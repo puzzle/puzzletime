@@ -1,4 +1,4 @@
-# Creat the tables and relations between them for the project puzzletime
+# Creates the tables and relations between them for the project puzzletime
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz
 
