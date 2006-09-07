@@ -32,12 +32,12 @@ class AddTables < ActiveRecord::Migration
     #creates table holidays
     create_table :holidays do |t|
       t.column :holiday_date, :date , :null => false
-      t.column :mustHours_day, :float, :null => false
+      t.column :musthours_day, :float, :null => false
     end
     
     #creates table masterdata
-    create_table :masterData do |t|
-      t.column :mustHours_day, :float, :null => false
+    create_table :masterdata do |t|
+      t.column :musthours_day, :float, :null => false
       t.column :vacations_year, :integer, :null => false
     end
     
@@ -50,7 +50,7 @@ class AddTables < ActiveRecord::Migration
     end
     
     #creates table projectmemberships
-    create_table :projectMemberships do |t|
+    create_table :projectmemberships do |t|
       t.column :project_id, :integer
       t.column :employee_id, :integer
       t.column :management, :boolean, :default => 'false'
@@ -80,8 +80,8 @@ class AddTables < ActiveRecord::Migration
     
     #executes some SQL-queries to get the relations of the tables onto the Postgresql-DB
     execute('ALTER TABLE employments ADD CONSTRAINT fk_employments_employees FOREIGN KEY ( employee_id ) REFERENCES employees( id ) ')
-    execute('ALTER TABLE projectMemberships ADD CONSTRAINT fk_projectMemberships_employees FOREIGN KEY ( employee_id ) REFERENCES employees( id ) ')
-    execute('ALTER TABLE projectMemberships ADD CONSTRAINT fk_projectMemberships_projects FOREIGN KEY ( project_id ) REFERENCES projects( id ) ')
+    execute('ALTER TABLE projectmemberships ADD CONSTRAINT fk_projectmemberships_employees FOREIGN KEY ( employee_id ) REFERENCES employees( id ) ')
+    execute('ALTER TABLE projectmemberships ADD CONSTRAINT fk_projectmemberships_projects FOREIGN KEY ( project_id ) REFERENCES projects( id ) ')
     execute('ALTER TABLE projects ADD CONSTRAINT fk_projects_clients FOREIGN KEY ( client_id ) REFERENCES clients( id ) ')
     execute('ALTER TABLE times ADD CONSTRAINT fk_times_employees FOREIGN KEY ( employee_id ) REFERENCES employees( id ) ')  
     execute('ALTER TABLE times ADD CONSTRAINT fk_times_projects FOREIGN KEY ( project_id ) REFERENCES projects( id ) ')
@@ -92,10 +92,10 @@ class AddTables < ActiveRecord::Migration
     #removes the tables listed below in case of back-migration
   def self.down
    drop_table :times
-   drop_table :masterData
+   drop_table :masterdata
    drop_table :holidays
    drop_table :employments
-   drop_table :projectMemberships
+   drop_table :projectmemberships
    drop_table :projects
    drop_table :clients
    drop_table :absences
