@@ -14,7 +14,7 @@ class AddTables < ActiveRecord::Migration
       t.column :passwd, :string, :null => false
       t.column :email, :string, :null => false
       t.column :phone, :string, :null => false
-      t.column :managment, :boolean, :default => 'false'
+      t.column :management, :boolean, :default => 'false'
     end
  
     #creates table clients
