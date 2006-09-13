@@ -75,10 +75,10 @@ class AddTables < ActiveRecord::Migration
       t.column :to_end_time, :time
       t.column :description, :text 
       t.column :billable, :boolean, :default => 'true'
-      t.column :booked, :boolean, :default => 'false'
     end
     
     #executes some SQL-queries to get the relations of the tables onto the Postgresql-DB
+    execute('ALTER TABLE employees ADD CONSTRAINT chk_unique_name UNIQUE ( shortname )')
     execute('ALTER TABLE employments ADD CONSTRAINT fk_employments_employees FOREIGN KEY ( employee_id ) REFERENCES employees( id ) ')
     execute('ALTER TABLE projectmemberships ADD CONSTRAINT fk_projectmemberships_employees FOREIGN KEY ( employee_id ) REFERENCES employees( id ) ')
     execute('ALTER TABLE projectmemberships ADD CONSTRAINT fk_projectmemberships_projects FOREIGN KEY ( project_id ) REFERENCES projects( id ) ')
