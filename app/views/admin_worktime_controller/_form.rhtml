@@ -1,0 +1,25 @@
+<%= error_messages_for 'worktime' %>
+
+<!--[form:worktime]-->
+<p><label for="worktime_report_type">Report type</label><br/>
+<%= text_field 'worktime', 'report_type'  %></p>
+
+<p><label for="worktime_work_date">Work date</label><br/>
+<%= date_select 'worktime', 'work_date'  %></p>
+
+<p><label for="worktime_hours">Hours</label><br/>
+</p>
+
+<p><label for="worktime_from_start_time">From start time</label><br/>
+</p>
+
+<p><label for="worktime_to_end_time">To end time</label><br/>
+</p>
+
+<p><label for="worktime_description">Description</label><br/>
+<%= text_area 'worktime', 'description'  %></p>
+
+<p><label for="worktime_billable">Billable</label><br/>
+<select id="worktime_billable" name="worktime[billable]"><option value="false">False</option><option value="true" selected>True</option></select></p>
+<!--[eoform:worktime]-->
+

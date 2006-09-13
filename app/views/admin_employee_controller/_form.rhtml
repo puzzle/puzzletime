@@ -1,0 +1,25 @@
+<%= error_messages_for 'employee' %>
+
+<!--[form:employee]-->
+<p><label for="employee_firstname">Firstname</label><br/>
+<%= text_field 'employee', 'firstname'  %></p>
+
+<p><label for="employee_lastname">Lastname</label><br/>
+<%= text_field 'employee', 'lastname'  %></p>
+
+<p><label for="employee_shortname">Shortname</label><br/>
+<%= text_field 'employee', 'shortname'  %></p>
+
+<p><label for="employee_passwd">Passwd</label><br/>
+<%= text_field 'employee', 'passwd'  %></p>
+
+<p><label for="employee_email">Email</label><br/>
+<%= text_field 'employee', 'email'  %></p>
+
+<p><label for="employee_phone">Phone</label><br/>
+<%= text_field 'employee', 'phone'  %></p>
+
+<p><label for="employee_management">Management</label><br/>
+<select id="employee_management" name="employee[management]"><option value="false" selected>False</option><option value="true">True</option></select></p>
+<!--[eoform:employee]-->
+
