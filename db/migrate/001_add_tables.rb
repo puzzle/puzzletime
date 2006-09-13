@@ -64,7 +64,7 @@ class AddTables < ActiveRecord::Migration
     end
     
     #creates table times
-    create_table :times do |t|
+    create_table :worktimes do |t|
       t.column :project_id, :integer
       t.column :absence_id, :integer
       t.column :employee_id, :integer
@@ -83,15 +83,15 @@ class AddTables < ActiveRecord::Migration
     execute('ALTER TABLE projectmemberships ADD CONSTRAINT fk_projectmemberships_employees FOREIGN KEY ( employee_id ) REFERENCES employees( id ) ')
     execute('ALTER TABLE projectmemberships ADD CONSTRAINT fk_projectmemberships_projects FOREIGN KEY ( project_id ) REFERENCES projects( id ) ')
     execute('ALTER TABLE projects ADD CONSTRAINT fk_projects_clients FOREIGN KEY ( client_id ) REFERENCES clients( id ) ')
-    execute('ALTER TABLE times ADD CONSTRAINT fk_times_employees FOREIGN KEY ( employee_id ) REFERENCES employees( id ) ')  
-    execute('ALTER TABLE times ADD CONSTRAINT fk_times_projects FOREIGN KEY ( project_id ) REFERENCES projects( id ) ')
-    execute('ALTER TABLE times ADD CONSTRAINT fk_times_absences FOREIGN KEY ( absence_id ) REFERENCES absences( id ) ')
-    execute('ALTER TABLE times ADD CONSTRAINT chkname CHECK (report_type IN(\'start_stop_day\' , \'absolute_day\' , \'week\' , \'month\' ))')
+    execute('ALTER TABLE worktimes ADD CONSTRAINT fk_times_employees FOREIGN KEY ( employee_id ) REFERENCES employees( id ) ')  
+    execute('ALTER TABLE worktimes ADD CONSTRAINT fk_times_projects FOREIGN KEY ( project_id ) REFERENCES projects( id ) ')
+    execute('ALTER TABLE worktimes ADD CONSTRAINT fk_times_absences FOREIGN KEY ( absence_id ) REFERENCES absences( id ) ')
+    execute('ALTER TABLE worktimes ADD CONSTRAINT chkname CHECK (report_type IN(\'start_stop_day\' , \'absolute_day\' , \'week\' , \'month\' ))')
   end
    
     #removes the tables listed below in case of back-migration
   def self.down
-   drop_table :times
+   drop_table :worktimes
    drop_table :masterdata
    drop_table :holidays
    drop_table :employments
