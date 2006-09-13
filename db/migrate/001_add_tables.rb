@@ -36,7 +36,7 @@ class AddTables < ActiveRecord::Migration
     end
     
     #creates table masterdata
-    create_table :masterdata do |t|
+    create_table :masterdatas do |t|
       t.column :musthours_day, :float, :null => false
       t.column :vacations_year, :integer, :null => false
     end
@@ -92,7 +92,7 @@ class AddTables < ActiveRecord::Migration
     #removes the tables listed below in case of back-migration
   def self.down
    drop_table :worktimes
-   drop_table :masterdata
+   drop_table :masterdatas
    drop_table :holidays
    drop_table :employments
    drop_table :projectmemberships
