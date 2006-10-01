@@ -49,11 +49,11 @@ class AddTables < ActiveRecord::Migration
       t.column :end_date, :date
     end
     
-    #creates linktable employees_projects
-    create_table :employees_projects do |t|
+    #creates table projectmemberships
+    create_table :projectmemberships do |t|
       t.column :project_id, :integer
       t.column :employee_id, :integer
-      t.column :management, :boolean, :default => 'false'
+      t.column :projectmanagement, :boolean, :default => 'false'
     end
     
     #creates table projects
@@ -63,14 +63,14 @@ class AddTables < ActiveRecord::Migration
       t.column :description, :text
     end
     
-    #creates table times
+    #creates table worktimes
     create_table :worktimes do |t|
       t.column :project_id, :integer
       t.column :absence_id, :integer
       t.column :employee_id, :integer
       t.column :report_type, :string, :null => false
       t.column :work_date, :date, :null => false
-      t.column :hours, :time
+      t.column :hours, :float
       t.column :from_start_time, :time
       t.column :to_end_time, :time
       t.column :description, :text 
@@ -80,8 +80,8 @@ class AddTables < ActiveRecord::Migration
     #executes some SQL-queries to get the relations of the tables onto the Postgresql-DB
     execute('ALTER TABLE employees ADD CONSTRAINT chk_unique_name UNIQUE ( shortname )')
     execute('ALTER TABLE employments ADD CONSTRAINT fk_employments_employees FOREIGN KEY ( employee_id ) REFERENCES employees( id ) ON DELETE CASCADE ')
-    execute('ALTER TABLE employees_projects ADD CONSTRAINT fk_employees_projects_employees FOREIGN KEY ( employee_id ) REFERENCES employees( id ) ON DELETE CASCADE')
-    execute('ALTER TABLE employees_projects ADD CONSTRAINT fk_employees_projects_projects FOREIGN KEY ( project_id ) REFERENCES projects( id ) ON DELETE CASCADE')
+    execute('ALTER TABLE projectmemberships ADD CONSTRAINT fk_projectmemberships_employees FOREIGN KEY ( employee_id ) REFERENCES employees( id ) ON DELETE CASCADE')
+    execute('ALTER TABLE projectmemberships ADD CONSTRAINT fk_projectmemberships_projects FOREIGN KEY ( project_id ) REFERENCES projects( id ) ON DELETE CASCADE')
     execute('ALTER TABLE projects ADD CONSTRAINT fk_projects_clients FOREIGN KEY ( client_id ) REFERENCES clients( id ) ON DELETE CASCADE')
     execute('ALTER TABLE worktimes ADD CONSTRAINT fk_times_employees FOREIGN KEY ( employee_id ) REFERENCES employees( id ) ON DELETE CASCADE')  
     execute('ALTER TABLE worktimes ADD CONSTRAINT fk_times_projects FOREIGN KEY ( project_id ) REFERENCES projects( id ) ON DELETE CASCADE')
@@ -95,7 +95,7 @@ class AddTables < ActiveRecord::Migration
    drop_table :masterdatas
    drop_table :holidays
    drop_table :employments
-   drop_table :employees_projects
+   drop_table :projectmemberships
    drop_table :projects
    drop_table :clients
    drop_table :absences

@@ -1,0 +1,30 @@
+<h1>New project</h1>
+<%= error_messages_for 'project' %>
+<br/>
+<%= start_form_tag :action => 'create' %>
+  <table>
+    <tr>
+  	  <td><label for="project_name">Project name: </label></td>
+      <td><%= text_field 'project', 'name'  %></td>
+    </tr>
+    <tr> 
+      <td><label for="client_name">Client: </label></td>
+      <td><select name="project[client_id]">
+      <% @client.each do |client| %>
+      <option value="<%= client.id %>"> 
+      <%= client.name %>
+      </option>
+      <% end %>
+      </select></td>
+   </tr>
+   <tr>
+     <td><label for="project_description">Description</label></td>
+ 	 <td><%= text_area 'project', 'description'  %></td>
+   </tr>
+   <tr> 
+    <td><td><%= submit_tag 'Save' %></td></td>
+    </tr>
+   </table>
+<%= end_form_tag %>
+<br/>
+<%= link_to 'Back', :action => 'list' %>

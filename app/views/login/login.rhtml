@@ -1,0 +1,49 @@
+<html>
+<head>
+  <title>AdminWorktimeController: <%= controller.action_name %></title>
+  <%= stylesheet_link_tag 'scaffold' %>
+    <%= stylesheet_link_tag 'puzzletime', :media => 'all' %>
+</head>
+<body>
+<div id="outer">
+
+	<div id="upbg"></div>
+
+	<div id="inner">
+
+		<div id="header">
+			<h1><span>puzzle</span>Time<sup>1.0</sup></h1>
+			<h2>by puzzle itc</h2>
+		</div>
+	
+		<div id="splash"></div>
+	
+		<div id="menu">
+		<div id="date"><%= Time.now %></div>
+		</div>
+
+<%= form_tag%>
+<center>
+<table>
+	<tr>
+	<td/>
+ 	 <td><p style="color: red"><%= flash[:notice] %></p></td>
+ 	 </tr>
+    <tr>
+     <td>Shortname:</td>
+     <td><%= text_field("employee", "shortname") %></td>
+ 	</tr>
+ 	<tr>
+ 	<td>Password:</td>
+ 	<td><%= password_field("employee", "pwd") %></td>
+ 	</tr>
+ 	<tr>
+ 	<td/>
+ 	<td><input type="submit" value=" Login "/></td>
+ 	</tr>
+  </table>
+  </center>
+<%= end_form_tag%>
+
+</body>
+</html>

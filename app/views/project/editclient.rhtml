@@ -1,0 +1,22 @@
+<h1>Editing client</h1>
+<br/>
+<%= error_messages_for 'client' %>
+
+<%= start_form_tag :action => 'updateclient', :id => @client %>
+  <table>
+    <tr>
+      <td><label for="client_name">Name: </label></td>
+      <td><%= text_field 'client', 'name'  %></td>
+    </tr>
+    <tr>
+      <td><label for="project_description">Contact: </label></td>
+      <td><%= text_field 'client', 'contact'  %></td>
+    </tr>
+    <tr>
+      <td><td><%= submit_tag 'Save' %></td></td>
+    </tr>
+  </table>
+<%= end_form_tag %>
+<br/>
+
+<%= link_to 'Back', :action => 'clientlist' %>

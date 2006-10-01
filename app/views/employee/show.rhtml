@@ -1,0 +1,61 @@
+
+<p style="color: green"><%= flash[:notice] %></p>
+
+<p>
+  <b>Firstname:</b> <%= @employee.firstname %>
+</p>
+<p>
+  <b>Lastname:</b> <%= @employee.lastname %>
+</p>
+<p>
+  <b>Shortname:</b> <%= @employee.shortname %>
+</p>
+<p>
+  <b>Email:</b> <%= @employee.email %>
+</p>
+<p>
+  <b>Phone:</b> <%= @employee.phone %>
+</p>
+<p>
+  <b>Managment:</b> <%= @employee.management %>
+</p>
+
+<% if @employee.has_employments? %>
+  <table>
+    <tr>
+      <% for column in Employment.content_columns %>
+        <td>
+        <p><b><%= column.human_name %></b></p>
+        </td>
+      <% end %>
+    </tr>
+      <% for employment in @employee.employments %>
+        <tr>
+          <td><%= employment.percent %></td>
+          <td><%= employment.start_date %></td>
+          <td><%= employment.end_date %></td>
+          <td><%= link_to 'Edit', :action => 'editemployment', :id => employment  %></td>
+          <td><%= link_to 'Delete', { :action => 'destroyemployment', :id_employment => employment, :id_employee => @employee }, :confirm => 'Are you sure?', :post => true %></td>
+        </tr>
+     <% end %>
+  </table>
+  <% end %>
+
+  <%= form_tag :action => 'recordEmployment' ,:id => @employee %>
+  <table>
+    <tr>
+      <td><label for="employment_percent">Percent: </label></td>
+  	  <td><%= text_field 'employment', 'percent'  %></td>
+    </tr>
+    <tr>
+  	  <td><label for="employment_start_date">Start date: </label></td>
+      <td><%= date_select 'employment', 'start_date'  %></td>
+    </tr>
+    <tr>
+      <td><td><%= submit_tag 'Save' %></td></td>
+    </tr>
+  </table>
+  
+  <%= end_form_tag %>
+<br/>
+<%= link_to 'Back', :action => 'list' %>  

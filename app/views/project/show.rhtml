@@ -1,0 +1,52 @@
+
+  <p>
+    <b>Projectname: </b> <%=h @project.name %> 
+  </p> 
+  <p>
+    <b>Description: </b> <%=h @project.description %>
+  </p>
+  <p>
+    <b>Clientname: </b> <%=h @project.client.name %>
+  </p>
+  <p>
+    <b>Contact: </b> <%=h @project.client.contact %>
+  </p>
+  
+        <table>
+          <tr>
+            <td><b>Members:</b></td><td><b>Projectmanagement</b></td>
+          </tr>
+          <%for projectmembership in @project.projectmemberships %> 
+          <tr>
+            <td> <%= projectmembership.employee.lastname %> <%= projectmembership.employee.firstname %></td>
+                     
+            <td><center> <% if projectmembership.projectmanagement === false %>
+            	 <%= link_to 'add', :action => 'addpromem', :project_id => @project, :projectmembership_id => projectmembership %>             
+                 <% else %>
+                 <%= link_to 'remove', :action => 'removepromem', :project_id => @project, :projectmembership_id => projectmembership %> 
+                 <% end %>
+                 </center> 
+           </td> 
+            <td>
+            <%= link_to 'Delete', { :action => 'destroypromem', :project_id => @project, :projectmembership_id => projectmembership }, 
+                                   :confirm => 'Are you sure?', 
+                                   :post => true %>
+            </td>
+          </tr>
+          <% end %>
+        </table> 
+        </br>
+ <%= start_form_tag :action => 'createpromem', :project_id => @project  %> 
+        <p><label for="employee_name">Employee</label><br/>
+        <select name="employee_id[]" multiple="multiple" size="5"">
+            <% @employee.each do |employee| %>
+            <option value="<%= employee.id %>"> 
+            <%= employee.lastname %> <%= employee.firstname %>
+            </option>
+            <% end %>
+            </select></p>
+   <%= submit_tag 'Save' %>
+   <%= end_form_tag %>
+
+   <br/>   
+   <%= link_to 'Back', :action => 'list' %>

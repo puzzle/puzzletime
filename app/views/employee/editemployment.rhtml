@@ -1,0 +1,22 @@
+
+  <p style="color: red"><%= flash[:notice] %></p>
+<table>
+  <%= form_tag :action => 'updateemployment', :id => @employment %>
+  <tr>
+    <td><label for="employment_percent">Percent: </label></td>
+    <td><%= text_field 'employment', 'percent'  %></td>
+  </tr>
+  <tr>
+    <td><label for="employment_start_date">Start date</label></td>
+    <td><%= date_select 'employment', 'start_date'  %></td>
+  </tr>
+  <tr>
+  	<td><label for="employment_end_date">End date</label></td>
+  	<td><%= date_select 'employment', 'end_date'  %></td>
+  </tr>
+  </table>
+  <%= submit_tag 'Save' %>
+  <%= end_form_tag %>
+<br/>
+<br/>
+<%= link_to 'Back', :action => 'show', :id => @employment %>  

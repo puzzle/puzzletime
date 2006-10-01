@@ -30,7 +30,7 @@ ActiveRecord::Schema.define(:version => 1) do
     t.column "employee_id", :integer
     t.column "percent", :integer, :null => false
     t.column "start_date", :date, :null => false
-    t.column "end_date", :date, :null => false
+    t.column "end_date", :date
   end
 
   create_table "holidays", :force => true do |t|
@@ -46,7 +46,7 @@ ActiveRecord::Schema.define(:version => 1) do
   create_table "projectmemberships", :force => true do |t|
     t.column "project_id", :integer
     t.column "employee_id", :integer
-    t.column "management", :boolean, :default => false
+    t.column "projectmanagement", :boolean, :default => false
   end
 
   create_table "projects", :force => true do |t|
@@ -61,7 +61,7 @@ ActiveRecord::Schema.define(:version => 1) do
     t.column "employee_id", :integer
     t.column "report_type", :string, :null => false
     t.column "work_date", :date, :null => false
-    t.column "hours", :time
+    t.column "hours", :float
     t.column "from_start_time", :time
     t.column "to_end_time", :time
     t.column "description", :text

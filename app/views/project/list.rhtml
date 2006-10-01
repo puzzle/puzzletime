@@ -1,0 +1,26 @@
+<h1>Listing projects</h1>
+
+<table>
+  <tr>
+  <th>Name</th>
+  <th>Client</th>  
+  </tr>
+  
+<% for project in @projects %>
+  <tr>
+  	<td><%=h project.name %>
+    <td><%=h project.client.name %>
+    <td><%= link_to 'Show', :action => 'show', :id => project %></td>
+    <td><%= link_to 'Edit', :action => 'edit', :id => project %></td>
+    <td><%= link_to 'Delete', { :action => 'destroy', :id => project }, :confirm => 'Are you sure?', :post => true %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= link_to 'Previous page', { :page => @project_pages.current.previous } if @project_pages.current.previous %>
+<%= link_to 'Next page', { :page => @project_pages.current.next } if @project_pages.current.next %> 
+
+<br />
+
+<%= link_to 'New project', {:action => 'new'} %> |
+<%= link_to 'Clientmenu', :action => 'clientlist' %>

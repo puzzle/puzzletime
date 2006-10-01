@@ -1,0 +1,34 @@
+<h1>Listing employees</h1>
+<p style = "color: green"><%= flash[:notice] %></p>
+
+<table>
+  <tr>
+    <td><p>Firstname</p></td>
+    <td><p>Lastname</p></td>
+    <td><p>Shortname</p></td>
+    <td><p>Email</p></td>
+    <td><p>Phone</p></td>
+    <td><p>Management</p></td>
+  </tr>
+  
+  <% for employee in @employees %>
+  <tr>
+    <td><%= employee.firstname  %></td>
+    <td><%= employee.lastname  %></td>
+    <td><%= employee.shortname  %></td>
+    <td><%= employee.email  %></td>
+    <td><%= employee.phone  %></td>
+    <td><%= employee.management %></td> 
+    <td><%= link_to 'Show', :action => 'show', :id => employee %></td>
+    <td><%= link_to 'Edit', :action => 'edit', :id => employee %></td>
+    <td><%= link_to 'Delete', { :action => 'destroy', :id => employee }, :confirm => 'Are you sure?', :post => true %></td>
+  </tr>
+  <% end %>
+</table>
+
+<%= link_to 'Previous page', { :page => @employee_pages.current.previous } if @employee_pages.current.previous %>
+<%= link_to 'Next page', { :page => @employee_pages.current.next } if @employee_pages.current.next %> 
+
+<br />
+
+<%= link_to 'New employee', :action => 'new' %>

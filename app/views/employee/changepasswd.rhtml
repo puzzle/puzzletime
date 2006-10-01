@@ -1,0 +1,27 @@
+<h1>Change Password</h1>
+<br/>
+<p style="color: green"><%= flash[:notice] %></p>
+<%= debug(@user) %>
+
+<%= start_form_tag :action => 'updatepwd' %>
+<table>
+  <tr>
+    <td>Old Password: </td>
+    <td><%= password_field 'employee', 'pwd' %></td>
+  </tr>
+  <tr>
+    <td>New Password: </td>
+    <td><%= password_field 'employee', 'change_pwd' %></td>
+  </tr>
+  <tr>
+    <td>Confirm: </td>
+    <td><%= password_field 'employee', 'change_pwd_confirmation'  %></td>
+  </tr>
+  <tr>
+    <td><td><%= submit_tag 'Save' %></td></td>
+  </tr>
+  </table>
+  
+  <%= end_form_tag %>
+
+
