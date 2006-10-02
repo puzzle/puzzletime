@@ -1,11 +1,11 @@
-<h1>Worktimemenu of <%=h @employee.firstname %> <%=h @employee.lastname %></h1>
+<h1>Worktimemenu of <%=h @user.firstname %> <%=h @user.lastname %></h1>
   <br/>
-  <b>Employee: <%=h @employee.firstname %> <%=h @employee.lastname %></b>
+  <b>Employee: <%=h @user.firstname %> <%=h @user.lastname %></b>
   <table>
     <tr>
       <td><b>Projectmember in Projects listed below: </b></td>
     </tr>
-	<% for project in @employee.projects %>
+	<% for project in @user.projects %>
 	<tr>
 	  <td><%=h project.name %></td>
 	  <td><%= link_to 'Add time', :action => 'addtime', :project_id => project %></td>

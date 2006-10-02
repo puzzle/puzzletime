@@ -26,7 +26,7 @@
 				<li><%= link_to 'Employee', :controller => 'employee', :action => 'list' %></li>
 			</ul>
 
-		<div id="date"><%= Time.now %><br/>
+		<div id="date"><%= Date.today %>
 		</div>
 		</div>
 <p style="color: green"><%= flash[:notice] %></p>

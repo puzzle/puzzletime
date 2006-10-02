@@ -7,15 +7,15 @@
 <table>
   <tr>
     <td>Old Password: </td>
-    <td><%= password_field 'employee', 'pwd' %></td>
+    <td><input id="employee_pwd" name="pwd" size="30" type="password" /></td>
   </tr>
   <tr>
     <td>New Password: </td>
-    <td><%= password_field 'employee', 'change_pwd' %></td>
+    <td><input id="change_pwd" name="change_pwd" size="30" type="password" /></td>
   </tr>
   <tr>
     <td>Confirm: </td>
-    <td><%= password_field 'employee', 'change_pwd_confirmation'  %></td>
+    <td><input id="change_pwd_confirmation" name="change_pwd_confirmation" size="30" type="password" /></td>
   </tr>
   <tr>
     <td><td><%= submit_tag 'Save' %></td></td>
@@ -23,5 +23,5 @@
   </table>
   
   <%= end_form_tag %>
-
-
+  <br/>
+<%= link_to 'Back',:controller => 'worktime', :action => 'list', :id => @user %>

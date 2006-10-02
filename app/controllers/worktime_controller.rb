@@ -2,9 +2,6 @@ class WorktimeController < ApplicationController
   
   before_filter :authorize
   
-  def list
-    @employee = session[:user]
-  end
 
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
   verify :method => :post, :only => [ :destroy, :create, :update ],
@@ -13,33 +10,17 @@ class WorktimeController < ApplicationController
 
   def addtime
     @project = Project.find(params[:project_id])
-    @employee = Employee.find(@user.id)
   end
 
   def new
     @worktime = Worktime.new
   end
   
-  def hide_stuff
-    while true
-      case params[:report_type]
-        when 'start_stop_day':
-          page.visual_effect :fade, 'worktime_hours', :duration => 3
-        when 'absolute_day':
-          page.visual_effect :fade, 'worktime_from_start_time'
-          page.visual_effect :fade, 'worktime_to_end_time'
-        when 'week':
-        when 'month':
-      else
-       flash[:notice] = "Its over"
-      end 
-    end  
-  end
-  
   def createtime
-    @project = Project.find(params[:project_id])
-    @employee = Employee.find(params[@user.id])
-    if
+    params[:worktime][:employee_id] = @user.id 
+    params[:worktime][:project_id] = params[:project_id]
+    worktime = Worktime.new(params[:worktime])
+    if worktime.save
       flash[:notice] = 'Worktime was successfully created.' 
       redirect_to :action => 'list'
     else

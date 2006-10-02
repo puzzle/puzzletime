@@ -53,10 +53,16 @@ class EmployeeController < ApplicationController
   end
   
   def updatepwd
-    if Employee.find(@user.id).try_to_checkpwd
-      #  @employee.update_attributes(params[:employee])
-      flash[:notice] = 'Password was successfully updated.'
-      redirect_to :controller =>'worktime', :action => 'list', :id => @user.id
+    
+    if Employee.checkpwd(@user.id, params[:pwd])
+      if params[:change_pwd] === params[:change_pwd_confirmation]
+        @user.updatepwd(params[:change_pwd])
+        flash[:notice] = 'Password was successfully updated.'
+        redirect_to :controller =>'worktime', :action => 'list', :id => @user.id
+      else
+        flash[:notice] = 'Passwordconfirmation does not match'
+        redirect_to :controller =>'employee', :action => 'changepasswd', :id => @user.id
+      end
     else
      flash[:notice] = 'Old password did not match.'
      redirect_to :controller =>'employee', :action => 'changepasswd', :id => @user.id
