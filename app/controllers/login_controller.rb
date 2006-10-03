@@ -1,21 +1,28 @@
+# (c) Puzzle itc, Berne
+# Diplomarbeit 2149, Xavier Hayoz
+
+
 class LoginController < ApplicationController
 
- before_filter :authorize, :except => :login
+  # Checks if employee came from login or from direct url
+  before_filter :authorize, :except => :login
  
+  # Login procedure for user
   def login
     if request.get?
       session[:user] = nil
-    else
-      logged_in_employee = Employee.new(params[:employee]).try_to_login
-      if logged_in_employee
-        session[:user] = logged_in_employee
+    else 
+      logged_in = Employee.login(params[:employee][:shortname], params[:employee][:pwd])
+      if  logged_in != nil
+        session[:user] = logged_in
         redirect_to(:controller => 'worktime', :action => 'list')
       else
         flash[:notice] = "Invalid shortname/password combination"
       end
      end
   end
-      
+  
+  #Logout procedure for user    
   def logout
     session[:user]=nil
     flash[:notice]="Logged out"

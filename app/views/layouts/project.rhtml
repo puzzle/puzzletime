@@ -21,9 +21,9 @@
 			<div id="menu">
 			<ul>
 				<li class="first"><li class="first"><%= link_to 'Log out', :controller => 'login', :action => 'logout' %></li>
-			    <li><%= link_to 'Change your Password', :controller => 'employee', :action => 'changepasswd' %></li>
+			    <li><%= link_to 'Change your Password', :controller => 'employee', :action => 'changePasswd' %></li>
 				<li><%= link_to 'Time', :controller => 'worktime', :action => 'list' %></li>
-				<li><%= link_to 'Employee', :controller => 'employee', :action => 'list' %></li>
+				<li><%= link_to 'Employee', :controller => 'employee', :action => 'listEmployee' %></li>
 			</ul>
 
 		<div id="date"><%= Date.today %>

@@ -17,7 +17,7 @@ class Employee < ActiveRecord::Base
   validates_uniqueness_of :shortname 
   
   def before_create
-    self.passwd = Employee.passwd(self.pwd)
+    self.passwd = Employee.encode(self.pwd)
   end
   
   def after_create
@@ -25,30 +25,26 @@ class Employee < ActiveRecord::Base
   end
   
   def self.login(shortname, pwd)
-    passwd = passwd(pwd)
+    passwd = encode(pwd)
     find(:first,
          :conditions =>["shortname = ? and passwd = ?",
                          shortname, passwd])
   end
   
   def self.checkpwd(id, pwd)
-    passwd = passwd(pwd)
-    find(:first,
+    passwd = encode(pwd)
+    nil != find(:first,
          :conditions =>["id = ? and passwd = ?",
                          id, passwd])
   end
   
   def updatepwd(pwd)
-    hashed_pwd = Employee.passwd(pwd)
+    hashed_pwd = Employee.encode(pwd)
     update_attributes(:passwd => hashed_pwd)
   end
   
-  def try_to_login
-    Employee.login(self.shortname, self.pwd)
-  end
-  
   private
-  def self.passwd(pwd)
+  def self.encode(pwd)
     Digest::SHA1.hexdigest(pwd) 
   end
 end

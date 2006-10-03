@@ -1,7 +1,7 @@
 <h1>New project</h1>
 <%= error_messages_for 'project' %>
 <br/>
-<%= start_form_tag :action => 'create' %>
+<%= start_form_tag :action => 'createProject' %>
   <table>
     <tr>
   	  <td><label for="project_name">Project name: </label></td>
@@ -27,4 +27,4 @@
    </table>
 <%= end_form_tag %>
 <br/>
-<%= link_to 'Back', :action => 'list' %>
+<%= link_to 'Back', :action => 'listProject' %>

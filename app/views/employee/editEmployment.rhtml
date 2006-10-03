@@ -1,7 +1,7 @@
 
   <p style="color: red"><%= flash[:notice] %></p>
 <table>
-  <%= form_tag :action => 'updateemployment', :id => @employment %>
+  <%= form_tag :action => 'updateEmployment', :id => @employment, :id_employee => @employee %>
   <tr>
     <td><label for="employment_percent">Percent: </label></td>
     <td><%= text_field 'employment', 'percent'  %></td>
@@ -19,4 +19,4 @@
   <%= end_form_tag %>
 <br/>
 <br/>
-<%= link_to 'Back', :action => 'show', :id => @employment %>  
+<%= link_to 'Back', :action => 'showEmployee', :id => @employee %>  

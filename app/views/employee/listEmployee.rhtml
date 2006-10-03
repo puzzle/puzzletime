@@ -19,9 +19,9 @@
     <td><%= employee.email  %></td>
     <td><%= employee.phone  %></td>
     <td><%= employee.management %></td> 
-    <td><%= link_to 'Show', :action => 'show', :id => employee %></td>
-    <td><%= link_to 'Edit', :action => 'edit', :id => employee %></td>
-    <td><%= link_to 'Delete', { :action => 'destroy', :id => employee }, :confirm => 'Are you sure?', :post => true %></td>
+    <td><%= link_to 'Show', :action => 'showEmployee', :id => employee %></td>
+    <td><%= link_to 'Edit', :action => 'editEmployee', :id => employee %></td>
+    <td><%= link_to 'Delete', { :action => 'destroyEmployee', :id => employee }, :confirm => 'Are you sure?', :post => true %></td>
   </tr>
   <% end %>
 </table>
@@ -31,4 +31,4 @@
 
 <br />
 
-<%= link_to 'New employee', :action => 'new' %>
+<%= link_to 'New employee', :action => 'newEmployee' %>

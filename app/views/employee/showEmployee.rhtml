@@ -34,14 +34,14 @@
           <td><%= employment.percent %></td>
           <td><%= employment.start_date %></td>
           <td><%= employment.end_date %></td>
-          <td><%= link_to 'Edit', :action => 'editemployment', :id => employment  %></td>
-          <td><%= link_to 'Delete', { :action => 'destroyemployment', :id_employment => employment, :id_employee => @employee }, :confirm => 'Are you sure?', :post => true %></td>
+          <td><%= link_to 'Edit', :action => 'editEmployment', :id => employment, :id_employee => @employee  %></td>
+          <td><%= link_to 'Delete', { :action => 'destroyEmployment', :id_employment => employment, :id_employee => @employee }, :confirm => 'Are you sure?', :post => true %></td>
         </tr>
      <% end %>
   </table>
   <% end %>
 
-  <%= form_tag :action => 'recordEmployment' ,:id => @employee %>
+  <%= form_tag :action => 'createEmployment' ,:id => @employee %>
   <table>
     <tr>
       <td><label for="employment_percent">Percent: </label></td>
@@ -58,4 +58,4 @@
   
   <%= end_form_tag %>
 <br/>
-<%= link_to 'Back', :action => 'list' %>  
+<%= link_to 'Back', :action => 'listEmployee' %>  

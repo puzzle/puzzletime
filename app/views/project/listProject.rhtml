@@ -10,9 +10,9 @@
   <tr>
   	<td><%=h project.name %>
     <td><%=h project.client.name %>
-    <td><%= link_to 'Show', :action => 'show', :id => project %></td>
-    <td><%= link_to 'Edit', :action => 'edit', :id => project %></td>
-    <td><%= link_to 'Delete', { :action => 'destroy', :id => project }, :confirm => 'Are you sure?', :post => true %></td>
+    <td><%= link_to 'Show', :action => 'showProject', :id => project %></td>
+    <td><%= link_to 'Edit', :action => 'editProject', :id => project %></td>
+    <td><%= link_to 'Delete', { :action => 'destroyProject', :id => project }, :confirm => 'Are you sure?', :post => true %></td>
   </tr>
 <% end %>
 </table>
@@ -22,5 +22,5 @@
 
 <br />
 
-<%= link_to 'New project', {:action => 'new'} %> |
-<%= link_to 'Clientmenu', :action => 'clientlist' %>
+<%= link_to 'New project', {:action => 'newProject'} %> |
+<%= link_to 'Clientmenu',:controller => 'client', :action => 'listClient' %>

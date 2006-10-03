@@ -1,6 +1,6 @@
-<h1>New employee</h1>
+<h1>Editing employee</h1>
 <br/>
-<%= start_form_tag :action => 'create' %>
+<%= start_form_tag :action => 'updateEmployee', :id => @employee %>
  <table>
    <tr> 
      <td><label for="employee_firstname">Firstname: </label></td>
@@ -15,10 +15,6 @@
      <td><%= text_field 'employee', 'shortname'  %></td>
    </tr>
    <tr>
-     <td><label for="employee_passwd">Password: </label></td>
-     <td><%= password_field 'employee', 'pwd'  %></td>
-   </tr>
-   <tr>
      <td><label for="employee_email">Email: </label></td>
   	 <td><%= text_field 'employee', 'email'  %></td>
    </tr>
@@ -27,11 +23,14 @@
      <td><%= text_field 'employee', 'phone'  %></td>
    </tr>
    <tr>
+  	 <td><label for="employee_phone">Management: </label></td>
+     <td><%=check_box 'employee', 'management'  %></td>
+   </tr>
+   <tr>
   	 <td><td><%= submit_tag 'Save' %></td></td>
    </tr>
    </table>
+  
 <%= end_form_tag %>
-<br/>
-<%= link_to 'Back', :action => 'list' %>
 
-
+<%= link_to 'Back', :action => 'listEmployee' %>

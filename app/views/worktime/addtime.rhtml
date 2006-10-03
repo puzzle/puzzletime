@@ -16,23 +16,23 @@
           </select>
     </td>
   </tr>
-  
-    <tr>
-      <td>Hours: </td>
-      <td><%= text_field ('worktime', 'hours', {:disabled => true})  %></td>
-    </tr>
-    <tr>
-      <td>Workdate: </td>
-      <td><%= date_select('worktime', 'work_date') %></td>
-    </tr>
-  
+  <tr>
+    <td>Workdate: </td>
+    <td><%= date_select('worktime', 'work_date') %></td>
+  </tr>
+  <tr>
+    <td>Hours: </td>
+    <td><%= text_field ('worktime', 'hours', {:disabled => true})  %></td>
+  </tr>
   <tr>	
     <td>From start time: </td>
-    <td><%=datetime_select('worktime', 'from_start_time')%></td>
+    <td>
+      <%= select_hour(Time.now) %>
+    </td>
   </tr>
   <tr>
     <td>To end time: </td>
-    <td><%=datetime_select('worktime', 'to_end_time')%></td>
+    <td><%= select_worktime_hour(Time.now,{:id=>'worktime_to_end_time'})%></td>
   </tr>
   <tr>
     <td>Description: </td>

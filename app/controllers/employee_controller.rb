@@ -9,7 +9,7 @@ class EmployeeController < ApplicationController
   # Startpoint
   def index
     list
-    render :action => 'list'
+    render :action => 'listEmployee'
   end
 
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
@@ -17,43 +17,48 @@ class EmployeeController < ApplicationController
          :redirect_to => { :action => :list }
   
   # Lists all employees
-  def list
+  def listEmployee
     @employee_pages, @employees = paginate :employees, :per_page => 10
   end
   
   # Shows detail of chosen Employee 
-  def show
+  def showEmployee
     @employee = Employee.find(params[:id])
   end
   
   # Creates new employee
-  def create
+  def createEmployee
     @employee = Employee.new(params[:employee])
     if @employee.save
       flash[:notice] = 'Employee was successfully created.'
       redirect_to :action => 'list'
     else
+      flash[:notice] = 'Employee was not created.'
       render :action => 'new'
     end
   end
   
-  # Records employment data
-  def recordEmployment
-    @employee = Employee.find(params[:id])
+  # Create employment data
+  def createEmployment
+    employee = Employee.find(params[:id])
     @employment = @employee.employments.create(params[:employment])
     if @employment.save
       flash[:notice] = 'Employment was successfully created'
-      redirect_to :action => 'show', :id => @employee
+      redirect_to :action => 'listEmployee'
+    else 
+      flash[:notice] = 'Employment was not created'
+      redirect_to :action => 'showEmployee', :id => employee
     end  
   end
   
   # Editpage employment data
-  def editemployment
+  def editEmployment
     @employment = Employment.find(params[:id])
+    @employee = Employee.find(params[:id_employee])
   end
   
-  def updatepwd
-    
+  #Changes userpwd
+  def updatePwd
     if Employee.checkpwd(@user.id, params[:pwd])
       if params[:change_pwd] === params[:change_pwd_confirmation]
         @user.updatepwd(params[:change_pwd])
@@ -64,48 +69,60 @@ class EmployeeController < ApplicationController
         redirect_to :controller =>'employee', :action => 'changepasswd', :id => @user.id
       end
     else
-     flash[:notice] = 'Old password did not match.'
+     flash[:notice] = 'Old password does not match.'
      redirect_to :controller =>'employee', :action => 'changepasswd', :id => @user.id
     end  
   end
   
   # Update employment data
-  def updateemployment
-    @employment = Employment.find(params[:id])
-    if @employment.update_attributes(params[:employment])
+  def updateEmployment
+    @employee = Employee.find(params[:id_employee]) 
+    if Employment.find(params[:id]).update_attributes(params[:employment])
       flash[:notice] = 'Employment was successfully updated.'
-      redirect_to :action => 'list'
+      redirect_to :action => 'showEmployee', :id =>@employee
     else
       flash[:notice] = 'Please enter percent'
-      redirect_to :action => 'editEmployment', :id => @employment
+      redirect_to :action => 'editEmployment', :id => @employee
     end
   end
   
   # Deletes the chosen employment data
-  def destroyemployment
-    Employment.find(params[:id_employment]).destroy
-    redirect_to :action => 'show', :id => @user
+  def destroyEmployment
+       @employee = Employee.find(params[:id_employee])
+    if Employment.find(params[:id_employment]).destroy
+      flash[:notice] = 'Employment was deleted'
+      redirect_to :action => 'showEmployee', :id => @employee
+    else
+      flash[:notice] = 'Employment was not deleted'
+      redirect_to :action => 'showEmployee', :id => @employee
+    end
   end
   
   # Shows the editpage of chosen employee
-  def edit
+  def editEmployee
     @employee = Employee.find(params[:id])
   end
 
   # Stores the changed employee
-  def update
-    @employee = Employee.find(params[:id])
-    if @employee.update_attributes(params[:employee])
+  def updateEmployee
+    if Employee.find(params[:id]).update_attributes(params[:employee])
       flash[:notice] = 'Employee was successfully updated.'
-      redirect_to :action => 'list'
+      redirect_to :action => 'listEmployee'
     else
-      render :action => 'edit'
+      flash[:notice] = 'Employee was not updated.'
+      render :action => 'editEmployee'
     end
   end
   
   # Deletes the chosen employee
-  def destroy
-    Employee.find(params[:id]).destroy
-    redirect_to :action => 'list'
+  def destroyEmployee
+    @employee = Employee.find(params[:id])
+    if @employee.destroy
+        flash[:notice] = 'Employee was deleted'
+      redirect_to :action => 'listEmployee'
+    else
+      flash[:notice] = 'Employee was not deleted'
+      redirect_to :action => 'listEmployee'
+    end
   end
 end

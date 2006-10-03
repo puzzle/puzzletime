@@ -22,10 +22,10 @@
 		<div id="menu">
 			<ul>
 				<li class="first"><%= link_to 'Log out', :controller => 'login', :action => 'logout' %></li>
-				<li><%= link_to 'Change your Password', :controller => 'employee', :action => 'changepasswd' %></li>
+				<li><%= link_to 'Change your Password', :controller => 'employee', :action => 'changePasswd' %></li>
 				<% if @user.management === true %>
-				<li><%= link_to 'Project/Client',:controller => 'project' ,:action => 'list' %></li>
-				<li><%= link_to 'Employee', :controller => 'employee', :action => 'list' %></li>
+				<li><%= link_to 'Project/Client',:controller => 'project' ,:action => 'listProject' %></li>
+				<li><%= link_to 'Employee', :controller => 'employee', :action => 'listEmployee' %></li>
 				<% end %>
 			</ul>
 
