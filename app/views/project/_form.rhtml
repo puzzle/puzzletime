@@ -1,10 +1,25 @@
+
 <%= error_messages_for 'project' %>
-
-<!--[form:project]-->
-<p><label for="project_name">Name</label><br/>
-<%= text_field 'project', 'name'  %></p>
-
-<p><label for="project_description">Description</label><br/>
-<%= text_area 'project', 'description'  %></p>
-<!--[eoform:project]-->
-
+<table>
+  <tr>
+    <td>Project name: </td>
+  	<td><%= text_field 'project', 'name'  %></td>
+  </tr>
+  <tr>
+    <td>Client: </td>
+    <td><select name="project[client_id]">
+      <% @client.each do |client| %>
+      <option value="<%= client.id %>"> 
+      <%= client.name %>
+      </option>
+      <% end %>
+      </select></td>
+   </tr>
+   <tr>
+     <td>Description: </td>
+  	 <td><%= text_area 'project', 'description'  %></td>
+   </tr>
+   <tr>
+     <td><td><%= submit_tag 'Save' %></td></td>
+   </tr>
+ </table>

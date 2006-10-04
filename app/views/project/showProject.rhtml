@@ -11,7 +11,7 @@
   <p>
     <b>Contact: </b> <%=h @project.client.contact %>
   </p>
-  
+        <div ="tabel">
         <table>
           <tr>
             <td><b>Members:</b></td><td><b>Projectmanagement</b></td>
@@ -21,22 +21,23 @@
             <td> <%= projectmembership.employee.lastname %> <%= projectmembership.employee.firstname %></td>
                      
             <td><center> <% if projectmembership.projectmanagement === false %>
-            	 <%= link_to 'add', :action => 'addProjectmanagement', :project_id => @project, :projectmembership_id => projectmembership %>             
+            	 <%= link_to 'add', :action => 'addProjectManagement', :project_id => @project, :projectmembership_id => projectmembership %>             
                  <% else %>
-                 <%= link_to 'remove', :action => 'removeProjectmanagement', :project_id => @project, :projectmembership_id => projectmembership %> 
+                 <%= link_to 'remove', :action => 'removeProjectManagement', :project_id => @project, :projectmembership_id => projectmembership %> 
                  <% end %>
                  </center> 
            </td> 
             <td>
-            <%= link_to 'Delete', { :action => 'destroyProjectmembership', :project_id => @project, :projectmembership_id => projectmembership }, 
+            <%= link_to 'Delete', { :action => 'destroyProjectMembership', :project_id => @project, :projectmembership_id => projectmembership }, 
                                    :confirm => 'Are you sure?', 
                                    :post => true %>
             </td>
           </tr>
           <% end %>
         </table> 
+        </div>
         </br>
- <%= start_form_tag :action => 'createProjectmembership', :project_id => @project  %> 
+ <%= start_form_tag :action => 'createProjectMembership', :project_id => @project  %> 
         <p><label for="employee_name">Employee</label><br/>
         <select name="employee_id[]" multiple="multiple" size="5"">
             <% @employee.each do |employee| %>

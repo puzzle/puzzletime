@@ -1,20 +1,6 @@
-
-  <p style="color: red"><%= flash[:notice] %></p>
-<table>
+<h1>Edit project </h1>
   <%= form_tag :action => 'updateEmployment', :id => @employment, :id_employee => @employee %>
-  <tr>
-    <td><label for="employment_percent">Percent: </label></td>
-    <td><%= text_field 'employment', 'percent'  %></td>
-  </tr>
-  <tr>
-    <td><label for="employment_start_date">Start date</label></td>
-    <td><%= date_select 'employment', 'start_date'  %></td>
-  </tr>
-  <tr>
-  	<td><label for="employment_end_date">End date</label></td>
-  	<td><%= date_select 'employment', 'end_date'  %></td>
-  </tr>
-  </table>
+  <%= render :partial => 'form' %>
   <%= submit_tag 'Save' %>
   <%= end_form_tag %>
 <br/>

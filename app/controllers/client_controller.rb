@@ -37,6 +37,17 @@ class ClientController < ApplicationController
     @client = Client.find(params[:id])
   end
   
+  # Stores the updated attributes of client
+  def updateClient
+    @client = Client.find(params[:id])
+    if @client.update_attributes(params[:client])
+      flash[:notice] = 'Client was successfully updated.'
+      redirect_to :action => 'listClient', :id => @client
+    else
+      render :action => 'editClient'
+    end
+  end
+  
   # Deletes the chosen client
   def destroyClient
     Client.find(params[:id]).destroy

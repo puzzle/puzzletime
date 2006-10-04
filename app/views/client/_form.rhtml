@@ -1,7 +1,3 @@
-<h1>Add new client</h1>
-<%= error_messages_for 'client' %>
-<br/>
-<%= start_form_tag :action => 'createclient'%>
   <table>
     <tr>
   	  <td><label for="client_name">Name: </label></td>
@@ -15,6 +11,3 @@
       <td><td><%= submit_tag 'Save' %></td></td>
     </tr>
   </table>
-<%= end_form_tag %>
-<br/>
-<%= link_to 'Back', :action => 'clientlist' %>

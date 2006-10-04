@@ -10,7 +10,7 @@ class ProjectController < ApplicationController
   # Startpoint
   def index
     list
-    render :action => 'list'
+    render :action => 'listProject'
   end
 
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
@@ -34,42 +34,47 @@ class ProjectController < ApplicationController
     @client = Client.find_all
   end
   
-  # Create projectmembership
-  def createProjectmembership
+  # Create project membership
+  def createProjectMembership
     @project = Project.find(params[:project_id])
-    @employees = Employee.find(params[:employee_id])
-    @employees.each do |e|
-      Projectmembership.create(:project_id => @project.id,
+    if params.has_key?(:employee_id)
+      @employees = Employee.find(params[:employee_id])
+      @employees.each do |e|
+        Projectmembership.create(:project_id => @project.id,
                                :employee_id => e.id)
-      end
-    flash[:notice] = 'Projectmember was created.'
-    redirect_to :action => 'showProject' , :id => @project
+      end      
+      flash[:notice] = 'Projectmember was created'
+      redirect_to :action => 'showProject' , :id => @project
+    else
+      flash[:notice] = 'Please select one or more employees'
+      redirect_to :action => 'showProject' , :id => @project
+    end
   end
 
-  # Add projectmanagement
-  def addProjectmanagement
+  # Add project management
+  def addProjectManagement
     @project = Project.find(params[:project_id])
     @projectmembership = Projectmembership.find(params[:projectmembership_id])
     @projectmembership.update_attributes(:projectmanagement => true)
-    flash[:notice] = "#{@projectmembership.employee.lastname} #{@projectmembership.employee.firstname} was added to projectmanager."
+    flash[:notice] = "#{@projectmembership.employee.lastname} #{@projectmembership.employee.firstname} was added to projectmanager"
     redirect_to :action => 'showProject' , :id => @project
   end
   
-  # Remove projectmanagement
-  def removeProjectmanagement
+  # Remove project management
+  def removeProjectManagement
     @project = Project.find(params[:project_id])
     @projectmembership = Projectmembership.find(params[:projectmembership_id])
     @projectmembership.update_attributes(:projectmanagement => false)
-    flash[:notice] = "#{@projectmembership.employee.lastname} #{@projectmembership.employee.firstname} was removed from projectmanager."
+    flash[:notice] = "#{@projectmembership.employee.lastname} #{@projectmembership.employee.firstname} was removed from projectmanager"
     redirect_to :action => 'showProject' , :id => @project
   end
   
-  # Destroy projectmembership
-  def destroyProjectmembership
+  # Destroy project membership
+  def destroyProjectMembership
     @project = Project.find(params[:project_id])
     @projectmembership = Projectmembership.find(params[:projectmembership_id])
     Projectmembership.find(params[:projectmembership_id]).destroy
-    flash[:notice] = "Projectmember #{@projectmembership.employee.lastname} was deleted."
+    flash[:notice] = "Projectmember #{@projectmembership.employee.lastname} #{@projectmembership.employee.firstname} was deleted"
     redirect_to :action => 'showProject' , :id => @project
   end
   
@@ -77,11 +82,11 @@ class ProjectController < ApplicationController
   def createProject
    @project = Project.new(params[:project])
     if @project.save
-      flash[:notice] = 'Project was successfully created.'
-      redirect_to :action => 'list'
+      flash[:notice] = 'Project was successfully created'
+      redirect_to :action => 'listProject'
     else
-      flash[:notice] = 'Project was not created.'
-      redirect_to :action => 'list'
+      flash[:notice] = 'Project was not created'
+      render :action => 'listProject'
     end
   end
   
@@ -95,27 +100,17 @@ class ProjectController < ApplicationController
   def updateProject
     @project = Project.find(params[:id])
     if @project.update_attributes(params[:project])
-      flash[:notice] = 'Project was successfully updated.'
-      redirect_to :action => 'show', :id => @project
+      flash[:notice] = 'Project was successfully updated'
+      redirect_to :action => 'showProject', :id => @project
     else
-      render :action => 'edit'
-    end
-  end
-  
-  # Stores the updated attributes of client
-  def updateClient
-    @client = Client.find(params[:id])
-    if @client.update_attributes(params[:client])
-      flash[:notice] = 'Client was successfully updated.'
-      redirect_to :action => 'clientlist', :id => @client
-    else
-      render :action => 'editclient'
+      render :action => 'editProject'
     end
   end
   
   # Deletes the chosen project
   def destroyProject
     Project.find(params[:id]).destroy
-    redirect_to :action => 'list'
+    flash[:notice] = 'Project was successfully deleted'
+    redirect_to :action => 'listProject'
   end
 end

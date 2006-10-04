@@ -12,8 +12,8 @@
   <% for column in Client.content_columns %>
     <td><%=h client.send(column.name) %></td>
   <% end %>
-    <td><%= link_to 'Edit', :action => 'editclient', :id => client %></td>
-    <td><%= link_to 'Delete', { :action => 'destroy', :id => client }, :confirm => 'By deleting the choosen client you will delete its projects! Are you sure?', :post => true %></td>
+    <td><%= link_to 'Edit', :action => 'editClient', :id => client %></td>
+    <td><%= link_to 'Delete', { :action => 'destroyClient', :id => client }, :confirm => 'By deleting the selected client you will delete its projects! Are you sure?', :post => true %></td>
   </tr>
 <% end %>
 </table>
@@ -23,5 +23,4 @@
 
 <br />
 
-<%= link_to 'New client', :action => 'newclient' %> |
-<%= link_to 'Back to project', :action => 'list' %>
+<%= link_to 'New client', :action => 'newclient' %> 

@@ -1,7 +1,7 @@
 <h1>New worktime</h1>
 <%=h @user.lastname %> <%=h @user.firstname %>
 <br/>
-<%= start_form_tag ({:action => 'createtime', :project_id => @project}) %>
+<%= start_form_tag :action => 'createTime', :project_id => @project %>
 
 
 <table>
@@ -22,17 +22,19 @@
   </tr>
   <tr>
     <td>Hours: </td>
-    <td><%= text_field ('worktime', 'hours', {:disabled => true})  %></td>
+    <td><%= text_field('worktime', 'hours', {:disabled => true})  %></td>
   </tr>
   <tr>	
     <td>From start time: </td>
     <td>
-      <%= select_hour(Time.now) %>
+      <%= worktime_hour('worktime_from_start_time_hour') %> <%= worktime_minute('worktime_from_start_time_minute') %> 
     </td>
   </tr>
   <tr>
     <td>To end time: </td>
-    <td><%= select_worktime_hour(Time.now,{:id=>'worktime_to_end_time'})%></td>
+    <td>
+    <%= worktime_hour('worktime_to_end_time_hour') %> <%= worktime_minute('worktime_to_end_time_minute') %> 
+    </td>
   </tr>
   <tr>
     <td>Description: </td>
@@ -49,4 +51,4 @@
 <%= end_form_tag %>
 
 <br/>
-<%= link_to 'Back', :action => 'list' %>
+<%= link_to 'Back', :action => 'listTime' %>

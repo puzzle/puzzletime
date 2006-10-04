@@ -1,8 +1,4 @@
-<h1>New employee</h1>
-<br/>
-<%= error_message_for 'employee' %>
-<%= start_form_tag :action => 'createEmployee' %>
- <table>
+<table>
    <tr> 
      <td><label for="employee_firstname">Firstname: </label></td>
 	 <td><%= text_field 'employee', 'firstname'  %></td>
@@ -35,8 +31,3 @@
   	 <td><td><%= submit_tag 'Save' %></td></td>
    </tr>
    </table>
-<%= end_form_tag %>
-<br/>
-<%= link_to 'Back', :action => 'listEmployee' %>
-
-

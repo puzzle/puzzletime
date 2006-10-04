@@ -2,18 +2,35 @@
 
 module ApplicationHelper
 
-include ActionView::Helpers::DateHelper
-
- def select_worktime_html(id, type, options, prefix = nil, include_blank = false, discard_type = false, disabled = false)
-    select_worktime_html  = %(<select id="#{id}" name="#{prefix || DEFAULT_PREFIX})
-    select_worktime_html << "[#{type}]" unless discard_type
-    select_worktime_html << %(")
-    select_worktime_html << %( disabled="disabled") if disabled
-    select_worktime_html << %(>)
-    select_worktime_html << %(<option value=""></option>) 
-    if include_blank
-      select_worktime_html << options.to_s
-      select_worktime_html << "</select>"
+  def worktime_hour(name)
+    html = %(<select id=")
+    html << "#{name}"
+    html << %(" name=")
+    html << "#{name}"
+    html << %(">)
+    0.upto(23) do |hour|
+      html << %(<option value=")
+      html << "#{hour}"
+      html << %(">)
+      html << "#{hour}"
+      html << %(</option>)
     end
+    html << %(</select>)
+  end
+ 
+  def worktime_minute(name)
+    html = %(<select id=")
+    html << "#{name}"
+    html << %(" name=")
+    html << "#{name}"
+    html << %(">)
+    0.upto(59) do |minute|
+      html << %(<option value=")
+      html << "#{minute}"
+      html << %(">)
+      html << "#{minute}"
+      html << %(</option>)
+    end
+    html << %(</select>)
   end
 end

@@ -31,10 +31,10 @@ class EmployeeController < ApplicationController
     @employee = Employee.new(params[:employee])
     if @employee.save
       flash[:notice] = 'Employee was successfully created.'
-      redirect_to :action => 'list'
+      redirect_to :action => 'listEmployee'
     else
       flash[:notice] = 'Employee was not created.'
-      render :action => 'new'
+      render :action => 'newEmployee'
     end
   end
   
@@ -47,7 +47,7 @@ class EmployeeController < ApplicationController
       redirect_to :action => 'listEmployee'
     else 
       flash[:notice] = 'Employment was not created'
-      redirect_to :action => 'showEmployee', :id => employee
+      render :action => 'showEmployee', :id => employee
     end  
   end
   
@@ -57,20 +57,20 @@ class EmployeeController < ApplicationController
     @employee = Employee.find(params[:id_employee])
   end
   
-  #Changes userpwd
+  #Update userpwd
   def updatePwd
     if Employee.checkpwd(@user.id, params[:pwd])
       if params[:change_pwd] === params[:change_pwd_confirmation]
         @user.updatepwd(params[:change_pwd])
         flash[:notice] = 'Password was successfully updated.'
-        redirect_to :controller =>'worktime', :action => 'list', :id => @user.id
+        redirect_to :controller =>'worktime', :action => 'listTime', :id => @user.id
       else
         flash[:notice] = 'Passwordconfirmation does not match'
-        redirect_to :controller =>'employee', :action => 'changepasswd', :id => @user.id
+        render :controller =>'employee', :action => 'changePasswd', :id => @user.id
       end
     else
      flash[:notice] = 'Old password does not match.'
-     redirect_to :controller =>'employee', :action => 'changepasswd', :id => @user.id
+     render :controller =>'employee', :action => 'changePasswd', :id => @user.id
     end  
   end
   
@@ -82,7 +82,7 @@ class EmployeeController < ApplicationController
       redirect_to :action => 'showEmployee', :id =>@employee
     else
       flash[:notice] = 'Please enter percent'
-      redirect_to :action => 'editEmployment', :id => @employee
+      render :action => 'editEmployment', :id => @employee
     end
   end
   
@@ -94,7 +94,7 @@ class EmployeeController < ApplicationController
       redirect_to :action => 'showEmployee', :id => @employee
     else
       flash[:notice] = 'Employment was not deleted'
-      redirect_to :action => 'showEmployee', :id => @employee
+      render :action => 'showEmployee', :id => @employee
     end
   end
   
@@ -122,7 +122,7 @@ class EmployeeController < ApplicationController
       redirect_to :action => 'listEmployee'
     else
       flash[:notice] = 'Employee was not deleted'
-      redirect_to :action => 'listEmployee'
+      render :action => 'listEmployee'
     end
   end
 end
