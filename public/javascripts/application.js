@@ -8,18 +8,34 @@ var type = document.getElementById("report_type").value;
 switch(type){
  case "start_stop_day": 
 	document.getElementById("worktime_hours").disabled = true;
+	document.getElementById("worktime_from_start_time_hour").disabled = false;
+	document.getElementById("worktime_from_start_time_minute").disabled = false;
+	document.getElementById("worktime_to_end_time_hour").disabled = false;
+	document.getElementById("worktime_to_end_time_minute").disabled = false;
+	break;
  
  case "absolute_day":
-	document.getElementById("worktime_from_start_time").disabled = true;
-	document.getElementById("worktime_to_end_time").disabled = true;
+	document.getElementById("worktime_from_start_time_hour").disabled = true;
+	document.getElementById("worktime_from_start_time_minute").disabled = true;
+	document.getElementById("worktime_to_end_time_hour").disabled = true;
+	document.getElementById("worktime_to_end_time_minute").disabled = true;
 	document.getElementById("worktime_hours").disabled = false;
+	break;
 
- case "worktime_week":
-	document.getElementById("worktime_from_start_time").disabled = true;
-	document.getElementById("worktime_to_end_time").disabled = true;
+ case "week":
+        document.getElementById("worktime_hours").disabled = false;
+	document.getElementById("worktime_from_start_time_hour").disabled = true;
+	document.getElementById("worktime_from_start_time_minute").disabled = true;
+	document.getElementById("worktime_to_end_time_hour").disabled = true;
+	document.getElementById("worktime_to_end_time_minute").disabled = true;
+        break;
  
- case "worktime_month":
-	document.getElementById("worktime_from_start_time").disabled = true;
-	document.getElementById("worktime_to_end_time").disabled = true;
+ case "month":
+	document.getElementById("worktime_hours").disabled = false;
+	document.getElementById("worktime_from_start_time_hour").disabled = true;
+	document.getElementById("worktime_from_start_time_minute").disabled = true;
+	document.getElementById("worktime_to_end_time_hour").disabled = true;
+	document.getElementById("worktime_to_end_time_minute").disabled = true;
+	break;
  }
 }

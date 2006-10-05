@@ -20,12 +20,13 @@
 		<div id="menu">
 		<ul>    <% if @user != nil%>
 				<li class="first"><li class="first"><%= link_to 'Log out', :controller => 'login', :action => 'logout' %></li>
-			    <li><%= link_to 'Change your Password', :controller => 'employee', :action => 'changePasswd' %></li>
+			    <li><%= link_to 'Change Pwd', :controller => 'employee', :action => 'changePasswd' %></li>
 		        <% if @user.management === true %>
 				<li><%= link_to 'Time', :controller => 'worktime', :action => 'listTime' %></li>
 				<li><%= link_to 'Employee', :controller => 'employee', :action => 'listEmployee' %></li>
 				<li><%= link_to 'Project', :controller => 'project', :action => 'listProject' %></li>
 				<li><%= link_to 'Client', :controller => 'client', :action => 'listClient' %></li>
+				<li><%= link_to 'Absence', :controller => 'absence', :action => 'listAbsence' %></li>
 				<% end %>
 				<% end %>
 			</ul>

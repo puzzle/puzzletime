@@ -1,0 +1,23 @@
+<h1>Absence</h1>
+
+
+<table>
+  <tr>
+    <td><p>Absence name</p></td>
+    <td><p>Payed?</th></p>
+  </tr>
+  <% for absence in @absences %>
+  <tr>
+    <td><%= absence.name %></td>
+    <td><%= absence.payed %></td>
+    <td><%= link_to 'Edit', :action => 'editAbsence', :id => absence %></td>
+    <td><%= link_to 'Delete', {:action => 'destroyAbsence', :id => absence}, :confirm => 'Are you sure?', :post => true %></td>
+  </tr>
+  <% end %>
+</table>
+<br/>
+
+<%= link_to 'New Absence', :action => 'newAbsence' %>
+<br/>
+<%= link_to 'Previous page', { :page => @absence_pages.current.previous } if @absence_pages.current.previous %>
+<%= link_to 'Next page', { :page => @absence_pages.current.next } if @absence_pages.current.next %> 

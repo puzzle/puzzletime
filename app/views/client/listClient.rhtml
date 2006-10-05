@@ -3,7 +3,7 @@
 <table>
   <tr>
   <% for column in Client.content_columns %>
-    <th><%= column.human_name %></th>
+    <td><p><%= column.human_name %></p></td>
   <% end %>
   </tr>
   
@@ -23,4 +23,4 @@
 
 <br />
 
-<%= link_to 'New client', :action => 'newclient' %> 
+<%= link_to 'New client', :action => 'newClient' %> 

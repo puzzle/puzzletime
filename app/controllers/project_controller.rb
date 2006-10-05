@@ -31,7 +31,7 @@ class ProjectController < ApplicationController
   # Creates new instance of project
   def newProject
     @project = Project.new
-    @client = Client.find_all
+    @client = Client.find(:all)
   end
   
   # Create project membership

@@ -1,7 +1,6 @@
 /*
 
-	terrafirma1.0 by nodethirtythree design
-	http://www.nodethirtythree.com
+	Müstache
 
 */
 
@@ -14,7 +13,7 @@ margin: 0px;
 body
 {
 background: #F9F9F7 url('images/a1.gif') repeat-x;
-font-size: 11px;
+font-size: 12px;
 font-family: "trebuchet ms", helvetica, sans-serif;
 color: #8C8C73;
 line-height: 18px;
@@ -31,6 +30,12 @@ a:hover
 text-decoration: none;
 }
 
+h1
+{
+font-size:18px;
+font-weight:normal;
+}
+
 sup
 {
 font-size: 0.5em;
@@ -39,8 +44,17 @@ font-size: 0.5em;
 
 p
 {
-margin-bottom: 14px;
+margin-bottom: 5px;
 text-align: justify;
+font-weight: bold;
+}
+
+table
+{
+font-size: 12px;
+font-family: "trebuchet ms", helvetica, sans-serif;
+color: #8C8C73;
+line-height: 18px;
 }
 
 img.picA
@@ -148,6 +162,16 @@ color: #FCE2CA;
 top: 51px;
 }
 
+#notice
+{top: 0px;
+line-height: 52px;
+color: #0066FF;
+right: 30px;
+font-weight: bold;
+font-size: 12px;
+letter-spacing: -1px;
+}
+
 #header sup
 {
 color: #FCE2CA;
@@ -157,7 +181,7 @@ color: #FCE2CA;
 {
 position: absolute;
 right: 30px;
-background: #EAEAE2 url("images/puzzletimebanner.jpg") no-repeat;
+background: #EAEAE2 url("images/puzzletimebanner1.jpg") no-repeat;
 width: 458px;
 height: 92px;
 }
@@ -348,4 +372,40 @@ color: #A8A88D;
 #footer a
 {
 color: #8C8C73;
+}
+
+.fieldWithErrors {
+  padding: 2px;
+  background-color: red;
+  display: table;
+}
+
+#errorExplanation {
+  width: 400px;
+  border: 2px solid red;
+  padding: 7px;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+}
+
+#errorExplanation h2 {
+  text-align: left;
+  font-weight: bold;
+  padding: 5px 5px 5px 15px;
+  font-size: 12px;
+  margin: -7px;
+  background-color: #c00;
+  color: #fff;
+}
+
+#errorExplanation p {
+  color: #333;
+  margin-bottom: 0;
+  padding: 5px;
+}
+
+#errorExplanation ul li {
+  font-size: 12px;
+  list-style: square;
 }

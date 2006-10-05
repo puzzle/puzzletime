@@ -2,9 +2,9 @@
 <br/>
 <%= error_messages_for 'client' %>
 
-<%= start_form_tag :action => 'updateclient', :id => @client %>
+<%= start_form_tag :action => 'updateClient', :id => @client %>
 <%= render :partial => 'form' %>
 <%= end_form_tag %>
 <br/>
 
-<%= link_to 'Back', :action => 'clientlist' %>
+<%= link_to 'Back', :action => 'listClient' %>

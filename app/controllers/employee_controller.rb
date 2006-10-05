@@ -40,7 +40,7 @@ class EmployeeController < ApplicationController
   
   # Create employment data
   def createEmployment
-    employee = Employee.find(params[:id])
+    @employee = Employee.find(params[:id])
     @employment = @employee.employments.create(params[:employment])
     if @employment.save
       flash[:notice] = 'Employment was successfully created'

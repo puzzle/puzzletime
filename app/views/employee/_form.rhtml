@@ -11,10 +11,12 @@
      <td><label for="employee_shortname">Shortname: </label></td>
      <td><%= text_field 'employee', 'shortname'  %></td>
    </tr>
+   <% if params[:action] == 'newEmployee' %> 
    <tr>
      <td><label for="employee_passwd">Password: </label></td>
      <td><%= password_field 'employee', 'pwd'  %></td>
    </tr>
+   <% end %>
    <tr>
      <td><label for="employee_email">Email: </label></td>
   	 <td><%= text_field 'employee', 'email'  %></td>
