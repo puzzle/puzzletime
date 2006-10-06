@@ -4,10 +4,11 @@
     <tr>
       <td>Projectmember in Projects listed below: </td>
     </tr>
-	<% for project in @user.projects %>
+	<% for project in @user_projects %>
 	<tr>
 	  <td><%=h project.name %></td>
-	  <td><%= link_to 'Add time', :action => 'addTime', :project_id => project %></td>
+	  <td><%= link_to 'Add', :action => 'addTime', :project_id => project %></td>
+	  <td><%= link_to 'View', :action => 'viewTime', :project_id => project %></td>
 	</tr>
 	<% end %>
 	<tr>
@@ -16,3 +17,5 @@
 	  </td>
 	</td>
   </table>
+  <br/>
+  

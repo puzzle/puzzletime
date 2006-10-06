@@ -16,15 +16,21 @@ class WorktimeController < ApplicationController
   end
   
   def listTime
-    @time_pages, @times = paginate :times, :per_page => 10
+    @user_projects = @user.projects
   end
   
-  
+  def viewTime
+    @times = Worktime.find(:all, :conditions => ["project_id = ? and employee_id = ?", params[:project_id], @user.id ])
+    for time in @times
+     puts "test #{time} #{@times} #{time.hours} "
+    end
+  end
+                   
   def addTime
     if params.has_key?(:project_id)
       @project = Project.find(params[:project_id])
     else
-      @absence = Absence.find(:all)
+      @absence = Absence.find(:id)
     end
   end
   
@@ -38,7 +44,7 @@ class WorktimeController < ApplicationController
     params[:worktime][:from_start_time] = "{#{start_time_hour}:#{start_time_minute}}"
     params[:worktime][:to_end_time] = "{#{end_time_hour}:#{end_time_minute}}"
     
-    if params[:worktime][:report_type]==='start_stop_day'
+    if params[:worktime][:report_type]=='start_stop_day'
       hours_start = start_time_hour.to_f + (start_time_minute.to_f/60)
       hours_end = end_time_hour.to_f + (end_time_minute.to_f/60)
       params[:worktime][:hours] = hours_end-hours_start

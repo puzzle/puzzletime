@@ -1,17 +1,19 @@
-
-  <p>
-    <b>Projectname: </b> <%=h @project.name %> 
-  </p> 
-  <p>
-    <b>Description: </b> <%=h @project.description %>
-  </p>
-  <p>
-    <b>Clientname: </b> <%=h @project.client.name %>
-  </p>
-  <p>
-    <b>Contact: </b> <%=h @project.client.contact %>
-  </p>
-        <div ="tabel">
+<h1>Projectdetails</h1>
+<br/>
+<table>
+  <tr>
+    <td>Projectname: <%=h @project.name %> </td>
+  </tr> 
+  <tr>
+    <td>Description: <%=h @project.description %></td>
+  </tr>
+  <tr>
+    <td>Clientname: <%=h @project.client.name %></td>
+  </tr>
+  <tr>
+    <td>Contact: <%=h @project.client.contact %></td>
+  </tr>
+</table>
         <table>
           <tr>
             <td><b>Members:</b></td><td><b>Projectmanagement</b></td>
@@ -35,7 +37,6 @@
           </tr>
           <% end %>
         </table> 
-        </div>
         </br>
  <%= start_form_tag :action => 'createProjectMembership', :project_id => @project  %> 
         <p><label for="employee_name">Employee</label><br/>
