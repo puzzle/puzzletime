@@ -1,8 +1,11 @@
 # Methods added to this helper will be available to all templates in the application.
 
 module ApplicationHelper
-
-  def worktime_hour(name)
+  def round_hour(hour)
+    (hour.to_f * 100).round / 100.0
+  end
+  
+    def worktime_hour(name)
     html = %(<select id=")
     html << "#{name}"
     html << %(" name=")

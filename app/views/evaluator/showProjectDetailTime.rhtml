@@ -1,0 +1,21 @@
+<h1>Detail of Project</h1>
+
+<br/>
+<table>
+  <% for time in @times %>
+   <tr>
+     <td><%= time.work_date %></td>
+     <td><%= round_hour(time.hours) %></td>
+     <% if params.has_key?(:employee_id) %>
+     <td><%= link_to 'Edit', :action => 'editProjectDetailTime', :worktime_id => time, :employee_id => @employee, :project_id => @project %></td>
+     <% else %>
+     <td><%= link_to 'Edit', :action => 'editProjectDetailTime', :worktime_id => time, :user_id => @user.id, :project_id => @project %></td>
+     <% end %>
+   </tr>
+  <% end %>
+ </table>
+ <% if params.has_key?(:employee_id)  %>
+ <%= link_to 'Back', :action => 'showProjects', :id => @employee.id %> 
+ <% else %>
+ <%= link_to 'Back', :controller => 'worktime', :action => 'listTime', :id => @user.id %>
+ <% end %>

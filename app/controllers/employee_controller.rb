@@ -33,21 +33,28 @@ class EmployeeController < ApplicationController
       flash[:notice] = 'Employee was successfully created.'
       redirect_to :action => 'listEmployee'
     else
-      flash[:notice] = 'Employee was not created.'
       render :action => 'newEmployee'
     end
   end
   
   # Create employment data
   def createEmployment
-    @employee = Employee.find(params[:id])
-    @employment = @employee.employments.create(params[:employment])
-    if @employment.save
-      flash[:notice] = 'Employment was successfully created'
-      redirect_to :action => 'listEmployee'
+    @employee = Employee.find(params[:id]) 
+    @employment = Employment.find(:first, :conditions =>["employee_id = ? AND end_date IS NULL", @employee.id]) 
+   if @employment != nil
+     enddate = {'end_date(1i)' => params[:employment]['start_date(1i)'],
+                'end_date(2i)' => params[:employment]['start_date(2i)'],
+                'end_date(3i)' => params[:employment]['start_date(3i)']}
+     @employment.attributes = enddate
+     @employment.end_date = @employment.end_date-1
+     @employment.save
+   end
+   if @employee.employments.create(params[:employment])
+       flash[:notice] = 'Employment was successfully created'
+       redirect_to :action => 'listEmployee'
     else 
       flash[:notice] = 'Employment was not created'
-      render :action => 'showEmployee', :id => employee
+      render :action => 'showEmployee', :id => @employee
     end  
   end
   

@@ -51,6 +51,6 @@ class ClientController < ApplicationController
   # Deletes the chosen client
   def destroyClient
     Client.find(params[:id]).destroy
-    redirect_to :action => 'clientlist'
+    redirect_to :action => 'listClient'
   end
 end

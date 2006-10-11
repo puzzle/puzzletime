@@ -18,19 +18,12 @@ class WorktimeController < ApplicationController
   def listTime
     @user_projects = @user.projects
   end
-  
-  def viewTime
-    @times = Worktime.find(:all, :conditions => ["project_id = ? and employee_id = ?", params[:project_id], @user.id ])
-    for time in @times
-     puts "test #{time} #{@times} #{time.hours} "
-    end
-  end
                    
   def addTime
     if params.has_key?(:project_id)
       @project = Project.find(params[:project_id])
     else
-      @absence = Absence.find(:id)
+      @absence = Absence.find(:all)
     end
   end
   
@@ -57,24 +50,5 @@ class WorktimeController < ApplicationController
     else
       render :action => 'newTime'
     end
-  end
-
-  def editTime
-    @worktime = Worktime.find(params[:id])
-  end
-
-  def updateTime
-    @worktime = Worktime.find(params[:id])
-    if @worktime.update_attributes(params[:worktime])
-      flash[:notice] = 'Worktime was successfully updated.'
-      redirect_to :action => 'show', :id => @worktime
-    else
-      render :action => 'edit'
-    end
-  end
-
-  def destroyTime
-    Worktime.find(params[:id]).destroy
-    redirect_to :action => 'list'
   end
 end

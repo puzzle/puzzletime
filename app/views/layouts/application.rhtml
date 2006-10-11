@@ -19,10 +19,9 @@
 		<div id="splash"></div>
 		<div id="menu">
 		<ul>    <% if @user != nil%>
-				<li class="first"><li class="first"><%= link_to 'Log out', :controller => 'login', :action => 'logout' %></li>
-			    <li><%= link_to 'Change Pwd', :controller => 'employee', :action => 'changePasswd' %></li>
-		        <% if @user.management === true %>
-				<li><%= link_to 'Time', :controller => 'worktime', :action => 'listTime' %></li>
+				<li class="first"><%= link_to 'Time', :controller => 'worktime', :action => 'listTime' %></li>
+				<% if @user.management === true %>
+				<li><%= link_to 'Evaluator', :controller => 'evaluator', :action => 'listEvaluator' %></li>
 				<li><%= link_to 'Employee', :controller => 'employee', :action => 'listEmployee' %></li>
 				<li><%= link_to 'Project', :controller => 'project', :action => 'listProject' %></li>
 				<li><%= link_to 'Client', :controller => 'client', :action => 'listClient' %></li>
@@ -30,10 +29,8 @@
 				<% end %>
 				<% end %>
 			</ul>
-		
-		<div id="date"><%= Date.today %></div>
 		<% if @user != nil%>
-		User: <%= @user.lastname %> <%= @user.firstname %>
+		User: <%= @user.lastname %> <%= @user.firstname %> | <%= link_to 'Change Pwd', :controller => 'employee', :action => 'changePasswd' %> | <%= link_to 'Log out', :controller => 'login', :action => 'logout' %>
 		<% end %>
 		</div>
 		<center><div id="notice"><%= @flash[:notice] %></div></center>

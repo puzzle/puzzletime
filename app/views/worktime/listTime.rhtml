@@ -1,14 +1,18 @@
 <h1>Worktimemenu of <%=h @user.firstname %> <%=h @user.lastname %></h1>
   <br/>
+  Projectmember in Projects listed below: 
+  <br/>
   <table>
-    <tr>
-      <td>Projectmember in Projects listed below: </td>
-    </tr>
+  <tr>
+    <td><p>Project:</p></td>
+    <td><p>Total:</p></td>
+  </tr>
 	<% for project in @user_projects %>
 	<tr>
 	  <td><%=h project.name %></td>
+	  <td><%= round_hour(project.sumProjectTime(@user.id)) %></td>
 	  <td><%= link_to 'Add', :action => 'addTime', :project_id => project %></td>
-	  <td><%= link_to 'View', :action => 'viewTime', :project_id => project %></td>
+	  <td><%= link_to 'View', :controller => 'evaluator', :action => 'showProjectDetailTime', :project_id => project, :user_id => @user.id %></td>
 	</tr>
 	<% end %>
 	<tr>

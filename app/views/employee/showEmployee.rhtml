@@ -1,25 +1,25 @@
 
 
-
-<p>
-  <b>Firstname:</b> <%= @employee.firstname %>
-</p>
-<p>
-  <b>Lastname:</b> <%= @employee.lastname %>
-</p>
-<p>
-  <b>Shortname:</b> <%= @employee.shortname %>
-</p>
-<p>
-  <b>Email:</b> <%= @employee.email %>
-</p>
-<p>
-  <b>Phone:</b> <%= @employee.phone %>
-</p>
-<p>
-  <b>Managment:</b> <%= @employee.management %>
-</p>
-
+<table>
+  <tr>
+    <td>Firstname: <%= @employee.firstname %></td>
+  </tr>
+  <tr>
+    <td>Lastname: <%= @employee.lastname %></td>
+  </tr>
+  <tr>
+    <td>Shortname: <%= @employee.shortname %></td>
+  </tr>
+  <tr>
+    <td>Email: <%= @employee.email %></td>
+  </tr>
+  <tr>
+    <td>Phone: <%= @employee.phone %></td>
+  </tr>
+  <tr>
+    <td>Managment: <%= @employee.management %></td>
+  </tr>
+</table>
 <% if @employee.has_employments? %>
   <table>
     <tr>
@@ -42,20 +42,8 @@
   <% end %>
 
   <%= form_tag :action => 'createEmployment' ,:id => @employee %>
-  <table>
-    <tr>
-      <td><label for="employment_percent">Percent: </label></td>
-  	  <td><%= text_field 'employment', 'percent'  %></td>
-    </tr>
-    <tr>
-  	  <td><label for="employment_start_date">Start date: </label></td>
-      <td><%= date_select 'employment', 'start_date'  %></td>
-    </tr>
-    <tr>
-      <td><td><%= submit_tag 'Save' %></td></td>
-    </tr>
-  </table>
-  
+  <%= render :partial => 'employment' %>
+  <%= submit_tag 'Save' %>
   <%= end_form_tag %>
 <br/>
 <%= link_to 'Back', :action => 'listEmployee' %>  

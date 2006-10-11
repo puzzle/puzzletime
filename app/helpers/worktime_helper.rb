@@ -1,2 +1,2 @@
-module WorktimeControllerHelper
+module WorktimeHelper 
 end

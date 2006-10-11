@@ -10,4 +10,8 @@ class Project < ActiveRecord::Base
   
   validates_presence_of :name, :description, :client_id
   validates_uniqueness_of :name
+  
+  def sumProjectTime(employee_id)
+    Worktime.sum(:hours, :conditions => ["project_id = ? AND employee_id = ?", id, employee_id])
+  end
 end

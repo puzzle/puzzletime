@@ -1,7 +1,5 @@
-/*
-
-	Müstache
-
+/*Diplomarbeit 2149
+Xavier Hayoz 
 */
 
 *
@@ -12,7 +10,7 @@ margin: 0px;
 
 body
 {
-background: #F9F9F7 url('images/a1.gif') repeat-x;
+background: #F9F9F7 url('../images/a1.gif') repeat-x;
 font-size: 12px;
 font-family: "trebuchet ms", helvetica, sans-serif;
 color: #8C8C73;
@@ -42,13 +40,6 @@ font-size: 0.5em;
 }
 
 
-p
-{
-margin-bottom: 5px;
-text-align: justify;
-font-weight: bold;
-}
-
 table
 {
 font-size: 12px;
@@ -56,33 +47,6 @@ font-family: "trebuchet ms", helvetica, sans-serif;
 color: #8C8C73;
 line-height: 18px;
 }
-
-img.picA
-{
-position: relative;
-top: -2px;
-background: url('images/a47.gif') no-repeat;
-width: 76px;
-height: 74px;
-padding: 8px;
-}
-
-img.picB
-{
-position: relative;
-top: -2px;
-background: url('images/a26.gif') no-repeat;
-width: 146px;
-height: 75px;
-padding: 7px;
-}
-
-img.floatleft
-{
-float: left;
-margin: 0px 14px 3px 0px;
-}
-
 
 ul.linklist
 {
@@ -108,7 +72,7 @@ padding-top: 0px;
 position: absolute;
 top: 0px;
 left: 0px;
-background: #fff url('images/upbg.gif') no-repeat;
+background: #fff url('../images/upbg.gif') no-repeat;
 width: 747px;
 height: 264px;
 z-index: 1;
@@ -119,7 +83,7 @@ z-index: 1;
 position: relative;
 width: 747px;
 margin: 0 auto;
-background: #fff url('images/abg.gif') repeat-y;
+background: #fff url('../images/abg.gif') repeat-y;
 }
 
 #inner
@@ -181,7 +145,7 @@ color: #FCE2CA;
 {
 position: absolute;
 right: 30px;
-background: #EAEAE2 url("images/puzzletimebanner1.jpg") no-repeat;
+background: #EAEAE2 url("../images/puzzletimebanner1.jpg") no-repeat;
 width: 458px;
 height: 92px;
 }
@@ -189,7 +153,7 @@ height: 92px;
 #menu
 {
 position: relative;
-background: #46461F url('images/a16.gif') repeat-x;
+background: #46461F url('../images/a16.gif') repeat-x;
 height: 67px;
 padding: 0px 20px 0px 5px;
 margin: 98px 0px 20px 0px;
@@ -203,7 +167,7 @@ margin: 98px 0px 20px 0px;
 {
 display: inline;
 line-height: 52px;
-padding-left: 3px;
+padding-left: -3px;
 }
 
 #menu ul li.first
@@ -215,7 +179,7 @@ border-left: 0px;
 {
 background-color: transparent;
 background-repeat: repeat-x;
-padding: 8px 12px 8px 12px;
+padding:8px 12px 8px 12px;
 font-size: 12px;
 color: #fff;
 font-weight: bold;
@@ -223,7 +187,7 @@ font-weight: bold;
 
 #menu ul li a:hover
 {
-background: #fff url('images/a18.gif') repeat-x top;
+background: #fff url('../../images/a18.gif') repeat-x top;
 color: #4A4A24;
 text-decoration: none;
 }
@@ -240,140 +204,6 @@ font-size: 12px;
 letter-spacing: -1px;
 }
 
-#secondarycontent
-{
-position: relative;
-width: 180px;
-float: right;
-}
-
-#secondarycontent h3
-{
-position: relative;
-top: 4px;
-font-size: 16px;
-line-height: 25px;
-color: #656551;
-letter-spacing: -1px;
-background: url('images/a22.gif') bottom repeat-x;
-padding: 0px 0px 10px 10px;
-margin-bottom: 20px;
-}
-
-#secondarycontent .content
-{
-padding: 0px 10px 0px 10px;
-margin-bottom: 20px;
-}
-
-#primarycontent
-{
-position: relative;
-width: 480px;
-float: left;
-}
-
-#primarycontent h3
-{
-position: relative;
-top: 4px;
-font-size: 18px;
-line-height: 25px;
-color: #656551;
-letter-spacing: -1px;
-background: url('images/a22.gif') bottom repeat-x;
-padding: 0px 0px 10px 15px;
-margin-bottom: 20px;
-}
-
-#primarycontent .content
-{
-padding: 0px 15px 0px 15px;
-margin-bottom: 20px;
-}
-
-#primarycontent .post
-{
-margin-bottom: 30px;
-}
-
-#primarycontent .post .header
-{
-position: relative;
-}
-
-#primarycontent .post .date
-{
-position: absolute;
-right: 15px;
-top: 0px;
-line-height: 35px;
-color: #AFAFA4;
-font-weight: bold;
-}
-
-#primarycontent .post .content
-{
-margin-bottom: 0px;
-}
-
-#primarycontent .post .footer
-{
-position: relative;
-top: -10px;
-background: url('images/a33.gif') repeat-x;
-height: 64px;
-}
-
-#primarycontent .post .footer ul
-{
-list-style: none;
-position: absolute;
-right: 15px;
-bottom: 15px;
-}
-
-#primarycontent .post .footer ul li
-{
-display: inline;
-line-height: 14px;
-padding-left: 17px;
-margin-left: 25px;
-background-repeat: no-repeat;
-background-position: 0px 2px;
-}
-
-#primarycontent .post .footer ul li.printerfriendly
-{
-background-image: url('images/a41.gif');
-}
-
-#primarycontent .post .footer ul li.comments
-{
-background-image: url('images/a36.gif');
-}
-
-#primarycontent .post .footer ul li.readmore
-{
-background-image: url('images/a38.gif');
-}
-
-#footer
-{
-position: relative;
-clear: both;
-height: 66px;
-text-align: center;
-line-height: 66px;
-background-image: url('images/a50.gif');
-color: #A8A88D;
-}
-
-#footer a
-{
-color: #8C8C73;
-}
-
 .fieldWithErrors {
   padding: 2px;
   background-color: red;
@@ -382,30 +212,31 @@ color: #8C8C73;
 
 #errorExplanation {
   width: 400px;
-  border: 2px solid red;
-  padding: 7px;
+  border: 4px solid red;
+  padding: 20px;
   padding-bottom: 12px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   background-color: #f0f0f0;
 }
 
 #errorExplanation h2 {
   text-align: left;
-  font-weight: bold;
-  padding: 5px 5px 5px 15px;
+  padding: 5px 5px 5px 15px 
   font-size: 12px;
   margin: -7px;
-  background-color: #c00;
-  color: #fff;
+  color: #f00;
 }
 
 #errorExplanation p {
   color: #333;
+  margin-left: -10px;
   margin-bottom: 0;
-  padding: 5px;
+  padding: 7px;
 }
 
 #errorExplanation ul li {
   font-size: 12px;
+  margin-left: 10px;
   list-style: square;
+  
 }

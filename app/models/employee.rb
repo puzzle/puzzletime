@@ -13,7 +13,7 @@ class Employee < ActiveRecord::Base
   attr_accessor :pwd
   
   validates_presence_of :firstname, :lastname, :shortname, :email, :phone
-  validates_presence_of :pwd, :on => :create
+  validates_presence_of :pwd, :on => :save
   validates_uniqueness_of :shortname 
   
   def before_create
@@ -36,6 +36,31 @@ class Employee < ActiveRecord::Base
     nil != find(:first,
          :conditions =>["id = ? and passwd = ?",
                          id, passwd])
+  end
+  
+  def sumVacation
+    
+    tmp_lastYearStart = "#{Time.now.year-1}-1-1"
+    tmp_lastYearEnd = "#{Time.now.year-1}-12-31"
+    tmp_actualYearStart = "#{Time.now.year}-1-1"
+    tmp_actualYearEnd = "#{Time.now.year}-12-31"
+    
+    lastYear_used_holidays = Worktime.sum(:hours, :conditions => ["absence_id = ? AND employee_id = ? AND work_date < ? AND work_date > ?",Absence::VACATION_ID, id, tmp_lastYearEnd, tmp_lastYearStart])
+    
+    if lastYear_used_holidays == nil
+      lastYear_not_used_holidays = (Masterdata.sum(:vacations_year)/8).to_f
+    else
+      lastYear_not_used_holidays = (Masterdata.sum(:vacations_year)-lastYear_used_holidays)/8
+    end
+    
+    actual_used_holidays = Worktime.sum(:hours, :conditions => ["absence_id = ? AND employee_id = ? AND work_date < ? AND work_date > ?",Absence::VACATION_ID, id, tmp_actualYearEnd, tmp_actualYearStart])
+    
+    
+    if actual_used_holidays == nil
+      actual_not_used_holidays = (Masterdata.sum(:vacations_year)/8).to_f + lastYear_not_used_holidays
+    else
+      actual_not_used_holidays = (Masterdata.sum(:vacations_year)-actual_used_holidays)/8 + lastYear_not_used_holidays
+    end
   end
   
   def updatepwd(pwd)

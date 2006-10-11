@@ -1,0 +1,13 @@
+<h1>projects overview of <%= @employee.lastname%> <%= @employee.firstname %></h1>
+<br/>
+<table>
+  <% for project in @employee_projects %>
+  </tr>
+    <td><%= project.name %> </td>
+    <td><%= round_hour(project.sumProjectTime(@employee.id)) %></td>
+    <td><%= link_to 'View', :action => 'showProjectDetailTime', :project_id => project, :employee_id => @employee.id %></td>
+  <tr>
+  <% end %>
+</table>
+
+<%= link_to 'Back', :action => 'showEmployeeProjects' %> 

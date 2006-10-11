@@ -23,7 +23,7 @@ class AbsenceController < ApplicationController
       flash[:notice] = 'New absence was added'
       redirect_to :action => 'listAbsence'
     else
-      render :action => 'createAbsence'
+      render :action => 'newAbsence'
     end   
   end
   

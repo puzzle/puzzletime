@@ -1,4 +1,4 @@
-<%= error_messages_for 'worktime' %>
+<%= error_messages_for 'project' %>
 
 
 <table>
@@ -13,7 +13,7 @@
           </select>
     </td>
   </tr>
-  <% unless params.has_key?(:project_id) || params[:action] === "editTime" %>
+  <% unless params.has_key?(:project_id) || params[:action] === "editProjectDetailTime" %>
   <tr>
 	<td>Absence: </td>
     <td>
