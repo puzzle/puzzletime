@@ -40,20 +40,21 @@ class EmployeeController < ApplicationController
   # Create employment data
   def createEmployment
     @employee = Employee.find(params[:id]) 
-    @employment = Employment.find(:first, :conditions =>["employee_id = ? AND end_date IS NULL", @employee.id]) 
-   if @employment != nil
+    @employment_search = Employment.find(:first, :conditions =>["employee_id = ? AND end_date IS NULL", @employee.id]) 
+   if @employment_search != nil
      enddate = {'end_date(1i)' => params[:employment]['start_date(1i)'],
                 'end_date(2i)' => params[:employment]['start_date(2i)'],
                 'end_date(3i)' => params[:employment]['start_date(3i)']}
-     @employment.attributes = enddate
-     @employment.end_date = @employment.end_date-1
-     @employment.save
+     @employment_search.attributes = enddate
+     @employment_search.end_date = @employment_search.end_date-1
+     @employment_search.save
    end
-   if @employee.employments.create(params[:employment])
+   @employment = @employee.employments.create(params[:employment])
+   
+   if @employment.save
        flash[:notice] = 'Employment was successfully created'
-       redirect_to :action => 'listEmployee'
+       redirect_to :action => 'showEmployee', :id => @employee
     else 
-      flash[:notice] = 'Employment was not created'
       render :action => 'showEmployee', :id => @employee
     end  
   end
@@ -61,7 +62,7 @@ class EmployeeController < ApplicationController
   # Editpage employment data
   def editEmployment
     @employment = Employment.find(params[:id])
-    @employee = Employee.find(params[:id_employee])
+    @employee = Employee.find(params[:employee_id])
   end
   
   #Update userpwd
@@ -83,20 +84,25 @@ class EmployeeController < ApplicationController
   
   # Update employment data
   def updateEmployment
-    @employee = Employee.find(params[:id_employee]) 
-    if Employment.find(params[:id]).update_attributes(params[:employment])
+   @employee = Employee.find(params[:employee_id])
+   @employment = Employment.find(params[:id])
+   attributes = params[:employment]
+   if params[:final] != 'true'
+      attributes.delete_if {|key, value| key =~ /^end_date/ }
+   end   
+   if @employment.update_attributes(attributes)
       flash[:notice] = 'Employment was successfully updated.'
-      redirect_to :action => 'showEmployee', :id =>@employee
-    else
-      flash[:notice] = 'Please enter percent'
-      render :action => 'editEmployment', :id => @employee
-    end
-  end
+      redirect_to :action => 'showEmployee', :id => @employee
+   else
+     flash[:notice] = 'Employment was not updated.'
+     render :action => 'editEmployment'
+   end
+ end 
   
   # Deletes the chosen employment data
   def destroyEmployment
-       @employee = Employee.find(params[:id_employee])
-    if Employment.find(params[:id_employment]).destroy
+       @employee = Employee.find(params[:employee_id])
+    if Employment.find(params[:employment_id]).destroy
       flash[:notice] = 'Employment was deleted'
       redirect_to :action => 'showEmployee', :id => @employee
     else
@@ -112,18 +118,19 @@ class EmployeeController < ApplicationController
 
   # Stores the changed employee
   def updateEmployee
-    if Employee.find(params[:id]).update_attributes(params[:employee])
+    @employee = Employee.find(params[:id])
+    if @employee.update_attributes(params[:employee])
       flash[:notice] = 'Employee was successfully updated.'
       redirect_to :action => 'listEmployee'
     else
       flash[:notice] = 'Employee was not updated.'
-      render :action => 'editEmployee'
+      redirect_to :action => 'listEmployee'
     end
   end
   
   # Deletes the chosen employee
   def destroyEmployee
-    @employee = Employee.find(params[:id])
+    @employee = Employee.find(params[:employee_id])
     if @employee.destroy
         flash[:notice] = 'Employee was deleted'
       redirect_to :action => 'listEmployee'

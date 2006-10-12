@@ -1,14 +1,14 @@
 
-<%= error_messages_for 'project' %>
+<%= error_messages_for(:project) %>
 <table>
   <tr>
     <td>Project name: </td>
-  	<td><%= text_field 'project', 'name'  %></td>
+  	<td><%= text_field 'project', 'name', :size => 20  %></td>
   </tr>
   <tr>
     <td>Client: </td>
     <td><select name="project[client_id]">
-      <% @client.each do |client| %>
+      <% @clients.each do |client| %>
       <option value="<%= client.id %>"> 
       <%= client.name %>
       </option>

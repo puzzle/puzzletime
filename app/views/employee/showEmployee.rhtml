@@ -32,10 +32,10 @@
       <% for employment in @employee.employments %>
         <tr>
           <td><%= employment.percent %></td>
-          <td><%= employment.start_date %></td>
-          <td><%= employment.end_date %></td>
-          <td><%= link_to 'Edit', :action => 'editEmployment', :id => employment, :id_employee => @employee  %></td>
-          <td><%= link_to 'Delete', { :action => 'destroyEmployment', :id_employment => employment, :id_employee => @employee }, :confirm => 'Are you sure?', :post => true %></td>
+          <td><%= change_date(employment.start_date) %></td>
+          <td><%= change_date(employment.end_date) %></td>
+          <td><%= link_to 'Edit', :action => 'editEmployment', :id => employment, :employee_id => @employee  %></td>
+          <td><%= link_to 'Delete', { :action => 'destroyEmployment', :employment_id => employment, :employee_id => @employee }, :confirm => 'Are you sure?', :post => true %></td>
         </tr>
      <% end %>
   </table>

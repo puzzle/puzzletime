@@ -10,10 +10,11 @@ class Employee < ActiveRecord::Base
   has_many :projects, :through => :projectmemberships
   has_many :worktimes
   
-  attr_accessor :pwd
+  attr_accessor :pwd 
+  
   
   validates_presence_of :firstname, :lastname, :shortname, :email, :phone
-  validates_presence_of :pwd, :on => :save
+  validates_presence_of :pwd, :on => :create
   validates_uniqueness_of :shortname 
   
   def before_create

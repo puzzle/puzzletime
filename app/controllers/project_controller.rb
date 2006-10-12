@@ -25,13 +25,12 @@ class ProjectController < ApplicationController
   # Shows detail of chosen project
   def showProject
     @project = Project.find(params[:id])
-    @employee = Employee.find_all
+    @employee = Employee.find(:all, :order => 'lastname')
   end
   
   # Creates new instance of project
   def newProject
-    @project = Project.new
-    @client = Client.find(:all)
+    @clients = Client.find(:all)
   end
   
   # Create project membership
@@ -80,25 +79,27 @@ class ProjectController < ApplicationController
   
   # Saves new project on db
   def createProject
+   @clients = Client.find(:all)
    @project = Project.new(params[:project])
     if @project.save
       flash[:notice] = 'Project was successfully created'
       redirect_to :action => 'listProject'
     else
       flash[:notice] = 'Project was not created'
-      render :action => 'listProject'
+      render :action => 'newProject'
     end
   end
   
   # Shows the editpage of project
   def editProject
     @project = Project.find(params[:id])
-    @client = Client.find(:all)
+    @clients = Client.find(:all)
   end
   
   # Stores the updated attributes of project
   def updateProject
-    @project = Project.find(params[:id])
+    @clients = Client.find(:all)
+    @project = Project.find(params[:project_id])
     if @project.update_attributes(params[:project])
       flash[:notice] = 'Project was successfully updated'
       redirect_to :action => 'showProject', :id => @project

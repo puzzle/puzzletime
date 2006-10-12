@@ -1,3 +1,4 @@
+<%= error_messages_for(:employment) %>
 <br/>
 <table>
     <tr>
@@ -12,6 +13,10 @@
     <tr>
   	  <td><label for="employment_end_date">End date: </label></td>
       <td><%= date_select 'employment', 'end_date', :order => [:day, :month, :year] %></td>
+    </tr>
+    <tr>
+      <td><label for="final"> Last employment? </td>
+      <td><select name="final"><option value="false">false</option><option value="true">true</option></select><td>
     </tr>
     <% end %>
  </table>

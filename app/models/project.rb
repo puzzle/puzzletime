@@ -8,7 +8,7 @@ class Project < ActiveRecord::Base
   belongs_to :client
   has_many :worktimes
   
-  validates_presence_of :name, :description, :client_id
+  validates_presence_of :name, :description
   validates_uniqueness_of :name
   
   def sumProjectTime(employee_id)

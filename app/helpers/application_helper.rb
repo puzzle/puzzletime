@@ -36,4 +36,8 @@ module ApplicationHelper
     end
     html << %(</select>)
   end
+  
+  def change_date(date)
+   data = "#{date.day}-#{date.month}-#{date.year}"
+  end
 end

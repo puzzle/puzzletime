@@ -3,7 +3,6 @@
 
 class Employment < ActiveRecord::Base
 
-  validates_presence_of :percent, :start_date
+  validates_presence_of :percent
   belongs_to :employee
-
 end
