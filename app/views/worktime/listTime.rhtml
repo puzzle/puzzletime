@@ -5,14 +5,12 @@
   <table>
   <tr>
     <td><p>Project:</p></td>
-    <td><p>Total:</p></td>
   </tr>
 	<% for project in @user_projects %>
 	<tr>
 	  <td><%=h project.name %></td>
-	  <td><%= round_hour(project.sumProjectTime(@user.id)) %></td>
 	  <td><%= link_to 'Add', :action => 'addTime', :project_id => project %></td>
-	  <td><%= link_to 'View', :controller => 'evaluator', :action => 'showProjectDetailTime', :project_id => project, :user_id => @user.id %></td>
+	  <td><%= link_to 'View', :controller => 'evaluator', :action => 'selectProjectDetailTime', :project_id => project, :user_id => @user.id %></td>
 	</tr>
 	<% end %>
 	<tr>

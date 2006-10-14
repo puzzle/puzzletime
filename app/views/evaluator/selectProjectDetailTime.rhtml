@@ -1,0 +1,37 @@
+<h1>Detail of Project</h1>
+<br/>
+ <% if params.has_key?(:employee_id) %>
+  <%= start_form_tag :action => 'showProjectDetailTime', :employee_id => @employee, :project_id => @project %>
+  <table>
+    <tr>
+      <td>From:</td><td> <%= date_select('worktime','start', :order => [:day, :month, :year]) %></td>
+    </tr>
+    <tr>
+     <td>To:</td><td> <%= date_select('worktime','end', :order => [:day, :month, :year]) %></td>
+    </tr>
+    <tr>
+  	<td><%= submit_tag 'Search' %></td>
+   </tr>
+   </table>
+   <%= end_form_tag %>
+ <% else %>
+   <%= start_form_tag :action => 'showProjectDetailTime', :project_id => @project %>
+    <table>
+    <tr>
+      <td><%= date_select('worktime','start', :order => [:day, :month, :year]) %></td>
+    </tr>
+    <tr>
+      <td><%= date_select('worktime','end', :order => [:day, :month, :year]) %></td>
+    </tr>
+    <tr>
+      <td><%= submit_tag 'Search' %></td>
+    </tr>
+    </table>
+   <%= end_form_tag %>
+ <% end %>
+ 
+ <% if params.has_key?(:employee_id)  %>
+ <%= link_to 'Back', :action => 'showProjects', :employee_id => @employee%> 
+ <% else %>
+ <%= link_to 'Back', :controller => 'worktime', :action => 'listTime'  %>
+ <% end %>

@@ -13,7 +13,7 @@
      <td><label for="employee_shortname">Shortname: </label></td>
      <td><%= text_field 'employee', 'shortname', :size => 18  %></td>
    </tr>
-   <% unless params[:action] == 'editEmployee' %> 
+   <% unless params[:action] == 'editEmployee' || params[:action] == 'updateEmployee' %> 
    <tr>
      <td><label for="employee_passwd">Password: </label></td>
      <td><%= password_field 'employee', 'pwd', :size => 18  %></td>

@@ -13,7 +13,7 @@
           </select>
     </td>
   </tr>
-  <% unless params.has_key?(:project_id) || params[:action] === "editProjectDetailTime" %>
+  <% unless params.has_key?(:project_id) || params[:action] == 'editProjectDetailTime' %>
   <tr>
 	<td>Absence: </td>
     <td>
@@ -33,7 +33,7 @@
   </tr>
   <tr>
     <td>Hours: </td>
-    <td><%= text_field('worktime', 'hours', {:disabled => true})  %></td>
+    <td><%= text_field('worktime', 'hours', {:disabled => true, :size => 3})  %></td>
   </tr>
   <tr>	
     <td>From start time: </td>

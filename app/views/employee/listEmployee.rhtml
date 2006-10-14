@@ -12,12 +12,12 @@
   
   <% for employee in @employees %>
   <tr>
-    <td><%= employee.firstname  %></td>
-    <td><%= employee.lastname  %></td>
-    <td><%= employee.shortname  %></td>
-    <td><%= employee.email  %></td>
-    <td><%= employee.phone  %></td>
-    <td><%= employee.management %></td> 
+    <td><%=h employee.lastname  %></td>
+    <td><%=h employee.firstname  %></td>
+    <td><%=h employee.shortname  %></td>
+    <td><%=h employee.email  %></td>
+    <td><%=h employee.phone  %></td>
+    <td><%=h employee.management %></td> 
     <td><%= link_to 'Show', :action => 'showEmployee', :id => employee %></td>
     <td><%= link_to 'Edit', :action => 'editEmployee', :id => employee %></td>
     <td><%= link_to 'Delete', { :action => 'destroyEmployee', :id => employee }, :confirm => 'Are you sure?', :post => true %></td>

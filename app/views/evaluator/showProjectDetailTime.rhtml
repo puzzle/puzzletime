@@ -1,21 +1,42 @@
-<h1>Detail of Project</h1>
+<h1>All times </h1>
+
+<% if params.has_key?(:employee_id) %>
+<table>
+  <tr>
+   <td>Total time of work for this selected project:</td>
+   <td><%= round_hour(@project.sumProjectTime(@employee.id)) %>h</td>
+  </tr>
+  <tr> 
+   <td>Total time of selected period:</td>
+   <td><%= round_hour(@sum_period_time) %>h</td>
+  </tr>
+ </table> 
+<% else %>
+ <table>
+  <tr>
+  <td>Total time of work for this selected project:</td>
+  <td><%= round_hour(@project.sumProjectTime(@user.id)) %> </td>
+ </tr>
+ </table> 
+<% end %>
 
 <br/>
-<table>
-  <% for time in @times %>
-   <tr>
-     <td><%= change_date(time.work_date) %></td>
-     <td><%= round_hour(time.hours) %></td>
-     <% if params.has_key?(:employee_id) %>
-     <td><%= link_to 'Edit', :action => 'editProjectDetailTime', :worktime_id => time, :employee_id => @employee, :project_id => @project %></td>
-     <% else %>
-     <td><%= link_to 'Edit', :action => 'editProjectDetailTime', :worktime_id => time, :user_id => @user.id, :project_id => @project %></td>
-     <% end %>
-   </tr>
-  <% end %>
- </table>
+ <table>
+   <% for time in @times %>
+    <tr>
+      <td><%= change_date(time.work_date) %></td>
+      <td><%= time.hours %>h</td>
+      <% if params.has_key?(:employee_id) %>
+      <td><%= link_to 'Edit', :action =>'editProjectDetailTime', :employee_id => @employee, :worktime_id => time, :project_id => @project %></td>
+      <% else %>
+      <td><%= link_to 'Edit', :action =>'editProjectDetailTime', :worktime_id => time, :project_id => @project %></td>
+      <% end %>
+    </tr>
+   <% end %>
+</table> 
+ 
  <% if params.has_key?(:employee_id)  %>
- <%= link_to 'Back', :action => 'showProjects', :id => @employee.id %> 
+ <%= link_to 'Back', :action => 'selectProjectDetailTime', :employee_id => @employee, :project_id => @project %> 
  <% else %>
- <%= link_to 'Back', :controller => 'worktime', :action => 'listTime', :id => @user.id %>
+ <%= link_to 'Back', :action => 'selectProjectDetailTime', :project_id => @project  %>
  <% end %>

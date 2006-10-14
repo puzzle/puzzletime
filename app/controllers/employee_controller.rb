@@ -18,7 +18,7 @@ class EmployeeController < ApplicationController
   
   # Lists all employees
   def listEmployee
-    @employee_pages, @employees = paginate :employees, :per_page => 10
+    @employee_pages, @employees = paginate :employees, :per_page => 10 , :order => 'lastname'
   end
   
   # Shows detail of chosen Employee 
@@ -119,12 +119,11 @@ class EmployeeController < ApplicationController
   # Stores the changed employee
   def updateEmployee
     @employee = Employee.find(params[:id])
-    if @employee.update_attributes(params[:employee])
+    if@employee.update_attributes(params[:employee])
       flash[:notice] = 'Employee was successfully updated.'
       redirect_to :action => 'listEmployee'
     else
-      flash[:notice] = 'Employee was not updated.'
-      redirect_to :action => 'listEmployee'
+      render :action => 'editEmployee'
     end
   end
   
