@@ -16,7 +16,7 @@ class WorktimeController < ApplicationController
   end
   
   def listTime
-    @user_projects = @user.projects
+    @user_projectmemberships = @user.projectmemberships
   end
                    
   def addTime

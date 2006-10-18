@@ -31,7 +31,7 @@
                  </center> 
            </td> 
             <td>
-            <%= link_to 'Delete', { :action => 'destroyProjectMembership', :project_id => @project, :projectmembership_id => projectmembership }, 
+            <%= link_to 'remove from project', { :action => 'destroyProjectMembership', :project_id => @project, :projectmembership_id => projectmembership }, 
                                    :confirm => 'Are you sure?', 
                                    :post => true %>
             </td>

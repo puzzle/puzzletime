@@ -3,7 +3,7 @@
 class ApplicationController < ActionController::Base
 
   def authorize
-    @user = session[:user]   
+    @user = session[:user]
     unless @user
       flash[:notice] = 'Please log in'
       redirect_to(:controller => 'login', :action => 'login' )

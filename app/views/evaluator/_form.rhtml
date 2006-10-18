@@ -51,7 +51,7 @@
     <td>Description: </td>
     <td><%= text_area 'worktime', 'description',{:rows => 10}  %></td>
   </tr>
-  <% if params.has_key?(:project_id) %>
+  <% if params[:action] != 'editAbsenceDetailTime' %>
   <tr>
     <td>Billable: </td>
     <td><%= check_box 'worktime', 'billable' %></td>

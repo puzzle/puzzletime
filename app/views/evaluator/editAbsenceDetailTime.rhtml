@@ -1,0 +1,16 @@
+<h1>Editing absence</h1>
+
+<% if params.has_key?(:employee_id)  %>
+  <%= start_form_tag :action => 'updateAbsenceDetailTime', :worktime_id => @worktime, :project_id => @project, :employee_id => @employee %>
+    <%= render :partial => 'form' %>
+<%= end_form_tag %>
+<% else %>
+ <%= start_form_tag :action => 'updateAbsenceDetailTime', :worktime_id => @worktime, :project_id => @project %>
+  <%= render :partial => 'form' %>
+<%= end_form_tag %>
+<% end %>
+ <% if params.has_key?(:employee_id)  %>
+ <%= link_to 'Back', :action => 'showProjects', :employee_id => @employee, :project_id => @project %> 
+ <% else %>
+ <%= link_to 'Back', :controller => 'worktime', :action => 'listTime', :project_id => @project %>
+ <% end %>

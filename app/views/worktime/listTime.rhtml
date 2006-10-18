@@ -1,23 +1,27 @@
-<h1>Worktimemenu of <%=h @user.firstname %> <%=h @user.lastname %></h1>
+<h1>Worktime menu of <%=h @user.firstname %> <%=h @user.lastname %></h1>
   <br/>
-  Projectmember in Projects listed below: 
+  Project member in projects listed below: 
   <br/>
   <table>
   <tr>
-    <td><p>Project:</p></td>
+    <td><div id="puzzle">Project</div></td>
+    <td></td><td><div id="puzzle"> | Current Week <%= Time.now.strftime("%W") %></div></td>
+    <td><div id="puzzle"> | Current Month <%= Time.now.strftime("%m") %></div></td>
+    <td><div id="puzzle"> | Current Year</div></td>
   </tr>
-	<% for project in @user_projects %>
-	<tr>
-	  <td><%=h project.name %></td>
-	  <td><%= link_to 'Add', :action => 'addTime', :project_id => project %></td>
-	  <td><%= link_to 'View', :controller => 'evaluator', :action => 'selectProjectDetailTime', :project_id => project, :user_id => @user.id %></td>
+	  <% for projectmembership in @user_projectmemberships %>
+	  <tr>
+	    <td><%=h  projectmembership.project.name %></td>
+	    <td><%= link_to 'Add time', :action =>'addTime', :project_id => projectmembership.project %></td>
+	    <td>| <%= projectmembership.project.sumProjectActualWeek(@user.id) %></td>
+        <td>| <%= projectmembership.project.sumProjectActualMonth(@user.id) %></td>
+        <td>| <%= projectmembership.project.sumProjectActualYear(@user.id) %></td>
 	</tr>
 	<% end %>
 	<tr>
 	  <td>
-	    <%= link_to 'Add absence', :action => 'addTime' %>
+	    <%= link_to 'Add absence', :action => 'addTime' %> | <%= link_to 'Absence', :controller => 'evaluator', :action => 'selectAbsenceDetailTime' %>	    
 	  </td>
 	</td>
   </table>
   <br/>
-  

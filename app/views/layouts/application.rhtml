@@ -13,15 +13,17 @@
 
 		<div id="header">
 			<h1><span>puzzle</span>Time<sup>1.0</sup></h1>
-			<h2>by puzzle itc</h2>
+			<h2>by Puzzle ITC</h2>
 		</div>
 	
 		<div id="splash"></div>
 		<div id="menu">
 		<ul>    <% if @user != nil%>
 				<li class="first"><%= link_to 'Time', :controller => 'worktime', :action => 'listTime' %></li>
-				<% if @user.management === true %>
-				<li><%= link_to 'Evaluator', :controller => 'evaluator', :action => 'listEvaluator' %></li>
+				<%if Projectmembership.is_projectmanagement(@user) == true || @user.management == true %>
+				<li><%= link_to 'Evaluator', :controller => 'evaluator', :action => 'listEvaluator' %></li>	
+				<% end %>
+				<% if @user.management == true %>
 				<li><%= link_to 'Employee', :controller => 'employee', :action => 'listEmployee' %></li>
 				<li><%= link_to 'Project', :controller => 'project', :action => 'listProject' %></li>
 				<li><%= link_to 'Client', :controller => 'client', :action => 'listClient' %></li>

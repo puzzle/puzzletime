@@ -2,12 +2,12 @@
 <br/>
 <table>
   <tr>
-    <td><p>Firstname</p></td>
-    <td><p>Lastname</p></td>
-    <td><p>Shortname</p></td>
-    <td><p>Email</p></td>
-    <td><p>Phone</p></td>
-    <td><p>Management</p></td>
+    <td><div id="puzzle">Firstname</div></td>
+    <td><div id="puzzle">Lastname</div></td>
+    <td><div id="puzzle">Shortname</div></td>
+    <td><div id="puzzle">Email</div></td>
+    <td><div id="puzzle">Phone</div></td>
+    <td><div id="puzzle">Management</div></td>
   </tr>
   
   <% for employee in @employees %>
@@ -18,9 +18,7 @@
     <td><%=h employee.email  %></td>
     <td><%=h employee.phone  %></td>
     <td><%=h employee.management %></td> 
-    <td><%= link_to 'Show', :action => 'showEmployee', :id => employee %></td>
-    <td><%= link_to 'Edit', :action => 'editEmployee', :id => employee %></td>
-    <td><%= link_to 'Delete', { :action => 'destroyEmployee', :id => employee }, :confirm => 'Are you sure?', :post => true %></td>
+    <td><%= link_to 'Show', :action => 'showEmployee', :id => employee %> | <%= link_to 'Edit', :action => 'editEmployee', :id => employee %> | <%= link_to 'Delete', { :action => 'destroyEmployee', :id => employee }, :confirm => 'Are you sure?', :post => true %></td>
   </tr>
   <% end %>
 </table>

@@ -26,9 +26,9 @@ class ClientController < ApplicationController
     @client = Client.new(params[:client])
     if @client.save
       flash[:notice] = 'Client was successfully created.'
-      redirect_to :action => 'clientlist'
+      redirect_to :action => 'listClient'
     else
-      render :action => 'newclient'
+      render :action => 'newClient'
     end
   end
   

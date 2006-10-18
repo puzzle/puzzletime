@@ -4,9 +4,9 @@
   <% for project in @employee_projects %>
   </tr>
     <td><%= project.name %> </td>
-    <td><%= link_to 'View', :action => 'selectProjectDetailTime', :project_id => project, :employee_id => @employee.id %></td>
+    <td><%= link_to 'View', :action => 'selectProjectDetailTime', :project_id => project, :employee_id => @employee %></td>
   <tr>
   <% end %>
 </table>
 
-<%= link_to 'Back', :action => 'showEmployeeProjects' %> 
+<%= link_to 'Back', :action => 'showEmployeeProjectAndAbsence' %> 

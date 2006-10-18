@@ -19,13 +19,24 @@ line-height: 18px;
 
 a
 {
-color: #FF7800;
+color: #0087e3;
 text-decoration: underline;
 }
 
 a:hover
 {
 text-decoration: none;
+}
+
+#puzzle
+{
+font-size: 12px;
+font-family: "trebuchet ms", helvetica, sans-serif;
+font-weight: bold;
+color: #0087e3;
+padding-top: 10px;
+padding-bottom: 5px;
+line-height: 0px;
 }
 
 h1
@@ -96,7 +107,7 @@ z-index: 2;
 #header
 {
 position: absolute;
-background: #14C7FF;
+background: #0087e3;
 width: 202px;
 height: 92px;
 color: #fff;
@@ -205,14 +216,14 @@ letter-spacing: -1px;
 }
 
 .fieldWithErrors {
-  padding: 2px;
-  background-color: red;
+  padding: 1px;
+  background-color: #0087e3;
   display: table;
 }
 
 #errorExplanation {
-  width: 400px;
-  border: 4px solid red;
+  width: 450px;
+  border: 2px solid #0087e3;
   padding: 20px;
   padding-bottom: 12px;
   margin-bottom: 10px;
@@ -224,7 +235,7 @@ letter-spacing: -1px;
   padding: 5px 5px 5px 15px 
   font-size: 12px;
   margin: -7px;
-  color: #f00;
+  color: #0087e3;
 }
 
 #errorExplanation p {

@@ -1,0 +1,30 @@
+<h1>Project groups</h1>
+<br/>
+
+<% if @user.management == true %>
+<%= detail_employee(@projects)%>
+
+<% else %>
+<table>
+  <% for projectmembership in @projectmemberships %>
+  <tr>
+    <td><div id="puzzle"><%= projectmembership.project.name %></div></td> 
+    <td><div id="puzzle"><% if projectmembership.project.sumProjectAllTime != nil %> Total time <%= projectmembership.project.sumProjectAllTime %><% end %></div></td>
+    <td><div id="puzzle"> | Current Week</div></td>
+    <td><div id="puzzle"> | Current Month</div></td>
+    <td><div id="puzzle"> | Current Year</div></td>
+    <% for employee in projectmembership.project.employees %>
+     <tr>
+      <td><%= employee.lastname %> <%= employee.firstname %></td>
+      <td>| <%= projectmembership.project.sumProjectTime(employee.id) %></td>
+      <td>| <%= projectmembership.project.sumProjectActualWeek(employee.id) %></td>
+      <td>| <%= projectmembership.project.sumProjectActualMonth(employee.id) %></td>
+      <td>| <%= projectmembership.project.sumProjectActualYear(employee.id) %></td>
+      <td>| <%= link_to 'Other', :action => 'selectProjectDetailTime', :employee_id => employee, :project_id => projectmembership.project %></td>
+    </tr>
+   <% end %>
+  </tr>
+  <% end %>
+  </table>
+<% end %>
+<%= link_to 'Back', :action => 'listEvaluator' %>

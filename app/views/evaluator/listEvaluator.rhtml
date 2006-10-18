@@ -1,16 +1,20 @@
 <h1>Evaluatoroptions</h1>
 <table>
+  <%if @user.management == true %>
   <tr>
     <td><%= link_to 'Employees holiday overview', :action => 'showHoliday' %>
     </td>
   </tr>
   <tr>
-    <td><%= link_to 'Employee projects overview', :action => 'showEmployeeProjects' %>
+    <td><%= link_to 'Employee projects and absence overview', :action => 'showEmployeeProjectAndAbsence' %>
     </td>
   </tr>
+   <% end %>
+   <%if @user.management == true || Projectmembership.is_projectmanagement(@user) %>
   <tr>
-    <td><%= link_to 'Projects overview ', :controller => 'project', :action => 'listProject' %>
+    <td><%= link_to 'Project groups ', :action => 'showProjectgroups' %>
     </td>
   </tr>
+  <% end %>
  </table>
  

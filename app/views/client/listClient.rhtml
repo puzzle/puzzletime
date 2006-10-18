@@ -1,9 +1,9 @@
 <h1>Listing clients</h1>
-
+<br/>
 <table>
   <tr>
   <% for column in Client.content_columns %>
-    <td><p><%= column.human_name %></p></td>
+    <td><div id="puzzle"><%= column.human_name %></div></td>
   <% end %>
   </tr>
   
@@ -12,8 +12,7 @@
   <% for column in Client.content_columns %>
     <td><%=h client.send(column.name) %></td>
   <% end %>
-    <td><%= link_to 'Edit', :action => 'editClient', :id => client %></td>
-    <td><%= link_to 'Delete', { :action => 'destroyClient', :id => client }, :confirm => 'By deleting the selected client you will delete its projects! Are you sure?', :post => true %></td>
+    <td><%= link_to 'Edit', :action => 'editClient', :id => client %> | <%= link_to 'Delete', { :action => 'destroyClient', :id => client }, :confirm => 'By deleting the selected client you will delete its projects! Are you sure?', :post => true %></td>
   </tr>
 <% end %>
 </table>

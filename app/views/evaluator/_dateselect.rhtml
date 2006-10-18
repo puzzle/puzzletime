@@ -1,0 +1,26 @@
+
+    <% if params.has_key?(:employee_id) %>
+    <table>
+    <tr>
+      <td>From:</td><td> <%= date_select('worktime','start', :order => [:day, :month, :year]) %></td>
+    </tr>
+    <tr>
+     <td>To:</td><td> <%= date_select('worktime','end', :order => [:day, :month, :year]) %></td>
+    </tr>
+    <tr>
+  	<td><td><%= submit_tag 'Search' %></td></td>
+   </tr>
+   </table>
+   <% else %>
+    <table>
+    <tr>
+      <td>From:</td><td><%= date_select('worktime','start', :order => [:day, :month, :year]) %></td>
+    </tr>
+    <tr>
+      <td>To:</td><td><%= date_select('worktime','end', :order => [:day, :month, :year]) %></td>
+    </tr>
+    <tr>
+      <td><td><%= submit_tag 'Search' %></td></td>
+    </tr>
+    </table>
+    <% end %>

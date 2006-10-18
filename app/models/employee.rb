@@ -13,7 +13,7 @@ class Employee < ActiveRecord::Base
   attr_accessor :pwd 
   
   
-  validates_presence_of :firstname, :lastname, :shortname, :email, :phone, :on => :update
+  validates_presence_of :firstname, :lastname, :shortname, :email, :phone
   validates_presence_of :pwd, :on => :create
   validates_uniqueness_of :shortname 
   

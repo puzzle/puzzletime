@@ -4,7 +4,7 @@
   <% for employee in @employees %>
   </tr>
     <td><%= employee.lastname %> <%= employee.firstname %></td>
-    <td><%= link_to 'View',  :action => 'showProjects',  :id => employee %></td>
+    <td><%= link_to 'Project',  :action => 'showProjects',  :employee_id => employee %> | <%= link_to 'Absence', :action => 'selectAbsenceDetailTime', :employee_id => employee %></td>
   <tr>
   <% end %>
 </table>

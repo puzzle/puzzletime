@@ -1,17 +1,15 @@
 <h1>Absence</h1>
-
-
+<br/>
 <table>
   <tr>
-    <td><p>Absence name</p></td>
-    <td><p>Payed?</th></p>
+    <td><div id="puzzle">Absence name</div></td>
+    <td><div id="puzzle">Payed</div></td>
   </tr>
   <% for absence in @absences %>
   <tr>
     <td><%= absence.name %></td>
     <td><%= absence.payed %></td>
-    <td><%= link_to 'Edit', :action => 'editAbsence', :id => absence %></td>
-    <td><%= link_to 'Delete', {:action => 'destroyAbsence', :id => absence}, :confirm => 'Are you sure?', :post => true %></td>
+    <td><%= link_to 'Edit', :action => 'editAbsence', :id => absence %> | <%= link_to 'Delete', {:action => 'destroyAbsence', :id => absence}, :confirm => 'Are you sure?', :post => true %></td>
   </tr>
   <% end %>
 </table>

@@ -1,42 +1,41 @@
-<h1>All times </h1>
-
+<h1>All times for <%= @project.name %> </h1>
+<br/>
 <% if params.has_key?(:employee_id) %>
 <table>
-  <tr>
-   <td>Total time of work for this selected project:</td>
-   <td><%= round_hour(@project.sumProjectTime(@employee.id)) %>h</td>
-  </tr>
-  <tr> 
-   <td>Total time of selected period:</td>
+   <tr> 
+   <td>Total time between <%= @startdate %> and <%= @enddate %> is </td>
    <td><%= round_hour(@sum_period_time) %>h</td>
   </tr>
  </table> 
 <% else %>
  <table>
-  <tr>
-  <td>Total time of work for this selected project:</td>
-  <td><%= round_hour(@project.sumProjectTime(@user.id)) %> </td>
- </tr>
+ <tr> 
+   <td>Total time between <%= @startdate %> and <%= @enddate %>: </td>
+   <td><%= round_hour(@sum_period_time) %>h</td>
+  </tr>
  </table> 
 <% end %>
 
 <br/>
  <table>
+   <tr>
+    <td><div id="puzzle">Date</div></td><td><div id="puzzle">Hours</div></td>
+   </tr>
    <% for time in @times %>
     <tr>
       <td><%= change_date(time.work_date) %></td>
-      <td><%= time.hours %>h</td>
+      <td><%= time.hours %></td>
       <% if params.has_key?(:employee_id) %>
-      <td><%= link_to 'Edit', :action =>'editProjectDetailTime', :employee_id => @employee, :worktime_id => time, :project_id => @project %></td>
+      <td><%= link_to 'Edit', :action =>'editProjectDetailTime', :employee_id => @employee, :worktime_id => time %> </td>
       <% else %>
-      <td><%= link_to 'Edit', :action =>'editProjectDetailTime', :worktime_id => time, :project_id => @project %></td>
+      <td><%= link_to 'Edit', :action =>'editProjectDetailTime', :worktime_id => time %></td>
       <% end %>
     </tr>
    <% end %>
 </table> 
  
  <% if params.has_key?(:employee_id)  %>
- <%= link_to 'Back', :action => 'selectProjectDetailTime', :employee_id => @employee, :project_id => @project %> 
+ <%= link_to 'Back', :action => 'showProjectgroups' %> 
  <% else %>
- <%= link_to 'Back', :action => 'selectProjectDetailTime', :project_id => @project  %>
+ <%= link_to 'Back', :controller => 'worktime',:action => 'listTime'  %>
  <% end %>

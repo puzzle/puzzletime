@@ -1,0 +1,29 @@
+<h1>Absence detail time of the selected period</h1>
+Total absence time of selected period is <%= @sum_absence_time %>h 
+<br/>
+<table>
+<tr>
+    <td><div id="puzzle">Date</div></td>
+    <td><div id="puzzle">Absence</div></td>
+    <td><div id="puzzle">Hours</div></td>
+   </tr>
+<% for absence_time in @absence_times %>
+  <tr>
+    <td><%= change_date(absence_time.work_date) %></td>
+    <td><%= absence_time.absence.name %></td>
+    <td><%= absence_time.hours %></td>
+    <% if params.has_key?(:employee_id) %>
+      <td><%= link_to 'Edit', :action =>'editAbsenceDetailTime', :employee_id => @employee, :worktime_id => absence_time%></td>
+      <% else %>
+      <td><%= link_to 'Edit', :action =>'editAbsenceDetailTime', :worktime_id => absence_time%></td>
+      <% end %>
+  </tr>
+<% end %>
+</table>
+
+ <% if params.has_key?(:employee_id)  %>
+ <%= link_to 'Back', :action => 'showEmployeeProjectAndAbsence' %> 
+ <% else %>
+ <%= link_to 'Back', :controller => 'worktime', :action => 'listTime'  %>
+ <% end %>
+ 

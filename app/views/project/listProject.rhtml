@@ -2,17 +2,15 @@
 <br/>
 <table>
   <tr>
-  <td><p>Name</p></td>
-  <td><p>Client</p></td>
+  <td><div id="puzzle">Name</div></td>
+  <td><div id="puzzle">Client</div></td>
   </tr>
   
 <% for project in @projects %>
   <tr>
   	<td><%=h project.name %>
     <td><%=h project.client.name %>
-    <td><%= link_to 'Show', :action => 'showProject', :id => project %></td>
-    <td><%= link_to 'Edit', :action => 'editProject', :id => project %></td>
-    <td><%= link_to 'Delete', { :action => 'destroyProject', :id => project }, :confirm => 'Are you sure?', :post => true %></td>
+    <td><%= link_to 'Show', :action => 'showProject', :id => project %> | <%= link_to 'Edit', :action => 'editProject', :id => project %> | <%= link_to 'Delete', { :action => 'destroyProject', :id => project }, :confirm => 'Are you sure?', :post => true %></td>
   </tr>
 <% end %>
 </table>
