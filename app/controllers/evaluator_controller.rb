@@ -7,46 +7,29 @@ class EvaluatorController < ApplicationController
   # Checks if employee came from login or from direct url
   before_filter :authorize
   
-  def listEvaluator
-  end
   
-  def showHoliday
-    @employees = Employee.find(:all)
-  end
-  
-  def showEmployeeProjectAndAbsence
-    @employees = Employee.find(:all)
-  end
-  
-  def showProjects
-    @employee = Employee.find(params[:employee_id])
-    if params.has_key?(:employee_id) 
-      @employee_projects = @employee.projects
-    else
-      @employee_projects = @user.projects
-    end
-  end
-  
-  def showProjectDetailTime
-    @project = Project.find(params[:project_id])
+  def showProjectsPeriod
     @startdate ="#{params[:worktime]['start(3i)']}-#{params[:worktime]['start(2i)']}-#{params[:worktime]['start(1i)']}"      
     @enddate = "#{params[:worktime]['end(3i)']}-#{params[:worktime]['end(2i)']}-#{params[:worktime]['end(1i)']}"
-    startdate = "#{params[:worktime]['start(1i)']}-#{params[:worktime]['start(2i)']}-#{params[:worktime]['start(3i)']}"      
-    enddate= "#{params[:worktime]['end(1i)']}-#{params[:worktime]['end(2i)']}-#{params[:worktime]['end(3i)']}"  
-    if params.has_key?(:employee_id)
-      @employee = Employee.find(params[:employee_id])
-     else
-      @employee = @user
-     end
-      @times = Worktime.find(:all, :conditions => ["project_id = ? and employee_id = ? AND work_date BETWEEN ? AND ?", @project.id, @employee.id, startdate, enddate])
-      @sum_period_time =  Worktime.sum(:hours, :conditions => ["project_id = ? and employee_id = ? AND work_date BETWEEN ? AND ?", @project.id, @employee.id, startdate, enddate])
+    @startdate_db = "#{params[:worktime]['start(1i)']}-#{params[:worktime]['start(2i)']}-#{params[:worktime]['start(3i)']}"      
+    @enddate_db = "#{params[:worktime]['end(1i)']}-#{params[:worktime]['end(2i)']}-#{params[:worktime]['end(3i)']}"
+    @projects = Project.find(:all)
+    @projectmemberships = Projectmembership.find(:all, :conditions =>["employee_id = ? AND projectmanagement IS TRUE", @user.id])
   end
   
-  def selectProjectDetailTime
-     @project = Project.find(params[:project_id])
-     if params.has_key?(:employee_id)
-       @employee = Employee.find(params[:employee_id])
-     end    
+  def showUserProjectPeriod
+    @startdate ="#{params[:worktime]['start(3i)']}-#{params[:worktime]['start(2i)']}-#{params[:worktime]['start(1i)']}"      
+    @enddate = "#{params[:worktime]['end(3i)']}-#{params[:worktime]['end(2i)']}-#{params[:worktime]['end(1i)']}"
+    @startdate_db = "#{params[:worktime]['start(1i)']}-#{params[:worktime]['start(2i)']}-#{params[:worktime]['start(3i)']}"      
+    @enddate_db = "#{params[:worktime]['end(1i)']}-#{params[:worktime]['end(2i)']}-#{params[:worktime]['end(3i)']}"
+  end
+  
+  def showEmployeesPeriod
+    @startdate ="#{params[:worktime]['start(3i)']}-#{params[:worktime]['start(2i)']}-#{params[:worktime]['start(1i)']}"      
+    @enddate = "#{params[:worktime]['end(3i)']}-#{params[:worktime]['end(2i)']}-#{params[:worktime]['end(1i)']}"
+    @startdate_db = "#{params[:worktime]['start(1i)']}-#{params[:worktime]['start(2i)']}-#{params[:worktime]['start(3i)']}"      
+    @enddate_db = "#{params[:worktime]['end(1i)']}-#{params[:worktime]['end(2i)']}-#{params[:worktime]['end(3i)']}"
+    @employees = Employee.find(:all)
   end
   
   def selectAbsenceDetailTime
@@ -117,8 +100,12 @@ class EvaluatorController < ApplicationController
     end
   end
   
-  def showProjectgroups
+  def showProjects
     @projects = Project.find(:all)
     @projectmemberships = Projectmembership.find(:all, :conditions =>["employee_id = ? AND projectmanagement IS TRUE", @user.id])
-   end
+  end
+   
+  def showEmployees
+    @employees = Employee.find(:all)
+  end 
 end

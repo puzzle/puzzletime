@@ -20,10 +20,11 @@
 		<div id="menu">
 		<ul>    <% if @user != nil%>
 				<li class="first"><%= link_to 'Time', :controller => 'worktime', :action => 'listTime' %></li>
-				<%if Projectmembership.is_projectmanagement(@user) == true || @user.management == true %>
-				<li><%= link_to 'Evaluator', :controller => 'evaluator', :action => 'listEvaluator' %></li>	
+				<%if Projectmembership.is_projectmanagement(@user) == true && @user.management == false %>
+				<li><%= link_to 'Evaluator', :controller => 'evaluator', :action => 'showProjects' %></li>	
 				<% end %>
 				<% if @user.management == true %>
+				<li><%= link_to 'Evaluator', :controller => 'evaluator', :action => 'listEvaluator' %></li>	
 				<li><%= link_to 'Employee', :controller => 'employee', :action => 'listEmployee' %></li>
 				<li><%= link_to 'Project', :controller => 'project', :action => 'listProject' %></li>
 				<li><%= link_to 'Client', :controller => 'client', :action => 'listClient' %></li>

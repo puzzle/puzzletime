@@ -1,12 +1,15 @@
-<h1>projects overview of <%= @employee.lastname%> <%= @employee.firstname %></h1>
+<h1>Project Groups</h1>
 <br/>
-<table>
-  <% for project in @employee_projects %>
-  </tr>
-    <td><%= project.name %> </td>
-    <td><%= link_to 'View', :action => 'selectProjectDetailTime', :project_id => project, :employee_id => @employee %></td>
-  <tr>
-  <% end %>
-</table>
-
-<%= link_to 'Back', :action => 'showEmployeeProjectAndAbsence' %> 
+<%= link_to 'Other Times', :action => 'selectPeriodProject' %>
+<br/>
+<br/>
+<% if @user.management == true %>
+ <%= overview_employee_current(@projects)%>
+<% else %>
+ <%= overview_projectmember_current(@projectmemberships) %>
+<% end %>
+<% if @user.management == true %>
+ <%= link_to 'Back', :action => 'listEvaluator' %>
+<% else %>
+  <%= link_to 'Back', :controller => 'worktime', :action => 'listTime' %>
+<% end %>

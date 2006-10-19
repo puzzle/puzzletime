@@ -1,0 +1,7 @@
+<h1>Select Detail Time</h1>
+<br/>
+ <%= start_form_tag :action => 'showEmployeesPeriod'%>
+ <%= render :partial => 'dateselect' %>
+ <%= end_form_tag %>
+
+ <%= link_to 'Back', :action => 'showEmployees' %>

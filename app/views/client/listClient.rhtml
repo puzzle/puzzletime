@@ -1,9 +1,9 @@
-<h1>Listing clients</h1>
+<h1>Clients</h1>
 <br/>
 <table>
   <tr>
   <% for column in Client.content_columns %>
-    <td><div id="puzzle"><%= column.human_name %></div></td>
+    <td><div id="puzzle_table_title"><%= column.human_name %></div></td>
   <% end %>
   </tr>
   

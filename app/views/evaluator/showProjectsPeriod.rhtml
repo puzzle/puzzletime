@@ -1,0 +1,18 @@
+<h1>Project Groups</h1>
+<br/>
+ Project times between <%= @startdate %> and <%= @enddate %>
+<br/>
+<br/>
+<% if @user.management == true %>
+ <%= overview_employee_period(@projects, @startdate_db, @enddate_db, @startdate, @enddate)%>
+<% else %>
+ <%= overview_projectmember_period(@projectmemberships, @startdate_db, @enddate_db, @startdate, @enddate) %>
+<% end %>
+<br/>
+
+
+<% if @user.management == true %>
+<%= link_to 'Current Time', :action => 'showProjects' %> | <%= link_to 'Evaluator menu', :action => 'listEvaluator' %> 
+<% else %>
+  <%= link_to 'Current Time', :action => 'showProjects' %>
+<% end %>

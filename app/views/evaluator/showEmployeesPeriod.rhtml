@@ -1,0 +1,9 @@
+<h1>Employee Projects Overview</h1>
+<br/>
+Project times between <%= @startdate %> and <%= @enddate %>
+<br/>
+<br/>
+  <%= overview_employees_period(@employees, @startdate_db, @enddate_db, @startdate, @enddate)%>
+<br/>
+
+<%= link_to 'Current Time', :action => 'showEmployees' %> | <%= link_to 'Evaluator', :action => 'listEvaluator' %>

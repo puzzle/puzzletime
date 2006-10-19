@@ -19,15 +19,19 @@ class Project < ActiveRecord::Base
     Worktime.sum(:hours, :conditions => ["project_id = ?",id])
   end
   
-  def sumProjectActualWeek(employee_id)
+  def sumProjectCurrentWeek(employee_id)
     Worktime.sum(:hours, :conditions => ["project_id = ? AND employee_id = ? AND work_date BETWEEN ? AND ?", id, employee_id, "#{Time.now.year}-#{Time.now.month}-#{Time.now.day-7}", "#{Time.now.year}-#{Time.now.month}-#{Time.now.day}"])
   end
   
-  def sumProjectActualMonth(employee_id)
+  def sumProjectCurrentMonth(employee_id)
     Worktime.sum(:hours, :conditions => ["project_id = ? AND employee_id = ? AND work_date BETWEEN ? AND ?", id, employee_id, "#{Time.now.year}-#{Time.now.month}-01", "#{Time.now.year}-#{Time.now.month}-#{days_in_month(Time.now.month)}"])
   end
   
-  def sumProjectActualYear(employee_id)
+  def sumProjectCurrentYear(employee_id)
     Worktime.sum(:hours, :conditions => ["project_id = ? AND employee_id = ? AND work_date BETWEEN ? AND ?", id, employee_id, "#{Time.now.year}-01-01", "#{Time.now.year}-12-#{days_in_month(Time.now.month)}"])
+  end
+  
+  def sumProjectPeriod(employee_id, startdate, enddate)
+    Worktime.sum(:hours, :conditions => ["project_id = ? AND employee_id = ? AND work_date BETWEEN ? AND ?", id, employee_id, startdate, enddate])
   end
 end

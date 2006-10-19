@@ -2,8 +2,8 @@
 <br/>
 <table>
   <tr>
-    <td><div id="puzzle">Absence name</div></td>
-    <td><div id="puzzle">Payed</div></td>
+    <td><div id="puzzle_table_title">Absence name</div></td>
+    <td><div id="puzzle_table_title">Payed</div></td>
   </tr>
   <% for absence in @absences %>
   <tr>
@@ -15,7 +15,7 @@
 </table>
 <br/>
 
-<%= link_to 'New Absence', :action => 'newAbsence' %>
+<%= link_to 'New absence', :action => 'newAbsence' %>
 <br/>
 <%= link_to 'Previous page', { :page => @absence_pages.current.previous } if @absence_pages.current.previous %>
 <%= link_to 'Next page', { :page => @absence_pages.current.next } if @absence_pages.current.next %> 
