@@ -1,0 +1,10 @@
+<!-- (c) Puzzle itc, Berne
+Diplomarbeit 2149, Xavier Hayoz -->
+
+<h1>Employee Absences Overview</h1>
+<br/>
+<%= link_to 'Other Times', :action => 'selectPeriodAbsence' %>
+<br/>
+<br/>
+  <%= overview_absence_current(@employees, @absences)%>
+<%= link_to 'Back', :action => 'listEvaluator' %> 

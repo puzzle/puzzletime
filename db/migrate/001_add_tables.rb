@@ -6,7 +6,7 @@ class AddTables < ActiveRecord::Migration
   
   def self.up                 
     
-    #creates table employees
+    # Creates table employees
     create_table :employees do |t|                      
       t.column :firstname, :string, :null => false
       t.column :lastname, :string, :null => false
@@ -17,31 +17,31 @@ class AddTables < ActiveRecord::Migration
       t.column :management, :boolean, :default => 'false'
     end
  
-    #creates table clients
+    # Creates table clients
     create_table :clients do |t|                        
       t.column :name, :string, :null => false
       t.column :contact, :string, :null => false
     end
  
-    #creates table absences
+    # Creates table absences
     create_table :absences do |t|
       t.column :name, :string, :null => false
       t.column :payed, :boolean, :default => 'false'
     end
     
-    #creates table holidays
+    # Creates table holidays
     create_table :holidays do |t|
       t.column :holiday_date, :date , :null => false
       t.column :musthours_day, :float, :null => false
     end
     
-    #creates table masterdata
+    # Creates table masterdata
     create_table :masterdatas do |t|
       t.column :musthours_day, :float, :null => false
       t.column :vacations_year, :integer, :null => false
     end
     
-    #creates table employments
+    # Creates table employments
     create_table :employments do |t|
       t.column :employee_id, :integer
       t.column :percent, :integer, :null => false
@@ -49,21 +49,21 @@ class AddTables < ActiveRecord::Migration
       t.column :end_date, :date
     end
     
-    #creates table projectmemberships
+    # Creates table projectmemberships
     create_table :projectmemberships do |t|
       t.column :project_id, :integer
       t.column :employee_id, :integer
       t.column :projectmanagement, :boolean, :default => 'false'
     end
     
-    #creates table projects
+    # Creates table projects
     create_table :projects do |t|
       t.column :client_id, :integer
       t.column :name, :string, :null => false
       t.column :description, :text
     end
     
-    #creates table worktimes
+    # Creates table worktimes
     create_table :worktimes do |t|
       t.column :project_id, :integer
       t.column :absence_id, :integer
@@ -77,7 +77,7 @@ class AddTables < ActiveRecord::Migration
       t.column :billable, :boolean, :default => 'true'
     end
     
-    #executes some SQL-queries to get the relations of the tables onto the Postgresql-DB
+    # Executes some SQL-queries to get the relations of the tables onto the Postgresql-DB
     execute('ALTER TABLE employees ADD CONSTRAINT chk_unique_name UNIQUE ( shortname )')
     execute('ALTER TABLE employments ADD CONSTRAINT fk_employments_employees FOREIGN KEY ( employee_id ) REFERENCES employees( id ) ON DELETE CASCADE ')
     execute('ALTER TABLE projectmemberships ADD CONSTRAINT fk_projectmemberships_employees FOREIGN KEY ( employee_id ) REFERENCES employees( id ) ON DELETE CASCADE')
@@ -89,7 +89,7 @@ class AddTables < ActiveRecord::Migration
     execute('ALTER TABLE worktimes ADD CONSTRAINT chkname CHECK (report_type IN(\'start_stop_day\' , \'absolute_day\' , \'week\' , \'month\' ))')
   end
    
-    #removes the tables listed below in case of back-migration
+    # Removes the tables listed below in case of back-migration
   def self.down
    drop_table :worktimes
    drop_table :masterdatas

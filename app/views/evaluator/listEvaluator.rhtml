@@ -1,14 +1,26 @@
+<!-- (c) Puzzle itc, Berne
+Diplomarbeit 2149, Xavier Hayoz -->
+
 <h1>Evaluator Options</h1>
+<br/>
 <table>
   <%if @user.management == true %>
   <tr>
     <td><%= link_to 'Employees Overview', :action => 'showEmployees' %>
     </td>
   </tr>
+  <tr>
+    <td><%= link_to 'Absences Overview', :action => 'showAbsences' %>
+    </td>
+  </tr>
+  <tr>
+    <td><%= link_to 'Clients Overview', :action => 'showClients' %>
+    </td>
+  </tr>
    <% end %>
    <%if @user.management == true || Projectmembership.is_projectmanagement(@user) %>
   <tr>
-    <td><%= link_to 'Project Groups Overview', :action => 'showProjects' %>
+    <td><%= link_to 'Projects Overview', :action => 'showProjects' %>
     </td>
   </tr>
   <% end %>

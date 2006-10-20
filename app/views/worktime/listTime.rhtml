@@ -1,9 +1,12 @@
-<h1>Worktime menu of <%=h @user.firstname %> <%=h @user.lastname %></h1>
-  <br/>
-  <%= link_to 'Other Times', :controller => 'evaluator', :action => 'selectPeriodUser' %>
-  <br/>
-  <br/>
-  Project member in projects listed below: 
-  <br/>
- <%= overview_user_current(@user.projects) %>
- <br/>	 
+<!-- (c) Puzzle itc, Berne
+Diplomarbeit 2149, Xavier Hayoz -->
+
+<h1>Worktime Menu of <%=h @user.firstname %> <%=h @user.lastname %></h1>
+<br/>
+<%= link_to 'Other Times', :action => 'selectPeriodUser' %>
+<br/>
+<br/>
+Project member in projects listed below: 
+<br/>
+<%= overview_user_current(@user.projects) %>	 
+<%= link_to 'Add Absence', :action => 'addTime' %> | <%= link_to 'View Absence', :action => 'showUserAbsences' %>

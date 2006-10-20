@@ -8,7 +8,8 @@ class Employee < ActiveRecord::Base
   has_many :employments 
   has_many :projectmemberships, :dependent => true
   has_many :projects, :through => :projectmemberships
-  has_many :worktimes
+  has_many :worktimes, :dependent => true
+  has_many :absences, :through => :worktimes
   
   attr_accessor :pwd 
   

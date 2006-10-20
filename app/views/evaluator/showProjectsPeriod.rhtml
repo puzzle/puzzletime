@@ -1,3 +1,6 @@
+<!-- (c) Puzzle itc, Berne
+Diplomarbeit 2149, Xavier Hayoz -->
+
 <h1>Project Groups</h1>
 <br/>
  Project times between <%= @startdate %> and <%= @enddate %>
@@ -8,9 +11,6 @@
 <% else %>
  <%= overview_projectmember_period(@projectmemberships, @startdate_db, @enddate_db, @startdate, @enddate) %>
 <% end %>
-<br/>
-
-
 <% if @user.management == true %>
 <%= link_to 'Current Time', :action => 'showProjects' %> | <%= link_to 'Evaluator menu', :action => 'listEvaluator' %> 
 <% else %>
