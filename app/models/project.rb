@@ -32,7 +32,7 @@ class Project < ActiveRecord::Base
   
   # Gets the sum of project hours of current year from employee
   def sumProjectCurrentYear(employee_id)
-    Worktime.sum(:hours, :conditions => ["project_id = ? AND employee_id = ? AND work_date BETWEEN ? AND ?", id, employee_id, "#{Time.now.year}-01-01", "#{Time.now.year}-12-#{days_in_month(Time.now.month)}"])
+    Worktime.sum(:hours, :conditions => ["project_id = ? AND employee_id = ? AND work_date BETWEEN ? AND ?", id, employee_id, "#{Time.now.year}-01-01", "#{Time.now.year}-12-31"])
   end
   
   # Gets the sum of project hours of selected period from employee
@@ -52,7 +52,7 @@ class Project < ActiveRecord::Base
   
   # Gets the sum of project hours of current year
   def sumProjectYear
-    Worktime.sum(:hours, :conditions => ["project_id = ? AND work_date BETWEEN ? AND ?", id, "#{Time.now.year}-01-01", "#{Time.now.year}-12-#{days_in_month(Time.now.month)}"])
+    Worktime.sum(:hours, :conditions => ["project_id = ? AND work_date BETWEEN ? AND ?", id, "#{Time.now.year}-01-01", "#{Time.now.year}-12-31"])
   end
   # Gets the total sum of project hours 
   def sumProjectTotal

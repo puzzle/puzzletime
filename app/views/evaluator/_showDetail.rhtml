@@ -1,0 +1,22 @@
+<br/>
+<table>
+    <tr>
+      <td>Employee: <%= @employee.lastname %> <%= @employee.firstname %></td>
+    </tr>
+      <td>Project: <%= @project.name %></td>
+    </tr>
+    <% if params[:action] == 'showDetailPeriod' %>
+    <tr>
+      <td>Period: <%= @startdate %> to <%= @enddate %> </td>
+    </tr>
+    <% end %>
+</table>
+<br/>
+<table>
+<% for time in @times %>
+<tr>
+  <td><%= change_date(time.work_date) %></td><td><%=time.hours %> h</td>
+<tr>
+<% end %> 
+</table>
+

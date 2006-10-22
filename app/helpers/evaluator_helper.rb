@@ -16,9 +16,9 @@ module EvaluatorHelper
       html << "#{employee.firstname}"
       html << %(</div></td><td><div id="puzzle_table_title">| Total Project</div></td><td><div id="puzzle_table_title"> | Date )
       html << "#{startdate}"
-      html << %( )
+      html << %( to )
       html << "#{enddate}"
-      html << %(</div></td><td><div id="puzzle_table_title"> |</div></td></tr>)
+      html << %(</div></td><td></td><td><div id="puzzle_table_title"> |</div></td></tr>)
       for projectmembership in employee.projectmemberships
         sum_all_project += projectmembership.project.sumProjectPeriod(employee.id, startdate_db, enddate_db).to_f  
         sum_total +=  projectmembership.project.sumProjectTime(employee.id).to_f
@@ -28,13 +28,26 @@ module EvaluatorHelper
         html << "#{round(projectmembership.project.sumProjectTime(employee.id))}"
         html << %(</td><td>| )
         html << "#{round(projectmembership.project.sumProjectPeriod(employee.id, startdate_db, enddate_db))}"
+          html << %(</td><td><a href="/evaluator/showDetailPeriod?project_id=)
+          html << "#{projectmembership.project.id}"
+          html << %(&employee_id=)
+          html << "#{employee.id}"
+          html << %(&startdate=)
+          html << "#{startdate}"
+          html << %(&enddate=)
+          html << "#{enddate}"
+          html << %(&startdate_db=)
+          html << "#{startdate_db}"
+          html << %(&enddate_db=)
+          html << "#{enddate_db}"
+          html << %("><img src ="/images/lupe.gif" border=0></a></td>)
         html << %(</td><td>|</td></tr>)
       end
       html << %(<tr><td><div id="puzzle_total_sum">Total time</div></td><td><div id="puzzle_total_sum">| )
       html << "#{round(sum_total)}"
       html << %(</div></td><td><div id="puzzle_total_sum">| )
       html << "#{round(sum_all_project)}"
-      html << %(</div></td><td><div id="puzzle_total_sum">|</div></td></tr>)
+      html << %(</div></td><td></td><td><div id="puzzle_total_sum">|</div></td></tr>)
     end
     html << %(</table>)
   end
@@ -54,9 +67,9 @@ module EvaluatorHelper
       html << "#{employee.firstname}"
       html << %(</div></td><td><div id="puzzle_table_title">| Total Project</div></td><td><div id="puzzle_table_title"> | Current Week )
       html << "#{Time.now.strftime('%W')}"
-      html << %(</div></td><td><div id="puzzle_table_title"> | Current Month )
+      html << %(</div></td><td></td><td><div id="puzzle_table_title"> | Current Month )
       html << "#{Time.now.strftime('%m')}"
-      html << %(</div></td><td><div id="puzzle_table_title"> | Current Year</td><td><div id="puzzle_table_title"> |</div></td></tr>)
+      html << %(</div></td><td></td><td><div id="puzzle_table_title"> | Current Year</td><td></td><td><div id="puzzle_table_title"> |</div></td></tr>)
       for projectmembership in employee.projectmemberships
         sum_week += projectmembership.project.sumProjectCurrentWeek(employee.id).to_f
         sum_month += projectmembership.project.sumProjectCurrentMonth(employee.id).to_f
@@ -68,21 +81,36 @@ module EvaluatorHelper
         html << "#{round(projectmembership.project.sumProjectTime(employee.id))}"
         html << %(</td><td>| )
         html << "#{round(projectmembership.project.sumProjectCurrentWeek(employee.id))}"
-        html << %(</td><td>| )
+          html << %(</td><td><a href="/evaluator/showDetailWeek?project_id=)
+          html << "#{projectmembership.project.id}"
+          html << %(&employee_id=)
+          html << "#{employee.id}"
+          html << %("><img src ="/images/lupe.gif" border=0></a></td>)
+        html << %(<td>| )
         html << "#{round(projectmembership.project.sumProjectCurrentMonth(employee.id))}"
-        html << %(</td><td>| )
+          html << %(</td><td><a href="/evaluator/showDetailMonth?project_id=)
+          html << "#{projectmembership.project.id}"
+          html << %(&employee_id=)
+          html << "#{employee.id}"
+          html << %("><img src ="/images/lupe.gif" border=0></a></td>)
+        html << %(<td>| )
         html << "#{round(projectmembership.project.sumProjectCurrentYear(employee.id))}"
-        html << %(</td><td>|</td></tr>)
+          html << %(</td><td><a href="/evaluator/showDetailYear?project_id=)
+          html << "#{projectmembership.project.id}"
+          html << %(&employee_id=)
+          html << "#{employee.id}"
+          html << %("><img src ="/images/lupe.gif" border=0></a></td>)
+        html << %(<td>|</td></tr>)
       end
       html << %(<tr><td><div id="puzzle_total_sum">Total time</div></td><td><div id="puzzle_total_sum">| )
       html << "#{round(sum_all_project)}"
       html << %(</div></td><td><div id="puzzle_total_sum">| )
       html << "#{round(sum_week)}"
-      html << %(</div></td><td><div id="puzzle_total_sum">| )
+      html << %(</div><td></td></td><td><div id="puzzle_total_sum">| )
       html << "#{round(sum_month)}"
-      html << %(</div></td><td><div id="puzzle_total_sum">| )
+      html << %(</div><td></td></td><td><div id="puzzle_total_sum">| )
       html << "#{round(sum_year)}"
-      html << %(</div></td><td><div id="puzzle_total_sum">|</div></td></tr>)
+      html << %(</div><td></td></td><td><div id="puzzle_total_sum">|</div></td></tr>)
     end
     html << %(</table>)
   end
@@ -101,9 +129,9 @@ module EvaluatorHelper
       html << "#{projectmembership.project.name}"
       html << %(</div></td><td><div id="puzzle_table_title">| Total Project</div></td><td><div id="puzzle_table_title"> | Current Week )
       html << "#{Time.now.strftime('%W')}"
-      html << %(</div></td><td><div id="puzzle_table_title"> | Current Month )
+      html << %(</div></td><td></td><td><div id="puzzle_table_title"> | Current Month )
       html << "#{Time.now.strftime('%m')}"
-      html << %(</div></td><td><div id="puzzle_table_title"> | Current Year</div></td><td><div id="puzzle_table_title"> |</div></td></tr>)
+      html << %(</div></td><td></td><td><div id="puzzle_table_title"> | Current Year</div></td><td></td><td><div id="puzzle_table_title"> |</div></td></tr>)
       for employee in projectmembership.project.employees
         sum_week += projectmembership.project.sumProjectCurrentWeek(employee.id).to_f
         sum_month += projectmembership.project.sumProjectCurrentMonth(employee.id).to_f
@@ -117,21 +145,36 @@ module EvaluatorHelper
         html << "#{round(projectmembership.project.sumProjectTime(employee.id))}"
         html << %(</td><td>| )
         html << "#{round(projectmembership.project.sumProjectCurrentWeek(employee.id))}"
-        html << %(</td><td>| )
+          html << %(</td><td><a href="/evaluator/showDetailWeek?project_id=)
+          html << "#{projectmembership.project.id}"
+          html << %(&employee_id=)
+          html << "#{employee.id}"
+          html << %("><img src ="/images/lupe.gif" border=0></a></td>)
+        html << %(<td>| )
         html << "#{round(projectmembership.project.sumProjectCurrentMonth(employee.id))}"
-        html << %(</td><td>| )
+          html << %(</td><td><a href="/evaluator/showDetailMonth?project_id=)
+          html << "#{projectmembership.project.id}"
+          html << %(&employee_id=)
+          html << "#{employee.id}"
+          html << %("><img src ="/images/lupe.gif" border=0></a></td>)
+        html << %(<td>| )
         html << "#{round(projectmembership.project.sumProjectCurrentYear(employee.id))}"
-        html << %(</td><td>|</td></tr>)
+          html << %(</td><td><a href="/evaluator/showDetailYear?project_id=)
+          html << "#{projectmembership.project.id}"
+          html << %(&employee_id=)
+          html << "#{employee.id}"
+          html << %("><img src ="/images/lupe.gif" border=0></a></td>)
+        html << %(<td>|</td></tr>)
       end
       html << %(<tr><td><div id="puzzle_total_sum"> Total time </div></td><td><div id="puzzle_total_sum">| )
       html << "#{round(sum_all_project)}"
       html << %(</div></td><td><div id="puzzle_total_sum">| )
       html << "#{round(sum_week)}"
-      html << %(</div></td><td><div id="puzzle_total_sum">| )
+      html << %(</div></td><td></td><td><div id="puzzle_total_sum">| )
       html << "#{round(sum_month)}"
-      html << %(</div></td><td><div id="puzzle_total_sum">| )
+      html << %(</div></td><td></td><td><div id="puzzle_total_sum">| )
       html << "#{round(sum_year)}"
-      html << %(</div></td><td><div id="puzzle_total_sum">|</div></td></tr>)
+      html << %(</div></td><td></td><td><div id="puzzle_total_sum">|</div></td></tr>)
     end
     html << %(</table>)
   end
@@ -150,7 +193,7 @@ module EvaluatorHelper
       html << "#{startdate}"
       html << %( to )
       html << "#{enddate}"
-      html << %(</div></td><td>|</div></td></tr>)
+      html << %(</div></td><td></td><td><div id="puzzle_table_title">|</div></td></tr>)
       for employee in projectmembership.project.employees
         sum_total += projectmembership.project.sumProjectPeriod(employee.id, startdate_db, enddate_db).to_f
         sum_all_project += projectmembership.project.sumProjectTime(employee.id).to_f
@@ -162,18 +205,31 @@ module EvaluatorHelper
         html << "#{round(projectmembership.project.sumProjectTime(employee.id))}"
         html << %(</td><td>| )
         html << "#{round(projectmembership.project.sumProjectPeriod(employee.id, startdate_db, enddate_db))}"
-        html << %(</td><td>|</td></tr>)
+          html << %(</td><td><a href="/evaluator/showDetailPeriod?project_id=)
+          html << "#{projectmembership.project.id}"
+          html << %(&employee_id=)
+          html << "#{employee.id}"
+          html << %(&startdate=)
+          html << "#{startdate}"
+          html << %(&enddate=)
+          html << "#{enddate}"
+          html << %(&startdate_db=)
+          html << "#{startdate_db}"
+          html << %(&enddate_db=)
+          html << "#{enddate_db}"
+          html << %("><img src ="/images/lupe.gif" border=0></a></td>)
+        html << %(<td>|</td></tr>)
       end
       html << %(<tr><td><div id="puzzle_total_sum">Total time</div></td><td><div id="puzzle_total_sum">| )
       html << "#{round(sum_all_project)}"
       html << %(</div></td><td><div id="puzzle_total_sum">| )
       html << "#{round(sum_total)}"
-      html << %(</div></td><td><div id="puzzle_total_sum">|</div></td></tr>)
+      html << %(</div></td><td></td><td><div id="puzzle_total_sum">|</div></td></tr>)
     end
     html << %(</table>)
   end
-   
-  # Overview of all employees for project in selected period. 
+ 
+  # Overview of all employees for current time. 
   # Used for management.
   # Group by projects. 
   def overview_employee_current(projects)
@@ -185,11 +241,11 @@ module EvaluatorHelper
       sum_all_project = 0
       html << %(<tr><td><div id="puzzle_table_title">)
       html << "#{project.name}"
-      html << %(</div></td><td><div id="puzzle_table_title">| Total Project</div></td><td><div id="puzzle_table_title"> | Current Week )
+      html << %(</div></td><td><div id="puzzle_table_title">| Total Project</div></td><td></td><td><div id="puzzle_table_title"> | Current Week )
       html << "#{Time.now.strftime('%W')}"
-      html << %(</div></td><td><div id="puzzle_table_title"> | Current Month )
+      html << %(</div></td><td></td><td><div id="puzzle_table_title"> | Current Month )
       html << "#{Time.now.strftime('%m')}"
-      html << %(</div></td><td><div id="puzzle_table_title"> | Current Year</div></td><td><div id="puzzle_table_title"> |</div></td></tr>)
+      html << %(</div></td><td></td><td><div id="puzzle_table_title"> | Current Year</div></td><td></td><td><div id="puzzle_table_title"> |</div></td></tr>)
       for employee in project.employees
         sum_week += project.sumProjectCurrentWeek(employee.id).to_f
         sum_month += project.sumProjectCurrentMonth(employee.id).to_f
@@ -201,28 +257,43 @@ module EvaluatorHelper
         html << "#{employee.firstname}"
         html << %(</td><td>| )
         html << "#{round(project.sumProjectTime(employee.id))}"
-        html << %(</td><td>| )
+        html << %(</td><td></td><td>| )
         html << "#{round(project.sumProjectCurrentWeek(employee.id))}"
-        html << %(</td><td>| )
+          html << %(</td><td><a href="/evaluator/showDetailWeek?project_id=)
+          html << "#{project.id}"
+          html << %(&employee_id=)
+          html << "#{employee.id}"
+          html << %("><img src ="/images/lupe.gif" border=0></a></td>)
+        html << %(<td>| )
         html << "#{round(project.sumProjectCurrentMonth(employee.id))}"
-        html << %(</td><td>| )
+           html << %(</td><td><a href="/evaluator/showDetailMonth?project_id=)
+           html << "#{project.id}"
+           html << %(&employee_id=)
+           html << "#{employee.id}"
+           html << %("><img src ="/images/lupe.gif" border=0></a></td>)
+        html << %(<td>| )
         html << "#{round(project.sumProjectCurrentYear(employee.id))}"
-        html << %(</td><td>|</td></tr>)
+           html << %(</td><td><a href="/evaluator/showDetailYear?project_id=)
+           html << "#{project.id}"
+           html << %(&employee_id=)
+           html << "#{employee.id}"
+           html << %("><img src ="/images/lupe.gif" border=0></a></td>)
+        html << %(<td>|</td></tr>)
       end
       html << %(<tr><td><div id="puzzle_total_sum"> Total time</div> </td><td><div id="puzzle_total_sum">| )
       html << "#{round(sum_all_project)}"
-      html << %(</div></td><td><div id="puzzle_total_sum">| )
+      html << %(</div></td><td></td><td><div id="puzzle_total_sum">| )
       html << "#{round(sum_week)}"
-      html << %(</div></td><td><div id="puzzle_total_sum">| )
+      html << %(</div></td><td></td><td><div id="puzzle_total_sum">| )
       html << "#{round(sum_month)}"
-      html << %(</div></td><td><div id="puzzle_total_sum">| )
+      html << %(</div></td><td></td><td><div id="puzzle_total_sum">| )
       html << "#{round(sum_year)}"
-      html << %(</div></td><td><div id="puzzle_total_sum">|</div></td></tr>)
+      html << %(</div></td><td></td><td><div id="puzzle_total_sum">|</div></td></tr>)
     end
     html << %(</table>)
   end
-  
-  # Overview of all employees for project and current time. 
+
+  # Overview of all employees for project in selected period. 
   # Used for management.
   # Group by projects. 
   def overview_employee_period(projects, startdate_db, enddate_db, startdate, enddate)
@@ -236,7 +307,7 @@ module EvaluatorHelper
       html << "#{startdate}"
       html << %( to )
       html << "#{enddate}"
-      html << %(</div></td><td>|</div></td></tr>)
+      html << %(</div></td><td></td><td><div id="puzzle_table_title">|</div></td></tr>)
       for employee in project.employees
         sum_total += project.sumProjectPeriod(employee.id, startdate_db, enddate_db).to_f
         sum_all_project += project.sumProjectTime(employee.id).to_f
@@ -248,19 +319,31 @@ module EvaluatorHelper
         html << "#{round(project.sumProjectTime(employee.id))}"
         html << %(</td><td>| )
         html << "#{round(project.sumProjectPeriod(employee.id, startdate_db, enddate_db))}"
-        html << %(</td><td>|</td></tr>)
+          html << %(</td><td><a href="/evaluator/showDetailPeriod?project_id=)
+          html << "#{project.id}"
+          html << %(&employee_id=)
+          html << "#{employee.id}"
+          html << %(&startdate=)
+          html << "#{startdate}"
+          html << %(&enddate=)
+          html << "#{enddate}"
+          html << %(&startdate_db=)
+          html << "#{startdate_db}"
+          html << %(&enddate_db=)
+          html << "#{enddate_db}"
+          html << %("><img src ="/images/lupe.gif" border=0></a></td>)
+        html << %(<td>|</td></tr>)
       end
       html << %(<tr><td><div id="puzzle_total_sum">Total time</div> </td><td><div id="puzzle_total_sum">| )
       html << "#{round(sum_all_project)}"
       html << %(</div></td><td><div id="puzzle_total_sum">| )
       html << "#{round(sum_total)}"
-      html << %(</div></td><td><div id="puzzle_total_sum">|</div></td></tr>)
+      html << %(</div></td><td></td><td><div id="puzzle_total_sum">|</div></td></tr>)
     end
     html << %(</table>)
   end
   
-  # Overview of all projects for selected period.
-  # Group by clients.
+  # Overview of all projects and selected period from clients.
   def overview_client_period(clients, startdate_db, enddate_db, startdate, enddate)
     html = %(<table>)
     for client in clients  
@@ -293,9 +376,8 @@ module EvaluatorHelper
     end
     html << %(</table>)
   end
-
-  # Overview of all projects for current time. 
-  # Group by clients. 
+  
+  # Overview of all projects and current time from clients.
   def overview_client_current(clients)
     html = %(<table>)
     for client in clients  
@@ -355,9 +437,9 @@ module EvaluatorHelper
       html << "#{employee.firstname}"
       html << %(</div></td><td><div id="puzzle_table_title"> | Current Week )
       html << "#{Time.now.strftime('%W')}"
-      html << %(</div></td><td><div id="puzzle_table_title"> | Current Month )
+      html << %(</div></td><td></td><td><div id="puzzle_table_title"> | Current Month )
       html << "#{Time.now.strftime('%m')}"
-      html << %(</div></td><td><div id="puzzle_table_title"> | Current Year</td><td><div id="puzzle_table_title"> |</div></td></tr>)
+      html << %(</div></td><td></td><td><div id="puzzle_table_title"> | Current Year</td><td></td><td><div id="puzzle_table_title"> |</div></td></tr>)
       for absence in absences
         sum_week += absence.sumAbsenceCurrentWeek(employee.id).to_f
         sum_month += absence.sumAbsenceCurrentMonth(employee.id).to_f
@@ -366,23 +448,38 @@ module EvaluatorHelper
         html << "#{absence.name}"
         html << %(</td><td>| )
         html << "#{round(absence.sumAbsenceCurrentWeek(employee.id).to_f/8)}"
-        html << %(</td><td>| )
+          html << %(</td><td><a href="/evaluator/showDetailAbsenceWeek?absence_id=)
+          html << "#{absence.id}"
+          html << %(&employee_id=)
+          html << "#{employee.id}"
+          html << %("><img src ="/images/lupe.gif" border=0></a></td>)
+        html << %(<td>| )
         html << "#{round(absence.sumAbsenceCurrentMonth(employee.id).to_f/8)}"
-        html << %(</td><td>| )
-        html << "#{round(absence.sumAbsenceCurrentWeek(employee.id).to_f/8)}"
-        html << %(</td><td>|</td></tr>)
+          html << %(</td><td><a href="/evaluator/showDetailAbsenceMonth?absence_id=)
+          html << "#{absence.id}"
+          html << %(&employee_id=)
+          html << "#{employee.id}"
+          html << %("><img src ="/images/lupe.gif" border=0></a></td>)
+        html << %(<td>| )
+        html << "#{round(absence.sumAbsenceCurrentYear(employee.id).to_f/8)}"
+          html << %(</td><td><a href="/evaluator/showDetailAbsenceYear?absence_id=)
+          html << "#{absence.id}"
+          html << %(&employee_id=)
+          html << "#{employee.id}"
+          html << %("><img src ="/images/lupe.gif" border=0></a></td>)
+        html << %(<td>|</td></tr>)
       end
       html << %(<tr><td><div id="puzzle_total_sum">Total time</div></td><td><div id="puzzle_total_sum">| )
       html << "#{round(sum_week/8)}"
-      html << %(</div></td><td><div id="puzzle_total_sum">| )
+      html << %(</div></td><td></td><td><div id="puzzle_total_sum">| )
       html << "#{round(sum_month/8)}"
-      html << %(</div></td><td><div id="puzzle_total_sum">| )
+      html << %(</div></td><td></td><td><div id="puzzle_total_sum">| )
       html << "#{round(sum_year/8)}"
-      html << %(</div></td><td><div id="puzzle_total_sum">|</div></td></tr>)
+      html << %(</div></td><td></td><td><div id="puzzle_total_sum">|</div></td></tr>)
     end
     html << %(</table>)
   end
-
+  
   #Overview of all absences for selected period.
   #Group by employees.
   def overview_absence_period(employees, absences, startdate_db, enddate_db, startdate, enddate)
@@ -397,18 +494,31 @@ module EvaluatorHelper
       html << "#{startdate}"
       html << %( to )
       html << "#{enddate}"
-      html << %(</div></td><td><div id="puzzle_table_title"> | </div></td></tr>)
+      html << %(</div></td><td></td><td><div id="puzzle_table_title"> | </div></td></tr>)
       for absence in absences
         sum_total += absence.sumAbsencePeriod(employee.id, startdate_db, enddate_db).to_f
         html << %(<tr><td>)
         html << "#{absence.name}"
         html << %(</td><td>| )
         html << "#{round(absence.sumAbsencePeriod(employee.id, startdate_db, enddate_db).to_f/8)}"
-        html << %(</td><td>|</td></tr>)
+          html << %(</td><td><a href="/evaluator/showDetailAbsencePeriod?absence_id=)
+          html << "#{absence.id}"
+          html << %(&employee_id=)
+          html << "#{employee.id}"
+          html << %(&startdate=)
+          html << "#{startdate}"
+          html << %(&enddate=)
+          html << "#{enddate}"
+          html << %(&startdate_db=)
+          html << "#{startdate_db}"
+          html << %(&enddate_db=)
+          html << "#{enddate_db}"
+          html << %("><img src ="/images/lupe.gif" border=0></a></td>)
+        html << %(<td>|</td></tr>)
       end
       html << %(<tr><td><div id="puzzle_total_sum">Total time</div></td><td><div id="puzzle_total_sum">| )
       html << "#{round(sum_total/8)}"
-      html << %(</div></td><td><div id="puzzle_total_sum">|</div></td></tr>)
+      html << %(</div></td><td></td><td><div id="puzzle_total_sum">|</div></td></tr>)
     end
     html << %(</table>)
   end 

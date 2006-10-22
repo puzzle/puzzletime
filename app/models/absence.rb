@@ -25,7 +25,7 @@ class Absence < ActiveRecord::Base
   
   # Gets the sum of absence hours of current year from DB
   def sumAbsenceCurrentYear(employee_id)
-    Worktime.sum(:hours, :conditions => ["absence_id = ? AND employee_id = ? AND work_date BETWEEN ? AND ?", id, employee_id, "#{Time.now.year}-01-01", "#{Time.now.year}-12-#{days_in_month(Time.now.month)}"])
+    Worktime.sum(:hours, :conditions => ["absence_id = ? AND employee_id = ? AND work_date BETWEEN ? AND ?", id, employee_id, "#{Time.now.year}-01-01", "#{Time.now.year}-12-31"])
   end
   
   # Gets the sum of absence hours of selected period from DB
