@@ -1,0 +1,42 @@
+<h1>Change Project of saved time </h1>
+
+<br/>
+<table>
+  <tr>
+    <td>Old Project: </td>
+      <td><%= @old_project.project.name %></td>
+  </tr>
+  <% if @user.management == true %>
+  <%= start_form_tag :action => 'updateEmployeeChangedProject' , :worktime_id => @old_project.id %>
+  <tr>
+	<td>New Project: </td>
+    <td><select name="worktime[project_id]">
+      <% @projects.each do |project| %>
+      <option value="<%= project.id %>"> 
+      <%= project.name %>
+      </option>
+      <% end %>
+      </select></td>
+   </tr>
+   <tr>
+     <td><td><%= submit_tag 'Save' %></td></td>
+   </tr>
+   <%= end_form_tag %>
+   <% else %>
+   <%= start_form_tag :action => 'updateEmployeeChangedProject' , :worktime_id => @old_project.id %>
+   <tr>
+	<td>New Project: </td>
+    <td><select name="worktime[project_id]">
+      <% for projectmembership in @projectmemberships %>
+      <option value="<%= projectmembership.project.id %>"> 
+      <%= projectmembership.project.name %>
+      </option>
+      <% end %>
+      </select></td>
+   </tr>
+   <tr>
+     <td><td><%= submit_tag 'Save' %></td></td>
+   </tr>
+   <%= end_form_tag %>
+   <% end %>
+   </table>

@@ -2,10 +2,11 @@
 # Diplomarbeit 2149, Xavier Hayoz
 
 class EvaluatorController < ApplicationController
-
+ 
+  # Used for the method days_in_month.
   include ActiveSupport::CoreExtensions::Time::Calculations::ClassMethods
   
-  # Checks if employee came from login or from direct url
+  # Checks if employee came from login or from direct url.
   before_filter :authorize
   
   # Store the request in the instances variables below.
@@ -53,13 +54,7 @@ class EvaluatorController < ApplicationController
     @clients = Client.find(:all)    
   end
   
-  def showDetailTimeAndDate
-    if params.has_key?(:startdate)
-     
-    else
-    end
-  end
-  
+  # 
   def showDetailWeek
     @project = Project.find(params[:project_id])
     @employee = Employee.find(params[:employee_id])
@@ -118,10 +113,7 @@ class EvaluatorController < ApplicationController
   
   def editProjectDetailTime
     @worktime = Worktime.find(params[:worktime_id])
-    @absence = Absence.find(:all)
-    if params.has_key?(:employee_id)
-      @employee = Employee.find(params[:employee_id])
-    end   
+    @absence = Absence.find(:all) 
   end
   
   def editAbsenceDetailTime
@@ -129,41 +121,6 @@ class EvaluatorController < ApplicationController
     @absence = Absence.find(:all)
     if params.has_key?(:employee_id)
       @employee = Employee.find(params[:employee_id])
-    end
-  end
-  
-
-  def updateProjectDetailTime
-    @worktime = Worktime.find(params[:worktime_id])
-    if params.has_key?(:employee_id)
-      @employee = Employee.find(params[:employee_id])
-    end
-    if @worktime.update_attributes(params[:worktime])
-      flash[:notice] = 'Worktime was successfully updated.'
-      if params.has_key?(:employee_id)    
-        redirect_to :action => 'showProjects', :employee_id => @employee
-      else
-        redirect_to :controller => 'worktime', :action => 'listTime'
-      end
-    else
-      render :action => 'editTime'
-    end
-  end
-  
-  def updateAbsenceDetailTime
-    @worktime = Worktime.find(params[:worktime_id])
-    if params.has_key?(:employee_id)
-      @employee = Employee.find(params[:employee_id])
-    end
-    if @worktime.update_attributes(params[:worktime])
-      flash[:notice] = 'Worktime was successfully updated.'
-      if params.has_key?(:employee_id)    
-        redirect_to :action => 'showEmployeeProjectAndAbsence', :employee_id => @employee
-      else
-        redirect_to :controller=>'worktime', :action => 'listTime'
-      end
-    else
-      render :action => 'editAbsenceDetailTime'
     end
   end
   

@@ -22,10 +22,8 @@ module WorktimeHelper
       html << "#{round(project.sumProjectTime(@user.id))}"
       html << %(</td><td>| )
       html << "#{round(project.sumProjectPeriod(@user.id, startdate_db, enddate_db))}"
-          html << %(</td><td><a href="/evaluator/showDetailPeriod?project_id=)
+          html << %(</td><td><a href="/worktime/showDetailUserPeriod?project_id=)
           html << "#{project.id}"
-          html << %(&employee_id=)
-          html << "#{@user.id}"
           html << %(&startdate=)
           html << "#{startdate}"
           html << %(&enddate=)
@@ -38,9 +36,9 @@ module WorktimeHelper
       html << %(<td>|</td></tr>)
     end
     html << %(<tr><td><div id="puzzle_total_sum"> Total time </div></td><td><div id="puzzle_total_sum">| )
-    html << "#{sum_all_project}"
+    html << "#{round(sum_all_project)}"
     html << %(</div></td><td><div id="puzzle_total_sum">| )
-    html << "#{sum_total}"
+    html << "#{round(sum_total)}"
     html << %(</div></td><td></td><td><div id="puzzle_total_sum">|</div></td></tr></table>)
   end
 
@@ -65,27 +63,21 @@ module WorktimeHelper
       html << %(<tr><td>)
       html << "#{project.name}"
       html << %(</td><td>| )
-      html << "#{project.sumProjectTime(@user.id)}"  
+      html << "#{round(project.sumProjectTime(@user.id))}"  
       html << %(</td><td>| )
-      html << "#{project.sumProjectCurrentWeek(@user.id).to_f}"
-        html << %(</td><td><a href="/evaluator/showDetailWeek?project_id=)
+      html << "#{round(project.sumProjectCurrentWeek(@user.id).to_f)}"
+        html << %(</td><td><a href="/worktime/showDetailUserWeek?project_id=)
         html << "#{project.id}"
-        html << %(&employee_id=)
-        html << "#{@user.id}"
         html << %("><img src ="/images/lupe.gif" border=0></a></td>)
       html << %(<td>| )
-      html << "#{project.sumProjectCurrentMonth(@user.id).to_f}"
-        html << %(</td><td><a href="/evaluator/showDetailMonth?project_id=)
+      html << "#{round(project.sumProjectCurrentMonth(@user.id).to_f)}"
+        html << %(</td><td><a href="/worktime/showDetailUserMonth?project_id=)
         html << "#{project.id}"
-        html << %(&employee_id=)
-        html << "#{@user.id}"
         html << %("><img src ="/images/lupe.gif" border=0></a></td>)
       html << %(<td>| )
-      html << "#{project.sumProjectCurrentYear(@user.id).to_f}"
-        html << %(</td><td><a href="/evaluator/showDetailYear?project_id=)
+      html << "#{round(project.sumProjectCurrentYear(@user.id).to_f)}"
+        html << %(</td><td><a href="/worktime/showDetailUserYear?project_id=)
         html << "#{project.id}"
-        html << %(&employee_id=)
-        html << "#{@user.id}"
         html << %("><img src ="/images/lupe.gif" border=0></a></td>)
       html << %(<td>|<a href="/worktime/addTime?project_id=)
       html << "#{project.id}"
@@ -93,13 +85,13 @@ module WorktimeHelper
       html << %(</td></tr>)
     end
     html << %(<tr><td><div id="puzzle_total_sum"> Total time </div></td><td><div id="puzzle_total_sum">| )
-    html << "#{sum_all_project}"
+    html << "#{round(sum_all_project)}"
     html << %(</div></td><td><div id="puzzle_total_sum">| )
-    html << "#{sum_week}"
+    html << "#{round(sum_week)}"
     html << %(</div></td><td></td><td><div id="puzzle_total_sum">| )
-    html << "#{sum_month}"
+    html << "#{round(sum_month)}"
     html << %(</div></td><td></td><td><div id="puzzle_total_sum">| )
-    html << "#{sum_year}"
+    html << "#{round(sum_year)}"
     html << %(</div></td><td></td><td><div id="puzzle_total_sum">|</div></td></tr></table)
   end
   
@@ -135,7 +127,7 @@ module WorktimeHelper
           html << "#{@user.id}"
           html << %("><img src ="/images/lupe.gif" border=0></a></td>)
         html << %(<td>| )
-        html << "#{round(absence.sumAbsenceCurrentWeek(@user.id).to_f/8)}"
+        html << "#{round(absence.sumAbsenceCurrentYear(@user.id).to_f/8)}"
           html << %(</td><td><a href="/evaluator/showDetailAbsenceYear?absence_id=)
           html << "#{absence.id}"
           html << %(&employee_id=)

@@ -1,0 +1,16 @@
+<h1>Edit Absence of <%= @employee.lastname %> <%= @employee.firstname %> </h1>
+<br/>
+<table>
+  <tr>
+    <td>Current Absence Typ: <%= @worktime.absence.name %></td>
+  </tr>
+  <tr>
+    <td>Current Report Type: <%= @worktime.report_type %></td>
+  </tr>
+ </table>
+<br/>
+ <%= start_form_tag :action => 'updateAbsenceTime', :worktime_id => @worktime %>
+ <%= render :partial => 'editForm' %>
+ <%= end_form_tag %>
+ 
+ <%= link_to 'Current Absences', :action => 'showAbsences'%>

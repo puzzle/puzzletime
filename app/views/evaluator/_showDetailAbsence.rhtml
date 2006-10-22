@@ -14,7 +14,15 @@
 <tr>
   <td><%= change_date(time.work_date) %></td><td><%=time.hours %> h</td>
   <td><%= time.absence.name %></td>
+  <% if @user.management == true %>
+  <td><%= link_to 'Edit Absence', :controller => 'absence'  ,:action=>'editAbsenceTime' , :worktime_id => time , :employee_id => @employee %></td>
+  <td><%= link_to 'Delete Absence', :controller => 'absence'  ,:action=>'deleteAbsenceTime' , :worktime_id => time %></td>
+  <% end %>
 <tr>
 <% end %> 
 </table>
-
+<% if @user.management == true %>
+<%= link_to 'Current Absences', :action => 'showAbsences' %>
+<% else %>
+<%= link_to 'Current Absences', :controller => 'worktime', :action => 'showUserAbsences' %>
+<% end %>

@@ -4,12 +4,12 @@ Diplomarbeit 2149, Xavier Hayoz -->
 <%= error_messages_for 'worktime' %>
 
 <table>
-  <tr>
+    <tr>
 	<td>Report type: </td>
     <td>
           <select id="report_type" name="worktime[report_type]" onChange="switchvisibility();">
           <option value="start_stop_day">Start-Stop Time</option> 
-          <option value="absolute_day">Hours/Day</option> 
+          <option value="absolute_day">Hours/Day</option>
           <option value="week">Hours/Week</option> 
           <option value="month">Hours/Month</option>
           </select>
@@ -21,7 +21,7 @@ Diplomarbeit 2149, Xavier Hayoz -->
     <td>
           <select id="absence" name="worktime[absence_id]">
           <% @absence.each do |abs| %>
-          <option value="<%=abs.id%>">
+          <option value="<%= abs.id%>">
           <%= abs.name %>
           </option> 
           <% end %>
@@ -37,7 +37,7 @@ Diplomarbeit 2149, Xavier Hayoz -->
     <td>Hours: </td>
     <td><%= text_field('worktime', 'hours', {:disabled => true})  %></td>
   </tr>
-  <tr>	
+  <tr>
     <td>From start time: </td>
     <td>
       <%= worktime_hour('worktime_from_start_time_hour') %> <%= worktime_minute('worktime_from_start_time_minute') %> 

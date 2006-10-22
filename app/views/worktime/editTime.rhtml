@@ -1,0 +1,16 @@
+<h1>Edit your Time</h1>
+<br/>
+<table>
+<tr>
+ <td>Current Report Type: <%= @worktime.report_type %></td>
+</tr>
+<tr>
+<td>Current Employee: <%= @worktime.employee.lastname %> <%= @worktime.employee.firstname %>
+</tr>
+</table>
+<%= start_form_tag :action => 'updateTime', :worktime_id => @worktime , :project_id => @project %>
+<%= render :partial => 'form' %>
+<%= end_form_tag %>
+
+<br/>
+<%= link_to 'Back', :action => 'listTime' %>

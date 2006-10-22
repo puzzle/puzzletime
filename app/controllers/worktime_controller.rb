@@ -2,7 +2,9 @@
 # Diplomarbeit 2149, Xavier Hayoz
 
 class WorktimeController < ApplicationController
-  
+
+  include ActiveSupport::CoreExtensions::Time::Calculations::ClassMethods  
+
   # Checks if employee came from login or from direct url
   before_filter :authorize
   
@@ -19,17 +21,55 @@ class WorktimeController < ApplicationController
   def listTime
     @user_projectmemberships = @user.projectmemberships
   end
-                
-  # Shows the addTime or the addAbsence page   
-  def addTime
-    if params.has_key?(:project_id)
-      @project = Project.find(params[:project_id])
-    else
-      @absence = Absence.find(:all)
-    end
+  
+  # Shows the edit page for the selected time
+  def editTime
+    @project = Project.find(params[:project_id])
+    @worktime = Worktime.find(params[:worktime_id])
   end
   
-  # Stores the data on DB 
+  # Shows the addAbsence page 
+  def addAbsence
+    @absence = Absence.find(:all)
+  end
+  
+  # Shows the addTime page
+  def addTime
+    @project = Project.find(params[:project_id])
+  end
+  
+  # Update the selected worktime on DB
+  def updateTime
+    @worktime = Worktime.find(params[:worktime_id])
+    @project = Project.find(params[:project_id])
+    start_time_hour = params[:worktime_from_start_time_hour]
+    start_time_minute = params[:worktime_from_start_time_minute]
+    end_time_hour = params[:worktime_to_end_time_hour]
+    end_time_minute = params[:worktime_to_end_time_minute]
+    params[:worktime][:employee_id] = @user.id 
+    params[:worktime][:project_id] = @project.id
+    params[:worktime][:from_start_time] = "{#{start_time_hour}:#{start_time_minute}}"
+    params[:worktime][:to_end_time] = "{#{end_time_hour}:#{end_time_minute}}"
+    
+    if params[:worktime][:report_type]=='start_stop_day'
+      hours_start = start_time_hour.to_f + (start_time_minute.to_f/60)
+      hours_end = end_time_hour.to_f + (end_time_minute.to_f/60)
+      if hours_end-hours_start > 0
+        params[:worktime][:hours] = hours_end-hours_start
+        @worktime.update_attributes(params[:worktime])
+        flash[:notice] = 'Item was successfully updated.' 
+        redirect_to :action => 'listTime'
+      else
+        flash[:notice] = 'Please select correct start and end time.'
+        render :action => 'addTime'
+      end
+    else
+      @worktime.update_attributes(params[:worktime])
+      flash[:notice] = 'Item was successfully updated.'
+    end
+  end
+    
+  # Stores the new time the data on DB 
   def createTime
     start_time_hour = params[:worktime_from_start_time_hour]
     start_time_minute = params[:worktime_from_start_time_minute]
@@ -45,15 +85,48 @@ class WorktimeController < ApplicationController
       hours_end = end_time_hour.to_f + (end_time_minute.to_f/60)
       if hours_end-hours_start > 0
         params[:worktime][:hours] = hours_end-hours_start
-        worktime = Worktime.create(params[:worktime])
+        Worktime.create(params[:worktime])
         flash[:notice] = 'Item was successfully created.' 
         redirect_to :action => 'listTime'
       else
         flash[:notice] = 'Please select correct start and end time.'
         render :action => 'addTime'
       end
+    else Worktime.create(params[:worktime])
+      flash[:notice] = 'Item was successfully updated.' 
+      redirect_to :action => 'listTime'
     end
   end
+  
+  # Stores the new absence on DB 
+  def createAbsenceTime
+    start_time_hour = params[:worktime_from_start_time_hour]
+    start_time_minute = params[:worktime_from_start_time_minute]
+    end_time_hour = params[:worktime_to_end_time_hour]
+    end_time_minute = params[:worktime_to_end_time_minute]
+    params[:worktime][:employee_id] = @user.id
+    params[:worktime][:from_start_time] = "{#{start_time_hour}:#{start_time_minute}}"
+    params[:worktime][:to_end_time] = "{#{end_time_hour}:#{end_time_minute}}"
+    
+   if params[:worktime][:report_type]=='start_stop_day'
+      hours_start = start_time_hour.to_f + (start_time_minute.to_f/60)
+      hours_end = end_time_hour.to_f + (end_time_minute.to_f/60)
+      if hours_end-hours_start > 0
+        params[:worktime][:hours] = hours_end-hours_start
+        Worktime.create(params[:worktime])
+        flash[:notice] = 'Item was successfully created.' 
+        redirect_to :action => 'listTime'
+      else
+        flash[:notice] = 'Please select correct start and end time.'
+        render :action => 'addTime'
+      end
+    else 
+      Worktime.create(params[:worktime])
+      flash[:notice] = 'Item was successfully updated.' 
+      redirect_to :action => 'listTime'
+    end 
+  end
+  
   
   # Store the request in the instances variables below.
   # They are needed to get data of the DB.
@@ -78,5 +151,29 @@ class WorktimeController < ApplicationController
     @startdate_db = "#{params[:worktime]['start(1i)']}-#{params[:worktime]['start(2i)']}-#{params[:worktime]['start(3i)']}"      
     @enddate_db = "#{params[:worktime]['end(1i)']}-#{params[:worktime]['end(2i)']}-#{params[:worktime]['end(3i)']}"
     @absences = Absence.find(:all)
+  end
+  
+  def showDetailUserWeek
+    @project = Project.find(params[:project_id])
+    @times = Worktime.find(:all, :conditions => ["project_id = ? AND employee_id = ? AND work_date BETWEEN ? AND ?", @project.id, @user.id, "#{Time.now.year}-#{Time.now.month}-#{Time.now.day-7}", "#{Time.now.year}-#{Time.now.month}-#{Time.now.day}"], :order => "work_date ASC")
+  end
+  
+  def showDetailUserMonth
+    @project = Project.find(params[:project_id])
+    @times = Worktime.find(:all, :conditions => ["project_id = ? AND employee_id = ? AND  work_date BETWEEN ? AND ?", @project.id, @user.id, "#{Time.now.year}-#{Time.now.month}-01", "#{Time.now.year}-#{Time.now.month}-#{days_in_month(Time.now.month)}"], :order => "work_date ASC")
+  end
+  
+  def showDetailUserYear
+    @project = Project.find(params[:project_id])
+    @times = Worktime.find(:all, :conditions => ["project_id = ? AND employee_id = ? AND work_date BETWEEN ? AND ?", @project.id, @user.id, "#{Time.now.year}-01-01", "#{Time.now.year}-12-31"], :order => "work_date ASC")
+  end
+  
+   def showDetailUserPeriod
+    @project = Project.find(params[:project_id])
+    @startdate = params[:startdate]
+    @enddate = params[:enddate]
+    @startdate_db = params[:startdate_db]
+    @enddate_db = params[:enddate_db]
+    @times = Worktime.find(:all, :conditions => ["project_id = ? AND employee_id = ? AND work_date BETWEEN ? AND ?", @project.id, @user.id, @startdate_db, @enddate_db ], :order => "work_date ASC")
   end
 end

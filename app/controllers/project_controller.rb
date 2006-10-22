@@ -108,6 +108,25 @@ class ProjectController < ApplicationController
     end
   end
   
+  def changeProject
+    if @user.management == true
+      @projects = Project.find(:all, :order => "name")
+    else
+      @projectmemberships = Projectmembership.find(:all, :conditions =>["employee_id = ? and projectmanagement IS TRUE", @user.id])
+    end
+    @old_project = Worktime.find(params[:worktime_id])
+  end
+  
+  def updateEmployeeChangedProject
+    @worktime = Worktime.find(params[:worktime_id])
+    if @worktime.update_attributes(params[:worktime])
+      flash[:notice] = 'Project was successfully changed'
+      redirect_to :controller => 'evaluator', :action => 'showProjects'
+    else
+      render :action => 'changeProject'
+    end
+  end
+  
   # Deletes the chosen project
   def destroyProject
     Project.find(params[:id]).destroy
