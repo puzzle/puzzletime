@@ -17,6 +17,10 @@ Diplomarbeit 2149, Xavier Hayoz -->
     <td><%= link_to 'Clients Overview', :action => 'showClients' %>
     </td>
   </tr>
+  <tr>
+    <td><%= link_to 'Overtime Overview', :action => 'showOvertime' %>
+    </td>
+  </tr>
    <% end %>
    <%if @user.management == true || Projectmembership.is_projectmanagement(@user) %>
   <tr>

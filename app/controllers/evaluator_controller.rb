@@ -12,11 +12,8 @@ class EvaluatorController < ApplicationController
   # Store the request in the instances variables below.
   # They are needed to get data from the DB.
   def showProjectsPeriod
-      @startdate ="#{params[:worktime]['start(3i)']}-#{params[:worktime]['start(2i)']}-#{params[:worktime]['start(1i)']}"      
-      @enddate = "#{params[:worktime]['end(3i)']}-#{params[:worktime]['end(2i)']}-#{params[:worktime]['end(1i)']}"
-      @startdate_db = "#{params[:worktime]['start(1i)']}-#{params[:worktime]['start(2i)']}-#{params[:worktime]['start(3i)']}"      
-      @enddate_db = "#{params[:worktime]['end(1i)']}-#{params[:worktime]['end(2i)']}-#{params[:worktime]['end(3i)']}"
-    if @user.management == true
+    setPeriodDates
+    if @user.management 
       @projects = Project.find(:all)
     else  
       @projectmemberships = Projectmembership.find(:all, :conditions =>["employee_id = ? AND projectmanagement IS TRUE", @user.id])
@@ -26,20 +23,22 @@ class EvaluatorController < ApplicationController
   # Store the request in the instances variables below.
   # They are needed to get data from the DB.
   def showEmployeesPeriod
-    @startdate ="#{params[:worktime]['start(3i)']}-#{params[:worktime]['start(2i)']}-#{params[:worktime]['start(1i)']}"      
-    @enddate = "#{params[:worktime]['end(3i)']}-#{params[:worktime]['end(2i)']}-#{params[:worktime]['end(1i)']}"
-    @startdate_db = "#{params[:worktime]['start(1i)']}-#{params[:worktime]['start(2i)']}-#{params[:worktime]['start(3i)']}"      
-    @enddate_db = "#{params[:worktime]['end(1i)']}-#{params[:worktime]['end(2i)']}-#{params[:worktime]['end(3i)']}"
+    setPeriodDates
     @employees = Employee.find(:all)
+  end
+  
+  # Sets the selected periodDates 
+  def setPeriodDates
+    @startdate = "#{params[:worktime]['start(3i)']}-#{params[:worktime]['start(2i)']}-#{params[:worktime]['start(1i)']}"
+    @enddate = "#{params[:worktime]['end(3i)']}-#{params[:worktime]['end(2i)']}-#{params[:worktime]['end(1i)']}"
+    @startdate_db = "#{params[:worktime]['start(1i)']}-#{params[:worktime]['start(2i)']}-#{params[:worktime]['start(3i)']}"
+    @enddate_db = "#{params[:worktime]['end(1i)']}-#{params[:worktime]['end(2i)']}-#{params[:worktime]['end(3i)']}"
   end
   
   # Store the request in the instances variables below.
   # They are needed to get data from the DB.
   def showAbsencesPeriod
-    @startdate ="#{params[:worktime]['start(3i)']}-#{params[:worktime]['start(2i)']}-#{params[:worktime]['start(1i)']}"      
-    @enddate = "#{params[:worktime]['end(3i)']}-#{params[:worktime]['end(2i)']}-#{params[:worktime]['end(1i)']}"
-    @startdate_db = "#{params[:worktime]['start(1i)']}-#{params[:worktime]['start(2i)']}-#{params[:worktime]['start(3i)']}"      
-    @enddate_db = "#{params[:worktime]['end(1i)']}-#{params[:worktime]['end(2i)']}-#{params[:worktime]['end(3i)']}"
+    setPeriodDates
     @employees = Employee.find(:all, :order => "lastname ASC")
     @absences  = Absence.find(:all, :order => "name ASC")
   end
@@ -47,33 +46,34 @@ class EvaluatorController < ApplicationController
   # Store the request in the instances variables below.
   # They are needed to get data from the DB.
   def showClientsPeriod
-    @startdate ="#{params[:worktime]['start(3i)']}-#{params[:worktime]['start(2i)']}-#{params[:worktime]['start(1i)']}"      
-    @enddate = "#{params[:worktime]['end(3i)']}-#{params[:worktime]['end(2i)']}-#{params[:worktime]['end(1i)']}"
-    @startdate_db = "#{params[:worktime]['start(1i)']}-#{params[:worktime]['start(2i)']}-#{params[:worktime]['start(3i)']}"      
-    @enddate_db = "#{params[:worktime]['end(1i)']}-#{params[:worktime]['end(2i)']}-#{params[:worktime]['end(3i)']}"
+    setPeriodDates
     @clients = Client.find(:all)    
   end
   
-  # 
+  # showDetail queries for current times
+  def showDetail(startdate, enddate)
+    @project = Project.find(params[:project_id])
+    @employee = Employee.find(params[:employee_id])
+    @times = Worktime.find(:all, :conditions => ["project_id = ? AND employee_id = ? AND work_date BETWEEN ? AND ?", @project.id, @employee.id, startdate, enddate], :order => "work_date ASC")
+  end
+    
+  # Shows project detail of current week.
   def showDetailWeek
-    @project = Project.find(params[:project_id])
-    @employee = Employee.find(params[:employee_id])
-    @times = Worktime.find(:all, :conditions => ["project_id = ? AND employee_id = ? AND work_date BETWEEN ? AND ?", @project.id, @employee.id, "#{Time.now.year}-#{Time.now.month}-#{Time.now.day-7}", "#{Time.now.year}-#{Time.now.month}-#{Time.now.day}"], :order => "work_date ASC")
+    showDetail("#{Time.now.year}-#{Time.now.month}-#{Time.now.day-7}", "#{Time.now.year}-#{Time.now.month}-#{Time.now.day}")
   end
   
+  # Shows project detail of current month.
   def showDetailMonth
-    @project = Project.find(params[:project_id])
-    @employee = Employee.find(params[:employee_id])
-    @times = Worktime.find(:all, :conditions => ["project_id = ? AND employee_id = ? AND  work_date BETWEEN ? AND ?", @project.id, @employee.id, "#{Time.now.year}-#{Time.now.month}-01", "#{Time.now.year}-#{Time.now.month}-#{days_in_month(Time.now.month)}"], :order => "work_date ASC")
+    showDetail("#{Time.now.year}-#{Time.now.month}-01", "#{Time.now.year}-#{Time.now.month}-#{days_in_month(Time.now.month)}")
   end
   
+  # Shows project detail of current year.
   def showDetailYear
-    @project = Project.find(params[:project_id])
-    @employee = Employee.find(params[:employee_id])
-    @times = Worktime.find(:all, :conditions => ["project_id = ? AND employee_id = ? AND work_date BETWEEN ? AND ?", @project.id, @employee.id, "#{Time.now.year}-01-01", "#{Time.now.year}-12-31"], :order => "work_date ASC")
+    showDetail("#{Time.now.year}-01-01", "#{Time.now.year}-12-31")
   end
-  
-   def showDetailPeriod
+ 
+  # Shows project detail of selected period.
+  def showDetailPeriod
     @project = Project.find(params[:project_id])
     @employee = Employee.find(params[:employee_id])
     @startdate = params[:startdate]
@@ -83,25 +83,29 @@ class EvaluatorController < ApplicationController
     @times = Worktime.find(:all, :conditions => ["project_id = ? AND employee_id = ? AND work_date BETWEEN ? AND ?", @project.id, @employee.id, @startdate_db, @enddate_db ], :order => "work_date ASC")
   end
   
-    def showDetailAbsenceWeek
+  # Shows detail query
+  def showDetailAbsence(startdate,enddate)
     @absence = Absence.find(params[:absence_id])
     @employee = Employee.find(params[:employee_id])
-    @times = Worktime.find(:all, :conditions => ["absence_id = ? AND employee_id = ? AND work_date BETWEEN ? AND ?", @absence.id, @employee.id, "#{Time.now.year}-#{Time.now.month}-#{Time.now.day-7}", "#{Time.now.year}-#{Time.now.month}-#{Time.now.day}"], :order => "work_date ASC")
+    @times = Worktime.find(:all, :conditions => ["absence_id = ? AND employee_id = ? AND work_date BETWEEN ? AND ?", @absence.id, @employee.id, startdate, enddate], :order => "work_date ASC")
+  end
+  # Shows absence detail of current week.
+  def showDetailAbsenceWeek
+    showDetailAbsence("#{Time.now.year}-#{Time.now.month}-#{Time.now.day-7}", "#{Time.now.year}-#{Time.now.month}-#{Time.now.day}")
   end
   
+  # Shows absence detail of current month.
   def showDetailAbsenceMonth
-    @absence = Absence.find(params[:absence_id])
-    @employee = Employee.find(params[:employee_id])
-    @times = Worktime.find(:all, :conditions => ["absence_id = ? AND employee_id = ? AND  work_date BETWEEN ? AND ?", @absence.id, @employee.id, "#{Time.now.year}-#{Time.now.month}-01", "#{Time.now.year}-#{Time.now.month}-#{days_in_month(Time.now.month)}"], :order => "work_date ASC")
+    showDetailAbsence("#{Time.now.year}-#{Time.now.month}-01", "#{Time.now.year}-#{Time.now.month}-#{days_in_month(Time.now.month)}")
   end
   
+  # showAbsence queries for current times
   def showDetailAbsenceYear
-    @absence = Absence.find(params[:absence_id])
-    @employee = Employee.find(params[:employee_id])
-    @times = Worktime.find(:all, :conditions => ["absence_id = ? AND employee_id = ? AND work_date BETWEEN ? AND ?", @absence.id, @employee.id, "#{Time.now.year}-01-01", "#{Time.now.year}-12-31"], :order => "work_date ASC")
+    showDetailAbsence("#{Time.now.year}-01-01", "#{Time.now.year}-12-31")
   end
   
-   def showDetailAbsencePeriod
+  # Shows absence detail of selected period.
+  def showDetailAbsencePeriod 
     @absence = Absence.find(params[:absence_id])
     @employee = Employee.find(params[:employee_id])
     @startdate = params[:startdate]
@@ -111,11 +115,13 @@ class EvaluatorController < ApplicationController
     @times = Worktime.find(:all, :conditions => ["absence_id = ? AND employee_id = ? AND work_date BETWEEN ? AND ?", @absence.id, @employee.id, @startdate_db, @enddate_db ], :order => "work_date ASC")
   end
   
+  # Shows project edit detail page.
   def editProjectDetailTime
     @worktime = Worktime.find(params[:worktime_id])
     @absence = Absence.find(:all) 
   end
   
+  # Shows absence edit detail page.
   def editAbsenceDetailTime
     @worktime = Worktime.find(params[:worktime_id])
     @absence = Absence.find(:all)
@@ -124,25 +130,30 @@ class EvaluatorController < ApplicationController
     end
   end
   
-  # Shows all Projects
+  # Shows all projects.
   def showProjects
     @projects = Project.find(:all, :order => "name ASC")
     @projectmemberships = Projectmembership.find(:all, :conditions =>["employee_id = ? AND projectmanagement IS TRUE", @user.id])
   end
    
-  # Shows all employees
+  # Shows all employees.
   def showEmployees
     @employees = Employee.find(:all, :order => "lastname ASC")
   end 
   
-  # Show all absences
+  # Shows all absences.
   def showAbsences
     @employees = Employee.find(:all, :order => "lastname ASC")
     @absences  = Absence.find(:all, :order => "name ASC")
   end 
   
-  # Show all clients
+  # Shows all clients.
   def showClients
     @clients = Client.find(:all, :order => "name ASC")
+  end
+  
+  # Shows overtimes of employees
+  def showOvertime
+    @employees = Employee.find(:all, :order =>"lastname ASC")
   end
 end

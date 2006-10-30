@@ -3,7 +3,7 @@
 
 class Worktime < ActiveRecord::Base
   
-  # All dependencies between the models are listed below
+  # All dependencies between the models are listed below.
   belongs_to :absence 
   belongs_to :employee
   belongs_to :project

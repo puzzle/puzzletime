@@ -23,6 +23,44 @@ class AbsenceController < ApplicationController
     @worktime = Worktime.find(params[:worktime_id])
   end
   
+  # Shows editAbsence page.
+  def editAbsence
+    @absence = Absence.find(params[:id])
+  end
+
+  # Saves the new absence on the DB.
+  def createAbsence
+    @absence = Absence.new(params[:absence])
+    if @absence.save
+      flash[:notice] = 'Absence was successfully created'
+      redirect_to :action => 'listAbsence'
+    else
+      render :action => 'newAbsence'
+    end
+  end
+  
+  # Update the selected absence on DB.
+  def updateAbsence
+    @absence = Absence.find(params[:id])
+    if @absence.update_attributes(params[:absence])
+      flash[:notice] = 'Absence was successfully created'
+      redirect_to :action => 'listAbsence'
+    else
+      render :action => 'newAbsence'
+    end
+  end
+  
+  # Deletes selected absence from the DB.
+  def destroyAbsence
+    @absence = Absence.find(params[:id])
+    if @absence.destroy
+      flash[:notice] = 'Absence was successfully removed'
+      redirect_to :action => 'listAbsence'
+    else
+      render :action => 'listAbsence'
+    end
+  end
+  
   # Saves the updated absence attributes on DB.
   def updateAbsenceTime
     @worktime = Worktime.find(params[:worktime_id])

@@ -13,19 +13,24 @@ class Absence < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name
   
+  #Gets the sum of absence hours
+  def sumAbsenceCurrent(employee_id, startdate, enddate)
+    Worktime.sum(:hours, :conditions => ["absence_id = ? AND employee_id = ? AND work_date BETWEEN ? AND ?", id, employee_id, startdate, enddate])
+  end
+  
   # Gets the sum of absence hours of current week from DB
   def sumAbsenceCurrentWeek(employee_id)
-    Worktime.sum(:hours, :conditions => ["absence_id = ? AND employee_id = ? AND work_date BETWEEN ? AND ?", id, employee_id, "#{Time.now.year}-#{Time.now.month}-#{Time.now.day-7}", "#{Time.now.year}-#{Time.now.month}-#{Time.now.day}"])
+    sumAbsenceCurrent(employee_id, "#{Time.now.year}-#{Time.now.month}-#{Time.now.day-7}", "#{Time.now.year}-#{Time.now.month}-#{Time.now.day}")
   end
   
   # Gets the sum of absence hours of current month from DB
   def sumAbsenceCurrentMonth(employee_id)
-    Worktime.sum(:hours, :conditions => ["absence_id = ? AND employee_id = ? AND work_date BETWEEN ? AND ?", id, employee_id, "#{Time.now.year}-#{Time.now.month}-01", "#{Time.now.year}-#{Time.now.month}-#{days_in_month(Time.now.month)}"])
+    sumAbsenceCurrent(employee_id, "#{Time.now.year}-#{Time.now.month}-01", "#{Time.now.year}-#{Time.now.month}-#{days_in_month(Time.now.month)}")
   end
   
   # Gets the sum of absence hours of current year from DB
   def sumAbsenceCurrentYear(employee_id)
-    Worktime.sum(:hours, :conditions => ["absence_id = ? AND employee_id = ? AND work_date BETWEEN ? AND ?", id, employee_id, "#{Time.now.year}-01-01", "#{Time.now.year}-12-31"])
+    sumAbsenceCurrent(employee_id, "#{Time.now.year}-01-01", "#{Time.now.year}-12-31")
   end
   
   # Gets the sum of absence hours of selected period from DB

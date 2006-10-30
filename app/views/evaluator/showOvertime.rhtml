@@ -1,0 +1,10 @@
+<h1>Employee Overtime Overview</h1>
+<br/>
+<table>
+  <% for employee in @employees %>
+  <tr>
+    <td><%= employee.lastname %> <%= employee.firstname %></td>
+    <td><%= employee.totalOvertime(employee) %></td>
+  </tr>
+  <% end %>
+</table>

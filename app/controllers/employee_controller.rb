@@ -5,12 +5,6 @@ class EmployeeController < ApplicationController
 
   # Checks if employee came from login or from direct url
   before_filter :authorize
-  
-  # Startpoint
-  def index
-    list
-    render :action => 'listEmployee'
-  end
 
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
   verify :method => :post, :only => [ :destroy, :create, :update ],
@@ -119,7 +113,7 @@ class EmployeeController < ApplicationController
   # Stores the changed employee
   def updateEmployee
     @employee = Employee.find(params[:id])
-    if@employee.update_attributes(params[:employee])
+    if @employee.update_attributes(params[:employee])
       flash[:notice] = 'Employee was successfully updated.'
       redirect_to :action => 'listEmployee'
     else
@@ -129,7 +123,7 @@ class EmployeeController < ApplicationController
   
   # Deletes the chosen employee
   def destroyEmployee
-    @employee = Employee.find(params[:employee_id])
+    @employee = Employee.find(params[:id])
     if @employee.destroy
         flash[:notice] = 'Employee was deleted'
       redirect_to :action => 'listEmployee'

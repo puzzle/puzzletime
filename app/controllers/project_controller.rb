@@ -4,36 +4,30 @@
 class ProjectController < ApplicationController
 
   
-  # Checks if employee came from login or from direct url
+  # Checks if employee came from login or from direct url.
   before_filter :authorize
-  
-  # Startpoint
-  def index
-    list
-    render :action => 'listProject'
-  end
 
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
   verify :method => :post, :only => [ :destroy, :create, :update ],
          :redirect_to => { :action => :list }
 
-  # Lists all projects
+  # Lists all projects.
   def listProject
     @project_pages, @projects = paginate :projects, :per_page => 10
   end
   
-  # Shows detail of chosen project
+  # Shows detail of chosen project.
   def showProject
     @project = Project.find(params[:id])
     @employee = Employee.find(:all, :order => 'lastname')
   end
   
-  # Creates new instance of project
+  # Creates new instance of project.
   def newProject
     @clients = Client.find(:all)
   end
   
-  # Create project membership
+  # Create project membership.
   def createProjectMembership
     @project = Project.find(params[:project_id])
     if params.has_key?(:employee_id)
@@ -50,7 +44,7 @@ class ProjectController < ApplicationController
     end
   end
 
-  # Add project management
+  # Add project management.
   def addProjectManagement
     @project = Project.find(params[:project_id])
     @projectmembership = Projectmembership.find(params[:projectmembership_id])
@@ -59,7 +53,7 @@ class ProjectController < ApplicationController
     redirect_to :action => 'showProject' , :id => @project
   end
   
-  # Remove project management
+  # Remove project management.
   def removeProjectManagement
     @project = Project.find(params[:project_id])
     @projectmembership = Projectmembership.find(params[:projectmembership_id])
@@ -68,7 +62,7 @@ class ProjectController < ApplicationController
     redirect_to :action => 'showProject' , :id => @project
   end
   
-  # Destroy project membership
+  # Destroy project membership.
   def destroyProjectMembership
     @project = Project.find(params[:project_id])
     @projectmembership = Projectmembership.find(params[:projectmembership_id])
@@ -77,7 +71,7 @@ class ProjectController < ApplicationController
     redirect_to :action => 'showProject' , :id => @project
   end
   
-  # Saves new project on db
+  # Saves new project on DB.
   def createProject
    @clients = Client.find(:all)
    @project = Project.new(params[:project])
@@ -90,13 +84,13 @@ class ProjectController < ApplicationController
     end
   end
   
-  # Shows the editpage of project
+  # Shows the editpage of project.
   def editProject
     @project = Project.find(params[:id])
     @clients = Client.find(:all)
   end
   
-  # Stores the updated attributes of project
+  # Stores the updated attributes of project.
   def updateProject
     @clients = Client.find(:all)
     @project = Project.find(params[:project_id])
@@ -108,6 +102,7 @@ class ProjectController < ApplicationController
     end
   end
   
+  # Show the change project page.
   def changeProject
     if @user.management == true
       @projects = Project.find(:all, :order => "name")
@@ -117,6 +112,7 @@ class ProjectController < ApplicationController
     @old_project = Worktime.find(params[:worktime_id])
   end
   
+  # Stores the changes on the DB.
   def updateEmployeeChangedProject
     @worktime = Worktime.find(params[:worktime_id])
     if @worktime.update_attributes(params[:worktime])
@@ -127,7 +123,7 @@ class ProjectController < ApplicationController
     end
   end
   
-  # Deletes the chosen project
+  # Deletes the chosen project.
   def destroyProject
     Project.find(params[:id]).destroy
     flash[:notice] = 'Project was successfully deleted'

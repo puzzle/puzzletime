@@ -114,21 +114,21 @@ module WorktimeHelper
         html << "#{absence.name}"
         html << %(</td><td>| )
         html << "#{round(absence.sumAbsenceCurrentWeek(@user.id).to_f/8)}"
-          html << %(</td><td><a href="/evaluator/showDetailAbsenceWeek?absence_id=)
+          html << %( d</td><td><a href="/evaluator/showDetailAbsenceWeek?absence_id=)
           html << "#{absence.id}"
           html << %(&employee_id=)
           html << "#{@user.id}"
           html << %("><img src ="/images/lupe.gif" border=0></a></td>)
         html << %(<td>| )
         html << "#{round(absence.sumAbsenceCurrentMonth(@user.id).to_f/8)}"
-          html << %(</td><td><a href="/evaluator/showDetailAbsenceMonth?absence_id=)
+          html << %( d</td><td><a href="/evaluator/showDetailAbsenceMonth?absence_id=)
           html << "#{absence.id}"
           html << %(&employee_id=)
           html << "#{@user.id}"
           html << %("><img src ="/images/lupe.gif" border=0></a></td>)
         html << %(<td>| )
         html << "#{round(absence.sumAbsenceCurrentYear(@user.id).to_f/8)}"
-          html << %(</td><td><a href="/evaluator/showDetailAbsenceYear?absence_id=)
+          html << %( d</td><td><a href="/evaluator/showDetailAbsenceYear?absence_id=)
           html << "#{absence.id}"
           html << %(&employee_id=)
           html << "#{@user.id}"
@@ -137,11 +137,11 @@ module WorktimeHelper
       end
       html << %(<tr><td><div id="puzzle_total_sum">Total time</div></td><td><div id="puzzle_total_sum">| )
       html << "#{round(sum_week/8)}"
-      html << %(</div></td><td></td><td><div id="puzzle_total_sum">| )
+      html << %( d</div></td><td></td><td><div id="puzzle_total_sum">| )
       html << "#{round(sum_month/8)}"
-      html << %(</div></td><td></td><td><div id="puzzle_total_sum">| )
+      html << %( d</div></td><td></td><td><div id="puzzle_total_sum">| )
       html << "#{round(sum_year/8)}"
-      html << %(</div></td><td></td><td><div id="puzzle_total_sum">|</div></td></tr></table>)
+      html << %( d</div></td><td></td><td><div id="puzzle_total_sum">|</div></td></tr></table>)
   end
   
   # Overview of absence for user and selected period. 

@@ -3,10 +3,10 @@
 
 class Client < ActiveRecord::Base
 
-  # All dependencies between the models are listed below
+  # All dependencies between the models are listed below.
   has_many :projects
   
-  # Validation helpers
+  # Validation helpers.
   validates_presence_of :name, :contact
   validates_uniqueness_of :name
 end

@@ -3,7 +3,7 @@
 
 class Employment < ActiveRecord::Base
   
-  # All dependencies between the models are listed below
+  # All dependencies between the models are listed below.
   validates_presence_of :percent
   belongs_to :employee
 end

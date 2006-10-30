@@ -448,21 +448,21 @@ module EvaluatorHelper
         html << "#{absence.name}"
         html << %(</td><td>| )
         html << "#{round(absence.sumAbsenceCurrentWeek(employee.id).to_f/8)}"
-          html << %(</td><td><a href="/evaluator/showDetailAbsenceWeek?absence_id=)
+          html << %( d</td><td><a href="/evaluator/showDetailAbsenceWeek?absence_id=)
           html << "#{absence.id}"
           html << %(&employee_id=)
           html << "#{employee.id}"
           html << %("><img src ="/images/lupe.gif" border=0></a></td>)
         html << %(<td>| )
         html << "#{round(absence.sumAbsenceCurrentMonth(employee.id).to_f/8)}"
-          html << %(</td><td><a href="/evaluator/showDetailAbsenceMonth?absence_id=)
+          html << %( d</td><td><a href="/evaluator/showDetailAbsenceMonth?absence_id=)
           html << "#{absence.id}"
           html << %(&employee_id=)
           html << "#{employee.id}"
           html << %("><img src ="/images/lupe.gif" border=0></a></td>)
         html << %(<td>| )
         html << "#{round(absence.sumAbsenceCurrentYear(employee.id).to_f/8)}"
-          html << %(</td><td><a href="/evaluator/showDetailAbsenceYear?absence_id=)
+          html << %( d</td><td><a href="/evaluator/showDetailAbsenceYear?absence_id=)
           html << "#{absence.id}"
           html << %(&employee_id=)
           html << "#{employee.id}"
@@ -471,11 +471,11 @@ module EvaluatorHelper
       end
       html << %(<tr><td><div id="puzzle_total_sum">Total time</div></td><td><div id="puzzle_total_sum">| )
       html << "#{round(sum_week/8)}"
-      html << %(</div></td><td></td><td><div id="puzzle_total_sum">| )
+      html << %( d</div></td><td></td><td><div id="puzzle_total_sum">| )
       html << "#{round(sum_month/8)}"
-      html << %(</div></td><td></td><td><div id="puzzle_total_sum">| )
+      html << %( d</div></td><td></td><td><div id="puzzle_total_sum">| )
       html << "#{round(sum_year/8)}"
-      html << %(</div></td><td></td><td><div id="puzzle_total_sum">|</div></td></tr>)
+      html << %( d</div></td><td></td><td><div id="puzzle_total_sum">|</div></td></tr>)
     end
     html << %(</table>)
   end
@@ -501,7 +501,7 @@ module EvaluatorHelper
         html << "#{absence.name}"
         html << %(</td><td>| )
         html << "#{round(absence.sumAbsencePeriod(employee.id, startdate_db, enddate_db).to_f/8)}"
-          html << %(</td><td><a href="/evaluator/showDetailAbsencePeriod?absence_id=)
+          html << %( d</td><td><a href="/evaluator/showDetailAbsencePeriod?absence_id=)
           html << "#{absence.id}"
           html << %(&employee_id=)
           html << "#{employee.id}"
@@ -518,7 +518,7 @@ module EvaluatorHelper
       end
       html << %(<tr><td><div id="puzzle_total_sum">Total time</div></td><td><div id="puzzle_total_sum">| )
       html << "#{round(sum_total/8)}"
-      html << %(</div></td><td></td><td><div id="puzzle_total_sum">|</div></td></tr>)
+      html << %( d</div></td><td></td><td><div id="puzzle_total_sum">|</div></td></tr>)
     end
     html << %(</table>)
   end 
