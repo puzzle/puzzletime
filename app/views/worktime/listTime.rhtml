@@ -4,8 +4,8 @@ Diplomarbeit 2149, Xavier Hayoz -->
 <h1>Worktime Menu of <%=h @user.firstname %> <%=h @user.lastname %></h1>
 <br>
 <%= link_to 'Other Times', :action => 'selectPeriodUser' %>
-<br>Overtime: <%= @user.totalOvertime %>
-<br>Remaining Holidays: <%= @user.remainingHolidays %> 
+<br>Overtime: <= @user.totalOvertime %>
+<br>Remaining Holidays: <= @user.remainingHolidays %> 
 <br>Project member in projects listed below: 
 <%= overview_user_current(@user.projects) %>	 
 <%= link_to 'Add Absence', :action => 'addAbsence' %> | <%= link_to 'View Absence', :action => 'showUserAbsences' %>
