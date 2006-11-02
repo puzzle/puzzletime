@@ -61,10 +61,12 @@ class Employee < ActiveRecord::Base
    end
   end
   
+  # Calculates remaining holidays
   def remainingHolidays
     ((totalHolidays-usedHolidays)/8).to_f
   end
   
+  # Calculates used holidays
   def usedHolidays
     if self.worktimes.sum(:hours, :conditions => ["absence_id = ?", Holiday::VACATION_ID]) == nil
       return 0
@@ -73,20 +75,28 @@ class Employee < ActiveRecord::Base
     end
   end
   
+  # Calculates total holidays
   def totalHolidays
     first_employment = self.employments.find(:first)
     sumTotal = 0
-    first_employment.start_date.year.step(Date.today.year, 1){|year|
-    sumTotal += Masterdata.instance.vacations_year
-    }
-    puts "#{sumTotal}"
-    sumTotal
+    if first_employment == nil
+      sumTotal 
+    else
+      first_employment.start_date.year.step(Date.today.year, 1){|year|
+      sumTotal += Masterdata.instance.vacations_year
+      }
+      sumTotal
+    end
   end
 
   # Sum total overtime
   def totalOvertime
     first_employment = self.employments.find(:first)
-    sumWorktime(first_employment.start_date, Date.today)-musttime(first_employment.start_date, Date.today)
+    if first_employment == nil
+      return 0
+    else
+      sumWorktime(first_employment.start_date, Date.today)-musttime(first_employment.start_date, Date.today)
+    end
   end
   
   # Sum musttime
