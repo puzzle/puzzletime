@@ -1,10 +1,16 @@
 <h1>Employee Overtime Overview</h1>
 <br/>
 <table>
+  <tr>
+    <td><div id="puzzle_table_title">Employee</div></td>
+    <td><div id="puzzle_table_title">Current Overtime</div></td>
+    <td><div id="puzzle_table_title">Remaining Holidays for <%= Date.today.year %></div></td>
+  </tr>
   <% for employee in @employees %>
   <tr>
     <td><%= employee.lastname %> <%= employee.firstname %></td>
-    <td><%= employee.totalOvertime(employee) %></td>
+    <td><%= employee.totalOvertime %></td>
+    <td><%= employee.remainingHolidays %></td>
   </tr>
   <% end %>
 </table>

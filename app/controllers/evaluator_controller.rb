@@ -59,7 +59,7 @@ class EvaluatorController < ApplicationController
     
   # Shows project detail of current week.
   def showDetailWeek
-    showDetail("#{Time.now.year}-#{Time.now.month}-#{Time.now.day-7}", "#{Time.now.year}-#{Time.now.month}-#{Time.now.day}")
+    showDetail(startCurrentWeek(Date.today), endCurrentWeek(Date.today))
   end
   
   # Shows project detail of current month.
@@ -91,7 +91,7 @@ class EvaluatorController < ApplicationController
   end
   # Shows absence detail of current week.
   def showDetailAbsenceWeek
-    showDetailAbsence("#{Time.now.year}-#{Time.now.month}-#{Time.now.day-7}", "#{Time.now.year}-#{Time.now.month}-#{Time.now.day}")
+    showDetailAbsence(startCurrentWeek(Date.today), endCurrentWeek(Date.today))
   end
   
   # Shows absence detail of current month.
@@ -155,5 +155,9 @@ class EvaluatorController < ApplicationController
   # Shows overtimes of employees
   def showOvertime
     @employees = Employee.find(:all, :order =>"lastname ASC")
+  end
+  
+  def showDescription
+    @time = Worktime.find(params[:worktime_id])
   end
 end

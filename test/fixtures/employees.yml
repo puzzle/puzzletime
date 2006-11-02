@@ -1,17 +1,19 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-first:
-  id: 1
+maria:
+  id:        1
   firstname: Maria
-  lastname: Dolores
+  lastname:  Dolores
   shortname: ggg
-  passwd: Yaataw
-  email: bla@bla.ch
-  phone: 9393
-another:
-  id: 2
+  passwd:    Yaataw
+  email:     bla@bla.ch
+  phone:     9393
+  management: true
+pedro:
+  id:        2
   firstname: Pedro
-  lastname: Dolores
+  lastname:  Dolores
   shortname: gig
-  passwd: sdf
-  email: bol@bla.ch
-  phone: 97373
+  passwd:    sdf
+  email:     bol@bla.ch
+  phone:     97373
+  management: false

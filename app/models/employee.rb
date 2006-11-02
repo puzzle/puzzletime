@@ -52,52 +52,62 @@ class Employee < ActiveRecord::Base
     update_attributes(:passwd => hashed_pwd)
   end
   
-  
+  # Sum total worked time
   def sumWorktime(start_date, end_date)
-   self.worktimes.sum(:hours, :joins => "LEFT JOIN absences AS a ON worktimes.absence_id = a.id", :conditions => ["(worktimes.absence_id IS NULL OR a.payed) AND work_date BETWEEN ? AND ?",start_date, end_date])
+   if self.worktimes.sum(:hours, :joins => "LEFT JOIN absences AS a ON worktimes.absence_id = a.id", :conditions => ["(worktimes.absence_id IS NULL OR a.payed) AND work_date BETWEEN ? AND ?",start_date, end_date]) == nil
+     return 0
+   else
+     self.worktimes.sum(:hours, :joins => "LEFT JOIN absences AS a ON worktimes.absence_id = a.id", :conditions => ["(worktimes.absence_id IS NULL OR a.payed) AND work_date BETWEEN ? AND ?",start_date, end_date])
+   end
+  end
+  
+  def remainingHolidays
+    ((totalHolidays-usedHolidays)/8).to_f
+  end
+  
+  def usedHolidays
+    if self.worktimes.sum(:hours, :conditions => ["absence_id = ?", Holiday::VACATION_ID]) == nil
+      return 0
+    else
+      self.worktimes.sum(:hours, :conditions => ["absence_id = ?", Holiday::VACATION_ID])
+    end
+  end
+  
+  def totalHolidays
+    first_employment = self.employments.find(:first)
+    sumTotal = 0
+    first_employment.start_date.year.step(Date.today.year, 1){|year|
+    sumTotal += Masterdata.instance.vacations_year
+    }
+    puts "#{sumTotal}"
+    sumTotal
   end
 
-  def totalOvertime(employee)
+  # Sum total overtime
+  def totalOvertime
     first_employment = self.employments.find(:first)
-    puts "Mitarbeitername: #{employee.lastname}"
-    puts "First Employment: #{first_employment.start_date}"
-    self.overtime(first_employment.start_date, Date.today)
+    sumWorktime(first_employment.start_date, Date.today)-musttime(first_employment.start_date, Date.today)
   end
   
-  def overtime(start_date, end_date)
-     sumWorktime(start_date, end_date) - musttime(start_date, end_date)
-  end
-  
+  # Sum musttime
   def musttime(start_date, end_date)
-    employments = self.employments.find(:all, :conditions =>["start_date <= ? OR end_date IS NULL OR end_date >= ? OR start_date <= ? OR end_date <= ? ",end_date ,start_date, start_date, end_date])
+    employments = self.employments.find(:all, :conditions =>["start_date <= ? OR end_date IS NULL OR end_date >= ? OR start_date <= ? OR end_date >= ? ",end_date ,start_date, start_date, end_date])
     currentEmployment = 0
     sum = 0
-    
-    puts "Das Startdatum: #{start_date}"
-    puts "Das Enddatum: #{end_date}"
     start_date.step(end_date,1) {|date|
       hours = Holiday.mustTime(date)
-      puts "Aktuelles Datum der Schlaufe: #{date}",date.strftime("%A")
-      puts "Hour nach Holiday must Time: #{hours}"
-      puts "SUM nach Holiday must Time: #{sum}"
-      puts "Aktueller Index: #{currentEmployment}"
       if employments[currentEmployment].end_date != nil
-        puts "Current employment enddate not nil"
         if employments[currentEmployment].end_date < date && currentEmployment < employments.length-1
           currentEmployment += 1
-          puts "Aktueller Index in der if schlaufe: #{currentEmployment}"
         end 
         # testing needed as currentEmployment could be before or after date, 
         # if there is no present employment for date.
         if date.between?(employments[currentEmployment].start_date, employments[currentEmployment].end_date)
             sum += hours * employments[currentEmployment].percent / 100
         end
-        puts "SUM nach date between Time: #{sum}"
       else
       sum += hours * employments[currentEmployment].percent / 100
-      puts "SUM nach else Time: #{sum}"
       end      
-    puts "--------------------------------------------"
     }
     sum
   end

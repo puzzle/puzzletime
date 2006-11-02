@@ -63,7 +63,7 @@ class WorktimeController < ApplicationController
         redirect_to :action => 'listTime'
       else
         flash[:notice] = 'Please select correct start and end time.'
-        render :action => 'addTime'
+        render :action => 'editTime'
       end
     else
       @worktime.update_attributes(params[:worktime])
@@ -159,7 +159,7 @@ class WorktimeController < ApplicationController
   # Shows user project detail of current week.
   def showDetailUserWeek
     @project = Project.find(params[:project_id])
-    @times = Worktime.find(:all, :conditions => ["project_id = ? AND employee_id = ? AND work_date BETWEEN ? AND ?", @project.id, @user.id, "#{Time.now.year}-#{Time.now.month}-#{Time.now.day-7}", "#{Time.now.year}-#{Time.now.month}-#{Time.now.day}"], :order => "work_date ASC")
+    @times = Worktime.find(:all, :conditions => ["project_id = ? AND employee_id = ? AND work_date BETWEEN ? AND ?", @project.id, @user.id, startCurrentWeek(Date.today), endCurrentWeek(Date.today)], :order => "work_date ASC")
   end
   
   # Shows user project detail of current month.

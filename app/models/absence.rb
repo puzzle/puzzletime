@@ -13,6 +13,20 @@ class Absence < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name
   
+  #returns the startdate of current week
+  def startCurrentWeek(date)
+    if date.wday == '0'
+      date-6
+    else
+      date-(date.wday-1)
+    end
+  end
+  
+  #returns the enddate of current week
+  def endCurrentWeek(date)
+    startCurrentWeek(date)+5 
+  end
+  
   #Gets the sum of absence hours
   def sumAbsenceCurrent(employee_id, startdate, enddate)
     Worktime.sum(:hours, :conditions => ["absence_id = ? AND employee_id = ? AND work_date BETWEEN ? AND ?", id, employee_id, startdate, enddate])
@@ -20,7 +34,7 @@ class Absence < ActiveRecord::Base
   
   # Gets the sum of absence hours of current week from DB
   def sumAbsenceCurrentWeek(employee_id)
-    sumAbsenceCurrent(employee_id, "#{Time.now.year}-#{Time.now.month}-#{Time.now.day-7}", "#{Time.now.year}-#{Time.now.month}-#{Time.now.day}")
+    sumAbsenceCurrent(employee_id, startCurrentWeek(Date.today), endCurrentWeek(Date.today))
   end
   
   # Gets the sum of absence hours of current month from DB

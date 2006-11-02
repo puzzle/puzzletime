@@ -19,6 +19,8 @@ Diplomarbeit 2149, Xavier Hayoz -->
 <tr>
   <td><%= change_date(time.work_date) %></td>
   <td><%=time.hours %> h</td>
+  <td><%=h time.description.slice(0..50) %>
+  <%= link_to '...', :action => 'showDescription', :worktime_id => time.id %></td>
   <td><%= link_to 'Change Project', :controller =>'project', :action =>'changeProject', :worktime_id => time.id %>
 <tr>
 <% end %> 

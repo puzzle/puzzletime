@@ -45,13 +45,7 @@ module ApplicationHelper
     end
     html << %(</select>)   
   end
-  
-  #returns the date of current week
-  def currentWeek(date)
-  puts "#{date.wday}"
-  
-  end
-  
+
   # Change english datelayout to german one.
   def change_date(date)
     date.strftime("%d-%m-%Y")

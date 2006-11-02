@@ -14,4 +14,19 @@ class ApplicationController < ActionController::Base
       redirect_to(:controller => 'login', :action => 'login' )
     end
   end 
+  
+  #returns the startdate of current week
+  def startCurrentWeek(date)
+    if date.wday == '0'
+      date-6
+    else
+      date-(date.wday-1)
+    end
+  end
+  
+  #returns the enddate of current week
+  def endCurrentWeek(date)
+    startCurrentWeek(date)+5 
+  end
 end
+
