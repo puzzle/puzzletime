@@ -1,6 +1,3 @@
-<!-- (c) Puzzle itc, Berne
-Diplomarbeit 2149, Xavier Hayoz -->
-
 <table>
   <tr>
     <td>Firstname: <%= @employee.firstname %></td>
@@ -44,7 +41,7 @@ Diplomarbeit 2149, Xavier Hayoz -->
         </tr>
      <% end %>
   </table>
-  <% end %>
+<% end %>
 
   <%= form_tag :action => 'createEmployment' ,:id => @employee %>
   <%= render :partial => 'employment' %>

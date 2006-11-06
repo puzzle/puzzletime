@@ -34,7 +34,7 @@ class ApplicationController < ActionController::Base
     startCurrentWeek(date)+5 
   end
   
-   def parseDate(attributes, prefix)
+  def parseDate(attributes, prefix)
     "#{attributes[prefix + '(3i)']}-#{attributes[prefix + '(2i)']}-#{attributes[prefix + '(1i)']}"
   end
 end

@@ -27,10 +27,10 @@
 			<% end %>
 			<% if @user.management == true %>
 			<li><%= link_to 'Evaluator', :controller => 'evaluator', :action => 'listEvaluator' %></li>	
-			<li><%= link_to 'Employee', :controller => 'employee', :action => 'listEmployee' %></li>
-			<li><%= link_to 'Project', :controller => 'project', :action => 'listProject' %></li>
-			<li><%= link_to 'Client', :controller => 'client', :action => 'listClient' %></li>
-			<li><%= link_to 'Absence', :controller => 'absence', :action => 'listAbsence' %></li>
+			<li><%= link_to 'Employees', :controller => 'employee', :action => 'listEmployee' %></li>
+			<li><%= link_to 'Projects', :controller => 'project', :action => 'listProject' %></li>
+			<li><%= link_to 'Clients', :controller => 'client', :action => 'listClient' %></li>
+			<li><%= link_to 'Absences', :controller => 'absence', :action => 'listAbsence' %></li>
 			<% end %>		    
 	  </ul>		  
 	  User: <%= @user.lastname %> <%= @user.firstname %> | <%= link_to 'Change Pwd', :controller => 'employee', :action => 'changePasswd' %> | <%= link_to 'Log out', :controller => 'login', :action => 'logout' %>

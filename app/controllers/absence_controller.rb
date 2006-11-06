@@ -75,10 +75,9 @@ class AbsenceController < ApplicationController
   def deleteAbsenceTime
     if Worktime.destroy(params[:worktime_id])
       flash[:notice] = 'Absence Time was deleted'
-      redirect_to :controller => 'evaluator' ,:action => 'showAbsences'
     else
-      flash[:notice] ='Absence Time was not deleted'
-      render :controller => 'evaluator' ,:action =>'showAbsences'
+      flash[:notice] ='Absence Time was could not be deleted'      
     end
+    redirect_to :controller => 'evaluator' ,:action =>'showAbsences'
   end
 end

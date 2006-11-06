@@ -44,13 +44,18 @@ class ClientController < ApplicationController
       flash[:notice] = 'Client was successfully updated.'
       redirect_to :action => 'listClient', :id => @client
     else
+      flash[:notice] = 'Client could not be updated.'
       render :action => 'editClient'
     end
   end
   
   # Deletes the chosen client
   def destroyClient
-    Client.destroy(params[:id])
+    if Client.destroy(params[:id])
+       flash[:notice] = 'Client was successfully deleted.'
+    else
+       flash[:notice] = 'Client could no be deleted. Some error occured.'
+    end      
     redirect_to :action => 'listClient'
   end
 end

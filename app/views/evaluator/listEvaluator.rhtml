@@ -1,32 +1,25 @@
-<!-- (c) Puzzle itc, Berne
-Diplomarbeit 2149, Xavier Hayoz -->
-
 <h1>Evaluator Options</h1>
 <br/>
 <table>
-  <%if @user.management == true %>
+ <%if @user.management || Projectmembership.is_projectmanagement(@user) %>
   <tr>
-    <td><%= link_to 'Employees Overview', :action => 'showEmployees' %>
+    <td><%= link_to 'Project Worktimes Overview', :action => 'showProjects' %>
     </td>
   </tr>
-  <tr>
-    <td><%= link_to 'Absences Overview', :action => 'showAbsences' %>
-    </td>
+ <% end %>
+ <%if @user.management %>
+ <tr>
+    <td><%= link_to 'Client Worktimes Overview', :action => 'showClients' %></td>
   </tr>
   <tr>
-    <td><%= link_to 'Clients Overview', :action => 'showClients' %>
-    </td>
+    <td><%= link_to 'Employee Worktimes Overview', :action => 'showEmployees' %></td>
   </tr>
   <tr>
-    <td><%= link_to 'Overtime Overview', :action => 'showOvertime' %>
-    </td>
+    <td><%= link_to 'Employee Absences Overview', :action => 'showAbsences' %></td>
   </tr>
-   <% end %>
-   <%if @user.management == true || Projectmembership.is_projectmanagement(@user) %>
   <tr>
-    <td><%= link_to 'Projects Overview', :action => 'showProjects' %>
-    </td>
+    <td><%= link_to 'Employee Overtime Overview', :action => 'showOvertime' %></td>
   </tr>
-  <% end %>
+ <% end %>
  </table>
  

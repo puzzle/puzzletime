@@ -9,7 +9,7 @@ background: #F9F9F7 url('../images/diagonal.gif') repeat-x;
 font-size: 12px;
 font-family: "trebuchet ms", helvetica, sans-serif;
 color: #666666;
-line-height: 18px;
+line-height: 14px;
 padding: 0px;
 margin: 0px;
 }
@@ -24,8 +24,6 @@ a:hover
 {
 text-decoration: none;
 }
-
-
 
 h1
 {
@@ -44,7 +42,11 @@ table
 font-size: 12px;
 font-family: "trebuchet ms", helvetica, sans-serif;
 color: #666666;
-line-height: 18px;
+}
+
+td
+{
+padding-right: 4px;
 }
 
 ul.linklist
@@ -134,17 +136,14 @@ position: absolute;
 font-size: 10px;
 font-weight: normal;
 color: #FCE2CA;
-top: 43px;
+top: 44px;
 }
 
 #notice
-{top: 0px;
-line-height: 52px;
+{
 color: #0066FF;
-right: 30px;
 font-weight: bold;
 font-size: 12px;
-letter-spacing: -1px;
 }
 
 #header sup
@@ -171,9 +170,9 @@ margin: 98px 0px 30px 0px;
 
 #menu ul
 {
-padding-top: 7px;
+padding-top: 9px;
 padding-left: 0px;
-margin-bottom: 8px;
+margin-bottom: 13px;
 }
 
 #menu ul li
