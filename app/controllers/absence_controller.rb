@@ -52,8 +52,7 @@ class AbsenceController < ApplicationController
   
   # Deletes selected absence from the DB.
   def destroyAbsence
-    @absence = Absence.find(params[:id])
-    if @absence.destroy
+    if Absence.delete(params[:id])
       flash[:notice] = 'Absence was successfully removed'
       redirect_to :action => 'listAbsence'
     else
@@ -74,8 +73,7 @@ class AbsenceController < ApplicationController
 
   # Deletes the selected absence time from DB.
   def deleteAbsenceTime
-    @worktime = Worktime.find(params[:worktime_id])
-    if @worktime.destroy
+    if Worktime.destroy(params[:worktime_id])
       flash[:notice] = 'Absence Time was deleted'
       redirect_to :controller => 'evaluator' ,:action => 'showAbsences'
     else

@@ -50,9 +50,9 @@ module WorktimeHelper
     sum_year = 0
     html = %(<table><tr><td><div id="puzzle_table_title">Projects</div></td>)
     html << %(<td><div id="puzzle_table_title">| Total Project</div></td>)
-    html << %(<td><div id="puzzle_table_title"> | Current Week )
+    html << %(<td><div id="puzzle_table_title"> | Current Week: )
     html << "#{Time.now.strftime('%W')}"
-    html << %(</div></td><td></td><td><div id="puzzle_table_title"> | Current Month )
+    html << %(</div></td><td></td><td><div id="puzzle_table_title"> | Current Month: )
     html << "#{Time.now.strftime('%m')}"
     html << %(</div></td><td></td><td><div id="puzzle_table_title"> | Current Year</div></td><td></td><td><div id="puzzle_table_title"> |</div></td></tr>)
     for project in projects
@@ -101,9 +101,9 @@ module WorktimeHelper
     sum_month = 0
     sum_year = 0
     html = %(<table><tr><td><div id="puzzle_table_title">Absence</div></td>)
-    html << %(<td><div id="puzzle_table_title"> | Current Week )
+    html << %(<td><div id="puzzle_table_title"> | Current Week: )
     html << "#{Time.now.strftime('%W')}"
-    html << %(</div></td><td></td><td><div id="puzzle_table_title"> | Current Month )
+    html << %(</div></td><td></td><td><div id="puzzle_table_title"> | Current Month: )
     html << "#{Time.now.strftime('%m')}"
     html << %(</div></td><td></td><td><div id="puzzle_table_title"> | Current Year</td><td></td><td><div id="puzzle_table_title"> |</div></td></tr>)
       for absence in absences

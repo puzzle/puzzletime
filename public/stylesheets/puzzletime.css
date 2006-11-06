@@ -2,19 +2,16 @@
 Xavier Hayoz 
 */
 
-*
-{
-padding: 0px;
-margin: 0px;
-}
 
 body
 {
-background: #F9F9F7 url('../images/a1.gif') repeat-x;
+background: #F9F9F7 url('../images/diagonal.gif') repeat-x;
 font-size: 12px;
 font-family: "trebuchet ms", helvetica, sans-serif;
 color: #666666;
 line-height: 18px;
+padding: 0px;
+margin: 0px;
 }
 
 a
@@ -69,28 +66,20 @@ margin-top: 0px;
 padding-top: 0px;
 }
 
-#upbg
-{
-position: absolute;
-top: 0px;
-background: #fff url('../images/upbg.gif') no-repeat;
-width: 747px;
-height: 264px;
-z-index: 1;
-}
-
 #outer
 {
 position: relative;
-width: 747px;
+width: 687px;
 margin: auto;
-background: #fff url('../images/abg1.gif')repeat-y;
+padding: 13px 16px 13px 16px;
+background: #fff url('../images/whitebox.gif') repeat-y;
+z-index: 2;
 }
 
 #inner
 {
 position: relative;
-padding: 13px 30px 13px 30px;
+padding: 13px 16px 13px 16px;
 z-index: 2;
 }
 
@@ -136,8 +125,7 @@ font-weight: normal;
 position: absolute;
 font-size: 23px;
 letter-spacing: -1px;
-top: 30px;
-height: 92px;
+top: 15px;
 }
 
 #header h2
@@ -146,7 +134,7 @@ position: absolute;
 font-size: 10px;
 font-weight: normal;
 color: #FCE2CA;
-top: 51px;
+top: 43px;
 }
 
 #notice
@@ -167,7 +155,7 @@ color: #FCE2CA;
 #splash
 {
 position: absolute;
-right: 30px;
+right: 16px;
 background: #EAEAE2 url("../images/puzzletimebanner1.jpg") no-repeat;
 width: 458px;
 height: 92px;
@@ -175,21 +163,22 @@ height: 92px;
 
 #menu
 {
-position: relative;
-background: #46461F url('../images/a16.gif') repeat-x;
-height: 67px;
-padding: 0px 20px 0px 5px;
-margin: 98px 0px 20px 0px;
+background: #46461F url('../images/menu.gif') repeat-x;
+height:  50px; 
+padding: 0px 6px 0px 5px;
+margin: 98px 0px 30px 0px;
 }
 
 #menu ul
 {
+padding-top: 7px;
+padding-left: 0px;
+margin-bottom: 8px;
 }
 
 #menu ul li
 {
 display: inline;
-line-height: 52px;
 padding-left: -3px;
 }
 
@@ -202,7 +191,7 @@ border-left: 0px;
 {
 background-color: transparent;
 background-repeat: repeat-x;
-padding:8px 12px 8px 12px;
+padding: 2px 10px 4px 10px;  /* for the white box around the hovered link */
 font-size: 12px;
 color: #fff;
 font-weight: bold;
@@ -210,7 +199,7 @@ font-weight: bold;
 
 #menu ul li a:hover
 {
-background: #fff url('../../images/a18.gif') repeat-x top;
+background: #fff url('../../images/menubox.gif') repeat-x top;
 color: #4A4A24;
 text-decoration: none;
 }

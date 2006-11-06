@@ -67,7 +67,7 @@ class EmployeeController < ApplicationController
         flash[:notice] = 'Password was successfully updated.'
         redirect_to :controller =>'worktime', :action => 'listTime', :id => @user.id
       else
-        flash[:notice] = 'Passwordconfirmation does not match'
+        flash[:notice] = 'Password confirmation does not match'
         render :controller =>'employee', :action => 'changePasswd', :id => @user.id
       end
     else

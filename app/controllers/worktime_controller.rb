@@ -134,10 +134,15 @@ class WorktimeController < ApplicationController
   # Store the request in the instances variables below.
   # They are needed to get data of the DB.
   def showUserProjectsPeriod
-    @startdate ="#{params[:worktime]['start(3i)']}-#{params[:worktime]['start(2i)']}-#{params[:worktime]['start(1i)']}"      
-    @enddate = "#{params[:worktime]['end(3i)']}-#{params[:worktime]['end(2i)']}-#{params[:worktime]['end(1i)']}"
-    @startdate_db = "#{params[:worktime]['start(1i)']}-#{params[:worktime]['start(2i)']}-#{params[:worktime]['start(3i)']}"      
-    @enddate_db = "#{params[:worktime]['end(1i)']}-#{params[:worktime]['end(2i)']}-#{params[:worktime]['end(3i)']}"
+    setPeriodDates
+  end
+  
+  def setPeriod(attributes)
+    setPeriodDates
+  end
+  
+  def getDate(attributes, prefix)
+    "#{params[:worktime]['start(3i)']}-#{params[:worktime]['start(2i)']}-#{params[:worktime]['start(1i)']}"
   end
   
   # Shows all absences of user.
@@ -149,10 +154,7 @@ class WorktimeController < ApplicationController
   # Store the request in the instances variables below.
   # They are needed to get data of the DB.
   def showUserAbsencesPeriod
-    @startdate ="#{params[:worktime]['start(3i)']}-#{params[:worktime]['start(2i)']}-#{params[:worktime]['start(1i)']}"      
-    @enddate = "#{params[:worktime]['end(3i)']}-#{params[:worktime]['end(2i)']}-#{params[:worktime]['end(1i)']}"
-    @startdate_db = "#{params[:worktime]['start(1i)']}-#{params[:worktime]['start(2i)']}-#{params[:worktime]['start(3i)']}"      
-    @enddate_db = "#{params[:worktime]['end(1i)']}-#{params[:worktime]['end(2i)']}-#{params[:worktime]['end(3i)']}"
+    setPeriodDates
     @absences = Absence.find(:all)
   end
   
@@ -183,4 +185,15 @@ class WorktimeController < ApplicationController
     @enddate_db = params[:enddate_db]
     @times = Worktime.find(:all, :conditions => ["project_id = ? AND employee_id = ? AND work_date BETWEEN ? AND ?", @project.id, @user.id, @startdate_db, @enddate_db ], :order => "work_date ASC")
   end
+  
+private
+  
+    # Sets the selected periodDates 
+  def setPeriodDates
+    @startdate = parseDate(params[:worktime], 'start')
+    @enddate = parseDate(params[:worktime], 'end')
+    @startdate_db = parseDate(params[:worktime], 'start')
+    @enddate_db = parseDate(params[:worktime], 'end')
+  end
+  
 end

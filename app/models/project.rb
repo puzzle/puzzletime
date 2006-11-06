@@ -12,7 +12,7 @@ class Project < ActiveRecord::Base
   has_many :worktimes
   
   # Validation helpers.  
-  validates_presence_of :name, :description
+  validates_presence_of :name
   validates_uniqueness_of :name
   
   # Gets the sum of project selected from employee.

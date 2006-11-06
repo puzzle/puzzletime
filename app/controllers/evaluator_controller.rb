@@ -27,13 +27,7 @@ class EvaluatorController < ApplicationController
     @employees = Employee.find(:all)
   end
   
-  # Sets the selected periodDates 
-  def setPeriodDates
-    @startdate = "#{params[:worktime]['start(3i)']}-#{params[:worktime]['start(2i)']}-#{params[:worktime]['start(1i)']}"
-    @enddate = "#{params[:worktime]['end(3i)']}-#{params[:worktime]['end(2i)']}-#{params[:worktime]['end(1i)']}"
-    @startdate_db = "#{params[:worktime]['start(1i)']}-#{params[:worktime]['start(2i)']}-#{params[:worktime]['start(3i)']}"
-    @enddate_db = "#{params[:worktime]['end(1i)']}-#{params[:worktime]['end(2i)']}-#{params[:worktime]['end(3i)']}"
-  end
+
   
   # Store the request in the instances variables below.
   # They are needed to get data from the DB.
@@ -159,5 +153,15 @@ class EvaluatorController < ApplicationController
   
   def showDescription
     @time = Worktime.find(params[:worktime_id])
+  end
+  
+private
+  
+    # Sets the selected periodDates 
+  def setPeriodDates
+    @startdate = parseDate(params[:worktime], 'start')
+    @enddate = parseDate(params[:worktime], 'end')
+    @startdate_db = parseDate(params[:worktime], 'start')
+    @enddate_db = parseDate(params[:worktime], 'end')
   end
 end

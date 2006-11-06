@@ -5,7 +5,12 @@
 # Likewise, all the methods added will be available for all controllers.
 
 class ApplicationController < ActionController::Base
+  before_filter :set_charset
 
+  def set_charset
+    @headers["Content-Type"] = "text/html; charset=utf-8" 
+  end
+  
   #Filter for check if user is logged in or not
   def authorize
     @user = session[:user]
@@ -27,6 +32,10 @@ class ApplicationController < ActionController::Base
   #returns the enddate of current week
   def endCurrentWeek(date)
     startCurrentWeek(date)+5 
+  end
+  
+   def parseDate(attributes, prefix)
+    "#{attributes[prefix + '(3i)']}-#{attributes[prefix + '(2i)']}-#{attributes[prefix + '(1i)']}"
   end
 end
 

@@ -7,6 +7,6 @@ class Client < ActiveRecord::Base
   has_many :projects
   
   # Validation helpers.
-  validates_presence_of :name, :contact
+  validates_presence_of :name
   validates_uniqueness_of :name
 end

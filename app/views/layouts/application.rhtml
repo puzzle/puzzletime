@@ -1,51 +1,50 @@
-<!-- (c) Puzzle itc, Berne
-Diplomarbeit 2149, Xavier Hayoz -->
-
 <html>
 <head>
-  <title>AdminWorktimeController: <%= controller.action_name %></title>
-    <%= stylesheet_link_tag 'puzzletime', :media => 'screen' %>
-    <%= javascript_include_tag :defaults %>
+  <title>puzzleTime</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta http-equiv="pragma" content="no-cache" />
+  <meta http-equiv="cache-control" content="no-cache" />
+  <%= stylesheet_link_tag 'puzzletime', :media => 'screen' %>
+  <%= javascript_include_tag :defaults %>
 </head>
 <body>
 <div id="outer">
 
-	<div id="upbg"></div>
+	<div id="header">
+		<h1><span>puzzle</span>Time<sup>1.0</sup></h1>
+		<h2>&nbsp; by Puzzle ITC</h2>
+	</div>
 
-	<div id="inner">
-
-		<div id="header">
-			<h1><span>puzzle</span>Time<sup>1.0</sup></h1>
-			<h2>by Puzzle ITC</h2>
-		</div>
+	<div id="splash"></div>
 	
-		<div id="splash"></div>
-		<div id="menu">
-		<ul>    <% if @user != nil%>
-				<li class="first"><%= link_to 'Time', :controller => 'worktime', :action => 'listTime' %></li>
-				<%if Projectmembership.is_projectmanagement(@user) == true && @user.management == false %>
-				<li><%= link_to 'Evaluator', :controller => 'evaluator', :action => 'showProjects' %></li>	
-				<% end %>
-				<% if @user.management == true %>
-				<li><%= link_to 'Evaluator', :controller => 'evaluator', :action => 'listEvaluator' %></li>	
-				<li><%= link_to 'Employee', :controller => 'employee', :action => 'listEmployee' %></li>
-				<li><%= link_to 'Project', :controller => 'project', :action => 'listProject' %></li>
-				<li><%= link_to 'Client', :controller => 'client', :action => 'listClient' %></li>
-				<li><%= link_to 'Absence', :controller => 'absence', :action => 'listAbsence' %></li>
-				<% end %>
-				<% end %>
-			</ul>
-		<% if @user != nil%>
-		User: <%= @user.lastname %> <%= @user.firstname %> | <%= link_to 'Change Pwd', :controller => 'employee', :action => 'changePasswd' %> | <%= link_to 'Log out', :controller => 'login', :action => 'logout' %>
-		<% end %>
-		</div>
-		<center><div id="notice"><%= @flash[:notice] %></div></center>
-		<br/>
+	<div id="menu">
+	<% if @user != nil%>
+	  <ul>
+	      	<li class="first"><%= link_to 'Time', :controller => 'worktime', :action => 'listTime' %></li>
+			<%if Projectmembership.is_projectmanagement(@user) == true && @user.management == false %>
+			<li><%= link_to 'Evaluator', :controller => 'evaluator', :action => 'showProjects' %></li>	
+			<% end %>
+			<% if @user.management == true %>
+			<li><%= link_to 'Evaluator', :controller => 'evaluator', :action => 'listEvaluator' %></li>	
+			<li><%= link_to 'Employee', :controller => 'employee', :action => 'listEmployee' %></li>
+			<li><%= link_to 'Project', :controller => 'project', :action => 'listProject' %></li>
+			<li><%= link_to 'Client', :controller => 'client', :action => 'listClient' %></li>
+			<li><%= link_to 'Absence', :controller => 'absence', :action => 'listAbsence' %></li>
+			<% end %>		    
+	  </ul>		  
+	  User: <%= @user.lastname %> <%= @user.firstname %> | <%= link_to 'Change Pwd', :controller => 'employee', :action => 'changePasswd' %> | <%= link_to 'Log out', :controller => 'login', :action => 'logout' %>
+	<% end %>
+	</div>
+	
+	<% if @flash.has_key?(:notice) %>
+	<center><div id="notice"><%= @flash[:notice] %></div></center>
+	<% end %>
 
-<%= @content_for_layout %>
+    <%= @content_for_layout %>
 
-<br/>
-<br/>
+    <br/>
+    <br/>
 </div>
 </body>
 </html>
