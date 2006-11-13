@@ -5,6 +5,7 @@ class Holiday < ActiveRecord::Base
 
    REGULARHOLIDAYS = [[1,1],[25,12],[26,12],[1,8]]
    VACATION_ID = 3
+   
   # Collection of functions to check if date is holiday or not       
   def self.mustTime(date)
     if Holiday.isWeekend(date)

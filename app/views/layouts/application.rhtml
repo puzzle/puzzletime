@@ -23,7 +23,7 @@
 	  <ul>
 	      	<li class="first"><%= link_to 'Time', :controller => 'worktime', :action => 'listTime' %></li>
 			<%if Projectmembership.is_projectmanagement(@user) == true && @user.management == false %>
-			<li><%= link_to 'Evaluator', :controller => 'evaluator', :action => 'showProjects' %></li>	
+			<li><%= link_to 'Evaluator', :controller => 'evaluator', :action => 'overview', :category => 'Project', :division => 'employees' %></li>	
 			<% end %>
 			<% if @user.management == true %>
 			<li><%= link_to 'Evaluator', :controller => 'evaluator', :action => 'listEvaluator' %></li>	

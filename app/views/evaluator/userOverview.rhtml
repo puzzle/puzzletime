@@ -1,0 +1,28 @@
+<h1><%= @matrix[:division].to_s.capitalize %> of <%= @user.label %></h1>
+
+<p><%= periodLink(@period, @matrix) %></p>
+
+<p>
+Overtime: <%= @user.totalOvertime.to_f %> hours
+<br>
+Remaining Holidays: <%= @user.remainingHolidays %> days
+</p>
+
+<%= overview(@matrix, @user.id, @period) %>	
+ 
+ 
+<%= link_to 'Add Absence', :controller => 'worktime', :action => 'addAbsence' %> | 
+
+<%= 
+if @matrix[:division] == :projects
+    link_to 'View Absences', 
+            :action => 'userOverview',
+            :category => @matrix[:category],
+            :division => :absences
+ else
+     link_to 'View Projects', 
+            :action => 'userOverview',
+            :category => @matrix[:category],
+            :division => :projects
+ end           
+%>

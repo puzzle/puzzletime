@@ -21,7 +21,7 @@ class WorktimeController < ApplicationController
   
   #List the time.
   def listTime
-    @user_projectmemberships = @user.projectmemberships
+    redirect_to :controller => 'evaluator', :action => 'userOverview'
   end
   
   # Shows the edit page for the selected time.
@@ -129,71 +129,5 @@ class WorktimeController < ApplicationController
       redirect_to :action => 'listTime'
     end 
   end
-  
-  
-  # Store the request in the instances variables below.
-  # They are needed to get data of the DB.
-  def showUserProjectsPeriod
-    setPeriodDates
-  end
-  
-  def setPeriod(attributes)
-    setPeriodDates
-  end
-  
-  def getDate(attributes, prefix)
-    "#{params[:worktime]['start(3i)']}-#{params[:worktime]['start(2i)']}-#{params[:worktime]['start(1i)']}"
-  end
-  
-  # Shows all absences of user.
-  def showUserAbsences
-    @absences = Absence.find(:all)
-  end
-  
-  
-  # Store the request in the instances variables below.
-  # They are needed to get data of the DB.
-  def showUserAbsencesPeriod
-    setPeriodDates
-    @absences = Absence.find(:all)
-  end
-  
-  # Shows user project detail of current week.
-  def showDetailUserWeek
-    @project = Project.find(params[:project_id])
-    @times = Worktime.find(:all, :conditions => ["project_id = ? AND employee_id = ? AND work_date BETWEEN ? AND ?", @project.id, @user.id, startCurrentWeek(Date.today), endCurrentWeek(Date.today)], :order => "work_date ASC")
-  end
-  
-  # Shows user project detail of current month.
-  def showDetailUserMonth
-    @project = Project.find(params[:project_id])
-    @times = Worktime.find(:all, :conditions => ["project_id = ? AND employee_id = ? AND  work_date BETWEEN ? AND ?", @project.id, @user.id, "#{Time.now.year}-#{Time.now.month}-01", "#{Time.now.year}-#{Time.now.month}-#{days_in_month(Time.now.month)}"], :order => "work_date ASC")
-  end
-  
-  # Shows user project detail of current year.
-  def showDetailUserYear
-    @project = Project.find(params[:project_id])
-    @times = Worktime.find(:all, :conditions => ["project_id = ? AND employee_id = ? AND work_date BETWEEN ? AND ?", @project.id, @user.id, "#{Time.now.year}-01-01", "#{Time.now.year}-12-31"], :order => "work_date ASC")
-  end
-  
-  # Shows user project deatil of selected period.
-  def showDetailUserPeriod
-    @project = Project.find(params[:project_id])
-    @startdate = params[:startdate]
-    @enddate = params[:enddate]
-    @startdate_db = params[:startdate_db]
-    @enddate_db = params[:enddate_db]
-    @times = Worktime.find(:all, :conditions => ["project_id = ? AND employee_id = ? AND work_date BETWEEN ? AND ?", @project.id, @user.id, @startdate_db, @enddate_db ], :order => "work_date ASC")
-  end
-  
-private
-  
-    # Sets the selected periodDates 
-  def setPeriodDates
-    @startdate = parseDate(params[:worktime], 'start')
-    @enddate = parseDate(params[:worktime], 'end')
-    @startdate_db = parseDate(params[:worktime], 'start')
-    @enddate_db = parseDate(params[:worktime], 'end')
-  end
-  
+
 end

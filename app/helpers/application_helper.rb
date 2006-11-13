@@ -47,7 +47,7 @@ module ApplicationHelper
   end
 
   # Change english datelayout to german one.
-  def change_date(date)
-    date.strftime("%d-%m-%Y")
+  def format_date(date)
+    date.strftime("%d.%m.%Y")
   end     
 end

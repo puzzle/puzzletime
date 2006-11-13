@@ -15,4 +15,5 @@ class Projectmembership < ActiveRecord::Base
       false
     end
   end
+  
 end

@@ -8,7 +8,7 @@ class Employee < ActiveRecord::Base
   # All dependencies between the models are listed below.
   has_many :employments 
   has_many :projectmemberships, :dependent => true
-  has_many :projects, :through => :projectmemberships
+  has_many :projects, :through => :projectmemberships, :order => "name"
   has_many :worktimes, :dependent => true
   has_many :absences, :through => :worktimes
   
@@ -19,16 +19,6 @@ class Employee < ActiveRecord::Base
   validates_presence_of :firstname, :lastname, :shortname, :email, :phone
   validates_presence_of :pwd, :on => :create
   validates_uniqueness_of :shortname 
-  
-  # Hashes password before storing it.
-  def before_create
-    self.passwd = Employee.encode(self.pwd)
-  end
-  
-  # After created password, instance pwd should be nil
-  def after_create
-    @pwd = nil
-  end
   
   # Hashes and compares the pwd.
   def self.login(shortname, pwd)
@@ -46,6 +36,49 @@ class Employee < ActiveRecord::Base
                          id, passwd])
   end
   
+  def self.list(id = nil) 
+    if id != nil
+      find(id).to_a
+    else  
+      find(:all, :order => "lastname")  
+    end 
+  end
+  
+  def self.division
+    :employees
+  end
+    
+  def label
+    lastname + " " + firstname
+  end
+   
+  def subdivisionRef
+    id
+  end
+  
+  def detailFor(time)
+    ""
+  end
+  
+  def worktimesBy(period, projectId)
+    worktimes.find(:all, :conditions => Worktime.conditionsFor(period, :project_id => projectId), :order => "work_date ASC")
+  end  
+  
+  def sumWorktime(period = nil, projectId = 0)
+    worktimes.sum(:hours, :conditions => Worktime.conditionsFor(period, :project_id => projectId)).to_f
+  end
+    
+  
+  # Hashes password before storing it.
+  def before_create
+    self.passwd = Employee.encode(self.pwd)
+  end
+  
+  # After created password, instance pwd should be nil
+  def after_create
+    @pwd = nil
+  end
+   
   # Saves new password in DB.
   def updatepwd(pwd)
     hashed_pwd = Employee.encode(pwd)
@@ -53,7 +86,7 @@ class Employee < ActiveRecord::Base
   end
   
   # Sum total worked time
-  def sumWorktime(start_date, end_date)
+  def sumWorktimeOld(start_date, end_date)
    if self.worktimes.sum(:hours, :joins => "LEFT JOIN absences AS a ON worktimes.absence_id = a.id", :conditions => ["(worktimes.absence_id IS NULL OR a.payed) AND work_date BETWEEN ? AND ?",start_date, end_date]) == nil
      return 0
    else
@@ -63,30 +96,24 @@ class Employee < ActiveRecord::Base
   
   # Calculates remaining holidays
   def remainingHolidays
-    ((totalHolidays-usedHolidays)/8).to_f
+    ((totalHolidays - usedHolidays) / 8).to_f
   end
   
   # Calculates used holidays
   def usedHolidays
-    if self.worktimes.sum(:hours, :conditions => ["absence_id = ?", Holiday::VACATION_ID]) == nil
-      return 0
-    else
-      self.worktimes.sum(:hours, :conditions => ["absence_id = ?", Holiday::VACATION_ID])
-    end
+    self.worktimes.sum(:hours, :conditions => ["absence_id = ?", Holiday::VACATION_ID]).to_f
   end
   
   # Calculates total holidays
   def totalHolidays
     first_employment = self.employments.find(:first)
     sumTotal = 0
-    if first_employment == nil
-      sumTotal 
-    else
-      first_employment.start_date.year.step(Date.today.year, 1){|year|
-      sumTotal += Masterdata.instance.vacations_year
-      }
-      sumTotal
+    if first_employment != nil
+      first_employment.start_date.year.step(Date.today.year, 1) {|year|
+        sumTotal += Masterdata.instance.vacations_year
+      }      
     end
+    sumTotal
   end
 
   # Sum total overtime
@@ -95,7 +122,7 @@ class Employee < ActiveRecord::Base
     if first_employment == nil
       return 0
     else
-      sumWorktime(first_employment.start_date, Date.today)-musttime(first_employment.start_date, Date.today)
+      sumWorktime(first_employment.start_date, Date.today) - musttime(first_employment.start_date, Date.today)
     end
   end
   
@@ -122,8 +149,9 @@ class Employee < ActiveRecord::Base
     sum
   end
   
-  # Hash function for pwd.
-  private
+private
+  
+  # Hash function for pwd.  
   def self.encode(pwd)
     Digest::SHA1.hexdigest(pwd) 
   end

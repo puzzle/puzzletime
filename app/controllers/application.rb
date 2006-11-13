@@ -35,7 +35,7 @@ class ApplicationController < ActionController::Base
   end
   
   def parseDate(attributes, prefix)
-    "#{attributes[prefix + '(3i)']}-#{attributes[prefix + '(2i)']}-#{attributes[prefix + '(1i)']}"
+    Date.parse("#{attributes[prefix + '(3i)']}-#{attributes[prefix + '(2i)']}-#{attributes[prefix + '(1i)']}")
   end
 end
 

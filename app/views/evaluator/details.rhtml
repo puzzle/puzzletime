@@ -1,0 +1,31 @@
+<h1>Work Time Details <%= @period.to_s %></h1>
+<table>
+    <tr class="times_table_title">
+      <td><%= @category.class.name %>: <%= @category.label %></td>
+    </tr>
+    <tr class="times_table_title">
+      <td><%= @subdivision.class.name%>: <%= @subdivision.label %></td>
+    </tr>
+</table>
+<br/>
+<table>
+<% for time in @times %>
+<tr>
+  <td><%= format_date(time.work_date) %></td>
+  <td><%= time.hours %> h</td>
+  <td><%= @category.detailFor(time) %></td>
+  <td><%= time.description.slice(0..50)
+      if time.description.length > 50
+        link_to '...', :action => 'showDescription', :worktime_id => time.id
+      end    %></td>
+  <td><%= link_to 'Change Project', :controller =>'project', :action =>'changeProject', :worktime_id => time.id %>
+<tr>
+<% end %> 
+</table>
+
+<%= link_to 'Overview', 
+            :action => params[:return_action],
+            :category => @matrix[:category],
+            :division => @matrix[:division],            
+            :start_date => @period.startDate,
+            :end_date => @period.endDate %>

@@ -68,6 +68,29 @@ margin-top: 0px;
 padding-top: 0px;
 }
 
+.times_table_title
+{
+font-size: 12px;
+font-family: "trebuchet ms", helvetica, sans-serif;
+font-weight: bold;
+color: #0087e3;
+padding-top: 10px;
+padding-bottom: 8px;
+white-space: nowrap;
+}
+
+
+.times_total_sum
+{
+font-size: 12px;
+font-family: "trebuchet ms", helvetica, sans-serif;
+font-weight: bold;
+color: #f4a460;
+padding-top: 10px;
+padding-bottom: 20px;
+white-space: nowrap;
+}
+
 #outer
 {
 position: relative;
