@@ -1,17 +1,9 @@
-<!-- (c) Puzzle itc, Berne
-Diplomarbeit 2149, Xavier Hayoz -->
-
-<h1>Edit your Time</h1>
+<h1>Edit Time for <%= @worktime.account.name %></h1>
 <br/>
 <table>
-<tr>
- <td>Current Report Type: <%= @worktime.report_type %></td>
-</tr>
-<tr>
-<td>Current Employee: <%= @worktime.employee.lastname %> <%= @worktime.employee.firstname %>
 </tr>
 </table>
-<%= start_form_tag :action => 'updateTime', :worktime_id => @worktime , :project_id => @project %>
+<%= start_form_tag :action => 'updateTime', :worktime_id => @worktime %>
 <%= render :partial => 'form' %>
 <%= end_form_tag %>
 

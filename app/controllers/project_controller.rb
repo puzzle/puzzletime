@@ -13,13 +13,13 @@ class ProjectController < ApplicationController
 
   # Lists all projects.
   def listProject
-    @project_pages, @projects = paginate :projects, :per_page => 10
+    @project_pages, @projects = paginate :projects, :order => 'client_id, name', :per_page => 10
   end
   
   # Shows detail of chosen project.
   def showProject
     @project = Project.find(params[:id])
-    @employee = Employee.find(:all, :order => 'lastname')
+    @employees = Employee.list
   end
   
   # Creates new instance of project.
@@ -29,46 +29,35 @@ class ProjectController < ApplicationController
   
   # Create project membership.
   def createProjectMembership
-    @project = Project.find(params[:project_id])
     if params.has_key?(:employee_id)
       @employees = Employee.find(params[:employee_id])
       @employees.each do |e|
-        Projectmembership.create(:project_id => @project.id,
-                               :employee_id => e.id)
+        Projectmembership.create(:project_id => params[:project_id],
+                                 :employee_id => e.id)
       end      
       flash[:notice] = 'Projectmember was created'
-      redirect_to :action => 'showProject' , :id => @project
+      redirect_to :action => 'showProject' , :id => params[:project_id]
     else
       flash[:notice] = 'Please select one or more employees'
-      redirect_to :action => 'showProject' , :id => @project
+      redirect_to :action => 'showProject' , :id => params[:project_id]
     end
   end
 
   # Add project management.
   def addProjectManagement
-    @project = Project.find(params[:project_id])
-    @projectmembership = Projectmembership.find(params[:projectmembership_id])
-    @projectmembership.update_attributes(:projectmanagement => true)
-    flash[:notice] = "#{@projectmembership.employee.lastname} #{@projectmembership.employee.firstname} was added to projectmanager"
-    redirect_to :action => 'showProject' , :id => @project
+    setProjectManagement(true)
   end
   
   # Remove project management.
   def removeProjectManagement
-    @project = Project.find(params[:project_id])
-    @projectmembership = Projectmembership.find(params[:projectmembership_id])
-    @projectmembership.update_attributes(:projectmanagement => false)
-    flash[:notice] = "#{@projectmembership.employee.lastname} #{@projectmembership.employee.firstname} was removed from projectmanager"
-    redirect_to :action => 'showProject' , :id => @project
+    setProjectManagement(false)
   end
   
   # Destroy project membership.
   def destroyProjectMembership
-    @project = Project.find(params[:project_id])
-    @projectmembership = Projectmembership.find(params[:projectmembership_id])
-    Projectmembership.find(params[:projectmembership_id]).destroy
-    flash[:notice] = "Projectmember #{@projectmembership.employee.lastname} #{@projectmembership.employee.firstname} was deleted"
-    redirect_to :action => 'showProject' , :id => @project
+    Projectmembership.destroy(params[:projectmembership_id])
+    flash[:notice] = "Projectmembership was deleted"
+    redirect_to :action => 'showProject', :id => params[:project_id]
   end
   
   # Saves new project on DB.
@@ -101,32 +90,22 @@ class ProjectController < ApplicationController
       render :action => 'editProject'
     end
   end
-  
-  # Show the change project page.
-  def changeProject
-    if @user.management == true
-      @projects = Project.find(:all, :order => "name")
-    else
-      @projectmemberships = Projectmembership.find(:all, :conditions =>["employee_id = ? and projectmanagement IS TRUE", @user.id])
-    end
-    @old_project = Worktime.find(params[:worktime_id])
-  end
-  
-  # Stores the changes on the DB.
-  def updateEmployeeChangedProject
-    @worktime = Worktime.find(params[:worktime_id])
-    if @worktime.update_attributes(params[:worktime])
-      flash[:notice] = 'Project was successfully changed'
-      redirect_to :controller => 'evaluator', :action => 'showProjects'
-    else
-      render :action => 'changeProject'
-    end
-  end
+ 
   
   # Deletes the chosen project.
   def destroyProject
-    Project.find(params[:id]).destroy
+    Project.destroy(params[:id])
     flash[:notice] = 'Project was successfully deleted'
     redirect_to :action => 'listProject'
   end
+  
+private
+
+  def setProjectManagement(bool)
+    projectmembership = Projectmembership.find(params[:projectmembership_id])
+    projectmembership.update_attributes(:projectmanagement => bool)
+    flash[:notice] = "#{projectmembership.employee.label} was " + (bool ? "set as" : "removed as") + " project manager"
+    redirect_to :action => 'showProject' , :id => params[:project_id]
+  end
+  
 end

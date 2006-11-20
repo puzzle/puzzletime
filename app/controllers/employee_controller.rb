@@ -95,12 +95,12 @@ class EmployeeController < ApplicationController
   
   # Deletes the chosen employment data
   def destroyEmployment
-       @employee = Employee.find(params[:employee_id])
-    if Employment.find(params[:employment_id]).destroy
+    @employee = Employee.find(params[:employee_id])
+    if Employment.destroy(params[:employment_id])
       flash[:notice] = 'Employment was deleted'
       redirect_to :action => 'showEmployee', :id => @employee
     else
-      flash[:notice] = 'Employment was not deleted'
+      flash[:notice] = 'Problem on deleting employment'
       render :action => 'showEmployee', :id => @employee
     end
   end
@@ -117,19 +117,18 @@ class EmployeeController < ApplicationController
       flash[:notice] = 'Employee was successfully updated.'
       redirect_to :action => 'listEmployee'
     else
+      flash[:notice] = 'Problem on updating employee'
       render :action => 'editEmployee'
     end
   end
   
   # Deletes the chosen employee
   def destroyEmployee
-    @employee = Employee.find(params[:id])
-    if @employee.destroy
-        flash[:notice] = 'Employee was deleted'
-      redirect_to :action => 'listEmployee'
+    if Employee.destroy(params[:id])
+      flash[:notice] = 'Employee was deleted'      
     else
-      flash[:notice] = 'Employee was not deleted'
-      render :action => 'listEmployee'
+      flash[:notice] = 'Problem on deleting employee'
     end
+    redirect_to :action => 'listEmployee'
   end
 end

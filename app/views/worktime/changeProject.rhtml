@@ -1,0 +1,26 @@
+<h1>Change Project for Time Entry </h1>
+
+<br/>
+<table>
+  <tr>
+    <td>Old Project: </td>
+      <td><%= @worktime.project.fullname %></td>
+  </tr>
+  <%= start_form_tag :action => 'updateProject', 
+                     :worktime_id => @worktime.id,
+                     :evaluation => params[:evaluation]%>
+  <tr>
+	<td>New Project: </td>
+    <td><select name="worktime[project_id]">
+      <% @projects.each do |project| %>
+      <option value="<%= project.id %>"> 
+      <%= project.fullname %>
+      </option>
+      <% end %>
+      </select></td>
+   </tr>
+   <tr>
+     <td><td><%= submit_tag 'Save' %></td></td>
+   </tr>
+   <%= end_form_tag %>
+   </table>

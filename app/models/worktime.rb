@@ -11,19 +11,19 @@ class Worktime < ActiveRecord::Base
   #Accessor needed for all select*.rhtml
   attr_accessor :start
   attr_accessor :end
-  
-  def self.conditionsFor(period = nil, idHash = {})
-    condArray = [ " 1=1 "]
-    if period != nil
-      condArray = ["(work_date BETWEEN ? AND ?)", period.startDate, period.endDate]
-    end  
-    idHash.each_pair { |name, id|
-      if id > 0 
-        condArray[0] += "AND #{name} = ?"
-        condArray.push(id)
-      end
-    }
-    condArray
+    
+  TYPE_START_STOP = 'start_stop_day'
+  TYPE_HOURS_DAY = 'absolute_day'
+  TYPE_HOURS_WEEK = 'week'
+  TYPE_HOURS_MONTH = 'month'
+
+  def validate
+    if hours.to_f <= 0
+      errors.add(hours, "hours must be positive")
+    end
   end  
-  
+    
+  def account
+    project != nil ? project : absence
+  end
 end

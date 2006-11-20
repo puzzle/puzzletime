@@ -1,0 +1,27 @@
+<h1>Description</h1>
+<br/>
+<table>
+  <tr>
+    <td>Employee: <%= @time.employee.label %></td>
+  </tr>
+  <tr>
+   <td>Date: <%= format_date(@time.work_date) %></td>
+  </tr>
+  <tr>
+    <td>Hours: <%= round(@time.hours) %></td>
+  </tr>
+  <tr>
+    <td>Description: </td>
+  </tr>
+  <tr> 
+    <td><%= @time.description %></td>
+  </tr>
+</table>
+<br/>
+<%= link_to 'Back', 
+            :action => 'details',
+            :evaluation => params[:evaluation],
+            :category_id => params[:category_id],
+            :division_id => params[:division_id],
+            :start_date => params[:start_date],
+            :end_date => params[:end_date]  %>

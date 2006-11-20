@@ -1,9 +1,9 @@
-<h1><%=@matrix[:category]%> <%=@matrix[:division].to_s.capitalize%> Overview</h1>
+<h1><%= @evaluation.label %> Overview</h1>
 
 <p>
-<%= periodLink(@period, @matrix) %>
+<%= periodLink(@period) %>
 </p>
 
-<%= overview(@matrix, @id, @period) %>
+<%= overview(@evaluation, @period) %>
 
 <%= link_to 'Evaluator', :action => 'listEvaluator' %> 

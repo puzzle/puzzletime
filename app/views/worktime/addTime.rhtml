@@ -1,9 +1,11 @@
-<!-- (c) Puzzle itc, Berne
-Diplomarbeit 2149, Xavier Hayoz -->
 
-<h1>New Work Time</h1>
+<% if @worktime.account != nil %>
+<h1>New Time for <%= @worktime.account.name %></h1>
+<% else %>
+<h1>New Absence</h1>
+<% end %>
 <br/>
-<%= start_form_tag :action => 'createTime', :project_id => @project.id %>
+<%= start_form_tag :action => 'createTime' %>
 <%= render :partial => 'form' %>
 <%= end_form_tag %>
 

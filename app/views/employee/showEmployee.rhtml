@@ -30,7 +30,7 @@
       <% for employment in @employee.employments %>
         <tr>
           <td><%= employment.percent %></td>
-          <td><%= change_date(employment.start_date) %></td>
+          <td><%= format_date(employment.start_date) %></td>
            <% if employment.end_date %>
              <td><%= change_date(employment.end_date) %></td>
                        <td><%= link_to 'Edit', :action => 'editEmployment', :id => employment, :employee_id => @employee  %></td>

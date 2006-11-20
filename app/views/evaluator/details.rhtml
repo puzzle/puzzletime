@@ -12,20 +12,49 @@
 <% for time in @times %>
 <tr>
   <td><%= format_date(time.work_date) %></td>
-  <td><%= time.hours %> h</td>
+  <td><%= round(time.hours) %> h</td>
   <td><%= @category.detailFor(time) %></td>
-  <td><%= time.description.slice(0..50)
+  <td><%= time.description.slice(0..50) %>
+      <%=
       if time.description.length > 50
-        link_to '...', :action => 'showDescription', :worktime_id => time.id
+        link_to '...', 
+                :action => 'description', 
+                :worktime_id => time.id,
+                :evaluation => params[:evaluation],
+                :category_id => params[:category_id],
+                :division_id => params[:division_id],
+                :start_date => params[:start_date],
+                :end_date => params[:end_date]
       end    %></td>
-  <td><%= link_to 'Change Project', :controller =>'project', :action =>'changeProject', :worktime_id => time.id %>
+  <td>
+  <% if @evaluation.for?(@user) %>
+    <%= link_to 'Edit', 
+                :controller =>'worktime', 
+                :action =>'editTime', 
+                :id => time.id %>
+    <%= link_to 'Delete', 
+                {:controller =>'worktime', 
+                :action =>'deleteTime',                 
+                :id => time.id,
+                :evaluation => params[:evaluation],
+                :category_id => params[:category_id],
+                :division_id => params[:division_id],
+                :start_date => params[:start_date],
+                :end_date => params[:end_date]},
+                :confirm => 'Do you really want to delete this time?' %>
+  <% else %>            
+    <%= link_to 'Change Project', 
+                :controller =>'worktime', 
+                :action =>'changeProject', 
+                :worktime_id => time.id,
+                :evaluation => params[:evaluation] %>
+  <% end %>            
 <tr>
 <% end %> 
 </table>
 
 <%= link_to 'Overview', 
-            :action => params[:return_action],
-            :category => @matrix[:category],
-            :division => @matrix[:division],            
+            :action => 'overview',
+            :evaluation => params[:evaluation],           
             :start_date => @period.startDate,
             :end_date => @period.endDate %>

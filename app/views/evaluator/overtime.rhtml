@@ -8,9 +8,9 @@
   </tr>
   <% for employee in @employees %>
   <tr>
-    <td><%= employee.lastname %> <%= employee.firstname %></td>
-    <td><%= employee.totalOvertime %></td>
-    <td><%= employee.remainingHolidays %></td>
+    <td><%= employee.label %></td>
+    <td><%= employee.totalOvertime %> h </td>
+    <td><%= employee.remainingHolidays %> d</td>
   </tr>
   <% end %>
 </table>

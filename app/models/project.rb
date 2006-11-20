@@ -3,10 +3,14 @@
 
 class Project < ActiveRecord::Base
   
-  include ActiveSupport::CoreExtensions::Time::Calculations::ClassMethods
+  include Category
+  include Division
 
   # All dependencies between the models are listed below.
-  has_many :projectmemberships, :dependent => true
+  has_many :projectmemberships, :dependent => true, :finder_sql => 
+    'SELECT m.* FROM projectmemberships m, employees e ' +
+    'WHERE e.id = m.employee_id ' +
+    'ORDER BY e.lastname, e.firstname'
   has_many :employees, :through => :projectmemberships, :order => "lastname"
   belongs_to :client
   has_many :worktimes
@@ -15,36 +19,12 @@ class Project < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name
   
-  def self.list(id = nil)
-    if id != nil
-      find(id).to_a
-    else  
-      find(:all, :order => "name")  
-    end  
+  def self.list
+    self.find(:all, :order => 'name')
   end
   
-  def self.division
-    :projects
-  end  
-  
-  def label
-    name
-  end  
-  
-  def subdivisionRef
-    id
-  end
-  
-  def detailFor(time)
-    ""
-  end
-  
-  def worktimesBy(period = nil, employeeId = 0)
-    worktimes.find(:all, :conditions => Worktime.conditionsFor(period, :employee_id => employeeId), :order => "work_date ASC")
-  end  
-  
-  def sumWorktime(period = nil, employeeId = 0)
-    worktimes.sum(:hours, :conditions => Worktime.conditionsFor(period, :employee_id => employeeId)).to_f
+  def fullname
+    client.name + ' - ' + name
   end
 
 end

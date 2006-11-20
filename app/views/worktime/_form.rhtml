@@ -1,26 +1,26 @@
-<!-- (c) Puzzle itc, Berne
-Diplomarbeit 2149, Xavier Hayoz -->
 
 <%= error_messages_for 'worktime' %>
 
+
+<%= hidden_field 'worktime', 'project_id' %>
 <table>
     <tr>
 	<td>Report type: </td>
     <td>
           <select id="report_type" name="worktime[report_type]" onChange="switchvisibility();">
-          <option value="start_stop_day">Start-Stop Time</option> 
-          <option value="absolute_day">Hours/Day</option>
-          <option value="week">Hours/Week</option> 
-          <option value="month">Hours/Month</option>
+          <option value="<%= Worktime::TYPE_START_STOP %>" <%= 'selected="selected"' if Worktime::TYPE_START_STOP == @worktime.report_type %>>Start-Stop Time</option> 
+          <option value="<%= Worktime::TYPE_HOURS_DAY %>" <%= 'selected="selected"' if Worktime::TYPE_HOURS_DAY == @worktime.report_type %>>Hours/Day</option>
+          <option value="<%= Worktime::TYPE_HOURS_WEEK %>" <%= 'selected="selected"' if Worktime::TYPE_HOURS_WEEK == @worktime.report_type %>>Hours/Week</option> 
+          <option value="<%= Worktime::TYPE_HOURS_MONTH %>" <%= 'selected="selected"' if Worktime::TYPE_HOURS_MONTH == @worktime.report_type %>>Hours/Month</option>
           </select>
     </td>
   </tr>
-  <% unless params.has_key?(:project_id) || params[:action] === "editTime" %>
+  <% if params[:action] == "addAbsence" %>
   <tr>
 	<td>Absence: </td>
     <td>
           <select id="absence" name="worktime[absence_id]">
-          <% @absence.each do |abs| %>
+          <% @absences.each do |abs| %>
           <option value="<%= abs.id%>">
           <%= abs.name %>
           </option> 
@@ -28,6 +28,8 @@ Diplomarbeit 2149, Xavier Hayoz -->
           </select>
     </td>
   </tr>
+  <% else %>
+    <%= hidden_field 'worktime', 'absence_id' %>
   <% end %>
   <tr>
     <td>Workdate: </td>
@@ -40,16 +42,18 @@ Diplomarbeit 2149, Xavier Hayoz -->
   <tr>
     <td>From start time: </td>
     <td>
-      <%= worktime_hour('worktime_from_start_time_hour') %> <%= worktime_minute('worktime_from_start_time_minute') %> 
+      <%= worktime_hour('worktime_from_start_time_hour', @worktime.from_start_time) %>
+      <%= worktime_minute('worktime_from_start_time_minute', @worktime.from_start_time) %> 
     </td>
   </tr>
   <tr>
     <td>To end time: </td>
     <td>
-    <%= worktime_hour('worktime_to_end_time_hour') %> <%= worktime_minute('worktime_to_end_time_minute') %> 
+    <%= worktime_hour('worktime_to_end_time_hour', @worktime.to_end_time) %> 
+    <%= worktime_minute('worktime_to_end_time_minute', @worktime.to_end_time) %> 
     </td>
   </tr>
-  <tr>
+  <tr valign="top">
     <td>Description: </td>
     <td><%= text_area 'worktime', 'description',{:rows => 10}  %></td>
   </tr>
@@ -63,3 +67,7 @@ Diplomarbeit 2149, Xavier Hayoz -->
     <td><td><%= submit_tag 'Save' %></td></td>
    </tr>
  </table>
+ 
+<script type="text/javascript">
+  switchvisibility();
+</script>

@@ -8,19 +8,12 @@ class AbsenceController < ApplicationController
   
   # List all absences.
   def listAbsence
-     @absence_pages, @absences = paginate :absences, :per_page => 10
+     @absence_pages, @absences = paginate :absences, :order => 'name', :per_page => 10
   end
 
   # Show Page for absence.
   def newAbsence
     Absence.new(params[:absence])
-  end
-  
-  # Shows editAbsenceTime page.
-  def editAbsenceTime
-    @employee = Employee.find(params[:employee_id])
-    @absence = Absence.find(:all)
-    @worktime = Worktime.find(params[:worktime_id])
   end
   
   # Shows editAbsence page.
@@ -60,24 +53,4 @@ class AbsenceController < ApplicationController
     end
   end
   
-  # Saves the updated absence attributes on DB.
-  def updateAbsenceTime
-    @worktime = Worktime.find(params[:worktime_id])
-    if @worktime.update_attributes(params[:worktime])
-      flash[:notice] = 'Absence Time was successfully updated.'   
-      redirect_to :controller => 'evaluator' ,:action => 'showAbsences'
-    else
-      render :action => 'editAbsenceTime'
-    end
-  end
-
-  # Deletes the selected absence time from DB.
-  def deleteAbsenceTime
-    if Worktime.destroy(params[:worktime_id])
-      flash[:notice] = 'Absence Time was deleted'
-    else
-      flash[:notice] ='Absence Time was could not be deleted'      
-    end
-    redirect_to :controller => 'evaluator' ,:action =>'showAbsences'
-  end
 end

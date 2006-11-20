@@ -1,6 +1,6 @@
-<h1><%= @matrix[:division].to_s.capitalize %> of <%= @user.label %></h1>
+<h1><%= @evaluation.division_method.to_s.capitalize %> of <%= @user.label %></h1>
 
-<p><%= periodLink(@period, @matrix) %></p>
+<p><%= periodLink(@period) %></p>
 
 <p>
 Overtime: <%= @user.totalOvertime.to_f %> hours
@@ -8,21 +8,19 @@ Overtime: <%= @user.totalOvertime.to_f %> hours
 Remaining Holidays: <%= @user.remainingHolidays %> days
 </p>
 
-<%= overview(@matrix, @user.id, @period) %>	
+<%= overview(@evaluation, @period) %>	
  
  
 <%= link_to 'Add Absence', :controller => 'worktime', :action => 'addAbsence' %> | 
 
 <%= 
-if @matrix[:division] == :projects
+if @evaluation.division_method == :projects
     link_to 'View Absences', 
-            :action => 'userOverview',
-            :category => @matrix[:category],
-            :division => :absences
+            :action => 'overview',
+            :evaluation => 'userabsences'
  else
      link_to 'View Projects', 
-            :action => 'userOverview',
-            :category => @matrix[:category],
-            :division => :projects
+            :action => 'overview',
+            :evaluation => 'user'
  end           
 %>

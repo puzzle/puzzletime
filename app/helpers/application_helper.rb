@@ -12,17 +12,17 @@ module ApplicationHelper
   
   # Generates <select>-statement with id.
   # Needed for javascript
-  def worktime_hour(name)
-    html = %(<select id=")
-    html << "#{name}"
-    html << %(" name=")
-    html << "#{name}"
-    html << %(">)
-    0.upto(23) do |hour|
-      html << %(<option value=")
-      html << "#{hour}"
-      html << %(">)
-      html << "#{hour}"
+  def worktime_hour(name, time)
+    time = Time.now if time == nil  
+    hour = time.hour
+    html = %(<select id="#{name}")
+    html << %(" name="#{name}">)
+    0.upto(23) do |h|
+      html << %(<option value="#{h}")
+      if h == hour
+        html << %( selected="selected")
+      end 
+      html << %( >#{h})
       html << %(</option>)
     end
     html << %(</select>)
@@ -30,17 +30,17 @@ module ApplicationHelper
  
   # Generates <select>-statement with id.
   # Needed for javascript
-  def worktime_minute(name)
-    html = %(<select id=")
-    html << "#{name}"
-    html << %(" name=")
-    html << "#{name}"
-    html << %(">)
-    0.upto(59) do |minute|
-      html << %(<option value=")
-      html << "#{minute}"
-      html << %(">)
-      html << "#{minute}"
+  def worktime_minute(name, time)
+    time = Time.now if time == nil  
+    minute = time.min
+    html = %(<select id="#{name}" )
+    html << %(" name="#{name}">)
+    0.upto(59) do |min|
+      html << %(<option value="#{min}")
+      if min == minute
+        html << %( selected="selected")
+      end  
+      html << %( >#{min})
       html << %(</option>)
     end
     html << %(</select>)   

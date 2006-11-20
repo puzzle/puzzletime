@@ -22,19 +22,19 @@ Diplomarbeit 2149, Xavier Hayoz -->
             <td><b>Members:</b></td>
             <td><b>Projectmanagement</b></td>
           </tr>
-          <%for projectmembership in @project.projectmemberships %> 
+          <%for membership in @project.projectmemberships %> 
           <tr>
-            <td> <%= projectmembership.employee.lastname %> <%= projectmembership.employee.firstname %></td>
-                     
-            <td><center> <% if projectmembership.projectmanagement === false %>
-            	 <%= link_to 'add', :action => 'addProjectManagement', :project_id => @project, :projectmembership_id => projectmembership %>             
-                 <% else %>
-                 <%= link_to 'remove', :action => 'removeProjectManagement', :project_id => @project, :projectmembership_id => projectmembership %> 
-                 <% end %>
+            <td> <%= membership.employee.label %> </td>        
+            <td><center> 
+            <% if !membership.projectmanagement %>
+            	 <%= link_to 'add', :action => 'addProjectManagement', :project_id => @project, :projectmembership_id => membership.id %>             
+            <% else %>
+                 <%= link_to 'remove', :action => 'removeProjectManagement', :project_id => @project, :projectmembership_id => membership.id %> 
+            <% end %>
                  </center> 
            </td> 
             <td>
-            <%= link_to 'remove from project', { :action => 'destroyProjectMembership', :project_id => @project, :projectmembership_id => projectmembership }, 
+            <%= link_to 'remove from project', { :action => 'destroyProjectMembership', :project_id => @project, :projectmembership_id => membership }, 
                                    :confirm => 'Are you sure?', 
                                    :post => true %>
             </td>
@@ -43,11 +43,11 @@ Diplomarbeit 2149, Xavier Hayoz -->
         </table> 
         </br>
  <%= start_form_tag :action => 'createProjectMembership', :project_id => @project  %> 
-        <p><label for="employee_name">Employee</label><br/>
+        <p><label for="employee_name">Employees</label><br/>
         <select name="employee_id[]" multiple="multiple" size="5"">
-            <% @employee.each do |employee| %>
+            <% @employees.each do |employee| %>
             <option value="<%= employee.id %>"> 
-            <%= employee.lastname %> <%= employee.firstname %>
+            <%= employee.label %>
             </option>
             <% end %>
             </select></p>

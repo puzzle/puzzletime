@@ -3,59 +3,53 @@
 
 module EvaluatorHelper
       
-  def periodLink(period, matrix)
+  def periodLink(period)
     if period != nil
       html = "Work times during #{period} "
-      html += link_to 'Current Period', :action => params[:action], 
-                :category => @matrix[:category],
-                :division => @matrix[:division]
+      html += link_to 'Current Period', 
+                      :action => params[:action], 
+                      :evaluation => params[:evaluation]
     else
       html = link_to 'Other Period', 
             :action => 'selectPeriod', 
-            :category => @matrix[:category],
-            :division => @matrix[:division],
-            :return_action => params[:action]
+            :return_action => params[:action], 
+            :evaluation => params[:evaluation]
     end  
   end    
       
-  def detailLink(category, division, period, id)
-    link = "<a href=\"/evaluator/details?category=#{category.class.name}"
-    link += "&division=#{division.class.division}&return_action=#{params[:action]}"
-    link += "&category_id=#{category.id}&division_id=#{division.id}"
+  def detailLink(category_id, division_id, period)
+    link = "<a href=\"/evaluator/details?evaluation=#{params[:evaluation]}"
+    link += "&category_id=#{category_id}&division_id=#{division_id}"
     link += "&start_date=#{period.startDate}&end_date=#{period.endDate}\">"
     link += "<img src =\"/images/lupe.gif\" border=0></a>"
   end
   
-  def overview(matrix, id = nil, period = nil)
+  def overview(evaluation, period = nil)
     if period == nil
-      overview_impl(matrix, 
-               id, 
-               [Period.currentWeek, Period.currentMonth, Period.currentYear],
-               ["Current Week: #{Time.now.strftime('%W')}",
-                "Current Month: #{Time.now.strftime('%m')}",
-                "Current Year: #{Time.now.strftime('%y')}"])
+      overview_impl(evaluation,
+               [Period.currentWeek, Period.currentMonth, Period.currentYear])
     else
-      overview_impl(matrix, id, [period], [period.to_s])
+      overview_impl(evaluation, [period])
     end   
   end
   
-  def overview_impl(matrix, id, periods, periodLabels)
+  def overview_impl(evaluation, periods)
     
     header = %(<td>| Total Project</td>)
-    periodLabels.each { |label|
-      header += %(<td colspan="2">| #{label}</td>)
+    periods.each { |period|
+      header += %(<td colspan="2">| #{period.label}</td>)
     }    
     header += %(<td>|</td>)
     
     html = %(<table>)
-    for category in matrix[:category].list(id)
+    for category in evaluation.categories
       sum_total = 0 
       sum_periods = Array.new(periods.size, 0)
       html << %(<tr class="times_table_title">)
       html << %(<td>#{category.label}</td>)
       html << header
       html << %(</tr>)
-      for division in category.send(@matrix[:division])
+      for division in evaluation.divisions(category)
         times = periods.collect { |p| division.sumWorktime(p, category.subdivisionRef) }
         total = division.sumWorktime(nil, category.subdivisionRef)
         sum_periods.each_index { |i| sum_periods[i] += times[i] }
@@ -65,10 +59,10 @@ module EvaluatorHelper
         html << %(<td>| #{round(total)}</td>)
         periods.each_index { |i| 
           html << %(<td>| #{round(times[i])}</td>)
-          html << %(<td align="right">#{detailLink(category, division, periods[i], id)}</td>)
+          html << %(<td align="right">#{detailLink(category.id, division.id, periods[i])}</td>)
         }
-        if category.class == Employee && category == @user
-          html << %(<td>| <a href="/worktime/addTime?division=#{division.class.division}&division_id=#{division.id}">)
+        if evaluation.for?(@user)
+          html << %(<td>| <a href="/worktime/addTime?project_id=#{division.id}">)
           html << %(Add Time</a></td>)
         else 
           html << %(<td>|</td>)          

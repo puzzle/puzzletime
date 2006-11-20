@@ -1,36 +1,32 @@
 <h1>Evaluator Options</h1>
 <br/>
 <table>
- <%if @user.management || Projectmembership.is_projectmanagement(@user) %>
+ <%if @user.management || @user.projectManager? %>
   <tr>
     <td><%= link_to 'Project Worktimes Overview', 
-                    :action => 'overview', 
-                    :category => Project.name,
-                    :division => :employees %>
+                    :action => 'overview',
+                    :evaluation => 'managed' %>
     </td>
   </tr>
  <% end %>
  <%if @user.management %>
  <tr>
     <td><%= link_to 'Client Worktimes Overview', 
-                    :action => 'overview', 
-                    :category => Client.name,
-                    :division => :projects %></td>
+                    :action => 'overview',
+                    :evaluation => 'clients' %></td>
   </tr>
   <tr>
     <td><%= link_to 'Employee Worktimes Overview', 
-                    :action => 'overview', 
-                    :category => Employee.name,
-                    :division => :projects %></td>
+                    :action => 'overview',
+                    :evaluation => 'employees' %></td>
   </tr>
   <tr>
     <td><%= link_to 'Employee Absences Overview', 
                     :action => 'overview',
-                    :category => Employee.name,
-                    :division => :absences %></td>
+                    :evaluation => 'absences' %></td>
   </tr>
   <tr>
-    <td><%= link_to 'Employee Overtime Overview', :action => 'showOvertime' %></td>
+    <td><%= link_to 'Employee Overtime Overview', :action => 'overtime' %></td>
   </tr>
  <% end %>
  </table>

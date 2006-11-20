@@ -5,12 +5,17 @@ require "digest/sha1"
 
 class Employee < ActiveRecord::Base
   
+  include Category
+  include Division
+  
   # All dependencies between the models are listed below.
-  has_many :employments 
+  has_many :employments, :order => 'start_date'
   has_many :projectmemberships, :dependent => true
   has_many :projects, :through => :projectmemberships, :order => "name"
+  has_many :managed_projects, :class_name => 'Project', :through => :projectmemberships, :order => "name"
   has_many :worktimes, :dependent => true
   has_many :absences, :through => :worktimes
+
   
   # Attribute reader and writer.
   attr_accessor :pwd 
@@ -36,38 +41,25 @@ class Employee < ActiveRecord::Base
                          id, passwd])
   end
   
-  def self.list(id = nil) 
-    if id != nil
-      find(id).to_a
-    else  
-      find(:all, :order => "lastname")  
-    end 
+  def self.list 
+    find(:all, :order => "lastname")  
   end
   
-  def self.division
-    :employees
-  end
-    
   def label
     lastname + " " + firstname
   end
-   
-  def subdivisionRef
-    id
-  end
-  
-  def detailFor(time)
-    ""
-  end
   
   def worktimesBy(period, projectId)
-    worktimes.find(:all, :conditions => Worktime.conditionsFor(period, :project_id => projectId), :order => "work_date ASC")
+    worktimes.find(:all, :conditions => conditionsFor(period, :project_id => projectId), :order => "work_date ASC")
   end  
   
   def sumWorktime(period = nil, projectId = 0)
-    worktimes.sum(:hours, :conditions => Worktime.conditionsFor(period, :project_id => projectId)).to_f
+    worktimes.sum(:hours, :conditions => conditionsFor(period, :project_id => projectId)).to_f
   end
     
+  def projectManager?
+    managed_projects.size > 0
+  end  
   
   # Hashes password before storing it.
   def before_create
@@ -83,15 +75,6 @@ class Employee < ActiveRecord::Base
   def updatepwd(pwd)
     hashed_pwd = Employee.encode(pwd)
     update_attributes(:passwd => hashed_pwd)
-  end
-  
-  # Sum total worked time
-  def sumWorktimeOld(start_date, end_date)
-   if self.worktimes.sum(:hours, :joins => "LEFT JOIN absences AS a ON worktimes.absence_id = a.id", :conditions => ["(worktimes.absence_id IS NULL OR a.payed) AND work_date BETWEEN ? AND ?",start_date, end_date]) == nil
-     return 0
-   else
-     self.worktimes.sum(:hours, :joins => "LEFT JOIN absences AS a ON worktimes.absence_id = a.id", :conditions => ["(worktimes.absence_id IS NULL OR a.payed) AND work_date BETWEEN ? AND ?",start_date, end_date])
-   end
   end
   
   # Calculates remaining holidays
@@ -119,19 +102,17 @@ class Employee < ActiveRecord::Base
   # Sum total overtime
   def totalOvertime
     first_employment = self.employments.find(:first)
-    if first_employment == nil
-      return 0
-    else
-      sumWorktime(first_employment.start_date, Date.today) - musttime(first_employment.start_date, Date.today)
-    end
+    return 0 if first_employment == nil
+    period = Period.new(first_employment.start_date, Date.today)
+    sumWorktime(period) - musttime(period)
   end
   
   # Sum musttime
-  def musttime(start_date, end_date)
-    employments = self.employments.find(:all, :conditions =>["start_date <= ? OR end_date IS NULL OR end_date >= ? OR start_date <= ? OR end_date >= ? ",end_date ,start_date, start_date, end_date])
+  def musttime(period)
+    employments = self.employments.find(:all, :conditions =>["start_date <= ? OR end_date IS NULL OR end_date >= ? OR start_date <= ? OR end_date >= ? ", period.endDate, period.startDate, period.startDate, period.endDate])
     currentEmployment = 0
     sum = 0
-    start_date.step(end_date,1) {|date|
+    period.step {|date|
       hours = Holiday.mustTime(date)
       if employments[currentEmployment].end_date != nil
         if employments[currentEmployment].end_date < date && currentEmployment < employments.length-1

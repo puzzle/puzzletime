@@ -3,62 +3,48 @@
 
 class EvaluatorController < ApplicationController
  
-  # Used for the method days_in_month.
-  include ActiveSupport::CoreExtensions::Time::Calculations::ClassMethods
-  
   # Checks if employee came from login or from direct url.
   before_filter :authorize
-  
-  @@categories = [Employee, Project, Client, Absence]
-  @@subdivisions = [:projects, :absences, :employees]
-  @@defaultMatrix = {:category => Employee, :division => :projects}
-     
-  def userOverview
-     setPeriod
-     setMatrix
-     @matrix[:category] = Employee
-     @id = @user.id
-  end   
-     
-  def overview
-    setPeriod
-    setMatrix    
-  end
-  
-  def details
-    setPeriod
-    setMatrix
-    @category = @matrix[:category].find(params[:category_id])
-    @subdivision = @category.send(@matrix[:division]).find(params[:division_id])
-    @times = @subdivision.worktimesBy(@period, @category.subdivisionRef)    
-  end
 
-  # Shows project edit detail page.
-  def editProjectDetailTime
-    @worktime = Worktime.find(params[:worktime_id])
-    @absence = Absence.find(:all) 
-  end
-  
-  # Shows absence edit detail page.
-  def editAbsenceDetailTime
-    @worktime = Worktime.find(params[:worktime_id])
-    @absence = Absence.find(:all)
-    if params.has_key?(:employee_id)
-      @employee = Employee.find(params[:employee_id])
+  def overview
+    setEvaluation
+    setPeriod    
+    if @evaluation.for?(@user)
+      render :action => 'userOverview'
     end
+  end 
+  
+  def details  
+    setEvaluation
+    setPeriod
+    @category = @evaluation.category(params[:category_id].to_i)
+    @subdivision = @evaluation.division(@category, params[:division_id].to_i)
+    @times = @subdivision.worktimesBy(@period, @category.subdivisionRef)    
   end
   
   # Shows overtimes of employees
-  def showOvertime
-    @employees = Employee.find(:all, :order =>"lastname ASC")
+  def overtime
+    @employees = Employee.list
   end
   
-  def showDescription
+  def description
     @time = Worktime.find(params[:worktime_id])
   end
   
 private  
-    
+
+  def setEvaluation
+    @evaluation = case params[:evaluation]
+      when 'clients' then Evaluation.clients
+      when 'managed' then Evaluation.managed(@user)
+      when 'employees' then Evaluation.employees
+      when 'absences' then Evaluation.absences
+      when 'user' then Evaluation.user(@user)
+      when 'userabsences' then Evaluation.userAbsences(@user)
+      else Evaluation.managed(@user)
+      end  
+  end
+
   def setPeriod
     @period = nil
     if params.has_key?(:start_date)
@@ -69,13 +55,4 @@ private
     end  
   end
   
-  def setMatrix
-    @matrix = @@defaultMatrix
-    @@categories.each { |ea|     
-      @matrix[:category] = ea if ea.name == params[:category]
-    }
-    @@subdivisions.each { |ea|   
-      @matrix[:division] = ea if ea.to_s == params[:division]
-    }
-  end
 end
