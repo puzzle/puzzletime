@@ -1,5 +1,5 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-maria:
+half_year_maria:
   id:        1
   firstname: Maria
   lastname:  Dolores
@@ -8,7 +8,7 @@ maria:
   email:     bla@bla.ch
   phone:     9393
   management: true
-pedro:
+various_pedro:
   id:        2
   firstname: Pedro
   lastname:  Dolores
@@ -17,3 +17,31 @@ pedro:
   email:     bol@bla.ch
   phone:     97373
   management: false
+next_year_pablo:
+  id:        3
+  firstname: Pablo
+  lastname:  Sanchez
+  shortname: ps
+  passwd:    sdf
+  email:     ps@bla.ch
+  phone:     97373
+  management: false
+left_this_year_macy:
+  id:        4
+  firstname: Macy
+  lastname:  Grey
+  shortname: mg
+  passwd:    sdf
+  email:     mg@bla.ch
+  phone:     97373
+  management: false  
+long_time_john:
+  id:        5
+  firstname: John
+  lastname:  Neverends
+  shortname: jn
+  passwd:    sdf
+  email:     jn@bla.ch
+  phone:     97373
+  management: false  
+    

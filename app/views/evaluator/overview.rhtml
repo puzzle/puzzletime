@@ -6,4 +6,6 @@
 
 <%= overview(@evaluation, @period) %>
 
-<%= link_to 'Evaluator', :action => 'listEvaluator' %> 
+<% if @user.management %>
+  <%= link_to 'Evaluator', :action => 'listEvaluator' %> 
+<% end %>

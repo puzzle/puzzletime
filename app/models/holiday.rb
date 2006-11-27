@@ -3,11 +3,11 @@
 
 class Holiday < ActiveRecord::Base
 
-   REGULARHOLIDAYS = [[1,1],[25,12],[26,12],[1,8]]
+   REGULARHOLIDAYS = [[1,1],[2,1],[25,12],[26,12],[1,8]]
    VACATION_ID = 3
    
   # Collection of functions to check if date is holiday or not       
-  def self.mustTime(date)
+  def self.musttime(date)
     if Holiday.isWeekend(date)
       return 0
     elsif Holiday.isRegularHoliday(date)
@@ -25,9 +25,9 @@ class Holiday < ActiveRecord::Base
   # Checks if date is a regular holiday
   def self.isRegularHoliday(date)
     REGULARHOLIDAYS.each{|day|
-    if date.month == day[1] && date.day == day[0]
-      return true
-    end
+      if date.month == day[1] && date.day == day[0]
+        return true
+      end
     }
     return false
   end

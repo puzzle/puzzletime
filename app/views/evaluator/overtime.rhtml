@@ -9,8 +9,8 @@
   <% for employee in @employees %>
   <tr>
     <td><%= employee.label %></td>
-    <td><%= employee.totalOvertime %> h </td>
-    <td><%= employee.remainingHolidays %> d</td>
+    <td><%= round(employee.currentOvertime) %> h </td>
+    <td><%= employee.currentRemainingHolidays %> d</td>
   </tr>
   <% end %>
 </table>

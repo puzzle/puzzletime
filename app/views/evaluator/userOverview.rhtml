@@ -3,9 +3,9 @@
 <p><%= periodLink(@period) %></p>
 
 <p>
-Overtime: <%= @user.totalOvertime.to_f %> hours
+Overtime: <%= round(@user.currentOvertime.to_f) %> hours
 <br>
-Remaining Holidays: <%= @user.remainingHolidays %> days
+Remaining Holidays: <%= @user.currentRemainingHolidays %> days
 </p>
 
 <%= overview(@evaluation, @period) %>	

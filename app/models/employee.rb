@@ -77,61 +77,76 @@ class Employee < ActiveRecord::Base
     update_attributes(:passwd => hashed_pwd)
   end
   
+  def currentRemainingHolidays
+    remainingHolidays(employmentPeriodTo(endOfYear))
+  end
+  
   # Calculates remaining holidays
-  def remainingHolidays
-    ((totalHolidays - usedHolidays) / 8).to_f
+  def remainingHolidays(period)
+    totalHolidays(period) - usedHolidays(period)
   end
   
   # Calculates used holidays
-  def usedHolidays
-    self.worktimes.sum(:hours, :conditions => ["absence_id = ?", Holiday::VACATION_ID]).to_f
+  def usedHolidays(period)
+    return 0 if period == nil
+    self.worktimes.sum(:hours, :conditions => ["absence_id = ? AND (work_date BETWEEN ? AND ?)", 
+      Holiday::VACATION_ID, period.startDate, period.endDate]).to_f / 8
   end
-  
+    
   # Calculates total holidays
-  def totalHolidays
-    first_employment = self.employments.find(:first)
-    sumTotal = 0
-    if first_employment != nil
-      first_employment.start_date.year.step(Date.today.year, 1) {|year|
-        sumTotal += Masterdata.instance.vacations_year
-      }      
-    end
-    sumTotal
+  def totalHolidays(period)
+    holidays = 0
+    employmentsDuring(period).each {|e|
+      holidays += e.holidays
+    } 
+    return holidays  
+  end
+
+  def currentOvertime
+    overtime(employmentPeriodTo(Date.today))
   end
 
   # Sum total overtime
-  def totalOvertime
-    first_employment = self.employments.find(:first)
-    return 0 if first_employment == nil
-    period = Period.new(first_employment.start_date, Date.today)
+  def overtime(period)
     sumWorktime(period) - musttime(period)
   end
   
-  # Sum musttime
   def musttime(period)
-    employments = self.employments.find(:all, :conditions =>["start_date <= ? OR end_date IS NULL OR end_date >= ? OR start_date <= ? OR end_date >= ? ", period.endDate, period.startDate, period.startDate, period.endDate])
-    currentEmployment = 0
-    sum = 0
-    period.step {|date|
-      hours = Holiday.mustTime(date)
-      if employments[currentEmployment].end_date != nil
-        if employments[currentEmployment].end_date < date && currentEmployment < employments.length-1
-          currentEmployment += 1
-        end 
-        # testing needed as currentEmployment could be before or after date, 
-        # if there is no present employment for date.
-        if date.between?(employments[currentEmployment].start_date, employments[currentEmployment].end_date)
-            sum += hours * employments[currentEmployment].percent / 100
-        end
-      else
-      sum += hours * employments[currentEmployment].percent / 100
-      end      
+    musttime = 0
+    employmentsDuring(period).each {|e|
+      musttime += e.musttime
     }
-    sum
+    return musttime      
+  end
+  
+  def employmentsDuring(period)
+    return [] if period == nil
+    selectedEmployments = employments.find(:all, 
+      :conditions => ["(end_date IS NULL OR end_date >= ?) AND start_date <= ?", 
+      period.startDate, period.endDate],
+      :order => 'start_date')
+    if ! selectedEmployments.empty?
+      selectedEmployments.first.start_date = period.startDate
+      if selectedEmployments.last.end_date == nil ||
+         selectedEmployments.last.end_date > period.endDate then
+        selectedEmployments.last.end_date = period.endDate
+      end  
+    end
+    return selectedEmployments    
+  end
+    
+  def employmentPeriodTo(date)
+    first_employment = self.employments.find(:first)
+    return nil if first_employment == nil || first_employment.start_date > date
+    return Period.new(first_employment.start_date, date)
   end
   
 private
-  
+
+  def endOfYear
+    Date.new(Date.today.year, 12, 31)
+  end
+    
   # Hash function for pwd.  
   def self.encode(pwd)
     Digest::SHA1.hexdigest(pwd) 

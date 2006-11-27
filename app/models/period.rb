@@ -32,6 +32,18 @@ class Period
       yield date
     }
   end  
+  
+  def length
+    ((@endDate - @startDate) + 1).to_i
+  end
+  
+  def musttime
+    sum = 0
+    step {|date|
+      sum += Holiday.musttime(date)
+    }
+    sum 
+  end
     
   def to_s
     formattedDate(@startDate) + ' - ' + formattedDate(@endDate)
