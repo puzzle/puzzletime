@@ -4,8 +4,7 @@
 class WorktimeController < ApplicationController
  
   # Checks if employee came from login or from direct url.
-  before_filter :authorize
-  
+  before_filter :authenticate
 
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
   verify :method => :post, :only => [ :destroy, :create, :update ],

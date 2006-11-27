@@ -4,11 +4,11 @@
 class EvaluatorController < ApplicationController
  
   # Checks if employee came from login or from direct url.
-  before_filter :authorize
-
+  before_filter :authenticate
+  
   def overview
     setEvaluation
-    setPeriod    
+    setPeriod        
     if @evaluation.for?(@user)
       render :action => 'userOverview'
     end
@@ -24,6 +24,7 @@ class EvaluatorController < ApplicationController
   
   # Shows overtimes of employees
   def overtime
+    authorize
     @employees = Employee.list
   end
   
@@ -34,6 +35,12 @@ class EvaluatorController < ApplicationController
 private  
 
   def setEvaluation
+    if ! @user.management &&
+      (params[:evaluation] == 'clients' ||
+      params[:evaluation] == 'employees') then
+        params[:evaluation] = 'managed'
+    end  
+  
     @evaluation = case params[:evaluation]
       when 'clients' then Evaluation.clients
       when 'managed' then Evaluation.managed(@user)
@@ -53,6 +60,10 @@ private
       @period = Period.new(parseDate(params[:worktime], 'start'), 
                            parseDate(params[:worktime], 'end'))  
     end  
+  end
+    
+  def parseDate(attributes, prefix)
+    Date.new(attributes[prefix + '(1i)'].to_i, attributes[prefix + '(2i)'].to_i, attributes[prefix + '(3i)'].to_i)
   end
   
 end

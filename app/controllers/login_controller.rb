@@ -5,7 +5,7 @@
 class LoginController < ApplicationController
 
   # Checks if employee came from login or from direct url
-  before_filter :authorize, :except => :login
+  before_filter :authenticate, :except => :login
  
   # Login procedure for user
   def login

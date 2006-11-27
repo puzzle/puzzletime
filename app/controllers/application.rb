@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
   end
   
   #Filter for check if user is logged in or not
-  def authorize
+  def authenticate
     @user = session[:user]
     unless @user
       flash[:notice] = 'Please log in'
@@ -20,22 +20,13 @@ class ApplicationController < ActionController::Base
     end
   end 
   
-  #returns the startdate of current week
-  def startCurrentWeek(date)
-    if date.wday == '0'
-      date-6
-    else
-      date-(date.wday-1)
+  def authorize
+    authenticate
+    unless @user.management
+      flash[:notice] = 'You are not authorized to view this page'
+      redirect_to(:controller => 'login', :action => 'login' )
     end
-  end
-  
-  #returns the enddate of current week
-  def endCurrentWeek(date)
-    startCurrentWeek(date)+5 
-  end
-  
-  def parseDate(attributes, prefix)
-    Date.parse("#{attributes[prefix + '(3i)']}-#{attributes[prefix + '(2i)']}-#{attributes[prefix + '(1i)']}")
-  end
+  end  
+
 end
 

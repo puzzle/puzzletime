@@ -10,37 +10,81 @@
 </head>
 <body>
 <div id="outer">
-
 	<div id="header">
 		<h1><span>puzzle</span>Time<sup>1.0</sup></h1>
 		<h2>&nbsp; by Puzzle ITC</h2>
 	</div>
 
 	<div id="splash"></div>
+		
 	
-	<div id="menu">
 	<% if @user != nil%>
+	<div id="menu">
 	  <ul>
-	      	<li class="first"><%= link_to 'Time', :controller => 'worktime', :action => 'listTime' %></li>
-			<%if @user.projectManager? && ! @user.management %>
-			<li><%= link_to 'Evaluator', :controller => 'evaluator', :action => 'overview', :evalution => 'managed' %></li>	
+	      	<li class="first"><%= link_to 'Time', 
+	      	                        :controller => 'worktime', 
+	      	                        :action => 'listTime' %></li>
+			<%if @user.projectManager? %>
+			<li><%= link_to 'My Projects', 
+			         :controller => 'evaluator', 
+			         :action => 'overview', 
+			         :evalution => 'managed' %></li>	
 			<% end %>
 			<% if @user.management %>
-			<li><%= link_to 'Evaluator', :controller => 'evaluator', :action => 'listEvaluator' %></li>	
-			<li><%= link_to 'Employees', :controller => 'employee', :action => 'listEmployee' %></li>
-			<li><%= link_to 'Projects', :controller => 'project', :action => 'listProject' %></li>
-			<li><%= link_to 'Clients', :controller => 'client', :action => 'listClient' %></li>
-			<li><%= link_to 'Absences', :controller => 'absence', :action => 'listAbsence' %></li>
+			<li><%= link_to 'Clients', 
+			         :controller => 'evaluator',
+                     :action => 'overview',
+                     :evaluation => 'clients' %></li>
+            <li><%= link_to 'Employees', 
+                     :controller => 'evaluator',
+                     :action => 'overview',
+                     :evaluation => 'employees' %></li>
+           <li><%= link_to 'Absences', 
+                     :controller => 'evaluator',
+                     :action => 'overview',
+                     :evaluation => 'absences' %></li>
+            <li><%= link_to 'Overtime',
+                     :controller => 'evaluator', 
+                     :action => 'overtime' %></li>
+			<li><%= link_to 'Managing', 
+			         :controller => 'project', 
+			         :action => 'listProject' %></li>         
 			<% end %>		    
-	  </ul>		  
-	  User: <%= @user.label %> | <%= link_to 'Change Pwd', :controller => 'employee', :action => 'changePasswd' %> | <%= link_to 'Log out', :controller => 'login', :action => 'logout' %>
-	<% end %>
+	  </ul>		
+	    
+	  User: <%= @user.label %> | 
+	   <%= link_to 'Change Pwd', 
+	           :controller => 'employee', 
+	           :action => 'changePasswd' %> | 
+	   <%= link_to 'Log out', 
+	           :controller => 'login', 
+	           :action => 'logout' %>
 	</div>
+	
+	<% if @user.management &&
+	       ['client', 'employee', 'absence', 'project'].include?(params[:controller]) %>
+    <div id="submenu">
+    Manage:
+    &nbsp;
+	<%= link_to 'Employees', :controller => 'employee', :action => 'listEmployee' %>
+	&nbsp;
+    <%= link_to 'Projects', :controller => 'project', :action => 'listProject' %>
+    &nbsp;
+    <%= link_to 'Clients', :controller => 'client', :action => 'listClient' %>
+    &nbsp;
+    <%= link_to 'Absences', :controller => 'absence', :action => 'listAbsence' %>
+	</div>
+	<% end%>
+	
+	<% else %>
+	<div id="menu">
+	</div>
+	<% end %>
 	
 	<% if @flash.has_key?(:notice) %>
 	<center><div id="notice"><%= @flash[:notice] %></div></center>
 	<% end %>
-
+	
     <%= @content_for_layout %>
 
     <br/>
