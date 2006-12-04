@@ -9,7 +9,7 @@ class Project < ActiveRecord::Base
   # All dependencies between the models are listed below.
   has_many :projectmemberships, :dependent => true, :finder_sql => 
     'SELECT m.* FROM projectmemberships m, employees e ' +
-    'WHERE e.id = m.employee_id ' +
+    'WHERE m.project_id = #{id} AND e.id = m.employee_id ' +
     'ORDER BY e.lastname, e.firstname'
   has_many :employees, :through => :projectmemberships, :order => "lastname"
   belongs_to :client

@@ -4,7 +4,8 @@
 class EmployeeController < ApplicationController
 
   # Checks if employee came from login or from direct url
-  before_filter :authorize
+  before_filter :authorize, :except => [:changePasswd, :updatePwd]
+  before_filter :authenticate, :only => [:changePasswd, :updatePwd]
 
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
   verify :method => :post, :only => [ :destroy, :create, :update ],
