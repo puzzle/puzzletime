@@ -21,4 +21,4 @@
 require File.dirname(__FILE__) + "/../config/environment"
 require 'fcgi_handler'
 
-RailsFCGIHandler.process!
+RailsFCGIHandler.process! File.dirname(__FILE__) + "/../log/fcgi_crash.log"

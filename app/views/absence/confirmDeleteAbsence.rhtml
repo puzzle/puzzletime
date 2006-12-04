@@ -1,0 +1,19 @@
+<h1>Delete Absence</h1>
+<p>
+Do you really want to delete absence <%= @absence.label %>?
+</p>
+<table>
+<tr>
+    <td>
+    <%= start_form_tag :action => 'deleteAbsence', :id => @absence %>
+    <%= submit_tag 'Delete' %>  
+    <%= end_form_tag %>
+    </td>
+    <td>
+    <%= start_form_tag :action => 'listAbsence', :method => 'get' %>
+    <%= submit_tag 'Cancel' %>  
+    <%= end_form_tag %>
+    </td>
+</td>
+</table>    
+

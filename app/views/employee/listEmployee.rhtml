@@ -1,5 +1,5 @@
 <h1>Employees</h1>
-<br/>
+
 <table>
   <tr>
     <td><div id="puzzle_table_title">Firstname</div></td>
@@ -17,8 +17,12 @@
     <td><%=h employee.shortname  %></td>
     <td><%=h employee.email  %></td>
     <td><%=h employee.phone  %></td>
-    <td><%=h employee.management %></td> 
-    <td><%= link_to 'Show', :action => 'showEmployee', :id => employee %> | <%= link_to 'Edit', :action => 'editEmployee', :id => employee %> | <%= link_to 'Delete', { :action => 'destroyEmployee', :id => employee }, :confirm => 'Are you sure?', :post => true %></td>
+    <td><%= employee.management ? 'yes' : 'no' %></td> 
+    <td>
+    <%= link_to 'Show', :action => 'showEmployee', :id => employee %> | 
+    <%= link_to 'Edit', :action => 'editEmployee', :id => employee %> | 
+    <%= link_to 'Delete', { :action => 'confirmDeleteEmployee', :id => employee } %>
+    </td>
   </tr>
   <% end %>
 </table>

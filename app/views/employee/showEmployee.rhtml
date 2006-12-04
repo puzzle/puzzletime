@@ -1,3 +1,4 @@
+<h1>Employee Details</h1>
 <table>
   <tr>
     <td>Firstname: <%= @employee.firstname %></td>
@@ -14,10 +15,13 @@
   <tr>
     <td>Phone: <%= @employee.phone %></td>
   </tr>
+  <% if @employee.management %>
   <tr>
-    <td>Managment: <%= @employee.management %></td>
+    <td>Is part of the managment</td>
   </tr>
+  <% end %>
 </table>
+<h2>Employments</h2>
 <% if @employee.has_employments? %>
   <table>
     <tr>
@@ -32,12 +36,12 @@
           <td><%= employment.percent %></td>
           <td><%= format_date(employment.start_date) %></td>
            <% if employment.end_date %>
-             <td><%= change_date(employment.end_date) %></td>
-                       <td><%= link_to 'Edit', :action => 'editEmployment', :id => employment, :employee_id => @employee  %></td>
+             <td><%= format_date(employment.end_date) %></td>
+             <td><%= link_to 'Edit', :action => 'editEmployment', :id => employment, :employee_id => @employee  %></td>
            <% else %>
           <td><td><%= link_to 'Edit', :action => 'editEmployment', :id => employment, :employee_id => @employee  %></td></td>
           <% end %>
-          <td><%= link_to 'Delete', { :action => 'destroyEmployment', :employment_id => employment, :employee_id => @employee }, :confirm => 'Are you sure?', :post => true %></td>
+          <td><%= link_to 'Delete', :action => 'confirmDeleteEmployment', :employment_id => employment, :employee_id => @employee %></td>
         </tr>
      <% end %>
   </table>

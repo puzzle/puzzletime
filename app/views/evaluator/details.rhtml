@@ -34,14 +34,13 @@
                 :id => time.id %>
     <%= link_to 'Delete', 
                 {:controller =>'worktime', 
-                :action =>'deleteTime',                 
+                :action =>'confirmDeleteTime',                 
                 :id => time.id,
                 :evaluation => params[:evaluation],
                 :category_id => params[:category_id],
                 :division_id => params[:division_id],
                 :start_date => params[:start_date],
-                :end_date => params[:end_date]},
-                :confirm => 'Do you really want to delete this time?' %>
+                :end_date => params[:end_date]} %>
   <% else %>            
     <%= link_to 'Change Project', 
                 :controller =>'worktime', 

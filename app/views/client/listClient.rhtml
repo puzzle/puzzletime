@@ -1,8 +1,5 @@
-<!-- (c) Puzzle itc, Berne
-Diplomarbeit 2149, Xavier Hayoz -->
-
 <h1>Clients</h1>
-<br/>
+
 <table>
   <tr>
   <% for column in Client.content_columns %>
@@ -15,7 +12,9 @@ Diplomarbeit 2149, Xavier Hayoz -->
   <% for column in Client.content_columns %>
     <td><%=h client.send(column.name) %></td>
   <% end %>
-    <td><%= link_to 'Edit', :action => 'editClient', :id => client %> | <%= link_to 'Delete', { :action => 'destroyClient', :id => client }, :confirm => 'By deleting the selected client you will delete its projects! Are you sure?', :post => true %></td>
+    <td>
+    <%= link_to 'Edit', :action => 'editClient', :id => client %> | 
+    <%= link_to 'Delete', { :action => 'confirmDeleteClient', :id => client }%></td>
   </tr>
 <% end %>
 </table>

@@ -1,8 +1,4 @@
-<!-- (c) Puzzle itc, Berne
-Diplomarbeit 2149, Xavier Hayoz -->
-
 <h1>Projects</h1>
-<br/>
 <table>
   <tr>
   <td><div id="puzzle_table_title">Name</div></td>
@@ -13,7 +9,10 @@ Diplomarbeit 2149, Xavier Hayoz -->
   <tr>
   	<td><%=h project.name %>
     <td><%=h project.client.name %>
-    <td><%= link_to 'Show', :action => 'showProject', :id => project %> | <%= link_to 'Edit', :action => 'editProject', :id => project %> | <%= link_to 'Delete', { :action => 'destroyProject', :id => project }, :confirm => 'Are you sure?', :post => true %></td>
+    <td>
+    <%= link_to 'Show', :action => 'showProject', :id => project %> | 
+    <%= link_to 'Edit', :action => 'editProject', :id => project %> | 
+    <%= link_to 'Delete', :action => 'confirmDeleteProject', :id => project %></td>
   </tr>
 <% end %>
 </table>

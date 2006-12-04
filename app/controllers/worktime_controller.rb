@@ -7,8 +7,8 @@ class WorktimeController < ApplicationController
   before_filter :authenticate
 
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
-  verify :method => :post, :only => [ :destroy, :create, :update ],
-         :redirect_to => { :action => :list }
+  verify :method => :post, :only => [ :deleteTime, :createTime, :updateTime, :updateProject ],
+         :redirect_to => { :action => :listTime }
    
   #List the time.
   def listTime
@@ -33,6 +33,10 @@ class WorktimeController < ApplicationController
     @worktime.project_id = params[:project_id]    
   end
   
+  def confirmDeleteTime
+    @worktime = Worktime.find(params[:id])
+  end
+  
   def deleteTime
     Worktime.destroy(params[:id])
     redirect_to :controller => 'evaluator', 
@@ -48,7 +52,18 @@ class WorktimeController < ApplicationController
   def updateTime        
     parseTimes
     @worktime = Worktime.find(params[:worktime_id])
-    if @worktime.update_attributes(params[:worktime])
+    begin
+      @worktime.attributes = params[:worktime]
+    # Catch the exception from AR::Base
+    rescue ActiveRecord::MultiparameterAssignmentErrors => ex
+      # Iterarate over the exceptions and remove the invalid field components from the input
+      ex.errors.each { |err| params[:worktime].delete_if { |key, value| key =~ /^#{err.attribute}/ } }
+      # Recreate the Model with the bad input fields removed
+      @worktime.attributes = params[:worktime]
+      # remove manually as @worktime already had a valid work_date, we want an error to be thrown
+      @worktime.work_date = nil     
+    end
+    if @worktime.save
       flash[:notice] = 'Item was successfully updated.'
       redirect_to :action => 'listTime'
     else
@@ -58,9 +73,16 @@ class WorktimeController < ApplicationController
     
   # Stores the new time the data on DB.
   def createTime
-    parseTimes    
-    @worktime = Worktime.new
-    @worktime.attributes = params[:worktime]
+    parseTimes 
+    begin
+      @worktime = Worktime.new(params[:worktime])
+    # Catch the exception from AR::Base
+    rescue ActiveRecord::MultiparameterAssignmentErrors => ex
+      # Iterarate over the exceptions and remove the invalid field components from the input
+      ex.errors.each { |err| params[:worktime].delete_if { |key, value| key =~ /^#{err.attribute}/ } }
+      # Recreate the Model with the bad input fields removed
+      @worktime = Worktime.new(params[:worktime])      
+    end
     if @worktime.save
       flash[:notice] = 'Item was successfully created.' 
       redirect_to :action => 'listTime'

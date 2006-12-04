@@ -1,0 +1,19 @@
+<h1>Delete Client</h1>
+<p>
+Do you really want to delete client <%= @client.label %>?
+</p>
+<table>
+<tr>
+    <td>
+    <%= start_form_tag :action => 'deleteClient', :id => @client %>
+    <%= submit_tag 'Delete' %>  
+    <%= end_form_tag %>
+    </td>
+    <td>
+    <%= start_form_tag :action => 'listClient', :method => 'get' %>
+    <%= submit_tag 'Cancel' %>  
+    <%= end_form_tag %>
+    </td>
+</td>
+</table>    
+

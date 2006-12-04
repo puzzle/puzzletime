@@ -56,14 +56,24 @@ private
     @period = nil
     if params.has_key?(:start_date)
       @period = Period.new(Date.parse(params[:start_date]), Date.parse(params[:end_date]))
-    elsif params.has_key?(:worktime)
-      @period = Period.new(parseDate(params[:worktime], 'start'), 
-                           parseDate(params[:worktime], 'end'))  
+    elsif params.has_key?(:period)
+      begin
+        @period = Period.new(parseDate(params[:period], 'startDate'), 
+                           parseDate(params[:period], 'endDate'))  
+        raise ArgumentError, "start date after end date" if @period.negative?                   
+      rescue ArgumentError => ex
+        flash[:notice] = "Invalid period: " + ex
+        redirect_to :action => :selectPeriod, 
+               :return_action => params[:action],
+               :evaluation => params[:evaluation]
+      end                       
     end  
   end
     
   def parseDate(attributes, prefix)
-    Date.new(attributes[prefix + '(1i)'].to_i, attributes[prefix + '(2i)'].to_i, attributes[prefix + '(3i)'].to_i)
+     Date.new(attributes[prefix + '(1i)'].to_i, 
+              attributes[prefix + '(2i)'].to_i, 
+              attributes[prefix + '(3i)'].to_i)
   end
   
 end

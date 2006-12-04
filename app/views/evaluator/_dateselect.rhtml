@@ -1,9 +1,9 @@
 <table>
   <tr>
-    <td>From:</td><td><%= date_select('worktime','start', :order => [:day, :month, :year]) %></td>
+    <td>From:</td><td><%= date_select(:period, :startDate, :order => [:day, :month, :year]) %></td>
   </tr>
   <tr>
-    <td>To:</td><td><%= date_select('worktime','end', :order => [:day, :month, :year]) %></td>
+    <td>To:</td><td><%= date_select(:period, :endDate, :order => [:day, :month, :year]) %></td>
   </tr>
   <tr>
     <td><td><%= submit_tag 'Search' %></td></td>

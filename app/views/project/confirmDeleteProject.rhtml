@@ -1,0 +1,19 @@
+<h1>Delete Project</h1>
+<p>
+Do you really want to delete project <%= @project.label %>?
+</p>
+<table>
+<tr>
+    <td>
+    <%= start_form_tag :action => 'deleteProject', :id => @project %>
+    <%= submit_tag 'Delete' %>  
+    <%= end_form_tag %>
+    </td>
+    <td>
+    <%= start_form_tag :action => 'listProject', :method => 'get' %>
+    <%= submit_tag 'Cancel' %>  
+    <%= end_form_tag %>
+    </td>
+</td>
+</table>    
+

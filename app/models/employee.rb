@@ -21,7 +21,7 @@ class Employee < ActiveRecord::Base
   attr_accessor :pwd 
   
   # Validation helpers.
-  validates_presence_of :firstname, :lastname, :shortname, :email, :phone
+  validates_presence_of :firstname, :lastname, :shortname
   validates_presence_of :pwd, :on => :create
   validates_uniqueness_of :shortname 
   
@@ -90,7 +90,7 @@ class Employee < ActiveRecord::Base
   def usedHolidays(period)
     return 0 if period == nil
     self.worktimes.sum(:hours, :conditions => ["absence_id = ? AND (work_date BETWEEN ? AND ?)", 
-      Holiday::VACATION_ID, period.startDate, period.endDate]).to_f / 8
+      Absence::VACATION_ID, period.startDate, period.endDate]).to_f / 8
   end
     
   # Calculates total holidays
@@ -112,6 +112,7 @@ class Employee < ActiveRecord::Base
   end
   
   def musttime(period)
+    Holiday.refresh
     musttime = 0
     employmentsDuring(period).each {|e|
       musttime += e.musttime

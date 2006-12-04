@@ -5,6 +5,9 @@ class ClientController < ApplicationController
 
   # Checks if employee came from login or from direct url
   before_filter :authorize
+  
+  verify :method => :post, :only => [ :deleteClient ],
+         :redirect_to => { :action => :listClient }
 
   # Lists all clients
   def listClient
@@ -49,8 +52,11 @@ class ClientController < ApplicationController
     end
   end
   
-  # Deletes the chosen client
-  def destroyClient
+  def confirmDeleteClient
+    @client = Client.find(params[:id])
+  end
+  
+  def deleteClient
     if Client.destroy(params[:id])
        flash[:notice] = 'Client was successfully deleted.'
     else

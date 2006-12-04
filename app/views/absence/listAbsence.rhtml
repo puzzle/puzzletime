@@ -1,8 +1,4 @@
-<!-- (c) Puzzle itc, Berne
-Diplomarbeit 2149, Xavier Hayoz -->
-
 <h1>Absences</h1>
-<br/>
 <table>
   <tr>
     <td><div id="puzzle_table_title">Absence name</div></td>
@@ -12,7 +8,9 @@ Diplomarbeit 2149, Xavier Hayoz -->
   <tr>
     <td><%= absence.name %></td>
     <td><%= absence.payed %></td>
-    <td><%= link_to 'Edit', :action => 'editAbsence', :id => absence %> | <%= link_to 'Delete', {:action => 'destroyAbsence', :id => absence}, :confirm => 'Are you sure?', :post => true %></td>
+    <td>
+    <%= link_to 'Edit', :action => 'editAbsence', :id => absence %> | 
+    <%= link_to 'Delete', {:action => 'confirmDeleteAbsence', :id => absence} %></td>
   </tr>
   <% end %>
 </table>

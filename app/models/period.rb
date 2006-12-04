@@ -44,6 +44,10 @@ class Period
     }
     sum 
   end
+  
+  def negative?
+    @startDate > @endDate
+  end
     
   def to_s
     formattedDate(@startDate) + ' - ' + formattedDate(@endDate)

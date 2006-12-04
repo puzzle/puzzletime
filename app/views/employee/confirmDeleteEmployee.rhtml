@@ -1,0 +1,19 @@
+<h1>Delete Employee</h1>
+<p>
+Do you really want to delete employee <%= @employee.label %>?
+</p>
+<table>
+<tr>
+    <td>
+    <%= start_form_tag :action => 'deleteEmployee', :id => @employee %>
+    <%= submit_tag 'Delete' %>  
+    <%= end_form_tag %>
+    </td>
+    <td>
+    <%= start_form_tag :action => 'listEmployee', :method => 'get' %>
+    <%= submit_tag 'Cancel' %>  
+    <%= end_form_tag %>
+    </td>
+</td>
+</table>    
+

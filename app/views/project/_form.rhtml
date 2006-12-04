@@ -1,6 +1,3 @@
-<!-- (c) Puzzle itc, Berne
-Diplomarbeit 2149, Xavier Hayoz -->
-
 <%= error_messages_for(:project) %>
 <table>
   <tr>
@@ -9,17 +6,13 @@ Diplomarbeit 2149, Xavier Hayoz -->
   </tr>
   <tr>
     <td>Client: </td>
-    <td><select name="project[client_id]">
-      <% @clients.each do |client| %>
-      <option value="<%= client.id %>"> 
-      <%= client.name %>
-      </option>
-      <% end %>
-      </select></td>
+    <td>
+    <%= collection_select( :project, :client_id, @clients, :id, :name) %>    
+    </td>
    </tr>
-   <tr>
+   <tr valign="top">
      <td>Description: </td>
-  	 <td><%= text_area 'project', 'description',{:rows => 10}  %></td>
+  	 <td><%= text_area 'project', 'description',{:rows => 5}  %></td>
    </tr>
    <tr>
      <td><td><%= submit_tag 'Save' %></td></td>

@@ -31,6 +31,12 @@ font-size:18px;
 font-weight:normal;
 }
 
+h2
+{
+font-size:14px;
+font-weight:bold;
+}
+
 sup
 {
 font-size: 0.5em;
@@ -260,30 +266,26 @@ letter-spacing: -1px;
 #errorExplanation {
   width: 450px;
   border: 2px solid #0087e3;
-  padding: 20px;
-  padding-bottom: 12px;
-  margin-bottom: 10px;
+  padding-top: 15px;
+  padding-left: 20px;
   background-color: #f0f0f0;
 }
 
 #errorExplanation h2 {
   text-align: left;
-  padding: 5px 5px 5px 15px 
-  font-size: 12px;
-  margin: -7px;
+  font-size: 13px;
+  margin: -10px;
   color: #0087e3;
 }
 
 #errorExplanation p {
   color: #333;
   margin-left: -10px;
-  margin-bottom: 0;
-  padding: 7px;
 }
 
 #errorExplanation ul li {
+  color: #333;
   font-size: 12px;
   margin-left: 10px;
-  list-style: square;
-  
+  list-style: square;  
 }

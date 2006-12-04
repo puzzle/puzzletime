@@ -1,0 +1,19 @@
+<h1>Delete Employment</h1>
+<p>
+Do you really want to delete the employment of <%= @employee.label %> from <%= @employment.period.to_s %>?
+</p>
+<table>
+<tr>
+    <td>
+    <%= start_form_tag :action => 'deleteEmployment', :employment_id => @employment, :employee_id => @employee %>
+    <%= submit_tag 'Delete' %>  
+    <%= end_form_tag %>
+    </td>
+    <td>
+    <%= start_form_tag :action => 'showEmployee', :id => @employee, :method => 'get' %>
+    <%= submit_tag 'Cancel' %>  
+    <%= end_form_tag %>
+    </td>
+</td>
+</table>    
+
