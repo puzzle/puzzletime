@@ -5,9 +5,7 @@ class Period
   attr_reader :startDate, :endDate, :label
   
   def self.currentWeek
-    start = Date.today
-    start -= start.cwday - 1
-    new(start, start + 6, "This week: #{Time.now.strftime('%W')}")
+    self.weekFor(Date.today, "This week: #{Time.now.strftime('%W')}")
   end
   
   def self.currentMonth
@@ -19,6 +17,12 @@ class Period
   def self.currentYear
     today = Date.today
     new(Date.civil(today.year, 1, 1), Date.civil(today.year, 12, 31), "This year: #{Time.now.strftime('%y')}")
+  end
+  
+  def self.weekFor(date, label = nil)
+    start = date
+    start -= start.cwday - 1
+    new(start, start + 6, label)    
   end
   
   def initialize(startDate, endDate, label = nil)

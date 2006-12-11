@@ -1,6 +1,7 @@
 <h1>Select Custom Period</h1>
 <br/>
- <%= start_form_tag :action => params[:return_action], 
+ <%= start_form_tag :action => 'changePeriod',
+                    :return_action => params[:return_action], 
                     :evaluation => params[:evaluation] %>
                     
  <%= render :partial => 'dateselect' %>

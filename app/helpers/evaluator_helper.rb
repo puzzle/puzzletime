@@ -5,9 +5,10 @@ module EvaluatorHelper
       
   def periodLink(period)
     if period != nil
-      html = "Work times during #{period} "
+      html = "Work times during #{period} &nbsp; "
       html += link_to 'Current Period', 
-                      :action => params[:action], 
+                      :action => 'currentPeriod',
+                      :return_action => params[:action], 
                       :evaluation => params[:evaluation]
     else
       html = link_to 'Other Period', 
@@ -19,7 +20,8 @@ module EvaluatorHelper
       
   def detailLink(category_id, division_id, period)
     link = "<a href=\"/evaluator/details?evaluation=#{params[:evaluation]}"
-    link += "&category_id=#{category_id}&division_id=#{division_id}"
+    link += "&category_id=#{category_id}"
+    link += "&division_id=#{division_id}" if ! division_id.nil?
     link += "&start_date=#{period.startDate}&end_date=#{period.endDate}\">"
     link += "<img src =\"/images/lupe.gif\" border=0></a>"
   end
@@ -33,8 +35,7 @@ module EvaluatorHelper
     end   
   end
   
-  def overview_impl(evaluation, periods)
-    
+  def overview_impl(evaluation, periods)    
     header = %(<td>| Total Project</td>)
     periods.each { |period|
       header += %(<td colspan="2">| #{period.label}</td>)
@@ -72,9 +73,9 @@ module EvaluatorHelper
       html << %(<tr class="times_total_sum">)
       html << %(<td>Total time</td>)
       html << %(<td>| #{round(sum_total)}</td>)
-      sum_periods.each { |sum|
-        html << %(<td>| #{round(sum)}</td>)
-        html << %(<td></td>)
+      periods.each_index { |i|
+        html << %(<td>| #{round(sum_periods[i])}</td>)
+        html << %(<td align="right">#{detailLink(category.id, nil, periods[i])}</td>)
       }
       html << %(<td>|</td></tr>)
     end

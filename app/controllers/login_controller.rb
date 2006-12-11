@@ -24,7 +24,7 @@ class LoginController < ApplicationController
   
   #Logout procedure for user    
   def logout
-    session[:user]=nil
+    reset_session
     flash[:notice]="Logged out"
     redirect_to(:action => "login")
   end

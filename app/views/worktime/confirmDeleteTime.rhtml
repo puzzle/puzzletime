@@ -10,9 +10,7 @@ at the <%= format_date(@worktime.work_date) %> for <%= @worktime.account.label %
                        :id => @worktime,
                        :evaluation => params[:evaluation],
                        :category_id => params[:category_id],
-                       :division_id => params[:division_id],
-                       :start_date => params[:start_date],
-                       :end_date => params[:end_date] %>
+                       :division_id => params[:division_id] %>
     <%= submit_tag 'Delete' %>  
     <%= end_form_tag %>
     </td>
@@ -22,8 +20,6 @@ at the <%= format_date(@worktime.work_date) %> for <%= @worktime.account.label %
                        :evaluation => params[:evaluation],
                        :category_id => params[:category_id],
                        :division_id => params[:division_id],
-                       :start_date => params[:start_date],
-                       :end_date => params[:end_date],
                        :method => 'get' )%>
     <%= submit_tag 'Cancel' %>  
     <%= end_form_tag %>

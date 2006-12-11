@@ -12,7 +12,12 @@ class WorktimeController < ApplicationController
    
   #List the time.
   def listTime
-    redirect_to :controller => 'evaluator', :action => 'overview', :evaluation => 'user'
+    eval = 'user'
+    if @worktime != nil && @worktime.absence? 
+      @user.absences(true)      #true forces reload
+      eval = 'userabsences'
+    end  
+    redirect_to :controller => 'evaluator', :action => 'overview', :evaluation => eval
   end
   
   # Shows the edit page for the selected time.
@@ -22,15 +27,15 @@ class WorktimeController < ApplicationController
   
   # Shows the addAbsence page.
   def addAbsence
-    @worktime = Worktime.new
+    createDefaultWorktime
     @absences = Absence.list
     render :action => 'addTime'
   end
   
   # Shows the addTime page.
   def addTime
-    @worktime = Worktime.new
-    @worktime.project_id = params[:project_id]    
+    createDefaultWorktime
+    @worktime.project_id = params[:project_id]
   end
   
   def confirmDeleteTime
@@ -43,9 +48,7 @@ class WorktimeController < ApplicationController
                 :action => 'details', 
                 :evaluation => params[:evaluation],
                 :category_id => params[:category_id],
-                :division_id => params[:division_id],
-                :start_date => params[:start_date],
-                :end_date => params[:end_date]
+                :division_id => params[:division_id]
   end
     
   # Update the selected worktime on DB.
@@ -64,8 +67,8 @@ class WorktimeController < ApplicationController
       @worktime.work_date = nil     
     end
     if @worktime.save
-      flash[:notice] = 'Item was successfully updated.'
-      redirect_to :action => 'listTime'
+      flash[:notice] = 'Time was successfully updated.'
+      listDetailTime
     else
       render :action => 'editTime'
     end  
@@ -83,9 +86,9 @@ class WorktimeController < ApplicationController
       # Recreate the Model with the bad input fields removed
       @worktime = Worktime.new(params[:worktime])      
     end
-    if @worktime.save
-      flash[:notice] = 'Item was successfully created.' 
-      redirect_to :action => 'listTime'
+    if @worktime.save      
+      flash[:notice] = 'Time was successfully added.'
+      listDetailTime  
     else
       render :action => 'addTime'
     end  
@@ -113,6 +116,31 @@ class WorktimeController < ApplicationController
   end
   
 private
+
+  #List the time.
+  def listDetailTime
+    eval = 'user'
+    if @worktime != nil && @worktime.absence? 
+      @user.absences(true)      #true forces reload
+      eval = 'userabsences'
+    end  
+    if session[:period].nil?
+      session[:period] = Period.weekFor(@worktime.work_date)
+    end
+    redirect_to :controller => 'evaluator', 
+                :action => 'details', 
+                :evaluation => eval, 
+                :category_id => @user.id
+  end
+
+  def createDefaultWorktime
+    @worktime = Worktime.new
+    @worktime.report_type = Worktime::TYPE_HOURS_DAY
+    period = session[:period]
+    if period != nil && period.length == 1
+      @worktime.work_date = period.startDate
+    end  
+  end
       
   def parseTimes
     params[:worktime][:employee_id] = @user.id

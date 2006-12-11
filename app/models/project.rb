@@ -13,7 +13,7 @@ class Project < ActiveRecord::Base
     'ORDER BY e.lastname, e.firstname'
   has_many :employees, :through => :projectmemberships, :order => "lastname"
   belongs_to :client
-  has_many :worktimes
+  has_many :worktimes, :dependent => true
   
   # Validation helpers.  
   validates_presence_of :name

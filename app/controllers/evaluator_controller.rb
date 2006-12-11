@@ -5,10 +5,10 @@ class EvaluatorController < ApplicationController
  
   # Checks if employee came from login or from direct url.
   before_filter :authenticate
+  before_filter :setPeriod
   
   def overview
-    setEvaluation
-    setPeriod        
+    setEvaluation       
     if @evaluation.for?(@user)
       render :action => 'userOverview'
     end
@@ -16,10 +16,13 @@ class EvaluatorController < ApplicationController
   
   def details  
     setEvaluation
-    setPeriod
-    @category = @evaluation.category(params[:category_id].to_i)
-    @subdivision = @evaluation.division(@category, params[:division_id].to_i)
-    @times = @subdivision.worktimesBy(@period, @category.subdivisionRef)    
+    @evaluation.set_detail_ids(params[:category_id], params[:division_id])
+    puts @evaluation.division_label
+    if params[:start_date] != nil
+      @period = Period.new(Date.parse(params[:start_date]), Date.parse(params[:end_date]))
+      session[:period] = @period
+    end
+    @times = @evaluation.times(@period)
   end
   
   # Shows overtimes of employees
@@ -30,6 +33,26 @@ class EvaluatorController < ApplicationController
   
   def description
     @time = Worktime.find(params[:worktime_id])
+  end
+  
+  def currentPeriod
+    session[:period] = nil
+    redirect_to :action => params[:return_action], :evaluation => params[:evaluation]
+  end
+  
+  def changePeriod
+    begin
+      @period = Period.new(parseDate(params[:period], 'startDate'), 
+                           parseDate(params[:period], 'endDate'))  
+      raise ArgumentError, "start date after end date" if @period.negative?   
+      session[:period] = @period                
+    rescue ArgumentError => ex
+      flash[:notice] = "Invalid period: " + ex
+      redirect_to :action => :selectPeriod, 
+               :return_action => params[:action],
+               :evaluation => params[:evaluation]
+    end   
+    redirect_to :action => params[:return_action], :evaluation => params[:evaluation]
   end
   
 private  
@@ -51,23 +74,9 @@ private
       else Evaluation.managed(@user)
       end  
   end
-
+  
   def setPeriod
-    @period = nil
-    if params.has_key?(:start_date)
-      @period = Period.new(Date.parse(params[:start_date]), Date.parse(params[:end_date]))
-    elsif params.has_key?(:period)
-      begin
-        @period = Period.new(parseDate(params[:period], 'startDate'), 
-                           parseDate(params[:period], 'endDate'))  
-        raise ArgumentError, "start date after end date" if @period.negative?                   
-      rescue ArgumentError => ex
-        flash[:notice] = "Invalid period: " + ex
-        redirect_to :action => :selectPeriod, 
-               :return_action => params[:action],
-               :evaluation => params[:evaluation]
-      end                       
-    end  
+    @period = session[:period]
   end
     
   def parseDate(attributes, prefix)

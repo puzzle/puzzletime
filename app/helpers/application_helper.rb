@@ -7,8 +7,13 @@ module ApplicationHelper
   
   # round time function.
   def round(hour)
-    (hour.to_f * 100).round / 100.0
+    "%.2f" % hour.to_f
   end
+  
+  # Change english datelayout to german one.
+  def format_date(date)
+    date.strftime("%a, %d.%m.%Y")
+  end  
   
   # Generates <select>-statement with id.
   # Needed for javascript
@@ -45,9 +50,5 @@ module ApplicationHelper
     end
     html << %(</select>)   
   end
-
-  # Change english datelayout to german one.
-  def format_date(date)
-    date.strftime("%d.%m.%Y")
-  end     
+   
 end

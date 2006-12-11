@@ -1,30 +1,39 @@
 <h1>Work Time Details <%= @period.to_s %></h1>
 <table>
     <tr class="times_table_title">
-      <td><%= @category.class.name %>: <%= @category.label %></td>
+      <td><%= @evaluation.category_label %></td>
     </tr>
     <tr class="times_table_title">
-      <td><%= @subdivision.class.name%>: <%= @subdivision.label %></td>
+      <td><%= @evaluation.division_label %></td>
     </tr>
 </table>
 <br/>
 <table>
+<tr class="times_table_title">
+   <td>Date</td>
+   <td>Hours</td>
+   <td>Who</td>
+   <td>Project</td>
+   <td>Description</td>
+   <td></td>
+</tr>
+<% total = 0 %>
 <% for time in @times %>
+<% total += time.hours %>
 <tr>
-  <td><%= format_date(time.work_date) %></td>
-  <td><%= round(time.hours) %> h</td>
-  <td><%= @category.detailFor(time) %></td>
-  <td><%= time.description.slice(0..50) %>
+  <td align="right"><%= format_date(time.work_date) %></td>
+  <td align="right"><%= round(time.hours) %></td>
+  <td><%= time.employee.shortname %></td>
+  <td><%= time.account.label %></td>
+  <td><%= time.description.slice(0..40) %>  
       <%=
-      if time.description.length > 50
+      if time.description.length > 40
         link_to '...', 
                 :action => 'description', 
                 :worktime_id => time.id,
                 :evaluation => params[:evaluation],
                 :category_id => params[:category_id],
-                :division_id => params[:division_id],
-                :start_date => params[:start_date],
-                :end_date => params[:end_date]
+                :division_id => params[:division_id]
       end    %></td>
   <td>
   <% if @evaluation.for?(@user) %>
@@ -38,9 +47,7 @@
                 :id => time.id,
                 :evaluation => params[:evaluation],
                 :category_id => params[:category_id],
-                :division_id => params[:division_id],
-                :start_date => params[:start_date],
-                :end_date => params[:end_date]} %>
+                :division_id => params[:division_id]} %>
   <% else %>            
     <%= link_to 'Change Project', 
                 :controller =>'worktime', 
@@ -50,10 +57,18 @@
   <% end %>            
 <tr>
 <% end %> 
+<tr class="times_total_sum">
+    <td>Total time</td> 
+    <td><%= round(total) %></td>
+    <td colspan="3"></td> 
+    <td>
+    <% if @evaluation.for?(@user) && @evaluation.division_details? %>
+        <a href="/worktime/addTime?project_id=<%= @evaluation.detail_division.id %>">Add Time</a>
+    <% end %>      
+    </td>
+</tr>
 </table>
 
 <%= link_to 'Overview', 
             :action => 'overview',
-            :evaluation => params[:evaluation],           
-            :start_date => @period.startDate,
-            :end_date => @period.endDate %>
+            :evaluation => params[:evaluation] %>

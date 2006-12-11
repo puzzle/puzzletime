@@ -4,9 +4,11 @@
 class Client < ActiveRecord::Base
 
   include Category
+  include Division
 
   # All dependencies between the models are listed below.
   has_many :projects, :order => "name"
+  has_many :worktimes, :through => :projects
   
   # Validation helpers.
   validates_presence_of :name
@@ -23,4 +25,10 @@ class Client < ActiveRecord::Base
   def detailFor(time)
     time.employee.shortname
   end
+  
+  def worktimesBy(period, absences = nil)
+    worktimes.find(:all, 
+                   :conditions => conditionsFor(period, {:client_id => id}, absences), 
+                   :order => "work_date ASC, from_start_time ASC")
+  end  
 end

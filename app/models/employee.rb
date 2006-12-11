@@ -9,13 +9,15 @@ class Employee < ActiveRecord::Base
   include Division
   
   # All dependencies between the models are listed below.
-  has_many :employments, :order => 'start_date'
+  has_many :employments, :order => 'start_date', :dependent => true
   has_many :projectmemberships, :dependent => true
   has_many :projects, :through => :projectmemberships, :order => "name"
   has_many :managed_projects, :class_name => 'Project', :through => :projectmemberships, :order => "name"
   has_many :worktimes, :dependent => true
-  has_many :absences, :through => :worktimes
-
+  has_many :absences, :finder_sql => 
+              'SELECT DISTINCT(a.*) FROM absences a, worktimes t WHERE ' +
+              't.employee_id = #{id} AND t.absence_id = a.id ' +
+              'ORDER BY a.name'
   
   # Attribute reader and writer.
   attr_accessor :pwd 
@@ -49,8 +51,10 @@ class Employee < ActiveRecord::Base
     lastname + " " + firstname
   end
   
-  def worktimesBy(period, projectId)
-    worktimes.find(:all, :conditions => conditionsFor(period, :project_id => projectId), :order => "work_date ASC")
+  def worktimesBy(period, absences = nil, projectId = 0)
+    worktimes.find(:all, 
+                   :conditions => conditionsFor(period, {:project_id => projectId}, absences), 
+                   :order => "work_date ASC, from_start_time ASC")
   end  
   
   def sumWorktime(period = nil, projectId = 0)
@@ -103,7 +107,7 @@ class Employee < ActiveRecord::Base
   end
 
   def currentOvertime
-    overtime(employmentPeriodTo(Date.today))
+    overtime(employmentPeriodTo(Date.today-1))
   end
 
   # Sum total overtime
