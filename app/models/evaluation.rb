@@ -16,11 +16,11 @@ class Evaluation
   end
   
   def self.employees
-    new(Employee, :list, 'Employee Projects', :employeeProjects, false, true)
+    new(Employee, :list, 'Employee Projects', :employeeProjects, false, true, false)
   end
   
   def self.absences
-    new(Employee, :list, 'Employee Absences', :employeeAbsences, true, true)
+    new(Employee, :list, 'Employee Absences', :employeeAbsences, true, true, false)
   end  
     
   def self.managedProjects(user)
@@ -28,7 +28,7 @@ class Evaluation
   end
   
   def self.clientProjects(client_id)
-    new(Client.find(client_id), :projects, 'Projects', :projectEmployees) 
+    new(Client.find(client_id), :projects, 'Projects', :projectEmployees, false, false, false) 
   end
   
   def self.employeeProjects(employee_id)
