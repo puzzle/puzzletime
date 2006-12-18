@@ -1,0 +1,16 @@
+<% times = collect_times(periods, sum_periods, division) %>
+<tr>
+    <td>
+    <% if @evaluation.sub_evaluation %>
+    <a href="<%= @evaluation.sub_evaluation %>?category_id=<%= division.id %>">
+    <%= division.label %>
+    </a>
+    <% else %>
+    <%= division.label %>
+    <% end %>
+    </td>
+    <%= render(:partial => 'periodTime',
+               :collection => times,
+               :locals => {:division_id => division.id, :periods => periods}) %>
+    <td>| <%= add_time_link(division) %></td> 
+</tr>

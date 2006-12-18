@@ -16,7 +16,13 @@
 </table>
 <br/>
 
+<% if @absence_pages.page_count > 1 %>
+<br />
+Page: 
+<%= pagination_links(@absence_pages) %>
+<br />
+<% end %>
+
+<br />
+
 <%= link_to 'New absence', :action => 'newAbsence' %>
-<br/>
-<%= link_to 'Previous page', { :page => @absence_pages.current.previous } if @absence_pages.current.previous %>
-<%= link_to 'Next page', { :page => @absence_pages.current.next } if @absence_pages.current.next %> 

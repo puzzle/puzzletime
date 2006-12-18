@@ -9,7 +9,7 @@
   <%= javascript_include_tag :defaults %>
 </head>
 <body>
-<div id="outer">
+<div id="content">
 	<div id="header">
 		<h1><span>puzzle</span>Time<sup>1.0</sup></h1>
 		<h2>&nbsp; by Puzzle ITC</h2>
@@ -27,22 +27,18 @@
 			<%if @user.projectManager? %>
 			<li><%= link_to 'My Projects', 
 			         :controller => 'evaluator', 
-			         :action => 'overview', 
-			         :evaluation => 'managed' %></li>	
+			         :action => 'managed' %></li>	
 			<% end %>
 			<% if @user.management %>
 			<li><%= link_to 'Clients', 
 			         :controller => 'evaluator',
-                     :action => 'overview',
-                     :evaluation => 'clients' %></li>
+                     :action => 'clients' %></li>
             <li><%= link_to 'Employees', 
                      :controller => 'evaluator',
-                     :action => 'overview',
-                     :evaluation => 'employees' %></li>
+                     :action => 'employees' %></li>
            <li><%= link_to 'Absences', 
                      :controller => 'evaluator',
-                     :action => 'overview',
-                     :evaluation => 'absences' %></li>
+                     :action => 'absences' %></li>
             <li><%= link_to 'Overtime',
                      :controller => 'evaluator', 
                      :action => 'overtime' %></li>

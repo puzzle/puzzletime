@@ -1,6 +1,6 @@
 <h1><%= @evaluation.division_method.to_s.capitalize %> of <%= @user.label %></h1>
 
-<p><%= periodLink(@period) %></p>
+<%= render(:partial => 'periodLink') %>
 
 <p>
 Overtime: <%= round(@user.currentOvertime.to_f) %> hours
@@ -8,19 +8,18 @@ Overtime: <%= round(@user.currentOvertime.to_f) %> hours
 Remaining Holidays: <%= @user.currentRemainingHolidays %> days
 </p>
 
-<%= overview(@evaluation, @period) %>	
- 
+<%= render(:partial => 'category') %>
+
+<br /> 
  
 <%= link_to 'Add Absence', :controller => 'worktime', :action => 'addAbsence' %> | 
 
 <%= 
 if @evaluation.division_method == :projects
     link_to 'View Absences', 
-            :action => 'overview',
-            :evaluation => 'userabsences'
+            :action => 'userAbsences'
  else
      link_to 'View Projects', 
-            :action => 'overview',
-            :evaluation => 'user'
+            :action => 'userProjects'
  end           
 %>

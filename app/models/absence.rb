@@ -3,7 +3,7 @@
 
 class Absence < ActiveRecord::Base
 
-  include Division
+  include Evaluatable
   
   # All dependencies between the models are listed below
   has_many :worktimes, :dependent => true

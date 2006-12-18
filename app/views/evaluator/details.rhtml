@@ -22,7 +22,7 @@
 <% total += time.hours %>
 <tr>
   <td align="right"><%= format_date(time.work_date) %></td>
-  <td align="right"><%= round(time.hours) %></td>
+  <td align="right"><%= number_with_precision(time.hours, 2) %></td>
   <td><%= time.employee.shortname %></td>
   <td><%= time.account.label %></td>
   <td><%= time.description.slice(0..40) %>  
@@ -59,16 +59,18 @@
 <% end %> 
 <tr class="times_total_sum">
     <td>Total time</td> 
-    <td><%= round(total) %></td>
+    <td align="right"><%= number_with_precision(total, 2) %></td>
     <td colspan="3"></td> 
     <td>
-    <% if @evaluation.for?(@user) && @evaluation.division_details? %>
-        <a href="/worktime/addTime?project_id=<%= @evaluation.detail_division.id %>">Add Time</a>
+    <% if @evaluation.for?(@user) && @evaluation.division %>
+        <a href="/worktime/addTime?project_id=<%= @evaluation.division.id %>">Add Time</a>
     <% end %>      
     </td>
 </tr>
 </table>
 
+<br/>
+
 <%= link_to 'Overview', 
-            :action => 'overview',
-            :evaluation => params[:evaluation] %>
+            :action => params[:evaluation],
+            :category_id => params[:category_id] %>

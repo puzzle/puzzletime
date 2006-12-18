@@ -11,8 +11,12 @@ class ProjectController < ApplicationController
          :redirect_to => { :action => :listProject }
 
   # Lists all projects.
-  def listProject
-    @project_pages, @projects = paginate :projects, :order => 'client_id, name', :per_page => 10
+  def listProject   
+    options = {:order => 'client_id, name', :per_page => 10}
+    if params.has_key?(:client_id) 
+      options[:conditions] = ['client_id = ?', params[:client_id]]
+    end
+    @project_pages, @projects = paginate :projects, options
   end
   
   # Shows detail of chosen project.
@@ -102,6 +106,9 @@ private
   def setProjectManagement(bool)
     projectmembership = Projectmembership.find(params[:projectmembership_id])
     projectmembership.update_attributes(:projectmanagement => bool)
+    if projectmembership.employee == @user 
+      @user.managed_projects(true)  #reload list for user (old version is cached otherwise)
+    end
     flash[:notice] = "#{projectmembership.employee.label} was " + (bool ? "set as" : "removed as") + " project manager"
     redirect_to :action => 'showProject' , :id => params[:project_id]
   end

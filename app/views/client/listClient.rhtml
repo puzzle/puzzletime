@@ -13,15 +13,22 @@
     <td><%=h client.send(column.name) %></td>
   <% end %>
     <td>
-    <%= link_to 'Edit', :action => 'editClient', :id => client %> | 
+    <%= link_to 'Projects', :controller => 'project', :action => 'listProject', :client_id => client %> 
+    |
+    <%= link_to 'Edit', :action => 'editClient', :id => client %> 
+    |
     <%= link_to 'Delete', { :action => 'confirmDeleteClient', :id => client }%></td>
   </tr>
 <% end %>
 </table>
 
-<%= link_to 'Previous page', { :page => @client_pages.current.previous } if @client_pages.current.previous %>
-<%= link_to 'Next page', { :page => @client_pages.current.next } if @client_pages.current.next %> 
-
+<% if @client_pages.page_count > 1 %>
+<br />
+Page: 
+<%= pagination_links(@client_pages) %>
+<br />
+<% end %>
+<br />
 <br />
 
 <%= link_to 'New client', :action => 'newClient' %> 

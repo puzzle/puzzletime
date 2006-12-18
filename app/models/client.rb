@@ -3,8 +3,7 @@
 
 class Client < ActiveRecord::Base
 
-  include Category
-  include Division
+  include Evaluatable
 
   # All dependencies between the models are listed below.
   has_many :projects, :order => "name"
@@ -18,17 +17,10 @@ class Client < ActiveRecord::Base
     find(:all, :order => "name")  
   end
   
-  def subdivisionRef
-    0
-  end
-  
-  def detailFor(time)
-    time.employee.shortname
-  end
-  
-  def worktimesBy(period, absences = nil)
+  def worktimesBy(period, absences = nil, dummy = nil)
     worktimes.find(:all, 
                    :conditions => conditionsFor(period, {:client_id => id}, absences), 
                    :order => "work_date ASC, from_start_time ASC")
   end  
+
 end

@@ -1,0 +1,14 @@
+<p>
+<%  if @period != nil %>
+Work times during <%= @period %> &nbsp; 
+<%= link_to 'Current Period', 
+             :action => 'currentPeriod', 
+             :evaluation => params[:action],
+             :category_id => params[:category_id] %>
+<% else %>
+<%= link_to 'Other Period', 
+            :action => 'selectPeriod',  
+            :evaluation => params[:action],
+            :category_id => params[:category_id] %>
+<% end %>
+</p>

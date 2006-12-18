@@ -1,0 +1,15 @@
+<% p = periods[periodTime_counter - 1] if periodTime_counter > 0 %>
+
+<td>| <%= number_with_precision(periodTime, 2) %></td>
+<td align="right">
+<% if division_id || !@evaluation.top_category %>
+<%=
+    "<a href=\"/evaluator/details?evaluation=" +
+    "#{params[:action]}&category_id=#{@evaluation.category.id}" +
+    (division_id ? "&division_id=#{division_id}" : "") +
+    (p ? "&start_date=#{p.startDate}&end_date=#{p.endDate}" : "&start_date=0") +
+    "\">" %>
+    <img src ="/images/lupe.gif" border=0>
+    </a>
+<% end %>    
+</td>

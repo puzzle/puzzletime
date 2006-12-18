@@ -1,12 +1,23 @@
 <h1>Select Custom Period</h1>
 <br/>
  <%= start_form_tag :action => 'changePeriod',
-                    :return_action => params[:return_action], 
-                    :evaluation => params[:evaluation] %>
+                    :evaluation => params[:evaluation],
+                    :category_id => params[:category_id] %>
                     
- <%= render :partial => 'dateselect' %>
+<table>
+  <tr>
+    <td>From:</td><td><%= date_select(:period, :startDate, :order => [:day, :month, :year]) %></td>
+  </tr>
+  <tr>
+    <td>To:</td><td><%= date_select(:period, :endDate, :order => [:day, :month, :year]) %></td>
+  </tr>
+  <tr>
+    <td><td><%= submit_tag 'Search' %></td></td>
+  </tr>
+</table>
+
  <%= end_form_tag %>
 
  <%= link_to 'Back to overview', 
-             :action => params[:return_action], 
-             :evaluation => params[:evaluation] %>
+             :action => params[:evaluation],
+             :category_id => params[:category_id] %>

@@ -1,118 +1,136 @@
 
 class Evaluation 
 
-  attr_reader :category_class,        # Client, Project, Employee
-              :category_method,       # gets list of categories from category_class
+  attr_reader :category,              # category
+              :sub_evaluation,        # next evaluation for divisions
+              :division,              # selected division for details
               :division_method,       # gets list of divisions from category
-              :single_category,       # use this category instead of getting a list
               :label,                 # name of the evaluation, defaults to '#category #division'
-              :receiver,              # receiver of category_methods, defaults to category_class
-              :detail_category,       # category for detail view
-              :detail_division        # division for detail view, can be nil
+              :absences,              # worktimes for projects or absences?
+              :top_category,          # details for top_category totals not possible
+              :category_times         # should divisions only contain worktimes from category
+
   
   def self.clients
-    new(Client, :list, :projects) 
-  end
-  
-  def self.managed(user)
-    new(Project, :managed_projects, :employees, nil, 'Managed Projects', user)
+    new(Client, :list, 'Clients', :clientProjects, false, true, false) 
   end
   
   def self.employees
-    new(Employee, :list, :projects)
+    new(Employee, :list, 'Employee Projects', :employeeProjects, false, true)
   end
   
   def self.absences
-    new(Employee, :list, :absences)
-  end
-  
-  def self.user(user)
-    new(Employee, nil, :projects, user)
-  end
-  
-  def self.userAbsences(user)
-    new(Employee, nil, :absences, user)
-  end
+    new(Employee, :list, 'Employee Absences', :employeeAbsences, true, true)
+  end  
     
-  def categories
-    if single_category.nil?
-      receiver.send(category_method)
-    else
-      single_category.to_a
-    end  
+  def self.managedProjects(user)
+    new(user, :managed_projects, 'Managed Projects', :projectEmployees, false, true, false)
   end
   
-  def divisions(category)  
-    category.send(division_method)
+  def self.clientProjects(client_id)
+    new(Client.find(client_id), :projects, 'Projects', :projectEmployees) 
+  end
+  
+  def self.employeeProjects(employee_id)
+    new(Employee.find(employee_id), :projects, 'Projects') 
+  end
+  
+  def self.projectEmployees(project_id)
+    new(Project.find(project_id), :employees, 'Employees') 
+  end
+  
+  def self.employeeAbsences(employee_id)
+    new(Employee.find(employee_id), :absences, 'Absences', nil, true)
+  end
+  
+  ########  instance methods ########
+  
+  def divisions  
+    @category.send(division_method)
   end
       
   def absences?
-    division_method == :absences
+    @absences
   end
   
-  def details?
-    ! detail_category.nil?
+  def subdivision_ref
+    @category_times ? @category.id : 0
   end
-  
-  def division_details?
-    ! detail_division.nil?
-  end
+
+  def sum_times(period, division)
+    division.sumWorktime(period, subdivision_ref, @absences)
+  end  
   
   def times(period)
-    if details?
-      if division_details?
-        detail_division.worktimesBy(period, absences?, detail_category.subdivisionRef)
-      else
-        detail_category.worktimesBy(period, absences?) 
-      end 
-    end 
+     if division
+        division.worktimesBy(period, @absences, subdivision_ref)
+     else
+        category.worktimesBy(period, @absences) 
+     end 
   end
   
   def category_label
-    detail_label(detail_category)
+    detail_label(category)
   end  
   
   def division_label
-    detail_label(detail_division)
+    detail_label(division)
   end 
-    
-  def for?(user)
-    single_category == user
+  
+  def title
+    if class_category?
+      label + " Overview"
+    else
+      label + " of " + category.label
+    end  
   end
   
-  def set_detail_ids(category_id, division_id = nil)
-    self.detail_category = category_id
-    if ! division_id.nil?
-      @detail_division = divisions(detail_category).find(division_id.to_i)
-    end
+  def division_header
+    divs = divisions
+    if divs.first
+      divs.first.class.to_s.capitalize
+    else
+      ""
+    end  
   end
     
+  def for?(user)
+    category == user
+  end
+  
+  def set_division_id(division_id = nil)
+    if division_id
+      if class_category?
+         @division = category.find(division_id.to_i)
+      else   
+         @division = divisions.find(division_id.to_i)
+      end  
+    end
+  end
+      
 private
 
-  def initialize(clazz, category_method, division_method, category = nil, label = nil, receiver = nil)
-    @category_class = clazz
-    @category_method = category_method
+  def initialize(category, division_method, label = nil, sub_evaluation = nil, absences = false, top_category = false, category_times = true)
+    @category = category
     @division_method = division_method
-    @single_category = category
+    @sub_evaluation = sub_evaluation
+    @absences = absences
+    @top_category = top_category
+    @category_times = category_times
     self.label = label
-    self.receiver = receiver
   end
      
   def label=(label)
-    @label = label || category_class.to_s + ' ' + division_method.to_s.capitalize  
+    @label = label || category.label 
   end     
        
-  def receiver=(receiver)
-    @receiver = receiver || category_class
-  end     
-    
-  def detail_category=(id)
-    @detail_category = single_category.nil? ? category_class.find(id.to_i) : single_category 
-  end
-     
   def detail_label(item)
-    if ! item.nil?
+    if ! (item.nil? || class_category?)
       item.class.name + ': ' + item.label
     end  
   end   
+  
+  def class_category?
+    category.kind_of? Class
+  end
 end 

@@ -5,9 +5,8 @@
     <td><div id="puzzle_table_title">Firstname</div></td>
     <td><div id="puzzle_table_title">Lastname</div></td>
     <td><div id="puzzle_table_title">Shortname</div></td>
-    <td><div id="puzzle_table_title">Email</div></td>
-    <td><div id="puzzle_table_title">Phone</div></td>
-    <td><div id="puzzle_table_title">Management</div></td>
+    <td><div id="puzzle_table_title">Percent</div></td>
+    <td><div id="puzzle_table_title">Manager</div></td>
   </tr>
   
   <% for employee in @employees %>
@@ -15,8 +14,14 @@
     <td><%=h employee.lastname  %></td>
     <td><%=h employee.firstname  %></td>
     <td><%=h employee.shortname  %></td>
-    <td><%=h employee.email  %></td>
-    <td><%=h employee.phone  %></td>
+    <td align="right">
+    <%= if ! employee.current_employment.nil?
+            h(employee.current_employment.percent) + " %"
+        else
+            "none"
+        end    
+    %>   
+    </td>
     <td><%= employee.management ? 'yes' : 'no' %></td> 
     <td>
     <%= link_to 'Show', :action => 'showEmployee', :id => employee %> | 
@@ -27,9 +32,12 @@
   <% end %>
 </table>
 
-<%= link_to 'Previous page', { :page => @employee_pages.current.previous } if @employee_pages.current.previous %>
-<%= link_to 'Next page', { :page => @employee_pages.current.next } if @employee_pages.current.next %> 
-
+<% if @employee_pages.page_count > 1 %>
+<br />
+Page: 
+<%= pagination_links(@employee_pages) %>
+<br />
+<% end %>
 <br />
 
 <%= link_to 'New employee', :action => 'newEmployee' %>

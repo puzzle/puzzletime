@@ -1,22 +1,18 @@
 
-module Division 
+module Evaluatable 
 
   def label
     name
   end
    
-  def detailFor(time)
-    ""
-  end  
-  
   def worktimesBy(period = nil, absences = nil, employeeId = 0)
     worktimes.find(:all, 
                    :conditions => conditionsFor(period, {:employee_id => employeeId}, absences), 
                    :order => "work_date ASC, from_start_time ASC")
   end  
   
-  def sumWorktime(period = nil, employeeId = 0)
-    worktimes.sum(:hours, :conditions => conditionsFor(period, :employee_id => employeeId)).to_f
+  def sumWorktime(period = nil, employeeId = 0, absences = nil)
+    worktimes.sum(:hours, :conditions => conditionsFor(period, {:employee_id => employeeId}, absences)).to_f
   end
   
   def conditionsFor(period = nil, idHash = {}, absences = nil)

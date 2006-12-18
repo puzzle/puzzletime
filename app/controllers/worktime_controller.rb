@@ -12,30 +12,37 @@ class WorktimeController < ApplicationController
    
   #List the time.
   def listTime
-    eval = 'user'
+    eval = 'userProjects'
     if @worktime != nil && @worktime.absence? 
       @user.absences(true)      #true forces reload
-      eval = 'userabsences'
+      eval = 'userAbsences'
     end  
-    redirect_to :controller => 'evaluator', :action => 'overview', :evaluation => eval
+    redirect_to :controller => 'evaluator', :action => eval
   end
   
   # Shows the edit page for the selected time.
-  def editTime
+  def editTime    
     @worktime = Worktime.find(params[:id])
+    @accounts = @worktime.absence? ? Absence.list : @user.projects    
   end
   
   # Shows the addAbsence page.
   def addAbsence
     createDefaultWorktime
-    @absences = Absence.list
+    @accounts = Absence.list
     render :action => 'addTime'
   end
   
   # Shows the addTime page.
   def addTime
-    createDefaultWorktime
-    @worktime.project_id = params[:project_id]
+    createDefaultWorktime   
+    if params.has_key? :absence_id
+      @accounts = Absence.list
+      @worktime.absence_id = params[:absence_id] 
+    else
+      @accounts = @user.projects
+      @worktime.project_id = params[:project_id] 
+    end  
   end
   
   def confirmDeleteTime
@@ -119,10 +126,10 @@ private
 
   #List the time.
   def listDetailTime
-    eval = 'user'
+    eval = 'userProjects'
     if @worktime != nil && @worktime.absence? 
       @user.absences(true)      #true forces reload
-      eval = 'userabsences'
+      eval = 'userAbsences'
     end  
     if session[:period].nil?
       session[:period] = Period.weekFor(@worktime.work_date)

@@ -1,11 +1,5 @@
-<h1><%= @evaluation.label %> Overview</h1>
+<h1><%= @evaluation.title %></h1>
 
-<p>
-<%= periodLink(@period) %>
-</p>
+<%= render(:partial => 'periodLink') %>
 
-<%= overview(@evaluation, @period) %>
-
-<% if @user.management %>
-  <%= link_to 'Evaluator', :action => 'listEvaluator' %> 
-<% end %>
+<%= render(:partial => 'category') %>

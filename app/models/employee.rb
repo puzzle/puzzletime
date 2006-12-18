@@ -5,19 +5,24 @@ require "digest/sha1"
 
 class Employee < ActiveRecord::Base
   
-  include Category
-  include Division
+  include Evaluatable
   
   # All dependencies between the models are listed below.
   has_many :employments, :order => 'start_date', :dependent => true
   has_many :projectmemberships, :dependent => true
   has_many :projects, :through => :projectmemberships, :order => "name"
-  has_many :managed_projects, :class_name => 'Project', :through => :projectmemberships, :order => "name"
+  has_many :managed_projects, 
+           :class_name => 'Project', 
+           :through => :projectmemberships, 
+           :order => "name", 
+           :conditions => "projectmemberships.projectmanagement IS TRUE"
   has_many :worktimes, :dependent => true
   has_many :absences, :finder_sql => 
               'SELECT DISTINCT(a.*) FROM absences a, worktimes t WHERE ' +
               't.employee_id = #{id} AND t.absence_id = a.id ' +
               'ORDER BY a.name'
+  has_one :current_employment, :class_name => 'Employment', 
+          :conditions => ['start_date <= ? AND (end_date IS NULL OR end_date >= ?)', Date.today, Date.today]
   
   # Attribute reader and writer.
   attr_accessor :pwd 
@@ -57,8 +62,8 @@ class Employee < ActiveRecord::Base
                    :order => "work_date ASC, from_start_time ASC")
   end  
   
-  def sumWorktime(period = nil, projectId = 0)
-    worktimes.sum(:hours, :conditions => conditionsFor(period, :project_id => projectId)).to_f
+  def sumWorktime(period = nil, projectId = 0, absences = nil)
+    worktimes.sum(:hours, :conditions => conditionsFor(period, {:project_id => projectId}, absences)).to_f
   end
     
   def projectManager?

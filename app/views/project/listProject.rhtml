@@ -17,8 +17,12 @@
 <% end %>
 </table>
 
-<%= link_to 'Previous page', { :page => @project_pages.current.previous } if @project_pages.current.previous %>
-<%= link_to 'Next page', { :page => @project_pages.current.next } if @project_pages.current.next %> 
+<% if @project_pages.page_count > 1 %>
+<br />
+Page: 
+<%= pagination_links(@project_pages, :params => {:client_id => params[:client_id]}) %>
+<br />
+<% end %>
 
 <br />
 
