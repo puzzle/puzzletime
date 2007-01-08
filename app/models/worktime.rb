@@ -18,7 +18,7 @@ class Worktime < ActiveRecord::Base
   TYPE_HOURS_MONTH = 'month'
   
   validates_presence_of :work_date, :message => "is invalid"
-  validates_inclusion_of :hours, :in => 0..750, :message => "should be positive"
+  validates_inclusion_of :hours, :in => 0.0001..750, :message => "should be positive"
       
   def account
     project != nil ? project : absence

@@ -49,6 +49,10 @@ class Period
     sum 
   end
   
+  def include?(date)
+    (@startDate..@endDate).include?(date)
+  end
+  
   def negative?
     @startDate > @endDate
   end

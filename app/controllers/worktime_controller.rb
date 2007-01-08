@@ -7,7 +7,7 @@ class WorktimeController < ApplicationController
   before_filter :authenticate
 
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
-  verify :method => :post, :only => [ :deleteTime, :createTime, :updateTime, :updateProject ],
+  verify :method => :post, :only => [ :deleteTime, :createTime, :updateTime, :updateProject, :addAttendanceTime ],
          :redirect_to => { :action => :listTime }
    
   #List the time.
@@ -22,8 +22,8 @@ class WorktimeController < ApplicationController
   
   # Shows the edit page for the selected time.
   def editTime    
-    @worktime = Worktime.find(params[:id])
-    @accounts = @worktime.absence? ? Absence.list : @user.projects    
+    @worktime = Worktime.find(params[:id])   
+    setWorktimeAccounts
   end
   
   # Shows the addAbsence page.
@@ -37,12 +37,11 @@ class WorktimeController < ApplicationController
   def addTime
     createDefaultWorktime   
     if params.has_key? :absence_id
-      @accounts = Absence.list
       @worktime.absence_id = params[:absence_id] 
     else
-      @accounts = @user.projects
       @worktime.project_id = params[:project_id] 
     end  
+    setWorktimeAccounts
   end
   
   def confirmDeleteTime
@@ -62,21 +61,12 @@ class WorktimeController < ApplicationController
   def updateTime        
     parseTimes
     @worktime = Worktime.find(params[:worktime_id])
-    begin
-      @worktime.attributes = params[:worktime]
-    # Catch the exception from AR::Base
-    rescue ActiveRecord::MultiparameterAssignmentErrors => ex
-      # Iterarate over the exceptions and remove the invalid field components from the input
-      ex.errors.each { |err| params[:worktime].delete_if { |key, value| key =~ /^#{err.attribute}/ } }
-      # Recreate the Model with the bad input fields removed
-      @worktime.attributes = params[:worktime]
-      # remove manually as @worktime already had a valid work_date, we want an error to be thrown
-      @worktime.work_date = nil     
-    end
+    setWorktimeParams
     if @worktime.save
       flash[:notice] = 'Time was successfully updated.'
       listDetailTime
     else
+      setWorktimeAccounts
       render :action => 'editTime'
     end  
   end
@@ -84,19 +74,20 @@ class WorktimeController < ApplicationController
   # Stores the new time the data on DB.
   def createTime
     parseTimes 
-    begin
-      @worktime = Worktime.new(params[:worktime])
-    # Catch the exception from AR::Base
-    rescue ActiveRecord::MultiparameterAssignmentErrors => ex
-      # Iterarate over the exceptions and remove the invalid field components from the input
-      ex.errors.each { |err| params[:worktime].delete_if { |key, value| key =~ /^#{err.attribute}/ } }
-      # Recreate the Model with the bad input fields removed
-      @worktime = Worktime.new(params[:worktime])      
-    end
+    @worktime = Worktime.new
+    setWorktimeParams
     if @worktime.save      
       flash[:notice] = 'Time was successfully added.'
-      listDetailTime  
+      if params[:add_next] == 'true'
+        account_id = @worktime.absence_id ?   
+          { :absence_id => @worktime.absence_id } : 
+          { :project_id => @worktime.project_id }
+        redirect_to account_id.merge!({ :action => 'addTime' })
+      else
+        listDetailTime  
+      end
     else
+      setWorktimeAccounts
       render :action => 'addTime'
     end  
   end
@@ -122,6 +113,64 @@ class WorktimeController < ApplicationController
     end
   end
   
+  def attendance
+    createDefaultWorktime   
+  end
+  
+  def saveAttendance
+    parseTimes
+    @worktime = Worktime.new
+    setWorktimeParams
+    if @worktime.valid?     
+      attendance = Attendance.new(@worktime)
+      if params[:add_next] == 'true'
+        session[:attendance] = attendance
+        redirect_to :action => 'splitAttendance'
+      else       
+        attendance.save
+        flash[:notice] = 'Time was successfully added.'
+        listDetailTime  
+      end
+    else
+      render :action => 'attendance'
+    end  
+  end
+  
+  def splitAttendance
+    @attendance = session[:attendance]
+    if @attendance.nil?
+      redirect_to :action => 'addTime'
+    end  
+    @worktime = @attendance.worktimeTemplate
+    setWorktimeAccounts
+  end
+  
+  def deleteAttendanceTime
+    session[:attendance].removeWorktime(params[:attendance_id].to_i)
+    redirect_to :action => 'splitAttendance'
+  end
+  
+  def addAttendanceTime
+    parseTimes 
+    @worktime = Worktime.new
+    setWorktimeParams
+    @attendance = session[:attendance]
+    if @worktime.valid?      
+      @attendance.addWorktime(@worktime)      
+      if params[:add_next] == 'true' && @attendance.incomplete?
+        redirect_to :action => 'splitAttendance'
+      else
+        @attendance.save
+        session[:attendance] = nil
+        flash[:notice] = 'All times were successfully added.'
+        listDetailTime
+      end
+    else
+      setWorktimeAccounts
+      render :action => 'splitAttendance'
+    end  
+  end
+  
 private
 
   #List the time.
@@ -131,7 +180,8 @@ private
       @user.absences(true)      #true forces reload
       eval = 'userAbsences'
     end  
-    if session[:period].nil?
+    if session[:period].nil? || 
+        ! session[:period].include?(@worktime.work_date)
       session[:period] = Period.weekFor(@worktime.work_date)
     end
     redirect_to :controller => 'evaluator', 
@@ -142,6 +192,7 @@ private
 
   def createDefaultWorktime
     @worktime = Worktime.new
+    @worktime.from_start_time = Time.now.change(:hour => 8)
     @worktime.report_type = Worktime::TYPE_HOURS_DAY
     period = session[:period]
     if period != nil && period.length == 1
@@ -158,7 +209,26 @@ private
       end_minute = params[:worktime_to_end_time_minute]
       params[:worktime][:from_start_time] = "{#{start_hour}:#{start_minute}}"
       params[:worktime][:to_end_time] = "{#{end_hour}:#{end_minute}}"
-      params[:worktime][:hours] = end_hour.to_f + (end_minute.to_f / 60) - start_hour.to_f - (start_minute.to_f / 60) 
+      params[:worktime][:hours] = ((end_hour.to_f + (end_minute.to_f / 60) - 
+                                   start_hour.to_f - (start_minute.to_f / 60)) * 10000).round / 10000.0
+    end
+  end
+  
+  def setWorktimeAccounts
+    @accounts = @worktime.absence? ? Absence.list : @user.projects 
+  end
+  
+  def setWorktimeParams
+    begin
+      @worktime.attributes = params[:worktime]
+    # Catch the exception from AR::Base
+    rescue ActiveRecord::MultiparameterAssignmentErrors => ex
+      # Iterarate over the exceptions and remove the invalid field components from the input
+      ex.errors.each { |err| params[:worktime].delete_if { |key, value| key =~ /^#{err.attribute}/ } }
+      # Recreate the Model with the bad input fields removed
+      @worktime.attributes = params[:worktime]
+      # remove manually as @worktime already had a valid work_date, we want an error to be thrown
+      @worktime.work_date = nil     
     end
   end
 

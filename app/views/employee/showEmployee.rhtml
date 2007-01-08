@@ -33,14 +33,14 @@
     </tr>
       <% for employment in @employee.employments %>
         <tr>
-          <td><%= employment.percent %></td>
-          <td><%= format_date(employment.start_date) %></td>
-           <% if employment.end_date %>
-             <td><%= format_date(employment.end_date) %></td>
-             <td><%= link_to 'Edit', :action => 'editEmployment', :id => employment, :employee_id => @employee  %></td>
-           <% else %>
-          <td><td><%= link_to 'Edit', :action => 'editEmployment', :id => employment, :employee_id => @employee  %></td></td>
+          <td align="right"><%= employment.percent %> %</td>
+          <td align="right"><%= employment.start_date.strftime("%d.%m.%Y") %></td>
+          <td align="right">
+          <% if employment.end_date %>
+            <%= employment.end_date.strftime("%d.%m.%Y") %>
           <% end %>
+          </td>
+          <td><%= link_to 'Edit', :action => 'editEmployment', :id => employment, :employee_id => @employee  %></td>
           <td><%= link_to 'Delete', :action => 'confirmDeleteEmployment', :employment_id => employment, :employee_id => @employee %></td>
         </tr>
      <% end %>

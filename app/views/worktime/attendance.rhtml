@@ -1,6 +1,10 @@
 
+<h1>Attendance Time Wizard</h1>
+<br/>
+
 <%= error_messages_for 'worktime' %>
 
+<%= start_form_tag :action => 'saveAttendance' %>
 <table>
     <tr>
 	<td>Report type: </td>
@@ -11,20 +15,6 @@
       <option value="<%= Worktime::TYPE_HOURS_WEEK %>" <%= 'selected="selected"' if Worktime::TYPE_HOURS_WEEK == @worktime.report_type %>>Hours/Week</option> 
       <option value="<%= Worktime::TYPE_HOURS_MONTH %>" <%= 'selected="selected"' if Worktime::TYPE_HOURS_MONTH == @worktime.report_type %>>Hours/Month</option>
       </select>
-    </td>
-  </tr>
-  <tr>
-	<td>
-	<% if @worktime.project_id.nil? 
-	       account_id = :absence_id %>
-	   Absence: 
-	<% else 
-	       account_id = :project_id %>
-	   Project:
-	<% end %>      
-	</td>
-    <td>
-        <%= collection_select( :worktime, account_id, @accounts, :id, :name) %>
     </td>
   </tr>
   <tr>
@@ -49,36 +39,25 @@
     <%= worktime_minute('worktime_to_end_time_minute', @worktime.to_end_time) %> 
     </td>
   </tr>
-  <tr valign="top">
-    <td>Description: </td>
-    <td><%= text_area 'worktime', 'description', {:rows => 5} %></td>
-  </tr>
-  <% if ! @worktime.absence? %>
   <tr>
-    <td>Billable: </td>
-    <td><%= check_box 'worktime', 'billable' %></td>
-  </tr>
-  <% end %>
-  <tr>
-    <td><%= hidden_field_tag :add_next, 'false' %></td>
+    <td><%= hidden_field_tag :add_next, 'true' %></td>
     <td>    
-    <% if @worktime.new_record? %>
     <table>
     <tr>
-      <td>      
-      <%= submit_tag 'Save + Add', :onclick => 'document.getElementById(\'add_next\').value=\'true\'' %>
-      </td>
       <td>
-      <%= submit_tag 'Finish' %>
+      <%= submit_tag 'Partition' %>
       </td>
+      <td><%= submit_tag 'Finish', :onclick => 'document.getElementById(\'add_next\').value=\'false\'' %></td>
     </tr>
     </table>   
-    <% else %>
-    <%= submit_tag 'Save' %>
-    <% end %>
     </td>
-   </tr>
- </table>
+  </tr>
+</table>
+<%= end_form_tag %>
+
+<br/>
+<%= link_to 'Overview', :action => 'listTime' %>
+ 
  
 <script type="text/javascript">
   switchvisibility();

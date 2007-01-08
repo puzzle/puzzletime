@@ -1,8 +1,6 @@
 <h1>Edit Time for <%= @worktime.account.name %></h1>
 <br/>
-<table>
-</tr>
-</table>
+
 <%= start_form_tag :action => 'updateTime', :worktime_id => @worktime %>
 <%= render :partial => 'form' %>
 <%= end_form_tag %>

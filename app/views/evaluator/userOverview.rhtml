@@ -8,6 +8,10 @@ Overtime: <%= round(@user.currentOvertime.to_f) %> hours
 Remaining Vacations: <%= @user.currentRemainingVacations %> days
 </p>
 
+<p>
+<%= link_to 'Add attendance time', :controller => 'worktime', :action => 'attendance' %>
+</p>
+
 <%= render(:partial => 'category') %>
 
 <br /> 

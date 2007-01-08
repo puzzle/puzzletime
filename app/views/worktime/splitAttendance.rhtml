@@ -1,0 +1,36 @@
+
+<h1>Partition Attendance Time</h1>
+
+<p>
+<strong>
+Attended <%= number_with_precision(@attendance.time.hours, 2) %> h
+at <%= format_date(@attendance.time.work_date) %>:
+</strong>
+<br/>
+
+<table cellpadding="0" cellspacing="0">
+<% 
+i = 0
+for t in @attendance.worktimes %>
+  <tr>
+    <td align="right"><%= number_with_precision(t.hours, 2) %> h</td> 
+    <td>for <%= t.account.label %></td>
+    <td><%= t.description.slice(0..20) %></td>
+    <td><%= link_to 'delete...', 
+            {:action => 'deleteAttendanceTime',
+             :attendance_id => i}, 
+            {:confirm => 'Do you really want to delete this worktime?'} %></td>
+  </tr>
+<%  i += 1
+end %>   
+</table>
+</p>
+
+<br/>
+
+<%= start_form_tag :action => 'addAttendanceTime' %>
+<%= render :partial => 'form' %>
+<%= end_form_tag %>
+
+<br/>
+<%= link_to 'Overview', :action => 'listTime' %>
