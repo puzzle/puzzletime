@@ -99,16 +99,17 @@ class EmployeeController < ApplicationController
    attributes = params[:employment]
    if ! params[:final]
       attributes.delete_if {|key, value| key =~ /^end_date/ }
+      @employment.end_date = nil
    end   
    
-    begin
-      @employment.attributes = attributes
-    rescue ActiveRecord::MultiparameterAssignmentErrors => ex
-      ex.errors.each { |err| params[:employment].delete_if { |key, value| key =~ /^#{err.attribute}/ } }
-      @employment.attributes = attributes
-      @employment.errors.add_to_base("Date is invalid")
-      render :action => 'editEmployment'
-    end
+   begin
+     @employment.attributes = attributes
+   rescue ActiveRecord::MultiparameterAssignmentErrors => ex
+     ex.errors.each { |err| params[:employment].delete_if { |key, value| key =~ /^#{err.attribute}/ } }
+     @employment.attributes = attributes
+     @employment.errors.add_to_base("Date is invalid")
+     render :action => 'editEmployment'
+   end
    
    if @employment.save
       flash[:notice] = 'Employment was successfully updated.'

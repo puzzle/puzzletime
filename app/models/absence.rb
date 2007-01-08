@@ -14,9 +14,7 @@ class Absence < ActiveRecord::Base
   # Validation helpers
   validates_presence_of :name
   validates_uniqueness_of :name
-  
-  VACATION_ID = 1     
-  
+    
   def self.list
     find(:all, :order => 'name')
   end

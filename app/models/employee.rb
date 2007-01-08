@@ -21,9 +21,7 @@ class Employee < ActiveRecord::Base
               'SELECT DISTINCT(a.*) FROM absences a, worktimes t WHERE ' +
               't.employee_id = #{id} AND t.absence_id = a.id ' +
               'ORDER BY a.name'
-  has_one :current_employment, :class_name => 'Employment', 
-          :conditions => ['start_date <= ? AND (end_date IS NULL OR end_date >= ?)', Date.today, Date.today]
-  
+
   # Attribute reader and writer.
   attr_accessor :pwd 
   
@@ -86,29 +84,29 @@ class Employee < ActiveRecord::Base
     update_attributes(:passwd => hashed_pwd)
   end
   
-  def currentRemainingHolidays
-    remainingHolidays(employmentPeriodTo(endOfYear))
+  def currentRemainingVacations
+    initial_vacation_days + remainingVacations(employmentPeriodTo(endOfYear))
   end
   
-  # Calculates remaining holidays
-  def remainingHolidays(period)
-    totalHolidays(period) - usedHolidays(period)
+  # Calculates remaining Vacations
+  def remainingVacations(period)
+    totalVacations(period) - usedVacations(period)
   end
   
   # Calculates used holidays
-  def usedHolidays(period)
+  def usedVacations(period)
     return 0 if period == nil
     self.worktimes.sum(:hours, :conditions => ["absence_id = ? AND (work_date BETWEEN ? AND ?)", 
-      Absence::VACATION_ID, period.startDate, period.endDate]).to_f / 8
+      VACATION_ID, period.startDate, period.endDate]).to_f / 8
   end
     
   # Calculates total holidays
-  def totalHolidays(period)
-    holidays = 0
+  def totalVacations(period)
+    days = 0
     employmentsDuring(period).each {|e|
-      holidays += e.holidays
+      days += e.vacations
     } 
-    return holidays  
+    return days  
   end
 
   def currentOvertime
@@ -127,6 +125,12 @@ class Employee < ActiveRecord::Base
       musttime += e.musttime
     }
     return musttime      
+  end
+  
+  def current_employment
+    employments.find(:first, 
+          :conditions => ['start_date <= ? AND (end_date IS NULL OR end_date >= ?)', 
+            Date.today, Date.today])  
   end
   
   def employmentsDuring(period)

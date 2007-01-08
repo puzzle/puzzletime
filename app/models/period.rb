@@ -5,19 +5,19 @@ class Period
   attr_reader :startDate, :endDate, :label
   
   def self.currentWeek
-    self.weekFor(Date.today, "This week: #{Time.now.strftime('%W')}")
+    start = Time.now.at_beginning_of_week
+    new(start, start.next_week, "This week: #{start.strftime('%W')}")
   end
   
   def self.currentMonth
-    start = Date.today
-    start -= start.day - 1
-    new(start, start + days_in_month(start.month, start.year) - 1, "This month: #{Time.now.strftime('%m')}")    
+    start = Time.now.at_beginning_of_month
+    new(start, start.months_since(1), "This month: #{start.strftime('%m')}")    
   end
   
   def self.currentYear
-    today = Date.today
-    new(Date.civil(today.year, 1, 1), Date.civil(today.year, 12, 31), "This year: #{Time.now.strftime('%y')}")
-  end
+    start = Time.now.at_beginning_of_year
+    new(start, start.years_since(1), "This year: #{start.strftime('%y')}")
+   end
   
   def self.weekFor(date, label = nil)
     start = date

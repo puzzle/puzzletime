@@ -3,29 +3,33 @@
 <table>
    <tr> 
      <td><label for="employee_firstname">Firstname: </label></td>
-	 <td><%= text_field 'employee', 'firstname', :size => 18  %></td>
+	 <td><%= text_field 'employee', 'firstname', :size => 25  %></td>
    </tr>
    <tr>
   	 <td><label for="employee_lastname">Lastname: </label></td>
-     <td><%= text_field 'employee', 'lastname', :size => 18  %></td>
+     <td><%= text_field 'employee', 'lastname', :size => 25  %></td>
    </tr>
    <tr>
      <td><label for="employee_shortname">Shortname: </label></td>
-     <td><%= text_field 'employee', 'shortname', :size => 18  %></td>
+     <td><%= text_field 'employee', 'shortname', :size => 25  %></td>
    </tr>
    <% unless params[:action] == 'editEmployee' || params[:action] == 'updateEmployee' %> 
    <tr>
      <td><label for="employee_passwd">Password: </label></td>
-     <td><%= password_field 'employee', 'pwd', :size => 18  %></td>
+     <td><%= password_field 'employee', 'pwd', :size => 25  %></td>
    </tr>
    <% end %>
    <tr>
      <td><label for="employee_email">Email: </label></td>
-  	 <td><%= text_field 'employee', 'email', :size => 18  %></td>
+  	 <td><%= text_field 'employee', 'email', :size => 25  %></td>
    </tr>
    <tr>
   	 <td><label for="employee_phone">Phone: </label></td>
-     <td><%= text_field 'employee', 'phone', :size => 18  %></td>
+     <td><%= text_field 'employee', 'phone', :size => 25  %></td>
+   </tr>
+   <tr>
+  	 <td><label for="employee_initial_vacation_days">Initial Vacations: </label></td>
+     <td><%= text_field 'employee', 'initial_vacation_days', :size => 25  %> days</td>
    </tr>
    <tr>
   	 <td><label for="employee_phone">Management: </label></td>

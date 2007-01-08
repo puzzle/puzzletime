@@ -29,15 +29,15 @@ class Employment < ActiveRecord::Base
   end
   
   def period
-    return Period.new(start_date, end_date)
+    return Period.new(start_date, end_date ? end_date : Date.today)
   end
   
   def percentFactor
     percent / 100.0
   end
   
-  def holidays
-    round2Decimals(period.length / 365.25 * Masterdata.instance.vacations_year * percentFactor)
+  def vacations
+    round2Decimals(period.length / 365.25 * VACATION_DAYS_PER_YEAR * percentFactor)
   end 
   
   def musttime

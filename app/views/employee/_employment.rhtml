@@ -11,8 +11,8 @@
     </tr>
     <% if employment != nil && ! employment.new_record? %>
     <tr>
-      <td><label for="final"> Last employment? </td>
-      <td><input type="checkbox" value="1" name="final" /><td>
+      <td><label for="final"> Set end date:</td>
+      <td><input type="checkbox" value="1" name="final" <%= employment.end_date ? 'checked="checked"' : ''%>/><td>
     </tr>
     <tr>
   	  <td><label for="employment_end_date">End date: </label></td>

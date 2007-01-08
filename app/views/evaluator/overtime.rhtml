@@ -4,13 +4,13 @@
   <tr>
     <td><div id="puzzle_table_title">Employee</div></td>
     <td><div id="puzzle_table_title">Current Overtime</div></td>
-    <td><div id="puzzle_table_title">Remaining Holidays for <%= Date.today.year %></div></td>
+    <td><div id="puzzle_table_title">Remaining Vacations for <%= Date.today.year %></div></td>
   </tr>
   <% for employee in @employees %>
   <tr>
     <td><%= employee.label %></td>
     <td><%= round(employee.currentOvertime) %> h </td>
-    <td><%= employee.currentRemainingHolidays %> d</td>
+    <td><%= employee.currentRemainingVacations %> d</td>
   </tr>
   <% end %>
 </table>

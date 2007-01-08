@@ -3,8 +3,6 @@
 
 class Holiday < ActiveRecord::Base
 
-   REGULARHOLIDAYS = [[1,1],[2,1],[25,12],[26,12],[1,8]]
-   
   # Collection of functions to check if date is holiday or not       
   def self.musttime(date)
     if Holiday.isWeekend(date)
@@ -17,13 +15,13 @@ class Holiday < ActiveRecord::Base
           return holiday.musthours_day
         end
       }
-      return Masterdata.instance.musthours_day
+      return MUST_HOURS_PER_DAY
     end
   end
 
   # Checks if date is a regular holiday
   def self.isRegularHoliday(date)
-    REGULARHOLIDAYS.each{|day|
+    REGULAR_HOLIDAYS.each{|day|
       if date.day == day[0] && date.month == day[1]
         return true
       end

@@ -11,9 +11,10 @@
 <table>
 <tr class="times_table_title">
    <td>Date</td>
-   <td>Hours</td>
+   <td>Hours</td>   
    <td>Who</td>
    <td>Project</td>
+   <td>$</td>
    <td>Description</td>
    <td></td>
 </tr>
@@ -25,6 +26,7 @@
   <td align="right"><%= number_with_precision(time.hours, 2) %></td>
   <td><%= time.employee.shortname %></td>
   <td><%= time.account.label %></td>
+  <td><%= time.billable ? 'y' : 'n' %></td>
   <td><%= time.description.slice(0..40) %>  
       <%=
       if time.description.length > 40
@@ -34,7 +36,8 @@
                 :evaluation => params[:evaluation],
                 :category_id => params[:category_id],
                 :division_id => params[:division_id]
-      end    %></td>
+      end    %>
+  </td>
   <td>
   <% if @evaluation.for?(@user) %>
     <%= link_to 'Edit', 
@@ -54,8 +57,9 @@
                 :action =>'changeProject', 
                 :worktime_id => time.id,
                 :evaluation => params[:evaluation] %>
-  <% end %>            
-<tr>
+  <% end %>
+  </td>
+</tr>
 <% end %> 
 <tr class="times_total_sum">
     <td>Total time</td> 
