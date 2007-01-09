@@ -5,19 +5,19 @@ class Period
   attr_reader :startDate, :endDate, :label
   
   def self.currentWeek
-    start = Time.now.at_beginning_of_week
-    new(start, start.next_week, "This week: #{start.strftime('%W')}")
+    self.weekFor(Date.today, "This week: #{Time.now.strftime('%W')}")
   end
   
   def self.currentMonth
-    start = Time.now.at_beginning_of_month
-    new(start, start.months_since(1), "This month: #{start.strftime('%m')}")    
-  end
+    start = Date.today
+    start -= start.day - 1
+    new(start, start + days_in_month(start.month, start.year) - 1, "This month: #{Time.now.strftime('%m')}")    
+   end
   
   def self.currentYear
-    start = Time.now.at_beginning_of_year
-    new(start, start.years_since(1), "This year: #{start.strftime('%y')}")
-   end
+    today = Date.today
+    new(Date.civil(today.year, 1, 1), Date.civil(today.year, 12, 31), "This year: #{Time.now.strftime('%y')}")
+  end
   
   def self.weekFor(date, label = nil)
     start = date
@@ -32,9 +32,9 @@ class Period
   end
     
   def step 
-    @startDate.step(@endDate,1) {|date|
+    @startDate.step(@endDate,1) do |date|
       yield date
-    }
+    end
   end  
   
   def length
@@ -43,9 +43,9 @@ class Period
   
   def musttime
     sum = 0
-    step {|date|
+    step do |date|
       sum += Holiday.musttime(date)
-    }
+    end
     sum 
   end
   

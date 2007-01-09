@@ -14,7 +14,7 @@ class Employee < ActiveRecord::Base
   has_many :managed_projects, 
            :class_name => 'Project', 
            :through => :projectmemberships, 
-           :order => "name", 
+           :order => "client_id, name", 
            :conditions => "projectmemberships.projectmanagement IS TRUE"
   has_many :worktimes, :dependent => true
   has_many :absences, :finder_sql => 
@@ -54,14 +54,8 @@ class Employee < ActiveRecord::Base
     lastname + " " + firstname
   end
   
-  def worktimesBy(period, absences = nil, projectId = 0)
-    worktimes.find(:all, 
-                   :conditions => conditionsFor(period, {:project_id => projectId}, absences), 
-                   :order => "work_date ASC, from_start_time ASC")
-  end  
-  
-  def sumWorktime(period = nil, projectId = 0, absences = nil)
-    worktimes.sum(:hours, :conditions => conditionsFor(period, {:project_id => projectId}, absences)).to_f
+  def partnerId
+    :project_id
   end
     
   def projectManager?
@@ -103,27 +97,26 @@ class Employee < ActiveRecord::Base
   # Calculates total holidays
   def totalVacations(period)
     days = 0
-    employmentsDuring(period).each {|e|
+    employmentsDuring(period).each do |e|
       days += e.vacations
-    } 
+    end
     return days  
   end
 
-  def currentOvertime
-    overtime(employmentPeriodTo(Date.today-1))
+  def currentOvertime(date = Date.today - 1)
+    overtime(employmentPeriodTo(date))
   end
-
+  
   # Sum total overtime
   def overtime(period)
     sumWorktime(period) - musttime(period)
   end
   
   def musttime(period)
-    Holiday.refresh
     musttime = 0
-    employmentsDuring(period).each {|e|
+    employmentsDuring(period).each do |e|
       musttime += e.musttime
-    }
+    end
     return musttime      
   end
   

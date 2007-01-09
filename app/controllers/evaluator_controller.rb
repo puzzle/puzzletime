@@ -1,87 +1,78 @@
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz
 
+require 'fastercsv'
+
 class EvaluatorController < ApplicationController
  
   # Checks if employee came from login or from direct url.
   before_filter :authenticate
   before_filter :authorize, :only => [:clients, :employees, :absences, 
-                                      :clientProjects, :employeeProjects, :employeeAbsences]
+                                      :clientProjects, :employeeProjects, :employeeAbsences,
+                                      :overtime]
   before_filter :setPeriod
   
-  def clients
-    @evaluation = Evaluation.clients
-    render :action => 'overview'
-  end
-  
-  def employees
-    @evaluation = Evaluation.employees
-    render :action => 'overview'
-  end
-  
-  def absences
-    @evaluation = Evaluation.absences
-    render :action => 'overview'
-  end
-  
-  def managed
-    @evaluation = Evaluation.managedProjects(@user)
-    render :action => 'overview'
-  end
-  
-  def clientProjects
-    @evaluation = Evaluation.clientProjects(params[:category_id])
-    render :action => 'overview'
-  end
-  
-  def projectEmployees
-    @evaluation = Evaluation.projectEmployees(params[:category_id])
-    render :action => 'overview'
-  end
-  
-  def employeeProjects
-    @evaluation = Evaluation.employeeProjects(params[:category_id])
-    render :action => 'overview'
-  end 
-    
-  def employeeAbsences
-    @evaluation = Evaluation.employeeAbsences(params[:category_id])
-    render :action => 'overview'
-  end
-  
-  def userProjects
-    @evaluation = Evaluation.employeeProjects(@user.id)
-    render :action => 'userOverview'
-  end
-  
-  def userAbsences
-    @evaluation = Evaluation.employeeAbsences(@user.id)
-    render :action => 'userOverview'
+  def overview
+    if ! params[:evaluation]
+      params[:evaluation] = params[:action]      
+    end 
+    setEvaluation
+    if @evaluation.for?(@user) then render :action => 'userOverview'
+    else render :action => 'overview'
+    end
   end
   
   def details  
     setEvaluation
     @evaluation.set_division_id(params[:division_id])
     if params[:start_date] != nil
-      if params[:start_date] == "0"
-        @period = nil
-      else  
-        @period = Period.new(Date.parse(params[:start_date]), Date.parse(params[:end_date]))     
-      end  
+      @period = params[:start_date] == "0" ? nil :
+                   Period.new(Date.parse(params[:start_date]), Date.parse(params[:end_date]))     
       session[:period] = @period 
     end
     
-    @times = @evaluation.times(@period)
+    @time_pages = Paginator.new self, @evaluation.count_times(@period), NO_OF_DETAIL_ROWS, params[:page]
+    @times = @evaluation.times(@period, 
+                                :limit => @time_pages.items_per_page,
+                                :offset => @time_pages.current.offset)
   end
   
   # Shows overtimes of employees
   def overtime
-    authorize
     @employees = Employee.list
   end
   
   def description
     @time = Worktime.find(params[:worktime_id])
+  end
+  
+  def exportCSV
+    setEvaluation
+    @evaluation.set_division_id(params[:division_id])
+    times = @evaluation.times(@period)
+ 
+    filename = "puzzletime_" + 
+               csvLabel(@evaluation.category) + "-" +
+               csvLabel(@evaluation.division) + ".csv"
+    setExportHeader(filename)
+    
+    csv_string = FasterCSV.generate do |csv|
+      csv << ["Date", "Hours", "Start Time", "End Time", 
+              "Billable", "Employee", "Project", "Description"]
+      times.each do |time|
+        csv << [ time.work_date.strftime("%d.%m.%Y"),
+                 time.hours,
+                 (time.times? ? time.from_start_time.strftime("%H:%M") : ''),
+                 (time.times? ? time.to_end_time.strftime("%H:%M") : ''),
+                 time.billable,
+                 time.employee.label,
+                 time.account.label,
+                 time.description]
+      end
+    end 
+    send_data(csv_string,
+              :type => 'text/csv; charset=utf-8; header=present',
+              :filename => filename)  
   end
   
   def currentPeriod
@@ -106,32 +97,70 @@ class EvaluatorController < ApplicationController
     end       
   end
   
+  def clients
+    overview
+  end
+  
+  def employees
+    overview
+  end
+  
+  def absences
+    overview
+  end
+  
+  def managed
+    overview
+  end
+  
+  def clientProjects
+    overview
+  end
+  
+  def projectEmployees
+    overview
+  end
+  
+  def employeeProjects
+    overview
+  end 
+    
+  def employeeAbsences
+    overview
+  end
+  
+  def userProjects
+    overview
+  end
+  
+  def userAbsences
+    overview
+  end
+  
 private  
 
   def setEvaluation
-    if ! @user.management &&
-      (params[:evaluation] == 'clients' ||
-       params[:evaluation] == 'absences' ||
-       params[:evaluation] == 'clientprojects' ||
-       params[:evaluation] == 'employeeprojects' ||
-       params[:evaluation] == 'employeeabsences' ||
-       params[:evaluation] == 'employees') then
-        params[:evaluation] = 'managed'
-    end  
-  
     @evaluation = case params[:evaluation].downcase
-      when 'clients' then Evaluation.clients
-      when 'managed' then Evaluation.managedProjects(@user)
-      when 'employees' then Evaluation.employees
-      when 'absences' then Evaluation.absences
-      when 'userprojects' then Evaluation.employeeProjects(@user.id)
-      when 'userabsences' then Evaluation.employeeAbsences(@user.id)
-      when 'clientprojects' then Evaluation.clientProjects(params[:category_id])
-      when 'employeeprojects' then Evaluation.employeeProjects(params[:category_id])
-      when 'employeeabsences' then Evaluation.employeeAbsences(params[:category_id])
-      when 'projectemployees' then Evaluation.projectEmployees(params[:category_id])
-      else Evaluation.managedProjects(@user)
-      end  
+        when 'managed' then Evaluation.managedProjects(@user)
+        when 'userprojects' then Evaluation.employeeProjects(@user.id)
+        when 'userabsences' then Evaluation.employeeAbsences(@user.id)        
+        when 'projectemployees' then Evaluation.projectEmployees(params[:category_id])
+        else nil
+        end
+    if @user.management && @evaluation.nil?
+      @evaluation = case params[:evaluation].downcase
+        when 'clients' then Evaluation.clients
+        when 'employees' then Evaluation.employees
+        when 'absences' then Evaluation.absences
+        when 'clientprojects' then Evaluation.clientProjects(params[:category_id])
+        when 'employeeprojects' then Evaluation.employeeProjects(params[:category_id])
+        when 'employeeabsences' then Evaluation.employeeAbsences(params[:category_id])
+        else nil
+        end  
+    end
+    if @evaluation.nil?
+      @evaluation = Evaluation.employeeProjects(@user.id)
+    end 
   end
   
   def setPeriod
@@ -142,6 +171,25 @@ private
      Date.new(attributes[prefix + '(1i)'].to_i, 
               attributes[prefix + '(2i)'].to_i, 
               attributes[prefix + '(3i)'].to_i)
+  end
+
+  def setExportHeader(filename)
+    if request.env['HTTP_USER_AGENT'] =~ /msie/i
+      headers['Pragma'] = 'public'
+      headers['Content-type'] = 'text/plain'
+      headers['Cache-Control'] = 'no-cache, must-revalidate, post-check=0, pre-check=0'
+      headers['Content-Disposition'] = "attachment; filename=\"#{filename}\""
+      headers['Expires'] = '0'
+    else
+      headers['Content-Type'] ||= 'text/csv'
+      headers['Content-Disposition'] = "attachment; filename=\"#{filename}\""
+    end
+  end
+  
+  def csvLabel(item)
+    item.nil? || !item.respond_to?(:label) ? 
+      '' : 
+      item.label.downcase.gsub(/[^0-9a-z]/, "_") 
   end
   
 end

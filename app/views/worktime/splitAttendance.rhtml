@@ -19,7 +19,8 @@ for t in @attendance.worktimes %>
     <td><%= link_to 'delete...', 
             {:action => 'deleteAttendanceTime',
              :attendance_id => i}, 
-            {:confirm => 'Do you really want to delete this worktime?'} %></td>
+            {:confirm => 'Do you really want to delete this worktime?',
+            :post => true} %></td>
   </tr>
 <%  i += 1
 end %>   

@@ -1,25 +1,35 @@
-<h1>Description</h1>
+<h1>Worktime Details</h1>
 <br/>
+
 <table>
+  <%= render :partial => "worktime/details", :object => @time %>
   <tr>
-    <td>Employee: <%= @time.employee.label %></td>
-  </tr>
-  <tr>
-   <td>Date: <%= format_date(@time.work_date) %></td>
-  </tr>
-  <tr>
-    <td>Hours: <%= round(@time.hours) %></td>
-  </tr>
-  <tr>
-    <td>Description: </td>
-  </tr>
-  <tr> 
-    <td><%= @time.description %></td>
+    <td></td>
+    <td>
+    <strong>
+    <% if @time.employee == @user %>
+    <%= link_to 'Edit', 
+                :controller =>'worktime', 
+                :action =>'editTime', 
+                :id => @time.id %>
+    &nbsp;             
+    <%= link_to 'Delete', 
+                evaluation_detail_params.merge!({
+                    :controller =>'worktime', 
+                    :action =>'confirmDeleteTime',                 
+                    :id => @time.id }) %>
+    <% else %>            
+    <%= link_to 'Change Project', 
+                evaluation_detail_params.merge!({
+                    :controller =>'worktime', 
+                    :action =>'changeProject', 
+                    :worktime_id => @time.id}) %>
+    <% end %>
+    </strong>
+    </td>
   </tr>
 </table>
 <br/>
+
 <%= link_to 'Back', 
-            :action => 'details',
-            :evaluation => params[:evaluation],
-            :category_id => params[:category_id],
-            :division_id => params[:division_id]  %>
+            evaluation_detail_params.merge!({:action => 'details'}) %>

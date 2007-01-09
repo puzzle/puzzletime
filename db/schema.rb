@@ -2,7 +2,7 @@
 # migrations feature of ActiveRecord to incrementally modify your database, and
 # then regenerate this schema definition.
 
-ActiveRecord::Schema.define(:version => 1) do
+ActiveRecord::Schema.define(:version => 2) do
 
   create_table "absences", :force => true do |t|
     t.column "name", :string, :null => false
@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(:version => 1) do
     t.column "email", :string, :null => false
     t.column "phone", :string, :null => false
     t.column "management", :boolean, :default => false
+    t.column "initial_vacation_days", :float, :default => 0.0
   end
 
   add_index "employees", ["shortname"], :name => "chk_unique_name", :unique => true
@@ -36,11 +37,6 @@ ActiveRecord::Schema.define(:version => 1) do
   create_table "holidays", :force => true do |t|
     t.column "holiday_date", :date, :null => false
     t.column "musthours_day", :float, :null => false
-  end
-
-  create_table "masterdatas", :force => true do |t|
-    t.column "musthours_day", :float, :null => false
-    t.column "vacations_year", :integer, :null => false
   end
 
   create_table "projectmemberships", :force => true do |t|

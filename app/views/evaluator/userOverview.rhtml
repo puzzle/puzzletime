@@ -1,16 +1,35 @@
-<h1><%= @evaluation.division_method.to_s.capitalize %> of <%= @user.label %></h1>
+<h1><%= @evaluation.division_method.to_s.singularize.capitalize %> Times of <%= @user.label %></h1>
 
-<%= render(:partial => 'periodLink') %>
+<table cellspacing="0">
+<tr>
+  <td>Monthly Work Time: &nbsp; </td>
+  <td align="right"><%= number_with_precision(@user.musttime(Period.currentMonth).to_f, 2) %> h</td>
+  <td width="20%"> &nbsp; </td>
+  <td>Remaining: &nbsp; </td>
+  <td align="right"><%= number_with_precision(0 - @user.overtime(Period.currentMonth).to_f, 2) %> h</td>
+</tr>
+<tr>
+  <td>Overtime Yesterday:</td>
+  <td align="right"><%= number_with_precision(@user.currentOvertime.to_f, 2) %> h</td>
+  <td> </td>
+  <td>Today:</td>
+  <td align="right"><%= number_with_precision(@user.currentOvertime(Date.today).to_f, 2) %> h</td>
+</tr>
+<tr>
+  <td>Planned Vacations:</td>
+  <td align="right"><%= number_with_precision(@user.usedVacations(Period.currentYear), 2) %> d</td>
+  <td> </td>
+  <td>Remaining:</td>
+  <td align="right"><%= number_with_precision(@user.currentRemainingVacations, 2) %> d</td>
+</tr>
+</table>
 
-<p>
-Overtime: <%= round(@user.currentOvertime.to_f) %> hours
-<br>
-Remaining Vacations: <%= @user.currentRemainingVacations %> days
-</p>
 
 <p>
 <%= link_to 'Add attendance time', :controller => 'worktime', :action => 'attendance' %>
 </p>
+
+<%= render(:partial => 'periodLink') %>
 
 <%= render(:partial => 'category') %>
 

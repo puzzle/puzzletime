@@ -1,13 +1,12 @@
 <h1>Work Time Details <%= @period.to_s %></h1>
-<table>
-    <tr class="times_table_title">
-      <td><%= @evaluation.category_label %></td>
-    </tr>
-    <tr class="times_table_title">
-      <td><%= @evaluation.division_label %></td>
-    </tr>
-</table>
-<br/>
+
+<p>
+<b><%= @evaluation.category_label %></b>
+<p/>
+<p>
+<b><%= @evaluation.division_label %></b>
+<p/>
+
 <table>
 <tr class="times_table_title">
    <td>Date</td>
@@ -18,9 +17,7 @@
    <td>Description</td>
    <td></td>
 </tr>
-<% total = 0 %>
 <% for time in @times %>
-<% total += time.hours %>
 <tr>
   <td align="right"><%= format_date(time.work_date) %></td>
   <td align="right"><%= number_with_precision(time.hours, 2) %></td>
@@ -31,40 +28,36 @@
       <%=
       if time.description.length > 40
         link_to '...', 
-                :action => 'description', 
-                :worktime_id => time.id,
-                :evaluation => params[:evaluation],
-                :category_id => params[:category_id],
-                :division_id => params[:division_id]
+                evaluation_detail_params.merge!({
+                    :action => 'description', 
+                    :worktime_id => time.id})
       end    %>
   </td>
   <td>
   <% if @evaluation.for?(@user) %>
     <%= link_to 'Edit', 
-                :controller =>'worktime', 
-                :action =>'editTime', 
-                :id => time.id %>
+                 :controller =>'worktime', 
+                 :action =>'editTime', 
+                 :id => time.id %>
     <%= link_to 'Delete', 
-                {:controller =>'worktime', 
-                :action =>'confirmDeleteTime',                 
-                :id => time.id,
-                :evaluation => params[:evaluation],
-                :category_id => params[:category_id],
-                :division_id => params[:division_id]} %>
+                evaluation_detail_params.merge!({
+                    :controller =>'worktime', 
+                    :action =>'confirmDeleteTime',                 
+                    :id => time.id}) %>
   <% else %>            
     <%= link_to 'Change Project', 
-                :controller =>'worktime', 
-                :action =>'changeProject', 
-                :worktime_id => time.id,
-                :evaluation => params[:evaluation] %>
+                evaluation_detail_params.merge!({
+                    :controller =>'worktime', 
+                    :action =>'changeProject', 
+                    :worktime_id => time.id})  %>
   <% end %>
   </td>
 </tr>
 <% end %> 
 <tr class="times_total_sum">
-    <td>Total time</td> 
-    <td align="right"><%= number_with_precision(total, 2) %></td>
-    <td colspan="3"></td> 
+    <td>Overall Total</td> 
+    <td align="right"><%= number_with_precision(@evaluation.sum_times(@period), 2) %></td>
+    <td colspan="4"></td> 
     <td>
     <% if @evaluation.for?(@user) && @evaluation.division %>
         <a href="/worktime/addTime?project_id=<%= @evaluation.division.id %>">Add Time</a>
@@ -73,8 +66,19 @@
 </tr>
 </table>
 
+<% if @time_pages.page_count > 1 %>
+<br />
+Page: 
+<%= pagination_links(@time_pages, :params => evaluation_detail_params) %>
+<br />
+<% end %>
 <br/>
 
 <%= link_to 'Overview', 
             :action => params[:evaluation],
             :category_id => params[:category_id] %>
+&nbsp;
+<%= link_to 'Export CSV', 
+            evaluation_detail_params.merge!({
+                :action => 'exportCSV'}) %>          
+            

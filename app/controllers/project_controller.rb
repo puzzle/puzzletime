@@ -4,19 +4,19 @@
 class ProjectController < ApplicationController
   
   # Checks if employee came from login or from direct url.
-  before_filter :authorize
+  before_filter :authenticate
+  before_filter :authorize, :only => [ :newProject, :createProject, 
+                                       :deleteProject, :confirmDeleteProject ]
 
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
   verify :method => :post, :only => [ :createProject, :updateProject, :deleteProject ],
          :redirect_to => { :action => :listProject }
 
   # Lists all projects.
-  def listProject   
-    options = {:order => 'client_id, name', :per_page => 10}
-    if params.has_key?(:client_id) 
-      options[:conditions] = ['client_id = ?', params[:client_id]]
+  def listProject
+    if @user.management then listAllProjects 
+    else listManagedProjects   
     end
-    @project_pages, @projects = paginate :projects, options
   end
   
   # Shows detail of chosen project.
@@ -95,7 +95,7 @@ class ProjectController < ApplicationController
     end
   end  
     
-  def destroyProjectMembership
+  def removeProjectMembership
     Projectmembership.destroy(params[:projectmembership_id])
     flash[:notice] = "Projectmembership was deleted"
     redirect_to :action => 'showProject', :id => params[:project_id]
@@ -111,6 +111,21 @@ private
     end
     flash[:notice] = "#{projectmembership.employee.label} was " + (bool ? "set as" : "removed as") + " project manager"
     redirect_to :action => 'showProject' , :id => params[:project_id]
+  end
+  
+  def listManagedProjects
+    @project_pages = Paginator.new self, @user.managed_projects.count, NO_OF_OVERVIEW_ROWS, params[:page]
+    @projects = @user.managed_projects.find(:all, 
+                          :limit => @project_pages.items_per_page,
+                          :offset => @project_pages.current.offset)   
+  end
+  
+  def listAllProjects
+    options = {:order => 'client_id, name', :per_page => NO_OF_OVERVIEW_ROWS}
+    if params.has_key?(:client_id) 
+      options[:conditions] = ['client_id = ?', params[:client_id]]
+    end
+    @project_pages, @projects = paginate :projects, options
   end
   
 end

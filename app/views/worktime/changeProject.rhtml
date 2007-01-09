@@ -1,26 +1,35 @@
 <h1>Change Project for Time Entry </h1>
-
 <br/>
+
 <table>
+  <%= render :partial => "worktime/details", :object => @worktime %>
   <tr>
-    <td>Old Project: </td>
-      <td><%= @worktime.project.fullname %></td>
+    <td></td>
+    <td></td>
   </tr>
-  <%= start_form_tag :action => 'updateProject', 
-                     :worktime_id => @worktime.id,
-                     :evaluation => params[:evaluation]%>
+  <%= start_form_tag evaluation_detail_params.merge!({
+                        :action => 'updateProject', 
+                        :worktime_id => @worktime.id}) %>
   <tr>
 	<td>New Project: </td>
-    <td><select name="worktime[project_id]">
+    <td>
+    <select name="worktime[project_id]">
       <% @projects.each do |project| %>
       <option value="<%= project.id %>"> 
       <%= project.fullname %>
       </option>
       <% end %>
-      </select></td>
-   </tr>
-   <tr>
-     <td><td><%= submit_tag 'Save' %></td></td>
-   </tr>
-   <%= end_form_tag %>
-   </table>
+    </select>
+    </td>
+  </tr>
+  <tr>
+     <td></td>
+     <td><%= submit_tag 'Save' %></td>
+  </tr>
+  <%= end_form_tag %>
+</table>
+<br/>
+
+<%= link_to 'Back', evaluation_detail_params.merge!({
+                        :controller => 'evaluator',
+                        :action => 'details' }) %>

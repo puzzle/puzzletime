@@ -15,7 +15,7 @@ class EmployeeController < ApplicationController
   
   # Lists all employees
   def listEmployee
-    @employee_pages, @employees = paginate :employees, :per_page => 10 , :order => 'lastname'
+    @employee_pages, @employees = paginate :employees, :per_page => NO_OF_OVERVIEW_ROWS, :order => 'lastname'
   end
   
   # Shows detail of chosen Employee 

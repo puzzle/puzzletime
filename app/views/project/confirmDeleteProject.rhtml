@@ -10,7 +10,7 @@ Do you really want to delete project <%= @project.label %>?
     <%= end_form_tag %>
     </td>
     <td>
-    <%= start_form_tag :action => 'listProject', :method => 'get' %>
+    <%= start_form_tag( {:action => 'listProject'}, :method => 'get' ) %>
     <%= submit_tag 'Cancel' %>  
     <%= end_form_tag %>
     </td>

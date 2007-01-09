@@ -11,7 +11,7 @@ class AbsenceController < ApplicationController
          :redirect_to => { :action => :listAbsence }
          
   def listAbsence
-     @absence_pages, @absences = paginate :absences, :order => 'name', :per_page => 10
+     @absence_pages, @absences = paginate :absences, :order => 'name', :per_page => NO_OF_OVERVIEW_ROWS
   end
 
   def newAbsence

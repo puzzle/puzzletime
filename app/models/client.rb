@@ -17,10 +17,15 @@ class Client < ActiveRecord::Base
     find(:all, :order => "name")  
   end
   
-  def worktimesBy(period, absences = nil, dummy = nil)
-    worktimes.find(:all, 
-                   :conditions => conditionsFor(period, {:client_id => id}, absences), 
-                   :order => "work_date ASC, from_start_time ASC")
+  def partnerId
+    :client_id
+  end
+  
+  def worktimesBy(period, absences = nil, dummy = nil, options = {})
+    super(period, absences, id, options)
   end  
 
+  def countWorktimes(period, absences = nil, dummy = nil)
+    super(period, absences, id)
+  end  
 end

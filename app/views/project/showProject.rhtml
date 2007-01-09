@@ -1,8 +1,6 @@
-<!-- (c) Puzzle itc, Berne
-Diplomarbeit 2149, Xavier Hayoz -->
-
 <h1>Project Details</h1>
 <br/>
+
 <table>
   <tr>
     <td>Projectname: <%=h @project.name %> </td>
@@ -17,42 +15,47 @@ Diplomarbeit 2149, Xavier Hayoz -->
     <td>Contact: <%=h @project.client.contact %></td>
   </tr>
 </table>
-        <table>
-          <tr>
-            <td><b>Members:</b></td>
-            <td><b>Projectmanagement</b></td>
-          </tr>
-          <%for membership in @project.projectmemberships %> 
-          <tr>
-            <td> <%= membership.employee.label %> </td>        
-            <td><center> 
-            <% if !membership.projectmanagement %>
-            	 <%= link_to 'add', :action => 'addProjectManagement', :project_id => @project, :projectmembership_id => membership.id %>             
-            <% else %>
-                 <%= link_to 'remove', :action => 'removeProjectManagement', :project_id => @project, :projectmembership_id => membership.id %> 
-            <% end %>
-                 </center> 
-           </td> 
-            <td>
-            <%= link_to 'remove from project', { :action => 'destroyProjectMembership', :project_id => @project, :projectmembership_id => membership }, 
-                                   :confirm => 'Are you sure?', 
-                                   :post => true %>
-            </td>
-          </tr>
-          <% end %>
-        </table> 
-        </br>
- <%= start_form_tag :action => 'createProjectMembership', :project_id => @project  %> 
-        <p><label for="employee_name">Employees</label><br/>
-        <select name="employee_id[]" multiple="multiple" size="5"">
-            <% @employees.each do |employee| %>
-            <option value="<%= employee.id %>"> 
-            <%= employee.label %>
-            </option>
-            <% end %>
-            </select></p>
-   <%= submit_tag 'Save' %>
-   <%= end_form_tag %>
+<br/>
 
-   <br/>   
-   <%= link_to 'Back', :action => 'listProject' %>
+<table>
+  <tr>
+    <td><b>Members</b></td>
+    <td><b>Projectmanagement</b></td>
+  </tr>
+  <%for membership in @project.projectmemberships %> 
+  <tr>
+    <td> <%= membership.employee.label %> </td>        
+    <td align="center"> 
+    <% if !membership.projectmanagement %>
+    	 <%= link_to 'add', :action => 'addProjectManagement', :project_id => @project, :projectmembership_id => membership.id %>             
+    <% else %>
+         <%= link_to 'remove', :action => 'removeProjectManagement', :project_id => @project, :projectmembership_id => membership.id %> 
+    <% end %>          
+   </td> 
+   <td>
+    <%= link_to 'remove from project', { :action => 'removeProjectMembership', :project_id => @project, :projectmembership_id => membership }, 
+                           :confirm => 'Are you sure?', 
+                           :post => true %>
+    </td>
+  </tr>
+  <% end %>
+</table> 
+</br>
+
+ <%= start_form_tag :action => 'createProjectMembership', :project_id => @project  %> 
+<p>
+<label for="employee_name">Employees</label>
+<br/>
+<select name="employee_id[]" multiple="multiple" size="5"">
+<% @employees.each do |employee| %>
+  <option value="<%= employee.id %>"> 
+  <%= employee.label %>
+  </option>
+<% end %>
+</select>
+</p>
+<%= submit_tag 'Add to Project' %>
+<%= end_form_tag %>
+
+<br/>   
+<%= link_to 'Project List', :action => 'listProject' %>

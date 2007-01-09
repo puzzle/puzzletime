@@ -57,20 +57,29 @@ class Evaluation
     @category_times ? @category.id : 0
   end
 
-  def sum_times(period, division)
-    division.sumWorktime(period, subdivision_ref, @absences)
+  def sum_times(period, div = nil)
+    div = div || division
+    if div then div.sumWorktime(period, @absences, subdivision_ref)
+    else category.sumWorktime(period, @absences)
+    end
   end  
   
-  def times(period)
-     if division
-        division.worktimesBy(period, @absences, subdivision_ref)
-     else
-        category.worktimesBy(period, @absences) 
-     end 
+  def count_times(period)
+    if division then division.countWorktimes(period, @absences, subdivision_ref)
+    else category.countWorktimes(period, @absences)
+    end
+  end
+  
+  def times(period, options = {})
+    if division then division.worktimesBy(period, @absences, subdivision_ref, options)
+    else category.worktimesBy(period, @absences, 0, options)
+    end
   end
   
   def category_label
-    detail_label(category)
+    if managed? then 'Client: ' + division.client.name
+    else detail_label(category)
+    end
   end  
   
   def division_label
@@ -95,7 +104,7 @@ class Evaluation
   end
     
   def for?(user)
-    category == user
+    category == user && ! managed?
   end
   
   def set_division_id(division_id = nil)
@@ -119,16 +128,20 @@ private
     @category_times = category_times
     self.label = label
   end
-     
+  
   def label=(label)
     @label = label || category.label 
   end     
        
   def detail_label(item)
-    if ! (item.nil? || class_category?)
+    if ! ( item.nil? || item.kind_of?(Class) )
       item.class.name + ': ' + item.label
     end  
   end   
+  
+  def managed?
+    division_method == :managed_projects
+  end
   
   def class_category?
     category.kind_of? Class

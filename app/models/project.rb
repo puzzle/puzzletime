@@ -19,7 +19,7 @@ class Project < ActiveRecord::Base
   validates_uniqueness_of :name
   
   def self.list
-    self.find(:all, :order => 'name')
+    self.find(:all, :order => 'client_id, name')
   end
   
   def fullname

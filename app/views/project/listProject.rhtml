@@ -11,8 +11,11 @@
     <td><%=h project.client.name %>
     <td>
     <%= link_to 'Show', :action => 'showProject', :id => project %> | 
-    <%= link_to 'Edit', :action => 'editProject', :id => project %> | 
-    <%= link_to 'Delete', :action => 'confirmDeleteProject', :id => project %></td>
+    <%= link_to 'Edit', :action => 'editProject', :id => project %>
+    <% if @user.management %> | 
+    <%= link_to 'Delete', :action => 'confirmDeleteProject', :id => project %>
+    <% end %>
+    </td>
   </tr>
 <% end %>
 </table>
@@ -26,4 +29,6 @@ Page:
 
 <br />
 
+<% if @user.management %>
 <%= link_to 'New project', {:action => 'newProject'} %> 
+<% end %>

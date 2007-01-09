@@ -1,0 +1,33 @@
+<h1>Holidays</h1>
+<table>
+  <tr>
+  <td><div id="puzzle_table_title">Date</div></td>
+  <td><div id="puzzle_table_title">Must Hours</div></td>
+  </tr>
+  
+<% for holiday in @holidays %>
+  <tr>
+  	<td align="right"><%= format_date(holiday.holiday_date) %>
+    <td align="right"><%= number_with_precision(holiday.musthours_day, 2) %>
+    <td>
+    <%= link_to 'Edit', :action => 'edit', :id => holiday %> | 
+    <%= link_to 'Delete', 
+                {:action => 'destroy', 
+                :id => holiday},
+                {:confirm => 'Do you really want to delete this holiday?',
+                :post => true} %>    
+    </td>
+  </tr>
+<% end %>
+</table>
+
+<% if @holiday_pages.page_count > 1 %>
+<br />
+Page: 
+<%= pagination_links @holiday_pages %>
+<br />
+<% end %>
+
+<br />
+
+<%= link_to 'New Holiday', :action => 'new' %> 

@@ -15,6 +15,13 @@ module ApplicationHelper
     date.strftime("%a, %d.%m.%Y")
   end  
   
+  def evaluation_detail_params
+    { :evaluation => params[:evaluation],
+      :category_id => params[:category_id],
+      :division_id => params[:division_id],
+      :page => params[:page] }
+  end
+  
   # Generates <select>-statement with id.
   # Needed for javascript
   def worktime_hour(name, time)

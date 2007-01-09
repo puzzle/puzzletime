@@ -3,6 +3,8 @@
 
 class WorktimeController < ApplicationController
  
+  include ApplicationHelper
+  
   # Checks if employee came from login or from direct url.
   before_filter :authenticate
 
@@ -50,11 +52,9 @@ class WorktimeController < ApplicationController
   
   def deleteTime
     Worktime.destroy(params[:id])
-    redirect_to :controller => 'evaluator', 
-                :action => 'details', 
-                :evaluation => params[:evaluation],
-                :category_id => params[:category_id],
-                :division_id => params[:division_id]
+    redirect_to evaluation_detail_params.merge!({
+                  :controller => 'evaluator', 
+                  :action => 'details'})
   end
     
   # Update the selected worktime on DB.
@@ -92,24 +92,23 @@ class WorktimeController < ApplicationController
     end  
   end
   
-    # Show the change project page.
+  # Show the change project page.
   def changeProject
-    if @user.management
-      @projects = Project.list
-    else
-      @projects = @user.managed_projects
+    if @user.management then @projects = Project.list
+    else @projects = @user.managed_projects
     end  
     @worktime = Worktime.find(params[:worktime_id])
   end
   
-  # Stores the changes on the DB.
   def updateProject
     @worktime = Worktime.find(params[:worktime_id])
     if @worktime.update_attributes(params[:worktime])
       flash[:notice] = 'Project was successfully changed'
-      redirect_to :controller => 'evaluator', :action => 'overview', :evaluation => params[:evaluation]
+      redirect_to evaluation_detail_params.merge!({
+                        :controller => 'evaluator',
+                        :action => 'details' }) 
     else
-      render :action => 'changeWorktimeProject'
+      render :action => 'changeProject'
     end
   end
   

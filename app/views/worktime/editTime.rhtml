@@ -1,9 +1,13 @@
 <h1>Edit Time for <%= @worktime.account.name %></h1>
 <br/>
 
-<%= start_form_tag :action => 'updateTime', :worktime_id => @worktime %>
+<%= start_form_tag evaluation_detail_params.merge!({
+                        :action => 'updateTime', 
+                        :worktime_id => @worktime}) %>
 <%= render :partial => 'form' %>
 <%= end_form_tag %>
 
 <br/>
-<%= link_to 'Back', :action => 'listTime' %>
+<%= link_to 'Back', evaluation_detail_params.merge!({
+                        :controller => 'evaluator',
+                        :action => 'details' }) %>

@@ -11,7 +11,7 @@ class ClientController < ApplicationController
 
   # Lists all clients
   def listClient
-    @client_pages, @clients = paginate :clients, :order => 'name', :per_page => 10
+    @client_pages, @clients = paginate :clients, :order => 'name', :per_page => NO_OF_OVERVIEW_ROWS
   end
   
   # Shows detail of chosen client
