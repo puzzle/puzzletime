@@ -1,5 +1,0 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-master:
-  id:             1
-  musthours_day:  8
-  vacations_year: 20

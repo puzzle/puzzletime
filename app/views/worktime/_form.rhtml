@@ -24,7 +24,7 @@
 	<% end %>      
 	</td>
     <td>
-        <%= collection_select( :worktime, account_id, @accounts, :id, :name) %>
+        <%= collection_select( :worktime, account_id, @accounts, :id, :label_verbose) %>
     </td>
   </tr>
   <tr>

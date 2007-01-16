@@ -9,6 +9,7 @@ class Worktime < ActiveRecord::Base
   belongs_to :project
   
   validates_presence_of :work_date, :message => "is invalid"
+  validates_presence_of :employee_id
   
   before_validation DateFormatter.new('work_date')
   before_validation :store_hours
@@ -18,7 +19,7 @@ class Worktime < ActiveRecord::Base
   TYPE_HOURS_WEEK = 'week'
   TYPE_HOURS_MONTH = 'month'
   
-  H_M = /(\d*):([0-5]\d)/
+  H_M = /^(\d*):([0-5]\d)/
       
   def account
     project ? project : absence
@@ -90,9 +91,12 @@ private
   end
 
   def string_to_time(value)
-    if value.kind_of?(String) && ! (value =~ H_M)
-      value = value.to_f
-      value = value.to_i.to_s + ':' + ((value - value.to_i) * 60).to_i.to_s
+    if value.kind_of?(String) && ! (value =~ H_M) 
+      if value.size > 0 && value =~ /^\d*\.?\d*$/
+        value = value.to_i.to_s + ':' + ((value.to_f - value.to_i) * 60).to_i.to_s
+      else
+        value = nil
+      end    
     end
     value
   end

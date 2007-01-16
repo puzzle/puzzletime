@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-SET client_encoding = 'SQL_ASCII';
+SET client_encoding = 'UNICODE';
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 
@@ -17,7 +17,7 @@ SET search_path = public, pg_catalog;
 
 SET default_tablespace = '';
 
-SET default_with_oids = false;
+SET default_with_oids = true;
 
 --
 -- Name: absences; Type: TABLE; Schema: public; Owner: puzzle; Tablespace: 
@@ -53,7 +53,8 @@ CREATE TABLE employees (
     passwd character varying(255) NOT NULL,
     email character varying(255) NOT NULL,
     phone character varying(255) NOT NULL,
-    management boolean DEFAULT false
+    management boolean DEFAULT false,
+    initial_vacation_days double precision DEFAULT 0::double precision
 );
 
 
@@ -78,17 +79,6 @@ CREATE TABLE holidays (
     id serial NOT NULL,
     holiday_date date NOT NULL,
     musthours_day double precision NOT NULL
-);
-
-
---
--- Name: masterdatas; Type: TABLE; Schema: public; Owner: puzzle; Tablespace: 
---
-
-CREATE TABLE masterdatas (
-    id serial NOT NULL,
-    musthours_day double precision NOT NULL,
-    vacations_year integer NOT NULL
 );
 
 
@@ -194,14 +184,6 @@ ALTER TABLE ONLY holidays
 
 
 --
--- Name: masterdatas_pkey; Type: CONSTRAINT; Schema: public; Owner: puzzle; Tablespace: 
---
-
-ALTER TABLE ONLY masterdatas
-    ADD CONSTRAINT masterdatas_pkey PRIMARY KEY (id);
-
-
---
 -- Name: projectmemberships_pkey; Type: CONSTRAINT; Schema: public; Owner: puzzle; Tablespace: 
 --
 
@@ -285,4 +267,4 @@ ALTER TABLE ONLY worktimes
 -- PostgreSQL database dump complete
 --
 
-INSERT INTO schema_info (version) VALUES (1)
+INSERT INTO schema_info (version) VALUES (2)

@@ -22,7 +22,7 @@ class Project < ActiveRecord::Base
     self.find(:all, :order => 'client_id, name')
   end
   
-  def fullname
+  def label_verbose
     client.name + ' - ' + name
   end
 

@@ -1,5 +1,16 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-first:
-  id: 1
-another:
-  id: 2
+
+vacation:
+  id:    1
+  name:  Ferien
+  payed: true
+  
+civil_service:
+  id:    2
+  name:  Zivildienst
+  payed: true
+  
+doctor:
+  id:    3
+  name:  Arztbesuch
+  payed: false    

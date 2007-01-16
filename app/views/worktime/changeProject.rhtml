@@ -16,7 +16,7 @@
     <select name="worktime[project_id]">
       <% @projects.each do |project| %>
       <option value="<%= project.id %>"> 
-      <%= project.fullname %>
+      <%= project.label_verbose %>
       </option>
       <% end %>
     </select>

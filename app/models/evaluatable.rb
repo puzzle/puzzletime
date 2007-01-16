@@ -5,6 +5,10 @@ module Evaluatable
     name
   end
   
+  def label_verbose
+    label
+  end
+  
   # Id Symbol of the matching entity
   def partnerId
     :employee_id

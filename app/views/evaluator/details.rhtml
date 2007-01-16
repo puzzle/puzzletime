@@ -22,11 +22,11 @@
   <td align="right"><%= format_date(time.work_date) %></td>
   <td align="right"><%= number_with_precision(time.hours, 2) %></td>
   <td><%= time.employee.shortname %></td>
-  <td><%= time.account.label %></td>
+  <td><%= time.account.label_verbose %></td>
   <td><%= time.billable ? 'y' : 'n' %></td>
-  <td><%= time.description.slice(0..40) %>  
+  <td><%= time.description.slice(0..20) %>  
       <%=
-      if time.description.length > 40
+      if time.description.length > 20
         link_to '...', 
                 evaluation_detail_params.merge!({
                     :action => 'description', 
@@ -60,8 +60,12 @@
     <td align="right"><%= number_with_precision(@evaluation.sum_times(@period), 2) %></td>
     <td colspan="4"></td> 
     <td>
-    <% if @evaluation.for?(@user) && @evaluation.division %>
+    <% if @evaluation.for?(@user) %>
+      <% if @evaluation.division %>
         <a href="/worktime/addTime?project_id=<%= @evaluation.division.id %>">Add Time</a>
+      <% else %>
+        <a href="/worktime/addTime">Add Time</a>
+      <% end %>  
     <% end %>      
     </td>
 </tr>

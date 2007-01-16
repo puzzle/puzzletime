@@ -1,5 +1,18 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-first:
-  id: 1
-another:
-  id: 2
+
+allgemein:
+  id:        8
+  client_id: 1    #puzzle
+  name:      Allgemein
+  
+puzzletime:
+  id:        1
+  client_id: 1    #puzzle
+  name:      PuzzleTime
+  
+webauftritt:
+  id:        2
+  client_id: 2    #swisstopo
+  name:      Webauftritt
+  
+      

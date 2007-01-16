@@ -10,7 +10,9 @@ class Employee < ActiveRecord::Base
   # All dependencies between the models are listed below.
   has_many :employments, :order => 'start_date', :dependent => true
   has_many :projectmemberships, :dependent => true
-  has_many :projects, :through => :projectmemberships, :order => "name"
+  has_many :projects, 
+           :through => :projectmemberships, 
+           :order => "client_id, name"
   has_many :managed_projects, 
            :class_name => 'Project', 
            :through => :projectmemberships, 

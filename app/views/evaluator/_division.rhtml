@@ -3,10 +3,10 @@
     <td>
     <% if @evaluation.sub_evaluation %>
     <a href="<%= @evaluation.sub_evaluation %>?category_id=<%= division.id %>">
-    <%= division.label %>
+    <%= division.label_verbose %>
     </a>
     <% else %>
-    <%= division.label %>
+    <%= division.label_verbose %>
     <% end %>
     </td>
     <%= render(:partial => 'periodTime',

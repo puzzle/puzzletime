@@ -37,8 +37,8 @@ class Attendance
       time.hours = remainingHours
       time.save
     end
-    worktimes.each {|time|
-        time.save }
+    worktimes.each { |wtime|
+        wtime.save }
   end
   
 private

@@ -39,7 +39,7 @@ class WorktimeController < ApplicationController
     if params.has_key? :absence_id
       @worktime.absence_id = params[:absence_id] 
     else
-      @worktime.project_id = params[:project_id] 
+      @worktime.project_id = params[:project_id] || DEFAULT_PROJECT_ID
     end  
     setWorktimeAccounts
   end
@@ -122,6 +122,7 @@ class WorktimeController < ApplicationController
   
   def saveAttendance
     @worktime = Worktime.new
+    @worktime.employee = @user
     setWorktimeParams
     if @worktime.valid?     
       attendance = Attendance.new(@worktime)
