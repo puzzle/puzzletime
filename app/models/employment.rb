@@ -8,6 +8,8 @@ class Employment < ActiveRecord::Base
   before_create :updateEndDate
   belongs_to :employee
   
+  before_validation DateFormatter.new('start_date', 'end_date')
+  
   def validate
     if end_date != nil && period.negative?
       errors.add_to_base("Date range is invalid")

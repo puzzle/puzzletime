@@ -4,4 +4,5 @@
 <%= render :partial => 'form' %>  
 <%= end_form_tag %>
 
-<%= link_to 'Back', :action => 'listEmployee' %>
+<%= link_to 'Back', :action => 'listEmployee' %> |
+<%= link_to 'Show', :action => 'showEmployee', :id => @employee %>

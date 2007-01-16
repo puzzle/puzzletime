@@ -1,0 +1,35 @@
+  #dateBocksMessage {
+    clear: both;
+  }
+  
+	#dateBocksMessage div {
+	  font-size: 0.75em;
+	}
+	
+	#dateBocksMessage div.error {
+	  color: red;
+	}
+	
+	#dateBocks input.error {
+	  background-color: pink;
+	}
+	 
+	#dateBocks ul {
+		list-style: none;
+		padding: 0 5px 0 0;
+		margin: 0;
+	}
+	
+	#dateBocks ul li {
+		display: inline;
+	}
+	
+	#dateBocks ul a {
+		padding: 5px;
+		display: block;
+		float: left;
+	}
+	
+	#dateBocks input {
+		width: 100px;
+	}

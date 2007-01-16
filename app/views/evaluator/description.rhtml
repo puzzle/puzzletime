@@ -9,9 +9,10 @@
     <strong>
     <% if @time.employee == @user %>
     <%= link_to 'Edit', 
-                :controller =>'worktime', 
-                :action =>'editTime', 
-                :id => @time.id %>
+                evaluation_detail_params.merge!({
+                    :controller =>'worktime', 
+                    :action =>'editTime', 
+                    :id => @time.id}) %>
     &nbsp;             
     <%= link_to 'Delete', 
                 evaluation_detail_params.merge!({

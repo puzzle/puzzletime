@@ -25,9 +25,9 @@ class Period
     new(start, start + 6, label)    
   end
   
-  def initialize(startDate, endDate, label = nil)
-    @startDate = startDate
-    @endDate = endDate
+  def initialize(startDate = Date.today, endDate = Date.today, label = nil)    
+    @startDate = parseDate(startDate)
+    @endDate = parseDate(endDate)
     @label = label != nil ? label : self.to_s
   end
     
@@ -62,9 +62,14 @@ class Period
   end  
   
 private
+
+  def parseDate(date)
+    date = Date.strptime(date, DATE_FORMAT) if date.kind_of? String
+    date
+  end
   
   def formattedDate(date)
-    "#{date.day}.#{date.month}.#{date.year}"
+    date.strftime(DATE_FORMAT)
   end 
 
 end

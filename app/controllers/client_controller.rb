@@ -9,6 +9,10 @@ class ClientController < ApplicationController
   verify :method => :post, :only => [ :deleteClient ],
          :redirect_to => { :action => :listClient }
 
+  def index
+    redirect_to :action => 'listClient'
+  end
+  
   # Lists all clients
   def listClient
     @client_pages, @clients = paginate :clients, :order => 'name', :per_page => NO_OF_OVERVIEW_ROWS

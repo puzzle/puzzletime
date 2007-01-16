@@ -7,6 +7,10 @@ class LoginController < ApplicationController
   # Checks if employee came from login or from direct url
   before_filter :authenticate, :except => :login
  
+  def index
+    redirect_to :action => 'login'
+  end
+ 
   # Login procedure for user
   def login
     if request.get?

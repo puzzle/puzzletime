@@ -7,7 +7,11 @@
     </tr>
     <tr>
   	  <td><label for="employment_start_date">Start date: </label></td>
-      <td><%= date_select 'employment', 'start_date', :order => [:day, :month, :year] %></td>
+      <td>
+      <%= #date_select 'employment', 'start_date', :order => [:day, :month, :year]
+       %>
+      <%= date_calendar_field 'employment', 'start_date', 'Start Date' %>
+       </td>
     </tr>
     <% if employment != nil && ! employment.new_record? %>
     <tr>
@@ -16,7 +20,11 @@
     </tr>
     <tr>
   	  <td><label for="employment_end_date">End date: </label></td>
-      <td><%= date_select 'employment', 'end_date', :order => [:day, :month, :year] %></td>
+      <td>
+      <%= #date_select 'employment', 'end_date', :order => [:day, :month, :year]
+       %>
+      <%= date_calendar_field 'employment', 'end_date', 'End Date' %>
+      </td>
     </tr>
     <% end %>
  </table>

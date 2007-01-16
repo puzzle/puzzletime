@@ -4,6 +4,8 @@
 class Holiday < ActiveRecord::Base
 
   after_save :refresh
+  
+  before_validation DateFormatter.new('holiday_date')
 
   # Collection of functions to check if date is holiday or not       
   def self.musttime(date)

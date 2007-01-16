@@ -12,6 +12,10 @@ class ProjectController < ApplicationController
   verify :method => :post, :only => [ :createProject, :updateProject, :deleteProject ],
          :redirect_to => { :action => :listProject }
 
+  def index
+    redirect_to :action => 'listProject'
+  end
+
   # Lists all projects.
   def listProject
     if @user.management then listAllProjects 

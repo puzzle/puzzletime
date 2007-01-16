@@ -9,7 +9,11 @@ class AbsenceController < ApplicationController
     # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
   verify :method => :post, :only => [ :createAbsence, :updateAbsence, :deleteAbsence ],
          :redirect_to => { :action => :listAbsence }
-         
+        
+  def index
+    redirect_to :action => 'listAbsence'
+  end
+   
   def listAbsence
      @absence_pages, @absences = paginate :absences, :order => 'name', :per_page => NO_OF_OVERVIEW_ROWS
   end

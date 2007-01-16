@@ -6,13 +6,19 @@
                     
 <table>
   <tr>
-    <td>From:</td><td><%= date_select(:period, :startDate, :order => [:day, :month, :year]) %></td>
+    <td>From:</td>
+    <td>
+    <%= date_calendar_field 'period', 'startDate', 'Start Date' %>
+    </td>
   </tr>
   <tr>
-    <td>To:</td><td><%= date_select(:period, :endDate, :order => [:day, :month, :year]) %></td>
+    <td>To:</td>
+    <td>
+    <%= date_calendar_field 'period', 'endDate', 'End Date' %>
+    </td>
   </tr>
   <tr>
-    <td><td><%= submit_tag 'Search' %></td></td>
+    <td><td><%= submit_tag 'Select' %></td></td>
   </tr>
 </table>
 

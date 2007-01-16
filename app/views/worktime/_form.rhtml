@@ -29,24 +29,30 @@
   </tr>
   <tr>
     <td>Workdate: </td>
-    <td><%= date_select('worktime', 'work_date', :order => [:day, :month, :year]) %></td>
+    <td>
+    <%= date_calendar_field 'worktime', 'work_date', 'Work Date' %>
+    </td>
   </tr>
   <tr>
     <td>Hours: </td>
-    <td><%= text_field('worktime', 'hours', {:disabled => true})  %></td>
+    <td><%= text_field('worktime', 'hours', :disabled => true, :size => '15')  %></td>
   </tr>
   <tr>
     <td>From start time: </td>
-    <td>
-      <%= worktime_hour('worktime_from_start_time_hour', @worktime.from_start_time) %>
-      <%= worktime_minute('worktime_from_start_time_minute', @worktime.from_start_time) %> 
+    <td>     
+      <%= text_field 'worktime', 
+                     'from_start_time', 
+                     :size => '15', 
+                     :value => @worktime.formatted_start_time  %> 
     </td>
   </tr>
   <tr>
     <td>To end time: </td>
     <td>
-    <%= worktime_hour('worktime_to_end_time_hour', @worktime.to_end_time) %> 
-    <%= worktime_minute('worktime_to_end_time_minute', @worktime.to_end_time) %> 
+    <%= text_field 'worktime', 
+                   'to_end_time', 
+                   :size => '15',
+                   :value => @worktime.formatted_end_time   %> 
     </td>
   </tr>
   <tr valign="top">
@@ -60,13 +66,13 @@
   </tr>
   <% end %>
   <tr>
-    <td><%= hidden_field_tag :add_next, 'false' %></td>
+    <td></td>
     <td>    
     <% if @worktime.new_record? %>
     <table>
     <tr>
       <td>      
-      <%= submit_tag 'Save + Add', :onclick => 'document.getElementById(\'add_next\').value=\'true\'' %>
+      <%= submit_tag 'Save + Add' %>
       </td>
       <td>
       <%= submit_tag 'Finish' %>
@@ -80,6 +86,4 @@
    </tr>
  </table>
  
-<script type="text/javascript">
-  switchvisibility();
-</script>
+<%= render :partial => 'type_switch_js' %>

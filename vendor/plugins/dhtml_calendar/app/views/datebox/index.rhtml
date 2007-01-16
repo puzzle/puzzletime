@@ -1,0 +1,132 @@
+<%= engine_stylesheet "datebocks_engine", "demo" %>
+<%= engine_stylesheet "datebocks_engine", "calendar-win2k-cold-1.css" %>
+
+<div id="content" class="content">
+  <div class="conatiner_outside">
+    <div class="conatiner_inside">
+    <h1><a href="http://inimit.com">DateBocks</a></h1>
+    
+    <h2 class="intuitive_date_input_selection">Intuitive Date Input Selection</h2>
+    <p class="about"><strong>DateBocks</strong> is a pure JavaScript library using DHTML and advanced date parsing to generate the date based on the grammar passed. The purpose of <strong>DateBocks</strong> is to simplify the date entering process using common terms we are all familiar with.</p>
+    
+    <div id="demo">
+      <%= start_form_tag %>
+        <%= datebocks_field('example', 'birthday') %>
+      </form>
+    </div>
+    
+    <ul class="examples">
+    	<li>Today</li>
+    	<li>tod</li>
+    	<li>tomorrow</li>
+    	<li>tom</li>
+    	<li>yesterday</li>
+    	<li>6</li>
+    	<li>6th</li>
+    	<li>6th October</li>
+    	<li>3rd of Feb</li>
+    	<li>10th Feb 2004</li>
+    	<li>14th of Februrary</li>
+    	<li>12 feb</li>
+    	<li>1 ja</li>
+    	<li>mon</li>
+    	<li>Friday</li>
+    	<li>next Friday</li>
+    	<li>next fri</li>
+    	<li>next m</li>
+    	<li>last Monday</li>
+    	<li>last mon</li>
+    	<li>last m</li>
+    	<li>2004-8-8 (ISO)</li>
+    	<li>2004-04-04</li>
+    	<li>1/24/2005 (US)</li>
+    	<li>4/26</li>
+    	<li>10-24-2005</li>
+    	<li>Next Week</li>
+    	<li>Last Year</li>
+    	<li>Next Month</li>
+    	<li>18.11.2004</li>
+    </ul>
+    
+    <br style="clear:both;" />
+    
+    <h2 class="installation">Installation</h2>
+    <p>Ruby on Rails is the development framework of choice. Future implementations in such core JavaScript libraries as the Dojo Toolkit, YUI, GWT, and others are likely to follow.</p>
+    <p>In addition, I am also considering implementing it for Wordpress, Drupal, and other such frameworks. If you have already done so, or are interested in contributing such a plugin....<br />Please <a href="http://nshb.net/contact.html">contact me!</a></p>
+
+    <p class="strong">To install the <strong>DateBocks</strong> Engine in Ruby on Rails - follow these simple steps.</p>
+    <div id="steps">
+      <ol class="steps">
+        <li>script/plugin discover</li>
+        <li>script/plugin install engines</li>
+        <li>script/plugin install datebocks_engine</li>
+        <li>Edit your application.rb file so it looks something like the following:
+  <pre>
+  class ApplicationController < ActionController::Base
+    include DatebocksEngine
+  end
+  </pre>
+        </li>
+        <li>Edit your application_helper.rb file:
+  <pre>
+  module ApplicationHelper
+    include DatebocksEngine
+  end
+  </pre>
+        </li>
+        <li>Add the following to &lt;head&gt; tag within the /views/layouts/application.rhtml
+  <pre>
+  &lt;%= engine_javascript "datebocks_engine", "calendar", "lang/calendar-en", "calendar-setup" %&gt;
+  &lt;%= engine_stylesheet "datebocks_engine", "calendar-win2k-cold-1.css" %&gt;
+  </pre>
+        </li>
+        <li>Add "Engines.start :datebocks" to the end of ./config/environment.rb</li>
+        <li>Restart your webserver of choice </li>
+        <li>Substitute &lt;%= date_select 'model', 'date_column' %&gt; for &lt;%= datebocks_field('event', 'date_column') %&gt; within any view</li>
+      </ol>
+    </div>
+    
+    <h2 class="license">License</h2>
+    <p>The <strong>DateBocks</strong> Engine is released under the<br /><a href="http://www.gnu.org/licenses/lgpl.html">GNU Lesser General Public License</a> version 2.1 or above.</p>
+    
+    <h2 class="bugs_and_feature_requests">Bugs & Feature Requests</h2>
+    <p>If you find a bug or have a great idea for <strong>DateBocks</strong>...<br />Please do <%= link_to 'create a ticket', 'http://dev.toolbocks.com' %> so I can enhcnace it for everyone else!</p>
+    
+    <h2 class="support">Support</h2>
+    <p>If you are having trouble installing <strong>DateBocks</strong>, please sign up for our <%= link_to 'mailing list', 'http://lists.toolbocks.com/mailman/listinfo/toolbocks-user' %>, and hopefully someone in ToolBocks user community may be able to assist you with their experience.</p>
+    <p>For commercial support, please contact me through <%= link_to 'Inimit Innovations Inc.', 'http://inimit.com' %><br /> I would be pleased to help with implementing <strong>DateBocks</strong> in addition to providing any Ruby on Rails, CSS or AJAX development services.</p>
+    
+    
+    <h2 class="feature_wish_list">Feature Wish List</h2>
+    <ul class="feature_wish_list">
+    	<li>Detection when a month and day have been switched in the ISO and US formats (22/1/2006 or 2006-22-1) to correct when the month is greater than 12 and the day is less than or equal to 12</li>
+    	<li>New match: "first monday in november" </li>
+    	<li>New match: "last fri in oct"</li>
+    	<li>New match: "2nd wed in dec" </li>
+    	<li>Initial date validation with server side code (Ruby/PHP/etc) to ensure that the base date used via their time zone is correct.</li>
+    	<li>If a date is not matched, then use an AJAX extension/plugin (Ruby/PHP/etc) to try and make sense of it 
+    	   <ul>
+            <li>Utilize <a href="http://runt.rubyforge.org/">RUNT</a> as the third party tool for Ruby</li>
+    	   </ul>
+      </li>
+    	<li>Second or even inline box to enter the Time with same text based functionality
+    		<ul>
+    			<li>Match: [all date matches] at 7pm</li>
+    			<li>Match: [all date matches] @ 7pm</li>
+    			<li>Match: 4am</li>
+    			<li>Match: 18:00</li>
+    			<li>Match: (1|one) hour[s]?</li>
+    			<li>Match: (5|five) min(ute[s]?)?</li>
+    			<li>Match: morning (return 9am - configurable time)</li>
+    			<li>Match: evening (return 5pm - configurable time)</li>
+    			<li>Match: now</li>
+    		</ul>
+    	</li>
+    	<li>Have a suggestion? Please do <a href="http://nshb.net/contact.html">email me</a></li>
+    </ul>
+    
+    <div id="footer">
+      <p>AJAX & Ruby on Rails Development by <%= link_to 'Nathaniel Brown', 'http://nshb.net' %> sponsored by <%= link_to 'Inimit Innovations Inc.', 'http://inimit.com' %></p>
+    </div>
+  </div>
+</div>

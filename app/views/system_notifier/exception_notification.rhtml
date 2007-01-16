@@ -1,0 +1,34 @@
+<% require 'pp' %>
+A <%= @exception.class %> occured in
+  <%= @controller.controller_name %>#<%= @controller.action_name %>:
+  <%= @exception.message %>
+  
+---------------------------
+Request Information:
+---------------------------
+ * URL: <%= @request.protocol %><%= @host %><%= @request.request_uri%>
+ * Parameters: <%= @request.parameters.inspect %>
+ * Rails root: <%= @rails_root %>
+ 
+---------------------------
+Session dump:
+---------------------------
+<% for variable in @request.session.instance_variables -%>
+<% next if variable =~ /^@db/ -%>
+ * <%= variable %>:
+   <%= PP.pp(@request.session.instance_variable_get(variable),"").
+        gsub(/\n/, "\n   ").strip %>
+<% end -%>
+
+---------------------------
+Environment
+---------------------------         
+<% for key, value in @request.env -%>
+ * <%= key %>: <%= value.to_s.strip %>
+<% end -%>
+
+---------------------------
+Full execution backtrace:
+---------------------------
+  <%= @backtrace.join "\n  " %>
+  

@@ -12,12 +12,14 @@ class EvaluatorController < ApplicationController
                                       :overtime]
   before_filter :setPeriod
   
+  def index
+    overview
+  end
+  
   def overview
-    if ! params[:evaluation]
-      params[:evaluation] = params[:action]      
-    end 
+    params[:evaluation] = params[:action] if ! params[:evaluation]
     setEvaluation
-    if @evaluation.for?(@user) then render :action => 'userOverview'
+    if @evaluation.for?(@user) then render :action => 'userOverview' 
     else render :action => 'overview'
     end
   end
@@ -49,30 +51,33 @@ class EvaluatorController < ApplicationController
   def exportCSV
     setEvaluation
     @evaluation.set_division_id(params[:division_id])
-    times = @evaluation.times(@period)
- 
-    filename = "puzzletime_" + 
-               csvLabel(@evaluation.category) + "-" +
+
+    filename = "puzzletime_" + csvLabel(@evaluation.category) + "-" +
                csvLabel(@evaluation.division) + ".csv"
     setExportHeader(filename)
     
     csv_string = FasterCSV.generate do |csv|
-      csv << ["Date", "Hours", "Start Time", "End Time", 
+      csv << ["Date", "Hours", "Start Time", "End Time", "Report Type",
               "Billable", "Employee", "Project", "Description"]
-      times.each do |time|
+      @evaluation.times(@period).each do |time|
         csv << [ time.work_date.strftime("%d.%m.%Y"),
                  time.hours,
                  (time.times? ? time.from_start_time.strftime("%H:%M") : ''),
                  (time.times? ? time.to_end_time.strftime("%H:%M") : ''),
+                 time.report_type,
                  time.billable,
                  time.employee.label,
                  time.account.label,
-                 time.description]
+                 time.description ]
       end
     end 
     send_data(csv_string,
               :type => 'text/csv; charset=utf-8; header=present',
               :filename => filename)  
+  end
+  
+  def selectPeriod
+    @period = Period.new()
   end
   
   def currentPeriod
@@ -83,8 +88,8 @@ class EvaluatorController < ApplicationController
   
   def changePeriod
     begin
-      @period = Period.new(parseDate(params[:period], 'startDate'), 
-                           parseDate(params[:period], 'endDate'))  
+      @period = Period.new(params[:period][:startDate], 
+                           params[:period][:endDate])  
       raise ArgumentError, "start date after end date" if @period.negative?   
       session[:period] = @period  
       redirect_to :action => params[:evaluation],
@@ -97,43 +102,8 @@ class EvaluatorController < ApplicationController
     end       
   end
   
-  def clients
-    overview
-  end
-  
-  def employees
-    overview
-  end
-  
-  def absences
-    overview
-  end
-  
-  def managed
-    overview
-  end
-  
-  def clientProjects
-    overview
-  end
-  
-  def projectEmployees
-    overview
-  end
-  
-  def employeeProjects
-    overview
-  end 
-    
-  def employeeAbsences
-    overview
-  end
-  
-  def userProjects
-    overview
-  end
-  
-  def userAbsences
+  def method_missing(action, *args)
+    params[:evaluation] = action.to_s
     overview
   end
   
@@ -166,12 +136,6 @@ private
   def setPeriod
     @period = session[:period]
   end
-    
-  def parseDate(attributes, prefix)
-     Date.new(attributes[prefix + '(1i)'].to_i, 
-              attributes[prefix + '(2i)'].to_i, 
-              attributes[prefix + '(3i)'].to_i)
-  end
 
   def setExportHeader(filename)
     if request.env['HTTP_USER_AGENT'] =~ /msie/i
@@ -187,8 +151,7 @@ private
   end
   
   def csvLabel(item)
-    item.nil? || !item.respond_to?(:label) ? 
-      '' : 
+    item.nil? || !item.respond_to?(:label) ? '' : 
       item.label.downcase.gsub(/[^0-9a-z]/, "_") 
   end
   

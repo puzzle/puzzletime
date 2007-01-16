@@ -12,6 +12,10 @@ class WorktimeController < ApplicationController
   verify :method => :post, :only => [ :deleteTime, :createTime, :updateTime, :updateProject, :addAttendanceTime ],
          :redirect_to => { :action => :listTime }
    
+  def index
+    listTime
+  end 
+   
   #List the time.
   def listTime
     eval = 'userProjects'
@@ -20,12 +24,6 @@ class WorktimeController < ApplicationController
       eval = 'userAbsences'
     end  
     redirect_to :controller => 'evaluator', :action => eval
-  end
-  
-  # Shows the edit page for the selected time.
-  def editTime    
-    @worktime = Worktime.find(params[:id])   
-    setWorktimeAccounts
   end
   
   # Shows the addAbsence page.
@@ -46,20 +44,15 @@ class WorktimeController < ApplicationController
     setWorktimeAccounts
   end
   
-  def confirmDeleteTime
-    @worktime = Worktime.find(params[:id])
+  # Shows the edit page for the selected time.
+  def editTime    
+    @worktime = Worktime.find(params[:id])   
+    setWorktimeAccounts
   end
   
-  def deleteTime
-    Worktime.destroy(params[:id])
-    redirect_to evaluation_detail_params.merge!({
-                  :controller => 'evaluator', 
-                  :action => 'details'})
-  end
     
   # Update the selected worktime on DB.
-  def updateTime        
-    parseTimes
+  def updateTime       
     @worktime = Worktime.find(params[:worktime_id])
     setWorktimeParams
     if @worktime.save
@@ -73,12 +66,12 @@ class WorktimeController < ApplicationController
     
   # Stores the new time the data on DB.
   def createTime
-    parseTimes 
     @worktime = Worktime.new
+    @worktime.employee = @user    
     setWorktimeParams
     if @worktime.save      
       flash[:notice] = 'Time was successfully added.'
-      if params[:add_next] == 'true'
+      if params[:commit] != 'Finish'
         account_id = @worktime.absence_id ?   
           { :absence_id => @worktime.absence_id } : 
           { :project_id => @worktime.project_id }
@@ -112,17 +105,27 @@ class WorktimeController < ApplicationController
     end
   end
   
+  def confirmDeleteTime
+    @worktime = Worktime.find(params[:id])
+  end
+  
+  def deleteTime
+    Worktime.destroy(params[:id])
+    redirect_to evaluation_detail_params.merge!({
+                  :controller => 'evaluator', 
+                  :action => 'details'})
+  end
+  
   def attendance
     createDefaultWorktime   
   end
   
   def saveAttendance
-    parseTimes
     @worktime = Worktime.new
     setWorktimeParams
     if @worktime.valid?     
       attendance = Attendance.new(@worktime)
-      if params[:add_next] == 'true'
+      if params[:commit] != 'Finish'
         session[:attendance] = attendance
         redirect_to :action => 'splitAttendance'
       else       
@@ -137,9 +140,7 @@ class WorktimeController < ApplicationController
   
   def splitAttendance
     @attendance = session[:attendance]
-    if @attendance.nil?
-      redirect_to :action => 'addTime'
-    end  
+    redirect_to :action => 'addTime' if @attendance.nil?
     @worktime = @attendance.worktimeTemplate
     setWorktimeAccounts
   end
@@ -150,13 +151,13 @@ class WorktimeController < ApplicationController
   end
   
   def addAttendanceTime
-    parseTimes 
     @worktime = Worktime.new
+    @worktime.employee = @user
     setWorktimeParams
     @attendance = session[:attendance]
     if @worktime.valid?      
-      @attendance.addWorktime(@worktime)      
-      if params[:add_next] == 'true' && @attendance.incomplete?
+      @attendance.addWorktime(@worktime)         
+      if params[:commit] != 'Finish' && @attendance.incomplete?
         redirect_to :action => 'splitAttendance'
       else
         @attendance.save
@@ -197,20 +198,6 @@ private
     if period != nil && period.length == 1
       @worktime.work_date = period.startDate
     end  
-  end
-      
-  def parseTimes
-    params[:worktime][:employee_id] = @user.id
-    if params[:worktime][:report_type] == Worktime::TYPE_START_STOP
-      start_hour = params[:worktime_from_start_time_hour]
-      start_minute = params[:worktime_from_start_time_minute]
-      end_hour = params[:worktime_to_end_time_hour]
-      end_minute = params[:worktime_to_end_time_minute]
-      params[:worktime][:from_start_time] = "{#{start_hour}:#{start_minute}}"
-      params[:worktime][:to_end_time] = "{#{end_hour}:#{end_minute}}"
-      params[:worktime][:hours] = ((end_hour.to_f + (end_minute.to_f / 60) - 
-                                   start_hour.to_f - (start_minute.to_f / 60)) * 10000).round / 10000.0
-    end
   end
   
   def setWorktimeAccounts

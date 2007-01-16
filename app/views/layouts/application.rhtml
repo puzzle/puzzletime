@@ -7,6 +7,9 @@
   <meta http-equiv="cache-control" content="no-cache" />
   <%= stylesheet_link_tag 'puzzletime', :media => 'screen' %>
   <%= javascript_include_tag :defaults %>
+  <%= engine_stylesheet "dhtml_calendar", "calendar-blue" %>
+  <%= engine_javascript "dhtml_calendar", "datebocks_engine", "calendar", "lang/calendar-en", "calendar-setup" %>
+  
 </head>
 <body>
 <div id="content">
@@ -60,7 +63,7 @@
 	</div>
 	
 	<% if @user.management &&
-	     ['client', 'employee', 'absence', 'project'].include?(params[:controller]) %>
+	     ['client', 'employee', 'absence', 'project', 'holiday'].include?(params[:controller]) %>
         <div id="submenu">
         Manage:
         &nbsp;

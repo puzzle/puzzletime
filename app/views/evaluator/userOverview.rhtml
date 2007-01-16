@@ -24,17 +24,13 @@
 </tr>
 </table>
 
-
-<p>
-<%= link_to 'Add attendance time', :controller => 'worktime', :action => 'attendance' %>
-</p>
-
 <%= render(:partial => 'periodLink') %>
 
 <%= render(:partial => 'category') %>
 
-<br /> 
- 
+<p>
+<%= link_to 'Add attendance time', :controller => 'worktime', :action => 'attendance' %> |
+
 <%= link_to 'Add Absence', :controller => 'worktime', :action => 'addAbsence' %> | 
 
 <%= 
@@ -46,3 +42,4 @@ if @evaluation.division_method == :projects
             :action => 'userProjects'
  end           
 %>
+</p>

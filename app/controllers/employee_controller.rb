@@ -13,6 +13,10 @@ class EmployeeController < ApplicationController
                                       :updateEmployee, :updateEmployment ],
          :redirect_to => { :action => :listEmployee }
   
+  def index
+    redirect_to :action => 'listEmployee'
+  end
+  
   # Lists all employees
   def listEmployee
     @employee_pages, @employees = paginate :employees, :per_page => NO_OF_OVERVIEW_ROWS, :order => 'lastname'

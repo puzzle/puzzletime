@@ -109,7 +109,19 @@ class Employee < ActiveRecord::Base
   
   # Sum total overtime
   def overtime(period)
-    sumWorktime(period) - musttime(period)
+    payedWorktime(period) - musttime(period)
+  end
+  
+  def payedWorktime(period)
+    condArray = ["(absence_id IS NULL OR absences.payed)"]
+    if period
+      condArray[0] += " AND (work_date BETWEEN ? AND ?)"    
+      condArray.push period.startDate
+      condArray.push period.endDate
+    end      
+    worktimes.sum(:hours, 
+                  :joins => 'LEFT JOIN absences ON absences.id = absence_id',
+                  :conditions => condArray).to_f
   end
   
   def musttime(period)
