@@ -1,40 +1,44 @@
-<h1>Project Details</h1>
+<h1>Projekt Details</h1>
 <br/>
 
 <table>
   <tr>
-    <td>Projectname: <%=h @project.name %> </td>
+    <td>Name: </td>
+    <td><%=h @project.name %></td>
   </tr> 
   <tr>
-    <td>Description: <%=h @project.description %></td>
+    <td>Beschreibung: </td>
+    <td><%= simple_format @project.description if @project.description %></td>
   </tr>
   <tr>
-    <td>Clientname: <%=h @project.client.name %></td>
+    <td>Kunde: </td>
+    <td><%=h @project.client.name %></td>
   </tr>
   <tr>
-    <td>Contact: <%=h @project.client.contact %></td>
+    <td>Kontakt: </td>
+    <td><%=h @project.client.contact %></td>
   </tr>
 </table>
 <br/>
 
 <table>
   <tr>
-    <td><b>Members</b></td>
-    <td><b>Projectmanagement</b></td>
+    <td><b>Mitarbeiter</b></td>
+    <td><b>Projekt Management</b></td>
   </tr>
   <%for membership in @project.projectmemberships %> 
   <tr>
     <td> <%= membership.employee.label %> </td>        
     <td align="center"> 
     <% if !membership.projectmanagement %>
-    	 <%= link_to 'add', :action => 'addProjectManagement', :project_id => @project, :projectmembership_id => membership.id %>             
+    	 <%= link_to 'Hinzuf&uuml;gen', :action => 'addProjectManagement', :project_id => @project, :projectmembership_id => membership.id %>             
     <% else %>
-         <%= link_to 'remove', :action => 'removeProjectManagement', :project_id => @project, :projectmembership_id => membership.id %> 
+         <%= link_to 'Entfernen', :action => 'removeProjectManagement', :project_id => @project, :projectmembership_id => membership.id %> 
     <% end %>          
    </td> 
    <td>
-    <%= link_to 'remove from project', { :action => 'removeProjectMembership', :project_id => @project, :projectmembership_id => membership }, 
-                           :confirm => 'Are you sure?', 
+    <%= link_to 'Vom Projekt entfernen', { :action => 'removeProjectMembership', :project_id => @project, :projectmembership_id => membership }, 
+                           :confirm => 'Sind sie sicher?', 
                            :post => true %>
     </td>
   </tr>
@@ -44,7 +48,7 @@
 
  <%= start_form_tag :action => 'createProjectMembership', :project_id => @project  %> 
 <p>
-<label for="employee_name">Employees</label>
+<label for="employee_name">Mitarbeiter</label>
 <br/>
 <select name="employee_id[]" multiple="multiple" size="5"">
 <% @employees.each do |employee| %>
@@ -54,9 +58,9 @@
 <% end %>
 </select>
 </p>
-<%= submit_tag 'Add to Project' %>
+<%= submit_tag 'Hinzufügen' %>
 <%= end_form_tag %>
 
 <br/>   
-<%= link_to 'Project List', :action => 'listProject' %> |
-<%= link_to 'Edit', :action => 'editProject', :id => @project %>
+<%= link_to '&Uuml;bersicht', :action => 'listProject' %> |
+<%= link_to 'Bearbeiten', :action => 'editProject', :id => @project %>

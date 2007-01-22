@@ -1,20 +1,20 @@
 <%= error_messages_for(:project) %>
 <table>
   <tr>
-    <td>Project name: </td>
+    <td>Name: </td>
   	<td><%= text_field 'project', 'name', :size => 20  %></td>
   </tr>
   <tr>
-    <td>Client: </td>
+    <td>Kunde: </td>
     <td>
     <%= collection_select( :project, :client_id, @clients, :id, :name) %>    
     </td>
    </tr>
    <tr valign="top">
-     <td>Description: </td>
+     <td>Beschreibung: </td>
   	 <td><%= text_area 'project', 'description',{:rows => 5}  %></td>
    </tr>
    <tr>
-     <td><td><%= submit_tag 'Save' %></td></td>
+     <td><td><%= submit_tag 'Speichern' %></td></td>
    </tr>
  </table>

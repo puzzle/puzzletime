@@ -21,7 +21,11 @@ class Project < ActiveRecord::Base
   def self.list
     self.find(:all, :order => 'client_id, name')
   end
-  
+    
+  def self.label
+    'Projekt'
+  end
+    
   def label_verbose
     client.name + ' - ' + name
   end

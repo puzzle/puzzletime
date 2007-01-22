@@ -1,35 +1,38 @@
-<h1>Employee Details</h1>
+<h1>Mitarbeiter Details</h1>
 <table>
   <tr>
-    <td>Firstname: <%= @employee.firstname %></td>
+    <td>Vorname: </td>
+    <td><%= @employee.firstname %></td>
   </tr>
   <tr>
-    <td>Lastname: <%= @employee.lastname %></td>
+    <td>Nachname: </td>
+    <td><%= @employee.lastname %></td>
   </tr>
   <tr>
-    <td>Shortname: <%= @employee.shortname %></td>
+    <td>K&uuml;rzel:</td>
+    <td><%= @employee.shortname %></td>
   </tr>
   <tr>
-    <td>Email: <%= @employee.email %></td>
+    <td>Email:</td>
+    <td><%= @employee.email %></td>
   </tr>
   <tr>
-    <td>Phone: <%= @employee.phone %></td>
+    <td>Telefon:</td>
+    <td><%= @employee.phone %></td>
   </tr>
   <% if @employee.management %>
   <tr>
-    <td>Is part of the managment</td>
+    <td colspan="2">Ist Mitglied der Gesch&auml;ftsleitung</td>
   </tr>
   <% end %>
 </table>
-<h2>Employments</h2>
+<h2>Anstellungen</h2>
 <% if @employee.has_employments? %>
   <table>
-    <tr>
-      <% for column in Employment.content_columns %>
-        <td>
-        <p><b><%= column.human_name %></b></p>
-        </td>
-      <% end %>
+    <tr class="times_table_title">
+     <td>Prozent</td>
+     <td>Start Datum</td>
+     <td>End Datum</td>
     </tr>
       <% for employment in @employee.employments %>
         <tr>
@@ -40,8 +43,8 @@
             <%= employment.end_date.strftime("%d.%m.%Y") %>
           <% end %>
           </td>
-          <td><%= link_to 'Edit', :action => 'editEmployment', :id => employment, :employee_id => @employee  %></td>
-          <td><%= link_to 'Delete', :action => 'confirmDeleteEmployment', :employment_id => employment, :employee_id => @employee %></td>
+          <td><%= link_to 'Bearbeiten', :action => 'editEmployment', :id => employment, :employee_id => @employee  %></td>
+          <td><%= link_to 'L&ouml;schen', :action => 'confirmDeleteEmployment', :employment_id => employment, :employee_id => @employee %></td>
         </tr>
      <% end %>
   </table>
@@ -49,10 +52,10 @@
 
   <%= form_tag :action => 'createEmployment' ,:id => @employee %>
   <%= render :partial => 'employment' %>
-  <%= submit_tag 'Save' %>
+  <%= submit_tag 'Hinzufügen' %>
   <%= end_form_tag %>
 <br/>
 
-<%= link_to 'Back', :action => 'listEmployee' %> |
-<%= link_to 'Edit', :action => 'editEmployee', :id => @employee %> | 
-<%= link_to 'Delete', :action => 'confirmDeleteEmployee', :id => @employee %> 
+<%= link_to '&Uuml;bersicht', :action => 'listEmployee' %> |
+<%= link_to 'Bearbeiten', :action => 'editEmployee', :id => @employee %> | 
+<%= link_to 'L&ouml;schen', :action => 'confirmDeleteEmployee', :id => @employee %> 

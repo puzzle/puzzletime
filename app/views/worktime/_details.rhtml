@@ -1,24 +1,24 @@
   <tr>
-    <td>Employee:</td>
+    <td>Mitarbeiter:</td>
     <td><%= details.employee.label %></td>
   </tr>
   <tr>
-    <td>Project:</td>
-    <td><%= details.account.label %></td>
+    <td>Projekt:</td>
+    <td><%= details.account.label_verbose %></td>
   </tr>
   <tr>
-   <td>Date:</td>
+   <td>Datum:</td>
    <td><%= format_date(details.work_date) %></td>
   </tr>
   <tr>
-    <td>Time:</td>
+    <td>Zeit:</td>
     <td><%= details.timeString %></td>
   </tr>
   <tr>
-    <td>Billable:</td>
-    <td><%= details.billable ? 'yes' : 'no' %></td>
+    <td>Verrechenbar:</td>
+    <td><%= details.billable ? 'ja' : 'nein' %></td>
   </tr>
   <tr valign="top">
-    <td>Description:</td>
+    <td>Beschreibung:</td>
     <td><%= simple_format details.description %></td>
   </tr>

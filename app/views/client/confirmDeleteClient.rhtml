@@ -1,17 +1,17 @@
-<h1>Delete Client</h1>
+<h1>Kunde l&ouml;schen</h1>
 <p>
-Do you really want to delete client <%= @client.label %>?
+Wollen sie den Kunden <%= @client.label %> wirklich l&ouml;schen?
 </p>
 <table>
 <tr>
     <td>
     <%= start_form_tag :action => 'deleteClient', :id => @client %>
-    <%= submit_tag 'Delete' %>  
+    <%= submit_tag 'Löschen' %>  
     <%= end_form_tag %>
     </td>
     <td>
     <%= start_form_tag :action => 'listClient', :method => 'get' %>
-    <%= submit_tag 'Cancel' %>  
+    <%= submit_tag 'Abbrechen' %>  
     <%= end_form_tag %>
     </td>
 </td>

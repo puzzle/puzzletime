@@ -1,4 +1,4 @@
-<h1>Change Project for Time Entry </h1>
+<h1>Projekt &auml;ndern </h1>
 <br/>
 
 <table>
@@ -11,7 +11,7 @@
                         :action => 'updateProject', 
                         :worktime_id => @worktime.id}) %>
   <tr>
-	<td>New Project: </td>
+	<td>Neues Projekt: </td>
     <td>
     <select name="worktime[project_id]">
       <% @projects.each do |project| %>
@@ -24,12 +24,12 @@
   </tr>
   <tr>
      <td></td>
-     <td><%= submit_tag 'Save' %></td>
+     <td><%= submit_tag 'Speichern' %></td>
   </tr>
   <%= end_form_tag %>
 </table>
 <br/>
 
-<%= link_to 'Back', evaluation_detail_params.merge!({
+<%= link_to 'Arbeitszeiten', evaluation_detail_params.merge!({
                         :controller => 'evaluator',
                         :action => 'details' }) %>

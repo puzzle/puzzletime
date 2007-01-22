@@ -71,7 +71,7 @@ class WorktimeController < ApplicationController
     setWorktimeParams
     if @worktime.save      
       flash[:notice] = 'Time was successfully added.'
-      if params[:commit] != 'Finish'
+      if params[:commit] != 'Abschliessen'
         account_id = @worktime.absence_id ?   
           { :absence_id => @worktime.absence_id } : 
           { :project_id => @worktime.project_id }
@@ -126,7 +126,7 @@ class WorktimeController < ApplicationController
     setWorktimeParams
     if @worktime.valid?     
       attendance = Attendance.new(@worktime)
-      if params[:commit] != 'Finish'
+      if params[:commit] != 'Abschliessen'
         session[:attendance] = attendance
         redirect_to :action => 'splitAttendance'
       else       
@@ -158,7 +158,7 @@ class WorktimeController < ApplicationController
     @attendance = session[:attendance]
     if @worktime.valid?      
       @attendance.addWorktime(@worktime)         
-      if params[:commit] != 'Finish' && @attendance.incomplete?
+      if params[:commit] != 'Abschliessen' && @attendance.incomplete?
         redirect_to :action => 'splitAttendance'
       else
         @attendance.save

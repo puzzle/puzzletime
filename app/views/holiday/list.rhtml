@@ -1,8 +1,8 @@
-<h1>Holidays</h1>
+<h1>Feiertage</h1>
 <table>
-  <tr>
-  <td><div id="puzzle_table_title">Date</div></td>
-  <td><div id="puzzle_table_title">Must Hours</div></td>
+  <tr class="times_table_title">
+  <td>Datum</div></td>
+  <td>Muss Stunden</td>
   </tr>
   
 <% for holiday in @holidays %>
@@ -10,11 +10,11 @@
   	<td align="right"><%= format_date(holiday.holiday_date) %>
     <td align="right"><%= number_with_precision(holiday.musthours_day, 2) %>
     <td>
-    <%= link_to 'Edit', :action => 'edit', :id => holiday %> | 
-    <%= link_to 'Delete', 
+    <%= link_to 'Bearbeiten', :action => 'edit', :id => holiday %> | 
+    <%= link_to 'L&ouml;schen', 
                 {:action => 'destroy', 
                 :id => holiday},
-                {:confirm => 'Do you really want to delete this holiday?',
+                {:confirm => 'Wollen sie diesen Feiertag wirklich entfernen?',
                 :post => true} %>    
     </td>
   </tr>
@@ -23,11 +23,11 @@
 
 <% if @holiday_pages.page_count > 1 %>
 <br />
-Page: 
+Seite: 
 <%= pagination_links @holiday_pages %>
 <br />
 <% end %>
 
 <br />
 
-<%= link_to 'New Holiday', :action => 'new' %> 
+<%= link_to 'Neuer Feiertag', :action => 'new' %> 

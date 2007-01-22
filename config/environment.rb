@@ -53,8 +53,13 @@ end
 # Include your application configuration below
 ActionMailer::Base.delivery_method = :sendmail
 
+
+
 module DhtmlCalendar
 end
 Engines.start :dhtml_calendar
+#module Engines
+#  CONFIG = {:edge => true}
+#end 
 
 require 'puzzletime_settings'

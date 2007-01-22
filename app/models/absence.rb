@@ -19,6 +19,10 @@ class Absence < ActiveRecord::Base
     find(:all, :order => 'name')
   end
   
+  def self.label
+    'Absenz'
+  end
+  
   def dont_destroy_vacation
     raise "Can't delete vacation absence" if self.id == VACATION_ID
   end  

@@ -1,4 +1,4 @@
-<h1>Worktime Details</h1>
+<h1>Arbeitszeit Details</h1>
 <br/>
 
 <table>
@@ -8,19 +8,19 @@
     <td>
     <strong>
     <% if @time.employee == @user %>
-    <%= link_to 'Edit', 
+    <%= link_to 'Bearbeiten', 
                 evaluation_detail_params.merge!({
                     :controller =>'worktime', 
                     :action =>'editTime', 
                     :id => @time.id}) %>
     &nbsp;             
-    <%= link_to 'Delete', 
+    <%= link_to 'L&ouml;schen', 
                 evaluation_detail_params.merge!({
                     :controller =>'worktime', 
                     :action =>'confirmDeleteTime',                 
                     :id => @time.id }) %>
     <% else %>            
-    <%= link_to 'Change Project', 
+    <%= link_to 'Project &auml;ndern', 
                 evaluation_detail_params.merge!({
                     :controller =>'worktime', 
                     :action =>'changeProject', 
@@ -32,5 +32,5 @@
 </table>
 <br/>
 
-<%= link_to 'Back', 
+<%= link_to 'Arbeitszeiten', 
             evaluation_detail_params.merge!({:action => 'details'}) %>

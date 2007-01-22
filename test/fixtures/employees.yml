@@ -44,4 +44,34 @@ long_time_john:
   email:     jn@bla.ch
   phone:     97373
   management: false  
+
+pascal:
+  id:        6
+  firstname: Pascal
+  lastname:  Zumkehr
+  shortname: pz
+  passwd:    pz
+  email:     pz@bla.ch
+  phone:     97373
+  management: false    
+  
+mark:
+  id:        7
+  firstname: Mark
+  lastname:  Waber
+  shortname: mw
+  passwd:    mw
+  email:     mw@bla.ch
+  phone:     97373
+  management: true
+  
+lucien:
+  id:        8
+  firstname: Lucien
+  lastname:  Weller
+  shortname: lw
+  passwd:    lw
+  email:     lw@bla.ch
+  phone:     97373
+  management: false       
     

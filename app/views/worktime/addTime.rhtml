@@ -1,8 +1,8 @@
 
 <% if @worktime.account != nil %>
-<h1>New Time for <%= @worktime.account.name %></h1>
+<h1>Neue Arbeitszeit f&uuml;r <%= @worktime.account.name %></h1>
 <% else %>
-<h1>New Absence</h1>
+<h1>Neue Absenz</h1>
 <% end %>
 <br/>
 
@@ -11,4 +11,4 @@
 <%= end_form_tag %>
 
 <br/>
-<%= link_to 'Overview', :action => 'listTime' %>
+<%= link_to '&Uuml;bersicht', :action => 'listTime' %>

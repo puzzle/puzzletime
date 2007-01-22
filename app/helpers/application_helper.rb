@@ -28,7 +28,7 @@ module ApplicationHelper
     calendar_field object, method,
     	{ :field_title => title,
     	  :button_image => 'calendar.gif',
-    	  :button_title => 'Show calendar',
+    	  :button_title => 'Kalender anzeigen',
     	  :size => '15',
     	  :value => date_value(object, method).strftime(DATE_FORMAT)},
     	{ :firstDay => 1,

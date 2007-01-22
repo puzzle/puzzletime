@@ -51,6 +51,10 @@ class Employee < ActiveRecord::Base
   def self.list 
     find(:all, :order => "lastname")  
   end
+    
+  def self.label
+    'Mitarbeiter'
+  end  
   
   def label
     lastname + " " + firstname

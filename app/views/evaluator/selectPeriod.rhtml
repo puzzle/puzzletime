@@ -1,4 +1,4 @@
-<h1>Select Custom Period</h1>
+<h1>Eigene Zeitspanne ausw&auml;hlen</h1>
 <br/>
  <%= start_form_tag :action => 'changePeriod',
                     :evaluation => params[:evaluation],
@@ -6,24 +6,24 @@
                     
 <table>
   <tr>
-    <td>From:</td>
+    <td>Von:</td>
     <td>
     <%= date_calendar_field 'period', 'startDate', 'Start Date' %>
     </td>
   </tr>
   <tr>
-    <td>To:</td>
+    <td>Bis:</td>
     <td>
     <%= date_calendar_field 'period', 'endDate', 'End Date' %>
     </td>
   </tr>
   <tr>
-    <td><td><%= submit_tag 'Select' %></td></td>
+    <td><td><%= submit_tag 'Auswählen' %></td></td>
   </tr>
 </table>
 
  <%= end_form_tag %>
 
- <%= link_to 'Back to overview', 
+ <%= link_to 'Zur&uuml;ck zur &Uuml;bersicht', 
              :action => params[:evaluation],
              :category_id => params[:category_id] %>

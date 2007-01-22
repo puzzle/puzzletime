@@ -12,35 +12,35 @@ class Evaluation
 
   
   def self.clients
-    new(Client, :list, 'Clients', :clientProjects, false, true, false) 
+    new(Client, :list, 'Kunden', :clientProjects, false, true, false) 
   end
   
   def self.employees
-    new(Employee, :list, 'Employee Projects', :employeeProjects, false, true, false)
+    new(Employee, :list, 'Mitarbeiter Projekt', :employeeProjects, false, true, false)
   end
   
   def self.absences
-    new(Employee, :list, 'Employee Absences', :employeeAbsences, true, true, false)
+    new(Employee, :list, 'Mitarbeiter Absenzen', :employeeAbsences, true, true, false)
   end  
     
   def self.managedProjects(user)
-    new(user, :managed_projects, 'Managed Projects', :projectEmployees, false, true, false)
+    new(user, :managed_projects, 'Geleitete Projekte', :projectEmployees, false, true, false)
   end
   
   def self.clientProjects(client_id)
-    new(Client.find(client_id), :projects, 'Projects', :projectEmployees, false, false, false) 
+    new(Client.find(client_id), :projects, 'Projekte', :projectEmployees, false, false, false) 
   end
   
   def self.employeeProjects(employee_id)
-    new(Employee.find(employee_id), :projects, 'Projects') 
+    new(Employee.find(employee_id), :projects, 'Projekte') 
   end
   
   def self.projectEmployees(project_id)
-    new(Project.find(project_id), :employees, 'Employees') 
+    new(Project.find(project_id), :employees, 'Mitarbeiter') 
   end
   
   def self.employeeAbsences(employee_id)
-    new(Employee.find(employee_id), :absences, 'Absences', nil, true)
+    new(Employee.find(employee_id), :absences, 'Absenzen', nil, true)
   end
   
   ########  instance methods ########
@@ -58,7 +58,7 @@ class Evaluation
   end
 
   def sum_times(period, div = nil)
-    div = div || division
+    div ||= division
     if div then div.sumWorktime(period, @absences, subdivision_ref)
     else category.sumWorktime(period, @absences)
     end
@@ -77,7 +77,7 @@ class Evaluation
   end
   
   def category_label
-    if managed? then 'Client: ' + division.client.name
+    if managed? then 'Kunde: ' + division.client.name
     else detail_label(category)
     end
   end  
@@ -88,23 +88,23 @@ class Evaluation
   
   def title
     if class_category?
-      label + " Overview"
+      label + " &Uuml;bersicht"
     else
-      label + " of " + category.label
+      label + " von " + category.label
     end  
   end
   
   def division_header
     divs = divisions
     if divs.first
-      divs.first.class.to_s.capitalize
+      divs.first.class.label
     else
       ""
     end  
   end
     
   def for?(user)
-    category == user && ! managed?
+    (category == user) && ! managed?
   end
   
   def set_division_id(division_id = nil)
@@ -135,7 +135,7 @@ private
        
   def detail_label(item)
     if ! ( item.nil? || item.kind_of?(Class) )
-      item.class.name + ': ' + item.label
+      item.class.label + ': ' + item.label
     end  
   end   
   

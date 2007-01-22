@@ -1,2 +1,25 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
+pz_puzzletime:
+  id: 1
+  project_id: 1
+  employee_id: 6
+  projectmanagement: true
+  
+mw_allgemein:
+  id: 2
+  project_id: 8
+  employee_id: 7
+  projectmanagement: true
+  
+lw_webauftritt:
+  id: 3
+  project_id: 2
+  employee_id: 8
+  projectmanagement: false   
+  
+pz_allgemein:
+  id: 4
+  project_id: 8
+  employee_id: 6
+  projectmanagement: false

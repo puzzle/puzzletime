@@ -3,24 +3,17 @@
 
 <table>
     <tr>
-	<td>Report type: </td>
-    <td>
-      <select id="report_type" name="worktime[report_type]" onChange="switchvisibility();">
-      <option value="<%= Worktime::TYPE_START_STOP %>" <%= 'selected="selected"' if Worktime::TYPE_START_STOP == @worktime.report_type %>>Start-Stop Time</option> 
-      <option value="<%= Worktime::TYPE_HOURS_DAY %>" <%= 'selected="selected"' if Worktime::TYPE_HOURS_DAY == @worktime.report_type %>>Hours/Day</option>
-      <option value="<%= Worktime::TYPE_HOURS_WEEK %>" <%= 'selected="selected"' if Worktime::TYPE_HOURS_WEEK == @worktime.report_type %>>Hours/Week</option> 
-      <option value="<%= Worktime::TYPE_HOURS_MONTH %>" <%= 'selected="selected"' if Worktime::TYPE_HOURS_MONTH == @worktime.report_type %>>Hours/Month</option>
-      </select>
-    </td>
+	<td>Report Typ: </td>
+    <td><%= select_report_type %> </td>
   </tr>
   <tr>
 	<td>
 	<% if @worktime.project_id.nil? 
 	       account_id = :absence_id %>
-	   Absence: 
+	   Absenz: 
 	<% else 
 	       account_id = :project_id %>
-	   Project:
+	   Projekt:
 	<% end %>      
 	</td>
     <td>
@@ -28,17 +21,17 @@
     </td>
   </tr>
   <tr>
-    <td>Workdate: </td>
+    <td>Datum: </td>
     <td>
     <%= date_calendar_field 'worktime', 'work_date', 'Work Date' %>
     </td>
   </tr>
   <tr>
-    <td>Hours: </td>
+    <td>Stunden: </td>
     <td><%= text_field('worktime', 'hours', :disabled => true, :size => '15')  %></td>
   </tr>
   <tr>
-    <td>From start time: </td>
+    <td>Anfangszeit: </td>
     <td>     
       <%= text_field 'worktime', 
                      'from_start_time', 
@@ -47,7 +40,7 @@
     </td>
   </tr>
   <tr>
-    <td>To end time: </td>
+    <td>Endzeit: </td>
     <td>
     <%= text_field 'worktime', 
                    'to_end_time', 
@@ -56,12 +49,12 @@
     </td>
   </tr>
   <tr valign="top">
-    <td>Description: </td>
+    <td>Beschreibung: </td>
     <td><%= text_area 'worktime', 'description', {:rows => 5} %></td>
   </tr>
   <% if ! @worktime.absence? %>
   <tr>
-    <td>Billable: </td>
+    <td>Verrechenbar: </td>
     <td><%= check_box 'worktime', 'billable' %></td>
   </tr>
   <% end %>
@@ -72,15 +65,15 @@
     <table>
     <tr>
       <td>      
-      <%= submit_tag 'Save + Add' %>
+      <%= submit_tag 'Speichern und weiter erfassen' %>
       </td>
       <td>
-      <%= submit_tag 'Finish' %>
+      <%= submit_tag 'Abschliessen' %>
       </td>
     </tr>
     </table>   
     <% else %>
-    <%= submit_tag 'Save' %>
+    <%= submit_tag 'Speichern' %>
     <% end %>
     </td>
    </tr>

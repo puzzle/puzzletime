@@ -1,17 +1,17 @@
-<h1>Delete Absence</h1>
+<h1>Absenz l&ouml;schen</h1>
 <p>
-Do you really want to delete absence <%= @absence.label %>?
+Wollen sie die Absenz <%= @absence.label %> wirklich l&ouml;schen?
 </p>
 <table>
 <tr>
     <td>
     <%= start_form_tag :action => 'deleteAbsence', :id => @absence %>
-    <%= submit_tag 'Delete' %>  
+    <%= submit_tag 'Löschen' %>  
     <%= end_form_tag %>
     </td>
     <td>
     <%= start_form_tag :action => 'listAbsence', :method => 'get' %>
-    <%= submit_tag 'Cancel' %>  
+    <%= submit_tag 'Abbrechen' %>  
     <%= end_form_tag %>
     </td>
 </td>

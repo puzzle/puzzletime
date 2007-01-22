@@ -1,11 +1,10 @@
-<h1>Clients</h1>
+<h1>Kunden</h1>
 
 <table>
-  <tr>
-  <% for column in Client.content_columns %>
-    <td><div id="puzzle_table_title"><%= column.human_name %></div></td>
-  <% end %>
-  </tr>
+<tr class="times_table_title">
+  <td>Name</td>
+  <td>Kontakt</td>
+</tr>
   
 <% for client in @clients %>
   <tr>
@@ -13,22 +12,22 @@
     <td><%=h client.send(column.name) %></td>
   <% end %>
     <td>
-    <%= link_to 'Projects', :controller => 'project', :action => 'listProject', :client_id => client %> 
+    <%= link_to 'Projekte', :controller => 'project', :action => 'listProject', :client_id => client %> 
     |
-    <%= link_to 'Edit', :action => 'editClient', :id => client %> 
+    <%= link_to 'Bearbeiten', :action => 'editClient', :id => client %> 
     |
-    <%= link_to 'Delete', { :action => 'confirmDeleteClient', :id => client }%></td>
+    <%= link_to 'L&ouml;schen', { :action => 'confirmDeleteClient', :id => client }%></td>
   </tr>
 <% end %>
 </table>
 
 <% if @client_pages.page_count > 1 %>
 <br />
-Page: 
+Seite: 
 <%= pagination_links(@client_pages) %>
 <br />
 <% end %>
 <br />
 <br />
 
-<%= link_to 'New client', :action => 'newClient' %> 
+<%= link_to 'Neuer Kunde', :action => 'newClient' %> 

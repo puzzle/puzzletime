@@ -15,7 +15,12 @@ class Client < ActiveRecord::Base
    
   def self.list 
     find(:all, :order => "name")  
+  end  
+    
+  def self.label
+    'Kunde'
   end
+  
   
   def partnerId
     :client_id

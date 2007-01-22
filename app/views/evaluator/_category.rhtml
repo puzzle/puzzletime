@@ -1,15 +1,14 @@
 <% 
    periods = init_periods
-   sum_periods = Array.new(periods.size+1, 0)            
+   sum_periods = Array.new(periods.size + 1, 0)            
  %>
 
 <table>
 <tr class="times_table_title">
-    <td><%= @evaluation.division_header %></td>
-    <td>| Total </td>
-    <td></td>
+    <td><%= @evaluation.division_header %></td>    
     <%= render(:partial => 'periodHead', :collection => periods ) %>
-    <td>|</td>
+    <td>Total</td>
+    <td></td>
  </tr>
  
  <%= render(:partial => 'division',
@@ -17,10 +16,10 @@
             :locals => { :periods => periods, :sum_periods => sum_periods }) %>   
             
 <tr class="times_total_sum">
-    <td>Total time</td>
+    <td>Total Zeit</td>
     <%= render(:partial => 'periodTime', 
                :collection => sum_periods,
                :locals => {:periods => periods}) %>
-    <td>|</td>
+    <td></td>
 </tr>
 </table>

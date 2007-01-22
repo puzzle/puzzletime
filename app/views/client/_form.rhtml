@@ -1,17 +1,15 @@
-<!-- (c) Puzzle itc, Berne
-Diplomarbeit 2149, Xavier Hayoz -->
 <%= error_messages_for(:client) %>
   
-  <table>
-    <tr>
+<table>
+<tr>
   	  <td><label for="client_name">Name: </label></td>
   	  <td><%= text_field 'client', 'name'  %></td>
-    </tr>
-    <tr>
-      <td><label for="client_description">Contact: </label></td>
+</tr>
+<tr>
+  <td><label for="client_description">Kontak: </label></td>
   	  <td><%= text_field 'client', 'contact'  %></td>
-    </tr>
-    <tr>
-      <td><td><%= submit_tag 'Save' %></td></td>
-    </tr>
-  </table>
+</tr>
+<tr>
+  <td><td><%= submit_tag 'Speichern' %></td></td>
+</tr>
+</table>

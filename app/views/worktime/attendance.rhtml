@@ -1,5 +1,5 @@
 
-<h1>Attendance Time Wizard</h1>
+<h1>Anwesenheitszeit Wizard</h1>
 <br/>
 
 <%= error_messages_for 'worktime' %>
@@ -7,26 +7,19 @@
 <%= start_form_tag :action => 'saveAttendance' %>
 <table>
     <tr>
-	<td>Report type: </td>
-    <td>
-      <select id="report_type" name="worktime[report_type]" onChange="switchvisibility();">
-      <option value="<%= Worktime::TYPE_START_STOP %>" <%= 'selected="selected"' if Worktime::TYPE_START_STOP == @worktime.report_type %>>Start-Stop Time</option> 
-      <option value="<%= Worktime::TYPE_HOURS_DAY %>" <%= 'selected="selected"' if Worktime::TYPE_HOURS_DAY == @worktime.report_type %>>Hours/Day</option>
-      <option value="<%= Worktime::TYPE_HOURS_WEEK %>" <%= 'selected="selected"' if Worktime::TYPE_HOURS_WEEK == @worktime.report_type %>>Hours/Week</option> 
-      <option value="<%= Worktime::TYPE_HOURS_MONTH %>" <%= 'selected="selected"' if Worktime::TYPE_HOURS_MONTH == @worktime.report_type %>>Hours/Month</option>
-      </select>
-    </td>
+	<td>Report Typ: </td>
+    <td><%= select_report_type %></td>
   </tr>
   <tr>
-    <td>Workdate: </td>
+    <td>Datum: </td>
     <td><%= date_calendar_field 'worktime', 'work_date', 'Work Date' %></td>
   </tr>
   <tr>
-    <td>Hours: </td>
+    <td>Stunden: </td>
     <td><%= text_field('worktime', 'hours', :disabled => true, :size => 15)  %></td>
   </tr>
   <tr>
-    <td>From start time: </td>
+    <td>Startzeit: </td>
     <td>
     <%= text_field 'worktime', 
                    'from_start_time', 
@@ -35,7 +28,7 @@
     </td>
   </tr>
   <tr>
-    <td>To end time: </td>
+    <td>Endzeit: </td>
     <td>
     <%= text_field 'worktime', 
                    'to_end_time', 
@@ -49,9 +42,9 @@
     <table>
     <tr>
       <td>
-      <%= submit_tag 'Partition' %>
+      <%= submit_tag 'Aufteilen' %>
       </td>
-      <td><%= submit_tag 'Finish' %></td>
+      <td><%= submit_tag 'Abschliessen' %></td>
     </tr>
     </table>   
     </td>
@@ -60,6 +53,6 @@
 <%= end_form_tag %>
 
 <br/>
-<%= link_to 'Overview', :action => 'listTime' %>
+<%= link_to '&Uuml;bersicht', :action => 'listTime' %>
  
 <%= render :partial => 'type_switch_js' %>

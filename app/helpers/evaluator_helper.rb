@@ -13,10 +13,14 @@ module EvaluatorHelper
   
   def collect_times(periods, sum_periods, division)
     times = periods.collect { |p| @evaluation.sum_times(p, division) }
-    times.insert(0, @evaluation.sum_times(nil, division))
+    times.push(@evaluation.sum_times(nil, division))
     sum_periods.each_index { |i| sum_periods[i] += times[i] }
     return times
-  end     
+  end   
+  
+  def alternate_row(number)
+    number.modulo(2) == 1 ? '<tr class="uneven">' : '<tr>'
+  end  
   
   def add_time_link(division)
     html = ""
@@ -27,9 +31,10 @@ module EvaluatorHelper
        else
           html += "project_id=#{division.id}"
        end 
-       html += "\">Add Time</a>"
+       html += "\">Zeit erfassen</a>"
     end
     return html   
   end
+
 
 end

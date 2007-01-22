@@ -1,10 +1,10 @@
 
-<h1>Partition Attendance Time</h1>
+<h1>Anwesenheitszeit aufteilen</h1>
 
 <p>
 <strong>
-Attended <%= number_with_precision(@attendance.time.hours, 2) %> h
-at <%= format_date(@attendance.time.work_date) %>:
+<%= number_with_precision(@attendance.time.hours, 2) %> h anwesend
+am <%= format_date(@attendance.time.work_date) %>:
 </strong>
 <br/>
 
@@ -16,17 +16,17 @@ for t in @attendance.worktimes %>
     <td align="right"><%= number_with_precision(t.hours, 2) %> h</td> 
     <td>for <%= t.account.label %></td>
     <td><%= t.description.slice(0..20) %></td>
-    <td><%= link_to 'delete...', 
+    <td><%= link_to 'l&ouml;schen...', 
             {:action => 'deleteAttendanceTime',
              :attendance_id => i}, 
-            {:confirm => 'Do you really want to delete this worktime?',
+            {:confirm => 'Wollen sie diese Arbeitszeit wirklich entfernen?',
             :post => true} %></td>
   </tr>
 <%  i += 1
 end %>   
 </table>
 <br/>
-These times have not been saved yet! Please submit this form to save.
+Die Zeiten wurden noch nicht gespeichert. Bitte schliessen sie dazu den Aufteilungsprozess ab.
 </p>
 
 <br/>
@@ -36,4 +36,4 @@ These times have not been saved yet! Please submit this form to save.
 <%= end_form_tag %>
 
 <br/>
-<%= link_to 'Overview', :action => 'listTime' %>
+<%= link_to '&Uuml;bersicht', :action => 'listTime' %>

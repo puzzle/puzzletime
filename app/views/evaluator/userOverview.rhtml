@@ -1,25 +1,24 @@
-<h1><%= @evaluation.division_method.to_s.singularize.capitalize %> Times of <%= @user.label %></h1>
-
+<h1>Zeiten aller <%= @evaluation.label %> von <%= @user.label %></h1>
 <table cellspacing="0">
 <tr>
-  <td>Monthly Work Time: &nbsp; </td>
+  <td>Monatliche Arbeitszeit: &nbsp; </td>
   <td align="right"><%= number_with_precision(@user.musttime(Period.currentMonth).to_f, 2) %> h</td>
   <td width="20%"> &nbsp; </td>
-  <td>Remaining: &nbsp; </td>
+  <td>Verbleibend: &nbsp; </td>
   <td align="right"><%= number_with_precision(0 - @user.overtime(Period.currentMonth).to_f, 2) %> h</td>
 </tr>
 <tr>
-  <td>Overtime Yesterday:</td>
+  <td>&Uuml;berzeit Gestern:</td>
   <td align="right"><%= number_with_precision(@user.currentOvertime.to_f, 2) %> h</td>
   <td> </td>
-  <td>Today:</td>
+  <td>Heute:</td>
   <td align="right"><%= number_with_precision(@user.currentOvertime(Date.today).to_f, 2) %> h</td>
 </tr>
 <tr>
-  <td>Planned Vacations:</td>
+  <td>Geplante Ferien:</td>
   <td align="right"><%= number_with_precision(@user.usedVacations(Period.currentYear), 2) %> d</td>
   <td> </td>
-  <td>Remaining:</td>
+  <td>Verbleibend:</td>
   <td align="right"><%= number_with_precision(@user.currentRemainingVacations, 2) %> d</td>
 </tr>
 </table>
@@ -29,16 +28,16 @@
 <%= render(:partial => 'category') %>
 
 <p>
-<%= link_to 'Add attendance time', :controller => 'worktime', :action => 'attendance' %> |
+<%= link_to 'Anwesenheitszeit erfassen', :controller => 'worktime', :action => 'attendance' %> |
 
-<%= link_to 'Add Absence', :controller => 'worktime', :action => 'addAbsence' %> | 
+<%= link_to 'Absenz erfassen', :controller => 'worktime', :action => 'addAbsence' %> | 
 
 <%= 
 if @evaluation.division_method == :projects
-    link_to 'View Absences', 
+    link_to 'Absenzen anzeigen', 
             :action => 'userAbsences'
  else
-     link_to 'View Projects', 
+     link_to 'Projekte anzeigen', 
             :action => 'userProjects'
  end           
 %>

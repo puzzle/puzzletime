@@ -1,7 +1,7 @@
-<h1>Delete Worktime</h1>
+<h1>Arbeitszeit l&ouml;schen</h1>
 <p>
-Do you really want to delete <%= round(@worktime.hours) %>h work time 
-at <%= format_date(@worktime.work_date) %> for <%= @worktime.account.label %>?
+Wollen sie wirklich <%= round(@worktime.hours) %>h Arbeitszeit
+am <%= format_date(@worktime.work_date) %> f&uuml;r <%= @worktime.account.label %> l&ouml;schen?
 </p>
 <table>
 <tr>
@@ -9,14 +9,14 @@ at <%= format_date(@worktime.work_date) %> for <%= @worktime.account.label %>?
     <%= start_form_tag evaluation_detail_params.merge!({
                          :action => 'deleteTime', 
                          :id => @worktime}) %>
-    <%= submit_tag 'Delete' %>  
+    <%= submit_tag 'Löschen' %>  
     <%= end_form_tag %>
     </td>
     <td>
     <%= start_form_tag evaluation_detail_params.merge!({
                           :controller => 'evaluator', 
                           :action => 'details'}) %>
-    <%= submit_tag 'Cancel' %>  
+    <%= submit_tag 'Abbrechen' %>  
     <%= end_form_tag %>
     </td>
 </td>

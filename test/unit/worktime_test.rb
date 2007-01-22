@@ -1,10 +1,20 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class WorktimeTest < Test::Unit::TestCase
-  fixtures :worktimes
+  fixtures :projects, :employees, :worktimes
   
   def setup
     @worktime = Worktime.new
+  end
+  
+  def test_fixture
+    wt = Worktime.find(1)
+    assert_kind_of Worktime, wt
+    assert_equal worktimes(:wt_pz_allgemein).project_id, wt.project_id
+    assert_equal projects(:allgemein), wt.account
+    assert_equal employees(:pascal), wt.employee
+    assert ! wt.times?
+    assert_nil wt.absence
   end
   
   def test_time_facade
@@ -53,6 +63,30 @@ class WorktimeTest < Test::Unit::TestCase
     set_field(field, "-8")
     assert_nil get_field(field)
   end
+  
+  def test_hours
+    time = Time.now
+    @worktime.hours = 8
+    assert_equal @worktime.hours, 8
+    @worktime.hours = 8.5
+    assert_equal @worktime.hours, 8.5
+    @worktime.hours = '8'
+    assert_equal @worktime.hours, 8
+    @worktime.hours = '8.5'
+    assert_equal @worktime.hours, 8.5
+    @worktime.hours = '.5'
+    assert_equal @worktime.hours, 0.5
+    @worktime.hours = '8:'
+    assert_equal @worktime.hours, 8
+    @worktime.hours = '8:30'
+    assert_equal @worktime.hours, 8.5
+    @worktime.hours = ':30'
+    assert_equal @worktime.hours, 0.5
+    @worktime.hours = 'afsdf'
+    assert_equal @worktime.hours, 0
+  end
+  
+private  
   
   def get_field(field)
     @worktime.send(field)

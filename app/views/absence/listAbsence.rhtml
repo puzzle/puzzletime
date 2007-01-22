@@ -1,16 +1,16 @@
-<h1>Absences</h1>
+<h1>Absenzen</h1>
 <table>
-  <tr>
-    <td><div id="puzzle_table_title">Absence name</div></td>
-    <td><div id="puzzle_table_title">Payed</div></td>
+  <tr class="times_table_title">
+    <td>Bezeichnung</td>
+    <td>Bezahlt</td>
   </tr>
   <% for absence in @absences %>
   <tr>
     <td><%= absence.name %></td>
-    <td><%= absence.payed %></td>
+    <td><%= absence.payed ? 'ja' : 'nein' %></td>
     <td>
-    <%= link_to 'Edit', :action => 'editAbsence', :id => absence %> | 
-    <%= link_to 'Delete', {:action => 'confirmDeleteAbsence', :id => absence} %></td>
+    <%= link_to 'Bearbeiten', :action => 'editAbsence', :id => absence %> | 
+    <%= link_to 'L&ouml;schen', {:action => 'confirmDeleteAbsence', :id => absence} %></td>
   </tr>
   <% end %>
 </table>
@@ -18,11 +18,11 @@
 
 <% if @absence_pages.page_count > 1 %>
 <br />
-Page: 
+Seite: 
 <%= pagination_links(@absence_pages) %>
 <br />
 <% end %>
 
 <br />
 
-<%= link_to 'New absence', :action => 'newAbsence' %>
+<%= link_to 'Neue Absenz', :action => 'newAbsence' %>

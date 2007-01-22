@@ -1,17 +1,17 @@
-<h1>Delete Employment</h1>
+<h1>Anstellung l&ouml;schen</h1>
 <p>
-Do you really want to delete the employment of <%= @employee.label %> from <%= @employment.period.to_s %>?
+Wollen sie wirklich die Anstellung von <%= @employee.label %> vom <%= @employment.period.to_s %> l&ouml;schen?
 </p>
 <table>
 <tr>
     <td>
     <%= start_form_tag :action => 'deleteEmployment', :employment_id => @employment, :employee_id => @employee %>
-    <%= submit_tag 'Delete' %>  
+    <%= submit_tag 'Löschen' %>  
     <%= end_form_tag %>
     </td>
     <td>
     <%= start_form_tag :action => 'showEmployee', :id => @employee, :method => 'get' %>
-    <%= submit_tag 'Cancel' %>  
+    <%= submit_tag 'Abbrechen' %>  
     <%= end_form_tag %>
     </td>
 </td>

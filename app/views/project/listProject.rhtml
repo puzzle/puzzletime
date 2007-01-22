@@ -1,8 +1,8 @@
-<h1>Projects</h1>
+<h1>Projekte</h1>
 <table>
-  <tr>
-  <td><div id="puzzle_table_title">Name</div></td>
-  <td><div id="puzzle_table_title">Client</div></td>
+  <tr class="times_table_title">
+  <td>Name</td>
+  <td>Kunde</td>
   </tr>
   
 <% for project in @projects %>
@@ -10,10 +10,10 @@
   	<td><%=h project.name %>
     <td><%=h project.client.name %>
     <td>
-    <%= link_to 'Show', :action => 'showProject', :id => project %> | 
-    <%= link_to 'Edit', :action => 'editProject', :id => project %>
+    <%= link_to 'Anzeigen', :action => 'showProject', :id => project %> | 
+    <%= link_to 'Bearbeiten', :action => 'editProject', :id => project %>
     <% if @user.management %> | 
-    <%= link_to 'Delete', :action => 'confirmDeleteProject', :id => project %>
+    <%= link_to 'L&ouml;schen', :action => 'confirmDeleteProject', :id => project %>
     <% end %>
     </td>
   </tr>
@@ -22,7 +22,7 @@
 
 <% if @project_pages.page_count > 1 %>
 <br />
-Page: 
+Seite: 
 <%= pagination_links(@project_pages, :params => {:client_id => params[:client_id]}) %>
 <br />
 <% end %>
@@ -30,5 +30,5 @@ Page:
 <br />
 
 <% if @user.management %>
-<%= link_to 'New project', {:action => 'newProject'} %> 
+<%= link_to 'Neues Projekt', {:action => 'newProject'} %> 
 <% end %>

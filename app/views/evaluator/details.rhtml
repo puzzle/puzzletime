@@ -1,4 +1,4 @@
-<h1>Work Time Details <%= @period.to_s %></h1>
+<h1>Arbeitszeit Details <%= @period.to_s %></h1>
 
 <p>
 <b><%= @evaluation.category_label %></b>
@@ -9,24 +9,26 @@
 
 <table>
 <tr class="times_table_title">
-   <td>Date</td>
-   <td>Hours</td>   
-   <td>Who</td>
-   <td>Project</td>
+   <td>Datum</td>
+   <td>Stunden</td>   
+   <td>Wer</td>
+   <td>Projekt</td>
    <td>$</td>
-   <td>Description</td>
+   <td>Beschreibung</td>
    <td></td>
 </tr>
+<% row = 1 %>
 <% for time in @times %>
-<tr>
+<% row += 1 %>
+<%= alternate_row row %>
   <td align="right"><%= format_date(time.work_date) %></td>
   <td align="right"><%= number_with_precision(time.hours, 2) %></td>
   <td><%= time.employee.shortname %></td>
   <td><%= time.account.label_verbose %></td>
-  <td><%= time.billable ? 'y' : 'n' %></td>
-  <td><%= time.description.slice(0..20) %>  
+  <td><%= time.billable ? 'j' : 'n' %></td>
+  <td><%= time.description.slice(0..40) %>  
       <%=
-      if time.description.length > 20
+      if time.description.length > 40
         link_to '...', 
                 evaluation_detail_params.merge!({
                     :action => 'description', 
@@ -35,18 +37,18 @@
   </td>
   <td>
   <% if @evaluation.for?(@user) %>
-    <%= link_to 'Edit', 
+    <%= link_to 'Bearbeiten', 
                  evaluation_detail_params.merge!({
                     :controller =>'worktime', 
                     :action =>'editTime', 
                     :id => time.id}) %>
-    <%= link_to 'Delete', 
+    <%= link_to 'L&ouml;schen', 
                 evaluation_detail_params.merge!({
                     :controller =>'worktime', 
                     :action =>'confirmDeleteTime',                 
                     :id => time.id}) %>
   <% else %>            
-    <%= link_to 'Change Project', 
+    <%= link_to 'Projekt &auml;ndern', 
                 evaluation_detail_params.merge!({
                     :controller =>'worktime', 
                     :action =>'changeProject', 
@@ -56,15 +58,15 @@
 </tr>
 <% end %> 
 <tr class="times_total_sum">
-    <td>Overall Total</td> 
+    <td>Total insgesamt</td> 
     <td align="right"><%= number_with_precision(@evaluation.sum_times(@period), 2) %></td>
     <td colspan="4"></td> 
     <td>
     <% if @evaluation.for?(@user) %>
       <% if @evaluation.division %>
-        <a href="/worktime/addTime?project_id=<%= @evaluation.division.id %>">Add Time</a>
+        <a href="/worktime/addTime?project_id=<%= @evaluation.division.id %>">Zeit hinzuf&uuml;gen</a>
       <% else %>
-        <a href="/worktime/addTime">Add Time</a>
+        <a href="/worktime/addTime">Zeit hinzuf&uuml;gen</a>
       <% end %>  
     <% end %>      
     </td>
@@ -73,13 +75,13 @@
 
 <% if @time_pages.page_count > 1 %>
 <br />
-Page: 
+Seite: 
 <%= pagination_links(@time_pages, :params => evaluation_detail_params) %>
 <br />
 <% end %>
 <br/>
 
-<%= link_to 'Overview', 
+<%= link_to '&Uuml;bersicht', 
             :action => params[:evaluation],
             :category_id => params[:category_id] %>
 &nbsp;

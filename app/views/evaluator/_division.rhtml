@@ -1,5 +1,5 @@
 <% times = collect_times(periods, sum_periods, division) %>
-<tr>
+<%= alternate_row division_counter %>
     <td>
     <% if @evaluation.sub_evaluation %>
     <a href="<%= @evaluation.sub_evaluation %>?category_id=<%= division.id %>">
@@ -12,5 +12,5 @@
     <%= render(:partial => 'periodTime',
                :collection => times,
                :locals => {:division_id => division.id, :periods => periods}) %>
-    <td>| <%= add_time_link(division) %></td> 
+    <td> <%= add_time_link(division) %></td> 
 </tr>

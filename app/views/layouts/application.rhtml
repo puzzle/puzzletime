@@ -8,7 +8,7 @@
   <%= stylesheet_link_tag 'puzzletime', :media => 'screen' %>
   <%= javascript_include_tag :defaults %>
   <%= engine_stylesheet "dhtml_calendar", "calendar-blue" %>
-  <%= engine_javascript "dhtml_calendar", "datebocks_engine", "calendar", "lang/calendar-en", "calendar-setup" %>
+  <%= engine_javascript "dhtml_calendar", "datebocks_engine", "calendar", "lang/calendar-de", "calendar-setup" %>
   
 </head>
 <body>
@@ -24,40 +24,40 @@
 	<% if @user != nil%>
 	<div id="menu">
 	  <ul>
-      	<li class="first"><%= link_to 'Time', 
+      	<li class="first"><%= link_to 'Meine Zeit', 
       	                        :controller => 'worktime', 
       	                        :action => 'listTime' %></li>
 		<%if @user.projectManager? %>
-		<li><%= link_to 'My Projects', 
+		<li><%= link_to 'Meine Projekte', 
 		         :controller => 'evaluator', 
 		         :action => 'managed' %></li>	
 		<% end %>
 		<% if @user.management %>
-		<li><%= link_to 'Clients', 
+		<li><%= link_to 'Kunden', 
 		         :controller => 'evaluator',
                  :action => 'clients' %></li>
-        <li><%= link_to 'Employees', 
+        <li><%= link_to 'Mitarbeiter', 
                  :controller => 'evaluator',
                  :action => 'employees' %></li>
-       <li><%= link_to 'Absences', 
+       <li><%= link_to 'Absenzen', 
                  :controller => 'evaluator',
                  :action => 'absences' %></li>
-        <li><%= link_to 'Overtime',
+        <li><%= link_to '&Uuml;berzeit',
                  :controller => 'evaluator', 
                  :action => 'overtime' %></li>
         <% end %>
         <% if @user.management || @user.projectManager? %>         
-		<li><%= link_to 'Managing', 
+		<li><%= link_to 'Verwalten', 
 		         :controller => 'project', 
 		         :action => 'listProject' %></li>         
 		<% end %>
 	  </ul>		
 	    
-	  User: <%= @user.label %> | 
-	   <%= link_to 'Change Pwd', 
+	  Benutzer: <%= @user.label %> | 
+	   <%= link_to 'Passwort &auml;ndern', 
 	           :controller => 'employee', 
 	           :action => 'changePasswd' %> | 
-	   <%= link_to 'Log out', 
+	   <%= link_to 'Logout', 
 	           :controller => 'login', 
 	           :action => 'logout' %>
 	</div>
@@ -65,17 +65,17 @@
 	<% if @user.management &&
 	     ['client', 'employee', 'absence', 'project', 'holiday'].include?(params[:controller]) %>
         <div id="submenu">
-        Manage:
+        Verwalte:
         &nbsp;
-        <%= link_to 'Employees', :controller => 'employee', :action => 'listEmployee' %>
+        <%= link_to 'Mitarbeiter', :controller => 'employee', :action => 'listEmployee' %>
         &nbsp;
-        <%= link_to 'Projects', :controller => 'project', :action => 'listProject' %>
+        <%= link_to 'Projekte', :controller => 'project', :action => 'listProject' %>
         &nbsp;
-        <%= link_to 'Clients', :controller => 'client', :action => 'listClient' %>
+        <%= link_to 'Kunden', :controller => 'client', :action => 'listClient' %>
         &nbsp;
-        <%= link_to 'Absences', :controller => 'absence', :action => 'listAbsence' %>
+        <%= link_to 'Absenzen', :controller => 'absence', :action => 'listAbsence' %>
         &nbsp;
-        <%= link_to 'Holidays', :controller => 'holiday', :action => 'list' %>
+        <%= link_to 'Feiertage', :controller => 'holiday', :action => 'list' %>
         </div>
 	<% end%>
 	

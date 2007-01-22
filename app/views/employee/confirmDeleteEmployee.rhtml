@@ -1,17 +1,17 @@
-<h1>Delete Employee</h1>
+<h1>Mitarbeiter l&ouml;schen</h1>
 <p>
-Do you really want to delete employee <%= @employee.label %>?
+Wollen sie den Mitarbeiter <%= @employee.label %> wirklich l&ouml;schen?
 </p>
 <table>
 <tr>
     <td>
     <%= start_form_tag :action => 'deleteEmployee', :id => @employee %>
-    <%= submit_tag 'Delete' %>  
+    <%= submit_tag 'Löschen' %>  
     <%= end_form_tag %>
     </td>
     <td>
     <%= start_form_tag :action => 'listEmployee', :method => 'get' %>
-    <%= submit_tag 'Cancel' %>  
+    <%= submit_tag 'Abbrechen' %>  
     <%= end_form_tag %>
     </td>
 </td>

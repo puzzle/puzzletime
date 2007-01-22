@@ -1,4 +1,4 @@
-<h1>Edit Time for <%= @worktime.account.name %></h1>
+<h1>Arbeitszeit bearbeiten von <%= @worktime.account.name %></h1>
 <br/>
 
 <%= start_form_tag evaluation_detail_params.merge!({                        
@@ -8,6 +8,6 @@
 <%= end_form_tag %>
 
 <br/>
-<%= link_to 'Back', evaluation_detail_params.merge!({
+<%= link_to 'Arbeitszeiten', evaluation_detail_params.merge!({
                         :controller => 'evaluator',
                         :action => 'details' }) %>

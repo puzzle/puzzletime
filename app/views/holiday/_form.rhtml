@@ -1,18 +1,16 @@
 <%= error_messages_for(:holiday) %>
 <table>
   <tr>
-    <td>Date: </td>
+    <td>Daum: </td>
   	<td>
-  	<%= #date_select('holiday', 'holiday_date', :order => [:day, :month, :year]) 
-  	%>
   	<%= date_calendar_field 'holiday', 'holiday_date', 'Holiday Date' %>
   	</td>
   </tr>
   <tr>
-    <td>Must Hours: </td>
+    <td>Muss Stunden: </td>
     <td><%= text_field('holiday', 'musthours_day', :size => 15 )  %></td>
    </tr>
    <tr>
-     <td><td><%= submit_tag 'Save' %></td></td>
+     <td><td><%= submit_tag 'Speichern' %></td></td>
    </tr>
  </table>
