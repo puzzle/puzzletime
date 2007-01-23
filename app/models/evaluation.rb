@@ -25,6 +25,10 @@ class Evaluation
     
   def self.managedProjects(user)
     new(user, :managed_projects, 'Geleitete Projekte', :projectEmployees, false, true, false)
+  end  
+    
+  def self.managedAbsences(user)
+    new(user, :managed_employees, 'Mitarbeiter Absenzen', :employeeAbsences, true, true, false)
   end
   
   def self.clientProjects(client_id)
@@ -140,7 +144,7 @@ private
   end   
   
   def managed?
-    division_method == :managed_projects
+    division_method.to_s =~ /managed/
   end
   
   def class_category?

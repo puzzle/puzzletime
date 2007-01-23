@@ -38,13 +38,13 @@
         <li><%= link_to 'Mitarbeiter', 
                  :controller => 'evaluator',
                  :action => 'employees' %></li>
-       <li><%= link_to 'Absenzen', 
-                 :controller => 'evaluator',
-                 :action => 'absences' %></li>
         <li><%= link_to '&Uuml;berzeit',
                  :controller => 'evaluator', 
                  :action => 'overtime' %></li>
         <% end %>
+        <li><%= link_to 'Absenzen', 
+                 :controller => 'evaluator',
+                 :action => 'absences' %></li>
         <% if @user.management || @user.projectManager? %>         
 		<li><%= link_to 'Verwalten', 
 		         :controller => 'project', 

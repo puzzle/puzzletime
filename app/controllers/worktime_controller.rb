@@ -170,6 +170,28 @@ class WorktimeController < ApplicationController
     end  
   end
   
+  def addMultiAbsence
+    @accounts = Absence.list
+    @multiabsence = MultiAbsence.new
+  end
+  
+  
+  def createMultiAbsence
+    @multiabsence = MultiAbsence.new
+    @multiabsence.employee = @user    
+    @multiabsence.attributes = params[:multiabsence]
+    if @multiabsence.valid?
+      count = @multiabsence.save      
+      flash[:notice] = "#{count} Absenzen wurden erfasst"
+      @worktime = @multiabsence.worktime
+      session[:period] = @multiabsence.period if session[:period].nil?
+      listDetailTime  
+    else
+      @accounts = Absence.list
+      render :action => 'addMultiAbsence'
+    end  
+  end
+  
 private
 
   #List the time.

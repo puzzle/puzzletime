@@ -7,9 +7,8 @@ class EvaluatorController < ApplicationController
  
   # Checks if employee came from login or from direct url.
   before_filter :authenticate
-  before_filter :authorize, :only => [:clients, :employees, :absences, 
-                                      :clientProjects, :employeeProjects, :employeeAbsences,
-                                      :overtime]
+  before_filter :authorize, :only => [:clients, :employees, :overtime,
+                                      :clientProjects, :employeeProjects, :employeeAbsences ]
   before_filter :setPeriod
   
   def index
@@ -112,6 +111,8 @@ private
   def setEvaluation
     @evaluation = case params[:evaluation].downcase
         when 'managed' then Evaluation.managedProjects(@user)
+        when 'managedabsences' then Evaluation.managedAbsences(@user)
+        when 'absences' then Evaluation.absences
         when 'userprojects' then Evaluation.employeeProjects(@user.id)
         when 'userabsences' then Evaluation.employeeAbsences(@user.id)        
         when 'projectemployees' then Evaluation.projectEmployees(params[:category_id])
@@ -121,7 +122,6 @@ private
       @evaluation = case params[:evaluation].downcase
         when 'clients' then Evaluation.clients
         when 'employees' then Evaluation.employees
-        when 'absences' then Evaluation.absences
         when 'clientprojects' then Evaluation.clientProjects(params[:category_id])
         when 'employeeprojects' then Evaluation.employeeProjects(params[:category_id])
         when 'employeeabsences' then Evaluation.employeeAbsences(params[:category_id])

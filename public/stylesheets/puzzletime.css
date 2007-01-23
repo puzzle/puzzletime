@@ -1,7 +1,7 @@
 body
 {
 background: #F9F9F7 url('../images/diagonal.gif') repeat-x;
-font-size: 13px;
+font-size: 14px;
 font-family: "trebuchet ms", helvetica, sans-serif;
 color: #666666;
 line-height: 14px;
@@ -28,7 +28,7 @@ font-weight:normal;
 
 h2
 {
-font-size:14px;
+font-size:15px;
 font-weight:bold;
 }
 
@@ -39,7 +39,7 @@ font-size: 0.5em;
 
 table
 {
-font-size: 13px;
+font-size: 14px;
 }
 
 td
@@ -93,7 +93,7 @@ white-space: nowrap;
 {
 position: relative;
 max-width: 992px;
-min-width: 700px;
+min-width: 730px;
 margin: auto;
 padding: 13px 16px 13px 16px;
 background: #fff url('../images/whitebox.gif') repeat-y;
@@ -127,15 +127,15 @@ font-weight: normal;
 #header h1
 {
 position: absolute;
-font-size: 23px;
+font-size: 28px;
 letter-spacing: -1px;
-top: 15px;
+top: 4px;
 }
 
 #header h2
 {
 position: absolute;
-font-size: 10px;
+font-size: 11px;
 font-weight: normal;
 color: #FCE2CA;
 top: 44px;
@@ -189,7 +189,7 @@ font-weight: bold;
 
 #spacer
 {
-  margin-top: 120px;  
+margin-top: 120px;  
 }
 
 #menu ul
@@ -254,7 +254,7 @@ letter-spacing: -1px;
 
 #errorExplanation h2 {
   text-align: left;
-  font-size: 13px;
+  font-size: 14px;
   margin: -10px;
   margin-bottom: 10px;
   color: #0087e3;

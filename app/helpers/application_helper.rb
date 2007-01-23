@@ -50,9 +50,9 @@ private
   
   def date_value(object_name, method_name)
     if object = self.instance_variable_get("@#{object_name}")
-      if date = object.send(method_name)
+      if  date = object.send(method_name)
         return date
-      end  
+      end      
     end
     Date.today
   end

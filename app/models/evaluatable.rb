@@ -13,7 +13,7 @@ module Evaluatable
   def partnerId
     :employee_id
   end
-   
+     
   def worktimesBy(period = nil, absences = nil, partnerVal = 0, options = {})
     options[:conditions] = conditionsFor(period, {partnerId => partnerVal}, absences)
     options[:order] = "work_date ASC, from_start_time ASC"

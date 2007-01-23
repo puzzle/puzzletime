@@ -32,6 +32,8 @@
 
 <%= link_to 'Absenz erfassen', :controller => 'worktime', :action => 'addAbsence' %> | 
 
+<%= link_to 'Mehrt&auml;gige Absenz erfassen', :controller => 'worktime', :action => 'addMultiAbsence' %> | 
+
 <%= 
 if @evaluation.division_method == :projects
     link_to 'Absenzen anzeigen', 

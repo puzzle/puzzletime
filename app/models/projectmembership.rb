@@ -7,6 +7,7 @@ class Projectmembership < ActiveRecord::Base
   belongs_to :employee
   belongs_to :project
   belongs_to :managed_project, :class_name => 'Project', :conditions => 'projectmemberships.projectmanagement IS TRUE'
+  belongs_to :managed_employee, :class_name => 'Employee'
  
   validates_uniqueness_of :employee_id, :scope => 'project_id', :message => "Dieser Mitarbeiter ist bereits dem Projekt zugeteilt"
   validates_uniqueness_of :project_id, :scope => 'employee_id', :message => "Dieser Mitarbeiter ist bereits dem Projekt zugeteilt"

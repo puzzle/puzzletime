@@ -6,6 +6,7 @@ class Employment < ActiveRecord::Base
   # All dependencies between the models are listed below.
   validates_presence_of :percent, :message => "Die Prozente m&uuml;ssen angegeben werden"
   validates_presence_of :start_date, :message => "Das Start Datum muss angegeben werden"
+  
   before_create :updateEndDate
   belongs_to :employee
   
@@ -42,7 +43,7 @@ class Employment < ActiveRecord::Base
   def vacations
     round2Decimals(period.length / 365.25 * VACATION_DAYS_PER_YEAR * percentFactor)
   end 
-  
+    
   def musttime
     period.musttime * percentFactor
   end

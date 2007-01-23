@@ -8,8 +8,9 @@
     "#{params[:evaluation]}&category_id=#{@evaluation.category.id}" +
     (division_id ? "&division_id=#{division_id}" : "") +
     (p ? "&start_date=#{p.startDate}&end_date=#{p.endDate}" : "&start_date=0") +
-    "\">" %>
-    <img src ="/images/lupe.gif" border="0" width="19" height="11"></a>
+    "\">" %><img src="/images/lupe.gif" border="0" width="19" height="11" /></a>
+<% else %>
+    <img src="/images/space.gif" border="0" width="19" height="11" />   
 <% end %>  
 &nbsp;
 </td>

@@ -18,6 +18,14 @@ class Employee < ActiveRecord::Base
            :through => :projectmemberships, 
            :order => "client_id, name", 
            :conditions => "projectmemberships.projectmanagement IS TRUE"
+  has_many :managed_employees, 
+           :class_name => 'Employee', 
+           :finder_sql =>
+              'SELECT DISTINCT(e.*) ' + 
+              'FROM employees e, projectmemberships m, projectmemberships n WHERE ' +
+              'm.employee_id = #{id} AND m.projectmanagement AND ' +
+              'm.project_id = n.project_id AND n.employee_id = e.id ' +
+              'ORDER BY e.lastname, e.firstname'
   has_many :worktimes, :dependent => true
   has_many :absences, :finder_sql => 
               'SELECT DISTINCT(a.*) FROM absences a, worktimes t WHERE ' +
@@ -140,10 +148,14 @@ class Employee < ActiveRecord::Base
     return musttime      
   end
   
-  def current_employment
+  def employment_at(date)
     employments.find(:first, 
           :conditions => ['start_date <= ? AND (end_date IS NULL OR end_date >= ?)', 
-            Date.today, Date.today])  
+            date, date]) 
+  end
+  
+  def current_employment
+    employment_at(Date.today) 
   end
   
   def employmentsDuring(period)
