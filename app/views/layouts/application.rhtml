@@ -18,8 +18,7 @@
 		<h2>&nbsp; by Puzzle ITC</h2>
 	</div>
 
-	<div id="splash"></div>
-		
+	<div id="splash"></div>		
 	
 	<% if @user != nil%>
 	<div id="menu">
@@ -52,7 +51,8 @@
 		         :action => 'listProject' %></li>         
 		<% end %>
 	  </ul>		
-	    
+	</div>   
+	<div id="menu_user">
 	  Benutzer: <%= @user.label %> | 
 	   <%= link_to 'Passwort &auml;ndern', 
 	           :controller => 'employee', 
@@ -80,8 +80,7 @@
 	<% end%>
 	
 	<% else %>
-	<div id="menu">
-	</div>
+	<div id="spacer"> </div>
 	<% end %>
 	
 	<% if @flash.has_key?(:notice) %>

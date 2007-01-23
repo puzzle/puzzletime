@@ -32,7 +32,7 @@ class ClientController < ApplicationController
   def createClient
     @client = Client.new(params[:client])
     if @client.save
-      flash[:notice] = 'Client was successfully created.'
+      flash[:notice] = 'Der Kunde wurde erfasst'
       redirect_to :action => 'listClient'
     else
       render :action => 'newClient'
@@ -48,10 +48,10 @@ class ClientController < ApplicationController
   def updateClient
     @client = Client.find(params[:id])
     if @client.update_attributes(params[:client])
-      flash[:notice] = 'Client was successfully updated.'
+      flash[:notice] = 'Der Kunde wurde aktualisiert'
       redirect_to :action => 'listClient', :id => @client
     else
-      flash[:notice] = 'Client could not be updated.'
+      flash[:notice] = 'Der Kunde konnte nicht aktualisiert werden'
       render :action => 'editClient'
     end
   end
@@ -62,9 +62,9 @@ class ClientController < ApplicationController
   
   def deleteClient
     if Client.destroy(params[:id])
-       flash[:notice] = 'Client was successfully deleted.'
+       flash[:notice] = 'Der Kunde wurde entfernt'
     else
-       flash[:notice] = 'Client could no be deleted. Some error occured.'
+       flash[:notice] = 'Der Kunde konnte nicht entfernt werden'
     end      
     redirect_to :action => 'listClient'
   end

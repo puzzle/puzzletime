@@ -17,21 +17,17 @@ module EvaluatorHelper
     sum_periods.each_index { |i| sum_periods[i] += times[i] }
     return times
   end   
-  
-  def alternate_row(number)
-    number.modulo(2) == 1 ? '<tr class="uneven">' : '<tr>'
-  end  
-  
+
   def add_time_link(division)
     html = ""
     if @evaluation.for?(@user) 
-       html = "<a href=\"/worktime/addTime?" 
+       html = "<td>\n<a href=\"/worktime/addTime?" 
        if division.kind_of? Absence
           html += "absence_id=#{division.id}"
        else
           html += "project_id=#{division.id}"
        end 
-       html += "\">Zeit erfassen</a>"
+       html += "\">Zeit erfassen</a>\n</td>"
     end
     return html   
   end

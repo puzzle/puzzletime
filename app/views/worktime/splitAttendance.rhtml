@@ -8,13 +8,13 @@ am <%= format_date(@attendance.time.work_date) %>:
 </strong>
 <br/>
 
-<table cellpadding="0" cellspacing="0">
+<table cellpadding="0">
 <% 
 i = 0
 for t in @attendance.worktimes %>
-  <tr>
+  <%= alternate_row %>
     <td align="right"><%= number_with_precision(t.hours, 2) %> h</td> 
-    <td>for <%= t.account.label %></td>
+    <td>f&uuml;r <%= t.account.label %></td>
     <td><%= t.description.slice(0..20) %></td>
     <td><%= link_to 'l&ouml;schen...', 
             {:action => 'deleteAttendanceTime',

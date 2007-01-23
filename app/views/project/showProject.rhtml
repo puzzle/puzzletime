@@ -23,11 +23,11 @@
 
 <table>
   <tr>
-    <td><b>Mitarbeiter</b></td>
-    <td><b>Projekt Management</b></td>
+    <th>Mitarbeiter</th>
+    <th>Projekt Management</th>
   </tr>
   <%for membership in @project.projectmemberships %> 
-  <tr>
+  <%= alternate_row %>
     <td> <%= membership.employee.label %> </td>        
     <td align="center"> 
     <% if !membership.projectmanagement %>

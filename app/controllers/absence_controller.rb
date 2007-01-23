@@ -29,7 +29,7 @@ class AbsenceController < ApplicationController
   def createAbsence
     @absence = Absence.new(params[:absence])
     if @absence.save
-      flash[:notice] = 'Absence was successfully created'
+      flash[:notice] = 'Die Absenz wurde erstellt'
       redirect_to :action => 'listAbsence'
     else
       render :action => 'newAbsence'
@@ -39,7 +39,7 @@ class AbsenceController < ApplicationController
   def updateAbsence
     @absence = Absence.find(params[:id])
     if @absence.update_attributes(params[:absence])
-      flash[:notice] = 'Absence was successfully created'
+      flash[:notice] = 'Die Absenz wurde aktualisiert'
       redirect_to :action => 'listAbsence'
     else
       render :action => 'newAbsence'
@@ -51,7 +51,7 @@ class AbsenceController < ApplicationController
   end
   
   def deleteAbsence
-    flash[:notice] = 'Absence was successfully removed'
+    flash[:notice] = 'Die Absenz wurde entfernt'
     begin
       Absence.destroy(params[:id])
     rescue RuntimeError => err

@@ -12,8 +12,8 @@ class Absence < ActiveRecord::Base
   before_destroy :dont_destroy_vacation
   
   # Validation helpers
-  validates_presence_of :name
-  validates_uniqueness_of :name
+  validates_presence_of :name, :message => "Ein Name muss angegeben werden"
+  validates_uniqueness_of :name, :message => "Dieser Name wird bereits verwendet"
     
   def self.list
     find(:all, :order => 'name')
@@ -24,7 +24,7 @@ class Absence < ActiveRecord::Base
   end
   
   def dont_destroy_vacation
-    raise "Can't delete vacation absence" if self.id == VACATION_ID
+    raise "Die Ferien Absenz kann nicht gel&ouml;scht werden" if self.id == VACATION_ID
   end  
    
 end

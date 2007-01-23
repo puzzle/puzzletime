@@ -29,13 +29,13 @@
 <h2>Anstellungen</h2>
 <% if @employee.has_employments? %>
   <table>
-    <tr class="times_table_title">
-     <td>Prozent</td>
-     <td>Start Datum</td>
-     <td>End Datum</td>
+    <tr>
+     <th>Prozent</th>
+     <th>Start Datum</th>
+     <th>End Datum</th>
     </tr>
       <% for employment in @employee.employments %>
-        <tr>
+        <%= alternate_row %>
           <td align="right"><%= employment.percent %> %</td>
           <td align="right"><%= employment.start_date.strftime("%d.%m.%Y") %></td>
           <td align="right">

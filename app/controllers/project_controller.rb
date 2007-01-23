@@ -38,11 +38,11 @@ class ProjectController < ApplicationController
   def createProject   
    @project = Project.new(params[:project])
     if @project.save
-      flash[:notice] = 'Project was successfully created'
+      flash[:notice] = 'Das Projekt wurde erfasst'
       redirect_to :action => 'showProject', :id => @project
     else
       @clients = Client.list
-      flash[:notice] = 'Project was not created'
+      flash[:notice] = 'Das Projekt konnte nicht erfasst werden'
       render :action => 'newProject'
     end
   end
@@ -58,7 +58,7 @@ class ProjectController < ApplicationController
     @clients = Client.list
     @project = Project.find(params[:project_id])
     if @project.update_attributes(params[:project])
-      flash[:notice] = 'Project was successfully updated'
+      flash[:notice] = 'Das Projekt wurde aktualisiert'
       redirect_to :action => 'showProject', :id => @project
     else
       render :action => 'editProject'
@@ -72,7 +72,7 @@ class ProjectController < ApplicationController
   # Deletes the chosen project.
   def deleteProject
     Project.destroy(params[:id])
-    flash[:notice] = 'Project was successfully deleted'
+    flash[:notice] = 'Das Projekt wurde entfernt'
     redirect_to :action => 'listProject'
   end
   
@@ -91,17 +91,17 @@ class ProjectController < ApplicationController
         Projectmembership.create(:project_id => params[:project_id],
                                  :employee_id => e.id)
       end      
-      flash[:notice] = 'Projectmember was created'
+      flash[:notice] = 'Der Mitarbeiter wurde dem Projekt hinzugef&uuml;gt'
       redirect_to :action => 'showProject' , :id => params[:project_id]
     else
-      flash[:notice] = 'Please select one or more employees'
+      flash[:notice] = 'Bitte w&auml;hlen sie einen oder mehrere Mitarbeiter'
       redirect_to :action => 'showProject' , :id => params[:project_id]
     end
   end  
     
   def removeProjectMembership
     Projectmembership.destroy(params[:projectmembership_id])
-    flash[:notice] = "Projectmembership was deleted"
+    flash[:notice] = "Der Mitarbeiter wurde vom Projekt entfernt
     redirect_to :action => 'showProject', :id => params[:project_id]
   end
   
@@ -113,7 +113,7 @@ private
     if projectmembership.employee == @user 
       @user.managed_projects(true)  #reload list for user (old version is cached otherwise)
     end
-    flash[:notice] = "#{projectmembership.employee.label} was " + (bool ? "set as" : "removed as") + " project manager"
+    flash[:notice] = "#{projectmembership.employee.label} wurde als Projektleiter " + (bool ? "erfasst" : "entfernt") 
     redirect_to :action => 'showProject' , :id => params[:project_id]
   end
   

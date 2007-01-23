@@ -21,7 +21,7 @@ class LoginController < ApplicationController
         session[:user] = logged_in
         redirect_to(:controller => 'worktime', :action => 'listTime')
       else
-        flash[:notice] = "Invalid shortname/password combination"
+        flash[:notice] = "Ung&uuml;ltige Benutzerdaten"
       end
      end
   end
@@ -29,7 +29,7 @@ class LoginController < ApplicationController
   #Logout procedure for user    
   def logout
     reset_session
-    flash[:notice]="Logged out"
+    flash[:notice]="Sie wurden ausgeloggt"
     redirect_to(:action => "login")
   end
 end

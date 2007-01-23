@@ -18,10 +18,7 @@ class Attendance
   end
 
   def worktimeTemplate
-    worktime = Worktime.new
-    worktime.project_id = DEFAULT_PROJECT_ID
-    worktime.report_type = time.report_type
-    worktime.work_date = time.work_date
+    worktime = lastWorktime.template
     worktime.hours = remainingHours
     worktime.from_start_time = nextStartTime
     worktime.to_end_time = time.to_end_time
@@ -51,6 +48,10 @@ private
     worktimes.empty? ? 
       time.from_start_time :
       worktimes.last.to_end_time    
+  end
+  
+  def lastWorktime
+    worktimes.empty? ? time : worktimes.last
   end
   
 end

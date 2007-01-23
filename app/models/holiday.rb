@@ -6,7 +6,9 @@ class Holiday < ActiveRecord::Base
   after_save :refresh
   
   before_validation DateFormatter.new('holiday_date')
-
+  
+  validates_presence_of :holiday_date, :message => "Das Datum ist ung&uuml;ltig"  
+  validates_presence_of :musthours_day, :message => "Die Muss Stunden m&uuml;ssen angegeben werden"
   # Collection of functions to check if date is holiday or not       
   def self.musttime(date)
     if Holiday.isWeekend(date)

@@ -1,21 +1,23 @@
 <h1>Kunden</h1>
 
 <table>
-<tr class="times_table_title">
-  <td>Name</td>
-  <td>Kontakt</td>
+<tr>
+  <th>Name</th>
+  <th>Kontakt</th>
 </tr>
   
 <% for client in @clients %>
-  <tr>
+  <%= alternate_row %>
   <% for column in Client.content_columns %>
     <td><%=h client.send(column.name) %></td>
   <% end %>
     <td>
     <%= link_to 'Projekte', :controller => 'project', :action => 'listProject', :client_id => client %> 
-    |
+    </td>
+    <td> 
     <%= link_to 'Bearbeiten', :action => 'editClient', :id => client %> 
-    |
+    </td>
+    <td> 
     <%= link_to 'L&ouml;schen', { :action => 'confirmDeleteClient', :id => client }%></td>
   </tr>
 <% end %>

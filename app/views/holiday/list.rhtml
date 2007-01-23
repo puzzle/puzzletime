@@ -1,16 +1,18 @@
 <h1>Feiertage</h1>
 <table>
-  <tr class="times_table_title">
-  <td>Datum</div></td>
-  <td>Muss Stunden</td>
+  <tr>
+  <th>Datum</th>
+  <th>Muss Stunden</th>
   </tr>
   
 <% for holiday in @holidays %>
-  <tr>
+  <%= alternate_row %>
   	<td align="right"><%= format_date(holiday.holiday_date) %>
     <td align="right"><%= number_with_precision(holiday.musthours_day, 2) %>
     <td>
-    <%= link_to 'Bearbeiten', :action => 'edit', :id => holiday %> | 
+    <%= link_to 'Bearbeiten', :action => 'edit', :id => holiday %> 
+    </td>
+    <td>  
     <%= link_to 'L&ouml;schen', 
                 {:action => 'destroy', 
                 :id => holiday},

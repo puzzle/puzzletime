@@ -1,16 +1,16 @@
 <h1>Mitarbeiter</h1>
 
 <table>
-  <tr class="times_table_title">
-    <td>Vorname</td>
-    <td>Nachname</td>
-    <td>K&uuml;rzel</td>
-    <td>Prozent</td>
-    <td>GL</td>
+  <tr>
+    <th>Vorname</th>
+    <th>Nachname</th>
+    <th>K&uuml;rzel</th>
+    <th>Prozent</th>
+    <th>GL</th>
   </tr>
   
   <% for employee in @employees %>
-  <tr>
+  <%= alternate_row %>
     <td><%=h employee.lastname  %></td>
     <td><%=h employee.firstname  %></td>
     <td><%=h employee.shortname  %></td>
@@ -24,8 +24,12 @@
     </td>
     <td><%= employee.management ? 'ja' : 'nein' %></td> 
     <td>
-    <%= link_to 'Anzeigen', :action => 'showEmployee', :id => employee %> | 
-    <%= link_to 'Bearbeiten', :action => 'editEmployee', :id => employee %> | 
+    <%= link_to 'Anzeigen', :action => 'showEmployee', :id => employee %> 
+    </td>
+    <td>  
+    <%= link_to 'Bearbeiten', :action => 'editEmployee', :id => employee %> 
+    </td>
+    <td>  
     <%= link_to 'L&ouml;schen', :action => 'confirmDeleteEmployee', :id => employee %>
     </td>
   </tr>

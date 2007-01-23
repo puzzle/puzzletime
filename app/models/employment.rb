@@ -4,7 +4,8 @@
 class Employment < ActiveRecord::Base
   
   # All dependencies between the models are listed below.
-  validates_presence_of :percent, :start_date
+  validates_presence_of :percent, :message => "Die Prozente m&uuml;ssen angegeben werden"
+  validates_presence_of :start_date, :message => "Das Start Datum muss angegeben werden"
   before_create :updateEndDate
   belongs_to :employee
   
@@ -12,9 +13,9 @@ class Employment < ActiveRecord::Base
   
   def validate
     if end_date != nil && period.negative?
-      errors.add_to_base("Date range is invalid")
+      errors.add_to_base("Die Zeitspanne ist ung&uuml;ltig")
     elsif parallelEmployments?
-      errors.add_to_base("Another employment is already defined for this period") 
+      errors.add_to_base("Eine andere Anstellung ist bereits für diese Zeitspanne definiert") 
     end 
   end
   

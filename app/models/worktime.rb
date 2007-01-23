@@ -8,8 +8,8 @@ class Worktime < ActiveRecord::Base
   belongs_to :employee
   belongs_to :project
   
-  validates_presence_of :work_date, :message => "is invalid"
-  validates_presence_of :employee_id
+  validates_presence_of :work_date, :message => "Das Datum ist ung&uuml;ltig"
+  validates_presence_of :employee_id, :message => "Ein Mitarbeiter muss vorhanden sein"
   
   before_validation DateFormatter.new('work_date')
   before_validation :store_hours
@@ -56,24 +56,34 @@ class Worktime < ActiveRecord::Base
     report_type == TYPE_START_STOP
   end
   
+  def template
+    newWorktime = Worktime.new
+    newWorktime.from_start_time = Time.now.change(:hour => 8)
+    newWorktime.report_type = report_type
+    newWorktime.work_date = work_date
+    newWorktime.project_id = project_id
+    newWorktime.absence_id = absence_id
+    return newWorktime
+  end
+  
   def timeString
     case report_type
       when TYPE_START_STOP then formatted_start_time + ' - ' + formatted_end_time + 
                           ' (' + ((hours*100).round / 100.0).to_s + ' h)'
       when TYPE_HOURS_DAY then hours.to_s + ' h'
-      when TYPE_HOURS_WEEK then hours.to_s + ' h this week'
-      when TYPE_HOURS_MONTH then hours.to_s + ' h this month'
+      when TYPE_HOURS_WEEK then hours.to_s + ' h in dieser Woche'
+      when TYPE_HOURS_MONTH then hours.to_s + ' h in diesem Monat'
     end
   end
   
   def validate
     if times?
-      errors.add(:from_start_time, 'is invalid') if ! from_start_time
-      errors.add(:to_end_time, 'is invalid') if ! to_end_time
-      errors.add(:to_end_time, 'should be after start time') if from_start_time && 
+      errors.add(:from_start_time, 'Die Anfangszeit ist ung&uuml;ltig') if ! from_start_time
+      errors.add(:to_end_time, 'Die Endzeit ist ung&uuml;ltig') if ! to_end_time
+      errors.add(:to_end_time, 'Die Endzeit muss nach der Startzeit sein') if from_start_time && 
           to_end_time && to_end_time <= from_start_time
     else
-      errors.add(:hours, 'should be positive') if hours <= 0
+      errors.add(:hours, 'Stunden m&uuml;ssen positiv sein') if hours <= 0
     end
   end
   

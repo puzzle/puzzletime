@@ -57,8 +57,8 @@ class EvaluatorController < ApplicationController
     setExportHeader(filename)
     
     csv_string = FasterCSV.generate do |csv|
-      csv << ["Date", "Hours", "Start Time", "End Time", "Report Type",
-              "Billable", "Employee", "Project", "Description"]
+      csv << ["Datum", "Stunden", "Start Zeit", "End Zeit", "Reporttyp",
+              "Verrechenbar", "Mitarbeiter", "Projekt", "Beschreibung"]
       @evaluation.times(@period).each do |time|
         csv << [ time.work_date.strftime("%d.%m.%Y"),
                  time.hours,
@@ -90,12 +90,12 @@ class EvaluatorController < ApplicationController
     begin
       @period = Period.new(params[:period][:startDate], 
                            params[:period][:endDate])  
-      raise ArgumentError, "start date after end date" if @period.negative?   
+      raise ArgumentError, "Start Datum nach End Datum" if @period.negative?   
       session[:period] = @period  
       redirect_to :action => params[:evaluation],
                   :category_id => params[:category_id]              
     rescue ArgumentError => ex
-      flash[:notice] = "Invalid period: " + ex
+      flash[:notice] = "Ung&uuml;ltige Zeitspanne: " + ex
       redirect_to :action => :selectPeriod, 
                   :evaluation => params[:evaluation],
                   :category_id => params[:category_id]

@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
   def authenticate
     @user = session[:user]
     unless @user
-      flash[:notice] = 'Please log in'
+      flash[:notice] = 'Bitten Loggen sie sich ein'
       redirect_to(:controller => 'login', :action => 'login' )
     end
   end 
@@ -25,7 +25,7 @@ class ApplicationController < ActionController::Base
   def authorize
     authenticate
     unless @user.management
-      flash[:notice] = 'You are not authorized to view this page'
+      flash[:notice] = 'Sie sind nicht authorisiert, diese Seite zu öffnen'
       redirect_to(:controller => 'login', :action => 'login' )
     end
   end  

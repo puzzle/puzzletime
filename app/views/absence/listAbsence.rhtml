@@ -1,16 +1,15 @@
 <h1>Absenzen</h1>
 <table>
-  <tr class="times_table_title">
-    <td>Bezeichnung</td>
-    <td>Bezahlt</td>
+  <tr>
+    <th>Bezeichnung</th>
+    <th>Bezahlt</th>
   </tr>
   <% for absence in @absences %>
-  <tr>
+  <%= alternate_row %>
     <td><%= absence.name %></td>
     <td><%= absence.payed ? 'ja' : 'nein' %></td>
-    <td>
-    <%= link_to 'Bearbeiten', :action => 'editAbsence', :id => absence %> | 
-    <%= link_to 'L&ouml;schen', {:action => 'confirmDeleteAbsence', :id => absence} %></td>
+    <td><%= link_to 'Bearbeiten', :action => 'editAbsence', :id => absence %></td>
+    <td><%= link_to 'L&ouml;schen', {:action => 'confirmDeleteAbsence', :id => absence} %></td>
   </tr>
   <% end %>
 </table>

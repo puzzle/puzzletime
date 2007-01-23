@@ -15,7 +15,13 @@ module ApplicationHelper
   # Change english datelayout to german one.
   def format_date(date)
     date.strftime("%a, %d.%m.%Y")
-  end  
+  end    
+    
+  def alternate_row
+    @row = 1 if ! defined? @row    
+    @row += 1
+    @row.modulo(2) == 1 ? '<tr class="uneven">' : '<tr>'
+  end    
   
   def evaluation_detail_params
     { :evaluation => params[:evaluation],

@@ -31,7 +31,7 @@ class EmployeeController < ApplicationController
   def createEmployee
     @employee = Employee.new(params[:employee])
     if @employee.save
-      flash[:notice] = 'Employee was successfully created.'
+      flash[:notice] = 'Der Mitarbeiter wurde erfassen'
       redirect_to :action => 'showEmployee', :id => @employee
     else
       render :action => 'newEmployee'
@@ -47,10 +47,10 @@ class EmployeeController < ApplicationController
   def updateEmployee
     @employee = Employee.find(params[:id])
     if @employee.update_attributes(params[:employee])
-      flash[:notice] = 'Employee was successfully updated.'
+      flash[:notice] = 'Der Mitarbeiter wurde aktualisiert'
       redirect_to :action => 'listEmployee'
     else
-      flash[:notice] = 'Problem on updating employee'
+      flash[:notice] = 'Der Mitarbeiter konnte nicht aktualisiert werden'
       render :action => 'editEmployee'
     end
   end
@@ -61,9 +61,9 @@ class EmployeeController < ApplicationController
   
   def deleteEmployee
     if Employee.destroy(params[:id])
-      flash[:notice] = 'Employee was deleted'      
+      flash[:notice] = 'Der Mitarbeiter wurde entfernt'      
     else
-      flash[:notice] = 'Problem on deleting employee'
+      flash[:notice] = 'Der Mitarbeiter konnte nicht entfernt werden'
     end
     redirect_to :action => 'listEmployee'
   end
@@ -83,9 +83,10 @@ class EmployeeController < ApplicationController
     end
     @employment.employee = @employee
     if @employment.save
-      flash[:notice] = 'Employment was successfully created'
+      flash[:notice] = 'Die Anstellung wurde erfasst'
       redirect_to :action => 'showEmployee', :id => @employee
     else 
+      flash[:notice] = 'Die Anstellung konnte nicht erfasst werden'
       render :action => 'showEmployee', :id => @employee
     end  
   end
@@ -111,15 +112,15 @@ class EmployeeController < ApplicationController
    rescue ActiveRecord::MultiparameterAssignmentErrors => ex
      ex.errors.each { |err| params[:employment].delete_if { |key, value| key =~ /^#{err.attribute}/ } }
      @employment.attributes = attributes
-     @employment.errors.add_to_base("Date is invalid")
+     @employment.errors.add_to_base("Datum ist ungültig")
      render :action => 'editEmployment'
    end
    
    if @employment.save
-      flash[:notice] = 'Employment was successfully updated.'
+      flash[:notice] = 'Die Anstellung wurde aktualisiert'
       redirect_to :action => 'showEmployee', :id => @employee
    else
-     flash[:notice] = 'Employment was not updated.'
+     flash[:notice] = 'Die Anstellung konnte nicht aktualisiert werden'
      render :action => 'editEmployment'
    end
  end 
@@ -133,10 +134,10 @@ class EmployeeController < ApplicationController
   def deleteEmployment
     @employee = Employee.find(params[:employee_id])
     if Employment.destroy(params[:employment_id])
-      flash[:notice] = 'Employment was deleted'
+      flash[:notice] = 'Die Anstellung wurde entfernt'
       redirect_to :action => 'showEmployee', :id => @employee
     else
-      flash[:notice] = 'Problem on deleting employment'
+      flash[:notice] = 'Die Anstellung konnte nicht entfernt werden'
       render :action => 'showEmployee', :id => @employee
     end
   end
@@ -146,14 +147,14 @@ class EmployeeController < ApplicationController
     if Employee.checkpwd(@user.id, params[:pwd])
       if params[:change_pwd] === params[:change_pwd_confirmation]
         @user.updatepwd(params[:change_pwd])
-        flash[:notice] = 'Password was successfully updated.'
+        flash[:notice] = 'Das Passwort wurde aktualisiert'
         redirect_to :controller =>'worktime', :action => 'listTime', :id => @user.id
       else
-        flash[:notice] = 'Password confirmation does not match'
+        flash[:notice] = 'Die Passwort Best&auml;tigung stimmt nicht mit dem Passwort &uuml;berein'
         render :controller =>'employee', :action => 'changePasswd', :id => @user.id
       end
     else
-     flash[:notice] = 'Old password does not match.'
+     flash[:notice] = 'Das alte Passwort ist falsch'
      render :controller =>'employee', :action => 'changePasswd', :id => @user.id
     end  
   end

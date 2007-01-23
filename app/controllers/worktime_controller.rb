@@ -56,7 +56,7 @@ class WorktimeController < ApplicationController
     @worktime = Worktime.find(params[:worktime_id])
     setWorktimeParams
     if @worktime.save
-      flash[:notice] = 'Time was successfully updated.'
+      flash[:notice] = 'Die Arbeitszeit wurde aktualisiert'
       listDetailTime
     else
       setWorktimeAccounts
@@ -70,12 +70,11 @@ class WorktimeController < ApplicationController
     @worktime.employee = @user    
     setWorktimeParams
     if @worktime.save      
-      flash[:notice] = 'Time was successfully added.'
-      if params[:commit] != 'Abschliessen'
-        account_id = @worktime.absence_id ?   
-          { :absence_id => @worktime.absence_id } : 
-          { :project_id => @worktime.project_id }
-        redirect_to account_id.merge!({ :action => 'addTime' })
+      flash[:notice] = 'Die Arbeitszeit wurde erfasst'
+      if params[:commit] != 'Abschliessen'        
+        @worktime = @worktime.template
+        setWorktimeAccounts
+        render :action => 'addTime'
       else
         listDetailTime  
       end
@@ -87,16 +86,15 @@ class WorktimeController < ApplicationController
   
   # Show the change project page.
   def changeProject
-    if @user.management then @projects = Project.list
-    else @projects = @user.managed_projects
-    end  
     @worktime = Worktime.find(params[:worktime_id])
+    #@projects = @user.management? ? Project.list : @user.managed_projects 
+    @projects = @worktime.employee.projects   
   end
   
   def updateProject
     @worktime = Worktime.find(params[:worktime_id])
     if @worktime.update_attributes(params[:worktime])
-      flash[:notice] = 'Project was successfully changed'
+      flash[:notice] = 'Das Projekt wurde angepasst'
       redirect_to evaluation_detail_params.merge!({
                         :controller => 'evaluator',
                         :action => 'details' }) 
@@ -131,7 +129,7 @@ class WorktimeController < ApplicationController
         redirect_to :action => 'splitAttendance'
       else       
         attendance.save
-        flash[:notice] = 'Time was successfully added.'
+        flash[:notice] = 'Die Arbeitszeit wurde erfasst'
         listDetailTime  
       end
     else
@@ -163,7 +161,7 @@ class WorktimeController < ApplicationController
       else
         @attendance.save
         session[:attendance] = nil
-        flash[:notice] = 'All times were successfully added.'
+        flash[:notice] = 'Alle Arbeitszeiten wurden erfasst'
         listDetailTime
       end
     else
@@ -196,9 +194,8 @@ private
     @worktime.from_start_time = Time.now.change(:hour => 8)
     @worktime.report_type = Worktime::TYPE_HOURS_DAY
     period = session[:period]
-    if period != nil && period.length == 1
-      @worktime.work_date = period.startDate
-    end  
+    @worktime.work_date = (period != nil && period.length == 1) ?
+       period.startDate : Date.today
   end
   
   def setWorktimeAccounts

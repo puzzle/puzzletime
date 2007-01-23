@@ -8,19 +8,17 @@
 <p/>
 
 <table>
-<tr class="times_table_title">
-   <td>Datum</td>
-   <td>Stunden</td>   
-   <td>Wer</td>
-   <td>Projekt</td>
-   <td>$</td>
-   <td>Beschreibung</td>
-   <td></td>
+<tr>
+   <th>Datum</th>
+   <th>Stunden</th>   
+   <th>Wer</th>
+   <th>Projekt</th>
+   <th>$</th>
+   <th>Beschreibung</th>
+   <th></th>
 </tr>
-<% row = 1 %>
 <% for time in @times %>
-<% row += 1 %>
-<%= alternate_row row %>
+<%= alternate_row  %>
   <td align="right"><%= format_date(time.work_date) %></td>
   <td align="right"><%= number_with_precision(time.hours, 2) %></td>
   <td><%= time.employee.shortname %></td>
@@ -35,41 +33,47 @@
                     :worktime_id => time.id})
       end    %>
   </td>
-  <td>
-  <% if @evaluation.for?(@user) %>
+<% if @evaluation.for?(@user) %>
+  <td>  
     <%= link_to 'Bearbeiten', 
                  evaluation_detail_params.merge!({
                     :controller =>'worktime', 
                     :action =>'editTime', 
                     :id => time.id}) %>
+  </td>
+  <td> 
     <%= link_to 'L&ouml;schen', 
                 evaluation_detail_params.merge!({
                     :controller =>'worktime', 
                     :action =>'confirmDeleteTime',                 
                     :id => time.id}) %>
-  <% else %>            
+  </td>                 
+<% else %>            
+  <td>
     <%= link_to 'Projekt &auml;ndern', 
                 evaluation_detail_params.merge!({
                     :controller =>'worktime', 
                     :action =>'changeProject', 
                     :worktime_id => time.id})  %>
-  <% end %>
-  </td>
+  </td>                 
+<% end %>
 </tr>
 <% end %> 
 <tr class="times_total_sum">
     <td>Total insgesamt</td> 
     <td align="right"><%= number_with_precision(@evaluation.sum_times(@period), 2) %></td>
-    <td colspan="4"></td> 
-    <td>
+    <td colspan="4"></td>     
     <% if @evaluation.for?(@user) %>
+    <td colspan="2">
       <% if @evaluation.division %>
         <a href="/worktime/addTime?project_id=<%= @evaluation.division.id %>">Zeit hinzuf&uuml;gen</a>
       <% else %>
         <a href="/worktime/addTime">Zeit hinzuf&uuml;gen</a>
       <% end %>  
-    <% end %>      
-    </td>
+    </td>  
+    <% else %>
+    <td></td>
+    <% end %>  
 </tr>
 </table>
 

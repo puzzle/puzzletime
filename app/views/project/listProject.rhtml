@@ -1,21 +1,25 @@
 <h1>Projekte</h1>
 <table>
-  <tr class="times_table_title">
-  <td>Name</td>
-  <td>Kunde</td>
+  <tr>
+  <th>Name</th>
+  <th>Kunde</th>
   </tr>
   
 <% for project in @projects %>
-  <tr>
+  <%= alternate_row %>
   	<td><%=h project.name %>
     <td><%=h project.client.name %>
     <td>
-    <%= link_to 'Anzeigen', :action => 'showProject', :id => project %> | 
-    <%= link_to 'Bearbeiten', :action => 'editProject', :id => project %>
-    <% if @user.management %> | 
-    <%= link_to 'L&ouml;schen', :action => 'confirmDeleteProject', :id => project %>
-    <% end %>
+    <%= link_to 'Anzeigen', :action => 'showProject', :id => project %> 
     </td>
+    <td>  
+    <%= link_to 'Bearbeiten', :action => 'editProject', :id => project %>
+    </td>
+    <% if @user.management %> 
+    <td>  
+    <%= link_to 'L&ouml;schen', :action => 'confirmDeleteProject', :id => project %>
+    </td>
+    <% end %>    
   </tr>
 <% end %>
 </table>

@@ -61,5 +61,6 @@ Engines.start :dhtml_calendar
 #module Engines
 #  CONFIG = {:edge => true}
 #end 
-
+#
+require "overrides" 
 require 'puzzletime_settings'

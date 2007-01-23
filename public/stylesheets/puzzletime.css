@@ -67,13 +67,14 @@ margin-top: 0px;
 padding-top: 0px;
 }
 
-.times_table_title
+th
 {
 font-weight: bold;
 color: #0087e3;
-
 white-space: nowrap;
+text-align: left;
 }
+
 
 .uneven {
   background-color: #E9F0FF;
@@ -91,7 +92,8 @@ white-space: nowrap;
 #content
 {
 position: relative;
-width: 992px;
+max-width: 992px;
+min-width: 700px;
 margin: auto;
 padding: 13px 16px 13px 16px;
 background: #fff url('../images/whitebox.gif') repeat-y;
@@ -154,15 +156,23 @@ color: #FCE2CA;
 {
 position: absolute;
 right: 16px;
-background: #EAEAE2 url("../images/banner.jpg") no-repeat;
+background: url("../images/banner.jpg") no-repeat;
 width: 547px;
 height: 92px;
 }
 
 #menu
 {
-background: url('../images/menu.gif') repeat-x;  /* #46461F */
-margin: 98px 0px 20px 0px;
+background: #46461F url('../images/menu_bg.gif') repeat-x;  /* #46461F */
+margin-top: 98px;
+height: 35px;
+}
+
+#menu_user
+{
+background: url('../images/menu_user.gif') repeat-x; 
+padding-top: 2px;
+margin-bottom: 30px;
 }
 
 #submenu
@@ -177,6 +187,10 @@ color: black;
 font-weight: bold;
 }
 
+#spacer
+{
+  margin-top: 120px;  
+}
 
 #menu ul
 {
@@ -235,23 +249,25 @@ letter-spacing: -1px;
   padding-top: 15px;
   padding-left: 20px;
   background-color: #f0f0f0;
+  margin-bottom: 15px;
 }
 
 #errorExplanation h2 {
   text-align: left;
   font-size: 13px;
   margin: -10px;
+  margin-bottom: 10px;
   color: #0087e3;
 }
 
 #errorExplanation p {
   color: #333;
   margin-left: -10px;
+  margin-bottom: -7px;
 }
 
 #errorExplanation ul li {
   color: #333;
-  font-size: 12px;
-  margin-left: 10px;
-  list-style: square;  
+  list-style: none;  
+  margin-left: -30px;
 }

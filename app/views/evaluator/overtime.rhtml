@@ -1,13 +1,13 @@
 <h1>&Uuml;berzeit &Uuml;bersicht</h1>
 <br/>
 <table>
-  <tr class="times_table_title">
-    <td>Mitarbeiter</td>
-    <td>Momentane &Uuml;berzeit</td>
-    <td>Verbleibende Ferien f&uuml;r <%= Date.today.year %></td>
+  <tr>
+    <th>Mitarbeiter</th>
+    <th>Momentane &Uuml;berzeit</th>
+    <th>Verbleibende Ferien f&uuml;r <%= Date.today.year %></th>
   </tr>
   <% for employee in @employees %>
-  <tr>
+  <%= alternate_row %>
     <td><%= employee.label %></td>
     <td><%= number_with_precision(employee.currentOvertime, 2) %> h </td>
     <td><%= number_with_precision(employee.currentRemainingVacations, 2) %> d</td>

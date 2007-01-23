@@ -4,11 +4,11 @@
  %>
 
 <table>
-<tr class="times_table_title">
-    <td><%= @evaluation.division_header %></td>    
+<tr>
+    <th><%= @evaluation.division_header %></th>    
     <%= render(:partial => 'periodHead', :collection => periods ) %>
-    <td>Total</td>
-    <td></td>
+    <th>Total</th>
+    <th></th>
  </tr>
  
  <%= render(:partial => 'division',

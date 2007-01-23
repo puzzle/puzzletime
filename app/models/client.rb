@@ -10,17 +10,16 @@ class Client < ActiveRecord::Base
   has_many :worktimes, :through => :projects
   
   # Validation helpers.
-  validates_presence_of :name
-  validates_uniqueness_of :name
-   
+  validates_presence_of :name, :message => "Ein Name muss angegeben sein"
+  validates_uniqueness_of :name, :message => "Dieser Name wird bereits verwendet"
+       
   def self.list 
     find(:all, :order => "name")  
   end  
     
   def self.label
     'Kunde'
-  end
-  
+  end  
   
   def partnerId
     :client_id

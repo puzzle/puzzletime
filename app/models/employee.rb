@@ -28,10 +28,12 @@ class Employee < ActiveRecord::Base
   attr_accessor :pwd 
   
   # Validation helpers.
-  validates_presence_of :firstname, :lastname, :shortname
-  validates_presence_of :pwd, :on => :create
-  validates_uniqueness_of :shortname 
-  
+  validates_presence_of :firstname, :message => "Der Vorname muss angegeben werden"
+  validates_presence_of :lastname, :message => "Der Nachname muss angegeben werden"
+  validates_presence_of :shortname, :message => "Das K&uuml;rzel muss angegeben werden"
+  validates_presence_of :pwd, :on => :create, :message => "Es muss ein Passwort angegeben werden"
+  validates_uniqueness_of :shortname, :message => "Dieses K&uuml;rzel wird bereits verwendet"
+ 
   # Hashes and compares the pwd.
   def self.login(shortname, pwd)
     passwd = encode(pwd)

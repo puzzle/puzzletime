@@ -14,9 +14,9 @@ class Project < ActiveRecord::Base
   belongs_to :client
   has_many :worktimes, :dependent => true
   
-  # Validation helpers.  
-  validates_presence_of :name
-  validates_uniqueness_of :name
+  validates_presence_of :name, :message => "Ein Name muss angegeben sein"
+  validates_uniqueness_of :name, :message => "Dieser Name wird bereits verwendet"
+    
   
   def self.list
     self.find(:all, :order => 'client_id, name')
