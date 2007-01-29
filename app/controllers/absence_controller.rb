@@ -50,14 +50,13 @@ class AbsenceController < ApplicationController
     @absence = Absence.find(params[:id])
   end
   
-  def deleteAbsence
-    flash[:notice] = 'Die Absenz wurde entfernt'
+  def deleteAbsence    
     begin
       Absence.destroy(params[:id])
-    rescue RuntimeError => err
+      flash[:notice] = 'Die Absenz wurde entfernt'
+    rescue Exception => err
       flash[:notice] = err.message
-    end     
-    
+    end         
     redirect_to :action => 'listAbsence'
   end
   

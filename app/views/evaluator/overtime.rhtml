@@ -3,14 +3,14 @@
 <table>
   <tr>
     <th>Mitarbeiter</th>
-    <th>Momentane &Uuml;berzeit</th>
-    <th>Verbleibende Ferien f&uuml;r <%= Date.today.year %></th>
+    <th>Momentane &Uuml;berzeit </th>
+    <th>Verbleibende Ferien f&uuml;r <%= Date.today.year %> </th>
   </tr>
   <% for employee in @employees %>
   <%= alternate_row %>
     <td><%= employee.label %></td>
-    <td><%= number_with_precision(employee.currentOvertime, 2) %> h </td>
-    <td><%= number_with_precision(employee.currentRemainingVacations, 2) %> d</td>
+    <td align="right"><%= number_with_precision(employee.currentOvertime, 2) %> h &nbsp;</td>
+    <td align="right"><%= number_with_precision(employee.currentRemainingVacations, 2) %> d &nbsp;</td>
   </tr>
   <% end %>
 </table>

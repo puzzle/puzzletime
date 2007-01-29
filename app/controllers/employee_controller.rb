@@ -60,11 +60,12 @@ class EmployeeController < ApplicationController
   end
   
   def deleteEmployee
-    if Employee.destroy(params[:id])
-      flash[:notice] = 'Der Mitarbeiter wurde entfernt'      
-    else
-      flash[:notice] = 'Der Mitarbeiter konnte nicht entfernt werden'
-    end
+    begin
+      Employee.destroy(params[:id])
+      flash[:notice] = 'Der Mitarbeiter wurde entfernt'    
+    rescue Exception => err
+      flash[:notice] = err.message
+    end   
     redirect_to :action => 'listEmployee'
   end
   

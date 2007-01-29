@@ -5,18 +5,18 @@ class Period
   attr_reader :startDate, :endDate, :label
   
   def self.currentWeek
-    self.weekFor(Date.today, "Diese Woche: #{Time.now.strftime('%W')}")
+    self.weekFor(Date.today, "KW #{Time.now.strftime('%W')}")
   end
   
   def self.currentMonth
     start = Date.today
     start -= start.day - 1
-    new(start, start + days_in_month(start.month, start.year) - 1, "Dieser Monat: #{Time.now.strftime('%m')}")    
+    new(start, start + days_in_month(start.month, start.year) - 1, "#{Date.today.strftime('%B')}")    
    end
   
   def self.currentYear
     today = Date.today
-    new(Date.civil(today.year, 1, 1), Date.civil(today.year, 12, 31), "Dieses Jahr: #{Time.now.strftime('%y')}")
+    new(Date.civil(today.year, 1, 1), Date.civil(today.year, 12, 31), "#{Date.today.strftime('%Y')}")
   end
   
   def self.weekFor(date, label = nil)

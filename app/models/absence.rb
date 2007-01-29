@@ -10,6 +10,8 @@ class Absence < ActiveRecord::Base
   has_many :employees, :through => :worktimes, :order => "lastname"
 
   before_destroy :dont_destroy_vacation
+  before_destroy :protect_worktimes
+  
   
   # Validation helpers
   validates_presence_of :name, :message => "Ein Name muss angegeben werden"

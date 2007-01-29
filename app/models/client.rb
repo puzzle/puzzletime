@@ -12,6 +12,9 @@ class Client < ActiveRecord::Base
   # Validation helpers.
   validates_presence_of :name, :message => "Ein Name muss angegeben sein"
   validates_uniqueness_of :name, :message => "Dieser Name wird bereits verwendet"
+  
+  before_destroy :protect_worktimes
+  
        
   def self.list 
     find(:all, :order => "name")  

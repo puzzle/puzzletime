@@ -63,6 +63,7 @@ class Worktime < ActiveRecord::Base
     newWorktime.work_date = work_date
     newWorktime.project_id = project_id
     newWorktime.absence_id = absence_id
+    newWorktime.billable = billable
     return newWorktime
   end
   

@@ -61,11 +61,12 @@ class ClientController < ApplicationController
   end
   
   def deleteClient
-    if Client.destroy(params[:id])
+    begin
+       Client.destroy(params[:id])
        flash[:notice] = 'Der Kunde wurde entfernt'
-    else
-       flash[:notice] = 'Der Kunde konnte nicht entfernt werden'
-    end      
+    rescue Exception => err
+       flash[:notice] = err.message
+    end   
     redirect_to :action => 'listClient'
   end
 end

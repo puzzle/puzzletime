@@ -75,9 +75,14 @@ white-space: nowrap;
 text-align: left;
 }
 
+th.periodHead
+{
+text-align: right;
+}
+
 
 .uneven {
-  background-color: #E9F0FF;
+  background-color: #C9D8FF;
 }
 
 .times_total_sum

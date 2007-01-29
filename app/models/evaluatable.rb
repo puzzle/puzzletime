@@ -41,4 +41,12 @@ module Evaluatable
     }
     return condArray
   end    
+  
+  def worktimes?
+    self.worktimes.size > 0
+  end
+    
+  def protect_worktimes
+    raise "Diesem Objekt sind Arbeitszeiten zugeteilt. Es kann nicht entfernt werden." if worktimes?
+  end  
 end 

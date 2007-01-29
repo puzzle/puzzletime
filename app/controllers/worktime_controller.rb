@@ -54,6 +54,10 @@ class WorktimeController < ApplicationController
   # Update the selected worktime on DB.
   def updateTime       
     @worktime = Worktime.find(params[:worktime_id])
+    if @worktime.employee != @user
+      listTime 
+      return
+    end  
     setWorktimeParams
     if @worktime.save
       flash[:notice] = 'Die Arbeitszeit wurde aktualisiert'
@@ -108,7 +112,8 @@ class WorktimeController < ApplicationController
   end
   
   def deleteTime
-    Worktime.destroy(params[:id])
+    worktime = Worktime.find(params[:id])
+    worktime.destroy if worktime.employee == @user
     redirect_to evaluation_detail_params.merge!({
                   :controller => 'evaluator', 
                   :action => 'details'})

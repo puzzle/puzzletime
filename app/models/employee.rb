@@ -41,6 +41,9 @@ class Employee < ActiveRecord::Base
   validates_presence_of :shortname, :message => "Das K&uuml;rzel muss angegeben werden"
   validates_presence_of :pwd, :on => :create, :message => "Es muss ein Passwort angegeben werden"
   validates_uniqueness_of :shortname, :message => "Dieses K&uuml;rzel wird bereits verwendet"
+  
+  before_destroy :protect_worktimes
+  
  
   # Hashes and compares the pwd.
   def self.login(shortname, pwd)
@@ -87,7 +90,11 @@ class Employee < ActiveRecord::Base
   def after_create
     @pwd = nil
   end
-   
+  
+  def initial_vacation_days
+    super || 0    
+  end
+  
   # Saves new password in DB.
   def updatepwd(pwd)
     hashed_pwd = Employee.encode(pwd)

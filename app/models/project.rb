@@ -17,6 +17,8 @@ class Project < ActiveRecord::Base
   validates_presence_of :name, :message => "Ein Name muss angegeben sein"
   validates_uniqueness_of :name, :message => "Dieser Name wird bereits verwendet"
     
+  before_destroy :protect_worktimes
+  
   
   def self.list
     self.find(:all, :order => 'client_id, name')
@@ -25,9 +27,10 @@ class Project < ActiveRecord::Base
   def self.label
     'Projekt'
   end
-    
+      
   def label_verbose
     client.name + ' - ' + name
-  end
+  end  
+  
 
 end

@@ -31,7 +31,7 @@ class ProjectController < ApplicationController
   
   # Creates new instance of project.
   def newProject
-    @clients = Client.find(:all)
+    @clients = Client.list
   end
  
   # Saves new project on DB.
@@ -71,8 +71,12 @@ class ProjectController < ApplicationController
   
   # Deletes the chosen project.
   def deleteProject
-    Project.destroy(params[:id])
-    flash[:notice] = 'Das Projekt wurde entfernt'
+    begin
+      Project.destroy(params[:id])
+      flash[:notice] = 'Das Projekt wurde entfernt'
+    rescue Exception => err
+      flash[:notice] = err.message
+    end      
     redirect_to :action => 'listProject'
   end
   
@@ -101,11 +105,11 @@ class ProjectController < ApplicationController
     
   def removeProjectMembership
     Projectmembership.destroy(params[:projectmembership_id])
-    flash[:notice] = "Der Mitarbeiter wurde vom Projekt entfernt
+    flash[:notice] = "Der Mitarbeiter wurde vom Projekt entfernt"
     redirect_to :action => 'showProject', :id => params[:project_id]
   end
   
-private
+private  
 
   def setProjectManagement(bool)
     projectmembership = Projectmembership.find(params[:projectmembership_id])
@@ -114,7 +118,7 @@ private
       @user.managed_projects(true)  #reload list for user (old version is cached otherwise)
     end
     flash[:notice] = "#{projectmembership.employee.label} wurde als Projektleiter " + (bool ? "erfasst" : "entfernt") 
-    redirect_to :action => 'showProject' , :id => params[:project_id]
+    redirect_to :action => 'showProject', :id => params[:project_id]
   end
   
   def listManagedProjects

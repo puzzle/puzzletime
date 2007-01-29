@@ -51,9 +51,7 @@ end
 require 'date'
 
 class Date
-  MONTHNAMES = [nil, 'Januar', 'Februar', 'März', 'April', 'Mai',
-                'Juni', 'Juli', 'August', 'September', 'Oktober',
-                'November', 'Dezember' ]
+  MONTHNAMES = [nil] + %w(Januar Februar März April Mai Juni Juli August September Oktober November Dezember)
   DAYNAMES = %w(Sonntag Montag Dienstag Mittwoch Donnerstag Freitag Samstag)
   ABBR_MONTHNAMES = [nil] + %w(Jan Feb Mär Apr Mai Jun Jul Aug Sep Okt Nov Dez)
   ABBR_DAYNAMES = %w(So Mo Di Mi Do Fr Sa)             
