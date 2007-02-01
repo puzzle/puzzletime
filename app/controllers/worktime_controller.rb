@@ -9,8 +9,10 @@ class WorktimeController < ApplicationController
   before_filter :authenticate
 
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
-  verify :method => :post, :only => [ :deleteTime, :createTime, :updateTime, :updateProject, :addAttendanceTime ],
+  verify :method => :post, :only => [ :deleteTime, :createTime, :updateTime, :updateProject ],
          :redirect_to => { :action => :listTime }
+         
+  FINISH = 'Abschliessen'       
    
   def index
     listTime
@@ -42,7 +44,27 @@ class WorktimeController < ApplicationController
       @worktime.project_id = params[:project_id] || DEFAULT_PROJECT_ID
     end  
     setWorktimeAccounts
-  end
+  end  
+      
+  # Stores the new time the data on DB.
+  def createTime
+    @worktime = Worktime.new
+    @worktime.employee = @user    
+    setWorktimeParams
+    if @worktime.save      
+      flash[:notice] = 'Die Arbeitszeit wurde erfasst'
+      if params[:commit] != FINISH        
+        @worktime = @worktime.template
+        setWorktimeAccounts
+        render :action => 'addTime'
+      else
+        listDetailTime  
+      end
+    else
+      setWorktimeAccounts
+      render :action => 'addTime'
+    end  
+  end  
   
   # Shows the edit page for the selected time.
   def editTime    
@@ -55,7 +77,7 @@ class WorktimeController < ApplicationController
   def updateTime       
     @worktime = Worktime.find(params[:worktime_id])
     if @worktime.employee != @user
-      listTime 
+      createWorktimeEdit 
       return
     end  
     setWorktimeParams
@@ -67,27 +89,40 @@ class WorktimeController < ApplicationController
       render :action => 'editTime'
     end  
   end
-    
-  # Stores the new time the data on DB.
-  def createTime
-    @worktime = Worktime.new
-    @worktime.employee = @user    
-    setWorktimeParams
-    if @worktime.save      
-      flash[:notice] = 'Die Arbeitszeit wurde erfasst'
-      if params[:commit] != 'Abschliessen'        
-        @worktime = @worktime.template
-        setWorktimeAccounts
-        render :action => 'addTime'
-      else
-        listDetailTime  
-      end
-    else
-      setWorktimeAccounts
-      render :action => 'addTime'
-    end  
-  end
   
+  def createWorktimeEdit
+    @edit = session[:edit]
+    if @edit.nil?
+      @worktime = Worktime.find(params[:worktime_id])
+      @edit = WorktimeEdit.new(@worktime.clone)
+    else  
+      @worktime = @edit.worktimeTemplate
+    end    
+    setWorktimeParams
+    done = false
+    if @worktime.valid?
+      if @edit.addWorktime(@worktime)
+        if @edit.incomplete?
+          session[:edit] = @edit
+          @worktime = @edit.worktimeTemplate
+        else
+          @edit.save
+          session[:edit] = nil
+          done = true
+          flash[:notice] = 'Die Arbeitszeit wurde angepasst'
+          redirect_to evaluation_detail_params.merge!({
+                        :controller => 'evaluator',
+                        :action => 'details' }) 
+        end
+      end  
+    end
+    if ! done
+      @accounts = @worktime.employee.projects 
+      render :action => 'worktimeEdit'
+    end     
+  end
+ 
+
   # Show the change project page.
   def changeProject
     @worktime = Worktime.find(params[:worktime_id])
@@ -119,68 +154,11 @@ class WorktimeController < ApplicationController
                   :action => 'details'})
   end
   
-  def attendance
-    createDefaultWorktime   
-  end
-  
-  def saveAttendance
-    @worktime = Worktime.new
-    @worktime.employee = @user
-    setWorktimeParams
-    if @worktime.valid?     
-      attendance = Attendance.new(@worktime)
-      if params[:commit] != 'Abschliessen'
-        session[:attendance] = attendance
-        redirect_to :action => 'splitAttendance'
-      else       
-        attendance.save
-        flash[:notice] = 'Die Arbeitszeit wurde erfasst'
-        listDetailTime  
-      end
-    else
-      render :action => 'attendance'
-    end  
-  end
-  
-  def splitAttendance
-    @attendance = session[:attendance]
-    redirect_to :action => 'addTime' if @attendance.nil?
-    @worktime = @attendance.worktimeTemplate
-    setWorktimeAccounts
-  end
-  
-  def deleteAttendanceTime
-    session[:attendance].removeWorktime(params[:attendance_id].to_i)
-    redirect_to :action => 'splitAttendance'
-  end
-  
-  def addAttendanceTime
-    @worktime = Worktime.new
-    @worktime.employee = @user
-    setWorktimeParams
-    @attendance = session[:attendance]
-    if @worktime.valid?      
-      @attendance.addWorktime(@worktime)         
-      if params[:commit] != 'Abschliessen' && @attendance.incomplete?
-        redirect_to :action => 'splitAttendance'
-      else
-        @attendance.save
-        session[:attendance] = nil
-        flash[:notice] = 'Alle Arbeitszeiten wurden erfasst'
-        listDetailTime
-      end
-    else
-      setWorktimeAccounts
-      render :action => 'splitAttendance'
-    end  
-  end
-  
   def addMultiAbsence
     @accounts = Absence.list
     @multiabsence = MultiAbsence.new
   end
-  
-  
+    
   def createMultiAbsence
     @multiabsence = MultiAbsence.new
     @multiabsence.employee = @user    
@@ -197,23 +175,27 @@ class WorktimeController < ApplicationController
     end  
   end
   
-private
+protected
 
   #List the time.
   def listDetailTime
     eval = 'userProjects'
-    if @worktime != nil && @worktime.absence? 
+    @worktime ||= Worktime.new
+    if @worktime.absence? 
       @user.absences(true)      #true forces reload
       eval = 'userAbsences'
     end  
+    periodParam = {}
     if session[:period].nil? || 
         ! session[:period].include?(@worktime.work_date)
-      session[:period] = Period.weekFor(@worktime.work_date)
+      period = Period.weekFor(@worktime.work_date)
+      periodParam = {:start_date => period.startDate, :end_date => period.endDate}
     end
-    redirect_to :controller => 'evaluator', 
+    redirect_to periodParam.merge!({
+                :controller => 'evaluator', 
                 :action => 'details', 
                 :evaluation => eval, 
-                :category_id => @user.id
+                :category_id => @user.id })
   end
 
   def createDefaultWorktime

@@ -7,7 +7,24 @@
 <br/>
 
 <%= start_form_tag( { :action => 'createTime' }) %>
+<table>
 <%= render :partial => 'form' %>
+<tr>
+    <td></td>
+    <td>    
+    <table>
+    <tr>
+      <td>      
+      <%= submit_tag 'Speichern und weiter erfassen' %>
+      </td>
+      <td>
+      <%= submit_tag WorktimeController::FINISH %>
+      </td>
+    </tr>
+    </table> 
+    </td>
+</tr>
+</table>
 <%= end_form_tag %>
 
 <br/>

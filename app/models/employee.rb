@@ -11,12 +11,14 @@ class Employee < ActiveRecord::Base
   has_many :employments, :order => 'start_date', :dependent => true
   has_many :projectmemberships, :dependent => true
   has_many :projects, 
+           :include => :client,
            :through => :projectmemberships, 
-           :order => "client_id, name"
+           :order => "clients.name, projects.name"
   has_many :managed_projects, 
            :class_name => 'Project', 
            :through => :projectmemberships, 
-           :order => "client_id, name", 
+           :include => :client,
+           :order => "clients.name, projects.name", 
            :conditions => "projectmemberships.projectmanagement IS TRUE"
   has_many :managed_employees, 
            :class_name => 'Employee', 

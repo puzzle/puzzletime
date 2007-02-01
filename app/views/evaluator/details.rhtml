@@ -33,7 +33,6 @@
                     :worktime_id => time.id})
       end    %>
   </td>
-<% if @evaluation.for?(@user) %>
   <td>  
     <%= link_to 'Bearbeiten', 
                  evaluation_detail_params.merge!({
@@ -41,21 +40,14 @@
                     :action =>'editTime', 
                     :id => time.id}) %>
   </td>
+<% if @evaluation.for?(@user) %>
   <td> 
     <%= link_to 'L&ouml;schen', 
                 evaluation_detail_params.merge!({
                     :controller =>'worktime', 
                     :action =>'confirmDeleteTime',                 
                     :id => time.id}) %>
-  </td>                 
-<% else %>            
-  <td>
-    <%= link_to 'Projekt &auml;ndern', 
-                evaluation_detail_params.merge!({
-                    :controller =>'worktime', 
-                    :action =>'changeProject', 
-                    :worktime_id => time.id})  %>
-  </td>                 
+  </td>                  
 <% end %>
 </tr>
 <% end %> 

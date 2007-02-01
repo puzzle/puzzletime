@@ -16,7 +16,7 @@ module Evaluatable
      
   def worktimesBy(period = nil, absences = nil, partnerVal = 0, options = {})
     options[:conditions] = conditionsFor(period, {partnerId => partnerVal}, absences)
-    options[:order] = "work_date ASC, from_start_time ASC"
+    options[:order] = "work_date ASC, from_start_time ASC, project_id, employee_id"
     worktimes.find(:all, options)
   end  
   

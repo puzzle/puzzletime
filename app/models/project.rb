@@ -20,8 +20,10 @@ class Project < ActiveRecord::Base
   before_destroy :protect_worktimes
   
   
-  def self.list
-    self.find(:all, :order => 'client_id, name')
+  def self.list(options = {})
+    options.merge!({:include => :client,
+                    :order => 'clients.name, projects.name'})
+    self.find(:all, options)
   end
     
   def self.label

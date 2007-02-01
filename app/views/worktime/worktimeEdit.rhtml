@@ -1,8 +1,14 @@
-<h1>Arbeitszeit bearbeiten von <%= @worktime.account.name %></h1>
+<h1>Arbeitszeit bearbeiten von <%= @worktime.employee.label %></h1>
+<br/>
+
+<p>
+Zur Vervollst&auml;ndigung der geleisteten Stunden
+m&uuml;ssen noch weitere Eintr&auml;ge erstellt werden.
+</p>
 <br/>
 
 <%= start_form_tag evaluation_detail_params.merge!({                        
-                        :action => 'updateTime', 
+                        :action => 'createWorktimeEdit', 
                         :worktime_id => @worktime}) %>
 <table>                        
 <%= render :partial => 'form' %>

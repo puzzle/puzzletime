@@ -29,7 +29,7 @@ class EvaluatorController < ApplicationController
     if params[:start_date] != nil
       @period = params[:start_date] == "0" ? nil :
                    Period.new(Date.parse(params[:start_date]), Date.parse(params[:end_date]))     
-      session[:period] = @period 
+       #session[:period] = @period 
     end
     
     @time_pages = Paginator.new self, @evaluation.count_times(@period), NO_OF_DETAIL_ROWS, params[:page]

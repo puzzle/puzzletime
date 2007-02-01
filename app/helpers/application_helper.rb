@@ -27,6 +27,8 @@ module ApplicationHelper
     { :evaluation => params[:evaluation],
       :category_id => params[:category_id],
       :division_id => params[:division_id],
+      :start_date => params[:start_date],
+      :end_date => params[:end_date],
       :page => params[:page] }
   end
   

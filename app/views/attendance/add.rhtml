@@ -4,7 +4,7 @@
 
 <%= error_messages_for 'worktime' %>
 
-<%= start_form_tag :action => 'saveAttendance' %>
+<%= start_form_tag :action => 'create' %>
 <table>
     <tr>
 	<td>Report Typ: </td>
@@ -41,9 +41,7 @@
     <td>    
     <table>
     <tr>
-      <td>
-      <%= submit_tag 'Aufteilen' %>
-      </td>
+      <td><%= submit_tag 'Aufteilen' %></td>
       <td><%= submit_tag 'Abschliessen' %></td>
     </tr>
     </table>   
@@ -55,4 +53,4 @@
 <br/>
 <%= link_to '&Uuml;bersicht', :action => 'listTime' %>
  
-<%= render :partial => 'type_switch_js' %>
+<%= render :partial => 'worktime/type_switch_js' %>

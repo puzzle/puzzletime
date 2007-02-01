@@ -129,11 +129,14 @@ private
   end
   
   def listAllProjects
-    options = {:order => 'client_id, name', :per_page => NO_OF_OVERVIEW_ROWS}
+    @project_pages = Paginator.new self, Project.count, NO_OF_OVERVIEW_ROWS, params[:page]
+   
+    options = {:limit => @project_pages.items_per_page,
+               :offset => @project_pages.current.offset}
     if params.has_key?(:client_id) 
       options[:conditions] = ['client_id = ?', params[:client_id]]
     end
-    @project_pages, @projects = paginate :projects, options
+    @projects = Project.list(options)
   end
   
 end

@@ -14,7 +14,7 @@ DEFAULT_PROJECT_ID      = 8
 REGULAR_HOLIDAYS        = [[1,1],[2,1],[1,8],[25,12],[26,12]]
 
 # Applications Customization Settings
-NO_OF_OVERVIEW_ROWS     = 10      # rows for listing projects, employees, ...
+NO_OF_OVERVIEW_ROWS     = 5      # rows for listing projects, employees, ...
 NO_OF_DETAIL_ROWS       = 20      # rows for detail time entries
 
 DATE_FORMAT             = '%d.%m.%Y'

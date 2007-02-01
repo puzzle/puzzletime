@@ -3,7 +3,7 @@ body
 background: #F9F9F7 url('../images/diagonal.gif') repeat-x;
 font-size: 14px;
 font-family: "trebuchet ms", helvetica, sans-serif;
-color: #666666;
+color: #333333;
 line-height: 14px;
 padding: 0px;
 margin: 0px;
@@ -88,7 +88,7 @@ text-align: right;
 .times_total_sum
 {
 font-weight: bold;
-color: #f4a460;
+/* color: #f4a460; */
 padding-top: 10px;
 padding-bottom: 20px;
 white-space: nowrap;
@@ -102,16 +102,6 @@ min-width: 730px;
 margin: auto;
 padding: 13px 16px 13px 16px;
 background: #fff url('../images/whitebox.gif') repeat-y;
-}
-
-
-#puzzle_total_sum
-{
-font-weight: bold;
-color: #f4a460;
-padding-top: 10px;
-padding-bottom: 20px;
-line-height: 0px;
 }
 
 #header
@@ -131,19 +121,17 @@ font-weight: normal;
 
 #header h1
 {
-position: absolute;
+top: 4px;
 font-size: 28px;
 letter-spacing: -1px;
-top: 4px;
+margin-bottom: 3px;
 }
 
-#header h2
+#brand
 {
-position: absolute;
 font-size: 11px;
 font-weight: normal;
 color: #FCE2CA;
-top: 44px;
 }
 
 #notice

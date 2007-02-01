@@ -1,82 +1,58 @@
 
 <%= error_messages_for 'worktime' %>
 
-<table>
-    <tr>
-	<td>Reporttyp: </td>
-    <td><%= select_report_type %> </td>
-  </tr>
-  <tr>
-	<td>
-	<% if @worktime.project_id.nil? 
-	       account_id = :absence_id %>
-	   Absenz: 
-	<% else 
-	       account_id = :project_id %>
-	   Projekt:
-	<% end %>      
-	</td>
-    <td>
-        <%= collection_select( :worktime, account_id, @accounts, :id, :label_verbose) %>
+<tr>
+  <td>Reporttyp: </td>
+  <td><%= select_report_type %> </td>
+</tr>
+<tr>
+  <td>
+    <% if @worktime.project_id.nil? 
+           account_id = :absence_id %>
+       Absenz: 
+    <% else 
+           account_id = :project_id %>
+       Projekt:
+    <% end %>      
     </td>
-  </tr>
-  <tr>
+    <td><%= collection_select( :worktime, account_id, @accounts, :id, :label_verbose) %></td>
+</tr>
+ <tr>
     <td>Datum: </td>
-    <td>
-    <%= date_calendar_field 'worktime', 'work_date', 'Datum' %>
-    </td>
-  </tr>
-  <tr>
+    <td><%= date_calendar_field 'worktime', 'work_date', 'Datum' %></td>
+</tr>
+<tr>
     <td>Stunden: </td>
     <td><%= text_field('worktime', 'hours', :disabled => true, :size => '15')  %></td>
-  </tr>
-  <tr>
+</tr>
+<tr>
     <td>Anfangszeit: </td>
     <td>     
-      <%= text_field 'worktime', 
-                     'from_start_time', 
-                     :size => '15', 
-                     :value => @worktime.formatted_start_time  %> 
+    <%= text_field 'worktime', 
+                 'from_start_time', 
+                 :size => '15', 
+                 :value => @worktime.formatted_start_time  %> 
     </td>
-  </tr>
-  <tr>
+</tr>
+<tr>
     <td>Endzeit: </td>
     <td>
     <%= text_field 'worktime', 
-                   'to_end_time', 
-                   :size => '15',
-                   :value => @worktime.formatted_end_time   %> 
+               'to_end_time', 
+               :size => '15',
+               :value => @worktime.formatted_end_time   %> 
     </td>
-  </tr>
-  <tr valign="top">
+</tr>
+<tr valign="top">
     <td>Beschreibung: </td>
     <td><%= text_area 'worktime', 'description', {:rows => 5} %></td>
-  </tr>
-  <% if ! @worktime.absence? %>
-  <tr>
+</tr>
+<% if ! @worktime.absence? %>
+<tr>
     <td>Verrechenbar: </td>
     <td><%= check_box 'worktime', 'billable' %></td>
-  </tr>
-  <% end %>
-  <tr>
-    <td></td>
-    <td>    
-    <% if @worktime.new_record? %>
-    <table>
-    <tr>
-      <td>      
-      <%= submit_tag 'Speichern und weiter erfassen' %>
-      </td>
-      <td>
-      <%= submit_tag 'Abschliessen' %>
-      </td>
-    </tr>
-    </table>   
-    <% else %>
-    <%= submit_tag 'Speichern' %>
-    <% end %>
-    </td>
-   </tr>
- </table>
+</tr>
+<% end %>
+
  
-<%= render :partial => 'type_switch_js' %>
+<%= render :partial => 'worktime/type_switch_js' %>
