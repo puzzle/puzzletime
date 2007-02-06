@@ -1,0 +1,39 @@
+<h1><%= modelClass.labelPlural %> <%= groupLabel %></h1>
+
+<table>
+<tr>
+<% for field in moduleClass.listFields %>
+  <th><%= field[1] %> </th>
+<% end %>  
+</tr>  
+<% for entry in @entries %>
+  <%= alternate_row %>
+  <% for field in moduleClass.listFields %>
+    <%= dataField entry, field[0] %>
+  <% end %>
+  <% for action in controller.listActions %>
+    <td>
+    <%= actionLink action, entry %> 
+    </td>
+  <% end %> 
+    <td> 
+    <%= link_to 'Bearbeiten', linkParams(:action => 'edit', :id => entry) %> 
+    </td>
+    <td> 
+    <%= link_to 'L&ouml;schen', linkParams(:action => 'confirmDelete', :id => entry) %>
+    </td>
+  </tr>
+<% end %>
+</table>
+
+<% if @entry_pages.page_count > 1 %>
+<br />
+Seite: 
+<%= pagination_links(@entry_pages, :params => linkParams) %>
+<br />
+<% end %>
+<br />
+<br />
+
+<%= link_to newLabel, linkParams(:action => 'add') %> 
+<%= groupLink %>

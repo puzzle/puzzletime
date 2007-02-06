@@ -1,8 +1,0 @@
-<h1>Mitarbeiter bearbeiten</h1>
-<br/>
-<%= start_form_tag :action => 'updateEmployee', :id => @employee %>
-<%= render :partial => 'form' %>  
-<%= end_form_tag %>
-
-<%= link_to '&Uuml;bersicht', :action => 'listEmployee' %> |
-<%= link_to 'Anzeigen', :action => 'showEmployee', :id => @employee %>

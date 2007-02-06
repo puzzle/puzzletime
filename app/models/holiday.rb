@@ -2,6 +2,8 @@
 # Diplomarbeit 2149, Xavier Hayoz
 
 class Holiday < ActiveRecord::Base
+  
+  extend Manageable
 
   after_save :refresh
   
@@ -39,8 +41,8 @@ class Holiday < ActiveRecord::Base
   # 0 is Sunday, 6 is Saturday
   def self.isWeekend(date)
     return date.wday == 0 || date.wday == 6
-  end  
-  
+  end
+    
   def self.refresh
     @@irregularHolidays = Holiday.find(:all, :order => 'holiday_date')
   end 
@@ -50,5 +52,23 @@ class Holiday < ActiveRecord::Base
   end
   
   self.refresh
+  
+  ##### interface methods for Manageable #####
+  
+  def self.fieldNames
+    [ [ :holiday_date, 'Datum' ], [ :musthours_day, 'Muss Stunden' ] ]
+  end
+  
+  def self.labels
+    ['Der', 'Feiertag', 'Feiertage']
+  end
+  
+  def self.orderBy
+    'holiday_date'
+  end
+  
+  def label
+    "den Feiertag am #{holiday_date.strftime('%a, %d.%m.%Y')}"
+  end
   
 end

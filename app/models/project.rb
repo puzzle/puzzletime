@@ -4,6 +4,7 @@
 class Project < ActiveRecord::Base
   
   include Evaluatable
+  extend Manageable
 
   # All dependencies between the models are listed below.
   has_many :projectmemberships, :dependent => true, :finder_sql => 
@@ -19,11 +20,27 @@ class Project < ActiveRecord::Base
     
   before_destroy :protect_worktimes
   
+  ##### interface methods for Manageable #####  
+    
+  def self.labels
+    ['Das', 'Projekt', 'Projekte']
+  end  
   
+  def self.fieldNames    
+    [[:name, 'Name'], 
+     [:client_id, 'Kunde'],
+     [:description, 'Beschreibung']]    
+  end
+  
+  def self.listFields
+    [[:name, 'Name'], 
+     [:client, 'Kunde']]
+  end
+    
   def self.list(options = {})
-    options.merge!({:include => :client,
-                    :order => 'clients.name, projects.name'})
-    self.find(:all, options)
+    options[:include] ||= :client
+    options[:order] ||= 'clients.name, projects.name'
+    super(options)
   end
     
   def self.label
@@ -32,7 +49,6 @@ class Project < ActiveRecord::Base
       
   def label_verbose
     client.name + ' - ' + name
-  end  
-  
+  end    
 
 end

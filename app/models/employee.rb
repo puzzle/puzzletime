@@ -6,6 +6,7 @@ require "digest/sha1"
 class Employee < ActiveRecord::Base
   
   include Evaluatable
+  extend Manageable
   
   # All dependencies between the models are listed below.
   has_many :employments, :order => 'start_date', :dependent => true
@@ -41,7 +42,6 @@ class Employee < ActiveRecord::Base
   validates_presence_of :firstname, :message => "Der Vorname muss angegeben werden"
   validates_presence_of :lastname, :message => "Der Nachname muss angegeben werden"
   validates_presence_of :shortname, :message => "Das K&uuml;rzel muss angegeben werden"
-  validates_presence_of :pwd, :on => :create, :message => "Es muss ein Passwort angegeben werden"
   validates_uniqueness_of :shortname, :message => "Dieses K&uuml;rzel wird bereits verwendet"
   
   before_destroy :protect_worktimes
@@ -63,13 +63,35 @@ class Employee < ActiveRecord::Base
                          id, passwd])
   end
   
-  def self.list 
-    find(:all, :order => "lastname")  
+  ##### interface methods for Manageable #####  
+    
+  def self.labels
+    ['Der', 'Mitarbeiter', 'Mitarbeiter']
+  end  
+  
+  def self.fieldNames    
+    [[:firstname, 'Vorname'], 
+     [:lastname, 'Nachname'],
+     [:shortname, 'Kürzel'],
+     [:email, 'Email'],
+     [:phone, 'Telefon'],
+     [:initial_vacation_days, 'Anfängliche Ferien'],
+     [:management, 'GL']]    
+  end
+  
+  def self.listFields
+    [[:lastname, 'Nachname'],
+     [:firstname, 'Vorname'], 
+     [:shortname, 'Kürzel'],
+     [:current_percent, 'Prozent'],
+     [:management, 'GL']]
+  end
+  
+  def self.orderBy 
+    'lastname, firstname'
   end
     
-  def self.label
-    'Mitarbeiter'
-  end  
+   ##### interface methods for Evaluatable #####    
   
   def label
     lastname + " " + firstname
@@ -78,23 +100,25 @@ class Employee < ActiveRecord::Base
   def partnerId
     :project_id
   end
+  
+  ##### helper methods #####
     
   def projectManager?
     managed_projects.size > 0
   end  
   
+  def initial_vacation_days
+    super || 0    
+  end
+  
   # Hashes password before storing it.
   def before_create
-    self.passwd = Employee.encode(self.pwd)
+    self.passwd = Employee.encode(self.shortname)    
   end
   
   # After created password, instance pwd should be nil
   def after_create
     @pwd = nil
-  end
-  
-  def initial_vacation_days
-    super || 0    
   end
   
   # Saves new password in DB.
@@ -161,6 +185,14 @@ class Employee < ActiveRecord::Base
     employments.find(:first, 
           :conditions => ['start_date <= ? AND (end_date IS NULL OR end_date >= ?)', 
             date, date]) 
+  end
+  
+  def current_percent
+    if empl = current_employment
+      empl.percent.to_s + ' %'
+    else
+      'keine'
+    end  
   end
   
   def current_employment

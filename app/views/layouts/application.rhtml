@@ -49,8 +49,7 @@
                  :action => 'absences' %></li>
         <% if @user.management || @user.projectManager? %>         
 		<li><%= link_to 'Verwalten', 
-		         :controller => 'project', 
-		         :action => 'listProject' %></li>         
+		         :controller => 'project' %></li>         
 		<% end %>
 	  </ul>		
 	</div>   
@@ -65,19 +64,20 @@
 	</div>
 	
 	<% if @user.management &&
-	     ['client', 'employee', 'absence', 'project', 'holiday'].include?(params[:controller]) %>
+	     ['client', 'employee', 'absence', 'project', 
+	      'holiday', 'employment', 'projectmembership'].include?(params[:controller]) %>
         <div id="submenu">
         Verwalte:
         &nbsp;
-        <%= link_to 'Mitarbeiter', :controller => 'employee', :action => 'listEmployee' %>
+        <%= link_to 'Mitarbeiter', :controller => 'employee' %>
         &nbsp;
-        <%= link_to 'Projekte', :controller => 'project', :action => 'listProject' %>
+        <%= link_to 'Projekte', :controller => 'project' %>
         &nbsp;
-        <%= link_to 'Kunden', :controller => 'client', :action => 'listClient' %>
+        <%= link_to 'Kunden', :controller => 'client' %>
         &nbsp;
-        <%= link_to 'Absenzen', :controller => 'absence', :action => 'listAbsence' %>
+        <%= link_to 'Absenzen', :controller => 'absence' %>
         &nbsp;
-        <%= link_to 'Feiertage', :controller => 'holiday', :action => 'list' %>
+        <%= link_to 'Feiertage', :controller => 'holiday' %>
         </div>
 	<% end%>
 	

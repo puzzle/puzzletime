@@ -1,0 +1,54 @@
+<h1><%= Employee.labelPlural %> von <%= @project.label %></h1>
+
+<table>
+<tr>
+    <th>Mitarbeiter</th>
+    <th>Projektleitung</th>
+</tr>
+<%for membership in @project.projectmemberships %> 
+<%= alternate_row %>
+    <td> <%= membership.employee.label %> </td>        
+    <td align="center"> 
+    <% if !membership.projectmanagement %>
+        <%= link_to 'Hinzuf&uuml;gen', 
+    	             :action => 'createManager',     	             
+    	             :id => membership,
+    	             :group_id => @project, 
+    	             :group_page => params[:group_page] %>             
+    <% else %>
+        <%= link_to 'Entfernen', 
+                     :action => 'removeManager',  
+                     :id => membership, 
+                     :group_id => @project, 
+    	             :group_page => params[:group_page] %> 
+    <% end %>          
+    </td> 
+    <td>
+    <%= link_to 'Vom Projekt entfernen', 
+                { :action => 'removeMembership', 
+                  :id => membership,  
+                  :group_id => @project,
+    	          :group_page => params[:group_page] }, 
+                :confirm => 'Sind sie sicher?', 
+                :post => true %>
+    </td>
+  </tr>
+<% end %>
+</table> 
+</br>
+
+<p>
+Mitarbeiter:
+<%= start_form_tag :action => 'createMembership', 
+                   :group_id => @project,
+                   :group_page => params[:group_page]  %> 
+<select name="employee_id[]" multiple="multiple" size="5">
+<%= options_from_collection_for_select @employees, :id, :label %>
+</select>
+<%= submit_tag 'Hinzufügen' %>
+<%= end_form_tag %>
+</p>
+<br/>   
+
+<%= link_to '&Uuml;bersicht Projekte', :controller => 'project', :action => 'list' %> |
+<%= link_to 'Projekt Bearbeiten', :controller => 'project', :action => 'edit', :id => @project %>

@@ -1,20 +1,20 @@
-<%= error_messages_for(:project) %>
+<%= error_messages_for :entry %>
+
 <table>
-  <tr>
-    <td>Name: </td>
-  	<td><%= text_field 'project', 'name', :size => 20  %></td>
-  </tr>
-  <tr>
-    <td>Kunde: </td>
-    <td>
-    <%= collection_select( :project, :client_id, @clients, :id, :name) %>    
-    </td>
-   </tr>
-   <tr valign="top">
-     <td>Beschreibung: </td>
-  	 <td><%= text_area 'project', 'description',{:rows => 5}  %></td>
-   </tr>
-   <tr>
-     <td><td><%= submit_tag 'Speichern' %></td></td>
-   </tr>
+<tr>
+  <td>Name: </td>
+  <td><%= text_field 'entry', 'name', :size => 20  %></td>
+</tr>
+<tr>
+  <td>Kunde: </td>
+  <td><%= collection_select( :entry, :client_id, @clients, :id, :name) %></td>
+</tr>
+<tr valign="top">
+  <td>Beschreibung: </td>
+  <td><%= text_area 'entry', 'description', {:rows => 5, :cols => 30}  %></td>
+</tr>
+<tr>
+  <td></td>
+  <td><%= submit_tag 'Speichern' %></td>
+</tr>
  </table>

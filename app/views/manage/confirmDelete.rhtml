@@ -1,0 +1,19 @@
+<h1><%= modelClass.label %> l&ouml;schen</h1>
+
+<p>Wollen sie <%= @entry.label %> wirklich entfernen?</p>
+
+<table>
+<tr>
+    <td>
+    <%= start_form_tag linkParams(:action => 'delete', :id => @entry) %>
+    <%= submit_tag 'Löschen' %>  
+    <%= end_form_tag %>
+    </td>
+    <td>
+    <%= start_form_tag linkParams(:action => 'list') %>
+    <%= submit_tag 'Abbrechen' %>  
+    <%= end_form_tag %>
+    </td>
+</td>
+</table>    
+

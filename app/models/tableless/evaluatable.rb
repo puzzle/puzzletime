@@ -49,4 +49,8 @@ module Evaluatable
   def protect_worktimes
     raise "Diesem Objekt sind Arbeitszeiten zugeteilt. Es kann nicht entfernt werden." if worktimes?
   end  
+  
+  def to_s
+    label
+  end
 end 

@@ -4,6 +4,7 @@
 class Absence < ActiveRecord::Base
 
   include Evaluatable
+  extend Manageable
   
   # All dependencies between the models are listed below
   has_many :worktimes, :dependent => true
@@ -14,15 +15,17 @@ class Absence < ActiveRecord::Base
   
   
   # Validation helpers
-  validates_presence_of :name, :message => "Ein Name muss angegeben werden"
-  validates_uniqueness_of :name, :message => "Dieser Name wird bereits verwendet"
+  validates_presence_of :name, :message => "Eine Bezeichnung muss angegeben werden"
+  validates_uniqueness_of :name, :message => "Diese Bezeichnung wird bereits verwendet"
     
-  def self.list
-    find(:all, :order => 'name')
-  end
-  
-  def self.label
-    'Absenz'
+  ##### interface methods for Manageable #####   
+    
+  def self.fieldNames
+    [[:name, 'Bezeichnung'], [:payed, 'Bezahlt']]
+  end  
+
+  def self.labels
+    ['Die', 'Absenz', 'Absenzen']
   end
   
   def dont_destroy_vacation

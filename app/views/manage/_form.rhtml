@@ -1,0 +1,14 @@
+<%= error_messages_for :entry %>
+  
+<table>
+<% for field in moduleClass.fieldNames %>
+<tr>
+  <td><%= field[1] %>: </td>
+  <td><%= inputField field %></td>
+</tr>
+<% end %>
+<tr>
+  <td></td>
+  <td><%= submit_tag 'Speichern' %></td>
+</tr>
+</table>

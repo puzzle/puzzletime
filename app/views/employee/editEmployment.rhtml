@@ -1,8 +1,0 @@
-<h1>Anstellung bearbeiten </h1>
-  <%= form_tag :action => 'updateEmployment', :id => @employment, :employee_id => @employee %>
-  <%= render :partial => 'employment' %>
-  <%= submit_tag 'Save' %>
-  <%= end_form_tag %>
-<br/>
-<br/>
-<%= link_to 'Mitarbeiter anzeigen', :action => 'showEmployee', :id => @employee %>  

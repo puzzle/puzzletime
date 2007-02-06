@@ -4,6 +4,7 @@
 class Client < ActiveRecord::Base
 
   include Evaluatable
+  extend Manageable
 
   # All dependencies between the models are listed below.
   has_many :projects, :order => "name"
@@ -14,19 +15,22 @@ class Client < ActiveRecord::Base
   validates_uniqueness_of :name, :message => "Dieser Name wird bereits verwendet"
   
   before_destroy :protect_worktimes
-  
-       
-  def self.list 
-    find(:all, :order => "name")  
-  end  
+
+  ##### interface methods for Manageable #####  
     
-  def self.label
-    'Kunde'
+  def self.labels
+    ['Der', 'Kunde', 'Kunden']
   end  
+  
+  def self.fieldNames
+    [[:name, 'Name'], [:contact, 'Kontakt']]
+  end
+  
+  ##### interface methods for Evaluatable #####
   
   def partnerId
     :client_id
-  end
+  end 
   
   def worktimesBy(period, absences = nil, dummy = nil, options = {})
     super(period, absences, id, options)
