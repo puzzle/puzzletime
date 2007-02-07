@@ -13,14 +13,6 @@ class EmployeeController < ApplicationController
   verify :method => :post, :only => [ :updatePwd ],
          :redirect_to => { :controller => 'worktime', :action => 'listTime' }
   
-  def modelClass
-    Employee
-  end
-  
-  def listActions
-    [['Anstellungen', 'employment', 'list']]
-  end  
-  
   #Update userpwd
   def updatePwd
     if Employee.checkpwd(@user.id, params[:pwd])
@@ -37,5 +29,39 @@ class EmployeeController < ApplicationController
       render :controller =>'employee', :action => 'changePasswd', :id => @user.id
     end  
   end
+  
+  ##### helper methods for ManageModule ##### 
+  
+  def modelClass
+    Employee
+  end
+  
+  def listActions
+    [['Anstellungen', 'employment', 'list'],
+     ['&Uuml;berzeit', 'overtime_vacation', 'list']]
+  end  
+    
+  def editFields    
+    [[:firstname, 'Vorname'], 
+     [:lastname, 'Nachname'],
+     [:shortname, 'Kürzel'],
+     [:email, 'Email'],
+     [:phone, 'Telefon'],
+     [:initial_vacation_days, 'Anfängliche Ferien'],
+     [:management, 'GL']]    
+  end
+  
+  def listFields
+    [[:lastname, 'Nachname'],
+     [:firstname, 'Vorname'], 
+     [:shortname, 'Kürzel'],
+     [:current_percent, 'Prozent'],
+     [:management, 'GL']]
+  end
+  
+  def formatColumn(attribute, value)
+    return (value ? value.to_s + ' %' : 'keine') if :current_percent == attribute
+    super  attribute, value 
+  end 
 
 end

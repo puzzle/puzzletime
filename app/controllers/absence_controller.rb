@@ -11,5 +11,9 @@ class AbsenceController < ApplicationController
   def modelClass
     Absence
   end   
+    
+  def editFields
+    [[:name, 'Bezeichnung'], [:payed, 'Bezahlt']]
+  end 
   
 end

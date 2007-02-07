@@ -47,12 +47,15 @@ class Employment < ActiveRecord::Base
     
   # updates the end date of the previous employement
   def updateEndDate
-    previous_employment = Employment.find(:first, :conditions => ["employee_id = ? AND start_date < ? AND end_date IS NULL", employee_id, start_date]) 
+    previous_employment = Employment.find(:first, 
+            :conditions => ["employee_id = ? AND start_date < ? AND end_date IS NULL", employee_id, start_date]) 
     if previous_employment != nil
         previous_employment.end_date = start_date - 1
         previous_employment.save
     end
-    later_employment = Employment.find(:first, :conditions => ["employee_id = ? AND start_date > ?", employee_id, start_date], :order => 'start_date') 
+    later_employment = Employment.find(:first, 
+            :conditions => ["employee_id = ? AND start_date > ?", employee_id, start_date], 
+            :order => 'start_date') 
     if later_employment != nil
       self.end_date = later_employment.start_date - 1
     end
@@ -67,7 +70,7 @@ class Employment < ActiveRecord::Base
   end
   
   def vacations
-    round2Decimals(period.length / 365.25 * VACATION_DAYS_PER_YEAR * percentFactor)
+    period.length / 365.25 * VACATION_DAYS_PER_YEAR * percentFactor
   end 
     
   def musttime
@@ -77,28 +80,15 @@ class Employment < ActiveRecord::Base
   ##### interface methods for Manageable #####     
     
   def label
-    "die Anstellung vom #{start_date.strftime('%d.%m.%Y')} - #{end_date ? end_date.strftime('%d.%m.%Y') : 'offen'}"
+    "die Anstellung vom #{start_date.strftime(DATE_FORMAT)} - #{end_date ? end_date.strftime(DATE_FORMAT) : 'offen'}"
   end  
     
   def self.labels
     ['Die', 'Anstellung', 'Anstellungen']
   end  
   
-  def self.fieldNames    
-    [[:percent, 'Prozent'],
-     [:start_date, 'Start Datum'], 
-     [:final, 'End Datum setzen'],
-     [:end_date, 'End Datum']]    
-  end
-  
-  def self.listFields
-    [[:start_date, 'Start Datum'], 
-     [:end_date, 'End Datum'],
-     [:percent, 'Prozent']]   
-  end
-  
   def self.orderBy 
-    'start_date'
+    'start_date DESC'
   end
  
   def self.columnType(col)
@@ -125,10 +115,6 @@ private
       conditions.push(start_date, start_date, start_date)
     end  
     return Employment.count(:all, :conditions => conditions) > 0
-  end
-
-  def round2Decimals(number)  
-    (number * 100).round / 100.0
   end
   
 end

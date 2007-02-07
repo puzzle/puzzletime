@@ -1,17 +1,20 @@
-
-# client controllers must implement modelClass, listActions
-# models must implement list, listFields, fieldNames, label, labelPlural, article
+#
+# client controllers must implement modelClass, editFields
+# and may implement groupClass, listFields, listActions, formatColumn, initFormData
+# 
+# models must extend Manageable and implement self.labels (see Manageable)
 module ManageModule
 
   def self.included(controller)
     controller.helper :manage  
-    controller.helper_method :group, :modelClass
+    controller.helper_method :group, :modelClass, :formatColumn, :listFields, :editFields
    
     # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
     controller.verify :method => :post, :only => [ :create, :update, :delete ],
          :redirect_to => { :action => :list }
          
-    controller.hide_action :modelClass, :groupClass, :group, :listActions
+    controller.hide_action :modelClass, :groupClass, :group, :formatColumn,
+                           :editFields, :listFields, :listActions
   end     
   
   def index
@@ -25,13 +28,13 @@ module ManageModule
                           :conditions => conditions,
                           :limit => @entry_pages.items_per_page,
                           :offset => @entry_pages.current.offset)  
-    render :action => '../manage/list'                      
+    renderManage :action => 'list'                      
   end
     
   def add
     @entry = modelClass.new
     initFormData
-    render :action => '../manage/add'
+    renderManage :action => 'add'
   end
   
   def create
@@ -42,14 +45,14 @@ module ManageModule
       redirectToList
     else
       initFormData
-      render :action => '../manage/add'
+      renderManage :action => 'add'
     end
   end
   
   def edit
     setEntryFromId
     initFormData
-    render :action => '../manage/edit'
+    renderManage :action => 'edit'
   end
   
   def update
@@ -60,13 +63,13 @@ module ManageModule
     else      
       flash[:notice] = classLabel + ' konnte nicht aktualisiert werden'
       initFormData
-      render :action => '../manage/edit'
+      renderManage :action => 'edit'
     end
   end
   
   def confirmDelete
     setEntryFromId
-    render :action => '../manage/confirmDelete'
+    renderManage :action => 'confirmDelete' 
   end
   
   def delete
@@ -79,12 +82,33 @@ module ManageModule
     redirectToList
   end
   
+  ####### helper methods, not actions ##########
+  
   def listActions
+    []
+  end
+  
+  def listFields
+    editFields
+  end
+  
+  # must overwrite in mixin class 
+  def editFields
     []
   end
     
   def group
     groupClass.find(params[:group_id]) if group?
+  end
+  
+  def formatColumn(attribute, value)    
+    case modelClass.columnType(attribute)
+      when :date then value.strftime(LONG_DATE_FORMAT) if value
+      when :float then "%01.2f" % value if value
+      when :integer then value
+      when :boolean then value ? 'ja' : 'nein'
+      else value.to_s
+      end
   end
   
 protected
@@ -96,7 +120,7 @@ protected
   def initFormData
   
   end  
-
+  
 private
 
   def setEntryFromId
@@ -110,6 +134,14 @@ private
                 :group_page => params[:group_page]
   end
   
+  def renderManage(options)
+    template = options[:action]
+    if template && ! template_exists?("#{self.class.controller_path}/#{template}")
+      options[:action] = "../manage/#{template}"
+    end    
+    render options  
+  end  
+  
   def classLabel
     modelClass.article + ' ' + modelClass.label
   end
@@ -121,5 +153,5 @@ private
   def group?
     groupClass && params[:group_id]
   end
-
+  
 end

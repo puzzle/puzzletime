@@ -34,7 +34,7 @@ module ActionView #nodoc
           content_tag("div",
             content_tag(
               options[:header_tag] || "h2",
-              "#{object.errors.count} Fehler verhinderten das Speichern dieses Eintrags" 
+              "#{object.errors.count} Fehler verhinderte#{object.errors.count > 1 ? 'n' : ''} das Speichern dieses Eintrags" 
             ) +
             content_tag("p", "Folgende Angaben sind fehlerhaft:") +
             content_tag("ul", list ),

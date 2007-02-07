@@ -5,7 +5,6 @@ class ClientController < ApplicationController
 
   include ManageModule 
   
-  # Checks if employee came from login or from direct url
   before_filter :authorize   
 
   def modelClass
@@ -14,6 +13,10 @@ class ClientController < ApplicationController
   
   def listActions
     [['Projekte', 'project', 'list', false ]]
+  end
+  
+  def editFields
+    [[:name, 'Name'], [:contact, 'Kontakt']]
   end
 
 end

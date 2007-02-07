@@ -9,6 +9,10 @@ padding: 0px;
 margin: 0px;
 }
 
+p {
+    margin-bottom: 20px;
+}
+
 a
 {
 color: #0087e3 ;
@@ -22,14 +26,22 @@ text-decoration: none;
 
 h1
 {
-font-size:18px;
-font-weight:normal;
+font-size: 18px;
+font-weight: normal;
+margin-bottom: 20px;
 }
 
 h2
 {
 font-size:15px;
 font-weight:bold;
+}
+
+h3
+{
+font-size: 14px;
+font-weight: bold;
+color: #4a4a4a;
 }
 
 sup
@@ -80,6 +92,11 @@ th.periodHead
 text-align: right;
 }
 
+textarea, input, select {
+font-size: 16px;
+font-family: sans-serif;
+
+}
 
 .uneven {
   background-color: #C9D8FF;
@@ -136,8 +153,10 @@ color: #FCE2CA;
 
 #notice
 {
-color: #0066FF;
 font-weight: bold;
+margin: 10px;
+margin-top: 20px;
+margin-bottom: 20px;
 }
 
 #header sup
@@ -231,13 +250,14 @@ letter-spacing: -1px;
 }
 
 .fieldWithErrors {
-  padding: 1px;
+  float:    left;
+  padding: 2px;
+  margin-right: 5px;
   background-color: #0087e3;
-  display: table;
 }
 
 #errorExplanation {
-  width: 450px;
+  width: 550px;
   border: 2px solid #0087e3;
   padding-top: 15px;
   padding-left: 20px;

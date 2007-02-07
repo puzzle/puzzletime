@@ -1,27 +1,23 @@
-<h1>Eigene Zeitspanne ausw&auml;hlen</h1>
-<br/>
- <%= start_form_tag :action => 'changePeriod',
+<% @title = 'Eigene Zeitspanne ausw&auml;hlen' %>
+
+
+<%= start_form_tag :action => 'changePeriod',
                     :evaluation => params[:evaluation],
-                    :category_id => params[:category_id] %>
-                    
+                    :category_id => params[:category_id] %>                  
 <table>
   <tr>
     <td>Von:</td>
-    <td>
-    <%= date_calendar_field 'period', 'startDate', 'Start Date' %>
-    </td>
+    <td><%= date_calendar_field 'period', 'startDate', 'Start Date' %></td>
   </tr>
   <tr>
     <td>Bis:</td>
-    <td>
-    <%= date_calendar_field 'period', 'endDate', 'End Date' %>
-    </td>
+    <td><%= date_calendar_field 'period', 'endDate', 'End Date' %></td>
   </tr>
   <tr>
-    <td><td><%= submit_tag 'Auswählen' %></td></td>
+    <td></td>
+    <td><%= submit_tag 'Auswählen' %></td>
   </tr>
 </table>
-
  <%= end_form_tag %>
 
  <%= link_to 'Zur&uuml;ck zur &Uuml;bersicht', 

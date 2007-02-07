@@ -54,21 +54,17 @@ class Holiday < ActiveRecord::Base
   self.refresh
   
   ##### interface methods for Manageable #####
-  
-  def self.fieldNames
-    [ [ :holiday_date, 'Datum' ], [ :musthours_day, 'Muss Stunden' ] ]
-  end
-  
+   
   def self.labels
     ['Der', 'Feiertag', 'Feiertage']
   end
   
   def self.orderBy
-    'holiday_date'
+    'holiday_date DESC'
   end
   
   def label
-    "den Feiertag am #{holiday_date.strftime('%a, %d.%m.%Y')}"
+    "den Feiertag am #{holiday_date.strftime(LONG_DATE_FORMAT)}"
   end
   
 end

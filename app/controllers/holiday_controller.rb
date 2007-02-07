@@ -10,4 +10,8 @@ class HolidayController < ApplicationController
     Holiday
   end
   
+  def editFields
+    [ [ :holiday_date, 'Datum' ], [ :musthours_day, 'Muss Stunden' ] ]
+  end
+  
 end

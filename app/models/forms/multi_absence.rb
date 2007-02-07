@@ -69,7 +69,7 @@ private
 
   def worktimeTemplate(date, hours)
     worktime = Worktime.new
-    worktime.report_type = Worktime::TYPE_HOURS_DAY
+    worktime.report_type = ReportType::HOURS_DAY
     worktime.work_date = date
     worktime.absence_id = @absence_id
     worktime.description = @description

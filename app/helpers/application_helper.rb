@@ -14,7 +14,7 @@ module ApplicationHelper
   
   # Change english datelayout to german one.
   def format_date(date)
-    date.strftime("%a, %d.%m.%Y") if date
+    date.strftime(LONG_DATE_FORMAT) if date
   end    
     
   def alternate_row

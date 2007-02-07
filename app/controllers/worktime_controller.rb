@@ -21,18 +21,11 @@ class WorktimeController < ApplicationController
   #List the time.
   def listTime
     eval = 'userProjects'
-    if @worktime != nil && @worktime.absence? 
+    if params[:absences] || (@worktime != nil && @worktime.absence?)
       @user.absences(true)      #true forces reload
       eval = 'userAbsences'
     end  
     redirect_to :controller => 'evaluator', :action => eval
-  end
-  
-  # Shows the addAbsence page.
-  def addAbsence
-    createDefaultWorktime
-    @accounts = Absence.list
-    render :action => 'addTime'
   end
   
   # Shows the addTime page.
@@ -42,9 +35,18 @@ class WorktimeController < ApplicationController
       @worktime.absence_id = params[:absence_id] 
     else
       @worktime.project_id = params[:project_id] || DEFAULT_PROJECT_ID
+      @worktime.setProjectDefaults
     end  
     setWorktimeAccounts
   end  
+    
+  # Shows the addAbsence page.
+  def addAbsence
+    createDefaultWorktime    
+    @worktime.absence_id = params[:absence_id] if params.has_key? :absence_id
+    @accounts = Absence.list
+    render :action => 'addTime'
+  end    
       
   # Stores the new time the data on DB.
   def createTime
@@ -122,26 +124,6 @@ class WorktimeController < ApplicationController
     end     
   end
  
-
-  # Show the change project page.
-  def changeProject
-    @worktime = Worktime.find(params[:worktime_id])
-    #@projects = @user.management? ? Project.list : @user.managed_projects 
-    @projects = @worktime.employee.projects   
-  end
-  
-  def updateProject
-    @worktime = Worktime.find(params[:worktime_id])
-    if @worktime.update_attributes(params[:worktime])
-      flash[:notice] = 'Das Projekt wurde angepasst'
-      redirect_to evaluation_detail_params.merge!({
-                        :controller => 'evaluator',
-                        :action => 'details' }) 
-    else
-      render :action => 'changeProject'
-    end
-  end
-  
   def confirmDeleteTime
     @worktime = Worktime.find(params[:id])
   end
@@ -167,7 +149,6 @@ class WorktimeController < ApplicationController
       count = @multiabsence.save      
       flash[:notice] = "#{count} Absenzen wurden erfasst"
       @worktime = @multiabsence.worktime
-      session[:period] = @multiabsence.period if session[:period].nil?
       listDetailTime  
     else
       @accounts = Absence.list
@@ -200,8 +181,8 @@ protected
 
   def createDefaultWorktime
     @worktime = Worktime.new
-    @worktime.from_start_time = Time.now.change(:hour => 8)
-    @worktime.report_type = Worktime::TYPE_HOURS_DAY
+    @worktime.from_start_time = Time.now.change(:hour => DEFAULT_START_HOUR)
+    @worktime.report_type = DEFAULT_REPORT_TYPE
     period = session[:period]
     @worktime.work_date = (period != nil && period.length == 1) ?
        period.startDate : Date.today

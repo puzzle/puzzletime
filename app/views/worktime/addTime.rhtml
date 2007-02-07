@@ -1,31 +1,12 @@
 
-<% if @worktime.account != nil %>
-<h1>Neue Arbeitszeit f&uuml;r <%= @worktime.account.name %></h1>
-<% else %>
-<h1>Neue Absenz</h1>
-<% end %>
-<br/>
+<% @title = @worktime.account.nil? ? 'Neue Absenz' :
+                "Neue Arbeitszeit f&uuml;r #{@worktime.account.name}" %>
 
-<%= start_form_tag( { :action => 'createTime' }) %>
-<table>
-<%= render :partial => 'form' %>
-<tr>
-    <td></td>
-    <td>    
-    <table>
-    <tr>
-      <td>      
-      <%= submit_tag 'Speichern und weiter erfassen' %>
-      </td>
-      <td>
-      <%= submit_tag WorktimeController::FINISH %>
-      </td>
-    </tr>
-    </table> 
-    </td>
-</tr>
-</table>
+
+<%= start_form_tag :action => 'createTime' %>
+<%= render :partial => 'form', 
+           :locals => {:submit => ['Speichern und weiter erfassen', WorktimeController::FINISH]} %>
 <%= end_form_tag %>
 
 <br/>
-<%= link_to '&Uuml;bersicht', :action => 'listTime' %>
+<%= overviewLink @worktime.project_id.nil? %>

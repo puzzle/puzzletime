@@ -1,9 +1,9 @@
-<h1>&Uuml;berzeit &Uuml;bersicht</h1>
-<br/>
+<% @title = '&Uuml;berzeit &Uuml;bersicht' %>
+
 <table>
   <tr>
     <th>Mitarbeiter</th>
-    <th>Momentane &Uuml;berzeit </th>
+    <th>Aktuelle &Uuml;berzeit </th>
     <th>Verbleibende Ferien f&uuml;r <%= Date.today.year %> </th>
   </tr>
   <% for employee in @employees %>

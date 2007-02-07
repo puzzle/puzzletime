@@ -1,5 +1,5 @@
 
-<h1>Mehrt&auml;gige Absenz erfassen</h1>
+<% @title = 'Mehrt&auml;gige Absenz erfassen' %>
 
 <p>
 Beim Erfassen von mehrt&auml;gigen Absenzen wird f&uuml;r jeden Arbeitstag in der</br>
@@ -12,21 +12,15 @@ angegebenen Zeitspanne eine Absenz mit der Dauer des Tages-Solls erzeugt.
 <table>
   <tr>
 	<td>Absenz:</td>
-    <td>
-    <%= collection_select( 'multiabsence', 'absence_id', @accounts, :id, :label_verbose) %>
-    </td>
+    <td><%= collection_select( 'multiabsence', 'absence_id', @accounts, :id, :label_verbose) %></td>
   </tr>
   <tr>
     <td>Vom: </td>
-    <td>
-    <%= date_calendar_field 'multiabsence', 'start_date', 'Start Datum' %>
-    </td>
+    <td><%= date_calendar_field 'multiabsence', 'start_date', 'Start Datum' %></td>
   </tr>
   <tr>
     <td>Bis: </td>
-    <td>
-    <%= date_calendar_field 'multiabsence', 'end_date', 'End Datum' %>
-    </td>
+    <td><%= date_calendar_field 'multiabsence', 'end_date', 'End Datum' %></td>
   </tr>
   <tr valign="top">
     <td>Beschreibung: </td>

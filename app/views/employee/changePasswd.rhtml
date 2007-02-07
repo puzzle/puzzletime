@@ -1,5 +1,4 @@
-<h1>Passwort &auml;ndern</h1>
-<br/>
+<% @title = 'Passwort &auml;ndern' %>
 
 <%= start_form_tag :action => 'updatePwd' %>
 <table>
@@ -18,8 +17,8 @@
   <tr>
     <td><td><%= submit_tag 'Speichern' %></td></td>
   </tr>
-  </table>
+</table>
   
-  <%= end_form_tag %>
-  <br/>
+<%= end_form_tag %>
+<br/>
 <%= link_to 'Zur&uuml;ck',:controller => 'worktime', :action => 'listTime', :id => @user %>

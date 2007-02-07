@@ -4,32 +4,26 @@
 module EvaluatorHelper
         
   def init_periods
-    if @period.nil?
-      [Period.currentWeek, Period.currentMonth, Period.currentYear]
-    else
+    @period.nil? ? 
+      [Period.currentWeek, Period.currentMonth, Period.currentYear] : 
       [@period]
-    end
   end 
   
   def collect_times(periods, sum_periods, division)
     times = periods.collect { |p| @evaluation.sum_times(p, division) }
     times.push(@evaluation.sum_times(nil, division))
     sum_periods.each_index { |i| sum_periods[i] += times[i] }
-    return times
+    times
   end   
 
-  def add_time_link(division)
-    html = ""
-    if @evaluation.for?(@user) 
-       html = "<td>\n<a href=\"/worktime/addTime?" 
-       if division.kind_of? Absence
-          html += "absence_id=#{division.id}"
-       else
-          html += "project_id=#{division.id}"
-       end 
-       html += "\">Zeit erfassen</a>\n</td>"
-    end
-    return html   
+  def add_time_link(division = nil)
+     addAction = @evaluation.absences? ? 'addAbsence' : 'addTime'
+     account = ''
+     if division
+       account = @evaluation.absences? ? 'absence_id' : 'project_id'
+       account = "?#{account}=#{division.id}"
+     end  
+     "<a href=\"/worktime/#{addAction}#{account}\">Zeit erfassen</a>"  
   end
 
 

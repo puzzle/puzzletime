@@ -1,6 +1,8 @@
+<% submit ||= ['Speichern'] %>
 
 <%= error_messages_for 'worktime' %>
 
+<table>
 <tr>
   <td>Reporttyp: </td>
   <td><%= select_report_type %> </td>
@@ -47,12 +49,20 @@
     <td>Beschreibung: </td>
     <td><%= text_area 'worktime', 'description', {:rows => 5} %></td>
 </tr>
-<% if ! @worktime.absence? %>
+<% if ! @worktime.project_id.nil? %>
 <tr>
     <td>Verrechenbar: </td>
     <td><%= check_box 'worktime', 'billable' %></td>
 </tr>
 <% end %>
-
+<tr>
+   <td></td>
+   <td>    
+   <% for label in submit %>
+    <%= submit_tag label %>
+   <% end %>
+   </td>
+</tr>
+</table>
  
 <%= render :partial => 'worktime/type_switch_js' %>

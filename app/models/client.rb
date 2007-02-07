@@ -22,10 +22,6 @@ class Client < ActiveRecord::Base
     ['Der', 'Kunde', 'Kunden']
   end  
   
-  def self.fieldNames
-    [[:name, 'Name'], [:contact, 'Kontakt']]
-  end
-  
   ##### interface methods for Evaluatable #####
   
   def partnerId

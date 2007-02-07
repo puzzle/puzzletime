@@ -19,10 +19,6 @@ class Absence < ActiveRecord::Base
   validates_uniqueness_of :name, :message => "Diese Bezeichnung wird bereits verwendet"
     
   ##### interface methods for Manageable #####   
-    
-  def self.fieldNames
-    [[:name, 'Bezeichnung'], [:payed, 'Bezahlt']]
-  end  
 
   def self.labels
     ['Die', 'Absenz', 'Absenzen']

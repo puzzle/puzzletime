@@ -1,18 +1,14 @@
-<h1>Arbeitszeit Details <%= @period.to_s %></h1>
+<% @title = "Arbeitszeit Details #{@period.to_s}" %>
 
-<p>
-<b><%= @evaluation.category_label %></b>
-<p/>
-<p>
-<b><%= @evaluation.division_label %></b>
-<p/>
+<h3><%= @evaluation.category_label %></h3>
+<h3><%= @evaluation.division_label %></h3>
 
 <table>
 <tr>
    <th>Datum</th>
    <th>Stunden</th>   
    <th>Wer</th>
-   <th>Projekt</th>
+   <th><%= @evaluation.account %></th>
    <th>$</th>
    <th>Beschreibung</th>
    <th></th>
@@ -57,11 +53,7 @@
     <td colspan="4"></td>     
     <% if @evaluation.for?(@user) %>
     <td colspan="2">
-      <% if @evaluation.division %>
-        <a href="/worktime/addTime?project_id=<%= @evaluation.division.id %>">Zeit hinzuf&uuml;gen</a>
-      <% else %>
-        <a href="/worktime/addTime">Zeit hinzuf&uuml;gen</a>
-      <% end %>  
+      <%= add_time_link(@evaluation.division) %>  
     </td>  
     <% else %>
     <td></td>

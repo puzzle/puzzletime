@@ -59,7 +59,7 @@ class EvaluatorController < ApplicationController
       csv << ["Datum", "Stunden", "Start Zeit", "End Zeit", "Reporttyp",
               "Verrechenbar", "Mitarbeiter", "Projekt", "Beschreibung"]
       @evaluation.times(@period).each do |time|
-        csv << [ time.work_date.strftime("%d.%m.%Y"),
+        csv << [ time.work_date.strftime(DATE_FORMAT),
                  time.hours,
                  (time.times? ? time.from_start_time.strftime("%H:%M") : ''),
                  (time.times? ? time.to_end_time.strftime("%H:%M") : ''),

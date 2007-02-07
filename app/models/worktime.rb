@@ -3,7 +3,8 @@
 
 class Worktime < ActiveRecord::Base
   
-  # All dependencies between the models are listed below.
+  include ReportType::Accessors
+  
   belongs_to :absence 
   belongs_to :employee
   belongs_to :project
@@ -14,11 +15,6 @@ class Worktime < ActiveRecord::Base
   before_validation DateFormatter.new('work_date')
   before_validation :store_hours
     
-  TYPE_START_STOP = 'start_stop_day'
-  TYPE_HOURS_DAY = 'absolute_day'
-  TYPE_HOURS_WEEK = 'week'
-  TYPE_HOURS_MONTH = 'month'
-  
   H_M = /^(\d*):([0-5]\d)/
       
   def account
@@ -53,7 +49,7 @@ class Worktime < ActiveRecord::Base
   end
   
   def times?
-    report_type == TYPE_START_STOP
+    report_type == ReportType::START_STOP
   end
   
   def template
@@ -69,11 +65,11 @@ class Worktime < ActiveRecord::Base
   
   def timeString
     case report_type
-      when TYPE_START_STOP then formatted_start_time + ' - ' + formatted_end_time + 
+      when ReportType::START_STOP then formatted_start_time + ' - ' + formatted_end_time + 
                           ' (' + ((hours*100).round / 100.0).to_s + ' h)'
-      when TYPE_HOURS_DAY then hours.to_s + ' h'
-      when TYPE_HOURS_WEEK then hours.to_s + ' h in dieser Woche'
-      when TYPE_HOURS_MONTH then hours.to_s + ' h in diesem Monat'
+      when ReportType::HOURS_DAY then hours.to_s + ' h'
+      when ReportType::HOURS_WEEK then hours.to_s + ' h in dieser Woche'
+      when ReportType::MONTH then hours.to_s + ' h in diesem Monat'
     end
   end
   
@@ -86,12 +82,18 @@ class Worktime < ActiveRecord::Base
     else
       errors.add(:hours, 'Stunden m&uuml;ssen positiv sein') if hours <= 0
     end
+    project.validate_worktime self if project_id
   end
   
   def store_hours
     if times? && from_start_time && to_end_time
       self.hours = (to_end_time - from_start_time) / 3600.0
     end
+  end
+  
+  def setProjectDefaults
+    self.report_type = project.report_type if report_type < project.report_type
+    self.billable = project.billable
   end
   
 private

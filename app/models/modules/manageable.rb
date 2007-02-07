@@ -5,6 +5,11 @@ module Manageable
     options[:order] ||= orderBy
     find(:all, options)  
   end  
+  
+  # must overwrite in mixin class
+  def labels
+    ['Der', 'Eintrag', 'Einträge']
+  end
     
   def label
     labels[1]
@@ -21,23 +26,7 @@ module Manageable
   def columnType(col)
     columns_hash[col.to_s].type
   end
-  
-  # may overwrite in mixin class
-  def listFields
-    fieldNames
-  end
-  
-  # must overwrite in mixin class 
-  def fieldNames
-    []
-  end
-  
-  # must overwrite in mixin class
-  def labels
-    ['Der', 'Eintrag', 'Einträge']
-  end
-  
-  # may overwrite in mixin class
+    
   def orderBy
     'name'
   end

@@ -5,6 +5,7 @@ class Project < ActiveRecord::Base
   
   include Evaluatable
   extend Manageable
+  include ReportType::Accessors
 
   # All dependencies between the models are listed below.
   has_many :projectmemberships, :dependent => true, :finder_sql => 
@@ -16,7 +17,7 @@ class Project < ActiveRecord::Base
   has_many :worktimes, :dependent => true
   
   validates_presence_of :name, :message => "Ein Name muss angegeben sein"
-  validates_uniqueness_of :name, :message => "Dieser Name wird bereits verwendet"
+  validates_uniqueness_of :name, :scope => 'client_id', :message => "Dieser Name wird bereits verwendet"
     
   before_destroy :protect_worktimes
   
@@ -25,17 +26,6 @@ class Project < ActiveRecord::Base
   def self.labels
     ['Das', 'Projekt', 'Projekte']
   end  
-  
-  def self.fieldNames    
-    [[:name, 'Name'], 
-     [:client_id, 'Kunde'],
-     [:description, 'Beschreibung']]    
-  end
-  
-  def self.listFields
-    [[:name, 'Name'], 
-     [:client, 'Kunde']]
-  end
     
   def self.list(options = {})
     options[:include] ||= :client
@@ -49,6 +39,16 @@ class Project < ActiveRecord::Base
       
   def label_verbose
     client.name + ' - ' + name
-  end    
+  end  
+    
+  def validate_worktime(worktime)
+    if worktime.report_type < report_type
+      worktime.errors.add(:report_type, 
+        "Der Reporttyp muss eine Genauigkeit von mindestens #{report_type.name} haben") 
+    end
+    if description_required? && worktime.description.strip.empty?
+      worktime.errors.add(:description, "Es muss eine Beschreibung angegeben werden")   
+    end  
+  end  
 
 end

@@ -1,7 +1,9 @@
-<h1><%= newLabel %> <%= groupLabel %></h1>
+<% @title = newLabel + ' ' + groupLabel %>
+
+<%= renderManage :partial => 'info' %>
 
 <%= start_form_tag linkParams(:action => 'create') %>
 <%= renderManage :partial => 'form' %>
 <%= end_form_tag %>
 
-<%= render :partial => 'manage/backlink' %>
+<%= renderManage :partial => 'backlink' %>

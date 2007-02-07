@@ -1,7 +1,13 @@
-<h1><%= @entry.class.label %> <%= groupLabel %> bearbeiten</h1>
+<% @title = "#{@entry.class.label} #{groupLabel} bearbeiten" %>
+
+<%= renderManage :partial => 'info' %>
 
 <%= start_form_tag linkParams(:action => 'update', :id => @entry) %>
 <%= renderManage :partial => 'form' %>
 <%= end_form_tag %>
 
-<%= render :partial => 'manage/backlink' %>
+<%= renderManage :partial => 'backlink' %>
+
+<% for action in controller.listActions %>
+ |  <%= actionLink action, @entry %> 
+ <% end %> 

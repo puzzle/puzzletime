@@ -1,4 +1,4 @@
-<h1><%= Employee.labelPlural %> von <%= @project.label %></h1>
+<% @title = Employee.labelPlural + ' ' + groupLabel %>
 
 <table>
 <tr>
@@ -11,24 +11,15 @@
     <td align="center"> 
     <% if !membership.projectmanagement %>
         <%= link_to 'Hinzuf&uuml;gen', 
-    	             :action => 'createManager',     	             
-    	             :id => membership,
-    	             :group_id => @project, 
-    	             :group_page => params[:group_page] %>             
+    	            linkParams(:action => 'createManager', :id => membership) %>             
     <% else %>
         <%= link_to 'Entfernen', 
-                     :action => 'removeManager',  
-                     :id => membership, 
-                     :group_id => @project, 
-    	             :group_page => params[:group_page] %> 
+                    linkParams(:action => 'removeManager', :id => membership) %> 
     <% end %>          
     </td> 
     <td>
     <%= link_to 'Vom Projekt entfernen', 
-                { :action => 'removeMembership', 
-                  :id => membership,  
-                  :group_id => @project,
-    	          :group_page => params[:group_page] }, 
+                linkParams(:action => 'removeMembership', :id => membership), 
                 :confirm => 'Sind sie sicher?', 
                 :post => true %>
     </td>
@@ -39,9 +30,7 @@
 
 <p>
 Mitarbeiter:
-<%= start_form_tag :action => 'createMembership', 
-                   :group_id => @project,
-                   :group_page => params[:group_page]  %> 
+<%= start_form_tag linkParams(:action => 'createMembership') %> 
 <select name="employee_id[]" multiple="multiple" size="5">
 <%= options_from_collection_for_select @employees, :id, :label %>
 </select>
@@ -50,5 +39,4 @@ Mitarbeiter:
 </p>
 <br/>   
 
-<%= link_to '&Uuml;bersicht Projekte', :controller => 'project', :action => 'list' %> |
-<%= link_to 'Projekt Bearbeiten', :controller => 'project', :action => 'edit', :id => @project %>
+<%= groupLink(true) %>

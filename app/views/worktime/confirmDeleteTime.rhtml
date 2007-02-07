@@ -1,8 +1,10 @@
-<h1>Arbeitszeit l&ouml;schen</h1>
+<% @title = "Arbeitszeit l&ouml;schen" %>
+
 <p>
 Wollen sie wirklich <%= round(@worktime.hours) %>h Arbeitszeit
 am <%= format_date(@worktime.work_date) %> f&uuml;r <%= @worktime.account.label_verbose %> l&ouml;schen?
 </p>
+
 <table>
 <tr>
     <td>
@@ -19,6 +21,6 @@ am <%= format_date(@worktime.work_date) %> f&uuml;r <%= @worktime.account.label_
     <%= submit_tag 'Abbrechen' %>  
     <%= end_form_tag %>
     </td>
-</td>
+</tr>
 </table>    
 

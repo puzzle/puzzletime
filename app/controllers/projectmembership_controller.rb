@@ -1,6 +1,10 @@
 class ProjectmembershipController < ApplicationController
    
   before_filter :authenticate
+  
+  helper :manage
+  helper_method :group
+  hide_action :group
 
   def list
     @project = Project.find(params[:group_id])
@@ -20,6 +24,7 @@ class ProjectmembershipController < ApplicationController
       params[:employee_id].each do |id|
         Projectmembership.create(:project_id => params[:group_id],
                                  :employee_id => id)
+        @user.projects(true) if @user.id == id                         
       end      
       flash[:notice] = 'Der/Die Mitarbeiter wurden dem Projekt hinzugef&uuml;gt'
     else
@@ -32,6 +37,10 @@ class ProjectmembershipController < ApplicationController
     Projectmembership.destroy(params[:id])
     flash[:notice] = "Der Mitarbeiter wurde vom Projekt entfernt"
     redirectToList
+  end
+  
+  def group
+    @project
   end
   
 private
@@ -47,7 +56,7 @@ private
     projectmembership = Projectmembership.find(params[:id])
     projectmembership.update_attributes(:projectmanagement => bool)
     #reload list for user (old version is cached otherwise)
-    @user.managed_projects(true) if projectmembership.employee == @user 
+    @user.managed_projects(true) if projectmembership.employee_id == @user.id 
     flash[:notice] = "#{projectmembership.employee.label} wurde als Projektleiter " + (bool ? "erfasst" : "entfernt") 
     redirectToList
   end   

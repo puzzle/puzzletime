@@ -14,6 +14,18 @@
   <td><%= text_area 'entry', 'description', {:rows => 5, :cols => 30}  %></td>
 </tr>
 <tr>
+  <td>Report Detail: </td>
+  <td><%= select_report_type 'entry', 'report_type', false %></td>
+</tr>
+<tr>
+  <td>Verrechenbar: </td>
+  <td><%= check_box 'entry', 'billable' %></td>
+</tr>
+<tr>
+  <td>Beschreibung nötig: </td>
+  <td><%= check_box 'entry', 'description_required' %></td>
+</tr>
+<tr>
   <td></td>
   <td><%= submit_tag 'Speichern' %></td>
 </tr>

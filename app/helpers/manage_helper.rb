@@ -11,14 +11,12 @@ module ManageHelper
   end
   
   def dataField(entry, attribute)
-    value = entry.send(attribute)
-    case modelClass.columnType(attribute)
-      when :date then td format_date(value), true
-      when :float then td number_with_precision( value, 2 ), true
-      when :integer then td value, true
-      when :boolean then td(value ? 'ja' : 'nein', false)
-      else td value, false
-      end
+    options = case modelClass.columnType(attribute)
+                when :date, :float, :integer then ' align="right"'
+                when :boolean then ' align="center"'
+                else ''
+                end
+    "<td#{options}>#{h formatColumn(attribute, entry.send(attribute))}</td>"
   end 
   
   def linkParams(prms = {})
@@ -36,12 +34,19 @@ module ManageHelper
             :group_page => params[:page]
   end
   
-  def groupLink
+  def groupLink(first = false)
     if group
-      '| ' + (link_to "&Uuml;bersicht #{group.class.labelPlural}",
+      (first ? '' : '| ') + 
+      (link_to "&Uuml;bersicht #{group.class.labelPlural}",
                     :controller => group.class.to_s.downcase,
                     :action => 'list',
-                    :page => params[:group_page] )
+                    :page => params[:group_page] ) +
+      ' | ' +
+      (link_to "#{group.class.label} bearbeiten",
+                    :controller => group.class.to_s.downcase,
+                    :action => 'edit',
+                    :id => params[:group_id],
+                    :page => params[:group_page] )                                  
     end             
   end 
 
@@ -59,23 +64,19 @@ module ManageHelper
   end
   
   def renderManage(options)
-    if actionName = options[:action]
-      options[:action] = "manage/#{actionName}" if absent?(actionName)
-    elsif partial = options[:partial]
-      options[:partial] = "manage/#{partial}" if absent?(partial, '_')
+    if template = options[:partial]
+      if templateAbsent? template, controller.class.controller_path
+        return if templateAbsent? template, 'manage'
+        options[:partial] = "manage/#{template}"      
+      end  
     end    
-    render options
+    render options  
   end
   
-private
-
-  def td(value, alignRight)
-    align = alignRight ? ' align="right"' : ''
-    "<td#{align}>#{value}</td>"
-  end
+private  
   
-  def absent?(template, partial = '')
-    ! template_exists?("#{controller.class.controller_path}/#{partial}#{template}", :rhtml)
-  end
+  def templateAbsent?(template,view)
+    ! template_exists? "#{view}/_#{template}", :rhtml
+  end  
     
 end

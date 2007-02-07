@@ -12,5 +12,7 @@
     <%= render(:partial => 'periodTime',
                :collection => times,
                :locals => {:division_id => division.id, :periods => periods}) %>
-    <%= add_time_link(division) %>
+    <% if @evaluation.for? @user %>
+    <td><%= add_time_link(division) %></td>
+    <% end %>
 </tr>

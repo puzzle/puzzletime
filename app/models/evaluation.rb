@@ -120,6 +120,10 @@ class Evaluation
       end  
     end
   end
+  
+  def account
+    absences? ? 'Absenz' : 'Projekt'
+  end
       
 private
 

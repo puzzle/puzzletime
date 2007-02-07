@@ -1,6 +1,6 @@
 <html>
 <head>
-  <title>puzzleTime</title>
+  <title>puzzleTime - <%= @title %></title>
   
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
   <meta http-equiv="pragma" content="no-cache" />
@@ -64,8 +64,8 @@
 	</div>
 	
 	<% if @user.management &&
-	     ['client', 'employee', 'absence', 'project', 
-	      'holiday', 'employment', 'projectmembership'].include?(params[:controller]) %>
+	     ['client', 'employee', 'absence', 'project', 'holiday', 
+	      'employment', 'projectmembership', 'overtime_vacation'].include?(params[:controller]) %>
         <div id="submenu">
         Verwalte:
         &nbsp;
@@ -85,8 +85,10 @@
 	<div id="spacer"> </div>
 	<% end %>
 	
+	<h1><%= @title %></h1>
+	
 	<% if @flash.has_key?(:notice) %>
-	<center><div id="notice"><%= @flash[:notice] %></div></center>
+	<div id="notice"><%= @flash[:notice] %></div>
 	<% end %>
 	
     <%= @content_for_layout %>

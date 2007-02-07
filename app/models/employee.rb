@@ -9,7 +9,7 @@ class Employee < ActiveRecord::Base
   extend Manageable
   
   # All dependencies between the models are listed below.
-  has_many :employments, :order => 'start_date', :dependent => true
+  has_many :employments, :order => 'start_date DESC', :dependent => true
   has_many :projectmemberships, :dependent => true
   has_many :projects, 
            :include => :client,
@@ -34,6 +34,7 @@ class Employee < ActiveRecord::Base
               'SELECT DISTINCT(a.*) FROM absences a, worktimes t WHERE ' +
               't.employee_id = #{id} AND t.absence_id = a.id ' +
               'ORDER BY a.name'
+  has_many :overtime_vacations, :order => 'transfer_date DESC', :dependent => true        
 
   # Attribute reader and writer.
   attr_accessor :pwd 
@@ -44,8 +45,7 @@ class Employee < ActiveRecord::Base
   validates_presence_of :shortname, :message => "Das K&uuml;rzel muss angegeben werden"
   validates_uniqueness_of :shortname, :message => "Dieses K&uuml;rzel wird bereits verwendet"
   
-  before_destroy :protect_worktimes
-  
+  before_destroy :protect_worktimes  
  
   # Hashes and compares the pwd.
   def self.login(shortname, pwd)
@@ -69,29 +69,16 @@ class Employee < ActiveRecord::Base
     ['Der', 'Mitarbeiter', 'Mitarbeiter']
   end  
   
-  def self.fieldNames    
-    [[:firstname, 'Vorname'], 
-     [:lastname, 'Nachname'],
-     [:shortname, 'Kürzel'],
-     [:email, 'Email'],
-     [:phone, 'Telefon'],
-     [:initial_vacation_days, 'Anfängliche Ferien'],
-     [:management, 'GL']]    
-  end
-  
-  def self.listFields
-    [[:lastname, 'Nachname'],
-     [:firstname, 'Vorname'], 
-     [:shortname, 'Kürzel'],
-     [:current_percent, 'Prozent'],
-     [:management, 'GL']]
-  end
-  
   def self.orderBy 
     'lastname, firstname'
   end
-    
-   ##### interface methods for Evaluatable #####    
+  
+  def self.columnType(col)
+    return :integer if :current_percent == col
+    super col 
+  end  
+  
+  ##### interface methods for Evaluatable #####    
   
   def label
     lastname + " " + firstname
@@ -127,36 +114,36 @@ class Employee < ActiveRecord::Base
     update_attributes(:passwd => hashed_pwd)
   end
   
+  #########  vacation and overtime information ############
+  
   def currentRemainingVacations
-    initial_vacation_days + remainingVacations(employmentPeriodTo(endOfYear))
+    initial_vacation_days + 
+      overtimeVacationHours / 8.0 + 
+      remainingVacations(employmentPeriodTo(endOfYear))
   end
   
-  # Calculates remaining Vacations
   def remainingVacations(period)
     totalVacations(period) - usedVacations(period)
   end
   
-  # Calculates used holidays
   def usedVacations(period)
-    return 0 if period == nil
+    return 0 if period.nil?
     self.worktimes.sum(:hours, :conditions => ["absence_id = ? AND (work_date BETWEEN ? AND ?)", 
-      VACATION_ID, period.startDate, period.endDate]).to_f / 8
+      VACATION_ID, period.startDate, period.endDate]).to_f / 8.0
   end
     
-  # Calculates total holidays
   def totalVacations(period)
-    days = 0
-    employmentsDuring(period).each do |e|
-      days += e.vacations
-    end
-    return days  
-  end
-
-  def currentOvertime(date = Date.today - 1)
-    overtime(employmentPeriodTo(date))
+    sumEmployments period, :vacations
   end
   
-  # Sum total overtime
+  def musttime(period)
+    sumEmployments period, :musttime 
+  end  
+
+  def currentOvertime(date = Date.today - 1)
+    overtime(employmentPeriodTo(date)) - overtimeVacationHours
+  end
+  
   def overtime(period)
     payedWorktime(period) - musttime(period)
   end
@@ -173,37 +160,31 @@ class Employee < ActiveRecord::Base
                   :conditions => condArray).to_f
   end
   
-  def musttime(period)
-    musttime = 0
-    employmentsDuring(period).each do |e|
-      musttime += e.musttime
-    end
-    return musttime      
+  def overtimeVacationHours
+    overtime_vacations.sum(:hours).to_f
   end
   
-  def employment_at(date)
-    employments.find(:first, 
-          :conditions => ['start_date <= ? AND (end_date IS NULL OR end_date >= ?)', 
-            date, date]) 
-  end
+  ######### employment information ######################
   
   def current_percent
-    if empl = current_employment
-      empl.percent.to_s + ' %'
-    else
-      'keine'
-    end  
+    empl = current_employment
+    empl.percent if empl
   end
   
   def current_employment
     employment_at(Date.today) 
   end
   
+  def employment_at(date)
+    employments.find( :first, :conditions => 
+      ['start_date <= ? AND (end_date IS NULL OR end_date >= ?)', date, date] ) 
+  end
+  
   def employmentsDuring(period)
-    return [] if period == nil
+    return [] if period.nil?
     selectedEmployments = employments.find(:all, 
       :conditions => ["(end_date IS NULL OR end_date >= ?) AND start_date <= ?", 
-      period.startDate, period.endDate],
+        period.startDate, period.endDate],
       :order => 'start_date')
     if ! selectedEmployments.empty?
       selectedEmployments.first.start_date = period.startDate
@@ -212,13 +193,13 @@ class Employee < ActiveRecord::Base
         selectedEmployments.last.end_date = period.endDate
       end  
     end
-    return selectedEmployments    
+    selectedEmployments    
   end
     
   def employmentPeriodTo(date)
     first_employment = self.employments.find(:first)
     return nil if first_employment == nil || first_employment.start_date > date
-    return Period.new(first_employment.start_date, date)
+    Period.new(first_employment.start_date, date)
   end
   
 private
@@ -227,8 +208,14 @@ private
     Date.new(Date.today.year, 12, 31)
   end
     
-  # Hash function for pwd.  
   def self.encode(pwd)
     Digest::SHA1.hexdigest(pwd) 
   end
+  
+  def sumEmployments(period, field)
+    sum = 0
+    employmentsDuring(period).each { |e| sum += e.send(field) }
+    sum     
+  end
+  
 end
