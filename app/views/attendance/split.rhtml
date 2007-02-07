@@ -1,12 +1,8 @@
 
 <% @title = 'Anwesenheitszeit aufteilen' %>
 
-<p>
-<strong>
-<%= number_with_precision(@attendance.original.hours, 2) %> h anwesend
-am <%= format_date(@attendance.original.work_date) %>:
-</strong>
-<br/>
+<h3><%= number_with_precision(@attendance.original.hours, 2) %> h anwesend
+am <%= format_date(@attendance.original.work_date) %>:</h3>
 
 <table cellpadding="0">
 <% 
@@ -25,32 +21,13 @@ for t in @attendance.worktimes %>
 <%  i += 1
 end %>   
 </table>
-<br/>
-Die Zeiten wurden noch nicht gespeichert. Bitte schliessen sie dazu den Aufteilungsprozess ab.
-</p>
 
-<br/>
+<p>Die Zeiten wurden noch nicht gespeichert. Bitte schliessen sie dazu den Aufteilungsprozess ab.</p>
 
 <%= start_form_tag :action => 'createPart' %>
-<table>
-<%= render :partial => 'worktime/form' %>
-<tr>
-    <td></td>
-    <td>       
-    <table>
-    <tr>
-      <td>      
-      <%= submit_tag 'Speichern und weiter Aufteilen' %>
-      </td>
-      <td>
-      <%= submit_tag WorktimeController::FINISH %>
-      </td>
-    </tr>
-    </table>   
-    </td>
-</tr>
-</table>  
+<%= render :partial => 'worktime/form', 
+           :locals => {:submit => ['Speichern und weiter Aufteilen', WorktimeController::FINISH]} %>
+ 
 <%= end_form_tag %>
 
-<br/>
-<%= link_to '&Uuml;bersicht', :action => 'listTime' %>
+<p><%= link_to '&Uuml;bersicht', :action => 'listTime' %></p>
