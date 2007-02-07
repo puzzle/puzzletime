@@ -4,11 +4,10 @@ class SystemNotifier < ActionMailer::Base
   
   def exception_notification(controller, request, exception)
     sent_on = Time.now
-    @subject = sprintf("[ERROR] %s\#%s (%s) %s",
+    @subject = sprintf("[ERROR] %s\#%s (%s)",
                        controller.controller_name,
                        controller.action_name,
-                       exception.class,
-                       exception.message.inspect)
+                       exception.class)
     @body = { "controller" => controller,
               "request"    => request,
               "exception"  => exception,

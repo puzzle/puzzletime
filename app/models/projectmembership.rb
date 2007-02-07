@@ -5,7 +5,7 @@ class Projectmembership < ActiveRecord::Base
 
   # All dependencies between the models are listed below
   belongs_to :employee
-  belongs_to :project
+  belongs_to :project, :include => :client
   belongs_to :managed_project, :class_name => 'Project', :include => :client, :conditions => 'projectmemberships.projectmanagement IS TRUE'
   belongs_to :managed_employee, :class_name => 'Employee'
  
