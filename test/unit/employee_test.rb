@@ -10,9 +10,9 @@ class EmployeeTest < Test::Unit::TestCase
     employee = Employee.find(1)
     period = yearPeriod(employee)    
     assert_equal employee.employmentsDuring(period).size, 1
-    assert_equal employee.remainingVacations(period), 10.08
+    assert_in_delta 10.08, employee.remainingVacations(period), 0.005
     assert_equal employee.usedVacations(period), 0
-    assert_equal employee.totalVacations(period), 10.08
+    assert_in_delta 10.08, employee.totalVacations(period), 0.005
     assert_equal employee.overtime(period), - 127 * 8
   end
   
@@ -24,9 +24,9 @@ class EmployeeTest < Test::Unit::TestCase
     assert_equal employments[0].start_date, Date.new(2005, 11, 1)
     assert_equal employments[0].end_date, Date.new(2006, 1, 31)
     assert_equal employments[0].period.length, 92
-    assert_equal employments[0].vacations, 2.02
-    assert_equal employments[1].vacations, 150 / 12.0 * 0.2 - 0.01
-    assert_equal employments[2].vacations, 5.86
+    assert_in_delta 2.02, employments[0].vacations, 0.005
+    assert_in_delta 150 / 12.0 * 0.2 - 0.01, employments[1].vacations, 0.005
+    assert_in_delta 5.86, employments[2].vacations, 0.005
     assert_in_delta 10.37, employee.remainingVacations(period), 0.01
     assert_equal employee.usedVacations(period), 0
     assert_in_delta 10.37, employee.totalVacations(period), 0.01
@@ -47,19 +47,19 @@ class EmployeeTest < Test::Unit::TestCase
     employee = Employee.find(4)
     period = yearPeriod(employee)  
     assert_equal employee.employmentsDuring(period).size, 1
-    assert_equal employee.remainingVacations(period), 30 * 0.8 - 0.08 
+    assert_in_delta 30 * 0.8 - 0.08, employee.remainingVacations(period), 0.005
     assert_equal employee.usedVacations(period), 0
-    assert_equal employee.totalVacations(period), 30 * 0.8 - 0.08
-    assert_equal employee.overtime(period), - 387 * 8 * 0.8
+    assert_in_delta 30 * 0.8 - 0.08, employee.totalVacations(period), 0.005
+    assert_in_delta( (- 387 * 8 * 0.8), employee.overtime(period), 0.005)
   end
   
   def test_long_time_employment
     employee = Employee.find(5)
     period = yearPeriod(employee)  
     assert_equal employee.employmentsDuring(period).size, 1
-    assert_equal employee.remainingVacations(period), 17 * 20 * 0.9 - 0.01
+    assert_in_delta 17 * 20 * 0.9 - 0.01, employee.remainingVacations(period), 0.005
     assert_equal employee.usedVacations(period), 0
-    assert_equal employee.totalVacations(period), 17 * 20 * 0.9 - 0.01
+    assert_in_delta 17 * 20 * 0.9 - 0.01, employee.totalVacations(period), 0.005
     assert_equal employee.overtime(period), - 31500
   end
   

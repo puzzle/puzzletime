@@ -197,7 +197,7 @@ class Employee < ActiveRecord::Base
   end
     
   def employmentPeriodTo(date)
-    first_employment = self.employments.find(:first)
+    first_employment = self.employments.find(:first, :order => 'start_date ASC')
     return nil if first_employment == nil || first_employment.start_date > date
     Period.new(first_employment.start_date, date)
   end
