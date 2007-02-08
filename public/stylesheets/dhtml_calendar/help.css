@@ -1,0 +1,39 @@
+* {
+	font-family: arial, sans-serif;
+	font-size: 8pt;
+}
+
+table {
+	width: 100%;
+  border-spacing: 0px;
+  border: 1px solid #CACACA;
+  border-bottom: 0;
+  border-collapse: collapse;
+}
+
+table thead td {
+	font-weight: bold;
+	font-size: 11pt;
+}
+
+table thead {
+  background-color: #F9F9F9;
+  font-weight: bold;
+}
+
+table th {
+  background-color: #F9F9F9;
+  font-weight: bold;
+  padding: 9px;
+  border-bottom: 1px solid #CACACA;
+}
+
+table td {
+  padding: 6px;
+  border-bottom: 1px solid #CACACA;
+}
+
+table td+td,
+table th+th {
+  border-left: 1px solid #CACACA;
+}

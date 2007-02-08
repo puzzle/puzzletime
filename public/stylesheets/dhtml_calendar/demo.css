@@ -1,0 +1,183 @@
+body {
+  background: url('/engine_files/dhtml_calendar/images/demo/bg_body.gif') repeat-x top left;
+}
+
+.content {
+  background: url('/engine_files/dhtml_calendar/images/demo/bg_content_tile.gif') repeat-y top left;
+  width: 562px;
+  margin: 0 auto;
+}
+
+#content .conatiner_outside {
+  background: url('/engine_files/dhtml_calendar/images/demo/bg_content_top.gif') no-repeat top left;
+}
+
+#content .conatiner_inside {
+  background: url('/engine_files/dhtml_calendar/images/demo/bg_content_bottom.gif') no-repeat bottom left;
+  padding: 0 10px 0 10px;
+}
+
+h1 a,
+h1 a:visited,
+h1 a:hover {
+  color: #303030;
+  width: 562px;
+  height: 37px;
+  display: block;
+  font-size: 6pt;
+  text-align: center;
+  text-decoration: none;
+  margin: 0 0 30px -10px;
+}
+
+h2 {
+  margin: 0 auto;
+  width: 562px;
+  text-align: left;
+  color: #FFF;
+  font-size: 6pt;
+  padding: 20px 0;
+  height: 15px;
+}
+
+h2.intuitive_date_input_selection {
+  background: url('/engine_files/dhtml_calendar/images/demo/title_intuitive_date_input_selection.gif') no-repeat center center;
+}
+
+h2.demo {
+  background: url('/engine_files/dhtml_calendar/images/demo/title_demo.gif') no-repeat center center;
+  height: 9px;
+  padding: 20px 0 5px 0;
+}
+
+h2.examples {
+  background: url('/engine_files/dhtml_calendar/images/demo/title_examples.gif') no-repeat center center;
+}
+
+h2.installation {
+  background: url('/engine_files/dhtml_calendar/images/demo/title_installation.gif') no-repeat center center;
+  padding: 60px 0 10px 0;
+}
+
+h2.license {
+  background: url('/engine_files/dhtml_calendar/images/demo/title_license.gif') no-repeat center center;
+}
+
+h2.bugs_and_feature_requests {
+  background: url('/engine_files/dhtml_calendar/images/demo/title_bugs_and_feature_requests.gif') no-repeat center center;
+}
+
+h2.support {
+  background: url('/engine_files/dhtml_calendar/images/demo/title_support.gif') no-repeat center center;
+}
+
+h2.feature_wish_list {
+  background: url('/engine_files/dhtml_calendar/images/demo/title_feature_wish_list.gif') no-repeat center center;
+}
+
+p {
+  color: #888;
+  font-size: 10pt;
+  text-align: center;
+  font-family: arial;
+}
+
+p.strong {
+  color: #4d4d4d;
+}
+
+li {
+  color: #acacac;
+  font-family: arial;
+  font-size: 10pt;
+}
+
+a,
+a:visited {
+  color: #888;
+}
+
+a:hover {
+  color: #333;
+}
+
+ol.steps {
+  width: 470px;
+  margin: 0 auto;
+  padding: 0 0 20px 0;
+}
+
+ol.steps,
+ol.steps li,
+#steps li {
+  color: #4d4d4d;
+  font-size: 8pt;
+  font-family: arial;
+}
+
+ol.steps li ul {
+  margin: 0;
+  padding: 0 0 0 5px;
+}
+
+ol.steps li ul li {
+  font-size: 7pt;
+  padding: 3px 0;
+}
+
+pre {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 7pt;
+  color: #4d4d4d;
+}
+
+
+#demo {
+  background: url('/engine_files/dhtml_calendar/images/demo/bg_demo.gif') no-repeat center center;
+  width: 257px;
+  height: 70px;
+  margin: 0 auto;
+  padding: 30px 0 0 35px;
+}
+
+#demo input {
+  font-size: 10pt;
+}
+
+#demo div {
+  width: 170px;
+  margin: 0 auto;
+}
+
+ul.examples {
+  list-style: url('/engine_files/dhtml_calendar/images/demo/icon_arrow.gif');
+  width: 500px;
+  margin: 10px 0 0 70px;
+  padding: 0;
+}
+
+ul.examples li {
+  width: 130px;
+  float: left;
+  padding: 0 35px 0 0;
+}
+
+#footer {
+  margin: 50px 0 0 0;
+  padding: 0 0 8px 0;
+}
+
+#footer p {
+  margin: 0;
+  padding: 0;
+  color: #fff;
+  font-size: 8pt;
+  text-align: left;
+}
+
+#footer p a,
+#footer p a:visited {
+  color: #fff;
+  text-decoration: underline;
+  font-size: 8pt;
+}
