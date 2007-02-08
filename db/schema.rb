@@ -2,7 +2,7 @@
 # migrations feature of ActiveRecord to incrementally modify your database, and
 # then regenerate this schema definition.
 
-ActiveRecord::Schema.define(:version => 2) do
+ActiveRecord::Schema.define(:version => 3) do
 
   create_table "absences", :force => true do |t|
     t.column "name", :string, :null => false
@@ -39,6 +39,12 @@ ActiveRecord::Schema.define(:version => 2) do
     t.column "musthours_day", :float, :null => false
   end
 
+  create_table "overtime_vacations", :force => true do |t|
+    t.column "hours", :float, :null => false
+    t.column "employee_id", :integer, :null => false
+    t.column "transfer_date", :date, :null => false
+  end
+
   create_table "projectmemberships", :force => true do |t|
     t.column "project_id", :integer
     t.column "employee_id", :integer
@@ -49,6 +55,9 @@ ActiveRecord::Schema.define(:version => 2) do
     t.column "client_id", :integer
     t.column "name", :string, :null => false
     t.column "description", :text
+    t.column "billable", :boolean, :default => true
+    t.column "report_type", :string, :default => "month"
+    t.column "description_required", :boolean, :default => false
   end
 
   create_table "worktimes", :force => true do |t|
@@ -62,6 +71,7 @@ ActiveRecord::Schema.define(:version => 2) do
     t.column "to_end_time", :time
     t.column "description", :text
     t.column "billable", :boolean, :default => true
+    t.column "booked", :boolean, :default => false
   end
 
 end

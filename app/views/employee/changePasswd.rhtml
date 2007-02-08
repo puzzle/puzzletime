@@ -1,6 +1,6 @@
 <% @title = 'Passwort &auml;ndern' %>
 
-<%= start_form_tag :action => 'updatePwd' %>
+<% form_tag :action => 'updatePwd' do %>
 <table>
   <tr>
     <td>Altes Passwort:</td>
@@ -15,10 +15,10 @@
     <td><input id="change_pwd_confirmation" name="change_pwd_confirmation" size="30" type="password" /></td>
   </tr>
   <tr>
-    <td><td><%= submit_tag 'Speichern' %></td></td>
+    <td></td>
+    <td><%= submit_tag 'Speichern' %></td>
   </tr>
 </table>
-  
-<%= end_form_tag %>
-<br/>
-<%= link_to 'Zur&uuml;ck',:controller => 'worktime', :action => 'listTime', :id => @user %>
+<% end %>
+
+<p><%= link_to 'Meine Zeit', :controller => 'evaluator' %></p>

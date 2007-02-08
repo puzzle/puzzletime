@@ -59,10 +59,10 @@ private
   def date_or_nil(value)
     unless value.kind_of? Date
       begin
-        value = value.to_s.strpdate(DATE_FORMAT)
-      rescue
+        value = Date.strptime(value.to_s, DATE_FORMAT)
+      rescue 
         value = nil
-      end
+      end  
     end
     value  
   end

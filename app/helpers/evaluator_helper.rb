@@ -26,5 +26,28 @@ module EvaluatorHelper
      "<a href=\"/worktime/#{addAction}#{account}\">Zeit erfassen</a>"  
   end
 
-
+  def period_link(label, periodMethod, date)
+    period = Period.send(periodMethod, date)
+    link_to label, evaluation_overview_params( :action => 'changePeriod',
+                         'period[startDate]' => period.startDate.strftime(DATE_FORMAT),
+                         'period[endDate]' => period.endDate.strftime(DATE_FORMAT),
+                         'period[label]' => label )
+  end
+  
+  def timeInfo
+    infos = @period ?    
+            [[['Arbeitszeit', @user.musttime(@period), 'h'],
+              ['Verbleibend', 0 - @user.overtime(@period).to_f, 'h']],
+             [['&Uuml;berzeit', @user.overtime(@period), 'h']],
+             [['Bezogene Ferien', @user.usedVacations(@period), 'd'], 
+              ['Offen', @user.remainingVacations(@period.endDate), 'd']]]  :
+            [[['Monatliche Arbeitszeit', @user.musttime(Period.currentMonth), 'h'],
+              ['Verbleibend', 0 - @user.overtime(Period.currentMonth).to_f, 'h']],
+             [['&Uuml;berzeit Gestern', @user.currentOvertime, 'h'], 
+              ['&Uuml;berzeit Heute', @user.currentOvertime(Date.today), 'h']],
+             [['Geplante Ferien', @user.usedVacations(Period.currentYear), 'd'], 
+              ['Verbleibend', @user.currentRemainingVacations, 'd']]]   
+    render :partial => 'timeinfo', :locals => {:infos => infos}
+  end
+  
 end

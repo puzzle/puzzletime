@@ -4,8 +4,6 @@
 # Methods added to this helper will be available to all templates in the application.
 
 module ApplicationHelper
-
-  include CalendarHelper
   
   # round time function.
   def round(hour)
@@ -30,6 +28,12 @@ module ApplicationHelper
       :start_date => params[:start_date],
       :end_date => params[:end_date],
       :page => params[:page] }
+  end
+  
+  def evaluation_overview_params(prms = {})
+    prms[:evaluation] ||= params[:evaluation]
+    prms[:category_id] ||= params[:category_id]
+    prms
   end
   
   def date_calendar_field(object, method, title)

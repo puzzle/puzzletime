@@ -60,7 +60,17 @@ class WorktimeController < ApplicationController
         setWorktimeAccounts
         render :action => 'addTime'
       else
-        listDetailTime  
+        eval = @worktime.absence? ? 'userAbsences' : 'userProjects'
+        @user.absences(true) if @worktime.absence? 
+        options = {:controller => 'evaluator', :action => 'details', 
+                   :evaluation => (@worktime.absence? ? 'userAbsences' : 'userProjects') }
+        if session[:period].nil? || 
+            ! session[:period].include?(@worktime.work_date)
+          period = Period.weekFor(@worktime.work_date)
+          options[:start_date] = period.startDate
+          options[:end_date] = period.endDate
+        end
+        redirect_to options 
       end
     else
       setWorktimeAccounts
@@ -78,14 +88,13 @@ class WorktimeController < ApplicationController
   # Update the selected worktime on DB.
   def updateTime       
     @worktime = Worktime.find(params[:worktime_id])
-    if @worktime.employee != @user
-      createWorktimeEdit 
-      return
-    end  
+    return createWorktimeEdit if @worktime.employee != @user
     setWorktimeParams
     if @worktime.save
       flash[:notice] = 'Die Arbeitszeit wurde aktualisiert'
-      listDetailTime
+      redirect_to evaluation_detail_params.merge!({
+                        :controller => 'evaluator',
+                        :action => 'details' }) 
     else
       setWorktimeAccounts
       render :action => 'editTime'
@@ -146,10 +155,21 @@ class WorktimeController < ApplicationController
     @multiabsence.employee = @user    
     @multiabsence.attributes = params[:multiabsence]
     if @multiabsence.valid?
-      count = @multiabsence.save      
+      count = @multiabsence.save   
       flash[:notice] = "#{count} Absenzen wurden erfasst"
-      @worktime = @multiabsence.worktime
-      listDetailTime  
+      @user.absences(true)      #true forces reload
+
+      options = { :controller => 'evaluator', :action => 'details', 
+                  :evaluation => 'userAbsences'}
+      puts session[:period].nil?
+      if session[:period].nil? || 
+          (! session[:period].include?(@multiabsence.start_date) ||
+          ! session[:period].include?(@multiabsence.end_date))
+        options[:start_date] = @multiabsence.start_date
+        options[:end_date] = @multiabsence.end_date  
+      end
+      puts options.inspect
+      redirect_to options  
     else
       @accounts = Absence.list
       render :action => 'addMultiAbsence'
@@ -166,13 +186,12 @@ protected
       @user.absences(true)      #true forces reload
       eval = 'userAbsences'
     end  
-    periodParam = {}
     if session[:period].nil? || 
         ! session[:period].include?(@worktime.work_date)
       period = Period.weekFor(@worktime.work_date)
-      periodParam = {:start_date => period.startDate, :end_date => period.endDate}
+      @periodParam ||= {:start_date => period.startDate, :end_date => period.endDate}
     end
-    redirect_to periodParam.merge!({
+    redirect_to @periodParam.merge!({
                 :controller => 'evaluator', 
                 :action => 'details', 
                 :evaluation => eval, 

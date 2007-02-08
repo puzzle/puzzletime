@@ -1,12 +1,12 @@
 <%= error_messages_for :entry %>
   
 <table>
-<% for field in editFields %>
+<% for field in editFields -%>
 <tr>
   <td><%= field[1] %>: </td>
   <td><%= inputField field %></td>
 </tr>
-<% end %>
+<% end -%>
 <tr>
   <td></td>
   <td><%= submit_tag 'Speichern' %></td>

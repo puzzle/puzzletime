@@ -19,7 +19,7 @@ class EmployeeController < ApplicationController
       if params[:change_pwd] === params[:change_pwd_confirmation]
         @user.updatepwd(params[:change_pwd])
         flash[:notice] = 'Das Passwort wurde aktualisiert'
-        redirect_to :controller =>'worktime', :action => 'listTime', :id => @user.id
+        redirect_to :controller => 'evaluator'
       else
         flash[:notice] = 'Die Passwort Best&auml;tigung stimmt nicht mit dem Passwort &uuml;berein'
         render :controller =>'employee', :action => 'changePasswd', :id => @user.id

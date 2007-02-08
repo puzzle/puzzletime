@@ -1,30 +1,8 @@
-<% @title = "Zeiten aller #{@evaluation.label} von #{@user.label}" %>
-
-<table cellspacing="0">
-<tr>
-  <td>Monatliche Arbeitszeit: &nbsp; </td>
-  <td align="right"><%= number_with_precision(@user.musttime(Period.currentMonth).to_f, 2) %> h</td>
-  <td width="20%"> &nbsp; </td>
-  <td>Verbleibend: &nbsp; </td>
-  <td align="right"><%= number_with_precision(0 - @user.overtime(Period.currentMonth).to_f, 2) %> h</td>
-</tr>
-<tr>
-  <td>&Uuml;berzeit Gestern:</td>
-  <td align="right"><%= number_with_precision(@user.currentOvertime.to_f, 2) %> h</td>
-  <td> </td>
-  <td>Heute:</td>
-  <td align="right"><%= number_with_precision(@user.currentOvertime(Date.today).to_f, 2) %> h</td>
-</tr>
-<tr>
-  <td>Geplante Ferien:</td>
-  <td align="right"><%= number_with_precision(@user.usedVacations(Period.currentYear), 2) %> d</td>
-  <td> </td>
-  <td>Verbleibend:</td>
-  <td align="right"><%= number_with_precision(@user.currentRemainingVacations, 2) %> d</td>
-</tr>
-</table>
+<% @title = "Zeiten aller #{@evaluation.label} von #{@user.label}" -%>
 
 <%= render(:partial => 'periodLink') %>
+
+<p><%= timeInfo %></p>
 
 <%= render(:partial => 'category') %>
 

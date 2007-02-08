@@ -3,11 +3,11 @@
 <p>Zur Vervollst&auml;ndigung der geleisteten Stunden
 m&uuml;ssen noch weitere Eintr&auml;ge erstellt werden.</p>
 
-<%= start_form_tag evaluation_detail_params.merge!({                        
+<% form_tag evaluation_detail_params.merge!({                        
                         :action => 'createWorktimeEdit', 
-                        :worktime_id => @worktime}) %>                        
+                        :worktime_id => @worktime}) do %>                        
 <%= render :partial => 'form' %>
-<%= end_form_tag %>
+<% end %>
 
 <p>
 <%= link_to 'Arbeitszeiten', evaluation_detail_params.merge!({

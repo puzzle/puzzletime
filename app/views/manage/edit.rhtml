@@ -2,9 +2,9 @@
 
 <%= renderManage :partial => 'info' %>
 
-<%= start_form_tag linkParams(:action => 'update', :id => @entry) %>
+<% form_tag linkParams(:action => 'update', :id => @entry) do %>
 <%= renderManage :partial => 'form' %>
-<%= end_form_tag %>
+<% end %>
 
 <%= renderManage :partial => 'backlink' %>
 

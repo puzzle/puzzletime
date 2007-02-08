@@ -8,18 +8,18 @@ am <%= format_date(@worktime.work_date) %> f&uuml;r <%= @worktime.account.label_
 <table>
 <tr>
     <td>
-    <%= start_form_tag evaluation_detail_params.merge!({
+    <% form_tag evaluation_detail_params.merge!({
                          :action => 'deleteTime', 
-                         :id => @worktime}) %>
+                         :id => @worktime}) do %>
     <%= submit_tag 'Löschen' %>  
-    <%= end_form_tag %>
+    <% end %>
     </td>
     <td>
-    <%= start_form_tag evaluation_detail_params.merge!({
+    <% form_tag evaluation_detail_params.merge!({
                           :controller => 'evaluator', 
-                          :action => 'details'}) %>
+                          :action => 'details'}) do %>
     <%= submit_tag 'Abbrechen' %>  
-    <%= end_form_tag %>
+    <% end %>
     </td>
 </tr>
 </table>    

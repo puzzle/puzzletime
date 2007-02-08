@@ -1,20 +1,18 @@
 <% 
    periods = init_periods
    sum_periods = Array.new(periods.size + 1, 0)            
- %>
-
+-%>
+ 
 <table>
 <tr>
     <th><%= @evaluation.division_header %></th>    
     <%= render(:partial => 'periodHead', :collection => periods ) %>
     <th class="periodHead">Total &nbsp; &nbsp;</th>
     <th></th>
- </tr>
- 
+ </tr> 
  <%= render(:partial => 'division',
             :collection => @evaluation.divisions,
-            :locals => { :periods => periods, :sum_periods => sum_periods }) %>   
-            
+            :locals => { :periods => periods, :sum_periods => sum_periods }) %> 
 <tr class="times_total_sum">
     <td>Total Zeit</td>
     <%= render(:partial => 'periodTime', 

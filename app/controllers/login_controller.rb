@@ -29,7 +29,7 @@ class LoginController < ApplicationController
   #Logout procedure for user    
   def logout
     reset_session
-    flash[:notice]="Sie wurden ausgeloggt"
+    flash[:notice] = "Sie wurden ausgeloggt"
     redirect_to(:action => "login")
   end
 end

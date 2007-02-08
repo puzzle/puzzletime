@@ -5,14 +5,14 @@
 <table>
 <tr>
     <td>
-    <%= start_form_tag linkParams(:action => 'delete', :id => @entry) %>
+    <% form_tag linkParams(:action => 'delete', :id => @entry) do %>
     <%= submit_tag 'Löschen' %>  
-    <%= end_form_tag %>
+    <% end %>
     </td>
     <td>
-    <%= start_form_tag linkParams(:action => 'list') %>
+    <% form_tag linkParams(:action => 'list'), {:method => 'get'} do %>
     <%= submit_tag 'Abbrechen' %>  
-    <%= end_form_tag %>
+    <% end %>
     </td>
 </td>
 </table>    

@@ -1,9 +1,30 @@
 <% @title = 'Eigene Zeitspanne ausw&auml;hlen' %>
 
+<p>
+<table cellspacing="0">
+<tr>
+  <td><%= period_link 'Gestern', :dayFor, Time.new.yesterday %> </td>
+  <td> &nbsp; </td>
+  <td><%= period_link 'Letzte Woche', :weekFor, Time.new.advance(:days => -7) %> </td>
+  <td> &nbsp; </td>
+  <td><%= period_link 'Letzter Monat', :monthFor, Time.new.advance(:months => -1) %> </td>
+  <td> &nbsp; </td>
+  <td><%= period_link 'Letztes Jahr', :yearFor, Time.new.advance(:years => -1) %> </td>
+</tr>
+<tr>
+  <td><%= period_link 'Vorgestern', :dayFor, Time.new.advance(:days => -2) %> </td>
+  <td> &nbsp; </td>
+  <td><%= period_link 'Vorletzte Woche', :weekFor, Time.new.advance(:days => -14) %> </td>
+  <td> &nbsp; </td>
+  <td><%= period_link 'Vorletzter Monat', :monthFor, Time.new.advance(:months => -2) %> </td>
+  <td> &nbsp; </td>
+  <td><%= period_link 'Vorletztes Jahr', :yearFor, Time.new.advance(:years => -2) %> </td>
+</tr>
+</table>
+</p>
 
-<%= start_form_tag :action => 'changePeriod',
-                    :evaluation => params[:evaluation],
-                    :category_id => params[:category_id] %>                  
+<p>Beliebig:</p>
+<% form_tag evaluation_overview_params(:action => 'changePeriod') do %>                  
 <table>
   <tr>
     <td>Von:</td>
@@ -18,8 +39,11 @@
     <td><%= submit_tag 'Auswählen' %></td>
   </tr>
 </table>
- <%= end_form_tag %>
+ <% end %>
 
+<p>
  <%= link_to 'Zur&uuml;ck zur &Uuml;bersicht', 
              :action => params[:evaluation],
              :category_id => params[:category_id] %>
+</p>
+             

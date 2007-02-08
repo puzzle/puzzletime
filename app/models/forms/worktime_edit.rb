@@ -5,7 +5,7 @@ class WorktimeEdit < Splitable
       worktime.work_date = original.work_date
       worktime.errors.add(:work_date, 'Das Datum kann nicht geändert werden')
     end
-    if remainingHours < worktime.hours
+    if worktime.hours - remainingHours > 0.00001    # we are working with floats: use delta 
       worktime.errors.add(:hours, 'Die gesamte Anzahl Stunden kann nicht vergrössert werden')
     end
     super(worktime) if worktime.errors.empty?

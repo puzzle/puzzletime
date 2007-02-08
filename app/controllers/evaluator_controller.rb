@@ -86,19 +86,18 @@ class EvaluatorController < ApplicationController
   end
   
   def changePeriod
-    begin
-      @period = Period.new(params[:period][:startDate], 
-                           params[:period][:endDate])  
-      raise ArgumentError, "Start Datum nach End Datum" if @period.negative?   
-      session[:period] = @period  
-      redirect_to :action => params[:evaluation],
-                  :category_id => params[:category_id]              
-    rescue ArgumentError => ex
-      flash[:notice] = "Ung&uuml;ltige Zeitspanne: " + ex
-      redirect_to :action => :selectPeriod, 
-                  :evaluation => params[:evaluation],
-                  :category_id => params[:category_id]
-    end       
+    @period = Period.new(params[:period][:startDate], 
+                         params[:period][:endDate],
+                         params[:period][:label])  
+    raise ArgumentError, "Start Datum nach End Datum" if @period.negative?   
+    session[:period] = @period  
+    redirect_to :action => params[:evaluation],
+                :category_id => params[:category_id]              
+  rescue ArgumentError => ex
+    flash[:notice] = "Ung&uuml;ltige Zeitspanne: " + ex
+    redirect_to :action => :selectPeriod, 
+                :evaluation => params[:evaluation],
+                :category_id => params[:category_id]      
   end
   
   def method_missing(action, *args)

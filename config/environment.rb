@@ -5,7 +5,7 @@
 # ENV['RAILS_ENV'] ||= 'production'
 
 # Specifies gem version of Rails to use when vendor/rails is not present
-RAILS_GEM_VERSION = '1.1.6'
+RAILS_GEM_VERSION = '1.2.2'
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
@@ -37,7 +37,7 @@ Rails::Initializer.run do |config|
 
   # Make Active Record use UTC-base instead of local time
   # config.active_record.default_timezone = :utc
-  
+    
   # See Rails::Configuration for more options
 end
 
@@ -53,14 +53,6 @@ end
 # Include your application configuration below
 ActionMailer::Base.delivery_method = :sendmail
 
-
-
-module DhtmlCalendar
-end
-Engines.start :dhtml_calendar
-#module Engines
-#  CONFIG = {:edge => true}
-#end 
-#
+#require 'active_ldap'
 require "overrides" 
 require 'puzzletime_settings'

@@ -1,31 +1,32 @@
-<% @title = "#{modelClass.labelPlural} #{groupLabel}" %>
+<% @title = "#{modelClass.labelPlural} #{groupLabel}" -%>
 
 <%= renderManage :partial => 'info' %>
 
 <table>
 <tr>
-<% for field in listFields %>
+<% for field in listFields -%>
   <th><%= field[1] %> </th>
-<% end %>  
+<% end -%>  
 </tr>  
-<% for entry in @entries %>
+<% for entry in @entries -%>
   <%= alternate_row %>
-  <% for field in listFields %>
+  <% for field in listFields -%>
     <%= dataField entry, field[0] %>
-  <% end %>
-  <% for action in controller.listActions %>
+  <% end -%>
+  <% for action in controller.listActions -%>
     <td><%= actionLink action, entry %></td>
-  <% end %> 
+  <% end -%> 
     <td><%= link_to 'Bearbeiten', linkParams(:action => 'edit', :id => entry) %></td>
     <td><%= link_to 'L&ouml;schen', linkParams(:action => 'confirmDelete', :id => entry) %></td>
   </tr>
-<% end %>
+<% end -%>
 </table>
 
-<% if @entry_pages.page_count > 1 %>
+<% if @entry_pages.page_count > 1 -%>
 <p>Seite: <%= pagination_links(@entry_pages, :params => linkParams) %></p>
-<% end %>
+<% end -%>
 
+<br/>
 <p>
 <%= link_to newLabel, linkParams(:action => 'add') %> 
 <%= groupLink %>

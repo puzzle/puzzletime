@@ -5,7 +5,6 @@
 # Likewise, all the methods added will be available for all controllers.
 
 class ApplicationController < ActionController::Base
-  include CalendarHelper
 
   before_filter :set_charset
 
@@ -17,7 +16,6 @@ class ApplicationController < ActionController::Base
   def authenticate
     @user = session[:user]
     unless @user
-      flash[:notice] = 'Bitten Loggen sie sich ein'
       redirect_to(:controller => 'login', :action => 'login' )
     end
   end 

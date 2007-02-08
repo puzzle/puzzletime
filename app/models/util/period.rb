@@ -9,20 +9,31 @@ class Period
   end
   
   def self.currentMonth
-    start = Date.today
-    start -= start.day - 1
-    new(start, start + days_in_month(start.month, start.year) - 1, "#{Date.today.strftime('%B')}")    
-   end
+    self.monthFor(Date.today, "#{Date.today.strftime('%B')}")
+  end
   
   def self.currentYear
-    today = Date.today
-    new(Date.civil(today.year, 1, 1), Date.civil(today.year, 12, 31), "#{Date.today.strftime('%Y')}")
+    self.yearFor(Date.today, "#{Date.today.strftime('%Y')}")
+  end
+  
+  def self.dayFor(date, label = nil)
+    new(date, date, label)
   end
   
   def self.weekFor(date, label = nil)
-    start = date
-    start -= start.cwday - 1
-    new(start, start + 6, label)    
+    date = date.to_date if date.kind_of? Time
+    date -= (date.wday - 1) % 7
+    new(date, date + 6, label)    
+  end
+  
+  def self.monthFor(date, label = nil) 
+    date = date.to_date if date.kind_of? Time   
+    date -= date.day - 1
+    new(date, date + days_in_month(date.month, date.year) - 1, label)    
+  end
+  
+  def self.yearFor(date, label = nil)
+    new(Date.civil(date.year, 1, 1), Date.civil(date.year, 12, 31), label)  
   end
   
   def initialize(startDate = Date.today, endDate = Date.today, label = nil)    
@@ -65,6 +76,7 @@ private
 
   def parseDate(date)
     date = Date.strptime(date, DATE_FORMAT) if date.kind_of? String
+    date = date.to_date if date.kind_of? Time
     date
   end
   

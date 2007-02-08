@@ -3,10 +3,9 @@
                 "Neue Arbeitszeit f&uuml;r #{@worktime.account.name}" %>
 
 
-<%= start_form_tag :action => 'createTime' %>
+<% form_tag :action => 'createTime' do %>
 <%= render :partial => 'form', 
            :locals => {:submit => ['Speichern und weiter erfassen', WorktimeController::FINISH]} %>
-<%= end_form_tag %>
+<% end %>
 
-<br/>
-<%= overviewLink @worktime.project_id.nil? %>
+<p><%= overviewLink @worktime.project_id.nil? %></p>

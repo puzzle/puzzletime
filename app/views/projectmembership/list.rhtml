@@ -1,42 +1,41 @@
-<% @title = Employee.labelPlural + ' ' + groupLabel %>
+<% @title = Employee.labelPlural + ' ' + groupLabel -%>
 
 <table>
 <tr>
     <th>Mitarbeiter</th>
     <th>Projektleitung</th>
 </tr>
-<%for membership in @project.projectmemberships %> 
+<%for membership in @project.projectmemberships -%> 
 <%= alternate_row %>
     <td> <%= membership.employee.label %> </td>        
     <td align="center"> 
-    <% if !membership.projectmanagement %>
+    <% if !membership.projectmanagement -%>
         <%= link_to 'Hinzuf&uuml;gen', 
     	            linkParams(:action => 'createManager', :id => membership) %>             
-    <% else %>
+    <% else -%>
         <%= link_to 'Entfernen', 
                     linkParams(:action => 'removeManager', :id => membership) %> 
-    <% end %>          
+    <% end -%>          
     </td> 
     <td>
     <%= link_to 'Vom Projekt entfernen', 
                 linkParams(:action => 'removeMembership', :id => membership), 
                 :confirm => 'Sind sie sicher?', 
-                :post => true %>
+                :method => 'post' %>
     </td>
   </tr>
-<% end %>
+<% end -%>
 </table> 
 </br>
 
 <p>
 Mitarbeiter:
-<%= start_form_tag linkParams(:action => 'createMembership') %> 
+<% form_tag linkParams(:action => 'createMembership') do %> 
 <select name="employee_id[]" multiple="multiple" size="5">
 <%= options_from_collection_for_select @employees, :id, :label %>
 </select>
 <%= submit_tag 'Hinzufügen' %>
-<%= end_form_tag %>
-</p>
-<br/>   
+<% end %>
+</p>  
 
-<%= groupLink(true) %>
+<p><%= groupLink(true) %></p>

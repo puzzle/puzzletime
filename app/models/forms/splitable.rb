@@ -24,7 +24,7 @@ class Splitable
   end
     
   def incomplete?
-    remainingHours > 0
+    remainingHours > 0.00001     # we are working with floats: use delta
   end
   
   def save

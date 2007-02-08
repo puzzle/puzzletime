@@ -1,4 +1,4 @@
-<% @title = "Arbeitszeit Details #{@period.to_s}" %>
+<% @title = "Arbeitszeit Details #{@period.to_s}" -%>
 
 <h3><%= @evaluation.category_label %></h3>
 <h3><%= @evaluation.division_label %></h3>
@@ -13,7 +13,7 @@
    <th>Beschreibung</th>
    <th></th>
 </tr>
-<% for time in @times %>
+<% for time in @times -%>
 <%= alternate_row  %>
   <td align="right"><%= format_date(time.work_date) %></td>
   <td align="right"><%= number_with_precision(time.hours, 2) %></td>
@@ -36,7 +36,7 @@
                     :action =>'editTime', 
                     :id => time.id}) %>
   </td>
-<% if @evaluation.for?(@user) %>
+  <% if @evaluation.for?(@user) -%>
   <td> 
     <%= link_to 'L&ouml;schen', 
                 evaluation_detail_params.merge!({
@@ -44,31 +44,31 @@
                     :action =>'confirmDeleteTime',                 
                     :id => time.id}) %>
   </td>                  
-<% end %>
+  <% end -%>
 </tr>
-<% end %> 
+<% end -%> 
 <tr class="times_total_sum">
     <td>Total insgesamt</td> 
     <td align="right"><%= number_with_precision(@evaluation.sum_times(@period), 2) %></td>
     <td colspan="4"></td>     
-    <% if @evaluation.for?(@user) %>
+    <% if @evaluation.for?(@user) -%>
     <td colspan="2">
       <%= add_time_link(@evaluation.division) %>  
     </td>  
-    <% else %>
+    <% else -%>
     <td></td>
-    <% end %>  
+    <% end -%>  
 </tr>
 </table>
 
-<% if @time_pages.page_count > 1 %>
-<br />
+<% if @time_pages.page_count > 1 -%>
+<p>
 Seite: 
 <%= pagination_links(@time_pages, :params => evaluation_detail_params) %>
-<br />
-<% end %>
-<br/>
+</p>
+<% end -%>
 
+<p>
 <%= link_to '&Uuml;bersicht', 
             :action => params[:evaluation],
             :category_id => params[:category_id] %>
@@ -76,4 +76,4 @@ Seite:
 <%= link_to 'Export CSV', 
             evaluation_detail_params.merge!({
                 :action => 'exportCSV'}) %>          
-            
+</p>            

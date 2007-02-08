@@ -3,13 +3,22 @@
 
 class Projectmembership < ActiveRecord::Base
 
-  # All dependencies between the models are listed below
   belongs_to :employee
   belongs_to :project, :include => :client
-  belongs_to :managed_project, :class_name => 'Project', :include => :client, :conditions => 'projectmemberships.projectmanagement IS TRUE'
-  belongs_to :managed_employee, :class_name => 'Employee'
+  belongs_to :managed_project, 
+             :class_name => 'Project', 
+             :foreign_key => 'project_id',
+             :include => :client, 
+             :conditions => 'projectmemberships.projectmanagement IS TRUE'
+  belongs_to :managed_employee, 
+             :class_name => 'Employee',
+             :foreign_key => 'employee_id' 
  
-  validates_uniqueness_of :employee_id, :scope => 'project_id', :message => "Dieser Mitarbeiter ist bereits dem Projekt zugeteilt"
-  validates_uniqueness_of :project_id, :scope => 'employee_id', :message => "Dieser Mitarbeiter ist bereits dem Projekt zugeteilt"
+  validates_uniqueness_of :employee_id, 
+                          :scope => 'project_id', 
+                          :message => "Dieser Mitarbeiter ist bereits dem Projekt zugeteilt"
+  validates_uniqueness_of :project_id, 
+                          :scope => 'employee_id', 
+                          :message => "Dieser Mitarbeiter ist bereits dem Projekt zugeteilt"
 
 end

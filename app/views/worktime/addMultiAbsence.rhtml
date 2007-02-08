@@ -8,7 +8,7 @@ angegebenen Zeitspanne eine Absenz mit der Dauer des Tages-Solls erzeugt.
 
 <%= error_messages_for 'multiabsence' %>
 
-<%= start_form_tag( :action => 'createMultiAbsence' ) %>
+<% form_tag( :action => 'createMultiAbsence' ) do %>
 <table>
   <tr>
 	<td>Absenz:</td>
@@ -31,7 +31,6 @@ angegebenen Zeitspanne eine Absenz mit der Dauer des Tages-Solls erzeugt.
     <td><%= submit_tag 'Speichern' %></td>
    </tr>
  </table>
-<%= end_form_tag %>
+<% end %>
 
-<br/>
-<%= link_to '&Uuml;bersicht', :action => 'listTime' %>
+<p><%= link_to '&Uuml;bersicht', :action => 'listTime' %></p>

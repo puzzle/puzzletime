@@ -16,7 +16,7 @@ for t in @attendance.worktimes %>
             {:action => 'delete',
              :attendance_id => i}, 
             {:confirm => 'Wollen sie diese Arbeitszeit wirklich entfernen?',
-            :post => true} %></td>
+             :method => 'post' } %></td>
   </tr>
 <%  i += 1
 end %>   
@@ -24,10 +24,10 @@ end %>
 
 <p>Die Zeiten wurden noch nicht gespeichert. Bitte schliessen sie dazu den Aufteilungsprozess ab.</p>
 
-<%= start_form_tag :action => 'createPart' %>
+<% form_tag :action => 'createPart' do %>
 <%= render :partial => 'worktime/form', 
            :locals => {:submit => ['Speichern und weiter Aufteilen', WorktimeController::FINISH]} %>
  
-<%= end_form_tag %>
+<% end %>
 
 <p><%= link_to '&Uuml;bersicht', :action => 'listTime' %></p>

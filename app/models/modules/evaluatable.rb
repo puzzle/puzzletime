@@ -26,7 +26,8 @@ module Evaluatable
   end
   
   def countWorktimes(period = nil, absences = nil, partnerVal = 0)
-    worktimes.count(conditionsFor(period, {partnerId => partnerVal}, absences))
+    worktimes.count("*", 
+                    :conditions => conditionsFor(period, {partnerId => partnerVal}, absences))
   end
   
   def conditionsFor(period = nil, idHash = {}, absences = nil)
@@ -47,7 +48,7 @@ module Evaluatable
   end
     
   def protect_worktimes
-    raise "Diesem Objekt sind Arbeitszeiten zugeteilt. Es kann nicht entfernt werden." if worktimes?
+    raise "Diesem Eintrag sind Arbeitszeiten zugeteilt. Er kann nicht entfernt werden." if worktimes?
   end  
   
   def to_s

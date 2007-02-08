@@ -7,7 +7,7 @@ class Absence < ActiveRecord::Base
   extend Manageable
   
   # All dependencies between the models are listed below
-  has_many :worktimes, :dependent => true
+  has_many :worktimes
   has_many :employees, :through => :worktimes, :order => "lastname"
 
   before_destroy :dont_destroy_vacation

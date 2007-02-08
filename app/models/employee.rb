@@ -9,8 +9,8 @@ class Employee < ActiveRecord::Base
   extend Manageable
   
   # All dependencies between the models are listed below.
-  has_many :employments, :order => 'start_date DESC', :dependent => true
-  has_many :projectmemberships, :dependent => true
+  has_many :employments, :order => 'start_date DESC', :dependent => :destroy
+  has_many :projectmemberships, :dependent => :destroy
   has_many :projects, 
            :include => :client,
            :through => :projectmemberships, 
@@ -29,12 +29,12 @@ class Employee < ActiveRecord::Base
               'm.employee_id = #{id} AND m.projectmanagement AND ' +
               'm.project_id = n.project_id AND n.employee_id = e.id ' +
               'ORDER BY e.lastname, e.firstname'
-  has_many :worktimes, :dependent => true
+  has_many :worktimes
   has_many :absences, :finder_sql => 
               'SELECT DISTINCT(a.*) FROM absences a, worktimes t WHERE ' +
               't.employee_id = #{id} AND t.absence_id = a.id ' +
               'ORDER BY a.name'
-  has_many :overtime_vacations, :order => 'transfer_date DESC', :dependent => true        
+  has_many :overtime_vacations, :order => 'transfer_date DESC', :dependent => :destroy        
 
   # Attribute reader and writer.
   attr_accessor :pwd 
@@ -117,13 +117,17 @@ class Employee < ActiveRecord::Base
   #########  vacation and overtime information ############
   
   def currentRemainingVacations
-    initial_vacation_days + 
-      overtimeVacationHours / 8.0 + 
-      remainingVacations(employmentPeriodTo(endOfYear))
+     remainingVacations(Date.new(Date.today.year, 12, 31))
   end
   
-  def remainingVacations(period)
-    totalVacations(period) - usedVacations(period)
+  def remainingVacations(date)
+    period = employmentPeriodTo(date)
+    initial_vacation_days + totalVacations(period) + 
+      overtimeVacationHours(date) / 8.0 - usedVacations(period)
+  end
+  
+  def totalVacations(period)
+    sumEmployments period, :vacations
   end
   
   def usedVacations(period)
@@ -131,15 +135,7 @@ class Employee < ActiveRecord::Base
     self.worktimes.sum(:hours, :conditions => ["absence_id = ? AND (work_date BETWEEN ? AND ?)", 
       VACATION_ID, period.startDate, period.endDate]).to_f / 8.0
   end
-    
-  def totalVacations(period)
-    sumEmployments period, :vacations
-  end
-  
-  def musttime(period)
-    sumEmployments period, :musttime 
-  end  
-
+     
   def currentOvertime(date = Date.today - 1)
     overtime(employmentPeriodTo(date)) - overtimeVacationHours
   end
@@ -147,6 +143,10 @@ class Employee < ActiveRecord::Base
   def overtime(period)
     payedWorktime(period) - musttime(period)
   end
+  
+  def musttime(period)
+    sumEmployments period, :musttime 
+  end  
   
   def payedWorktime(period)
     condArray = ["(absence_id IS NULL OR absences.payed)"]
@@ -160,8 +160,9 @@ class Employee < ActiveRecord::Base
                   :conditions => condArray).to_f
   end
   
-  def overtimeVacationHours
-    overtime_vacations.sum(:hours).to_f
+  def overtimeVacationHours(date = nil)    
+    overtime_vacations.sum(:hours,
+                           :conditions => date ? ['transfer_date <= ?', date] : nil).to_f
   end
   
   ######### employment information ######################
@@ -204,10 +205,6 @@ class Employee < ActiveRecord::Base
   
 private
 
-  def endOfYear
-    Date.new(Date.today.year, 12, 31)
-  end
-    
   def self.encode(pwd)
     Digest::SHA1.hexdigest(pwd) 
   end
