@@ -36,7 +36,7 @@ module EvaluatorHelper
   
   def timeInfo
     infos = @period ?    
-            [[['Arbeitszeit', @user.musttime(@period), 'h'],
+            [[['Soll Arbeitszeit', @user.musttime(@period), 'h'],
               ['&Uuml;berzeit', @user.overtime(@period).to_f, 'h']],
              [['Bezogene Ferien', @user.usedVacations(@period), 'd'], 
               ['Offen', @user.remainingVacations(@period.endDate), 'd']]]  :

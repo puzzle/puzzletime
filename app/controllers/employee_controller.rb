@@ -47,7 +47,6 @@ class EmployeeController < ApplicationController
      [:shortname, 'Kürzel'],
      [:ldapname, 'LDAP Name'],
      [:email, 'Email'],
-     [:phone, 'Telefon'],
      [:initial_vacation_days, 'Anfängliche Ferien'],
      [:management, 'GL']]    
   end
