@@ -5,7 +5,7 @@ unless defined?(RAILS_ROOT)
 
   unless RUBY_PLATFORM =~ /mswin32/
     require 'pathname'
-    root_path = Pathname.new(root_path).cleanpath(true).to_s
+    root_path = Pathname.new(root_path).cleanpath(true).realpath().to_s
   end
 
   RAILS_ROOT = root_path

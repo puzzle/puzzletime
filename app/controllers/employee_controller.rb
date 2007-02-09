@@ -15,9 +15,9 @@ class EmployeeController < ApplicationController
   
   #Update userpwd
   def updatePwd
-    if Employee.checkpwd(@user.id, params[:pwd])
+    if @user.checkPasswd(params[:pwd])
       if params[:change_pwd] === params[:change_pwd_confirmation]
-        @user.updatepwd(params[:change_pwd])
+        @user.setPasswd(params[:change_pwd])
         flash[:notice] = 'Das Passwort wurde aktualisiert'
         redirect_to :controller => 'evaluator'
       else
@@ -45,6 +45,7 @@ class EmployeeController < ApplicationController
     [[:firstname, 'Vorname'], 
      [:lastname, 'Nachname'],
      [:shortname, 'Kürzel'],
+     [:ldapname, 'LDAP Name'],
      [:email, 'Email'],
      [:phone, 'Telefon'],
      [:initial_vacation_days, 'Anfängliche Ferien'],

@@ -53,6 +53,6 @@ end
 # Include your application configuration below
 ActionMailer::Base.delivery_method = :sendmail
 
-#require 'active_ldap'
+require 'active_ldap'
 require "overrides" 
 require 'puzzletime_settings'

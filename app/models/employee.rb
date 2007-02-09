@@ -2,6 +2,7 @@
 # Diplomarbeit 2149, Xavier Hayoz
 
 require "digest/sha1"
+require "net/ldap"
 
 class Employee < ActiveRecord::Base
   
@@ -35,9 +36,6 @@ class Employee < ActiveRecord::Base
               't.employee_id = #{id} AND t.absence_id = a.id ' +
               'ORDER BY a.name'
   has_many :overtime_vacations, :order => 'transfer_date DESC', :dependent => :destroy        
-
-  # Attribute reader and writer.
-  attr_accessor :pwd 
   
   # Validation helpers.
   validates_presence_of :firstname, :message => "Der Vorname muss angegeben werden"
@@ -48,19 +46,20 @@ class Employee < ActiveRecord::Base
   before_destroy :protect_worktimes  
  
   # Hashes and compares the pwd.
-  def self.login(shortname, pwd)
+  def self.login(username, pwd)
     passwd = encode(pwd)
-    find(:first,
-         :conditions =>["shortname = ? and passwd = ?",
-                         shortname, passwd])
-  end
-  
-  # Checks password before updating.
-  def self.checkpwd(id, pwd)
-    passwd = encode(pwd)
-    nil != find(:first,
-         :conditions =>["id = ? and passwd = ?",
-                         id, passwd])
+    user = find(:first, :conditions => ["shortname = ? and passwd = ?", username, passwd])
+    if user.nil?
+      connection = Net::LDAP.new :host => LDAP_HOST, 
+                                 :port => LDAP_PORT, 
+                                 :encryption => :simple_tls         
+      if connection.bind_as(:base => LDAP_DN, 
+                            :filter => "uid=#{username}", 
+                            :password => pwd)
+        user = find(:first, :conditions => ["ldapname = ?", username])
+      end    
+    end            
+    user
   end
   
   ##### interface methods for Manageable #####  
@@ -98,20 +97,16 @@ class Employee < ActiveRecord::Base
     super || 0    
   end
   
-  # Hashes password before storing it.
   def before_create
-    self.passwd = Employee.encode(self.shortname)    
+    self.passwd = ""    # disable password login  
   end
   
-  # After created password, instance pwd should be nil
-  def after_create
-    @pwd = nil
+  def checkPasswd(pwd)
+    self.passwd == Employee.encode(pwd)
   end
   
-  # Saves new password in DB.
-  def updatepwd(pwd)
-    hashed_pwd = Employee.encode(pwd)
-    update_attributes(:passwd => hashed_pwd)
+  def setPasswd(pwd)
+    update_attributes(:passwd => Employee.encode(pwd))
   end
   
   #########  vacation and overtime information ############
