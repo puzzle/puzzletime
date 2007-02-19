@@ -72,7 +72,7 @@ class Worktime < ActiveRecord::Base
       when ReportType::MONTH then hours.to_s + ' h in diesem Monat'
     end
   end
-  
+    
   def validate
     if times?
       errors.add(:from_start_time, 'Die Anfangszeit ist ung&uuml;ltig') if ! from_start_time

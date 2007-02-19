@@ -14,35 +14,22 @@ module Evaluatable
     :employee_id
   end
      
-  def worktimesBy(period = nil, absences = nil, partnerVal = 0, options = {})
+  def worktimesBy(period = nil, absences = false, partnerVal = 0, options = {})
     options[:conditions] = conditionsFor(period, {partnerId => partnerVal}, absences)
     options[:order] = "work_date ASC, from_start_time ASC, project_id, employee_id"
     worktimes.find(:all, options)
   end  
   
-  def sumWorktime(period = nil, absences = nil, partnerVal = 0)
+  def sumWorktime(period = nil, absences = false, partnerVal = 0)
     worktimes.sum(:hours, 
                   :conditions => conditionsFor(period, {partnerId => partnerVal}, absences)).to_f
   end
   
-  def countWorktimes(period = nil, absences = nil, partnerVal = 0)
+  def countWorktimes(period = nil, absences = false, partnerVal = 0)
     worktimes.count("*", 
                     :conditions => conditionsFor(period, {partnerId => partnerVal}, absences))
   end
-  
-  def conditionsFor(period = nil, idHash = {}, absences = nil)
-    condArray = [ " 1=1 "]
-    condArray = ["(work_date BETWEEN ? AND ?)", period.startDate, period.endDate] if ! period.nil?
-    condArray[0] += " AND absence_id " + (absences ? "IS NOT NULL " : "IS NULL ") if ! absences.nil?
-    idHash.each_pair { |name, id|
-      if id > 0 
-        condArray[0] += "AND #{name} = ?"
-        condArray.push(id)
-      end
-    }
-    return condArray
-  end    
-  
+
   def worktimes?
     self.worktimes.size > 0
   end
@@ -54,4 +41,22 @@ module Evaluatable
   def to_s
     label
   end
+  
+private    
+    
+  def conditionsFor(period = nil, idHash = {}, absences = false)
+    condArray = [ (absences ? 'absence_id' : 'project_id') + ' IS NOT NULL ' ]
+    if ! period.nil?
+      condArray[0] += " AND (work_date BETWEEN ? AND ?) "
+      condArray.push period.startDate, period.endDate
+    end
+    idHash.each_pair do |name, id|
+      if id > 0 
+        condArray[0] += " AND #{name} = ? "
+        condArray.push id 
+      end
+    end
+    return condArray
+  end    
+  
 end 

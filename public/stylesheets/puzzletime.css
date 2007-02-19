@@ -106,24 +106,21 @@ textarea, input, select {
     padding-left:   20px;
 }
 
-#header span {
+#brand {    
     font-weight:    normal;
-}
-
-#header h1 {
-    top:            4px;
     font-size:      28px;
     letter-spacing: -1px;
+    margin-top:     20px;
     margin-bottom:  3px;
 }
 
-#brand {
+#company {
     font-size:      11px;
     font-weight:    normal;
     color:          #FCE2CA;
 }
 
-#header sup {
+#brand sup {
     color:          #FCE2CA;
 }
 

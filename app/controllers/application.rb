@@ -17,12 +17,13 @@ class ApplicationController < ActionController::Base
     @user = session[:user]
     unless @user
       redirect_to(:controller => 'login', :action => 'login' )
+      return false
     end
+    return true
   end 
   
   def authorize
-    authenticate
-    unless @user.management
+    unless authenticate && @user.management
       flash[:notice] = 'Sie sind nicht authorisiert, diese Seite zu öffnen'
       redirect_to(:controller => 'login', :action => 'login' )
     end
@@ -30,7 +31,7 @@ class ApplicationController < ActionController::Base
 
   def rescue_action_in_public(exception)
     case exception
-      when ActiveRecord::RecordNotFound, ::ActionController::UnknownAction
+      when ::ActionController::RoutingError, ActiveRecord::RecordNotFound, ::ActionController::UnknownAction
         render(:file => "#{RAILS_ROOT}/public/404.html",
                :status => "404 Not Found")
       else
