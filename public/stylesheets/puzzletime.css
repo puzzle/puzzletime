@@ -6,10 +6,16 @@ body {
     line-height:    14px;
     padding:        0px;
     margin:         0px;
+    text-align:     center;   /* centered content in IE */
 }
 
 p {
-    margin-bottom: 20px;
+    margin-bottom:  20px;
+    text-align:     justify;
+}
+
+div {
+    text-align:     justify;
 }
 
 a {
@@ -38,10 +44,6 @@ h3 {
     color:          #4a4a4a;
 }
 
-sup {
-    font-size:      0.5em;
-}
-
 table {
     font-size:      14px;
 }
@@ -49,6 +51,7 @@ table {
 td {
     padding-left:   4px;
     padding-right:  4px;
+    text-align:     left;
 }
 
 th {
@@ -65,7 +68,7 @@ th.periodHead {
 textarea, input, select {
     font-size:      15px;
     font-family:    sans-serif;
-    line-height:    13px;
+    line-height:    17px;
 }
 
 .uneven {
@@ -89,29 +92,30 @@ textarea, input, select {
 }
 
 #content {
-    position:       relative;
     max-width:      992px;
     min-width:      730px;
+    width:          992px;
     margin:         auto;
     padding:        13px 16px 13px 16px;
     background:     #fff url('../images/whitebox.gif') repeat-y;
 }
 
 #header {
-    position:       absolute;
     background:     #0087e3;
     width:          302px;
     height:         92px;
     color:          #fff;
     padding-left:   20px;
+    float:          left;
 }
 
 #brand {    
     font-weight:    normal;
     font-size:      28px;
+    line-height:    24px;
     letter-spacing: -1px;
     margin-top:     20px;
-    margin-bottom:  3px;
+    margin-bottom:  0px;
 }
 
 #company {
@@ -122,19 +126,18 @@ textarea, input, select {
 
 #brand sup {
     color:          #FCE2CA;
+    font-size:      0.5em;
 }
 
 #splash {
-    position:       absolute;
     right:          16px;
-    background:     url("../images/banner.jpg") no-repeat;
-    width:          547px;
     height:         92px;
+    margin-bottom:  14px;
 }
 
 #menu {
     background:     #46461F url('../images/menu_bg.gif') repeat-x;  /* #46461F */
-    margin-top:     98px;
+    margin-top:     -8px;
     height:         35px;
 }
 
@@ -145,8 +148,9 @@ textarea, input, select {
 }
 
 #submenu {
-    padding:        0px 50px 0px 5px;
-    margin:         10px 50px 20px 0px;
+    padding-left:   10px;
+    margin-bottom:  30px;
+    margin-top:     -10px;
 }
 
 #submenu a {
@@ -154,23 +158,16 @@ textarea, input, select {
     font-weight:    bold;
 }
 
-#spacer {
-    margin-top:     120px;  
-}
-
 #menu ul {
     padding-top:    9px;
     padding-left:   8px;
+    margin-left:    0px;
     margin-bottom:  13px;
 }
 
 #menu ul li {
     display:        inline;
     padding-left:   -3px;
-}
-
-#menu ul li.first {
-    border-left:    0px;
 }
 
 #menu ul li a {

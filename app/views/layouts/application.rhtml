@@ -17,7 +17,9 @@
 		<div id="company">&nbsp; by Puzzle ITC</div>
 	</div>
 
-	<div id="splash"></div>		
+	<div id="splash">
+	<img src="/images/banner.jpg" align="right" width="547" height="92" />
+	</div>		
 	
 	<% if @user -%>
 	<div id="menu">
@@ -77,9 +79,6 @@
         <%= link_to 'Feiertage', :controller => 'holiday' %>
         </div>
 	  <% end -%>
-	
-	<% else -%>
-	<div id="spacer"> </div>
 	<% end -%>
 	
 	<h1><%= @title %></h1>

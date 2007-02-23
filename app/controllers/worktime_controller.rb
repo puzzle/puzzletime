@@ -190,6 +190,8 @@ protected
         ! session[:period].include?(@worktime.work_date)
       period = Period.weekFor(@worktime.work_date)
       @periodParam ||= {:start_date => period.startDate, :end_date => period.endDate}
+    else
+      @periodParam ||= {}   
     end
     redirect_to @periodParam.merge!({
                 :controller => 'evaluator', 
