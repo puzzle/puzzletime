@@ -1,14 +1,19 @@
-<% p = periods[periodTime_counter]  -%>
+<% 
+    p = periods[periodTime_counter]  
+    division_id = nil if ! defined? division_id
+-%>
 <td align="right">
 <%= number_with_precision(periodTime, 2) %>
-<% if division_id || ! @evaluation.top_category -%>
-<%= "<a href=\"/evaluator/details?evaluation=" +
-    "#{params[:evaluation]}&category_id=#{@evaluation.category.id}" +
-    (division_id ? "&division_id=#{division_id}" : "") +
-    (p ? "&start_date=#{p.startDate}&end_date=#{p.endDate}" : "&start_date=0") +
-    "\">" %><img src="/images/lupe.gif" border="0" width="19" height="11" /></a>
+<% if division_id || @evaluation.class::TOTAL_DETAILS -%>
+    <%= linkHash = {:action => 'details',
+                    :evaluation => params[:evaluation],
+                    :category_id => @evaluation.category.id}
+        linkHash[:division_id] = division_id if division_id
+        linkHash[:start_date] = p ? p.startDate : 0
+        linkHash[:end_date] = p.endDate if p            
+        link_to image_tag('lupe.gif', :size => '19x11', :border => 0), linkHash %>
 <% else -%>
-    <img src="/images/space.gif" border="0" width="19" height="11" />   
+    <%= image_tag 'space.gif', :size => '19x11', :border => 0 %>
 <% end -%>  
 &nbsp;
 </td>

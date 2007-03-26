@@ -35,4 +35,8 @@ class Client < ActiveRecord::Base
   def countWorktimes(period, absences = nil, dummy = nil)
     super(period, absences, id)
   end  
+
+  def self.sumWorktime(period, absences)
+    Worktime.sumWorktime period, absences
+  end
 end

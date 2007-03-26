@@ -2,7 +2,7 @@
 # migrations feature of ActiveRecord to incrementally modify your database, and
 # then regenerate this schema definition.
 
-ActiveRecord::Schema.define(:version => 4) do
+ActiveRecord::Schema.define(:version => 5) do
 
   create_table "absences", :force => true do |t|
     t.column "name",  :string,                     :null => false
@@ -20,7 +20,6 @@ ActiveRecord::Schema.define(:version => 4) do
     t.column "shortname",             :string,  :limit => 3,                    :null => false
     t.column "passwd",                :string,                                  :null => false
     t.column "email",                 :string,                                  :null => false
-    t.column "phone",                 :string,                                  :null => false
     t.column "management",            :boolean,              :default => false
     t.column "initial_vacation_days", :float,                :default => 0.0
     t.column "ldapname",              :string
@@ -46,15 +45,11 @@ ActiveRecord::Schema.define(:version => 4) do
     t.column "transfer_date", :date,    :null => false
   end
 
-  create_table "plugin_schema", :id => false, :force => true do |t|
-    t.column "engine_name", :string
-    t.column "version",     :integer
-  end
-
   create_table "projectmemberships", :force => true do |t|
     t.column "project_id",        :integer
     t.column "employee_id",       :integer
     t.column "projectmanagement", :boolean, :default => false
+    t.column "last_completed",    :date
   end
 
   create_table "projects", :force => true do |t|

@@ -24,7 +24,7 @@ class AttendanceController < WorktimeController
       @attendance = Attendance.new(@worktime)
       saveAttendance
     else
-      render :action => 'attendance'
+      render :action => 'add'
     end  
   end
   

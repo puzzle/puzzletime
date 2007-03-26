@@ -18,7 +18,7 @@ class EvaluatorController < ApplicationController
   def overview
     params[:evaluation] = params[:action] if ! params[:evaluation]
     setEvaluation
-    if @evaluation.for?(@user) then render :action => 'userOverview' 
+    if params[:evaluation] =~ /^user/ then render :action => 'userOverview' 
     else render :action => 'overview'
     end
   end
@@ -99,6 +99,15 @@ class EvaluatorController < ApplicationController
                 :evaluation => params[:evaluation],
                 :category_id => params[:category_id]      
   end
+
+  def completeProject
+    pm = @user.projectmemberships.find(:first, 
+            :conditions => ["project_id = ?", params[:project_id]])
+    pm.update_attributes(:last_completed => Date.today)
+    flash[:notice] = "Das Datum der kompletten Erfassung aller Zeiten für das Projekt #{pm.project.label_verbose} wurde aktualisiert."
+    redirect_to :action => params[:evaluation], 
+                :category_id => params[:category_id]
+  end
   
   def method_missing(action, *args)
     params[:evaluation] = action.to_s
@@ -109,26 +118,26 @@ private
 
   def setEvaluation
     @evaluation = case params[:evaluation].downcase
-        when 'managed' then Evaluation.managedProjects(@user)
-        when 'managedabsences' then Evaluation.managedAbsences(@user)
-        when 'absences' then Evaluation.absences
-        when 'userprojects' then Evaluation.employeeProjects(@user.id)
-        when 'userabsences' then Evaluation.employeeAbsences(@user.id)        
-        when 'projectemployees' then Evaluation.projectEmployees(params[:category_id])
+        when 'managed' then ManagedProjectsEval.new(@user)
+        when 'managedabsences' then ManagedAbsencesEval.new(@user)
+        when 'absences' then AbsencesEval.new
+        when 'userprojects' then EmployeeProjectsEval.new(@user.id)
+        when 'userabsences' then EmployeeAbsencesEval.new(@user.id)        
+        when 'projectemployees' then ProjectEmployeesEval.new(params[:category_id])
         else nil
         end
     if @user.management && @evaluation.nil?
       @evaluation = case params[:evaluation].downcase
-        when 'clients' then Evaluation.clients
-        when 'employees' then Evaluation.employees
-        when 'clientprojects' then Evaluation.clientProjects(params[:category_id])
-        when 'employeeprojects' then Evaluation.employeeProjects(params[:category_id])
-        when 'employeeabsences' then Evaluation.employeeAbsences(params[:category_id])
+        when 'clients' then ClientsEval.new
+        when 'employees' then EmployeesEval.new
+        when 'clientprojects' then ClientProjectsEval.new(params[:category_id])
+        when 'employeeprojects' then EmployeeProjectsEval.new(params[:category_id])
+        when 'employeeabsences' then EmployeeAbsencesEval.new(params[:category_id])
         else nil
         end  
     end
     if @evaluation.nil?
-      @evaluation = Evaluation.employeeProjects(@user.id)
+      @evaluation = EmployeeProjectsEval.new(@user.id)
     end 
   end
   

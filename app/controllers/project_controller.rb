@@ -53,7 +53,7 @@ class ProjectController < ApplicationController
   end
   
   def formatColumn(attribute, value)
-    return value.slice(0..40) + (value.size > 40 ? '...' : '') if :description == attribute
+    return value.slice(0..40) + (value.size > 40 ? '...' : '') if value && :description == attribute
     super attribute, value
   end
   

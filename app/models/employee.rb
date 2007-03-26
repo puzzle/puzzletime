@@ -108,6 +108,27 @@ class Employee < ActiveRecord::Base
   def setPasswd(pwd)
     update_attributes(:passwd => Employee.encode(pwd))
   end
+
+  def sumManagedProjectsWorktime(period)
+    sql = "SELECT sum(hours) AS sum " +
+           "FROM ((employees E LEFT JOIN projectmemberships PM ON E.id = PM.employee_id) " +
+	       " LEFT JOIN projects P ON PM.project_id = P.id)" +
+           " LEFT JOIN worktimes T ON P.id = T.project_id " +
+           "WHERE E.id = #{self.id} AND PM.projectmanagement"
+    if period
+      sql += " AND T.work_date BETWEEN #{period.startDate} AND #{period.endDate}"
+    end
+    self.class.connection.select_value(sql).to_f
+  end
+
+  def self.sumWorktime(period, absences)
+    Worktime.sumWorktime period, absences
+  end
+
+  def lastCompleted(project)
+    projectmemberships.find(:first, 
+	                        :conditions => ["project_id = ?", project.id]).last_completed
+  end
   
   #########  vacation and overtime information ############
   

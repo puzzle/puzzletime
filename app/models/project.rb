@@ -33,10 +33,6 @@ class Project < ActiveRecord::Base
     super(options)
   end
     
-  def self.label
-    'Projekt'
-  end
-      
   def label_verbose
     client.name + ' - ' + name
   end  

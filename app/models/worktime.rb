@@ -95,6 +95,15 @@ class Worktime < ActiveRecord::Base
     self.report_type = project.report_type if report_type < project.report_type
     self.billable = project.billable
   end
+
+  def self.sumWorktime(period, absences)
+    condArray = [ (absences ? 'absence_id' : 'project_id') + ' IS NOT NULL ' ]
+    if period
+      condArray[0] += " AND work_date BETWEEN ? AND ?"
+      condArray.push period.startDate, period.endDate
+    end
+    self.sum(:hours, :conditions => condArray).to_f
+  end
   
 private
 

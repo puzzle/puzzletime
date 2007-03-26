@@ -1,18 +1,14 @@
-<% times = collect_times(periods, sum_periods, division) -%>
 <%= alternate_row %>
     <td>
-    <% if @evaluation.sub_evaluation -%>
-    <a href="<%= @evaluation.sub_evaluation %>?category_id=<%= division.id %>">
-    <%= division.label_verbose %>
-    </a>
-    <% else -%>
-    <%= division.label_verbose %>
-    <% end -%>
+    <%= link_to_if sub = @evaluation.class::SUB_EVALUATION, 
+                   division.label_verbose, 
+                   :action => sub, 
+                   :category_id => division.id %>
     </td>
     <%= render(:partial => 'periodTime',
-               :collection => times,
+               :collection => collect_times(periods, :sum_times, division),
                :locals => {:division_id => division.id, :periods => periods}) %>
-    <% if @evaluation.for? @user -%>
-    <td><%= add_time_link(division) %></td>
-    <% end -%>
+    <%= render :partial => 'divisionSupplement',
+               :collection => @evaluation.division_supplement(@user),
+               :locals => {:division => division} %>       
 </tr>

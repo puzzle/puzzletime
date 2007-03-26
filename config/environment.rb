@@ -17,7 +17,7 @@ Rails::Initializer.run do |config|
   # config.frameworks -= [ :action_web_service, :action_mailer ]
 
   # Add additional load paths for your own custom dirs
-  config.load_paths += %W( #{RAILS_ROOT}/app/models/forms #{RAILS_ROOT}/app/models/modules #{RAILS_ROOT}/app/models/util)
+  config.load_paths += %W( #{RAILS_ROOT}/app/models/forms #{RAILS_ROOT}/app/models/modules #{RAILS_ROOT}/app/models/util #{RAILS_ROOT}/app/models/evaluations)
 
   # Force all environments to use the same logger level 
   # (by default production uses :info, the others :debug)

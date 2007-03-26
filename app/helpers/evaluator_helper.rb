@@ -9,21 +9,30 @@ module EvaluatorHelper
       [@period]
   end 
   
-  def collect_times(periods, sum_periods, division)
-    times = periods.collect { |p| @evaluation.sum_times(p, division) }
-    times.push(@evaluation.sum_times(nil, division))
-    sum_periods.each_index { |i| sum_periods[i] += times[i] }
+  def collect_times(periods, method, *division)
+    times = periods.collect { |p| @evaluation.send(method, p, *division) }
+    times.push(@evaluation.send(method, nil, *division))
     times
-  end   
-
-  def add_time_link(division = nil)
-     addAction = @evaluation.absences? ? 'addAbsence' : 'addTime'
-     account = ''
-     if division
-       account = @evaluation.absences? ? 'absence_id' : 'project_id'
-       account = "?#{account}=#{division.id}"
+  end  
+  
+  def add_time_link(account = nil)
+     linkHash = {:controller => 'worktime'}
+     linkHash[:action] = @evaluation.absences? ? 'addAbsence' : 'addTime'
+     if account
+       account_field = @evaluation.absences? ? :absence_id : :project_id
+       linkHash[account_field] = account.id
      end  
-     "<a href=\"/worktime/#{addAction}#{account}\">Zeit erfassen</a>"  
+     link_to 'Zeit erfassen', linkHash 
+  end
+
+  def complete_link(project)
+     link_to 'Komplettieren', 
+	     evaluation_overview_params(:action => 'completeProject', 
+					                :project_id => project.id)
+  end
+
+  def last_completion(employee)
+    format_date employee.lastCompleted(@evaluation.category)
   end
 
   def period_link(label, periodMethod, date)
