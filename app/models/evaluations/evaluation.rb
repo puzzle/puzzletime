@@ -18,9 +18,13 @@ class Evaluation
   # Whether this Evaluation is for absences or project times.
   ABSENCES         = false   
   
-  # Whether details for totals are possible   
-  TOTAL_DETAILS    = true            
-
+  # Whether details for totals are possible.  
+  TOTAL_DETAILS    = true    
+  
+  # The field of a division referencing the category entry in the database. 
+  # May be nil if not required for this Evaluation (default).
+  CATEGORY_REF     = nil        
+  
   attr_reader :category,             # category              
               :division              # selected division for detail Evaluations, nil otherwise
   
@@ -37,32 +41,33 @@ class Evaluation
   # Otherwise the sum of all worktimes in the main category is returned.
   def sum_times(period, div = nil)
     div ||= division
-    if div then div.sumWorktime(period, absences?, category_ref)
-    else category.sumWorktime(period, absences?)
-    end
+    sendTimeQuery(:sumWorktime, period, div)
   end  
 
   # Sums all worktimes for the category in a given period.
   def sum_total_times(period = nil)
-    category.sumWorktime(period, absences?)
+    category.sumWorktime(self, period)
   end
   
   # Counts the number of Worktime entries in the current Evaluation for a given period.
   def count_times(period)
-    if division then division.countWorktimes(period, absences?, category_ref)
-    else category.countWorktimes(period, absences?)
-    end
+    sendTimeQuery(:countWorktimes, period, division)
   end
   
   # Returns a list of all Worktime entries for this Evaluation in the given period
   # of time.
   def times(period, options = {})
-    if division then division.worktimesBy(period, absences?, category_ref, options)
-    else category.worktimesBy(period, absences?, 0, options)
-    end
-  end  
-        
-  # Whether this Evaluation is for Absences or Projects. Returns the configured class constant. 
+    sendTimeQuery(:findWorktimes, period, division, options)
+  end
+  
+  # Field with category reference for divisions. Nil if not required.
+  # Returns the configured class constant.
+  def categoryRef
+    self.class::CATEGORY_REF
+  end
+          
+  # Whether this Evaluation is for Absences or Projects. 
+  # Returns the configured class constant. 
   def absences?
     self.class::ABSENCES
   end   
@@ -132,7 +137,7 @@ protected
   def initialize(category)
     @category = category
   end
-
+  
 private
        
   def detail_label(item)
@@ -143,11 +148,10 @@ private
   def class_category?
     category.kind_of? Class
   end
+    
+  def sendTimeQuery(method, period = nil, div = nil, options = {})
+    receiver = div ? div : category
+    receiver.send(method, self, period, div && categoryRef, options)
+  end
   
-  # The lowest Evaluations need to include a reference to their category
-  # for the worktime queries to not include unrelated worktimes.
-  def category_ref
-    self.class::SUB_EVALUATION ? 0 : category.id
-  end 
-
 end 

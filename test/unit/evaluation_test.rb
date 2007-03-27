@@ -383,7 +383,7 @@ class EvaluationTest < Test::Unit::TestCase
     assert_count_times 0, 1, 1, 1 
   end
   
-    def test_employee_absences_lucien
+  def test_employee_absences_lucien
     @evaluation = EmployeeAbsencesEval.new(employees(:lucien).id)
     assert @evaluation.absences?
     assert @evaluation.for?(employees(:lucien))

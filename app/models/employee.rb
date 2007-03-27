@@ -83,10 +83,6 @@ class Employee < ActiveRecord::Base
     lastname + " " + firstname
   end
   
-  def partnerId
-    :project_id
-  end
-  
   ##### helper methods #####
     
   def projectManager?
@@ -121,8 +117,8 @@ class Employee < ActiveRecord::Base
     self.class.connection.select_value(sql).to_f
   end
 
-  def self.sumWorktime(period, absences)
-    Worktime.sumWorktime period, absences
+  def self.sumWorktime(evaluation, period, categoryRef = false, options = {})
+    Worktime.sumWorktime period, evaluation.absences?
   end
 
   def lastCompleted(project)

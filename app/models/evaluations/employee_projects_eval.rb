@@ -1,7 +1,8 @@
 class EmployeeProjectsEval < Evaluation
 
   DIVISION_METHOD  = :projects
-  LABEL           = 'Projekte'
+  LABEL            = 'Projekte'
+  CATEGORY_REF     = :employee_id      
   
   def initialize(employee_id)
     super(Employee.find(employee_id))

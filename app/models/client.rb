@@ -23,20 +23,8 @@ class Client < ActiveRecord::Base
   end  
   
   ##### interface methods for Evaluatable #####
-  
-  def partnerId
-    :client_id
-  end 
-  
-  def worktimesBy(period, absences = nil, dummy = nil, options = {})
-    super(period, absences, id, options)
-  end  
 
-  def countWorktimes(period, absences = nil, dummy = nil)
-    super(period, absences, id)
-  end  
-
-  def self.sumWorktime(period, absences)
-    Worktime.sumWorktime period, absences
+  def self.sumWorktime(evaluation, period, categoryRef = false, options = {})
+    Worktime.sumWorktime period, evaluation.absences?
   end
 end

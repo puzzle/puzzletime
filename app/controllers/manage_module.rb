@@ -153,8 +153,7 @@ protected
   
   # Initializes the data for editing an entry. 
   # Is currently used to set default values. 
-  def initFormData
-  
+  def initFormData  
   end  
   
 private

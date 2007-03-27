@@ -3,6 +3,7 @@ class EmployeeAbsencesEval < Evaluation
   DIVISION_METHOD  = :absences
   LABEL            = 'Absenzen'
   ABSENCES         = true
+  CATEGORY_REF     = :employee_id      
   
   def initialize(employee_id)
     super(Employee.find(employee_id))

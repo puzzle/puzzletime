@@ -3,7 +3,7 @@ class ManagedProjectsEval < Evaluation
   DIVISION_METHOD  = :managed_projects
   SUB_EVALUATION   = 'projectemployees'
   LABEL            = 'Geleitete Projekte'
-  TOTAL_DETAILS    = false
+  TOTAL_DETAILS    = false  
       
   def category_label
     'Kunde: ' + division.client.name
@@ -11,10 +11,6 @@ class ManagedProjectsEval < Evaluation
 
   def sum_total_times(period = nil)
     category.sumManagedProjectsWorktime(period)
-  end
-
-  def division_supplement(user)
-    []
   end
 
 end
