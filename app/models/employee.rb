@@ -47,19 +47,20 @@ class Employee < ActiveRecord::Base
  
   # Hashes and compares the pwd.
   def self.login(username, pwd)
-    passwd = encode(pwd)
-    user = find(:first, :conditions => ["shortname = ? and passwd = ?", username, passwd])
-    if user.nil?
-      connection = Net::LDAP.new :host => LDAP_HOST, 
-                                 :port => LDAP_PORT, 
-                                 :encryption => :simple_tls         
-      if connection.bind_as(:base => LDAP_DN, 
-                            :filter => "uid=#{username}", 
-                            :password => pwd)
-        user = find(:first, :conditions => ["ldapname = ?", username])
-      end    
-    end            
+    user = find(:first, :conditions => ["shortname = ? and passwd = ?", username, encode(pwd)])
+    user = ldapLogin(username, pwd) if user.nil?   
     user
+  end
+  
+  def self.ldapLogin(username, pwd)
+    connection = Net::LDAP.new :host => LDAP_HOST, 
+                               :port => LDAP_PORT, 
+                               :encryption => :simple_tls         
+    if connection.bind_as :base => LDAP_DN, 
+                          :filter => "uid=#{username}", 
+                          :password => pwd 
+      return find(:first, :conditions => ["ldapname = ?", username])
+    end  
   end
   
   ##### interface methods for Manageable #####  

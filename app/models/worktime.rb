@@ -91,7 +91,8 @@ class Worktime < ActiveRecord::Base
     end
   end
   
-  def setProjectDefaults
+  def setProjectDefaults(project_id = DEFAULT_PROJECT_ID)
+    self.project_id = project_id
     self.report_type = project.report_type if report_type < project.report_type
     self.billable = project.billable
   end

@@ -6,7 +6,7 @@ class DateFormatter
   
   def before_validation(model)
     @date_fields.each do |field|
-      field_before_type_cast = model.send(field +'_before_type_cast')
+      field_before_type_cast = model.send(field + '_before_type_cast')
       if field_before_type_cast.kind_of? String
         begin
           model.send( field + '=', 

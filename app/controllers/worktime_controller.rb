@@ -33,9 +33,8 @@ class WorktimeController < ApplicationController
     createDefaultWorktime   
     if params.has_key? :absence_id
       @worktime.absence_id = params[:absence_id] 
-    else
-      @worktime.project_id = params[:project_id] || DEFAULT_PROJECT_ID
-      @worktime.setProjectDefaults
+    else 
+      @worktime.setProjectDefaults params[:project_id]
     end  
     setWorktimeAccounts
   end  

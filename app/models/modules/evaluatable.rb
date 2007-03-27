@@ -17,7 +17,7 @@ module Evaluatable
   # Finds all Worktimes related to this object in a given period.    
   def findWorktimes(evaluation, period = nil, categoryRef = false, options = {})
     options[:conditions] = conditionsFor(evaluation, period, categoryRef)
-    options[:order] = "work_date ASC, from_start_time ASC, project_id, employee_id"
+    options[:order] = "work_date ASC, project_id, employee_id"
     worktimes.find(:all, options)
   end  
   
@@ -33,15 +33,10 @@ module Evaluatable
     worktimes.count("*", options)
   end
 
-  # Returns whether this object has related Worktimes.
-  def worktimes?
-    worktimes.size > 0
-  end
-    
   # Raises an Exception if this object has related Worktimes. 
   # This method is a callback for :before_delete.  
   def protect_worktimes
-    raise "Diesem Eintrag sind Arbeitszeiten zugeteilt. Er kann nicht entfernt werden." if worktimes?
+    raise "Diesem Eintrag sind Arbeitszeiten zugeteilt. Er kann nicht entfernt werden." if ! worktimes.empty?
   end  
   
   def to_s

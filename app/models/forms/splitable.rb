@@ -28,8 +28,7 @@ class Splitable
   end
   
   def save
-    worktimes.each { |wtime|
-       wtime.save }
+    worktimes.each { |wtime|  wtime.save }
   end
   
 protected
