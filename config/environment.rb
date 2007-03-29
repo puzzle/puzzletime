@@ -54,4 +54,5 @@ end
 ActionMailer::Base.delivery_method = :sendmail
 
 require "overrides" 
+require 'report_type'
 require 'puzzletime_settings'

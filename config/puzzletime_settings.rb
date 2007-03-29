@@ -21,6 +21,7 @@ NO_OF_DETAIL_ROWS       = 20      # rows for detail time entries
 
 DATE_FORMAT             = '%d.%m.%Y'
 LONG_DATE_FORMAT        = '%a, %d.%m.%Y'
+TIME_FORMAT             = '%H:%M'
 
 # Email settings for error messages
 SYSTEM_EMAIL            = %{"PuzzleTime" <puzzletime@puzzle.ch>}
@@ -32,5 +33,5 @@ LDAP_PORT               = 636
 LDAP_DN                 = 'ou=users,dc=puzzle,dc=itc'
 
 # Default values
-DEFAULT_REPORT_TYPE     = ReportType::HOURS_DAY
+DEFAULT_REPORT_TYPE     = HoursDayType::INSTANCE
 DEFAULT_START_HOUR      = 8

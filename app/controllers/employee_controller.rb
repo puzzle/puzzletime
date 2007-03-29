@@ -11,7 +11,7 @@ class EmployeeController < ApplicationController
 
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
   verify :method => :post, :only => [ :updatePwd ],
-         :redirect_to => { :controller => 'worktime', :action => 'listTime' }
+         :redirect_to => { :controller => 'projecttime', :action => 'list' }
   
   #Update userpwd
   def updatePwd

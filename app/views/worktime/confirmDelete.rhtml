@@ -9,7 +9,7 @@ am <%= format_date(@worktime.work_date) %> f&uuml;r <%= @worktime.account.label_
 <tr>
     <td>
     <% form_tag evaluation_detail_params.merge!({
-                         :action => 'deleteTime', 
+                         :action => 'delete', 
                          :id => @worktime}) do %>
     <%= submit_tag 'Löschen' %>  
     <% end %>

@@ -1,0 +1,9 @@
+<% @title = @worktime.account.nil? ? 'Neue Absenz' :
+                "Neue Arbeitszeit f&uuml;r #{@worktime.account.name}" -%>
+
+<% form_tag :action => 'create' do -%>
+<%= renderGenericPartial :partial => 'form', 
+           :locals => {:submit => ['Speichern und weiter erfassen', WorktimeController::FINISH]} %>
+<% end -%>
+
+<p><%= link_to '&Uuml;bersicht', :action => 'list' %></p>

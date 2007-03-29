@@ -14,6 +14,11 @@ module ApplicationHelper
   def format_date(date)
     date.strftime(LONG_DATE_FORMAT) if date
   end    
+  
+  def format_time(time)
+    time ||= Time.now
+    time.strftime(TIME_FORMAT)
+  end
     
   def alternate_row
     @row = 1 if ! defined? @row    
@@ -52,6 +57,20 @@ module ApplicationHelper
     	  :cache => true }
   end
   
+  def renderGenericPartial(options)
+    if template = options[:partial]
+      if templateAbsent? template, controller.class.controller_path
+        return if templateAbsent? template, genericPath
+        options[:partial] = "#{genericPath}/#{template}"      
+      end  
+    end    
+    render options  
+  end
+  
+  def genericPath
+    '.'
+  end
+  
 private  
   
   def date_value(object_name, method_name)
@@ -62,5 +81,9 @@ private
     end
     Date.today
   end
+  
+  def templateAbsent?(template,view)
+    ! template_exists? "#{view}/_#{template}", :rhtml
+  end  
    
 end

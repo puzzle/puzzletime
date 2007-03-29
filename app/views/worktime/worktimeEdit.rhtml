@@ -6,7 +6,7 @@ m&uuml;ssen noch weitere Eintr&auml;ge erstellt werden.</p>
 <% form_tag evaluation_detail_params.merge!({                        
                         :action => 'createWorktimeEdit', 
                         :worktime_id => @worktime}) do %>                        
-<%= render :partial => 'form' %>
+<%= renderGeneric :partial => 'form' %>
 <% end %>
 
 <p>

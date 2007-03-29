@@ -1,0 +1,3 @@
+class Attendancetime < Worktime
+
+end

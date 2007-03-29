@@ -23,7 +23,7 @@
     <%= text_field 'worktime', 
                    'from_start_time', 
                    :size => '15',
-                   :value => @worktime.formatted_start_time   %> 
+                   :value => format_time(@worktime.from_start_time)   %> 
     </td>
   </tr>
   <tr>
@@ -32,7 +32,7 @@
     <%= text_field 'worktime', 
                    'to_end_time', 
                    :size => '15',
-                   :value => @worktime.formatted_end_time   %> 
+                   :value => format_time(@worktime.to_end_time) %> 
     </td>
   </tr>
   <tr>
@@ -50,6 +50,6 @@
 <% end %>
 
 <br/>
-<%= link_to '&Uuml;bersicht', :action => 'listTime' %>
+<%= link_to '&Uuml;bersicht', :action => 'list' %>
  
 <%= render :partial => 'worktime/type_switch_js' %>

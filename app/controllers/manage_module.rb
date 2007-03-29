@@ -38,14 +38,14 @@ module ManageModule
                           :conditions => conditions,
                           :limit => @entry_pages.items_per_page,
                           :offset => @entry_pages.current.offset)  
-    renderManage :action => 'list'                      
+    renderGeneric :action => 'list'                      
   end
     
   # Action to add a new entry.  
   def add
     @entry = modelClass.new
     initFormData
-    renderManage :action => 'add'
+    renderGeneric :action => 'add'
   end
   
   # Action to create an added entry in the database.
@@ -57,7 +57,7 @@ module ManageModule
       redirectToList
     else
       initFormData
-      renderManage :action => 'add'
+      renderGeneric :action => 'add'
     end
   end
   
@@ -65,7 +65,7 @@ module ManageModule
   def edit
     setEntryFromId
     initFormData
-    renderManage :action => 'edit'
+    renderGeneric :action => 'edit'
   end
   
   # Action to update an edited entry in the database.
@@ -77,14 +77,14 @@ module ManageModule
     else      
       flash[:notice] = classLabel + ' konnte nicht aktualisiert werden'
       initFormData
-      renderManage :action => 'edit'
+      renderGeneric :action => 'edit'
     end
   end
   
   # Action to confirm the deletion of an entry.
   def confirmDelete
     setEntryFromId
-    renderManage :action => 'confirmDelete' 
+    renderGeneric :action => 'confirmDelete' 
   end
   
   # Action to delete an entry from the database.
@@ -170,16 +170,10 @@ private
                 :group_id => params[:group_id],
                 :group_page => params[:group_page]
   end
-  
-  # Custom render method that renders the local template if found,
-  # and the general one if none is available.
-  def renderManage(options)
-    template = options[:action]
-    if template && ! template_exists?("#{self.class.controller_path}/#{template}")
-      options[:action] = "../manage/#{template}"
-    end    
-    render options  
-  end  
+
+  def genericPath
+    'manage'
+  end
   
   # Label with article of the model class.
   def classLabel

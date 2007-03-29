@@ -1,9 +1,9 @@
 <% @title = "#{newLabel} #{groupLabel}" %>
 
-<%= renderManage :partial => 'info' %>
+<%= renderGenericPartial :partial => 'info' %>
 
 <% form_tag linkParams(:action => 'create') do %>
-<%= renderManage :partial => 'form' %>
+<%= renderGenericPartial :partial => 'form' %>
 <% end %>
 
-<%= renderManage :partial => 'backlink' %>
+<%= renderGenericPartial :partial => 'backlink' %>

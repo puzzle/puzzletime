@@ -10,10 +10,8 @@ module WorktimeHelper
              htmlOptions
   end
   
-  def overviewLink(absences = false)
-    options = {:action => 'listTime'}
-    options[:absences] = true if absences
-    link_to '&Uuml;bersicht', options
+  def genericPath
+    'worktime'
   end
 
 end

@@ -1,7 +1,7 @@
 class AttendanceController < WorktimeController
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
   verify :method => :post, :only => [ :addAttendanceTime ],
-         :redirect_to => { :action => :listTime }
+         :redirect_to => { :action => :list }
          
   def add
     createDefaultWorktime   
@@ -9,7 +9,7 @@ class AttendanceController < WorktimeController
   
   def split
     @attendance = session[:attendance]
-    redirect_to :controller => 'worktime', :action => 'addTime' if @attendance.nil?
+    redirect_to :controller => 'worktime', :action => 'add' if @attendance.nil?
     @worktime = @attendance.worktimeTemplate
     setWorktimeAccounts
   end

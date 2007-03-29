@@ -8,8 +8,8 @@
 
 <p>
 <%= link_to 'Anwesenheitszeit erfassen', :controller => 'attendance', :action => 'add' %> |
-<%= link_to 'Absenz erfassen', :controller => 'worktime', :action => 'addAbsence' %> | 
-<%= link_to 'Mehrt&auml;gige Absenz erfassen', :controller => 'worktime', :action => 'addMultiAbsence' %> | 
+<%= link_to 'Absenz erfassen', :controller => 'absencetime', :action => 'add' %> | 
+<%= link_to 'Mehrt&auml;gige Absenz erfassen', :controller => 'absencetime', :action => 'addMultiAbsence' %> | 
 <%= @evaluation.absences? ?
         link_to('Projekte anzeigen', :action => 'userProjects') :
         link_to('Absenzen anzeigen', :action => 'userAbsences') %>

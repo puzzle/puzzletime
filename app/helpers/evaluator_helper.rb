@@ -16,12 +16,9 @@ module EvaluatorHelper
   end  
   
   def add_time_link(account = nil)
-     linkHash = {:controller => 'worktime'}
-     linkHash[:action] = @evaluation.absences? ? 'addAbsence' : 'addTime'
-     if account
-       account_field = @evaluation.absences? ? :absence_id : :project_id
-       linkHash[account_field] = account.id
-     end  
+     linkHash = { :action => 'add' }
+     linkHash[:controller] =  @evaluation.absences? ? 'absencetime' : 'projecttime'   
+     linkHash[:account_id] = account.id if account
      link_to 'Zeit erfassen', linkHash 
   end
 
@@ -46,14 +43,14 @@ module EvaluatorHelper
   def timeInfo
     infos = @period ?    
             [[['Soll Arbeitszeit', @user.musttime(@period), 'h'],
-              ['&Uuml;berzeit', @user.overtime(@period).to_f, 'h']],
-             [['Bezogene Ferien', @user.usedVacations(@period), 'd'], 
+              ['Bezogene Ferien', @user.usedVacations(@period), 'd']],
+             [['&Uuml;berzeit', @user.overtime(@period).to_f, 'h'], 
               ['Offen', @user.remainingVacations(@period.endDate), 'd']]]  :
             [[['Monatliche Arbeitszeit', @user.musttime(Period.currentMonth), 'h'],
-              ['Verbleibend', 0 - @user.overtime(Period.currentMonth).to_f, 'h']],
-             [['&Uuml;berzeit Gestern', @user.currentOvertime, 'h'], 
-              ['&Uuml;berzeit Heute', @user.currentOvertime(Date.today), 'h']],
-             [['Geplante Ferien', @user.usedVacations(Period.currentYear), 'd'], 
+              ['&Uuml;berzeit Gestern', @user.currentOvertime, 'h'],
+              ['Geplante Ferien', @user.usedVacations(Period.currentYear), 'd']],
+             [['Verbleibend', 0 - @user.overtime(Period.currentMonth).to_f, 'h'],
+              ['&Uuml;berzeit Heute', @user.currentOvertime(Date.today), 'h'],
               ['Verbleibend', @user.currentRemainingVacations, 'd']]]   
     render :partial => 'timeinfo', :locals => {:infos => infos}
   end

@@ -63,20 +63,8 @@ module ManageHelper
     "von #{group.label}" if group
   end
   
-  def renderManage(options)
-    if template = options[:partial]
-      if templateAbsent? template, controller.class.controller_path
-        return if templateAbsent? template, 'manage'
-        options[:partial] = "manage/#{template}"      
-      end  
-    end    
-    render options  
+  def genericPath
+    'manage'
   end
-  
-private  
-  
-  def templateAbsent?(template,view)
-    ! template_exists? "#{view}/_#{template}", :rhtml
-  end  
-    
+     
 end

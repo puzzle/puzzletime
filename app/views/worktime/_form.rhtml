@@ -8,46 +8,38 @@
   <td><%= select_report_type %> </td>
 </tr>
 <tr>
-  <td>
-    <% if @worktime.project_id.nil? 
-           account_id = :absence_id %>
-       Absenz: 
-    <% else 
-           account_id = :project_id %>
-       Projekt:
-    <% end %>      
-    </td>
-    <td><%= collection_select( :worktime, account_id, @accounts, :id, :label_verbose) %></td>
+  <td><%= @worktime.class.account_label %></td>
+  <td><%= collection_select( :worktime, :account_id, @accounts, :id, :label_verbose) %></td>
 </tr>
  <tr>
-    <td>Datum: </td>
-    <td><%= date_calendar_field 'worktime', 'work_date', 'Datum' %></td>
+  <td>Datum: </td>
+  <td><%= date_calendar_field 'worktime', 'work_date', 'Datum' %></td>
 </tr>
 <tr>
-    <td>Stunden: </td>
-    <td><%= text_field('worktime', 'hours', :disabled => true, :size => '15')  %></td>
+  <td>Stunden: </td>
+  <td><%= text_field('worktime', 'hours', :disabled => true, :size => '15')  %></td>
 </tr>
 <tr>
-    <td>Anfangszeit: </td>
-    <td>     
-    <%= text_field 'worktime', 
+  <td>Anfangszeit: </td>
+  <td>     
+  <%= text_field 'worktime', 
                  'from_start_time', 
                  :size => '15', 
-                 :value => @worktime.formatted_start_time  %> 
-    </td>
+                 :value => format_time(@worktime.from_start_time)  %> 
+  </td>
 </tr>
 <tr>
-    <td>Endzeit: </td>
-    <td>
-    <%= text_field 'worktime', 
-               'to_end_time', 
-               :size => '15',
-               :value => @worktime.formatted_end_time   %> 
-    </td>
+  <td>Endzeit: </td>
+  <td>
+  <%= text_field 'worktime', 
+                 'to_end_time', 
+                 :size => '15',
+                 :value => format_time(@worktime.to_end_time)  %> 
+   </td>
 </tr>
 <tr valign="top">
-    <td>Beschreibung: </td>
-    <td><%= text_area 'worktime', 'description', {:rows => 5} %></td>
+  <td>Beschreibung: </td>
+  <td><%= text_area 'worktime', 'description', {:rows => 5} %></td>
 </tr>
 <% if ! @worktime.project_id.nil? %>
 <tr>

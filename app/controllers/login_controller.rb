@@ -19,7 +19,7 @@ class LoginController < ApplicationController
       logged_in = Employee.login(params[:employee][:shortname], params[:employee][:pwd])
       if  logged_in != nil
         session[:user] = logged_in
-        redirect_to(:controller => 'worktime', :action => 'listTime')
+        redirect_to(:controller => 'projecttime', :action => 'list')
       else
         flash[:notice] = "Ung&uuml;ltige Benutzerdaten"
       end

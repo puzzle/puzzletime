@@ -61,8 +61,8 @@ class EvaluatorController < ApplicationController
       @evaluation.times(@period).each do |time|
         csv << [ time.work_date.strftime(DATE_FORMAT),
                  time.hours,
-                 (time.times? ? time.from_start_time.strftime("%H:%M") : ''),
-                 (time.times? ? time.to_end_time.strftime("%H:%M") : ''),
+                 (time.startStop? ? time.from_start_time.strftime("%H:%M") : ''),
+                 (time.startStop? ? time.to_end_time.strftime("%H:%M") : ''),
                  time.report_type,
                  time.billable,
                  time.employee.label,

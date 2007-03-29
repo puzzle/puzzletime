@@ -1,9 +1,9 @@
 <% @title = "Arbeitszeit bearbeiten von #{@worktime.account.name}" %>
 
 <% form_tag evaluation_detail_params.merge!({                        
-                        :action => 'updateTime', 
-                        :worktime_id => @worktime}) do %>                
-<%= render :partial => 'form' %>
+                        :action => 'update', 
+                        :id => @worktime}) do %>                
+<%= renderGenericPartial :partial => 'form' %>
 <% end %>
 
 <p>

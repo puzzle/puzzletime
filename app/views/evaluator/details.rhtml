@@ -32,16 +32,16 @@
   <td>  
     <%= link_to 'Bearbeiten', 
                  evaluation_detail_params.merge!({
-                    :controller =>'worktime', 
-                    :action =>'editTime', 
+                    :controller => time.class.name.downcase, 
+                    :action => 'edit', 
                     :id => time.id}) %>
   </td>
   <% if @evaluation.for?(@user) -%>
   <td> 
     <%= link_to 'L&ouml;schen', 
                 evaluation_detail_params.merge!({
-                    :controller =>'worktime', 
-                    :action =>'confirmDeleteTime',                 
+                    :controller => time.class.name.downcase, 
+                    :action =>'confirmDelete',                 
                     :id => time.id}) %>
   </td>                  
   <% end -%>

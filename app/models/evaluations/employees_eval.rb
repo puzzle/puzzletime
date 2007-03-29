@@ -1,8 +1,8 @@
 class EmployeesEval < Evaluation
 
   SUB_EVALUATION   = 'employeeprojects'
-  LABEL           = 'Mitarbeiter Projekt'
-  TOTAL_DETAILS  = false
+  LABEL            = 'Mitarbeiter Projektzeit'
+  TOTAL_DETAILS    = false
   
   def initialize
     super(Employee)

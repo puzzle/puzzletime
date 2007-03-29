@@ -25,8 +25,8 @@
 	<div id="menu">
 	  <ul>
       	<li class="first"><%= link_to 'Meine Zeit', 
-      	                        :controller => 'worktime', 
-      	                        :action => 'listTime' %></li>
+      	                        :controller => 'projecttime', 
+      	                        :action => 'list' %></li>
 		<% if @user.projectManager? -%>
 		<li><%= link_to 'Meine Projekte', 
 		         :controller => 'evaluator', 

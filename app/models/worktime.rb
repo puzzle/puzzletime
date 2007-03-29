@@ -5,8 +5,8 @@ class Worktime < ActiveRecord::Base
   
   include ReportType::Accessors
   
-  belongs_to :absence 
   belongs_to :employee
+  belongs_to :absence   
   belongs_to :project
   
   validates_presence_of :work_date, :message => "Das Datum ist ung&uuml;ltig"
@@ -21,39 +21,43 @@ class Worktime < ActiveRecord::Base
     project ? project : absence
   end
   
+  def account_id
+    project_id ? project_id : absence_id
+  end
+  
+  def account_id=(value)
+    
+  end
+  
+  def self.account_label
+    ''
+  end
+  
   def hours=(value)
     if md = H_M.match(value.to_s)
       value = md[1].to_i + md[2].to_i / 60.0
     end
-    write_attribute('hours', value.to_f)
+    write_attribute 'hours', value.to_f
   end
   
   def from_start_time=(value)
-    write_attribute('from_start_time', string_to_time(value))
+    write_converted_time 'from_start_time', value
   end
   
   def to_end_time=(value)
-    write_attribute('to_end_time', string_to_time(value))
+    write_converted_time 'to_end_time', value
   end
-  
-  def formatted_start_time
-    formatted_time(from_start_time)
-  end
-  
-  def formatted_end_time
-    formatted_time(to_end_time)
-  end
-  
+      
   def absence?
-    absence_id != nil
+    false
   end
   
-  def times?
-    report_type == ReportType::START_STOP
+  def startStop?
+    report_type == StartStopType::INSTANCE
   end
   
   def template
-    newWorktime = Worktime.new
+    newWorktime = self.class.new
     newWorktime.from_start_time = Time.now.change(:hour => 8)
     newWorktime.report_type = report_type
     newWorktime.work_date = work_date
@@ -64,37 +68,18 @@ class Worktime < ActiveRecord::Base
   end
   
   def timeString
-    case report_type
-      when ReportType::START_STOP then formatted_start_time + ' - ' + formatted_end_time + 
-                          ' (' + ((hours*100).round / 100.0).to_s + ' h)'
-      when ReportType::HOURS_DAY then hours.to_s + ' h'
-      when ReportType::HOURS_WEEK then hours.to_s + ' h in dieser Woche'
-      when ReportType::MONTH then hours.to_s + ' h in diesem Monat'
-    end
+    report_type.timeString(self)
   end
     
   def validate
-    if times?
-      errors.add(:from_start_time, 'Die Anfangszeit ist ung&uuml;ltig') if ! from_start_time
-      errors.add(:to_end_time, 'Die Endzeit ist ung&uuml;ltig') if ! to_end_time
-      errors.add(:to_end_time, 'Die Endzeit muss nach der Startzeit sein') if from_start_time && 
-          to_end_time && to_end_time <= from_start_time
-    else
-      errors.add(:hours, 'Stunden m&uuml;ssen positiv sein') if hours <= 0
-    end
+    report_type.validate_worktime self
     project.validate_worktime self if project_id
   end
   
   def store_hours
-    if times? && from_start_time && to_end_time
+    if startStop? && from_start_time && to_end_time
       self.hours = (to_end_time - from_start_time) / 3600.0
     end
-  end
-  
-  def setProjectDefaults(project_id = DEFAULT_PROJECT_ID)
-    self.project_id = project_id
-    self.report_type = project.report_type if report_type < project.report_type
-    self.billable = project.billable
   end
 
   def self.sumWorktime(period, absences)
@@ -108,9 +93,8 @@ class Worktime < ActiveRecord::Base
   
 private
 
-  def formatted_time(time)
-    time ||= Time.now
-    time.strftime("%H:%M")
+  def write_converted_time(attribute, value)
+    write_attribute(attribute, string_to_time(value))
   end
 
   def string_to_time(value)

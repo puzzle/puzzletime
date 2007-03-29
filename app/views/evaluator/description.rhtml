@@ -6,22 +6,25 @@
     <td></td>
     <td>
     <strong>
-    <% if @time.employee == @user %>
+    <% 
+    controller = @time.class.name.downcase
+    if @time.employee == @user
+    %>
     <%= link_to 'Bearbeiten', 
                 evaluation_detail_params.merge!({
-                    :controller =>'worktime', 
-                    :action =>'editTime', 
+                    :controller => controller, 
+                    :action =>'edit', 
                     :id => @time.id}) %>
     &nbsp;             
     <%= link_to 'L&ouml;schen', 
                 evaluation_detail_params.merge!({
-                    :controller =>'worktime', 
-                    :action =>'confirmDeleteTime',                 
+                    :controller => controller, 
+                    :action =>'confirmDelete',                 
                     :id => @time.id }) %>
     <% else %>            
     <%= link_to 'Project &auml;ndern', 
                 evaluation_detail_params.merge!({
-                    :controller =>'worktime', 
+                    :controller => controller, 
                     :action =>'changeProject', 
                     :worktime_id => @time.id}) %>
     <% end %>

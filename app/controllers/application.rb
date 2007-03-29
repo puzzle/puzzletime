@@ -41,5 +41,19 @@ class ApplicationController < ActionController::Base
     end                    
   end
   
+protected  
+  
+  def renderGeneric(options)
+    template = options[:action]
+    if template && ! template_exists?("#{self.class.controller_path}/#{template}")
+      options[:action] = "../#{genericPath}/#{template}"
+    end    
+    render options  
+  end  
+  
+  def genericPath
+    '.'
+  end
+  
 end
 

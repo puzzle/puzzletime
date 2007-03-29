@@ -10,8 +10,8 @@ class Attendance < Splitable
   def save
     if incomplete?
       original.hours = remainingHours
-      if ! worktimes.empty? && original.report_type == ReportType::START_STOP
-        original.report_type = ReportType::HOURS_DAY
+      if ! worktimes.empty? && original.report_type == StartStopType::INSTANCE
+        original.report_type = HoursDayType::INSTANCE
       end
       original.save
     end

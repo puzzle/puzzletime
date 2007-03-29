@@ -68,8 +68,8 @@ private
   end
 
   def worktimeTemplate(date, hours)
-    worktime = Worktime.new
-    worktime.report_type = ReportType::HOURS_DAY
+    worktime = Absencetime.new
+    worktime.report_type = HoursDayType::INSTANCE
     worktime.work_date = date
     worktime.absence_id = @absence_id
     worktime.description = @description
