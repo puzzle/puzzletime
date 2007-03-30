@@ -7,10 +7,12 @@
   <td>Reporttyp: </td>
   <td><%= select_report_type %> </td>
 </tr>
+<% if @accounts -%>
 <tr>
   <td><%= @worktime.class.account_label %></td>
   <td><%= collection_select( :worktime, :account_id, @accounts, :id, :label_verbose) %></td>
 </tr>
+<% end -%>
  <tr>
   <td>Datum: </td>
   <td><%= date_calendar_field 'worktime', 'work_date', 'Datum' %></td>
@@ -37,22 +39,24 @@
                  :value => format_time(@worktime.to_end_time)  %> 
    </td>
 </tr>
+<% if @accounts -%>
 <tr valign="top">
   <td>Beschreibung: </td>
   <td><%= text_area 'worktime', 'description', {:rows => 5} %></td>
 </tr>
-<% if ! @worktime.project_id.nil? %>
+<% if ! @worktime.project_id.nil? -%>
 <tr>
     <td>Verrechenbar: </td>
     <td><%= check_box 'worktime', 'billable' %></td>
 </tr>
-<% end %>
+<% end -%>
+<% end -%>
 <tr>
    <td></td>
    <td>    
-   <% for label in submit %>
+   <% for label in submit -%>
     <%= submit_tag label %>
-   <% end %>
+   <% end -%>
    </td>
 </tr>
 </table>

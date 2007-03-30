@@ -16,4 +16,15 @@
                :locals => {:periods => periods}) %>
     <td></td>
 </tr>
+<% if @evaluation.category.kind_of? Employee -%>
+<tr class="times_total_sum">
+    <td>Anwesenheit</td>
+    <%= 
+    times = (periods + [nil]).collect { |p| @evaluation.category.sumAttendance p }
+    render(:partial => 'periodTime', 
+           :collection => times,
+           :locals => {:periods => periods, :action => 'attendanceDetails'}) %>
+    <td></td>
+</tr>
+<% end -%>
 </table>

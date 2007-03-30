@@ -1,4 +1,4 @@
-<% @title = "Arbeitszeit bearbeiten von #{@worktime.account.name}" %>
+<% @title = "#{@worktime.class.label} bearbeiten" %>
 
 <% form_tag evaluation_detail_params.merge!({                        
                         :action => 'update', 
@@ -9,5 +9,5 @@
 <p>
 <%= link_to 'Arbeitszeiten', evaluation_detail_params.merge!({
                         :controller => 'evaluator',
-                        :action => 'details' }) %>
+                        :action => params[:return_action] }) %>
 </p>

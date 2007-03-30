@@ -48,7 +48,7 @@ class Evaluation
   def sum_total_times(period = nil)
     category.sumWorktime(self, period)
   end
-  
+    
   # Counts the number of Worktime entries in the current Evaluation for a given period.
   def count_times(period)
     sendTimeQuery(:countWorktimes, period, division)

@@ -19,4 +19,8 @@ class Absencetime < Worktime
     'Absenz'
   end
   
+  def self.label
+    'Absenz'
+  end
+  
 end

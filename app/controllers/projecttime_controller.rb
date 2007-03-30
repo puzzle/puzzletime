@@ -1,9 +1,5 @@
 class ProjecttimeController < WorktimeController
-  
-  def list
-    redirect_to :controller => 'evaluator', :action => 'userProjects'
-  end
-  
+    
 protected
 
   def setWorktime

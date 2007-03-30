@@ -26,13 +26,14 @@ module ApplicationHelper
     @row.modulo(2) == 1 ? '<tr class="uneven">' : '<tr>'
   end    
   
-  def evaluation_detail_params
+  def evaluation_detail_params    
     { :evaluation => params[:evaluation],
       :category_id => params[:category_id],
       :division_id => params[:division_id],
       :start_date => params[:start_date],
       :end_date => params[:end_date],
-      :page => params[:page] }
+      :page => params[:page],
+      :return_action => params[:return_action] }
   end
   
   def evaluation_overview_params(prms = {})

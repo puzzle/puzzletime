@@ -7,7 +7,7 @@
 <%= render(:partial => 'category') %>
 
 <p>
-<%= link_to 'Anwesenheitszeit erfassen', :controller => 'attendance', :action => 'add' %> |
+<%= link_to 'Anwesenheitszeit erfassen', :controller => 'attendancetime', :action => 'add' %> |
 <%= link_to 'Absenz erfassen', :controller => 'absencetime', :action => 'add' %> | 
 <%= link_to 'Mehrt&auml;gige Absenz erfassen', :controller => 'absencetime', :action => 'addMultiAbsence' %> | 
 <%= @evaluation.absences? ?

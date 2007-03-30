@@ -35,9 +35,17 @@ class EvaluatorController < ApplicationController
     @time_pages = Paginator.new self, @evaluation.count_times(@period), NO_OF_DETAIL_ROWS, params[:page]
     @times = @evaluation.times(@period, 
                                 :limit => @time_pages.items_per_page,
-                                :offset => @time_pages.current.offset)
+                                :offset => @time_pages.current.offset)                               
   end
   
+  def attendanceDetails
+    eval = params[:evaluation]
+    params[:evaluation] = 'attendance'
+    details
+    params[:evaluation] = eval
+    render :action => 'details' 
+  end
+    
   # Shows overtimes of employees
   def overtime
     @employees = Employee.list
@@ -66,7 +74,7 @@ class EvaluatorController < ApplicationController
                  time.report_type,
                  time.billable,
                  time.employee.label,
-                 time.account.label,
+                 (time.account ? time.account.label : 'Anwesenheitszeit'),
                  time.description ]
       end
     end 
@@ -124,6 +132,7 @@ private
         when 'userprojects' then EmployeeProjectsEval.new(@user.id)
         when 'userabsences' then EmployeeAbsencesEval.new(@user.id)        
         when 'projectemployees' then ProjectEmployeesEval.new(params[:category_id])
+        when 'attendance' then AttendanceEval.new(params[:category_id] || @user.id)
         else nil
         end
     if @user.management && @evaluation.nil?

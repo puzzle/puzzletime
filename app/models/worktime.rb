@@ -33,6 +33,10 @@ class Worktime < ActiveRecord::Base
     ''
   end
   
+  def self.label
+    'Arbeitszeit'
+  end
+  
   def hours=(value)
     if md = H_M.match(value.to_s)
       value = md[1].to_i + md[2].to_i / 60.0
@@ -56,8 +60,8 @@ class Worktime < ActiveRecord::Base
     report_type == StartStopType::INSTANCE
   end
   
-  def template
-    newWorktime = self.class.new
+  def template(newWorktime = nil)
+    newWorktime ||= self.class.new
     newWorktime.from_start_time = Time.now.change(:hour => 8)
     newWorktime.report_type = report_type
     newWorktime.work_date = work_date

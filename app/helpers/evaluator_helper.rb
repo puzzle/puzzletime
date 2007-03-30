@@ -10,14 +10,19 @@ module EvaluatorHelper
   end 
   
   def collect_times(periods, method, *division)
-    times = periods.collect { |p| @evaluation.send(method, p, *division) }
-    times.push(@evaluation.send(method, nil, *division))
-    times
+    #times = periods.collect { |p| @evaluation.send(method, p, *division) }
+    #times.push(@evaluation.send(method, nil, *division))
+    #times
+    (periods + [nil]).collect { |p| @evaluation.send(method, p, *division) }
   end  
   
   def add_time_link(account = nil)
      linkHash = { :action => 'add' }
-     linkHash[:controller] =  @evaluation.absences? ? 'absencetime' : 'projecttime'   
+     linkHash[:controller] =  case 
+                                when @evaluation.absences? : 'absencetime'
+                                when @evaluation.kind_of?(AttendanceEval) : 'attendancetime'
+                                else 'projecttime'
+                                end   
      linkHash[:account_id] = account.id if account
      link_to 'Zeit erfassen', linkHash 
   end

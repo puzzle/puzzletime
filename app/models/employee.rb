@@ -22,6 +22,10 @@ class Employee < ActiveRecord::Base
            :include => :client,
            :order => "clients.name, projects.name", 
            :conditions => "projectmemberships.projectmanagement IS TRUE"
+  has_many :absences, :finder_sql => 
+              'SELECT DISTINCT(a.*) FROM absences a, worktimes t WHERE ' +
+              't.employee_id = #{id} AND t.absence_id = a.id ' +
+              'ORDER BY a.name'         
   has_many :managed_employees, 
            :class_name => 'Employee', 
            :finder_sql =>
@@ -31,10 +35,7 @@ class Employee < ActiveRecord::Base
               'm.project_id = n.project_id AND n.employee_id = e.id ' +
               'ORDER BY e.lastname, e.firstname'
   has_many :worktimes
-  has_many :absences, :finder_sql => 
-              'SELECT DISTINCT(a.*) FROM absences a, worktimes t WHERE ' +
-              't.employee_id = #{id} AND t.absence_id = a.id ' +
-              'ORDER BY a.name'
+  has_many :attendancetimes
   has_many :overtime_vacations, :order => 'transfer_date DESC', :dependent => :destroy        
   
   # Validation helpers.
@@ -121,6 +122,11 @@ class Employee < ActiveRecord::Base
   def self.sumWorktime(evaluation, period, categoryRef = false, options = {})
     Worktime.sumWorktime period, evaluation.absences?
   end
+  
+  def sumAttendance(period = nil, options = {})
+    options[:conditions] = [ "work_date BETWEEN ? AND ?", period.startDate, period.endDate ] if period
+    attendancetimes.sum(:hours, options)
+  end
 
   def lastCompleted(project)
     projectmemberships.find(:first, 
@@ -162,7 +168,7 @@ class Employee < ActiveRecord::Base
   end  
   
   def payedWorktime(period)
-    condArray = ["(absence_id IS NULL OR absences.payed)"]
+    condArray = ["((project_id IS NULL AND absence_id IS NULL) OR absences.payed)"]
     if period
       condArray[0] += " AND (work_date BETWEEN ? AND ?)"    
       condArray.push period.startDate

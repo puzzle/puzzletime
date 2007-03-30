@@ -17,15 +17,9 @@ class WorktimeController < ApplicationController
   def index
     list
   end 
-   
-  #List the time.
-  def listTime
-    eval = 'userProjects'
-    if params[:absences] || (@worktime != nil && @worktime.absence?)
-      @user.absences(true)      #true forces reload
-      eval = 'userAbsences'
-    end  
-    redirect_to :controller => 'evaluator', :action => eval
+  
+  def list
+    redirect_to :controller => 'evaluator', :action => userEvaluation
   end
   
   # Shows the add time page.
@@ -43,12 +37,17 @@ class WorktimeController < ApplicationController
     setWorktimeParams
     if @worktime.save      
       flash[:notice] = 'Die Arbeitszeit wurde erfasst'
-      if params[:commit] != FINISH        
+      if params[:commit] == 'Aufteilen'
+        @worktime = @worktime.template Projecttime.new
+        @accounts = @user.projects
+        renderGeneric :action => 'add'
+      elsif params[:commit] != FINISH        
         @worktime = @worktime.template
         setAccounts
         renderGeneric :action => 'add'
       else
-        options = {:controller => 'evaluator', :action => 'details', 
+        options = {:controller => 'evaluator', 
+                   :action => (@worktime.kind_of?(Attendancetime) ? 'attendanceDetails' : 'details'), 
                    :evaluation => userEvaluation }
         if session[:period].nil? || 
             ! session[:period].include?(@worktime.work_date)
@@ -80,7 +79,7 @@ class WorktimeController < ApplicationController
       flash[:notice] = 'Die Arbeitszeit wurde aktualisiert'
       redirect_to evaluation_detail_params.merge!({
                         :controller => 'evaluator',
-                        :action => 'details' }) 
+                        :action => params[:return_action] }) 
     else
       setAccounts
       renderGeneric :action => 'edit'
@@ -107,7 +106,7 @@ class WorktimeController < ApplicationController
           flash[:notice] = 'Die Arbeitszeit wurde angepasst'
           redirect_to evaluation_detail_params.merge!({
                         :controller => 'evaluator',
-                        :action => 'details' }) 
+                        :action => params[:return_action] }) 
           return              
         end
       end  
@@ -127,7 +126,7 @@ class WorktimeController < ApplicationController
     flash[:notice] = 'Die Arbeitszeit wurde entfernt'
     redirect_to evaluation_detail_params.merge!({
                   :controller => 'evaluator', 
-                  :action => 'details'})
+                  :action => params[:return_action]})
   end
   
 protected

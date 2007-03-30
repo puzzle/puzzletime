@@ -1,17 +1,20 @@
 <% 
+    # local variables:
+    # periods, division_id, action
     p = periods[periodTime_counter]  
     division_id = nil if ! defined? division_id
+    action ||= 'details'
 -%>
 <td align="right">
 <%= number_with_precision(periodTime, 2) %>
 <% if division_id || @evaluation.class::TOTAL_DETAILS -%>
-    <%= linkHash = {:action => 'details',
+    <%= linkHash = {:action => action,
                     :evaluation => params[:evaluation],
                     :category_id => @evaluation.category.id}
         linkHash[:division_id] = division_id if division_id
         linkHash[:start_date] = p ? p.startDate : 0
         linkHash[:end_date] = p.endDate if p            
-        link_to image_tag('lupe.gif', :size => '19x11', :border => 0), linkHash %>
+        link_to image_tag('lupe.gif', :size => '19x11', :border => 0, :alt => 'Details'), linkHash %>
 <% else -%>
     <%= image_tag 'space.gif', :size => '19x11', :border => 0 %>
 <% end -%>  

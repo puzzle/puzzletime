@@ -1,4 +1,6 @@
-<% @title = "Arbeitszeit Details #{@period.to_s}" -%>
+<% @title = "Arbeitszeit Details #{@period.to_s}" 
+   attendance = @evaluation.kind_of? AttendanceEval
+-%>
 
 <h3><%= @evaluation.category_label %></h3>
 <h3><%= @evaluation.division_label %></h3>
@@ -6,17 +8,24 @@
 <table>
 <tr>
    <th>Datum</th>
-   <th>Stunden</th>   
+   <th>Stunden</th>  
+<% if attendance -%>
+   <th>Zeiten</th>
+<% else -%>       
    <th>Wer</th>
    <th><%= @evaluation.account %></th>
    <th>$</th>
    <th>Beschreibung</th>
+<% end -%>   
    <th></th>
 </tr>
 <% for time in @times -%>
 <%= alternate_row  %>
   <td align="right"><%= format_date(time.work_date) %></td>
   <td align="right"><%= number_with_precision(time.hours, 2) %></td>
+<% if attendance -%>
+  <td><%= time.timeString %></td>
+<% else -%>  
   <td><%= time.employee.shortname %></td>
   <td><%= time.account.label_verbose %></td>
   <td><%= time.billable ? 'j' : 'n' %></td>
@@ -26,14 +35,17 @@
         link_to '...', 
                 evaluation_detail_params.merge!({
                     :action => 'description', 
+                    :return_action => params[:action],
                     :worktime_id => time.id})
       end    %>
   </td>
+<% end -%>  
   <td>  
     <%= link_to 'Bearbeiten', 
                  evaluation_detail_params.merge!({
                     :controller => time.class.name.downcase, 
                     :action => 'edit', 
+                    :return_action => params[:action],
                     :id => time.id}) %>
   </td>
   <% if @evaluation.for?(@user) -%>
@@ -41,7 +53,8 @@
     <%= link_to 'L&ouml;schen', 
                 evaluation_detail_params.merge!({
                     :controller => time.class.name.downcase, 
-                    :action =>'confirmDelete',                 
+                    :action =>'confirmDelete',   
+                    :return_action => params[:action],              
                     :id => time.id}) %>
   </td>                  
   <% end -%>
@@ -50,7 +63,11 @@
 <tr class="times_total_sum">
     <td>Total insgesamt</td> 
     <td align="right"><%= number_with_precision(@evaluation.sum_times(@period), 2) %></td>
+    <% if attendance -%>
+    <td colspan="1"></td>
+    <% else -%>
     <td colspan="4"></td>     
+    <% end -%>
     <% if @evaluation.for?(@user) -%>
     <td colspan="2">
       <%= add_time_link(@evaluation.division) %>  
@@ -75,5 +92,6 @@ Seite:
 &nbsp;
 <%= link_to 'Export CSV', 
             evaluation_detail_params.merge!({
-                :action => 'exportCSV'}) %>          
+                :action => 'exportCSV',
+                :evaluation => (attendance ? 'attendance' : params[:evaluation]) }) %>          
 </p>            
