@@ -18,7 +18,7 @@ am <%= format_date(@worktime.work_date) %> f&uuml;r
     <td>
     <% form_tag evaluation_detail_params.merge!({
                           :controller => 'evaluator', 
-                          :action => 'details'}) do %>
+                          :action => controller.detailAction}) do %>
     <%= submit_tag 'Abbrechen' %>  
     <% end %>
     </td>

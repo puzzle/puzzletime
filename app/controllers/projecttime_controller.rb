@@ -2,7 +2,7 @@ class ProjecttimeController < WorktimeController
     
 protected
 
-  def setWorktime
+  def setNewWorktime
     @worktime = Projecttime.new   
   end
   
@@ -14,8 +14,18 @@ protected
     @accounts = @user.projects 
   end  
   
-  def userEvaluation
-    'userProjects'
+  def processAfterCreate
+    if params[:attendance]
+      attendance = @worktime.template Attendancetime.new
+      attendance.employee_id = @worktime.employee_id
+      attendance.copyTimesFrom @worktime
+      if ! attendance.save
+        @worktime.errors.add_to_base attendance.errors.full_messages.first
+        setAccounts
+        renderGeneric :action => 'add'
+        return false
+      end  
+    end
+    true
   end
-  
 end

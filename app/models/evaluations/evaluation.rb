@@ -21,9 +21,13 @@ class Evaluation
   # Whether details for totals are possible.  
   TOTAL_DETAILS    = true    
   
+  # Wheter this Evaluation displays attendance times for its category in the overview.
+  ATTENDANCE       = false
+  
   # The field of a division referencing the category entry in the database. 
   # May be nil if not required for this Evaluation (default).
-  CATEGORY_REF     = nil        
+  CATEGORY_REF     = nil          
+  
   
   attr_reader :category,             # category              
               :division              # selected division for detail Evaluations, nil otherwise
@@ -105,6 +109,11 @@ class Evaluation
   def for?(user)
     false
   end 
+  
+  def ==(other)
+    self.class == other.class &&
+      self.category == other.category
+  end
   
   ################ Methods for detail view ##############
   

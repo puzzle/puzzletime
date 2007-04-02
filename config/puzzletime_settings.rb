@@ -30,7 +30,7 @@ EXCEPTION_RECIPIENTS    = ["zumkehr@puzzle.ch"]
 # LDAP configuration
 LDAP_HOST               = 'proximai.ww2.ch'
 LDAP_PORT               = 636
-LDAP_DN                 = 'ou=users,dc=puzzle,dc=itc'
+LDAP_DN                 = 'ou=puzzle,ou=users,dc=puzzle,dc=itc'
 
 # Default values
 DEFAULT_REPORT_TYPE     = HoursDayType::INSTANCE

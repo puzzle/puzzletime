@@ -23,4 +23,8 @@ class Absencetime < Worktime
     'Absenz'
   end
   
+  def billable
+    false
+  end
+  
 end

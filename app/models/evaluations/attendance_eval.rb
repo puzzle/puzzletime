@@ -16,8 +16,7 @@ class AttendanceEval < Evaluation
   # If a division is passed or set previously, their sum will be returned.
   # Otherwise the sum of all worktimes in the main category is returned.
   def sum_times(period, div = nil, options = {})
-    addConditions options, period
-    category.attendancetimes.sum(:hours, options)
+    category.sumAttendance period, options
   end  
 
   # Sums all worktimes for the category in a given period.
@@ -28,7 +27,7 @@ class AttendanceEval < Evaluation
   # Counts the number of Worktime entries in the current Evaluation for a given period.
   def count_times(period = nil, options = {})
     addConditions options, period
-    category.attendancetimes.count("*", options)
+    category.attendancetimes.count("*", options).to_i
   end
   
   # Returns a list of all Worktime entries for this Evaluation in the given period

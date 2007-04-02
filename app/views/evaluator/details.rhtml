@@ -34,27 +34,25 @@
       if time.description.length > 40
         link_to '...', 
                 evaluation_detail_params.merge!({
-                    :action => 'description', 
-                    :return_action => params[:action],
-                    :worktime_id => time.id})
+                    :controller => time.controller, 
+                    :action => 'view', 
+                    :id => time.id})
       end    %>
   </td>
 <% end -%>  
   <td>  
     <%= link_to 'Bearbeiten', 
                  evaluation_detail_params.merge!({
-                    :controller => time.class.name.downcase, 
+                    :controller => time.controller, 
                     :action => 'edit', 
-                    :return_action => params[:action],
                     :id => time.id}) %>
   </td>
   <% if @evaluation.for?(@user) -%>
   <td> 
     <%= link_to 'L&ouml;schen', 
                 evaluation_detail_params.merge!({
-                    :controller => time.class.name.downcase, 
-                    :action =>'confirmDelete',   
-                    :return_action => params[:action],              
+                    :controller => time.controller, 
+                    :action =>'confirmDelete',                
                     :id => time.id}) %>
   </td>                  
   <% end -%>
@@ -86,10 +84,14 @@ Seite:
 <% end -%>
 
 <p>
-<%= link_to '&Uuml;bersicht', 
+<%= render :partial => 'backlink', 
+           :collection => session[:evalLevels][0..-2],
+           :spacer_template => 'spacer' %>
+<% if session[:evalLevels].size > 1 %>|<% end %>
+<%= link_to '&Uuml;bersicht',
             :action => params[:evaluation],
             :category_id => params[:category_id] %>
-&nbsp;
+|
 <%= link_to 'Export CSV', 
             evaluation_detail_params.merge!({
                 :action => 'exportCSV',

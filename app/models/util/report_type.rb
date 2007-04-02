@@ -29,6 +29,10 @@ public
     worktime.errors.add(:hours, 'Stunden m&uuml;ssen positiv sein') if worktime.hours <= 0
   end
   
+  def copy_times(source, target)
+    target.hours = source.hours
+  end
+  
   module Accessors
     
     def report_type
@@ -52,6 +56,12 @@ class StartStopType < ReportType
     worktime.from_start_time.strftime(TIME_FORMAT) + ' - ' + 
       worktime.to_end_time.strftime(TIME_FORMAT) + 
       ' (' + ((worktime.hours*100).round / 100.0).to_s + ' h)'    
+  end
+  
+  def copy_times(source, target)
+    super source, target
+    target.from_start_time = source.from_start_time
+    target.to_end_time = source.to_end_time
   end
   
   def validate_worktime(worktime)

@@ -12,7 +12,7 @@ module ApplicationHelper
   
   # Change english datelayout to german one.
   def format_date(date)
-    date.strftime(LONG_DATE_FORMAT) if date
+    date ? date.strftime(LONG_DATE_FORMAT) : ''
   end    
   
   def format_time(time)
@@ -32,8 +32,7 @@ module ApplicationHelper
       :division_id => params[:division_id],
       :start_date => params[:start_date],
       :end_date => params[:end_date],
-      :page => params[:page],
-      :return_action => params[:return_action] }
+      :page => params[:page] }
   end
   
   def evaluation_overview_params(prms = {})
@@ -61,7 +60,7 @@ module ApplicationHelper
   def renderGenericPartial(options)
     if template = options[:partial]
       if templateAbsent? template, controller.class.controller_path
-        return if templateAbsent? template, genericPath
+        return if templateAbsent? template, genericPath        
         options[:partial] = "#{genericPath}/#{template}"      
       end  
     end    

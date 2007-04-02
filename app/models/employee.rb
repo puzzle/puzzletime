@@ -54,14 +54,16 @@ class Employee < ActiveRecord::Base
   end
   
   def self.ldapLogin(username, pwd)
-    connection = Net::LDAP.new :host => LDAP_HOST, 
-                               :port => LDAP_PORT, 
-                               :encryption => :simple_tls         
-    if connection.bind_as :base => LDAP_DN, 
-                          :filter => "uid=#{username}", 
-                          :password => pwd 
+    if ldapConnection.bind_as :base => LDAP_DN, 
+                              :filter => "uid=#{username}", 
+                              :password => pwd 
       return find(:first, :conditions => ["ldapname = ?", username])
     end  
+  end
+  
+  def self.ldapUsers       
+     ldapConnection.search(:base => LDAP_DN,  
+                           :attributes => ['uid', 'sn', 'givenname', 'mail'] )
   end
   
   ##### interface methods for Manageable #####  
@@ -125,7 +127,12 @@ class Employee < ActiveRecord::Base
   
   def sumAttendance(period = nil, options = {})
     options[:conditions] = [ "work_date BETWEEN ? AND ?", period.startDate, period.endDate ] if period
-    attendancetimes.sum(:hours, options)
+    attendancetimes.sum(:hours, options).to_f
+  end
+  
+   def self.sumAttendance(period = nil, options = {})
+    options[:conditions] = [ "work_date BETWEEN ? AND ?", period.startDate, period.endDate ] if period
+    Attendancetime.sum(:hours, options).to_f
   end
 
   def lastCompleted(project)
@@ -184,6 +191,21 @@ class Employee < ActiveRecord::Base
                            :conditions => date ? ['transfer_date <= ?', date] : nil).to_f
   end
   
+  def syncWithLdap(ldapuser)
+    self.ldapname = ldapuser.uid[0]  
+    self.lastname = ldapuser.sn[0]
+    self.firstname = ldapuser.givenname[0]
+    self.email = ldapuser.mail[0]    
+  rescue NoMethodError => ex
+  ensure   
+    while ! save
+      return if ! errors.on :shortname
+      self.shortname = firstname.first.downcase + lastname.first.downcase + 
+                     (shortname ? (shortname[2..4].to_i + 1).to_s : '')
+    end
+    projectmemberships.push Projectmembership.new(:project_id => DEFAULT_PROJECT_ID)
+  end
+  
   ######### employment information ######################
   
   def current_percent
@@ -226,6 +248,12 @@ private
 
   def self.encode(pwd)
     Digest::SHA1.hexdigest(pwd) 
+  end
+  
+  def self.ldapConnection
+    Net::LDAP.new :host => LDAP_HOST, 
+                  :port => LDAP_PORT, 
+                  :encryption => :simple_tls  
   end
   
   def sumEmployments(period, field)

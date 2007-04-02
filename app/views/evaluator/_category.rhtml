@@ -16,7 +16,7 @@
                :locals => {:periods => periods}) %>
     <td></td>
 </tr>
-<% if @evaluation.category.kind_of? Employee -%>
+<% if @evaluation.class::ATTENDANCE -%>
 <tr class="times_total_sum">
     <td>Anwesenheit</td>
     <%= 

@@ -1,0 +1,7 @@
+<% if params[:action] == 'list' -%>
+<p>
+<% form_tag :action => 'ldapsync' do -%>
+<%= submit_tag 'LDAP Synchronisation' %>
+<% end -%>
+</p>
+<% end -%>

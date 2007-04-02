@@ -28,9 +28,10 @@ module EvaluatorHelper
   end
 
   def complete_link(project)
-     link_to 'Komplettieren', 
-	     evaluation_overview_params(:action => 'completeProject', 
-					                :project_id => project.id)
+     link_to('Komplettieren', 
+	          evaluation_overview_params(:action => 'completeProject', 
+					                     :project_id => project.id)) + 
+		' (' +  format_date(@user.lastCompleted(project)) + ')'		                
   end
 
   def last_completion(employee)

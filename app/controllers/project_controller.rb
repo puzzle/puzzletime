@@ -3,8 +3,8 @@
 
 class ProjectController < ApplicationController
   
-  include ManageModule
   helper :worktime
+  include ManageModule  
   
   # Checks if employee came from login or from direct url.
   before_filter :authenticate
@@ -21,7 +21,7 @@ class ProjectController < ApplicationController
     @entries = @user.managed_projects.find(:all, 
                           :limit => @entry_pages.items_per_page,
                           :offset => @entry_pages.current.offset)
-    renderManage :action => 'list'   
+    renderGeneric :action => 'list'   
   end
   
   def create

@@ -18,11 +18,11 @@ class Worktime < ActiveRecord::Base
   H_M = /^(\d*):([0-5]\d)/
       
   def account
-    project ? project : absence
+    nil
   end
   
   def account_id
-    project_id ? project_id : absence_id
+    nil
   end
   
   def account_id=(value)
@@ -65,10 +65,14 @@ class Worktime < ActiveRecord::Base
     newWorktime.from_start_time = Time.now.change(:hour => 8)
     newWorktime.report_type = report_type
     newWorktime.work_date = work_date
-    newWorktime.project_id = project_id
-    newWorktime.absence_id = absence_id
+    newWorktime.account_id = account_id
     newWorktime.billable = billable
     return newWorktime
+  end
+  
+  def copyTimesFrom(other)
+    self.report_type = other.report_type
+    other.report_type.copy_times(other, self)
   end
   
   def timeString
@@ -93,6 +97,10 @@ class Worktime < ActiveRecord::Base
       condArray.push period.startDate, period.endDate
     end
     self.sum(:hours, :conditions => condArray).to_f
+  end
+  
+  def controller
+    self.class.name.downcase
   end
   
 private

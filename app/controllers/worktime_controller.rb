@@ -12,6 +12,8 @@ class WorktimeController < ApplicationController
   verify :method => :post, :only => [ :delete, :create, :update ],
          :redirect_to => { :action => :list }
          
+  hide_action :detailAction                
+         
   FINISH = 'Abschliessen'       
    
   def index
@@ -19,7 +21,7 @@ class WorktimeController < ApplicationController
   end 
   
   def list
-    redirect_to :controller => 'evaluator', :action => userEvaluation
+    redirect_to :controller => 'evaluator', :action => userEvaluation, :clear => 1
   end
   
   # Shows the add time page.
@@ -32,25 +34,22 @@ class WorktimeController < ApplicationController
     
   # Stores the new time the data on DB.
   def create
-    setWorktime
+    setNewWorktime
     @worktime.employee = @user    
     setWorktimeParams
     if @worktime.save      
       flash[:notice] = 'Die Arbeitszeit wurde erfasst'
-      if params[:commit] == 'Aufteilen'
-        @worktime = @worktime.template Projecttime.new
-        @accounts = @user.projects
-        renderGeneric :action => 'add'
-      elsif params[:commit] != FINISH        
+      return if ! processAfterCreate
+      if params[:commit] != FINISH        
         @worktime = @worktime.template
         setAccounts
         renderGeneric :action => 'add'
       else
-        options = {:controller => 'evaluator', 
-                   :action => (@worktime.kind_of?(Attendancetime) ? 'attendanceDetails' : 'details'), 
-                   :evaluation => userEvaluation }
-        if session[:period].nil? || 
-            ! session[:period].include?(@worktime.work_date)
+        options = { :controller => 'evaluator', 
+                    :action     => detailAction, 
+                    :evaluation => userEvaluation,
+                    :clear => 1 }
+        if session[:period].nil? || ! session[:period].include?(@worktime.work_date)
           period = Period.weekFor(@worktime.work_date)
           options[:start_date] = period.startDate
           options[:end_date] = period.endDate
@@ -65,21 +64,22 @@ class WorktimeController < ApplicationController
   
   # Shows the edit page for the selected time.
   def edit
-    @worktime = Worktime.find(params[:id])   
+    setWorktime   
     setAccounts
     renderGeneric :action => 'edit'
   end  
     
   # Update the selected worktime on DB.
   def update  
-    @worktime = Worktime.find(params[:id])
+    setWorktime
+    session[:edit] = nil
     return createWorktimeEdit if @worktime.employee != @user
     setWorktimeParams
     if @worktime.save
       flash[:notice] = 'Die Arbeitszeit wurde aktualisiert'
       redirect_to evaluation_detail_params.merge!({
                         :controller => 'evaluator',
-                        :action => params[:return_action] }) 
+                        :action => detailAction }) 
     else
       setAccounts
       renderGeneric :action => 'edit'
@@ -89,7 +89,7 @@ class WorktimeController < ApplicationController
   def createWorktimeEdit
     @edit = session[:edit]
     if @edit.nil?
-      @worktime = Worktime.find(params[:id])
+      setWorktime
       @edit = WorktimeEdit.new(@worktime.clone)
     else  
       @worktime = @edit.worktimeTemplate
@@ -106,7 +106,7 @@ class WorktimeController < ApplicationController
           flash[:notice] = 'Die Arbeitszeit wurde angepasst'
           redirect_to evaluation_detail_params.merge!({
                         :controller => 'evaluator',
-                        :action => params[:return_action] }) 
+                        :action => detailAction }) 
           return              
         end
       end  
@@ -116,64 +116,38 @@ class WorktimeController < ApplicationController
   end
  
   def confirmDelete
-    @worktime = Worktime.find(params[:id])
+    setWorktime
     renderGeneric :action => 'confirmDelete'   
   end
   
   def delete
-    worktime = Worktime.find(params[:id])
-    worktime.destroy if worktime.employee == @user
+    setWorktime
+    @worktime.destroy if @worktime.employee == @user
     flash[:notice] = 'Die Arbeitszeit wurde entfernt'
     redirect_to evaluation_detail_params.merge!({
                   :controller => 'evaluator', 
-                  :action => params[:return_action]})
+                  :action => detailAction})
+  end
+  
+  def view
+    setWorktime
+    renderGeneric :action => 'view'
+  end  
+  
+  # may overwrite in subclass
+  def detailAction
+    'details'
   end
   
 protected
 
-  #List the time.
-  def listDetailTime
-    if session[:period].nil? || 
-        (! @worktime.nil? && ! session[:period].include?(@worktime.work_date) )
-      period = Period.weekFor(@worktime.work_date)
-      @periodParam ||= {:start_date => period.startDate, :end_date => period.endDate}
-    else
-      @periodParam ||= {}   
-    end
-    redirect_to @periodParam.merge!({
-                :controller => 'evaluator', 
-                :action => 'details', 
-                :evaluation => userEvaluation, 
-                :category_id => @user.id })
-  end
-
   def createDefaultWorktime
-    setWorktime
+    setNewWorktime
     @worktime.from_start_time = Time.now.change(:hour => DEFAULT_START_HOUR)
     @worktime.report_type = DEFAULT_REPORT_TYPE
     period = session[:period]
     @worktime.work_date = (period != nil && period.length == 1) ?
        period.startDate : Date.today
-  end
-  
-  # overwrite in subclass
-  def setWorktime
-    @worktime = nil
-  end
-  
-  # overwrite in subclass
-  def setWorktimeAccount
-    
-  end
-  
-  # overwrite in subclass
-  def setAccounts
-    @accounts = nil 
-  end
-  
-  #overwrite in subclass
-  def userEvaluation
-    ''
   end
   
   def setWorktimeParams
@@ -190,8 +164,38 @@ protected
     end
   end
   
+  def setWorktime
+    @worktime = Worktime.find(params[:id])
+  end
+  
+  # overwrite in subclass
+  def setNewWorktime
+    @worktime = nil
+  end
+  
+  # overwrite in subclass
+  def setWorktimeAccount
+    
+  end
+  
+  # overwrite in subclass
+  def setAccounts
+    @accounts = nil 
+  end
+  
+  # may overwrite in subclass
+  def userEvaluation
+    'userProjects'
+  end
+  
+  # may overwrite in subclass
+  # return whether normal proceeding should continue or another action was taken
+  def processAfterCreate
+    true
+  end
+  
   def genericPath
     'worktime'
   end
-
+ 
 end

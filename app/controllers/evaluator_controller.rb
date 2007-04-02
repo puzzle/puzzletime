@@ -18,14 +18,20 @@ class EvaluatorController < ApplicationController
   def overview
     params[:evaluation] = params[:action] if ! params[:evaluation]
     setEvaluation
-    if params[:evaluation] =~ /^user/ then render :action => 'userOverview' 
-    else render :action => 'overview'
-    end
+    
+    # set session evaluation levels
+    session[:evalLevels] = Array.new if params[:clear]
+    levels = session[:evalLevels]
+    current = [@evaluation, params[:evaluation]]
+    levels.pop while params[:up] && levels.last != current
+    levels.push current if levels.last != current
+    
+    render :action => (params[:evaluation] =~ /^user/ ? 'userOverview' : 'overview' )
   end
   
   def details  
     setEvaluation
-    @evaluation.set_division_id(params[:division_id])
+    @evaluation.set_division_id(params[:division_id])    
     if params[:start_date] != nil
       @period = params[:start_date] == "0" ? nil :
                    Period.new(Date.parse(params[:start_date]), Date.parse(params[:end_date]))     
@@ -34,14 +40,14 @@ class EvaluatorController < ApplicationController
     
     @time_pages = Paginator.new self, @evaluation.count_times(@period), NO_OF_DETAIL_ROWS, params[:page]
     @times = @evaluation.times(@period, 
-                                :limit => @time_pages.items_per_page,
-                                :offset => @time_pages.current.offset)                               
+                               :limit => @time_pages.items_per_page,
+                               :offset => @time_pages.current.offset)                               
   end
   
   def attendanceDetails
     eval = params[:evaluation]
     params[:evaluation] = 'attendance'
-    details
+    details    
     params[:evaluation] = eval
     render :action => 'details' 
   end
@@ -49,10 +55,6 @@ class EvaluatorController < ApplicationController
   # Shows overtimes of employees
   def overtime
     @employees = Employee.list
-  end
-  
-  def description
-    @time = Worktime.find(params[:worktime_id])
   end
   
   def exportCSV

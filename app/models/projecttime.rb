@@ -1,4 +1,5 @@
 class Projecttime < Worktime
+
   def account
     project
   end

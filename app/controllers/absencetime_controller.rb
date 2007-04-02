@@ -12,8 +12,10 @@ class AbsencetimeController < WorktimeController
     if @multiabsence.valid?
       count = @multiabsence.save   
       flash[:notice] = "#{count} Absenzen wurden erfasst"
-      options = { :controller => 'evaluator', :action => 'details', 
-                  :evaluation => userEvaluation}
+      options = { :controller => 'evaluator', 
+                  :action => detailAction, 
+                  :evaluation => userEvaluation,
+                  :clear => 1 }
       if session[:period].nil? || 
           (! session[:period].include?(@multiabsence.start_date) ||
           ! session[:period].include?(@multiabsence.end_date))
@@ -29,7 +31,7 @@ class AbsencetimeController < WorktimeController
   
 protected
 
-  def setWorktime
+  def setNewWorktime
     @worktime = Absencetime.new   
   end
   

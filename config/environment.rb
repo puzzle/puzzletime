@@ -53,6 +53,6 @@ end
 # Include your application configuration below
 ActionMailer::Base.delivery_method = :sendmail
 
-require "overrides" 
+require 'overrides' 
 require 'report_type'
 require 'puzzletime_settings'

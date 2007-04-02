@@ -44,11 +44,17 @@
   <td>Beschreibung: </td>
   <td><%= text_area 'worktime', 'description', {:rows => 5} %></td>
 </tr>
-<% if ! @worktime.project_id.nil? -%>
+<% if @worktime.kind_of? Projecttime -%>
 <tr>
     <td>Verrechenbar: </td>
     <td><%= check_box 'worktime', 'billable' %></td>
 </tr>
+<% if ['add', 'create'].include? params[:action] -%>
+<tr>
+    <td>Anwesenheitszeit: </td>
+    <td><%= check_box_tag 'attendance' %></td>
+</tr>
+<% end -%>
 <% end -%>
 <% end -%>
 <tr>
