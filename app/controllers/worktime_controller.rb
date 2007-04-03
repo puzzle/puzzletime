@@ -134,7 +134,28 @@ class WorktimeController < ApplicationController
     renderGeneric :action => 'view'
   end  
   
-  # may overwrite in subclass
+  def autoStartStop
+    if worktime = @user.auto_start_time(true)
+      worktime.to_end_time = worktime.work_date == Date.today ? Time.now : '23:59'
+      worktime.report_type = StartStopType::INSTANCE
+    else
+      worktime = Attendancetime.new
+      worktime.employee = @user
+      worktime.report_type = AutoStartType::INSTANCE
+      worktime.work_date = Date.today
+      worktime.from_start_time = Time.now 
+    end
+    if worktime.save
+      flash[:notice] = "Die Anwesenheit mit #{worktime.timeString} wurde erfasst"
+    else
+      flash[:notice] = 'Die Anwesenheit konnte nicht gespeichert werden:'
+      worktime.errors.each { |attr, msg| flash[:notice] += "<br/> - " + msg }
+    end    
+    @user.auto_start_time(true)  
+    list
+  end
+  
+  # no action, may overwrite in subclass
   def detailAction
     'details'
   end

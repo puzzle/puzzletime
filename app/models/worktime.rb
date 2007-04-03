@@ -57,7 +57,7 @@ class Worktime < ActiveRecord::Base
   end
   
   def startStop?
-    report_type == StartStopType::INSTANCE
+    report_type.startStop?
   end
   
   def template(newWorktime = nil)
@@ -86,7 +86,7 @@ class Worktime < ActiveRecord::Base
   
   def store_hours
     if startStop? && from_start_time && to_end_time
-      self.hours = (to_end_time - from_start_time) / 3600.0
+      self.hours = (to_end_time.seconds_since_midnight - from_start_time.seconds_since_midnight) / 3600.0
     end
   end
 
@@ -106,10 +106,6 @@ class Worktime < ActiveRecord::Base
 private
 
   def write_converted_time(attribute, value)
-    write_attribute(attribute, string_to_time(value))
-  end
-
-  def string_to_time(value)
     if value.kind_of?(String) && ! (value =~ H_M) 
       if value.size > 0 && value =~ /^\d*\.?\d*$/
         value = value.to_i.to_s + ':' + ((value.to_f - value.to_i) * 60).to_i.to_s
@@ -117,7 +113,7 @@ private
         value = nil
       end    
     end
-    value
+    write_attribute attribute, value
   end
   
 end

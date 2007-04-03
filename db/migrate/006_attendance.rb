@@ -17,7 +17,7 @@ class Attendance < ActiveRecord::Migration
   end
 
   def self.down
-    Attendancetime.delect_all
+    Attendancetime.delete_all
     remove_column :worktimes, :type    
   end
 end

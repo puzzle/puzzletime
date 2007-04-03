@@ -2,6 +2,7 @@ class ReportType
 
   include Comparable
   attr_reader :key, :name, :accuracy
+  START_STOP = false
   
 protected
   
@@ -14,7 +15,7 @@ protected
 public    
  
   def self.[](key)
-    INSTANCES.detect {|type| type.key == key }
+    ObjectSpace.each_object(ReportType) {|type| return type if type.key == key }
   end
   
   def to_s
@@ -33,8 +34,11 @@ public
     target.hours = source.hours
   end
   
+  def startStop?
+    self.class::START_STOP
+  end
+  
   module Accessors
-    
     def report_type
       type = read_attribute('report_type')
       type.is_a?(String) ? ReportType[type] : type
@@ -43,14 +47,14 @@ public
     def report_type=(type)
       type = type.key if type.is_a? ReportType
       write_attribute('report_type', type)
-    end
-    
+    end    
   end
-
+  
 end
 
 class StartStopType < ReportType
   INSTANCE = self.new 'start_stop_day', 'Start/Stop Zeit', 10
+  START_STOP = true
   
   def timeString(worktime)
     worktime.from_start_time.strftime(TIME_FORMAT) + ' - ' + 
@@ -77,6 +81,20 @@ class StartStopType < ReportType
     end
   end
 end 
+
+class AutoStartType < StartStopType
+  INSTANCE = self.new 'auto_start', 'Auto Start', 12
+  
+  def timeString(worktime)
+    'Start um ' + worktime.from_start_time.strftime(TIME_FORMAT)
+  end
+  
+  def validate_worktime(worktime)
+    if ! worktime.from_start_time
+      worktime.errors.add(:from_start_time, 'Die Anfangszeit ist ung&uuml;ltig') 
+    end
+  end
+end
 
 class HoursDayType < ReportType
   INSTANCE = self.new 'absolute_day', 'Stunden/Tag', 6

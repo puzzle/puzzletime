@@ -37,6 +37,9 @@ class Employee < ActiveRecord::Base
   has_many :worktimes
   has_many :attendancetimes
   has_many :overtime_vacations, :order => 'transfer_date DESC', :dependent => :destroy        
+  has_one  :auto_start_time, 
+           :class_name => 'Attendancetime',
+           :conditions => "report_type = '#{AutoStartType::INSTANCE.key}'"
   
   # Validation helpers.
   validates_presence_of :firstname, :message => "Der Vorname muss angegeben werden"
@@ -85,6 +88,20 @@ class Employee < ActiveRecord::Base
   
   def label
     lastname + " " + firstname
+  end  
+  
+  def self.sumWorktime(evaluation, period, categoryRef = false, options = {})
+    Worktime.sumWorktime period, evaluation.absences?
+  end
+  
+  def sumAttendance(period = nil, options = {})
+    options[:conditions] = [ "work_date BETWEEN ? AND ?", period.startDate, period.endDate ] if period
+    attendancetimes.sum(:hours, options).to_f
+  end
+  
+   def self.sumAttendance(period = nil, options = {})
+    options[:conditions] = [ "work_date BETWEEN ? AND ?", period.startDate, period.endDate ] if period
+    Attendancetime.sum(:hours, options).to_f
   end
   
   ##### helper methods #####
@@ -114,32 +131,16 @@ class Employee < ActiveRecord::Base
            "FROM ((employees E LEFT JOIN projectmemberships PM ON E.id = PM.employee_id) " +
 	       " LEFT JOIN projects P ON PM.project_id = P.id)" +
            " LEFT JOIN worktimes T ON P.id = T.project_id " +
-           "WHERE E.id = #{self.id} AND PM.projectmanagement"
-    if period
-      sql += " AND T.work_date BETWEEN #{period.startDate} AND #{period.endDate}"
-    end
+           "WHERE E.id = #{self.id} AND PM.projectmanagement"    
+    sql += " AND T.work_date BETWEEN #{period.startDate} AND #{period.endDate}" if period
     self.class.connection.select_value(sql).to_f
-  end
-
-  def self.sumWorktime(evaluation, period, categoryRef = false, options = {})
-    Worktime.sumWorktime period, evaluation.absences?
-  end
-  
-  def sumAttendance(period = nil, options = {})
-    options[:conditions] = [ "work_date BETWEEN ? AND ?", period.startDate, period.endDate ] if period
-    attendancetimes.sum(:hours, options).to_f
-  end
-  
-   def self.sumAttendance(period = nil, options = {})
-    options[:conditions] = [ "work_date BETWEEN ? AND ?", period.startDate, period.endDate ] if period
-    Attendancetime.sum(:hours, options).to_f
   end
 
   def lastCompleted(project)
     projectmemberships.find(:first, 
 	                        :conditions => ["project_id = ?", project.id]).last_completed
   end
-  
+    
   #########  vacation and overtime information ############
   
   def currentRemainingVacations
@@ -153,7 +154,7 @@ class Employee < ActiveRecord::Base
   end
   
   def totalVacations(period)
-    sumEmployments period, :vacations
+    employmentsDuring(period).sum(&:vacations)
   end
   
   def usedVacations(period)
@@ -171,7 +172,7 @@ class Employee < ActiveRecord::Base
   end
   
   def musttime(period)
-    sumEmployments period, :musttime 
+    employmentsDuring(period).sum(&:musttime)
   end  
   
   def payedWorktime(period)
@@ -254,12 +255,6 @@ private
     Net::LDAP.new :host => LDAP_HOST, 
                   :port => LDAP_PORT, 
                   :encryption => :simple_tls  
-  end
-  
-  def sumEmployments(period, field)
-    sum = 0
-    employmentsDuring(period).each { |e| sum += e.send(field) }
-    sum     
   end
   
 end

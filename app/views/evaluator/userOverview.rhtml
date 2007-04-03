@@ -7,10 +7,20 @@
 <%= render(:partial => 'category') %>
 
 <p>
-<%= link_to 'Anwesenheitszeit erfassen', :controller => 'attendancetime', :action => 'add' %> |
-<%= link_to 'Absenz erfassen', :controller => 'absencetime', :action => 'add' %> | 
-<%= link_to 'Mehrt&auml;gige Absenz erfassen', :controller => 'absencetime', :action => 'addMultiAbsence' %> | 
 <%= @evaluation.absences? ?
         link_to('Projekte anzeigen', :action => 'userProjects', :clear => 1) :
-        link_to('Absenzen anzeigen', :action => 'userAbsences', :clear => 1) %>
+        link_to('Absenzen anzeigen', :action => 'userAbsences', :clear => 1) %> |
+<%= link_to 'Anwesenheit ' + ( @user.auto_start_time ? "(seit #{@user.auto_start_time.from_start_time.strftime(TIME_FORMAT) }) stoppen" : 'starten' ),
+            {:controller => 'worktime',
+             :action => 'autoStartStop'},
+            :method => 'post' %> | 
+<%= link_to 'Anwesenheitszeit erfassen', 
+            :controller => 'attendancetime', 
+            :action => 'add' %> |
+<%= link_to 'Absenz erfassen', 
+            :controller => 'absencetime', 
+            :action => 'add' %> | 
+<%= link_to 'Mehrt&auml;gige Absenz erfassen', 
+            :controller => 'absencetime', 
+            :action => 'addMultiAbsence' %> 
 </p>

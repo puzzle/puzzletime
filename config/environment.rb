@@ -10,6 +10,8 @@ RAILS_GEM_VERSION = '1.2.2'
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
 
+PATH_PREFIX = ENV['RAILS_RELATIVE_URL_ROOT'] || ''
+
 Rails::Initializer.run do |config|
   # Settings in config/environments/* take precedence those specified here
   
@@ -39,6 +41,7 @@ Rails::Initializer.run do |config|
   # config.active_record.default_timezone = :utc
     
   # See Rails::Configuration for more options
+  config.action_controller.asset_host = PATH_PREFIX
 end
 
 # Add new inflection rules using the following format 
