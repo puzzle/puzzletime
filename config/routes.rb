@@ -17,11 +17,11 @@ ActionController::Routing::Routes.draw do |map|
   # instead of a file named 'wsdl'
   # map.connect ':controller/service.wsdl', :action => 'wsdl'
  
-  map.connect PATH_PREFIX, :controller => 'projecttime', :action => 'list'
+  map.connect PATH_PREFIX + '/', :controller => 'projecttime', :action => 'list'
   
   #map.connect 'puzzletime/stylesheets/:file', :controller => 'stylesheets'
  
   # Install the default route as the lowest priority.
-  map.connect PATH_PREFIX + ':controller/:action/:id'
+  map.connect PATH_PREFIX + '/:controller/:action/:id'
  
 end

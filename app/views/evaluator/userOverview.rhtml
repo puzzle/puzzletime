@@ -10,10 +10,17 @@
 <%= @evaluation.absences? ?
         link_to('Projekte anzeigen', :action => 'userProjects', :clear => 1) :
         link_to('Absenzen anzeigen', :action => 'userAbsences', :clear => 1) %> |
-<%= link_to 'Anwesenheit ' + ( @user.auto_start_time ? "(seit #{@user.auto_start_time.from_start_time.strftime(TIME_FORMAT) }) stoppen" : 'starten' ),
-            {:controller => 'worktime',
-             :action => 'autoStartStop'},
-            :method => 'post' %> | 
+<%= if @user.auto_start_time      
+   link_to "Anwesenheit (seit #{@user.auto_start_time.from_start_time.strftime(TIME_FORMAT) }) stoppen",
+            {:controller => 'attendancetime',
+             :action => 'stop'},
+            :method => 'post' 
+ else 
+   link_to 'Anwesenheit starten',
+            {:controller => 'attendancetime',
+             :action => 'start'},
+            :method => 'post' 
+ end %> | 
 <%= link_to 'Anwesenheitszeit erfassen', 
             :controller => 'attendancetime', 
             :action => 'add' %> |

@@ -17,7 +17,7 @@ class LoginController < ApplicationController
       session[:user] = nil
     else 
       logged_in = Employee.login(params[:employee][:shortname], params[:employee][:pwd])
-      if  logged_in != nil
+      if logged_in != nil
         session[:user] = logged_in
         redirect_to(:controller => 'projecttime', :action => 'list')
       else
