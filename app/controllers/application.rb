@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
   def set_charset
     headers["Content-Type"] = "text/html; charset=utf-8" 
   end
-  
+    
   #Filter for check if user is logged in or not
   def authenticate
     @user = session[:user]
@@ -25,7 +25,7 @@ class ApplicationController < ActionController::Base
   
   def authorize
     unless authenticate && @user.management
-      flash[:notice] = 'Sie sind nicht authorisiert, diese Seite zu öffnen'
+      flash[:notice] = 'Sie sind nicht authorisiert, um diese Seite zu öffnen'
       redirect_to(:controller => 'login', :action => 'login' )
     end
   end  

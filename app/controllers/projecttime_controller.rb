@@ -15,7 +15,7 @@ protected
   end  
   
   def processAfterCreate
-    if params[:attendance]
+    if @worktime.attendance
       attendance = @worktime.template Attendancetime.new
       attendance.employee_id = @worktime.employee_id
       attendance.copyTimesFrom @worktime

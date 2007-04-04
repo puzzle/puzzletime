@@ -1,5 +1,7 @@
 class Projecttime < Worktime
 
+  attr_accessor :attendance
+
   def account
     project
   end
@@ -25,5 +27,11 @@ class Projecttime < Worktime
   
   def self.label
     'Projektzeit'
+  end
+  
+  def template(newWorktime = nil)
+    newWorktime = super newWorktime    
+    newWorktime.attendance = attendance if newWorktime.class == self.class
+    newWorktime
   end
 end

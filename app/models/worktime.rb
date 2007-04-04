@@ -106,13 +106,14 @@ class Worktime < ActiveRecord::Base
 private
 
   def write_converted_time(attribute, value)
+    value = value.change(:sec => 0) if value.kind_of? Time
     if value.kind_of?(String) && ! (value =~ H_M) 
       if value.size > 0 && value =~ /^\d*\.?\d*$/
         value = value.to_i.to_s + ':' + ((value.to_f - value.to_i) * 60).to_i.to_s
       else
         value = nil
       end    
-    end
+    end    
     write_attribute attribute, value
   end
   

@@ -52,7 +52,7 @@
 <% if ['add', 'create'].include? params[:action] -%>
 <tr>
     <td>Anwesenheitszeit: </td>
-    <td><%= check_box_tag 'attendance' %></td>
+    <td><%= check_box 'worktime', 'attendance' %></td>
 </tr>
 <% end -%>
 <% end -%>
