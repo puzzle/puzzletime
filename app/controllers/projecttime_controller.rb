@@ -11,7 +11,7 @@ protected
   end
 
   def setAccounts    
-    @accounts = @user.projects 
+    @accounts = @worktime.employee.projects 
   end  
   
   def processAfterCreate

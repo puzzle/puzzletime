@@ -148,6 +148,7 @@ protected
     period = session[:period]
     @worktime.work_date = (period != nil && period.length == 1) ?
        period.startDate : Date.today
+    @worktime.employee = @user   
   end
   
   def setWorktimeParams
