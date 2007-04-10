@@ -35,7 +35,6 @@ class EvaluatorController < ApplicationController
     if params[:start_date] != nil
       @period = params[:start_date] == "0" ? nil :
                    Period.new(Date.parse(params[:start_date]), Date.parse(params[:end_date]))     
-       #session[:period] = @period 
     end
     
     @time_pages = Paginator.new self, @evaluation.count_times(@period), NO_OF_DETAIL_ROWS, params[:page]
@@ -55,6 +54,17 @@ class EvaluatorController < ApplicationController
   # Shows overtimes of employees
   def overtime
     @employees = Employee.list
+  end
+  
+  def report
+    setEvaluation
+    @evaluation.set_division_id(params[:division_id])
+    if params[:start_date] != nil
+      @period = params[:start_date] == "0" ? nil :
+                   Period.new(Date.parse(params[:start_date]), Date.parse(params[:end_date]))     
+    end
+    @times = @evaluation.times(@period)
+    render :layout => false
   end
   
   def exportCSV
@@ -117,6 +127,10 @@ class EvaluatorController < ApplicationController
     flash[:notice] = "Das Datum der kompletten Erfassung aller Zeiten für das Projekt #{pm.project.label_verbose} wurde aktualisiert."
     redirect_to :action => params[:evaluation], 
                 :category_id => params[:category_id]
+  end
+  
+  def calendar
+  
   end
   
   def method_missing(action, *args)

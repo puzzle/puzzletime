@@ -60,5 +60,5 @@ module EvaluatorHelper
               ['Verbleibend', @user.currentRemainingVacations, 'd']]]   
     render :partial => 'timeinfo', :locals => {:infos => infos}
   end
-  
+ 
 end

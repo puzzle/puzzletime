@@ -39,7 +39,7 @@ class Period
   def initialize(startDate = Date.today, endDate = Date.today, label = nil)    
     @startDate = parseDate(startDate)
     @endDate = parseDate(endDate)
-    @label = label != nil ? label : self.to_s
+    @label = label ? label : self.to_s
   end
     
   def step 

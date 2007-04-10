@@ -1,0 +1,13 @@
+<% if @user.management -%>
+Verwalte:
+&nbsp;
+<%= link_to 'Mitarbeiter', :controller => 'employee' %>
+&nbsp;
+<%= link_to 'Projekte', :controller => 'project' %>
+&nbsp;
+<%= link_to 'Kunden', :controller => 'client' %>
+&nbsp;
+<%= link_to 'Absenzen', :controller => 'absence' %>
+&nbsp;
+<%= link_to 'Feiertage', :controller => 'holiday' %>
+<% end -%>

@@ -62,7 +62,7 @@ module ManageHelper
   def groupLabel
     "von #{group.label}" if group
   end
-  
+
   def genericPath
     'manage'
   end

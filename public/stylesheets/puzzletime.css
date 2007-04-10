@@ -28,7 +28,7 @@ a:hover {
 }
 
 h1 {
-    font-size:      18px;
+    font-size:      20px;
     font-weight:    normal;
     margin-bottom:  20px;
 }
@@ -142,14 +142,15 @@ textarea, input, select {
 
 #menu_user {
     background:     url('../images/menu_user.gif') repeat-x; 
-    padding-top:    2px;
-    margin-bottom:  30px;
+    padding-top:    4px;
+    margin-bottom:  25px;
+    float:          right;
 }
 
 #submenu {
-    padding-left:   10px;
-    margin-bottom:  30px;
-    margin-top:     -10px;
+    background:     url('../images/menu_user.gif') repeat-x; 
+    padding-top:    4px;
+    margin-bottom:  25px;
 }
 
 #submenu a {

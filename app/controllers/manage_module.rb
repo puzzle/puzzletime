@@ -14,7 +14,8 @@ module ManageModule
   # Sets up the controller that mixed this Module in.
   def self.included(controller)
     controller.helper :manage  
-    controller.helper_method :group, :modelClass, :formatColumn, :listFields, :editFields
+    controller.helper_method :group, :modelClass, :formatColumn, 
+                             :listFields, :editFields
    
     # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
     controller.verify :method => :post, :only => [ :create, :update, :delete ],

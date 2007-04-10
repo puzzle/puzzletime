@@ -57,34 +57,20 @@
 		<% end -%>
 	  </ul>		
 	</div>   
+	
 	<div id="menu_user">
 	  Benutzer: <%= @user.label %> | 
-	   <%= link_to 'Passwort &auml;ndern', 
-	           :controller => 'employee', 
-	           :action => 'changePasswd' %> | 
-	   <%= link_to 'Logout', 
+	  <%= link_to 'Logout', 
 	           :controller => 'login', 
 	           :action => 'logout' %>
-	</div>
-	
-	  <% if @user.management &&
-	     ['client', 'employee', 'absence', 'project', 'holiday', 
-	      'employment', 'projectmembership', 'overtime_vacation'].include?(params[:controller]) -%>
-        <div id="submenu">
-        Verwalte:
-        &nbsp;
-        <%= link_to 'Mitarbeiter', :controller => 'employee' %>
-        &nbsp;
-        <%= link_to 'Projekte', :controller => 'project' %>
-        &nbsp;
-        <%= link_to 'Kunden', :controller => 'client' %>
-        &nbsp;
-        <%= link_to 'Absenzen', :controller => 'absence' %>
-        &nbsp;
-        <%= link_to 'Feiertage', :controller => 'holiday' %>
-        </div>
-	  <% end -%>
-	<% end -%>
+    </div>
+      
+	<div id="submenu">
+	&nbsp; 
+	<%= renderGenericPartial :partial => 'submenu' %>
+    </div>   
+
+    <% end -%>
 	
 	<h1><%= @title %></h1>
 	

@@ -1,0 +1,77 @@
+<% 
+@title = "Zeitrapport Puzzle ITC" 
+if @evaluation.category.kind_of? Project
+    project = @evaluation.category
+    employee = @evaluation.division
+else
+    project = @evaluation.division
+    employee = @evaluation.category
+end
+-%>
+
+<html>
+<head>
+  <title><%= @title %></title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta http-equiv="pragma" content="no-cache" />
+  <meta http-equiv="cache-control" content="no-cache" />
+  <link rel="shortcut icon" href="<%= PATH_PREFIX %>/favicon.gif" />
+  
+  <%= stylesheet_link_tag 'print', :media => 'all' %>
+</head>
+<body>
+<h1><%= @title %></h1>
+<table>
+<tr>
+<td>Kunde</td>
+<td><b><%= project.client.label %></b></td>
+</tr>
+<tr>
+<td>Projekt</td>
+<td><b><%= project.label %></b></td>
+</tr>
+<tr>
+<td>Mitarbeiter</td>
+<td><b><%= employee.label %></b></td>
+</tr>
+<tr>
+<td>Periode</td>
+<td><b><%= @period.to_s %></b></td>
+</tr>
+</table>
+
+<p></p>
+
+<table width="100%">
+<tr>
+   <th> Datum </th>
+   <th> Zeit von </th>
+   <th> Zeit bis </th>
+   <th> Stunden </th>
+   <th width="90%"> Beschreibung</th>
+</tr>
+<% for time in @times -%>
+<%= alternate_row  %>
+  <td align="right" nowrap><%= format_date(time.work_date) %></td>
+  <td align="center"><%= format_time time.from_start_time if time.startStop? %></td>
+  <td align="center"><%= format_time time.to_end_time if time.startStop? %></td>
+  <td align="right"><%= number_with_precision(time.hours, 2) %> &nbsp;</td>
+  <td><%= simple_format time.description.strip %></td>
+</tr>
+<% end -%> 
+<tr class="times_total_sum">
+    <td colspan="3">Total Stunden</td> 
+    <td align="right"><%= number_with_precision(@evaluation.sum_times(@period), 2) %> &nbsp;</td>
+    <td></td>  
+</tr>
+</table>
+
+<script type="text/javascript">
+window.print();
+</script>
+</body>
+</html>
+
+
+          

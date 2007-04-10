@@ -1,0 +1,6 @@
+<% if session[:evalLevels].size > 1 || params[:action] =~ /etails/ -%>
+Auswertung:
+<%= render :partial => 'backlink', 
+           :collection => session[:evalLevels][0..-1],
+           :spacer_template => 'spacer' %>
+<% end -%>   

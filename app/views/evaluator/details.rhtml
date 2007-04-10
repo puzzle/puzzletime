@@ -1,6 +1,6 @@
 <% @title = "Arbeitszeit Details #{@period.to_s}" 
    attendance = @evaluation.kind_of? AttendanceEval
--%>
+-%>       
 
 <h3><%= @evaluation.category_label %></h3>
 <h3><%= @evaluation.division_label %></h3>
@@ -84,10 +84,6 @@ Seite:
 <% end -%>
 
 <p>
-<%= render :partial => 'backlink', 
-           :collection => session[:evalLevels][0..-2],
-           :spacer_template => 'spacer' %>
-<% if session[:evalLevels].size > 1 %>|<% end %>
 <%= link_to '&Uuml;bersicht',
             :action => params[:evaluation],
             :category_id => params[:category_id] %>
@@ -95,5 +91,13 @@ Seite:
 <%= link_to 'Export CSV', 
             evaluation_detail_params.merge!({
                 :action => 'exportCSV',
-                :evaluation => (attendance ? 'attendance' : params[:evaluation]) }) %>          
+                :evaluation => (attendance ? 'attendance' : params[:evaluation]) }) %> 
+<% if @evaluation.class::SUB_EVALUATION.nil? && 
+      @evaluation.division &&
+      ! @evaluation.absences? -%>
+|
+<%= link_to 'Rapport drucken',
+            evaluation_detail_params.merge!({
+                :action => 'report' }) %>  
+<% end -%>
 </p>            
