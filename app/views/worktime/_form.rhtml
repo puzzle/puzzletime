@@ -49,7 +49,7 @@
     <td>Verrechenbar: </td>
     <td><%= check_box 'worktime', 'billable' %></td>
 </tr>
-<% if ['add', 'create'].include? params[:action] -%>
+<% if ['add', 'create', 'stop'].include? params[:action] -%>
 <tr>
     <td>Anwesenheitszeit: </td>
     <td><%= check_box 'worktime', 'attendance' %></td>

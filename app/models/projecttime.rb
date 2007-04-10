@@ -1,6 +1,6 @@
 class Projecttime < Worktime
 
-  attr_accessor :attendance
+  attr_reader :attendance
 
   def account
     project
@@ -12,6 +12,10 @@ class Projecttime < Worktime
   
   def account_id=(value)
     self.project_id = value
+  end
+  
+  def attendance=(value)
+    @attendance = value.to_i != 0
   end
   
   def setProjectDefaults(id = nil)
