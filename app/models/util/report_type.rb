@@ -97,7 +97,8 @@ class AutoStartType < StartStopType
     if ! worktime.from_start_time
       worktime.errors.add(:from_start_time, 'Die Anfangszeit ist ung&uuml;ltig') 
     end
-    if worktime.employee.auto_start_time
+    existing = worktime.employee.auto_start_time 
+    if existing && existing != worktime
       worktime.errors.add(:employee_id, 'Es wurde bereits eine offene Anwesenheit erfasst')
     end
   end
