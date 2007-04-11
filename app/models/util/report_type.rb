@@ -53,7 +53,7 @@ public
 end
 
 class StartStopType < ReportType
-  INSTANCE = self.new 'start_stop_day', 'Start/Stop Zeit', 10
+  INSTANCE = self.new 'start_stop_day', 'Von/Bis Zeit', 10
   START_STOP = true
   
   def timeString(worktime)
@@ -83,15 +83,22 @@ class StartStopType < ReportType
 end 
 
 class AutoStartType < StartStopType
-  INSTANCE = self.new 'auto_start', 'Auto Start', 12
+  INSTANCE = self.new 'auto_start', 'Von/Bis offen', 12
   
   def timeString(worktime)
     'Start um ' + worktime.from_start_time.strftime(TIME_FORMAT)
   end
   
   def validate_worktime(worktime)
+    # set defaults
+    worktime.work_date = Date.today
+    worktime.to_end_time = nil
+    # validate
     if ! worktime.from_start_time
       worktime.errors.add(:from_start_time, 'Die Anfangszeit ist ung&uuml;ltig') 
+    end
+    if worktime.employee.auto_start_time
+      worktime.errors.add(:employee_id, 'Es wurde bereits eine offene Anwesenheit erfasst')
     end
   end
 end

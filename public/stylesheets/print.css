@@ -39,3 +39,8 @@ th {
     padding-bottom: 20px;
     white-space:    nowrap;
 }
+
+.date {
+    text-align:     right;
+    font-size:      13px;
+}

@@ -21,6 +21,9 @@ end
   <%= stylesheet_link_tag 'print', :media => 'all' %>
 </head>
 <body>
+<div class="date">
+<%= format_date Date.today %>
+</div>
 <h1><%= @title %></h1>
 <table>
 <tr>

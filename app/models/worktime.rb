@@ -16,27 +16,26 @@ class Worktime < ActiveRecord::Base
   before_validation :store_hours
     
   H_M = /^(\d*):([0-5]\d)/
-      
+
+  ###############  ACCESSORS  ##################
+  
+  # account this worktime is booked for.
+  # defined in subclasses, either Project or Absence    
   def account
     nil
   end
   
+  # account id, default nil
   def account_id
-    nil
   end
   
-  def account_id=(value)
-    
+  # sets the account id.
+  # overwrite in subclass
+  def account_id=(value)    
   end
   
-  def self.account_label
-    ''
-  end
-  
-  def self.label
-    'Arbeitszeit'
-  end
-  
+  # set the hours, either as number or as a string with the format
+  # h:mm or h.dd (4:45 <-> 4.75)
   def hours=(value)
     if md = H_M.match(value.to_s)
       value = md[1].to_i + md[2].to_i / 60.0
@@ -44,22 +43,43 @@ class Worktime < ActiveRecord::Base
     write_attribute 'hours', value.to_f
   end
   
+  # set the start time, either as number or as a string with the format
+  # h:mm or h.dd (8:45 <-> 8.75)
   def from_start_time=(value)
     write_converted_time 'from_start_time', value
   end
   
+  # set the end time, either as number or as a string with the format
+  # h:mm or h.dd (8:45 <-> 8.75)
   def to_end_time=(value)
     write_converted_time 'to_end_time', value
   end
+    
+  # Returns a human readable String of the time information contained in this Worktime.  
+  def timeString
+    report_type.timeString(self)
+  end
       
+  ###################  TESTS  ####################    
+      
+  # Whether this Worktime is for an absence or not
   def absence?
     false
   end
   
+  # Whether the report typ of this Worktime contains start and stop times
   def startStop?
     report_type.startStop?
   end
   
+  # Whether this Worktime contains the passed attribute
+  def hasAttribute?(attr)
+    self.class.validAttributes.include? attr
+  end
+  
+  ##################  HELPERS  ####################
+  
+  # Returns a copy of this Worktime with default values set
   def template(newWorktime = nil)
     newWorktime ||= self.class.new
     newWorktime.from_start_time = Time.now.change(:hour => 8)
@@ -71,26 +91,54 @@ class Worktime < ActiveRecord::Base
     return newWorktime
   end
   
+  # Copies the report_type and the time information from an other Worktime
   def copyTimesFrom(other)
     self.report_type = other.report_type
     other.report_type.copy_times(other, self)
   end
-  
-  def timeString
-    report_type.timeString(self)
-  end
-    
+
+  # Validate callback before saving  
   def validate
     report_type.validate_worktime self
-    project.validate_worktime self if project_id
   end
   
+  # Store hour information from start/stop times.
   def store_hours
     if startStop? && from_start_time && to_end_time
       self.hours = (to_end_time.seconds_since_midnight - from_start_time.seconds_since_midnight) / 3600.0
     end
+    self.work_date ||= Date.today
+  end
+  
+  # Name of the corresponding controller
+  def controller
+    self.class.name.downcase
+  end
+  
+  ##################  CLASS METHODS   ######################  
+  
+  # Returns an Array of the valid report types for this Worktime
+  def report_types
+    ReportType::INSTANCES
+  end
+  
+  # Returns an Array of the valid attributes for this Worktime
+  def self.validAttributes
+    [:work_date, :hours, :from_start_time, :to_end_time, :employee_id, :report_type]
+  end
+    
+  # label for the account class
+  # overwrite in subclass
+  def self.account_label
+    ''
+  end
+  
+  # label for this worktime class
+  def self.label
+    'Arbeitszeit'
   end
 
+  # Sums all Worktimes for a given period
   def self.sumWorktime(period, absences)
     condArray = [ (absences ? 'absence_id' : 'project_id') + ' IS NOT NULL ' ]
     if period
@@ -98,10 +146,6 @@ class Worktime < ActiveRecord::Base
       condArray.push period.startDate, period.endDate
     end
     self.sum(:hours, :conditions => condArray).to_f
-  end
-  
-  def controller
-    self.class.name.downcase
   end
   
 private

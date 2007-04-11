@@ -1,12 +1,23 @@
 <script type="text/javascript">
   function switchvisibility() {
     var type = document.getElementById("worktime_report_type").value;
+    document.getElementById("worktime_work_date").disabled = false;
+    document.getElementById("worktime_work_date_calendar").style.visibility = "visible";
     
     switch(type) {
-     case "start_stop_day":
-    	document.getElementById("worktime_hours").disabled = true;
+     case "auto_start":
+        document.getElementById("worktime_work_date").disabled = true;    
+        document.getElementById("worktime_work_date").value = "<%= @worktime.work_date.strftime(DATE_FORMAT) %>";
+        document.getElementById("worktime_work_date_calendar").style.visibility = "hidden";
+        document.getElementById("worktime_hours").disabled = true;
     	document.getElementById("worktime_from_start_time").disabled = false;
-    	document.getElementById("worktime_to_end_time").disabled = false;
+        document.getElementById("worktime_to_end_time").disabled = true;
+        break; 
+        
+     case "start_stop_day":        
+       	document.getElementById("worktime_hours").disabled = true;
+    	document.getElementById("worktime_from_start_time").disabled = false;
+    	document.getElementById("worktime_to_end_time").disabled = false;     
     	break;
      
      default:

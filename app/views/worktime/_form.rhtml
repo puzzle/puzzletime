@@ -7,7 +7,7 @@
   <td>Reporttyp: </td>
   <td><%= select_report_type %> </td>
 </tr>
-<% if @accounts -%>
+<% if @worktime.hasAttribute? :account_id -%>
 <tr>
   <td><%= @worktime.class.account_label %></td>
   <td><%= collection_select( :worktime, :account_id, @accounts, :id, :label_verbose) %></td>
@@ -22,7 +22,7 @@
   <td><%= text_field('worktime', 'hours', :disabled => true, :size => '15')  %></td>
 </tr>
 <tr>
-  <td>Anfangszeit: </td>
+  <td>Von: </td>
   <td>     
   <%= text_field 'worktime', 
                  'from_start_time', 
@@ -31,7 +31,7 @@
   </td>
 </tr>
 <tr>
-  <td>Endzeit: </td>
+  <td>Bis: </td>
   <td>
   <%= text_field 'worktime', 
                  'to_end_time', 
@@ -39,23 +39,23 @@
                  :value => format_time(@worktime.to_end_time)  %> 
    </td>
 </tr>
-<% if @accounts -%>
+<% if @worktime.hasAttribute? :description -%>
 <tr valign="top">
   <td>Beschreibung: </td>
   <td><%= text_area 'worktime', 'description', {:rows => 5} %></td>
 </tr>
-<% if @worktime.kind_of? Projecttime -%>
+<% end -%>
+<% if @worktime.hasAttribute? :billable -%>
 <tr>
     <td>Verrechenbar: </td>
     <td><%= check_box 'worktime', 'billable' %></td>
 </tr>
-<% if ['add', 'create', 'stop'].include? params[:action] -%>
+<% end -%>
+<% if @worktime.hasAttribute?(:attendance) && @worktime.new_record? -%>
 <tr>
     <td>Anwesenheitszeit: </td>
     <td><%= check_box 'worktime', 'attendance' %></td>
 </tr>
-<% end -%>
-<% end -%>
 <% end -%>
 <tr>
    <td></td>

@@ -15,7 +15,7 @@ class Projecttime < Worktime
   end
   
   def attendance=(value)
-    @attendance = value.to_i != 0
+    @attendance = value.kind_of?(String) ? value.to_i != 0 : value
   end
   
   def setProjectDefaults(id = nil)
@@ -23,6 +23,15 @@ class Projecttime < Worktime
     self.project_id = id
     self.report_type = project.report_type if report_type < project.report_type
     self.billable = project.billable
+  end
+  
+  def self.validAttributes
+    super + [:account, :account_id, :description, :billable, :attendance]
+  end   
+      
+  def validate
+    super    
+    project.validate_worktime self
   end
   
   def self.account_label

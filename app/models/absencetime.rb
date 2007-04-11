@@ -23,8 +23,11 @@ class Absencetime < Worktime
     'Absenz'
   end
   
+  def self.validAttributes
+    super + [:account, :account_id, :description]
+  end 
+      
   def billable
     false
   end
-  
 end

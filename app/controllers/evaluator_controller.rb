@@ -18,36 +18,21 @@ class EvaluatorController < ApplicationController
   def overview
     params[:evaluation] = params[:action] if ! params[:evaluation]
     setEvaluation
-    
-    # set session evaluation levels
-    session[:evalLevels] = Array.new if params[:clear]
-    levels = session[:evalLevels]
-    current = [@evaluation, params[:evaluation]]
-    levels.pop while params[:up] && levels.last != current
-    levels.push current if levels.last != current
-    
+    setNavigationLevels
     render :action => (params[:evaluation] =~ /^user/ ? 'userOverview' : 'overview' )
   end
   
   def details  
     setEvaluation
-    @evaluation.set_division_id(params[:division_id])    
-    if params[:start_date] != nil
-      @period = params[:start_date] == "0" ? nil :
-                   Period.new(Date.parse(params[:start_date]), Date.parse(params[:end_date]))     
-    end
-    
-    @time_pages = Paginator.new self, @evaluation.count_times(@period), NO_OF_DETAIL_ROWS, params[:page]
-    @times = @evaluation.times(@period, 
-                               :limit => @time_pages.items_per_page,
-                               :offset => @time_pages.current.offset)                               
+    setNavigationLevels
+    setDetailVariables                            
   end
   
   def attendanceDetails
-    eval = params[:evaluation]
-    params[:evaluation] = 'attendance'
-    details    
-    params[:evaluation] = eval
+    setEvaluation
+    setNavigationLevels
+    @evaluation = AttendanceEval.new(params[:category_id] || @user.id)
+    setDetailVariables
     render :action => 'details' 
   end
     
@@ -164,6 +149,27 @@ private
     if @evaluation.nil?
       @evaluation = EmployeeProjectsEval.new(@user.id)
     end 
+  end
+  
+  def setNavigationLevels
+      # set session evaluation levels
+    session[:evalLevels] = Array.new if params[:clear]
+    levels = session[:evalLevels]
+    current = [@evaluation, params[:evaluation]]
+    levels.pop while params[:up] && levels.last != current
+    levels.push current if levels.last != current
+  end
+  
+  def setDetailVariables
+    @evaluation.set_division_id(params[:division_id])    
+    if params[:start_date] != nil
+      @period = params[:start_date] == "0" ? nil :
+                   Period.new(Date.parse(params[:start_date]), Date.parse(params[:end_date]))     
+    end    
+    @time_pages = Paginator.new self, @evaluation.count_times(@period), NO_OF_DETAIL_ROWS, params[:page]
+    @times = @evaluation.times(@period, 
+                               :limit => @time_pages.items_per_page,
+                               :offset => @time_pages.current.offset)  
   end
   
   def setPeriod
