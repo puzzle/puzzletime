@@ -4,7 +4,9 @@ class AttendancetimeController < WorktimeController
          :only => [ :autoStartStop, :startNow, :endNow ],
          :redirect_to => { :action => :list }
          
-  before_filter :authenticate, :except => [:autoStartStop]      
+  before_filter :authenticate, :except => [:autoStartStop] 
+  
+  SPLIT = 'Aufteilen'     
            
   def autoStartStop
     @user = Employee.login(params[:user], params[:pwd])
@@ -30,10 +32,16 @@ class AttendancetimeController < WorktimeController
   def stop
     return if autoStartExists(false, "Keine offene Anwesenheit vorhanden")
     attendance = stopAttendance
-    if attendance then addProjecttimeFrom attendance
+    if attendance then splitAttendance attendance
     else list
     end
   end  
+  
+  def splitAttendance(attendance = nil)
+    attendance ||= setWorktime
+    session[:split] = AttendanceSplit.new(attendance)
+    redirect_to evaluation_detail_params.merge!({:action => 'split'})
+  end
   
   def detailAction
     'attendanceDetails'
@@ -87,17 +95,10 @@ protected
     @user.auto_start_time(true) 
     attendance
   end
-  
-  def addProjecttimeFrom(attendance)
-    @worktime = attendance.template Projecttime.new
-    @worktime.copyTimesFrom attendance
-    @accounts = @user.projects
-    renderGeneric :action => 'add'
-  end
 
-  def processAfterCreate
-    if params[:commit] == 'Aufteilen'
-      addProjecttimeFrom @worktime
+  def processAfterSave
+    if params[:commit] == SPLIT
+      splitAttendance @worktime
       return false
     end  
     true

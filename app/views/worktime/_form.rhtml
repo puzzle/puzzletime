@@ -51,7 +51,9 @@
     <td><%= check_box 'worktime', 'billable' %></td>
 </tr>
 <% end -%>
-<% if @worktime.hasAttribute?(:attendance) && @worktime.new_record? -%>
+<% if @worktime.hasAttribute?(:attendance) &&
+      @worktime.new_record? && 
+      ! defined?(@split) -%>
 <tr>
     <td>Anwesenheitszeit: </td>
     <td><%= check_box 'worktime', 'attendance' %></td>

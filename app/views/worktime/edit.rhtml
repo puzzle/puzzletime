@@ -1,13 +1,18 @@
-<% @title = "#{@worktime.class.label} bearbeiten" %>
+<% @title = "#{@worktime.class.label} bearbeiten" 
+   buttons = nil
+   buttons = ['Speichern', AttendancetimeController::SPLIT] if @worktime.kind_of? Attendancetime
+-%>
 
 <% form_tag evaluation_detail_params.merge!({                        
                         :action => 'update', 
                         :id => @worktime}) do %>                
-<%= renderGenericPartial :partial => 'form' %>
+<%= renderGenericPartial :partial => 'form', 
+                         :locals => {:submit => buttons} %>
 <% end %>
 
 <p>
-<%= link_to 'Arbeitszeiten', evaluation_detail_params.merge!({
-                        :controller => 'evaluator',
-                        :action => controller.detailAction }) %>
+<%= link_to 'Arbeitszeiten', 
+            evaluation_detail_params.merge!({
+                :controller => 'evaluator',
+                :action => controller.detailAction }) %>
 </p>

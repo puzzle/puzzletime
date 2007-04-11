@@ -1,0 +1,34 @@
+<% @title = @split.page_title -%>
+
+<h3><%= @split.original.timeString %>  
+am <%= format_date(@split.original.work_date) %>:</h3>
+
+<table cellpadding="0">
+<%= renderGenericPartial :partial => 'part', :collection => @split.worktimes %>
+</table>
+
+<p>Die Zeiten wurden noch nicht gespeichert. Bitte schliessen sie dazu den Aufteilungsprozess ab.</p>
+
+<% form_tag evaluation_detail_params.merge!({     
+                        :controller => @worktime.class.name,                   
+                        :action => 'createPart', 
+                        :id => @worktime}) do -%>
+<%= renderGenericPartial :partial => 'form', 
+           :locals => {:submit => @split.class::SUBMIT_BUTTONS} %>
+<% end -%>
+
+<p>
+<% 
+options = evaluation_detail_params
+if params[:evaluation]
+  options[:controller] = 'evaluator'
+  options[:action] = controller.detailAction
+else
+  options[:action] = 'list'
+end
+-%>
+<%= link_to 'Arbeitszeiten', 
+            options,
+            {:onclick => "return confirm('Alle Änderungen an dieser Aufteilung gehen dabei verloren!');"} %>                      
+</p>                       
+

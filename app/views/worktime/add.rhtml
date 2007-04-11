@@ -1,12 +1,12 @@
 <% @title = "Neue #{@worktime.class.label}"
    buttons = ['Speichern und weiter erfassen', WorktimeController::FINISH]
-   buttons.insert 1, 'Aufteilen' if @worktime.kind_of? Attendancetime
+   buttons.insert 1, AttendancetimeController::SPLIT if @worktime.kind_of? Attendancetime
  -%>
 
 <% form_tag :controller => @worktime.class.name, 
             :action => 'create' do -%>
 <%= renderGenericPartial :partial => 'form', 
-           :locals => {:submit => buttons} %>
+                         :locals => {:submit => buttons} %>
 <% end -%>
 
 <p><%= link_to '&Uuml;bersicht', 

@@ -14,7 +14,7 @@ protected
     @accounts = @worktime.employee.projects 
   end  
   
-  def processAfterCreate
+  def processAfterSave
     if @worktime.attendance
       attendance = @worktime.template Attendancetime.new
       attendance.employee_id = @worktime.employee_id

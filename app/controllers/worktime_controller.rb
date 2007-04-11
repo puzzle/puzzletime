@@ -9,8 +9,8 @@ class WorktimeController < ApplicationController
   before_filter :authenticate
 
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
-  verify :method => :post, :only => [ :delete, :create, :update ],
-         :redirect_to => { :action => :list }
+  verify :method => :post, :only => [ :delete, :create, :update, :createPart, :deletePart ],
+         :redirect_to => { :action => 'list' }
          
   hide_action :detailAction                
          
@@ -39,22 +39,13 @@ class WorktimeController < ApplicationController
     setWorktimeParams
     if @worktime.save      
       flash[:notice] = 'Die Arbeitszeit wurde erfasst'
-      return if ! processAfterCreate
+      return if ! processAfterSave
       if params[:commit] != FINISH        
         @worktime = @worktime.template
         setAccounts
         renderGeneric :action => 'add'
       else
-        options = { :controller => 'evaluator', 
-                    :action     => detailAction, 
-                    :evaluation => userEvaluation,
-                    :clear => 1 }
-        if session[:period].nil? || ! session[:period].include?(@worktime.work_date)
-          period = Period.weekFor(@worktime.work_date)
-          options[:start_date] = period.startDate
-          options[:end_date] = period.endDate
-        end
-        redirect_to options 
+        listDetailTime
       end
     else
       setAccounts
@@ -72,11 +63,16 @@ class WorktimeController < ApplicationController
   # Update the selected worktime on DB.
   def update  
     setWorktime
-    session[:edit] = nil
-    return createWorktimeEdit if @worktime.employee != @user
+    if @worktime.employee != @user
+      return listDetailTime if @worktime.absence?
+      session[:split] = WorktimeEdit.new(@worktime.clone)
+      createPart
+      return
+    end
     setWorktimeParams
     if @worktime.save
       flash[:notice] = 'Die Arbeitszeit wurde aktualisiert'
+      return if ! processAfterSave
       redirect_to evaluation_detail_params.merge!({
                         :controller => 'evaluator',
                         :action => detailAction }) 
@@ -86,35 +82,6 @@ class WorktimeController < ApplicationController
     end  
   end
   
-  def createWorktimeEdit
-    @edit = session[:edit]
-    if @edit.nil?
-      setWorktime
-      @edit = WorktimeEdit.new(@worktime.clone)
-    else  
-      @worktime = @edit.worktimeTemplate
-    end    
-    setWorktimeParams
-    if @worktime.valid?
-      if @edit.addWorktime(@worktime)
-        if @edit.incomplete?
-          session[:edit] = @edit
-          @worktime = @edit.worktimeTemplate
-        else
-          @edit.save
-          session[:edit] = nil
-          flash[:notice] = 'Die Arbeitszeit wurde angepasst'
-          redirect_to evaluation_detail_params.merge!({
-                        :controller => 'evaluator',
-                        :action => detailAction }) 
-          return              
-        end
-      end  
-    end
-    @accounts = @worktime.employee.projects 
-    renderGeneric :action => 'worktimeEdit'
-  end
- 
   def confirmDelete
     setWorktime
     renderGeneric :action => 'confirmDelete'   
@@ -132,6 +99,41 @@ class WorktimeController < ApplicationController
   def view
     setWorktime
     renderGeneric :action => 'view'
+  end  
+  
+  def split
+    @split = session[:split]
+    redirect_to :controller => 'projecttime', :action => 'add' if @split.nil?
+    @worktime = @split.worktimeTemplate
+    @accounts = @worktime.employee.projects
+    renderGeneric :action => 'split'
+  end
+  
+  def createPart
+    @split = session[:split]
+    setNewWorktime 
+    setWorktime if params[:id]
+    @worktime.employee = @user
+    setWorktimeParams
+    if @worktime.valid? && @split.addWorktime(@worktime)   
+      if @split.complete? || (params[:commit] == FINISH && @split.class::INCOMPLETE_FINISH)
+        @split.save
+        session[:split] = nil
+        flash[:notice] = 'Alle Arbeitszeiten wurden erfasst'
+        listDetailTime
+      else
+        session[:split] = @split
+        redirect_to evaluation_detail_params.merge!({:action => 'split'})
+      end     
+    else
+      @accounts = @worktime.employee.projects
+      renderGeneric :action => 'split'
+    end         
+  end
+  
+  def deletePart
+    session[:split].removeWorktime(params[:part_id].to_i)
+    redirect_to evaluation_detail_params.merge!({:action => 'split'})
   end  
 
   # no action, may overwrite in subclass
@@ -165,6 +167,22 @@ protected
     end
   end
   
+  def listDetailTime
+    options = evaluation_detail_params
+    options[:controller] = 'evaluator'
+    options[:action] = detailAction
+    if params[:evaluation].nil? 
+      options[:evaluation] = userEvaluation
+      options[:clear] = 1
+      if session[:period].nil? || ! session[:period].include?(@worktime.work_date)
+        period = Period.weekFor(@worktime.work_date)
+        options[:start_date] = period.startDate
+        options[:end_date] = period.endDate
+      end  
+    end
+    redirect_to options 
+  end
+  
   def setWorktime
     @worktime = Worktime.find(params[:id])
   end
@@ -191,7 +209,7 @@ protected
   
   # may overwrite in subclass
   # return whether normal proceeding should continue or another action was taken
-  def processAfterCreate
+  def processAfterSave
     true
   end
   

@@ -1,0 +1,14 @@
+ <%= alternate_row %>
+    <td align="right"><%= number_with_precision(part.hours, 2) %> h</td> 
+    <td>f&uuml;r <%= part.account.label %></td>
+    <td><%= part.description.slice(0..50) %></td>
+    <td>
+    <% if part.new_record? -%>
+    <%= link_to 'l&ouml;schen...', 
+            {:action => 'deletePart',
+             :part_id => part_counter}, 
+            {:confirm => 'Wollen sie diese Arbeitszeit wirklich entfernen?',
+             :method => 'post' } %>
+    <% end -%>         
+    </td>
+ </tr>

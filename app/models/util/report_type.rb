@@ -92,6 +92,7 @@ class AutoStartType < StartStopType
   def validate_worktime(worktime)
     # set defaults
     worktime.work_date = Date.today
+    worktime.hours = 0
     worktime.to_end_time = nil
     # validate
     if ! worktime.from_start_time

@@ -1,5 +1,8 @@
 class Splitable
 
+  INCOMPLETE_FINISH = true
+  SUBMIT_BUTTONS = nil
+
   attr_reader :original, :worktimes
   
   def initialize(original)
@@ -12,23 +15,27 @@ class Splitable
   end
   
   def removeWorktime(index)
-    @worktimes.delete_at(index)
+    @worktimes.delete_at(index) if @worktimes[index].new_record?
   end
 
   def worktimeTemplate
-    worktime = lastWorktime.template
+    worktime = lastWorktime.template Projecttime.new
     worktime.hours = remainingHours
     worktime.from_start_time = nextStartTime
     worktime.to_end_time = original.to_end_time
-    return worktime
+    worktime
   end
     
-  def incomplete?
-    remainingHours > 0.00001     # we are working with floats: use delta
+  def complete?
+    remainingHours < 0.00001     # we are working with floats: use delta
   end
   
   def save
     worktimes.each { |wtime|  wtime.save }
+  end
+  
+  def page_title
+    'Aufteilen'
   end
   
 protected
