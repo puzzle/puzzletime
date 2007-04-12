@@ -36,7 +36,7 @@ class Worktime < ActiveRecord::Base
   end
   
   # set the hours, either as number or as a string with the format
-  # h:mm or h.dd (4:45 <-> 4.75)
+  # h:mm or h.dd (8:45 <-> 8.75)
   def hours=(value)
     if md = H_M.match(value.to_s)
       value = md[1].to_i + md[2].to_i / 60.0
@@ -151,7 +151,13 @@ private
     value = value.change(:sec => 0) if value.kind_of? Time
     if value.kind_of?(String) && ! (value =~ H_M) 
       if value.size > 0 && value =~ /^\d*\.?\d*$/
-        value = value.to_i.to_s + ':' + ((value.to_f - value.to_i) * 60).to_i.to_s
+        # military time: 1400
+        if value.size > 2 && ! value.include?(?.)
+          hour = value.to_i / 100
+          value = hour.to_s + ':' + (value.to_i - hour * 100).to_s
+        else
+          value = value.to_i.to_s + ':' + ((value.to_f - value.to_i) * 60).to_i.to_s
+        end  
       else
         value = nil
       end    
