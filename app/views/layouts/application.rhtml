@@ -46,11 +46,14 @@
                  :controller => 'evaluator', 
                  :action => 'overtime',
                  :clear => 1 %></li>
-        <% end -%>
         <li><%= link_to 'Absenzen', 
                  :controller => 'evaluator',
                  :action => 'absences',
-                 :clear => 1 %></li>
+                 :clear => 1 %></li>         
+        <% end -%>
+        <li><%= link_to 'Abwesenheiten', 
+                 :controller => 'evaluator',
+                 :action => 'absencedetails' %></li>
         <% if @user.management || @user.projectManager? -%>         
 		<li><%= link_to 'Verwalten', 
 		         :controller => 'project' %></li>         

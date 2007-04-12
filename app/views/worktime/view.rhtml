@@ -5,13 +5,16 @@
   <tr>
     <td></td>
     <td>
-    <strong>    
+    <strong>   
+    <% if @worktime.employee == @user || 
+          (@user.management && @worktime.project_id) -%>   
     <%= link_to 'Bearbeiten', 
                 evaluation_detail_params.merge!({
                     :controller => @worktime.controller, 
                     :action =>'edit', 
-                    :id => @worktime.id}) %>
+                    :id => @worktime.id}) %>             
     &nbsp;    
+    <% end %>   
     <% if @worktime.employee == @user -%>         
     <%= link_to 'L&ouml;schen', 
                 evaluation_detail_params.merge!({

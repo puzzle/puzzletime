@@ -1,8 +1,6 @@
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz
 
-require 'fastercsv'
-
 class EvaluatorController < ApplicationController
  
   # Checks if employee came from login or from direct url.
@@ -16,69 +14,73 @@ class EvaluatorController < ApplicationController
   end
   
   def overview
-    params[:evaluation] = params[:action] if ! params[:evaluation]
     setEvaluation
     setNavigationLevels
     render :action => (params[:evaluation] =~ /^user/ ? 'userOverview' : 'overview' )
   end
   
   def details  
+    redirect_to :action => 'absencedetails' if params[:evaluation] == 'absencedetails'
     setEvaluation
     setNavigationLevels
-    setDetailVariables                            
+    setEvaluationDetails
+    paginateTimes                          
   end
   
   def attendanceDetails
     setEvaluation
     setNavigationLevels
     @evaluation = AttendanceEval.new(params[:category_id] || @user.id)
-    setDetailVariables
+    setEvaluationDetails
+    paginateTimes
     render :action => 'details' 
   end
     
   # Shows overtimes of employees
   def overtime
+    session[:evalLevels] = Array.new
     @employees = Employee.list
   end
   
+  def absencedetails
+    session[:evalLevels] = Array.new
+    params[:evaluation] = 'absencedetails'
+    setEvaluation
+    @period ||= Period.comingMonth Date.today, 'Kommender Monat'
+    paginateTimes
+  end
+  
+  ########################  DETAIL ACTIONS  #########################
+  
   def report
     setEvaluation
-    @evaluation.set_division_id(params[:division_id])
-    if params[:start_date] != nil
-      @period = params[:start_date] == "0" ? nil :
-                   Period.new(Date.parse(params[:start_date]), Date.parse(params[:end_date]))     
-    end
+    setEvaluationDetails
     @times = @evaluation.times(@period)
     render :layout => false
   end
   
   def exportCSV
     setEvaluation
-    @evaluation.set_division_id(params[:division_id])
-
+    setEvaluationDetails
     filename = "puzzletime_" + csvLabel(@evaluation.category) + "-" +
                csvLabel(@evaluation.division) + ".csv"
     setExportHeader(filename)
-    
-    csv_string = FasterCSV.generate do |csv|
-      csv << ["Datum", "Stunden", "Start Zeit", "End Zeit", "Reporttyp",
-              "Verrechenbar", "Mitarbeiter", "Projekt", "Beschreibung"]
-      @evaluation.times(@period).each do |time|
-        csv << [ time.work_date.strftime(DATE_FORMAT),
-                 time.hours,
-                 (time.startStop? ? time.from_start_time.strftime("%H:%M") : ''),
-                 (time.startStop? ? time.to_end_time.strftime("%H:%M") : ''),
-                 time.report_type,
-                 time.billable,
-                 time.employee.label,
-                 (time.account ? time.account.label : 'Anwesenheitszeit'),
-                 time.description ]
-      end
-    end 
-    send_data(csv_string,
+    send_data(@evaluation.csvString(@period),
               :type => 'text/csv; charset=utf-8; header=present',
               :filename => filename)  
   end
+    
+  ######################  OVERVIEW ACTIONS  #####################3
+
+  def completeProject
+    pm = @user.projectmemberships.find(:first, 
+            :conditions => ["project_id = ?", params[:project_id]])
+    pm.update_attributes(:last_completed => Date.today)
+    flash[:notice] = "Das Datum der kompletten Erfassung aller Zeiten für das Projekt #{pm.project.label_verbose} wurde aktualisiert."
+    redirectToOverview
+  end
+  
+  ########################  PERIOD ACTIONS  #########################
   
   def selectPeriod
     @period = Period.new()
@@ -86,8 +88,7 @@ class EvaluatorController < ApplicationController
   
   def currentPeriod
     session[:period] = nil
-    redirect_to :action => params[:evaluation],
-                :category_id => params[:category_id]
+    redirectToOverview
   end
   
   def changePeriod
@@ -96,28 +97,18 @@ class EvaluatorController < ApplicationController
                          params[:period][:label])  
     raise ArgumentError, "Start Datum nach End Datum" if @period.negative?   
     session[:period] = @period  
-    redirect_to :action => params[:evaluation],
-                :category_id => params[:category_id]              
-  rescue ArgumentError => ex
+    redirectToOverview             
+  rescue ArgumentError => ex        # ArgumentError from Period.new or if period.negative?
     flash[:notice] = "Ung&uuml;ltige Zeitspanne: " + ex
     redirect_to :action => :selectPeriod, 
                 :evaluation => params[:evaluation],
                 :category_id => params[:category_id]      
   end
-
-  def completeProject
-    pm = @user.projectmemberships.find(:first, 
-            :conditions => ["project_id = ?", params[:project_id]])
-    pm.update_attributes(:last_completed => Date.today)
-    flash[:notice] = "Das Datum der kompletten Erfassung aller Zeiten für das Projekt #{pm.project.label_verbose} wurde aktualisiert."
-    redirect_to :action => params[:evaluation], 
-                :category_id => params[:category_id]
+  
+  def calendar  
   end
   
-  def calendar
-  
-  end
-  
+  # Dispatches evaluation names used as actions
   def method_missing(action, *args)
     params[:evaluation] = action.to_s
     overview
@@ -126,10 +117,11 @@ class EvaluatorController < ApplicationController
 private  
 
   def setEvaluation
+    params[:evaluation] ||= 'userprojects'
     @evaluation = case params[:evaluation].downcase
         when 'managed' then ManagedProjectsEval.new(@user)
         when 'managedabsences' then ManagedAbsencesEval.new(@user)
-        when 'absences' then AbsencesEval.new
+        when 'absencedetails' then AbsenceDetailsEval.new
         when 'userprojects' then EmployeeProjectsEval.new(@user.id)
         when 'userabsences' then EmployeeAbsencesEval.new(@user.id)        
         when 'projectemployees' then ProjectEmployeesEval.new(params[:category_id])
@@ -141,14 +133,23 @@ private
         when 'clients' then ClientsEval.new
         when 'employees' then EmployeesEval.new
         when 'clientprojects' then ClientProjectsEval.new(params[:category_id])
-        when 'employeeprojects' then EmployeeProjectsEval.new(params[:category_id])
-        when 'employeeabsences' then EmployeeAbsencesEval.new(params[:category_id])
+        when 'employeeprojects' then EmployeeProjectsEval.new(params[:category_id])  
+        when 'absences' then AbsencesEval.new
+        when 'employeeabsences' then EmployeeAbsencesEval.new(params[:category_id])      
         else nil
         end  
     end
     if @evaluation.nil?
       @evaluation = EmployeeProjectsEval.new(@user.id)
     end 
+  end
+  
+  def setEvaluationDetails
+    @evaluation.set_division_id(params[:division_id])    
+    if params[:start_date] != nil
+      @period = params[:start_date] == "0" ? nil :
+                   Period.new(Date.parse(params[:start_date]), Date.parse(params[:end_date]))     
+    end     
   end
   
   def setNavigationLevels
@@ -160,16 +161,11 @@ private
     levels.push current if levels.last != current
   end
   
-  def setDetailVariables
-    @evaluation.set_division_id(params[:division_id])    
-    if params[:start_date] != nil
-      @period = params[:start_date] == "0" ? nil :
-                   Period.new(Date.parse(params[:start_date]), Date.parse(params[:end_date]))     
-    end    
+  def paginateTimes
     @time_pages = Paginator.new self, @evaluation.count_times(@period), NO_OF_DETAIL_ROWS, params[:page]
     @times = @evaluation.times(@period, 
                                :limit => @time_pages.items_per_page,
-                               :offset => @time_pages.current.offset)  
+                               :offset => @time_pages.current.offset) 
   end
   
   def setPeriod
@@ -187,6 +183,11 @@ private
       headers['Content-Type'] ||= 'text/csv'
       headers['Content-Disposition'] = "attachment; filename=\"#{filename}\""
     end
+  end
+  
+  def redirectToOverview
+    redirect_to :action => params[:evaluation],
+                :category_id => params[:category_id]
   end
   
   def csvLabel(item)

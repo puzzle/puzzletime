@@ -89,19 +89,20 @@ class Employee < ActiveRecord::Base
   def label
     lastname + " " + firstname
   end  
-  
-  def self.sumWorktime(evaluation, period, categoryRef = false, options = {})
-    Worktime.sumWorktime period, evaluation.absences?
+
+  def self.method_missing(symbol, *args)
+    case symbol
+      when :sumWorktime, :countWorktimes, :findWorktimes : Worktime.send(symbol, *args) 
+      else super
+      end
   end
   
   def sumAttendance(period = nil, options = {})
-    options[:conditions] = [ "work_date BETWEEN ? AND ?", period.startDate, period.endDate ] if period
-    attendancetimes.sum(:hours, options).to_f
+    self.class.sumAttendanceFor attendancetimes, period, options
   end
   
    def self.sumAttendance(period = nil, options = {})
-    options[:conditions] = [ "work_date BETWEEN ? AND ?", period.startDate, period.endDate ] if period
-    Attendancetime.sum(:hours, options).to_f
+    sumAttendanceFor Attendancetime, period, options
   end
   
   ##### helper methods #####
@@ -255,6 +256,11 @@ private
     Net::LDAP.new :host => LDAP_HOST, 
                   :port => LDAP_PORT, 
                   :encryption => :simple_tls  
+  end
+  
+  def self.sumAttendanceFor(receiver, period = nil, options = {})
+    options[:conditions] = [ "work_date BETWEEN ? AND ?", period.startDate, period.endDate ] if period
+    receiver.sum(:hours, options).to_f
   end
   
 end

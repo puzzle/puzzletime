@@ -1,3 +1,6 @@
+
+require 'fastercsv'
+
 # An Evaluation gives an overview of the worktimes reported to the system.
 # It provides the sum of all Worktimes for a category, split up into several divisions.
 # The detailed Worktimes may be inspected for the whole category or a certain division only.
@@ -27,6 +30,18 @@ class Evaluation
   # The field of a division referencing the category entry in the database. 
   # May be nil if not required for this Evaluation (default).
   CATEGORY_REF     = nil          
+  
+  # Columns to display in the detail view
+  DETAIL_COLUMNS   = [:work_date, :hours, :employee, :account, :billable, :description]
+  
+  # Table captions for detail columns
+  DETAIL_LABELS    = {:work_date   => 'Datum',
+                      :hours       => 'Stunden',
+                      :times       => 'Zeiten',
+                      :employee    => 'Wer',
+                      :account     => 'Projekt',
+                      :billable    => '$',
+                      :description => 'Beschreibung'}
   
   
   attr_reader :category,             # category              
@@ -95,9 +110,10 @@ class Evaluation
     divs.first ? divs.first.class.label : ''
   end
  
-  # Returns an Array of helper methods of the evaluator to be called in 
-  # the overview (_division.rhtml) for each division. May be used for 
-  # displaying additional information or links to certain actions.
+  # Returns a two-dimensional Array with helper methods of the evaluator
+  # to be called in the overview (_division.rhtml) for each division 
+  # and the according table headers. May be used for displaying additional 
+  # information or links to certain actions.
   # No methods are called by default.
   # See EmployeeProjectsEval for an example.
   def division_supplement(user)
@@ -134,11 +150,37 @@ class Evaluation
   def division_label
     detail_label(division)
   end
+    
+  def editLink?(user)
+    for?(user) || ! absences?
+  end
   
-  # Label for either Absence or Project, depending on what this Evaluation is for.
-  def account
-    absences? ? 'Absenz' : 'Projekt'
-  end 
+  def deleteLink?(user)
+    for? user
+  end
+  
+  def splitLink?(user)
+    false
+  end
+  
+  # Returns a CSV String for all times in this Evaluation
+  def csvString(period)
+    FasterCSV.generate do |csv|
+      csv << ["Datum", "Stunden", "Start Zeit", "End Zeit", "Reporttyp",
+              "Verrechenbar", "Mitarbeiter", "Projekt", "Beschreibung"]
+      times(period).each do |time|
+        csv << [ time.work_date.strftime(DATE_FORMAT),
+                 time.hours,
+                 (time.startStop? ? time.from_start_time.strftime("%H:%M") : ''),
+                 (time.startStop? ? time.to_end_time.strftime("%H:%M") : ''),
+                 time.report_type,
+                 time.billable,
+                 time.employee.label,
+                 (time.account ? time.account.label : 'Anwesenheitszeit'),
+                 time.description ]
+      end
+    end 
+  end
       
 protected
 

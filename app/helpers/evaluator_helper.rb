@@ -9,11 +9,35 @@ module EvaluatorHelper
       [@period]
   end 
   
+  def detailTD(worktime, field)
+    case field
+      when :work_date : td format_date(worktime.work_date), 'right'
+      when :hours : td number_with_precision(worktime.hours, 2), 'right'
+      when :times : td worktime.timeString
+      when :employee : td worktime.employee.shortname
+      when :account : td worktime.account.label_verbose
+      when :billable : td(worktime.billable ? 'j' : 'n')
+      when :description :
+        desc = worktime.description.slice(0..50)
+        if worktime.description.length > 50
+          desc += link_to '...', evaluation_detail_params.merge!({
+                                  :controller => worktime.controller, 
+                                  :action => 'view', 
+                                  :id => worktime.id})
+        end                          
+        td desc
+      end
+  end
+  
+  def td(value, align = nil)
+    align = align ? " align=\"#{align}\"" : ""
+    "<td#{align}>#{value}</td>\n"
+  end
+  
   def collect_times(periods, method, *division)
-    #times = periods.collect { |p| @evaluation.send(method, p, *division) }
-    #times.push(@evaluation.send(method, nil, *division))
-    #times
-    (periods + [nil]).collect { |p| @evaluation.send(method, p, *division) }
+    (periods + [nil]).collect do |p| 
+      @evaluation.send(method, p, *division) 
+    end
   end  
   
   def add_time_link(account = nil)

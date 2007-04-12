@@ -1,10 +1,10 @@
-<% @title = '&Uuml;berzeit &Uuml;bersicht' %>
+<% @title = '&Uuml;berzeit &Uuml;bersicht' -%>
 
 <table>
   <tr>
     <th>Mitarbeiter</th>
     <th>Aktuelle &Uuml;berzeit </th>
-    <th>Verbleibende Ferien f&uuml;r <%= Date.today.year %> </th>
+    <th>Verbleibende Ferien <%= Date.today.year %> </th>
   </tr>
   <% for employee in @employees %>
   <%= alternate_row %>

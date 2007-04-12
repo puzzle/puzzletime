@@ -9,6 +9,6 @@ class ProjectEmployeesEval < Evaluation
   end  
   
   def division_supplement(user)
-    [:last_completion]
+    [[:last_completion, 'Komplettiert']]
   end
 end

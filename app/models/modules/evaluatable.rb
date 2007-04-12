@@ -46,7 +46,7 @@ module Evaluatable
 private    
   
   def conditionsFor(evaluation, period = nil, categoryRef = false)
-    condArray = [ (evaluation.absences? ? 'absence_id' : 'project_id') + ' IS NOT NULL ' ]
+    condArray = [ "type = '" + (evaluation.absences? ? 'Absencetime' : 'Projecttime') + "'" ]
     if period
       condArray[0] += " AND (work_date BETWEEN ? AND ?) "
       condArray.push period.startDate, period.endDate

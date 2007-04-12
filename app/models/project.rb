@@ -36,6 +36,11 @@ class Project < ActiveRecord::Base
   def label_verbose
     client.name + ' - ' + name
   end  
+  
+  # Returns an Array of the valid report types for Projects
+  def report_types
+    ReportType::INSTANCES
+  end
     
   def validate_worktime(worktime)
     if worktime.report_type < report_type

@@ -1,11 +1,11 @@
 <p>
-<%  if @period != nil %>
-Arbeitszeiten w&auml;hrend <%= @period %> &nbsp; 
+<%  if @period -%>
+Zeiten w&auml;hrend <%= @period %> &nbsp; 
 <%= link_to 'Aktuelle Zeitspanne', 
              :action => 'currentPeriod', 
              :evaluation => params[:action],
              :category_id => params[:category_id] %> | 
-<% end %>
+<% end -%>
 <%= link_to 'Andere Zeitspanne', 
             :action => 'selectPeriod',  
             :evaluation => params[:action],

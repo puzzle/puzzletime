@@ -36,6 +36,12 @@ class Period
     new(Date.civil(date.year, 1, 1), Date.civil(date.year, 12, 31), label)  
   end
   
+  def self.comingMonth(date = Date.today, label = nil)
+    date = date.to_date if date.kind_of? Time
+    date -= (date.wday - 1) % 7
+    new(date, date + 28, label)
+  end
+  
   def initialize(startDate = Date.today, endDate = Date.today, label = nil)    
     @startDate = parseDate(startDate)
     @endDate = parseDate(endDate)

@@ -4,6 +4,7 @@
 class Worktime < ActiveRecord::Base
   
   include ReportType::Accessors
+  extend Evaluatable
   
   belongs_to :employee
   belongs_to :absence   
@@ -115,12 +116,12 @@ class Worktime < ActiveRecord::Base
     self.class.name.downcase
   end
   
-  ##################  CLASS METHODS   ######################  
-  
   # Returns an Array of the valid report types for this Worktime
   def report_types
     ReportType::INSTANCES
   end
+  
+  ##################  CLASS METHODS   ######################  
   
   # Returns an Array of the valid attributes for this Worktime
   def self.validAttributes
@@ -133,21 +134,17 @@ class Worktime < ActiveRecord::Base
     ''
   end
   
+  #######################  CLASS METHODS FOR EVALUATABLE  ####################
+  
   # label for this worktime class
   def self.label
     'Arbeitszeit'
   end
-
-  # Sums all Worktimes for a given period
-  def self.sumWorktime(period, absences)
-    condArray = [ (absences ? 'absence_id' : 'project_id') + ' IS NOT NULL ' ]
-    if period
-      condArray[0] += " AND work_date BETWEEN ? AND ?"
-      condArray.push period.startDate, period.endDate
-    end
-    self.sum(:hours, :conditions => condArray).to_f
-  end
   
+  def self.worktimes
+    self
+  end
+ 
 private
 
   def write_converted_time(attribute, value)

@@ -1,5 +1,7 @@
 class AttendanceEval < Evaluation
-  
+
+  DETAIL_COLUMNS   = [:work_date, :hours, :times]
+    
   def initialize(employee_id)
     super(Employee.find(employee_id))
   end  
@@ -37,7 +39,15 @@ class AttendanceEval < Evaluation
     options[:order] = "work_date ASC, from_start_time"
     category.attendancetimes.find(:all, options)
   end
+  
+  def editLink?(user)
+    for? user
+  end
  
+  def splitLink?(user)
+    for? user
+  end  
+  
 private
 
   def addConditions(options = {}, period = nil)

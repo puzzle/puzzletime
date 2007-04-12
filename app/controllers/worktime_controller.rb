@@ -40,17 +40,11 @@ class WorktimeController < ApplicationController
     if @worktime.save      
       flash[:notice] = 'Die Arbeitszeit wurde erfasst'
       return if ! processAfterSave
-      if params[:commit] != FINISH        
-        @worktime = @worktime.template
-        setAccounts
-        renderGeneric :action => 'add'
-      else
-        listDetailTime
-      end
-    else
-      setAccounts
-      renderGeneric :action => 'add'
+      return listDetailTime if params[:commit] == FINISH        
+      @worktime = @worktime.template
     end  
+    setAccounts
+    renderGeneric :action => 'add'
   end  
   
   # Shows the edit page for the selected time.
@@ -67,18 +61,16 @@ class WorktimeController < ApplicationController
       return listDetailTime if @worktime.absence?
       session[:split] = WorktimeEdit.new(@worktime.clone)
       createPart
-      return
-    end
-    setWorktimeParams
-    if @worktime.save
-      flash[:notice] = 'Die Arbeitszeit wurde aktualisiert'
-      return if ! processAfterSave
-      redirect_to evaluation_detail_params.merge!({
-                        :controller => 'evaluator',
-                        :action => detailAction }) 
     else
-      setAccounts
-      renderGeneric :action => 'edit'
+      setWorktimeParams
+      if @worktime.save
+        flash[:notice] = 'Die Arbeitszeit wurde aktualisiert'
+        return if ! processAfterSave
+        listDetailTime
+      else
+        setAccounts
+        renderGeneric :action => 'edit'
+      end  
     end  
   end
   
@@ -91,9 +83,7 @@ class WorktimeController < ApplicationController
     setWorktime
     @worktime.destroy if @worktime.employee == @user
     flash[:notice] = 'Die Arbeitszeit wurde entfernt'
-    redirect_to evaluation_detail_params.merge!({
-                  :controller => 'evaluator', 
-                  :action => detailAction})
+    listDetailTime
   end
   
   def view
@@ -111,8 +101,7 @@ class WorktimeController < ApplicationController
   
   def createPart
     @split = session[:split]
-    setNewWorktime 
-    setWorktime if params[:id]
+    params[:id] ? setWorktime : setNewWorktime 
     @worktime.employee = @user
     setWorktimeParams
     if @worktime.valid? && @split.addWorktime(@worktime)   
@@ -144,27 +133,24 @@ class WorktimeController < ApplicationController
 protected
 
   def createDefaultWorktime
+    period = session[:period]
     setNewWorktime
     @worktime.from_start_time = Time.now.change(:hour => DEFAULT_START_HOUR)
     @worktime.report_type = DEFAULT_REPORT_TYPE
-    period = session[:period]
-    @worktime.work_date = (period != nil && period.length == 1) ?
-       period.startDate : Date.today
+    @worktime.work_date = (period && period.length == 1) ? period.startDate : Date.today
     @worktime.employee = @user   
   end
   
   def setWorktimeParams
-    begin
-      @worktime.attributes = params[:worktime]
+    @worktime.attributes = params[:worktime]
     # Catch the exception from AR::Base
-    rescue ActiveRecord::MultiparameterAssignmentErrors => ex
-      # Iterarate over the exceptions and remove the invalid field components from the input
-      ex.errors.each { |err| params[:worktime].delete_if { |key, value| key =~ /^#{err.attribute}/ } }
-      # Recreate the Model with the bad input fields removed
-      @worktime.attributes = params[:worktime]
-      # remove manually as @worktime already had a valid work_date, we want an error to be thrown
-      @worktime.work_date = nil     
-    end
+  rescue ActiveRecord::MultiparameterAssignmentErrors => ex
+    # Iterarate over the exceptions and remove the invalid field components from the input
+    ex.errors.each { |err| params[:worktime].delete_if { |key, value| key =~ /^#{err.attribute}/ } }
+    # Recreate the Model with the bad input fields removed
+    @worktime.attributes = params[:worktime]
+    # remove manually as @worktime already had a valid work_date, we want an error to be thrown
+    @worktime.work_date = nil 
   end
   
   def listDetailTime
@@ -193,8 +179,7 @@ protected
   end
   
   # overwrite in subclass
-  def setWorktimeAccount
-    
+  def setWorktimeAccount    
   end
   
   # overwrite in subclass

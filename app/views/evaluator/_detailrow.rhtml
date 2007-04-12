@@ -1,0 +1,28 @@
+<%= render :partial => spacer, :locals => {:time => detailrow} if spacer %>
+
+<%= alternate_row  %>
+<% for field in @evaluation.class::DETAIL_COLUMNS -%>
+    <%= detailTD detailrow, field %>
+<% end -%>  
+<% if @evaluation.editLink? @user -%>
+  <td><%= link_to 'Bearbeiten', 
+                  evaluation_detail_params.merge!({
+                    :controller => detailrow.controller, 
+                    :action => 'edit', 
+                    :id => detailrow.id}) %></td>
+<% end -%>
+<% if @evaluation.splitLink? @user -%>
+  <td><%= link_to 'Aufteilen', 
+                  evaluation_detail_params.merge!({
+                    :controller => detailrow.controller, 
+                    :action => 'splitAttendance', 
+                    :id => detailrow.id}) %></td>
+<% end -%>
+<% if @evaluation.deleteLink? @user -%>
+  <td><%= link_to 'L&ouml;schen', 
+                  evaluation_detail_params.merge!({
+                    :controller => detailrow.controller, 
+                    :action =>'confirmDelete',                
+                    :id => detailrow.id}) %></td>                  
+<% end -%>
+</tr>

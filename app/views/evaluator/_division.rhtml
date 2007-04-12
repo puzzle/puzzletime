@@ -9,7 +9,7 @@
     <%= render(:partial => 'periodTime',
                :collection => collect_times(periods, :sum_times, division),
                :locals => {:division_id => division.id, :periods => periods}) %>
-    <%= render :partial => 'divisionSupplement',
-               :collection => @evaluation.division_supplement(@user),
-               :locals => {:division => division} %>       
+    <% for supp in @evaluation.division_supplement(@user)%>           
+    <td><%= self.send(supp[0], division) %></td>
+    <% end -%>    
 </tr>

@@ -24,7 +24,10 @@ class Client < ActiveRecord::Base
   
   ##### interface methods for Evaluatable #####
 
-  def self.sumWorktime(evaluation, period, categoryRef = false, options = {})
-    Worktime.sumWorktime period, evaluation.absences?
+  def self.method_missing(symbol, *args)
+    case symbol
+      when :sumWorktime, :countWorktimes, :findWorktimes : Worktime.send(symbol, *args) 
+      else super
+      end
   end
 end

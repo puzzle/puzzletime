@@ -5,6 +5,8 @@ class EmployeeAbsencesEval < Evaluation
   ABSENCES         = true
   CATEGORY_REF     = :employee_id   
   ATTENDANCE       = true   
+  DETAIL_COLUMNS   = superclass::DETAIL_COLUMNS.reject{|i| :billable == i}
+  DETAIL_LABELS    = superclass::DETAIL_LABELS.merge({:account => 'Absenz'})
   
   def initialize(employee_id)
     super(Employee.find(employee_id))
@@ -15,7 +17,7 @@ class EmployeeAbsencesEval < Evaluation
   end
 
   def division_supplement(user)
-    return [:add_time_link] if self.for? user
+    return [[:add_time_link, '']] if self.for? user
     super(user)
   end
   

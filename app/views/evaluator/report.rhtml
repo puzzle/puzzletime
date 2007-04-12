@@ -24,23 +24,25 @@ end
 <div class="date">
 <%= format_date Date.today %>
 </div>
+
 <h1><%= @title %></h1>
+
 <table>
 <tr>
-<td>Kunde</td>
-<td><b><%= project.client.label %></b></td>
+    <td>Kunde</td>
+    <td><b><%= project.client.label %></b></td>
 </tr>
 <tr>
-<td>Projekt</td>
-<td><b><%= project.label %></b></td>
+    <td>Projekt</td>
+    <td><b><%= project.label %></b></td>
 </tr>
 <tr>
-<td>Mitarbeiter</td>
-<td><b><%= employee.label %></b></td>
+    <td>Mitarbeiter</td>
+    <td><b><%= employee.label %></b></td>
 </tr>
 <tr>
-<td>Periode</td>
-<td><b><%= @period.to_s %></b></td>
+    <td>Periode</td>
+    <td><b><%= @period.to_s %></b></td>
 </tr>
 </table>
 
