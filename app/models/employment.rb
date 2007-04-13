@@ -96,6 +96,10 @@ class Employment < ActiveRecord::Base
     super(col)
   end 
   
+  def self.puzzlebaseMap
+    Puzzlebase::Employment
+  end
+  
 private
  
   def parallelEmployments?

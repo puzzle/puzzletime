@@ -15,7 +15,9 @@
 </tr>
 <tr>
   <td>Report Detail: </td>
-  <td><%= select_report_type 'entry', 'report_type', false %></td>
+  <td><%= select 'entry', 'report_type', 
+             ReportType::INSTANCES.collect {|type| [type.name, type.key]}, 
+             {:selected => @entry.report_type.key} %></td>
 </tr>
 <tr>
   <td>Verrechenbar: </td>

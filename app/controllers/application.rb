@@ -24,10 +24,12 @@ class ApplicationController < ActionController::Base
   end 
   
   def authorize
-    unless authenticate && @user.management
-      flash[:notice] = 'Sie sind nicht authorisiert, um diese Seite zu öffnen'
-      redirect_to(:controller => 'login', :action => 'login' )
-    end
+    if authenticate
+      unless @user.management
+        flash[:notice] = 'Sie sind nicht authorisiert, um diese Seite zu öffnen'
+        redirect_to(:controller => 'login', :action => 'login' )
+      end
+    end  
   end  
 
   def rescue_action_in_public(exception)

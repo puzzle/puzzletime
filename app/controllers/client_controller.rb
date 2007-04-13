@@ -1,11 +1,7 @@
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz
 
-class ClientController < ApplicationController
-
-  include ManageModule 
-  
-  before_filter :authorize   
+class ClientController < ManageController
 
   def modelClass
     Client

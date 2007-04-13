@@ -1,9 +1,7 @@
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz
 
-class EmployeeController < ApplicationController
-
-  include ManageModule
+class EmployeeController < ManageController
 
   # Checks if employee came from login or from direct url
   before_filter :authorize, :except => [:changePasswd, :updatePwd]
@@ -45,7 +43,7 @@ class EmployeeController < ApplicationController
     redirect_to :action => 'list'
   end
   
-  ##### helper methods for ManageModule ##### 
+  ##### helper methods for ManageController ##### 
   
   def modelClass
     Employee

@@ -1,10 +1,6 @@
 
-class EmploymentController < ApplicationController
+class EmploymentController < ManageController
 
-  include ManageModule
-  
-  before_filter :authorize
-  
   def modelClass
     Employment
   end

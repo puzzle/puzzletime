@@ -1,12 +1,7 @@
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz
 
-class AbsenceController < ApplicationController
-
-  include ManageModule
-
-  # Checks if employee came from login or from direct url.
-  before_filter :authorize
+class AbsenceController < ManageController
    
   def modelClass
     Absence

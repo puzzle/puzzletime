@@ -1,4 +1,4 @@
-# ManageModule is a Module that may be mixed into Controllers that want to provide
+# ManageController may be extended by other Controllers that want to provide
 # management functionality for their represented objects. This includes listing,
 # creating, updating and deleting entries. 
 # 
@@ -9,21 +9,20 @@
 # and may implement groupClass, listFields, listActions, formatColumn, initFormData
 # 
 # Models must extend Manageable and implement self.labels (see Manageable)
-module ManageModule
+class ManageController < ApplicationController 
 
-  # Sets up the controller that mixed this Module in.
-  def self.included(controller)
-    controller.helper :manage  
-    controller.helper_method :group, :modelClass, :formatColumn, 
-                             :listFields, :editFields
+  helper :manage    
+  helper_method :group, :modelClass, :formatColumn, 
+                :listFields, :editFields
    
-    # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
-    controller.verify :method => :post, :only => [ :create, :update, :delete ],
+  before_filter :authorize 
+   
+  # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
+  verify :method => :post, :only => [ :create, :update, :delete ],
          :redirect_to => { :action => :list }
          
-    controller.hide_action :modelClass, :groupClass, :group, :formatColumn,
-                           :editFields, :listFields, :listActions
-  end     
+  hide_action :modelClass, :groupClass, :group, :formatColumn,
+                           :editFields, :listFields, :listActions  
   
   # Main Action. Redirects to list.
   def index
@@ -33,7 +32,7 @@ module ManageModule
   # Action to list all available entries from the database. 
   # The entries are paginated into NO_OF_OVERVIEW_ROWS entries per page.
   def list
-    @entry_pages = ActionController::Pagination::Paginator.new(
+    @entry_pages = Paginator.new(
        self, modelClass.count(:conditions => conditions), NO_OF_OVERVIEW_ROWS, params[:page] )
     @entries = modelClass.list(
                           :conditions => conditions,
@@ -97,6 +96,19 @@ module ManageModule
        flash[:notice] = err.message
     end   
     redirectToList
+  end
+  
+  def synchronize
+    mapper = modelClass.puzzlebaseMap
+    redirectToList if mapper.nil?
+    @errors = mapper.synchronize
+    if @errors.empty?
+      flash[:notice] = modelClass.labelPlural + ' erfolgreich aktualisiert'
+      redirectToList
+    else  
+      flash[:notice] = "Folgende Fehler sind bei der Synchronisation aufgetreten:"
+      renderGeneric :action => 'synchronize'
+    end  
   end
   
   ####### helper methods, not actions ##########

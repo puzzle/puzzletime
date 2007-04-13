@@ -1,0 +1,18 @@
+<% @title = "#{modelClass ? modelClass.labelPlural : 'Alles'} synchronisieren" -%>
+
+<table>
+<tr>
+  <th>Objekt</th>
+  <th>Bezeichnung</th>
+  <th>Fehler</th>
+</tr>  
+<% for obj in @errors -%>
+  <%= alternate_row %>
+  <td><%= obj.class.label %></td>
+  <td><%= obj.label %></td>
+  <td><%= obj.errors.full_messages.join('<br />') %></td>
+  </tr>
+<% end -%>
+</table>
+
+<%= renderGenericPartial :partial => 'backlink' %>

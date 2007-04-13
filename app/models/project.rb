@@ -32,16 +32,15 @@ class Project < ActiveRecord::Base
     options[:order] ||= 'clients.name, projects.name'
     super(options)
   end
+  
+  def self.puzzlebaseMap
+    Puzzlebase::CustomerProject
+  end
     
   def label_verbose
     client.name + ' - ' + name
   end  
-  
-  # Returns an Array of the valid report types for Projects
-  def report_types
-    ReportType::INSTANCES
-  end
-    
+     
   def validate_worktime(worktime)
     if worktime.report_type < report_type
       worktime.errors.add(:report_type, 

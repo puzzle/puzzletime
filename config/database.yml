@@ -21,7 +21,16 @@ test:
 production:
   adapter: postgresql
   database: puzzletime
-  cencoding: utf8
+  encoding: utf8
   username: puzzle
   password: timepuzzle
   host: 127.0.0.1
+
+# Connection to puzzlebase used for synchronization
+puzzlebase:
+  adapter: mysql
+  database: puzzlebase_db
+  encoding: utf8
+  username: time
+  password: debriz42
+  host: 10.2.111.68   #ramani.ww2.ch

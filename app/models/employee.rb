@@ -49,21 +49,25 @@ class Employee < ActiveRecord::Base
   
   before_destroy :protect_worktimes  
  
-  # Hashes and compares the pwd.
+  # Tries to login a user with the passed data.
+  # Returns the logged-in Employee or nil if the login failed.
   def self.login(username, pwd)
-    user = find(:first, :conditions => ["shortname = ? and passwd = ?", username, encode(pwd)])
+    user = find_by_shortname_and_passwd(username, encode(pwd))
     user = ldapLogin(username, pwd) if user.nil?   
     user
   end
   
+  # Performs a login over LDAP with the passed data.
+  # Returns the logged-in Employee or nil if the login failed.
   def self.ldapLogin(username, pwd)
     if ldapConnection.bind_as :base => LDAP_DN, 
                               :filter => "uid=#{username}", 
                               :password => pwd 
-      return find(:first, :conditions => ["ldapname = ?", username])
+      return find_by_ldapname(username)
     end  
   end
   
+  # Returns a Array of LDAP user information
   def self.ldapUsers       
      ldapConnection.search(:base => LDAP_DN,  
                            :attributes => ['uid', 'sn', 'givenname', 'mail'] )
@@ -80,16 +84,24 @@ class Employee < ActiveRecord::Base
   end
   
   def self.columnType(col)
-    return :integer if :current_percent == col
-    super col 
+    case col 
+      when :current_percent : :integer
+      else super col
+      end
   end  
+  
+  def self.puzzlebaseMap
+    Puzzlebase::Employee
+  end
   
   ##### interface methods for Evaluatable #####    
   
   def label
     lastname + " " + firstname
   end  
-
+  
+  # Redirects the messages :sumWorktime, :countWorktimes, :findWorktimes
+  # to the Worktime Class.
   def self.method_missing(symbol, *args)
     case symbol
       when :sumWorktime, :countWorktimes, :findWorktimes : Worktime.send(symbol, *args) 
@@ -97,20 +109,24 @@ class Employee < ActiveRecord::Base
       end
   end
   
+  # Sums the attendance times of this Employee.
   def sumAttendance(period = nil, options = {})
     self.class.sumAttendanceFor attendancetimes, period, options
   end
   
-   def self.sumAttendance(period = nil, options = {})
+  # Sums all attendance times in the system.
+  def self.sumAttendance(period = nil, options = {})
     sumAttendanceFor Attendancetime, period, options
   end
   
   ##### helper methods #####
     
+  # Whether this Employee is a project manager  
   def projectManager?
     managed_projects.size > 0
   end  
   
+  # Accessor for the initial vacation days. Default is 0.
   def initial_vacation_days
     super || 0    
   end
@@ -127,6 +143,7 @@ class Employee < ActiveRecord::Base
     update_attributes(:passwd => Employee.encode(pwd))
   end
 
+  # Sums the worktimes of all managed projects.
   def sumManagedProjectsWorktime(period)
     sql = "SELECT sum(hours) AS sum " +
            "FROM ((employees E LEFT JOIN projectmemberships PM ON E.id = PM.employee_id) " +
@@ -136,63 +153,15 @@ class Employee < ActiveRecord::Base
     sql += " AND T.work_date BETWEEN #{period.startDate} AND #{period.endDate}" if period
     self.class.connection.select_value(sql).to_f
   end
-
+   
+  # Returns the date the passed project was completed last. 
   def lastCompleted(project)
-    projectmemberships.find(:first, 
-	                        :conditions => ["project_id = ?", project.id]).last_completed
-  end
-    
-  #########  vacation and overtime information ############
-  
-  def currentRemainingVacations
-     remainingVacations(Date.new(Date.today.year, 12, 31))
+    projectmemberships.find_by_project_id(project.id).last_completed
   end
   
-  def remainingVacations(date)
-    period = employmentPeriodTo(date)
-    initial_vacation_days + totalVacations(period) + 
-      overtimeVacationHours(date) / 8.0 - usedVacations(period)
-  end
-  
-  def totalVacations(period)
-    employmentsDuring(period).sum(&:vacations)
-  end
-  
-  def usedVacations(period)
-    return 0 if period.nil?
-    self.worktimes.sum(:hours, :conditions => ["absence_id = ? AND (work_date BETWEEN ? AND ?)", 
-      VACATION_ID, period.startDate, period.endDate]).to_f / 8.0
-  end
-     
-  def currentOvertime(date = Date.today - 1)
-    overtime(employmentPeriodTo(date)) - overtimeVacationHours
-  end
-  
-  def overtime(period)
-    payedWorktime(period) - musttime(period)
-  end
-  
-  def musttime(period)
-    employmentsDuring(period).sum(&:musttime)
-  end  
-  
-  def payedWorktime(period)
-    condArray = ["((project_id IS NULL AND absence_id IS NULL) OR absences.payed)"]
-    if period
-      condArray[0] += " AND (work_date BETWEEN ? AND ?)"    
-      condArray.push period.startDate
-      condArray.push period.endDate
-    end      
-    worktimes.sum(:hours, 
-                  :joins => 'LEFT JOIN absences ON absences.id = absence_id',
-                  :conditions => condArray).to_f
-  end
-  
-  def overtimeVacationHours(date = nil)    
-    overtime_vacations.sum(:hours,
-                           :conditions => date ? ['transfer_date <= ?', date] : nil).to_f
-  end
-  
+  # Synchronizes this Employee with the passed LDAP user structure.
+  # Sets the ldapname, lastname, firstname and email of this Employee
+  # and creates a unique shortname if this Employee did not exist yet.  
   def syncWithLdap(ldapuser)
     self.ldapname = ldapuser.uid[0]  
     self.lastname = ldapuser.sn[0]
@@ -207,23 +176,90 @@ class Employee < ActiveRecord::Base
     end
     projectmemberships.push Projectmembership.new(:project_id => DEFAULT_PROJECT_ID)
   end
+    
+  #########  vacation and overtime information ############
+  
+  # Returns the unused days of vacation remaining until the end of the current year.
+  def currentRemainingVacations
+     remainingVacations(Date.new(Date.today.year, 12, 31))
+  end
+  
+  # Returns the unused days of vacation remaining until the given date.
+  def remainingVacations(date)
+    period = employmentPeriodTo(date)
+    initial_vacation_days + totalVacations(period) + 
+      overtimeVacationHours(date) / 8.0 - usedVacations(period)
+  end
+  
+  # Returns the overall amount of granted vacation days for the given period.
+  def totalVacations(period)
+    employmentsDuring(period).sum(&:vacations)
+  end
+  
+  # Returns the used vacation days for the given period
+  def usedVacations(period)
+    return 0 if period.nil?
+    worktimes.sum(:hours, :conditions => ["absence_id = ? AND (work_date BETWEEN ? AND ?)", 
+      VACATION_ID, period.startDate, period.endDate]).to_f / 8.0
+  end
+  
+  # Returns the overall overtime hours until the given date.
+  # Default is yesterday.   
+  def currentOvertime(date = Date.today - 1)
+    overtime(employmentPeriodTo(date)) - overtimeVacationHours
+  end
+  
+  # Returns the overtime hours worked in the given period.
+  def overtime(period)
+    payedWorktime(period) - musttime(period)
+  end
+  
+  # Returns the hours this employee has to work in the given period.
+  def musttime(period)
+    employmentsDuring(period).sum(&:musttime)
+  end  
+  
+  # Returns the hours this employee worked plus the payed absences for the given period.
+  def payedWorktime(period)
+    condArray = ["((project_id IS NULL AND absence_id IS NULL) OR absences.payed)"]
+    if period
+      condArray[0] += " AND (work_date BETWEEN ? AND ?)"    
+      condArray.push period.startDate
+      condArray.push period.endDate
+    end      
+    worktimes.sum(:hours, 
+                  :joins => 'LEFT JOIN absences ON absences.id = absence_id',
+                  :conditions => condArray).to_f
+  end
+  
+  # Return the overtime hours that were transformed into vacations up to the given date.
+  def overtimeVacationHours(date = nil)    
+    overtime_vacations.sum(:hours,
+                           :conditions => date ? ['transfer_date <= ?', date] : nil).to_f
+  end
   
   ######### employment information ######################
   
+  # Returns the current employement percent value.
+  # Returns nil if no current employement is present.
   def current_percent
     empl = current_employment
     empl.percent if empl
   end
   
+  # Returns the current employement, nil if none is present.
   def current_employment
     employment_at(Date.today) 
   end
   
+  # Returns the employement at the given date, nil if none is present.
   def employment_at(date)
     employments.find( :first, :conditions => 
       ['start_date <= ? AND (end_date IS NULL OR end_date >= ?)', date, date] ) 
   end
   
+  # Returns an Array of all employements during the given period, 
+  # an empty Array if no employments exist.
   def employmentsDuring(period)
     return [] if period.nil?
     selectedEmployments = employments.find(:all, 
@@ -240,6 +276,8 @@ class Employee < ActiveRecord::Base
     selectedEmployments    
   end
     
+  # Returns the Period from the first employement date until the given period.
+  # Returns nil if no employments exist until this date.  
   def employmentPeriodTo(date)
     first_employment = self.employments.find(:first, :order => 'start_date ASC')
     return nil if first_employment == nil || first_employment.start_date > date

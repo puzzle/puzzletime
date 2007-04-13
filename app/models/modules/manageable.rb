@@ -1,4 +1,4 @@
-# A Module to be mixed in by classes that may be managed by the ManageModule.
+# A Module to be mixed in by classes that may be managed by the ManageController.
 # 
 # All methods are on the class side, so use 'extend Manageable' to use this Module.
 module Manageable
@@ -38,6 +38,10 @@ module Manageable
   # Field sorting order for listing all entries.  
   def orderBy
     'name'
+  end
+  
+  def puzzlebaseMap
+    nil
   end
     
 end

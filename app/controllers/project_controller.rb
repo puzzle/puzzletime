@@ -1,11 +1,8 @@
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz
 
-class ProjectController < ApplicationController
-  
-  helper :worktime
-  include ManageModule  
-  
+class ProjectController < ManageController
+    
   # Checks if employee came from login or from direct url.
   before_filter :authenticate
   before_filter :authorize, :only => [ :delete, :confirmDelete ]
@@ -63,7 +60,7 @@ class ProjectController < ApplicationController
       super
     end
   end
-  
+    
 protected
       
   def groupClass
