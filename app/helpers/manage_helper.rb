@@ -33,22 +33,6 @@ module ManageHelper
             :group_id => entry.id,
             :group_page => params[:page]
   end
-  
-  def groupLink(first = false)
-    if group
-      (first ? '' : '| ') + 
-      (link_to "&Uuml;bersicht #{group.class.labelPlural}",
-                    :controller => group.class.to_s.downcase,
-                    :action => 'list',
-                    :page => params[:group_page] ) +
-      ' | ' +
-      (link_to "#{group.class.label} bearbeiten",
-                    :controller => group.class.to_s.downcase,
-                    :action => 'edit',
-                    :id => params[:group_id],
-                    :page => params[:group_page] )                                  
-    end             
-  end 
 
   def newLabel
     neu = case modelClass.article

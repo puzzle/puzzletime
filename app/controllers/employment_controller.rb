@@ -15,10 +15,7 @@ class EmploymentController < ManageController
   end  
     
   def editFields    
-    [[:percent, 'Prozent'],
-     [:start_date, 'Start Datum'], 
-     [:final, 'End Datum setzen'],
-     [:end_date, 'End Datum']]    
+    []    
   end
   
   def listFields

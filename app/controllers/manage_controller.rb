@@ -18,7 +18,7 @@ class ManageController < ApplicationController
   before_filter :authorize 
    
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
-  verify :method => :post, :only => [ :create, :update, :delete ],
+  verify :method => :post, :only => [ :create, :update, :delete, :synchronize ],
          :redirect_to => { :action => :list }
          
   hide_action :modelClass, :groupClass, :group, :formatColumn,

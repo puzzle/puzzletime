@@ -16,8 +16,12 @@
   <% for action in controller.listActions -%>
     <td><%= actionLink action, entry %></td>
   <% end -%> 
+  <% if editFields.size > 0 -%>
     <td><%= link_to 'Bearbeiten', linkParams(:action => 'edit', :id => entry) %></td>
+  <% end -%>  
+  <% if modelClass.local? -%>
     <td><%= link_to 'L&ouml;schen', linkParams(:action => 'confirmDelete', :id => entry) %></td>
+  <% end -%>  
   </tr>
 <% end -%>
 </table>
@@ -28,6 +32,19 @@
 
 <br/>
 <p>
-<%= link_to newLabel, linkParams(:action => 'add') %> 
-<%= groupLink %>
+<% if modelClass.local? -%>
+    <%= link_to newLabel, linkParams(:action => 'add') %> 
+<% end -%>
+<% if group -%>
+    <%= modelClass.puzzlebaseMap.nil? ? '|' : '' %>    
+    <%= link_to "&Uuml;bersicht #{group.class.labelPlural}",
+                :controller => group.class.to_s.downcase,
+                :action => 'list',
+                :page => params[:group_page] %>
+<% elsif ! modelClass.local? -%>
+    <%= link_to 'Synchronisieren',
+                {:action => 'synchronize',
+                 :page => params[:page]},
+                 :post => true %>             
+<% end -%>
 </p>

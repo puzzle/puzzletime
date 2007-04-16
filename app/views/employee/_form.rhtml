@@ -1,0 +1,30 @@
+<%= error_messages_for :entry %>
+  
+<table>
+<tr>
+  <td>Vorname: </td>
+  <td><%= h @entry.firstname %></td>
+</tr>
+<tr>
+  <td>Nachname: </td>
+  <td><%= h @entry.lastname %></td>
+</tr>
+<tr>
+  <td>K&uuml;rzel: </td>
+  <td><%= h @entry.shortname %></td>
+</tr>
+<tr>
+  <td>Email: </td>
+  <td><%= h @entry.email %></td>
+</tr>
+<% for field in editFields -%>
+<tr>
+  <td><%= field[1] %>: </td>
+  <td><%= inputField field %></td>
+</tr>
+<% end -%>
+<tr>
+  <td></td>
+  <td><%= submit_tag 'Speichern' %></td>
+</tr>
+</table>

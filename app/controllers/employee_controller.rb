@@ -28,21 +28,6 @@ class EmployeeController < ManageController
     end  
   end
   
-  def ldapsync
-    count = 0
-    Employee.ldapUsers.each do |user| 
-      begin
-        e = Employee.find_by_ldapname(user.uid[0])
-        e = Employee.new if e.nil?
-        e.syncWithLdap user
-        count += 1
-      rescue NoMethodError => ex 
-      end 
-    end
-    flash[:notice] = count.to_s + ' Mitarbeiter wurden synchronisiert'
-    redirect_to :action => 'list'
-  end
-  
   ##### helper methods for ManageController ##### 
   
   def modelClass
@@ -55,12 +40,7 @@ class EmployeeController < ManageController
   end  
     
   def editFields    
-    [[:firstname, 'Vorname'], 
-     [:lastname, 'Nachname'],
-     [:shortname, 'Kürzel'],
-     [:ldapname, 'LDAP Name'],
-     [:email, 'Email'],
-     [:initial_vacation_days, 'Anfängliche Ferien'],
+    [[:initial_vacation_days, 'Anfängliche Ferien'],
      [:management, 'GL']]    
   end
   

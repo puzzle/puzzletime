@@ -3,11 +3,15 @@
 <table>
 <tr>
   <td>Name: </td>
-  <td><%= text_field 'entry', 'name', :size => 20  %></td>
+  <td><%= h @entry.name %></td>
+</tr>
+<tr>
+  <td>K&uuml;rzel: </td>
+  <td><%= h @entry.shortname %></td>
 </tr>
 <tr>
   <td>Kunde: </td>
-  <td><%= collection_select( :entry, :client_id, @clients, :id, :name) %></td>
+  <td><%= h @entry.client.name %></td>
 </tr>
 <tr valign="top">
   <td>Beschreibung: </td>

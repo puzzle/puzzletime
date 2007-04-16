@@ -10,6 +10,14 @@
             :action => params[:evaluation],
             :category_id => params[:category_id] %>
 |
+<% if @evaluation.for? @user
+    details = params[:action] == 'details'
+-%>
+<%= link_to details ? 'Anwesenheiten' : 'Arbeitszeiten',
+            evaluation_detail_params.merge!({
+                :action => details ? 'attendanceDetails' : 'details' }) %>
+|
+<% end -%>
 <%= link_to 'Export CSV', 
             evaluation_detail_params.merge!({
                 :action => 'exportCSV',

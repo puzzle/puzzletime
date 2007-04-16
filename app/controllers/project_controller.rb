@@ -43,10 +43,18 @@ class ProjectController < ManageController
     [['Mitarbeiter', 'projectmembership', 'list']]
   end
   
-  def editFields
+  def listFields
     [[:name, 'Name'], 
+     [:shortname, 'K&uuml;rzel'],
      [:client, 'Kunde'],
      [:description, 'Beschreibung']]
+  end
+  
+  def editFields
+    [[:description, 'Beschreibung'],
+     [:report_type, 'Reporttyp'], 
+     [:billable, 'Verrechenbar'], 
+     [:description_required, 'Beschreibung nötig']]
   end
   
   def formatColumn(attribute, value)

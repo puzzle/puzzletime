@@ -1,7 +1,7 @@
 module Puzzlebase
   class Base < ActiveRecord::Base
     # Set up database connection to puzzlebase for all subclasses of Base
-    establish_connection YAML.load_file(File.join(RAILS_ROOT, 'config/database.yml'))['puzzlebase']
+    establish_connection :puzzlebase
     
     # Set database properties
     set_table_name(nil) { "TBL_#{self.table_id}" }

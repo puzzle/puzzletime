@@ -10,4 +10,12 @@ module Puzzlebase
                 :ldapname  => :S_LDAPNAME,
                 :email     => :S_EMAIL }    
   end  
+  
+  # Synchronizes the Employees and their Employments.
+  def self.synchronize
+    resetErrors
+    updateAll
+    Puzzlebase::Employement.updateAll
+    errors
+  end 
 end

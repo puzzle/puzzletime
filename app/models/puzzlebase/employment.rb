@@ -17,7 +17,8 @@ module Puzzlebase
     end
         
     def self.setReference(local, original)
-      local.employee_id = ::Employee.find_by_shortname(original.employee.S_SHORTNAME).id
+      employee = ::Employee.find_by_shortname(original.employee.S_SHORTNAME)
+      local.employee_id = employee.id if employee
     end    
   end
 end

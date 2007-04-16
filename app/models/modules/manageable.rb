@@ -43,5 +43,9 @@ module Manageable
   def puzzlebaseMap
     nil
   end
+  
+  def local? 
+    puzzlebaseMap.nil?
+  end
     
 end

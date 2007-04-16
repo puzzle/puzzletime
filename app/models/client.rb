@@ -13,6 +13,8 @@ class Client < ActiveRecord::Base
   # Validation helpers.
   validates_presence_of :name, :message => "Ein Name muss angegeben sein"
   validates_uniqueness_of :name, :message => "Dieser Name wird bereits verwendet"
+  validates_presence_of :shortname, :message => "Ein Kürzel muss angegeben werden" 
+  validates_uniqueness_of :shortname, :message => "Dieses Kürzel wird bereits verwendet" 
   
   before_destroy :protect_worktimes
 
@@ -24,6 +26,14 @@ class Client < ActiveRecord::Base
   
   def self.puzzlebaseMap
     Puzzlebase::Customer
+  end
+  
+  def self.orderBy
+    'shortname'
+  end
+  
+  def label
+    shortname
   end
   
   ##### interface methods for Evaluatable #####

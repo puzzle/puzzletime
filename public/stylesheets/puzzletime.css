@@ -144,13 +144,17 @@ textarea, input, select {
     background:     url('../images/menu_user.gif') repeat-x; 
     padding-top:    4px;
     margin-bottom:  25px;
+    margin-left:    20px;
     float:          right;
 }
 
 #submenu {
     background:     url('../images/menu_user.gif') repeat-x; 
-    padding-top:    4px;
+    padding-top:    3px;
+    padding-left:   40px;
+    text-indent:    -28px;
     margin-bottom:  25px;
+    line-height:    16px;
 }
 
 #submenu a {

@@ -38,4 +38,9 @@ Mitarbeiter:
 <% end %>
 </p>  
 
-<p><%= groupLink(true) %></p>
+<p>
+<%= link_to "&Uuml;bersicht #{group.class.labelPlural}",
+            :controller => group.class.to_s.downcase,
+            :action => 'list',
+            :page => params[:group_page] %>
+</p>

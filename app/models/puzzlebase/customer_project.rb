@@ -19,7 +19,8 @@ module Puzzlebase
     end
     
     def self.setReference(local, original)
-      local.client_id = ::Client.find_by_shortname(original.customer.S_CUSTOMER).id
+      client = ::Client.find_by_shortname(original.customer.S_CUSTOMER)
+      local.client_id = client.id if client
     end
     
     def self.updateAttributes(local, original)

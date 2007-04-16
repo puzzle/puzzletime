@@ -10,6 +10,7 @@ class Employment < ActiveRecord::Base
   # All dependencies between the models are listed below.
   validates_inclusion_of :percent, :in => 0..200, :message => "Die Prozente m&uuml;ssen angegeben werden"
   validates_presence_of :start_date, :message => "Das Start Datum muss angegeben werden"
+  validates_presence_of :employee_id, :message => 'Es muss ein Mitarbeiter angegeben werden'
   
   before_validation :resetEndDate
   before_create :updateEndDate

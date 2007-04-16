@@ -40,6 +40,10 @@ class AttendanceEval < Evaluation
     category.attendancetimes.find(:all, options)
   end
   
+  # Do nothing, attendance has no divisions
+  def set_division_id(division_id = nil)
+  end
+  
   def editLink?(user)
     for? user
   end

@@ -16,8 +16,11 @@ class Project < ActiveRecord::Base
   belongs_to :client
   has_many :worktimes
   
-  validates_presence_of :name, :message => "Ein Name muss angegeben sein"
+  validates_presence_of :name, :message => "Ein Name muss angegeben werden"  
   validates_uniqueness_of :name, :scope => 'client_id', :message => "Dieser Name wird bereits verwendet"
+  validates_presence_of :shortname, :message => "Ein Kürzel muss angegeben werden" 
+  validates_uniqueness_of :shortname, :scope => 'client_id', :message => "Dieses Kürzel wird bereits verwendet"
+  validates_presence_of :client_id, :message => "Das Projekt muss einem Kunden zugeordnet sein"
     
   before_destroy :protect_worktimes
   
@@ -29,7 +32,7 @@ class Project < ActiveRecord::Base
     
   def self.list(options = {})
     options[:include] ||= :client
-    options[:order] ||= 'clients.name, projects.name'
+    options[:order] ||= 'clients.shortname, projects.name'
     super(options)
   end
   
@@ -38,7 +41,7 @@ class Project < ActiveRecord::Base
   end
     
   def label_verbose
-    client.name + ' - ' + name
+    client.shortname + ' - ' + name
   end  
      
   def validate_worktime(worktime)

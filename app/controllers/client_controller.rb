@@ -11,8 +11,8 @@ class ClientController < ManageController
     [['Projekte', 'project', 'list', false ]]
   end
   
-  def editFields
-    [[:name, 'Name'], [:contact, 'Kontakt']]
+  def listFields
+    [[:shortname, 'K&uuml;rzel'], [:name, 'Name'], [:contact, 'Kontakt']]
   end
 
 end
