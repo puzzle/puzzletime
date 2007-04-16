@@ -1,12 +1,12 @@
 class Puzzlebase < ActiveRecord::Migration
   def self.up
-    add_column :clients, :shortname, :string, :limit => 4
+    add_column :clients, :shortname, :string, :limit => 4, :null => false
     change_column :clients, :contact, :string, :null => true
-    add_column :projects, :shortname, :string, :limit => 3  
+    add_column :projects, :shortname, :string, :limit => 3, :null => false
     
-    setShortnames Client, 4
-    setShortnames Project, 3
-    Employee.find(:all).each do |entry|
+    setShortnames ::Client, 4
+    setShortnames ::Project, 3
+    ::Employee.find(:all).each do |entry|
       entry.update_attribute(:shortname, entry.shortname.upcase)
     end
   end

@@ -9,6 +9,11 @@ module Puzzlebase
                 :end_date   => :D_END } 
          
   protected
+  
+    def self.updateAll
+      ::Employment.delete_all
+      super
+    end
     
     def self.localFindOptions(original)
       { :include => :employee, 
