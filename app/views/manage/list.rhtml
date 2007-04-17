@@ -27,7 +27,7 @@
 </table>
 
 <% if @entry_pages.page_count > 1 -%>
-<p>Seite: <%= pagination_links(@entry_pages, :params => linkParams) %></p>
+<p>Seite: <%= pagination_links(@entry_pages, :window_size => 5, :params => linkParams) %></p>
 <% end -%>
 
 <br/>

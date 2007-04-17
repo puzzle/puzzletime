@@ -29,9 +29,9 @@
 </br>
 
 <p>
-Mitarbeiter:
 <% form_tag linkParams(:action => 'createMembership') do %> 
-<select name="employee_id[]" multiple="multiple" size="5">
+Mitarbeiter:<br/><br/>
+<select name="employee_id[]" multiple="multiple" size="12">
 <%= options_from_collection_for_select @employees, :id, :label %>
 </select>
 <%= submit_tag 'Hinzufügen' %>

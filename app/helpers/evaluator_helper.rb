@@ -18,8 +18,8 @@ module EvaluatorHelper
       when :account : td worktime.account.label_verbose
       when :billable : td(worktime.billable ? 'j' : 'n')
       when :description :
-        desc = worktime.description.slice(0..50)
-        if worktime.description.length > 50
+        desc = worktime.description.slice(0..40)
+        if worktime.description.length > 40
           desc += link_to '...', evaluation_detail_params.merge!({
                                   :controller => worktime.controller, 
                                   :action => 'view', 
@@ -72,16 +72,16 @@ module EvaluatorHelper
   
   def timeInfo
     infos = @period ?    
-            [[['Soll Arbeitszeit', @user.musttime(@period), 'h'],
+            [[['&Uuml;berzeit', @user.overtime(@period).to_f, 'h'],
               ['Bezogene Ferien', @user.usedVacations(@period), 'd']],
-             [['&Uuml;berzeit', @user.overtime(@period).to_f, 'h'], 
+             [['Soll Arbeitszeit', @user.musttime(@period), 'h'], 
               ['Offen', @user.remainingVacations(@period.endDate), 'd']]]  :
-            [[['Monatliche Arbeitszeit', @user.musttime(Period.currentMonth), 'h'],
-              ['&Uuml;berzeit Gestern', @user.currentOvertime, 'h'],
-              ['Geplante Ferien', @user.usedVacations(Period.currentYear), 'd']],
-             [['Verbleibend', 0 - @user.overtime(Period.currentMonth).to_f, 'h'],
-              ['&Uuml;berzeit Heute', @user.currentOvertime(Date.today), 'h'],
-              ['Verbleibend', @user.currentRemainingVacations, 'd']]]   
+            [[['&Uuml;berzeit Gestern', @user.currentOvertime, 'h'],
+              ['Geplante Ferien', @user.usedVacations(Period.currentYear), 'd'],
+              ['Monatliche Arbeitszeit', @user.musttime(Period.currentMonth), 'h']],
+             [['&Uuml;berzeit Heute', @user.currentOvertime(Date.today), 'h'],
+              ['Verbleibend', @user.currentRemainingVacations, 'd'],
+              ['Verbleibend', 0 - @user.overtime(Period.currentMonth).to_f, 'h']]]   
     render :partial => 'timeinfo', :locals => {:infos => infos}
   end
  
