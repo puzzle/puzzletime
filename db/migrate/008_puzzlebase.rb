@@ -1,7 +1,7 @@
 class Puzzlebase < ActiveRecord::Migration
   def self.up
     add_column :clients, :shortname, :string, :limit => 4, :null => false
-    change_column :clients, :contact, :string, :null => true
+    remove_column :clients, :contact
     add_column :projects, :shortname, :string, :limit => 3, :null => false
     
     setShortnames ::Client, 4
@@ -14,6 +14,7 @@ class Puzzlebase < ActiveRecord::Migration
   def self.down
     remove_column :clients, :shortname
     remove_column :projects, :shortname
+    add_column :clients, :contact, :null => false
   end
   
   def self.setShortnames(clazz, length)

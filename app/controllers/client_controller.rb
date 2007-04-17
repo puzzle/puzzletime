@@ -12,7 +12,7 @@ class ClientController < ManageController
   end
   
   def listFields
-    [[:shortname, 'K&uuml;rzel'], [:name, 'Name'], [:contact, 'Kontakt']]
+    [[:name, 'Name'], [:shortname, 'K&uuml;rzel']]
   end
 
 end

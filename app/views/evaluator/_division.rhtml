@@ -3,8 +3,7 @@
     <%= link_to_if sub = @evaluation.class::SUB_EVALUATION, 
                    division.label_verbose, 
                    :action => sub, 
-                   :category_id => division.id,
-                   :down => 1 %>
+                   :category_id => division.id %>
     </td>
     <%= render(:partial => 'periodTime',
                :collection => collect_times(periods, :sum_times, division),

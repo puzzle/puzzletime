@@ -28,14 +28,6 @@ class Client < ActiveRecord::Base
     Puzzlebase::Customer
   end
   
-  def self.orderBy
-    'shortname'
-  end
-  
-  def label
-    shortname
-  end
-  
   ##### interface methods for Evaluatable #####
 
   def self.method_missing(symbol, *args)

@@ -157,8 +157,8 @@ private
     session[:evalLevels] = Array.new if params[:clear]
     levels = session[:evalLevels]
     current = [@evaluation, params[:evaluation]]
-    levels.pop while params[:up] && levels.last != current
-    levels.push current if levels.last != current
+    levels.pop while levels.any? { |level| level[1] == current[1] }  
+    levels.push current
   end
   
   def paginateTimes
