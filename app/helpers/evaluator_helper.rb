@@ -77,7 +77,7 @@ module EvaluatorHelper
              [['Soll Arbeitszeit', @user.musttime(@period), 'h'], 
               ['Offen', @user.remainingVacations(@period.endDate), 'd']]]  :
             [[['&Uuml;berzeit Gestern', @user.currentOvertime, 'h'],
-              ['Geplante Ferien', @user.usedVacations(Period.currentYear), 'd'],
+              ['Bezogene Ferien', @user.usedVacations(Period.currentYear), 'd'],
               ['Monatliche Arbeitszeit', @user.musttime(Period.currentMonth), 'h']],
              [['&Uuml;berzeit Heute', @user.currentOvertime(Date.today), 'h'],
               ['Verbleibend', @user.currentRemainingVacations, 'd'],

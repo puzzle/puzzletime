@@ -17,7 +17,7 @@ am <%= format_date(@split.original.work_date) %>:</h3>
            :locals => {:submit => @split.class::SUBMIT_BUTTONS} %>
 <% end -%>
 
-<p>
+
 <% 
 options = evaluation_detail_params
 if params[:evaluation]
@@ -26,9 +26,10 @@ if params[:evaluation]
 else
   options[:action] = 'list'
 end
+htmlOptions = {}
+unless @split.empty?
+  htmlOptions[:onclick] = "return confirm('Alle Änderungen an dieser Aufteilung gehen dabei verloren!');"
+end  
 -%>
-<%= link_to 'Arbeitszeiten', 
-            options,
-            {:onclick => "return confirm('Alle Änderungen an dieser Aufteilung gehen dabei verloren!');"} %>                      
-</p>                       
+<p><%= link_to 'Arbeitszeiten', options, htmlOptions %></p>                       
 

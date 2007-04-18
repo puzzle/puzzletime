@@ -38,6 +38,10 @@ class Splitable
     'Aufteilen'
   end
   
+  def empty?
+    worktimes.empty?
+  end
+  
 protected
   
   def remainingHours
