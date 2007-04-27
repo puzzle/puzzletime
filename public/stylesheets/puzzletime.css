@@ -3,7 +3,6 @@ body {
     font-size:      14px;
     font-family:    "trebuchet ms", helvetica, sans-serif;
     color:          #333333;
-    line-height:    14px;
     padding:        0px;
     margin:         0px;
     text-align:     center;   /* centered content in IE */
@@ -111,7 +110,7 @@ textarea, input, select {
 #brand {    
     font-weight:    normal;
     font-size:      28px;
-    line-height:    24px;
+    line-height:    20px;
     letter-spacing: -1px;
     margin-top:     20px;
     margin-bottom:  0px;
@@ -142,19 +141,16 @@ textarea, input, select {
 
 #menu_user {
     background:     url('../images/menu_user.gif') repeat-x; 
-    padding-top:    4px;
-    margin-bottom:  25px;
+    margin-bottom:  20px;
     margin-left:    20px;
     float:          right;
 }
 
 #submenu {
     background:     url('../images/menu_user.gif') repeat-x; 
-    padding-top:    3px;
     padding-left:   40px;
     text-indent:    -28px;
-    margin-bottom:  25px;
-    line-height:    16px;
+    margin-bottom:  20px;
 }
 
 #submenu a {
@@ -163,7 +159,7 @@ textarea, input, select {
 }
 
 #menu ul {
-    padding-top:    9px;
+    padding-top:    6px;
     padding-left:   8px;
     margin-left:    0px;
     margin-bottom:  13px;

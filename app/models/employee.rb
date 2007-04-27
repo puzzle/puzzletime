@@ -51,7 +51,7 @@ class Employee < ActiveRecord::Base
  
   # Tries to login a user with the passed data.
   # Returns the logged-in Employee or nil if the login failed.
-  def self.login(username, pwd)
+  def self.login(username, pwd)    
     user = find_by_shortname_and_passwd(username.upcase, encode(pwd))
     user = ldapLogin(username, pwd) if user.nil?   
     user
@@ -60,11 +60,13 @@ class Employee < ActiveRecord::Base
   # Performs a login over LDAP with the passed data.
   # Returns the logged-in Employee or nil if the login failed.
   def self.ldapLogin(username, pwd)
-    if ldapConnection.bind_as :base => LDAP_DN, 
+    if ! username.strip.empty? && 
+       ldapConnection.bind_as(:base => LDAP_DN, 
                               :filter => "uid=#{username}", 
-                              :password => pwd 
+                              :password => pwd)
       return find_by_ldapname(username)
     end  
+    nil
   end
   
   # Returns a Array of LDAP user information
@@ -89,11 +91,11 @@ class Employee < ActiveRecord::Base
       else super col
       end
   end  
-  
+      
   def self.puzzlebaseMap
     Puzzlebase::Employee
-  end
-  
+  end  
+      
   ##### interface methods for Evaluatable #####    
   
   def label
@@ -159,24 +161,6 @@ class Employee < ActiveRecord::Base
     projectmemberships.find_by_project_id(project.id).last_completed
   end
   
-  # Synchronizes this Employee with the passed LDAP user structure.
-  # Sets the ldapname, lastname, firstname and email of this Employee
-  # and creates a unique shortname if this Employee did not exist yet.  
-  def syncWithLdap(ldapuser)
-    self.ldapname = ldapuser.uid[0]  
-    self.lastname = ldapuser.sn[0]
-    self.firstname = ldapuser.givenname[0]
-    self.email = ldapuser.mail[0]    
-  rescue NoMethodError => ex
-  ensure   
-    while ! save
-      return if ! errors.on :shortname
-      self.shortname = firstname.first.downcase + lastname.first.downcase + 
-                     (shortname ? (shortname[2..4].to_i + 1).to_s : '')
-    end
-    projectmemberships.push Projectmembership.new(:project_id => DEFAULT_PROJECT_ID)
-  end
-    
   #########  vacation and overtime information ############
   
   # Returns the unused days of vacation remaining until the end of the current year.

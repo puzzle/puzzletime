@@ -80,6 +80,10 @@ class Employment < ActiveRecord::Base
   
   ##### interface methods for Manageable #####     
     
+  def self.puzzlebaseMap
+    Puzzlebase::Employment
+  end  
+    
   def label
     "die Anstellung vom #{start_date.strftime(DATE_FORMAT)} - #{end_date ? end_date.strftime(DATE_FORMAT) : 'offen'}"
   end  
@@ -96,10 +100,6 @@ class Employment < ActiveRecord::Base
     return :boolean if col == :final
     super(col)
   end 
-  
-  def self.puzzlebaseMap
-    Puzzlebase::Employment
-  end
   
 private
  

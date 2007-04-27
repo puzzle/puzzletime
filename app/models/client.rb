@@ -23,11 +23,11 @@ class Client < ActiveRecord::Base
   def self.labels
     ['Der', 'Kunde', 'Kunden']
   end  
-  
+      
   def self.puzzlebaseMap
     Puzzlebase::Customer
-  end
-  
+  end      
+
   ##### interface methods for Evaluatable #####
 
   def self.method_missing(symbol, *args)

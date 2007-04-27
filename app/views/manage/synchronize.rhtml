@@ -9,8 +9,12 @@
 <% for obj in @errors -%>
   <%= alternate_row %>
   <td><%= obj.class.label %></td>
-  <td><%= obj.label %></td>
-  <td><%= obj.errors.full_messages.join('<br />') %></td>
+  <td><%= obj.debugString %></td>
+  <td>
+  <% obj.errors.each do |attr, msg| -%>
+    <%= msg %><br/>
+  <% end -%>
+  </td>
   </tr>
 <% end -%>
 </table>

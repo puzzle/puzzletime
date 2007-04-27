@@ -1,19 +1,12 @@
 class ReportType
 
   include Comparable
+  include ActionView::Helpers::NumberHelper
+  
   attr_reader :key, :name, :accuracy
+  
   START_STOP = false
   
-protected
-  
-  def initialize(key, name, accuracy)
-    @key = key
-    @name = name
-    @accuracy = accuracy
-  end
-  
-public    
- 
   def self.[](key)
     ObjectSpace.each_object(ReportType) {|type| return type if type.key == key }
   end
@@ -50,6 +43,18 @@ public
     end    
   end
   
+  protected
+  
+  def initialize(key, name, accuracy)
+    @key = key
+    @name = name
+    @accuracy = accuracy
+  end
+  
+  def roundedHours(worktime)
+    number_with_precision(worktime.hours, 2).to_s
+  end
+  
 end
 
 class StartStopType < ReportType
@@ -59,7 +64,7 @@ class StartStopType < ReportType
   def timeString(worktime)
     worktime.from_start_time.strftime(TIME_FORMAT) + ' - ' + 
       worktime.to_end_time.strftime(TIME_FORMAT) + 
-      ' (' + ((worktime.hours*100).round / 100.0).to_s + ' h)'    
+      ' (' + roundedHours(worktime) + ' h)'    
   end
   
   def copy_times(source, target)
@@ -109,7 +114,7 @@ class HoursDayType < ReportType
   INSTANCE = self.new 'absolute_day', 'Stunden/Tag', 6
   
   def timeString(worktime)
-    worktime.hours.to_s + ' h'
+    roundedHours(worktime) + ' h'
   end
 end 
 
@@ -117,7 +122,7 @@ class HoursWeekType < ReportType
   INSTANCE = self.new 'week', 'Stunden/Woche', 4
   
   def timeString(worktime)
-    worktime.hours.to_s + ' h in dieser Woche'
+    roundedHours(worktime) + ' h in dieser Woche'
   end
 end 
 
@@ -125,7 +130,7 @@ class HoursMonthType < ReportType
   INSTANCE = self.new 'month', 'Stunden/Monat', 2
   
   def timeString(worktime)
-    worktime.hours.to_s + ' h in diesem Monat'
+    roundedHours(worktime) + ' h in diesem Monat'
   end
 end 
 

@@ -35,10 +35,10 @@ class Project < ActiveRecord::Base
     options[:order] ||= 'clients.shortname, projects.name'
     super(options)
   end
-  
+        
   def self.puzzlebaseMap
     Puzzlebase::CustomerProject
-  end
+  end      
     
   def label_verbose
     client.shortname + ' - ' + name
