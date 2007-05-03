@@ -32,6 +32,7 @@ class UserNotification < ActiveRecord::Base
     period ||= Period.currentWeek
     list(:conditions => ['date_from BETWEEN ? AND ? OR date_to BETWEEN ? AND ?', 
                           period.startDate, period.endDate, 
-                          period.startDate, period.endDate])
+                          period.startDate, period.endDate],
+         :order => 'date_from')
   end
 end
