@@ -93,7 +93,10 @@ class WorktimeController < ApplicationController
   
   def split
     @split = session[:split]
-    redirect_to :controller => 'projecttime', :action => 'add' if @split.nil?
+    if @split.nil?
+      redirect_to :controller => 'projecttime', :action => 'add'
+      return
+    end
     @worktime = @split.worktimeTemplate
     @accounts = @worktime.employee.projects
     renderGeneric :action => 'split'

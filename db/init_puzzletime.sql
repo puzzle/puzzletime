@@ -25,3 +25,10 @@ VALUES (1, 'Puzzle ITC', 'PITC');
 
 INSERT INTO projects (id, client_id, name, shortname)
 VALUES (8, 1, 'Allgemein', 'ALG');
+
+INSERT INTO projectmemberships (project_id, employee_id)
+VALUES (8, 1);
+INSERT INTO projectmemberships (project_id, employee_id)
+VALUES (8, 2);
+INSERT INTO projectmemberships (project_id, employee_id)
+VALUES (8, 3);
