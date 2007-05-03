@@ -16,8 +16,8 @@ DEFAULT_PROJECT_ID      = 8
 REGULAR_HOLIDAYS        = [[1,1],[2,1],[1,8],[25,12],[26,12]]
 
 # Email settings for error messages
-SYSTEM_EMAIL            = %{"PuzzleTime" <puzzletime@puzzle.ch>}
-EXCEPTION_RECIPIENTS    = ["zumkehr@puzzle.ch"]
+SYSTEM_EMAIL            = %{"PuzzleTime" <monitor-sender@worldweb2000.com>}
+EXCEPTION_RECIPIENTS    = ["zumkehr@puzzle.ch", "josi@puzzle.ch"]
 
 # LDAP configuration
 LDAP_HOST               = 'proximai.ww2.ch'

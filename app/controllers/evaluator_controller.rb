@@ -16,6 +16,7 @@ class EvaluatorController < ApplicationController
   def overview
     setEvaluation
     setNavigationLevels
+    @notifications = UserNotification.list_during(@period)
     render :action => (params[:evaluation] =~ /^user/ ? 'userOverview' : 'overview' )
   end
   

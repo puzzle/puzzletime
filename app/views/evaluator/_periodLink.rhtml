@@ -10,4 +10,23 @@ Zeiten w&auml;hrend <%= @period %> &nbsp;
             :action => 'selectPeriod',  
             :evaluation => params[:action],
             :category_id => params[:category_id] %>
+
+<% unless @notifications.empty? -%>
+ | <%= link_to_function "#{@notifications.size} Nachricht#{@notifications.size > 1 ? 'en' : ''}", 
+            visual_effect(:toggle_blind, "notifications", :duration => 0.2) %>
 </p>
+
+<ul id="notifications">
+<% @notifications.each do |notification| -%>
+<li>- <%= h notification.message %></li>
+<% end -%>
+</ul>
+
+<script type="text/javascript">
+// <![CDATA[
+$('notifications').hide();
+// ]]>
+</script>
+<% else -%>
+</p>
+<% end -%>
