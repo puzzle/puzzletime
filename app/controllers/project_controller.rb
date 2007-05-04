@@ -40,7 +40,7 @@ class ProjectController < ManageController
   end  
   
   def listActions
-    [['Mitarbeiter', 'projectmembership', 'list']]
+    [['Mitarbeiter', 'projectmembership', 'listEmployees']]
   end
   
   def listFields

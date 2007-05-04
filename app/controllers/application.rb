@@ -28,7 +28,10 @@ class ApplicationController < ActionController::Base
       unless @user.management
         flash[:notice] = 'Sie sind nicht authorisiert, um diese Seite zu öffnen'
         redirect_to(:controller => 'login', :action => 'login' )
+        return false
       end
+    else
+      return false  
     end  
   end  
 

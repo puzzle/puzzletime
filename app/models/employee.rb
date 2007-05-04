@@ -11,7 +11,14 @@ class Employee < ActiveRecord::Base
   
   # All dependencies between the models are listed below.
   has_many :employments, :order => 'start_date DESC', :dependent => :destroy
-  has_many :projectmemberships, :dependent => :destroy
+  has_many :projectmemberships, 
+           :dependent => :destroy           
+  has_many :sorted_projectmemberships,
+           :class_name => 'Projectmembership',
+           :finder_sql => 
+              'SELECT m.* FROM projectmemberships m, projects p, clients c ' +
+              'WHERE m.employee_id = #{id} AND p.id = m.project_id AND p.client_id = c.id ' +
+              'ORDER BY c.shortname, p.name'
   has_many :projects, 
            :include => :client,
            :through => :projectmemberships, 
@@ -159,7 +166,7 @@ class Employee < ActiveRecord::Base
    
   # Returns the date the passed project was completed last. 
   def lastCompleted(project)
-    projectmemberships.find_by_project_id(project.id).last_completed
+    projectmemberships.find(:first, :conditions => ['project_id = ?', project.id]).last_completed
   end
   
   #########  vacation and overtime information ############

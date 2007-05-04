@@ -56,11 +56,9 @@
         <% end -%>
         <li><%= link_to 'Abwesenheiten', 
                  :controller => 'evaluator',
-                 :action => 'absencedetails' %></li>
-        <% if @user.management || @user.projectManager? -%>         
+                 :action => 'absencedetails' %></li>              
 		<li><%= link_to 'Verwalten', 
-		         :controller => 'project' %></li>         
-		<% end -%>
+		         :controller => 'projectmembership' %></li>  
 	  </ul>		
 	</div>   
 	

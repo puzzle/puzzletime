@@ -1,25 +1,29 @@
-<% @title = Employee.labelPlural + ' ' + groupLabel -%>
+<% @title = "#{listLabel} #{groupLabel}" -%>
 
 <table>
 <tr>
-    <th>Mitarbeiter</th>
+    <th><%= listLabel %></th>
     <th>Projektleitung</th>
 </tr>
-<%for membership in @project.projectmemberships -%> 
+<%for membership in @subject.sorted_projectmemberships -%> 
 <%= alternate_row %>
-    <td> <%= membership.employee.label %> </td>        
+    <td> <%= project? ? membership.employee.label : membership.project.label_verbose %> </td>        
     <td align="center"> 
-    <% if !membership.projectmanagement -%>
-        <%= link_to 'Hinzuf&uuml;gen', 
-    	            linkParams(:action => 'createManager', :id => membership) %>             
-    <% else -%>
-        <%= link_to 'Entfernen', 
-                    linkParams(:action => 'removeManager', :id => membership) %> 
-    <% end -%>          
+    <% if project? || @user.management? -%>
+        <% if membership.projectmanagement -%>
+            <%= link_to 'Entfernen', 
+                        pmLinkParams(:action => 'removeManager', :id => membership) %>       
+        <% else -%>
+            <%= link_to 'Hinzuf&uuml;gen', 
+        	            pmLinkParams(:action => 'createManager', :id => membership) %>      
+        <% end -%>  
+    <% else -%>  
+        <%= membership.projectmanagement ? 'ja' : 'nein' %>         
+    <% end -%>     
     </td> 
     <td>
     <%= link_to 'Vom Projekt entfernen', 
-                linkParams(:action => 'removeMembership', :id => membership), 
+                pmLinkParams(:action => 'removeMembership', :id => membership), 
                 :confirm => 'Sind sie sicher?', 
                 :method => 'post' %>
     </td>
@@ -29,18 +33,21 @@
 </br>
 
 <p>
-<% form_tag linkParams(:action => 'createMembership') do %> 
-Mitarbeiter:<br/><br/>
-<select name="employee_id[]" multiple="multiple" size="12">
-<%= options_from_collection_for_select @employees, :id, :label %>
-</select>
+<% form_tag pmLinkParams(:action => 'createMembership') do -%> 
+<%= listLabel %>:<br/>
+<%= select_tag 'ids[]', 
+               options_from_collection_for_select(@list, :id, :label_verbose), 
+               :multiple => true, 
+               :size => 15 %>
 <%= submit_tag 'Hinzufügen' %>
-<% end %>
+<% end -%>
 </p>  
 
+<% if @user.management || project? -%>
 <p>
 <%= link_to "&Uuml;bersicht #{group.class.labelPlural}",
             :controller => group.class.to_s.downcase,
             :action => 'list',
             :page => params[:group_page] %>
 </p>
+<% end -%>

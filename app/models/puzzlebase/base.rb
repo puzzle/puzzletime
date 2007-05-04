@@ -49,7 +49,7 @@ protected
   # based on the MAPPINGS defined.
   def self.updateAttributes(local, original)
     self::MAPPINGS.each_pair do |localAttr, originalAttr| 
-      local.send :"#{localAttr}=", original.send(originalAttr)
+      local.send(:"#{localAttr}=", original.send(originalAttr))
     end 
   end
   
