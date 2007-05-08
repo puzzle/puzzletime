@@ -33,7 +33,7 @@ class EvaluatorController < ApplicationController
     setNavigationLevels
     @evaluation = AttendanceEval.new(params[:category_id] || @user.id)
     setEvaluationDetails
-    paginateTimes
+    paginateTimes    
     render :action => 'details' 
   end
     
@@ -48,6 +48,7 @@ class EvaluatorController < ApplicationController
     params[:evaluation] = 'absencedetails'
     setEvaluation
     @period ||= Period.comingMonth Date.today, 'Kommender Monat'
+    @notifications = UserNotification.list_during(@period)
     paginateTimes
   end
   
