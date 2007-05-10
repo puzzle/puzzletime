@@ -104,6 +104,7 @@ class WorktimeController < ApplicationController
   
   def createPart
     @split = session[:split]
+    return create if @split.nil?
     params[:id] ? setWorktime : setNewWorktime 
     @worktime.employee = @user
     setWorktimeParams
