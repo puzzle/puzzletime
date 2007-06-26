@@ -16,14 +16,16 @@ module Evaluatable
      
   # Finds all Worktimes related to this object in a given period.    
   def findWorktimes(evaluation, period = nil, categoryRef = false, options = {})
-    options[:conditions] = conditionsFor(evaluation, period, categoryRef)
+    options[:conditions] = conditionsFor(evaluation, period, categoryRef, 
+                                         options[:conditions] ||= nil)
     options[:order] = "work_date ASC, project_id, employee_id"
     worktimes.find(:all, options)
   end  
   
   # Sums all worktimes related to this object in a given period.
   def sumWorktime(evaluation, period = nil, categoryRef = false, options = {})
-    options[:conditions] = conditionsFor(evaluation, period, categoryRef)
+    options[:conditions] = conditionsFor(evaluation, period, categoryRef, 
+                                         options[:conditions] ||= nil)
     worktimes.sum(:hours, options).to_f
   end
   
@@ -45,8 +47,13 @@ module Evaluatable
   
 private    
   
-  def conditionsFor(evaluation, period = nil, categoryRef = false)
-    condArray = [ "type = '" + (evaluation.absences? ? 'Absencetime' : 'Projecttime') + "'" ]
+  def conditionsFor(evaluation, period = nil, categoryRef = false, condArray = nil)
+    if condArray.nil?
+      condArray = [ '' ]
+    else
+      condArray[0] += " AND "
+    end
+    condArray[0] += "type = '" + (evaluation.absences? ? 'Absencetime' : 'Projecttime') + "'"
     if period
       condArray[0] += " AND (work_date BETWEEN ? AND ?) "
       condArray.push period.startDate, period.endDate

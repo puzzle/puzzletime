@@ -258,7 +258,7 @@ class Employee < ActiveRecord::Base
       :conditions => ["(end_date IS NULL OR end_date >= ?) AND start_date <= ?", 
         period.startDate, period.endDate],
       :order => 'start_date')
-    if ! selectedEmployments.empty?
+    unless selectedEmployments.empty?
       selectedEmployments.first.start_date = period.startDate
       if selectedEmployments.last.end_date == nil ||
          selectedEmployments.last.end_date > period.endDate then

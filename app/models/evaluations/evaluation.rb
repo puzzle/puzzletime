@@ -58,9 +58,9 @@ class Evaluation
   # Sums all worktimes for a given period.
   # If a division is passed or set previously, their sum will be returned.
   # Otherwise the sum of all worktimes in the main category is returned.
-  def sum_times(period, div = nil)
+  def sum_times(period, div = nil, options = {})
     div ||= division
-    sendTimeQuery(:sumWorktime, period, div)
+    sendTimeQuery(:sumWorktime, period, div, options)
   end  
 
   # Sums all worktimes for the category in a given period.

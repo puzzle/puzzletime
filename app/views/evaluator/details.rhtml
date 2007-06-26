@@ -25,8 +25,12 @@
 <% if @evaluation.class::SUB_EVALUATION.nil? && 
       @evaluation.division &&
       ! @evaluation.absences? -%>
-| <%= link_to 'Rapport drucken',
+ | Rapport: 
+<%= link_to 'alle Zeiten',
               evaluation_detail_params.merge!({
-                 :action => 'report' }) %>  
+                 :action => 'report' }) %>
+ / <%= link_to 'verrechenbare',
+              evaluation_detail_params.merge!({
+                 :action => 'report', :only_billable => 'true' }) %>
 <% end -%>
-</p>            
+</p>

@@ -57,7 +57,9 @@ class EvaluatorController < ApplicationController
   def report
     setEvaluation
     setEvaluationDetails
-    @times = @evaluation.times(@period)
+    options = params[:only_billable] ? { :conditions => [ "billable = 't'" ] } : {}
+    @times = @evaluation.times(@period, options.dup)
+    @times_total_sum = @evaluation.sum_times(@period, nil, options.dup)
     render :layout => false
   end
   
@@ -78,7 +80,8 @@ class EvaluatorController < ApplicationController
     pm = @user.projectmemberships.find(:first, 
             :conditions => ["project_id = ?", params[:project_id]])
     pm.update_attributes(:last_completed => Date.today)
-    flash[:notice] = "Das Datum der kompletten Erfassung aller Zeiten für das Projekt #{pm.project.label_verbose} wurde aktualisiert."
+    flash[:notice] = "Das Datum der kompletten Erfassung aller Zeiten " +
+                     "für das Projekt #{pm.project.label_verbose} wurde aktualisiert."
     redirectToOverview
   end
   
