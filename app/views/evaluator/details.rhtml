@@ -26,10 +26,10 @@
       @evaluation.division &&
       ! @evaluation.absences? -%>
  | Rapport: 
-<%= link_to 'alle Zeiten',
+<%= link_to 'alle Stunden',
               evaluation_detail_params.merge!({
                  :action => 'report' }) %>
- / <%= link_to 'verrechenbare',
+ / <%= link_to 'verrechenbare Stunden',
               evaluation_detail_params.merge!({
                  :action => 'report', :only_billable => 'true' }) %>
 <% end -%>
