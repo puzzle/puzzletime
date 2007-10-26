@@ -97,7 +97,7 @@ class EvaluatorController < ApplicationController
   end
   
   def changePeriod
-    @period = Period.new(params[:period][:startDate], 
+    @period = Period.retrieve(params[:period][:startDate], 
                          params[:period][:endDate],
                          params[:period][:label])  
     raise ArgumentError, "Start Datum nach End Datum" if @period.negative?   
@@ -153,7 +153,7 @@ private
     @evaluation.set_division_id(params[:division_id])    
     if params[:start_date] != nil
       @period = params[:start_date] == "0" ? nil :
-                   Period.new(Date.parse(params[:start_date]), Date.parse(params[:end_date]))     
+                   Period.retrieve(Date.parse(params[:start_date]), Date.parse(params[:end_date]))     
     end     
   end
   

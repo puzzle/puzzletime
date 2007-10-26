@@ -63,7 +63,7 @@ class Employment < ActiveRecord::Base
   end
   
   def period
-    return Period.new(start_date, end_date ? end_date : Date.today) if start_date
+    return Period.retrieve(start_date, end_date ? end_date : Date.today) if start_date
   end
   
   def percentFactor
@@ -77,6 +77,26 @@ class Employment < ActiveRecord::Base
   def musttime
     period.musttime * percentFactor
   end
+  
+  ##### cache dates for performance reasons  ######
+  
+  def start_date
+  	@start_date ||= read_attribute(:start_date)
+  end
+  
+  def end_date
+  	@end_date ||= read_attribute(:end_date)
+  end
+  
+  def start_date=(value)
+  	write_attribute(:start_date, value)
+	@start_date = nil
+  end
+  
+  def end_date=(value)
+  	write_attribute(:end_date, value)
+	@end_date = nil
+  end  
   
   ##### interface methods for Manageable #####     
     

@@ -8,15 +8,17 @@
 <td align="right">
 <%= number_with_precision(periodTime, 2) %>
 <% if division_id || @evaluation.class::TOTAL_DETAILS -%>
-    <%= linkHash = {:action => action,
-                    :evaluation => params[:evaluation],
-                    :category_id => @evaluation.category.id}
-        linkHash[:division_id] = division_id if division_id
-        linkHash[:start_date] = p ? p.startDate : 0
-        linkHash[:end_date] = p.endDate if p            
-        link_to image_tag('lupe.gif', :size => '19x11', :border => 0, :alt => 'Details'), linkHash %>
+    <%  link = request.relative_url_root + '/' + controller.controller_name + '/' +
+				 action + '?evaluation=' + params[:evaluation] +
+				 '&category_id=' +  @evaluation.category_id.to_s 
+		link += '&division_id=' + division_id.to_s if division_id
+		link += '&' + ( p ? p.url_query_s : 'start_date=0' )
+		# use html link instead of link_to for performance reasons -%>		
+	<a href="<%= link %>"> 
+    <%= image_tag('lupe.gif', 'size' => '19x11', 'border' => 0, 'alt' => 'Details') %>
+	</a>
 <% else -%>
-    <%= image_tag 'space.gif', :size => '19x11', :border => 0 %>
+    <%= image_tag( 'space.gif', 'size' => '19x11', 'border' => 0 ) %>
 <% end -%>  
 &nbsp;
 </td>

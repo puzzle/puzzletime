@@ -48,7 +48,8 @@ class Holiday < ActiveRecord::Base
   
   # 0 is Sunday, 6 is Saturday
   def self.weekend?(date)
-    date.wday == 0 || date.wday == 6
+  	wday = date.wday
+    wday == 0 || wday == 6
   end
       
   def self.refresh
@@ -76,6 +77,16 @@ class Holiday < ActiveRecord::Base
   def destroyUserNotification
     notification = findUserNotification
     notification.destroy if notification
+  end
+  
+  def holiday_date
+  	# cache holiday date to prevent endless string_to_date conversion
+  	@holiday_date ||= read_attribute(:holiday_date)
+  end
+  
+  def holiday_date=(value)
+  	write_attribute(:holiday_date, value)
+	@holiday_date = nil
   end
 
 private

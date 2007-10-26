@@ -54,6 +54,11 @@ class Evaluation
   def divisions  
     category.send(self.class::DIVISION_METHOD)
   end
+  
+  # The record identifier of the category, 0 if category is not an active record
+  def category_id
+  	category.is_a?(Class) ? 0 : category.id
+  end
  
   # Sums all worktimes for a given period.
   # If a division is passed or set previously, their sum will be returned.

@@ -60,7 +60,7 @@ private
     end
     if categoryRef 
       condArray[0] += " AND #{evaluation.categoryRef} = ? "
-      condArray.push evaluation.category.id 
+      condArray.push evaluation.category_id 
     end
     return condArray
   end      

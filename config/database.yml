@@ -25,6 +25,14 @@ production:
   username: puzzle
   password: timepuzzle
   host: 127.0.0.1
+  
+profile:
+  adapter: postgresql
+  database: puzzletime_profile
+  encoding: utf8
+  username: puzzle
+  password: timepuzzle
+  host: 127.0.0.1
 
 # Connection to puzzlebase used for synchronization
 puzzlebase:

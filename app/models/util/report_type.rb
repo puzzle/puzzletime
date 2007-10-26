@@ -8,7 +8,7 @@ class ReportType
   START_STOP = false
   
   def self.[](key)
-    ObjectSpace.each_object(ReportType) {|type| return type if type.key == key }
+  	ALL_INSTANCES.each {|type| return type if type.key == key }
   end
   
   def to_s
@@ -140,4 +140,5 @@ class ReportType
                HoursDayType::INSTANCE,
                HoursWeekType::INSTANCE,
                HoursMonthType::INSTANCE]
+  ALL_INSTANCES = INSTANCES + [AutoStartType::INSTANCE]
 end

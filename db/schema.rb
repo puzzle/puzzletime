@@ -11,7 +11,8 @@ ActiveRecord::Schema.define(:version => 9) do
 
   create_table "clients", :force => true do |t|
     t.column "name",      :string,              :null => false
-    t.column "shortname", :string, :limit => 4, :null => false
+    t.column "contact",   :string
+    t.column "shortname", :string, :limit => 4
   end
 
   create_table "employees", :force => true do |t|
@@ -59,7 +60,7 @@ ActiveRecord::Schema.define(:version => 9) do
     t.column "billable",             :boolean,              :default => true
     t.column "report_type",          :string,               :default => "month"
     t.column "description_required", :boolean,              :default => false
-    t.column "shortname",            :string,  :limit => 3,                      :null => false
+    t.column "shortname",            :string,  :limit => 3
   end
 
   create_table "user_notifications", :force => true do |t|
