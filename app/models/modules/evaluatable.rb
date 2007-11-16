@@ -18,7 +18,7 @@ module Evaluatable
   def findWorktimes(evaluation, period = nil, categoryRef = false, options = {})
     options[:conditions] = conditionsFor(evaluation, period, categoryRef, 
                                          options[:conditions] ||= nil)
-    options[:order] = "work_date ASC, project_id, employee_id"
+    options[:order] ||= "work_date ASC, project_id, employee_id"
     worktimes.find(:all, options)
   end  
   

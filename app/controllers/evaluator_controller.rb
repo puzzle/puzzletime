@@ -36,13 +36,7 @@ class EvaluatorController < ApplicationController
     paginateTimes    
     render :action => 'details' 
   end
-    
-  # Shows overtimes of employees
-  def overtime
-    session[:evalLevels] = Array.new
-    @employees = Employee.list
-  end
-  
+
   def absencedetails
     session[:evalLevels] = Array.new
     params[:evaluation] = 'absencedetails'
@@ -51,6 +45,17 @@ class EvaluatorController < ApplicationController
     @notifications = UserNotification.list_during(@period)
     paginateTimes
   end
+  
+  # Shows overtimes of employees
+  def overtime
+    session[:evalLevels] = Array.new
+    @employees = Employee.list
+  end
+  
+  def graph
+    @graph = WorktimeGraph.new(@period || Period.currentMonth, @user)
+  end
+  
   
   ########################  DETAIL ACTIONS  #########################
   

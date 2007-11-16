@@ -1,0 +1,19 @@
+<% @title = 'Monatszeit &Uuml;bersicht' -%>
+
+<table cellpadding="0" cellspacing="0">
+<tr>
+<% @graph.each_day do |day| -%>	
+	<td width="50pt" valign="bottom" align="center">
+	<% @graph.timeboxes.reverse_each do |box| -%>
+		<%= "<div style=\"background-color: #{box.color}; height: #{box.height}pt;\" tooltip=\"#{box.tooltip}\"></div>" %>
+	<% end -%>
+	<div align="center"><%= day.strftime(DATE_FORMAT)%><br>&nbsp;</div>
+	</td>
+<% if day.wday == 0 -%>
+</tr>
+<tr>
+<% end -%>		
+<% end -%>	
+</tr>
+
+</table>
