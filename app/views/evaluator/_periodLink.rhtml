@@ -21,12 +21,14 @@ Zeiten w&auml;hrend <%= @period %> &nbsp;
 <li>- <%= h notification.message %></li>
 <% end -%>
 </ul>
-
-<script type="text/javascript">
-// <![CDATA[
-$('notifications').hide();
-// ]]>
-</script>
+	
+	<% unless "login" == controller.request.env["HTTP_REFERER"][-5,5] -%>
+	<script type="text/javascript">
+	// <![CDATA[
+	$('notifications').hide();
+	// ]]>
+	</script>
+	<% end -%>
 <% else -%>
 </p>
 <% end -%>

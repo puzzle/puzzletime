@@ -2,7 +2,7 @@ class Cache
 
   attr_accessor :max_size, :timeout
 	
-  def initialize(timeout = 60 * 60 * 24 , max_size = 32)
+  def initialize(timeout = 60 * 60 * 24 , max_size = 64)
     self.max_size =  max_size
     self.timeout = timeout
     @map = Hash.new

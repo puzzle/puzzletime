@@ -90,12 +90,12 @@ class Employment < ActiveRecord::Base
   
   def start_date=(value)
   	write_attribute(:start_date, value)
-	@start_date = nil
+	  @start_date = nil
   end
   
   def end_date=(value)
   	write_attribute(:end_date, value)
-	@end_date = nil
+	  @end_date = nil
   end  
   
   ##### interface methods for Manageable #####     

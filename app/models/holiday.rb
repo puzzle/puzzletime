@@ -51,6 +51,20 @@ class Holiday < ActiveRecord::Base
   	wday = date.wday
     wday == 0 || wday == 6
   end
+  
+  def self.regular_holidays(period)
+    holidays = Array.new
+    years = period.startDate.year..period.endDate.year
+    years.each do |year|
+      REGULAR_HOLIDAYS.each do |day|
+         regular = Date.civil(year, day[1], day[0])
+         if regular.between?(period.startDate, period.endDate)
+           holidays.push new(:holiday_date => regular, :musthours_day => 0)
+         end
+      end
+    end
+    holidays
+  end
       
   def self.refresh
     @@irregularHolidays = Holiday.find(:all, :order => 'holiday_date')
@@ -64,19 +78,15 @@ class Holiday < ActiveRecord::Base
   
   # add user notification for new holiday
   def createUserNotification
-    UserNotification.create(:date_from => holiday_date,
-                            :date_to => holiday_date,
-                            :message => notificationMessage)
+    UserNotification.createHoliday(self)
   end
   
   def updateUserNotification
-    self.class.find(id).destroyUserNotification
-    createUserNotification
+    UserNotification.updateHoliday(self)
   end
   
   def destroyUserNotification
-    notification = findUserNotification
-    notification.destroy if notification
+    UserNotification.destroyHoliday(self)
   end
   
   def holiday_date
@@ -86,21 +96,8 @@ class Holiday < ActiveRecord::Base
   
   def holiday_date=(value)
   	write_attribute(:holiday_date, value)
-	@holiday_date = nil
+	  @holiday_date = nil
   end
-
-private
-  def notificationMessage
-    holiday_date.strftime(LONG_DATE_FORMAT) + 
-      " ist ein Feiertag (" + number_with_precision(musthours_day, 2).to_s + 
-      " Stunden Sollarbeitszeit)"
-  end
-  
-  def findUserNotification
-    UserNotification.find(:first, 
-                        :conditions => ['date_from = ? AND date_to = ? AND message = ?', 
-                                        holiday_date, holiday_date, notificationMessage])
-  end 
   
 public
   ##### interface methods for Manageable #####
