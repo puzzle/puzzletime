@@ -179,7 +179,7 @@ textarea, input, select {
 }
 
 #menu ul li a:hover {
-    background:     #fff url('../../images/menubox.gif') repeat-x top;
+    background:     #fff url('../images/menubox.gif') repeat-x top;
     color:          #4A4A24;
     text-decoration: none;
 }

@@ -8,7 +8,7 @@
 <td align="right">
 <%= number_with_precision(periodTime, 2) %>
 <% if division_id || @evaluation.class::TOTAL_DETAILS -%>
-    <%  link = request.relative_url_root + '/' + controller.controller_name + '/' +
+    <%  link = PATH_PREFIX + '/' + controller.controller_name + '/' +
 				 action + '?evaluation=' + params[:evaluation] +
 				 '&category_id=' +  @evaluation.category_id.to_s 
 		link += '&division_id=' + division_id.to_s if division_id
