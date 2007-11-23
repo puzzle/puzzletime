@@ -52,6 +52,12 @@ class Holiday < ActiveRecord::Base
     wday == 0 || wday == 6
   end
   
+  def self.holiday?(date)
+    self.weekend?(date) || 
+      self.regularHoliday?(date) || 
+      self.irregularHoliday?(date)
+  end
+  
   def self.regular_holidays(period)
     holidays = Array.new
     years = period.startDate.year..period.endDate.year

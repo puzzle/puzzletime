@@ -2,27 +2,31 @@
 <%  if @period -%>
 Zeiten w&auml;hrend <%= @period %> &nbsp; 
 <%= link_to 'Aktuelle Zeitspanne', 
+			 :controller => 'evaluator',
              :action => 'currentPeriod', 
              :evaluation => params[:action],
              :category_id => params[:category_id] %> | 
 <% end -%>
 <%= link_to 'Andere Zeitspanne', 
+			:controller => 'evaluator',
             :action => 'selectPeriod',  
             :evaluation => params[:action],
             :category_id => params[:category_id] %>
 
-<% unless @notifications.empty? -%>
+<% if @notifications && !@notifications.empty? -%>
  | <%= link_to_function "#{@notifications.size} Nachricht#{@notifications.size > 1 ? 'en' : ''}", 
             visual_effect(:toggle_blind, "notifications", :duration => 0.2) %>
 </p>
 
 <ul id="notifications">
-<% @notifications.each do |notification| -%>
-<li>- <%= h notification.message %></li>
-<% end -%>
+	<% @notifications.each do |notification| -%>
+	<li>- <%= h notification.message %></li>
+	<% end -%>
 </ul>
 	
-	<% unless "login" == controller.request.env["HTTP_REFERER"][-5,5] -%>
+	<%= javascript_include_tag :defaults %>
+	<% ref = controller.request.env["HTTP_REFERER"]
+ 	   if ref && "login" != ref[-5,5] -%>
 	<script type="text/javascript">
 	// <![CDATA[
 	$('notifications').hide();

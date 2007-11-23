@@ -4,6 +4,8 @@
 # See Evaluation for further details.
 module Evaluatable 
 
+  include Comparable
+
   # The displayed label of this object.
   def label
     name
@@ -16,6 +18,7 @@ module Evaluatable
      
   # Finds all Worktimes related to this object in a given period.    
   def findWorktimes(evaluation, period = nil, categoryRef = false, options = {})
+    options = options.clone
     options[:conditions] = conditionsFor(evaluation, period, categoryRef, 
                                          options[:conditions] ||= nil)
     options[:order] ||= "work_date ASC, project_id, employee_id"
@@ -24,6 +27,7 @@ module Evaluatable
   
   # Sums all worktimes related to this object in a given period.
   def sumWorktime(evaluation, period = nil, categoryRef = false, options = {})
+    options = options.clone
     options[:conditions] = conditionsFor(evaluation, period, categoryRef, 
                                          options[:conditions] ||= nil)
     worktimes.sum(:hours, options).to_f
@@ -31,6 +35,7 @@ module Evaluatable
   
   # Counts the number of worktimes related to this object in a given period.
   def countWorktimes(evaluation, period = nil, categoryRef = false, options = {})
+    options = options.clone
     options[:conditions] = conditionsFor(evaluation, period, categoryRef)
     worktimes.count("*", options)
   end
@@ -40,6 +45,10 @@ module Evaluatable
   def protect_worktimes
     raise "Diesem Eintrag sind Arbeitszeiten zugeteilt. Er kann nicht entfernt werden." if ! worktimes.empty?
   end  
+  
+  def <=>(other)
+    label_verbose <=> other.label_verbose
+  end
   
   def to_s
     label
@@ -51,7 +60,8 @@ private
     if condArray.nil?
       condArray = [ '' ]
     else
-      condArray[0] += " AND "
+      condArray = condArray.clone
+      condArray[0] = "( #{condArray[0]} ) AND "
     end
     condArray[0] += "type = '" + (evaluation.absences? ? 'Absencetime' : 'Projecttime') + "'"
     if period

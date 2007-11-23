@@ -1,0 +1,6 @@
+#!/bin/bash
+#
+# Vacuums the database
+# Put as executable into /etc/cron.daily
+
+vacuumdb -d puzzletime -q -z -U puzzle > /dev/null 2>&1

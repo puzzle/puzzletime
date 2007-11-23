@@ -289,7 +289,17 @@ private
   end
   
   def self.sumAttendanceFor(receiver, period = nil, options = {})
-    options[:conditions] = [ "work_date BETWEEN ? AND ?", period.startDate, period.endDate ] if period
+    if period
+      options = options.clone
+      if options[:conditions]
+        options[:conditions] = options[:conditions].clone
+        options[:conditions][0] = "(#{options[:conditions][0]}) AND "
+      else
+        options[:conditions] = ['']
+      end
+      options[:conditions][0] += "work_date BETWEEN ? AND ?"
+      options[:conditions].push period.startDate, period.endDate 
+    end
     receiver.sum(:hours, options).to_f
   end
   

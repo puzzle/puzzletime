@@ -1,9 +1,9 @@
 class Timebox
   
   MUST_HOURS_COLOR = '#FF0000'
-  ATTENDANCE_POS_COLOR = '#00FF00'
+  ATTENDANCE_POS_COLOR = '#55FF55'
   ATTENDANCE_NEG_COLOR = '#000000'
-  BLANK_COLOR = '#FFFFFF'
+  BLANK_COLOR = 'transparent'
   
   attr_reader :height, :color, :tooltip
   attr_writer :height
@@ -12,6 +12,10 @@ class Timebox
     @height = height
     @color = color
     @tooltip = tooltip
+  end
+  
+  def stretch(factor)
+    @height *= factor
   end
   
   def self.must_hours
@@ -29,4 +33,5 @@ class Timebox
   def self.blank(height)
     new(height, BLANK_COLOR, '')
   end
+  
 end

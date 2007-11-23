@@ -97,7 +97,7 @@ private
   def compute_musttime
 	  sum = 0
 	  step do |date|
-		sum += Holiday.musttime(date)
+		  sum += Holiday.musttime(date)
 	  end
 	  sum   	
   end

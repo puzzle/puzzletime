@@ -42,6 +42,7 @@ module ApplicationHelper
   end
   
   def date_calendar_field(object, method, title)
+    @has_calendar = true    # used to include calendar js/css
     calendar_field object, method,
     	{ :field_title => title,
     	  :button_image => 'calendar.gif',

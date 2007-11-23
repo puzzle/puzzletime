@@ -53,7 +53,7 @@ class EvaluatorController < ApplicationController
   end
   
   def graph
-    @graph = WorktimeGraph.new(@period || Period.currentMonth, @user)
+    redirect_to :controller => 'graph', :action => 'graph'
   end
   
   

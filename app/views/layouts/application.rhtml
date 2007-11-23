@@ -10,8 +10,9 @@
   <link rel="shortcut icon" href="<%= PATH_PREFIX %>/favicon.gif" />
   
   <%= stylesheet_link_tag 'puzzletime', :media => 'screen' %>
+  <% if @has_calendar -%>
   <%= dhtml_calendar_includes "blue", "de" %>
-  <%= javascript_include_tag :defaults %>
+  <% end -%>
 </head>
 <body>
 <div id="content">

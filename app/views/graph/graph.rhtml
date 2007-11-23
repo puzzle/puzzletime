@@ -1,0 +1,81 @@
+<% @title = 'Graphische &Uuml;bersicht' -%>
+
+<%= render(:partial => 'evaluator/periodLink') %>
+
+<style type="text/css">
+.graph { 
+	border-spacing: 0px;
+}
+
+.graph tr {
+	height: 		87pt;	
+}
+
+.graph .head {
+	height: 		0;
+}
+
+.graph th {
+	text-align:		center;
+}
+
+.graph td {
+	vertical-align: bottom;
+	text-align: 	center;
+	width: 			55pt;
+	padding: 		0pt;
+	border: 		1px solid white;
+}
+
+.graph td.holiday {
+	background-color: #EEEEEE;	
+}
+
+.graph div {
+	text-align: 	center;
+	font-size:		9.5pt;
+}
+
+.graph div.dateLabel {
+	background-color: #FFFFFF; 
+	height: 25pt;
+}
+</style>
+
+<table class="graph" align="left">
+<tr class="head">
+	<th></th>
+	<%= weekday_header %>
+<% @graph.each_day do |day| -%>	
+	<% if day.wday == 1 -%>
+</tr>
+<tr>
+	<th>KW <%= day.cweek %> </th>
+	<% end -%>	
+	<%= day_td day %>
+	<% @graph.timeboxes.reverse_each do |box| -%>
+		<%= timebox_div box %>
+	<% end -%>
+	<div class="dateLabel"><%= day.strftime(DATE_FORMAT)%></div>
+	</td>	
+<% end -%>	
+</tr>
+</table>
+
+<table width="350pt" align="right">
+<%= render :partial => "legend", :collection => [Project, Absence] %>
+<tr>
+	<td colspan="2"><b>Anwesenheit</b></td>
+</tr>
+<%= render( :partial => 'legendItem', :collection => [
+		['zus&auml;tzliche Anwesenheitszeit', Timebox::ATTENDANCE_POS_COLOR],
+		['fehlende Anwesenheitszeit', Timebox::ATTENDANCE_NEG_COLOR],
+		['Wochenende / Feiertag', '#EEEEEE' ]] ) %>
+<tr valign="center">
+	<td><div style="background-color: #FF0000; height: 1pt; width: 50pt;"></div></td>
+	<td>Tagessoll (8 h)</td>
+</tr>		
+</table>
+
+<br clear="all">
+

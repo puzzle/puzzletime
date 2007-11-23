@@ -22,21 +22,21 @@ class AttendanceEval < Evaluation
   end  
 
   # Sums all worktimes for the category in a given period.
-  def sum_total_times(period = nil)  
-    sum_times period
+  def sum_total_times(period = nil, options = {})  
+    sum_times period, nil, options
   end
     
   # Counts the number of Worktime entries in the current Evaluation for a given period.
   def count_times(period = nil, options = {})
-    addConditions options, period
+    options = addConditions options, period
     category.attendancetimes.count("*", options).to_i
   end
   
   # Returns a list of all Worktime entries for this Evaluation in the given period
   # of time.
   def times(period, options = {})
-    addConditions options, period
-    options[:order] = "work_date ASC, from_start_time"
+    options = addConditions options, period
+    options[:order] ||= "work_date ASC, from_start_time"
     category.attendancetimes.find(:all, options)
   end
   
@@ -55,7 +55,18 @@ class AttendanceEval < Evaluation
 private
 
   def addConditions(options = {}, period = nil)
-    options[:conditions] = [ "work_date BETWEEN ? AND ?", period.startDate, period.endDate ] if period
+    options = options.clone
+    if period
+      if options[:conditions]
+        options[:conditions] = options[:conditions].clone
+        options[:conditions][0] = "(#{options[:conditions][0]}) AND "
+      else
+        options[:conditions] = ['']
+      end
+      options[:conditions][0] += "work_date BETWEEN ? AND ?"
+      options[:conditions].push period.startDate, period.endDate 
+    end
+    options
   end  
   
 end

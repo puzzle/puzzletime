@@ -69,8 +69,8 @@ class Evaluation
   end  
 
   # Sums all worktimes for the category in a given period.
-  def sum_total_times(period = nil)
-    category.sumWorktime(self, period)
+  def sum_total_times(period = nil, options = {})
+    category.sumWorktime(self, period, false, options)
   end
     
   # Counts the number of Worktime entries in the current Evaluation for a given period.
