@@ -1,6 +1,5 @@
 class WorktimeGraph
   
-  PIXEL_PER_HOUR = 6.0
   WORKTIME_OPTIONS = {:order => 'work_date, from_start_time, project_id, absence_id',
                       :conditions => ['(report_type = ? OR report_type = ?)',
                                        StartStopType::INSTANCE.key, 
@@ -106,7 +105,7 @@ private
     attendance_hours = @attendance_eval.sum_total_times(@current, 
                           {:conditions => WORKTIME_OPTIONS[:conditions]})
     period_boxes.each do |box|
-      attendance_hours += (box.height * must_hours) / PIXEL_PER_HOUR
+      attendance_hours += (box.height * must_hours) / Timebox::PIXEL_PER_HOUR
     end
     attendance_hours
   end
@@ -116,7 +115,7 @@ private
       box = b.clone
       box.stretch(must_hours)
       @boxes.push box
-      @total_hours += box.height / PIXEL_PER_HOUR
+      @total_hours += box.height / Timebox::PIXEL_PER_HOUR
     end
   end  
   
@@ -132,7 +131,7 @@ private
     if diff > 0.01
       @total_hours += diff
       @boxes.push Timebox.attendance_pos(heightFor(diff))
-    elsif diff < 0.01
+    elsif diff < -0.01
       # replace with removing corresponding projecttime algorithm
       diff_height = heightFor(-diff)
       @boxes.reverse_each do |b|
@@ -151,9 +150,9 @@ private
   def insert_musthours_line(must_hours)
     if @total_hours < must_hours
       @boxes.push Timebox.blank(heightFor(must_hours - @total_hours))
-      @boxes.push Timebox.must_hours
+      @boxes.push Timebox.must_hours(must_hours)
     elsif @total_hours == must_hours
-      @boxes.push Timebox.must_hours
+      @boxes.push Timebox.must_hours(must_hours)
     else
       sum = 0
       limit = heightFor(must_hours)
@@ -162,11 +161,11 @@ private
         diff = sum - limit
         if diff > 0
           @boxes[i].height = @boxes[i].height - diff
-          @boxes.insert(i+1, Timebox.must_hours)
+          @boxes.insert(i+1, Timebox.must_hours(must_hours))
           @boxes.insert(i+2, Timebox.new(diff, @boxes[i].color, @boxes[i].tooltip))
           break
         elsif diff == 0
-          @boxes.insert(i+1, Timebox.must_hours)
+          @boxes.insert(i+1, Timebox.must_hours(must_hours))
           break
         end
       end
@@ -174,7 +173,7 @@ private
   end
   
   def heightFor(hours)
-    hours * PIXEL_PER_HOUR
+    hours * Timebox::PIXEL_PER_HOUR
   end
   
   def colorFor(worktime)
@@ -190,17 +189,18 @@ private
   
   def generateAbsenceColor(id)
     srand id
-    val = randomColor
+    val = randomColor(200)
     '#FF' + val + val
   end
   
   def generateProjectColor(id)
     srand id
-    '#' + randomColor + randomColor + 'FF'
+    '#' + randomColor(120) + randomColor + 'FF'
   end
   
-  def randomColor
-    (50 + rand(150)).to_s(16)
+  def randomColor(span = 170)
+    lower = (255 - span) / 2
+    (lower + rand(span)).to_s(16)
   end
   
   def tooltipFor(worktime)

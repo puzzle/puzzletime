@@ -47,6 +47,9 @@ Rails::Initializer.run do |config|
     
   # See Rails::Configuration for more options
   config.action_controller.asset_host = PATH_PREFIX
+  
+  # Do not symbolize keys for performance reasons
+  config.action_view.local_assigns_support_string_keys = false
 end
 
 # Add new inflection rules using the following format 

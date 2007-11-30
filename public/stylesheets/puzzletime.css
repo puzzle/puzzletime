@@ -110,14 +110,14 @@ textarea, input, select {
 #brand {    
     font-weight:    normal;
     font-size:      28px;
-    line-height:    20px;
     letter-spacing: -1px;
-    margin-top:     20px;
+    margin-top:     22px;
     margin-bottom:  0px;
 }
 
 #company {
     font-size:      11px;
+	line-height:     1px;
     font-weight:    normal;
     color:          #FCE2CA;
 }

@@ -1,5 +1,7 @@
 class Timebox
   
+  PIXEL_PER_HOUR = 6.0
+  
   MUST_HOURS_COLOR = '#FF0000'
   ATTENDANCE_POS_COLOR = '#55FF55'
   ATTENDANCE_NEG_COLOR = '#000000'
@@ -9,7 +11,7 @@ class Timebox
   attr_writer :height
   
   def initialize(height, color, tooltip)
-    @height = height
+    @height = (height * 10).round / 10.0
     @color = color
     @tooltip = tooltip
   end
@@ -18,20 +20,25 @@ class Timebox
     @height *= factor
   end
   
-  def self.must_hours
-    new(1, MUST_HOURS_COLOR, 'Sollzeit')
+  def self.must_hours(must_hours)
+    new(1, MUST_HOURS_COLOR, "Sollzeit (#{must_hours} h)")
   end
   
   def self.attendance_pos(height)
-    new(height, ATTENDANCE_POS_COLOR, 'Anwesenheit')
+    new(height, ATTENDANCE_POS_COLOR, "zus&auml;tzliche Anwesenheit (#{hours_from_height(height)} h)")
   end
 
   def self.attendance_neg(height)
-    new(height, ATTENDANCE_NEG_COLOR, 'Anwesenheit')
+    new(height, ATTENDANCE_NEG_COLOR, "fehlende Anwesenheit (#{hours_from_height(height)} h)")
   end
   
   def self.blank(height)
     new(height, BLANK_COLOR, '')
   end
-  
+
+private
+
+  def self.hours_from_height(height)
+    (100 * height / PIXEL_PER_HOUR).round / 100.0
+  end
 end

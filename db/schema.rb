@@ -2,7 +2,7 @@
 # migrations feature of ActiveRecord to incrementally modify your database, and
 # then regenerate this schema definition.
 
-ActiveRecord::Schema.define(:version => 9) do
+ActiveRecord::Schema.define(:version => 10) do
 
   create_table "absences", :force => true do |t|
     t.column "name",  :string,                     :null => false
@@ -12,7 +12,7 @@ ActiveRecord::Schema.define(:version => 9) do
   create_table "clients", :force => true do |t|
     t.column "name",      :string,              :null => false
     t.column "contact",   :string
-    t.column "shortname", :string, :limit => 4
+    t.column "shortname", :string, :limit => 4, :null => false
   end
 
   create_table "employees", :force => true do |t|
@@ -22,7 +22,7 @@ ActiveRecord::Schema.define(:version => 9) do
     t.column "passwd",                :string,                                  :null => false
     t.column "email",                 :string,                                  :null => false
     t.column "management",            :boolean,              :default => false
-    t.column "initial_vacation_days", :float,                :default => 0.0
+    t.column "initial_vacation_days", :float
     t.column "ldapname",              :string
   end
 
@@ -33,6 +33,13 @@ ActiveRecord::Schema.define(:version => 9) do
     t.column "percent",     :integer, :null => false
     t.column "start_date",  :date,    :null => false
     t.column "end_date",    :date
+  end
+
+  add_index "employments", ["employee_id"], :name => "index_employments_on_employee_id"
+
+  create_table "engine_schema_info", :id => false, :force => true do |t|
+    t.column "engine_name", :string
+    t.column "version",     :integer
   end
 
   create_table "holidays", :force => true do |t|
@@ -53,6 +60,9 @@ ActiveRecord::Schema.define(:version => 9) do
     t.column "last_completed",    :date
   end
 
+  add_index "projectmemberships", ["employee_id"], :name => "index_projectmemberships_on_employee_id"
+  add_index "projectmemberships", ["project_id"], :name => "index_projectmemberships_on_project_id"
+
   create_table "projects", :force => true do |t|
     t.column "client_id",            :integer
     t.column "name",                 :string,                                    :null => false
@@ -60,8 +70,11 @@ ActiveRecord::Schema.define(:version => 9) do
     t.column "billable",             :boolean,              :default => true
     t.column "report_type",          :string,               :default => "month"
     t.column "description_required", :boolean,              :default => false
-    t.column "shortname",            :string,  :limit => 3
+    t.column "shortname",            :string,  :limit => 3,                      :null => false
   end
+
+  add_index "projects", ["client_id"], :name => "index_projects_on_client_id"
+  add_index "projects", ["client_id"], :name => "project_clients"
 
   create_table "user_notifications", :force => true do |t|
     t.column "date_from", :date, :null => false
@@ -83,5 +96,11 @@ ActiveRecord::Schema.define(:version => 9) do
     t.column "booked",          :boolean, :default => false
     t.column "type",            :string
   end
+
+  add_index "worktimes", ["absence_id", "employee_id", "work_date"], :name => "absence_empl_date_index"
+  add_index "worktimes", ["employee_id", "work_date"], :name => "attendance_empl_date_index"
+  add_index "worktimes", ["employee_id", "work_date", "absence_id"], :name => "worktimes_absences"
+  add_index "worktimes", ["work_date", "employee_id"], :name => "worktimes_attendances"
+  add_index "worktimes", ["employee_id", "project_id", "work_date"], :name => "worktimes_projects"
 
 end

@@ -7,6 +7,14 @@ module GraphHelper
   end
 
   def timebox_div(box)
+    image_tag('space.gif', 
+              'height' => "#{box.height}pt",
+              #'alt' => box.tooltip,
+              'title' => box.tooltip,
+              'style' => "background-color: #{box.color};")
+  end
+
+  def timebox_div_old(box)
     "<div style=\"background-color: #{box.color}; " +
          "height: #{box.height}pt;\" " +
          "title=\"#{box.tooltip}\"></div>"  

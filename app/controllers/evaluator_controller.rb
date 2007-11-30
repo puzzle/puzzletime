@@ -110,12 +110,10 @@ class EvaluatorController < ApplicationController
     redirectToOverview             
   rescue ArgumentError => ex        # ArgumentError from Period.new or if period.negative?
     flash[:notice] = "Ung&uuml;ltige Zeitspanne: " + ex
-    redirect_to :action => :selectPeriod, 
-                :evaluation => params[:evaluation],
-                :category_id => params[:category_id]      
-  end
-  
-  def calendar  
+    render :action => 'selectPeriod'
+    #redirect_to :action => :selectPeriod, 
+ #               :evaluation => params[:evaluation],
+#                :category_id => params[:category_id]      
   end
   
   # Dispatches evaluation names used as actions
