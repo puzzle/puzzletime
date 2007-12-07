@@ -9,8 +9,8 @@
   <% for employee in @employees %>
   <%= alternate_row %>
     <td><%= employee.label %></td>
-    <td align="right"><%= number_with_precision(employee.currentOvertime, 2) %> h &nbsp;</td>
-    <td align="right"><%= number_with_precision(employee.currentRemainingVacations, 2) %> d &nbsp;</td>
+    <td align="right"><%= number_with_precision(employee.statistics.current_overtime, 2) %> h &nbsp;</td>
+    <td align="right"><%= number_with_precision(employee.statistics.current_remaining_vacations, 2) %> d &nbsp;</td>
   </tr>
   <% end %>
 </table>

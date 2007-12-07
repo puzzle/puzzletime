@@ -4,6 +4,7 @@
 class Holiday < ActiveRecord::Base
   
   include ActionView::Helpers::NumberHelper
+  include Comparable
   extend Manageable
 
   before_create :createUserNotification
@@ -17,6 +18,15 @@ class Holiday < ActiveRecord::Base
   validates_presence_of :musthours_day, :message => "Die Muss Stunden m&uuml;ssen angegeben werden"
   validates_uniqueness_of :holiday_date, :message => "Pro Datum ist nur ein Feiertag erlaubt"
   
+  
+  def self.period_musttime(period)
+    hours = workday_hours(period)
+    holidays(period).each do |holiday|
+      hours -= MUST_HOURS_PER_DAY - holiday.musthours_day
+    end
+    hours
+  end
+ 
   # Collection of functions to check if date is holiday or not       
   def self.musttime(date)
     if Holiday.weekend?(date)
@@ -58,13 +68,24 @@ class Holiday < ActiveRecord::Base
       self.irregularHoliday?(date)
   end
   
+  # returns all holidays for the given period which fall on a weekday
+  def self.holidays(period)
+    holidays = @@irregularHolidays.select { |holiday|  period.include?(holiday.holiday_date) }
+    irregulars = holidays.collect { |holiday| holiday.holiday_date }
+    regulars = regular_holidays(period)
+    regulars.each do |holiday| 
+      holidays.push holiday if ! irregulars.include?(holiday.holiday_date)
+    end
+    holidays   
+  end
+  
   def self.regular_holidays(period)
     holidays = Array.new
     years = period.startDate.year..period.endDate.year
     years.each do |year|
       REGULAR_HOLIDAYS.each do |day|
          regular = Date.civil(year, day[1], day[0])
-         if regular.between?(period.startDate, period.endDate)
+         if period.include?(regular) && ! weekend?(regular)
            holidays.push new(:holiday_date => regular, :musthours_day => 0)
          end
       end
@@ -72,9 +93,30 @@ class Holiday < ActiveRecord::Base
     holidays
   end
       
+
+private
+
   def self.refresh
     @@irregularHolidays = Holiday.find(:all, :order => 'holiday_date')
+    @@irregularHolidays = @@irregularHolidays.select do |holiday|
+      ! weekend?(holiday.holiday_date)
+    end
   end 
+  
+  def self.workday_hours(period)
+    length = period.length
+    weeks = length / 7
+    hours = weeks * 5 * MUST_HOURS_PER_DAY
+    if length % 7 > 0
+      lastPeriod = Period.new(period.startDate + weeks * 7, period.endDate)
+      lastPeriod.step do |day|
+        hours += MUST_HOURS_PER_DAY if ! Holiday.weekend?(day)
+      end
+    end
+    hours
+  end
+  
+public
   
   def refresh
     Holiday.refresh
@@ -95,6 +137,8 @@ class Holiday < ActiveRecord::Base
     UserNotification.destroyHoliday(self)
   end
   
+  ##### caching #####
+  
   def holiday_date
   	# cache holiday date to prevent endless string_to_date conversion
   	@holiday_date ||= read_attribute(:holiday_date)
@@ -105,7 +149,6 @@ class Holiday < ActiveRecord::Base
 	  @holiday_date = nil
   end
   
-public
   ##### interface methods for Manageable #####
    
   def self.labels
@@ -118,6 +161,10 @@ public
   
   def label
     "den Feiertag am #{holiday_date.strftime(LONG_DATE_FORMAT)}"
+  end
+ 
+  def <=>(other)
+    holiday_date <=> other.holiday_date
   end
   
 end

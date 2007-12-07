@@ -74,7 +74,6 @@ ActiveRecord::Schema.define(:version => 10) do
   end
 
   add_index "projects", ["client_id"], :name => "index_projects_on_client_id"
-  add_index "projects", ["client_id"], :name => "project_clients"
 
   create_table "user_notifications", :force => true do |t|
     t.column "date_from", :date, :null => false
@@ -97,9 +96,7 @@ ActiveRecord::Schema.define(:version => 10) do
     t.column "type",            :string
   end
 
-  add_index "worktimes", ["absence_id", "employee_id", "work_date"], :name => "absence_empl_date_index"
-  add_index "worktimes", ["employee_id", "work_date"], :name => "attendance_empl_date_index"
-  add_index "worktimes", ["employee_id", "work_date", "absence_id"], :name => "worktimes_absences"
+  add_index "worktimes", ["absence_id", "work_date", "employee_id"], :name => "worktimes_absences"
   add_index "worktimes", ["work_date", "employee_id"], :name => "worktimes_attendances"
   add_index "worktimes", ["employee_id", "project_id", "work_date"], :name => "worktimes_projects"
 

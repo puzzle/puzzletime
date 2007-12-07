@@ -71,17 +71,18 @@ module EvaluatorHelper
   end
   
   def timeInfo
+    stat = @user.statistics
     infos = @period ?    
-            [[['&Uuml;berzeit', @user.overtime(@period).to_f, 'h'],
-              ['Bezogene Ferien', @user.usedVacations(@period), 'd']],
-             [['Soll Arbeitszeit', @user.musttime(@period), 'h'], 
-              ['Verbleibend', @user.remainingVacations(@period.endDate), 'd']]]  :
-            [[['&Uuml;berzeit Gestern', @user.currentOvertime, 'h'],
-              ['Bezogene Ferien', @user.usedVacations(Period.currentYear), 'd'],
-              ['Monatliche Arbeitszeit', @user.musttime(Period.currentMonth), 'h']],
-             [['&Uuml;berzeit Heute', @user.currentOvertime(Date.today), 'h'],
-              ['Verbleibend', @user.currentRemainingVacations, 'd'],
-              ['Verbleibend', 0 - @user.overtime(Period.currentMonth).to_f, 'h']]]   
+            [[['&Uuml;berzeit', stat.overtime(@period).to_f, 'h'],
+              ['Bezogene Ferien', stat.used_vacations(@period), 'd']],
+             [['Soll Arbeitszeit', stat.musttime(@period), 'h'], 
+              ['Verbleibend', stat.remaining_vacations(@period.endDate), 'd']]]  :
+            [[['&Uuml;berzeit Gestern', stat.current_overtime, 'h'],
+              ['Bezogene Ferien', stat.used_vacations(Period.currentYear), 'd'],
+              ['Monatliche Arbeitszeit', stat.musttime(Period.currentMonth), 'h']],
+             [['&Uuml;berzeit Heute', stat.current_overtime(Date.today), 'h'],
+              ['Verbleibend', stat.current_remaining_vacations, 'd'],
+              ['Verbleibend', 0 - stat.overtime(Period.currentMonth).to_f, 'h']]]   
     render :partial => 'timeinfo', :locals => {:infos => infos}
   end
  

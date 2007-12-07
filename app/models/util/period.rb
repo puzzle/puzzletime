@@ -7,6 +7,8 @@ class Period
   # Caches the most used periods
   @@cache = Cache.new
   
+  ####### constructors ########
+  
   def self.currentWeek
     self.weekFor(Date.today, "KW #{Time.now.strftime('%W')}")
   end
@@ -55,6 +57,9 @@ class Period
     @label = label ? label : self.to_s
   end
     
+    
+  #########  public methods  #########  
+    
   def step 
     @startDate.step(@endDate,1) do |date|
       yield date
@@ -67,11 +72,11 @@ class Period
   
   def musttime
   	# cache musttime because computation is expensive
-    @musttime ||= compute_musttime
+    @musttime ||= Holiday.period_musttime(self)
   end
   
   def include?(date)
-    (@startDate..@endDate).include?(date)
+    date.between?(@startDate, @endDate) 
   end
   
   def negative?
@@ -92,14 +97,6 @@ private
     date = Date.strptime(date, DATE_FORMAT) if date.kind_of? String
     date = date.to_date if date.kind_of? Time
     date
-  end
-  
-  def compute_musttime
-	  sum = 0
-	  step do |date|
-		  sum += Holiday.musttime(date)
-	  end
-	  sum   	
   end
   
   def formattedDate(date)

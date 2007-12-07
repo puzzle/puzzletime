@@ -169,79 +169,18 @@ class Employee < ActiveRecord::Base
     projectmemberships.find(:first, :conditions => ['project_id = ?', project.id]).last_completed
   end
   
-  #########  vacation and overtime information ############
-  
-  # Returns the unused days of vacation remaining until the end of the current year.
-  def currentRemainingVacations
-     remainingVacations(Date.new(Date.today.year, 12, 31))
+  def statistics
+    EmployeeStatistics.new(self)
   end
-  
-  # Returns the unused days of vacation remaining until the given date.
-  def remainingVacations(date)
-    period = employmentPeriodTo(date)
-    initial_vacation_days + totalVacations(period) + 
-      overtimeVacationHours(date) / 8.0 - usedVacations(period)
-  end
-  
-  # Returns the overall amount of granted vacation days for the given period.
-  def totalVacations(period)
-    employmentsDuring(period).sum(&:vacations)
-  end
-  
-  # Returns the used vacation days for the given period
-  def usedVacations(period)
-    return 0 if period.nil?
-    worktimes.sum(:hours, :conditions => ["absence_id = ? AND (work_date BETWEEN ? AND ?)", 
-      VACATION_ID, period.startDate, period.endDate]).to_f / 8.0
-  end
-  
-  # Returns the overall overtime hours until the given date.
-  # Default is yesterday.   
-  def currentOvertime(date = Date.today - 1)
-    overtime(employmentPeriodTo(date)) - overtimeVacationHours
-  end
-  
-  # Returns the overtime hours worked in the given period.
-  def overtime(period)
-    payedWorktime(period) - musttime(period)
-  end
-  
-  # Returns the hours this employee has to work in the given period.
-  def musttime(period)
-    employmentsDuring(period).sum(&:musttime)
-  end  
-  
-  # Returns the hours this employee worked plus the payed absences for the given period.
-  def payedWorktime(period)
-    condArray = ["((project_id IS NULL AND absence_id IS NULL) OR absences.payed)"]
-    if period
-      condArray[0] += " AND (work_date BETWEEN ? AND ?)"    
-      condArray.push period.startDate
-      condArray.push period.endDate
-    end      
-    worktimes.sum(:hours, 
-                  :joins => 'LEFT JOIN absences ON absences.id = absence_id',
-                  :conditions => condArray).to_f
-  end
-  
-  # Return the overtime hours that were transformed into vacations up to the given date.
-  def overtimeVacationHours(date = nil)    
-    overtime_vacations.sum(:hours,
-                           :conditions => date ? ['transfer_date <= ?', date] : nil).to_f
-  end
+
   
   ######### employment information ######################
   
   # Returns the current employement percent value.
   # Returns nil if no current employement is present.
   def current_percent
-    empl = current_employment
+    empl =  employment_at(Date.today)
     empl.percent if empl
-  end
-  
-  # Returns the current employement, nil if none is present.
-  def current_employment
-    employment_at(Date.today) 
   end
   
   # Returns the employement at the given date, nil if none is present.
@@ -250,31 +189,6 @@ class Employee < ActiveRecord::Base
       ['start_date <= ? AND (end_date IS NULL OR end_date >= ?)', date, date] ) 
   end
   
-  # Returns an Array of all employements during the given period, 
-  # an empty Array if no employments exist.
-  def employmentsDuring(period)
-    return [] if period.nil?
-    selectedEmployments = employments.find(:all, 
-      :conditions => ["(end_date IS NULL OR end_date >= ?) AND start_date <= ?", 
-        period.startDate, period.endDate],
-      :order => 'start_date')
-    unless selectedEmployments.empty?
-      selectedEmployments.first.start_date = period.startDate
-      if selectedEmployments.last.end_date == nil ||
-         selectedEmployments.last.end_date > period.endDate then
-        selectedEmployments.last.end_date = period.endDate
-      end  
-    end
-    selectedEmployments    
-  end
-    
-  # Returns the Period from the first employement date until the given period.
-  # Returns nil if no employments exist until this date.  
-  def employmentPeriodTo(date)
-    first_employment = self.employments.find(:first, :order => 'start_date ASC')
-    return nil if first_employment == nil || first_employment.start_date > date
-    Period.retrieve(first_employment.start_date, date)
-  end
   
 private
 
