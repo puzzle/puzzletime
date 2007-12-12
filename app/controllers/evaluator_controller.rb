@@ -3,12 +3,17 @@
 
 class EvaluatorController < ApplicationController
  
- 
   # Checks if employee came from login or from direct url.
   before_filter :authenticate
   before_filter :authorize, :only => [:clients, :employees, :overtime,
                                       :clientProjects, :employeeProjects, :employeeAbsences ]
   before_filter :setPeriod
+  
+  helper_method :user_view?
+  
+  verify :method => :post, 
+         :only => [ :completeProject, :complete_all ],
+         :redirect_to => { :action => :userProjects }
   
   def index
     overview
@@ -18,7 +23,7 @@ class EvaluatorController < ApplicationController
     setEvaluation
     setNavigationLevels
     @notifications = UserNotification.list_during(@period)
-    render :action => (params[:evaluation] =~ /^user/ ? 'userOverview' : 'overview' )
+    render :action => (user_view? ? 'userOverview' : 'overview' )
   end
   
   def details  
@@ -87,7 +92,15 @@ class EvaluatorController < ApplicationController
             :conditions => ["project_id = ?", params[:project_id]])
     pm.update_attributes(:last_completed => Date.today)
     flash[:notice] = "Das Datum der kompletten Erfassung aller Zeiten " +
-                     "für das Projekt #{pm.project.label_verbose} wurde aktualisiert."
+                     "&uuml;r das Projekt #{pm.project.label_verbose} wurde aktualisiert."
+    redirectToOverview
+  end
+  
+  def complete_all
+     @user.projectmemberships.each do |pm|
+       pm.update_attributes(:last_completed => Date.today)
+   end
+   flash[:notice] = "Das Datum der kompletten Erfassung aller Zeiten wurde f&uuml;r alle Projekte aktualisiert."
     redirectToOverview
   end
   
@@ -122,6 +135,10 @@ class EvaluatorController < ApplicationController
   def method_missing(action, *args)
     params[:evaluation] = action.to_s
     overview
+  end
+  
+  def user_view?
+    params[:evaluation] =~ /^user/ 
   end
   
 private  

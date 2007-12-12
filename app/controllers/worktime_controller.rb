@@ -39,7 +39,7 @@ class WorktimeController < ApplicationController
     setWorktimeParams
     if @worktime.save      
       flash[:notice] = 'Die Arbeitszeit wurde erfasst'
-      return if ! processAfterSave
+      return if ! processAfterCreate
       return listDetailTime if params[:commit] == FINISH        
       @worktime = @worktime.template
     end  
@@ -57,15 +57,15 @@ class WorktimeController < ApplicationController
   # Update the selected worktime on DB.
   def update  
     setWorktime
-    if @worktime.employee != @user
+    if @worktime.employee_id != @user.id
       return listDetailTime if @worktime.absence?
       session[:split] = WorktimeEdit.new(@worktime.clone)
       createPart
-    else
+    else 
       setWorktimeParams
       if @worktime.save
         flash[:notice] = 'Die Arbeitszeit wurde aktualisiert'
-        return if ! processAfterSave
+        return if ! processAfterUpdate
         listDetailTime
       else
         setAccounts
@@ -201,6 +201,14 @@ protected
   # return whether normal proceeding should continue or another action was taken
   def processAfterSave
     true
+  end
+  
+  def processAfterCreate
+    processAfterSave
+  end
+  
+  def processAfterUpdate
+    processAfterSave
   end
   
   def genericPath

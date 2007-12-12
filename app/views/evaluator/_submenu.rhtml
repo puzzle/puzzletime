@@ -2,5 +2,7 @@
 Auswertung:
 <%= render :partial => 'evallink', 
            :collection => session[:evalLevels][0..-1],
-           :spacer_template => 'submenu_spacer' %>     
+           :spacer_template => 'submenu_spacer' %>    
+<% elsif user_view? -%>
+<%= render :partial => 'submenu_user' %>
 <% end -%>   

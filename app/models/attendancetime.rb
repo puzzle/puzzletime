@@ -1,5 +1,7 @@
 class Attendancetime < Worktime
 
+  attr_reader :projecttime
+
   def self.label
     'Anwesenheitszeit'
   end
@@ -12,5 +14,10 @@ class Attendancetime < Worktime
   def report_types
     return super if ! new_record? && report_type != AutoStartType::INSTANCE
     [AutoStartType::INSTANCE] + super   
+  end
+  
+    
+  def projecttime=(value)
+    @projecttime = value.kind_of?(String) ? value.to_i != 0 : value
   end
 end

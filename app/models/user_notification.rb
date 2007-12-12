@@ -4,6 +4,9 @@ class UserNotification < ActiveRecord::Base
   include Comparable
   extend Manageable
   
+  # from/to day of month to display completion notification
+  DISPLAY_COMPLETION = [26, 2]
+  
   # Validation helpers
   before_validation DateFormatter.new('date_from', 'date_to')
   validates_presence_of :date_from, :message => "Eine Startdatum muss angegeben werden"
@@ -11,36 +14,32 @@ class UserNotification < ActiveRecord::Base
     
     
   def self.list_during(period=nil)
+    current = period.nil?
     period ||= Period.currentWeek
     custom = list(:conditions => ['date_from BETWEEN ? AND ? OR date_to BETWEEN ? AND ?', 
                                   period.startDate, period.endDate, 
                                   period.startDate, period.endDate],
                   :order => 'date_from')
-    regular = Holiday.regular_holidays(period)  
-    regular.collect! {|holiday| newHolidayNotification(holiday) }
-    list = custom.concat(regular)
+    list = custom.concat(self.holiday_notifications(period))
+    list.push currentCompletionNotification if current && month_end?
     list.sort!
   end  
     
-  ##### Factory methods for Holidays #####
+  def self.holiday_notifications(period = nil)
+    period ||= Period.currentWeek
+    regular = Holiday.holidays(period)  
+    regular.collect! {|holiday| newHolidayNotification(holiday) }
+  end
+  
 
-  def self.createHoliday(holiday)
-    notification = newHolidayNotification(holiday)
-    notification.save
-  end
-  
-  def self.updateHoliday(holiday)
-    previous = Holiday.find(holiday.id)
-    destroyHoliday previous
-    createHoliday holiday
-  end
-  
-  def self.destroyHoliday(holiday)
-    notification = findHoliday(holiday)
-    notification.destroy if notification
-  end
-  
 private
+
+  def self.currentCompletionNotification
+    last_day = month_end
+    new :date_from => last_day,
+        :date_to   => last_day,
+        :message    => "Bitte bis Ende Monat Projekte komplettieren."
+  end
 
   def self.newHolidayNotification(holiday)
     new :date_from => holiday.holiday_date,
@@ -53,12 +52,19 @@ private
       " ist ein Feiertag (" + ("%01.2f" % holiday.musthours_day).to_s + 
       " Stunden Sollarbeitszeit)"
   end
+   
+  def self.month_end
+    last_day = Date.today
+    if last_day.mday > 12
+      last_day = last_day.last_month 
+    end
+    last_day.end_of_month
+  end
   
-  def self.findHoliday(holiday)
-    date = holiday.holiday_date
-    find(:first, :conditions => ['date_from = ? AND date_to = ? AND message = ?', 
-                                 date, date, holidayMessage(holiay)])
-  end   
+  def self.month_end?
+    today = Date.today.mday
+    today > DISPLAY_COMPLETION[0] || today < DISPLAY_COMPLETION[1] 
+  end
 
 public 
 
@@ -105,4 +111,5 @@ public
     write_attribute(:date_from, value)
     @date_from = nil
   end
+
 end

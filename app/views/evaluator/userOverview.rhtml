@@ -7,9 +7,6 @@
 <%= render(:partial => 'category') %>
 
 <p>
-<%= @evaluation.absences? ?
-        link_to('Projekte anzeigen', :action => 'userProjects', :clear => 1) :
-        link_to('Absenzen anzeigen', :action => 'userAbsences', :clear => 1) %> |
 <%= if @user.auto_start_time      
    link_to "Anwesenheit (seit #{@user.auto_start_time.from_start_time.strftime(TIME_FORMAT) }) stoppen",
             {:controller => 'attendancetime',
@@ -29,5 +26,8 @@
             :action => 'add' %> | 
 <%= link_to 'Mehrt&auml;gige Absenz erfassen', 
             :controller => 'absencetime', 
-            :action => 'addMultiAbsence' %> 
+            :action => 'addMultiAbsence' %> |
+<%= link_to 'Alles Komplettieren', 
+             evaluation_overview_params(:action => 'complete_all'),
+			:method => 'post' %> 
 </p>

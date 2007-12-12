@@ -4,9 +4,15 @@
 module EvaluatorHelper
         
   def init_periods
-    @period.nil? ? 
-      [Period.currentWeek, Period.currentMonth, Period.currentYear] : 
+    if @period
       [@period]
+    else 
+      if user_view?
+        [Period.currentDay, Period.currentWeek, Period.currentMonth]
+      else
+        [Period.currentWeek, Period.currentMonth, Period.currentYear]
+      end
+    end
   end 
   
   def detailTD(worktime, field)
@@ -35,7 +41,9 @@ module EvaluatorHelper
   end
   
   def collect_times(periods, method, *division)
-    (periods + [nil]).collect do |p| 
+    all_periods = periods
+    all_periods += [nil] if !user_view?
+    all_periods.collect do |p| 
       @evaluation.send(method, p, *division) 
     end
   end  
@@ -53,8 +61,9 @@ module EvaluatorHelper
 
   def complete_link(project)
      link_to('Komplettieren', 
-	          evaluation_overview_params(:action => 'completeProject', 
-					                     :project_id => project.id)) + 
+	           evaluation_overview_params(:action => 'completeProject', 
+					                               :project_id => project.id),
+             :method => 'post' ) + 
 		' (' +  format_date(@user.lastCompleted(project)) + ')'		                
   end
 

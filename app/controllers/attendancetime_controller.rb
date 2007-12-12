@@ -54,11 +54,10 @@ protected
   end  
   
   def startAttendance
-    attendance = Attendancetime.new
-    attendance.employee = @user
-    attendance.report_type = AutoStartType::INSTANCE
-    attendance.work_date = Date.today
-    attendance.from_start_time = Time.now 
+    attendance = Attendancetime.new :employee => @user, 
+                                    :report_type => AutoStartType::INSTANCE, 
+                                    :work_date => Date.today, 
+                                    :from_start_time => Time.now
     saveAttendance attendance, "Die Anwesenheit mit #timeString wurde erfasst\n"
   end
   

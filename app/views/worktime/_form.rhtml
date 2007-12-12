@@ -59,6 +59,16 @@
     <td><%= check_box 'worktime', 'attendance' %></td>
 </tr>
 <% end -%>
+<% unless @worktime.new_record? || @worktime.absence? || @worktime.employee != @user -%>
+<tr>
+	<td>Anpassen: </td>
+	<% if @worktime.is_a? Projecttime -%>
+	<td><%= check_box 'worktime', 'attendance' %> zugehörige Anwesenheitszeit</td>
+	<% else -%>
+	<td><%= check_box 'worktime', 'projecttime' %> zugehörige Projektzeit</td>
+	<% end -%>
+</tr>
+<% end -%>
 <tr>
    <td></td>
    <td>    

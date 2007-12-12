@@ -9,6 +9,10 @@ class Period
   
   ####### constructors ########
   
+  def self.currentDay
+    self.dayFor(Date.today, "Heute")
+  end
+  
   def self.currentWeek
     self.weekFor(Date.today, "KW #{Time.now.strftime('%W')}")
   end

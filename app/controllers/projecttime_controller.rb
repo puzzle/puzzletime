@@ -1,5 +1,7 @@
 class ProjecttimeController < WorktimeController
     
+   before_filter :load_old_projecttime, :only => [:update]
+    
 protected
 
   def setNewWorktime
@@ -14,7 +16,13 @@ protected
     @accounts = @worktime.employee.projects 
   end  
   
-  def processAfterSave
+  def load_old_projecttime
+    if params[:attendance]
+      @old_projecttime = Projecttime.find(params[:id])
+    end
+  end
+  
+  def processAfterCreate
     if @worktime.attendance
       attendance = @worktime.template Attendancetime.new
       attendance.employee_id = @worktime.employee_id
@@ -28,4 +36,12 @@ protected
     end
     true
   end
+  
+  def processAfterUpdate
+    if @worktime.attendance
+      
+    end
+    true
+  end
+  
 end

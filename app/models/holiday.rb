@@ -7,9 +7,6 @@ class Holiday < ActiveRecord::Base
   include Comparable
   extend Manageable
 
-  before_create :createUserNotification
-  before_update :updateUserNotification
-  before_destroy :destroyUserNotification
   after_save :refresh
   
   before_validation DateFormatter.new('holiday_date')
@@ -123,19 +120,6 @@ public
   end
   
   self.refresh
-  
-  # add user notification for new holiday
-  def createUserNotification
-    UserNotification.createHoliday(self)
-  end
-  
-  def updateUserNotification
-    UserNotification.updateHoliday(self)
-  end
-  
-  def destroyUserNotification
-    UserNotification.destroyHoliday(self)
-  end
   
   ##### caching #####
   
