@@ -61,6 +61,16 @@ class Worktime < ActiveRecord::Base
     report_type.timeString(self)
   end
       
+  def work_date
+    # cache date to prevent endless string_to_date conversion
+    @work_date ||= read_attribute(:work_date)
+  end
+  
+  def work_date=(value)
+    write_attribute(:work_date, value)
+    @work_date = nil
+  end
+      
   ###################  TESTS  ####################    
       
   # Whether this Worktime is for an absence or not

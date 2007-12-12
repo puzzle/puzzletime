@@ -16,11 +16,11 @@ class LoginController < ApplicationController
   # Login procedure for user
   def login
     if request.get?      
-      session[:user] = nil
+      session[:user_id] = nil
     else 
       logged_in = Employee.login(params[:employee][:shortname], params[:employee][:pwd])
-      if logged_in != nil
-        session[:user] = logged_in
+      if logged_in
+        session[:user_id] = logged_in.id
         redirect_to :controller => 'projecttime', :action => 'list'
       else
         flash[:notice] = "Ung&uuml;ltige Benutzerdaten"

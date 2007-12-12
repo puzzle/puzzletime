@@ -15,11 +15,12 @@ class ApplicationController < ActionController::Base
     
   #Filter for check if user is logged in or not
   def authenticate
-    @user = session[:user]
-    unless @user
+    user_id = session[:user_id]
+    unless user_id
       redirect_to(:controller => 'login', :action => 'login' )
       return false
     end
+    @user = Employee.find(user_id)
     return true
   end 
   
@@ -59,6 +60,14 @@ protected
   
   def genericPath
     '.'
+  end
+  
+  def setPeriod
+    @period = nil
+    p = session[:period]
+    if p.kind_of? Array
+      @period = Period.retrieve(*p)
+    end
   end
   
 end

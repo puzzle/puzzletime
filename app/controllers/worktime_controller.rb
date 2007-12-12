@@ -137,11 +137,11 @@ class WorktimeController < ApplicationController
 protected
 
   def createDefaultWorktime
-    period = session[:period]
+    setPeriod
     setNewWorktime
     @worktime.from_start_time = Time.now.change(:hour => DEFAULT_START_HOUR)
     @worktime.report_type = DEFAULT_REPORT_TYPE
-    @worktime.work_date = (period && period.length == 1) ? period.startDate : Date.today
+    @worktime.work_date = (@period && @period.length == 1) ? @period.startDate : Date.today
     @worktime.employee = @user   
   end
   
@@ -164,7 +164,8 @@ protected
     if params[:evaluation].nil? 
       options[:evaluation] = userEvaluation
       options[:clear] = 1
-      if session[:period].nil? || ! session[:period].include?(@worktime.work_date)
+      setPeriod
+      if @period.nil? || ! @period.include?(@worktime.work_date)
         period = Period.weekFor(@worktime.work_date)
         options[:start_date] = period.startDate
         options[:end_date] = period.endDate

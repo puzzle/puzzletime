@@ -1,4 +1,4 @@
-<%= link_to_if params[:action] != evallink[1],
-               evallink[0].title,
-               :action => evallink[1],
-               :category_id => evallink[0].category_id %> 
+<%= link_to_if params[:action] != evallink[0],
+               evallink[2],
+               :action => evallink[0],
+               :category_id => evallink[1] %> 

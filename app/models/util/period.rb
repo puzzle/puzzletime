@@ -94,7 +94,13 @@ class Period
 private
 
   def parseDate(date)
-    date = Date.strptime(date, DATE_FORMAT) if date.kind_of? String
+    if date.kind_of? String
+      begin
+        date = Date.strptime(date, DATE_FORMAT) 
+      rescue
+        date = Date.parse(date)
+      end
+    end  
     date = date.to_date if date.kind_of? Time
     date
   end

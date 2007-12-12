@@ -38,7 +38,7 @@ deploy.task :restart do
   #nothing
 end
 
-after "deploy:update_code", :chown_file
+after "deploy:update_code", :chown_files
 after "deploy:start", :restart_web_server
 after "deploy:restart", :restart_web_server
 

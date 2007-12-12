@@ -32,4 +32,16 @@ class OvertimeVacation < ActiveRecord::Base
     'transfer_date DESC'
   end 
   
+  ##### caching #####
+  
+  def transfer_date
+    # cache holiday date to prevent endless string_to_date conversion
+    @transfer_date ||= read_attribute(:transfer_date)
+  end
+  
+  def transfer_date=(value)
+    write_attribute(:transfer_date, value)
+    @transfer_date = nil
+  end
+  
 end

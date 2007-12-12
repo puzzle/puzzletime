@@ -84,4 +84,25 @@ public
     errors.add(:date_to, "Enddatum muss nach Startdatum sein.") if date_from > date_to
   end
   
+  #### caching #####
+  
+  def date_to
+    # cache date to prevent endless string_to_date conversion
+    @date_to ||= read_attribute(:date_to)
+  end
+  
+  def date_to=(value)
+    write_attribute(:date_to, value)
+    @date_to = nil
+  end
+  
+  def date_from
+    # cache date to prevent endless string_to_date conversion
+    @date_from ||= read_attribute(:date_from)
+  end
+  
+  def date_from=(value)
+    write_attribute(:date_from, value)
+    @date_from = nil
+  end
 end

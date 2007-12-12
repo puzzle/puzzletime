@@ -3,6 +3,7 @@
 
 class EvaluatorController < ApplicationController
  
+ 
   # Checks if employee came from login or from direct url.
   before_filter :authenticate
   before_filter :authorize, :only => [:clients, :employees, :overtime,
@@ -106,7 +107,7 @@ class EvaluatorController < ApplicationController
                          params[:period][:endDate],
                          params[:period][:label])  
     raise ArgumentError, "Start Datum nach End Datum" if @period.negative?   
-    session[:period] = @period  
+    session[:period] = [@period.startDate.to_s, @period.endDate.to_s,  @period.label]  
     redirectToOverview             
   rescue ArgumentError => ex        # ArgumentError from Period.new or if period.negative?
     flash[:notice] = "Ung&uuml;ltige Zeitspanne: " + ex
@@ -115,6 +116,7 @@ class EvaluatorController < ApplicationController
  #               :evaluation => params[:evaluation],
 #                :category_id => params[:category_id]      
   end
+  
   
   # Dispatches evaluation names used as actions
   def method_missing(action, *args)
@@ -156,7 +158,7 @@ private
     @evaluation.set_division_id(params[:division_id])    
     if params[:start_date] != nil
       @period = params[:start_date] == "0" ? nil :
-                   Period.retrieve(Date.parse(params[:start_date]), Date.parse(params[:end_date]))     
+                   Period.retrieve(params[:start_date], params[:end_date])     
     end     
   end
   
@@ -164,8 +166,8 @@ private
       # set session evaluation levels
     session[:evalLevels] = Array.new if params[:clear]
     levels = session[:evalLevels]
-    current = [@evaluation, params[:evaluation]]
-    levels.pop while levels.any? { |level| level[1] == current[1] }  
+    current = [params[:evaluation], @evaluation.category_id, @evaluation.title]
+    levels.pop while levels.any? { |level| level[0] == current[0] }  
     levels.push current
   end
   
@@ -174,10 +176,6 @@ private
     @times = @evaluation.times(@period, 
                                :limit => @time_pages.items_per_page,
                                :offset => @time_pages.current.offset) 
-  end
-  
-  def setPeriod
-    @period = session[:period]
   end
 
   def setExportHeader(filename)

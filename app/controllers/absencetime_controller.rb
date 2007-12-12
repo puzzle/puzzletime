@@ -16,9 +16,10 @@ class AbsencetimeController < WorktimeController
                   :action => detailAction, 
                   :evaluation => userEvaluation,
                   :clear => 1 }
-      if session[:period].nil? || 
-          (! session[:period].include?(@multiabsence.start_date) ||
-          ! session[:period].include?(@multiabsence.end_date))
+      setPeriod           
+      if @period.nil? || 
+          (! @period.include?(@multiabsence.start_date) ||
+          ! @period.include?(@multiabsence.end_date))
         options[:start_date] = @multiabsence.start_date
         options[:end_date] = @multiabsence.end_date  
       end

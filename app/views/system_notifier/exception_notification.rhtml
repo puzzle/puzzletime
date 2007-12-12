@@ -23,7 +23,7 @@ Session dump:
 <% end -%>
 <%
 =end %>
-User: <%= @request.session[:user] ? @request.session[:user].label : 'nil' %>
+User: <%= @request.session[:user_id] ? Employee.find(@request.session[:user_id]).label : 'nil' %>
 
 
 ---------------------------

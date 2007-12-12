@@ -16,9 +16,11 @@ class GraphController < ApplicationController
 private  
 
   def setPeriod
-    @period = session[:period]
+    @period = nil
+    p = session[:period]
+    if p.kind_of? Array
+      @period = Period.retrieve(*p)
+    end
   end
-
-
   
 end
