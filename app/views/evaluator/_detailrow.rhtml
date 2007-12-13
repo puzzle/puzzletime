@@ -4,7 +4,7 @@
 <% for field in @evaluation.class::DETAIL_COLUMNS -%>
     <%= detailTD detailrow, field %>
 <% end -%>  
-<% if @evaluation.editLink? @user -%>
+<% if (@evaluation.editLink?(@user) && ! detailrow.booked) || @user.management -%>
   <td><%= link_to 'Bearbeiten', 
                   evaluation_detail_params.merge!({
                     :controller => detailrow.controller, 
@@ -18,7 +18,7 @@
                     :action => 'splitAttendance', 
                     :id => detailrow.id}) %></td>
 <% end -%>
-<% if @evaluation.deleteLink? @user -%>
+<% if @evaluation.deleteLink?(@user) && ! detailrow.booked -%>
   <td><%= link_to 'L&ouml;schen', 
                   evaluation_detail_params.merge!({
                     :controller => detailrow.controller, 

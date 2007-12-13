@@ -63,6 +63,8 @@ module EvaluatorHelper
       end 
   end
 
+  #### division supplement functions
+
   def complete_link(project)
      link_to('Komplettieren', 
 	           evaluation_overview_params(:action => 'completeProject', 
@@ -74,6 +76,12 @@ module EvaluatorHelper
   def last_completion(employee)
     format_date employee.lastCompleted(@evaluation.category)
   end
+
+  def offered_hours(project)
+    number_with_precision(project.offered_hours, 2)
+  end
+  
+  ### period and time helpers
 
   def period_link(label, periodMethod, date)
     period = Period.send(periodMethod, date)

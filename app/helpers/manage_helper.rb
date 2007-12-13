@@ -6,6 +6,10 @@ module ManageHelper
       when :date then date_calendar_field 'entry', field[0], field[1]
       when :boolean then check_box 'entry', field[0]
       when :float, :integer then text_field 'entry', field[0], :size => 15
+      when :text then text_area 'entry', field[0], {:rows => 5, :cols => 30}
+      when :report_type then select 'entry', field[0], 
+                ReportType::INSTANCES.collect {|type| [type.name, type.key]}, 
+               {:selected => @entry.send(field[0]).key}
       else text_field 'entry', field[0], :size => 30
       end
   end

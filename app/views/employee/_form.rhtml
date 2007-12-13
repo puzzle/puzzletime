@@ -17,12 +17,7 @@
   <td>Email: </td>
   <td><%= h @entry.email %></td>
 </tr>
-<% for field in editFields -%>
-<tr>
-  <td><%= field[1] %>: </td>
-  <td><%= inputField field %></td>
-</tr>
-<% end -%>
+<%= renderGenericPartial :partial => 'field', :collection => editFields %>
 <tr>
   <td></td>
   <td><%= submit_tag 'Speichern' %></td>

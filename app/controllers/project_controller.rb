@@ -53,6 +53,7 @@ class ProjectController < ManageController
   def editFields
     [[:description, 'Beschreibung'],
      [:report_type, 'Reporttyp'], 
+     [:offered_hours, 'Offerierte Stunden'],
      [:billable, 'Verrechenbar'], 
      [:description_required, 'Beschreibung nötig']]
   end

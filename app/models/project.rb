@@ -43,6 +43,13 @@ class Project < ActiveRecord::Base
     Puzzlebase::CustomerProject
   end      
     
+  def self.columnType(col)
+    case col 
+      when :report_type : :report_type
+      else super col
+      end
+  end  
+  
   def label_verbose
     client.shortname + ' - ' + name
   end  
@@ -56,5 +63,7 @@ class Project < ActiveRecord::Base
       worktime.errors.add(:description, "Es muss eine Beschreibung angegeben werden")   
     end  
   end  
+  
+
 
 end

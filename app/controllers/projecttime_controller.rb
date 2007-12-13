@@ -6,8 +6,13 @@ protected
     @worktime = Projecttime.new   
   end
   
+  def createDefaultWorktime
+    super
+    @worktime.attendance = @user.default_attendance
+  end
+  
   def setWorktimeAccount
-    @worktime.setProjectDefaults params[:account_id]
+    @worktime.setProjectDefaults(params[:account_id] || @user.default_project_id)
   end
 
   def setAccounts    

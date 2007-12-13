@@ -85,8 +85,13 @@ class WorktimeController < ApplicationController
   
   def delete
     setWorktime
-    @worktime.destroy if @worktime.employee == @user
-    flash[:notice] = "Die #{@worktime.class.label} wurde entfernt"
+    if @worktime.employee == @user
+      if @worktime.destroy 
+        flash[:notice] = "Die #{@worktime.class.label} wurde entfernt"
+      else  
+        flash[:notice] = @worktime.errors.first.to_s 
+      end
+    end  
     listDetailTime
   end
   
@@ -110,7 +115,7 @@ class WorktimeController < ApplicationController
     @split = session[:split]
     return create if @split.nil?
     params[:id] ? setWorktime : setNewWorktime 
-    @worktime.employee = @user
+    @worktime.employee ||= @user
     setWorktimeParams
     if @worktime.valid? && @split.addWorktime(@worktime)   
       if @split.complete? || (params[:commit] == FINISH && @split.class::INCOMPLETE_FINISH)
@@ -144,7 +149,7 @@ protected
     setPeriod
     setNewWorktime
     @worktime.from_start_time = Time.now.change(:hour => DEFAULT_START_HOUR)
-    @worktime.report_type = DEFAULT_REPORT_TYPE
+    @worktime.report_type = @user.report_type || DEFAULT_REPORT_TYPE
     @worktime.work_date = (@period && @period.length == 1) ? @period.startDate : Date.today
     @worktime.employee_id = record_other? ? params[:employee_id] : @user.id
   end

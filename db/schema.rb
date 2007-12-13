@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 10) do
+ActiveRecord::Schema.define(:version => 11) do
 
   create_table "absences", :force => true do |t|
     t.string  "name",                     :null => false
@@ -31,6 +31,9 @@ ActiveRecord::Schema.define(:version => 10) do
     t.boolean "management",                         :default => false
     t.float   "initial_vacation_days"
     t.string  "ldapname"
+    t.string  "report_type"
+    t.boolean "default_attendance",                 :default => false
+    t.integer "default_project_id"
   end
 
   add_index "employees", ["shortname"], :name => "chk_unique_name", :unique => true
@@ -78,6 +81,7 @@ ActiveRecord::Schema.define(:version => 10) do
     t.string  "report_type",                       :default => "month"
     t.boolean "description_required",              :default => false
     t.string  "shortname",            :limit => 3,                      :null => false
+    t.float   "offered_hours"
   end
 
   add_index "projects", ["client_id"], :name => "index_projects_on_client_id"

@@ -6,4 +6,5 @@ class AttendanceSplit < Splitable
     'Anwesenheit aufteilen'
   end
   
+  
 end

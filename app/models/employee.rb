@@ -7,6 +7,7 @@ require "net/ldap"
 class Employee < ActiveRecord::Base
   
   include Evaluatable
+  include ReportType::Accessors
   extend Manageable
   
   # All dependencies between the models are listed below.
@@ -95,6 +96,7 @@ class Employee < ActiveRecord::Base
   def self.columnType(col)
     case col 
       when :current_percent : :integer
+      when :default_report_type : :report_type
       else super col
       end
   end  

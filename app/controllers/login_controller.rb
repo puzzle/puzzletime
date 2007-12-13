@@ -34,4 +34,20 @@ class LoginController < ApplicationController
     flash[:notice] = "Sie wurden ausgeloggt"
     redirect_to :action => "login"
   end
+  
+  def 
+  
+  def settings
+  end
+  
+  def save_settings
+     if @user.update_attributes(params[:user])
+      flash[:notice] =  'Die Benutzereinstellungen wurden aktualisiert'
+      redirect_to :controller => 'projecttime', :action => 'list'
+    else      
+      flash[:notice] = 'Die Benutzereinstellungen konnten nicht aktualisiert werden'
+      render :action => 'settings'
+    end
+  end
+  
 end

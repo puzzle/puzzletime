@@ -57,6 +57,12 @@
     <td><%= check_box 'worktime', 'billable' %></td>
 </tr>
 <% end -%>
+<% if @user.management && @worktime.hasAttribute?(:booked) && ! @worktime.new_record? -%>
+<tr>
+    <td>Verbucht: </td>
+    <td><%= check_box 'worktime', 'booked' %></td>
+</tr>
+<% end -%>
 <% if @worktime.hasAttribute?(:attendance) &&
       @worktime.new_record? && 
       ! defined?(@split) -%>
@@ -65,7 +71,7 @@
     <td><%= check_box 'worktime', 'attendance' %></td>
 </tr>
 <% end -%>
-<% unless @worktime.new_record? || @worktime.absence? || @worktime.employee != @user -%>
+<% if ! @worktime.new_record? && ! @worktime.absence? && @worktime.employee == @user -%>
 <tr>
 	<td>Anpassen: </td>
 	<% if @worktime.is_a? Projecttime -%>

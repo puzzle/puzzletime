@@ -1,6 +1,10 @@
 class Projecttime < Worktime
 
   attr_reader :attendance
+  
+  validate_on_update :protect_booked
+  before_destroy :protect_booked
+ 
 
   def account
     project
@@ -26,7 +30,7 @@ class Projecttime < Worktime
   end
   
   def self.validAttributes
-    super + [:account, :account_id, :description, :billable, :attendance]
+    super + [:account, :account_id, :description, :billable, :booked, :attendance]
   end   
       
   def validate
@@ -50,5 +54,13 @@ class Projecttime < Worktime
   
   def corresponding_type
     Attendancetime
+  end
+  
+  def protect_booked
+    previous = Projecttime.find(self.id)
+    if previous.booked && self.booked
+      errors.add_to_base "Verbuchte Arbeitszeiten k&ouml;nnen nicht ver&auml;ndert werden" 
+      return false
+    end
   end
 end

@@ -10,6 +10,10 @@ class ClientProjectsEval < Evaluation
   
   def account_id
      division.id if division
+ end
+ 
+  def division_supplement(user)
+    [[:offered_hours, 'Offeriert']]
   end
   
 end

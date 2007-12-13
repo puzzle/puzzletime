@@ -17,74 +17,31 @@
 <body>
 <div id="content">
 	<div id="header">
-		<div id="brand">puzzleTime<sup>1.0</sup></div>
+		<div id="brand">puzzleTime<sup>1.2_betah</sup></div>
 		<div id="company">&nbsp; by Puzzle ITC</div>
 	</div>
-
 	<div id="splash">
 	<%= image_tag 'banner.jpg', :size => '547x92', :align => 'right' %>
 	</div>		
-	
-	<% if @user -%>
-	<div id="menu">
-	  <ul>
-      	<li class="first"><%= link_to 'Meine Zeit', 
-      	                        :controller => 'projecttime', 
-      	                        :action => 'list' %></li>
-		<% if @user.projectManager? -%>
-		<li><%= link_to 'Meine Projekte', 
-		         :controller => 'evaluator', 
-		         :action => 'managed',
-                 :clear => 1 %></li>	
-		<% end -%>
-		<% if @user.management -%>
-		<li><%= link_to 'Kunden', 
-		         :controller => 'evaluator',
-                 :action => 'clients',
-                 :clear => 1 %></li>
-        <li><%= link_to 'Mitarbeiter', 
-                 :controller => 'evaluator',
-                 :action => 'employees',
-                 :clear => 1 %></li>
-        <li><%= link_to 'Absenzen', 
-                 :controller => 'evaluator',
-                 :action => 'absences',
-                 :clear => 1 %></li>     
-        <li><%= link_to '&Uuml;berzeit',
-                 :controller => 'evaluator', 
-                 :action => 'overtime',
-                 :clear => 1 %></li>    
-        <% end -%>
-        <li><%= link_to 'Abwesenheiten', 
-                 :controller => 'evaluator',
-                 :action => 'absencedetails' %></li>              
-		<li><%= link_to 'Verwalten', 
-		         :controller => 'projectmembership' %></li>  
-	  </ul>		
-	</div>   
-	
+<% if @user -%>
+	<%= render :partial => 'layouts/menu' %>
 	<div id="menu_user">
-	  Benutzer: <%= @user.label %> | 
+	  Benutzer: <%= @user.label %>|
+	  <%= link_to 'Einstellungen', :controller => 'login', :action => 'settings' %>	 | 
 	  <%= link_to 'Logout', 
 	           {:controller => 'login', 
 	           :action => 'logout'},
-	           :method => 'post' %>
+	           :method => 'post' %> 	   
     </div>
-      
 	<div id="submenu">
     <%= renderGenericPartial :partial => 'submenu' %> &nbsp;
     </div>   
-
-    <% end -%>
-	
+<% end -%>
 	<h1><%= @title %></h1>
-	
 	<% if flash.has_key?(:notice) -%>
 	<div id="notice"><%= flash[:notice] %></div>
 	<% end -%>
-	
     <%= @content_for_layout %>
-
     <br/>
     <br/>
 </div>
