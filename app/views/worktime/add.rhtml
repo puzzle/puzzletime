@@ -4,11 +4,20 @@
  -%>
 
 <% form_tag :controller => @worktime.class.name, 
-            :action => 'create' do -%>
+           	:action => 'create' do -%>
 <%= renderGenericPartial :partial => 'form', 
                          :locals => {:submit => buttons} %>
 <% end -%>
 
-<p><%= link_to '&Uuml;bersicht', 
+<p>
+<% if record_other? %>	
+	<%= link_to 'Arbeitszeiten', 
+            evaluation_detail_params.merge!({
+                :controller => 'evaluator',
+                :action => controller.detailAction }) %>
+<% else -%>	
+	<%= link_to '&Uuml;bersicht', 
                :controller => @worktime.class.name,
-               :action => 'list' %></p>
+               :action => 'list' %>
+<% end -%>			   
+</p>

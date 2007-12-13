@@ -17,4 +17,13 @@ class EmployeeProjectsEval < Evaluation
     return [[:add_time_link, ''], [:complete_link, '']] if self.for? user
     super(user)
   end
+  
+  def employee_id
+    category.id
+  end
+  
+  def account_id
+     division.id if division
+  end
+  
 end

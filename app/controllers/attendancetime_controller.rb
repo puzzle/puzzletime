@@ -84,9 +84,9 @@ protected
     abort  
   end
   
-  def saveAttendance(attendance, msg)
+  def saveAttendance(attendance, message)
     if attendance.save
-      flash[:notice] = msg.sub('#timeString', attendance.timeString)
+      flash[:notice] = message.sub('#timeString', attendance.timeString)
     else
       flash[:notice] = 'Die Anwesenheit konnte nicht gespeichert werden:\n'
       attendance.errors.each { |attr, msg| flash[:notice] += "<br/> - " + msg + "\n"}
@@ -101,6 +101,10 @@ protected
       return false
     end  
     true
+  end
+  
+  def update_corresponding?
+    params[:worktime][:projecttime]
   end
   
 end

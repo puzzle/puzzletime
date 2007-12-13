@@ -9,4 +9,8 @@ class EmployeesEval < Evaluation
     super(Employee)
   end  
   
+  def employee_id
+     division.id if division
+  end
+ 
 end

@@ -21,4 +21,12 @@ class EmployeeAbsencesEval < Evaluation
     super(user)
   end
   
+  def employee_id
+    category.id
+  end
+  
+  def account_id
+    division.id if division
+  end
+  
 end

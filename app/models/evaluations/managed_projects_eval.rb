@@ -12,5 +12,9 @@ class ManagedProjectsEval < Evaluation
   def sum_total_times(period = nil)
     category.sumManagedProjectsWorktime(period)
   end
+  
+  def account_id
+     division.id if division
+  end
 
 end

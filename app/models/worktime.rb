@@ -102,6 +102,14 @@ class Worktime < ActiveRecord::Base
     return newWorktime
   end
   
+  def copy_from(other)
+    self.report_type      = other.report_type
+    self.work_date        = other.work_date
+    self.hours            = other.hours
+    self.from_start_time  = other.from_start_time
+    self.to_end_time      = other.to_end_time
+  end
+  
   # Copies the report_type and the time information from an other Worktime
   def copyTimesFrom(other)
     self.report_type = other.report_type
@@ -119,6 +127,24 @@ class Worktime < ActiveRecord::Base
       self.hours = (to_end_time.seconds_since_midnight - from_start_time.seconds_since_midnight) / 3600.0
     end
     self.work_date ||= Date.today
+  end
+  
+  def find_corresponding
+    return nil if corresponding_type.nil?
+    conditions = ["type = ? AND employee_id = ? AND work_date = ?",
+                  corresponding_type.name, employee_id, work_date]
+    if report_type.is_a? StartStopType
+      conditions[0] += " AND from_start_time = ? AND to_end_time = ?"
+      conditions.push from_start_time, to_end_time
+    else
+      conditions[0] += " AND hours = ?"
+      conditions.push hours
+    end
+    Worktime.find(:first, :conditions => conditions)
+  end
+  
+  def corresponding_type
+    nil
   end
   
   # Name of the corresponding controller
@@ -157,6 +183,7 @@ class Worktime < ActiveRecord::Base
  
 private
 
+  # allow time formats such as 14, 1400, 14:00 and 14.0 (1430, 14:30, 14.5)
   def write_converted_time(attribute, value)
     value = value.change(:sec => 0) if value.kind_of? Time
     if value.kind_of?(String) && ! (value =~ H_M) 

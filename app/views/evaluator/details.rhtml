@@ -13,7 +13,7 @@
 <% if @evaluation.for? @user
     details = params[:action] == 'details'
 -%>
-<%= link_to details ? 'Anwesenheiten' : 'Arbeitszeiten',
+<%= link_to details ? 'Anwesenheiten' : 'Projektzeiten',
             evaluation_detail_params.merge!({
                 :action => details ? 'attendanceDetails' : 'details' }) %>
 |
@@ -26,11 +26,20 @@
       @evaluation.division &&
       ! @evaluation.absences? -%>
  | Rapport: 
-<%= link_to 'alle Stunden',
-              evaluation_detail_params.merge!({
-                 :action => 'report' }) %>
- / <%= link_to 'verrechenbare Stunden',
-              evaluation_detail_params.merge!({
-                 :action => 'report', :only_billable => 'true' }) %>
+	<%= link_to 'alle Stunden',
+	              evaluation_detail_params.merge!({
+	                 :action => 'report' }) %>
+	 / <%= link_to 'verrechenbare Stunden',
+	              evaluation_detail_params.merge!({
+	                 :action => 'report', :only_billable => 'true' }) %>
+<% end -%>
+<% if @user.management -%>
+|
+    <%= link_to 'Fremderfassen', evaluation_detail_params.merge!(
+									:controller => worktime_controller,
+								    :action => 'add',
+									:other => 1,
+									:account_id => @evaluation.account_id,
+									:employee_id => @evaluation.employee_id) %>
 <% end -%>
 </p>

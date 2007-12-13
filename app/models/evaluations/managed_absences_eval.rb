@@ -9,4 +9,8 @@ class ManagedAbsencesEval < Evaluation
     'Kunde: ' + division.client.name
   end
   
+  def account_id
+     division.id if division
+  end
+  
 end

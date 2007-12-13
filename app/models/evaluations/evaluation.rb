@@ -168,6 +168,14 @@ class Evaluation
     false
   end
   
+  def employee_id
+    nil
+  end
+  
+  def account_id
+    nil
+  end
+  
   # Returns a CSV String for all times in this Evaluation
   def csvString(period)
     FasterCSV.generate do |csv|

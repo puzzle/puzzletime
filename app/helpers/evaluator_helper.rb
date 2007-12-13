@@ -50,13 +50,17 @@ module EvaluatorHelper
   
   def add_time_link(account = nil)
      linkHash = { :action => 'add' }
-     linkHash[:controller] =  case 
-                                when @evaluation.absences? : 'absencetime'
-                                when @evaluation.kind_of?(AttendanceEval) : 'attendancetime'
-                                else 'projecttime'
-                                end   
+     linkHash[:controller] =  worktime_controller 
      linkHash[:account_id] = account.id if account
      link_to 'Zeit erfassen', linkHash 
+  end
+  
+  def worktime_controller
+    case 
+      when @evaluation.absences? : 'absencetime'
+      when @evaluation.kind_of?(AttendanceEval) : 'attendancetime'
+      else 'projecttime'
+      end 
   end
 
   def complete_link(project)

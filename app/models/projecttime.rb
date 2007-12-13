@@ -47,4 +47,8 @@ class Projecttime < Worktime
     newWorktime.attendance = attendance if newWorktime.class == self.class
     newWorktime
   end
+  
+  def corresponding_type
+    Attendancetime
+  end
 end

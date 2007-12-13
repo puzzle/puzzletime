@@ -7,14 +7,15 @@ class WorktimeController < ApplicationController
   
   # Checks if employee came from login or from direct url.
   before_filter :authenticate
-
+  helper_method :record_other?
+  hide_action :detailAction  
+  
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
   verify :method => :post, :only => [ :delete, :create, :update, :createPart, :deletePart ],
          :redirect_to => { :action => 'list' }
          
-  hide_action :detailAction                
-         
   FINISH = 'Abschliessen'       
+   
    
   def index
     list
@@ -30,15 +31,16 @@ class WorktimeController < ApplicationController
     setWorktimeAccount
     setAccounts 
     renderGeneric :action => 'add'  
-  end  
+  end
     
   # Stores the new time the data on DB.
   def create
-    setNewWorktime
-    @worktime.employee = @user    
+    setNewWorktime  
     setWorktimeParams
+    params[:other] = 1 if params[:worktime][:employee_id]
+    @worktime.employee = @user if ! record_other?
     if @worktime.save      
-      flash[:notice] = 'Die Arbeitszeit wurde erfasst'
+      flash[:notice] = "Die #{@worktime.class.label} wurde erfasst."
       return if ! processAfterCreate
       return listDetailTime if params[:commit] == FINISH        
       @worktime = @worktime.template
@@ -62,10 +64,12 @@ class WorktimeController < ApplicationController
       session[:split] = WorktimeEdit.new(@worktime.clone)
       createPart
     else 
+      @old_worktime = find_worktime if update_corresponding?
       setWorktimeParams
       if @worktime.save
-        flash[:notice] = 'Die Arbeitszeit wurde aktualisiert'
+        flash[:notice] = "Die #{@worktime.class.label} wurde aktualisiert."
         return if ! processAfterUpdate
+        update_corresponding if update_corresponding?
         listDetailTime
       else
         setAccounts
@@ -82,7 +86,7 @@ class WorktimeController < ApplicationController
   def delete
     setWorktime
     @worktime.destroy if @worktime.employee == @user
-    flash[:notice] = 'Die Arbeitszeit wurde entfernt'
+    flash[:notice] = "Die #{@worktime.class.label} wurde entfernt"
     listDetailTime
   end
   
@@ -112,7 +116,7 @@ class WorktimeController < ApplicationController
       if @split.complete? || (params[:commit] == FINISH && @split.class::INCOMPLETE_FINISH)
         @split.save
         session[:split] = nil
-        flash[:notice] = 'Alle Arbeitszeiten wurden erfasst'
+        flash[:notice] = "Alle Arbeitszeiten wurden erfasst"
         listDetailTime
       else
         session[:split] = @split
@@ -142,7 +146,7 @@ protected
     @worktime.from_start_time = Time.now.change(:hour => DEFAULT_START_HOUR)
     @worktime.report_type = DEFAULT_REPORT_TYPE
     @worktime.work_date = (@period && @period.length == 1) ? @period.startDate : Date.today
-    @worktime.employee = @user   
+    @worktime.employee_id = record_other? ? params[:employee_id] : @user.id
   end
   
   def setWorktimeParams
@@ -163,6 +167,7 @@ protected
     options[:action] = detailAction
     if params[:evaluation].nil? 
       options[:evaluation] = userEvaluation
+      options[:category_id] = @worktime.employee_id
       options[:clear] = 1
       setPeriod
       if @period.nil? || ! @period.include?(@worktime.work_date)
@@ -175,7 +180,11 @@ protected
   end
   
   def setWorktime
-    @worktime = Worktime.find(params[:id])
+    @worktime = find_worktime
+  end
+  
+  def find_worktime
+     Worktime.find(params[:id])
   end
   
   # overwrite in subclass
@@ -194,7 +203,30 @@ protected
   
   # may overwrite in subclass
   def userEvaluation
-    'userProjects'
+    record_other? ? 'employeeprojects' : 'userProjects'
+  end
+  
+  def record_other?
+    @user.management && params[:other]
+  end
+  
+  def update_corresponding? 
+    false
+  end
+  
+  def update_corresponding
+    corresponding = @old_worktime.find_corresponding
+    label = @old_worktime.corresponding_type.label
+    if corresponding
+      corresponding.copy_from @worktime
+      if corresponding.save
+        flash[:notice] += " Die zugehörige #{label} wurde angepasst."
+      else
+        flash[:notice] += " Die zugehörige #{label} konnte nicht angepasst werden."
+      end
+    else 
+      flash[:notice] += " Es konnte keine zugehörige #{label} gefunden werden."
+    end
   end
   
   # may overwrite in subclass

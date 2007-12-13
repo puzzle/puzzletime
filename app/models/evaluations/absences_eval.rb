@@ -10,5 +10,9 @@ class AbsencesEval < Evaluation
   def initialize
     super(Employee)
   end 
+  
+  def employee_id
+    division.id if division
+  end
       
 end

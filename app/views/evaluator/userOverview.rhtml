@@ -30,4 +30,11 @@
 <%= link_to 'Alles Komplettieren', 
              evaluation_overview_params(:action => 'complete_all'),
 			:method => 'post' %> 
+<% if @user.management -%>
+|
+<%= link_to 'Fremderfassen', 
+             :controller => worktime_controller,
+			 :action => 'add',
+			 :other => 1 %> 
+<% end -%>			
 </p>

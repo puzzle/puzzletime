@@ -46,7 +46,7 @@ protected
   
   def userEvaluation
     @user.absences(true)
-    'userAbsences'
+    record_other? ? 'employeeabsences' : 'userAbsences'
   end
   
 end

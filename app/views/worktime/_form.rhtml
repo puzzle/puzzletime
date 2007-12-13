@@ -3,6 +3,12 @@
 <%= error_messages_for 'worktime' %>
 
 <table>
+<% if record_other? -%>
+<tr>
+	<td>Mitarbeiter: </td>
+	<td><%= collection_select( :worktime, :employee_id, Employee.list, :id, :label_verbose ) %></td>
+</tr>	
+<% end -%>
 <tr>
   <td>Reporttyp: </td>
   <td><%= select_report_type %> </td>

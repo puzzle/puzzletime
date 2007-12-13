@@ -52,6 +52,10 @@ class AttendanceEval < Evaluation
     for? user
   end  
   
+  def employee_id
+    category.id
+  end
+  
 private
 
   def addConditions(options = {}, period = nil)
