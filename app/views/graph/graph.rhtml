@@ -1,5 +1,7 @@
 <% @title = 'Wochengrafik' -%>
 
+<%= stylesheet_link_tag 'graph', :media => 'all' %>
+
 <%= render(:partial => 'evaluator/periodLink') %>
 
 <table class="graph" align="left">
@@ -9,7 +11,7 @@
 <% @graph.each_day do |day| -%>	
 	<% if day.wday == 1 -%>
 </tr>
-<tr>
+<tr height="100pt">
 	<th>KW <%= day.cweek %> &nbsp;</th>
 	<% end -%>	
 	<%= day_td day %>

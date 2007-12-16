@@ -90,8 +90,8 @@ textarea, input, select {
 }
 
 #content {
-    max-width:      992px;
     min-width:      730px;
+    /*max-width:      992px;*/
     width:          992px;
     margin:         auto;
     padding:        13px 16px 13px 16px;
@@ -194,70 +194,6 @@ textarea, input, select {
     margin-top: -16px;
     list-style-type: none;
 }
-
-
-.graph { 
-	border-spacing: 0px;
-}
-
-.graph tr {
-	height: 		80pt;	
-}
-
-.graph .head {
-	height: 		0;
-}
-
-.graph th {
-	text-align:		center;
-}
-
-.graph td {
-	vertical-align: bottom;
-	text-align: 	center;
-	width: 			55pt;
-	padding: 		0pt;
-	border: 		1px solid white;
-}
-
-.graph td.holiday {
-	background-color: #DDDDDD;	
-}
-
-.graph div {
-	text-align: 	center;
-	font-size:		9.5pt;
-	width:			100%;
-	float:			left;
-}
-
-.graph img {
-	margin: 0px;
-	border: 0px;
-	width: 100%;
-	float: left;
-}
-
-.graph div.dateLabel {
-	background-color: 	#FFFFFF; 
-	height: 			25pt;
-	text-align: 		center;
-	font-size:			9.5pt;
-}
-
-.legend tr {
-	vertical-align: top;
-}
-
-.legend td {
-	text-align: left;
-}
-
-.legend img {
-	width: 55pt;
-	vertical-align: middle;
-}
-
 
 .fieldWithErrors {
     float:          left;

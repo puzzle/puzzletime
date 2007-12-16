@@ -69,4 +69,4 @@ ActionMailer::Base.delivery_method = :sendmail
 require 'overrides' 
 require 'report_type'
 require 'puzzletime_settings'
-require 'memcache'
+#require 'memcache'

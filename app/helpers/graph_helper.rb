@@ -6,6 +6,45 @@ module GraphHelper
     names.join("\n")
   end
 
+  def week_header
+  	header = ''
+    @graph.each_week do |day|
+    	header += "<th>#{'%02d' % day.cweek}</th>\n"
+    end
+	header
+  end
+  
+  def month_header
+  	header = ''
+	current_month = @graph.period.startDate.month 
+	span = 0
+  	@graph.each_week do |day|
+  	  span += 1
+	  if day.month != current_month
+		header += append_month(current_month, span)
+		current_month = day.month
+		span = 0
+	  end
+  	end
+	span += 1
+	header += append_month(current_month, span)
+  end
+  
+  def append_month(current_month, span)
+	header = "<th colspan=\"#{span}\">"
+	header += Date::MONTHNAMES[current_month] if span > 2
+	header += "</th>\n"  
+	header	
+  end
+  
+  def weekbox_td(box)
+  	if box
+  	  "<td style=\"background-color: #{box.color};\" title=\"#{box.tooltip}\">#{box.height}</td>"
+  	else
+  	  "<td></td>"
+	end  	
+  end
+    
   def timebox_div(box)
     image_tag('space.gif', 
               'height' => "#{box.height}pt",

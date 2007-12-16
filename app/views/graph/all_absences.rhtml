@@ -1,0 +1,32 @@
+<% @title = 'Absenzen&uuml;bersicht' -%>
+
+<%= stylesheet_link_tag 'graph', :media => 'all' %>
+
+<%= render(:partial => 'evaluator/periodLink') %>
+
+<table class="week">
+<tr class="head">
+	<th></th>
+	<%= month_header %>
+</tr>
+<tr class="head">
+	<th></th>
+	<%= week_header %>
+</tr>	
+<% @graph.each_employee do |employee| -%>	
+<tr>
+	<th><%= employee.label %> </th>
+	<% @graph.each_week do |day| -%>	
+	<%= weekbox_td @graph.timebox %>
+	<% end -%>
+</tr>
+<% end -%>	
+</table>
+
+<br />
+
+<table class="legend" width="350pt">
+<%= render :partial => "legend", :collection => [Absence] %>
+</table>
+
+
