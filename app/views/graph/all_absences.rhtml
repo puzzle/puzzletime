@@ -1,32 +1,61 @@
-<% @title = 'Absenzen&uuml;bersicht' -%>
+<% @title = 'Abwesenheiten' 
+   @title += " #{Date.today.year}" if @period.nil?
+   @content_width = @graph.period.length * 3 + 300 -%>
 
 <%= stylesheet_link_tag 'graph', :media => 'all' %>
 
 <%= render(:partial => 'evaluator/periodLink') %>
 
+<div class="scrollbox">
 <table class="week">
 <tr class="head">
-	<th></th>
+	<th rowspan="2"></th>
+	<th rowspan="2">&Uuml;b</th>
+	<th rowspan="2">Gh</th>
 	<%= month_header %>
+	<th rowspan="2">Bz</th>
+	<th rowspan="2">&Uuml;b</th>
 </tr>
 <tr class="head">
-	<th></th>
 	<%= week_header %>
 </tr>	
 <% @graph.each_employee do |employee| -%>	
-<tr>
+<%= alternate_row %>
 	<th><%= employee.label %> </th>
+	<td class="stat"><%= @graph.previous_left_vacations %></td>
+	<td class="stat"><%= @graph.granted_vacations %></td>
 	<% @graph.each_week do |day| -%>	
-	<%= weekbox_td @graph.timebox %>
+	<%= weekbox_td @graph.timebox -%>
 	<% end -%>
+	<td class="stat"><%= @graph.used_vacations %></td>
+	<td class="stat"><%= @graph.following_left_vacations %></td>
 </tr>
 <% end -%>	
 </table>
+</div>
 
 <br />
 
-<table class="legend" width="350pt">
+<table class="legend" width="350pt" align="left">
 <%= render :partial => "legend", :collection => [Absence] %>
 </table>
 
+<table>
+<tr>
+	<td colpan="2"><b>Spalten</b></td>
+</tr>
+<tr>
+	<td>&Uuml;b</td>
+	<td>Ferien &Uuml;bertrag vor/nach der gew&auml;hlten Zeitspanne</td>
+</tr>
+<tr>
+	<td>Gh</td>
+	<td>Ferien Guthaben w&auml;hrend der gew&auml;hlten Zeitspanne</td>
+</tr>
+<tr>
+	<td>Bz</td>
+	<td>Bezogene Ferien w&auml;hrend der gew&auml;hlten Zeitspanne</td>
+</tr>
+</table>
 
+<br clear="all"/>

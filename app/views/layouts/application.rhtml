@@ -15,7 +15,7 @@
   <% end -%>
 </head>
 <body>
-<div id="content">
+<div id="content" style="width: <%= [@content_width || 992, 992].max.to_s + 'px' %>;">
 	<div id="header">
 		<div id="brand">puzzleTime<sup>1.2_betah</sup></div>
 		<div id="company">&nbsp; by Puzzle ITC</div>
@@ -26,7 +26,7 @@
 <% if @user -%>
 	<%= render :partial => 'layouts/menu' %>
 	<div id="menu_user">
-	  Benutzer: <%= @user.label %>|
+	  Benutzer: <%= @user.label %> |
 	  <%= link_to 'Einstellungen', :controller => 'login', :action => 'settings' %>	 | 
 	  <%= link_to 'Logout', 
 	           {:controller => 'login', 

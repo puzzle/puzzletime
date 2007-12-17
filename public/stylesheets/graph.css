@@ -68,6 +68,42 @@
 	border-bottom: 	1px solid #bbb;
 }
 
+.week td.stat {
+	text-align: 	right;
+	padding:		2pt;
+}
+
+td a {
+	text-decoration: none;
+	color:			#333;
+}
+
+td a:hover {
+	position:		relative;
+	float:			left;
+	width:			100%;
+}
+
+td a span {
+	display: 		none;
+}
+
+td a:hover span {
+	display: 		block;
+	position:		absolute;
+	top:			10px;
+	left:			10px;	
+	z-index: 		3;
+	background:		#ffffdd;
+	white-space:	nowrap;
+	padding:		1pt;
+	border:			1px solid #ddd;
+	font-size:		10pt;
+	float:			left;
+	text-align:		left;
+}
+
+
 .legend tr {
 	vertical-align: top;
 }

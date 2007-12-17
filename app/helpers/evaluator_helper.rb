@@ -41,12 +41,16 @@ module EvaluatorHelper
   end
   
   def collect_times(periods, method, *division)
-    all_periods = periods
-    all_periods += [nil] if !user_view?
-    all_periods.collect do |p| 
+    all_periods(periods).collect do |p| 
       @evaluation.send(method, p, *division) 
     end
   end  
+  
+  def all_periods(periods)
+    all_periods = periods
+    all_periods += [nil] if !user_view?
+    all_periods
+  end
   
   def add_time_link(account = nil)
      linkHash = { :action => 'add' }

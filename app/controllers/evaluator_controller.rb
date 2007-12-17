@@ -62,6 +62,10 @@ class EvaluatorController < ApplicationController
     redirect_to :controller => 'graph', :action => 'graph'
   end
   
+  def all_absences
+    redirect_to :controller => 'graph', :action => 'all_absences'
+  end
+  
   
   ########################  DETAIL ACTIONS  #########################
   

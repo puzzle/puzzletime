@@ -2,7 +2,7 @@ body {
     background:     #F9F9F7 url('../images/diagonal.gif') repeat-x;
     font-size:      10.5pt;
     font-family:    "trebuchet ms", helvetica, sans-serif;
-    color:          #333333;
+    color:          #333;
     padding:        0px;
     margin:         0px;
     text-align:     center;   /* centered content in IE */
@@ -91,11 +91,11 @@ textarea, input, select {
 
 #content {
     min-width:      730px;
-    /*max-width:      992px;*/
-    width:          992px;
+   	overflow:		visible;
     margin:         auto;
     padding:        13px 16px 13px 16px;
-    background:     #fff url('../images/whitebox.gif') repeat-y;
+    background:     #fff; /*url('../images/whitebox.gif') repeat-y;*/
+	border:			1px solid #E9E9E7;
 }
 
 #header {

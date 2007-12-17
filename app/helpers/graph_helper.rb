@@ -16,41 +16,43 @@ module GraphHelper
   
   def month_header
   	header = ''
-	current_month = @graph.period.startDate.month 
-	span = 0
+  	current_month = @graph.period.startDate.month 
+  	span = 0
   	@graph.each_week do |day|
-  	  span += 1
-	  if day.month != current_month
-		header += append_month(current_month, span)
-		current_month = day.month
-		span = 0
-	  end
+  	  if day.month != current_month
+    		header += append_month(current_month, span)
+    		current_month = day.month
+    		span = 0
+      end
+      span += 1
   	end
-	span += 1
-	header += append_month(current_month, span)
+  	header += append_month(current_month, span)
   end
   
   def append_month(current_month, span)
-	header = "<th colspan=\"#{span}\">"
-	header += Date::MONTHNAMES[current_month] if span > 2
-	header += "</th>\n"  
-	header	
+  	header = "<th colspan=\"#{span}\">"
+  	header += Date::MONTHNAMES[current_month] if span > 2
+  	header += "</th>\n"  
+  	header	
   end
   
   def weekbox_td(box)
   	if box
-  	  "<td style=\"background-color: #{box.color};\" title=\"#{box.tooltip}\">#{box.height}</td>"
+  	  "<td style=\"background-color: #{box.color};\"><a>#{box.height}<span>#{box.tooltip}</span></a></td>"
   	else
   	  "<td></td>"
-	end  	
+	  end  	
   end
     
   def timebox_div(box)
-    image_tag('space.gif', 
-              'height' => "#{box.height}pt",
-              #'alt' => box.tooltip,
-              'title' => box.tooltip,
-              'style' => "background-color: #{box.color};")
+    div = "<a>"
+    div += image_tag('space.gif', 
+                      'height' => "#{box.height}pt",
+                      'border' => 0,
+                      'style' => "background-color: #{box.color};") 
+    div += "<span>#{box.tooltip}</span>" if not box.tooltip.strip.empty?               
+    div += "</a>"  
+    div
   end
 
   def timebox_div_old(box)

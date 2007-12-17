@@ -23,7 +23,7 @@ class EmployeeStatistics
   
   # Returns the overall amount of granted vacation days for the given period.
   def total_vacations(period)
-    employments_during(period).sum(&:vacations)
+    employments_during(period).sum(&:vacations).to_f
   end
   
   # Returns the used vacation days for the given period
@@ -86,7 +86,7 @@ private
           period.startDate, period.endDate],
         :order => 'start_date')
     unless selectedEmployments.empty?
-      selectedEmployments.first.start_date = period.startDate
+      selectedEmployments.first.start_date = period.startDate if selectedEmployments.first.start_date < period.startDate
       if selectedEmployments.last.end_date == nil ||
          selectedEmployments.last.end_date > period.endDate then
         selectedEmployments.last.end_date = period.endDate

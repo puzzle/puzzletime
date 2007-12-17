@@ -172,7 +172,7 @@ class Employee < ActiveRecord::Base
   end
   
   def statistics
-    EmployeeStatistics.new(self)
+    @statistics ||= EmployeeStatistics.new(self)
   end
 
   
