@@ -7,7 +7,7 @@ class Client < ActiveRecord::Base
   extend Manageable
 
   # All dependencies between the models are listed below.
-  has_many :projects, :order => "name"
+  has_many :projects, :order => "name", :conditions => ['parent_id IS NULL']
   has_many :worktimes, :through => :projects
   
   # Validation helpers.

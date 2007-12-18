@@ -1,11 +1,10 @@
 class ClientProjectsEval < Evaluation
 
   DIVISION_METHOD  = :projects
-  SUB_EVALUATION   = 'projectemployees'
   LABEL            = 'Projekte'   
   
   def initialize(client_id)
-    super(Client.find(client_id))
+    super(client_id.is_a?(ActiveRecord::Base) ? client_id : Client.find(client_id))
   end   
   
   def account_id
@@ -14,6 +13,11 @@ class ClientProjectsEval < Evaluation
  
   def division_supplement(user)
     [[:offered_hours, 'Offeriert']]
+  end
+  
+  def sub_evaluation(div = nil)
+    div ||= division
+    div.children? ? 'subprojects' : 'projectemployees'
   end
   
 end

@@ -5,6 +5,7 @@
 module Evaluatable 
 
   include Comparable
+  include Conditioner
 
   # The displayed label of this object.
   def label
@@ -57,22 +58,11 @@ module Evaluatable
 private    
   
   def conditionsFor(evaluation, period = nil, categoryRef = false, condArray = nil)
-    if condArray.nil?
-      condArray = [ '' ]
-    else
-      condArray = condArray.clone
-      condArray[0] = "( #{condArray[0]} ) AND "
-    end
-    condArray[0] += "type = '" + (evaluation.absences? ? 'Absencetime' : 'Projecttime') + "'"
-    if period
-      condArray[0] += " AND (work_date BETWEEN ? AND ?) "
-      condArray.push period.startDate, period.endDate
-    end
-    if categoryRef 
-      condArray[0] += " AND #{evaluation.categoryRef} = ? "
-      condArray.push evaluation.category_id 
-    end
-    return condArray
+    condArray = clone_conditions(condArray)
+    append_conditions(condArray, ["type = '" + (evaluation.absences? ? 'Absencetime' : 'Projecttime') + "'"])
+    append_conditions(condArray, ['work_date BETWEEN ? AND ?', period.startDate, period.endDate]) if period
+    append_conditions(condArray, ["#{evaluation.categoryRef} = ?", evaluation.category_id]) if categoryRef
+    condArray
   end      
   
 end 

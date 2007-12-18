@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 11) do
+ActiveRecord::Schema.define(:version => 12) do
 
   create_table "absences", :force => true do |t|
     t.string  "name",                     :null => false
@@ -20,6 +20,11 @@ ActiveRecord::Schema.define(:version => 11) do
     t.string "name",                   :null => false
     t.string "contact"
     t.string "shortname", :limit => 4, :null => false
+  end
+
+  create_table "departments", :force => true do |t|
+    t.string "name",                   :null => false
+    t.string "shortname", :limit => 3, :null => false
   end
 
   create_table "employees", :force => true do |t|
@@ -68,6 +73,7 @@ ActiveRecord::Schema.define(:version => 11) do
     t.integer "employee_id"
     t.boolean "projectmanagement", :default => false
     t.date    "last_completed"
+    t.boolean "active",            :default => true
   end
 
   add_index "projectmemberships", ["employee_id"], :name => "index_projectmemberships_on_employee_id"
@@ -75,13 +81,16 @@ ActiveRecord::Schema.define(:version => 11) do
 
   create_table "projects", :force => true do |t|
     t.integer "client_id"
-    t.string  "name",                                                   :null => false
+    t.string  "name",                                                     :null => false
     t.text    "description"
-    t.boolean "billable",                          :default => true
-    t.string  "report_type",                       :default => "month"
-    t.boolean "description_required",              :default => false
-    t.string  "shortname",            :limit => 3,                      :null => false
+    t.boolean "billable",                            :default => true
+    t.string  "report_type",                         :default => "month"
+    t.boolean "description_required",                :default => false
+    t.string  "shortname",            :limit => 3
     t.float   "offered_hours"
+    t.integer "parent_id"
+    t.integer "department_id"
+    t.string  "path_ids",             :limit => nil
   end
 
   add_index "projects", ["client_id"], :name => "index_projects_on_client_id"

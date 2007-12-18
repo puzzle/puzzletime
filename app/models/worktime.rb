@@ -4,6 +4,7 @@
 class Worktime < ActiveRecord::Base
   
   include ReportType::Accessors
+  include Conditioner
   extend Evaluatable
   
   belongs_to :employee
@@ -133,12 +134,10 @@ class Worktime < ActiveRecord::Base
     return nil if corresponding_type.nil?
     conditions = ["type = ? AND employee_id = ? AND work_date = ?",
                   corresponding_type.name, employee_id, work_date]
-    if report_type.is_a? StartStopType
-      conditions[0] += " AND from_start_time = ? AND to_end_time = ?"
-      conditions.push from_start_time, to_end_time
+    if report_type.is_a? StartStopType              
+      conditions_append(conditions, ['from_start_time = ? AND to_end_time = ?', from_start_time, to_end_time])              
     else
-      conditions[0] += " AND hours = ?"
-      conditions.push hours
+      conditions_append(conditions, ['hours = ?', hours])
     end
     Worktime.find(:first, :conditions => conditions)
   end

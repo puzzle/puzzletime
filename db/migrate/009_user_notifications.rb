@@ -5,9 +5,6 @@ class UserNotifications < ActiveRecord::Migration
       t.column :date_to, :date, :null => true
       t.column :message, :text, :null => false
     end
-    Holiday.find(:all).each do |holiday|
-      holiday.createUserNotification
-    end
   end
 
   def self.down

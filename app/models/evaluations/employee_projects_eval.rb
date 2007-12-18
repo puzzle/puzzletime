@@ -25,5 +25,10 @@ class EmployeeProjectsEval < Evaluation
   def account_id
      division.id if division
   end
+ 
+  def sub_evaluation(project = nil)
+    project ||= division
+    project.children? ? "employeesubprojects#{employee_id}" : nil
+  end
   
 end

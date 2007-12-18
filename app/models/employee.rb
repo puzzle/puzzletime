@@ -8,32 +8,31 @@ class Employee < ActiveRecord::Base
   
   include Evaluatable
   include ReportType::Accessors
+  extend Conditioner
   extend Manageable
   
   # All dependencies between the models are listed below.
   has_many :employments, :order => 'start_date DESC', :dependent => :destroy
   has_many :projectmemberships, 
-           :dependent => :destroy           
-  has_many :sorted_projectmemberships,
-           :class_name => 'Projectmembership',
-           :finder_sql => 
-              'SELECT m.* FROM projectmemberships m, projects p, clients c ' +
-              'WHERE m.employee_id = #{id} AND p.id = m.project_id AND p.client_id = c.id ' +
-              'ORDER BY c.shortname, p.name'
+           :dependent => :destroy,
+           :include => [ { :project => :client } ],
+           :order => 'clients.shortname, projects.name'
   has_many :projects, 
            :include => :client,
            :through => :projectmemberships, 
-           :order => "clients.name, projects.name"
+           :conditions => 'projectmemberships.active',
+           :order => "clients.shortname, projects.name"
+  has_many :clients, :through => :projects, :order => 'shortname'    
   has_many :managed_projects, 
            :class_name => 'Project', 
            :through => :projectmemberships, 
            :include => :client,
            :order => "clients.name, projects.name", 
            :conditions => "projectmemberships.projectmanagement IS TRUE"
-  has_many :absences, :finder_sql => 
-              'SELECT DISTINCT(a.*) FROM absences a, worktimes t WHERE ' +
-              't.employee_id = #{id} AND t.absence_id = a.id ' +
-              'ORDER BY a.name'         
+  has_many :absences, 
+           :through => :worktimes,
+           :uniq => true,
+           :order => 'name'     
   has_many :managed_employees, 
            :class_name => 'Employee', 
            :finder_sql =>
@@ -171,6 +170,10 @@ class Employee < ActiveRecord::Base
     projectmemberships.find(:first, :conditions => ['project_id = ?', project.id]).last_completed
   end
   
+  def leaf_projects
+    projects.collect{|p| p.leaves }.flatten
+  end
+  
   def statistics
     @statistics ||= EmployeeStatistics.new(self)
   end
@@ -206,15 +209,8 @@ private
   
   def self.sumAttendanceFor(receiver, period = nil, options = {})
     if period
-      options = options.clone
-      if options[:conditions]
-        options[:conditions] = options[:conditions].clone
-        options[:conditions][0] = "(#{options[:conditions][0]}) AND "
-      else
-        options[:conditions] = ['']
-      end
-      options[:conditions][0] += "work_date BETWEEN ? AND ?"
-      options[:conditions].push period.startDate, period.endDate 
+      options = clone_options options
+      append_conditions(options[:conditions], ['work_date BETWEEN ? AND ?', period.startDate, period.endDate])
     end
     receiver.sum(:hours, options).to_f
   end

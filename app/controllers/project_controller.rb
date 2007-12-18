@@ -27,9 +27,7 @@ class ProjectController < ManageController
       # set current user as project manager
       Projectmembership.create(:project_id => @entry.id,
                                :employee_id => @user.id,
-                               :projectmanagement => true)         
-      @user.managed_projects(true)   
-      @user.projects(true)                              
+                               :projectmanagement => true)                           
     end  
   end
   

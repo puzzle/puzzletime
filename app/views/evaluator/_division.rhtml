@@ -1,6 +1,6 @@
 <%= alternate_row %>
     <td>
-    <%= link_to_if sub = @evaluation.class::SUB_EVALUATION, 
+    <%= link_to_if sub = @evaluation.sub_evaluation(division), 
                    division.label_verbose, 
                    :action => sub, 
                    :category_id => division.id %>

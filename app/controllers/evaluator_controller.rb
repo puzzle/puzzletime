@@ -128,10 +128,7 @@ class EvaluatorController < ApplicationController
     redirectToOverview             
   rescue ArgumentError => ex        # ArgumentError from Period.new or if period.negative?
     flash[:notice] = "Ung&uuml;ltige Zeitspanne: " + ex
-    render :action => 'selectPeriod'
-    #redirect_to :action => :selectPeriod, 
- #               :evaluation => params[:evaluation],
-#                :category_id => params[:category_id]      
+    render :action => 'selectPeriod'    
   end
   
   
@@ -154,7 +151,11 @@ private
         when 'managedabsences' then ManagedAbsencesEval.new(@user)
         when 'absencedetails' then AbsenceDetailsEval.new
         when 'userprojects' then EmployeeProjectsEval.new(@user.id)
-        when 'userabsences' then EmployeeAbsencesEval.new(@user.id)        
+        when "employeesubprojects#{@user.id}", "usersubprojects" then
+          params[:evaluation] = 'usersubprojects'
+          EmployeeSubProjectsEval.new(params[:category_id], @user.id)
+        when 'userabsences' then EmployeeAbsencesEval.new(@user.id)
+        when 'subprojects' then SubProjectsEval.new(params[:category_id])
         when 'projectemployees' then ProjectEmployeesEval.new(params[:category_id])
         when 'attendance' then AttendanceEval.new(params[:category_id] || @user.id)
         else nil
@@ -164,7 +165,8 @@ private
         when 'clients' then ClientsEval.new
         when 'employees' then EmployeesEval.new
         when 'clientprojects' then ClientProjectsEval.new(params[:category_id])
-        when 'employeeprojects' then EmployeeProjectsEval.new(params[:category_id])  
+        when 'employeeprojects' then EmployeeProjectsEval.new(params[:category_id])
+        when /employeesubprojects(\d+)/ then EmployeeSubProjectsEval.new(params[:category_id], $1)
         when 'absences' then AbsencesEval.new
         when 'employeeabsences' then EmployeeAbsencesEval.new(params[:category_id])      
         else nil
@@ -188,8 +190,16 @@ private
     session[:evalLevels] = Array.new if params[:clear]
     levels = session[:evalLevels]
     current = [params[:evaluation], @evaluation.category_id, @evaluation.title]
-    levels.pop while levels.any? { |level| level[0] == current[0] }  
+    levels.pop while levels.any? { |level| pop_level? level, current }  
     levels.push current
+  end
+  
+  def pop_level?(level, current)
+    pop = level[0] == current[0]
+    if level[0] =~ /(employee|user)?subprojects(\d*)/
+      pop &&= level[1] == current[1]
+    end
+    pop
   end
   
   def paginateTimes

@@ -5,7 +5,7 @@
     <th><%= listLabel %></th>
     <th>Projektleitung</th>
 </tr>
-<%for membership in @subject.sorted_projectmemberships -%> 
+<%for membership in @subject.projectmemberships.find(:all, :conditions => ['active = true']) -%> 
 <%= alternate_row %>
     <td> <%= project? ? membership.employee.label : membership.project.label_verbose %> </td>        
     <td align="center"> 

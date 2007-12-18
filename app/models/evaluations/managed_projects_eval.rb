@@ -1,7 +1,6 @@
 class ManagedProjectsEval < Evaluation
 
   DIVISION_METHOD  = :managed_projects
-  SUB_EVALUATION   = 'projectemployees'
   LABEL            = 'Geleitete Projekte'
   TOTAL_DETAILS    = false  
       
@@ -17,4 +16,9 @@ class ManagedProjectsEval < Evaluation
      division.id if division
   end
 
+  def sub_evaluation(div = nil)
+    div ||= division
+    div.children? ? 'subprojects' : 'projectemployees'
+  end
+  
 end

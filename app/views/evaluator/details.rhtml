@@ -22,7 +22,7 @@
             evaluation_detail_params.merge!({
                 :action => 'exportCSV',
                 :evaluation => (@evaluation.kind_of?(AttendanceEval) ? 'attendance' : params[:evaluation]) }) %> 
-<% if @evaluation.class::SUB_EVALUATION.nil? && 
+<% if @evaluation.sub_evaluation.nil? && 
       @evaluation.division &&
       ! @evaluation.absences? -%>
  | Rapport: 

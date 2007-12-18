@@ -42,9 +42,7 @@ class ProjectmembershipController < ApplicationController
       entry = employee? ? :project_id : :employee_id 
       params[:group_id] = @user.id if employee? && ! @user.management?       
       params[:ids].each do |id|        
-        Projectmembership.create(group => params[:group_id],
-                                   entry => id)                          
-        @user.projects(true) if (employee? && @user.id == params[:group_id]) || @user.id == id                         
+        Projectmembership.activate(group => params[:group_id], entry => id)                                             
       end      
       flash[:notice] = 'Der/Die Mitarbeiter wurden dem Projekt hinzugef&uuml;gt'
     else
@@ -54,7 +52,7 @@ class ProjectmembershipController < ApplicationController
   end  
     
   def removeMembership
-    Projectmembership.destroy(params[:id])
+    Projectmembership.deactivate(params[:id])
     flash[:notice] = "Der Mitarbeiter wurde vom Projekt entfernt"
     redirectToList
   end

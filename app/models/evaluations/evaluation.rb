@@ -124,6 +124,11 @@ class Evaluation
   def division_supplement(user)
     []
   end
+  
+  # Next lower evaluation for divisions, which will be acting as the category there.
+  def sub_evaluation(division = nil)
+    self.class::SUB_EVALUATION
+  end
     
   # Returns whether this Evaluation is personally for the current user. 
   # Default is false.  
@@ -202,6 +207,11 @@ protected
     @category = category
   end
   
+  def sendTimeQuery(method, period = nil, div = nil, options = {})
+    receiver = div ? div : category
+    receiver.send(method, self, period, div && categoryRef, options)
+  end
+  
 private
        
   def detail_label(item)
@@ -213,9 +223,4 @@ private
     category.kind_of? Class
   end
     
-  def sendTimeQuery(method, period = nil, div = nil, options = {})
-    receiver = div ? div : category
-    receiver.send(method, self, period, div && categoryRef, options)
-  end
-  
 end 

@@ -55,7 +55,7 @@ module EvaluatorHelper
   def add_time_link(account = nil)
      linkHash = { :action => 'add' }
      linkHash[:controller] =  worktime_controller 
-     linkHash[:account_id] = account.id if account
+     linkHash[:account_id] = account.leaves.first.id if account
      link_to 'Zeit erfassen', linkHash 
   end
   

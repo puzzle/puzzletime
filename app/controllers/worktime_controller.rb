@@ -107,7 +107,7 @@ class WorktimeController < ApplicationController
       return
     end
     @worktime = @split.worktimeTemplate
-    @accounts = @worktime.employee.projects
+    setProjectAccounts
     renderGeneric :action => 'split'
   end
   
@@ -128,7 +128,7 @@ class WorktimeController < ApplicationController
         redirect_to evaluation_detail_params.merge!({:action => 'split'})
       end     
     else
-      @accounts = @worktime.employee.projects
+      setProjectAccounts
       renderGeneric :action => 'split'
     end         
   end
@@ -204,6 +204,10 @@ protected
   # overwrite in subclass
   def setAccounts
     @accounts = nil 
+  end
+  
+  def setProjectAccounts
+    @accounts = @worktime.employee.leaf_projects
   end
   
   # may overwrite in subclass

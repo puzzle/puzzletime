@@ -1,4 +1,5 @@
-<% @title = "Zeiten aller #{@evaluation.label} von #{@user.label}" -%>
+<% @title = "Zeiten aller #{@evaluation.label} von " +
+			"#{@evaluation.is_a?(EmployeeSubProjectsEval) ? @evaluation.category.label : @user.label}" -%>
 
 <%= render(:partial => 'periodLink') %>
 

@@ -21,4 +21,30 @@ class Projectmembership < ActiveRecord::Base
                           :scope => 'employee_id', 
                           :message => "Dieser Mitarbeiter ist bereits dem Projekt zugeteilt"
 
+  def self.activate(attributes)
+    membership = create(attributes) 
+    membership = find(:first, assoc_conditions(attributes[:employee_id], attributes[:project_id]) )
+    membership.update_attributes :active => true
+  end
+  
+  def self.deactivate(id)
+    membership = find(id)
+    if membership.worktimes?
+      membership.update_attributes :active => false 
+    else  
+      membership.destroy
+    end
+  end
+
+  def worktimes?
+    Worktime.count(self.class.assoc_conditions(employee_id, project_id)) > 0
+  end
+  
+private  
+  
+  def self.assoc_conditions(employee_id, project_id)
+    { :conditions => ['employee_id = ? AND project_id = ?', employee_id, project_id] }
+  end
+  
+  
 end
