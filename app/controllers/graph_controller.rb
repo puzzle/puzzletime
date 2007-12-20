@@ -13,18 +13,7 @@ class GraphController < ApplicationController
   end
   
   def all_absences
-  	@graph = VacationGraph.new(@period)
-  end
-
-  
-private  
-
-  def setPeriod
-    @period = nil
-    p = session[:period]
-    if p.kind_of? Array
-      @period = Period.retrieve(*p)
-    end
-  end
+    @graph = VacationGraph.new(@period)
+ end
   
 end

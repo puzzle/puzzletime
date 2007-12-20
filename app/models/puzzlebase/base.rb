@@ -1,15 +1,18 @@
 class Puzzlebase::Base < ActiveRecord::Base
+  
   # Set up database connection to puzzlebase for all subclasses of Base
   establish_connection :puzzlebase
   
   # Set database properties
-  set_table_name(nil) { "TBL_#{self.table_id}" }
-  set_primary_key(nil) { "PK_#{self.table_id}" }
+  set_table_name(nil) { "TBL_#{self.table_id}".downcase }
+  set_primary_key(nil) { "PK_#{self.table_id}".downcase }
   
   # The model class the Puzzlebase model maps to.
   MAPS_TO = nil
   # The attributes of the model class that map to the puzzlebase attributes.
   MAPPINGS = {}
+  # Find the puzzlebase records to import according to these options
+  FIND_OPTIONS = {}
   
   # Synchronizes Clients, Projects, Employees and Employments from puzzlebase    
   def self.synchronizeAll
@@ -32,14 +35,14 @@ protected
 
   # Updates all entries of the receiver from puzzlebase
   def self.updateAll
-    find(:all).each { |original| updateLocal original }
+    find(:all, self::FIND_OPTIONS).each { |original| updateLocal original }
   end
     
   # Updates or creates a corresponding local entry from an original entry
   # in puzzlebase and saves it.
   def self.updateLocal(original)
-    local = self::MAPS_TO.find(:first, localFindOptions(original))
-    local = self::MAPS_TO.new if local.nil?
+    local = findLocal(original)
+    local ||= self::MAPS_TO.new
     updateAttributes local, original
     setReference local, original
     saveUpdated local
@@ -55,19 +58,21 @@ protected
   
   # Saves an update local entry and logs potential error messages.
   def self.saveUpdated(local)
-    unless local.save
-      errors.push local
-    end
+    success = local.save
+    errors.push local if not success
+    success
   end
   
-  # SQL select conditions for entries with references to other tables,
-  # called by updateLocalWithReference.
+  def self.findLocal(original)
+    self::MAPS_TO.find(:first, localFindOptions(original))
+  end
+  
+  # SQL select conditions for entries with references to other tables
   def self.localFindOptions(original)     
      {:conditions => ["shortname = ?", original.send(self::MAPPINGS[:shortname])]} 
   end     
   
-  # Sets the local reference based on the original entry from puzzlebase,
-  # called by updateLocalWithReference.
+  # Sets the local reference based on the original entry from puzzlebase
   def self.setReference(local, original)
   end
   

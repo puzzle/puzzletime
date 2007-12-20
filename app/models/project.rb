@@ -50,13 +50,16 @@ class Project < ActiveRecord::Base
   has_many :worktimes, :extend => Project::WorktimeAssoc
   
   validates_presence_of :name, :message => "Ein Name muss angegeben werden"  
-  validates_uniqueness_of :name, :scope => 'parent_id', :message => "Dieser Name wird bereits verwendet"
-  validates_presence_of :shortname, :if => Proc.new {|p| p.parent_id.nil? }, :message => "Ein Kürzel muss angegeben werden" 
-  validates_uniqueness_of :shortname, :scope => 'parent_id', :message => "Dieses Kürzel wird bereits verwendet"
+  validates_uniqueness_of :name, :scope => [:parent_id, :client_id], :message => "Dieser Name wird bereits verwendet"
+  validates_presence_of :shortname, :message => "Ein Kürzel muss angegeben werden" 
+  validates_uniqueness_of :shortname, :scope => [:parent_id, :client_id], :message => "Dieses Kürzel wird bereits verwendet"
   validates_presence_of :client_id, :message => "Das Projekt muss einem Kunden zugeordnet sein"
     
   before_destroy :protect_worktimes
-  before_save :generate_path_ids
+  
+  #yep, this triggers before_update to generate path_ids after the project got its id and saves it again
+  after_create :save  
+  before_update :generate_path_ids
   
   ##### interface methods for Manageable #####  
     
