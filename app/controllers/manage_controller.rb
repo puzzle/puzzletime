@@ -13,7 +13,7 @@ class ManageController < ApplicationController
 
   helper :manage    
   helper_method :group, :modelClass, :formatColumn, 
-                :listFields, :editFields
+                :listFields, :editFields, :sub?, :group_parent_id, :group_parent_sub?
    
   before_filter :authorize 
    
@@ -22,7 +22,8 @@ class ManageController < ApplicationController
          :redirect_to => { :action => :list }
          
   hide_action :modelClass, :groupClass, :group, :formatColumn,
-                           :editFields, :listFields, :listActions  
+              :editFields, :listFields, :listActions, 
+              :sub?, :group_id_field, :group_parent_id, :group_parent_sub?
   
   # Main Action. Redirects to list.
   def index
@@ -51,7 +52,7 @@ class ManageController < ApplicationController
   # Action to create an added entry in the database.
   def create
     @entry = modelClass.new(params[:entry])
-    @entry.send("#{groupClass.to_s.downcase}_id=".to_sym, params[:group_id]) if group?
+    @entry.send("#{group_id_field}=".to_sym, params[:group_id]) if group?
     if @entry.save
       flash[:notice] = classLabel + ' wurde erfasst'
       redirectToList
@@ -169,6 +170,16 @@ protected
   def initFormData  
   end  
   
+  # SQL WHERE conditions for the entries displayed in the list action.
+  # May return nil.  
+  def conditions
+    ["#{group_id_field} = ?", params[:group_id]] if group?
+  end
+  
+  def group_id_field
+    "#{groupClass.to_s.downcase}_id"
+  end
+  
 private
 
   # Sets the instance variable entry from the HTTP parameter.
@@ -181,7 +192,8 @@ private
     redirect_to :action => 'list', 
                 :page => params[:page], 
                 :group_id => params[:group_id],
-                :group_page => params[:group_page]
+                :group_page => params[:group_page],
+                :sub => params[:sub]
   end
 
   def genericPath
@@ -193,15 +205,28 @@ private
     modelClass.article + ' ' + modelClass.label
   end
     
-  # SQL WHERE conditions for the entries displayed in the list action.
-  # May return nil.  
-  def conditions
-    ["#{groupClass.to_s.downcase}_id = ?", params[:group_id]] if group?
-  end
-  
   # Returns whether a group is defined for the current request.
   def group?
     groupClass && params[:group_id]
   end
   
+  def sub?
+    params[:sub]
+  end
+  
+  def nonsub_parent_id_field
+    group_id_field
+  end
+  
+  # only used if sub? == true
+  def group_parent_id
+    id = group.parent_id
+    id = group.send(nonsub_parent_id_field) if id.nil?
+    id
+  end
+  
+  def group_parent_sub?
+    not group.parent_id.nil?
+  end
+      
 end

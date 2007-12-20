@@ -5,6 +5,10 @@ class SubProjectsEval < ClientProjectsEval
   
   def initialize(project_id)
     super(Project.find(project_id))
-  end   
+  end
+  
+  def account_id
+     division ? division.id : category.id
+  end
   
 end

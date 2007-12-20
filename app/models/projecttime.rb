@@ -2,6 +2,7 @@ class Projecttime < Worktime
 
   attr_reader :attendance
   
+  validate :project_leaf  
   validate_on_update :protect_booked
   before_destroy :protect_booked
  
@@ -54,6 +55,10 @@ class Projecttime < Worktime
   
   def corresponding_type
     Attendancetime
+  end
+  
+  def project_leaf
+    errors.add(:project_id, 'Das angegebene Projekt enthält Subprojekte.') if project.children?
   end
   
   def protect_booked

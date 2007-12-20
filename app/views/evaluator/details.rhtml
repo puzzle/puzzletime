@@ -22,16 +22,22 @@
             evaluation_detail_params.merge!({
                 :action => 'exportCSV',
                 :evaluation => (@evaluation.kind_of?(AttendanceEval) ? 'attendance' : params[:evaluation]) }) %> 
-<% if @evaluation.sub_evaluation.nil? && 
-      @evaluation.division &&
-      ! @evaluation.absences? -%>
- | Rapport: 
-	<%= link_to 'alle Stunden',
-	              evaluation_detail_params.merge!({
-	                 :action => 'report' }) %>
-	 / <%= link_to 'verrechenbare Stunden',
-	              evaluation_detail_params.merge!({
-	                 :action => 'report', :only_billable => 'true' }) %>
+<% if @evaluation.report? -%>
+ | 
+<%= link_to 'Stundenrapport',
+	         evaluation_detail_params.merge!({
+	            :action => 'report' }) %>
+ | 
+<%= link_to 'Rechnung',
+	         evaluation_detail_params.merge!({
+	            :action => 'report', 
+				:only_billable => 'true' }) %>
+ |
+<%= link_to 'Alle verbuchen',
+	         evaluation_detail_params.merge!({
+	            :action => 'book_all' }),
+			 :method => :post,
+			 :confirm => 'Wollen sie wirklich alle hier dargestellten Arbeitszeiten verbuchen?' %>			
 <% end -%>
 <% if @user.management -%>
 |

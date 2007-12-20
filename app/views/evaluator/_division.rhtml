@@ -1,14 +1,21 @@
 <%= alternate_row %>
     <td>
-    <%= link_to_if sub = @evaluation.sub_evaluation(division), 
+    <%= link_to_if sub = @evaluation.sub_evaluation, 
                    division.label_verbose, 
                    :action => sub, 
                    :category_id => division.id %>
     </td>
+<% if @evaluation.class::SUB_PROJECTS_EVAL -%>	
+	<td>
+	<% if sub = @evaluation.sub_projects_evaluation(division) -%>
+	<%= link_to '&crarr;', {:action => sub, :category_id => division.id}, :class => 'symbol' %>
+	<% end -%>	
+	</td>
+<% end -%>	
     <%= render(:partial => 'periodTime',
                :collection => collect_times(periods, :sum_times, division),
                :locals => {:division_id => division.id, :periods => periods}) %>
     <% for supp in @evaluation.division_supplement(@user)%>           
-    <td><%= self.send(supp[0], division) %></td>
+    <td<%= " align='#{supp[2]}'" if supp[2] %>><%= self.send(supp[0], division) %></td>
     <% end -%>    
 </tr>

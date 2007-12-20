@@ -1,8 +1,10 @@
 class ManagedProjectsEval < Evaluation
 
-  DIVISION_METHOD  = :managed_projects
-  LABEL            = 'Geleitete Projekte'
-  TOTAL_DETAILS    = false  
+  DIVISION_METHOD   = :managed_projects
+  LABEL             = 'Geleitete Projekte'
+  TOTAL_DETAILS     = false  
+  SUB_EVALUATION    = 'projectemployees'
+  SUB_PROJECTS_EVAL = 'subprojects'
       
   def category_label
     'Kunde: ' + division.client.name
@@ -16,9 +18,4 @@ class ManagedProjectsEval < Evaluation
      division.id if division
   end
 
-  def sub_evaluation(div = nil)
-    div ||= division
-    div.children? ? 'subprojects' : 'projectemployees'
-  end
-  
 end

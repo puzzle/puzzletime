@@ -2,6 +2,9 @@ class EmployeeSubProjectsEval < SubProjectsEval
 
   include Conditioner
   
+  SUB_PROJECTS_EVAL = 'employeesubprojects'
+  SUB_EVALUATION    = nil
+    
   attr_reader :employee_id
 
   def initialize(project_id, employee_id)
@@ -22,16 +25,14 @@ class EmployeeSubProjectsEval < SubProjectsEval
     super(period, append_employee_condition(options))
   end
   
-  
   def sendTimeQuery(method, period = nil, div = nil, options = {})
     super(method, period, div, append_employee_condition(options))
   end
-  
-  
-  def sub_evaluation(project = nil)
-    project ||= division
-    project.children? ? "employeesubprojects#{employee_id}" : nil
+
+  def sub_projects_evaluation(division = nil)
+    self.class::SUB_PROJECTS_EVAL + employee_id.to_s if division.children?
   end
+  
   
 private
   

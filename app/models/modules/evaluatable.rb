@@ -61,7 +61,7 @@ private
     condArray = clone_conditions(condArray)
     append_conditions(condArray, ["type = '" + (evaluation.absences? ? 'Absencetime' : 'Projecttime') + "'"])
     append_conditions(condArray, ['work_date BETWEEN ? AND ?', period.startDate, period.endDate]) if period
-    append_conditions(condArray, ["#{evaluation.categoryRef} = ?", evaluation.category_id]) if categoryRef
+    append_conditions(condArray, ["? = #{evaluation.categoryRef}", evaluation.category_id]) if categoryRef
     condArray
   end      
   

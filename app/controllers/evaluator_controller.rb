@@ -12,7 +12,7 @@ class EvaluatorController < ApplicationController
   helper_method :user_view?
   
   verify :method => :post, 
-         :only => [ :completeProject, :complete_all ],
+         :only => [ :completeProject, :complete_all, :book_all ],
          :redirect_to => { :action => :userProjects }
   
   def index
@@ -52,12 +52,6 @@ class EvaluatorController < ApplicationController
     paginateTimes
   end
   
-  # Shows overtimes of employees
-  def overtime
-    session[:evalLevels] = Array.new
-    @employees = Employee.list
-  end
-  
   def graph
     redirect_to :controller => 'graph', :action => 'graph'
   end
@@ -72,9 +66,9 @@ class EvaluatorController < ApplicationController
   def report
     setEvaluation
     setEvaluationDetails
-    options = params[:only_billable] ? { :conditions => [ "billable = 't'" ] } : {}
-    @times = @evaluation.times(@period, options.dup)
-    @times_total_sum = @evaluation.sum_times(@period, nil, options.dup)
+    options = params[:only_billable] ? { :conditions => [ "worktimes.billable = 't'" ] } : {}
+    @times = @evaluation.times(@period, options)
+    @times_total_sum = @evaluation.sum_times(@period, nil, options)
     render :layout => false
   end
   
@@ -87,6 +81,18 @@ class EvaluatorController < ApplicationController
     send_data(@evaluation.csvString(@period),
               :type => 'text/csv; charset=utf-8; header=present',
               :filename => filename)  
+  end
+  
+  def book_all
+    setEvaluation
+    setEvaluationDetails
+    @evaluation.times(@period).each do |worktime|
+      worktime.update_attributes(:booked => true)
+    end
+    flash[:notice] = "Alle Arbeitszeiten von #{Employee.find(@evaluation.employee_id).label} " + 
+                     "f&uuml;r #{Project.find(@evaluation.account_id).label_verbose}" +
+                     "#{ ' w&auml;hrend dem ' + @period.to_s if @period} wurden verbucht."
+    redirect_to params.merge({:action => 'details'})
   end
     
   ######################  OVERVIEW ACTIONS  #####################3
@@ -121,8 +127,8 @@ class EvaluatorController < ApplicationController
   
   def changePeriod
     @period = Period.retrieve(params[:period][:startDate], 
-                         params[:period][:endDate],
-                         params[:period][:label])  
+                              params[:period][:endDate],
+                              params[:period][:label])  
     raise ArgumentError, "Start Datum nach End Datum" if @period.negative?   
     session[:period] = [@period.startDate.to_s, @period.endDate.to_s,  @period.label]  
     redirectToOverview             

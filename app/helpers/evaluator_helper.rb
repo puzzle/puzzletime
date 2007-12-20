@@ -22,7 +22,8 @@ module EvaluatorHelper
       when :times : td worktime.timeString
       when :employee : td worktime.employee.shortname
       when :account : td worktime.account.label_verbose
-      when :billable : td(worktime.billable ? 'j' : 'n')
+      when :billable : td(worktime.billable ? '$' : ' ')
+      when :booked :  td(worktime.booked ? '&beta;' : ' ')
       when :description :
         desc = worktime.description.slice(0..40)
         if worktime.description.length > 40
@@ -55,7 +56,9 @@ module EvaluatorHelper
   def add_time_link(account = nil)
      linkHash = { :action => 'add' }
      linkHash[:controller] =  worktime_controller 
-     linkHash[:account_id] = account.leaves.first.id if account
+     if account
+       linkHash[:account_id] = account.is_a?(Absence) ? account.id : account.leaves.first.id
+     end
      link_to 'Zeit erfassen', linkHash 
   end
   
@@ -83,6 +86,18 @@ module EvaluatorHelper
 
   def offered_hours(project)
     number_with_precision(project.offered_hours, 2)
+  end
+  
+  def overtime(employee)
+    number_with_precision(@period ? 
+        employee.statistics.overtime(@period) : 
+        employee.statistics.current_overtime, 2) + ' h'
+  end
+  
+  def remaining_vacations(employee)
+    number_with_precision(@period ? 
+        employee.statistics.remaining_vacations(@period.endDate) : 
+        employee.statistics.current_remaining_vacations, 2) + ' d'
   end
   
   ### period and time helpers

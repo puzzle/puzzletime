@@ -4,7 +4,7 @@ class AbsencesEval < Evaluation
   LABEL            = 'Mitarbeiter Absenzen'
   ABSENCES         = true
   TOTAL_DETAILS    = false
-  DETAIL_COLUMNS   = superclass::DETAIL_COLUMNS.reject{|i| :billable == i}
+  DETAIL_COLUMNS   = superclass::DETAIL_COLUMNS.reject{|i| :billable == i || :booked == i }
   DETAIL_LABELS    = superclass::DETAIL_LABELS.merge({:account => 'Absenz'})
     
   def initialize
@@ -15,4 +15,8 @@ class AbsencesEval < Evaluation
     division.id if division
   end
       
+  def division_supplement(user)
+     [[:remaining_vacations, 'Übrige Ferien', 'right']]
+ end
+ 
 end

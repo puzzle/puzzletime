@@ -26,7 +26,7 @@
 <% if @user -%>
 	<%= render :partial => 'layouts/menu' %>
 	<div id="menu_user">
-	  Benutzer: <%= @user.label %> |
+	  <%= @user.label %> |
 	  <%= link_to 'Einstellungen', :controller => 'login', :action => 'settings' %>	 | 
 	  <%= link_to 'Logout', 
 	           {:controller => 'login', 

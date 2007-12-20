@@ -19,18 +19,18 @@
              :action => 'start'},
             :method => 'post' 
  end %> | 
-<%= link_to 'Anwesenheitszeit erfassen', 
-            :controller => 'attendancetime', 
-            :action => 'add' %> |
+<% if @evaluation.absences? -%>
 <%= link_to 'Absenz erfassen', 
             :controller => 'absencetime', 
             :action => 'add' %> | 
 <%= link_to 'Mehrt&auml;gige Absenz erfassen', 
             :controller => 'absencetime', 
-            :action => 'addMultiAbsence' %> |
+            :action => 'addMultiAbsence' %> 
+<% else -%>			
 <%= link_to 'Alles Komplettieren', 
              evaluation_overview_params(:action => 'complete_all'),
 			:method => 'post' %> 
+<% end -%>			
 <% if @user.management -%>
 |
 <%= link_to 'Fremderfassen', 

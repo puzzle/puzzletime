@@ -2,6 +2,7 @@
 <table>
 <tr>
     <th><%= @evaluation.division_header %></th>    
+	<%= '<th></th>' if @evaluation.class::SUB_PROJECTS_EVAL %>
     <% for p in periods -%>
     <th class="periodHead"> <%= p.label %> &nbsp; &nbsp;</th>
     <% end -%>
@@ -17,6 +18,7 @@
             :locals => { :periods => periods }) %> 
 <tr class="times_total_sum">
     <td>Total Zeit</td>
+	<%= '<th></th>' if @evaluation.class::SUB_PROJECTS_EVAL %>
     <%= render(:partial => 'periodTime', 
                :collection => collect_times(periods, :sum_total_times),
                :locals => {:periods => periods}) %>
@@ -24,11 +26,17 @@
 <% if @evaluation.class::ATTENDANCE -%>
 <tr class="times_total_sum">
     <td>Anwesenheit</td>
+	<%= '<th></th>' if @evaluation.class::SUB_PROJECTS_EVAL %>
     <%= 
     times = all_periods(periods).collect { |p| @evaluation.category.sumAttendance p }
     render(:partial => 'periodTime', 
            :collection => times,
            :locals => {:periods => periods, :action => 'attendanceDetails'}) %>
+<% if @evaluation.for? @user -%>
+	<td style="font-weight: normal;">
+	<%= link_to 'Zeit erfassen', :controller => 'attendancetime', :action => 'add' %>
+	</td>
+<% end -%>	   
 </tr>
 <% end -%>
 </table>

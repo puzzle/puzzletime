@@ -26,6 +26,12 @@ a:hover {
     text-decoration: none;
 }
 
+a.symbol {
+	text-decoration: none;
+	font-weight: 	 bold;
+	font-size: 		 12pt;
+}
+
 h1 {
     font-size:      15pt;
     font-weight:    normal;

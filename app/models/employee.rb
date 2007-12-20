@@ -167,7 +167,8 @@ class Employee < ActiveRecord::Base
    
   # Returns the date the passed project was completed last. 
   def lastCompleted(project)
-    projectmemberships.find(:first, :conditions => ['project_id = ?', project.id]).last_completed
+    membership = projectmemberships.find(:first, :conditions => ['project_id = ?', project.id])
+    membership.last_completed if membership
   end
   
   def leaf_projects

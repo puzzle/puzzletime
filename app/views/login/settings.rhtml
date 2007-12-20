@@ -16,7 +16,7 @@
 	<td>Default Projekt: </td>
 	<td>
 	<%= select 'user', 'default_project_id', 
-                @user.projects.collect{|project| [project.label_verbose, project.id]}, 
+                @user.leaf_projects.collect{|project| [project.label_verbose, project.id]}, 
                {:selected => @user.default_project_id} %>
 	</td>
 </tr>

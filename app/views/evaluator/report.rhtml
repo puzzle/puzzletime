@@ -1,12 +1,7 @@
 <% 
 @title = "Zeitrapport Puzzle ITC" 
-if @evaluation.category.kind_of? Project
-    project = @evaluation.category
-    employee = @evaluation.division
-else
-    project = @evaluation.division
-    employee = @evaluation.category
-end
+project = Project.find(@evaluation.account_id)
+employee = Employee.find(@evaluation.employee_id)
 -%>
 
 <html>

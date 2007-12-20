@@ -13,4 +13,8 @@ class EmployeesEval < Evaluation
      division.id if division
   end
  
+  def division_supplement(user)
+     [[:overtime, 'Überzeit', 'right']]
+ end
+ 
 end

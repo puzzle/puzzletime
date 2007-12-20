@@ -1,9 +1,10 @@
 class EmployeeProjectsEval < Evaluation
 
-  DIVISION_METHOD  = :projects
-  LABEL            = 'Projekte'
-  CATEGORY_REF     = :employee_id   
-  ATTENDANCE       = true   
+  DIVISION_METHOD   = :projects
+  LABEL             = 'Projekte'
+  CATEGORY_REF      = :employee_id   
+  ATTENDANCE        = true   
+  SUB_PROJECTS_EVAL = 'employeesubprojects'
   
   def initialize(employee_id)
     super(Employee.find(employee_id))
@@ -25,10 +26,10 @@ class EmployeeProjectsEval < Evaluation
   def account_id
      division.id if division
   end
- 
-  def sub_evaluation(project = nil)
-    project ||= division
-    project.children? ? "employeesubprojects#{employee_id}" : nil
+  
+  def sub_projects_evaluation(project = nil)
+    self.class::SUB_PROJECTS_EVAL + employee_id.to_s if project && project.children?
   end
+
   
 end

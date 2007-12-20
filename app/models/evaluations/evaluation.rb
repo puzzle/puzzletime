@@ -13,7 +13,9 @@ class Evaluation
   DIVISION_METHOD  = :list  
            
   # Next lower evaluation for divisions, which will be acting as the category there.
-  SUB_EVALUATION   = nil    
+  SUB_EVALUATION   = nil   
+  
+  SUB_PROJECTS_EVAL = nil
       
   # Name of the evaluation to be displayed     
   LABEL            = ''              
@@ -32,7 +34,7 @@ class Evaluation
   CATEGORY_REF     = nil          
   
   # Columns to display in the detail view
-  DETAIL_COLUMNS   = [:work_date, :hours, :employee, :account, :billable, :description]
+  DETAIL_COLUMNS   = [:work_date, :hours, :employee, :account, :billable, :booked, :description]
   
   # Table captions for detail columns
   DETAIL_LABELS    = {:work_date   => 'Datum',
@@ -41,6 +43,7 @@ class Evaluation
                       :employee    => 'Wer',
                       :account     => 'Projekt',
                       :billable    => '$',
+                      :booked      => '&beta;',
                       :description => 'Beschreibung'}
   
   
@@ -126,8 +129,12 @@ class Evaluation
   end
   
   # Next lower evaluation for divisions, which will be acting as the category there.
-  def sub_evaluation(division = nil)
+  def sub_evaluation
     self.class::SUB_EVALUATION
+  end
+  
+  def sub_projects_evaluation(division)
+    self.class::SUB_PROJECTS_EVAL if self.class::SUB_PROJECTS_EVAL && division.children?
   end
     
   # Returns whether this Evaluation is personally for the current user. 
@@ -171,6 +178,10 @@ class Evaluation
   
   def splitLink?(user)
     false
+  end
+  
+  def report?
+    account_id && employee_id && ! absences?
   end
   
   def employee_id

@@ -3,13 +3,19 @@
 
 class ProjectController < ManageController
     
+  include Conditioner  
+    
   # Checks if employee came from login or from direct url.
   before_filter :authenticate
   before_filter :authorize, :only => [ :delete, :confirmDelete ]
 
   def list
-    if @user.management? then super 
-    else listManagedProjects   
+    # nana, list managed projects for everybody
+    #if @user.management? then super
+    #else listManagedProjects   
+    #end
+    if sub? || group? then super
+    else listManagedProjects
     end
   end
   
@@ -19,6 +25,11 @@ class ProjectController < ManageController
                           :limit => @entry_pages.items_per_page,
                           :offset => @entry_pages.current.offset)
     renderGeneric :action => 'list'   
+  end
+  
+  def listSubProjects
+    params[:sub] = 1
+    list
   end
   
   def create
@@ -38,7 +49,8 @@ class ProjectController < ManageController
   end  
   
   def listActions
-    [['Mitarbeiter', 'projectmembership', 'listEmployees']]
+    [['Subprojekte', 'project', 'listSubProjects', 'children?'],
+     ['Mitarbeiter', 'projectmembership', 'listEmployees']]
   end
   
   def listFields
@@ -57,26 +69,34 @@ class ProjectController < ManageController
   end
   
   def formatColumn(attribute, value)
-    return value.slice(0..40) + (value.size > 40 ? '...' : '') if value && :description == attribute
+    return value.slice(0..25) + (value.size > 25 ? '...' : '') if value && :description == attribute
     super attribute, value
   end
   
   def authorize
     authenticate
-    unless @user.managed_projects.collect{|p| p.id.to_s}.include?(params[:id])
+    project = Project.find(params[:id])
+    if (@user.managed_projects.collect{|p| p.id } & project.path_ids).empty?
       super
     end
   end
     
 protected
-      
+
   def groupClass
-    Client
+    sub? ? Project : Client
   end
   
-  def initFormData
-    @clients = Client.list
-    @entry.client_id = params[:group_id] if @entry.client_id.nil? && params[:group_id]
+  def conditions
+    sub? ? ["parent_id = ?", params[:group_id]] : append_conditions(super, ['parent_id IS NULL'])
+  end
+  
+  def group_id_field
+    sub? ? 'parent_id' : super
+  end
+  
+  def nonsub_parent_id_field
+    'client_id'
   end
   
 end

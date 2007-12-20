@@ -27,10 +27,12 @@ module ManageHelper
     prms[:group_id] ||= params[:group_id]
     prms[:page] ||= params[:page]
     prms[:group_page] ||= params[:group_page]
+    prms[:sub] ||= params[:sub]
     prms
   end
   
   def actionLink(linkParams, entry)
+    return if linkParams[3] && !entry.send(linkParams[3])
     link_to linkParams[0], 
             :controller => linkParams[1], 
             :action => linkParams[2], 

@@ -5,7 +5,7 @@ class EmployeeAbsencesEval < Evaluation
   ABSENCES         = true
   CATEGORY_REF     = :employee_id   
   ATTENDANCE       = true   
-  DETAIL_COLUMNS   = superclass::DETAIL_COLUMNS.reject{|i| :billable == i}
+  DETAIL_COLUMNS   = superclass::DETAIL_COLUMNS.reject{|i| :billable == i || :booked == i }
   DETAIL_LABELS    = superclass::DETAIL_LABELS.merge({:account => 'Absenz'})
   
   def initialize(employee_id)
