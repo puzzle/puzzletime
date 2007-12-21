@@ -188,16 +188,18 @@ protected
   
   def checkOverlapping
     if @worktime.report_type.is_a? StartStopType
-      overlaps = @worktime.class.find(:all, :conditions => [
-                                'employee_id = :employee_id AND work_date = :work_date AND id <> :id AND (' +
-                                '(from_start_time <= :start_time AND to_end_time >= :end_time) OR ' +
-                                '(from_start_time >= :start_time AND from_start_time < :end_time) OR ' +
-                                '(to_end_time > :start_time AND to_end_time <= :end_time))',
-                                {:employee_id => @worktime.employee_id,
-                                 :work_date   => @worktime.work_date,
-                                 :id          => @worktime.id,
-                                 :start_time  => @worktime.from_start_time, 
-                                 :end_time    => @worktime.to_end_time} ])
+      conditions = ['(project_id IS NULL AND absence_id IS NULL) AND ' + 
+                    'employee_id = :employee_id AND work_date = :work_date AND id <> :id AND (' +
+                    '(from_start_time <= :start_time AND to_end_time >= :end_time) OR ' +
+                    '(from_start_time >= :start_time AND from_start_time < :end_time) OR ' +
+                    '(to_end_time > :start_time AND to_end_time <= :end_time))',
+                    {:employee_id => @worktime.employee_id,
+                     :work_date   => @worktime.work_date,
+                     :id          => @worktime.id,
+                     :start_time  => @worktime.from_start_time, 
+                     :end_time    => @worktime.to_end_time} ]
+      conditions[0] = ' NOT ' + conditions[0] unless @worktime.is_a? Attendancetime             
+      overlaps = Worktime.find(:all, :conditions => conditions)
       flash[:notice] += " Es besteht eine &Uuml;berlappung mit mindestens einem anderen Eintrag: " if not overlaps.empty? 
       flash[:notice] += overlaps.join(', ') if not overlaps.empty?                           
     end
