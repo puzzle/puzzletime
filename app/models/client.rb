@@ -8,7 +8,8 @@ class Client < ActiveRecord::Base
 
   # All dependencies between the models are listed below.
   has_many :projects, :order => "name", :conditions => ['parent_id IS NULL']
-  has_many :worktimes, :through => :projects
+  has_many :all_projects, :class_name => 'Project', :order => 'name'
+  has_many :worktimes, :through => :all_projects
   
   # Validation helpers.
   validates_presence_of :name, :message => "Ein Name muss angegeben sein"

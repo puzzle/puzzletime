@@ -31,11 +31,15 @@ class Puzzlebase::Base < ActiveRecord::Base
     errors
   end 
   
+  def self.removeUnused
+    removeUnusedExcept findAll
+  end
+  
 protected  
 
   # Updates all entries of the receiver from puzzlebase
   def self.updateAll
-    find(:all, self::FIND_OPTIONS).each { |original| updateLocal original }
+    findAll.each { |original| updateLocal original }
   end
     
   # Updates or creates a corresponding local entry from an original entry
@@ -67,10 +71,27 @@ protected
     self::MAPS_TO.find(:first, localFindOptions(original))
   end
   
+  def self.findAll
+    find(:all, self::FIND_OPTIONS)  
+  end
+  
   # SQL select conditions for entries with references to other tables
   def self.localFindOptions(original)     
      {:conditions => ["shortname = ?", original.send(self::MAPPINGS[:shortname])]} 
   end     
+  
+    
+  def self.removeUnusedExcept(originals, condition = nil)
+    base_shortnames = originals.collect { |original| "'#{original.send(self::MAPPINGS[:shortname])}'" }
+    conditions = ""
+    conditions = "shortname NOT IN (#{base_shortnames.join(', ')})" if not base_shortnames.empty?
+    conditions += " AND " if conditions.size > 0 && condition
+    conditions += condition if condition
+    only_local = self::MAPS_TO.find(:all, :conditions => [conditions])
+    only_local.each do |local|
+      local.destroy if local.worktimes(true).empty?
+    end
+  end
   
   # Sets the local reference based on the original entry from puzzlebase
   def self.setReference(local, original)

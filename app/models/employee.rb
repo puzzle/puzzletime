@@ -157,11 +157,12 @@ class Employee < ActiveRecord::Base
   # Sums the worktimes of all managed projects.
   def sumManagedProjectsWorktime(period)
     sql = "SELECT sum(hours) AS sum " +
-          "FROM ((employees E LEFT JOIN projectmemberships PM ON E.id = PM.employee_id) " +
+          "FROM (((employees E LEFT JOIN projectmemberships PM ON E.id = PM.employee_id) " +
 	        " LEFT JOIN projects P ON PM.project_id = P.id)" +
-          " LEFT JOIN worktimes T ON P.id = T.project_id " +
+          " LEFT JOIN projects C ON P.id = ANY (C.path_ids))" +
+          " LEFT JOIN worktimes T ON C.id = T.project_id " +
           "WHERE E.id = #{self.id} AND PM.projectmanagement"    
-    sql += " AND T.work_date BETWEEN #{period.startDate} AND #{period.endDate}" if period
+    sql += " AND T.work_date BETWEEN '#{period.startDate}' AND '#{period.endDate}'" if period
     self.class.connection.select_value(sql).to_f
   end
    

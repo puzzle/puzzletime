@@ -11,7 +11,8 @@ class Puzzlebase::Customer < Puzzlebase::Base
               :name      => :S_DESCRIPTION.to_s.downcase.to_sym }
   FIND_OPTIONS = {:select => 'DISTINCT(TBL_CUSTOMER.*)'.downcase,
                   :joins => :customer_projects,
-                  :conditions => ["TBL_CUSTOMER_PROJECT.B_SYNCTOPUZZLETIME = 't'".downcase]}            
+                  :conditions => ["TBL_CUSTOMER_PROJECT.B_SYNCTOPUZZLETIME = 't'".downcase]}
+                  
 end
 
 class Client < ActiveRecord::Base    

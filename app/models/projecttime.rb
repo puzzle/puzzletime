@@ -6,6 +6,17 @@ class Projecttime < Worktime
   validate_on_update :protect_booked
   before_destroy :protect_booked
  
+  def self.validAttributes
+    super + [:account, :account_id, :description, :billable, :booked, :attendance]
+  end    
+  
+  def self.account_label
+    'Projekt'
+  end
+  
+  def self.label
+    'Projektzeit'
+  end
 
   def account
     project
@@ -30,23 +41,6 @@ class Projecttime < Worktime
     self.billable = project.billable
   end
   
-  def self.validAttributes
-    super + [:account, :account_id, :description, :billable, :booked, :attendance]
-  end   
-      
-  def validate
-    super    
-    project.validate_worktime self
-  end
-  
-  def self.account_label
-    'Projekt'
-  end
-  
-  def self.label
-    'Projektzeit'
-  end
-  
   def template(newWorktime = nil)
     newWorktime = super newWorktime    
     newWorktime.attendance = attendance if newWorktime.class == self.class
@@ -57,8 +51,15 @@ class Projecttime < Worktime
     Attendancetime
   end
   
+  ########### validation helpers ###########
+  
+  def validate
+    super    
+    project.validate_worktime self
+  end
+  
   def project_leaf
-    errors.add(:project_id, 'Das angegebene Projekt enthält Subprojekte.') if project.children?
+    errors.add(:project_id, "Das angegebene Projekt enthält Subprojekte.") if project(true).children?
   end
   
   def protect_booked

@@ -3,51 +3,24 @@
 
 class Project < ActiveRecord::Base
  
-  # topfunky hack to get sums for the worktimes association
-  module WorktimeAssoc
-    include Conditioner
- 
-    def sum(column_name, options = {})
-      options = restrict_conditions options
-      @reflection.klass.sum(column_name, options)
-    end
-    
-    def find(*args)
-      case args.first
-        when :first, :all then 
-          options = restrict_conditions args.extract_options!
-          @reflection.klass.find(args.first, options)
-        else 
-          @reflection.klass.find(args)
-      end
-    end
-    
-    def restrict_conditions(options)
-      options = clone_options options
-      append_conditions(options[:conditions], 
-                        [ "worktimes.project_id = projects.id AND #{@owner.id} = ANY (projects.path_ids)" ])
-      options[:include] = 'project'
-      options
-    end
-  end
-  
   include Evaluatable
   extend Manageable
   include ReportType::Accessors
 
+  acts_as_tree :order => 'name'
+
   # All dependencies between the models are listed below.
-  has_many :projectmemberships, :dependent => :destroy,
+  has_many :projectmemberships, 
+           :dependent => :destroy,
            :include => :employee,
            :order => 'employees.lastname, employees.firstname'
   #defined in custom method         
   #has_many :employees, :through => :worktimes, :uniq => true, :order => "lastname, firstname"
   
-  has_many :children, :class_name => 'Project', :foreign_key => 'parent_id', :order => 'name'
-  belongs_to :parent, :class_name => 'Project', :foreign_key => 'parent_id'
   belongs_to :department
   belongs_to :client
   
-  has_many :worktimes, :extend => Project::WorktimeAssoc
+  has_many :worktimes, :extend => HasTreeAssociation
   
   validates_presence_of :name, :message => "Ein Name muss angegeben werden"  
   validates_uniqueness_of :name, :scope => [:parent_id, :client_id], :message => "Dieser Name wird bereits verwendet"
@@ -129,6 +102,10 @@ class Project < ActiveRecord::Base
                         :joins => { :worktimes => :project },
                         :conditions => ['? = ANY (projects.path_ids)', self.id],
                         :order => 'lastname, firstname')
+  end
+
+  def move_times_to(other)
+    Projecttime.update_all ["project_id = ?", other.id], ["project_id = ?", self.id]
   end
 
   def generate_path_ids
