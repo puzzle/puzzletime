@@ -1,7 +1,5 @@
-class EmployeeProjectsEval < Evaluation
+class EmployeeProjectsEval < ProjectsEval
 
-  DIVISION_METHOD   = :projects
-  LABEL             = 'Projekte'
   CATEGORY_REF      = :employee_id   
   ATTENDANCE        = true   
   SUB_PROJECTS_EVAL = 'employeesubprojects'
@@ -16,15 +14,11 @@ class EmployeeProjectsEval < Evaluation
   
   def division_supplement(user)
     return [[:add_time_link, ''], [:complete_link, '']] if self.for? user
-    super(user)
+    []
   end
   
   def employee_id
     category.id
-  end
-  
-  def account_id
-     division.id if division
   end
   
   def sub_projects_evaluation(project = nil)

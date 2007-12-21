@@ -11,7 +11,6 @@ class Hierarchy < ActiveRecord::Migration
       add_column :projects, :parent_id, :integer
       add_column :projects, :department_id, :integer
       execute('ALTER TABLE projects ADD COLUMN path_ids INTEGER[]')
-      change_column :projects, :shortname, :string, :limit => 3, :null => true
       
       Project.find(:all).each do |project|
         project.update_attributes :path_ids => [project.id]
@@ -43,7 +42,6 @@ class Hierarchy < ActiveRecord::Migration
       remove_column :projects, :path_ids
       remove_column :projects, :department_id
       remove_column :projects, :parent_id
-      change_column :projects, :shortname, :string, :limit => 3, :null => false
       
       drop_table :departments
     end

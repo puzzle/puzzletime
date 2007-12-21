@@ -41,6 +41,7 @@ class WorktimeController < ApplicationController
     @worktime.employee = @user if ! record_other?
     if @worktime.save      
       flash[:notice] = "Die #{@worktime.class.label} wurde erfasst."
+      checkOverlapping
       return if ! processAfterCreate
       return listDetailTime if params[:commit] == FINISH        
       @worktime = @worktime.template
@@ -68,6 +69,7 @@ class WorktimeController < ApplicationController
       setWorktimeParams
       if @worktime.save
         flash[:notice] = "Die #{@worktime.class.label} wurde aktualisiert."
+        checkOverlapping
         return if ! processAfterUpdate
         update_corresponding if update_corresponding?
         listDetailTime
@@ -182,6 +184,23 @@ protected
       end  
     end
     redirect_to options 
+  end
+  
+  def checkOverlapping
+    if @worktime.report_type.is_a? StartStopType
+      overlaps = @worktime.class.find(:all, :conditions => [
+                                'employee_id = :employee_id AND work_date = :work_date AND id <> :id AND (' +
+                                '(from_start_time <= :start_time AND to_end_time >= :end_time) OR ' +
+                                '(from_start_time >= :start_time AND from_start_time < :end_time) OR ' +
+                                '(to_end_time > :start_time AND to_end_time <= :end_time))',
+                                {:employee_id => @worktime.employee_id,
+                                 :work_date   => @worktime.work_date,
+                                 :id          => @worktime.id,
+                                 :start_time  => @worktime.from_start_time, 
+                                 :end_time    => @worktime.to_end_time} ])
+      flash[:notice] += " Es besteht eine &Uuml;berlappung mit mindestens einem anderen Eintrag: " if not overlaps.empty? 
+      flash[:notice] += overlaps.join(', ') if not overlaps.empty?                           
+    end
   end
   
   def setWorktime

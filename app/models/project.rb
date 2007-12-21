@@ -27,6 +27,7 @@ class Project < ActiveRecord::Base
   validates_presence_of :shortname, :message => "Ein Kürzel muss angegeben werden" 
   validates_uniqueness_of :shortname, :scope => [:parent_id, :client_id], :message => "Dieses Kürzel wird bereits verwendet"
   validates_presence_of :client_id, :message => "Das Projekt muss einem Kunden zugeordnet sein"
+  validates_presence_of :department_id, :message => "Das Projekt muss einem Gesch&auml;ftsbereich zugeordnet sein"
     
   before_destroy :protect_worktimes
   

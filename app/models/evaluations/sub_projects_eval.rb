@@ -1,4 +1,4 @@
-class SubProjectsEval < ClientProjectsEval
+class SubProjectsEval < ProjectsEval
 
   DIVISION_METHOD  = :children  
   LABEL            = 'Subprojekte'

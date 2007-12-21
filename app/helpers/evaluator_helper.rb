@@ -85,7 +85,17 @@ module EvaluatorHelper
   end
 
   def offered_hours(project)
-    number_with_precision(project.offered_hours, 2)
+    offered = project.offered_hours
+    if offered
+      total = project.worktimes.sum(:hours)
+      color = 'green'
+      if total > offered
+        color = 'red'
+      elsif total > offered * 0.9
+        color = 'orange'
+      end
+      "#{number_with_precision(offered, 0)} (<font color=\"#{color}\">#{number_with_precision(offered - total, 0)}</font>)" 
+    end
   end
   
   def overtime(employee)

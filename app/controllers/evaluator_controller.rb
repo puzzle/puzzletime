@@ -170,9 +170,11 @@ private
       @evaluation = case params[:evaluation].downcase
         when 'clients' then ClientsEval.new
         when 'employees' then EmployeesEval.new
+        when 'departments' then DepartmentsEval.new
         when 'clientprojects' then ClientProjectsEval.new(params[:category_id])
         when 'employeeprojects' then EmployeeProjectsEval.new(params[:category_id])
         when /employeesubprojects(\d+)/ then EmployeeSubProjectsEval.new(params[:category_id], $1)
+        when 'departmentprojects' then DepartmentProjectsEval.new(params[:category_id])
         when 'absences' then AbsencesEval.new
         when 'employeeabsences' then EmployeeAbsencesEval.new(params[:category_id])      
         else nil
