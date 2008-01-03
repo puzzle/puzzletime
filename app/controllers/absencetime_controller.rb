@@ -40,7 +40,7 @@ protected
     @worktime.absence_id = params[:account_id]
   end
 
-  def setAccounts
+  def setAccounts(all = false)
     @accounts = Absence.list 
   end  
   

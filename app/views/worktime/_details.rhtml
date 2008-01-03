@@ -20,5 +20,5 @@
   </tr>
   <tr valign="top">
     <td>Beschreibung:</td>
-    <td><%= simple_format details.description %></td>
+    <td><%= details.description.gsub "\n", "<br/>" %></td>
   </tr>

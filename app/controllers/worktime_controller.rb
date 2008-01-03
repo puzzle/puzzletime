@@ -53,7 +53,7 @@ class WorktimeController < ApplicationController
   # Shows the edit page for the selected time.
   def edit
     setWorktime   
-    setAccounts
+    setAccounts true
     renderGeneric :action => 'edit'
   end  
     
@@ -74,7 +74,7 @@ class WorktimeController < ApplicationController
         update_corresponding if update_corresponding?
         listDetailTime
       else
-        setAccounts
+        setAccounts true
         renderGeneric :action => 'edit'
       end  
     end  
@@ -223,7 +223,7 @@ protected
   end
   
   # overwrite in subclass
-  def setAccounts
+  def setAccounts(all = false)
     @accounts = nil 
   end
   

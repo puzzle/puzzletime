@@ -32,7 +32,7 @@
 		['fehlende Anwesenheitszeit', Timebox::ATTENDANCE_NEG_COLOR],
 		['Wochenende / Feiertag', '#DDDDDD' ]] ) %>
 <tr>
-	<td><%= timebox_div Timebox.new(1, '#FF0000', '') %></td>
+	<td><%= timebox_div Timebox.new(nil, '#FF0000', 1, '') %></td>
 	<td>Tagessoll (8 h)</td>
 </tr>		
 </table>

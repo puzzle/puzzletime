@@ -45,7 +45,7 @@ module GraphHelper
   end
     
   def timebox_div(box)
-    div = "<a>"
+    div = worktime_link box.worktime
     div += image_tag('space.gif', 
                       'height' => "#{box.height}pt",
                       'border' => 0,
@@ -54,6 +54,15 @@ module GraphHelper
     div += "</a>"  
     div
   end
+  
+  def worktime_link(worktime)
+    if worktime && ! worktime.new_record?
+      "<a href=\"" + PATH_PREFIX + '/' + worktime.class.name.downcase + "/edit/#{worktime.id}\">"
+    else
+      "<a>"
+    end
+  end
+  
 
   def timebox_div_old(box)
     "<div style=\"background-color: #{box.color}; " +

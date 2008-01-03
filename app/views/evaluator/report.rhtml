@@ -57,7 +57,7 @@ employee = Employee.find(@evaluation.employee_id)
   <td align="center"><%= format_time time.from_start_time if time.startStop? %></td>
   <td align="center"><%= format_time time.to_end_time if time.startStop? %></td>
   <td align="right"><%= number_with_precision(time.hours, 2) %> &nbsp;</td>
-  <td><%= simple_format time.description.strip %></td>
+  <td><%= time.description.strip.gsub "\n", "<br/>" %></td>
 </tr>
 <% end -%> 
 <tr class="times_total_sum">

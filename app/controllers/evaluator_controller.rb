@@ -52,8 +52,8 @@ class EvaluatorController < ApplicationController
     paginateTimes
   end
   
-  def graph
-    redirect_to :controller => 'graph', :action => 'graph'
+  def weekly
+    redirect_to :controller => 'graph', :action => 'weekly'
   end
   
   def all_absences

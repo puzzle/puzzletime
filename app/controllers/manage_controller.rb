@@ -101,6 +101,7 @@ class ManageController < ApplicationController
   
   def synchronize
     mapper = modelClass.puzzlebaseMap
+    flash[:notice] = modelClass.labelPlural + ' nicht aktualisiert'
     redirectToList if mapper.nil?
     @errors = mapper.synchronize
     if @errors.empty?

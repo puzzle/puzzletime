@@ -111,6 +111,10 @@ class Evaluation
     label + (class_category? ? ' &Uuml;bersicht' : ' von ' + category.label)
   end
   
+  def worktime_name
+    absences? ? Absencetime.label : Projecttime.label
+  end
+  
   # The header name of the division column to be displayed.
   # Returns the class name of the division objects.
   def division_header

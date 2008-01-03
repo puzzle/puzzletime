@@ -15,8 +15,14 @@ protected
     @worktime.setProjectDefaults(params[:account_id] || @user.default_project_id)
   end
 
-  def setAccounts   
-    @accounts = params[:other] ? Project.leaves : setProjectAccounts
+  def setAccounts(all = false)
+    if params[:other]
+      @accounts = Project.leaves
+    elsif all
+      @accounts = @worktime.employee.alltime_leaf_projects
+    else
+      setProjectAccounts
+    end  
   end  
   
   def update_corresponding?

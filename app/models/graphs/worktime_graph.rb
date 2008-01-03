@@ -17,7 +17,7 @@ class WorktimeGraph
     @absences_eval = EmployeeAbsencesEval.new(@employee.id)
     @attendance_eval = AttendanceEval.new(@employee.id)
     
-    @colorMap = Hash.new
+    @colorMap = AccountColorMapper.new
     @weekly_boxes = Hash.new
     @monthly_boxes = Hash.new
   end
@@ -59,12 +59,11 @@ class WorktimeGraph
   end
   
   def accounts?(type)
-    ! accounts(type).empty?
+    @colorMap.accounts? type
   end
 
   def accountsLegend(type)
-    accounts = accounts(type).sort
-    accounts.collect { |p| [p.label_verbose, @colorMap[p]] }
+    @colorMap.accountsLegend type
   end
   
 private
@@ -90,7 +89,7 @@ private
     projects = evaluation.times(period, options) 
     hours = period.musttime.to_f
     return [] if hours == 0
-    projects.collect { |w| Timebox.new(heightFor(w.hours/hours), colorFor(w), tooltipFor(w))  }
+    projects.collect { |w| Timebox.new(w, colorFor(w), Timebox::height_from_hours(w.hours/hours))  }
   end  
           
   def concat_period_boxes
@@ -121,7 +120,7 @@ private
   
   def append_account_boxes(worktimes)
     worktimes.each do |w| 
-      @boxes.push Timebox.new(heightFor(w.hours), colorFor(w), tooltipFor(w))
+      @boxes.push Timebox.new(w, colorFor(w))
       @total_hours += w.hours
     end
   end
@@ -130,10 +129,11 @@ private
     diff = attendance_hours - @total_hours
     if diff > 0.01
       @total_hours += diff
-      @boxes.push Timebox.attendance_pos(heightFor(diff))
+      attendance = @attendance_eval.times(@current, {:conditions => WORKTIME_OPTIONS[:conditions]}).first
+      @boxes.push Timebox.attendance_pos(attendance, diff)
     elsif diff < -0.01
       # replace with removing corresponding projecttime algorithm
-      diff_height = heightFor(-diff)
+      diff_height = Timebox::height_from_hours(-diff)
       @boxes.reverse_each do |b|
         diff_height -= b.height
         if diff_height < 0
@@ -143,26 +143,30 @@ private
           @boxes.pop
         end
       end
-      @boxes.push Timebox.attendance_neg(heightFor(-diff))
+      attendance = Attendancetime.new(:employee_id => @employee.id, 
+                                  :work_date => @current.startDate, 
+                                  :hours => diff,
+                                  :report_type => HoursDayType::INSTANCE)
+      @boxes.push Timebox.attendance_neg(attendance, -diff)
     end
   end
   
   def insert_musthours_line(must_hours)
     if @total_hours < must_hours
-      @boxes.push Timebox.blank(heightFor(must_hours - @total_hours))
+      @boxes.push Timebox.blank(must_hours - @total_hours)
       @boxes.push Timebox.must_hours(must_hours)
     elsif @total_hours == must_hours
       @boxes.push Timebox.must_hours(must_hours)
     else
       sum = 0
-      limit = heightFor(must_hours)
+      limit = Timebox::height_from_hours(must_hours)
       @boxes.each_index do |i|
         sum += @boxes[i].height
         diff = sum - limit
         if diff > 0
           @boxes[i].height = @boxes[i].height - diff
           @boxes.insert(i+1, Timebox.must_hours(must_hours))
-          @boxes.insert(i+2, Timebox.new(diff, @boxes[i].color, @boxes[i].tooltip))
+          @boxes.insert(i+2, Timebox.new(@boxes[i].worktime, @boxes[i].color, diff, @boxes[i].tooltip))
           break
         elsif diff == 0
           @boxes.insert(i+1, Timebox.must_hours(must_hours))
@@ -172,43 +176,8 @@ private
     end
   end
   
-  def heightFor(hours)
-    hours * Timebox::PIXEL_PER_HOUR
-  end
-  
   def colorFor(worktime)
-    @colorMap[worktime.account] ||= generateColor(worktime)
-  end
-  
-  def generateColor(worktime)
-    return Timebox::ATTENDANCE_POS_COLOR unless worktime.account_id
-    worktime.absence? ? 
-        generateAbsenceColor(worktime.absence_id) :
-        generateProjectColor(worktime.project_id)
-  end
-  
-  def generateAbsenceColor(id)
-    srand id
-    val = randomColor(200)
-    '#FF' + val + val
-  end
-  
-  def generateProjectColor(id)
-    srand id
-    '#' + randomColor(120) + randomColor + 'FF'
-  end
-  
-  def randomColor(span = 170)
-    lower = (255 - span) / 2
-    (lower + rand(span)).to_s(16)
-  end
-  
-  def tooltipFor(worktime)
-    worktime.timeString + ': ' + (worktime.account ? worktime.account.label : 'Anwesenheit')
-  end
-
-  def accounts(type)
-    @colorMap.keys.select { |key| key.is_a? type }
+    @colorMap[worktime.account]
   end
 
   def extend_to_weeks(period)

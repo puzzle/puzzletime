@@ -28,7 +28,13 @@ class Employee < ActiveRecord::Base
            :through => :projectmemberships, 
            :include => :client,
            :order => "clients.name, projects.name", 
-           :conditions => "projectmemberships.projectmanagement IS TRUE"
+           :conditions => "projectmemberships.projectmanagement AND projectmemberships.active"
+  has_many :alltime_projects, 
+           :class_name => 'Project',
+           :include => :client,
+           :through => :projectmemberships,
+           :source => :project,
+           :order => "clients.shortname, projects.name"
   has_many :absences, 
            :through => :worktimes,
            :uniq => true,
@@ -172,8 +178,13 @@ class Employee < ActiveRecord::Base
     membership.last_completed if membership
   end
   
-  def leaf_projects
-    projects.collect{|p| p.leaves }.flatten
+  def leaf_projects(list = nil)
+    list ||= projects
+    list.collect{|p| p.leaves }.flatten.uniq
+  end
+  
+  def alltime_leaf_projects
+    leaf_projects(alltime_projects)
   end
   
   def statistics

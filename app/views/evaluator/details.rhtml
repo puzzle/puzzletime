@@ -1,4 +1,4 @@
-<% @title = "Arbeitszeit Details #{@period.to_s}" -%>       
+<% @title = "#{@evaluation.worktime_name} Details #{@period.to_s}" -%>       
 
 <h3><%= @evaluation.category_label %></h3>
 <h3><%= @evaluation.division_label %></h3>
@@ -13,7 +13,7 @@
 <% if @evaluation.for? @user
     details = params[:action] == 'details'
 -%>
-<%= link_to details ? 'Anwesenheiten' : 'Projektzeiten',
+<%= link_to details ? 'Anwesenheiten' : 'Arbeitszeiten',
             evaluation_detail_params.merge!({
                 :action => details ? 'attendanceDetails' : 'details' }) %>
 |

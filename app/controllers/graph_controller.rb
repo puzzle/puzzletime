@@ -8,7 +8,7 @@ class GraphController < ApplicationController
   before_filter :authorize, :only => [:all_absences]
   before_filter :setPeriod
 
-  def graph
+  def weekly
     @graph = WorktimeGraph.new(@period || Period.currentMonth, @user)
   end
   

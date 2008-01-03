@@ -1,5 +1,7 @@
 class AttendanceEval < Evaluation
 
+  include Conditioner
+
   DETAIL_COLUMNS   = [:work_date, :hours, :times]
     
   def initialize(employee_id)
@@ -13,6 +15,10 @@ class AttendanceEval < Evaluation
   def division_label
     'Anwesenheitszeiten'
   end  
+   
+  def worktime_name
+    Attendancetime.label
+  end 
    
   # Sums all worktimes for a given period.
   # If a division is passed or set previously, their sum will be returned.
@@ -59,17 +65,8 @@ class AttendanceEval < Evaluation
 private
 
   def addConditions(options = {}, period = nil)
-    options = options.clone
-    if period
-      if options[:conditions]
-        options[:conditions] = options[:conditions].clone
-        options[:conditions][0] = "(#{options[:conditions][0]}) AND "
-      else
-        options[:conditions] = ['']
-      end
-      options[:conditions][0] += "work_date BETWEEN ? AND ?"
-      options[:conditions].push period.startDate, period.endDate 
-    end
+    options = clone_options options
+    append_conditions(options[:conditions], ['work_date BETWEEN ? AND ?', period.startDate, period.endDate]) if period
     options
   end  
   

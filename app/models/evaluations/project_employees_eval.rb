@@ -1,7 +1,5 @@
 class ProjectEmployeesEval < Evaluation
 
-  include Conditioner
-
   DIVISION_METHOD  = :employees
   LABEL            = 'Mitarbeiter'
   CATEGORY_REF     = 'ANY ( path_ids )'      

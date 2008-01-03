@@ -10,7 +10,7 @@ class VacationGraph
     
     @absences_eval = AbsencesEval.new
     
-    @colorMap = Hash.new
+    @colorMap = AccountColorMapper.new
     @cache = Cache.new(60, 3 * @period.length/7)
   end
   
@@ -56,7 +56,7 @@ class VacationGraph
   	
   	hours = times[max_absence] / MUST_HOURS_PER_DAY
   	color = colorFor(max_absence) if max_absence
-  	Timebox.new hours, color, tooltip 
+  	Timebox.new nil, color, hours, tooltip 
   end
  
   def employee
@@ -79,13 +79,12 @@ class VacationGraph
     employee.statistics.used_vacations(@actual_period).round(1)
   end
   
-  def accounts?(type)
-    ! accounts(type).empty?
+  def accounts?(type = Absence)
+    @colorMap.accounts?(type)
   end
 
-  def accountsLegend(type)
-    accounts = accounts(type).sort
-    accounts.collect { |p| [p.label_verbose, @colorMap[p]] }
+  def accountsLegend(type = Absence)
+    @colorMap.accountsLegend(type)
   end
   
 private
@@ -152,23 +151,9 @@ private
   end
 
   def colorFor(absence)
-    @colorMap[absence] ||= generateAbsenceColor(absence.id)
+    @colorMap[absence]
   end
   
-  def generateAbsenceColor(id)
-    srand id
-    '#FF' + randomColor(190) + randomColor(10)
-  end
-  
-  def randomColor(span = 170)
-    lower = (255 - span) / 2
-    (lower + rand(span)).to_s(16)
-  end
-  
-  def accounts(type)
-    @colorMap.keys.select { |key| key.is_a? type }
-  end
-
   def extend_to_weeks(period)
     Period.new Period.weekFor(period.startDate).startDate,
                Period.weekFor(period.endDate).endDate,
