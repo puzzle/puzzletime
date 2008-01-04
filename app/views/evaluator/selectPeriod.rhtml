@@ -3,28 +3,40 @@
 <p>
 <table cellspacing="0">
 <tr>
-  <td><%= period_link 'Gestern', :dayFor, Time.new.yesterday %> </td>
+  <td><%= period_link 'Heute', '0d' %> </td>
   <td> &nbsp; </td>
-  <td><%= period_link 'Letzte Woche', :weekFor, Time.new.advance(:days => -7) %> </td>
+  <td><%= period_link 'Diese Woche', '0w' %> </td>
   <td> &nbsp; </td>
-  <td><%= period_link 'Letzter Monat', :monthFor, Time.new.advance(:months => -1) %> </td>
+  <td><%= period_link 'Dieser Monat', '0m' %> </td>
   <td> &nbsp; </td>
-  <td><%= period_link 'Letztes Jahr', :yearFor, Time.new.advance(:years => -1) %> </td>
+  <td><%= period_link 'Dieses Jahr', '0y' %> </td>
 </tr>
 <tr>
-  <td><%= period_link 'Vorgestern', :dayFor, Time.new.advance(:days => -2) %> </td>
+  <td><%= period_link 'Gestern', '-1d' %> </td>
   <td> &nbsp; </td>
-  <td><%= period_link 'Vorletzte Woche', :weekFor, Time.new.advance(:days => -14) %> </td>
+  <td><%= period_link 'Letzte Woche', '-1w' %> </td>
   <td> &nbsp; </td>
-  <td><%= period_link 'Vorletzter Monat', :monthFor, Time.new.advance(:months => -2) %> </td>
+  <td><%= period_link 'Letzter Monat', '-1m' %> </td>
   <td> &nbsp; </td>
-  <td><%= period_link 'Vorletztes Jahr', :yearFor, Time.new.advance(:years => -2) %> </td>
+  <td><%= period_link 'Letztes Jahr', '-1y' %> </td>
+</tr>
+<tr>
+  <td><%= period_link 'Vorgestern', '-2d' %> </td>
+  <td> &nbsp; </td>
+  <td><%= period_link 'Vorletzte Woche', '-2w' %> </td>
+  <td> &nbsp; </td>
+  <td><%= period_link 'Vorletzter Monat', '-2m' %> </td>
+  <td> &nbsp; </td>
+  <td><%= period_link 'Vorletztes Jahr', '-2y' %> </td>
 </tr>
 </table>
 </p>
 
-<p>Beliebig:</p>
-<% form_tag evaluation_overview_params(:action => 'changePeriod') do %>                  
+<br />
+<br />
+
+Beliebig:                 
+<% form_tag evaluation_overview_params(:action => 'changePeriod') do %> 
 <table>
   <tr>
     <td>Von:</td>
@@ -39,7 +51,7 @@
     <td><%= submit_tag 'Ausw&auml;hlen' %></td>
   </tr>
 </table>
- <% end %>
+<% end %>
 
 <p>
  <%= link_to 'Zur&uuml;ck zur &Uuml;bersicht', 

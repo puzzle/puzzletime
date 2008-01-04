@@ -1,5 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/2002/REC-xhtml1-20020801/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
 <head>
   <title>puzzleTime - <%= @title %></title>
@@ -14,20 +13,21 @@
   <%= dhtml_calendar_includes "blue", "de" %>
   <% end -%>
 </head>
-<body>
-<div id="content" style="width: <%= [@content_width || 992, 992].max.to_s + 'px' %>;">
-	<div id="header">
+<body>	
+<div id="content">
+  <div id="header">
+	<%= image_tag 'banner.jpg', :size => '547x92', :id => 'banner' %>
+	<div id="splash">
 		<div id="brand">puzzleTime<sup>1.2_betah</sup></div>
 		<div id="company">&nbsp; by Puzzle ITC</div>
-	</div>
-	<div id="splash">
-	<%= image_tag 'banner.jpg', :size => '547x92', :align => 'right' %>
-	</div>		
+	</div>	
+  </div>
+  
 <% if @user -%>
 	<%= render :partial => 'layouts/menu' %>
 	<div id="menu_user">
 	  <%= @user.label %> |
-	  <%= link_to 'Einstellungen', :controller => 'login', :action => 'settings' %>	 | 
+	  <%= link_to 'Einstellungen', :controller => 'employee', :action => 'settings' %>	 | 
 	  <%= link_to 'Logout', 
 	           {:controller => 'login', 
 	           :action => 'logout'},
@@ -37,13 +37,15 @@
     <%= renderGenericPartial :partial => 'submenu' %> &nbsp;
     </div>   
 <% end -%>
+
 	<h1><%= @title %></h1>
 	<% if flash.has_key?(:notice) -%>
 	<div id="notice"><%= flash[:notice] %></div>
 	<% end -%>
+	
+	<div>
     <%= @content_for_layout %>
-    <br/>
-    <br/>
+	</div>
 </div>
 </body>
 </html>

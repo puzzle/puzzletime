@@ -4,14 +4,14 @@
 
 <%= render(:partial => 'evaluator/periodLink') %>
 
-<table class="graph" align="left">
+<table class="graph">
 <tr class="head">
 	<th></th>
 	<%= weekday_header %>
 <% @graph.each_day do |day| -%>	
 	<% if day.wday == 1 -%>
 </tr>
-<tr height="100pt">
+<tr>
 	<th>KW <%= day.cweek %> &nbsp;</th>
 	<% end -%>	
 	<%= day_td day %>
@@ -22,7 +22,8 @@
 </tr>
 </table>
 
-<table class="legend" width="350pt" align="right">
+
+<table class="legend">
 <%= render :partial => "legend", :collection => [Project, Absence] %>
 <tr>
 	<td colspan="2"><b>Anwesenheit</b></td>
@@ -37,5 +38,5 @@
 </tr>		
 </table>
 
-<br clear="all">
+<br clear="all" />
 

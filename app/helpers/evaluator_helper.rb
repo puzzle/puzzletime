@@ -7,11 +7,8 @@ module EvaluatorHelper
     if @period
       [@period]
     else 
-      if user_view?
-        [Period.currentDay, Period.currentWeek, Period.currentMonth]
-      else
-        [Period.currentWeek, Period.currentMonth, Period.currentYear]
-      end
+      periods = user_view? ? @user.user_periods : @user.eval_periods
+      periods.collect { |p| Period.parse(p) }
     end
   end 
   
@@ -42,16 +39,10 @@ module EvaluatorHelper
   end
   
   def collect_times(periods, method, *division)
-    all_periods(periods).collect do |p| 
+    periods.collect do |p| 
       @evaluation.send(method, p, *division) 
     end
   end  
-  
-  def all_periods(periods)
-    all_periods = periods
-    all_periods += [nil] if !user_view?
-    all_periods
-  end
   
   def add_time_link(account = nil)
      linkHash = { :action => 'add' }
@@ -112,12 +103,8 @@ module EvaluatorHelper
   
   ### period and time helpers
 
-  def period_link(label, periodMethod, date)
-    period = Period.send(periodMethod, date)
-    link_to label, evaluation_overview_params( :action => 'changePeriod',
-                         'period[startDate]' => period.startDate.strftime(DATE_FORMAT),
-                         'period[endDate]' => period.endDate.strftime(DATE_FORMAT),
-                         'period[label]' => label )
+  def period_link(label, shortcut)
+    link_to label, evaluation_overview_params( :action => 'changePeriod', :shortcut => shortcut )
   end
   
   def timeInfo

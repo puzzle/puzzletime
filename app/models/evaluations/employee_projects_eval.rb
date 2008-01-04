@@ -2,6 +2,7 @@ class EmployeeProjectsEval < ProjectsEval
 
   CATEGORY_REF      = :employee_id   
   ATTENDANCE        = true   
+  SUB_EVALUATION    = nil
   SUB_PROJECTS_EVAL = 'employeesubprojects'
   
   def initialize(employee_id)

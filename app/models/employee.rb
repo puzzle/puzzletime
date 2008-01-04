@@ -190,7 +190,22 @@ class Employee < ActiveRecord::Base
   def statistics
     @statistics ||= EmployeeStatistics.new(self)
   end
+  
+  def user_periods=(periods)
+    write_array_attribute(:user_periods, periods)
+  end
 
+  def user_periods
+    read_array_attribute(:user_periods)
+  end
+
+  def eval_periods=(periods)
+    write_array_attribute(:eval_periods, periods)
+  end
+
+  def eval_periods
+    read_array_attribute(:eval_periods)
+  end
   
   ######### employment information ######################
   
@@ -226,6 +241,17 @@ private
       append_conditions(options[:conditions], ['work_date BETWEEN ? AND ?', period.startDate, period.endDate])
     end
     receiver.sum(:hours, options).to_f
+  end
+  
+  def read_array_attribute(attribute)
+    value = read_attribute(attribute)
+    return [] if value.nil?
+    value[1..-2].split(/,\s*/)
+  end
+  
+  def write_array_attribute(attribute, value)
+    value = [value] unless value.is_a? Array
+    write_attribute(attribute, "{\"#{value.join("\", \"")}\"}")
   end
   
 end

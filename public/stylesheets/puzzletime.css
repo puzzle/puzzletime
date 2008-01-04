@@ -32,6 +32,10 @@ a.symbol {
 	font-size: 		 12pt;
 }
 
+a img {
+	border:			0;
+}
+
 h1 {
     font-size:      15pt;
     font-weight:    normal;
@@ -65,59 +69,41 @@ th {
     text-align:     left;
 }
 
-th.periodHead {
-    text-align:     right;
-}
-
 textarea, input, select {
     font-size:      10.5pt;
     font-family:    sans-serif;
     line-height:    14pt;
 }
 
-.uneven {
-    background-color: #C9D8FF;
-}
-
-.times_total_sum {
-    font-weight:    bold;
-    /* color: #f4a460; */
-    padding-top:    10px;
-    padding-bottom: 20px;
-    white-space:    nowrap;
-}
-
-#notice {
-    font-weight:    bold;
-    margin:         10px;
-    margin-top:     20px;
-    margin-bottom:  20px;
-    color:          #e47400;
-}
-
 #content {
-    min-width:      730px;
-   	overflow:		visible;
+	display:		table;
+	min-width:		740px;
+	width: 			940px;
     margin:         auto;
-    padding:        13px 16px 13px 16px;
+    padding:        8px 16px 40px 16px;
     background:     #fff; /*url('../images/whitebox.gif') repeat-y;*/
-	border:			1px solid #E9E9E7;
+	border-left:	1px solid #E9E9E7;
+	border-right:	1px solid #E9E9E7;
 }
 
 #header {
-    background:     #0087e3;
-    width:          302px;
     height:         92px;
+    margin-bottom:  14px;
+}
+
+#splash {
+    background:     #0087e3;
     color:          #fff;
     padding-left:   20px;
-    float:          left;
+	height:			92px;
+	max-width:		30%;
 }
 
 #brand {    
     font-weight:    normal;
     font-size:      28px;
     letter-spacing: -1px;
-    margin-top:     22px;
+	padding-top:    22px;
     margin-bottom:  0px;
 }
 
@@ -133,10 +119,8 @@ textarea, input, select {
     font-size:      0.5em;
 }
 
-#splash {
-    right:          16px;
-    height:         92px;
-    margin-bottom:  14px;
+#banner {
+	float:			right;
 }
 
 #menu {
@@ -175,7 +159,6 @@ textarea, input, select {
 
 #menu ul li {
     display:        inline;
-    padding-left:   -3px;
 	font-size:		14px;
 }
 
@@ -193,11 +176,37 @@ textarea, input, select {
     text-decoration: none;
 }
 
+th.periodHead {
+    text-align:     right;
+}
+
+.uneven {
+    background-color: #C9D8FF;
+	white-space: nowrap;
+}
+
+.times_total_sum {
+    font-weight:    bold;
+    /* color: #f4a460; */
+    padding-top:    10px;
+    padding-bottom: 20px;
+    white-space:    nowrap;
+}
+
+#notice {
+    font-weight:    bold;
+    margin:         10px;
+    margin-top:     20px;
+    margin-bottom:  20px;
+    color:          #e47400;
+}
+
 #notifications {
     border: 2px solid #C9D8FF;
     background-color: #f0f0f0;
     margin: 0;
     margin-top: -16px;
+	margin-bottom: 10px;
     list-style-type: none;
 }
 

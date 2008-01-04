@@ -117,7 +117,7 @@ class EvaluatorController < ApplicationController
   ########################  PERIOD ACTIONS  #########################
   
   def selectPeriod
-    @period = Period.new()
+    @period = Period.new() if @period.nil?
   end
   
   def currentPeriod
@@ -126,9 +126,13 @@ class EvaluatorController < ApplicationController
   end
   
   def changePeriod
-    @period = Period.retrieve(params[:period][:startDate], 
-                              params[:period][:endDate],
-                              params[:period][:label])  
+    if params[:shortcut]
+      @period = Period.parse(params[:shortcut])
+    else
+      @period = Period.retrieve(params[:period][:startDate], 
+                                params[:period][:endDate],
+                                params[:period][:label])  
+    end
     raise ArgumentError, "Start Datum nach End Datum" if @period.negative?   
     session[:period] = [@period.startDate.to_s, @period.endDate.to_s,  @period.label]  
     redirectToOverview             

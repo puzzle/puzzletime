@@ -9,7 +9,21 @@ class EmployeeController < ManageController
 
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
   verify :method => :post, :only => [ :updatePwd ],
-         :redirect_to => { :controller => 'projecttime', :action => 'list' }
+         :redirect_to => { :controller => 'evaluator', :action => 'userProjects', :clear => 1 }
+  
+  
+  def settings
+  end
+  
+  def save_settings
+    if @user.update_attributes(params[:user])
+      flash[:notice] =  'Die Benutzereinstellungen wurden aktualisiert'
+      redirect_to :controller => 'projecttime', :action => 'list'
+    else      
+      flash[:notice] = 'Die Benutzereinstellungen konnten nicht aktualisiert werden'
+      render :action => 'settings'
+    end
+  end
   
   #Update userpwd
   def updatePwd

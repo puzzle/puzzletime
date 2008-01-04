@@ -1,6 +1,7 @@
 
 .graph { 
 	border-spacing: 0px;
+	float:			left;
 }
 
 .graph .head {
@@ -9,6 +10,10 @@
 
 .graph th {
 	text-align:		center;
+}
+
+.graph tr {
+	height: 		80pt;
 }
 
 .graph td {
@@ -41,26 +46,24 @@
 	background-color: 	#FFFFFF; 
 	height: 			25pt;
 	text-align: 		center;
-	font-size:			9.5pt;
+	font-size:			9pt;
 }
 
-.week {
+.absence {
 	border-spacing: 0px;
 }
 
-.week .head th {
+.absence .head th {
 	text-align:		center;
-	border-right: 	1px solid #bbb;	
-	border-bottom: 	1px solid #bbb;
 }
 
-.week th {
+.absence th {
 	text-align: 	left;
 	border-right: 	1px solid #bbb;	
 	border-bottom: 	1px solid #bbb;
 }
 
-.week td {
+.absence td {
 	text-align: 	center;
 	padding: 		0pt;
 	font-size:		8pt;
@@ -68,7 +71,7 @@
 	border-bottom: 	1px solid #bbb;
 }
 
-.week td.stat {
+.absence td.stat {
 	text-align: 	right;
 	padding:		2pt;
 }
@@ -103,6 +106,10 @@ td a:hover span {
 	text-align:		left;
 }
 
+.legend {
+	width:			240pt;
+	margin-left:	20pt;
+}
 
 .legend tr {
 	vertical-align: top;

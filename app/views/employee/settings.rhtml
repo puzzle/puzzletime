@@ -1,0 +1,91 @@
+<% @title = "Benutzereinstellungen" -%>
+
+<%= error_messages_for :entry %>
+  
+<% form_tag :action => 'save_settings' do -%>
+<table>
+<tr>
+	<td>Default Report Typ: </td>
+	<td>
+	<%= select 'user', 'report_type', 
+                ReportType::INSTANCES.collect {|type| [type.name, type.key]}, 
+               {:selected => @user.report_type ? @user.report_type.key : nil} %>
+	</td>
+</tr>
+<tr>
+	<td>Default Projekt: </td>
+	<td>
+	<%= select 'user', 'default_project_id', 
+                @user.leaf_projects.collect{|project| [project.label_verbose, project.id]}, 
+               {:selected => @user.default_project_id} %>
+	</td>
+</tr>
+<tr>
+	<td>Anwesenheitszeiten: </td>
+	<td><%= check_box 'user', 'default_attendance' %> standardmässig erfassen</td>
+</tr>
+<tr>
+	<td>Aktuelle Zeitspannen:</td>
+</tr>
+<tr valign="top">
+	<td> &nbsp; Eigene Zeit</td>
+	<td>
+	<table cellspacing="0" cellpadding="0">
+	<tr valign="top">
+		<td>
+		<%= multiple_check_box 'user', 'user_periods', '-1d' %> Gestern <br>
+		<%= multiple_check_box 'user', 'user_periods', '0d' %> Heute
+		</td>
+		<td>
+		<%= multiple_check_box 'user', 'user_periods', '-1w' %> Vorige Woche <br/>
+		<%= multiple_check_box 'user', 'user_periods', '0w' %> Aktuelle Woche
+		</td>
+		<td>
+		<%= multiple_check_box 'user', 'user_periods', '-1m' %> Voriger Monat <br/>
+		<%= multiple_check_box 'user', 'user_periods', '0m' %> Aktueller Monat
+		</td>
+		<td>
+		<%= multiple_check_box 'user', 'user_periods', '-1y' %> Voriges Jahr <br/>
+		<%= multiple_check_box 'user', 'user_periods', '0y' %> Aktuelles Jahr
+		</td>
+		<td><%= multiple_check_box 'user', 'user_periods', '0' %> Total</td>
+	</tr>
+	</table>
+	</td>
+</tr>
+<tr valign="top">
+	<td> &nbsp; Auswertungen </td>
+	<td>
+	<table cellspacing="0" cellpadding="0">
+	<tr valign="top">
+		<td>
+		<%= multiple_check_box 'user', 'eval_periods', '-1d' %> Gestern <br>
+		<%= multiple_check_box 'user', 'eval_periods', '0d' %> Heute
+		</td>
+		<td>
+		<%= multiple_check_box 'user', 'eval_periods', '-1w' %> Vorige Woche <br/>
+		<%= multiple_check_box 'user', 'eval_periods', '0w' %> Aktuelle Woche
+		</td>
+		<td>
+		<%= multiple_check_box 'user', 'eval_periods', '-1m' %> Voriger Monat <br/>
+		<%= multiple_check_box 'user', 'eval_periods', '0m' %> Aktueller Monat
+		</td>
+		<td>
+		<%= multiple_check_box 'user', 'eval_periods', '-1y' %> Voriges Jahr <br/>
+		<%= multiple_check_box 'user', 'eval_periods', '0y' %> Aktuelles Jahr
+		</td>
+		<td><%= multiple_check_box 'user', 'eval_periods', '0' %> Total</td>
+	</tr>
+	</table>
+	</td>
+</tr>
+<tr>
+  <td></td>
+  <td><%= submit_tag 'Speichern' %></td>
+</tr>
+</table>
+<% end -%>
+
+<%= link_to 'Meine Zeit', 
+            :controller => 'projecttime',
+            :action => 'list' %>

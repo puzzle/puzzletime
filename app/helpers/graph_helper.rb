@@ -2,7 +2,7 @@ module GraphHelper
 
   def weekday_header
     names = Date::DAYNAMES[1..6] + [Date::DAYNAMES[0]]
-    names.collect! { |n| "<th>#{n}</th>" }
+    names.collect! { |n| "<th>#{n[0..1]}</th>" }
     names.join("\n")
   end
 
@@ -48,7 +48,6 @@ module GraphHelper
     div = worktime_link box.worktime
     div += image_tag('space.gif', 
                       'height' => "#{box.height}pt",
-                      'border' => 0,
                       'style' => "background-color: #{box.color};") 
     div += "<span>#{box.tooltip}</span>" if not box.tooltip.strip.empty?               
     div += "</a>"  

@@ -2,7 +2,7 @@ module WorktimeHelper
      
   def select_report_type(object_name = 'worktime', method = 'report_type', switch = true)
       htmlOptions = {}
-      htmlOptions[:onChange] = 'switchvisibility();' if switch
+      htmlOptions[:onchange] = 'switchvisibility();' if switch
       obj = instance_variable_get("@#{object_name}")
       select object_name, 
              method, 

@@ -21,7 +21,7 @@ module ApplicationHelper
   end
     
   def alternate_row
-    @row = 1 if ! defined? @row    
+    @row = -1 if ! defined? @row    
     @row += 1
     @row.modulo(2) == 1 ? '<tr class="uneven">' : '<tr>'
   end    

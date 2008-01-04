@@ -4,11 +4,8 @@
     <th><%= @evaluation.division_header %></th>    
 	<%= '<th></th>' if @evaluation.class::SUB_PROJECTS_EVAL %>
     <% for p in periods -%>
-    <th class="periodHead"> <%= p.label %> &nbsp; &nbsp;</th>
+    <th class="periodHead"> <%= p ? p.label : 'Total' %> &nbsp; &nbsp;</th>
     <% end -%>
-	<% if not user_view? -%>
-    <th class="periodHead">Total &nbsp; &nbsp;</th>
-	<% end -%>
     <% for supp in @evaluation.division_supplement(@user)%>           
     <th><%= supp[1] %></th>
     <% end -%>  
@@ -28,7 +25,7 @@
     <td>Anwesenheit</td>
 	<%= '<th></th>' if @evaluation.class::SUB_PROJECTS_EVAL %>
     <%= 
-    times = all_periods(periods).collect { |p| @evaluation.category.sumAttendance p }
+    times = periods.collect { |p| @evaluation.category.sumAttendance p }
     render(:partial => 'periodTime', 
            :collection => times,
            :locals => {:periods => periods, :action => 'attendanceDetails'}) %>
