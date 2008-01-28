@@ -5,7 +5,9 @@ class Period
   attr_reader :startDate, :endDate, :label
   
   # Caches the most used periods
-  @@cache = Cache.new
+  @@cache = MemCache.new 'localhost:11211', :namespace => 'periods'
+  
+  EXPIRE_SECONDS = 3600
   
   ####### constructors ########
   
@@ -68,12 +70,22 @@ class Period
   end
   
   def self.retrieve(startDate = Date.today, endDate = Date.today, label = nil)
-    @@cache.get([startDate, endDate, label]) { Period.new(startDate, endDate, label) }
+    startDate = parseDate(startDate)
+    endDate = parseDate(endDate)
+    key = startDate.strftime('%Y%m%d') + endDate.strftime('%Y%m%d')
+    period = @@cache.get(key) 
+    if period.nil?
+        period = Period.new(startDate, endDate, label)
+        @@cache.set key, period, EXPIRE_SECONDS
+    else
+      period.set_label label
+    end
+    period
   end
   
   def initialize(startDate = Date.today, endDate = Date.today, label = nil)    
-    @startDate = parseDate(startDate)
-    @endDate = parseDate(endDate)
+    @startDate = self.class.parseDate(startDate)
+    @endDate = self.class.parseDate(endDate)
     @label = label ? label : self.to_s
   end
     
@@ -111,7 +123,13 @@ class Period
     formattedDate(@startDate) + ' - ' + formattedDate(@endDate)
   end  
   
-private
+
+  def set_label(label)
+    @label = label
+  end
+  
+  
+private   
 
   def self.dayLabel(date)
     case date
@@ -136,7 +154,7 @@ private
     "#{date.strftime('%Y')}"
   end
 
-  def parseDate(date)
+  def self.parseDate(date)
     if date.kind_of? String
       begin
         date = Date.strptime(date, DATE_FORMAT) 

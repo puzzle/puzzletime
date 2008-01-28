@@ -1,5 +1,6 @@
 class EmployeeProjectsEval < ProjectsEval
 
+  DIVISION_METHOD   = :alltime_projects
   CATEGORY_REF      = :employee_id   
   ATTENDANCE        = true   
   SUB_EVALUATION    = nil

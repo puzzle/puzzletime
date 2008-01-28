@@ -11,7 +11,7 @@ class VacationGraph
     @absences_eval = AbsencesEval.new
     
     @colorMap = AccountColorMapper.new
-    @cache = Cache.new(60, 3 * @period.length/7)
+    @cache = Hash.new
   end
   
   def each_employee
@@ -160,8 +160,8 @@ private
                period.label
   end
   
-  def get_period_month(date)  
-    @cache.get(date.month) { Period.new(date.beginning_of_month, date.end_of_month)}
+  def get_period_month(date)
+    get_set_cache(date.month) { Period.new(date.beginning_of_month, date.end_of_month) }
   end
   
   def get_period_week(from)
@@ -169,7 +169,16 @@ private
   end
   
   def get_period(from, to)
-    @cache.get([from, to]) { Period.new(from, to) }
+    get_set_cache([from, to]) { Period.new(from, to) }
+  end
+  
+  def get_set_cache(key)
+    val = @cache[key]
+    if val.nil?
+      val = yield
+      @cache[key] = val
+    end
+    val
   end
   
 end

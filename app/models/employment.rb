@@ -105,7 +105,7 @@ class Employment < ActiveRecord::Base
   end  
     
   def label
-    "die Anstellung vom #{start_date.strftime(DATE_FORMAT)} - #{end_date ? end_date.strftime(DATE_FORMAT) : 'offen'}"
+    "die Anstellung vom #{date_label start_date} - #{date_label end_date}"
   end  
     
   def self.labels
@@ -120,6 +120,10 @@ class Employment < ActiveRecord::Base
     return :boolean if col == :final
     super(col)
   end 
+  
+  def date_label(date)
+    date ? date.strftime(DATE_FORMAT) : 'offen'
+  end
   
 private
  

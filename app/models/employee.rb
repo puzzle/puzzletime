@@ -32,8 +32,9 @@ class Employee < ActiveRecord::Base
   has_many :alltime_projects, 
            :class_name => 'Project',
            :include => :client,
-           :through => :projectmemberships,
-           :source => :project,
+           :through => :worktimes,
+           :source => 'project',
+           :uniq => true,
            :order => "clients.shortname, projects.name"
   has_many :absences, 
            :through => :worktimes,

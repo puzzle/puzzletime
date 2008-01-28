@@ -29,6 +29,8 @@ end
 
 class Employment < ActiveRecord::Base
   def debugString
-    "#{employee.shortname}: #{percent}% vom #{start_date.strftime(DATE_FORMAT)} - #{end_date.strftime(DATE_FORMAT)}"
+    "#{employee.shortname}: #{percent}% vom #{date_label(start_date)} - #{date_label(end_date)}"
   end
+  
+  def 
 end

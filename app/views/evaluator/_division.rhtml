@@ -1,3 +1,8 @@
+ <% 
+periodTimes = collect_times(periods, :sum_times, division)
+
+if @period.nil? || periodTimes.sum > 0
+-%>
 <%= alternate_row %>
     <td>
     <%= link_to_if sub = @evaluation.sub_evaluation, 
@@ -13,9 +18,10 @@
 	</td>
 <% end -%>	
     <%= render(:partial => 'periodTime',
-               :collection => collect_times(periods, :sum_times, division),
+               :collection => periodTimes,
                :locals => {:division_id => division.id, :periods => periods}) %>
     <% for supp in @evaluation.division_supplement(@user)%>           
     <td<%= " align='#{supp[2]}'" if supp[2] %>><%= self.send(supp[0], division) %></td>
     <% end -%>    
 </tr>
+<% end -%>

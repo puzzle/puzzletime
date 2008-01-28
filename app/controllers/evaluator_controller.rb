@@ -160,7 +160,7 @@ private
         when 'managed' then ManagedProjectsEval.new(@user)
         when 'managedabsences' then ManagedAbsencesEval.new(@user)
         when 'absencedetails' then AbsenceDetailsEval.new
-        when 'userprojects' then EmployeeProjectsEval.new(@user.id)
+        when 'userprojects' then @period.nil? ? UserProjectsEval.new(@user.id) : EmployeeProjectsEval.new(@user.id)
         when "employeesubprojects#{@user.id}", "usersubprojects" then
           params[:evaluation] = 'usersubprojects'
           EmployeeSubProjectsEval.new(params[:category_id], @user.id)

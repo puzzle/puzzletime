@@ -1,6 +1,6 @@
 <% @title = "Neue #{@worktime.class.label}"
-   buttons = ['Speichern und weiter erfassen', WorktimeController::FINISH]
-   buttons.insert 1, AttendancetimeController::SPLIT if @worktime.kind_of? Attendancetime
+   buttons = [WorktimeController::FINISH, 'Speichern und weiter erfassen']
+   buttons.insert 0, AttendancetimeController::SPLIT if @worktime.kind_of? Attendancetime
  -%>
 
 <% form_tag :controller => @worktime.class.name, 
