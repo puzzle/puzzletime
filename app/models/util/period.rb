@@ -5,11 +5,14 @@ class Period
   attr_reader :startDate, :endDate, :label
   
   # Caches the most used periods
-  @@cache = MemCache.new 'localhost:11211', :namespace => 'periods'
-  
-  EXPIRE_SECONDS = 3600
+  # Not sure yet if this really works in a stateless fcgi environment
+  @@cache = Cache.new
   
   ####### constructors ########
+  
+  def self.cache_size
+    puts @@cache.size
+  end
   
   def self.currentDay
     self.dayFor(Date.today)
@@ -51,6 +54,11 @@ class Period
     retrieve(Date.civil(date.year, 1, 1), Date.civil(date.year, 12, 31), label)  
   end
   
+  def self.pastMonth(date = Date.today, label = nil)
+    date = date.to_date if date.kind_of? Time
+    retrieve(date - 28, date + 7, label)
+  end
+  
   def self.comingMonth(date = Date.today, label = nil)
     date = date.to_date if date.kind_of? Time
     date -= (date.wday - 1) % 7
@@ -72,15 +80,8 @@ class Period
   def self.retrieve(startDate = Date.today, endDate = Date.today, label = nil)
     startDate = parseDate(startDate)
     endDate = parseDate(endDate)
-    key = startDate.strftime('%Y%m%d') + endDate.strftime('%Y%m%d')
-    period = @@cache.get(key) 
-    if period.nil?
-        period = Period.new(startDate, endDate, label)
-        @@cache.set key, period, EXPIRE_SECONDS
-    else
-      period.set_label label
-    end
-    period
+    key = [startDate, endDate, label]
+    @@cache.get(key) {Period.new(startDate, endDate, label)}
   end
   
   def initialize(startDate = Date.today, endDate = Date.today, label = nil)    

@@ -1,1 +1,3 @@
-<% render :partial => 'evaluator/submenu_user' %>
+<% if params[:action] == 'weekly' -%>
+<%= render :partial => 'evaluator/submenu_user' %> 
+<% end -%>

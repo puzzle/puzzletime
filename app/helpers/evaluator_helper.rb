@@ -22,7 +22,7 @@ module EvaluatorHelper
       when :billable : td(worktime.billable ? '$' : ' ')
       when :booked :  td(worktime.booked ? '&beta;' : ' ')
       when :description :
-        desc = worktime.description.slice(0..40)
+        desc = h worktime.description.slice(0..40)
         if worktime.description.length > 40
           desc += link_to '...', evaluation_detail_params.merge!({
                                   :controller => worktime.controller, 

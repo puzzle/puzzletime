@@ -12,8 +12,10 @@ class Hierarchy < ActiveRecord::Migration
       add_column :projects, :department_id, :integer
       execute('ALTER TABLE projects ADD COLUMN path_ids INTEGER[]')
       
+      Departments.create(:id => 1, :name => "No", :shortname => "NO")
+      
       Project.find(:all).each do |project|
-        project.update_attributes :path_ids => [project.id]
+        project.update_attributes :path_ids => [project.id], :department_id => 1
       end
       
       execute('ALTER TABLE projects ADD CONSTRAINT fk_project_parent FOREIGN KEY ( parent_id ) REFERENCES projects ( id ) ON DELETE CASCADE')

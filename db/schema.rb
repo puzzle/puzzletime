@@ -39,6 +39,8 @@ ActiveRecord::Schema.define(:version => 12) do
     t.string  "report_type"
     t.boolean "default_attendance",                 :default => false
     t.integer "default_project_id"
+    t.string  "user_periods",          :limit => 3
+    t.string  "eval_periods",          :limit => 3
   end
 
   add_index "employees", ["shortname"], :name => "chk_unique_name", :unique => true
@@ -86,7 +88,7 @@ ActiveRecord::Schema.define(:version => 12) do
     t.boolean "billable",                            :default => true
     t.string  "report_type",                         :default => "month"
     t.boolean "description_required",                :default => false
-    t.string  "shortname",            :limit => 3
+    t.string  "shortname",            :limit => 3,                        :null => false
     t.float   "offered_hours"
     t.integer "parent_id"
     t.integer "department_id"
@@ -116,8 +118,8 @@ ActiveRecord::Schema.define(:version => 12) do
     t.string  "type"
   end
 
-  add_index "worktimes", ["absence_id", "work_date", "employee_id"], :name => "worktimes_absences"
-  add_index "worktimes", ["work_date", "employee_id"], :name => "worktimes_attendances"
-  add_index "worktimes", ["employee_id", "project_id", "work_date"], :name => "worktimes_projects"
+  add_index "worktimes", ["absence_id", "employee_id", "work_date"], :name => "worktimes_absences"
+  add_index "worktimes", ["employee_id", "work_date"], :name => "worktimes_attendances"
+  add_index "worktimes", ["project_id", "employee_id", "work_date"], :name => "worktimes_projects"
 
 end

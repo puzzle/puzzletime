@@ -20,6 +20,7 @@ class EvaluatorController < ApplicationController
   end
   
   def overview
+        puts Period.cache_size
     setEvaluation
     setNavigationLevels
     @notifications = UserNotification.list_during(@period)

@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   filter_parameter_logging :pwd, :password
 
   def set_charset
-    headers["Content-Type"] = "text/html; charset=utf-8" 
+    headers["Content-Type"] = "text/html; charset=UTF-8" 
   end
     
   #Filter for check if user is logged in or not
