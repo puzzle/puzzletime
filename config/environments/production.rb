@@ -18,5 +18,5 @@ config.action_view.cache_template_loading            = true
 # Disable delivery errors if you bad email addresses should just be ignored
 # config.action_mailer.raise_delivery_errors = false
 
-config.action_controller.asset_host = "https://secure.worldweb2000.com#{PATH_PREFIX}"
+#config.action_controller.asset_host = "https://secure.worldweb2000.com#{PATH_PREFIX}"
 

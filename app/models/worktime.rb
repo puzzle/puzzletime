@@ -157,7 +157,7 @@ class Worktime < ActiveRecord::Base
   end
   
   def to_s
-    "#{"%.2f" % hours} h #{self.class.label} #{'f&uuml;r ' + account.label_verbose if account_id}"
+    "#{timeString} #{self.class.label} #{'f&uuml;r ' + account.label_verbose if account_id}"
   end
   
   ##################  CLASS METHODS   ######################  
