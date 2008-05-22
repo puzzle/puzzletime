@@ -1,17 +1,17 @@
 class Puzzlebase::Customer < Puzzlebase::Base 
   has_many :customer_projects, 
-           :foreign_key => 'FK_CUSTOMER'.downcase          
+           :foreign_key => 'FK_CUSTOMER'          
   has_many :projects, 
            :through => :customer_projects,
-           :foreign_key => 'FK_CUSTOMER'.downcase,
-           :conditions => 'FK_PROJECT IS NULL'.downcase
+           :foreign_key => 'FK_CUSTOMER',
+           :conditions => 'FK_PROJECT IS NULL'
            
   MAPS_TO = ::Client         
-  MAPPINGS = {:shortname => :S_CUSTOMER.to_s.downcase.to_sym,
-              :name      => :S_DESCRIPTION.to_s.downcase.to_sym }
-  FIND_OPTIONS = {:select => 'DISTINCT(TBL_CUSTOMER.*)'.downcase,
+  MAPPINGS = {:shortname => :S_CUSTOMER,
+              :name      => :S_DESCRIPTION }
+  FIND_OPTIONS = {:select => 'DISTINCT(TBL_CUSTOMER.*)',
                   :joins => :customer_projects,
-                  :conditions => ["TBL_CUSTOMER_PROJECT.B_SYNCTOPUZZLETIME = 't'".downcase]}
+                  :conditions => ["TBL_CUSTOMER_PROJECT.B_SYNCTOPUZZLETIME = 't'"]}
                   
 end
 

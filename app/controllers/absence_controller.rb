@@ -8,7 +8,7 @@ class AbsenceController < ManageController
   end   
     
   def editFields
-    [[:name, 'Bezeichnung'], [:payed, 'Bezahlt']]
+    [[:name, 'Bezeichnung'], [:payed, 'Bezahlt'], [:private, 'Nicht öffentlich']]
   end 
   
 end

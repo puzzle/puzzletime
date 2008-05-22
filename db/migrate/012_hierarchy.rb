@@ -12,7 +12,7 @@ class Hierarchy < ActiveRecord::Migration
       add_column :projects, :department_id, :integer
       execute('ALTER TABLE projects ADD COLUMN path_ids INTEGER[]')
       
-      Departments.create(:id => 1, :name => "No", :shortname => "NO")
+      Department.create(:id => 1, :name => "No", :shortname => "NO")
       
       Project.find(:all).each do |project|
         project.update_attributes :path_ids => [project.id], :department_id => 1
@@ -31,11 +31,16 @@ class Hierarchy < ActiveRecord::Migration
                                    :employee_id => time.employee_id,
                                    :active => false)      
       end
+      
+      # add private flag for absences
+      add_column :absences, :private, :boolean, :default => false
+      Absence.update_all( 'private = false' )
     end
   end
 
   def self.down
     transaction do
+      remove_column :absences, :private
       Projectmembership.delete_all('active = false')
       execute('ALTER TABLE projects DROP CONSTRAINT fk_project_parent')
       execute('ALTER TABLE projects DROP CONSTRAINT fk_project_department')

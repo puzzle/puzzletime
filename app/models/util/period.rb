@@ -6,13 +6,10 @@ class Period
   
   # Caches the most used periods
   # Not sure yet if this really works in a stateless fcgi environment
+  # At least for single requests...
   @@cache = Cache.new
   
   ####### constructors ########
-  
-  def self.cache_size
-    puts @@cache.size
-  end
   
   def self.currentDay
     self.dayFor(Date.today)

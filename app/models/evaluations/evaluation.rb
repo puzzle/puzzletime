@@ -185,7 +185,7 @@ class Evaluation
   end
   
   def report?
-    account_id && employee_id && ! absences?
+    account_id && ! absences?    # && employee_id
   end
   
   def employee_id

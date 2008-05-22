@@ -1,9 +1,9 @@
 class Puzzlebase::Unit < Puzzlebase::Base        
   has_many :projects, 
-           :foreign_key => 'FK_UNIT'.downcase
+           :foreign_key => 'FK_UNIT'
            
   MAPS_TO = ::Department         
-  MAPPINGS = {:shortname => :S_UNIT.to_s.downcase.to_sym,
-              :name      => :S_DESCRIPTION.to_s.downcase.to_sym }
+  MAPPINGS = {:shortname => :S_UNIT,
+              :name      => :S_DESCRIPTION }
 
 end

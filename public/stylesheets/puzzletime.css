@@ -77,10 +77,9 @@ textarea, input, select {
 
 #content {
 	display:		table;
-	min-width:		740px;
-	width: 			940px;
+	width: 			800pt;
     margin:         auto;
-    padding:        8px 16px 40px 16px;
+    padding:        0px 16px 40px 16px;
     background:     #fff; /*url('../images/whitebox.gif') repeat-y;*/
 	border-left:	1px solid #E9E9E7;
 	border-right:	1px solid #E9E9E7;

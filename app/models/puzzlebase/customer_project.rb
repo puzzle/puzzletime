@@ -1,16 +1,16 @@
 class Puzzlebase::CustomerProject < Puzzlebase::Base  
   
-  set_table_name 'TBL_CUSTOMER_PROJECT'.downcase 
+  set_table_name 'TBL_CUSTOMER_PROJECT' 
     
   belongs_to :customer,
-             :foreign_key => 'FK_CUSTOMER'.downcase
+             :foreign_key => 'FK_CUSTOMER'
   belongs_to :project,
-             :foreign_key => 'FK_PROJECT'.downcase
+             :foreign_key => 'FK_PROJECT'
              
   MAPS_TO = ::Project         
-  MAPPINGS = {:shortname      => :S_PROJECT.to_s.downcase.to_sym,
-              :name           => :S_DESCRIPTION.to_s.downcase.to_sym } 
-  FIND_OPTIONS = {:conditions => ["B_SYNCTOPUZZLETIME = 't'".downcase]}               
+  MAPPINGS = {:shortname      => :S_PROJECT,
+              :name           => :S_DESCRIPTION } 
+  FIND_OPTIONS = {:conditions => ["B_SYNCTOPUZZLETIME = 't'"]}               
     
   # Synchronizes the Projects and the Customers.
   def self.synchronize
@@ -34,17 +34,15 @@ class Puzzlebase::CustomerProject < Puzzlebase::Base
     Puzzlebase::Project.updateChildren original.project, findLocal(original) if success
   end
 
-  # TODO upcase original method names for MySQL
   def self.localFindOptions(original)
       { :include => :client,
         :conditions => ["projects.shortname = ? AND clients.shortname = ? AND projects.parent_id IS NULL", 
-                        original.project.s_project, original.customer.s_customer] }
+                        original.project.S_PROJECT, original.customer.S_CUSTOMER] }
   end
   
-  # TODO upcase original method names for MySQL
   def self.setReference(local, original)
-    client = ::Client.find_by_shortname(original.customer.s_customer)
-    department = ::Department.find_by_shortname(original.project.unit.s_unit)
+    client = ::Client.find_by_shortname(original.customer.S_CUSTOMER)
+    department = ::Department.find_by_shortname(original.project.unit.S_UNIT)
     local.client_id = client.id if client
     local.department_id = department.id if department
   end

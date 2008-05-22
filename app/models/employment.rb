@@ -27,7 +27,6 @@ class Employment < ActiveRecord::Base
   end
   
   def resetEndDate
-    puts final
     write_attribute('end_date', nil) unless final
   end  
  

@@ -12,8 +12,9 @@
 ActiveRecord::Schema.define(:version => 12) do
 
   create_table "absences", :force => true do |t|
-    t.string  "name",                     :null => false
-    t.boolean "payed", :default => false
+    t.string  "name",                       :null => false
+    t.boolean "payed",   :default => false
+    t.boolean "private", :default => false
   end
 
   create_table "clients", :force => true do |t|

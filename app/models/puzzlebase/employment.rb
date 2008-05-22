@@ -31,6 +31,4 @@ class Employment < ActiveRecord::Base
   def debugString
     "#{employee.shortname}: #{percent}% vom #{date_label(start_date)} - #{date_label(end_date)}"
   end
-  
-  def 
 end

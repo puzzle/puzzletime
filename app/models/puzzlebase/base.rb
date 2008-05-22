@@ -4,8 +4,8 @@ class Puzzlebase::Base < ActiveRecord::Base
   establish_connection :puzzlebase
   
   # Set database properties
-  set_table_name(nil) { "TBL_#{self.table_id}".downcase }
-  set_primary_key(nil) { "PK_#{self.table_id}".downcase }
+  set_table_name(nil) { "TBL_#{self.table_id}" }
+  set_primary_key(nil) { "PK_#{self.table_id}" }
   
   # The model class the Puzzlebase model maps to.
   MAPS_TO = nil

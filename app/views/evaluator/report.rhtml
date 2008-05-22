@@ -1,7 +1,6 @@
 <% 
 @title = "Zeitrapport Puzzle ITC" 
 project = Project.find(@evaluation.account_id)
-employee = Employee.find(@evaluation.employee_id)
 -%>
 
 <html>
@@ -31,10 +30,13 @@ employee = Employee.find(@evaluation.employee_id)
     <td>Projekt</td>
     <td><b><%= project.label %></b></td>
 </tr>
+<% if @evaluation.employee_id
+	employee = Employee.find(@evaluation.employee_id) -%>
 <tr>
     <td>Mitarbeiter</td>
     <td><b><%= employee.label %></b></td>
 </tr>
+<% end %>
 <tr>
     <td>Periode</td>
     <td><b><%= @period.to_s %></b></td>
@@ -49,6 +51,9 @@ employee = Employee.find(@evaluation.employee_id)
    <th> Zeit von </th>
    <th> Zeit bis </th>
    <th> Stunden </th>
+   <% if @evaluation.employee_id.nil? -%>
+   <th> Mitarbeiter </th>
+   <% end -%>
    <th width="90%"> Beschreibung</th>
 </tr>
 <% for time in @times -%>
@@ -57,6 +62,9 @@ employee = Employee.find(@evaluation.employee_id)
   <td align="center"><%= format_time time.from_start_time if time.startStop? %></td>
   <td align="center"><%= format_time time.to_end_time if time.startStop? %></td>
   <td align="right"><%= number_with_precision(time.hours, 2) %> &nbsp;</td>
+  <% if @evaluation.employee_id.nil? -%>
+  <td align="left"><%= time.employee.shortname %></td>
+  <% end -%>
   <td><%= h(time.description).strip.gsub "\n", "<br/>" %></td>
 </tr>
 <% end -%> 

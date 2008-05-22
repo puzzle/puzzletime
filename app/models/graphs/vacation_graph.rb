@@ -21,14 +21,14 @@ class VacationGraph
       @absencetimes = @absences_eval.times(period, 
                         {:order      => 'work_date, from_start_time, employee_id, absence_id',
                          :include    => 'absence',
-                         :conditions => ['(report_type = ? OR report_type = ? OR report_type = ?)',
+                         :conditions => ['NOT absences.private AND (report_type = ? OR report_type = ? OR report_type = ?)',
                                          StartStopType::INSTANCE.key, 
                                          HoursDayType::INSTANCE.key,
                                          HoursWeekType::INSTANCE.key] })
       @monthly_absencetimes = @absences_eval.times(period,
                         {:order      => 'work_date, from_start_time, employee_id, absence_id',
                          :include    => 'absence',
-                         :conditions => ['(report_type = ?)', HoursMonthType::INSTANCE.key] }  )
+                         :conditions => ['NOT absences.private AND (report_type = ?)', HoursMonthType::INSTANCE.key] }  )
       @index = 0
       @monthly_index = 0
       @month = nil
