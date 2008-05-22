@@ -1,22 +1,26 @@
+require "date"
 class MultiAbsence
   
-  attr_reader :absence_id, :employee, :start_date, :end_date, :description, :worktime
+  attr_reader :absence_id, :employee, :start_date, :duration, :description, :worktime
   attr_writer :employee
+  
+  def initialize
+    @duration = 1
+  end
   
   def attributes=(attr_hash)
     @absence_id = attr_hash[:absence_id]
     @start_date = attr_hash[:start_date]
-    @end_date = attr_hash[:end_date]
+    @duration = attr_hash[:duration]
     @description = attr_hash[:description]
   end
   
   def valid?
     @worktime = worktimeTemplate(@start_date, MUST_HOURS_PER_DAY)
-    @worktime.work_date = @end_date if @worktime.valid?
     if valid = @worktime.valid? 
-      if period.negative?
+      if duration <= 0
         valid = false
-        @worktime.errors.add(:work_date, "Das Start Datum muss nach dem End Datum sein")
+        @worktime.errors.add(:work_date, "Die Dauer muss grösser als 0 sein.")
       end
     end
     valid    
@@ -27,11 +31,15 @@ class MultiAbsence
   end
   
   def end_date
-    date_or_nil(@end_date)
+    start_date + duration * 7 - 1
+  end
+  
+  def duration
+    @duration.to_i
   end
   
   def period
-    Period.new(@start_date, @end_date)
+    Period.new(start_date, end_date)
   end
   
   def errors
@@ -40,7 +48,6 @@ class MultiAbsence
   
   def save
     count = 0
-    period = Period.new(@start_date, @end_date)
     period.step {|date|
       if employment = @employee.employment_at(date)
         must = Holiday.musttime(date) * employment.percentFactor

@@ -14,9 +14,9 @@ class Puzzlebase::Project < Puzzlebase::Base
   MAPS_TO = ::Project         
   MAPPINGS = {:shortname      => :S_PROJECT,
               :name           => :S_DESCRIPTION}  
-  FIND_OPTIONS = {:select => 'DISTINCT(TBL_PROJECT.*)',
+  FIND_OPTIONS = {:select => 'DISTINCT TBL_PROJECT.*',
                   :joins => :customer_projects,
-                  :conditions => ["TBL_CUSTOMER_PROJECT.B_SYNCTOPUZZLETIME = 't' AND TBL_PROJECT.FK_PROJECT is null"]}    
+                  :conditions => ["TBL_CUSTOMER_PROJECT.B_SYNCTOPUZZLETIME AND TBL_PROJECT.FK_PROJECT IS NULL"]}    
        
        
   def self.updateChildren(original_parent, local_parent)
@@ -85,11 +85,13 @@ protected
   end
     
   def self.removeUnusedChildren(original_parent, local_parent)
-    original_children = original_parent.children
-    removeUnusedExcept original_children, "parent_id = #{local_parent.id}"
-    original_children.each do |child|
-      removeUnusedChildren child, findLocalChild(child, local_parent)
-    end
+    if original_parent   # should never be nil in production environment
+      original_children = original_parent.children
+      removeUnusedExcept original_children, "parent_id = #{local_parent.id}"
+      original_children.each do |child|
+        removeUnusedChildren child, findLocalChild(child, local_parent)
+      end
+    end 
   end
   
 end

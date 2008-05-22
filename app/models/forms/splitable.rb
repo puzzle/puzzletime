@@ -11,6 +11,11 @@ class Splitable
   end
   
   def addWorktime(worktime)
+    if original.report_type > HoursWeekType::INSTANCE && worktime.work_date != original.work_date
+      worktime.work_date = original.work_date
+      worktime.errors.add(:work_date, 'Das Datum kann nicht geändert werden')
+      return false
+    end
     @worktimes.push(worktime)
   end
   

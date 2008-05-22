@@ -101,11 +101,11 @@ class ManageController < ApplicationController
   
   def synchronize
     mapper = modelClass.puzzlebaseMap
-    flash[:notice] = modelClass.labelPlural + ' nicht aktualisiert'
+    flash[:notice] = modelClass.labelPlural + ' wurden nicht aktualisiert'
     redirectToList if mapper.nil?
     @errors = mapper.synchronize
     if @errors.empty?
-      flash[:notice] = modelClass.labelPlural + ' erfolgreich aktualisiert'
+      flash[:notice] = modelClass.labelPlural + ' wurden erfolgreich aktualisiert'
       redirectToList
     else  
       flash[:notice] = "Folgende Fehler sind bei der Synchronisation aufgetreten:"
@@ -122,8 +122,8 @@ class ManageController < ApplicationController
   end
   
   # Links that appear for each entry in the list action.
-  # Returns an Array of 3-element Arrays with the following elements:
-  # [label, controller, action]
+  # Returns an Array of 4-element Arrays with the following elements:
+  # [label, controller, action, is_displayed_method]
   # Every created link holds the id of the entry as parameter.
   def listActions
     []

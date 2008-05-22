@@ -128,7 +128,6 @@ class Worktime < ActiveRecord::Base
     if startStop? && from_start_time && to_end_time
       self.hours = (to_end_time.seconds_since_midnight - from_start_time.seconds_since_midnight) / 3600.0
     end
-    self.work_date ||= Date.today
   end
   
   def find_corresponding

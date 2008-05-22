@@ -31,7 +31,7 @@ task :chown_files, :roles => :app do
 end
 
 deploy.task :start do
-   #nothing
+  #nothing
 end
 
 deploy.task :restart do

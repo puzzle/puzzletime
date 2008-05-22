@@ -13,6 +13,10 @@
   <td>Kunde: </td>
   <td><%= h @entry.client.name %></td>
 </tr>
+<tr>
+  <td>Bereich: </td>
+  <td><%= h @entry.department.name %></td>
+</tr>
 <%= renderGenericPartial :partial => 'field', :collection => editFields %>
 <tr>
   <td></td>

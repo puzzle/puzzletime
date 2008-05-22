@@ -7,7 +7,7 @@
     switch(type) {
      case "auto_start":
         document.getElementById("worktime_work_date").disabled = true;    
-        document.getElementById("worktime_work_date").value = "<%= @worktime.work_date.strftime(DATE_FORMAT) %>";
+        document.getElementById("worktime_work_date").value = "<%= Date.today.strftime(DATE_FORMAT) %>";
         document.getElementById("worktime_work_date_calendar").style.visibility = "hidden";
         document.getElementById("worktime_hours").disabled = true;
     	document.getElementById("worktime_from_start_time").disabled = false;

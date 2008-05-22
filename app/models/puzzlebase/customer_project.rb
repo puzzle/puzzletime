@@ -10,7 +10,7 @@ class Puzzlebase::CustomerProject < Puzzlebase::Base
   MAPS_TO = ::Project         
   MAPPINGS = {:shortname      => :S_PROJECT,
               :name           => :S_DESCRIPTION } 
-  FIND_OPTIONS = {:conditions => ["B_SYNCTOPUZZLETIME = 't'"]}               
+  FIND_OPTIONS = {:conditions => ["B_SYNCTOPUZZLETIME"]}               
     
   # Synchronizes the Projects and the Customers.
   def self.synchronize

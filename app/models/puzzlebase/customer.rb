@@ -9,9 +9,9 @@ class Puzzlebase::Customer < Puzzlebase::Base
   MAPS_TO = ::Client         
   MAPPINGS = {:shortname => :S_CUSTOMER,
               :name      => :S_DESCRIPTION }
-  FIND_OPTIONS = {:select => 'DISTINCT(TBL_CUSTOMER.*)',
+  FIND_OPTIONS = {:select => 'DISTINCT TBL_CUSTOMER.*',
                   :joins => :customer_projects,
-                  :conditions => ["TBL_CUSTOMER_PROJECT.B_SYNCTOPUZZLETIME = 't'"]}
+                  :conditions => ["TBL_CUSTOMER_PROJECT.B_SYNCTOPUZZLETIME"]}
                   
 end
 
