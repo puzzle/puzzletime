@@ -104,7 +104,7 @@ protected
   end
   
   def update_corresponding?
-    params[:worktime][:projecttime]
+    params[:worktime][:projecttime].to_i != 0
   end
   
 end

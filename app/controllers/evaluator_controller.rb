@@ -89,8 +89,9 @@ class EvaluatorController < ApplicationController
     @evaluation.times(@period).each do |worktime|
       worktime.update_attributes(:booked => true)
     end
-    flash[:notice] = "Alle Arbeitszeiten von #{Employee.find(@evaluation.employee_id).label} " + 
-                     "f&uuml;r #{Project.find(@evaluation.account_id).label_verbose}" +
+    flash[:notice] = "Alle Arbeitszeiten "
+    flash[:notice] += "von #{Employee.find(@evaluation.employee_id).label} " if @evaluation.employee_id
+    flash[:notice] += "f&uuml;r #{Project.find(@evaluation.account_id).label_verbose}" +
                      "#{ ' w&auml;hrend dem ' + @period.to_s if @period} wurden verbucht."
     redirect_to params.merge({:action => 'details'})
   end

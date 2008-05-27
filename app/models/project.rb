@@ -66,6 +66,10 @@ class Project < ActiveRecord::Base
     "#{client.shortname} - #{top_project.shortname+': ' unless top?}#{name}"
   end  
   
+  def label_ancestry
+    top? ? name : "#{parent.label_ancestry} - #{name}"
+  end
+  
   def top_project
     self.class.find(path_ids[0])
   end

@@ -252,7 +252,7 @@ protected
       if corresponding.save
         flash[:notice] += " Die zugehörige #{label} wurde angepasst."
       else
-        flash[:notice] += " Die zugehörige #{label} konnte nicht angepasst werden."
+        flash[:notice] += " Die zugehörige #{label} konnte nicht angepasst werden (#{corresponding.errors.full_messages.join ', '})."
       end
     else 
       flash[:notice] += " Es konnte keine zugehörige #{label} gefunden werden."

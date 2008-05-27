@@ -27,5 +27,9 @@ class EmployeeProjectsEval < ProjectsEval
     self.class::SUB_PROJECTS_EVAL + employee_id.to_s if project && project.children?
   end
 
-  
+  # default would turn Employee.alltime_projects too complicated
+  def set_division_id(division_id = nil)
+    return if division_id.nil?
+    @division = Project.find(division_id.to_i)
+  end
 end

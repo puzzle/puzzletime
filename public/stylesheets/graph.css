@@ -66,7 +66,7 @@
 .absence td {
 	text-align: 	center;
 	padding: 		0pt;
-	font-size:		8pt;
+	font-size:		11px;
 	border-right: 	1px solid #bbb;	
 	border-bottom: 	1px solid #bbb;
 }
@@ -101,7 +101,7 @@ td a:hover span {
 	white-space:	nowrap;
 	padding:		1pt;
 	border:			1px solid #ddd;
-	font-size:		10pt;
+	font-size:		12px;
 	float:			left;
 	text-align:		left;
 }

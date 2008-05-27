@@ -19,9 +19,10 @@ protected
     if params[:other]
       @accounts = Project.leaves
     elsif all
-      @accounts = @worktime.employee.alltime_leaf_projects
+      set_alltime_accounts
     else
       setProjectAccounts
+      set_alltime_accounts unless @accounts.include? @worktime.project
     end  
   end  
   
@@ -45,5 +46,10 @@ protected
     true
   end
   
+private
+
+  def set_alltime_accounts
+    @accounts = @worktime.employee.alltime_leaf_projects
+  end
   
 end

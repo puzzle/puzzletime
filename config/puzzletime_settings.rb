@@ -25,7 +25,7 @@ LDAP_PORT               = 636
 LDAP_DN                 = 'ou=puzzle,ou=users,dc=puzzle,dc=itc'
 
 # Applications Customization Settings
-NO_OF_OVERVIEW_ROWS     = 25      # rows for listing projects, employees, ...
+NO_OF_OVERVIEW_ROWS     = 20      # rows for listing projects, employees, ...
 NO_OF_DETAIL_ROWS       = 20      # rows for detail time entries
 PAGINATION_WINDOW_SIZE  = 10      
 

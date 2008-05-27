@@ -1,3 +1,5 @@
+require "date"
+require "digest"
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz
 

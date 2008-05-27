@@ -1,6 +1,6 @@
 body {
     background:     #F9F9F7 url('../images/diagonal.gif') repeat-x;
-    font-size:      10.5pt;
+    font-size:      14px;
     font-family:    "trebuchet ms", helvetica, sans-serif;
     color:          #333;
     padding:        0px;
@@ -29,7 +29,7 @@ a:hover {
 a.symbol {
 	text-decoration: none;
 	font-weight: 	 bold;
-	font-size: 		 12pt;
+	font-size: 		 16px;
 }
 
 a img {
@@ -37,24 +37,24 @@ a img {
 }
 
 h1 {
-    font-size:      15pt;
+    font-size:      20px;
     font-weight:    normal;
     margin-bottom:  20px;
 }
 
 h2 {
-    font-size:      12pt;
+    font-size:      16px;
     font-weight:    bold;
 }
 
 h3 {
-    font-size:      10.5pt;
+    font-size:      14px;
     font-weight:    bold;
     color:          #4a4a4a;
 }
 
 table {
-    font-size:      10.5pt;
+    font-size:      14px;
 }
 
 td {
@@ -70,7 +70,7 @@ th {
 }
 
 textarea, input, select {
-    font-size:      10.5pt;
+    font-size:      14px;
     font-family:    sans-serif;
     line-height:    14pt;
 }
@@ -158,7 +158,7 @@ textarea, input, select {
 
 #menu ul li {
     display:        inline;
-	font-size:		14px;
+	font-size:		15px;
 }
 
 #menu ul li a {

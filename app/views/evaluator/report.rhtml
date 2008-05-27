@@ -28,7 +28,7 @@ project = Project.find(@evaluation.account_id)
 </tr>
 <tr>
     <td>Projekt</td>
-    <td><b><%= project.label %></b></td>
+    <td><b><%= project.label_ancestry %></b></td>
 </tr>
 <% if @evaluation.employee_id
 	employee = Employee.find(@evaluation.employee_id) -%>
