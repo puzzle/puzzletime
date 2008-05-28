@@ -54,7 +54,8 @@ class Evaluation
   ############### Time Evaluation Functions ###############
   
   # Returns a list of all division objects for the represented category.
-  def divisions  
+  # May be parameterized by a period. This is ignored by default.
+  def divisions(period = nil)  
     category.send(self.class::DIVISION_METHOD)
   end
   

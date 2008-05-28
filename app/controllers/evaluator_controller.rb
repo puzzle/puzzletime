@@ -103,7 +103,7 @@ class EvaluatorController < ApplicationController
             :conditions => ["project_id = ?", params[:project_id]])
     pm.update_attributes(:last_completed => Date.today)
     flash[:notice] = "Das Datum der kompletten Erfassung aller Zeiten " +
-                     "&uuml;r das Projekt #{pm.project.label_verbose} wurde aktualisiert."
+                     "f&uuml;r das Projekt #{pm.project.label_verbose} wurde aktualisiert."
     redirectToOverview
   end
   

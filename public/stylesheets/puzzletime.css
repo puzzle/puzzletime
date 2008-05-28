@@ -72,21 +72,22 @@ th {
 textarea, input, select {
     font-size:      14px;
     font-family:    sans-serif;
-    line-height:    14pt;
+    line-height:    16px;
 }
 
 #content {
 	display:		table;
-	width: 			800pt;
-    margin:         auto;
+	width: 			992px;
+	margin:         auto;
     padding:        0px 16px 40px 16px;
-    background:     #fff; /*url('../images/whitebox.gif') repeat-y;*/
+    background:     #fff; 
 	border-left:	1px solid #E9E9E7;
 	border-right:	1px solid #E9E9E7;
 }
 
 #header {
-    height:         92px;
+    height:         75px;
+    margin-top:     -10px;
     margin-bottom:  14px;
 }
 
@@ -94,7 +95,7 @@ textarea, input, select {
     background:     #0087e3;
     color:          #fff;
     padding-left:   20px;
-	height:			92px;
+	height:     	75px;
 	max-width:		30%;
 }
 
@@ -102,7 +103,7 @@ textarea, input, select {
     font-weight:    normal;
     font-size:      28px;
     letter-spacing: -1px;
-	padding-top:    22px;
+	padding-top:	13px; 
     margin-bottom:  0px;
 }
 
@@ -120,10 +121,11 @@ textarea, input, select {
 
 #banner {
 	float:			right;
+	height:  75px;
 }
 
 #menu {
-    background:     #46461F url('../images/menu_bg.gif') repeat-x;  /* #46461F */
+    background:     #46461F url('../images/menu_bg.gif') repeat-x; 
     margin-top:     -8px;
     height:         35px;
 }
@@ -150,7 +152,7 @@ textarea, input, select {
 }
 
 #menu ul {
-    padding-top:    7px;
+    padding-top:    6px;
     padding-left:   8px;
     margin-left:    0px;
     margin-bottom:  13px;

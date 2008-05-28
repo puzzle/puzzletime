@@ -91,6 +91,14 @@ class Employee < ActiveRecord::Base
                            :attributes => ['uid', 'sn', 'givenname', 'mail'] )
   end
   
+  def self.employed_ones(period)
+     find(:all, :select => 'distinct (employees.*)',
+                :joins => 'left outer join employments em on em.employee_id = employees.id', 
+                :conditions => ['(em.end_date IS null or em.end_date >= ?) AND em.start_date <= ?', 
+                                period.startDate, period.endDate ],
+                :order => orderBy)
+  end
+  
   ##### interface methods for Manageable #####  
     
   def self.labels

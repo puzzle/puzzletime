@@ -1,7 +1,7 @@
  <% 
 periodTimes = collect_times(periods, :sum_times, division)
 
-if @period.nil? || periodTimes.sum > 0
+if @period.nil? || @evaluation.category == Employee || periodTimes.sum > 0
 -%>
 <%= alternate_row %>
     <td>

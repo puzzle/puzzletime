@@ -15,7 +15,7 @@ class VacationGraph
   end
   
   def each_employee
-  	@absences_eval.divisions.each do |empl|
+  	@absences_eval.divisions(period).each do |empl|
   	  @absences_eval.set_division_id empl.id
       # trade some memory for speed
       @absencetimes = @absences_eval.times(period, 

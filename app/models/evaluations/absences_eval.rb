@@ -11,6 +11,10 @@ class AbsencesEval < Evaluation
     super(Employee)
   end 
   
+  def divisions(period = nil)  
+    Employee.employed_ones(period || Period.currentYear)
+  end
+  
   def employee_id
     division.id if division
   end
