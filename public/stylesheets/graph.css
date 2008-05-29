@@ -13,13 +13,13 @@
 }
 
 .graph tr {
-	height: 		80pt;
+	height: 		110px;
 }
 
 .graph td {
 	vertical-align: bottom;
 	text-align: 	center;
-	width: 			55pt;
+	width: 			80px;
 	padding: 		0pt;
 	border: 		1px solid white;
 }
@@ -30,7 +30,6 @@
 
 .graph div {
 	text-align: 	center;
-	font-size:		9.5pt;
 	width:			100%;
 	float:			left;
 }
@@ -44,9 +43,9 @@
 
 .graph div.dateLabel {
 	background-color: 	#FFFFFF; 
-	height: 			25pt;
+	height: 			25px;
 	text-align: 		center;
-	font-size:			9pt;
+	font-size:			13px;
 }
 
 .absence {
@@ -101,14 +100,14 @@ td a:hover span {
 	white-space:	nowrap;
 	padding:		1pt;
 	border:			1px solid #ddd;
-	font-size:		12px;
+	font-size:		13px;
 	float:			left;
 	text-align:		left;
 }
 
 .legend {
-	width:			240pt;
-	margin-left:	20pt;
+	width:			320px;
+	margin-left:	20px;
 }
 
 .legend tr {
@@ -120,6 +119,6 @@ td a:hover span {
 }
 
 .legend img {
-	width: 55pt;
+	width: 75px;
 	vertical-align: middle;
 }

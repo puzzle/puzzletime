@@ -47,7 +47,7 @@ module GraphHelper
   def timebox_div(box)
     div = worktime_link box.worktime
     div += image_tag('space.gif', 
-                      'height' => "#{box.height}pt",
+                      'height' => "#{box.height}px",
                       'style' => "background-color: #{box.color};") 
     div += "<span>#{box.tooltip}</span>" if not box.tooltip.strip.empty?               
     div += "</a>"  

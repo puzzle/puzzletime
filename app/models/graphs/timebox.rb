@@ -1,6 +1,6 @@
 class Timebox
   
-  PIXEL_PER_HOUR = 6.0
+  PIXEL_PER_HOUR = 8.0
   
   MUST_HOURS_COLOR = '#FF0000'
   ATTENDANCE_POS_COLOR = '#55FF55'

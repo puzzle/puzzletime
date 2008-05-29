@@ -64,16 +64,13 @@
 </tr>
 </table>
 
-<br />
+<br/>
 
-<div>
-<table>
+<table style="float: left; margin-right: 100px;">
 <%= render :partial => "legend", :collection => [Absence] %>
 </table>
 
 <% if @user.management -%>
-<br />
-
 <table>
 <tr>
 	<td colspan="2"><b>Spalten</b></td>
@@ -93,6 +90,4 @@
 </table>
 <% end -%>
 
-</div>
-
-<br clear="all"/>
+<br clear="all" />
