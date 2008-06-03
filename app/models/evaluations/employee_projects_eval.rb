@@ -1,14 +1,18 @@
 class EmployeeProjectsEval < ProjectsEval
 
-  DIVISION_METHOD   = :alltime_projects
   CATEGORY_REF      = :employee_id   
   ATTENDANCE        = true   
   SUB_EVALUATION    = nil
   SUB_PROJECTS_EVAL = 'employeesubprojects'
   
-  def initialize(employee_id)
+  def initialize(employee_id, alltime)
     super(Employee.find(employee_id))
+    @alltime = alltime
   end  
+  
+  def divisions(period = nil)  
+    @alltime ? category.alltime_projects : category.projects
+  end
   
   def for?(user)
     self.category == user

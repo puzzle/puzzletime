@@ -4,9 +4,14 @@ class ProjectEmployeesEval < Evaluation
   LABEL            = 'Mitarbeiter'
   CATEGORY_REF     = 'ANY ( path_ids )'      
   
-  def initialize(project_id)
+  def initialize(project_id, alltime)
     super(Project.find(project_id))
+    @alltime = alltime
   end  
+  
+  def divisions(period = nil)
+    @alltime ? category.employees : category.managed_employees
+  end
   
   def division_supplement(user)
     [[:last_completion, 'Komplettiert']]

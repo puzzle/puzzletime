@@ -187,7 +187,11 @@ class Employee < ActiveRecord::Base
    
   # Returns the date the passed project was completed last. 
   def lastCompleted(project)
-    membership = projectmemberships.find(:first, :conditions => ['project_id = ?', project.id])
+    path = project.path_ids.clone
+    membership = nil
+    while membership.nil?
+      membership = projectmemberships.find(:first, :conditions => ['project_id = ?', path.pop])
+    end
     membership.last_completed if membership
   end
   

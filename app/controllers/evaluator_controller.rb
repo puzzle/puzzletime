@@ -108,7 +108,7 @@ class EvaluatorController < ApplicationController
   end
   
   def complete_all
-     @user.projectmemberships.each do |pm|
+     @user.projectmemberships.find(:all, :conditions => ['active']).each do |pm|
        pm.update_attributes(:last_completed => Date.today)
    end
    flash[:notice] = "Das Datum der kompletten Erfassung aller Zeiten wurde f&uuml;r alle Projekte aktualisiert."
@@ -161,13 +161,13 @@ private
         when 'managed' then ManagedProjectsEval.new(@user)
         when 'managedabsences' then ManagedAbsencesEval.new(@user)
         when 'absencedetails' then AbsenceDetailsEval.new
-        when 'userprojects' then @period.nil? ? UserProjectsEval.new(@user.id) : EmployeeProjectsEval.new(@user.id)
+        when 'userprojects' then EmployeeProjectsEval.new(@user.id, @period != nil)
         when "employeesubprojects#{@user.id}", "usersubprojects" then
           params[:evaluation] = 'usersubprojects'
           EmployeeSubProjectsEval.new(params[:category_id], @user.id)
         when 'userabsences' then EmployeeAbsencesEval.new(@user.id)
         when 'subprojects' then SubProjectsEval.new(params[:category_id])
-        when 'projectemployees' then ProjectEmployeesEval.new(params[:category_id])
+        when 'projectemployees' then ProjectEmployeesEval.new(params[:category_id], @period != nil)
         when 'attendance' then AttendanceEval.new(params[:category_id] || @user.id)
         else nil
         end
@@ -177,7 +177,7 @@ private
         when 'employees' then EmployeesEval.new
         when 'departments' then DepartmentsEval.new
         when 'clientprojects' then ClientProjectsEval.new(params[:category_id])
-        when 'employeeprojects' then @period.nil? ? UserProjectsEval.new(params[:category_id]) : EmployeeProjectsEval.new(params[:category_id])
+        when 'employeeprojects' then EmployeeProjectsEval.new(params[:category_id], @period != nil)
         when /employeesubprojects(\d+)/ then EmployeeSubProjectsEval.new(params[:category_id], $1)
         when 'departmentprojects' then DepartmentProjectsEval.new(params[:category_id])
         when 'absences' then AbsencesEval.new

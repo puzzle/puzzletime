@@ -17,6 +17,12 @@ class Project < ActiveRecord::Base
   #defined in custom method         
   #has_many :employees, :through => :worktimes, :uniq => true, :order => "lastname, firstname"
   
+  has_many :managed_employees, 
+           :class_name => 'Employee',
+           :through => :projectmemberships, 
+           :conditions => 'projectmemberships.active',
+           :order => "lastname, firstname"
+           
   belongs_to :department
   belongs_to :client
   
