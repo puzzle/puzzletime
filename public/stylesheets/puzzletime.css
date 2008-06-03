@@ -181,6 +181,10 @@ th.periodHead {
     text-align:     right;
 }
 
+#evaluation td {
+	white-space: nowrap;
+}
+
 .uneven {
     background-color: #C9D8FF;
 	white-space: nowrap;

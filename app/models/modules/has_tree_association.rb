@@ -1,6 +1,6 @@
 module HasTreeAssociation
   
- include Conditioner
+  include Conditioner
  
   def sum(column_name, options = {})
     options = restrict_conditions options

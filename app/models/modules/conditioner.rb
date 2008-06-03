@@ -17,6 +17,7 @@ module Conditioner
     []
   end
   
+  # only use if conditions will be added later on!
   def clone_options(options = {})
     options = options.clone
     options[:conditions] = clone_conditions options[:conditions]

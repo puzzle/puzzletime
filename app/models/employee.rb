@@ -31,13 +31,6 @@ class Employee < ActiveRecord::Base
            :include => :client,
            :order => "clients.name, projects.name", 
            :conditions => "projectmemberships.projectmanagement AND projectmemberships.active"
-  has_many :alltime_projects, 
-           :class_name => 'Project',
-           :include => :client,
-           :through => :worktimes,
-           :source => 'project',
-           :uniq => true,
-           :order => "clients.shortname, projects.name"
   has_many :absences, 
            :through => :worktimes,
            :uniq => true,
@@ -181,6 +174,15 @@ class Employee < ActiveRecord::Base
           "WHERE E.id = #{self.id} AND PM.projectmanagement"    
     sql += " AND T.work_date BETWEEN '#{period.startDate}' AND '#{period.endDate}'" if period
     self.class.connection.select_value(sql).to_f
+  end
+  
+  def alltime_projects
+    Project.find_by_sql ["SELECT DISTINCT c.shortname, pa.* FROM  worktimes w " + 
+                "LEFT JOIN projects pw ON w.project_id = pw.id " + 
+                "LEFT JOIN projects pa ON pw.path_ids[1] = pa.id " +
+                "LEFT JOIN clients c ON pa.client_id = c.id " +
+                "WHERE w.employee_id = ? AND pa.id IS NOT NULL " + 
+                "ORDER BY c.shortname, pa.name", self.id]
   end
    
   # Returns the date the passed project was completed last. 

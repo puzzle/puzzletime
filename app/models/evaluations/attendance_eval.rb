@@ -65,8 +65,10 @@ class AttendanceEval < Evaluation
 private
 
   def addConditions(options = {}, period = nil)
-    options = clone_options options
-    append_conditions(options[:conditions], ['work_date BETWEEN ? AND ?', period.startDate, period.endDate]) if period
+    if period
+      options = clone_options options
+      append_conditions(options[:conditions], ['work_date BETWEEN ? AND ?', period.startDate, period.endDate])
+    end
     options
   end  
   

@@ -177,7 +177,7 @@ private
         when 'employees' then EmployeesEval.new
         when 'departments' then DepartmentsEval.new
         when 'clientprojects' then ClientProjectsEval.new(params[:category_id])
-        when 'employeeprojects' then EmployeeProjectsEval.new(params[:category_id])
+        when 'employeeprojects' then @period.nil? ? UserProjectsEval.new(params[:category_id]) : EmployeeProjectsEval.new(params[:category_id])
         when /employeesubprojects(\d+)/ then EmployeeSubProjectsEval.new(params[:category_id], $1)
         when 'departmentprojects' then DepartmentProjectsEval.new(params[:category_id])
         when 'absences' then AbsencesEval.new
@@ -199,7 +199,7 @@ private
   end
   
   def setNavigationLevels
-      # set session evaluation levels
+    # set session evaluation levels
     session[:evalLevels] = Array.new if params[:clear]
     levels = session[:evalLevels]
     current = [params[:evaluation], @evaluation.category_id, @evaluation.title]
