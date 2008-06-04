@@ -5,6 +5,7 @@ class EmployeeProjectsEval < ProjectsEval
   SUB_EVALUATION    = nil
   SUB_PROJECTS_EVAL = 'employeesubprojects'
   
+  # alltime: boolean, use all projects ever worked for / only current memberships
   def initialize(employee_id, alltime)
     super(Employee.find(employee_id))
     @alltime = alltime

@@ -186,7 +186,7 @@ private
         end  
     end
     if @evaluation.nil?
-      @evaluation = EmployeeProjectsEval.new(@user.id)
+      @evaluation = EmployeeProjectsEval.new(@user.id, false)
     end 
   end
   

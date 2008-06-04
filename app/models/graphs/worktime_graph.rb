@@ -13,7 +13,7 @@ class WorktimeGraph
     @period = extend_to_weeks period
     @employee = employee
     
-    @projects_eval = EmployeeProjectsEval.new(@employee.id)
+    @projects_eval = EmployeeProjectsEval.new(@employee.id, true)
     @absences_eval = EmployeeAbsencesEval.new(@employee.id)
     @attendance_eval = AttendanceEval.new(@employee.id)
     
