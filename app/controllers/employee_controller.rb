@@ -49,9 +49,9 @@ class EmployeeController < ManageController
   end
   
   def listActions
-    [['Projekte', 'projectmembership', 'listProjects'],   
-     ['&Uuml;berzeit', 'overtime_vacation', 'list'],
-     ['Anstellungen', 'employment', 'list']]
+    [['Projekte', 'projectmembership', 'listProjects', true],   
+     ['&Uuml;berzeit', 'overtime_vacation', 'list', true],
+     ['Anstellungen', 'employment', 'list', true]]
   end  
     
   def editFields    

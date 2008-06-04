@@ -24,7 +24,7 @@
     <td>
     <%= link_to 'Vom Projekt entfernen', 
                 pmLinkParams(:action => 'removeMembership', :id => membership), 
-                :confirm => 'Sind sie sicher?', 
+                :confirm => "Wollen Sie #{membership.employee.label} wirklich vom Projekt #{membership.project.label} entfernen?", 
                 :method => 'post' %>
     </td>
   </tr>
@@ -48,6 +48,6 @@
 <%= link_to "&Uuml;bersicht #{group.class.labelPlural}",
             :controller => group.class.to_s.downcase,
             :action => 'list',
-            :page => params[:group_page] %>
+            :up => 1 %>
 </p>
 <% end -%>

@@ -8,5 +8,6 @@
 
 <%= renderGenericPartial :partial => 'backlink' %>
 <% for action in controller.listActions -%>
- |  <%= actionLink action, @entry %> 
- <% end -%> 
+   <%= '|' if displayLink? action, @entry %>
+   <%= actionLink action, @entry %> 
+<% end -%> 

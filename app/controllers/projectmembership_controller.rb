@@ -1,6 +1,7 @@
 class ProjectmembershipController < ApplicationController
    
   before_filter :authenticate
+  before_filter :handle_navigation, :only => [ :list, :listProjects, :listEmployees ]
   
   helper :manage
   helper_method :group
@@ -61,6 +62,17 @@ class ProjectmembershipController < ApplicationController
     @subject
   end
   
+protected
+    
+  def handle_navigation
+    navi.arrive Projectmembership, nil, params[:group_id], params[:up]
+    params[:group_id] = navi.group_id
+  end
+    
+  def navi
+    session[:navi] ||= NavigationTree.new
+  end
+  
 private
 
   def employee?
@@ -75,8 +87,6 @@ private
   def redirectToList
     redirect_to :action => 'list', 
                 :page => params[:page], 
-                :group_id => params[:group_id],
-                :group_page => params[:group_page],
                 :subject => params[:subject]
   end       
 

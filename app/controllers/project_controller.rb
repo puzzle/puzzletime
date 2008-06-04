@@ -14,9 +14,7 @@ class ProjectController < ManageController
     #if @user.management? then super
     #else listManagedProjects   
     #end
-    if sub? || group? then super
-    else listManagedProjects
-    end
+    group? ? super : listManagedProjects
   end
   
   def listManagedProjects
@@ -28,7 +26,6 @@ class ProjectController < ManageController
   end
   
   def listSubProjects
-    params[:sub] = 1
     list
   end
   
@@ -49,8 +46,8 @@ class ProjectController < ManageController
   end  
   
   def listActions
-    [['Subprojekte', 'project', 'listSubProjects', 'children?'],
-     ['Mitarbeiter', 'projectmembership', 'listEmployees']]
+    [['Subprojekte', 'project', 'list', 'children?'],
+     ['Mitarbeiter', 'projectmembership', 'listEmployees', true]]
   end
   
   def listFields
@@ -79,24 +76,26 @@ class ProjectController < ManageController
     if (@user.managed_projects.collect{|p| p.id } & project.path_ids).empty?
       super
     end
+  end  
+  
+  def group_label
+    navi.prev_parent? ? '&Uuml;bergeordnetes Projekt' : super
   end
     
 protected
 
-  def groupClass
-    sub? ? Project : Client
-  end
-  
   def conditions
-    sub? ? ["parent_id = ?", params[:group_id]] : append_conditions(super, ['parent_id IS NULL'])
+    sub_projects? ? ["parent_id = ?", params[:group_id]] : append_conditions(super, ['parent_id IS NULL'])
   end
   
   def group_id_field
-    sub? ? 'parent_id' : super
+    super
   end
   
-  def nonsub_parent_id_field
-    'client_id'
+private
+
+  def sub_projects?
+    groupClass == modelClass
   end
   
 end

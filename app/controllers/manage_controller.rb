@@ -13,9 +13,10 @@ class ManageController < ApplicationController
 
   helper :manage    
   helper_method :group, :modelClass, :formatColumn, 
-                :listFields, :editFields, :sub?, :group_parent_id, :group_parent_sub?
+                :listFields, :editFields, :group_parent_id, :group_label
    
   before_filter :authorize 
+  before_filter :handle_navigation, :only => [ :list ]
    
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
   verify :method => :post, :only => [ :create, :update, :delete, :synchronize ],
@@ -23,7 +24,7 @@ class ManageController < ApplicationController
          
   hide_action :modelClass, :groupClass, :group, :formatColumn,
               :editFields, :listFields, :listActions, 
-              :sub?, :group_id_field, :group_parent_id, :group_parent_sub?
+              :group_id_field, :group_parent_id, :group_label
   
   # Main Action. Redirects to list.
   def index
@@ -158,12 +159,17 @@ class ManageController < ApplicationController
       end
   end
   
+  # Label for the group overview link
+  def group_label
+    group.class.labelPlural 
+  end
+  
 protected
   
   # The group class the represented entry objects belong to.
   # E.g., the group of a Project is a Client. Default is nil.
   def groupClass
-    nil
+    navi.prev_model
   end
   
   # Initializes the data for editing an entry. 
@@ -180,6 +186,20 @@ protected
   def group_id_field
     "#{groupClass.to_s.downcase}_id"
   end
+    
+  def handle_navigation
+    navi.arrive modelClass, params[:page], params[:group_id], params[:up]
+    params[:group_id] = navi.group_id
+    params[:page] = navi.page
+  end
+    
+  def navi
+    session[:navi] ||= NavigationTree.new
+  end
+  
+  def genericPath
+    'manage'
+  end
   
 private
 
@@ -192,13 +212,7 @@ private
   def redirectToList
     redirect_to :action => 'list', 
                 :page => params[:page], 
-                :group_id => params[:group_id],
-                :group_page => params[:group_page],
-                :sub => params[:sub]
-  end
-
-  def genericPath
-    'manage'
+                :group_id => params[:group_id]
   end
   
   # Label with article of the model class.
@@ -209,25 +223,6 @@ private
   # Returns whether a group is defined for the current request.
   def group?
     groupClass && params[:group_id]
-  end
-  
-  def sub?
-    params[:sub]
-  end
-  
-  def nonsub_parent_id_field
-    group_id_field
-  end
-  
-  # only used if sub? == true
-  def group_parent_id
-    id = group.parent_id
-    id = group.send(nonsub_parent_id_field) if id.nil?
-    id
-  end
-  
-  def group_parent_sub?
-    not group.parent_id.nil?
   end
       
 end

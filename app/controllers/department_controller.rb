@@ -8,7 +8,7 @@ class DepartmentController < ManageController
   end
   
   def listActions
-    [['Projekte', 'project', 'list', false ]]
+    [['Projekte', 'project', 'list', true ]]
   end
   
   def listFields

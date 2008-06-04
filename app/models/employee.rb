@@ -153,7 +153,7 @@ class Employee < ActiveRecord::Base
   
   def before_create
     self.passwd = ""    # disable password login  
-    self.projectmemberships.create(:project_id => DEFAULT_PROJECT_ID)
+    self.projectmemberships.build(:project_id => DEFAULT_PROJECT_ID)
   end
   
   def checkPasswd(pwd)
