@@ -14,7 +14,7 @@ DEFAULT_PROJECT_ID      = 8
 
 # Array of holidays with a fixed date. [day, month]
 REGULAR_HOLIDAYS        = [[1,1],[2,1],[1,8],[25,12],[26,12]]
-
+  
 # Email settings for error messages
 SYSTEM_EMAIL            = %{"PuzzleTime" <monitor-sender@worldweb2000.com>}
 EXCEPTION_RECIPIENTS    = ["zumkehr@puzzle.ch", "josi@puzzle.ch"]
@@ -36,3 +36,6 @@ TIME_FORMAT             = '%H:%M'
 # Default values
 DEFAULT_REPORT_TYPE     = HoursDayType::INSTANCE
 DEFAULT_START_HOUR      = 8
+
+ # from/to day of month to display completion notification
+DISPLAY_COMPLETION = [26, 2]

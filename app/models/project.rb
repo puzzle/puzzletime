@@ -14,14 +14,6 @@ class Project < ActiveRecord::Base
            :dependent => :destroy,
            :include => :employee,
            :order => 'employees.lastname, employees.firstname'
-  #defined in custom method         
-  #has_many :employees, :through => :worktimes, :uniq => true, :order => "lastname, firstname"
-  
-  has_many :managed_employees, 
-           :class_name => 'Employee',
-           :through => :projectmemberships, 
-           :conditions => 'projectmemberships.active',
-           :order => "lastname, firstname"
            
   belongs_to :department
   belongs_to :client
@@ -106,6 +98,13 @@ class Project < ActiveRecord::Base
     ids = read_attribute(:path_ids)
     return [] if ids.nil?
     ids[1..-2].split(/,\s*/).collect { |i| i.to_i }
+  end
+  
+  def managed_employees
+    Employee.find(:all, :select => 'DISTINCT(employees.*)',
+    					:joins => { :projectmemberships => :project },
+    					:conditions => ['projectmemberships.project_id IN (?) AND projectmemberships.active', path_ids],
+    					:order => 'lastname, firstname' )
   end
   
   def employees

@@ -4,9 +4,6 @@ class UserNotification < ActiveRecord::Base
   include Comparable
   extend Manageable
   
-  # from/to day of month to display completion notification
-  DISPLAY_COMPLETION = [26, 2]
-  
   # Validation helpers
   before_validation DateFormatter.new('date_from', 'date_to')
   validates_presence_of :date_from, :message => "Eine Startdatum muss angegeben werden"

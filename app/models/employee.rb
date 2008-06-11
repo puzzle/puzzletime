@@ -35,14 +35,6 @@ class Employee < ActiveRecord::Base
            :through => :worktimes,
            :uniq => true,
            :order => 'name'     
-  has_many :managed_employees, 
-           :class_name => 'Employee', 
-           :finder_sql =>
-              'SELECT DISTINCT(e.*) ' + 
-              'FROM employees e, projectmemberships m, projectmemberships n WHERE ' +
-              'm.employee_id = #{id} AND m.projectmanagement AND ' +
-              'm.project_id = n.project_id AND n.employee_id = e.id ' +
-              'ORDER BY e.lastname, e.firstname'
   has_many :worktimes
   has_many :attendancetimes
   has_many :overtime_vacations, :order => 'transfer_date DESC', :dependent => :destroy        
@@ -201,7 +193,7 @@ class Employee < ActiveRecord::Base
   end
   
   def alltime_leaf_projects
-    leaf_projects(alltime_projects)
+    leaf_projects((alltime_projects + projects).sort)
   end
   
   def statistics

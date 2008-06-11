@@ -159,7 +159,6 @@ private
     params[:evaluation] ||= 'userprojects'
     @evaluation = case params[:evaluation].downcase
         when 'managed' then ManagedProjectsEval.new(@user)
-        when 'managedabsences' then ManagedAbsencesEval.new(@user)
         when 'absencedetails' then AbsenceDetailsEval.new
         when 'userprojects' then EmployeeProjectsEval.new(@user.id, @period != nil)
         when "employeesubprojects#{@user.id}", "usersubprojects" then
