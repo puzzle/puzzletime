@@ -173,6 +173,12 @@ class Worktime < ActiveRecord::Base
     ''
   end
   
+  def self.<=>(other)
+    # nasty hack to override <=> from evaluatable
+    return false if other == ActiveRecord::Base
+    superclass.method('<=>').call other
+  end
+  
   #######################  CLASS METHODS FOR EVALUATABLE  ####################
   
   # label for this worktime class

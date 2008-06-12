@@ -1,5 +1,3 @@
-include ActiveSupport::CoreExtensions::Time::Calculations::ClassMethods
-
 class Period 
 
   attr_reader :startDate, :endDate, :label
@@ -43,7 +41,7 @@ class Period
     date = date.to_date if date.kind_of? Time   
     label ||= monthLabel date
     date -= date.day - 1
-    retrieve(date, date + days_in_month(date.month, date.year) - 1, label)    
+    retrieve(date, date + Time.days_in_month(date.month, date.year) - 1, label)    
   end
   
   def self.yearFor(date, label = nil)
@@ -121,7 +119,6 @@ class Period
     formattedDate(@startDate) + ' - ' + formattedDate(@endDate)
   end  
   
-
   def set_label(label)
     @label = label
   end

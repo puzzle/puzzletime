@@ -84,7 +84,7 @@ private
   end
   
   def templateAbsent?(template,view)
-    ! template_exists? "#{view}/_#{template}", :rhtml
+    ! finder.file_exists? "#{view}/_#{template}.rhtml"
   end  
    
 end

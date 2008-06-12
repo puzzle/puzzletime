@@ -5,7 +5,7 @@
 # ENV['RAILS_ENV'] ||= 'production'
 
 # Specifies gem version of Rails to use when vendor/rails is not present
-RAILS_GEM_VERSION = '2.0.2'
+RAILS_GEM_VERSION = '2.1.0'
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
@@ -51,7 +51,7 @@ Rails::Initializer.run do |config|
   config.action_controller.asset_host = PATH_PREFIX
   
   # Do not symbolize keys for performance reasons
-  config.action_view.local_assigns_support_string_keys = false
+  #config.action_view.local_assigns_support_string_keys = false
 end
 
 # Add new inflection rules using the following format 
@@ -65,6 +65,8 @@ end
 
 # Include your application configuration below
 ActionMailer::Base.delivery_method = :sendmail
+
+ActiveRecord::Base.store_full_sti_class = false
 
 ActionController::Base.fragment_cache_store = :mem_cache_store
 

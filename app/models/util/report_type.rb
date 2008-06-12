@@ -74,6 +74,7 @@ class StartStopType < ReportType
   end
   
   def validate_worktime(worktime)
+    worktime.work_date ||= Date.today
     if ! worktime.from_start_time
       worktime.errors.add(:from_start_time, 'Die Anfangszeit ist ung&uuml;ltig') 
     end

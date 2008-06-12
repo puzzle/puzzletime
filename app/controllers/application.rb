@@ -53,8 +53,11 @@ protected
   def renderGeneric(options)
     template = options[:action]
     if template && ! template_exists?("#{self.class.controller_path}/#{template}")
-      options[:action] = "../#{genericPath}/#{template}"
+      options[:template] = "#{genericPath}/#{template}"
+    else
+      options[:template] = "#{self.class.controller_path}/#{template}"
     end    
+    options[:action] = nil
     render options  
   end  
   
