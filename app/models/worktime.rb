@@ -128,6 +128,7 @@ class Worktime < ActiveRecord::Base
     if startStop? && from_start_time && to_end_time
       self.hours = (to_end_time.seconds_since_midnight - from_start_time.seconds_since_midnight) / 3600.0
     end
+    self.work_date = Date.today if report_type.kind_of? AutoStartType
   end
   
   def find_corresponding
@@ -171,12 +172,6 @@ class Worktime < ActiveRecord::Base
   # overwrite in subclass
   def self.account_label
     ''
-  end
-  
-  def self.<=>(other)
-    # nasty hack to override <=> from evaluatable
-    return false if other == ActiveRecord::Base
-    superclass.method('<=>').call other
   end
   
   #######################  CLASS METHODS FOR EVALUATABLE  ####################

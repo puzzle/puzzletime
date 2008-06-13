@@ -32,7 +32,7 @@ class ProjectEmployeesEval < Evaluation
   end  
  
    def sendTimeQuery(method, period = nil, div = nil, options = {})
-    options[:include] = :project
+    options[:joins] = :project
     super method, period, div, options
   end  
   

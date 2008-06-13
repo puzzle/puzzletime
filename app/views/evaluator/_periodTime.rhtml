@@ -1,12 +1,12 @@
 <% 
     # local variables:
     # periods, division_id, action
-    p = periods[periodTime_counter]  
+    p = periods[periodTime_counter - 1]  
     division_id = nil if ! defined? division_id
     action ||= 'details'
 -%>
 <td align="right">
-<%= number_with_precision(periodTime, 2) %>
+<%= number_with_delimiter(number_with_precision(periodTime, 2), "'") %>
 <% if division_id || @evaluation.class::TOTAL_DETAILS -%>
     <%  link = PATH_PREFIX + '/' + controller.controller_name + '/' +
 				 action + '?evaluation=' + params[:evaluation] +

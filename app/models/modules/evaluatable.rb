@@ -22,7 +22,7 @@ module Evaluatable
     options = options.clone
     options[:conditions] = conditionsFor(evaluation, period, categoryRef, 
                                          options[:conditions] ||= nil)
-    options[:order] ||= "work_date ASC, project_id, employee_id"
+    options[:order] ||= "work_date ASC, from_start_time, project_id, employee_id"
     worktimes.find(:all, options)
   end  
   
@@ -48,6 +48,7 @@ module Evaluatable
   end  
   
   def <=>(other)
+    return super(other) if self.kind_of? Class
     label_verbose <=> other.label_verbose
   end
   
