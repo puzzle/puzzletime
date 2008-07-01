@@ -178,7 +178,7 @@ class Employee < ActiveRecord::Base
   def lastCompleted(project)
     path = project.path_ids.clone
     membership = nil
-    while membership.nil?
+    while membership.nil? && !path.empty?
       membership = projectmemberships.find(:first, :conditions => ['project_id = ?', path.pop])
     end
     membership.last_completed if membership

@@ -35,7 +35,7 @@ private
     last_day = month_end
     new :date_from => last_day,
         :date_to   => last_day,
-        :message    => "Bitte bis Ende Monat Projekte komplettieren."
+        :message    => "Bitte Ende Monat Projekte komplettieren."
   end
 
   def self.newHolidayNotification(holiday)

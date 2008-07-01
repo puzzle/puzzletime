@@ -108,10 +108,10 @@ class EvaluatorController < ApplicationController
   end
   
   def complete_all
-     @user.projectmemberships.find(:all, :conditions => ['active']).each do |pm|
+    @user.projectmemberships.find(:all, :conditions => ['active']).each do |pm|
        pm.update_attributes(:last_completed => Date.today)
-   end
-   flash[:notice] = "Das Datum der kompletten Erfassung aller Zeiten wurde f&uuml;r alle Projekte aktualisiert."
+    end
+    flash[:notice] = "Das Datum der kompletten Erfassung aller Zeiten wurde f&uuml;r alle Projekte aktualisiert."
     redirectToOverview
   end
   
