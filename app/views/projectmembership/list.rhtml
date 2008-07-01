@@ -43,11 +43,11 @@
 <% end -%>
 </p>  
 
-<% if @user.management || project? -%>
+<% if params[:groups] -%>
 <p>
 <%= link_to "&Uuml;bersicht #{group.class.labelPlural}",
-            :controller => group.class.to_s.downcase,
-            :action => 'list',
-            :up => 1 %>
+            group_params({
+               :controller => group.class.to_s.downcase,
+               :action => 'list'}) %>
 </p>
 <% end -%>

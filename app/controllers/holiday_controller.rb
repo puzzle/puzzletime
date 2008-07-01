@@ -1,9 +1,7 @@
 
 class HolidayController < ManageController
 
-  def modelClass
-    Holiday
-  end
+  GROUP_KEY = 'holiday'
   
   def editFields
     [ [ :holiday_date, 'Datum' ], [ :musthours_day, 'Muss Stunden' ] ]

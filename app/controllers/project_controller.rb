@@ -9,6 +9,9 @@ class ProjectController < ManageController
   before_filter :authenticate
   before_filter :authorize, :only => [ :delete, :confirmDelete ]
 
+  VALID_GROUPS = [ClientController, DepartmentController, ProjectController]
+  GROUP_KEY = 'project'
+  
   def list
     # nana, list managed projects for everybody
     #if @user.management? then super
@@ -46,7 +49,7 @@ class ProjectController < ManageController
   end  
   
   def listActions
-    [['Subprojekte', 'project', 'list', 'children?'],
+    [['Subprojekte', 'project', 'list', :children?],
      ['Mitarbeiter', 'projectmembership', 'listEmployees', true]]
   end
   
@@ -79,23 +82,23 @@ class ProjectController < ManageController
   end  
   
   def group_label
-    navi.prev_parent? ? '&Uuml;bergeordnetes Projekt' : super
+    sub_sub_project? ? '&Uuml;bergeordnetes Projekt' : super
   end
     
 protected
 
   def conditions
-    sub_projects? ? ["parent_id = ?", params[:group_id]] : append_conditions(super, ['parent_id IS NULL'])
-  end
-  
-  def group_id_field
-    super
+    sub_projects? ? ["parent_id = ?", group_id] : append_conditions(super, ['parent_id IS NULL'])
   end
   
 private
 
   def sub_projects?
     groupClass == modelClass
+  end
+  
+  def sub_sub_project?
+    params[:groups].size > 2 && params[:groups][-2] == group_key && params[:groups][-3] == group_key
   end
   
 end

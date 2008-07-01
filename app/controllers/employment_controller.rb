@@ -1,14 +1,9 @@
 
 class EmploymentController < ManageController
 
-  def modelClass
-    Employment
-  end
-  
-  def groupClass
-    Employee
-  end
-  
+  VALID_GROUPS = [EmployeeController] 
+  GROUP_KEY = 'employment'
+
   def formatColumn(attribute, value)
     return value.to_s + ' %' if :percent == attribute
     super  attribute, value 

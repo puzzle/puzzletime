@@ -50,6 +50,7 @@ class Project < ActiveRecord::Base
   end      
     
   def self.columnType(col)
+    puts col.inspect
     case col 
       when :report_type : :report_type
       else super col

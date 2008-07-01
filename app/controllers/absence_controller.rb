@@ -3,9 +3,7 @@
 
 class AbsenceController < ManageController
    
-  def modelClass
-    Absence
-  end   
+  GROUP_KEY = 'absence'
     
   def editFields
     [[:name, 'Bezeichnung'], [:payed, 'Bezahlt'], [:private, 'Nicht öffentlich']]

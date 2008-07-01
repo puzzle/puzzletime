@@ -38,13 +38,14 @@
 <% if group -%>
     <%= '|' if modelClass.local?  %>    
 	<%= link_to "&Uuml;bersicht #{group_label}",
-                :controller => group.class.to_s.downcase,
-                :action => 'list',
-				:up => 1 %>
+				group_params({
+                  :controller => group.class.to_s.downcase,
+                  :action => 'list'}) %>
 <% elsif ! modelClass.local? -%>
     <%= link_to 'Synchronisieren',
-                {:action => 'synchronize',
-                 :page => params[:page]},
-                 :method => :post %>             
+                linkParams({
+ 				   :action => 'synchronize',
+                   :page => params[:page]}),
+                :method => :post %>             
 <% end -%>
 </p>

@@ -3,9 +3,8 @@
 
 class ClientController < ManageController
 
-  def modelClass
-    Client
-  end
+  GROUP_KEY = 'client'
+  
   
   def listActions
     [['Projekte', 'project', 'list', true ]]

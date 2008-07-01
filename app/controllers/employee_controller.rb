@@ -11,6 +11,7 @@ class EmployeeController < ManageController
   verify :method => :post, :only => [ :updatePwd ],
          :redirect_to => { :controller => 'evaluator', :action => 'userProjects', :clear => 1 }
   
+  GROUP_KEY = 'employee'
   
   def settings
   end

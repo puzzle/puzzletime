@@ -13,10 +13,9 @@ class ManageController < ApplicationController
 
   helper :manage    
   helper_method :group, :modelClass, :formatColumn, 
-                :listFields, :editFields, :group_parent_id, :group_label
+                :listFields, :editFields, :group_parent_id, :group_label, :local_group_key
    
   before_filter :authorize 
-  before_filter :handle_navigation, :only => [ :list ]
    
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
   verify :method => :post, :only => [ :create, :update, :delete, :synchronize ],
@@ -25,6 +24,8 @@ class ManageController < ApplicationController
   hide_action :modelClass, :groupClass, :group, :formatColumn,
               :editFields, :listFields, :listActions, 
               :group_id_field, :group_parent_id, :group_label
+  
+  VALID_GROUPS = []
   
   # Main Action. Redirects to list.
   def index
@@ -116,10 +117,18 @@ class ManageController < ApplicationController
   
   ####### helper methods, not actions ##########
   
+  def self.model_class
+    controller_name.camelize.constantize
+  end
+
   # The Class of the managed entries. 
   # This method must be overriden by mixin classes.
   def modelClass
-    nil
+    self.class.model_class
+  end
+  
+  def local_group_key
+    self.class::GROUP_KEY
   end
   
   # Links that appear for each entry in the list action.
@@ -145,7 +154,7 @@ class ManageController < ApplicationController
   # The group entry for the currently active entry.
   # This object is determined over the parameter group_id.
   def group
-    groupClass.find(params[:group_id]) if group?
+    groupClass.find(group_id) if group?
   end
   
   # Formats the value for the field attribute.
@@ -161,7 +170,7 @@ class ManageController < ApplicationController
   
   # Label for the group overview link
   def group_label
-    group.class.labelPlural 
+    groupClass.labelPlural 
   end
   
 protected
@@ -169,7 +178,8 @@ protected
   # The group class the represented entry objects belong to.
   # E.g., the group of a Project is a Client. Default is nil.
   def groupClass
-    navi.prev_model
+    ctrlr = self.class::VALID_GROUPS.find{ |c| c::GROUP_KEY == group_key }
+    ctrlr.model_class if ctrlr
   end
   
   # Initializes the data for editing an entry. 
@@ -180,25 +190,23 @@ protected
   # SQL WHERE conditions for the entries displayed in the list action.
   # May return nil.  
   def conditions
-    ["#{group_id_field} = ?", params[:group_id]] if group?
+    ["#{group_id_field} = ?", group_id] if group?
   end
   
   def group_id_field
     "#{groupClass.to_s.downcase}_id"
   end
-    
-  def handle_navigation
-    navi.arrive modelClass, params[:page], params[:group_id], params[:up]
-    params[:group_id] = navi.group_id
-    params[:page] = navi.page
-  end
-    
-  def navi
-    session[:navi] ||= NavigationTree.new
-  end
   
   def genericPath
     'manage'
+  end
+  
+  def group_key
+    params[:groups].to_a.last
+  end
+  
+  def group_id
+    params[:group_ids].to_a.last
   end
   
 private
@@ -212,7 +220,9 @@ private
   def redirectToList
     redirect_to :action => 'list', 
                 :page => params[:page], 
-                :group_id => params[:group_id]
+                :groups => params[:groups],
+                :group_ids => params[:group_ids],
+                :group_pages => params[:group_pages]
   end
   
   # Label with article of the model class.
@@ -222,7 +232,7 @@ private
     
   # Returns whether a group is defined for the current request.
   def group?
-    groupClass && params[:group_id]
+    groupClass && group_id
   end
       
 end

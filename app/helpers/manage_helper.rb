@@ -24,10 +24,26 @@ module ManageHelper
   end 
   
   def linkParams(prms = {})
-    #prms[:group_id] ||= params[:group_id]
-    prms[:page] ||= params[:page]
-    prms[:group_page] ||= params[:group_page]
-    prms[:sub] ||= params[:sub]
+    prms[:page]        ||= params[:page]
+    prms[:groups]      ||= params[:groups]
+    prms[:group_ids]   ||= params[:group_ids]
+    prms[:group_pages] ||= params[:group_pages]
+    prms
+  end
+  
+  def child_group_params(key, id, page, prms = {})
+    prms[:groups]      ||= params[:groups].to_a + [key]
+    prms[:group_ids]   ||= params[:group_ids].to_a + [id]
+    prms[:group_pages] ||= params[:group_pages].to_a + [page] 
+    prms
+  end
+  
+  def group_params(prms = {})
+    prms[:page]        ||= params[:group_pages].to_a.last
+    prms[:groups]      ||= params[:groups][0..-2] 
+    prms[:group_ids]   ||= params[:group_ids][0..-2]
+    prms[:group_pages] ||= params[:group_pages][0..-2] 
+    puts prms.inspect
     prms
   end
   
@@ -39,10 +55,9 @@ module ManageHelper
   def actionLink(linkParams, entry)
     return unless displayLink? linkParams, entry
     link_to linkParams[0], 
-            :controller => linkParams[1], 
-            :action => linkParams[2], 
-            :group_id => entry.id,
-            :group_page => params[:page]
+            child_group_params(local_group_key, entry.id, params[:page], 
+              {:controller => linkParams[1], 
+               :action => linkParams[2]})
   end
 
   def newLabel

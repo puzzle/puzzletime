@@ -3,9 +3,7 @@
 
 class DepartmentController < ManageController
 
-  def modelClass
-    Department
-  end
+  GROUP_KEY = 'dept'
   
   def listActions
     [['Projekte', 'project', 'list', true ]]

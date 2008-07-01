@@ -1,13 +1,8 @@
 class OvertimeVacationController < ManageController
 
-  def modelClass
-    OvertimeVacation
-  end
+  VALID_GROUPS = [EmployeeController]
+  GROUP_KEY = 'otime'
   
-  def groupClass
-    Employee
-  end  
-    
   def editFields    
     [[:hours, 'Stunden'],
      [:transfer_date, 'Umgebucht am']]    

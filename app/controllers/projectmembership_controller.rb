@@ -1,7 +1,6 @@
 class ProjectmembershipController < ApplicationController
    
   before_filter :authenticate
-  before_filter :handle_navigation, :only => [ :list, :listProjects, :listEmployees ]
   
   helper :manage
   helper_method :group
@@ -16,15 +15,15 @@ class ProjectmembershipController < ApplicationController
   end  
   
   def listProjects    
-    params[:group_id] = @user.id if ! @user.management? || params[:group_id].nil?
-    @subject = Employee.find(params[:group_id])
+    group_id = @user.id if ! @user.management? || group_id.nil?
+    @subject = Employee.find(group_id)
     @list = Project.list
     render :action => 'list'
   end
   
   def listEmployees 
     return listProjects if ! projectManager?   
-    @subject = Project.find(params[:group_id])
+    @subject = Project.find(group_id)
     @list = Employee.list  
     render :action => 'list'
   end 
@@ -41,9 +40,9 @@ class ProjectmembershipController < ApplicationController
     if params.has_key?(:ids)
       group = employee? ? :employee_id : :project_id 
       entry = employee? ? :project_id : :employee_id 
-      params[:group_id] = @user.id if employee? && ! @user.management?       
+      group_id = @user.id if employee? && ! @user.management?       
       params[:ids].each do |id|        
-        Projectmembership.activate(group => params[:group_id], entry => id)                                             
+        Projectmembership.activate(group => group_id, entry => id)                                             
       end      
       flash[:notice] = 'Der/Die Mitarbeiter wurden dem Projekt hinzugef&uuml;gt'
     else
@@ -62,17 +61,6 @@ class ProjectmembershipController < ApplicationController
     @subject
   end
   
-protected
-    
-  def handle_navigation
-    navi.arrive Projectmembership, nil, params[:group_id], params[:up]
-    params[:group_id] = navi.group_id
-  end
-    
-  def navi
-    session[:navi] ||= NavigationTree.new
-  end
-  
 private
 
   def employee?
@@ -81,13 +69,16 @@ private
   
   def projectManager?
     @user.management? || 
-      @user.managed_projects.collect{|p| p.id}.include?(params[:group_id].to_i)
+      @user.managed_projects.collect{|p| p.id}.include?(group_id.to_i)
   end
 
   def redirectToList
     redirect_to :action => 'list', 
                 :page => params[:page], 
-                :subject => params[:subject]
+                :subject => params[:subject],
+                :groups => params[:groups],
+                :group_ids => params[:group_ids],
+                :group_pages => params[:group_pages]
   end       
 
   def setManager(bool)
@@ -99,4 +90,12 @@ private
     redirectToList
   end   
   
+  def group_id
+    params[:group_ids].last
+  end
+  
+  def group_id=(value)
+    params[:group_ids] = [0] if params[:group_ids].nil?
+    params[:group_ids].last = value
+  end
 end
