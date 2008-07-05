@@ -15,8 +15,8 @@ class ProjectmembershipController < ApplicationController
   end  
   
   def listProjects    
-    group_id = @user.id if ! @user.management? || group_id.nil?
-    @subject = Employee.find(group_id)
+    id_group =  (! @user.management? || group_id.nil?) ? @user.id : group_id
+    @subject = Employee.find(id_group)
     @list = Project.list
     render :action => 'list'
   end
@@ -38,11 +38,11 @@ class ProjectmembershipController < ApplicationController
   
   def createMembership
     if params.has_key?(:ids)
-      group = employee? ? :employee_id : :project_id 
+      group_key = employee? ? :employee_id : :project_id 
       entry = employee? ? :project_id : :employee_id 
-      group_id = @user.id if employee? && ! @user.management?       
+      id_group =  (employee? && ! @user.management?) ? @user.id : group_id
       params[:ids].each do |id|        
-        Projectmembership.activate(group => group_id, entry => id)                                             
+        Projectmembership.activate(group_key => id_group, entry => id)                                             
       end      
       flash[:notice] = 'Der/Die Mitarbeiter wurden dem Projekt hinzugef&uuml;gt'
     else
@@ -91,11 +91,10 @@ private
   end   
   
   def group_id
-    params[:group_ids].last
+    last_param :group_ids
   end
   
-  def group_id=(value)
-    params[:group_ids] = [0] if params[:group_ids].nil?
-    params[:group_ids].last = value
+  def last_param(key)
+    params[key].split('-').last if params[key]
   end
 end

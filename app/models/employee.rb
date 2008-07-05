@@ -44,6 +44,7 @@ class Employee < ActiveRecord::Base
   validates_presence_of :lastname, :message => "Der Nachname muss angegeben werden"
   validates_presence_of :shortname, :message => "Das K&uuml;rzel muss angegeben werden"
   validates_uniqueness_of :shortname, :message => "Dieses K&uuml;rzel wird bereits verwendet"
+  validates_uniqueness_of :ldapname, :message => "Dieses LDAP Name wird bereits verwendet"
   
   before_destroy :protect_worktimes  
  

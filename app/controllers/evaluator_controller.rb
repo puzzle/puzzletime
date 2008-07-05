@@ -169,7 +169,7 @@ private
         when 'projectemployees' then ProjectEmployeesEval.new(params[:category_id], @period != nil)
         when 'attendance' then AttendanceEval.new(params[:category_id] || @user.id)
         else nil
-        end
+    end
     if @user.management && @evaluation.nil?
       @evaluation = case params[:evaluation].downcase
         when 'clients' then ClientsEval.new
@@ -182,7 +182,7 @@ private
         when 'absences' then AbsencesEval.new
         when 'employeeabsences' then EmployeeAbsencesEval.new(params[:category_id])      
         else nil
-        end  
+      end  
     end
     if @evaluation.nil?
       @evaluation = EmployeeProjectsEval.new(@user.id, false)

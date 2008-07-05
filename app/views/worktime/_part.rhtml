@@ -6,7 +6,7 @@
     <% if part.new_record? -%>
     <%= link_to 'l&ouml;schen...', 
             {:action => 'deletePart',
-             :part_id => part_counter}, 
+             :part_id => part_counter - 1}, 
             {:confirm => 'Wollen sie diese Arbeitszeit wirklich entfernen?',
              :method => 'post' } %>
     <% end -%>         

@@ -202,11 +202,11 @@ protected
   end
   
   def group_key
-    params[:groups].to_a.last
+    last_param :groups
   end
   
   def group_id
-    params[:group_ids].to_a.last
+    last_param :group_ids
   end
   
 private
@@ -233,6 +233,10 @@ private
   # Returns whether a group is defined for the current request.
   def group?
     groupClass && group_id
+  end
+  
+  def last_param(key)
+    params[key].split('-').last if params[key]
   end
       
 end

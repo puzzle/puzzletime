@@ -27,7 +27,7 @@ module HasTreeAssociation
     options = clone_options options
     append_conditions(options[:conditions], 
                       [ "worktimes.project_id = projects.id AND #{@owner.id} = ANY (projects.path_ids)" ])
-    options[:include] = 'project'
+    options[:joins] = :project
     options
   end
 

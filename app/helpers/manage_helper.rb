@@ -32,18 +32,17 @@ module ManageHelper
   end
   
   def child_group_params(key, id, page, prms = {})
-    prms[:groups]      ||= params[:groups].to_a + [key]
-    prms[:group_ids]   ||= params[:group_ids].to_a + [id]
-    prms[:group_pages] ||= params[:group_pages].to_a + [page] 
+    prms[:groups]      ||= append_param(:groups, key)
+    prms[:group_ids]   ||= append_param(:group_ids, id)
+    prms[:group_pages] ||= append_param(:group_pages, page ? page : 1) 
     prms
   end
   
   def group_params(prms = {})
-    prms[:page]        ||= params[:group_pages].to_a.last
-    prms[:groups]      ||= params[:groups][0..-2] 
-    prms[:group_ids]   ||= params[:group_ids][0..-2]
-    prms[:group_pages] ||= params[:group_pages][0..-2] 
-    puts prms.inspect
+    prms[:page]        ||= last_param(:group_pages)
+    prms[:groups]      ||= remove_last_param(:groups)
+    prms[:group_ids]   ||= remove_last_param(:group_ids)
+    prms[:group_pages] ||= remove_last_param(:group_pages)
     prms
   end
   
@@ -77,4 +76,21 @@ module ManageHelper
     'manage'
   end
      
+private
+
+  def last_param(key)
+    params[key].split('-').last if params[key]
+  end
+
+  def remove_last_param(key)
+    if params[key]
+      param_array = params[key].split('-')[0..-2]
+      return param_array.join('-') unless param_array.empty?
+    end
+    nil
+  end
+     
+  def append_param(key, value)
+    params[key] ? "#{params[key]}-#{value}" : value
+  end
 end
