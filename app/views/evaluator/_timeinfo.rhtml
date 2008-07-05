@@ -3,7 +3,7 @@
 <tr>
   <% for info in row -%>
   <td><%= info[0] %>: &nbsp; </td>
-  <td align="right"><%= number_with_precision(info[1].to_f, 2) %> <%= info[2] %></td>
+  <td align="right"><%= format_hour info[1]  %> <%= info[2] %></td>
   <td> &nbsp; &nbsp; &nbsp; </td>
   <% end -%>
 </tr>

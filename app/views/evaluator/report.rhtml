@@ -61,7 +61,7 @@ project = Project.find(@evaluation.account_id)
   <td align="right" nowrap><%= format_date(time.work_date) %></td>
   <td align="center"><%= format_time time.from_start_time if time.startStop? %></td>
   <td align="center"><%= format_time time.to_end_time if time.startStop? %></td>
-  <td align="right"><%= number_with_precision(time.hours, 2) %> &nbsp;</td>
+  <td align="right"><%= format_hour time.hours %> &nbsp;</td>
   <% if @evaluation.employee_id.nil? -%>
   <td align="left"><%= time.employee.shortname %></td>
   <% end -%>
@@ -70,7 +70,7 @@ project = Project.find(@evaluation.account_id)
 <% end -%> 
 <tr class="times_total_sum">
     <td colspan="3">Total Stunden</td> 
-    <td align="right"><%= number_with_precision(@times_total_sum, 2) %> &nbsp;</td>
+    <td align="right"><%= format_hour @times_total_sum %> &nbsp;</td>
     <td></td>  
 </tr>
 </table>

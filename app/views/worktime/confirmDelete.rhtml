@@ -1,7 +1,7 @@
 <% @title = "Arbeitszeit l&ouml;schen" %>
 
 <p>
-Wollen sie wirklich <%= round(@worktime.hours) %>h Arbeitszeit
+Wollen sie wirklich <%= format_hour @worktime.hours %>h Arbeitszeit
 am <%= format_date(@worktime.work_date) %> f&uuml;r 
 <%= @worktime.account ? @worktime.account.label_verbose : 'Anwesenheit' %> l&ouml;schen?
 </p>

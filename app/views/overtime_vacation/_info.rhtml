@@ -1,1 +1,1 @@
-<p>Aktuelle &Uuml;berzeit: <%= number_with_precision(group.statistics.current_overtime.to_f, 2) %> h</p>
+<p>Aktuelle &Uuml;berzeit: <%= format_hour group.statistics.current_overtime %> h</p>

@@ -6,8 +6,8 @@
 module ApplicationHelper
   
   # round time function.
-  def round(hour)
-    "%.2f" % hour.to_f
+  def format_hour(hour)
+    number_with_delimiter(number_with_precision(hour.to_f, 2), "'")
   end
   
   # Change english datelayout to german one.

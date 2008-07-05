@@ -15,7 +15,7 @@ module EvaluatorHelper
   def detailTD(worktime, field)
     case field
       when :work_date : td format_date(worktime.work_date), 'right'
-      when :hours : td number_with_precision(worktime.hours, 2), 'right'
+      when :hours : td format_hour(worktime.hours), 'right'
       when :times : td worktime.timeString
       when :employee : td worktime.employee.shortname
       when :account : td worktime.account.label_verbose

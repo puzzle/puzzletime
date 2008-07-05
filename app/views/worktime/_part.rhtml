@@ -1,5 +1,5 @@
  <%= alternate_row %>
-    <td align="right"><%= number_with_precision(part.hours, 2) %> h</td> 
+    <td align="right"><%= format_hour part.hours %> h</td> 
     <td>f&uuml;r <%= part.account.label_verbose %></td>
     <td><%= h part.description.slice(0..50) %></td>
     <td>
