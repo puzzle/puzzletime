@@ -91,7 +91,7 @@ private
   end   
   
   def group_id
-    last_param :group_ids
+    last_param(:group_ids) || @user.id
   end
   
   def last_param(key)

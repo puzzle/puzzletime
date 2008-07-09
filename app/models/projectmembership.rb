@@ -14,6 +14,9 @@ class Projectmembership < ActiveRecord::Base
              :class_name => 'Employee',
              :foreign_key => 'employee_id' 
  
+  validates_presence_of :employee_id, :message => "Es muss ein Mitarbeiter angegeben werden"  
+  validates_presence_of :project_id, :message => "Es muss ein Projekt angegeben werden" 
+  
   validates_uniqueness_of :employee_id, 
                           :scope => 'project_id', 
                           :message => "Dieser Mitarbeiter ist bereits dem Projekt zugeteilt"
@@ -22,7 +25,8 @@ class Projectmembership < ActiveRecord::Base
                           :message => "Dieser Mitarbeiter ist bereits dem Projekt zugeteilt"
 
   def self.activate(attributes)
-    membership = create(attributes) 
+    create(attributes) 
+    puts attributes.inspect
     membership = find(:first, assoc_conditions(attributes[:employee_id], attributes[:project_id]) )
     membership.update_attributes :active => true
   end
