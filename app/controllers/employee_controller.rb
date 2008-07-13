@@ -17,7 +17,7 @@ class EmployeeController < ManageController
   end
   
   def save_settings
-    if @user.update_attributes(params[:user].slice(:report_type, :default_project_id,:default_attendance, :user_periods, :eval_periods))
+    if @user.update_attributes(params[:user].slice(:report_type, :default_project_id, :default_attendance, :user_periods, :eval_periods))
       flash[:notice] =  'Die Benutzereinstellungen wurden aktualisiert'
       redirect_to :controller => 'projecttime', :action => 'list'
     else      

@@ -87,7 +87,8 @@ class EvaluatorController < ApplicationController
     setEvaluation
     setEvaluationDetails
     @evaluation.times(@period).each do |worktime|
-      worktime.update_attributes(:booked => true)
+      #worktime cannot be directly updated because it's loaded with :joins
+      Worktime.update worktime.id, :booked => 1   
     end
     flash[:notice] = "Alle Arbeitszeiten "
     flash[:notice] += "von #{Employee.find(@evaluation.employee_id).label} " if @evaluation.employee_id
