@@ -78,7 +78,7 @@ module EvaluatorHelper
   def offered_hours(project)
     offered = project.offered_hours
     if offered
-      total = project.worktimes.sum(:hours).to_i
+      total = project.worktimes.sum(:hours, :conditions => ['worktimes.billable']).to_i
       color = 'green'
       if total > offered
         color = 'red'
