@@ -19,25 +19,20 @@ module Evaluatable
      
   # Finds all Worktimes related to this object in a given period.    
   def findWorktimes(evaluation, period = nil, categoryRef = false, options = {})
-    options = options.clone
-    options[:conditions] = conditionsFor(evaluation, period, categoryRef, 
-                                         options[:conditions] ||= nil)
+    options = conditionsFor(evaluation, period, categoryRef, options)
     options[:order] ||= "work_date ASC, from_start_time, project_id, employee_id"
     worktimes.find(:all, options)
   end  
   
   # Sums all worktimes related to this object in a given period.
   def sumWorktime(evaluation, period = nil, categoryRef = false, options = {})
-    options = options.clone
-    options[:conditions] = conditionsFor(evaluation, period, categoryRef, 
-                                         options[:conditions] ||= nil)
+    options = conditionsFor(evaluation, period, categoryRef, options)
     worktimes.sum(:hours, options).to_f
   end
   
   # Counts the number of worktimes related to this object in a given period.
   def countWorktimes(evaluation, period = nil, categoryRef = false, options = {})
-    options = options.clone
-    options[:conditions] = conditionsFor(evaluation, period, categoryRef)
+    options = conditionsFor(evaluation, period, categoryRef, options)
     worktimes.count("*", options)
   end
 
@@ -58,12 +53,12 @@ module Evaluatable
   
 private    
   
-  def conditionsFor(evaluation, period = nil, categoryRef = false, condArray = nil)
-    condArray = condArray ? condArray.clone() : []
-    append_conditions(condArray, ["type = '" + (evaluation.absences? ? 'Absencetime' : 'Projecttime') + "'"])
-    append_conditions(condArray, ['work_date BETWEEN ? AND ?', period.startDate, period.endDate]) if period
-    append_conditions(condArray, ["? = #{evaluation.categoryRef}", evaluation.category_id]) if categoryRef
-    condArray
+  def conditionsFor(evaluation, period = nil, categoryRef = false, options = {})
+    options = clone_options(options)
+    append_conditions(options[:conditions], ["type = '" + (evaluation.absences? ? 'Absencetime' : 'Projecttime') + "'"])
+    append_conditions(options[:conditions], ['work_date BETWEEN ? AND ?', period.startDate, period.endDate]) if period
+    append_conditions(options[:conditions], ["? = #{evaluation.categoryRef}", evaluation.category_id]) if categoryRef
+    options
   end      
   
 end 
