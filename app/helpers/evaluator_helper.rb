@@ -64,11 +64,15 @@ module EvaluatorHelper
   #### division supplement functions
 
   def complete_link(project)
-     link_to('Komplettieren', 
-	           evaluation_overview_params(:action => 'completeProject', 
-					                               :project_id => project.id),
-             :method => 'post' ) + 
-		' (' +  format_date(@user.lastCompleted(project)) + ')'		                
+    link_text = ''
+    if @user.projectmemberships.any? { |pm| pm.project == project || pm.project.ancestors.include?(project) }
+      link_text = link_to('Komplettieren', 
+           evaluation_overview_params(:action => 'completeProject', 
+				                               :project_id => project.id),
+           :method => 'post' ) 
+    end
+	  link_text +=  ' (' +  format_date(@user.lastCompleted(project)) + ')'
+    link_text	
   end
 
   def last_completion(employee)

@@ -177,12 +177,20 @@ class Employee < ActiveRecord::Base
    
   # Returns the date the passed project was completed last. 
   def lastCompleted(project)
+    # search hierarchy up first
     path = project.path_ids.clone
     membership = nil
     while membership.nil? && !path.empty?
       membership = projectmemberships.find(:first, :conditions => ['project_id = ?', path.pop])
     end
-    membership.last_completed if membership
+    
+    if membership
+      membership.last_completed 
+    else
+      # otherwise, get minimum date of all children
+      memberships = projectmemberships.find(:all, :conditions => ['? = ANY (projects.path_ids)', project.id])
+      memberships.collect{|pm| pm.last_completed}.min
+    end
   end
   
   def leaf_projects(list = nil)

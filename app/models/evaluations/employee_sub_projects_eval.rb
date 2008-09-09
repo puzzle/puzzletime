@@ -17,7 +17,7 @@ class EmployeeSubProjectsEval < SubProjectsEval
   end
   
   def division_supplement(user)
-    return [[:add_time_link, '']] if self.for? user
+    return [[:add_time_link, ''], [:complete_link, '']] if self.for? user
     super(user)
   end
 

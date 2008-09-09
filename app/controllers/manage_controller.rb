@@ -54,7 +54,8 @@ class ManageController < ApplicationController
   # Action to create an added entry in the database.
   def create
     @entry = modelClass.new(params[:entry])
-    @entry.send("#{group_id_field}=".to_sym, params[:group_id]) if group?
+    @entry.send("#{group_id_field}=".to_sym, group_id) if group?
+    puts @entry.inspect
     if @entry.save
       flash[:notice] = classLabel + ' wurde erfasst'
       redirectToList

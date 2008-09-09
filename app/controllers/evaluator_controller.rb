@@ -100,11 +100,21 @@ class EvaluatorController < ApplicationController
   ######################  OVERVIEW ACTIONS  #####################3
 
   def completeProject
-    pm = @user.projectmemberships.find(:first, 
+    project = Project.find params[:project_id]
+    memberships = @user.projectmemberships.find(:first, 
             :conditions => ["project_id = ?", params[:project_id]])
-    pm.update_attributes(:last_completed => Date.today)
+    if memberships.nil?
+      # no direct membership - complete parent project
+      memberships = @user.projectmemberships.find(:all,
+            :conditions => ["? = ANY (projects.path_ids)", params[:project_id]])
+    else
+      memberships = [memberships] 
+    end
+    memberships.each do |pm|
+      pm.update_attributes(:last_completed => Date.today)
+    end
     flash[:notice] = "Das Datum der kompletten Erfassung aller Zeiten " +
-                     "f&uuml;r das Projekt #{pm.project.label_verbose} wurde aktualisiert."
+                     "f&uuml;r das Projekt #{project.label_verbose} wurde aktualisiert."
     redirectToOverview
   end
   
