@@ -1,6 +1,7 @@
 class Puzzlebase::CustomerProject < Puzzlebase::Base  
   
   set_table_name 'TBL_CUSTOMER_PROJECT' 
+  set_primary_key 'PK_CUSTOMER_PROJECT'
     
   belongs_to :customer,
              :foreign_key => 'FK_CUSTOMER'
@@ -10,7 +11,8 @@ class Puzzlebase::CustomerProject < Puzzlebase::Base
   MAPS_TO = ::Project         
   MAPPINGS = {:shortname      => :S_PROJECT,
               :name           => :S_DESCRIPTION } 
-  FIND_OPTIONS = {:conditions => ["B_SYNCTOPUZZLETIME"]}               
+  FIND_OPTIONS = {:include => 'project',
+                  :conditions => ["B_SYNCTOPUZZLETIME AND TBL_PROJECT.FK_PROJECT IS NULL"]}               
     
   # Synchronizes the Projects and the Customers.
   def self.synchronize

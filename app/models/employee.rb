@@ -50,27 +50,53 @@ class Employee < ActiveRecord::Base
  
   # Tries to login a user with the passed data.
   # Returns the logged-in Employee or nil if the login failed.
-  def self.login(username, pwd)    
+  def self.login(username, pwd)   
     user = find_by_shortname_and_passwd(username.upcase, encode(pwd))
     user = ldapLogin(username, pwd) if user.nil?   
     user
+  end
+  
+  def self.ldap_test(username, pwd)     
+    con = Net::LDAP.new :host => LDAP_HOST,
+      :port => LDAP_PORT,
+      :encryption => :simple_tls
+      
+    
+     filter = Net::LDAP::Filter.eq('memberUid', username)   
+     treebase = "cn=puzzletime,ou=groups,dc=puzzle,dc=itc"
+
+     con.search( :base => treebase, :filter => filter ) do |entry|
+        p entry.inspect
+      end                    
   end
   
   # Performs a login over LDAP with the passed data.
   # Returns the logged-in Employee or nil if the login failed.
   def self.ldapLogin(username, pwd)
     if ! username.strip.empty? && 
-       ldapConnection.bind_as(:base => LDAP_DN, 
-                              :filter => "uid=#{username}", 
-                              :password => pwd)
+       (ldapAuthUser(LDAP_USER_DN, username, pwd) ||
+        (ldapAuthUser(LDAP_EXTERNAL_DN, username, pwd) &&
+         ldapGroupMember(username) ) )
       return find_by_ldapname(username)
     end  
     nil
   end
   
+  def self.ldapAuthUser(dn, username, pwd)
+    ldapConnection.bind_as(:base => dn, 
+                           :filter => "uid=#{username}", 
+                           :password => pwd)
+  end
+  
+  def self.ldapGroupMember(username) 
+    result = ldapConnection.search(:base => LDAP_GROUP, 
+                                   :filter => Net::LDAP::Filter.eq('memberUid', username) )
+    not result.empty?
+  end
+  
   # Returns a Array of LDAP user information
   def self.ldapUsers       
-     ldapConnection.search(:base => LDAP_DN,  
+     ldapConnection.search(:base => LDAP_USER_DN,  
                            :attributes => ['uid', 'sn', 'givenname', 'mail'] )
   end
   

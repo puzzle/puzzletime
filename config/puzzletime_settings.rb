@@ -22,7 +22,9 @@ EXCEPTION_RECIPIENTS    = ["zumkehr@puzzle.ch", "josi@puzzle.ch"]
 # LDAP configuration
 LDAP_HOST               = 'proximai.ww2.ch'
 LDAP_PORT               = 636
-LDAP_DN                 = 'ou=puzzle,ou=users,dc=puzzle,dc=itc'
+LDAP_USER_DN            = 'ou=puzzle,ou=users,dc=puzzle,dc=itc'
+LDAP_EXTERNAL_DN        = 'ou=extern,ou=users,dc=puzzle,dc=itc'
+LDAP_GROUP              = 'cn=puzzletime,ou=groups,dc=puzzle,dc=itc'
 
 # Applications Customization Settings
 NO_OF_OVERVIEW_ROWS     = 20      # rows for listing projects, employees, ...
