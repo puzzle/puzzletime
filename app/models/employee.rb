@@ -56,20 +56,6 @@ class Employee < ActiveRecord::Base
     user
   end
   
-  def self.ldap_test(username, pwd)     
-    con = Net::LDAP.new :host => LDAP_HOST,
-      :port => LDAP_PORT,
-      :encryption => :simple_tls
-      
-    
-     filter = Net::LDAP::Filter.eq('memberUid', username)   
-     treebase = "cn=puzzletime,ou=groups,dc=puzzle,dc=itc"
-
-     con.search( :base => treebase, :filter => filter ) do |entry|
-        p entry.inspect
-      end                    
-  end
-  
   # Performs a login over LDAP with the passed data.
   # Returns the logged-in Employee or nil if the login failed.
   def self.ldapLogin(username, pwd)
