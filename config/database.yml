@@ -20,11 +20,11 @@ test:
 
 production:
   adapter: postgresql
-  database: puzzletime
+  database: pitc_puzzletime_prod
   encoding: utf8
-  username: puzzle
-  password: timepuzzle
-  host: 127.0.0.1
+  username: pitc_puzzletime
+  password: whougbyesht3
+  host: pitc-puzzletime.db.puzzle.ch
   
 profile:
   adapter: postgresql
