@@ -23,7 +23,6 @@ class Puzzlebase::Project < Puzzlebase::Base
     original_children = original_parent.children
     return if original_children.empty?
     moveWorktimesIfNecessary(original_parent, local_parent, original_children)
-    
     original_children.each do |child|
       local = findLocalChild(child, local_parent)
       local = updateLocalChild local_parent, child, local
@@ -32,17 +31,22 @@ class Puzzlebase::Project < Puzzlebase::Base
   end
   
   def self.removeUnused
-    removeUnusedExcept findAll, 'parent_id IS NULL'
     top_projects = Project.find(:all, :conditions => ['parent_id IS NULL'])
     top_projects.each do |local|
-      removeUnusedChildren findOriginal(local), local
+      original = findOriginal(local)
+      if original.nil?
+        local.destroy if local.worktimes(true).empty?
+      else   
+        removeUnusedChildren original, local
+      end
     end
   end
   
 protected
            
   def self.updateLocal(original)
-    locals = ::Project.find_all_by_shortname(original.S_PROJECT)
+    client_shortnames = original.customer_projects.collect {|cp| cp.customer.S_CUSTOMER }
+    locals = ::Project.find :all, :joins => :client, :conditions => ["projects.shortname = ? AND clients.shortname IN (#{client_shortnames.join(', ')})", original.S_PROJECT]
     locals.each do |local|
       updateAttributes local, original
       setReference local, original
@@ -70,9 +74,20 @@ protected
     self::MAPS_TO.find(:first, :conditions => ["shortname = ? AND parent_id = ?", original_child.S_PROJECT, local_parent.id])
   end
     
+  # use only for top projects  
   def self.findOriginal(local)
-    find(:first, :conditions => ['FK_PROJECT IS NULL AND S_PROJECT = ?', local.shortname])
+    find(:first, 
+         :conditions => ['TBL_PROJECT.FK_PROJECT IS NULL AND TBL_PROJECT.S_PROJECT = ? AND TBL_CUSTOMER.S_CUSTOMER = ?', local.shortname, local.client.shortname],
+         :joins => :customers)
   end
+ 
+  # use only for top projects
+  def self.localFindOptions(original)     
+     {:joins => :client, 
+      :conditions => ["projects.shortname = ? AND clients.shortname = ? AND projects.parent_id IS NULL",
+                      original.S_PROJECT, 
+                      original.customer.S_CUSTOMER]} 
+  end     
 
   def self.moveWorktimesIfNecessary(original_parent, local_parent, original_children)
     existing_children = original_children.select { |child| not findLocalChild(child, local_parent).nil? }

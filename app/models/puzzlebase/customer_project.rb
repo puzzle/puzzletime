@@ -21,7 +21,7 @@ class Puzzlebase::CustomerProject < Puzzlebase::Base
     Puzzlebase::Customer.updateAll
     updateAll    
     removeUnused
-    errors
+    errors 
   end     
   
   def self.removeUnused

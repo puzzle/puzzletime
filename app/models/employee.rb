@@ -43,6 +43,7 @@ class Employee < ActiveRecord::Base
   validates_presence_of :firstname, :message => "Der Vorname muss angegeben werden"
   validates_presence_of :lastname, :message => "Der Nachname muss angegeben werden"
   validates_presence_of :shortname, :message => "Das K&uuml;rzel muss angegeben werden"
+  validates_presence_of :email, :message => "Die Email Adresse muss angegeben werden"         # Required by database
   validates_uniqueness_of :shortname, :message => "Dieses K&uuml;rzel wird bereits verwendet"
   validates_uniqueness_of :ldapname, :message => "Dieses LDAP Name wird bereits verwendet"
   
