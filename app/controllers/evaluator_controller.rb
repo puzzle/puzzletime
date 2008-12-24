@@ -1,5 +1,5 @@
-# (c) Puzzle itc, Berne
-# Diplomarbeit 2149, Xavier Hayoz
+
+require 'fastercsv'
 
 class EvaluatorController < ApplicationController
  
@@ -124,6 +124,33 @@ class EvaluatorController < ApplicationController
     end
     flash[:notice] = "Das Datum der kompletten Erfassung aller Zeiten wurde f&uuml;r alle Projekte aktualisiert."
     redirectToOverview
+  end
+  
+  def exportCapacityCSV
+    data = FasterCSV.generate do |csv|
+      csv << ["Mitarbeiter", "Projekt", "Verrechenbar", "Nicht verrechenbar"]
+      Employee.employed_ones(@period).each do |employee|
+        employee.alltime_projects.each do |project|
+          result = Worktime.find_by_sql ["""SELECT SUM(w.hours) AS HOURS, w.billable FROM worktimes w 
+                                           LEFT JOIN projects p ON p.id = w.project_id
+                                           WHERE w.employee_id = ? AND p.path_ids[1] = ? 
+                                           AND w.work_date BETWEEN ? AND ?
+                                           GROUP BY w.billable""",
+                                         employee.id, project.id, @period.startDate, @period.endDate ]  
+          if result.collect { |w| w.hours }.sum > 0
+            billable = result.select {|w| w.billable }.first
+            not_billable = result.select{ |w| !w.billable }.first
+            csv << [employee.label, project.label_verbose, billable ? billable.hours : 0, not_billable ? not_billable.hours : 0]
+          end  
+          # TODO include Anwesenheitszeit Differenz
+        end  
+      end  
+    end 
+    filename = "puzzletime_auslastung.csv"
+    setExportHeader(filename)
+    send_data(data,
+              :type => 'text/csv; charset=utf-8; header=present',
+              :filename => filename)  
   end
   
   ########################  PERIOD ACTIONS  #########################
