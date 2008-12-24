@@ -7,6 +7,7 @@ class VacationGraph
     period ||= Period.currentYear
     @actual_period = period
     @period = extend_to_weeks period
+    @todays_week = Period.weekFor(Date.today).to_s
     
     @absences_eval = AbsencesEval.new
     
@@ -41,6 +42,10 @@ class VacationGraph
       @current = get_period_week(day)
       yield day
 	  end
+	end
+ 
+  def is_current_week
+    @current.to_s == @todays_week
   end
      
   def timebox

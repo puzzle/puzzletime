@@ -20,7 +20,8 @@ class AbsencesEval < Evaluation
   end
       
   def division_supplement(user)
-     [[:remaining_vacations, 'Übrige Ferien', 'right']]
+     [[:remaining_vacations, 'Übrige Ferien', 'right'],
+      [:overtime_vacations_tooltip, '', 'left']]
  end
  
 end

@@ -18,7 +18,8 @@ class EmployeesEval < Evaluation
   end
  
   def division_supplement(user)
-     [[:overtime, 'Überzeit', 'right']]
+     [[:overtime, 'Überzeit', 'right'],
+      [:overtime_vacations_tooltip, '', 'left']]
  end
  
 end

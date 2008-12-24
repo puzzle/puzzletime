@@ -35,7 +35,7 @@
 <% end -%>
 
 	<% @graph.each_week do |day| -%>	
-	<%= weekbox_td @graph.timebox -%>
+	<%= weekbox_td @graph.timebox, @graph.is_current_week -%>
 	<% end -%>
 	
 <% if  @user.management -%>

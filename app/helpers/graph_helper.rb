@@ -9,7 +9,7 @@ module GraphHelper
   def week_header
   	header = ''
     @graph.each_week do |day|
-    	header += "<th>#{'%02d' % day.cweek}</th>\n"
+    	header += "<th #{'class="current"' if @graph.is_current_week}>#{'%02d' % day.cweek}</th>\n"
     end
 	header
   end
@@ -36,10 +36,12 @@ module GraphHelper
   	header	
   end
   
-  def weekbox_td(box)
+  def weekbox_td(box, current)
   	if box
   	  "<td style=\"background-color: #{box.color};\"><a>#{box.height}<span>#{box.tooltip}</span></a></td>"
-  	else
+  	elsif current
+      '<td class="current"></td>'
+    else 
   	  "<td></td>"
 	  end  	
   end

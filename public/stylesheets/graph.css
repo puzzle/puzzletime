@@ -105,6 +105,14 @@ td a:hover span {
 	text-align:		left;
 }
 
+tr.uneven .current {
+	background: #eeeecc;
+}
+
+tr .current {
+	background: #ffffdd;
+}
+
 .legend {
 	width:			320px;
 	margin-left:	20px;

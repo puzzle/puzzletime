@@ -215,6 +215,35 @@ th.periodHead {
     list-style-type: none;
 }
 
+a.tooltip {
+	font-weight: bolder;
+	text-decoration: none;
+}
+
+a.tooltip span {
+	display: 		none;
+}
+
+a.tooltip:hover {
+	position:		relative;
+}			
+
+a.tooltip:hover span {
+	display: 		block;
+	position:		absolute;
+	top:			10px;
+	left:			10px;	
+	z-index: 		3;
+	background:		#ffffdd;
+	color:			#333;
+	white-space:	nowrap;
+	padding:		1pt;
+	border:			1px solid #ddd;
+	font-weight:	normal;
+	float:			left;
+	text-align:		left;
+}
+
 .fieldWithErrors {
     float:          left;
     padding:        2px;

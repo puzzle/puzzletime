@@ -105,6 +105,22 @@ module EvaluatorHelper
         employee.statistics.current_remaining_vacations, 2) + ' d'
   end
   
+  def overtime_vacations_tooltip(employee)
+    transfers = employee.overtime_vacations.find(:all,
+                                                 :conditions => @period ? ['transfer_date <= ?', @period.endDate] : nil,
+                                                 :order => 'transfer_date')
+    tooltip = ''
+    unless transfers.empty?
+      tooltip = '<a href="#" class="tooltip">&lt;-&gt;<span>Ferien-&Uuml;berzeit Umbuchungen:<br/>'
+      transfers.collect! do |t| 
+        " - #{format_date(t.transfer_date)}: #{number_with_precision(t.hours, 2)} h" 
+      end
+      tooltip += transfers.join('<br />')
+      tooltip += '</span></a>'
+    end
+    tooltip
+  end
+  
   ### period and time helpers
 
   def period_link(label, shortcut)
