@@ -20,6 +20,10 @@ class EmployeesEval < Evaluation
   def division_supplement(user)
      [[:overtime, 'Überzeit', 'right'],
       [:overtime_vacations_tooltip, '', 'left']]
- end
+  end
+
+  def overview_supplement(user)
+    user.management ? [[:exportCapacityCSV, 'MA Auslastung CSV']] : super(user)
+  end
  
 end

@@ -3,3 +3,10 @@
 <%= render :partial => 'periodLink' %>
 
 <%= render :partial => 'category' %>
+
+<p>
+<%= @evaluation.overview_supplement(@user).collect do |supplement|
+		link_to supplement[1], :action => supplement[0]
+	end.join(' | ')
+ %>
+</p>

@@ -63,13 +63,38 @@ class EvaluatorController < ApplicationController
   
   ########################  DETAIL ACTIONS  #########################
   
+  def compose_report
+    setEvaluation
+    setEvaluationDetails
+  end
+  
   def report
     setEvaluation
     setEvaluationDetails
     options = params[:only_billable] ? { :conditions => [ "worktimes.billable = 't'" ] } : {}
     @times = @evaluation.times(@period, options)
-    @times_total_sum = @evaluation.sum_times(@period, nil, options)
+    combine_times if params[:combine]
     render :layout => false
+  end
+  
+  def combine_times
+    combined_map = {}
+    combined_times = []
+    @times.each do |time|
+      if time.report_type.kind_of?(StartStopType) && params[:start_stop]
+        combined_times.push time
+      else
+        key = "#{time.dateString}$#{time.employee.shortname}" 
+        if combined_map.include?(key)
+          combined_map[key].hours += time.hours
+          combined_map[key].description += "\n" + time.description if time.description
+        else
+          combined_map[key] = time
+          combined_times.push time
+        end
+      end
+    end
+    @times = combined_times
   end
   
   def exportCSV
@@ -127,30 +152,17 @@ class EvaluatorController < ApplicationController
   end
   
   def exportCapacityCSV
-    data = FasterCSV.generate do |csv|
-      csv << ["Mitarbeiter", "Projekt", "Verrechenbar", "Nicht verrechenbar"]
-      Employee.employed_ones(@period).each do |employee|
-        employee.alltime_projects.each do |project|
-          result = Worktime.find_by_sql ["""SELECT SUM(w.hours) AS HOURS, w.billable FROM worktimes w 
-                                           LEFT JOIN projects p ON p.id = w.project_id
-                                           WHERE w.employee_id = ? AND p.path_ids[1] = ? 
-                                           AND w.work_date BETWEEN ? AND ?
-                                           GROUP BY w.billable""",
-                                         employee.id, project.id, @period.startDate, @period.endDate ]  
-          if result.collect { |w| w.hours }.sum > 0
-            billable = result.select {|w| w.billable }.first
-            not_billable = result.select{ |w| !w.billable }.first
-            csv << [employee.label, project.label_verbose, billable ? billable.hours : 0, not_billable ? not_billable.hours : 0]
-          end  
-          # TODO include Anwesenheitszeit Differenz
-        end  
-      end  
-    end 
-    filename = "puzzletime_auslastung.csv"
-    setExportHeader(filename)
-    send_data(data,
-              :type => 'text/csv; charset=utf-8; header=present',
-              :filename => filename)  
+    if @period
+      
+      filename = "puzzletime_auslastung_#{@period.startDate.strftime("%Y%m%d")}_#{@period.endDate.strftime("%Y%m%d")}.csv"
+      setExportHeader(filename)
+      send_data(create_capacity_csv,
+                :type => 'text/csv; charset=utf-8; header=present',
+                :filename => filename)  
+    else
+      flash[:notice] = "Bitte wählen Sie eine Zeitspanne für die Auslastung."
+      redirect_to :back
+    end
   end
   
   ########################  PERIOD ACTIONS  #########################
@@ -280,6 +292,66 @@ private
   def csvLabel(item)
     item.nil? || !item.respond_to?(:label) ? '' : 
       item.label.downcase.gsub(/[^0-9a-z]/, "_") 
+  end
+  
+  def create_capacity_csv
+    periods = monthly_periods
+    FasterCSV.generate do |csv|
+      csv << ["Mitarbeiter", "Projekt", "Verrechenbar", "Nicht verrechenbar", "Monat", "Jahr"]
+      Employee.employed_ones(@period).each do |employee|
+        periods.each do |period|
+          project_time = 0
+          employee.alltime_projects.each do |project|
+            result = find_billable_time(employee, project, period)
+            sum = result.collect { |w| w.hours }.sum  
+            if sum > 0
+              csv << [employee.shortname, 
+                      project.label_verbose,
+                      extract_billable_hours(result, true), 
+                      extract_billable_hours(result, false),
+                      period.startDate.month, 
+                      period.startDate.year]
+            end  
+            project_time += sum
+          end
+          # include Anwesenheitszeit Differenz
+          diff = employee.sumAttendance(period) - project_time
+          if diff.abs > 0.001
+            csv << [employee.shortname, 
+                    "Zusätzliche Anwesenheit",
+                    0, 
+                    diff,
+                    period.startDate.month, 
+                    period.startDate.year]
+          end
+        end  
+      end  
+    end 
+  end
+  
+  def find_billable_time(employee, project, period)
+    Worktime.find_by_sql ["""SELECT SUM(w.hours) AS HOURS, w.billable FROM worktimes w 
+                             LEFT JOIN projects p ON p.id = w.project_id
+                             WHERE w.employee_id = ? AND p.path_ids[1] = ? 
+                             AND w.work_date BETWEEN ? AND ?
+                             GROUP BY w.billable""",
+                          employee.id, project.id, period.startDate, period.endDate ]  
+  end
+  
+  def monthly_periods
+    month_end = @period.startDate.end_of_month
+    periods = [Period.new(@period.startDate, [month_end, @period.endDate].min)]
+    while @period.endDate > month_end
+      month_start = month_end + 1
+      month_end = month_start.end_of_month
+      periods.push Period.new(month_start, [month_end, @period.endDate].min)
+    end
+    periods
+  end
+  
+  def extract_billable_hours(result, billable)
+    entry = result.select {|w| w.billable == billable }.first
+    entry ? entry.hours : 0
   end
   
 end

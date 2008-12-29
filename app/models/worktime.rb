@@ -61,6 +61,11 @@ class Worktime < ActiveRecord::Base
   def timeString
     report_type.timeString(self)
   end
+  
+  # Returns the date formatted according to the report type
+  def dateString
+    report_type.dateString(work_date)
+  end
       
   def work_date
     # cache date to prevent endless string_to_date conversion

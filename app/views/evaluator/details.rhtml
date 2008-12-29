@@ -26,12 +26,7 @@
  | 
 <%= link_to 'Stundenrapport',
 	         evaluation_detail_params.merge!({
-	            :action => 'report' }) %>
- | 
-<%= link_to 'Rechnung',
-	         evaluation_detail_params.merge!({
-	            :action => 'report', 
-				:only_billable => 'true' }) %>
+	            :action => 'compose_report' }) %>
  |
 <%= link_to 'Alle verbuchen',
 	         evaluation_detail_params.merge!({

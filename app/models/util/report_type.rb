@@ -31,6 +31,10 @@ class ReportType
     self.class::START_STOP
   end
   
+  def dateString(date)
+    date.strftime(LONG_DATE_FORMAT)
+  end
+  
   module Accessors
     def report_type
       type = read_attribute('report_type')
@@ -124,6 +128,10 @@ class HoursWeekType < ReportType
   def timeString(worktime)
     roundedHours(worktime) + ' h in dieser Woche'
   end
+  
+  def dateString(date)
+    date.strftime('W %V, %Y')
+  end
 end 
 
 class HoursMonthType < ReportType
@@ -131,6 +139,10 @@ class HoursMonthType < ReportType
   
   def timeString(worktime)
     roundedHours(worktime) + ' h in diesem Monat'
+  end
+  
+  def dateString(date)
+    date.strftime('%m.%Y')
   end
 end 
 

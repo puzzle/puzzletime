@@ -1,0 +1,21 @@
+<table>
+<tr>
+    <td>Kunde</td>
+    <td><b><%= project.client.label %></b></td>
+</tr>
+<tr>
+    <td>Projekt</td>
+    <td><b><%= project.label_ancestry %></b></td>
+</tr>
+<% if @evaluation.employee_id
+	employee = Employee.find(@evaluation.employee_id) -%>
+<tr>
+    <td>Mitarbeiter</td>
+    <td><b><%= employee.label %></b></td>
+</tr>
+<% end %>
+<tr>
+    <td>Periode</td>
+    <td><b><%= @period.to_s %></b></td>
+</tr>
+</table>

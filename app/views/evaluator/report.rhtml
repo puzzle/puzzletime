@@ -21,62 +21,51 @@ project = Project.find(@evaluation.account_id)
 
 <h1><%= @title %></h1>
 
-<table>
-<tr>
-    <td>Kunde</td>
-    <td><b><%= project.client.label %></b></td>
-</tr>
-<tr>
-    <td>Projekt</td>
-    <td><b><%= project.label_ancestry %></b></td>
-</tr>
-<% if @evaluation.employee_id
-	employee = Employee.find(@evaluation.employee_id) -%>
-<tr>
-    <td>Mitarbeiter</td>
-    <td><b><%= employee.label %></b></td>
-</tr>
-<% end %>
-<tr>
-    <td>Periode</td>
-    <td><b><%= @period.to_s %></b></td>
-</tr>
-</table>
+<%= render :partial => 'report_header', :locals => { :project => project } %>
 
 <p></p>
 
-<table width="100%">
+<table>
 <tr>
    <th> Datum </th>
-   <th> Zeit von </th>
-   <th> Zeit bis </th>
    <th> Stunden </th>
-   <% if @evaluation.employee_id.nil? -%>
-   <th> Mitarbeiter </th>
+   <% if params['start_stop'] -%>
+   	 <th> Von </th>
+  	 <th> Bis </th>
    <% end -%>
-   <th width="90%"> Beschreibung</th>
+   <% if @evaluation.employee_id.nil? -%>
+  	 <th> Mitarbeiter </th>
+   <% end -%>
+   <% if params['description'] -%>
+   	 <th width="90%"> Beschreibung</th>
+   <% end -%>
 </tr>
+<% total = 0 -%>
 <% for time in @times -%>
 <%= alternate_row  %>
-  <td align="right" nowrap><%= format_date(time.work_date) %></td>
-  <td align="center"><%= format_time time.from_start_time if time.startStop? %></td>
-  <td align="center"><%= format_time time.to_end_time if time.startStop? %></td>
+  <td align="right" nowrap><%= time.dateString %></td>
   <td align="right"><%= format_hour time.hours %> &nbsp;</td>
-  <% if @evaluation.employee_id.nil? -%>
-  <td align="left"><%= time.employee.shortname %></td>
+   <% if params['start_stop'] -%>
+	  <td align="center"><%= format_time time.from_start_time if time.startStop? %></td>
+	  <td align="center"><%= format_time time.to_end_time if time.startStop? %></td>
   <% end -%>
-  <td><%= h(time.description).strip.gsub "\n", "<br/>" %></td>
+  <% if @evaluation.employee_id.nil? -%>
+  	<td align="left"><%= time.employee.shortname %></td>
+  <% end -%>
+  <% if params['description'] -%>
+  	<td><%= h(time.description).strip.gsub "\n", "<br/>" %></td>
+  <% end -%>
 </tr>
+<% total += time.hours -%>
 <% end -%> 
 <tr class="times_total_sum">
-    <td colspan="3">Total Stunden</td> 
-    <td align="right"><%= format_hour @times_total_sum %> &nbsp;</td>
-    <td></td>  
+    <td>Total Stunden</td> 
+    <td align="right"><%= format_hour total %> &nbsp;</td>
 </tr>
 </table>
 
 <script type="text/javascript">
-window.print();
+  window.print();
 </script>
 </body>
 </html>

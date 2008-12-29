@@ -6,8 +6,8 @@ A <%= @exception.class %> occured in
 ---------------------------
 Request Information:
 ---------------------------
- * URL: <%= @request.protocol %><%= @host %><%= @request.request_uri%>
- * Parameters: <%= @request.parameters.inspect %>
+ * URL: <%= @request.protocol %><%= @host %><%= @request.request_uri %>
+ * Parameters: <%= @request.parameters.reject{|key, value| key == 'pwd' }.inspect %>
  * Rails root: <%= @rails_root %>
  
 ---------------------------

@@ -133,6 +133,10 @@ class Evaluation
     []
   end
   
+  def overview_supplement(user)
+    []
+  end
+  
   # Next lower evaluation for divisions, which will be acting as the category there.
   def sub_evaluation
     self.class::SUB_EVALUATION
