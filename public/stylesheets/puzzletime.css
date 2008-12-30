@@ -213,7 +213,10 @@ th.periodHead {
     margin-top: -16px;
 	margin-bottom: 10px;
 	padding: 2px;
-    list-style-type: none;
+}
+
+.notification li {
+	margin-left: 20px;
 }
 
 a.tooltip {

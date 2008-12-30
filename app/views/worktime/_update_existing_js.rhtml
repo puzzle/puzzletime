@@ -1,5 +1,6 @@
 <%= javascript_include_tag :defaults, :cache => true %>	
 <script type="text/javascript">
+//<![CDATA[
 function workDateChanged(cal) {
 	workDate = $('worktime_work_date').value;
 <% if record_other? -%>
@@ -11,4 +12,5 @@ function workDateChanged(cal) {
 						:method => :get,
 						:with => "'employee_id=' + employee_id + '&work_date=' + workDate") %>
 }
+//]]>
 </script>

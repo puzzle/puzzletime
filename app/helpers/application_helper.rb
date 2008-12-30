@@ -20,10 +20,10 @@ module ApplicationHelper
     time.strftime(TIME_FORMAT)
   end
     
-  def alternate_row
+  def alternate_row(attrs = '')
     @row = -1 if ! defined? @row    
     @row += 1
-    @row.modulo(2) == 1 ? '<tr class="uneven">' : '<tr>'
+    @row.modulo(2) == 1 ? "<tr class=\"uneven\" #{attrs}>" : "<tr #{attrs}>"
   end    
   
   def evaluation_detail_params    

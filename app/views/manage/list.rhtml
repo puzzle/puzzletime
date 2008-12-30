@@ -9,7 +9,7 @@
 <% end -%>  
 </tr>  
 <% for entry in @entries -%>
-  <%= alternate_row %>
+  <%= alternate_row('valign="top"') %>
   <% for field in listFields -%>
     <%= dataField entry, field[0] %>
   <% end -%>

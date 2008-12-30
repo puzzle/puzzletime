@@ -161,7 +161,6 @@ class WorktimeController < ApplicationController
     @worktime = Worktime.new
     @worktime.work_date = params[:work_date]
     @worktime.employee_id = @user.management ? params[:employee_id] : @user.id
-    puts @worktime.work_date
     setExisting
     renderGeneric :action => 'existing'
   end

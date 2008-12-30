@@ -20,7 +20,7 @@ Zeiten w&auml;hrend <%= @period %> &nbsp;
 
 <ul id="notifications" class="notification" style="display: none;">
 	<% @notifications.each do |notification| -%>
-	<li>- <%= h notification.message %></li>
+	<li><%= h(notification.message).gsub("\n", "<br/>") %></li>
 	<% end -%>
 </ul>
 	

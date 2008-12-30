@@ -20,7 +20,7 @@ module ManageHelper
                 when :boolean then ' align="center"'
                 else ''
                 end
-    "<td#{options}>#{h formatColumn(attribute, entry.send(attribute))}</td>"
+    "<td#{options}>#{h(formatColumn(attribute, entry.send(attribute))).gsub("\n", "<br/>")}</td>"
   end 
   
   def linkParams(prms = {})
