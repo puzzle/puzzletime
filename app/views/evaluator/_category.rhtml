@@ -16,7 +16,7 @@
 <tr class="times_total_sum">
     <td>Total Zeit</td>
 	<%= '<th></th>' if @evaluation.class::SUB_PROJECTS_EVAL %>
-    <%= render(:partial => 'periodTime', 
+    <%= render(:partial => 'timecell', 
                :collection => collect_times(periods, :sum_total_times),
                :locals => {:periods => periods}) %>
 </tr>
@@ -26,7 +26,7 @@
 	<%= '<th></th>' if @evaluation.class::SUB_PROJECTS_EVAL %>
     <%= 
     times = periods.collect { |p| @evaluation.category.sumAttendance p }
-    render(:partial => 'periodTime', 
+    render(:partial => 'timecell', 
            :collection => times,
            :locals => {:periods => periods, :action => 'attendanceDetails'}) %>
 <% if @evaluation.for? @user -%>

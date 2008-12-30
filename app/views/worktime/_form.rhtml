@@ -1,17 +1,23 @@
-<% submit ||= ['Speichern'] %>
+<% submit ||= ['Speichern']
+   auto_start_stop_type ||= false %>
 
 <%= error_messages_for 'worktime' %>
 
 <table>
 <% if record_other? -%>
 <tr>
-	<td>Mitarbeiter: </td>
-	<td><%= collection_select( :worktime, :employee_id, Employee.list, :id, :label_verbose ) %></td>
+  <td>Mitarbeiter: </td>
+  <td>
+	<%= collection_select( :worktime, :employee_id, Employee.list, :id, :label_verbose ) %>
+	<% if @existing -%>
+	  <%= observe_field(:worktime_employee_id, :function => "workDateChanged(null)") %>
+	<% end -%>
+  </td>
 </tr>	
 <% end -%>
 <tr>
   <td>Reporttyp: </td>
-  <td><%= select_report_type %> </td>
+  <td><%= select_report_type auto_start_stop_type %> </td>
 </tr>
 <% if @worktime.hasAttribute? :account_id -%>
 <tr>
@@ -21,7 +27,12 @@
 <% end -%>
  <tr>
   <td>Datum: </td>
-  <td><%= date_calendar_field 'worktime', 'work_date', 'Datum', ['add', 'create', 'edit', 'update'].include?(controller.action_name) %></td>
+  <td>
+	<%= date_calendar_field 'worktime', 'work_date', 'Datum', @existing %>
+	<% if @existing -%>
+		<%= observe_field(:worktime_work_date, :function => "workDateChanged(null)") %>
+	<% end -%>			  
+  </td>
 </tr>
 <tr>
   <td>Stunden: </td>

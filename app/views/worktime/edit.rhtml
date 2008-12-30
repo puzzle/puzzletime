@@ -4,20 +4,14 @@
 -%>
 
 <%= renderGenericPartial :partial => 'existing' %> 
-<script type="text/javascript">
-function workDateChanged(cal) {
-	value = $('worktime_work_date').value;
-	<%= remote_function(:url => { :action => 'existing' }, 
-						:method => :get,
-						:with => "'#{"other=#{params[:other]}&employee_id=#{@worktime.employee_id}&" if params[:other]}work_date=' + value") %>
-}
-</script>
+<%= renderGenericPartial :partial => 'update_existing_js' %> 
 
 <% form_tag evaluation_detail_params.merge!({                        
                         :action => 'update', 
                         :id => @worktime}) do %>                
 <%= renderGenericPartial :partial => 'form', 
-                         :locals => {:submit => buttons} %>
+                         :locals => {:submit => buttons,
+                                     :auto_start_stop_type => @worktime.report_type == AutoStartType::INSTANCE } %>
 <% end %>
 
 <p>
@@ -25,8 +19,9 @@ function workDateChanged(cal) {
             evaluation_detail_params.merge!({
                 :controller => 'evaluator',
                 :action => controller.detailAction }) %>
+|
+ <%= link_to 'L&ouml;schen', 
+              evaluation_detail_params.merge!({
+                :action =>'confirmDelete',                
+                :id => @worktime.id}) %>
 </p>
-
-<%= javascript_include_tag :defaults, :cache => true %>	
-<%= observe_field(:worktime_work_date,
-				  :function => "workDateChanged(null)") %>

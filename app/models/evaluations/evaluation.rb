@@ -38,7 +38,7 @@ class Evaluation
   
   # Table captions for detail columns
   DETAIL_LABELS    = {:work_date   => 'Datum',
-                      :hours       => 'Stunden',
+                      :hours        => 'Stunden',
                       :times       => 'Zeiten',
                       :employee    => 'Wer',
                       :account     => 'Projekt',

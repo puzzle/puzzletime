@@ -10,12 +10,6 @@ class Attendancetime < Worktime
     'Anwesenheit'
   end
   
-  # AutoStartType only available for new records or existing with this type
-  def report_types
-    return super if ! new_record? && report_type != AutoStartType::INSTANCE
-    [AutoStartType::INSTANCE] + super   
-  end
-  
   def projecttime=(value)
     @projecttime = value.kind_of?(String) ? value.to_i != 0 : value
   end

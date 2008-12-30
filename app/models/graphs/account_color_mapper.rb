@@ -28,17 +28,18 @@ private
   
   def generateAbsenceColor(id)
     srand id
-    '#FF' + randomColor(190) + randomColor(10)
+    '#FF' + randomColor(230) + randomColor(140)
   end
   
   def generateProjectColor(id)
     srand id
-    '#' + randomColor(120) + randomColor + 'FF'
+    '#' + randomColor(170) + randomColor(240) + 'FF'
   end
   
   def randomColor(span = 170)
     lower = (255 - span) / 2
-    (lower + rand(span)).to_s(16)
+    hex = (lower + rand(span)).to_s(16)
+    hex.size == 1 ? '0' + hex : hex
   end
   
   def accounts(type)

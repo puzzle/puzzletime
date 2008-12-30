@@ -1,0 +1,78 @@
+<% @title = 'Laufende Zeit' %>
+
+<table>
+<tr>
+<% if @user.running_attendance -%>
+	<td>Anwesend seit <%= format_time @user.running_attendance.from_start_time %></td>
+	<td align="center">
+	<%= link_to 'Stoppen', 
+				{:controller => 'attendancetime',
+	             :action => 'stop'},
+	             :method => 'post'  %>
+	</td>
+<% else -%>		 
+	<td>Anwesenheit</td>
+	<td align="center">
+	<%= link_to 'Starten', 
+				{:controller => 'attendancetime',
+	             :action => 'start'},
+	             :method => 'post'  %>
+	</td>
+<% end -%>
+</tr>
+
+<% if @user.running_project -%>
+<% form_tag({:controller => 'projecttime', :action => 'stop'}, :name => 'stop_project_form') do -%>
+<tr>
+	<td>
+	<%= @user.running_project.project.label_verbose %> seit <%= format_time @user.running_project.from_start_time %>
+	</td>
+	<td align="center">
+	<%= link_to_function 'Stoppen', 'stop_project_form.submit()' %>
+	</td>
+</tr>
+<tr>
+	<td colspan="2" style="text-align: right;">
+	Beschreibung: <%= text_field_tag 'description', @user.running_project.description, :size => 25 %></td>
+</tr>
+<% end -%>
+<% end %>
+
+<tr>
+	<td colspan="2"><br/><b>Meine Projekte</b></td>
+</tr>
+<% @user.leaf_projects.each do |project| -%>
+<%= alternate_row %>
+	<td><%= project.label_verbose %></td>
+	<td align="center">
+	<%= link_to_function 'Starten', "start_project(#{project.id})" %>
+	</td>
+</tr>
+<% end -%>
+</table>
+
+<% form_tag({:controller => 'projecttime', :action => 'start'}, :id => 'start_project_form') do -%>
+	<%= hidden_field_tag 'id' %>
+	<%= hidden_field_tag 'description', nil, :id => 'start_description' %>
+<% end -%>
+<script type="text/javascript">
+//<![CDATA[
+	function start_project(id) {
+		document.getElementById('id').value = id;
+		desc = document.getElementById('description');
+		if (desc != null) {
+			document.getElementById('start_description').value = desc.value;
+		}
+		document.getElementById('start_project_form').submit();
+	}
+//]]>
+</script>
+
+<p></p>
+<%= link_to 'Arbeitszeiten', 
+			:controller => 'evaluator', 
+			:action => 'details', 
+			:evaluation => 'userProjects', 
+			:category_id => @user.id,
+			:start_date => Date.today,
+			:end_date => Date.today %>

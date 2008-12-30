@@ -116,7 +116,7 @@ class Period
   end
     
   def to_s
-    formattedDate(@startDate) + ' - ' + formattedDate(@endDate)
+    (length > 1) ? formattedDate(@startDate) + ' - ' + formattedDate(@endDate) : formattedDate(@startDate)
   end  
   
   def set_label(label)

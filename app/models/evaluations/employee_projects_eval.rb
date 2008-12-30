@@ -4,6 +4,8 @@ class EmployeeProjectsEval < ProjectsEval
   ATTENDANCE        = true   
   SUB_EVALUATION    = nil
   SUB_PROJECTS_EVAL = 'employeesubprojects'
+  DETAIL_COLUMNS    = superclass::DETAIL_COLUMNS.collect{ |i| i == :hours ? :times : i }
+  
   
   # alltime: boolean, use all projects ever worked for / only current memberships
   def initialize(employee_id, alltime)

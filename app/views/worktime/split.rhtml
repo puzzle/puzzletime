@@ -14,7 +14,7 @@ am <%= format_date(@split.original.work_date) %>:</h3>
                         :action => 'createPart', 
                         :id => @worktime}) do -%>
 <%= renderGenericPartial :partial => 'form', 
-           :locals => {:submit => @split.class::SUBMIT_BUTTONS} %>
+           :locals => {:submit => @split.class::SUBMIT_BUTTONS } %>
 <% end -%>
 
 

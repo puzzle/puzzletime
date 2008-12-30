@@ -26,7 +26,7 @@ class Client < ActiveRecord::Base
   end  
       
   def self.puzzlebaseMap
-    Puzzlebase::Customer
+    Puzzlebase::CustomerProject
   end      
 
   ##### interface methods for Evaluatable #####

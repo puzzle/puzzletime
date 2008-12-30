@@ -4,6 +4,7 @@ class EmployeeSubProjectsEval < SubProjectsEval
   
   SUB_PROJECTS_EVAL = 'employeesubprojects'
   SUB_EVALUATION    = nil
+  DETAIL_COLUMNS    = superclass::DETAIL_COLUMNS.collect{ |i| i == :hours ? :times : i }
     
   attr_reader :employee_id
 

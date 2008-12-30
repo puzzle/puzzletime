@@ -1,12 +1,12 @@
 <% 
     # local variables:
     # periods, division_id, action
-    p = periods[periodTime_counter - 1]  
+    p = periods[timecell_counter - 1]  
     division_id = nil if ! defined? division_id
     action ||= 'details'
 -%>
 <td align="right">
-<%= format_hour periodTime %>
+<%= format_hour timecell %>
 <% if division_id || @evaluation.class::TOTAL_DETAILS -%>
     <%  link = PATH_PREFIX + '/' + controller.controller_name + '/' +
 				 action + '?evaluation=' + params[:evaluation] +

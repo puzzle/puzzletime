@@ -11,7 +11,7 @@ class WorktimeController < ApplicationController
   hide_action :detailAction  
   
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
-  verify :method => :post, :only => [ :delete, :create, :update, :createPart, :deletePart ],
+  verify :method => :post, :only => [ :delete, :create, :update, :createPart, :deletePart, :start, :stop ],
          :redirect_to => { :action => 'list' }
          
   FINISH = 'Abschliessen'       
@@ -121,13 +121,17 @@ class WorktimeController < ApplicationController
     @split = session[:split]
     return create if @split.nil?
     params[:id] ? setWorktime : setNewWorktime 
-    @worktime.employee ||= @user
+    @worktime.employee ||= @split.original.employee
     setWorktimeParams
     if @worktime.valid? && @split.addWorktime(@worktime)   
       if @split.complete? || (params[:commit] == FINISH && @split.class::INCOMPLETE_FINISH)
         @split.save
         session[:split] = nil
         flash[:notice] = "Alle Arbeitszeiten wurden erfasst"
+        if @worktime.employee != @user
+          params[:other] = 1
+          params[:evaluation] = nil 
+        end
         listDetailTime
       else
         session[:split] = @split
@@ -144,11 +148,19 @@ class WorktimeController < ApplicationController
     redirect_to evaluation_detail_params.merge!({:action => 'split'})
   end  
   
+  def running
+    if request.env["HTTP_USER_AGENT"] =~ /.*iPhone.*/
+      render :action => 'running', :layout => 'phone'
+    else
+      render :action => 'running'
+    end
+  end
+  
   # ajax action
   def existing
     @worktime = Worktime.new
     @worktime.work_date = params[:work_date]
-    @worktime.employee_id = record_other? ? params[:employee_id] : @user.id
+    @worktime.employee_id = @user.management ? params[:employee_id] : @user.id
     puts @worktime.work_date
     setExisting
     renderGeneric :action => 'existing'
@@ -296,5 +308,51 @@ protected
   def genericPath
     'worktime'
   end
- 
+  
+  ################   RUNNING TIME FUNCTIONS    ##################
+  
+  def startRunning(time)
+    time.employee = @user
+    time.report_type = AutoStartType::INSTANCE
+    time.work_date = Date.today
+    time.from_start_time = Time.now
+    time.billable = time.project.billable if time.project
+    saveRunning time, "Die #{time.account ? 'Projektzeit ' + time.account.label_verbose : 'Anwesenheit'} mit #timeString wurde erfasst.\n"
+  end
+  
+  def stopRunning(time = runningTime)
+    time.to_end_time = time.work_date == Date.today ? Time.now : '23:59'
+    time.report_type = StartStopType::INSTANCE
+    time.store_hours
+    if time.hours < 0.0166
+      append_flash "#{time.class.label} unter einer Minute wird nicht erfasst.\n"
+      time.destroy
+      runningTime(true)
+    else  
+      saveRunning time, "Die #{time.account ? 'Projektzeit ' + time.account.label_verbose : 'Anwesenheit'} von #timeString wurde gespeichert.\n"
+    end  
+  end
+    
+  def saveRunning(time, message)
+    if time.save
+      append_flash message.sub('#timeString', time.timeString)
+    else
+      append_flash "Die #{time.class.label} konnte nicht gespeichert werden:\n"
+      time.errors.each { |attr, msg| flash[:notice] += "<br/> - " + msg + "\n"}
+    end    
+    runningTime(true)
+    time
+  end
+  
+  def runningTime(reload = false)
+    # implement in subclass
+  end
+  
+  def redirect_to_running
+    redirect_to :controller => 'worktime', :action => 'running'
+  end
+  
+  def append_flash(msg)
+    flash[:notice] = flash[:notice] ? flash[:notice] + '<br/>' + msg : msg
+  end
 end

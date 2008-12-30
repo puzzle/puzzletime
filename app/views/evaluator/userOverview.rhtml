@@ -8,11 +8,11 @@
 <%= render(:partial => 'category') %>
 
 <p>
-<%= if @user.auto_start_time      
-   link_to "Anwesenheit (seit #{@user.auto_start_time.from_start_time.strftime(TIME_FORMAT) }) stoppen",
+<%= if @user.running_attendance      
+   link_to "Anwesenheit (seit #{@user.running_attendance.from_start_time.strftime(TIME_FORMAT) }) stoppen",
             {:controller => 'attendancetime',
              :action => 'stop'},
-            :method => 'post' 
+             :method => 'post' 
  else 
    link_to 'Anwesenheit starten',
             {:controller => 'attendancetime',

@@ -17,7 +17,7 @@ if @period.nil? || @evaluation.category == Employee || periodTimes.sum > 0
 	<% end -%>	
 	</td>
 <% end -%>	
-    <%= render(:partial => 'periodTime',
+    <%= render(:partial => 'timecell',
                :collection => periodTimes,
                :locals => {:division_id => division.id, :periods => periods}) %>
     <% for supp in @evaluation.division_supplement(@user)%>           

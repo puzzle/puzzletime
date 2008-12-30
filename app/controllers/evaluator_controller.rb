@@ -77,26 +77,6 @@ class EvaluatorController < ApplicationController
     render :layout => false
   end
   
-  def combine_times
-    combined_map = {}
-    combined_times = []
-    @times.each do |time|
-      if time.report_type.kind_of?(StartStopType) && params[:start_stop]
-        combined_times.push time
-      else
-        key = "#{time.dateString}$#{time.employee.shortname}" 
-        if combined_map.include?(key)
-          combined_map[key].hours += time.hours
-          combined_map[key].description += "\n" + time.description if time.description
-        else
-          combined_map[key] = time
-          combined_times.push time
-        end
-      end
-    end
-    @times = combined_times
-  end
-  
   def exportCSV
     setEvaluation
     setEvaluationDetails
@@ -287,6 +267,26 @@ private
   def redirectToOverview
     redirect_to :action => params[:evaluation],
                 :category_id => params[:category_id]
+  end
+  
+  def combine_times
+    combined_map = {}
+    combined_times = []
+    @times.each do |time|
+      if time.report_type.kind_of?(StartStopType) && params[:start_stop]
+        combined_times.push time
+      else
+        key = "#{time.dateString}$#{time.employee.shortname}" 
+        if combined_map.include?(key)
+          combined_map[key].hours += time.hours
+          combined_map[key].description += "\n" + time.description if time.description
+        else
+          combined_map[key] = time
+          combined_times.push time
+        end
+      end
+    end
+    @times = combined_times
   end
   
   def csvLabel(item)

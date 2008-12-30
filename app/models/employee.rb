@@ -35,8 +35,11 @@ class Employee < ActiveRecord::Base
   has_many :worktimes
   has_many :attendancetimes
   has_many :overtime_vacations, :order => 'transfer_date DESC', :dependent => :destroy        
-  has_one  :auto_start_time, 
+  has_one  :running_attendance, 
            :class_name => 'Attendancetime',
+           :conditions => "report_type = '#{AutoStartType::INSTANCE.key}'"
+  has_one  :running_project, 
+           :class_name => 'Projecttime',
            :conditions => "report_type = '#{AutoStartType::INSTANCE.key}'"
   
   # Validation helpers.

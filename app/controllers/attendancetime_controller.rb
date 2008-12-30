@@ -11,29 +11,59 @@ class AttendancetimeController < WorktimeController
   def autoStartStop
     @user = Employee.login(params[:user], params[:pwd])
     if @user 
-      if @user.auto_start_time 
-        attendance = stopAttendance
-        startAttendance if attendance && attendance.work_date != Date.today
+      if @user.running_attendance 
+        attendance = stopRunning
+        if attendance && @user.running_project
+          stopRunning @user.running_project
+        end
+        startRunning if attendance && attendance.work_date != Date.today
       else 
-        startAttendance
+        startRunning
       end   
     else  
-      flash[:notice] = "Ung&uuml;ltige Benutzerdaten\n"
+      flash[:notice] = "Ung&uuml;ltige Benutzerdaten.\n"
     end  
     render :text => flash[:notice]
   end         
   
+  # called from running
   def start
-    return if autoStartExists true, "Es wurde bereits eine fr&uuml;here Anwesenheit gestartet"
-    startAttendance
-    list
+    if runningTime
+      flash[:notice] = "Es wurde bereits eine fr&uuml;here Anwesenheitszeit gestartet."
+    else
+      startRunning Attendancetime.new
+    end  
+    redirect_to :back
+  end
+ 
+  # called from running 
+  def stop
+    attendance = runningTime
+    if attendance 
+      stopRunning attendance
+      if @user.running_project
+        stopRunning @user.running_project
+      elsif Projecttime.find(:first, :conditions => ["type = ? AND employee_id = ? AND work_date = ? AND to_end_time = ?",
+                                                     'Projecttime', @user.id, attendance.work_date, attendance.to_end_time]).nil?
+        splitAttendance attendance
+        return
+      end
+    else
+      flash[:notice] = 'Keine offene Anwesenheit vorhanden.'
+    end
+    redirect_to :back
   end
   
-  def stop
-    return if autoStartExists(false, "Keine offene Anwesenheit vorhanden")
-    attendance = stopAttendance
-    if attendance then splitAttendance attendance
-    else list
+  # called from userOverview
+  def stopAttendance
+    return if autoStartExists(false, "Keine offene Anwesenheit vorhanden.")
+    attendance = stopRunning
+    if attendance then 
+      if @user.running_project
+        stopRunning @user.running_project
+      end
+    else 
+      list
     end
   end  
   
@@ -53,48 +83,15 @@ protected
     @worktime = Attendancetime.new   
   end  
   
-  def startAttendance
-    attendance = Attendancetime.new :employee => @user, 
-                                    :report_type => AutoStartType::INSTANCE, 
-                                    :work_date => Date.today, 
-                                    :from_start_time => Time.now
-    saveAttendance attendance, "Die Anwesenheit mit #timeString wurde erfasst\n"
-  end
-  
-  def stopAttendance
-    attendance = @user.auto_start_time
-    attendance.to_end_time = attendance.work_date == Date.today ? Time.now : '23:59'
-    attendance.report_type = StartStopType::INSTANCE
-    attendance.store_hours
-    if attendance.hours < 0.0166
-      flash[:notice] = "Anwesenheiten unter einer Minute werden nicht erfasst\n"
-      attendance.destroy
-      @user.auto_start_time(true)
-    else  
-      saveAttendance attendance, "Die Anwesenheit von #timeString wurde gespeichert\n"
-    end  
-  end
-  
   def autoStartExists(expected, msg)
-    abort = (! @user.auto_start_time.nil?) == expected
+    abort = (! runningTime.nil?) == expected
     if abort
       flash[:notice] = msg
       list
     end
     abort  
   end
-  
-  def saveAttendance(attendance, message)
-    if attendance.save
-      flash[:notice] = message.sub('#timeString', attendance.timeString)
-    else
-      flash[:notice] = 'Die Anwesenheit konnte nicht gespeichert werden:\n'
-      attendance.errors.each { |attr, msg| flash[:notice] += "<br/> - " + msg + "\n"}
-    end    
-    @user.auto_start_time(true) 
-    attendance
-  end
-
+ 
   def processAfterSave
     if params[:commit] == SPLIT
       splitAttendance @worktime
@@ -105,6 +102,10 @@ protected
   
   def update_corresponding?
     params[:worktime][:projecttime].to_i != 0
+  end
+  
+  def runningTime(reload = false)
+    @user.running_attendance(reload)
   end
   
 end

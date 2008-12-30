@@ -157,11 +157,6 @@ class Worktime < ActiveRecord::Base
     self.class.name.downcase
   end
   
-  # Returns an Array of the valid report types for this Worktime
-  def report_types
-    ReportType::INSTANCES
-  end
-  
   def to_s
     "#{timeString} #{self.class.label} #{'f&uuml;r ' + account.label_verbose if account_id}"
   end

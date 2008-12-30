@@ -1,5 +1,31 @@
 class ProjecttimeController < WorktimeController
 
+  def start
+    running = runningTime
+    if running
+      running.description = params[:description]
+      stopRunning running
+    end  
+    time = Projecttime.new
+    time.project_id = params[:id]
+    startRunning time
+    if @user.running_attendance.nil?
+      startRunning Attendancetime.new
+    end
+    redirect_to_running
+  end
+  
+  def stop
+    running = runningTime
+    if running
+      running.description = params[:description]
+      stopRunning running
+    else
+      flash[:notice] = 'Zur Zeit läuft kein Projekt'
+    end
+    redirect_to_running
+  end
+
 protected
 
   def setNewWorktime
@@ -44,6 +70,10 @@ protected
       return false
     end  
     true
+  end
+  
+  def runningTime(reload = false)
+    @user.running_project(reload)
   end
   
 private

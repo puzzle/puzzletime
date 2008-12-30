@@ -4,19 +4,13 @@
  -%>
  
 <%= renderGenericPartial :partial => 'existing' %> 
-<script type="text/javascript">
-function workDateChanged(cal) {
-	value = $('worktime_work_date').value;
-	<%= remote_function(:url => { :action => 'existing' }, 
-						:method => :get,
-						:with => "'#{"other=#{params[:other]}&employee_id=#{@worktime.employee_id}&" if params[:other]}work_date=' + value") %>
-}
-</script>
-				  
+<%= renderGenericPartial :partial => 'update_existing_js' %> 
+	  
 <% form_tag :controller => @worktime.class.name, 
            	:action => 'create' do -%>
 <%= renderGenericPartial :partial => 'form', 
-                         :locals => {:submit => buttons} %>
+                         :locals => {:submit => buttons,
+									 :auto_start_stop_type => !@worktime.kind_of?(Absencetime) && @worktime.employee == @user} %>
 <% end -%>
 
 <p>
@@ -31,7 +25,3 @@ function workDateChanged(cal) {
                :action => 'list' %>
 <% end -%>			   
 </p>
-
-<%= javascript_include_tag :defaults, :cache => true %>	
-<%= observe_field(:worktime_work_date,
-				  :function => "workDateChanged(null)") %>
