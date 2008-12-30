@@ -41,21 +41,22 @@ module ApplicationHelper
     prms
   end
   
-  def date_calendar_field(object, method, title)
+  def date_calendar_field(object, method, title, update = false)
     @has_calendar = true    # used to include calendar js/css
-    calendar_field object, method,
-    	{ :field_title => title,
-    	  :button_image => 'calendar.gif',
-    	  :button_title => 'Kalender anzeigen',
-    	  :size => '15',
-    	  :value => date_value(object, method).strftime(DATE_FORMAT)},
-    	{ :firstDay => 1,
-    	  :step => 1,
-    	  :ifFormat => DATE_FORMAT,
-    	  :daFormat => DATE_FORMAT,
-    	  :range => [2006,2100],
-    	  :showOthers => true,
-    	  :cache => true }
+    html_options = { :field_title => title,
+        :button_image => 'calendar.gif',
+        :button_title => 'Kalender anzeigen',
+        :size => '15',
+        :value => date_value(object, method).strftime(DATE_FORMAT)}
+    cal_options = { :firstDay => 1,
+        :step => 1,
+        :ifFormat => DATE_FORMAT,
+        :daFormat => DATE_FORMAT,
+        :range => [2006,2100],
+        :showOthers => true,
+        :cache => true }    
+    cal_options[:onUpdate] = :workDateChanged if update    
+    calendar_field object, method, html_options, cal_options
   end
   
   def renderGenericPartial(options)

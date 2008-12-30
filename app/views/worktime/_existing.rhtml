@@ -1,0 +1,12 @@
+<div id="existing" class="notification" <%= 'style="display: none;"' if controller.action_name == 'existing' %>>
+<% unless @existing.empty? -%>
+Am <%= format_date(@work_date) %> bereits erfasste Zeiten:
+
+<table cellpadding="0">
+<% @row = 0 -%>
+<%= renderGenericPartial :partial => 'part', :collection => @existing %>
+</table>
+<% else -%>
+Am <%= format_date(@work_date) %> wurden noch keine Zeiten erfasst.
+<% end -%>
+</div>

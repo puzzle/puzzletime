@@ -30,6 +30,7 @@ class WorktimeController < ApplicationController
     createDefaultWorktime   
     setWorktimeAccount
     setAccounts 
+    setExisting
     renderGeneric :action => 'add'  
   end
     
@@ -47,6 +48,7 @@ class WorktimeController < ApplicationController
       @worktime = @worktime.template
     end  
     setAccounts
+    setExisting
     renderGeneric :action => 'add'
   end  
   
@@ -54,6 +56,7 @@ class WorktimeController < ApplicationController
   def edit
     setWorktime   
     setAccounts true
+    setExisting
     renderGeneric :action => 'edit'
   end  
     
@@ -75,6 +78,7 @@ class WorktimeController < ApplicationController
         listDetailTime
       else
         setAccounts true
+        setExisting
         renderGeneric :action => 'edit'
       end  
     end  
@@ -139,6 +143,16 @@ class WorktimeController < ApplicationController
     session[:split].removeWorktime(params[:part_id].to_i)
     redirect_to evaluation_detail_params.merge!({:action => 'split'})
   end  
+  
+  # ajax action
+  def existing
+    @worktime = Worktime.new
+    @worktime.work_date = params[:work_date]
+    @worktime.employee_id = record_other? ? params[:employee_id] : @user.id
+    puts @worktime.work_date
+    setExisting
+    renderGeneric :action => 'existing'
+  end
 
   # no action, may overwrite in subclass
   def detailAction
@@ -207,6 +221,12 @@ protected
   
   def setWorktime
     @worktime = find_worktime
+  end
+  
+  def setExisting    
+    @work_date = @worktime.work_date
+    @existing = Worktime.find(:all, :conditions => ['employee_id = ? AND work_date = ?', @worktime.employee_id, @work_date],
+                                    :order => 'type DESC, from_start_time, project_id')
   end
   
   def find_worktime

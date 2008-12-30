@@ -3,6 +3,16 @@
    buttons = ['Speichern', AttendancetimeController::SPLIT] if @worktime.kind_of? Attendancetime
 -%>
 
+<%= renderGenericPartial :partial => 'existing' %> 
+<script type="text/javascript">
+function workDateChanged(cal) {
+	value = $('worktime_work_date').value;
+	<%= remote_function(:url => { :action => 'existing' }, 
+						:method => :get,
+						:with => "'#{"other=#{params[:other]}&employee_id=#{@worktime.employee_id}&" if params[:other]}work_date=' + value") %>
+}
+</script>
+
 <% form_tag evaluation_detail_params.merge!({                        
                         :action => 'update', 
                         :id => @worktime}) do %>                
@@ -16,3 +26,7 @@
                 :controller => 'evaluator',
                 :action => controller.detailAction }) %>
 </p>
+
+<%= javascript_include_tag :defaults, :cache => true %>	
+<%= observe_field(:worktime_work_date,
+				  :function => "workDateChanged(null)") %>

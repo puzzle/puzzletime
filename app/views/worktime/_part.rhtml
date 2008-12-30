@@ -1,14 +1,14 @@
  <%= alternate_row %>
-    <td align="right"><%= format_hour part.hours %> h</td> 
-    <td>f&uuml;r <%= part.account.label_verbose %></td>
-    <td><%= h part.description.slice(0..50) %></td>
-    <td>
+    <td align="right"><%= part.timeString %></td> 
+    <td><%= part.account ? part.account.label_verbose : 'Anwesenheitszeit' %></td>
+    <td><%= h part.description.slice(0..50) if part.description %></td>
     <% if part.new_record? -%>
+    <td>
     <%= link_to 'l&ouml;schen...', 
             {:action => 'deletePart',
              :part_id => part_counter - 1}, 
             {:confirm => 'Wollen sie diese Arbeitszeit wirklich entfernen?',
-             :method => 'post' } %>
-    <% end -%>         
+             :method => 'post' } %>    
     </td>
+    <% end -%>     
  </tr>

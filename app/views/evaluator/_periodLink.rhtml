@@ -18,18 +18,18 @@ Zeiten w&auml;hrend <%= @period %> &nbsp;
             visual_effect(:toggle_blind, "notifications", :duration => 0.2) %>
 </p>
 
-<ul id="notifications">
+<ul id="notifications" class="notification" style="display: none;">
 	<% @notifications.each do |notification| -%>
 	<li>- <%= h notification.message %></li>
 	<% end -%>
 </ul>
 	
-	<%= javascript_include_tag :defaults %>
+	<%= javascript_include_tag :defaults, :cache => true %>
 	<% ref = controller.request.env["HTTP_REFERER"]
- 	   if ref && "login" != ref[-5,5] -%>
+ 	   if ref && "login" == ref[-5,5] -%>
 	<script type="text/javascript">
 	// <![CDATA[
-	$('notifications').hide();
+	$('notifications').show();
 	// ]]>
 	</script>
 	<% end -%>

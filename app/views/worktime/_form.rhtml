@@ -21,7 +21,7 @@
 <% end -%>
  <tr>
   <td>Datum: </td>
-  <td><%= date_calendar_field 'worktime', 'work_date', 'Datum' %></td>
+  <td><%= date_calendar_field 'worktime', 'work_date', 'Datum', ['add', 'create', 'edit', 'update'].include?(controller.action_name) %></td>
 </tr>
 <tr>
   <td>Stunden: </td>
