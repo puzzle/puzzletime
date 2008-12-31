@@ -4,9 +4,25 @@
     <td><%= h part.description.slice(0..50) if part.description %></td>
     <% if part.new_record? -%>
     <td>
-    <%= link_to 'l&ouml;schen...', 
+    <%= link_to 'L&ouml;schen', 
             {:action => 'deletePart',
              :part_id => part_counter - 1}, 
+            {:confirm => 'Wollen sie diese Arbeitszeit wirklich entfernen?',
+             :method => 'post' } %>    
+    </td>
+	<% else %>
+	<td>
+    <%= link_to 'Bearbeiten', 
+                {:controller => part.controller,
+				 :action => 'edit',
+                 :id => part.id} %>    
+    </td>    
+	<td>
+    <%= link_to 'L&ouml;schen', 
+            {:controller => part.controller,
+			 :action => 'delete',
+             :id => part.id,
+			 :back => 1}, 
             {:confirm => 'Wollen sie diese Arbeitszeit wirklich entfernen?',
              :method => 'post' } %>    
     </td>

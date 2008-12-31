@@ -11,8 +11,11 @@ class WorktimeController < ApplicationController
   hide_action :detailAction  
   
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
-  verify :method => :post, :only => [ :delete, :create, :update, :createPart, :deletePart, :start, :stop ],
+  verify :method => :post, :only => [ :delete, :createPart, :deletePart, :start, :stop ],
          :redirect_to => { :action => 'list' }
+  verify :method => :post, :only => [ :create ], :redirect_to => { :action => 'add' }   
+  verify :method => :post, :only => [ :update ], :redirect_to => { :action => 'edit' }     
+        
          
   FINISH = 'Abschliessen'       
    
@@ -98,7 +101,19 @@ class WorktimeController < ApplicationController
         flash[:notice] = @worktime.errors.first.to_s 
       end
     end  
-    listDetailTime
+    if params[:back] 
+      referer = request.headers["Referer"]
+      referer.gsub!(/time\/create[^A-Z]?/, 'time/add')
+      referer.gsub!(/time\/update[^A-Z]?/, 'time/edit')
+      if referer.include?('work_date')
+        referer.gsub!(/work_date=[0-9]{4}\-[0-9]{2}\-[0-9]{2}/, "work_date=#{@worktime.work_date}")
+      else
+        referer += (referer.include?('?') ? '&' : '?') + "work_date=#{@worktime.work_date}" 
+      end  
+      redirect_to(referer)
+    else
+      listDetailTime
+    end
   end
   
   def view
@@ -181,7 +196,13 @@ protected
     setNewWorktime
     @worktime.from_start_time = Time.now.change(:hour => DEFAULT_START_HOUR)
     @worktime.report_type = @user.report_type || DEFAULT_REPORT_TYPE
-    @worktime.work_date = (@period && @period.length == 1) ? @period.startDate : Date.today
+    if params[:work_date]
+      @worktime.work_date = params[:work_date]
+    elsif @period && @period.length == 1
+      @worktime.work_date = @period.startDate 
+    else 
+      @worktime.work_date = Date.today
+    end
     @worktime.employee_id = record_other? ? params[:employee_id] : @user.id
   end
   
