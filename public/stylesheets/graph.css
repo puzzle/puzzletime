@@ -78,12 +78,13 @@
 td a {
 	text-decoration: none;
 	color:			#333;
+	width:			100%;
+	position:		relative;
+	float:			left;
 }
 
 td a:hover {
-	position:		relative;
-	float:			left;
-	width:			100%;
+	border: 		0;
 }
 
 td a span {

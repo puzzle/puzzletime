@@ -59,18 +59,6 @@ module ApplicationHelper
     calendar_field object, method, html_options, cal_options
   end
   
-  def blackout_hash(hash, *keys)
-    dupe = hash.dup
-    dupe.each_pair do |key, value|
-      if keys.include? key
-        dupe[key] = '***'
-      elsif value.kind_of? Hash
-        dupe[key] = blackout_hash(value, *keys)
-      end
-    end
-    dupe
-  end
-  
   def renderGenericPartial(options)
     if template = options[:partial]
       if templateAbsent? template, controller.class.controller_path

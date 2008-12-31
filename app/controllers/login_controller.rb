@@ -18,7 +18,6 @@ class LoginController < ApplicationController
     if request.get?      
       session[:user_id] = nil
     else 
-      puts blackout_hash(params, 'pwd').inspect
       logged_in = Employee.login(params[:employee][:shortname], params[:employee][:pwd])
       if logged_in
         reset_session

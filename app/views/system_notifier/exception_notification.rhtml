@@ -7,7 +7,7 @@ A <%= @exception.class %> occured in
 Request Information:
 ---------------------------
  * URL: <%= @request.protocol %><%= @host %><%= @request.request_uri %>
- * Parameters: <%= blackout_hash(@request.parameters, 'pwd').inspect %>
+ * Parameters: <%= @protected_params.inspect %>
  * Rails root: <%= @rails_root %>
  
 ---------------------------
