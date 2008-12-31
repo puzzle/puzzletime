@@ -95,15 +95,15 @@ module EvaluatorHelper
   end
   
   def overtime(employee)
-    number_with_precision(@period ? 
+    format_hour(@period ? 
         employee.statistics.overtime(@period) : 
-        employee.statistics.current_overtime, 2) + ' h'
+        employee.statistics.current_overtime) + ' h'
   end
   
   def remaining_vacations(employee)
-    number_with_precision(@period ? 
+    format_hour(@period ? 
         employee.statistics.remaining_vacations(@period.endDate) : 
-        employee.statistics.current_remaining_vacations, 2) + ' d'
+        employee.statistics.current_remaining_vacations) + ' d'
   end
   
   def overtime_vacations_tooltip(employee)
@@ -114,7 +114,7 @@ module EvaluatorHelper
     unless transfers.empty?
       tooltip = '<a href="#" class="tooltip">&lt;-&gt;<span>Ferien-&Uuml;berzeit Umbuchungen:<br/>'
       transfers.collect! do |t| 
-        " - #{format_date(t.transfer_date)}: #{number_with_precision(t.hours, 2)} h" 
+        " - #{format_date(t.transfer_date)}: #{format_hour(t.hours)} h" 
       end
       tooltip += transfers.join('<br />')
       tooltip += '</span></a>'

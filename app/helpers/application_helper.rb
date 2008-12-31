@@ -7,7 +7,7 @@ module ApplicationHelper
   
   # round time function.
   def format_hour(hour)
-    number_with_delimiter(number_with_precision(hour.to_f, 2), "'")
+    number_with_precision(hour.to_f, :precision => 2, :delimiter => "'", :separator => '.')
   end
   
   # Change english datelayout to german one.
@@ -97,7 +97,7 @@ private
   end
   
   def templateAbsent?(template,view)
-    ! finder.file_exists? "#{view}/_#{template}.rhtml"
+    ! File.exist?(File.join(File.dirname(__FILE__), "../views/#{view}/_#{template}.rhtml"))
   end  
    
 end

@@ -5,7 +5,7 @@
 # ENV['RAILS_ENV'] ||= 'production'
 
 # Specifies gem version of Rails to use when vendor/rails is not present
-RAILS_GEM_VERSION = '2.1.0'
+RAILS_GEM_VERSION = '2.2.2'
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
@@ -52,6 +52,12 @@ Rails::Initializer.run do |config|
   
   # Do not symbolize keys for performance reasons
   #config.action_view.local_assigns_support_string_keys = false
+  
+  # The internationalization framework can be changed 
+  # to have another default locale (standard is :en) or more load paths.
+  # All files from config/locales/*.rb,yml are added automatically.
+  # config.i18n.load_path << Dir[File.join(RAILS_ROOT, 'my', 'locales', '*.{rb,yml}')]
+  config.i18n.default_locale = :de
 end
 
 # Add new inflection rules using the following format 
@@ -68,7 +74,7 @@ ActionMailer::Base.delivery_method = :sendmail
 
 ActiveRecord::Base.store_full_sti_class = false
 
-ActionController::Base.fragment_cache_store = :mem_cache_store
+#ActionController::Base.fragment_cache_store = :mem_cache_store
 
 require 'overrides' 
 require 'report_type'

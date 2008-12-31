@@ -56,7 +56,7 @@ class ReportType
   end
   
   def roundedHours(worktime)
-    number_with_precision(worktime.hours, 2).to_s
+    number_with_precision(worktime.hours, :precision => 2, :delimiter => "'", :separator => '.')
   end
   
 end
