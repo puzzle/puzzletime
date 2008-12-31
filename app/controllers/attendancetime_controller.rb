@@ -16,9 +16,9 @@ class AttendancetimeController < WorktimeController
         if attendance && @user.running_project
           stopRunning @user.running_project
         end
-        startRunning if attendance && attendance.work_date != Date.today
+        startRunning(Attendancetime.new) if attendance && attendance.work_date != Date.today
       else 
-        startRunning
+        startRunning Attendancetime.new
       end   
     else  
       flash[:notice] = "Ung&uuml;ltige Benutzerdaten.\n"
