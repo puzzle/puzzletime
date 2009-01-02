@@ -41,8 +41,10 @@ class AttendancetimeController < WorktimeController
     attendance = runningTime
     if attendance 
       stopRunning attendance
-      if @user.running_project
-        stopRunning @user.running_project
+      project = @user.running_project
+      if project
+        project.description = params[:description] if params[:description]
+        stopRunning project
       elsif Projecttime.find(:first, :conditions => ["type = ? AND employee_id = ? AND work_date = ? AND to_end_time = ?",
                                                      'Projecttime', @user.id, attendance.work_date, attendance.to_end_time]).nil?
         splitAttendance attendance
@@ -53,19 +55,6 @@ class AttendancetimeController < WorktimeController
     end
     redirect_to :back
   end
-  
-  # called from userOverview
-  def stopAttendance
-    return if autoStartExists(false, "Keine offene Anwesenheit vorhanden.")
-    attendance = stopRunning
-    if attendance then 
-      if @user.running_project
-        stopRunning @user.running_project
-      end
-    else 
-      list
-    end
-  end  
   
   def splitAttendance(attendance = nil)
     attendance ||= setWorktime

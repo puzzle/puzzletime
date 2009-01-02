@@ -3,13 +3,13 @@
 <table>
 <tr>
 <% if @user.running_attendance -%>
+<% form_tag({:controller => 'attendancetime', :action => 'stop'}, :id => 'stop_attendance_form') do -%>
+	<%= hidden_field_tag 'description', nil, :id => 'attendance_description' %>
 	<td>Anwesend seit <%= format_time @user.running_attendance.from_start_time %></td>
 	<td align="center">
-	<%= link_to 'Stoppen', 
-				{:controller => 'attendancetime',
-	             :action => 'stop'},
-	             :method => 'post'  %>
+	<%= link_to_function 'Stoppen', 'stop_attendance()' %>
 	</td>
+<% end -%>	
 <% else -%>		 
 	<td>Anwesenheit</td>
 	<td align="center">
@@ -64,6 +64,14 @@
 			document.getElementById('start_description').value = desc.value;
 		}
 		document.getElementById('start_project_form').submit();
+	}
+	
+	function stop_attendance() {
+		desc = document.getElementById('description');
+		if (desc != null) {
+			document.getElementById('attendance_description').value = desc.value;
+		}
+		document.getElementById('stop_attendance_form').submit();
 	}
 //]]>
 </script>
