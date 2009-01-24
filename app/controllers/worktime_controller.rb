@@ -101,8 +101,8 @@ class WorktimeController < ApplicationController
         flash[:notice] = @worktime.errors.first.to_s 
       end
     end  
-    if params[:back] 
-      referer = request.headers["Referer"]
+    referer = request.headers["Referer"]
+    if params[:back] && !(referer =~ /time\/edit\/#{@worktime.id}$/)
       referer.gsub!(/time\/create[^A-Z]?/, 'time/add')
       referer.gsub!(/time\/update[^A-Z]?/, 'time/edit')
       if referer.include?('work_date')

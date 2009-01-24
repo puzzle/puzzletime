@@ -52,6 +52,23 @@ class EmployeeStatistics
      employments_during(period).sum(&:musttime)
   end  
   
+  # Returns an Array of all employements during the given period, 
+  # an empty Array if no employments exist.
+  def employments_during(period)
+    return [] if period.nil?
+    selectedEmployments = @employee.employments.find(:all, 
+        :conditions => ["(end_date IS NULL OR end_date >= ?) AND start_date <= ?", 
+          period.startDate, period.endDate],
+        :order => 'start_date')
+    unless selectedEmployments.empty?
+      selectedEmployments.first.start_date = period.startDate if selectedEmployments.first.start_date < period.startDate
+      if selectedEmployments.last.end_date == nil ||
+         selectedEmployments.last.end_date > period.endDate then
+        selectedEmployments.last.end_date = period.endDate
+      end  
+    end
+    selectedEmployments    
+  end
 
 private
 
@@ -77,23 +94,6 @@ private
 
   ######### employment helpers ######################  
   
-  # Returns an Array of all employements during the given period, 
-  # an empty Array if no employments exist.
-  def employments_during(period)
-    return [] if period.nil?
-    selectedEmployments = @employee.employments.find(:all, 
-        :conditions => ["(end_date IS NULL OR end_date >= ?) AND start_date <= ?", 
-          period.startDate, period.endDate],
-        :order => 'start_date')
-    unless selectedEmployments.empty?
-      selectedEmployments.first.start_date = period.startDate if selectedEmployments.first.start_date < period.startDate
-      if selectedEmployments.last.end_date == nil ||
-         selectedEmployments.last.end_date > period.endDate then
-        selectedEmployments.last.end_date = period.endDate
-      end  
-    end
-    selectedEmployments    
-  end
   
   # Returns the Period from the first employement date until the given period.
   # Returns nil if no employments exist until this date.  

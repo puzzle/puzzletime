@@ -86,6 +86,43 @@
 </table>
 <% end -%>
 
-<%= link_to 'Meine Zeit', 
-            :controller => 'projecttime',
-            :action => 'list' %>
+<br/>
+<br/>
+<h2>Benutzerinformationen</h2>
+
+<div style="float:left;">
+<b>Anstellungen</b>
+<table style="margin-right: 50px;">
+<tr>
+	<th>Von</th>
+	<th>Bis</th>
+	<th>Prozent</th>
+</tr>
+<% @user.employments.each do |employment| -%>	
+<%= alternate_row %>
+	<td align="right"><%= format_date employment.start_date %></td>
+	<td align="right"><%= format_date employment.end_date %></td>
+	<td align="right"><%= employment.percent %> %</td>
+</tr>
+<% end -%>
+</table>
+</div>
+
+<% unless @user.overtime_vacations.empty? -%>
+<div>
+<b>Ferien &Uuml;berzeit Umbuchungen</b>
+<table>
+<tr>
+	<th>Datum</th>
+	<th>Stunden</th>
+</tr>
+<% @user.overtime_vacations.each do |transfer| -%>	
+<%= alternate_row %>
+	<td align="right"><%= format_date transfer.transfer_date %></td>
+	<td align="right"><%= format_hour transfer.hours %> h</td>
+</tr>
+<% end -%>
+
+</table>
+</div>
+<% end -%>

@@ -27,8 +27,7 @@
 <% if @user -%>
 	<%= render :partial => 'layouts/menu' %>
 	<div id="menu_user">
-	  <%= @user.label %> |
-	  <%= link_to 'Einstellungen', :controller => 'employee', :action => 'settings' %>	 | 
+	  <%= link_to @user.label, :controller => 'employee', :action => 'settings' %>	 | 
 	  <%= link_to '?', 'https://twiki.puzzle.ch/bin/view/Puzzle/PuzzleTimeFAQ' %> |
 	  <%= link_to 'Logout', 
 	           {:controller => 'login', 

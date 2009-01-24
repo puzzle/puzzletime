@@ -2,6 +2,9 @@ class VacationGraph
   
   attr_reader :period, :day
   
+  UNPAID_ABSENCE = Absence.new :name => 'Unbezahlter Urlaub'
+  UNPAID_ABSENCE.id = 0
+  
   
   def initialize(period = nil)
     period ||= Period.currentYear
@@ -30,13 +33,15 @@ class VacationGraph
                         {:order      => 'work_date, from_start_time, employee_id, absence_id',
                          :include    => 'absence',
                          :conditions => ['NOT absences.private AND (report_type = ?)', HoursMonthType::INSTANCE.key] }  )
+      @unpaid_absences = empl.statistics.employments_during(period).select {|e| e.percent == 0 } 
+      @unpaid_absences.collect! { |e| Period.new(e.start_date, e.end_date ? e.end_date : period.endDate) }
       @index = 0
       @monthly_index = 0
       @month = nil
 	    yield empl
   	end
   end
-  
+    
   def each_week
 	  @period.startDate.step(@period.endDate, 7) do |day|
       @current = get_period_week(day)
@@ -54,6 +59,9 @@ class VacationGraph
     tooltip = create_tooltip(absences)
   	absences = add_monthly_absences times
     tooltip += '<br />' if not tooltip.empty?
+    tooltip += create_tooltip(absences)
+    tooltip += '<br />' if ! tooltip.empty? && ! absences.empty?
+    absences = add_unpaid_absences times
     tooltip += create_tooltip(absences)
   	
   	max_absence = get_max_absence times
@@ -113,7 +121,21 @@ private
       part1.concat part2
     end
   end
-
+  
+  def add_unpaid_absences(times)
+    absences = []
+    @unpaid_absences.each do |unpaid|
+      @current.step do |date|
+        if unpaid.include?(date) && date.wday > 0 && date.wday < 6 
+          times[UNPAID_ABSENCE] += MUST_HOURS_PER_DAY
+          absences << Absencetime.new(:absence => UNPAID_ABSENCE, :hours => MUST_HOURS_PER_DAY, :work_date => date, :report_type => HoursDayType::INSTANCE)
+        end
+      end
+    end
+    absences
+  end
+  
+ 
   def add_monthly(times, period)
     month = get_period_month(period.startDate)
     factor = period.musttime.to_f / month.musttime.to_f
