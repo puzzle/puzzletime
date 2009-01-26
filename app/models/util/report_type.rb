@@ -1,7 +1,6 @@
 class ReportType
 
   include Comparable
-  include ActionView::Helpers::NumberHelper
   
   attr_reader :key, :name, :accuracy
   
@@ -56,7 +55,11 @@ class ReportType
   end
   
   def roundedHours(worktime)
-    number_with_precision(worktime.hours, :precision => 2, :delimiter => "'", :separator => '.')
+    number = (Float(worktime.hours) * (100)).round.to_f / 100
+    number = "%01.2f" % number
+    parts = number.split('.')
+    parts[0].gsub!(/(\d)(?=(\d\d\d)+(?!\d))/, "\\1'")
+    parts.join('.')
   end
   
 end

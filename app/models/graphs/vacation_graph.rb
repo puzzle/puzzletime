@@ -1,5 +1,7 @@
 class VacationGraph
   
+  include ActionView::Helpers::NumberHelper
+  
   attr_reader :period, :day
   
   UNPAID_ABSENCE = Absence.new :name => 'Unbezahlter Urlaub'
@@ -37,6 +39,7 @@ class VacationGraph
       @unpaid_absences.collect! { |e| Period.new(e.start_date, e.end_date ? e.end_date : period.endDate) }
       @index = 0
       @monthly_index = 0
+      @unpaid_index = 0
       @month = nil
 	    yield empl
   	end
@@ -61,8 +64,7 @@ class VacationGraph
     tooltip += '<br />' if not tooltip.empty?
     tooltip += create_tooltip(absences)
     tooltip += '<br />' if ! tooltip.empty? && ! absences.empty?
-    absences = add_unpaid_absences times
-    tooltip += create_tooltip(absences)
+    tooltip += add_unpaid_absences times
   	
   	max_absence = get_max_absence times
   	return nil if max_absence.nil?
@@ -123,18 +125,17 @@ private
   end
   
   def add_unpaid_absences(times)
-    absences = []
+    tooltip = ""
     @unpaid_absences.each do |unpaid|
       @current.step do |date|
         if unpaid.include?(date) && date.wday > 0 && date.wday < 6 
           times[UNPAID_ABSENCE] += MUST_HOURS_PER_DAY
-          absences << Absencetime.new(:absence => UNPAID_ABSENCE, :hours => MUST_HOURS_PER_DAY, :work_date => date, :report_type => HoursDayType::INSTANCE)
+          tooltip += "#{date.strftime(DATE_FORMAT)}: #{MUST_HOURS_PER_DAY}0 h #{UNPAID_ABSENCE.label}<br/>"
         end
       end
     end
-    absences
+    tooltip
   end
-  
  
   def add_monthly(times, period)
     month = get_period_month(period.startDate)
