@@ -6,7 +6,8 @@ class EvaluatorController < ApplicationController
   # Checks if employee came from login or from direct url.
   before_filter :authenticate
   before_filter :authorize, :only => [:clients, :employees, :overtime,
-                                      :clientProjects, :employeeProjects, :employeeAbsences ]
+                                      :clientProjects, :employeeProjects, :employeeAbsences,
+                                      :exportCapacityCSV, :exportMAOverview]
   before_filter :setPeriod
   
   helper_method :user_view?
@@ -133,7 +134,6 @@ class EvaluatorController < ApplicationController
   
   def exportCapacityCSV
     if @period
-      
       filename = "puzzletime_auslastung_#{@period.startDate.strftime("%Y%m%d")}_#{@period.endDate.strftime("%Y%m%d")}.csv"
       setExportHeader(filename)
       send_data(create_capacity_csv,
@@ -143,6 +143,11 @@ class EvaluatorController < ApplicationController
       flash[:notice] = "Bitte wählen Sie eine Zeitspanne für die Auslastung."
       redirect_to :back
     end
+  end
+  
+  def exportMAOverview
+    @period ||= Period.currentYear
+    #render :action => :exportMAOverview, :layout => false
   end
   
   ########################  PERIOD ACTIONS  #########################
@@ -229,7 +234,7 @@ private
   
   def setNavigationLevels
     # set session evaluation levels
-    session[:evalLevels] = Array.new if params[:clear]
+    session[:evalLevels] = Array.new if params[:clear] || session[:evalLevels].nil?
     levels = session[:evalLevels]
     current = [params[:evaluation], @evaluation.category_id, @evaluation.title]
     levels.pop while levels.any? { |level| pop_level? level, current }  

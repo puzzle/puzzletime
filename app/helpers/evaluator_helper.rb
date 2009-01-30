@@ -132,8 +132,9 @@ module EvaluatorHelper
     stat = @user.statistics
     infos = @period ?    
             [[['&Uuml;berzeit', stat.overtime(@period).to_f, 'h'],
-              ['Bezogene Ferien', stat.used_vacations(@period), 'd']],
-             [['Soll Arbeitszeit', stat.musttime(@period), 'h'], 
+              ['Bezogene Ferien', stat.used_vacations(@period), 'd'],
+              ['Soll Arbeitszeit', stat.musttime(@period), 'h']],
+             [['Abschliessend', stat.current_overtime(@period.endDate), 'h'], 
               ['Verbleibend', stat.remaining_vacations(@period.endDate), 'd']]]  :
             [[['&Uuml;berzeit Gestern', stat.current_overtime, 'h'],
               ['Bezogene Ferien', stat.used_vacations(Period.currentYear), 'd'],

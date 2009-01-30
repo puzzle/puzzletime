@@ -7,7 +7,7 @@
 	<%= hidden_field_tag 'description', nil, :id => 'attendance_description' %>
 	<td>Anwesend seit <%= format_time @user.running_attendance.from_start_time %></td>
 	<td align="center">
-	<%= link_to_function 'Stoppen', 'stop_attendance()' %>
+	<%= link_to_function 'Stoppen', 'stop_attendance()', :href => url_for({:controller => 'attendancetime', :action => 'stop'}) %>
 	</td>
 <% end -%>	
 <% else -%>		 
@@ -28,7 +28,7 @@
 	<%= @user.running_project.project.label_verbose %> seit <%= format_time @user.running_project.from_start_time %>
 	</td>
 	<td align="center">
-	<%= link_to_function 'Stoppen', 'stop_project_form.submit()' %>
+	<%= link_to_function 'Stoppen', 'stop_project_form.submit()', :href => url_for({:controller => 'projecttime', :action => 'stop'}) %>
 	</td>
 </tr>
 <tr>
@@ -45,7 +45,7 @@
 <%= alternate_row %>
 	<td><%= project.label_verbose %></td>
 	<td align="center">
-	<%= link_to_function 'Starten', "start_project(#{project.id})" %>
+	<%= link_to_function 'Starten', "start_project(#{project.id})", :href => url_for({:controller => 'projecttime', :action => 'start', :id => project.id}) %>
 	</td>
 </tr>
 <% end -%>

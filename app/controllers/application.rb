@@ -18,9 +18,15 @@ class ApplicationController < ActionController::Base
     
   #Filter for check if user is logged in or not
   def authenticate
+    puts 'authenticate'
     user_id = session[:user_id]
     unless user_id
-      redirect_to(:controller => 'login', :action => 'login' )
+      # allow ad-hoc login
+      if request.post? && params[:user] && params[:pwd]
+        return true if login_with(params[:user], params[:pwd]) 
+        flash[:notice] = "Ung&uuml;ltige Benutzerdaten"
+      end
+      redirect_to_login
       return false
     end
     @user = Employee.find(user_id)
@@ -31,7 +37,7 @@ class ApplicationController < ActionController::Base
     if authenticate
       unless @user.management
         flash[:notice] = 'Sie sind nicht authorisiert, um diese Seite zu öffnen'
-        redirect_to(:controller => 'login', :action => 'login' )
+        redirect_to_login
         return false
       end
     else
@@ -74,6 +80,25 @@ protected
     if p.kind_of? Array
       @period = Period.retrieve(*p)
     end
+  end
+  
+  def redirect_to_login
+    puts 'redirect to login'
+    url_hash = params
+    url_hash[:main_controller] = url_hash[:controller]
+    url_hash[:main_action]     = url_hash[:action]
+    url_hash[:controller]      = 'login'
+    url_hash[:action]          = 'login'
+    redirect_to url_hash
+  end
+  
+  def login_with(user, pwd)
+    if @user = Employee.login(user, pwd)    #assignment
+      reset_session
+      session[:user_id] = @user.id
+      return true
+    end  
+    false
   end
   
 end

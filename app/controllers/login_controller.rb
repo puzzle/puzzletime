@@ -4,8 +4,6 @@
 
 class LoginController < ApplicationController
 
-  # Checks if employee came from login or from direct url
-  before_filter :authenticate, :except => :login
   verify :method => :post, :only => [ :logout ], 
          :redirect_to => { :controller => 'projecttime', :action => 'list' }
   
@@ -15,18 +13,16 @@ class LoginController < ApplicationController
  
   # Login procedure for user
   def login
-    if request.get?      
-      session[:user_id] = nil
-    else 
-      logged_in = Employee.login(params[:employee][:shortname], params[:employee][:pwd])
-      if logged_in
-        reset_session
-        session[:user_id] = logged_in.id
+    puts 'login'
+    if request.post?
+      if login_with(params[:user], params[:pwd])
         redirect_to :controller => 'projecttime', :action => 'list'
       else
         flash[:notice] = "Ung&uuml;ltige Benutzerdaten"
       end
     end
+    params[:main_controller] ||= 'projecttime'
+    params[:main_action] ||= 'list'
   end
   
   #Logout procedure for user    

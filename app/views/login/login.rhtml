@@ -1,20 +1,28 @@
 <center>
 <p style="text-align: center;">Bitte loggen Sie sich ein:</p>
-<% form_tag do %>
+
+<% 
+url_hash = params.except(:main_controller, :main_action)
+url_hash[:controller] = params[:main_controller]
+url_hash[:action]     = params[:main_action]
+form_tag(url_hash, :name => 'form') do -%>
 <table>
   <tr>
     <td>Login:</td>
-    <td><%= text_field 'employee', 'shortname', :size => 20 %></td>
+    <td><%= text_field_tag 'user', nil, :size => 20 %></td>
   </tr>
   <tr>
  	<td>Passwort:</td>
- 	<td><%= password_field 'employee', 'pwd', :size => 20 %></td>
+ 	<td><%= password_field_tag 'pwd', nil, :size => 20 %></td>
   </tr>
   <tr>
  	<td></td>
  	<td><input type="submit" value="Login "/></td>
   </tr>
 </table>
-<% end %>
+<% end -%>
 </center>
+<script type="text/javascript">
+	document.form.user.focus();
+</script>
 

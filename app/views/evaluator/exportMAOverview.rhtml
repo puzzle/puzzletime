@@ -1,0 +1,28 @@
+<% @title = "Mitarbeiter Statistiken Puzzletime" %>
+
+<%= render(:partial => 'periodLink') %>
+
+<% Employee.list.each do |em| -%>
+	<h2><%= em.label %></h2>
+
+	Ueberzeit: <%= format_hour em.statistics.current_overtime(@period.endDate) %> Stunden<br/>
+	Bezogene Ferien: <%= format_hour em.statistics.used_vacations(@period) %> Tage<br>
+	Ferienrestguthaben: <%= format_hour em.statistics.remaining_vacations(@period.endDate) %> Tage<br/>
+	Projekte:</br>
+	<table>
+	<%  
+	eval = EmployeeProjectsEval.new(em.id, true)
+	projects = eval.times(@period).collect { |w| w.project }	
+	projects.uniq!
+	projects.sort! {|a,b| a.label_verbose <=> b.label_verbose }
+	projects.each do |p|
+	%>
+		<tr>
+			<td align="right"><%= format_hour eval.sum_times(@period, p) %> h</td>
+			<td><%= p.label_verbose %></td>
+		</tr>
+	<% end -%>
+	</table>	
+	<hr/>
+<% end -%>
+
