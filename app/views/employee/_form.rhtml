@@ -17,6 +17,10 @@
   <td>Email: </td>
   <td><%= h @entry.email %></td>
 </tr>
+<tr>
+  <td>Ldapname: </td>
+  <td><%= h @entry.ldapname %></td>
+</tr>
 <%= renderGenericPartial :partial => 'field', :collection => editFields %>
 <tr>
   <td></td>

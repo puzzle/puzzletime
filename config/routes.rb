@@ -17,7 +17,7 @@ ActionController::Routing::Routes.draw do |map|
   # instead of a file named 'wsdl'
   # map.connect ':controller/service.wsdl', :action => 'wsdl'
  
-  map.connect PATH_PREFIX + '/', :controller => 'projecttime', :action => 'list'
+  map.connect PATH_PREFIX + '/', ApplicationController::HOME_ACTION
   
   #map.connect 'puzzletime/stylesheets/:file', :controller => 'stylesheets'
  

@@ -1,8 +1,9 @@
 <div id="menu">
   <ul>
   	<li class="first"><%= link_to 'Meine Zeit', 
-  	                        :controller => 'projecttime', 
-  	                        :action => 'list' %></li>
+  	                        :controller => 'evaluator',
+						    :action => 'userProjects',
+							:clear => 1 %></li>
 <% if @user.projectManager? -%>
 	<li><%= link_to 'Meine Projekte', 
 	         :controller => 'evaluator', 

@@ -5,7 +5,7 @@
 class LoginController < ApplicationController
 
   verify :method => :post, :only => [ :logout ], 
-         :redirect_to => { :controller => 'projecttime', :action => 'list' }
+         :redirect_to => HOME_ACTION
   
   def index
     redirect_to :action => "login"
@@ -13,16 +13,13 @@ class LoginController < ApplicationController
  
   # Login procedure for user
   def login
-    puts 'login'
     if request.post?
       if login_with(params[:user], params[:pwd])
-        redirect_to :controller => 'projecttime', :action => 'list'
+        redirect_to HOME_ACTION
       else
         flash[:notice] = "Ung&uuml;ltige Benutzerdaten"
       end
     end
-    params[:main_controller] ||= 'projecttime'
-    params[:main_action] ||= 'list'
   end
   
   #Logout procedure for user    

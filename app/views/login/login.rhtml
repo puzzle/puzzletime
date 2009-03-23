@@ -1,11 +1,7 @@
 <center>
 <p style="text-align: center;">Bitte loggen Sie sich ein:</p>
 
-<% 
-url_hash = params.except(:main_controller, :main_action)
-url_hash[:controller] = params[:main_controller]
-url_hash[:action]     = params[:main_action]
-form_tag(url_hash, :name => 'form') do -%>
+<% form_tag(ApplicationController::HOME_ACTION, :name => 'form') do -%>
 <table>
   <tr>
     <td>Login:</td>

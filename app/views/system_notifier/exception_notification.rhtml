@@ -29,7 +29,7 @@ User: <%= @request.session[:user_id] ? Employee.find(@request.session[:user_id])
 ---------------------------
 Environment
 ---------------------------         
-<% for key, value in @request.env -%>
+<% for key, value in @request.env.except('RAW_POST_DATA') -%>
  * <%= key %>: <%= value.to_s.strip %>
 <% end -%>
 

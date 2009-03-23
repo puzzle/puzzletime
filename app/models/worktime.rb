@@ -140,11 +140,14 @@ class Worktime < ActiveRecord::Base
     return nil if corresponding_type.nil?
     conditions = ["type = ? AND employee_id = ? AND work_date = ?",
                   corresponding_type.name, employee_id, work_date]
-    if report_type.is_a? StartStopType              
-      append_conditions(conditions, ['from_start_time = ? AND to_end_time = ?', from_start_time, to_end_time])              
+    if report_type.is_a? AutoStartType
+      append_conditions(conditions, ['from_start_time = ? AND to_end_time IS NULL', from_start_time])          
+    elsif report_type.is_a? StartStopType              
+      append_conditions(conditions, ['from_start_time = ? AND to_end_time = ?', from_start_time, to_end_time])          
     else
       append_conditions(conditions, ['hours = ?', hours])
     end
+    puts conditions.inspect
     Worktime.find(:first, :conditions => conditions)
   end
   

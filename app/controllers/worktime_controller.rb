@@ -5,14 +5,13 @@ class WorktimeController < ApplicationController
  
   include ApplicationHelper
   
-  # Checks if employee came from login or from direct url.
   before_filter :authenticate
   helper_method :record_other?
   hide_action :detailAction  
   
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
   verify :method => :post, :only => [ :delete, :createPart, :deletePart, :start, :stop ],
-         :redirect_to => { :action => 'list' }
+         :redirect_to => { :action => 'index' }
   verify :method => :post, :only => [ :create ], :redirect_to => { :action => 'add' }   
   verify :method => :post, :only => [ :update ], :redirect_to => { :action => 'edit' }     
         
@@ -21,12 +20,8 @@ class WorktimeController < ApplicationController
    
    
   def index
-    list
-  end 
-  
-  def list
     redirect_to :controller => 'evaluator', :action => userEvaluation, :clear => 1
-  end
+  end 
   
   # Shows the add time page.
   def add
