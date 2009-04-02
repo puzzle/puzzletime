@@ -39,7 +39,7 @@ class EmployeeStatistics
   # Returns the overall overtime hours until the given date.
   # Default is yesterday.   
   def current_overtime(date = Date.today - 1)
-    overtime(employment_period_to(date)) - overtime_vacation_hours
+    overtime(employment_period_to(date)) - overtime_vacation_hours(date)
   end
   
   # Returns the overtime hours worked in the given period.
