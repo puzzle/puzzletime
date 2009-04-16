@@ -56,7 +56,7 @@ class Employee < ActiveRecord::Base
   # Returns the logged-in Employee or nil if the login failed.
   def self.login(username, pwd)   
     user = find_by_shortname_and_passwd(username.upcase, encode(pwd))
-    #user = ldapLogin(username, pwd) if user.nil?   
+    user = ldapLogin(username, pwd) if user.nil?   
     user
   end
   
