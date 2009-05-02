@@ -35,8 +35,7 @@
 <tr>
 	<td><%= timebox_div Timebox.new(nil, '#FF0000', 1, '') %></td>
 	<td>
-	Tagessoll (
-	<%= "%0.2f" % (MUST_HOURS_PER_DAY * @graph.must_hours_factor) %>
+	Tagessoll (<%= "%0.2f" % (MUST_HOURS_PER_DAY * @graph.must_hours_factor) %>
 	 h)
 	 </td>
 </tr>		
