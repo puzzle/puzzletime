@@ -6,7 +6,7 @@ class WorktimeGraph
                                        HoursDayType::INSTANCE.key] }
   
   
-  attr_reader :period, :employee, :day
+  attr_reader :period, :employee
   
   
   def initialize(period, employee)
@@ -32,7 +32,8 @@ class WorktimeGraph
   end
      
   def timeboxes
-    must_hours = Holiday.musttime(@current.startDate)
+    # must_hours are MUST_HOURS_PER_DAY unless employment > 100%
+    must_hours = Holiday.musttime(@current.startDate) * must_hours_factor
     period_boxes = concat_period_boxes    
     @total_hours = 0
     @boxes = Array.new
@@ -64,6 +65,11 @@ class WorktimeGraph
 
   def accountsLegend(type)
     @colorMap.accountsLegend type
+  end
+  
+  def must_hours_factor
+    p = @current || @period
+    [@employee.employment_at(p.startDate).percentFactor, 1.0].max
   end
   
 private
