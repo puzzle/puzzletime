@@ -205,8 +205,9 @@ class Employee < ActiveRecord::Base
     else
       # otherwise, get minimum date of all children
       memberships = projectmemberships.find(:all, :conditions => ['? = ANY (projects.path_ids)', project.id])
-      last_completed = memberships.collect{|pm| pm.last_completed}
-	  last_completed.empty? ? nil : last_completed.min
+      last_completed = memberships.collect{ |pm| pm.last_completed }
+	  last_completed.delete(nil)
+	  last_completed.min
     end
   end
   
