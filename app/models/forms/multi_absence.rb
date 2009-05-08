@@ -50,7 +50,7 @@ class MultiAbsence
     count = 0
     period.step {|date|
       if employment = @employee.employment_at(date)
-        must = Holiday.musttime(date) * [1.0, employment.percentFactor].min
+        must = Holiday.musttime(date) * employment.percentFactor
         if must > 0
           absence = worktimeTemplate(date, must)
           absence.save

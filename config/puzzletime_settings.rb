@@ -10,7 +10,7 @@ VACATION_DAYS_PER_YEAR  = 25.0
 # Significant IDs
 # THIS SHOULD BE SYNCED WITH THE DATABASE !
 VACATION_ID             = 1
-DEFAULT_PROJECT_ID      = 8
+DEFAULT_PROJECT_ID      = 8   # Puzzle Allgemein
 
 # Array of holidays with a fixed date. [day, month]
 REGULAR_HOLIDAYS        = [[1,1],[2,1],[1,8],[25,12],[26,12]]

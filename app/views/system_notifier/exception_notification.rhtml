@@ -13,17 +13,14 @@ Request Information:
 ---------------------------
 Session dump:
 ---------------------------
-<%
-=begin %> commented
+
+ * User: <%= @request.session[:user_id] ? Employee.find(@request.session[:user_id]).label : 'nil' %>
 <% for variable in @request.session.instance_variables -%>
-<% next if variable =~ /^@db/ -%>
+   <% next if variable =~ /^@db/ -%>
  * <%= variable %>:
    <%= PP.pp(@request.session.instance_variable_get(variable),"").
         gsub(/\n/, "\n   ").strip %>
 <% end -%>
-<%
-=end %>
-User: <%= @request.session[:user_id] ? Employee.find(@request.session[:user_id]).label : 'nil' %>
 
 
 ---------------------------

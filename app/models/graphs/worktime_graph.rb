@@ -4,10 +4,8 @@ class WorktimeGraph
                       :conditions => ['(report_type = ? OR report_type = ?)',
                                        StartStopType::INSTANCE.key, 
                                        HoursDayType::INSTANCE.key] }
-  
-  
+ 
   attr_reader :period, :employee
-  
   
   def initialize(period, employee)
     @period = extend_to_weeks period
@@ -69,7 +67,8 @@ class WorktimeGraph
   
   def must_hours_factor
     p = @current || @period
-    [@employee.employment_at(p.startDate).percentFactor, 1.0].max
+    employment = @employee.employment_at(p.startDate)
+    employment ? [employment.percentFactor, 1.0].max : 1.0
   end
   
 private
