@@ -134,9 +134,10 @@ class EvaluatorController < ApplicationController
   
   def exportCapacityCSV
     if @period
+      csv = create_capacity_csv   # create csv beforehand to view eventual errors
       filename = "puzzletime_auslastung_#{@period.startDate.strftime("%Y%m%d")}_#{@period.endDate.strftime("%Y%m%d")}.csv"
       setExportHeader(filename)
-      send_data(create_capacity_csv,
+      send_data(csv,
                 :type => 'text/csv; charset=utf-8; header=present',
                 :filename => filename)  
     else
@@ -302,45 +303,64 @@ private
   def create_capacity_csv
     periods = monthly_periods
     FasterCSV.generate do |csv|
-      csv << ["Mitarbeiter", "Projekt", "Verrechenbar", "Nicht verrechenbar", "Monat", "Jahr"]
+      csv << ["Mitarbeiter", "Projekt", "Subprojekt", "Verrechenbar", "Nicht verrechenbar", "Monat", "Jahr"]
       Employee.employed_ones(@period).each do |employee|
         periods.each do |period|
           project_time = 0
-          employee.alltime_projects.each do |project|
-            result = find_billable_time(employee, project, period)
-            sum = result.collect { |w| w.hours }.sum  
-            if sum > 0
-              csv << [employee.shortname, 
-                      project.label_verbose,
-                      extract_billable_hours(result, true), 
-                      extract_billable_hours(result, false),
-                      period.startDate.month, 
-                      period.startDate.year]
+          processed_ids = []
+          employee.worked_on_projects.each do |project|
+            # get id of parent project on (max) level 1
+            id = project.path_ids[[1, project.path_ids.size - 1].min]
+            if ! processed_ids.include? id
+              processed_ids.push id
+              result = find_billable_time(employee, id, period)
+              sum = result.collect { |w| w.hours }.sum  
+              parent = child = Project.find(id)
+              parent = child.parent if child.parent
+              append_account_entry(csv, 
+                        employee, 
+                        period, 
+                        parent.label_verbose, 
+                        child == parent ? "" : child.label,
+                        extract_billable_hours(result, true), 
+                        extract_billable_hours(result, false))
+              project_time += sum
             end  
-            project_time += sum
           end
           # include Anwesenheitszeit Differenz
           diff = employee.sumAttendance(period) - project_time
-          if diff.abs > 0.001
-            csv << [employee.shortname, 
-                    "Zusätzliche Anwesenheit",
-                    0, 
-                    diff,
-                    period.startDate.month, 
-                    period.startDate.year]
-          end
+          append_account_entry(csv, employee, period, "Zusätzliche Anwesenheit", "", 0, diff)
+          # include all absencetimes
+          absences = employee.worktimes.sum(:hours, 
+                        :include => :absence,
+                        :conditions => ["type = 'Absencetime' AND absences.payed AND work_date BETWEEN ? AND ?", 
+                                        period.startDate, 
+                                        period.endDate]).to_f
+          append_account_entry(csv, employee, period, "Abwesenheiten", "", 0, absences)
         end  
       end  
     end 
   end
   
-  def find_billable_time(employee, project, period)
+  def append_account_entry(csv, employee, period, project_label, subproject_label, billable_hours, not_billable_hours)
+    if (billable_hours + not_billable_hours).abs > 0.001
+      csv << [employee.shortname, 
+              project_label,
+              subproject_label,
+              billable_hours, 
+              not_billable_hours,
+              period.startDate.month, 
+              period.startDate.year]
+    end
+  end
+  
+  def find_billable_time(employee, project_id, period)
     Worktime.find_by_sql ["""SELECT SUM(w.hours) AS HOURS, w.billable FROM worktimes w 
                              LEFT JOIN projects p ON p.id = w.project_id
-                             WHERE w.employee_id = ? AND p.path_ids[1] = ? 
+                             WHERE w.employee_id = ? AND ? = ANY(p.path_ids)
                              AND w.work_date BETWEEN ? AND ?
                              GROUP BY w.billable""",
-                          employee.id, project.id, period.startDate, period.endDate ]  
+                          employee.id, project_id, period.startDate, period.endDate ]  
   end
   
   def monthly_periods

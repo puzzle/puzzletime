@@ -181,15 +181,6 @@ class Employee < ActiveRecord::Base
     sql += " AND T.work_date BETWEEN '#{period.startDate}' AND '#{period.endDate}'" if period
     self.class.connection.select_value(sql).to_f
   end
-  
-  def alltime_projects
-    Project.find_by_sql ["SELECT DISTINCT c.shortname, pa.* FROM  worktimes w " + 
-                "LEFT JOIN projects pw ON w.project_id = pw.id " + 
-                "LEFT JOIN projects pa ON pw.path_ids[1] = pa.id " +
-                "LEFT JOIN clients c ON pa.client_id = c.id " +
-                "WHERE w.employee_id = ? AND pa.id IS NOT NULL " + 
-                "ORDER BY c.shortname, pa.name", self.id]
-  end
    
   # Returns the date the passed project was completed last. 
   def lastCompleted(project)
@@ -210,12 +201,32 @@ class Employee < ActiveRecord::Base
 	  last_completed.min
     end
   end
+    
+  # parent projects this employee ever worked on
+  def alltime_projects
+    Project.find_by_sql ["SELECT DISTINCT c.shortname, pa.* FROM  worktimes w " + 
+                "LEFT JOIN projects pw ON w.project_id = pw.id " + 
+                "LEFT JOIN projects pa ON pw.path_ids[1] = pa.id " +
+                "LEFT JOIN clients c ON pa.client_id = c.id " +
+                "WHERE w.employee_id = ? AND pa.id IS NOT NULL " + 
+                "ORDER BY c.shortname, pa.name", self.id]
+  end
   
+  def worked_on_projects
+    Project.find_by_sql ["SELECT DISTINCT c.shortname, pw.* FROM  worktimes w " + 
+                "LEFT JOIN projects pw ON w.project_id = pw.id " + 
+                "LEFT JOIN clients c ON pw.client_id = c.id " +
+                "WHERE w.employee_id = ? AND pw.id IS NOT NULL " + 
+                "ORDER BY c.shortname, pw.path_ids", self.id]
+  end
+  
+  # the leaf projects of the given list or of the current membership projects
   def leaf_projects(list = nil)
     list ||= projects
     list.collect{|p| p.leaves }.flatten.uniq
   end
   
+  # all leaf projects of the alltime_projects
   def alltime_leaf_projects
     leaf_projects((alltime_projects + projects).sort)
   end
