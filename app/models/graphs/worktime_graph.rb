@@ -92,6 +92,7 @@ private
     conditions = [ "report_type = ?", report_type.key]
     options = WORKTIME_OPTIONS.merge(:conditions => conditions)               
     projects = evaluation.times(period, options) 
+	#TODO: stretch by employment musttime if employment > 100%
     hours = period.musttime.to_f
     return [] if hours == 0
     projects.collect { |w| Timebox.new(w, colorFor(w), Timebox::height_from_hours(w.hours/hours))  }
