@@ -285,7 +285,13 @@ private
         key = "#{time.dateString}$#{time.employee.shortname}" 
         if combined_map.include?(key)
           combined_map[key].hours += time.hours
-          combined_map[key].description += "\n" + time.description if time.description
+          if time.description
+            if combined_map[key].description
+              combined_map[key].description += "\n" + time.description
+            else
+              combined_map[key].description = time.description
+            end  
+          end           
         else
           combined_map[key] = time
           combined_times.push time
