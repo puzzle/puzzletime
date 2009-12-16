@@ -129,7 +129,7 @@ class Project < ActiveRecord::Base
       worktime.errors.add(:report_type, 
         "Der Reporttyp muss eine Genauigkeit von mindestens #{report_type.name} haben") 
     end
-    if description_required? && worktime.description.strip.empty?
+    if description_required? && worktime.description.blank?
       worktime.errors.add(:description, "Es muss eine Beschreibung angegeben werden")   
     end  
   end  
