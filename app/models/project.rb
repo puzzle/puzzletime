@@ -20,6 +20,8 @@ class Project < ActiveRecord::Base
   
   has_many :worktimes, :extend => HasTreeAssociation
   
+  before_validation DateFormatter.new('freeze_until')
+  
   validates_presence_of :name, :message => "Ein Name muss angegeben werden"  
   validates_uniqueness_of :name, :scope => [:parent_id, :client_id], :message => "Dieser Name wird bereits verwendet"
   validates_presence_of :shortname, :message => "Ein Kürzel muss angegeben werden" 
@@ -114,6 +116,16 @@ class Project < ActiveRecord::Base
                         :joins => { :worktimes => :project },
                         :conditions => ['? = ANY (projects.path_ids)', self.id],
                         :order => 'lastname, firstname')
+  end
+  
+  def freeze_until
+    # cache date to prevent endless string_to_date conversion
+    @freeze_until ||= read_attribute(:freeze_until)
+  end
+  
+  def freeze_until=(value)
+    write_attribute(:freeze_until, value)
+    @freeze_until = nil
   end
 
   def move_times_to(other)
