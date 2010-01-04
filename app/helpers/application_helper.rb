@@ -46,13 +46,14 @@ module ApplicationHelper
     prms
   end
   
-  def date_calendar_field(object, method, title, update = false)
+  def date_calendar_field(object, method, title, update = false, default = Date.today)
     @has_calendar = true    # used to include calendar js/css
+    date = date_value(object, method, default)
     html_options = { :field_title => title,
         :button_image => 'calendar.gif',
         :button_title => 'Kalender anzeigen',
         :size => '15',
-        :value => date_value(object, method).strftime(DATE_FORMAT)}
+        :value => date ? date.strftime(DATE_FORMAT) : ""}
     cal_options = { :firstDay => 1,
         :step => 1,
         :ifFormat => DATE_FORMAT,
@@ -80,13 +81,13 @@ module ApplicationHelper
   
 private  
   
-  def date_value(object_name, method_name)
+  def date_value(object_name, method_name, default = Date.today)
     if object = self.instance_variable_get("@#{object_name}")
       if  date = object.send(method_name)
         return date
       end      
     end
-    Date.today
+    default
   end
   
   def templateAbsent?(template,view)

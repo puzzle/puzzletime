@@ -65,6 +65,7 @@ class ProjectController < ManageController
      [:report_type, 'Reporttyp'], 
      [:offered_hours, 'Offerierte Stunden'],
      [:billable, 'Verrechenbar'], 
+     [:freeze_until, 'Eingefroren vor'], 
      [:description_required, 'Beschreibung nötig']]
   end
   

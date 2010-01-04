@@ -260,6 +260,7 @@ a.tooltip:hover span {
     border:         2px solid #e47400;
     padding-top:    15px;
     padding-left:   20px;
+    padding-right:   20px;
     background-color: #f0f0f0;
     margin-bottom:  15px;
 }

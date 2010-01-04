@@ -132,6 +132,10 @@ class Project < ActiveRecord::Base
     if description_required? && worktime.description.blank?
       worktime.errors.add(:description, "Es muss eine Beschreibung angegeben werden")   
     end  
+    if freeze_until && worktime.work_date <= freeze_until
+      worktime.errors.add(:work_date, 
+        "Die Zeiten vor dem #{freeze_until.strftime(DATE_FORMAT)} wurden für dieses Projekt eingefroren und können nicht mehr geändert werden. Um diese Arbeitszeit trotzdem zu erfassen, wende dich bitte an den entsprechenden Projektleiter.")
+    end
   end  
   
 end

@@ -42,6 +42,7 @@ ActiveRecord::Schema.define(:version => 12) do
     t.integer "default_project_id"
     t.string  "user_periods",          :limit => 3
     t.string  "eval_periods",          :limit => 3
+    t.integer "department_id"
   end
 
   add_index "employees", ["shortname"], :name => "chk_unique_name", :unique => true
@@ -69,6 +70,27 @@ ActiveRecord::Schema.define(:version => 12) do
     t.float   "hours",         :null => false
     t.integer "employee_id",   :null => false
     t.date    "transfer_date", :null => false
+  end
+
+  create_table "plannings", :force => true do |t|
+    t.integer  "employee_id",                     :null => false
+    t.integer  "project_id",                      :null => false
+    t.integer  "start_week",                      :null => false
+    t.integer  "end_week"
+    t.boolean  "definitive",   :default => false, :null => false
+    t.text     "description"
+    t.boolean  "monday_am",    :default => false, :null => false
+    t.boolean  "monday_pm",    :default => false, :null => false
+    t.boolean  "tuesday_am",   :default => false, :null => false
+    t.boolean  "tuesday_pm",   :default => false, :null => false
+    t.boolean  "wednesday_am", :default => false, :null => false
+    t.boolean  "wednesday_pm", :default => false, :null => false
+    t.boolean  "thursday_am",  :default => false, :null => false
+    t.boolean  "thursday_pm",  :default => false, :null => false
+    t.boolean  "friday_am",    :default => false, :null => false
+    t.boolean  "friday_pm",    :default => false, :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "projectmemberships", :force => true do |t|
@@ -120,7 +142,7 @@ ActiveRecord::Schema.define(:version => 12) do
   end
 
   add_index "worktimes", ["absence_id", "employee_id", "work_date"], :name => "worktimes_absences"
-  add_index "worktimes", ["employee_id", "work_date"], :name => "worktimes_attendances"
   add_index "worktimes", ["employee_id", "project_id", "work_date"], :name => "worktimes_projects"
+  add_index "worktimes", ["employee_id", "work_date"], :name => "worktimes_attendances"
 
 end
