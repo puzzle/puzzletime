@@ -14,9 +14,10 @@ test:
   adapter: postgresql
   database: puzzletime_test
   encoding: utf8
-  username: puzzle
+  username: puzzle_super
   password: timepuzzle
   host: 127.0.0.1
+  min_messages: warning
 
 production:
   adapter: postgresql

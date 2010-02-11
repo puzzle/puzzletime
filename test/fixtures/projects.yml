@@ -4,15 +4,18 @@ allgemein:
   id:        8
   client_id: 1    #puzzle
   name:      Allgemein
+  shortname: al
   
 puzzletime:
   id:        1
   client_id: 1    #puzzle
   name:      PuzzleTime
+  shortname: pt
   
 webauftritt:
   id:        2
   client_id: 2    #swisstopo
   name:      Webauftritt
+  shortname: web
   
       

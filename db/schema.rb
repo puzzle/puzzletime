@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 12) do
+ActiveRecord::Schema.define(:version => 13) do
 
   create_table "absences", :force => true do |t|
     t.string  "name",                       :null => false
@@ -116,6 +116,7 @@ ActiveRecord::Schema.define(:version => 12) do
     t.integer "parent_id"
     t.integer "department_id"
     t.string  "path_ids",             :limit => nil
+    t.date    "freeze_until"
   end
 
   add_index "projects", ["client_id"], :name => "index_projects_on_client_id"
