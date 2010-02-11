@@ -15,14 +15,17 @@ Session dump:
 ---------------------------
 
  * User: <%= @request.session[:user_id] ? Employee.find(@request.session[:user_id]).label : 'nil' %>
-<% for variable in @request.session.instance_variables -%>
-   <% next if variable =~ /^@db/ -%>
- * <%= variable %>:
-   <%= PP.pp(@request.session.instance_variable_get(variable),"").
-        gsub(/\n/, "\n   ").strip %>
+<% @request.session.instance_variable_get(:@data).each do |key, value| -%>
+ * <%= key %>:
+   <%= PP.pp(value,"").gsub(/\n/, "\n   ").strip %>
 <% end -%>
 
-
+---------------------------
+Full execution backtrace:
+---------------------------
+  <%= @backtrace.join "\n  " %>
+  
+  
 ---------------------------
 Environment
 ---------------------------         
@@ -30,8 +33,4 @@ Environment
  * <%= key %>: <%= value.to_s.strip %>
 <% end -%>
 
----------------------------
-Full execution backtrace:
----------------------------
-  <%= @backtrace.join "\n  " %>
   

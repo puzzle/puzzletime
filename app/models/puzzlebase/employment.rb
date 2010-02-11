@@ -24,6 +24,16 @@ protected
     employee = ::Employee.find_by_shortname(original.employee.S_SHORTNAME)
     local.employee_id = employee.id if employee
   end    
+  
+  # Saves an update local entry and logs potential error messages.
+  def self.saveUpdated(local)
+    if local.percent == 0 && local.end_date.nil?
+      # do not sync 0% employments with open end dates => corresponds to quitted employee
+      true
+    else 
+      super(local)
+    end
+  end
 end
 
 
