@@ -11,14 +11,15 @@ class AttendancetimeController < WorktimeController
   def autoStartStop
     @user = Employee.login(params[:user], params[:pwd])
     if @user 
+      now = Time.now
       if @user.running_attendance 
-        attendance = stopRunning
+        attendance = stopRunning(runningTime, now)
         if attendance && @user.running_project
-          stopRunning @user.running_project
+          stopRunning @user.running_project, now
         end
-        startRunning(Attendancetime.new) if attendance && attendance.work_date != Date.today
+        startRunning(Attendancetime.new, now) if attendance && attendance.work_date != Date.today
       else 
-        startRunning Attendancetime.new
+        startRunning Attendancetime.new, now
       end   
     else  
       flash[:notice] = "Ung&uuml;ltige Benutzerdaten.\n"
@@ -40,11 +41,12 @@ class AttendancetimeController < WorktimeController
   def stop
     attendance = runningTime
     if attendance 
-      stopRunning attendance
+      now = Time.now
+      stopRunning attendance, now
       project = @user.running_project
       if project
         project.description = params[:description] if params[:description]
-        stopRunning project
+        stopRunning project, now
       elsif Projecttime.find(:first, :conditions => ["type = ? AND employee_id = ? AND work_date = ? AND to_end_time = ?",
                                                      'Projecttime', @user.id, attendance.work_date, attendance.to_end_time]).nil?
         splitAttendance attendance

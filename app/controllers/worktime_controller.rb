@@ -330,17 +330,17 @@ protected
   
   ################   RUNNING TIME FUNCTIONS    ##################
   
-  def startRunning(time)
+  def startRunning(time, start = Time.now)
     time.employee = @user
     time.report_type = AutoStartType::INSTANCE
-    time.work_date = Date.today
-    time.from_start_time = Time.now
+    time.work_date = start.to_date
+    time.from_start_time = start
     time.billable = time.project.billable if time.project
     saveRunning time, "Die #{time.account ? 'Projektzeit ' + time.account.label_verbose : 'Anwesenheit'} mit #timeString wurde erfasst.\n"
   end
   
-  def stopRunning(time = runningTime)
-    time.to_end_time = time.work_date == Date.today ? Time.now : '23:59'
+  def stopRunning(time = runningTime, stop = Time.now)
+    time.to_end_time = time.work_date == Date.today ? stop : '23:59'
     time.report_type = StartStopType::INSTANCE
     time.store_hours
     if time.hours < 0.0166

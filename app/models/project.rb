@@ -141,12 +141,17 @@ class Project < ActiveRecord::Base
       worktime.errors.add(:report_type, 
         "Der Reporttyp muss eine Genauigkeit von mindestens #{report_type.name} haben") 
     end
-    if description_required? && worktime.description.blank?
+    
+    if worktime.report_type != AutoStartType::INSTANCE && description_required? && worktime.description.blank?
       worktime.errors.add(:description, "Es muss eine Beschreibung angegeben werden")   
     end  
-    if freeze_until && worktime.work_date <= freeze_until
-      worktime.errors.add(:work_date, 
-        "Die Zeiten vor dem #{freeze_until.strftime(DATE_FORMAT)} wurden für dieses Projekt eingefroren und können nicht mehr geändert werden. Um diese Arbeitszeit trotzdem zu erfassen, wende dich bitte an den entsprechenden Projektleiter.")
+    
+    
+    if freeze_until
+      if worktime.work_date <= freeze_until || (!worktime.new_record? && Worktime.find(worktime.id).work_date <= freeze_until)
+        worktime.errors.add(:work_date, 
+          "Die Zeiten vor dem #{freeze_until.strftime(DATE_FORMAT)} wurden für dieses Projekt eingefroren und können nicht mehr geändert werden. Um diese Arbeitszeit trotzdem zu erfassen, wende dich bitte an den entsprechenden Projektleiter.")
+      end
     end
   end  
   

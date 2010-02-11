@@ -2,15 +2,16 @@ class ProjecttimeController < WorktimeController
 
   def start
     running = runningTime
+    now = Time.now
     if running
       running.description = params[:description]
-      stopRunning running
+      stopRunning running, now
     end  
     time = Projecttime.new
     time.project_id = params[:id]
-    startRunning time
+    startRunning time, now
     if @user.running_attendance.nil?
-      startRunning Attendancetime.new
+      startRunning Attendancetime.new, now
     end
     redirect_to_running
   end
@@ -66,6 +67,7 @@ protected
     if ! attendance.save
       @worktime.errors.add_to_base attendance.errors.full_messages.first
       setAccounts
+      setExisting
       renderGeneric :action => 'add'
       return false
     end  
