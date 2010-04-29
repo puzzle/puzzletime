@@ -32,7 +32,8 @@ module Manageable
   
   # Data type of the field col of the class.
   def columnType(col)
-    columns_hash[col.to_s].type
+    col = columns_hash[col.to_s]
+    col.type if col   # col may not be in columns_hash (e.g. for associations). Return nil in this case
   end
     
   # Field sorting order for listing all entries.  

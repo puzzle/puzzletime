@@ -5,6 +5,7 @@ class Projecttime < Worktime
   validate :project_leaf  
   validate_on_update :protect_booked
   before_destroy :protect_booked
+  before_destroy :protect_frozen
  
   def self.validAttributes
     super + [:account, :account_id, :description, :billable, :booked, :attendance]
@@ -68,6 +69,10 @@ class Projecttime < Worktime
       errors.add_to_base "Verbuchte Arbeitszeiten k&ouml;nnen nicht ver&auml;ndert werden" 
       return false
     end
+  end
+  
+  def protect_frozen
+    project.validate_worktime_frozen(self)
   end
   
 end

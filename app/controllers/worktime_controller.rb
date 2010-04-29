@@ -93,7 +93,8 @@ class WorktimeController < ApplicationController
       if @worktime.destroy 
         flash[:notice] = "Die #{@worktime.class.label} wurde entfernt"
       else  
-        flash[:notice] = @worktime.errors.first.to_s 
+        # errors enumerator yields attr and message (=second item)
+        flash[:notice] = @worktime.errors.collect(&:second).join(", ")
       end
     end  
     referer = request.headers["Referer"]

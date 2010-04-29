@@ -145,14 +145,32 @@ class Project < ActiveRecord::Base
     if worktime.report_type != AutoStartType::INSTANCE && description_required? && worktime.description.blank?
       worktime.errors.add(:description, "Es muss eine Beschreibung angegeben werden")   
     end  
-    
-    
-    if freeze_until
-      if worktime.work_date <= freeze_until || (!worktime.new_record? && Worktime.find(worktime.id).work_date <= freeze_until)
-        worktime.errors.add(:work_date, 
-          "Die Zeiten vor dem #{freeze_until.strftime(DATE_FORMAT)} wurden für dieses Projekt eingefroren und können nicht mehr geändert werden. Um diese Arbeitszeit trotzdem zu erfassen, wende dich bitte an den entsprechenden Projektleiter.")
+     
+    validate_worktime_frozen(worktime)
+  end  
+  
+  def validate_worktime_frozen(worktime)
+    if freeze = latest_freeze_until
+      if worktime.work_date <= freeze || (!worktime.new_record? && Worktime.find(worktime.id).work_date <= freeze)
+        worktime.errors.add(:work_date, "Die Zeiten vor dem #{freeze.strftime(DATE_FORMAT)} wurden für dieses Projekt eingefroren und können nicht mehr geändert werden. Um diese Arbeitszeit trotzdem zu bearbeiten, wende dich bitte an den entsprechenden Projektleiter.")
+        false
       end
     end
-  end  
+  end
+  
+  def latest_freeze_until
+    if parent.nil?
+      freeze_until
+    else     
+      parent_freeze_until = parent.latest_freeze_until
+      if freeze_until.nil?
+        parent_freeze_until
+      elsif parent_freeze_until.nil?
+        freeze_until
+      else
+        [freeze_until, parent_freeze_until].max
+      end
+    end
+  end
   
 end

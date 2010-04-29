@@ -90,7 +90,7 @@ module EvaluatorHelper
       elsif total > offered * 0.9
         color = 'orange'
       end
-      "#{number_with_precision(offered, 0)} (<font color=\"#{color}\">#{number_with_precision(offered - total, 0)}</font>)" 
+      "#{number_with_precision(offered, 0)} (<font color=\"#{color}\">#{format_hour(offered - total)}</font>)" 
     end
   end
   
