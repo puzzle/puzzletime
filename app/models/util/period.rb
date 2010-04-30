@@ -44,6 +44,11 @@ class Period
     retrieve(date, date + Time.days_in_month(date.month, date.year) - 1, label)    
   end
   
+  def self.quarterFor(date, label = nil)
+    label ||= quarterLabel date
+    retrieve(Date.civil(date.year, date.month - 2, 1), date + Time.days_in_month(date.month, date.year) - 1, label)      
+  end
+  
   def self.yearFor(date, label = nil)
     label ||= yearLabel date
     retrieve(Date.civil(date.year, 1, 1), Date.civil(date.year, 12, 31), label)  
@@ -67,6 +72,7 @@ class Period
       when 'd' then dayFor Time.new.advance(:days => shift).to_date
       when 'w' then weekFor Time.new.advance(:days => shift * 7).to_date
       when 'm' then monthFor Time.new.advance(:months => shift).to_date
+      when 'q' then quarterFor Date.civil(Time.new.year, shift * 3, 1)
       when 'y' then yearFor Time.new.advance(:years => shift).to_date
       else nil
     end
@@ -143,6 +149,10 @@ private
 
   def self.monthLabel(date)
     "#{date.strftime('%B')}"
+  end
+  
+  def self.quarterLabel(date)
+    "plem"
   end
   
   def self.yearLabel(date)

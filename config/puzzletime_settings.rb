@@ -17,7 +17,7 @@ REGULAR_HOLIDAYS        = [[1,1],[2,1],[1,8],[25,12],[26,12]]
   
 # Email settings for error messages
 SYSTEM_EMAIL            = %{"PuzzleTime" <monitor-sender@worldweb2000.com>}
-EXCEPTION_RECIPIENTS    = ["zumkehr@puzzle.ch", "josi@puzzle.ch"]
+EXCEPTION_RECIPIENTS    = ["santschi@puzzle.ch"]
 
 # LDAP configuration
 LDAP_HOST               = 'proximai.ww2.ch'
@@ -34,6 +34,7 @@ PAGINATION_WINDOW_SIZE  = 10
 DATE_FORMAT             = '%d.%m.%Y'
 LONG_DATE_FORMAT        = '%a, %d.%m.%Y'
 TIME_FORMAT             = '%H:%M'
+WEEK_FORMAT             = '%Y %W'
 
 # Default values
 DEFAULT_REPORT_TYPE     = HoursDayType::INSTANCE

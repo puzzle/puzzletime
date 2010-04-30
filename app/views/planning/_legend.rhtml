@@ -1,0 +1,14 @@
+<table class="legend">
+<tr>
+	<td colspan="2"><b>Legende</b></td>
+</tr>
+<%= render( :partial => 'graph/legendItem', :collection => [
+		['Unverplant', '#FFA199'],
+		['Teilweise verplant', '#FFDE99'],
+		['Verplant', '#99FFA1'],
+		['&Uuml;berplant', 'red'],
+		['Provisorische Planung', '#99CCFF'],
+		['Definitive Planung', '#99ABFF'],
+		['Abwesenheit', '#CCCCFF' ]] ) %>
+
+</table>

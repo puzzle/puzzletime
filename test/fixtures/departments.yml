@@ -1,0 +1,15 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+devone:
+  name:      devone
+  shortname: d1
+  
+devtwo:
+  name:      devtwo
+  shortname: d2
+  
+sys:
+  name:      sys
+  shortname: sys
+  
+      

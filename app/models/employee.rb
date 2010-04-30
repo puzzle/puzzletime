@@ -256,7 +256,12 @@ class Employee < ActiveRecord::Base
   # Returns the current employement percent value.
   # Returns nil if no current employement is present.
   def current_percent
-    empl =  employment_at(Date.today)
+    percent(Date.today)
+  end
+  
+  # Returns the employment percent value for a given employment date
+  def percent(date)
+    empl = employment_at(date)
     empl.percent if empl
   end
   

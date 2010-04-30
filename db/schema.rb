@@ -19,7 +19,6 @@ ActiveRecord::Schema.define(:version => 13) do
 
   create_table "clients", :force => true do |t|
     t.string "name",                   :null => false
-    t.string "contact"
     t.string "shortname", :limit => 4, :null => false
   end
 
@@ -35,7 +34,7 @@ ActiveRecord::Schema.define(:version => 13) do
     t.string  "passwd",                                                :null => false
     t.string  "email",                                                 :null => false
     t.boolean "management",                         :default => false
-    t.float   "initial_vacation_days"
+    t.float   "initial_vacation_days",              :default => 0.0
     t.string  "ldapname"
     t.string  "report_type"
     t.boolean "default_attendance",                 :default => false
@@ -55,11 +54,6 @@ ActiveRecord::Schema.define(:version => 13) do
   end
 
   add_index "employments", ["employee_id"], :name => "index_employments_on_employee_id"
-
-  create_table "engine_schema_info", :id => false, :force => true do |t|
-    t.string  "engine_name"
-    t.integer "version"
-  end
 
   create_table "holidays", :force => true do |t|
     t.date  "holiday_date",  :null => false

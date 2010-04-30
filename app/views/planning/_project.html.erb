@@ -1,0 +1,6 @@
+<%= alternate_row %>
+	<td><%= project.label_verbose %></td>
+	<td><%= project.department.shortname %></td>
+	<td><%= link_to 'Aktuelle Planung', :action => 'project_planning', :project_id => project %></td>
+	<td><%= link_to 'Neue Planung', :action => 'add', :project_id => project %></td>
+</tr>

@@ -61,13 +61,17 @@ class Project < ActiveRecord::Base
   def self.leaves
     list.select {|project| project.leaf? }
   end
+
+  def self.top_projects
+    list.select{|c| c.top? }
+  end
   
   def label_verbose
     path_labels = path_ids[0..-2].collect{ |id| self.class.find(id).shortname }
     path_label = "-#{path_labels.join("-")}" if not path_labels.empty?
     "#{client.shortname}#{path_label}: #{name}"
-  end  
-  
+  end
+ 
   def label_ancestry
     top? ? name : "#{parent.label_ancestry} - #{name}"
   end

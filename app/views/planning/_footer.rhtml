@@ -1,0 +1,31 @@
+	<% first_span ||= 1 %>
+<% if type == :calendar_week %>
+	<tr class="head">
+		<td colspan="<%= first_span %>" rowspan="3"></td>
+		<%= week_header %>
+	</tr>	
+	<tr class="head">
+		<%= month_header %>
+	</tr>
+	<tr class="head">
+		<%= year_header %>
+	</tr>
+<% else %>
+	<tr class="head">
+		<td colspan="<%= first_span %>" rowspan="5"></td>
+		<%= day_name_header(2) %>
+	</tr>	
+	<tr class="head">
+		<%= day_date_header(2) %>
+	</tr>
+	<tr class="head">
+		<%= week_header(10) %>
+	</tr>
+	<tr class="head">
+		<%= month_header(10) %>
+	</tr>
+	<tr class="head">
+		<%= year_header(10) %>
+	</tr>
+<% end %>
+</table>

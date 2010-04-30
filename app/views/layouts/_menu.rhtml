@@ -10,6 +10,10 @@
 	         :action => 'managed',
              :clear => 1 %></li>	
 <% end -%>
+	<li><%= link_to 'Planung', 
+	         :controller => 'planning', 
+	         :action => 'index',
+             :clear => 1 %></li>	
 <% if @user.management -%>
 	<li><%= link_to 'Kunden', 
 	         :controller => 'evaluator',

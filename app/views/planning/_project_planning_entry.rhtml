@@ -1,0 +1,20 @@
+<tr>
+	<th colspan="2"><%= project_planning_graph.project.label_verbose %></th>
+	<%= week_overview_tds(project_planning_graph.overview_graph, 10) -%>
+</tr>
+<% project_planning_graph.employees.each do |employee| %>
+	<tr>
+		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<th><%= link_to employee.label, :controller => 'planning', :action => 'employee_planning', :employee_id => employee %></th>
+		<% project_planning_graph.each_week do |week| -%>	
+			<%= day_planning_tds(project_planning_graph.plannings, employee, project_planning_graph.project, week) -%>			
+		<% end -%>
+	</tr>
+<% end %>
+<tr>
+	<th style="width:30px"></th>
+	<th>Neue Planung</th>
+	<% project_planning_graph.each_week do |week| -%>	
+		<%= unplanned_half_day_tds(nil, project_planning_graph.project, week) -%>
+	<% end %>
+</tr>

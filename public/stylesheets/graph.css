@@ -131,3 +131,31 @@ tr .current {
 	width: 75px;
 	vertical-align: middle;
 }
+
+.absence td.tentative {
+	background-color: #99CCFF;
+}
+
+.absence td.definitive {
+	background-color: #99ABFF;
+}
+
+.absence td.absence {
+	background-color: #CCCCFF;
+}
+
+.absence td.free {
+	background-color: #FFA199;
+}
+
+.absence td.half_planned {
+	background-color: #FFDE99;
+}
+
+.absence td.full_planned {
+	background-color: #99FFA1;
+}
+
+.absence td.over_planned {
+	background-color: red;
+}

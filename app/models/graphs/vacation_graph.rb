@@ -1,6 +1,7 @@
 class VacationGraph
   
   include ActionView::Helpers::NumberHelper
+  include GraphHelper
   
   attr_reader :period, :day
   
@@ -45,17 +46,6 @@ class VacationGraph
   	end
   end
     
-  def each_week
-	  @period.startDate.step(@period.endDate, 7) do |day|
-      @current = get_period_week(day)
-      yield day
-	  end
-	end
- 
-  def is_current_week
-    @current.to_s == @todays_week
-  end
-     
   def timebox
   	times = Hash.new(0)
   	absences = add_absences times, @current
@@ -180,33 +170,6 @@ private
 
   def colorFor(absence)
     @colorMap[absence]
-  end
-  
-  def extend_to_weeks(period)
-    Period.new Period.weekFor(period.startDate).startDate,
-               Period.weekFor(period.endDate).endDate,
-               period.label
-  end
-  
-  def get_period_month(date)
-    get_set_cache(date.month) { Period.new(date.beginning_of_month, date.end_of_month) }
-  end
-  
-  def get_period_week(from)
-    get_period(from, from + 6)
-  end
-  
-  def get_period(from, to)
-    get_set_cache([from, to]) { Period.new(from, to) }
-  end
-  
-  def get_set_cache(key)
-    val = @cache[key]
-    if val.nil?
-      val = yield
-      @cache[key] = val
-    end
-    val
   end
   
 end

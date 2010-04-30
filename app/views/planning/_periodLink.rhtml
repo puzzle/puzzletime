@@ -1,0 +1,16 @@
+<% id ||= nil %>
+<p>
+<%  if @period && @period != Period.currentMonth -%>
+	Zeiten w&auml;hrend <%= @period %> &nbsp; 
+	<%= link_to 'Aktuelle Zeitspanne', 
+				 :controller => 'evaluator',
+	             :action => 'currentPeriod', 
+	             :evaluation => params[:action],
+	             :category_id => id %> | 
+<% end -%>
+<%= link_to 'Andere Zeitspanne', 
+			:controller => 'evaluator',
+            :action => 'selectPeriod',  
+            :evaluation => params[:action],
+			:category_id => id %>
+</p>

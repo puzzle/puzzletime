@@ -61,6 +61,30 @@ class EvaluatorController < ApplicationController
     redirect_to :controller => 'graph', :action => 'all_absences'
   end
   
+  def employee_planning
+    redirect_to :controller => 'planning', :action => 'employee_planning', :employee_id => params[:category_id]
+  end
+  
+  def employees_planning
+    redirect_to :controller => 'planning', :action => 'employees_planning'
+  end
+
+  def my_planning
+    redirect_to :controller => 'planning', :action => 'my_planning'
+  end
+  
+  def project_planning
+    redirect_to :controller => 'planning', :action => 'project_planning'
+  end
+  
+  def department_planning
+    redirect_to :controller => 'planning', :action => 'department_planning', :department_id => params[:category_id]
+  end
+  
+  def company_planning
+    redirect_to :controller => 'planning', :action => 'company_planning'
+  end
+  
   
   ########################  DETAIL ACTIONS  #########################
   

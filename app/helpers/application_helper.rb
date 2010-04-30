@@ -47,21 +47,32 @@ module ApplicationHelper
   end
   
   def date_calendar_field(object, method, title, update = false, default = Date.today)
+    cal_options = {:onUpdate => :workDateChanged} if update    
+    generic_calendar_field object, method, title, DATE_FORMAT, cal_options, default
+  end
+
+  def week_calendar_field(object, method, title, update = false, default = Date.today)
+    cal_options = {:onUpdate => :updatePlanning} if update    
+    generic_calendar_field object, method, title, WEEK_FORMAT, cal_options, default
+  end
+  
+  def generic_calendar_field(object, method, title, date_format, cal_options, default = Date.today)
+    cal_options ||= {}
     @has_calendar = true    # used to include calendar js/css
     date = date_value(object, method, default)
     html_options = { :field_title => title,
         :button_image => 'calendar.gif',
         :button_title => 'Kalender anzeigen',
         :size => '15',
-        :value => date ? date.strftime(DATE_FORMAT) : ""}
-    cal_options = { :firstDay => 1,
+        :value => date ? date.strftime(date_format) : ""}
+    cal_options.merge!({
+        :firstDay => 1,
         :step => 1,
-        :ifFormat => DATE_FORMAT,
-        :daFormat => DATE_FORMAT,
+        :ifFormat => date_format,
+        :daFormat => date_format,
         :range => [2006,2100],
         :showOthers => true,
-        :cache => true }    
-    cal_options[:onUpdate] = :workDateChanged if update    
+        :cache => true })
     calendar_field object, method, html_options, cal_options
   end
   

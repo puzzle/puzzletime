@@ -9,6 +9,8 @@
   <td> &nbsp; </td>
   <td><%= period_link 'Dieser Monat', '0m' %> </td>
   <td> &nbsp; </td>
+  <td><%= period_link '1. Quartal', '1q' %> </td>
+  <td> &nbsp; </td>
   <td><%= period_link 'Dieses Jahr', '0y' %> </td>
 </tr>
 <tr>
@@ -17,6 +19,8 @@
   <td><%= period_link 'Letzte Woche', '-1w' %> </td>
   <td> &nbsp; </td>
   <td><%= period_link 'Letzter Monat', '-1m' %> </td>
+  <td> &nbsp; </td>
+  <td><%= period_link '2. Quartal', '2q' %> </td>
   <td> &nbsp; </td>
   <td><%= period_link 'Letztes Jahr', '-1y' %> </td>
 </tr>
@@ -27,7 +31,20 @@
   <td> &nbsp; </td>
   <td><%= period_link 'Vorletzter Monat', '-2m' %> </td>
   <td> &nbsp; </td>
+  <td><%= period_link '3. Quartal', '3q' %> </td>
+  <td> &nbsp; </td>
   <td><%= period_link 'Vorletztes Jahr', '-2y' %> </td>
+</tr>
+<tr>
+  <td> &nbsp; </td>
+  <td> &nbsp; </td>
+  <td> &nbsp; </td>
+  <td> &nbsp; </td>
+  <td> &nbsp; </td>
+  <td> &nbsp; </td>
+  <td><%= period_link '4. Quartal', '4q' %> </td>
+  <td> &nbsp; </td>
+  <td> &nbsp; </td>
 </tr>
 </table>
 </p>
@@ -58,4 +75,3 @@ Beliebig:
              :action => params[:evaluation],
              :category_id => params[:category_id] %>
 </p>
-             
