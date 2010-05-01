@@ -86,9 +86,12 @@ class PlanningController < ApplicationController
       @planning.project = Project.find(params[:project_id])
     end
     if params[:date]
-      @planning.start_week = Week::from_string(params[:date]).to_integer
+      week_date = Week::from_string(params[:date])
+      @planning.start_week = week_date.to_integer
+      @period = extended_period(week_date.to_date)
+    else
+      @period = extended_period
     end
-    @period = extended_period
     build_planning_form
   end
   
