@@ -20,12 +20,9 @@ class CreatePlannings < ActiveRecord::Migration
       
       t.timestamps
     end
-    
-    add_column :employees, :department_id, :integer
   end
 
   def self.down
     drop_table :plannings
-    remove_column :employees, :department_id
   end
 end
