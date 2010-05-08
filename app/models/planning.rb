@@ -35,6 +35,7 @@ class Planning < ActiveRecord::Base
   def validate
     errors.add(:start_week, "Von Format ist ung&uuml;ltig") if !valid_week?(start_week)
     errors.add(:end_week, "Bis Format ist ung&uuml;ltig") if end_week && !valid_week?(end_week)
+    errors.add(:end_week, "Bis Datum ist ung&uuml;ltig") if end_week && (end_week < start_week)
 
     if !(monday_am || monday_pm || tuesday_am || tuesday_pm || wednesday_am || wednesday_pm || thursday_am || thursday_pm || friday_am || friday_pm)
       errors.add(:start_date, "Mindestens ein halber Tag muss selektiert werden")
