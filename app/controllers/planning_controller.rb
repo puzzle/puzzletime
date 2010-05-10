@@ -164,7 +164,7 @@ private
   
   def planned_employees(department, period)
     #this could be improved with a many-to-many table relation between Department and Employee
-    projects = Project.all(:conditions => {:department_id => department, :parent_id => nil})
+    projects = Project.all(:conditions => {:department_id => department})
     memberships = Projectmembership.all(:conditions => {:project_id => projects.collect{|p|p.id}, :active => true})
     employees = Employee.find(memberships.collect{|m| m.employee_id})
     period ||= Period.currentMonth
