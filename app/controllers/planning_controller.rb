@@ -168,7 +168,7 @@ private
     memberships = Projectmembership.all(:conditions => {:project_id => projects.collect{|p|p.id}, :active => true})
     employees = Employee.find(memberships.collect{|m| m.employee_id})
     period ||= Period.currentMonth
-    employees.select{|e| !e.employment_at(period.startDate).nil?}
+    employees.select{|e| e.employment_at(period.startDate).present? || e.employment_at(period.endDate).present?}
   end
   
   def set_planning_attributes(planning_params)
