@@ -14,8 +14,8 @@ test:
   adapter: postgresql
   database: puzzletime_test
   encoding: utf8
-  username: postgres
-  password: timepuzzle
+  username: hudson
+  password: rhashVeav
   host: 127.0.0.1
   min_messages: warning
 
