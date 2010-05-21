@@ -19,15 +19,6 @@ test:
   host: 127.0.0.1
   min_messages: warning
 
-hudson:
-  adapter: postgresql
-  database: pitc_puzzletime_test
-  encoding: utf8
-  username: pitc_puzzletime
-  password: whougbyesht3
-  host: pitc-puzzletime.db.puzzle.ch
-  min_messages: warning
-
 production:
   adapter: postgresql
   database: pitc_puzzletime_prod
