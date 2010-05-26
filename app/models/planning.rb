@@ -61,7 +61,7 @@ class Planning < ActiveRecord::Base
   def wednesday
     wednesday_am && wednesday_pm
   end
-  
+
   def thursday
     thursday_am && thursday_pm
   end
@@ -86,10 +86,19 @@ class Planning < ActiveRecord::Base
   end
 
 private
-  def overlaps?(existing_planning)
-    if existing_planning != self
-      #return true #todo: implement overlaps method
-    end
+  def overlaps?(other_planning)
+    return false if other_planning == self
+    return true if self.repeat_type_forever? && other_planning.repeat_type_forever?
+    
+    # sort plannings so that p1 starts before or in same week as p2
+    p1_end_week = (self.start_week <= other_planning.start_week) ? self.end_week : other_planning.end_week
+    p2_start_week = (self.start_week <= other_planning.start_week) ? other_planning.start_week : self.start_week
+    
+    # set end_week to a very late date
+    p1_end_week ||= 999950
+    
+    return p1_end_week >= p2_start_week
+    
   end
   
   def valid_week?(week)
