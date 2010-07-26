@@ -3,11 +3,9 @@
 puzzle:
   id:      1
   name:    Puzzle
-  contact: Mark
   shortname: pitc
 
 swisstopo:
   id:      2
   name:    Swisstopo
-  contact: Hanspeter
   shortname: stop
