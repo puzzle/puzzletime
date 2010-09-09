@@ -7,7 +7,7 @@ class EvaluatorController < ApplicationController
   before_filter :authenticate
   before_filter :authorize, :only => [:clients, :employees, :overtime,
                                       :clientProjects, :employeeProjects, :employeeAbsences,
-                                      :exportCapacityCSV, :exportMAOverview]
+                                      :exportCapacityCSV, :exportExtendedCapacityCSV, :exportMAOverview]
   before_filter :setPeriod
   
   helper_method :user_view?
@@ -158,12 +158,16 @@ class EvaluatorController < ApplicationController
   
   def exportCapacityCSV
     if @period
-      csv = create_capacity_csv   # create csv beforehand to view eventual errors
-      filename = "puzzletime_auslastung_#{@period.startDate.strftime("%Y%m%d")}_#{@period.endDate.strftime("%Y%m%d")}.csv"
-      setExportHeader(filename)
-      send_data(csv,
-                :type => 'text/csv; charset=utf-8; header=present',
-                :filename => filename)  
+      exportCSV(create_capacity_csv, "puzzletime_auslastung")
+    else
+      flash[:notice] = "Bitte wählen Sie eine Zeitspanne für die Auslastung."
+      redirect_to :back
+    end
+  end
+  
+  def exportExtendedCapacityCSV
+    if @period
+      exportCSV(create_extended_capacity_csv, "puzzletime_detaillierte_auslastung")
     else
       flash[:notice] = "Bitte wählen Sie eine Zeitspanne für die Auslastung."
       redirect_to :back
@@ -324,10 +328,61 @@ private
     end
     @times = combined_times
   end
+
+  def exportCSV(csv_data, filename_prefix)
+    filename = "#{filename_prefix}_#{@period.startDate.strftime("%Y%m%d")}_#{@period.endDate.strftime("%Y%m%d")}.csv"
+    setExportHeader(filename)
+    send_data(csv_data,
+              :type => 'text/csv; charset=utf-8; header=present',
+              :filename => filename)  
+  end
   
   def csvLabel(item)
     item.nil? || !item.respond_to?(:label) ? '' : 
       item.label.downcase.gsub(/[^0-9a-z]/, "_") 
+  end
+  
+  def create_extended_capacity_csv
+    FasterCSV.generate do |csv|
+      csv << ["Detaillierte Auslastung", @period]
+      csv << []
+      
+      csv << ["Mitarbeiter",
+              "Soll Arbeitszeit (h)",
+              "Überzeit (h)",
+              "Überzeit Total (h)",
+              "Ferienguthaben bis Ende #{@period.endDate.year} (h)",
+              "Zusätzliche Anwesenheit (h)",
+              "Abwesenheit (h)",
+              "Projekt",
+              "Subprojekt",
+              "Projekte Total (h)",
+              "Projekte Total verrechenbar (h)",
+              "Projekte Total nicht verrechenbar (h)",
+              "PITC Projekte Total (h)"]
+              
+      Employee.employed_ones(@period).each do |employee|
+        stat = employee.statistics
+        
+        
+        employee.sumAttendance(@period)
+        
+        csv << [employee.shortname,                                     # Mitarbeiter
+                stat.musttime(@period),                                 # Soll Arbeitszeit (h)
+                stat.overtime(@period).to_f,                            # Überzeit (h)
+                sprintf('%.2f', stat.current_overtime),                 # Überzeit Total (h)
+                sprintf('%.2f', stat.current_remaining_vacations),      # Ferienguthaben bis Ende Jahr (h)
+                "",                                                     # Zusätzliche Anwesenheit (h)
+                "",                                                     # Abwesenheit (h)
+                "",                                                     # Projekt
+                "",                                                     # Subprojekt
+                "",                                                     # Projekte Total (h)
+                "",                                                     # Projekte Total verrechenbar (h)
+                "",                                                     # Projekte Total nicht verrechenbar (h)
+                ""]                                                     # PITC Projekte Total (h)
+      csv << []
+      end  
+    end
   end
   
   def create_capacity_csv

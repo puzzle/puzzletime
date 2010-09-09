@@ -23,7 +23,9 @@ class EmployeesEval < Evaluation
   end
 
   def overview_supplement(user)
-    user.management ? [[:exportCapacityCSV, 'MA Auslastung CSV'], [:exportMAOverview, 'MA Übersicht']] : super(user)
+    user.management ? [[:exportCapacityCSV, 'Auslastung CSV'],
+                       [:exportExtendedCapacityCSV, 'Detaillierte Auslastung CSV'],
+                       [:exportMAOverview, 'MA Übersicht']] : super(user)
   end
  
 end
