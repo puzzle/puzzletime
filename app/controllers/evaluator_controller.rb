@@ -158,7 +158,7 @@ class EvaluatorController < ApplicationController
   
   def exportCapacityCSV
     if @period
-      exportCSV(create_capacity_csv, "puzzletime_auslastung")
+      sendCSV(CapacityReport.new(@period))
     else
       flash[:notice] = "Bitte wählen Sie eine Zeitspanne für die detaillierte Auslastung."
       redirect_to :back
@@ -167,7 +167,7 @@ class EvaluatorController < ApplicationController
   
   def exportExtendedCapacityCSV
     if @period
-      exportCSV(create_extended_capacity_csv, "puzzletime_detaillierte_auslastung")
+      sendCSV(ExtendedCapacityReport.new(@period))
     else
       flash[:notice] = "Bitte wählen Sie eine Zeitspanne für die Auslastung."
       redirect_to :back
@@ -329,210 +329,14 @@ private
     @times = combined_times
   end
 
-  def exportCSV(csv_data, filename_prefix)
-    filename = "#{filename_prefix}_#{@period.startDate.strftime("%Y%m%d")}_#{@period.endDate.strftime("%Y%m%d")}.csv"
-    setExportHeader(filename)
-    send_data(csv_data, :type => 'text/csv; charset=utf-8; header=present', :filename => filename)  
+  def sendCSV(csv_report)
+    setExportHeader(csv_report.filename)
+    send_data(csv_report.to_csv, :type => 'text/csv; charset=utf-8; header=present', :filename => csv_report.filename)  
   end
   
   def csvLabel(item)
     item.nil? || !item.respond_to?(:label) ? '' : 
       item.label.downcase.gsub(/[^0-9a-z]/, "_") 
-  end
-  
-  def create_extended_capacity_csv
-    FasterCSV.generate do |csv|
-      # header
-      csv << ["Mitarbeiter",
-              "Soll Arbeitszeit (h)",
-              "Überzeit (h)",
-              "Überzeit Total (h)",
-              "Ferienguthaben bis Ende #{Date.today.year} (h)",
-              "Zusätzliche Anwesenheit (h)",
-              "Abwesenheit (h)",
-              "Projekte Total (h)",
-              "Subprojektname",
-              "Projekte Total verrechenbar (h)",
-              "Projekte Total nicht verrechenbar (h)",
-              "Interne Projekte Total (h)"]
-      
-      Employee.employed_ones(@period).each do |employee|
-        # prepare employee data
-        project_total_billable_hours = 0      # Projekte Total verrechenbar (h)
-        project_total_non_billable_hours = 0  # Projekte Total nicht verrechenbar (h)
-        internal_project_total_hours = 0      # Interne Projekte Total (h)
-        
-        processed_ids = []
-        billable_projects = []
-        non_billable_projects = []
-        employee.worked_on_projects.each do |project|
-          # get id of parent project on (max) level 1
-          id = project.path_ids[[1, project.path_ids.size - 1].min]
-          if ! processed_ids.include? id
-            processed_ids.push id
-            project = Project.find(id)
-            if project.billable
-              billable_projects.push project
-            else
-              non_billable_projects.push project
-            end
-          end 
-        end
-
-        # line per billable project
-        csv_billable_lines = []
-        billable_projects.each do |project|
-          result = find_billable_time(employee, project.id, @period)
-          sum = result.collect { |w| w.hours }.sum  
-          parent = child = project
-          parent = child.parent if child.parent
-          
-          project_billable_hours = extract_billable_hours(result, true)
-          project_total_billable_hours += project_billable_hours
-          project_non_billable_hours = extract_billable_hours(result, false)
-          project_total_non_billable_hours += project_non_billable_hours
-          
-          if (project_billable_hours+project_non_billable_hours).abs > 0.001
-            csv_billable_lines << [employee.shortname, "", "", "", "", "", "",
-                    parent.label_verbose, 
-                    child == parent ? "" : child.label,
-                    project_billable_hours, 
-                    project_non_billable_hours,
-                    "-"]
-          end
-        end
-      
-        # line per non-billable project
-        csv_non_billable_lines = []
-        non_billable_projects.each do |project|
-          result = find_billable_time(employee, project.id, @period)
-          sum = result.collect { |w| w.hours }.sum  
-          parent = child = project
-          parent = child.parent if child.parent
-          
-          internal_project_hours = extract_billable_hours(result, false)
-          internal_project_total_hours += internal_project_hours
-          
-          if internal_project_hours.abs > 0.001
-            csv_non_billable_lines << [employee.shortname, "", "", "", "", "", "",
-                    parent.label_verbose, 
-                    child == parent ? "" : child.label,
-                    "-", 
-                    "-", 
-                    internal_project_hours]
-          end
-        end
-        
-        project_total_hours = project_total_billable_hours + project_total_non_billable_hours + internal_project_total_hours
-        diff = employee.sumAttendance(@period) - project_total_hours
-        additional_attendance_hours = diff.abs > 0.001 ? diff : 0
-        
-        # first line: employee overview
-        csv << [employee.shortname,                                     # Mitarbeiter
-                employee.statistics.musttime(@period),                  # Soll Arbeitszeit (h)
-                employee.statistics.overtime(@period),                  # Überzeit (h)
-                employee.statistics.current_overtime,                   # Überzeit Total (h)
-                employee.statistics.current_remaining_vacations,        # Ferienguthaben bis Ende Jahr (h)
-                additional_attendance_hours,                            # Zusätzliche Anwesenheit (h)
-                employee_absences(employee, @period),                   # Abwesenheit (h)
-                project_total_hours,                                    # Projekte Total (h)
-                "-",                                                    # Subprojektname
-                project_total_billable_hours,                           # Projekte Total verrechenbar (h)
-                project_total_non_billable_hours,                       # Projekte Total nicht verrechenbar (h)
-                internal_project_total_hours]                           # Interne Projekte Total (h)
-        
-        # append prepared data to CSV
-        csv_billable_lines.each do |line|
-          csv << line
-        end
-        csv_non_billable_lines.each do |line|
-          csv << line
-        end
-      end
-    end
-  end
-  
-  def create_capacity_csv
-    periods = monthly_periods
-    FasterCSV.generate do |csv|
-      csv << ["Mitarbeiter", "Projekt", "Subprojekt", "Verrechenbar", "Nicht verrechenbar", "Monat", "Jahr"]
-      Employee.employed_ones(@period).each do |employee|
-        periods.each do |period|
-          project_time = 0
-          processed_ids = []
-          employee.worked_on_projects.each do |project|
-            # get id of parent project on (max) level 1
-            id = project.path_ids[[1, project.path_ids.size - 1].min]
-            if ! processed_ids.include? id
-              processed_ids.push id
-              result = find_billable_time(employee, id, period)
-              sum = result.collect { |w| w.hours }.sum  
-              parent = child = Project.find(id)
-              parent = child.parent if child.parent
-              append_account_entry(csv, 
-                        employee, 
-                        period, 
-                        parent.label_verbose, 
-                        child == parent ? "" : child.label,
-                        extract_billable_hours(result, true), 
-                        extract_billable_hours(result, false))
-              project_time += sum
-            end  
-          end
-          # include Anwesenheitszeit Differenz
-          diff = employee.sumAttendance(period) - project_time
-          append_account_entry(csv, employee, period, "Zusätzliche Anwesenheit", "", 0, diff)
-          # include all absencetimes
-          absences = employee_absences(employee, period)
-          append_account_entry(csv, employee, period, "Abwesenheiten", "", 0, absences)
-        end  
-      end  
-    end 
-  end
-  
-  def employee_absences(employee, period)
-   employee.worktimes.sum(:hours, 
-                          :include => :absence,
-                          :conditions => ["type = 'Absencetime' AND absences.payed AND work_date BETWEEN ? AND ?", 
-                                          period.startDate, 
-                                          period.endDate]).to_f
-  end
-  
-  def append_account_entry(csv, employee, period, project_label, subproject_label, billable_hours, not_billable_hours)
-    if (billable_hours + not_billable_hours).abs > 0.001
-      csv << [employee.shortname, 
-              project_label,
-              subproject_label,
-              billable_hours, 
-              not_billable_hours,
-              period.startDate.month, 
-              period.startDate.year]
-    end
-  end
-  
-  def find_billable_time(employee, project_id, period)
-    Worktime.find_by_sql ["""SELECT SUM(w.hours) AS HOURS, w.billable FROM worktimes w 
-                             LEFT JOIN projects p ON p.id = w.project_id
-                             WHERE w.employee_id = ? AND ? = ANY(p.path_ids)
-                             AND w.work_date BETWEEN ? AND ?
-                             GROUP BY w.billable""",
-                          employee.id, project_id, period.startDate, period.endDate ]  
-  end
-  
-  def monthly_periods
-    month_end = @period.startDate.end_of_month
-    periods = [Period.new(@period.startDate, [month_end, @period.endDate].min)]
-    while @period.endDate > month_end
-      month_start = month_end + 1
-      month_end = month_start.end_of_month
-      periods.push Period.new(month_start, [month_end, @period.endDate].min)
-    end
-    periods
-  end
-  
-  def extract_billable_hours(result, billable)
-    entry = result.select {|w| w.billable == billable }.first
-    entry ? entry.hours : 0
   end
   
 end
