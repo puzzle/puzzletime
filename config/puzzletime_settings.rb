@@ -20,7 +20,8 @@ SYSTEM_EMAIL            = %{"PuzzleTime" <monitor-sender@worldweb2000.com>}
 EXCEPTION_RECIPIENTS    = ["santschi@puzzle.ch"]
 
 # LDAP configuration
-LDAP_HOST               = 'proximai.ww2.ch'
+LDAP_HOST               = 'ldapi.rz.puzzle.ch'
+
 LDAP_PORT               = 636
 LDAP_USER_DN            = 'ou=puzzle,ou=users,dc=puzzle,dc=itc'
 LDAP_EXTERNAL_DN        = 'ou=extern,ou=users,dc=puzzle,dc=itc'
