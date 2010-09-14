@@ -21,6 +21,7 @@ Rails::Initializer.run do |config|
   # Add additional load paths for your own custom dirs
   config.load_paths += %W( #{RAILS_ROOT}/app/models/forms 
                            #{RAILS_ROOT}/app/models/modules 
+                           #{RAILS_ROOT}/app/models/csv 
                            #{RAILS_ROOT}/app/models/util 
                            #{RAILS_ROOT}/app/models/evaluations
                            #{RAILS_ROOT}/app/models/graphs
