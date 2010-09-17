@@ -18,7 +18,7 @@ private
               "Soll Arbeitszeit (h)",
               "Überzeit (h)",
               "Überzeit Total (h)",
-              "Ferienguthaben bis Ende #{Date.today.year} (h)",
+              "Ferienguthaben (h)",
               "Zusätzliche Anwesenheit (h)",
               "Abwesenheit (h)",
               "Projekte Total (h)",
@@ -102,18 +102,18 @@ private
       additional_attendance_hours = diff.abs > 0.001 ? diff : 0
       
       # append employee overview
-      csv << [employee.shortname,                                     # Mitarbeiter
-              employee.statistics.musttime(@period),                  # Soll Arbeitszeit (h)
-              employee.statistics.overtime(@period),                  # Überzeit (h)
-              employee.statistics.current_overtime,                   # Überzeit Total (h)
-              employee.statistics.current_remaining_vacations,        # Ferienguthaben bis Ende Jahr (h)
-              additional_attendance_hours,                            # Zusätzliche Anwesenheit (h)
-              employee_absences(employee, @period),                   # Abwesenheit (h)
-              project_total_hours,                                    # Projekte Total (h)
-              "",                                                    # Subprojektname
-              project_total_billable_hours,                           # Projekte Total verrechenbar (h)
-              project_total_non_billable_hours,                       # Projekte Total nicht verrechenbar (h)
-              internal_project_total_hours]                           # Interne Projekte Total (h)
+      csv << [employee.shortname,                                       # Mitarbeiter
+              employee.statistics.musttime(@period),                    # Soll Arbeitszeit (h)
+              employee.statistics.overtime(@period),                    # Überzeit (h)
+              employee.statistics.current_overtime(@period.endDate),    # Überzeit Total (h)
+              employee.statistics.remaining_vacations(@period.endDate), # Ferienguthaben (h)
+              additional_attendance_hours,                              # Zusätzliche Anwesenheit (h)
+              employee_absences(employee, @period),                     # Abwesenheit (h)
+              project_total_hours,                                      # Projekte Total (h)
+              "",                                                       # Subprojektname
+              project_total_billable_hours,                             # Projekte Total verrechenbar (h)
+              project_total_non_billable_hours,                         # Projekte Total nicht verrechenbar (h)
+              internal_project_total_hours]                             # Interne Projekte Total (h)
       
       # append billable project lines
       csv_billable_lines.each do |line|
