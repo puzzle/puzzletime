@@ -19,7 +19,7 @@ private
               'Soll Arbeitszeit (h)',
               'Überzeit (h)',
               'Überzeit Total (h)',
-              'Ferienguthaben (d)',
+              "Ferienguthaben bis #{@period.endDate.year} (d)",
               'Zusätzliche Anwesenheit (h)',
               'Abwesenheit (h)',
               'Projekte Total (h)',
@@ -106,6 +106,7 @@ private
       additional_attendance_hours = diff.abs > 0.001 ? diff : 0
       
       average_percents = employee.statistics.employments_during(@period).sum(&:percent)
+      remaining_vacations = employee.statistics.remaining_vacations(Date.new(@period.endDate.year, 12, 31))
       
       # append employee overview
       csv << [employee.shortname,
@@ -113,7 +114,7 @@ private
               employee.statistics.musttime(@period),
               employee.statistics.overtime(@period),
               format_with_precision(employee.statistics.current_overtime(@period.endDate)),
-              format_with_precision(employee.statistics.remaining_vacations(@period.endDate)),
+              format_with_precision(remaining_vacations),
               format_with_precision(additional_attendance_hours),
               format_with_precision(employee_absences(employee, @period)),
               format_with_precision(project_total_hours),
