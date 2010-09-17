@@ -1,7 +1,8 @@
 class BaseCapacityReport
   
-  def initialize(period)
+  def initialize(period, filename_prefix)
     @period = period
+    @filename_prefix = filename_prefix
   end
 
   def filename

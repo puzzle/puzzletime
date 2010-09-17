@@ -1,8 +1,7 @@
 class CapacityReport < BaseCapacityReport
   
   def initialize(period)
-    super(period)
-    @filename_prefix = "puzzletime_auslastung"
+    super(period, "puzzletime_auslastung")
   end
   
   def to_csv
