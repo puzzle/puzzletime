@@ -1,7 +1,7 @@
 class ExtendedCapacityReport < BaseCapacityReport
   
   def initialize(current_period)
-    super(current_period, "puzzletime_detaillierte_auslastung")
+    super(current_period, 'puzzletime_detaillierte_auslastung')
   end
   
   def to_csv
@@ -14,18 +14,20 @@ class ExtendedCapacityReport < BaseCapacityReport
 private
 
   def add_header(csv)
-      csv << ["Mitarbeiter",
-              "Soll Arbeitszeit (h)",
-              "Überzeit (h)",
-              "Überzeit Total (h)",
-              "Ferienguthaben (h)",
-              "Zusätzliche Anwesenheit (h)",
-              "Abwesenheit (h)",
-              "Projekte Total (h)",
-              "Subprojektname",
-              "Projekte Total verrechenbar (h)",
-              "Projekte Total nicht verrechenbar (h)",
-              "Interne Projekte Total (h)"]
+      csv << ['Mitarbeiter',
+              'Anstellungsgrad (%)',
+              'Soll Arbeitszeit (h)',
+              'Überzeit (h)',
+              'Überzeit Total (h)',
+              'Ferienguthaben (d)',
+              'Zusätzliche Anwesenheit (h)',
+              'Abwesenheit (h)',
+              'Projekte Total (h)',
+              'Subprojektname',
+              'Kunden-Projekte Total (h)',
+              'Kunden-Projekte Total verrechenbar (h)',
+              'Kunden-Projekte Total nicht verrechenbar (h)',
+              'Interne Projekte Total (h)']
   end
   
   def add_employees(csv)
@@ -67,12 +69,13 @@ private
         project_total_non_billable_hours += project_non_billable_hours
         
         if (project_billable_hours+project_non_billable_hours).abs > 0.001
-          csv_billable_lines << [employee.shortname, "", "", "", "", "", "",
+          csv_billable_lines << [employee.shortname, '', '', '', '', '', '', '',
                                  parent.label_verbose, 
-                                 child == parent ? "" : child.label,
-                                 project_billable_hours, 
-                                 project_non_billable_hours,
-                                 ""]
+                                 child == parent ? '' : child.label,
+                                 format_with_precision(project_billable_hours+project_non_billable_hours), 
+                                 format_with_precision(project_billable_hours), 
+                                 format_with_precision(project_non_billable_hours),
+                                 '']
         end
       end
       
@@ -88,12 +91,13 @@ private
         internal_project_total_hours += internal_project_hours
         
         if internal_project_hours.abs > 0.001
-          csv_non_billable_lines << [employee.shortname, "", "", "", "", "", "",
+          csv_non_billable_lines << [employee.shortname, '', '', '', '', '', '', '',
                                      parent.label_verbose, 
-                                     child == parent ? "" : child.label,
-                                     "", 
-                                     "", 
-                                     internal_project_hours]
+                                     child == parent ? '' : child.label,
+                                     '', 
+                                     '', 
+                                     '', 
+                                     format_with_precision(internal_project_hours)]
         end
       end
 
@@ -101,19 +105,23 @@ private
       diff = employee.sumAttendance(@period) - project_total_hours
       additional_attendance_hours = diff.abs > 0.001 ? diff : 0
       
+      average_percents = employee.statistics.employments_during(@period).sum(&:percent)
+      
       # append employee overview
-      csv << [employee.shortname,                                       # Mitarbeiter
-              employee.statistics.musttime(@period),                    # Soll Arbeitszeit (h)
-              employee.statistics.overtime(@period),                    # Überzeit (h)
-              employee.statistics.current_overtime(@period.endDate),    # Überzeit Total (h)
-              remaining_vacations(employee),                            # Ferienguthaben (h)
-              additional_attendance_hours,                              # Zusätzliche Anwesenheit (h)
-              employee_absences(employee, @period),                     # Abwesenheit (h)
-              project_total_hours,                                      # Projekte Total (h)
-              "",                                                       # Subprojektname
-              project_total_billable_hours,                             # Projekte Total verrechenbar (h)
-              project_total_non_billable_hours,                         # Projekte Total nicht verrechenbar (h)
-              internal_project_total_hours]                             # Interne Projekte Total (h)
+      csv << [employee.shortname,
+              average_percents,
+              employee.statistics.musttime(@period),
+              employee.statistics.overtime(@period),
+              format_with_precision(employee.statistics.current_overtime(@period.endDate)),
+              format_with_precision(employee.statistics.remaining_vacations(@period.endDate)),
+              format_with_precision(additional_attendance_hours),
+              format_with_precision(employee_absences(employee, @period)),
+              format_with_precision(project_total_hours),
+              '',
+              format_with_precision(project_total_billable_hours+project_total_non_billable_hours),
+              format_with_precision(project_total_billable_hours),
+              format_with_precision(project_total_non_billable_hours),
+              format_with_precision(internal_project_total_hours)]
       
       # append billable project lines
       csv_billable_lines.each do |line|
@@ -127,8 +135,8 @@ private
     end
   end
   
-  def remaining_vacations(employee)
-    employee.statistics.remaining_vacations(@period.endDate) * 8 # remaining vacations in hours
+  def format_with_precision(number)
+    sprintf("%0.02f", number) 
   end
   
 end
