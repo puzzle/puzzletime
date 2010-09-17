@@ -106,7 +106,7 @@ private
               employee.statistics.musttime(@period),                    # Soll Arbeitszeit (h)
               employee.statistics.overtime(@period),                    # Überzeit (h)
               employee.statistics.current_overtime(@period.endDate),    # Überzeit Total (h)
-              employee.statistics.remaining_vacations(@period.endDate), # Ferienguthaben (h)
+              remaining_vacations(employee),                            # Ferienguthaben (h)
               additional_attendance_hours,                              # Zusätzliche Anwesenheit (h)
               employee_absences(employee, @period),                     # Abwesenheit (h)
               project_total_hours,                                      # Projekte Total (h)
@@ -125,6 +125,10 @@ private
         csv << line
       end
     end
+  end
+  
+  def remaining_vacations(employee)
+    employee.statistics.remaining_vacations(@period.endDate) * 8 # remaining vacations in hours
   end
   
 end
