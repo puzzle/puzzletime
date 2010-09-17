@@ -19,7 +19,7 @@ private
               'Soll Arbeitszeit (h)',
               'Überzeit (h)',
               'Überzeit Total (h)',
-              "Ferienguthaben bis #{@period.endDate.year} (d)",
+              "Ferienguthaben bis Ende #{@period.endDate.year} (d)",
               'Zusätzliche Anwesenheit (h)',
               'Abwesenheit (h)',
               'Projekte Total (h)',
