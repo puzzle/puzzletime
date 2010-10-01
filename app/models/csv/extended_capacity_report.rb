@@ -15,19 +15,28 @@ private
 
   def add_header(csv)
       csv << ['Mitarbeiter',
+              'Bereich',
               'Anstellungsgrad (%)',
               'Soll Arbeitszeit (h)',
               'Überzeit (h)',
               'Überzeit Total (h)',
               "Ferienguthaben bis Ende #{@period.endDate.year} (d)",
+              'Anwesenheit (h)',
               'Zusätzliche Anwesenheit (h)',
               'Abwesenheit (h)',
-              'Projekte Total (h)',
+              'Projektkürzel',
+              'Projektname',
               'Subprojektname',
+              'Projekte Total (h)',
+              'Projekte Total - Detail (h)',
               'Kunden-Projekte Total (h)',
+              'Kunden-Projekte Total - Detail (h)',
               'Kunden-Projekte Total verrechenbar (h)',
+              'Kunden-Projekte Total verrechenbar - Detail (h)',
               'Kunden-Projekte Total nicht verrechenbar (h)',
-              'Interne Projekte Total (h)']
+              'Kunden-Projekte Total nicht verrechenbar - Detail (h)',
+              'Interne Projekte Total (h)',
+              'Interne Projekte Total - Detail (h)']
   end
   
   def add_employees(csv)
@@ -55,7 +64,7 @@ private
         end 
       end
 
-      # process billable projects
+      # process billable (customer) projects
       csv_billable_lines = []
       billable_projects.each do |project|
         times = find_billable_time(employee, project.id, @period)
@@ -69,17 +78,23 @@ private
         project_total_non_billable_hours += project_non_billable_hours
         
         if (project_billable_hours+project_non_billable_hours).abs > 0.001
-          csv_billable_lines << [employee.shortname, '', '', '', '', '', '', '',
-                                 parent.label_verbose, 
-                                 child == parent ? '' : child.label,
-                                 format_with_precision(project_billable_hours+project_non_billable_hours), 
-                                 format_with_precision(project_billable_hours), 
-                                 format_with_precision(project_non_billable_hours),
+          csv_billable_lines << [employee.shortname, '', '', '', '', '', '', '', '', '',
+                                 project_code(parent, child),
+                                 project_label(parent),
+                                 subproject_label(parent, child),
+                                 '', 
+                                 project_billable_hours+project_non_billable_hours, 
+                                 '', 
+                                 project_billable_hours+project_non_billable_hours, 
+                                 '', 
+                                 project_billable_hours, 
+                                 '', 
+                                 project_non_billable_hours,
                                  '']
         end
       end
       
-      # process non billable projects
+      # process non billable (internal) projects
       csv_non_billable_lines = []
       non_billable_projects.each do |project|
         times = find_billable_time(employee, project.id, @period)
@@ -91,18 +106,20 @@ private
         internal_project_total_hours += internal_project_hours
         
         if internal_project_hours.abs > 0.001
-          csv_non_billable_lines << [employee.shortname, '', '', '', '', '', '', '',
-                                     parent.label_verbose, 
-                                     child == parent ? '' : child.label,
-                                     '', 
-                                     '', 
-                                     '', 
-                                     format_with_precision(internal_project_hours)]
+          csv_non_billable_lines << [employee.shortname, '', '', '', '', '', '', '', '', '',
+                                     project_code(parent, child),
+                                     project_label(parent),
+                                     subproject_label(parent, child),
+                                     '',
+                                     internal_project_hours,
+                                     '', '', '', '', '', '', '', 
+                                     internal_project_hours]
         end
       end
 
       project_total_hours = project_total_billable_hours + project_total_non_billable_hours + internal_project_total_hours
-      diff = employee.sumAttendance(@period) - project_total_hours
+      attendance_hours = employee.sumAttendance(@period)
+      diff = attendance_hours - project_total_hours
       additional_attendance_hours = diff.abs > 0.001 ? diff : 0
       
       average_percents = employee.statistics.employments_during(@period).sum(&:percent)
@@ -110,19 +127,28 @@ private
       
       # append employee overview
       csv << [employee.shortname,
+              '',
               average_percents,
               employee.statistics.musttime(@period),
               employee.statistics.overtime(@period),
-              format_with_precision(employee.statistics.current_overtime(@period.endDate)),
-              format_with_precision(remaining_vacations),
-              format_with_precision(additional_attendance_hours),
-              format_with_precision(employee_absences(employee, @period)),
-              format_with_precision(project_total_hours),
+              employee.statistics.current_overtime(@period.endDate),
+              remaining_vacations,
+              attendance_hours,
+              additional_attendance_hours,
+              employee_absences(employee, @period),
               '',
-              format_with_precision(project_total_billable_hours+project_total_non_billable_hours),
-              format_with_precision(project_total_billable_hours),
-              format_with_precision(project_total_non_billable_hours),
-              format_with_precision(internal_project_total_hours)]
+              '',
+              '',
+              project_total_hours,
+              '',
+              project_total_billable_hours+project_total_non_billable_hours,
+              '',
+              project_total_billable_hours,
+              '',
+              project_total_non_billable_hours,
+              '',
+              internal_project_total_hours,
+              '']
       
       # append billable project lines
       csv_billable_lines.each do |line|
@@ -136,8 +162,18 @@ private
     end
   end
   
-  def format_with_precision(number)
-    sprintf("%0.02f", number) 
+  def project_code(project, subproject)
+    result = "#{project.client.shortname}-#{project.shortname}"
+    result += "-#{subproject.shortname}" if subproject != project
+    result
   end
   
+  def project_label(project)
+    project.label_verbose 
+  end
+  
+  def subproject_label(project, subproject)
+    subproject == project ? '' : subproject.label
+  end
+
 end
