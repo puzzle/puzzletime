@@ -103,6 +103,7 @@ private
         parent = child.parent if child.parent
         
         internal_project_hours = extract_billable_hours(times, false)
+        internal_project_hours += extract_billable_hours(times, true) #hack because there may be entries with wrong $-flag
         internal_project_total_hours += internal_project_hours
         
         if internal_project_hours.abs > 0.001
