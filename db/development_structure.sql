@@ -53,7 +53,6 @@ ALTER SEQUENCE absences_id_seq OWNED BY absences.id;
 CREATE TABLE clients (
     id integer NOT NULL,
     name character varying(255) NOT NULL,
-    contact character varying(255),
     shortname character varying(4) NOT NULL
 );
 
@@ -119,15 +118,14 @@ CREATE TABLE employees (
     passwd character varying(255) NOT NULL,
     email character varying(255) NOT NULL,
     management boolean DEFAULT false,
-    initial_vacation_days double precision DEFAULT (0)::double precision,
+    initial_vacation_days double precision DEFAULT 0,
     ldapname character varying(255),
     report_type character varying(255),
     default_attendance boolean DEFAULT false,
     default_project_id integer,
     user_periods character varying(3)[],
     eval_periods character varying(3)[],
-    department_id integer,
-    CONSTRAINT chk_report_type CHECK ((((((report_type)::text = 'start_stop_day'::text) OR ((report_type)::text = 'absolute_day'::text)) OR ((report_type)::text = 'week'::text)) OR ((report_type)::text = 'month'::text)))
+    CONSTRAINT chk_report_type CHECK (((report_type)::text = ANY ((ARRAY['start_stop_day'::character varying, 'absolute_day'::character varying, 'week'::character varying, 'month'::character varying])::text[])))
 );
 
 
@@ -180,16 +178,6 @@ CREATE SEQUENCE employments_id_seq
 --
 
 ALTER SEQUENCE employments_id_seq OWNED BY employments.id;
-
-
---
--- Name: engine_schema_info; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE engine_schema_info (
-    engine_name character varying(255),
-    version integer
-);
 
 
 --
@@ -350,7 +338,7 @@ CREATE TABLE projects (
     department_id integer,
     path_ids integer[],
     freeze_until date,
-    CONSTRAINT chkname_report CHECK ((((((report_type)::text = 'start_stop_day'::text) OR ((report_type)::text = 'absolute_day'::text)) OR ((report_type)::text = 'week'::text)) OR ((report_type)::text = 'month'::text)))
+    CONSTRAINT chkname_report CHECK (((report_type)::text = ANY ((ARRAY['start_stop_day'::character varying, 'absolute_day'::character varying, 'week'::character varying, 'month'::character varying])::text[])))
 );
 
 
@@ -431,7 +419,7 @@ CREATE TABLE worktimes (
     billable boolean DEFAULT true,
     booked boolean DEFAULT false,
     type character varying(255),
-    CONSTRAINT chkname CHECK (((((((report_type)::text = 'start_stop_day'::text) OR ((report_type)::text = 'absolute_day'::text)) OR ((report_type)::text = 'week'::text)) OR ((report_type)::text = 'month'::text)) OR ((report_type)::text = 'auto_start'::text)))
+    CONSTRAINT chkname CHECK (((report_type)::text = ANY ((ARRAY['start_stop_day'::character varying, 'absolute_day'::character varying, 'week'::character varying, 'month'::character varying, 'auto_start'::character varying])::text[])))
 );
 
 
@@ -774,28 +762,30 @@ ALTER TABLE ONLY worktimes
 -- PostgreSQL database dump complete
 --
 
-INSERT INTO schema_migrations (version) VALUES ('12');
+INSERT INTO schema_migrations (version) VALUES ('1');
+
+INSERT INTO schema_migrations (version) VALUES ('2');
+
+INSERT INTO schema_migrations (version) VALUES ('3');
+
+INSERT INTO schema_migrations (version) VALUES ('4');
+
+INSERT INTO schema_migrations (version) VALUES ('5');
 
 INSERT INTO schema_migrations (version) VALUES ('6');
 
 INSERT INTO schema_migrations (version) VALUES ('7');
 
-INSERT INTO schema_migrations (version) VALUES ('2');
+INSERT INTO schema_migrations (version) VALUES ('8');
 
 INSERT INTO schema_migrations (version) VALUES ('9');
 
-INSERT INTO schema_migrations (version) VALUES ('4');
-
 INSERT INTO schema_migrations (version) VALUES ('10');
-
-INSERT INTO schema_migrations (version) VALUES ('3');
-
-INSERT INTO schema_migrations (version) VALUES ('8');
 
 INSERT INTO schema_migrations (version) VALUES ('11');
 
-INSERT INTO schema_migrations (version) VALUES ('1');
-
-INSERT INTO schema_migrations (version) VALUES ('5');
+INSERT INTO schema_migrations (version) VALUES ('12');
 
 INSERT INTO schema_migrations (version) VALUES ('13');
+
+INSERT INTO schema_migrations (version) VALUES ('14');

@@ -47,6 +47,23 @@ class PlanningController < ApplicationController
     @graph = EmployeePlanningGraph.new(@employee, @period)
   end
   
+  def employee_lists
+    @employee = @user
+    @employee_lists = EmployeeList.find(:all, :conditions => { :employee_id => @employee.id })
+  end
+  
+  def employee_lists_planning
+    @employee_list = EmployeeList.find_by_id(params[:employee_list_id])
+    @employee_list_name = @employee_list.title
+    @employee_list_items = @employee_list.employee_list_items
+    
+    @employees = Employee.find(:all) # TODO: select only the affected employees
+    
+    
+    period = @period.present? ? @period : Period.currentMonth
+    @graph = EmployeesPlanningGraph.new(@employees, period)
+  end
+  
   def projects
     @projects = Project.top_projects
   end

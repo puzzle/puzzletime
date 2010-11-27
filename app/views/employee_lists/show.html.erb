@@ -1,0 +1,22 @@
+
+<p>
+  <b>Titel:</b>
+  <%=h @employee_list.title %>
+</p>
+
+<div class="employee_list_item">
+	<p>
+	<ul>
+	<% @employee_list_items.each do |item| %>
+		<li>
+			<%= employee = Employee.find_by_id(item.employee_id) %>
+		</li>
+	<% end %>
+	</ul>
+	</p>
+</div>
+
+
+
+<%= link_to 'Bearbeiten', edit_employee_list_path(@employee_list) %> |
+<%= link_to 'Zur&uuml;ck', :controller => 'planning', :action => 'employee_lists' %>

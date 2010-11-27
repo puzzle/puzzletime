@@ -1,0 +1,11 @@
+<h1>Mitarbeiterliste bearbeiten</h1>
+
+<% form_for(@employee_list) do |f| %>
+
+  <%= render :partial => 'fields', :locals => {:f => f} %>
+
+  <p><%= f.submit "Speichern" %></p>
+<% end %>
+
+<%= link_to 'Anzeigen', @employee_list %> |
+<%= link_to 'Zur&uuml;ck', :controller => 'planning', :action => 'employee_lists' %>

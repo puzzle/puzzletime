@@ -41,6 +41,11 @@ class Employee < ActiveRecord::Base
   has_one  :running_project, 
            :class_name => 'Projecttime',
            :conditions => "report_type = '#{AutoStartType::INSTANCE.key}'"
+  has_many :employee_lists,
+           :dependent => :destroy
+  has_many :employees,
+           :through => :employee_lists,
+           :dependent => :destroy
   
   # Validation helpers.
   validates_presence_of :firstname, :message => "Der Vorname muss angegeben werden"
@@ -276,6 +281,7 @@ private
 
   def self.encode(pwd)
     Digest::SHA1.hexdigest(pwd) 
+    # logger.info "Hash of password: #{Digest::SHA1.hexdigest(pwd)}"
   end
   
   def self.ldapConnection
