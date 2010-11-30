@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 14) do
+ActiveRecord::Schema.define(:version => 15) do
 
   create_table "absences", :force => true do |t|
     t.string  "name",                       :null => false
@@ -27,6 +27,20 @@ ActiveRecord::Schema.define(:version => 14) do
     t.string "shortname", :limit => 3, :null => false
   end
 
+  create_table "employee_list_items", :force => true do |t|
+    t.integer  "employee_list_id", :null => false
+    t.integer  "employee_id",      :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "employee_lists", :force => true do |t|
+    t.integer  "employee_id", :null => false
+    t.string   "title",       :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "employees", :force => true do |t|
     t.string  "firstname",                                             :null => false
     t.string  "lastname",                                              :null => false
@@ -41,7 +55,6 @@ ActiveRecord::Schema.define(:version => 14) do
     t.integer "default_project_id"
     t.string  "user_periods",          :limit => 3
     t.string  "eval_periods",          :limit => 3
-    t.integer "department_id"
   end
 
   add_index "employees", ["shortname"], :name => "chk_unique_name", :unique => true

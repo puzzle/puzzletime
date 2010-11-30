@@ -2,23 +2,33 @@
 <%= render :partial => 'planning/periodLink', :locals => {:id => @employee} %>
 
 <table>
-  <tr>
-    <th>Bezeichnung</th>
-  </tr>
 
-<% for employee_list in @employee_lists %>
-  <%= alternate_row %>
-    <td><%=h employee_list.title %></td>
-	<td><%= link_to 'Listenplanung', :controller => 'planning', :action => 'employee_lists_planning', :employee_list_id => employee_list.id %></td>
-    <td><%= link_to 'Liste anzeigen', :controller => 'employee_lists', :action => 'show', :id => employee_list.id %></td>
-    <td><%= link_to 'Löschen', employee_list, :confirm => 'Mitarbeiterliste wirklich l&ouml;schen?', :method => :delete %></td>
-  </tr>
+<% if @employee_lists.empty? %> 
+	
+	<tr><td>Noch keine Mitarbeiterlisten</td></tr> 
+
+<% else %>
+
+	<tr>
+		<th>Bezeichnung</th>
+	</tr>
+
+	<% for employee_list in @employee_lists %>
+	  <%= alternate_row %>
+	    <td><%=h employee_list.title %></td>
+		<td><%= link_to 'Listenplanung', :controller => 'planning', :action => 'employee_lists_planning', :employee_list_id => employee_list.id %></td>
+	    <td><%= link_to 'Liste anzeigen', :controller => 'employee_lists', :action => 'show', :id => employee_list.id %></td>
+	    <td><%= link_to 'Löschen', employee_list, :confirm => 'Mitarbeiterliste wirklich l&ouml;schen?', :method => :delete %></td>
+	  </tr>
+	<% end %>
+
 <% end %>
+
 </table>
 
 <br />
 
-<%= link_to 'Neue Mitarbeiterliste', new_employee_list_path %>
+<%= link_to 'Neue Mitarbeiterliste', :controller => "employee_lists", :action => "new" %>
 
 
 </table>

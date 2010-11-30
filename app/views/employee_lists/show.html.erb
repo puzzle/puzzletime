@@ -17,6 +17,5 @@
 </div>
 
 
-
-<%= link_to 'Bearbeiten', edit_employee_list_path(@employee_list) %> |
+<%= link_to 'Bearbeiten', :controller => 'employee_lists', :action => 'edit', :id => @employee_list %> |
 <%= link_to 'Zur&uuml;ck', :controller => 'planning', :action => 'employee_lists' %>

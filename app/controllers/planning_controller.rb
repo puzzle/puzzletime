@@ -57,8 +57,9 @@ class PlanningController < ApplicationController
     @employee_list_name = @employee_list.title
     @employee_list_items = @employee_list.employee_list_items
     
-    @employees = Employee.find(:all) # TODO: select only the affected employees
-    
+    # select only the affected employees
+    elis = @employee_list.employee_list_items
+    @employees = Employee.find(elis.collect{|e| e.employee_id})
     
     period = @period.present? ? @period : Period.currentMonth
     @graph = EmployeesPlanningGraph.new(@employees, period)
