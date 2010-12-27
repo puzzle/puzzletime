@@ -10,6 +10,10 @@ development:
 # re-generated from your development database when you run 'rake'.
 # Do not set this db to the same as development or production.
 
+# user 'hudson' has to be a superuser due to a rails 2.2.2 bug resulting in 
+# 'ActiveRecord::StatementInvalid: PGError: ERROR:  permission denied: "RI_ConstraintTrigger_17866" is a system trigger'
+# errors if not.
+
 test:
   adapter: postgresql
   database: puzzletime_test
