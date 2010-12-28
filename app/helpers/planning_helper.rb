@@ -58,6 +58,23 @@ module PlanningHelper
     result << "</td>"
   end
   
+  # returns a weekly absence column in the project planning graph view
+  def week_absence_td_proj(absence_graph, date)
+    absences = []
+    5.times do |day|
+      absences << absence_graph.absence(date)
+    end
+    result = '<td border=\"0\"'
+    absences.compact!
+    if absences.present?
+      result << 'background-color=\"rgb(204, 204, 255)\"'
+      absences.each do |absence|
+        result << "#{absence.label}"
+      end
+    end
+    result << "</td>"
+  end
+  
   # returns daily absence columns
   def day_absence_tds(absence_graph, date)
     result = ''
@@ -73,9 +90,31 @@ module PlanningHelper
     end
     result
   end
+  
+  # returns daily absence columns in the project planning graph view
+  def day_absence_tds_proj(absence_graph, date)
+    result = ''
+    5.times do |day|
+      absence = absence_graph.absence(date)
+      if absence
+        result << "<td class=\"absence\" border=\"0\" colspan=\"2\"></td>"
+      else
+        result << empty_half_day_td_absence(date)
+        result << empty_half_day_td_absence(date)
+      end
+      date = date.next
+    end
+    result
+  end
 
+  # draw an empty cell in the planning graph views
   def empty_half_day_td(date)
     "<td #{'class="current"' if Date.today == date } style='width:10px'></td>"
+  end
+  
+  # draws an empty cell in the thin row for absences in the project planning graph view
+  def empty_half_day_td_absence(date)
+    "<td #{'class="current"' if Date.today == date } style='width:10px; border-width: 0px 1px 0px 0px'></td>"
   end
 
   def half_day_with_link_td(employee, date, project)

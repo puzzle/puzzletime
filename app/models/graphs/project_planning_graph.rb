@@ -13,5 +13,10 @@ class ProjectPlanningGraph
     @employees = @plannings.select{|planning| planning.planned_during?(@period)}.collect{|planning| planning.employee }.uniq.sort
     @overview_graph = ProjectOverviewPlanningGraph.new(@project, @plannings, @period)
   end
+  
+  def get_absence_graph(employee_id)
+    absences = Absencetime.all(:conditions => ['employee_id = ? AND work_date >= ? AND work_date <= ?', employee_id, @period.startDate, @period.endDate])
+    AbsencePlanningGraph.new(absences, @period)
+  end
 
 end

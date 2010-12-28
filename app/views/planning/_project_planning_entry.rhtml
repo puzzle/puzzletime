@@ -3,6 +3,18 @@
 	<%= week_overview_tds(project_planning_graph.overview_graph, 10) -%>
 </tr>
 <% project_planning_graph.employees.each do |employee| %>
+	<% absence_graph = project_planning_graph.get_absence_graph(employee.id) %>
+	<tr style="height:2px">
+		<td style="width:30px; border-width:0px 1px 0px 0px;"></td>
+		<th style="border-width:0px 1px 0px 0px;"></th>
+		<% project_planning_graph.each_week do |week| -%>	
+			<% if type == :calendar_week %>
+				<%= week_absence_td_proj(absence_graph, week) -%>
+			<% else %>
+				<%= day_absence_tds_proj(absence_graph, week) -%>
+			<% end %>
+		<% end -%>
+	</tr>
 	<tr>
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		<th><%= link_to employee.label, :controller => 'planning', :action => 'employee_planning', :employee_id => employee %></th>
@@ -11,6 +23,8 @@
 		<% end -%>
 	</tr>
 <% end %>
+
+
 <tr>
 	<th style="width:30px"></th>
 	<th>Neue Planung</th>
