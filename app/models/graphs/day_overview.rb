@@ -2,14 +2,23 @@ class DayOverview
   
   def initialize
     @half_days = []
+    @half_days_abstract = []
   end
   
-  def add(half_day_label)
-    @half_days << HalfDay.new(half_day_label)
+  def add(half_day_label, abstract_amount = 0)
+    if abstract_amount==0
+      @half_days << HalfDay.new(half_day_label)
+    else
+      @half_days_abstract << HalfDayAbstract.new(half_day_label, abstract_amount)
+    end
   end
   
   def label
     result = ''
+    @half_days_abstract.each do |half_day|
+      result << half_day.label
+      result << '<br>' unless result =~ /<br>$/
+    end
     @half_days.each do |half_day|
       result << half_day.label
       result << '<br>' unless result =~ /<br>$/
@@ -27,7 +36,12 @@ class DayOverview
   end
   
   def percent
-    @half_days.size * 10
+    perc = 0
+    perc += @half_days.size * 10
+    @half_days_abstract.each do |half_day|
+      perc += half_day.abstract_amount
+    end
+    perc
   end
   
 end

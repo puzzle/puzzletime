@@ -51,7 +51,7 @@ protected
     
     # abstract plannings which are quantified by a integer 'abstract_amount'
     if planning.is_abstract && planning.abstract_amount>0 
-      add_to_cache(planning.project.label, date)
+      add_to_cache(planning.project.label, date, planning.abstract_amount)
     
     # concrete plannings or abstract plannings which are quantified by means of a half-day selection
     else
@@ -72,13 +72,13 @@ protected
     end
   end
 
-  def add_to_cache(label, date)
+  def add_to_cache(label, date, abstract_amount = 0)
     cached = @cache[date]
     unless cached
       cached = DayOverview.new
       @cache[date] = cached
     end
-    cached.add(label)
+    cached.add(label, abstract_amount)
   end
   
 end

@@ -40,23 +40,6 @@ module PlanningHelper
       unplanned_half_day_tds(employee, project, date)
     end
   end
-  
-  # returns daily planned columns
-  def day_planning_abstr_tds(plannings, employee, project, date)
-    current_planning = week_planning(plannings, date, project, employee)
-    #planned_half_day_tds(current_planning, date)
-    result = ""
-    if current_planning
-      # render an abstract block with colspan=10
-      result << half_day_td(current_planning, true, date, 10, true)
-    else
-      # render 10 half-days (= one week) which are not planned abstractely yet 
-      10.times do
-        result << "<td></td>"
-      end
-    end
-    result
-  end
 
   # returns a weekly absence column
   def week_absence_td(absence_graph, date)
@@ -148,20 +131,20 @@ module PlanningHelper
 
   # render a week with one or more planned half days in the half-day-per-column view
   def planned_half_day_tds(planning, date)
-    result = half_day_td(planning, planning.monday_am, date, 1, false)
-    result << half_day_td(planning, planning.monday_pm, date, 1, false)
+    result = half_day_td(planning, planning.monday_am, date, 1, planning.is_abstract)
+    result << half_day_td(planning, planning.monday_pm, date, 1, planning.is_abstract)
     date = date.next
-    result << half_day_td(planning, planning.tuesday_am, date, 1, false)
-    result << half_day_td(planning, planning.tuesday_pm, date, 1, false)
+    result << half_day_td(planning, planning.tuesday_am, date, 1, planning.is_abstract)
+    result << half_day_td(planning, planning.tuesday_pm, date, 1, planning.is_abstract)
     date = date.next
-    result << half_day_td(planning, planning.wednesday_am, date, 1, false)
-    result << half_day_td(planning, planning.wednesday_pm, date, 1, false)
+    result << half_day_td(planning, planning.wednesday_am, date, 1, planning.is_abstract)
+    result << half_day_td(planning, planning.wednesday_pm, date, 1, planning.is_abstract)
     date = date.next
-    result << half_day_td(planning, planning.thursday_am, date, 1, false)
-    result << half_day_td(planning, planning.thursday_pm, date, 1, false)
+    result << half_day_td(planning, planning.thursday_am, date, 1, planning.is_abstract)
+    result << half_day_td(planning, planning.thursday_pm, date, 1, planning.is_abstract)
     date = date.next
-    result << half_day_td(planning, planning.friday_am, date, 1, false)
-    result << half_day_td(planning, planning.friday_pm, date, 1, false)
+    result << half_day_td(planning, planning.friday_am, date, 1, planning.is_abstract)
+    result << half_day_td(planning, planning.friday_pm, date, 1, planning.is_abstract)
     result
   end
   
@@ -186,7 +169,7 @@ module PlanningHelper
   
   # render a planned halfday in the half-day-per-column view
   def half_day_td(planning, planned, date, colspan, isabstract)
-    return empty_half_day_td(date) if !planned
+    return empty_half_day_td(date) if (!planned && !isabstract)
     result = '<td ' 
     if colspan>1
       result << "colspan='#{colspan}' "

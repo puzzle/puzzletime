@@ -17,7 +17,7 @@
 			<% if type == :calendar_week %>
 				<%= week_planning_td(employee_planning_graph.plannings_abstr, user, project, week) -%>
 			<% else %>
-				<%= day_planning_abstr_tds(employee_planning_graph.plannings_abstr, user, project, week) -%>			
+				<%= day_planning_tds(employee_planning_graph.plannings_abstr, user, project, week) -%>			
 			<% end %>
 		<% end -%>
 	</tr>
