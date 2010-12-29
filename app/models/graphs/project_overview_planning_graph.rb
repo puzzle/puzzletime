@@ -2,10 +2,11 @@ class ProjectOverviewPlanningGraph < OverviewPlanningGraph
 
   attr_reader :employee
   
-  def initialize(project, plannings, period)
+  def initialize(project, plannings, plannings_abstr, period)
     super(period)
     @project = project
     add_plannings_to_cache(plannings)
+    add_plannings_to_cache(plannings_abstr)
   end
   
   def style(date)

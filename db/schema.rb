@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 15) do
+ActiveRecord::Schema.define(:version => 16) do
 
   create_table "absences", :force => true do |t|
     t.string  "name",                       :null => false
@@ -80,24 +80,26 @@ ActiveRecord::Schema.define(:version => 15) do
   end
 
   create_table "plannings", :force => true do |t|
-    t.integer  "employee_id",                     :null => false
-    t.integer  "project_id",                      :null => false
-    t.integer  "start_week",                      :null => false
+    t.integer  "employee_id",                        :null => false
+    t.integer  "project_id",                         :null => false
+    t.integer  "start_week",                         :null => false
     t.integer  "end_week"
-    t.boolean  "definitive",   :default => false, :null => false
+    t.boolean  "definitive",      :default => false, :null => false
     t.text     "description"
-    t.boolean  "monday_am",    :default => false, :null => false
-    t.boolean  "monday_pm",    :default => false, :null => false
-    t.boolean  "tuesday_am",   :default => false, :null => false
-    t.boolean  "tuesday_pm",   :default => false, :null => false
-    t.boolean  "wednesday_am", :default => false, :null => false
-    t.boolean  "wednesday_pm", :default => false, :null => false
-    t.boolean  "thursday_am",  :default => false, :null => false
-    t.boolean  "thursday_pm",  :default => false, :null => false
-    t.boolean  "friday_am",    :default => false, :null => false
-    t.boolean  "friday_pm",    :default => false, :null => false
+    t.boolean  "monday_am",       :default => false, :null => false
+    t.boolean  "monday_pm",       :default => false, :null => false
+    t.boolean  "tuesday_am",      :default => false, :null => false
+    t.boolean  "tuesday_pm",      :default => false, :null => false
+    t.boolean  "wednesday_am",    :default => false, :null => false
+    t.boolean  "wednesday_pm",    :default => false, :null => false
+    t.boolean  "thursday_am",     :default => false, :null => false
+    t.boolean  "thursday_pm",     :default => false, :null => false
+    t.boolean  "friday_am",       :default => false, :null => false
+    t.boolean  "friday_pm",       :default => false, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "is_abstract"
+    t.decimal  "abstract_amount"
   end
 
   create_table "projectmemberships", :force => true do |t|
