@@ -114,6 +114,7 @@ class PlanningController < ApplicationController
   end
   
   def create
+    #Rails.logger.info("PARAMS: #{params.inspect}")
     set_employees
     @planning = Planning.new
     set_planning_attributes(params[:planning])
@@ -194,6 +195,8 @@ private
     @planning.project = Project.find(planning_params[:project_id]) if planning_params[:project_id]
     @planning.start_week = Week::from_string(planning_params[:start_week_date]).to_integer if planning_params[:start_week_date] 
     @planning.definitive = planning_params[:type] == 'definitive'
+    @planning.is_abstract = planning_params[:abstract_concrete] == 'abstract'
+    @planning.abstract_amount = (planning_params[:abstract_amount].blank? ? 0 : planning_params[:abstract_amount])
     case planning_params[:repeat_type]
       when 'no'
         @planning.end_week = @planning.start_week

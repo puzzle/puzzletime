@@ -86,6 +86,13 @@
 	  	<%= radio_button('planning', 'type', 'definitive', :checked => (@planning.definitive || @planning.new_record?)) %>Definitiv
 	  </td>
     </tr>
+	<tr>
+	  <td valign="top">Abstraktion: </td>
+	  <td>
+	  	<%= radio_button('planning', 'abstract_concrete', 'abstract', :checked => @planning.is_abstract) %>Abstrakt <%= select("planning", "abstract_amount", (1..40).collect {|x| ["#{x*2.5}%", x*2.5]}, {:include_blank => true}) %><br>
+	  	<%= radio_button('planning', 'abstract_concrete', 'concrete', :checked => (!@planning.is_abstract || @planning.new_record?)) %>Konkret
+	  </td>
+    </tr>
 	<tr valign="top">
 	  <td>Beschreibung: </td>
 	  <td><%= text_area 'planning', 'description', {:rows => 5} %></td>

@@ -48,22 +48,29 @@ protected
   end
   
   def add_week_to_cache(planning, date)
-    add_to_cache(planning.project.label, date) if planning.monday_am
-    add_to_cache(planning.project.label, date) if planning.monday_pm
-    date = date.next
-    add_to_cache(planning.project.label, date) if planning.tuesday_am
-    add_to_cache(planning.project.label, date) if planning.tuesday_pm
-    date = date.next
-    add_to_cache(planning.project.label, date) if planning.wednesday_am
-    add_to_cache(planning.project.label, date) if planning.wednesday_pm
-    date = date.next
-    add_to_cache(planning.project.label, date) if planning.thursday_am
-    add_to_cache(planning.project.label, date) if planning.thursday_pm
-    date = date.next
-    add_to_cache(planning.project.label, date) if planning.friday_am
-    add_to_cache(planning.project.label, date) if planning.friday_pm
+    
+    # abstract plannings which are quantified by a integer 'abstract_amount'
+    if planning.is_abstract && planning.abstract_amount>0 
+      add_to_cache(planning.project.label, date)
+    
+    # concrete plannings or abstract plannings which are quantified by means of a half-day selection
+    else
+      add_to_cache(planning.project.label, date) if planning.monday_am
+      add_to_cache(planning.project.label, date) if planning.monday_pm
+      date = date.next
+      add_to_cache(planning.project.label, date) if planning.tuesday_am
+      add_to_cache(planning.project.label, date) if planning.tuesday_pm
+      date = date.next
+      add_to_cache(planning.project.label, date) if planning.wednesday_am
+      add_to_cache(planning.project.label, date) if planning.wednesday_pm
+      date = date.next
+      add_to_cache(planning.project.label, date) if planning.thursday_am
+      add_to_cache(planning.project.label, date) if planning.thursday_pm
+      date = date.next
+      add_to_cache(planning.project.label, date) if planning.friday_am
+      add_to_cache(planning.project.label, date) if planning.friday_pm
+    end
   end
-
 
   def add_to_cache(label, date)
     cached = @cache[date]
@@ -73,4 +80,5 @@ protected
     end
     cached.add(label)
   end
+  
 end

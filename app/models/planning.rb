@@ -36,17 +36,42 @@ class Planning < ActiveRecord::Base
     errors.add(:start_week, "Von Format ist ung&uuml;ltig") if !valid_week?(start_week)
     errors.add(:end_week, "Bis Format ist ung&uuml;ltig") if end_week && !valid_week?(end_week)
     errors.add(:end_week, "Bis Datum ist ung&uuml;ltig") if end_week && (end_week < start_week)
+    
+    halfday_selected = (monday_am || monday_pm || tuesday_am || tuesday_pm || wednesday_am || wednesday_pm || thursday_am || thursday_pm || friday_am || friday_pm)
 
-    if !(monday_am || monday_pm || tuesday_am || tuesday_pm || wednesday_am || wednesday_pm || thursday_am || thursday_pm || friday_am || friday_pm)
+    if !is_abstract && !halfday_selected
       errors.add(:start_date, "Mindestens ein halber Tag muss selektiert werden")
     end
     
-    existing_plannings = Planning.find(:all, :conditions => ['project_id = ? and employee_id = ?', project_id, employee_id]) #todo: limit search result by date
-    existing_plannings.each do |planning|
-      if overlaps?(planning)
-        errors.add(:start_date, "Dieses Projekt ist in diesem Zeitraum bereits geplant")
-        break
+    if (is_abstract && abstract_amount>0 && halfday_selected)
+      errors.add(:start_date, "Abstrakte Planungen entweder mit der Selektion von Halbtagen oder durch Auswählen des Umfangs (Dropdown-Box) spezifizieren (nicht beides).")
+    end
+    
+    if (abstract_amount==0 && !halfday_selected)
+      errors.add(:start_date, "Entweder Halbtag selektieren oder Umfang auswählen (Dropdown-Box).")
+    end
+    
+    existing_plannings = Planning.find(:all, :conditions => ['project_id = ? and employee_id = ? and is_abstract=false', project_id, employee_id]) #todo: limit search result by date
+    existing_plannings_abstr = Planning.find(:all, :conditions => ['project_id = ? and employee_id = ? and is_abstract=true', project_id, employee_id]) #todo: limit search result by date
+    
+    if self.is_abstract==false
+      existing_plannings.each do |planning|
+        if overlaps?(planning)
+          errors.add(:start_date, "Dieses Projekt ist in diesem Zeitraum bereits geplant")
+          break
+        end
       end
+    end
+    
+    if self.is_abstract
+      existing_plannings_abstr.each do |planning|
+        if overlaps?(planning)
+          errors.add(:start_date, "Dieses Projekt ist in diesem Zeitraum bereits abstrakt geplant")
+          break
+        end
+      end
+    else
+      
     end
   end
   
@@ -82,6 +107,7 @@ class Planning < ActiveRecord::Base
     result += 10 if thursday_pm
     result += 10 if friday_am
     result += 10 if friday_pm
+    result += abstract_amount
     result
   end
 
