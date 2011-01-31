@@ -192,7 +192,9 @@ module PlanningHelper
     end
     result << "<br>Prozent: #{planning.percent}%"
     if isabstract
-      result << ' (abstrakt)'
+      result << ' (Prozentplanung)'
+    else
+      result << ' (Tagesplanung)'
     end
     result << '</span>'
     result << '</a></td>'

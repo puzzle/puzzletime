@@ -17,7 +17,7 @@
 		<% end -%>
 	</tr>
 	<tr>
-		<td>&nbsp;&nbsp;&nbsp;A&nbsp;&nbsp;</td>
+		<td>&nbsp;&nbsp;&nbsp;P&nbsp;&nbsp;</td>
 		<th><%= link_to employee.label, :controller => 'planning', :action => 'employee_planning', :employee_id => employee %></th>
 		<% project_planning_graph.each_week do |week| -%>	
 			<%= day_planning_tds(project_planning_graph.plannings_abstr, employee, project_planning_graph.project, week) -%>			

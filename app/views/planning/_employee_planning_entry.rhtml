@@ -11,7 +11,7 @@
 
 <% employee_planning_graph.projects_abstr.each do |project| %>
 	<tr>
-		<td>&nbsp;&nbsp;A&nbsp;&nbsp;&nbsp;</td>
+		<td>&nbsp;&nbsp;P&nbsp;&nbsp;&nbsp;</td>
 		<th><%= link_to project.label_verbose, :controller => 'planning', :action => 'project_planning', :project_id => project %> </th>
 		<% employee_planning_graph.each_week do |week| -%>	
 			<% if type == :calendar_week %>
