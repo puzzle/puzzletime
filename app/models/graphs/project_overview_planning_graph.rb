@@ -27,7 +27,8 @@ class ProjectOverviewPlanningGraph < OverviewPlanningGraph
   end
 
   def week_label(week)
-    "#{planned_percent(week)}%"
+    planned_perc = (planned_percent(week)*10).round.to_f/10 # round with precision of one digit after the point
+    "#{planned_perc}%"
   end
   
 end

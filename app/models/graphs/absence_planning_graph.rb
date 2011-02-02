@@ -50,8 +50,10 @@ private
   def add_month_absence(absence)
     dateFrom = Date.civil(absence.work_date.year, absence.work_date.month, 1)
     dateTo = Date.civil(dateFrom.year, dateFrom.month, -1)
+    #TODO: consider holidays as Christmas or Eastern while calculating workdays
+    workdays = (dateFrom..dateTo).select { |day| [1, 2, 3, 4, 5].include?(day.wday) }.size # number of work days in the month
     dateFrom.step(dateTo, 1) do |date|
-      add_to_cache(absence.timeString, date, absence.hours/31)   # TODO: find number of work days in the month and divide by this number
+      add_to_cache(absence.timeString, date, absence.hours/workdays)
     end
   end
   

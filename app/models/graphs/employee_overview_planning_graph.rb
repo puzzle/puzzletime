@@ -30,11 +30,12 @@ class EmployeeOverviewPlanningGraph < OverviewPlanningGraph
   end
 
   def planned_days(week)
-    planned_percent(week) / 20.0
+    (planned_percent(week) / 20.0 * 10).round.to_f/10
   end
   
   def week_label(week)
-    "#{planned_percent(week)}%/#{employement_percent(week)}%"
+    planned_perc = (planned_percent(week)*10).round.to_f/10
+    "#{planned_perc}%/#{employement_percent(week)}%"
   end
   
   def label(date)
