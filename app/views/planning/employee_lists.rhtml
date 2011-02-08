@@ -17,7 +17,8 @@
 	  <%= alternate_row %>
 	    <td><%=h employee_list.title %></td>
 		<td><%= link_to 'Listenplanung', :controller => 'planning', :action => 'employee_lists_planning', :employee_list_id => employee_list.id %></td>
-	    <td><%= link_to 'Liste anzeigen', :controller => 'employee_lists', :action => 'show', :id => employee_list.id %></td>
+	    <td><%= link_to 'Mitglieder', :controller => 'employee_lists', :action => 'show', :id => employee_list.id %></td>
+		<td><%= link_to 'Bearbeiten', :controller => 'employee_lists', :action => 'edit', :id => employee_list.id %></td>
 	    <td><%= link_to 'Löschen', employee_list, :confirm => 'Mitarbeiterliste wirklich l&ouml;schen?', :method => :delete %></td>
 	  </tr>
 	<% end %>

@@ -27,16 +27,16 @@ ActiveRecord::Schema.define(:version => 16) do
     t.string "shortname", :limit => 3, :null => false
   end
 
-  create_table "employee_list_items", :force => true do |t|
-    t.integer  "employee_list_id", :null => false
-    t.integer  "employee_id",      :null => false
+  create_table "employee_lists", :force => true do |t|
+    t.integer  "employee_id", :null => false
+    t.string   "title",       :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "employee_lists", :force => true do |t|
-    t.integer  "employee_id", :null => false
-    t.string   "title",       :null => false
+  create_table "employee_lists_employees", :id => false, :force => true do |t|
+    t.integer  "employee_list_id"
+    t.integer  "employee_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

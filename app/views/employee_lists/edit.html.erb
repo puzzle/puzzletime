@@ -1,10 +1,9 @@
 <h1>Mitarbeiterliste bearbeiten</h1>
+<%= error_messages_for 'employee_list' %>
 
-<% form_for(@employee_list) do |f| %>
-
-  <%= render :partial => 'fields', :locals => {:f => f} %>
-
-  <p><%= f.submit "Speichern" %></p>
+<% form_for @employee_list do |f| %>
+ <%= render :partial => 'form', :locals => { :f => f } %>
+ <p><%= f.submit "Änderungen speichern" %></p>
 <% end %>
 
 <%= link_to 'Anzeigen', @employee_list %> |

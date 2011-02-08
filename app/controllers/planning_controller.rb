@@ -55,14 +55,8 @@ class PlanningController < ApplicationController
   def employee_lists_planning
     @employee_list = EmployeeList.find_by_id(params[:employee_list_id])
     @employee_list_name = @employee_list.title
-    @employee_list_items = @employee_list.employee_list_items
-    
-    # select only the affected employees
-    elis = @employee_list.employee_list_items
-    @employees = Employee.find(elis.collect{|e| e.employee_id})
-    
     period = @period.present? ? @period : Period.currentMonth
-    @graph = EmployeesPlanningGraph.new(@employees, period)
+    @graph = EmployeesPlanningGraph.new(@employee_list.employees, period)
   end
   
   def projects

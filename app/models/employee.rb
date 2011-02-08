@@ -11,6 +11,8 @@ class Employee < ActiveRecord::Base
   extend Manageable
   
   # All dependencies between the models are listed below.
+  has_and_belongs_to_many :employee_lists
+  
   has_many :employments, :order => 'start_date DESC', :dependent => :destroy
   has_many :projectmemberships, 
            :dependent => :destroy,
@@ -41,11 +43,6 @@ class Employee < ActiveRecord::Base
   has_one  :running_project, 
            :class_name => 'Projecttime',
            :conditions => "report_type = '#{AutoStartType::INSTANCE.key}'"
-  has_many :employee_lists,
-           :dependent => :destroy
-  has_many :employees,
-           :through => :employee_lists,
-           :dependent => :destroy
   
   # Validation helpers.
   validates_presence_of :firstname, :message => "Der Vorname muss angegeben werden"

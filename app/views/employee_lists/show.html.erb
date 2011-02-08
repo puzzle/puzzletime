@@ -4,12 +4,12 @@
   <%=h @employee_list.title %>
 </p>
 
-<div class="employee_list_item">
+<div class="employees">
 	<p>
 	<ul>
-	<% @employee_list_items.each do |item| %>
+	<% @employee_list.employees.each do |employee| %>
 		<li>
-			<%= employee = Employee.find_by_id(item.employee_id) %>
+			<%= employee = Employee.find_by_id(employee.id) %>
 		</li>
 	<% end %>
 	</ul>

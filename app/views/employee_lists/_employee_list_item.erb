@@ -1,9 +1,0 @@
-<div class="employee_list_item">
-	<p>
-	<% fields_for "employee_list[employee_list_item_attributes][]", employee_list_item do |eli_form| %>
-		<%= eli_form.select :employee_id, @employees.collect {|item| [ item, item.id ] } %>
-	    <%= link_to_function "Entfernen", "$(this).up('.employee_list_item').remove()" %>
-	    <%= eli_form.hidden_field :id, :index => nil %>
-	<% end %>
-	</p>
-</div>

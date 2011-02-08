@@ -1,0 +1,10 @@
+<p>
+  <%= f.label :title, 'Bezeichnung' %><br />
+  <%= f.text_field :title %>
+</p>
+
+<ul class="checkbox-list">
+  <% for employee in Employee.find(:all, :order => 'lastname') %>
+    <li><%= check_box_tag "employee_list[employee_ids][]", employee.id, @employee_list.employees.include?(employee) -%> <%= employee -%></li>
+  <% end -%>
+</ul>

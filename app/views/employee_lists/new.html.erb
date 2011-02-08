@@ -1,12 +1,11 @@
 <h1>Neue Mitarbeiterliste</h1>
+<%= error_messages_for 'employee_list' %>
 
 <% form_for @employee_list do |f| %>
-
-  <%= render :partial => 'fields', :locals => {:f => f} %>
-  
-  <p><%= f.submit "Speichern" %></p>
+  <%= render :partial => 'form', :locals => { :f => f } %>
+  <p><%= f.submit "Liste Speichern" %></p>
 <% end %>
-
+  
 <%= link_to 'Zur&uuml;ck', :controller => 'planning', :action => 'employee_lists' %>
 
 </table>

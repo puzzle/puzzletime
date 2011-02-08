@@ -18,7 +18,6 @@ class EmployeeListsController < ApplicationController
   # GET /employee_lists/1.xml
   def show
     @employee_list = EmployeeList.find(params[:id])
-    @employee_list_items = @employee_list.employee_list_items
 
     respond_to do |format|
       format.html # show.html.erb
@@ -29,10 +28,8 @@ class EmployeeListsController < ApplicationController
   # GET /employee_lists/new
   # GET /employee_lists/new.xml
   def new
-    @employees = Employee.find(:all, :order => 'lastname')
     @employee_list = EmployeeList.new
-    @employee_list.employee_list_items.build  
-
+    
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @employee_list }
@@ -42,7 +39,6 @@ class EmployeeListsController < ApplicationController
   # GET /employee_lists/1/edit
   def edit
     @employee_list = EmployeeList.find(params[:id])
-    @employees = Employee.find(:all, :order => 'lastname')
   end
 
   # POST /employee_lists
@@ -51,8 +47,9 @@ class EmployeeListsController < ApplicationController
     @employee_list = EmployeeList.new(params[:employee_list])
     @employee_list.employee_id = @user.id # add current user id to the created object
 
+    #logger.debug "employees = #{@employee_list.employees.inspect}" 
     respond_to do |format|
-      if @employee_list.save
+      if @employee_list.save(false) # TODO: can't validate because of translations missing (??)
         flash[:notice] = 'EmployeeList was successfully created.'
         #format.html { redirect_to(@employee_list) }
         format.html { redirect_to :controller => 'planning', :action => 'employee_lists' }
@@ -68,7 +65,7 @@ class EmployeeListsController < ApplicationController
   # PUT /employee_lists/1.xml
   def update
     
-    params[:employee_list][:existing_employee_list_item_attributes] ||= {}
+    params[:employee_list][:employee_ids] ||= []
 
     @employee_list = EmployeeList.find(params[:id])
     
