@@ -3,8 +3,13 @@
   <%= f.text_field :title %>
 </p>
 
-<ul class="checkbox-list">
-  <% for employee in Employee.find(:all, :order => 'lastname') %>
-    <li><%= check_box_tag "employee_list[employee_ids][]", employee.id, @employee_list.employees.include?(employee) -%> <%= employee -%></li>
+<table>
+  <% for employee in @curr_employees %>
+  	<tr>
+    	<td>
+    		<%= check_box_tag "employee_list[employee_ids][]", employee.id, @employee_list.employees.include?(employee) -%> <%= employee -%>
+		</td>
+	</tr>
   <% end -%>
-</ul>
+
+</table>

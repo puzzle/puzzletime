@@ -18,6 +18,7 @@ class EmployeeListsController < ApplicationController
   # GET /employee_lists/1.xml
   def show
     @employee_list = EmployeeList.find(params[:id])
+    @employees = @employee_list.employees.sort_by(&:lastname)
 
     respond_to do |format|
       format.html # show.html.erb
@@ -29,7 +30,8 @@ class EmployeeListsController < ApplicationController
   # GET /employee_lists/new.xml
   def new
     @employee_list = EmployeeList.new
-    
+    @curr_employees = Employee.employed_ones(@period || Period.pastMonth)
+
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @employee_list }
@@ -39,6 +41,7 @@ class EmployeeListsController < ApplicationController
   # GET /employee_lists/1/edit
   def edit
     @employee_list = EmployeeList.find(params[:id])
+    @curr_employees = Employee.employed_ones(@period || Period.pastMonth)
   end
 
   # POST /employee_lists
@@ -50,7 +53,7 @@ class EmployeeListsController < ApplicationController
     #logger.debug "employees = #{@employee_list.employees.inspect}" 
     respond_to do |format|
       if @employee_list.save(false) # TODO: can't validate because of translations missing (??)
-        flash[:notice] = 'EmployeeList was successfully created.'
+        flash[:notice] = 'Mitarbeiterliste wurde erfolgreich erstellt.'
         #format.html { redirect_to(@employee_list) }
         format.html { redirect_to :controller => 'planning', :action => 'employee_lists' }
         format.xml  { render :xml => @employee_list, :status => :created, :location => @employee_list }
@@ -71,7 +74,7 @@ class EmployeeListsController < ApplicationController
     
     respond_to do |format|
       if @employee_list.update_attributes(params[:employee_list])
-        flash[:notice] = 'EmployeeList was successfully updated.'
+        flash[:notice] = 'Mitarbeiterliste wurde erfolgreich angepasst.'
         #format.html { redirect_to(@employee_list) }
         format.html { redirect_to :controller => 'planning', :action => 'employee_lists' }
         format.xml  { head :ok }

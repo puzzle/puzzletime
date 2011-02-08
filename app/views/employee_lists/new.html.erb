@@ -2,7 +2,7 @@
 <%= error_messages_for 'employee_list' %>
 
 <% form_for @employee_list do |f| %>
-  <%= render :partial => 'form', :locals => { :f => f } %>
+  <%= render :partial => 'form', :locals => { :f => f} %>
   <p><%= f.submit "Liste Speichern" %></p>
 <% end %>
   

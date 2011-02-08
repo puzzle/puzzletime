@@ -7,7 +7,7 @@
 <div class="employees">
 	<p>
 	<ul>
-	<% @employee_list.employees.each do |employee| %>
+	<% @employees.each do |employee| %>
 		<li>
 			<%= employee = Employee.find_by_id(employee.id) %>
 		</li>
