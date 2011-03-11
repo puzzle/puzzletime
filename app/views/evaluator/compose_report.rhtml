@@ -20,8 +20,20 @@ project = Project.find(@evaluation.account_id)
 		<td>Nur verrechenbare Stunden</td>
 	</tr>
 	<tr>
-		<td><%= check_box_tag 'combine' %></td>
-		<td>Eintr&auml;ge pro Tag/Woche/Monat zusammenfassen</td>
+		<td><%= check_box_tag 'combine_on' %></td>
+		<td>Eintr&auml;ge zusammenfassen</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td><%= radio_button_tag 'combine', 'time', true %> pro Tag/Woche/Monat </td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td><%= radio_button_tag 'combine', 'ticket' %> pro Ticket/Task</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td><%= radio_button_tag 'combine', 'ticket_employee' %> pro Ticket/Task und Mitarbeiter</td>
 	</tr>
 	<tr>
 		<td><%= check_box_tag 'start_stop' %></td>

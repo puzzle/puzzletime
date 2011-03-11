@@ -149,6 +149,10 @@ class Project < ActiveRecord::Base
     if worktime.report_type != AutoStartType::INSTANCE && description_required? && worktime.description.blank?
       worktime.errors.add(:description, "Es muss eine Beschreibung angegeben werden")   
     end  
+    
+    if worktime.report_type != AutoStartType::INSTANCE && ticket_required? && worktime.ticket.blank?
+      worktime.errors.add(:ticket, "Es muss ein Ticket/Task angegeben werden")   
+    end  
      
     validate_worktime_frozen(worktime)
   end  

@@ -98,7 +98,9 @@ class EvaluatorController < ApplicationController
     setEvaluationDetails
     options = params[:only_billable] ? { :conditions => [ "worktimes.billable = 't'" ] } : {}
     @times = @evaluation.times(@period, options)
-    combine_times if params[:combine]
+    @tckt_view = params[:combine_on] && (params[:combine]=="ticket" || params[:combine]=="ticket_employee")
+    combine_times if params[:combine_on] && params[:combine]=="time"
+    combine_tickets if @tckt_view
     render :layout => false
   end
   
@@ -327,6 +329,58 @@ private
       end
     end
     @times = combined_times
+  end
+  
+  # builds a hash which contains all information needed by the report grouped by ticket
+  def combine_tickets
+    ticket_groups = @times.group_by(&:ticket)
+    @tickets = {}
+
+    ticket_groups.each do |ticket, worktimes|
+      p "#{ticket} - size #{worktimes.size}"
+      
+      if @tickets[ticket].nil?
+        @tickets[ticket] = {:n_entries => 0, 
+                            :sum => 0, 
+                            :employees => Hash.new, 
+                            :date => Array.new(2), 
+                            :descriptions => Array.new}
+      end
+      
+      for t in worktimes
+        @tickets[ticket][:n_entries] += 1
+        @tickets[ticket][:sum] += t.hours
+        
+        # employees involved in this ticket
+        if @tickets[ticket][:employees][t.employee.shortname].nil?
+          @tickets[ticket][:employees][t.employee.shortname] = [t.hours, [t.description]]
+        else
+          @tickets[ticket][:employees][t.employee.shortname][0] += t.hours
+          @tickets[ticket][:employees][t.employee.shortname][1] << t.description
+        end
+        
+        # date range of this ticket
+        if @tickets[ticket][:date][0].nil?
+          @tickets[ticket][:date][0] = t.work_date
+        else 
+          if t.work_date < @tickets[ticket][:date][0]
+            @tickets[ticket][:date][0] = t.work_date
+          end
+        end
+        
+        if @tickets[ticket][:date][1].nil?
+          @tickets[ticket][:date][1] = t.work_date
+        else 
+          if t.work_date > @tickets[ticket][:date][1]
+            @tickets[ticket][:date][1] = t.work_date
+          end
+        end
+        
+        @tickets[ticket][:descriptions] << "\"" + t.description + "\""
+      end
+      
+    end
+    #p "Grouped object: #{ticket_groups}"
   end
 
   def sendCSV(csv_report)

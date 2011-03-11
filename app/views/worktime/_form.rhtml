@@ -56,6 +56,14 @@
                  :value => format_time(@worktime.to_end_time)  %> 
    </td>
 </tr>
+<tr>
+  <td>Ticket/Task: </td>
+  <td>
+  <%= text_field 'worktime', 
+                 'ticket', 
+                 :size => '15'  %> 
+   </td>
+</tr>
 <% if @worktime.hasAttribute? :description -%>
 <tr valign="top">
   <td>Beschreibung: </td>
