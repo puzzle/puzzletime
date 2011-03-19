@@ -72,7 +72,7 @@ project = Project.find(@evaluation.account_id)
 <!-- ticket/task view -->
 <% else %>
 	
-	<% @tickets.sort.each do |tckt_key, tckt_val| %>
+	<% @tickets.each do |tckt_key, tckt_val| %>
 	<%= alternate_row  %>
 	  <td align="right" nowrap><%= tckt_key %></td>
 	  <td align="right"><%= format_hour tckt_val[:sum] %> &nbsp;</td>
@@ -110,6 +110,8 @@ project = Project.find(@evaluation.account_id)
 	</tr>
 
 </table>
+
+<%= p @tickets %>
 
 </body>
 </html>

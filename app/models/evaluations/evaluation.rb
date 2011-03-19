@@ -34,16 +34,17 @@ class Evaluation
   CATEGORY_REF     = nil          
   
   # Columns to display in the detail view
-  DETAIL_COLUMNS   = [:work_date, :hours, :employee, :account, :billable, :booked, :description]
+  DETAIL_COLUMNS   = [:work_date, :hours, :employee, :account, :billable, :booked, :ticket, :description]
   
   # Table captions for detail columns
   DETAIL_LABELS    = {:work_date   => 'Datum',
-                      :hours        => 'Stunden',
+                      :hours       => 'Stunden',
                       :times       => 'Zeiten',
                       :employee    => 'Wer',
                       :account     => 'Projekt',
                       :billable    => '$',
                       :booked      => '&beta;',
+                      :ticket      => 'Ticket', 
                       :description => 'Beschreibung'}
   
   
@@ -205,7 +206,7 @@ class Evaluation
   def csvString(period)
     FasterCSV.generate do |csv|
       csv << ["Datum", "Stunden", "Von Zeit", "Bis Zeit", "Reporttyp",
-              "Verrechenbar", "Mitarbeiter", "Projekt", "Beschreibung"]
+              "Verrechenbar", "Mitarbeiter", "Projekt", "Ticket", "Beschreibung"]
       times(period).each do |time|
         csv << [ time.work_date.strftime(DATE_FORMAT),
                  time.hours,
@@ -215,6 +216,7 @@ class Evaluation
                  time.billable,
                  time.employee.label,
                  (time.account ? time.account.label_verbose : 'Anwesenheitszeit'),
+                 time.ticket,
                  time.description ]
       end
     end 

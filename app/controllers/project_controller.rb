@@ -66,7 +66,8 @@ class ProjectController < ManageController
      [:offered_hours, 'Offerierte Stunden'],
      [:billable, 'Verrechenbar'], 
      [:freeze_until, 'Eingefroren vor'], 
-     [:description_required, 'Beschreibung nötig']]
+     [:description_required, 'Beschreibung nötig'],
+     [:ticket_required, 'Ticket/Task nötig']]
   end
   
   def formatColumn(attribute, value)

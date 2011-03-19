@@ -21,6 +21,7 @@ module EvaluatorHelper
       when :account : td worktime.account.label_verbose
       when :billable : td(worktime.billable ? '$' : ' ')
       when :booked :  td(worktime.booked ? '&beta;' : ' ')
+      when :ticket :  td worktime.ticket
       when :description :
         description = worktime.description || ''
         desc = h description.slice(0..40)

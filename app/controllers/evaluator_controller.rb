@@ -334,6 +334,10 @@ private
   # builds a hash which contains all information needed by the report grouped by ticket
   def combine_tickets
     ticket_groups = @times.group_by(&:ticket)
+    # remove ticket group with key nil and '' (empty string)
+    ticket_groups.delete(nil)
+    ticket_groups.delete('')
+    
     @tickets = {}
 
     ticket_groups.each do |ticket, worktimes|
