@@ -82,18 +82,16 @@ project = Project.find(@evaluation.account_id)
 		  <td align="center"><%= format_date tckt_val[:date][1] %></td>
 	  <% end -%>
 	  
-	  <% if @evaluation.employee_id.nil? -%>
-	  	<td align="left">
-	  		<% if params[:combine]=="ticket" %>
-	  			<%= tckt_val[:employees].keys.sort.join(", ") %>
-			<% end %>
-			<% if params[:combine]=="ticket_employee"%>
-				<% a = Array.new %>
-				<% tckt_val[:employees].each_pair{ |k,v| a << k + " (" + v[0].round(2).to_s + "h)" } %>
-				<%= a.sort.join(", ") %>
-			<% end %>
-		</td>
-	  <% end -%>
+	  <td align="left">
+  		<% if params[:combine]=="ticket" %>
+  			<%= tckt_val[:employees].keys.sort.join(", ") %>
+		<% end %>
+		<% if params[:combine]=="ticket_employee"%>
+			<% a = Array.new %>
+			<% tckt_val[:employees].each_pair{ |k,v| a << k + " (" + v[0].round(2).to_s + "h)" } %>
+			<%= a.sort.join(", ") %>
+		<% end %>
+	  </td>
 	  
 	  <% if params[:description] -%>
 	  	<td><%= h(tckt_val[:descriptions].join(", ")).strip.gsub "\n", "<br/>" %></td>
@@ -111,7 +109,8 @@ project = Project.find(@evaluation.account_id)
 
 </table>
 
-<%= p @tickets %>
+</br>
+<% p @tickets.inspect %>
 
 </body>
 </html>
