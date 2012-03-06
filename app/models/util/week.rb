@@ -11,7 +11,7 @@ class Week
   end
   
   def self.from_date(date)
-    Week.new(date.year, date.cweek)
+    Week.new(date.cwyear, date.cweek)
   end
   
   def self.valid?(week_integer)
