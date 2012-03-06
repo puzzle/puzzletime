@@ -53,7 +53,8 @@
 <br />
 
 Beliebig:                 
-<% form_tag evaluation_overview_params(:action => 'changePeriod') do %> 
+<% form_tag :action => 'changePeriod' do %> 
+<%= hidden_field_tag :back_url, params[:back_url] %>
 <table>
   <tr>
     <td>Von:</td>
@@ -72,6 +73,5 @@ Beliebig:
 
 <p>
  <%= link_to 'Zur&uuml;ck zur &Uuml;bersicht', 
-             :action => params[:evaluation],
-             :category_id => params[:category_id] %>
+             params[:back_url] %>
 </p>

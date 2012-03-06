@@ -147,7 +147,7 @@ class EvaluatorController < ApplicationController
     end
     flash[:notice] = "Das Datum der kompletten Erfassung aller Zeiten " +
                      "f&uuml;r das Projekt #{project.label_verbose} wurde aktualisiert."
-    redirectToOverview
+    redirect_to params[:back_url]
   end
   
   def complete_all
@@ -155,7 +155,7 @@ class EvaluatorController < ApplicationController
        pm.update_attributes(:last_completed => Date.today)
     end
     flash[:notice] = "Das Datum der kompletten Erfassung aller Zeiten wurde f&uuml;r alle Projekte aktualisiert."
-    redirectToOverview
+    redirect_to params[:back_url]
   end
   
   def exportCapacityCSV
@@ -189,7 +189,7 @@ class EvaluatorController < ApplicationController
   
   def currentPeriod
     session[:period] = nil
-    redirectToOverview
+    redirect_to params[:back_url]
   end
   
   def changePeriod
@@ -202,10 +202,11 @@ class EvaluatorController < ApplicationController
     end
     raise ArgumentError, "Start Datum nach End Datum" if @period.negative?   
     session[:period] = [@period.startDate.to_s, @period.endDate.to_s,  @period.label]  
-    redirectToOverview             
+     #redirectToOverview      
+    redirect_to params[:back_url]
   rescue ArgumentError => ex        # ArgumentError from Period.new or if period.negative?
     flash[:notice] = "Ung&uuml;ltige Zeitspanne: " + ex
-    render :action => 'selectPeriod'    
+    render :action => 'selectPeriod'
   end
   
   

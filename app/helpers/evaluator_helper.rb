@@ -69,8 +69,9 @@ module EvaluatorHelper
     link_text = ''
     if @user.projectmemberships.any? { |pm| pm.project == project || pm.project.ancestors.include?(project) }
       link_text = link_to('Komplettieren', 
-           evaluation_overview_params(:action => 'completeProject', 
-				                               :project_id => project.id),
+                          :action => 'completeProject', 
+				                  :project_id => project.id, 
+				                  :back_url => request.request_uri,
            :method => 'post' ) 
     end
 	  link_text +=  ' (' +  format_date(@user.lastCompleted(project)) + ')'
@@ -126,7 +127,7 @@ module EvaluatorHelper
   ### period and time helpers
 
   def period_link(label, shortcut)
-    link_to label, evaluation_overview_params( :action => 'changePeriod', :shortcut => shortcut )
+    link_to label, :action => 'changePeriod', :shortcut => shortcut, :back_url => params[:back_url]
   end
   
   def timeInfo

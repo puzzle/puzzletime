@@ -28,7 +28,7 @@
             :action => 'addMultiAbsence' %> 
 <% else -%>			
 <%= link_to 'Alles Komplettieren', 
-             evaluation_overview_params(:action => 'complete_all'),
+             {:action => 'complete_all', :back_url => request.request_uri},
 			:method => 'post',
 			:confirm => 'Wollen sie wirklich alle Projekte komplettieren?' %> 
 <% end -%>			

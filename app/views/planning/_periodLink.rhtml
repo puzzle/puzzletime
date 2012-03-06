@@ -5,12 +5,10 @@
 	<%= link_to 'Aktuelle Zeitspanne', 
 				 :controller => 'evaluator',
 	             :action => 'currentPeriod', 
-	             :evaluation => params[:action],
-	             :category_id => id %> | 
+                 :back_url => request.request_uri %> | 
 <% end -%>
 <%= link_to 'Andere Zeitspanne', 
 			:controller => 'evaluator',
-            :action => 'selectPeriod',  
-            :evaluation => params[:action],
-			:category_id => id %>
+            :action => 'selectPeriod', 
+            :back_url => request.request_uri %>
 </p>

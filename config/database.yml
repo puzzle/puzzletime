@@ -2,7 +2,7 @@ development:
   adapter: postgresql
   database: puzzletime_development
   encoding: utf8
-  username: postgres
+  username: puzzletime #postgres
   password: timepuzzle
   host: 127.0.0.1
 

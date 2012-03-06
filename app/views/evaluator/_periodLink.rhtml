@@ -4,14 +4,12 @@ Zeiten w&auml;hrend <%= @period %> &nbsp;
 <%= link_to 'Aktuelle Zeitspanne', 
 			 :controller => 'evaluator',
              :action => 'currentPeriod', 
-             :evaluation => params[:action],
-             :category_id => params[:category_id] %> | 
+             :back_url => request.request_uri %> | 
 <% end -%>
 <%= link_to 'Andere Zeitspanne', 
 			:controller => 'evaluator',
-            :action => 'selectPeriod',  
-            :evaluation => params[:action],
-            :category_id => params[:category_id] %>
+            :action => 'selectPeriod', 
+            :back_url => request.request_uri %>
 
 <% if @notifications && !@notifications.empty? -%>
  | <%= link_to_function "#{@notifications.size} Nachricht#{@notifications.size > 1 ? 'en' : ''}", 

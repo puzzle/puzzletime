@@ -39,13 +39,7 @@ module ApplicationHelper
       :end_date => params[:end_date],
       :page => params[:page] }
   end
-  
-  def evaluation_overview_params(prms = {})
-    prms[:evaluation] ||= params[:evaluation]
-    prms[:category_id] ||= params[:category_id]
-    prms
-  end
-  
+    
   def date_calendar_field(object, method, title, update = false, default = Date.today)
     cal_options = {:onUpdate => :workDateChanged} if update    
     generic_calendar_field object, method, title, DATE_FORMAT, cal_options, default
