@@ -148,12 +148,9 @@ class Project < ActiveRecord::Base
     self.path_ids = top? ? [id] : parent.path_ids.clone.push(id)
   end
   
-  def ==(other)
-    other.is_a?(Project) && id == other.id? && !id.nil?
- 	end
-  
   def <=>(other)
     return super(other) if self.kind_of? Class
+    return 0 if other.is_a?(Project) && id == other.id? && !id.nil?
     
     "#{client.shortname}: #{label_ancestry}" <=> "#{other.client.shortname}: #{other.label_ancestry}"
   end
