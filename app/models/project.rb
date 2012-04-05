@@ -149,7 +149,7 @@ class Project < ActiveRecord::Base
   end
   
   def ==(other)
-    id == other.id? && !id.nil?
+    other.is_a?(Project) && id == other.id? && !id.nil?
  	end
   
   def <=>(other)
