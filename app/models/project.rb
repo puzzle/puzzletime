@@ -149,8 +149,8 @@ class Project < ActiveRecord::Base
   end
   
   def <=>(other)
-    return super(other) if self.kind_of? Class
-    return 0 if other.is_a?(Project) && id == other.id? && !id.nil?
+    return super(other) unless other.is_a?(Project)
+    return 0 if id == other.id? && !id.nil?
     
     "#{client.shortname}: #{label_ancestry}" <=> "#{other.client.shortname}: #{other.label_ancestry}"
   end
