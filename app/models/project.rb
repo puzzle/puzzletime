@@ -148,6 +148,10 @@ class Project < ActiveRecord::Base
     self.path_ids = top? ? [id] : parent.path_ids.clone.push(id)
   end
   
+  def ==(other)
+  	super
+ 	end
+  
   def <=>(other)
     return super(other) if self.kind_of? Class
     
