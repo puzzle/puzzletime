@@ -122,7 +122,7 @@ class EvaluationTest < Test::Unit::TestCase
     
     divisions = @evaluation.divisions
     assert_equal 1, divisions.size
-    assert_equal projects(:puzzletime), divisions.first
+    assert_equal projects(:puzzletime).id, divisions.first.id
         
     #assert_sum_times 0, 6, 18, 18, projects(:puzzletime)   
   end
@@ -141,7 +141,7 @@ class EvaluationTest < Test::Unit::TestCase
     
     divisions = @evaluation.divisions
     assert_equal 1, divisions.size
-    assert_equal projects(:allgemein), divisions.first
+    assert_equal projects(:allgemein).id, divisions.first.id
         
     #assert_sum_times 0, 14, 14, 15, projects(:allgemein)  
   end  
@@ -175,8 +175,8 @@ class EvaluationTest < Test::Unit::TestCase
     
     divisions = @evaluation.divisions
     assert_equal 2, divisions.size
-    assert_equal projects(:allgemein), divisions[0]
-    assert_equal projects(:puzzletime), divisions[1]
+    assert_equal projects(:allgemein).id, divisions[0].id
+    assert_equal projects(:puzzletime).id, divisions[1].id
             
     assert_sum_times 0, 20, 32, 33
     assert_count_times 0, 3, 5, 6  
@@ -204,8 +204,8 @@ class EvaluationTest < Test::Unit::TestCase
     
     divisions = @evaluation.divisions
     assert_equal 2, divisions.size
-    assert_equal projects(:allgemein), divisions[0]
-    assert_equal projects(:puzzletime), divisions[1]
+    assert_equal projects(:allgemein).id, divisions[0].id
+    assert_equal projects(:puzzletime).id, divisions[1].id
             
     #assert_sum_times 0, 0, 0, 1, projects(:allgemein)
     #assert_sum_times 0, 0, 2, 2, projects(:puzzletime)  
@@ -231,7 +231,7 @@ class EvaluationTest < Test::Unit::TestCase
     
     divisions = @evaluation.divisions
     assert_equal 1, divisions.size
-    assert_equal projects(:allgemein), divisions[0]
+    assert_equal projects(:allgemein).id, divisions[0].id
             
     #assert_sum_times 0, 5, 5, 5, projects(:allgemein)
   end
@@ -251,7 +251,7 @@ class EvaluationTest < Test::Unit::TestCase
     
     divisions = @evaluation.divisions
     assert_equal 1, divisions.size
-    assert_equal projects(:webauftritt), divisions[0]
+    assert_equal projects(:webauftritt).id, divisions[0].id
             
     #assert_sum_times 0, 0, 11, 11, projects(:webauftritt)
   end

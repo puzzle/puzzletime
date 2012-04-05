@@ -147,7 +147,6 @@ class Worktime < ActiveRecord::Base
     else
       append_conditions(conditions, ['hours = ?', hours])
     end
-    puts conditions.inspect
     Worktime.find(:first, :conditions => conditions)
   end
   

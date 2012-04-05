@@ -342,8 +342,6 @@ private
     @tickets = {}
 
     ticket_groups.each do |ticket, worktimes|
-      p "#{ticket} - size #{worktimes.size}"
-      
       if @tickets[ticket].nil?
         @tickets[ticket] = {:n_entries => 0, 
                             :sum => 0, 

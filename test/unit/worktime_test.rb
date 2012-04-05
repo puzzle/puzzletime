@@ -11,7 +11,7 @@ class WorktimeTest < Test::Unit::TestCase
     wt = Worktime.find(1)
     assert_kind_of Worktime, wt
     assert_equal worktimes(:wt_pz_allgemein).project_id, wt.project_id
-    assert_equal projects(:allgemein), wt.account
+    assert_equal projects(:allgemein).id, wt.account.id
     assert_equal employees(:pascal), wt.employee
     assert ! wt.startStop?
     assert_nil wt.absence

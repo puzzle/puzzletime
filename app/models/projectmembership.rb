@@ -26,7 +26,6 @@ class Projectmembership < ActiveRecord::Base
 
   def self.activate(attributes)
     create(attributes) 
-    puts attributes.inspect
     membership = find(:first, assoc_conditions(attributes[:employee_id], attributes[:project_id]) )
     membership.update_attributes :active => true
   end

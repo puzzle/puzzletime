@@ -155,7 +155,6 @@ class Project < ActiveRecord::Base
     "#{client.shortname}: #{label_ancestry}" <=> "#{other.client.shortname}: #{other.label_ancestry}"
   end
   
-  
   def validate_worktime(worktime)
     if worktime.report_type < report_type
       worktime.errors.add(:report_type, 
