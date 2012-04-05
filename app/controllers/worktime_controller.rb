@@ -222,6 +222,7 @@ protected
     if params[:evaluation].nil? 
       options[:evaluation] = userEvaluation
       options[:category_id] = @worktime.employee_id
+      options[:division_id] = nil
       options[:clear] = 1
       setPeriod
       if @period.nil? || ! @period.include?(@worktime.work_date)

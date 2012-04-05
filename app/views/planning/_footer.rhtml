@@ -1,4 +1,6 @@
-	<% first_span ||= 1 %>
+<% first_span ||= 1 %>
+<% type ||= :calendar_day %>
+
 <% if type == :calendar_week %>
 	<tr class="head">
 		<td colspan="<%= first_span %>" rowspan="3"></td>

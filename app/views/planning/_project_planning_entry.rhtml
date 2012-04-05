@@ -1,3 +1,5 @@
+<% type ||= :calendar_day %>
+
 <tr>
 	<th colspan="2"><%= project_planning_graph.project.label_verbose %></th>
 	<%= week_overview_tds(project_planning_graph.overview_graph, 10) -%>
