@@ -67,13 +67,21 @@ class Project < ActiveRecord::Base
   end
   
   def label_verbose
-    path_labels = path_ids[0..-2].collect{ |id| self.class.find(id).shortname }
+  	path_labels = ancestor_projects.collect(&:shortname) 
     path_label = "-#{path_labels.join("-")}" if not path_labels.empty?
     "#{client.shortname}#{path_label}: #{name}"
   end
- 
+    
+  def ancestor_projects
+    @ancestor_projects ||= begin
+      ids = path_ids[0..-2]
+      ps = Hash[self.class.find(ids).collect {|p| [p.id, p]}]
+      ids.collect {|id| ps[id] }
+    end
+  end
+  
   def label_ancestry
-    top? ? name : "#{parent.label_ancestry} - #{name}"
+  	(ancestor_projects + [self]).collect(&:name).join(" - ")
   end
   
   def top_project
@@ -139,6 +147,13 @@ class Project < ActiveRecord::Base
   def generate_path_ids
     self.path_ids = top? ? [id] : parent.path_ids.clone.push(id)
   end
+  
+  def <=>(other)
+    return super(other) if self.kind_of? Class
+    
+    "#{client.shortname}: #{label_ancestry}" <=> "#{other.client.shortname}: #{other.label_ancestry}"
+  end
+  
   
   def validate_worktime(worktime)
     if worktime.report_type < report_type

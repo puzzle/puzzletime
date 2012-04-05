@@ -17,7 +17,7 @@ class ProjectmembershipController < ApplicationController
   def listProjects    
     id_group =  (! @user.management? || group_id.nil?) ? @user.id : group_id
     @subject = Employee.find(id_group)
-    @list = Project.list
+    @list = Project.list.sort
     render :action => 'list'
   end
   
