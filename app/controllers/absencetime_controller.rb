@@ -36,8 +36,8 @@ protected
     @worktime = Absencetime.new   
   end
   
-  def setWorktimeAccount
-    @worktime.absence_id = params[:account_id]
+  def setWorktimeDefaults
+    @worktime.absence_id ||= params[:account_id]
   end
 
   def setAccounts(all = false)

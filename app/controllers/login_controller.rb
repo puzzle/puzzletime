@@ -15,7 +15,7 @@ class LoginController < ApplicationController
   def login
     if request.post?
       if login_with(params[:user], params[:pwd])
-        redirect_to HOME_ACTION
+        redirect_to params[:ref].present? ? params[:ref] : HOME_ACTION
       else
         flash[:notice] = "Ung&uuml;ltige Benutzerdaten"
       end

@@ -74,6 +74,10 @@ protected
     @worktime = Attendancetime.new   
   end  
   
+  def setWorktimeDefaults
+    @worktime.projecttime = @user.default_attendance
+  end
+
   def autoStartExists(expected, msg)
     abort = (! runningTime.nil?) == expected
     if abort

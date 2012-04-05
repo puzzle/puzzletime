@@ -1,7 +1,8 @@
 <center>
 <p style="text-align: center;">Bitte loggen Sie sich ein:</p>
 
-<% form_tag(ApplicationController::HOME_ACTION, :name => 'form') do -%>
+<% form_tag({:controller => 'login', :action => 'login'}, :name => 'form') do -%>
+<%= hidden_field_tag 'ref', params[:ref] %>
 <table>
   <tr>
     <td>Login:</td>

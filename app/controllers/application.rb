@@ -27,7 +27,7 @@ class ApplicationController < ActionController::Base
         return true if login_with(params[:user], params[:pwd]) 
         flash[:notice] = "Ung&uuml;ltige Benutzerdaten"
       end
-      redirect_to :controller => 'login', :action => 'login'
+      redirect_to :controller => 'login', :action => 'login', :ref => request.url
       return false
     end
     @user = Employee.find(user_id)

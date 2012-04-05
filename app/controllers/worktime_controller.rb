@@ -26,7 +26,7 @@ class WorktimeController < ApplicationController
   # Shows the add time page.
   def add
     createDefaultWorktime   
-    setWorktimeAccount
+    setWorktimeDefaults
     setAccounts 
     setExisting
     renderGeneric :action => 'add'  
@@ -52,7 +52,8 @@ class WorktimeController < ApplicationController
   
   # Shows the edit page for the selected time.
   def edit
-    setWorktime   
+    setWorktime
+    setWorktimeDefaults
     setAccounts true
     setExisting
     renderGeneric :action => 'edit'
@@ -271,7 +272,7 @@ protected
   end
   
   # overwrite in subclass
-  def setWorktimeAccount    
+  def setWorktimeDefaults
   end
   
   # overwrite in subclass
@@ -367,7 +368,7 @@ protected
   def runningTime(reload = false)
     # implement in subclass
   end
-  
+    
   def redirect_to_running
     redirect_to :controller => 'worktime', :action => 'running'
   end
