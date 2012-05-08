@@ -97,7 +97,7 @@ class WorktimeController < ApplicationController
         # errors enumerator yields attr and message (=second item)
         flash[:notice] = @worktime.errors.collect(&:second).join(", ")
       end
-    end  
+    end
     referer = request.headers["Referer"]
     if params[:back] && !(referer =~ /time\/edit\/#{@worktime.id}$/)
       referer.gsub!(/time\/create[^A-Z]?/, 'time/add')

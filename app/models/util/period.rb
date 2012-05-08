@@ -152,7 +152,7 @@ private
   end
   
   def self.quarterLabel(date)
-    "plem"
+    "#{date.month/4 + 1}. Quartal"
   end
   
   def self.yearLabel(date)

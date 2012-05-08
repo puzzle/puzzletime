@@ -14,15 +14,15 @@ module EvaluatorHelper
   
   def detailTD(worktime, field)
     case field
-      when :work_date : td format_date(worktime.work_date), 'right'
-      when :hours : td format_hour(worktime.hours), 'right'
-      when :times : td worktime.timeString
-      when :employee : td worktime.employee.shortname
-      when :account : td worktime.account.label_verbose
-      when :billable : td(worktime.billable ? '$' : ' ')
-      when :booked :  td(worktime.booked ? '&beta;' : ' ')
-      when :ticket :  td worktime.ticket
-      when :description :
+      when :work_date then td format_date(worktime.work_date), 'right'
+      when :hours then td format_hour(worktime.hours), 'right'
+      when :times then td worktime.timeString
+      when :employee then td worktime.employee.shortname
+      when :account then td worktime.account.label_verbose
+      when :billable then td(worktime.billable ? '$' : ' ')
+      when :booked then  td(worktime.booked ? '&beta;' : ' ')
+      when :ticket then  td worktime.ticket
+      when :description 
         description = worktime.description || ''
         desc = h description.slice(0..40)
         if description.length > 40
@@ -57,8 +57,8 @@ module EvaluatorHelper
   
   def worktime_controller
     case 
-      when @evaluation.absences? : 'absencetime'
-      when @evaluation.kind_of?(AttendanceEval) : 'attendancetime'
+      when @evaluation.absences? then 'absencetime'
+      when @evaluation.kind_of?(AttendanceEval) then 'attendancetime'
       else 'projecttime'
       end 
   end

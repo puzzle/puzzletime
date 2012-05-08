@@ -16,7 +16,8 @@
                 {:controller => part.controller,
 				 :action => 'edit',
                  :id => part.id} %>    
-    </td>    
+    </td>
+    <% if @user == @worktime.employee -%>
 	<td>
     <%= link_to 'L&ouml;schen', 
             {:controller => part.controller,
@@ -26,5 +27,7 @@
             {:confirm => 'Wollen sie diese Arbeitszeit wirklich entfernen?',
              :method => 'post' } %>    
     </td>
-    <% end -%>     
+    <% end -%>
+    <% end -%>
+    
  </tr>

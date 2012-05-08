@@ -53,7 +53,7 @@ class Project < ActiveRecord::Base
     
   def self.columnType(col)
     case col 
-      when :report_type : :report_type
+      when :report_type then :report_type
       else super col
       end
   end  
@@ -67,9 +67,8 @@ class Project < ActiveRecord::Base
   end
   
   def label_verbose
-  	path_labels = ancestor_projects.collect(&:shortname) 
-    path_label = "-#{path_labels.join("-")}" if not path_labels.empty?
-    "#{client.shortname}#{path_label}: #{name}"
+  	path_labels = (ancestor_projects + [self]).collect(&:shortname)
+    "#{client.shortname}-#{path_labels.join("-")}: #{name}"
   end
     
   def ancestor_projects
