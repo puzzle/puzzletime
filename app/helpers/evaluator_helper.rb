@@ -69,10 +69,10 @@ module EvaluatorHelper
     link_text = ''
     if @user.projectmemberships.any? { |pm| pm.project == project || pm.project.ancestors.include?(project) }
       link_text = link_to('Komplettieren', 
-                          :action => 'completeProject', 
+                          {:action => 'completeProject', 
 				                  :project_id => project.id, 
-				                  :back_url => request.request_uri,
-           :method => 'post' ) 
+				                  :back_url => request.request_uri},
+                          :method => 'post' ) 
     end
 	  link_text +=  ' (' +  format_date(@user.lastCompleted(project)) + ')'
     link_text	
