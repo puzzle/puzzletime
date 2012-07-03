@@ -33,7 +33,17 @@
 </tr>
 <tr>
 	<td colspan="2" style="text-align: right;">
-	Beschreibung: <%= text_field_tag 'description', @user.running_project.description, :size => 25 %></td>
+		<table width="100" style="margin-left: auto; text-align: left;">
+			<tr>
+				<td>Beschreibung:</td>
+				<td><%= text_field_tag 'description', @user.running_project.description, :size => 25 %></td>
+			</tr>
+			<tr>
+				<td>Ticket/Task:</td>
+				<td><%= text_field_tag 'ticket', @user.running_project.ticket, :size => 15 %></td>
+			</tr>
+		</table>
+	</td>
 </tr>
 <% end -%>
 <% end %>

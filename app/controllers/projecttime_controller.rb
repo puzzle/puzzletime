@@ -20,6 +20,7 @@ class ProjecttimeController < WorktimeController
     running = runningTime
     if running
       running.description = params[:description]
+      running.ticket = params[:ticket]
       stopRunning running
     else
       flash[:notice] = 'Zur Zeit läuft kein Projekt'
