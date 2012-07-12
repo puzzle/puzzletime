@@ -5,8 +5,11 @@ class EmploymentController < ManageController
   GROUP_KEY = 'employment'
 
   def formatColumn(attribute, value)
-    return value.to_s + ' %' if :percent == attribute
-    super  attribute, value 
+    if :percent == attribute
+      (value == value.to_i ? value.to_i.to_s : value.to_s) + ' %'
+    else
+      super  attribute, value 
+    end
   end  
     
   def editFields    

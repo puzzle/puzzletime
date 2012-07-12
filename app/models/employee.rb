@@ -112,10 +112,10 @@ class Employee < ActiveRecord::Base
   
   def self.columnType(col)
     case col 
-      when :current_percent : :integer
-      when :default_report_type : :report_type
-      else super col
-      end
+    when :current_percent : :decimal
+    when :default_report_type : :report_type
+    else super col
+    end
   end  
       
   def self.puzzlebaseMap

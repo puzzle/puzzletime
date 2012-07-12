@@ -52,13 +52,16 @@ class EmployeeListsController < ApplicationController
 
     #logger.debug "employees = #{@employee_list.employees.inspect}" 
     respond_to do |format|
-      if @employee_list.save(false) # TODO: can't validate because of translations missing (??)
+      if @employee_list.save 
         flash[:notice] = 'Mitarbeiterliste wurde erfolgreich erstellt.'
         #format.html { redirect_to(@employee_list) }
         format.html { redirect_to :controller => 'planning', :action => 'employee_lists' }
         format.xml  { render :xml => @employee_list, :status => :created, :location => @employee_list }
       else
-        format.html { render :action => "new" }
+        format.html do 
+          @curr_employees = Employee.employed_ones(@period || Period.pastMonth)
+          render :action => "new"
+        end
         format.xml  { render :xml => @employee_list.errors, :status => :unprocessable_entity }
       end
     end

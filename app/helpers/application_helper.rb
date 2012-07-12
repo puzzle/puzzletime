@@ -24,6 +24,10 @@ module ApplicationHelper
     time ||= Time.now
     time.strftime(TIME_FORMAT)
   end
+  
+  def format_percent(value)
+    (value == value.to_i ? value.to_i.to_s : value.to_s) + ' %'
+  end
     
   def alternate_row(attrs = '')
     @row = -1 if ! defined? @row    

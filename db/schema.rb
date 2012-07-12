@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 16) do
+ActiveRecord::Schema.define(:version => 18) do
 
   create_table "absences", :force => true do |t|
     t.string  "name",                       :null => false
@@ -61,8 +61,8 @@ ActiveRecord::Schema.define(:version => 16) do
 
   create_table "employments", :force => true do |t|
     t.integer "employee_id"
-    t.integer "percent",     :null => false
-    t.date    "start_date",  :null => false
+    t.decimal "percent",     :precision => 5, :scale => 2, :null => false
+    t.date    "start_date",                                :null => false
     t.date    "end_date"
   end
 
@@ -126,6 +126,7 @@ ActiveRecord::Schema.define(:version => 16) do
     t.integer "department_id"
     t.string  "path_ids",             :limit => nil
     t.date    "freeze_until"
+    t.boolean "ticket_required",                     :default => false
   end
 
   add_index "projects", ["client_id"], :name => "index_projects_on_client_id"
@@ -149,6 +150,7 @@ ActiveRecord::Schema.define(:version => 16) do
     t.boolean "billable",        :default => true
     t.boolean "booked",          :default => false
     t.string  "type"
+    t.string  "ticket"
   end
 
   add_index "worktimes", ["absence_id", "employee_id", "work_date"], :name => "worktimes_absences"

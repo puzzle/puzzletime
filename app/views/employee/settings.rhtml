@@ -102,7 +102,7 @@
 <%= alternate_row %>
 	<td align="right"><%= format_date employment.start_date %></td>
 	<td align="right"><%= format_date employment.end_date %></td>
-	<td align="right"><%= employment.percent %> %</td>
+	<td align="right"><%= format_percent employment.percent %></td>
 </tr>
 <% end -%>
 </table>

@@ -69,8 +69,15 @@ class EmployeeController < ManageController
   end
   
   def formatColumn(attribute, value)
-    return (value ? value.to_s + ' %' : 'keine') if :current_percent == attribute
-    super  attribute, value 
+    if :current_percent == attribute
+      case value
+      when nil then 'keine'
+      when value.to_i then value.to_i.to_s + ' %'
+      else value.to_s + ' %'
+      end
+    else
+      super  attribute, value 
+    end 
   end 
 
 end

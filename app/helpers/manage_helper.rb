@@ -16,7 +16,7 @@ module ManageHelper
   
   def dataField(entry, attribute)
     options = case modelClass.columnType(attribute)
-                when :date, :float, :integer then ' align="right"'
+                when :date, :float, :integer, :decimal then ' align="right"'
                 when :boolean then ' align="center"'
                 else ''
                 end
