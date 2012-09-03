@@ -11,7 +11,7 @@
     <% end -%>  
  </tr> 
  <%= render(:partial => 'division',
-            :collection => @evaluation.divisions(@period),
+            :collection => @evaluation.divisions(@period).sort,
             :locals => { :periods => periods }) %> 
 <tr class="times_total_sum">
     <td>Total Zeit</td>
