@@ -6,6 +6,10 @@ class ProjectsEval < Evaluation
   SUB_EVALUATION    = 'projectemployees'
   SUB_PROJECTS_EVAL = 'subprojects'
   
+  def divisions(period = nil)  
+    super.sort
+  end
+  
   def account_id
      division.id if division
   end

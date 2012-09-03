@@ -14,7 +14,7 @@ class EmployeeProjectsEval < ProjectsEval
   end  
   
   def divisions(period = nil)  
-    @alltime ? category.alltime_projects : category.projects
+    @alltime ? category.alltime_projects.sort : category.projects.sort
   end
   
   def for?(user)
