@@ -24,7 +24,7 @@ class ProjectController < ManageController
     @entry_pages = Paginator.new self, @user.managed_projects.count, NO_OF_OVERVIEW_ROWS, params[:page]
     @entries = @user.managed_projects.find(:all, 
                           :limit => @entry_pages.items_per_page,
-                          :offset => @entry_pages.current.offset)
+                          :offset => @entry_pages.current.offset).sort
     renderGeneric :action => 'list'   
   end
   
@@ -55,8 +55,6 @@ class ProjectController < ManageController
   
   def listFields
     [[:name, 'Name'], 
-     [:shortname, 'K&uuml;rzel'],
-     [:client, 'Kunde'],
      [:description, 'Beschreibung']]
   end
   
@@ -70,9 +68,10 @@ class ProjectController < ManageController
      [:ticket_required, 'Ticket/Task nötig']]
   end
   
-  def formatColumn(attribute, value)
-    return value.slice(0..25) + (value.size > 25 ? '...' : '') if value && :description == attribute
-    super attribute, value
+  def formatColumn(attribute, value, entry)
+    return value.slice(0..35) + (value.size > 35 ? '...' : '') if value && :description == attribute
+    return entry.label_verbose if attribute == :name
+    super attribute, value, entry
   end
   
   def authorize

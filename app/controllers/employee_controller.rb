@@ -68,7 +68,7 @@ class EmployeeController < ManageController
      [:management, 'GL']]
   end
   
-  def formatColumn(attribute, value)
+  def formatColumn(attribute, value, entry)
     if :current_percent == attribute
       case value
       when nil then 'keine'
@@ -76,7 +76,7 @@ class EmployeeController < ManageController
       else value.to_s + ' %'
       end
     else
-      super  attribute, value 
+      super  attribute, value, entry
     end 
   end 
 

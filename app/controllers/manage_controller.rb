@@ -158,7 +158,7 @@ class ManageController < ApplicationController
   end
   
   # Formats the value for the field attribute.
-  def formatColumn(attribute, value)    
+  def formatColumn(attribute, value, entry)    
     case modelClass.columnType(attribute)
       when :date then value.strftime(LONG_DATE_FORMAT) if value
       when :float, :decimal then "%01.2f" % value if value
