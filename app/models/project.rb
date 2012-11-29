@@ -72,7 +72,10 @@ class Project < ActiveRecord::Base
   end
   
   def tooltip
-    description
+    ([self] + ancestor_projects.reverse).each do |p|
+      return p.description if p.description.present?
+    end
+    nil
   end
     
   def ancestor_projects

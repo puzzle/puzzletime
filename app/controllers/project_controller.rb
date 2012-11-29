@@ -69,7 +69,6 @@ class ProjectController < ManageController
   end
   
   def formatColumn(attribute, value, entry)
-    return value.slice(0..35) + (value.size > 35 ? '...' : '') if value && :description == attribute
     return entry.label_verbose if attribute == :name
     super attribute, value, entry
   end
