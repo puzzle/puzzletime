@@ -16,6 +16,11 @@ module Evaluatable
   def label_verbose
     label
   end
+  
+  # A tooltip to display in a list
+  def tooltip
+    nil
+  end
      
   # Finds all Worktimes related to this object in a given period.    
   def findWorktimes(evaluation, period = nil, categoryRef = false, options = {})

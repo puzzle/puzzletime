@@ -5,10 +5,14 @@ if @period.nil? || @evaluation.category == Employee || periodTimes.sum > 0
 -%>
 <%= alternate_row %>
     <td>
-    <%= link_to_if sub = @evaluation.sub_evaluation, 
-                   division.label_verbose, 
-                   :action => sub, 
-                   :category_id => division.id %>
+    <% if sub = @evaluation.sub_evaluation %>
+        <%= link_to division.label_verbose, 
+                    {:action => sub, 
+                     :category_id => division.id},
+                    :title => division.tooltip %>
+    <% else %>
+        <%= content_tag :span, division.label_verbose, :title => division.tooltip %>
+    <% end %>
     </td>
 <% if @evaluation.class::SUB_PROJECTS_EVAL -%>	
 	<td>

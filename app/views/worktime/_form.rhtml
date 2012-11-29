@@ -22,7 +22,11 @@
 <% if @worktime.hasAttribute? :account_id -%>
 <tr>
   <td><%= @worktime.class.account_label %></td>
-  <td><%= collection_select( :worktime, :account_id, @accounts.sort, :id, :label_verbose) %></td>
+  <td>
+      <select id="worktime_account_id" name="worktime[account_id]">
+          <%= account_options %>
+      </select>
+  </td>
 </tr>
 <% end -%>
  <tr>

@@ -2,6 +2,10 @@
 
 <%= render :partial => 'periodLink' %>
 
+<% if @evaluation.category.respond_to?(:tooltip) && @evaluation.category.tooltip.present? %>
+  <p><%= h(@evaluation.category.tooltip) %></p>
+<% end %>
+
 <%= render :partial => 'category' %>
 
 <p>

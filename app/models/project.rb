@@ -70,6 +70,10 @@ class Project < ActiveRecord::Base
   	path_labels = (ancestor_projects + [self]).collect(&:shortname)
     "#{client.shortname}-#{path_labels.join("-")}: #{name}"
   end
+  
+  def tooltip
+    description
+  end
     
   def ancestor_projects
     @ancestor_projects ||= begin

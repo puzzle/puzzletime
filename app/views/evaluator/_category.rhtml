@@ -9,7 +9,7 @@
     <% for supp in @evaluation.division_supplement(@user)%>           
     <th><%= supp[1] %></th>
     <% end -%>  
- </tr> 
+</tr> 
  <%= render(:partial => 'division',
             :collection => @evaluation.divisions(@period).sort,
             :locals => { :periods => periods }) %> 
