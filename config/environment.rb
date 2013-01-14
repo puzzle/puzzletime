@@ -50,7 +50,7 @@ Rails::Initializer.run do |config|
     
   # See Rails::Configuration for more options
   config.action_controller.asset_host = PATH_PREFIX
-  
+    
   # Do not symbolize keys for performance reasons
   #config.action_view.local_assigns_support_string_keys = false
   
@@ -74,6 +74,11 @@ end
 ActionMailer::Base.delivery_method = :sendmail
 
 ActiveRecord::Base.store_full_sti_class = false
+
+# disable xml params parsing
+# workaround for CVE-2013-0156.
+ActionController::Base.param_parsers.delete(Mime::XML) 
+
 
 #ActionController::Base.fragment_cache_store = :mem_cache_store
 
