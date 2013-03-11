@@ -1,22 +1,22 @@
 <% @title = "Benutzereinstellungen" -%>
 
 <%= error_messages_for :entry %>
-  
+
 <% form_tag :action => 'save_settings' do -%>
 <table>
 <tr>
 	<td>Default Report Typ: </td>
 	<td>
-	<%= select 'user', 'report_type', 
-                ReportType::INSTANCES.collect {|type| [type.name, type.key]}, 
+	<%= select 'user', 'report_type',
+                ReportType::INSTANCES.collect {|type| [type.name, type.key]},
                {:selected => @user.report_type ? @user.report_type.key : nil} %>
 	</td>
 </tr>
 <tr>
 	<td>Default Projekt: </td>
 	<td>
-	<%= select 'user', 'default_project_id', 
-                @user.leaf_projects.collect{|project| [project.label_verbose, project.id]}, 
+	<%= select 'user', 'default_project_id',
+                @user.leaf_projects.sort.collect{|project| [project.label_verbose, project.id]},
                {:selected => @user.default_project_id} %>
 	</td>
 </tr>
@@ -98,7 +98,7 @@
 	<th>Bis</th>
 	<th>Prozent</th>
 </tr>
-<% @user.employments.each do |employment| -%>	
+<% @user.employments.each do |employment| -%>
 <%= alternate_row %>
 	<td align="right"><%= format_date employment.start_date %></td>
 	<td align="right"><%= format_date employment.end_date %></td>
@@ -116,7 +116,7 @@
 	<th>Datum</th>
 	<th>Stunden</th>
 </tr>
-<% @user.overtime_vacations.each do |transfer| -%>	
+<% @user.overtime_vacations.each do |transfer| -%>
 <%= alternate_row %>
 	<td align="right"><%= format_date transfer.transfer_date %></td>
 	<td align="right"><%= format_hour transfer.hours %> h</td>
