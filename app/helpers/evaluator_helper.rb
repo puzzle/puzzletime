@@ -2,65 +2,66 @@
 # Diplomarbeit 2149, Xavier Hayoz
 
 module EvaluatorHelper
-        
+
   def init_periods
     if @period
       [@period]
-    else 
+    else
       periods = user_view? ? @user.user_periods : @user.eval_periods
       periods.collect { |p| Period.parse(p) }
     end
-  end 
-  
+  end
+
   def detailTD(worktime, field)
     case field
-      when :work_date then td format_date(worktime.work_date), 'right'
-      when :hours then td format_hour(worktime.hours), 'right'
-      when :times then td worktime.timeString
+      when :work_date then td format_date(worktime.work_date), 'right', true
+      when :hours then td format_hour(worktime.hours), 'right', true
+      when :times then td worktime.timeString, nil, true
       when :employee then td worktime.employee.shortname
       when :account then td worktime.account.label_verbose
       when :billable then td(worktime.billable ? '$' : ' ')
       when :booked then  td(worktime.booked ? '&beta;' : ' ')
       when :ticket then  td worktime.ticket
-      when :description 
+      when :description
         description = worktime.description || ''
         desc = h description.slice(0..40)
         if description.length > 40
           desc += link_to '...', evaluation_detail_params.merge!({
-                                  :controller => worktime.controller, 
-                                  :action => 'view', 
+                                  :controller => worktime.controller,
+                                  :action => 'view',
                                   :id => worktime.id})
-        end                          
+        end
         td desc
       end
   end
-  
-  def td(value, align = nil)
+
+  def td(value, align = nil, nowrap = false)
     align = align ? " align=\"#{align}\"" : ""
-    "<td#{align}>#{value}</td>\n"
+    style = nowrap ? " style=\"white-space: nowrap;\"" : ""
+    "<td#{align}#{style}>#{value}</td>\n"
   end
-  
+
   def collect_times(periods, method, *division)
-    periods.collect do |p| 
-      @evaluation.send(method, p, *division) 
+    periods.collect do |p|
+      @evaluation.send(method, p, *division)
     end
-  end  
-  
+  end
+
   def add_time_link(account = nil)
      linkHash = { :action => 'add' }
-     linkHash[:controller] =  worktime_controller 
+     linkHash[:controller] =  worktime_controller
      if account
        linkHash[:account_id] = account.is_a?(Absence) ? account.id : account.leaves.first.id
      end
-     link_to 'Zeit erfassen', linkHash 
+     link_to 'Zeit erfassen', linkHash
   end
-  
+
   def worktime_controller
-    case 
+    case
       when @evaluation.absences? then 'absencetime'
       when @evaluation.kind_of?(AttendanceEval) then 'attendancetime'
       else 'projecttime'
-      end 
+      end
   end
 
   #### division supplement functions
@@ -68,14 +69,14 @@ module EvaluatorHelper
   def complete_link(project)
     link_text = ''
     if @user.projectmemberships.any? { |pm| pm.project == project || pm.project.ancestors.include?(project) }
-      link_text = link_to('Komplettieren', 
-                          {:action => 'completeProject', 
-				                  :project_id => project.id, 
+      link_text = link_to('Komplettieren',
+                          {:action => 'completeProject',
+				                  :project_id => project.id,
 				                  :back_url => request.request_uri},
-                          :method => 'post' ) 
+                          :method => 'post' )
     end
 	  link_text +=  ' (' +  format_date(@user.lastCompleted(project)) + ')'
-    link_text	
+    link_text
   end
 
   def last_completion(employee)
@@ -92,22 +93,22 @@ module EvaluatorHelper
       elsif total > offered * 0.9
         color = 'orange'
       end
-      "#{number_with_precision(offered, 0)} (<font color=\"#{color}\">#{format_hour(offered - total)}</font>)" 
+      "#{number_with_precision(offered, 0)} (<font color=\"#{color}\">#{format_hour(offered - total)}</font>)"
     end
   end
-  
+
   def overtime(employee)
-    format_hour(@period ? 
-        employee.statistics.overtime(@period) : 
+    format_hour(@period ?
+        employee.statistics.overtime(@period) :
         employee.statistics.current_overtime) + ' h'
   end
-  
+
   def remaining_vacations(employee)
-    format_hour(@period ? 
-        employee.statistics.remaining_vacations(@period.endDate) : 
+    format_hour(@period ?
+        employee.statistics.remaining_vacations(@period.endDate) :
         employee.statistics.current_remaining_vacations) + ' d'
   end
-  
+
   def overtime_vacations_tooltip(employee)
     transfers = employee.overtime_vacations.find(:all,
                                                  :conditions => @period ? ['transfer_date <= ?', @period.endDate] : nil,
@@ -115,36 +116,36 @@ module EvaluatorHelper
     tooltip = ''
     unless transfers.empty?
       tooltip = '<a href="#" class="tooltip">&lt;-&gt;<span>&Uuml;berzeit-Ferien Umbuchungen:<br/>'
-      transfers.collect! do |t| 
-        " - #{format_date(t.transfer_date)}: #{format_hour(t.hours)} h" 
+      transfers.collect! do |t|
+        " - #{format_date(t.transfer_date)}: #{format_hour(t.hours)} h"
       end
       tooltip += transfers.join('<br />')
       tooltip += '</span></a>'
     end
     tooltip
   end
-  
+
   ### period and time helpers
 
   def period_link(label, shortcut)
     link_to label, :action => 'changePeriod', :shortcut => shortcut, :back_url => params[:back_url]
   end
-  
+
   def timeInfo
     stat = @user.statistics
-    infos = @period ?    
+    infos = @period ?
             [[['&Uuml;berzeit', stat.overtime(@period).to_f, 'h'],
               ['Bezogene Ferien', stat.used_vacations(@period), 'd'],
               ['Soll Arbeitszeit', stat.musttime(@period), 'h']],
-             [['Abschliessend', stat.current_overtime(@period.endDate), 'h'], 
+             [['Abschliessend', stat.current_overtime(@period.endDate), 'h'],
               ['Verbleibend', stat.remaining_vacations(@period.endDate), 'd']]]  :
             [[['&Uuml;berzeit Gestern', stat.current_overtime, 'h'],
               ['Bezogene Ferien', stat.used_vacations(Period.currentYear), 'd'],
               ['Monatliche Arbeitszeit', stat.musttime(Period.currentMonth), 'h']],
              [['&Uuml;berzeit Heute', stat.current_overtime(Date.today), 'h'],
               ['Verbleibend', stat.current_remaining_vacations, 'd'],
-              ['Verbleibend', 0 - stat.overtime(Period.currentMonth).to_f, 'h']]]   
+              ['Verbleibend', 0 - stat.overtime(Period.currentMonth).to_f, 'h']]]
     render :partial => 'timeinfo', :locals => {:infos => infos}
   end
- 
+
 end

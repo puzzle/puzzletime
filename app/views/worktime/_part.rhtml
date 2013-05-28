@@ -1,33 +1,33 @@
  <%= alternate_row %>
-    <td align="right"><%= part.timeString %></td> 
-    <td><%= part.account ? part.account.label_verbose : 'Anwesenheitszeit' %></td>
-    <td><%= h part.description.slice(0..50) if part.description %></td>
+    <td align="right" style="white-space: nowrap;"><%= part.timeString %></td>
+    <td><%= part.account ? h(part.account.label_verbose) : 'Anwesenheitszeit' %></td>
+    <td><%= h truncate(part.description, :length => 50) if part.description %></td>
     <% if part.new_record? -%>
     <td>
-    <%= link_to 'L&ouml;schen', 
+    <%= link_to 'L&ouml;schen',
             {:action => 'deletePart',
-             :part_id => part_counter}, 
+             :part_id => part_counter},
             {:confirm => 'Wollen sie diese Arbeitszeit wirklich entfernen?',
-             :method => 'post' } %>    
+             :method => 'post' } %>
     </td>
 	<% else %>
 	<td>
-    <%= link_to 'Bearbeiten', 
+    <%= link_to 'Bearbeiten',
                 {:controller => part.controller,
 				 :action => 'edit',
-                 :id => part.id} %>    
+                 :id => part.id} %>
     </td>
     <% if @user == @worktime.employee -%>
 	<td>
-    <%= link_to 'L&ouml;schen', 
+    <%= link_to 'L&ouml;schen',
             {:controller => part.controller,
 			 :action => 'delete',
              :id => part.id,
-			 :back => 1}, 
+			 :back => 1},
             {:confirm => 'Wollen sie diese Arbeitszeit wirklich entfernen?',
-             :method => 'post' } %>    
+             :method => 'post' } %>
     </td>
     <% end -%>
     <% end -%>
-    
+
  </tr>
