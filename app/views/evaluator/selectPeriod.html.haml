@@ -1,0 +1,76 @@
+- @title = 'Eigene Zeitspanne ausw&auml;hlen'
+%p
+  %table{:cellspacing => "0"}
+    %tr
+      %td
+        = period_link 'Heute', '0d'
+      %td &nbsp;
+      %td
+        = period_link 'Diese Woche', '0w'
+      %td &nbsp;
+      %td
+        = period_link 'Dieser Monat', '0m'
+      %td &nbsp;
+      %td
+        = period_link '1. Quartal', '1q'
+      %td &nbsp;
+      %td
+        = period_link 'Dieses Jahr', '0y'
+    %tr
+      %td
+        = period_link 'Gestern', '-1d'
+      %td &nbsp;
+      %td
+        = period_link 'Letzte Woche', '-1w'
+      %td &nbsp;
+      %td
+        = period_link 'Letzter Monat', '-1m'
+      %td &nbsp;
+      %td
+        = period_link '2. Quartal', '2q'
+      %td &nbsp;
+      %td
+        = period_link 'Letztes Jahr', '-1y'
+    %tr
+      %td
+        = period_link 'Vorgestern', '-2d'
+      %td &nbsp;
+      %td
+        = period_link 'Vorletzte Woche', '-2w'
+      %td &nbsp;
+      %td
+        = period_link 'Vorletzter Monat', '-2m'
+      %td &nbsp;
+      %td
+        = period_link '3. Quartal', '3q'
+      %td &nbsp;
+      %td
+        = period_link 'Vorletztes Jahr', '-2y'
+    %tr
+      %td &nbsp;
+      %td &nbsp;
+      %td &nbsp;
+      %td &nbsp;
+      %td &nbsp;
+      %td &nbsp;
+      %td
+        = period_link '4. Quartal', '4q'
+      %td &nbsp;
+      %td &nbsp;
+%br/
+%br/
+Beliebig:
+- form_tag :action => 'changePeriod' do
+  = hidden_field_tag :back_url, params[:back_url]
+  %table
+    %tr
+      %td Von:
+      %td= date_calendar_field 'period', 'startDate', 'Start Datum'
+    %tr
+      %td Bis:
+      %td= date_calendar_field 'period', 'endDate', 'End Datum'
+    %tr
+      %td
+      %td= submit_tag 'Ausw&auml;hlen'
+%p
+  = link_to 'Zur&uuml;ck zur &Uuml;bersicht', params[:back_url]

@@ -1,0 +1,18 @@
+- @title = "#{@evaluation.worktime_name} Details #{@period.to_s}"
+%h3= @evaluation.category_label
+%h3= @evaluation.division_label
+= render :partial => 'detailTimes'
+%p
+  = link_to '&Uuml;bersicht', :action => params[:evaluation], :category_id => params[:category_id]
+  - if @evaluation.for? @user
+  - details = params[:action] == 'details'
+    = link_to details ? 'Anwesenheiten' : 'Arbeitszeiten', evaluation_detail_params.merge!({:action => details ? 'attendanceDetails' : 'details' })
+  = link_to 'Export CSV', evaluation_detail_params.merge!({:action => 'exportCSV', :evaluation => (@evaluation.kind_of?(AttendanceEval) ? 'attendance' : params[:evaluation]) })
+  - if @evaluation.report?
+    |
+    \#{link_to 'Stundenrapport', evaluation_detail_params.merge!({ :action => 'compose_report' })}
+    |
+    \#{link_to 'Alle verbuchen', evaluation_detail_params.merge!({ :action => 'book_all' }), :method => :post, :confirm => 'Wollen sie wirklich alle hier dargestellten Arbeitszeiten verbuchen?'}
+  - if @user.management
+    |
+    \#{link_to 'Fremderfassen', evaluation_detail_params.merge!( :controller => worktime_controller, :action => 'add', :other => 1, :account_id => @evaluation.account_id, :employee_id => @evaluation.employee_id)}

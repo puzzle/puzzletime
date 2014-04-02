@@ -1,0 +1,6 @@
+- this_week = time.work_date.cweek
+- @last_week ||= this_week
+- if @last_week != this_week
+- @last_week = this_week
+  %tr
+    %td{:colspan => "5"} &nbsp;

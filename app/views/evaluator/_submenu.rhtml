@@ -1,8 +1,0 @@
-<% if session[:evalLevels].size > 1 || params[:action] == 'details' -%>
-Auswertung:
-<%= render :partial => 'evallink', 
-           :collection => session[:evalLevels][0..-1],
-           :spacer_template => 'submenu_spacer' %>    
-<% elsif user_view? -%>
-<%= render :partial => 'submenu_user' %>
-<% end -%>   

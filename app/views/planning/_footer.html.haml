@@ -1,0 +1,22 @@
+- first_span ||= 1
+- type ||= :calendar_day
+- if type == :calendar_week
+  %tr.head
+    %td{:colspan => first_span, :rowspan => "3"}
+    = week_header
+  %tr.head
+    = month_header
+  %tr.head
+    = year_header
+- else
+  %tr.head
+    %td{:colspan => first_span, :rowspan => "5"}
+    = day_name_header(2)
+  %tr.head
+    = day_date_header(2)
+  %tr.head
+    = week_header(10)
+  %tr.head
+    = month_header(10)
+  %tr.head
+    = year_header(10)

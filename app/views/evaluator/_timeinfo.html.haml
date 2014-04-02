@@ -1,0 +1,12 @@
+%table{:cellspacing => "0"}
+  - for row in infos
+    %tr
+      - for info in row
+        %td
+          = info[0]
+          \: &nbsp;
+        %td{:align => "right"}
+          = format_hour info[1]
+          = info[2]
+        %td &nbsp; &nbsp; &nbsp;
+%br/

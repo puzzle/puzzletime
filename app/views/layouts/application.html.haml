@@ -1,0 +1,38 @@
+!!! Strict
+%html{:lang => "de", "xml:lang" => "de", :xmlns => "http://www.w3.org/1999/xhtml"}
+  %head
+    %title
+      puzzleTime #{"- #{@title}" if @title}
+    %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}/
+    %meta{:content => "no-cache", "http-equiv" => "pragma"}/
+    %meta{:content => "no-cache", "http-equiv" => "cache-control"}/
+    %link{:href => "#{PATH_PREFIX}/favicon.gif", :rel => "shortcut icon"}/
+    = stylesheet_link_tag 'puzzletime', :media => 'all'
+    - if @has_calendar
+      = dhtml_calendar_includes "blue", "de"
+  %body
+    #content
+      = image_tag 'space.gif', :size => '840x1'
+      #header
+        = image_tag 'banner.jpg', :size => '547x75', :id => 'banner'
+        #splash
+          #brand
+            puzzleTime
+            %sup 1.4
+          #company &nbsp; by Puzzle ITC
+      - if @user
+        = render :partial => 'layouts/menu'
+        #menu_user
+          = link_to @user.label, :controller => 'employee', :action => 'settings'
+          |
+          \#{link_to '?', 'https://twiki.puzzle.ch/bin/view/Puzzle/PuzzleTimeFAQ'} |
+          \#{link_to 'Logout',  {:controller => 'login',  :action => 'logout'}, :method => 'post'}
+        #submenu
+          = renderGenericPartial :partial => 'submenu'
+          \&nbsp;
+      %h1= @title
+      - if flash.has_key?(:notice)
+        #notice= flash[:notice]
+      %div
+        = @content_for_layout
+  = javascript_include_tag "application"

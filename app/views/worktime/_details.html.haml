@@ -1,0 +1,18 @@
+%tr
+  %td Mitarbeiter:
+  %td= details.employee.label
+%tr
+  %td Projekt:
+  %td= details.account.label_verbose
+%tr
+  %td Datum:
+  %td= format_date(details.work_date)
+%tr
+  %td Zeit:
+  %td= details.timeString
+%tr
+  %td Verrechenbar:
+  %td= details.billable ? 'ja' : 'nein'
+%tr{:valign => "top"}
+  %td Beschreibung:
+  %td= h(details.description).gsub "\n", "<br/>"

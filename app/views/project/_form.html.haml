@@ -1,0 +1,18 @@
+= error_messages_for :entry
+%table
+  %tr
+    %td Name:
+    %td= h @entry.name
+  %tr
+    %td K&uuml;rzel:
+    %td= h @entry.shortname
+  %tr
+    %td Kunde:
+    %td= h @entry.client.name
+  %tr
+    %td Bereich:
+    %td= h @entry.department.name
+  = renderGenericPartial :partial => 'field', :collection => editFields
+  %tr
+    %td
+    %td= submit_tag 'Speichern'

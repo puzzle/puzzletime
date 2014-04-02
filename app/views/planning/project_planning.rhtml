@@ -1,8 +1,0 @@
-<% @title = "Planung Projekt #{@project.label}" -%>
-<%= render :partial => 'planning/periodLink', :locals => {:id => @project} %>
-<%= render :partial => 'planning/header' %>
-<%= render :partial => 'planning/project_planning_entry', :locals => {:project_planning_graph => @graph}%>
-</table>
-
-<br><br>
-<%= render :partial => 'legend' %>

@@ -1,0 +1,43 @@
+- type ||= :calendar_day
+%tr
+  %th{:colspan => "2"}= link_to user.label, :controller => 'planning', :action => 'employee_planning', :employee_id => user
+  - if type == :calendar_week
+    = week_overview_tds(employee_planning_graph.overview_graph)
+  - else
+    = week_overview_tds(employee_planning_graph.overview_graph, 10)
+- employee_planning_graph.projects_abstr.each do |project|
+  %tr
+    %td &nbsp;&nbsp;P&nbsp;&nbsp;&nbsp;
+    %th
+      = link_to project.label_verbose, :controller => 'planning', :action => 'project_planning', :project_id => project
+    - employee_planning_graph.each_week do |week|
+      - if type == :calendar_week
+        = week_planning_td(employee_planning_graph.plannings_abstr, user, project, week)
+      - else
+        = day_planning_tds(employee_planning_graph.plannings_abstr, user, project, week)
+- employee_planning_graph.projects.each do |project|
+  %tr
+    %td &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    %th
+      = link_to project.label_verbose, :controller => 'planning', :action => 'project_planning', :project_id => project
+    - employee_planning_graph.each_week do |week|
+      - if type == :calendar_week
+        = week_planning_td(employee_planning_graph.plannings, user, project, week)
+      - else
+        = day_planning_tds(employee_planning_graph.plannings, user, project, week)
+%tr
+  %td{:style => "width:30px"}
+  %th Abwesenheiten
+  - employee_planning_graph.each_week do |week|
+    - if type == :calendar_week
+      = week_absence_td(employee_planning_graph.absence_graph, week)
+    - else
+      = day_absence_tds(employee_planning_graph.absence_graph, week)
+%tr
+  %th{:style => "width:30px"}
+  %th Neue Planung
+  - employee_planning_graph.each_week do |week|
+    - if type == :calendar_week
+      = week_planning_td(employee_planning_graph.plannings, user, nil, week)
+    - else
+      = day_planning_tds(employee_planning_graph.plannings, user, nil, week)

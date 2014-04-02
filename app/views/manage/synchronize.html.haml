@@ -1,0 +1,15 @@
+- @title = "#{modelClass ? modelClass.labelPlural : 'Alles'} synchronisieren"
+%table
+  %tr
+    %th Objekt
+    %th Bezeichnung
+    %th Fehler
+  - for obj in @errors
+    = alternate_row
+    %td= obj.class.label
+    %td= obj.debugString
+    %td
+      - obj.errors.each do |attr, msg|
+        = msg
+        %br/
+= renderGenericPartial :partial => 'backlink'

@@ -1,8 +1,0 @@
-<% if @graph.accounts? legend -%>
-<tr>
-	<td colspan="2"><b><%= legend.labelPlural %></b></td>
-</tr>
-	<% @graph.accountsLegend(legend).each do |l| -%>
-	<%= render :partial => 'legendItem', :locals => {:legendItem => l} %>
-	<% end -%>
-<% end -%>

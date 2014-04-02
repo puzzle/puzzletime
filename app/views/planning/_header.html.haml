@@ -1,0 +1,23 @@
+- type ||= :calendar_day
+= stylesheet_link_tag 'graph', :media => 'all'
+= '<table class="absence">'
+- if type == :calendar_week
+  %tr.head
+    %td{:colspan => "2", :rowspan => "3"}
+    = year_header
+  %tr.head
+    = month_header
+  %tr.head
+    = week_header
+- else
+  %tr.head
+    %td{:colspan => "2", :rowspan => "5"}
+    = year_header(10)
+  %tr.head
+    = month_header(10)
+  %tr.head
+    = week_header(10)
+  %tr.head
+    = day_name_header(2)
+  %tr.head
+    = day_date_header(2)

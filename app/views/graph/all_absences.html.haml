@@ -1,0 +1,56 @@
+- @title = 'Ferienplan'
+- @title += " #{Date.today.year}" if @period.nil?
+= stylesheet_link_tag 'graph', :media => 'all'
+= render :partial => 'evaluator/periodLink'
+%table.absence
+  %tr.head
+    %th{:rowspan => "2"}
+    - if @user.management
+      %th{:rowspan => "2"} &Uuml;b
+      %th{:rowspan => "2"} Gh
+    = month_header
+    - if @user.management
+      %th{:rowspan => "2"} Bz
+      %th{:rowspan => "2"} &Uuml;b
+  %tr.head
+    = week_header
+  - @graph.each_employee do |employee|
+    = alternate_row
+    %th
+      = employee.label
+    - if  @user.management
+      %td.stat= @graph.previous_left_vacations
+      %td.stat= @graph.granted_vacations
+    - @graph.each_week do |day|
+      = weekbox_td @graph.timebox, @graph.is_current_week
+    - if  @user.management
+      %td.stat= @graph.used_vacations
+      %td.stat= @graph.following_left_vacations
+  %tr.head
+    - if @user.management
+      %th{:colspan => "3", :rowspan => "2"}
+    - else
+      %th{:rowspan => "2"}
+    = week_header
+    - if @user.management
+      %th{:colspan => "2", :rowspan => "2"}
+  %tr.head
+    = month_header
+%br/
+%table{:style => "float: left; margin-right: 100px;"}
+  = render :partial => "legend", :collection => [Absence]
+- if @user.management
+  %table
+    %tr
+      %td{:colspan => "2"}
+        %b Spalten
+    %tr
+      %td &Uuml;b
+      %td Ferien &Uuml;bertrag vor/nach der gew&auml;hlten Zeitspanne
+    %tr
+      %td Gh
+      %td Ferien Guthaben w&auml;hrend der gew&auml;hlten Zeitspanne
+    %tr
+      %td Bz
+      %td Bezogene Ferien w&auml;hrend der gew&auml;hlten Zeitspanne
+%br{:clear => "all"}/

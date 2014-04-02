@@ -1,0 +1,3 @@
+%tr
+  %th{:colspan => "2"}= link_to user.label, :controller => 'planning', :action => 'employee_planning', :employee_id => user
+  = week_overview_tds(employee_planning_graph.overview_graph)

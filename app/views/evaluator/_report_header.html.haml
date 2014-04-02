@@ -1,0 +1,19 @@
+%table
+  %tr
+    %td Kunde
+    %td
+      %b= project.client.label
+  %tr
+    %td Projekt
+    %td
+      %b= project.label_ancestry
+  - if @evaluation.employee_id
+  - employee = Employee.find(@evaluation.employee_id)
+    %tr
+      %td Mitarbeiter
+      %td
+        %b= employee.label
+  %tr
+    %td Periode
+    %td
+      %b= @period.to_s

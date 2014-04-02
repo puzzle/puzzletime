@@ -100,7 +100,7 @@ private
   end
   
   def templateAbsent?(template,view)
-    ! File.exist?(File.join(File.dirname(__FILE__), "../views/#{view}/_#{template}.rhtml"))
+    ! File.exist?(File.join(File.dirname(__FILE__), "../views/#{view}/_#{template}.html.haml"))
   end  
    
 end

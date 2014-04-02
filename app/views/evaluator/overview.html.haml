@@ -1,0 +1,7 @@
+- @title = @evaluation.title
+= render :partial => 'periodLink'
+- if @evaluation.category.respond_to?(:tooltip) && @evaluation.category.tooltip.present?
+  %p= h(@evaluation.category.tooltip)
+= render :partial => 'category'
+%p
+  = @evaluation.overview_supplement(@user).collect{|supplement| link_to supplement[1], :action => supplement[0]}.join(' | ')                                                |

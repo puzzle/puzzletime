@@ -1,0 +1,15 @@
+- @title = 'Arbeitszeit Details'
+%table
+  = renderGenericPartial :partial => "details", :object => @worktime
+  %tr
+    %td
+    %td
+      %strong
+        - if @worktime.employee == @user ||
+        - (@user.management && @worktime.project_id)
+          = link_to 'Bearbeiten', evaluation_detail_params.merge!({:controller => @worktime.controller, :action =>'edit', :id => @worktime.id})
+          \&nbsp;
+        - if @worktime.employee == @user
+          = link_to 'L&ouml;schen', evaluation_detail_params.merge!({:controller => @worktime.controller, :action =>'confirmDelete', :id => @worktime.id })               |
+%br/
+= link_to 'Arbeitszeiten', evaluation_detail_params.merge!({:controller => 'evaluator', :action => controller.detailAction})

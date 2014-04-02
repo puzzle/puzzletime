@@ -1,0 +1,7 @@
+- @title = "Planung von #{@employee.label}"
+= render :partial => 'planning/periodLink', :locals => {:id => @employee}
+= render :partial => 'planning/header'
+= render :partial => 'planning/employee_planning_entry', :locals => {:user => @employee, :employee_planning_graph => @graph}
+%br/
+%br/
+= render :partial => 'legend'
