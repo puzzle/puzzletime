@@ -1,7 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class EmploymentTest < Test::Unit::TestCase
-  fixtures :employments
+class EmploymentTest < ActiveSupport::TestCase
 
   def setup
     @half_year = Employment.find(1)

@@ -1,7 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class PlanningTest < Test::Unit::TestCase
-  fixtures :employees, :projects
+class PlanningTest < ActiveSupport::TestCase
 
   def test_overlapping_with_no_repeat_and_no_repeat
     p1 = build_planning(201010, 201010)

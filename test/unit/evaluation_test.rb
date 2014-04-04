@@ -1,7 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class EvaluationTest < Test::Unit::TestCase
-  fixtures :employees, :projects, :clients, :projectmemberships, :absences, :worktimes
+class EvaluationTest < ActiveSupport::TestCase
   
   def setup
     @period_week = Period.new("4.12.2006", "10.12.2006")

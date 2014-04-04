@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class WeekTest < Test::Unit::TestCase
+class WeekTest < ActiveSupport::TestCase
   
   def test_from_string
     week = Week.from_string("2009 10")

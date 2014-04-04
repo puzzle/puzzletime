@@ -1,8 +1,7 @@
 require File.dirname(__FILE__) + '/../test_helper'
 require 'planning_controller'
 
-class PlanningControllerTest < Test::Unit::TestCase
-  fixtures :projects, :departments
+class PlanningControllerTest < ActionController::TestCase
   
   def setup
     @controller = PlanningController.new
@@ -61,14 +60,6 @@ class PlanningControllerTest < Test::Unit::TestCase
     post :create, :planning => {:employee_id => employees(:lucien), :project_id => projects(:puzzletime)}
     assert_nil assigns(:planning).id
     assert_template 'add'
-  end
-  
-  def test_edit
-    get :edit
-  end
-  
-  def test_update
-    post :update
   end
   
   def test_delete
