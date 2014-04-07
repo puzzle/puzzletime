@@ -93,5 +93,12 @@ protected
     false
   end
   
+private
+  #TODO: delete this method after upgrading to rails 3 and use ViewPath#template_exists?  
+  def template_exists?(path)
+    self.view_paths.find_template(path, response.template.template_format)
+  rescue ActionView::MissingTemplate
+    false
+  end
 end
 

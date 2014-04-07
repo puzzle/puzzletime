@@ -9,3 +9,5 @@ require 'rdoc/task'
 
 require 'tasks/rails'
 
+load "vendor/plugins/tarantula/lib/relevance/tasks/tarantula_tasks.rake"
+#Dir["relevance/tasks/*.rake"].each {|f| load f }
