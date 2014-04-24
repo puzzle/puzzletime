@@ -6,12 +6,10 @@
   - if @notifications && !@notifications.empty?
     | #{link_to_function "#{@notifications.size} Nachricht#{@notifications.size > 1 ? 'en' : ''}",  visual_effect(:toggle_blind, "notifications", :duration => 0.2)}
     %ul#notifications.notification{:style => "display: none;"}
-    - @notifications.each do |notification|
-      %li= h(notification.message).gsub("\n", "<br/>")
+      - @notifications.each do |notification|
+        %li= h(notification.message).gsub("\n", "<br/>")
     = javascript_include_tag :defaults, :cache => true
     - ref = controller.request.env["HTTP_REFERER"]
     - if ref && "login" == ref[-5,5]
       :javascript
-        // 
         $('notifications').show();
-        //
