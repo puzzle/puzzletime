@@ -1,8 +1,8 @@
 class EmployeeListsController < ApplicationController
-  
-  before_filter :authenticate
-  before_filter :setPeriod
-  
+
+  before_action :authenticate
+  before_action :setPeriod
+
   # GET /employee_lists
   # GET /employee_lists.xml
 #  def index
@@ -22,7 +22,7 @@ class EmployeeListsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @employee_list }
+      format.xml  { render xml: @employee_list }
     end
   end
 
@@ -34,7 +34,7 @@ class EmployeeListsController < ApplicationController
 
     respond_to do |format|
       format.html # new.html.erb
-      format.xml  { render :xml => @employee_list }
+      format.xml  { render xml: @employee_list }
     end
   end
 
@@ -50,19 +50,19 @@ class EmployeeListsController < ApplicationController
     @employee_list = EmployeeList.new(params[:employee_list])
     @employee_list.employee_id = @user.id # add current user id to the created object
 
-    #logger.debug "employees = #{@employee_list.employees.inspect}" 
+    # logger.debug "employees = #{@employee_list.employees.inspect}"
     respond_to do |format|
-      if @employee_list.save 
+      if @employee_list.save
         flash[:notice] = 'Mitarbeiterliste wurde erfolgreich erstellt.'
-        #format.html { redirect_to(@employee_list) }
-        format.html { redirect_to :controller => 'planning', :action => 'employee_lists' }
-        format.xml  { render :xml => @employee_list, :status => :created, :location => @employee_list }
+        # format.html { redirect_to(@employee_list) }
+        format.html { redirect_to controller: 'planning', action: 'employee_lists' }
+        format.xml  { render xml: @employee_list, status: :created, location: @employee_list }
       else
-        format.html do 
+        format.html do
           @curr_employees = Employee.employed_ones(@period || Period.pastMonth)
-          render :action => "new"
+          render action: 'new'
         end
-        format.xml  { render :xml => @employee_list.errors, :status => :unprocessable_entity }
+        format.xml  { render xml: @employee_list.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -70,20 +70,20 @@ class EmployeeListsController < ApplicationController
   # PUT /employee_lists/1
   # PUT /employee_lists/1.xml
   def update
-    
+
     params[:employee_list][:employee_ids] ||= []
 
     @employee_list = EmployeeList.find(params[:id])
-    
+
     respond_to do |format|
       if @employee_list.update_attributes(params[:employee_list])
         flash[:notice] = 'Mitarbeiterliste wurde erfolgreich angepasst.'
-        #format.html { redirect_to(@employee_list) }
-        format.html { redirect_to :controller => 'planning', :action => 'employee_lists' }
+        # format.html { redirect_to(@employee_list) }
+        format.html { redirect_to controller: 'planning', action: 'employee_lists' }
         format.xml  { head :ok }
       else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @employee_list.errors, :status => :unprocessable_entity }
+        format.html { render action: 'edit' }
+        format.xml  { render xml: @employee_list.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -95,10 +95,10 @@ class EmployeeListsController < ApplicationController
     @employee_list.destroy
 
     respond_to do |format|
-      #format.html { redirect_to(employee_lists_url) }
-      format.html { redirect_to :controller => 'planning', :action => 'employee_lists' }
+      # format.html { redirect_to(employee_lists_url) }
+      format.html { redirect_to controller: 'planning', action: 'employee_lists' }
       format.xml  { head :ok }
     end
-  end 
+  end
 
 end

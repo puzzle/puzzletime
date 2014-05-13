@@ -7,32 +7,32 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
-  HOME_ACTION = { :controller => 'evaluator', :action => 'userProjects' }
+  HOME_ACTION = { controller: 'evaluator', action: 'userProjects' }
 
-  after_filter :set_charset
+  after_action :set_charset
   filter_parameter_logging :pwd, :password
 
   def set_charset
-    content_type = headers["Content-Type"] || 'text/html'
+    content_type = headers['Content-Type'] || 'text/html'
     if /^text\//.match(content_type)
-      headers["Content-Type"] = "#{content_type}; charset=utf-8"
+      headers['Content-Type'] = "#{content_type}; charset=utf-8"
     end
   end
 
-  #Filter for check if user is logged in or not
+  # Filter for check if user is logged in or not
   def authenticate
     user_id = session[:user_id]
     unless user_id
       # allow ad-hoc login
       if request.post? && params[:user] && params[:pwd]
         return true if login_with(params[:user], params[:pwd])
-        flash[:notice] = "Ung&uuml;ltige Benutzerdaten"
+        flash[:notice] = 'Ung&uuml;ltige Benutzerdaten'
       end
-      redirect_to :controller => 'login', :action => 'login', :ref => request.url
+      redirect_to controller: 'login', action: 'login', ref: request.url
       return false
     end
     @user = Employee.find(user_id)
-    return true
+    true
   end
 
   def authorize
@@ -50,20 +50,20 @@ class ApplicationController < ActionController::Base
   def rescue_action_in_public(exception)
     case exception
       when ::ActionController::RoutingError, ActiveRecord::RecordNotFound, ::ActionController::UnknownAction
-        render(:file => "#{RAILS_ROOT}/public/404.html",
-               :status => "404 Not Found")
+        render(file: "#{RAILS_ROOT}/public/404.html",
+               status: '404 Not Found')
       else
-        render(:file => "#{RAILS_ROOT}/public/500.html",
-               :status => "500 Error")
+        render(file: "#{RAILS_ROOT}/public/500.html",
+               status: '500 Error')
         SystemNotifier.deliver_exception_notification(self, request, exception)
     end
   end
 
-protected
+  protected
 
   def renderGeneric(options)
     template = options[:action]
-    if template && ! template_exists?("#{self.class.controller_path}/#{template}")
+    if template && !template_exists?("#{self.class.controller_path}/#{template}")
       options[:template] = "#{genericPath}/#{template}"
     else
       options[:template] = "#{self.class.controller_path}/#{template}"
@@ -94,12 +94,11 @@ protected
     false
   end
 
-private
-  #TODO: delete this method after upgrading to rails 3 and use ViewPath#template_exists?
+  private
+  # TODO: delete this method after upgrading to rails 3 and use ViewPath#template_exists?
   def template_exists?(path)
-    self.view_paths.find_template(path, response.template.template_format)
+    view_paths.find_template(path, response.template.template_format)
   rescue ActionView::MissingTemplate
     false
   end
 end
-

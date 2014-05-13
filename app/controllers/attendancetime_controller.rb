@@ -1,54 +1,54 @@
-class AttendancetimeController < WorktimeController 
-    
-  verify :method => :post,
-         :only => [ :autoStartStop, :startNow, :endNow ],
-         :redirect_to => { :action => :list }
-         
-  before_filter :authenticate, :except => [:autoStartStop] 
-  
-  SPLIT = 'Aufteilen'     
-           
+class AttendancetimeController < WorktimeController
+
+  verify method: :post,
+         only: [:autoStartStop, :startNow, :endNow],
+         redirect_to: { action: :list }
+
+  before_action :authenticate, except: [:autoStartStop]
+
+  SPLIT = 'Aufteilen'
+
   def autoStartStop
     @user = Employee.login(params[:user], params[:pwd])
-    if @user 
+    if @user
       now = Time.now
-      if @user.running_attendance 
+      if @user.running_attendance
         attendance = stopRunning(runningTime, now)
         if attendance && @user.running_project
           stopRunning @user.running_project, now
         end
         startRunning(Attendancetime.new, now) if attendance && attendance.work_date != Date.today
-      else 
+      else
         startRunning Attendancetime.new, now
-      end   
-    else  
+      end
+    else
       flash[:notice] = "Ung&uuml;ltige Benutzerdaten.\n"
-    end  
-    render :text => flash[:notice]
-  end         
-  
+    end
+    render text: flash[:notice]
+  end
+
   # called from running
   def start
     if runningTime
-      flash[:notice] = "Es wurde bereits eine fr&uuml;here Anwesenheitszeit gestartet."
+      flash[:notice] = 'Es wurde bereits eine fr&uuml;here Anwesenheitszeit gestartet.'
     else
       startRunning Attendancetime.new
-    end  
+    end
     redirect_to :back
   end
- 
-  # called from running 
+
+  # called from running
   def stop
     attendance = runningTime
-    if attendance 
+    if attendance
       now = Time.now
       stopRunning attendance, now
       project = @user.running_project
       if project
         project.description = params[:description] if params[:description]
         stopRunning project, now
-      elsif Projecttime.find(:first, :conditions => ["type = ? AND employee_id = ? AND work_date = ? AND to_end_time = ?",
-                                                     'Projecttime', @user.id, attendance.work_date, attendance.to_end_time]).nil?
+      elsif Projecttime.find(:first, conditions: ['type = ? AND employee_id = ? AND work_date = ? AND to_end_time = ?',
+                                                  'Projecttime', @user.id, attendance.work_date, attendance.to_end_time]).nil?
         splitAttendance attendance
         return
       end
@@ -57,50 +57,50 @@ class AttendancetimeController < WorktimeController
     end
     redirect_to :back
   end
-  
+
   def splitAttendance(attendance = nil)
     attendance ||= setWorktime
     session[:split] = AttendanceSplit.new(attendance)
-    redirect_to evaluation_detail_params.merge!({:action => 'split'})
+    redirect_to evaluation_detail_params.merge!(action: 'split')
   end
-  
+
   def detailAction
     'attendanceDetails'
-  end   
-    
-protected
+  end
+
+  protected
 
   def setNewWorktime
-    @worktime = Attendancetime.new   
-  end  
-  
+    @worktime = Attendancetime.new
+  end
+
   def setWorktimeDefaults
     @worktime.projecttime = @user.default_attendance
   end
 
   def autoStartExists(expected, msg)
-    abort = (! runningTime.nil?) == expected
+    abort = (runningTime) == expected
     if abort
       flash[:notice] = msg
       list
     end
-    abort  
+    abort
   end
- 
+
   def processAfterSave
     if params[:commit] == SPLIT
       splitAttendance @worktime
       return false
-    end  
+    end
     true
   end
-  
+
   def update_corresponding?
     params[:worktime][:projecttime].to_i != 0
   end
-  
+
   def runningTime(reload = false)
     @user.running_attendance(reload)
   end
-  
+
 end

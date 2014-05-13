@@ -3,30 +3,30 @@ class EmployeeAbsencesEval < Evaluation
   DIVISION_METHOD  = :absences
   LABEL            = 'Absenzen'
   ABSENCES         = true
-  CATEGORY_REF     = :employee_id   
-  ATTENDANCE       = true   
-  DETAIL_COLUMNS   = superclass::DETAIL_COLUMNS.reject{|i| :billable == i || :booked == i }
-  DETAIL_LABELS    = superclass::DETAIL_LABELS.merge({:account => 'Absenz'})
-  
+  CATEGORY_REF     = :employee_id
+  ATTENDANCE       = true
+  DETAIL_COLUMNS   = superclass::DETAIL_COLUMNS.reject { |i| :billable == i || :booked == i }
+  DETAIL_LABELS    = superclass::DETAIL_LABELS.merge(account: 'Absenz')
+
   def initialize(employee_id)
     super(Employee.find(employee_id))
-  end    
-    
+  end
+
   def for?(user)
-    self.category == user
+    category == user
   end
 
   def division_supplement(user)
     return [[:add_time_link, '']] if self.for? user
     super(user)
   end
-  
+
   def employee_id
     category.id
   end
-  
+
   def account_id
     division.id if division
   end
-  
+
 end

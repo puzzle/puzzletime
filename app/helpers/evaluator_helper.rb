@@ -26,18 +26,18 @@ module EvaluatorHelper
         description = worktime.description || ''
         desc = h description.slice(0..40)
         if description.length > 40
-          desc += link_to '...', evaluation_detail_params.merge!({
-                                  :controller => worktime.controller,
-                                  :action => 'view',
-                                  :id => worktime.id})
+          desc += link_to '...', evaluation_detail_params.merge!(
+                                  controller: worktime.controller,
+                                  action: 'view',
+                                  id: worktime.id)
         end
         td desc
       end
   end
 
   def td(value, align = nil, nowrap = false)
-    align = align ? " align=\"#{align}\"" : ""
-    style = nowrap ? " style=\"white-space: nowrap;\"" : ""
+    align = align ? " align=\"#{align}\"" : ''
+    style = nowrap ? " style=\"white-space: nowrap;\"" : ''
     "<td#{align}#{style}>#{value}</td>\n"
   end
 
@@ -48,12 +48,12 @@ module EvaluatorHelper
   end
 
   def add_time_link(account = nil)
-     linkHash = { :action => 'add' }
-     linkHash[:controller] =  worktime_controller
-     if account
-       linkHash[:account_id] = account.is_a?(Absence) ? account.id : account.leaves.first.id
-     end
-     link_to 'Zeit erfassen', linkHash
+    linkHash = { action: 'add' }
+    linkHash[:controller] =  worktime_controller
+    if account
+      linkHash[:account_id] = account.is_a?(Absence) ? account.id : account.leaves.first.id
+    end
+    link_to 'Zeit erfassen', linkHash
   end
 
   def worktime_controller
@@ -70,12 +70,12 @@ module EvaluatorHelper
     link_text = ''
     if @user.projectmemberships.any? { |pm| pm.project == project || pm.project.ancestors.include?(project) }
       link_text = link_to('Komplettieren',
-                          {:action => 'completeProject',
-				                  :project_id => project.id,
-				                  :back_url => request.request_uri},
-                          :method => 'post' )
+                          { action: 'completeProject',
+				                        project_id: project.id,
+				                        back_url: request.request_uri },
+                          method: 'post')
     end
-	  link_text +=  ' (' +  format_date(@user.lastCompleted(project)) + ')'
+	   link_text +=  ' (' +  format_date(@user.lastCompleted(project)) + ')'
     link_text
   end
 
@@ -86,7 +86,7 @@ module EvaluatorHelper
   def offered_hours(project)
     offered = project.offered_hours
     if offered
-      total = project.worktimes.sum(:hours, :conditions => ['worktimes.billable']).to_f
+      total = project.worktimes.sum(:hours, conditions: ['worktimes.billable']).to_f
       color = 'green'
       if total > offered
         color = 'red'
@@ -111,8 +111,8 @@ module EvaluatorHelper
 
   def overtime_vacations_tooltip(employee)
     transfers = employee.overtime_vacations.find(:all,
-                                                 :conditions => @period ? ['transfer_date <= ?', @period.endDate] : nil,
-                                                 :order => 'transfer_date')
+                                                 conditions: @period ? ['transfer_date <= ?', @period.endDate] : nil,
+                                                 order: 'transfer_date')
     tooltip = ''
     unless transfers.empty?
       tooltip = '<a href="#" class="tooltip">&lt;-&gt;<span>&Uuml;berzeit-Ferien Umbuchungen:<br/>'
@@ -128,7 +128,7 @@ module EvaluatorHelper
   ### period and time helpers
 
   def period_link(label, shortcut)
-    link_to label, :action => 'changePeriod', :shortcut => shortcut, :back_url => params[:back_url]
+    link_to label, action: 'changePeriod', shortcut: shortcut, back_url: params[:back_url]
   end
 
   def timeInfo
@@ -145,7 +145,7 @@ module EvaluatorHelper
              [['&Uuml;berzeit Heute', stat.current_overtime(Date.today), 'h'],
               ['Verbleibend', stat.current_remaining_vacations, 'd'],
               ['Verbleibend', 0 - stat.overtime(Period.currentMonth).to_f, 'h']]]
-    render :partial => 'timeinfo', :locals => {:infos => infos}
+    render partial: 'timeinfo', locals: { infos: infos }
   end
 
 end

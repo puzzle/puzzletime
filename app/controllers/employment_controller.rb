@@ -1,7 +1,7 @@
 
 class EmploymentController < ManageController
 
-  VALID_GROUPS = [EmployeeController] 
+  VALID_GROUPS = [EmployeeController]
   GROUP_KEY = 'employment'
 
   def formatColumn(attribute, value, entry)
@@ -10,16 +10,16 @@ class EmploymentController < ManageController
     else
       super  attribute, value, entry
     end
-  end  
-    
-  def editFields    
-    []    
   end
-  
+
+  def editFields
+    []
+  end
+
   def listFields
-    [[:start_date, 'Start Datum'], 
+    [[:start_date, 'Start Datum'],
      [:end_date, 'End Datum'],
-     [:percent, 'Prozent']]   
+     [:percent, 'Prozent']]
   end
-  
-end  
+
+end

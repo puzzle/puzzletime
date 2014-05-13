@@ -1,6 +1,6 @@
 module PlanningHelper
   include GraphHelper
-  
+
   # returns weekly overview columns
   def week_overview_tds(overview_graph, colspan = 0)
     result = ''
@@ -9,20 +9,20 @@ module PlanningHelper
     end
     result
   end
-  
-  # returns one overview column for a given week 
+
+  # returns one overview column for a given week
   def week_overview_td(overview_graph, week, colspan = 0)
     result = "<td colspan=\"#{colspan}\" class=\"#{overview_graph.week_style(week)}\">"
     label = overview_graph.week_label(week)
-    
+
     if colspan > 0
-      result <<  label    
+      result <<  label
     else
-      result << "<a href=\"#{url_for(:action => 'employee_planning', :employee_id => overview_graph.employee, :week_date => week)}\">"
+      result << "<a href=\"#{url_for(action: 'employee_planning', employee_id: overview_graph.employee, week_date: week)}\">"
       result << "#{overview_graph.planned_days(week)}"
       result << "<span>#{label}</span></a>"
     end
-    result << "</td>"
+    result << '</td>'
   end
 
   # returns a weekly planned column
@@ -55,9 +55,9 @@ module PlanningHelper
         result << "#{absence.label}"
       end
     end
-    result << "</td>"
+    result << '</td>'
   end
-  
+
   # returns a weekly absence column in the project planning graph view
   def week_absence_td_proj(absence_graph, date)
     absences = []
@@ -72,9 +72,9 @@ module PlanningHelper
         result << "#{absence.label}"
       end
     end
-    result << "</td>"
+    result << '</td>'
   end
-  
+
   # returns daily absence columns
   def day_absence_tds(absence_graph, date)
     result = ''
@@ -90,7 +90,7 @@ module PlanningHelper
     end
     result
   end
-  
+
   # returns daily absence columns in the project planning graph view
   def day_absence_tds_proj(absence_graph, date)
     result = ''
@@ -111,7 +111,7 @@ module PlanningHelper
   def empty_half_day_td(date)
     "<td #{'class="current"' if Date.today == date } style='width:10px'></td>"
   end
-  
+
   # draws an empty cell in the thin row for absences in the project planning graph view
   def empty_half_day_td_absence(date)
     "<td #{'class="current"' if Date.today == date } style='width:10px; border-width: 0px 1px 0px 0px'></td>"
@@ -123,9 +123,9 @@ module PlanningHelper
     result << '<a href="/planning/add?'
     result << "employee_id=#{employee.id}" if employee
     result << "&project_id=#{project.id}" if project
-    result << "&date=#{Week::from_date(date).to_integer}\""
-    result << ">&nbsp;<span>Neue Planung</span></a>" 
-    result << "</td>"
+    result << "&date=#{Week.from_date(date).to_integer}\""
+    result << '>&nbsp;<span>Neue Planung</span></a>'
+    result << '</td>'
     result
   end
 
@@ -147,8 +147,8 @@ module PlanningHelper
     result << half_day_td(planning, planning.friday_pm, date, 1, planning.is_abstract)
     result
   end
-  
-  
+
+
   def unplanned_half_day_tds(employee, project, date)
     result = half_day_with_link_td(employee, date, project)
     result << half_day_with_link_td(employee, date, project)
@@ -166,17 +166,17 @@ module PlanningHelper
     result << half_day_with_link_td(employee, date, project)
     result
   end
-  
+
   # render a planned halfday in the half-day-per-column view
   def half_day_td(planning, planned, date, colspan, isabstract)
-    return empty_half_day_td(date) if (!planned && !isabstract)
-    result = '<td ' 
-    if colspan>1
+    return empty_half_day_td(date) if !planned && !isabstract
+    result = '<td '
+    if colspan > 1
       result << "colspan='#{colspan}' "
     end
     result << 'class="'
     if planning.definitive
-      result << 'definitive' 
+      result << 'definitive'
     else
       result << 'tentative'
     end
@@ -200,14 +200,14 @@ module PlanningHelper
     result << '</a></td>'
     result
   end
-  
-private
+
+  private
   # returns the planning record matching the week and project
   def week_planning(plannings, current_week_date, project, employee)
-    plannings = plannings.select{|planning| planning.project == project and planning.employee == employee}
+    plannings = plannings.select { |planning| planning.project == project and planning.employee == employee }
     return nil if plannings.empty?
-    
-    current_week = Week::from_date(current_week_date).to_integer
+
+    current_week = Week.from_date(current_week_date).to_integer
     plannings.each do |planning|
       return planning if (planning.end_week.nil? && current_week >= planning.start_week) ||
                          (current_week >= planning.start_week && current_week <= planning.end_week)

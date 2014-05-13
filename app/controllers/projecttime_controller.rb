@@ -6,7 +6,7 @@ class ProjecttimeController < WorktimeController
     if running
       running.description = params[:description]
       stopRunning running, now
-    end  
+    end
     time = Projecttime.new
     time.project_id = params[:id]
     startRunning time, now
@@ -15,7 +15,7 @@ class ProjecttimeController < WorktimeController
     end
     redirect_to_running
   end
-  
+
   def stop
     running = runningTime
     if running
@@ -28,12 +28,12 @@ class ProjecttimeController < WorktimeController
     redirect_to_running
   end
 
-protected
+  protected
 
   def setNewWorktime
-    @worktime = Projecttime.new   
+    @worktime = Projecttime.new
   end
-  
+
   def setWorktimeDefaults
     @worktime.setProjectDefaults(params[:account_id] || @user.default_project_id) unless @worktime.project_id
     @worktime.attendance = @user.default_attendance
@@ -47,38 +47,38 @@ protected
     else
       setProjectAccounts
       set_alltime_accounts unless @accounts.include? @worktime.project
-    end  
-  end  
-  
+    end
+  end
+
   def update_corresponding?
     params[:worktime][:attendance].to_i != 0
   end
-  
+
   def processAfterCreate
-    if ! @worktime.attendance
+    unless @worktime.attendance
       return true
     end
     attendance = @worktime.template Attendancetime.new
     attendance.employee_id = @worktime.employee_id
     attendance.copyTimesFrom @worktime
-    if ! attendance.save
+    unless attendance.save
       @worktime.errors.add_to_base attendance.errors.full_messages.first
       setAccounts
       setExisting
-      renderGeneric :action => 'add'
+      renderGeneric action: 'add'
       return false
-    end  
+    end
     true
   end
-  
+
   def runningTime(reload = false)
     @user.running_project(reload)
   end
-  
-private
+
+  private
 
   def set_alltime_accounts
     @accounts = @worktime.employee.alltime_leaf_projects
   end
-  
+
 end

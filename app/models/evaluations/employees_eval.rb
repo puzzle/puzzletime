@@ -4,22 +4,22 @@ class EmployeesEval < Evaluation
   LABEL            = 'Mitarbeiter Projektzeit'
   TOTAL_DETAILS    = false
   ATTENDANCE       = true
-  
+
   def initialize
     super(Employee)
-  end  
-  
-  def divisions(period = nil)  
+  end
+
+  def divisions(period = nil)
     Employee.employed_ones(period || Period.currentYear)
   end
-  
+
   def employee_id
-     division.id if division
+    division.id if division
   end
- 
+
   def division_supplement(user)
-     [[:overtime, 'Überzeit', 'right'],
-      [:overtime_vacations_tooltip, '', 'left']]
+    [[:overtime, 'Überzeit', 'right'],
+     [:overtime_vacations_tooltip, '', 'left']]
   end
 
   def overview_supplement(user)
@@ -27,5 +27,5 @@ class EmployeesEval < Evaluation
                        [:exportExtendedCapacityCSV, 'Detaillierte Auslastung CSV'],
                        [:exportMAOverview, 'MA Übersicht']] : super(user)
   end
- 
+
 end

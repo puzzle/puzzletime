@@ -10,17 +10,17 @@ class WorktimeController < ApplicationController
   hide_action :detailAction  
   
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
-  verify :method => :post, :only => [ :delete, :createPart, :deletePart, :start, :stop ],
-         :redirect_to => { :action => 'index' }
-  verify :method => :post, :only => [ :create ], :redirect_to => { :action => 'add' }   
-  verify :method => :post, :only => [ :update ], :redirect_to => { :action => 'edit' }     
+  verify method: :post, only: [ :delete, :createPart, :deletePart, :start, :stop ],
+         redirect_to: { action: 'index' }
+  verify method: :post, only: [ :create ], redirect_to: { action: 'add' }   
+  verify method: :post, only: [ :update ], redirect_to: { action: 'edit' }     
         
          
   FINISH = 'Abschliessen'       
    
    
   def index
-    redirect_to :controller => 'evaluator', :action => userEvaluation, :clear => 1
+    redirect_to controller: 'evaluator', action: userEvaluation, clear: 1
   end 
   
   # Shows the add time page.
@@ -29,7 +29,7 @@ class WorktimeController < ApplicationController
     setWorktimeDefaults
     setAccounts 
     setExisting
-    renderGeneric :action => 'add'  
+    renderGeneric action: 'add'  
   end
     
   # Stores the new time the data on DB.
@@ -47,7 +47,7 @@ class WorktimeController < ApplicationController
     end  
     setAccounts
     setExisting
-    renderGeneric :action => 'add'
+    renderGeneric action: 'add'
   end  
   
   # Shows the edit page for the selected time.
@@ -56,7 +56,7 @@ class WorktimeController < ApplicationController
     setWorktimeDefaults
     setAccounts true
     setExisting
-    renderGeneric :action => 'edit'
+    renderGeneric action: 'edit'
   end  
     
   # Update the selected worktime on DB.
@@ -78,14 +78,14 @@ class WorktimeController < ApplicationController
       else
         setAccounts true
         setExisting
-        renderGeneric :action => 'edit'
+        renderGeneric action: 'edit'
       end  
     end  
   end
   
   def confirmDelete
     setWorktime
-    renderGeneric :action => 'confirmDelete'   
+    renderGeneric action: 'confirmDelete'   
   end
   
   def delete
@@ -115,18 +115,18 @@ class WorktimeController < ApplicationController
   
   def view
     setWorktime
-    renderGeneric :action => 'view'
+    renderGeneric action: 'view'
   end  
   
   def split
     @split = session[:split]
     if @split.nil?
-      redirect_to :controller => 'projecttime', :action => 'add'
+      redirect_to controller: 'projecttime', action: 'add'
       return
     end
     @worktime = @split.worktimeTemplate
     setProjectAccounts
-    renderGeneric :action => 'split'
+    renderGeneric action: 'split'
   end
   
   def createPart
@@ -147,24 +147,24 @@ class WorktimeController < ApplicationController
         listDetailTime
       else
         session[:split] = @split
-        redirect_to evaluation_detail_params.merge!({:action => 'split'})
+        redirect_to evaluation_detail_params.merge!(action: 'split')
       end     
     else
       setProjectAccounts
-      renderGeneric :action => 'split'
+      renderGeneric action: 'split'
     end         
   end
   
   def deletePart
     session[:split].removeWorktime(params[:part_id].to_i)
-    redirect_to evaluation_detail_params.merge!({:action => 'split'})
+    redirect_to evaluation_detail_params.merge!(action: 'split')
   end  
   
   def running
     if request.env["HTTP_USER_AGENT"] =~ /.*iPhone.*/
-      render :action => 'running', :layout => 'phone'
+      render action: 'running', layout: 'phone'
     else
-      render :action => 'running'
+      render action: 'running'
     end
   end
   
@@ -172,13 +172,13 @@ class WorktimeController < ApplicationController
   def existing
     @worktime = Worktime.new
     begin
-       @worktime.work_date = Date.strptime(params[:work_date], DATE_FORMAT)
-    rescue ArgumentError
-      #invalid string, date will remain unaffected, i.e., nil
+      @worktime.work_date = Date.strptime(params[:work_date], DATE_FORMAT)
+   rescue ArgumentError
+      # invalid string, date will remain unaffected, i.e., nil
     end
     @worktime.employee_id = @user.management ? params[:employee_id] : @user.id
     setExisting
-    renderGeneric :action => 'existing'
+    renderGeneric action: 'existing'
   end
 
   # no action, may overwrite in subclass
@@ -186,12 +186,12 @@ class WorktimeController < ApplicationController
     'details'
   end
   
-protected
+  protected
 
   def createDefaultWorktime
     setPeriod
     setNewWorktime
-    @worktime.from_start_time = Time.now.change(:hour => DEFAULT_START_HOUR)
+    @worktime.from_start_time = Time.now.change(hour: DEFAULT_START_HOUR)
     @worktime.report_type = @user.report_type || DEFAULT_REPORT_TYPE
     if params[:work_date]
       @worktime.work_date = params[:work_date]
@@ -236,18 +236,18 @@ protected
   
   def checkOverlapping
     if @worktime.report_type.is_a? StartStopType
-      conditions = ['(project_id IS NULL AND absence_id IS NULL) AND ' + 
+      conditions = ['(project_id IS NULL AND absence_id IS NULL) AND ' \ 
                     'employee_id = :employee_id AND work_date = :work_date AND id <> :id AND (' +
                     '(from_start_time <= :start_time AND to_end_time >= :end_time) OR ' +
                     '(from_start_time >= :start_time AND from_start_time < :end_time) OR ' +
                     '(to_end_time > :start_time AND to_end_time <= :end_time))',
-                    {:employee_id => @worktime.employee_id,
-                     :work_date   => @worktime.work_date,
-                     :id          => @worktime.id,
-                     :start_time  => @worktime.from_start_time, 
-                     :end_time    => @worktime.to_end_time} ]
+                    {employee_id: @worktime.employee_id,
+                     work_date: @worktime.work_date,
+                     id: @worktime.id,
+                     start_time: @worktime.from_start_time, 
+                     end_time: @worktime.to_end_time} ]
       conditions[0] = ' NOT ' + conditions[0] unless @worktime.is_a? Attendancetime             
-      overlaps = Worktime.find(:all, :conditions => conditions)
+      overlaps = Worktime.find(:all, conditions: conditions)
       flash[:notice] += " Es besteht eine &Uuml;berlappung mit mindestens einem anderen Eintrag: <br/>\n" if not overlaps.empty? 
       flash[:notice] += overlaps.join("<br/>\n") if not overlaps.empty?                           
     end
@@ -259,12 +259,12 @@ protected
   
   def setExisting    
     @work_date = @worktime.work_date
-    @existing = Worktime.find(:all, :conditions => ['employee_id = ? AND work_date = ?', @worktime.employee_id, @work_date],
-                                    :order => 'type DESC, from_start_time, project_id')
+    @existing = Worktime.find(:all, conditions: ['employee_id = ? AND work_date = ?', @worktime.employee_id, @work_date],
+                                    order: 'type DESC, from_start_time, project_id')
   end
   
   def find_worktime
-     Worktime.find(params[:id])
+    Worktime.find(params[:id])
   end
   
   # overwrite in subclass
@@ -371,7 +371,7 @@ protected
   end
     
   def redirect_to_running
-    redirect_to :controller => 'worktime', :action => 'running'
+    redirect_to controller: 'worktime', action: 'running'
   end
   
   def append_flash(msg)

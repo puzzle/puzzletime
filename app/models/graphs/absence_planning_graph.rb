@@ -1,11 +1,11 @@
 class AbsencePlanningGraph
-  
+
   include PlanningHelper
-  
+
   def initialize(absences, period)
     @period = period
-    @cache = Hash.new
-    
+    @cache = {}
+
     absences.each do |absence|
       case absence.report_type
         when StartStopType
@@ -18,31 +18,31 @@ class AbsencePlanningGraph
           add_month_absence(absence)
       end
     end
-    
+
     @period.startDate.step(@period.endDate) do |day|
       if !Holiday.weekend?(day) && (Holiday.regularHoliday?(day) || Holiday.irregularHoliday?(day))
-        add_to_cache("Feiertag", day)
+        add_to_cache('Feiertag', day)
       end
     end
   end
 
   def absence(date)
-    @cache[date]    
+    @cache[date]
   end
 
-private
+  private
   def add_start_stop_absence(absence)
-    add_to_cache(absence.timeString, absence.work_date, absence.hours*1)
+    add_to_cache(absence.timeString, absence.work_date, absence.hours * 1)
   end
-  
+
   def add_day_absence(absence)
-    add_to_cache(absence.timeString, absence.work_date, absence.hours*1)
+    add_to_cache(absence.timeString, absence.work_date, absence.hours * 1)
   end
 
   def add_weekly_absence(absence)
     date = absence.work_date
     5.times do
-      add_to_cache(absence.timeString, date, absence.hours/5)
+      add_to_cache(absence.timeString, date, absence.hours / 5)
       date = date.next
     end
   end
@@ -50,23 +50,23 @@ private
   def add_month_absence(absence)
     dateFrom = Date.civil(absence.work_date.year, absence.work_date.month, 1)
     dateTo = Date.civil(dateFrom.year, dateFrom.month, -1)
-    #TODO: consider holidays as Christmas or Eastern while calculating workdays
+    # TODO: consider holidays as Christmas or Eastern while calculating workdays
     workdays = (dateFrom..dateTo).select { |day| [1, 2, 3, 4, 5].include?(day.wday) }.size # number of work days in the month
     dateFrom.step(dateTo, 1) do |date|
-      add_to_cache(absence.timeString, date, absence.hours/workdays)
+      add_to_cache(absence.timeString, date, absence.hours / workdays)
     end
   end
-  
-  def add_to_cache(label, date, hours=0)
+
+  def add_to_cache(label, date, hours = 0)
     cached = @cache[date]
     unless cached
       cached = DayOverview.new
       @cache[date] = cached
     end
-    if hours==0
+    if hours == 0
       cached.add(label)
     else
-      cached.add(label, hours/8*10)
+      cached.add(label, hours / 8 * 10)
     end
   end
 
