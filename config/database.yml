@@ -17,6 +17,9 @@
 default: &default
   adapter: postgresql
   encoding: unicode
+  username: puzzletime
+  password: timepuzzle
+  host: 127.0.0.1
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: 5
