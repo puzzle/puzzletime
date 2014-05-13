@@ -1,4 +1,5 @@
-require 'date'
+# encoding: utf-8
+
 class MultiAbsence
 
   attr_reader :absence_id, :employee, :start_date, :duration, :description, :worktime

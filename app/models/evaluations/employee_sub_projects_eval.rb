@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class EmployeeSubProjectsEval < SubProjectsEval
 
   include Conditioner

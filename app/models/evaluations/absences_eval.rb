@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class AbsencesEval < Evaluation
 
   SUB_EVALUATION   = 'employeeabsences'

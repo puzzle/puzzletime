@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz
 
@@ -8,7 +10,7 @@ class Absence < ActiveRecord::Base
 
   # All dependencies between the models are listed below
   has_many :worktimes
-  has_many :employees, through: :worktimes, order: 'lastname'
+  has_many :employees, -> { order('lastname') }, through: :worktimes
 
   before_destroy :dont_destroy_vacation
   before_destroy :protect_worktimes

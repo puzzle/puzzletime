@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # A Module that provides the funcionality for a model object to be evaluated.
 #
 # A class mixin Evaluatable has to provide a has_many relation for worktimes.
@@ -26,19 +28,19 @@ module Evaluatable
   def findWorktimes(evaluation, period = nil, categoryRef = false, options = {})
     options = conditionsFor(evaluation, period, categoryRef, options)
     options[:order] ||= 'work_date ASC, from_start_time, project_id, employee_id'
-    worktimes.find(:all, options)
+    worktimes.where(options[:conditions]).reorder(options[:order])
   end
 
   # Sums all worktimes related to this object in a given period.
   def sumWorktime(evaluation, period = nil, categoryRef = false, options = {})
     options = conditionsFor(evaluation, period, categoryRef, options)
-    worktimes.sum(:hours, options).to_f
+    worktimes.where(options[:conditions]).sum(:hours).to_f
   end
 
   # Counts the number of worktimes related to this object in a given period.
   def countWorktimes(evaluation, period = nil, categoryRef = false, options = {})
     options = conditionsFor(evaluation, period, categoryRef, options)
-    worktimes.count('*', options)
+    worktimes.where(options[:conditions]).count
   end
 
   # Raises an Exception if this object has related Worktimes.
@@ -52,7 +54,8 @@ module Evaluatable
     label_verbose <=> other.label_verbose
   end
 
-  def to_s
+  # TODO use locales
+  def to_s_old
     label
   end
 

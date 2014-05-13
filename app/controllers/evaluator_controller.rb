@@ -1,5 +1,4 @@
-
-require 'fastercsv'
+# encoding: utf-8
 
 class EvaluatorController < ApplicationController
 

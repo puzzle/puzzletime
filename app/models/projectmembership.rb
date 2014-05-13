@@ -1,15 +1,16 @@
+# encoding: utf-8
+
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz
 
 class Projectmembership < ActiveRecord::Base
 
   belongs_to :employee
-  belongs_to :project, include: :client
+  belongs_to :project, -> { includes(:client) }
   belongs_to :managed_project,
+             -> { includes(:client).where(projectmemberships: { projectmanagement: true }) },
              class_name: 'Project',
-             foreign_key: 'project_id',
-             include: :client,
-             conditions: 'projectmemberships.projectmanagement IS TRUE'
+             foreign_key: 'project_id'
   belongs_to :managed_employee,
              class_name: 'Employee',
              foreign_key: 'employee_id'
@@ -26,7 +27,7 @@ class Projectmembership < ActiveRecord::Base
 
   def self.activate(attributes)
     create(attributes)
-    membership = find(:first, assoc_conditions(attributes[:employee_id], attributes[:project_id]))
+    membership = where(assoc_conditions(attributes[:employee_id], attributes[:project_id])[:conditions]).first
     membership.update_attributes active: true
   end
 

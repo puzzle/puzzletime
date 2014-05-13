@@ -1,7 +1,8 @@
-require File.dirname(__FILE__) + '/../test_helper'
+# encoding: utf-8
+
+require 'test_helper'
 
 class PeriodTest < ActiveSupport::TestCase
-  :masterdatas
 
   def setup
     @half_year = Period.new(Date.new(2006, 1, 1), Date.new(2006, 6, 30))

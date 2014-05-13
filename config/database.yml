@@ -86,3 +86,19 @@ production:
   database: puzzletime_production
   username: puzzletime
   password: <%= ENV['PUZZLETIME_DATABASE_PASSWORD'] %>
+
+
+# Connection to puzzlebase used for synchronization
+puzzlebase:
+  adapter: mysql2
+  database: puzzlebase_db
+  encoding: utf8
+  username: time
+  password: debriz42
+  host: 10.2.111.68   #ramani.ww2.ch
+  #adapter: postgresql
+  #database: puzzlebase
+  #encoding: utf8
+  #username: puzzle
+  #password: timepuzzle
+  #host: 127.0.0.1

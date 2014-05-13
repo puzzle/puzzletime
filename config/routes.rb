@@ -4,8 +4,12 @@ Rails.application.routes.draw do
 
   resources :employee_lists
 
+  resource :planning do
+    get ':action'
+  end
+
   # Install the default route as the lowest priority.
-  match '/:controller/:action/:id', via: :all
+  match ':controller(/:action(/:id))', via: [:get, :post, :patch]
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

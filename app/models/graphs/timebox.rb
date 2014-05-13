@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class Timebox
 
   PIXEL_PER_HOUR = 8.0

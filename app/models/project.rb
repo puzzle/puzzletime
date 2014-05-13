@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # (c) Puzzle itc, Berne:projects
 # Diplomarbeit 2149, Xavier Hayoz
 
@@ -11,9 +13,8 @@ class Project < ActiveRecord::Base
 
   # All dependencies between the models are listed below.
   has_many :projectmemberships,
-           dependent: :destroy,
-           include: :employee,
-           order: 'employees.lastname, employees.firstname'
+           -> { includes(:employee).order('employees.lastname, employees.firstname') },
+           dependent: :destroy
 
   belongs_to :department
   belongs_to :client
@@ -124,17 +125,17 @@ class Project < ActiveRecord::Base
   end
 
   def managed_employees
-    Employee.find(:all, select: 'DISTINCT(employees.*)',
-    					               joins: { projectmemberships: :project },
-    					               conditions: ['projectmemberships.project_id IN (?) AND projectmemberships.active', path_ids],
-    					               order: 'lastname, firstname')
+    Employee.joins(projectmemberships: :project).
+             where('projectmemberships.project_id IN (?) AND projectmemberships.active', path_ids).
+             order('lastname, firstname').
+             uniq
   end
 
   def employees
-    Employee.find(:all, select: 'DISTINCT(employees.*)',
-                        joins: { worktimes: :project },
-                        conditions: ['? = ANY (projects.path_ids)', id],
-                        order: 'lastname, firstname')
+    Employee.joins(worktimes: :project).
+             where('? = ANY (projects.path_ids)', id).
+             order('lastname, firstname').
+             uniq
   end
 
   def freeze_until

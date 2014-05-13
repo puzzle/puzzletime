@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class Puzzlebase::Unit < Puzzlebase::Base
   has_many :projects,
            foreign_key: 'FK_UNIT'

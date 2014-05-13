@@ -1,4 +1,6 @@
-require File.dirname(__FILE__) + '/../test_helper'
+# encoding: utf-8
+
+require 'test_helper'
 
 class PlanningTest < ActiveSupport::TestCase
 
@@ -168,8 +170,8 @@ class PlanningTest < ActiveSupport::TestCase
     Planning.new(start_week: start_week,
                  end_week: end_week,
                  monday_am: true,
-                 employee_id: employees(:long_time_john),
-                 project_id: projects(:allgemein))
+                 employee_id: employees(:long_time_john).id,
+                 project_id: projects(:allgemein).id)
   end
 
 end

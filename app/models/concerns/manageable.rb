@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # A Module to be mixed in by classes that may be managed by the ManageController.
 #
 # All methods are on the class side, so use 'extend Manageable' to use this Module.
@@ -6,7 +8,11 @@ module Manageable
   # Lists all entries in the database of the corresponding class.
   def list(options = {})
     options[:order] ||= orderBy
-    find(:all, options)
+    #find(:all, options)
+    where(options[:conditions]).
+    reorder(options[:order]).
+    limit(options[:limit]).
+    offset(options[:offset])
   end
 
   # Array with the German article, singular and plural name of the class.

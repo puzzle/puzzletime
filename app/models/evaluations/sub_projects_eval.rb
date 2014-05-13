@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class SubProjectsEval < ProjectsEval
 
   DIVISION_METHOD  = :children

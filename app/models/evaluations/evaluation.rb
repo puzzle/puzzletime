@@ -1,5 +1,5 @@
+# encoding: utf-8
 
-require 'fastercsv'
 
 # An Evaluation gives an overview of the worktimes reported to the system.
 # It provides the sum of all Worktimes for a category, split up into several divisions.

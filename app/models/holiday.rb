@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz
 
@@ -94,7 +96,7 @@ class Holiday < ActiveRecord::Base
   private
 
   def self.refresh
-    @@irregularHolidays = Holiday.find(:all, order: 'holiday_date')
+    @@irregularHolidays = Holiday.order('holiday_date')
     @@irregularHolidays = @@irregularHolidays.select do |holiday|
       !weekend?(holiday.holiday_date)
     end

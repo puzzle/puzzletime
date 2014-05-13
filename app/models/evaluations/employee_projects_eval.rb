@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class EmployeeProjectsEval < ProjectsEval
 
   CATEGORY_REF      = :employee_id

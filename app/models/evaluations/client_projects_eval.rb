@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class ClientProjectsEval < ProjectsEval
 
   def initialize(client_id)

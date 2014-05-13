@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class EmployeeAbsencesEval < Evaluation
 
   DIVISION_METHOD  = :absences

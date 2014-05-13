@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class ExtendedCapacityReport < BaseCapacityReport
 
   def initialize(current_period)

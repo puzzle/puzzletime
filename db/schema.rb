@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 18) do
 
   create_table "clients", force: true do |t|
     t.string "name",                null: false
+    t.string "contact"
     t.string "shortname", limit: 4, null: false
   end
 
@@ -53,7 +54,7 @@ ActiveRecord::Schema.define(version: 18) do
     t.string  "passwd",                                          null: false
     t.string  "email",                                           null: false
     t.boolean "management",                      default: false
-    t.float   "initial_vacation_days",           default: 0.0
+    t.float   "initial_vacation_days", :default => { :expr => "(0)::double precision" }
     t.string  "ldapname"
     t.string  "report_type"
     t.boolean "default_attendance",              default: false
@@ -70,6 +71,11 @@ ActiveRecord::Schema.define(version: 18) do
     t.date    "end_date"
     t.index ["employee_id"], :name => "index_employments_on_employee_id"
     t.foreign_key ["employee_id"], "employees", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_employments_employees"
+  end
+
+  create_table "engine_schema_info", id: false, force: true do |t|
+    t.string  "engine_name"
+    t.integer "version"
   end
 
   create_table "holidays", force: true do |t|

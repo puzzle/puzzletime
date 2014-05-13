@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz
 
@@ -147,7 +149,7 @@ class Worktime < ActiveRecord::Base
     else
       append_conditions(conditions, ['hours = ?', hours])
     end
-    Worktime.find(:first, conditions: conditions)
+    Worktime.where(conditions).first
   end
 
   def corresponding_type

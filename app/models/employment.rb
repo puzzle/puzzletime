@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz
 
@@ -47,15 +49,12 @@ class Employment < ActiveRecord::Base
 
   # updates the end date of the previous employement
   def updateEndDate
-    previous_employment = Employment.find(:first,
-                                          conditions: ['employee_id = ? AND start_date < ? AND end_date IS NULL', employee_id, start_date])
+    previous_employment = Employment.where('employee_id = ? AND start_date < ? AND end_date IS NULL', employee_id, start_date).first
     if previous_employment
       previous_employment.end_date = start_date - 1
       previous_employment.save
     end
-    later_employment = Employment.find(:first,
-                                       conditions: ['employee_id = ? AND start_date > ?', employee_id, start_date],
-                                       order: 'start_date')
+    later_employment = Employment.where('employee_id = ? AND start_date > ?', employee_id, start_date).order('start_date').first
     if later_employment
       self.end_date = later_employment.start_date - 1
     end
@@ -142,7 +141,7 @@ class Employment < ActiveRecord::Base
       conditions[0] += ' AND (start_date = ? OR (start_date <= ? AND end_date >= ?))'
       conditions.push(start_date, start_date, start_date)
     end
-    Employment.count(:all, conditions: conditions) > 0
+    Employment.where(conditions).count > 0
   end
 
 end

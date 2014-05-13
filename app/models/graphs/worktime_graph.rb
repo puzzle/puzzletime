@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class WorktimeGraph
 
   WORKTIME_OPTIONS = { order: 'work_date, from_start_time, project_id, absence_id',

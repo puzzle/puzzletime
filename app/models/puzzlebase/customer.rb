@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class Puzzlebase::Customer < Puzzlebase::Base
   has_many :customer_projects,
            foreign_key: 'FK_CUSTOMER'

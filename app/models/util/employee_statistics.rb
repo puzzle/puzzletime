@@ -29,8 +29,9 @@ class EmployeeStatistics
   # Returns the used vacation days for the given period
   def used_vacations(period)
     return 0 if period.nil?
-    @employee.worktimes.sum(:hours, conditions: ['absence_id = ? AND (work_date BETWEEN ? AND ?)',
-                                                 VACATION_ID, period.startDate, period.endDate]).to_f / 8.0
+    @employee.worktimes.where('absence_id = ? AND (work_date BETWEEN ? AND ?)',
+                              VACATION_ID, period.startDate, period.endDate).
+                        sum(:hours).to_f / 8.0
   end
 
 
@@ -56,10 +57,10 @@ class EmployeeStatistics
   # an empty Array if no employments exist.
   def employments_during(period)
     return [] if period.nil?
-    selectedEmployments = @employee.employments.find(:all,
-                                                     conditions: ['(end_date IS NULL OR end_date >= ?) AND start_date <= ?',
-                                                                  period.startDate, period.endDate],
-                                                     order: 'start_date')
+    selectedEmployments = @employee.employments.where('(end_date IS NULL OR end_date >= ?) AND start_date <= ?',
+                                                      period.startDate, period.endDate).
+                                                reorder('start_date').
+                                                to_a
     unless selectedEmployments.empty?
       selectedEmployments.first.start_date = period.startDate if selectedEmployments.first.start_date < period.startDate
       if selectedEmployments.last.end_date.nil? ||
@@ -80,15 +81,17 @@ class EmployeeStatistics
       condArray.push period.startDate
       condArray.push period.endDate
     end
-    @employee.worktimes.sum(:hours,
-                            joins: 'LEFT JOIN absences ON absences.id = absence_id',
-                            conditions: condArray).to_f
+    @employee.worktimes.joins('LEFT JOIN absences ON absences.id = absence_id').
+                        where(condArray).
+                        sum(:hours).
+                        to_f
   end
 
   # Return the overtime hours that were transformed into vacations up to the given date.
   def overtime_vacation_hours(date = nil)
-    @employee.overtime_vacations.sum(:hours,
-                                     conditions: date ? ['transfer_date <= ?', date] : nil).to_f
+    @employee.overtime_vacations.where(date ? ['transfer_date <= ?', date] : nil).
+                                 sum(:hours).
+                                 to_f
   end
 
 
@@ -98,7 +101,7 @@ class EmployeeStatistics
   # Returns the Period from the first employement date until the given period.
   # Returns nil if no employments exist until this date.
   def employment_period_to(date)
-    first_employment = @employee.employments.find(:first, order: 'start_date ASC')
+    first_employment = @employee.employments.reorder('start_date ASC').first
     return nil if first_employment.nil? || first_employment.start_date > date
     Period.retrieve(first_employment.start_date, date)
   end

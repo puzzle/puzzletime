@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class Planning < ActiveRecord::Base
 
   validates_presence_of :employee_id, :project_id, :start_week

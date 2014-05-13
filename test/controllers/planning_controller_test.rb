@@ -1,5 +1,6 @@
-require File.dirname(__FILE__) + '/../test_helper'
-require 'planning_controller'
+# encoding: utf-8
+
+require 'test_helper'
 
 class PlanningControllerTest < ActionController::TestCase
 
@@ -7,7 +8,7 @@ class PlanningControllerTest < ActionController::TestCase
     @controller = PlanningController.new
     @request = ActionController::TestRequest.new
     @response = ActionController::TestResponse.new
-    login_as (:mark)
+    login_as(:mark)
   end
 
   def test_show_index

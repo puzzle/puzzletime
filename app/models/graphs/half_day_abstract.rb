@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class HalfDayAbstract < HalfDay
   attr_reader :label, :abstract_amount
 

@@ -146,7 +146,7 @@ class PlanningController < ApplicationController
   def delete
     planning = Planning.find(params[:planning])
     if planning.destroy
-      flash[:notice] = 'Die Planung wurde entfernt '
+      flash[:notice] = 'Die Planung wurde entfernt'
     else
       flash[:error] = 'Die Planung konnte nicht geloescht werden'
     end

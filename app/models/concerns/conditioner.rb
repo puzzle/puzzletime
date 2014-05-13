@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module Conditioner
 
   def append_conditions(existing, appends, cat = 'AND')

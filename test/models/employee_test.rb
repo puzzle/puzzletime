@@ -1,10 +1,9 @@
-require File.dirname(__FILE__) + '/../test_helper'
+# encoding: utf-8
+
+require 'test_helper'
 
 class EmployeeTest < ActiveSupport::TestCase
-  fixtures :employees, :employments
 
-  def setup
-  end
 
   def test_half_year_employment
     employee = Employee.find(1)
@@ -20,7 +19,7 @@ class EmployeeTest < ActiveSupport::TestCase
     employee = Employee.find(2)
     period = yearPeriod(employee)
     employments = employee.statistics.employments_during(period)
-    assert_equal employments.size, 3
+    assert_equal 3, employments.size
     assert_equal employments[0].start_date, Date.new(2005, 11, 1)
     assert_equal employments[0].end_date, Date.new(2006, 1, 31)
     assert_equal employments[0].period.length, 92

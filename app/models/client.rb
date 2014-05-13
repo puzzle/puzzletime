@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz
 
@@ -7,33 +9,33 @@ class Client < ActiveRecord::Base
   extend Manageable
 
   # All dependencies between the models are listed below.
-  has_many :projects, :order => "name", :conditions => ['parent_id IS NULL']
-  has_many :all_projects, :class_name => 'Project', :order => 'name'
-  has_many :worktimes, :through => :all_projects
-  
+  has_many :projects, -> { where(parent_id: nil).order(:name) }
+  has_many :all_projects, -> { order(:name) }, class_name: 'Project'
+  has_many :worktimes, through: :all_projects
+
   # Validation helpers.
-  validates_presence_of :name, :message => "Ein Name muss angegeben sein"
-  validates_uniqueness_of :name, :message => "Dieser Name wird bereits verwendet"
-  validates_presence_of :shortname, :message => "Ein Kürzel muss angegeben werden" 
-  validates_uniqueness_of :shortname, :message => "Dieses Kürzel wird bereits verwendet" 
-  
+  validates_presence_of :name, message: 'Ein Name muss angegeben sein'
+  validates_uniqueness_of :name, message: 'Dieser Name wird bereits verwendet'
+  validates_presence_of :shortname, message: 'Ein Kürzel muss angegeben werden'
+  validates_uniqueness_of :shortname, message: 'Dieses Kürzel wird bereits verwendet'
+
   before_destroy :protect_worktimes
 
-  ##### interface methods for Manageable #####  
-    
+  ##### interface methods for Manageable #####
+
   def self.labels
-    ['Der', 'Kunde', 'Kunden']
-  end  
-      
+    %w(Der Kunde Kunden)
+  end
+
   def self.puzzlebaseMap
     Puzzlebase::CustomerProject
-  end      
+  end
 
   ##### interface methods for Evaluatable #####
 
   def self.method_missing(symbol, *args)
     case symbol
-      when :sumWorktime, :countWorktimes, :findWorktimes : Worktime.send(symbol, *args) 
+      when :sumWorktime, :countWorktimes, :findWorktimes then Worktime.send(symbol, *args)
       else super
       end
   end

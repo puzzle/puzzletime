@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class Splitable
 
   INCOMPLETE_FINISH = true

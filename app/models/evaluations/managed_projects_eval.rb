@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class ManagedProjectsEval < ProjectsEval
 
   DIVISION_METHOD   = :managed_projects

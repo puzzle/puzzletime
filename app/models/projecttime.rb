@@ -1,9 +1,11 @@
+# encoding: utf-8
+
 class Projecttime < Worktime
 
   attr_reader :attendance
 
   validate :project_leaf
-  validate_on_update :protect_booked
+  validate :protect_booked, on: :update
   before_destroy :protect_booked
   before_destroy :protect_frozen
 

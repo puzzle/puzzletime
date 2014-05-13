@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # abstract class for evaluation with project divisions
 class ProjectsEval < Evaluation
 

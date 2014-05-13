@@ -1,11 +1,9 @@
+# encoding: utf-8
+
 class Puzzlebase::Base < ActiveRecord::Base
 
   # Set up database connection to puzzlebase for all subclasses of Base
   establish_connection :puzzlebase
-
-  # Set database properties
-  set_table_name(nil) { "TBL_#{table_id}" }
-  set_primary_key(nil) { "PK_#{table_id}" }
 
   # The model class the Puzzlebase model maps to.
   MAPS_TO = nil
@@ -13,6 +11,15 @@ class Puzzlebase::Base < ActiveRecord::Base
   MAPPINGS = {}
   # Find the puzzlebase records to import according to these options
   FIND_OPTIONS = {}
+
+  # Set database properties
+  def self.table_name
+    "TBL_#{reset_table_name}"
+  end
+
+  def self.primary_key
+    "PK_#{reset_table_name}"
+  end
 
   # Synchronizes Clients, Projects, Employees and Employments from puzzlebase
   def self.synchronizeAll

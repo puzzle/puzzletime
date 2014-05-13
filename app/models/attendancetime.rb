@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class Attendancetime < Worktime
 
   attr_reader :projecttime

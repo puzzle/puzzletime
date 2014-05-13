@@ -3,8 +3,9 @@ source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.1.1'
-# Use postgresql as the database for Active Record
+
 gem 'pg'
+gem 'mysql2' # for puzzle base
 
 gem 'airbrake'
 gem 'acts_as_tree'
@@ -43,6 +44,7 @@ end
 
 group :development do
   gem 'spring'
+  gem 'pry-rails'
 end
 
 group :test do
@@ -51,10 +53,8 @@ end
 
 group :console do
   gem 'debugger'
-  gem 'pry'
   gem 'pry-doc'
   gem 'pry-nav'
-  gem 'pry-rails'
 end
 
 group :metrics do

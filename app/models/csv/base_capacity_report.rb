@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class BaseCapacityReport
 
   def initialize(period, filename_prefix)

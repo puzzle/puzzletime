@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class ProjectEmployeesEval < Evaluation
 
   DIVISION_METHOD  = :employees

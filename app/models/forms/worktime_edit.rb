@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class WorktimeEdit < Splitable
 
   INCOMPLETE_FINISH = false

@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class Puzzlebase::Employee < Puzzlebase::Base
   has_many :employments,
            foreign_key: 'FK_EMPLOYEE'

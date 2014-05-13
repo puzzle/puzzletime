@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class DepartmentsEval < Evaluation
 
   SUB_EVALUATION   = 'departmentprojects'

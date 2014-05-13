@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class AttendanceSplit < Splitable
 
   SUBMIT_BUTTONS = ['Speichern und weiter Aufteilen', WorktimeController::FINISH]

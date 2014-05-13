@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz
 
@@ -9,15 +11,6 @@ class ApplicationController < ActionController::Base
 
   HOME_ACTION = { controller: 'evaluator', action: 'userProjects' }
 
-  after_action :set_charset
-  filter_parameter_logging :pwd, :password
-
-  def set_charset
-    content_type = headers['Content-Type'] || 'text/html'
-    if /^text\//.match(content_type)
-      headers['Content-Type'] = "#{content_type}; charset=utf-8"
-    end
-  end
 
   # Filter for check if user is logged in or not
   def authenticate
@@ -44,18 +37,6 @@ class ApplicationController < ActionController::Base
       end
     else
       return false
-    end
-  end
-
-  def rescue_action_in_public(exception)
-    case exception
-      when ::ActionController::RoutingError, ActiveRecord::RecordNotFound, ::ActionController::UnknownAction
-        render(file: "#{RAILS_ROOT}/public/404.html",
-               status: '404 Not Found')
-      else
-        render(file: "#{RAILS_ROOT}/public/500.html",
-               status: '500 Error')
-        SystemNotifier.deliver_exception_notification(self, request, exception)
     end
   end
 
