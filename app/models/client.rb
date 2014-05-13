@@ -11,7 +11,6 @@ class Client < ActiveRecord::Base
   # All dependencies between the models are listed below.
   has_many :projects, -> { where(parent_id: nil).order(:name) }
   has_many :all_projects, -> { order(:name) }, class_name: 'Project'
-  has_many :worktimes, through: :all_projects
 
   # Validation helpers.
   validates_presence_of :name, message: 'Ein Name muss angegeben sein'
@@ -38,5 +37,10 @@ class Client < ActiveRecord::Base
       when :sumWorktime, :countWorktimes, :findWorktimes then Worktime.send(symbol, *args)
       else super
       end
+  end
+
+  def worktimes
+    Worktime.joins(:project).
+             where(projects: { client_id: id })
   end
 end

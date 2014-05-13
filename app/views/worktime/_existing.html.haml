@@ -2,8 +2,8 @@
 
   - unless @existing.empty?
     Am #{format_date(@work_date)} bereits erfasste Zeiten:
-    %table{:cellpadding => "0"}
-      - @row = 0
-      = renderGenericPartial :partial => 'part', :collection => @existing
+    %table.striped{:cellpadding => "0"}
+      %tbody
+        = renderGenericPartial :partial => 'part', :collection => @existing
   - else
     Am #{format_date(@work_date)} wurden noch keine Zeiten erfasst.

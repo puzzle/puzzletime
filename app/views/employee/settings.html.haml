@@ -91,26 +91,30 @@
 %h2 Benutzerinformationen
 %div{:style => "float:left;"}
   %b Anstellungen
-  %table{:style => "margin-right: 50px;"}
-    %tr
-      %th Von
-      %th Bis
-      %th Prozent
-    - @user.employments.each do |employment|
-      = alternate_row
-      %td{:align => "right"}= format_date employment.start_date
-      %td{:align => "right"}= format_date employment.end_date
-      %td{:align => "right"}= format_percent employment.percent
+  %table.striped{:style => "margin-right: 50px;"}
+    %thead
+      %tr
+        %th Von
+        %th Bis
+        %th Prozent
+    %tbody
+      - @user.employments.each do |employment|
+        %tr
+          %td{:align => "right"}= format_date employment.start_date
+          %td{:align => "right"}= format_date employment.end_date
+          %td{:align => "right"}= format_percent employment.percent
 - unless @user.overtime_vacations.empty?
   %div
     %b &Uuml;berzeit-Ferien Umbuchungen
     %table
-      %tr
-        %th Datum
-        %th Stunden
-      - @user.overtime_vacations.each do |transfer|
-        = alternate_row
-        %td{:align => "right"}= format_date transfer.transfer_date
-        %td{:align => "right"}
-          = format_hour transfer.hours
-          h
+      %thead
+        %tr
+          %th Datum
+          %th Stunden
+      %tbody
+        - @user.overtime_vacations.each do |transfer|
+          %tr
+            %td{:align => "right"}= format_date transfer.transfer_date
+            %td{:align => "right"}
+              = format_hour transfer.hours
+              h

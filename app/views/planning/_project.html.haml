@@ -1,9 +1,9 @@
-= alternate_row
-%td
-  = project.label_verbose
-%td
-  = project.department.shortname if project.department
-%td
-  = link_to 'Aktuelle Planung', :action => 'project_planning', :project_id => project
-%td
-  = link_to 'Neue Planung', :action => 'add', :project_id => project
+%tr
+  %td
+    = project.label_verbose
+  %td
+    = project.department.shortname if project.department
+  %td
+    = link_to 'Aktuelle Planung', :action => 'project_planning', :project_id => project
+  %td
+    = link_to 'Neue Planung', :action => 'add', :project_id => project

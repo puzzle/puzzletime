@@ -16,7 +16,6 @@ class EvaluationTest < ActiveSupport::TestCase
     assert ! @evaluation.for?(employees(:pascal))
     assert ! @evaluation.class::TOTAL_DETAILS
 
-
     divisions = @evaluation.divisions
     assert_equal 2, divisions.size
     assert_equal clients(:puzzle), divisions[0]

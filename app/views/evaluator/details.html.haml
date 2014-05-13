@@ -1,7 +1,9 @@
 - @title = "#{@evaluation.worktime_name} Details #{@period.to_s}"
 %h3= @evaluation.category_label
 %h3= @evaluation.division_label
+
 = render :partial => 'detailTimes'
+
 %p
   = link_to '&Uuml;bersicht', :action => params[:evaluation], :category_id => params[:category_id]
   - if @evaluation.for? @user

@@ -14,63 +14,66 @@
     %h1= @title
     = render :partial => 'report_header', :locals => { :project => project }
     %p
-    %table
-      %tr
-        %th
-          = @tckt_view?"Ticket/Task":"Datum"
-        %th Stunden
-        - if params[:start_stop]
-          %th Von
-          %th Bis
-        - if @tckt_view || @evaluation.employee_id.nil?
-          %th Mitarbeiter
-        - if !@tckt_view && params[:ticket]
-          %th Ticket
-        - if params[:description]
-          %th{:width => "50%"}
-            Beschreibung#{@tckt_view?"en":""}
+    %table.striped
+      %thead
+        %tr
+          %th
+            = @tckt_view?"Ticket/Task":"Datum"
+          %th Stunden
+          - if params[:start_stop]
+            %th Von
+            %th Bis
+          - if @tckt_view || @evaluation.employee_id.nil?
+            %th Mitarbeiter
+          - if !@tckt_view && params[:ticket]
+            %th Ticket
+          - if params[:description]
+            %th{:width => "50%"}
+              Beschreibung#{@tckt_view?"en":""}
       - total = 0
       / standard view
-      - if !@tckt_view
-        - for time in @times
-          = alternate_row
-          %td{:align => "right", :nowrap => ""}= time.dateString
+      %tbody
+        - if !@tckt_view
+          - for time in @times
+            %tr
+              %td{:align => "right", :nowrap => ""}= time.dateString
+              %td{:align => "right"}
+                = format_hour time.hours
+                \&nbsp;
+              - if params[:start_stop]
+                %td{:align => "center"}= format_time time.from_start_time if time.startStop?
+                %td{:align => "center"}= format_time time.to_end_time if time.startStop?
+              - if @evaluation.employee_id.nil?
+                %td{:align => "left"}= time.employee.shortname
+              - if params[:ticket]
+                %td{:align => "right"}= time.ticket
+              - if params[:description]
+                %td= h(time.description).strip.gsub "\n", "<br/>"
+              - total += time.hours
+          / ticket/task view
+        - else
+          - @tickets.each do |tckt_key, tckt_val|
+            %tr
+              %td{:align => "right", :nowrap => ""}= tckt_key
+              %td{:align => "right"}
+                = format_hour tckt_val[:sum]
+                \&nbsp;
+              - if params[:start_stop]
+                %td{:align => "center"}= format_date tckt_val[:date][0]
+                %td{:align => "center"}= format_date tckt_val[:date][1]
+              %td{:align => "left"}
+                - if params[:combine]=="ticket"
+                  = tckt_val[:employees].keys.sort.join(", ")
+                - if params[:combine]=="ticket_employee"
+                  - a = Array.new
+                  - tckt_val[:employees].each_pair{ |k,v| a << k + " (" + v[0].round(2).to_s + "h)" }
+                  = a.sort.join(", ")
+              - if params[:description]
+                %td= h(tckt_val[:descriptions].join(", ")).strip.gsub "\n", "<br/>"
+              - total += tckt_val[:sum]
+      %tfoot
+        %tr.times_total_sum
+          %td Total Stunden
           %td{:align => "right"}
-            = format_hour time.hours
+            = format_hour total
             \&nbsp;
-          - if params[:start_stop]
-            %td{:align => "center"}= format_time time.from_start_time if time.startStop?
-            %td{:align => "center"}= format_time time.to_end_time if time.startStop?
-          - if @evaluation.employee_id.nil?
-            %td{:align => "left"}= time.employee.shortname
-          - if params[:ticket]
-            %td{:align => "right"}= time.ticket
-          - if params[:description]
-            %td= h(time.description).strip.gsub "\n", "<br/>"
-          - total += time.hours
-        / ticket/task view
-      - else
-        - @tickets.each do |tckt_key, tckt_val|
-          = alternate_row
-          %td{:align => "right", :nowrap => ""}= tckt_key
-          %td{:align => "right"}
-            = format_hour tckt_val[:sum]
-            \&nbsp;
-          - if params[:start_stop]
-            %td{:align => "center"}= format_date tckt_val[:date][0]
-            %td{:align => "center"}= format_date tckt_val[:date][1]
-          %td{:align => "left"}
-            - if params[:combine]=="ticket"
-              = tckt_val[:employees].keys.sort.join(", ")
-            - if params[:combine]=="ticket_employee"
-              - a = Array.new
-              - tckt_val[:employees].each_pair{ |k,v| a << k + " (" + v[0].round(2).to_s + "h)" }
-              = a.sort.join(", ")
-          - if params[:description]
-            %td= h(tckt_val[:descriptions].join(", ")).strip.gsub "\n", "<br/>"
-          - total += tckt_val[:sum]
-      %tr.times_total_sum
-        %td Total Stunden
-        %td{:align => "right"}
-          = format_hour total
-          \&nbsp;

@@ -7,4 +7,4 @@
     %tr
       %td
         = check_box_tag "employee_list[employee_ids][]", employee.id, @employee_list.employees.include?(employee)
-        = employee
+        = employee.label

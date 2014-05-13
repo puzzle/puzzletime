@@ -38,7 +38,7 @@ module EvaluatorHelper
   def td(value, align = nil, nowrap = false)
     align = align ? " align=\"#{align}\"" : ''
     style = nowrap ? " style=\"white-space: nowrap;\"" : ''
-    "<td#{align}#{style}>#{value}</td>\n"
+    "<td#{align}#{style}>#{value}</td>\n".html_safe
   end
 
   def collect_times(periods, method, *division)

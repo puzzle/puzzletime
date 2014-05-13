@@ -5,17 +5,19 @@ allgemein:
   client_id: 1    #puzzle
   name:      Allgemein
   shortname: al
-  
+  path_ids: [8]
+
 puzzletime:
   id:        1
   client_id: 1    #puzzle
   name:      PuzzleTime
   shortname: pt
-  
+  path_ids: [1]
+
 webauftritt:
   id:        2
   client_id: 2    #swisstopo
   name:      Webauftritt
   shortname: web
-  
-      
+  path_ids: [2]
+

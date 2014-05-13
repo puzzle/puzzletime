@@ -39,8 +39,6 @@ module Evaluatable
   def sumWorktime(evaluation, period = nil, categoryRef = false, options = {})
     options = conditionsFor(evaluation, period, categoryRef, options)
     worktimes.where(options[:conditions]).
-              includes(options[:include]).
-              references(options[:include]).
               joins(options[:joins]).
               sum(:hours).to_f
   end
@@ -49,7 +47,7 @@ module Evaluatable
   def countWorktimes(evaluation, period = nil, categoryRef = false, options = {})
     options = conditionsFor(evaluation, period, categoryRef, options)
     worktimes.where(options[:conditions]).
-              includes(options[:include]).
+              joins(options[:joins]).
               count
   end
 

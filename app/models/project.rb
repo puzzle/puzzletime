@@ -85,7 +85,7 @@ class Project < ActiveRecord::Base
 
   def ancestor_projects
     @ancestor_projects ||= begin
-      ids = path_ids[0..-2]
+      ids = Array(path_ids)[0..-2]
       hash = {}
       self.class.find(ids).each { |p| hash[p.id] = p }
       ids.collect { |id| hash[id.to_i] }

@@ -9,7 +9,7 @@ module PlanningHelper
     overview_graph.each_week do |week|
       result << week_overview_td(overview_graph, week, colspan)
     end
-    result
+    result.html_safe
   end
 
   # returns one overview column for a given week
@@ -22,9 +22,10 @@ module PlanningHelper
     else
       result << "<a href=\"#{url_for(action: 'employee_planning', employee_id: overview_graph.employee, week_date: week)}\">"
       result << "#{overview_graph.planned_days(week)}"
-      result << "<span>#{label}</span></a>"
+      result << "<span>#{h(label)}</span></a>"
     end
     result << '</td>'
+    result.html_safe
   end
 
   # returns a weekly planned column
@@ -54,10 +55,11 @@ module PlanningHelper
     if absences.present?
       result << 'class=absence><a>&nbsp;<span>'
       absences.each do |absence|
-        result << "#{absence.label}"
+        result << h(absence.label)
       end
     end
     result << '</td>'
+    result.html_safe
   end
 
   # returns a weekly absence column in the project planning graph view
@@ -75,6 +77,7 @@ module PlanningHelper
       end
     end
     result << '</td>'
+    result.html_safe
   end
 
   # returns daily absence columns
@@ -90,7 +93,7 @@ module PlanningHelper
       end
       date = date.next
     end
-    result
+    result.html_safe
   end
 
   # returns daily absence columns in the project planning graph view
@@ -106,17 +109,17 @@ module PlanningHelper
       end
       date = date.next
     end
-    result
+    result.html_safe
   end
 
   # draw an empty cell in the planning graph views
   def empty_half_day_td(date)
-    "<td #{'class="current"' if Date.today == date } style='width:10px'></td>"
+    "<td #{'class="current"' if Date.today == date } style='width:10px'></td>".html_safe
   end
 
   # draws an empty cell in the thin row for absences in the project planning graph view
   def empty_half_day_td_absence(date)
-    "<td #{'class="current"' if Date.today == date } style='width:10px; border-width: 0px 1px 0px 0px'></td>"
+    "<td #{'class="current"' if Date.today == date } style='width:10px; border-width: 0px 1px 0px 0px'></td>".html_safe
   end
 
   # renders a planned planning cell with a link to the respective project
@@ -128,7 +131,7 @@ module PlanningHelper
     result << "&date=#{Week.from_date(date).to_integer}\""
     result << '>&nbsp;<span>Neue Planung</span></a>'
     result << '</td>'
-    result
+    result.html_safe
   end
 
   # render a week with one or more planned half days in the half-day-per-column view
@@ -147,7 +150,7 @@ module PlanningHelper
     date = date.next
     result << half_day_td(planning, planning.friday_am, date, 1, planning.is_abstract)
     result << half_day_td(planning, planning.friday_pm, date, 1, planning.is_abstract)
-    result
+    result.html_safe
   end
 
 
@@ -166,7 +169,7 @@ module PlanningHelper
     date = date.next
     result << half_day_with_link_td(employee, date, project)
     result << half_day_with_link_td(employee, date, project)
-    result
+    result.html_safe
   end
 
   # render a planned halfday in the half-day-per-column view
@@ -185,10 +188,10 @@ module PlanningHelper
     result << '"><a'
     result << " href=\"/planning/edit/#{planning.id}\">&nbsp;"
     result << '<span>'
-    result << "Projekt: #{planning.project.label}<br>"
+    result << "Projekt: #{h(planning.project.label)}<br>"
     result << 'Beschreibung: '
     if planning.description.present?
-      result << "#{planning.description}"
+      result << "#{h(planning.description)}"
     else
       result << '⁻'
     end
@@ -200,7 +203,7 @@ module PlanningHelper
     end
     result << '</span>'
     result << '</a></td>'
-    result
+    result.html_safe
   end
 
   private

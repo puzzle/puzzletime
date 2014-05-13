@@ -29,12 +29,6 @@ module ApplicationHelper
     (value == value.to_i ? value.to_i.to_s : value.to_s) + ' %'
   end
 
-  def alternate_row(attrs = '')
-    @row = -1 unless defined? @row
-    @row += 1
-    @row.modulo(2) == 1 ? "<tr class=\"uneven\" #{attrs}>" : "<tr #{attrs}>"
-  end
-
   def evaluation_detail_params
     { evaluation: params[:evaluation],
       category_id: params[:category_id],
