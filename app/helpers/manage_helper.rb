@@ -16,11 +16,12 @@ module ManageHelper
 
   def dataField(entry, attribute)
     options = case modelClass.columnType(attribute)
-                when :date, :float, :integer, :decimal then ' align="right"'
-                when :boolean then ' align="center"'
-                else ''
+                when :date, :float, :integer, :decimal then { align: :right }
+                when :boolean then { align: :center }
+                else {}
                 end
-    "<td#{options}>#{h(formatColumn(attribute, entry.send(attribute), entry)).gsub("\n", '<br/>')}</td>"
+    #"<td#{options}>#{h(formatColumn(attribute, entry.send(attribute), entry)).gsub("\n", '<br/>')}</td>"
+    simple_format(formatColumn(attribute, entry.send(attribute), entry), options, wrapper_tag: :td)
   end
 
   def linkParams(prms = {})
@@ -66,6 +67,10 @@ module ManageHelper
             when 'Das' then 'Neues'
             end
     neu + ' ' + modelClass.label
+  end
+
+  def error_messages_for(entry)
+    # TODO render shared/error_messages
   end
 
   def groupLabel

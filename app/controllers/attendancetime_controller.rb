@@ -1,9 +1,5 @@
 class AttendancetimeController < WorktimeController
 
-  verify method: :post,
-         only: [:autoStartStop, :startNow, :endNow],
-         redirect_to: { action: :list }
-
   before_action :authenticate, except: [:autoStartStop]
 
   SPLIT = 'Aufteilen'
@@ -47,8 +43,8 @@ class AttendancetimeController < WorktimeController
       if project
         project.description = params[:description] if params[:description]
         stopRunning project, now
-      elsif Projecttime.find(:first, conditions: ['type = ? AND employee_id = ? AND work_date = ? AND to_end_time = ?',
-                                                  'Projecttime', @user.id, attendance.work_date, attendance.to_end_time]).nil?
+      elsif !Projecttime.where('type = ? AND employee_id = ? AND work_date = ? AND to_end_time = ?',
+                               'Projecttime', @user.id, attendance.work_date, attendance.to_end_time).exist?
         splitAttendance attendance
         return
       end

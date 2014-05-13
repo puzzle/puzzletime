@@ -17,10 +17,6 @@ class ManageController < ApplicationController
 
   before_action :authorize
 
-  # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
-  verify method: :post, only: [:create, :update, :delete, :synchronize],
-         redirect_to: { action: :list }
-
   hide_action :modelClass, :groupClass, :group, :formatColumn,
               :editFields, :listFields, :listActions,
               :group_id_field, :group_parent_id, :group_label
@@ -33,14 +29,8 @@ class ManageController < ApplicationController
   end
 
   # Action to list all available entries from the database.
-  # The entries are paginated into NO_OF_OVERVIEW_ROWS entries per page.
   def list
-    @entry_pages = Paginator.new(
-       self, modelClass.count(conditions: conditions), NO_OF_OVERVIEW_ROWS, params[:page])
-    @entries = modelClass.list(
-                          conditions: conditions,
-                          limit: @entry_pages.items_per_page,
-                          offset: @entry_pages.current.offset)
+    @entries = modelClass.list(conditions: conditions).page(params[:page])
     renderGeneric action: 'list'
   end
 

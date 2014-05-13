@@ -1,6 +1,6 @@
 %center
   %p{:style => "text-align: center;"} Bitte loggen Sie sich ein:
-  - form_tag({:controller => 'login', :action => 'login'}, :name => 'form') do
+  = form_tag({:controller => 'login', :action => 'login'}, :name => 'form') do
     = hidden_field_tag 'ref', params[:ref]
     %table
       %tr

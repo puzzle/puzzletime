@@ -7,13 +7,13 @@
     = weekday_header
     - @graph.each_day do |day|
       - if day.wday == 1
-        = "</tr><tr>"
+        = "</tr><tr>".html_safe
         %th
           KW #{day.cweek} &nbsp;
-      = day_td day
-      - @graph.timeboxes.reverse_each do |box|
-        = timebox_div box
-      .dateLabel= day.strftime(DATE_FORMAT)
+      = day_td day do
+        - @graph.timeboxes.reverse_each do |box|
+          = timebox_div box
+        .dateLabel= day.strftime(DATE_FORMAT)
 
 
 

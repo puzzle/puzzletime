@@ -7,7 +7,7 @@
     %meta{:content => "no-cache", "http-equiv" => "pragma"}/
     %meta{:content => "no-cache", "http-equiv" => "cache-control"}/
     %meta{:content => "width=420", :name => "viewport"}/
-    %link{:href => "#{PATH_PREFIX}/favicon.gif", :rel => "shortcut icon"}/
+    = favicon_link_tag 'favicon.gif'
     = stylesheet_link_tag 'phone'
   %body
     #header
@@ -18,4 +18,4 @@
     - if flash.has_key?(:notice)
       #notice= flash[:notice]
     %div
-      = @content_for_layout
+      = yield

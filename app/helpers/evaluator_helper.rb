@@ -72,7 +72,7 @@ module EvaluatorHelper
       link_text = link_to('Komplettieren',
                           { action: 'completeProject',
 				                        project_id: project.id,
-				                        back_url: request.request_uri },
+				                        back_url: request.path },
                           method: 'post')
     end
 	   link_text +=  ' (' +  format_date(@user.lastCompleted(project)) + ')'
@@ -86,14 +86,15 @@ module EvaluatorHelper
   def offered_hours(project)
     offered = project.offered_hours
     if offered
-      total = project.worktimes.sum(:hours, conditions: ['worktimes.billable']).to_f
+      total = project.worktimes.where(worktimes: { billable: true }).sum(:hours).to_f
       color = 'green'
       if total > offered
         color = 'red'
       elsif total > offered * 0.9
         color = 'orange'
       end
-      "#{number_with_precision(offered, 0)} (<font color=\"#{color}\">#{format_hour(offered - total)}</font>)"
+      "#{number_with_precision(offered, precision: 0)} " \
+      "(<font color=\"#{color}\">#{format_hour(offered - total)}</font>)".html_safe
     end
   end
 
@@ -110,9 +111,10 @@ module EvaluatorHelper
   end
 
   def overtime_vacations_tooltip(employee)
-    transfers = employee.overtime_vacations.find(:all,
-                                                 conditions: @period ? ['transfer_date <= ?', @period.endDate] : nil,
-                                                 order: 'transfer_date')
+    transfers = employee.overtime_vacations.
+                         where(@period ? ['transfer_date <= ?', @period.endDate] : nil).
+                         order('transfer_date').
+                         to_a
     tooltip = ''
     unless transfers.empty?
       tooltip = '<a href="#" class="tooltip">&lt;-&gt;<span>&Uuml;berzeit-Ferien Umbuchungen:<br/>'
@@ -122,7 +124,7 @@ module EvaluatorHelper
       tooltip += transfers.join('<br />')
       tooltip += '</span></a>'
     end
-    tooltip
+    tooltip.html_safe
   end
 
   ### period and time helpers

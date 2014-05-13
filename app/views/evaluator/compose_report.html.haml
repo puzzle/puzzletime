@@ -3,7 +3,7 @@
 = render :partial => 'report_header', :locals => { :project => project }
 %p
 %h3 Rapport Einstellungen
-- form_tag evaluation_detail_params.merge!(:action => 'report'), :method => 'get' do
+= form_tag evaluation_detail_params.merge!(:action => 'report'), :method => 'get' do
   = hidden_field_tag 'evaluation', params[:evaluation]
   = hidden_field_tag 'category_id', params[:category_id]
   = hidden_field_tag('division_id', params[:division_id]) if params[:division_id]

@@ -4,7 +4,7 @@
 = render(:partial => 'category')
 %p
   - if @user.running_attendance
-    = link_to "Anwesenheit (seit #{@user.running_attendance.from_start_time.strftime(TIME_FORMAT) }) stoppen", {:controller => 'attendancetime', :action => 'stop'}, :method => 'post' 
+    = link_to "Anwesenheit (seit #{@user.running_attendance.from_start_time.strftime(TIME_FORMAT) }) stoppen", {:controller => 'attendancetime', :action => 'stop'}, :method => 'post'
   - else
     = link_to 'Anwesenheit starten', {:controller => 'attendancetime', :action => 'start'}, :method => 'post'                                                                               |
 
@@ -12,6 +12,6 @@
     = link_to 'Absenz erfassen', :controller => 'absencetime', :action => 'add'
     = link_to 'Mehrw&ouml;chige Absenz erfassen',  :controller => 'absencetime',  :action => 'addMultiAbsence'
   - else
-    = link_to 'Alles Komplettieren', {:action => 'complete_all', :back_url => request.request_uri}, :method => 'post', :confirm => 'Wollen sie wirklich alle Projekte komplettieren?'
+    = link_to 'Alles Komplettieren', {:action => 'complete_all', :back_url => request.path}, :method => 'post', :confirm => 'Wollen sie wirklich alle Projekte komplettieren?'
   - if @user.management
     = link_to 'Fremderfassen',  :controller => worktime_controller, :action => 'add', :other => 1

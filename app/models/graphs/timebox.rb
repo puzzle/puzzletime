@@ -17,7 +17,6 @@ class Timebox
       @worktime = worktime
       hgt ||= self.class.height_from_hours worktime.hours
       tooltip ||= tooltip_for worktime
-
     end
     @height = (hgt * 10).round / 10.0
     @color = color

@@ -75,11 +75,20 @@ class Puzzlebase::Base < ActiveRecord::Base
   end
 
   def self.findLocal(original)
-    self::MAPS_TO.find(:first, localFindOptions(original))
+    o = localFindOptions(original)
+    self::MAPS_TO.where(o[:conditions]).
+                  joins(o[:joins]).
+                  includes(o[:include]).
+                  first
   end
 
   def self.findAll
-    find(:all, self::FIND_OPTIONS)
+    o = self::FIND_OPTIONS
+    where(o[:conditions]).
+    includes(o[:include]).
+    order(o[:order]).
+    joins(o[:joins]).
+    select(o[:select])
   end
 
   # SQL select conditions for entries with references to other tables
@@ -94,7 +103,7 @@ class Puzzlebase::Base < ActiveRecord::Base
     conditions = "shortname NOT IN (#{base_shortnames.join(', ')})" unless base_shortnames.empty?
     conditions += ' AND ' if conditions.size > 0 && condition
     conditions += condition if condition
-    only_local = self::MAPS_TO.find(:all, conditions: [conditions])
+    only_local = self::MAPS_TO.where(conditions)
     only_local.each do |local|
       local.destroy if local.worktimes(true).empty?
     end

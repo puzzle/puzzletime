@@ -11,12 +11,6 @@ class WorktimeController < ApplicationController
   helper_method :record_other?
   hide_action :detailAction
 
-  # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
-  verify method: :post, only: [:delete, :createPart, :deletePart, :start, :stop],
-         redirect_to: { action: 'index' }
-  verify method: :post, only: [:create], redirect_to: { action: 'add' }
-  verify method: :post, only: [:update], redirect_to: { action: 'edit' }
-
 
   FINISH = 'Abschliessen'
 
@@ -249,7 +243,7 @@ class WorktimeController < ApplicationController
                       start_time: @worktime.from_start_time,
                       end_time: @worktime.to_end_time }]
       conditions[0] = ' NOT ' + conditions[0] unless @worktime.is_a? Attendancetime
-      overlaps = Worktime.find(:all, conditions: conditions)
+      overlaps = Worktime.where(conditions)
       flash[:notice] += " Es besteht eine &Uuml;berlappung mit mindestens einem anderen Eintrag: <br/>\n" unless overlaps.empty?
       flash[:notice] += overlaps.join("<br/>\n") unless overlaps.empty?
     end
@@ -261,8 +255,8 @@ class WorktimeController < ApplicationController
 
   def setExisting
     @work_date = @worktime.work_date
-    @existing = Worktime.find(:all, conditions: ['employee_id = ? AND work_date = ?', @worktime.employee_id, @work_date],
-                                    order: 'type DESC, from_start_time, project_id')
+    @existing = Worktime.where('employee_id = ? AND work_date = ?', @worktime.employee_id, @work_date).
+                         order('type DESC, from_start_time, project_id')
   end
 
   def find_worktime

@@ -11,10 +11,6 @@ class EvaluatorController < ApplicationController
 
   helper_method :user_view?
 
-  verify method: :post,
-         only: [:completeProject, :complete_all, :book_all],
-         redirect_to: { action: :userProjects }
-
   def index
     overview
   end
@@ -132,12 +128,10 @@ class EvaluatorController < ApplicationController
 
   def completeProject
     project = Project.find params[:project_id]
-    memberships = @user.projectmemberships.find(:first,
-                                                conditions: ['project_id = ?', params[:project_id]])
+    memberships = @user.projectmemberships.where('project_id = ?', params[:project_id]).first
     if memberships.nil?
       # no direct membership - complete parent project
-      memberships = @user.projectmemberships.find(:all,
-                                                  conditions: ['? = ANY (projects.path_ids)', params[:project_id]])
+      memberships = @user.projectmemberships.where('? = ANY (projects.path_ids)', params[:project_id])
     else
       memberships = [memberships]
     end
@@ -150,9 +144,7 @@ class EvaluatorController < ApplicationController
   end
 
   def complete_all
-    @user.projectmemberships.find(:all, conditions: ['active']).each do |pm|
-      pm.update_attributes(last_completed: Date.today)
-    end
+    @user.projectmemberships.where(active: true).update_all(last_completed: Date.today)
     flash[:notice] = 'Das Datum der kompletten Erfassung aller Zeiten wurde f&uuml;r alle Projekte aktualisiert.'
     redirect_to params[:back_url]
   end
@@ -210,7 +202,7 @@ class EvaluatorController < ApplicationController
 
 
   # Dispatches evaluation names used as actions
-  def method_missing(action, *args)
+  def action_missing(action, *args)
     params[:evaluation] = action.to_s
     overview
   end
@@ -281,10 +273,7 @@ class EvaluatorController < ApplicationController
   end
 
   def paginateTimes
-    @time_pages = Paginator.new self, @evaluation.count_times(@period), NO_OF_DETAIL_ROWS, params[:page]
-    @times = @evaluation.times(@period,
-                               limit: @time_pages.items_per_page,
-                               offset: @time_pages.current.offset)
+    @times = @evaluation.times(@period).page(params[:page])
   end
 
   def setExportHeader(filename)

@@ -2,5 +2,5 @@
 %p
   - if @period && @period != Period.currentMonth
     Zeiten w&auml;hrend #{@period} &nbsp;
-    \#{link_to 'Aktuelle Zeitspanne',  :controller => 'evaluator', :action => 'currentPeriod',  :back_url => request.request_uri} |
-  = link_to 'Andere Zeitspanne', :controller => 'evaluator', :action => 'selectPeriod', :back_url => request.request_uri
+    \#{link_to 'Aktuelle Zeitspanne',  :controller => 'evaluator', :action => 'currentPeriod',  :back_url => request.path} |
+  = link_to 'Andere Zeitspanne', :controller => 'evaluator', :action => 'selectPeriod', :back_url => request.path

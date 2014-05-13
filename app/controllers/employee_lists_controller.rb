@@ -3,16 +3,6 @@ class EmployeeListsController < ApplicationController
   before_action :authenticate
   before_action :setPeriod
 
-  # GET /employee_lists
-  # GET /employee_lists.xml
-#  def index
-#    @employee_lists = EmployeeList.find(:all)
-#
-#    respond_to do |format|
-#      format.html # index.html.erb
-#      format.xml  { render :xml => @employee_lists }
-#    end
-#  end
 
   # GET /employee_lists/1
   # GET /employee_lists/1.xml

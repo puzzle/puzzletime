@@ -8,8 +8,8 @@ module Manageable
   # Lists all entries in the database of the corresponding class.
   def list(options = {})
     options[:order] ||= orderBy
-    #find(:all, options)
     where(options[:conditions]).
+    includes(options[:include]).
     reorder(options[:order]).
     limit(options[:limit]).
     offset(options[:offset])

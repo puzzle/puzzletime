@@ -19,7 +19,11 @@ class Project < ActiveRecord::Base
   belongs_to :department
   belongs_to :client
 
-  has_many :worktimes, extend: HasTreeAssociation
+  has_many :worktimes, ->(project) {
+           joins(:project).
+           unscope(where: :project_id).
+           where("worktimes.project_id = projects.id AND " \
+                 "#{project.id} = ANY (projects.path_ids)") }
 
   before_validation DateFormatter.new('freeze_until')
 
@@ -111,17 +115,6 @@ class Project < ActiveRecord::Base
   def leaves
     return [self] if leaf?
     children.collect { |p| p.leaves }.flatten
-  end
-
-  def path_ids=(ids)
-    ids = [ids] unless ids.is_a? Array
-    write_attribute(:path_ids, "{#{ids.join(',')}}")
-  end
-
-  def path_ids
-    ids = read_attribute(:path_ids)
-    return [] if ids.nil?
-    ids[1..-2].split(/,\s*/).collect { |i| i.to_i }
   end
 
   def managed_employees

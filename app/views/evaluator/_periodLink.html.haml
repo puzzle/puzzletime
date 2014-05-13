@@ -1,8 +1,8 @@
 %p
   - if @period
     Zeiten w&auml;hrend #{@period} &nbsp;
-    \#{link_to 'Aktuelle Zeitspanne',  :controller => 'evaluator', :action => 'currentPeriod',  :back_url => request.request_uri} |
-  = link_to 'Andere Zeitspanne', :controller => 'evaluator', :action => 'selectPeriod', :back_url => request.request_uri
+    \#{link_to 'Aktuelle Zeitspanne',  :controller => 'evaluator', :action => 'currentPeriod',  :back_url => request.path} |
+  = link_to 'Andere Zeitspanne', :controller => 'evaluator', :action => 'selectPeriod', :back_url => request.path
   - if @notifications && !@notifications.empty?
     | #{link_to_function "#{@notifications.size} Nachricht#{@notifications.size > 1 ? 'en' : ''}",  visual_effect(:toggle_blind, "notifications", :duration => 0.2)}
     %ul#notifications.notification{:style => "display: none;"}

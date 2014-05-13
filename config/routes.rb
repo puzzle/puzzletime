@@ -4,12 +4,27 @@ Rails.application.routes.draw do
 
   resources :employee_lists
 
-  resource :planning do
+  scope '/planning', controller: 'planning' do
+    post 'create'
+    post 'update'
+    post 'delete'
     get ':action'
   end
 
+  scope '/login', controller: 'login' do
+    match 'login', via: [:get, :post, :patch]
+    post 'logout'
+  end
+
+  # TODO: POST actions:
+  # evaluator  :completeProject, :complete_all, :book_all
+  # attendancetime :autoStartStop, :startNow, :endNow
+  # employee: :updatePwd
+  # manage: :create, :update, :delete, :synchronize
+  # worktime: :delete, :createPart, :deletePart, :start, :stop, :create, :update
+
   # Install the default route as the lowest priority.
-  match ':controller(/:action(/:id))', via: [:get, :post, :patch]
+  match '/:controller(/:action(/:id))', via: [:get, :post, :patch]
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

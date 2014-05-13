@@ -1,7 +1,7 @@
 class Puzzlebase::CustomerProject < Puzzlebase::Base
 
-  set_table_name 'TBL_CUSTOMER_PROJECT'
-  set_primary_key 'PK_CUSTOMER_PROJECT'
+  self.table_name = 'TBL_CUSTOMER_PROJECT'
+  self.primary_key = 'PK_CUSTOMER_PROJECT'
 
   belongs_to :customer,
              foreign_key: 'FK_CUSTOMER'

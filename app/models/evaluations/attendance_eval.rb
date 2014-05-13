@@ -45,7 +45,9 @@ class AttendanceEval < Evaluation
   def times(period, options = {})
     options = addConditions options, period
     options[:order] ||= 'work_date ASC, from_start_time'
-    category.attendancetimes.find(:all, options)
+    category.attendancetimes.where(options[:conditions]).
+                             includes(options[:include]).
+                             reorder(options[:order])
   end
 
   # Do nothing, attendance has no divisions

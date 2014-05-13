@@ -23,10 +23,7 @@ class ProjectController < ManageController
   end
 
   def listManagedProjects
-    @entry_pages = Paginator.new self, @user.managed_projects.count, NO_OF_OVERVIEW_ROWS, params[:page]
-    @entries = @user.managed_projects.find(:all,
-                                           limit: @entry_pages.items_per_page,
-                                           offset: @entry_pages.current.offset).sort
+    @entries = @user.managed_projects.page(params[:page])
     renderGeneric action: 'list'
   end
 

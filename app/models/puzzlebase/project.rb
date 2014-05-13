@@ -33,7 +33,7 @@ class Puzzlebase::Project < Puzzlebase::Base
   end
 
   def self.removeUnused
-    top_projects = Project.find(:all, conditions: ['parent_id IS NULL'])
+    top_projects = Project.where(parent_id: nil)
     top_projects.each do |local|
       original = findOriginal(local)
       if original.nil?
@@ -48,7 +48,10 @@ class Puzzlebase::Project < Puzzlebase::Base
 
   def self.updateLocal(original)
     client_shortnames = original.customer_projects.collect { |cp| cp.customer.S_CUSTOMER }
-    locals = ::Project.find :all, joins: :client, conditions: ["projects.shortname = ? AND clients.shortname IN (#{client_shortnames.join(', ')})", original.S_PROJECT]
+    locals = ::Project.joins(:client).
+                       where("projects.shortname = ? AND " \
+                             "clients.shortname IN (#{client_shortnames.join(', ')})",
+                             original.S_PROJECT)
     locals.each do |local|
       updateAttributes local, original
       setReference local, original
@@ -73,14 +76,17 @@ class Puzzlebase::Project < Puzzlebase::Base
   end
 
   def self.findLocalChild(original_child, local_parent)
-    self::MAPS_TO.find(:first, conditions: ['shortname = ? AND parent_id = ?', original_child.S_PROJECT, local_parent.id])
+    self::MAPS_TO.where('shortname = ? AND parent_id = ?',
+                        original_child.S_PROJECT, local_parent.id).
+                  first
   end
 
   # use only for top projects
   def self.findOriginal(local)
-    find(:first,
-         conditions: ['TBL_PROJECT.FK_PROJECT IS NULL AND TBL_PROJECT.S_PROJECT = ? AND TBL_CUSTOMER.S_CUSTOMER = ?', local.shortname, local.client.shortname],
-         joins: :customers)
+    where('TBL_PROJECT.FK_PROJECT IS NULL AND TBL_PROJECT.S_PROJECT = ? AND TBL_CUSTOMER.S_CUSTOMER = ?',
+          local.shortname, local.client.shortname).
+    joins(:customers).
+    first
   end
 
   # use only for top projects

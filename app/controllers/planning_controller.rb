@@ -4,11 +4,6 @@ class PlanningController < ApplicationController
 
   before_action :setPeriod
 
-  # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
-  verify method: :post, only: [:delete], redirect_to: { action: 'index' }
-  verify method: :post, only: [:create], redirect_to: { action: 'add' }
-  verify method: :post, only: [:update], redirect_to: { action: 'edit' }
-
   def index
     redirect_to action: 'my_planning'
   end
@@ -49,7 +44,7 @@ class PlanningController < ApplicationController
 
   def employee_lists
     @employee = @user
-    @employee_lists = EmployeeList.find(:all, conditions: { employee_id: @employee.id })
+    @employee_lists = EmployeeList.where(employee_id: @employee.id)
   end
 
   def employee_lists_planning

@@ -14,7 +14,7 @@ DEFAULT_PROJECT_ID      = 8   # Puzzle Allgemein
 
 # Array of holidays with a fixed date. [day, month]
 REGULAR_HOLIDAYS        = [[1,1],[2,1],[1,8],[25,12],[26,12]]
-  
+
 # Email settings for error messages
 SYSTEM_EMAIL            = %{"PuzzleTime" <monitor-sender@worldweb2000.com>}
 EXCEPTION_RECIPIENTS    = ["santschi@puzzle.ch"]
@@ -28,9 +28,6 @@ LDAP_EXTERNAL_DN        = 'ou=extern,ou=users,dc=puzzle,dc=itc'
 LDAP_GROUP              = 'cn=puzzletime,ou=groups,dc=puzzle,dc=itc'
 
 # Applications Customization Settings
-NO_OF_OVERVIEW_ROWS     = 20      # rows for listing projects, employees, ...
-NO_OF_DETAIL_ROWS       = 20      # rows for detail time entries
-PAGINATION_WINDOW_SIZE  = 10      
 
 DATE_FORMAT             = '%d.%m.%Y'
 LONG_DATE_FORMAT        = '%a, %d.%m.%Y'

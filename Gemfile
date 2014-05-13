@@ -15,7 +15,7 @@ gem 'kaminari'
 gem 'haml'
 gem 'rails_config'
 gem 'rails-i18n'
-gem 'ruby-net-ldap'
+gem 'net-ldap'
 gem 'seed-fu'
 gem 'schema_validations'
 
@@ -40,11 +40,15 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 group :development, :test do
   gem 'faker'
   gem 'codez-tarantula', require: 'tarantula-rails3'
+  gem 'binding_of_caller'
 end
 
 group :development do
   gem 'spring'
   gem 'pry-rails'
+  gem 'better_errors'
+  gem 'bullet'
+  gem 'quiet_assets'
 end
 
 group :test do

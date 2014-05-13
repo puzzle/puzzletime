@@ -80,7 +80,7 @@ textarea, input, select {
 	width: 			992px;
 	margin:         auto;
     padding:        0px 16px 40px 16px;
-    background:     #fff; 
+    background:     #fff;
 	border-left:	1px solid #E9E9E7;
 	border-right:	1px solid #E9E9E7;
 }
@@ -99,11 +99,11 @@ textarea, input, select {
 	max-width:		30%;
 }
 
-#brand {    
+#brand {
     font-weight:    normal;
     font-size:      28px;
     letter-spacing: -1px;
-	padding-top:	13px; 
+	padding-top:	13px;
     margin-bottom:  0px;
 }
 
@@ -125,20 +125,20 @@ textarea, input, select {
 }
 
 #menu {
-    background:     #46461F url('../images/menu_bg.gif') repeat-x; 
+    background:     #46461F url('../images/menu_bg.gif') repeat-x;
     margin-top:     -8px;
     height:         35px;
 }
 
 #menu_user {
-    background:     url('../images/menu_user.gif') repeat-x; 
+    background:     url('../images/menu_user.gif') repeat-x;
     margin-left:    20px;
 	padding-top: 	 2px;
     float:          right;
 }
 
 #submenu {
-    background:     url('../images/menu_user.gif') repeat-x; 
+    background:     url('../images/menu_user.gif') repeat-x;
     padding-left:   40px;
 	padding-top: 	 2px;
     text-indent:    -28px;
@@ -189,6 +189,10 @@ th.periodHead {
     background-color: #C9D8FF;
 }
 
+table.striped tbody tr:nth-child(odd) {
+    background-color: #C9D8FF;
+}
+
 .times_total_sum {
     font-weight:    bold;
     /* color: #f4a460; */
@@ -229,13 +233,13 @@ a.tooltip span {
 
 a.tooltip:hover {
 	position:		relative;
-}			
+}
 
 a.tooltip:hover span {
 	display: 		block;
 	position:		absolute;
 	top:			10px;
-	left:			10px;	
+	left:			10px;
 	z-index: 		3;
 	background:		#ffffdd;
 	color:			#333;
@@ -280,6 +284,6 @@ a.tooltip:hover span {
 
 #errorExplanation ul li {
     color:          #333;
-    list-style:     none;  
+    list-style:     none;
     margin-left:    -30px;
 }

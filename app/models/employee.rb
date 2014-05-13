@@ -1,10 +1,5 @@
 # encoding: utf-8
 
-require 'date'
-require 'digest'
-require 'digest/sha1'
-require 'net/ldap'
-
 class Employee < ActiveRecord::Base
 
   include Evaluatable
@@ -188,14 +183,14 @@ class Employee < ActiveRecord::Base
     path = project.path_ids.clone
     membership = nil
     while membership.nil? && !path.empty?
-      membership = projectmemberships.find(:first, conditions: ['project_id = ?', path.pop])
+      membership = projectmemberships.where(project_id: path.pop).first
     end
 
     if membership
       membership.last_completed
     else
       # otherwise, get minimum date of all children
-      memberships = projectmemberships.find(:all, conditions: ['? = ANY (projects.path_ids)', project.id])
+      memberships = projectmemberships.where('? = ANY (projects.path_ids)', project.id)
       last_completed = memberships.collect { |pm| pm.last_completed }
 	     last_completed.delete(nil)
 	     last_completed.min
@@ -233,22 +228,6 @@ class Employee < ActiveRecord::Base
 
   def statistics
     @statistics ||= EmployeeStatistics.new(self)
-  end
-
-  def user_periods=(periods)
-    write_array_attribute(:user_periods, periods)
-  end
-
-  def user_periods
-    read_array_attribute(:user_periods)
-  end
-
-  def eval_periods=(periods)
-    write_array_attribute(:eval_periods, periods)
-  end
-
-  def eval_periods
-    read_array_attribute(:eval_periods)
   end
 
   ######### employment information ######################
@@ -289,18 +268,10 @@ class Employee < ActiveRecord::Base
       options = clone_options options
       append_conditions(options[:conditions], ['work_date BETWEEN ? AND ?', period.startDate, period.endDate])
     end
-    receiver.sum(:hours, options).to_f
-  end
-
-  def read_array_attribute(attribute)
-    value = read_attribute(attribute)
-    return [] if value.nil?
-    value[1..-2].split(/,\s*/)
-  end
-
-  def write_array_attribute(attribute, value)
-    value = [value] unless value.is_a? Array
-    write_attribute(attribute, "{\"#{value.join("\", \"")}\"}")
+    receiver.where(options[:conditions]).
+             joins(options[:joins]).
+             sum(:hours).
+             to_f
   end
 
 end

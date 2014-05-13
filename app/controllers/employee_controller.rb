@@ -9,9 +9,6 @@ class EmployeeController < ManageController
   before_action :authorize, except: [:changePasswd, :updatePwd, :settings, :save_settings]
   before_action :authenticate, only: [:changePasswd, :updatePwd, :settings, :save_settings]
 
-  # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
-  verify method: :post, only: [:updatePwd],
-         redirect_to: HOME_ACTION
 
   GROUP_KEY = 'employee'
 

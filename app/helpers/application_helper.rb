@@ -74,13 +74,14 @@ module ApplicationHelper
     calendar_field object, method, html_options, cal_options
   end
 
+  # TODO: remove this method
   def renderGenericPartial(options)
-    if template = options[:partial]
-      if templateAbsent? template, controller.class.controller_path
-        return if templateAbsent? template, genericPath
-        options[:partial] = "#{genericPath}/#{template}"
-      end
-    end
+    #if template = options[:partial]
+    #  if templateAbsent? template, controller.class.controller_path
+    #    return if templateAbsent? template, genericPath
+    #    options[:partial] = "#{genericPath}/#{template}"
+    #  end
+    #end
     render options
   end
 

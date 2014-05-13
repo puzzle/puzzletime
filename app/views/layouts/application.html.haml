@@ -6,10 +6,11 @@
     %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}/
     %meta{:content => "no-cache", "http-equiv" => "pragma"}/
     %meta{:content => "no-cache", "http-equiv" => "cache-control"}/
-    %link{:href => "#{PATH_PREFIX}/favicon.gif", :rel => "shortcut icon"}/
-    = stylesheet_link_tag 'puzzletime', :media => 'all'
+    = favicon_link_tag 'favicon.gif'
+    = stylesheet_link_tag 'application', :media => 'all'
     - if @has_calendar
       = dhtml_calendar_includes "blue", "de"
+
   %body
     #content
       = image_tag 'space.gif', :size => '840x1'
@@ -18,21 +19,23 @@
         #splash
           #brand
             puzzleTime
-            %sup 1.4
+            %sup 2.0 alpha
           #company &nbsp; by Puzzle ITC
       - if @user
-        = render :partial => 'layouts/menu'
+        = render 'layouts/menu'
         #menu_user
           = link_to @user.label, :controller => 'employee', :action => 'settings'
           |
           \#{link_to '?', 'https://twiki.puzzle.ch/bin/view/Puzzle/PuzzleTimeFAQ'} |
           \#{link_to 'Logout',  {:controller => 'login',  :action => 'logout'}, :method => 'post'}
         #submenu
-          = renderGenericPartial :partial => 'submenu'
+          = render 'submenu'
           \&nbsp;
+
       %h1= @title
-      - if flash.has_key?(:notice)
+      - if flash.key?(:notice)
         #notice= flash[:notice]
       %div
-        = @content_for_layout
+        = yield
+
   = javascript_include_tag "application"

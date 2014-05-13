@@ -30,6 +30,8 @@ module Puzzletime
 
     config.cache_store = :dalli_store
 
+    config.assets.precompile += %w(print.css phone.css graph.css)
+
     config.to_prepare do |config|
       # TODO refactor to rails_config
       require 'report_type'

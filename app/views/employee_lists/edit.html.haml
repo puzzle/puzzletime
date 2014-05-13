@@ -1,7 +1,7 @@
 %h1
   Mitarbeiterliste bearbeiten
 = error_messages_for 'employee_list'
-- form_for @employee_list do |f|
+= form_for @employee_list do |f|
   = render :partial => 'form', :locals => { :f => f }
   %p
     = f.submit "Änderungen speichern"

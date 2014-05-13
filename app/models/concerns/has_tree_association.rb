@@ -4,33 +4,30 @@ module HasTreeAssociation
 
   include Conditioner
 
-  def sum(column_name, options = {})
-    options = restrict_conditions options
-    @reflection.klass.sum(column_name, options)
+  def sum(column_name)
+    descendant_scope.sum(column_name)
   end
 
   def find(*args)
+    # TODO wire that up for rails 4
     case args.first
       when :first, :all then
-        options = restrict_conditions args.extract_options!
-        @reflection.klass.find(args.first, options)
+        @klass.descendant_scope.find(args.first, options)
       else
-        @reflection.klass.find(args)
+        @klass.find(args)
     end
   end
 
-  def count(*args)
-    column_name, options = @reflection.klass.send(:construct_count_options_from_args, *args)
-    options = restrict_conditions options
-    @reflection.klass.count(column_name, options)
+  def count(column_name)
+    descendant_scope.count(column_name)
   end
 
-  def restrict_conditions(options)
-    options = clone_options options
-    append_conditions(options[:conditions],
-                      ["worktimes.project_id = projects.id AND #{@owner.id} = ANY (projects.path_ids)"])
-    options[:joins] = :project
-    options
+  private
+
+  def descendant_scope
+    joins(:project).
+           where("worktimes.project_id = projects.id AND " \
+                 "#{@association.owner.id} = ANY (projects.path_ids)")
   end
 
 end

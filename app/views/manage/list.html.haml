@@ -1,24 +1,29 @@
 - @title = "#{modelClass.labelPlural} #{groupLabel}"
 = renderGenericPartial :partial => 'info'
-%table
-  %tr
-    - for field in listFields
-      %th
-        = field[1]
-  - for entry in @entries
-    = alternate_row('valign="top"')
-    - for field in listFields
-      = dataField entry, field[0]
-    - for action in controller.listActions
-      %td= actionLink action, entry
-    - if editFields.size > 0
-      %td= link_to 'Bearbeiten', linkParams(:action => 'edit', :id => entry)
-    - if modelClass.local?
-      %td= link_to 'L&ouml;schen', linkParams(:action => 'confirmDelete', :id => entry)
-- if @entry_pages.page_count > 1
+%table.striped
+  %thead
+    %tr
+      - for field in listFields
+        %th
+          = field[1]
+  %tbody
+    - for entry in @entries.sort
+      %tr{valign: 'top'}
+        - for field in listFields
+          = dataField entry, field[0]
+        - for action in controller.listActions
+          %td= actionLink action, entry
+        - if editFields.size > 0
+          %td= link_to 'Bearbeiten', linkParams(:action => 'edit', :id => entry)
+        - if modelClass.local?
+          %td= link_to 'L&ouml;schen', linkParams(:action => 'confirmDelete', :id => entry)
+
+- if @entries.total_pages > 1
   %p
-    Seite: #{pagination_links(@entry_pages, :window_size => PAGINATION_WINDOW_SIZE, :params => linkParams)}
+    Seite:
+    = paginate @entries
 %br/
+
 %p
   - if modelClass.local?
     = link_to newLabel, linkParams(:action => 'add')

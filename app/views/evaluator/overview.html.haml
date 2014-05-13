@@ -4,4 +4,4 @@
   %p= h(@evaluation.category.tooltip)
 = render :partial => 'category'
 %p
-  = @evaluation.overview_supplement(@user).collect{|supplement| link_to supplement[1], :action => supplement[0]}.join(' | ')                                                |
+  = @evaluation.overview_supplement(@user).collect do |supplement| link_to supplement[1], :action => supplement[0] end.join(' | ').html_safe

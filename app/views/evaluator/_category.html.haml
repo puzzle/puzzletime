@@ -1,27 +1,33 @@
 - periods = init_periods
-%table#evaluation
-  %tr
-    %th= @evaluation.division_header
-    = '<th></th>' if @evaluation.class::SUB_PROJECTS_EVAL
-    - for p in periods
-      %th.periodHead
-        = p ? p.label : 'Total'
-        \&nbsp; &nbsp;
-    - for supp in @evaluation.division_supplement(@user)
-      %th= supp[1]
-  = render(:partial => 'division', :collection => @evaluation.divisions(@period).sort, :locals => { :periods => periods })
-  %tr.times_total_sum
-    %td Total Zeit
-    - if @evaluation.class::SUB_PROJECTS_EVAL
-      %th
-    = render(:partial => 'timecell', :collection => collect_times(periods, :sum_total_times), :locals => {:periods => periods})
-  - if @evaluation.class::ATTENDANCE
+%table#evaluation.striped
+  %thead
+    %tr
+      %th= @evaluation.division_header
+      -if @evaluation.class::SUB_PROJECTS_EVAL
+        %th
+      - for p in periods
+        %th.periodHead
+          = p ? p.label : 'Total'
+          \&nbsp; &nbsp;
+      - for supp in @evaluation.division_supplement(@user)
+        %th= supp[1]
+
+  %tbody
+    = render(:partial => 'division', :collection => @evaluation.divisions(@period).sort, :locals => { :periods => periods })
+
+  %tfoot
     %tr.times_total_sum
-      %td Anwesenheit
+      %td Total Zeit
       - if @evaluation.class::SUB_PROJECTS_EVAL
         %th
-      - times = periods.collect { |p| @evaluation.category.sumAttendance p }
-      = render(:partial => 'timecell', :collection => times, :locals => {:periods => periods, :action => 'attendanceDetails'})
-      - if @evaluation.for? @user
-        %td{:style => "font-weight: normal;"}
-          = link_to 'Zeit erfassen', :controller => 'attendancetime', :action => 'add'
+      = render(:partial => 'timecell', :collection => collect_times(periods, :sum_total_times), :locals => {:periods => periods})
+    - if @evaluation.class::ATTENDANCE
+      %tr.times_total_sum
+        %td Anwesenheit
+        - if @evaluation.class::SUB_PROJECTS_EVAL
+          %th
+        - times = periods.collect { |p| @evaluation.category.sumAttendance p }
+        = render(:partial => 'timecell', :collection => times, :locals => {:periods => periods, :action => 'attendanceDetails'})
+        - if @evaluation.for? @user
+          %td{:style => "font-weight: normal;"}
+            = link_to 'Zeit erfassen', :controller => 'attendancetime', :action => 'add'

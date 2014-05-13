@@ -4,8 +4,8 @@
 %table
   %tr
     %td
-      - form_tag linkParams(:action => 'delete', :id => @entry) do
+      = form_tag linkParams(:action => 'delete', :id => @entry) do
         = submit_tag 'Löschen'
     %td
-      - form_tag linkParams(:action => 'list'), {:method => 'get'} do
+      = form_tag linkParams(:action => 'list'), {:method => 'get'} do
         = submit_tag 'Abbrechen'
