@@ -1,0 +1,73 @@
+AllCops:
+  RunRailsCops: true
+  Exclude:
+    - Rakefile
+    - db/**/*
+    - config/**/*
+    - bin/**/*
+    - spec/**/*
+    - vendor/**/*
+    - tmp/**/*
+    - app/assets/config.rb
+
+# This cop is currently buggy (0.21.0)
+Delegate:
+  Enabled: false
+
+ClassLength:
+  Max: 200
+  Severity: error
+
+MethodLength:
+  Max: 10
+  Severity: error
+
+CyclomaticComplexity:
+  Max: 6
+  Severity: error
+
+LineLength:
+  Max: 100
+  Severity: warning
+
+
+# Keep for now, easier with superclass definitions
+ClassAndModuleChildren:
+  Enabled: false
+
+# The ones we use must exist for the entire class hierarchy.
+ClassVars:
+  Enabled: false
+
+# map instead of collect, reduce instead of inject.
+# Probably later
+CollectionMethods:
+  Enabled: false
+
+# Well, well, well
+Documentation:
+  Enabled: false
+
+# Probably later
+DotPosition:
+  Enabled: false
+
+# That's no huge stopper
+EmptyLines:
+  Enabled: false
+
+# We thinks that's fine
+EmptyLinesAroundBody:
+  Enabled: false
+
+# Missing UTF-8 encoding statements should always be created.
+Encoding:
+  Severity: error
+
+# Keep single line bodys for if and unless
+IfUnlessModifier:
+  Enabled: false
+
+# We thinks that's fine
+HasAndBelongsToMany:
+  Enabled: false

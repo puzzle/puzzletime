@@ -4,10 +4,23 @@
 
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
-SET standard_conforming_strings = off;
+SET standard_conforming_strings = on;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
-SET escape_string_warning = off;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
 
 SET search_path = public, pg_catalog;
 
@@ -34,8 +47,8 @@ CREATE TABLE absences (
 CREATE SEQUENCE absences_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -64,8 +77,8 @@ CREATE TABLE clients (
 CREATE SEQUENCE clients_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -94,8 +107,8 @@ CREATE TABLE departments (
 CREATE SEQUENCE departments_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -104,6 +117,50 @@ CREATE SEQUENCE departments_id_seq
 --
 
 ALTER SEQUENCE departments_id_seq OWNED BY departments.id;
+
+
+--
+-- Name: employee_lists; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE employee_lists (
+    id integer NOT NULL,
+    employee_id integer NOT NULL,
+    title character varying(255) NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: employee_lists_employees; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE employee_lists_employees (
+    employee_list_id integer,
+    employee_id integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: employee_lists_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE employee_lists_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: employee_lists_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE employee_lists_id_seq OWNED BY employee_lists.id;
 
 
 --
@@ -136,8 +193,8 @@ CREATE TABLE employees (
 CREATE SEQUENCE employees_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -155,7 +212,7 @@ ALTER SEQUENCE employees_id_seq OWNED BY employees.id;
 CREATE TABLE employments (
     id integer NOT NULL,
     employee_id integer,
-    percent integer NOT NULL,
+    percent numeric(5,2) NOT NULL,
     start_date date NOT NULL,
     end_date date
 );
@@ -168,8 +225,8 @@ CREATE TABLE employments (
 CREATE SEQUENCE employments_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -198,8 +255,8 @@ CREATE TABLE holidays (
 CREATE SEQUENCE holidays_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -229,8 +286,8 @@ CREATE TABLE overtime_vacations (
 CREATE SEQUENCE overtime_vacations_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -264,7 +321,9 @@ CREATE TABLE plannings (
     friday_am boolean DEFAULT false NOT NULL,
     friday_pm boolean DEFAULT false NOT NULL,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    is_abstract boolean,
+    abstract_amount numeric
 );
 
 
@@ -275,8 +334,8 @@ CREATE TABLE plannings (
 CREATE SEQUENCE plannings_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -308,8 +367,8 @@ CREATE TABLE projectmemberships (
 CREATE SEQUENCE projectmemberships_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -338,6 +397,7 @@ CREATE TABLE projects (
     department_id integer,
     path_ids integer[],
     freeze_until date,
+    ticket_required boolean DEFAULT false,
     CONSTRAINT chkname_report CHECK (((report_type)::text = ANY ((ARRAY['start_stop_day'::character varying, 'absolute_day'::character varying, 'week'::character varying, 'month'::character varying])::text[])))
 );
 
@@ -349,8 +409,8 @@ CREATE TABLE projects (
 CREATE SEQUENCE projects_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -389,8 +449,8 @@ CREATE TABLE user_notifications (
 CREATE SEQUENCE user_notifications_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -419,6 +479,7 @@ CREATE TABLE worktimes (
     billable boolean DEFAULT true,
     booked boolean DEFAULT false,
     type character varying(255),
+    ticket character varying(255),
     CONSTRAINT chkname CHECK (((report_type)::text = ANY ((ARRAY['start_stop_day'::character varying, 'absolute_day'::character varying, 'week'::character varying, 'month'::character varying, 'auto_start'::character varying])::text[])))
 );
 
@@ -430,8 +491,8 @@ CREATE TABLE worktimes (
 CREATE SEQUENCE worktimes_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -446,84 +507,91 @@ ALTER SEQUENCE worktimes_id_seq OWNED BY worktimes.id;
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE absences ALTER COLUMN id SET DEFAULT nextval('absences_id_seq'::regclass);
+ALTER TABLE ONLY absences ALTER COLUMN id SET DEFAULT nextval('absences_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE clients ALTER COLUMN id SET DEFAULT nextval('clients_id_seq'::regclass);
+ALTER TABLE ONLY clients ALTER COLUMN id SET DEFAULT nextval('clients_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE departments ALTER COLUMN id SET DEFAULT nextval('departments_id_seq'::regclass);
+ALTER TABLE ONLY departments ALTER COLUMN id SET DEFAULT nextval('departments_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE employees ALTER COLUMN id SET DEFAULT nextval('employees_id_seq'::regclass);
+ALTER TABLE ONLY employee_lists ALTER COLUMN id SET DEFAULT nextval('employee_lists_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE employments ALTER COLUMN id SET DEFAULT nextval('employments_id_seq'::regclass);
+ALTER TABLE ONLY employees ALTER COLUMN id SET DEFAULT nextval('employees_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE holidays ALTER COLUMN id SET DEFAULT nextval('holidays_id_seq'::regclass);
+ALTER TABLE ONLY employments ALTER COLUMN id SET DEFAULT nextval('employments_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE overtime_vacations ALTER COLUMN id SET DEFAULT nextval('overtime_vacations_id_seq'::regclass);
+ALTER TABLE ONLY holidays ALTER COLUMN id SET DEFAULT nextval('holidays_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE plannings ALTER COLUMN id SET DEFAULT nextval('plannings_id_seq'::regclass);
+ALTER TABLE ONLY overtime_vacations ALTER COLUMN id SET DEFAULT nextval('overtime_vacations_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE projectmemberships ALTER COLUMN id SET DEFAULT nextval('projectmemberships_id_seq'::regclass);
+ALTER TABLE ONLY plannings ALTER COLUMN id SET DEFAULT nextval('plannings_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE projects ALTER COLUMN id SET DEFAULT nextval('projects_id_seq'::regclass);
+ALTER TABLE ONLY projectmemberships ALTER COLUMN id SET DEFAULT nextval('projectmemberships_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE user_notifications ALTER COLUMN id SET DEFAULT nextval('user_notifications_id_seq'::regclass);
+ALTER TABLE ONLY projects ALTER COLUMN id SET DEFAULT nextval('projects_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE worktimes ALTER COLUMN id SET DEFAULT nextval('worktimes_id_seq'::regclass);
+ALTER TABLE ONLY user_notifications ALTER COLUMN id SET DEFAULT nextval('user_notifications_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY worktimes ALTER COLUMN id SET DEFAULT nextval('worktimes_id_seq'::regclass);
 
 
 --
@@ -556,6 +624,14 @@ ALTER TABLE ONLY clients
 
 ALTER TABLE ONLY departments
     ADD CONSTRAINT departments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: employee_lists_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY employee_lists
+    ADD CONSTRAINT employee_lists_pkey PRIMARY KEY (id);
 
 
 --
@@ -789,3 +865,11 @@ INSERT INTO schema_migrations (version) VALUES ('12');
 INSERT INTO schema_migrations (version) VALUES ('13');
 
 INSERT INTO schema_migrations (version) VALUES ('14');
+
+INSERT INTO schema_migrations (version) VALUES ('15');
+
+INSERT INTO schema_migrations (version) VALUES ('16');
+
+INSERT INTO schema_migrations (version) VALUES ('17');
+
+INSERT INTO schema_migrations (version) VALUES ('18');

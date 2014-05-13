@@ -1,4 +1,0 @@
-#!/bin/bash
-# start 5 fcgi processes that are checked every 5 seconds
-
-/home/puzzletime/www/current/script/process/spawner fcgi -p 11000 -i 5 -r 5

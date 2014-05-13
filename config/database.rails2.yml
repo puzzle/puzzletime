@@ -1,0 +1,55 @@
+development:
+  adapter: postgresql
+  database: puzzletime_development
+  encoding: unicode
+  username: puzzletime #postgres
+  password: timepuzzle
+  host: 127.0.0.1
+
+# Warning: The database defined as 'test' will be erased and
+# re-generated from your development database when you run 'rake'.
+# Do not set this db to the same as development or production.
+
+# user 'hudson' has to be a superuser due to a rails 2.2.2 bug resulting in
+# 'ActiveRecord::StatementInvalid: PGError: ERROR:  permission denied: "RI_ConstraintTrigger_17866" is a system trigger'
+# errors if not.
+
+test:
+  adapter: postgresql
+  database: puzzletime_test
+  encoding: unicode
+  username: puzzletime
+  password: timepuzzle
+  host: 127.0.0.1
+  min_messages: warning
+
+production:
+  adapter: postgresql
+  database: pitc_puzzletime_prod
+  encoding: utf8
+  username: pitc_puzzletime
+  password: whougbyesht3
+  host: pitc-puzzletime.db.puzzle.ch
+
+profile:
+  adapter: postgresql
+  database: puzzletime_profile
+  encoding: utf8
+  username: puzzle
+  password: timepuzzle
+  host: 127.0.0.1
+
+# Connection to puzzlebase used for synchronization
+puzzlebase:
+  adapter: mysql
+  database: puzzlebase_db
+  encoding: utf8
+  username: time
+  password: debriz42
+  host: 10.2.111.68   #ramani.ww2.ch
+  #adapter: postgresql
+  #database: puzzlebase
+  #encoding: utf8
+  #username: puzzle
+  #password: timepuzzle
+  #host: 127.0.0.1
