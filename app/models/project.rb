@@ -1,4 +1,24 @@
 # encoding: utf-8
+# == Schema Information
+#
+# Table name: projects
+#
+#  id                   :integer          not null, primary key
+#  client_id            :integer
+#  name                 :string(255)      not null
+#  description          :text
+#  billable             :boolean          default(TRUE)
+#  report_type          :string(255)      default("month")
+#  description_required :boolean          default(FALSE)
+#  shortname            :string(3)        not null
+#  offered_hours        :float
+#  parent_id            :integer
+#  department_id        :integer
+#  path_ids             :integer          is an Array
+#  freeze_until         :date
+#  ticket_required      :boolean          default(FALSE)
+#
+
 
 # (c) Puzzle itc, Berne:projects
 # Diplomarbeit 2149, Xavier Hayoz

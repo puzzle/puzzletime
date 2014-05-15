@@ -1,4 +1,15 @@
 # encoding: utf-8
+# == Schema Information
+#
+# Table name: employments
+#
+#  id          :integer          not null, primary key
+#  employee_id :integer
+#  percent     :decimal(5, 2)    not null
+#  start_date  :date             not null
+#  end_date    :date
+#
+
 
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz

@@ -1,4 +1,0 @@
-if @worktime.work_date
-  page.replace 'existing', :partial => '/worktime/existing' 
-  page.visual_effect(:blind_down, 'existing', :duration => 0.2 )
-end

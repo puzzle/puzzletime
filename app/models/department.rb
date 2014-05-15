@@ -1,4 +1,13 @@
 # encoding: utf-8
+# == Schema Information
+#
+# Table name: departments
+#
+#  id        :integer          not null, primary key
+#  name      :string(255)      not null
+#  shortname :string(3)        not null
+#
+
 
 class Department < ActiveRecord::Base
 

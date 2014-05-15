@@ -6,9 +6,16 @@
     %tr
       %td Mitarbeiter:
       %td
-        = collection_select( :worktime, :employee_id, Employee.list, :id, :label_verbose )
-        - if @existing
-          = observe_field(:worktime_employee_id, :function => "workDateChanged(null)")
+        = collection_select(:worktime,
+                            :employee_id,
+                            Employee.list,
+                            :id,
+                            :label_verbose,
+                            data: { remote: true,
+                                    url: url_for(action: 'existing'),
+                                    dynamic_param: 'worktime[work_date]' })
+  - else
+    = hidden_field('worktime', 'employee_id')
   %tr
     %td Reporttyp:
     %td
@@ -22,9 +29,11 @@
   %tr
     %td Datum:
     %td
-      = date_calendar_field 'worktime', 'work_date', 'Datum', @existing
-      - if @existing
-        = observe_field(:worktime_work_date, :function => "workDateChanged(null)")
+      = date_calendar_field 'worktime',
+                            'work_date',
+                            data: { remote: true,
+                                    url: url_for(action: 'existing'),
+                                    dynamic_param: 'worktime[employee_id]' }
   %tr
     %td Stunden:
     %td= text_field('worktime', 'hours', :disabled => true, :size => '15')

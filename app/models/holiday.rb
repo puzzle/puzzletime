@@ -1,4 +1,13 @@
 # encoding: utf-8
+# == Schema Information
+#
+# Table name: holidays
+#
+#  id            :integer          not null, primary key
+#  holiday_date  :date             not null
+#  musthours_day :float            not null
+#
+
 
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz

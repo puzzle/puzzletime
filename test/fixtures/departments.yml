@@ -1,3 +1,12 @@
+# == Schema Information
+#
+# Table name: departments
+#
+#  id        :integer          not null, primary key
+#  name      :string(255)      not null
+#  shortname :string(3)        not null
+#
+
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 devone:

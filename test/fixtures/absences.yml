@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: absences
+#
+#  id      :integer          not null, primary key
+#  name    :string(255)      not null
+#  payed   :boolean          default(FALSE)
+#  private :boolean          default(FALSE)
+#
+
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 vacation:

@@ -1,4 +1,14 @@
 # encoding: utf-8
+# == Schema Information
+#
+# Table name: absences
+#
+#  id      :integer          not null, primary key
+#  name    :string(255)      not null
+#  payed   :boolean          default(FALSE)
+#  private :boolean          default(FALSE)
+#
+
 
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz

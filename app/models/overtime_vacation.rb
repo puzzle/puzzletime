@@ -1,4 +1,14 @@
 # encoding: utf-8
+# == Schema Information
+#
+# Table name: overtime_vacations
+#
+#  id            :integer          not null, primary key
+#  hours         :float            not null
+#  employee_id   :integer          not null
+#  transfer_date :date             not null
+#
+
 
 class OvertimeVacation < ActiveRecord::Base
 

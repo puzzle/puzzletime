@@ -30,6 +30,7 @@ gem 'therubyracer',  platforms: :ruby
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
+gem 'jquery-ui-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
 # bundle exec rake doc:rails generates the API under doc/api.
@@ -39,7 +40,7 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 
 group :development, :test do
   gem 'faker'
-  gem 'codez-tarantula', require: 'tarantula-rails3'
+  gem 'codez-tarantula', require: 'tarantula-rails3', path: '../tarantula'
   gem 'binding_of_caller'
 end
 

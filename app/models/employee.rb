@@ -1,4 +1,24 @@
 # encoding: utf-8
+# == Schema Information
+#
+# Table name: employees
+#
+#  id                    :integer          not null, primary key
+#  firstname             :string(255)      not null
+#  lastname              :string(255)      not null
+#  shortname             :string(3)        not null
+#  passwd                :string(255)      not null
+#  email                 :string(255)      not null
+#  management            :boolean          default(FALSE)
+#  initial_vacation_days :float
+#  ldapname              :string(255)
+#  report_type           :string(255)
+#  default_attendance    :boolean          default(FALSE)
+#  default_project_id    :integer
+#  user_periods          :string(3)        is an Array
+#  eval_periods          :string(3)        is an Array
+#
+
 
 class Employee < ActiveRecord::Base
 
@@ -249,13 +269,20 @@ class Employee < ActiveRecord::Base
     employments.where('start_date <= ? AND (end_date IS NULL OR end_date >= ?)', date, date).first
   end
 
-
-  private
-
   def self.encode(pwd)
     Digest::SHA1.hexdigest(pwd)
     # logger.info "Hash of password: #{Digest::SHA1.hexdigest(pwd)}"
   end
+
+  def user_periods
+    super || []
+  end
+
+  def eval_periods
+    super || []
+  end
+
+  private
 
   def self.ldapConnection
     Net::LDAP.new host: LDAP_HOST,

@@ -1,17 +1,37 @@
+# == Schema Information
+#
+# Table name: employees
+#
+#  id                    :integer          not null, primary key
+#  firstname             :string(255)      not null
+#  lastname              :string(255)      not null
+#  shortname             :string(3)        not null
+#  passwd                :string(255)      not null
+#  email                 :string(255)      not null
+#  management            :boolean          default(FALSE)
+#  initial_vacation_days :float
+#  ldapname              :string(255)
+#  report_type           :string(255)
+#  default_attendance    :boolean          default(FALSE)
+#  default_project_id    :integer
+#  user_periods          :string(3)        is an Array
+#  eval_periods          :string(3)        is an Array
+#
+
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 half_year_maria:
   id:        1
   firstname: Maria
   lastname:  Dolores
-  shortname: ggg
-  passwd:    Yaataw
+  shortname: GGG
+  passwd:    <%= Employee.encode('Yaataw') %>
   email:     bla@bla.ch
   management: true
 various_pedro:
   id:        2
   firstname: Pedro
   lastname:  Dolores
-  shortname: gig
+  shortname: GIG
   passwd:    sdf
   email:     bol@bla.ch
   management: false
@@ -19,7 +39,7 @@ next_year_pablo:
   id:        3
   firstname: Pablo
   lastname:  Sanchez
-  shortname: ps
+  shortname: PS
   passwd:    sdf
   email:     ps@bla.ch
   management: false
@@ -27,43 +47,42 @@ left_this_year_macy:
   id:        4
   firstname: Macy
   lastname:  Grey
-  shortname: mg
+  shortname: MG
   passwd:    sdf
   email:     mg@bla.ch
-  management: false  
+  management: false
 long_time_john:
   id:        5
   firstname: John
   lastname:  Neverends
-  shortname: jn
+  shortname: JN
   passwd:    sdf
   email:     jn@bla.ch
-  management: false  
+  management: false
 
 pascal:
   id:        6
   firstname: Pascal
   lastname:  Zumkehr
-  shortname: pz
+  shortname: PZ
   passwd:    pz
   email:     pz@bla.ch
-  management: false    
-  
+  management: false
+
 mark:
   id:        7
   firstname: Mark
   lastname:  Waber
-  shortname: mw
+  shortname: MW
   passwd:    mw
   email:     mw@bla.ch
   management: true
-  
+
 lucien:
   id:        8
   firstname: Lucien
   lastname:  Weller
-  shortname: lw
+  shortname: LW
   passwd:    lw
   email:     lw@bla.ch
-  management: false       
-    
+  management: false

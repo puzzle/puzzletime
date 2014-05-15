@@ -1,4 +1,16 @@
 # encoding: utf-8
+# == Schema Information
+#
+# Table name: projectmemberships
+#
+#  id                :integer          not null, primary key
+#  project_id        :integer
+#  employee_id       :integer
+#  projectmanagement :boolean          default(FALSE)
+#  last_completed    :date
+#  active            :boolean          default(TRUE)
+#
+
 
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz

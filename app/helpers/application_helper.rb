@@ -38,34 +38,30 @@ module ApplicationHelper
       page: params[:page] }
   end
 
-  def date_calendar_field(object, method, title, update = false, default = Date.today)
-    cal_options = { onUpdate: :workDateChanged } if update
-    generic_calendar_field object, method, title, DATE_FORMAT, cal_options, default
+  def date_calendar_field(object, method, options = {})
+    generic_calendar_field object, method, DATE_FORMAT, options
   end
 
   def week_calendar_field(object, method, title, update = false, default = Date.today)
+    # TODO code updatePlanning to jquery
+    # TODO handle week format
     cal_options = { onUpdate: :updatePlanning } if update
-    generic_calendar_field object, method, title, WEEK_FORMAT, cal_options, default
+    generic_calendar_field object, method, WEEK_FORMAT #, update && :updatePlanning, default
   end
 
-  def generic_calendar_field(object, method, title, date_format, cal_options, default = Date.today)
-    cal_options ||= {}
-    @has_calendar = true    # used to include calendar js/css
-    date = date_value(object, method, default)
-    html_options = { field_title: title,
-                     button_image: 'calendar.gif',
-                     button_title: 'Kalender anzeigen',
-                     size: '15',
-                     value: date ? date.strftime(date_format) : '' }
-    cal_options.merge!(
-        firstDay: 1,
-        step: 1,
-        ifFormat: date_format,
-        daFormat: date_format,
-        range: [2006, 2100],
-        showOthers: true,
-        cache: true)
-    calendar_field object, method, html_options, cal_options
+  def generic_calendar_field(object, method, date_format, html_options = {})
+    date = date_value(object, method, html_options[:value])
+    html_options[:size] = 15
+    html_options[:class] = 'date'
+    html_options[:value] = date ? date.strftime(date_format) : ''
+    html_options[:data] ||= {}
+    html_options[:data][:format] = date_format.gsub('%', '')
+
+    text_field(object, method, html_options) +
+    content_tag(:span, image_tag('calendar.gif',
+                       title: 'Kalender anzeigen',
+                       size: '15x15',
+                       class: 'calendar'))
   end
 
   # TODO: remove this method

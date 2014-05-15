@@ -1,3 +1,10 @@
+PATH
+  remote: ../tarantula
+  specs:
+    codez-tarantula (0.5.2)
+      hpricot (~> 0.8.4)
+      htmlentities (~> 4.3.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -60,9 +67,6 @@ GEM
     ci_reporter (1.9.2)
       builder (>= 2.1.2)
     coderay (1.1.0)
-    codez-tarantula (0.5.1)
-      hpricot (~> 0.8.4)
-      htmlentities (~> 4.3.0)
     coffee-rails (4.0.1)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.0)
@@ -97,6 +101,8 @@ GEM
     jquery-rails (3.1.0)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
+    jquery-ui-rails (4.2.1)
+      railties (>= 3.2.16)
     json (1.8.1)
     kaminari (0.15.1)
       actionpack (>= 3.0.0)
@@ -244,7 +250,7 @@ DEPENDENCIES
   brakeman (= 2.5.0)
   bullet
   ci_reporter
-  codez-tarantula
+  codez-tarantula!
   coffee-rails (~> 4.0.0)
   dalli
   debugger
@@ -253,6 +259,7 @@ DEPENDENCIES
   faker
   haml
   jquery-rails
+  jquery-ui-rails
   kaminari
   mysql2
   net-ldap

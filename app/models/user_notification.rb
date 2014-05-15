@@ -1,4 +1,14 @@
 # encoding: utf-8
+# == Schema Information
+#
+# Table name: user_notifications
+#
+#  id        :integer          not null, primary key
+#  date_from :date             not null
+#  date_to   :date
+#  message   :text             not null
+#
+
 
 
 class UserNotification < ActiveRecord::Base

@@ -3,7 +3,7 @@
 require 'test_helper'
 require 'relevance/tarantula'
 
-class TarantulaTest < ActionController::IntegrationTest
+class TarantulaTest < ActionDispatch::IntegrationTest
   # Load enough test data to ensure that there's a link to every page in your
   # application. Doing so allows Tarantula to follow those links and crawl
   # every page.  For many applications, you can load a decent data set by
@@ -17,8 +17,9 @@ class TarantulaTest < ActionController::IntegrationTest
     # pages that are only accessible to logged-in users.
     #
     post '/login/login', user: 'ggg', pwd: 'Yaataw'
-    # follow_redirect!
+    follow_redirect!
 
-    tarantula_crawl(self)
+    t = tarantula_crawler(self)
+    t.crawl
   end
 end

@@ -168,11 +168,11 @@ class WorktimeController < ApplicationController
   def existing
     @worktime = Worktime.new
     begin
-      @worktime.work_date = Date.strptime(params[:work_date], DATE_FORMAT)
+      @worktime.work_date = Date.strptime(params[:worktime][:work_date].to_s, DATE_FORMAT)
    rescue ArgumentError
       # invalid string, date will remain unaffected, i.e., nil
     end
-    @worktime.employee_id = @user.management ? params[:employee_id] : @user.id
+    @worktime.employee_id = @user.management ? params[:worktime][:employee_id] : @user.id
     setExisting
     renderGeneric action: 'existing'
   end

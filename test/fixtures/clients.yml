@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: clients
+#
+#  id        :integer          not null, primary key
+#  name      :string(255)      not null
+#  contact   :string(255)
+#  shortname :string(4)        not null
+#
+
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 puzzle:
