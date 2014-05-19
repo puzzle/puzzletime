@@ -4,7 +4,7 @@ class ProjecttimeController < WorktimeController
 
   def start
     running = runningTime
-    now = Time.now
+    now = Time.zone.now
     if running
       running.description = params[:description]
       running.ticket = params[:ticket]
@@ -79,6 +79,13 @@ class ProjecttimeController < WorktimeController
   end
 
   private
+
+  def model_params
+    attrs = [:account_id, :report_type, :work_date, :hours,
+             :from_start_time, :to_end_time, :description, :billable, :booked, :ticket]
+    attrs << :employee_id if @user.management
+    params.require(:worktime).permit(attrs)
+  end
 
   def set_alltime_accounts
     @accounts = @worktime.employee.alltime_leaf_projects

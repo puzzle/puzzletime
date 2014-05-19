@@ -7,7 +7,7 @@ class AttendancetimeController < WorktimeController
   def autoStartStop
     @user = Employee.login(params[:user], params[:pwd])
     if @user
-      now = Time.now
+      now = Time.zone.now
       if @user.running_attendance
         attendance = stopRunning(runningTime, now)
         if attendance && @user.running_project
@@ -37,7 +37,7 @@ class AttendancetimeController < WorktimeController
   def stop
     attendance = runningTime
     if attendance
-      now = Time.now
+      now = Time.zone.now
       stopRunning attendance, now
       project = @user.running_project
       if project
@@ -100,4 +100,9 @@ class AttendancetimeController < WorktimeController
     @user.running_attendance(reload)
   end
 
+  def model_params
+    params.require(:worktime).permit(
+      :report_type, :work_date, :hours,
+      :from_start_time, :to_end_time)
+  end
 end

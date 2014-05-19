@@ -25,15 +25,14 @@
         = render 'layouts/menu'
         #menu_user
           = link_to @user.label, :controller => 'employee', :action => 'settings'
-          |
-          \#{link_to '?', 'https://twiki.puzzle.ch/bin/view/Puzzle/PuzzleTimeFAQ'} |
-          \#{link_to 'Logout',  {:controller => 'login',  :action => 'logout'}, :method => 'post'}
+          = link_to '?', 'https://twiki.puzzle.ch/bin/view/Puzzle/PuzzleTimeFAQ'
+          = link_to 'Logout',  {:controller => 'login',  :action => 'logout'}, :method => 'post'
         #submenu
           = render 'submenu'
           \&nbsp;
 
       %h1= @title
-      - if flash.key?(:notice)
+      - if flash.key?('notice')
         #notice= flash[:notice]
       %div
         = yield

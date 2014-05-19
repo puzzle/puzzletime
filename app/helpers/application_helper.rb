@@ -21,7 +21,7 @@ module ApplicationHelper
   end
 
   def format_time(time)
-    time ||= Time.now
+    time ||= Time.zone.now
     time.strftime(TIME_FORMAT)
   end
 

@@ -70,7 +70,7 @@ module ManageHelper
   end
 
   def error_messages_for(entry)
-    # TODO render shared/error_messages
+    render 'shared/error_messages', object: entry
   end
 
   def groupLabel

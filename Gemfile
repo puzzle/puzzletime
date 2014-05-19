@@ -67,6 +67,7 @@ group :metrics do
   gem 'annotate'
   gem 'brakeman', '2.5.0'
   gem 'ci_reporter'
+  gem 'rails-erd'
   gem 'rubocop'
   gem 'rubocop-checkstyle_formatter'
   gem 'simplecov-rcov'

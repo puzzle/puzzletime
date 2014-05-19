@@ -10,7 +10,7 @@ class Cache
 
   def get(key)
     if @map.include? key
-      @map[key][1] = Time.now
+      @map[key][1] = Time.zone.now
       @map[key][0]
     else
       put(key, yield)
@@ -26,7 +26,7 @@ class Cache
   end
 
   def cleanup
-    now = Time.now
+    now = Time.zone.now
     @map.delete_if { |key, value| now - value[1] > timeout }
     force_cleanup if full?
   end
@@ -35,7 +35,7 @@ class Cache
 
   def put(key, value)
     cleanup if full?
-    @map[key] = [value, Time.now]
+    @map[key] = [value, Time.zone.now]
     value
   end
 

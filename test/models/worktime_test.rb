@@ -24,7 +24,7 @@ class WorktimeTest < ActiveSupport::TestCase
   end
 
   def time_facade(field)
-    now = Time.now
+    now = Time.zone.now
     set_field(field, now)
     assert_equal_time_field now, field
     # set_field(field, now.to_s)
@@ -66,7 +66,7 @@ class WorktimeTest < ActiveSupport::TestCase
   end
 
   def test_hours
-    time = Time.now
+    time = Time.zone.now
     @worktime.hours = 8
     assert_equal @worktime.hours, 8
     @worktime.hours = 8.5

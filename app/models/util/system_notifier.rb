@@ -14,7 +14,7 @@ class SystemNotifier < ActionMailer::Base
               'protected_params' => blackout_hash(request.parameters, 'pwd'),
               'host'             => request.env['HTTP_HOST'],
               'rails_root'       => rails_root }
-    @sent_on    = Time.now
+    @sent_on    = Time.zone.now
     @from       = SYSTEM_EMAIL
     @recipients = EXCEPTION_RECIPIENTS
     @headers    = {}

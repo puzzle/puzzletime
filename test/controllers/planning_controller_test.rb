@@ -28,7 +28,7 @@ class PlanningControllerTest < ActionController::TestCase
   end
 
   def test_existing
-    get :existing, employee_id: employees(:lucien)
+    xhr :get, :existing, planning: { employee_id: employees(:lucien) }
     assert_template 'existing'
   end
 
@@ -53,7 +53,7 @@ class PlanningControllerTest < ActionController::TestCase
                               monday_am: '1',
                               description: description }
     assert_equal description, assigns(:planning).description
-    assert_redirected_to action: 'employee_planning'
+    assert_redirected_to action: 'employee_planning', employee_id: employees(:lucien)
   end
 
   def test_create_empty
@@ -74,7 +74,7 @@ class PlanningControllerTest < ActionController::TestCase
     assert Planning.exists?(assigns(:planning))
     post :delete, planning: assigns(:planning)
     assert !Planning.exists?(assigns(:planning))
-    assert_redirected_to action: 'employee_planning'
+    assert_redirected_to action: 'employee_planning', employee_id: employees(:lucien)
   end
 
   def test_company_planning

@@ -22,7 +22,7 @@ module WorktimeHelper
       options << %(<option value="#{h(value)}"#{selected_attribute}#{title_attribute}>#{h(element.label_verbose)}</option>)
     end
 
-    options_for_select.join("\n")
+    options_for_select.join("\n").html_safe
   end
 
 end

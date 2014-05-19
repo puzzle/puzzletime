@@ -32,7 +32,7 @@ class WorktimeController < ApplicationController
   def create
     setNewWorktime
     setWorktimeParams
-    params[:other] = 1 if params[:worktime][:employee_id]
+    params[:other] = 1 if params[:worktime][:employee_id] && @user.management
     @worktime.employee = @user unless record_other?
     if @worktime.save
       flash[:notice] = "Die #{@worktime.class.label} wurde erfasst."
@@ -187,7 +187,7 @@ class WorktimeController < ApplicationController
   def createDefaultWorktime
     setPeriod
     setNewWorktime
-    @worktime.from_start_time = Time.now.change(hour: DEFAULT_START_HOUR)
+    @worktime.from_start_time = Time.zone.now.change(hour: DEFAULT_START_HOUR)
     @worktime.report_type = @user.report_type || DEFAULT_REPORT_TYPE
     if params[:work_date]
       @worktime.work_date = params[:work_date]
@@ -200,15 +200,7 @@ class WorktimeController < ApplicationController
   end
 
   def setWorktimeParams
-    @worktime.attributes = params[:worktime]
-    # Catch the exception from AR::Base
-  rescue ActiveRecord::MultiparameterAssignmentErrors => ex
-    # Iterarate over the exceptions and remove the invalid field components from the input
-    ex.errors.each { |err| params[:worktime].delete_if { |key, value| key =~ /^#{err.attribute}/ } }
-    # Recreate the Model with the bad input fields removed
-    @worktime.attributes = params[:worktime]
-    # remove manually as @worktime already had a valid work_date, we want an error to be thrown
-    @worktime.work_date = nil
+    @worktime.attributes = model_params
   end
 
   def listDetailTime
@@ -243,7 +235,7 @@ class WorktimeController < ApplicationController
                       start_time: @worktime.from_start_time,
                       end_time: @worktime.to_end_time }]
       conditions[0] = ' NOT ' + conditions[0] unless @worktime.is_a? Attendancetime
-      overlaps = Worktime.where(conditions)
+      overlaps = Worktime.where(conditions).to_a
       flash[:notice] += " Es besteht eine &Uuml;berlappung mit mindestens einem anderen Eintrag: <br/>\n" unless overlaps.empty?
       flash[:notice] += overlaps.join("<br/>\n") unless overlaps.empty?
     end
@@ -329,7 +321,7 @@ class WorktimeController < ApplicationController
 
   ################   RUNNING TIME FUNCTIONS    ##################
 
-  def startRunning(time, start = Time.now)
+  def startRunning(time, start = Time.zone.now)
     time.employee = @user
     time.report_type = AutoStartType::INSTANCE
     time.work_date = start.to_date
@@ -338,7 +330,7 @@ class WorktimeController < ApplicationController
     saveRunning time, "Die #{time.account ? 'Projektzeit ' + time.account.label_verbose : 'Anwesenheit'} mit #timeString wurde erfasst.\n"
   end
 
-  def stopRunning(time = runningTime, stop = Time.now)
+  def stopRunning(time = runningTime, stop = Time.zone.now)
     time.to_end_time = time.work_date == Date.today ? stop : '23:59'
     time.report_type = StartStopType::INSTANCE
     time.store_hours

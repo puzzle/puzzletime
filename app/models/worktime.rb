@@ -122,7 +122,7 @@ class Worktime < ActiveRecord::Base
   def template(newWorktime = nil)
     newWorktime ||= self.class.new
     newWorktime.from_start_time = report_type.is_a?(StartStopType) ?
-                 to_end_time : Time.now.change(hour: DEFAULT_START_HOUR)
+                 to_end_time : Time.zone.now.change(hour: DEFAULT_START_HOUR)
     newWorktime.report_type = report_type
     newWorktime.work_date = work_date
     newWorktime.account_id = account_id
@@ -213,7 +213,7 @@ class Worktime < ActiveRecord::Base
 
   # allow time formats such as 14, 1400, 14:00 and 14.0 (1430, 14:30, 14.5)
   def write_converted_time(attribute, value)
-    value = value.change(sec: 0) if value.kind_of? Time
+    value = I18n.l(value, format: :time) if value.kind_of? Time
     if value.kind_of?(String) && ! (value =~ H_M)
       if value.size > 0 && value =~ /^\d*\.?\d*$/
         # military time: 1400
