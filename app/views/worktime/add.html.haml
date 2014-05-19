@@ -3,7 +3,6 @@
 - buttons.insert 0, AttendancetimeController::SPLIT if @worktime.kind_of? Attendancetime
 #existing
   = renderGenericPartial :partial => 'existing'
-=# renderGenericPartial :partial => 'update_existing_js'
 = form_tag :controller => @worktime.class.name, :action => 'create' do
   = renderGenericPartial :partial => 'form', :locals => {:submit => buttons, :auto_start_stop_type => !@worktime.kind_of?(Absencetime) && @worktime.employee == @user}
 %p

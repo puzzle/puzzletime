@@ -1,24 +1,31 @@
-= javascript_include_tag :defaults, :cache => true
-= renderGenericPartial :partial => 'update_existing_js'
 = error_messages_for 'planning'
 %table
   %tr
     %td Mitarbeiter:
     %td
-      = collection_select( :planning, :employee_id, @employees, :id, :label_verbose)
-      = observe_field(:planning_employee_id, :function => "updatePlanning()")
+      = collection_select(:planning,
+                          :employee_id,
+                          @employees,
+                          :id,
+                          :label_verbose,
+                          data: { remote: true,
+                                  url: url_for(action: 'existing'),
+                                  dynamic_params: 'planning[start_week_date]' })
   %tr
     %td Start:
     %td
-      = week_calendar_field('planning', 'start_week_date', 'Datum', true)
-      = observe_field(:planning_start_week_date, :function => "updatePlanning()")
+      = week_calendar_field('planning',
+                            'start_week_date',
+                            data: { remote: true,
+                                    url: url_for(action: 'existing'),
+                                    dynamic_params: 'planning[employee_id]' })
   %tr
     %td &nbsp;
     %td
   %tr{:valign => "top"}
     %td Aktuelle Planung:
     %td
-      %div{:style => "border: 2px solid #C9D8FF;"}
+      #existing{:style => "border: 2px solid #C9D8FF;"}
         = renderGenericPartial :partial => 'existing'
   %tr
     %td &nbsp;
@@ -72,7 +79,8 @@
       Keine
       %br/
       = radio_button('planning', 'repeat_type', 'until', :checked => @planning.repeat_type_until?)
-      Bis KW #{week_calendar_field 'planning', 'end_week_date', 'Datum'}
+      Bis KW
+      = week_calendar_field 'planning', 'end_week_date'
       %br/
       = radio_button('planning', 'repeat_type', 'forever', :checked => (!@planning.new_record? && @planning.repeat_type_forever?))
       Unbeschr&auml;nkt

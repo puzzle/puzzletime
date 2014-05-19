@@ -7,6 +7,7 @@ class ProjecttimeController < WorktimeController
     now = Time.now
     if running
       running.description = params[:description]
+      running.ticket = params[:ticket]
       stopRunning running, now
     end
     time = Projecttime.new

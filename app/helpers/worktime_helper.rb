@@ -7,7 +7,7 @@ module WorktimeHelper
            'report_type',
            options.collect { |type| [type.name, type.key] },
            { selected: @worktime.report_type.key },
-           onchange: 'switchvisibility();'
+           onchange: 'App.switchTimeFieldsVisibility();'
   end
 
   def genericPath

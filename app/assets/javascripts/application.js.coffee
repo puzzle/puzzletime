@@ -2,44 +2,43 @@
 # This file is automatically included by javascript_include_tag :defaults
 #
 #= require jquery
+#= require jquery.turbolinks
 #= require jquery_ujs
 #= require jquery.ui.datepicker
 #= require jquery-ui-datepicker-i18n
-#= require turbolinks
 #= require_self
+#= require worktime
+#= require turbolinks
 
 
+window.App ||= {}
 
-# start selection on previously selected date
+datepickerI18n = ->
+  $.datepicker.regional[$('html').attr('lang')]
+
+formatWeek = (field, dateString) ->
+  if field.data('format') == 'week'
+    date = $.datepicker.parseDate(datepickerI18n().dateFormat, dateString)
+    val = $.datepicker.formatDate('yy', date) + ' ' + $.datepicker.iso8601Week(date)
+    field.val(val)
+
 datepicker = do ->
-  lastDate = null
-  track = (updateFunction) ->
-    ->
-      lastDate = $(this).val()
-      $(this).trigger('change')
-
+  track = (dateString) ->
+    formatWeek($(this), dateString)
+    $(this).trigger('change')
 
   show: ->
     field = $(this)
     if field.is('.calendar')
       field = field.parent().siblings('.date')
-    options = { dateFormat: field.data('format'), onSelect: track(), showWeek: true }
+    options =
+      onSelect: track
+      showWeek: true
 
-    options = $.extend(options, $.datepicker.regional[$('html').attr('lang')])
+    options = $.extend(options, datepickerI18n())
     field.datepicker(options)
     field.datepicker('show')
 
-    if lastDate && field.val() is ""
-      field.datepicker('setDate', lastDate)
-      field.val('') # user must confirm selection
-
-workDateChanged = () ->
-    workDate = $('#worktime_work_date').value;
-    employee_id = $('#worktime_employee_id').value;
-
-    #remote_function(:url => { :action => 'existing' },
-    #          :method => :get,
-    #          :with => "'employee_id=' + employee_id + '&work_date=' + workDate")}
 
 
 switch_half_day = (day) ->
@@ -55,9 +54,16 @@ $ ->
   $('body').on('click', 'input.date, img.calendar', datepicker.show)
 
   # wire up data-dynamic-param
-  $('body').on('ajax:beforeSend', '[data-dynamic-param]', (event, xhr, settings) ->
-    param = $(this).data('dynamic-param')
-    value = $('#' + param.replace('[', '_').replace(']', '')).val()
-    settings.url = settings.url + "&" +
-                   encodeURIComponent(param) + "=" + value
+  $('body').on('ajax:beforeSend', '[data-dynamic-params]', (event, xhr, settings) ->
+    params = $(this).data('dynamic-params').split(',')
+    urlParams = for p in params
+      value = $('#' + p.replace('[', '_').replace(']', '')).val()
+      encodeURIComponent(p) + "=" + value
+    settings.url = settings.url + "&" + urlParams.join('&')
+  )
+
+  $('body').on('click', '[data-toggle]', (event) ->
+    id = $(this).data('toggle')
+    $('#' + id).slideToggle(200)
+    event.preventDefault()
   )

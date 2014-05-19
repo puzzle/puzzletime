@@ -20,8 +20,8 @@ class PlanningController < ApplicationController
   end
 
   def existing
-    if params[:start_week_date].present?
-      current_week = Week.from_string(params[:start_week_date]).to_date
+    if params[:planning][:start_week_date].present?
+      current_week = Week.from_string(params[:planning][:start_week_date]).to_date
       @period = extended_period(current_week)
     # else: use default period
     end
@@ -156,7 +156,9 @@ class PlanningController < ApplicationController
   end
 
   def set_employee
-    @employee = Employee.find(params[:employee_id]) if params[:employee_id].present?
+    id = params[:employee_id].presence ||
+         (params[:planning] && params[:planning][:employee_id].presence)
+    @employee = Employee.find(id) if id
   end
 
   def set_employees

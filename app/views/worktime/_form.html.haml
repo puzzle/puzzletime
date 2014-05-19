@@ -13,7 +13,7 @@
                             :label_verbose,
                             data: { remote: true,
                                     url: url_for(action: 'existing'),
-                                    dynamic_param: 'worktime[work_date]' })
+                                    dynamic_params: 'worktime[work_date]' })
   - else
     = hidden_field('worktime', 'employee_id')
   %tr
@@ -33,7 +33,7 @@
                             'work_date',
                             data: { remote: true,
                                     url: url_for(action: 'existing'),
-                                    dynamic_param: 'worktime[employee_id]' }
+                                    dynamic_params: 'worktime[employee_id]' }
   %tr
     %td Stunden:
     %td= text_field('worktime', 'hours', :disabled => true, :size => '15')
@@ -81,4 +81,8 @@
     %td
       - for label in submit
         = submit_tag label
-= render :partial => 'worktime/type_switch_js'
+
+- content_for :javascript do
+  $(function() {
+  App.switchTimeFieldsVisibility();
+  })

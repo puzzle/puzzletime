@@ -30,7 +30,7 @@ class AttendancetimeController < WorktimeController
     else
       startRunning Attendancetime.new
     end
-    redirect_to :back
+    redirect_to controller: 'worktime', action: 'running'
   end
 
   # called from running
@@ -42,6 +42,7 @@ class AttendancetimeController < WorktimeController
       project = @user.running_project
       if project
         project.description = params[:description] if params[:description]
+        project.ticket = params[:ticket] if params[:ticket]
         stopRunning project, now
       elsif !Projecttime.where('type = ? AND employee_id = ? AND work_date = ? AND to_end_time = ?',
                                'Projecttime', @user.id, attendance.work_date, attendance.to_end_time).exist?
@@ -51,7 +52,7 @@ class AttendancetimeController < WorktimeController
     else
       flash[:notice] = 'Keine offene Anwesenheit vorhanden.'
     end
-    redirect_to :back
+    redirect_to controller: 'worktime', action: 'running'
   end
 
   def splitAttendance(attendance = nil)

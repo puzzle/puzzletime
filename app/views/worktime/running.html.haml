@@ -1,34 +1,42 @@
 - @title = 'Laufende Zeit'
 %table.striped
-  %tr
-    - if @user.running_attendance
-      = form_tag({:controller => 'attendancetime', :action => 'stop'}, :id => 'stop_attendance_form') do
-        = hidden_field_tag 'description', nil, :id => 'attendance_description'
+  %thead
+    %tr
+      - if @user.running_attendance
         %td
           Anwesend seit #{format_time @user.running_attendance.from_start_time}
         %td{:align => "center"}
-          = link_to_function 'Stoppen', 'stop_attendance()', :href => url_for({:controller => 'attendancetime', :action => 'stop'})
-    - else
-      %td Anwesenheit
-      %td{:align => "center"}
-        = link_to 'Starten', {:controller => 'attendancetime', :action => 'start'}, :method => 'post'
-  - if @user.running_project
-    = form_tag({:controller => 'projecttime', :action => 'stop'}, :name => 'stop_project_form') do
+          = form_tag({:controller => 'attendancetime', :action => 'stop'}, :id => 'stop_attendance_form') do
+            = hidden_field_tag 'description', nil, :id => 'attendance_description'
+            = hidden_field_tag 'ticket', nil, :id => 'attendance_ticket'
+            = link_to 'Stoppen',
+                      {:controller => 'attendancetime', :action => 'stop'},
+                      id: 'attendanceStopper'
+      - else
+        %td Anwesenheit
+        %td{:align => "center"}
+          = link_to 'Starten', {:controller => 'attendancetime', :action => 'start'}, :method => 'post'
+
+    - if @user.running_project
       %tr
         %td
           = @user.running_project.project.label_verbose
           seit #{format_time @user.running_project.from_start_time}
         %td{:align => "center"}
-          = link_to_function 'Stoppen', 'stop_project_form.submit()', :href => url_for({:controller => 'projecttime', :action => 'stop'})
+          = link_to 'Stoppen',
+                    {:controller => 'projecttime', :action => 'stop'},
+                    id: 'runningProjectStopper'
       %tr
         %td{:colspan => "2", :style => "text-align: right;"}
-          %table{:style => "margin-left: auto; text-align: left;", :width => "100"}
-            %tr
-              %td Beschreibung:
-              %td= text_field_tag 'description', @user.running_project.description, :size => 25
-            %tr
-              %td Ticket/Task:
-              %td= text_field_tag 'ticket', @user.running_project.ticket, :size => 15
+          = form_tag({:controller => 'projecttime', :action => 'stop'}, :id => 'stop_project_form') do
+            %table{:style => "margin-left: auto; text-align: left;", :width => "100"}
+              %thead
+                %tr
+                  %td Beschreibung:
+                  %td= text_field_tag 'description', @user.running_project.description, :size => 25
+                %tr
+                  %td Ticket/Task:
+                  %td= text_field_tag 'ticket', @user.running_project.ticket, :size => 15
 
   %thead
     %tr
@@ -40,29 +48,14 @@
       %tr
         %td= project.label_verbose
         %td{:align => "center"}
-          = link_to_function 'Starten', "start_project(#{project.id})", :href => url_for({:controller => 'projecttime', :action => 'start', :id => project.id})
+          = link_to 'Starten',
+                    {:controller => 'projecttime', :action => 'start', :id => project.id},
+                    data: { start_project: project.id }
 
 = form_tag({:controller => 'projecttime', :action => 'start'}, :id => 'start_project_form') do
   = hidden_field_tag 'id'
   = hidden_field_tag 'description', nil, :id => 'start_description'
-:javascript
-  //
-  	function start_project(id) {
-  		document.getElementById('id').value = id;
-  		desc = document.getElementById('description');
-  		if (desc != null) {
-  			document.getElementById('start_description').value = desc.value;
-  		}
-  		document.getElementById('start_project_form').submit();
-  	}
+  = hidden_field_tag 'ticket', nil, :id => 'start_ticket'
 
-  	function stop_attendance() {
-  		desc = document.getElementById('description');
-  		if (desc != null) {
-  			document.getElementById('attendance_description').value = desc.value;
-  		}
-  		document.getElementById('stop_attendance_form').submit();
-  	}
-  //
 %p
 = link_to 'Arbeitszeiten', :controller => 'evaluator', :action => 'details', :evaluation => 'userProjects', :category_id => @user.id, :start_date => Date.today, :end_date => Date.today

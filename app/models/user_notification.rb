@@ -57,7 +57,7 @@ class UserNotification < ActiveRecord::Base
   end
 
   def self.holidayMessage(holiday)
-    holiday.holiday_date.strftime(LONG_DATE_FORMAT) +
+    I18n.l(holiday.holiday_date, format: LONG_DATE_FORMAT) +
       ' ist ein Feiertag (' + ('%01.2f' % holiday.musthours_day).to_s +
       ' Stunden Sollarbeitszeit)'
   end

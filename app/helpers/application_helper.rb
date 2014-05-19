@@ -42,11 +42,9 @@ module ApplicationHelper
     generic_calendar_field object, method, DATE_FORMAT, options
   end
 
-  def week_calendar_field(object, method, title, update = false, default = Date.today)
-    # TODO code updatePlanning to jquery
+  def week_calendar_field(object, method, options = {})
     # TODO handle week format
-    cal_options = { onUpdate: :updatePlanning } if update
-    generic_calendar_field object, method, WEEK_FORMAT #, update && :updatePlanning, default
+    generic_calendar_field object, method, WEEK_FORMAT, options
   end
 
   def generic_calendar_field(object, method, date_format, html_options = {})
@@ -55,7 +53,7 @@ module ApplicationHelper
     html_options[:class] = 'date'
     html_options[:value] = date ? date.strftime(date_format) : ''
     html_options[:data] ||= {}
-    html_options[:data][:format] = date_format.gsub('%', '')
+    html_options[:data][:format] = date_format == WEEK_FORMAT ? 'week' : 'date'
 
     text_field(object, method, html_options) +
     content_tag(:span, image_tag('calendar.gif',
