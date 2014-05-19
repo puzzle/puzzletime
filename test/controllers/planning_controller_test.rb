@@ -5,9 +5,6 @@ require 'test_helper'
 class PlanningControllerTest < ActionController::TestCase
 
   def setup
-    @controller = PlanningController.new
-    @request = ActionController::TestRequest.new
-    @response = ActionController::TestResponse.new
     login_as(:mark)
   end
 
@@ -43,8 +40,6 @@ class PlanningControllerTest < ActionController::TestCase
   end
 
   def test_create
-    get :add
-
     description = 'new planning description'
     post :create, planning: { employee_id: employees(:lucien),
                               project_id: projects(:puzzletime),
@@ -57,7 +52,6 @@ class PlanningControllerTest < ActionController::TestCase
   end
 
   def test_create_empty
-    get :add
     post :create, planning: { employee_id: employees(:lucien), project_id: projects(:puzzletime) }
     assert_nil assigns(:planning).id
     assert_template 'add'
