@@ -11,7 +11,7 @@ class ProjecttimeController < WorktimeController
       stopRunning running, now
     end
     time = Projecttime.new
-    time.project_id = params[:id]
+    time.project = Project.find(params[:id])
     startRunning time, now
     if @user.running_attendance.nil?
       startRunning Attendancetime.new, now

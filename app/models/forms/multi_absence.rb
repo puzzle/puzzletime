@@ -44,7 +44,7 @@ class MultiAbsence
   end
 
   def errors
-    @worktime ? @worktime.errors : []
+    @worktime ? @worktime.errors : {}
   end
 
   def save

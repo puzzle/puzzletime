@@ -6,7 +6,7 @@ A #{@exception.class} occured in
 \---------------------------
 Request Information:
 \---------------------------
-* URL: #{@request.protocol}#{@host}#{@request.path}
+* URL: #{@request.protocol}#{@host}#{@request.original_fullpath}
 * Parameters: #{@protected_params.inspect}
 * Rails root: #{@rails_root}
 

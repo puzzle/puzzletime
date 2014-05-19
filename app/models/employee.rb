@@ -30,18 +30,15 @@ class Employee < ActiveRecord::Base
   # All dependencies between the models are listed below.
   has_and_belongs_to_many :employee_lists
 
-  has_many :employments, -> { order('start_date DESC') }, dependent: :destroy
+  has_many :employments, dependent: :destroy
   has_many :projectmemberships,
-           -> { includes(project: :client).order('clients.shortname, projects.name') },
            dependent: :destroy
   has_many :projects,
-           -> { includes(:client).where(projectmemberships: { active: true }).order('clients.shortname, projects.name') },
+           -> { where(projectmemberships: { active: true }) },
            through: :projectmemberships
   has_many :clients, -> { order('shortname') }, through: :projects
   has_many :managed_projects,
-           -> do includes(:client).
-                where(projectmemberships: { projectmanagement: true, active: true }).
-                order('clients.name, projects.name') end,
+           -> { where(projectmemberships: { projectmanagement: true, active: true }) },
            class_name: 'Project',
            through: :projectmemberships
   has_many :absences,
@@ -49,7 +46,7 @@ class Employee < ActiveRecord::Base
            through: :worktimes
   has_many :worktimes
   has_many :attendancetimes
-  has_many :overtime_vacations, -> { order('transfer_date DESC') }, dependent: :destroy
+  has_many :overtime_vacations, dependent: :destroy
   has_one :running_attendance,
           -> { where(report_type: AutoStartType::INSTANCE.key) },
           class_name: 'Attendancetime'
@@ -66,6 +63,8 @@ class Employee < ActiveRecord::Base
   validates_uniqueness_of :ldapname, message: 'Dieser LDAP Name wird bereits verwendet'
 
   before_destroy :protect_worktimes
+
+  scope :list, -> { order('lastname', 'firstname') }
 
   # Tries to login a user with the passed data.
   # Returns the logged-in Employee or nil if the login failed.
@@ -210,7 +209,8 @@ class Employee < ActiveRecord::Base
       membership.last_completed
     else
       # otherwise, get minimum date of all children
-      memberships = projectmemberships.where('? = ANY (projects.path_ids)', project.id)
+      memberships = projectmemberships.joins(:project).
+                                       where('? = ANY (projects.path_ids)', project.id)
       last_completed = memberships.collect { |pm| pm.last_completed }
 	     last_completed.delete(nil)
 	     last_completed.min

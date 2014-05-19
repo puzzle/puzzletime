@@ -87,6 +87,20 @@ class WorktimeTest < ActiveSupport::TestCase
     assert_equal @worktime.hours, 0
   end
 
+  def test_start_stop_validation
+    @worktime.report_type = StartStopType::INSTANCE
+    @worktime.employee = employees(:various_pedro)
+    @worktime.work_date = Date.today
+    assert !@worktime.valid?
+    @worktime.from_start_time = '8:00'
+    @worktime.to_end_time = '9:00'
+    assert @worktime.valid?, @worktime.errors.full_messages.join(', ')
+    @worktime.to_end_time = '7:00'
+    assert !@worktime.valid?
+    @worktime.to_end_time = '-3'
+    assert !@worktime.valid?
+  end
+
   private
 
   def get_field(field)
@@ -102,8 +116,12 @@ class WorktimeTest < ActiveSupport::TestCase
   end
 
   def assert_equal_time(time1, time2)
-    assert_equal(time1.hour, time2.hour) &&
-    assert_equal(time1.min, time2.min)
+    if time1.is_a?(Time) && time2.is_a?(Time)
+      assert_equal(time1.hour, time2.hour) &&
+      assert_equal(time1.min, time2.min)
+    else
+      assert_equal time1, time2
+    end
   end
 
 end

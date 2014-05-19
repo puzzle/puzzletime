@@ -30,6 +30,7 @@
 class Planning < ActiveRecord::Base
 
   validates_presence_of :employee_id, :project_id, :start_week
+  validate :validate_planning
 
   belongs_to :project
   belongs_to :employee
@@ -61,7 +62,7 @@ class Planning < ActiveRecord::Base
     !((period.startDate < start_week_date && period.endDate < start_week_date) || (period.startDate > end_week_date && period.endDate > end_week_date))
   end
 
-  def validate
+  def validate_planning
     errors.add(:start_week, 'Von Format ist ung&uuml;ltig') unless valid_week?(start_week)
     errors.add(:end_week, 'Bis Format ist ung&uuml;ltig') if end_week && !valid_week?(end_week)
     errors.add(:end_week, 'Bis Datum ist ung&uuml;ltig') if end_week && (end_week < start_week)

@@ -33,17 +33,18 @@ class Project < ActiveRecord::Base
 
   # All dependencies between the models are listed below.
   has_many :projectmemberships,
-           -> { includes(:employee).order('employees.lastname, employees.firstname') },
            dependent: :destroy
 
   belongs_to :department
   belongs_to :client
 
-  has_many :worktimes, ->(project) {
-           joins(:project).
-           unscope(where: :project_id).
-           where("worktimes.project_id = projects.id AND " \
-                 "#{project.id} = ANY (projects.path_ids)") }
+  has_many :worktimes,
+           ->(project) do
+             joins(:project).
+             unscope(where: :project_id).
+             where("worktimes.project_id = projects.id AND " \
+                   "#{project.id} = ANY (projects.path_ids)")
+           end
 
   before_validation DateFormatter.new('freeze_until')
 
@@ -59,6 +60,12 @@ class Project < ActiveRecord::Base
   # yep, this triggers before_update to generate path_ids after the project got its id and saves it again
   after_create :save
   before_update :generate_path_ids
+
+  scope :list, -> do
+    includes(:client).
+    references(:client).
+    order('clients.shortname, projects.name')
+  end
 
   ##### interface methods for Manageable #####
 

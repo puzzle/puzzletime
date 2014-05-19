@@ -204,7 +204,7 @@ class Evaluation
 
   # Returns a CSV String for all times in this Evaluation
   def csvString(period)
-    FasterCSV.generate do |csv|
+    CSV.generate do |csv|
       csv << ['Datum', 'Stunden', 'Von Zeit', 'Bis Zeit', 'Reporttyp',
               'Verrechenbar', 'Mitarbeiter', 'Projekt', 'Ticket', 'Beschreibung']
       times(period).each do |time|

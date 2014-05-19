@@ -73,9 +73,6 @@ module ApplicationHelper
     render options
   end
 
-  def genericPath
-    '.'
-  end
 
   private
 

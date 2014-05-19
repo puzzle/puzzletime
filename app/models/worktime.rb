@@ -35,6 +35,7 @@ class Worktime < ActiveRecord::Base
 
   validates_presence_of :work_date, message: 'Das Datum ist ung&uuml;ltig'
   validates_presence_of :employee_id, message: 'Ein Mitarbeiter muss vorhanden sein'
+  validate :validate_by_report_type
 
   before_validation DateFormatter.new('work_date')
   before_validation :store_hours
@@ -146,7 +147,7 @@ class Worktime < ActiveRecord::Base
   end
 
   # Validate callback before saving
-  def validate
+  def validate_by_report_type
     report_type.validate_worktime self
   end
 

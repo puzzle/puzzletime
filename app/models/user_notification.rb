@@ -20,6 +20,7 @@ class UserNotification < ActiveRecord::Base
   before_validation DateFormatter.new('date_from', 'date_to')
   validates_presence_of :date_from, message: 'Eine Startdatum muss angegeben werden'
   validates_presence_of :message, message: 'Eine Nachricht muss angegeben werden'
+  validate :validate_period
 
 
   def self.list_during(period = nil)
@@ -95,7 +96,7 @@ class UserNotification < ActiveRecord::Base
     'date_from DESC, date_to DESC'
   end
 
-  def validate
+  def validate_period
     errors.add(:date_to, 'Enddatum muss nach Startdatum sein.') if date_from > date_to
   end
 

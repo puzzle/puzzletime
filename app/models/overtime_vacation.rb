@@ -22,6 +22,8 @@ class OvertimeVacation < ActiveRecord::Base
   validates_presence_of :transfer_date, message: 'Das Datum muss angegeben werden'
   validates_presence_of :employee_id, message: 'Es muss ein Mitarbeiter angegeben werden'
 
+  scope :list, -> { order('transfer_date DESC') }
+
   def days
     hours / 8.0
   end

@@ -95,7 +95,7 @@ class WorktimeController < ApplicationController
       end
     end
     referer = request.headers['Referer']
-    if params[:back] && !(referer =~ /time\/edit\/#{@worktime.id}$/)
+    if params[:back] && referer && !(referer =~ /time\/edit\/#{@worktime.id}$/)
       referer.gsub!(/time\/create[^A-Z]?/, 'time/add')
       referer.gsub!(/time\/update[^A-Z]?/, 'time/edit')
       if referer.include?('work_date')
@@ -313,10 +313,6 @@ class WorktimeController < ApplicationController
 
   def processAfterUpdate
     processAfterSave
-  end
-
-  def genericPath
-    'worktime'
   end
 
   ################   RUNNING TIME FUNCTIONS    ##################

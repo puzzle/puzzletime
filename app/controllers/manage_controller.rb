@@ -187,10 +187,6 @@ class ManageController < ApplicationController
     "#{groupClass.to_s.downcase}_id"
   end
 
-  def genericPath
-    'manage'
-  end
-
   def group_key
     last_param :groups
   end

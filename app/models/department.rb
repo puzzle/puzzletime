@@ -14,9 +14,7 @@ class Department < ActiveRecord::Base
   include Evaluatable
   extend Manageable
 
-  has_many :projects, -> { includes(:client).
-                           where(parent_id: nil)
-                           order('clients.shortname, projects.name') }
+  has_many :projects, -> { where(parent_id: nil) }
 
   has_many :all_projects, class_name: 'Project'
   has_many :worktimes, through: :all_projects

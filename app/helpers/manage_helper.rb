@@ -77,10 +77,6 @@ module ManageHelper
     "von #{group.label}" if group
   end
 
-  def genericPath
-    'manage'
-  end
-
   private
 
   def last_param(key)

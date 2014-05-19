@@ -20,7 +20,7 @@ class Absence < ActiveRecord::Base
 
   # All dependencies between the models are listed below
   has_many :worktimes
-  has_many :employees, -> { order('lastname') }, through: :worktimes
+  has_many :employees, through: :worktimes
 
   before_destroy :dont_destroy_vacation
   before_destroy :protect_worktimes

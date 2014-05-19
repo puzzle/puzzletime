@@ -16,7 +16,7 @@ class EvaluationTest < ActiveSupport::TestCase
     assert ! @evaluation.for?(employees(:pascal))
     assert ! @evaluation.class::TOTAL_DETAILS
 
-    divisions = @evaluation.divisions
+    divisions = @evaluation.divisions.list
     assert_equal 2, divisions.size
     assert_equal clients(:puzzle), divisions[0]
     assert_equal clients(:swisstopo), divisions[1]
@@ -120,7 +120,7 @@ class EvaluationTest < ActiveSupport::TestCase
     @evaluation = ManagedProjectsEval.new(employees(:pascal))
     assert_managed employees(:pascal)
 
-    divisions = @evaluation.divisions
+    divisions = @evaluation.divisions.list
     assert_equal 1, divisions.size
     assert_equal projects(:puzzletime).id, divisions.first.id
 
@@ -139,7 +139,7 @@ class EvaluationTest < ActiveSupport::TestCase
     @evaluation = ManagedProjectsEval.new(employees(:mark))
     assert_managed employees(:mark)
 
-    divisions = @evaluation.divisions
+    divisions = @evaluation.divisions.list
     assert_equal 1, divisions.size
     assert_equal projects(:allgemein).id, divisions.first.id
 
@@ -173,7 +173,7 @@ class EvaluationTest < ActiveSupport::TestCase
     assert ! @evaluation.for?(employees(:mark))
     assert @evaluation.class::TOTAL_DETAILS
 
-    divisions = @evaluation.divisions
+    divisions = @evaluation.divisions.list
     assert_equal 2, divisions.size
     assert_equal projects(:allgemein).id, divisions[0].id
     assert_equal projects(:puzzletime).id, divisions[1].id
@@ -202,7 +202,7 @@ class EvaluationTest < ActiveSupport::TestCase
     assert @evaluation.for?(employees(:pascal))
     assert @evaluation.class::TOTAL_DETAILS
 
-    divisions = @evaluation.divisions
+    divisions = @evaluation.divisions.list
     assert_equal 2, divisions.size
     assert_equal projects(:allgemein).id, divisions[0].id
     assert_equal projects(:puzzletime).id, divisions[1].id
@@ -229,7 +229,7 @@ class EvaluationTest < ActiveSupport::TestCase
     assert @evaluation.for?(employees(:mark))
     assert @evaluation.class::TOTAL_DETAILS
 
-    divisions = @evaluation.divisions
+    divisions = @evaluation.divisions.list
     assert_equal 1, divisions.size
     assert_equal projects(:allgemein).id, divisions[0].id
 
@@ -249,7 +249,7 @@ class EvaluationTest < ActiveSupport::TestCase
     assert @evaluation.for?(employees(:lucien))
     assert @evaluation.class::TOTAL_DETAILS
 
-    divisions = @evaluation.divisions
+    divisions = @evaluation.divisions.list
     assert_equal 1, divisions.size
     assert_equal projects(:webauftritt).id, divisions[0].id
 
@@ -269,7 +269,7 @@ class EvaluationTest < ActiveSupport::TestCase
     assert ! @evaluation.for?(employees(:pascal))
     assert @evaluation.class::TOTAL_DETAILS
 
-    divisions = @evaluation.divisions
+    divisions = @evaluation.divisions.list
     # assert_equal 2, divisions.size
     # assert_equal employees(:mark), divisions[0]
     # assert_equal employees(:pascal), divisions[1]
@@ -318,7 +318,7 @@ class EvaluationTest < ActiveSupport::TestCase
     assert ! @evaluation.for?(employees(:lucien))
     assert @evaluation.class::TOTAL_DETAILS
 
-    divisions = @evaluation.divisions
+    divisions = @evaluation.divisions.list
     # assert_equal 1, divisions.size
     # assert_equal employees(:lucien), divisions[0]
 
@@ -339,7 +339,7 @@ class EvaluationTest < ActiveSupport::TestCase
     assert @evaluation.for?(employees(:pascal))
     assert @evaluation.class::TOTAL_DETAILS
 
-    divisions = @evaluation.divisions
+    divisions = @evaluation.divisions.list
     # assert_equal 3, divisions.size
     assert_equal absences(:doctor), divisions[0]
     assert_equal absences(:vacation), divisions[1]
@@ -367,7 +367,7 @@ class EvaluationTest < ActiveSupport::TestCase
     assert @evaluation.for?(employees(:mark))
     assert @evaluation.class::TOTAL_DETAILS
 
-    divisions = @evaluation.divisions
+    divisions = @evaluation.divisions.list
     # assert_equal 3, divisions.size
     assert_equal absences(:civil_service), divisions[0]
 
@@ -389,7 +389,7 @@ class EvaluationTest < ActiveSupport::TestCase
     assert @evaluation.for?(employees(:lucien))
     assert @evaluation.class::TOTAL_DETAILS
 
-    divisions = @evaluation.divisions
+    divisions = @evaluation.divisions.list
     # assert_equal 3, divisions.size
     assert_equal absences(:doctor), divisions[0]
 

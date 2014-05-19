@@ -72,7 +72,7 @@ module EvaluatorHelper
       link_text = link_to('Komplettieren',
                           { action: 'completeProject',
 				                        project_id: project.id,
-				                        back_url: request.path },
+				                        back_url: request.original_fullpath },
                           method: 'post')
     end
 	   link_text +=  ' (' +  format_date(@user.lastCompleted(project)) + ')'

@@ -19,8 +19,8 @@ class Client < ActiveRecord::Base
   extend Manageable
 
   # All dependencies between the models are listed below.
-  has_many :projects, -> { where(parent_id: nil).order(:name) }
-  has_many :all_projects, -> { order(:name) }, class_name: 'Project'
+  has_many :projects, -> { where(parent_id: nil) }
+  has_many :all_projects, class_name: 'Project'
 
   # Validation helpers.
   validates_presence_of :name, message: 'Ein Name muss angegeben sein'

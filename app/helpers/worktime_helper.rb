@@ -10,10 +10,6 @@ module WorktimeHelper
            onchange: 'App.switchTimeFieldsVisibility();'
   end
 
-  def genericPath
-    'worktime'
-  end
-
   def account_options
     options_for_select = @accounts.sort.inject([]) do |options, element|
       value = element.id

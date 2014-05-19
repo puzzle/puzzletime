@@ -7,7 +7,7 @@ class CapacityReport < BaseCapacityReport
   end
 
   def to_csv
-    FasterCSV.generate do |csv|
+    CSV.generate do |csv|
       csv << ['Mitarbeiter', 'Projekt', 'Subprojekt', 'Verrechenbar', 'Nicht verrechenbar', 'Monat', 'Jahr']
       Employee.employed_ones(@period).each do |employee|
         monthly_periods.each do |period|

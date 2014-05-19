@@ -154,7 +154,7 @@ class EvaluatorController < ApplicationController
       sendCSV(CapacityReport.new(@period))
     else
       flash[:notice] = 'Bitte wählen Sie eine Zeitspanne für die detaillierte Auslastung.'
-      redirect_to :back
+      redirect_to request.env["HTTP_REFERER"].present? ? :back : root_path
     end
   end
 
@@ -163,7 +163,7 @@ class EvaluatorController < ApplicationController
       sendCSV(ExtendedCapacityReport.new(@period))
     else
       flash[:notice] = 'Bitte wählen Sie eine Zeitspanne für die Auslastung.'
-      redirect_to :back
+      redirect_to request.env["HTTP_REFERER"].present? ? :back : root_path
     end
   end
 
@@ -196,7 +196,7 @@ class EvaluatorController < ApplicationController
      # redirectToOverview
     redirect_to params[:back_url]
   rescue ArgumentError => ex        # ArgumentError from Period.new or if period.negative?
-    flash[:notice] = 'Ung&uuml;ltige Zeitspanne: ' + ex
+    flash[:notice] = "Ung&uuml;ltige Zeitspanne: #{ex}"
     render action: 'selectPeriod'
   end
 

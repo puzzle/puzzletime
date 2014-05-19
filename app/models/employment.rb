@@ -24,6 +24,7 @@ class Employment < ActiveRecord::Base
   validates_inclusion_of :percent, in: 0..200, message: 'Die Prozente m&uuml;ssen angegeben werden'
   validates_presence_of :start_date, message: 'Das Start Datum muss angegeben werden'
   validates_presence_of :employee_id, message: 'Es muss ein Mitarbeiter angegeben werden'
+  validate :valid_period
 
   before_validation :resetEndDate
   before_create :updateEndDate
@@ -31,7 +32,9 @@ class Employment < ActiveRecord::Base
 
   before_validation DateFormatter.new('start_date', 'end_date')
 
-  def validate
+  scope :list, -> { order('start_date DESC') }
+
+  def valid_period
     if end_date && period && period.negative?
       errors.add_to_base('Die Zeitspanne ist ung&uuml;ltig')
     elsif parallelEmployments?

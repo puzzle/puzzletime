@@ -20,6 +20,14 @@ class TarantulaTest < ActionDispatch::IntegrationTest
     follow_redirect!
 
     t = tarantula_crawler(self)
+
+    t.skip_uri_patterns << /\/synchronize$/
+
+    t.allow_404_for /^\-?\d+$/
+    t.allow_404_for /projecttime\/start$/
+    t.allow_404_for /attendancetime\/confirmDelete\/\d+$/
+    t.allow_404_for /attendancetime\/update\/\d+$/
+
     t.crawl
   end
 end

@@ -69,9 +69,12 @@ class StartStopType < ReportType
   START_STOP = true
 
   def timeString(worktime)
-    worktime.from_start_time.strftime(TIME_FORMAT) + ' - ' +
-      worktime.to_end_time.strftime(TIME_FORMAT) +
-      ' (' + roundedHours(worktime) + ' h)'
+    if worktime.from_start_time.is_a?(Time) &&
+       worktime.to_end_time.is_a?(Time)
+      I18n.l(worktime.from_start_time, format: :time) + ' - ' +
+        I18n.l(worktime.to_end_time, format: :time) +
+        ' (' + roundedHours(worktime) + ' h)'
+    end
   end
 
   def copy_times(source, target)
@@ -81,13 +84,13 @@ class StartStopType < ReportType
   end
 
   def validate_worktime(worktime)
-    unless worktime.from_start_time
+    unless worktime.from_start_time.is_a?(Time)
       worktime.errors.add(:from_start_time, 'Die Anfangszeit ist ung&uuml;ltig')
     end
-    unless worktime.to_end_time
+    unless worktime.to_end_time.is_a?(Time)
       worktime.errors.add(:to_end_time, 'Die Endzeit ist ung&uuml;ltig')
     end
-    if worktime.from_start_time && worktime.to_end_time &&
+    if worktime.from_start_time.is_a?(Time) && worktime.to_end_time.is_a?(Time) &&
        worktime.to_end_time <= worktime.from_start_time
       worktime.errors.add(:to_end_time, 'Die Endzeit muss nach der Startzeit sein')
     end
@@ -98,7 +101,9 @@ class AutoStartType < StartStopType
   INSTANCE = new 'auto_start', 'Von/Bis offen', 12
 
   def timeString(worktime)
-    'Start um ' + worktime.from_start_time.strftime(TIME_FORMAT)
+    if worktime.from_start_time.is_a?(Time)
+      'Start um ' + I18n.l(worktime.from_start_time, format: :time)
+    end
   end
 
   def validate_worktime(worktime)
@@ -107,7 +112,7 @@ class AutoStartType < StartStopType
     worktime.hours = 0
     worktime.to_end_time = nil
     # validate
-    unless worktime.from_start_time
+    unless worktime.from_start_time.is_a?(Time)
       worktime.errors.add(:from_start_time, 'Die Anfangszeit ist ung&uuml;ltig')
     end
     existing = worktime.employee.send("running_#{worktime.class.name[0..-5].downcase}".to_sym)

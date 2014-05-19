@@ -5,6 +5,7 @@ require 'rails/all'
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
+require 'csv'
 
 module Puzzletime
   class Application < Rails::Application
@@ -13,7 +14,7 @@ module Puzzletime
     # -- all .rb files in that directory are automatically loaded.
 
     config.autoload_paths += %W(#{config.root}/app/models/forms
-                                #{config.root}/app/models/csv
+                                #{config.root}/app/models/reports
                                 #{config.root}/app/models/util
                                 #{config.root}/app/models/evaluations
                                 #{config.root}/app/models/graphs)

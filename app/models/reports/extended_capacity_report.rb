@@ -7,7 +7,7 @@ class ExtendedCapacityReport < BaseCapacityReport
   end
 
   def to_csv
-    FasterCSV.generate do |csv|
+    CSV.generate do |csv|
       add_header(csv)
       add_employees(csv)
     end

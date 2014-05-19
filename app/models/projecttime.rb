@@ -24,8 +24,11 @@ class Projecttime < Worktime
 
   attr_reader :attendance
 
+  validates :project_id, presence: true
   validate :project_leaf
   validate :protect_booked, on: :update
+  validate :validate_by_project
+
   before_destroy :protect_booked
   before_destroy :protect_frozen
 
@@ -76,13 +79,13 @@ class Projecttime < Worktime
 
   ########### validation helpers ###########
 
-  def validate
-    super
-    project.validate_worktime self
+  def validate_by_project
+    project.validate_worktime(self) if project
   end
 
   def project_leaf
-    errors.add(:project_id, 'Das angegebene Projekt enthält Subprojekte.') if project(true).children?
+    p = project(true)
+    errors.add(:project_id, 'Das angegebene Projekt enthält Subprojekte.') if p && p.children?
   end
 
   def protect_booked

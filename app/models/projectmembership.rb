@@ -18,9 +18,9 @@
 class Projectmembership < ActiveRecord::Base
 
   belongs_to :employee
-  belongs_to :project, -> { includes(:client) }
+  belongs_to :project
   belongs_to :managed_project,
-             -> { includes(:client).where(projectmemberships: { projectmanagement: true }) },
+             -> { where(projectmemberships: { projectmanagement: true }) },
              class_name: 'Project',
              foreign_key: 'project_id'
   belongs_to :managed_employee,
@@ -36,6 +36,12 @@ class Projectmembership < ActiveRecord::Base
   validates_uniqueness_of :project_id,
                           scope: 'employee_id',
                           message: 'Dieser Mitarbeiter ist bereits dem Projekt zugeteilt'
+
+  scope :list, -> do
+     includes(project: :client).
+     references(project: :client).
+     order('clients.shortname, projects.name')
+  end
 
   def self.activate(attributes)
     create(attributes)
