@@ -15,14 +15,15 @@
 # gem 'pg'
 #
 default: &default
-  adapter: postgresql
+  adapter: <%= ENV['RAILS_DB_ADAPTER'] || 'postgresql' %>
   encoding: unicode
-  username: puzzletime
-  password: timepuzzle
-  host: 127.0.0.1
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: 5
+  timeout: 5000
+  username: <%= ENV['RAILS_DB_USERNAME'] || 'puzzletime' %>
+  password: <%= ENV['RAILS_DB_PASSWORD'] || 'timepuzzle' %>
+  host: <%= ENV['RAILS_DB_HOST'] || '127.0.0.1' %>
 
 development:
   <<: *default
@@ -83,9 +84,7 @@ test:
 #
 production:
   <<: *default
-  database: puzzletime_production
-  username: puzzletime
-  password: <%= ENV['PUZZLETIME_DATABASE_PASSWORD'] %>
+  database: <%= ENV['RAILS_DB_NAME'] || 'puzzletime_production' %>
 
 
 # Connection to puzzlebase used for synchronization
