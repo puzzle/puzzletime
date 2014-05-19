@@ -68,7 +68,7 @@ class ProjecttimeController < WorktimeController
       @worktime.errors.add_to_base attendance.errors.full_messages.first
       setAccounts
       setExisting
-      renderGeneric action: 'add'
+      render action: 'add'
       return false
     end
     true

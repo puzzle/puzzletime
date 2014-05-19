@@ -43,7 +43,6 @@ module ApplicationHelper
   end
 
   def week_calendar_field(object, method, options = {})
-    # TODO handle week format
     generic_calendar_field object, method, WEEK_FORMAT, options
   end
 
@@ -62,18 +61,6 @@ module ApplicationHelper
                        class: 'calendar'))
   end
 
-  # TODO: remove this method
-  def renderGenericPartial(options)
-    #if template = options[:partial]
-    #  if templateAbsent? template, controller.class.controller_path
-    #    return if templateAbsent? template, genericPath
-    #    options[:partial] = "#{genericPath}/#{template}"
-    #  end
-    #end
-    render options
-  end
-
-
   private
 
   def date_value(object_name, method_name, default = Date.today)
@@ -83,10 +70,6 @@ module ApplicationHelper
       end
     end
     default
-  end
-
-  def templateAbsent?(template, view)
-    !File.exist?(File.join(File.dirname(__FILE__), "../views/#{view}/_#{template}.html.haml"))
   end
 
 end

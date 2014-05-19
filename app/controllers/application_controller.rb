@@ -42,22 +42,6 @@ class ApplicationController < ActionController::Base
 
   protected
 
- # TODO remove this method
-  def renderGeneric(options)
-    #template = options[:action]
-    #if template && !template_exists?("#{self.class.controller_path}/#{template}")
-    #  options[:template] = "#{genericPath}/#{template}"
-    #else
-    #  options[:template] = "#{self.class.controller_path}/#{template}"
-    #end
-    #options[:action] = nil
-    render options
-  end
-
-  def genericPath
-    '.'
-  end
-
   def setPeriod
     @period = nil
     p = session[:period]
@@ -76,11 +60,4 @@ class ApplicationController < ActionController::Base
     false
   end
 
-  private
-  # TODO: delete this method after upgrading to rails 3 and use ViewPath#template_exists?
-  def generic_template_exists?(path)
-    view_paths.template_exists?(path)
-  rescue ActionView::MissingTemplate
-    false
-  end
 end

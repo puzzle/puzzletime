@@ -1,8 +1,8 @@
 - @title = "#{@entry.class.label} #{groupLabel} bearbeiten"
-= renderGenericPartial :partial => 'info'
+= render :partial => 'info'
 = form_tag linkParams(:action => 'update', :id => @entry) do
-  = renderGenericPartial :partial => 'form'
-= renderGenericPartial :partial => 'backlink'
+  = render :partial => 'form'
+= render :partial => 'backlink'
 - for action in controller.listActions
   = '|' if displayLink? action, @entry
   = actionLink action, @entry

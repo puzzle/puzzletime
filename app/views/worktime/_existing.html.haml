@@ -4,6 +4,6 @@
     Am #{format_date(@work_date)} bereits erfasste Zeiten:
     %table.striped{:cellpadding => "0"}
       %tbody
-        = renderGenericPartial :partial => 'part', :collection => @existing
+        = render :partial => 'part', :collection => @existing
   - else
     Am #{format_date(@work_date)} wurden noch keine Zeiten erfasst.

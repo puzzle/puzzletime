@@ -31,14 +31,14 @@ class ManageController < ApplicationController
   # Action to list all available entries from the database.
   def list
     @entries = modelClass.list(conditions: conditions).page(params[:page])
-    renderGeneric action: 'list'
+    render action: 'list'
   end
 
   # Action to add a new entry.
   def add
     @entry = modelClass.new
     initFormData
-    renderGeneric action: 'add'
+    render action: 'add'
   end
 
   # Action to create an added entry in the database.
@@ -50,7 +50,7 @@ class ManageController < ApplicationController
       redirectToList
     else
       initFormData
-      renderGeneric action: 'add'
+      render action: 'add'
     end
   end
 
@@ -58,7 +58,7 @@ class ManageController < ApplicationController
   def edit
     setEntryFromId
     initFormData
-    renderGeneric action: 'edit'
+    render action: 'edit'
   end
 
   # Action to update an edited entry in the database.
@@ -70,14 +70,14 @@ class ManageController < ApplicationController
     else
       flash[:notice] = classLabel + ' konnte nicht aktualisiert werden'
       initFormData
-      renderGeneric action: 'edit'
+      render action: 'edit'
     end
   end
 
   # Action to confirm the deletion of an entry.
   def confirmDelete
     setEntryFromId
-    renderGeneric action: 'confirmDelete'
+    render action: 'confirmDelete'
   end
 
   # Action to delete an entry from the database.
@@ -101,7 +101,7 @@ class ManageController < ApplicationController
       redirectToList
     else
       flash[:notice] = 'Folgende Fehler sind bei der Synchronisation aufgetreten:'
-      renderGeneric action: 'synchronize'
+      render action: 'synchronize'
     end
   end
 

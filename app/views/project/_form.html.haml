@@ -12,7 +12,7 @@
   %tr
     %td Bereich:
     %td= h @entry.department.name
-  = renderGenericPartial :partial => 'field', :collection => editFields
+  = render :partial => 'field', :collection => editFields
   %tr
     %td
     %td= submit_tag 'Speichern'

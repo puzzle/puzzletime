@@ -1,5 +1,5 @@
 - @title = "#{newLabel} #{groupLabel}"
-= renderGenericPartial :partial => 'info'
+= render :partial => 'info'
 = form_tag linkParams(:action => 'create') do
-  = renderGenericPartial :partial => 'form'
-= renderGenericPartial :partial => 'backlink'
+  = render :partial => 'form'
+= render :partial => 'backlink'

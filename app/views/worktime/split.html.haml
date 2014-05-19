@@ -3,11 +3,11 @@
   = @split.original.timeString
   am #{format_date(@split.original.work_date)}:
 %table{:cellpadding => "0"}
-  = renderGenericPartial :partial => 'part', :collection => @split.worktimes
+  = render :partial => 'part', :collection => @split.worktimes
 %p Die Zeiten wurden noch nicht gespeichert. Bitte schliessen sie dazu den Aufteilungsprozess ab.
 
 = form_tag(evaluation_detail_params.merge!({:controller => @worktime.class.name, :action => 'createPart', :id => @worktime})) do
-  = renderGenericPartial(:partial => 'form', :locals => {:submit => @split.class::SUBMIT_BUTTONS })
+  = render(:partial => 'form', :locals => {:submit => @split.class::SUBMIT_BUTTONS })
 
 - options = evaluation_detail_params
 - if params[:evaluation]

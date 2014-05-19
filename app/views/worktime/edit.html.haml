@@ -2,9 +2,9 @@
 - buttons = nil
 - buttons = ['Speichern', AttendancetimeController::SPLIT] if @worktime.kind_of? Attendancetime
 #existing
-  = renderGenericPartial :partial => 'existing'
+  = render :partial => 'existing'
 = form_tag evaluation_detail_params.merge!({:action => 'update', :id => @worktime}) do
-  = renderGenericPartial :partial => 'form', :locals => {:submit => buttons, :auto_start_stop_type => @worktime.report_type == AutoStartType::INSTANCE }
+  = render :partial => 'form', :locals => {:submit => buttons, :auto_start_stop_type => @worktime.report_type == AutoStartType::INSTANCE }
 %p
   = link_to 'Arbeitszeiten', evaluation_detail_params.merge!({:controller => 'evaluator', :action => controller.detailAction })
   - if @user == @worktime.employee

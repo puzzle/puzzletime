@@ -15,7 +15,7 @@
   %tr
     %td Ldapname:
     %td= h @entry.ldapname
-  = renderGenericPartial :partial => 'field', :collection => editFields
+  = render :partial => 'field', :collection => editFields
   %tr
     %td
     %td= submit_tag 'Speichern'

@@ -24,7 +24,7 @@ class ProjectController < ManageController
 
   def listManagedProjects
     @entries = @user.managed_projects.page(params[:page])
-    renderGeneric action: 'list'
+    render action: 'list'
   end
 
   def listSubProjects

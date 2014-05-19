@@ -25,7 +25,7 @@ class WorktimeController < ApplicationController
     setWorktimeDefaults
     setAccounts
     setExisting
-    renderGeneric action: 'add'
+    render action: 'add'
   end
 
   # Stores the new time the data on DB.
@@ -43,7 +43,7 @@ class WorktimeController < ApplicationController
     end
     setAccounts
     setExisting
-    renderGeneric action: 'add'
+    render action: 'add'
   end
 
   # Shows the edit page for the selected time.
@@ -52,7 +52,7 @@ class WorktimeController < ApplicationController
     setWorktimeDefaults
     setAccounts true
     setExisting
-    renderGeneric action: 'edit'
+    render action: 'edit'
   end
 
   # Update the selected worktime on DB.
@@ -74,14 +74,14 @@ class WorktimeController < ApplicationController
       else
         setAccounts true
         setExisting
-        renderGeneric action: 'edit'
+        render action: 'edit'
       end
     end
   end
 
   def confirmDelete
     setWorktime
-    renderGeneric action: 'confirmDelete'
+    render action: 'confirmDelete'
   end
 
   def delete
@@ -111,7 +111,7 @@ class WorktimeController < ApplicationController
 
   def view
     setWorktime
-    renderGeneric action: 'view'
+    render action: 'view'
   end
 
   def split
@@ -122,7 +122,7 @@ class WorktimeController < ApplicationController
     end
     @worktime = @split.worktimeTemplate
     setProjectAccounts
-    renderGeneric action: 'split'
+    render action: 'split'
   end
 
   def createPart
@@ -147,7 +147,7 @@ class WorktimeController < ApplicationController
       end
     else
       setProjectAccounts
-      renderGeneric action: 'split'
+      render action: 'split'
     end
   end
 
@@ -174,7 +174,7 @@ class WorktimeController < ApplicationController
     end
     @worktime.employee_id = @user.management ? params[:worktime][:employee_id] : @user.id
     setExisting
-    renderGeneric action: 'existing'
+    render action: 'existing'
   end
 
   # no action, may overwrite in subclass
