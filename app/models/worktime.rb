@@ -81,13 +81,13 @@ class Worktime < ActiveRecord::Base
   end
 
   # Returns a human readable String of the time information contained in this Worktime.
-  def timeString
-    report_type.timeString(self)
+  def time_string
+    report_type.time_string(self)
   end
 
   # Returns the date formatted according to the report type
-  def dateString
-    report_type.dateString(work_date)
+  def date_string
+    report_type.date_string(work_date)
   end
 
   def work_date
@@ -108,13 +108,13 @@ class Worktime < ActiveRecord::Base
   end
 
   # Whether the report typ of this Worktime contains start and stop times
-  def startStop?
-    report_type.startStop?
+  def start_stop?
+    report_type.start_stop?
   end
 
   # Whether this Worktime contains the passed attribute
-  def hasAttribute?(attr)
-    self.class.validAttributes.include? attr
+  def has_attribute?(attr)
+    self.class.valid_attributes.include? attr
   end
 
   ##################  HELPERS  ####################
@@ -141,7 +141,7 @@ class Worktime < ActiveRecord::Base
   end
 
   # Copies the report_type and the time information from an other Worktime
-  def copyTimesFrom(other)
+  def copy_times_from(other)
     self.report_type = other.report_type
     other.report_type.copy_times(other, self)
   end
@@ -153,7 +153,7 @@ class Worktime < ActiveRecord::Base
 
   # Store hour information from start/stop times.
   def store_hours
-    if startStop? && from_start_time && to_end_time
+    if start_stop? && from_start_time && to_end_time
       self.hours = (to_end_time.seconds_since_midnight - from_start_time.seconds_since_midnight) / 3600.0
     end
     self.work_date = Date.today if report_type.kind_of? AutoStartType
@@ -183,13 +183,13 @@ class Worktime < ActiveRecord::Base
   end
 
   def to_s
-    "#{timeString} #{self.class.label} #{'f&uuml;r ' + account.label_verbose if account_id}"
+    "#{time_string} #{self.class.label} #{'f&uuml;r ' + account.label_verbose if account_id}"
   end
 
   ##################  CLASS METHODS   ######################
 
   # Returns an Array of the valid attributes for this Worktime
-  def self.validAttributes
+  def self.valid_attributes
     [:work_date, :hours, :from_start_time, :to_end_time, :employee_id, :report_type]
   end
 

@@ -20,7 +20,7 @@ class EmployeeListsController < ApplicationController
   # GET /employee_lists/new.xml
   def new
     @employee_list = EmployeeList.new
-    @curr_employees = Employee.employed_ones(@period || Period.pastMonth)
+    @curr_employees = Employee.employed_ones(@period || Period.past_month)
 
     respond_to do |format|
       format.html # new.html.erb
@@ -31,7 +31,7 @@ class EmployeeListsController < ApplicationController
   # GET /employee_lists/1/edit
   def edit
     @employee_list = EmployeeList.find(params[:id])
-    @curr_employees = Employee.employed_ones(@period || Period.pastMonth)
+    @curr_employees = Employee.employed_ones(@period || Period.past_month)
   end
 
   # POST /employee_lists
@@ -49,7 +49,7 @@ class EmployeeListsController < ApplicationController
         format.xml  { render xml: @employee_list, status: :created, location: @employee_list }
       else
         format.html do
-          @curr_employees = Employee.employed_ones(@period || Period.pastMonth)
+          @curr_employees = Employee.employed_ones(@period || Period.past_month)
           render action: 'new'
         end
         format.xml  { render xml: @employee_list.errors, status: :unprocessable_entity }

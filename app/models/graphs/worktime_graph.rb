@@ -23,9 +23,9 @@ class WorktimeGraph
   end
 
   def each_day
-    set_period_boxes(@monthly_boxes, Period.monthFor(@period.startDate), HoursMonthType::INSTANCE)
+    set_period_boxes(@monthly_boxes, Period.month_for(@period.startDate), HoursMonthType::INSTANCE)
     @period.step do |day|
-      @current = Period.dayFor(day)
+      @current = Period.day_for(day)
       compute_period_times day
       yield day
     end
@@ -63,24 +63,24 @@ class WorktimeGraph
     @colorMap.accounts? type
   end
 
-  def accountsLegend(type)
-    @colorMap.accountsLegend type
+  def accounts_legend(type)
+    @colorMap.accounts_legend type
   end
 
   def must_hours_factor
     p = @current || @period
     employment = @employee.employment_at(p.startDate)
-    employment ? [employment.percentFactor, 1.0].max : 1.0
+    employment ? [employment.percent_factor, 1.0].max : 1.0
   end
 
   private
 
   def compute_period_times(day)
     if day.wday == 1
-      set_period_boxes(@weekly_boxes, Period.weekFor(day), HoursWeekType::INSTANCE)
+      set_period_boxes(@weekly_boxes, Period.week_for(day), HoursWeekType::INSTANCE)
     end
     if day.mday == 1
-      set_period_boxes(@monthly_boxes, Period.monthFor(day), HoursMonthType::INSTANCE)
+      set_period_boxes(@monthly_boxes, Period.month_for(day), HoursMonthType::INSTANCE)
     end
   end
 
@@ -97,7 +97,7 @@ class WorktimeGraph
 	  # stretch by employment musttime if employment > 100%
     hours = period.musttime.to_f * must_hours_factor
     return [] if hours == 0
-    projects.collect { |w| Timebox.new(w, colorFor(w), Timebox.height_from_hours(w.hours / hours))  }
+    projects.collect { |w| Timebox.new(w, color_for(w), Timebox.height_from_hours(w.hours / hours))  }
   end
 
   def concat_period_boxes
@@ -128,7 +128,7 @@ class WorktimeGraph
 
   def append_account_boxes(worktimes)
     worktimes.each do |w|
-      @boxes.push Timebox.new(w, colorFor(w))
+      @boxes.push Timebox.new(w, color_for(w))
       @total_hours += w.hours
     end
   end
@@ -184,13 +184,13 @@ class WorktimeGraph
     end
   end
 
-  def colorFor(worktime)
+  def color_for(worktime)
     @colorMap[worktime.account]
   end
 
   def extend_to_weeks(period)
-    Period.new Period.weekFor(period.startDate).startDate,
-               Period.weekFor(period.endDate).endDate,
+    Period.new Period.week_for(period.startDate).startDate,
+               Period.week_for(period.endDate).endDate,
                period.label
   end
 

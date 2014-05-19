@@ -6,7 +6,7 @@ class EvaluatorController < ApplicationController
   before_action :authenticate
   before_action :authorize, only: [:clients, :employees, :overtime,
                                    :clientProjects, :employeeProjects, :employeeAbsences,
-                                   :exportCapacityCSV, :exportExtendedCapacityCSV, :exportMAOverview]
+                                   :export_capacity_csv, :export_extended_capacity_csv, :export_ma_overview]
   before_action :set_period
 
   helper_method :user_view?
@@ -16,36 +16,36 @@ class EvaluatorController < ApplicationController
   end
 
   def overview
-    setEvaluation
-    setNavigationLevels
+    set_evaluation
+    set_navigation_levels
     @notifications = UserNotification.list_during(@period)
-    render action: (user_view? ? 'userOverview' : 'overview')
+    render action: (user_view? ? 'user_overview' : 'overview')
   end
 
   def details
     redirect_to action: 'absencedetails' if params[:evaluation] == 'absencedetails'
-    setEvaluation
-    setNavigationLevels
-    setEvaluationDetails
-    paginateTimes
+    set_evaluation
+    set_navigation_levels
+    set_evaluation_details
+    paginate_times
   end
 
-  def attendanceDetails
-    setEvaluation
-    setNavigationLevels
+  def attendance_details
+    set_evaluation
+    set_navigation_levels
     @evaluation = AttendanceEval.new(params[:category_id] || @user.id)
-    setEvaluationDetails
-    paginateTimes
+    set_evaluation_details
+    paginate_times
     render action: 'details'
   end
 
   def absencedetails
     session[:evalLevels] = []
     params[:evaluation] = 'absencedetails'
-    setEvaluation
-    @period ||= Period.comingMonth Date.today, 'Kommender Monat'
+    set_evaluation
+    @period ||= Period.coming_month Date.today, 'Kommender Monat'
     @notifications = UserNotification.list_during(@period)
-    paginateTimes
+    paginate_times
   end
 
   def weekly
@@ -84,13 +84,13 @@ class EvaluatorController < ApplicationController
   ########################  DETAIL ACTIONS  #########################
 
   def compose_report
-    setEvaluation
-    setEvaluationDetails
+    set_evaluation
+    set_evaluation_details
   end
 
   def report
-    setEvaluation
-    setEvaluationDetails
+    set_evaluation
+    set_evaluation_details
     options = params[:only_billable] ? { conditions: ["worktimes.billable = 't'"] } : {}
     @times = @evaluation.times(@period, options)
     @tckt_view = params[:combine_on] && (params[:combine] == 'ticket' || params[:combine] == 'ticket_employee')
@@ -99,20 +99,20 @@ class EvaluatorController < ApplicationController
     render layout: false
   end
 
-  def exportCSV
-    setEvaluation
-    setEvaluationDetails
-    filename = 'puzzletime_' + csvLabel(@evaluation.category) + '-' +
-               csvLabel(@evaluation.division) + '.csv'
-    setExportHeader(filename)
-    send_data(@evaluation.csvString(@period),
+  def export_csv
+    set_evaluation
+    set_evaluation_details
+    filename = 'puzzletime_' + csv_label(@evaluation.category) + '-' +
+               csv_label(@evaluation.division) + '.csv'
+    set_export_header(filename)
+    send_data(@evaluation.csv_string(@period),
               type: 'text/csv; charset=utf-8; header=present',
               filename: filename)
   end
 
   def book_all
-    setEvaluation
-    setEvaluationDetails
+    set_evaluation
+    set_evaluation_details
     @evaluation.times(@period).each do |worktime|
       # worktime cannot be directly updated because it's loaded with :joins
       Worktime.update worktime.id, booked: 1
@@ -126,7 +126,7 @@ class EvaluatorController < ApplicationController
 
   ######################  OVERVIEW ACTIONS  #####################3
 
-  def completeProject
+  def complete_project
     project = Project.find params[:project_id]
     memberships = @user.projectmemberships.where('project_id = ?', params[:project_id]).first
     if memberships.nil?
@@ -149,41 +149,41 @@ class EvaluatorController < ApplicationController
     redirect_to params[:back_url]
   end
 
-  def exportCapacityCSV
+  def export_capacity_csv
     if @period
-      sendCSV(CapacityReport.new(@period))
+      send_csv(CapacityReport.new(@period))
     else
       flash[:notice] = 'Bitte wählen Sie eine Zeitspanne für die detaillierte Auslastung.'
       redirect_to request.env['HTTP_REFERER'].present? ? :back : root_path
     end
   end
 
-  def exportExtendedCapacityCSV
+  def export_extended_capacity_csv
     if @period
-      sendCSV(ExtendedCapacityReport.new(@period))
+      send_csv(ExtendedCapacityReport.new(@period))
     else
       flash[:notice] = 'Bitte wählen Sie eine Zeitspanne für die Auslastung.'
       redirect_to request.env['HTTP_REFERER'].present? ? :back : root_path
     end
   end
 
-  def exportMAOverview
-    @period ||= Period.currentYear
-    # render :action => :exportMAOverview, :layout => false
+  def export_ma_overview
+    @period ||= Period.current_year
+    # render :action => :export_ma_overview, :layout => false
   end
 
   ########################  PERIOD ACTIONS  #########################
 
-  def selectPeriod
+  def select_period
     @period = Period.new if @period.nil?
   end
 
-  def currentPeriod
+  def current_period
     session[:period] = nil
     redirect_to params[:back_url]
   end
 
-  def changePeriod
+  def change_period
     if params[:shortcut]
       @period = Period.parse(params[:shortcut])
     else
@@ -193,11 +193,11 @@ class EvaluatorController < ApplicationController
     end
     fail ArgumentError, 'Start Datum nach End Datum' if @period.negative?
     session[:period] = [@period.startDate.to_s, @period.endDate.to_s,  @period.label]
-     # redirectToOverview
+     # redirect_to_overview
     redirect_to params[:back_url]
   rescue ArgumentError => ex        # ArgumentError from Period.new or if period.negative?
     flash[:notice] = "Ung&uuml;ltige Zeitspanne: #{ex}"
-    render action: 'selectPeriod'
+    render action: 'select_period'
   end
 
 
@@ -213,7 +213,7 @@ class EvaluatorController < ApplicationController
 
   private
 
-  def setEvaluation
+  def set_evaluation
     params[:evaluation] ||= 'userprojects'
     @evaluation = case params[:evaluation].downcase
         when 'managed' then ManagedProjectsEval.new(@user)
@@ -247,7 +247,7 @@ class EvaluatorController < ApplicationController
     end
   end
 
-  def setEvaluationDetails
+  def set_evaluation_details
     @evaluation.set_division_id(params[:division_id])
     if params[:start_date]
       @period = params[:start_date] == '0' ? nil :
@@ -255,7 +255,7 @@ class EvaluatorController < ApplicationController
     end
   end
 
-  def setNavigationLevels
+  def set_navigation_levels
     # set session evaluation levels
     session[:evalLevels] = [] if params[:clear] || session[:evalLevels].nil?
     levels = session[:evalLevels]
@@ -272,11 +272,11 @@ class EvaluatorController < ApplicationController
     pop
   end
 
-  def paginateTimes
+  def paginate_times
     @times = @evaluation.times(@period).page(params[:page])
   end
 
-  def setExportHeader(filename)
+  def set_export_header(filename)
     if request.env['HTTP_USER_AGENT'] =~ /msie/i
       headers['Pragma'] = 'public'
       headers['Content-type'] = 'text/plain'
@@ -289,7 +289,7 @@ class EvaluatorController < ApplicationController
     end
   end
 
-  def redirectToOverview
+  def redirect_to_overview
     redirect_to action: params[:evaluation],
                 category_id: params[:category_id]
   end
@@ -301,7 +301,7 @@ class EvaluatorController < ApplicationController
       if time.report_type.kind_of?(StartStopType) && params[:start_stop]
         combined_times.push time
       else
-        key = "#{time.dateString}$#{time.employee.shortname}"
+        key = "#{time.date_string}$#{time.employee.shortname}"
         if combined_map.include?(key)
           combined_map[key].hours += time.hours
           if time.description
@@ -374,12 +374,12 @@ class EvaluatorController < ApplicationController
     # p "Grouped object: #{ticket_groups}"
   end
 
-  def sendCSV(csv_report)
-    setExportHeader(csv_report.filename)
+  def send_csv(csv_report)
+    set_export_header(csv_report.filename)
     send_data(csv_report.to_csv, type: 'text/csv; charset=utf-8; header=present', filename: csv_report.filename)
   end
 
-  def csvLabel(item)
+  def csv_label(item)
     item.nil? || !item.respond_to?(:label) ? '' :
       item.label.downcase.gsub(/[^0-9a-z]/, '_')
   end

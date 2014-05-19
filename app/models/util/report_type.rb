@@ -26,11 +26,11 @@ class ReportType
     target.hours = source.hours
   end
 
-  def startStop?
+  def start_stop?
     self.class::START_STOP
   end
 
-  def dateString(date)
+  def date_string(date)
     date.strftime(LONG_DATE_FORMAT)
   end
 
@@ -54,7 +54,7 @@ class ReportType
     @accuracy = accuracy
   end
 
-  def roundedHours(worktime)
+  def rounded_hours(worktime)
     number = (Float(worktime.hours) * (100)).round.to_f / 100
     number = '%01.2f' % number
     parts = number.split('.')
@@ -68,12 +68,12 @@ class StartStopType < ReportType
   INSTANCE = new 'start_stop_day', 'Von/Bis Zeit', 10
   START_STOP = true
 
-  def timeString(worktime)
+  def time_string(worktime)
     if worktime.from_start_time.is_a?(Time) &&
        worktime.to_end_time.is_a?(Time)
       I18n.l(worktime.from_start_time, format: :time) + ' - ' +
         I18n.l(worktime.to_end_time, format: :time) +
-        ' (' + roundedHours(worktime) + ' h)'
+        ' (' + rounded_hours(worktime) + ' h)'
     end
   end
 
@@ -100,7 +100,7 @@ end
 class AutoStartType < StartStopType
   INSTANCE = new 'auto_start', 'Von/Bis offen', 12
 
-  def timeString(worktime)
+  def time_string(worktime)
     if worktime.from_start_time.is_a?(Time)
       'Start um ' + I18n.l(worktime.from_start_time, format: :time)
     end
@@ -115,9 +115,11 @@ class AutoStartType < StartStopType
     unless worktime.from_start_time.is_a?(Time)
       worktime.errors.add(:from_start_time, 'Die Anfangszeit ist ung&uuml;ltig')
     end
-    existing = worktime.employee.send("running_#{worktime.class.name[0..-5].downcase}".to_sym)
-    if existing && existing != worktime
-      worktime.errors.add(:employee_id, "Es wurde bereits eine offene #{worktime.class.label} erfasst")
+    if worktime.employee
+      existing = worktime.employee.send("running_#{worktime.class.name[0..-5].downcase}".to_sym)
+      if existing && existing != worktime
+        worktime.errors.add(:employee_id, "Es wurde bereits eine offene #{worktime.class.label} erfasst")
+      end
     end
   end
 end
@@ -125,19 +127,19 @@ end
 class HoursDayType < ReportType
   INSTANCE = new 'absolute_day', 'Stunden/Tag', 6
 
-  def timeString(worktime)
-    roundedHours(worktime) + ' h'
+  def time_string(worktime)
+    rounded_hours(worktime) + ' h'
   end
 end
 
 class HoursWeekType < ReportType
   INSTANCE = new 'week', 'Stunden/Woche', 4
 
-  def timeString(worktime)
-    roundedHours(worktime) + ' h in dieser Woche'
+  def time_string(worktime)
+    rounded_hours(worktime) + ' h in dieser Woche'
   end
 
-  def dateString(date)
+  def date_string(date)
     date.strftime('W %V, %Y')
   end
 end
@@ -145,11 +147,11 @@ end
 class HoursMonthType < ReportType
   INSTANCE = new 'month', 'Stunden/Monat', 2
 
-  def timeString(worktime)
-    roundedHours(worktime) + ' h in diesem Monat'
+  def time_string(worktime)
+    rounded_hours(worktime) + ' h in diesem Monat'
   end
 
-  def dateString(date)
+  def date_string(date)
     date.strftime('%m.%Y')
   end
 end

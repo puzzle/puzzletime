@@ -1,5 +1,5 @@
 - @title = @evaluation.title
-= render :partial => 'periodLink'
+= render :partial => 'period_link'
 - if @evaluation.category.respond_to?(:tooltip) && @evaluation.category.tooltip.present?
   %p= h(@evaluation.category.tooltip)
 = render :partial => 'category'

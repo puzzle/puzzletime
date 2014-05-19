@@ -36,7 +36,7 @@ class Client < ActiveRecord::Base
     %w(Der Kunde Kunden)
   end
 
-  def self.puzzlebaseMap
+  def self.puzzlebase_map
     Puzzlebase::CustomerProject
   end
 
@@ -44,7 +44,7 @@ class Client < ActiveRecord::Base
 
   def self.method_missing(symbol, *args)
     case symbol
-      when :sumWorktime, :countWorktimes, :findWorktimes then Worktime.send(symbol, *args)
+      when :sum_worktime, :count_worktimes, :find_worktimes then Worktime.send(symbol, *args)
       else super
       end
   end

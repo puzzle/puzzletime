@@ -6,8 +6,8 @@
 class EmployeeController < ManageController
 
   # Checks if employee came from login or from direct url
-  before_action :authorize, except: [:changePasswd, :updatePwd, :settings, :save_settings]
-  before_action :authenticate, only: [:changePasswd, :updatePwd, :settings, :save_settings]
+  before_action :authorize, except: [:changePasswd, :update_pwd, :settings, :save_settings]
+  before_action :authenticate, only: [:changePasswd, :update_pwd, :settings, :save_settings]
 
 
   GROUP_KEY = 'employee'
@@ -28,10 +28,10 @@ class EmployeeController < ManageController
   end
 
   # Update userpwd
-  def updatePwd
-    if @user.checkPasswd(params[:pwd])
+  def update_pwd
+    if @user.check_passwd(params[:pwd])
       if params[:change_pwd] === params[:change_pwd_confirmation]
-        @user.setPasswd(params[:change_pwd])
+        @user.set_passwd(params[:change_pwd])
         flash[:notice] = 'Das Passwort wurde aktualisiert'
         redirect_to controller: 'evaluator'
       else
@@ -46,22 +46,22 @@ class EmployeeController < ManageController
 
   ##### helper methods for ManageController #####
 
-  def modelClass
+  def model_class
     Employee
   end
 
-  def listActions
-    [['Projekte', 'projectmembership', 'listProjects', true],
+  def list_actions
+    [['Projekte', 'projectmembership', 'list_projects', true],
      ['&Uuml;berzeit', 'overtime_vacation', 'list', true],
      ['Anstellungen', 'employment', 'list', true]]
   end
 
-  def editFields
+  def edit_fields
     [[:initial_vacation_days, 'Anfängliche Ferien'],
      [:management, 'GL']]
   end
 
-  def listFields
+  def list_fields
     [[:lastname, 'Nachname'],
      [:firstname, 'Vorname'],
      [:shortname, 'Kürzel'],
@@ -69,7 +69,7 @@ class EmployeeController < ManageController
      [:management, 'GL']]
   end
 
-  def formatColumn(attribute, value, entry)
+  def format_column(attribute, value, entry)
     if :current_percent == attribute
       case value
       when nil then 'keine'

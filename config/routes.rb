@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  root to: 'evaluator#userProjects'
+  root to: 'evaluator#user_projects'
 
   resources :employee_lists
 
@@ -17,11 +17,11 @@ Rails.application.routes.draw do
   end
 
   # TODO: POST actions:
-  # evaluator  :completeProject, :complete_all, :book_all
-  # attendancetime :autoStartStop, :startNow, :endNow
-  # employee: :updatePwd
+  # evaluator  :complete_project, :complete_all, :book_all
+  # attendancetime :auto_start_stop, :startNow, :endNow
+  # employee: :update_pwd
   # manage: :create, :update, :delete, :synchronize
-  # worktime: :delete, :createPart, :deletePart, :start, :stop, :create, :update
+  # worktime: :delete, :create_part, :delete_part, :start, :stop, :create, :update
 
   # Install the default route as the lowest priority.
   match '/:controller(/:action(/:id))', via: [:get, :post, :patch]

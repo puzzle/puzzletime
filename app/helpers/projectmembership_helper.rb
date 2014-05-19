@@ -1,6 +1,6 @@
 module ProjectmembershipHelper
 
-  def listLabel
+  def list_label
     project? ? 'Mitarbeiter' : 'Projekte'
   end
 
@@ -8,8 +8,8 @@ module ProjectmembershipHelper
     @subject.kind_of?(Project)
   end
 
-  def pmLinkParams(prms = {})
-    prms = linkParams prms
+  def pm_link_params(prms = {})
+    prms = link_params prms
     prms[:subject] ||= @subject.class.name.downcase
     prms
   end

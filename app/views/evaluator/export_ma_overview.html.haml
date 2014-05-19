@@ -1,5 +1,5 @@
 - @title = "Mitarbeiter Statistiken Puzzletime"
-= render(:partial => 'periodLink')
+= render(:partial => 'period_link')
 - Employee.list.each do |em|
   %h2= em.label
   Ueberzeit: #{format_hour em.statistics.current_overtime(@period.endDate)} Stunden

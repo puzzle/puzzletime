@@ -36,14 +36,14 @@ class AttendanceEval < Evaluation
 
   # Counts the number of Worktime entries in the current Evaluation for a given period.
   def count_times(period = nil, options = {})
-    options = addConditions options, period
+    options = add_conditions options, period
     category.attendancetimes.count('*', options).to_i
   end
 
   # Returns a list of all Worktime entries for this Evaluation in the given period
   # of time.
   def times(period, options = {})
-    options = addConditions options, period
+    options = add_conditions options, period
     options[:order] ||= 'work_date ASC, from_start_time'
     category.attendancetimes.where(options[:conditions]).
                              includes(options[:include]).
@@ -54,11 +54,11 @@ class AttendanceEval < Evaluation
   def set_division_id(division_id = nil)
   end
 
-  def editLink?(user)
+  def edit_link?(user)
     for? user
   end
 
-  def splitLink?(user)
+  def split_link?(user)
     for? user
   end
 
@@ -68,7 +68,7 @@ class AttendanceEval < Evaluation
 
   private
 
-  def addConditions(options = {}, period = nil)
+  def add_conditions(options = {}, period = nil)
     if period
       options = clone_options options
       append_conditions(options[:conditions], ['work_date BETWEEN ? AND ?', period.startDate, period.endDate])

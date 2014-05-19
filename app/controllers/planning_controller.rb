@@ -50,7 +50,7 @@ class PlanningController < ApplicationController
   def employee_lists_planning
     @employee_list = EmployeeList.find_by_id(params[:employee_list_id])
     @employee_list_name = @employee_list.title
-    period = @period.present? ? @period : Period.currentMonth
+    period = @period.present? ? @period : Period.current_month
     @graph = EmployeesPlanningGraph.new(@employee_list.employees, period)
   end
 
@@ -81,7 +81,7 @@ class PlanningController < ApplicationController
   end
 
   def company_planning
-    period = @period.present? ? @period : Period.currentMonth
+    period = @period.present? ? @period : Period.current_month
     @graph = EmployeesPlanningGraph.new(Employee.employed_ones(period), period)
   end
 
@@ -163,7 +163,7 @@ class PlanningController < ApplicationController
 
   def set_employees
     unless @period
-      @period = Period.currentMonth
+      @period = Period.current_month
     end
     @employees = Employee.employed_ones(@period)
   end
@@ -177,7 +177,7 @@ class PlanningController < ApplicationController
     projects = Project.where(department_id: department)
     memberships = Projectmembership.where(project_id: projects.collect { |p|p.id }, active: true)
     employees = Employee.find(memberships.collect { |m| m.employee_id })
-    period ||= Period.currentMonth
+    period ||= Period.current_month
     employees.select { |e| e.employment_at(period.startDate).present? || e.employment_at(period.endDate).present? }
   end
 

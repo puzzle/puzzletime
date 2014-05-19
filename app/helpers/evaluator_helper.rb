@@ -12,11 +12,11 @@ module EvaluatorHelper
     end
   end
 
-  def detailTD(worktime, field)
+  def detail_td(worktime, field)
     case field
       when :work_date then td format_date(worktime.work_date), 'right', true
       when :hours then td format_hour(worktime.hours), 'right', true
-      when :times then td worktime.timeString, nil, true
+      when :times then td worktime.time_string, nil, true
       when :employee then td worktime.employee.shortname
       when :account then td worktime.account.label_verbose
       when :billable then td(worktime.billable ? '$' : ' ')
@@ -70,17 +70,17 @@ module EvaluatorHelper
     link_text = ''
     if @user.projectmemberships.any? { |pm| pm.project == project || pm.project.ancestors.include?(project) }
       link_text = link_to('Komplettieren',
-                          { action: 'completeProject',
+                          { action: 'complete_project',
 				                        project_id: project.id,
 				                        back_url: request.original_fullpath },
                           method: 'post')
     end
-	   link_text +=  ' (' +  format_date(@user.lastCompleted(project)) + ')'
+	   link_text +=  ' (' +  format_date(@user.last_completed(project)) + ')'
     link_text
   end
 
   def last_completion(employee)
-    format_date employee.lastCompleted(@evaluation.category)
+    format_date employee.last_completed(@evaluation.category)
   end
 
   def offered_hours(project)
@@ -130,10 +130,10 @@ module EvaluatorHelper
   ### period and time helpers
 
   def period_link(label, shortcut)
-    link_to label, action: 'changePeriod', shortcut: shortcut, back_url: params[:back_url]
+    link_to label, action: 'change_period', shortcut: shortcut, back_url: params[:back_url]
   end
 
-  def timeInfo
+  def time_info
     stat = @user.statistics
     infos = @period ?
             [[['&Uuml;berzeit', stat.overtime(@period).to_f, 'h'],
@@ -142,11 +142,11 @@ module EvaluatorHelper
              [['Abschliessend', stat.current_overtime(@period.endDate), 'h'],
               ['Verbleibend', stat.remaining_vacations(@period.endDate), 'd']]]  :
             [[['&Uuml;berzeit Gestern', stat.current_overtime, 'h'],
-              ['Bezogene Ferien', stat.used_vacations(Period.currentYear), 'd'],
-              ['Monatliche Arbeitszeit', stat.musttime(Period.currentMonth), 'h']],
+              ['Bezogene Ferien', stat.used_vacations(Period.current_year), 'd'],
+              ['Monatliche Arbeitszeit', stat.musttime(Period.current_month), 'h']],
              [['&Uuml;berzeit Heute', stat.current_overtime(Date.today), 'h'],
               ['Verbleibend', stat.current_remaining_vacations, 'd'],
-              ['Verbleibend', 0 - stat.overtime(Period.currentMonth).to_f, 'h']]]
+              ['Verbleibend', 0 - stat.overtime(Period.current_month).to_f, 'h']]]
     render partial: 'timeinfo', locals: { infos: infos }
   end
 

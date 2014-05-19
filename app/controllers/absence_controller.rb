@@ -7,7 +7,7 @@ class AbsenceController < ManageController
 
   GROUP_KEY = 'absence'
 
-  def editFields
+  def edit_fields
     [[:name, 'Bezeichnung'], [:payed, 'Bezahlt'], [:private, 'Nicht öffentlich']]
   end
 

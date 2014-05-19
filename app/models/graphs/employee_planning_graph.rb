@@ -8,7 +8,7 @@ class EmployeePlanningGraph
 
   def initialize(employee, period = nil)
     @employee = employee
-    period ||= Period.currentMonth
+    period ||= Period.current_month
     @actual_period = period
     @period = extend_to_weeks(period)
     @cache = {}

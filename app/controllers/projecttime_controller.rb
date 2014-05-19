@@ -3,28 +3,28 @@
 class ProjecttimeController < WorktimeController
 
   def start
-    running = runningTime
+    running = running_time
     now = Time.zone.now
     if running
       running.description = params[:description]
       running.ticket = params[:ticket]
-      stopRunning running, now
+      stop_running running, now
     end
     time = Projecttime.new
     time.project = Project.find(params[:id])
-    startRunning time, now
+    start_running time, now
     if @user.running_attendance.nil?
-      startRunning Attendancetime.new, now
+      start_running Attendancetime.new, now
     end
     redirect_to_running
   end
 
   def stop
-    running = runningTime
+    running = running_time
     if running
       running.description = params[:description]
       running.ticket = params[:ticket]
-      stopRunning running
+      stop_running running
     else
       flash[:notice] = 'Zur Zeit läuft kein Projekt'
     end
@@ -33,22 +33,22 @@ class ProjecttimeController < WorktimeController
 
   protected
 
-  def setNewWorktime
+  def set_new_worktime
     @worktime = Projecttime.new
   end
 
-  def setWorktimeDefaults
-    @worktime.setProjectDefaults(params[:account_id] || @user.default_project_id) unless @worktime.project_id
+  def set_worktime_defaults
+    @worktime.set_project_defaults(params[:account_id] || @user.default_project_id) unless @worktime.project_id
     @worktime.attendance = @user.default_attendance
   end
 
-  def setAccounts(all = false)
+  def set_accounts(all = false)
     if params[:other]
       @accounts = Project.leaves
     elsif all
       set_alltime_accounts
     else
-      setProjectAccounts
+      set_project_accounts
       set_alltime_accounts unless @accounts.include? @worktime.project
     end
   end
@@ -57,24 +57,24 @@ class ProjecttimeController < WorktimeController
     params[:worktime][:attendance].to_i != 0
   end
 
-  def processAfterCreate
+  def process_after_create
     unless @worktime.attendance
       return true
     end
     attendance = @worktime.template Attendancetime.new
     attendance.employee_id = @worktime.employee_id
-    attendance.copyTimesFrom @worktime
+    attendance.copy_times_from @worktime
     unless attendance.save
       @worktime.errors.add_to_base attendance.errors.full_messages.first
-      setAccounts
-      setExisting
+      set_accounts
+      set_existing
       render action: 'add'
       return false
     end
     true
   end
 
-  def runningTime(reload = false)
+  def running_time(reload = false)
     @user.running_project(reload)
   end
 

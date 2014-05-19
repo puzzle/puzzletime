@@ -1,5 +1,5 @@
 - @title = "Listen von #{@employee.label}"
-= render :partial => 'planning/periodLink', :locals => {:id => @employee}
+= render :partial => 'planning/period_link', :locals => {:id => @employee}
 %table.striped
   - if @employee_lists.empty?
     %tr

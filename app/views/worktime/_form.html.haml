@@ -20,7 +20,7 @@
     %td Reporttyp:
     %td
       = select_report_type auto_start_stop_type
-  - if @worktime.hasAttribute? :account_id
+  - if @worktime.has_attribute? :account_id
     %tr
       %td= @worktime.class.account_label
       %td
@@ -49,19 +49,19 @@
     %td Ticket/Task:
     %td
       = text_field 'worktime', 'ticket', :size => '15'
-  - if @worktime.hasAttribute? :description
+  - if @worktime.has_attribute? :description
     %tr{:valign => "top"}
       %td Beschreibung:
       %td= text_area 'worktime', 'description', {:rows => 5}
-  - if @worktime.hasAttribute? :billable
+  - if @worktime.has_attribute? :billable
     %tr
       %td Verrechenbar:
       %td= check_box 'worktime', 'billable'
-  - if @user.management && @worktime.hasAttribute?(:booked) && ! @worktime.new_record?
+  - if @user.management && @worktime.has_attribute?(:booked) && ! @worktime.new_record?
     %tr
       %td Verbucht:
       %td= check_box 'worktime', 'booked'
-  - if @worktime.hasAttribute?(:attendance) && @worktime.new_record? && !defined?(@split)
+  - if @worktime.has_attribute?(:attendance) && @worktime.new_record? && !defined?(@split)
     %tr
       %td Anwesenheitszeit:
       %td= check_box 'worktime', 'attendance'

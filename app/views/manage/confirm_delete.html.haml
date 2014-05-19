@@ -1,11 +1,11 @@
-- @title = "#{modelClass.label} l&ouml;schen"
+- @title = "#{model_class.label} l&ouml;schen"
 %p
   Wollen sie #{@entry.label} wirklich entfernen?
 %table
   %tr
     %td
-      = form_tag linkParams(:action => 'delete', :id => @entry) do
+      = form_tag link_params(:action => 'delete', :id => @entry) do
         = submit_tag 'Löschen'
     %td
-      = form_tag linkParams(:action => 'list'), {:method => 'get'} do
+      = form_tag link_params(:action => 'list'), {:method => 'get'} do
         = submit_tag 'Abbrechen'

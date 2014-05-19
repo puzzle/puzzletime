@@ -5,7 +5,7 @@ class UserNotificationController < ManageController
 
   GROUP_KEY = 'noti'
 
-  def editFields
+  def edit_fields
     [[:date_from, 'Startdatum'], [:date_to, 'Enddatum'], [:message, 'Nachricht']]
   end
 

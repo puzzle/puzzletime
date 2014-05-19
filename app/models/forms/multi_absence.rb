@@ -17,7 +17,7 @@ class MultiAbsence
   end
 
   def valid?
-    @worktime = worktimeTemplate(@start_date, MUST_HOURS_PER_DAY)
+    @worktime = worktime_template(@start_date, MUST_HOURS_PER_DAY)
     if valid = @worktime.valid?
       if duration <= 0
         valid = false
@@ -51,9 +51,9 @@ class MultiAbsence
     count = 0
     period.step do|date|
       if employment = @employee.employment_at(date)
-        must = Holiday.musttime(date) * employment.percentFactor
+        must = Holiday.musttime(date) * employment.percent_factor
         if must > 0
-          absence = worktimeTemplate(date, must)
+          absence = worktime_template(date, must)
           absence.save
           count += 1
         end
@@ -75,7 +75,7 @@ class MultiAbsence
     value
   end
 
-  def worktimeTemplate(date, hours)
+  def worktime_template(date, hours)
     worktime = Absencetime.new
     worktime.report_type = HoursDayType::INSTANCE
     worktime.work_date = date

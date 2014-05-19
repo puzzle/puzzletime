@@ -32,7 +32,7 @@ class Projecttime < Worktime
   before_destroy :protect_booked
   before_destroy :protect_frozen
 
-  def self.validAttributes
+  def self.valid_attributes
     super + [:account, :account_id, :description, :billable, :booked, :attendance]
   end
 
@@ -60,7 +60,7 @@ class Projecttime < Worktime
     @attendance = value.kind_of?(String) ? value.to_i != 0 : value
   end
 
-  def setProjectDefaults(id = nil)
+  def set_project_defaults(id = nil)
     self.project_id = id
     self.project_id = DEFAULT_PROJECT_ID if project.nil?  # if id is nil or invalid, project is nil
     self.report_type = project.report_type if report_type < project.report_type

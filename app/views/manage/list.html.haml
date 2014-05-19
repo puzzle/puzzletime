@@ -1,22 +1,22 @@
-- @title = "#{modelClass.labelPlural} #{groupLabel}"
+- @title = "#{model_class.label_plural} #{of_group_label}"
 = render :partial => 'info'
 %table.striped
   %thead
     %tr
-      - for field in listFields
+      - for field in list_fields
         %th
           = field[1]
   %tbody
     - for entry in @entries.sort
       %tr{valign: 'top'}
-        - for field in listFields
-          = dataField entry, field[0]
-        - for action in controller.listActions
-          %td= actionLink action, entry
-        - if editFields.size > 0
-          %td= link_to 'Bearbeiten', linkParams(:action => 'edit', :id => entry)
-        - if modelClass.local?
-          %td= link_to 'L&ouml;schen', linkParams(:action => 'confirm_delete', :id => entry)
+        - for field in list_fields
+          = data_field entry, field[0]
+        - for action in controller.list_actions
+          %td= action_link action, entry
+        - if edit_fields.size > 0
+          %td= link_to 'Bearbeiten', link_params(:action => 'edit', :id => entry)
+        - if model_class.local?
+          %td= link_to 'L&ouml;schen', link_params(:action => 'confirm_delete', :id => entry)
 
 - if @entries.total_pages > 1
   %p
@@ -25,10 +25,10 @@
 %br/
 
 %p
-  - if modelClass.local?
-    = link_to newLabel, linkParams(:action => 'add')
+  - if model_class.local?
+    = link_to new_label, link_params(:action => 'add')
   - if group
-    = '|' if modelClass.local?
+    = '|' if model_class.local?
     = link_to "&Uuml;bersicht #{group_label}", group_params({:controller => group.class.to_s.downcase, :action => 'list'})
-  - elsif ! modelClass.local?
-    = link_to 'Synchronisieren', linkParams({:action => 'synchronize', :page => params[:page]}), :method => :post
+  - elsif ! model_class.local?
+    = link_to 'Synchronisieren', link_params({:action => 'synchronize', :page => params[:page]}), :method => :post

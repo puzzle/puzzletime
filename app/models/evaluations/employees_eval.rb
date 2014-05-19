@@ -12,7 +12,7 @@ class EmployeesEval < Evaluation
   end
 
   def divisions(period = nil)
-    Employee.employed_ones(period || Period.currentYear)
+    Employee.employed_ones(period || Period.current_year)
   end
 
   def employee_id
@@ -25,9 +25,9 @@ class EmployeesEval < Evaluation
   end
 
   def overview_supplement(user)
-    user.management ? [[:exportCapacityCSV, 'Auslastung CSV'],
-                       [:exportExtendedCapacityCSV, 'Detaillierte Auslastung CSV'],
-                       [:exportMAOverview, 'MA Übersicht']] : super(user)
+    user.management ? [[:export_capacity_csv, 'Auslastung CSV'],
+                       [:export_extended_capacity_csv, 'Detaillierte Auslastung CSV'],
+                       [:export_ma_overview, 'MA Übersicht']] : super(user)
   end
 
 end

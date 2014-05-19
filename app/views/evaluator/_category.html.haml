@@ -27,7 +27,7 @@
         - if @evaluation.class::SUB_PROJECTS_EVAL
           %th
         - times = periods.collect { |p| @evaluation.category.sum_attendance p }
-        = render(:partial => 'timecell', :collection => times, :locals => {:periods => periods, :action => 'attendanceDetails'})
+        = render(:partial => 'timecell', :collection => times, :locals => {:periods => periods, :action => 'attendance_details'})
         - if @evaluation.for? @user
           %td{:style => "font-weight: normal;"}
             = link_to 'Zeit erfassen', :controller => 'attendancetime', :action => 'add'

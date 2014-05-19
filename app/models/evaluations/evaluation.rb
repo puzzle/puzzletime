@@ -70,28 +70,28 @@ class Evaluation
   # Otherwise the sum of all worktimes in the main category is returned.
   def sum_times(period, div = nil, options = {})
     div ||= division
-    sendTimeQuery(:sumWorktime, period, div, options)
+    send_time_query(:sum_worktime, period, div, options)
   end
 
   # Sums all worktimes for the category in a given period.
   def sum_total_times(period = nil, options = {})
-    category.sumWorktime(self, period, false, options)
+    category.sum_worktime(self, period, false, options)
   end
 
   # Counts the number of Worktime entries in the current Evaluation for a given period.
   def count_times(period)
-    sendTimeQuery(:countWorktimes, period, division)
+    send_time_query(:count_worktimes, period, division)
   end
 
   # Returns a list of all Worktime entries for this Evaluation in the given period
   # of time.
   def times(period, options = {})
-    sendTimeQuery(:findWorktimes, period, division, options)
+    send_time_query(:find_worktimes, period, division, options)
   end
 
   # Field with category reference for divisions. Nil if not required.
   # Returns the configured class constant.
-  def categoryRef
+  def category_ref
     self.class::CATEGORY_REF
   end
 
@@ -178,15 +178,15 @@ class Evaluation
     detail_label(division)
   end
 
-  def editLink?(user)
+  def edit_link?(user)
     for?(user) || !absences?
   end
 
-  def deleteLink?(user)
+  def delete_link?(user)
     for? user
   end
 
-  def splitLink?(user)
+  def split_link?(user)
     false
   end
 
@@ -203,15 +203,15 @@ class Evaluation
   end
 
   # Returns a CSV String for all times in this Evaluation
-  def csvString(period)
+  def csv_string(period)
     CSV.generate do |csv|
       csv << ['Datum', 'Stunden', 'Von Zeit', 'Bis Zeit', 'Reporttyp',
               'Verrechenbar', 'Mitarbeiter', 'Projekt', 'Ticket', 'Beschreibung']
       times(period).each do |time|
         csv << [time.work_date.strftime(DATE_FORMAT),
                 time.hours,
-                (time.startStop? ? time.from_start_time.strftime('%H:%M') : ''),
-                (time.startStop? ? time.to_end_time.strftime('%H:%M') : ''),
+                (time.start_stop? ? time.from_start_time.strftime('%H:%M') : ''),
+                (time.start_stop? ? time.to_end_time.strftime('%H:%M') : ''),
                 time.report_type,
                 time.billable,
                 time.employee.label,
@@ -229,9 +229,9 @@ class Evaluation
     @category = category
   end
 
-  def sendTimeQuery(method, period = nil, div = nil, options = {})
+  def send_time_query(method, period = nil, div = nil, options = {})
     receiver = div ? div : category
-    receiver.send(method, self, period, div && categoryRef, options)
+    receiver.send(method, self, period, div && category_ref, options)
   end
 
   private

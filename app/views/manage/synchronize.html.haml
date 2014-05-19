@@ -1,4 +1,4 @@
-- @title = "#{modelClass ? modelClass.labelPlural : 'Alles'} synchronisieren"
+- @title = "#{model_class ? model_class.label_plural : 'Alles'} synchronisieren"
 %table.striped
   %thead
     %tr
@@ -9,7 +9,7 @@
   - for obj in @errors
     %tr
       %td= obj.class.label
-      %td= obj.debugString
+      %td= obj.debug_string
       %td
         - obj.errors.each do |attr, msg|
           = msg

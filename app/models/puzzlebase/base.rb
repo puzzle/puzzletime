@@ -22,67 +22,67 @@ class Puzzlebase::Base < ActiveRecord::Base
   end
 
   # Synchronizes Clients, Projects, Employees and Employments from puzzlebase
-  def self.synchronizeAll
-    resetErrors
+  def self.synchronize_all
+    reset_errors
     # synchronizes clients and projects
-    Puzzlebase::CustomerProject.updateAll
+    Puzzlebase::CustomerProject.update_all
     # synchronizes employees and employments
-    Puzzlebase::Employee.updateAll
+    Puzzlebase::Employee.update_all
     errors
   end
 
   # Synchronizes the entries for this puzzlebase table.
   def self.synchronize
-    resetErrors
-    updateAll
+    reset_errors
+    update_all
     errors
   end
 
-  def self.removeUnused
-    removeUnusedExcept findAll
+  def self.remove_unused
+    remove_unused_except find_all
   end
 
   protected
 
   # Updates all entries of the receiver from puzzlebase
-  def self.updateAll
-    findAll.each { |original| updateLocal original }
+  def self.update_all
+    find_all.each { |original| update_local original }
   end
 
   # Updates or creates a corresponding local entry from an original entry
   # in puzzlebase and saves it.
-  def self.updateLocal(original)
-    local = findLocal(original)
+  def self.update_local(original)
+    local = find_local(original)
     local ||= self::MAPS_TO.new
-    updateAttributes local, original
-    setReference local, original
-    saveUpdated local
+    update_attributes local, original
+    set_reference local, original
+    save_updated local
   end
 
   # Updates all attributes of the local entry from the original entry in puzzlebase.
   # based on the MAPPINGS defined.
-  def self.updateAttributes(local, original)
+  def self.update_attributes(local, original)
     self::MAPPINGS.each_pair do |localAttr, originalAttr|
       local.send(:"#{localAttr}=", original.send(originalAttr))
     end
   end
 
   # Saves an update local entry and logs potential error messages.
-  def self.saveUpdated(local)
+  def self.save_updated(local)
     success = local.save
     errors.push local unless success
     success
   end
 
-  def self.findLocal(original)
-    o = localFindOptions(original)
+  def self.find_local(original)
+    o = local_find_options(original)
     self::MAPS_TO.where(o[:conditions]).
                   joins(o[:joins]).
                   includes(o[:include]).
                   first
   end
 
-  def self.findAll
+  def self.find_all
     o = self::FIND_OPTIONS
     where(o[:conditions]).
     includes(o[:include]).
@@ -92,12 +92,12 @@ class Puzzlebase::Base < ActiveRecord::Base
   end
 
   # SQL select conditions for entries with references to other tables
-  def self.localFindOptions(original)
+  def self.local_find_options(original)
     { conditions: ['shortname = ?', original.send(self::MAPPINGS[:shortname])] }
   end
 
 
-  def self.removeUnusedExcept(originals, condition = nil)
+  def self.remove_unused_except(originals, condition = nil)
     base_shortnames = originals.collect { |original| "'#{original.send(self::MAPPINGS[:shortname])}'" }
     conditions = ''
     conditions = "shortname NOT IN (#{base_shortnames.join(', ')})" unless base_shortnames.empty?
@@ -110,7 +110,7 @@ class Puzzlebase::Base < ActiveRecord::Base
   end
 
   # Sets the local reference based on the original entry from puzzlebase
-  def self.setReference(local, original)
+  def self.set_reference(local, original)
   end
 
   # Helper method to compute the table name in puzzlebase
@@ -124,7 +124,7 @@ class Puzzlebase::Base < ActiveRecord::Base
   end
 
   # Resets all errorenous entries.
-  def self.resetErrors
+  def self.reset_errors
     @@errors = []
   end
 

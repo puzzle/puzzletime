@@ -8,7 +8,7 @@ class GraphController < ApplicationController
   before_action :set_period
 
   def weekly
-    @graph = WorktimeGraph.new(@period || Period.pastMonth, @user)
+    @graph = WorktimeGraph.new(@period || Period.past_month, @user)
   end
 
   def all_absences

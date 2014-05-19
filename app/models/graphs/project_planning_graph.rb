@@ -8,7 +8,7 @@ class ProjectPlanningGraph
 
   def initialize(project, period = nil)
     @project = project
-    period ||= Period.currentMonth
+    period ||= Period.current_month
     @period = extend_to_weeks period
     @cache = {}
     @plannings       = Planning.where('project_id = ? and start_week <= ? and is_abstract=false', @project.id, Week.from_date(period.endDate).to_integer)

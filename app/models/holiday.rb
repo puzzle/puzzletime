@@ -57,7 +57,7 @@ class Holiday < ActiveRecord::Base
     false
   end
 
-  def self.irregularHoliday?(date)
+  def self.irregular_holiday?(date)
     @@irregularHolidays.each do |holiday|
       return true if holiday.holiday_date == date
     end
@@ -73,7 +73,7 @@ class Holiday < ActiveRecord::Base
   def self.holiday?(date)
     self.weekend?(date) ||
       self.regularHoliday?(date) ||
-      self.irregularHoliday?(date)
+      self.irregular_holiday?(date)
   end
 
   # returns all holidays for the given period which fall on a weekday
@@ -150,7 +150,7 @@ class Holiday < ActiveRecord::Base
     %w(Der Feiertag Feiertage)
   end
 
-  def self.orderBy
+  def self.order_by
     'holiday_date DESC'
   end
 

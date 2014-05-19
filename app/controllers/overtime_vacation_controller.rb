@@ -3,7 +3,7 @@ class OvertimeVacationController < ManageController
   VALID_GROUPS = [EmployeeController]
   GROUP_KEY = 'otime'
 
-  def editFields
+  def edit_fields
     [[:hours, 'Stunden'],
      [:transfer_date, 'Umgebucht am']]
   end

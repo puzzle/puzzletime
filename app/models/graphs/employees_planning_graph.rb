@@ -9,7 +9,7 @@ class EmployeesPlanningGraph
 
   def initialize(employees, period = nil)
     @employees = employees.sort
-    period ||= Period.currentMonth
+    period ||= Period.current_month
     @actual_period = period
     @period = extend_to_weeks period
     @cache = {}
@@ -21,11 +21,11 @@ class EmployeesPlanningGraph
 
   end
 
-  def graphFor(user)
+  def graph_for(user)
     @cache[user]
   end
 
-  def colorFor(project)
+  def color_for(project)
     @colorMap[project]
   end
 

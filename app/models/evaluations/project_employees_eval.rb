@@ -33,7 +33,7 @@ class ProjectEmployeesEval < Evaluation
     "Projekt: #{category.top? ? category.label : category.label_verbose}"
   end
 
-  def sendTimeQuery(method, period = nil, div = nil, options = {})
+  def send_time_query(method, period = nil, div = nil, options = {})
     options[:joins] = :project
     super method, period, div, options
  end

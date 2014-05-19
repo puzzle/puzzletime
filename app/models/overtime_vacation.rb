@@ -42,7 +42,7 @@ class OvertimeVacation < ActiveRecord::Base
     ['Die', '&Uuml;berzeit-Ferien Umbuchung', '&Uuml;berzeit-Ferien Umbuchungen']
   end
 
-  def self.orderBy
+  def self.order_by
     'transfer_date DESC'
   end
 

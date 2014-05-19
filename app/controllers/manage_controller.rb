@@ -5,100 +5,100 @@
 # The class of the managed objects is called a Model. Several managed objects can belong to
 # a certain group, e.g., projects belong to one client.
 #
-# Client controllers must implement modelClass, editFields
-# and may implement groupClass, listFields, listActions, formatColumn, initFormData
+# Client controllers must implement model_class, edit_fields
+# and may implement group_class, list_fields, list_actions, format_column, init_form_data
 #
 # Models must extend Manageable and implement self.labels (see Manageable)
 class ManageController < ApplicationController
 
   helper :manage
-  helper_method :group, :modelClass, :formatColumn,
-                :listFields, :editFields, :group_parent_id, :group_label, :local_group_key
+  helper_method :group, :model_class, :format_column,
+                :list_fields, :edit_fields, :group_parent_id, :group_label, :local_group_key
 
   before_action :authorize
 
-  hide_action :modelClass, :groupClass, :group, :formatColumn,
-              :editFields, :listFields, :listActions,
+  hide_action :model_class, :group_class, :group, :format_column,
+              :edit_fields, :list_fields, :list_actions,
               :group_id_field, :group_parent_id, :group_label
 
   VALID_GROUPS = []
 
   # Main Action. Redirects to list.
   def index
-    redirectToList
+    redirect_to_list
   end
 
   # Action to list all available entries from the database.
   def list
-    @entries = modelClass.list(conditions: conditions).page(params[:page])
+    @entries = model_class.list(conditions: conditions).page(params[:page])
     render action: 'list'
   end
 
   # Action to add a new entry.
   def add
-    @entry = modelClass.new
-    initFormData
+    @entry = model_class.new
+    init_form_data
     render action: 'add'
   end
 
   # Action to create an added entry in the database.
   def create
-    @entry = modelClass.new(params[:entry])
+    @entry = model_class.new(params[:entry])
     @entry.send("#{group_id_field}=".to_sym, group_id) if group?
     if @entry.save
-      flash[:notice] = classLabel + ' wurde erfasst'
-      redirectToList
+      flash[:notice] = class_label + ' wurde erfasst'
+      redirect_to_list
     else
-      initFormData
+      init_form_data
       render action: 'add'
     end
   end
 
   # Action to edit an entry.
   def edit
-    setEntryFromId
-    initFormData
+    set_entry_from_id
+    init_form_data
     render action: 'edit'
   end
 
   # Action to update an edited entry in the database.
   def update
-    setEntryFromId
+    set_entry_from_id
     if @entry.update_attributes(params[:entry])
-      flash[:notice] = classLabel + ' wurde aktualisiert'
-      redirectToList
+      flash[:notice] = class_label + ' wurde aktualisiert'
+      redirect_to_list
     else
-      flash[:notice] = classLabel + ' konnte nicht aktualisiert werden'
-      initFormData
+      flash[:notice] = class_label + ' konnte nicht aktualisiert werden'
+      init_form_data
       render action: 'edit'
     end
   end
 
   # Action to confirm the deletion of an entry.
   def confirm_delete
-    setEntryFromId
+    set_entry_from_id
     render action: 'confirm_delete'
   end
 
   # Action to delete an entry from the database.
   def delete
     begin
-      modelClass.destroy(params[:id])
-      flash[:notice] = classLabel + ' wurde entfernt'
+      model_class.destroy(params[:id])
+      flash[:notice] = class_label + ' wurde entfernt'
    rescue => err
       flash[:notice] = err.message
     end
-    redirectToList
+    redirect_to_list
   end
 
   def synchronize
-    mapper = modelClass.puzzlebaseMap
-    flash[:notice] = modelClass.labelPlural + ' wurden nicht aktualisiert'
-    redirectToList if mapper.nil?
+    mapper = model_class.puzzlebase_map
+    flash[:notice] = model_class.label_plural + ' wurden nicht aktualisiert'
+    redirect_to_list if mapper.nil?
     @errors = mapper.synchronize
     if @errors.empty?
-      flash[:notice] = modelClass.labelPlural + ' wurden erfolgreich aktualisiert'
-      redirectToList
+      flash[:notice] = model_class.label_plural + ' wurden erfolgreich aktualisiert'
+      redirect_to_list
     else
       flash[:notice] = 'Folgende Fehler sind bei der Synchronisation aufgetreten:'
       render action: 'synchronize'
@@ -113,7 +113,7 @@ class ManageController < ApplicationController
 
   # The Class of the managed entries.
   # This method must be overriden by mixin classes.
-  def modelClass
+  def model_class
     self.class.model_class
   end
 
@@ -125,31 +125,31 @@ class ManageController < ApplicationController
   # Returns an Array of 4-element Arrays with the following elements:
   # [label, controller, action, is_displayed_method]
   # Every created link holds the id of the entry as parameter.
-  def listActions
+  def list_actions
     []
   end
 
   # The fields of an entry object that are displayed in the list action.
   # Defaults to all editable fields.
-  def listFields
-    editFields
+  def list_fields
+    edit_fields
   end
 
   # The fields of an entry object that may be edited.
   # Must overwrite in mixin class.
-  def editFields
+  def edit_fields
     []
   end
 
   # The group entry for the currently active entry.
   # This object is determined over the parameter group_id.
   def group
-    groupClass.find(group_id) if group?
+    group_class.find(group_id) if group?
   end
 
   # Formats the value for the field attribute.
-  def formatColumn(attribute, value, entry)
-    case modelClass.columnType(attribute)
+  def format_column(attribute, value, entry)
+    case model_class.column_type(attribute)
       when :date then value.strftime(LONG_DATE_FORMAT) if value
       when :float, :decimal then '%01.2f' % value if value
       when :integer then value
@@ -160,21 +160,21 @@ class ManageController < ApplicationController
 
   # Label for the group overview link
   def group_label
-    groupClass.labelPlural
+    group_class.label_plural
   end
 
   protected
 
   # The group class the represented entry objects belong to.
   # E.g., the group of a Project is a Client. Default is nil.
-  def groupClass
+  def group_class
     ctrlr = self.class::VALID_GROUPS.find { |c| c::GROUP_KEY == group_key }
     ctrlr.model_class if ctrlr
   end
 
   # Initializes the data for editing an entry.
   # Is currently used to set default values.
-  def initFormData
+  def init_form_data
   end
 
   # SQL WHERE conditions for the entries displayed in the list action.
@@ -184,7 +184,7 @@ class ManageController < ApplicationController
   end
 
   def group_id_field
-    "#{groupClass.to_s.downcase}_id"
+    "#{group_class.to_s.downcase}_id"
   end
 
   def group_key
@@ -198,12 +198,12 @@ class ManageController < ApplicationController
   private
 
   # Sets the instance variable entry from the HTTP parameter.
-  def setEntryFromId
-    @entry = modelClass.find(params[:id])
+  def set_entry_from_id
+    @entry = model_class.find(params[:id])
   end
 
   # Redirects a request to the list action.
-  def redirectToList
+  def redirect_to_list
     redirect_to action: 'list',
                 page: params[:page],
                 groups: params[:groups],
@@ -212,13 +212,13 @@ class ManageController < ApplicationController
   end
 
   # Label with article of the model class.
-  def classLabel
-    modelClass.article + ' ' + modelClass.label
+  def class_label
+    model_class.article + ' ' + model_class.label
   end
 
   # Returns whether a group is defined for the current request.
   def group?
-    groupClass && group_id
+    group_class && group_id
   end
 
   def last_param(key)

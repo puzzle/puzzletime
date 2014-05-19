@@ -1,11 +1,11 @@
 class AbsencetimeController < WorktimeController
 
-  def addMultiAbsence
-    setAccounts
+  def add_multi_absence
+    set_accounts
     @multiabsence = MultiAbsence.new
   end
 
-  def createMultiAbsence
+  def create_multi_absence
     @multiabsence = MultiAbsence.new
     @multiabsence.employee = @user
     @multiabsence.attributes = params[:multiabsence]
@@ -13,8 +13,8 @@ class AbsencetimeController < WorktimeController
       count = @multiabsence.save
       flash[:notice] = "#{count} Absenzen wurden erfasst"
       options = { controller: 'evaluator',
-                  action: detailAction,
-                  evaluation: userEvaluation,
+                  action: detail_action,
+                  evaluation: user_evaluation,
                   clear: 1 }
       set_period
       if @period.nil? ||
@@ -25,26 +25,26 @@ class AbsencetimeController < WorktimeController
       end
       redirect_to options
     else
-      setAccounts
-      render action: 'addMultiAbsence'
+      set_accounts
+      render action: 'add_multi_absence'
     end
   end
 
   protected
 
-  def setNewWorktime
+  def set_new_worktime
     @worktime = Absencetime.new
   end
 
-  def setWorktimeDefaults
+  def set_worktime_defaults
     @worktime.absence_id ||= params[:account_id]
   end
 
-  def setAccounts(all = false)
+  def set_accounts(all = false)
     @accounts = Absence.list
   end
 
-  def userEvaluation
+  def user_evaluation
     @user.absences(true)
     record_other? ? 'employeeabsences' : 'userAbsences'
   end

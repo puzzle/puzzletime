@@ -1,8 +1,8 @@
 module GraphHelper
 
   def extend_to_weeks(period)
-    Period.new Period.weekFor(period.startDate).startDate,
-               Period.weekFor(period.endDate).endDate,
+    Period.new Period.week_for(period.startDate).startDate,
+               Period.week_for(period.endDate).endDate,
                period.label
   end
 

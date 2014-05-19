@@ -18,7 +18,7 @@ class Puzzlebase::Customer < Puzzlebase::Base
 end
 
 class Client < ActiveRecord::Base
-  def debugString
+  def debug_string
     "#{shortname}: #{name}"
   end
 end

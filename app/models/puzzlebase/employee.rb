@@ -13,9 +13,9 @@ class Puzzlebase::Employee < Puzzlebase::Base
 
   # Synchronizes the Employees and their Employments.
   def self.synchronize
-    resetErrors
-    updateAll
-    Puzzlebase::Employment.updateAll
+    reset_errors
+    update_all
+    Puzzlebase::Employment.update_all
     errors
   end
 
@@ -23,7 +23,7 @@ end
 
 
 class Employee < ActiveRecord::Base
-  def debugString
+  def debug_string
     "#{shortname}: #{label} (#{ldapname})"
   end
 end

@@ -3,13 +3,13 @@ class NavigationTree
     @tree = []
   end
 
-  def arrive(modelClass, page, group_id, up)
+  def arrive(model_class, page, group_id, up)
     if @tree.empty? || (group_id && current[:group_id] != group_id)
-      push(modelClass, group_id, page)
+      push(model_class, group_id, page)
     elsif up && depth > 1
       @tree.pop
     else
-      set(modelClass, page)
+      set(model_class, page)
     end
   end
 
@@ -43,21 +43,21 @@ class NavigationTree
 
   private
 
-  def set(modelClass, page)
-    if current[:model] == modelClass
+  def set(model_class, page)
+    if current[:model] == model_class
       current[:page] = page
     else
       @tree = []
-      push(modelClass, nil, page)
+      push(model_class, nil, page)
     end
   end
 
-  def push(modelClass, group_id, page)
-    @tree.push(create(modelClass, group_id, page))
+  def push(model_class, group_id, page)
+    @tree.push(create(model_class, group_id, page))
   end
 
-  def create(modelClass, group_id, page)
-    { model: modelClass, group_id: group_id, page: page }
+  def create(model_class, group_id, page)
+    { model: model_class, group_id: group_id, page: page }
   end
 
 end

@@ -21,68 +21,68 @@ class Puzzlebase::Project < Puzzlebase::Base
                    conditions: ['TBL_CUSTOMER_PROJECT.B_SYNCTOPUZZLETIME AND TBL_PROJECT.FK_PROJECT IS NULL'] }
 
 
-  def self.updateChildren(original_parent, local_parent)
+  def self.update_children(original_parent, local_parent)
     original_children = original_parent.children
     return if original_children.empty?
-    moveWorktimesIfNecessary(original_parent, local_parent, original_children)
+    move_worktimes_if_necessary(original_parent, local_parent, original_children)
     original_children.each do |child|
-      local = findLocalChild(child, local_parent)
-      local = updateLocalChild local_parent, child, local
-      updateChildren child, local if local
+      local = find_local_child(child, local_parent)
+      local = update_local_child local_parent, child, local
+      update_children child, local if local
     end
   end
 
-  def self.removeUnused
+  def self.remove_unused
     top_projects = Project.where(parent_id: nil)
     top_projects.each do |local|
-      original = findOriginal(local)
+      original = find_original(local)
       if original.nil?
         local.destroy if local.worktimes(true).empty?
       else
-        removeUnusedChildren original, local
+        remove_unused_children original, local
       end
     end
   end
 
   protected
 
-  def self.updateLocal(original)
+  def self.update_local(original)
     client_shortnames = original.customer_projects.collect { |cp| cp.customer.S_CUSTOMER }
     locals = ::Project.joins(:client).
                        where('projects.shortname = ? AND ' \
                              "clients.shortname IN (#{client_shortnames.join(', ')})",
                              original.S_PROJECT)
     locals.each do |local|
-      updateAttributes local, original
-      setReference local, original
-      success = saveUpdated local
-      updateChildren original, local if success
+      update_attributes local, original
+      set_reference local, original
+      success = save_updated local
+      update_children original, local if success
     end
   end
 
-  def self.setReference(local, original)
+  def self.set_reference(local, original)
     department = ::Department.find_by_shortname(original.unit.S_UNIT)
     local.department_id = department.id if department
   end
 
-  def self.updateLocalChild(local_parent, original, local = nil)
+  def self.update_local_child(local_parent, original, local = nil)
     local ||= self::MAPS_TO.new
-    updateAttributes local, original
-    setReference local, original
+    update_attributes local, original
+    set_reference local, original
     local.parent_id = local_parent.id
     local.client_id = local_parent.client_id
-    success = saveUpdated local
+    success = save_updated local
     success ? local : false
   end
 
-  def self.findLocalChild(original_child, local_parent)
+  def self.find_local_child(original_child, local_parent)
     self::MAPS_TO.where('shortname = ? AND parent_id = ?',
                         original_child.S_PROJECT, local_parent.id).
                   first
   end
 
   # use only for top projects
-  def self.findOriginal(local)
+  def self.find_original(local)
     where('TBL_PROJECT.FK_PROJECT IS NULL AND TBL_PROJECT.S_PROJECT = ? AND TBL_CUSTOMER.S_CUSTOMER = ?',
           local.shortname, local.client.shortname).
     joins(:customers).
@@ -90,29 +90,29 @@ class Puzzlebase::Project < Puzzlebase::Base
   end
 
   # use only for top projects
-  def self.localFindOptions(original)
+  def self.local_find_options(original)
     { joins: :client,
       conditions: ['projects.shortname = ? AND clients.shortname = ? AND projects.parent_id IS NULL',
                    original.S_PROJECT,
                    original.customer.S_CUSTOMER] }
   end
 
-  def self.moveWorktimesIfNecessary(original_parent, local_parent, original_children)
-    existing_children = original_children.select { |child| findLocalChild(child, local_parent) }
+  def self.move_worktimes_if_necessary(original_parent, local_parent, original_children)
+    existing_children = original_children.select { |child| find_local_child(child, local_parent) }
     if existing_children.empty? && !local_parent.worktimes.empty?
       originals = original_children.select { |original| original.S_PROJECT == local_parent.shortname }
-      child = updateLocalChild local_parent,
+      child = update_local_child local_parent,
                                originals.empty? ? original_parent : originals.first
       local_parent.move_times_to child
     end
   end
 
-  def self.removeUnusedChildren(original_parent, local_parent)
+  def self.remove_unused_children(original_parent, local_parent)
     if original_parent   # should never be nil in production environment
       original_children = original_parent.children
-      removeUnusedExcept original_children, "parent_id = #{local_parent.id}"
+      remove_unused_except original_children, "parent_id = #{local_parent.id}"
       original_children.each do |child|
-        removeUnusedChildren child, findLocalChild(child, local_parent)
+        remove_unused_children child, find_local_child(child, local_parent)
       end
     end
   end
@@ -121,7 +121,7 @@ end
 
 
 class Project < ActiveRecord::Base
-  def debugString
+  def debug_string
     "#{shortname}: #{name}"
   end
 end

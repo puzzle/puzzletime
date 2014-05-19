@@ -25,39 +25,39 @@ class UserNotification < ActiveRecord::Base
 
   def self.list_during(period = nil)
     current = period.nil?
-    period ||= Period.currentWeek
+    period ||= Period.current_week
     custom = list(conditions: ['date_from BETWEEN ? AND ? OR date_to BETWEEN ? AND ?',
                                period.startDate, period.endDate,
                                period.startDate, period.endDate],
                   order: 'date_from')
     list = custom.concat(holiday_notifications(period))
-    list.push currentCompletionNotification if current && month_end?
+    list.push current_completion_notification if current && month_end?
     list.sort!
   end
 
   def self.holiday_notifications(period = nil)
-    period ||= Period.currentWeek
+    period ||= Period.current_week
     regular = Holiday.holidays(period)
-    regular.collect! { |holiday| newHolidayNotification(holiday) }
+    regular.collect! { |holiday| new_holiday_notification(holiday) }
   end
 
 
   private
 
-  def self.currentCompletionNotification
+  def self.current_completion_notification
     last_day = month_end
     new date_from: last_day,
         date_to: last_day,
         message: 'Bitte Ende Monat Projekte komplettieren.'
   end
 
-  def self.newHolidayNotification(holiday)
+  def self.new_holiday_notification(holiday)
     new date_from: holiday.holiday_date,
         date_to: holiday.holiday_date,
-        message: holidayMessage(holiday)
+        message: holiday_message(holiday)
   end
 
-  def self.holidayMessage(holiday)
+  def self.holiday_message(holiday)
     I18n.l(holiday.holiday_date, format: LONG_DATE_FORMAT) +
       ' ist ein Feiertag (' + ('%01.2f' % holiday.musthours_day).to_s +
       ' Stunden Sollarbeitszeit)'
@@ -92,7 +92,7 @@ class UserNotification < ActiveRecord::Base
     %w(Die Nachricht Nachrichten)
   end
 
-  def self.orderBy
+  def self.order_by
     'date_from DESC, date_to DESC'
   end
 

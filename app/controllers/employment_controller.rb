@@ -4,7 +4,7 @@ class EmploymentController < ManageController
   VALID_GROUPS = [EmployeeController]
   GROUP_KEY = 'employment'
 
-  def formatColumn(attribute, value, entry)
+  def format_column(attribute, value, entry)
     if :percent == attribute
       (value == value.to_i ? value.to_i.to_s : value.to_s) + ' %'
     else
@@ -12,11 +12,11 @@ class EmploymentController < ManageController
     end
   end
 
-  def editFields
+  def edit_fields
     []
   end
 
-  def listFields
+  def list_fields
     [[:start_date, 'Start Datum'],
      [:end_date, 'End Datum'],
      [:percent, 'Prozent']]

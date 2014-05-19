@@ -26,8 +26,8 @@ class Employment < ActiveRecord::Base
   validates_presence_of :employee_id, message: 'Es muss ein Mitarbeiter angegeben werden'
   validate :valid_period
 
-  before_validation :resetEndDate
-  before_create :updateEndDate
+  before_validation :reset_end_date
+  before_create :update_end_date
   belongs_to :employee
 
   before_validation DateFormatter.new('start_date', 'end_date')
@@ -37,12 +37,12 @@ class Employment < ActiveRecord::Base
   def valid_period
     if end_date && period && period.negative?
       errors.add_to_base('Die Zeitspanne ist ung&uuml;ltig')
-    elsif parallelEmployments?
+    elsif parallel_employments?
       errors.add_to_base('F&uuml;r diese Zeitspanne ist bereits eine andere Anstellung definiert')
     end
   end
 
-  def resetEndDate
+  def reset_end_date
     write_attribute('end_date', nil) unless final
   end
 
@@ -62,7 +62,7 @@ class Employment < ActiveRecord::Base
   end
 
   # updates the end date of the previous employement
-  def updateEndDate
+  def update_end_date
     previous_employment = Employment.where('employee_id = ? AND start_date < ? AND end_date IS NULL', employee_id, start_date).first
     if previous_employment
       previous_employment.end_date = start_date - 1
@@ -78,16 +78,16 @@ class Employment < ActiveRecord::Base
     return Period.retrieve(start_date, end_date ? end_date : Date.today) if start_date
   end
 
-  def percentFactor
+  def percent_factor
     percent / 100.0
   end
 
   def vacations
-    period.length / 365.25 * VACATION_DAYS_PER_YEAR * percentFactor
+    period.length / 365.25 * VACATION_DAYS_PER_YEAR * percent_factor
   end
 
   def musttime
-    period.musttime * percentFactor
+    period.musttime * percent_factor
   end
 
   ##### cache dates for performance reasons  ######
@@ -112,7 +112,7 @@ class Employment < ActiveRecord::Base
 
   ##### interface methods for Manageable #####
 
-  def self.puzzlebaseMap
+  def self.puzzlebase_map
     Puzzlebase::Employment
   end
 
@@ -124,11 +124,11 @@ class Employment < ActiveRecord::Base
     %w(Die Anstellung Anstellungen)
   end
 
-  def self.orderBy
+  def self.order_by
     'start_date DESC'
   end
 
-  def self.columnType(col)
+  def self.column_type(col)
     return :boolean if col == :final
     super(col)
   end
@@ -139,7 +139,7 @@ class Employment < ActiveRecord::Base
 
   private
 
-  def parallelEmployments?
+  def parallel_employments?
     conditions = ['employee_id = ? ', employee_id]
     if id
       conditions[0] += ' AND id <> ? '

@@ -5,11 +5,11 @@ class DepartmentController < ManageController
 
   GROUP_KEY = 'dept'
 
-  def listActions
+  def list_actions
     [['Projekte', 'project', 'list', true]]
   end
 
-  def listFields
+  def list_fields
     [[:name, 'Name'], [:shortname, 'K&uuml;rzel']]
   end
 

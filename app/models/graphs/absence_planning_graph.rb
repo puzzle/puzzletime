@@ -22,7 +22,7 @@ class AbsencePlanningGraph
     end
 
     @period.startDate.step(@period.endDate) do |day|
-      if !Holiday.weekend?(day) && (Holiday.regularHoliday?(day) || Holiday.irregularHoliday?(day))
+      if !Holiday.weekend?(day) && (Holiday.regularHoliday?(day) || Holiday.irregular_holiday?(day))
         add_to_cache('Feiertag', day)
       end
     end
@@ -34,17 +34,17 @@ class AbsencePlanningGraph
 
   private
   def add_start_stop_absence(absence)
-    add_to_cache(absence.timeString, absence.work_date, absence.hours * 1)
+    add_to_cache(absence.time_string, absence.work_date, absence.hours * 1)
   end
 
   def add_day_absence(absence)
-    add_to_cache(absence.timeString, absence.work_date, absence.hours * 1)
+    add_to_cache(absence.time_string, absence.work_date, absence.hours * 1)
   end
 
   def add_weekly_absence(absence)
     date = absence.work_date
     5.times do
-      add_to_cache(absence.timeString, date, absence.hours / 5)
+      add_to_cache(absence.time_string, date, absence.hours / 5)
       date = date.next
     end
   end
@@ -55,7 +55,7 @@ class AbsencePlanningGraph
     # TODO: consider holidays as Christmas or Eastern while calculating workdays
     workdays = (dateFrom..dateTo).select { |day| [1, 2, 3, 4, 5].include?(day.wday) }.size # number of work days in the month
     dateFrom.step(dateTo, 1) do |date|
-      add_to_cache(absence.timeString, date, absence.hours / workdays)
+      add_to_cache(absence.time_string, date, absence.hours / workdays)
     end
   end
 

@@ -1,6 +1,6 @@
 - @title = "Zeiten aller #{@evaluation.label} von #{@evaluation.is_a?(EmployeeSubProjectsEval) ? @evaluation.category.label : @user.label}"
-= render(:partial => 'periodLink')
-= timeInfo
+= render(:partial => 'period_link')
+= time_info
 = render(:partial => 'category')
 %p
   - if @user.running_attendance
@@ -17,7 +17,7 @@
               :action => 'add'
     = link_to 'Mehrw&ouml;chige Absenz erfassen',
               :controller => 'absencetime',
-              :action => 'addMultiAbsence'
+              :action => 'add_multi_absence'
   - else
     = link_to 'Alles Komplettieren',
               {:action => 'complete_all', :back_url => request.original_fullpath},

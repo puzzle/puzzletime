@@ -11,24 +11,24 @@ class Puzzlebase::Employment < Puzzlebase::Base
 
   protected
 
-  def self.updateAll
+  def self.update_all
     ::Employment.delete_all
     super
   end
 
-  def self.localFindOptions(original)
+  def self.local_find_options(original)
     { include: :employee,
       conditions: ['employments.start_date = ? AND employees.shortname = ?',
                    original.D_START, original.employee.S_SHORTNAME] }
   end
 
-  def self.setReference(local, original)
+  def self.set_reference(local, original)
     employee = ::Employee.find_by_shortname(original.employee.S_SHORTNAME)
     local.employee_id = employee.id if employee
   end
 
   # Saves an update local entry and logs potential error messages.
-  def self.saveUpdated(local)
+  def self.save_updated(local)
     if local.percent == 0 && local.end_date.nil?
       # do not sync 0% employments with open end dates => corresponds to quitted employee
       true
@@ -40,7 +40,7 @@ end
 
 
 class Employment < ActiveRecord::Base
-  def debugString
+  def debug_string
     "#{employee.shortname + ':' if employee} #{percent}% vom #{date_label(start_date)} - #{date_label(end_date)}"
   end
 end

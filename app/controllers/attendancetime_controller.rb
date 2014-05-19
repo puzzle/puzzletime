@@ -1,21 +1,21 @@
 class AttendancetimeController < WorktimeController
 
-  before_action :authenticate, except: [:autoStartStop]
+  before_action :authenticate, except: [:auto_start_stop]
 
   SPLIT = 'Aufteilen'
 
-  def autoStartStop
+  def auto_start_stop
     @user = Employee.login(params[:user], params[:pwd])
     if @user
       now = Time.zone.now
       if @user.running_attendance
-        attendance = stopRunning(runningTime, now)
+        attendance = stop_running(running_time, now)
         if attendance && @user.running_project
-          stopRunning @user.running_project, now
+          stop_running @user.running_project, now
         end
-        startRunning(Attendancetime.new, now) if attendance && attendance.work_date != Date.today
+        start_running(Attendancetime.new, now) if attendance && attendance.work_date != Date.today
       else
-        startRunning Attendancetime.new, now
+        start_running Attendancetime.new, now
       end
     else
       flash[:notice] = "Ung&uuml;ltige Benutzerdaten.\n"
@@ -25,28 +25,28 @@ class AttendancetimeController < WorktimeController
 
   # called from running
   def start
-    if runningTime
+    if running_time
       flash[:notice] = 'Es wurde bereits eine fr&uuml;here Anwesenheitszeit gestartet.'
     else
-      startRunning Attendancetime.new
+      start_running Attendancetime.new
     end
     redirect_to controller: 'worktime', action: 'running'
   end
 
   # called from running
   def stop
-    attendance = runningTime
+    attendance = running_time
     if attendance
       now = Time.zone.now
-      stopRunning attendance, now
+      stop_running attendance, now
       project = @user.running_project
       if project
         project.description = params[:description] if params[:description]
         project.ticket = params[:ticket] if params[:ticket]
-        stopRunning project, now
+        stop_running project, now
       elsif !Projecttime.where('type = ? AND employee_id = ? AND work_date = ? AND to_end_time = ?',
                                'Projecttime', @user.id, attendance.work_date, attendance.to_end_time).exist?
-        splitAttendance attendance
+        split_attendance attendance
         return
       end
     else
@@ -55,28 +55,28 @@ class AttendancetimeController < WorktimeController
     redirect_to controller: 'worktime', action: 'running'
   end
 
-  def splitAttendance(attendance = nil)
-    attendance ||= setWorktime
+  def split_attendance(attendance = nil)
+    attendance ||= set_worktime
     session[:split] = AttendanceSplit.new(attendance)
     redirect_to evaluation_detail_params.merge!(action: 'split')
   end
 
-  def detailAction
-    'attendanceDetails'
+  def detail_action
+    'attendance_details'
   end
 
   protected
 
-  def setNewWorktime
+  def set_new_worktime
     @worktime = Attendancetime.new
   end
 
-  def setWorktimeDefaults
+  def set_worktime_defaults
     @worktime.projecttime = @user.default_attendance
   end
 
-  def autoStartExists(expected, msg)
-    abort = (runningTime) == expected
+  def auto_start_exists(expected, msg)
+    abort = (running_time) == expected
     if abort
       flash[:notice] = msg
       list
@@ -84,9 +84,9 @@ class AttendancetimeController < WorktimeController
     abort
   end
 
-  def processAfterSave
+  def process_after_save
     if params[:commit] == SPLIT
-      splitAttendance @worktime
+      split_attendance @worktime
       return false
     end
     true
@@ -96,7 +96,7 @@ class AttendancetimeController < WorktimeController
     params[:worktime][:projecttime].to_i != 0
   end
 
-  def runningTime(reload = false)
+  def running_time(reload = false)
     @user.running_attendance(reload)
   end
 

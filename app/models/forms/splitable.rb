@@ -12,7 +12,7 @@ class Splitable
     @worktimes = []
   end
 
-  def addWorktime(worktime)
+  def add_worktime(worktime)
     if original.report_type > HoursWeekType::INSTANCE && worktime.work_date != original.work_date
       worktime.work_date = original.work_date
       worktime.errors.add(:work_date, 'Das Datum kann nicht geändert werden')
@@ -21,21 +21,21 @@ class Splitable
     @worktimes.push(worktime)
   end
 
-  def removeWorktime(index)
+  def remove_worktime(index)
     @worktimes.delete_at(index) if @worktimes[index].new_record?
   end
 
-  def worktimeTemplate
-    worktime = lastWorktime.template Projecttime.new
-    worktime.hours = remainingHours
-    worktime.from_start_time = nextStartTime
+  def worktime_template
+    worktime = last_worktime.template Projecttime.new
+    worktime.hours = remaining_hours
+    worktime.from_start_time = next_start_time
     worktime.to_end_time = original.to_end_time
     worktime.project_id ||= worktime.employee.default_project_id
     worktime
   end
 
   def complete?
-    remainingHours < 0.00001     # we are working with floats: use delta
+    remaining_hours < 0.00001     # we are working with floats: use delta
   end
 
   def save
@@ -52,17 +52,17 @@ class Splitable
 
   protected
 
-  def remainingHours
+  def remaining_hours
     original.hours - worktimes.inject(0) { |sum, time| sum + time.hours }
   end
 
-  def nextStartTime
+  def next_start_time
     worktimes.empty? ?
       original.from_start_time :
       worktimes.last.to_end_time
   end
 
-  def lastWorktime
+  def last_worktime
     worktimes.empty? ? original : worktimes.last
   end
 

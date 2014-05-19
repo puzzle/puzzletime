@@ -1,13 +1,13 @@
 - id ||= nil
 %p
-  - if @period && @period != Period.currentMonth
+  - if @period && @period != Period.current_month
     Zeiten w&auml;hrend #{@period} &nbsp;
     = link_to 'Aktuelle Zeitspanne',
               :controller => 'evaluator',
-              :action => 'currentPeriod',
+              :action => 'current_period',
               :back_url => request.original_fullpath
     |
   = link_to 'Andere Zeitspanne',
             :controller => 'evaluator',
-            :action => 'selectPeriod',
+            :action => 'select_period',
             :back_url => request.original_fullpath

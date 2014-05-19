@@ -28,7 +28,7 @@ class EmployeeSubProjectsEval < SubProjectsEval
     super(period, append_employee_condition(options))
   end
 
-  def sendTimeQuery(method, period = nil, div = nil, options = {})
+  def send_time_query(method, period = nil, div = nil, options = {})
     super(method, period, div, append_employee_condition(options))
   end
 

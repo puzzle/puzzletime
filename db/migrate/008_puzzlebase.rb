@@ -4,8 +4,8 @@ class Puzzlebase < ActiveRecord::Migration
     remove_column :clients, :contact
     add_column :projects, :shortname, :string, :limit => 3, :null => false
 
-    setShortnames ::Client, 4
-    setShortnames ::Project, 3
+    set_shortnames ::Client, 4
+    set_shortnames ::Project, 3
     ::Employee.all.each do |entry|
       entry.update_attribute(:shortname, entry.shortname.upcase)
     end
@@ -17,7 +17,7 @@ class Puzzlebase < ActiveRecord::Migration
     add_column :clients, :contact, :null => false
   end
 
-  def self.setShortnames(clazz, length)
+  def self.set_shortnames(clazz, length)
     clazz.all.each do |entry|
       entry.update_attribute(:shortname, entry.name.upcase.slice(0..(length-1)))
     end

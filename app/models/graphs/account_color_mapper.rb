@@ -14,7 +14,7 @@ class AccountColorMapper
     !accounts(type).empty?
   end
 
-  def accountsLegend(type)
+  def accounts_legend(type)
     accounts = accounts(type).sort
     accounts.collect { |p| [p.label_verbose, @map[p]] }
   end
@@ -24,21 +24,21 @@ class AccountColorMapper
   def generate_color(account)
     return Timebox::ATTENDANCE_POS_COLOR if account.nil?
     account.is_a?(Absence) ?
-        generateAbsenceColor(account.id) :
-        generateProjectColor(account.id)
+        generate_absence_color(account.id) :
+        generate_project_color(account.id)
   end
 
-  def generateAbsenceColor(id)
+  def generate_absence_color(id)
     srand id
-    '#FF' + randomColor(230) + randomColor(140)
+    '#FF' + random_color(230) + random_color(140)
   end
 
-  def generateProjectColor(id)
+  def generate_project_color(id)
     srand id
-    '#' + randomColor(170) + randomColor(240) + 'FF'
+    '#' + random_color(170) + random_color(240) + 'FF'
   end
 
-  def randomColor(span = 170)
+  def random_color(span = 170)
     lower = (255 - span) / 2
     hex = (lower + rand(span)).to_s(16)
     hex.size == 1 ? '0' + hex : hex

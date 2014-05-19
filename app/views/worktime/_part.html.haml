@@ -1,10 +1,10 @@
 %tr
-  %td{:align => "right", :style => "white-space: nowrap;"}= part.timeString
+  %td{:align => "right", :style => "white-space: nowrap;"}= part.time_string
   %td= part.account ? h(part.account.label_verbose) : 'Anwesenheitszeit'
   %td= h truncate(part.description, :length => 50) if part.description
   - if part.new_record?
     %td
-      = link_to 'L&ouml;schen', {:action => 'deletePart', :part_id => part_counter}, {:confirm => 'Wollen sie diese Arbeitszeit wirklich entfernen?', :method => 'post' }
+      = link_to 'L&ouml;schen', {:action => 'delete_part', :part_id => part_counter}, {:confirm => 'Wollen sie diese Arbeitszeit wirklich entfernen?', :method => 'post' }
   - else
     %td
       = link_to 'Bearbeiten', {:controller => part.controller, :action => 'edit', :id => part.id}

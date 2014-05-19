@@ -1,7 +1,7 @@
 #menu
   %ul
     %li.first= link_to 'Meine Zeit', :controller => 'evaluator', :action => 'userProjects', :clear => 1
-    - if @user.projectManager?
+    - if @user.project_manager?
       %li= link_to 'Meine Projekte', :controller => 'evaluator', :action => 'managed', :clear => 1
     %li= link_to 'Planung', :controller => 'planning', :action => 'index', :clear => 1
     - if @user.management

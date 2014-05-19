@@ -12,10 +12,10 @@ class VacationGraph
 
 
   def initialize(period = nil)
-    period ||= Period.currentYear
+    period ||= Period.current_year
     @actual_period = period
     @period = extend_to_weeks period
-    @todays_week = Period.weekFor(Date.today).to_s
+    @todays_week = Period.week_for(Date.today).to_s
 
     @absences_eval = AbsencesEval.new
 
@@ -62,7 +62,7 @@ class VacationGraph
   	 return nil if max_absence.nil?
 
   	 hours = times[max_absence] / MUST_HOURS_PER_DAY
-  	 color = colorFor(max_absence) if max_absence
+  	 color = color_for(max_absence) if max_absence
   	 Timebox.new nil, color, hours, tooltip
   end
 
@@ -90,8 +90,8 @@ class VacationGraph
     @colorMap.accounts?(type)
   end
 
-  def accountsLegend(type = Absence)
-    @colorMap.accountsLegend(type)
+  def accounts_legend(type = Absence)
+    @colorMap.accounts_legend(type)
   end
 
   private
@@ -165,12 +165,12 @@ class VacationGraph
 
   def create_tooltip(absences)
     entries = absences.collect do |time|
-      "#{time.work_date.strftime(DATE_FORMAT)}: #{time.timeString} #{time.absence.label}"
+      "#{time.work_date.strftime(DATE_FORMAT)}: #{time.time_string} #{time.absence.label}"
     end
     entries.join('<br/>')
   end
 
-  def colorFor(absence)
+  def color_for(absence)
     @colorMap[absence]
   end
 

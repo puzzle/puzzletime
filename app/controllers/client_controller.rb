@@ -6,11 +6,11 @@ class ClientController < ManageController
   GROUP_KEY = 'client'
 
 
-  def listActions
+  def list_actions
     [['Projekte', 'project', 'list', true]]
   end
 
-  def listFields
+  def list_fields
     [[:name, 'Name'], [:shortname, 'K&uuml;rzel']]
   end
 

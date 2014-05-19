@@ -14,7 +14,7 @@ class WorktimeTest < ActiveSupport::TestCase
     assert_equal worktimes(:wt_pz_allgemein).project_id, wt.project_id
     assert_equal projects(:allgemein).id, wt.account.id
     assert_equal employees(:pascal), wt.employee
-    assert !wt.startStop?
+    assert !wt.start_stop?
     assert_nil wt.absence
   end
 

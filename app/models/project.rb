@@ -79,11 +79,11 @@ class Project < ActiveRecord::Base
     super(options)
   end
 
-  def self.puzzlebaseMap
+  def self.puzzlebase_map
     Puzzlebase::CustomerProject
   end
 
-  def self.columnType(col)
+  def self.column_type(col)
     case col
       when :report_type then :report_type
       else super col

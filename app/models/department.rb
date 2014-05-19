@@ -28,7 +28,7 @@ class Department < ActiveRecord::Base
     ['Der', 'Gesch&auml;ftsbereich', 'Gesch&auml;ftsbereiche']
   end
 
-  def self.puzzlebaseMap
+  def self.puzzlebase_map
     Puzzlebase::Unit
   end
 
@@ -36,7 +36,7 @@ class Department < ActiveRecord::Base
 
   def self.method_missing(symbol, *args)
     case symbol
-      when :sumWorktime, :countWorktimes, :findWorktimes then Worktime.send(symbol, *args)
+      when :sum_worktime, :count_worktimes, :find_worktimes then Worktime.send(symbol, *args)
       else super
       end
   end

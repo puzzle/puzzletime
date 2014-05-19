@@ -11,7 +11,7 @@ class ManagedProjectsEval < ProjectsEval
   end
 
   def sum_total_times(period = nil)
-    category.sumManagedProjectsWorktime(period)
+    category.sum_managed_projects_worktime(period)
   end
 
 end

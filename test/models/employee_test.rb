@@ -7,7 +7,7 @@ class EmployeeTest < ActiveSupport::TestCase
 
   def test_half_year_employment
     employee = Employee.find(1)
-    period = yearPeriod(employee)
+    period = year_period(employee)
     assert_equal employee.statistics.employments_during(period).size, 1
     # assert_in_delta 10.08, employee.statistics.remaining_vacations(period.endDate), 0.005
     assert_equal employee.statistics.used_vacations(period), 0
@@ -17,7 +17,7 @@ class EmployeeTest < ActiveSupport::TestCase
 
   def test_various_employment
     employee = Employee.find(2)
-    period = yearPeriod(employee)
+    period = year_period(employee)
     employments = employee.statistics.employments_during(period)
     assert_equal 3, employments.size
     assert_equal employments[0].start_date, Date.new(2005, 11, 1)
@@ -34,7 +34,7 @@ class EmployeeTest < ActiveSupport::TestCase
 
   def test_next_year_employment
     employee = Employee.find(3)
-    period = yearPeriod(employee)
+    period = year_period(employee)
     assert_equal employee.statistics.employments_during(period).size, 0
     assert_equal employee.statistics.remaining_vacations(Date.new(2006, 12, 31)), 0
     assert_equal employee.statistics.used_vacations(period), 0
@@ -44,7 +44,7 @@ class EmployeeTest < ActiveSupport::TestCase
 
   def test_left_this_year_employment
     employee = Employee.find(4)
-    period = yearPeriod(employee)
+    period = year_period(employee)
     assert_equal employee.statistics.employments_during(period).size, 1
     # assert_in_delta 30 * 0.8 - 0.08, employee.statistics.remaining_vacations(period.endDate), 0.005
     assert_equal employee.statistics.used_vacations(period), 0
@@ -54,7 +54,7 @@ class EmployeeTest < ActiveSupport::TestCase
 
   def test_long_time_employment
     employee = Employee.find(5)
-    period = yearPeriod(employee)
+    period = year_period(employee)
     assert_equal employee.statistics.employments_during(period).size, 1
     # assert_in_delta 17 * 20 * 0.9 - 0.01, employee.statistics.remaining_vacations(period.endDate), 0.005
     assert_equal employee.statistics.used_vacations(period), 0
@@ -64,7 +64,7 @@ class EmployeeTest < ActiveSupport::TestCase
 
   private
 
-  def yearPeriod(employee)
+  def year_period(employee)
     employee.statistics.send :employment_period_to, Date.new(2006, 12, 31)
   end
 

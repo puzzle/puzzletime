@@ -7,7 +7,7 @@ module Manageable
 
   # Lists all entries in the database of the corresponding class.
   def list(options = {})
-    options[:order] ||= orderBy
+    options[:order] ||= order_by
     where(options[:conditions]).
     includes(options[:include]).
     reorder(options[:order]).
@@ -27,7 +27,7 @@ module Manageable
   end
 
   # Plural name of the class in German.
-  def labelPlural
+  def label_plural
     labels[2]
   end
 
@@ -37,22 +37,22 @@ module Manageable
   end
 
   # Data type of the field col of the class.
-  def columnType(col)
+  def column_type(col)
     col = columns_hash[col.to_s]
     col.type if col   # col may not be in columns_hash (e.g. for associations). Return nil in this case
   end
 
   # Field sorting order for listing all entries.
-  def orderBy
+  def order_by
     'name'
   end
 
-  def puzzlebaseMap
+  def puzzlebase_map
     nil
   end
 
   def local?
-    puzzlebaseMap.nil?
+    puzzlebase_map.nil?
   end
 
 end

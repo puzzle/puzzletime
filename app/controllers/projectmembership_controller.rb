@@ -11,32 +11,32 @@ class ProjectmembershipController < ApplicationController
   end
 
   def list
-    employee? ? listProjects : listEmployees
+    employee? ? list_projects : list_employees
   end
 
-  def listProjects
+  def list_projects
     id_group =  (! @user.management? || group_id.nil?) ? @user.id : group_id
     @subject = Employee.find(id_group)
     @list = Project.list.sort
     render action: 'list'
   end
 
-  def listEmployees
-    return listProjects unless projectManager?
+  def list_employees
+    return list_projects unless project_manager?
     @subject = Project.find(group_id)
     @list = Employee.list
     render action: 'list'
   end
 
-  def createManager
-    setManager(true)
+  def create_manager
+    set_manager(true)
   end
 
-  def removeManager
-    setManager(false)
+  def remove_manager
+    set_manager(false)
   end
 
-  def createMembership
+  def create_membership
     if params.key?(:ids)
       group_key = employee? ? :employee_id : :project_id
       entry = employee? ? :project_id : :employee_id
@@ -48,13 +48,13 @@ class ProjectmembershipController < ApplicationController
     else
       flash[:notice] = 'Bitte w&auml;hlen sie einen oder mehrere Mitarbeiter'
     end
-    redirectToList
+    redirect_to_list
   end
 
-  def removeMembership
+  def remove_membership
     Projectmembership.deactivate(params[:id])
     flash[:notice] = 'Der Mitarbeiter wurde vom Projekt entfernt'
-    redirectToList
+    redirect_to_list
   end
 
   def group
@@ -67,12 +67,12 @@ class ProjectmembershipController < ApplicationController
     Project.name.downcase != params[:subject]
   end
 
-  def projectManager?
+  def project_manager?
     @user.management? ||
       @user.managed_projects.collect { |p| p.id }.include?(group_id.to_i)
   end
 
-  def redirectToList
+  def redirect_to_list
     redirect_to action: 'list',
                 page: params[:page],
                 subject: params[:subject],
@@ -81,13 +81,13 @@ class ProjectmembershipController < ApplicationController
                 group_pages: params[:group_pages]
   end
 
-  def setManager(bool)
+  def set_manager(bool)
     projectmembership = Projectmembership.find(params[:id])
     projectmembership.update_attributes(projectmanagement: bool)
     # reload list for user (old version is cached otherwise)
     @user.managed_projects(true) if projectmembership.employee_id == @user.id
     flash[:notice] = "#{projectmembership.employee.label} wurde als Projektleiter " + (bool ? 'erfasst' : 'entfernt')
-    redirectToList
+    redirect_to_list
   end
 
   def group_id

@@ -17,17 +17,17 @@ class ProjectController < ManageController
   def list
     # nana, list managed projects for everybody
     # if @user.management? then super
-    # else listManagedProjects
+    # else list_managed_projects
     # end
-    group? ? super : listManagedProjects
+    group? ? super : list_managed_projects
   end
 
-  def listManagedProjects
+  def list_managed_projects
     @entries = @user.managed_projects.page(params[:page])
     render action: 'list'
   end
 
-  def listSubProjects
+  def list_sub_projects
     list
   end
 
@@ -43,21 +43,21 @@ class ProjectController < ManageController
 
   ####### helper methods, not actions ##########
 
-  def modelClass
+  def model_class
     Project
   end
 
-  def listActions
+  def list_actions
     [['Subprojekte', 'project', 'list', :children?],
-     ['Mitarbeiter', 'projectmembership', 'listEmployees', true]]
+     ['Mitarbeiter', 'projectmembership', 'list_employees', true]]
   end
 
-  def listFields
+  def list_fields
     [[:name, 'Name'],
      [:description, 'Beschreibung']]
   end
 
-  def editFields
+  def edit_fields
     [[:description, 'Beschreibung'],
      [:report_type, 'Reporttyp'],
      [:offered_hours, 'Offerierte Stunden'],
@@ -67,7 +67,7 @@ class ProjectController < ManageController
      [:ticket_required, 'Ticket/Task nötig']]
   end
 
-  def formatColumn(attribute, value, entry)
+  def format_column(attribute, value, entry)
     return entry.label_verbose if attribute == :name
     super attribute, value, entry
   end
@@ -93,11 +93,14 @@ class ProjectController < ManageController
   private
 
   def sub_projects?
-    groupClass == modelClass
+    group_class == model_class
   end
 
   def sub_sub_project?
-    params[:groups].size > 2 && params[:groups][-2] == group_key && params[:groups][-3] == group_key
+    params[:groups] &&
+    params[:groups].size > 2 &&
+    params[:groups][-2] == group_key &&
+    params[:groups][-3] == group_key
   end
 
 end

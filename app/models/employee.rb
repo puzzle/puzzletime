@@ -70,37 +70,37 @@ class Employee < ActiveRecord::Base
   # Returns the logged-in Employee or nil if the login failed.
   def self.login(username, pwd)
     user = find_by_shortname_and_passwd(username.upcase, encode(pwd))
-    user = ldapLogin(username, pwd) if user.nil?
+    user = ldap_login(username, pwd) if user.nil?
     user
   end
 
   # Performs a login over LDAP with the passed data.
   # Returns the logged-in Employee or nil if the login failed.
-  def self.ldapLogin(username, pwd)
+  def self.ldap_login(username, pwd)
     if !username.strip.empty? &&
-       (ldapAuthUser(LDAP_USER_DN, username, pwd) ||
-        (ldapAuthUser(LDAP_EXTERNAL_DN, username, pwd) &&
-         ldapGroupMember(username)))
+       (ldap_auth_user(LDAP_USER_DN, username, pwd) ||
+        (ldap_auth_user(LDAP_EXTERNAL_DN, username, pwd) &&
+         ldap_group_member(username)))
       return find_by_ldapname(username)
     end
     nil
   end
 
-  def self.ldapAuthUser(dn, username, pwd)
-    ldapConnection.bind_as(base: dn,
+  def self.ldap_auth_user(dn, username, pwd)
+    ldap_connection.bind_as(base: dn,
                            filter: "uid=#{username}",
                            password: pwd)
   end
 
-  def self.ldapGroupMember(username)
-    result = ldapConnection.search(base: LDAP_GROUP,
+  def self.ldap_group_member(username)
+    result = ldap_connection.search(base: LDAP_GROUP,
                                    filter: Net::LDAP::Filter.eq('memberUid', username))
     not result.empty?
   end
 
   # Returns a Array of LDAP user information
-  def self.ldapUsers
-    ldapConnection.search(base: LDAP_USER_DN,
+  def self.ldap_users
+    ldap_connection.search(base: LDAP_USER_DN,
                           attributes: %w(uid sn givenname mail))
   end
 
@@ -108,7 +108,7 @@ class Employee < ActiveRecord::Base
     joins('left join employments em on em.employee_id = employees.id').
     where('(em.end_date IS null or em.end_date >= ?) AND em.start_date <= ?',
           period.startDate, period.endDate).
-    order(orderBy).
+    order(order_by).
     uniq
   end
 
@@ -118,11 +118,11 @@ class Employee < ActiveRecord::Base
     %w(Der Mitarbeiter Mitarbeiter)
   end
 
-  def self.orderBy
+  def self.order_by
     'lastname, firstname'
   end
 
-  def self.columnType(col)
+  def self.column_type(col)
     case col
     when :current_percent then :decimal
     when :default_report_type then :report_type
@@ -130,7 +130,7 @@ class Employee < ActiveRecord::Base
     end
   end
 
-  def self.puzzlebaseMap
+  def self.puzzlebase_map
     Puzzlebase::Employee
   end
 
@@ -140,29 +140,29 @@ class Employee < ActiveRecord::Base
     lastname + ' ' + firstname
   end
 
-  # Redirects the messages :sumWorktime, :countWorktimes, :findWorktimes
+  # Redirects the messages :sum_worktime, :count_worktimes, :find_worktimes
   # to the Worktime Class.
   def self.method_missing(symbol, *args)
     case symbol
-      when :sumWorktime, :countWorktimes, :findWorktimes then Worktime.send(symbol, *args)
+      when :sum_worktime, :count_worktimes, :find_worktimes then Worktime.send(symbol, *args)
       else super
       end
   end
 
   # Sums the attendance times of this Employee.
   def sum_attendance(period = nil, options = {})
-    self.class.sumAttendanceFor attendancetimes, period, options
+    self.class.sum_attendance_for attendancetimes, period, options
   end
 
   # Sums all attendance times in the system.
   def self.sum_attendance(period = nil, options = {})
-    sumAttendanceFor Attendancetime, period, options
+    sum_attendance_for Attendancetime, period, options
   end
 
   ##### helper methods #####
 
   # Whether this Employee is a project manager
-  def projectManager?
+  def project_manager?
     managed_projects.size > 0
   end
 
@@ -176,16 +176,16 @@ class Employee < ActiveRecord::Base
     projectmemberships.build(project_id: DEFAULT_PROJECT_ID)
   end
 
-  def checkPasswd(pwd)
+  def check_passwd(pwd)
     passwd == Employee.encode(pwd)
   end
 
-  def setPasswd(pwd)
+  def set_passwd(pwd)
     update_attributes(passwd: Employee.encode(pwd))
   end
 
   # Sums the worktimes of all managed projects.
-  def sumManagedProjectsWorktime(period)
+  def sum_managed_projects_worktime(period)
     sql = 'SELECT sum(hours) AS sum ' \
           'FROM (((employees E LEFT JOIN projectmemberships PM ON E.id = PM.employee_id) ' +
 	        ' LEFT JOIN projects P ON PM.project_id = P.id)' +
@@ -197,7 +197,7 @@ class Employee < ActiveRecord::Base
   end
 
   # Returns the date the passed project was completed last.
-  def lastCompleted(project)
+  def last_completed(project)
     # search hierarchy up first
     path = project.path_ids.clone
     membership = nil
@@ -284,13 +284,13 @@ class Employee < ActiveRecord::Base
 
   private
 
-  def self.ldapConnection
+  def self.ldap_connection
     Net::LDAP.new host: LDAP_HOST,
                   port: LDAP_PORT,
                   encryption: :simple_tls
   end
 
-  def self.sumAttendanceFor(receiver, period = nil, options = {})
+  def self.sum_attendance_for(receiver, period = nil, options = {})
     if period
       options = clone_options options
       append_conditions(options[:conditions], ['work_date BETWEEN ? AND ?', period.startDate, period.endDate])
