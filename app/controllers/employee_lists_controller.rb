@@ -1,7 +1,7 @@
 class EmployeeListsController < ApplicationController
 
   before_action :authenticate
-  before_action :setPeriod
+  before_action :set_period
 
 
   # GET /employee_lists/1

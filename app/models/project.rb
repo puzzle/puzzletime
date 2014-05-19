@@ -42,7 +42,7 @@ class Project < ActiveRecord::Base
            ->(project) do
              joins(:project).
              unscope(where: :project_id).
-             where("worktimes.project_id = projects.id AND " \
+             where('worktimes.project_id = projects.id AND ' \
                    "#{project.id} = ANY (projects.path_ids)")
            end
 

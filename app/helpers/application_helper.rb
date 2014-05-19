@@ -56,9 +56,9 @@ module ApplicationHelper
 
     text_field(object, method, html_options) +
     content_tag(:span, image_tag('calendar.gif',
-                       title: 'Kalender anzeigen',
-                       size: '15x15',
-                       class: 'calendar'))
+                                 title: 'Kalender anzeigen',
+                                 size: '15x15',
+                                 class: 'calendar'))
   end
 
   private

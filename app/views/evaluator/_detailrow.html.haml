@@ -12,4 +12,4 @@
   - if @evaluation.deleteLink?(@user)
     %td
       - if ! detailrow.booked
-        = link_to 'L&ouml;schen', evaluation_detail_params.merge!({:controller => detailrow.controller, :action =>'confirmDelete', :id => detailrow.id})                |
+        = link_to 'L&ouml;schen', evaluation_detail_params.merge!({:controller => detailrow.controller, :action =>'confirm_delete', :id => detailrow.id})                |

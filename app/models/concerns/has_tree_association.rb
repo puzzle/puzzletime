@@ -26,7 +26,7 @@ module HasTreeAssociation
 
   def descendant_scope
     joins(:project).
-           where("worktimes.project_id = projects.id AND " \
+           where('worktimes.project_id = projects.id AND ' \
                  "#{@association.owner.id} = ANY (projects.path_ids)")
   end
 

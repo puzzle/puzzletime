@@ -7,7 +7,7 @@ class EvaluatorController < ApplicationController
   before_action :authorize, only: [:clients, :employees, :overtime,
                                    :clientProjects, :employeeProjects, :employeeAbsences,
                                    :exportCapacityCSV, :exportExtendedCapacityCSV, :exportMAOverview]
-  before_action :setPeriod
+  before_action :set_period
 
   helper_method :user_view?
 
@@ -154,7 +154,7 @@ class EvaluatorController < ApplicationController
       sendCSV(CapacityReport.new(@period))
     else
       flash[:notice] = 'Bitte wählen Sie eine Zeitspanne für die detaillierte Auslastung.'
-      redirect_to request.env["HTTP_REFERER"].present? ? :back : root_path
+      redirect_to request.env['HTTP_REFERER'].present? ? :back : root_path
     end
   end
 
@@ -163,7 +163,7 @@ class EvaluatorController < ApplicationController
       sendCSV(ExtendedCapacityReport.new(@period))
     else
       flash[:notice] = 'Bitte wählen Sie eine Zeitspanne für die Auslastung.'
-      redirect_to request.env["HTTP_REFERER"].present? ? :back : root_path
+      redirect_to request.env['HTTP_REFERER'].present? ? :back : root_path
     end
   end
 

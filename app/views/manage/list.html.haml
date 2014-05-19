@@ -16,7 +16,7 @@
         - if editFields.size > 0
           %td= link_to 'Bearbeiten', linkParams(:action => 'edit', :id => entry)
         - if modelClass.local?
-          %td= link_to 'L&ouml;schen', linkParams(:action => 'confirmDelete', :id => entry)
+          %td= link_to 'L&ouml;schen', linkParams(:action => 'confirm_delete', :id => entry)
 
 - if @entries.total_pages > 1
   %p

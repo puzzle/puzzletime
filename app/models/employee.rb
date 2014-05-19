@@ -150,12 +150,12 @@ class Employee < ActiveRecord::Base
   end
 
   # Sums the attendance times of this Employee.
-  def sumAttendance(period = nil, options = {})
+  def sum_attendance(period = nil, options = {})
     self.class.sumAttendanceFor attendancetimes, period, options
   end
 
   # Sums all attendance times in the system.
-  def self.sumAttendance(period = nil, options = {})
+  def self.sum_attendance(period = nil, options = {})
     sumAttendanceFor Attendancetime, period, options
   end
 

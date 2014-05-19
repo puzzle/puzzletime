@@ -9,7 +9,7 @@ class ProjectController < ManageController
 
   # Checks if employee came from login or from direct url.
   before_action :authenticate
-  before_action :authorize, only: [:delete, :confirmDelete]
+  before_action :authorize, only: [:delete, :confirm_delete]
 
   VALID_GROUPS = [ClientController, DepartmentController, ProjectController]
   GROUP_KEY = 'project'

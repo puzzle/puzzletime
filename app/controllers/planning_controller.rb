@@ -2,7 +2,7 @@ class PlanningController < ApplicationController
 
   before_action :authenticate
 
-  before_action :setPeriod
+  before_action :set_period
 
   def index
     redirect_to action: 'my_planning'
@@ -174,8 +174,8 @@ class PlanningController < ApplicationController
 
   def planned_employees(department, period)
     # this could be improved with a many-to-many table relation between Department and Employee
-    projects = Project.where({ department_id: department })
-    memberships = Projectmembership.where({ project_id: projects.collect { |p|p.id }, active: true })
+    projects = Project.where(department_id: department)
+    memberships = Projectmembership.where(project_id: projects.collect { |p|p.id }, active: true)
     employees = Employee.find(memberships.collect { |m| m.employee_id })
     period ||= Period.currentMonth
     employees.select { |e| e.employment_at(period.startDate).present? || e.employment_at(period.endDate).present? }

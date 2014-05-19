@@ -20,7 +20,7 @@ module ManageHelper
                 when :boolean then { align: :center }
                 else {}
                 end
-    #"<td#{options}>#{h(formatColumn(attribute, entry.send(attribute), entry)).gsub("\n", '<br/>')}</td>"
+    # "<td#{options}>#{h(formatColumn(attribute, entry.send(attribute), entry)).gsub("\n", '<br/>')}</td>"
     simple_format(formatColumn(attribute, entry.send(attribute), entry), options, wrapper_tag: :td)
   end
 

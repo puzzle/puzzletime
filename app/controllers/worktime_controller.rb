@@ -79,9 +79,9 @@ class WorktimeController < ApplicationController
     end
   end
 
-  def confirmDelete
+  def confirm_delete
     setWorktime
-    render action: 'confirmDelete'
+    render action: 'confirm_delete'
   end
 
   def delete
@@ -185,7 +185,7 @@ class WorktimeController < ApplicationController
   protected
 
   def createDefaultWorktime
-    setPeriod
+    set_period
     setNewWorktime
     @worktime.from_start_time = Time.zone.now.change(hour: DEFAULT_START_HOUR)
     @worktime.report_type = @user.report_type || DEFAULT_REPORT_TYPE
@@ -212,7 +212,7 @@ class WorktimeController < ApplicationController
       options[:category_id] = @worktime.employee_id
       options[:division_id] = nil
       options[:clear] = 1
-      setPeriod
+      set_period
       if @period.nil? || ! @period.include?(@worktime.work_date)
         period = Period.weekFor(@worktime.work_date)
         options[:start_date] = period.startDate

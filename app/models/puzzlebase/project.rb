@@ -49,7 +49,7 @@ class Puzzlebase::Project < Puzzlebase::Base
   def self.updateLocal(original)
     client_shortnames = original.customer_projects.collect { |cp| cp.customer.S_CUSTOMER }
     locals = ::Project.joins(:client).
-                       where("projects.shortname = ? AND " \
+                       where('projects.shortname = ? AND ' \
                              "clients.shortname IN (#{client_shortnames.join(', ')})",
                              original.S_PROJECT)
     locals.each do |local|

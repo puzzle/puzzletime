@@ -20,7 +20,7 @@ class EmployeeController < ManageController
                                          :user_periods, :eval_periods)
     if @user.update_attributes(attrs)
       flash[:notice] =  'Die Benutzereinstellungen wurden aktualisiert'
-      redirect_to HOME_ACTION
+      redirect_to root_path
     else
       flash[:notice] = 'Die Benutzereinstellungen konnten nicht aktualisiert werden'
       render action: 'settings'

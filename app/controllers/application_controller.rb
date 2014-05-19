@@ -7,10 +7,10 @@
 # Likewise, all the methods added will be available for all controllers.
 
 class ApplicationController < ActionController::Base
+
   protect_from_forgery with: :exception
 
-  HOME_ACTION = { controller: 'evaluator', action: 'userProjects' }
-
+  private
 
   # Filter for check if user is logged in or not
   def authenticate
@@ -30,19 +30,19 @@ class ApplicationController < ActionController::Base
 
   def authorize
     if authenticate
-      unless @user.management
+      if @user.management
+        true
+      else
         flash[:notice] = 'Sie sind nicht authorisiert, um diese Seite zu öffnen'
-        redirect_to HOME_ACTION
-        return false
+        redirect_to root_path
+        false
       end
     else
-      return false
+      false
     end
   end
 
-  protected
-
-  def setPeriod
+  def set_period
     @period = nil
     p = session[:period]
     if p.kind_of? Array
@@ -55,9 +55,10 @@ class ApplicationController < ActionController::Base
     if @user
       reset_session
       session[:user_id] = @user.id
-      return true
+      true
+    else
+      false
     end
-    false
   end
 
 end

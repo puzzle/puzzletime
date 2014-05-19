@@ -121,7 +121,7 @@ class ExtendedCapacityReport < BaseCapacityReport
       end
 
       project_total_hours = project_total_billable_hours + project_total_non_billable_hours + internal_project_total_hours
-      attendance_hours = employee.sumAttendance(@period)
+      attendance_hours = employee.sum_attendance(@period)
       diff = attendance_hours - project_total_hours
       additional_attendance_hours = diff.abs > 0.001 ? diff : 0
 

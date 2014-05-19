@@ -16,7 +16,7 @@ class AbsencetimeController < WorktimeController
                   action: detailAction,
                   evaluation: userEvaluation,
                   clear: 1 }
-      setPeriod
+      set_period
       if @period.nil? ||
           (! @period.include?(@multiabsence.start_date) ||
           ! @period.include?(@multiabsence.end_date))

@@ -75,9 +75,9 @@ class ManageController < ApplicationController
   end
 
   # Action to confirm the deletion of an entry.
-  def confirmDelete
+  def confirm_delete
     setEntryFromId
-    render action: 'confirmDelete'
+    render action: 'confirm_delete'
   end
 
   # Action to delete an entry from the database.

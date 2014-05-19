@@ -25,7 +25,7 @@ class TarantulaTest < ActionDispatch::IntegrationTest
 
     t.allow_404_for /^\-?\d+$/
     t.allow_404_for /projecttime\/start$/
-    t.allow_404_for /attendancetime\/confirmDelete\/\d+$/
+    t.allow_404_for /attendancetime\/confirm_delete\/\d+$/
     t.allow_404_for /attendancetime\/update\/\d+$/
 
     t.crawl
