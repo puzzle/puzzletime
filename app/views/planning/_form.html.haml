@@ -39,35 +39,36 @@
     %td
       = radio_button('planning', 'abstract_concrete', 'concrete', :checked => (!@planning.is_abstract || @planning.new_record?))
       Tagesplanung
-      %table
-        %tr{:class => cycle('', 'uneven')}
-          %th
-          %th= Date::ABBR_DAYNAMES[1]
-          %th= Date::ABBR_DAYNAMES[2]
-          %th= Date::ABBR_DAYNAMES[3]
-          %th= Date::ABBR_DAYNAMES[4]
-          %th= Date::ABBR_DAYNAMES[5]
-        %tr{:class => cycle('', 'uneven')}
-          %td Vormittag
-          %td= check_box 'planning', 'monday_am', {:onclick => "switch_day('planning_monday')"}
-          %td= check_box 'planning', 'tuesday_am', {:onclick => "switch_day('planning_tuesday')"}
-          %td= check_box 'planning', 'wednesday_am', {:onclick => "switch_day('planning_wednesday')"}
-          %td= check_box 'planning', 'thursday_am', {:onclick => "switch_day('planning_thursday')"}
-          %td= check_box 'planning', 'friday_am', {:onclick => "switch_day('planning_friday')"}
-        %tr{:class => cycle('', 'uneven')}
-          %td Nachmittag
-          %td= check_box 'planning', 'monday_pm', {:onclick => "switch_day('planning_monday')"}
-          %td= check_box 'planning', 'tuesday_pm', {:onclick => "switch_day('planning_tuesday')"}
-          %td= check_box 'planning', 'wednesday_pm', {:onclick => "switch_day('planning_wednesday')"}
-          %td= check_box 'planning', 'thursday_pm', {:onclick => "switch_day('planning_thursday')"}
-          %td= check_box 'planning', 'friday_pm', {:onclick => "switch_day('planning_friday')"}
-        %tr{:class => cycle('', 'uneven')}
-          %td{:rowspan => "2"} Ganzer Tag
-          %td= check_box 'planning', 'monday', {:onclick => "switch_half_day('planning_monday')"}
-          %td= check_box 'planning', 'tuesday', {:onclick => "switch_half_day('planning_tuesday')"}
-          %td= check_box 'planning', 'wednesday', {:onclick => "switch_half_day('planning_wednesday')"}
-          %td= check_box 'planning', 'thursday', {:onclick => "switch_half_day('planning_thursday')"}
-          %td= check_box 'planning', 'friday', {:onclick => "switch_half_day('planning_friday')"}
+      %table.striped
+        %tbody
+          %tr
+            %th
+            %th= Date::ABBR_DAYNAMES[1]
+            %th= Date::ABBR_DAYNAMES[2]
+            %th= Date::ABBR_DAYNAMES[3]
+            %th= Date::ABBR_DAYNAMES[4]
+            %th= Date::ABBR_DAYNAMES[5]
+          %tr
+            %td Vormittag
+            %td= check_box 'planning', 'monday_am', data: { switch_day: 'planning_monday'}
+            %td= check_box 'planning', 'tuesday_am', data: { switch_day: 'planning_tuesday' }
+            %td= check_box 'planning', 'wednesday_am', data: { switch_day: 'planning_wednesday' }
+            %td= check_box 'planning', 'thursday_am', data: { switch_day: 'planning_thursday' }
+            %td= check_box 'planning', 'friday_am', data: { switch_day: 'planning_friday' }
+          %tr
+            %td Nachmittag
+            %td= check_box 'planning', 'monday_pm', data: { switch_day: 'planning_monday' }
+            %td= check_box 'planning', 'tuesday_pm', data: { switch_day: 'planning_tuesday' }
+            %td= check_box 'planning', 'wednesday_pm', data: { switch_day: 'planning_wednesday' }
+            %td= check_box 'planning', 'thursday_pm', data: { switch_day: 'planning_thursday' }
+            %td= check_box 'planning', 'friday_pm', data: { switch_day: 'planning_friday' }
+          %tr
+            %td{:rowspan => "2"} Ganzer Tag
+            %td= check_box 'planning', 'monday', data: { switch_half_day: 'planning_monday' }
+            %td= check_box 'planning', 'tuesday', data: { switch_half_day: 'planning_tuesday' }
+            %td= check_box 'planning', 'wednesday', data: { switch_half_day: 'planning_wednesday' }
+            %td= check_box 'planning', 'thursday', data: { switch_half_day: 'planning_thursday' }
+            %td= check_box 'planning', 'friday', data: { switch_half_day: 'planning_friday' }
       = radio_button('planning', 'abstract_concrete', 'abstract', :checked => @planning.is_abstract)
       Prozentplanung
       \#{select("planning", "abstract_amount", (1..44).collect {|x| ["#{x*2.5}%", x*2.5]}, {:include_blank => true})}

@@ -75,6 +75,20 @@ textarea, input, select {
     line-height:    16px;
 }
 
+.right {
+  text-align: right;
+}
+
+.center {
+  text-align: center;
+}
+
+table.table td.action {
+  width: 20px;
+  text-align: center;
+}
+
+
 #content {
 	display:		table;
 	width: 			992px;
@@ -183,10 +197,6 @@ th.periodHead {
 
 #evaluation td {
 	white-space: nowrap;
-}
-
-.uneven {
-    background-color: #C9D8FF;
 }
 
 table.striped tbody tr:nth-child(odd) {

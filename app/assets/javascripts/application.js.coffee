@@ -8,10 +8,11 @@
 #= require jquery-ui-datepicker-i18n
 #= require_self
 #= require worktime
+#= require planning
 #= require turbolinks
 
 
-window.App ||= {}
+app = window.App ||= {}
 
 datepickerI18n = ->
   $.datepicker.regional[$('html').attr('lang')]
@@ -38,15 +39,6 @@ datepicker = do ->
     options = $.extend(options, datepickerI18n())
     field.datepicker(options)
     field.datepicker('show')
-
-
-
-switch_half_day = (day) ->
-	document.getElementById(day + '_am').checked = document.getElementById(day).checked
-	document.getElementById(day + '_pm').checked = document.getElementById(day).checked
-
-switch_day = (day) ->
-	document.getElementById(day).checked = document.getElementById(day + '_am').checked && document.getElementById(day + '_pm').checked
 
 
 $ ->
