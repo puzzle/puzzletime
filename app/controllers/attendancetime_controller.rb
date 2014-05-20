@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class AttendancetimeController < WorktimeController
 
   before_action :authenticate, except: [:auto_start_stop]
@@ -18,7 +20,7 @@ class AttendancetimeController < WorktimeController
         start_running Attendancetime.new, now
       end
     else
-      flash[:notice] = "Ung&uuml;ltige Benutzerdaten.\n"
+      flash[:notice] = "Ungültige Benutzerdaten.\n"
     end
     render text: flash[:notice]
   end
@@ -26,7 +28,7 @@ class AttendancetimeController < WorktimeController
   # called from running
   def start
     if running_time
-      flash[:notice] = 'Es wurde bereits eine fr&uuml;here Anwesenheitszeit gestartet.'
+      flash[:notice] = 'Es wurde bereits eine frühere Anwesenheitszeit gestartet.'
     else
       start_running Attendancetime.new
     end

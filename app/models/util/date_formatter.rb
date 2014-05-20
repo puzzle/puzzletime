@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class DateFormatter
 
   def initialize(*date_fields)

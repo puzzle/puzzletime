@@ -32,7 +32,7 @@ class Timebox
   end
 
   def self.attendance_pos(attendance, hours)
-    attendance(attendance, ATTENDANCE_POS_COLOR, hours, 'zus&auml;tzliche Anwesenheit')
+    attendance(attendance, ATTENDANCE_POS_COLOR, hours, 'zusätzliche Anwesenheit')
   end
 
   def self.attendance_neg(attendance, hours)

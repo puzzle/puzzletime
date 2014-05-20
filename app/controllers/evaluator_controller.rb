@@ -119,8 +119,8 @@ class EvaluatorController < ApplicationController
     end
     flash[:notice] = 'Alle Arbeitszeiten '
     flash[:notice] += "von #{Employee.find(@evaluation.employee_id).label} " if @evaluation.employee_id
-    flash[:notice] += "f&uuml;r #{Project.find(@evaluation.account_id).label_verbose}" \
-                     "#{ ' w&auml;hrend dem ' + @period.to_s if @period} wurden verbucht."
+    flash[:notice] += "für #{Project.find(@evaluation.account_id).label_verbose}" \
+                     "#{ ' während dem ' + @period.to_s if @period} wurden verbucht."
     redirect_to params.merge(action: 'details')
   end
 
@@ -139,13 +139,13 @@ class EvaluatorController < ApplicationController
       pm.update_attributes(last_completed: Date.today)
     end
     flash[:notice] = 'Das Datum der kompletten Erfassung aller Zeiten ' \
-                     "f&uuml;r das Projekt #{project.label_verbose} wurde aktualisiert."
+                     "für das Projekt #{project.label_verbose} wurde aktualisiert."
     redirect_to params[:back_url]
   end
 
   def complete_all
     @user.projectmemberships.where(active: true).update_all(last_completed: Date.today)
-    flash[:notice] = 'Das Datum der kompletten Erfassung aller Zeiten wurde f&uuml;r alle Projekte aktualisiert.'
+    flash[:notice] = 'Das Datum der kompletten Erfassung aller Zeiten wurde für alle Projekte aktualisiert.'
     redirect_to params[:back_url]
   end
 
@@ -196,7 +196,7 @@ class EvaluatorController < ApplicationController
      # redirect_to_overview
     redirect_to params[:back_url]
   rescue ArgumentError => ex        # ArgumentError from Period.new or if period.negative?
-    flash[:notice] = "Ung&uuml;ltige Zeitspanne: #{ex}"
+    flash[:notice] = "Ungültige Zeitspanne: #{ex}"
     render action: 'select_period'
   end
 

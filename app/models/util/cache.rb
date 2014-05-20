@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class Cache
 
   attr_accessor :max_size, :timeout

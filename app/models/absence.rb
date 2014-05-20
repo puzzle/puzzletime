@@ -37,7 +37,7 @@ class Absence < ActiveRecord::Base
   end
 
   def dont_destroy_vacation
-    fail 'Die Ferien Absenz kann nicht gel&ouml;scht werden' if id == VACATION_ID
+    fail 'Die Ferien Absenz kann nicht gelöscht werden' if id == VACATION_ID
   end
 
 end

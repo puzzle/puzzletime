@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class ProjectmembershipController < ApplicationController
 
   before_action :authenticate
@@ -44,9 +46,9 @@ class ProjectmembershipController < ApplicationController
       params[:ids].each do |id|
         Projectmembership.activate(group_key => id_group, entry => id)
       end
-      flash[:notice] = 'Der/Die Mitarbeiter wurden dem Projekt hinzugef&uuml;gt'
+      flash[:notice] = 'Der/Die Mitarbeiter wurden dem Projekt hinzugefügt'
     else
-      flash[:notice] = 'Bitte w&auml;hlen sie einen oder mehrere Mitarbeiter'
+      flash[:notice] = 'Bitte wählen sie einen oder mehrere Mitarbeiter'
     end
     redirect_to_list
   end

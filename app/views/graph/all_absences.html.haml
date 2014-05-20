@@ -7,12 +7,12 @@
     %tr.head
       %th{:rowspan => "2"}
       - if @user.management
-        %th{:rowspan => "2"} &Uuml;b
+        %th{:rowspan => "2"} Üb
         %th{:rowspan => "2"} Gh
       = month_header
       - if @user.management
         %th{:rowspan => "2"} Bz
-        %th{:rowspan => "2"} &Uuml;b
+        %th{:rowspan => "2"} Üb
     %tr.head
       = week_header
   %tbody
@@ -49,12 +49,12 @@
       %td{:colspan => "2"}
         %b Spalten
     %tr
-      %td &Uuml;b
-      %td Ferien &Uuml;bertrag vor/nach der gew&auml;hlten Zeitspanne
+      %td Üb
+      %td Ferien Übertrag vor/nach der gewählten Zeitspanne
     %tr
       %td Gh
-      %td Ferien Guthaben w&auml;hrend der gew&auml;hlten Zeitspanne
+      %td Ferien Guthaben während der gewählten Zeitspanne
     %tr
       %td Bz
-      %td Bezogene Ferien w&auml;hrend der gew&auml;hlten Zeitspanne
+      %td Bezogene Ferien während der gewählten Zeitspanne
 %br{:clear => "all"}/

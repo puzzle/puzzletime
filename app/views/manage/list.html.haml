@@ -16,7 +16,7 @@
         - if edit_fields.size > 0
           %td= link_to 'Bearbeiten', link_params(:action => 'edit', :id => entry)
         - if model_class.local?
-          %td= link_to 'L&ouml;schen', link_params(:action => 'confirm_delete', :id => entry)
+          %td= link_to 'Löschen', link_params(:action => 'confirm_delete', :id => entry)
 
 - if @entries.total_pages > 1
   %p
@@ -29,6 +29,6 @@
     = link_to new_label, link_params(:action => 'add')
   - if group
     = '|' if model_class.local?
-    = link_to "&Uuml;bersicht #{group_label}", group_params({:controller => group.class.to_s.downcase, :action => 'list'})
+    = link_to "Übersicht #{group_label}", group_params({:controller => group.class.to_s.downcase, :action => 'list'})
   - elsif ! model_class.local?
     = link_to 'Synchronisieren', link_params({:action => 'synchronize', :page => params[:page]}), :method => :post

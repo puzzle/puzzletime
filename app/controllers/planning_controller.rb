@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class PlanningController < ApplicationController
 
   before_action :authenticate

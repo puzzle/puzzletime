@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module WorktimeHelper
 
   def select_report_type(auto_start_stop_type = false)

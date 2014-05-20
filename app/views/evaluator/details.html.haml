@@ -5,7 +5,7 @@
 = render :partial => 'detail_times'
 
 %p
-  = link_to '&Uuml;bersicht', :action => params[:evaluation], :category_id => params[:category_id]
+  = link_to 'Übersicht', :action => params[:evaluation], :category_id => params[:category_id]
   - if @evaluation.for? @user
   - details = params[:action] == 'details'
     = link_to details ? 'Anwesenheiten' : 'Arbeitszeiten', evaluation_detail_params.merge!({:action => details ? 'attendance_details' : 'details' })

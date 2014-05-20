@@ -9,4 +9,4 @@
   = link_to 'Arbeitszeiten', evaluation_detail_params.merge!({:controller => 'evaluator', :action => controller.detail_action })
   - if @user == @worktime.employee
     |
-    \#{link_to 'L&ouml;schen',  evaluation_detail_params.merge!({ :action =>'confirm_delete', :id => @worktime.id})}
+    \#{link_to 'Löschen',  evaluation_detail_params.merge!({ :action =>'confirm_delete', :id => @worktime.id})}

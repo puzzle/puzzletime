@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz
 
@@ -14,7 +16,7 @@ class LoginController < ApplicationController
       if login_with(params[:user], params[:pwd])
         redirect_to params[:ref].present? ? params[:ref] : root_path
       else
-        flash[:notice] = 'Ung&uuml;ltige Benutzerdaten'
+        flash[:notice] = 'Ungültige Benutzerdaten'
       end
     end
   end

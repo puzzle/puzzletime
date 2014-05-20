@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class EmployeeListsController < ApplicationController
 
   before_action :authenticate

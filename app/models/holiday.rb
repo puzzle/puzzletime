@@ -22,8 +22,8 @@ class Holiday < ActiveRecord::Base
 
   before_validation DateFormatter.new('holiday_date')
 
-  validates_presence_of :holiday_date, message: 'Das Datum ist ung&uuml;ltig'
-  validates_presence_of :musthours_day, message: 'Die Muss Stunden m&uuml;ssen angegeben werden'
+  validates_presence_of :holiday_date, message: 'Das Datum ist ungültig'
+  validates_presence_of :musthours_day, message: 'Die Muss Stunden müssen angegeben werden'
   validates_uniqueness_of :holiday_date, message: 'Pro Datum ist nur ein Feiertag erlaubt'
 
 

@@ -236,7 +236,7 @@ class WorktimeController < ApplicationController
                       end_time: @worktime.to_end_time }]
       conditions[0] = ' NOT ' + conditions[0] unless @worktime.is_a? Attendancetime
       overlaps = Worktime.where(conditions).to_a
-      flash[:notice] += " Es besteht eine &Uuml;berlappung mit mindestens einem anderen Eintrag: <br/>\n" unless overlaps.empty?
+      flash[:notice] += " Es besteht eine Überlappung mit mindestens einem anderen Eintrag: <br/>\n" unless overlaps.empty?
       flash[:notice] += overlaps.join("<br/>\n") unless overlaps.empty?
     end
   end

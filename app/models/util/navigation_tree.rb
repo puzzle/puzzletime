@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class NavigationTree
   def initialize
     @tree = []

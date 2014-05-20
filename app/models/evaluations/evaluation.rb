@@ -43,7 +43,7 @@ class Evaluation
                        employee: 'Wer',
                        account: 'Projekt',
                        billable: '$',
-                       booked: '&beta;',
+                       booked: '&beta;'.html_safe,
                        ticket: 'Ticket',
                        description: 'Beschreibung' }
 
@@ -110,7 +110,7 @@ class Evaluation
 
   # The title for this Evaluation
   def title
-    label + (class_category? ? ' &Uuml;bersicht' : ' von ' + category.label)
+    label + (class_category? ? ' Übersicht' : ' von ' + category.label)
   end
 
   def worktime_name

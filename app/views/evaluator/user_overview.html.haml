@@ -11,11 +11,13 @@
     = link_to 'Anwesenheit starten',
               {:controller => 'attendancetime', :action => 'start'},
               :method => 'post'
+  |
   - if @evaluation.absences?
     = link_to 'Absenz erfassen',
               :controller => 'absencetime',
               :action => 'add'
-    = link_to 'Mehrw&ouml;chige Absenz erfassen',
+    |
+    = link_to 'Mehrwöchige Absenz erfassen',
               :controller => 'absencetime',
               :action => 'add_multi_absence'
   - else
@@ -24,6 +26,7 @@
               :method => 'post',
               :confirm => 'Wollen sie wirklich alle Projekte komplettieren?'
   - if @user.management
+    |
     = link_to 'Fremderfassen',
               :controller => worktime_controller,
               :action => 'add',

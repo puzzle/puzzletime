@@ -1,11 +1,11 @@
 %p
   - if @period
-    Zeiten w&auml;hrend #{@period} &nbsp;
+    Zeiten während #{@period} &nbsp;
     = link_to 'Aktuelle Zeitspanne',
               :controller => 'evaluator',
               :action => 'current_period',
               :back_url => request.original_fullpath
-  |
+    |
   = link_to 'Andere Zeitspanne',
             :controller => 'evaluator',
             :action => 'select_period',

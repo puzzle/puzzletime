@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module EmployeeHelper
 
   def multiple_check_box(object_name, field, value)

@@ -21,7 +21,7 @@ class Employment < ActiveRecord::Base
   attr_accessor :final
 
   # All dependencies between the models are listed below.
-  validates_inclusion_of :percent, in: 0..200, message: 'Die Prozente m&uuml;ssen angegeben werden'
+  validates_inclusion_of :percent, in: 0..200, message: 'Die Prozente müssen angegeben werden'
   validates_presence_of :start_date, message: 'Das Start Datum muss angegeben werden'
   validates_presence_of :employee_id, message: 'Es muss ein Mitarbeiter angegeben werden'
   validate :valid_period
@@ -36,9 +36,9 @@ class Employment < ActiveRecord::Base
 
   def valid_period
     if end_date && period && period.negative?
-      errors.add_to_base('Die Zeitspanne ist ung&uuml;ltig')
+      errors.add_to_base('Die Zeitspanne ist ungültig')
     elsif parallel_employments?
-      errors.add_to_base('F&uuml;r diese Zeitspanne ist bereits eine andere Anstellung definiert')
+      errors.add_to_base('Für diese Zeitspanne ist bereits eine andere Anstellung definiert')
     end
   end
 

@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class OvertimeVacationController < ManageController
 
   VALID_GROUPS = [EmployeeController]

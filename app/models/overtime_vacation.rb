@@ -35,11 +35,11 @@ class OvertimeVacation < ActiveRecord::Base
   ##### interface methods for Manageable #####
 
   def label
-    "die &Uuml;berzeit-Ferien Umbuchung von #{hours} Stunden am #{transfer_date.strftime(DATE_FORMAT)}"
+    "die Überzeit-Ferien Umbuchung von #{hours} Stunden am #{transfer_date.strftime(DATE_FORMAT)}"
   end
 
   def self.labels
-    ['Die', '&Uuml;berzeit-Ferien Umbuchung', '&Uuml;berzeit-Ferien Umbuchungen']
+    ['Die', 'Überzeit-Ferien Umbuchung', 'Überzeit-Ferien Umbuchungen']
   end
 
   def self.order_by

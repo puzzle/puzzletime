@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class ReportType
 
   include Comparable
@@ -19,7 +21,7 @@ class ReportType
   end
 
   def validate_worktime(worktime)
-    worktime.errors.add(:hours, 'Stunden m&uuml;ssen positiv sein') if worktime.hours <= 0
+    worktime.errors.add(:hours, 'Stunden müssen positiv sein') if worktime.hours <= 0
   end
 
   def copy_times(source, target)
@@ -85,10 +87,10 @@ class StartStopType < ReportType
 
   def validate_worktime(worktime)
     unless worktime.from_start_time.is_a?(Time)
-      worktime.errors.add(:from_start_time, 'Die Anfangszeit ist ung&uuml;ltig')
+      worktime.errors.add(:from_start_time, 'Die Anfangszeit ist ungültig')
     end
     unless worktime.to_end_time.is_a?(Time)
-      worktime.errors.add(:to_end_time, 'Die Endzeit ist ung&uuml;ltig')
+      worktime.errors.add(:to_end_time, 'Die Endzeit ist ungültig')
     end
     if worktime.from_start_time.is_a?(Time) && worktime.to_end_time.is_a?(Time) &&
        worktime.to_end_time <= worktime.from_start_time
@@ -113,7 +115,7 @@ class AutoStartType < StartStopType
     worktime.to_end_time = nil
     # validate
     unless worktime.from_start_time.is_a?(Time)
-      worktime.errors.add(:from_start_time, 'Die Anfangszeit ist ung&uuml;ltig')
+      worktime.errors.add(:from_start_time, 'Die Anfangszeit ist ungültig')
     end
     if worktime.employee
       existing = worktime.employee.send("running_#{worktime.class.name[0..-5].downcase}".to_sym)

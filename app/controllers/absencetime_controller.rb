@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class AbsencetimeController < WorktimeController
 
   def add_multi_absence

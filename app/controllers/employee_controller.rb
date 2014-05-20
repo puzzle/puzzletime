@@ -35,7 +35,7 @@ class EmployeeController < ManageController
         flash[:notice] = 'Das Passwort wurde aktualisiert'
         redirect_to controller: 'evaluator'
       else
-        flash[:notice] = 'Die Passwort Best&auml;tigung stimmt nicht mit dem Passwort &uuml;berein'
+        flash[:notice] = 'Die Passwort Bestätigung stimmt nicht mit dem Passwort überein'
         render controller: 'employee', action: 'changePasswd', id: @user.id
       end
     else
@@ -52,7 +52,7 @@ class EmployeeController < ManageController
 
   def list_actions
     [['Projekte', 'projectmembership', 'list_projects', true],
-     ['&Uuml;berzeit', 'overtime_vacation', 'list', true],
+     ['Überzeit', 'overtime_vacation', 'list', true],
      ['Anstellungen', 'employment', 'list', true]]
   end
 

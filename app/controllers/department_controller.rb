@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz
 
@@ -10,7 +12,7 @@ class DepartmentController < ManageController
   end
 
   def list_fields
-    [[:name, 'Name'], [:shortname, 'K&uuml;rzel']]
+    [[:name, 'Name'], [:shortname, 'Kürzel']]
   end
 
 end

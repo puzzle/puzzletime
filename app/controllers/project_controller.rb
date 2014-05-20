@@ -81,7 +81,7 @@ class ProjectController < ManageController
   end
 
   def group_label
-    sub_sub_project? ? '&Uuml;bergeordnetes Projekt' : super
+    sub_sub_project? ? 'Übergeordnetes Projekt' : super
   end
 
   protected

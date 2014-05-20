@@ -33,7 +33,7 @@ class Worktime < ActiveRecord::Base
   belongs_to :absence
   belongs_to :project
 
-  validates_presence_of :work_date, message: 'Das Datum ist ung&uuml;ltig'
+  validates_presence_of :work_date, message: 'Das Datum ist ungültig'
   validates_presence_of :employee_id, message: 'Ein Mitarbeiter muss vorhanden sein'
   validate :validate_by_report_type
 
@@ -183,7 +183,7 @@ class Worktime < ActiveRecord::Base
   end
 
   def to_s
-    "#{time_string} #{self.class.label} #{'f&uuml;r ' + account.label_verbose if account_id}"
+    "#{time_string} #{self.class.label} #{'für ' + account.label_verbose if account_id}"
   end
 
   ##################  CLASS METHODS   ######################

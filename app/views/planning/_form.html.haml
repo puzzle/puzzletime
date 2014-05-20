@@ -83,7 +83,7 @@
       = week_calendar_field 'planning', 'end_week_date'
       %br/
       = radio_button('planning', 'repeat_type', 'forever', :checked => (!@planning.new_record? && @planning.repeat_type_forever?))
-      Unbeschr&auml;nkt
+      Unbeschränkt
   %tr
     %td{:valign => "top"} Typ:
     %td
@@ -101,4 +101,4 @@
       = submit_tag 'Speichern'
 - if @planning && !@planning.new_record?
   %p
-    = link_to('L&ouml;schen', {:controller => 'planning', :action => 'delete', :planning => @planning}, :confirm => "Wollen sie die Plannung wirklich entfernen?", :method => :post)
+    = link_to('Löschen', {:controller => 'planning', :action => 'delete', :planning => @planning}, :confirm => "Wollen sie die Plannung wirklich entfernen?", :method => :post)

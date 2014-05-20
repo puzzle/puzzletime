@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz
 
@@ -20,7 +22,7 @@ module EvaluatorHelper
       when :employee then td worktime.employee.shortname
       when :account then td worktime.account.label_verbose
       when :billable then td(worktime.billable ? '$' : ' ')
-      when :booked then  td(worktime.booked ? '&beta;' : ' ')
+      when :booked then  td(worktime.booked ? '&beta;'.html_safe : ' ')
       when :ticket then  td worktime.ticket
       when :description
         description = worktime.description || ''
@@ -117,7 +119,7 @@ module EvaluatorHelper
                          to_a
     tooltip = ''
     unless transfers.empty?
-      tooltip = '<a href="#" class="tooltip">&lt;-&gt;<span>&Uuml;berzeit-Ferien Umbuchungen:<br/>'
+      tooltip = '<a href="#" class="tooltip">&lt;-&gt;<span>Überzeit-Ferien Umbuchungen:<br/>'
       transfers.collect! do |t|
         " - #{format_date(t.transfer_date)}: #{format_hour(t.hours)} h"
       end
@@ -136,15 +138,15 @@ module EvaluatorHelper
   def time_info
     stat = @user.statistics
     infos = @period ?
-            [[['&Uuml;berzeit', stat.overtime(@period).to_f, 'h'],
+            [[['Überzeit', stat.overtime(@period).to_f, 'h'],
               ['Bezogene Ferien', stat.used_vacations(@period), 'd'],
               ['Soll Arbeitszeit', stat.musttime(@period), 'h']],
              [['Abschliessend', stat.current_overtime(@period.endDate), 'h'],
               ['Verbleibend', stat.remaining_vacations(@period.endDate), 'd']]]  :
-            [[['&Uuml;berzeit Gestern', stat.current_overtime, 'h'],
+            [[['Überzeit Gestern', stat.current_overtime, 'h'],
               ['Bezogene Ferien', stat.used_vacations(Period.current_year), 'd'],
               ['Monatliche Arbeitszeit', stat.musttime(Period.current_month), 'h']],
-             [['&Uuml;berzeit Heute', stat.current_overtime(Date.today), 'h'],
+             [['Überzeit Heute', stat.current_overtime(Date.today), 'h'],
               ['Verbleibend', stat.current_remaining_vacations, 'd'],
               ['Verbleibend', 0 - stat.overtime(Period.current_month).to_f, 'h']]]
     render partial: 'timeinfo', locals: { infos: infos }

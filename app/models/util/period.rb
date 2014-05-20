@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class Period
 
   attr_reader :startDate, :endDate, :label
@@ -138,7 +140,7 @@ class Period
       when Date.yesterday then 'Gestern'
       when Time.new.advance(days: -2).to_date then 'Vorgestern'
       when Date.tomorrow then 'Morgen'
-      when Time.new.advance(days: 2).to_date then '&Uuml;bermorgen'
+      when Time.new.advance(days: 2).to_date then 'Übermorgen'
       else date.strftime(DATE_FORMAT)
     end
   end

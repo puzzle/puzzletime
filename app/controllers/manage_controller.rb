@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # ManageController may be extended by other Controllers that want to provide
 # management functionality for their represented objects. This includes listing,
 # creating, updating and deleting entries.

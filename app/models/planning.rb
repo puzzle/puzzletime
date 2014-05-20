@@ -63,9 +63,9 @@ class Planning < ActiveRecord::Base
   end
 
   def validate_planning
-    errors.add(:start_week, 'Von Format ist ung&uuml;ltig') unless valid_week?(start_week)
-    errors.add(:end_week, 'Bis Format ist ung&uuml;ltig') if end_week && !valid_week?(end_week)
-    errors.add(:end_week, 'Bis Datum ist ung&uuml;ltig') if end_week && (end_week < start_week)
+    errors.add(:start_week, 'Von Format ist ungültig') unless valid_week?(start_week)
+    errors.add(:end_week, 'Bis Format ist ungültig') if end_week && !valid_week?(end_week)
+    errors.add(:end_week, 'Bis Datum ist ungültig') if end_week && (end_week < start_week)
 
     halfday_selected = (monday_am || monday_pm || tuesday_am || tuesday_pm || wednesday_am || wednesday_pm || thursday_am || thursday_pm || friday_am || friday_pm)
 
