@@ -1,0 +1,7 @@
+- if params[:project_id]
+  %p
+    - # TODO back link to grouped projects
+    = link_to "Übersicht Projekte", projects_path(returning: true)
+- elsif params[:employee_id]
+  %p
+    = link_to "Übersicht Mitarbeiter", employees_path(returning: true)

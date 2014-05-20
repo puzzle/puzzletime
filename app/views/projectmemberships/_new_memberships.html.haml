@@ -1,0 +1,9 @@
+%p
+  = form_tag action: 'create_membership' do
+    = list_label
+    \:
+    %br/
+    = select_tag 'ids[]',
+                 options_from_collection_for_select(@list, :id, :label_verbose), :multiple => true,
+                 :size => 15
+    = submit_tag 'Hinzufügen'

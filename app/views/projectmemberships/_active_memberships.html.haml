@@ -1,0 +1,29 @@
+%table.striped
+  %thead
+    %tr
+      %th= list_label
+      %th Projektleitung
+  %tbody
+    - @projects.each do |membership|
+      %tr
+        %td
+          = project? ? membership.employee.label : membership.project.label_verbose
+        %td{:align => "center"}
+          - if project? || @user.management?
+            - if membership.projectmanagement
+              = link_to 'Entfernen',
+                        { action: 'destroy_manager', id: membership},
+                        method: :delete
+            - else
+              = link_to 'Hinzufügen',
+                        { action: 'create_manager', id: membership },
+                        method: :post
+          - else
+            = f(membership.projectmanagement)
+        %td
+          = link_to 'Vom Projekt entfernen',
+                    { action: 'remove_membership', id: membership },
+                    data: { confirm: "Wollen Sie #{membership.employee.label} " \
+                                     "wirklich vom Projekt " \
+                                     "#{membership.project.label} entfernen?",
+                            method: :destroy }
