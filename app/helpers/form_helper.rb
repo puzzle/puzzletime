@@ -17,7 +17,10 @@ module FormHelper
     options[:builder] ||= DryCrud::Form::Builder
     options[:cancel_url] ||= polymorphic_path(object, returning: true)
 
-    form_for(object, options, &block)
+    form_for(object, options) do |form|
+      render('shared/error_messages', object: Array(object).last) +
+      content_tag(:table, yield(form))
+    end
   end
 
   # Renders a standard form for the given entry and attributes.
@@ -27,8 +30,7 @@ module FormHelper
   # if present. An options hash may be given as the last argument.
   def standard_form(object, *attrs, &block)
     plain_form(object, attrs.extract_options!) do |form|
-      content = form.error_messages
-
+      content = ''
       if block_given?
         content << capture(form, &block)
       else

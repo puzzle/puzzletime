@@ -2,7 +2,44 @@ Rails.application.routes.draw do
 
   root to: 'evaluator#user_projects'
 
+  concern :with_projects do
+    resources :projects, only: [:index, :edit, :update] do
+      resources :projects, only: [:index, :edit, :update]
+    end
+  end
+
+  concerns :with_projects
+
+  resources :absences, except: [:show]
+
+  resources :clients, only: [:index], concerns: :with_projects
+
+  resources :departments, only: [:index], concerns: :with_projects
+
+  resources :employees, except: [:show, :destroy] do
+    collection do
+      get :settings
+      post :settings, to: 'employees#update_settings'
+      get :passwd
+      post :passwd, to: 'employees#update_passwd'
+    end
+
+    resources :employments, only: [:index]
+    resources :overtime_vacations, except: [:show]
+  end
+
   resources :employee_lists
+
+  resources :holidays, except: [:show]
+
+  resources :projectmemberships do
+    collection do
+      get :projects
+      get :employees
+    end
+  end
+
+  resources :user_notifications, execpt: [:show]
 
   scope '/planning', controller: 'planning' do
     post 'create'
@@ -19,7 +56,6 @@ Rails.application.routes.draw do
   # TODO: POST actions:
   # evaluator  :complete_project, :complete_all, :book_all
   # attendancetime :auto_start_stop, :startNow, :endNow
-  # employee: :update_pwd
   # manage: :create, :update, :delete, :synchronize
   # worktime: :delete, :create_part, :delete_part, :start, :stop, :create, :update
 

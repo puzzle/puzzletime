@@ -13,9 +13,7 @@ class CrudController < ListController
 
   self.responder = DryCrud::Responder
 
-  if Rails.version >= '4.0'
-    class_attribute :permitted_attrs
-  end
+  class_attribute :permitted_attrs
 
   # Defines before and after callback hooks for create, update, save and
   # destroy actions.
@@ -59,9 +57,9 @@ class CrudController < ListController
   #   POST /entries.json
   def create(options = {}, &block)
     assign_attributes
-    created = with_callbacks(:create, :save) { entry.save }
-    respond_options = options.reverse_merge(success: created)
-    respond_with(entry, respond_options, &block)
+    options[:success] = with_callbacks(:create, :save) { entry.save }
+    options[:location] ||= index_url
+    respond_with(entry, options, &block)
   end
 
   # Display a form to edit an exisiting entry of this model.
@@ -79,9 +77,9 @@ class CrudController < ListController
   #   PUT /entries/1.json
   def update(options = {}, &block)
     assign_attributes
-    updated = with_callbacks(:update, :save) { entry.save }
-    respond_options = options.reverse_merge(success: updated)
-    respond_with(entry, respond_options, &block)
+    options[:success] = with_callbacks(:update, :save) { entry.save }
+    options[:location] ||= index_url
+    respond_with(entry, options, &block)
   end
 
   # Destroy an existing entry of this model.
@@ -101,6 +99,20 @@ class CrudController < ListController
     respond_options = options.reverse_merge(success: destroyed,
                                             location: location)
     respond_with(entry, respond_options, &block)
+  end
+
+  def synchronize
+    mapper = model_class.puzzlebase_map
+    flash[:notice] = models_label(true) + ' wurden nicht aktualisiert'
+    redirect_to_list if mapper.nil?
+    @errors = mapper.synchronize
+    if @errors.empty?
+      flash[:notice] = models_label(true) + ' wurden erfolgreich aktualisiert'
+      redirect_to_list
+    else
+      flash[:notice] = 'Folgende Fehler sind bei der Synchronisation aufgetreten:'
+      render action: 'synchronize'
+    end
   end
 
   private
@@ -129,11 +141,7 @@ class CrudController < ListController
 
   # The form params for this model.
   def model_params
-    if Rails.version < '4.0'
-      params[model_identifier]
-    else
-      params.require(model_identifier).permit(permitted_attrs)
-    end
+    params.require(model_identifier).permit(permitted_attrs)
   end
 
   # Url of the index page to return to.

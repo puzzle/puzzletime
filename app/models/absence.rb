@@ -40,4 +40,8 @@ class Absence < ActiveRecord::Base
     fail 'Die Ferien Absenz kann nicht gelöscht werden' if id == VACATION_ID
   end
 
+  def to_s
+    name
+  end
+
 end

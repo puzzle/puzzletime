@@ -116,7 +116,7 @@ class Employment < ActiveRecord::Base
     Puzzlebase::Employment
   end
 
-  def label
+  def to_s
     "die Anstellung vom #{date_label start_date} - #{date_label end_date}"
   end
 

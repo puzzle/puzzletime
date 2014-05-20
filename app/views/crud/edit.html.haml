@@ -1,5 +1,9 @@
 - @title ||= ti(:title, model: full_entry_label).html_safe
 
-- content_for(:actions, render('actions_edit'))
+= render 'info'
 
 = render 'form'
+
+%br/
+= render 'backlink'
+= render 'actions_edit'

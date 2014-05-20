@@ -93,6 +93,7 @@ class ManageController < ApplicationController
     redirect_to_list
   end
 
+  #
   def synchronize
     mapper = model_class.puzzlebase_map
     flash[:notice] = model_class.label_plural + ' wurden nicht aktualisiert'
@@ -149,16 +150,6 @@ class ManageController < ApplicationController
     group_class.find(group_id) if group?
   end
 
-  # Formats the value for the field attribute.
-  def format_column(attribute, value, entry)
-    case model_class.column_type(attribute)
-      when :date then I18n.l(value, format: LONG_DATE_FORMAT) if value
-      when :float, :decimal then '%01.2f' % value if value
-      when :integer then value
-      when :boolean then value ? 'ja' : 'nein'
-      else value.to_s
-      end
-  end
 
   # Label for the group overview link
   def group_label

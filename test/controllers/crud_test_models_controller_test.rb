@@ -14,7 +14,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
 
   attr_accessor :models
 
-  setup :reset_db, :setup_db, :create_test_data, :special_routing
+  setup :reset_db, :setup_db, :create_test_data, :special_routing, :login
 
   teardown :reset_db
 
@@ -49,7 +49,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   def test_index_search
     super
     assert_equal 1, entries.size
-    assert_equal({ q: 'AAAA' }, session[:list_params]['/crud_test_models'])
+    assert_equal({ q: 'AAAA' }.with_indifferent_access, session[:list_params]['/crud_test_models'])
   end
 
   def test_index_with_custom_options
@@ -68,7 +68,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert entries.present?
     assert_equal 1, entries.size
     assert_equal [CrudTestModel.find_by_name('BBBBB')], entries
-    assert_equal({ q: 'DDD' }, session[:list_params]['/crud_test_models'])
+    assert_equal({ q: 'DDD' }.with_indifferent_access, session[:list_params]['/crud_test_models'])
   end
 
   def test_sort_given_column
@@ -78,7 +78,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert entries.present?
     assert_equal 6, entries.size
     assert_equal CrudTestModel.all.sort_by(&:children), entries
-    assert_equal({ sort: 'children', sort_dir: 'asc' },
+    assert_equal({ sort: 'children', sort_dir: 'asc' }.with_indifferent_access,
                  session[:list_params]['/crud_test_models'])
   end
 
@@ -88,7 +88,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_template 'index'
     assert entries.present?
     assert_equal 6, entries.size
-    assert_equal({ sort: 'chatty', sort_dir: 'desc' },
+    assert_equal({ sort: 'chatty', sort_dir: 'desc' }.with_indifferent_access,
                  session[:list_params]['/crud_test_models'])
 
     # sort order is ambiguous, use index
@@ -108,7 +108,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert entries.present?
     assert_equal 3, entries.size
     assert_equal %w(CCCCC DDDDD BBBBB), entries.map(&:name)
-    assert_equal({ sort: 'chatty', sort_dir: 'asc', q: 'DDD' },
+    assert_equal({ sort: 'chatty', sort_dir: 'asc', q: 'DDD' }.with_indifferent_access,
                  session[:list_params]['/crud_test_models'])
   end
 
@@ -116,7 +116,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     session[:list_params] = {}
     session[:list_params]['/crud_test_models'] = { q: 'DDD',
                                                    sort: 'chatty',
-                                                   sort_dir: 'desc' }
+                                                   sort_dir: 'desc' }.with_indifferent_access
     get :index, returning: true
     assert_response :success
     assert_template 'index'

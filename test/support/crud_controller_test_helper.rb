@@ -80,7 +80,7 @@ module CrudControllerTestHelper
     assert_difference("#{model_class.name}.count") do
       post :create, test_params(model_identifier => new_entry_attrs)
     end
-    assert_redirected_to_show entry
+    assert_redirected_to_index
     assert !entry.new_record?
     assert_attrs_equal(new_entry_attrs)
   end
@@ -107,7 +107,7 @@ module CrudControllerTestHelper
                                model_identifier => edit_entry_attrs)
     end
     assert_attrs_equal(edit_entry_attrs)
-    assert_redirected_to_show entry
+    assert_redirected_to_index
   end
 
   def test_update_json # :nodoc:

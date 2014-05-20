@@ -1,0 +1,7 @@
+- if model_class.local?
+  = add_action_link
+- if group
+  = '|' if model_class.local?
+  = group_projects_link
+- elsif ! model_class.local?
+  = link_to 'Synchronisieren', link_params({:action => 'synchronize', :page => params[:page]}), :method => :post

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 18) do
+ActiveRecord::Schema.define(version: 20140520103140) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -51,7 +51,7 @@ ActiveRecord::Schema.define(version: 18) do
     t.string  "firstname",                                       null: false
     t.string  "lastname",                                        null: false
     t.string  "shortname",             limit: 3,                 null: false
-    t.string  "passwd",                                          null: false
+    t.string  "passwd"
     t.string  "email",                                           null: false
     t.boolean "management",                      default: false
     t.float   "initial_vacation_days", :default => { :expr => "(0)::double precision" }

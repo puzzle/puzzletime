@@ -43,6 +43,7 @@ class Projectmembership < ActiveRecord::Base
     order('clients.shortname, projects.name')
   end
 
+
   def self.activate(attributes)
     create(attributes)
     membership = where(assoc_conditions(attributes[:employee_id], attributes[:project_id])[:conditions]).first

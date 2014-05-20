@@ -3,6 +3,8 @@
 # A Module to be mixed in by classes that may be managed by the ManageController.
 #
 # All methods are on the class side, so use 'extend Manageable' to use this Module.
+
+# TODO remove
 module Manageable
 
   # Lists all entries in the database of the corresponding class.

@@ -17,4 +17,8 @@ class EmployeeList < ActiveRecord::Base
 
   validates_presence_of :title, message: 'Name der Mitarbeiterliste fehlt.'
 
+  def to_s
+    title
+  end
+
 end

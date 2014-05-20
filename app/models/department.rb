@@ -21,6 +21,9 @@ class Department < ActiveRecord::Base
 
   before_destroy :protect_worktimes
 
+  def to_s
+    name
+  end
 
   ##### interface methods for Manageable #####
 

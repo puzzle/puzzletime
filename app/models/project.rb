@@ -48,6 +48,8 @@ class Project < ActiveRecord::Base
 
   before_validation DateFormatter.new('freeze_until')
 
+
+  schema_validations except: :path_ids
   validates_presence_of :name, message: 'Ein Name muss angegeben werden'
   validates_uniqueness_of :name, scope: [:parent_id, :client_id], message: 'Dieser Name wird bereits verwendet'
   validates_presence_of :shortname, message: 'Ein Kürzel muss angegeben werden'
@@ -65,6 +67,18 @@ class Project < ActiveRecord::Base
     includes(:client).
     references(:client).
     order('clients.shortname, projects.name')
+  end
+
+  def to_s
+    name
+  end
+
+  def client_name
+    client.name
+  end
+
+  def department_name
+    department.name
   end
 
   ##### interface methods for Manageable #####

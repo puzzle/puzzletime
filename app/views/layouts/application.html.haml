@@ -10,7 +10,6 @@
     = favicon_link_tag 'favicon.gif'
     = stylesheet_link_tag 'application', :media => 'all', 'data-turbolinks-track' => true
     = javascript_include_tag "application", 'data-turbolinks-track' => true
-
   %body
     #content
       = image_tag 'space.gif', :size => '840x1'
@@ -24,7 +23,7 @@
       - if @user
         = render 'layouts/menu'
         #menu_user
-          = link_to @user.label, :controller => 'employee', :action => 'settings'
+          = link_to @user.label, settings_employees_path
           |
           = link_to '?', 'https://twiki.puzzle.ch/bin/view/Puzzle/PuzzleTimeFAQ'
           |
@@ -35,7 +34,7 @@
 
       %h1= @title
       - if flash.key?('notice')
-        #notice= flash[:notice]
+        #notice= flash[:notice].html_safe
       %div
         = yield
 

@@ -1,0 +1,146 @@
+
+de-CH:
+  activerecord:
+    models:
+      absence:
+        one: Absenz
+        other: Absenzen
+      absencetime:
+        one: Absenz
+        other: Absenzen
+      client:
+        one: Kunde
+        other: Kunden
+      department:
+        one: Geschäftsbereich
+        other: Geschäftsbereiche
+      employee_list:
+        one: Liste
+        other: Listen
+      employee:
+        one: Mitarbeiter
+        other: Mitarbeiter
+      employment:
+        one: Anstellung
+        other: Anstellungen
+      holiday:
+        one: Feiertag
+        other: Feiertage
+      overtime_vacation:
+        one: Überzeit-Ferien Umbuchung
+        other: Überzeit-Ferien Umbuchungen
+      planning:
+        one: Planung
+        other: Planungen
+      project:
+        one: Projekt
+        other: Projekte
+      projecttime:
+        one: Projektzeit
+        other: Projektzeiten
+      projectmembership:
+        one: Projekt
+        other: Projekte
+      user_notification:
+        one: Nachricht
+        other: Nachrichten
+      worktime:
+        one: Arbeitszeit
+        other: Arbeitszeiten
+
+    attributes:
+      absence:
+        name: Bezeichnung
+        payed: Bezahlt
+        private: Nicht öffentlich
+      client:
+        name: Name
+        shortname: Kürzel
+        contact: Kontaktperson
+      department:
+        name: Name
+        shortname: Kürzel
+      employee_list:
+        title: Bezeichnung
+        employee_id: Mitarbeiter
+      employee:
+        firstname: Vorname
+        lastname: Nachname
+        shortname: Kürzel
+        passwd: Passwort
+        management: GL
+        initial_vacation_days: Anfängliche Ferien
+        ldapname: LDAP Name
+        current_percent: Prozent
+        report_type: Default Reporttyp
+        default_project_id: Default Projekt
+        user_periods: Zeitspannen Eigene Zeit
+        eval_periods: Zeitspannen Auswertungen
+      employment:
+        employee_id: Mitarbeiter
+        start_date: Startdatum
+        end_date: Enddatum
+        percent: Prozent
+      holiday:
+        holiday_date: Datum
+        musthours_day: Muss Stunden
+      overtime_vacation:
+        employee_id: Mitarbeiter
+        hours: Stunden
+        transfer_date: Umgebucht am
+      planning:
+        employee_id: Mitarbeiter
+        project_id: Projekt
+        start_week: Start
+        end_week: Bis KW
+        definitive: Definitiv
+        description: Beschreibung
+        monday_am: Montag Vormittag
+        monday_pm: Montag Nachmittag
+        tuesday_am: Dienstag Vormittag
+        tuesday_pm: Dienstag Nachmittag
+        wednesday_am: Mittwoch Vormittag
+        wednesday_pm: Mittwoch Nachmittag
+        thursday_am: Donnerstag Vormittag
+        thursday_pm: Donnerstag Nachmittag
+        friday_am: Freitag Vormittag
+        friday_pm: Freitag Nachmittag
+        is_abstract: Abstrakt
+        abstract_amount: Anzahl
+      project:
+        client_id: Kunde
+        department_id: Geschäftsbereich
+        name: Name
+        shortname: Kürzel
+        client_name: Kunde
+        department_name: Geschäftsbereich
+        description: Beschreibung
+        report_type: Reporttyp
+        offered_hours: Offerierte Stunden
+        billable: Verrechenbar
+        freeze_until: Eingefroren vor
+        description_required: Beschreibung nötig
+        ticket_required: Ticket/Task nötig
+      projectmembership:
+        project_id: Projekt
+        employee_id: Mitarbeiter
+        projectmanagement: Projektleitung
+        last_completed: Komplettiert
+        active: Aktiv
+      user_notification:
+        date_from: Startdatum
+        date_to: Enddatum
+        message: Nachricht
+      worktime:
+        project_id: Projekt
+        absence_id: Absenz
+        employee_id: Mitarbeiter
+        report_type: Reporttyp
+        work_date: Datum
+        hours: Stunden
+        from_start_time: Von
+        to_end_time: Bis
+        description: Beschreibung
+        billable: Verrechenbar
+        booked: Verbucht
+        ticket: Ticket/Task

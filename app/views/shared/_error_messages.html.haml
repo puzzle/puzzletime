@@ -6,4 +6,4 @@
       - errors.each do |attr, msg|
         %li
           \-
-          = msg
+          = /^[[:upper:]]/.match(msg) ? msg : errors.full_message(attr, msg)

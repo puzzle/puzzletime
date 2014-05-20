@@ -114,7 +114,7 @@ class FormatHelperTest < ActionView::TestCase
 
     test 'format date column' do
       m = crud_test_models(:AAAAA)
-      assert_equal '01.01.1910', format_type(m, :birthdate)
+      assert_equal 'Sa, 01.01.1910', format_type(m, :birthdate)
     end
 
     test 'format datetime column' do
@@ -125,7 +125,7 @@ class FormatHelperTest < ActionView::TestCase
 
   test 'format time column' do
     m = crud_test_models(:AAAAA)
-    assert_equal '01:01', format_type(m, :gets_up_at)
+    assert_equal '00:01', format_type(m, :gets_up_at)
   end
 
   test 'format text column' do

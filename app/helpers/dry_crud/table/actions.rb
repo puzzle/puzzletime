@@ -44,7 +44,7 @@ module DryCrud::Table
         path = action_path(e, &block)
         if path
           path = path.is_a?(String) ? path : edit_polymorphic_path(path)
-          table_action_link('pencil', path, html_options.clone)
+          table_action_link('Bearbeiten', path, html_options.clone)
         end
       end
     end
@@ -56,7 +56,7 @@ module DryCrud::Table
       action_col do |e|
         path = action_path(e, &block)
         if path
-          table_action_link('remove',
+          table_action_link('Löschen',
                             path,
                             html_options.merge(
                               data: { confirm: ti(:confirm_delete),
@@ -72,9 +72,8 @@ module DryCrud::Table
     end
 
     # Generic action link inside a table.
-    def table_action_link(icon, url, html_options = {})
-      add_css_class(html_options, "icon icon-#{icon}")
-      link_to('', url, html_options)
+    def table_action_link(label, url, html_options = {})
+      link_to(label, url, html_options)
     end
 
     private

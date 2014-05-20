@@ -69,11 +69,11 @@ module DryCrud
       @model_class ||= controller_name.classify.constantize
     end
 
-      # The identifier of the model used for form parameters.
-      # I.e., the symbol of the underscored model name.
-      def model_identifier
-        @model_identifier ||= model_class.model_name.param_key
-      end
+    # The identifier of the model used for form parameters.
+    # I.e., the symbol of the underscored model name.
+    def model_identifier
+      @model_identifier ||= model_class.model_name.param_key
+    end
 
     # A human readable plural name of the model.
     def models_label(plural = true)

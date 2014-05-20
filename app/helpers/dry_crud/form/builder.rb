@@ -67,6 +67,7 @@ module DryCrud::Form
     # Render a standard string field with column contraints.
     def string_field(attr, html_options = {})
       html_options[:maxlength] ||= column_property(@object, attr, :limit)
+      html_options[:size] ||= 30
       text_field(attr, html_options)
     end
 
@@ -78,34 +79,46 @@ module DryCrud::Form
 
     # Customize the standard text area to have 5 rows by default.
     def text_area(attr, html_options = {})
-      html_options[:rows] ||= 5
+      html_options[:rows] ||= 8
+      html_options[:cols] ||= 50
       super
+    end
+
+    # Render a field to select a date.
+    def date_field(attr, html_options = {})
+      format = html_options.delete(:format)
+      date = date_value(attr, format)
+      html_options[:size] = 15
+      html_options[:class] = 'date'
+      html_options[:value] = date
+      html_options[:data] ||= {}
+      html_options[:data][:format] = format == WEEK_FORMAT ? 'week' : 'date'
+
+      text_field(attr, html_options) +
+      content_tag(:span, @template.image_tag('calendar.gif',
+                                             title: 'Kalender anzeigen',
+                                             size: '15x15',
+                                             class: 'calendar'))
+    end
+
+    def date_value(attr, format)
+      raw = @object._timeliness_raw_value_for(attr.to_s)
+      if raw
+        raw
+      else
+        val = @object.send(attr)
+        val.is_a?(Date) ? template.l(val, format: format) : val
+      end
+    end
+
+    def number_field(attr, html_options = {})
+      html_options[:size] ||= 15
+      text_field(attr, html_options)
     end
 
     alias_method :integer_field, :number_field
     alias_method :float_field, :number_field
     alias_method :decimal_field, :number_field
-
-    if Rails.version < '4.0'
-      # Render a field to select a date. You might want to customize this.
-      def date_field(attr, html_options = {})
-        html_options[:type] = 'date'
-        text_field(attr, html_options)
-      end
-
-      # Render a field to enter a time. You might want to customize this.
-      def time_field(attr, html_options = {})
-        html_options[:type] = 'time'
-        text_field(attr, html_options)
-      end
-
-      # Render a field to enter a date and time.
-      # You might want to customize this.
-      def datetime_field(attr, html_options = {})
-        html_options[:type] = 'datetime'
-        text_field(attr, html_options)
-      end
-    end
 
     # Render a select element for a :belongs_to association defined by attr.
     # Use additional html_options for the select element.
@@ -149,6 +162,10 @@ module DryCrud::Form
       end
     end
 
+    def static_field(attr, options = {})
+      @template.format_attr(@object, attr)
+    end
+
     # Renders a static text where otherwise form inputs appear.
     def static_text(text)
       content_tag(:p, text, class: 'form-control-static')
@@ -161,8 +178,9 @@ module DryCrud::Form
 
     # Render a submit button and a cancel link for this form.
     def standard_actions(submit_label = ti('button.save'), cancel_url = nil)
-      content_tag(:div, class: 'col-md-offset-2 col-md-8') do
-        safe_join([submit_button(submit_label), cancel_link(cancel_url)], ' ')
+      content_tag(:tr) do
+        content_tag(:td) +
+        content_tag(:td, submit_button(submit_label))
       end
     end
 

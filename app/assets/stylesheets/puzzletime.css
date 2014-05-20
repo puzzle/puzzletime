@@ -83,9 +83,21 @@ textarea, input, select {
   text-align: center;
 }
 
+.table tr {
+    vertical-align: top;
+}
+
+.table td > p {
+    margin: 0;
+}
+
 table.table td.action {
   width: 20px;
   text-align: center;
+}
+
+table.table thead a {
+    text-decoration: none;
 }
 
 
@@ -296,4 +308,8 @@ a.tooltip:hover span {
     color:          #333;
     list-style:     none;
     margin-left:    -30px;
+}
+
+.calendar {
+    margin-left: 5px;
 }

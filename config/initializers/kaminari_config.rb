@@ -8,3 +8,15 @@ Kaminari.configure do |config|
   # config.page_method_name = :page
   # config.param_name = :page
 end
+
+
+module Kaminari
+  module Helpers
+    class Tag
+      # Monkey patch this method to always include the :page param
+      def page_url_for(page)
+        @template.url_for @params.merge(@param_name => page)
+      end
+    end
+  end
+end

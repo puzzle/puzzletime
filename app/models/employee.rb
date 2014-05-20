@@ -137,6 +137,10 @@ class Employee < ActiveRecord::Base
   ##### interface methods for Evaluatable #####
 
   def label
+    to_s
+  end
+
+  def to_s
     lastname + ' ' + firstname
   end
 

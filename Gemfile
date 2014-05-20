@@ -18,6 +18,7 @@ gem 'rails-i18n'
 gem 'net-ldap'
 gem 'seed-fu'
 gem 'schema_validations'
+gem 'validates_timeliness'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.3'
@@ -43,11 +44,11 @@ group :development, :test do
   gem 'faker'
   gem 'codez-tarantula', require: 'tarantula-rails3', path: '../tarantula'
   gem 'binding_of_caller'
+  gem 'pry-rails'
 end
 
 group :development do
   gem 'spring'
-  gem 'pry-rails'
   gem 'better_errors'
   gem 'bullet'
   gem 'quiet_assets'

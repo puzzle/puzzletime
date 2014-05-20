@@ -18,6 +18,9 @@ class ActiveSupport::TestCase
 
   # Add more helper methods to be used by all tests here...
 
+  def login
+    login_as(:mark)
+  end
 
   def login_as(user)
     @request.session[:user_id] = user ? employees(user).id : nil

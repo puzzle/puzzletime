@@ -3,29 +3,6 @@
 
 module ManageHelper
 
-  def input_field(field)
-    case model_class.column_type(field[0])
-      when :date then date_calendar_field 'entry', field[0]
-      when :boolean then check_box 'entry', field[0]
-      when :float, :integer then text_field 'entry', field[0], size: 15
-      when :text then text_area 'entry', field[0], rows: 5, cols: 30
-      when :report_type then select 'entry', field[0],
-                                    ReportType::INSTANCES.collect { |type| [type.name, type.key] },
-                                    selected: @entry.send(field[0]).key
-      else text_field 'entry', field[0], size: 30
-      end
-  end
-
-  def data_field(entry, attribute)
-    options = case model_class.column_type(attribute)
-                when :date, :float, :integer, :decimal then { align: :right }
-                when :boolean then { align: :center }
-                else {}
-                end
-    # "<td#{options}>#{h(format_column(attribute, entry.send(attribute), entry)).gsub("\n", '<br/>')}</td>"
-    simple_format(format_column(attribute, entry.send(attribute), entry), options, wrapper_tag: :td)
-  end
-
   def link_params(prms = {})
     prms[:page]        ||= params[:page]
     prms[:groups]      ||= params[:groups]
@@ -54,25 +31,12 @@ module ManageHelper
     test.nil? || test == true || entry.send(test)
   end
 
-  def action_link(link_params, entry)
+  def action_link_old(link_params, entry)
     return unless display_link? link_params, entry
     link_to link_params[0],
             child_group_params(local_group_key, entry.id, params[:page],
                                controller: link_params[1],
                                action: link_params[2])
-  end
-
-  def new_label
-    neu = case model_class.article
-            when 'Der' then 'Neuer'
-            when 'Die' then 'Neue'
-            when 'Das' then 'Neues'
-            end
-    neu + ' ' + model_class.label
-  end
-
-  def error_messages_for(entry)
-    render 'shared/error_messages', object: entry
   end
 
   def of_group_label

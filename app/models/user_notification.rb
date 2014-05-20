@@ -84,8 +84,8 @@ class UserNotification < ActiveRecord::Base
 
   ##### interface methods for Manageable #####
 
-  def label
-    "die Nachricht '#{message}'"
+  def to_s
+    message.truncate(30)
   end
 
   def self.labels

@@ -3,6 +3,8 @@
 # A dummy model used for general testing.
 class CrudTestModel < ActiveRecord::Base #:nodoc:
 
+  extend Manageable
+
   belongs_to :companion, class_name: 'CrudTestModel'
   has_and_belongs_to_many :others, class_name: 'OtherCrudTestModel'
   has_many :mores, class_name: 'OtherCrudTestModel',
@@ -36,6 +38,8 @@ end
 
 # Second dummy model to test associations.
 class OtherCrudTestModel < ActiveRecord::Base #:nodoc:
+
+  extend Manageable
 
   has_and_belongs_to_many :others, class_name: 'CrudTestModel'
   belongs_to :more, foreign_key: :more_id, class_name: 'CrudTestModel'
