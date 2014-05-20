@@ -203,7 +203,7 @@ class Project < ActiveRecord::Base
   def validate_worktime_frozen(worktime)
     if freeze = latest_freeze_until
       if worktime.work_date <= freeze || (!worktime.new_record? && Worktime.find(worktime.id).work_date <= freeze)
-        worktime.errors.add(:work_date, "Die Zeiten vor dem #{freeze.strftime(DATE_FORMAT)} wurden für dieses Projekt eingefroren und können nicht mehr geändert werden. Um diese Arbeitszeit trotzdem zu bearbeiten, wende dich bitte an den entsprechenden Projektleiter.")
+        worktime.errors.add(:work_date, "Die Zeiten vor dem #{I18n.l(freeze)} wurden für dieses Projekt eingefroren und können nicht mehr geändert werden. Um diese Arbeitszeit trotzdem zu bearbeiten, wende dich bitte an den entsprechenden Projektleiter.")
         false
       end
     end

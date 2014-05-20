@@ -134,7 +134,7 @@ class Employment < ActiveRecord::Base
   end
 
   def date_label(date)
-    date ? date.strftime(DATE_FORMAT) : 'offen'
+    date ? I18n.l(date) : 'offen'
   end
 
   private

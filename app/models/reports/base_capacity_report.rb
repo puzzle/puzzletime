@@ -8,7 +8,7 @@ class BaseCapacityReport
   end
 
   def filename
-    "#{@filename_prefix}_#{@period.startDate.strftime('%Y%m%d')}_#{@period.endDate.strftime('%Y%m%d')}.csv"
+    "#{@filename_prefix}_#{format_date(@period.startDate)}_#{format_date(@period.endDate)}.csv"
   end
 
   def find_billable_time(employee, project_id, period)
@@ -32,6 +32,12 @@ class BaseCapacityReport
                              period.endDate).
                        sum(:hours).
                        to_f
+  end
+
+  private
+
+  def format_date(date)
+    I18n.l(date, format: '%Y%m%d')
   end
 
 end

@@ -13,7 +13,7 @@
       = day_td day do
         - @graph.timeboxes.reverse_each do |box|
           = timebox_div box
-        .dateLabel= day.strftime(DATE_FORMAT)
+        .dateLabel= I18n.l(day)
 
 
 

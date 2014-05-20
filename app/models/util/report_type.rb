@@ -33,7 +33,7 @@ class ReportType
   end
 
   def date_string(date)
-    date.strftime(LONG_DATE_FORMAT)
+    I18n.l(date, format: LONG_DATE_FORMAT)
   end
 
   module Accessors
@@ -142,7 +142,7 @@ class HoursWeekType < ReportType
   end
 
   def date_string(date)
-    date.strftime('W %V, %Y')
+    I18n.l(date, format: 'W %V, %Y')
   end
 end
 
@@ -154,7 +154,7 @@ class HoursMonthType < ReportType
   end
 
   def date_string(date)
-    date.strftime('%m.%Y')
+    I18n.l(date, format: '%m.%Y')
   end
 end
 

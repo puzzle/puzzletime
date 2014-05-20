@@ -155,7 +155,7 @@ class Holiday < ActiveRecord::Base
   end
 
   def label
-    "den Feiertag am #{holiday_date.strftime(LONG_DATE_FORMAT)}"
+    "den Feiertag am #{I18n.l(holiday_date, format: LONG_DATE_FORMAT)}"
   end
 
   def <=>(other)

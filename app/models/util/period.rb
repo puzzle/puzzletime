@@ -124,7 +124,7 @@ class Period
   end
 
   def to_s
-    (length > 1) ? formatted_date(@startDate) + ' - ' + formatted_date(@endDate) : formatted_date(@startDate)
+    (length > 1) ? I18n.l(@startDate) + ' - ' + I18n.l(@endDate) : I18n.l(@startDate)
   end
 
   def set_label(label)
@@ -141,7 +141,7 @@ class Period
       when Time.new.advance(days: -2).to_date then 'Vorgestern'
       when Date.tomorrow then 'Morgen'
       when Time.new.advance(days: 2).to_date then 'Übermorgen'
-      else date.strftime(DATE_FORMAT)
+      else I18n.l(date)
     end
   end
 
@@ -150,7 +150,7 @@ class Period
   end
 
   def self.month_label(date)
-    "#{date.strftime('%B')}"
+    I18n.l(date, format: '%B')
   end
 
   def self.quarter_label(date)
@@ -158,7 +158,7 @@ class Period
   end
 
   def self.year_label(date)
-    "#{date.strftime('%Y')}"
+    I18n.l(date, format: '%Y')
   end
 
   def self.parse_date(date)
@@ -171,10 +171,6 @@ class Period
     end
     date = date.to_date if date.kind_of? Time
     date
-  end
-
-  def formatted_date(date)
-    date.strftime(DATE_FORMAT)
   end
 
 end

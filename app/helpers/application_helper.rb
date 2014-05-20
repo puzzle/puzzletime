@@ -19,12 +19,12 @@ module ApplicationHelper
 
   # Change english datelayout to german one.
   def format_date(date)
-    date ? date.strftime(LONG_DATE_FORMAT) : ''
+    date ? I18n.l(date, format: LONG_DATE_FORMAT) : ''
   end
 
   def format_time(time)
     time ||= Time.zone.now
-    time.strftime(TIME_FORMAT)
+    I18n.l(time, format: TIME_FORMAT)
   end
 
   def format_percent(value)
@@ -52,7 +52,7 @@ module ApplicationHelper
     date = date_value(object, method, html_options[:value])
     html_options[:size] = 15
     html_options[:class] = 'date'
-    html_options[:value] = date ? date.strftime(date_format) : ''
+    html_options[:value] = date ? I18n.l(date, format: date_format) : ''
     html_options[:data] ||= {}
     html_options[:data][:format] = date_format == WEEK_FORMAT ? 'week' : 'date'
 

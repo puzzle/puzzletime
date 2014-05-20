@@ -152,7 +152,7 @@ class ManageController < ApplicationController
   # Formats the value for the field attribute.
   def format_column(attribute, value, entry)
     case model_class.column_type(attribute)
-      when :date then value.strftime(LONG_DATE_FORMAT) if value
+      when :date then I18n.l(value, format: LONG_DATE_FORMAT) if value
       when :float, :decimal then '%01.2f' % value if value
       when :integer then value
       when :boolean then value ? 'ja' : 'nein'

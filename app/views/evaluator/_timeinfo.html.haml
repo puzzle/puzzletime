@@ -3,8 +3,8 @@
     %tr
       - for info in row
         %td
-          = info[0]
-          \: &nbsp;
+          = "#{info[0]}: "
+          &nbsp;
         %td{:align => "right"}
           = format_hour info[1]
           = info[2]

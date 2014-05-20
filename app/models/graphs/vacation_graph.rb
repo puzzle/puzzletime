@@ -122,7 +122,7 @@ class VacationGraph
       @current.step do |date|
         if unpaid.include?(date) && date.wday > 0 && date.wday < 6
           times[UNPAID_ABSENCE] += MUST_HOURS_PER_DAY
-          tooltip += "#{date.strftime(DATE_FORMAT)}: #{MUST_HOURS_PER_DAY}0 h #{UNPAID_ABSENCE.label}<br/>"
+          tooltip += "#{I18n.l(date)}: #{MUST_HOURS_PER_DAY}0 h #{UNPAID_ABSENCE.label}<br/>"
         end
       end
     end
@@ -165,7 +165,7 @@ class VacationGraph
 
   def create_tooltip(absences)
     entries = absences.collect do |time|
-      "#{time.work_date.strftime(DATE_FORMAT)}: #{time.time_string} #{time.absence.label}"
+      "#{I18n.l(time.work_date)}: #{time.time_string} #{time.absence.label}"
     end
     entries.join('<br/>')
   end
