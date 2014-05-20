@@ -1,12 +1,12 @@
 # encoding: utf-8
 
-class ProjectmembershipsController < ApplicationController
+class MembershipsController < ApplicationController
 
   # TODO move to application controller
   before_action :authenticate
 
   def show
-    employee? ? list_projects : list_employees
+    list
     @projects = @subject.projectmemberships.where(active: true).
                                             sort_by { |m| m.project }
   end
@@ -22,7 +22,7 @@ class ProjectmembershipsController < ApplicationController
   def create_membership
     if params.key?(:ids)
       params[:ids].each do |id|
-        config = employee? ? employee_config(id) : project_config(id)
+        config = activate_config(id)
         Projectmembership.activate(config)
       end
       flash[:notice] = 'Der/Die Mitarbeiter wurden dem Projekt hinzugefügt'
@@ -40,30 +40,6 @@ class ProjectmembershipsController < ApplicationController
 
   private
 
-  def list_projects
-    @subject = Employee.find(employee_id)
-    @list = Project.list.sort
-  end
-
-  def list_employees
-    return list_projects unless project_manager?
-    @subject = Project.find(project_id)
-    @list = Employee.list
-  end
-
-  def employee_config(id)
-    { employee_id: employee_id, project_id: id }
-  end
-
-  def project_config(id)
-    { project_id: project_id, employee_id: id }
-  end
-
-  def project_manager?
-    @user.management? ||
-      @user.managed_projects.collect { |p| p.id }.include?(project_id.to_i)
-  end
-
   def redirect_to_list
     redirect_to action: 'index'
   end
@@ -75,18 +51,6 @@ class ProjectmembershipsController < ApplicationController
     @user.managed_projects(true) if projectmembership.employee_id == @user.id
     flash[:notice] = "#{projectmembership.employee} wurde als Projektleiter #{bool ? 'erfasst' : 'entfernt'}"
     redirect_to_list
-  end
-
-  def employee?
-    project_id.nil?
-  end
-
-  def employee_id
-    (@user.management && params[:employee_id]) || @user.id
-  end
-
-  def project_id
-    params[:project_id]
   end
 
 end

@@ -2,19 +2,18 @@ Rails.application.routes.draw do
 
   root to: 'evaluator#user_projects'
 
-  concern :with_memberships do
-    resource :projectmemberships, only: [:show] do
-      post :manager, to: 'create_manager'
-      delete :manager, to: 'destroy_manager'
-      post :membership, to: 'create_membership'
-      delete :membership, to: 'destroy_membership'
-    end
+  concern :memberships do
+    post :manager, to: 'create_manager'
+    delete :manager, to: 'destroy_manager'
+    post :membership, to: 'create_membership'
+    delete :membership, to: 'destroy_membership'
   end
 
   concern :with_projects do
     resources :projects, only: [:index, :edit, :update] do
-      resources :projects, only: [:index, :edit, :update],
-                           concerns: :with_memberships
+      resources :projects, only: [:index, :edit, :update] do
+        resource :project_memberships, only: [:show], concerns: :memberships
+      end
     end
   end
 
@@ -34,17 +33,18 @@ Rails.application.routes.draw do
 
     resources :employments, only: [:index]
     resources :overtime_vacations, except: [:show]
-    concerns :with_memberships
+    resource :employee_memberships, only: [:show], concerns: :memberships
   end
 
   resources :employee_lists
+
+  resource :employee_memberships, only: [:show], concerns: :memberships
 
   resources :holidays, except: [:show]
 
   resources :user_notifications, execpt: [:show]
 
   concerns :with_projects
-  concerns :with_memberships
 
   scope '/planning', controller: 'planning' do
     post 'create'

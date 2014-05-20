@@ -2,5 +2,6 @@
 
 = list_table :name, :description do |t|
   - t.action_col { |p| link_to('Subprojekte', sub_projects_path(p)) if p.children? }
-  - t.action_col { |p| link_to('Mitarbeiter', employees_projectmemberships_path(project_id: p.id)) }
+  - # TODO use full path for memberships
+  - t.action_col { |p| link_to('Mitarbeiter', project_project_memberships_path(p)) }
   - t.edit_action_col

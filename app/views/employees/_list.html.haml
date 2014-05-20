@@ -1,6 +1,6 @@
 = list_table :lastname, :firstname, :shortname, :current_percent, :management do |t|
   - t.action_col do |e|
-    - link_to('Projekte', projects_projectmemberships_path(employee_id: e.id))
+    - link_to('Projekte', employee_employee_memberships_path(e))
   - t.action_col do |e|
     - link_to('Überzeit', employee_overtime_vacations_path(e) )
   - t.action_col do |e|

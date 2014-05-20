@@ -1,7 +1,7 @@
 - if @user.management || @user.project_manager?
   Verwalte:
   &nbsp;
-  = link_to 'Zugehörigkeiten', projectmemberships_path
+  = link_to 'Zugehörigkeiten', employee_memberships_path
   &nbsp;
   = link_to 'Projekte', projects_path
 - if @user.management

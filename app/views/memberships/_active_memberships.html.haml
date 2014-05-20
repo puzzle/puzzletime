@@ -7,19 +7,9 @@
     - @projects.each do |membership|
       %tr
         %td
-          = project? ? membership.employee.label : membership.project.label_verbose
+          = membership_other_label(membership)
         %td{:align => "center"}
-          - if project? || @user.management?
-            - if membership.projectmanagement
-              = link_to 'Entfernen',
-                        { action: 'destroy_manager', id: membership},
-                        method: :delete
-            - else
-              = link_to 'Hinzufügen',
-                        { action: 'create_manager', id: membership },
-                        method: :post
-          - else
-            = f(membership.projectmanagement)
+          = render 'project_management', membership: membership
         %td
           = link_to 'Vom Projekt entfernen',
                     { action: 'remove_membership', id: membership },
