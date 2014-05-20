@@ -88,20 +88,20 @@ class Employee < ActiveRecord::Base
 
   def self.ldap_auth_user(dn, username, pwd)
     ldap_connection.bind_as(base: dn,
-                           filter: "uid=#{username}",
-                           password: pwd)
+                            filter: "uid=#{username}",
+                            password: pwd)
   end
 
   def self.ldap_group_member(username)
     result = ldap_connection.search(base: LDAP_GROUP,
-                                   filter: Net::LDAP::Filter.eq('memberUid', username))
+                                    filter: Net::LDAP::Filter.eq('memberUid', username))
     not result.empty?
   end
 
   # Returns a Array of LDAP user information
   def self.ldap_users
     ldap_connection.search(base: LDAP_USER_DN,
-                          attributes: %w(uid sn givenname mail))
+                           attributes: %w(uid sn givenname mail))
   end
 
   def self.employed_ones(period)

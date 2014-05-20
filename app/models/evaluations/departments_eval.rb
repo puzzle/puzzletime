@@ -2,9 +2,9 @@
 
 class DepartmentsEval < Evaluation
 
-  SUB_EVALUATION   = 'departmentprojects'
-  LABEL            = 'Geschäftsbereiche'
-  TOTAL_DETAILS    = false
+  self.sub_evaluation   = 'departmentprojects'
+  self.label            = 'Geschäftsbereiche'
+  self.total_details    = false
 
   def initialize
     super(Department)

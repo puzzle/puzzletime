@@ -4,9 +4,9 @@ class EmployeeSubProjectsEval < SubProjectsEval
 
   include Conditioner
 
-  SUB_PROJECTS_EVAL = 'employeesubprojects'
-  SUB_EVALUATION    = nil
-  DETAIL_COLUMNS    = superclass::DETAIL_COLUMNS.collect { |i| i == :hours ? :times : i }
+  self.sub_projects_eval = 'employeesubprojects'
+  self.sub_evaluation    = nil
+  self.detail_columns    = detail_columns.collect { |i| i == :hours ? :times : i }
 
   attr_reader :employee_id
 
@@ -33,7 +33,7 @@ class EmployeeSubProjectsEval < SubProjectsEval
   end
 
   def sub_projects_evaluation(division = nil)
-    self.class::SUB_PROJECTS_EVAL + employee_id.to_s if division.children?
+    sub_projects_eval + employee_id.to_s if division.children?
   end
 
 

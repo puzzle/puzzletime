@@ -2,13 +2,13 @@
 
 class EmployeeAbsencesEval < Evaluation
 
-  DIVISION_METHOD  = :absences
-  LABEL            = 'Absenzen'
-  ABSENCES         = true
-  CATEGORY_REF     = :employee_id
-  ATTENDANCE       = true
-  DETAIL_COLUMNS   = superclass::DETAIL_COLUMNS.reject { |i| :billable == i || :booked == i }
-  DETAIL_LABELS    = superclass::DETAIL_LABELS.merge(account: 'Absenz')
+  self.division_method  = :absences
+  self.label            = 'Absenzen'
+  self.absences         = true
+  self.category_ref     = :employee_id
+  self.attendance       = true
+  self.detail_columns   = detail_columns.reject { |i| :billable == i || :booked == i }
+  self.detail_labels    = detail_labels.merge(account: 'Absenz')
 
   def initialize(employee_id)
     super(Employee.find(employee_id))

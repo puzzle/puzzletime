@@ -14,7 +14,7 @@ class EvaluationTest < ActiveSupport::TestCase
     @evaluation = ClientsEval.new
     assert ! @evaluation.absences?
     assert ! @evaluation.for?(employees(:pascal))
-    assert ! @evaluation.class::TOTAL_DETAILS
+    assert ! @evaluation.total_details
 
     divisions = @evaluation.divisions.list
     assert_equal 2, divisions.size
@@ -44,7 +44,7 @@ class EvaluationTest < ActiveSupport::TestCase
     @evaluation = EmployeesEval.new
     assert ! @evaluation.absences?
     assert ! @evaluation.for?(employees(:pascal))
-    assert ! @evaluation.class::TOTAL_DETAILS
+    assert ! @evaluation.total_details
 
     divisions = @evaluation.divisions
     assert_equal 3, divisions.size
@@ -82,7 +82,7 @@ class EvaluationTest < ActiveSupport::TestCase
     @evaluation = AbsencesEval.new
     assert @evaluation.absences?
     assert ! @evaluation.for?(employees(:pascal))
-    assert ! @evaluation.class::TOTAL_DETAILS
+    assert ! @evaluation.total_details
 
     divisions = @evaluation.divisions
     assert_equal 3, divisions.size
@@ -164,14 +164,14 @@ class EvaluationTest < ActiveSupport::TestCase
   def assert_managed(user)
     assert ! @evaluation.absences?
     assert ! @evaluation.for?(user)
-    assert ! @evaluation.class::TOTAL_DETAILS
+    assert ! @evaluation.total_details
   end
 
   def test_client_projects
     @evaluation = ClientProjectsEval.new(clients(:puzzle).id)
     assert ! @evaluation.absences?
     assert ! @evaluation.for?(employees(:mark))
-    assert @evaluation.class::TOTAL_DETAILS
+    assert @evaluation.total_details
 
     divisions = @evaluation.divisions.list
     assert_equal 2, divisions.size
@@ -200,7 +200,7 @@ class EvaluationTest < ActiveSupport::TestCase
     @evaluation = EmployeeProjectsEval.new(employees(:pascal).id, false)
     assert ! @evaluation.absences?
     assert @evaluation.for?(employees(:pascal))
-    assert @evaluation.class::TOTAL_DETAILS
+    assert @evaluation.total_details
 
     divisions = @evaluation.divisions.list
     assert_equal 2, divisions.size
@@ -227,7 +227,7 @@ class EvaluationTest < ActiveSupport::TestCase
     @evaluation = EmployeeProjectsEval.new(employees(:mark).id, false)
     assert ! @evaluation.absences?
     assert @evaluation.for?(employees(:mark))
-    assert @evaluation.class::TOTAL_DETAILS
+    assert @evaluation.total_details
 
     divisions = @evaluation.divisions.list
     assert_equal 1, divisions.size
@@ -247,7 +247,7 @@ class EvaluationTest < ActiveSupport::TestCase
     @evaluation = EmployeeProjectsEval.new(employees(:lucien).id, false)
     assert ! @evaluation.absences?
     assert @evaluation.for?(employees(:lucien))
-    assert @evaluation.class::TOTAL_DETAILS
+    assert @evaluation.total_details
 
     divisions = @evaluation.divisions.list
     assert_equal 1, divisions.size
@@ -267,7 +267,7 @@ class EvaluationTest < ActiveSupport::TestCase
     @evaluation = ProjectEmployeesEval.new(projects(:allgemein).id, false)
     assert ! @evaluation.absences?
     assert ! @evaluation.for?(employees(:pascal))
-    assert @evaluation.class::TOTAL_DETAILS
+    assert @evaluation.total_details
 
     divisions = @evaluation.divisions.list
     # assert_equal 2, divisions.size
@@ -294,7 +294,7 @@ class EvaluationTest < ActiveSupport::TestCase
     @evaluation = ProjectEmployeesEval.new(projects(:puzzletime).id, false)
     assert ! @evaluation.absences?
     assert ! @evaluation.for?(employees(:pascal))
-    assert @evaluation.class::TOTAL_DETAILS
+    assert @evaluation.total_details
 
     divisions = @evaluation.divisions
     # assert_equal 1, divisions.size
@@ -316,7 +316,7 @@ class EvaluationTest < ActiveSupport::TestCase
     @evaluation = ProjectEmployeesEval.new(projects(:webauftritt).id, false)
     assert ! @evaluation.absences?
     assert ! @evaluation.for?(employees(:lucien))
-    assert @evaluation.class::TOTAL_DETAILS
+    assert @evaluation.total_details
 
     divisions = @evaluation.divisions.list
     # assert_equal 1, divisions.size
@@ -337,7 +337,7 @@ class EvaluationTest < ActiveSupport::TestCase
     @evaluation = EmployeeAbsencesEval.new(employees(:pascal).id)
     assert @evaluation.absences?
     assert @evaluation.for?(employees(:pascal))
-    assert @evaluation.class::TOTAL_DETAILS
+    assert @evaluation.total_details
 
     divisions = @evaluation.divisions.list
     # assert_equal 3, divisions.size
@@ -365,7 +365,7 @@ class EvaluationTest < ActiveSupport::TestCase
     @evaluation = EmployeeAbsencesEval.new(employees(:mark).id)
     assert @evaluation.absences?
     assert @evaluation.for?(employees(:mark))
-    assert @evaluation.class::TOTAL_DETAILS
+    assert @evaluation.total_details
 
     divisions = @evaluation.divisions.list
     # assert_equal 3, divisions.size
@@ -387,7 +387,7 @@ class EvaluationTest < ActiveSupport::TestCase
     @evaluation = EmployeeAbsencesEval.new(employees(:lucien).id)
     assert @evaluation.absences?
     assert @evaluation.for?(employees(:lucien))
-    assert @evaluation.class::TOTAL_DETAILS
+    assert @evaluation.total_details
 
     divisions = @evaluation.divisions.list
     # assert_equal 3, divisions.size

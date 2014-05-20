@@ -5,7 +5,7 @@
 - action ||= 'details'
 %td{:align => "right"}
   = format_hour timecell
-  - if division_id || @evaluation.class::TOTAL_DETAILS
+  - if division_id || @evaluation.total_details
     - link = url_for(controller: controller.controller_name,
                      action: action,
                      evaluation: params[:evaluation],

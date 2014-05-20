@@ -2,9 +2,9 @@
 
 class ManagedProjectsEval < ProjectsEval
 
-  DIVISION_METHOD   = :managed_projects
-  LABEL             = 'Geleitete Projekte'
-  TOTAL_DETAILS     = false
+  self.division_method   = :managed_projects
+  self.label             = 'Geleitete Projekte'
+  self.total_details     = false
 
   def category_label
     'Kunde: ' + division.client.name

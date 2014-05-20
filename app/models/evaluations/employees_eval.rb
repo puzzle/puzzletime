@@ -2,10 +2,10 @@
 
 class EmployeesEval < Evaluation
 
-  SUB_EVALUATION   = 'employeeprojects'
-  LABEL            = 'Mitarbeiter Projektzeit'
-  TOTAL_DETAILS    = false
-  ATTENDANCE       = true
+  self.sub_evaluation   = 'employeeprojects'
+  self.label            = 'Mitarbeiter Projektzeit'
+  self.total_details    = false
+  self.attendance       = true
 
   def initialize
     super(Employee)

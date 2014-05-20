@@ -102,7 +102,7 @@ class Puzzlebase::Project < Puzzlebase::Base
     if existing_children.empty? && !local_parent.worktimes.empty?
       originals = original_children.select { |original| original.S_PROJECT == local_parent.shortname }
       child = update_local_child local_parent,
-                               originals.empty? ? original_parent : originals.first
+                                 originals.empty? ? original_parent : originals.first
       local_parent.move_times_to child
     end
   end

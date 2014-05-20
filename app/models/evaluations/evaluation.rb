@@ -9,43 +9,47 @@
 # This class is abstract, subclasses generally override the class constants for customization.
 class Evaluation
 
+  class_attribute :division_method, :sub_evaluation, :sub_projects_eval, :label, :absences,
+                  :total_details, :attendance, :category_ref, :detail_columns, :detail_labels
+
   # The method to send to the category object to retrieve a list of divisions.
-  DIVISION_METHOD  = :list
+  self.division_method   = :list
 
   # Next lower evaluation for divisions, which will be acting as the category there.
-  SUB_EVALUATION   = nil
+  self.sub_evaluation    = nil
 
-  SUB_PROJECTS_EVAL = nil
+  self.sub_projects_eval = nil
 
   # Name of the evaluation to be displayed
-  LABEL            = ''
+  self.label             = ''
 
   # Whether this Evaluation is for absences or project times.
-  ABSENCES         = false
+  self.absences          = false
 
   # Whether details for totals are possible.
-  TOTAL_DETAILS    = true
+  self.total_details     = true
 
   # Wheter this Evaluation displays attendance times for its category in the overview.
-  ATTENDANCE       = false
+  self.attendance       = false
 
   # The field of a division referencing the category entry in the database.
   # May be nil if not required for this Evaluation (default).
-  CATEGORY_REF     = nil
+  self.category_ref     = nil
 
   # Columns to display in the detail view
-  DETAIL_COLUMNS   = [:work_date, :hours, :employee, :account, :billable, :booked, :ticket, :description]
+  self.detail_columns   = [:work_date, :hours, :employee, :account, :billable, :booked,
+                           :ticket, :description]
 
   # Table captions for detail columns
-  DETAIL_LABELS    = { work_date: 'Datum',
-                       hours: 'Stunden',
-                       times: 'Zeiten',
-                       employee: 'Wer',
-                       account: 'Projekt',
-                       billable: '$',
-                       booked: '&beta;'.html_safe,
-                       ticket: 'Ticket',
-                       description: 'Beschreibung' }
+  self.detail_labels    = { work_date: 'Datum',
+                            hours: 'Stunden',
+                            times: 'Zeiten',
+                            employee: 'Wer',
+                            account: 'Projekt',
+                            billable: '$',
+                            booked: '&beta;'.html_safe,
+                            ticket: 'Ticket',
+                            description: 'Beschreibung' }
 
 
   attr_reader :category,             # category
@@ -57,7 +61,7 @@ class Evaluation
   # Returns a list of all division objects for the represented category.
   # May be parameterized by a period. This is ignored by default.
   def divisions(period = nil)
-    category.send(self.class::DIVISION_METHOD)
+    category.send(division_method)
   end
 
   # The record identifier of the category, 0 if category is not an active record
@@ -89,24 +93,7 @@ class Evaluation
     send_time_query(:find_worktimes, period, division, options)
   end
 
-  # Field with category reference for divisions. Nil if not required.
-  # Returns the configured class constant.
-  def category_ref
-    self.class::CATEGORY_REF
-  end
-
-  # Whether this Evaluation is for Absences or Projects.
-  # Returns the configured class constant.
-  def absences?
-    self.class::ABSENCES
-  end
-
   ################ Methods for overview ##############
-
-  # The label to be displayed for this Evaluation. Returns the configured class constant.
-  def label
-    self.class::LABEL
-  end
 
   # The title for this Evaluation
   def title
@@ -138,13 +125,8 @@ class Evaluation
     []
   end
 
-  # Next lower evaluation for divisions, which will be acting as the category there.
-  def sub_evaluation
-    self.class::SUB_EVALUATION
-  end
-
   def sub_projects_evaluation(division)
-    self.class::SUB_PROJECTS_EVAL if self.class::SUB_PROJECTS_EVAL && division.children?
+    sub_projects_eval if sub_projects_eval && division.children?
   end
 
   # Returns whether this Evaluation is personally for the current user.

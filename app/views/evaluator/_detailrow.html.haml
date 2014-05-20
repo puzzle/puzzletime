@@ -1,6 +1,6 @@
 = render :partial => spacer, :locals => {:time => detailrow} if spacer
 %tr
-  - for field in @evaluation.class::DETAIL_COLUMNS
+  - @evaluation.detail_columns.each do |field|
     = detail_td detailrow, field
   - if @evaluation.edit_link?(@user) || @user.management
     %td

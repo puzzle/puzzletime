@@ -2,11 +2,11 @@
 
 class EmployeeProjectsEval < ProjectsEval
 
-  CATEGORY_REF      = :employee_id
-  ATTENDANCE        = true
-  SUB_EVALUATION    = nil
-  SUB_PROJECTS_EVAL = 'employeesubprojects'
-  DETAIL_COLUMNS    = superclass::DETAIL_COLUMNS.collect { |i| i == :hours ? :times : i }
+  self.category_ref      = :employee_id
+  self.attendance        = true
+  self.sub_evaluation    = nil
+  self.sub_projects_eval = 'employeesubprojects'
+  self.detail_columns    = detail_columns.collect { |i| i == :hours ? :times : i }
 
 
   # alltime: boolean, use all projects ever worked for / only current memberships
@@ -33,7 +33,7 @@ class EmployeeProjectsEval < ProjectsEval
   end
 
   def sub_projects_evaluation(project = nil)
-    self.class::SUB_PROJECTS_EVAL + employee_id.to_s if project && project.children?
+    sub_projects_eval + employee_id.to_s if project && project.children?
   end
 
   # default would turn Employee.alltime_projects too complicated

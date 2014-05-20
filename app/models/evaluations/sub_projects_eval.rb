@@ -2,8 +2,8 @@
 
 class SubProjectsEval < ProjectsEval
 
-  DIVISION_METHOD  = :children
-  LABEL            = 'Subprojekte'
+  self.division_method  = :children
+  self.label            = 'Subprojekte'
 
   def initialize(project_id)
     super(Project.find(project_id))

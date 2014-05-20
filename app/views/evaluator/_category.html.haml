@@ -3,7 +3,7 @@
   %thead
     %tr
       %th= @evaluation.division_header
-      -if @evaluation.class::SUB_PROJECTS_EVAL
+      -if @evaluation.sub_projects_eval
         %th
       - for p in periods
         %th.periodHead
@@ -18,13 +18,13 @@
   %tfoot
     %tr.times_total_sum
       %td Total Zeit
-      - if @evaluation.class::SUB_PROJECTS_EVAL
+      - if @evaluation.sub_projects_eval
         %th
       = render(:partial => 'timecell', :collection => collect_times(periods, :sum_total_times), :locals => {:periods => periods})
-    - if @evaluation.class::ATTENDANCE
+    - if @evaluation.attendance?
       %tr.times_total_sum
         %td Anwesenheit
-        - if @evaluation.class::SUB_PROJECTS_EVAL
+        - if @evaluation.sub_projects_eval
           %th
         - times = periods.collect { |p| @evaluation.category.sum_attendance p }
         = render(:partial => 'timecell', :collection => times, :locals => {:periods => periods, :action => 'attendance_details'})

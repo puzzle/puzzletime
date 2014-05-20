@@ -2,12 +2,12 @@
 
 class AbsencesEval < Evaluation
 
-  SUB_EVALUATION   = 'employeeabsences'
-  LABEL            = 'Mitarbeiter Absenzen'
-  ABSENCES         = true
-  TOTAL_DETAILS    = false
-  DETAIL_COLUMNS   = superclass::DETAIL_COLUMNS.reject { |i| :billable == i || :booked == i }
-  DETAIL_LABELS    = superclass::DETAIL_LABELS.merge(account: 'Absenz')
+  self.sub_evaluation   = 'employeeabsences'
+  self.label            = 'Mitarbeiter Absenzen'
+  self.absences         = true
+  self.total_details    = false
+  self.detail_columns   = detail_columns.reject { |i| :billable == i || :booked == i }
+  self.detail_labels    = detail_labels.merge(account: 'Absenz')
 
   def initialize
     super(Employee)

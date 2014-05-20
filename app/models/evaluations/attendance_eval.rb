@@ -4,7 +4,7 @@ class AttendanceEval < Evaluation
 
   include Conditioner
 
-  DETAIL_COLUMNS   = [:work_date, :hours, :times]
+  self.detail_columns   = [:work_date, :hours, :times]
 
   def initialize(employee_id)
     super(Employee.find(employee_id))

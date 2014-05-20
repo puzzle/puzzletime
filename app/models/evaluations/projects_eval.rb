@@ -3,10 +3,10 @@
 # abstract class for evaluation with project divisions
 class ProjectsEval < Evaluation
 
-  DIVISION_METHOD   = :projects
-  LABEL             = 'Projekte'
-  SUB_EVALUATION    = 'projectemployees'
-  SUB_PROJECTS_EVAL = 'subprojects'
+  self.division_method   = :projects
+  self.label             = 'Projekte'
+  self.sub_evaluation    = 'projectemployees'
+  self.sub_projects_eval = 'subprojects'
 
   def account_id
     division.id if division

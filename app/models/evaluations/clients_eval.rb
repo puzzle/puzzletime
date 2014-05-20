@@ -2,9 +2,9 @@
 
 class ClientsEval < Evaluation
 
-  SUB_EVALUATION   = 'clientprojects'
-  LABEL            = 'Kunden'
-  TOTAL_DETAILS    = false
+  self.sub_evaluation   = 'clientprojects'
+  self.label            = 'Kunden'
+  self.total_details    = false
 
   def initialize
     super(Client)
