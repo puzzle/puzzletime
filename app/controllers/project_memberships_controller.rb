@@ -3,7 +3,11 @@
 
 class ProjectMembershipsController < MembershipsController
 
+  include ProjectGroupable
+
   before_action :authorize
+
+  helper_method :parent_path
 
   private
 
@@ -23,6 +27,14 @@ class ProjectMembershipsController < MembershipsController
   def project_manager?
     @user.management? ||
       @user.managed_projects.collect { |p| p.id }.include?(project_id.to_i)
+  end
+
+  def parent_path(options = {})
+    polymorphic_path([main_group, group].compact.uniq, options)
+  end
+
+  def main_path
+    "#{parent_path}/project_memberships"
   end
 
   def authorize

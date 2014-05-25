@@ -5,6 +5,8 @@ class MembershipsController < ApplicationController
   # TODO move to application controller
   before_action :authenticate
 
+  helper_method :main_path
+
   def show
     list
     @projects = @subject.projectmemberships.where(active: true).
@@ -40,8 +42,11 @@ class MembershipsController < ApplicationController
 
   private
 
+  def main_path
+  end
+
   def redirect_to_list
-    redirect_to action: 'index'
+    redirect_to main_path
   end
 
   def set_manager(bool)

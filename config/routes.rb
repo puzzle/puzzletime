@@ -11,8 +11,9 @@ Rails.application.routes.draw do
 
   concern :with_projects do
     resources :projects, only: [:index, :edit, :update] do
+      resource :project_memberships, only: [:show], concerns: :memberships
       resources :projects, only: [:index, :edit, :update] do
-        resource :project_memberships, only: [:show], concerns: :memberships
+
       end
     end
   end

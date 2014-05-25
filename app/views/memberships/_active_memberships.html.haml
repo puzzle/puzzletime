@@ -12,6 +12,6 @@
           = render 'project_management', membership: membership
         %td
           = link_to 'Vom Projekt entfernen',
-                    { action: 'membership', id: membership },
+                    "#{main_path}/membership/#{membership.to_param}",
                     data: { confirm: "Wollen Sie #{membership.employee.label} wirklich vom Projekt #{membership.project.label} entfernen?",
                             method: :delete }

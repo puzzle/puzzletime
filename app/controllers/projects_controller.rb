@@ -5,7 +5,7 @@
 
 class ProjectsController < CrudController
 
-  VALID_GROUPS = [Client, Department, Project]
+  include ProjectGroupable
 
   self.permitted_attrs = [:description, :report_type, :offered_hours, :billable,
                           :freeze_until, :description_required, :ticket_required]
@@ -16,8 +16,8 @@ class ProjectsController < CrudController
 
   after_create :set_project_manager
 
-  helper_method :group, :main_group
 
+  # TODO: remove?
   def list_sub_projects
     list
   end
@@ -38,30 +38,6 @@ class ProjectsController < CrudController
                              projectmanagement: true)
   end
 
-  def group
-    @group ||=
-      begin
-        project_id = params[:project_id].presence
-        if project_id && project_id != group_param(main_group_model)
-          Project.find(project_id)
-        else
-          main_group
-        end
-      end
-  end
-
-  def main_group
-    @main_group ||= main_group_model && main_group_model.find(group_param(main_group_model))
-  end
-
-  def main_group_model
-    @main_group_model ||= VALID_GROUPS.detect { |m| group_param(m).present? }
-  end
-
-  def group_param(model)
-    params["#{model.model_name.param_key}_id"]
-  end
-
   def managed_projects
     @user.managed_projects.page(params[:page])
   end
@@ -74,10 +50,6 @@ class ProjectsController < CrudController
 
   def managed_project?(project)
     (@user.managed_projects.collect { |p| p.id } & project.path_ids).present?
-  end
-
-  def group_label
-    sub_sub_project? ? 'Übergeordnetes Projekt' : super
   end
 
   def group_filter
