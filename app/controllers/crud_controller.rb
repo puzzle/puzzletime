@@ -101,19 +101,6 @@ class CrudController < ListController
     respond_with(entry, respond_options, &block)
   end
 
-  def synchronize
-    mapper = model_class.puzzlebase_map
-    flash[:notice] = models_label(true) + ' wurden nicht aktualisiert'
-    redirect_to_list if mapper.nil?
-    @errors = mapper.synchronize
-    if @errors.empty?
-      flash[:notice] = models_label(true) + ' wurden erfolgreich aktualisiert'
-      redirect_to_list
-    else
-      flash[:notice] = 'Folgende Fehler sind bei der Synchronisation aufgetreten:'
-      render action: 'synchronize'
-    end
-  end
 
   private
 

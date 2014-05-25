@@ -21,8 +21,6 @@ class ListController < ApplicationController
 
   helper_method :entries
 
-  before_action :authorize
-
   ##############  ACTIONS  ############################################
 
   # List all entries of this model.

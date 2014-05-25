@@ -60,7 +60,7 @@ class Employee < ActiveRecord::Base
   validates_presence_of :shortname, message: 'Das Kürzel muss angegeben werden'
   validates_presence_of :email, message: 'Die Email Adresse muss angegeben werden'         # Required by database
   validates_uniqueness_of :shortname, message: 'Dieses Kürzel wird bereits verwendet'
-  validates_uniqueness_of :ldapname, message: 'Dieser LDAP Name wird bereits verwendet'
+  validates_uniqueness_of :ldapname, allow_blank: true, message: 'Dieser LDAP Name wird bereits verwendet'
 
   before_destroy :protect_worktimes
 

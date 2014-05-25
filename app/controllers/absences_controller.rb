@@ -3,7 +3,7 @@
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz
 
-class AbsencesController < CrudController
+class AbsencesController < ManageController
 
   self.permitted_attrs = [:name, :payed, :private]
 

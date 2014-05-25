@@ -2,7 +2,7 @@
 %html{:lang => "de", "xml:lang" => "de", :xmlns => "http://www.w3.org/1999/xhtml"}
   %head
     %title
-      puzzleTime #{"- #{@title}" if @title}
+      puzzleTime #{"- #{strip_tags(@title)}" if @title}
     %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}/
     %meta{:content => "no-cache", "http-equiv" => "pragma"}/
     %meta{:content => "no-cache", "http-equiv" => "cache-control"}/

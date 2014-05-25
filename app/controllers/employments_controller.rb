@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 
-class EmploymentsController < CrudController
+class EmploymentsController < ManageController
 
   self.nesting = Employee
 

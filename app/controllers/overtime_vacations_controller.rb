@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-class OvertimeVacationsController < CrudController
+class OvertimeVacationsController < ManageController
 
   self.nesting = Employee
 

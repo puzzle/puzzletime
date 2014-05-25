@@ -3,7 +3,7 @@
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz
 
-class EmployeesController < CrudController
+class EmployeesController < ManageController
 
   self.permitted_attrs = [:initial_vacation_days, :management]
 

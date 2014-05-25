@@ -1,19 +1,19 @@
 - if @user.management || @user.project_manager?
   Verwalte:
-  \&nbsp;
-  \#{link_to 'Zugehörigkeiten', :controller => 'projectmembership'}
-  \&nbsp;
-  \#{link_to 'Projekte', :controller => 'project', :action => 'list'}
+  &nbsp;
+  = link_to 'Zugehörigkeiten', employee_memberships_path
+  &nbsp;
+  = link_to 'Projekte', projects_path
 - if @user.management
-  \&nbsp;
-  \#{link_to 'Kunden', :controller => 'client'}
-  \&nbsp;
-  \#{link_to 'Bereiche', :controller => 'department'}
-  \&nbsp;
-  \#{link_to 'Mitarbeiter', :controller => 'employees'}
-  \&nbsp;
-  \#{link_to 'Absenzen', :controller => 'absence'}
-  \&nbsp;
-  \#{link_to 'Feiertage', :controller => 'holiday'}
-  \&nbsp;
-  \#{link_to 'Nachrichten', :controller => 'user_notification'}
+  &nbsp;
+  = link_to 'Kunden', clients_path
+  &nbsp;
+  = link_to 'Bereiche', departments_path
+  &nbsp;
+  = link_to 'Mitarbeiter', employees_path
+  &nbsp;
+  = link_to 'Absenzen', absences_path
+  &nbsp;
+  = link_to 'Feiertage', holidays_path
+  &nbsp;
+  = link_to 'Nachrichten', user_notifications_path

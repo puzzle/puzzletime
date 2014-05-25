@@ -1,4 +1,4 @@
-- @title = "#{model_class ? model_class.label_plural : 'Alles'} synchronisieren"
+- @title = "#{model_class ? models_label(true) : 'Alles'} synchronisieren"
 %table.striped
   %thead
     %tr
@@ -15,4 +15,4 @@
           = msg
           %br/
 
-= render :partial => 'backlink'
+= render 'backlink'

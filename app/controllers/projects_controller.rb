@@ -3,7 +3,7 @@
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz
 
-class ProjectsController < CrudController
+class ProjectsController < ManageController
 
   include ProjectGroupable
 
