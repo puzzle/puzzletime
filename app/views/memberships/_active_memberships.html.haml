@@ -1,7 +1,7 @@
 %table.striped
   %thead
     %tr
-      %th= list_label
+      %th= membership_list_label
       %th Projektleitung
   %tbody
     - @projects.each do |membership|
@@ -12,8 +12,6 @@
           = render 'project_management', membership: membership
         %td
           = link_to 'Vom Projekt entfernen',
-                    { action: 'remove_membership', id: membership },
-                    data: { confirm: "Wollen Sie #{membership.employee.label} " \
-                                     "wirklich vom Projekt " \
-                                     "#{membership.project.label} entfernen?",
-                            method: :destroy }
+                    { action: 'membership', id: membership },
+                    data: { confirm: "Wollen Sie #{membership.employee.label} wirklich vom Projekt #{membership.project.label} entfernen?",
+                            method: :delete }

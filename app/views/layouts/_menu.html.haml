@@ -10,4 +10,4 @@
       %li= link_to 'Absenzen', :controller => 'evaluator', :action => 'absences', :clear => 1
       %li= link_to 'Bereiche', :controller => 'evaluator', :action => 'departments', :clear => 1
     %li= link_to 'Ferienplan', :controller => 'graph', :action => 'all_absences'
-    %li= link_to 'Verwalten', :controller => 'projectmembership'
+    %li= link_to 'Verwalten', employee_memberships_path

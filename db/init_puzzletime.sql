@@ -41,14 +41,14 @@ INSERT INTO clients (id, name, shortname)
 VALUES (2, 'Client AG', 'CLIE');
 
 -- projects
-INSERT INTO projects (id, client_id, name, shortname)
-VALUES (8, 1, 'Allgemein', 'ALG');
-INSERT INTO projects (id, client_id, name, shortname)
-VALUES (9, 1, 'Kundensupport', 'SUP');
-INSERT INTO projects (id, client_id, name, shortname)
-VALUES (10, 2, 'Produktives', 'PRO');
-INSERT INTO projects (id, client_id, name, shortname)
-VALUES (11, 2, 'Administratives', 'ADM');
+INSERT INTO projects (id, client_id, name, shortname, path_ids)
+VALUES (8, 1, 'Allgemein', 'ALG', ARRAY[8]);
+INSERT INTO projects (id, client_id, name, shortname, path_ids)
+VALUES (9, 1, 'Kundensupport', 'SUP', ARRAY[9]);
+INSERT INTO projects (id, client_id, name, shortname, path_ids)
+VALUES (10, 2, 'Produktives', 'PRO', ARRAY[10]);
+INSERT INTO projects (id, client_id, name, shortname, path_ids)
+VALUES (11, 2, 'Administratives', 'ADM', ARRAY[11]);
 
 -- project memberships
 INSERT INTO projectmemberships (project_id, employee_id)

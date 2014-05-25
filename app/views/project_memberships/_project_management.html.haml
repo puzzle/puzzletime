@@ -1,8 +1,8 @@
 - if membership.projectmanagement
   = link_to 'Entfernen',
-            { action: 'destroy_manager', id: membership},
+            { action: 'manager', id: membership},
             method: :delete
 - else
   = link_to 'Hinzufügen',
-            { action: 'create_manager', id: membership },
+            { action: 'manager', id: membership },
             method: :post

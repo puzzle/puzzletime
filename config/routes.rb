@@ -3,10 +3,10 @@ Rails.application.routes.draw do
   root to: 'evaluator#user_projects'
 
   concern :memberships do
-    post :manager, to: 'create_manager'
-    delete :manager, to: 'destroy_manager'
-    post :membership, to: 'create_membership'
-    delete :membership, to: 'destroy_membership'
+    post 'manager/:id', action: 'create_manager'
+    delete 'manager/:id', action: 'destroy_manager'
+    post :membership, action: 'create_membership'
+    delete 'membership/:id', action: 'destroy_membership'
   end
 
   concern :with_projects do
