@@ -83,25 +83,8 @@ class Project < ActiveRecord::Base
 
   ##### interface methods for Manageable #####
 
-  def self.labels
-    %w(Das Projekt Projekte)
-  end
-
-  def self.list(options = {})
-    options[:include] ||= :client
-    options[:order] ||= 'clients.shortname, projects.name'
-    super(options)
-  end
-
   def self.puzzlebase_map
     Puzzlebase::CustomerProject
-  end
-
-  def self.column_type(col)
-    case col
-      when :report_type then :report_type
-      else super col
-      end
   end
 
   def self.leaves

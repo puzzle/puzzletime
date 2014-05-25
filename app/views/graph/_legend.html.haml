@@ -1,6 +1,6 @@
 - if @graph.accounts? legend
   %tr
-    %td{:colspan => "2"}
-      %b= legend.label_plural
+    %td{colspan: "2"}
+      %b= legend.model_name.human(count: 2)
   - @graph.accounts_legend(legend).each do |l|
-    = render :partial => 'legendItem', :locals => {:legendItem => l}
+    = render 'legend_item', legend_item: l

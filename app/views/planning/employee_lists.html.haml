@@ -1,21 +1,22 @@
 - @title = "Listen von #{@employee.label}"
 = render :partial => 'planning/period_link', :locals => {:id => @employee}
-%table.striped
-  - if @employee_lists.empty?
-    %tr
-      %td Noch keine Mitarbeiterlisten
-  - else
-    %head
+
+
+- if @employee_lists.empty?
+  %p Noch keine Mitarbeiterlisten
+- else
+  %table.striped
+    %thead
       %tr
         %th Bezeichnung
     %tbody
-    - for employee_list in @employee_lists
-      %tr
-        %td= h employee_list.title
-        %td= link_to 'Listenplanung', :controller => 'planning', :action => 'employee_lists_planning', :employee_list_id => employee_list.id
-        %td= link_to 'Mitglieder', :controller => 'employee_lists', :action => 'show', :id => employee_list.id
-        %td= link_to 'Bearbeiten', :controller => 'employee_lists', :action => 'edit', :id => employee_list.id
-        %td= link_to 'Löschen', employee_list, :confirm => 'Mitarbeiterliste wirklich löschen?', :method => :delete
+      - for employee_list in @employee_lists
+        %tr
+          %td= h employee_list.title
+          %td= link_to 'Listenplanung', :controller => 'planning', :action => 'employee_lists_planning', :employee_list_id => employee_list.id
+          %td= link_to 'Mitglieder', :controller => 'employee_lists', :action => 'show', :id => employee_list.id
+          %td= link_to 'Bearbeiten', :controller => 'employee_lists', :action => 'edit', :id => employee_list.id
+          %td= link_to 'Löschen', employee_list, :confirm => 'Mitarbeiterliste wirklich löschen?', :method => :delete
 
 %br/
 = link_to 'Neue Mitarbeiterliste', :controller => "employee_lists", :action => "new"

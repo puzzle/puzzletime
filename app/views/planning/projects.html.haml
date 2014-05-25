@@ -1,7 +1,9 @@
 = render :partial => 'planning/period_link'
-%table
-  %th
-    Projekt
-  %th
-    Bereich
-  = render :partial => 'project', :collection => @projects
+%table.striped
+  %thead
+    %th
+      Projekt
+    %th
+      Bereich
+  %tbody
+    = render :partial => 'project', :collection => @projects

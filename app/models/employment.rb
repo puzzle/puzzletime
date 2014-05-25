@@ -120,19 +120,6 @@ class Employment < ActiveRecord::Base
     "die Anstellung vom #{date_label start_date} - #{date_label end_date}"
   end
 
-  def self.labels
-    %w(Die Anstellung Anstellungen)
-  end
-
-  def self.order_by
-    'start_date DESC'
-  end
-
-  def self.column_type(col)
-    return :boolean if col == :final
-    super(col)
-  end
-
   def date_label(date)
     date ? I18n.l(date) : 'offen'
   end

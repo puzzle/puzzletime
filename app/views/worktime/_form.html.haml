@@ -1,6 +1,6 @@
 - submit ||= ['Speichern']
 - auto_start_stop_type ||= false
-= error_messages_for @worktime
+= render 'shared/error_messages', object: @worktime
 %table
   - if record_other?
     %tr

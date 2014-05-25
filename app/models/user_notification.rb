@@ -9,8 +9,6 @@
 #  message   :text             not null
 #
 
-
-
 class UserNotification < ActiveRecord::Base
 
   include Comparable
@@ -22,14 +20,16 @@ class UserNotification < ActiveRecord::Base
   validates_presence_of :message, message: 'Eine Nachricht muss angegeben werden'
   validate :validate_period
 
+  scope :list, -> { order('date_from DESC, date_to DESC') }
+
 
   def self.list_during(period = nil)
     current = period.nil?
     period ||= Period.current_week
-    custom = list(conditions: ['date_from BETWEEN ? AND ? OR date_to BETWEEN ? AND ?',
-                               period.startDate, period.endDate,
-                               period.startDate, period.endDate],
-                  order: 'date_from')
+    custom = list.where('date_from BETWEEN ? AND ? OR date_to BETWEEN ? AND ?',
+                        period.startDate, period.endDate,
+                        period.startDate, period.endDate).
+                  reorder('date_from')
     list = custom.concat(holiday_notifications(period))
     list.push current_completion_notification if current && month_end?
     list.sort!
@@ -86,14 +86,6 @@ class UserNotification < ActiveRecord::Base
 
   def to_s
     message.truncate(30)
-  end
-
-  def self.labels
-    %w(Die Nachricht Nachrichten)
-  end
-
-  def self.order_by
-    'date_from DESC, date_to DESC'
   end
 
   def validate_period

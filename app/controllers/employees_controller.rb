@@ -7,7 +7,8 @@ class EmployeesController < ManageController
 
   self.permitted_attrs = [:initial_vacation_days, :management]
 
-  before_action :authorize, except: [:changePasswd, :update_pwd, :settings, :save_settings]
+  before_action :authorize, except: [:changePasswd, :update_pwd,
+                                     :settings, :update_settings]
 
 
   def settings
@@ -15,7 +16,7 @@ class EmployeesController < ManageController
 
   def update_settings
     attrs = params.require(:user).permit(:report_type, :default_project_id, :default_attendance,
-                                         :user_periods, :eval_periods)
+                                         user_periods: [], eval_periods: [])
     if @user.update_attributes(attrs)
       flash[:notice] =  'Die Benutzereinstellungen wurden aktualisiert'
       redirect_to root_path

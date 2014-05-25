@@ -30,6 +30,8 @@ class Client < ActiveRecord::Base
 
   before_destroy :protect_worktimes
 
+  scope :list, -> { order('name') }
+
   def to_s
     name
   end

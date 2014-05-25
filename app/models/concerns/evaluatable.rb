@@ -11,7 +11,7 @@ module Evaluatable
 
   # The displayed label of this object.
   def label
-    name
+    to_s
   end
 
   # A more complete label, defaults to the normal label method.
@@ -60,11 +60,6 @@ module Evaluatable
   def <=>(other)
     return super(other) if self.kind_of? Class
     label_verbose <=> other.label_verbose
-  end
-
-  # TODO use locales
-  def to_s_old
-    label
   end
 
   private

@@ -51,9 +51,8 @@ module GraphHelper
     @current.to_s == @today
   end
 
-
   def weekday_header
-    names = Date::DAYNAMES[1..6] + [Date::DAYNAMES[0]]
+    names = I18n.t(:'date.day_names')[1..6] + [I18n.t(:'date.day_names')[0]]
     names.collect! { |n| "<th>#{n[0..1]}</th>" }
     names.join("\n").html_safe
   end
@@ -61,7 +60,7 @@ module GraphHelper
   def day_name_header(span = 0)
   	 header = ''
     @graph.each_day do |day|
-      header += "<th colspan=\"#{span}\" #{'class="current"' if Date.today == day }>#{Date::DAYNAMES[day.wday][0..1]}</th>\n" unless Holiday.weekend?(day)
+      header += "<th colspan=\"#{span}\" #{'class="current"' if Date.today == day }>#{I18n.t(:'date.day_names')[day.wday][0..1]}</th>\n" unless Holiday.weekend?(day)
     end
     header.html_safe
   end
@@ -100,7 +99,7 @@ module GraphHelper
 
   def append_month(current_month, span)
   	 header = "<th colspan=\"#{span}\">"
-  	 header += Date::MONTHNAMES[current_month] if span > 2
+  	 header += I18n.t(:'date.month_names')[current_month] if span > 2
   	 header += "</th>\n"
   	 header
   end

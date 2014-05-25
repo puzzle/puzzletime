@@ -26,6 +26,8 @@ class Holiday < ActiveRecord::Base
   validates_presence_of :musthours_day, message: 'Die Muss Stunden müssen angegeben werden'
   validates_uniqueness_of :holiday_date, message: 'Pro Datum ist nur ein Feiertag erlaubt'
 
+  scope :list, -> { order('holiday_date DESC') }
+
 
   def self.period_musttime(period)
     hours = workday_hours(period)
@@ -131,28 +133,6 @@ class Holiday < ActiveRecord::Base
   end
 
   refresh
-
-  ##### caching #####
-
-  def holiday_date
-  	# cache holiday date to prevent endless string_to_date conversion
-  	 @holiday_date ||= read_attribute(:holiday_date)
-  end
-
-  def holiday_date=(value)
-  	 write_attribute(:holiday_date, value)
-	   @holiday_date = nil
-  end
-
-  ##### interface methods for Manageable #####
-
-  def self.labels
-    %w(Der Feiertag Feiertage)
-  end
-
-  def self.order_by
-    'holiday_date DESC'
-  end
 
   def to_s
     "am #{I18n.l(holiday_date, format: LONG_DATE_FORMAT)}"

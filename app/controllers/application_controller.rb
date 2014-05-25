@@ -17,26 +17,22 @@ class ApplicationController < ActionController::Base
   # Filter for check if user is logged in or not
   def authenticate
     user_id = session[:user_id]
-    unless user_id
+    if user_id
+      @user = Employee.find(user_id)
+    else
       # allow ad-hoc login
       if request.post? && params[:user] && params[:pwd]
-        return true if login_with(params[:user], params[:pwd])
+        return if login_with(params[:user], params[:pwd])
         flash[:notice] = 'Ungültige Benutzerdaten'
       end
       redirect_to controller: 'login', action: 'login', ref: request.url
-      return false
     end
-    @user = Employee.find(user_id)
-    true
   end
 
   def authorize
-    if authorized?
-      true
-    else
+    unless authorized?
       flash[:notice] = 'Sie sind nicht authorisiert, um diese Seite zu öffnen'
       redirect_to root_path
-      false
     end
   end
 
@@ -61,9 +57,6 @@ class ApplicationController < ActionController::Base
     if @user
       reset_session
       session[:user_id] = @user.id
-      true
-    else
-      false
     end
   end
 

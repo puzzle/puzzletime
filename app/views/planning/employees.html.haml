@@ -1,7 +1,9 @@
 = render :partial => 'planning/period_link'
-%table
-  %th
-    Nachname
-  %th
-    Vorname
-  = render :partial => 'employee', :collection	 => @employees
+%table.striped
+  %thead
+    %th
+      Nachname
+    %th
+      Vorname
+  %tbody
+    = render :partial => 'employee', :collection	 => @employees

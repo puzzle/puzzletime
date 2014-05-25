@@ -108,37 +108,17 @@ class Employee < ActiveRecord::Base
     joins('left join employments em on em.employee_id = employees.id').
     where('(em.end_date IS null or em.end_date >= ?) AND em.start_date <= ?',
           period.startDate, period.endDate).
-    order(order_by).
+    order('lastname, firstname').
     uniq
   end
 
   ##### interface methods for Manageable #####
-
-  def self.labels
-    %w(Der Mitarbeiter Mitarbeiter)
-  end
-
-  def self.order_by
-    'lastname, firstname'
-  end
-
-  def self.column_type(col)
-    case col
-    when :current_percent then :decimal
-    when :default_report_type then :report_type
-    else super col
-    end
-  end
 
   def self.puzzlebase_map
     Puzzlebase::Employee
   end
 
   ##### interface methods for Evaluatable #####
-
-  def label
-    to_s
-  end
 
   def to_s
     lastname + ' ' + firstname

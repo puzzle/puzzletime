@@ -38,14 +38,6 @@ class OvertimeVacation < ActiveRecord::Base
     "von #{hours} Stunden am #{I18n.l(transfer_date)}"
   end
 
-  def self.labels
-    ['Die', 'Überzeit-Ferien Umbuchung', 'Überzeit-Ferien Umbuchungen']
-  end
-
-  def self.order_by
-    'transfer_date DESC'
-  end
-
   ##### caching #####
 
   def transfer_date
