@@ -2,8 +2,6 @@
 
 class PlanningController < ApplicationController
 
-  before_action :authenticate
-
   before_action :set_period
 
   def index

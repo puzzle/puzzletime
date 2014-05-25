@@ -6,6 +6,8 @@
 
 class LoginController < ApplicationController
 
+  skip_before_action :authenticate, except: [:logout]
+
   def index
     redirect_to action: 'login'
   end

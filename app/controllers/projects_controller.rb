@@ -10,17 +10,10 @@ class ProjectsController < CrudController
   self.permitted_attrs = [:description, :report_type, :offered_hours, :billable,
                           :freeze_until, :description_required, :ticket_required]
 
-  # Checks if employee came from login or from direct url.
-  before_action :authenticate
-  before_action :authorize, only: [:destroy]
+  before_action :authorize, only: [:edit, :update, :destroy]
 
   after_create :set_project_manager
 
-
-  # TODO: remove?
-  def list_sub_projects
-    list
-  end
 
   private
 
@@ -42,14 +35,8 @@ class ProjectsController < CrudController
     @user.managed_projects.page(params[:page])
   end
 
-  def authorize
-    authenticate
-    project = Project.find(params[:id])
-    super unless managed_project?(project)
-  end
-
-  def managed_project?(project)
-    (@user.managed_projects.collect { |p| p.id } & project.path_ids).present?
+  def authorized?
+    super || managed_project?(entry)
   end
 
   def group_filter

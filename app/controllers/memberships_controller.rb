@@ -2,9 +2,6 @@
 
 class MembershipsController < ApplicationController
 
-  # TODO move to application controller
-  before_action :authenticate
-
   helper_method :main_path
 
   def show

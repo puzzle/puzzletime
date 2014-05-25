@@ -10,6 +10,8 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery with: :exception
 
+  before_action :authenticate
+
   private
 
   # Filter for check if user is logged in or not
@@ -29,17 +31,21 @@ class ApplicationController < ActionController::Base
   end
 
   def authorize
-    if authenticate
-      if @user.management
-        true
-      else
-        flash[:notice] = 'Sie sind nicht authorisiert, um diese Seite zu öffnen'
-        redirect_to root_path
-        false
-      end
+    if authorized?
+      true
     else
+      flash[:notice] = 'Sie sind nicht authorisiert, um diese Seite zu öffnen'
+      redirect_to root_path
       false
     end
+  end
+
+  def authorized?
+    @user && @user.management
+  end
+
+  def managed_project?(project)
+    (@user.managed_projects.collect { |p| p.id } & project.path_ids).present?
   end
 
   def set_period

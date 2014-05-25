@@ -3,7 +3,6 @@
 class EvaluatorController < ApplicationController
 
   # Checks if employee came from login or from direct url.
-  before_action :authenticate
   before_action :authorize, only: [:clients, :employees, :overtime,
                                    :clientProjects, :employeeProjects, :employeeAbsences,
                                    :export_capacity_csv, :export_extended_capacity_csv, :export_ma_overview]

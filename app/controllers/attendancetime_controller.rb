@@ -2,7 +2,7 @@
 
 class AttendancetimeController < WorktimeController
 
-  before_action :authenticate, except: [:auto_start_stop]
+  skip_before_action :authenticate, only: [:auto_start_stop]
 
   SPLIT = 'Aufteilen'
 

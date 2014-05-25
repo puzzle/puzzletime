@@ -8,7 +8,6 @@ class EmployeesController < CrudController
   self.permitted_attrs = [:initial_vacation_days, :management]
 
   before_action :authorize, except: [:changePasswd, :update_pwd, :settings, :save_settings]
-  before_action :authenticate, only: [:changePasswd, :update_pwd, :settings, :save_settings]
 
 
   def settings

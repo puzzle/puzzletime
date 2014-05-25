@@ -7,7 +7,6 @@ class WorktimeController < ApplicationController
 
   include ApplicationHelper
 
-  before_action :authenticate
   helper_method :record_other?
   hide_action :detail_action
 

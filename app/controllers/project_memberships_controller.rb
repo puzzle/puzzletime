@@ -12,7 +12,7 @@ class ProjectMembershipsController < MembershipsController
   private
 
   def list
-    @subject = Project.find(project_id)
+    subject
     @list = Employee.list
   end
 
@@ -24,11 +24,6 @@ class ProjectMembershipsController < MembershipsController
     params[:project_id]
   end
 
-  def project_manager?
-    @user.management? ||
-      @user.managed_projects.collect { |p| p.id }.include?(project_id.to_i)
-  end
-
   def parent_path(options = {})
     polymorphic_path([main_group, group].compact.uniq, options)
   end
@@ -37,9 +32,12 @@ class ProjectMembershipsController < MembershipsController
     "#{parent_path}/project_memberships"
   end
 
-  def authorize
-    # TODO assert project_manager?
-    super
+  def subject
+    @subject ||= Project.find(project_id)
+  end
+
+  def authorized?
+    super || managed_project?(subject)
   end
 
 end

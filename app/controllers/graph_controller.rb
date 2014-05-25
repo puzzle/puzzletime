@@ -5,8 +5,6 @@
 
 class GraphController < ApplicationController
 
-  # Checks if employee came from login or from direct url.
-  before_action :authenticate
   before_action :set_period
 
   def weekly
