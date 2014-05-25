@@ -151,20 +151,20 @@ table.table thead a {
 }
 
 #menu {
-    background:     #46461F url('../images/menu_bg.gif') repeat-x;
+    background:     #46461F asset-url('menu_bg.gif') repeat-x;
     margin-top:     -8px;
     height:         35px;
 }
 
 #menu_user {
-    background:     url('../images/menu_user.gif') repeat-x;
+    background:     asset-url('menu_user.gif') repeat-x;
     margin-left:    20px;
 	padding-top: 	 2px;
     float:          right;
 }
 
 #submenu {
-    background:     url('../images/menu_user.gif') repeat-x;
+    background:     asset-url('menu_user.gif') repeat-x;
     padding-left:   40px;
 	padding-top: 	 2px;
     text-indent:    -28px;
@@ -198,7 +198,7 @@ table.table thead a {
 }
 
 #menu ul li a:hover {
-    background:     #fff url('../images/menubox.gif') repeat-x top;
+    background:     #fff asset-url('menubox.gif') repeat-x top;
     color:          #4A4A24;
     text-decoration: none;
 }

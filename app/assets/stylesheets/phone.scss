@@ -1,5 +1,5 @@
 body {
-    background:     #fff; 
+    background:     #fff;
     font-size:      16pt;
     font-family:    "trebuchet ms", helvetica, sans-serif;
     color:          #333;
@@ -74,13 +74,13 @@ textarea, input, select {
 	margin-right:	-35px;
 }
 
-#brand {    
+#brand {
     font-weight:    normal;
     font-size:      28px;
 	text-align:		right;
 	color: 			#fff;
     letter-spacing: -1px;
-	padding:		13px; 
+	padding:		13px;
     margin-bottom:  0px;
 }
 
@@ -95,20 +95,20 @@ textarea, input, select {
 }
 
 #menu {
-    background:     #46461F url('../images/menu_bg.gif') repeat-x; 
+    background:     #46461F asset-url('menu_bg.gif') repeat-x;
     margin-top:     -8px;
     height:         35px;
 }
 
 #menu_user {
-    background:     url('../images/menu_user.gif') repeat-x; 
+    background:     asset-url('menu_user.gif') repeat-x;
     margin-left:    20px;
 	padding-top: 	 2px;
     float:          right;
 }
 
 #submenu {
-    background:     url('../images/menu_user.gif') repeat-x; 
+    background:     asset-url('menu_user.gif') repeat-x;
     padding-left:   40px;
 	padding-top: 	 2px;
     text-indent:    -28px;
@@ -142,7 +142,7 @@ textarea, input, select {
 }
 
 #menu ul li a:hover {
-    background:     #fff url('../images/menubox.gif') repeat-x top;
+    background:     #fff asset-url('menubox.gif') repeat-x top;
     color:          #4A4A24;
     text-decoration: none;
 }
