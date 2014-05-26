@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 class Puzzlebase::Project < Puzzlebase::Base
+
   has_many :customer_projects,
            foreign_key: 'FK_PROJECT',
            class_name: 'Puzzlebase::CustomerProject'

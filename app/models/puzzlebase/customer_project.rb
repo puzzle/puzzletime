@@ -1,3 +1,4 @@
+
 class Puzzlebase::CustomerProject < Puzzlebase::Base
 
   self.table_name = 'TBL_CUSTOMER_PROJECT'

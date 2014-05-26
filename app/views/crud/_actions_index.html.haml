@@ -1,8 +1,1 @@
-- if model_class.local?
-  = add_action_link
-- if parent
-  = '|' if model_class.local?
-  = link_to "Übersicht #{parent.class.model_name.human(count: 2)}",
-            polymorphic_path(parent.class, returning: true)
-- elsif ! model_class.local?
-  = link_to 'Synchronisieren', link_params({:action => 'synchronize', :page => params[:page]}), :method => :post
+= add_action_link

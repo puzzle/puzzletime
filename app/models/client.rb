@@ -5,7 +5,6 @@
 #
 #  id        :integer          not null, primary key
 #  name      :string(255)      not null
-#  contact   :string(255)
 #  shortname :string(4)        not null
 #
 

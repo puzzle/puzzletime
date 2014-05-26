@@ -3,7 +3,9 @@
 class Puzzlebase::Base < ActiveRecord::Base
 
   # Set up database connection to puzzlebase for all subclasses of Base
-  establish_connection :puzzlebase
+  establish_connection :puzzlebase unless Rails.env.test?
+
+  self.pluralize_table_names = false
 
   # The model class the Puzzlebase model maps to.
   MAPS_TO = nil
@@ -14,11 +16,11 @@ class Puzzlebase::Base < ActiveRecord::Base
 
   # Set database properties
   def self.table_name
-    "TBL_#{reset_table_name}"
+    "TBL_#{undecorated_table_name.upcase}"
   end
 
   def self.primary_key
-    "PK_#{reset_table_name}"
+    "PK_#{undecorated_table_name.upcase}"
   end
 
   # Synchronizes Clients, Projects, Employees and Employments from puzzlebase

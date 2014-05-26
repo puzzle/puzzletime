@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 class Puzzlebase::Customer < Puzzlebase::Base
+
   has_many :customer_projects,
            foreign_key: 'FK_CUSTOMER'
   has_many :projects,
@@ -18,7 +19,9 @@ class Puzzlebase::Customer < Puzzlebase::Base
 end
 
 class Client < ActiveRecord::Base
+
   def debug_string
     "#{shortname}: #{name}"
   end
+
 end
