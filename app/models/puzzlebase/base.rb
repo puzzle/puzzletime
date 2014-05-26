@@ -5,6 +5,7 @@ class Puzzlebase::Base < ActiveRecord::Base
   # Set up database connection to puzzlebase for all subclasses of Base
   establish_connection :puzzlebase unless Rails.env.test?
 
+  # TODO: check if really correct
   self.pluralize_table_names = false
 
   # The model class the Puzzlebase model maps to.
