@@ -30,11 +30,9 @@ class Absence < ActiveRecord::Base
   validates_presence_of :name, message: 'Eine Bezeichnung muss angegeben werden'
   validates_uniqueness_of :name, message: 'Diese Bezeichnung wird bereits verwendet'
 
-  ##### interface methods for Manageable #####
+  scope :list, -> { order(:name) }
 
-  def self.labels
-    %w(Die Absenz Absenzen)
-  end
+  ##### interface methods for Manageable #####
 
   def dont_destroy_vacation
     fail 'Die Ferien Absenz kann nicht gelöscht werden' if id == VACATION_ID

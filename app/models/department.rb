@@ -29,10 +29,6 @@ class Department < ActiveRecord::Base
 
   ##### interface methods for Manageable #####
 
-  def self.labels
-    ['Der', 'Geschäftsbereich', 'Geschäftsbereiche']
-  end
-
   def self.puzzlebase_map
     Puzzlebase::Unit
   end

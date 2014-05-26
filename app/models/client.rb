@@ -38,10 +38,6 @@ class Client < ActiveRecord::Base
 
   ##### interface methods for Manageable #####
 
-  def self.labels
-    %w(Der Kunde Kunden)
-  end
-
   def self.puzzlebase_map
     Puzzlebase::CustomerProject
   end
