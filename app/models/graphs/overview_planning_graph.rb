@@ -1,6 +1,8 @@
 # encoding: utf-8
 
 class OverviewPlanningGraph
+
+  # TODO separate view helpers from this class
   include PlanningHelper
 
   def initialize(period)

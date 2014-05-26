@@ -5,6 +5,7 @@
 
 # Methods added to this helper will be available to all templates in the application.
 
+# TODO: remove unused methods
 module ApplicationHelper
 
   # round time function.

@@ -2,6 +2,7 @@
 
 class EmployeesPlanningGraph
 
+  # TODO separate view helpers from this class
   include PlanningHelper
 
   attr_reader :period

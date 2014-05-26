@@ -5,4 +5,6 @@
   = link_to "Übersicht #{parent.class.model_name.human(count: 2)}",
             polymorphic_path(parent.class, returning: true)
 - elsif ! model_class.local?
-  = link_to 'Synchronisieren', link_params({:action => 'synchronize', :page => params[:page]}), :method => :post
+  = link_to 'Synchronisieren',
+            { action: 'synchronize' },
+            method: :post

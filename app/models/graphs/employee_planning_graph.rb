@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 class EmployeePlanningGraph
-
+  # TODO separate view helpers from this class
   include PlanningHelper
 
   attr_reader :period, :plannings, :plannings_abstr, :projects, :projects_abstr, :employee, :overview_graph, :absence_graph

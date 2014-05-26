@@ -2,6 +2,8 @@
 
 class ProjectPlanningGraph
 
+
+  # TODO separate view helpers from this class
   include PlanningHelper
 
   attr_reader :period, :project, :overview_graph, :employees, :employees_abstr, :plannings, :plannings_abstr

@@ -2,6 +2,8 @@
 
 class AbsencePlanningGraph
 
+
+  # TODO separate view helpers from this class
   include PlanningHelper
 
   def initialize(absences, period)

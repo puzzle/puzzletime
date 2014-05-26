@@ -3,6 +3,8 @@
 class VacationGraph
 
   include ActionView::Helpers::NumberHelper
+
+  # TODO separate view helpers from this class
   include GraphHelper
 
   attr_reader :period, :day
