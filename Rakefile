@@ -3,9 +3,7 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-require 'ci/reporter/rake/minitest' unless Rails.env.production?
-
-if Rails.env.development?
+unless Rails.env.production?
   require 'rails-erd'
 end
 

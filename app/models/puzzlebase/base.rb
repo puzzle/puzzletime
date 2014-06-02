@@ -17,11 +17,11 @@ class Puzzlebase::Base < ActiveRecord::Base
 
   # Set database properties
   def self.table_name
-    "TBL_#{undecorated_table_name.upcase}"
+    "TBL_#{name.demodulize.underscore.upcase}"
   end
 
   def self.primary_key
-    "PK_#{undecorated_table_name.upcase}"
+    "PK_#{name.demodulize.underscore.upcase}"
   end
 
   # Synchronizes Clients, Projects, Employees and Employments from puzzlebase

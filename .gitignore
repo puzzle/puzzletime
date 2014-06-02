@@ -15,4 +15,8 @@
 /log/*.log
 /tmp
 
+
+test/reports
 /doc/models.png
+rubocop-results.xml
+brakeman-output.tabs

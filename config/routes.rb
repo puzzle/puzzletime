@@ -45,11 +45,20 @@ Rails.application.routes.draw do
 
   concerns :with_projects
 
+  scope '/projecttime', controller: 'projecttime' do
+
+  end
+
   scope '/planning', controller: 'planning' do
     post 'create'
     post 'update'
     post 'delete'
     get ':action'
+  end
+
+  scope '/graph', controller: 'graph' do
+    get :weekly
+    get :all_absences
   end
 
   scope '/login', controller: 'login' do

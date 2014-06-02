@@ -3,7 +3,6 @@
 desc "Runs the tasks for a commit build"
 task :ci => ['log:clear',
              'db:migrate',
-             'ci:setup:minitest',
              'test']
 
 namespace :ci do
@@ -11,7 +10,6 @@ namespace :ci do
   task :nightly => ['log:clear',
                     'db:migrate',
                     'erd',
-                    'ci:setup:minitest',
                     'test',
                     'rubocop:report',
                     'brakeman',
