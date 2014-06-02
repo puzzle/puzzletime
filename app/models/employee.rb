@@ -61,6 +61,7 @@ class Employee < ActiveRecord::Base
   validates_presence_of :email, message: 'Die Email Adresse muss angegeben werden'         # Required by database
   validates_uniqueness_of :shortname, message: 'Dieses Kürzel wird bereits verwendet'
   validates_uniqueness_of :ldapname, allow_blank: true, message: 'Dieser LDAP Name wird bereits verwendet'
+  validate :periods_format
 
   before_destroy :protect_worktimes
 
@@ -267,6 +268,19 @@ class Employee < ActiveRecord::Base
   end
 
   private
+
+  def periods_format
+    validate_periods_format(:user_periods, user_periods)
+    validate_periods_format(:eval_periods, eval_periods)
+  end
+
+  def validate_periods_format(attr, periods)
+    periods.each do |p|
+      unless p =~ /^\-?\d[dwmqy]?$/
+        errors.add(attr, 'ist nicht gültig')
+      end
+    end
+  end
 
   def self.ldap_connection
     Net::LDAP.new host: LDAP_HOST,

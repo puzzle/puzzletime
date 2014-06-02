@@ -23,6 +23,7 @@
 allgemein:
   id:        8
   client_id: 1    #puzzle
+  department: devone
   name:      Allgemein
   shortname: al
   path_ids: [8]
@@ -30,6 +31,7 @@ allgemein:
 puzzletime:
   id:        1
   client_id: 1    #puzzle
+  department: devone
   name:      PuzzleTime
   shortname: pt
   path_ids: [1]
@@ -37,6 +39,7 @@ puzzletime:
 webauftritt:
   id:        2
   client_id: 2    #swisstopo
+  department: devtwo
   name:      Webauftritt
   shortname: web
   path_ids: [2]

@@ -35,6 +35,8 @@ gem 'jquery-ui-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
 gem 'jquery-turbolinks'
+
+
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0',          group: :doc
 
@@ -42,7 +44,7 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 
 group :development, :test do
   gem 'faker'
-  #gem 'codez-tarantula', require: 'tarantula-rails3', path: '../tarantula'
+  gem 'codez-tarantula', require: 'tarantula-rails3'
   gem 'binding_of_caller'
   gem 'pry-rails'
 end
@@ -62,6 +64,7 @@ group :console do
   gem 'debugger'
   gem 'pry-doc'
   gem 'pry-nav'
+  gem 'pry-debugger'
 end
 
 group :metrics do
