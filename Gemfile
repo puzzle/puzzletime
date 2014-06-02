@@ -42,7 +42,7 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 
 group :development, :test do
   gem 'faker'
-  gem 'codez-tarantula', require: 'tarantula-rails3', path: '../tarantula'
+  #gem 'codez-tarantula', require: 'tarantula-rails3', path: '../tarantula'
   gem 'binding_of_caller'
   gem 'pry-rails'
 end
