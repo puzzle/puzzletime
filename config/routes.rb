@@ -22,7 +22,7 @@ Rails.application.routes.draw do
 
   resources :departments, only: [:index], concerns: :with_projects
 
-  resources :employees, except: [:show, :destroy] do
+  resources :employees, only: [:index, :edit, :update] do
     collection do
       get :settings
       post :settings, to: 'employees#update_settings'

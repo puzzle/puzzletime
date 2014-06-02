@@ -44,3 +44,37 @@ webauftritt:
   shortname: web
   path_ids: [2]
 
+hitobito:
+  id:        3
+  client_id: 1    #puzzle
+  department: devtwo
+  name:      Hitobito
+  shortname: hit
+  path_ids: [3]
+
+hitobito_demo:
+  id:        4
+  client_id: 1    #puzzle
+  department: devtwo
+  name:      hitobito Demo
+  shortname: dem
+  parent_id: 3
+  path_ids: [3, 4]
+
+hitobito_demo_app:
+  id:        5
+  client_id: 1    #puzzle
+  department: devtwo
+  name:      hitobito Demo App
+  shortname: app
+  parent_id: 4
+  path_ids: [3, 4, 5]
+
+hitobito_demo_site:
+  id:        6
+  client_id: 1    #puzzle
+  department: devtwo
+  name:      hitobito Demo Site
+  shortname: sit
+  parent_id: 4
+  path_ids: [3, 4, 6]
