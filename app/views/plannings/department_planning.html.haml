@@ -1,0 +1,11 @@
+- @title = @department.label
+= render :partial => 'plannings/period_link', :locals => {:id => @employee}
+
+- unless @graph.employees.present?
+  Keine Mitarbeiter gefunden
+- else
+  %table.absence
+    = render :partial => 'plannings/header', :locals => { :type => :calendar_week_not_yet_implemented }
+    - @graph.employees.each do |employee|
+      = render :partial => 'plannings/employee_planning_entry', :locals =>{ :user => employee, :employee_planning_graph => @graph.graph_for(employee), :type => :calendar_week_not_yet_implemented}
+    = render :partial => 'plannings/footer', :locals => {:type => :calendar_week_not_yet_implemented, :first_span => 2}

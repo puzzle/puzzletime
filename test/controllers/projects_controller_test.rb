@@ -6,6 +6,15 @@ class ProjectsControllerTest < ActionController::TestCase
 
   setup :login
 
+  not_existing :test_show,
+               :test_show_json,
+               :test_show_with_non_existing_id_raises_record_not_found,
+               :test_new,
+               :test_create,
+               :test_create_json,
+               :test_destroy,
+               :test_destroy_json
+
   def test_index_in_department
     get :index, department_id: departments(:devone).id
     assert_equal assigns(:projects).size, 2
@@ -35,21 +44,6 @@ class ProjectsControllerTest < ActionController::TestCase
     get :index, project_id: projects(:hitobito_demo).id
     assert_equal [projects(:hitobito_demo_app), projects(:hitobito_demo_site)], assigns(:projects)
   end
-
-
-  def not_existing
-    # run this method for disabled tests
-  end
-
-  [:test_show,
-   :test_show_json,
-   :test_new,
-   :test_create,
-   :test_create_json,
-   :test_destroy,
-   :test_destroy_json].each do |m|
-     alias_method m, :not_existing
-   end
 
   private
 

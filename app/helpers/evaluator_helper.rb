@@ -50,7 +50,7 @@ module EvaluatorHelper
   end
 
   def add_time_link(account = nil)
-    linkHash = { action: 'add' }
+    linkHash = { action: 'new' }
     linkHash[:controller] =  worktime_controller
     if account
       linkHash[:account_id] = account.is_a?(Absence) ? account.id : account.leaves.first.id
@@ -60,9 +60,9 @@ module EvaluatorHelper
 
   def worktime_controller
     case
-      when @evaluation.absences? then 'absencetime'
-      when @evaluation.kind_of?(AttendanceEval) then 'attendancetime'
-      else 'projecttime'
+      when @evaluation.absences? then 'absencetimes'
+      when @evaluation.kind_of?(AttendanceEval) then 'attendancetimes'
+      else 'projecttimes'
       end
   end
 

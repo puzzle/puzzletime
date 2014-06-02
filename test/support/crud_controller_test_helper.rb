@@ -5,6 +5,7 @@
 # #test_entry_attrs to test the basic crud functionality. Override the test
 # methods if you changed the behaviour in your subclass controller.
 module CrudControllerTestHelper
+  extend ActiveSupport::Concern
 
   def test_index # :nodoc:
     get :index, test_params
@@ -136,6 +137,10 @@ module CrudControllerTestHelper
     assert_equal '', @response.body.strip
   end
 
+  def not_existing
+    # run this method for disabled tests
+  end
+
   private
 
   def assert_redirected_to_index # :nodoc:
@@ -217,4 +222,12 @@ module CrudControllerTestHelper
     params
   end
 
+
+  module ClassMethods
+    def not_existing(*tests)
+      tests.each do |method|
+        alias_method method, :not_existing
+      end
+    end
+  end
 end

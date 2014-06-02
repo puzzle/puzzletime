@@ -46,7 +46,7 @@ class EmployeeListsController < ApplicationController
       if @employee_list.save
         flash[:notice] = 'Mitarbeiterliste wurde erfolgreich erstellt.'
         # format.html { redirect_to(@employee_list) }
-        format.html { redirect_to controller: 'planning', action: 'employee_lists' }
+        format.html { redirect_to controller: 'plannings', action: 'employee_lists' }
         format.xml  { render xml: @employee_list, status: :created, location: @employee_list }
       else
         format.html do
@@ -70,7 +70,7 @@ class EmployeeListsController < ApplicationController
       if @employee_list.update_attributes(params[:employee_list])
         flash[:notice] = 'Mitarbeiterliste wurde erfolgreich angepasst.'
         # format.html { redirect_to(@employee_list) }
-        format.html { redirect_to controller: 'planning', action: 'employee_lists' }
+        format.html { redirect_to controller: 'plannings', action: 'employee_lists' }
         format.xml  { head :ok }
       else
         format.html { render action: 'edit' }
@@ -87,7 +87,7 @@ class EmployeeListsController < ApplicationController
 
     respond_to do |format|
       # format.html { redirect_to(employee_lists_url) }
-      format.html { redirect_to controller: 'planning', action: 'employee_lists' }
+      format.html { redirect_to controller: 'plannings', action: 'employee_lists' }
       format.xml  { head :ok }
     end
   end

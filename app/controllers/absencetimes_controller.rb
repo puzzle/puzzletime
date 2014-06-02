@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-class AbsencetimeController < WorktimeController
+class AbsencetimesController < WorktimesController
 
   def add_multi_absence
     set_accounts

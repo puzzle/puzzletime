@@ -6,19 +6,14 @@ class EmployeesControllerTest < ActionController::TestCase
 
   setup :login
 
-  def not_existing
-    # run this method for disabled tests
-  end
-
-  [:test_show,
-   :test_show_json,
-   :test_new,
-   :test_create,
-   :test_create_json,
-   :test_destroy,
-   :test_destroy_json].each do |m|
-     alias_method m, :not_existing
-   end
+  not_existing :test_show,
+               :test_show_json,
+               :test_show_with_non_existing_id_raises_record_not_found,
+               :test_new,
+               :test_create,
+               :test_create_json,
+               :test_destroy,
+               :test_destroy_json
 
   private
 

@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-class PlanningController < ApplicationController
+class PlanningsController < ApplicationController
 
   before_action :set_period
 
@@ -11,12 +11,12 @@ class PlanningController < ApplicationController
   def my_planning
     @employee = @user
     @graph = EmployeePlanningGraph.new(@employee, @period)
-    render template: 'planning/employee_planning'
+    render template: 'plannings/employee_planning'
   end
 
   def my_projects
     @projects = @user.managed_projects
-    render template: 'planning/projects'
+    render template: 'plannings/projects'
   end
 
   def existing
@@ -85,7 +85,7 @@ class PlanningController < ApplicationController
     @graph = EmployeesPlanningGraph.new(Employee.employed_ones(period), period)
   end
 
-  def add
+  def new
     set_employee
     @employee ||= @user
     @planning = Planning.new(employee: @employee)
@@ -113,7 +113,7 @@ class PlanningController < ApplicationController
     else
       @employee = @planning.employee
       build_planning_form
-      render action: 'add'
+      render action: 'new'
     end
   end
 
@@ -138,7 +138,7 @@ class PlanningController < ApplicationController
     end
   end
 
-  def delete
+  def destroy
     planning = Planning.find(params[:planning])
     if planning.destroy
       flash[:notice] = 'Die Planung wurde entfernt'

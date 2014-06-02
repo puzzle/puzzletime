@@ -13,14 +13,30 @@ Rails.application.routes.draw do
     resources :projects, only: [:index, :edit, :update] do
       resources :projects, only: [:index, :edit, :update]
       resource :project_memberships, only: [:show], concerns: :memberships
+
+      collection do
+        post :synchronize
+      end
     end
   end
 
   resources :absences, except: [:show]
 
-  resources :clients, only: [:index], concerns: :with_projects
+  resources :clients, only: [:index] do
+    collection do
+      post :synchronize
+    end
 
-  resources :departments, only: [:index], concerns: :with_projects
+    concerns :with_projects
+  end
+
+  resources :departments, only: [:index] do
+    collection do
+      post :synchronize
+    end
+
+    concerns :with_projects
+  end
 
   resources :employees, only: [:index, :edit, :update] do
     collection do
@@ -28,6 +44,7 @@ Rails.application.routes.draw do
       post :settings, to: 'employees#update_settings'
       get :passwd
       post :passwd, to: 'employees#update_passwd'
+      post :synchronize
     end
 
     resources :employments, only: [:index]
@@ -41,19 +58,71 @@ Rails.application.routes.draw do
 
   resources :holidays, except: [:show]
 
-  resources :user_notifications, execpt: [:show]
+  resources :user_notifications, except: [:show]
 
   concerns :with_projects
 
-  scope '/projecttime', controller: 'projecttime' do
-
+  resources :worktimes, only: [] do
+    collection do
+      get :running
+    end
   end
 
-  scope '/planning', controller: 'planning' do
-    post 'create'
-    post 'update'
-    post 'delete'
+  resources :projecttimes do
+    member do
+      get :confirm_delete
+    end
+
+    collection do
+      post 'start'
+      post 'stop'
+      post 'create_part'
+      match 'delete_part', via: [:post, :delete]
+
+      get ':action'
+    end
+  end
+
+  resources :absencetimes do
+    member do
+      get :confirm_delete
+    end
+
+    collection do
+      post :create_multi_absence
+      get ':action'
+    end
+  end
+
+  resources :attendancetimes do
+    member do
+      get :confirm_delete
+    end
+
+    collection do
+      post 'create_part'
+      match 'delete_part', via: [:post, :delete]
+      post :auto_start_stop
+      post :start
+      post :stop
+
+      get ':action'
+    end
+  end
+
+  scope '/evaluator', controller: 'evaluator' do
+    post :complete_project
+    post :complete_all
+    post :book_all
+    post :change_period
+
     get ':action'
+  end
+
+  resources :plannings do
+    collection do
+      get ':action'
+    end
   end
 
   scope '/graph', controller: 'graph' do
@@ -66,14 +135,10 @@ Rails.application.routes.draw do
     post 'logout'
   end
 
-  # TODO: POST actions:
-  # evaluator  :complete_project, :complete_all, :book_all
-  # attendancetime :auto_start_stop, :startNow, :endNow
-  # manage: :create, :update, :delete, :synchronize
-  # worktime: :delete, :create_part, :delete_part, :start, :stop, :create, :update
 
   # Install the default route as the lowest priority.
-  match '/:controller(/:action(/:id))', via: [:get, :post, :patch]
+  #match '/:controller(/:action(/:id))', via: [:get, :post, :patch]
+
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

@@ -1,0 +1,5 @@
+%tr
+  %td
+    = department.label_verbose
+  %td
+    = link_to 'Mitarbeiterplanung', :controller => 'plannings', :action => 'department_planning', :department_id => department

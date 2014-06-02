@@ -2,7 +2,7 @@
 
 require 'test_helper'
 
-class PlanningControllerTest < ActionController::TestCase
+class PlanningsControllerTest < ActionController::TestCase
 
   def setup
     login_as(:mark)
@@ -35,8 +35,8 @@ class PlanningControllerTest < ActionController::TestCase
   end
 
   def test_show_add_form
-    get :add, employee_id: employees(:lucien)
-    assert_template 'add'
+    get :new, employee_id: employees(:lucien)
+    assert_template 'new'
   end
 
   def test_create
@@ -54,7 +54,7 @@ class PlanningControllerTest < ActionController::TestCase
   def test_create_empty
     post :create, planning: { employee_id: employees(:lucien), project_id: projects(:puzzletime) }
     assert_nil assigns(:planning).id
-    assert_template 'add'
+    assert_template 'new'
   end
 
   def test_delete
@@ -66,7 +66,7 @@ class PlanningControllerTest < ActionController::TestCase
                               description: 'description' }
     assert_not_nil assigns(:planning)
     assert Planning.exists?(assigns(:planning))
-    post :delete, planning: assigns(:planning)
+    delete :destroy, planning: assigns(:planning)
     assert !Planning.exists?(assigns(:planning))
     assert_redirected_to action: 'employee_planning', employee_id: employees(:lucien)
   end

@@ -3,7 +3,7 @@
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz
 
-class WorktimeController < ApplicationController
+class WorktimesController < ApplicationController
 
   include ApplicationHelper
 
@@ -19,12 +19,12 @@ class WorktimeController < ApplicationController
   end
 
   # Shows the add time page.
-  def add
+  def new
     create_default_worktime
     set_worktime_defaults
     set_accounts
     set_existing
-    render action: 'add'
+    render action: 'new'
   end
 
   # Stores the new time the data on DB.
@@ -42,7 +42,7 @@ class WorktimeController < ApplicationController
     end
     set_accounts
     set_existing
-    render action: 'add'
+    render action: 'new'
   end
 
   # Shows the edit page for the selected time.
@@ -83,7 +83,7 @@ class WorktimeController < ApplicationController
     render action: 'confirm_delete'
   end
 
-  def delete
+  def destroy
     set_worktime
     if @worktime.employee == @user
       if @worktime.destroy
@@ -95,7 +95,7 @@ class WorktimeController < ApplicationController
     end
     referer = request.headers['Referer']
     if params[:back] && referer && !(referer =~ /time\/edit\/#{@worktime.id}$/)
-      referer.gsub!(/time\/create[^A-Z]?/, 'time/add')
+      referer.gsub!(/time\/create[^A-Z]?/, 'time/new')
       referer.gsub!(/time\/update[^A-Z]?/, 'time/edit')
       if referer.include?('work_date')
         referer.gsub!(/work_date=[0-9]{4}\-[0-9]{2}\-[0-9]{2}/, "work_date=#{@worktime.work_date}")
@@ -116,7 +116,7 @@ class WorktimeController < ApplicationController
   def split
     @split = session[:split]
     if @split.nil?
-      redirect_to controller: 'projecttime', action: 'add'
+      redirect_to controller: 'projecttimes', action: 'new'
       return
     end
     @worktime = @split.worktime_template
@@ -354,7 +354,7 @@ class WorktimeController < ApplicationController
   end
 
   def redirect_to_running
-    redirect_to controller: 'worktime', action: 'running'
+    redirect_to controller: 'worktimes', action: 'running'
   end
 
   def append_flash(msg)

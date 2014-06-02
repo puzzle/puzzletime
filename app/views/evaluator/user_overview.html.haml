@@ -5,20 +5,20 @@
 %p
   - if @user.running_attendance
     = link_to "Anwesenheit (seit #{I18n.l(@user.running_attendance.from_start_time, format: :time)}) stoppen",
-              {:controller => 'attendancetime', :action => 'stop'},
+              {:controller => 'attendancetimes', :action => 'stop'},
               :method => 'post'
   - else
     = link_to 'Anwesenheit starten',
-              {:controller => 'attendancetime', :action => 'start'},
+              {:controller => 'attendancetimes', :action => 'start'},
               :method => 'post'
   |
   - if @evaluation.absences?
     = link_to 'Absenz erfassen',
-              :controller => 'absencetime',
-              :action => 'add'
+              :controller => 'absencetimes',
+              :action => 'new'
     |
     = link_to 'Mehrwöchige Absenz erfassen',
-              :controller => 'absencetime',
+              :controller => 'absencetimes',
               :action => 'add_multi_absence'
   - else
     = link_to 'Alles Komplettieren',
@@ -29,5 +29,5 @@
     |
     = link_to 'Fremderfassen',
               :controller => worktime_controller,
-              :action => 'add',
+              :action => 'new',
               :other => 1

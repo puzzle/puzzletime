@@ -6,8 +6,8 @@
 %table
   %tr
     %td
-      = form_tag evaluation_detail_params.merge!({:action => 'delete', :id => @worktime}) do
+      = form_tag evaluation_detail_params.merge!({:action => 'destroy', :id => @worktime}), method: :delete do
         = submit_tag 'Löschen'
     %td
-      = form_tag evaluation_detail_params.merge!({:controller => 'evaluator', :action => controller.detail_action}) do
+      = form_tag evaluation_detail_params.merge!({:controller => 'evaluator', :action => controller.detail_action}), method: :get do
         = submit_tag 'Abbrechen'

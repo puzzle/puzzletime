@@ -125,7 +125,7 @@ module PlanningHelper
   # renders a planned planning cell with a link to the respective project
   def half_day_with_link_td(employee, date, project)
     result = "<td #{'class="current"' if Date.today == date } style='width:10px'>"
-    result << '<a href="/planning/add?'
+    result << '<a href="/plannings/new?'
     result << "employee_id=#{employee.id}" if employee
     result << "&project_id=#{project.id}" if project
     result << "&date=#{Week.from_date(date).to_integer}\""
@@ -186,7 +186,7 @@ module PlanningHelper
       result << 'tentative'
     end
     result << '"><a'
-    result << " href=\"/planning/edit/#{planning.id}\">&nbsp;"
+    result << " href=\"/plannings/edit/#{planning.id}\">&nbsp;"
     result << '<span>'
     result << "Projekt: #{h(planning.project.label)}<br>"
     result << 'Beschreibung: '

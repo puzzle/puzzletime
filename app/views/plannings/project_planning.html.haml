@@ -1,0 +1,10 @@
+- @title = "Planung Projekt #{@project.label}"
+= render :partial => 'plannings/period_link', :locals => {:id => @project}
+
+%table.absence
+  = render :partial => 'plannings/header'
+  = render :partial => 'plannings/project_planning_entry', :locals => {:project_planning_graph => @graph}
+
+%br/
+%br/
+= render :partial => 'legend'

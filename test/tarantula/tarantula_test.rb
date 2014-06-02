@@ -11,11 +11,6 @@ class TarantulaTest < ActionDispatch::IntegrationTest
   fixtures :all
 
   def test_tarantula
-    # If your application requires users to log in before accessing certain
-    # pages, uncomment the lines below and update them to allow this test to
-    # log in to your application.  Doing so allows Tarantula to crawl the
-    # pages that are only accessible to logged-in users.
-    #
     post '/login/login', user: 'ggg', pwd: 'Yaataw'
     follow_redirect!
 
@@ -23,11 +18,13 @@ class TarantulaTest < ActionDispatch::IntegrationTest
 
     t.skip_uri_patterns << /\/synchronize$/
 
-    t.allow_404_for /^\-?\d+$/
-    t.allow_404_for /projecttime\/start$/
-    t.allow_404_for /attendancetime\/confirm_delete\/\d+$/
-    t.allow_404_for /attendancetime\/update\/\d+$/
+    t.allow_404_for /^\-?\d+$/  # change period may produce such links in tarantula
+    t.allow_404_for /projecttimes\/start$/  # passing invalid project_id
+    t.allow_404_for /attendancetimes\/14/   # attendance modified elsewhere
+    t.allow_404_for /attendancetimes\/split_attendance/  # attendance modified elsewhere
 
     t.crawl
   end
+
+  # TODO: test as non-admin user
 end

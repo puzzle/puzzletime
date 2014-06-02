@@ -1,5 +1,5 @@
 - @title = "Listen von #{@employee.label}"
-= render :partial => 'planning/period_link', :locals => {:id => @employee}
+= render :partial => 'plannings/period_link', :locals => {:id => @employee}
 
 
 - if @employee_lists.empty?
@@ -13,7 +13,7 @@
       - for employee_list in @employee_lists
         %tr
           %td= h employee_list.title
-          %td= link_to 'Listenplanung', :controller => 'planning', :action => 'employee_lists_planning', :employee_list_id => employee_list.id
+          %td= link_to 'Listenplanung', :controller => 'plannings', :action => 'employee_lists_planning', :employee_list_id => employee_list.id
           %td= link_to 'Mitglieder', :controller => 'employee_lists', :action => 'show', :id => employee_list.id
           %td= link_to 'Bearbeiten', :controller => 'employee_lists', :action => 'edit', :id => employee_list.id
           %td= link_to 'Löschen', employee_list, :confirm => 'Mitarbeiterliste wirklich löschen?', :method => :delete

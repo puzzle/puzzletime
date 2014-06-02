@@ -8,7 +8,7 @@ app.switchTimeFieldsVisibility = () ->
   switch type
     when "auto_start"
       $("#worktime_work_date").prop('disabled', true)
-      $("#worktime_work_date").value = $.datepicker.formatDate(datepickerI18n().dateFormat, new Date())
+      $("#worktime_work_date").value = $.datepicker.formatDate(app.datepickerI18n().dateFormat, new Date())
       $("#worktime_work_date + span:has(.calendar)").hide()
       $("#worktime_hours").prop('disabled', true)
       $("#worktime_from_start_time").prop('disabled', false)

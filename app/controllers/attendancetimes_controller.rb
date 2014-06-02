@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-class AttendancetimeController < WorktimeController
+class AttendancetimesController < WorktimesController
 
   skip_before_action :authenticate, only: [:auto_start_stop]
 
@@ -32,7 +32,7 @@ class AttendancetimeController < WorktimeController
     else
       start_running Attendancetime.new
     end
-    redirect_to controller: 'worktime', action: 'running'
+    redirect_to controller: 'worktimes', action: 'running'
   end
 
   # called from running
@@ -47,14 +47,14 @@ class AttendancetimeController < WorktimeController
         project.ticket = params[:ticket] if params[:ticket]
         stop_running project, now
       elsif !Projecttime.where('type = ? AND employee_id = ? AND work_date = ? AND to_end_time = ?',
-                               'Projecttime', @user.id, attendance.work_date, attendance.to_end_time).exist?
+                               'Projecttime', @user.id, attendance.work_date, attendance.to_end_time).exists?
         split_attendance attendance
         return
       end
     else
       flash[:notice] = 'Keine offene Anwesenheit vorhanden.'
     end
-    redirect_to controller: 'worktime', action: 'running'
+    redirect_to controller: 'worktimes', action: 'running'
   end
 
   def split_attendance(attendance = nil)

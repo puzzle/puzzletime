@@ -56,27 +56,27 @@ class EvaluatorController < ApplicationController
   end
 
   def employee_planning
-    redirect_to controller: 'planning', action: 'employee_planning', employee_id: params[:category_id]
+    redirect_to controller: 'plannings', action: 'employee_planning', employee_id: params[:category_id]
   end
 
   def employees_planning
-    redirect_to controller: 'planning', action: 'employees_planning'
+    redirect_to controller: 'plannings', action: 'employees_planning'
   end
 
   def my_planning
-    redirect_to controller: 'planning', action: 'my_planning'
+    redirect_to controller: 'plannings', action: 'my_planning'
   end
 
   def project_planning
-    redirect_to controller: 'planning', action: 'project_planning'
+    redirect_to controller: 'plannings', action: 'project_planning'
   end
 
   def department_planning
-    redirect_to controller: 'planning', action: 'department_planning', department_id: params[:category_id]
+    redirect_to controller: 'plannings', action: 'department_planning', department_id: params[:category_id]
   end
 
   def company_planning
-    redirect_to controller: 'planning', action: 'company_planning'
+    redirect_to controller: 'plannings', action: 'company_planning'
   end
 
 

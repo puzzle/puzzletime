@@ -14,12 +14,12 @@
 
 app = window.App ||= {}
 
-datepickerI18n = ->
+app.datepickerI18n = ->
   $.datepicker.regional[$('html').attr('lang')]
 
 formatWeek = (field, dateString) ->
   if field.data('format') == 'week'
-    date = $.datepicker.parseDate(datepickerI18n().dateFormat, dateString)
+    date = $.datepicker.parseDate(app.datepickerI18n().dateFormat, dateString)
     val = $.datepicker.formatDate('yy', date) + ' ' + $.datepicker.iso8601Week(date)
     field.val(val)
 
@@ -36,7 +36,7 @@ datepicker = do ->
       onSelect: track
       showWeek: true
 
-    options = $.extend(options, datepickerI18n())
+    options = $.extend(options, app.datepickerI18n())
     field.datepicker(options)
     field.datepicker('show')
 
@@ -59,3 +59,8 @@ $ ->
     $('#' + id).slideToggle(200)
     event.preventDefault()
   )
+
+  $(document).on('page:fetch', ->
+    $('body').css( 'cursor', 'wait' ))
+  $(document).on('page:change', ->
+    $('body').css( 'cursor', 'default' ))

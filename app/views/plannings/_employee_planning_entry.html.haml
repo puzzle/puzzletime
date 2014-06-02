@@ -1,6 +1,6 @@
 - type ||= :calendar_day
 %tr
-  %th{:colspan => "2"}= link_to user.label, :controller => 'planning', :action => 'employee_planning', :employee_id => user
+  %th{:colspan => "2"}= link_to user.label, :controller => 'plannings', :action => 'employee_planning', :employee_id => user
   - if type == :calendar_week
     = week_overview_tds(employee_planning_graph.overview_graph)
   - else
@@ -9,7 +9,7 @@
   %tr
     %td &nbsp;&nbsp;P&nbsp;&nbsp;&nbsp;
     %th
-      = link_to project.label_verbose, :controller => 'planning', :action => 'project_planning', :project_id => project
+      = link_to project.label_verbose, :controller => 'plannings', :action => 'project_planning', :project_id => project
     - employee_planning_graph.each_week do |week|
       - if type == :calendar_week
         = week_planning_td(employee_planning_graph.plannings_abstr, user, project, week)
@@ -19,7 +19,7 @@
   %tr
     %td &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     %th
-      = link_to project.label_verbose, :controller => 'planning', :action => 'project_planning', :project_id => project
+      = link_to project.label_verbose, :controller => 'plannings', :action => 'project_planning', :project_id => project
     - employee_planning_graph.each_week do |week|
       - if type == :calendar_week
         = week_planning_td(employee_planning_graph.plannings, user, project, week)

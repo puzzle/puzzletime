@@ -30,4 +30,4 @@
         = render(:partial => 'timecell', :collection => times, :locals => {:periods => periods, :action => 'attendance_details'})
         - if @evaluation.for? @user
           %td{:style => "font-weight: normal;"}
-            = link_to 'Zeit erfassen', :controller => 'attendancetime', :action => 'add'
+            = link_to 'Zeit erfassen', :controller => 'attendancetimes', :action => 'new'

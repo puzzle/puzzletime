@@ -179,7 +179,7 @@ class Worktime < ActiveRecord::Base
 
   # Name of the corresponding controller
   def controller
-    self.class.name.downcase
+    self.class.model_name.route_key
   end
 
   def to_s

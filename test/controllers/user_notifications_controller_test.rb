@@ -6,6 +6,9 @@ class UserNotificationsControllerTest < ActionController::TestCase
 
   setup :login
 
+  not_existing :test_show,
+               :test_show_json,
+               :test_show_with_non_existing_id_raises_record_not_found
 
   private
 

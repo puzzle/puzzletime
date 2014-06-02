@@ -99,4 +99,4 @@
       = submit_tag 'Speichern'
 - if @planning && !@planning.new_record?
   %p
-    = link_to('Löschen', {:controller => 'planning', :action => 'delete', :planning => @planning}, :confirm => "Wollen sie die Plannung wirklich entfernen?", :method => :post)
+    = link_to('Löschen', {:controller => 'plannings', :action => 'destroy', :planning => @planning}, :confirm => "Wollen sie die Plannung wirklich entfernen?", :method => :delete)

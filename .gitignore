@@ -20,3 +20,5 @@ test/reports
 /doc/models.png
 rubocop-results.xml
 brakeman-output.tabs
+
+dump*.sql

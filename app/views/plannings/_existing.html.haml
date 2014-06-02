@@ -1,0 +1,3 @@
+%table.absence
+  = render :partial => 'plannings/header'
+  = render :partial => 'plannings/employee_planning_entry', :locals => {:user => @employee, :employee_planning_graph => @graph}

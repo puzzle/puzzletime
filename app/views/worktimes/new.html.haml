@@ -1,12 +1,12 @@
 - @title = "Neue #{@worktime.class.label}"
-- buttons = [WorktimeController::FINISH, 'Speichern und weiter erfassen']
-- buttons.insert 0, AttendancetimeController::SPLIT if @worktime.kind_of? Attendancetime
+- buttons = [WorktimesController::FINISH, 'Speichern und weiter erfassen']
+- buttons.insert 0, AttendancetimesController::SPLIT if @worktime.kind_of? Attendancetime
 #existing
   = render :partial => 'existing'
-= form_tag :controller => @worktime.class.name, :action => 'create' do
+= form_tag :controller => @worktime.controller, :action => 'create' do
   = render :partial => 'form', :locals => {:submit => buttons, :auto_start_stop_type => !@worktime.kind_of?(Absencetime) && @worktime.employee == @user}
 %p
   - if record_other?
     = link_to 'Arbeitszeiten', evaluation_detail_params.merge!({:controller => 'evaluator', :action => controller.detail_action })
   - else
-    = link_to 'Übersicht', :controller => @worktime.class.name, :action => 'index'
+    = link_to 'Übersicht', :controller => @worktime.controller, :action => 'index'

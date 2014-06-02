@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-class ProjecttimeController < WorktimeController
+class ProjecttimesController < WorktimesController
 
   def start
     running = running_time
@@ -68,7 +68,7 @@ class ProjecttimeController < WorktimeController
       @worktime.errors.add_to_base attendance.errors.full_messages.first
       set_accounts
       set_existing
-      render action: 'add'
+      render action: 'new'
       return false
     end
     true
