@@ -5,6 +5,7 @@ require 'simplecov-rcov'
 SimpleCov.coverage_dir 'test/coverage'
 # use this formatter for jenkins compatibility
 SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
+SimpleCov.command_name 'Unit Tests'
 SimpleCov.start 'rails'
 
 ENV['RAILS_ENV'] = 'test'
