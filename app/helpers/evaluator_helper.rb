@@ -59,11 +59,7 @@ module EvaluatorHelper
   end
 
   def worktime_controller
-    case
-      when @evaluation.absences? then 'absencetimes'
-      when @evaluation.kind_of?(AttendanceEval) then 'attendancetimes'
-      else 'projecttimes'
-      end
+    @evaluation.absences? ? 'absencetimes' : 'projecttimes' 
   end
 
   #### division supplement functions

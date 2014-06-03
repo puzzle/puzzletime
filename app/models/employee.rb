@@ -13,7 +13,6 @@
 #  initial_vacation_days :float
 #  ldapname              :string(255)
 #  report_type           :string(255)
-#  default_attendance    :boolean          default(FALSE)
 #  default_project_id    :integer
 #  user_periods          :string(3)        is an Array
 #  eval_periods          :string(3)        is an Array

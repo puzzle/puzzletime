@@ -11,11 +11,6 @@
       %td
         = select 'user', 'default_project_id', @user.leaf_projects.sort.collect{|project| [project.label_verbose, project.id]}, {:selected => @user.default_project_id}                                           |
     %tr
-      %td Anwesenheitszeiten:
-      %td
-        = check_box 'user', 'default_attendance'
-        standardmässig erfassen
-    %tr
       %td{:colspan => "2"}
         %br>/
         Angezeigte aktuelle Zeitspannen:

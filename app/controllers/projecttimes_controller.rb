@@ -39,7 +39,6 @@ class ProjecttimesController < WorktimesController
 
   def set_worktime_defaults
     @worktime.set_project_defaults(params[:account_id] || @user.default_project_id) unless @worktime.project_id
-    @worktime.attendance = @user.default_attendance
   end
 
   def set_accounts(all = false)
