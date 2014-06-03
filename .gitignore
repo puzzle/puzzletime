@@ -15,7 +15,7 @@
 /log/*.log
 /tmp
 
-
+coverage/
 test/reports
 /doc/models.png
 rubocop-results.xml

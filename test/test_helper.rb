@@ -5,6 +5,9 @@ require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 require 'minitest/reporters'
 
+require 'simplecov'
+SimpleCov.start 'rails'
+
 MiniTest::Reporters.use! [MiniTest::Reporters::DefaultReporter.new,
                           MiniTest::Reporters::JUnitReporter.new]
 
