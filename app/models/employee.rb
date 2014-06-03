@@ -45,9 +45,6 @@ class Employee < ActiveRecord::Base
            through: :worktimes
   has_many :worktimes
   has_many :overtime_vacations, dependent: :destroy
-  has_one :running_attendance,
-          -> { where(report_type: AutoStartType::INSTANCE.key) },
-          class_name: 'Attendancetime'
   has_one :running_project,
           -> { where(report_type: AutoStartType::INSTANCE.key) },
           class_name: 'Projecttime'

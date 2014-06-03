@@ -13,9 +13,6 @@ class ProjecttimesController < WorktimesController
     time = Projecttime.new
     time.project = Project.find(params[:id])
     start_running time, now
-    if @user.running_attendance.nil?
-      start_running Attendancetime.new, now
-    end
     redirect_to_running
   end
 
