@@ -6,6 +6,10 @@ require 'rails/test_help'
 require 'minitest/reporters'
 
 require 'simplecov'
+require 'simplecov-rcov'
+SimpleCov.coverage_dir 'test/coverage'
+# use this formatter for jenkins compatibility
+SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
 SimpleCov.start 'rails'
 
 MiniTest::Reporters.use! [MiniTest::Reporters::DefaultReporter.new,
