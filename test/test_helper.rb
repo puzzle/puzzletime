@@ -1,16 +1,16 @@
 # encoding: utf-8
 
-ENV['RAILS_ENV'] = 'test'
-require File.expand_path('../../config/environment', __FILE__)
-require 'rails/test_help'
-require 'minitest/reporters'
-
 require 'simplecov'
 require 'simplecov-rcov'
 SimpleCov.coverage_dir 'test/coverage'
 # use this formatter for jenkins compatibility
 SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
 SimpleCov.start 'rails'
+
+ENV['RAILS_ENV'] = 'test'
+require File.expand_path('../../config/environment', __FILE__)
+require 'rails/test_help'
+require 'minitest/reporters'
 
 MiniTest::Reporters.use! [MiniTest::Reporters::DefaultReporter.new,
                           MiniTest::Reporters::JUnitReporter.new]
