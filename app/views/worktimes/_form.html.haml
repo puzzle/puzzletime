@@ -64,21 +64,6 @@
     %tr
       %td Verbucht:
       %td= check_box 'worktime', 'booked'
-  - if @worktime.has_column?(:attendance) && @worktime.new_record? && !defined?(@split)
-    %tr
-      %td Anwesenheitszeit:
-      %td= check_box 'worktime', 'attendance'
-  - if !@worktime.new_record? && !@worktime.absence? && @worktime.employee_id == @user.id
-    %tr
-      %td Anpassen:
-      - if @worktime.is_a? Projecttime
-        %td
-          = check_box 'worktime', 'attendance'
-          zugehörige Anwesenheitszeit
-      - else
-        %td
-          = check_box 'worktime', 'projecttime'
-          zugehörige Projektzeit
   %tr
     %td
     %td

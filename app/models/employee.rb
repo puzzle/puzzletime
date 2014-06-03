@@ -45,7 +45,6 @@ class Employee < ActiveRecord::Base
            -> { order('name').uniq },
            through: :worktimes
   has_many :worktimes
-  has_many :attendancetimes
   has_many :overtime_vacations, dependent: :destroy
   has_one :running_attendance,
           -> { where(report_type: AutoStartType::INSTANCE.key) },
@@ -132,16 +131,6 @@ class Employee < ActiveRecord::Base
       when :sum_worktime, :count_worktimes, :find_worktimes then Worktime.send(symbol, *args)
       else super
       end
-  end
-
-  # Sums the attendance times of this Employee.
-  def sum_attendance(period = nil, options = {})
-    self.class.sum_attendance_for attendancetimes, period, options
-  end
-
-  # Sums all attendance times in the system.
-  def self.sum_attendance(period = nil, options = {})
-    sum_attendance_for Attendancetime, period, options
   end
 
   ##### helper methods #####

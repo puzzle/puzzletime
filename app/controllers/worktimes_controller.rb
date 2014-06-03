@@ -224,7 +224,7 @@ class WorktimesController < ApplicationController
 
   def check_overlapping
     if @worktime.report_type.is_a? StartStopType
-      conditions = ['(project_id IS NULL AND absence_id IS NULL) AND ' \
+      conditions = ['NOT (project_id IS NULL AND absence_id IS NULL) AND ' \
                     'employee_id = :employee_id AND work_date = :work_date AND id <> :id AND (' +
                     '(from_start_time <= :start_time AND to_end_time >= :end_time) OR ' +
                     '(from_start_time >= :start_time AND from_start_time < :end_time) OR ' +
@@ -234,7 +234,6 @@ class WorktimesController < ApplicationController
                       id: @worktime.id,
                       start_time: @worktime.from_start_time,
                       end_time: @worktime.to_end_time }]
-      conditions[0] = ' NOT ' + conditions[0] unless @worktime.is_a? Attendancetime
       overlaps = Worktime.where(conditions).to_a
       flash[:notice] += " Es besteht eine Überlappung mit mindestens einem anderen Eintrag: <br/>\n" unless overlaps.empty?
       flash[:notice] += overlaps.join("<br/>\n") unless overlaps.empty?

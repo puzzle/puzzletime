@@ -3,15 +3,6 @@
 = time_info
 = render(:partial => 'category')
 %p
-  - if @user.running_attendance
-    = link_to "Anwesenheit (seit #{I18n.l(@user.running_attendance.from_start_time, format: :time)}) stoppen",
-              {:controller => 'attendancetimes', :action => 'stop'},
-              :method => 'post'
-  - else
-    = link_to 'Anwesenheit starten',
-              {:controller => 'attendancetimes', :action => 'start'},
-              :method => 'post'
-  |
   - if @evaluation.absences?
     = link_to 'Absenz erfassen',
               :controller => 'absencetimes',
