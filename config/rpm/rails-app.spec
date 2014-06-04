@@ -1,7 +1,7 @@
 ### application settings
 # add your specific settings here
 
-%define app_name     puzzletime
+%define app_name     ptime
 %define app_version  1.0
 %define ruby_version 1.9.3
 
@@ -23,16 +23,9 @@
 
 # those are set automatically by the ENV variable used
 # to generate the database yml
-%if "%{?RAILS_DB_ADAPTER}" == "mysql2"
-%define use_mysql       1
-%else
-%define use_mysql       0
-%endif
-%if "%{?RAILS_DB_ADAPTER}" == "postgresql"
-%define use_pgsql       1
-%else
-%define use_pgsql       0
-%endif
+%define use_mysql         1
+%define use_pgsql         0
+%define use_postgresql92  1
 
 ### end of application settings
 ### settings that should not be changed
@@ -62,6 +55,9 @@ BuildRequires:	mysql-devel
 %endif
 %if %{use_pgsql}
 BuildRequires:	postgresql-devel
+%endif
+%if %{use_postgresql92}
+BuildRequires:	postgresql92-postgresql-devel
 %endif
 %if %{use_imagemagick}
 BuildRequires: ImageMagick-devel
@@ -166,7 +162,10 @@ echo "# Reindex sphinx for %{name}
 
 export PATH=%{ruby_bindir}:$PATH
 ([ ! -f ~/.gemrc ] || grep -q no-ri ~/.gemrc) || echo "gem: --no-ri --no-rdoc" >> ~/.gemrc
-%{bundle_cmd} install --local --deployment --without %{bundle_without_groups}
+%if %{use_postgresql92}
+source /opt/rh/postgresql92/enable
+%endif
+%{bundle_cmd} install --deployment --without %{bundle_without_groups}
 %{bundle_cmd} exec rake assets:precompile
 
 # cleanup log and tmp and db we don't want them in
@@ -280,4 +279,3 @@ fi
 
 %changelog
 # write a changelog!
-
