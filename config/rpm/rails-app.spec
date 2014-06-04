@@ -1,7 +1,7 @@
 ### application settings
 # add your specific settings here
 
-%define app_name     puzzletime
+%define app_name     ptime
 %define app_version  1.0
 %define ruby_version 1.9.3
 
