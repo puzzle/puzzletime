@@ -23,16 +23,8 @@
 
 # those are set automatically by the ENV variable used
 # to generate the database yml
-%if "%{?RAILS_DB_ADAPTER}" == "mysql2"
 %define use_mysql       1
-%else
-%define use_mysql       0
-%endif
-%if "%{?RAILS_DB_ADAPTER}" == "postgresql"
 %define use_pgsql       1
-%else
-%define use_pgsql       0
-%endif
 
 ### end of application settings
 ### settings that should not be changed
