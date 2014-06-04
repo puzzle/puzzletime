@@ -1,7 +1,7 @@
 # encoding: utf-8
 ENV['RAILS_ENV'] = 'test'
 
-if ENV['COVERAGE']
+if ENV['TEST_REPORTS']
   require 'simplecov'
   require 'simplecov-rcov'
   SimpleCov.coverage_dir 'test/coverage'
@@ -13,12 +13,15 @@ end
 
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
-require 'minitest/reporters'
 
-MiniTest::Reporters.use! [MiniTest::Reporters::DefaultReporter.new,
-                          MiniTest::Reporters::JUnitReporter.new]
+if ENV['TEST_REPORTS']
+  require 'minitest/reporters'
+  MiniTest::Reporters.use! [MiniTest::Reporters::DefaultReporter.new,
+                            MiniTest::Reporters::JUnitReporter.new]
+end
 
 Dir[Rails.root.join('test/support/**/*.rb')].sort.each { |f| require f }
+
 
 class ActiveSupport::TestCase
 

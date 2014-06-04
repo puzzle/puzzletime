@@ -6,13 +6,13 @@ task :ci => ['log:clear',
              'test']
 
 namespace :ci do
-  desc "Runs the tasks for a nightly build"
+  desc "Runs the tasks for a nightly build, set TEST_REPORTS=true"
   task :nightly => ['log:clear',
                     'db:migrate',
+                    'test',  # must be before others to get coverage
                     'erd',
                     'rubocop:report',
                     'brakeman',
-                    'test'
                     ]
 
 end
