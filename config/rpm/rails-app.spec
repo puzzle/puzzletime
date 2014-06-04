@@ -24,7 +24,7 @@
 # those are set automatically by the ENV variable used
 # to generate the database yml
 %define use_mysql       1
-%define use_pgsql       1
+%define use_postgresql92 1
 
 ### end of application settings
 ### settings that should not be changed
@@ -54,6 +54,9 @@ BuildRequires:	mysql-devel
 %endif
 %if %{use_pgsql}
 BuildRequires:	postgresql-devel
+%endif
+%if %{use_postgresql92}
+BuildRequires:	postgresql92-postgresql-devel
 %endif
 %if %{use_imagemagick}
 BuildRequires: ImageMagick-devel
@@ -158,6 +161,9 @@ echo "# Reindex sphinx for %{name}
 
 export PATH=%{ruby_bindir}:$PATH
 ([ ! -f ~/.gemrc ] || grep -q no-ri ~/.gemrc) || echo "gem: --no-ri --no-rdoc" >> ~/.gemrc
+%if %{use_postgresql92}
+source /opt/rh/postgresql92/enable
+%endif
 %{bundle_cmd} install --deployment --without %{bundle_without_groups}
 %{bundle_cmd} exec rake assets:precompile
 
@@ -272,4 +278,3 @@ fi
 
 %changelog
 # write a changelog!
-
