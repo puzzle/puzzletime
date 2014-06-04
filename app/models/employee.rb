@@ -166,7 +166,7 @@ class Employee < ActiveRecord::Base
   end
 
   def set_passwd(pwd)
-    update_attributes(passwd: Employee.encode(pwd))
+    update_attributes!(passwd: Employee.encode(pwd))
   end
 
   # Sums the worktimes of all managed projects.

@@ -52,9 +52,9 @@ class AbsencetimesController < WorktimesController
   end
 
   def model_params
-    attrs = [:account, :report_type, :work_date, :hours,
+    attrs = [:account_id, :report_type, :work_date, :hours,
              :from_start_time, :to_end_time, :description]
-    attrs << :emloyee_id if @user.management
+    attrs << :employee_id if @user.management
     params.require(:worktime).permit(attrs)
   end
 end

@@ -193,7 +193,7 @@ class Evaluation
         csv << [I18n.l(time.work_date, format: DATE_FORMAT),
                 time.hours,
                 (time.start_stop? ? I18n.l(time.from_start_time, format: :time) : ''),
-                (time.start_stop? ? I18n.l(time.to_end_time, format: :time) : ''),
+                (time.start_stop? && time.to_end_time? ? I18n.l(time.to_end_time, format: :time) : ''),
                 time.report_type,
                 time.billable,
                 time.employee.label,

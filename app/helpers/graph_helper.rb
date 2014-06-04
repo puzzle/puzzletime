@@ -149,7 +149,7 @@ module GraphHelper
 
   def worktime_link(worktime)
     if worktime && !worktime.new_record?
-      url = url_for(controller: worktime.class.name.downcase, action: :edit, id: worktime.id)
+      url = url_for(controller: worktime.controller, action: :edit, id: worktime.id)
       "<a href=\"#{url}\">"
     else
       '<a>'

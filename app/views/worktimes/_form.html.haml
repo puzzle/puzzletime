@@ -1,6 +1,7 @@
 - submit ||= ['Speichern']
 - auto_start_stop_type ||= false
 = render 'shared/error_messages', object: @worktime
+
 %table
   - if record_other?
     %tr
@@ -20,12 +21,13 @@
     %td Reporttyp:
     %td
       = select_report_type auto_start_stop_type
-  - if @worktime.has_attribute? :account_id
+  - if @worktime.has_column? :account_id
     %tr
       %td= @worktime.class.account_label
       %td
         %select#worktime_account_id{:name => "worktime[account_id]"}
           = account_options
+
   %tr
     %td Datum:
     %td
@@ -45,27 +47,28 @@
     %td Bis:
     %td
       = text_field 'worktime', 'to_end_time', :size => '15', :value => format_time(@worktime.to_end_time)
+
   %tr
     %td Ticket/Task:
     %td
       = text_field 'worktime', 'ticket', :size => '15'
-  - if @worktime.has_attribute? :description
+  - if @worktime.has_column? :description
     %tr{:valign => "top"}
       %td Beschreibung:
       %td= text_area 'worktime', 'description', {:rows => 5}
-  - if @worktime.has_attribute? :billable
+  - if @worktime.has_column? :billable
     %tr
       %td Verrechenbar:
       %td= check_box 'worktime', 'billable'
-  - if @user.management && @worktime.has_attribute?(:booked) && ! @worktime.new_record?
+  - if @user.management && @worktime.has_column?(:booked) && ! @worktime.new_record?
     %tr
       %td Verbucht:
       %td= check_box 'worktime', 'booked'
-  - if @worktime.has_attribute?(:attendance) && @worktime.new_record? && !defined?(@split)
+  - if @worktime.has_column?(:attendance) && @worktime.new_record? && !defined?(@split)
     %tr
       %td Anwesenheitszeit:
       %td= check_box 'worktime', 'attendance'
-  - if !@worktime.new_record? && !@worktime.absence? && @worktime.employee == @user
+  - if !@worktime.new_record? && !@worktime.absence? && @worktime.employee_id == @user.id
     %tr
       %td Anpassen:
       - if @worktime.is_a? Projecttime

@@ -91,7 +91,7 @@ class Projecttime < Worktime
   def protect_booked
     previous = Projecttime.find(id)
     if previous.booked && booked
-      errors.add_to_base 'Verbuchte Arbeitszeiten können nicht verändert werden'
+      errors.add(:base, 'Verbuchte Arbeitszeiten können nicht verändert werden')
       return false
     end
   end

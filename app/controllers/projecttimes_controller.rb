@@ -65,7 +65,7 @@ class ProjecttimesController < WorktimesController
     attendance.employee_id = @worktime.employee_id
     attendance.copy_times_from @worktime
     unless attendance.save
-      @worktime.errors.add_to_base attendance.errors.full_messages.first
+      @worktime.errors.add(:base, attendance.errors.full_messages.first)
       set_accounts
       set_existing
       render action: 'new'
@@ -88,7 +88,8 @@ class ProjecttimesController < WorktimesController
   end
 
   def set_alltime_accounts
-    @accounts = @worktime.employee.alltime_leaf_projects
+    e = @worktime.employee
+    @accounts = e ? e.alltime_leaf_projects : Project.leaves
   end
 
 end

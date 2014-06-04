@@ -2,11 +2,12 @@
 %h3
   = @split.original.time_string
   am #{format_date(@split.original.work_date)}:
-%table{:cellpadding => "0"}
-  = render :partial => 'part', :collection => @split.worktimes
+%table.striped{:cellpadding => "0"}
+  %tbody
+    = render :partial => 'part', :collection => @split.worktimes
 %p Die Zeiten wurden noch nicht gespeichert. Bitte schliessen sie dazu den Aufteilungsprozess ab.
 
-= form_tag(evaluation_detail_params.merge!({:controller => @worktime.class.name, :action => 'create_part', :id => @worktime})) do
+= form_tag(evaluation_detail_params.merge!({:controller => @worktime.controller, :action => 'create_part', :id => @worktime})) do
   = render(:partial => 'form', :locals => {:submit => @split.class::SUBMIT_BUTTONS })
 
 - options = evaluation_detail_params
@@ -14,7 +15,7 @@
   - options[:controller] = 'evaluator'
   - options[:action] = controller.detail_action
 - else
-  - options[:action] = 'list'
+  - options[:action] = 'index'
 
 - htmlOptions = {}
 - unless @split.empty?

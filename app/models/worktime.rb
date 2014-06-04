@@ -109,11 +109,11 @@ class Worktime < ActiveRecord::Base
 
   # Whether the report typ of this Worktime contains start and stop times
   def start_stop?
-    report_type.start_stop?
+    report_type.start_stop? if report_type
   end
 
   # Whether this Worktime contains the passed attribute
-  def has_attribute?(attr)
+  def has_column?(attr)
     self.class.valid_attributes.include? attr
   end
 
@@ -148,7 +148,7 @@ class Worktime < ActiveRecord::Base
 
   # Validate callback before saving
   def validate_by_report_type
-    report_type.validate_worktime self
+    report_type.validate_worktime(self) if report_type
   end
 
   # Store hour information from start/stop times.

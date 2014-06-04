@@ -21,7 +21,7 @@ class ReportType
   end
 
   def validate_worktime(worktime)
-    worktime.errors.add(:hours, 'Stunden müssen positiv sein') if worktime.hours <= 0
+    worktime.errors.add(:hours, 'Stunden müssen positiv sein') if worktime.hours.to_i <= 0
   end
 
   def copy_times(source, target)

@@ -5,6 +5,7 @@
 
 class WorktimesController < ApplicationController
 
+  # TODO remove
   include ApplicationHelper
 
   helper_method :record_other?
@@ -90,7 +91,7 @@ class WorktimesController < ApplicationController
         flash[:notice] = "Die #{@worktime.class.label} wurde entfernt"
       else
         # errors enumerator yields attr and message (=second item)
-        flash[:notice] = @worktime.errors.collect(&:second).join(', ')
+        flash[:notice] = @worktime.errors.messages.collect(&:second).flatten.join(', ')
       end
     end
     referer = request.headers['Referer']
@@ -269,7 +270,7 @@ class WorktimesController < ApplicationController
   end
 
   def set_project_accounts
-    @accounts = @worktime.employee.leaf_projects
+    @accounts = (@worktime.employee || @user).leaf_projects
   end
 
   # may overwrite in subclass

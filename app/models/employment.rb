@@ -36,9 +36,9 @@ class Employment < ActiveRecord::Base
 
   def valid_period
     if end_date && period && period.negative?
-      errors.add_to_base('Die Zeitspanne ist ungültig')
+      errors.add(:base, 'Die Zeitspanne ist ungültig')
     elsif parallel_employments?
-      errors.add_to_base('Für diese Zeitspanne ist bereits eine andere Anstellung definiert')
+      errors.add(:base, 'Für diese Zeitspanne ist bereits eine andere Anstellung definiert')
     end
   end
 

@@ -27,6 +27,8 @@ half_year_maria:
   passwd:    <%= Employee.encode('Yaataw') %>
   email:     bla@bla.ch
   management: true
+  user_periods: ["0w", "-1w", "0"]
+  eval_periods: ["-1m", "0"]
 various_pedro:
   id:        2
   firstname: Pedro
