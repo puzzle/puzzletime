@@ -23,8 +23,9 @@
 
 # those are set automatically by the ENV variable used
 # to generate the database yml
-%define use_mysql       1
-%define use_postgresql92 1
+%define use_mysql         1
+%define use_pgsql         0
+%define use_postgresql92  1
 
 ### end of application settings
 ### settings that should not be changed
