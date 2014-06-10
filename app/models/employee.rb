@@ -273,15 +273,4 @@ class Employee < ActiveRecord::Base
                   encryption: :simple_tls
   end
 
-  def self.sum_attendance_for(receiver, period = nil, options = {})
-    if period
-      options = clone_options options
-      append_conditions(options[:conditions], ['work_date BETWEEN ? AND ?', period.startDate, period.endDate])
-    end
-    receiver.where(options[:conditions]).
-             joins(options[:joins]).
-             sum(:hours).
-             to_f
-  end
-
 end
