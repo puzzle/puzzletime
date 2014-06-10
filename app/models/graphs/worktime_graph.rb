@@ -31,7 +31,7 @@ class WorktimeGraph
   end
 
   def timeboxes
-    # must_hours are MUST_HOURS_PER_DAY unless employment > 100%
+    # must_hours are Settings.must_hours_per_day unless employment > 100%
     must_hours = Holiday.musttime(@current.startDate) * must_hours_factor
     period_boxes = concat_period_boxes
     @total_hours = 0

@@ -20,12 +20,12 @@ module ApplicationHelper
 
   # Change english datelayout to german one.
   def format_date(date)
-    date ? I18n.l(date, format: LONG_DATE_FORMAT) : ''
+    date ? I18n.l(date, format: :long) : ''
   end
 
   def format_time(time)
     time ||= Time.zone.now
-    I18n.l(time, format: TIME_FORMAT)
+    I18n.l(time, format: :time)
   end
 
   def format_percent(value)
@@ -42,11 +42,11 @@ module ApplicationHelper
   end
 
   def date_calendar_field(object, method, options = {})
-    generic_calendar_field object, method, DATE_FORMAT, options
+    generic_calendar_field object, method, :default, options
   end
 
   def week_calendar_field(object, method, options = {})
-    generic_calendar_field object, method, WEEK_FORMAT, options
+    generic_calendar_field object, method, :week, options
   end
 
   def generic_calendar_field(object, method, date_format, html_options = {})
@@ -55,7 +55,7 @@ module ApplicationHelper
     html_options[:class] = 'date'
     html_options[:value] = date ? I18n.l(date, format: date_format) : ''
     html_options[:data] ||= {}
-    html_options[:data][:format] = date_format == WEEK_FORMAT ? 'week' : 'date'
+    html_options[:data][:format] = date_format
 
     text_field(object, method, html_options) +
     content_tag(:span, image_tag('calendar.gif',

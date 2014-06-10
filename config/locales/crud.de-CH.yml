@@ -35,6 +35,10 @@ de-CH:
         other: "%{count} Fehler verhinderten das Speichern dieses Eintrages:"
 
   # formats
+  date:
+    formats:
+      long: "%a, %d.%m.%Y"
+      week: "%Y %W"
   time:
     formats:
       time: "%H:%M"

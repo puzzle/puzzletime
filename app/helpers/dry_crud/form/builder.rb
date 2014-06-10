@@ -92,7 +92,7 @@ module DryCrud::Form
       html_options[:class] = 'date'
       html_options[:value] = date
       html_options[:data] ||= {}
-      html_options[:data][:format] = format == WEEK_FORMAT ? 'week' : 'date'
+      html_options[:data][:format] = format
 
       text_field(attr, html_options) +
       content_tag(:span, @template.image_tag('calendar.gif',

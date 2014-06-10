@@ -1,0 +1,52 @@
+# ############################## #
+# Global settings for puzzleTime #
+# ############################## #
+
+# Master values for time calculations.
+# DO NOT CHANGE THAT WITHOUT A GOOD REASON AND MIGRATIONS FOR THE EXISTING DATA !
+must_hours_per_day: 8.0
+vacation_days_per_year: 25.0
+
+# Significant IDs
+# THIS SHOULD BE SYNCED WITH THE DATABASE !
+vacation_id: 1
+default_project_id: 8   # Puzzle Allgemein
+
+# Array of holidays with a fixed date. [day, month]
+regular_holidays:
+  -
+    - 1
+    - 1
+  -
+    - 2
+    - 1
+  -
+    - 1
+    - 8
+  -
+    - 25
+    - 12
+  -
+    - 26
+    - 12
+
+# LDAP configuration
+ldap:
+  connection:
+    host: ldapi.rz.puzzle.ch
+    port: 636
+    encryption: simple_tls
+  user_dn: ou=puzzle,ou=users,dc=puzzle,dc=itc
+  external_dn: ou=extern,ou=users,dc=puzzle,dc=itc
+  group: cn=puzzletime,ou=groups,dc=puzzle,dc=itc
+
+# Default values
+defaults:
+  report_type: absolute_day
+  start_hour: 8
+
+completion:
+  # from/to day of month to display completion notification
+  display_period:
+    from: 26
+    to: 2

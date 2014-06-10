@@ -164,7 +164,7 @@ class Period
   def self.parse_date(date)
     if date.kind_of? String
       begin
-        date = Date.strptime(date, DATE_FORMAT)
+        date = Date.strptime(date, I18n.t('date.formats.default'))
       rescue
         date = Date.parse(date)
       end

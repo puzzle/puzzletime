@@ -74,8 +74,8 @@ class Employee < ActiveRecord::Base
   # Returns the logged-in Employee or nil if the login failed.
   def self.ldap_login(username, pwd)
     if !username.strip.empty? &&
-       (ldap_auth_user(LDAP_USER_DN, username, pwd) ||
-        (ldap_auth_user(LDAP_EXTERNAL_DN, username, pwd) &&
+       (ldap_auth_user(Settings.ldap.user_dn, username, pwd) ||
+        (ldap_auth_user(Settings.ldap.external_dn, username, pwd) &&
          ldap_group_member(username)))
       return find_by_ldapname(username)
     end
@@ -89,14 +89,14 @@ class Employee < ActiveRecord::Base
   end
 
   def self.ldap_group_member(username)
-    result = ldap_connection.search(base: LDAP_GROUP,
+    result = ldap_connection.search(base: Settings.ldap.group,
                                     filter: Net::LDAP::Filter.eq('memberUid', username))
     not result.empty?
   end
 
   # Returns a Array of LDAP user information
   def self.ldap_users
-    ldap_connection.search(base: LDAP_USER_DN,
+    ldap_connection.search(base: Settings.ldap.user_dn,
                            attributes: %w(uid sn givenname mail))
   end
 
@@ -143,7 +143,7 @@ class Employee < ActiveRecord::Base
 
   def before_create
     self.passwd = ''    # disable password login
-    projectmemberships.build(project_id: DEFAULT_PROJECT_ID)
+    projectmemberships.build(project_id: Settings.default_project_id)
   end
 
   def check_passwd(pwd)
@@ -268,9 +268,9 @@ class Employee < ActiveRecord::Base
   end
 
   def self.ldap_connection
-    Net::LDAP.new host: LDAP_HOST,
-                  port: LDAP_PORT,
-                  encryption: :simple_tls
+    config = Settings.ldap.connection.to_hash
+    config[:encryption] = config[:encryption].to_sym if config[:encryption]
+    Net::LDAP.new(config)
   end
 
 end

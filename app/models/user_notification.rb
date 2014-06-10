@@ -58,7 +58,7 @@ class UserNotification < ActiveRecord::Base
   end
 
   def self.holiday_message(holiday)
-    I18n.l(holiday.holiday_date, format: LONG_DATE_FORMAT) +
+    I18n.l(holiday.holiday_date, format: :long) +
       ' ist ein Feiertag (' + ('%01.2f' % holiday.musthours_day).to_s +
       ' Stunden Sollarbeitszeit)'
   end
@@ -73,7 +73,7 @@ class UserNotification < ActiveRecord::Base
 
   def self.month_end?
     today = Date.today.mday
-    today > DISPLAY_COMPLETION[0] || today < DISPLAY_COMPLETION[1]
+    today > Settings.completion.display_period.from || today < Settings.completion.display_period.to
   end
 
   public

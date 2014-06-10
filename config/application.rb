@@ -34,10 +34,5 @@ module Puzzletime
 
     config.assets.precompile += %w(print.css phone.css graph.css)
 
-    config.to_prepare do |config|
-      # TODO refactor to rails_config
-      require 'report_type'
-      require "#{Rails.root}/config/puzzletime_settings"
-    end
   end
 end

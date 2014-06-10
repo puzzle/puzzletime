@@ -63,7 +63,7 @@ class VacationGraph
   	 max_absence = get_max_absence times
   	 return nil if max_absence.nil?
 
-  	 hours = times[max_absence] / MUST_HOURS_PER_DAY
+  	 hours = times[max_absence] / Settings.must_hours_per_day
   	 color = color_for(max_absence) if max_absence
   	 Timebox.new nil, color, hours, tooltip
   end
@@ -123,8 +123,8 @@ class VacationGraph
     @unpaid_absences.each do |unpaid|
       @current.step do |date|
         if unpaid.include?(date) && date.wday > 0 && date.wday < 6
-          times[UNPAID_ABSENCE] += MUST_HOURS_PER_DAY
-          tooltip += "#{I18n.l(date)}: #{MUST_HOURS_PER_DAY}0 h #{UNPAID_ABSENCE.label}<br/>"
+          times[UNPAID_ABSENCE] += Settings.must_hours_per_day
+          tooltip += "#{I18n.l(date)}: #{Settings.must_hours_per_day}0 h #{UNPAID_ABSENCE.label}<br/>"
         end
       end
     end
