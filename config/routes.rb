@@ -118,6 +118,8 @@ Rails.application.routes.draw do
     match 'login', via: [:get, :post, :patch]
     post 'logout'
   end
+  
+  get 'status', to: 'status#index'
 
 
   # Install the default route as the lowest priority.
