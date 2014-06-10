@@ -24,13 +24,13 @@ class Employment < ActiveRecord::Base
   validates_inclusion_of :percent, in: 0..200, message: 'Die Prozente müssen angegeben werden'
   validates_presence_of :start_date, message: 'Das Start Datum muss angegeben werden'
   validates_presence_of :employee_id, message: 'Es muss ein Mitarbeiter angegeben werden'
+  validates :start_date, :end_date, timeliness: { date: true, allow_blank: true }
   validate :valid_period
 
   before_validation :reset_end_date
   before_create :update_end_date
   belongs_to :employee
 
-  before_validation DateFormatter.new('start_date', 'end_date')
 
   scope :list, -> { order('start_date DESC') }
 

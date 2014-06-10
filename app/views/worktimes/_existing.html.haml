@@ -1,9 +1,9 @@
 .notification
 
   - unless @existing.empty?
-    Am #{format_date(@work_date)} bereits erfasste Zeiten:
+    Am #{f(@work_date)} bereits erfasste Zeiten:
     %table.striped{:cellpadding => "0"}
       %tbody
         = render :partial => 'part', :collection => @existing
   - else
-    Am #{format_date(@work_date)} wurden noch keine Zeiten erfasst.
+    Am #{f(@work_date)} wurden noch keine Zeiten erfasst.

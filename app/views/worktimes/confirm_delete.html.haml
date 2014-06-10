@@ -1,7 +1,7 @@
 - @title = "Arbeitszeit löschen"
 %p
   Wollen sie wirklich #{format_hour @worktime.hours}h Arbeitszeit
-  am #{format_date(@worktime.work_date)} für
+  am #{f(@worktime.work_date)} für
   \#{@worktime.account ? @worktime.account.label_verbose : 'Anwesenheit'} löschen?
 %table
   %tr

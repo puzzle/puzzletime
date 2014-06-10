@@ -15,9 +15,9 @@ class UserNotification < ActiveRecord::Base
   extend Manageable
 
   # Validation helpers
-  before_validation DateFormatter.new('date_from', 'date_to')
   validates_presence_of :date_from, message: 'Eine Startdatum muss angegeben werden'
   validates_presence_of :message, message: 'Eine Nachricht muss angegeben werden'
+  validates :date_from, :date_to, timeliness: { date: true, allow_blank: true }
   validate :validate_period
 
   scope :list, -> { order('date_from DESC, date_to DESC') }

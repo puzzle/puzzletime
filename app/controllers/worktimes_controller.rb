@@ -5,9 +5,6 @@
 
 class WorktimesController < ApplicationController
 
-  # TODO remove
-  include ApplicationHelper
-
   helper_method :record_other?
   hide_action :detail_action
 

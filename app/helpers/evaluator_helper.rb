@@ -16,7 +16,7 @@ module EvaluatorHelper
 
   def detail_td(worktime, field)
     case field
-      when :work_date then td format_date(worktime.work_date), 'right', true
+      when :work_date then td f(worktime.work_date), 'right', true
       when :hours then td format_hour(worktime.hours), 'right', true
       when :times then td worktime.time_string, nil, true
       when :employee then td worktime.employee.shortname
@@ -73,12 +73,12 @@ module EvaluatorHelper
 				                        back_url: request.original_fullpath },
                           method: 'post')
     end
-	   link_text +=  ' (' +  format_date(@user.last_completed(project)) + ')'
+	   link_text +=  ' (' +  f(@user.last_completed(project)) + ')'
     link_text
   end
 
   def last_completion(employee)
-    format_date employee.last_completed(@evaluation.category)
+    f(employee.last_completed(@evaluation.category))
   end
 
   def offered_hours(project)
@@ -117,7 +117,7 @@ module EvaluatorHelper
     unless transfers.empty?
       tooltip = '<a href="#" class="tooltip">&lt;-&gt;<span>Überzeit-Ferien Umbuchungen:<br/>'
       transfers.collect! do |t|
-        " - #{format_date(t.transfer_date)}: #{format_hour(t.hours)} h"
+        " - #{f(t.transfer_date)}: #{format_hour(t.hours)} h"
       end
       tooltip += transfers.join('<br />')
       tooltip += '</span></a>'
