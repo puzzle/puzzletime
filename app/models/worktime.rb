@@ -35,9 +35,9 @@ class Worktime < ActiveRecord::Base
 
   validates_presence_of :work_date, message: 'Das Datum ist ungültig'
   validates_presence_of :employee_id, message: 'Ein Mitarbeiter muss vorhanden sein'
+  validates :work_date, timeliness: { date: true, allow_blank: true }
   validate :validate_by_report_type
 
-  before_validation DateFormatter.new('work_date')
   before_validation :store_hours
 
   H_M = /^(\d*):([0-5]\d)/

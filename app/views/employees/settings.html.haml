@@ -98,10 +98,10 @@
         %th Bis
         %th Prozent
     %tbody
-      - @user.employments.each do |employment|
+      - @user.employments.list.each do |employment|
         %tr
-          %td{:align => "right"}= format_date employment.start_date
-          %td{:align => "right"}= format_date employment.end_date
+          %td{:align => "right"}= f employment.start_date
+          %td{:align => "right"}= f employment.end_date
           %td{:align => "right"}= format_percent employment.percent
 - unless @user.overtime_vacations.empty?
   %div
@@ -112,9 +112,9 @@
           %th Datum
           %th Stunden
       %tbody
-        - @user.overtime_vacations.each do |transfer|
+        - @user.overtime_vacations.list.each do |transfer|
           %tr
-            %td{:align => "right"}= format_date transfer.transfer_date
+            %td{:align => "right"}= f transfer.transfer_date
             %td{:align => "right"}
               = format_hour transfer.hours
               h

@@ -16,11 +16,10 @@ class OvertimeVacation < ActiveRecord::Base
 
   belongs_to :employee
 
-  before_validation DateFormatter.new('transfer_date')
-
   validates_inclusion_of :hours, in: 0.001...999_999, message: 'Die Stunden müssen positiv sein'
   validates_presence_of :transfer_date, message: 'Das Datum muss angegeben werden'
   validates_presence_of :employee_id, message: 'Es muss ein Mitarbeiter angegeben werden'
+  validates :transfer_date, timeliness: { date: true, allow_blank: true }
 
   scope :list, -> { order('transfer_date DESC') }
 

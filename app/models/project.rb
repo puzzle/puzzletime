@@ -46,8 +46,6 @@ class Project < ActiveRecord::Base
                    "#{project.id} = ANY (projects.path_ids)")
            end
 
-  before_validation DateFormatter.new('freeze_until')
-
 
   schema_validations except: :path_ids
   validates_presence_of :name, message: 'Ein Name muss angegeben werden'
@@ -56,6 +54,7 @@ class Project < ActiveRecord::Base
   validates_uniqueness_of :shortname, scope: [:parent_id, :client_id], message: 'Dieses Kürzel wird bereits verwendet'
   validates_presence_of :client_id, message: 'Das Projekt muss einem Kunden zugeordnet sein'
   validates_presence_of :department_id, message: 'Das Projekt muss einem Geschäftsbereich zugeordnet sein'
+  validates :freeze_until, timeliness: { date: true, allow_blank: true }
 
   before_destroy :protect_worktimes
 
@@ -198,11 +197,13 @@ class Project < ActiveRecord::Base
   end
 
   def validate_worktime_frozen(worktime)
-    if freeze = latest_freeze_until
-      if worktime.work_date <= freeze || (!worktime.new_record? && Worktime.find(worktime.id).work_date <= freeze)
+    freeze = latest_freeze_until
+    if freeze &&
+       worktime.work_date &&
+       (worktime.work_date <= freeze ||
+        (!worktime.new_record? && Worktime.find(worktime.id).work_date <= freeze))
         worktime.errors.add(:work_date, "Die Zeiten vor dem #{I18n.l(freeze)} wurden für dieses Projekt eingefroren und können nicht mehr geändert werden. Um diese Arbeitszeit trotzdem zu bearbeiten, wende dich bitte an den entsprechenden Projektleiter.")
         false
-      end
     end
   end
 

@@ -10,7 +10,7 @@
     = stylesheet_link_tag 'print', :media => 'all'
   %body
     .date
-      = format_date Date.today
+      = f Date.today
     %h1= @title
     = render :partial => 'report_header', :locals => { :project => project }
     %p
@@ -59,8 +59,8 @@
                 = format_hour tckt_val[:sum]
                 \&nbsp;
               - if params[:start_stop]
-                %td{:align => "center"}= format_date tckt_val[:date][0]
-                %td{:align => "center"}= format_date tckt_val[:date][1]
+                %td{:align => "center"}= f tckt_val[:date][0]
+                %td{:align => "center"}= f tckt_val[:date][1]
               %td{:align => "left"}
                 - if params[:combine]=="ticket"
                   = tckt_val[:employees].keys.sort.join(", ")

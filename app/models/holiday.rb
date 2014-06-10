@@ -20,11 +20,9 @@ class Holiday < ActiveRecord::Base
 
   after_save :refresh
 
-  before_validation DateFormatter.new('holiday_date')
-
-  validates_presence_of :holiday_date, message: 'Das Datum ist ungültig'
   validates_presence_of :musthours_day, message: 'Die Muss Stunden müssen angegeben werden'
   validates_uniqueness_of :holiday_date, message: 'Pro Datum ist nur ein Feiertag erlaubt'
+  validates :holiday_date, timeliness: { date: true, allow_blank: true }, presence: true
 
   scope :list, -> { order('holiday_date DESC') }
 
@@ -135,7 +133,7 @@ class Holiday < ActiveRecord::Base
   refresh
 
   def to_s
-    "am #{I18n.l(holiday_date, format: :long)}"
+    holiday_date? ? "am #{I18n.l(holiday_date, format: :long)}" : ""
   end
 
   def <=>(other)

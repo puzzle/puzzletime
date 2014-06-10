@@ -5,7 +5,6 @@
 
 # Methods added to this helper will be available to all templates in the application.
 
-# TODO: remove unused methods
 module ApplicationHelper
 
   # round time function.
@@ -16,11 +15,6 @@ module ApplicationHelper
     parts = number.split('.')
     parts[0].gsub!(/(\d)(?=(\d\d\d)+(?!\d))/, "\\1'")
     parts.join('.')
-  end
-
-  # Change english datelayout to german one.
-  def format_date(date)
-    date ? I18n.l(date, format: :long) : ''
   end
 
   def format_time(time)
