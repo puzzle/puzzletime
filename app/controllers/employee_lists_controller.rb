@@ -1,5 +1,6 @@
 # encoding: utf-8
 
+# TODO: inherit from crud controller
 class EmployeeListsController < ApplicationController
 
   before_action :set_period

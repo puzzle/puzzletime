@@ -42,6 +42,7 @@ class PlanningsController < ApplicationController
     @graph = EmployeePlanningGraph.new(@employee, @period)
   end
 
+  # TODO move to employee_lists#index
   def employee_lists
     @employee = @user
     @employee_lists = EmployeeList.where(employee_id: @employee.id)
