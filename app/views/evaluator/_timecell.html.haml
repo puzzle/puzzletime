@@ -1,10 +1,12 @@
 - # local variables:
-- # periods, division_id, action
-- p = periods[timecell_counter]
+- #  division_id, action
+- p = @periods[timecell_counter]
+- timecell = @times[timecell_counter][division] if defined? division
 - division_id = nil if ! defined? division_id
+- division_id = division.id if defined? division
 - action ||= 'details'
 %td{:align => "right"}
-  = format_hour timecell
+  = format_hour timecell.to_f
   - if division_id || @evaluation.total_details
     - link = url_for(controller: controller.controller_name,
                      action: action,

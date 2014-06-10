@@ -32,6 +32,8 @@ class Worktime < ActiveRecord::Base
   belongs_to :employee
   belongs_to :absence
   belongs_to :project
+  has_one :client, through: :project
+  has_one :department, through: :project
 
   validates_presence_of :work_date, message: 'Das Datum ist ungültig'
   validates_presence_of :employee_id, message: 'Ein Mitarbeiter muss vorhanden sein'

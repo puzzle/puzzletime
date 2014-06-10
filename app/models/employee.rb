@@ -129,7 +129,7 @@ class Employee < ActiveRecord::Base
   # to the Worktime Class.
   def self.method_missing(symbol, *args)
     case symbol
-      when :sum_worktime, :count_worktimes, :find_worktimes then Worktime.send(symbol, *args)
+      when :sum_worktime, :count_worktimes, :sum_grouped_worktimes, :find_worktimes then Worktime.send(symbol, *args)
       else super
       end
   end
@@ -204,12 +204,13 @@ class Employee < ActiveRecord::Base
 
   # parent projects this employee ever worked on
   def alltime_projects
-    Project.find_by_sql ['SELECT DISTINCT c.shortname, pa.* FROM  worktimes w ' \
-                'LEFT JOIN projects pw ON w.project_id = pw.id ' +
-                'LEFT JOIN projects pa ON pw.path_ids[1] = pa.id ' +
-                'LEFT JOIN clients c ON pa.client_id = c.id ' +
-                'WHERE w.employee_id = ? AND pa.id IS NOT NULL ' +
-                'ORDER BY c.shortname, pa.name', id]
+    Project.select("DISTINCT clients.shortname, projects.*").
+            joins(:client).
+            joins('RIGHT JOIN projects leaves ON leaves.path_ids[1] = projects.id').
+            joins('RIGHT JOIN worktimes ON worktimes.project_id = leaves.id').
+            where(worktimes: { employee_id: id} ).
+            where('projects.id IS NOT NULL').
+            order('clients.shortname, projects.name')
   end
 
   def worked_on_projects

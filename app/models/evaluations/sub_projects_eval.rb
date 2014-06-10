@@ -22,4 +22,8 @@ class SubProjectsEval < ProjectsEval
   def division_label
     'Projekt: ' + (division ? division : category).label_ancestry
   end
+
+  def division_column
+    "projects.path_ids[#{category.path_ids.size+1}]"
+  end
 end

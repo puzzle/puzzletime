@@ -5,15 +5,6 @@
 
 module EvaluatorHelper
 
-  def init_periods
-    if @period
-      [@period]
-    else
-      periods = user_view? ? @user.user_periods : @user.eval_periods
-      periods.collect { |p| Period.parse(p) }
-    end
-  end
-
   def detail_td(worktime, field)
     case field
       when :work_date then td f(worktime.work_date), 'right', true
@@ -53,7 +44,7 @@ module EvaluatorHelper
     linkHash = { action: 'new' }
     linkHash[:controller] =  worktime_controller
     if account
-      linkHash[:account_id] = account.is_a?(Absence) ? account.id : account.leaves.first.id
+      linkHash[:account_id] = account.id
     end
     link_to 'Zeit erfassen', linkHash
   end
@@ -70,15 +61,19 @@ module EvaluatorHelper
 
   def complete_link(project)
     link_text = ''
-    if @user.projectmemberships.any? { |pm| pm.project == project || pm.project.ancestors.include?(project) }
+    if user_projectmemberships.any? { |pm| pm.project_id == project.id || pm.project.ancestor?(project.id) }
       link_text = link_to('Komplettieren',
                           { action: 'complete_project',
 				                        project_id: project.id,
 				                        back_url: request.original_fullpath },
                           method: 'post')
     end
-	   link_text +=  ' (' +  f(@user.last_completed(project)) + ')'
+	   link_text +=  ' ('.html_safe +  f(@user.last_completed(project)) + ')'.html_safe
     link_text
+  end
+
+  def user_projectmemberships
+    @user_projectmemberships ||= @user.projectmemberships.includes(:project)
   end
 
   def last_completion(employee)

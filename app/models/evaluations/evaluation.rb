@@ -9,7 +9,8 @@
 # This class is abstract, subclasses generally override the class constants for customization.
 class Evaluation
 
-  class_attribute :division_method, :sub_evaluation, :sub_projects_eval, :label, :absences,
+  class_attribute :division_method, :division_column, :division_join,
+                  :sub_evaluation, :sub_projects_eval, :label, :absences,
                   :total_details, :attendance, :category_ref, :detail_columns, :detail_labels
 
   # The method to send to the category object to retrieve a list of divisions.
@@ -67,6 +68,10 @@ class Evaluation
   # The record identifier of the category, 0 if category is not an active record
   def category_id
   	 category.is_a?(Class) ? 0 : category.id
+  end
+
+  def sum_times_grouped(period)
+    category.sum_grouped_worktimes(self, period)
   end
 
   # Sums all worktimes for a given period.

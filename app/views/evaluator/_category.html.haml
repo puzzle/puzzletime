@@ -1,33 +1,32 @@
-- periods = init_periods
 %table#evaluation.striped
   %thead
     %tr
       %th= @evaluation.division_header
       -if @evaluation.sub_projects_eval
         %th
-      - for p in periods
+      - @periods.each do |p|
         %th.periodHead
           = p ? p.label : 'Total'
           &nbsp; &nbsp;
-      - for supp in @evaluation.division_supplement(@user)
+      - @evaluation.division_supplement(@user).each do |supp|
         %th= supp[1]
 
   %tbody
-    = render(:partial => 'division', :collection => @evaluation.divisions(@period).sort, :locals => { :periods => periods })
+    = render(:partial => 'division', :collection => @evaluation.divisions(@period).sort)
 
   %tfoot
     %tr.times_total_sum
       %td Total Zeit
       - if @evaluation.sub_projects_eval
         %th
-      = render(:partial => 'timecell', :collection => collect_times(periods, :sum_total_times), :locals => {:periods => periods})
+      = render(:partial => 'timecell', :collection => collect_times(@periods, :sum_total_times))
     - if @evaluation.attendance?
       %tr.times_total_sum
         %td Anwesenheit
         - if @evaluation.sub_projects_eval
           %th
-        - times = periods.collect { |p| @evaluation.category.sum_attendance p }
-        = render(:partial => 'timecell', :collection => times, :locals => {:periods => periods, :action => 'attendance_details'})
+        - times = @periods.collect { |p| @evaluation.category.sum_attendance p }
+        = render(:partial => 'timecell', :collection => times, :locals => {:action => 'attendance_details'})
         - if @evaluation.for? @user
           %td{:style => "font-weight: normal;"}
             = link_to 'Zeit erfassen', :controller => 'attendancetimes', :action => 'new'

@@ -43,6 +43,14 @@ module Evaluatable
               sum(:hours).to_f
   end
 
+  def sum_grouped_worktimes(evaluation, period = nil)
+    options = conditions_for(evaluation, period)
+    worktimes.where(options[:conditions]).
+              joins(evaluation.division_join).
+              group(evaluation.division_column).
+              sum(:hours)
+  end
+
   # Counts the number of worktimes related to this object in a given period.
   def count_worktimes(evaluation, period = nil, category_ref = false, options = {})
     options = conditions_for(evaluation, period, category_ref, options)

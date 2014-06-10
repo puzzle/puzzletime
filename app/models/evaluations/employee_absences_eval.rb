@@ -3,6 +3,7 @@
 class EmployeeAbsencesEval < Evaluation
 
   self.division_method  = :absences
+  self.division_column  = :absence_id
   self.label            = 'Absenzen'
   self.absences         = true
   self.category_ref     = :employee_id

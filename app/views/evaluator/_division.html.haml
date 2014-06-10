@@ -1,4 +1,5 @@
-- periodTimes = collect_times(periods, :sum_times, division)
+- periodTimes = @periods.size.times.collect {|i| @times[i][division.id] }
+
 - if @period.nil? || @evaluation.category == Employee || periodTimes.sum > 0
   %tr
     %td
@@ -6,11 +7,14 @@
         = link_to division.label_verbose, {:action => sub, :category_id => division.id}, :title => division.tooltip
       - else
         = content_tag :span, division.label_verbose, :title => division.tooltip
+
     - if @evaluation.sub_projects_eval
       %td
         - if sub = @evaluation.sub_projects_evaluation(division)
           = link_to '&crarr;'.html_safe, {:action => sub, :category_id => division.id}, :class => 'symbol'
-    = render(:partial => 'timecell', :collection => periodTimes, :locals => {:division_id => division.id, :periods => periods})
-    - for supp in @evaluation.division_supplement(@user)
+
+    = render(:partial => 'timecell', :collection => periodTimes, :locals => {:division_id => division.id})
+
+    - @evaluation.division_supplement(@user).each do |supp|
       %td{align: supp[2].presence}
         = self.send(supp[0], division)

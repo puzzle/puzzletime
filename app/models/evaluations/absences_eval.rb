@@ -3,6 +3,7 @@
 class AbsencesEval < Evaluation
 
   self.sub_evaluation   = 'employeeabsences'
+  self.division_column  = :employee_id
   self.label            = 'Mitarbeiter Absenzen'
   self.absences         = true
   self.total_details    = false

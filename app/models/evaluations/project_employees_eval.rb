@@ -2,9 +2,10 @@
 
 class ProjectEmployeesEval < Evaluation
 
-  DIVISION_METHOD  = :employees
-  LABEL            = 'Mitarbeiter'
-  CATEGORY_REF     = 'ANY ( path_ids )'
+  self.division_method  = :employees
+  self.division_column  = :employee_id
+  self.label            = 'Mitarbeiter'
+  self.category_ref     = 'ANY ( path_ids )'
 
   def initialize(project_id, alltime)
     super(Project.find(project_id))

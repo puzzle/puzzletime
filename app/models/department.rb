@@ -17,7 +17,6 @@ class Department < ActiveRecord::Base
   has_many :projects, -> { where(parent_id: nil) }
 
   has_many :all_projects, class_name: 'Project'
-  has_many :worktimes, through: :all_projects
 
   before_destroy :protect_worktimes
 
@@ -25,6 +24,11 @@ class Department < ActiveRecord::Base
 
   def to_s
     name
+  end
+
+  def worktimes
+    Worktime.joins(:project).
+             where(projects: { department_id: id })
   end
 
   ##### interface methods for Manageable #####
@@ -37,7 +41,7 @@ class Department < ActiveRecord::Base
 
   def self.method_missing(symbol, *args)
     case symbol
-      when :sum_worktime, :count_worktimes, :find_worktimes then Worktime.send(symbol, *args)
+      when :sum_worktime, :sum_grouped_worktimes, :count_worktimes, :find_worktimes then Worktime.send(symbol, *args)
       else super
       end
   end

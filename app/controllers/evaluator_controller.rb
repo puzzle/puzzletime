@@ -18,7 +18,9 @@ class EvaluatorController < ApplicationController
     set_evaluation
     set_navigation_levels
     @notifications = UserNotification.list_during(@period)
-    render action: (user_view? ? 'user_overview' : 'overview')
+    @periods = init_periods
+    @times = @periods.collect { |p| @evaluation.sum_times_grouped(p) }
+    render(user_view? ? 'user_overview' : 'overview')
   end
 
   def details
@@ -381,6 +383,15 @@ class EvaluatorController < ApplicationController
   def csv_label(item)
     item.nil? || !item.respond_to?(:label) ? '' :
       item.label.downcase.gsub(/[^0-9a-z]/, '_')
+  end
+
+  def init_periods
+    if @period
+      [@period]
+    else
+      periods = user_view? ? @user.user_periods : @user.eval_periods
+      periods.collect { |p| Period.parse(p) }
+    end
   end
 
 end

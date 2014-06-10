@@ -106,6 +106,10 @@ class Project < ActiveRecord::Base
     nil
   end
 
+  def ancestor?(project_id)
+    path_ids.include?(project_id)
+  end
+
   def ancestor_projects
     @ancestor_projects ||= begin
       ids = Array(path_ids)[0..-2]
@@ -174,7 +178,7 @@ class Project < ActiveRecord::Base
 
   def <=>(other)
     return super(other) unless other.is_a?(Project)
-    return 0 if id == other.id? && id
+    return 0 if id && id == other.id
 
     "#{client.shortname}: #{label_ancestry}" <=> "#{other.client.shortname}: #{other.label_ancestry}"
   end

@@ -4,6 +4,8 @@
 class ProjectsEval < Evaluation
 
   self.division_method   = :projects
+  self.division_column   = 'projects.path_ids[1]'
+  self.division_join     = :project
   self.label             = 'Projekte'
   self.sub_evaluation    = 'projectemployees'
   self.sub_projects_eval = 'subprojects'
