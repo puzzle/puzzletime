@@ -120,11 +120,11 @@ class Employee < ActiveRecord::Base
     lastname + ' ' + firstname
   end
 
-  # Redirects the messages :sum_worktime, :count_worktimes, :find_worktimes
+  # Redirects the messages :sum_worktime, :find_worktimes
   # to the Worktime Class.
   def self.method_missing(symbol, *args)
     case symbol
-      when :sum_worktime, :count_worktimes, :sum_grouped_worktimes, :find_worktimes then Worktime.send(symbol, *args)
+      when :sum_worktime, :sum_grouped_worktimes, :find_worktimes then Worktime.send(symbol, *args)
       else super
       end
   end

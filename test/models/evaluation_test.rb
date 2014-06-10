@@ -539,11 +539,6 @@ class EvaluationTest < ActiveSupport::TestCase
   end
 
   def assert_count_times(day, week, month, all)
-    assert_equal day, @evaluation.count_times(@period_day)
-    assert_equal week, @evaluation.count_times(@period_week)
-    assert_equal month, @evaluation.count_times(@period_month)
-    assert_equal all, @evaluation.count_times(nil)
-
     assert_equal day, @evaluation.times(@period_day).size
     assert_equal week, @evaluation.times(@period_week).size
     assert_equal month, @evaluation.times(@period_month).size

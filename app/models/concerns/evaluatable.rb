@@ -51,14 +51,6 @@ module Evaluatable
               sum(:hours)
   end
 
-  # Counts the number of worktimes related to this object in a given period.
-  def count_worktimes(evaluation, period = nil, category_ref = false, options = {})
-    options = conditions_for(evaluation, period, category_ref, options)
-    worktimes.where(options[:conditions]).
-              joins(options[:joins]).
-              count
-  end
-
   # Raises an Exception if this object has related Worktimes.
   # This method is a callback for :before_delete.
   def protect_worktimes

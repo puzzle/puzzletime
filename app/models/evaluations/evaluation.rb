@@ -84,11 +84,6 @@ class Evaluation
     category.sum_worktime(self, period, false, options)
   end
 
-  # Counts the number of Worktime entries in the current Evaluation for a given period.
-  def count_times(period)
-    send_time_query(:count_worktimes, period, division)
-  end
-
   # Returns a list of all Worktime entries for this Evaluation in the given period
   # of time.
   def times(period, options = {})

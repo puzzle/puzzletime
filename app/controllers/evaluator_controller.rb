@@ -264,7 +264,7 @@ class EvaluatorController < ApplicationController
   end
 
   def paginate_times
-    @times = @evaluation.times(@period).page(params[:page])
+    @times = @evaluation.times(@period).includes(:employee, :project).page(params[:page])
   end
 
   def set_export_header(filename)

@@ -22,6 +22,4 @@
       %td{:colspan => @evaluation.detail_columns.size - 2}
       %td
 
-- if @times.total_pages > 1
-  %p
-    = paginate @times
+%p= paginate @times

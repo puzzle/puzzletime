@@ -41,7 +41,7 @@ class Department < ActiveRecord::Base
 
   def self.method_missing(symbol, *args)
     case symbol
-      when :sum_worktime, :sum_grouped_worktimes, :count_worktimes, :find_worktimes then Worktime.send(symbol, *args)
+      when :sum_worktime, :sum_grouped_worktimes, :find_worktimes then Worktime.send(symbol, *args)
       else super
       end
   end
