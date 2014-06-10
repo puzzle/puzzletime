@@ -24,6 +24,9 @@ class TarantulaTest < ActionDispatch::IntegrationTest
   private
 
   def setup_crawler(t)
+    # some links use example.com as a domain, allow them
+    t.skip_uri_patterns.delete(/^http/)
+    t.skip_uri_patterns << /^http(?!:\/\/www\.example\.com)/
     t.skip_uri_patterns << /\/synchronize$/
 
     t.allow_404_for /^\-?\d+$/  # change period may produce such links in tarantula
