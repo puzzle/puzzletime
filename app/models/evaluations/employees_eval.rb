@@ -5,7 +5,6 @@ class EmployeesEval < Evaluation
   self.sub_evaluation   = 'employeeprojects'
   self.label            = 'Mitarbeiter Projektzeit'
   self.total_details    = false
-  self.attendance       = true
 
   def initialize
     super(Employee)

@@ -22,7 +22,6 @@ class AccountColorMapper
   private
 
   def generate_color(account)
-    return Timebox::ATTENDANCE_POS_COLOR if account.nil?
     account.is_a?(Absence) ?
         generate_absence_color(account.id) :
         generate_project_color(account.id)

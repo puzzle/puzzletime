@@ -3,7 +3,6 @@
 class EmployeeProjectsEval < ProjectsEval
 
   self.category_ref      = :employee_id
-  self.attendance        = true
   self.sub_evaluation    = nil
   self.sub_projects_eval = 'employeesubprojects'
   self.detail_columns    = detail_columns.collect { |i| i == :hours ? :times : i }

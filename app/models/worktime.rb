@@ -159,24 +159,6 @@ class Worktime < ActiveRecord::Base
     self.work_date = Date.today if report_type.kind_of? AutoStartType
   end
 
-  def find_corresponding
-    return nil if corresponding_type.nil?
-    conditions = ['type = ? AND employee_id = ? AND work_date = ?',
-                  corresponding_type.name, employee_id, work_date]
-    if report_type.is_a? AutoStartType
-      append_conditions(conditions, ['from_start_time = ? AND to_end_time IS NULL', from_start_time])
-    elsif report_type.is_a? StartStopType
-      append_conditions(conditions, ['from_start_time = ? AND to_end_time = ?', from_start_time, to_end_time])
-    else
-      append_conditions(conditions, ['hours = ?', hours])
-    end
-    Worktime.where(conditions).first
-  end
-
-  def corresponding_type
-    nil
-  end
-
   # Name of the corresponding controller
   def controller
     self.class.model_name.route_key

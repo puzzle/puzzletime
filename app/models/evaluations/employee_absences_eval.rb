@@ -6,7 +6,6 @@ class EmployeeAbsencesEval < Evaluation
   self.label            = 'Absenzen'
   self.absences         = true
   self.category_ref     = :employee_id
-  self.attendance       = true
   self.detail_columns   = detail_columns.reject { |i| :billable == i || :booked == i }
   self.detail_labels    = detail_labels.merge(account: 'Absenz')
 

@@ -37,7 +37,6 @@ class WorktimesController < ApplicationController
     if @worktime.save
       flash[:notice] = "Die #{@worktime.class.label} wurde erfasst."
       check_overlapping
-      return unless process_after_create
       return list_detail_time if params[:commit] == FINISH
       @worktime = @worktime.template
     end
@@ -63,13 +62,10 @@ class WorktimesController < ApplicationController
       session[:split] = WorktimeEdit.new(@worktime.clone)
       create_part
     else
-      @old_worktime = find_worktime if update_corresponding?
       set_worktime_params
       if @worktime.save
         flash[:notice] = "Die #{@worktime.class.label} wurde aktualisiert."
         check_overlapping
-        return unless process_after_update
-        update_corresponding if update_corresponding?
         list_detail_time
       else
         set_accounts true
@@ -279,39 +275,6 @@ class WorktimesController < ApplicationController
 
   def record_other?
     @user.management && params[:other]
-  end
-
-  def update_corresponding?
-    false
-  end
-
-  def update_corresponding
-    corresponding = @old_worktime.find_corresponding
-    label = @old_worktime.corresponding_type.label
-    if corresponding
-      corresponding.copy_from @worktime
-      if corresponding.save
-        flash[:notice] += " Die zugehörige #{label} wurde angepasst."
-      else
-        flash[:notice] += " Die zugehörige #{label} konnte nicht angepasst werden (#{corresponding.errors.full_messages.join ', '})."
-      end
-    else
-      flash[:notice] += " Es konnte keine zugehörige #{label} gefunden werden."
-    end
-  end
-
-  # may overwrite in subclass
-  # return whether normal proceeding should continue or another action was taken
-  def process_after_save
-    true
-  end
-
-  def process_after_create
-    process_after_save
-  end
-
-  def process_after_update
-    process_after_save
   end
 
   ################   RUNNING TIME FUNCTIONS    ##################

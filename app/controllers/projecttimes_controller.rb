@@ -49,27 +49,6 @@ class ProjecttimesController < WorktimesController
     end
   end
 
-  def update_corresponding?
-    params[:worktime][:attendance].to_i != 0
-  end
-
-  def process_after_create
-    unless @worktime.attendance
-      return true
-    end
-    attendance = @worktime.template Attendancetime.new
-    attendance.employee_id = @worktime.employee_id
-    attendance.copy_times_from @worktime
-    unless attendance.save
-      @worktime.errors.add(:base, attendance.errors.full_messages.first)
-      set_accounts
-      set_existing
-      render action: 'new'
-      return false
-    end
-    true
-  end
-
   def running_time(reload = false)
     @user.running_project(reload)
   end

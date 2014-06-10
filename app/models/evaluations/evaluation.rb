@@ -10,7 +10,7 @@
 class Evaluation
 
   class_attribute :division_method, :sub_evaluation, :sub_projects_eval, :label, :absences,
-                  :total_details, :attendance, :category_ref, :detail_columns, :detail_labels
+                  :total_details, :category_ref, :detail_columns, :detail_labels
 
   # The method to send to the category object to retrieve a list of divisions.
   self.division_method   = :list
@@ -28,9 +28,6 @@ class Evaluation
 
   # Whether details for totals are possible.
   self.total_details     = true
-
-  # Wheter this Evaluation displays attendance times for its category in the overview.
-  self.attendance       = false
 
   # The field of a division referencing the category entry in the database.
   # May be nil if not required for this Evaluation (default).
@@ -166,10 +163,6 @@ class Evaluation
 
   def delete_link?(user)
     for? user
-  end
-
-  def split_link?(user)
-    false
   end
 
   def report?
