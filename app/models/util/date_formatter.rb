@@ -1,5 +1,6 @@
 # encoding: utf-8
 
+# TODO: check if still required
 class DateFormatter
 
   def initialize(*date_fields)
@@ -12,7 +13,7 @@ class DateFormatter
       if field_before_type_cast.kind_of? String
         begin
           model.send(field + '=',
-                     Date.strptime(field_before_type_cast, DATE_FORMAT))
+                     Date.strptime(field_before_type_cast, I18n.t('date.formats.default')))
         rescue ArgumentError
           # invalid string, date will remain unaffected, i.e., nil
         end

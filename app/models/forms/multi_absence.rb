@@ -17,7 +17,7 @@ class MultiAbsence
   end
 
   def valid?
-    @worktime = worktime_template(@start_date, MUST_HOURS_PER_DAY)
+    @worktime = worktime_template(@start_date, Settings.must_hours_per_day)
     if valid = @worktime.valid?
       if duration <= 0
         valid = false
@@ -67,7 +67,7 @@ class MultiAbsence
   def date_or_nil(value)
     unless value.kind_of? Date
       begin
-        value = Date.strptime(value.to_s, DATE_FORMAT)
+        value = Date.strptime(value.to_s, I18n.t('date.formats.default'))
       rescue
         value = nil
       end

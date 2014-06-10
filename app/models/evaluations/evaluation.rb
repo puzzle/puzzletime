@@ -190,7 +190,7 @@ class Evaluation
       csv << ['Datum', 'Stunden', 'Von Zeit', 'Bis Zeit', 'Reporttyp',
               'Verrechenbar', 'Mitarbeiter', 'Projekt', 'Ticket', 'Beschreibung']
       times(period).each do |time|
-        csv << [I18n.l(time.work_date, format: DATE_FORMAT),
+        csv << [I18n.l(time.work_date),
                 time.hours,
                 (time.start_stop? ? I18n.l(time.from_start_time, format: :time) : ''),
                 (time.start_stop? && time.to_end_time? ? I18n.l(time.to_end_time, format: :time) : ''),

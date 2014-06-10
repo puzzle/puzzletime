@@ -32,7 +32,7 @@ class EmployeeStatistics
   def used_vacations(period)
     return 0 if period.nil?
     @employee.worktimes.where('absence_id = ? AND (work_date BETWEEN ? AND ?)',
-                              VACATION_ID, period.startDate, period.endDate).
+                              Settings.vacation_id, period.startDate, period.endDate).
                         sum(:hours).to_f / 8.0
   end
 

@@ -83,7 +83,7 @@ class Employment < ActiveRecord::Base
   end
 
   def vacations
-    period.length / 365.25 * VACATION_DAYS_PER_YEAR * percent_factor
+    period.length / 365.25 * Settings.vacation_days_per_year * percent_factor
   end
 
   def musttime

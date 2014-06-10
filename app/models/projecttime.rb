@@ -62,7 +62,7 @@ class Projecttime < Worktime
 
   def set_project_defaults(id = nil)
     self.project_id = id
-    self.project_id = DEFAULT_PROJECT_ID if project.nil?  # if id is nil or invalid, project is nil
+    self.project_id = Settings.default_project_id if project.nil?  # if id is nil or invalid, project is nil
     self.report_type = project.report_type if report_type < project.report_type
     self.billable = project.billable
   end

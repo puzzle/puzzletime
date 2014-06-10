@@ -15,7 +15,7 @@ module FormatHelper
     when Float, BigDecimal then
       number_with_precision(value, precision: t('number.format.precision'),
                                    delimiter: t('number.format.delimiter'))
-    when Date   then l(value, format: LONG_DATE_FORMAT)
+    when Date   then l(value, format: :long)
     when Time   then "#{l(value.to_date)} #{l(value, format: :time)}"
     when true   then t('global.yes')
     when false  then t('global.no')

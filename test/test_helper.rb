@@ -12,6 +12,7 @@ if ENV['TEST_REPORTS']
 end
 
 require File.expand_path('../../config/environment', __FILE__)
+Rails.env = 'test'
 require 'rails/test_help'
 
 if ENV['TEST_REPORTS']

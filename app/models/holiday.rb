@@ -32,7 +32,7 @@ class Holiday < ActiveRecord::Base
   def self.period_musttime(period)
     hours = workday_hours(period)
     holidays(period).each do |holiday|
-      hours -= MUST_HOURS_PER_DAY - holiday.musthours_day
+      hours -= Settings.must_hours_per_day - holiday.musthours_day
     end
     hours
   end
@@ -47,13 +47,13 @@ class Holiday < ActiveRecord::Base
       @@irregularHolidays.each do |holiday|
         return holiday.musthours_day if holiday.holiday_date == date
       end
-      return MUST_HOURS_PER_DAY
+      return Settings.must_hours_per_day
     end
   end
 
   # Checks if date is a regular holiday
   def self.regularHoliday?(date)
-    REGULAR_HOLIDAYS.each do |day|
+    Settings.regular_holidays.each do |day|
       return true if date.day == day[0] && date.month == day[1]
     end
     false
@@ -93,7 +93,7 @@ class Holiday < ActiveRecord::Base
     holidays = []
     years = period.startDate.year..period.endDate.year
     years.each do |year|
-      REGULAR_HOLIDAYS.each do |day|
+      Settings.regular_holidays.each do |day|
         regular = Date.civil(year, day[1], day[0])
         if period.include?(regular) && !self.weekend?(regular)
           holidays.push new(holiday_date: regular, musthours_day: 0)
@@ -116,11 +116,11 @@ class Holiday < ActiveRecord::Base
   def self.workday_hours(period)
     length = period.length
     weeks = length / 7
-    hours = weeks * 5 * MUST_HOURS_PER_DAY
+    hours = weeks * 5 * Settings.must_hours_per_day
     if length % 7 > 0
       lastPeriod = Period.new(period.startDate + weeks * 7, period.endDate)
       lastPeriod.step do |day|
-        hours += MUST_HOURS_PER_DAY unless self.weekend?(day)
+        hours += Settings.must_hours_per_day unless self.weekend?(day)
       end
     end
     hours
@@ -135,7 +135,7 @@ class Holiday < ActiveRecord::Base
   refresh
 
   def to_s
-    "am #{I18n.l(holiday_date, format: LONG_DATE_FORMAT)}"
+    "am #{I18n.l(holiday_date, format: :long)}"
   end
 
   def <=>(other)

@@ -33,7 +33,7 @@ class ReportType
   end
 
   def date_string(date)
-    I18n.l(date, format: LONG_DATE_FORMAT)
+    I18n.l(date, format: :long)
   end
 
   module Accessors
