@@ -6,12 +6,8 @@
 
 %p
   = link_to 'Übersicht', :action => params[:evaluation], :category_id => params[:category_id]
-  - if @evaluation.for? @user
-  - details = params[:action] == 'details'
-    |
-    = link_to details ? 'Anwesenheiten' : 'Arbeitszeiten', evaluation_detail_params.merge!({:action => details ? 'attendance_details' : 'details' })
   |
-  = link_to 'Export CSV', evaluation_detail_params.merge!({:action => 'export_csv', :evaluation => (@evaluation.kind_of?(AttendanceEval) ? 'attendance' : params[:evaluation]) })
+  = link_to 'Export CSV', evaluation_detail_params.merge!({:action => 'export_csv', :evaluation => (params[:evaluation]) })
   - if @evaluation.report?
     |
     \#{link_to 'Stundenrapport', evaluation_detail_params.merge!({ :action => 'compose_report' })}

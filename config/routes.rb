@@ -94,22 +94,6 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :attendancetimes do
-    member do
-      get :confirm_delete
-    end
-
-    collection do
-      post 'create_part'
-      match 'delete_part', via: [:post, :delete]
-      post :auto_start_stop
-      post :start
-      post :stop
-
-      get ':action'
-    end
-  end
-
   scope '/evaluator', controller: 'evaluator' do
     post :complete_project
     post :complete_all
@@ -134,6 +118,8 @@ Rails.application.routes.draw do
     match 'login', via: [:get, :post, :patch]
     post 'logout'
   end
+  
+  get 'status', to: 'status#index'
 
 
   # Install the default route as the lowest priority.

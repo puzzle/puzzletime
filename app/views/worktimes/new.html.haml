@@ -1,6 +1,5 @@
 - @title = "Neue #{@worktime.class.label}"
 - buttons = [WorktimesController::FINISH, 'Speichern und weiter erfassen']
-- buttons.insert 0, AttendancetimesController::SPLIT if @worktime.kind_of? Attendancetime
 #existing
   = render :partial => 'existing'
 = form_tag :controller => @worktime.controller, :action => 'create' do

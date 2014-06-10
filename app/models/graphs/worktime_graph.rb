@@ -15,7 +15,6 @@ class WorktimeGraph
 
     @projects_eval = EmployeeProjectsEval.new(@employee.id, true)
     @absences_eval = EmployeeAbsencesEval.new(@employee.id)
-    @attendance_eval = AttendanceEval.new(@employee.id)
 
     @colorMap = AccountColorMapper.new
     @weekly_boxes = {}
@@ -41,10 +40,6 @@ class WorktimeGraph
     # fill projecttimes
     append_period_boxes period_boxes[:projects], must_hours
     append_account_boxes @projects_eval.times(@current, WORKTIME_OPTIONS)
-
-    # add attendance difference
-    attendance_hours = compute_attendance_hours(must_hours, period_boxes[:attendance])
-    insert_attendance_diff attendance_hours
 
     # add absencetimes, payed ones first
     append_period_boxes period_boxes[:absences], must_hours
@@ -87,7 +82,6 @@ class WorktimeGraph
   def set_period_boxes(hash, period, report_type)
     hash[:projects] = get_period_boxes(@projects_eval, period, report_type)
     hash[:absences] = get_period_boxes(@absences_eval, period, report_type)
-    hash[:attendance] = get_period_boxes(@attendance_eval, period, report_type)
   end
 
   def get_period_boxes(evaluation, period, report_type)
@@ -108,15 +102,6 @@ class WorktimeGraph
     period_boxes
   end
 
-  def compute_attendance_hours(must_hours, period_boxes)
-    attendance_hours = @attendance_eval.sum_total_times(@current,
-                                                        conditions: WORKTIME_OPTIONS[:conditions])
-    period_boxes.each do |box|
-      attendance_hours += (box.height * must_hours) / Timebox::PIXEL_PER_HOUR
-    end
-    attendance_hours
-  end
-
   def append_period_boxes(period_boxes, must_hours)
     period_boxes.each do |b|
       box = b.clone
@@ -130,32 +115,6 @@ class WorktimeGraph
     worktimes.each do |w|
       @boxes.push Timebox.new(w, color_for(w))
       @total_hours += w.hours
-    end
-  end
-
-  def insert_attendance_diff(attendance_hours)
-    diff = attendance_hours - @total_hours
-    if diff > 0.01
-      @total_hours += diff
-      attendance = @attendance_eval.times(@current, conditions: WORKTIME_OPTIONS[:conditions]).first
-      @boxes.push Timebox.attendance_pos(attendance, diff)
-    elsif diff < -0.01
-      # replace with removing corresponding projecttime algorithm
-      diff_height = Timebox.height_from_hours(-diff)
-      @boxes.reverse_each do |b|
-        diff_height -= b.height
-        if diff_height < 0
-          b.height = -diff_height
-          break
-        else
-          @boxes.pop
-        end
-      end
-      attendance = Attendancetime.new(employee_id: @employee.id,
-                                      work_date: @current.startDate,
-                                      hours: diff,
-                                      report_type: HoursDayType::INSTANCE)
-      @boxes.push Timebox.attendance_neg(attendance, -diff)
     end
   end
 

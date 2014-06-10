@@ -5,8 +5,6 @@ class Timebox
   PIXEL_PER_HOUR = 8.0
 
   MUST_HOURS_COLOR = '#FF0000'
-  ATTENDANCE_POS_COLOR = '#55FF55'
-  ATTENDANCE_NEG_COLOR = '#000000'
   BLANK_COLOR = 'transparent'
 
   attr_reader :height, :color, :tooltip, :worktime
@@ -31,14 +29,6 @@ class Timebox
     new(nil, MUST_HOURS_COLOR, 1, "Sollzeit (#{must_hours} h)")
   end
 
-  def self.attendance_pos(attendance, hours)
-    attendance(attendance, ATTENDANCE_POS_COLOR, hours, 'zusätzliche Anwesenheit')
-  end
-
-  def self.attendance_neg(attendance, hours)
-    attendance(attendance, ATTENDANCE_NEG_COLOR, hours, 'fehlende Anwesenheit')
-  end
-
   def self.blank(hours)
     new(nil, BLANK_COLOR, height_from_hours(hours), '')
   end
@@ -48,11 +38,6 @@ class Timebox
   end
 
   private
-
-  def self.attendance(attendance, color, hours, tooltip)
-    new(attendance, color, height_from_hours(hours),
-        "#{tooltip} (#{'%0.2f' % hours} h)")
-  end
 
   def tooltip_for(worktime)
     worktime.time_string + ': ' + (worktime.account ? worktime.account.label : 'Anwesenheit')

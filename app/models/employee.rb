@@ -13,7 +13,6 @@
 #  initial_vacation_days :float
 #  ldapname              :string(255)
 #  report_type           :string(255)
-#  default_attendance    :boolean          default(FALSE)
 #  default_project_id    :integer
 #  user_periods          :string(3)        is an Array
 #  eval_periods          :string(3)        is an Array
@@ -45,11 +44,7 @@ class Employee < ActiveRecord::Base
            -> { order('name').uniq },
            through: :worktimes
   has_many :worktimes
-  has_many :attendancetimes
   has_many :overtime_vacations, dependent: :destroy
-  has_one :running_attendance,
-          -> { where(report_type: AutoStartType::INSTANCE.key) },
-          class_name: 'Attendancetime'
   has_one :running_project,
           -> { where(report_type: AutoStartType::INSTANCE.key) },
           class_name: 'Projecttime'
@@ -132,16 +127,6 @@ class Employee < ActiveRecord::Base
       when :sum_worktime, :count_worktimes, :sum_grouped_worktimes, :find_worktimes then Worktime.send(symbol, *args)
       else super
       end
-  end
-
-  # Sums the attendance times of this Employee.
-  def sum_attendance(period = nil, options = {})
-    self.class.sum_attendance_for attendancetimes, period, options
-  end
-
-  # Sums all attendance times in the system.
-  def self.sum_attendance(period = nil, options = {})
-    sum_attendance_for Attendancetime, period, options
   end
 
   ##### helper methods #####
@@ -287,17 +272,6 @@ class Employee < ActiveRecord::Base
     config = Settings.ldap.connection.to_hash
     config[:encryption] = config[:encryption].to_sym if config[:encryption]
     Net::LDAP.new(config)
-  end
-
-  def self.sum_attendance_for(receiver, period = nil, options = {})
-    if period
-      options = clone_options options
-      append_conditions(options[:conditions], ['work_date BETWEEN ? AND ?', period.startDate, period.endDate])
-    end
-    receiver.where(options[:conditions]).
-             joins(options[:joins]).
-             sum(:hours).
-             to_f
   end
 
 end

@@ -13,9 +13,6 @@ class ProjecttimesController < WorktimesController
     time = Projecttime.new
     time.project = Project.find(params[:id])
     start_running time, now
-    if @user.running_attendance.nil?
-      start_running Attendancetime.new, now
-    end
     redirect_to_running
   end
 
@@ -39,7 +36,6 @@ class ProjecttimesController < WorktimesController
 
   def set_worktime_defaults
     @worktime.set_project_defaults(params[:account_id] || @user.default_project_id) unless @worktime.project_id
-    @worktime.attendance = @user.default_attendance
   end
 
   def set_accounts(all = false)
@@ -51,27 +47,6 @@ class ProjecttimesController < WorktimesController
       set_project_accounts
       set_alltime_accounts unless @accounts.include? @worktime.project
     end
-  end
-
-  def update_corresponding?
-    params[:worktime][:attendance].to_i != 0
-  end
-
-  def process_after_create
-    unless @worktime.attendance
-      return true
-    end
-    attendance = @worktime.template Attendancetime.new
-    attendance.employee_id = @worktime.employee_id
-    attendance.copy_times_from @worktime
-    unless attendance.save
-      @worktime.errors.add(:base, attendance.errors.full_messages.first)
-      set_accounts
-      set_existing
-      render action: 'new'
-      return false
-    end
-    true
   end
 
   def running_time(reload = false)

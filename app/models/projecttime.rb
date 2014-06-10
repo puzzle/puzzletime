@@ -22,8 +22,6 @@
 
 class Projecttime < Worktime
 
-  attr_reader :attendance
-
   validates :project_id, presence: true
   validate :project_leaf
   validate :protect_booked, on: :update
@@ -33,7 +31,7 @@ class Projecttime < Worktime
   before_destroy :protect_frozen
 
   def self.valid_attributes
-    super + [:account, :account_id, :description, :billable, :booked, :attendance]
+    super + [:account, :account_id, :description, :billable, :booked]
   end
 
   def self.account_label
@@ -56,10 +54,6 @@ class Projecttime < Worktime
     self.project_id = value
   end
 
-  def attendance=(value)
-    @attendance = value.kind_of?(String) ? value.to_i != 0 : value
-  end
-
   def set_project_defaults(id = nil)
     self.project_id = id
     self.project_id = Settings.default_project_id if project.nil?  # if id is nil or invalid, project is nil
@@ -69,12 +63,7 @@ class Projecttime < Worktime
 
   def template(newWorktime = nil)
     newWorktime = super newWorktime
-    newWorktime.attendance = attendance if newWorktime.class == self.class
     newWorktime
-  end
-
-  def corresponding_type
-    Attendancetime
   end
 
   ########### validation helpers ###########

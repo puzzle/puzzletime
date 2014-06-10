@@ -6,9 +6,6 @@
     %td
       - if @user.management || ! detailrow.booked
         = link_to 'Bearbeiten', evaluation_detail_params.merge!({:controller => detailrow.controller, :action => 'edit', :id => detailrow.id})
-  - if @evaluation.split_link? @user
-    %td
-      = link_to 'Aufteilen', evaluation_detail_params.merge!({:controller => detailrow.controller, :action => 'split_attendance', :id => detailrow.id})                |
   - if @evaluation.delete_link?(@user)
     %td
       - if ! detailrow.booked

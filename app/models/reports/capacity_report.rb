@@ -32,9 +32,6 @@ class CapacityReport < BaseCapacityReport
               project_time += sum
             end
           end
-          # include Anwesenheitszeit Differenz
-          diff = employee.sum_attendance(period) - project_time
-          append_entry(csv, employee, period, 'Zusätzliche Anwesenheit', '', 0, diff)
           # include all absencetimes
           absences = employee_absences(employee, period)
           append_entry(csv, employee, period, 'Abwesenheiten', '', 0, absences)

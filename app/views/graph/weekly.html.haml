@@ -21,8 +21,8 @@
   = render :partial => "legend", :collection => [Project, Absence]
   %tr
     %td{:colspan => "2"}
-      %b Anwesenheit
-  = render( :partial => 'legend_item', :collection => [['zusätzliche Anwesenheitszeit', Timebox::ATTENDANCE_POS_COLOR], ['fehlende Anwesenheitszeit', Timebox::ATTENDANCE_NEG_COLOR], ['Wochenende / Feiertag', '#DDDDDD' ]] )
+      %b Weiteres
+  = render( :partial => 'legend_item', :collection => [['Wochenende / Feiertag', '#DDDDDD' ]] )
   %tr
     %td= timebox_div Timebox.new(nil, '#FF0000', 1, '')
     %td

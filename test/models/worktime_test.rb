@@ -100,6 +100,14 @@ class WorktimeTest < ActiveSupport::TestCase
     @worktime.to_end_time = '-3'
     assert !@worktime.valid?
   end
+  
+  def test_template
+    newWorktime = Worktime.find(1).template
+    assert_not_nil newWorktime
+    assert_equal worktimes(:wt_pz_allgemein).project_id, newWorktime.project_id
+    assert_equal projects(:allgemein).id, newWorktime.account.id
+    assert_equal employees(:pascal), newWorktime.employee
+  end
 
   private
 

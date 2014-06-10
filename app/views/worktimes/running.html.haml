@@ -2,21 +2,6 @@
 %table.striped
   %thead
     %tr
-      - if @user.running_attendance
-        %td
-          Anwesend seit #{format_time @user.running_attendance.from_start_time}
-        %td{:align => "center"}
-          = form_tag({:controller => 'attendancetimes', :action => 'stop'}, :id => 'stop_attendance_form') do
-            = hidden_field_tag 'description', nil, :id => 'attendance_description'
-            = hidden_field_tag 'ticket', nil, :id => 'attendance_ticket'
-            = link_to 'Stoppen',
-                      {:controller => 'attendancetimes', :action => 'stop'},
-                      id: 'attendanceStopper'
-      - else
-        %td Anwesenheit
-        %td{:align => "center"}
-          = link_to 'Starten', {:controller => 'attendancetimes', :action => 'start'}, :method => 'post'
-
     - if @user.running_project
       %tr
         %td

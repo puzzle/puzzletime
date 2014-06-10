@@ -77,7 +77,7 @@ class EmployeeStatistics
 
     # Returns the hours this employee worked plus the payed absences for the given period.
   def payed_worktime(period)
-    condArray = ['((project_id IS NULL AND absence_id IS NULL) OR absences.payed)']
+    condArray = ['((project_id IS NOT NULL AND absence_id IS NULL) OR absences.payed)']
     if period
       condArray[0] += ' AND (work_date BETWEEN ? AND ?)'
       condArray.push period.startDate

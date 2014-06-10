@@ -15,7 +15,7 @@ class EmployeesController < ManageController
   end
 
   def update_settings
-    attrs = params.require(:user).permit(:report_type, :default_project_id, :default_attendance,
+    attrs = params.require(:user).permit(:report_type, :default_project_id,
                                          user_periods: [], eval_periods: [])
     if @user.update_attributes(attrs)
       flash[:notice] =  'Die Benutzereinstellungen wurden aktualisiert'

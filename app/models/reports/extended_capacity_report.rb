@@ -23,8 +23,6 @@ class ExtendedCapacityReport < BaseCapacityReport
             'Überzeit (h)',
             'Überzeit Total (h)',
             "Ferienguthaben bis Ende #{@period.endDate.year} (d)",
-            'Anwesenheit (h)',
-            'Zusätzliche Anwesenheit (h)',
             'Abwesenheit (h)',
             'Projektkürzel',
             'Projektname',
@@ -80,7 +78,7 @@ class ExtendedCapacityReport < BaseCapacityReport
         project_total_non_billable_hours += project_non_billable_hours
 
         if (project_billable_hours + project_non_billable_hours).abs > 0.001
-          csv_billable_lines << [employee.shortname, '', '', '', '', '', '', '', '', '',
+          csv_billable_lines << [employee.shortname, '', '', '', '', '', '', '',
                                  project_code(parent, child),
                                  project_label(parent),
                                  subproject_label(parent, child),
@@ -109,7 +107,7 @@ class ExtendedCapacityReport < BaseCapacityReport
         internal_project_total_hours += internal_project_hours
 
         if internal_project_hours.abs > 0.001
-          csv_non_billable_lines << [employee.shortname, '', '', '', '', '', '', '', '', '',
+          csv_non_billable_lines << [employee.shortname, '', '', '', '', '', '', '',
                                      project_code(parent, child),
                                      project_label(parent),
                                      subproject_label(parent, child),
@@ -121,9 +119,6 @@ class ExtendedCapacityReport < BaseCapacityReport
       end
 
       project_total_hours = project_total_billable_hours + project_total_non_billable_hours + internal_project_total_hours
-      attendance_hours = employee.sum_attendance(@period)
-      diff = attendance_hours - project_total_hours
-      additional_attendance_hours = diff.abs > 0.001 ? diff : 0
 
       average_percents = employee.statistics.employments_during(@period).sum(&:percent)
       remaining_vacations = employee.statistics.remaining_vacations(Date.new(@period.endDate.year, 12, 31))
@@ -136,8 +131,6 @@ class ExtendedCapacityReport < BaseCapacityReport
               employee.statistics.overtime(@period),
               employee.statistics.current_overtime(@period.endDate),
               remaining_vacations,
-              attendance_hours,
-              additional_attendance_hours,
               employee_absences(employee, @period),
               '',
               '',

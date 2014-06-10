@@ -31,15 +31,6 @@ class EvaluatorController < ApplicationController
     paginate_times
   end
 
-  def attendance_details
-    set_evaluation
-    set_navigation_levels
-    @evaluation = AttendanceEval.new(params[:category_id] || @user.id)
-    set_evaluation_details
-    paginate_times
-    render action: 'details'
-  end
-
   def absencedetails
     session[:evalLevels] = []
     params[:evaluation] = 'absencedetails'
@@ -226,7 +217,6 @@ class EvaluatorController < ApplicationController
         when 'userabsences' then EmployeeAbsencesEval.new(@user.id)
         when 'subprojects' then SubProjectsEval.new(params[:category_id])
         when 'projectemployees' then ProjectEmployeesEval.new(params[:category_id], @period)
-        when 'attendance' then AttendanceEval.new(params[:category_id] || @user.id)
         else nil
     end
     if @user.management && @evaluation.nil?
