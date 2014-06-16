@@ -123,7 +123,7 @@ class EvaluatorController < ApplicationController
     memberships = @user.projectmemberships.where('project_id = ?', params[:project_id]).first
     if memberships.nil?
       # no direct membership - complete parent project
-      memberships = @user.projectmemberships.where('? = ANY (projects.path_ids)', params[:project_id])
+      memberships = @user.projectmemberships.joins(:project).where('? = ANY (projects.path_ids)', params[:project_id])
     else
       memberships = [memberships]
     end

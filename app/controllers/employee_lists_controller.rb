@@ -39,7 +39,7 @@ class EmployeeListsController < ApplicationController
   # POST /employee_lists
   # POST /employee_lists.xml
   def create
-    @employee_list = EmployeeList.new(params[:employee_list])
+    @employee_list = EmployeeList.new(model_params)
     @employee_list.employee_id = @user.id # add current user id to the created object
 
     # logger.debug "employees = #{@employee_list.employees.inspect}"
@@ -62,13 +62,12 @@ class EmployeeListsController < ApplicationController
   # PUT /employee_lists/1
   # PUT /employee_lists/1.xml
   def update
-
     params[:employee_list][:employee_ids] ||= []
 
     @employee_list = EmployeeList.find(params[:id])
 
     respond_to do |format|
-      if @employee_list.update_attributes(params[:employee_list])
+      if @employee_list.update_attributes(model_params)
         flash[:notice] = 'Mitarbeiterliste wurde erfolgreich angepasst.'
         # format.html { redirect_to(@employee_list) }
         format.html { redirect_to controller: 'plannings', action: 'employee_lists' }
@@ -91,6 +90,12 @@ class EmployeeListsController < ApplicationController
       format.html { redirect_to controller: 'plannings', action: 'employee_lists' }
       format.xml  { head :ok }
     end
+  end
+
+  private
+
+  def model_params
+    params.require(:employee_list).permit(:title, :employee_ids => [])
   end
 
 end

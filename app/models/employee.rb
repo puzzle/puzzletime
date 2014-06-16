@@ -133,7 +133,7 @@ class Employee < ActiveRecord::Base
 
   # Whether this Employee is a project manager
   def project_manager?
-    managed_projects.size > 0
+    managed_projects.exists?
   end
 
   # Accessor for the initial vacation days. Default is 0.
