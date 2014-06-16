@@ -7,16 +7,13 @@
 
 module ApplicationHelper
 
-  # round time function.
   def format_hour(hour)
-    # number_with_precision is not that performant
-    number = (Float(hour) * (100)).round.to_f / 100
-    number = '%01.2f' % number
-    parts = number.split('.')
-    parts[0].gsub!(/(\d)(?=(\d\d\d)+(?!\d))/, "\\1'")
-    parts.join('.')
+    hour ||= 0.0
+    minutes = ((hour - hour.floor) * 60).round.to_s.rjust(2, "0")
+    hours = number_with_delimiter(hour.floor, :delimiter => "'")
+    "#{hours}:#{minutes}"
   end
-
+  
   def format_time(time)
     time ||= Time.zone.now
     I18n.l(time, format: :time)
