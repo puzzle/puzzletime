@@ -24,6 +24,10 @@ class EmployeeSubProjectsEval < SubProjectsEval
     super(user)
   end
 
+  def sum_times_grouped(period, options = {})
+    super(period, append_employee_condition(options))
+  end
+
   def sum_total_times(period = nil, options = {})
     super(period, append_employee_condition(options))
   end

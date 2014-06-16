@@ -67,8 +67,8 @@ class Evaluation
   	 category.is_a?(Class) ? 0 : category.id
   end
 
-  def sum_times_grouped(period)
-    category.sum_grouped_worktimes(self, period)
+  def sum_times_grouped(period, options = {})
+    category.sum_grouped_worktimes(self, period, options)
   end
 
   # Sums all worktimes for a given period.
