@@ -25,11 +25,13 @@
 
 class Project < ActiveRecord::Base
 
+  PATH_SEPARATOR = '-'
+
   include Evaluatable
   extend Manageable
   include ReportType::Accessors
 
-  acts_as_tree order: 'name'
+  acts_as_tree order: 'shortname'
 
   # All dependencies between the models are listed below.
   has_many :projectmemberships,
@@ -58,15 +60,17 @@ class Project < ActiveRecord::Base
 
   before_destroy :protect_worktimes
 
+  before_save :remember_name_changes
   # yep, this triggers before_update to generate path_ids after the project got its id and saves it again
   after_create :save
+  after_create :reset_parent_leaf
+  after_destroy :reset_parent_leaf
   before_update :generate_path_ids
+  after_save :update_child_path_names, if: -> { @names_changed }
 
-  scope :list, -> do
-    includes(:client).
-    references(:client).
-    order('clients.shortname, projects.name')
-  end
+  scope :list, -> { order('path_shortnames') }
+  scope :leaves, -> { where(leaf: true) }
+  scope :top, -> { where(parent_id: nil) }
 
   def to_s
     name
@@ -86,24 +90,16 @@ class Project < ActiveRecord::Base
     Puzzlebase::CustomerProject
   end
 
-  def self.leaves
-    list.select { |project| project.leaf? }
-  end
-
   def self.top_projects
-    list.select { |c| c.top? }
+    top.list
   end
 
   def label_verbose
-  	 path_labels = (ancestor_projects + [self]).collect(&:shortname)
-    "#{client.shortname}-#{path_labels.join('-')}: #{name}"
+    "#{path_shortnames}: #{name}"
   end
 
   def tooltip
-    ([self] + ancestor_projects.reverse).each do |p|
-      return p.description if p.description.present?
-    end
-    nil
+    inherited_description
   end
 
   def ancestor?(project_id)
@@ -120,7 +116,7 @@ class Project < ActiveRecord::Base
   end
 
   def label_ancestry
-  	 (ancestor_projects + [self]).collect(&:name).join(' - ')
+    path_names.split("\n")[1..-1].join(" #{PATH_SEPARATOR} ")
   end
 
   def top_project
@@ -131,57 +127,51 @@ class Project < ActiveRecord::Base
     parent_id.nil?
   end
 
-  def children?
-    !children.empty?
-  end
-
-  def leaf?
-    children.empty?
+  def sub_projects?
+    !leaf
   end
 
   def leaves
-    return [self] if leaf?
-    children.collect { |p| p.leaves }.flatten
+    self_and_descendants.list.leaves
+  end
+
+  def self_and_descendants
+    parent_id_condition = path_ids.each_with_index.collect {|id, i| "path_ids[#{i+1}] = #{id}" }.join(' AND ')
+    Project.where(parent_id_condition)
   end
 
   def managed_employees
     Employee.joins(projectmemberships: :project).
              where('projectmemberships.project_id IN (?) AND projectmemberships.active', path_ids).
-             order('lastname, firstname').
+             list.
              uniq
   end
 
   def employees
     Employee.joins(worktimes: :project).
              where('? = ANY (projects.path_ids)', id).
-             order('lastname, firstname').
+             list.
              uniq
-  end
-
-  def freeze_until
-    # cache date to prevent endless string_to_date conversion
-    @freeze_until ||= read_attribute(:freeze_until)
-  end
-
-  def freeze_until=(value)
-    write_attribute(:freeze_until, value)
-    @freeze_until = nil
   end
 
   def move_times_to(other)
     Projecttime.update_all ['project_id = ?', other.id], ['project_id = ?', id]
   end
 
-  def generate_path_ids
-    self.path_ids = top? ? [id] : parent.path_ids.clone.push(id)
-  end
-
   def <=>(other)
     return super(other) unless other.is_a?(Project)
     return 0 if id && id == other.id
 
-    "#{client.shortname}: #{label_ancestry}" <=> "#{other.client.shortname}: #{other.label_ancestry}"
+    path_shortnames <=> other.path_shortnames
   end
+
+  def update_path_names!
+    store_path_names
+    save!
+    update_child_path_names
+  end
+
+  protected
 
   def validate_worktime(worktime)
     if worktime.report_type < report_type
@@ -223,6 +213,41 @@ class Project < ActiveRecord::Base
       else
         [freeze_until, parent_freeze_until].max
       end
+    end
+  end
+
+  def remember_name_changes
+    @names_changed = parent_id_changed? || client_id_changed? ||
+                     name_changed? || shortname_changed? || description_changed?
+    store_path_names if @names_changed
+  end
+
+  def generate_path_ids
+    self.path_ids = top? ? [id] : parent.path_ids.clone.push(id)
+  end
+
+  def reset_parent_leaf
+    if parent
+      parent.update_column(:leaf, !parent.children.exists?)
+    end
+  end
+
+  def update_child_path_names
+    children.each do |c|
+      c.update_path_names!
+    end
+    @names_changed = false
+  end
+
+  def store_path_names
+    if parent
+      self.path_shortnames = parent.path_shortnames + PATH_SEPARATOR + shortname
+      self.path_names = parent.path_names + "\n" + name
+      self.inherited_description = description.presence || parent.inherited_description
+    else
+      self.path_shortnames = client.shortname + PATH_SEPARATOR + shortname
+      self.path_names = client.name + "\n" + name
+      self.inherited_description = description
     end
   end
 

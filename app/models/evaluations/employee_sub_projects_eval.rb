@@ -33,7 +33,7 @@ class EmployeeSubProjectsEval < SubProjectsEval
   end
 
   def sub_projects_evaluation(division = nil)
-    sub_projects_eval + employee_id.to_s if division.children?
+    sub_projects_eval + employee_id.to_s if division.sub_projects?
   end
 
 

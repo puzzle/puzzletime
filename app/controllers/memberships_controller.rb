@@ -6,9 +6,7 @@ class MembershipsController < ApplicationController
 
   def show
     list
-    @projects = @subject.projectmemberships.where(active: true).
-                                            includes(project: :client).
-                                            sort_by { |m| m.project }
+    @projects = @subject.projectmemberships.list.where(active: true)
   end
 
   def create_manager

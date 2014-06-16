@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140603122132) do
+ActiveRecord::Schema.define(version: 20140616082306) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 20140603122132) do
 
   create_table "clients", force: true do |t|
     t.string "name",                null: false
+    t.string "contact"
     t.string "shortname", limit: 4, null: false
   end
 
@@ -53,7 +54,7 @@ ActiveRecord::Schema.define(version: 20140603122132) do
     t.string  "passwd"
     t.string  "email",                                           null: false
     t.boolean "management",                      default: false
-    t.float   "initial_vacation_days",           default: 0.0
+    t.float   "initial_vacation_days", :default => { :expr => "(0)::double precision" }
     t.string  "ldapname"
     t.string  "report_type"
     t.integer "default_project_id"
@@ -69,6 +70,11 @@ ActiveRecord::Schema.define(version: 20140603122132) do
     t.date    "end_date"
     t.index ["employee_id"], :name => "index_employments_on_employee_id"
     t.foreign_key ["employee_id"], "employees", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_employments_employees"
+  end
+
+  create_table "engine_schema_info", id: false, force: true do |t|
+    t.string  "engine_name"
+    t.integer "version"
   end
 
   create_table "holidays", force: true do |t|
@@ -107,18 +113,22 @@ ActiveRecord::Schema.define(version: 20140603122132) do
 
   create_table "projects", force: true do |t|
     t.integer "client_id"
-    t.string  "name",                                             null: false
+    t.string  "name",                                                 null: false
     t.text    "description"
-    t.boolean "billable",                       default: true
-    t.string  "report_type",                    default: "month"
-    t.boolean "description_required",           default: false
-    t.string  "shortname",            limit: 3,                   null: false
+    t.boolean "billable",                           default: true
+    t.string  "report_type",                        default: "month"
+    t.boolean "description_required",               default: false
+    t.string  "shortname",             limit: 3,                      null: false
     t.float   "offered_hours"
     t.integer "parent_id"
     t.integer "department_id"
-    t.integer "path_ids",                                                      array: true
+    t.integer "path_ids",                                                          array: true
     t.date    "freeze_until"
-    t.boolean "ticket_required",                default: false
+    t.boolean "ticket_required",                    default: false
+    t.string  "path_shortnames"
+    t.string  "path_names",            limit: 2047
+    t.boolean "leaf",                               default: true,    null: false
+    t.text    "inherited_description"
     t.index ["client_id"], :name => "index_projects_on_client_id"
     t.foreign_key ["client_id"], "clients", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_projects_clients"
     t.foreign_key ["department_id"], "departments", ["id"], :on_update => :no_action, :on_delete => :set_null, :name => "fk_project_department"

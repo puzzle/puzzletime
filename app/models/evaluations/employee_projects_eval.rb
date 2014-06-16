@@ -32,7 +32,7 @@ class EmployeeProjectsEval < ProjectsEval
   end
 
   def sub_projects_evaluation(project = nil)
-    sub_projects_eval + employee_id.to_s if project && project.children?
+    sub_projects_eval + employee_id.to_s if project && project.sub_projects?
   end
 
   # default would turn Employee.alltime_projects too complicated

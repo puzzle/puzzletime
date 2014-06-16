@@ -25,56 +25,77 @@ allgemein:
   client_id: 1    #puzzle
   department: devone
   name:      Allgemein
-  shortname: al
+  shortname: AL
   path_ids: [8]
+  path_shortnames: PITC-AL
+  path_names: "Puzzle ITC\nAllgemein"
+  leaf: true
 
 puzzletime:
   id:        1
   client_id: 1    #puzzle
   department: devone
   name:      PuzzleTime
-  shortname: pt
+  shortname: PT
   path_ids: [1]
+  path_shortnames: PITC-PT
+  path_names: "Puzzle ITC\nPuzzleTime"
+  leaf: true
 
 webauftritt:
   id:        2
   client_id: 2    #swisstopo
   department: devtwo
   name:      Webauftritt
-  shortname: web
+  shortname: WEB
   path_ids: [2]
+  path_shortnames: STOP-WEB
+  path_names: "Swisstopo\nWebauftritt"
+  leaf: true
 
 hitobito:
   id:        3
   client_id: 1    #puzzle
   department: devtwo
   name:      Hitobito
-  shortname: hit
+  shortname: HIT
   path_ids: [3]
+  path_shortnames: PITC-HIT
+  path_names: "Puzzle ITC\nHitobito"
+  leaf: false
 
 hitobito_demo:
   id:        4
   client_id: 1    #puzzle
   department: devtwo
-  name:      hitobito Demo
-  shortname: dem
+  name:      Demo
+  shortname: DEM
   parent_id: 3
   path_ids: [3, 4]
+  path_shortnames: PITC-HIT-DEM
+  path_names: "Puzzle ITC\nHitobito\nDemo"
+  leaf: false
 
 hitobito_demo_app:
   id:        5
   client_id: 1    #puzzle
   department: devtwo
-  name:      hitobito Demo App
-  shortname: app
+  name:      App
+  shortname: APP
   parent_id: 4
   path_ids: [3, 4, 5]
+  path_shortnames: PITC-HIT-DEM-APP
+  path_names: "Puzzle ITC\nHitobito\nDemo\nApp"
+  leaf: true
 
 hitobito_demo_site:
   id:        6
   client_id: 1    #puzzle
   department: devtwo
-  name:      hitobito Demo Site
-  shortname: sit
+  name:      Site
+  shortname: SIT
   parent_id: 4
   path_ids: [3, 4, 6]
+  path_shortnames: PITC-HIT-DEM-SIT
+  path_names: "Puzzle ITC\nHitobito\nDemo\nSite"
+  leaf: true

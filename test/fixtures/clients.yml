@@ -13,9 +13,9 @@
 puzzle:
   id:      1
   name:    Puzzle
-  shortname: pitc
+  shortname: PITC
 
 swisstopo:
   id:      2
   name:    Swisstopo
-  shortname: stop
+  shortname: STOP

@@ -110,6 +110,7 @@ GEM
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    metaclass (0.0.4)
     method_source (0.8.2)
     mime-types (1.25.1)
     minitest (5.3.3)
@@ -118,6 +119,8 @@ GEM
       builder
       minitest (>= 5.0)
       ruby-progressbar
+    mocha (1.1.0)
+      metaclass (~> 0.0.1)
     multi_json (1.10.0)
     mysql2 (0.3.15)
     net-ldap (0.6.1)
@@ -275,6 +278,7 @@ DEPENDENCIES
   jquery-ui-rails
   kaminari
   minitest-reporters
+  mocha
   mysql2
   net-ldap
   pg

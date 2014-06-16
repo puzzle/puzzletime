@@ -210,9 +210,9 @@ class EvaluationTest < ActiveSupport::TestCase
 
     divisions = @evaluation.divisions.list
     assert_equal 3, divisions.size
-    assert_equal projects(:allgemein).id, divisions[0].id
-    assert_equal projects(:hitobito).id, divisions[1].id
-    assert_equal projects(:puzzletime).id, divisions[2].id
+    assert_equal projects(:allgemein), divisions[0]
+    assert_equal projects(:hitobito), divisions[1]
+    assert_equal projects(:puzzletime), divisions[2]
 
     assert_sum_times 0, 20, 32, 33
     assert_count_times 0, 3, 5, 6

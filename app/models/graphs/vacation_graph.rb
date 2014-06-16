@@ -55,9 +55,9 @@ class VacationGraph
   	 absences = add_absences times, @current
     tooltip = create_tooltip(absences)
   	 absences = add_monthly_absences times
-    tooltip += '<br />' unless tooltip.empty?
+    tooltip += '<br />'.html_safe unless tooltip.empty?
     tooltip += create_tooltip(absences)
-    tooltip += '<br />' if !tooltip.empty? && !absences.empty?
+    tooltip += '<br />'.html_safe if !tooltip.empty? && !absences.empty?
     tooltip += add_unpaid_absences times
 
   	 max_absence = get_max_absence times
@@ -119,12 +119,12 @@ class VacationGraph
   end
 
   def add_unpaid_absences(times)
-    tooltip = ''
+    tooltip = ''.html_safe
     @unpaid_absences.each do |unpaid|
       @current.step do |date|
         if unpaid.include?(date) && date.wday > 0 && date.wday < 6
           times[UNPAID_ABSENCE] += Settings.must_hours_per_day
-          tooltip += "#{I18n.l(date)}: #{Settings.must_hours_per_day}0 h #{UNPAID_ABSENCE.label}<br/>"
+          tooltip += "#{I18n.l(date)}: #{Settings.must_hours_per_day}0 h #{UNPAID_ABSENCE.label}<br/>".html_safe
         end
       end
     end
@@ -167,9 +167,9 @@ class VacationGraph
 
   def create_tooltip(absences)
     entries = absences.collect do |time|
-      "#{I18n.l(time.work_date)}: #{time.time_string} #{time.absence.label}"
+      "#{I18n.l(time.work_date)}: #{time.time_string} #{ERB::Util.h(time.absence.label)}"
     end
-    entries.join('<br/>')
+    entries.join('<br/>').html_safe
   end
 
   def color_for(absence)

@@ -12,7 +12,7 @@
         %th= supp[1]
 
   %tbody
-    = render(:partial => 'division', :collection => @evaluation.divisions(@period).sort)
+    = render(:partial => 'division', :collection => @evaluation.divisions(@period))
 
   %tfoot
     %tr.times_total_sum

@@ -10,7 +10,7 @@ class EmployeeListsController < ApplicationController
   # GET /employee_lists/1.xml
   def show
     @employee_list = EmployeeList.find(params[:id])
-    @employees = @employee_list.employees.sort_by(&:lastname)
+    @employees = @employee_list.employees.order(:lastname)
 
     respond_to do |format|
       format.html # show.html.erb

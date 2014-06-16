@@ -50,7 +50,7 @@ module EvaluatorHelper
   end
 
   def worktime_controller
-    @evaluation.absences? ? 'absencetimes' : 'projecttimes' 
+    @evaluation.absences? ? 'absencetimes' : 'projecttimes'
   end
 
   #### division supplement functions
@@ -64,12 +64,12 @@ module EvaluatorHelper
 				                        back_url: request.original_fullpath },
                           method: 'post')
     end
-	   link_text +=  ' ('.html_safe +  f(@user.last_completed(project)) + ')'.html_safe
+    link_text +=  ' ('.html_safe +  f(@user.last_completed(project)) + ')'.html_safe
     link_text
   end
 
   def user_projectmemberships
-    @user_projectmemberships ||= @user.projectmemberships.includes(:project)
+    @user_projectmemberships ||= @user.projectmemberships.includes(:project).to_a
   end
 
   def last_completion(employee)
