@@ -26,19 +26,21 @@ class VacationGraph
   end
 
   def each_employee
-  	 @absences_eval.divisions(period).each do |empl|
-   	  @absences_eval.set_division_id empl.id
-       # trade some memory for speed
+    @absences_eval.divisions(period).each do |empl|
+      @absences_eval.set_division_id empl.id
+      # trade some memory for speed
       @absencetimes = @absences_eval.times(period).
                                      reorder('work_date, from_start_time, employee_id, absence_id').
-                                     includes('absence').
+                                     includes(:absence).
+                                     references(:absence).
                                      where('NOT absences.private AND (report_type = ? OR report_type = ? OR report_type = ?)',
                                            StartStopType::INSTANCE.key,
                                            HoursDayType::INSTANCE.key,
                                            HoursWeekType::INSTANCE.key)
       @monthly_absencetimes = @absences_eval.times(period).
                                              reorder('work_date, from_start_time, employee_id, absence_id').
-                                             includes('absence').
+                                             includes(:absence).
+                                             references(:absence).
                                              where('NOT absences.private AND (report_type = ?)',
                                                    HoursMonthType::INSTANCE.key)
       @unpaid_absences = empl.statistics.employments_during(period).select { |e| e.percent == 0 }
@@ -47,15 +49,15 @@ class VacationGraph
       @monthly_index = 0
       @unpaid_index = 0
       @month = nil
- 	    yield empl
-   	end
+      yield empl
+    end
   end
 
   def timebox
-  	 times = Hash.new(0)
-  	 absences = add_absences times, @current
+    times = Hash.new(0)
+    absences = add_absences times, @current
     tooltip = create_tooltip(absences)
-  	 absences = add_monthly_absences times
+    absences = add_monthly_absences times
     tooltip += '<br />'.html_safe unless tooltip.empty?
     tooltip += create_tooltip(absences)
     tooltip += '<br />'.html_safe if !tooltip.empty? && !absences.empty?

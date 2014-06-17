@@ -66,7 +66,7 @@ group :metrics do
   gem 'minitest-reporters'
   gem 'rails-erd'
   gem 'rubocop'
-  gem 'rubocop-checkstyle_formatter'
+  gem 'rubocop-checkstyle_formatter', require: false
   gem 'simplecov-rcov'
   gem 'sdoc'
 end

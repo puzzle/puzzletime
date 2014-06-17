@@ -11,13 +11,8 @@
     = link_to 'Mehrwöchige Absenz erfassen',
               :controller => 'absencetimes',
               :action => 'add_multi_absence'
-  - else
-    = link_to 'Alles Komplettieren',
-              {:action => 'complete_all', :back_url => request.original_fullpath},
-              :method => 'post',
-              :confirm => 'Wollen sie wirklich alle Projekte komplettieren?'
-  - if @user.management
     |
+  - if @user.management
     = link_to 'Fremderfassen',
               :controller => worktime_controller,
               :action => 'new',

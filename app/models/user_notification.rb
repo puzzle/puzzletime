@@ -31,7 +31,6 @@ class UserNotification < ActiveRecord::Base
                         period.startDate, period.endDate).
                   reorder('date_from')
     list = custom.concat(holiday_notifications(period))
-    list.push current_completion_notification if current && month_end?
     list.sort!
   end
 
@@ -41,15 +40,7 @@ class UserNotification < ActiveRecord::Base
     regular.collect! { |holiday| new_holiday_notification(holiday) }
   end
 
-
   private
-
-  def self.current_completion_notification
-    last_day = month_end
-    new date_from: last_day,
-        date_to: last_day,
-        message: 'Bitte Ende Monat Projekte komplettieren.'
-  end
 
   def self.new_holiday_notification(holiday)
     new date_from: holiday.holiday_date,
@@ -61,19 +52,6 @@ class UserNotification < ActiveRecord::Base
     I18n.l(holiday.holiday_date, format: :long) +
       ' ist ein Feiertag (' + ('%01.2f' % holiday.musthours_day).to_s +
       ' Stunden Sollarbeitszeit)'
-  end
-
-  def self.month_end
-    last_day = Date.today
-    if last_day.mday > 12
-      last_day = last_day.last_month
-    end
-    last_day.end_of_month
-  end
-
-  def self.month_end?
-    today = Date.today.mday
-    today > Settings.completion.display_period.from || today < Settings.completion.display_period.to
   end
 
   public
