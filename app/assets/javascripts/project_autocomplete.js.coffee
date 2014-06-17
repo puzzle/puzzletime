@@ -18,8 +18,18 @@ projectSelect = (event, item) ->
   false
 
 projectItem = (ul, item) ->
-  $("<li>")
-    .append("<a><strong>" + item.path_shortnames + "</strong> - " +
-            item.name + "<br>" +
-            (item.description || '') + "</a>" )
+  name = item.name
+  if name and name.length > 70
+    name = name.substr(0, 70) + '…';
+
+  description = item.description
+  if description and description.length > 120
+    description = description.substr(0, 120) + '…'
+
+  $('<li class="project-autocomplete">')
+    .append('<a>' +
+            '<div class="shortname">' + item.path_shortnames + '</div>' +
+            '<div class="name">' + name + '</div>' +
+            (description && ('<div class="description">' + description + '</div>') || '') +
+            '</a>')
     .appendTo(ul)
