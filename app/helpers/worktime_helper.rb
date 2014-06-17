@@ -33,6 +33,16 @@ module WorktimeHelper
     description   
   end
   
+  def overview_day_class(worktimes, day)
+    if day == Date.today
+      'today'
+    elsif Holiday.holiday?(day)
+      'holiday'
+    elsif day < Date.today && sum_daily_worktimes(worktimes, day) <= 0
+      'missing'
+    end
+  end
+  
   def time_range(worktime)
     result = ""
     if worktime.from_start_time.present?

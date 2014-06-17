@@ -1,3 +1,3 @@
-%li.day{'data-date' => day}
+%li.day{'data-date' => day, class: overview_day_class(@worktimes, day)}
   .date= format_day(day)
   .time= format_hour(sum_daily_worktimes(@worktimes, day))

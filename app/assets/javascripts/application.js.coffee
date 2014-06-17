@@ -8,6 +8,7 @@
 #= require jquery-ui-datepicker-i18n
 #= require jquery.ui.autocomplete
 #= require waypoints
+#= require waypoints-sticky
 #= require_self
 #= require worktimes
 #= require worktimes-v2

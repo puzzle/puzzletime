@@ -27,28 +27,33 @@ app.worktimes.scrollToDayWithDate = (date) ->
     # no entries for this date available
     if dateLabel.prevAll('.date-label:not(.empty)').size() is 0
       # scroll to beginning
-      console.log('beginning')
-      offset = 0
-      $('.worktimes .weekcontent').animate({scrollTop: offset},
+      offset = $('.worktimes .weekcontent').offset().top + $('.worktimes .weeknav').height() - 20;
+      $('html, body').animate({scrollTop: offset},
         app.worktimes.scrollSpeed, undefined, (-> app.worktimes.activateFirstNavDay()))
       return
     else if dateLabel.nextAll('.date-label:not(.empty)').size() is 0
       # scroll to end
-      console.log('end')
-      offset = $('.worktimes .weekcontent')[0].scrollHeight
-      $('.worktimes .weekcontent').animate({scrollTop: offset},
+      offset = $('body').height()
+      $('html, body').animate({scrollTop: offset},
         app.worktimes.scrollSpeed, undefined, (-> app.worktimes.activateLastNavDay()))
       return
     else
       # scroll to previous non-empty entry
-      console.log('prev non-empty')
       dateLabel = dateLabel.prevAll('.date-label:not(.empty)').first()
       date = dateLabel.data('date')
 
-  offset = $('.worktimes .weekcontent').scrollTop() -
-    $('.worktimes .weekcontent').offset().top + dateLabel.offset().top
-  $('.worktimes .weekcontent').animate({scrollTop: offset},
-    app.worktimes.scrollSpeed, undefined, (-> app.worktimes.activateNavDayWithDate(date)))
+  # offset = $('.worktimes .weekcontent').scrollTop() -
+  offset = dateLabel.offset().top - $('.worktimes .weeknav').height() - 20;
+  $('html, body').animate({scrollTop: offset},
+    app.worktimes.scrollSpeed, undefined, (->
+      app.worktimes.activateNavDayWithDate(date)
+
+      # hightlight entries
+      entries = $('.worktimes .weekcontent .date-label[data-date="' + date + '"], ' + \
+        '.worktimes .weekcontent .entry[data-date="' + date + '"]')
+      entries.addClass('highlight')
+      setTimeout((-> entries.removeClass('highlight')), 500)
+    ))
 
 
 $ ->
@@ -63,5 +68,4 @@ $ ->
     app.worktimes.scrollToDayWithDate($(event.currentTarget).data('date'))
   )
 
-  # scroll to bottom initially
-  $('.worktimes .weekcontent').scrollTop($('.worktimes .weekcontent')[0].scrollHeight)
+  $('.worktimes .weeknav').waypoint('sticky')
