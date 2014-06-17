@@ -11,17 +11,15 @@ class WorktimesController < ApplicationController
   FINISH = 'Abschliessen'
 
   def index
-    @week_days = Date.today.at_beginning_of_week..Date.today.at_end_of_week
-    @worktimes = Worktime.where('employee_id = ? AND work_date >= ? AND work_date <= ?', @user.id, @week_days.first, @week_days.last)
+    @week_days = (Date.today.at_beginning_of_week..Date.today.at_end_of_week).to_a
+    @worktimes = Worktime.includes(:project).where('employee_id = ? AND work_date >= ? AND work_date <= ?', @user.id, @week_days.first, @week_days.last)
                          .order('type DESC, from_start_time, project_id')
-
+    @current_overtime = @user.statistics.current_overtime
     @monthly_worktime = @user.statistics.musttime(Period.current_month)
     @pending_worktime = 0 - @user.statistics.overtime(Period.current_month).to_f
 
     #redirect_to controller: 'evaluator', action: user_evaluation, clear: 1
   end
-
-  def v2; end # TODO: dummy view for new worktimes layout, remove later
 
   # Shows the add time page.
   def new

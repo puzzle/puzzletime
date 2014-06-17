@@ -23,6 +23,27 @@ module WorktimeHelper
     options_for_select.join("\n").html_safe
   end
   
+  def worktime_description(worktime)
+    description = worktime.description
+    description.insert(0, "#{worktime.ticket} - ") if worktime.ticket.present?
+    description   
+  end
+  
+  def time_range(worktime)
+    result = ""
+    if worktime.from_start_time.present?
+      result = "#{format_time(worktime.from_start_time)} - " 
+      if worktime.to_end_time.present?
+        result += format_time(worktime.to_end_time)
+      end
+    end
+    result
+  end
+  
+  def monthly_worktime
+    "#{format_hour(@monthly_worktime)} (#{format_hour(@pending_worktime)} verbleibend)"
+  end
+  
   def daily_worktimes(worktimes, day)
     worktimes.select{|worktime| worktime.work_date == day}
   end
