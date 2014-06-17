@@ -7,18 +7,6 @@ $worktimes-weekcontent-hover-bg: lightblue;
 $worktimes-font-size-small: 12px;
 $worktimes-default-spacing: 10px;
 
-@keyframes highlight {
-  0% {
-    background: inherit;
-  }
-  50% {
-    background: $worktimes-weekcontent-hover-bg;
-  }
-  100% {
-    background: inherit;
-  }
-}
-
 .worktimes {
   .figures {
     @include clearfix;
@@ -130,9 +118,14 @@ $worktimes-default-spacing: 10px;
     .date-label, .entry {
       padding: $worktimes-default-spacing 0;
       clear: both;
+      background-color: none;
+      -moz-transition: background-color 500ms ease-in;
+      -webkit-transition: background-color 500ms ease-in;
+      -o-transition: background-color 500ms ease-in;
+      transition: background-color 500ms ease-in;
 
       &.highlight {
-        animation: highlight 1000ms;
+        background-color: $worktimes-weekcontent-hover-bg;
       }
     }
 
