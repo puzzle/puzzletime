@@ -34,7 +34,9 @@ module WorktimeHelper
   end
   
   def overview_day_class(worktimes, day)
-    if Holiday.holiday?(day)
+    if day == Date.today
+      'today'
+    elsif Holiday.holiday?(day)
       'holiday'
     elsif day < Date.today && sum_daily_worktimes(worktimes, day) <= 0
       'missing'
