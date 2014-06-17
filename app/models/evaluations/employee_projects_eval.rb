@@ -15,7 +15,7 @@ class EmployeeProjectsEval < ProjectsEval
   end
 
   def divisions(period = nil)
-    @alltime ? category.alltime_projects : category.projects
+    @alltime ? category.alltime_projects : category.projects.list
   end
 
   def for?(user)
@@ -23,7 +23,7 @@ class EmployeeProjectsEval < ProjectsEval
   end
 
   def division_supplement(user)
-    return [[:add_time_link, ''], [:complete_link, '']] if self.for? user
+    return [[:add_time_link, '']] if self.for? user
     []
   end
 

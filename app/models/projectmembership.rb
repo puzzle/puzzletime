@@ -7,7 +7,6 @@
 #  project_id        :integer
 #  employee_id       :integer
 #  projectmanagement :boolean          default(FALSE)
-#  last_completed    :date
 #  active            :boolean          default(TRUE)
 #
 

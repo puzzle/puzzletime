@@ -118,29 +118,6 @@ class EvaluatorController < ApplicationController
 
   ######################  OVERVIEW ACTIONS  #####################3
 
-  def complete_project
-    project = Project.find params[:project_id]
-    memberships = @user.projectmemberships.where('project_id = ?', params[:project_id]).first
-    if memberships.nil?
-      # no direct membership - complete parent project
-      memberships = @user.projectmemberships.joins(:project).where('? = ANY (projects.path_ids)', params[:project_id])
-    else
-      memberships = [memberships]
-    end
-    memberships.each do |pm|
-      pm.update_attributes(last_completed: Date.today)
-    end
-    flash[:notice] = 'Das Datum der kompletten Erfassung aller Zeiten ' \
-                     "für das Projekt #{project.label_verbose} wurde aktualisiert."
-    redirect_to params[:back_url]
-  end
-
-  def complete_all
-    @user.projectmemberships.where(active: true).update_all(last_completed: Date.today)
-    flash[:notice] = 'Das Datum der kompletten Erfassung aller Zeiten wurde für alle Projekte aktualisiert.'
-    redirect_to params[:back_url]
-  end
-
   def export_capacity_csv
     if @period
       send_csv(CapacityReport.new(@period))
@@ -216,7 +193,7 @@ class EvaluatorController < ApplicationController
           EmployeeSubProjectsEval.new(params[:category_id], @user.id)
         when 'userabsences' then EmployeeAbsencesEval.new(@user.id)
         when 'subprojects' then SubProjectsEval.new(params[:category_id])
-        when 'projectemployees' then ProjectEmployeesEval.new(params[:category_id], @period)
+        when 'projectemployees' then ProjectEmployeesEval.new(params[:category_id])
         else nil
     end
     if @user.management && @evaluation.nil?
