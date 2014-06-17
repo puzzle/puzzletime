@@ -28,7 +28,7 @@
       - else
         = text_field('worktime',
                      'account',
-                     value: @worktime.account.label_verbose,
+                     value: @worktime.account.try(:label_verbose),
                      data: { autocomplete: 'project',
                              url: search_projects_path,
                              id_field: 'worktime_account_id' })

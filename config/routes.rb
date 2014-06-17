@@ -63,11 +63,7 @@ Rails.application.routes.draw do
 
   concerns :with_projects
 
-  resources :worktimes, only: [:index] do
-    collection do
-      get :running
-    end
-  end
+  resources :worktimes, only: [:index]
 
   resources :projecttimes do
     member do
@@ -80,6 +76,7 @@ Rails.application.routes.draw do
       post 'create_part'
       match 'delete_part', via: [:post, :delete]
 
+      get :running
       get ':action'
     end
   end

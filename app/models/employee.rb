@@ -153,11 +153,6 @@ class Employee < ActiveRecord::Base
     list.collect { |p| p.leaves }.flatten.uniq
   end
 
-  # all leaf projects of the alltime_projects
-  def alltime_leaf_projects
-    leaf_projects((alltime_projects + projects).sort)
-  end
-
   def statistics
     @statistics ||= EmployeeStatistics.new(self)
   end

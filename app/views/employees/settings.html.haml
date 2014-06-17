@@ -7,10 +7,6 @@
       %td
         = select 'user', 'report_type', ReportType::INSTANCES.collect {|type| [type.name, type.key]}, {:selected => @user.report_type ? @user.report_type.key : nil} |
     %tr
-      %td Default Projekt:
-      %td
-        = select 'user', 'default_project_id', @user.leaf_projects.sort.collect{|project| [project.label_verbose, project.id]}, {:selected => @user.default_project_id}                                           |
-    %tr
       %td{:colspan => "2"}
         %br>/
         Angezeigte aktuelle Zeitspannen:

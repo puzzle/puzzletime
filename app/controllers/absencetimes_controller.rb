@@ -2,6 +2,17 @@
 
 class AbsencetimesController < WorktimesController
 
+  self.permitted_attrs = [:account_id, :report_type, :work_date, :hours,
+                          :from_start_time, :to_end_time, :description]
+
+  def update
+    if entry.employee_id != @user.id
+      redirect_to index_url
+    else
+      super
+    end
+  end
+
   def add_multi_absence
     set_accounts
     @multiabsence = MultiAbsence.new
@@ -34,10 +45,6 @@ class AbsencetimesController < WorktimesController
 
   protected
 
-  def set_new_worktime
-    @worktime = Absencetime.new
-  end
-
   def set_worktime_defaults
     @worktime.absence_id ||= params[:account_id]
   end
@@ -51,10 +58,4 @@ class AbsencetimesController < WorktimesController
     record_other? ? 'employeeabsences' : 'userAbsences'
   end
 
-  def model_params
-    attrs = [:account_id, :report_type, :work_date, :hours,
-             :from_start_time, :to_end_time, :description]
-    attrs << :employee_id if @user.management
-    params.require(:worktime).permit(attrs)
-  end
 end
