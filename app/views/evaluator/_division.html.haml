@@ -1,6 +1,6 @@
-- periodTimes = @periods.size.times.collect {|i| @times[i][division.id] }
+- periodTimes = @periods.each_with_index.collect { |p,i| @times[i][division.id].to_f }
 
-- if @period.nil? || @evaluation.category == Employee || periodTimes.sum > 0
+- if (@period.nil? && !@evaluation.category.is_a?(Employee)) || periodTimes.sum > 0
   %tr
     %td
       - if sub = @evaluation.sub_evaluation

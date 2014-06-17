@@ -93,7 +93,7 @@ puzzlebase:
   database: puzzlebase_db
   encoding: utf8
   username: time
-  password: debriz42
+  password: ***REMOVED***
   host: 10.2.111.68   #ramani.ww2.ch
   #adapter: postgresql
   #database: puzzlebase
