@@ -1,10 +1,10 @@
 .worktimes
   .figures
     .balance
-      Überzeitsaldo: 
+      Überzeitsaldo:
       = format_hour(@current_overtime)
     .monthly
-      Monatliche Arbeitszeit: 
+      Monatliche Arbeitszeit:
       = monthly_worktime
     //TODO: add weekly calendar = week_calendar_field 'planning', 'end_week_date'
 
@@ -14,16 +14,15 @@
     .browser
       %ul.days
         = render partial: 'overview_day', collection: @week_days, as: :day
-        %li.total
-          Total:
-          = format_hour(sum_total_worktimes(@worktimes))
+      .control
+        %button{title: 'Zeit/Abwesenheit erfassen'} Erfassen
+      .control
+        %a.calendar{href: '#', title: 'Datum wählen'}= image_tag('calendar.png', 'size' => '16x16', 'alt' => 'Datum wählen')
+      .total
+        Total:
+        = format_hour(sum_total_worktimes(@worktimes))
 
-    = link_to(image_tag('arrow-right.png', 'size' => '16x16', 'alt' => "Vorherige Woche"), worktimes_url(week_date: @next_week_date), class: 'week-link')
+    = link_to(image_tag('arrow-right.png', 'size' => '16x16', 'alt' => "Nächste Woche"), worktimes_url(week_date: @next_week_date), class: 'week-link')
 
   .weekcontent
     = render partial: 'list', collection: @week_days, as: :day
-
-  .controls
-    %button Hinzufügen
-    %a{href: '#'} Absenz erfassen
-

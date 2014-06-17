@@ -38,17 +38,6 @@ class ProjecttimesController < WorktimesController
     @worktime.set_project_defaults(params[:account_id] || @user.default_project_id) unless @worktime.project_id
   end
 
-  def set_accounts(all = false)
-    if params[:other]
-      @accounts = Project.list.leaves
-    elsif all
-      set_alltime_accounts
-    else
-      set_project_accounts
-      set_alltime_accounts unless @accounts.include? @worktime.project
-    end
-  end
-
   def running_time(reload = false)
     @user.running_project(reload)
   end

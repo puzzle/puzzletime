@@ -166,7 +166,7 @@ class WorktimesController < ApplicationController
   def existing
     @worktime = Worktime.new
     @worktime.work_date = params[:worktime][:work_date]
-    @worktime.employee_id = @user.management ? params[:worktime][:employee_id] : @user.id
+    @worktime.employee_id = @user.management ? params[:worktime][:employee_id].presence || @user.id : @user.id
     set_existing
     render action: 'existing'
   end
@@ -241,7 +241,8 @@ class WorktimesController < ApplicationController
   def set_existing
     @work_date = @worktime.work_date
     @existing = Worktime.where('employee_id = ? AND work_date = ?', @worktime.employee_id, @work_date).
-                         order('type DESC, from_start_time, project_id')
+                         order('type DESC, from_start_time, project_id').
+                         includes(:project)
   end
 
   def set_week_days

@@ -15,18 +15,24 @@
                             data: { remote: true,
                                     url: url_for(action: 'existing'),
                                     dynamic_params: 'worktime[work_date]' })
-  - else
-    = hidden_field('worktime', 'employee_id')
   %tr
     %td Reporttyp:
     %td
       = select_report_type auto_start_stop_type
-  - if @worktime.has_column? :account_id
-    %tr
-      %td= @worktime.class.account_label
-      %td
+  %tr
+    %td= @worktime.class.account_label
+    %td
+      - if @worktime.absence?
         %select#worktime_account_id{:name => "worktime[account_id]"}
           = account_options
+      - else
+        = text_field('worktime',
+                     'account',
+                     value: @worktime.account.label_verbose,
+                     data: { autocomplete: 'project',
+                             url: search_projects_path,
+                             id_field: 'worktime_account_id' })
+        = hidden_field('worktime', 'account_id')
 
   %tr
     %td Datum:
