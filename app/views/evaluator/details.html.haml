@@ -1,18 +1,31 @@
 - @title = "#{@evaluation.worktime_name} Details #{@period.to_s}"
+
 %h3= @evaluation.category_label
 %h3= @evaluation.division_label
 
 = render :partial => 'detail_times'
 
 %p
-  = link_to 'Übersicht', :action => params[:evaluation], :category_id => params[:category_id]
+  = link_to 'Übersicht',
+            :action => params[:evaluation], :category_id => params[:category_id]
   |
-  = link_to 'Export CSV', evaluation_detail_params.merge!({:action => 'export_csv', :evaluation => (params[:evaluation]) })
+  = link_to 'Export CSV',
+            evaluation_detail_params.merge!(:action => 'export_csv',
+                                            :evaluation => params[:evaluation])
   - if @evaluation.report?
     |
-    \#{link_to 'Stundenrapport', evaluation_detail_params.merge!({ :action => 'compose_report' })}
+    = link_to 'Stundenrapport',
+              evaluation_detail_params.merge!(:action => 'compose_report')
     |
-    \#{link_to 'Alle verbuchen', evaluation_detail_params.merge!({ :action => 'book_all' }), :method => :post, :confirm => 'Wollen sie wirklich alle hier dargestellten Arbeitszeiten verbuchen?'}
+    = link_to 'Alle verbuchen',
+              evaluation_detail_params.merge!(:action => 'book_all'),
+              :method => :post,
+              :confirm => 'Wollen sie wirklich alle hier dargestellten Arbeitszeiten verbuchen?'
   - if @user.management
     |
-    \#{link_to 'Fremderfassen', evaluation_detail_params.merge!( :controller => worktime_controller, :action => 'new', :other => 1, :account_id => @evaluation.account_id, :employee_id => @evaluation.employee_id)}
+    = link_to 'Fremderfassen',
+              evaluation_detail_params.merge!(:controller => worktime_controller,
+                                              :action => 'new',
+                                              :other => 1,
+                                              :account_id => @evaluation.account_id,
+                                              :employee_id => @evaluation.employee_id)

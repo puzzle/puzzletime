@@ -10,7 +10,7 @@
   %br/
   Projekte:
   %table
-    - eval = EmployeeProjectsEval.new(em.id, true)
+    - eval = EmployeeProjectsEval.new(em.id)
     - projects = eval.times(@period).collect { |w| w.project }
     - projects.uniq!
     - projects.sort! {|a,b| a.label_verbose <=> b.label_verbose }

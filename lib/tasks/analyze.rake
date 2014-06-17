@@ -3,7 +3,9 @@ desc "Run brakeman"
 task :brakeman do
   FileUtils.rm_f('brakeman-output.tabs')
   # some files seem to cause brakeman to hang. ignore them
-  ignores = %w(nada)
+  ignores = %w(app/views/evaluator/_detailrow.html.haml
+               app/views/evaluator/details.html.haml
+               app/views/evaluator/select_period.html.haml)
 
   begin
     Timeout.timeout(300) do

@@ -12,6 +12,8 @@ class ApplicationController < ActionController::Base
 
   before_action :authenticate
 
+  helper_method :sanitized_back_url
+
   private
 
   # Filter for check if user is logged in or not
@@ -58,6 +60,11 @@ class ApplicationController < ActionController::Base
       reset_session
       session[:user_id] = @user.id
     end
+  end
+
+  def sanitized_back_url
+    uri = URI.parse(params[:back_url])
+    uri.query ? "#{uri.path}?#{uri.query}" : uri.path
   end
 
 end
