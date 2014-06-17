@@ -102,7 +102,11 @@ $worktimes-default-spacing: 10px;
         &:first-child {
           border-left-color: transparent;
         }
-
+        
+        &.today {
+          background-color: lightgrey;
+        }
+        
         &.holiday {
           .time {
             color: grey;  
