@@ -65,39 +65,8 @@ class Employee < ActiveRecord::Base
   # Tries to login a user with the passed data.
   # Returns the logged-in Employee or nil if the login failed.
   def self.login(username, pwd)
-    user = find_by_shortname_and_passwd(username.upcase, encode(pwd))
-    user = ldap_login(username, pwd) if user.nil?
-    user
-  end
-
-  # Performs a login over LDAP with the passed data.
-  # Returns the logged-in Employee or nil if the login failed.
-  def self.ldap_login(username, pwd)
-    if !username.strip.empty? &&
-       (ldap_auth_user(Settings.ldap.user_dn, username, pwd) ||
-        (ldap_auth_user(Settings.ldap.external_dn, username, pwd) &&
-         ldap_group_member(username)))
-      return find_by_ldapname(username)
-    end
-    nil
-  end
-
-  def self.ldap_auth_user(dn, username, pwd)
-    ldap_connection.bind_as(base: dn,
-                            filter: "uid=#{username}",
-                            password: pwd)
-  end
-
-  def self.ldap_group_member(username)
-    result = ldap_connection.search(base: Settings.ldap.group,
-                                    filter: Net::LDAP::Filter.eq('memberUid', username))
-    not result.empty?
-  end
-
-  # Returns a Array of LDAP user information
-  def self.ldap_users
-    ldap_connection.search(base: Settings.ldap.user_dn,
-                           attributes: %w(uid sn givenname mail))
+    find_by_shortname_and_passwd(username.upcase, encode(pwd)) ||
+    LdapAuthenticator.new.login(username, pwd)
   end
 
   def self.employed_ones(period)
@@ -120,13 +89,8 @@ class Employee < ActiveRecord::Base
     lastname + ' ' + firstname
   end
 
-  # Redirects the messages :sum_worktime, :find_worktimes
-  # to the Worktime Class.
-  def self.method_missing(symbol, *args)
-    case symbol
-      when :sum_worktime, :sum_grouped_worktimes, :find_worktimes then Worktime.send(symbol, *args)
-      else super
-      end
+  def self.worktimes
+    Worktime.all
   end
 
   ##### helper methods #####
@@ -189,21 +153,19 @@ class Employee < ActiveRecord::Base
 
   # parent projects this employee ever worked on
   def alltime_projects
-    Project.select("DISTINCT clients.shortname, projects.*").
-            joins(:client).
+    Project.select("DISTINCT projects.*").
             joins('RIGHT JOIN projects leaves ON leaves.path_ids[1] = projects.id').
             joins('RIGHT JOIN worktimes ON worktimes.project_id = leaves.id').
             where(worktimes: { employee_id: id} ).
             where('projects.id IS NOT NULL').
-            order('clients.shortname, projects.name')
+            order('projects.path_shortnames')
   end
 
   def worked_on_projects
-    Project.find_by_sql ['SELECT DISTINCT c.shortname, pw.* FROM  worktimes w ' \
-                'LEFT JOIN projects pw ON w.project_id = pw.id ' +
-                'LEFT JOIN clients c ON pw.client_id = c.id ' +
-                'WHERE w.employee_id = ? AND pw.id IS NOT NULL ' +
-                'ORDER BY c.shortname, pw.path_ids', id]
+    Project.find_by_sql ['SELECT DISTINCT pw.* FROM worktimes w ' \
+                'LEFT JOIN projects pw ON w.project_id = pw.id ' \
+                'WHERE w.employee_id = ? AND pw.id IS NOT NULL ' \
+                'ORDER BY pw.path_shortnames', id]
   end
 
   # the leaf projects of the given list or of the current membership projects
@@ -266,12 +228,6 @@ class Employee < ActiveRecord::Base
         errors.add(attr, 'ist nicht gültig')
       end
     end
-  end
-
-  def self.ldap_connection
-    config = Settings.ldap.connection.to_hash
-    config[:encryption] = config[:encryption].to_sym if config[:encryption]
-    Net::LDAP.new(config)
   end
 
 end

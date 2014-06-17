@@ -39,11 +39,8 @@ class Department < ActiveRecord::Base
 
   ##### interface methods for Evaluatable #####
 
-  def self.method_missing(symbol, *args)
-    case symbol
-      when :sum_worktime, :sum_grouped_worktimes, :find_worktimes then Worktime.send(symbol, *args)
-      else super
-      end
+  def self.worktimes
+    Worktime.all
   end
 
 end

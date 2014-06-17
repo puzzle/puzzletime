@@ -34,10 +34,9 @@ class ProjectEmployeesEval < Evaluation
     "Projekt: #{category.top? ? category.label : category.label_verbose}"
   end
 
-  def send_time_query(method, period = nil, div = nil, options = {})
-    options[:joins] = :project
-    super method, period, div, options
- end
+  def worktime_query(receiver, period = nil, division = nil)
+    super(receiver, period, division).joins(:project)
+  end
 
   def set_division_id(division_id = nil)
     return if division_id.nil?

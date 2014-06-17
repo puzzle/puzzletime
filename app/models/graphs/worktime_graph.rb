@@ -2,10 +2,10 @@
 
 class WorktimeGraph
 
-  WORKTIME_OPTIONS = { order: 'work_date, from_start_time, project_id, absence_id',
-                       conditions: ['(report_type = ? OR report_type = ?)',
-                                    StartStopType::INSTANCE.key,
-                                    HoursDayType::INSTANCE.key] }
+  WORKTIME_ORDER = 'work_date, from_start_time, project_id, absence_id'
+  WORKTIME_CONDITIONS = ['(worktimes.report_type = ? OR worktimes.report_type = ?)',
+                         StartStopType::INSTANCE.key,
+                         HoursDayType::INSTANCE.key]
 
   attr_reader :period, :employee
 
@@ -39,14 +39,17 @@ class WorktimeGraph
 
     # fill projecttimes
     append_period_boxes period_boxes[:projects], must_hours
-    append_account_boxes @projects_eval.times(@current, WORKTIME_OPTIONS)
+    append_account_boxes @projects_eval.times(@current).
+                                        where(WORKTIME_CONDITIONS).
+                                        reorder(WORKTIME_ORDER).
+                                        includes(:project)
 
     # add absencetimes, payed ones first
     append_period_boxes period_boxes[:absences], must_hours
-    append_account_boxes(@absences_eval.times(@current,
-                                              joins: 'LEFT JOIN absences ON absences.id = absence_id',
-                                              order: 'absences.payed DESC, work_date, from_start_time, absence_id',
-                                              conditions: WORKTIME_OPTIONS[:conditions].clone))
+    append_account_boxes(@absences_eval.times(@current).
+                                        joins('LEFT JOIN absences ON absences.id = absence_id').
+                                        reorder('absences.payed DESC, work_date, from_start_time, absence_id').
+                                        where(WORKTIME_CONDITIONS))
 
     # add must_hours limit
     insert_musthours_line must_hours
@@ -85,9 +88,9 @@ class WorktimeGraph
   end
 
   def get_period_boxes(evaluation, period, report_type)
-    conditions = ['report_type = ?', report_type.key]
-    options = WORKTIME_OPTIONS.merge(conditions: conditions)
-    projects = evaluation.times(period, options)
+    projects = evaluation.times(period).
+                          where(report_type: report_type.key).
+                          reorder(WORKTIME_ORDER)
 	  # stretch by employment musttime if employment > 100%
     hours = period.musttime.to_f * must_hours_factor
     return [] if hours == 0

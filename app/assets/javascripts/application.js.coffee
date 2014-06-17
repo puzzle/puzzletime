@@ -6,8 +6,10 @@
 #= require jquery_ujs
 #= require jquery.ui.datepicker
 #= require jquery-ui-datepicker-i18n
+#= require waypoints
 #= require_self
-#= require worktime
+#= require worktimes
+#= require worktimes-v2
 #= require planning
 #= require turbolinks
 

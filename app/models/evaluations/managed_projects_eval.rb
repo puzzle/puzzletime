@@ -10,7 +10,7 @@ class ManagedProjectsEval < ProjectsEval
     'Kunde: ' + division.client.name
   end
 
-  def sum_times_grouped(period, options = {})
+  def sum_times_grouped(period)
     query = Worktime.joins(:project).
                      joins('INNER JOIN projectmemberships pm ON pm.project_id = ANY (projects.path_ids)').
                      where(type: 'Projecttime').

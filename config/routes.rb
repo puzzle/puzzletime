@@ -65,6 +65,7 @@ Rails.application.routes.draw do
   resources :worktimes, only: [] do
     collection do
       get :running
+      get :v2 # TODO: dummy view for new worktimes layout, remove later
     end
   end
 

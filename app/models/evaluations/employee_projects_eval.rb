@@ -15,7 +15,7 @@ class EmployeeProjectsEval < ProjectsEval
   end
 
   def divisions(period = nil)
-    @alltime ? category.alltime_projects.includes(:client) : category.projects.includes(:client)
+    @alltime ? category.alltime_projects : category.projects
   end
 
   def for?(user)
