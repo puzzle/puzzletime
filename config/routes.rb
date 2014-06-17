@@ -63,10 +63,9 @@ Rails.application.routes.draw do
 
   concerns :with_projects
 
-  resources :worktimes, only: [] do
+  resources :worktimes, only: [:index] do
     collection do
       get :running
-      get :v2 # TODO: dummy view for new worktimes layout, remove later
     end
   end
 

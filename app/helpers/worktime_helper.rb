@@ -23,6 +23,10 @@ module WorktimeHelper
     options_for_select.join("\n").html_safe
   end
   
+  def worktime_project(worktime)
+    worktime.project.label_verbose if worktime.project
+  end
+  
   def worktime_description(worktime)
     description = worktime.description
     description.insert(0, "#{worktime.ticket} - ") if worktime.ticket.present?

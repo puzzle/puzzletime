@@ -6,10 +6,10 @@
     .monthly
       Monatliche Arbeitszeit: 
       = monthly_worktime
-    %a.calendar{href: '#', title: 'Choose date'}= image_tag('calendar.png', 'size' => '16x16', 'alt' => 'Choose date')
+    //TODO: add weekly calendar = week_calendar_field 'planning', 'end_week_date'
 
   .weeknav
-    %a.week-link{href: '#', title: 'Previous week'}= image_tag('arrow-left.png', 'size' => '16x16', 'alt' => 'Previous week')
+    = link_to(image_tag('arrow-left.png', 'size' => '16x16', 'alt' => "Vorherige Woche"), worktimes_url(week_date: @previous_week_date), class: 'week-link')
 
     .browser
       %ul.days
@@ -18,7 +18,7 @@
           Total:
           = format_hour(sum_total_worktimes(@worktimes))
 
-    %a.week-link{href: '#', title: 'Next week'}= image_tag('arrow-right.png', 'size' => '16x16', 'alt' => 'Next week')
+    = link_to(image_tag('arrow-right.png', 'size' => '16x16', 'alt' => "Vorherige Woche"), worktimes_url(week_date: @next_week_date), class: 'week-link')
 
   .weekcontent
     = render partial: 'list', collection: @week_days, as: :day
