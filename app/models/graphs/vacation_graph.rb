@@ -29,17 +29,18 @@ class VacationGraph
   	 @absences_eval.divisions(period).each do |empl|
    	  @absences_eval.set_division_id empl.id
        # trade some memory for speed
-      @absencetimes = @absences_eval.times(period,
-                                           order: 'work_date, from_start_time, employee_id, absence_id',
-                                           include: 'absence',
-                                           conditions: ['NOT absences.private AND (report_type = ? OR report_type = ? OR report_type = ?)',
-                                                        StartStopType::INSTANCE.key,
-                                                        HoursDayType::INSTANCE.key,
-                                                        HoursWeekType::INSTANCE.key])
-      @monthly_absencetimes = @absences_eval.times(period,
-                                                   order: 'work_date, from_start_time, employee_id, absence_id',
-                                                   include: 'absence',
-                                                   conditions: ['NOT absences.private AND (report_type = ?)', HoursMonthType::INSTANCE.key])
+      @absencetimes = @absences_eval.times(period).
+                                     reorder('work_date, from_start_time, employee_id, absence_id').
+                                     includes('absence').
+                                     where('NOT absences.private AND (report_type = ? OR report_type = ? OR report_type = ?)',
+                                           StartStopType::INSTANCE.key,
+                                           HoursDayType::INSTANCE.key,
+                                           HoursWeekType::INSTANCE.key)
+      @monthly_absencetimes = @absences_eval.times(period).
+                                             reorder('work_date, from_start_time, employee_id, absence_id').
+                                             includes('absence').
+                                             where('NOT absences.private AND (report_type = ?)',
+                                                   HoursMonthType::INSTANCE.key)
       @unpaid_absences = empl.statistics.employments_during(period).select { |e| e.percent == 0 }
       @unpaid_absences.collect! { |e| Period.new(e.start_date, e.end_date ? e.end_date : period.endDate) }
       @index = 0

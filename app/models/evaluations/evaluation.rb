@@ -67,27 +67,41 @@ class Evaluation
   	 category.is_a?(Class) ? 0 : category.id
   end
 
-  def sum_times_grouped(period, options = {})
-    category.sum_grouped_worktimes(self, period, options)
+  def sum_times_grouped(period)
+    worktime_query(category, period).
+      joins(division_join).
+      group(division_column).
+      sum(:hours)
   end
 
   # Sums all worktimes for a given period.
   # If a division is passed or set previously, their sum will be returned.
   # Otherwise the sum of all worktimes in the main category is returned.
-  def sum_times(period, div = nil, options = {})
-    div ||= division
-    send_time_query(:sum_worktime, period, div, options)
+  def sum_times(period, div = nil, scope = nil)
+    worktime_query(div || division || category,
+                   period,
+                   div || division).
+      merge(scope).
+      sum(:hours).to_f
   end
 
   # Sums all worktimes for the category in a given period.
-  def sum_total_times(period = nil, options = {})
-    category.sum_worktime(self, period, false, options)
+  def sum_total_times(period = nil)
+    worktime_query(category, period).sum(:hours).to_f
   end
 
   # Returns a list of all Worktime entries for this Evaluation in the given period
   # of time.
-  def times(period, options = {})
-    send_time_query(:find_worktimes, period, division, options)
+  def times(period)
+    worktime_query(division || category, period, division).
+      order('work_date ASC, from_start_time, project_id, employee_id')
+  end
+
+  def worktime_query(receiver, period = nil, division = nil)
+    query = receiver.worktimes.where(type: worktime_type)
+    query = query.where('work_date BETWEEN ? AND ?', period.startDate, period.endDate) if period
+    query = query.where("? = #{category_ref}", category_id) if division && category_ref
+    query
   end
 
   ################ Methods for overview ##############
@@ -105,7 +119,7 @@ class Evaluation
   # Returns the class name of the division objects.
   def division_header
     divs = divisions
-    divs.first ? divs.first.class.label : ''
+    divs.respond_to?(:klass) ? divs.klass.label : ''
   end
 
   # Returns a two-dimensional Array with helper methods of the evaluator
@@ -204,12 +218,11 @@ class Evaluation
     @category = category
   end
 
-  def send_time_query(method, period = nil, div = nil, options = {})
-    receiver = div ? div : category
-    receiver.send(method, self, period, div && category_ref, options)
-  end
-
   private
+
+  def worktime_type
+    absences? ? 'Absencetime' : 'Projecttime'
+  end
 
   def detail_label(item)
     return '' if item.nil? || item.kind_of?(Class)

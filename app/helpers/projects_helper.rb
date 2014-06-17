@@ -49,10 +49,10 @@ module ProjectsHelper
       breadcrumb << link_to(main_group, main_projects_path)
     end
 
-    path = group.ancestor_projects
-    path << group if @project
-    path.each do |p|
-      breadcrumb << link_to(p, main_sub_projects_path(p.id))
+    path_ids = group.path_ids[0..-2]
+    path_ids << group.id if @project
+    path_ids.each_with_index do |id, i|
+      breadcrumb << link_to(group.path_names.split("\n")[i+1], main_sub_projects_path(id))
     end
     safe_join(breadcrumb, ' &gt; '.html_safe)
   end

@@ -106,15 +106,6 @@ class Project < ActiveRecord::Base
     path_ids.include?(project_id)
   end
 
-  def ancestor_projects
-    @ancestor_projects ||= begin
-      ids = Array(path_ids)[0..-2]
-      hash = {}
-      self.class.find(ids).each { |p| hash[p.id] = p }
-      ids.collect { |id| hash[id.to_i] }
-    end
-  end
-
   def label_ancestry
     path_names.split("\n")[1..-1].join(" #{PATH_SEPARATOR} ")
   end

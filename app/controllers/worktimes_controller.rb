@@ -136,7 +136,12 @@ class WorktimesController < ApplicationController
         list_detail_time
       else
         session[:split] = @split
-        redirect_to evaluation_detail_params.merge!(action: 'split')
+        redirect_to respond_to do |wants|
+          wants.html do
+            evaluation_detail_params
+          end
+          wants.js {  }
+        end.merge!(action: 'split')
       end
     else
       set_project_accounts
@@ -315,5 +320,14 @@ class WorktimesController < ApplicationController
 
   def append_flash(msg)
     flash[:notice] = flash[:notice] ? flash[:notice] + '<br/>' + msg : msg
+  end
+
+  def evaluation_detail_params
+    { evaluation: params[:evaluation],
+      category_id: params[:category_id],
+      division_id: params[:division_id],
+      start_date: params[:start_date],
+      end_date: params[:end_date],
+      page: params[:page] }
   end
 end

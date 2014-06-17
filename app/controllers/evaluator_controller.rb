@@ -83,8 +83,8 @@ class EvaluatorController < ApplicationController
   def report
     set_evaluation
     set_evaluation_details
-    options = params[:only_billable] ? { conditions: ["worktimes.billable = 't'"] } : {}
-    @times = @evaluation.times(@period, options)
+    condition = params[:only_billable] ? { worktimes: { billable: true } } : {}
+    @times = @evaluation.times(@period).where(condition)
     @tckt_view = params[:combine_on] && (params[:combine] == 'ticket' || params[:combine] == 'ticket_employee')
     combine_times if params[:combine_on] && params[:combine] == 'time'
     combine_tickets if @tckt_view
