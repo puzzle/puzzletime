@@ -186,7 +186,7 @@ module PlanningHelper
       result << 'tentative'
     end
     result << '"><a'
-    result << " href=\"/plannings/edit/#{planning.id}\">&nbsp;"
+    result << " href=\"#{edit_planning_path(planning)}\">&nbsp;"
     result << '<span>'
     result << "Projekt: #{h(planning.project.label)}<br>"
     result << 'Beschreibung: '

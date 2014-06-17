@@ -45,10 +45,8 @@ class TarantulaTest < ActionDispatch::IntegrationTest
   def crawl_as_user(manager)
     user = employees(:half_year_maria)
     create_worktimes(user)
-    user.update_attributes!(
-      shortname: CREDENTIALS.first,
-      passwd: Employee.encode(CREDENTIALS.last),
-      management: manager)
+    create_plannings(user)
+    set_credentials(user, manager)
 
     start_crawling
   end
@@ -81,6 +79,34 @@ class TarantulaTest < ActionDispatch::IntegrationTest
       report_type: ReportType['absolute_day'],
       hours: 4,
       work_date: Date.today - 1.week)
+  end
+
+  def create_plannings(user)
+    projects = Project.where(parent_id: nil)
+    3.times do |i|
+      project = projects.sample
+      Planning.create!(
+        employee_id: user.id,
+        project_id: project.id,
+        start_week: Week.from_date(Date.today + ((i-1) * 7)).to_integer,
+        end_week: Week.from_date(Date.today + ((i+1) * 7)).to_integer,
+        monday_am: [true, false].sample,
+        monday_pm: [true, false].sample,
+        tuesday_am: [true, false].sample,
+        tuesday_pm: [true, false].sample,
+        wednesday_am: [true, false].sample,
+        wednesday_pm: [true, false].sample,
+        thursday_am: [true, false].sample,
+        thursday_pm: [true, false].sample
+      )
+    end
+  end
+
+  def set_credentials(user, manager)
+    user.update_attributes!(
+      shortname: CREDENTIALS.first,
+      passwd: Employee.encode(CREDENTIALS.last),
+      management: manager)
   end
 
 end

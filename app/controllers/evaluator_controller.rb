@@ -113,7 +113,7 @@ class EvaluatorController < ApplicationController
     flash[:notice] += "von #{Employee.find(@evaluation.employee_id).label} " if @evaluation.employee_id
     flash[:notice] += "für #{Project.find(@evaluation.account_id).label_verbose}" \
                      "#{ ' während dem ' + @period.to_s if @period} wurden verbucht."
-    redirect_to params.merge(action: 'details')
+    redirect_to params.merge(action: 'details', only_path: true)
   end
 
   ######################  OVERVIEW ACTIONS  #####################3
@@ -149,7 +149,7 @@ class EvaluatorController < ApplicationController
 
   def current_period
     session[:period] = nil
-    redirect_to params[:back_url]
+    redirect_to sanitized_back_url
   end
 
   def change_period
@@ -163,7 +163,7 @@ class EvaluatorController < ApplicationController
     fail ArgumentError, 'Start Datum nach End Datum' if @period.negative?
     session[:period] = [@period.startDate.to_s, @period.endDate.to_s,  @period.label]
      # redirect_to_overview
-    redirect_to params[:back_url]
+    redirect_to sanitized_back_url
   rescue ArgumentError => ex        # ArgumentError from Period.new or if period.negative?
     flash[:notice] = "Ungültige Zeitspanne: #{ex}"
     render action: 'select_period'
