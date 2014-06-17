@@ -30,6 +30,18 @@ class WorktimeHelperTest < ActionView::TestCase
     assert_equal "desc", worktime_description(worktime)
   end
   
+  test 'holiday time class' do
+    assert_equal "holiday", overview_day_class(@worktimes, Date.new(2014, 06, 9)) #pfingstmontag
+  end
+
+  test 'missing time class' do
+    assert_equal "missing", overview_day_class(@worktimes, Date.new(1990, 6, 13))
+  end
+
+  test 'normal time class' do
+    assert_equal nil, overview_day_class(@worktimes, Date.new(2040, 6, 15))
+  end
+  
   test 'time range without' do
     worktime = Worktime.new(from_start_time: '8:00', to_end_time: '11:59')
     assert_equal "08:00 - 11:59", time_range(worktime)
