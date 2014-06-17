@@ -1,0 +1,10 @@
+.entry{'data-date' => day}
+  .title-description
+    .title= worktime.project.label_verbose
+    .description= worktime_description(worktime)
+  .controls
+    %a{href: '#dup', title: 'Duplicate'}= image_tag('copy.png', 'size' => '16x16', 'alt' => 'Duplicate')
+    %a{href: '#del', title: 'Delete'}= image_tag('remove.png', 'size' => '16x16', 'alt' => 'Duplicate')
+  .time-value= format_hour(worktime.hours)
+  .time-range= time_range(worktime)
+  %a.entry-link{href: '#ent'}

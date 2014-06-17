@@ -12,7 +12,7 @@ module ApplicationHelper
     hour ||= 0.0
     minutes = ((hour - hour.floor) * 60).round.to_s.rjust(2, "0")
     hours = number_with_delimiter(hour.floor, :delimiter => "'")
-    "#{hours}:#{minutes}"
+    "#{hours}:#{minutes}".html_safe
   end
   
   def format_time(time)
