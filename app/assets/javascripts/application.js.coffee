@@ -6,63 +6,49 @@
 #= require jquery_ujs
 #= require jquery.ui.datepicker
 #= require jquery-ui-datepicker-i18n
+#= require jquery.ui.autocomplete
 #= require waypoints
+#= require waypoints-sticky
 #= require_self
 #= require worktimes
 #= require worktimes-v2
+#= require week_datepicker
+#= require project_autocomplete
 #= require planning
 #= require turbolinks
 
 
 app = window.App ||= {}
 
-app.datepickerI18n = ->
-  $.datepicker.regional[$('html').attr('lang')]
-
-formatWeek = (field, dateString) ->
-  if field.data('format') == 'week'
-    date = $.datepicker.parseDate(app.datepickerI18n().dateFormat, dateString)
-    val = $.datepicker.formatDate('yy', date) + ' ' + $.datepicker.iso8601Week(date)
-    field.val(val)
-
-datepicker = do ->
-  track = (dateString) ->
-    formatWeek($(this), dateString)
-    $(this).trigger('change')
-
-  show: ->
-    field = $(this)
-    if field.is('.calendar')
-      field = field.parent().siblings('.date')
-    options =
-      onSelect: track
-      showWeek: true
-
-    options = $.extend(options, app.datepickerI18n())
-    field.datepicker(options)
-    field.datepicker('show')
-
-
 $ ->
   # wire up date picker
-  $('body').on('click', 'input.date, img.calendar', datepicker.show)
+  $('body').on('click', 'input.date, img.calendar', app.datepicker.show)
 
   # wire up data-dynamic-param
   $('body').on('ajax:beforeSend', '[data-dynamic-params]', (event, xhr, settings) ->
     params = $(this).data('dynamic-params').split(',')
     urlParams = for p in params
-      value = $('#' + p.replace('[', '_').replace(']', '')).val()
+      value = $('#' + p.replace('[', '_').replace(']', '')).val() || ''
       encodeURIComponent(p) + "=" + value
     settings.url = settings.url + "&" + urlParams.join('&')
   )
 
+  # wire up toggle links
   $('body').on('click', '[data-toggle]', (event) ->
     id = $(this).data('toggle')
     $('#' + id).slideToggle(200)
     event.preventDefault()
   )
 
+  # wire up autocompletes
+  $('[data-autocomplete=project]').each(app.projectAutocomplete)
+
+  # change cursor for turbolink requests to give the user a minimal feedback
   $(document).on('page:fetch', ->
     $('body').css( 'cursor', 'wait' ))
   $(document).on('page:change', ->
     $('body').css( 'cursor', 'default' ))
+
+  # show alert if ajax requests fail
+  $(document).on('ajax:error', (event, xhr, status, error) ->
+    alert('Sorry, something went wrong\n(' + error + ')'))

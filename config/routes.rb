@@ -16,6 +16,7 @@ Rails.application.routes.draw do
 
       collection do
         post :synchronize
+        get :search
       end
     end
   end

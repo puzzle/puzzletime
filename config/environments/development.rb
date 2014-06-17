@@ -43,5 +43,7 @@ Rails.application.configure do
     Bullet.airbrake = false
     Bullet.add_footer = false
     Bullet.stacktrace_includes = []
+
+    Bullet.add_whitelist type: :unused_eager_loading, class_name: "Projecttime", association: :employee
   end
 end
