@@ -64,4 +64,4 @@ $ ->
   )
 
   # scroll to bottom initially
-  # $('.worktimes .weekcontent').scrollTop($('.worktimes .weekcontent')[0].scrollHeight)
+  $('.worktimes .weekcontent').scrollTop($('.worktimes .weekcontent')[0].scrollHeight)
