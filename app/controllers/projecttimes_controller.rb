@@ -40,7 +40,7 @@ class ProjecttimesController < WorktimesController
 
   def set_accounts(all = false)
     if params[:other]
-      @accounts = Project.leaves
+      @accounts = Project.list.leaves
     elsif all
       set_alltime_accounts
     else
@@ -64,7 +64,7 @@ class ProjecttimesController < WorktimesController
 
   def set_alltime_accounts
     e = @worktime.employee
-    @accounts = e ? e.alltime_leaf_projects : Project.leaves
+    @accounts = e ? e.alltime_leaf_projects : Project.list.leaves
   end
 
 end

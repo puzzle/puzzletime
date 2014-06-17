@@ -6,7 +6,7 @@ class EmployeeMembershipsController < MembershipsController
 
   def list
     @subject = Employee.find(employee_id)
-    @list = Project.list.sort
+    @list = Project.list
   end
 
   def activate_config(id)

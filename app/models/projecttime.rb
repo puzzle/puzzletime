@@ -74,7 +74,7 @@ class Projecttime < Worktime
 
   def project_leaf
     p = project(true)
-    errors.add(:project_id, 'Das angegebene Projekt enthält Subprojekte.') if p && p.children?
+    errors.add(:project_id, 'Das angegebene Projekt enthält Subprojekte.') if p && p.sub_projects?
   end
 
   def protect_booked

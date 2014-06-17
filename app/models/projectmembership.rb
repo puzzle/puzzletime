@@ -38,9 +38,9 @@ class Projectmembership < ActiveRecord::Base
                           message: 'Dieser Mitarbeiter ist bereits dem Projekt zugeteilt'
 
   scope :list, -> do
-    includes(project: :client).
-    references(project: :client).
-    order('clients.shortname, projects.name')
+    includes(:project).
+    references(:project).
+    order('projects.path_shortnames')
   end
 
 

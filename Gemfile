@@ -35,9 +35,9 @@ gem 'jquery-turbolinks'
 
 
 group :development, :test do
-  gem 'faker'
-  gem 'codez-tarantula', require: 'tarantula-rails3'
   gem 'binding_of_caller'
+  gem 'codez-tarantula', require: 'tarantula-rails3'
+  gem 'faker'
   gem 'pry-rails'
 end
 
@@ -50,6 +50,7 @@ end
 
 group :test do
   gem 'fabrication'
+  gem 'mocha', require: false
 end
 
 group :console do

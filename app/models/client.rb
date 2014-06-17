@@ -27,6 +27,8 @@ class Client < ActiveRecord::Base
   validates_presence_of :shortname, message: 'Ein Kürzel muss angegeben werden'
   validates_uniqueness_of :shortname, message: 'Dieses Kürzel wird bereits verwendet'
 
+  before_save :remember_name_changes
+  after_save :update_projects_path_names
   before_destroy :protect_worktimes
 
   scope :list, -> { order('name') }
@@ -53,5 +55,20 @@ class Client < ActiveRecord::Base
   def worktimes
     Worktime.joins(:project).
              where(projects: { client_id: id })
+  end
+
+  private
+
+  def remember_name_changes
+    @names_changed = name_changed? || shortname_changed?
+  end
+
+  def update_projects_path_names
+    if @names_changed
+      projects.find_each do |p|
+        p.update_path_names!
+      end
+      @names_changed = false
+    end
   end
 end

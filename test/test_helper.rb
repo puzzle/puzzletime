@@ -14,6 +14,7 @@ end
 require File.expand_path('../../config/environment', __FILE__)
 Rails.env = 'test'
 require 'rails/test_help'
+require 'mocha/mini_test'
 
 if ENV['TEST_REPORTS']
   require 'minitest/reporters'

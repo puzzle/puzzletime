@@ -59,7 +59,7 @@ class Evaluation
   # Returns a list of all division objects for the represented category.
   # May be parameterized by a period. This is ignored by default.
   def divisions(period = nil)
-    category.send(division_method)
+    category.send(division_method).list
   end
 
   # The record identifier of the category, 0 if category is not an active record
@@ -67,8 +67,8 @@ class Evaluation
   	 category.is_a?(Class) ? 0 : category.id
   end
 
-  def sum_times_grouped(period)
-    category.sum_grouped_worktimes(self, period)
+  def sum_times_grouped(period, options = {})
+    category.sum_grouped_worktimes(self, period, options)
   end
 
   # Sums all worktimes for a given period.
@@ -123,7 +123,7 @@ class Evaluation
   end
 
   def sub_projects_evaluation(division)
-    sub_projects_eval if sub_projects_eval && division.children?
+    sub_projects_eval if sub_projects_eval && division.sub_projects?
   end
 
   # Returns whether this Evaluation is personally for the current user.

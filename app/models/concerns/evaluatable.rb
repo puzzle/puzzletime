@@ -43,8 +43,8 @@ module Evaluatable
               sum(:hours).to_f
   end
 
-  def sum_grouped_worktimes(evaluation, period = nil)
-    options = conditions_for(evaluation, period)
+  def sum_grouped_worktimes(evaluation, period = nil, options = {})
+    options = conditions_for(evaluation, period, false, options)
     worktimes.where(options[:conditions]).
               joins(evaluation.division_join).
               group(evaluation.division_column).
