@@ -123,7 +123,7 @@ class Project < ActiveRecord::Base
   end
 
   def leaves
-    self_and_descendants.list.leaves
+    leaf? ? [self] : self_and_descendants.list.leaves
   end
 
   def self_and_descendants

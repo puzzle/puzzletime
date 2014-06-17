@@ -3,10 +3,16 @@
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz
 
-class WorktimesController < ApplicationController
+class WorktimesController < CrudController
 
   helper_method :record_other?
   hide_action :detail_action
+
+  after_save :check_overlapping
+
+  before_render_new :create_default_worktime
+  before_render_form :set_existing
+  before_render_form :set_accounts
 
   FINISH = 'Abschliessen'
 
@@ -15,72 +21,33 @@ class WorktimesController < ApplicationController
     set_worktimes
     set_statistics
   end
-  
-  # Shows the add time page.
-  def new
-    create_default_worktime
-    set_worktime_defaults
-    set_accounts
-    set_existing
-    render action: 'new'
-  end
 
-  # Stores the new time the data on DB.
   def create
-    set_new_worktime
-    set_worktime_params
-    params[:other] = 1 if params[:worktime][:employee_id] && @user.management
-    @worktime.employee = @user unless record_other?
-    if @worktime.save
-      flash[:notice] = "Die #{@worktime.class.label} wurde erfasst."
-      check_overlapping
-      return list_detail_time if params[:commit] == FINISH
-      @worktime = @worktime.template
-    end
-    set_accounts
-    set_existing
-    render action: 'new'
-  end
-
-  # Shows the edit page for the selected time.
-  def edit
-    set_worktime
-    set_worktime_defaults
-    set_accounts true
-    set_existing
-    render action: 'edit'
-  end
-
-  # Update the selected worktime on DB.
-  def update
-    set_worktime
-    if @worktime.employee_id != @user.id
-      return list_detail_time if @worktime.absence?
-      session[:split] = WorktimeEdit.new(@worktime.clone)
-      create_part
-    else
-      set_worktime_params
-      if @worktime.save
-        flash[:notice] = "Die #{@worktime.class.label} wurde aktualisiert."
-        check_overlapping
-        list_detail_time
-      else
-        set_accounts true
-        set_existing
-        render action: 'edit'
+    super do |format|
+      format.html do
+        if @worktime.errors.blank?
+          if params[:commit] == FINISH
+            redirect_to index_url
+          else
+            @worktime = @worktime.template
+            render 'new'
+          end
+        else
+          render 'new'
+        end
       end
     end
   end
 
+  # TODO: remove
   def confirm_delete
-    set_worktime
-    render action: 'confirm_delete'
+    respond_with entry
   end
 
+  # TODO refactor to crud controller
   def destroy
-    set_worktime
-    if @worktime.employee == @user
-      if @worktime.destroy
+    if entry.employee == @user
+      if entry.destroy
         flash[:notice] = "Die #{@worktime.class.label} wurde entfernt"
       else
         # errors enumerator yields attr and message (=second item)
@@ -103,63 +70,7 @@ class WorktimesController < ApplicationController
   end
 
   def view
-    set_worktime
-    render action: 'view'
-  end
-
-  def split
-    @split = session[:split]
-    if @split.nil?
-      redirect_to controller: 'projecttimes', action: 'new'
-      return
-    end
-    @worktime = @split.worktime_template
-    set_project_accounts
-    render action: 'split'
-  end
-
-  def create_part
-    @split = session[:split]
-    return create if @split.nil?
-    params[:id] ? set_worktime : set_new_worktime
-    @worktime.employee ||= @split.original.employee
-    set_worktime_params
-    if @worktime.valid? && @split.add_worktime(@worktime)
-      if @split.complete? || (params[:commit] == FINISH && @split.class::INCOMPLETE_FINISH)
-        @split.save
-        session[:split] = nil
-        flash[:notice] = 'Alle Arbeitszeiten wurden erfasst'
-        if @worktime.employee != @user
-          params[:other] = 1
-          params[:evaluation] = nil
-        end
-        list_detail_time
-      else
-        session[:split] = @split
-        redirect_to respond_to do |wants|
-          wants.html do
-            evaluation_detail_params
-          end
-          wants.js {  }
-        end.merge!(action: 'split')
-      end
-    else
-      set_project_accounts
-      render action: 'split'
-    end
-  end
-
-  def delete_part
-    session[:split].remove_worktime(params[:part_id].to_i)
-    redirect_to evaluation_detail_params.merge!(action: 'split')
-  end
-
-  def running
-    if request.env['HTTP_USER_AGENT'] =~ /.*iPhone.*/
-      render action: 'running', layout: 'phone'
-    else
-      render action: 'running'
-    end
+    respond_with entry
   end
 
   # ajax action
@@ -168,7 +79,7 @@ class WorktimesController < ApplicationController
     @worktime.work_date = params[:worktime][:work_date]
     @worktime.employee_id = @user.management ? params[:worktime][:employee_id].presence || @user.id : @user.id
     set_existing
-    render action: 'existing'
+    render 'existing'
   end
 
   # no action, may overwrite in subclass
@@ -176,11 +87,15 @@ class WorktimesController < ApplicationController
     'details'
   end
 
+  def self.model_identifier
+    :worktime
+  end
+
   protected
 
   def create_default_worktime
     set_period
-    set_new_worktime
+    entry
     @worktime.from_start_time = Time.zone.now.change(hour: Settings.defaults.start_hour)
     @worktime.report_type = @user.report_type || Settings.defaults.report_type
     if params[:work_date]
@@ -191,13 +106,15 @@ class WorktimesController < ApplicationController
       @worktime.work_date = Date.today
     end
     @worktime.employee_id = record_other? ? params[:employee_id] : @user.id
-  end
-
-  def set_worktime_params
-    @worktime.attributes = model_params
+    set_worktime_defaults
+    true
   end
 
   def list_detail_time
+    redirect_to detail_times_path
+  end
+
+  def detail_times_path
     options = evaluation_detail_params
     options[:controller] = 'evaluator'
     options[:action] = detail_action
@@ -213,7 +130,7 @@ class WorktimesController < ApplicationController
         options[:end_date] = period.endDate
       end
     end
-    redirect_to options
+    options
   end
 
   def check_overlapping
@@ -234,10 +151,6 @@ class WorktimesController < ApplicationController
     end
   end
 
-  def set_worktime
-    @worktime = find_worktime
-  end
-
   def set_existing
     @work_date = @worktime.work_date
     @existing = Worktime.where('employee_id = ? AND work_date = ?', @worktime.employee_id, @work_date).
@@ -255,26 +168,17 @@ class WorktimesController < ApplicationController
     @next_week_date = Week.from_date(@week_days.last + 1.day).to_integer
     @previous_week_date = Week.from_date(@week_days.first - 1.day).to_integer
   end
-  
+
   def set_worktimes
     @worktimes = Worktime.where('employee_id = ? AND work_date >= ? AND work_date <= ?', @user.id, @week_days.first, @week_days.last)
                          .includes(:project)
                          .order('type DESC, from_start_time, project_id')
   end
-  
+
   def set_statistics
     @current_overtime = @user.statistics.current_overtime
     @monthly_worktime = @user.statistics.musttime(Period.current_month)
     @pending_worktime = 0 - @user.statistics.overtime(Period.current_month).to_f
-  end
-
-  def find_worktime
-    Worktime.find(params[:id])
-  end
-
-  # overwrite in subclass
-  def set_new_worktime
-    @worktime = nil
   end
 
   # overwrite in subclass
@@ -286,10 +190,6 @@ class WorktimesController < ApplicationController
     @accounts = nil
   end
 
-  def set_project_accounts
-    @accounts = (@worktime.employee || @user).leaf_projects
-  end
-
   # may overwrite in subclass
   def user_evaluation
     record_other? ? 'employeeprojects' : 'userProjects'
@@ -299,51 +199,24 @@ class WorktimesController < ApplicationController
     @user.management && params[:other]
   end
 
-  ################   RUNNING TIME FUNCTIONS    ##################
-
-  def start_running(time, start = Time.zone.now)
-    time.employee = @user
-    time.report_type = AutoStartType::INSTANCE
-    time.work_date = start.to_date
-    time.from_start_time = start
-    time.billable = time.project.billable if time.project
-    save_running time, "Die #{time.account ? 'Projektzeit ' + time.account.label_verbose : 'Anwesenheit'} mit #time_string wurde erfasst.\n"
-  end
-
-  def stop_running(time = running_time, stop = Time.zone.now)
-    time.to_end_time = time.work_date == Date.today ? stop : '23:59'
-    time.report_type = StartStopType::INSTANCE
-    time.store_hours
-    if time.hours < 0.0166
-      append_flash "#{time.class.label} unter einer Minute wird nicht erfasst.\n"
-      time.destroy
-      running_time(true)
-    else
-      save_running time, "Die #{time.account ? 'Projektzeit ' + time.account.label_verbose : 'Anwesenheit'} von #time_string wurde gespeichert.\n"
-    end
-  end
-
-  def save_running(time, message)
-    if time.save
-      append_flash message.sub('#time_string', time.time_string)
-    else
-      append_flash "Die #{time.class.label} konnte nicht gespeichert werden:\n"
-      time.errors.each { |attr, msg| flash[:notice] += '<br/> - ' + msg + "\n" }
-    end
-    running_time(true)
-    time
-  end
-
-  def running_time(reload = false)
-    # implement in subclass
-  end
-
-  def redirect_to_running
-    redirect_to controller: 'worktimes', action: 'running'
-  end
-
   def append_flash(msg)
-    flash[:notice] = flash[:notice] ? flash[:notice] + '<br/>' + msg : msg
+    flash[:notice] = flash[:notice] ? flash[:notice] + '<br/>'.html_safe + msg : msg
+  end
+
+  def permitted_attrs
+    attrs = self.class.permitted_attrs.clone
+    attrs << :employee_id if @user.management
+    attrs
+  end
+
+  def assign_attributes
+    params[:other] = 1 if params[:worktime][:employee_id] && @user.management
+    super
+    entry.employee = @user unless record_other?
+  end
+
+  def ivar_name(klass)
+    klass < Worktime ? Worktime.model_name.param_key : super(klass)
   end
 
   def evaluation_detail_params

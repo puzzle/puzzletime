@@ -21,6 +21,7 @@ class ProjectsController < ManageController
     respond_to do |format|
       format.json do
         @projects = Project.list.
+                            where(leaf: true).
                             where(search_conditions).
                             select(:id, :name, :path_shortnames, :inherited_description).
                             limit(20)
