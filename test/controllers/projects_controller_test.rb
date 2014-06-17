@@ -45,6 +45,10 @@ class ProjectsControllerTest < ActionController::TestCase
     assert_equal [projects(:hitobito_demo_app), projects(:hitobito_demo_site)], assigns(:projects)
   end
 
+  def test_index_search
+    # not supported here
+  end
+
   private
 
   # Test object used in several tests.

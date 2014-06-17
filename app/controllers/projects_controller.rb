@@ -10,10 +10,23 @@ class ProjectsController < ManageController
   self.permitted_attrs = [:description, :report_type, :offered_hours, :billable,
                           :freeze_until, :description_required, :ticket_required]
 
+  self.search_columns = [:path_shortnames, :path_names, :inherited_description]
+
   before_action :authorize, only: [:edit, :update, :destroy]
 
   after_create :set_project_manager
 
+  def search
+    params[:q] ||= params[:term]
+    respond_to do |format|
+      format.json do
+        @projects = Project.list.
+                            where(search_conditions).
+                            select(:id, :name, :path_shortnames, :inherited_description).
+                            limit(20)
+      end
+    end
+  end
 
   private
 
