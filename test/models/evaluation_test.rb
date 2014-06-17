@@ -240,7 +240,7 @@ class EvaluationTest < ActiveSupport::TestCase
   end
 
   def test_employee_projects_pascal
-    @evaluation = EmployeeProjectsEval.new(employees(:pascal).id, true)
+    @evaluation = EmployeeProjectsEval.new(employees(:pascal).id)
     assert ! @evaluation.absences?
     assert @evaluation.for?(employees(:pascal))
     assert @evaluation.total_details
@@ -264,7 +264,7 @@ class EvaluationTest < ActiveSupport::TestCase
   end
 
   def test_employee_projects_pascal_detail
-    @evaluation = EmployeeProjectsEval.new(employees(:pascal).id, false)
+    @evaluation = EmployeeProjectsEval.new(employees(:pascal).id)
 
     @evaluation.set_division_id(projects(:allgemein).id)
     assert_sum_times 0, 0, 0, 1
@@ -276,7 +276,7 @@ class EvaluationTest < ActiveSupport::TestCase
   end
 
   def test_employee_projects_mark
-    @evaluation = EmployeeProjectsEval.new(employees(:mark).id, true)
+    @evaluation = EmployeeProjectsEval.new(employees(:mark).id)
     assert ! @evaluation.absences?
     assert @evaluation.for?(employees(:mark))
     assert @evaluation.total_details
@@ -300,14 +300,14 @@ class EvaluationTest < ActiveSupport::TestCase
   end
 
   def test_employee_projects_mark_detail
-    @evaluation = EmployeeProjectsEval.new(employees(:mark).id, false)
+    @evaluation = EmployeeProjectsEval.new(employees(:mark).id)
     @evaluation.set_division_id(projects(:allgemein).id)
     assert_sum_times 0, 5, 5, 5
     assert_count_times 0, 1, 1, 1
   end
 
   def test_employee_projects_lucien
-    @evaluation = EmployeeProjectsEval.new(employees(:lucien).id, true)
+    @evaluation = EmployeeProjectsEval.new(employees(:lucien).id)
     assert ! @evaluation.absences?
     assert @evaluation.for?(employees(:lucien))
     assert @evaluation.total_details
@@ -331,14 +331,14 @@ class EvaluationTest < ActiveSupport::TestCase
   end
 
   def test_employee_projects_lucien_detail
-    @evaluation = EmployeeProjectsEval.new(employees(:lucien).id, false)
+    @evaluation = EmployeeProjectsEval.new(employees(:lucien).id)
     @evaluation.set_division_id(projects(:webauftritt).id)
     assert_sum_times 0, 0, 11, 11
     assert_count_times 0, 0, 1, 1
   end
 
   def test_project_employees_allgemein
-    @evaluation = ProjectEmployeesEval.new(projects(:allgemein).id, true)
+    @evaluation = ProjectEmployeesEval.new(projects(:allgemein).id)
     assert ! @evaluation.absences?
     assert ! @evaluation.for?(employees(:pascal))
     assert @evaluation.total_details
@@ -362,7 +362,7 @@ class EvaluationTest < ActiveSupport::TestCase
   end
 
   def test_project_employees_allgemein_detail
-    @evaluation = ProjectEmployeesEval.new(projects(:allgemein).id, false)
+    @evaluation = ProjectEmployeesEval.new(projects(:allgemein).id)
 
     @evaluation.set_division_id(employees(:mark).id)
     assert_sum_times 0, 5, 5, 5
@@ -374,7 +374,7 @@ class EvaluationTest < ActiveSupport::TestCase
   end
 
   def test_project_employees_puzzletime
-    @evaluation = ProjectEmployeesEval.new(projects(:puzzletime).id, true)
+    @evaluation = ProjectEmployeesEval.new(projects(:puzzletime).id)
     assert ! @evaluation.absences?
     assert ! @evaluation.for?(employees(:pascal))
     assert @evaluation.total_details
@@ -398,7 +398,7 @@ class EvaluationTest < ActiveSupport::TestCase
   end
 
   def test_project_employees_puzzletime_detail
-    @evaluation = ProjectEmployeesEval.new(projects(:puzzletime).id, false)
+    @evaluation = ProjectEmployeesEval.new(projects(:puzzletime).id)
 
     @evaluation.set_division_id(employees(:pascal).id)
     assert_sum_times 0, 0, 2, 2
@@ -407,7 +407,7 @@ class EvaluationTest < ActiveSupport::TestCase
 
 
   def test_project_employees_webauftritt
-    @evaluation = ProjectEmployeesEval.new(projects(:webauftritt).id, true)
+    @evaluation = ProjectEmployeesEval.new(projects(:webauftritt).id)
     assert ! @evaluation.absences?
     assert ! @evaluation.for?(employees(:lucien))
     assert @evaluation.total_details
@@ -431,7 +431,7 @@ class EvaluationTest < ActiveSupport::TestCase
   end
 
   def test_project_employees_webauftritt_detail
-    @evaluation = ProjectEmployeesEval.new(projects(:webauftritt).id, false)
+    @evaluation = ProjectEmployeesEval.new(projects(:webauftritt).id)
 
     @evaluation.set_division_id(employees(:lucien).id)
     assert_sum_times 0, 0, 11, 11

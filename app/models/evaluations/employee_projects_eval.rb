@@ -4,18 +4,13 @@ class EmployeeProjectsEval < ProjectsEval
 
   self.category_ref      = :employee_id
   self.sub_evaluation    = nil
+  self.division_method   = :alltime_projects
   self.sub_projects_eval = 'employeesubprojects'
   self.detail_columns    = detail_columns.collect { |i| i == :hours ? :times : i }
 
 
-  # alltime: boolean, use all projects ever worked for / only current memberships
-  def initialize(employee_id, alltime)
+  def initialize(employee_id)
     super(Employee.find(employee_id))
-    @alltime = alltime
-  end
-
-  def divisions(period = nil)
-    @alltime ? category.alltime_projects : category.projects
   end
 
   def for?(user)
@@ -23,7 +18,7 @@ class EmployeeProjectsEval < ProjectsEval
   end
 
   def division_supplement(user)
-    return [[:add_time_link, ''], [:complete_link, '']] if self.for? user
+    return [[:add_time_link, '']] if for?(user)
     []
   end
 

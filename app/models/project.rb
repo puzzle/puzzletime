@@ -131,13 +131,6 @@ class Project < ActiveRecord::Base
     Project.where(parent_id_condition)
   end
 
-  def managed_employees
-    Employee.joins(projectmemberships: :project).
-             where('projectmemberships.project_id IN (?) AND projectmemberships.active', path_ids).
-             list.
-             uniq
-  end
-
   def employees
     Employee.joins(worktimes: :project).
              where('? = ANY (projects.path_ids)', id).

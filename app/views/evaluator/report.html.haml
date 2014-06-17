@@ -48,7 +48,7 @@
               - if params[:ticket]
                 %td{:align => "right"}= time.ticket
               - if params[:description]
-                %td= h(time.description).strip.gsub "\n", "<br/>"
+                %td= h(time.description).strip.gsub("\n", "<br/>").html_safe
               - total += time.hours
           / ticket/task view
         - else
@@ -69,7 +69,7 @@
                   - tckt_val[:employees].each_pair{ |k,v| a << k + " (" + v[0].round(2).to_s + "h)" }
                   = a.sort.join(", ")
               - if params[:description]
-                %td= h(tckt_val[:descriptions].join(", ")).strip.gsub "\n", "<br/>"
+                %td= h(tckt_val[:descriptions].join(", ")).strip.gsub("\n", "<br/>").html_safe
               - total += tckt_val[:sum]
       %tfoot
         %tr.times_total_sum

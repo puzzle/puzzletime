@@ -55,27 +55,6 @@ module EvaluatorHelper
 
   #### division supplement functions
 
-  def complete_link(project)
-    link_text = ''
-    if user_projectmemberships.any? { |pm| pm.project_id == project.id || pm.project.ancestor?(project.id) }
-      link_text = link_to('Komplettieren',
-                          { action: 'complete_project',
-				                        project_id: project.id,
-				                        back_url: request.original_fullpath },
-                          method: 'post')
-    end
-    link_text +=  ' ('.html_safe +  f(@user.last_completed(project)) + ')'.html_safe
-    link_text
-  end
-
-  def user_projectmemberships
-    @user_projectmemberships ||= @user.projectmemberships.includes(:project).to_a
-  end
-
-  def last_completion(employee)
-    f(employee.last_completed(@evaluation.category))
-  end
-
   def offered_hours(project)
     offered = project.offered_hours
     if offered

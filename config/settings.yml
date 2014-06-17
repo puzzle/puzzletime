@@ -44,9 +44,3 @@ ldap:
 defaults:
   report_type: absolute_day
   start_hour: 8
-
-completion:
-  # from/to day of month to display completion notification
-  display_period:
-    from: 26
-    to: 2

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140616082306) do
+ActiveRecord::Schema.define(version: 20140617090138) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,7 +24,6 @@ ActiveRecord::Schema.define(version: 20140616082306) do
 
   create_table "clients", force: true do |t|
     t.string "name",                null: false
-    t.string "contact"
     t.string "shortname", limit: 4, null: false
   end
 
@@ -70,11 +69,6 @@ ActiveRecord::Schema.define(version: 20140616082306) do
     t.date    "end_date"
     t.index ["employee_id"], :name => "index_employments_on_employee_id"
     t.foreign_key ["employee_id"], "employees", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_employments_employees"
-  end
-
-  create_table "engine_schema_info", id: false, force: true do |t|
-    t.string  "engine_name"
-    t.integer "version"
   end
 
   create_table "holidays", force: true do |t|
@@ -139,7 +133,6 @@ ActiveRecord::Schema.define(version: 20140616082306) do
     t.integer "project_id"
     t.integer "employee_id"
     t.boolean "projectmanagement", default: false
-    t.date    "last_completed"
     t.boolean "active",            default: true
     t.index ["employee_id"], :name => "index_projectmemberships_on_employee_id"
     t.index ["project_id"], :name => "index_projectmemberships_on_project_id"

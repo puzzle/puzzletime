@@ -73,7 +73,7 @@ class Employee < ActiveRecord::Base
     joins('left join employments em on em.employee_id = employees.id').
     where('(em.end_date IS null or em.end_date >= ?) AND em.start_date <= ?',
           period.startDate, period.endDate).
-    order('lastname, firstname').
+    list.
     uniq
   end
 
@@ -130,27 +130,6 @@ class Employee < ActiveRecord::Base
     self.class.connection.select_value(sql).to_f
   end
 
-  # Returns the date the passed project was completed last.
-  def last_completed(project)
-    # search hierarchy up first
-    path = project.path_ids.clone
-    membership = nil
-    while membership.nil? && !path.empty?
-      membership = projectmemberships.where(project_id: path.pop).first
-    end
-
-    if membership
-      membership.last_completed
-    else
-      # otherwise, get minimum date of all children
-      memberships = projectmemberships.joins(:project).
-                                       where('? = ANY (projects.path_ids)', project.id)
-      last_completed = memberships.collect { |pm| pm.last_completed }
-	     last_completed.delete(nil)
-	     last_completed.min
-    end
-  end
-
   # parent projects this employee ever worked on
   def alltime_projects
     Project.select("DISTINCT projects.*").
@@ -158,7 +137,7 @@ class Employee < ActiveRecord::Base
             joins('RIGHT JOIN worktimes ON worktimes.project_id = leaves.id').
             where(worktimes: { employee_id: id} ).
             where('projects.id IS NOT NULL').
-            order('projects.path_shortnames')
+            list
   end
 
   def worked_on_projects

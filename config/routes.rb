@@ -96,8 +96,6 @@ Rails.application.routes.draw do
   end
 
   scope '/evaluator', controller: 'evaluator' do
-    post :complete_project
-    post :complete_all
     post :book_all
     post :change_period
 
@@ -119,7 +117,7 @@ Rails.application.routes.draw do
     match 'login', via: [:get, :post, :patch]
     post 'logout'
   end
-  
+
   get 'status', to: 'status#index'
 
 
