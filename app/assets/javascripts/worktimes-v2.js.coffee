@@ -52,7 +52,7 @@ app.worktimes.scrollToDayWithDate = (date) ->
       entries = $('.worktimes .weekcontent .date-label[data-date="' + date + '"], ' + \
         '.worktimes .weekcontent .entry[data-date="' + date + '"]')
       entries.addClass('highlight')
-      setTimeout((-> entries.removeClass('highlight')), 1100)
+      setTimeout((-> entries.removeClass('highlight')), 500)
     ))
 
 
