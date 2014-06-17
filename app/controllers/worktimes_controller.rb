@@ -11,16 +11,11 @@ class WorktimesController < ApplicationController
   FINISH = 'Abschliessen'
 
   def index
-    @week_days = (Date.today.at_beginning_of_week..Date.today.at_end_of_week).to_a
-    @worktimes = Worktime.includes(:project).where('employee_id = ? AND work_date >= ? AND work_date <= ?', @user.id, @week_days.first, @week_days.last)
-                         .order('type DESC, from_start_time, project_id')
-    @current_overtime = @user.statistics.current_overtime
-    @monthly_worktime = @user.statistics.musttime(Period.current_month)
-    @pending_worktime = 0 - @user.statistics.overtime(Period.current_month).to_f
-
-    #redirect_to controller: 'evaluator', action: user_evaluation, clear: 1
+    set_week_days
+    set_worktimes
+    set_statistics
   end
-
+  
   # Shows the add time page.
   def new
     create_default_worktime
@@ -247,6 +242,29 @@ class WorktimesController < ApplicationController
     @work_date = @worktime.work_date
     @existing = Worktime.where('employee_id = ? AND work_date = ?', @worktime.employee_id, @work_date).
                          order('type DESC, from_start_time, project_id')
+  end
+
+  def set_week_days
+    if params[:week_date].present?
+      week_date = Week.from_string(params[:week_date]).to_date
+    else
+      week_date = Date.today
+    end
+    @week_days = (week_date.at_beginning_of_week..week_date.at_end_of_week).to_a
+    @next_week_date = Week.from_date(@week_days.last + 1.day).to_integer
+    @previous_week_date = Week.from_date(@week_days.first - 1.day).to_integer
+  end
+  
+  def set_worktimes
+    @worktimes = Worktime.where('employee_id = ? AND work_date >= ? AND work_date <= ?', @user.id, @week_days.first, @week_days.last)
+                         .includes(:project)
+                         .order('type DESC, from_start_time, project_id')
+  end
+  
+  def set_statistics
+    @current_overtime = @user.statistics.current_overtime
+    @monthly_worktime = @user.statistics.musttime(Period.current_month)
+    @pending_worktime = 0 - @user.statistics.overtime(Period.current_month).to_f
   end
 
   def find_worktime
