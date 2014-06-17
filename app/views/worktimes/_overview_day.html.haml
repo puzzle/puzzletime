@@ -1,0 +1,3 @@
+%li.day{'data-date' => day}
+  .date= format_day(day)
+  .time= format_hour(sum_daily_worktimes(@worktimes, day))
