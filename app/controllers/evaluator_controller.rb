@@ -187,7 +187,7 @@ class EvaluatorController < ApplicationController
     @evaluation = case params[:evaluation].downcase
         when 'managed' then ManagedProjectsEval.new(@user)
         when 'absencedetails' then AbsenceDetailsEval.new
-        when 'userprojects' then EmployeeProjectsEval.new(@user.id, @period)
+        when 'userprojects' then EmployeeProjectsEval.new(@user.id)
         when "employeesubprojects#{@user.id}", 'usersubprojects' then
           params[:evaluation] = 'usersubprojects'
           EmployeeSubProjectsEval.new(params[:category_id], @user.id)
@@ -202,7 +202,7 @@ class EvaluatorController < ApplicationController
         when 'employees' then EmployeesEval.new
         when 'departments' then DepartmentsEval.new
         when 'clientprojects' then ClientProjectsEval.new(params[:category_id])
-        when 'employeeprojects' then EmployeeProjectsEval.new(params[:category_id], @period)
+        when 'employeeprojects' then EmployeeProjectsEval.new(params[:category_id])
         when /employeesubprojects(\d+)/ then EmployeeSubProjectsEval.new(params[:category_id], Regexp.last_match[1])
         when 'departmentprojects' then DepartmentProjectsEval.new(params[:category_id])
         when 'absences' then AbsencesEval.new
@@ -211,7 +211,7 @@ class EvaluatorController < ApplicationController
       end
     end
     if @evaluation.nil?
-      @evaluation = EmployeeProjectsEval.new(@user.id, false)
+      @evaluation = EmployeeProjectsEval.new(@user.id)
     end
   end
 

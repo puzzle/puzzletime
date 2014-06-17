@@ -11,8 +11,8 @@
     = link_to 'Mehrwöchige Absenz erfassen',
               :controller => 'absencetimes',
               :action => 'add_multi_absence'
-  - if @user.management
     |
+  - if @user.management
     = link_to 'Fremderfassen',
               :controller => worktime_controller,
               :action => 'new',
