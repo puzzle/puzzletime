@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  root to: 'evaluator#user_projects'
+  root to: 'worktimes#index'
 
   concern :memberships do
     post 'manager/:id', action: 'create_manager'
@@ -65,6 +65,7 @@ Rails.application.routes.draw do
   resources :worktimes, only: [] do
     collection do
       get :running
+      get :v2 # TODO: dummy view for new worktimes layout, remove later
     end
   end
 

@@ -1,0 +1,175 @@
+$worktimes-border: gray;
+$worktimes-weeknav-bg: lightgray;
+$worktimes-weeknav-active-bg: white;
+$worktimes-weeknav-hover-bg: darkgray;
+$worktimes-weekcontent-hover-bg: lightblue;
+$worktimes-font-size-small: 12px;
+$worktimes-default-spacing: 10px;
+
+.worktimes {
+  .figures {
+    @include clearfix;
+
+    .balance {
+      float: left;
+      margin-left: 2 * $worktimes-default-spacing + 16px;
+    }
+    .monthly {
+      float: left;
+      margin-left: 20 * $worktimes-default-spacing;
+    }
+    .calendar {
+      float: right;
+      margin-right: 2 * $worktimes-default-spacing + 16px;
+    }
+  }
+
+  .weeknav {
+    @include clearfix;
+    margin: $worktimes-default-spacing 0;
+
+    .week-link {
+      display: block;
+      float: left;
+      margin: 19px $worktimes-default-spacing 0 $worktimes-default-spacing;
+    }
+
+    .browser {
+      float: left;
+      width: 992px - 4 * $worktimes-default-spacing - 2 * 16px - 2px;
+      border: 1px solid $worktimes-border;
+      background-color: $worktimes-weeknav-bg;
+    }
+
+    .days {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      .day, .total {
+        display: table-cell;
+        padding: $worktimes-default-spacing;
+      }
+
+      .day {
+        cursor: pointer;
+        border-width: 0 1px;
+        border-style: solid;
+        border-color: transparent;
+
+        &:hover {
+          background-color: $worktimes-weeknav-hover-bg;
+        }
+
+        &.active {
+          background-color: $worktimes-weeknav-active-bg;
+          border-color: $worktimes-border;
+        }
+
+        &:first-child {
+          border-left-color: transparent;
+        }
+
+        &:last-child {
+          border-right-color: transparent;
+        }
+
+        .date {
+          font-weight: bold;
+        }
+        .time {
+          font-size: $worktimes-font-size-small;
+        }
+      }
+
+      .total {
+        border-left: 1px solid $worktimes-border;
+      }
+    }
+  }
+
+  .weekcontent {
+    height: 200px;
+    overflow-y: scroll;
+    margin-bottom: $worktimes-default-spacing;
+    border: 1px solid $worktimes-border;
+
+    .date-label, .entry {
+      padding: $worktimes-default-spacing 0;
+      clear: both;
+    }
+
+    .date-label {
+      padding: $worktimes-default-spacing $worktimes-default-spacing 0 $worktimes-default-spacing;
+      font-size: $worktimes-font-size-small;
+      color: gray;
+
+      &.empty {
+        display: none;
+      }
+    }
+
+    .date-label + .entry {
+      border-top: 1px solid transparent;
+
+      &:hover, &:active {
+        border-top: 1px solid $worktimes-border;
+      }
+    }
+
+    .entry {
+      display: block;
+      position: relative;
+      border-bottom: 1px solid $worktimes-border;
+      text-decoration: none;
+      @include clearfix;
+
+      &:hover, &:active {
+        background-color: $worktimes-weekcontent-hover-bg;
+      }
+
+      .entry-link {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1
+      }
+
+      .title-description, .time-range, .time-value, .controls {
+        float: left;
+        padding: 0 $worktimes-default-spacing;
+      }
+
+      .title-description {
+        float: left;
+      }
+
+      .time-range, .time-value, .controls {
+        float: right;
+      }
+
+      .title, .time-value {
+        font-weight: bold;
+      }
+
+      .description, .time-range {
+        font-size: $worktimes-font-size-small;
+      }
+
+      .description {
+        @include ellipsis(true);
+        max-width: 750px;
+      }
+
+      .controls a {
+        display: block;
+        float: left;
+        position: relative;
+        margin-right: 5px;
+        z-index: 2;
+      }
+    }
+  }
+}

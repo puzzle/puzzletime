@@ -6,20 +6,22 @@
 # Methods added to this helper will be available to all templates in the application.
 
 module ApplicationHelper
+  include I18nHelper
 
-  # round time function.
   def format_hour(hour)
-    # number_with_precision is not that performant
-    number = (Float(hour) * (100)).round.to_f / 100
-    number = '%01.2f' % number
-    parts = number.split('.')
-    parts[0].gsub!(/(\d)(?=(\d\d\d)+(?!\d))/, "\\1'")
-    parts.join('.')
+    hour ||= 0.0
+    minutes = ((hour - hour.floor) * 60).round.to_s.rjust(2, "0")
+    hours = number_with_delimiter(hour.floor, :delimiter => "'")
+    "#{hours}:#{minutes}"
   end
-
+  
   def format_time(time)
     time ||= Time.zone.now
     I18n.l(time, format: :time)
+  end
+  
+  def format_day(date)
+    I18n.l(date, format: "%a %e.%-m.")
   end
 
   def format_percent(value)
@@ -57,7 +59,7 @@ module ApplicationHelper
                                  size: '15x15',
                                  class: 'calendar'))
   end
-
+  
   private
 
   def date_value(object_name, method_name, default = Date.today)
