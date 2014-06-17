@@ -8,12 +8,17 @@ class WorktimesController < ApplicationController
   helper_method :record_other?
   hide_action :detail_action
 
-
   FINISH = 'Abschliessen'
 
-
   def index
-    redirect_to controller: 'evaluator', action: user_evaluation, clear: 1
+    @week_days = Date.today.at_beginning_of_week..Date.today.at_end_of_week
+    @worktimes = Worktime.where('employee_id = ? AND work_date >= ? AND work_date <= ?', @user.id, @week_days.first, @week_days.last)
+                         .order('type DESC, from_start_time, project_id')
+
+    @monthly_worktime = @user.statistics.musttime(Period.current_month)
+    @pending_worktime = 0 - @user.statistics.overtime(Period.current_month).to_f
+
+    #redirect_to controller: 'evaluator', action: user_evaluation, clear: 1
   end
 
   # Shows the add time page.

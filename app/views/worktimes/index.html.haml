@@ -1,0 +1,35 @@
+Wochenansicht
+
+Überzeitsaldo:
+
+Monatliche Arbeitszeit:
+= format_hour(@monthly_worktime)
+
+(
+= format_hour(@pending_worktime)
+verbleibend)
+
+(Wochenübersicht)
+- @week_days.each do |day|
+  %p= format_day(day)
+  = format_hour(sum_daily_worktimes(@worktimes, day))
+Total:
+= format_hour(sum_total_worktimes(@worktimes))
+
+(Liste)
+
+- @week_days.each do |day|
+  %p= format_day(day)
+  - daily_worktimes = daily_worktimes(@worktimes, day)
+  - if daily_worktimes.empty?
+    (hide)
+  - else
+    - daily_worktimes.each do |worktime|
+      = worktime.project.label_verbose if worktime.project
+      = worktime.ticket
+      = worktime.description.gsub "\n", "<br/>" if worktime.description
+      = format_time(worktime.from_start_time)
+      \- 
+      = format_time(worktime.to_end_time)
+      = format_hour(worktime.hours)
+      = worktime.billable ? '$' : ''

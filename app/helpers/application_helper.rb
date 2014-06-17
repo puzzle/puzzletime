@@ -6,6 +6,7 @@
 # Methods added to this helper will be available to all templates in the application.
 
 module ApplicationHelper
+  include I18nHelper
 
   def format_hour(hour)
     hour ||= 0.0
@@ -17,6 +18,10 @@ module ApplicationHelper
   def format_time(time)
     time ||= Time.zone.now
     I18n.l(time, format: :time)
+  end
+  
+  def format_day(date)
+    I18n.l(date, format: "%a %e.%-m.")
   end
 
   def format_percent(value)
@@ -54,7 +59,7 @@ module ApplicationHelper
                                  size: '15x15',
                                  class: 'calendar'))
   end
-
+  
   private
 
   def date_value(object_name, method_name, default = Date.today)

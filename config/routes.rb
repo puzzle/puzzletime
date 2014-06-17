@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  root to: 'evaluator#user_projects'
+  root to: 'worktimes#index'
 
   concern :memberships do
     post 'manager/:id', action: 'create_manager'
