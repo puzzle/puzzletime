@@ -16,6 +16,8 @@ class WorktimesController < ApplicationController
     redirect_to controller: 'evaluator', action: user_evaluation, clear: 1
   end
 
+  def v2; end # TODO: dummy view for new worktimes layout, remove later
+
   # Shows the add time page.
   def new
     create_default_worktime
