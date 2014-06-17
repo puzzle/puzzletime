@@ -22,5 +22,18 @@ module WorktimeHelper
 
     options_for_select.join("\n").html_safe
   end
+  
+  def daily_worktimes(worktimes, day)
+    worktimes.select{|worktime| worktime.work_date == day}
+  end
+  
+  
+  def sum_daily_worktimes(worktimes, day)
+    sum_total_worktimes(daily_worktimes(worktimes, day))
+  end
+  
+  def sum_total_worktimes(worktimes)
+    worktimes.map(&:hours).inject(0, :+)
+  end
 
 end
