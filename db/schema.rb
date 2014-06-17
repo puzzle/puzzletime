@@ -53,7 +53,7 @@ ActiveRecord::Schema.define(version: 20140617090138) do
     t.string  "passwd"
     t.string  "email",                                           null: false
     t.boolean "management",                      default: false
-    t.float   "initial_vacation_days", :default => { :expr => "(0)::double precision" }
+    t.float   "initial_vacation_days",           default: 0.0
     t.string  "ldapname"
     t.string  "report_type"
     t.integer "default_project_id"

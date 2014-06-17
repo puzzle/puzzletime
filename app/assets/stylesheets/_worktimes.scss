@@ -1,10 +1,23 @@
-$worktimes-border: gray;
-$worktimes-weeknav-bg: lightgray;
-$worktimes-weeknav-active-bg: white;
-$worktimes-weeknav-hover-bg: darkgray;
+$worktimes-border: #ccc;
+$worktimes-border-radius: 3px;
+$worktimes-weeknav-bg: #eee;
+$worktimes-weeknav-active-bg: #fff;
+$worktimes-weeknav-hover-bg: lightblue;
 $worktimes-weekcontent-hover-bg: lightblue;
 $worktimes-font-size-small: 12px;
 $worktimes-default-spacing: 10px;
+
+@keyframes highlight {
+  0% {
+    background: inherit;
+  }
+  50% {
+    background: $worktimes-weekcontent-hover-bg;
+  }
+  100% {
+    background: inherit;
+  }
+}
 
 .worktimes {
   .figures {
@@ -18,15 +31,21 @@ $worktimes-default-spacing: 10px;
       float: left;
       margin-left: 20 * $worktimes-default-spacing;
     }
-    .calendar {
-      float: right;
-      margin-right: 2 * $worktimes-default-spacing + 16px;
-    }
   }
 
   .weeknav {
     @include clearfix;
-    margin: $worktimes-default-spacing 0;
+    padding: $worktimes-default-spacing 0;
+
+    &.stuck {
+      position: fixed;
+      top: 0;
+      z-index: 99;
+
+      .browser {
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+    }
 
     .week-link {
       display: block;
@@ -38,20 +57,34 @@ $worktimes-default-spacing: 10px;
       float: left;
       width: 992px - 4 * $worktimes-default-spacing - 2 * 16px - 2px;
       border: 1px solid $worktimes-border;
+      border-radius: $worktimes-border-radius;
       background-color: $worktimes-weeknav-bg;
+
+      .total {
+        border-left: 1px solid $worktimes-border;
+      }
+
+      .total, .control {
+        float: right;
+        line-height: 55px;
+        vertical-align: middle;
+        padding: 0 $worktimes-default-spacing;
+      }
     }
 
     .days {
+      float: left;
       list-style: none;
       margin: 0;
       padding: 0;
-
-      .day, .total {
-        display: table-cell;
-        padding: $worktimes-default-spacing;
-      }
+      @include clearfix;
 
       .day {
+        display: table-cell;
+        vertical-align: middle;
+        height: 55px - 2 * $worktimes-default-spacing;
+        float: left;
+        padding: $worktimes-default-spacing;
         cursor: pointer;
         border-width: 0 1px;
         border-style: solid;
@@ -70,10 +103,6 @@ $worktimes-default-spacing: 10px;
           border-left-color: transparent;
         }
 
-        &:last-child {
-          border-right-color: transparent;
-        }
-
         .date {
           font-weight: bold;
         }
@@ -81,26 +110,24 @@ $worktimes-default-spacing: 10px;
           font-size: $worktimes-font-size-small;
         }
       }
-
-      .total {
-        border-left: 1px solid $worktimes-border;
-      }
     }
   }
 
   .weekcontent {
-    height: 200px;
-    overflow-y: scroll;
     margin-bottom: $worktimes-default-spacing;
-    border: 1px solid $worktimes-border;
 
     .date-label, .entry {
       padding: $worktimes-default-spacing 0;
       clear: both;
+
+      &.highlight {
+        animation: highlight 1000ms;
+      }
     }
 
     .date-label {
-      padding: $worktimes-default-spacing $worktimes-default-spacing 0 $worktimes-default-spacing;
+      margin-top: $worktimes-default-spacing;
+      padding: $worktimes-default-spacing;
       font-size: $worktimes-font-size-small;
       color: gray;
 
@@ -109,18 +136,10 @@ $worktimes-default-spacing: 10px;
       }
     }
 
-    .date-label + .entry {
-      border-top: 1px solid transparent;
-
-      &:hover, &:active {
-        border-top: 1px solid $worktimes-border;
-      }
-    }
-
     .entry {
       display: block;
       position: relative;
-      border-bottom: 1px solid $worktimes-border;
+      border-top: 1px solid $worktimes-border;
       text-decoration: none;
       @include clearfix;
 
