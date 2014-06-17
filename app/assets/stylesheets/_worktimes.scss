@@ -73,6 +73,17 @@ $worktimes-default-spacing: 10px;
         &:last-child {
           border-right-color: transparent;
         }
+        
+        &.holiday {
+          .time {
+            color: grey;  
+          }
+        }
+        &.missing {
+          .time {
+            color: red;
+          }
+        }
 
         .date {
           font-weight: bold;
