@@ -172,7 +172,7 @@ class WorktimesController < CrudController
   def set_worktimes
     @worktimes = Worktime.where('employee_id = ? AND work_date >= ? AND work_date <= ?', @user.id, @week_days.first, @week_days.last)
                          .includes(:project)
-                         .order('type DESC, from_start_time, project_id')
+                         .order('work_date, type DESC, from_start_time, project_id')
   end
 
   def set_statistics
