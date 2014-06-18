@@ -21,7 +21,19 @@ class WorktimesController < CrudController
     set_worktimes
     set_statistics
   end
+  
+  def new
+    super do |format|
+      if params[:template]
+        template = Worktime.find(params[:template])
+        @worktime.account_id = template.account_id
+        @worktime.ticket = template.ticket
+        @worktime.description = template.description
+      end
+    end
+  end
 
+  
   def create
     super do |format|
       format.html do
@@ -171,7 +183,7 @@ class WorktimesController < CrudController
 
   def set_worktimes
     @worktimes = Worktime.where('employee_id = ? AND work_date >= ? AND work_date <= ?', @user.id, @week_days.first, @week_days.last)
-                         .includes(:project)
+                         .includes(:project, :absence)
                          .order('work_date, type DESC, from_start_time, project_id')
   end
 

@@ -15,7 +15,7 @@
       %ul.days
         = render partial: 'overview_day', collection: @week_days, as: :day
       .control
-        %button{title: 'Zeit/Abwesenheit erfassen'} Erfassen
+        = link_to 'Erfassen', new_projecttime_path, {title: 'Zeit/Abwesenheit erfassen'}
       .control
         %a.calendar{href: '#', title: 'Datum wählen'}= image_tag('calendar.png', 'size' => '16x16', 'alt' => 'Datum wählen')
       .total

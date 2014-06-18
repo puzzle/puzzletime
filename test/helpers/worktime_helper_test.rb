@@ -20,6 +20,15 @@ class WorktimeHelperTest < ActionView::TestCase
     assert_equal 26, sum_total_worktimes(@worktimes)
   end
   
+  test 'worktime account' do
+    worktime = Absencetime.new(account_id: absences(:vacation).id)
+    assert_equal 'Ferien', worktime_account(worktime)
+  end
+  
+  def worktime_account(worktime)
+    worktime.account.label_verbose if worktime.account
+  end
+  
   test 'worktime description with ticket' do
     worktime = Worktime.new(description: 'desc', ticket: '123')
     assert_equal "123 - desc", worktime_description(worktime)
