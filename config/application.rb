@@ -8,6 +8,16 @@ Bundler.require(*Rails.groups)
 require 'csv'
 
 module Puzzletime
+  
+  def self.version
+    @@ptime_version ||=
+      if File.exists?("#{Rails.root}/PTIME_VERSION")
+        File.open("#{Rails.root}/PTIME_VERSION").first.chomp.split(' ').second
+      else
+        ''
+      end
+  end
+  
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
