@@ -69,3 +69,8 @@ $ ->
   )
 
   $('.worktimes .weeknav').waypoint('sticky')
+
+  
+  $("#date_picker_week_date").datepicker onSelect: (date, instance) ->
+    window.location = "/worktimes?week_date=" + date
+    return
