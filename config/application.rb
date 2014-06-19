@@ -11,8 +11,8 @@ module Puzzletime
   
   def self.version
     @@ptime_version ||=
-      if File.exists?("#{Rails.root}/PTIME_VERSION")
-        File.open("#{Rails.root}/PTIME_VERSION").first.chomp.split(' ').second
+      if File.exists?("#{Rails.root}/VERSION")
+        File.open("#{Rails.root}/VERSION").first.chomp.split(' ').second
       else
         ''
       end
