@@ -15,8 +15,8 @@ class EmployeePlanningGraph
     @colorMap = AccountColorMapper.new
     employee_plannings = Planning.where('start_week <= ?', Week.from_date(@period.endDate).to_integer).
                                   where(employee_id: @employee.id)
-    @plannings       = employee_plannings.where(is_abstract: false)
-    @plannings_abstr = employee_plannings.where(is_abstract: true)
+    @plannings       = employee_plannings.where(is_abstract: false).includes(:project, :employee)
+    @plannings_abstr = employee_plannings.where(is_abstract: true).includes(:project, :employee)
     @projects       = collect_projects(@plannings)
     @projects_abstr = collect_projects(@plannings_abstr)
     absences = Absencetime.where('employee_id = ? AND work_date >= ? AND work_date <= ?',

@@ -1,7 +1,2 @@
-= link_to 'Meine Zeit', :controller => 'worktimes', :action => 'index', :clear => 1
-&nbsp;
-= link_to 'Meine Absenzen',  :controller => 'evaluator',  :action => 'userAbsences',  :clear => 1
-&nbsp;
-= link_to 'Ferienplan', :controller => 'graph', :action => 'all_absences'
-&nbsp;
-= link_to 'Wochengrafik',  :controller => 'graph',  :action => 'weekly'
+= nav 'Ferienplan', all_absences_graph_path
+= nav 'Wochengrafik', weekly_graph_path

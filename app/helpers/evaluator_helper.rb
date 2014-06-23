@@ -9,6 +9,10 @@ module EvaluatorHelper
     params.slice(:evaluation, :category_id, :division_id, :start_date, :end_date, :page)
   end
 
+  def evaluation_path(evaluation, options = {})
+    url_for(options.merge(controller: :evaluator, action: evaluation))
+  end
+
   def detail_td(worktime, field)
     case field
       when :work_date then td f(worktime.work_date), 'right', true
