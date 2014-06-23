@@ -1,5 +1,33 @@
-- if session[:evalLevels].size > 1 || params[:action] == 'details'
-  Auswertung:
-  \#{render :partial => 'evallink',  :collection => session[:evalLevels][0..-1], :spacer_template => 'submenu_spacer'}
-- elsif user_view?
-  = render :partial => 'worktimes/submenu'
+= nav 'Meine Zeit',
+      evaluation_path('userprojects', clear: 1),
+      evaluation_path('userprojects')
+- if @user.project_manager?
+  = nav 'Meine Projekte', evaluation_path('managed', clear: 1)
+- if @user.management
+  = nav 'Kunden',
+        evaluation_path('clients', clear: 1),
+        evaluation_path('clients'),
+        evaluation_path('clientprojects'),
+        evaluation_path('projectemployees')
+  = nav 'Mitarbeiter',
+        evaluation_path('employees', clear: 1),
+        evaluation_path('employees'),
+        evaluation_path('employeeprojects'),
+        evaluation_path('employeesubprojects')
+  = nav 'Bereiche',
+        evaluation_path('departments', clear: 1),
+        evaluation_path('departments'),
+        evaluation_path('departmentprojects')
+
+= nav 'Meine Absenzen',
+      evaluation_path('userabsences', clear: 1),
+      evaluation_path('userabsences')
+
+- if @user.management
+  = nav 'Absenzen Mitarbeiter',
+        evaluation_path('absences', clear: 1),
+        evaluation_path('absences'),
+        evaluation_path('employeeabsences')
+
+
+

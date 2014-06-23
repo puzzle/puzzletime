@@ -99,7 +99,7 @@ Rails.application.routes.draw do
     end
   end
 
-  scope '/graph', controller: 'graph' do
+  resource :graph, only: [], controller: :graph do
     get :weekly
     get :all_absences
   end

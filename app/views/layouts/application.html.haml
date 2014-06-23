@@ -29,8 +29,10 @@
           |
           = link_to 'Logout',  {:controller => 'login',  :action => 'logout'}, :method => 'post'
         #submenu
-          = render 'submenu'
-          &nbsp;
+          %ul
+            = render 'submenu'
+        #breadcrumb
+          = render 'breadcrumb'
 
       %h1= @title
       - if flash.key?('notice')

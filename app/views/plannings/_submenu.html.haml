@@ -1,13 +1,8 @@
-= link_to 'Meine Planung', :controller => 'plannings', :action => 'my_planning'
-\&nbsp;
-\#{link_to 'Meine Projekte', :controller => 'plannings', :action => 'my_projects'}
-\&nbsp;
-\#{link_to 'Mitarbeiter', :controller => 'plannings', :action => 'employees'}
-\&nbsp;
-\#{link_to 'Projekte', :controller => 'plannings', :action => 'projects'}
-\&nbsp;
-\#{link_to 'Bereiche', :controller => 'plannings', :action => 'departments'}
-\&nbsp;
-\#{link_to 'Unternehmen', :controller => 'plannings', :action => 'company_planning'}
-\&nbsp;
-\#{link_to 'Listen', :controller => 'plannings', :action => 'employee_lists'}
+- # TODO: define active_for paths
+= nav 'Meine Planung', :controller => 'plannings', :action => 'my_planning'
+= nav 'Meine Projekte', :controller => 'plannings', :action => 'my_projects'
+= nav 'Mitarbeiter', :controller => 'plannings', :action => 'employees'
+= nav 'Projekte', :controller => 'plannings', :action => 'projects'
+= nav 'Bereiche', :controller => 'plannings', :action => 'departments'
+= nav 'Unternehmen', :controller => 'plannings', :action => 'company_planning'
+= nav 'Listen', :controller => 'plannings', :action => 'employee_lists'

@@ -1,19 +1,11 @@
-- if @user.management || @user.project_manager?
-  Verwalte:
-  &nbsp;
-  = link_to 'Zugehörigkeiten', employee_memberships_path
-  &nbsp;
-  = link_to 'Projekte', projects_path
 - if @user.management
-  &nbsp;
-  = link_to 'Kunden', clients_path
-  &nbsp;
-  = link_to 'Bereiche', departments_path
-  &nbsp;
-  = link_to 'Mitarbeiter', employees_path
-  &nbsp;
-  = link_to 'Absenzen', absences_path
-  &nbsp;
-  = link_to 'Feiertage', holidays_path
-  &nbsp;
-  = link_to 'Nachrichten', user_notifications_path
+  = nav 'Mitarbeiter', employees_path, employees_path
+  = nav 'Kunden', clients_path, clients_path
+- if @user.management || @user.project_manager?
+  = nav 'Zugehörigkeiten', employee_memberships_path, employee_memberships_path
+- if @user.management
+  = nav 'Projekte', projects_path, projects_path
+  = nav 'Organisationseinheiten', departments_path, departments_path
+  = nav 'Feiertage', holidays_path, holidays_path
+  = nav 'Absenzarten', absences_path, absences_path
+  = nav 'Nachrichten', user_notifications_path, user_notifications_path

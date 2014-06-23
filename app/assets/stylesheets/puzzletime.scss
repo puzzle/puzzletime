@@ -169,20 +169,6 @@ table.table thead a {
     float:          right;
 }
 
-#submenu {
-    background:     asset-url('menu_user.gif') repeat-x;
-    padding-left:   40px;
-	padding-top: 	 2px;
-    text-indent:    -28px;
-    margin-bottom:  20px;
-}
-
-#submenu a {
-    color:          black;
-    font-weight:    bold;
-	font-size:		14px;
-}
-
 #menu ul {
     padding-top:    6px;
     padding-left:   8px;
@@ -191,7 +177,7 @@ table.table thead a {
 }
 
 #menu ul li {
-    display:        inline;
+  display:        inline;
 	font-size:		15px;
 }
 
@@ -203,9 +189,37 @@ table.table thead a {
     font-weight:    bold;
 }
 
-#menu ul li a:hover {
+#menu ul li a:hover, #menu li.active a {
     background:     #fff asset-url('menubox.gif') repeat-x top;
     color:          #4A4A24;
+    text-decoration: none;
+}
+
+#submenu {
+    background:     asset-url('menu_user.gif') repeat-x;
+    padding-left:   40px;
+    padding-top:   2px;
+    text-indent:    -28px;
+    margin-bottom:  20px;
+}
+
+#submenu ul {
+    margin: 0;
+    padding: 0;
+}
+
+#submenu ul li {
+    display:        inline;
+    padding-right: 8px;
+}
+
+#submenu li a {
+    color:          black;
+    font-weight:    bold;
+    font-size:    14px;
+}
+
+#submenu li.active a {
     text-decoration: none;
 }
 

@@ -15,7 +15,7 @@
         = day_absence_tds_proj(absence_graph, week)
   %tr
     %td &nbsp;&nbsp;&nbsp;P&nbsp;&nbsp;
-    %th= link_to employee.label, :controller => 'planning', :action => 'employee_planning', :employee_id => employee
+    %th= link_to employee.label, :controller => 'plannings', :action => 'employee_planning', :employee_id => employee
     - project_planning_graph.each_week do |week|
       = day_planning_tds(project_planning_graph.plannings_abstr, employee, project_planning_graph.project, week)
 
@@ -31,7 +31,7 @@
         = day_absence_tds_proj(absence_graph, week)
   %tr
     %td &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    %th= link_to employee.label, :controller => 'planning', :action => 'employee_planning', :employee_id => employee
+    %th= link_to employee.label, :controller => 'plannings', :action => 'employee_planning', :employee_id => employee
     - project_planning_graph.each_week do |week|
       = day_planning_tds(project_planning_graph.plannings, employee, project_planning_graph.project, week)
 

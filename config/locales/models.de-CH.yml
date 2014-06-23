@@ -3,8 +3,8 @@ de-CH:
   activerecord:
     models:
       absence:
-        one: Absenz
-        other: Absenzen
+        one: Absenzart
+        other: Absenzarten
       absencetime:
         one: Absenz
         other: Absenzen
@@ -12,8 +12,8 @@ de-CH:
         one: Kunde
         other: Kunden
       department:
-        one: Geschäftsbereich
-        other: Geschäftsbereiche
+        one: Organisationseinheit
+        other: Organisationseinheiten
       employee_list:
         one: Liste
         other: Listen
