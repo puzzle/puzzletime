@@ -67,28 +67,30 @@ Rails.application.routes.draw do
 
   resources :projecttimes do
     collection do
-      post 'start'
-      post 'stop'
-      post 'create_part'
-      match 'delete_part', via: [:post, :delete]
+      get :existing
+      post :start
+      post :stop
+      post :create_part
+      match :delete_part, via: [:post, :delete]
 
       get :running
-      get ':action'
+      get :split
     end
   end
 
   resources :absencetimes do
     collection do
+      get :existing
+      get :add_mulit_absence
       post :create_multi_absence
-      get ':action'
     end
   end
 
   scope '/evaluator', controller: 'evaluator' do
+    get ':action'
+
     post :book_all
     post :change_period
-
-    get ':action'
   end
 
   resources :plannings do
@@ -103,8 +105,8 @@ Rails.application.routes.draw do
   end
 
   scope '/login', controller: 'login' do
-    match 'login', via: [:get, :post, :patch]
-    post 'logout'
+    match :login, via: [:get, :post]
+    post :logout
   end
 
   get 'status', to: 'status#index'

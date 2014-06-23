@@ -6,12 +6,7 @@
 module EvaluatorHelper
 
   def evaluation_detail_params
-    { evaluation: params[:evaluation],
-      category_id: params[:category_id],
-      division_id: params[:division_id],
-      start_date: params[:start_date],
-      end_date: params[:end_date],
-      page: params[:page] }
+    params.slice(:evaluation, :category_id, :division_id, :start_date, :end_date, :page)
   end
 
   def detail_td(worktime, field)
@@ -30,7 +25,7 @@ module EvaluatorHelper
         if description.length > 40
           desc += link_to '...', evaluation_detail_params.merge!(
                                   controller: worktime.controller,
-                                  action: 'view',
+                                  action: 'show',
                                   id: worktime.id)
         end
         td desc

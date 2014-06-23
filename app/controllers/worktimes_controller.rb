@@ -55,10 +55,6 @@ class WorktimesController < CrudController
     super(location: destroy_referer)
   end
 
-  def view
-    respond_with entry
-  end
-
   # ajax action
   def existing
     @worktime = Worktime.new
@@ -211,11 +207,6 @@ class WorktimesController < CrudController
   end
 
   def evaluation_detail_params
-    { evaluation: params[:evaluation],
-      category_id: params[:category_id],
-      division_id: params[:division_id],
-      start_date: params[:start_date],
-      end_date: params[:end_date],
-      page: params[:page] }
+    params.slice(:evaluation, :category_id, :division_id, :start_date, :end_date, :page)
   end
 end
