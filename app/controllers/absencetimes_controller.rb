@@ -5,6 +5,8 @@ class AbsencetimesController < WorktimesController
   self.permitted_attrs = [:account_id, :report_type, :work_date, :hours,
                           :from_start_time, :to_end_time, :description]
 
+  before_render_form :set_accounts
+
   def update
     if entry.employee_id != @user.id
       redirect_to index_url
@@ -26,7 +28,7 @@ class AbsencetimesController < WorktimesController
       count = @multiabsence.save
       flash[:notice] = "#{count} Absenzen wurden erfasst"
       options = { controller: 'evaluator',
-                  action: detail_action,
+                  action: 'details',
                   evaluation: user_evaluation,
                   clear: 1 }
       set_period

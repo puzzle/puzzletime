@@ -66,10 +66,6 @@ Rails.application.routes.draw do
   resources :worktimes, only: [:index]
 
   resources :projecttimes do
-    member do
-      get :confirm_delete
-    end
-
     collection do
       post 'start'
       post 'stop'
@@ -82,10 +78,6 @@ Rails.application.routes.draw do
   end
 
   resources :absencetimes do
-    member do
-      get :confirm_delete
-    end
-
     collection do
       post :create_multi_absence
       get ':action'

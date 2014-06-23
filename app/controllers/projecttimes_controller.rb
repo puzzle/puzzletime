@@ -14,7 +14,6 @@ class ProjecttimesController < WorktimesController
     end
   end
 
-  # TODO: still used?
   def split
     @split = session[:split]
     if @split.nil?
@@ -40,7 +39,7 @@ class ProjecttimesController < WorktimesController
           params[:other] = 1
           params[:evaluation] = nil
         end
-        list_detail_time
+        redirect_to detail_times_path
       else
         session[:split] = @split
         redirect_to respond_to do |wants|

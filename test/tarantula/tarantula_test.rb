@@ -28,15 +28,13 @@ class TarantulaTest < ActionDispatch::IntegrationTest
     t.skip_uri_patterns.delete(/^http/)
     t.skip_uri_patterns << /^http(?!:\/\/www\.example\.com)/
     t.skip_uri_patterns << /\/synchronize$/
+    t.skip_uri_patterns << /\?week_date=(#{outside_four_week_window}.)*$/
 
     t.allow_404_for /^\-?\d+$/  # change period may produce such links in tarantula
     t.allow_404_for /projecttimes\/start$/  # passing invalid project_id
-    t.allow_404_for /attendancetimes\/\d+/   # attendance deleted elsewhere
     t.allow_404_for /absencetimes\/\d+/   # absencetime deleted elsewhere
     t.allow_404_for /projecttimes\/\d+/   # projecttime deleted elsewhere
-    t.allow_404_for /attendancetimes\/split_attendance/  # attendance modified elsewhere
     t.allow_404_for /employee_lists(\/\d+)?$/   # invalid employee_ids assigned
-    t.allow_404_for /evaluator\/attendance_details\?category_id=(0|\d{5,12})\&/   # invalid category
     t.allow_404_for /evaluator\/details\?category_id=(0|\d{5,12})\&/   # invalid category
 
     t.crawl_timeout = 20.minutes
@@ -107,6 +105,14 @@ class TarantulaTest < ActionDispatch::IntegrationTest
       shortname: CREDENTIALS.first,
       passwd: Employee.encode(CREDENTIALS.last),
       management: manager)
+  end
+
+  # Creates a regexp that only allows week strings from one week ago until two weeks from now.
+  def outside_four_week_window
+    today = Date.today
+    [today - 7, today, today + 7, today + 14].collect do |d|
+      "(?!#{d.cwyear}#{d.cweek})"
+    end.join
   end
 
 end

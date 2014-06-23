@@ -6,20 +6,20 @@
 class WorktimesController < CrudController
 
   helper_method :record_other?
-  hide_action :detail_action
+
+  before_action :authorize_destroy, only: :destroy
 
   after_save :check_overlapping
 
+  before_render_index :set_statistics
   before_render_new :create_default_worktime
   before_render_form :set_existing
-  before_render_form :set_accounts
 
   FINISH = 'Abschliessen'
 
   def index
     set_week_days
-    set_worktimes
-    set_statistics
+    super
   end
 
   def create
@@ -39,34 +39,8 @@ class WorktimesController < CrudController
     end
   end
 
-  # TODO: remove
-  def confirm_delete
-    respond_with entry
-  end
-
-  # TODO refactor to crud controller
   def destroy
-    if entry.employee == @user
-      if entry.destroy
-        flash[:notice] = "Die #{@worktime.class.label} wurde entfernt"
-      else
-        # errors enumerator yields attr and message (=second item)
-        flash[:notice] = @worktime.errors.messages.collect(&:second).flatten.join(', ')
-      end
-    end
-    referer = request.headers['Referer']
-    if params[:back] && referer && !(referer =~ /time\/edit\/#{@worktime.id}$/)
-      referer.gsub!(/time\/create[^A-Z]?/, 'time/new')
-      referer.gsub!(/time\/update[^A-Z]?/, 'time/edit')
-      if referer.include?('work_date')
-        referer.gsub!(/work_date=[0-9]{4}\-[0-9]{2}\-[0-9]{2}/, "work_date=#{@worktime.work_date}")
-      else
-        referer += (referer.include?('?') ? '&' : '?') + "work_date=#{@worktime.work_date}"
-      end
-      redirect_to(referer)
-    else
-      list_detail_time
-    end
+    super(location: destroy_referer)
   end
 
   def view
@@ -80,11 +54,6 @@ class WorktimesController < CrudController
     @worktime.employee_id = @user.management ? params[:worktime][:employee_id].presence || @user.id : @user.id
     set_existing
     render 'existing'
-  end
-
-  # no action, may overwrite in subclass
-  def detail_action
-    'details'
   end
 
   def self.model_identifier
@@ -110,14 +79,33 @@ class WorktimesController < CrudController
     true
   end
 
-  def list_detail_time
-    redirect_to detail_times_path
+  def authorize_destroy
+    unless entry.employee == @user
+      flash[:notice] = 'Sie sind nicht authorisiert, um diese Seite zu öffnen'
+      redirect_to root_path
+    end
+  end
+
+  def destroy_referer
+    referer = request.env['HTTP_REFERER']
+    if params[:back] && referer && !(referer =~ /time\/edit\/#{@worktime.id}$/)
+      referer.gsub!(/time\/create[^A-Z]?/, 'time/new')
+      referer.gsub!(/time\/update[^A-Z]?/, 'time/edit')
+      if referer.include?('work_date')
+        referer.gsub!(/work_date=[0-9]{4}\-[0-9]{2}\-[0-9]{2}/, "work_date=#{@worktime.work_date}")
+      else
+        referer += (referer.include?('?') ? '&' : '?') + "work_date=#{@worktime.work_date}"
+      end
+      referer
+    else
+      detail_times_path
+    end
   end
 
   def detail_times_path
     options = evaluation_detail_params
     options[:controller] = 'evaluator'
-    options[:action] = detail_action
+    options[:action] = 'details'
     if params[:evaluation].nil?
       options[:evaluation] = user_evaluation
       options[:category_id] = @worktime.employee_id
@@ -169,10 +157,10 @@ class WorktimesController < CrudController
     @previous_week_date = Week.from_date(@week_days.first - 1.day).to_integer
   end
 
-  def set_worktimes
-    @worktimes = Worktime.where('employee_id = ? AND work_date >= ? AND work_date <= ?', @user.id, @week_days.first, @week_days.last)
-                         .includes(:project)
-                         .order('type DESC, from_start_time, project_id')
+  def list_entries
+    Worktime.where('employee_id = ? AND work_date >= ? AND work_date <= ?', @user.id, @week_days.first, @week_days.last)
+            .includes(:project)
+            .order('type DESC, from_start_time, project_id')
   end
 
   def set_statistics
@@ -183,11 +171,6 @@ class WorktimesController < CrudController
 
   # overwrite in subclass
   def set_worktime_defaults
-  end
-
-  # overwrite in subclass
-  def set_accounts(all = false)
-    @accounts = nil
   end
 
   # may overwrite in subclass
