@@ -185,6 +185,10 @@ class WorktimesController < CrudController
     @worktimes = Worktime.where('employee_id = ? AND work_date >= ? AND work_date <= ?', @user.id, @week_days.first, @week_days.last)
                          .includes(:project, :absence)
                          .order('work_date, type DESC, from_start_time, project_id')
+    if @worktimes.empty?
+      flash.now[:notice] = "In dieser Woche wurden noch keine Zeiten erfasst"
+    end
+
   end
 
   def set_statistics
