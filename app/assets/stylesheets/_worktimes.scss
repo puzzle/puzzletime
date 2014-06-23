@@ -90,14 +90,14 @@ $worktimes-default-spacing: 10px;
         &:first-child {
           border-left-color: transparent;
         }
-        
+
         &.today {
           background-color: lightgrey;
         }
-        
+
         &.holiday {
           .time {
-            color: grey;  
+            color: grey;
           }
         }
         &.missing {
@@ -161,7 +161,7 @@ $worktimes-default-spacing: 10px;
         right: 0;
         bottom: 0;
         left: 0;
-        z-index: 1
+        z-index: 0;
       }
 
       .title-description, .time-range, .time-value, .controls {
@@ -195,7 +195,7 @@ $worktimes-default-spacing: 10px;
         float: left;
         position: relative;
         margin-right: 5px;
-        z-index: 2;
+        z-index: 1;
       }
     }
   }
