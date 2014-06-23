@@ -1,10 +1,10 @@
 .entry{'data-date' => day}
   .title-description
-    .title= worktime_project(worktime)
+    .title= worktime_account(worktime)
     .description= worktime_description(worktime)
   .controls
-    %a{href: '#dup', title: 'Kopieren'}= image_tag('copy.png', 'size' => '16x16', 'alt' => 'Kopieren')
-    %a{href: '#del', title: 'Löschen'}= image_tag('remove.png', 'size' => '16x16', 'alt' => 'Löschen')
+    = link_to image_tag('copy.png', size: '16x16'), new_polymorphic_url(worktime, template: worktime), {title: 'Kopieren'}
+    = link_to image_tag('remove.png', size: '16x16'), {:controller => worktime.controller, :action =>'confirm_delete', :id => worktime.id, title: 'Löschen'}
   .time-value= format_hour(worktime.hours)
   .time-range= time_range(worktime)
-  %a.entry-link{href: '#ent'}
+  = link_to '', edit_polymorphic_url(worktime), {class: 'entry-link'}

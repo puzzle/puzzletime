@@ -28,7 +28,7 @@ VALUES ('Militär', TRUE);
 INSERT INTO absences (name, payed)
 VALUES ('Zivildienst', TRUE);
 INSERT INTO absences (name, payed)
-VALUES ('Artzbesuch', FALSE);
+VALUES ('Arztbesuch', FALSE);
 INSERT INTO absences (name, payed)
 VALUES ('Heirat', TRUE);
 INSERT INTO absences (name, payed)

@@ -1,6 +1,6 @@
 #menu
   %ul
-    %li.first= link_to 'Meine Zeit', :controller => 'evaluator', :action => 'userProjects', :clear => 1
+    %li.first= link_to 'Zeiterfassung', :controller => 'worktimes', :action => 'index', :clear => 1
     - if @user.project_manager?
       %li= link_to 'Meine Projekte', :controller => 'evaluator', :action => 'managed', :clear => 1
     %li= link_to 'Planung', :controller => 'plannings', :action => 'index', :clear => 1
@@ -9,5 +9,4 @@
       %li= link_to 'Mitarbeiter', :controller => 'evaluator', :action => 'employees', :clear => 1
       %li= link_to 'Absenzen', :controller => 'evaluator', :action => 'absences', :clear => 1
       %li= link_to 'Bereiche', :controller => 'evaluator', :action => 'departments', :clear => 1
-    %li= link_to 'Ferienplan', :controller => 'graph', :action => 'all_absences'
     %li= link_to 'Verwalten', employee_memberships_path
