@@ -70,6 +70,7 @@ $worktimes-default-spacing: 10px;
       .day {
         display: table-cell;
         vertical-align: middle;
+        width: 75px;
         height: 55px - 2 * $worktimes-default-spacing;
         float: left;
         padding: $worktimes-default-spacing;
