@@ -1,2 +1,2 @@
-- if params[:action] == 'weekly'
-  = render :partial => 'evaluator/submenu_user'
+- if ['weekly', 'all_absences'].include? params[:action]
+  = render :partial => 'worktimes/submenu'

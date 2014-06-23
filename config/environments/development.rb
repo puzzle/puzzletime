@@ -45,5 +45,7 @@ Rails.application.configure do
     Bullet.stacktrace_includes = []
 
     Bullet.add_whitelist type: :unused_eager_loading, class_name: "Projecttime", association: :employee
+    Bullet.add_whitelist type: :unused_eager_loading, class_name: "Projecttime", association: :absence
+    Bullet.add_whitelist type: :unused_eager_loading, class_name: "Absencetime", association: :project
   end
 end

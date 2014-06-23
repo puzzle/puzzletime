@@ -23,8 +23,8 @@ module WorktimeHelper
     options_for_select.join("\n").html_safe
   end
   
-  def worktime_project(worktime)
-    worktime.project.label_verbose if worktime.project
+  def worktime_account(worktime)
+    worktime.account.label_verbose if worktime.account
   end
   
   def worktime_description(worktime)

@@ -4,9 +4,7 @@ require 'test_helper'
 
 class PlanningsControllerTest < ActionController::TestCase
 
-  def setup
-    login_as(:mark)
-  end
+  setup :login
 
   def test_show_index
     get :index

@@ -35,7 +35,7 @@
       %tbody
         - if !@tckt_view
           - for time in @times
-            %tr
+            %tr{class: cycle('even', 'uneven')}
               %td{:align => "right", :nowrap => ""}= time.date_string
               %td{:align => "right"}
                 = format_hour time.hours
@@ -53,7 +53,7 @@
           / ticket/task view
         - else
           - @tickets.each do |tckt_key, tckt_val|
-            %tr
+            %tr{class: cycle('even', 'uneven')}
               %td{:align => "right", :nowrap => ""}= tckt_key
               %td{:align => "right"}
                 = format_hour tckt_val[:sum]
