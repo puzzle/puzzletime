@@ -159,12 +159,8 @@ class WorktimesController < CrudController
   end
 
   def set_week_days
-    if params[:week_date].present?
-      week_date = Date.parse(params[:week_date])
-    else
-      week_date = Date.today
-    end
-    @week_days = (week_date.at_beginning_of_week..week_date.at_end_of_week).to_a
+    @selected_date = params[:week_date].present? ? Date.parse(params[:week_date]) : Date.today
+    @week_days = (@selected_date.at_beginning_of_week..@selected_date.at_end_of_week).to_a
     @next_week_date = @week_days.last + 1.day
     @previous_week_date = @week_days.first - 7.day
   end
