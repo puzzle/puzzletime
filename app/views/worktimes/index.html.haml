@@ -16,7 +16,7 @@
       .control
         = link_to 'Erfassen', new_projecttime_path, {title: 'Zeit/Abwesenheit erfassen'}
       .control
-        = week_calendar_field 'date_picker', 'week_date', type: 'hidden'
+        = date_calendar_field 'date_picker', 'week_date', type: 'hidden', value: @selected_date
       .total
         Total:
         = format_hour(sum_total_worktimes(@worktimes))
