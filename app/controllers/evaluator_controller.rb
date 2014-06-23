@@ -137,8 +137,10 @@ class EvaluatorController < ApplicationController
   end
 
   def export_ma_overview
-    @period ||= Period.current_year
-    # render :action => :export_ma_overview, :layout => false
+    unless @period
+      flash[:notice] = 'Bitte wählen Sie eine Zeitspanne für die Auswertung.'
+      redirect_to :action => 'employees'
+    end
   end
 
   ########################  PERIOD ACTIONS  #########################
