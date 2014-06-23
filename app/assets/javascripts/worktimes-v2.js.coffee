@@ -57,20 +57,20 @@ app.worktimes.scrollToDayWithDate = (date) ->
 
 
 $ ->
-  $('.worktimes .weekcontent .entry').waypoint( \
-    (direction) -> app.worktimes.activateNavDayWithDate($(this).data('date'))
-    ,
-    { context: '.worktimes .weekcontent' }
-  )
+  if $('.worktimes').size()
+    $('.worktimes .weekcontent .entry').waypoint( \
+      (direction) -> app.worktimes.activateNavDayWithDate($(this).data('date'))
+      ,
+      { context: '.worktimes .weekcontent' }
+    )
 
-  $('.worktimes .weeknav .day').on('click', (event) ->
-    event.preventDefault();
-    app.worktimes.scrollToDayWithDate($(event.currentTarget).data('date'))
-  )
+    $('.worktimes .weeknav .day').on('click', (event) ->
+      event.preventDefault();
+      app.worktimes.scrollToDayWithDate($(event.currentTarget).data('date'))
+    )
 
-  $('.worktimes .weeknav').waypoint('sticky')
+    $('.worktimes .weeknav').waypoint('sticky')
 
-  
-  $("#date_picker_week_date").datepicker onSelect: (date, instance) ->
-    window.location = "/worktimes?week_date=" + date
-    return
+    $("#date_picker_week_date").datepicker onSelect: (date, instance) ->
+      window.location = "/worktimes?week_date=" + date
+      return
