@@ -7,9 +7,20 @@
       %strong
         - if @worktime.employee == @user ||
         - (@user.management && @worktime.project_id)
-          = link_to 'Bearbeiten', evaluation_detail_params.merge!({:controller => @worktime.controller, :action =>'edit', :id => @worktime.id})
+          = link_to 'Bearbeiten',
+                    evaluation_detail_params.merge!(:controller => @worktime.controller,
+                                                    :action =>'edit',
+                                                    :id => @worktime.id)
           \&nbsp;
         - if @worktime.employee == @user
-          = link_to 'Löschen', evaluation_detail_params.merge!({:controller => @worktime.controller, :action =>'confirm_delete', :id => @worktime.id })               |
+          = link_to 'Löschen',
+                    evaluation_detail_params.merge!(:controller => @worktime.controller,
+                                                    :action =>'destroy',
+                                                    :id => @worktime.id }),
+                    data: { method: :delete,
+                            confirm: ti(:confirm_delete) }
 %br/
-= link_to 'Arbeitszeiten', evaluation_detail_params.merge!({:controller => 'evaluator', :action => controller.detail_action})
+= link_to 'Arbeitszeiten',
+          evaluation_detail_params.merge!(
+            :controller => 'evaluator',
+            :action => 'details'})

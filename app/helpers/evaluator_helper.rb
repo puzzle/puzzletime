@@ -5,6 +5,15 @@
 
 module EvaluatorHelper
 
+  def evaluation_detail_params
+    { evaluation: params[:evaluation],
+      category_id: params[:category_id],
+      division_id: params[:division_id],
+      start_date: params[:start_date],
+      end_date: params[:end_date],
+      page: params[:page] }
+  end
+
   def detail_td(worktime, field)
     case field
       when :work_date then td f(worktime.work_date), 'right', true

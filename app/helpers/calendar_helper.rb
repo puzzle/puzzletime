@@ -5,37 +5,7 @@
 
 # Methods added to this helper will be available to all templates in the application.
 
-module ApplicationHelper
-  include I18nHelper
-
-  def format_hour(hour)
-    hour ||= 0.0
-    minutes = ((hour - hour.floor) * 60).round.to_s.rjust(2, "0")
-    hours = number_with_delimiter(hour.floor, :delimiter => "'")
-    "#{hours}:#{minutes}".html_safe
-  end
-  
-  def format_time(time)
-    time ||= Time.zone.now
-    I18n.l(time, format: :time)
-  end
-  
-  def format_day(date)
-    I18n.l(date, format: "%a %e.%-m.")
-  end
-
-  def format_percent(value)
-    (value == value.to_i ? value.to_i.to_s : value.to_s) + ' %'
-  end
-
-  def evaluation_detail_params
-    { evaluation: params[:evaluation],
-      category_id: params[:category_id],
-      division_id: params[:division_id],
-      start_date: params[:start_date],
-      end_date: params[:end_date],
-      page: params[:page] }
-  end
+module CalendarHelper
 
   def date_calendar_field(object, method, options = {})
     generic_calendar_field object, method, :default, options
@@ -59,7 +29,7 @@ module ApplicationHelper
                                  size: '15x15',
                                  class: 'calendar'))
   end
-  
+
   private
 
   def date_value(object_name, method_name, default = Date.today)

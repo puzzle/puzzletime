@@ -6,6 +6,6 @@
   = render :partial => 'form', :locals => {:submit => buttons, :auto_start_stop_type => !@worktime.kind_of?(Absencetime) && @worktime.employee == @user}
 %p
   - if record_other?
-    = link_to 'Arbeitszeiten', evaluation_detail_params.merge!({:controller => 'evaluator', :action => controller.detail_action })
+    = link_to 'Arbeitszeiten', evaluation_detail_params.merge!({:controller => 'evaluator', :action => 'details' })
   - else
     = link_to 'Übersicht', :controller => @worktime.controller, :action => 'index'

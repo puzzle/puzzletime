@@ -5,8 +5,18 @@
   - if @evaluation.edit_link?(@user) || @user.management
     %td
       - if @user.management || ! detailrow.booked
-        = link_to 'Bearbeiten', evaluation_detail_params.merge!({:controller => detailrow.controller, :action => 'edit', :id => detailrow.id})
+        = link_to 'Bearbeiten',
+                  evaluation_detail_params.merge!(:controller => detailrow.controller,
+                                                  :action => 'edit',
+                                                  :id => detailrow.id)
   - if @evaluation.delete_link?(@user)
     %td
       - if ! detailrow.booked
-        = link_to 'Löschen', evaluation_detail_params.merge!({:controller => detailrow.controller, :action =>'confirm_delete', :id => detailrow.id})                |
+        = link_to 'Löschen',
+                  evaluation_detail_params.merge!(:controller => detailrow.controller,
+                                                  :action =>'destroy',
+                                                  :id => detailrow.id),
+                  data: { method: :delete,
+                          confirm: ti(:confirm_delete) }
+
+

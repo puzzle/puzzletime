@@ -4,10 +4,17 @@
   = render :partial => 'existing'
 
 = form_tag evaluation_detail_params.merge!({:action => 'update', :id => @worktime.id}), method: :patch do
-  = render :partial => 'form', :locals => {:submit => ['Speichern'], :auto_start_stop_type => @worktime.report_type == AutoStartType::INSTANCE }
+  = render 'form',
+           :submit => ['Speichern'],
+           :auto_start_stop_type => @worktime.report_type == AutoStartType::INSTANCE
 
 %p
-  = link_to 'Übersicht', evaluation_detail_params.merge!({:controller => 'evaluator', :action => controller.detail_action })
+  = link_to 'Übersicht',
+            evaluation_detail_params.merge!(:controller => 'evaluator',
+                                            :action => 'details')
   - if @user == @worktime.employee
     |
-    = link_to 'Löschen', evaluation_detail_params.merge!({ :action =>'confirm_delete', :id => @worktime.id})
+    = link_to 'Löschen',
+              evaluation_detail_params.merge!(:action =>'destroy', :id => @worktime.id),
+              data: { method: :delete,
+                      confirm: ti(:confirm_delete) }

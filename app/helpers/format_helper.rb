@@ -35,6 +35,26 @@ module FormatHelper
     format_type(obj, attr)
   end
 
+  def format_hour(hour)
+    hour ||= 0.0
+    minutes = ((hour - hour.floor) * 60).round.to_s.rjust(2, "0")
+    hours = number_with_delimiter(hour.floor, :delimiter => "'")
+    "#{hours}:#{minutes}".html_safe
+  end
+
+  def format_time(time)
+    time ||= Time.zone.now
+    I18n.l(time, format: :time)
+  end
+
+  def format_day(date)
+    I18n.l(date, format: "%a %e.%-m.")
+  end
+
+  def format_percent(value)
+    (value == value.to_i ? value.to_i.to_s : value.to_s) + ' %'
+  end
+
   # Renders a simple unordered list, which will
   # simply render all passed items or yield them
   # to your block.
