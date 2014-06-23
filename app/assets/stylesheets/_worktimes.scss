@@ -97,7 +97,7 @@ $worktimes-default-spacing: 10px;
         }
 
         &.holiday {
-          .time {
+          .time, .date {
             color: grey;
           }
         }
