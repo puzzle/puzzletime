@@ -46,6 +46,7 @@ class Project < ActiveRecord::Base
 
   belongs_to :department
   belongs_to :client
+  belongs_to :portfolio_item
 
   has_many :worktimes,
            ->(project) do
