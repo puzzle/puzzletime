@@ -4,12 +4,11 @@
 # Table name: projectmemberships
 #
 #  id                :integer          not null, primary key
-#  project_id        :integer
-#  employee_id       :integer
-#  projectmanagement :boolean          default(FALSE)
-#  active            :boolean          default(TRUE)
+#  project_id        :integer          not null
+#  employee_id       :integer          not null
+#  projectmanagement :boolean          default(FALSE), not null
+#  active            :boolean          default(TRUE), not null
 #
-
 
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz

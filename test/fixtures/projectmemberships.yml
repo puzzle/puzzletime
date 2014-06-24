@@ -3,11 +3,10 @@
 # Table name: projectmemberships
 #
 #  id                :integer          not null, primary key
-#  project_id        :integer
-#  employee_id       :integer
-#  projectmanagement :boolean          default(FALSE)
-#  last_completed    :date
-#  active            :boolean          default(TRUE)
+#  project_id        :integer          not null
+#  employee_id       :integer          not null
+#  projectmanagement :boolean          default(FALSE), not null
+#  active            :boolean          default(TRUE), not null
 #
 
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html

@@ -19,7 +19,6 @@
 #  ticket          :string(255)
 #
 
-
 class Absencetime < Worktime
 
   validates :absence, presence: true
