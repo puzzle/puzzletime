@@ -9,4 +9,4 @@
       = render :partial => 'plannings/employee_planning_entry', :locals =>{ :user => employee, :employee_planning_graph => @graph.graph_for(employee), :type => :calendar_week_not_yet_implemented}
     = render :partial => 'plannings/footer', :locals => {:type => :calendar_week_not_yet_implemented, :first_span => 2}
 
-= link_to 'Zurück', :controller => 'plannings', :action => 'employee_lists'
+= link_to 'Zurück', employee_lists_path

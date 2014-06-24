@@ -57,11 +57,10 @@ class ReportType
   end
 
   def rounded_hours(worktime)
-    number = (Float(worktime.hours) * (100)).round.to_f / 100
-    number = '%01.2f' % number
-    parts = number.split('.')
-    parts[0].gsub!(/(\d)(?=(\d\d\d)+(?!\d))/, "\\1'")
-    parts.join('.')
+    hour = worktime.hours || 0.0
+    minutes = ((hour - hour.floor) * 60).round.to_s.rjust(2, "0")
+    hours = ActiveSupport::NumberHelper.number_to_delimited(hour.floor, :delimiter => "'")
+    "#{hours}:#{minutes}".html_safe
   end
 
 end

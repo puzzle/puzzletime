@@ -1,9 +1,0 @@
-%h1
-  Neue Mitarbeiterliste
-= render 'shared/error_messages', object: @employee_list
-= form_for @employee_list do |f|
-  = render :partial => 'form', :locals => { :f => f}
-  %p
-    = f.submit "Liste Speichern"
-
-= link_to 'Zurück', :controller => 'plannings', :action => 'employee_lists'
