@@ -1,0 +1,16 @@
+= standard_form(@worktime) do |f|
+  = f.labeled(:account) do
+    = text_field('worktime',
+                     'account',
+                     value: @worktime.account.try(:label_verbose),
+                     data: { autocomplete: 'project',
+                             url: search_projects_path,
+                             id_field: 'worktime_account_id' })
+    = hidden_field('worktime', 'account_id')
+  = f.labeled_input_field(:ticket)
+  = f.labeled_text_area(:description)
+  = f.labeled_date_field(:work_date)
+  = f.labeled_input_field(:from_start_time)
+  = f.labeled_input_field(:to_end_time)
+  = f.labeled_input_field(:hours)
+  = f.labeled_boolean_field(:billable)

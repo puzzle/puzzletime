@@ -1,0 +1,8 @@
+= standard_form(@worktime) do |f|
+  = f.belongs_to_field(:absence)
+  = f.labeled_text_area(:description)
+  = f.labeled_date_field(:work_date)
+  = f.labeled_input_field(:from_start_time)
+  = f.labeled_input_field(:to_end_time)
+  = f.labeled_input_field(:hours)
+  = f.static_text(link_to 'Mehrwöchige Absenz', add_multi_absence_absencetimes_path)
