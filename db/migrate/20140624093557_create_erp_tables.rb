@@ -29,8 +29,8 @@ class CreateErpTables < ActiveRecord::Migration
 
     create_table :contracts do |t|
       t.string :number, null: false
-      t.date :start_at
-      t.date :finish_at
+      t.date :start_date
+      t.date :end_date
       t.integer :payment_period
       t.string :reference
     end
@@ -93,7 +93,7 @@ class CreateErpTables < ActiveRecord::Migration
     #rename_table :projects, :budget_items
     #rename_column :worktimes, :project_id, :budget_item_id
 
-    add_column :employees, :departement_id, :integer
+    add_column :employees, :department_id, :integer
 
     #drop_table :projectmemberships
   end
@@ -106,7 +106,7 @@ class CreateErpTables < ActiveRecord::Migration
     #  t.boolean :active, null: false, default: true
     #end
 
-    remove_column :employees, :departement_id
+    remove_column :employees, :department_id
 
     #rename_column :worktimes, :budget_item_id, :project_id
     #rename_table :budget_items, :projects

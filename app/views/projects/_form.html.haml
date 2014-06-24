@@ -1,14 +1,18 @@
 = crud_form do |f|
-  = f.labeled_static_field(:name)
-  = f.labeled_static_field(:shortname)
   = f.labeled_static_field(:client_name)
-  = f.labeled_static_field(:department_name)
-  = f.labeled_input_field(:description)
+  = f.labeled_input_fields(:name,
+                           :shortname,
+                           :description)
   = f.labeled_select :report_type,
                      ReportType::INSTANCES.collect { |type| [type.name, type.key] },
                      selected: entry.report_type.key
   = f.labeled_input_fields(:offered_hours,
+                           :offered_rate,
+                           :discount,
+                           :portfolio_item_id,
+                           :reference,
                            :billable,
+                           :closed,
                            :freeze_until,
                            :description_required,
                            :ticket_required)

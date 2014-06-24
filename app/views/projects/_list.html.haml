@@ -1,6 +1,5 @@
 - @title = projects_title
 
-= list_table :name, :description do |t|
+= crud_table :name, :description do |t|
   - t.action_col { |p| link_to('Subprojekte', sub_projects_path(p)) if p.sub_projects? }
   - t.action_col { |p| link_to('Mitarbeiter', project_memberships_path(p)) }
-  - t.edit_action_col
