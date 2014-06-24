@@ -42,12 +42,6 @@ class PlanningsController < ApplicationController
     @graph = EmployeePlanningGraph.new(@employee, @period)
   end
 
-  # TODO move to employee_lists#index
-  def employee_lists
-    @employee = @user
-    @employee_lists = EmployeeList.where(employee_id: @employee.id)
-  end
-
   def employee_lists_planning
     @employee_list = EmployeeList.find_by_id(params[:employee_list_id])
     @employee_list_name = @employee_list.title
