@@ -97,8 +97,8 @@ class WorktimesController < CrudController
   def destroy_referer
     referer = request.env['HTTP_REFERER']
     if params[:back] && referer && !(referer =~ /time\/edit\/#{@worktime.id}$/)
-      referer.gsub!(/time\/create[^A-Z]?/, 'time/new')
-      referer.gsub!(/time\/update[^A-Z]?/, 'time/edit')
+      referer.gsub!(/times$/, 'time/new')
+      referer.gsub!(/times\/\d+/, 'time/edit')
       if referer.include?('work_date')
         referer.gsub!(/work_date=[0-9]{4}\-[0-9]{2}\-[0-9]{2}/, "work_date=#{@worktime.work_date}")
       else
@@ -141,9 +141,11 @@ class WorktimesController < CrudController
                       id: @worktime.id,
                       start_time: @worktime.from_start_time,
                       end_time: @worktime.to_end_time }]
-      overlaps = Worktime.where(conditions).to_a
-      flash[:notice] += " Es besteht eine Überlappung mit mindestens einem anderen Eintrag: <br/>\n" unless overlaps.empty?
-      flash[:notice] += overlaps.join("<br/>\n") unless overlaps.empty?
+      overlaps = Worktime.where(conditions).includes(:project).to_a
+      if overlaps.present?
+        flash[:notice] += " Es besteht eine Überlappung mit mindestens einem anderen Eintrag: <br/>\n".html_safe
+        flash[:notice] += overlaps.collect { |o| ERB::Util.h(o) }.join("<br/>\n").html_safe
+      end
     end
   end
 

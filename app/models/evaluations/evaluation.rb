@@ -204,7 +204,7 @@ class Evaluation
                 time.report_type,
                 time.billable,
                 time.employee.label,
-                (time.account ? time.account.label_verbose : 'Anwesenheitszeit'),
+                time.account.label_verbose,
                 time.ticket,
                 time.description]
       end

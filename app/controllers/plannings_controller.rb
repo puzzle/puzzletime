@@ -15,7 +15,7 @@ class PlanningsController < ApplicationController
   end
 
   def my_projects
-    @projects = @user.managed_projects
+    @projects = @user.managed_projects.includes(:department)
     render template: 'plannings/projects'
   end
 
@@ -46,11 +46,11 @@ class PlanningsController < ApplicationController
     @employee_list = EmployeeList.find_by_id(params[:employee_list_id])
     @employee_list_name = @employee_list.title
     period = @period.present? ? @period : Period.current_month
-    @graph = EmployeesPlanningGraph.new(@employee_list.employees, period)
+    @graph = EmployeesPlanningGraph.new(@employee_list.employees.includes(:employments).list, period)
   end
 
   def projects
-    @projects = Project.top_projects
+    @projects = Project.top_projects.includes(:department)
   end
 
   def project_planning
@@ -77,7 +77,7 @@ class PlanningsController < ApplicationController
 
   def company_planning
     period = @period.present? ? @period : Period.current_month
-    @graph = EmployeesPlanningGraph.new(Employee.employed_ones(period), period)
+    @graph = EmployeesPlanningGraph.new(Employee.employed_ones(period).includes(:employments).list, period)
   end
 
   def new
@@ -171,7 +171,7 @@ class PlanningsController < ApplicationController
     # this could be improved with a many-to-many table relation between Department and Employee
     projects = Project.where(department_id: department)
     memberships = Projectmembership.where(project_id: projects.collect { |p|p.id }, active: true)
-    employees = Employee.find(memberships.collect { |m| m.employee_id })
+    employees = Employee.where(id: memberships.collect { |m| m.employee_id }).includes(:employments).list
     period ||= Period.current_month
     employees.select { |e| e.employment_at(period.startDate).present? || e.employment_at(period.endDate).present? }
   end

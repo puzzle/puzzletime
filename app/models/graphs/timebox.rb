@@ -40,7 +40,7 @@ class Timebox
   private
 
   def tooltip_for(worktime)
-    worktime.time_string + ': ' + (worktime.account ? worktime.account.label : 'Anwesenheit')
+    worktime.time_string + ': ' + worktime.account.label
   end
 
 end
