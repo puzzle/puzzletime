@@ -19,7 +19,6 @@
 #  ticket          :string(255)
 #
 
-
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz
 

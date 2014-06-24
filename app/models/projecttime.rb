@@ -19,7 +19,6 @@
 #  ticket          :string(255)
 #
 
-
 class Projecttime < Worktime
 
   validates :project_id, presence: true

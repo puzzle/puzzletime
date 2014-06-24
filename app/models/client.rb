@@ -8,7 +8,6 @@
 #  shortname :string(4)        not null
 #
 
-
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz
 
