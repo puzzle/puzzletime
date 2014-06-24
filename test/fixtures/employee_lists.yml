@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: employee_lists
+#
+#  id          :integer          not null, primary key
+#  employee_id :integer          not null
+#  title       :string(255)      not null
+#  created_at  :datetime
+#  updated_at  :datetime
+#
+
 list_a:
   title: Foo
   employee_id: 1

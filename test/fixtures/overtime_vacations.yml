@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: overtime_vacations
+#
+#  id            :integer          not null, primary key
+#  hours         :float            not null
+#  employee_id   :integer          not null
+#  transfer_date :date             not null
+#
+
 pascal_1:
   hours: 20
   employee_id: 6
