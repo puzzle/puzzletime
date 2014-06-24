@@ -1,5 +1,10 @@
 @import "mixins";
 
+/* apply a natural box layout model to all elements */
+*, *:before, *:after {
+  -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+ }
+
 body {
     background:     #F9F9F7 asset-url('diagonal.gif') repeat-x;
     font-size:      14px;
@@ -108,13 +113,11 @@ table.table thead a {
 
 
 #content {
-	display:		table;
-	width: 			992px;
-	margin:         auto;
-    padding:        0px 16px 40px 16px;
-    background:     #fff;
-	border-left:	1px solid #E9E9E7;
-	border-right:	1px solid #E9E9E7;
+    width: 100%;
+    margin: auto;
+    background: #fff;
+    border-left: 1px solid #E9E9E7;
+    border-right: 1px solid #E9E9E7;
 }
 
 #header {
