@@ -5,5 +5,6 @@
 
 class ClientsController < ManageController
 
+  self.permitted_attrs = :name, :shortname
 
 end

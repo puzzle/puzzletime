@@ -12,7 +12,6 @@
 class UserNotification < ActiveRecord::Base
 
   include Comparable
-  extend Manageable
 
   # Validation helpers
   validates_presence_of :date_from, message: 'Eine Startdatum muss angegeben werden'
@@ -59,8 +58,6 @@ class UserNotification < ActiveRecord::Base
   def <=>(other)
     date_from <=> other.date_from
   end
-
-  ##### interface methods for Manageable #####
 
   def to_s
     message.truncate(30)

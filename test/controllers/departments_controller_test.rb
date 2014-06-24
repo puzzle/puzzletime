@@ -4,30 +4,27 @@ require 'test_helper'
 
 class DepartmentsControllerTest < ActionController::TestCase
 
-  #include CrudControllerTestHelper
+  include CrudControllerTestHelper
 
   setup :login
 
-  def test_index # :nodoc:
-    get :index
-    assert_response :success
-    assert_template 'index'
-    assert entries.present?
+  not_existing :test_show,
+               :test_show_json,
+               :test_show_with_non_existing_id_raises_record_not_found
+
+  def test_destroy
+    assert_raises(RuntimeError) do
+      super
+    end
   end
 
-  def test_index_json # :nodoc:
-    get :index, format: 'json'
-    assert_response :success
-    assert entries.present?
-    assert @response.body.starts_with?('[{'), @response.body
+  def test_destroy_json
+    assert_raises(RuntimeError) do
+      super
+    end
   end
 
   private
-
-  # The entries as set by the controller.
-  def entries
-    @controller.send(:entries)
-  end
 
   # Test object used in several tests.
   def test_entry
