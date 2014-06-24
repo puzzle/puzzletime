@@ -58,7 +58,7 @@ class WorktimeHelperTest < ActionView::TestCase
 
   test 'time range without any times' do
     worktime = Worktime.new
-    assert_equal "", time_range(worktime)
+    assert_equal "&nbsp;", time_range(worktime)
   end
 
   test 'time range without end time' do
