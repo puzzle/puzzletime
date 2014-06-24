@@ -1,22 +1,13 @@
+@import "bootstrap_variables";
+@import "bootstrap";
 @import "mixins";
-
-/* apply a natural box layout model to all elements */
-*, *:before, *:after {
-  -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
- }
 
 body {
     background:     #F9F9F7 asset-url('diagonal.gif') repeat-x;
-    font-size:      14px;
-    font-family:    "trebuchet ms", helvetica, sans-serif;
-    color:          #333;
-    padding:        0px;
-    margin:         0px;
-    text-align:     center;   /* centered content in IE */
 }
 
 p {
-    margin-bottom:  20px;
+    /* margin-bottom:  20px; */
     text-align:     justify;
 }
 
@@ -24,14 +15,14 @@ div {
     text-align:     justify;
 }
 
-a {
-    color:          #0087e3 ;
-    text-decoration: underline;
-}
+/* a { */
+/*     color:          #0087e3 ; */
+/*     text-decoration: underline; */
+/* } */
 
-a:hover {
-    text-decoration: none;
-}
+/* a:hover { */
+/*     text-decoration: none; */
+/* } */
 
 a.symbol {
 	text-decoration: none;
@@ -39,77 +30,77 @@ a.symbol {
 	font-size: 		 16px;
 }
 
-a img {
-	border:			0;
-}
+/* a img { */
+/* 	border:			0; */
+/* } */
 
-h1 {
-    font-size:      20px;
-    font-weight:    normal;
-    margin-bottom:  20px;
-}
+/* h1 { */
+/*     font-size:      20px; */
+/*     font-weight:    normal; */
+/*     margin-bottom:  20px; */
+/* } */
 
-h2 {
-    font-size:      16px;
-    font-weight:    bold;
-}
+/* h2 { */
+/*     font-size:      16px; */
+/*     font-weight:    bold; */
+/* } */
 
-h3 {
-    font-size:      14px;
-    font-weight:    bold;
-    color:          #4a4a4a;
-}
+/* h3 { */
+/*     font-size:      14px; */
+/*     font-weight:    bold; */
+/*     color:          #4a4a4a; */
+/* } */
 
-table {
-    font-size:      14px;
-}
+/* table { */
+/*     font-size:      14px; */
+/* } */
 
-td {
-    padding-left:   4px;
-    padding-right:  4px;
-}
+/* td { */
+/*     padding-left:   4px; */
+/*     padding-right:  4px; */
+/* } */
 
-th {
-    font-weight:    bold;
-    color:          #0087e3;
-    white-space:    nowrap;
-    text-align:     left;
-}
+/* th { */
+/*     font-weight:    bold; */
+/*     color:          #0087e3; */
+/*     white-space:    nowrap; */
+/*     text-align:     left; */
+/* } */
 
-textarea, input, select {
-    font-size:      14px;
-    font-family:    sans-serif;
-    line-height:    16px;
-}
+/* textarea, input, select { */
+/*     font-size:      14px; */
+/*     font-family:    sans-serif; */
+/*     line-height:    16px; */
+/* } */
 
-textarea {
-  width: 400px;
-}
+/* textarea { */
+/*   width: 400px; */
+/* } */
 
-.right {
-  text-align: right;
-}
+/* .right { */
+/*   text-align: right; */
+/* } */
 
-.center {
-  text-align: center;
-}
+/* .center { */
+/*   text-align: center; */
+/* } */
 
-.table tr {
-    vertical-align: top;
-}
+/* .table tr { */
+/*     vertical-align: top; */
+/* } */
 
-.table td > p {
-    margin: 0;
-}
+/* .table td > p { */
+/*     margin: 0; */
+/* } */
 
-table.table td.action {
-  width: 20px;
-  text-align: center;
-}
+/* table.table td.action { */
+/*   width: 20px; */
+/*   text-align: center; */
+/* } */
 
-table.table thead a {
-    text-decoration: none;
-}
+/* table.table thead a { */
+/*     text-decoration: none; */
+/* } */
 
 
 #content {

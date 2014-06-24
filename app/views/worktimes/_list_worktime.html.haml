@@ -4,15 +4,15 @@
     = time_range(worktime)
   .time-value= format_hour(worktime.hours)
   .controls
-    = link_to image_tag('copy.png', size: '16x16'),
-              new_polymorphic_url(worktime, template: worktime),
-              {title: 'Kopieren'}
-    = link_to image_tag('remove.png', size: '16x16'),
-              {:controller => worktime.controller,
+    = link_to(new_polymorphic_url(worktime, template: worktime),
+              {title: 'Kopieren'}) do
+      .glyphicon.glyphicon-file
+    = link_to({:controller => worktime.controller,
               :action =>'destroy',
               :id => worktime.id},
               title: 'Löschen',
               data: { method: :delete,
-                      confirm: ti(:confirm_delete) }
+                      confirm: ti(:confirm_delete) }) do
+      .glyphicon.glyphicon-trash
   .description= worktime_description(worktime)
   = link_to '', edit_polymorphic_url(worktime), {class: 'entry-link'}

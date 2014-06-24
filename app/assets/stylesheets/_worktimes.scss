@@ -1,11 +1,8 @@
-$worktimes-border: #ccc;
+$worktimes-border: $gray-light;
 $worktimes-border-radius: 3px;
-$worktimes-weeknav-bg: #eee;
 $worktimes-weeknav-active-bg: #fff;
-$worktimes-weeknav-hover-bg: lightblue;
 $worktimes-weeknav-height: 70px;
-$worktimes-weekcontent-hover-bg: lightblue;
-$worktimes-font-size-small: 12px;
+$worktimes-weekcontent-hover-bg: lighten($brand-blue, 30%);
 $worktimes-default-spacing: 10px;
 
 .worktimes {
@@ -13,6 +10,7 @@ $worktimes-default-spacing: 10px;
 
   .figures {
     @include clearfix;
+    color: $gray;
 
     .balance {
       float: left;
@@ -45,7 +43,7 @@ $worktimes-default-spacing: 10px;
     border-width: 1px 0;
     border-style: solid;
     border-color: $worktimes-border;
-    background-color: #fff;
+    background-color: $gray-lighter;
 
     .browser {
       width: 90%;
@@ -72,14 +70,13 @@ $worktimes-default-spacing: 10px;
     .inner {
       display: inline-block;
       vertical-align: middle;
-      line-height: 1.2;
+      line-height: $line-height-base;
     }
 
-    .label {
-      font-weight: bold;
+    .weeknav-label {
     }
-    .time {
-      font-size: $worktimes-font-size-small;
+    .weeknav-time {
+      font-weight: 300;
     }
   }
 
@@ -98,7 +95,6 @@ $worktimes-default-spacing: 10px;
     margin: 0;
     padding: 0;
     @include clearfix;
-    background-color: $worktimes-weeknav-bg;
 
     .day {
       width: percentage(1 / 7);
@@ -107,15 +103,16 @@ $worktimes-default-spacing: 10px;
       border-style: solid;
       border-color: $worktimes-border;
 
-      &.holiday {
-        .label, .date {
-          color: grey;
-        }
+      &:first-child {
+        border-width: 0 1px;
       }
 
-      &.missing {
-        .time {
-          color: red;
+      &:hover {
+        border-width: 1px 2px 1px 1px;
+        height: $worktimes-weeknav-height;
+
+        &:first-child {
+          border-width: 1px 2px 1px 2px;
         }
       }
 
@@ -123,12 +120,22 @@ $worktimes-default-spacing: 10px;
         background-color: $worktimes-weeknav-active-bg;
       }
 
-      &:first-child {
-        border-width: 0 1px;
+      &.holiday {
+        .weeknav-label, .weeknav-time {
+          color: $gray;
+        }
+      }
+
+      &.missing {
+        .weeknav-time {
+          color: $brand-red;
+        }
       }
 
       &.today {
-        background-color: lightgrey;
+        .weeknav-time {
+          color: $brand-blue;
+        }
       }
     }
   }
@@ -140,10 +147,11 @@ $worktimes-default-spacing: 10px;
       padding: $worktimes-default-spacing 0;
       clear: both;
       background-color: none;
-      -moz-transition: background-color 500ms ease-in;
-      -webkit-transition: background-color 500ms ease-in;
-      -o-transition: background-color 500ms ease-in;
-      transition: background-color 500ms ease-in;
+
+      -moz-transition: background-color 400ms ease-in;
+      -webkit-transition: background-color 400ms ease-in;
+      -o-transition: background-color 400ms ease-in;
+      transition: background-color 400ms ease-in;
 
       &.highlight {
         background-color: $worktimes-weekcontent-hover-bg;
@@ -153,8 +161,7 @@ $worktimes-default-spacing: 10px;
     .date-label {
       margin-top: $worktimes-default-spacing;
       padding: $worktimes-default-spacing 5%;
-      font-size: $worktimes-font-size-small;
-      color: #238BCA;
+      color: $gray;
 
       &.empty {
         display: none;
@@ -198,12 +205,18 @@ $worktimes-default-spacing: 10px;
         text-align: right;
       }
 
-      .title, .time-value {
-        font-weight: bold;
+      .title {
+        font-size: 24px;
       }
 
-      .description, .time-range {
-        font-size: $worktimes-font-size-small;
+      .time-range {
+        font-size: 18px;
+        font-weight: 300;
+      }
+
+      .time-value {
+        font-size: 18px;
+        font-weight: 500;
       }
 
       .controls {
