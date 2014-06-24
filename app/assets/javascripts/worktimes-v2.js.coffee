@@ -63,7 +63,7 @@ app.worktimes.scrollTo = (offset, callback, date) ->
         entries = $('.worktimes .weekcontent .date-label[data-date="' + date + '"], ' + \
           '.worktimes .weekcontent .entry[data-date="' + date + '"]')
         entries.addClass('highlight')
-        setTimeout((-> entries.removeClass('highlight')), 500)
+        setTimeout((-> entries.removeClass('highlight')), 400)
     ))
 
 

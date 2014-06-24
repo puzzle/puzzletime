@@ -17,8 +17,8 @@
         .controls
           .weeknav-element
             .inner
-              .label Total
-              .time= format_hour(sum_total_worktimes(@worktimes))
+              .weeknav-label Total
+              .weeknav-time= format_hour(sum_total_worktimes(@worktimes))
           .weeknav-element
             .inner
               = date_calendar_field 'date_picker', 'week_date', type: 'hidden', value: @selected_date
