@@ -80,6 +80,7 @@ module CrudControllerTestHelper
   def test_create # :nodoc:
     assert_difference("#{model_class.name}.count") do
       post :create, test_params(model_identifier => new_entry_attrs)
+      assert_equal [], entry.errors.full_messages
     end
     assert_redirected_to_index
     assert !entry.new_record?
@@ -106,6 +107,7 @@ module CrudControllerTestHelper
     assert_no_difference("#{model_class.name}.count") do
       put :update, test_params(id: test_entry.id,
                                model_identifier => edit_entry_attrs)
+      assert_equal [], entry.errors.full_messages
     end
     assert_attrs_equal(edit_entry_attrs)
     assert_redirected_to_index

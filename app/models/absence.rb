@@ -16,7 +16,6 @@
 class Absence < ActiveRecord::Base
 
   include Evaluatable
-  extend Manageable
 
   # All dependencies between the models are listed below
   has_many :worktimes
@@ -32,7 +31,6 @@ class Absence < ActiveRecord::Base
 
   scope :list, -> { order(:name) }
 
-  ##### interface methods for Manageable #####
 
   def dont_destroy_vacation
     errors.add(:base, 'Die Ferien Absenz kann nicht gelöscht werden') if id == Settings.vacation_id

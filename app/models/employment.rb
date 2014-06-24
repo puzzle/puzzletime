@@ -16,8 +16,6 @@
 
 class Employment < ActiveRecord::Base
 
-  extend Manageable
-
   attr_accessor :final
 
   # All dependencies between the models are listed below.
@@ -108,12 +106,6 @@ class Employment < ActiveRecord::Base
   def end_date=(value)
   	 write_attribute(:end_date, value)
 	   @end_date = nil
-  end
-
-  ##### interface methods for Manageable #####
-
-  def self.puzzlebase_map
-    Puzzlebase::Employment
   end
 
   def to_s

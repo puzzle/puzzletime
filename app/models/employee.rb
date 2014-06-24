@@ -13,7 +13,7 @@
 #  initial_vacation_days :float
 #  ldapname              :string(255)
 #  eval_periods          :string(3)        is an Array
-#  departement_id        :integer
+#  department_id         :integer
 #
 
 class Employee < ActiveRecord::Base
@@ -21,9 +21,10 @@ class Employee < ActiveRecord::Base
   include Evaluatable
   include ReportType::Accessors
   extend Conditioner
-  extend Manageable
 
   # All dependencies between the models are listed below.
+  belongs_to :department
+
   has_and_belongs_to_many :employee_lists
 
   has_many :employments, dependent: :destroy
@@ -74,16 +75,11 @@ class Employee < ActiveRecord::Base
     uniq
   end
 
-  ##### interface methods for Manageable #####
-
-  def self.puzzlebase_map
-    Puzzlebase::Employee
-  end
 
   ##### interface methods for Evaluatable #####
 
   def to_s
-    lastname + ' ' + firstname
+    "#{lastname} #{firstname}"
   end
 
   def self.worktimes

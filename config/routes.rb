@@ -10,12 +10,11 @@ Rails.application.routes.draw do
   end
 
   concern :with_projects do
-    resources :projects, only: [:index, :edit, :update] do
-      resources :projects, only: [:index, :edit, :update]
+    resources :projects, except: [:show] do
+      resources :projects, except: [:show]
       resource :project_memberships, only: [:show], concerns: :memberships
 
       collection do
-        post :synchronize
         get :search
       end
     end
@@ -23,32 +22,23 @@ Rails.application.routes.draw do
 
   resources :absences, except: [:show]
 
-  resources :clients, only: [:index] do
-    collection do
-      post :synchronize
-    end
-
+  resources :clients,except: [:show] do
     concerns :with_projects
   end
 
-  resources :departments, only: [:index] do
-    collection do
-      post :synchronize
-    end
-
+  resources :departments, except: [:show] do
     concerns :with_projects
   end
 
-  resources :employees, only: [:index, :edit, :update] do
+  resources :employees, except: [:show] do
     collection do
       get :settings
       patch :settings, to: 'employees#update_settings'
       get :passwd
       post :passwd, to: 'employees#update_passwd'
-      post :synchronize
     end
 
-    resources :employments, only: [:index]
+    resources :employments, except: [:show]
     resources :overtime_vacations, except: [:show]
     resource :employee_memberships, only: [:show], concerns: :memberships
   end

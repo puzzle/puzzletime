@@ -4,8 +4,8 @@
 #
 #  id             :integer          not null, primary key
 #  number         :string(255)      not null
-#  start_at       :date
-#  finish_at      :date
+#  start_date     :date
+#  end_date       :date
 #  payment_period :integer
 #  reference      :string(255)
 #

@@ -5,6 +5,7 @@
 #
 #  id        :integer          not null, primary key
 #  name      :string(255)      not null
+#  contact   :string(255)
 #  shortname :string(4)        not null
 #
 
@@ -14,11 +15,10 @@
 class Client < ActiveRecord::Base
 
   include Evaluatable
-  extend Manageable
 
   # All dependencies between the models are listed below.
   has_many :projects, -> { where(parent_id: nil) }
-  has_many :all_projects, class_name: 'Project'
+  has_many :all_projects, class_name: 'Project', dependent: :destroy
 
   # Validation helpers.
   validates_presence_of :name, message: 'Ein Name muss angegeben sein'
@@ -34,12 +34,6 @@ class Client < ActiveRecord::Base
 
   def to_s
     name
-  end
-
-  ##### interface methods for Manageable #####
-
-  def self.puzzlebase_map
-    Puzzlebase::CustomerProject
   end
 
   ##### interface methods for Evaluatable #####
