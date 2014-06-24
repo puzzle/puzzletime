@@ -3,116 +3,132 @@ $worktimes-border-radius: 3px;
 $worktimes-weeknav-bg: #eee;
 $worktimes-weeknav-active-bg: #fff;
 $worktimes-weeknav-hover-bg: lightblue;
+$worktimes-weeknav-height: 70px;
 $worktimes-weekcontent-hover-bg: lightblue;
 $worktimes-font-size-small: 12px;
 $worktimes-default-spacing: 10px;
 
 .worktimes {
+  padding-top: 4 * $worktimes-default-spacing;
+
   .figures {
     @include clearfix;
 
     .balance {
       float: left;
-      margin-left: 2 * $worktimes-default-spacing + 16px;
+      margin-left: 5%;
     }
     .monthly {
-      float: left;
-      margin-left: 20 * $worktimes-default-spacing;
+      float: right;
+      margin-right: 5%;
     }
   }
 
-  .weeknav {
-    @include clearfix;
+  .weeknav-container {
+    width: 100%;
     padding: $worktimes-default-spacing 0;
 
     &.stuck {
       position: fixed;
-      top: 0;
+      top: -$worktimes-default-spacing;
       z-index: 99;
 
-      .browser {
+      .weeknav {
         box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
       }
     }
 
-    .week-link {
-      display: block;
-      float: left;
-      margin: 19px $worktimes-default-spacing 0 $worktimes-default-spacing;
-    }
+  }
+
+  .weeknav {
+    @include clearfix;
+    border-width: 1px 0;
+    border-style: solid;
+    border-color: $worktimes-border;
+    background-color: #fff;
 
     .browser {
+      width: 90%;
       float: left;
-      width: 992px - 4 * $worktimes-default-spacing - 2 * 16px - 2px;
-      border: 1px solid $worktimes-border;
-      border-radius: $worktimes-border-radius;
-      background-color: $worktimes-weeknav-bg;
 
-      .total {
-        border-left: 1px solid $worktimes-border;
-      }
-
-      .total, .control {
+      .controls {
         float: right;
-        line-height: 55px;
-        vertical-align: middle;
-        padding: 0 $worktimes-default-spacing;
+        width: 30%;
+        border-right: 1px solid $worktimes-border;
+
+        .weeknav-element {
+          width: 33.333%;
+        }
       }
     }
+  }
 
-    .days {
-      float: left;
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      @include clearfix;
+  .weeknav-element {
+    line-height: $worktimes-weeknav-height;
+    display: table-cell;
+    text-align: center;
+    float: left;
 
-      .day {
-        display: table-cell;
-        vertical-align: middle;
-        width: 75px;
-        height: 55px - 2 * $worktimes-default-spacing;
-        float: left;
-        padding: $worktimes-default-spacing;
-        cursor: pointer;
-        border-width: 0 1px;
-        border-style: solid;
-        border-color: transparent;
+    .inner {
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1.2;
+    }
 
-        &:hover {
-          background-color: $worktimes-weeknav-hover-bg;
+    .label {
+      font-weight: bold;
+    }
+    .time {
+      font-size: $worktimes-font-size-small;
+    }
+  }
+
+  .weeknav-link {
+    width: 5%;
+    line-height: $worktimes-weeknav-height;
+    float: left;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .weeknav-days {
+    width: 70%;
+    float: left;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    @include clearfix;
+    background-color: $worktimes-weeknav-bg;
+
+    .day {
+      width: percentage(1 / 7);
+      cursor: pointer;
+      border-width: 0 1px 0 0;
+      border-style: solid;
+      border-color: $worktimes-border;
+
+      &.holiday {
+        .label, .date {
+          color: grey;
         }
+      }
 
-        &.active {
-          background-color: $worktimes-weeknav-active-bg;
-          border-color: $worktimes-border;
-        }
-
-        &:first-child {
-          border-left-color: transparent;
-        }
-
-        &.today {
-          background-color: lightgrey;
-        }
-
-        &.holiday {
-          .time, .date {
-            color: grey;
-          }
-        }
-        &.missing {
-          .time {
-            color: red;
-          }
-        }
-
-        .date {
-          font-weight: bold;
-        }
+      &.missing {
         .time {
-          font-size: $worktimes-font-size-small;
+          color: red;
         }
+      }
+
+      &.active {
+        background-color: $worktimes-weeknav-active-bg;
+      }
+
+      &:first-child {
+        border-width: 0 1px;
+      }
+
+      &.today {
+        background-color: lightgrey;
       }
     }
   }
@@ -136,9 +152,9 @@ $worktimes-default-spacing: 10px;
 
     .date-label {
       margin-top: $worktimes-default-spacing;
-      padding: $worktimes-default-spacing;
+      padding: $worktimes-default-spacing 5%;
       font-size: $worktimes-font-size-small;
-      color: gray;
+      color: #238BCA;
 
       &.empty {
         display: none;
@@ -146,10 +162,8 @@ $worktimes-default-spacing: 10px;
     }
 
     .entry {
-      display: block;
       position: relative;
       border-top: 1px solid $worktimes-border;
-      text-decoration: none;
       @include clearfix;
 
       &:hover, &:active {
@@ -165,17 +179,23 @@ $worktimes-default-spacing: 10px;
         z-index: 0;
       }
 
-      .title-description, .time-range, .time-value, .controls {
+      > * {
         float: left;
-        padding: 0 $worktimes-default-spacing;
       }
 
-      .title-description {
-        float: left;
+      .title, .description {
+        width: 60%;
+        margin-left: 5%;
+        @include ellipsis(true);
+      }
+
+      .description {
+        clear: both;
       }
 
       .time-range, .time-value, .controls {
-        float: right;
+        width: 10%;
+        text-align: right;
       }
 
       .title, .time-value {
@@ -186,14 +206,12 @@ $worktimes-default-spacing: 10px;
         font-size: $worktimes-font-size-small;
       }
 
-      .description {
-        @include ellipsis(true);
-        max-width: 750px;
+      .controls {
+        margin-right: 5%;
       }
 
       .controls a {
-        display: block;
-        float: left;
+        display: inline-block;
         position: relative;
         margin-right: 5px;
         z-index: 1;
