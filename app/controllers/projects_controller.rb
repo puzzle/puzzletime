@@ -3,12 +3,14 @@
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz
 
+# TODO: set client/parent when creating project
 class ProjectsController < ManageController
 
   include ProjectGroupable
 
-  self.permitted_attrs = [:description, :report_type, :offered_hours, :billable,
-                          :freeze_until, :description_required, :ticket_required]
+  self.permitted_attrs = [:name, :shortname, :description, :client_id, :offered_hours, :offered_rate,
+                          :discount, :portfolio_item_id, :reference, :billable, :closed,
+                          :freeze_until, :report_type, :description_required, :ticket_required]
 
   self.search_columns = [:path_shortnames, :path_names, :inherited_description]
 
@@ -40,7 +42,7 @@ class ProjectsController < ManageController
   end
 
   def set_project_manager
-    Projectmembership.create(project_id: @entry.id,
+    Projectmembership.create(project_id: entry.id,
                              employee_id: @user.id,
                              projectmanagement: true)
   end

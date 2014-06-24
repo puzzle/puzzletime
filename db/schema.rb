@@ -59,8 +59,8 @@ ActiveRecord::Schema.define(version: 20140624093557) do
 
   create_table "contracts", force: true do |t|
     t.string  "number",         null: false
-    t.date    "start_at"
-    t.date    "finish_at"
+    t.date    "start_date"
+    t.date    "end_date"
     t.integer "payment_period"
     t.string  "reference"
   end
@@ -94,7 +94,7 @@ ActiveRecord::Schema.define(version: 20140624093557) do
     t.float   "initial_vacation_days", :default => { :expr => "(0)::double precision" }
     t.string  "ldapname"
     t.string  "eval_periods",          limit: 3,                              array: true
-    t.integer "departement_id"
+    t.integer "department_id"
     t.index ["shortname"], :name => "chk_unique_name", :unique => true
   end
 

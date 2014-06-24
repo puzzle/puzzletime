@@ -10,12 +10,7 @@ class ProjectsControllerTest < ActionController::TestCase
 
   not_existing :test_show,
                :test_show_json,
-               :test_show_with_non_existing_id_raises_record_not_found,
-               :test_new,
-               :test_create,
-               :test_create_json,
-               :test_destroy,
-               :test_destroy_json
+               :test_show_with_non_existing_id_raises_record_not_found
 
   def test_index_in_department
     get :index, department_id: departments(:devone).id
@@ -51,6 +46,18 @@ class ProjectsControllerTest < ActionController::TestCase
     # not supported here
   end
 
+  def test_destroy
+    assert_raises(RuntimeError) do
+      super
+    end
+  end
+
+  def test_destroy_json
+    assert_raises(RuntimeError) do
+      super
+    end
+  end
+
   private
 
   # Test object used in several tests.
@@ -60,9 +67,17 @@ class ProjectsControllerTest < ActionController::TestCase
 
   # Attribute hash used in several tests.
   def test_entry_attrs
-    { description: 'bla bla',
+    { name: 'My Project',
+      shortname: 'mpr',
+      client_id: test_entry.client_id,
+      description: 'bla bla',
       report_type: HoursWeekType::INSTANCE,
       offered_hours: 500,
+      offered_rate: 200,
+      discount: 5,
+      reference: 'abc',
+      closed: false,
+      portfolio_item_id: 1,
       billable: true,
       freeze_until: Date.today - 1.year,
       description_required: false,

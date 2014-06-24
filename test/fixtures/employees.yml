@@ -12,7 +12,7 @@
 #  initial_vacation_days :float
 #  ldapname              :string(255)
 #  eval_periods          :string(3)        is an Array
-#  departement_id        :integer
+#  department_id         :integer
 #
 
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html

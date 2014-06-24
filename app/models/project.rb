@@ -36,7 +36,6 @@ class Project < ActiveRecord::Base
   PATH_SEPARATOR = '-'
 
   include Evaluatable
-  extend Manageable
   include ReportType::Accessors
 
   acts_as_tree order: 'shortname'
@@ -63,7 +62,6 @@ class Project < ActiveRecord::Base
   validates_presence_of :shortname, message: 'Ein Kürzel muss angegeben werden'
   validates_uniqueness_of :shortname, scope: [:parent_id, :client_id], message: 'Dieses Kürzel wird bereits verwendet'
   validates_presence_of :client_id, message: 'Das Projekt muss einem Kunden zugeordnet sein'
-  validates_presence_of :department_id, message: 'Das Projekt muss einem Geschäftsbereich zugeordnet sein'
   validates :freeze_until, timeliness: { date: true, allow_blank: true }
 
   before_destroy :protect_worktimes
@@ -85,17 +83,11 @@ class Project < ActiveRecord::Base
   end
 
   def client_name
-    client.name
+    client.name if client
   end
 
   def department_name
-    department.name
-  end
-
-  ##### interface methods for Manageable #####
-
-  def self.puzzlebase_map
-    Puzzlebase::CustomerProject
+    department.name if department
   end
 
   def self.top_projects

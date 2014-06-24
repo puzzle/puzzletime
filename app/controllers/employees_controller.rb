@@ -5,7 +5,8 @@
 
 class EmployeesController < ManageController
 
-  self.permitted_attrs = [:initial_vacation_days, :management]
+  self.permitted_attrs = [:firstname, :lastname, :shortname, :email, :ldapname,
+                          :initial_vacation_days, :management]
 
   before_action :authorize, except: [:changePasswd, :update_pwd,
                                      :settings, :update_settings]
