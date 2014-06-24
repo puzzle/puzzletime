@@ -1,7 +1,8 @@
 .entry{'data-date' => day}
-  .title-description
-    .title= worktime_account(worktime)
-    .description= worktime_description(worktime)
+  .title= worktime_account(worktime)
+  .time-range
+    = time_range(worktime)
+  .time-value= format_hour(worktime.hours)
   .controls
     = link_to image_tag('copy.png', size: '16x16'),
               new_polymorphic_url(worktime, template: worktime),
@@ -13,6 +14,5 @@
               title: 'Löschen',
               data: { method: :delete,
                       confirm: ti(:confirm_delete) }
-  .time-value= format_hour(worktime.hours)
-  .time-range= time_range(worktime)
+  .description= worktime_description(worktime)
   = link_to '', edit_polymorphic_url(worktime), {class: 'entry-link'}

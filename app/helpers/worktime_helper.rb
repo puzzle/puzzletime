@@ -22,17 +22,17 @@ module WorktimeHelper
 
     options_for_select.join("\n").html_safe
   end
-  
+
   def worktime_account(worktime)
     worktime.account.label_verbose if worktime.account
   end
-  
+
   def worktime_description(worktime)
     description = worktime.description
     description.insert(0, "#{worktime.ticket} - ") if worktime.ticket.present?
-    description   
+    description
   end
-  
+
   def overview_day_class(worktimes, day)
     if day == Date.today
       'today'
@@ -42,31 +42,31 @@ module WorktimeHelper
       'missing'
     end
   end
-  
+
   def time_range(worktime)
-    result = ""
+    result = "&nbsp;"
     if worktime.from_start_time.present?
-      result = "#{format_time(worktime.from_start_time)} - " 
+      result = "#{format_time(worktime.from_start_time)} - "
       if worktime.to_end_time.present?
         result += format_time(worktime.to_end_time)
       end
     end
-    result
+    result.html_safe
   end
-  
+
   def monthly_worktime
     "#{format_hour(@monthly_worktime)} (#{format_hour(@pending_worktime)} verbleibend)"
   end
-  
+
   def daily_worktimes(worktimes, day)
     worktimes.select{|worktime| worktime.work_date == day}
   end
-  
-  
+
+
   def sum_daily_worktimes(worktimes, day)
     sum_total_worktimes(daily_worktimes(worktimes, day))
   end
-  
+
   def sum_total_worktimes(worktimes)
     worktimes.map(&:hours).inject(0, :+)
   end

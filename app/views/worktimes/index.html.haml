@@ -7,21 +7,26 @@
       Monatliche Arbeitszeit:
       = monthly_worktime
 
-  .weeknav
-    = link_to(image_tag('arrow-left.png', 'size' => '16x16', 'alt' => "Vorherige Woche"), worktimes_url(week_date: @previous_week_date), class: 'week-link')
+  .weeknav-container
+    .weeknav
+      = link_to(image_tag('arrow-left.png', 'size' => '16x16', 'alt' => "Vorherige Woche"), worktimes_url(week_date: @previous_week_date), class: 'weeknav-link')
 
-    .browser
-      %ul.days
-        = render partial: 'overview_day', collection: @week_days, as: :day
-      .control
-        = link_to 'Erfassen', new_projecttime_path, {title: 'Zeit/Abwesenheit erfassen'}
-      .control
-        = date_calendar_field 'date_picker', 'week_date', type: 'hidden', value: @selected_date
-      .total
-        Total:
-        = format_hour(sum_total_worktimes(@worktimes))
+      .browser
+        %ul.weeknav-days
+          = render partial: 'overview_day', collection: @week_days, as: :day
+        .controls
+          .weeknav-element
+            .inner
+              .label Total
+              .time= format_hour(sum_total_worktimes(@worktimes))
+          .weeknav-element
+            .inner
+              = date_calendar_field 'date_picker', 'week_date', type: 'hidden', value: @selected_date
+          .weeknav-element
+            .inner
+              = link_to 'Erfassen', new_projecttime_path, {title: 'Zeit/Abwesenheit erfassen'}
 
-    = link_to(image_tag('arrow-right.png', 'size' => '16x16', 'alt' => "Nächste Woche"), worktimes_url(week_date: @next_week_date), class: 'week-link')
+      = link_to(image_tag('arrow-right.png', 'size' => '16x16', 'alt' => "Nächste Woche"), worktimes_url(week_date: @next_week_date), class: 'weeknav-link')
 
   .weekcontent
     - if @worktimes.present?
