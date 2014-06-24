@@ -1,10 +1,7 @@
-%p
-  = f.label :title, 'Bezeichnung'
-  %br
-  = f.text_field :title
-%table
-  - for employee in @curr_employees
-    %tr
-      %td
-        = check_box_tag "employee_list[employee_ids][]", employee.id, @employee_list.employees.include?(employee)
-        = employee.label
+= crud_form do |f|
+  = f.labeled_text_field :title
+  %table
+    = f.collection_check_boxes :employee_ids, @curr_employees, :id, :label do |b|
+      %tr
+        %td
+          = b.label { b.check_box + ' ' + b.text }
