@@ -1,6 +1,6 @@
 %tr
   %td{:align => "right", :style => "white-space: nowrap;"}= part.time_string
-  %td= part.account ? h(part.account.label_verbose) : 'Anwesenheitszeit'
+  %td= h(part.account.label_verbose)
   %td= h truncate(part.description, :length => 50) if part.description
   - if part.new_record?
     %td

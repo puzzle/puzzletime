@@ -29,7 +29,7 @@ module DryCrud::Table
       action_col do |e|
         path = action_path(e, &block)
         if path
-          table_action_link('zoom-in',
+          table_action_link('Anzeigen',
                             path,
                             html_options.clone)
         end

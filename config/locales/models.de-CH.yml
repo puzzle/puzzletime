@@ -15,8 +15,8 @@ de-CH:
         one: Organisationseinheit
         other: Organisationseinheiten
       employee_list:
-        one: Liste
-        other: Listen
+        one: Mitarbeiterliste
+        other: Mitarbeiterlisten
       employee:
         one: Mitarbeiter
         other: Mitarbeiter

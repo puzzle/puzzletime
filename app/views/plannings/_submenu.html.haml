@@ -1,8 +1,7 @@
-- # TODO: define active_for paths
-= nav 'Meine Planung', :controller => 'plannings', :action => 'my_planning'
-= nav 'Meine Projekte', :controller => 'plannings', :action => 'my_projects'
-= nav 'Mitarbeiter', :controller => 'plannings', :action => 'employees'
-= nav 'Projekte', :controller => 'plannings', :action => 'projects'
-= nav 'Bereiche', :controller => 'plannings', :action => 'departments'
-= nav 'Unternehmen', :controller => 'plannings', :action => 'company_planning'
-= nav 'Listen', :controller => 'plannings', :action => 'employee_lists'
+= nav 'Meine Planung', planning_path('my_planning')
+= nav 'Meine Projekte', planning_path('my_projects')
+= nav 'Mitarbeiter', planning_path('employees'), planning_path('employee_planning')
+= nav 'Projekte', planning_path('projects'), planning_path('project_planning')
+= nav 'Bereiche', planning_path('departments'), planning_path('department_planning')
+= nav 'Unternehmen', planning_path('company_planning')
+= nav 'Listen', employee_lists_path, planning_path('employee_lists_planning')
