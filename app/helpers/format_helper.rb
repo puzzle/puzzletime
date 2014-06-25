@@ -36,10 +36,11 @@ module FormatHelper
   end
 
   def format_hour(hour)
-    hour ||= 0.0
-    minutes = ((hour - hour.floor) * 60).round.to_s.rjust(2, "0")
-    hours = number_with_delimiter(hour.floor, :delimiter => "'")
-    "#{hours}:#{minutes}".html_safe
+    if hour
+      minutes = ((hour - hour.floor) * 60).round.to_s.rjust(2, "0")
+      hours = number_with_delimiter(hour.floor, :delimiter => "'")
+      "#{hours}:#{minutes}".html_safe
+    end
   end
 
   def format_time(time)
