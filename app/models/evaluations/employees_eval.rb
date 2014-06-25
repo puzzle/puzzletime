@@ -24,10 +24,4 @@ class EmployeesEval < Evaluation
      [:overtime_vacations_tooltip, '', 'left']]
   end
 
-  def overview_supplement(user)
-    user.management ? [[:export_capacity_csv, 'Auslastung CSV'],
-                       [:export_extended_capacity_csv, 'Detaillierte Auslastung CSV'],
-                       [:export_ma_overview, 'MA Übersicht']] : super(user)
-  end
-
 end

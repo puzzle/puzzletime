@@ -12,10 +12,7 @@
       %td Total insgesamt
       %td{:align => "right"}= format_hour @evaluation.sum_times(@period)
       %td{:colspan => @evaluation.detail_columns.size - 2}
-      - if @evaluation.for?(@user)
-        %td{:colspan => "2"}= add_time_link(@evaluation.division)
-      - else
-        %td
+      %td
     %tr.times_total_sum
       %td Total verrechenbar
       %td{:align => "right"}= format_hour @evaluation.sum_times(@period, nil, Worktime.where(billable: true))

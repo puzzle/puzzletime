@@ -29,5 +29,9 @@
         evaluation_path('absences'),
         evaluation_path('employeeabsences')
 
+= nav 'Ferienplan', all_absences_graph_path
 
-
+- if @user.management
+  = nav 'Auslastung CSV', evaluation_path('export_capacity_csv')
+  = nav 'Detaillierte Auslastung CSV', evaluation_path('export_extended_capacity_csv')
+  = nav 'MA Übersicht', evaluation_path('export_ma_overview')

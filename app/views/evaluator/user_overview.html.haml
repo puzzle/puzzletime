@@ -2,18 +2,4 @@
 = render(:partial => 'period_link')
 = time_info
 = render(:partial => 'category')
-%p
-  - if @evaluation.absences?
-    = link_to 'Absenz erfassen',
-              :controller => 'absencetimes',
-              :action => 'new'
-    |
-    = link_to 'Mehrwöchige Absenz erfassen',
-              :controller => 'absencetimes',
-              :action => 'add_multi_absence'
-    |
-  - if @user.management
-    = link_to 'Fremderfassen',
-              :controller => worktime_controller,
-              :action => 'new',
-              :other => 1
+
