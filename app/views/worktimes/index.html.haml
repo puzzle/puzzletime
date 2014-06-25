@@ -34,3 +34,7 @@
     - else
       %p
         In dieser Woche wurden noch keine Zeiten erfasst
+
+%p.actions
+  - if @user.management
+    = link_to 'Fremderfassen', new_projecttime_path(other: 1)
