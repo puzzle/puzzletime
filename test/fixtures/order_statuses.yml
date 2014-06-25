@@ -1,0 +1,7 @@
+bearbeitung:
+  name: In Bearbeitung
+  position: 10
+
+abgeschlossen:
+  name: Abgeschlossen
+  position: 20

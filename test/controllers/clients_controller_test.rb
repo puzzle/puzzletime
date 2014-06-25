@@ -13,15 +13,20 @@ class ClientsControllerTest < ActionController::TestCase
                :test_show_with_non_existing_id_raises_record_not_found
 
   def test_destroy
-    assert_raises(RuntimeError) do
-      super
-    end
+    @test_entry = Fabricate(:client)
+    super
   end
 
   def test_destroy_json
-    assert_raises(RuntimeError) do
-      super
+    @test_entry = Fabricate(:client)
+    super
+  end
+
+  def test_destroy_protected
+    assert_no_difference("#{model_class.name}.count") do
+      delete :destroy, test_params(id: test_entry.id)
     end
+    assert_redirected_to_index
   end
 
   private
@@ -33,7 +38,7 @@ class ClientsControllerTest < ActionController::TestCase
 
   # Test object used in several tests.
   def test_entry
-    clients(:swisstopo)
+    @test_entry ||= clients(:swisstopo)
   end
 
   # Attribute hash used in several tests.

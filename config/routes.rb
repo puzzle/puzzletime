@@ -38,6 +38,12 @@ Rails.application.routes.draw do
 
   resources :holidays, except: [:show]
 
+  resources :order_statuses, except: [:show]
+
+  resources :order_kinds, except: [:show]
+
+  resources :portfolio_items, except: [:show]
+
   resources :user_notifications, except: [:show]
 
   concerns :with_projects
