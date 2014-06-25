@@ -17,11 +17,6 @@ class EmployeeProjectsEval < ProjectsEval
     category == user
   end
 
-  def division_supplement(user)
-    return [[:add_time_link, '']] if for?(user)
-    []
-  end
-
   def employee_id
     category.id
   end
