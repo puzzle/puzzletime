@@ -202,9 +202,11 @@ class WorktimesController < CrudController
   end
 
   def assign_attributes
-    params[:other] = 1 if params[model_name.to_s][:employee_id] && @user.management
-    super
-    entry.employee = @user unless record_other?
+    if params[model_name.to_s]
+      params[:other] = 1 if params[model_name.to_s][:employee_id] && @user.management
+      super
+      entry.employee = @user unless record_other?
+    end
   end
 
   def ivar_name(klass)
