@@ -136,6 +136,9 @@ GEM
     pg (0.17.1)
     polyglot (0.3.4)
     powerpack (0.0.9)
+    protective (0.1.0)
+      activerecord
+      activerecord
     pry (0.9.12.6)
       coderay (~> 1.0)
       method_source (~> 0.8)
@@ -290,6 +293,7 @@ DEPENDENCIES
   mysql2
   net-ldap
   pg
+  protective
   pry-debugger
   pry-doc
   pry-nav

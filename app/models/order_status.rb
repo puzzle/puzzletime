@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # == Schema Information
 #
 # Table name: order_statuses
@@ -9,9 +11,11 @@
 
 class OrderStatus < ActiveRecord::Base
 
-  has_many :orders
+  has_many :orders, foreign_key: :status_id
 
   validates :name, :position, uniqueness: true
+
+  protect_if :orders, 'Der Eintrag kann nicht gelöscht werden, da ihm noch Aufträge zugeordnet sind'
 
   scope :list, -> { order(:position) }
 

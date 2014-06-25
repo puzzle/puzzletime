@@ -22,8 +22,7 @@ class Absence < ActiveRecord::Base
   has_many :employees, through: :worktimes
 
   before_destroy :dont_destroy_vacation
-  before_destroy :protect_worktimes
-
+  protect_if :worktimes, 'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Arbeitszeiten zugeordnet sind'
 
   # Validation helpers
   validates_presence_of :name, message: 'Eine Bezeichnung muss angegeben werden'

@@ -64,7 +64,7 @@ class Project < ActiveRecord::Base
   validates_presence_of :client_id, message: 'Das Projekt muss einem Kunden zugeordnet sein'
   validates :freeze_until, timeliness: { date: true, allow_blank: true }
 
-  before_destroy :protect_worktimes
+  protect_if :worktimes, 'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Arbeitszeiten zugeordnet sind'
 
   before_save :remember_name_changes
   # yep, this triggers before_update to generate path_ids after the project got its id and saves it again

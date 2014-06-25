@@ -15,6 +15,9 @@ class Client < ActiveRecord::Base
 
   include Evaluatable
 
+  # must be before associations to prevent their destroy
+  protect_if :worktimes, 'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Arbeitszeiten zugeordnet sind'
+
   # All dependencies between the models are listed below.
   has_many :projects, -> { where(parent_id: nil) }
   has_many :all_projects, class_name: 'Project', dependent: :destroy
@@ -27,7 +30,7 @@ class Client < ActiveRecord::Base
 
   before_save :remember_name_changes
   after_save :update_projects_path_names
-  before_destroy :protect_worktimes
+
 
   scope :list, -> { order('name') }
 
