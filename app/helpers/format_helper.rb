@@ -43,12 +43,11 @@ module FormatHelper
   end
 
   def format_time(time)
-    time ||= Time.zone.now
-    I18n.l(time, format: :time)
+    I18n.l(time, format: :time) if time
   end
 
   def format_day(date)
-    I18n.l(date, format: "%a %e.%-m.")
+    I18n.l(date, format: "%a %e.%-m.") if date
   end
 
   def format_percent(value)

@@ -9,6 +9,12 @@ class ProjecttimesControllerTest < ActionController::TestCase
     assert_not_nil assigns(:worktime)
   end
   
+  def test_show
+    worktime = worktimes(:wt_pz_allgemein)
+    get :show, id: worktime.id
+    assert_redirected_to action: 'index', week_date: worktime.work_date
+  end
+  
   def test_new_with_template
     template = worktimes(:wt_pz_allgemein)
     template.update_attributes(ticket: "123", description: "desc")
