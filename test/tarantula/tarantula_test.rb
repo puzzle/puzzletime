@@ -68,7 +68,6 @@ class TarantulaTest < ActionDispatch::IntegrationTest
     projects = Project.leaves
     5.times do
       project = projects.sample
-      Projectmembership.create(employee_id: user.id, project_id: project.top_project.id, active: true)
       Projecttime.create!(
         employee_id: user.id,
         project_id: project.id,

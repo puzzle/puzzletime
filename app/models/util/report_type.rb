@@ -119,7 +119,7 @@ class AutoStartType < StartStopType
     if worktime.employee
       existing = worktime.employee.send("running_#{worktime.class.name[0..-5].downcase}".to_sym)
       if existing && existing != worktime
-        worktime.errors.add(:employee_id, "Es wurde bereits eine offene #{worktime.class.label} erfasst")
+        worktime.errors.add(:employee_id, "Es wurde bereits eine offene #{worktime.class.model_name.human} erfasst")
       end
     end
   end

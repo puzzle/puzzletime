@@ -1,8 +1,6 @@
 - if @user.management
   = nav 'Mitarbeiter', employees_path, employees_path
   = nav 'Kunden', clients_path, clients_path
-- if @user.management || @user.project_manager?
-  = nav 'Zugehörigkeiten', employee_memberships_path, employee_memberships_path
 - if @user.management
   = nav 'Projekte', projects_path, projects_path
   = nav 'Organisationseinheiten', departments_path, departments_path

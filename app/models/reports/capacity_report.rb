@@ -13,7 +13,7 @@ class CapacityReport < BaseCapacityReport
         monthly_periods.each do |period|
           project_time = 0
           processed_ids = []
-          employee.worked_on_projects.each do |project|
+          employee.alltime_leaf_projects.each do |project|
             # get id of parent project on (max) level 1
             id = project.path_ids[[1, project.path_ids.size - 1].min]
             unless processed_ids.include? id

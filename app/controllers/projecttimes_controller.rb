@@ -113,7 +113,7 @@ class ProjecttimesController < WorktimesController
     time.report_type = StartStopType::INSTANCE
     time.store_hours
     if time.hours < 0.0166
-      append_flash "#{time.class.label} unter einer Minute wird nicht erfasst.\n"
+      append_flash "#{time.class.model_name.human} unter einer Minute wird nicht erfasst.\n"
       time.destroy
       running_time(true)
     else
@@ -125,7 +125,7 @@ class ProjecttimesController < WorktimesController
     if time.save
       append_flash message.sub('#time_string', time.time_string)
     else
-      append_flash "Die #{time.class.label} konnte nicht gespeichert werden:\n"
+      append_flash "Die #{time.class.model_name.human} konnte nicht gespeichert werden:\n"
       time.errors.each { |attr, msg| flash[:notice] += '<br/> - ' + msg + "\n" }
     end
     running_time(true)
