@@ -18,7 +18,6 @@ class ProjecttimesControllerTest < ActionController::TestCase
   def test_create
     post :create, projecttime: { account_id: Project.first,
                                  work_date: Date.today,
-                                 employee_id: Employee.first,
                                  ticket: "#1",
                                  description: "desc",
                                  hours: "5:30"
