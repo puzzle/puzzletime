@@ -27,9 +27,8 @@ class BaseCapacityReport
 
   def employee_absences(employee, period)
     employee.worktimes.includes(:absence).
-                       where("type = 'Absencetime' AND absences.payed AND work_date BETWEEN ? AND ?",
-                             period.startDate,
-                             period.endDate).
+                       in_period(period).
+                       where(type: 'Absencetime', absences: { payed: true }).
                        sum(:hours).
                        to_f
   end

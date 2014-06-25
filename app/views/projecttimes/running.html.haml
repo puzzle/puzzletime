@@ -29,7 +29,7 @@
         %br/
         %b Meine Projekte
   %tbody
-    - @user.leaf_projects.each do |project|
+    - @user.alltime_leaf_projects.each do |project|
       %tr
         %td= project.label_verbose
         %td{:align => "center"}

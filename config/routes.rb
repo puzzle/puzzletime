@@ -2,17 +2,9 @@ Rails.application.routes.draw do
 
   root to: 'worktimes#index'
 
-  concern :memberships do
-    post 'manager/:id', action: 'create_manager'
-    delete 'manager/:id', action: 'destroy_manager'
-    post :membership, action: 'create_membership'
-    delete 'membership/:id', action: 'destroy_membership'
-  end
-
   concern :with_projects do
     resources :projects, except: [:show] do
       resources :projects, except: [:show]
-      resource :project_memberships, only: [:show], concerns: :memberships
 
       collection do
         get :search
@@ -40,12 +32,9 @@ Rails.application.routes.draw do
 
     resources :employments, except: [:show]
     resources :overtime_vacations, except: [:show]
-    resource :employee_memberships, only: [:show], concerns: :memberships
   end
 
   resources :employee_lists
-
-  resource :employee_memberships, only: [:show], concerns: :memberships
 
   resources :holidays, except: [:show]
 

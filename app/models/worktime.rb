@@ -24,6 +24,8 @@
 
 class Worktime < ActiveRecord::Base
 
+  H_M = /^(\d*):([0-5]\d)/
+
   include ReportType::Accessors
   include Conditioner
   extend Evaluatable
@@ -40,7 +42,13 @@ class Worktime < ActiveRecord::Base
 
   before_validation :store_hours
 
-  H_M = /^(\d*):([0-5]\d)/
+  scope :in_period, ->(period) do
+    if period
+      where('work_date BETWEEN ? AND ?', period.startDate, period.endDate)
+    else
+      all
+    end
+  end
 
   ###############  ACCESSORS  ##################
 
@@ -165,7 +173,7 @@ class Worktime < ActiveRecord::Base
   end
 
   def to_s
-    "#{time_string} #{self.class.label} #{'für ' + account.label_verbose if account}"
+    "#{time_string} #{self.class.model_name.human} #{'für ' + account.label_verbose if account}"
   end
 
   ##################  CLASS METHODS   ######################
@@ -182,11 +190,6 @@ class Worktime < ActiveRecord::Base
   end
 
   #######################  CLASS METHODS FOR EVALUATABLE  ####################
-
-  # label for this worktime class
-  def self.label
-    'Arbeitszeit'
-  end
 
   def self.worktimes
     self

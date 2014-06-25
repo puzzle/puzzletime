@@ -16,8 +16,6 @@ class ProjectsController < ManageController
 
   before_action :authorize, only: [:edit, :update, :destroy]
 
-  after_create :set_project_manager
-
   def search
     params[:q] ||= params[:term]
     respond_to do |format|
@@ -44,12 +42,6 @@ class ProjectsController < ManageController
     else
       managed_projects
     end
-  end
-
-  def set_project_manager
-    Projectmembership.create(project_id: entry.id,
-                             employee_id: @user.id,
-                             projectmanagement: true)
   end
 
   def managed_projects

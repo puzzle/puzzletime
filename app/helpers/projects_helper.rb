@@ -22,14 +22,6 @@ module ProjectsHelper
     end
   end
 
-  def project_memberships_path(project)
-    case main_group
-    when nil, Project then project_project_memberships_path(project)
-    when Client then client_project_project_memberships_path(main_group, project)
-    when Department then department_project_project_memberships_path(main_group, project)
-    end
-  end
-
   def group_projects_link(current = group)
     if main_group == current && (!main_group.is_a?(Project) || main_group.parent_id.nil?)
       main_group_link
