@@ -9,8 +9,13 @@
     = hidden_field('worktime', 'account_id')
   = f.labeled_input_field(:ticket)
   = f.labeled_text_area(:description)
-  = f.labeled_date_field(:work_date)
-  = f.labeled_input_field(:from_start_time)
-  = f.labeled_input_field(:to_end_time)
-  = f.labeled_input_field(:hours)
+  = f.labeled(:work_date) do
+    = date_calendar_field 'projecttime',
+                            'work_date',
+                            data: { remote: true,
+                                    url: url_for(action: 'existing'),
+                                    dynamic_params: 'projecttime[employee_id]' }
+  = f.labeled_text_field(:from_start_time, value: format_time(@worktime.from_start_time))
+  = f.labeled_text_field(:to_end_time, value: format_time(@worktime.to_end_time))
+  = f.labeled_input_field(:hours, value: format_hour(@worktime.hours))
   = f.labeled_boolean_field(:billable)

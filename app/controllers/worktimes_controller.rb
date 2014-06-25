@@ -21,6 +21,10 @@ class WorktimesController < CrudController
     set_week_days
     super
   end
+  
+  def show
+    redirect_to action: 'index', week_date: entry.work_date
+  end
 
   def new
     super do |format|
@@ -50,6 +54,14 @@ class WorktimesController < CrudController
       end
     end
   end
+  
+  def update
+    super do |format|
+      if entry.errors.blank?
+        redirect_to action: 'index', week_date: entry.work_date 
+      end
+    end
+  end
 
   def destroy
     super(location: destroy_referer)
@@ -58,14 +70,10 @@ class WorktimesController < CrudController
   # ajax action
   def existing
     @worktime = Worktime.new
-    @worktime.work_date = params[:worktime][:work_date]
-    @worktime.employee_id = @user.management ? params[:worktime][:employee_id].presence || @user.id : @user.id
+    @worktime.work_date = params[controller_name.singularize.to_sym][:work_date]
+    @worktime.employee_id = @user.management ? params[controller_name.singularize.to_sym][:employee_id].presence || @user.id : @user.id
     set_existing
     render 'existing'
-  end
-
-  def self.model_identifier
-    :worktime
   end
 
   protected
@@ -73,7 +81,6 @@ class WorktimesController < CrudController
   def create_default_worktime
     set_period
     entry
-    @worktime.from_start_time = Time.zone.now.change(hour: Settings.defaults.start_hour)
     @worktime.report_type = @user.report_type || Settings.defaults.report_type
     if params[:work_date]
       @worktime.work_date = params[:work_date]
