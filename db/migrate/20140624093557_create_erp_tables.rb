@@ -9,6 +9,12 @@ class CreateErpTables < ActiveRecord::Migration
       t.belongs_to :contract
       t.belongs_to :billing_address
 
+      t.string :target_cost, default: Order::TARGET_RATINGS.first
+      t.string :target_date, default: Order::TARGET_RATINGS.first
+      t.string :target_quality, default: Order::TARGET_RATINGS.first
+      t.string :targets_comment
+      t.datetime :targets_updated_at
+
       t.timestamps
     end
 
@@ -56,19 +62,6 @@ class CreateErpTables < ActiveRecord::Migration
       t.string :country
     end
 
-    create_table :target_scopes do |t|
-      t.string :label, null: false
-    end
-
-    create_table :order_targets do |t|
-      t.belongs_to :target_scope, null: false
-      t.belongs_to :order, null: false
-      t.string :rating
-      t.text :comment
-
-      t.timestamps
-    end
-
     create_table :contacts_orders, primary_key: false do |t|
       t.belongs_to :contact, null: false
       t.belongs_to :order, null: false
@@ -96,6 +89,22 @@ class CreateErpTables < ActiveRecord::Migration
     add_column :employees, :department_id, :integer
 
     #drop_table :projectmemberships
+
+    if Client.column_names.include?('contact')
+      remove_column :clients, :contact
+    end
+
+    %w(Projekt Mandat Support Wartung Support&Wartung Schulung Kleinauftrag Subscriptions).each do |n|
+      OrderKind.create!(name: n)
+    end
+
+    %w(Bearbeitung Abschluss Garantie Abgeschlossen).each_with_index do |n, i|
+      OrderStatus.create!(name: n, position: (i+1) * 10)
+    end
+
+    ['Web Application Development', 'Enterprise Applikation Development', 'Schulung'].each do |n|
+      PortfolioItem.create!(name: n)
+    end
   end
 
   def down
@@ -117,12 +126,9 @@ class CreateErpTables < ActiveRecord::Migration
     remove_column :projects, :offered_rate
     remove_column :projects, :closed
 
-
     drop_table :portfolio_items
     drop_table :employees_orders
     drop_table :contacts_orders
-    drop_table :order_targets
-    drop_table :target_scopes
     drop_table :billing_addresses
     drop_table :contacts
     drop_table :contracts
