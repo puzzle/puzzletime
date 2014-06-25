@@ -132,10 +132,6 @@ class Evaluation
     []
   end
 
-  def overview_supplement(user)
-    []
-  end
-
   def sub_projects_evaluation(division)
     sub_projects_eval if sub_projects_eval && division.sub_projects?
   end

@@ -5,10 +5,12 @@
           worktimes_path,
           projecttimes_path,
           absencetimes_path,
-          all_absences_graph_path,
           weekly_graph_path
     = nav 'Planung', plannings_path(clear: 1), plannings_path, employee_lists_path
-    = nav 'Auswertungen', evaluation_path('userprojects', clear: 1), '/evaluator'
+    = nav 'Auswertungen',
+          evaluation_path('userprojects', clear: 1),
+          '/evaluator',
+          all_absences_graph_path
     = nav 'Verwalten',
           employee_memberships_path,
           absences_path,

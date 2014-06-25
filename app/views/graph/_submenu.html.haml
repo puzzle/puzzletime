@@ -1,2 +1,5 @@
-- if ['weekly', 'all_absences'].include? params[:action]
-  = render :partial => 'worktimes/submenu'
+- case params[:action]
+- when 'weekly'
+  = render 'worktimes/submenu'
+- when 'all_absences'
+  = render 'evaluator/submenu'

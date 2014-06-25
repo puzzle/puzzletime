@@ -48,15 +48,6 @@ module EvaluatorHelper
     end
   end
 
-  def add_time_link(account = nil)
-    linkHash = { action: 'new' }
-    linkHash[:controller] =  worktime_controller
-    if account
-      linkHash[:account_id] = account.id
-    end
-    link_to 'Zeit erfassen', linkHash
-  end
-
   def worktime_controller
     @evaluation.absences? ? 'absencetimes' : 'projecttimes'
   end
