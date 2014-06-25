@@ -18,11 +18,6 @@ class EmployeeAbsencesEval < Evaluation
     category == user
   end
 
-  def division_supplement(user)
-    return [[:add_time_link, '']] if self.for? user
-    super(user)
-  end
-
   def employee_id
     category.id
   end

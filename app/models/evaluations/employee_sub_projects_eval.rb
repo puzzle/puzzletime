@@ -19,11 +19,6 @@ class EmployeeSubProjectsEval < SubProjectsEval
     employee_id == user.id
   end
 
-  def division_supplement(user)
-    return [[:add_time_link, '']] if self.for? user
-    super(user)
-  end
-
   def worktime_query(receiver, period = nil, division = nil)
     super(receiver, period, division).where(employee_id: employee_id)
   end
