@@ -17,6 +17,10 @@ class EmployeeProjectsEval < ProjectsEval
     category == user
   end
 
+  def division_supplement(user)
+    []
+  end
+
   def employee_id
     category.id
   end
