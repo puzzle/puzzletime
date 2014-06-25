@@ -124,12 +124,12 @@ class PlanningsController < CrudController
   end
 
   def planned_employees(department, period)
-    # this could be improved with a many-to-many table relation between Department and Employee
-    projects = Project.where(department_id: department)
-    memberships = Projectmembership.where(project_id: projects.collect { |p|p.id }, active: true)
-    employees = Employee.where(id: memberships.collect { |m| m.employee_id }).includes(:employments).list
+    employees = Employee.where(department_id: department).includes(:employments).list
     period ||= Period.current_month
-    employees.select { |e| e.employment_at(period.startDate).present? || e.employment_at(period.endDate).present? }
+    employees.select do |e|
+      e.employment_at(period.startDate).present? ||
+      e.employment_at(period.endDate).present?
+    end
   end
 
   def assign_attributes

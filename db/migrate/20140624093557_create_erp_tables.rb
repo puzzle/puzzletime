@@ -88,7 +88,7 @@ class CreateErpTables < ActiveRecord::Migration
 
     add_column :employees, :department_id, :integer
 
-    #drop_table :projectmemberships
+    drop_table :projectmemberships
 
     if Client.column_names.include?('contact')
       remove_column :clients, :contact
@@ -108,12 +108,12 @@ class CreateErpTables < ActiveRecord::Migration
   end
 
   def down
-    #create_table :projectmemberships do |t|
-    #  t.integer :project_id, null: false
-    #  t.integer :employee_id, null: false
-    #  t.boolean :projectmanagement, null: false, default: false
-    #  t.boolean :active, null: false, default: true
-    #end
+    create_table :projectmemberships do |t|
+      t.integer :project_id, null: false
+      t.integer :employee_id, null: false
+      t.boolean :projectmanagement, null: false, default: false
+      t.boolean :active, null: false, default: true
+    end
 
     remove_column :employees, :department_id
 

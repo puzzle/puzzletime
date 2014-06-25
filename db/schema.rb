@@ -130,16 +130,16 @@ ActiveRecord::Schema.define(version: 20140626104953) do
   end
 
   create_table "orders", force: true do |t|
-    t.integer  "budget_item_id",     null: false
+    t.integer  "budget_item_id",                       null: false
     t.integer  "kind_id"
     t.integer  "responsible_id"
     t.integer  "status_id"
     t.integer  "department_id"
     t.integer  "contract_id"
     t.integer  "billing_address_id"
-    t.string   "target_cost"
-    t.string   "target_date"
-    t.string   "target_quality"
+    t.string   "target_cost",        default: "green"
+    t.string   "target_date",        default: "green"
+    t.string   "target_quality",     default: "green"
     t.string   "targets_comment"
     t.datetime "targets_updated_at"
     t.datetime "created_at"
@@ -178,13 +178,6 @@ ActiveRecord::Schema.define(version: 20140626104953) do
   create_table "portfolio_items", force: true do |t|
     t.string  "name",                  null: false
     t.boolean "active", default: true, null: false
-  end
-
-  create_table "projectmemberships", force: true do |t|
-    t.integer "project_id",                        null: false
-    t.integer "employee_id",                       null: false
-    t.boolean "projectmanagement", default: false, null: false
-    t.boolean "active",            default: true,  null: false
   end
 
   create_table "projects", force: true do |t|

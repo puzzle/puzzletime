@@ -11,17 +11,23 @@ class ManagedProjectsEval < ProjectsEval
   end
 
   def sum_times_grouped(period)
-    query = Worktime.joins(:project).
-                     joins('INNER JOIN projectmemberships pm ON pm.project_id = ANY (projects.path_ids)').
-                     where(type: 'Projecttime').
-                     where(pm: { active: true, projectmanagement: true, employee_id: category.id }).
-                     group('pm.project_id')
-    query = query.where('work_date BETWEEN ? AND ?', period.startDate, period.endDate) if period
-    query.sum(:hours)
+    Worktime.joins(:project).
+             joins('INNER JOIN orders ON orders.budget_item_id = ANY (projects.path_ids)').
+             where(type: 'Projecttime').
+             where(orders: { responsible_id: category.id }).
+             in_period(period).
+             group('orders.budget_item_id').
+             sum(:hours)
   end
 
   def sum_total_times(period = nil)
-    category.sum_managed_projects_worktime(period)
+    Employee.joins('LEFT JOIN orders ON employees.id = orders.responsible_id').
+             joins('LEFT JOIN projects P ON orders.budget_item_id = P.id').
+             joins('LEFT JOIN projects C ON P.id = ANY (C.path_ids)').
+             joins('LEFT JOIN worktimes T ON C.id = T.project_id').
+             where(employees: { id: 1 }).
+             merge(Worktime.in_period(period)).
+             sum(:hours).to_f
   end
 
 end

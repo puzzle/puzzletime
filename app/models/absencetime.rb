@@ -45,10 +45,6 @@ class Absencetime < Worktime
     'Absenz'
   end
 
-  def self.label
-    'Absenz'
-  end
-
   def self.valid_attributes
     super + [:account, :account_id, :description]
   end
