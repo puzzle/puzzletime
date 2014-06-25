@@ -15,8 +15,9 @@ module FormHelper
     add_css_class(options[:html], 'form-horizontal')
     options[:html][:role] ||= 'form'
     options[:builder] ||= DryCrud::Form::Builder
-    options[:cancel_url] ||= polymorphic_url(object.class, returning: true)
-
+    url_object = Array(object.clone)
+    url_object[-1] = url_object[-1].class if url_object[-1].is_a?(ActiveRecord::Base)
+    options[:cancel_url] ||= polymorphic_url(url_object, returning: true)
     form_for(object, options) do |form|
       render('shared/error_messages', object: Array(object).last) +
       content_tag(:table, yield(form))
