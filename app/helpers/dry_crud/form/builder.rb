@@ -179,7 +179,7 @@ module DryCrud::Form
     # Render a submit button and a cancel link for this form.
     def standard_actions(submit_label = ti('button.save'), cancel_url = nil)
       content_tag(:tr) do
-        content_tag(:td) +
+        content_tag(:td, cancel_link(cancel_url)) +
         content_tag(:td, submit_button(submit_label))
       end
     end

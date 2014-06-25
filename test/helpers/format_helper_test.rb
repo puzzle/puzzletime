@@ -20,7 +20,7 @@ class FormatHelperTest < ActionView::TestCase
   end
 
   test 'format hour' do
-    assert_equal "0:00", format_hour(nil)
+    assert_nil format_hour(nil)
     assert_equal "0:00", format_hour(0.0001)
     assert_equal "0:30", format_hour(0.5)
     assert_equal "8:20", format_hour(8.33333)

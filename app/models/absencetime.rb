@@ -21,6 +21,9 @@
 
 
 class Absencetime < Worktime
+
+  validates :absence, presence: true
+
   def account
     absence
   end

@@ -2,7 +2,7 @@
 
 class AbsencetimesController < WorktimesController
 
-  self.permitted_attrs = [:account_id, :report_type, :work_date, :hours,
+  self.permitted_attrs = [:absence_id, :report_type, :work_date, :hours,
                           :from_start_time, :to_end_time, :description]
 
   before_render_form :set_accounts
