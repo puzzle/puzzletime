@@ -11,11 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 20140626104953) do
-=======
-ActiveRecord::Schema.define(version: 20140624093557) do
->>>>>>> create erp models
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -133,15 +129,6 @@ ActiveRecord::Schema.define(version: 20140624093557) do
     t.integer "position", null: false
   end
 
-  create_table "order_targets", force: true do |t|
-    t.integer  "target_scope_id", null: false
-    t.integer  "order_id",        null: false
-    t.string   "rating"
-    t.text     "comment"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "orders", force: true do |t|
     t.integer  "budget_item_id",     null: false
     t.integer  "kind_id"
@@ -150,6 +137,11 @@ ActiveRecord::Schema.define(version: 20140624093557) do
     t.integer  "department_id"
     t.integer  "contract_id"
     t.integer  "billing_address_id"
+    t.string   "target_cost"
+    t.string   "target_date"
+    t.string   "target_quality"
+    t.string   "targets_comment"
+    t.datetime "targets_updated_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -183,14 +175,11 @@ ActiveRecord::Schema.define(version: 20140624093557) do
     t.decimal  "abstract_amount"
   end
 
-<<<<<<< HEAD
-=======
   create_table "portfolio_items", force: true do |t|
     t.string  "name",                  null: false
     t.boolean "active", default: true, null: false
   end
 
->>>>>>> create erp models
   create_table "projectmemberships", force: true do |t|
     t.integer "project_id",                        null: false
     t.integer "employee_id",                       null: false
@@ -227,13 +216,10 @@ ActiveRecord::Schema.define(version: 20140624093557) do
     t.foreign_key ["parent_id"], "projects", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_project_parent"
   end
 
-<<<<<<< HEAD
-=======
   create_table "target_scopes", force: true do |t|
     t.string "label", null: false
   end
 
->>>>>>> create erp models
   create_table "user_notifications", force: true do |t|
     t.date "date_from", null: false
     t.date "date_to"
