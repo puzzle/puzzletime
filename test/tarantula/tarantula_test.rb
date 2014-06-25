@@ -95,7 +95,7 @@ class TarantulaTest < ActionDispatch::IntegrationTest
         wednesday_am: [true, false].sample,
         wednesday_pm: [true, false].sample,
         thursday_am: [true, false].sample,
-        thursday_pm: [true, false].sample
+        thursday_pm: true # select at least one half day
       )
     end
   end
