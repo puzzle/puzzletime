@@ -1,0 +1,7 @@
+web:
+  name: Webapplikationen
+  active: true
+
+mobile:
+  name: Mobile Applikationen
+  active: true

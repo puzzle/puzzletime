@@ -50,7 +50,7 @@ class Employee < ActiveRecord::Base
   validates_uniqueness_of :ldapname, allow_blank: true, message: 'Dieser LDAP Name wird bereits verwendet'
   validate :periods_format
 
-  before_destroy :protect_worktimes
+  protect_if :worktimes, 'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Arbeitszeiten zugeordnet sind'
 
   scope :list, -> { order('lastname', 'firstname') }
 

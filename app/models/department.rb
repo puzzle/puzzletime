@@ -17,8 +17,8 @@ class Department < ActiveRecord::Base
 
   has_many :all_projects, class_name: 'Project'
 
-  before_destroy :protect_worktimes
-  before_destroy :protect_with_projects
+  protect_if :worktimes, 'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Arbeitszeiten zugeordnet sind'
+  protect_if :projects, 'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Projekte zugeordnet sind'
 
   scope :list, -> { order('name') }
 
@@ -36,12 +36,5 @@ class Department < ActiveRecord::Base
   def self.worktimes
     Worktime.all
   end
-
-  private
-
-  def protect_with_projects
-    fail 'Diesem Eintrag sind Projekte zugeteilt. Er kann nicht entfernt werden.' if projects.exists?
-  end
-
 
 end

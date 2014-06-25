@@ -47,22 +47,27 @@ class ProjectsControllerTest < ActionController::TestCase
   end
 
   def test_destroy
-    assert_raises(RuntimeError) do
-      super
-    end
+    @test_entry = Fabricate(:project)
+    super
   end
 
   def test_destroy_json
-    assert_raises(RuntimeError) do
-      super
+    @test_entry = Fabricate(:project)
+    super
+  end
+
+  def test_destroy_protected
+    assert_no_difference("#{model_class.name}.count") do
+      delete :destroy, test_params(id: test_entry.id)
     end
+    assert_redirected_to_index
   end
 
   private
 
   # Test object used in several tests.
   def test_entry
-    projects(:webauftritt)
+    @test_entry ||= projects(:webauftritt)
   end
 
   # Attribute hash used in several tests.
