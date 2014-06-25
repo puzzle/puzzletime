@@ -40,13 +40,12 @@ class Project < ActiveRecord::Base
 
   acts_as_tree order: 'shortname'
 
-  # All dependencies between the models are listed below.
-  has_many :projectmemberships,
-           dependent: :destroy
 
   belongs_to :department
   belongs_to :client
   belongs_to :portfolio_item
+
+  has_one :order
 
   has_many :worktimes,
            ->(project) do

@@ -28,16 +28,10 @@ class Employee < ActiveRecord::Base
   has_and_belongs_to_many :employee_lists
 
   has_many :employments, dependent: :destroy
-  has_many :projectmemberships,
-           dependent: :destroy
-  has_many :projects,
-           -> { where(projectmemberships: { active: true }) },
-           through: :projectmemberships
-  has_many :clients, -> { order('shortname') }, through: :projects
-  has_many :managed_projects,
-           -> { where(projectmemberships: { projectmanagement: true, active: true }) },
-           class_name: 'Project',
-           through: :projectmemberships
+  #has_many :projects,
+  #         -> { where(projectmemberships: { active: true }) },
+  #         through: :projectmemberships
+  #has_many :clients, -> { order('shortname') }, through: :projects
   has_many :absences,
            -> { order('name').uniq },
            through: :worktimes
@@ -100,7 +94,6 @@ class Employee < ActiveRecord::Base
 
   def before_create
     self.passwd = ''    # disable password login
-    projectmemberships.build(project_id: Settings.default_project_id)
   end
 
   def check_passwd(pwd)
@@ -111,20 +104,14 @@ class Employee < ActiveRecord::Base
     update_attributes!(passwd: Employee.encode(pwd))
   end
 
-  # Sums the worktimes of all managed projects.
-  def sum_managed_projects_worktime(period)
-    sql = 'SELECT sum(hours) AS sum ' \
-          'FROM (((employees E LEFT JOIN projectmemberships PM ON E.id = PM.employee_id) ' +
-	        ' LEFT JOIN projects P ON PM.project_id = P.id)' +
-          ' LEFT JOIN projects C ON P.id = ANY (C.path_ids))' +
-          ' LEFT JOIN worktimes T ON C.id = T.project_id ' +
-          "WHERE E.id = #{id} AND PM.projectmanagement"
-    sql += " AND T.work_date BETWEEN '#{period.startDate}' AND '#{period.endDate}'" if period
-    self.class.connection.select_value(sql).to_f
+  def managed_projects
+    Project.select("DISTINCT projects.*").
+            joins('INNER JOIN orders ON orders.budget_item_id = projects.id').
+            where(orders: { responsible_id: id })
   end
 
-  # parent projects this employee ever worked on
-  def alltime_projects
+  # main projects this employee ever worked on
+  def alltime_main_projects
     Project.select("DISTINCT projects.*").
             joins('RIGHT JOIN projects leaves ON leaves.path_ids[1] = projects.id').
             joins('RIGHT JOIN worktimes ON worktimes.project_id = leaves.id').
@@ -133,17 +120,12 @@ class Employee < ActiveRecord::Base
             list
   end
 
-  def worked_on_projects
-    Project.find_by_sql ['SELECT DISTINCT pw.* FROM worktimes w ' \
-                'LEFT JOIN projects pw ON w.project_id = pw.id ' \
-                'WHERE w.employee_id = ? AND pw.id IS NOT NULL ' \
-                'ORDER BY pw.path_shortnames', id]
-  end
-
-  # the leaf projects of the given list or of the current membership projects
-  def leaf_projects(list = nil)
-    list ||= projects
-    list.collect { |p| p.leaves }.flatten.uniq
+  def alltime_leaf_projects
+    Project.select("DISTINCT projects.*").
+            joins('RIGHT JOIN worktimes ON worktimes.project_id = projects.id').
+            where(worktimes: { employee_id: id} ).
+            where('projects.id IS NOT NULL').
+            list
   end
 
   def statistics

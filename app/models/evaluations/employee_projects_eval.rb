@@ -4,7 +4,7 @@ class EmployeeProjectsEval < ProjectsEval
 
   self.category_ref      = :employee_id
   self.sub_evaluation    = nil
-  self.division_method   = :alltime_projects
+  self.division_method   = :alltime_main_projects
   self.sub_projects_eval = 'employeesubprojects'
   self.detail_columns    = detail_columns.collect { |i| i == :hours ? :times : i }
 
@@ -29,7 +29,7 @@ class EmployeeProjectsEval < ProjectsEval
     sub_projects_eval + employee_id.to_s if project && project.sub_projects?
   end
 
-  # default would turn Employee.alltime_projects too complicated
+  # default would turn Employee.alltime_main_projects too complicated
   def set_division_id(division_id = nil)
     return if division_id.nil?
     @division = Project.find(division_id.to_i)

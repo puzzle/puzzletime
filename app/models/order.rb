@@ -42,6 +42,8 @@ class Order < ActiveRecord::Base
   validates :target_cost, :target_date, :target_quality, inclusion: TARGET_RATINGS
   validates :targets_comment, presence: { if: :target_critical? }
 
+  # TODO: validate only one order per budget_items path_ids
+
   scope :list, -> do
     includes(:budget_item).
     references(:budget_item).

@@ -98,8 +98,7 @@ class Evaluation
   end
 
   def worktime_query(receiver, period = nil, division = nil)
-    query = receiver.worktimes.where(type: worktime_type)
-    query = query.where('work_date BETWEEN ? AND ?', period.startDate, period.endDate) if period
+    query = receiver.worktimes.where(type: worktime_type).in_period(period)
     query = query.where("? = #{category_ref}", category_id) if division && category_ref
     query
   end
@@ -119,7 +118,7 @@ class Evaluation
   # Returns the class name of the division objects.
   def division_header
     divs = divisions
-    divs.respond_to?(:klass) ? divs.klass.label : ''
+    divs.respond_to?(:klass) ? divs.klass.model_name.human : ''
   end
 
   # Returns a two-dimensional Array with helper methods of the evaluator
@@ -222,7 +221,7 @@ class Evaluation
 
   def detail_label(item)
     return '' if item.nil? || item.kind_of?(Class)
-    item.class.label + ': ' + item.label
+    item.class.model_name.human + ': ' + item.label
   end
 
   def class_category?

@@ -30,9 +30,7 @@ class OvertimeVacation < ActiveRecord::Base
   end
 
   def to_s
-    result = "von #{hours} Stunden"
-    result << " am #{I18n.l(transfer_date)}" if transfer_date
-    result
+    "von #{hours} Stunden#{" am #{I18n.l(transfer_date)}" if transfer_date}"
   end
 
   ##### caching #####

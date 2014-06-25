@@ -31,8 +31,8 @@ class EmployeeStatistics
   # Returns the used vacation days for the given period
   def used_vacations(period)
     return 0 if period.nil?
-    @employee.worktimes.where('absence_id = ? AND (work_date BETWEEN ? AND ?)',
-                              Settings.vacation_id, period.startDate, period.endDate).
+    @employee.worktimes.in_period(period).
+                        where(absence_id: Settings.vacation_id).
                         sum(:hours).to_f / 8.0
   end
 
@@ -77,14 +77,9 @@ class EmployeeStatistics
 
     # Returns the hours this employee worked plus the payed absences for the given period.
   def payed_worktime(period)
-    condArray = ['((project_id IS NOT NULL AND absence_id IS NULL) OR absences.payed)']
-    if period
-      condArray[0] += ' AND (work_date BETWEEN ? AND ?)'
-      condArray.push period.startDate
-      condArray.push period.endDate
-    end
     @employee.worktimes.joins('LEFT JOIN absences ON absences.id = absence_id').
-                        where(condArray).
+                        in_period(period).
+                        where('((project_id IS NOT NULL AND absence_id IS NULL) OR absences.payed)').
                         sum(:hours).
                         to_f
   end
