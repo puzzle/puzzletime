@@ -1,8 +1,17 @@
 = standard_form(@worktime) do |f|
-  = f.belongs_to_field(:absence)
+  / TODO: employee selection for 'fremderfassen'
+  = f.belongs_to_field(:absence_id)
   = f.labeled_text_area(:description)
-  = f.labeled_date_field(:work_date)
-  = f.labeled_input_field(:from_start_time)
-  = f.labeled_input_field(:to_end_time)
-  = f.labeled_input_field(:hours)
+  = f.labeled(:work_date) do
+    = date_calendar_field 'absencetime',
+                          'work_date',
+                          value: @worktime.work_date,
+                          data: { remote: true,
+                                  url: url_for(action: 'existing'),
+                                  dynamic_params: 'absencetime[employee_id]' }
+  = f.labeled_text_field(:from_start_time, value: format_time(@worktime.from_start_time))
+  = f.labeled_text_field(:to_end_time, value: format_time(@worktime.to_end_time))
+  = f.labeled_input_field(:hours, value: format_hour(@worktime.hours))
+  / TODO: add report types absolute_day, week and month
   = f.static_text(link_to 'Mehrwöchige Absenz', add_multi_absence_absencetimes_path)
+
