@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # == Schema Information
 #
 # Table name: portfolio_items
@@ -12,6 +14,8 @@ class PortfolioItem < ActiveRecord::Base
   has_many :budget_items, class_name: 'Project'
 
   scope :list, -> { order(:name) }
+
+  protect_if :budget_items, 'Der Eintrag kann nicht gelöscht werden, da ihm noch Budgetpositionen zugeordnet sind'
 
   validates :name, uniqueness: true
 
