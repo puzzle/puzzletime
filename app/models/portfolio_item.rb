@@ -9,7 +9,7 @@
 
 class PortfolioItem < ActiveRecord::Base
 
-  has_many :budget_items
+  has_many :budget_items, class_name: 'Project'
 
   scope :list, -> { order(:name) }
 
