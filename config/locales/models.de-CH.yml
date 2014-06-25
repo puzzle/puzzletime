@@ -120,7 +120,7 @@ de-CH:
         billable: Verrechenbar
         freeze_until: Eingefroren vor
         description_required: Beschreibung nötig
-        ticket_required: Ticket/Task nötig
+        ticket_required: Ticket nötig
       projectmembership:
         project_id: Projekt
         employee_id: Mitarbeiter
@@ -143,4 +143,5 @@ de-CH:
         description: Beschreibung
         billable: Verrechenbar
         booked: Verbucht
-        ticket: Ticket/Task
+        ticket: Ticket
+        account: Auftrag

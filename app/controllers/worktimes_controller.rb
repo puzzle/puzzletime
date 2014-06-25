@@ -21,6 +21,10 @@ class WorktimesController < CrudController
     set_week_days
     super
   end
+  
+  def show
+    redirect_to action: 'index', week_date: entry.work_date
+  end
 
   def new
     super do |format|
@@ -35,18 +39,18 @@ class WorktimesController < CrudController
 
 
   def create
+    entry.report_type = HoursDayType::INSTANCE #todo: implement real report_type
     super do |format|
-      format.html do
-        if @worktime.errors.blank?
-          if params[:commit] == FINISH
-            redirect_to index_url
-          else
-            @worktime = @worktime.template
-            render 'new'
-          end
-        else
-          render 'new'
-        end
+      if entry.errors.blank?
+        redirect_to action: 'index', week_date: entry.work_date
+      end
+    end
+  end
+  
+  def update
+    super do |format|
+      if entry.errors.blank?
+        redirect_to action: 'index', week_date: entry.work_date 
       end
     end
   end
@@ -58,22 +62,21 @@ class WorktimesController < CrudController
   # ajax action
   def existing
     @worktime = Worktime.new
-    @worktime.work_date = params[:worktime][:work_date]
-    @worktime.employee_id = @user.management ? params[:worktime][:employee_id].presence || @user.id : @user.id
+    @worktime.work_date = params[model_name.to_s][:work_date]
+    @worktime.employee_id = @user.management ? params[model_name.to_s][:employee_id].presence || @user.id : @user.id
     set_existing
     render 'existing'
   end
 
-  def self.model_identifier
-    :worktime
-  end
-
   protected
-
+  
+  def model_name
+    controller_name.singularize
+  end
+  
   def create_default_worktime
     set_period
     entry
-    @worktime.from_start_time = Time.zone.now.change(hour: Settings.defaults.start_hour)
     @worktime.report_type = @user.report_type || Settings.defaults.report_type
     if params[:work_date]
       @worktime.work_date = params[:work_date]
@@ -153,7 +156,7 @@ class WorktimesController < CrudController
     @work_date = @worktime.work_date
     @existing = Worktime.where('employee_id = ? AND work_date = ?', @worktime.employee_id, @work_date).
                          order('type DESC, from_start_time, project_id').
-                         includes(:project)
+                         includes(:project, :absence)
   end
 
   def set_week_days
@@ -199,9 +202,11 @@ class WorktimesController < CrudController
   end
 
   def assign_attributes
-    params[:other] = 1 if params[:worktime][:employee_id] && @user.management
-    super
-    entry.employee = @user unless record_other?
+    if params[model_name.to_s]
+      params[:other] = 1 if params[model_name.to_s][:employee_id] && @user.management
+      super
+      entry.employee = @user unless record_other?
+    end
   end
 
   def ivar_name(klass)
