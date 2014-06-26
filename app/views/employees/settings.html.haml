@@ -3,10 +3,6 @@
 = form_tag settings_employees_path do
   %table
     %tr
-      %td Default Report Typ:
-      %td
-        = select 'user', 'report_type', ReportType::INSTANCES.collect {|type| [type.name, type.key]}, {:selected => @user.report_type ? @user.report_type.key : nil} |
-    %tr
       %td{:colspan => "2"}
         %br>/
         Angezeigte aktuelle Zeitspannen:
