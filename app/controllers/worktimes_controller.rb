@@ -37,9 +37,8 @@ class WorktimesController < CrudController
     end
   end
 
-
   def create
-    entry.report_type = HoursDayType::INSTANCE #todo: implement real report_type
+    set_times(entry)
     super do |format|
       if entry.errors.blank?
         redirect_to action: 'index', week_date: entry.work_date
@@ -48,6 +47,7 @@ class WorktimesController < CrudController
   end
   
   def update
+    set_times(entry)
     super do |format|
       if entry.errors.blank?
         redirect_to action: 'index', week_date: entry.work_date 
@@ -77,7 +77,6 @@ class WorktimesController < CrudController
   def create_default_worktime
     set_period
     entry
-    @worktime.report_type = @user.report_type || Settings.defaults.report_type
     if params[:work_date]
       @worktime.work_date = params[:work_date]
     elsif @period && @period.length == 1
@@ -216,4 +215,16 @@ class WorktimesController < CrudController
   def evaluation_detail_params
     params.slice(:evaluation, :category_id, :division_id, :start_date, :end_date, :page)
   end
+
+  def set_times(entry)
+    if params[model_name.to_s][:from_start_time].present? || params[model_name.to_s][:to_end_time].present?
+      entry.hours = nil
+      entry.report_type = StartStopType::INSTANCE
+    else
+      entry.from_start_time = nil
+      entry.to_end_time = nil
+      entry.report_type = HoursDayType::INSTANCE
+    end
+  end
+
 end
