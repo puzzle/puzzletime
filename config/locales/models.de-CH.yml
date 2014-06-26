@@ -73,7 +73,6 @@ de-CH:
         ldapname: LDAP Name
         current_percent: Prozent
         default_project_id: Default Projekt
-        user_periods: Zeitspannen Eigene Zeit
         eval_periods: Zeitspannen Auswertungen
       employment:
         employee_id: Mitarbeiter

@@ -358,8 +358,7 @@ class EvaluatorController < ApplicationController
     if @period
       [@period]
     else
-      periods = user_view? ? @user.user_periods : @user.eval_periods
-      periods.collect { |p| Period.parse(p) }
+      @user.eval_periods.collect { |p| Period.parse(p) }
     end
   end
 
