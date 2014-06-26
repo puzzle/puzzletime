@@ -21,7 +21,7 @@ class WorktimesController < CrudController
     set_week_days
     super
   end
-  
+
   def show
     redirect_to action: 'index', week_date: entry.work_date
   end
@@ -45,7 +45,7 @@ class WorktimesController < CrudController
       end
     end
   end
-  
+
   def update
     set_times(entry)
     super do |format|
@@ -217,7 +217,7 @@ class WorktimesController < CrudController
   end
 
   def set_times(entry)
-    if params[model_name.to_s][:from_start_time].present? || params[model_name.to_s][:to_end_time].present?
+    if params[model_name.to_s] && (params[model_name.to_s][:from_start_time].present? || params[model_name.to_s][:to_end_time].present?)
       entry.hours = nil
       entry.report_type = StartStopType::INSTANCE
     else
