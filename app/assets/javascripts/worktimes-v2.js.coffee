@@ -87,3 +87,16 @@ $ ->
     selectedDate = $('.worktimes').data('selectedDate')
     if selectedDate && $('.worktimes .weeknav .day[data-date="' + selectedDate + '"]').size()
       $('.worktimes .weeknav .day[data-date="' + selectedDate + '"]').click()
+
+  $('#projecttime_hours').blur ->
+    toggle('#projecttime_from_start_time', $(this).val())
+    toggle('#projecttime_to_end_time', $(this).val())
+  $('#projecttime_from_start_time').blur ->
+    toggle('#projecttime_hours', $(this).val() || $('#projecttime_to_end_time').val())
+  $('#projecttime_to_end_time').blur ->
+    toggle('#projecttime_hours', $(this).val() || $('#projecttime_from_start_time').val())
+  
+  toggle = (selector_id, disable) ->
+    $(selector_id).prop('disabled', disable);
+    if disable
+      $(selector_id).val('');
