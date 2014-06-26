@@ -72,7 +72,6 @@ de-CH:
         initial_vacation_days: Anfängliche Ferien
         ldapname: LDAP Name
         current_percent: Prozent
-        default_project_id: Default Projekt
         eval_periods: Zeitspannen Auswertungen
       employment:
         employee_id: Mitarbeiter

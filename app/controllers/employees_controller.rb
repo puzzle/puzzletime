@@ -15,7 +15,7 @@ class EmployeesController < ManageController
   end
 
   def update_settings
-    attrs = params.require(:user).permit(:default_project_id, eval_periods: [])
+    attrs = params.require(:user).permit(eval_periods: [])
     if @user.update_attributes(attrs)
       flash[:notice] =  'Die Benutzereinstellungen wurden aktualisiert'
       redirect_to root_path

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140626103731) do
+ActiveRecord::Schema.define(version: 20140626104953) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,7 +55,6 @@ ActiveRecord::Schema.define(version: 20140626103731) do
     t.boolean "management",                      default: false
     t.float   "initial_vacation_days",           default: 0.0
     t.string  "ldapname"
-    t.integer "default_project_id"
     t.string  "eval_periods",          limit: 3,                              array: true
     t.index ["shortname"], :name => "chk_unique_name", :unique => true
   end
