@@ -3,43 +3,9 @@
 = form_tag settings_employees_path do
   %table
     %tr
-      %td{:colspan => "2"}
-        %br>/
-        Angezeigte aktuelle Zeitspannen:
-    %tr{:valign => "top"}
-      %td &nbsp; Eigene Zeit
       %td
-        %table{:cellpadding => "0", :cellspacing => "0"}
-          %tr{:valign => "top"}
-            %td
-              = multiple_check_box 'user', 'user_periods', '0d'
-              Heute
-              %br/
-              = multiple_check_box 'user', 'user_periods', '-1d'
-              Gestern
-            %td
-              = multiple_check_box 'user', 'user_periods', '0w'
-              Aktuelle Woche
-              %br/
-              = multiple_check_box 'user', 'user_periods', '-1w'
-              Vorige Woche
-            %td
-              = multiple_check_box 'user', 'user_periods', '0m'
-              Aktueller Monat
-              %br/
-              = multiple_check_box 'user', 'user_periods', '-1m'
-              Voriger Monat
-            %td
-              = multiple_check_box 'user', 'user_periods', '0y'
-              Aktuelles Jahr
-              %br/
-              = multiple_check_box 'user', 'user_periods', '-1y'
-              Voriges Jahr
-            %td
-              = multiple_check_box 'user', 'user_periods', '0'
-              Total
-    %tr{:valign => "top"}
-      %td &nbsp; Auswertungen
+        Zeitspannen:
+    %tr
       %td
         %table{:cellpadding => "0", :cellspacing => "0"}
           %tr{:valign => "top"}
@@ -71,7 +37,6 @@
               = multiple_check_box 'user', 'eval_periods', '0'
               Total
     %tr
-      %td
       %td= submit_tag 'Speichern'
 %br/
 %br/
