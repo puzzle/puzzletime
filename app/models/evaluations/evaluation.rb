@@ -47,7 +47,7 @@ class Evaluation
                             billable: '$',
                             booked: '&beta;'.html_safe,
                             ticket: 'Ticket',
-                            description: 'Beschreibung' }
+                            description: 'Bemerkungen' }
 
 
   attr_reader :category,             # category
@@ -191,7 +191,7 @@ class Evaluation
   def csv_string(period)
     CSV.generate do |csv|
       csv << ['Datum', 'Stunden', 'Von Zeit', 'Bis Zeit', 'Reporttyp',
-              'Verrechenbar', 'Mitarbeiter', 'Projekt', 'Ticket', 'Beschreibung']
+              'Verrechenbar', 'Mitarbeiter', 'Projekt', 'Ticket', 'Bemerkungen']
       times(period).each do |time|
         csv << [I18n.l(time.work_date),
                 time.hours,

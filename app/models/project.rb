@@ -164,7 +164,7 @@ class Project < ActiveRecord::Base
     end
 
     if worktime.report_type != AutoStartType::INSTANCE && description_required? && worktime.description.blank?
-      worktime.errors.add(:description, 'Es muss eine Beschreibung angegeben werden')
+      worktime.errors.add(:description, 'Es muss eine Bemerkung angegeben werden')
     end
 
     if worktime.report_type != AutoStartType::INSTANCE && ticket_required? && worktime.ticket.blank?

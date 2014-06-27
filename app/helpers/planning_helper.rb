@@ -189,7 +189,7 @@ module PlanningHelper
     result << " href=\"#{edit_planning_path(planning)}\">&nbsp;"
     result << '<span>'
     result << "Projekt: #{h(planning.project.label)}<br>"
-    result << 'Beschreibung: '
+    result << 'Bemerkungen: '
     if planning.description.present?
       result << "#{h(planning.description)}"
     else

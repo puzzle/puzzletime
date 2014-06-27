@@ -91,7 +91,7 @@ de-CH:
         start_week: Start
         end_week: Bis KW
         definitive: Definitiv
-        description: Beschreibung
+        description: Bemerkungen
         monday_am: Montag Vormittag
         monday_pm: Montag Nachmittag
         tuesday_am: Dienstag Vormittag
@@ -111,12 +111,12 @@ de-CH:
         shortname: Kürzel
         client_name: Kunde
         department_name: Geschäftsbereich
-        description: Beschreibung
+        description: Bemerkungen
         report_type: Reporttyp
         offered_hours: Offerierte Stunden
         billable: Verrechenbar
         freeze_until: Eingefroren vor
-        description_required: Beschreibung nötig
+        description_required: Bemerkung nötig
         ticket_required: Ticket nötig
       projectmembership:
         project_id: Projekt
@@ -137,7 +137,7 @@ de-CH:
         hours: Stunden
         from_start_time: Von
         to_end_time: Bis
-        description: Beschreibung
+        description: Bemerkungen
         billable: Verrechenbar
         booked: Verbucht
         ticket: Ticket
