@@ -53,6 +53,8 @@ de-CH:
         name: Bezeichnung
         payed: Bezahlt
         private: Nicht öffentlich
+      absencetime:
+        duration: Dauer
       client:
         name: Name
         shortname: Kürzel
@@ -131,6 +133,7 @@ de-CH:
       worktime:
         project_id: Projekt
         absence_id: Absenz
+        absence: Absenz
         employee_id: Mitarbeiter
         report_type: Reporttyp
         work_date: Datum

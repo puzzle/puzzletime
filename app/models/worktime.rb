@@ -84,7 +84,7 @@ class Worktime < ActiveRecord::Base
 
   # Returns a human readable String of the time information contained in this Worktime.
   def time_string
-    report_type.time_string(self)
+    report_type.time_string(self) if report_type
   end
 
   # Returns the date formatted according to the report type

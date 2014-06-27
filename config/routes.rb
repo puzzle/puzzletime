@@ -81,8 +81,6 @@ Rails.application.routes.draw do
   resources :absencetimes do
     collection do
       get :existing
-      get :add_multi_absence
-      post :create_multi_absence
     end
   end
 
