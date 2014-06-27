@@ -1,6 +1,6 @@
 = standard_form(@worktime) do |f|
   / TODO: employee selection for 'fremderfassen'
-  = f.belongs_to_field(:absence_id)
+  = f.labeled(:absence_id, f.belongs_to_field(:absence_id))
   = f.labeled_text_area(:description)
   = f.labeled(:work_date) do
     = date_calendar_field 'absencetime',
@@ -12,6 +12,8 @@
   = f.labeled_text_field(:from_start_time, value: format_time(@worktime.from_start_time))
   = f.labeled_text_field(:to_end_time, value: format_time(@worktime.to_end_time))
   = f.labeled_input_field(:hours, value: format_hour(@worktime.hours))
-  / TODO: add report types absolute_day, week and month
-  = f.static_text(link_to 'Mehrwöchige Absenz', add_multi_absence_absencetimes_path)
-
+  - if @worktime.new_record?
+    = f.static_text(link_to 'Mehrwöchige Absenz', 'javascript:;', id: 'multi_absence_link')
+    = f.static_text(link_to 'Reguläre Absenz', 'javascript:;', id: 'regular_absence_link')
+    = f.labeled_input_field(:duration, value: '1', addon: 'Wochen<br>Beim Erfassen von mehrwöchigen Absenzen wird für jeden Arbeitstag in der angegebenen Zeitspanne eine Absenz mit der Dauer des durchschnittlichen Tages-Solls erzeugt.'.html_safe)
+    = f.input_field(:create_multi, value: @create_multi, type: 'hidden')

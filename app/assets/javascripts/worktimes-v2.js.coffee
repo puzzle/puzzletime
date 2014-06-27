@@ -88,6 +88,7 @@ $ ->
     if selectedDate && $('.worktimes .weeknav .day[data-date="' + selectedDate + '"]').size()
       $('.worktimes .weeknav .day[data-date="' + selectedDate + '"]').click()
 
+  # toggle from/to and hour input fields
   $('#projecttime_hours').blur ->
     toggle('#projecttime_from_start_time', $(this).val())
     toggle('#projecttime_to_end_time', $(this).val())
@@ -95,8 +96,59 @@ $ ->
     toggle('#projecttime_hours', $(this).val() || $('#projecttime_to_end_time').val())
   $('#projecttime_to_end_time').blur ->
     toggle('#projecttime_hours', $(this).val() || $('#projecttime_from_start_time').val())
-  
+  $('#absencetime_hours').blur ->
+    toggle('#absencetime_from_start_time', $(this).val())
+    toggle('#absencetime_to_end_time', $(this).val())
+  $('#absencetime_from_start_time').blur ->
+    toggle('#absencetime_hours', $(this).val() || $('#absencetime_to_end_time').val())
+  $('#absencetime_to_end_time').blur ->
+    toggle('#absencetime_hours', $(this).val() || $('#absencetime_from_start_time').val())
+
   toggle = (selector_id, disable) ->
-    $(selector_id).prop('disabled', disable);
+    $(selector_id).prop('disabled', disable)
     if disable
-      $(selector_id).val('');
+      $(selector_id).val('')
+
+  # show regular absence on load, toggle when clicking on multi absence link
+  if $('#absencetime_create_multi').val()
+    # todo: fix showMultiAbsence() error
+    $('#absencetime_create_multi').val('true')
+    $('tr:nth-child(4)').hide()
+    $('tr:nth-child(5)').hide()
+    $('tr:nth-child(6)').hide()
+    $('tr:nth-child(7)').show()
+    $('#regular_absence_link').show()
+    $('#multi_absence_link').hide()
+  else
+    # todo: fix showRegularAbsence() error
+    $('#absencetime_create_multi').val('')
+    $('tr:nth-child(4)').show()
+    $('tr:nth-child(5)').show()
+    $('tr:nth-child(6)').show()
+    $('tr:nth-child(7)').hide()
+    $('#multi_absence_link').show()
+    $('#regular_absence_link').hide()
+
+  $('#multi_absence_link').click ->
+    showMultiAbsence()
+  $('#regular_absence_link').click ->
+    showRegularAbsence()
+
+  showMultiAbsence = () ->
+    $('#absencetime_create_multi').val('true')
+    $('tr:nth-child(4)').hide()
+    $('tr:nth-child(5)').hide()
+    $('tr:nth-child(6)').hide()
+    $('tr:nth-child(7)').show()
+    $('#regular_absence_link').show()
+    $('#multi_absence_link').hide()
+
+  showRegularAbsence = () ->
+    $('#absencetime_create_multi').val('')
+    $('tr:nth-child(4)').show()
+    $('tr:nth-child(5)').show()
+    $('tr:nth-child(6)').show()
+    $('tr:nth-child(7)').hide()
+    $('#multi_absence_link').show()
+    $('#regular_absence_link').hide()
+

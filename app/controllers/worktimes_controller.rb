@@ -50,7 +50,7 @@ class WorktimesController < CrudController
     set_times(entry)
     super do |format|
       if entry.errors.blank?
-        redirect_to action: 'index', week_date: entry.work_date 
+        redirect_to action: 'index', week_date: entry.work_date
       end
     end
   end
@@ -69,11 +69,11 @@ class WorktimesController < CrudController
   end
 
   protected
-  
+
   def model_name
     controller_name.singularize
   end
-  
+
   def create_default_worktime
     set_period
     entry
