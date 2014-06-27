@@ -1,3 +1,4 @@
+# encoding: utf-8
 class AbsencetimesController < WorktimesController
 
   self.permitted_attrs = [:absence_id, :report_type, :work_date, :hours,
