@@ -37,6 +37,8 @@ class TarantulaTest < ActionDispatch::IntegrationTest
     t.allow_404_for /employee_lists(\/\d+)?$/   # invalid employee_ids assigned
     t.allow_404_for /evaluator\/details\?category_id=(0|\d{5,12})\&/   # invalid category
 
+    t.handlers << Relevance::Tarantula::InvalidHtmlHandler.new
+
     t.crawl_timeout = 20.minutes
   end
 
