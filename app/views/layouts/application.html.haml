@@ -36,8 +36,8 @@
           = render 'breadcrumb'
 
       %h1= @title
-      - if flash.key?('notice')
-        #notice= flash[:notice].html_safe
+      #flash
+        = render partial: 'layouts/flash', collection: [:notice, :alert], as: :level
       %div
         = yield
 

@@ -71,9 +71,13 @@ module DryCrud::Form
       text_field(attr, html_options)
     end
 
+    def text_field(attr, html_options)
+      add_css_class(html_options, 'form-control')
+      super(attr, html_options)
+    end
+
     # Render a boolean field.
     def boolean_field(attr, html_options = {})
-      add_css_class(html_options, 'form-control')
       check_box(attr, html_options)
     end
 
@@ -81,6 +85,7 @@ module DryCrud::Form
     def text_area(attr, html_options = {})
       html_options[:rows] ||= 8
       html_options[:cols] ||= 50
+      add_css_class(html_options, 'form-control')
       super
     end
 
