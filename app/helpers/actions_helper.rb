@@ -13,6 +13,17 @@ module ActionsHelper
     link_to(label, url, html_options)
   end
 
+  # Outputs an icon for an action with an optional label.
+  def action_icon(icon_key, label = nil)
+    html = icon(icon_key)
+    html << ' ' << label if label
+    html
+  end
+
+  def icon(icon)
+    content_tag(:span, '', class: "glyphicon glyphicon-#{icon}")
+  end
+
   # Standard show action to the given path.
   # Uses the current +entry+ if no path is given.
   def show_action_link(path = nil)

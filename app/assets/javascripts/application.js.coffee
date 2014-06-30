@@ -22,7 +22,7 @@ app = window.App ||= {}
 
 $ ->
   # wire up date picker
-  $('body').on('click', 'input.date, img.calendar', app.datepicker.show)
+  $('body').on('click', 'input.date, .input-group .glyphicon-calendar', app.datepicker.show)
 
   # wire up data-dynamic-param
   $('body').on('ajax:beforeSend', '[data-dynamic-params]', (event, xhr, settings) ->

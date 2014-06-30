@@ -119,7 +119,7 @@ module DryCrud::Form
 
     # Number of grid columns the input field should span.
     def span
-      @span ||= INPUT_SPANS[field_method]
+      @span ||= INPUT_SPANS[field_method.to_sym]
     end
 
     # The caption of the label.

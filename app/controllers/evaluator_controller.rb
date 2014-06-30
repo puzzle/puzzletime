@@ -40,6 +40,8 @@ class EvaluatorController < ApplicationController
     paginate_times
   end
 
+  # TODO: check if removable
+
   def weekly
     redirect_to controller: 'graph', action: 'weekly'
   end

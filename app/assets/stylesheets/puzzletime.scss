@@ -225,8 +225,12 @@ th.periodHead {
 	white-space: nowrap;
 }
 
-table.striped tbody tr:nth-child(odd) {
+table.table-striped tbody tr:nth-child(odd) {
     background-color: #C9D8FF;
+}
+
+.btn + .cancel {
+  margin-left: 10px;
 }
 
 .times_total_sum {
@@ -235,14 +239,6 @@ table.striped tbody tr:nth-child(odd) {
     padding-top:    10px;
     padding-bottom: 20px;
     white-space:    nowrap;
-}
-
-#notice {
-    font-weight:    bold;
-    margin:         10px;
-    margin-top:     20px;
-    margin-bottom:  20px;
-    color:          #e47400;
 }
 
 .notification {
