@@ -23,7 +23,7 @@ module DryCrud::Form
 
     delegate :association, :column_type, :column_property, :captionize,
              :ti, :ta, :link_to, :content_tag, :safe_join, :capture,
-             :add_css_class, :assoc_and_id_attr,
+             :add_css_class, :assoc_and_id_attr, :icon,
              to: :template
 
     ### INPUT FIELDS
@@ -99,15 +99,14 @@ module DryCrud::Form
       html_options[:data] ||= {}
       html_options[:data][:format] = format
 
-      text_field(attr, html_options) +
-      content_tag(:span, @template.image_tag('calendar.gif',
-                                             title: 'Kalender anzeigen',
-                                             size: '15x15',
-                                             class: 'calendar'))
+      with_addon(text_field(attr, html_options), icon(:calendar))
     end
 
     def date_value(attr, format)
-      raw = @object._timeliness_raw_value_for(attr.to_s)
+      raw = nil
+      if @object.respond_to?(:_timeliness_raw_value_for)
+        raw = @object._timeliness_raw_value_for(attr.to_s)
+      end
       if raw
         raw
       else
@@ -183,9 +182,10 @@ module DryCrud::Form
 
     # Render a submit button and a cancel link for this form.
     def standard_actions(submit_label = ti('button.save'), cancel_url = nil)
-      content_tag(:tr) do
-        content_tag(:td, cancel_link(cancel_url)) +
-        content_tag(:td, submit_button(submit_label))
+      content_tag(:div, class: 'form-group') do
+        content_tag(:div, class: 'col-md-offset-2 col-md-8') do
+          safe_join([submit_button(submit_label), cancel_link(cancel_url)], ' ')
+        end
       end
     end
 

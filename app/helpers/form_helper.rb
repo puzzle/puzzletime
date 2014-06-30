@@ -53,7 +53,7 @@ module FormHelper
   private
 
   def default_cancel_url(object)
-    url_object = Array(object.clone)
+    url_object = Array(object).clone
     url_object[-1] = url_object[-1].class if url_object[-1].is_a?(ActiveRecord::Base)
     polymorphic_url(url_object, returning: true)
   end

@@ -80,7 +80,7 @@ $ ->
 
     $('.worktimes .weeknav-container').waypoint('sticky')
 
-    $("#date_picker_week_date").datepicker onSelect: (date, instance) ->
+    $("#week_date").datepicker onSelect: (date, instance) ->
       window.location = "/worktimes?week_date=" + date
       return
 
@@ -92,8 +92,8 @@ $ ->
   toggle = (selector_id, disable) ->
     $(selector_id).prop('disabled', disable)
     if disable
-      $(selector_id).val('')  
-  
+      $(selector_id).val('')
+
   $('#projecttime_hours').blur ->
     toggle('#projecttime_from_start_time', $(this).val())
     toggle('#projecttime_to_end_time', $(this).val())

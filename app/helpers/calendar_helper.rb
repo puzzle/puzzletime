@@ -7,10 +7,6 @@
 
 module CalendarHelper
 
-  def date_calendar_field(object, method, options = {})
-    generic_calendar_field object, method, :default, options
-  end
-
   def week_calendar_field(object, method, options = {})
     generic_calendar_field object, method, :week, options
   end
@@ -24,10 +20,7 @@ module CalendarHelper
     html_options[:data][:format] = date_format
 
     text_field(object, method, html_options) +
-    content_tag(:span, image_tag('calendar.gif',
-                                 title: 'Kalender anzeigen',
-                                 size: '15x15',
-                                 class: 'calendar'))
+    icon(:calendar)
   end
 
   private

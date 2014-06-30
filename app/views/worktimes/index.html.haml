@@ -20,8 +20,9 @@
               .weeknav-label Total
               .weeknav-time= format_hour(sum_total_worktimes(@worktimes))
           .weeknav-element
-            .inner
-              = date_calendar_field 'date_picker', 'week_date', type: 'hidden', value: @selected_date
+            .inner.input-group
+              = hidden_field_tag('week_date', I18n.l(@selected_date), class: 'date')
+              = icon(:calendar)
           .weeknav-element
             .inner
               = link_to 'Erfassen', new_projecttime_path(work_date: @selected_date), {title: 'Zeit/Abwesenheit erfassen'}

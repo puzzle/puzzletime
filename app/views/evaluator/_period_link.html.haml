@@ -15,7 +15,7 @@
     = link_to("#{@notifications.size} Nachricht#{@notifications.size > 1 ? 'en' : ''}",
               '#',
               data: { toggle: 'notifications' })
-    %ul#notifications.notification{:style => "display: none;"}
+    %ul#notifications.alert.alert-info{:style => "display: none;"}
       - @notifications.each do |notification|
         %li= h(notification.message).gsub("\n", "<br/>")
     - ref = controller.request.env["HTTP_REFERER"]
