@@ -1,9 +1,0 @@
-%tr
-  %td
-    = project.label_verbose
-  %td
-    = project.department.shortname if project.department
-  %td
-    = link_to 'Aktuelle Planung', :action => 'project_planning', :project_id => project
-  %td
-    = link_to 'Neue Planung', :action => 'new', :project_id => project

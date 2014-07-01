@@ -23,7 +23,7 @@ module DryCrud::Form
       INPUT_SPANS[:float_field]   =
       INPUT_SPANS[:decimal_field] = 2
     INPUT_SPANS[:date_field] =
-      INPUT_SPANS[:time_field] = 3
+      INPUT_SPANS[:time_field] = 2
 
     # Create a new control instance.
     # Takes the form builder, the attribute to build the control for
