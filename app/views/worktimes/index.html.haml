@@ -25,7 +25,7 @@
               = icon(:calendar)
           .weeknav-element
             .inner
-              = link_to 'Erfassen', new_projecttime_path(work_date: @selected_date), {title: 'Zeit/Abwesenheit erfassen'}
+              = link_to 'Erfassen', new_projecttime_path(work_date: I18n.l(@selected_date)), {title: 'Zeit/Abwesenheit erfassen'}
 
       = link_to(image_tag('arrow-right.png', 'size' => '16x16', 'alt' => "Nächste Woche"), worktimes_url(week_date: @next_week_date), class: 'weeknav-link')
 

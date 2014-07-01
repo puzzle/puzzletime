@@ -3,7 +3,10 @@
 #existing
   = render :partial => 'existing'
 
-%p Auftrag
-%p= link_to 'Absenz', new_absencetime_path(other: record_other?)
+%ul.nav.nav-tabs.nav-center{role: 'tablist'}
+  %li.active= link_to 'Auftrag', '#'
+  %li= link_to 'Absenz', new_absencetime_path(other: record_other?)
+
+%br/
 
 = render 'form'

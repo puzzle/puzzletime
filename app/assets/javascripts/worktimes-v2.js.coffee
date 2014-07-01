@@ -66,6 +66,18 @@ app.worktimes.scrollTo = (offset, callback, date) ->
         setTimeout((-> entries.removeClass('highlight')), 400)
     ))
 
+# show regular absence on load, toggle when clicking on multi absence link
+showMultiAbsence = (e) ->
+  $('#absencetime_create_multi').val('true')
+  $('#single').hide()
+  $('#multi').show()
+  e.preventDefault() if e
+
+showRegularAbsence = (e) ->
+  $('#absencetime_create_multi').val('')
+  $('#single').show()
+  $('#multi').hide()
+  e.preventDefault() if e
 
 $ ->
   if $('.worktimes').size()
@@ -109,30 +121,11 @@ $ ->
   $('#absencetime_to_end_time').blur ->
     toggle('#absencetime_hours', $(this).val() || $('#absencetime_from_start_time').val())
 
-  # show regular absence on load, toggle when clicking on multi absence link
-  showMultiAbsence = () ->
-    $('#absencetime_create_multi').val('true')
-    $('#absencetime_from_start_time').parent().parent().hide()
-    $('#absencetime_to_end_time').parent().parent().hide()
-    $('#absencetime_hours').parent().parent().hide()
-    $('#absencetime_duration').parent().parent().parent().show()
-    $('#regular_absence_link').show()
-    $('#multi_absence_link').hide()
-
-  showRegularAbsence = () ->
-    $('#absencetime_create_multi').val('')
-    $('#absencetime_from_start_time').parent().parent().show()
-    $('#absencetime_to_end_time').parent().parent().show()
-    $('#absencetime_hours').parent().parent().show()
-    $('#absencetime_duration').parent().parent().parent().hide()
-    $('#regular_absence_link').hide()
-    $('#multi_absence_link').show()
 
   if $('#absencetime_create_multi').val()
-    showMultiAbsence()
-  else
-    if $('#new_absencetime').length
-      showRegularAbsence()
+    showMultiAbsence(null)
+  else if $('#new_absencetime').length
+    showRegularAbsence(null)
 
   $('#multi_absence_link').click(showMultiAbsence)
   $('#regular_absence_link').click(showRegularAbsence)

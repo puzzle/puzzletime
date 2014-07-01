@@ -35,9 +35,8 @@ class Worktime < ActiveRecord::Base
   has_one :client, through: :project
   has_one :department, through: :project
 
-  validates_presence_of :work_date, message: 'Das Datum ist ungültig'
   validates_presence_of :employee_id, message: 'Ein Mitarbeiter muss vorhanden sein'
-  validates :work_date, timeliness: { date: true, allow_blank: true }
+  validates :work_date, timeliness: { date: true }
   validate :validate_by_report_type
 
   before_validation :store_hours

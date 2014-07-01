@@ -35,7 +35,9 @@ class AbsencetimesController < WorktimesController
     else
       set_employees
       @create_multi = true
-      flash[:notice] = @multiabsence.worktime.errors.full_messages.to_sentence
+      @multiabsence.worktime.errors.each do |attr, msg|
+        entry.errors.add(attr, msg)
+      end
       render 'new'
     end
   end

@@ -78,7 +78,9 @@ module DryCrud::Form
 
     # Render a boolean field.
     def boolean_field(attr, html_options = {})
-      check_box(attr, html_options)
+      content_tag(:div, class: 'checkbox') do
+        check_box(attr, html_options)
+      end
     end
 
     # Customize the standard text area to have 5 rows by default.

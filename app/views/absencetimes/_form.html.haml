@@ -16,11 +16,33 @@
                          data: { remote: true,
                                  url: url_for(action: 'existing'),
                                  dynamic_params: 'absencetime[employee_id]' })
-  = f.labeled_text_field(:from_start_time, value: format_time(@worktime.from_start_time))
-  = f.labeled_text_field(:to_end_time, value: format_time(@worktime.to_end_time))
-  = f.labeled_input_field(:hours, value: format_hour(@worktime.hours))
+  #single
+    .form-group
+      = f.label(:from_start_time, class: 'col-md-2 control-label')
+      .col-md-1
+        = f.text_field(:from_start_time, value: format_time(@worktime.from_start_time))
+      = f.label(:to_end_time, class: 'col-md-1 control-label')
+      .col-md-1
+        = f.text_field(:to_end_time, value: format_time(@worktime.to_end_time))
+      / TODO: implement start-stop
+      = f.label(:hours, class: 'col-md-1 control-label')
+      .col-md-1
+        = f.input_field(:hours, value: format_hour(@worktime.hours))
+
+    - if @worktime.new_record?
+      .form-group
+        .col-md-offset-2.col-md-6
+          = f.static_text(link_to 'Mehrwöchige Absenz', '#', id: 'multi_absence_link')
+
   - if @worktime.new_record?
-    = f.labeled_input_field(:duration, value: '1', addon: 'Wochen<br>Beim Erfassen von mehrwöchigen Absenzen wird für jeden Arbeitstag in der angegebenen Zeitspanne eine Absenz mit der Dauer des durchschnittlichen Tages-Solls erzeugt.'.html_safe)
-    = f.static_text(link_to 'Mehrwöchige Absenz', 'javascript:;', id: 'multi_absence_link')
-    = f.static_text(link_to 'Reguläre Absenz', 'javascript:;', id: 'regular_absence_link')
-    = f.input_field(:create_multi, value: @create_multi, type: 'hidden')
+    #multi
+      = f.labeled_input_field(:duration,
+                              span: 2,
+                              value: '1',
+                              addon: 'Woche(n)',
+                              help: 'Beim Erfassen von mehrwöchigen Absenzen wird für jeden Arbeitstag in der angegebenen Zeitspanne eine Absenz mit der Dauer des durchschnittlichen Tages-Solls erzeugt.'.html_safe)
+      = f.input_field(:create_multi, value: @create_multi, type: 'hidden')
+
+      .form-group
+        .col-md-offset-2.col-md-6
+          = f.static_text(link_to 'Reguläre Absenz', '#', id: 'regular_absence_link')

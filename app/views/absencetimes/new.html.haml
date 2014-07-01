@@ -1,9 +1,12 @@
 - @title = "Absenz erfassen"
 
 #existing
-  = render :partial => 'existing'
+  = render 'existing'
 
-%p= link_to 'Auftrag', new_projecttime_path(other: record_other?)
-%p Absenz
+%ul.nav.nav-tabs.nav-center{role: 'tablist'}
+  %li= link_to 'Auftrag', new_projecttime_path(other: record_other?)
+  %li.active= link_to 'Absenz', '#'
+
+%br/
 
 = render 'form'
