@@ -217,6 +217,17 @@ a.symbol {
     text-decoration: none;
 }
 
+.nav-tabs.nav-center > li, .nav-pills.nav-center > li {
+    float:none;
+    display:inline-block;
+    *display:inline; /* ie7 fix */
+     zoom:1; /* hasLayout ie7 trigger */
+}
+
+.nav-tabs.nav-center, .nav-pills.nav-center {
+    text-align:center;
+}
+
 th {
     color:          #0087e3;
 }

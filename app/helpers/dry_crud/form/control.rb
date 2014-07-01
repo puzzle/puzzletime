@@ -74,8 +74,12 @@ module DryCrud::Form
       errors = errors? ? ' has-error' : ''
 
       content_tag(:div, class: "form-group#{errors}") do
-        builder.label(attr, caption, class: 'col-md-2 control-label') +
-        content_tag(:div, content, class: "col-md-#{span}")
+        html = builder.label(attr, caption, class: 'col-md-2 control-label')
+        html << content_tag(:div, content, class: "col-md-#{span}")
+        if help.present?
+          html << builder.help_block(help)
+        end
+        html
       end
     end
 
@@ -92,7 +96,6 @@ module DryCrud::Form
         elsif required
           #content = builder.with_addon(content, REQUIRED_MARK)
         end
-        content << builder.help_block(help) if help.present?
         content
       end
     end

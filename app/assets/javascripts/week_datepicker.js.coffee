@@ -11,10 +11,7 @@ app.datepicker = do ->
   show: ->
     field = $(this)
     if field.is('.glyphicon-calendar')
-      if $(field.siblings('.date')).length == 0
-        field = field.parent().siblings('.date')
-      else
-        field = field.siblings('.date')
+      field = field.closest('.input-group').find('.date')
     console.log(field)
     options =
       onSelect: track
