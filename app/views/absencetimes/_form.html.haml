@@ -15,7 +15,7 @@
   = f.labeled_date_field(:work_date,
                          data: { remote: true,
                                  url: url_for(action: 'existing'),
-                                 dynamic_params: 'projecttime[employee_id]' })
+                                 dynamic_params: 'absencetime[employee_id]' })
   = f.labeled_text_field(:from_start_time, value: format_time(@worktime.from_start_time))
   = f.labeled_text_field(:to_end_time, value: format_time(@worktime.to_end_time))
   = f.labeled_input_field(:hours, value: format_hour(@worktime.hours))
