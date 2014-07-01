@@ -15,16 +15,18 @@ class ProjecttimesController < WorktimesController
   end
 
   def split
+    set_employees
     @split = session[:split]
     if @split.nil?
       redirect_to controller: 'projecttimes', action: 'new'
-      return
+    else
+      @worktime = @split.worktime_template
+      render action: 'split'
     end
-    @worktime = @split.worktime_template
-    render action: 'split'
   end
 
   def create_part
+    set_employees
     @split = session[:split]
     return create if @split.nil?
     entry

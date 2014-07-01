@@ -113,6 +113,31 @@ class ProjecttimesControllerTest < ActionController::TestCase
     assert_nil worktime.to_end_time
     assert_equal 1.5, worktime.hours
   end
+  
+
+  def test_split
+    worktime = worktimes(:wt_pz_allgemein)
+    session[:split] = WorktimeEdit.new(worktime.clone)
+    get :split
+    assert_template 'split'
+  end
+
+  def test_incomplete_split
+    worktime = worktimes(:wt_pz_allgemein)
+    put :update, id: worktime, projecttime: { hours: '0:30', employee_id: employees(:pascal) }
+    assert_match(/Die Zeiten wurden noch nicht gespeichert. Bitte schliessen sie dazu den Aufteilungsprozess ab./, @response.body)
+    assert_not_nil assigns(:split)
+  end
+  
+
+  def test_finish_split
+    worktime = worktimes(:wt_pz_allgemein)
+    put :update, id: worktime, projecttime: { hours: '1:00', employee_id: employees(:pascal) }
+    assert_not_nil assigns(:split)
+    assert_match(/Alle Arbeitszeiten wurden erfasst/, flash[:notice])
+    worktime.reload
+    assert_equal employees(:pascal), worktime.employee
+  end
 
   def test_destroy
     worktime = worktimes(:wt_mw_puzzletime)
