@@ -72,7 +72,7 @@ class AbsencetimesControllerTest < ActionController::TestCase
   end
 
   def test_create_multiabsence
-    login_as(:long_time_john) # works 90 percent
+    login_as(:long_time_john)
     work_date = Date.today + 3
     post :create, absencetime: { absence_id: absences(:vacation),
                                  work_date: work_date,
@@ -84,8 +84,21 @@ class AbsencetimesControllerTest < ActionController::TestCase
     assert_match(/15 Absenzen wurden erfasst/, flash[:notice])
   end
 
+  def test_create_other_multiabsence
+    work_date = Date.today + 3
+    post :create, absencetime: { absence_id: absences(:vacation),
+                                 work_date: work_date,
+                                 create_multi: 'true',
+                                 duration: '2',
+                                 employee_id: employees(:various_pedro)
+                                 }
+    assert_redirected_to action: 'index', week_date: work_date
+    assert flash[:alert].blank?
+    assert_match(/10 Absenzen wurden erfasst/, flash[:notice])
+  end
+
   def test_create_multiabsence_with_errors
-    login_as(:long_time_john) #works 90 percent
+    login_as(:long_time_john)
     work_date = Date.today + 3
     post :create, absencetime: { absence_id: absences(:vacation),
                                  work_date: work_date,
