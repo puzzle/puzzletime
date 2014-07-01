@@ -188,6 +188,15 @@ module DryCrud::Form
       end
     end
 
+    # Render only a submit button for this form.
+    def submit_action(submit_label = ti('button.save'), cancel_url = nil)
+      content_tag(:div, class: 'form-group') do
+        content_tag(:div, class: 'col-md-offset-2 col-md-8') do
+          submit_button(submit_label)
+        end
+      end
+    end
+
     # Render a standard submit button with the given label.
     def submit_button(label = ti('button.save'))
       button(label, class: 'btn btn-primary', data: { disable_with: label })

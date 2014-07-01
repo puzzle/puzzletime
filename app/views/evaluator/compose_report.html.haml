@@ -9,7 +9,7 @@
   = hidden_field_tag('division_id', params[:division_id]) if params[:division_id]
   = hidden_field_tag 'end_date', params[:end_date]
   = hidden_field_tag 'start_date', params[:start_date]
-  %table
+  %table.table-condensed
     %tr
       %td= check_box_tag 'only_billable'
       %td Nur verrechenbare Stunden
