@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 require 'rails_erd/domain/specialization'
 
 module RailsERD

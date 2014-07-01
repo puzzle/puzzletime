@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 module NavigationHelper
 
   # Create a list item for navigations.

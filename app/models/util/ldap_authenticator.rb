@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 class LdapAuthenticator
 
   # Performs a login over LDAP with the passed data.
