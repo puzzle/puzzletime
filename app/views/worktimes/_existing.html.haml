@@ -1,9 +1,11 @@
-.alert.alert-info
+.panel.panel-info
 
   - unless @existing.empty?
-    Am #{f(@work_date)} bereits erfasste Zeiten:
-    %table.striped{:cellpadding => "0"}
+    .panel-body
+      Am #{f(@work_date)} bereits erfasste Zeiten:
+    %table.table.table-condensed.table-striped
       %tbody
         = render :partial => 'part', :collection => @existing
   - else
-    Am #{f(@work_date)} wurden noch keine Zeiten erfasst.
+    .panel-body
+      Am #{f(@work_date)} wurden noch keine Zeiten erfasst.

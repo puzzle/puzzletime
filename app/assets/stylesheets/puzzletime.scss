@@ -307,4 +307,26 @@ a.tooltip:hover span {
     }
 }
 
+.right {
+  text-align: right;
+}
+
+.center {
+  text-align: center;
+}
+
+table.table td.action {
+  width: 20px;
+  text-align: center;
+}
+
+.cancel {
+  font-size: 80%;
+  margin-left: 7px;
+}
+
+footer {
+  clear: both;
+}
+
 @import "worktimes";

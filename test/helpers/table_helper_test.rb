@@ -40,7 +40,7 @@ class TableHelperTest < ActionView::TestCase
   test 'table with attrs' do
     expected = DryCrud::Table::Builder.table(
                  %w(foo bar), self,
-                 class: 'table striped table-hover') do |t|
+                 class: 'table table-striped table-hover table-condensed') do |t|
       t.attrs :size, :upcase
     end
     actual = plain_table(%w(foo bar), :size, :upcase)

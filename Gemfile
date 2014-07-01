@@ -8,7 +8,6 @@ gem 'mysql2' # for puzzle base
 gem 'airbrake'
 gem 'acts_as_tree'
 gem 'dalli'
-gem 'dry_crud'
 gem 'kaminari'
 gem 'kaminari-bootstrap'
 gem 'haml'

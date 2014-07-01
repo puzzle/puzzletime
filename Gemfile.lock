@@ -81,8 +81,6 @@ GEM
       debugger-ruby_core_source (~> 1.3.2)
     debugger-linecache (1.2.0)
     debugger-ruby_core_source (1.3.2)
-    dry_crud (2.1.1)
-      rails (>= 3.2)
     erubis (2.7.0)
     execjs (2.0.2)
     fabrication (2.11.2)
@@ -278,7 +276,6 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   dalli
   debugger
-  dry_crud
   fabrication
   faker
   haml
