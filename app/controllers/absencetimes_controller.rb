@@ -26,7 +26,7 @@ class AbsencetimesController < WorktimesController
 
   def create_multi_absence
     @multiabsence = MultiAbsence.new
-    @multiabsence.employee = @user
+    @multiabsence.employee = Employee.find_by_id(employee_id)
     @multiabsence.attributes = params[:absencetime]
     if @multiabsence.valid?
       count = @multiabsence.save

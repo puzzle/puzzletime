@@ -4,6 +4,6 @@
   = render :partial => 'existing'
 
 %p Auftrag
-%p= link_to 'Absenz', new_absencetime_path
+%p= link_to 'Absenz', new_absencetime_path(other: record_other?)
 
 = render 'form'

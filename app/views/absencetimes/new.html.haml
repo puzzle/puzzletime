@@ -3,7 +3,7 @@
 #existing
   = render :partial => 'existing'
 
-%p= link_to 'Auftrag', new_projecttime_path
+%p= link_to 'Auftrag', new_projecttime_path(other: record_other?)
 %p Absenz
 
 = render 'form'

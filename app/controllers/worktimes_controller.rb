@@ -87,12 +87,7 @@ class WorktimesController < CrudController
     else
       @worktime.work_date = Date.today
     end
-    if record_other?
-      @worktime.employee_id = params[model_name.to_s] ? params[model_name.to_s][:employee_id] : params[:employee_id]
-    else
-      @worktime.employee_id = @user.id
-    end
-    
+    @worktime.employee_id = employee_id
     set_worktime_defaults
     true
   end
@@ -185,6 +180,15 @@ class WorktimesController < CrudController
     @pending_worktime = 0 - @user.statistics.overtime(Period.current_month).to_f
   end
 
+  # returns the employee's id from the params or the logged in user
+  def employee_id
+    if record_other?
+      params[model_name.to_s] ? params[model_name.to_s][:employee_id] : params[:employee_id]
+    else
+      @user.id
+    end
+  end
+
   def set_employees
     @employees = Employee.list if record_other?
   end
@@ -199,10 +203,10 @@ class WorktimesController < CrudController
   end
 
   def record_other?
-    @user.management && (params[:other] || other_employee_param)
+    @user.management && (params[:other] || other_employee_param?)
   end
 
-  def other_employee_param
+  def other_employee_param?
     params[model_name.to_s] && params[model_name.to_s][:employee_id] && params[model_name.to_s][:employee_id] != @user.id
   end
 
