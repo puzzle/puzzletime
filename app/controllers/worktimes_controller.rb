@@ -27,6 +27,7 @@ class WorktimesController < CrudController
   end
 
   def new
+    set_employees
     super do |format|
       if params[:template]
         template = Worktime.find(params[:template])
@@ -39,6 +40,7 @@ class WorktimesController < CrudController
   
   def create
     set_times(entry)
+    set_employees
     super do |format|
       if entry.errors.blank?
         redirect_to action: 'index', week_date: entry.work_date
@@ -48,6 +50,7 @@ class WorktimesController < CrudController
 
   def update
     set_times(entry)
+    set_employees
     super do |format|
       if entry.errors.blank?
         redirect_to action: 'index', week_date: entry.work_date
@@ -85,7 +88,7 @@ class WorktimesController < CrudController
       @worktime.work_date = Date.today
     end
     if record_other?
-      @worktime.employee_id = params[model_name.to_s][:employee_id] if params[model_name.to_s]
+      @worktime.employee_id = params[model_name.to_s] ? params[model_name.to_s][:employee_id] : params[:employee_id]
     else
       @worktime.employee_id = @user.id
     end
@@ -182,6 +185,10 @@ class WorktimesController < CrudController
     @pending_worktime = 0 - @user.statistics.overtime(Period.current_month).to_f
   end
 
+  def set_employees
+    @employees = Employee.list if record_other?
+  end
+
   # overwrite in subclass
   def set_worktime_defaults
   end
@@ -192,7 +199,11 @@ class WorktimesController < CrudController
   end
 
   def record_other?
-    @user.management && params[:other]
+    @user.management && (params[:other] || other_employee_param)
+  end
+
+  def other_employee_param
+    params[model_name.to_s] && params[model_name.to_s][:employee_id] && params[model_name.to_s][:employee_id] != @user.id
   end
 
   def append_flash(msg)
@@ -231,5 +242,4 @@ class WorktimesController < CrudController
       entry.report_type = HoursDayType::INSTANCE
     end
   end
-
 end
