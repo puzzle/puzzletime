@@ -217,16 +217,15 @@ a.symbol {
     text-decoration: none;
 }
 
+th {
+    color:          #0087e3;
+}
 th.periodHead {
     text-align:     right;
 }
 
 #evaluation td {
 	white-space: nowrap;
-}
-
-table.table-striped tbody tr:nth-child(odd) {
-    background-color: #C9D8FF;
 }
 
 .btn + .cancel {
@@ -318,11 +317,7 @@ a.tooltip:hover span {
 table.table td.action {
   width: 20px;
   text-align: center;
-}
-
-.cancel {
-  font-size: 80%;
-  margin-left: 7px;
+  white-space: nowrap;
 }
 
 footer {

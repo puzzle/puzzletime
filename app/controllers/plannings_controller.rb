@@ -1,8 +1,10 @@
 # encoding: utf-8
 
-class PlanningsController < ApplicationController
+class PlanningsController < CrudController
 
   before_action :set_period
+
+  before_render_form :build_planning_form
 
   def index
     redirect_to action: 'my_planning'
@@ -62,7 +64,7 @@ class PlanningsController < ApplicationController
   end
 
   def departments
-    @departmens = Department.list
+    @departments = Department.list
   end
 
   def department_planning
@@ -83,71 +85,26 @@ class PlanningsController < ApplicationController
   def new
     set_employee
     @employee ||= @user
-    @planning = Planning.new(employee: @employee)
-    if params[:project_id]
-      @planning.project = Project.find(params[:project_id])
-    end
-    if params[:date]
-      week_date = Week.from_string(params[:date])
-      @planning.start_week = week_date.to_integer
-      @period = extended_period(week_date.to_date)
-    else
-      @period = extended_period
-    end
-    build_planning_form
+    entry.employee = @employee
+    entry.project = Project.find(params[:project_id]) if params[:project_id]
+    entry.start_week = Week.from_string(params[:date]).to_integer if params[:date]
+    super
   end
 
-  def create
-    # Rails.logger.info("PARAMS: #{params.inspect}")
-    set_employees
-    @planning = Planning.new
-    set_planning_attributes(params[:planning])
-    if @planning.save
-      flash[:notice] = 'Die Planung wurde erfolgreich erfasst'
-      redirect_to action: 'employee_planning', employee_id: @planning.employee
-    else
-      @employee = @planning.employee
-      build_planning_form
-      render action: 'new'
-    end
-  end
-
-  def edit
-    @planning = Planning.find(params[:id])
-    @employee = @planning.employee
-    start_date = Week.from_integer(@planning.start_week).to_date
-    @period = extended_period(start_date)
-    build_planning_form
-  end
-
-  def update
-    @planning = Planning.find(params[:id])
-    set_planning_attributes(params[:planning])
-    @employee = @planning.employee
-    if @planning.save
-      flash[:notice] = 'Die Planung wurde erfolgreich erfasst'
-      redirect_to action: 'employee_planning', employee_id: @employee
-    else
-      build_planning_form
-      render action: 'edit'
-    end
-  end
-
-  def destroy
-    planning = Planning.find(params[:planning])
-    if planning.destroy
-      flash[:notice] = 'Die Planung wurde entfernt'
-    else
-      flash[:error] = 'Die Planung konnte nicht geloescht werden'
-    end
-    redirect_to action: 'employee_planning', employee_id: planning.employee
-  end
 
   private
+
+  def index_url
+    { action: 'employee_planning', employee_id: entry.employee_id }
+  end
+
   def build_planning_form
+    @employee = entry.employee
     set_employees
     @projects = Project.top_projects
     @graph = EmployeePlanningGraph.new(@employee, @period)
+    start_date = Week.from_integer(entry.start_week).to_date if entry.start_week
+    @period = extended_period(start_date)
   end
 
   def set_employee
@@ -163,7 +120,8 @@ class PlanningsController < ApplicationController
     @employees = Employee.employed_ones(@period)
   end
 
-  def extended_period(date = Date.today)
+  def extended_period(date)
+    date ||= Date.today
     Period.new(date - 14, date + 21)
   end
 
@@ -176,32 +134,33 @@ class PlanningsController < ApplicationController
     employees.select { |e| e.employment_at(period.startDate).present? || e.employment_at(period.endDate).present? }
   end
 
-  def set_planning_attributes(planning_params)
-    @planning.employee = Employee.find(planning_params[:employee_id]) if planning_params[:employee_id]
-    @planning.project = Project.find(planning_params[:project_id]) if planning_params[:project_id]
-    @planning.start_week = Week.from_string(planning_params[:start_week_date]).to_integer if planning_params[:start_week_date]
-    @planning.definitive = planning_params[:type] == 'definitive'
-    @planning.is_abstract = planning_params[:abstract_concrete] == 'abstract'
-    @planning.abstract_amount = (planning_params[:abstract_amount].blank? ? 0 : planning_params[:abstract_amount])
+  def assign_attributes
+    planning_params = params[:planning]
+    entry.employee = Employee.find(planning_params[:employee_id]) if planning_params[:employee_id]
+    entry.project = Project.find(planning_params[:project_id]) if planning_params[:project_id]
+    entry.start_week = Week.from_string(planning_params[:start_week_date]).to_integer if planning_params[:start_week_date]
+    entry.definitive = planning_params[:type] == 'definitive'
+    entry.is_abstract = planning_params[:abstract_concrete] == 'abstract'
+    entry.abstract_amount = (planning_params[:abstract_amount].blank? ? 0 : planning_params[:abstract_amount])
     case planning_params[:repeat_type]
       when 'no'
-        @planning.end_week = @planning.start_week
+        entry.end_week = entry.start_week
       when 'until'
-        @planning.end_week = Week.from_string(planning_params[:end_week_date]).to_integer if planning_params[:end_week_date]
+        entry.end_week = Week.from_string(planning_params[:end_week_date]).to_integer if planning_params[:end_week_date]
       when 'forever'
-        @planning.end_week = nil
+        entry.end_week = nil
     end
-    @planning.monday_am = boolean_param(planning_params[:monday_am])
-    @planning.monday_pm = boolean_param(planning_params[:monday_pm])
-    @planning.tuesday_am = boolean_param(planning_params[:tuesday_am])
-    @planning.tuesday_pm = boolean_param(planning_params[:tuesday_pm])
-    @planning.wednesday_am = boolean_param(planning_params[:wednesday_am])
-    @planning.wednesday_pm = boolean_param(planning_params[:wednesday_pm])
-    @planning.thursday_am = boolean_param(planning_params[:thursday_am])
-    @planning.thursday_pm = boolean_param(planning_params[:thursday_pm])
-    @planning.friday_am = boolean_param(planning_params[:friday_am])
-    @planning.friday_pm = boolean_param(planning_params[:friday_pm])
-    @planning.description = planning_params[:description]
+    entry.monday_am = boolean_param(planning_params[:monday_am])
+    entry.monday_pm = boolean_param(planning_params[:monday_pm])
+    entry.tuesday_am = boolean_param(planning_params[:tuesday_am])
+    entry.tuesday_pm = boolean_param(planning_params[:tuesday_pm])
+    entry.wednesday_am = boolean_param(planning_params[:wednesday_am])
+    entry.wednesday_pm = boolean_param(planning_params[:wednesday_pm])
+    entry.thursday_am = boolean_param(planning_params[:thursday_am])
+    entry.thursday_pm = boolean_param(planning_params[:thursday_pm])
+    entry.friday_am = boolean_param(planning_params[:friday_am])
+    entry.friday_pm = boolean_param(planning_params[:friday_pm])
+    entry.description = planning_params[:description]
   end
 
   def boolean_param(param)

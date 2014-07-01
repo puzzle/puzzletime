@@ -91,6 +91,7 @@ de-CH:
         employee_id: Mitarbeiter
         project_id: Projekt
         start_week: Start
+        start_week_date: Start
         end_week: Bis KW
         definitive: Definitiv
         description: Bemerkungen

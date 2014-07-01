@@ -91,13 +91,11 @@ module DryCrud::Form
 
     # Render a field to select a date.
     def date_field(attr, html_options = {})
-      format = html_options.delete(:format)
+      format = html_options[:data] && html_options[:data][:format]
       date = date_value(attr, format)
       html_options[:size] = 15
-      html_options[:class] = 'date'
       html_options[:value] = date
-      html_options[:data] ||= {}
-      html_options[:data][:format] = format
+      add_css_class(html_options, 'date')
 
       with_addon(text_field(attr, html_options), icon(:calendar))
     end
@@ -131,6 +129,7 @@ module DryCrud::Form
     def belongs_to_field(attr, html_options = {})
       list = association_entries(attr, html_options).to_a
       if list.present?
+        add_css_class(html_options, 'form-control')
         collection_select(attr, list, :id, :to_s,
                           select_options(attr, html_options),
                           html_options)

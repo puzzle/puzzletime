@@ -107,7 +107,7 @@ td a:hover span {
 	text-align:		left;
 }
 
-tr:nth-child(odd) .current {
+.table-striped tr:nth-child(odd) .current {
 	background-color: #eeeecc !important;
 }
 
