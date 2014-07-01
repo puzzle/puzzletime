@@ -1,6 +1,7 @@
 - @title = 'Eigene Zeitspanne auswählen'
+
 %p
-  %table{:cellspacing => "0"}
+  %table.table-condensed
     %tr
       %td
         = period_link 'Heute', '0d'
@@ -57,9 +58,8 @@
         = period_link '4. Quartal', '4q'
       %td &nbsp;
       %td &nbsp;
-%br/
-%br/
-Beliebig:
+
+%h3 Beliebig
 = form_tag({ action: 'change_period' }, class: 'form-horizontal', role: 'form') do
   = hidden_field_tag :back_url, params[:back_url]
   .form-group
