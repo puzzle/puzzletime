@@ -1,23 +1,32 @@
 = standard_form(@worktime) do |f|
   - if record_other?
-    = f.labeled_belongs_to_field(:employee_id)
+    = f.labeled(:employee_id) do
+      = collection_select(:projecttime,
+                          :employee_id,
+                          @employees,
+                          :id,
+                          :label_verbose,
+                          selected: @worktime.employee_id,
+                          data: { remote: true,
+                                  url: url_for(action: 'existing'),
+                                  dynamic_params: 'projecttime[work_date]' })
   = f.labeled(:account) do
     = text_field('projecttime',
-                     'account',
-                     value: @worktime.account.try(:label_verbose),
-                     data: { autocomplete: 'project',
-                             url: search_projects_path,
-                             id_field: 'projecttime_account_id' })
+                 'account',
+                 value: @worktime.account.try(:label_verbose),
+                 data: { autocomplete: 'project',
+                         url: search_projects_path,
+                         id_field: 'projecttime_account_id' })
     = hidden_field('projecttime', 'account_id', value: @worktime.account_id)
   = f.labeled_input_field(:ticket)
   = f.labeled_text_area(:description)
   = f.labeled(:work_date) do
-    = date_calendar_field 'projecttime',
+    = date_calendar_field('projecttime',
                           'work_date',
                           value: @worktime.work_date,
                           data: { remote: true,
                                   url: url_for(action: 'existing'),
-                                  dynamic_params: 'projecttime[employee_id]' }
+                                  dynamic_params: 'projecttime[employee_id]' })
   = f.labeled_text_field(:from_start_time, value: format_time(@worktime.from_start_time))
   = f.labeled_text_field(:to_end_time, value: format_time(@worktime.to_end_time))
   / TODO: implement start-stop
