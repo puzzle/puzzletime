@@ -85,7 +85,7 @@ module DryCrud::Form
 
     # Customize the standard text area to have 5 rows by default.
     def text_area(attr, html_options = {})
-      html_options[:rows] ||= 8
+      html_options[:rows] ||= 3
       html_options[:cols] ||= 50
       add_css_class(html_options, 'form-control')
       super
@@ -107,7 +107,7 @@ module DryCrud::Form
       if @object.respond_to?(:_timeliness_raw_value_for)
         raw = @object._timeliness_raw_value_for(attr.to_s)
       end
-      if raw
+      if raw.is_a?(String)
         raw
       else
         val = @object.send(attr)

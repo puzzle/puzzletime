@@ -106,7 +106,7 @@ class AbsencetimesControllerTest < ActionController::TestCase
                                  duration: '-3'
                                  }
     assert_template 'new'
-    assert_match(/Dauer muss grösser als 0 sein/, flash[:notice])
+    assert_match(/Dauer muss grösser als 0 sein/, assigns(:worktime).errors.full_messages.join)
   end
 
   def test_update

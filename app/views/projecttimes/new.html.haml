@@ -5,7 +5,7 @@
 
 %ul.nav.nav-tabs.nav-center{role: 'tablist'}
   %li.active= link_to 'Auftrag', '#'
-  %li= link_to 'Absenz', new_absencetime_path(other: record_other?)
+  %li= link_to 'Absenz', new_absencetime_path(work_date: params[:work_date], other: record_other?)
 
 %br/
 
