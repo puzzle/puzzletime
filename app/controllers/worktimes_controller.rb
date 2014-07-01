@@ -36,7 +36,7 @@ class WorktimesController < CrudController
       end
     end
   end
-
+  
   def create
     set_times(entry)
     super do |format|
@@ -56,7 +56,7 @@ class WorktimesController < CrudController
   end
 
   def destroy
-    super(location: destroy_referer)
+    super(location: {action: 'index', week_date: entry.work_date})
   end
 
   # ajax action
@@ -84,7 +84,12 @@ class WorktimesController < CrudController
     else
       @worktime.work_date = Date.today
     end
-    @worktime.employee_id = record_other? ? params[:employee_id] : @user.id
+    if record_other?
+      @worktime.employee_id = params[model_name.to_s][:employee_id] if params[model_name.to_s]
+    else
+      @worktime.employee_id = @user.id
+    end
+    
     set_worktime_defaults
     true
   end

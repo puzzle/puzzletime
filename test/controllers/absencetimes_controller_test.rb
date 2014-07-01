@@ -111,4 +111,12 @@ class AbsencetimesControllerTest < ActionController::TestCase
     assert_equal 1.75, worktime.hours
   end
 
+  def test_destroy
+    worktime = worktimes(:wt_mw_service)
+    work_date = worktime.work_date
+    delete :destroy, id: worktime
+    assert_redirected_to action: 'index', week_date: work_date
+    assert_nil Absencetime.find_by_id(worktime.id)
+  end
+
 end
