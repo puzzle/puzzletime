@@ -1,5 +1,6 @@
 = standard_form(@worktime) do |f|
-  / TODO: employee selection for 'fremderfassen'
+  - if record_other?
+    = f.labeled_belongs_to_field(:employee_id)
   = f.labeled(:account) do
     = text_field('projecttime',
                      'account',

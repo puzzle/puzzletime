@@ -10,6 +10,7 @@ class ProjecttimesControllerTest < ActionController::TestCase
     assert_response :success
     assert_template 'new'
     assert_match(/Auftragszeit erfassen/, @response.body)
+    assert_no_match(/Mitarbeiter/, @response.body)
     assert_not_nil assigns(:worktime)
   end
 
@@ -21,6 +22,13 @@ class ProjecttimesControllerTest < ActionController::TestCase
     assert_equal template.project, assigns(:worktime).project
     assert_equal '123', assigns(:worktime).ticket
     assert_equal 'desc', assigns(:worktime).description
+  end
+  
+  def test_new_other
+    get :new, other: 1
+    assert_template 'new'
+    assert_match(/Mitarbeiter/, @response.body)
+    assert_nil assigns(:worktime).employee
   end
 
   def test_show
@@ -73,6 +81,25 @@ class ProjecttimesControllerTest < ActionController::TestCase
     assert_match(/Anfangszeit ist ungültig/, @response.body)
   end
 
+  def test_create_other
+    post :create, projecttime: { account_id: Project.first,
+                                 work_date: Date.today,
+                                 hours: '5:30',
+                                 employee_id: employees(:lucien)
+                                 }
+    assert_equal employees(:lucien), Projecttime.last.employee
+  end
+
+  def test_create_other_without_permission
+    login_as(:lucien)
+    post :create, projecttime: { account_id: Project.first,
+                                 work_date: Date.today,
+                                 hours: '5:30',
+                                 employee_id: employees(:mark)
+                                 }
+    assert_equal employees(:lucien), Projecttime.last.employee # assigns the projettime to himself
+  end
+
   def test_update
     worktime = worktimes(:wt_mw_puzzletime)
     put :update, id: worktime, projecttime: { hours: '1:30' }
@@ -85,6 +112,14 @@ class ProjecttimesControllerTest < ActionController::TestCase
     assert_nil worktime.from_start_time
     assert_nil worktime.to_end_time
     assert_equal 1.5, worktime.hours
+  end
+
+  def test_destroy
+    worktime = worktimes(:wt_mw_puzzletime)
+    work_date = worktime.work_date
+    delete :destroy, id: worktime
+    assert_redirected_to action: 'index', week_date: work_date
+    assert_nil Projecttime.find_by_id(worktime.id)
   end
 
 end
