@@ -42,7 +42,7 @@ Rails.application.routes.draw do
   resources :employees, only: [:index, :edit, :update] do
     collection do
       get :settings
-      post :settings, to: 'employees#update_settings'
+      patch :settings, to: 'employees#update_settings'
       get :passwd
       post :passwd, to: 'employees#update_passwd'
       post :synchronize

@@ -40,40 +40,6 @@ class EvaluatorController < ApplicationController
     paginate_times
   end
 
-  # TODO: check if removable
-
-  def weekly
-    redirect_to controller: 'graph', action: 'weekly'
-  end
-
-  def all_absences
-    redirect_to controller: 'graph', action: 'all_absences'
-  end
-
-  def employee_planning
-    redirect_to controller: 'plannings', action: 'employee_planning', employee_id: params[:category_id]
-  end
-
-  def employees_planning
-    redirect_to controller: 'plannings', action: 'employees_planning'
-  end
-
-  def my_planning
-    redirect_to controller: 'plannings', action: 'my_planning'
-  end
-
-  def project_planning
-    redirect_to controller: 'plannings', action: 'project_planning'
-  end
-
-  def department_planning
-    redirect_to controller: 'plannings', action: 'department_planning', department_id: params[:category_id]
-  end
-
-  def company_planning
-    redirect_to controller: 'plannings', action: 'company_planning'
-  end
-
 
   ########################  DETAIL ACTIONS  #########################
 
