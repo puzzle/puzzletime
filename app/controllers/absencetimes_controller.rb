@@ -33,6 +33,7 @@ class AbsencetimesController < WorktimesController
       flash[:notice] = "#{count} Absenzen wurden erfasst"
       redirect_to action: 'index', week_date: @multiabsence.work_date
     else
+      set_employees
       @create_multi = true
       flash[:notice] = @multiabsence.worktime.errors.full_messages.to_sentence
       render 'new'
