@@ -23,9 +23,8 @@ class PlanningsController < CrudController
 
   def existing
     if params[:planning][:start_week_date].present?
-      current_week = Week.from_string(params[:planning][:start_week_date]).to_date
-      @period = extended_period(current_week)
-    # else: use default period
+      current_week = Week.from_string(params[:planning][:start_week_date])
+      @period = extended_period(current_week.to_date) if current_week.valid?
     end
     set_employee
     @graph = EmployeePlanningGraph.new(@employee, @period)
@@ -103,8 +102,7 @@ class PlanningsController < CrudController
     set_employees
     @projects = Project.top_projects
     @graph = EmployeePlanningGraph.new(@employee, @period)
-    start_date = Week.from_integer(entry.start_week).to_date if entry.start_week
-    @period = extended_period(start_date)
+    @period = extended_period(entry.start_week_date)
   end
 
   def set_employee
