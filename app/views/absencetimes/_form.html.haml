@@ -1,16 +1,10 @@
 = standard_form(@worktime) do |f|
   - if record_other?
-    = f.labeled(:employee_id) do
-      = collection_select(:absencetime,
-                          :employee_id,
-                          @employees,
-                          :id,
-                          :label_verbose,
-                          selected: @worktime.employee_id,
-                          data: { remote: true,
-                                  url: url_for(action: 'existing'),
-                                  dynamic_params: 'absencetime[work_date]' })
-  = f.labeled(:absence_id, f.belongs_to_field(:absence_id))
+    = f.labeled_belongs_to_field(:employee_id,
+                                 data: { remote: true,
+                                         url: url_for(action: 'existing'),
+                                         dynamic_params: 'absencetime[work_date]' })
+  = f.labeled_belongs_to_field(:absence_id)
   = f.labeled_text_area(:description)
   = f.labeled_date_field(:work_date,
                          data: { remote: true,
@@ -24,7 +18,6 @@
       = f.label(:to_end_time, class: 'col-md-1 control-label')
       .col-md-1
         = f.text_field(:to_end_time, value: format_time(@worktime.to_end_time))
-      / TODO: implement start-stop
       = f.label(:hours, class: 'col-md-1 control-label')
       .col-md-1
         = f.input_field(:hours, value: format_hour(@worktime.hours))
@@ -41,7 +34,7 @@
                               value: '1',
                               addon: 'Woche(n)',
                               help: 'Beim Erfassen von mehrwöchigen Absenzen wird für jeden Arbeitstag in der angegebenen Zeitspanne eine Absenz mit der Dauer des durchschnittlichen Tages-Solls erzeugt.'.html_safe)
-      = f.input_field(:create_multi, value: @create_multi, type: 'hidden')
+      = f.hidden_field(:create_multi, value: @create_multi)
 
       .form-group
         .col-md-offset-2.col-md-6

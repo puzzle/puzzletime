@@ -1,15 +1,9 @@
 = standard_form(@worktime) do |f|
   - if record_other?
-    = f.labeled(:employee_id) do
-      = collection_select(:projecttime,
-                          :employee_id,
-                          @employees,
-                          :id,
-                          :label_verbose,
-                          selected: @worktime.employee_id,
-                          data: { remote: true,
-                                  url: url_for(action: 'existing'),
-                                  dynamic_params: 'projecttime[work_date]' })
+    = f.labeled_belongs_to_field(:employee_id,
+                                  data: { remote: true,
+                                          url: url_for(action: 'existing'),
+                                          dynamic_params: 'projecttime[work_date]' })
   = f.labeled(:account) do
     = f.text_field(:account,
                    value: @worktime.account.try(:label_verbose),
@@ -18,7 +12,7 @@
                            url: search_projects_path,
                            id_field: 'projecttime_account_id' })
     = f.hidden_field(:account_id)
-  = f.labeled_input_field(:ticket, span: 3)
+  = f.labeled_input_field(:ticket, span: 2)
   = f.labeled_text_area(:description)
   = f.labeled_date_field(:work_date,
                          data: { remote: true,

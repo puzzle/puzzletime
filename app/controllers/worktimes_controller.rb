@@ -14,6 +14,7 @@ class WorktimesController < CrudController
   before_render_index :set_statistics
   before_render_new :create_default_worktime
   before_render_form :set_existing
+  before_render_form :set_employees
 
   FINISH = 'Abschliessen'
 
@@ -23,11 +24,10 @@ class WorktimesController < CrudController
   end
 
   def show
-    redirect_to action: 'index', week_date: entry.work_date
+    redirect_to index_url
   end
 
   def new
-    set_employees
     super do |format|
       if params[:template]
         template = Worktime.find(params[:template])
@@ -37,45 +37,17 @@ class WorktimesController < CrudController
       end
     end
   end
-  
-  def create
-    set_times(entry)
-    set_employees
-    super do |format|
-      if entry.errors.blank?
-        redirect_to action: 'index', week_date: entry.work_date
-      end
-    end
-  end
-
-  def update
-    set_times(entry)
-    set_employees
-    super do |format|
-      if entry.errors.blank?
-        redirect_to action: 'index', week_date: entry.work_date
-      end
-    end
-  end
-
-  def destroy
-    super(location: {action: 'index', week_date: entry.work_date})
-  end
 
   # ajax action
   def existing
     @worktime = Worktime.new
-    @worktime.work_date = params[model_name.to_s][:work_date]
-    @worktime.employee_id = @user.management ? params[model_name.to_s][:employee_id].presence || @user.id : @user.id
+    @worktime.work_date = model_params[:work_date]
+    @worktime.employee_id = @user.management ? model_params[:employee_id].presence || @user.id : @user.id
     set_existing
     render 'existing'
   end
 
-  protected
-
-  def model_name
-    controller_name.singularize
-  end
+  private
 
   def create_default_worktime
     set_period
@@ -168,10 +140,18 @@ class WorktimesController < CrudController
     @previous_week_date = @week_days.first - 7.day
   end
 
+  def set_employees
+    @employees = Employee.list if record_other?
+  end
+
   def list_entries
     Worktime.where('employee_id = ? AND work_date >= ? AND work_date <= ?', @user.id, @week_days.first, @week_days.last)
             .includes(:project, :absence)
             .order('work_date, type DESC, from_start_time, project_id')
+  end
+
+  def index_url
+    { action: 'index', week_date: entry.work_date }
   end
 
   def set_statistics
@@ -183,14 +163,10 @@ class WorktimesController < CrudController
   # returns the employee's id from the params or the logged in user
   def employee_id
     if record_other?
-      params[model_name.to_s] ? params[model_name.to_s][:employee_id] : params[:employee_id]
+      params.key?(model_identifier) ? model_params[:employee_id] : params[:employee_id]
     else
       @user.id
     end
-  end
-
-  def set_employees
-    @employees = Employee.list if record_other?
   end
 
   # overwrite in subclass
@@ -203,11 +179,13 @@ class WorktimesController < CrudController
   end
 
   def record_other?
-    @user.management && (params[:other] || other_employee_param?)
+    @user.management && (%w(1 true).include?(params[:other]) || other_employee_param?)
   end
 
   def other_employee_param?
-    params[model_name.to_s] && params[model_name.to_s][:employee_id] && params[model_name.to_s][:employee_id] != @user.id
+    params.key?(model_identifier) &&
+    model_params[:employee_id] &&
+    model_params[:employee_id] != @user.id
   end
 
   def append_flash(msg)
@@ -221,10 +199,18 @@ class WorktimesController < CrudController
   end
 
   def assign_attributes
-    if params[model_name.to_s]
-      params[:other] = 1 if params[model_name.to_s][:employee_id] && @user.management
+    if params.key?(model_identifier)
+      params[:other] = 1 if model_params[:employee_id] && @user.management
       super
       entry.employee = @user unless record_other?
+      if model_params[:from_start_time].present? || model_params[:to_end_time].present?
+        entry.hours = nil
+        entry.report_type = StartStopType::INSTANCE
+      else
+        entry.from_start_time = nil
+        entry.to_end_time = nil
+        entry.report_type = HoursDayType::INSTANCE
+      end
     end
   end
 
@@ -236,14 +222,4 @@ class WorktimesController < CrudController
     params.slice(:evaluation, :category_id, :division_id, :start_date, :end_date, :page)
   end
 
-  def set_times(entry)
-    if params[model_name.to_s] && (params[model_name.to_s][:from_start_time].present? || params[model_name.to_s][:to_end_time].present?)
-      entry.hours = nil
-      entry.report_type = StartStopType::INSTANCE
-    else
-      entry.from_start_time = nil
-      entry.to_end_time = nil
-      entry.report_type = HoursDayType::INSTANCE
-    end
-  end
 end
