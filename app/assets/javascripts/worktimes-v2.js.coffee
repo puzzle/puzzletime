@@ -33,6 +33,9 @@ app.worktimes.activateLastNavDay = ->
 app.worktimes.scrollToDayWithDate = (date) ->
   dateLabel = $('.worktimes .weekcontent .date-label[data-date="' + date + '"]')
 
+  if dateLabel.size() is 0
+    return
+
   if dateLabel.hasClass('empty')
     # no entries for this date available
     if dateLabel.prevAll('.date-label:not(.empty)').size() is 0
