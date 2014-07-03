@@ -10,15 +10,3 @@
             :controller => 'evaluator',
             :action => 'select_period',
             :back_url => request.original_fullpath
-  - if @notifications && !@notifications.empty?
-    |
-    = link_to("#{@notifications.size} Nachricht#{@notifications.size > 1 ? 'en' : ''}",
-              '#',
-              data: { toggle: 'notifications' })
-    %ul#notifications.alert.alert-info{:style => "display: none;"}
-      - @notifications.each do |notification|
-        %li= h(notification.message).gsub("\n", "<br/>")
-    - ref = controller.request.env["HTTP_REFERER"]
-    - if ref && "login" == ref[-5,5]
-      :javascript
-        $('notifications').show();

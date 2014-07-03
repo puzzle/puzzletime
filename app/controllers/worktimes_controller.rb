@@ -20,6 +20,7 @@ class WorktimesController < CrudController
 
   def index
     set_week_days
+    @notifications = UserNotification.list_during(@period)
     super
   end
 
@@ -158,6 +159,7 @@ class WorktimesController < CrudController
     @current_overtime = @user.statistics.current_overtime
     @monthly_worktime = @user.statistics.musttime(Period.current_month)
     @pending_worktime = 0 - @user.statistics.overtime(Period.current_month).to_f
+    @remaining_vacations = @user.statistics.current_remaining_vacations
   end
 
   # returns the employee's id from the params or the logged in user

@@ -1,0 +1,4 @@
+- if @notifications && !@notifications.empty?
+  %ul#notifications.alert.alert-info
+    - @notifications.each do |notification|
+      %li= h(notification.message).gsub("\n", "<br/>")
