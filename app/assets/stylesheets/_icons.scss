@@ -1,0 +1,49 @@
+@font-face {
+  font-family: 'puzzletime-icons';
+  src:url('puzzletime-icons.eot?gkjlmk');
+  src:url('puzzletime-icons.eot?#iefixgkjlmk') format('embedded-opentype'),
+    url('puzzletime-icons.woff?gkjlmk') format('woff'),
+    url('puzzletime-icons.ttf?gkjlmk') format('truetype'),
+    url('puzzletime-icons.svg?gkjlmk#puzzletime-icons') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  font-family: 'puzzletime-icons';
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-add:before {
+  content: "\e600";
+}
+.icon-calendar:before {
+  content: "\e601";
+}
+.icon-delete:before {
+  content: "\e602";
+}
+.icon-duplicate:before {
+  content: "\e603";
+}
+.icon-help:before {
+  content: "\e604";
+}
+.icon-next:before {
+  content: "\e605";
+}
+.icon-previous:before {
+  content: "\e606";
+}
+.icon-user:before {
+  content: "\e607";
+}

@@ -25,11 +25,11 @@
           - if @user
             %li
               = link_to(settings_employees_path) do
-                = icon('user')
+                %i.icon-user
                 = @user.label
           %li
             = link_to('https://twiki.puzzle.ch/bin/view/Puzzle/PuzzleTimeFAQ') do
-              = icon('question-sign')
+              %i.icon-help
           - if @user
             %li
               = link_to 'Logout',  {:controller => 'login',  :action => 'logout'}, :method => 'post'
