@@ -1,34 +1,34 @@
-$worktimes-border: $gray-light;
-$worktimes-border-radius: 3px;
 $worktimes-weeknav-active-bg: #fff;
-$worktimes-weeknav-height: 70px;
 $worktimes-weekcontent-hover-bg: lighten($brand-blue, 30%);
-$worktimes-default-spacing: 10px;
 
 .worktimes {
-  padding-top: 4 * $worktimes-default-spacing;
+  padding-top: 4 * $padding-large-vertical;
 
   .figures {
-    @include clearfix;
+    @extend .row;
     color: $gray;
 
     .balance {
-      float: left;
-      margin-left: 5%;
+      @extend .col-xs-offset-1;
+      @extend .col-xs-2;
     }
     .monthly {
-      float: right;
-      margin-right: 5%;
+      @extend .col-xs-6;
+      text-align: center;
+    }
+    .holidays {
+      @extend .col-xs-2;
+      text-align: right;
     }
   }
 
   .weeknav-container {
     width: 100%;
-    padding: $worktimes-default-spacing 0;
+    padding: $padding-base-vertical 0;
 
     &.stuck {
       position: fixed;
-      top: -$worktimes-default-spacing;
+      top: -$padding-base-vertical;
       z-index: 99;
 
       .weeknav {
@@ -39,38 +39,27 @@ $worktimes-default-spacing: 10px;
   }
 
   .weeknav {
-    @include clearfix;
+    @extend .row;
+    position: relative;
     border-width: 1px 0;
     border-style: solid;
-    border-color: $worktimes-border;
+    border-color: $gray-light;
     background-color: $gray-lighter;
 
-    .browser {
-      width: 90%;
-      float: left;
-
-      .controls {
-        float: right;
-        width: 30%;
-        border-right: 1px solid $worktimes-border;
-
-        .weeknav-element {
-          width: 33.333%;
-        }
-      }
+    .controls {
     }
   }
 
   .weeknav-element {
-    line-height: $worktimes-weeknav-height;
+    line-height: 90px;
     display: table-cell;
     text-align: center;
-    float: left;
 
     .inner {
       display: inline-block;
       vertical-align: middle;
       line-height: $line-height-base;
+      margin-bottom: 10px;
     }
 
     .weeknav-label {
@@ -81,39 +70,67 @@ $worktimes-default-spacing: 10px;
   }
 
   .weeknav-link {
-    width: 5%;
-    line-height: $worktimes-weeknav-height;
-    float: left;
+    @extend .col-xs-1;
+    line-height: 90px + 30px;
     text-align: center;
     vertical-align: middle;
+    font-size: 30px;
+  }
+
+  .weeknav-calendar-row,
+  .weeknav-add-row {
+    position: absolute;
+    line-height: 30px;
+    vertical-align: middle;
+    border-width: 0 0 1px 0;
+    border-style: solid;
+    border-color: $gray-light;
+    background-color: #fff;
+  }
+  .weeknav-calendar-row {
+    @extend .col-xs-offset-1;
+    @extend .col-xs-8;
+    border-left-width: 1px;
+  }
+  .weeknav-add-row {
+    @extend .col-xs-offset-9;
+    @extend .col-xs-2;
+    border-right-width: 1px;
+    padding-right: 0;
+
+    .btn {
+      display: block;
+      padding: 4px 0;
+      border-radius: 0;
+
+      @media (max-width: 820px) {
+        .add-text {
+          display: none;
+        }
+      }
+    }
   }
 
   .weeknav-days {
-    width: 70%;
-    float: left;
+    @extend .col-xs-7;
     list-style: none;
-    margin: 0;
+    margin: 30px 0 0 0;
     padding: 0;
-    @include clearfix;
 
     .day {
+      @extend .col-xs-1;
       width: percentage(1 / 7);
       cursor: pointer;
       border-width: 0 1px 0 0;
       border-style: solid;
-      border-color: $worktimes-border;
+      border-color: $gray-light;
 
       &:first-child {
         border-width: 0 1px;
       }
 
       &:hover {
-        border-width: 1px 2px 1px 1px;
-        height: $worktimes-weeknav-height;
-
-        &:first-child {
-          border-width: 1px 2px 1px 2px;
-        }
+        @include box-shadow(inset 0 0 0 3px $brand-green);
       }
 
       &.active {
@@ -133,18 +150,24 @@ $worktimes-default-spacing: 10px;
       }
 
       &.today {
-        .weeknav-time {
-          color: $brand-blue;
-        }
+        background-color: $brand-blue;
+        color: #fff;
       }
     }
   }
 
+  .weeknav-total {
+      @extend .col-xs-3;
+      margin-top: 30px;
+      border-right: 1px solid $gray-light;
+      text-align: right;
+  }
+
   .weekcontent {
-    margin-bottom: $worktimes-default-spacing;
+    margin-bottom: $padding-base-vertical;
 
     .date-label, .entry {
-      padding: $worktimes-default-spacing 0;
+      padding: $padding-base-vertical 0;
       clear: both;
       background-color: none;
 
@@ -159,8 +182,8 @@ $worktimes-default-spacing: 10px;
     }
 
     .date-label {
-      margin-top: $worktimes-default-spacing;
-      padding: $worktimes-default-spacing 5%;
+      margin-top: $padding-base-vertical;
+      padding: $padding-base-vertical 5%;
       color: $gray;
 
       &.empty {
@@ -170,7 +193,7 @@ $worktimes-default-spacing: 10px;
 
     .entry {
       position: relative;
-      border-top: 1px solid $worktimes-border;
+      border-top: 1px solid $gray-light;
       @include clearfix;
 
       &:hover, &:active {
