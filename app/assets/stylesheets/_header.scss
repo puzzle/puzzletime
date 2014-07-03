@@ -31,10 +31,10 @@
 
   .navbar-nav {
     > li > a {
-    padding-top: ((40px - $line-height-computed) / 2);
-    padding-bottom: ((40px - $line-height-computed) / 2);
+      padding-top: ((40px - $line-height-computed) / 2);
+      padding-bottom: ((40px - $line-height-computed) / 2);
     }
-    .navbar-right li {
+    &.navbar-right li {
       border-left: 1px solid $navbar-default-border;
     }
   }
