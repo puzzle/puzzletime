@@ -41,8 +41,9 @@
     - if @worktimes.present?
       = render partial: 'list', collection: @week_days, as: :day
     - else
-      %p
-        In dieser Woche wurden noch keine Zeiten erfasst
+      .row
+        .col-xs-offset-1.col-xs-10
+          In dieser Woche wurden noch keine Zeiten erfasst
 
 %p.actions
   - if @user.management
