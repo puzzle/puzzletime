@@ -19,7 +19,6 @@
             = image_tag 'logo.svg', :size => '41x40'
             PuzzleTime
             %span.version
-              1.25
               = Puzzletime.version
         %ul.nav.navbar-nav.navbar-right
           - if @user
@@ -33,15 +32,16 @@
           - if @user
             %li
               = link_to 'Logout',  {:controller => 'login',  :action => 'logout'}, :method => 'post'
-    = render 'layouts/menu'
+    - if @user
+      = render 'layouts/menu'
 
-    #submenu.navbar.navbar.navbar-default
-      .container-fluid
-        %ul.nav.navbar-nav
-          = render 'submenu'
+      #submenu.navbar.navbar.navbar-default
+        .container-fluid
+          %ul.nav.navbar-nav
+            = render 'submenu'
 
-    #breadcrumb
-      = render 'breadcrumb'
+      #breadcrumb
+        = render 'breadcrumb'
 
     #content
       %h1= @title
