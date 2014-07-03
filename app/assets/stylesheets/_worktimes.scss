@@ -133,27 +133,35 @@ $worktimes-weekcontent-hover-bg: lighten($brand-blue, 30%);
         @include box-shadow(inset 0 0 0 3px $brand-green);
       }
 
-      &.active {
-        background-color: $worktimes-weeknav-active-bg;
-      }
+      &.today {
+        background: $brand-blue url('day-marker-active.svg') 100% 100% no-repeat;
+        color: #fff;
 
-      &.holiday {
-        .weeknav-label, .weeknav-time {
-          color: $gray;
+        &.active {
+          color: #000;
         }
       }
 
       &.missing {
+        background: url('day-marker-missing.svg') 100% 100% no-repeat;
+
         .weeknav-time {
           color: $brand-red;
         }
       }
 
-      &.today {
-        background-color: $brand-blue;
-        color: #fff;
+      &.holiday {
+        background: url('day-marker-holiday.svg') 100% 100% no-repeat;
+
+        .weeknav-label, .weeknav-time {
+          color: $gray;
+        }
       }
-    }
+
+      &.active {
+        background-color: $worktimes-weeknav-active-bg;
+      }
+   }
   }
 
   .weeknav-total {
