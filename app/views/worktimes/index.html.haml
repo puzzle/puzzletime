@@ -13,18 +13,18 @@
     .weeknav
       = link_to(worktimes_url(week_date: @previous_week_date),
                 {class: 'weeknav-link previous', title: 'Vorherige Woche'}) do
-        = icon('chevron-left')
+        %i.icon-previous
 
       %ul.weeknav-days
         = render partial: 'overview_day', collection: @week_days, as: :day
       .weeknav-calendar-row
         = hidden_field_tag('week_date', I18n.l(@selected_date), class: 'date')
-        = icon(:calendar)
+        %i.icon-calendar
         = I18n.l(@selected_date)
       .weeknav-add-row
         = link_to(new_projecttime_path(work_date: I18n.l(@selected_date)),
                   {class: 'btn btn-primary', title: 'Zeit/Abwesenheit erfassen'}) do
-          = icon(:plus)
+          %i.icon-add
           %span.add-text
             Hinzufügen
       .weeknav-total.weeknav-element
@@ -34,7 +34,7 @@
 
       = link_to(worktimes_url(week_date: @next_week_date),
                 {class: 'weeknav-link next', title: 'Nächste Woche'}) do
-        = icon('chevron-right')
+        %i.icon-next
 
   .weekcontent
     - if @worktimes.present?
