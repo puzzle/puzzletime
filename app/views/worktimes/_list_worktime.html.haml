@@ -1,5 +1,7 @@
 .entry{'data-date' => day}
-  .title= worktime_account(worktime)
+  .title-description
+    .title= worktime_account(worktime)
+    .description= worktime_description(worktime)
   .time-range
     = time_range(worktime)
   .time-value= format_hour(worktime.hours)
@@ -14,5 +16,4 @@
               data: { method: :delete,
                       confirm: ti(:confirm_delete) }) do
       %i.icon-delete
-  .description= worktime_description(worktime)
   = link_to '', edit_polymorphic_url(worktime), {class: 'entry-link'}

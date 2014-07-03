@@ -173,11 +173,10 @@ $worktimes-weekcontent-hover-bg: lighten($brand-blue, 30%);
   }
 
   .weekcontent {
+    margin-top: 20px;
     margin-bottom: $padding-base-vertical;
 
     .date-label, .entry {
-      padding: $padding-base-vertical 0;
-      clear: both;
       background-color: none;
 
       -moz-transition: background-color 400ms ease-in;
@@ -191,17 +190,26 @@ $worktimes-weekcontent-hover-bg: lighten($brand-blue, 30%);
     }
 
     .date-label {
-      margin-top: $padding-base-vertical;
-      padding: $padding-base-vertical 5%;
+      @extend .row;
       color: $gray;
 
       &.empty {
         display: none;
       }
+
+      .inner {
+        @extend .col-xs-offset-1;
+        @extend .col-xs-10;
+        padding-top: 60px;
+        padding-bottom: 10px;
+      }
     }
 
     .entry {
+      @extend .row;
+      min-height: 95px;
       position: relative;
+      padding: 20px 0;
       border-top: 1px solid $gray-light;
       @include clearfix;
 
@@ -218,14 +226,17 @@ $worktimes-weekcontent-hover-bg: lighten($brand-blue, 30%);
         z-index: 0;
       }
 
-      > * {
-        float: left;
+      .title-description {
+        @extend .col-xs-offset-1;
+        @extend .col-xs-5;
       }
 
       .title, .description {
-        width: 60%;
-        margin-left: 5%;
         @include ellipsis(true);
+      }
+
+      .title {
+        font-size: 24px;
       }
 
       .description {
@@ -233,26 +244,23 @@ $worktimes-weekcontent-hover-bg: lighten($brand-blue, 30%);
       }
 
       .time-range, .time-value, .controls {
-        width: 10%;
         text-align: right;
       }
 
-      .title {
-        font-size: 24px;
-      }
-
       .time-range {
+        @extend .col-xs-2;
         font-size: 18px;
         font-weight: 300;
       }
 
       .time-value {
+        @extend .col-xs-1;
         font-size: 18px;
         font-weight: 500;
       }
 
       .controls {
-        margin-right: 5%;
+        @extend .col-xs-2;
         font-size: 24px;
 
         a:hover, a:active {
