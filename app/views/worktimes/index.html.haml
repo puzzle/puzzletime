@@ -23,7 +23,8 @@
         %i.icon-calendar
         = I18n.l(@selected_date)
         - if @user.management
-          = link_to 'Fremderfassen', new_projecttime_path(other: 1), {class: 'add-other'}
+          = link_to('Fremderfassen', new_projecttime_path(other: 1, work_date: I18n.l(@selected_date)),
+                    {class: 'add-other'})
       .weeknav-add-row
         = link_to(new_projecttime_path(work_date: I18n.l(@selected_date)),
                   {class: 'btn btn-primary', title: 'Zeit/Abwesenheit erfassen'}) do
