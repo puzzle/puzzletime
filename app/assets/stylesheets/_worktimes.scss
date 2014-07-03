@@ -2,8 +2,6 @@ $worktimes-weeknav-active-bg: #fff;
 $worktimes-weekcontent-hover-bg: lighten($brand-blue, 30%);
 
 .worktimes {
-  padding-top: 4 * $padding-large-vertical;
-
   .figures {
     @extend .row;
     color: $gray;

@@ -1,22 +1,23 @@
-#menu
-  %ul
-    = nav 'Zeiterfassung',
-          worktimes_path(clear: 1),
-          worktimes_path,
-          projecttimes_path,
-          absencetimes_path,
-          weekly_graph_path
-    = nav 'Planung', plannings_path(clear: 1), plannings_path, employee_lists_path
-    = nav 'Auswertungen',
-          evaluation_path('userprojects', clear: 1),
-          '/evaluator',
-          all_absences_graph_path
-    = nav 'Verwalten',
-          employee_memberships_path,
-          absences_path,
-          clients_path,
-          projects_path,
-          departments_path,
-          employees_path,
-          user_notifications_path,
-          holidays_path
+#menu.navbar.navbar-inverse
+  .container-fluid
+    %ul.nav.navbar-nav
+      = nav 'Zeiterfassung',
+            worktimes_path(clear: 1),
+            worktimes_path,
+            projecttimes_path,
+            absencetimes_path,
+            weekly_graph_path
+      = nav 'Planung', plannings_path(clear: 1), plannings_path, employee_lists_path
+      = nav 'Auswertungen',
+            evaluation_path('userprojects', clear: 1),
+            '/evaluator',
+            all_absences_graph_path
+      = nav 'Verwalten',
+            employee_memberships_path,
+            absences_path,
+            clients_path,
+            projects_path,
+            departments_path,
+            employees_path,
+            user_notifications_path,
+            holidays_path

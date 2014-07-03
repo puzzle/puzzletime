@@ -2,12 +2,7 @@
 @import "bootstrap";
 @import "mixins";
 
-body {
-    background:     #F9F9F7 asset-url('diagonal.gif') repeat-x;
-}
-
 p {
-    /* margin-bottom:  20px; */
     text-align:     justify;
 }
 
@@ -15,24 +10,11 @@ div {
     text-align:     justify;
 }
 
-/* a { */
-/*     color:          #0087e3 ; */
-/*     text-decoration: underline; */
-/* } */
-
-/* a:hover { */
-/*     text-decoration: none; */
-/* } */
-
 a.symbol {
 	text-decoration: none;
 	font-weight: 	 bold;
 	font-size: 		 16px;
 }
-
-/* a img { */
-/* 	border:			0; */
-/* } */
 
 /* h1 { */
 /*     font-size:      20px; */
@@ -49,10 +31,6 @@ a.symbol {
 /*     font-size:      14px; */
 /*     font-weight:    bold; */
 /*     color:          #4a4a4a; */
-/* } */
-
-/* table { */
-/*     font-size:      14px; */
 /* } */
 
 /* td { */
@@ -104,117 +82,9 @@ a.symbol {
 
 
 #content {
-    width: 100%;
-    margin: auto;
-    background: #fff;
-    border-left: 1px solid #E9E9E7;
-    border-right: 1px solid #E9E9E7;
-}
-
-#header {
-    height:         75px;
-    margin-top:     -10px;
-    margin-bottom:  14px;
-}
-
-#splash {
-    background:     #0087e3;
-    color:          #fff;
-    padding-left:   20px;
-	height:     	75px;
-	max-width:		30%;
-}
-
-#brand {
-    font-weight:    normal;
-    font-size:      28px;
-    letter-spacing: -1px;
-	padding-top:	13px;
-    margin-bottom:  0px;
-}
-
-#company {
-    font-size:      11px;
-	line-height:     1px;
-    font-weight:    normal;
-    color:          #FCE2CA;
-}
-
-#brand sup {
-    color:          #FCE2CA;
-    font-size:      0.5em;
-}
-
-#banner {
-	float:			right;
-	height:  75px;
-}
-
-#menu {
-    background:     #46461F asset-url('menu_bg.gif') repeat-x;
-    margin-top:     -8px;
-    height:         35px;
-}
-
-#menu_user {
-    background:     asset-url('menu_user.gif') repeat-x;
-    margin-left:    20px;
-	padding-top: 	 2px;
-    float:          right;
-}
-
-#menu ul {
-    padding-top:    6px;
-    padding-left:   8px;
-    margin-left:    0px;
-    margin-bottom:  13px;
-}
-
-#menu ul li {
-  display:        inline;
-	font-size:		15px;
-}
-
-#menu ul li a {
-    background-color: transparent;
-    background-repeat: repeat-x;
-    padding:        2px 10px 4px 10px;  /* for the white box around the hovered link */
-    color:          #fff;
-    font-weight:    bold;
-}
-
-#menu ul li a:hover, #menu li.active a {
-    background:     #fff asset-url('menubox.gif') repeat-x top;
-    color:          #4A4A24;
-    text-decoration: none;
-}
-
-#submenu {
-    background:     asset-url('menu_user.gif') repeat-x;
-    padding-left:   40px;
-    padding-top:   2px;
-    text-indent:    -28px;
-    margin-bottom:  20px;
-}
-
-#submenu ul {
-    margin: 0;
-    padding: 0;
-}
-
-#submenu ul li {
-    display:        inline;
-    padding-right: 8px;
-}
-
-#submenu li a {
-    color:          black;
-    font-weight:    bold;
-    font-size:    14px;
-}
-
-#submenu li.active a {
-    text-decoration: none;
+    @extend .container-fluid;
+    margin-top: 40px;
+    margin-bottom: 40px;
 }
 
 .nav-tabs.nav-center > li, .nav-pills.nav-center > li {
@@ -335,4 +205,5 @@ footer {
   clear: both;
 }
 
+@import "header";
 @import "worktimes";
