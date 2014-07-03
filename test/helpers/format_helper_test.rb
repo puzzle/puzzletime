@@ -33,6 +33,11 @@ class FormatHelperTest < ActionView::TestCase
     assert_equal "Do 18.6.", format_day(Date.new(2099, 6, 18))
   end
 
+  test 'format days' do
+    assert_equal "5.0 Tage", format_days(5.0001)
+    assert_equal "-1.23 Tage", format_days(-1.23)
+  end
+
   test 'labeled text as block' do
     result = labeled('label') { 'value' }
 
