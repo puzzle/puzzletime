@@ -8,6 +8,10 @@
   &.navbar {
     min-height: 40px;
     border-width: 0;
+
+    &.lonely {
+      border-bottom-width: 1px;
+    }
   }
 
   .navbar-brand {
@@ -33,6 +37,10 @@
     > li > a {
       padding-top: ((40px - $line-height-computed) / 2);
       padding-bottom: ((40px - $line-height-computed) / 2);
+
+      i {
+        margin-right: 4px;
+      }
     }
     &.navbar-right li {
       border-left: 1px solid $navbar-default-border;
