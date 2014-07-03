@@ -79,6 +79,7 @@ $worktimes-weekcontent-hover-bg: lighten($brand-blue, 30%);
   }
 
   .weeknav-calendar-row,
+  .weeknav-add-other-row,
   .weeknav-add-row {
     position: absolute;
     line-height: 30px;
@@ -92,6 +93,10 @@ $worktimes-weekcontent-hover-bg: lighten($brand-blue, 30%);
     @extend .col-xs-offset-1;
     @extend .col-xs-8;
     border-left-width: 1px;
+
+    .add-other {
+      float: right
+    }
   }
   .weeknav-add-row {
     @extend .col-xs-offset-9;
