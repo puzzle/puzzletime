@@ -27,7 +27,6 @@ de-CH:
       edit: Bearbeiten
       add: Erstellen
       delete: Löschen
-      list: Übersicht %{model}
 
     errors:
       header:
