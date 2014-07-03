@@ -12,29 +12,38 @@
     = stylesheet_link_tag 'application', :media => 'all', 'data-turbolinks-track' => true
     = javascript_include_tag "application", 'data-turbolinks-track' => true
   %body
-    #content
-      = image_tag 'space.gif', :size => '840x1'
-      #header
-        = image_tag 'banner.jpg', :size => '547x75', :id => 'banner'
-        #splash
-          #brand
-            puzzleTime
-            %sup= Puzzletime.version
-          #company &nbsp; by Puzzle ITC
-      - if @user
-        = render 'layouts/menu'
-        #menu_user
-          = link_to @user.label, settings_employees_path
-          |
-          = link_to '?', 'https://twiki.puzzle.ch/bin/view/Puzzle/PuzzleTimeFAQ'
-          |
-          = link_to 'Logout',  {:controller => 'login',  :action => 'logout'}, :method => 'post'
-        #submenu
-          %ul
-            = render 'submenu'
-        #breadcrumb
-          = render 'breadcrumb'
+    #headerbar.navbar.navbar-default{role: 'navigation'}
+      .container-fluid
+        .navbar-header
+          .navbar-brand
+            = image_tag 'logo.svg', :size => '41x40'
+            PuzzleTime
+            %span.version
+              1.25
+              = Puzzletime.version
+        %ul.nav.navbar-nav.navbar-right
+          - if @user
+            %li
+              = link_to(settings_employees_path) do
+                = icon('user')
+                = @user.label
+          %li
+            = link_to('https://twiki.puzzle.ch/bin/view/Puzzle/PuzzleTimeFAQ') do
+              = icon('question-sign')
+          - if @user
+            %li
+              = link_to 'Logout',  {:controller => 'login',  :action => 'logout'}, :method => 'post'
+    = render 'layouts/menu'
 
+    #submenu.navbar.navbar.navbar-default
+      .container-fluid
+        %ul.nav.navbar-nav
+          = render 'submenu'
+
+    #breadcrumb
+      = render 'breadcrumb'
+
+    #content
       %h1= @title
       #flash
         = render partial: 'layouts/flash', collection: [:notice, :alert], as: :level
