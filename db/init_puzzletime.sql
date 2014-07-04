@@ -40,11 +40,17 @@ VALUES (1, 'Puzzle ITC', 'PITC');
 INSERT INTO clients (id, name, shortname)
 VALUES (2, 'Client AG', 'CLIE');
 
+-- departments
+INSERT INTO departments(id, name, shortname)
+VALUES(1, 'Backoffice', 'BO');
+INSERT INTO departments(id, name, shortname)
+VALUES(2, 'Software Development', 'SD');
+
 -- projects
-INSERT INTO projects (id, client_id, name, shortname, path_ids)
-VALUES (8, 1, 'Allgemein', 'ALG', ARRAY[8]);
-INSERT INTO projects (id, client_id, name, shortname, path_ids)
-VALUES (9, 1, 'Kundensupport', 'SUP', ARRAY[9]);
+INSERT INTO projects (id, client_id, department_id, name, shortname, path_ids)
+VALUES (8, 1, 1, 'Allgemein', 'ALG', ARRAY[8]);
+INSERT INTO projects (id, client_id, department_id, name, shortname, path_ids)
+VALUES (9, 1, 2, 'Kundensupport', 'SUP', ARRAY[9]);
 INSERT INTO projects (id, client_id, name, shortname, path_ids)
 VALUES (10, 2, 'Produktives', 'PRO', ARRAY[10]);
 INSERT INTO projects (id, client_id, name, shortname, path_ids)
