@@ -202,7 +202,7 @@ class WorktimesController < CrudController
 
   def assign_attributes
     if params.key?(model_identifier)
-      params[:other] = 1 if model_params[:employee_id] && @user.management
+      params[:other] = '1' if model_params[:employee_id] && @user.management
       super
       entry.employee = @user unless record_other?
       if model_params[:from_start_time].present? || model_params[:to_end_time].present?

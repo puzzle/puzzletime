@@ -31,6 +31,7 @@ class ProjecttimesController < WorktimesController
     return create if @split.nil?
     entry
     @worktime.employee ||= @split.original.employee
+    params[:other] = '1'
     assign_attributes
     if @worktime.valid? && @split.add_worktime(@worktime)
       if @split.complete? || (params[:commit] == FINISH && @split.class::INCOMPLETE_FINISH)
@@ -38,7 +39,7 @@ class ProjecttimesController < WorktimesController
         session[:split] = nil
         flash[:notice] = 'Alle Arbeitszeiten wurden erfasst'
         if @worktime.employee != @user
-          params[:other] = 1
+          params[:other] = '1'
           params[:evaluation] = nil
         end
         redirect_to detail_times_path
