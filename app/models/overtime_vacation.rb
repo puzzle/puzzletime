@@ -34,7 +34,9 @@ class OvertimeVacation < ActiveRecord::Base
   ##### interface methods for Manageable #####
 
   def to_s
-    "von #{hours} Stunden am #{I18n.l(transfer_date)}"
+    result = "von #{hours} Stunden"
+    result << " am #{I18n.l(transfer_date)}" if transfer_date
+    result
   end
 
   ##### caching #####

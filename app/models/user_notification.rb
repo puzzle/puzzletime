@@ -67,7 +67,7 @@ class UserNotification < ActiveRecord::Base
   end
 
   def validate_period
-    errors.add(:date_to, 'Enddatum muss nach Startdatum sein.') if date_from > date_to
+    errors.add(:date_to, 'Enddatum muss nach Startdatum sein.') if date_to && date_from > date_to
   end
 
   #### caching #####
