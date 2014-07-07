@@ -26,7 +26,7 @@ class TarantulaTest < ActionDispatch::IntegrationTest
   def setup_crawler(t)
     # some links use example.com as a domain, allow them
     t.skip_uri_patterns.delete(/^http/)
-    t.skip_uri_patterns << /\/login\/login/
+    t.skip_uri_patterns << /\/login\/logout/
     t.skip_uri_patterns << /^http(?!:\/\/www\.example\.com)/
     t.skip_uri_patterns << /\/employees\/#{user.id}$/
     t.skip_uri_patterns << /\/synchronize$/
