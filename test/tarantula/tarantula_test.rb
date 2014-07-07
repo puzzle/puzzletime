@@ -26,11 +26,11 @@ class TarantulaTest < ActionDispatch::IntegrationTest
   def setup_crawler(t)
     # some links use example.com as a domain, allow them
     t.skip_uri_patterns.delete(/^http/)
-    t.skip_uri_patterns << /\/login\/logout/
     t.skip_uri_patterns << /^http(?!:\/\/www\.example\.com)/
-    t.skip_uri_patterns << /\/employees\/#{user.id}$/
-    t.skip_uri_patterns << /\/synchronize$/
-    t.skip_uri_patterns << /\?week_date=(#{outside_four_week_window}.)*$/
+    t.skip_uri_patterns << /\/login\/logout/ # do not logout during tests
+    t.skip_uri_patterns << /\/employees\/#{user.id}$/ # do not modify logged in user
+    t.skip_uri_patterns << /\/synchronize$/ # do not access puzzlebase
+    t.skip_uri_patterns << /\?week_date=(#{outside_four_week_window}.)*$/ # only allows week strings from one week ago until two weeks from now.
 
     t.allow_404_for /^\-?\d+$/  # change period may produce such links in tarantula
     t.allow_404_for /projecttimes\/start$/  # passing invalid project_id
