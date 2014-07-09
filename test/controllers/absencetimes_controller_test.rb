@@ -73,7 +73,7 @@ class AbsencetimesControllerTest < ActionController::TestCase
 
   def test_create_multiabsence
     login_as(:long_time_john)
-    work_date = Date.today + 3
+    work_date = Date.new(2014, 7, 7) # no offical holidays in the next 3 weeks
     post :create, absencetime: { absence_id: absences(:vacation),
                                  work_date: work_date,
                                  create_multi: 'true',

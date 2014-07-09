@@ -1,4 +1,5 @@
-= standard_form(@worktime) do |f|
+- url ||= nil
+= standard_form(@worktime, url: url) do |f|
   - if record_other?
     = f.labeled_belongs_to_field(:employee_id,
                                   data: { remote: true,
