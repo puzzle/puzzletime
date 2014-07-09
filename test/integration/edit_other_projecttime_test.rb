@@ -41,10 +41,11 @@ class EditOtherProjecttimeTest < ActionDispatch::IntegrationTest
     assert_equal projecttime, Projecttime.last # splitted times will be persisted later as new records
     assert_equal 8.5, projecttime.hours
 
-    post_via_redirect create_part_projecttimes_path, projecttime: { employee_id: employees(:mark).id,
-                                           account_id: projects(:allgemein).id,
-                                           work_date: Date.today,
-                                           hours: '1:00'  }
+    post_via_redirect create_part_projecttimes_path,
+      projecttime: { employee_id: employees(:mark).id,
+                     account_id: projects(:allgemein).id,
+                     work_date: Date.today,
+                     hours: '1:00'  }
     assert_response :success
     assert_equal '/evaluator/details', path
     assert_match(/Alle Arbeitszeiten wurden erfasst/, response.body)
@@ -53,12 +54,14 @@ class EditOtherProjecttimeTest < ActionDispatch::IntegrationTest
   end
 
   private
+  
   def create_projecttime
     employee = employees(:mark)
-    post_via_redirect '/projecttimes', projecttime: { employee_id: employee.id,
-                                         account_id: projects(:allgemein).id,
-                                         work_date: Date.today,
-                                         hours: '8:30'  }
+    post_via_redirect '/projecttimes',
+      projecttime: { employee_id: employee.id,
+                     account_id: projects(:allgemein).id,
+                     work_date: Date.today,
+                     hours: '8:30'  }
     assert_response :success
     assert_equal '/projecttimes', path
     projecttime = Projecttime.last
@@ -67,7 +70,7 @@ class EditOtherProjecttimeTest < ActionDispatch::IntegrationTest
   end
 
   def login
-    post_via_redirect "/login/login", user: 'GGG', pwd: 'Yaataw'
+    post_via_redirect '/login/login', user: 'GGG', pwd: 'Yaataw'
     assert_response :success
     assert_equal '/', path
     assert assigns(:week_days)
