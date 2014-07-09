@@ -95,9 +95,13 @@ $ ->
 
     $('.worktimes .weeknav-container').waypoint('sticky')
 
-    $("#week_date").datepicker onSelect: (date, instance) ->
-      window.location = "/worktimes?week_date=" + date
-      return
+    $("#week_date").datepicker
+      showWeek: true,
+      changeYear: true
+      showButtonPanel: true
+      onSelect: (date, instance) ->
+        window.location = "/worktimes?week_date=" + date
+        return
 
     selectedDate = $('.worktimes').data('selectedDate')
     if selectedDate && $('.worktimes .weeknav .day[data-date="' + selectedDate + '"]').size()

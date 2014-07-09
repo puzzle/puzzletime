@@ -98,7 +98,6 @@ module DryCrud::Form
       html_options[:size] = 15
       html_options[:value] = date
       add_css_class(html_options, 'date')
-
       with_addon(text_field(attr, html_options), icon(:calendar))
     end
 
@@ -163,7 +162,7 @@ module DryCrud::Form
     # Renders the given content with an addon.
     def with_addon(content, addon)
       content_tag(:div, class: 'input-group') do
-        content + content_tag(:span, addon, class: 'input-group-addon')
+        content_tag(:span, addon, class: 'input-group-addon') + content
       end
     end
 
