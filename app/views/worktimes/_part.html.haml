@@ -8,7 +8,7 @@
                 {:action => 'delete_part', :part_id => part_counter},
                 data: { confirm: 'Wollen sie diese Arbeitszeit wirklich entfernen?',
                         method: 'delete' }
-  - else
+  - elsif record_other?
     %td
       = link_to 'Bearbeiten',
                 {:controller => part.controller, :action => 'edit', :id => part.id}

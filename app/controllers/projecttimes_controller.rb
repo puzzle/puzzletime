@@ -7,7 +7,7 @@ class ProjecttimesController < WorktimesController
 
   def update
     if entry.employee_id != @user.id
-      session[:split] = WorktimeEdit.new(entry.clone)
+      session[:split] = WorktimeEdit.new(entry.dup)
       create_part
     else
       super
@@ -45,12 +45,7 @@ class ProjecttimesController < WorktimesController
         redirect_to detail_times_path
       else
         session[:split] = @split
-        redirect_to respond_to do |wants|
-          wants.html do
-            evaluation_detail_params
-          end
-          wants.js {  }
-        end.merge!(action: 'split')
+        redirect_to evaluation_detail_params.merge!(action: 'split')
       end
     else
       render action: 'split'

@@ -70,7 +70,7 @@ Rails.application.routes.draw do
       get :existing
       post :start
       post :stop
-      post :create_part
+      match :create_part, via: [:post, :patch]
       match :delete_part, via: [:post, :delete]
 
       get :running
