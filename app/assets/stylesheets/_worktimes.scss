@@ -152,7 +152,7 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
       }
 
       &.today {
-        background: $brand-blue url('day-marker-active.svg') 100% 100% no-repeat;
+        background: $brand-blue image-url('day-marker-active.svg') 100% 100% no-repeat;
         color: #fff;
 
         &.active {
@@ -161,7 +161,7 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
       }
 
       &.missing {
-        background: url('day-marker-missing.svg') 100% 100% no-repeat;
+        background: image-url('day-marker-missing.svg') 100% 100% no-repeat;
 
         .weeknav-time {
           color: $brand-red;
@@ -169,7 +169,7 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
       }
 
       &.holiday {
-        background: url('day-marker-holiday.svg') 100% 100% no-repeat;
+        background: image-url('day-marker-holiday.svg') 100% 100% no-repeat;
 
         .weeknav-label, .weeknav-time {
           color: $gray;

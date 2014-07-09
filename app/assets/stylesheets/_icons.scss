@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'puzzletime-icons';
-  src:url('puzzletime-icons.eot?gkjlmk');
-  src:url('puzzletime-icons.eot?#iefixgkjlmk') format('embedded-opentype'),
-    url('puzzletime-icons.woff?gkjlmk') format('woff'),
-    url('puzzletime-icons.ttf?gkjlmk') format('truetype'),
-    url('puzzletime-icons.svg?gkjlmk#puzzletime-icons') format('svg');
+  src:asset-url('puzzletime-icons.eot?gkjlmk');
+  src:asset-url('puzzletime-icons.eot?#iefixgkjlmk') format('embedded-opentype'),
+    asset-url('puzzletime-icons.woff?gkjlmk') format('woff'),
+    asset-url('puzzletime-icons.ttf?gkjlmk') format('truetype'),
+    asset-url('puzzletime-icons.svg?gkjlmk#puzzletime-icons') format('svg');
   font-weight: normal;
   font-style: normal;
 }
