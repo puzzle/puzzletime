@@ -19,7 +19,7 @@
       %ul.weeknav-days
         = render partial: 'overview_day', collection: @week_days, as: :day
       .weeknav-calendar-row
-        = plain_form(Worktime.new(work_date: @selected_date)) do |f|
+        = plain_form(Worktime.new(work_date: @selected_date), method: :get) do |f|
           = f.date_field(:work_date, id: 'week_date')
         - if @user.management
           = link_to('Fremderfassen', new_projecttime_path(other: 1, work_date: I18n.l(@selected_date)),
