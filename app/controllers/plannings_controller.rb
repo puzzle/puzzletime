@@ -134,9 +134,9 @@ class PlanningsController < CrudController
 
   def assign_attributes
     planning_params = params[:planning]
-    entry.employee = Employee.find(planning_params[:employee_id]) if planning_params[:employee_id]
-    entry.project = Project.find(planning_params[:project_id]) if planning_params[:project_id]
-    entry.start_week = Week.from_string(planning_params[:start_week_date]).to_integer if planning_params[:start_week_date]
+    entry.employee = Employee.find(planning_params[:employee_id]) if planning_params[:employee_id].present?
+    entry.project = Project.find(planning_params[:project_id]) if planning_params[:project_id].present?
+    entry.start_week = Week.from_string(planning_params[:start_week_date]).to_integer if planning_params[:start_week_date].present?
     entry.definitive = planning_params[:type] == 'definitive'
     entry.is_abstract = planning_params[:abstract_concrete] == 'abstract'
     entry.abstract_amount = (planning_params[:abstract_amount].blank? ? 0 : planning_params[:abstract_amount])
@@ -144,7 +144,7 @@ class PlanningsController < CrudController
       when 'no'
         entry.end_week = entry.start_week
       when 'until'
-        entry.end_week = Week.from_string(planning_params[:end_week_date]).to_integer if planning_params[:end_week_date]
+        entry.end_week = Week.from_string(planning_params[:end_week_date]).to_integer if planning_params[:end_week_date].present?
       when 'forever'
         entry.end_week = nil
     end
