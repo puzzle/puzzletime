@@ -43,7 +43,7 @@ class ProjecttimesControllerTest < ActionController::TestCase
                                  work_date: work_date,
                                  ticket: '#1',
                                  description: 'desc',
-                                 hours: '5:30'
+                                 hours: '00:45'
                                  }
     assert_redirected_to action: 'index', week_date: work_date
     assert flash[:alert].blank?
@@ -51,7 +51,7 @@ class ProjecttimesControllerTest < ActionController::TestCase
     assert_equal projects(:puzzletime), Projecttime.last.project
     assert_equal HoursDayType::INSTANCE, Projecttime.last.report_type
     assert_equal '#1', Projecttime.last.ticket
-    assert_equal 5.5, Projecttime.last.hours
+    assert_equal 0.75, Projecttime.last.hours
     assert_equal work_date, Projecttime.last.work_date
     assert_equal employees(:mark), Projecttime.last.employee # logged in user
   end
@@ -125,7 +125,7 @@ class ProjecttimesControllerTest < ActionController::TestCase
   def test_incomplete_split
     worktime = worktimes(:wt_pz_allgemein)
     put :update, id: worktime, projecttime: { hours: '0:30', employee_id: employees(:pascal) }
-    assert_match(/Die Zeiten wurden noch nicht gespeichert. Bitte schliessen sie dazu den Aufteilungsprozess ab./, @response.body)
+    assert_redirected_to action: 'split'
     assert_not_nil assigns(:split)
   end
   
