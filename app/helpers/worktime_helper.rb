@@ -32,6 +32,10 @@ module WorktimeHelper
     end
     result.html_safe
   end
+  
+  def week_number(date)
+    date.strftime("%U").to_i if date
+  end
 
   def monthly_worktime
     "#{format_hour(@monthly_worktime)} (#{format_hour(@pending_worktime)} verbleibend)"
