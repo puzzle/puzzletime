@@ -1,9 +1,13 @@
+# encoding: utf-8
+
 # == Schema Information
 #
 # Table name: order_targets
 #
 #  id              :integer          not null, primary key
-#  rating          :string(255)
+#  order_id        :integer
+#  target_scope_id :integer
+#  rating          :string(255)      default("green"), not null
 #  comment         :text
 #  created_at      :datetime
 #  updated_at      :datetime
