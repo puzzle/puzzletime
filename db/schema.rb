@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140626104953) do
+ActiveRecord::Schema.define(version: 20140714093557) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -126,22 +126,27 @@ ActiveRecord::Schema.define(version: 20140626104953) do
 
   create_table "order_statuses", force: true do |t|
     t.string  "name",     null: false
+    t.string  "style"
     t.integer "position", null: false
   end
 
+  create_table "order_targets", force: true do |t|
+    t.integer  "order_id"
+    t.integer  "target_scope_id"
+    t.string   "rating",          default: "green", null: false
+    t.text     "comment"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "orders", force: true do |t|
-    t.integer  "budget_item_id",                       null: false
+    t.integer  "budget_item_id",     null: false
     t.integer  "kind_id"
     t.integer  "responsible_id"
     t.integer  "status_id"
     t.integer  "department_id"
     t.integer  "contract_id"
     t.integer  "billing_address_id"
-    t.string   "target_cost",        default: "green"
-    t.string   "target_date",        default: "green"
-    t.string   "target_quality",     default: "green"
-    t.string   "targets_comment"
-    t.datetime "targets_updated_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -210,7 +215,9 @@ ActiveRecord::Schema.define(version: 20140626104953) do
   end
 
   create_table "target_scopes", force: true do |t|
-    t.string "label", null: false
+    t.string  "name",     null: false
+    t.string  "icon"
+    t.integer "position", null: false
   end
 
   create_table "user_notifications", force: true do |t|

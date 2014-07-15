@@ -20,6 +20,7 @@ class OrderStatusesControllerTest < ActionController::TestCase
   # Attribute hash used in several tests.
   def test_entry_attrs
     { name: 'Full Stop',
-      position: 15 }
+      position: 15,
+      style: 'danger' }
   end
 end
