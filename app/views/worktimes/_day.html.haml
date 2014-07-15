@@ -1,5 +1,6 @@
-- daily_worktimes = daily_worktimes(@worktimes, day)
 .date-label{'data-date' => day}
   .inner
     = format_day(day)
-= render partial: 'worktime', collection: daily_worktimes, as: :worktime, locals: {day: day}
+  /todo: add and style daily total hours
+  /.time-value= format_hour(sum_hours(day))
+= render partial: 'worktime', collection: @daily_worktimes[day], as: :worktime, locals: {day: day}

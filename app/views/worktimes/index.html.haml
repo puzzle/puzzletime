@@ -36,7 +36,7 @@
       .weeknav-total.weeknav-element
         .inner
           .weeknav-label Total
-          .weeknav-time= format_hour(sum_total_worktimes(@worktimes))
+          .weeknav-time= format_hour(sum_hours)
 
       = link_to(worktimes_url(week_date: @next_week_date),
                 {class: 'weeknav-link next', title: 'Nächste Woche'}) do
