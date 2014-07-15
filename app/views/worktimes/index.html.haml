@@ -19,14 +19,15 @@
       %ul.weeknav-days
         = render partial: 'overview_day', collection: @week_days, as: :day
       .weeknav-calendar-row
-        = plain_form(Worktime.new(work_date: @selected_date), method: :get) do |f|
+        = plain_form(Worktime.new, method: :get) do |f|
           = f.date_field(:work_date, id: 'week_date')
         - if @user.management
-          = link_to('Fremderfassen', new_projecttime_path(other: 1, work_date: I18n.l(@selected_date)),
-                    {class: 'add-other'})
+          = link_to('Fremderfassen', new_projecttime_path(other: 1),
+                    {class: 'add-other', id: 'new_other_projecttime_link'})
       .weeknav-add-row
-        = link_to(new_projecttime_path(work_date: I18n.l(@selected_date)),
-                  {class: 'btn btn-primary', title: 'Zeit/Abwesenheit erfassen'}) do
+        = link_to(new_projecttime_path, {class: 'btn btn-primary',
+                                         title: 'Zeit/Abwesenheit erfassen',
+                                         id: 'new_projecttime_link' }) do
           %i.icon-add
           %span.add-text
             Hinzufügen
@@ -40,10 +41,5 @@
         %i.icon-next
 
   .weekcontent
-    - if @worktimes.present?
-      = render partial: 'day', collection: @week_days, as: :day
-    - else
-      .row
-        .col-xs-offset-1.col-xs-10
-          In dieser Woche wurden noch keine Zeiten erfasst.
+    = render partial: 'day', collection: @week_days, as: :day
 

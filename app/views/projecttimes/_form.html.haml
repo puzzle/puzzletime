@@ -1,5 +1,5 @@
 - url ||= nil
-= standard_form(@worktime, url: url) do |f|
+= standard_form(@worktime, {url: url, cancel_url: worktimes_path(week_date: @worktime.work_date)}) do |f|
   - if record_other?
     = f.labeled_belongs_to_field(:employee_id,
                                   data: { remote: true,
