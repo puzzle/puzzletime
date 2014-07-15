@@ -53,16 +53,22 @@ class WorktimesController < CrudController
   def create_default_worktime
     set_period
     entry
-    if params[:work_date]
-      @worktime.work_date = params[:work_date]
-    elsif @period && @period.length == 1
-      @worktime.work_date = @period.startDate
-    else
-      @worktime.work_date = Date.today
-    end
+    set_work_date
     @worktime.employee_id = employee_id
     set_worktime_defaults
     true
+  end
+  
+  def set_work_date
+    unless @worktime.work_date
+      if params[:work_date]
+        @worktime.work_date = params[:work_date]
+      elsif @period && @period.length == 1
+        @worktime.work_date = @period.startDate
+      else
+        @worktime.work_date = Date.today
+      end
+    end
   end
 
   def authorize_destroy
