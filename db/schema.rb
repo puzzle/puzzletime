@@ -33,8 +33,9 @@ ActiveRecord::Schema.define(version: 20140714093557) do
   end
 
   create_table "clients", force: true do |t|
-    t.string "name",                null: false
-    t.string "shortname", limit: 4, null: false
+    t.string  "name",                   null: false
+    t.string  "shortname",    limit: 4, null: false
+    t.integer "path_item_id"
   end
 
   create_table "contacts", force: true do |t|
@@ -87,7 +88,7 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.string  "passwd"
     t.string  "email",                                           null: false
     t.boolean "management",                      default: false
-    t.float   "initial_vacation_days", :default => { :expr => "(0)::double precision" }
+    t.float   "initial_vacation_days",           default: 0.0
     t.string  "ldapname"
     t.string  "eval_periods",          limit: 3,                              array: true
     t.integer "department_id"
@@ -140,7 +141,7 @@ ActiveRecord::Schema.define(version: 20140714093557) do
   end
 
   create_table "orders", force: true do |t|
-    t.integer  "budget_item_id",     null: false
+    t.integer  "path_item_id",       null: false
     t.integer  "kind_id"
     t.integer  "responsible_id"
     t.integer  "status_id"
@@ -155,6 +156,16 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.float   "hours",         null: false
     t.integer "employee_id",   null: false
     t.date    "transfer_date", null: false
+  end
+
+  create_table "path_items", force: true do |t|
+    t.string  "name",                                        null: false
+    t.string  "shortname",                                   null: false
+    t.integer "parent_id"
+    t.integer "path_ids",                                                 array: true
+    t.string  "path_shortnames"
+    t.string  "path_names",      limit: 2047
+    t.boolean "leaf",                         default: true, null: false
   end
 
   create_table "plannings", force: true do |t|
@@ -203,10 +214,12 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.string  "path_names",            limit: 2047
     t.boolean "leaf",                               default: true,    null: false
     t.text    "inherited_description"
-    t.boolean "closed",                             default: false,   null: false
+    t.integer "path_item_id"
+    t.boolean "open",                               default: true,    null: false
     t.integer "offered_rate"
     t.integer "portfolio_item_id"
-    t.integer "discount"
+    t.integer "discount_percent"
+    t.integer "discount_fixed"
     t.string  "reference"
     t.index ["client_id"], :name => "index_projects_on_client_id"
     t.foreign_key ["client_id"], "clients", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_projects_clients"
