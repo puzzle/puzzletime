@@ -1,19 +1,24 @@
 # == Schema Information
 #
-# Table name: order_statuses
+# Table name: target_scopes
 #
 #  id       :integer          not null, primary key
 #  name     :string(255)      not null
-#  style    :string(255)
+#  icon     :string(255)
 #  position :integer          not null
 #
 
-bearbeitung:
-  name: In Bearbeitung
-  style: success
+time:
+  name: Termin
+  icon: time
   position: 10
 
-abgeschlossen:
-  name: Abgeschlossen
-  style: danger
+cost:
+  name: Kosten
+  icon: usd
   position: 20
+
+quality:
+  name: Qualität
+  icon: star-empty
+  position: 30

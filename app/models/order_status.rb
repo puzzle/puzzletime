@@ -1,11 +1,11 @@
 # encoding: utf-8
-
 # == Schema Information
 #
 # Table name: order_statuses
 #
 #  id       :integer          not null, primary key
 #  name     :string(255)      not null
+#  style    :string(255)
 #  position :integer          not null
 #
 
