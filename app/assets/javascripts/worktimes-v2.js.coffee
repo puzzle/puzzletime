@@ -99,16 +99,8 @@ $ ->
 
     $('.worktimes .weeknav .day').on('click', (event) ->
       event.preventDefault();
-      
-      # convert date from yyyy-mm-dd to dd.mm.yyyy
       date = new Date($(event.currentTarget).data('date'))
-      d = date.getDate();
-      m =  date.getMonth();
-      m += 1; # JavaScript months are 0-11
-      y = date.getFullYear();
-      date = d + "." + m + "." + y;
-
-      $("#week_date").datepicker('setDate', date)
+      $("#week_date").datepicker({dateFormat: 'yyyy-mm-dd'}).datepicker('setDate', date)
       app.worktimes.scrollToDayWithDate($(event.currentTarget).data('date'))
     )
     
