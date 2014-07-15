@@ -225,6 +225,7 @@ class EvaluatorController < ApplicationController
       headers['Content-Type'] ||= 'text/csv'
       headers['Content-Disposition'] = "attachment; filename=\"#{filename}\""
     end
+    headers['Last-Modified'] = Time.now.httpdate
   end
 
   def redirect_to_overview
