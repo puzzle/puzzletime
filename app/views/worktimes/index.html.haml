@@ -21,6 +21,8 @@
       .weeknav-calendar-row
         = plain_form(Worktime.new, method: :get) do |f|
           = f.date_field(:work_date, id: 'week_date')
+        KW 
+        = week_number(@selected_date)
         - if @user.management
           = link_to('Fremderfassen', new_projecttime_path(other: 1),
                     {class: 'add-other', id: 'new_other_projecttime_link'})
