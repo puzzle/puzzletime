@@ -1,5 +1,7 @@
 class CreateErpTables < ActiveRecord::Migration
   def up
+    # TODO add indizes
+
     create_table :orders do |t|
       t.belongs_to :budget_item, null: false
       t.belongs_to :kind
@@ -116,6 +118,10 @@ class CreateErpTables < ActiveRecord::Migration
     ['Web Application Development', 'Enterprise Applikation Development', 'Schulung'].each do |n|
       PortfolioItem.create!(name: n)
     end
+
+    TargetScope.create!(name: 'Kosten', icon: 'usd', position: 10)
+    TargetScope.create!(name: 'Termin', icon: 'time', position: 20)
+    TargetScope.create!(name: 'Qualität', icon: 'star-empty', position: 30)
   end
 
   def down
