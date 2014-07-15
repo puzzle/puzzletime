@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class CreateErpTables < ActiveRecord::Migration
   def up
     # TODO add indizes
