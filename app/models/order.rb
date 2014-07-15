@@ -12,18 +12,11 @@
 #  department_id      :integer
 #  contract_id        :integer
 #  billing_address_id :integer
-#  target_cost        :string(255)
-#  target_date        :string(255)
-#  target_quality     :string(255)
-#  targets_comment    :string(255)
-#  targets_updated_at :datetime
 #  created_at         :datetime
 #  updated_at         :datetime
 #
 
 class Order < ActiveRecord::Base
-
-  TARGET_RATINGS = %w(green orange red)
 
   belongs_to :budget_item, class_name: 'Project'
   belongs_to :kind, class_name: 'OrderKind'
@@ -36,15 +29,15 @@ class Order < ActiveRecord::Base
   has_one :client, through: :budget_item
 
   has_many :comments, class_name: 'OrderComment'
+  has_many :targets, class_name: 'OrderTarget'
 
   has_and_belongs_to_many :employees
   has_and_belongs_to_many :contacts
 
   validates :kind_id, :responsible_id, :status_id, :department_id, presence: true
-  validates :target_cost, :target_date, :target_quality, inclusion: TARGET_RATINGS
-  validates :targets_comment, presence: { if: :target_critical? }
 
   # TODO: validate only one order per budget_items path_ids
+  # TODO: after create callback to initialize order targets
 
   scope :list, -> do
     includes(:budget_item).
@@ -56,7 +49,4 @@ class Order < ActiveRecord::Base
     budget_item.to_s
   end
 
-  def target_critical?
-    [target_cost, target_date, target_quality].any? { |t| t != TARGET_RATINGS.first }
-  end
 end

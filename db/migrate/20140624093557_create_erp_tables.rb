@@ -9,12 +9,6 @@ class CreateErpTables < ActiveRecord::Migration
       t.belongs_to :contract
       t.belongs_to :billing_address
 
-      t.string :target_cost, default: Order::TARGET_RATINGS.first
-      t.string :target_date, default: Order::TARGET_RATINGS.first
-      t.string :target_quality, default: Order::TARGET_RATINGS.first
-      t.string :targets_comment
-      t.datetime :targets_updated_at
-
       t.timestamps
     end
 
@@ -24,12 +18,28 @@ class CreateErpTables < ActiveRecord::Migration
 
     create_table :order_statuses do |t|
       t.string :name, null: false
+      t.string :style
       t.integer :position, null: false
     end
 
     create_table :order_comments do |t|
       t.belongs_to :order, null: false
       t.text :text, null: false
+      t.timestamps
+    end
+
+    create_table :target_scopes do |t|
+      t.string :name, null: false
+      t.string :icon
+      t.integer :position, null: false
+    end
+
+    create_table :order_targets do |t|
+      t.belongs_to :order
+      t.belongs_to :target_scope
+      t.string :rating, null: false, default: OrderTarget::RATINGS.first
+      t.text :comment
+
       t.timestamps
     end
 
@@ -98,9 +108,10 @@ class CreateErpTables < ActiveRecord::Migration
       OrderKind.create!(name: n)
     end
 
-    %w(Bearbeitung Abschluss Garantie Abgeschlossen).each_with_index do |n, i|
-      OrderStatus.create!(name: n, position: (i+1) * 10)
-    end
+    OrderStatus.create!(name: 'Bearbeitung', style: 'success', position: 10)
+    OrderStatus.create!(name: 'Abschluss', style: 'info', position: 20)
+    OrderStatus.create!(name: 'Garantie', style: 'warning', position: 30)
+    OrderStatus.create!(name: 'Abgeschlossen', style: 'danger', position: 40)
 
     ['Web Application Development', 'Enterprise Applikation Development', 'Schulung'].each do |n|
       PortfolioItem.create!(name: n)
@@ -132,6 +143,8 @@ class CreateErpTables < ActiveRecord::Migration
     drop_table :billing_addresses
     drop_table :contacts
     drop_table :contracts
+    drop_table :order_targets
+    drop_table :target_scopes
     drop_table :order_comments
     drop_table :order_statuses
     drop_table :order_kinds

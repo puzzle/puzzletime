@@ -1,7 +1,9 @@
 bearbeitung:
   name: In Bearbeitung
+  style: success
   position: 10
 
 abgeschlossen:
   name: Abgeschlossen
+  style: danger
   position: 20
