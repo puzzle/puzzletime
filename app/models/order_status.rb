@@ -11,9 +11,12 @@
 
 class OrderStatus < ActiveRecord::Base
 
+  STYLES = %w(default success info warning danger)
+
   has_many :orders, foreign_key: :status_id
 
   validates :name, :position, uniqueness: true
+  validates :style, inclusion: STYLES
 
   protect_if :orders, 'Der Eintrag kann nicht gelöscht werden, da ihm noch Aufträge zugeordnet sind'
 
