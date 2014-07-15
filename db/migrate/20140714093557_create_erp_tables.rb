@@ -5,7 +5,7 @@ class CreateErpTables < ActiveRecord::Migration
     # TODO add indizes
 
     create_table :orders do |t|
-      t.belongs_to :budget_item, null: false
+      t.belongs_to :path_item, null: false
       t.belongs_to :kind
       t.belongs_to :responsible
       t.belongs_to :status
@@ -91,16 +91,50 @@ class CreateErpTables < ActiveRecord::Migration
       t.boolean :active, null: false, default: true
     end
 
-    add_column :projects, :closed, :boolean, null: false, default: false
+    create_table :path_items do |t|
+      t.string :name, null: false
+      t.string :shortname, null: false
+      t.belongs_to :parent
+      t.integer :path_ids, array: true
+      t.string :path_shortnames
+      t.string :path_names, limit: 2047
+      t.boolean :leaf, null: false, default: true
+    end
+
+    add_column :projects, :path_item_id, :integer
+    add_column :projects, :open, :boolean, null: false, default: true
     add_column :projects, :offered_rate, :integer
     add_column :projects, :portfolio_item_id, :integer
-    add_column :projects, :discount, :integer
+    add_column :projects, :discount_percent, :integer
+    add_column :projects, :discount_fixed, :integer
     add_column :projects, :reference, :string
 
-    #rename_table :projects, :budget_items
-    #rename_column :worktimes, :project_id, :budget_item_id
+    add_column :clients, :path_item_id, :integer
 
     add_column :employees, :department_id, :integer
+
+    migrate_projects_to_path_items
+
+    # remove_column :projects, :client_id
+    # remove_column :projects, :name
+    # remove_column :projects, :short_name
+    # remove_column :projects, :parent_id
+    # remove_column :projects, :department_id
+    # remove_column :projects, :path_ids
+    # remove_column :projects, :path_shortnames
+    # remove_column :projects, :path_names
+    # remove_column :projects, :leaf
+    # remove_column :projects, :inherited_description
+
+    # rename_table :projects, :accounting_posts
+
+    # rename_column :worktimes, :project_id, :accounting_post_id
+
+    # TODO: accounting_post_id or path_item_id ??
+    # rename_column :plannings, :project_id, :accounting_post_id
+
+    # remove_column :clients, :name
+    # remove_column :clients, :shortname
 
     drop_table :projectmemberships
 
@@ -136,15 +170,22 @@ class CreateErpTables < ActiveRecord::Migration
 
     remove_column :employees, :department_id
 
-    #rename_column :worktimes, :budget_item_id, :project_id
-    #rename_table :budget_items, :projects
+    remove_column :clients, :path_item_id
 
-    remove_column :projects, :reference
-    remove_column :projects, :discount
-    remove_column :projects, :portfolio_item_id
+    # rename_column :worktimes, :accounting_post_id, :project_id
+
+    # rename_table :accounting_posts, :projects
+
+    remove_column :projects, :path_item_id
+    remove_column :projects, :open, :boolean
     remove_column :projects, :offered_rate
-    remove_column :projects, :closed
+    remove_column :projects, :portfolio_item_id
+    remove_column :projects, :discount_percent
+    remove_column :projects, :discount_fixed
+    remove_column :projects, :reference
 
+
+    drop_table :path_items
     drop_table :portfolio_items
     drop_table :employees_orders
     drop_table :contacts_orders
@@ -157,5 +198,11 @@ class CreateErpTables < ActiveRecord::Migration
     drop_table :order_statuses
     drop_table :order_kinds
     drop_table :orders
+  end
+
+  private
+
+  def migrate_projects_to_path_items
+
   end
 end
