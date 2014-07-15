@@ -83,6 +83,15 @@ showRegularAbsence = (e) ->
   e.preventDefault() if e
 
 $ ->
+  
+  $('#new_projecttime_link').click (e) ->
+    e.preventDefault()
+    window.location.href = $(this). attr('href') + '?work_date=' + $("#week_date").val();
+
+  $('#new_other_projecttime_link').click (e) ->
+    e.preventDefault()
+    window.location.href = $(this). attr('href') + '&work_date=' + $("#week_date").val();
+  
   if $('.worktimes').size()
     $('.worktimes .weekcontent .entry,'+
       '.worktimes .weekcontent .date-label:not(.empty)').waypoint( \
@@ -90,9 +99,19 @@ $ ->
 
     $('.worktimes .weeknav .day').on('click', (event) ->
       event.preventDefault();
+      
+      # convert date from yyyy-mm-dd to dd.mm.yyyy
+      date = new Date($(event.currentTarget).data('date'))
+      d = date.getDate();
+      m =  date.getMonth();
+      m += 1; # JavaScript months are 0-11
+      y = date.getFullYear();
+      date = d + "." + m + "." + y;
+
+      $("#week_date").datepicker('setDate', date)
       app.worktimes.scrollToDayWithDate($(event.currentTarget).data('date'))
     )
-
+    
     $('.worktimes .weeknav-container').waypoint('sticky')
 
     $("#week_date").datepicker
