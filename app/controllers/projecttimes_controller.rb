@@ -105,7 +105,7 @@ class ProjecttimesController < WorktimesController
     time.work_date = start.to_date
     time.from_start_time = start
     time.billable = time.project.billable if time.project
-    save_running time, "Die Projektzeit #{time.account.label_verbose} mit #time_string wurde erfasst.\n"
+    save_running time, "Die Zeit #{time.account.label_verbose} mit #time_string wurde erfasst.\n"
   end
 
   def stop_running(time = running_time, stop = Time.zone.now)
@@ -117,7 +117,7 @@ class ProjecttimesController < WorktimesController
       time.destroy
       running_time(true)
     else
-      save_running time, "Die Projektzeit #{time.account.label_verbose} von #time_string wurde gespeichert.\n"
+      save_running time, "Die Zeit #{time.account.label_verbose} von #time_string wurde gespeichert.\n"
     end
   end
 

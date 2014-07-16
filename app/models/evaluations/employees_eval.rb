@@ -4,7 +4,7 @@ class EmployeesEval < Evaluation
 
   self.division_column   = 'employee_id'
   self.sub_evaluation   = 'employeeprojects'
-  self.label            = 'Mitarbeiter Projektzeit'
+  self.label            = 'Mitarbeiter Zeit'
   self.total_details    = false
 
   def initialize
