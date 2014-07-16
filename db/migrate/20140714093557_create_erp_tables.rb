@@ -103,6 +103,9 @@ class CreateErpTables < ActiveRecord::Migration
       t.boolean :leaf, null: false, default: true
     end
 
+    add_index :path_items, :parent_id
+    add_index :path_items, :path_ids
+
     create_table :accounting_posts do |t|
       t.belongs_to :path_item, null: false
       t.belongs_to :portfolio_item
@@ -125,7 +128,6 @@ class CreateErpTables < ActiveRecord::Migration
     add_column :employees, :department_id, :integer
 
     add_column :worktimes, :accounting_post_id, :integer
-
 
     migrate_projects_to_path_items
 
@@ -180,7 +182,6 @@ class CreateErpTables < ActiveRecord::Migration
     # add_column :worktimes, :project_id, :integer
 
     # create_table :projects
-
 
     drop_table :accounting_posts
     drop_table :path_items
