@@ -8,8 +8,7 @@ class ProjectsController < ManageController
 
   include ProjectGroupable
 
-  self.permitted_attrs = [:name, :shortname, :description, :client_id, :offered_hours, :offered_rate,
-                          :discount, :portfolio_item_id, :reference, :billable, :closed,
+  self.permitted_attrs = [:name, :shortname, :description, :client_id, :offered_hours, :billable,
                           :freeze_until, :report_type, :description_required, :ticket_required]
 
   self.search_columns = [:path_shortnames, :path_names, :inherited_description]

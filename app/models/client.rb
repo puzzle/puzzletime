@@ -3,9 +3,10 @@
 #
 # Table name: clients
 #
-#  id        :integer          not null, primary key
-#  name      :string(255)      not null
-#  shortname :string(4)        not null
+#  id           :integer          not null, primary key
+#  name         :string(255)      not null
+#  shortname    :string(4)        not null
+#  path_item_id :integer
 #
 
 # (c) Puzzle itc, Berne
@@ -21,6 +22,8 @@ class Client < ActiveRecord::Base
   # All dependencies between the models are listed below.
   has_many :projects, -> { where(parent_id: nil) }
   has_many :all_projects, class_name: 'Project', dependent: :destroy
+  has_many :contacts
+  has_many :billing_addresses
 
   # Validation helpers.
   validates_presence_of :name, message: 'Ein Name muss angegeben sein'

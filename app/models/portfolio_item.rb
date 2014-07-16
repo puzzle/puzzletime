@@ -11,11 +11,11 @@
 
 class PortfolioItem < ActiveRecord::Base
 
-  has_many :budget_items, class_name: 'Project'
+  has_many :accounting_posts
 
   scope :list, -> { order(:name) }
 
-  protect_if :budget_items, 'Der Eintrag kann nicht gelöscht werden, da ihm noch Budgetpositionen zugeordnet sind'
+  protect_if :accounting_posts, 'Der Eintrag kann nicht gelöscht werden, da ihm noch Budgetpositionen zugeordnet sind'
 
   validates :name, uniqueness: true
 
