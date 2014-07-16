@@ -38,9 +38,15 @@ Rails.application.routes.draw do
 
   resources :holidays, except: [:show]
 
+  # TODO limit actions
+  resources :orders
+
   resources :order_statuses, except: [:show]
 
   resources :order_kinds, except: [:show]
+
+  # TODO limit actions
+  resources :path_items
 
   resources :portfolio_items, except: [:show]
 

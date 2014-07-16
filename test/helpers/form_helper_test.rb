@@ -124,4 +124,12 @@ class FormHelperTest < ActionView::TestCase
   def entry
     @entry ||= CrudTestModel.first
   end
+
+  def request
+    m = mock
+    f = mock
+    f.stubs(:js?)
+    m.stubs(:format).returns(f)
+    m
+  end
 end
