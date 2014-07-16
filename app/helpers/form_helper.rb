@@ -16,6 +16,11 @@ module FormHelper
     options[:html][:role] ||= 'form'
     options[:builder] ||= DryCrud::Form::Builder
     options[:cancel_url] ||= default_cancel_url(object)
+    if request.format.js?
+      options[:data] ||= {}
+      options[:data][:remote] = true
+      options[:data][:type] = :json
+    end
 
     form_for(object, options, &block)
   end

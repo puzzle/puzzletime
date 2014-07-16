@@ -42,7 +42,7 @@ class Order < ActiveRecord::Base
   scope :list, -> do
     includes(:path_item).
     references(:path_item).
-    order(path_item: :shortname)
+    order('path_items.shortname')
   end
 
   def to_s
