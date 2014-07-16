@@ -7,13 +7,8 @@
                      ReportType::INSTANCES.collect { |type| [type.name, type.key] },
                      selected: entry.report_type.key
   = f.labeled_input_fields(:offered_hours,
-                           :offered_rate,
-                           :discount,
-                           :portfolio_item_id,
-                           :reference,
                            :freeze_until,
                            :billable,
-                           :closed,
                            :description_required,
                            :ticket_required)
 

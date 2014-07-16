@@ -22,10 +22,6 @@
 #  leaf                  :boolean          default(TRUE), not null
 #  inherited_description :text
 #  closed                :boolean          default(FALSE), not null
-#  offered_rate          :integer
-#  portfolio_item_id     :integer
-#  discount              :integer
-#  reference             :string(255)
 #
 
 # (c) Puzzle itc, Berne:projects
