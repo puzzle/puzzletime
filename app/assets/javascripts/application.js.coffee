@@ -11,7 +11,6 @@
 #= require waypoints-sticky
 #= require_self
 #= require worktimes
-#= require worktimes-v2
 #= require week_datepicker
 #= require project_autocomplete
 #= require planning
