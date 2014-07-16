@@ -9,7 +9,7 @@ class ProjecttimesControllerTest < ActionController::TestCase
     get :new
     assert_response :success
     assert_template 'new'
-    assert_match(/Auftragszeit erfassen/, @response.body)
+    assert_match(/Zeit erfassen/, @response.body)
     assert_no_match(/Mitarbeiter/, @response.body)
     assert_not_nil assigns(:worktime)
   end
@@ -47,7 +47,7 @@ class ProjecttimesControllerTest < ActionController::TestCase
                                  }
     assert_redirected_to action: 'index', week_date: work_date
     assert flash[:alert].blank?
-    assert_match(/Projektzeit.*erfolgreich erstellt/, flash[:notice])
+    assert_match(/Zeit.*erfolgreich erstellt/, flash[:notice])
     assert_equal projects(:puzzletime), Projecttime.last.project
     assert_equal HoursDayType::INSTANCE, Projecttime.last.report_type
     assert_equal '#1', Projecttime.last.ticket
@@ -65,7 +65,7 @@ class ProjecttimesControllerTest < ActionController::TestCase
                                  }
     assert_redirected_to action: 'index', week_date: work_date
     assert flash[:alert].blank?
-    assert_match(/Projektzeit.*erfolgreich erstellt/, flash[:notice])
+    assert_match(/Zeit.*erfolgreich erstellt/, flash[:notice])
     assert_equal StartStopType::INSTANCE, Projecttime.last.report_type
     assert_equal '08:00', Projecttime.last.from_start_time.strftime('%H:%M')
     assert_equal '10:15', Projecttime.last.to_end_time.strftime('%H:%M')
@@ -107,7 +107,7 @@ class ProjecttimesControllerTest < ActionController::TestCase
     worktime.reload
     assert_redirected_to action: 'index', week_date: worktime.work_date
     assert flash[:alert].blank?
-    assert_match(/Projektzeit.*aktualisiert/, flash[:notice])
+    assert_match(/Zeit.*aktualisiert/, flash[:notice])
     assert_equal HoursDayType::INSTANCE, worktime.report_type
     assert_nil worktime.from_start_time
     assert_nil worktime.to_end_time

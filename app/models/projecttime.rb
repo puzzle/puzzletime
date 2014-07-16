@@ -39,7 +39,7 @@ class Projecttime < Worktime
   end
 
   def self.label
-    'Projektzeit'
+    'Zeit'
   end
 
   def account
