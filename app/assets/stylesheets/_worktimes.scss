@@ -237,10 +237,6 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
       margin-top: 50px;
       color: $gray;
 
-      &.empty {
-        display: none;
-      }
-
       .inner {
         @extend .col-xs-offset-1;
         @extend .col-xs-10;

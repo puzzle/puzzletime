@@ -32,21 +32,8 @@ app.worktimes.activateLastNavDay = ->
 
 app.worktimes.scrollToDayWithDate = (date) ->
   dateLabel = $('.worktimes .weekcontent .date-label[data-date="' + date + '"]')
-
   if dateLabel.size() is 0
     return
-
-  if dateLabel.hasClass('empty')
-    # no entries for this date available
-    if dateLabel.prevAll('.date-label:not(.empty)').size() is 0
-      # scroll to beginning
-      offset = $('.worktimes .weekcontent').offset().top + $('.worktimes .weeknav').height() - 20;
-      app.worktimes.scrollTo(offset, app.worktimes.activateFirstNavDay)
-      return
-    else
-      # scroll to previous non-empty entry
-      dateLabel = dateLabel.prevAll('.date-label:not(.empty)').first()
-      date = dateLabel.data('date')
 
   offset = dateLabel.offset().top - $('.worktimes .weeknav').height() - 20;
   app.worktimes.scrollTo(offset, app.worktimes.activateNavDayWithDate, date)
@@ -93,7 +80,7 @@ $ ->
     window.location.href = $(this). attr('href') + '&work_date=' + $("#week_date").val();
 
   if $('.worktimes').size()
-    $('.worktimes .weekcontent .date-label:not(.empty)').
+    $('.worktimes .weekcontent .date-label').
       waypoint({ handler: (direction) ->
         if direction == 'down'
           app.worktimes.activateNavDayWithDate($(this).data('date'))
