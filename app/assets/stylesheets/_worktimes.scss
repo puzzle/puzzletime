@@ -96,21 +96,21 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
     @extend .col-xs-offset-1;
     @extend .col-xs-8;
     border-left-width: 1px;
-    
+
     form {
       display: block;
       float: left;
       width: 100px;
-      
+
       .input-group-addon {
         padding: 0;
         border: 0;
         background: transparent;
-        
+
         span {
           margin-right: 4px;
           font-size: 16px;
-          color: $gray;  
+          color: $gray;
         }
       }
       .input-group {
@@ -234,6 +234,7 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
 
     .date-label {
       @extend .row;
+      margin-top: 50px;
       color: $gray;
 
       &.empty {
@@ -243,7 +244,7 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
       .inner {
         @extend .col-xs-offset-1;
         @extend .col-xs-10;
-        padding-top: 60px;
+        padding-top: 10px;
         padding-bottom: 10px;
       }
     }

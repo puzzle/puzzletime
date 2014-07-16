@@ -83,7 +83,7 @@ showRegularAbsence = (e) ->
   e.preventDefault() if e
 
 $ ->
-  
+
   $('#new_projecttime_link').click (e) ->
     e.preventDefault()
     window.location.href = $(this). attr('href') + '?work_date=' + $("#week_date").val();
@@ -91,11 +91,16 @@ $ ->
   $('#new_other_projecttime_link').click (e) ->
     e.preventDefault()
     window.location.href = $(this). attr('href') + '&work_date=' + $("#week_date").val();
-  
+
   if $('.worktimes').size()
-    $('.worktimes .weekcontent .entry,'+
-      '.worktimes .weekcontent .date-label:not(.empty)').waypoint( \
-        (direction) -> app.worktimes.activateNavDayWithDate($(this).data('date')))
+    $('.worktimes .weekcontent .date-label:not(.empty)').
+      waypoint({ handler: (direction) ->
+        if direction == 'down'
+          app.worktimes.activateNavDayWithDate($(this).data('date'))
+        else if direction == 'up' && $(this).prev().size()
+          app.worktimes.activateNavDayWithDate($(this).prev().data('date'))
+      , offset: -> $('.weeknav').height() })
+
 
     $('.worktimes .weeknav .day').on('click', (event) ->
       event.preventDefault();
@@ -103,7 +108,7 @@ $ ->
       $("#week_date").datepicker({dateFormat: 'yyyy-mm-dd'}).datepicker('setDate', date)
       app.worktimes.scrollToDayWithDate($(event.currentTarget).data('date'))
     )
-    
+
     $('.worktimes .weeknav-container').waypoint('sticky')
 
     $("#week_date").datepicker
