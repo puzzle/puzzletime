@@ -1,62 +1,149 @@
 app = window.App ||= {}
 
-app.switchTimeFieldsVisibility = () ->
-  type = $("#worktime_report_type").val()
-  $("#worktime_work_date").prop('disabled', false)
-  $("#worktime_work_date + span:has(.calendar)").show()
+app.worktimes = {}
 
-  switch type
-    when "auto_start"
-      $("#worktime_work_date").prop('disabled', true)
-      $("#worktime_work_date").value = $.datepicker.formatDate(app.datepickerI18n().dateFormat, new Date())
-      $("#worktime_work_date + span:has(.calendar)").hide()
-      $("#worktime_hours").prop('disabled', true)
-      $("#worktime_from_start_time").prop('disabled', false)
-      $("#worktime_to_end_time").prop('disabled', true)
-    when "start_stop_day"
-      $("#worktime_hours").prop('disabled', true)
-      $("#worktime_from_start_time").prop('disabled', false)
-      $("#worktime_to_end_time").prop('disabled', false)
+app.worktimes.scrollSpeed = 300;
+app.worktimes.activationEnabled = true;
+
+
+app.worktimes.activateNavDayWithDate = (date) ->
+  unless app.worktimes.activationEnabled
+    return
+
+  $('.worktimes .weeknav .day').removeClass('active')
+  $('.worktimes .weeknav .day[data-date="' + date + '"]').addClass('active')
+
+
+app.worktimes.activateFirstNavDay = ->
+  unless app.worktimes.activationEnabled
+    return
+
+  $('.worktimes .weeknav .day').removeClass('active')
+  $('.worktimes .weeknav .day:first-child').addClass('active')
+
+
+app.worktimes.activateLastNavDay = ->
+  unless app.worktimes.activationEnabled
+    return
+
+  $('.worktimes .weeknav .day').removeClass('active')
+  $('.worktimes .weeknav .day:last-child').addClass('active')
+
+
+app.worktimes.scrollToDayWithDate = (date) ->
+  dateLabel = $('.worktimes .weekcontent .date-label[data-date="' + date + '"]')
+
+  if dateLabel.size() is 0
+    return
+
+  if dateLabel.hasClass('empty')
+    # no entries for this date available
+    if dateLabel.prevAll('.date-label:not(.empty)').size() is 0
+      # scroll to beginning
+      offset = $('.worktimes .weekcontent').offset().top + $('.worktimes .weeknav').height() - 20;
+      app.worktimes.scrollTo(offset, app.worktimes.activateFirstNavDay)
+      return
     else
-      $("#worktime_from_start_time").prop('disabled', true)
-      $("#worktime_to_end_time").prop('disabled', true)
-      $("#worktime_hours").prop('disabled', false)
+      # scroll to previous non-empty entry
+      dateLabel = dateLabel.prevAll('.date-label:not(.empty)').first()
+      date = dateLabel.data('date')
 
-app.startProject = (id) ->
-  $('#id').attr('value', id)
-  copyWorktimeDetails('start')
-  $('#start_project_form').submit()
+  offset = dateLabel.offset().top - $('.worktimes .weeknav').height() - 20;
+  app.worktimes.scrollTo(offset, app.worktimes.activateNavDayWithDate, date)
 
 
-app.stopAttendance = () ->
-  copyWorktimeDetails('attendance')
-  $('#stop_attendance_form').submit()
+app.worktimes.scrollTo = (offset, callback, date) ->
+  # temporarly disable setting of .active on weeknav days
+  app.worktimes.activationEnabled = false
 
+  $('html, body').animate({scrollTop: offset},
+    app.worktimes.scrollSpeed, undefined, (->
+      app.worktimes.activationEnabled = true
+      callback.call(this, date)
 
-copyField = (fieldId, targetPrefix) ->
-  field = $('#' + fieldId)
-  if field
-    $('#' + targetPrefix + '_' + fieldId).attr('value', field.val())
+      if date
+        # hightlight entries
+        entries = $('.worktimes .weekcontent .date-label[data-date="' + date + '"], ' + \
+          '.worktimes .weekcontent .entry[data-date="' + date + '"]')
+        entries.addClass('highlight')
+        setTimeout((-> entries.removeClass('highlight')), 400)
+    ))
 
-copyWorktimeDetails = (prefix) ->
-  copyField('description', prefix)
-  copyField('ticket', prefix)
+# show regular absence on load, toggle when clicking on multi absence link
+showMultiAbsence = (e) ->
+  $('#absencetime_create_multi').val('true')
+  $('#single').hide()
+  $('#multi').show()
+  e.preventDefault() if e
 
+showRegularAbsence = (e) ->
+  $('#absencetime_create_multi').val('')
+  $('#single').show()
+  $('#multi').hide()
+  e.preventDefault() if e
 
 $ ->
-  $('body').on('click', '#attendanceStopper', (event) ->
-    app.stopAttendance()
-    event.preventDefault()
-  )
+  
+  $('#new_projecttime_link').click (e) ->
+    e.preventDefault()
+    window.location.href = $(this). attr('href') + '?work_date=' + $("#week_date").val();
 
-  $('body').on('click', '#runningProjectStopper', (event) ->
-    $('#stop_project_form').submit()
-    event.preventDefault()
-  )
+  $('#new_other_projecttime_link').click (e) ->
+    e.preventDefault()
+    window.location.href = $(this). attr('href') + '&work_date=' + $("#week_date").val();
+  
+  if $('.worktimes').size()
+    $('.worktimes .weekcontent .entry,'+
+      '.worktimes .weekcontent .date-label:not(.empty)').waypoint( \
+        (direction) -> app.worktimes.activateNavDayWithDate($(this).data('date')))
 
-  $('body').on('click', '[data-start-project]', (event) ->
-    id = $(this).data('start-project')
-    app.startProject(id)
-    event.preventDefault()
-  )
+    $('.worktimes .weeknav .day').on('click', (event) ->
+      event.preventDefault();
+      date = new Date($(event.currentTarget).data('date'))
+      $("#week_date").datepicker({dateFormat: 'yyyy-mm-dd'}).datepicker('setDate', date)
+      app.worktimes.scrollToDayWithDate($(event.currentTarget).data('date'))
+    )
+    
+    $('.worktimes .weeknav-container').waypoint('sticky')
 
+    $("#week_date").datepicker
+      showWeek: true,
+      changeYear: true
+      showButtonPanel: true
+      onSelect: (date, instance) ->
+        window.location = "/worktimes?week_date=" + date
+        return
+
+    selectedDate = $('.worktimes').data('selectedDate')
+    if selectedDate && $('.worktimes .weeknav .day[data-date="' + selectedDate + '"]').size()
+      $('.worktimes .weeknav .day[data-date="' + selectedDate + '"]').click()
+
+  # toggle from/to and hour input fields
+  toggle = (selector_id, disable) ->
+    $(selector_id).prop('disabled', disable)
+    if disable
+      $(selector_id).val('')
+
+  $('#projecttime_hours').blur ->
+    toggle('#projecttime_from_start_time', $(this).val())
+    toggle('#projecttime_to_end_time', $(this).val())
+  $('#projecttime_from_start_time').blur ->
+    toggle('#projecttime_hours', $(this).val() || $('#projecttime_to_end_time').val())
+  $('#projecttime_to_end_time').blur ->
+    toggle('#projecttime_hours', $(this).val() || $('#projecttime_from_start_time').val())
+  $('#absencetime_hours').blur ->
+    toggle('#absencetime_from_start_time', $(this).val())
+    toggle('#absencetime_to_end_time', $(this).val())
+  $('#absencetime_from_start_time').blur ->
+    toggle('#absencetime_hours', $(this).val() || $('#absencetime_to_end_time').val())
+  $('#absencetime_to_end_time').blur ->
+    toggle('#absencetime_hours', $(this).val() || $('#absencetime_from_start_time').val())
+
+
+  if $('#absencetime_create_multi').val()
+    showMultiAbsence(null)
+  else if $('#new_absencetime').length
+    showRegularAbsence(null)
+
+  $('#multi_absence_link').click(showMultiAbsence)
+  $('#regular_absence_link').click(showRegularAbsence)
