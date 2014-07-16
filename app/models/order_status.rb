@@ -6,6 +6,7 @@
 #  id       :integer          not null, primary key
 #  name     :string(255)      not null
 #  style    :string(255)
+#  closed   :boolean          default(FALSE), not null
 #  position :integer          not null
 #
 
