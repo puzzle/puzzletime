@@ -185,6 +185,8 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.string  "path_shortnames"
     t.string  "path_names",      limit: 2047
     t.boolean "leaf",                         default: true, null: false
+    t.index ["parent_id"], :name => "index_path_items_on_parent_id"
+    t.index ["path_ids"], :name => "index_path_items_on_path_ids"
   end
 
   create_table "plannings", force: true do |t|
