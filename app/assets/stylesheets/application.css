@@ -12,6 +12,8 @@
  *
  *= require jquery.ui.datepicker
  *= require jquery.ui.autocomplete
+ *= require selectize
+ *= require selectize.bootstrap3
  *= require puzzletime
  *= require_self
  */
