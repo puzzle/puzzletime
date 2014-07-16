@@ -106,7 +106,7 @@ class Employee < ActiveRecord::Base
 
   def managed_projects
     Project.select("DISTINCT projects.*").
-            joins('INNER JOIN orders ON orders.budget_item_id = projects.id').
+            joins('INNER JOIN orders ON orders.path_item_id = projects.id').
             where(orders: { responsible_id: id })
   end
 

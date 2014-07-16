@@ -2,7 +2,7 @@
 
 class CreateErpTables < ActiveRecord::Migration
   def up
-    # TODO add indizes
+    # TODO add indizes for every belongs to relation
 
     create_table :orders do |t|
       t.belongs_to :path_item, null: false
@@ -23,6 +23,7 @@ class CreateErpTables < ActiveRecord::Migration
     create_table :order_statuses do |t|
       t.string :name, null: false
       t.string :style
+      t.boolean :closed, null: false, default: false
       t.integer :position, null: false
     end
 
@@ -56,11 +57,12 @@ class CreateErpTables < ActiveRecord::Migration
     end
 
     create_table :contacts do |t|
+      t.belongs_to :client, null: false
       t.string :lastname
       t.string :firstname
       t.string :function
       t.string :email
-      t.string :telephone
+      t.string :phone
       t.string :mobile
 
       t.timestamps
@@ -92,51 +94,52 @@ class CreateErpTables < ActiveRecord::Migration
     end
 
     create_table :path_items do |t|
+      t.belongs_to :parent
       t.string :name, null: false
       t.string :shortname, null: false
-      t.belongs_to :parent
       t.integer :path_ids, array: true
       t.string :path_shortnames
       t.string :path_names, limit: 2047
       t.boolean :leaf, null: false, default: true
     end
 
-    add_column :projects, :path_item_id, :integer
-    add_column :projects, :open, :boolean, null: false, default: true
-    add_column :projects, :offered_rate, :integer
-    add_column :projects, :portfolio_item_id, :integer
-    add_column :projects, :discount_percent, :integer
-    add_column :projects, :discount_fixed, :integer
-    add_column :projects, :reference, :string
+    create_table :accounting_posts do |t|
+      t.belongs_to :path_item, null: false
+      t.belongs_to :portfolio_item
+      t.text :description
+      t.string :reference
+      t.integer :offered_hours
+      t.integer :offered_rate
+      t.integer :discount_percent
+      t.integer :discount_fixed
+      t.string :report_type
+      t.boolean :billable, null: false, default: true
+      t.boolean :description_required, null: false, default: false
+      t.boolean :ticket_required, null: false, default: false
+      t.boolean :open, null: false, default: true
+      t.boolean :order_closed, null: false, default: false # inherited from order
+    end
 
     add_column :clients, :path_item_id, :integer
 
     add_column :employees, :department_id, :integer
 
+    add_column :worktimes, :accounting_post_id, :integer
+
+
     migrate_projects_to_path_items
 
-    # remove_column :projects, :client_id
-    # remove_column :projects, :name
-    # remove_column :projects, :short_name
-    # remove_column :projects, :parent_id
-    # remove_column :projects, :department_id
-    # remove_column :projects, :path_ids
-    # remove_column :projects, :path_shortnames
-    # remove_column :projects, :path_names
-    # remove_column :projects, :leaf
-    # remove_column :projects, :inherited_description
 
-    # rename_table :projects, :accounting_posts
-
-    # rename_column :worktimes, :project_id, :accounting_post_id
-
-    # TODO: accounting_post_id or path_item_id ??
+    # TODO: order_id or accounting_post_id or path_item_id ??
     # rename_column :plannings, :project_id, :accounting_post_id
+
+    # remove_column :worktimes, :project_id
 
     # remove_column :clients, :name
     # remove_column :clients, :shortname
 
-    drop_table :projectmemberships
+    # drop_table :projects, :accounting_posts
+    # drop_table :projectmemberships
 
     if Client.column_names.include?('contact')
       remove_column :clients, :contact
@@ -161,30 +164,25 @@ class CreateErpTables < ActiveRecord::Migration
   end
 
   def down
-    create_table :projectmemberships do |t|
-      t.integer :project_id, null: false
-      t.integer :employee_id, null: false
-      t.boolean :projectmanagement, null: false, default: false
-      t.boolean :active, null: false, default: true
-    end
+    #create_table :projectmemberships do |t|
+    #  t.integer :project_id, null: false
+    #  t.integer :employee_id, null: false
+    #  t.boolean :projectmanagement, null: false, default: false
+    #  t.boolean :active, null: false, default: true
+    #end
 
     remove_column :employees, :department_id
 
     remove_column :clients, :path_item_id
 
-    # rename_column :worktimes, :accounting_post_id, :project_id
+    remove_column :worktimes, :accounting_post_id
 
-    # rename_table :accounting_posts, :projects
+    # add_column :worktimes, :project_id, :integer
 
-    remove_column :projects, :path_item_id
-    remove_column :projects, :open, :boolean
-    remove_column :projects, :offered_rate
-    remove_column :projects, :portfolio_item_id
-    remove_column :projects, :discount_percent
-    remove_column :projects, :discount_fixed
-    remove_column :projects, :reference
+    # create_table :projects
 
 
+    drop_table :accounting_posts
     drop_table :path_items
     drop_table :portfolio_items
     drop_table :employees_orders
@@ -203,6 +201,11 @@ class CreateErpTables < ActiveRecord::Migration
   private
 
   def migrate_projects_to_path_items
-
+    # TODO add path items for each client
+    # TODO add path items for each project
+    # TODO create accounting post to leaf path items, get inherited values
+    # TODO create orders for corresponding path items (dependent on path depth)
+    # TODO migrate planning project ids ?
+    # TODO rename Projecttime to Ordertime
   end
 end

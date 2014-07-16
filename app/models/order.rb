@@ -1,11 +1,10 @@
 # encoding: utf-8
-
 # == Schema Information
 #
 # Table name: orders
 #
 #  id                 :integer          not null, primary key
-#  budget_item_id     :integer          not null
+#  path_item_id       :integer          not null
 #  kind_id            :integer
 #  responsible_id     :integer
 #  status_id          :integer
@@ -18,7 +17,7 @@
 
 class Order < ActiveRecord::Base
 
-  belongs_to :budget_item, class_name: 'Project'
+  belongs_to :path_item
   belongs_to :kind, class_name: 'OrderKind'
   belongs_to :status, class_name: 'OrderStatus'
   belongs_to :responsible, class_name: 'Employee'
@@ -26,7 +25,8 @@ class Order < ActiveRecord::Base
   belongs_to :contract
   belongs_to :billing_address
 
-  has_one :client, through: :budget_item
+  # TODO
+  # has_one :client, through: :path_item
 
   has_many :comments, class_name: 'OrderComment'
   has_many :targets, class_name: 'OrderTarget'
@@ -36,17 +36,17 @@ class Order < ActiveRecord::Base
 
   validates :kind_id, :responsible_id, :status_id, :department_id, presence: true
 
-  # TODO: validate only one order per budget_items path_ids
+  # TODO: validate only one order per path_items path_ids
   # TODO: after create callback to initialize order targets
 
   scope :list, -> do
-    includes(:budget_item).
-    references(:budget_item).
-    order(budget_item: :shortname)
+    includes(:path_item).
+    references(:path_item).
+    order(path_item: :shortname)
   end
 
   def to_s
-    budget_item.to_s
+    path_item.to_s
   end
 
 end
