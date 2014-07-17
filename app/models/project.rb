@@ -21,7 +21,6 @@
 #  path_names            :string(2047)
 #  leaf                  :boolean          default(TRUE), not null
 #  inherited_description :text
-#  closed                :boolean          default(FALSE), not null
 #
 
 # (c) Puzzle itc, Berne:projects

@@ -6,7 +6,7 @@
 #  id           :integer          not null, primary key
 #  name         :string(255)      not null
 #  shortname    :string(4)        not null
-#  path_item_id :integer
+#  work_item_id :integer
 #
 
 Fabricator(:client) do
