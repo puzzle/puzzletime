@@ -16,74 +16,8 @@ a.symbol {
 	font-size: 		 16px;
 }
 
-/* h1 { */
-/*     font-size:      20px; */
-/*     font-weight:    normal; */
-/*     margin-bottom:  20px; */
-/* } */
-
-/* h2 { */
-/*     font-size:      16px; */
-/*     font-weight:    bold; */
-/* } */
-
-/* h3 { */
-/*     font-size:      14px; */
-/*     font-weight:    bold; */
-/*     color:          #4a4a4a; */
-/* } */
-
-/* td { */
-/*     padding-left:   4px; */
-/*     padding-right:  4px; */
-/* } */
-
-/* th { */
-/*     font-weight:    bold; */
-/*     color:          #0087e3; */
-/*     white-space:    nowrap; */
-/*     text-align:     left; */
-/* } */
-
-/* textarea, input, select { */
-/*     font-size:      14px; */
-/*     font-family:    sans-serif; */
-/*     line-height:    16px; */
-/* } */
-
-/* textarea { */
-/*   width: 400px; */
-/* } */
-
-/* .right { */
-/*   text-align: right; */
-/* } */
-
-/* .center { */
-/*   text-align: center; */
-/* } */
-
-/* .table tr { */
-/*     vertical-align: top; */
-/* } */
-
-/* .table td > p { */
-/*     margin: 0; */
-/* } */
-
-/* table.table td.action { */
-/*   width: 20px; */
-/*   text-align: center; */
-/* } */
-
-/* table.table thead a { */
-/*     text-decoration: none; */
-/* } */
-
-
 #content {
     @extend .container-fluid;
-    margin-top: 40px;
     margin-bottom: 40px;
 }
 
