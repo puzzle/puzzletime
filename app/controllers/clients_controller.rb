@@ -5,9 +5,13 @@
 
 class ClientsController < ManageController
 
-  self.permitted_attrs = [work_item_attributes: [:name, :shortname, :description]]
+  self.permitted_attrs = [work_item_attributes: [:name, :shortname, :description, :parent_id]]
 
-  respond_to :js, only: [:new, :create]
+
+  def categories
+    item = WorkItem.find(params[:client_work_item_id])
+    @categories = item.categories.list
+  end
 
   private
 
@@ -17,7 +21,7 @@ class ClientsController < ManageController
     client
   end
 
-  def js_entry
-    { id: entry.id, label: entry.to_s, work_item_id: entry.work_item_id }
+  def js_entry(object = entry)
+    { id: object.id, label: object.to_s, work_item_id: object.work_item_id }
   end
 end
