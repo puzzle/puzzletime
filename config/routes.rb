@@ -16,6 +16,10 @@ Rails.application.routes.draw do
 
   resources :clients,except: [:show] do
     concerns :with_projects
+
+    collection do
+      get :categories
+    end
   end
 
   resources :departments, except: [:show] do
