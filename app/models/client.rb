@@ -6,7 +6,7 @@
 #  id           :integer          not null, primary key
 #  name         :string(255)      not null
 #  shortname    :string(4)        not null
-#  path_item_id :integer
+#  work_item_id :integer
 #
 
 # (c) Puzzle itc, Berne
@@ -14,6 +14,7 @@
 
 class Client < ActiveRecord::Base
 
+  include BelongingToWorkItem
   include Evaluatable
 
   # must be before associations to prevent their destroy
@@ -24,6 +25,10 @@ class Client < ActiveRecord::Base
   has_many :all_projects, class_name: 'Project', dependent: :destroy
   has_many :contacts
   has_many :billing_addresses
+
+  has_many_through_work_item :orders
+  has_many_through_work_item :accounting_posts
+  #has_many_through_work_item :worktimes
 
   # Validation helpers.
   validates_presence_of :name, message: 'Ein Name muss angegeben sein'
@@ -47,6 +52,7 @@ class Client < ActiveRecord::Base
     Worktime.all
   end
 
+  # TODO replace with above has_many_through_work_item
   def worktimes
     Worktime.joins(:project).
              where(projects: { client_id: id })

@@ -24,8 +24,8 @@
 #  updated_at      :datetime
 #  is_abstract     :boolean
 #  abstract_amount :decimal(, )
+#  work_item_id    :integer
 #
-
 
 class Planning < ActiveRecord::Base
 

@@ -5,7 +5,7 @@ class CreateErpTables < ActiveRecord::Migration
     # TODO add indizes for every belongs to relation
 
     create_table :orders do |t|
-      t.belongs_to :path_item, null: false
+      t.belongs_to :work_item, null: false
       t.belongs_to :kind
       t.belongs_to :responsible
       t.belongs_to :status
@@ -93,23 +93,24 @@ class CreateErpTables < ActiveRecord::Migration
       t.boolean :active, null: false, default: true
     end
 
-    create_table :path_items do |t|
+    create_table :work_items do |t|
       t.belongs_to :parent
       t.string :name, null: false
       t.string :shortname, null: false
+      t.text :description
       t.integer :path_ids, array: true
       t.string :path_shortnames
       t.string :path_names, limit: 2047
       t.boolean :leaf, null: false, default: true
+      t.boolean :closed, null: false, default: false # inherited from order and accounting post
     end
 
-    add_index :path_items, :parent_id
-    add_index :path_items, :path_ids
+    add_index :work_items, :parent_id
+    add_index :work_items, :path_ids
 
     create_table :accounting_posts do |t|
-      t.belongs_to :path_item, null: false
+      t.belongs_to :work_item, null: false
       t.belongs_to :portfolio_item
-      t.text :description
       t.string :reference
       t.integer :offered_hours
       t.integer :offered_rate
@@ -119,21 +120,21 @@ class CreateErpTables < ActiveRecord::Migration
       t.boolean :billable, null: false, default: true
       t.boolean :description_required, null: false, default: false
       t.boolean :ticket_required, null: false, default: false
-      t.boolean :open, null: false, default: true
-      t.boolean :order_closed, null: false, default: false # inherited from order
+      t.boolean :closed, null: false, default: false
     end
 
-    add_column :clients, :path_item_id, :integer
+    add_column :clients, :work_item_id, :integer
 
     add_column :employees, :department_id, :integer
 
-    add_column :worktimes, :accounting_post_id, :integer
+    add_column :worktimes, :work_item_id, :integer
 
-    migrate_projects_to_path_items
+    add_column :plannings, :work_item_id, :integer
+
+    migrate_projects_to_work_items
 
 
-    # TODO: order_id or accounting_post_id or path_item_id ??
-    # rename_column :plannings, :project_id, :accounting_post_id
+    # remove_column :plannings, :project_id
 
     # remove_column :worktimes, :project_id
 
@@ -175,16 +176,20 @@ class CreateErpTables < ActiveRecord::Migration
 
     remove_column :employees, :department_id
 
-    remove_column :clients, :path_item_id
+    remove_column :clients, :work_item_id
 
-    remove_column :worktimes, :accounting_post_id
+    remove_column :worktimes, :work_item_id
+
+    remove_column :plannings, :work_item_id
 
     # add_column :worktimes, :project_id, :integer
+
+    # add_column :plannings, :project_id, :integer
 
     # create_table :projects
 
     drop_table :accounting_posts
-    drop_table :path_items
+    drop_table :work_items
     drop_table :portfolio_items
     drop_table :employees_orders
     drop_table :contacts_orders
@@ -201,7 +206,7 @@ class CreateErpTables < ActiveRecord::Migration
 
   private
 
-  def migrate_projects_to_path_items
+  def migrate_projects_to_work_items
     # TODO add path items for each client
     # TODO add path items for each project
     # TODO create accounting post to leaf path items, get inherited values
