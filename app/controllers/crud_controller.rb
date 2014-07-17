@@ -45,6 +45,7 @@ class CrudController < ListController
   #   GET /entries/new.json
   def new(&block)
     assign_attributes if params[model_identifier]
+    #block = ->(format) { format.js { render partial: 'form' }} unless block_given?
     respond_with(entry, &block)
   end
 
@@ -139,6 +140,11 @@ class CrudController < ListController
   # A label for the current entry, including the model name.
   def full_entry_label
     "#{models_label(false)} <i>#{ERB::Util.h(entry)}</i>".html_safe
+  end
+
+  # json hash representation of an entry used for javascript responses
+  def js_entry
+    { id: entry.id, label: entry.to_s }
   end
 
   # Set a success flash notice when we got a HTML request.

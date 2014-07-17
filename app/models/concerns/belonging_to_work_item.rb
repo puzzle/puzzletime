@@ -4,8 +4,21 @@ module BelongingToWorkItem
 
   included do
     belongs_to :work_item
+
+    has_many_through_work_item :worktimes
+
+    accepts_nested_attributes_for :work_item, update_only: true
+
+    scope :list, -> do
+      includes(:work_item).
+      references(:work_item).
+      order('work_items.path_shortnames')
+    end
   end
 
+  def to_s
+    work_item.to_s if work_item
+  end
 
   module ClassMethods
     def has_one_through_work_item(name)

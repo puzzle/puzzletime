@@ -242,6 +242,17 @@ module DryCrud::Form
       end
     end
 
+    # Returns true if any errors are found on the passed attribute or its
+    # association.
+    def errors?(attr)
+      attr_plain, attr_id = assoc_and_id_attr(attr)
+      # errors aint a Hash
+      # rubocop:disable HashMethods
+      @object.errors.has_key?(attr_plain.to_sym) ||
+      @object.errors.has_key?(attr_id.to_sym)
+      # rubocop:enable HashMethods
+    end
+
     # Render a label for the given attribute with the passed content.
     # The content may be given as an argument or as a block:
     #   labeled(:attr) { #content }
