@@ -85,7 +85,7 @@ module DryCrud::Form
 
     # Customize the standard text area to have 5 rows by default.
     def text_area(attr, html_options = {})
-      html_options[:rows] ||= 3
+      html_options[:rows] ||= 5
       html_options[:cols] ||= 50
       add_css_class(html_options, 'form-control')
       super

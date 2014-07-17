@@ -17,7 +17,7 @@ module DryCrud::Form
 
     # Number of default input field span columns depending
     # on the #field_method.
-    INPUT_SPANS = Hash.new(8)
+    INPUT_SPANS = Hash.new(5)
     INPUT_SPANS[:number_field] =
       INPUT_SPANS[:integer_field] =
       INPUT_SPANS[:float_field]   =
