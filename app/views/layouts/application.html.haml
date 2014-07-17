@@ -12,26 +12,7 @@
     = stylesheet_link_tag 'application', :media => 'all', 'data-turbolinks-track' => true
     = javascript_include_tag "application", 'data-turbolinks-track' => true
   %body
-    #headerbar.navbar.navbar-default{role: 'navigation', class: ('lonely' unless @user)}
-      .container-fluid
-        .navbar-header
-          .navbar-brand
-            = image_tag 'logo.svg', :size => '41x40'
-            PuzzleTime
-            %span.version
-              = Puzzletime.version
-        %ul.nav.navbar-nav.navbar-right
-          - if @user
-            %li
-              = link_to(settings_employees_path) do
-                %i.icon-user
-                = @user.label
-          %li
-            = link_to('https://twiki.puzzle.ch/bin/view/Puzzle/PuzzleTimeFAQ') do
-              %i.icon-help
-          - if @user
-            %li
-              = link_to 'Logout',  {:controller => 'login',  :action => 'logout'}, :method => 'post'
+    = render 'layouts/headerbar'
     - if @user
       = render 'layouts/menu'
 

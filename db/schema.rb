@@ -48,8 +48,8 @@ ActiveRecord::Schema.define(version: 20140714093557) do
   end
 
   create_table "clients", force: true do |t|
-    t.string  "name",                   null: false
-    t.string  "shortname",    limit: 4, null: false
+    t.string  "name"
+    t.string  "shortname"
     t.integer "work_item_id"
   end
 
@@ -250,7 +250,7 @@ ActiveRecord::Schema.define(version: 20140714093557) do
   create_table "work_items", force: true do |t|
     t.integer "parent_id"
     t.string  "name",                                         null: false
-    t.string  "shortname",                                    null: false
+    t.string  "shortname",       limit: 5,                    null: false
     t.text    "description"
     t.integer "path_ids",                                                  array: true
     t.string  "path_shortnames"

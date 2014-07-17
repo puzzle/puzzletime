@@ -96,7 +96,7 @@ class CreateErpTables < ActiveRecord::Migration
     create_table :work_items do |t|
       t.belongs_to :parent
       t.string :name, null: false
-      t.string :shortname, null: false
+      t.string :shortname, null: false, limit: 5
       t.text :description
       t.integer :path_ids, array: true
       t.string :path_shortnames
@@ -140,6 +140,8 @@ class CreateErpTables < ActiveRecord::Migration
 
     # remove_column :clients, :name
     # remove_column :clients, :shortname
+    change_column :clients, :name, :string, null: true
+    change_column :clients, :shortname, :string, null: true
 
     # drop_table :projects, :accounting_posts
     # drop_table :projectmemberships

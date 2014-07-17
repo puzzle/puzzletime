@@ -43,7 +43,9 @@ class ClientsControllerTest < ActionController::TestCase
 
   # Attribute hash used in several tests.
   def test_entry_attrs
-    { name: 'Initech',
-      shortname: 'INIT' }
+    { work_item_attributes:
+        { name: 'Initech',
+          shortname: 'INIT' }
+    }
   end
 end

@@ -110,28 +110,6 @@ class ProjectTest < ActiveSupport::TestCase
     assert_equal 'yada', c2.inherited_description
   end
 
-  test 'project and sub project get path names set when client shortname is changed' do
-    p = Fabricate(:project,
-                  client: clients(:puzzle),
-                  department: departments(:devone),
-                  name: 'Foo',
-                  shortname: 'FOO')
-    c = Fabricate(:project,
-                  client: clients(:puzzle),
-                  department: departments(:devone),
-                  parent: p,
-                  name: 'Bar',
-                  shortname: 'BAR')
-
-    clients(:puzzle).update_attributes!(shortname: 'PUZZ', name: 'Puzzle ITC')
-    p.reload
-    c.reload
-
-    assert_equal 'PUZZ-FOO', p.path_shortnames
-    assert_equal 'PUZZ-FOO-BAR', c.path_shortnames
-    assert_equal "Puzzle ITC\nFoo\nBar", c.path_names
-  end
-
   test 'sub project is not touched when parent names are not changed' do
     p = Fabricate(:project,
                   client: clients(:puzzle),

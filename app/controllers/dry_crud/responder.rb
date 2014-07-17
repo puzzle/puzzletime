@@ -10,6 +10,18 @@ module DryCrud
       super(controller, with_path_args(resources, controller), options)
     end
 
+    def to_js
+      if get? || response_overridden?
+        default_render
+      elsif has_errors?
+        display_js_errors
+      else
+        controller.render text: "'#{controller.send(:js_entry).to_json}'"
+      end
+    rescue ActionView::MissingTemplate => e
+      default_render
+    end
+
     private
 
     # Check whether the resource has errors. Additionally checks the :success
@@ -25,6 +37,10 @@ module DryCrud
       else
         resources
       end
+    end
+
+    def display_js_errors
+      controller.render partial: 'form', status: :unprocessable_entity
     end
 
   end
