@@ -28,23 +28,10 @@ class Client < ActiveRecord::Base
 
   has_many_through_work_item :orders
   has_many_through_work_item :accounting_posts
-  #has_many_through_work_item :worktimes
 
-  # Validation helpers.
-  validates_presence_of :name, message: 'Ein Name muss angegeben sein'
-  validates_uniqueness_of :name, message: 'Dieser Name wird bereits verwendet'
-  validates_presence_of :shortname, message: 'Ein Kürzel muss angegeben werden'
-  validates_uniqueness_of :shortname, message: 'Dieses Kürzel wird bereits verwendet'
+  validates :work_item, presence: true
 
-  before_save :remember_name_changes
-  after_save :update_projects_path_names
-
-
-  scope :list, -> { order('name') }
-
-  def to_s
-    name
-  end
+  delegate :name, :shortname, to: :work_item, allow_nil: true
 
   ##### interface methods for Evaluatable #####
 
@@ -58,18 +45,5 @@ class Client < ActiveRecord::Base
              where(projects: { client_id: id })
   end
 
-  private
 
-  def remember_name_changes
-    @names_changed = name_changed? || shortname_changed?
-  end
-
-  def update_projects_path_names
-    if @names_changed
-      projects.find_each do |p|
-        p.update_path_names!
-      end
-      @names_changed = false
-    end
-  end
 end

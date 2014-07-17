@@ -1,0 +1,9 @@
+puzzle:
+  id:      1
+  name:    Puzzle
+  shortname: PITC
+
+swisstopo:
+  id:      2
+  name:    Swisstopo
+  shortname: STOP
