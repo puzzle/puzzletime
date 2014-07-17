@@ -7,11 +7,19 @@ class ClientsController < ManageController
 
   self.search_columns = [:name, :shortname]
 
-  self.permitted_attrs = :name, :shortname
+  self.permitted_attrs = [work_item_attributes: [:name, :shortname, :description]]
 
-  def new
-    super do |format|
-      format.js { render partial: 'form' }
-    end
+  respond_to :js, only: [:new, :create]
+
+  private
+
+  def build_entry
+    client = super
+    client.build_work_item
+    client
+  end
+
+  def js_entry
+    { id: entry.id, label: entry.to_s, work_item_id: entry.work_item_id }
   end
 end

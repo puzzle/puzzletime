@@ -1,1 +1,3 @@
-= crud_form :name, :shortname
+= crud_form do |f|
+  = f.fields_for :work_item, entry.work_item do |fields|
+    = render 'work_items/fields', fields: fields

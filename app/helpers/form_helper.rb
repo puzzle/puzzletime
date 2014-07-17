@@ -19,7 +19,6 @@ module FormHelper
     if request.format.js?
       options[:data] ||= {}
       options[:data][:remote] = true
-      options[:data][:type] = :json
     end
 
     form_for(object, options, &block)

@@ -3,33 +3,40 @@
   - if entry.new_record?
 
     .form-group
-      = label_tag(:client_id, 'Kunde', class: 'col-md-2 control-label')
-      .col-md-8
-        = select_tag(:client_id,
-                     options_from_collection_for_select(@clients, :id, :to_s),
+      = label_tag(:client_work_item_id, 'Kunde', class: 'col-md-2 control-label')
+      .col-md-5
+        = select_tag(:client_work_item_id,
+                     options_from_collection_for_select(@clients, :work_item_id, :to_s),
                      prompt: ta(:please_select),
                      class: 'searchable')
+      .col-md-2
         %p.help-block
-          = new_modal_link(new_client_path(format: :js), 'Kunde erfassen')
+          = modal_create_link(new_client_path(format: :js),
+                              'client_work_item_id',
+                              'Kunde erfassen',
+                              id_field: 'work_item_id')
 
     .form-group
-      = label_tag(:category_id, class: 'col-md-2 control-label') do
+      = label_tag(:category_work_item_id, class: 'col-md-2 control-label') do
         -# add toggle checkbox with disable
         = check_box_tag :category_active
         &nbsp;
         Kategorie
-      .col-md-8
+      .col-md-5
         -# TODO update when client changed
-        = select_tag(:category_id,
+        = select_tag(:category_work_item_id,
                      "",
                      include_blank: true,
                      class: 'searchable')
+      .col-md-2
         %p.help-block
-          = new_modal_link(new_work_item_path(format: :js), 'Kategorie erfassen')
+          = modal_create_link(new_work_item_path(format: :js),
+                              'category_work_item_id',
+                              'Kategorie erfassen',
+                              id_field: 'work_item_id')
 
   = f.fields_for :work_item, entry.work_item do |fields|
-    = fields.labeled_input_field :name
-    = fields.labeled_input_field :shortname
+    = render 'work_items/fields', fields: fields
 
   = f.labeled_input_field :department_id, class: 'searchable'
   = f.labeled_input_field :responsible_id, class: 'searchable'

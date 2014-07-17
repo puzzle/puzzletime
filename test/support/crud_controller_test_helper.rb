@@ -156,11 +156,20 @@ module CrudControllerTestHelper
   end
 
   def assert_attrs_equal(attrs) # :nodoc:
+    assert_entry_attrs_equal(entry, attrs)
+  end
+
+  def assert_entry_attrs_equal(object, attrs)
     attrs.each do |key, value|
-      actual = entry.send(key)
-      assert_equal value, actual,
-                   "#{key} is expected to be <#{value.inspect}>, " +
-                   "got <#{actual.inspect}>"
+      if key.to_s.end_with?('_attributes')
+        sub_entry = object.send(key.to_s[0..(-'_attributes'.size-1)])
+        assert_entry_attrs_equal(sub_entry, value)
+      else
+        actual = object.send(key)
+        assert_equal value, actual,
+                     "#{key} is expected to be <#{value.inspect}>, " +
+                     "got <#{actual.inspect}>"
+      end
     end
   end
 
