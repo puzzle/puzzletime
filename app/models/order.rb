@@ -4,7 +4,7 @@
 # Table name: orders
 #
 #  id                 :integer          not null, primary key
-#  path_item_id       :integer          not null
+#  work_item_id       :integer          not null
 #  kind_id            :integer
 #  responsible_id     :integer
 #  status_id          :integer
@@ -17,7 +17,8 @@
 
 class Order < ActiveRecord::Base
 
-  belongs_to :path_item
+  include BelongingToWorkItem
+
   belongs_to :kind, class_name: 'OrderKind'
   belongs_to :status, class_name: 'OrderStatus'
   belongs_to :responsible, class_name: 'Employee'
@@ -25,28 +26,30 @@ class Order < ActiveRecord::Base
   belongs_to :contract
   belongs_to :billing_address
 
-  # TODO
-  # has_one :client, through: :path_item
+  has_one_through_work_item :client
 
   has_many :comments, class_name: 'OrderComment'
   has_many :targets, class_name: 'OrderTarget'
+  has_many_through_work_item :accounting_posts
+  has_many_through_work_item :worktimes
 
   has_and_belongs_to_many :employees
   has_and_belongs_to_many :contacts
 
   validates :kind_id, :responsible_id, :status_id, :department_id, presence: true
 
-  # TODO: validate only one order per path_items path_ids
+  # TODO: validate only one order per work_items path_ids
   # TODO: after create callback to initialize order targets
+  # TODO propagate status closed to work items when changed
 
   scope :list, -> do
-    includes(:path_item).
-    references(:path_item).
-    order('path_items.shortname')
+    includes(:work_item).
+    references(:work_item).
+    order('work_items.path_shortnames')
   end
 
   def to_s
-    path_item.to_s
+    work_item.to_s
   end
 
 end

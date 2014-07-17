@@ -20,7 +20,6 @@
 #  path_names            :string(2047)
 #  leaf                  :boolean          default(TRUE), not null
 #  inherited_description :text
-#  closed                :boolean          default(FALSE), not null
 #
 
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
