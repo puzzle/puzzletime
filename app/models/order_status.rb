@@ -19,9 +19,12 @@ class OrderStatus < ActiveRecord::Base
   validates :name, :position, uniqueness: true
   validates :style, inclusion: STYLES
 
+  # TODO propagate closed to work items when changed
+
   protect_if :orders, 'Der Eintrag kann nicht gelöscht werden, da ihm noch Aufträge zugeordnet sind'
 
   scope :list, -> { order(:position) }
+
 
   def to_s
     name

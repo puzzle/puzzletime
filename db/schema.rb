@@ -23,9 +23,8 @@ ActiveRecord::Schema.define(version: 20140714093557) do
   end
 
   create_table "accounting_posts", force: true do |t|
-    t.integer "path_item_id",                         null: false
+    t.integer "work_item_id",                         null: false
     t.integer "portfolio_item_id"
-    t.text    "description"
     t.string  "reference"
     t.integer "offered_hours"
     t.integer "offered_rate"
@@ -35,8 +34,7 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.boolean "billable",             default: true,  null: false
     t.boolean "description_required", default: false, null: false
     t.boolean "ticket_required",      default: false, null: false
-    t.boolean "open",                 default: true,  null: false
-    t.boolean "order_closed",         default: false, null: false
+    t.boolean "closed",               default: false, null: false
   end
 
   create_table "billing_addresses", force: true do |t|
@@ -52,7 +50,7 @@ ActiveRecord::Schema.define(version: 20140714093557) do
   create_table "clients", force: true do |t|
     t.string  "name",                   null: false
     t.string  "shortname",    limit: 4, null: false
-    t.integer "path_item_id"
+    t.integer "work_item_id"
   end
 
   create_table "contacts", force: true do |t|
@@ -160,7 +158,7 @@ ActiveRecord::Schema.define(version: 20140714093557) do
   end
 
   create_table "orders", force: true do |t|
-    t.integer  "path_item_id",       null: false
+    t.integer  "work_item_id",       null: false
     t.integer  "kind_id"
     t.integer  "responsible_id"
     t.integer  "status_id"
@@ -175,18 +173,6 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.float   "hours",         null: false
     t.integer "employee_id",   null: false
     t.date    "transfer_date", null: false
-  end
-
-  create_table "path_items", force: true do |t|
-    t.integer "parent_id"
-    t.string  "name",                                        null: false
-    t.string  "shortname",                                   null: false
-    t.integer "path_ids",                                                 array: true
-    t.string  "path_shortnames"
-    t.string  "path_names",      limit: 2047
-    t.boolean "leaf",                         default: true, null: false
-    t.index ["parent_id"], :name => "index_path_items_on_parent_id"
-    t.index ["path_ids"], :name => "index_path_items_on_path_ids"
   end
 
   create_table "plannings", force: true do |t|
@@ -210,6 +196,7 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.datetime "updated_at"
     t.boolean  "is_abstract"
     t.decimal  "abstract_amount"
+    t.integer  "work_item_id"
   end
 
   create_table "portfolio_items", force: true do |t|
@@ -260,21 +247,35 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.text "message",   null: false
   end
 
+  create_table "work_items", force: true do |t|
+    t.integer "parent_id"
+    t.string  "name",                                         null: false
+    t.string  "shortname",                                    null: false
+    t.text    "description"
+    t.integer "path_ids",                                                  array: true
+    t.string  "path_shortnames"
+    t.string  "path_names",      limit: 2047
+    t.boolean "leaf",                         default: true,  null: false
+    t.boolean "closed",                       default: false, null: false
+    t.index ["parent_id"], :name => "index_work_items_on_parent_id"
+    t.index ["path_ids"], :name => "index_work_items_on_path_ids"
+  end
+
   create_table "worktimes", force: true do |t|
     t.integer "project_id"
     t.integer "absence_id"
     t.integer "employee_id"
-    t.string  "report_type",                        null: false
-    t.date    "work_date",                          null: false
+    t.string  "report_type",                     null: false
+    t.date    "work_date",                       null: false
     t.float   "hours"
     t.time    "from_start_time"
     t.time    "to_end_time"
     t.text    "description"
-    t.boolean "billable",           default: true
-    t.boolean "booked",             default: false
+    t.boolean "billable",        default: true
+    t.boolean "booked",          default: false
     t.string  "type"
     t.string  "ticket"
-    t.integer "accounting_post_id"
+    t.integer "work_item_id"
     t.index ["absence_id", "employee_id", "work_date"], :name => "worktimes_absences", :conditions => "((type)::text = 'Absencetime'::text)"
     t.index ["employee_id", "work_date"], :name => "worktimes_attendances", :conditions => "((type)::text = 'Attendancetime'::text)"
     t.index ["project_id", "employee_id", "work_date"], :name => "worktimes_projects", :conditions => "((type)::text = 'Projecttime'::text)"

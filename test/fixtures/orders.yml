@@ -3,7 +3,7 @@
 # Table name: orders
 #
 #  id                 :integer          not null, primary key
-#  path_item_id       :integer          not null
+#  work_item_id       :integer          not null
 #  kind_id            :integer
 #  responsible_id     :integer
 #  status_id          :integer
@@ -15,9 +15,9 @@
 #
 
 puzzletime:
-  path_item_id: 1
+  work_item_id: 1
   responsible_id: 6
 
 allgemein:
-  path_item_id: 8
+  work_item_id: 8
   responsible_id: 7

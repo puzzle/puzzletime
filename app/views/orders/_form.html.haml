@@ -25,9 +25,9 @@
                      include_blank: true,
                      class: 'searchable')
         %p.help-block
-          = new_modal_link(new_path_item_path(format: :js), 'Kategorie erfassen')
+          = new_modal_link(new_work_item_path(format: :js), 'Kategorie erfassen')
 
-  = f.fields_for :path_item, entry.path_item do |fields|
+  = f.fields_for :work_item, entry.work_item do |fields|
     = fields.labeled_input_field :name
     = fields.labeled_input_field :shortname
 
