@@ -44,3 +44,6 @@ ldap:
 defaults:
   report_type: absolute_day
   start_hour: 8
+
+work_items:
+  path_separator: '-'

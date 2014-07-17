@@ -1,46 +1,16 @@
 = crud_form do |f|
 
   - if entry.new_record?
-
-    .form-group
-      = label_tag(:client_work_item_id, 'Kunde', class: 'col-md-2 control-label')
-      .col-md-5
-        = select_tag(:client_work_item_id,
-                     options_from_collection_for_select(@clients, :work_item_id, :to_s),
-                     prompt: ta(:please_select),
-                     class: 'searchable')
-      .col-md-2
-        %p.help-block
-          = modal_create_link(new_client_path(format: :js),
-                              'client_work_item_id',
-                              'Kunde erfassen',
-                              id_field: 'work_item_id')
-
-    .form-group
-      = label_tag(:category_work_item_id, class: 'col-md-2 control-label') do
-        -# add toggle checkbox with disable
-        = check_box_tag :category_active
-        &nbsp;
-        Kategorie
-      .col-md-5
-        -# TODO update when client changed
-        = select_tag(:category_work_item_id,
-                     "",
-                     include_blank: true,
-                     class: 'searchable')
-      .col-md-2
-        %p.help-block
-          = modal_create_link(new_work_item_path(format: :js),
-                              'category_work_item_id',
-                              'Kategorie erfassen',
-                              id_field: 'work_item_id')
+    = render 'client_field', f: f
+    = render 'category_field', f: f
 
   = f.fields_for :work_item, entry.work_item do |fields|
     = render 'work_items/fields', fields: fields
 
   = f.labeled_input_field :department_id, class: 'searchable'
   = f.labeled_input_field :responsible_id, class: 'searchable'
-  = f.labeled_input_field :kind, class: 'searchable'
+  = f.labeled_input_field :kind_id, class: 'searchable'
+  = f.labeled_input_field :status_id, class: 'searchable'
   = f.labeled_input_field :employee_ids, class: 'searchable', multi: true
 
 

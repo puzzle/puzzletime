@@ -20,8 +20,6 @@ class WorkItem < ActiveRecord::Base
 
   acts_as_tree order: 'shortname'
 
-  belongs_to :parent
-
   has_one :client
   has_one :order
   has_one :accounting_post
@@ -95,6 +93,16 @@ class WorkItem < ActiveRecord::Base
     WorkItem.where('? = ANY (path_ids)', id)
   end
 
+  # children that are not assigned to a special entity like client or order
+  def categories
+    children.joins('LEFT JOIN clients ON clients.work_item_id = work_items.id').
+             joins('LEFT JOIN orders ON orders.work_item_id = work_items.id').
+             joins('LEFT JOIN accounting_posts ON accounting_posts.work_item_id = work_items.id').
+             where(clients: { id: nil },
+                   orders: { id: nil },
+                   accounting_posts: { id: nil })
+  end
+
   def update_path_names!
     store_path_names
     save!
@@ -130,7 +138,7 @@ class WorkItem < ActiveRecord::Base
 
   def store_path_names
     if parent
-      self.path_shortnames = parent.path_shortnames + PATH_SEPARATOR + shortname
+      self.path_shortnames = parent.path_shortnames + Settings.work_items.path_separator + shortname
       self.path_names = parent.path_names + "\n" + name
     else
       self.path_shortnames = shortname
