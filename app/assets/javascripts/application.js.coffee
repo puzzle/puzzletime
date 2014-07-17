@@ -12,15 +12,30 @@
 #= require waypoints-sticky
 #= require bootstrap/modal
 #= require_self
+#= require modal_create
 #= require worktimes
 #= require week_datepicker
 #= require project_autocomplete
 #= require planning
-#= require modal_create
+#= require orders
 #= require turbolinks
 
 
 app = window.App ||= {}
+
+toggleEnabled = (element) ->
+  enabled = $(element).prop('checked')
+  selector = $(element).data('enable')
+  $('input' + selector +
+    ', select' + selector +
+    ', textarea' + selector).prop('disabled', !enabled)
+  affected = $(selector)
+  if enabled
+    affected.removeClass('disabled')
+    $.each(affected, (i, e) -> if e.selectize then e.selectize.enable())
+  else
+    affected.addClass('disabled')
+    $.each(affected, (i, e) -> if e.selectize then e.selectize.disable())
 
 
 $ ->
@@ -43,11 +58,21 @@ $ ->
     event.preventDefault()
   )
 
+  # wire up enable links
+  $('body').on('click', '[data-enable]', (event) -> toggleEnabled(this))
+  $('[data-enable]').each((i, e) -> toggleEnabled(e))
+
   # wire up autocompletes
   $('[data-autocomplete=project]').each(app.projectAutocomplete)
 
   # wire up selectize
   $('select.searchable').selectize()
+
+  # wire up disabled links
+  $('body').on('click', 'a.disabled', (event) ->
+   event.preventDefault()
+   event.stopPropagation()
+  )
 
   # change cursor for turbolink requests to give the user a minimal feedback
   $(document).on('page:fetch', ->

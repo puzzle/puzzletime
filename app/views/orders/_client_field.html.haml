@@ -1,0 +1,15 @@
+.form-group
+  = label_tag(:client_work_item_id, 'Kunde', class: 'col-md-2 control-label')
+  .col-md-5
+    = select_tag(:client_work_item_id,
+                 options_from_collection_for_select(@clients, :work_item_id, :to_s, params[:client_work_item_id]),
+                 prompt: ta(:please_select),
+                 class: 'searchable',
+                 data: { remote: true,
+                         url: categories_clients_path })
+  .col-md-2
+    %p.help-block
+      = modal_create_link(new_client_path(format: :js),
+                          'client_work_item_id',
+                          'Kunde erfassen',
+                          data: { id_field: 'work_item_id' })

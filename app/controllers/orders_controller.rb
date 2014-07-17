@@ -1,7 +1,7 @@
 class OrdersController < ManageController
 
-  self.permitted_attrs = [:kind_id, :responsible_id, :department_id,
-                          work_item: [:name, :shortname, :description],
+  self.permitted_attrs = [:kind_id, :responsible_id, :department_id, :status_id,
+                          work_item_attributes: [:name, :shortname, :description],
                           employee_ids: []]
 
   before_render_form :set_clients
@@ -14,8 +14,20 @@ class OrdersController < ManageController
     order
   end
 
+  def assign_attributes
+    super
+    entry.work_item.parent_id = (params[:category_active] && params[:category_work_item_id].presence) ||
+                                params[:client_work_item_id].presence
+  end
+
   def set_clients
     @clients = Client.list
+    @employees = Employee.list # restrict only with employment?
+    if params[:client_work_item_id].present?
+      @categories = WorkItem.find(params[:client_work_item_id]).categories.list
+    else
+      @categories = []
+    end
   end
 
 

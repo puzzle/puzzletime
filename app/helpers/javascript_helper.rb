@@ -1,14 +1,15 @@
 module JavascriptHelper
   def modal_create_link(path, element, title, options = {})
-    options[:update] ||= 'selectize'
-    link_to(path,
-            id: "#{element}_create_link",
-            data: options.merge(
-                    modal: '#modal',
-                    title: title,
-                    element: "##{element}",
-                    remote: true,
-                    type: :html )) do
+    options[:data] ||= {}
+    options[:data][:update] ||= 'selectize'
+    o = options.merge(
+          id: "#{element}_create_link",
+          data: { modal: '#modal',
+                  title: title,
+                  element: "##{element}",
+                  remote: true,
+                  type: :html })
+    link_to(path, o) do
       icon(:plus) + " Erfassen".html_safe
     end
   end
