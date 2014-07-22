@@ -9,7 +9,8 @@
   font-style: normal;
 }
 
-[class^="icon-"], [class*=" icon-"] {
+[class^="icon-"],
+[class*=" icon-"] {
   font-family: 'puzzletime-icons';
   speak: none;
   font-style: normal;
@@ -21,9 +22,14 @@
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  &:before {
+    vertical-align: middle;
+  }
 }
 
-.icon-add:before {
+.icon-add:before,
+.icon-duplicate:before {
   content: "\e600";
 }
 .icon-calendar:before {
@@ -32,18 +38,15 @@
 .icon-delete:before {
   content: "\e602";
 }
-.icon-duplicate:before {
+.icon-help:before {
   content: "\e603";
 }
-.icon-help:before {
+.icon-next:before {
   content: "\e604";
 }
-.icon-next:before {
+.icon-previous:before {
   content: "\e605";
 }
-.icon-previous:before {
-  content: "\e606";
-}
 .icon-user:before {
-  content: "\e607";
+  content: "\e606";
 }

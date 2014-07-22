@@ -1,6 +1,10 @@
 .date-label{'data-date' => day}
-  .inner
+  .date-day
     = format_day(day)
-  /todo: add and style daily total hours
-  /.time-value= format_hour(sum_hours(day))
-= render partial: 'worktime', collection: @daily_worktimes[day], as: :worktime, locals: {day: day}
+  .date-time-value
+    = format_hour(sum_hours(day))
+- worktimes = @daily_worktimes[day]
+- if worktimes.present?
+  = render partial: 'worktime', collection: worktimes, as: :worktime, locals: {day: day}
+- else
+  = render partial: 'day_empty', locals: {day: day}
