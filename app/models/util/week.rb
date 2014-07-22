@@ -17,8 +17,13 @@ class Week
   end
 
   def self.valid?(week_integer)
-    week = from_integer(week_integer)
-    Date.valid_commercial?(week.year, week.week, 1)
+    from_integer(week_integer).valid?
+  end
+
+  def self.parse_to_integer(week_string)
+    from_string(week_string).to_integer
+  rescue ArgumentError
+    nil
   end
 
   def initialize(year, week)
@@ -28,6 +33,10 @@ class Week
 
   def to_integer
     @year * 100 + @week
+  end
+
+  def valid?
+    Date.valid_commercial?(@year, @week, 1)
   end
 
   def to_date

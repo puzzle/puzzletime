@@ -1,9 +1,7 @@
 - errors ||= object.errors
 - if errors.any?
-  #errorExplanation.errorExplanation
-    %h2= ti(:"errors.header", count: errors.count, model: object.to_s)
+  #error_explanation.alert.alert-danger
     %ul
       - errors.each do |attr, msg|
         %li
-          \-
           = /^[[:upper:]]/.match(msg) ? msg : errors.full_message(attr, msg)

@@ -30,7 +30,6 @@ class Splitable
     worktime.hours = remaining_hours
     worktime.from_start_time = next_start_time
     worktime.to_end_time = original.to_end_time
-    worktime.project_id ||= worktime.employee.default_project_id
     worktime
   end
 

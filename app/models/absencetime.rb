@@ -21,6 +21,11 @@
 
 
 class Absencetime < Worktime
+
+  validates :absence, presence: true
+
+  attr_accessor :duration # used for multiabsence and not persisted
+
   def account
     absence
   end

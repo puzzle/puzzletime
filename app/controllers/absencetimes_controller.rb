@@ -1,11 +1,18 @@
 # encoding: utf-8
-
 class AbsencetimesController < WorktimesController
 
-  self.permitted_attrs = [:account_id, :report_type, :work_date, :hours,
+  self.permitted_attrs = [:absence_id, :report_type, :work_date, :hours,
                           :from_start_time, :to_end_time, :description]
 
   before_render_form :set_accounts
+
+  def create
+    if params[:absencetime].present? && params[:absencetime][:create_multi].present?
+      create_multi_absence
+    else
+      super
+    end
+  end
 
   def update
     if entry.employee_id != @user.id
@@ -15,37 +22,25 @@ class AbsencetimesController < WorktimesController
     end
   end
 
-  def add_multi_absence
-    set_accounts
-    @multiabsence = MultiAbsence.new
-  end
+  protected
 
   def create_multi_absence
     @multiabsence = MultiAbsence.new
-    @multiabsence.employee = @user
-    @multiabsence.attributes = params[:multiabsence]
+    @multiabsence.employee = Employee.find_by_id(employee_id)
+    @multiabsence.attributes = params[:absencetime]
     if @multiabsence.valid?
       count = @multiabsence.save
       flash[:notice] = "#{count} Absenzen wurden erfasst"
-      options = { controller: 'evaluator',
-                  action: 'details',
-                  evaluation: user_evaluation,
-                  clear: 1 }
-      set_period
-      if @period.nil? ||
-          (! @period.include?(@multiabsence.start_date) ||
-          ! @period.include?(@multiabsence.end_date))
-        options[:start_date] = @multiabsence.start_date
-        options[:end_date] = @multiabsence.end_date
-      end
-      redirect_to options
+      redirect_to action: 'index', week_date: @multiabsence.work_date
     else
-      set_accounts
-      render action: 'add_multi_absence'
+      set_employees
+      @create_multi = true
+      @multiabsence.worktime.errors.each do |attr, msg|
+        entry.errors.add(attr, msg)
+      end
+      render 'new'
     end
   end
-
-  protected
 
   def set_worktime_defaults
     @worktime.absence_id ||= params[:account_id]

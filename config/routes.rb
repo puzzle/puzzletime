@@ -42,7 +42,7 @@ Rails.application.routes.draw do
   resources :employees, only: [:index, :edit, :update] do
     collection do
       get :settings
-      post :settings, to: 'employees#update_settings'
+      patch :settings, to: 'employees#update_settings'
       get :passwd
       post :passwd, to: 'employees#update_passwd'
       post :synchronize
@@ -70,7 +70,7 @@ Rails.application.routes.draw do
       get :existing
       post :start
       post :stop
-      post :create_part
+      match :create_part, via: [:post, :patch]
       match :delete_part, via: [:post, :delete]
 
       get :running
@@ -81,8 +81,6 @@ Rails.application.routes.draw do
   resources :absencetimes do
     collection do
       get :existing
-      get :add_multi_absence
-      post :create_multi_absence
     end
   end
 

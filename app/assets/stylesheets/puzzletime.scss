@@ -1,36 +1,13 @@
+@import "bootstrap_variables";
+@import "bootstrap";
 @import "mixins";
 
-/* apply a natural box layout model to all elements */
-*, *:before, *:after {
-  -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
- }
-
-body {
-    background:     #F9F9F7 asset-url('diagonal.gif') repeat-x;
-    font-size:      14px;
-    font-family:    "trebuchet ms", helvetica, sans-serif;
-    color:          #333;
-    padding:        0px;
-    margin:         0px;
-    text-align:     center;   /* centered content in IE */
-}
-
 p {
-    margin-bottom:  20px;
     text-align:     justify;
 }
 
 div {
     text-align:     justify;
-}
-
-a {
-    color:          #0087e3 ;
-    text-decoration: underline;
-}
-
-a:hover {
-    text-decoration: none;
 }
 
 a.symbol {
@@ -39,193 +16,25 @@ a.symbol {
 	font-size: 		 16px;
 }
 
-a img {
-	border:			0;
+#content {
+    @extend .container-fluid;
+    margin-bottom: 40px;
 }
 
-h1 {
-    font-size:      20px;
-    font-weight:    normal;
-    margin-bottom:  20px;
+.nav-tabs.nav-center > li, .nav-pills.nav-center > li {
+    float:none;
+    display:inline-block;
+    *display:inline; /* ie7 fix */
+     zoom:1; /* hasLayout ie7 trigger */
 }
 
-h2 {
-    font-size:      16px;
-    font-weight:    bold;
-}
-
-h3 {
-    font-size:      14px;
-    font-weight:    bold;
-    color:          #4a4a4a;
-}
-
-table {
-    font-size:      14px;
-}
-
-td {
-    padding-left:   4px;
-    padding-right:  4px;
+.nav-tabs.nav-center, .nav-pills.nav-center {
+    text-align:center;
 }
 
 th {
-    font-weight:    bold;
     color:          #0087e3;
-    white-space:    nowrap;
-    text-align:     left;
 }
-
-textarea, input, select {
-    font-size:      14px;
-    font-family:    sans-serif;
-    line-height:    16px;
-}
-
-textarea {
-  width: 400px;
-}
-
-.right {
-  text-align: right;
-}
-
-.center {
-  text-align: center;
-}
-
-.table tr {
-    vertical-align: top;
-}
-
-.table td > p {
-    margin: 0;
-}
-
-table.table td.action {
-  width: 20px;
-  text-align: center;
-}
-
-table.table thead a {
-    text-decoration: none;
-}
-
-
-#content {
-    width: 100%;
-    margin: auto;
-    background: #fff;
-    border-left: 1px solid #E9E9E7;
-    border-right: 1px solid #E9E9E7;
-}
-
-#header {
-    height:         75px;
-    margin-top:     -10px;
-    margin-bottom:  14px;
-}
-
-#splash {
-    background:     #0087e3;
-    color:          #fff;
-    padding-left:   20px;
-	height:     	75px;
-	max-width:		30%;
-}
-
-#brand {
-    font-weight:    normal;
-    font-size:      28px;
-    letter-spacing: -1px;
-	padding-top:	13px;
-    margin-bottom:  0px;
-}
-
-#company {
-    font-size:      11px;
-	line-height:     1px;
-    font-weight:    normal;
-    color:          #FCE2CA;
-}
-
-#brand sup {
-    color:          #FCE2CA;
-    font-size:      0.5em;
-}
-
-#banner {
-	float:			right;
-	height:  75px;
-}
-
-#menu {
-    background:     #46461F asset-url('menu_bg.gif') repeat-x;
-    margin-top:     -8px;
-    height:         35px;
-}
-
-#menu_user {
-    background:     asset-url('menu_user.gif') repeat-x;
-    margin-left:    20px;
-	padding-top: 	 2px;
-    float:          right;
-}
-
-#menu ul {
-    padding-top:    6px;
-    padding-left:   8px;
-    margin-left:    0px;
-    margin-bottom:  13px;
-}
-
-#menu ul li {
-  display:        inline;
-	font-size:		15px;
-}
-
-#menu ul li a {
-    background-color: transparent;
-    background-repeat: repeat-x;
-    padding:        2px 10px 4px 10px;  /* for the white box around the hovered link */
-    color:          #fff;
-    font-weight:    bold;
-}
-
-#menu ul li a:hover, #menu li.active a {
-    background:     #fff asset-url('menubox.gif') repeat-x top;
-    color:          #4A4A24;
-    text-decoration: none;
-}
-
-#submenu {
-    background:     asset-url('menu_user.gif') repeat-x;
-    padding-left:   40px;
-    padding-top:   2px;
-    text-indent:    -28px;
-    margin-bottom:  20px;
-}
-
-#submenu ul {
-    margin: 0;
-    padding: 0;
-}
-
-#submenu ul li {
-    display:        inline;
-    padding-right: 8px;
-}
-
-#submenu li a {
-    color:          black;
-    font-weight:    bold;
-    font-size:    14px;
-}
-
-#submenu li.active a {
-    text-decoration: none;
-}
-
 th.periodHead {
     text-align:     right;
 }
@@ -234,8 +43,8 @@ th.periodHead {
 	white-space: nowrap;
 }
 
-table.striped tbody tr:nth-child(odd) {
-    background-color: #C9D8FF;
+.btn + .cancel {
+  margin-left: 10px;
 }
 
 .times_total_sum {
@@ -244,14 +53,6 @@ table.striped tbody tr:nth-child(odd) {
     padding-top:    10px;
     padding-bottom: 20px;
     white-space:    nowrap;
-}
-
-#notice {
-    font-weight:    bold;
-    margin:         10px;
-    margin-top:     20px;
-    margin-bottom:  20px;
-    color:          #e47400;
 }
 
 .notification {
@@ -296,43 +97,6 @@ a.tooltip:hover span {
 	text-align:		left;
 }
 
-.fieldWithErrors {
-    float:          left;
-    padding:        2px;
-    margin-right:   5px;
-    background-color: #e47400;
-}
-
-#errorExplanation {
-    width:          550px;
-    border:         2px solid #e47400;
-    padding-top:    15px;
-    padding-left:   20px;
-    padding-right:   20px;
-    background-color: #f0f0f0;
-    margin-bottom:  15px;
-}
-
-#errorExplanation h2 {
-    text-align:     left;
-    font-size:      14px;
-    margin:         -10px;
-    margin-bottom:  10px;
-    color:          #e47400;
-}
-
-#errorExplanation p {
-    color:           #333;
-    margin-left:    -10px;
-    margin-bottom:  -7px;
-}
-
-#errorExplanation ul li {
-    color:          #333;
-    list-style:     none;
-    margin-left:    -30px;
-}
-
 .calendar {
     margin-left: 5px;
 }
@@ -357,4 +121,24 @@ a.tooltip:hover span {
     }
 }
 
+.right {
+  text-align: right;
+}
+
+.center {
+  text-align: center;
+}
+
+table.table td.action {
+  width: 20px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+footer {
+  clear: both;
+}
+
+@import "header";
 @import "worktimes";
+@import "icons";

@@ -17,13 +17,13 @@ module DryCrud::Form
 
     # Number of default input field span columns depending
     # on the #field_method.
-    INPUT_SPANS = Hash.new(8)
+    INPUT_SPANS = Hash.new(5)
     INPUT_SPANS[:number_field] =
       INPUT_SPANS[:integer_field] =
       INPUT_SPANS[:float_field]   =
       INPUT_SPANS[:decimal_field] = 2
     INPUT_SPANS[:date_field] =
-      INPUT_SPANS[:time_field] = 3
+      INPUT_SPANS[:time_field] = 2
 
     # Create a new control instance.
     # Takes the form builder, the attribute to build the control for
@@ -73,9 +73,13 @@ module DryCrud::Form
     def labeled
       errors = errors? ? ' has-error' : ''
 
-      content_tag(:tr) do
-        content_tag(:td, builder.label(attr, caption) + ':'.html_safe) +
-        content_tag(:td, content)
+      content_tag(:div, class: "form-group#{errors}") do
+        html = builder.label(attr, caption, class: 'col-md-2 control-label')
+        html << content_tag(:div, content, class: "col-md-#{span}")
+        if help.present?
+          html << builder.help_block(help)
+        end
+        html
       end
     end
 
@@ -92,7 +96,6 @@ module DryCrud::Form
         elsif required
           #content = builder.with_addon(content, REQUIRED_MARK)
         end
-        content << builder.help_block(help) if help.present?
         content
       end
     end
@@ -101,7 +104,6 @@ module DryCrud::Form
     # depending on the attribute.
     def input
       @input ||= begin
-        builder.add_css_class(options, 'form-control')
         options[:required] = 'required' if required
         builder.send(field_method, attr, *(args << options))
       end
@@ -120,7 +122,7 @@ module DryCrud::Form
 
     # Number of grid columns the input field should span.
     def span
-      @span ||= INPUT_SPANS[field_method]
+      @span ||= INPUT_SPANS[field_method.to_sym]
     end
 
     # The caption of the label.

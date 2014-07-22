@@ -27,7 +27,7 @@ module Evaluatable
   # Raises an Exception if this object has related Worktimes.
   # This method is a callback for :before_delete.
   def protect_worktimes
-    fail 'Diesem Eintrag sind Arbeitszeiten zugeteilt. Er kann nicht entfernt werden.' unless worktimes.empty?
+    errors.add(:base, 'Diesem Eintrag sind Arbeitszeiten zugeteilt. Er kann nicht entfernt werden.') unless worktimes.empty?
   end
 
   def <=>(other)

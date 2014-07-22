@@ -1,8 +1,0 @@
-- daily_worktimes = daily_worktimes(@worktimes, day)
-- if daily_worktimes.empty?
-  .date-label.empty{'data-date' => day}
-    = format_day(day)
-- else
-  .date-label{'data-date' => day}
-    = format_day(day)
-  = render partial: 'list_worktime', collection: daily_worktimes, as: :worktime, locals: {day: day}

@@ -27,7 +27,6 @@ de-CH:
       edit: Bearbeiten
       add: Erstellen
       delete: Löschen
-      list: Übersicht %{model}
 
     errors:
       header:
@@ -38,7 +37,7 @@ de-CH:
   date:
     formats:
       long: "%a, %d.%m.%Y"
-      week: "%Y %W"
+      week: "%Y %V"
   time:
     formats:
       time: "%H:%M"

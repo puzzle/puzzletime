@@ -1,50 +1,38 @@
-= render 'shared/error_messages', object: @planning
-%table
-  %tr
-    %td Mitarbeiter:
-    %td
-      = collection_select(:planning,
-                          :employee_id,
-                          @employees,
-                          :id,
-                          :label_verbose,
-                          data: { remote: true,
-                                  url: url_for(action: 'existing'),
-                                  dynamic_params: 'planning[start_week_date]' })
-  %tr
-    %td Start:
-    %td
-      = week_calendar_field('planning',
-                            'start_week_date',
-                            data: { remote: true,
-                                    url: url_for(action: 'existing'),
-                                    dynamic_params: 'planning[employee_id]' })
-  %tr
-    %td &nbsp;
-    %td
-  %tr{:valign => "top"}
-    %td Aktuelle Planung:
-    %td
-      #existing{:style => "border: 2px solid #C9D8FF;"}
-        = render :partial => 'existing'
-  %tr
-    %td &nbsp;
-    %td
-  %tr
-    %td Projekt:
-    %td
-      = collection_select( :planning, :project_id, @projects, :id, :label_verbose)
-  %tr{:valign => "top"}
-    %td Auswahl:
-    %td
-      = radio_button('planning', 'abstract_concrete', 'concrete', :checked => (!@planning.is_abstract || @planning.new_record?))
-      Tagesplanung
-      %table.striped
-        %tbody
+= crud_form do |f|
+  = f.labeled_belongs_to_field(:employee_id,
+                         data: { remote: true,
+                                 url: url_for(action: 'existing'),
+                                 dynamic_params: 'planning[start_week_date]' })
+  = f.labeled_date_field(:start_week_date,
+                         data: { format: :week,
+                                 remote: true,
+                                 url: url_for(action: 'existing'),
+                                 dynamic_params: 'planning[employee_id]' })
+
+  = f.labeled(:p, caption: 'Aktuelle Planung') do
+    #existing
+      = render :partial => 'existing'
+
+  = f.labeled_collection_select(:project_id,
+                                @projects,
+                                :id,
+                                :label_verbose,
+                                f.select_options(:project_id),
+                                class: 'form-control')
+
+  = f.labeled('Auswahl') do
+    .radio
+      %label
+        = f.radio_button('abstract_concrete', 'concrete', :checked => (!@planning.is_abstract || @planning.new_record?))
+        Tagesplanung
+
+      %table.table-striped.table-condensed{style: 'margin-bottom: 10px;'}
+        %thead
           %tr
             %th
             - (1..5).each do |i|
               %th= I18n.t(:'date.abbr_day_names')[i]
+        %tbody
           %tr
             %td Vormittag
             %td= check_box 'planning', 'monday_am', data: { switch_day: 'planning_monday'}
@@ -66,37 +54,47 @@
             %td= check_box 'planning', 'wednesday', data: { switch_half_day: 'planning_wednesday' }
             %td= check_box 'planning', 'thursday', data: { switch_half_day: 'planning_thursday' }
             %td= check_box 'planning', 'friday', data: { switch_half_day: 'planning_friday' }
-      = radio_button('planning', 'abstract_concrete', 'abstract', :checked => @planning.is_abstract)
-      Prozentplanung
-      \#{select("planning", "abstract_amount", (1..44).collect {|x| ["#{x*2.5}%", x*2.5]}, {:include_blank => true})}
-      %br/
-  %tr
-    %td{:valign => "top"} Wiederholung:
-    %td
-      = radio_button('planning', 'repeat_type', 'no', :checked => (@planning.repeat_type_no? || @planning.new_record?))
-      Keine
-      %br/
-      = radio_button('planning', 'repeat_type', 'until', :checked => @planning.repeat_type_until?)
-      Bis KW
-      = week_calendar_field 'planning', 'end_week_date'
-      %br/
-      = radio_button('planning', 'repeat_type', 'forever', :checked => (!@planning.new_record? && @planning.repeat_type_forever?))
-      Unbeschränkt
-  %tr
-    %td{:valign => "top"} Typ:
-    %td
-      = radio_button('planning', 'type', 'tentative', :checked => !@planning.definitive)
-      Provisorisch
-      %br/
-      = radio_button('planning', 'type', 'definitive', :checked => (@planning.definitive || @planning.new_record?))
-      Definitiv
-  %tr{:valign => "top"}
-    %td Beschreibung:
-    %td= text_area 'planning', 'description', {:rows => 5}
-  %tr
-    %td
-    %td
-      = submit_tag 'Speichern'
-- if @planning && !@planning.new_record?
+
+    .row
+      .col-md-2
+        .radio
+          %label
+            = f.radio_button('abstract_concrete', 'abstract', :checked => @planning.is_abstract)
+            Prozentplanung
+      .col-md-2
+        = f.select("abstract_amount", (1..44).collect {|x| ["#{x*2.5}%", x*2.5]}, {:include_blank => true}, class: 'form-control')
+
+  = f.labeled('Wiederholung') do
+    .radio
+      %label
+        = f.radio_button('repeat_type', 'no', :checked => (@planning.repeat_type_no? || @planning.new_record?))
+        Keine
+    .row
+      .col-md-1
+        .radio
+          %label
+            = f.radio_button('repeat_type', 'until', :checked => @planning.repeat_type_until?)
+            Bis KW
+      .col-md-3
+        = f.date_field :end_week_date, class: 'col-md-3', data: { format: :week }
+    .radio
+      %label
+        = f.radio_button('repeat_type', 'forever', :checked => (!@planning.new_record? && @planning.repeat_type_forever?))
+        Unbeschränkt
+
+  = f.labeled('Typ') do
+    .radio
+      %label
+        = f.radio_button('type', 'tentative', :checked => !@planning.definitive)
+        Provisorisch
+    .radio
+      %label
+        = f.radio_button('type', 'definitive', :checked => (@planning.definitive || @planning.new_record?))
+        Definitiv
+
+  = f.labeled_text_area(:description)
+
+
+- if @planning.persisted?
   %p
-    = link_to('Löschen', {:controller => 'plannings', :action => 'destroy', :planning => @planning}, :confirm => "Wollen sie die Plannung wirklich entfernen?", :method => :delete)
+    = destroy_action_link

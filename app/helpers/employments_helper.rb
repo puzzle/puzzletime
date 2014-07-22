@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 module EmploymentsHelper
 
   def format_employment_percent(employment)

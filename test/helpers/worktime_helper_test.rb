@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 require 'test_helper'
 
 # Test UtilityHelper
@@ -6,18 +8,24 @@ class WorktimeHelperTest < ActionView::TestCase
 
   def setup
     @worktimes = Worktime.where('employee_id = ? AND work_date >= ? AND work_date <= ?', 7, Date.new(2006, 12, 4), Date.new(2006, 12, 10))
+    @daily_worktimes = @worktimes.group_by{ |w| w.work_date}
+  end
+
+  test 'week_number' do
+    assert_equal 29, week_number(Date.new(2014, 7, 20)) # sunday
+    assert_equal 30, week_number(Date.new(2014, 7, 21)) # monday
   end
 
   test 'daily worktimes' do
-    assert_equal [worktimes(:wt_mw_webauftritt)], daily_worktimes(@worktimes, Date.new(2006, 12, 8))
+    assert_equal [worktimes(:wt_mw_webauftritt)], @daily_worktimes[Date.new(2006, 12, 8)]
   end
 
   test 'sum daily worktimes' do
-    assert_equal 8, sum_daily_worktimes(@worktimes, Date.new(2006, 12, 9))
+    assert_equal 8, sum_hours(Date.new(2006, 12, 9))
   end
 
   test 'sum total worktimes' do
-    assert_equal 26, sum_total_worktimes(@worktimes)
+    assert_equal 26, sum_hours
   end
 
   test 'worktime account' do
@@ -58,7 +66,7 @@ class WorktimeHelperTest < ActionView::TestCase
 
   test 'time range without any times' do
     worktime = Worktime.new
-    assert_equal "", time_range(worktime)
+    assert_equal "&nbsp;", time_range(worktime)
   end
 
   test 'time range without end time' do

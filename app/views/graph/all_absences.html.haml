@@ -2,7 +2,7 @@
 - @title += " #{Date.today.year}" if @period.nil?
 = stylesheet_link_tag 'graph', :media => 'all'
 = render :partial => 'evaluator/period_link'
-%table.absence.striped
+%table.absence.table-striped.table-condensed
   %thead
     %tr.head
       %th{:rowspan => "2"}

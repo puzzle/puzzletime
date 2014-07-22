@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140617090138) do
+ActiveRecord::Schema.define(version: 20140626104953) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,11 +53,8 @@ ActiveRecord::Schema.define(version: 20140617090138) do
     t.string  "passwd"
     t.string  "email",                                           null: false
     t.boolean "management",                      default: false
-    t.float   "initial_vacation_days",           default: 0.0
+    t.float   "initial_vacation_days", :default => { :expr => "(0)::double precision" }
     t.string  "ldapname"
-    t.string  "report_type"
-    t.integer "default_project_id"
-    t.string  "user_periods",          limit: 3,                              array: true
     t.string  "eval_periods",          limit: 3,                              array: true
     t.index ["shortname"], :name => "chk_unique_name", :unique => true
   end
@@ -105,6 +102,13 @@ ActiveRecord::Schema.define(version: 20140617090138) do
     t.decimal  "abstract_amount"
   end
 
+  create_table "projectmemberships", force: true do |t|
+    t.integer "project_id",                        null: false
+    t.integer "employee_id",                       null: false
+    t.boolean "projectmanagement", default: false, null: false
+    t.boolean "active",            default: true,  null: false
+  end
+
   create_table "projects", force: true do |t|
     t.integer "client_id"
     t.string  "name",                                                 null: false
@@ -127,17 +131,6 @@ ActiveRecord::Schema.define(version: 20140617090138) do
     t.foreign_key ["client_id"], "clients", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_projects_clients"
     t.foreign_key ["department_id"], "departments", ["id"], :on_update => :no_action, :on_delete => :set_null, :name => "fk_project_department"
     t.foreign_key ["parent_id"], "projects", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_project_parent"
-  end
-
-  create_table "projectmemberships", force: true do |t|
-    t.integer "project_id"
-    t.integer "employee_id"
-    t.boolean "projectmanagement", default: false
-    t.boolean "active",            default: true
-    t.index ["employee_id"], :name => "index_projectmemberships_on_employee_id"
-    t.index ["project_id"], :name => "index_projectmemberships_on_project_id"
-    t.foreign_key ["employee_id"], "employees", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_projectmemberships_employees"
-    t.foreign_key ["project_id"], "projects", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_projectmemberships_projects"
   end
 
   create_table "user_notifications", force: true do |t|

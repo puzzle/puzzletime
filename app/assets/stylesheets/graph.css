@@ -1,7 +1,8 @@
 
-.graph { 
+.graph {
 	border-spacing: 0px;
 	float:			left;
+	margin-right: 50px;
 }
 
 .graph .head {
@@ -25,7 +26,7 @@
 }
 
 .graph td.holiday {
-	background-color: #DDDDDD;	
+	background-color: #DDDDDD;
 }
 
 .graph div {
@@ -42,7 +43,7 @@
 }
 
 .graph div.dateLabel {
-	background-color: 	#FFFFFF; 
+	background-color: 	#FFFFFF;
 	height: 			25px;
 	text-align: 		center;
 	font-size:			13px;
@@ -58,7 +59,7 @@
 
 .absence th {
 	text-align: 	left;
-	border-right: 	1px solid #bbb;	
+	border-right: 	1px solid #bbb;
 	border-bottom: 	1px solid #bbb;
 }
 
@@ -66,7 +67,7 @@
 	text-align: 	center;
 	padding: 		0pt;
 	font-size:		11px;
-	border-right: 	1px solid #bbb;	
+	border-right: 	1px solid #bbb;
 	border-bottom: 	1px solid #bbb;
 }
 
@@ -95,7 +96,7 @@ td a:hover span {
 	display: 		block;
 	position:		absolute;
 	top:			10px;
-	left:			10px;	
+	left:			10px;
 	z-index: 		3;
 	background:		#ffffdd;
 	white-space:	nowrap;
@@ -106,12 +107,12 @@ td a:hover span {
 	text-align:		left;
 }
 
-tr.uneven .current {
-	background: #eeeecc;
+.table-striped tr:nth-child(odd) .current {
+	background-color: #eeeecc !important;
 }
 
 tr .current {
-	background: #ffffdd;
+	background-color: #ffffdd !important;
 }
 
 .legend {

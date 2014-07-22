@@ -1,6 +1,7 @@
 - @title = 'Eigene Zeitspanne auswählen'
+
 %p
-  %table{:cellspacing => "0"}
+  %table.table-condensed
     %tr
       %td
         = period_link 'Heute', '0d'
@@ -57,20 +58,27 @@
         = period_link '4. Quartal', '4q'
       %td &nbsp;
       %td &nbsp;
-%br/
-%br/
-Beliebig:
-= form_tag :action => 'change_period' do
+
+%h3 Beliebig
+= form_tag({ action: 'change_period' }, class: 'form-horizontal', role: 'form') do
   = hidden_field_tag :back_url, params[:back_url]
-  %table
-    %tr
-      %td Von:
-      %td= date_calendar_field 'period', 'startDate'
-    %tr
-      %td Bis:
-      %td= date_calendar_field 'period', 'endDate'
-    %tr
-      %td
-      %td= submit_tag 'Auswählen'
+  .form-group
+    = label('period', 'startDate', 'Von', class: 'col-md-1 control-label')
+    .col-md-2
+      .input-group
+        = text_field('period', 'startDate', class: 'form-control date', value: I18n.l(@period.startDate))
+        %span.input-group-addon
+          %span.glyphicon.glyphicon-calendar
+  .form-group
+    = label('period', 'endDate', 'Bis', class: 'col-md-1 control-label')
+    .col-md-2
+      .input-group
+        = text_field('period', 'endDate', class: 'form-control date', value: I18n.l(@period.endDate))
+        %span.input-group-addon
+          %span.glyphicon.glyphicon-calendar
+  .form-group
+    .col-md-offset-1.col-md-2
+      = submit_tag('Auswählen', class: 'btn btn-primary')
+
 %p
   = link_to 'Zurück zur Übersicht', sanitized_back_url

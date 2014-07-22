@@ -35,6 +35,10 @@ class Planning < ActiveRecord::Base
   belongs_to :project
   belongs_to :employee
 
+  def to_s
+    "für #{employee.to_s}" if employee
+  end
+
   def start_week_date
     Week.from_integer(start_week).to_date if valid_week?(start_week)
   end

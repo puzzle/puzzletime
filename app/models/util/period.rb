@@ -2,6 +2,7 @@
 
 class Period
 
+  # TODO: use underscore
   attr_reader :startDate, :endDate, :label
 
   # Caches the most used periods
