@@ -27,8 +27,10 @@ class TarantulaTest < ActionDispatch::IntegrationTest
     # some links use example.com as a domain, allow them
     t.skip_uri_patterns.delete(/^http/)
     t.skip_uri_patterns << /^http(?!:\/\/www\.example\.com)/
-    t.skip_uri_patterns << /\/synchronize$/
-    t.skip_uri_patterns << /\?week_date=(#{outside_four_week_window}.)*$/
+    t.skip_uri_patterns << /\/login\/logout/ # do not logout during tests
+    t.skip_uri_patterns << /\/employees\/#{user.id}$/ # do not modify logged in user
+    t.skip_uri_patterns << /\/synchronize$/ # do not access puzzlebase
+    t.skip_uri_patterns << /\?week_date=(#{outside_four_week_window}.)*$/ # only allows week strings from one week ago until two weeks from now.
 
     t.allow_404_for /^\-?\d+$/  # change period may produce such links in tarantula
     t.allow_404_for /projecttimes\/start$/  # passing invalid project_id
@@ -37,18 +39,23 @@ class TarantulaTest < ActionDispatch::IntegrationTest
     t.allow_404_for /employee_lists(\/\d+)?$/   # invalid employee_ids assigned
     t.allow_404_for /evaluator\/details\?category_id=(0|\d{5,12})\&/   # invalid category
 
+    t.handlers << Relevance::Tarantula::InvalidHtmlHandler.new
+
     t.crawl_timeout = 20.minutes
   end
 
   def crawl_as_user(manager)
-    user = employees(:half_year_maria)
-    create_worktimes(user)
-    create_plannings(user)
-    set_credentials(user, manager)
+    create_worktimes
+    create_plannings
+    set_credentials(manager)
 
     start_crawling
   end
-
+  
+  def user
+    @user ||= employees(:half_year_maria)
+  end
+  
   def start_crawling
     post '/login/login', user: CREDENTIALS.first, pwd: CREDENTIALS.last
     follow_redirect!
@@ -58,7 +65,7 @@ class TarantulaTest < ActionDispatch::IntegrationTest
     t.crawl
   end
 
-  def create_worktimes(user)
+  def create_worktimes
     projects = Project.leaves
     5.times do
       project = projects.sample
@@ -79,7 +86,7 @@ class TarantulaTest < ActionDispatch::IntegrationTest
       work_date: Date.today - 1.week)
   end
 
-  def create_plannings(user)
+  def create_plannings
     projects = Project.where(parent_id: nil)
     3.times do |i|
       project = projects.sample
@@ -95,12 +102,12 @@ class TarantulaTest < ActionDispatch::IntegrationTest
         wednesday_am: [true, false].sample,
         wednesday_pm: [true, false].sample,
         thursday_am: [true, false].sample,
-        thursday_pm: [true, false].sample
+        thursday_pm: true # select at least one half day
       )
     end
   end
 
-  def set_credentials(user, manager)
+  def set_credentials(manager)
     user.update_attributes!(
       shortname: CREDENTIALS.first,
       passwd: Employee.encode(CREDENTIALS.last),

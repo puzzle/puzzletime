@@ -1,9 +1,12 @@
 = render :partial => 'plannings/period_link'
-%table.striped
-  %thead
-    %th
-      Nachname
-    %th
-      Vorname
-  %tbody
-    = render :partial => 'employee', :collection	 => @employees
+
+= DryCrud::Table::Builder.table(@employees,
+                                self,
+                                class: 'table-condensed table-striped table-hover') do |t|
+  - t.attrs :lastname, :firstname
+  - t.action_col do |e|
+    = link_to 'Aktuelle Planung',
+              :action => 'employee_planning', :employee_id => e.id
+  - t.action_col do |e|
+    = link_to 'Neue Planung',
+              :action => 'new', :employee_id => e.id

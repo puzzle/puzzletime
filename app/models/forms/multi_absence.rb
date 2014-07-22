@@ -2,7 +2,7 @@
 
 class MultiAbsence
 
-  attr_reader :absence_id, :employee, :start_date, :duration, :description, :worktime
+  attr_reader :absence_id, :employee, :work_date, :duration, :description, :worktime
   attr_writer :employee
 
   def initialize
@@ -11,13 +11,13 @@ class MultiAbsence
 
   def attributes=(attr_hash)
     @absence_id = attr_hash[:absence_id]
-    @start_date = attr_hash[:start_date]
+    @work_date = attr_hash[:work_date]
     @duration = attr_hash[:duration]
     @description = attr_hash[:description]
   end
 
   def valid?
-    @worktime = worktime_template(@start_date, Settings.must_hours_per_day)
+    @worktime = worktime_template(@work_date, Settings.must_hours_per_day)
     if valid = @worktime.valid?
       if duration <= 0
         valid = false
@@ -27,12 +27,12 @@ class MultiAbsence
     valid
   end
 
-  def start_date
-    date_or_nil(@start_date)
+  def work_date
+    date_or_nil(@work_date)
   end
 
   def end_date
-    start_date + duration * 7 - 1
+    work_date + duration * 7 - 1
   end
 
   def duration
@@ -40,7 +40,7 @@ class MultiAbsence
   end
 
   def period
-    Period.new(start_date, end_date)
+    Period.new(work_date, end_date)
   end
 
   def errors
@@ -67,7 +67,7 @@ class MultiAbsence
   def date_or_nil(value)
     unless value.kind_of? Date
       begin
-        value = Date.strptime(value.to_s, I18n.t('date.formats.default'))
+        value = Date.parse(value)
       rescue
         value = nil
       end

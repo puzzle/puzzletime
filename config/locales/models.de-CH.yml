@@ -36,8 +36,8 @@ de-CH:
         one: Projekt
         other: Projekte
       projecttime:
-        one: Projektzeit
-        other: Projektzeiten
+        one: Zeit
+        other: Zeiten
       projectmembership:
         one: Projekt
         other: Projekte
@@ -53,6 +53,8 @@ de-CH:
         name: Bezeichnung
         payed: Bezahlt
         private: Nicht öffentlich
+      absencetime:
+        duration: Dauer
       client:
         name: Name
         shortname: Kürzel
@@ -72,9 +74,6 @@ de-CH:
         initial_vacation_days: Anfängliche Ferien
         ldapname: LDAP Name
         current_percent: Prozent
-        report_type: Default Reporttyp
-        default_project_id: Default Projekt
-        user_periods: Zeitspannen Eigene Zeit
         eval_periods: Zeitspannen Auswertungen
       employment:
         employee_id: Mitarbeiter
@@ -92,9 +91,10 @@ de-CH:
         employee_id: Mitarbeiter
         project_id: Projekt
         start_week: Start
+        start_week_date: Start
         end_week: Bis KW
         definitive: Definitiv
-        description: Beschreibung
+        description: Bemerkungen
         monday_am: Montag Vormittag
         monday_pm: Montag Nachmittag
         tuesday_am: Dienstag Vormittag
@@ -114,13 +114,13 @@ de-CH:
         shortname: Kürzel
         client_name: Kunde
         department_name: Geschäftsbereich
-        description: Beschreibung
+        description: Bemerkungen
         report_type: Reporttyp
         offered_hours: Offerierte Stunden
         billable: Verrechenbar
         freeze_until: Eingefroren vor
-        description_required: Beschreibung nötig
-        ticket_required: Ticket/Task nötig
+        description_required: Bemerkung nötig
+        ticket_required: Ticket nötig
       projectmembership:
         project_id: Projekt
         employee_id: Mitarbeiter
@@ -134,13 +134,15 @@ de-CH:
       worktime:
         project_id: Projekt
         absence_id: Absenz
+        absence: Absenz
         employee_id: Mitarbeiter
         report_type: Reporttyp
         work_date: Datum
         hours: Stunden
         from_start_time: Von
         to_end_time: Bis
-        description: Beschreibung
+        description: Bemerkungen
         billable: Verrechenbar
         booked: Verbucht
-        ticket: Ticket/Task
+        ticket: Ticket
+        account: Auftrag

@@ -12,9 +12,6 @@
 #  management            :boolean          default(FALSE)
 #  initial_vacation_days :float
 #  ldapname              :string(255)
-#  report_type           :string(255)
-#  default_project_id    :integer
-#  user_periods          :string(3)        is an Array
 #  eval_periods          :string(3)        is an Array
 #
 
@@ -181,10 +178,6 @@ class Employee < ActiveRecord::Base
     # logger.info "Hash of password: #{Digest::SHA1.hexdigest(pwd)}"
   end
 
-  def user_periods
-    super || []
-  end
-
   def eval_periods
     super || []
   end
@@ -192,7 +185,6 @@ class Employee < ActiveRecord::Base
   private
 
   def periods_format
-    validate_periods_format(:user_periods, user_periods)
     validate_periods_format(:eval_periods, eval_periods)
   end
 

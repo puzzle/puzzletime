@@ -1,5 +1,5 @@
 - @title = 'Laufende Zeit'
-%table.striped
+%table.table-striped
   %thead
     %tr
     - if @user.running_project
@@ -17,7 +17,7 @@
             %table{:style => "margin-left: auto; text-align: left;", :width => "100"}
               %thead
                 %tr
-                  %td Beschreibung:
+                  %td Bemerkungen:
                   %td= text_field_tag 'description', @user.running_project.description, :size => 25
                 %tr
                   %td Ticket/Task:

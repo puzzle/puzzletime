@@ -11,7 +11,6 @@
 #= require waypoints-sticky
 #= require_self
 #= require worktimes
-#= require worktimes-v2
 #= require week_datepicker
 #= require project_autocomplete
 #= require planning
@@ -22,7 +21,7 @@ app = window.App ||= {}
 
 $ ->
   # wire up date picker
-  $('body').on('click', 'input.date, img.calendar', app.datepicker.show)
+  $('body').on('click', 'input.date, .input-group .glyphicon-calendar', app.datepicker.show)
 
   # wire up data-dynamic-param
   $('body').on('ajax:beforeSend', '[data-dynamic-params]', (event, xhr, settings) ->

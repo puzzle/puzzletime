@@ -6,31 +6,42 @@
     .monthly
       Monatliche Arbeitszeit:
       = monthly_worktime
+    .holidays
+      Feriensaldo:
+      = format_days(@remaining_vacations)
 
   .weeknav-container
     .weeknav
-      = link_to(image_tag('arrow-left.png', 'size' => '16x16', 'alt' => "Vorherige Woche"), worktimes_url(week_date: @previous_week_date), class: 'weeknav-link')
+      = link_to(worktimes_url(week_date: @previous_week_date),
+                {class: 'weeknav-link previous', title: 'Vorherige Woche'}) do
+        %i.icon-previous
 
-      .browser
-        %ul.weeknav-days
-          = render partial: 'overview_day', collection: @week_days, as: :day
-        .controls
-          .weeknav-element
-            .inner
-              .label Total
-              .time= format_hour(sum_total_worktimes(@worktimes))
-          .weeknav-element
-            .inner
-              = date_calendar_field 'date_picker', 'week_date', type: 'hidden', value: @selected_date
-          .weeknav-element
-            .inner
-              = link_to 'Erfassen', new_projecttime_path, {title: 'Zeit/Abwesenheit erfassen'}
+      %ul.weeknav-days
+        = render partial: 'overview_day', collection: @week_days, as: :day
+      .weeknav-calendar-row
+        = plain_form(Worktime.new, method: :get) do |f|
+          = f.date_field(:work_date, id: 'week_date')
+        KW 
+        = week_number(@selected_date)
+        - if @user.management
+          = link_to('Fremderfassen', new_projecttime_path(other: 1),
+                    {class: 'add-other', id: 'new_other_projecttime_link'})
+      .weeknav-add-row
+        = link_to(new_projecttime_path, {class: 'btn btn-primary',
+                                         title: 'Zeit/Abwesenheit erfassen',
+                                         id: 'new_projecttime_link' }) do
+          %i.icon-add
+          %span.add-text
+            Hinzufügen
+      .weeknav-total.weeknav-element
+        .inner
+          .weeknav-label Total
+          .weeknav-time= format_hour(sum_hours)
 
-      = link_to(image_tag('arrow-right.png', 'size' => '16x16', 'alt' => "Nächste Woche"), worktimes_url(week_date: @next_week_date), class: 'weeknav-link')
+      = link_to(worktimes_url(week_date: @next_week_date),
+                {class: 'weeknav-link next', title: 'Nächste Woche'}) do
+        %i.icon-next
 
   .weekcontent
-    - if @worktimes.present?
-      = render partial: 'list', collection: @week_days, as: :day
-    - else
-      %p
-        In dieser Woche wurden noch keine Zeiten erfasst
+    = render partial: 'day', collection: @week_days, as: :day
+

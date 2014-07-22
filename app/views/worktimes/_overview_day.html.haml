@@ -1,4 +1,4 @@
 %li.weeknav-element.day{'data-date' => day, class: overview_day_class(@worktimes, day)}
   .inner
-    .label= format_day(day)
-    .time= format_hour(sum_daily_worktimes(@worktimes, day))
+    .weeknav-label= format_day(day)
+    .weeknav-time= format_hour(sum_hours(day))

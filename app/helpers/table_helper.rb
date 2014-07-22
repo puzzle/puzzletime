@@ -17,7 +17,7 @@ module TableHelper
   # An options hash may be given as the last argument.
   def plain_table(entries, *attrs, &block)
     options = attrs.extract_options!
-    add_css_class(options, 'table striped table-hover')
+    add_css_class(options, 'table table-striped table-hover table-condensed')
     builder = options.delete(:builder) || DryCrud::Table::Builder
     builder.table(entries, self, options) do |t|
       t.attrs(*attrs)

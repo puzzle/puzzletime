@@ -1,13 +1,20 @@
 %tr
-  %td{:align => "right", :style => "white-space: nowrap;"}= part.time_string
   %td= h(part.account.label_verbose)
   %td= h truncate(part.description, :length => 50) if part.description
+  %td{:align => "right", :style => "white-space: nowrap;"}= part.time_string
   - if part.new_record?
     %td
-      = link_to 'Löschen', {:action => 'delete_part', :part_id => part_counter}, {:confirm => 'Wollen sie diese Arbeitszeit wirklich entfernen?', :method => 'delete' }
-  - else
+      = link_to 'Löschen',
+                {:action => 'delete_part', :part_id => part_counter},
+                data: { confirm: 'Wollen sie diese Arbeitszeit wirklich entfernen?',
+                        method: 'delete' }
+  - elsif record_other?
     %td
-      = link_to 'Bearbeiten', {:controller => part.controller, :action => 'edit', :id => part.id}
+      = link_to 'Bearbeiten',
+                {:controller => part.controller, :action => 'edit', :id => part.id}
     - if @user == @worktime.employee
       %td
-        = link_to 'Löschen', {:controller => part.controller, :action => 'destroy', :id => part.id, :back => 1}, {:confirm => 'Wollen sie diese Arbeitszeit wirklich entfernen?', :method => 'delete' }
+        = link_to 'Löschen',
+                  {:controller => part.controller, :action => 'destroy', :id => part.id, :back => 1},
+                  data: { confirm: 'Wollen sie diese Arbeitszeit wirklich entfernen?',
+                          method: 'delete' }

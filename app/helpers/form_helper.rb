@@ -15,12 +15,9 @@ module FormHelper
     add_css_class(options[:html], 'form-horizontal')
     options[:html][:role] ||= 'form'
     options[:builder] ||= DryCrud::Form::Builder
-    options[:cancel_url] ||= polymorphic_path(object, returning: true)
+    options[:cancel_url] ||= default_cancel_url(object)
 
-    form_for(object, options) do |form|
-      render('shared/error_messages', object: Array(object).last) +
-      content_tag(:table, yield(form))
-    end
+    form_for(object, options, &block)
   end
 
   # Renders a standard form for the given entry and attributes.
@@ -30,7 +27,8 @@ module FormHelper
   # if present. An options hash may be given as the last argument.
   def standard_form(object, *attrs, &block)
     plain_form(object, attrs.extract_options!) do |form|
-      content = ''
+      content = form.error_messages
+
       if block_given?
         content << capture(form, &block)
       else
@@ -50,6 +48,14 @@ module FormHelper
     attrs = default_crud_attrs - [:created_at, :updated_at] if attrs.blank?
     attrs << options
     standard_form(path_args(entry), *attrs, &block)
+  end
+
+  private
+
+  def default_cancel_url(object)
+    url_object = Array(object).clone
+    url_object[-1] = url_object[-1].class if url_object[-1].is_a?(ActiveRecord::Base)
+    polymorphic_url(url_object, returning: true)
   end
 
 end

@@ -2,27 +2,6 @@
 
 module WorktimeHelper
 
-  def select_report_type(auto_start_stop_type = false)
-    options = ReportType::INSTANCES
-    options = [AutoStartType::INSTANCE] + options if auto_start_stop_type
-    select 'worktime',
-           'report_type',
-           options.collect { |type| [type.name, type.key] },
-           { selected: @worktime.report_type.key },
-           onchange: 'App.switchTimeFieldsVisibility();'
-  end
-
-  def account_options
-    options_for_select = @accounts.inject([]) do |options, element|
-      value = element.id
-      selected_attribute = ' selected="selected"' if @worktime.account_id == value
-      title_attribute = " title=\"#{element.tooltip}\"" if element.tooltip.present?
-      options << %(<option value="#{h(value)}"#{selected_attribute}#{title_attribute}>#{h(element.label_verbose)}</option>)
-    end
-
-    options_for_select.join("\n").html_safe
-  end
-
   def worktime_account(worktime)
     worktime.account.label_verbose if worktime.account
   end
@@ -38,7 +17,7 @@ module WorktimeHelper
       'today'
     elsif Holiday.holiday?(day)
       'holiday'
-    elsif day < Date.today && sum_daily_worktimes(worktimes, day) <= 0
+    elsif day < Date.today && sum_hours(day) <= 0
       'missing'
     end
   end
@@ -54,21 +33,21 @@ module WorktimeHelper
     result.html_safe
   end
 
+  def week_number(date)
+    date.strftime("%V").to_i if date
+  end
+
   def monthly_worktime
     "#{format_hour(@monthly_worktime)} (#{format_hour(@pending_worktime)} verbleibend)"
   end
 
-  def daily_worktimes(worktimes, day)
-    worktimes.select{|worktime| worktime.work_date == day}
-  end
-
-
-  def sum_daily_worktimes(worktimes, day)
-    sum_total_worktimes(daily_worktimes(worktimes, day))
-  end
-
-  def sum_total_worktimes(worktimes)
-    worktimes.map(&:hours).inject(0, :+)
+  # sum worktime hours for a given date. if no date is given, sum all worktime hours
+  def sum_hours(day=nil)
+    if day
+      @daily_worktimes[day] ? @daily_worktimes[day].map(&:hours).sum : 0
+    else
+      @worktimes.map(&:hours).sum
+    end
   end
 
 end

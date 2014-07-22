@@ -23,7 +23,7 @@ module DryCrud::Form
 
     delegate :association, :column_type, :column_property, :captionize,
              :ti, :ta, :link_to, :content_tag, :safe_join, :capture,
-             :add_css_class, :assoc_and_id_attr,
+             :add_css_class, :assoc_and_id_attr, :icon,
              to: :template
 
     ### INPUT FIELDS
@@ -71,39 +71,42 @@ module DryCrud::Form
       text_field(attr, html_options)
     end
 
+    def text_field(attr, html_options)
+      add_css_class(html_options, 'form-control')
+      super(attr, html_options)
+    end
+
     # Render a boolean field.
     def boolean_field(attr, html_options = {})
-      add_css_class(html_options, 'form-control')
-      check_box(attr, html_options)
+      content_tag(:div, class: 'checkbox') do
+        check_box(attr, html_options)
+      end
     end
 
     # Customize the standard text area to have 5 rows by default.
     def text_area(attr, html_options = {})
-      html_options[:rows] ||= 8
+      html_options[:rows] ||= 5
       html_options[:cols] ||= 50
+      add_css_class(html_options, 'form-control')
       super
     end
 
     # Render a field to select a date.
     def date_field(attr, html_options = {})
-      format = html_options.delete(:format)
+      format = html_options[:data] && html_options[:data][:format]
       date = date_value(attr, format)
       html_options[:size] = 15
-      html_options[:class] = 'date'
       html_options[:value] = date
-      html_options[:data] ||= {}
-      html_options[:data][:format] = format
-
-      text_field(attr, html_options) +
-      content_tag(:span, @template.image_tag('calendar.gif',
-                                             title: 'Kalender anzeigen',
-                                             size: '15x15',
-                                             class: 'calendar'))
+      add_css_class(html_options, 'date')
+      with_addon(text_field(attr, html_options), icon(:calendar))
     end
 
     def date_value(attr, format)
-      raw = @object._timeliness_raw_value_for(attr.to_s)
-      if raw
+      raw = nil
+      if @object.respond_to?(:_timeliness_raw_value_for)
+        raw = @object._timeliness_raw_value_for(attr.to_s)
+      end
+      if raw.is_a?(String)
         raw
       else
         val = @object.send(attr)
@@ -127,6 +130,7 @@ module DryCrud::Form
     def belongs_to_field(attr, html_options = {})
       list = association_entries(attr, html_options).to_a
       if list.present?
+        add_css_class(html_options, 'form-control')
         collection_select(attr, list, :id, :to_s,
                           select_options(attr, html_options),
                           html_options)
@@ -158,7 +162,7 @@ module DryCrud::Form
     # Renders the given content with an addon.
     def with_addon(content, addon)
       content_tag(:div, class: 'input-group') do
-        content + content_tag(:span, addon, class: 'input-group-addon')
+        content_tag(:span, addon, class: 'input-group-addon') + content
       end
     end
 
@@ -178,9 +182,19 @@ module DryCrud::Form
 
     # Render a submit button and a cancel link for this form.
     def standard_actions(submit_label = ti('button.save'), cancel_url = nil)
-      content_tag(:tr) do
-        content_tag(:td) +
-        content_tag(:td, submit_button(submit_label))
+      content_tag(:div, class: 'form-group') do
+        content_tag(:div, class: 'col-md-offset-2 col-md-8') do
+          safe_join([submit_button(submit_label), cancel_link(cancel_url)], ' ')
+        end
+      end
+    end
+
+    # Render only a submit button for this form.
+    def submit_action(submit_label = ti('button.save'), cancel_url = nil)
+      content_tag(:div, class: 'form-group') do
+        content_tag(:div, class: 'col-md-offset-2 col-md-8') do
+          submit_button(submit_label)
+        end
       end
     end
 

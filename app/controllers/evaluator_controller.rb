@@ -40,38 +40,6 @@ class EvaluatorController < ApplicationController
     paginate_times
   end
 
-  def weekly
-    redirect_to controller: 'graph', action: 'weekly'
-  end
-
-  def all_absences
-    redirect_to controller: 'graph', action: 'all_absences'
-  end
-
-  def employee_planning
-    redirect_to controller: 'plannings', action: 'employee_planning', employee_id: params[:category_id]
-  end
-
-  def employees_planning
-    redirect_to controller: 'plannings', action: 'employees_planning'
-  end
-
-  def my_planning
-    redirect_to controller: 'plannings', action: 'my_planning'
-  end
-
-  def project_planning
-    redirect_to controller: 'plannings', action: 'project_planning'
-  end
-
-  def department_planning
-    redirect_to controller: 'plannings', action: 'department_planning', department_id: params[:category_id]
-  end
-
-  def company_planning
-    redirect_to controller: 'plannings', action: 'company_planning'
-  end
-
 
   ########################  DETAIL ACTIONS  #########################
 
@@ -257,6 +225,7 @@ class EvaluatorController < ApplicationController
       headers['Content-Type'] ||= 'text/csv'
       headers['Content-Disposition'] = "attachment; filename=\"#{filename}\""
     end
+    headers['Last-Modified'] = Time.now.httpdate
   end
 
   def redirect_to_overview
@@ -358,8 +327,7 @@ class EvaluatorController < ApplicationController
     if @period
       [@period]
     else
-      periods = user_view? ? @user.user_periods : @user.eval_periods
-      periods.collect { |p| Period.parse(p) }
+      @user.eval_periods.collect { |p| Period.parse(p) }
     end
   end
 

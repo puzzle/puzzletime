@@ -1,17 +1,19 @@
 %center
-  %p{:style => "text-align: center;"} Bitte loggen Sie sich ein:
   = form_tag({:controller => 'login', :action => 'login'}, :name => 'form') do
     = hidden_field_tag 'ref', params[:ref]
-    %table
+    %table.table-condensed
       %tr
-        %td Login:
-        %td= text_field_tag 'user', nil, :size => 20
+        %td
+          %label.control-label Login
+        %td= text_field_tag 'user', nil, :size => 20, :class => 'form-control'
       %tr
-        %td Passwort:
-        %td= password_field_tag 'pwd', nil, :size => 20
+        %td
+          %label.control-label Passwort
+        %td= password_field_tag 'pwd', nil, :size => 20, :class => 'form-control'
       %tr
         %td
         %td
-          %input{:type => "submit", :value => "Login "}/
+          %input{:type => "submit", :value => "Login", :class => 'btn btn-primary'}
+
 :javascript
   document.form.user.focus();

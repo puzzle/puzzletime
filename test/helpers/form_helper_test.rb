@@ -83,7 +83,7 @@ class FormHelperTest < ActionView::TestCase
     assert_match /input .*?name="_method"
                         .*?type="hidden"
                         .*?value="(patch|put)"/x, f
-    assert_match /div[^>]* id='errorExplanation'/, f
+    assert_match /div[^>]* id='error_explanation'/, f
     skip('error class not attached in test')
     assert_match /div\ class="fieldWithErrors"\>.*?
                   \<input .*?name="crud_test_model\[name\]"

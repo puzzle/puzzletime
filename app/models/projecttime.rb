@@ -39,7 +39,7 @@ class Projecttime < Worktime
   end
 
   def self.label
-    'Projektzeit'
+    'Zeit'
   end
 
   def account
@@ -58,7 +58,6 @@ class Projecttime < Worktime
     return if id.nil?
 
     self.project =  Project.find(id).leaves.first
-    self.report_type = project.report_type if report_type < project.report_type
     self.billable = project.billable
   end
 

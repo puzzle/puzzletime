@@ -7,7 +7,7 @@ class ProjecttimesController < WorktimesController
 
   def update
     if entry.employee_id != @user.id
-      session[:split] = WorktimeEdit.new(entry.clone)
+      session[:split] = WorktimeEdit.new(entry.dup)
       create_part
     else
       super
@@ -15,20 +15,23 @@ class ProjecttimesController < WorktimesController
   end
 
   def split
+    set_employees
     @split = session[:split]
     if @split.nil?
       redirect_to controller: 'projecttimes', action: 'new'
-      return
+    else
+      @worktime = @split.worktime_template
+      render action: 'split'
     end
-    @worktime = @split.worktime_template
-    render action: 'split'
   end
 
   def create_part
+    set_employees
     @split = session[:split]
     return create if @split.nil?
     entry
     @worktime.employee ||= @split.original.employee
+    params[:other] = '1'
     assign_attributes
     if @worktime.valid? && @split.add_worktime(@worktime)
       if @split.complete? || (params[:commit] == FINISH && @split.class::INCOMPLETE_FINISH)
@@ -36,18 +39,13 @@ class ProjecttimesController < WorktimesController
         session[:split] = nil
         flash[:notice] = 'Alle Arbeitszeiten wurden erfasst'
         if @worktime.employee != @user
-          params[:other] = 1
+          params[:other] = '1'
           params[:evaluation] = nil
         end
         redirect_to detail_times_path
       else
         session[:split] = @split
-        redirect_to respond_to do |wants|
-          wants.html do
-            evaluation_detail_params
-          end
-          wants.js {  }
-        end.merge!(action: 'split')
+        redirect_to evaluation_detail_params.merge!(action: 'split')
       end
     else
       render action: 'split'
@@ -107,7 +105,7 @@ class ProjecttimesController < WorktimesController
     time.work_date = start.to_date
     time.from_start_time = start
     time.billable = time.project.billable if time.project
-    save_running time, "Die Projektzeit #{time.account.label_verbose} mit #time_string wurde erfasst.\n"
+    save_running time, "Die Zeit #{time.account.label_verbose} mit #time_string wurde erfasst.\n"
   end
 
   def stop_running(time = running_time, stop = Time.zone.now)
@@ -119,7 +117,7 @@ class ProjecttimesController < WorktimesController
       time.destroy
       running_time(true)
     else
-      save_running time, "Die Projektzeit #{time.account.label_verbose} von #time_string wurde gespeichert.\n"
+      save_running time, "Die Zeit #{time.account.label_verbose} von #time_string wurde gespeichert.\n"
     end
   end
 

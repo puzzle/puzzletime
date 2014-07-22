@@ -10,8 +10,9 @@ app.datepicker = do ->
 
   show: ->
     field = $(this)
-    if field.is('.calendar')
-      field = field.parent().siblings('.date')
+    if field.is('.glyphicon-calendar')
+      field = field.closest('.input-group').find('.date')
+    console.log(field)
     options =
       onSelect: track
       showWeek: true

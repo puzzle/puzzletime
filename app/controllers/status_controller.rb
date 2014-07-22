@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 class StatusController < ApplicationController
 
   skip_before_action :authenticate

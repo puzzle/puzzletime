@@ -6,6 +6,7 @@ end
 namespace :erd do
   task :options => :customize
   task :customize do
+    require Rails.root.join('lib', 'tasks', 'erd_patch.rb')
     mkdir_p Rails.root.join('doc')
     ENV['attributes']  ||= 'content,inheritance,foreign_keys,timestamps'
     ENV['indirect']    ||= 'false'
@@ -15,3 +16,4 @@ namespace :erd do
     ENV['filetype']    ||= 'png'
   end
 end
+
