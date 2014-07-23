@@ -1,5 +1,26 @@
 # encoding: utf-8
 
+# define deleted models
+class Project < ActiveRecord::Base
+  acts_as_tree order: 'shortname'
+  belongs_to :work_item
+  
+  def latest_freeze_until
+    if parent.nil?
+      freeze_until
+    else
+      parent_freeze_until = parent.latest_freeze_until
+      if freeze_until.nil?
+        parent_freeze_until
+      elsif parent_freeze_until.nil?
+        freeze_until
+      else
+        [freeze_until, parent_freeze_until].max
+      end
+    end
+  end
+end
+
 class CreateErpTables < ActiveRecord::Migration
   def up
     # TODO add indizes for every belongs to relation
@@ -130,8 +151,12 @@ class CreateErpTables < ActiveRecord::Migration
     add_column :worktimes, :work_item_id, :integer
 
     add_column :plannings, :work_item_id, :integer
+    
+    add_column :projects, :work_item_id, :integer # just temporary to simplify the migration
 
     migrate_projects_to_work_items
+    
+    remove_column :projects, :work_item_id
 
 
     # remove_column :plannings, :project_id
@@ -209,11 +234,86 @@ class CreateErpTables < ActiveRecord::Migration
   private
 
   def migrate_projects_to_work_items
-    # TODO add path items for each client
-    # TODO add path items for each project
-    # TODO create accounting post to leaf path items, get inherited values
-    # TODO create orders for corresponding path items (dependent on path depth)
-    # TODO migrate planning project ids ?
-    # TODO rename Projecttime to Ordertime
+    add_work_items_for_clients
+    add_work_items_for_projects
+    create_accounting_posts
+    create_orders
+    migrate_planning_project_ids
+    #TODO rename_table :projecttime, :order_time
   end
+  
+  def add_work_items_for_clients
+    Client.all.each do |client|
+      # access attributes directly because of delegations
+      client.create_work_item!(name: client[:name], shortname: client[:shortname])
+    end
+  end
+  
+  def add_work_items_for_projects
+    Project.where(leaf: true).each do |project|
+      case project.path_ids.size
+      when 1
+        client = Client.find(project[:client_id])
+        project.create_work_item!(parent_id: client.work_item.id,
+                                  name: project[:name],
+                                  shortname: project[:shortname],
+                                  description: project[:description],
+                                  leaf: true)
+      when 2
+        # TODO whitlist project with "tiefe 2"
+      when 3
+        # TODO add work items for each project
+      else
+        throw "Project #{project.path_shortnames} has invalid numbers of parents (#{project.path_ids.size} parents but only 1-3 are supported)"
+      end
+    end
+  end
+  
+  # create accounting post to leaf work items, get inherited values
+  def create_accounting_posts
+    Project.where(leaf: true).each do |project|
+      #get inherited values
+      freeze_until = project.latest_freeze_until
+      description = project.inherited_description
+      # TODO where is the new freeze attribute?
+      # TODO wherewo kommt die beschreibung hin? fehlt etwa ein work_item? 
+      project.work_item.create_accounting_post! if project.work_item # TODO remove if as soon as add_work_items_for_projects has been implemented
+    end  
+  end    
+  
+  # create orders for corresponding work items (dependent on path depth)
+  def create_orders
+    # TODO create orders for corresponding work items (dependent on path depth)    
+  end
+  
+  def migrate_planning_project_ids
+    assert_valid_plannings_before_migration
+    migrate_plannings
+    
+    # TODO assert valid plannings after migration
+    #assert_valid_plannings_after_migration
+  end
+    
+  def assert_valid_plannings_before_migration
+    Planning.all.each do |planning|
+      unless planning.valid?
+        throw "Bad data found in planning #{planning.id}. Exception #{e}"
+      end
+    end
+  end
+  
+  def migrate_plannings
+    Planning.all.each do |planning|
+      planning.update_attributes!(work_item_id: planning.project.work_item_id)
+    end
+  end
+  
+  def assert_valid_plannings_after_migration
+    Planning.all.each do |planning|
+      unless planning.work_item
+        throw "Missing work_item for planning #{planning.id}"
+      end
+    end
+  end
+  
 end
