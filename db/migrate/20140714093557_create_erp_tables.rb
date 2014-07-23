@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-# define deleted models
+# define deleted models that are used in the migration
 class Project < ActiveRecord::Base
   acts_as_tree order: 'shortname'
   belongs_to :work_item
@@ -23,8 +23,6 @@ end
 
 class CreateErpTables < ActiveRecord::Migration
   def up
-    # TODO add indizes for every belongs to relation
-
     create_table :orders do |t|
       t.belongs_to :work_item, null: false
       t.belongs_to :kind
@@ -36,6 +34,14 @@ class CreateErpTables < ActiveRecord::Migration
 
       t.timestamps
     end
+    
+    add_index :orders, :work_item_id
+    add_index :orders, :kind_id
+    add_index :orders, :responsible_id
+    add_index :orders, :status_id
+    add_index :orders, :department_id
+    add_index :orders, :contract_id
+    add_index :orders, :billing_address_id
 
     create_table :order_kinds do |t|
       t.string :name, null: false
@@ -53,6 +59,8 @@ class CreateErpTables < ActiveRecord::Migration
       t.text :text, null: false
       t.timestamps
     end
+    
+    add_index :order_comments, :order_id
 
     create_table :target_scopes do |t|
       t.string :name, null: false
@@ -68,6 +76,9 @@ class CreateErpTables < ActiveRecord::Migration
 
       t.timestamps
     end
+    
+    add_index :order_targets, :order_id
+    add_index :order_targets, :target_scope_id
 
     create_table :contracts do |t|
       t.string :number, null: false
@@ -88,6 +99,8 @@ class CreateErpTables < ActiveRecord::Migration
 
       t.timestamps
     end
+    
+    add_index :contacts, :client_id
 
     create_table :billing_addresses do |t|
       t.belongs_to :client
@@ -98,16 +111,25 @@ class CreateErpTables < ActiveRecord::Migration
       t.string :town
       t.string :country
     end
+    
+    add_index :billing_addresses, :client_id
+    add_index :billing_addresses, :contact_id
 
     create_table :contacts_orders, primary_key: false do |t|
       t.belongs_to :contact, null: false
       t.belongs_to :order, null: false
     end
+    
+    add_index :contacts_orders, :contact_id
+    add_index :contacts_orders, :order_id
 
     create_table :employees_orders, primary_key: false do |t|
       t.belongs_to :employee, null: false
       t.belongs_to :order, null: false
     end
+    
+    add_index :employees_orders, :employee_id
+    add_index :employees_orders, :order_id
 
     create_table :portfolio_items do |t|
       t.string :name, null: false
@@ -125,7 +147,7 @@ class CreateErpTables < ActiveRecord::Migration
       t.boolean :leaf, null: false, default: true
       t.boolean :closed, null: false, default: false # inherited from order and accounting post
     end
-
+    
     add_index :work_items, :parent_id
     add_index :work_items, :path_ids
 
@@ -143,6 +165,9 @@ class CreateErpTables < ActiveRecord::Migration
       t.boolean :ticket_required, null: false, default: false
       t.boolean :closed, null: false, default: false
     end
+    
+    add_index :accounting_posts, :work_item_id
+    add_index :accounting_posts, :portfolio_item_id
 
     add_column :clients, :work_item_id, :integer
 
@@ -236,8 +261,6 @@ class CreateErpTables < ActiveRecord::Migration
   def migrate_projects_to_work_items
     add_work_items_for_clients
     add_work_items_for_projects
-    create_accounting_posts
-    create_orders
     migrate_planning_project_ids
     #TODO rename_table :projecttime, :order_time
   end
@@ -250,47 +273,75 @@ class CreateErpTables < ActiveRecord::Migration
   end
   
   def add_work_items_for_projects
+    # TODO what about non-leaf projects with depth 1?
+    # for instance project id :2548, parent_id: nil, leaf: false
     Project.where(leaf: true).each do |project|
       case project.path_ids.size
       when 1
-        client = Client.find(project[:client_id])
-        project.create_work_item!(parent_id: client.work_item.id,
-                                  name: project[:name],
-                                  shortname: project[:shortname],
-                                  description: project[:description],
-                                  leaf: true)
+        migrate_depth1_project(project)
       when 2
-        # TODO whitlist project with "tiefe 2"
+        migrate_depth2_project(project)
       when 3
-        # TODO add work items for each project
+        migrate_depth3_project(project)
       else
         throw "Project #{project.path_shortnames} has invalid numbers of parents (#{project.path_ids.size} parents but only 1-3 are supported)"
       end
     end
   end
   
-  # create accounting post to leaf work items, get inherited values
-  def create_accounting_posts
-    Project.where(leaf: true).each do |project|
-      #get inherited values
-      freeze_until = project.latest_freeze_until
-      description = project.inherited_description
-      # TODO where is the new freeze attribute?
-      # TODO wherewo kommt die beschreibung hin? fehlt etwa ein work_item? 
-      project.work_item.create_accounting_post! if project.work_item # TODO remove if as soon as add_work_items_for_projects has been implemented
-    end  
-  end    
+  def migrate_depth1_project(project)
+      client = Client.find(project[:client_id])
+      create_work_item!(project, client.work_item, true)
+      project.work_item.create_order!(department_id: project.department_id)
+      project.work_item.create_accounting_post!(billable: project.billable,
+                                                description_required: project.description_required,
+                                                ticket_required: project.ticket_required)
+  end
   
-  # create orders for corresponding work items (dependent on path depth)
-  def create_orders
-    # TODO create orders for corresponding work items (dependent on path depth)    
+  def migrate_depth2_project(project)
+    # TODO whitlist project with depth 2
+  end
+  
+  def migrate_depth3_project(project)
+    l1_project = project.parent.parent
+    l2_project = project.parent
+    
+    unless l1_project.work_item
+      client = Client.find(l1_project[:client_id])
+      create_work_item!(l1_project, client.work_item, false)
+    end
+    
+    unless l2_project.work_item
+      create_work_item!(l2_project, l1_project.work_item, false)
+      create_order!(l2_project)
+    end
+    
+    create_work_item!(project, l2_project.work_item, true)
+    create_accounting_post!(project)
+  end
+  
+  def create_work_item!(project, parent_work_item, leaf)
+    project.create_work_item!(parent_id: parent_work_item.id,
+                              name: project[:name],
+                              shortname: project[:shortname],
+                              description: project[:description],
+                              leaf: leaf)
+    project.save!
+  end
+  
+  def create_order!(project)
+    project.work_item.create_order!(department_id: project[:department_id])
+  end
+  
+  def create_accounting_post!(project)
+    project.work_item.create_accounting_post!(billable: project[:billable],
+                                              description_required: project[:description_required],
+                                              ticket_required: project[:ticket_required])
   end
   
   def migrate_planning_project_ids
     assert_valid_plannings_before_migration
     migrate_plannings
-    
-    # TODO assert valid plannings after migration
     #assert_valid_plannings_after_migration
   end
     
