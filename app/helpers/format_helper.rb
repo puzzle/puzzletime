@@ -51,6 +51,10 @@ module FormatHelper
     I18n.l(date, format: "%a %e.%-m.") if date
   end
 
+  def localize_date(date)
+    I18n.l(date, format: "%d.%m.%Y") if date
+  end
+
   def format_days(number)
     "#{number.round(2)} Tage"
   end
