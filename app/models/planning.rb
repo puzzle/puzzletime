@@ -34,6 +34,7 @@ class Planning < ActiveRecord::Base
 
   belongs_to :project
   belongs_to :employee
+  belongs_to :work_item
 
   def to_s
     "für #{employee.to_s}" if employee
