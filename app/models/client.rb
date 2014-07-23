@@ -21,6 +21,7 @@ class Client < ActiveRecord::Base
   protect_if :worktimes, 'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Arbeitszeiten zugeordnet sind'
 
   # All dependencies between the models are listed below.
+  belongs_to :work_item
   has_many :projects, -> { where(parent_id: nil) }
   has_many :all_projects, class_name: 'Project', dependent: :destroy
   has_many :contacts
