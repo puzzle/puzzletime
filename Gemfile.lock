@@ -60,6 +60,14 @@ GEM
     bullet (4.9.0)
       activesupport
       uniform_notifier (~> 1.6.0)
+    capybara (2.4.1)
+      mime-types (>= 1.16)
+      nokogiri (>= 1.3.3)
+      rack (>= 1.0.0)
+      rack-test (>= 0.5.4)
+      xpath (~> 2.0)
+    childprocess (0.5.3)
+      ffi (~> 1.0, >= 1.0.11)
     choice (0.1.6)
     coderay (1.1.0)
     codez-tarantula (0.5.3)
@@ -74,6 +82,7 @@ GEM
     coffee-script-source (1.7.0)
     columnize (0.8.9)
     dalli (2.7.0)
+    database_cleaner (1.3.0)
     debug_inspector (0.0.2)
     debugger (1.6.6)
       columnize (>= 0.3.1)
@@ -87,13 +96,15 @@ GEM
     faker (1.3.0)
       i18n (~> 0.5)
     fastercsv (1.5.5)
+    ffi (1.9.3)
     haml (4.0.5)
       tilt
+    headless (1.0.2)
     highline (1.6.21)
     hike (1.2.3)
     hpricot (0.8.6)
     htmlentities (4.3.1)
-    i18n (0.6.9)
+    i18n (0.6.11)
     jbuilder (2.0.7)
       activesupport (>= 3.0.0, < 5)
       multi_json (~> 1.2)
@@ -119,7 +130,8 @@ GEM
     metaclass (0.0.4)
     method_source (0.8.2)
     mime-types (1.25.1)
-    minitest (5.3.3)
+    mini_portile (0.6.0)
+    minitest (5.4.0)
     minitest-reporters (1.0.4)
       ansi
       builder
@@ -127,14 +139,16 @@ GEM
       ruby-progressbar
     mocha (1.1.0)
       metaclass (~> 0.0.1)
-    multi_json (1.10.0)
-    mysql2 (0.3.15)
+    multi_json (1.10.1)
+    mysql2 (0.3.16)
     net-ldap (0.6.1)
+    nokogiri (1.6.3.1)
+      mini_portile (= 0.6.0)
     parser (2.1.9)
       ast (>= 1.1, < 3.0)
       slop (~> 3.4, >= 3.4.5)
     pg (0.17.1)
-    polyglot (0.3.4)
+    polyglot (0.3.5)
     powerpack (0.0.9)
     protective (0.1.0)
       activerecord
@@ -184,7 +198,7 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rainbow (2.0.0)
-    rake (10.3.1)
+    rake (10.3.2)
     rdoc (4.1.1)
       json (~> 1.4)
     ref (1.0.5)
@@ -203,6 +217,7 @@ GEM
       sexp_processor (~> 4.0)
     ruby_parser (3.4.1)
       sexp_processor (~> 4.1)
+    rubyzip (1.1.6)
     sass (3.2.19)
     sass-rails (4.0.3)
       railties (>= 4.0.0, < 5.0)
@@ -218,6 +233,11 @@ GEM
       json (~> 1.8)
       rdoc (~> 4.0, < 5.0)
     selectize-rails (0.9.1)
+    selenium-webdriver (2.42.0)
+      childprocess (>= 0.5.0)
+      multi_json (~> 1.0)
+      rubyzip (~> 1.0)
+      websocket (~> 1.0.4)
     sexp_processor (4.4.3)
     simplecov (0.7.1)
       multi_json (~> 1.0)
@@ -245,7 +265,7 @@ GEM
       libv8 (~> 3.16.14.0)
       ref
     thor (0.19.1)
-    thread_safe (0.3.3)
+    thread_safe (0.3.4)
     tilt (1.4.1)
     timeliness (0.3.7)
     treetop (1.4.15)
@@ -253,7 +273,7 @@ GEM
       polyglot (>= 0.3.1)
     turbolinks (2.2.2)
       coffee-rails
-    tzinfo (1.1.0)
+    tzinfo (1.2.1)
       thread_safe (~> 0.1)
     uglifier (2.5.0)
       execjs (>= 0.3.0)
@@ -262,6 +282,9 @@ GEM
     validates_timeliness (3.0.14)
       timeliness (~> 0.3.6)
     valuable (0.9.8)
+    websocket (1.0.7)
+    xpath (2.0.0)
+      nokogiri (~> 1.3)
     yard (0.8.7.4)
 
 PLATFORMS
@@ -276,13 +299,16 @@ DEPENDENCIES
   bootstrap-sass
   brakeman (= 2.5.0)
   bullet
+  capybara
   codez-tarantula
   coffee-rails (~> 4.0.0)
   dalli
+  database_cleaner
   debugger
   fabrication
   faker
   haml
+  headless
   jbuilder
   jquery-rails
   jquery-turbolinks
@@ -310,6 +336,7 @@ DEPENDENCIES
   schema_validations
   sdoc
   selectize-rails
+  selenium-webdriver
   simplecov-rcov
   spring
   therubyracer

@@ -9,8 +9,12 @@ class ClientsController < ManageController
 
 
   def categories
-    item = WorkItem.find(params[:client_work_item_id])
-    @categories = item.categories.list
+    if params[:client_work_item_id].present?
+      item = WorkItem.find(params[:client_work_item_id])
+      @categories = item.categories.list
+    else
+      @categories = []
+    end
   end
 
   private
