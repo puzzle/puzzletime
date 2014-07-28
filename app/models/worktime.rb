@@ -33,7 +33,7 @@ class Worktime < ActiveRecord::Base
 
   belongs_to :employee
   belongs_to :absence
-  belongs_to :project
+  belongs_to :work_item
   has_one :client, through: :project
   has_one :department, through: :project
 
@@ -55,6 +55,7 @@ class Worktime < ActiveRecord::Base
 
   # account this worktime is booked for.
   # defined in subclasses, either Project or Absence
+  # TODO rename to accounting_post, okay?
   def account
     nil
   end

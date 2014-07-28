@@ -37,7 +37,7 @@ class WorktimeGraph
     @total_hours = 0
     @boxes = []
 
-    # fill projecttimes
+    # fill ordertimes
     append_period_boxes period_boxes[:projects], must_hours
     append_account_boxes @projects_eval.times(@current).
                                         where(WORKTIME_CONDITIONS).

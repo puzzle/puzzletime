@@ -759,7 +759,7 @@ CREATE INDEX worktimes_attendances ON worktimes USING btree (employee_id, work_d
 -- Name: worktimes_projects; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX worktimes_projects ON worktimes USING btree (project_id, employee_id, work_date) WHERE ((type)::text = 'Projecttime'::text);
+CREATE INDEX worktimes_projects ON worktimes USING btree (project_id, employee_id, work_date) WHERE ((type)::text = 'Ordertime'::text);
 
 
 --

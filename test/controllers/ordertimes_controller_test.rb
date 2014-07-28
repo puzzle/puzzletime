@@ -1,7 +1,7 @@
 # encoding: UTF-8
 require 'test_helper'
 
-class ProjecttimesControllerTest < ActionController::TestCase
+class OrdertimesControllerTest < ActionController::TestCase
 
   setup :login
 
@@ -39,7 +39,7 @@ class ProjecttimesControllerTest < ActionController::TestCase
 
   def test_create_hours_day_type
     work_date = Date.today - 7
-    post :create, projecttime: { account_id: projects(:puzzletime),
+    post :create, Ordertime: { account_id: projects(:puzzletime),
                                  work_date: work_date,
                                  ticket: '#1',
                                  description: 'desc',
@@ -48,17 +48,17 @@ class ProjecttimesControllerTest < ActionController::TestCase
     assert_redirected_to action: 'index', week_date: work_date
     assert flash[:alert].blank?
     assert_match(/Zeit.*erfolgreich erstellt/, flash[:notice])
-    assert_equal projects(:puzzletime), Projecttime.last.project
-    assert_equal HoursDayType::INSTANCE, Projecttime.last.report_type
-    assert_equal '#1', Projecttime.last.ticket
-    assert_equal 0.75, Projecttime.last.hours
-    assert_equal work_date, Projecttime.last.work_date
-    assert_equal employees(:mark), Projecttime.last.employee # logged in user
+    assert_equal projects(:puzzletime), Ordertime.last.project
+    assert_equal HoursDayType::INSTANCE, Ordertime.last.report_type
+    assert_equal '#1', Ordertime.last.ticket
+    assert_equal 0.75, Ordertime.last.hours
+    assert_equal work_date, Ordertime.last.work_date
+    assert_equal employees(:mark), Ordertime.last.employee # logged in user
   end
 
   def test_create_start_stop_type
     work_date = Date.today + 10
-    post :create, projecttime: { account_id: Project.first,
+    post :create, Ordertime: { account_id: Project.first,
                                  work_date: work_date,
                                  from_start_time: '8:00',
                                  to_end_time: '10:15'
@@ -66,15 +66,15 @@ class ProjecttimesControllerTest < ActionController::TestCase
     assert_redirected_to action: 'index', week_date: work_date
     assert flash[:alert].blank?
     assert_match(/Zeit.*erfolgreich erstellt/, flash[:notice])
-    assert_equal StartStopType::INSTANCE, Projecttime.last.report_type
-    assert_equal '08:00', Projecttime.last.from_start_time.strftime('%H:%M')
-    assert_equal '10:15', Projecttime.last.to_end_time.strftime('%H:%M')
-    assert_equal 2.25, Projecttime.last.hours
+    assert_equal StartStopType::INSTANCE, Ordertime.last.report_type
+    assert_equal '08:00', Ordertime.last.from_start_time.strftime('%H:%M')
+    assert_equal '10:15', Ordertime.last.to_end_time.strftime('%H:%M')
+    assert_equal 2.25, Ordertime.last.hours
   end
 
   def test_create_with_missing_start_time
     work_date = Date.today + 10
-    post :create, projecttime: { account_id: Project.first,
+    post :create, Ordertime: { account_id: Project.first,
                                  work_date: work_date,
                                  to_end_time: '10:15'
                                  }
@@ -82,27 +82,27 @@ class ProjecttimesControllerTest < ActionController::TestCase
   end
 
   def test_create_other
-    post :create, projecttime: { account_id: Project.first,
+    post :create, Ordertime: { account_id: Project.first,
                                  work_date: Date.today,
                                  hours: '5:30',
                                  employee_id: employees(:lucien)
                                  }
-    assert_equal employees(:lucien), Projecttime.last.employee
+    assert_equal employees(:lucien), Ordertime.last.employee
   end
 
   def test_create_other_without_permission
     login_as(:lucien)
-    post :create, projecttime: { account_id: Project.first,
+    post :create, Ordertime: { account_id: Project.first,
                                  work_date: Date.today,
                                  hours: '5:30',
                                  employee_id: employees(:mark)
                                  }
-    assert_equal employees(:lucien), Projecttime.last.employee # assigns the projettime to himself
+    assert_equal employees(:lucien), Ordertime.last.employee # assigns the projettime to himself
   end
 
   def test_update
     worktime = worktimes(:wt_mw_puzzletime)
-    put :update, id: worktime, projecttime: { hours: '1:30' }
+    put :update, id: worktime, Ordertime: { hours: '1:30' }
 
     worktime.reload
     assert_redirected_to action: 'index', week_date: worktime.work_date
@@ -124,7 +124,7 @@ class ProjecttimesControllerTest < ActionController::TestCase
 
   def test_incomplete_split
     worktime = worktimes(:wt_pz_allgemein)
-    put :update, id: worktime, projecttime: { hours: '0:30', employee_id: employees(:pascal) }
+    put :update, id: worktime, Ordertime: { hours: '0:30', employee_id: employees(:pascal) }
     assert_redirected_to action: 'split'
     assert_not_nil assigns(:split)
   end
@@ -132,7 +132,7 @@ class ProjecttimesControllerTest < ActionController::TestCase
 
   def test_finish_split
     worktime = worktimes(:wt_pz_allgemein)
-    put :update, id: worktime, projecttime: { hours: '1:00', employee_id: employees(:pascal) }
+    put :update, id: worktime, Ordertime: { hours: '1:00', employee_id: employees(:pascal) }
     assert_not_nil assigns(:split)
     assert_match(/Alle Arbeitszeiten wurden erfasst/, flash[:notice])
     worktime.reload
@@ -144,7 +144,7 @@ class ProjecttimesControllerTest < ActionController::TestCase
     work_date = worktime.work_date
     delete :destroy, id: worktime
     assert_redirected_to action: 'index', week_date: work_date
-    assert_nil Projecttime.find_by_id(worktime.id)
+    assert_nil Ordertime.find_by_id(worktime.id)
   end
 
 end

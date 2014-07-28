@@ -3,7 +3,7 @@
 module WorktimeHelper
 
   def worktime_account(worktime)
-    worktime.account.label_verbose if worktime.account
+    worktime.work_item.label_verbose if worktime.work_item
   end
 
   def worktime_description(worktime)

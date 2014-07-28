@@ -20,10 +20,10 @@
 #  work_item_id    :integer
 #
 
-class Projecttime < Worktime
+class Ordertime < Worktime
 
   validates :project_id, presence: true
-  validate :project_leaf
+  validate :validate_accounting_post
   validate :protect_booked, on: :update
   validate :validate_by_project
 
@@ -39,15 +39,15 @@ class Projecttime < Worktime
   end
 
   def account
-    project
+    work_item.accounting_post if work_item
   end
 
   def account_id
-    project_id
+    work_item.accounting_post.id  if work_item
   end
 
   def account_id=(value)
-    self.project_id = value
+    self.work_item.accounting_post_id = value if self.work_item
   end
 
   def set_project_defaults(id = nil)
@@ -65,16 +65,17 @@ class Projecttime < Worktime
   ########### validation helpers ###########
 
   def validate_by_project
-    project.validate_worktime(self) if project
+    work_item.accounting_post.validate_worktime(self) if work_item && work_item.accounting_post
   end
 
-  def project_leaf
-    p = project(true)
-    errors.add(:project_id, 'Das angegebene Projekt enthält Subprojekte.') if p && p.sub_projects?
+  def validate_accounting_post
+    errors.add(:accounting_post_id, 'Der Auftrag hat keine Buchungsposition.') if work_item && !work_item.accounting_post
+    #p = project(true)
+    #errors.add(:project_id, 'Das angegebene Projekt enthält Subprojekte.') if p && p.sub_projects?
   end
 
   def protect_booked
-    previous = Projecttime.find(id)
+    previous = Ordertime.find(id)
     if previous.booked && booked
       errors.add(:base, 'Verbuchte Arbeitszeiten können nicht verändert werden')
       return false

@@ -24,12 +24,12 @@
         KW 
         = week_number(@selected_date)
         - if @user.management
-          = link_to('Fremderfassen', new_projecttime_path(other: 1),
-                    {class: 'add-other', id: 'new_other_projecttime_link'})
+          = link_to('Fremderfassen', new_ordertime_path(other: 1),
+                    {class: 'add-other', id: 'new_other_ordertime_link'})
       .weeknav-add-row
-        = link_to(new_projecttime_path, {class: 'btn btn-primary',
+        = link_to(new_ordertime_path, {class: 'btn btn-primary',
                                          title: 'Zeit/Abwesenheit erfassen',
-                                         id: 'new_projecttime_link' }) do
+                                         id: 'new_ordertime_link' }) do
           %i.icon-add
           %span.add-text
             Hinzufügen
