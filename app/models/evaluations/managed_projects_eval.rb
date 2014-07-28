@@ -13,7 +13,7 @@ class ManagedProjectsEval < ProjectsEval
   def sum_times_grouped(period)
     Worktime.joins(:project).
              joins('INNER JOIN orders ON orders.work_item_id = ANY (projects.path_ids)').
-             where(type: 'Projecttime').
+             where(type: 'Ordertime').
              where(orders: { responsible_id: category.id }).
              in_period(period).
              group('orders.work_item_id').

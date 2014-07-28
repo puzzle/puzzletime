@@ -35,6 +35,8 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.boolean "description_required", default: false, null: false
     t.boolean "ticket_required",      default: false, null: false
     t.boolean "closed",               default: false, null: false
+    t.index ["portfolio_item_id"], :name => "index_accounting_posts_on_portfolio_item_id"
+    t.index ["work_item_id"], :name => "index_accounting_posts_on_work_item_id"
   end
 
   create_table "billing_addresses", force: true do |t|
@@ -45,11 +47,14 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.string  "zip_code"
     t.string  "town"
     t.string  "country"
+    t.index ["client_id"], :name => "index_billing_addresses_on_client_id"
+    t.index ["contact_id"], :name => "index_billing_addresses_on_contact_id"
   end
 
   create_table "clients", force: true do |t|
     t.string  "name"
     t.string  "shortname"
+    t.integer "path_item_id"
     t.integer "work_item_id"
   end
 
@@ -63,11 +68,14 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.string   "mobile"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["client_id"], :name => "index_contacts_on_client_id"
   end
 
   create_table "contacts_orders", primary_key: "false", :default => { :expr => "nextval('contacts_orders_false_seq'::regclass)" }, force: true do |t|
     t.integer "contact_id", null: false
     t.integer "order_id",   null: false
+    t.index ["contact_id"], :name => "index_contacts_orders_on_contact_id"
+    t.index ["order_id"], :name => "index_contacts_orders_on_order_id"
   end
 
   create_table "contracts", force: true do |t|
@@ -114,6 +122,8 @@ ActiveRecord::Schema.define(version: 20140714093557) do
   create_table "employees_orders", primary_key: "false", :default => { :expr => "nextval('employees_orders_false_seq'::regclass)" }, force: true do |t|
     t.integer "employee_id", null: false
     t.integer "order_id",    null: false
+    t.index ["employee_id"], :name => "index_employees_orders_on_employee_id"
+    t.index ["order_id"], :name => "index_employees_orders_on_order_id"
   end
 
   create_table "employments", force: true do |t|
@@ -123,6 +133,11 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.date    "end_date"
     t.index ["employee_id"], :name => "index_employments_on_employee_id"
     t.foreign_key ["employee_id"], "employees", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_employments_employees"
+  end
+
+  create_table "engine_schema_info", id: false, force: true do |t|
+    t.string  "engine_name"
+    t.integer "version"
   end
 
   create_table "holidays", force: true do |t|
@@ -135,6 +150,7 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.text     "text",       null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["order_id"], :name => "index_order_comments_on_order_id"
   end
 
   create_table "order_kinds", force: true do |t|
@@ -155,6 +171,8 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.text     "comment"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["order_id"], :name => "index_order_targets_on_order_id"
+    t.index ["target_scope_id"], :name => "index_order_targets_on_target_scope_id"
   end
 
   create_table "orders", force: true do |t|
@@ -167,12 +185,31 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.integer  "billing_address_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["billing_address_id"], :name => "index_orders_on_billing_address_id"
+    t.index ["contract_id"], :name => "index_orders_on_contract_id"
+    t.index ["department_id"], :name => "index_orders_on_department_id"
+    t.index ["kind_id"], :name => "index_orders_on_kind_id"
+    t.index ["responsible_id"], :name => "index_orders_on_responsible_id"
+    t.index ["status_id"], :name => "index_orders_on_status_id"
+    t.index ["work_item_id"], :name => "index_orders_on_work_item_id"
   end
 
   create_table "overtime_vacations", force: true do |t|
     t.float   "hours",         null: false
     t.integer "employee_id",   null: false
     t.date    "transfer_date", null: false
+  end
+
+  create_table "path_items", force: true do |t|
+    t.integer "parent_id"
+    t.string  "name",                                        null: false
+    t.string  "shortname",                                   null: false
+    t.integer "path_ids",                                                 array: true
+    t.string  "path_shortnames"
+    t.string  "path_names",      limit: 2047
+    t.boolean "leaf",                         default: true, null: false
+    t.index ["parent_id"], :name => "index_path_items_on_parent_id"
+    t.index ["path_ids"], :name => "index_path_items_on_path_ids"
   end
 
   create_table "plannings", force: true do |t|
@@ -204,13 +241,6 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.boolean "active", default: true, null: false
   end
 
-  create_table "projectmemberships", force: true do |t|
-    t.integer "project_id",                        null: false
-    t.integer "employee_id",                       null: false
-    t.boolean "projectmanagement", default: false, null: false
-    t.boolean "active",            default: true,  null: false
-  end
-
   create_table "projects", force: true do |t|
     t.integer "client_id"
     t.string  "name",                                                 null: false
@@ -233,6 +263,17 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.foreign_key ["client_id"], "clients", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_projects_clients"
     t.foreign_key ["department_id"], "departments", ["id"], :on_update => :no_action, :on_delete => :set_null, :name => "fk_project_department"
     t.foreign_key ["parent_id"], "projects", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_project_parent"
+  end
+
+  create_table "projectmemberships", force: true do |t|
+    t.integer "project_id"
+    t.integer "employee_id"
+    t.boolean "projectmanagement", default: false
+    t.boolean "active",            default: true
+    t.index ["employee_id"], :name => "index_projectmemberships_on_employee_id"
+    t.index ["project_id"], :name => "index_projectmemberships_on_project_id"
+    t.foreign_key ["employee_id"], "employees", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_projectmemberships_employees"
+    t.foreign_key ["project_id"], "projects", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_projectmemberships_projects"
   end
 
   create_table "target_scopes", force: true do |t|
@@ -265,16 +306,17 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.integer "project_id"
     t.integer "absence_id"
     t.integer "employee_id"
-    t.string  "report_type",                     null: false
-    t.date    "work_date",                       null: false
+    t.string  "report_type",                        null: false
+    t.date    "work_date",                          null: false
     t.float   "hours"
     t.time    "from_start_time"
     t.time    "to_end_time"
     t.text    "description"
-    t.boolean "billable",        default: true
-    t.boolean "booked",          default: false
+    t.boolean "billable",           default: true
+    t.boolean "booked",             default: false
     t.string  "type"
     t.string  "ticket"
+    t.integer "accounting_post_id"
     t.integer "work_item_id"
     t.index ["absence_id", "employee_id", "work_date"], :name => "worktimes_absences", :conditions => "((type)::text = 'Absencetime'::text)"
     t.index ["employee_id", "work_date"], :name => "worktimes_attendances", :conditions => "((type)::text = 'Attendancetime'::text)"

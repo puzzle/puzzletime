@@ -26,7 +26,7 @@ class Splitable
   end
 
   def worktime_template
-    worktime = last_worktime.template Projecttime.new
+    worktime = last_worktime.template Ordertime.new
     worktime.hours = remaining_hours
     worktime.from_start_time = next_start_time
     worktime.to_end_time = original.to_end_time

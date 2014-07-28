@@ -182,7 +182,9 @@ class CreateErpTables < ActiveRecord::Migration
     migrate_projects_to_work_items
     
     remove_column :projects, :work_item_id
-
+    
+    # rename projecttime to ordertime
+    Worktime.where(type: 'Projecttime').update_all(type: 'Ordertime')
 
     # remove_column :plannings, :project_id
 
@@ -225,6 +227,9 @@ class CreateErpTables < ActiveRecord::Migration
     #  t.boolean :projectmanagement, null: false, default: false
     #  t.boolean :active, null: false, default: true
     #end
+    
+    # rename ordertime to projecttime
+    Worktime.where(type: 'Ordertime').update_all(type: 'Projecttime')
 
     remove_column :employees, :department_id
 
@@ -262,7 +267,6 @@ class CreateErpTables < ActiveRecord::Migration
     add_work_items_for_clients
     add_work_items_for_projects
     migrate_planning_project_ids
-    #TODO rename_table :projecttime, :order_time
   end
   
   def add_work_items_for_clients

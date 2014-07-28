@@ -111,7 +111,7 @@ class Evaluation
   end
 
   def worktime_name
-    absences? ? Absencetime.label : Projecttime.label
+    absences? ? Absencetime.label : Ordertime.label
   end
 
   # The header name of the division column to be displayed.
@@ -216,7 +216,7 @@ class Evaluation
   private
 
   def worktime_type
-    absences? ? 'Absencetime' : 'Projecttime'
+    absences? ? 'Absencetime' : 'Ordertime'
   end
 
   def detail_label(item)

@@ -35,7 +35,7 @@ de-CH:
       project:
         one: Projekt
         other: Projekte
-      projecttime:
+      ordertime:
         one: Zeit
         other: Zeiten
       projectmembership:
