@@ -2,13 +2,14 @@
 
 require 'test_helper'
 
-# Test UtilityHelper
 class WorktimeHelperTest < ActionView::TestCase
   include FormatHelper
 
   def setup
-    @worktimes = Worktime.where('employee_id = ? AND work_date >= ? AND work_date <= ?', 7, Date.new(2006, 12, 4), Date.new(2006, 12, 10))
-    @daily_worktimes = @worktimes.group_by{ |w| w.work_date}
+    Holiday.refresh
+    @worktimes = Worktime.where('employee_id = ? AND work_date >= ? AND work_date <= ?',
+                                7, Date.new(2006, 12, 4), Date.new(2006, 12, 10))
+    @daily_worktimes = @worktimes.group_by { |w| w.work_date}
   end
 
   test 'daily worktimes' do
