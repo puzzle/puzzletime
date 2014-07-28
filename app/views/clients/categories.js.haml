@@ -4,4 +4,5 @@ selectize.clearOptions()
   selectize.addOption({ value: '#{c.id}', text: '#{c.to_s}' })
 selectize.refreshOptions(false)
 
-$('#category_work_item_id_create_link').attr('data-params', 'work_item[parent_id]=#{params[:client_work_item_id]}')
+var categoryParam = 'work_item[parent_id]=#{params[:client_work_item_id]}'
+$('#category_work_item_id_create_link').attr('data-params', categoryParam).data('params', categoryParam)

@@ -5,6 +5,7 @@
                  options_from_collection_for_select(@clients, :work_item_id, :to_s, params[:client_work_item_id]),
                  prompt: ta(:please_select),
                  class: 'searchable',
+                 required: true,
                  data: { remote: true,
                          url: categories_clients_path })
   .col-md-2
