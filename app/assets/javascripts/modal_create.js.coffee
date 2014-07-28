@@ -9,6 +9,7 @@ showModal = (event, data, status, xhr) ->
   if title
     modal.find('.modal-title').html(title)
   modal.attr('data-originator', '#' + $this[0].id)
+  modal.data('originator', '#' + $this[0].id)
   modal.modal('show')
 
 processCreatedEntry = (event, data, status, xhr) ->
