@@ -62,7 +62,7 @@ Rails.application.routes.draw do
 
   resources :worktimes, only: [:index]
 
-  resources :projecttimes do
+  resources :ordertimes do
     collection do
       get :existing
       post :start

@@ -44,8 +44,8 @@ Rails.application.configure do
     Bullet.add_footer = false
     Bullet.stacktrace_includes = []
 
-    Bullet.add_whitelist type: :unused_eager_loading, class_name: "Projecttime", association: :employee
-    Bullet.add_whitelist type: :unused_eager_loading, class_name: "Projecttime", association: :absence
+    Bullet.add_whitelist type: :unused_eager_loading, class_name: "Ordertime", association: :employee
+    Bullet.add_whitelist type: :unused_eager_loading, class_name: "Ordertime", association: :absence
     Bullet.add_whitelist type: :unused_eager_loading, class_name: "Absencetime", association: :project
     Bullet.add_whitelist type: :unused_eager_loading, class_name: "Planning", association: :project
     Bullet.add_whitelist type: :unused_eager_loading, class_name: "Planning", association: :employee

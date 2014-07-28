@@ -28,4 +28,17 @@ class AccountingPost < ActiveRecord::Base
   has_many_through_work_item :worktimes
 
   # TODO propagate closed to work items when changed
+  
+  protected
+
+  def validate_worktime(worktime)
+    if worktime.report_type != AutoStartType::INSTANCE && description_required? && worktime.description.blank?
+      worktime.errors.add(:description, 'Es muss eine Bemerkung angegeben werden')
+    end
+
+    if worktime.report_type != AutoStartType::INSTANCE && ticket_required? && worktime.ticket.blank?
+      worktime.errors.add(:ticket, 'Es muss ein Ticket angegeben werden')
+    end
+  end
+
 end

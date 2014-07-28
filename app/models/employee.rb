@@ -39,7 +39,7 @@ class Employee < ActiveRecord::Base
   has_many :overtime_vacations, dependent: :destroy
   has_one :running_project,
           -> { where(report_type: AutoStartType::INSTANCE.key) },
-          class_name: 'Projecttime'
+          class_name: 'Ordertime'
 
   # Validation helpers.
   validates_presence_of :firstname, message: 'Der Vorname muss angegeben werden'

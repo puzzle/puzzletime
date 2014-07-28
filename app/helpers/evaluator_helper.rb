@@ -49,7 +49,7 @@ module EvaluatorHelper
   end
 
   def worktime_controller
-    @evaluation.absences? ? 'absencetimes' : 'projecttimes'
+    @evaluation.absences? ? 'absencetimes' : 'ordertimes'
   end
 
   #### division supplement functions

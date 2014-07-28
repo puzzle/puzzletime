@@ -153,7 +153,6 @@ class WorktimesController < CrudController
 
   def list_entries
     @worktimes = Worktime.where('employee_id = ? AND work_date >= ? AND work_date <= ?', @user.id, @week_days.first, @week_days.last)
-                         .includes(:project, :absence)
                          .order('work_date, from_start_time, project_id')
     @daily_worktimes = @worktimes.group_by{ |w| w.work_date }
     @worktimes
