@@ -36,9 +36,9 @@ class Order < ActiveRecord::Base
   has_and_belongs_to_many :employees
   has_and_belongs_to_many :contacts
 
-  # TODO specify how to migrate kind, status and responsible, then enable validation 
-  #validates :kind_id, :responsible_id, :status_id, :department_id, presence: true
-  validate :work_time_parent_presence
+  # TODO specify how to migrate kind, status and responsible, then enable validation
+  validates :kind_id, :responsible_id, :status_id, :department_id, presence: true
+  validate :work_item_parent_presence
 
   # TODO: validate only one order per work_items path_ids
   # TODO: after create callback to initialize order targets
@@ -60,9 +60,9 @@ class Order < ActiveRecord::Base
 
   private
 
-  def work_time_parent_presence
+  def work_item_parent_presence
     if work_item && work_item.parent_id.nil?
-      work_item.errors.add(:parent_id, :blank)
+      errors.add(:base, 'Kunde darf nicht leer sein')
     end
   end
 
