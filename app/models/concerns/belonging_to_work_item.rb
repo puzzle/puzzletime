@@ -3,7 +3,7 @@ module BelongingToWorkItem
   extend ActiveSupport::Concern
 
   included do
-    belongs_to :work_item
+    belongs_to :work_item, validate: true, autosave: true
 
     has_many_through_work_item :worktimes
 

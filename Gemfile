@@ -53,6 +53,10 @@ end
 group :test do
   gem 'fabrication'
   gem 'mocha', require: false
+  gem 'capybara'
+  gem 'headless'
+  gem 'selenium-webdriver'
+  gem 'database_cleaner'
 end
 
 group :console do

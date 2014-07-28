@@ -22,7 +22,7 @@ class OrdersController < ManageController
 
   def set_clients
     @clients = Client.list
-    @employees = Employee.list # restrict only with employment?
+    @employees = Employee.list # TODO: restrict only with employment?
     if params[:client_work_item_id].present?
       @categories = WorkItem.find(params[:client_work_item_id]).categories.list
     else
