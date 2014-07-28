@@ -179,25 +179,6 @@ class CreateErpTables < ActiveRecord::Migration
     
     add_column :projects, :work_item_id, :integer # just temporary to simplify the migration
 
-    migrate_projects_to_work_items
-    
-    remove_column :projects, :work_item_id
-    
-    # rename projecttime to ordertime
-    Worktime.where(type: 'Projecttime').update_all(type: 'Ordertime')
-
-    # remove_column :plannings, :project_id
-
-    # remove_column :worktimes, :project_id
-
-    # remove_column :clients, :name
-    # remove_column :clients, :shortname
-    change_column :clients, :name, :string, null: true
-    change_column :clients, :shortname, :string, null: true
-
-    # drop_table :projects, :accounting_posts
-    # drop_table :projectmemberships
-
     if Client.column_names.include?('contact')
       remove_column :clients, :contact
     end
@@ -218,6 +199,25 @@ class CreateErpTables < ActiveRecord::Migration
     TargetScope.create!(name: 'Kosten', icon: 'usd', position: 10)
     TargetScope.create!(name: 'Termin', icon: 'time', position: 20)
     TargetScope.create!(name: 'Qualität', icon: 'star-empty', position: 30)
+
+    migrate_projects_to_work_items
+    
+    remove_column :projects, :work_item_id
+    
+    # rename projecttime to ordertime
+    Worktime.where(type: 'Projecttime').update_all(type: 'Ordertime')
+
+    # remove_column :plannings, :project_id
+
+    # remove_column :worktimes, :project_id
+
+    # remove_column :clients, :name
+    # remove_column :clients, :shortname
+    change_column :clients, :name, :string, null: true
+    change_column :clients, :shortname, :string, null: true
+
+    # drop_table :projects, :accounting_posts
+    # drop_table :projectmemberships
   end
 
   def down
@@ -296,10 +296,8 @@ class CreateErpTables < ActiveRecord::Migration
   def migrate_depth1_project(project)
       client = Client.find(project[:client_id])
       create_work_item!(project, client.work_item, true)
-      project.work_item.create_order!(department_id: project.department_id)
-      project.work_item.create_accounting_post!(billable: project.billable,
-                                                description_required: project.description_required,
-                                                ticket_required: project.ticket_required)
+      create_order!(project)
+      create_accounting_post!(project)
   end
   
   def migrate_depth2_project(project)
@@ -334,7 +332,14 @@ class CreateErpTables < ActiveRecord::Migration
   end
   
   def create_order!(project)
-    project.work_item.create_order!(department_id: project[:department_id])
+    # TODO specify how to migrate kind, status and responsible
+    kind = OrderKind.first
+    status = OrderStatus.first
+    responsible = Employee.last
+    project.work_item.create_order!(kind: kind,
+                                    status: status,
+                                    responsible: responsible,
+                                    department_id: project[:department_id])
   end
   
   def create_accounting_post!(project)
