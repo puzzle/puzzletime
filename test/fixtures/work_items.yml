@@ -2,8 +2,23 @@ puzzle:
   id:      1
   name:    Puzzle
   shortname: PITC
+  path_ids: [1]
+  path_shortnames: PITC
+  path_names: Puzzle
 
 swisstopo:
   id:      2
   name:    Swisstopo
   shortname: STOP
+  path_ids: [2]
+  path_shortnames: STOP
+  path_names: Swisstopo
+
+intern:
+  id:      3
+  name:    Interne Projekte
+  shortname: IPR
+  parent_id: 1
+  path_ids: [1, 3]
+  path_shortnames: PITC-IPR
+  path_names: "Puzzle\nInterneProjekte"

@@ -15,11 +15,19 @@ require File.expand_path('../../config/environment', __FILE__)
 Rails.env = 'test'
 require 'rails/test_help'
 require 'mocha/mini_test'
+require 'capybara/rails'
 
 if ENV['TEST_REPORTS']
   require 'minitest/reporters'
   MiniTest::Reporters.use! [MiniTest::Reporters::DefaultReporter.new,
                             MiniTest::Reporters::JUnitReporter.new]
+end
+
+unless ENV['HEADLESS'] == 'false'
+  require 'headless'
+
+  headless = Headless.new(destroy_at_exit: false)
+  headless.start
 end
 
 Dir[Rails.root.join('test/support/**/*.rb')].sort.each { |f| require f }
@@ -48,4 +56,30 @@ class ActiveSupport::TestCase
   def logout
     @request.session[:user_id] = nil
   end
+end
+
+class ActionDispatch::IntegrationTest
+  # Make the Capybara DSL available in all integration tests
+  include Capybara::DSL
+  DatabaseCleaner.strategy = :truncation
+  self.use_transactional_fixtures = false
+
+  setup do
+    Capybara.default_driver = :selenium
+    DatabaseCleaner.start
+  end
+
+  teardown do
+    DatabaseCleaner.clean
+  end
+
+  def login_as(user, ref_path = nil)
+    employee = employees(user)
+    employee.set_passwd('foobar')
+    visit login_path(ref: ref_path)
+    fill_in 'user', with: employee.shortname
+    fill_in 'pwd', with: 'foobar'
+    click_button 'Login'
+  end
+
 end
