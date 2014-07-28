@@ -9,11 +9,11 @@
           seit #{format_time @user.running_project.from_start_time}
         %td{:align => "center"}
           = link_to 'Stoppen',
-                    {:controller => 'projecttimes', :action => 'stop'},
+                    {:controller => 'ordertimes', :action => 'stop'},
                     id: 'runningProjectStopper'
       %tr
         %td{:colspan => "2", :style => "text-align: right;"}
-          = form_tag({:controller => 'projecttimes', :action => 'stop'}, :id => 'stop_project_form') do
+          = form_tag({:controller => 'ordertimes', :action => 'stop'}, :id => 'stop_project_form') do
             %table{:style => "margin-left: auto; text-align: left;", :width => "100"}
               %thead
                 %tr
@@ -34,10 +34,10 @@
         %td= project.label_verbose
         %td{:align => "center"}
           = link_to 'Starten',
-                    {:controller => 'projecttimes', :action => 'start', :id => project.id},
+                    {:controller => 'ordertimes', :action => 'start', :id => project.id},
                     data: { start_project: project.id }
 
-= form_tag({:controller => 'projecttimes', :action => 'start'}, :id => 'start_project_form') do
+= form_tag({:controller => 'ordertimes', :action => 'start'}, :id => 'start_project_form') do
   = hidden_field_tag 'id'
   = hidden_field_tag 'description', nil, :id => 'start_description'
   = hidden_field_tag 'ticket', nil, :id => 'start_ticket'

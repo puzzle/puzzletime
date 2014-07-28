@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-class ProjecttimesController < WorktimesController
+class OrdertimesController < WorktimesController
 
   self.permitted_attrs = [:account_id, :report_type, :work_date, :hours,
                           :from_start_time, :to_end_time, :description, :billable, :booked, :ticket]
@@ -18,7 +18,7 @@ class ProjecttimesController < WorktimesController
     set_employees
     @split = session[:split]
     if @split.nil?
-      redirect_to controller: 'projecttimes', action: 'new'
+      redirect_to controller: 'ordertimes', action: 'new'
     else
       @worktime = @split.worktime_template
       render action: 'split'
@@ -73,7 +73,7 @@ class ProjecttimesController < WorktimesController
       running.ticket = params[:ticket]
       stop_running running, now
     end
-    time = Projecttime.new
+    time = ordertime.new
     time.project = Project.find(params[:id])
     start_running time, now
     redirect_to_running

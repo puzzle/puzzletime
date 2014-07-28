@@ -71,11 +71,11 @@ showRegularAbsence = (e) ->
 
 $ ->
 
-  $('#new_projecttime_link').click (e) ->
+  $('#new_ordertime_link').click (e) ->
     e.preventDefault()
     window.location.href = $(this). attr('href') + '?work_date=' + $("#week_date").val();
 
-  $('#new_other_projecttime_link').click (e) ->
+  $('#new_other_ordertime_link').click (e) ->
     e.preventDefault()
     window.location.href = $(this). attr('href') + '&work_date=' + $("#week_date").val();
 
@@ -116,13 +116,13 @@ $ ->
     if disable
       $(selector_id).val('')
 
-  $('#projecttime_hours').blur ->
-    toggle('#projecttime_from_start_time', $(this).val())
-    toggle('#projecttime_to_end_time', $(this).val())
-  $('#projecttime_from_start_time').blur ->
-    toggle('#projecttime_hours', $(this).val() || $('#projecttime_to_end_time').val())
-  $('#projecttime_to_end_time').blur ->
-    toggle('#projecttime_hours', $(this).val() || $('#projecttime_from_start_time').val())
+  $('#ordertime_hours').blur ->
+    toggle('#ordertime_from_start_time', $(this).val())
+    toggle('#ordertime_to_end_time', $(this).val())
+  $('#ordertime_from_start_time').blur ->
+    toggle('#ordertime_hours', $(this).val() || $('#ordertime_to_end_time').val())
+  $('#ordertime_to_end_time').blur ->
+    toggle('#ordertime_hours', $(this).val() || $('#ordertime_from_start_time').val())
   $('#absencetime_hours').blur ->
     toggle('#absencetime_from_start_time', $(this).val())
     toggle('#absencetime_to_end_time', $(this).val())
