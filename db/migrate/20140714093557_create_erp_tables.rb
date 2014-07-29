@@ -25,7 +25,6 @@ class Projectmembership < ActiveRecord::Base
 end
 
 class CreateErpTables < ActiveRecord::Migration
-  @@counter = 0
   def up
     create_table :orders do |t|
       t.belongs_to :work_item, null: false
@@ -101,8 +100,12 @@ class CreateErpTables < ActiveRecord::Migration
       t.string :email
       t.string :phone
       t.string :mobile
+<<<<<<< HEAD
       t.string :crm_key
 
+=======
+
+>>>>>>> Migrate ordertime project ids
       t.timestamps
     end
 
@@ -207,12 +210,18 @@ class CreateErpTables < ActiveRecord::Migration
     TargetScope.create!(name: 'Termin', icon: 'time', position: 20)
     TargetScope.create!(name: 'Qualität', icon: 'star-empty', position: 30)
 
+    # rename projecttime to ordertime
+    Worktime.where(type: 'Projecttime').update_all(type: 'Ordertime')
+
     migrate_projects_to_work_items
 
     remove_column :projects, :work_item_id
+<<<<<<< HEAD
 
     # rename projecttime to ordertime
     Worktime.where(type: 'Projecttime').update_all(type: 'Ordertime')
+=======
+>>>>>>> Migrate ordertime project ids
 
     # remove_column :plannings, :project_id
 
@@ -278,7 +287,7 @@ class CreateErpTables < ActiveRecord::Migration
     say_with_time 'add work_items for projects' do
       add_work_items_for_projects
     end
-    say_with_time 'migrate plannings' do
+    say_with_time 'migrate planning project ids' do
       migrate_planning_project_ids
     end
   end
@@ -291,7 +300,9 @@ class CreateErpTables < ActiveRecord::Migration
   end
 
   def add_work_items_for_projects
-    Project.where(leaf: true).each do |project|
+    count = Project.count(leaf: true)
+    Project.where(leaf: true).each_with_index do |project, index|
+      say "   (#{index}/#{count})" if index % 100 == 0
       case project.path_ids.size
       when 1
         migrate_depth1_project(project)
@@ -302,11 +313,21 @@ class CreateErpTables < ActiveRecord::Migration
       else
         fail "Project #{project.path_shortnames} has invalid numbers of parents (#{project.path_ids.size} parents but only 1-3 are supported)"
       end
+
+      # migrate ordertime project ids
+      Ordertime.where(project_id: project.id).update_all(work_item_id: project.work_item.id)
     end
-    
+
     # assert all projects have a work_item
-    Project.all.each do |project|
-      fail "Missing work_item for project #{project.id}" unless project.work_item
+    count = Project.where('work_item_id is null').count
+    if count > 0
+      fail "Missing work_items for #{count} projects (e.g. project #{Project.where('work_item_id is null').first.id})"
+    end
+
+    # assert all ordertimes have a work_item
+    count = Ordertime.where('work_item_id is null').count
+    if count > 0
+      fail "Missing work_items for #{count} ordertimes (e.g. ordertime #{Ordertime.where('work_item_id is null').first.id})"
     end
   end
 
@@ -325,7 +346,7 @@ class CreateErpTables < ActiveRecord::Migration
       client = Client.find(project.parent[:client_id])
       create_work_item!(project.parent, client.work_item, false)
     end
-    
+
     create_work_item!(project, project.parent.work_item, true)
     create_order!(project)
     create_accounting_post!(project)
@@ -356,7 +377,7 @@ class CreateErpTables < ActiveRecord::Migration
                               shortname: project[:shortname],
                               description: project[:description],
                               leaf: leaf)
-    
+
     project.save!
   end
 
