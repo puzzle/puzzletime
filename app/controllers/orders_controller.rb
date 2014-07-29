@@ -4,6 +4,8 @@ class OrdersController < ManageController
                           work_item_attributes: [:name, :shortname, :description],
                           employee_ids: []]
 
+  # TODO: authorization (Die Erstellung von Aufträgen soll durch die Rolle AV und Managment möglich sein.)
+
   before_render_form :set_clients
 
   private
@@ -11,12 +13,15 @@ class OrdersController < ManageController
   def build_entry
     order = super
     order.build_work_item
+    order.department_id ||= current_user.department_id
+    order.responsible_id ||= current_user.id
     order
   end
 
   def assign_attributes
     super
-    entry.work_item.parent_id = (params[:category_active] && params[:category_work_item_id].presence) ||
+    entry.work_item.parent_id = (params[:category_active] &&
+                                 params[:category_work_item_id].presence) ||
                                 params[:client_work_item_id].presence
   end
 
@@ -29,6 +34,5 @@ class OrdersController < ManageController
       @categories = []
     end
   end
-
 
 end
