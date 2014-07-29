@@ -39,15 +39,15 @@ class Ordertime < Worktime
   end
 
   def account
-    work_item.accounting_post if work_item
+    work_item
   end
 
   def account_id
-    work_item.accounting_post.id  if work_item
+    work_item.id  if work_item
   end
 
   def account_id=(value)
-    self.work_item.accounting_post_id = value if self.work_item
+    self.work_item.id = value if self.work_item
   end
 
   def set_project_defaults(id = nil)
