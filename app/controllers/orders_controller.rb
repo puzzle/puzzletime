@@ -1,6 +1,6 @@
 class OrdersController < ManageController
 
-  self.permitted_attrs = [:kind_id, :responsible_id, :department_id, :status_id,
+  self.permitted_attrs = [:crm_key, :kind_id, :responsible_id, :department_id, :status_id,
                           work_item_attributes: [:name, :shortname, :description],
                           employee_ids: []]
 
