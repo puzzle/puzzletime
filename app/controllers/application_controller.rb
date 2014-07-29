@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
 
   before_action :authenticate
 
-  helper_method :sanitized_back_url
+  helper_method :sanitized_back_url, :current_user
 
   private
 
@@ -44,6 +44,10 @@ class ApplicationController < ActionController::Base
 
   def managed_project?(project)
     (@user.managed_projects.collect { |p| p.id } & project.path_ids).present?
+  end
+
+  def current_user
+    @user
   end
 
   def set_period

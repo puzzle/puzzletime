@@ -59,9 +59,11 @@ class ActiveSupport::TestCase
 end
 
 class ActionDispatch::IntegrationTest
-  # Make the Capybara DSL available in all integration tests
+
   include Capybara::DSL
+
   DatabaseCleaner.strategy = :truncation
+
   self.use_transactional_fixtures = false
 
   setup do
@@ -71,6 +73,14 @@ class ActionDispatch::IntegrationTest
 
   teardown do
     DatabaseCleaner.clean
+  end
+
+  private
+
+  def selectize(id, value)
+    element = find("##{id} + .selectize-control")
+    element.find('.selectize-input').click # open dropdown
+    element.find('.selectize-dropdown-content').find('div', text: value).click
   end
 
   def login_as(user, ref_path = nil)
