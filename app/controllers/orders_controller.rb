@@ -1,14 +1,28 @@
 class OrdersController < ManageController
 
-  self.permitted_attrs = [:kind_id, :responsible_id, :department_id, :status_id,
+  self.permitted_attrs = [:crm_key, :kind_id, :responsible_id, :department_id, :status_id,
                           work_item_attributes: [:name, :shortname, :description],
                           employee_ids: []]
 
+  self.sort_mappings = {
+    client: 'work_items.path_names',
+    order: 'work_items.name',
+    kind: 'order_kinds.name',
+    department: 'departments.name',
+    responsible: 'employees.lastname || employees.firstname',
+    status: 'order_statuses.position' }
+
   # TODO: authorization (Die Erstellung von Aufträgen soll durch die Rolle AV und Managment möglich sein.)
 
+  before_render_index :set_target_scopes
   before_render_form :set_clients
 
   private
+
+  def list_entries
+    super.includes(:kind, :department, :status, :responsible, :targets, :employees).
+          order('work_items.path_names')
+  end
 
   def build_entry
     order = super
@@ -20,9 +34,11 @@ class OrdersController < ManageController
 
   def assign_attributes
     super
-    entry.work_item.parent_id = (params[:category_active] &&
-                                 params[:category_work_item_id].presence) ||
-                                params[:client_work_item_id].presence
+    if entry.new_record?
+      entry.work_item.parent_id = (params[:category_active] &&
+                                   params[:category_work_item_id].presence) ||
+                                  params[:client_work_item_id].presence
+    end
   end
 
   def set_clients
@@ -33,6 +49,10 @@ class OrdersController < ManageController
     else
       @categories = []
     end
+  end
+
+  def set_target_scopes
+    @target_scopes = TargetScope.list
   end
 
 end

@@ -11,8 +11,9 @@ module UtilityHelper
     content_tag(tag, safe_join(collection, &block), options)
   end
 
-  def icon(icon)
-    content_tag(:span, '', class: "glyphicon glyphicon-#{icon}")
+  def icon(icon, options = {})
+    add_css_class(options, "glyphicon glyphicon-#{icon}")
+    content_tag(:span, '', options)
   end
 
   # Overridden method that takes a block that is executed for each item in

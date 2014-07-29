@@ -5,7 +5,7 @@
 
 class ClientsController < ManageController
 
-  self.permitted_attrs = [work_item_attributes: [:name, :shortname, :description, :parent_id]]
+  self.permitted_attrs = [:crm_key, work_item_attributes: [:name, :shortname, :description]]
 
 
   def categories

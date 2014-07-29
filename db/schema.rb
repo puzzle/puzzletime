@@ -54,8 +54,8 @@ ActiveRecord::Schema.define(version: 20140714093557) do
   create_table "clients", force: true do |t|
     t.string  "name"
     t.string  "shortname"
-    t.integer "path_item_id"
     t.integer "work_item_id"
+    t.string  "crm_key"
   end
 
   create_table "contacts", force: true do |t|
@@ -66,6 +66,7 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.string   "email"
     t.string   "phone"
     t.string   "mobile"
+    t.string   "crm_key"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["client_id"], :name => "index_contacts_on_client_id"
@@ -183,6 +184,7 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.integer  "department_id"
     t.integer  "contract_id"
     t.integer  "billing_address_id"
+    t.string   "crm_key"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["billing_address_id"], :name => "index_orders_on_billing_address_id"
@@ -198,18 +200,6 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.float   "hours",         null: false
     t.integer "employee_id",   null: false
     t.date    "transfer_date", null: false
-  end
-
-  create_table "path_items", force: true do |t|
-    t.integer "parent_id"
-    t.string  "name",                                        null: false
-    t.string  "shortname",                                   null: false
-    t.integer "path_ids",                                                 array: true
-    t.string  "path_shortnames"
-    t.string  "path_names",      limit: 2047
-    t.boolean "leaf",                         default: true, null: false
-    t.index ["parent_id"], :name => "index_path_items_on_parent_id"
-    t.index ["path_ids"], :name => "index_path_items_on_path_ids"
   end
 
   create_table "plannings", force: true do |t|
@@ -306,17 +296,16 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.integer "project_id"
     t.integer "absence_id"
     t.integer "employee_id"
-    t.string  "report_type",                        null: false
-    t.date    "work_date",                          null: false
+    t.string  "report_type",                     null: false
+    t.date    "work_date",                       null: false
     t.float   "hours"
     t.time    "from_start_time"
     t.time    "to_end_time"
     t.text    "description"
-    t.boolean "billable",           default: true
-    t.boolean "booked",             default: false
+    t.boolean "billable",        default: true
+    t.boolean "booked",          default: false
     t.string  "type"
     t.string  "ticket"
-    t.integer "accounting_post_id"
     t.integer "work_item_id"
     t.index ["absence_id", "employee_id", "work_date"], :name => "worktimes_absences", :conditions => "((type)::text = 'Absencetime'::text)"
     t.index ["employee_id", "work_date"], :name => "worktimes_attendances", :conditions => "((type)::text = 'Attendancetime'::text)"
