@@ -25,7 +25,6 @@ class Projectmembership < ActiveRecord::Base
 end
 
 class CreateErpTables < ActiveRecord::Migration
-  @@counter = 0
   def up
     create_table :orders do |t|
       t.belongs_to :work_item, null: false
@@ -100,7 +99,7 @@ class CreateErpTables < ActiveRecord::Migration
       t.string :email
       t.string :phone
       t.string :mobile
-
+      
       t.timestamps
     end
     
@@ -204,12 +203,12 @@ class CreateErpTables < ActiveRecord::Migration
     TargetScope.create!(name: 'Termin', icon: 'time', position: 20)
     TargetScope.create!(name: 'Qualität', icon: 'star-empty', position: 30)
 
+    # rename projecttime to ordertime
+    Worktime.where(type: 'Projecttime').update_all(type: 'Ordertime')
+    
     migrate_projects_to_work_items
     
     remove_column :projects, :work_item_id
-    
-    # rename projecttime to ordertime
-    Worktime.where(type: 'Projecttime').update_all(type: 'Ordertime')
 
     # remove_column :plannings, :project_id
 
@@ -274,7 +273,7 @@ class CreateErpTables < ActiveRecord::Migration
     say_with_time 'add work_items for projects' do
       add_work_items_for_projects
     end
-    say_with_time 'migrate plannings' do
+    say_with_time 'migrate planning project ids' do
       migrate_planning_project_ids
     end
   end
@@ -287,7 +286,9 @@ class CreateErpTables < ActiveRecord::Migration
   end
   
   def add_work_items_for_projects
-    Project.where(leaf: true).each do |project|
+    count = Project.count(leaf: true)
+    Project.where(leaf: true).each_with_index do |project, index|
+      say "   (#{index}/#{count})" if index % 100 == 0
       case project.path_ids.size
       when 1
         migrate_depth1_project(project)
@@ -298,11 +299,21 @@ class CreateErpTables < ActiveRecord::Migration
       else
         fail "Project #{project.path_shortnames} has invalid numbers of parents (#{project.path_ids.size} parents but only 1-3 are supported)"
       end
+      
+      # migrate ordertime project ids
+      Ordertime.where(project_id: project.id).update_all(work_item_id: project.work_item.id)
     end
     
     # assert all projects have a work_item
-    Project.all.each do |project|
-      fail "Missing work_item for project #{project.id}" unless project.work_item
+    count = Project.where('work_item_id is null').count
+    if count > 0
+      fail "Missing work_items for #{count} projects (e.g. project #{Project.where('work_item_id is null').first.id})"
+    end
+    
+    # assert all ordertimes have a work_item
+    count = Ordertime.where('work_item_id is null').count
+    if count > 0
+      fail "Missing work_items for #{count} ordertimes (e.g. ordertime #{Ordertime.where('work_item_id is null').first.id})"
     end
   end
   
@@ -371,35 +382,13 @@ class CreateErpTables < ActiveRecord::Migration
                                               description_required: project[:description_required],
                                               ticket_required: project[:ticket_required])
   end
-  
-  def migrate_planning_project_ids
-    assert_valid_plannings_before_migration
-    migrate_plannings
-    assert_valid_plannings_after_migration
-  end
-    
-  def assert_valid_plannings_before_migration
-    Planning.all.each do |planning|
-      unless planning.valid?
-        fail "Bad data found in planning #{planning.id}. Exception #{e}"
-      end
-    end
-  end
-  
-  def migrate_plannings
-    Planning.all.each do |planning|
-      planning.update_attributes!(work_item_id: planning.project.work_item_id)
-    end
-  end
-  
-  def assert_valid_plannings_after_migration
-    Planning.all.each do |planning|
-      unless planning.work_item
-        fail "Missing work_item for planning #{planning.id}"
-      end
-    end
-  end
 
+  def migrate_planning_project_ids
+    Planning.all.each do |planning|
+      planning.update_column(:work_item_id, planning.project.work_item_id)
+    end
+  end
+  
   def project_responsible(project)
     # find a project management member for this project or its parents
     membership = projectmanagement_membership(project)
@@ -416,5 +405,5 @@ class CreateErpTables < ActiveRecord::Migration
   def projectmanagement_membership(project)
     Projectmembership.where(project_id: project.id, projectmanagement: true).first
   end
-  
+
 end

@@ -137,7 +137,7 @@ class WorktimesController < CrudController
     @work_date = @worktime.work_date
     @existing = Worktime.where('employee_id = ? AND work_date = ?', @worktime.employee_id, @work_date).
                          order('type DESC, from_start_time, project_id').
-                         includes(:project, :absence)
+                         includes(:work_item, :absence)
   end
 
   def set_week_days
