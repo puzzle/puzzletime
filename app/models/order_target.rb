@@ -26,7 +26,7 @@ class OrderTarget < ActiveRecord::Base
   scope :list, -> { includes(:target_scope).references(:target_scope).order(target_scopes: :position) }
 
   def target_critical?
-    rating != TARGET_RATINGS.first
+    rating != RATINGS.first
   end
 
 end
