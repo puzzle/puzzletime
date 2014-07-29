@@ -268,12 +268,15 @@ class CreateErpTables < ActiveRecord::Migration
   private
 
   def migrate_projects_to_work_items
-    say 'add work_items for clients'
-    add_work_items_for_clients
-    say 'add work_items for projects'
-    add_work_items_for_projects
-    say 'migrate plannings'
-    migrate_planning_project_ids
+    say_with_time 'add work_items for clients' do
+      add_work_items_for_clients
+    end
+    say_with_time 'add work_items for projects' do
+      add_work_items_for_projects
+    end
+    say_with_time 'migrate plannings' do
+      migrate_planning_project_ids
+    end
   end
   
   def add_work_items_for_clients
@@ -336,11 +339,12 @@ class CreateErpTables < ActiveRecord::Migration
                               shortname: project[:shortname],
                               description: project[:description],
                               leaf: leaf)
+    
     project.save!
   end
   
   def create_order!(project)
-    kind = OrderKind.first # 'Projekt'
+    kind = OrderKind.list.third # 'Projekt'
     status = OrderStatus.list.first # 'Bearbeitung'
     responsible = project_responsible(project)
     project.work_item.create_order!(kind: kind,
