@@ -46,7 +46,7 @@ class Order < ActiveRecord::Base
   scope :list, -> do
     includes(:work_item).
     references(:work_item).
-    order('work_items.path_shortnames')
+    order('work_items.path_names')
   end
 
   def to_s
@@ -55,6 +55,10 @@ class Order < ActiveRecord::Base
 
   def status_id
     super || OrderStatus.list.pluck(:id).first
+  end
+
+  def parent_names
+    work_item.path_names.split("\n")[0..-2].join(" #{Settings.work_items.path_separator} ")
   end
 
   private

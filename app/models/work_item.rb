@@ -74,7 +74,7 @@ class WorkItem < ActiveRecord::Base
   end
 
   def label_ancestry
-    path_names.split("\n")[1..-1].join(" #{PATH_SEPARATOR} ")
+    path_names.split("\n")[1..-1].join(" #{Settings.work_items.path_separator} ")
   end
 
   def top_item
