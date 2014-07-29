@@ -190,12 +190,6 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
     assert has_content?('New Order wurde erfolgreich erstellt')
   end
 
-  def selectize(id, value)
-    element = find("##{id} + .selectize-control")
-    element.find('.selectize-input').click # open dropdown
-    element.find('.selectize-dropdown-content').find('div', text: value).click
-  end
-
   def login
     login_as(:mark, new_order_path)
   end
