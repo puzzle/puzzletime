@@ -287,8 +287,6 @@ class CreateErpTables < ActiveRecord::Migration
   end
   
   def add_work_items_for_projects
-    # TODO what about non-leaf projects with depth 1?
-    # for instance project id :2548, parent_id: nil, leaf: false
     Project.where(leaf: true).each do |project|
       case project.path_ids.size
       when 1
@@ -301,6 +299,11 @@ class CreateErpTables < ActiveRecord::Migration
         fail "Project #{project.path_shortnames} has invalid numbers of parents (#{project.path_ids.size} parents but only 1-3 are supported)"
       end
     end
+    
+    # assert all projects have a work_item
+    Project.all.each do |project|
+      fail "Missing work_item for project #{project.id}" unless project.work_item
+    end
   end
   
   def migrate_depth1_project(project)
@@ -312,6 +315,16 @@ class CreateErpTables < ActiveRecord::Migration
   
   def migrate_depth2_project(project)
     # TODO whitlist project with depth 2
+
+    # until we have the list, migrate it without creating a category
+    unless project.parent.work_item
+      client = Client.find(project.parent[:client_id])
+      create_work_item!(project.parent, client.work_item, false)
+    end
+    
+    create_work_item!(project, project.parent.work_item, true)
+    create_order!(project)
+    create_accounting_post!(project)
   end
   
   def migrate_depth3_project(project)
@@ -362,7 +375,7 @@ class CreateErpTables < ActiveRecord::Migration
   def migrate_planning_project_ids
     assert_valid_plannings_before_migration
     migrate_plannings
-    #assert_valid_plannings_after_migration
+    assert_valid_plannings_after_migration
   end
     
   def assert_valid_plannings_before_migration
