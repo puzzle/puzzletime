@@ -4,7 +4,7 @@
 class Project < ActiveRecord::Base
   acts_as_tree order: 'shortname'
   belongs_to :work_item
-  
+
   def latest_freeze_until
     if parent.nil?
       freeze_until
@@ -35,10 +35,11 @@ class CreateErpTables < ActiveRecord::Migration
       t.belongs_to :department
       t.belongs_to :contract
       t.belongs_to :billing_address
+      t.string :crm_key
 
       t.timestamps
     end
-    
+
     add_index :orders, :work_item_id
     add_index :orders, :kind_id
     add_index :orders, :responsible_id
@@ -63,7 +64,7 @@ class CreateErpTables < ActiveRecord::Migration
       t.text :text, null: false
       t.timestamps
     end
-    
+
     add_index :order_comments, :order_id
 
     create_table :target_scopes do |t|
@@ -80,7 +81,7 @@ class CreateErpTables < ActiveRecord::Migration
 
       t.timestamps
     end
-    
+
     add_index :order_targets, :order_id
     add_index :order_targets, :target_scope_id
 
@@ -100,10 +101,11 @@ class CreateErpTables < ActiveRecord::Migration
       t.string :email
       t.string :phone
       t.string :mobile
+      t.string :crm_key
 
       t.timestamps
     end
-    
+
     add_index :contacts, :client_id
 
     create_table :billing_addresses do |t|
@@ -115,7 +117,7 @@ class CreateErpTables < ActiveRecord::Migration
       t.string :town
       t.string :country
     end
-    
+
     add_index :billing_addresses, :client_id
     add_index :billing_addresses, :contact_id
 
@@ -123,7 +125,7 @@ class CreateErpTables < ActiveRecord::Migration
       t.belongs_to :contact, null: false
       t.belongs_to :order, null: false
     end
-    
+
     add_index :contacts_orders, :contact_id
     add_index :contacts_orders, :order_id
 
@@ -131,7 +133,7 @@ class CreateErpTables < ActiveRecord::Migration
       t.belongs_to :employee, null: false
       t.belongs_to :order, null: false
     end
-    
+
     add_index :employees_orders, :employee_id
     add_index :employees_orders, :order_id
 
@@ -151,7 +153,7 @@ class CreateErpTables < ActiveRecord::Migration
       t.boolean :leaf, null: false, default: true
       t.boolean :closed, null: false, default: false # inherited from order and accounting post
     end
-    
+
     add_index :work_items, :parent_id
     add_index :work_items, :path_ids
 
@@ -169,18 +171,19 @@ class CreateErpTables < ActiveRecord::Migration
       t.boolean :ticket_required, null: false, default: false
       t.boolean :closed, null: false, default: false
     end
-    
+
     add_index :accounting_posts, :work_item_id
     add_index :accounting_posts, :portfolio_item_id
 
     add_column :clients, :work_item_id, :integer
+    add_column :clients, :crm_key, :string
 
     add_column :employees, :department_id, :integer
 
     add_column :worktimes, :work_item_id, :integer
 
     add_column :plannings, :work_item_id, :integer
-    
+
     add_column :projects, :work_item_id, :integer # just temporary to simplify the migration
 
     if Client.column_names.include?('contact')
@@ -205,9 +208,9 @@ class CreateErpTables < ActiveRecord::Migration
     TargetScope.create!(name: 'Qualität', icon: 'star-empty', position: 30)
 
     migrate_projects_to_work_items
-    
+
     remove_column :projects, :work_item_id
-    
+
     # rename projecttime to ordertime
     Worktime.where(type: 'Projecttime').update_all(type: 'Ordertime')
 
@@ -231,12 +234,13 @@ class CreateErpTables < ActiveRecord::Migration
     #  t.boolean :projectmanagement, null: false, default: false
     #  t.boolean :active, null: false, default: true
     #end
-    
+
     # rename ordertime to projecttime
     Worktime.where(type: 'Ordertime').update_all(type: 'Projecttime')
 
     remove_column :employees, :department_id
 
+    remove_column :clients, :crm_key
     remove_column :clients, :work_item_id
 
     remove_column :worktimes, :work_item_id
@@ -275,14 +279,14 @@ class CreateErpTables < ActiveRecord::Migration
     say 'migrate plannings'
     migrate_planning_project_ids
   end
-  
+
   def add_work_items_for_clients
     Client.all.each do |client|
       # access attributes directly because of delegations
       client.create_work_item!(name: client[:name], shortname: client[:shortname])
     end
   end
-  
+
   def add_work_items_for_projects
     # TODO what about non-leaf projects with depth 1?
     # for instance project id :2548, parent_id: nil, leaf: false
@@ -299,36 +303,36 @@ class CreateErpTables < ActiveRecord::Migration
       end
     end
   end
-  
+
   def migrate_depth1_project(project)
       client = Client.find(project[:client_id])
       create_work_item!(project, client.work_item, true)
       create_order!(project)
       create_accounting_post!(project)
   end
-  
+
   def migrate_depth2_project(project)
     # TODO whitlist project with depth 2
   end
-  
+
   def migrate_depth3_project(project)
     l1_project = project.parent.parent
     l2_project = project.parent
-    
+
     unless l1_project.work_item
       client = Client.find(l1_project[:client_id])
       create_work_item!(l1_project, client.work_item, false)
     end
-    
+
     unless l2_project.work_item
       create_work_item!(l2_project, l1_project.work_item, false)
       create_order!(l2_project)
     end
-    
+
     create_work_item!(project, l2_project.work_item, true)
     create_accounting_post!(project)
   end
-  
+
   def create_work_item!(project, parent_work_item, leaf)
     # TODO clarify if freeze_until has to be migrated
     project.create_work_item!(parent_id: parent_work_item.id,
@@ -338,7 +342,7 @@ class CreateErpTables < ActiveRecord::Migration
                               leaf: leaf)
     project.save!
   end
-  
+
   def create_order!(project)
     kind = OrderKind.first # 'Projekt'
     status = OrderStatus.list.first # 'Bearbeitung'
@@ -348,19 +352,19 @@ class CreateErpTables < ActiveRecord::Migration
                                     responsible: responsible,
                                     department_id: project[:department_id])
   end
-  
+
   def create_accounting_post!(project)
     project.work_item.create_accounting_post!(billable: project[:billable],
                                               description_required: project[:description_required],
                                               ticket_required: project[:ticket_required])
   end
-  
+
   def migrate_planning_project_ids
     assert_valid_plannings_before_migration
     migrate_plannings
     #assert_valid_plannings_after_migration
   end
-    
+
   def assert_valid_plannings_before_migration
     Planning.all.each do |planning|
       unless planning.valid?
@@ -368,13 +372,13 @@ class CreateErpTables < ActiveRecord::Migration
       end
     end
   end
-  
+
   def migrate_plannings
     Planning.all.each do |planning|
       planning.update_attributes!(work_item_id: planning.project.work_item_id)
     end
   end
-  
+
   def assert_valid_plannings_after_migration
     Planning.all.each do |planning|
       unless planning.work_item
@@ -395,9 +399,9 @@ class CreateErpTables < ActiveRecord::Migration
     # TODO: specify default responsible
     membership ? membership.employee : Employee.find_by_shortname('MW')
   end
-  
+
   def projectmanagement_membership(project)
     Projectmembership.where(project_id: project.id, projectmanagement: true).first
   end
-  
+
 end
