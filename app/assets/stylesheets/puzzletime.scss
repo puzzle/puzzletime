@@ -133,6 +133,22 @@ a.tooltip:hover span {
   color: $btn-link-disabled-color;
 }
 
+.red {
+  color: $brand-danger;
+}
+
+.green {
+  color: $brand-success;
+}
+
+.orange {
+  color: $brand-warning;
+}
+
+.tooltip p {
+  margin-bottom: 0;
+}
+
 a.disabled:hover {
   cursor: default;
   text-decoration: none;

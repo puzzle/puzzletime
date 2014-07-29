@@ -1,5 +1,36 @@
 module OrderHelper
 
+  def order_team_enumeration(order)
+    list = order.employees.to_a
+
+    if list.size > 2
+      linked_employee_enumeration(list.take(2)) + ', ...'
+    else
+      linked_employee_enumeration(list)
+    end
+  end
+
+  def linked_employee_enumeration(employees)
+    safe_join(employees, ', ') { |e| link_to(e, e) }
+  end
+
+  def order_target_icon(target)
+    return unless target
+    icon(order_target_icon_key(target),
+         style: "font-size: 20px;",
+         class: target.rating,
+         title: simple_format(target.comment),
+         data: { toggle: :tooltip })
+  end
+
+  def order_target_icon_key(target)
+    case target.rating
+    when 'green' then 'ok-sign'
+    when 'orange' then 'exclamation-sign'
+    when 'red' then 'remove-sign'
+    end
+  end
+
   def format_order_status_style(status)
     content_tag(:span, status.name, class: "label label-#{status.style}")
   end
