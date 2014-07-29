@@ -22,7 +22,6 @@
 
 class Ordertime < Worktime
 
-  validates :project_id, presence: true
   validate :validate_accounting_post
   validate :protect_booked, on: :update
   validate :validate_by_project
@@ -70,8 +69,6 @@ class Ordertime < Worktime
 
   def validate_accounting_post
     errors.add(:accounting_post_id, 'Der Auftrag hat keine Buchungsposition.') if work_item && !work_item.accounting_post
-    #p = project(true)
-    #errors.add(:project_id, 'Das angegebene Projekt enthält Subprojekte.') if p && p.sub_projects?
   end
 
   def protect_booked
@@ -80,10 +77,6 @@ class Ordertime < Worktime
       errors.add(:base, 'Verbuchte Arbeitszeiten können nicht verändert werden')
       return false
     end
-  end
-
-  def protect_frozen
-    project.validate_worktime_frozen(self)
   end
 
 end
