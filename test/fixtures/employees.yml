@@ -66,6 +66,7 @@ pascal:
   passwd:    pz
   email:     pz@bla.ch
   management: false
+  department: devtwo
 
 mark:
   id:        7
@@ -75,6 +76,7 @@ mark:
   passwd:    mw
   email:     mw@bla.ch
   management: true
+  department: devone
 
 lucien:
   id:        8
@@ -84,3 +86,4 @@ lucien:
   passwd:    lw
   email:     lw@bla.ch
   management: false
+  department: devtwo
