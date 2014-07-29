@@ -15,9 +15,22 @@
 #
 
 puzzletime:
-  work_item_id: 1
+  work_item_id: 4
   responsible_id: 6
+  status: bearbeitung
+  kind: mandat
+  department: devone
 
 allgemein:
-  work_item_id: 8
+  work_item_id: 3
   responsible_id: 7
+  status: abgeschlossen
+  kind: mandat
+  department: sys
+
+hitobito_demo:
+  work_item_id: 8
+  responsible_id: 8
+  status: bearbeitung
+  kind: projekt
+  department: devtwo

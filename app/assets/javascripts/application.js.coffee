@@ -11,6 +11,7 @@
 #= require waypoints
 #= require waypoints-sticky
 #= require bootstrap/modal
+#= require bootstrap/tooltip
 #= require_self
 #= require modal_create
 #= require worktimes
@@ -73,6 +74,9 @@ $ ->
    event.preventDefault()
    event.stopPropagation()
   )
+
+  # wire up tooltips
+  $('body').tooltip({ selector: '[data-toggle=tooltip]', placement: 'top', html: true })
 
   # change cursor for turbolink requests to give the user a minimal feedback
   $(document).on('page:fetch', ->
