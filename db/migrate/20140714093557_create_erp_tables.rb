@@ -20,8 +20,12 @@ class Project < ActiveRecord::Base
     end
   end
 end
+class Projectmembership < ActiveRecord::Base
+  belongs_to :employee
+end
 
 class CreateErpTables < ActiveRecord::Migration
+  @@counter = 0
   def up
     create_table :orders do |t|
       t.belongs_to :work_item, null: false
@@ -268,8 +272,11 @@ class CreateErpTables < ActiveRecord::Migration
   private
 
   def migrate_projects_to_work_items
+    say 'add work_items for clients'
     add_work_items_for_clients
+    say 'add work_items for projects'
     add_work_items_for_projects
+    say 'migrate plannings'
     migrate_planning_project_ids
   end
 
@@ -292,7 +299,7 @@ class CreateErpTables < ActiveRecord::Migration
       when 3
         migrate_depth3_project(project)
       else
-        throw "Project #{project.path_shortnames} has invalid numbers of parents (#{project.path_ids.size} parents but only 1-3 are supported)"
+        fail "Project #{project.path_shortnames} has invalid numbers of parents (#{project.path_ids.size} parents but only 1-3 are supported)"
       end
     end
   end
@@ -327,6 +334,7 @@ class CreateErpTables < ActiveRecord::Migration
   end
 
   def create_work_item!(project, parent_work_item, leaf)
+    # TODO clarify if freeze_until has to be migrated
     project.create_work_item!(parent_id: parent_work_item.id,
                               name: project[:name],
                               shortname: project[:shortname],
@@ -336,10 +344,9 @@ class CreateErpTables < ActiveRecord::Migration
   end
 
   def create_order!(project)
-    # TODO specify how to migrate kind, status and responsible
-    kind = OrderKind.first
-    status = OrderStatus.first
-    responsible = Employee.last
+    kind = OrderKind.first # 'Projekt'
+    status = OrderStatus.list.first # 'Bearbeitung'
+    responsible = project_responsible(project)
     project.work_item.create_order!(kind: kind,
                                     status: status,
                                     responsible: responsible,
@@ -361,7 +368,7 @@ class CreateErpTables < ActiveRecord::Migration
   def assert_valid_plannings_before_migration
     Planning.all.each do |planning|
       unless planning.valid?
-        throw "Bad data found in planning #{planning.id}. Exception #{e}"
+        fail "Bad data found in planning #{planning.id}. Exception #{planning.errors.full_messages.join(', ')}"
       end
     end
   end
@@ -375,9 +382,26 @@ class CreateErpTables < ActiveRecord::Migration
   def assert_valid_plannings_after_migration
     Planning.all.each do |planning|
       unless planning.work_item
-        throw "Missing work_item for planning #{planning.id}"
+        fail "Missing work_item for planning #{planning.id}"
       end
     end
+  end
+
+  def project_responsible(project)
+    # find a project management member for this project or its parents
+    membership = projectmanagement_membership(project)
+    if !membership && project.parent
+      membership = projectmanagement_membership(project.parent)
+      if !membership && project.parent.parent
+        membership = projectmanagement_membership(project.parent.parent)
+      end
+    end
+    # TODO: specify default responsible
+    membership ? membership.employee : Employee.find_by_shortname('MW')
+  end
+
+  def projectmanagement_membership(project)
+    Projectmembership.where(project_id: project.id, projectmanagement: true).first
   end
 
 end
