@@ -1,3 +1,5 @@
 = crud_form do |f|
   = f.fields_for :work_item, entry.work_item do |fields|
     = render 'work_items/fields', fields: fields
+  - if Crm.instance
+    = f.labeled_input_field :crm_key, caption: Crm.instance.crm_key_label, span: 2
