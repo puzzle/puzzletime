@@ -21,12 +21,16 @@ GEM
       activemodel (= 4.1.4)
       activesupport (= 4.1.4)
       arel (~> 5.0.0)
-    activesupport (4.1.4)
+    activeresource (4.0.0)
+      activemodel (~> 4.0)
+      activesupport (~> 4.0)
       i18n (~> 0.6, >= 0.6.9)
       json (~> 1.7, >= 1.7.7)
       minitest (~> 5.1)
+      rails-observers (~> 0.1.1)
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
+    activesupport (4.1.4)
     acts_as_tree (1.6.0)
       activerecord (>= 3.0.0)
     airbrake (3.1.16)
@@ -101,6 +105,8 @@ GEM
       tilt
     headless (1.0.2)
     highline (1.6.21)
+    highrise (3.2.1)
+      activeresource (>= 3.2.13)
     hike (1.2.3)
     hpricot (0.8.6)
     htmlentities (4.3.1)
@@ -190,6 +196,8 @@ GEM
     rails-i18n (4.0.2)
       i18n (~> 0.6)
       rails (>= 4.0)
+    rails-observers (0.1.2)
+      activemodel (~> 4.0)
     rails_config (0.4.1)
       activesupport (>= 3.0)
     railties (4.1.4)
@@ -309,6 +317,7 @@ DEPENDENCIES
   faker
   haml
   headless
+  highrise
   jbuilder
   jquery-rails
   jquery-turbolinks
