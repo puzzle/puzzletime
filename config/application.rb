@@ -17,7 +17,9 @@ module Puzzletime
                                 #{config.root}/app/models/reports
                                 #{config.root}/app/models/util
                                 #{config.root}/app/models/evaluations
-                                #{config.root}/app/models/graphs)
+                                #{config.root}/app/models/graphs
+                                #{config.root}/app/domain
+                                #{config.root}/app/jobs)
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
@@ -36,6 +38,14 @@ module Puzzletime
 
     config.assets.paths << Rails.root.join('app', 'assets', 'fonts')
 
+    config.to_prepare do |_|
+      if Settings.highrise.api_token
+        Crm.instance = Crm::Highrise.new
+        if Delayed::Job.table_exists?
+          CrmSyncJob.new.schedule
+        end
+      end
+    end
   end
 
   def self.version
