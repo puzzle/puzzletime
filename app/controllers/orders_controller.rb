@@ -4,6 +4,8 @@ class OrdersController < ManageController
                           work_item_attributes: [:name, :shortname, :description],
                           employee_ids: []]
 
+  self.remember_params += %w(department_id kind_id status_id)
+
   self.sort_mappings = {
     client: 'work_items.path_names',
     order: 'work_items.name',
@@ -13,15 +15,46 @@ class OrdersController < ManageController
     status: 'order_statuses.position' }
 
   # TODO: authorization (Die Erstellung von Aufträgen soll durch die Rolle AV und Managment möglich sein.)
+  skip_before_action :authorize
 
-  before_render_index :set_target_scopes
+  before_action :set_filter_values, only: :index
   before_render_form :set_clients
 
   private
 
   def list_entries
-    super.includes(:kind, :department, :status, :responsible, :targets, :employees).
-          order('work_items.path_names')
+    entries = super.includes(:kind, :department, :status, :responsible, :targets, :employees).
+                    order('work_items.path_names')
+
+    if (params.keys & %w(department_id kind_id status_id)).present?
+      filter_entries_by(entries, :department_id, :kind_id, :status_id)
+    else
+      default_filter_entries(entries)
+    end
+  end
+
+  def filter_entries_by(entries, *keys)
+    keys.inject(entries) do |filtered, key|
+      if params[key].present?
+        filtered.where(key => params[key])
+      else
+        filtered
+      end
+    end
+  end
+
+  def default_filter_entries(entries)
+    params[:status_id] = @order_statuses.first.id
+    entries = entries.where(status_id: params[:status_id])
+
+    if !current_user.management? && current_user.order_responsible?
+      entries.where(responsible_id: current_user.id)
+    elsif current_user.department_id?
+      params[:department_id] = current_user.department_id
+      entries.where(department_id: current_user.department_id)
+    else
+      entries
+    end
   end
 
   def build_entry
@@ -51,7 +84,10 @@ class OrdersController < ManageController
     end
   end
 
-  def set_target_scopes
+  def set_filter_values
+    @departments = Department.list
+    @order_kinds = OrderKind.list
+    @order_statuses = OrderStatus.list
     @target_scopes = TargetScope.list
   end
 

@@ -6,7 +6,7 @@
 class EmployeesController < ManageController
 
   self.permitted_attrs = [:firstname, :lastname, :shortname, :email, :ldapname,
-                          :initial_vacation_days, :management]
+                          :initial_vacation_days, :department_id, :management]
 
   self.search_columns = [:firstname, :lastname, :shortname]
 
