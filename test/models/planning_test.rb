@@ -171,7 +171,7 @@ class PlanningTest < ActiveSupport::TestCase
                  end_week: end_week,
                  monday_am: true,
                  employee_id: employees(:long_time_john).id,
-                 project_id: projects(:allgemein).id)
+                 work_item_id: work_items(:allgemein).id)
   end
 
 end
