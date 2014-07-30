@@ -155,7 +155,6 @@ class Project < ActiveRecord::Base
     update_child_path_names
   end
 
-  protected
 
   def validate_worktime(worktime)
     if worktime.report_type < report_type
@@ -174,6 +173,7 @@ class Project < ActiveRecord::Base
     validate_worktime_frozen(worktime)
   end
 
+
   def validate_worktime_frozen(worktime)
     freeze = latest_freeze_until
     if freeze &&
@@ -184,6 +184,8 @@ class Project < ActiveRecord::Base
         false
     end
   end
+
+  protected
 
   def latest_freeze_until
     if parent.nil?
