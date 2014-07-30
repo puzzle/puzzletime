@@ -27,7 +27,6 @@ class Ordertime < Worktime
   validate :validate_by_project
 
   before_destroy :protect_booked
-  before_destroy :protect_frozen
 
   def self.valid_attributes
     super + [:account, :account_id, :description, :billable, :booked]
@@ -42,18 +41,11 @@ class Ordertime < Worktime
   end
 
   def account_id
-    work_item.id  if work_item
+    work_item_id
   end
 
   def account_id=(value)
-    self.work_item.id = value if self.work_item
-  end
-
-  def set_project_defaults(id = nil)
-    return if id.nil?
-
-    self.project =  Project.find(id).leaves.first
-    self.billable = project.billable
+    self.work_item_id = value
   end
 
   def template(newWorktime = nil)

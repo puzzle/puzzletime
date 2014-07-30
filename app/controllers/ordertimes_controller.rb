@@ -94,7 +94,7 @@ class OrdertimesController < WorktimesController
   protected
 
   def set_worktime_defaults
-    @worktime.set_project_defaults(params[:account_id]) unless @worktime.project_id
+    @worktime.work_item_id ||= params[:account_id]
   end
 
   ################   RUNNING TIME FUNCTIONS    ##################
