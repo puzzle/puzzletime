@@ -7,6 +7,8 @@ class EmployeesController < ManageController
 
   self.permitted_attrs = [:initial_vacation_days, :management]
 
+  self.search_columns = [:firstname, :lastname, :shortname]
+
   before_action :authorize, except: [:changePasswd, :update_pwd,
                                      :settings, :update_settings]
 

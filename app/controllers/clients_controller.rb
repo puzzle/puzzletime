@@ -5,5 +5,6 @@
 
 class ClientsController < ManageController
 
+  self.search_columns = [:name, :shortname]
 
 end
