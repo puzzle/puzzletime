@@ -20,8 +20,13 @@ class Project < ActiveRecord::Base
     end
   end
 end
+
 class Projectmembership < ActiveRecord::Base
   belongs_to :employee
+end
+
+class Planning < ActiveRecord::Base
+  belongs_to :project
 end
 
 class CreateErpTables < ActiveRecord::Migration
@@ -292,7 +297,7 @@ class CreateErpTables < ActiveRecord::Migration
   def add_work_items_for_projects
     count = Project.count(leaf: true)
     Project.where(leaf: true).each_with_index do |project, index|
-      say "   (#{index}/#{count})" if index % 100 == 0
+      say "   (#{index}/#{count})" if index > 0 && index % 50 == 0
       case project.path_ids.size
       when 1
         migrate_depth1_project(project)
@@ -308,19 +313,10 @@ class CreateErpTables < ActiveRecord::Migration
       Ordertime.where(project_id: project.id).update_all(work_item_id: project.work_item.id)
     end
     
-    # assert all projects have a work_item
-    count = Project.where('work_item_id is null').count
-    if count > 0
-      fail "Missing work_items for #{count} projects (e.g. project #{Project.where('work_item_id is null').first.id})"
-    end
-    
-    # assert all ordertimes have a work_item
-    count = Ordertime.where('work_item_id is null').count
-    if count > 0
-      fail "Missing work_items for #{count} ordertimes (e.g. ordertime #{Ordertime.where('work_item_id is null').first.id})"
-    end
+    assert_all_entries_have_work_items(Project)
+    assert_all_entries_have_work_items(Ordertime)
   end
-
+  
   def migrate_depth1_project(project)
       client = Client.find(project[:client_id])
       create_work_item!(project, client.work_item, true)
@@ -386,13 +382,13 @@ class CreateErpTables < ActiveRecord::Migration
                                               description_required: project[:description_required],
                                               ticket_required: project[:ticket_required])
   end
-
+  
   def migrate_planning_project_ids
     Planning.all.each do |planning|
       planning.update_column(:work_item_id, planning.project.work_item_id)
     end
   end
-  
+
   def project_responsible(project)
     # find a project management member for this project or its parents
     membership = projectmanagement_membership(project)
@@ -408,6 +404,13 @@ class CreateErpTables < ActiveRecord::Migration
 
   def projectmanagement_membership(project)
     Projectmembership.where(project_id: project.id, projectmanagement: true).first
+  end
+
+  def assert_all_entries_have_work_items(model_class)
+    count = model_class.where('work_item_id is null').count
+    if count > 0
+      fail "Missing work_items for #{count} #{model_class.name.downcase.pluralize} (e.g. #{model_class.name} ##{model_class.where('work_item_id is null').first.id})"
+    end
   end
 
 end
