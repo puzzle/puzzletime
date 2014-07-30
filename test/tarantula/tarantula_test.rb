@@ -32,7 +32,7 @@ class TarantulaTest < ActionDispatch::IntegrationTest
     t.skip_uri_patterns << /\?week_date=(#{outside_four_week_window}.)*$/ # only allows week strings from one week ago until two weeks from now.
 
     t.allow_404_for /^\-?\d+$/  # change period may produce such links in tarantula
-    t.allow_404_for /ordertimes\/start$/  # passing invalid project_id
+    t.allow_404_for /ordertimes\/start$/  # passing invalid work_item_id
     t.allow_404_for /absencetimes\/\d+/   # absencetime deleted elsewhere
     t.allow_404_for /ordertimes\/\d+/   # ordertime deleted elsewhere
     t.allow_404_for /employee_lists(\/\d+)?$/   # invalid employee_ids assigned
@@ -65,12 +65,12 @@ class TarantulaTest < ActionDispatch::IntegrationTest
   end
 
   def create_worktimes
-    projects = Project.leaves
+    work_items = WorkItem.all
     5.times do
-      project = projects.sample
+      work_item = work_items.sample
       Ordertime.create!(
         employee_id: user.id,
-        project_id: project.id,
+        work_item_id: work_item.id,
         report_type: ReportType['absolute_day'],
         hours: (1..9).to_a.sample,
         work_date: Date.today - (0..8).to_a.sample.days,
@@ -85,12 +85,12 @@ class TarantulaTest < ActionDispatch::IntegrationTest
   end
 
   def create_plannings
-    projects = Project.where(parent_id: nil)
+    work_items = WorkItem.where(parent_id: nil)
     3.times do |i|
-      project = projects.sample
+      work_item = work_items.sample
       Planning.create!(
         employee_id: user.id,
-        project_id: project.id,
+        work_item_id: work_item.id,
         start_week: Week.from_date(Date.today + ((i-1) * 7)).to_integer,
         end_week: Week.from_date(Date.today + ((i+1) * 7)).to_integer,
         monday_am: [true, false].sample,

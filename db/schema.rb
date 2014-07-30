@@ -81,7 +81,7 @@ ActiveRecord::Schema.define(version: 20140626104953) do
 
   create_table "plannings", force: true do |t|
     t.integer  "employee_id",                     null: false
-    t.integer  "project_id",                      null: false
+    t.integer  "project_id"
     t.integer  "start_week",                      null: false
     t.integer  "end_week"
     t.boolean  "definitive",      default: false, null: false
