@@ -11,8 +11,8 @@ class WorktimeTest < ActiveSupport::TestCase
   def test_fixture
     wt = Worktime.find(1)
     assert_kind_of Worktime, wt
-    assert_equal worktimes(:wt_pz_allgemein).project_id, wt.project_id
-    assert_equal projects(:allgemein).id, wt.account.id
+    assert_equal worktimes(:wt_pz_allgemein).work_item_id, wt.work_item_id
+    assert_equal work_items(:allgemein).id, wt.account.id
     assert_equal employees(:pascal), wt.employee
     assert !wt.start_stop?
     assert_nil wt.absence
@@ -105,7 +105,7 @@ class WorktimeTest < ActiveSupport::TestCase
     newWorktime = Worktime.find(1).template
     assert_not_nil newWorktime
     assert_equal worktimes(:wt_pz_allgemein).project_id, newWorktime.project_id
-    assert_equal projects(:allgemein).id, newWorktime.account.id
+    assert_equal work_items(:allgemein).id, newWorktime.account.id
     assert_equal employees(:pascal), newWorktime.employee
   end
 

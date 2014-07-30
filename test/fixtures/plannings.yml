@@ -5,7 +5,6 @@
 #
 #  id              :integer          not null, primary key
 #  employee_id     :integer          not null
-#  project_id      :integer          not null
 #  start_week      :integer          not null
 #  end_week        :integer
 #  definitive      :boolean          default(FALSE), not null

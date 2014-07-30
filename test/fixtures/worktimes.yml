@@ -3,7 +3,6 @@
 # Table name: worktimes
 #
 #  id              :integer          not null, primary key
-#  project_id      :integer
 #  absence_id      :integer
 #  employee_id     :integer
 #  report_type     :string(255)      not null
@@ -22,7 +21,7 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 wt_pz_allgemein:
   id: 1
-  project_id: 8
+  work_item_id: 3
   employee_id: 6
   report_type: absolute_day
   work_date: 2006-11-29
@@ -31,7 +30,7 @@ wt_pz_allgemein:
   
 wt_pz_puzzletime:
   id: 2
-  project_id: 1
+  work_item_id: 4
   employee_id: 6
   report_type: absolute_day
   work_date: 2006-12-03
@@ -40,7 +39,7 @@ wt_pz_puzzletime:
   
 wt_pz_webauftritt:
   id: 3
-  project_id: 2
+  work_item_id: 11
   employee_id: 6
   report_type: absolute_day
   work_date: 2006-12-04
@@ -58,7 +57,7 @@ wt_pz_vacation:
   
 wt_mw_allgemein:
   id: 5
-  project_id: 8
+  work_item_id: 3
   employee_id: 7
   report_type: absolute_day
   work_date: 2006-12-06
@@ -67,7 +66,7 @@ wt_mw_allgemein:
   
 wt_mw_puzzletime:
   id: 6
-  project_id: 1
+  work_item_id: 4
   employee_id: 7
   report_type: absolute_day
   work_date: 2006-12-07
@@ -76,7 +75,7 @@ wt_mw_puzzletime:
   
 wt_mw_webauftritt:
   id: 7
-  project_id: 2
+  work_item_id: 11
   employee_id: 7
   report_type: absolute_day
   work_date: 2006-12-08
@@ -94,7 +93,7 @@ wt_mw_service:
   
 wt_lw_allgemein:
   id: 9
-  project_id: 8
+  work_item_id: 3
   employee_id: 8
   report_type: absolute_day
   work_date: 2006-12-10
@@ -103,7 +102,7 @@ wt_lw_allgemein:
   
 wt_lw_puzzletime:
   id: 10
-  project_id: 1
+  work_item_id: 4
   employee_id: 8
   report_type: absolute_day
   work_date: 2006-12-11
@@ -112,7 +111,7 @@ wt_lw_puzzletime:
   
 wt_lw_webauftritt:
   id: 11
-  project_id: 2
+  work_item_id: 11
   employee_id: 8
   report_type: absolute_day
   work_date: 2006-12-12

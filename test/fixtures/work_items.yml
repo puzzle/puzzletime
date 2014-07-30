@@ -63,7 +63,14 @@ hitobito:
   path_names: "Puzzle ITC\nHitobito"
   leaf: false
 
-hitobito_demo:
+hitobito_demo:webauftritt:
+  id:        2
+  name:      Webauftritt
+  shortname: WEB
+  path_ids: [2]
+  path_shortnames: STOP-WEB
+  path_names: "Swisstopo\nWebauftritt"
+  leaf: true
   id:        8
   parent_id: 7
   name:      Demo
@@ -91,4 +98,14 @@ hitobito_demo_site:
   path_ids: [1,7,8,10]
   path_shortnames: PITC-HIT-DEM-SIT
   path_names: "Puzzle ITC\nHitobito\nDemo\nSite"
+  leaf: true
+
+webauftritt:
+  id:        11
+  name:      Webauftritt
+  shortname: WEB
+  parent_id: 2
+  path_ids: [2,11]
+  path_shortnames: STOP-WEB
+  path_names: "Swisstopo\nWebauftritt"
   leaf: true
