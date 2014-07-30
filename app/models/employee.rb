@@ -37,6 +37,7 @@ class Employee < ActiveRecord::Base
            through: :worktimes
   has_many :worktimes
   has_many :overtime_vacations, dependent: :destroy
+  has_many :responsible_orders, class_name: 'Order', foreign_key: :responsible_id
   has_one :running_project,
           -> { where(report_type: AutoStartType::INSTANCE.key) },
           class_name: 'Ordertime'
@@ -81,6 +82,10 @@ class Employee < ActiveRecord::Base
   end
 
   ##### helper methods #####
+
+  def order_responsible?
+    responsible_orders.exists?
+  end
 
   # Whether this Employee is a project manager
   def project_manager?

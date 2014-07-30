@@ -5,28 +5,73 @@ class OrdersControllerTest < ActionController::TestCase
   setup :login
 
   test 'GET index sorted by order' do
-    get :index, sort: 'order'
+    get :index, sort: 'order', status_id: ''
     assert_equal orders(:allgemein, :hitobito_demo, :puzzletime), assigns(:orders)
   end
 
   test 'GET index sorted by kind' do
-    get :index, sort: 'kind'
+    get :index, sort: 'kind', status_id: ''
     assert_equal orders(:allgemein, :puzzletime, :hitobito_demo), assigns(:orders)
   end
 
   test 'GET index sorted by department' do
-    get :index, sort: 'department'
+    get :index, sort: 'department', status_id: ''
     assert_equal orders(:puzzletime, :hitobito_demo, :allgemein), assigns(:orders)
   end
 
   test 'GET index sorted by responsible' do
-    get :index, sort: 'responsible'
+    get :index, sort: 'responsible', status_id: ''
     assert_equal orders(:allgemein, :hitobito_demo, :puzzletime), assigns(:orders)
   end
 
   test 'GET index sorted by status' do
-    get :index, sort: 'status'
+    get :index, sort: 'status', status_id: ''
     assert_equal orders(:hitobito_demo, :puzzletime, :allgemein), assigns(:orders)
+  end
+
+  test 'GET index with default filter for manager' do
+    login_as(:mark)
+    get :index
+    assert_equal orders(:hitobito_demo, :puzzletime), assigns(:orders)
+  end
+
+  test 'GET index with default filter for user' do
+    login_as(:pascal)
+    get :index
+    assert_equal [orders(:hitobito_demo)], assigns(:orders)
+  end
+
+  test 'GET index with default filter for responsible' do
+    login_as(:lucien)
+    get :index
+    assert_equal orders(:hitobito_demo, :puzzletime), assigns(:orders)
+  end
+
+  test 'GET index filtered by department' do
+    get :index, department_id: departments(:devone).id
+    assert_equal [orders(:puzzletime)], assigns(:orders)
+  end
+
+  test 'GET index filtered by status' do
+    get :index, status_id: order_statuses(:bearbeitung).id
+    assert_equal orders(:hitobito_demo, :puzzletime), assigns(:orders)
+  end
+
+  test 'GET index filtered by kind' do
+    get :index, kind_id: order_kinds(:projekt).id
+    assert_equal [orders(:hitobito_demo)], assigns(:orders)
+  end
+
+  test 'GET index filtered by status and kind' do
+    get :index, status_id: order_statuses(:bearbeitung), kind_id: order_kinds(:mandat).id
+    assert_equal [orders(:puzzletime)], assigns(:orders)
+  end
+
+  test 'GET index filtered by department, status and kind' do
+    get :index, department_id: departments(:devtwo),
+                status_id: order_statuses(:bearbeitung),
+                kind_id: order_kinds(:mandat).id
+    assert_equal [], assigns(:orders)
   end
 
   test 'GET new presets some values' do

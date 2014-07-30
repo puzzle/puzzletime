@@ -19,8 +19,20 @@ module OrderHelper
     icon(order_target_icon_key(target),
          style: "font-size: 20px;",
          class: target.rating,
-         title: simple_format(target.comment),
+         title: target.comment? ? simple_format(target.comment) : nil,
          data: { toggle: :tooltip })
+  end
+
+  def order_filter_select(name, label, list)
+    content_tag(:div, class: 'form-group') do
+      label_tag(name, label, class: 'control-label') +
+      ' &nbsp; '.html_safe +
+      select_tag(name,
+                 options_from_collection_for_select(list, :id, :to_s, params[name]),
+                 prompt: 'Alle',
+                 class: 'form-control',
+                 data: { submit: true })
+    end + ' &nbsp; &nbsp; '.html_safe
   end
 
   def order_target_icon_key(target)
