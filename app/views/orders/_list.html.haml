@@ -21,7 +21,7 @@
         %th
           = sort_link(:status)
         - @target_scopes.each do |scope|
-          %th= icon(scope.icon, title: scope.name)
+          %th= sort_link("target_scope_#{scope.id}", icon(scope.icon, title: scope.name))
 
     %tbody
       - entries.each do |order|
