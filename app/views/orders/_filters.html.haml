@@ -1,5 +1,5 @@
 
-= form_tag(nil, method: :get, class: 'form-inline', role: 'form') do
+= form_tag(nil, method: :get, class: 'form-inline', role: 'filter') do
   = hidden_field_tag :page, 1
 
   = order_filter_select(:department_id, 'Bereich', @departments)
