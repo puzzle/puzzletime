@@ -2,6 +2,10 @@
 
 = render 'info'
 
+- if search_support?
+  .list-search
+    = render 'search'
+
 = render 'list'
 
 %p= paginate entries

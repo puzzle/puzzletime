@@ -31,6 +31,11 @@ class ProjectsController < ManageController
 
   private
 
+  # No search box even with search columns defined (only used for search action).
+  def search_support?
+    false
+  end
+
   def list_entries
     if group
       super.merge(group_filter)
