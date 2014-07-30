@@ -9,6 +9,7 @@ class TableHelperTest < ActionView::TestCase
   include I18nHelper
   include CustomAssertions
   include CrudTestHelper
+  include SortHelper
 
   setup :reset_db, :setup_db, :create_test_data
   teardown :reset_db

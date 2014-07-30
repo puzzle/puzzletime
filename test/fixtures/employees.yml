@@ -76,7 +76,6 @@ mark:
   passwd:    mw
   email:     mw@bla.ch
   management: true
-  department: devone
 
 lucien:
   id:        8

@@ -69,6 +69,11 @@ $ ->
   # wire up selectize
   $('select.searchable').selectize()
 
+  # wire up direct submit fields
+  $('body').on('change', '[data-submit]', (event) ->
+    $(this).closest('form').submit()
+  )
+
   # wire up disabled links
   $('body').on('click', 'a.disabled', (event) ->
    event.preventDefault()

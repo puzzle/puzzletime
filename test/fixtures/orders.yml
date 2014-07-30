@@ -16,7 +16,7 @@
 
 puzzletime:
   work_item_id: 4
-  responsible_id: 6
+  responsible_id: 8
   status: bearbeitung
   kind: mandat
   department: devone
