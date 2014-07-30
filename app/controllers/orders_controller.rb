@@ -25,6 +25,7 @@ class OrdersController < ManageController
   def list_entries
     entries = super.includes(:kind, :department, :status, :responsible, :targets, :employees).
                     order('work_items.path_names')
+    entries = sort_entries_by_target_scope(entries)
 
     if (params.keys & %w(department_id kind_id status_id)).present?
       filter_entries_by(entries, :department_id, :kind_id, :status_id)
@@ -52,6 +53,19 @@ class OrdersController < ManageController
     elsif current_user.department_id?
       params[:department_id] = current_user.department_id
       entries.where(department_id: current_user.department_id)
+    else
+      entries
+    end
+  end
+
+  def sort_entries_by_target_scope(entries)
+    match = params[:sort].to_s.match(/\Atarget_scope_(\d+)\z/)
+    if match
+      entries.
+        joins('LEFT JOIN order_targets sort_target ' \
+              'ON sort_target.order_id = orders.id ').
+        where('sort_target.target_scope_id = ? OR sort_target.id IS NULL', match[1]).
+        reorder('sort_target.rating')
     else
       entries
     end
