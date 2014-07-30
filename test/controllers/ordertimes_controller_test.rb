@@ -39,16 +39,15 @@ class OrdertimesControllerTest < ActionController::TestCase
 
   def test_create_hours_day_type
     work_date = Date.today - 7
-    post :create, Ordertime: { account_id: projects(:puzzletime),
-                                 work_date: work_date,
-                                 ticket: '#1',
-                                 description: 'desc',
-                                 hours: '00:45'
-                                 }
+    post :create, Ordertime: { account_id: work_items(:puzzletime),
+                               work_date: work_date,
+                               ticket: '#1',
+                               description: 'desc',
+                               hours: '00:45'}
     assert_redirected_to action: 'index', week_date: work_date
     assert flash[:alert].blank?
     assert_match(/Zeit.*erfolgreich erstellt/, flash[:notice])
-    assert_equal projects(:puzzletime), Ordertime.last.project
+    assert_equal work_items(:puzzletime), Ordertime.last.work_item
     assert_equal HoursDayType::INSTANCE, Ordertime.last.report_type
     assert_equal '#1', Ordertime.last.ticket
     assert_equal 0.75, Ordertime.last.hours

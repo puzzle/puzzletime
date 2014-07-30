@@ -5,7 +5,6 @@
 #
 #  id              :integer          not null, primary key
 #  employee_id     :integer          not null
-#  project_id      :integer          not null
 #  start_week      :integer          not null
 #  end_week        :integer
 #  definitive      :boolean          default(FALSE), not null
@@ -29,10 +28,9 @@
 
 class Planning < ActiveRecord::Base
 
-  validates_presence_of :employee_id, :project_id, :start_week
+  validates_presence_of :employee_id, :work_item_id, :start_week
   validate :validate_planning
 
-  belongs_to :project
   belongs_to :employee
   belongs_to :work_item
 
@@ -86,8 +84,8 @@ class Planning < ActiveRecord::Base
       errors.add(:start_date, 'Entweder Halbtag selektieren oder Umfang auswählen (Dropdown-Box).')
     end
 
-    existing_plannings = Planning.where('project_id = ? and employee_id = ? and is_abstract=false', project_id, employee_id) # todo: limit search result by date
-    existing_plannings_abstr = Planning.where('project_id = ? and employee_id = ? and is_abstract=true', project_id, employee_id) # todo: limit search result by date
+    existing_plannings = Planning.where('work_item_id = ? and employee_id = ? and is_abstract=false', work_item_id, employee_id) # todo: limit search result by date
+    existing_plannings_abstr = Planning.where('work_item_id = ? and employee_id = ? and is_abstract=true', work_item_id, employee_id) # todo: limit search result by date
 
     if is_abstract == false
       existing_plannings.each do |planning|

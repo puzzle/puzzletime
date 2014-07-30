@@ -43,7 +43,7 @@ class EditOtherOrdertimeTest < ActionDispatch::IntegrationTest
 
     post_via_redirect create_part_ordertimes_path,
       ordertime: { employee_id: employees(:mark).id,
-                     account_id: projects(:allgemein).id,
+                     account_id: work_items(:allgemein).id,
                      work_date: Date.today,
                      hours: '1:00'  }
     assert_response :success
@@ -59,7 +59,7 @@ class EditOtherOrdertimeTest < ActionDispatch::IntegrationTest
     employee = employees(:mark)
     post_via_redirect '/ordertimes',
       ordertime: { employee_id: employee.id,
-                     account_id: projects(:allgemein).id,
+                     account_id: work_items(:allgemein).id,
                      work_date: Date.today,
                      hours: '8:30'  }
     assert_response :success

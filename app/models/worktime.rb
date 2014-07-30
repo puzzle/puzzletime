@@ -4,7 +4,6 @@
 # Table name: worktimes
 #
 #  id              :integer          not null, primary key
-#  project_id      :integer
 #  absence_id      :integer
 #  employee_id     :integer
 #  report_type     :string(255)      not null
@@ -139,6 +138,7 @@ class Worktime < ActiveRecord::Base
     newWorktime.account_id = account_id
     newWorktime.billable = billable
     newWorktime.employee_id = employee_id
+    newWorktime.work_item_id = work_item_id
     newWorktime
   end
 
