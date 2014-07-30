@@ -16,10 +16,10 @@ class OrdertimesControllerTest < ActionController::TestCase
 
   def test_new_with_template
     template = worktimes(:wt_mw_puzzletime)
-    template.update_attributes(ticket: '123', description: 'desc')
+    template.update_attributes!(ticket: '123', description: 'desc')
 
     get :new, template: template.id
-    assert_equal template.project, assigns(:worktime).project
+    assert_equal template.work_item, assigns(:worktime).work_item
     assert_equal '123', assigns(:worktime).ticket
     assert_equal 'desc', assigns(:worktime).description
   end
@@ -39,7 +39,7 @@ class OrdertimesControllerTest < ActionController::TestCase
 
   def test_create_hours_day_type
     work_date = Date.today - 7
-    post :create, Ordertime: { account_id: work_items(:puzzletime),
+    post :create, ordertime: { account_id: work_items(:puzzletime),
                                work_date: work_date,
                                ticket: '#1',
                                description: 'desc',
@@ -57,11 +57,10 @@ class OrdertimesControllerTest < ActionController::TestCase
 
   def test_create_start_stop_type
     work_date = Date.today + 10
-    post :create, Ordertime: { account_id: Project.first,
-                                 work_date: work_date,
-                                 from_start_time: '8:00',
-                                 to_end_time: '10:15'
-                                 }
+    post :create, ordertime: { account_id: work_items(:allgemein),
+                               work_date: work_date,
+                               from_start_time: '8:00',
+                               to_end_time: '10:15' }
     assert_redirected_to action: 'index', week_date: work_date
     assert flash[:alert].blank?
     assert_match(/Zeit.*erfolgreich erstellt/, flash[:notice])
@@ -73,35 +72,32 @@ class OrdertimesControllerTest < ActionController::TestCase
 
   def test_create_with_missing_start_time
     work_date = Date.today + 10
-    post :create, Ordertime: { account_id: Project.first,
-                                 work_date: work_date,
-                                 to_end_time: '10:15'
-                                 }
+    post :create, ordertime: { account_id: work_items(:allgemein),
+                               work_date: work_date,
+                               to_end_time: '10:15' }
     assert_match(/Anfangszeit ist ungültig/, @response.body)
   end
 
   def test_create_other
-    post :create, Ordertime: { account_id: Project.first,
-                                 work_date: Date.today,
-                                 hours: '5:30',
-                                 employee_id: employees(:lucien)
-                                 }
+    post :create, ordertime: { account_id: work_items(:allgemein),
+                               work_date: Date.today,
+                               hours: '5:30',
+                               employee_id: employees(:lucien) }
     assert_equal employees(:lucien), Ordertime.last.employee
   end
 
   def test_create_other_without_permission
     login_as(:lucien)
-    post :create, Ordertime: { account_id: Project.first,
-                                 work_date: Date.today,
-                                 hours: '5:30',
-                                 employee_id: employees(:mark)
-                                 }
+    post :create, ordertime: { account_id: work_items(:allgemein),
+                               work_date: Date.today,
+                               hours: '5:30',
+                               employee_id: employees(:mark) }
     assert_equal employees(:lucien), Ordertime.last.employee # assigns the projettime to himself
   end
 
   def test_update
     worktime = worktimes(:wt_mw_puzzletime)
-    put :update, id: worktime, Ordertime: { hours: '1:30' }
+    put :update, id: worktime, ordertime: { hours: '1:30' }
 
     worktime.reload
     assert_redirected_to action: 'index', week_date: worktime.work_date
@@ -123,7 +119,7 @@ class OrdertimesControllerTest < ActionController::TestCase
 
   def test_incomplete_split
     worktime = worktimes(:wt_pz_allgemein)
-    put :update, id: worktime, Ordertime: { hours: '0:30', employee_id: employees(:pascal) }
+    put :update, id: worktime, ordertime: { hours: '0:30', employee_id: employees(:pascal) }
     assert_redirected_to action: 'split'
     assert_not_nil assigns(:split)
   end
@@ -131,7 +127,7 @@ class OrdertimesControllerTest < ActionController::TestCase
 
   def test_finish_split
     worktime = worktimes(:wt_pz_allgemein)
-    put :update, id: worktime, Ordertime: { hours: '1:00', employee_id: employees(:pascal) }
+    put :update, id: worktime, ordertime: { hours: '1:00', employee_id: employees(:pascal) }
     assert_not_nil assigns(:split)
     assert_match(/Alle Arbeitszeiten wurden erfasst/, flash[:notice])
     worktime.reload
