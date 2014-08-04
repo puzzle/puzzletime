@@ -40,7 +40,7 @@ class PlanningsControllerTest < ActionController::TestCase
   def test_create
     description = 'new planning description'
     post :create, planning: { employee_id: employees(:lucien),
-                              project_id: projects(:puzzletime),
+                              work_item_id: work_items(:puzzletime),
                               start_week_date: '2010 01',
                               repeat_type: 'no',
                               monday_am: '1',
@@ -82,7 +82,6 @@ class PlanningsControllerTest < ActionController::TestCase
   def test_project_planning
     get :project_planning, work_item_id: work_items(:allgemein)
     assert_template 'project_planning'
-
   end
 
   def test_projects
