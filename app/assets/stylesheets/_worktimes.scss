@@ -237,19 +237,26 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
       margin-top: 50px;
       color: $gray;
 
-      .inner {
-        @extend .col-xs-offset-1;
-        @extend .col-xs-10;
+      .date-day,
+      .date-time-value {
         padding-top: 10px;
         padding-bottom: 10px;
+      }
+      .date-day {
+        @extend .col-xs-offset-1;
+        @extend .col-xs-7;
+      }
+      .date-time-value {
+        text-align: right;
+        @extend .col-xs-1;
       }
     }
 
     .entry {
       @extend .row;
-      min-height: 95px;
+      // min-height: 95px;
       position: relative;
-      padding: 20px 0;
+      padding: 15px 0;
       border-top: 1px solid $gray-light;
       @include clearfix;
 
@@ -281,7 +288,7 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
       }
 
       .title {
-        font-size: 24px;
+        font-size: 18px;
       }
 
       .description {
@@ -306,7 +313,10 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
 
       .controls {
         @extend .col-xs-2;
-        font-size: 24px;
+        font-size: 16px;
+        i {
+          font-size: 18px;
+        }
 
         a:hover, a:active {
           text-decoration: none;
@@ -320,5 +330,148 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
         z-index: 1;
       }
     }
+    .entry.is-empty {
+      .controls {
+        @extend .col-xs-5;
+      }
+      .controls a {
+        margin-right: 78px;
+
+        i {
+          margin-left: 0.5em;
+        }
+      }
+    }
   }
+}
+
+.from_pierre {
+
+font-family: Roboto-Regular;
+font-size: 22px;
+color: #444444;
+line-height: 29px;
+/* PuzzleTime: */
+
+border-color: #D8D8D8;
+/* All lines */
+
+font-family: Roboto-Light;
+font-size: 14px;
+color: #999999;
+line-height: 20px;
+/* Philipp Murkowsky: */
+
+font-family: Roboto-Light;
+font-size: 16px;
+color: #FFFFFF;
+line-height: 20px;
+background: #1E5A96;
+/* Meine Zeit: */
+
+font-family: Roboto-Light;
+font-size: 16px;
+color: #FFFFFF;
+line-height: 20px;
+background: #3B7BBE;
+/* Meine Aufträge: */
+
+font-family: Roboto-Regular;
+font-size: 14px;
+color: #444444;
+line-height: 20px;
+/* Meine Projekte: */
+
+font-family: Roboto-Regular;
+font-size: 14px;
+color: #999999;
+line-height: 20px;
+/* Meine Absenzen : */
+
+font-family: Roboto-Medium;
+font-size: 18px;
+color: #444444;
+line-height: 24px;
+/* Erinnerung: */
+
+font-family: Roboto-Regular;
+font-size: 14px;
+color: #444444;
+line-height: 20px;
+/* Bitte per Monatsend... */
+
+font-family: Roboto-Regular;
+font-size: 14px;
+color: #FFFFFF;
+line-height: 20px;
+border-radius: 2px;
+background: #3B7BBE;
+/* Freigeben: */
+
+font-family: Roboto-Regular;
+font-size: 14px;
+color: #999999;
+line-height: 20px;
+/* Überzeitsaldo : 8:55: */
+
+background: #F5F5F5;
+border: 1px solid #D8D8D8;
+/* Week timeline */
+
+font-family: Roboto-Medium;
+font-size: 16px;
+color: #444444;
+line-height: 21px;
+background: #FFFFFF;
+border: 1px solid #D8D8D8;
+/* Day */
+
+font-family: Roboto-Light;
+font-size: 16px;
+color: #444444;
+line-height: 21px;
+/* 08:15: */
+
+background: #FFFFFF;
+border: 2px solid #D8D8D8;
+/* Day :hover */
+
+font-family: Roboto-Light;
+font-size: 16px;
+color: #B44B5B;
+line-height: 21px;
+/* Day error - hour */
+
+font-family: Roboto-Medium;
+font-size: 16px;
+color: #FFFFFF;
+line-height: 21px;
+background: #69B978;
+/* Day current */
+
+font-family: Roboto-Regular;
+font-size: 24px;
+color: #444444;
+line-height: 32px;
+/* SAJA-IWS-RE2: */
+
+font-family: Roboto-Regular;
+font-size: 14px;
+color: #444444;
+line-height: 20px;
+/* 1234 - Mockups erste 2: */
+
+font-family: Roboto-Light;
+font-size: 18px;
+color: #4A4A4A;
+line-height: 24px;
+/* 07:10 - 10: */
+
+font-family: Roboto-Medium;
+font-size: 18px;
+color: #444444;
+line-height: 24px;
+/* 1:50 */
+
+
 }

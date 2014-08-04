@@ -40,8 +40,8 @@ ActiveRecord::Schema.define(version: 20140714093557) do
   end
 
   create_table "billing_addresses", force: true do |t|
-    t.integer "client_id"
-    t.integer "contact_id"
+    t.integer "client_id",  null: false
+    t.integer "contact_id", null: false
     t.string  "supplement"
     t.string  "street"
     t.string  "zip_code"
@@ -166,8 +166,8 @@ ActiveRecord::Schema.define(version: 20140714093557) do
   end
 
   create_table "order_targets", force: true do |t|
-    t.integer  "order_id"
-    t.integer  "target_scope_id"
+    t.integer  "order_id",                          null: false
+    t.integer  "target_scope_id",                   null: false
     t.string   "rating",          default: "green", null: false
     t.text     "comment"
     t.datetime "created_at"
@@ -204,7 +204,7 @@ ActiveRecord::Schema.define(version: 20140714093557) do
 
   create_table "plannings", force: true do |t|
     t.integer  "employee_id",                     null: false
-    t.integer  "project_id"
+    t.integer  "project_id",                      null: false
     t.integer  "start_week",                      null: false
     t.integer  "end_week"
     t.boolean  "definitive",      default: false, null: false

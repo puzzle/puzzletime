@@ -2,6 +2,7 @@
 
 # define deleted models that are used in the migration
 class Project < ActiveRecord::Base
+  schema_validations except: :path_ids
   acts_as_tree order: 'shortname'
   belongs_to :work_item
 
@@ -363,7 +364,6 @@ class CreateErpTables < ActiveRecord::Migration
                               shortname: project[:shortname],
                               description: project[:description],
                               leaf: leaf)
-
     project.save!
   end
 

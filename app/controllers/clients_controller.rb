@@ -5,8 +5,9 @@
 
 class ClientsController < ManageController
 
-  self.permitted_attrs = [:crm_key, work_item_attributes: [:name, :shortname, :description]]
+  self.search_columns = [:name, :shortname]
 
+  self.permitted_attrs = [:crm_key, work_item_attributes: [:name, :shortname, :description]]
 
   def categories
     if params[:client_work_item_id].present?

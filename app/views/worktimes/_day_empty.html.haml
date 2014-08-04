@@ -1,0 +1,9 @@
+
+.entry.is-empty{'data-date' => day}
+  .title-description
+    .title
+    .description
+  .controls
+    = link_to(new_projecttime_path(work_date: localize_date(day))) do
+      Hinzufügen
+      %i.icon-duplicate
