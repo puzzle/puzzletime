@@ -5,14 +5,14 @@ module BelongingToWorkItem
   included do
     belongs_to :work_item, validate: true, autosave: true
 
-    has_many_through_work_item :worktimes
+    has_descendants_through_work_item :worktimes
 
     accepts_nested_attributes_for :work_item, update_only: true
 
     scope :list, -> do
       includes(:work_item).
       references(:work_item).
-      order('work_items.path_shortnames')
+      order('work_items.path_names')
     end
   end
 
@@ -21,28 +21,23 @@ module BelongingToWorkItem
   end
 
   module ClassMethods
-    def has_one_through_work_item(name)
-      # TODO check if correct
-      table = name.to_s.classify.constantize.table_name
-      has_one name,
-              ->(entry) do
-                joins(:work_item).
-                where("#{table}.work_item_id = ANY (work_items.path_ids)")
-              end
+    def has_ancestor_through_work_item(name)
+      model = name.to_s.classify.constantize
+      define_method(name) do
+        model.joins('LEFT JOIN work_items ON ' \
+                    "#{model.table_name}.work_item_id = ANY (work_items.path_ids)").
+              where('work_items.id = ?', work_item_id).
+              first
+      end
     end
 
-    def has_many_through_work_item(name)
-      # TODO check if correct
-      table = name.to_s.classify.constantize.table_name
-      has_many name,
-               ->(entry) do
-                 joins(:work_item).
-                 unscope(where: :work_item_id).
-                 where("#{table}.work_item_id = work_items.id AND "\
-                       "? = ANY (work_items.path_ids)", entry.work_item_id)
-               end
+    def has_descendants_through_work_item(name)
+      model = name.to_s.classify.constantize
+      define_method(name) do
+        model.joins(:work_item).
+              where("? = ANY (work_items.path_ids)", work_item_id)
       end
-
+    end
   end
 
 
