@@ -2,7 +2,7 @@
   %thead
     %tr
       %th= @evaluation.division_header
-      -if @evaluation.sub_projects_eval
+      -if @evaluation.sub_work_items_eval
         %th
       - @periods.each do |p|
         %th.periodHead
@@ -17,7 +17,7 @@
   %tfoot
     %tr.times_total_sum
       %td Total Zeit
-      - if @evaluation.sub_projects_eval
+      - if @evaluation.sub_work_items_eval
         %th
       = render(:partial => 'timecell', :collection => collect_times(@periods, :sum_total_times))
 

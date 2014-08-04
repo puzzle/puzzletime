@@ -3,7 +3,7 @@
 class EmployeesEval < Evaluation
 
   self.division_column   = 'employee_id'
-  self.sub_evaluation   = 'employeeprojects'
+  self.sub_evaluation   = 'employeeworkitems'
   self.label            = 'Mitarbeiter Zeit'
   self.total_details    = false
 

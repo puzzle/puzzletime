@@ -1,9 +1,10 @@
 # encoding: utf-8
 
-class ManagedProjectsEval < ProjectsEval
+# TODO: rewrite to ManagedOrdersEval or remove
+class ManagedWorkItemsEval < WorkItemsEval
 
-  self.division_method   = :managed_projects
-  self.label             = 'Geleitete Projekte'
+  self.division_method   = :managed_orders
+  self.label             = 'Geleitete Aufträge'
   self.total_details     = false
 
   def category_label

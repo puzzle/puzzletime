@@ -40,11 +40,4 @@ class Client < ActiveRecord::Base
     Worktime.all
   end
 
-  # TODO replace with above has_many_through_work_item
-  def worktimes
-    Worktime.joins(:project).
-             where(projects: { client_id: id })
-  end
-
-
 end

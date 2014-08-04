@@ -18,30 +18,30 @@ class EvaluationTest < ActiveSupport::TestCase
 
     divisions = @evaluation.divisions.list
     assert_equal 2, divisions.size
-    assert_equal clients(:puzzle), divisions[0]
-    assert_equal clients(:swisstopo), divisions[1]
+    assert_equal work_items(:puzzle), divisions[0]
+    assert_equal work_items(:swisstopo), divisions[1]
 
-    assert_sum_times 0, 20, 32, 33, clients(:puzzle)
-    assert_sum_times 3, 10, 21, 21, clients(:swisstopo)
+    assert_sum_times 0, 20, 32, 33, work_items(:puzzle)
+    assert_sum_times 3, 10, 21, 21, work_items(:swisstopo)
 
-    assert_equal({ clients(:swisstopo).id => 3.0},
+    assert_equal({ work_items(:swisstopo).id => 3.0},
                  @evaluation.sum_times_grouped(@period_day))
-    assert_equal({ clients(:puzzle).id => 20.0, clients(:swisstopo).id => 10.0},
+    assert_equal({ work_items(:puzzle).id => 20.0, work_items(:swisstopo).id => 10.0},
                  @evaluation.sum_times_grouped(@period_week))
-    assert_equal({ clients(:puzzle).id => 32.0, clients(:swisstopo).id => 21.0},
+    assert_equal({ work_items(:puzzle).id => 32.0, work_items(:swisstopo).id => 21.0},
                  @evaluation.sum_times_grouped(@period_month))
   end
 
   def test_clients_detail_puzzle
     @evaluation = ClientsEval.new
-    @evaluation.set_division_id clients(:puzzle).id
+    @evaluation.set_division_id work_items(:puzzle).id
     assert_sum_times 0, 20, 32, 33
     assert_count_times 0, 3, 5, 6
   end
 
   def test_clients_detail_swisstopo
     @evaluation = ClientsEval.new
-    @evaluation.set_division_id clients(:swisstopo).id
+    @evaluation.set_division_id work_items(:swisstopo).id
 
     assert_sum_times 3, 10, 21, 21
     assert_count_times 1, 2, 3, 3
@@ -137,60 +137,60 @@ class EvaluationTest < ActiveSupport::TestCase
     assert_count_times 0, 1, 2, 2
   end
 
-  def test_managed_projects_pascal
-    @evaluation = ManagedProjectsEval.new(employees(:pascal))
+  def no_test_managed_work_items_pascal
+    @evaluation = ManagedWorkItemsEval.new(employees(:pascal))
     assert_managed employees(:pascal)
 
     divisions = @evaluation.divisions.list
     assert_equal 1, divisions.size
-    assert_equal projects(:puzzletime).id, divisions.first.id
+    assert_equal work_items(:puzzletime).id, divisions.first.id
 
-    assert_sum_times 0, 6, 18, 18, projects(:puzzletime)
+    assert_sum_times 0, 6, 18, 18, work_items(:puzzletime)
 
     assert_equal({ },
                  @evaluation.sum_times_grouped(@period_day))
-    assert_equal({ projects(:puzzletime).id => 6.0 },
+    assert_equal({ work_items(:puzzletime).id => 6.0 },
                  @evaluation.sum_times_grouped(@period_week))
-    assert_equal({ projects(:puzzletime).id => 18.0 },
+    assert_equal({ work_items(:puzzletime).id => 18.0 },
                  @evaluation.sum_times_grouped(@period_month))
  end
 
-  def test_managed_projects_pascal_details
-    @evaluation = ManagedProjectsEval.new(employees(:pascal))
-    @evaluation.set_division_id projects(:puzzletime).id
+  def no_test_managed_work_items_pascal_details
+    @evaluation = ManagedWorkItemsEval.new(employees(:pascal))
+    @evaluation.set_division_id work_items(:puzzletime).id
 
     assert_sum_times 0, 6, 18, 18
     assert_count_times 0, 1, 3, 3
   end
 
-  def test_managed_projects_mark
-    @evaluation = ManagedProjectsEval.new(employees(:mark))
+  def no_test_managed_work_items_mark
+    @evaluation = ManagedWorkItemsEval.new(employees(:mark))
     assert_managed employees(:mark)
 
     divisions = @evaluation.divisions.list
     assert_equal 1, divisions.size
-    assert_equal projects(:allgemein).id, divisions.first.id
+    assert_equal work_items(:allgemein).id, divisions.first.id
 
-    assert_sum_times 0, 14, 14, 15, projects(:allgemein)
+    assert_sum_times 0, 14, 14, 15, work_items(:allgemein)
 
     assert_equal({ },
                  @evaluation.sum_times_grouped(@period_day))
-    assert_equal({ projects(:allgemein).id => 14.0 },
+    assert_equal({ work_items(:allgemein).id => 14.0 },
                  @evaluation.sum_times_grouped(@period_week))
-    assert_equal({ projects(:allgemein).id => 14.0 },
+    assert_equal({ work_items(:allgemein).id => 14.0 },
                  @evaluation.sum_times_grouped(@period_month))
   end
 
-  def test_managed_projects_mark_details
-    @evaluation = ManagedProjectsEval.new(employees(:mark))
-    @evaluation.set_division_id projects(:allgemein).id
+  def no_test_managed_work_items_mark_details
+    @evaluation = ManagedWorkItemsEval.new(employees(:mark))
+    @evaluation.set_division_id work_items(:allgemein).id
 
     assert_sum_times 0, 14, 14, 15
     assert_count_times 0, 2, 2, 3
   end
 
-  def test_managed_projects_lucien
-    @evaluation = ManagedProjectsEval.new(employees(:lucien))
+  def no_test_managed_work_items_lucien
+    @evaluation = ManagedWorkItemsEval.new(employees(:lucien))
     assert_managed employees(:lucien)
     divisions = @evaluation.divisions
     assert_equal 0, divisions.size
@@ -202,143 +202,138 @@ class EvaluationTest < ActiveSupport::TestCase
     assert ! @evaluation.total_details
   end
 
-  def test_client_projects
-    @evaluation = ClientProjectsEval.new(clients(:puzzle).id)
+  def test_client_work_items
+    @evaluation = ClientWorkItemsEval.new(clients(:puzzle).id)
     assert ! @evaluation.absences?
     assert ! @evaluation.for?(employees(:mark))
     assert @evaluation.total_details
 
     divisions = @evaluation.divisions.list
-    assert_equal 3, divisions.size
-    assert_equal projects(:allgemein), divisions[0]
-    assert_equal projects(:hitobito), divisions[1]
-    assert_equal projects(:puzzletime), divisions[2]
+    assert_equal 4, divisions.size
+    assert_equal work_items(:allgemein), divisions[0]
+    assert_equal work_items(:hitobito), divisions[1]
+    assert_equal work_items(:intern), divisions[2]
+    assert_equal work_items(:puzzletime), divisions[3]
 
     assert_sum_times 0, 20, 32, 33
     assert_count_times 0, 3, 5, 6
-    assert_sum_times 0, 14, 14, 15, projects(:allgemein)
-    assert_sum_times 0, 6, 18, 18, projects(:puzzletime)
+    assert_sum_times 0, 14, 14, 15, work_items(:allgemein)
+    assert_sum_times 0, 6, 18, 18, work_items(:puzzletime)
 
     assert_equal({ },
                  @evaluation.sum_times_grouped(@period_day))
-    assert_equal({ projects(:allgemein).id => 14.0, projects(:puzzletime).id => 6.0 },
+    assert_equal({ work_items(:allgemein).id => 14.0, work_items(:puzzletime).id => 6.0 },
                  @evaluation.sum_times_grouped(@period_week))
-    assert_equal({ projects(:allgemein).id => 14.0, projects(:puzzletime).id => 18.0 },
+    assert_equal({ work_items(:allgemein).id => 14.0, work_items(:puzzletime).id => 18.0 },
                  @evaluation.sum_times_grouped(@period_month))
   end
 
-  def test_client_projects_detail
-    @evaluation = ClientProjectsEval.new(clients(:puzzle).id)
+  def test_client_work_items_detail
+    @evaluation = ClientWorkItemsEval.new(clients(:puzzle).id)
 
-    @evaluation.set_division_id(projects(:allgemein).id)
+    @evaluation.set_division_id(work_items(:allgemein).id)
     assert_sum_times 0, 14, 14, 15
     assert_count_times 0, 2, 2, 3
 
-    @evaluation.set_division_id(projects(:puzzletime).id)
+    @evaluation.set_division_id(work_items(:puzzletime).id)
     assert_sum_times 0, 6, 18, 18
     assert_count_times 0, 1, 3, 3
   end
 
-  def test_employee_projects_pascal
-    @evaluation = EmployeeProjectsEval.new(employees(:pascal).id)
+  def test_employee_work_items_pascal
+    @evaluation = EmployeeWorkItemsEval.new(employees(:pascal).id)
     assert ! @evaluation.absences?
     assert @evaluation.for?(employees(:pascal))
     assert @evaluation.total_details
 
     divisions = @evaluation.divisions.list.to_a
-    assert_equal 3, divisions.size
-    assert_equal projects(:allgemein).id, divisions[0].id
-    assert_equal projects(:puzzletime).id, divisions[1].id
-    assert_equal projects(:webauftritt).id, divisions[2].id
+    assert_equal 2, divisions.size
+    assert_equal work_items(:puzzle).id, divisions[0].id
+    assert_equal work_items(:swisstopo).id, divisions[1].id
 
-    assert_sum_times 0, 0, 0, 1, projects(:allgemein)
-    assert_sum_times 0, 0, 2, 2, projects(:puzzletime)
-    assert_sum_times 3, 3, 3, 3, projects(:webauftritt)
+    assert_sum_times 0, 0, 2, 3, work_items(:puzzle)
+    assert_sum_times 3, 3, 3, 3, work_items(:swisstopo)
 
-    assert_equal({ projects(:webauftritt).id => 3.0 },
+    assert_equal({ work_items(:swisstopo).id => 3.0 },
                  @evaluation.sum_times_grouped(@period_day))
-    assert_equal({ projects(:webauftritt).id => 3.0 },
+    assert_equal({ work_items(:swisstopo).id => 3.0 },
                  @evaluation.sum_times_grouped(@period_week))
-    assert_equal({ projects(:puzzletime).id => 2.0, projects(:webauftritt).id => 3.0 },
+    assert_equal({ work_items(:puzzle).id => 2.0, work_items(:swisstopo).id => 3.0 },
                  @evaluation.sum_times_grouped(@period_month))
   end
 
-  def test_employee_projects_pascal_detail
-    @evaluation = EmployeeProjectsEval.new(employees(:pascal).id)
+  def test_employee_work_items_pascal_detail
+    @evaluation = EmployeeSubWorkItemsEval.new(work_items(:puzzle).id, employees(:pascal).id)
 
-    @evaluation.set_division_id(projects(:allgemein).id)
+    @evaluation.set_division_id(work_items(:allgemein).id)
     assert_sum_times 0, 0, 0, 1
     assert_count_times 0, 0, 0, 1
 
-    @evaluation.set_division_id(projects(:puzzletime).id)
+    @evaluation.set_division_id(work_items(:puzzletime).id)
     assert_sum_times 0, 0, 2, 2
     assert_count_times 0, 0, 1, 1
   end
 
-  def test_employee_projects_mark
-    @evaluation = EmployeeProjectsEval.new(employees(:mark).id)
+  def test_employee_work_items_mark
+    @evaluation = EmployeeWorkItemsEval.new(employees(:mark).id)
     assert ! @evaluation.absences?
     assert @evaluation.for?(employees(:mark))
     assert @evaluation.total_details
 
     divisions = @evaluation.divisions.list.to_a
-    assert_equal 3, divisions.size
-    assert_equal projects(:allgemein).id, divisions[0].id
-    assert_equal projects(:puzzletime).id, divisions[1].id
-    assert_equal projects(:webauftritt).id, divisions[2].id
+    assert_equal 2, divisions.size
+    assert_equal work_items(:puzzle).id, divisions[0].id
+    assert_equal work_items(:swisstopo).id, divisions[1].id
 
-    assert_sum_times 0, 5, 5, 5, projects(:allgemein)
-    assert_sum_times 0, 6, 6, 6, projects(:puzzletime)
-    assert_sum_times 0, 7, 7, 7, projects(:webauftritt)
+    assert_sum_times 0, 11, 11, 11, work_items(:puzzle)
+    assert_sum_times 0, 7, 7, 7, work_items(:swisstopo)
 
     assert_equal({ },
                  @evaluation.sum_times_grouped(@period_day))
-    assert_equal({ projects(:allgemein).id => 5.0, projects(:puzzletime).id => 6.0, projects(:webauftritt).id => 7.0 },
+    assert_equal({ work_items(:puzzle).id => 11.0, work_items(:swisstopo).id => 7.0 },
                  @evaluation.sum_times_grouped(@period_week))
-    assert_equal({ projects(:allgemein).id => 5.0, projects(:puzzletime).id => 6.0, projects(:webauftritt).id => 7.0 },
+    assert_equal({ work_items(:puzzle).id => 11.0, work_items(:swisstopo).id => 7.0 },
                  @evaluation.sum_times_grouped(@period_month))
   end
 
-  def test_employee_projects_mark_detail
-    @evaluation = EmployeeProjectsEval.new(employees(:mark).id)
-    @evaluation.set_division_id(projects(:allgemein).id)
+  def test_employee_work_items_mark_detail
+    @evaluation = EmployeeSubWorkItemsEval.new(work_items(:puzzle).id, employees(:mark).id)
+    @evaluation.set_division_id(work_items(:allgemein).id)
     assert_sum_times 0, 5, 5, 5
     assert_count_times 0, 1, 1, 1
   end
 
-  def test_employee_projects_lucien
-    @evaluation = EmployeeProjectsEval.new(employees(:lucien).id)
+  def test_employee_work_items_lucien
+    @evaluation = EmployeeWorkItemsEval.new(employees(:lucien).id)
     assert ! @evaluation.absences?
     assert @evaluation.for?(employees(:lucien))
     assert @evaluation.total_details
 
     divisions = @evaluation.divisions.list.to_a
-    assert_equal 3, divisions.size
-    assert_equal projects(:allgemein).id, divisions[0].id
-    assert_equal projects(:puzzletime).id, divisions[1].id
-    assert_equal projects(:webauftritt).id, divisions[2].id
+    assert_equal 2, divisions.size
+    assert_equal work_items(:puzzle).id, divisions[0].id
+    assert_equal work_items(:swisstopo).id, divisions[1].id
 
-    assert_sum_times 0, 9, 9, 9, projects(:allgemein)
-    assert_sum_times 0, 0, 10, 10, projects(:puzzletime)
-    assert_sum_times 0, 0, 11, 11, projects(:webauftritt)
+    assert_sum_times 0, 9, 19, 19, work_items(:puzzle)
+    assert_sum_times 0, 0, 11, 11, work_items(:swisstopo)
 
     assert_equal({ },
                  @evaluation.sum_times_grouped(@period_day))
-    assert_equal({ projects(:allgemein).id => 9.0},
+    assert_equal({ work_items(:puzzle).id => 9.0},
                  @evaluation.sum_times_grouped(@period_week))
-    assert_equal({ projects(:webauftritt).id => 11.0, projects(:puzzletime).id => 10.0, projects(:allgemein).id => 9.0 },
+    assert_equal({ work_items(:swisstopo).id => 11.0, work_items(:puzzle).id => 19.0 },
                  @evaluation.sum_times_grouped(@period_month))
   end
 
-  def test_employee_projects_lucien_detail
-    @evaluation = EmployeeProjectsEval.new(employees(:lucien).id)
-    @evaluation.set_division_id(projects(:webauftritt).id)
+  def test_employee_work_items_lucien_detail
+    @evaluation = EmployeeSubWorkItemsEval.new(work_items(:swisstopo).id, employees(:lucien).id)
+    @evaluation.set_division_id(work_items(:webauftritt).id)
     assert_sum_times 0, 0, 11, 11
     assert_count_times 0, 0, 1, 1
   end
 
   def test_project_employees_allgemein
-    @evaluation = ProjectEmployeesEval.new(projects(:allgemein).id)
+    @evaluation = WorkItemEmployeesEval.new(work_items(:allgemein).id)
     assert ! @evaluation.absences?
     assert ! @evaluation.for?(employees(:pascal))
     assert @evaluation.total_details
@@ -362,7 +357,7 @@ class EvaluationTest < ActiveSupport::TestCase
   end
 
   def test_project_employees_allgemein_detail
-    @evaluation = ProjectEmployeesEval.new(projects(:allgemein).id)
+    @evaluation = WorkItemEmployeesEval.new(work_items(:allgemein).id)
 
     @evaluation.set_division_id(employees(:mark).id)
     assert_sum_times 0, 5, 5, 5
@@ -374,7 +369,7 @@ class EvaluationTest < ActiveSupport::TestCase
   end
 
   def test_project_employees_puzzletime
-    @evaluation = ProjectEmployeesEval.new(projects(:puzzletime).id)
+    @evaluation = WorkItemEmployeesEval.new(work_items(:puzzletime).id)
     assert ! @evaluation.absences?
     assert ! @evaluation.for?(employees(:pascal))
     assert @evaluation.total_details
@@ -398,7 +393,7 @@ class EvaluationTest < ActiveSupport::TestCase
   end
 
   def test_project_employees_puzzletime_detail
-    @evaluation = ProjectEmployeesEval.new(projects(:puzzletime).id)
+    @evaluation = WorkItemEmployeesEval.new(work_items(:puzzletime).id)
 
     @evaluation.set_division_id(employees(:pascal).id)
     assert_sum_times 0, 0, 2, 2
@@ -407,7 +402,7 @@ class EvaluationTest < ActiveSupport::TestCase
 
 
   def test_project_employees_webauftritt
-    @evaluation = ProjectEmployeesEval.new(projects(:webauftritt).id)
+    @evaluation = WorkItemEmployeesEval.new(work_items(:webauftritt).id)
     assert ! @evaluation.absences?
     assert ! @evaluation.for?(employees(:lucien))
     assert @evaluation.total_details
@@ -431,7 +426,7 @@ class EvaluationTest < ActiveSupport::TestCase
   end
 
   def test_project_employees_webauftritt_detail
-    @evaluation = ProjectEmployeesEval.new(projects(:webauftritt).id)
+    @evaluation = WorkItemEmployeesEval.new(work_items(:webauftritt).id)
 
     @evaluation.set_division_id(employees(:lucien).id)
     assert_sum_times 0, 0, 11, 11

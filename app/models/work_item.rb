@@ -16,6 +16,8 @@
 
 class WorkItem < ActiveRecord::Base
 
+  include Evaluatable
+
   ### ASSOCIATIONS
 
   acts_as_tree order: 'shortname'
@@ -86,7 +88,7 @@ class WorkItem < ActiveRecord::Base
     parent_id.nil?
   end
 
-  def sub_projects?
+  def children?
     !leaf
   end
 
@@ -102,6 +104,13 @@ class WorkItem < ActiveRecord::Base
              where(clients: { id: nil },
                    orders: { id: nil },
                    accounting_posts: { id: nil })
+  end
+
+  def employees
+    Employee.joins(worktimes: :work_item).
+             where('? = ANY (work_items.path_ids)', id).
+             list.
+             uniq
   end
 
   def update_path_names!

@@ -1,6 +1,7 @@
 # encoding: utf-8
 
-class DepartmentProjectsEval < ProjectsEval
+# TODO: rewrite to DepartmentOrdersEval or remove
+class DepartmentWorkItemsEval < WorkItemsEval
 
   self.division_join     = nil
 

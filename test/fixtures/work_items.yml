@@ -64,14 +64,7 @@ hitobito:
   path_names: "Puzzle ITC\nHitobito"
   leaf: false
 
-hitobito_demo:webauftritt:
-  id:        2
-  name:      Webauftritt
-  shortname: WEB
-  path_ids: [2]
-  path_shortnames: STOP-WEB
-  path_names: "Swisstopo\nWebauftritt"
-  leaf: true
+hitobito_demo:
   id:        8
   parent_id: 7
   name:      Demo

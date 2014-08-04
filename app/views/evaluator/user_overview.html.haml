@@ -1,4 +1,4 @@
-- @title = "Zeiten aller #{@evaluation.label} von #{@evaluation.is_a?(EmployeeSubProjectsEval) ? @evaluation.category.label : @user.label}"
+- @title = "Zeiten aller #{@evaluation.label} von #{@evaluation.is_a?(EmployeeSubWorkItemsEval) ? @evaluation.category.label : @user.label}"
 = render(:partial => 'period_link')
 = time_info
 = render(:partial => 'category')

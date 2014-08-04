@@ -1,12 +1,12 @@
 # encoding: utf-8
 
-class SubProjectsEval < ProjectsEval
+class SubWorkItemsEval < WorkItemsEval
 
   self.division_method  = :children
-  self.label            = 'Subprojekte'
+  self.label            = 'Subpositionen'
 
-  def initialize(project_id)
-    super(Project.find(project_id))
+  def initialize(item_id)
+    super(WorkItem.find(item_id))
   end
 
   def account_id
@@ -20,10 +20,10 @@ class SubProjectsEval < ProjectsEval
 
   # Label for the represented division, if any.
   def division_label
-    'Projekt: ' + (division ? division : category).label_ancestry
+    'Position: ' + (division ? division : category).label_ancestry
   end
 
   def division_column
-    "projects.path_ids[#{category.path_ids.size+1}]"
+    "work_items.path_ids[#{category.path_ids.size+1}]"
   end
 end
