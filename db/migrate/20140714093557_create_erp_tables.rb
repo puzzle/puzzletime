@@ -2,6 +2,7 @@
 
 # define deleted models that are used in the migration
 class Project < ActiveRecord::Base
+  schema_validations except: :path_ids
   acts_as_tree order: 'shortname'
   belongs_to :work_item
   schema_validations except: :path_ids
@@ -220,9 +221,6 @@ class CreateErpTables < ActiveRecord::Migration
 
     remove_column :projects, :work_item_id
 
-    # rename projecttime to ordertime
-    Worktime.where(type: 'Projecttime').update_all(type: 'Ordertime')
-
     # remove_column :plannings, :project_id
 
     # remove_column :worktimes, :project_id
@@ -282,7 +280,6 @@ class CreateErpTables < ActiveRecord::Migration
   private
 
   def migrate_projects_to_work_items
-    assert_valid_plannings_before_migration
     say_with_time 'add work_items for clients' do
       add_work_items_for_clients
     end
@@ -370,7 +367,6 @@ class CreateErpTables < ActiveRecord::Migration
                               shortname: project[:shortname],
                               description: project[:description],
                               leaf: leaf)
-
     project.save!
   end
 
@@ -391,31 +387,8 @@ class CreateErpTables < ActiveRecord::Migration
   end
 
   def migrate_planning_project_ids
-    migrate_plannings
-    assert_valid_plannings_after_migration
-  end
-
-  def assert_valid_plannings_before_migration
     Planning.find_each do |planning|
-      unless planning.valid?
-        unless planning.errors.keys == [:work_item_id]
-          fail "Bad data found in planning #{planning.id}. Exception #{planning.errors.full_messages.join(', ')}"
-        end
-      end
-    end
-  end
-
-  def migrate_plannings
-    Planning.find_each do |planning|
-      planning.update_attributes!(work_item_id: planning.project.work_item_id)
-    end
-  end
-
-  def assert_valid_plannings_after_migration
-    Planning.find_each do |planning|
-      unless planning.work_item
-        fail "Missing work_item for planning #{planning.id}"
-      end
+      planning.update_column(:work_item_id, planning.project.work_item_id)
     end
   end
 
