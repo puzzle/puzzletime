@@ -2,7 +2,6 @@
 
 # define deleted models that are used in the migration
 class Project < ActiveRecord::Base
-  schema_validations except: :path_ids
   acts_as_tree order: 'shortname'
   belongs_to :work_item
   schema_validations except: :path_ids

@@ -38,7 +38,7 @@ class EditOtherOrdertimeTest < ActionDispatch::IntegrationTest
     assert_match(/Die Zeiten wurden noch nicht gespeichert/, response.body)
     assert_match(/Bitte schliessen sie dazu den Aufteilungsprozess ab/, response.body)
     ordertime.reload
-    assert_equal ordertime, ordertime.last # splitted times will be persisted later as new records
+    assert_equal ordertime, Ordertime.last # splitted times will be persisted later as new records
     assert_equal 8.5, ordertime.hours
 
     post_via_redirect create_part_ordertimes_path,
@@ -64,7 +64,7 @@ class EditOtherOrdertimeTest < ActionDispatch::IntegrationTest
                      hours: '8:30'  }
     assert_response :success
     assert_equal '/ordertimes', path
-    ordertime = ordertime.last
+    ordertime = Ordertime.last
     assert_equal 8.5, ordertime.hours
     ordertime
   end
