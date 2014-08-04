@@ -78,8 +78,8 @@ class CreateErpTables < ActiveRecord::Migration
     end
 
     create_table :order_targets do |t|
-      t.belongs_to :order
-      t.belongs_to :target_scope
+      t.belongs_to :order, null: false
+      t.belongs_to :target_scope, null: false
       t.string :rating, null: false, default: OrderTarget::RATINGS.first
       t.text :comment
 
@@ -113,8 +113,8 @@ class CreateErpTables < ActiveRecord::Migration
     add_index :contacts, :client_id
 
     create_table :billing_addresses do |t|
-      t.belongs_to :client
-      t.belongs_to :contact
+      t.belongs_to :client, null: false
+      t.belongs_to :contact, null: false
       t.string :supplement
       t.string :street
       t.string :zip_code
@@ -213,7 +213,7 @@ class CreateErpTables < ActiveRecord::Migration
 
     # rename projecttime to ordertime
     Worktime.where(type: 'Projecttime').update_all(type: 'Ordertime')
-    
+
     migrate_projects_to_work_items
 
     remove_column :projects, :work_item_id
@@ -308,15 +308,15 @@ class CreateErpTables < ActiveRecord::Migration
       else
         fail "Project #{project.path_shortnames} has invalid numbers of parents (#{project.path_ids.size} parents but only 1-3 are supported)"
       end
-      
+
       # migrate ordertime project ids
       Ordertime.where(project_id: project.id).update_all(work_item_id: project.work_item.id)
     end
-    
+
     assert_all_entries_have_work_items(Project)
     assert_all_entries_have_work_items(Ordertime)
   end
-  
+
   def migrate_depth1_project(project)
       client = Client.find(project[:client_id])
       create_work_item!(project, client.work_item, true)
@@ -332,7 +332,7 @@ class CreateErpTables < ActiveRecord::Migration
       client = Client.find(project.parent[:client_id])
       create_work_item!(project.parent, client.work_item, false)
     end
-    
+
     create_work_item!(project, project.parent.work_item, true)
     create_order!(project)
     create_accounting_post!(project)
@@ -363,7 +363,7 @@ class CreateErpTables < ActiveRecord::Migration
                               shortname: project[:shortname],
                               description: project[:description],
                               leaf: leaf)
-    
+
     project.save!
   end
 
@@ -382,7 +382,7 @@ class CreateErpTables < ActiveRecord::Migration
                                               description_required: project[:description_required],
                                               ticket_required: project[:ticket_required])
   end
-  
+
   def migrate_planning_project_ids
     Planning.all.each do |planning|
       planning.update_column(:work_item_id, planning.project.work_item_id)

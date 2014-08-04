@@ -19,6 +19,8 @@ class Order < ActiveRecord::Base
 
   include BelongingToWorkItem
 
+  ### ASSOCIATIONS
+
   belongs_to :kind, class_name: 'OrderKind'
   belongs_to :status, class_name: 'OrderStatus'
   belongs_to :responsible, class_name: 'Employee'
@@ -36,18 +38,28 @@ class Order < ActiveRecord::Base
   has_and_belongs_to_many :employees
   has_and_belongs_to_many :contacts
 
+
+  ### VALIDATIONS
+
   validates :kind_id, :responsible_id, :status_id, :department_id, presence: true
   validate :work_item_parent_presence
 
   # TODO: validate only one order per work_items path_ids
-  # TODO: after create callback to initialize order targets
   # TODO propagate status closed to work items when changed
+
+  ### CALLBACKS
+
+  after_create :create_order_targets
+
+  ### SCOPES
 
   scope :list, -> do
     includes(:work_item).
     references(:work_item).
     order('work_items.path_names')
   end
+
+  ### INSTANCE METHODS
 
   def to_s
     work_item.to_s
@@ -66,6 +78,12 @@ class Order < ActiveRecord::Base
   def work_item_parent_presence
     if work_item && work_item.parent_id.nil?
       errors.add(:base, 'Kunde darf nicht leer sein')
+    end
+  end
+
+  def create_order_targets
+    TargetScope.find_each do |s|
+      targets.create!(target_scope: s, rating: OrderTarget::RATINGS.first)
     end
   end
 
