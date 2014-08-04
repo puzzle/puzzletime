@@ -51,14 +51,14 @@ class PlanningsController < CrudController
   end
 
   def projects
-    @projects = Project.top_projects.includes(:department)
+    @projects = WorkItem.list
   end
 
   def project_planning
-    unless params[:project_id]
+    unless params[:work_item_id]
       return redirect_to(action: 'projects')
     end
-    @project = Project.find(params[:project_id])
+    @project = WorkItem.find(params[:work_item_id])
     @graph = ProjectPlanningGraph.new(@project, @period)
   end
 
@@ -100,7 +100,7 @@ class PlanningsController < CrudController
   def build_planning_form
     @employee = entry.employee
     set_employees
-    @projects = Project.top_projects
+    @projects = WorkItem.list
     @graph = EmployeePlanningGraph.new(@employee, @period)
     @period = extended_period(entry.start_week_date)
   end
@@ -135,7 +135,7 @@ class PlanningsController < CrudController
   def assign_attributes
     planning_params = params[:planning]
     entry.employee = Employee.find(planning_params[:employee_id]) if planning_params[:employee_id].present?
-    entry.project = Project.find(planning_params[:project_id]) if planning_params[:project_id].present?
+    entry.work_item = WorkItem.find(planning_params[:work_item_id]) if planning_params[:work_item_id].present?
     entry.start_week = Week.from_string(planning_params[:start_week_date]).to_integer if planning_params[:start_week_date].present?
     entry.definitive = planning_params[:type] == 'definitive'
     entry.is_abstract = planning_params[:abstract_concrete] == 'abstract'

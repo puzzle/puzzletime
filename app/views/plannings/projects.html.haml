@@ -4,7 +4,6 @@
                                 self,
                                 class: 'table-condensed table-striped table-hover') do |t|
   - t.col('Projekt') { |p| p.label_verbose }
-  - t.col('Bereich') { |p| p.department.try(:shortname) }
   - t.action_col do |p|
     = link_to 'Aktuelle Planung',
               :action => 'project_planning', :project_id => p.id
