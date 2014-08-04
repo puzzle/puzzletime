@@ -17,7 +17,7 @@ class PlanningsController < CrudController
   end
 
   def my_projects
-    @projects = @user.managed_projects.includes(:department)
+    @projects = @user.responsible_orders.collect{|o| o.work_item}
     render template: 'plannings/projects'
   end
 
