@@ -13,11 +13,11 @@ module Puzzletime
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
-    config.autoload_paths += %W(#{config.root}/app/models/forms
-                                #{config.root}/app/models/reports
+    config.autoload_paths += %W(#{config.root}/app/domain/forms
+                                #{config.root}/app/domain/reports
                                 #{config.root}/app/models/util
-                                #{config.root}/app/models/evaluations
-                                #{config.root}/app/models/graphs
+                                #{config.root}/app/domain/evaluations
+                                #{config.root}/app/domain/graphs
                                 #{config.root}/app/domain
                                 #{config.root}/app/jobs)
 
