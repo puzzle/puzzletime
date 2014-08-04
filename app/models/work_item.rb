@@ -52,8 +52,9 @@ class WorkItem < ActiveRecord::Base
 
   ### SCOPES
 
-  scope :list, -> { order('path_shortnames') }
-  scope :recordable, -> { where(leaf: true, closed: false) }
+  scope :list,       -> { order('path_shortnames') }
+  scope :leaves,     -> { where(leaf: true) }
+  scope :recordable, -> { leaves.where(closed: false) }
 
   ### INSTANCE METHODS
 
@@ -107,6 +108,10 @@ class WorkItem < ActiveRecord::Base
     store_path_names
     save!
     update_child_path_names
+  end
+
+  def propagate_closed!(closed)
+    self_and_descendants.leaves.update_all(closed: closed)
   end
 
   private

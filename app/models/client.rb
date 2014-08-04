@@ -27,8 +27,8 @@ class Client < ActiveRecord::Base
   has_many :contacts
   has_many :billing_addresses
 
-  has_many_through_work_item :orders
-  has_many_through_work_item :accounting_posts
+  has_descendants_through_work_item :orders
+  has_descendants_through_work_item :accounting_posts
 
   validates :work_item, presence: true
 
