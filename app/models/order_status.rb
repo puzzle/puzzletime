@@ -14,12 +14,12 @@ class OrderStatus < ActiveRecord::Base
 
   STYLES = %w(default success info warning danger)
 
+  include Closable
+
   has_many :orders, foreign_key: :status_id
 
   validates :name, :position, uniqueness: true
   validates :style, inclusion: STYLES
-
-  # TODO propagate closed to work items when changed
 
   protect_if :orders, 'Der Eintrag kann nicht gelöscht werden, da ihm noch Aufträge zugeordnet sind'
 
@@ -28,6 +28,12 @@ class OrderStatus < ActiveRecord::Base
 
   def to_s
     name
+  end
+
+  def propagate_closed!
+    orders.includes(:status).find_each do |order|
+      order.propagate_closed!
+    end
   end
 
 end

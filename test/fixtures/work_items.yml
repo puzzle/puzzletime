@@ -23,6 +23,7 @@ allgemein:
   path_shortnames: PITC-AL
   path_names: "Puzzle ITC\nAllgemein"
   leaf: true
+  closed: true
 
 puzzletime:
   id:        4

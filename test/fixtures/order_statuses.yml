@@ -18,3 +18,4 @@ abgeschlossen:
   name: Abgeschlossen
   style: danger
   position: 20
+  closed: true
