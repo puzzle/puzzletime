@@ -78,8 +78,8 @@ class CreateErpTables < ActiveRecord::Migration
     end
 
     create_table :order_targets do |t|
-      t.belongs_to :order
-      t.belongs_to :target_scope
+      t.belongs_to :order, null: false
+      t.belongs_to :target_scope, null: false
       t.string :rating, null: false, default: OrderTarget::RATINGS.first
       t.text :comment
 
@@ -113,8 +113,8 @@ class CreateErpTables < ActiveRecord::Migration
     add_index :contacts, :client_id
 
     create_table :billing_addresses do |t|
-      t.belongs_to :client
-      t.belongs_to :contact
+      t.belongs_to :client, null: false
+      t.belongs_to :contact, null: false
       t.string :supplement
       t.string :street
       t.string :zip_code
