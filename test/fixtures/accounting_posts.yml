@@ -18,9 +18,13 @@
 #
 
 allgemein:
-  id: 1
   work_item_id: 3
 
 puzzletime:
-  id: 2
   work_item_id: 4
+
+hitobito_demo_app:
+  work_item_id: 9
+
+hitobito_demo_site:
+  work_item_id: 10

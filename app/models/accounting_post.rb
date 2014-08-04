@@ -20,16 +20,13 @@
 class AccountingPost < ActiveRecord::Base
 
   include BelongingToWorkItem
+  include Closable
 
   belongs_to :portfolio_itme
 
-  has_one_through_work_item :order
-  has_one_through_work_item :client
-  has_many_through_work_item :worktimes
+  has_ancestor_through_work_item :order
+  has_ancestor_through_work_item :client
 
-  # TODO propagate closed to work items when changed
-  
-  protected
 
   def validate_worktime(worktime)
     if worktime.report_type != AutoStartType::INSTANCE && description_required? && worktime.description.blank?

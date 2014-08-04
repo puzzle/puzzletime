@@ -18,6 +18,7 @@
 class Order < ActiveRecord::Base
 
   include BelongingToWorkItem
+  include Closable
 
   ### ASSOCIATIONS
 
@@ -28,12 +29,11 @@ class Order < ActiveRecord::Base
   belongs_to :contract
   belongs_to :billing_address
 
-  has_one_through_work_item :client
+  has_ancestor_through_work_item :client
 
   has_many :comments, class_name: 'OrderComment'
   has_many :targets, class_name: 'OrderTarget'
-  has_many_through_work_item :accounting_posts
-  has_many_through_work_item :worktimes
+  has_descendants_through_work_item :accounting_posts
 
   has_and_belongs_to_many :employees
   has_and_belongs_to_many :contacts
@@ -44,20 +44,10 @@ class Order < ActiveRecord::Base
   validates :kind_id, :responsible_id, :status_id, :department_id, presence: true
   validate :work_item_parent_presence
 
-  # TODO: validate only one order per work_items path_ids
-  # TODO propagate status closed to work items when changed
-
   ### CALLBACKS
 
+  after_initialize :set_default_status_id
   after_create :create_order_targets
-
-  ### SCOPES
-
-  scope :list, -> do
-    includes(:work_item).
-    references(:work_item).
-    order('work_items.path_names')
-  end
 
   ### INSTANCE METHODS
 
@@ -65,12 +55,18 @@ class Order < ActiveRecord::Base
     work_item.to_s
   end
 
-  def status_id
-    super || OrderStatus.list.pluck(:id).first
-  end
-
   def parent_names
     work_item.path_names.split("\n")[0..-2].join(" #{Settings.work_items.path_separator} ")
+  end
+
+  def propagate_closed!
+    if status.closed
+      work_item.propagate_closed!(status.closed)
+    else
+      accounting_posts.each do |post|
+        post.propagate_closed!
+      end
+    end
   end
 
   private
@@ -81,9 +77,22 @@ class Order < ActiveRecord::Base
     end
   end
 
+  def set_default_status_id
+    self.status_id ||= OrderStatus.list.pluck(:id).first
+  end
+
   def create_order_targets
     TargetScope.find_each do |s|
       targets.create!(target_scope: s, rating: OrderTarget::RATINGS.first)
+    end
+  end
+
+  def closed_changed?
+    if status_id_changed?
+      statuses = OrderStatus.find(status_id_change)
+      statuses.first.closed? != statuses.last.closed?
+    else
+      false
     end
   end
 
