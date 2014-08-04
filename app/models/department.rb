@@ -13,12 +13,10 @@ class Department < ActiveRecord::Base
 
   include Evaluatable
 
-  has_many :projects, -> { where(parent_id: nil) }
-
-  has_many :all_projects, class_name: 'Project'
-
+  has_many :orders
+  
   protect_if :worktimes, 'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Arbeitszeiten zugeordnet sind'
-  protect_if :projects, 'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Projekte zugeordnet sind'
+  protect_if :orders, 'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Aufträge zugeordnet sind'
 
   scope :list, -> { order('name') }
 
@@ -27,8 +25,7 @@ class Department < ActiveRecord::Base
   end
 
   def worktimes
-    Worktime.joins(:project).
-             where(projects: { department_id: id })
+    orders.collect{|o| o.worktimes }
   end
 
   ##### interface methods for Evaluatable #####
