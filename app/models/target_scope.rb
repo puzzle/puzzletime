@@ -12,16 +12,24 @@
 
 class TargetScope < ActiveRecord::Base
 
-  has_many :order_targets
+  has_many :order_targets, dependent: :destroy
 
   validates :name, :position, :icon, presence: true, uniqueness: true
 
-  protect_if :order_targets, 'Der Eintrag kann nicht gelöscht werden, da ihm noch Ziele zugeordnet sind'
+  after_create :create_order_targets
 
   scope :list, -> { order(:position) }
 
   def to_s
     name
+  end
+
+  private
+
+  def create_order_targets
+    Order.find_each do |o|
+      o.targets.create!(target_scope: self, rating: OrderTarget::RATINGS.first)
+    end
   end
 
 end

@@ -14,4 +14,9 @@ class OrderTest < ActiveSupport::TestCase
     assert order.valid?, order.errors.full_messages.join(', ')
   end
 
+  test 'created order comes with order targets' do
+    order = Fabricate(:order)
+    assert_equal TargetScope.all.to_set, order.targets.collect(&:target_scope).to_set
+  end
+
 end
