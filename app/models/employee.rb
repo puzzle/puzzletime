@@ -47,8 +47,8 @@ class Employee < ActiveRecord::Base
   validates_presence_of :lastname, message: 'Der Nachname muss angegeben werden'
   validates_presence_of :shortname, message: 'Das Kürzel muss angegeben werden'
   validates_presence_of :email, message: 'Die Email Adresse muss angegeben werden'         # Required by database
-  validates_uniqueness_of :shortname, message: 'Dieses Kürzel wird bereits verwendet'
-  validates_uniqueness_of :ldapname, allow_blank: true, message: 'Dieser LDAP Name wird bereits verwendet'
+  validates_uniqueness_of :shortname, case_sensitive: false, message: 'Dieses Kürzel wird bereits verwendet'
+  validates_uniqueness_of :ldapname, allow_blank: true, case_sensitive: false, message: 'Dieser LDAP Name wird bereits verwendet'
   validate :periods_format
 
   protect_if :worktimes, 'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Arbeitszeiten zugeordnet sind'

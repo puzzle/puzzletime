@@ -32,9 +32,9 @@ de-CH:
       planning:
         one: Planung
         other: Planungen
-      project:
-        one: Projekt
-        other: Projekte
+      order:
+        one: Auftrag
+        other: Aufträge
       ordertime:
         one: Zeit
         other: Zeiten
@@ -107,7 +107,17 @@ de-CH:
         friday_pm: Freitag Nachmittag
         is_abstract: Abstrakt
         abstract_amount: Anzahl
-      project:
+      projectmembership:
+        project_id: Projekt
+        employee_id: Mitarbeiter
+        projectmanagement: Projektleitung
+        last_completed: Komplettiert
+        active: Aktiv
+      user_notification:
+        date_from: Startdatum
+        date_to: Enddatum
+        message: Nachricht
+      work_item:
         client_id: Kunde
         department_id: Geschäftsbereich
         name: Name
@@ -121,16 +131,6 @@ de-CH:
         freeze_until: Eingefroren vor
         description_required: Bemerkung nötig
         ticket_required: Ticket nötig
-      projectmembership:
-        project_id: Projekt
-        employee_id: Mitarbeiter
-        projectmanagement: Projektleitung
-        last_completed: Komplettiert
-        active: Aktiv
-      user_notification:
-        date_from: Startdatum
-        date_to: Enddatum
-        message: Nachricht
       worktime:
         project_id: Projekt
         absence_id: Absenz
