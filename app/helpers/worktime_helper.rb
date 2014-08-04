@@ -32,15 +32,15 @@ module WorktimeHelper
     end
     result.html_safe
   end
-  
+
   def week_number(date)
-    date.strftime("%U").to_i if date
+    date.strftime("%V").to_i if date
   end
 
   def monthly_worktime
     "#{format_hour(@monthly_worktime)} (#{format_hour(@pending_worktime)} verbleibend)"
   end
-  
+
   # sum worktime hours for a given date. if no date is given, sum all worktime hours
   def sum_hours(day=nil)
     if day

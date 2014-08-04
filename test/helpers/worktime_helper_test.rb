@@ -12,6 +12,11 @@ class WorktimeHelperTest < ActionView::TestCase
     @daily_worktimes = @worktimes.group_by { |w| w.work_date}
   end
 
+  test 'week_number' do
+    assert_equal 29, week_number(Date.new(2014, 7, 20)) # sunday
+    assert_equal 30, week_number(Date.new(2014, 7, 21)) # monday
+  end
+
   test 'daily worktimes' do
     assert_equal [worktimes(:wt_mw_webauftritt)], @daily_worktimes[Date.new(2006, 12, 8)]
   end
