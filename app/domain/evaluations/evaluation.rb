@@ -10,7 +10,7 @@
 class Evaluation
 
   class_attribute :division_method, :division_column, :division_join,
-                  :sub_evaluation, :sub_projects_eval, :label, :absences,
+                  :sub_evaluation, :sub_work_items_eval, :label, :absences,
                   :total_details, :category_ref, :detail_columns, :detail_labels
 
   # The method to send to the category object to retrieve a list of divisions.
@@ -19,12 +19,12 @@ class Evaluation
   # Next lower evaluation for divisions, which will be acting as the category there.
   self.sub_evaluation    = nil
 
-  self.sub_projects_eval = nil
+  self.sub_work_items_eval = nil
 
   # Name of the evaluation to be displayed
   self.label             = ''
 
-  # Whether this Evaluation is for absences or project times.
+  # Whether this Evaluation is for absences or order times.
   self.absences          = false
 
   # Whether details for totals are possible.
@@ -94,7 +94,7 @@ class Evaluation
   # of time.
   def times(period)
     worktime_query(division || category, period, division).
-      order('work_date ASC, from_start_time, project_id, employee_id')
+      order('work_date ASC, from_start_time, work_item_id, employee_id')
   end
 
   def worktime_query(receiver, period = nil, division = nil)
@@ -126,13 +126,13 @@ class Evaluation
   # and the according table headers. May be used for displaying additional
   # information or links to certain actions.
   # No methods are called by default.
-  # See EmployeeProjectsEval for an example.
+  # See EmployeeWorkItemsEval for an example.
   def division_supplement(user)
     []
   end
 
-  def sub_projects_evaluation(division)
-    sub_projects_eval if sub_projects_eval && division.sub_projects?
+  def sub_work_items_evaluation(division)
+    sub_work_items_eval if sub_work_items_eval && division.children?
   end
 
   # Returns whether this Evaluation is personally for the current user.

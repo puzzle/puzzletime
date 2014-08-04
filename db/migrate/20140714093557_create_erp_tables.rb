@@ -4,6 +4,7 @@
 class Project < ActiveRecord::Base
   acts_as_tree order: 'shortname'
   belongs_to :work_item
+  schema_validations except: :path_ids
 
   def latest_freeze_until
     if parent.nil?
@@ -25,6 +26,7 @@ class Projectmembership < ActiveRecord::Base
   belongs_to :employee
 end
 
+require Rails.root.join('app', 'models', 'planning')
 class Planning < ActiveRecord::Base
   belongs_to :project
 end
@@ -227,6 +229,7 @@ class CreateErpTables < ActiveRecord::Migration
 
     # remove_column :clients, :name
     # remove_column :clients, :shortname
+    # change_column :clients, :work_item_id, :integer, null: false
     change_column :clients, :name, :string, null: true
     change_column :clients, :shortname, :string, null: true
 
@@ -279,6 +282,7 @@ class CreateErpTables < ActiveRecord::Migration
   private
 
   def migrate_projects_to_work_items
+    assert_valid_plannings_before_migration
     say_with_time 'add work_items for clients' do
       add_work_items_for_clients
     end
@@ -291,7 +295,7 @@ class CreateErpTables < ActiveRecord::Migration
   end
 
   def add_work_items_for_clients
-    Client.all.each do |client|
+    Client.find_each do |client|
       # access attributes directly because of delegations
       client.create_work_item!(name: client[:name], shortname: client[:shortname])
     end
@@ -387,27 +391,28 @@ class CreateErpTables < ActiveRecord::Migration
   end
 
   def migrate_planning_project_ids
-    assert_valid_plannings_before_migration
     migrate_plannings
     assert_valid_plannings_after_migration
   end
 
   def assert_valid_plannings_before_migration
-    Planning.all.each do |planning|
+    Planning.find_each do |planning|
       unless planning.valid?
-        fail "Bad data found in planning #{planning.id}. Exception #{e}"
+        unless planning.errors.keys == [:work_item_id]
+          fail "Bad data found in planning #{planning.id}. Exception #{planning.errors.full_messages.join(', ')}"
+        end
       end
     end
   end
 
   def migrate_plannings
-    Planning.all.each do |planning|
+    Planning.find_each do |planning|
       planning.update_attributes!(work_item_id: planning.project.work_item_id)
     end
   end
 
   def assert_valid_plannings_after_migration
-    Planning.all.each do |planning|
+    Planning.find_each do |planning|
       unless planning.work_item
         fail "Missing work_item for planning #{planning.id}"
       end

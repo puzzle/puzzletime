@@ -37,7 +37,7 @@ class Employee < ActiveRecord::Base
            through: :worktimes
   has_many :worktimes
   has_many :overtime_vacations, dependent: :destroy
-  has_many :responsible_orders, class_name: 'Order', foreign_key: :responsible_id
+  has_many :managed_orders, class_name: 'Order', foreign_key: :responsible_id
   has_one :running_project,
           -> { where(report_type: AutoStartType::INSTANCE.key) },
           class_name: 'Ordertime'
@@ -84,10 +84,11 @@ class Employee < ActiveRecord::Base
   ##### helper methods #####
 
   def order_responsible?
-    responsible_orders.exists?
+    managed_orders.exists?
   end
 
   # Whether this Employee is a project manager
+  # TODO remove
   def project_manager?
     managed_projects.exists?
   end
@@ -109,28 +110,29 @@ class Employee < ActiveRecord::Base
     update_attributes!(passwd: Employee.encode(pwd))
   end
 
+  # TODO remove
   def managed_projects
     Project.select("DISTINCT projects.*").
             joins('INNER JOIN orders ON orders.work_item_id = projects.id').
             where(orders: { responsible_id: id })
   end
 
-  # main projects this employee ever worked on
-  def alltime_main_projects
-    Project.select("DISTINCT projects.*").
-            joins('RIGHT JOIN projects leaves ON leaves.path_ids[1] = projects.id').
-            joins('RIGHT JOIN worktimes ON worktimes.project_id = leaves.id').
-            where(worktimes: { employee_id: id} ).
-            where('projects.id IS NOT NULL').
-            list
+  # main work items this employee ever worked on
+  def alltime_main_work_items
+    WorkItem.select("DISTINCT work_items.*").
+             joins('RIGHT JOIN work_items leaves ON leaves.path_ids[1] = work_items.id').
+             joins('RIGHT JOIN worktimes ON worktimes.work_item_id = leaves.id').
+             where(worktimes: { employee_id: id} ).
+             where('work_items.id IS NOT NULL').
+             list
   end
 
-  def alltime_leaf_projects
-    Project.select("DISTINCT projects.*").
-            joins('RIGHT JOIN worktimes ON worktimes.project_id = projects.id').
-            where(worktimes: { employee_id: id} ).
-            where('projects.id IS NOT NULL').
-            list
+  def alltime_leaf_work_items
+    WorkItem.select("DISTINCT work_items.*").
+             joins('RIGHT JOIN worktimes ON worktimes.project_id = work_items.id').
+             where(worktimes: { employee_id: id} ).
+             where('work_items.id IS NOT NULL').
+             list
   end
 
   def statistics

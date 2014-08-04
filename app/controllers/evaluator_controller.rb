@@ -4,7 +4,7 @@ class EvaluatorController < ApplicationController
 
   # Checks if employee came from login or from direct url.
   before_action :authorize, only: [:clients, :employees, :overtime,
-                                   :clientProjects, :employeeProjects, :employeeAbsences,
+                                   :client_work_items, :employee_work_items, :employee_absences,
                                    :export_capacity_csv, :export_extended_capacity_csv, :export_ma_overview]
   before_action :set_period
 
@@ -155,15 +155,15 @@ class EvaluatorController < ApplicationController
   def set_evaluation
     params[:evaluation] ||= 'userprojects'
     @evaluation = case params[:evaluation].downcase
-        when 'managed' then ManagedProjectsEval.new(@user)
+        when 'managed' then ManagedWorkItemsEval.new(@user)
         when 'absencedetails' then AbsenceDetailsEval.new
-        when 'userprojects' then EmployeeProjectsEval.new(@user.id)
-        when "employeesubprojects#{@user.id}", 'usersubprojects' then
-          params[:evaluation] = 'usersubprojects'
-          EmployeeSubProjectsEval.new(params[:category_id], @user.id)
+        when 'userworkitems' then EmployeeWorkItemsEval.new(@user.id)
+        when "employeesubworkitems#{@user.id}", 'usersubworkitems' then
+          params[:evaluation] = 'usersubworkitems'
+          EmployeeSubWorkItemsEval.new(params[:category_id], @user.id)
         when 'userabsences' then EmployeeAbsencesEval.new(@user.id)
-        when 'subprojects' then SubProjectsEval.new(params[:category_id])
-        when 'projectemployees' then ProjectEmployeesEval.new(params[:category_id])
+        when 'subworkitems' then SubWorkItemsEval.new(params[:category_id])
+        when 'workitememployees' then WorkItemEmployeesEval.new(params[:category_id])
         else nil
     end
     if @user.management && @evaluation.nil?
@@ -171,17 +171,17 @@ class EvaluatorController < ApplicationController
         when 'clients' then ClientsEval.new
         when 'employees' then EmployeesEval.new
         when 'departments' then DepartmentsEval.new
-        when 'clientprojects' then ClientProjectsEval.new(params[:category_id])
-        when 'employeeprojects' then EmployeeProjectsEval.new(params[:category_id])
-        when /employeesubprojects(\d+)/ then EmployeeSubProjectsEval.new(params[:category_id], Regexp.last_match[1])
-        when 'departmentprojects' then DepartmentProjectsEval.new(params[:category_id])
+        when 'clientworkitems' then ClientWorkItemsEval.new(params[:category_id])
+        when 'employeeworkitems' then EmployeeWorkItemsEval.new(params[:category_id])
+        when /employeesubworkitems(\d+)/ then EmployeeSubWorkItemsEval.new(params[:category_id], Regexp.last_match[1])
+        when 'departmentprojects' then DepartmentWorkItemsEval.new(params[:category_id])
         when 'absences' then AbsencesEval.new
         when 'employeeabsences' then EmployeeAbsencesEval.new(params[:category_id])
         else nil
       end
     end
     if @evaluation.nil?
-      @evaluation = EmployeeProjectsEval.new(@user.id)
+      @evaluation = EmployeeWorkItemsEval.new(@user.id)
     end
   end
 

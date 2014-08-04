@@ -1,11 +1,11 @@
 # encoding: utf-8
 
-class EmployeeProjectsEval < ProjectsEval
+class EmployeeWorkItemsEval < WorkItemsEval
 
   self.category_ref      = :employee_id
   self.sub_evaluation    = nil
-  self.division_method   = :alltime_main_projects
-  self.sub_projects_eval = 'employeesubprojects'
+  self.division_method   = :alltime_main_work_items
+  self.sub_work_items_eval = 'employeesubworkitems'
   self.detail_columns    = detail_columns.collect { |i| i == :hours ? :times : i }
 
 
@@ -25,13 +25,12 @@ class EmployeeProjectsEval < ProjectsEval
     category.id
   end
 
-  def sub_projects_evaluation(project = nil)
-    sub_projects_eval + employee_id.to_s if project && project.sub_projects?
+  def sub_work_items_evaluation(work_item = nil)
+    sub_work_items_eval + employee_id.to_s if work_item && work_item.children?
   end
 
-  # default would turn Employee.alltime_main_projects too complicated
   def set_division_id(division_id = nil)
     return if division_id.nil?
-    @division = Project.find(division_id.to_i)
+    @division = WorkItem.find(division_id.to_i)
   end
 end

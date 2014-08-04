@@ -1,14 +1,14 @@
 # encoding: utf-8
 
-class ProjectEmployeesEval < Evaluation
+class WorkItemEmployeesEval < Evaluation
 
   self.division_method  = :employees
   self.division_column  = :employee_id
   self.label            = 'Mitarbeiter'
   self.category_ref     = 'ANY ( path_ids )'
 
-  def initialize(project_id)
-    super(Project.find(project_id))
+  def initialize(item_id)
+    super(WorkItem.find(item_id))
   end
 
   def employee_id
@@ -19,14 +19,14 @@ class ProjectEmployeesEval < Evaluation
     category.id
   end
 
-  ####### overwritten methods for working with project hierarchies
+  ####### overwritten methods for working with work item hierarchies
 
   def category_label
-    "Projekt: #{category.top? ? category.label : category.label_verbose}"
+    "Position: #{category.top? ? category.label : category.label_verbose}"
   end
 
   def worktime_query(receiver, period = nil, division = nil)
-    super(receiver, period, division).joins(:project)
+    super(receiver, period, division).joins(:work_item)
   end
 
   def set_division_id(division_id = nil)
