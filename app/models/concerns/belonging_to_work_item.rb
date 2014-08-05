@@ -1,13 +1,25 @@
+# encoding: utf-8
+
 module BelongingToWorkItem
 
   extend ActiveSupport::Concern
 
   included do
-    belongs_to :work_item, validate: true, autosave: true
+    # must be before associations to prevent their destruction
+    protect_if :worktimes, 'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Arbeitszeiten zugeordnet sind'
+
+    belongs_to :work_item,
+               validate: true,
+               autosave: true,
+               dependent: :destroy
 
     has_descendants_through_work_item :worktimes
 
+    validates :work_item, presence: true
+
     accepts_nested_attributes_for :work_item, update_only: true
+
+    delegate :name, :shortname, to: :work_item, allow_nil: true
 
     scope :list, -> do
       includes(:work_item).
