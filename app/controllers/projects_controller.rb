@@ -13,7 +13,7 @@ class ProjectsController < ManageController
 
   self.search_columns = [:path_shortnames, :path_names, :inherited_description]
 
-  before_action :authorize, only: [:edit, :update, :destroy]
+  #before_action :authorize, only: [:edit, :update, :destroy]
 
   def search
     params[:q] ||= params[:term]
@@ -49,6 +49,10 @@ class ProjectsController < ManageController
 
   def authorized?
     super || managed_project?(entry)
+  end
+
+  def managed_project?(project)
+    (@user.managed_projects.collect { |p| p.id } & project.path_ids).present?
   end
 
   def group_filter

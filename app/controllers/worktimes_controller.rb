@@ -7,6 +7,7 @@ class WorktimesController < CrudController
 
   helper_method :record_other?
 
+  # TODO check handled with cancan
   before_action :authorize_destroy, only: :destroy
 
   after_save :check_overlapping
@@ -58,7 +59,7 @@ class WorktimesController < CrudController
     set_worktime_defaults
     true
   end
-  
+
   def set_work_date
     unless @worktime.work_date
       if params[:work_date]

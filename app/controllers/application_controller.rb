@@ -11,17 +11,19 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   before_action :authenticate
+  check_authorization
 
   helper_method :sanitized_back_url, :current_user
+
+  rescue_from CanCan::AccessDenied do |exception|
+    redirect_to root_url, alert: 'Sie sind nicht authorisiert, um diese Seite zu öffnen'
+  end
 
   private
 
   # Filter for check if user is logged in or not
   def authenticate
-    user_id = session[:user_id]
-    if user_id
-      @user = Employee.find(user_id)
-    else
+    unless current_user
       # allow ad-hoc login
       if request.post? && params[:user] && params[:pwd]
         return if login_with(params[:user], params[:pwd])
@@ -31,31 +33,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def authorize
-    unless authorized?
-      flash[:notice] = 'Sie sind nicht authorisiert, um diese Seite zu öffnen'
-      redirect_to root_path
-    end
-  end
-
-  def authorized?
-    @user && @user.management
-  end
-
-  def managed_project?(project)
-    (@user.managed_projects.collect { |p| p.id } & project.path_ids).present?
-  end
-
   def current_user
-    @user
-  end
-
-  def set_period
-    @period = nil
-    p = session[:period]
-    if p.kind_of? Array
-      @period = Period.retrieve(*p)
-    end
+    @user ||= session[:user_id] && Employee.find(session[:user_id])
   end
 
   def login_with(user, pwd)
@@ -63,6 +42,14 @@ class ApplicationController < ActionController::Base
     if @user
       reset_session
       session[:user_id] = @user.id
+    end
+  end
+
+  def set_period
+    @period = nil
+    p = session[:period]
+    if p.kind_of? Array
+      @period = Period.retrieve(*p)
     end
   end
 

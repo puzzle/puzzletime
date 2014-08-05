@@ -13,8 +13,6 @@ class CrudController < ListController
 
   self.responder = DryCrud::Responder
 
-  respond_to :js, only: [:new, :create]
-
   class_attribute :permitted_attrs
 
   # Defines before and after callback hooks for create, update, save and
@@ -26,12 +24,17 @@ class CrudController < ListController
   # further down.
   define_render_callbacks :show, :new, :edit
 
+  helper_method :entry, :full_entry_label
+
   hide_action :run_callbacks
+
+  respond_to :js, only: [:new, :create]
+
+  prepend_before_action :entry, only: [:show, :new, :create, :edit, :update, :destroy]
 
   after_save :set_success_notice
   after_destroy :set_success_notice
 
-  helper_method :entry, :full_entry_label
 
   ##############  ACTIONS  ############################################
 

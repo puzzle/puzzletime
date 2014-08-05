@@ -7,6 +7,7 @@ gem 'mysql2' # for puzzle base
 
 gem 'airbrake'
 gem 'acts_as_tree'
+gem 'cancancan'
 gem 'dalli'
 gem 'delayed_job_active_record'
 gem 'delayed_cron_job'

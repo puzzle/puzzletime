@@ -1,13 +1,11 @@
-- if @user.management
-  = nav 'Mitarbeiter', employees_path, employees_path
-  = nav 'Kunden', clients_path, clients_path
-- if @user.management
-  = nav 'Aufträge', orders_path, orders_path
-  = nav 'Organisationseinheiten', departments_path, departments_path
-  = nav 'Feiertage', holidays_path, holidays_path
-  = nav 'Absenzarten', absences_path, absences_path
-  = nav 'Nachrichten', user_notifications_path, user_notifications_path
-  = nav 'Auftragsarten', order_kinds_path, order_kinds_path
-  = nav 'Auftragsstati', order_statuses_path, order_statuses_path
-  = nav 'Portfolio Positionen', portfolio_items_path, portfolio_items_path
-  = nav 'Zielwerte', target_scopes_path, target_scopes_path
+= nav 'Mitarbeiter', employees_path, employees_path if can?(:read, Employee)
+= nav 'Kunden', clients_path, clients_path if can?(:read, Client)
+= nav 'Aufträge', orders_path, orders_path if can?(:read, Order)
+= nav 'Organisationseinheiten', departments_path, departments_path if can?(:read, Department)
+= nav 'Feiertage', holidays_path, holidays_path if can?(:read, Holiday)
+= nav 'Absenzarten', absences_path, absences_path if can?(:read, Absence)
+= nav 'Nachrichten', user_notifications_path, user_notifications_path if can?(:read, UserNotification)
+= nav 'Auftragsarten', order_kinds_path, order_kinds_path if can?(:read, OrderKind)
+= nav 'Auftragsstati', order_statuses_path, order_statuses_path if can?(:read, OrderStatus)
+= nav 'Portfolio Positionen', portfolio_items_path, portfolio_items_path if can?(:read, PortfolioItem)
+= nav 'Zielwerte', target_scopes_path, target_scopes_path if can?(:read, TargetScope)

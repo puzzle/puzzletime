@@ -22,8 +22,7 @@ class Client < ActiveRecord::Base
 
   # All dependencies between the models are listed below.
   belongs_to :work_item
-  has_many :projects, -> { where(parent_id: nil) }
-  has_many :all_projects, class_name: 'Project', dependent: :destroy
+
   has_many :contacts
   has_many :billing_addresses
 

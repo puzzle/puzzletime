@@ -2,10 +2,9 @@
 
 class EvaluatorController < ApplicationController
 
-  # Checks if employee came from login or from direct url.
-  before_action :authorize, only: [:clients, :employees, :overtime,
-                                   :client_work_items, :employee_work_items, :employee_absences,
-                                   :export_capacity_csv, :export_extended_capacity_csv, :export_ma_overview]
+  skip_authorize_resource
+  before_action :authorize_action
+
   before_action :set_period
 
   helper_method :user_view?
@@ -17,7 +16,6 @@ class EvaluatorController < ApplicationController
   def overview
     set_evaluation
     set_navigation_levels
-    @notifications = UserNotification.list_during(@period)
     @periods = init_periods
     @times = @periods.collect { |p| @evaluation.sum_times_grouped(p) }
     render(user_view? ? 'user_overview' : 'overview')
@@ -36,7 +34,6 @@ class EvaluatorController < ApplicationController
     params[:evaluation] = 'absencedetails'
     set_evaluation
     @period ||= Period.coming_month Date.today, 'Kommender Monat'
-    @notifications = UserNotification.list_during(@period)
     paginate_times
   end
 
@@ -329,6 +326,12 @@ class EvaluatorController < ApplicationController
     else
       @user.eval_periods.collect { |p| Period.parse(p) }
     end
+  end
+
+  def authorize_action
+    params[:evaluation] ||= params[:action].to_s
+    set_evaluation
+    authorize!(params[:evaluation].to_sym, Evaluation)
   end
 
 end
