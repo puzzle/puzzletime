@@ -15,7 +15,7 @@ class SubWorkItemsEval < WorkItemsEval
 
   # Label for the represented category.
   def category_label
-    'Kunde: ' + category.client.label
+    'Kunde: ' + category.top_item.client.label
   end
 
   # Label for the represented division, if any.

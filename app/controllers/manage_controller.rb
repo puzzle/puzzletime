@@ -2,6 +2,5 @@
 
 class ManageController < CrudController
 
-  before_action :authorize
 
 end

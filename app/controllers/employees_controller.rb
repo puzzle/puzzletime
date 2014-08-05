@@ -10,10 +10,6 @@ class EmployeesController < ManageController
 
   self.search_columns = [:firstname, :lastname, :shortname]
 
-  before_action :authorize, except: [:changePasswd, :update_pwd,
-                                     :settings, :update_settings]
-
-
   def settings
   end
 

@@ -28,10 +28,6 @@ class Employee < ActiveRecord::Base
   has_and_belongs_to_many :employee_lists
 
   has_many :employments, dependent: :destroy
-  #has_many :projects,
-  #         -> { where(projectmemberships: { active: true }) },
-  #         through: :projectmemberships
-  #has_many :clients, -> { order('shortname') }, through: :projects
   has_many :absences,
            -> { order('name').uniq },
            through: :worktimes
@@ -70,32 +66,32 @@ class Employee < ActiveRecord::Base
     uniq
   end
 
+  def self.worktimes
+    Worktime.all
+  end
 
-  ##### interface methods for Evaluatable #####
+  def self.encode(pwd)
+    Digest::SHA1.hexdigest(pwd)
+    # logger.info "Hash of password: #{Digest::SHA1.hexdigest(pwd)}"
+  end
+
+  ##### helper methods #####
 
   def to_s
     "#{lastname} #{firstname}"
   end
 
-  def self.worktimes
-    Worktime.all
-  end
-
-  ##### helper methods #####
-
   def order_responsible?
-    managed_orders.exists?
-  end
-
-  # Whether this Employee is a project manager
-  # TODO remove
-  def project_manager?
-    managed_projects.exists?
+    @order_responsible ||= managed_orders.exists?
   end
 
   # Accessor for the initial vacation days. Default is 0.
   def initial_vacation_days
     super || 0
+  end
+
+  def eval_periods
+    super || []
   end
 
   def before_create
@@ -156,15 +152,6 @@ class Employee < ActiveRecord::Base
   # Returns the employement at the given date, nil if none is present.
   def employment_at(date)
     employments.where('start_date <= ? AND (end_date IS NULL OR end_date >= ?)', date, date).first
-  end
-
-  def self.encode(pwd)
-    Digest::SHA1.hexdigest(pwd)
-    # logger.info "Hash of password: #{Digest::SHA1.hexdigest(pwd)}"
-  end
-
-  def eval_periods
-    super || []
   end
 
   private

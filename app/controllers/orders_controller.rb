@@ -14,9 +14,6 @@ class OrdersController < ManageController
     responsible: 'employees.lastname || employees.firstname',
     status: 'order_statuses.position' }
 
-  # TODO: authorization (Die Erstellung von Aufträgen soll durch die Rolle AV und Managment möglich sein.)
-  skip_before_action :authorize
-
   before_action :set_filter_values, only: :index
   before_render_form :set_clients
 
