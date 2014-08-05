@@ -44,9 +44,9 @@ $ ->
 
   # change cursor for turbolink requests to give the user a minimal feedback
   $(document).on('page:fetch', ->
-    $('body').css( 'cursor', 'wait' ))
+    $('body').addClass('loading'))
   $(document).on('page:change', ->
-    $('body').css( 'cursor', 'default' ))
+    $('body').removeClass('loading'))
 
   # show alert if ajax requests fail
   $(document).on('ajax:error', (event, xhr, status, error) ->
