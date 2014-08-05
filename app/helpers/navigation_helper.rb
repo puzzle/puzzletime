@@ -7,12 +7,17 @@ module NavigationHelper
   # the corresponding item is active.
   # If no active_for are given, the item is only active if the
   # link url equals the request url.
-  def nav(label, url, turbolink=true, *active_for)
-    options = {}
+  def nav(label, url, *active_for)
+    options = active_for.extract_options!
+    content_tag(:li, link_to(label, url, options), class: nav_active_class(url, active_for))
+  end
+
+  private
+
+  def nav_active_class(url, active_for)
     if current_page?(url) ||
        active_for.any? { |p| request.path =~ %r{^#{p}(/.*)?$} }
-      options[:class] = 'active'
+      'active'
     end
-    content_tag(:li, link_to(label, url, data: { no_turbolink: !turbolink }), options)
   end
 end
