@@ -171,6 +171,11 @@ footer {
   clear: both;
 }
 
+body.loading,
+body.loading a:hover {
+   cursor: progress !important;
+}
+
 @import "header";
 @import "worktimes";
 @import "icons";
