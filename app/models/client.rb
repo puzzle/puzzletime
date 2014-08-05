@@ -17,21 +17,11 @@ class Client < ActiveRecord::Base
   include BelongingToWorkItem
   include Evaluatable
 
-  # must be before associations to prevent their destroy
-  protect_if :worktimes, 'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Arbeitszeiten zugeordnet sind'
-
-  # All dependencies between the models are listed below.
-  belongs_to :work_item
-
   has_many :contacts
   has_many :billing_addresses
 
   has_descendants_through_work_item :orders
   has_descendants_through_work_item :accounting_posts
-
-  validates :work_item, presence: true
-
-  delegate :name, :shortname, to: :work_item, allow_nil: true
 
   ##### interface methods for Evaluatable #####
 

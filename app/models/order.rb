@@ -51,10 +51,6 @@ class Order < ActiveRecord::Base
 
   ### INSTANCE METHODS
 
-  def to_s
-    work_item.to_s
-  end
-
   def parent_names
     work_item.path_names.split("\n")[0..-2].join(" #{Settings.work_items.path_separator} ")
   end
