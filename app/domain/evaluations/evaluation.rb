@@ -94,7 +94,8 @@ class Evaluation
   # of time.
   def times(period)
     worktime_query(division || category, period, division).
-      order('work_date ASC, from_start_time, work_item_id, employee_id')
+      order('worktimes.work_date ASC, worktimes.from_start_time, ' \
+            'worktimes.work_item_id, worktimes.employee_id')
   end
 
   def worktime_query(receiver, period = nil, division = nil)
