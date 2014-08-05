@@ -1,7 +1,7 @@
 = nav 'Meine Zeit',
       evaluation_path('userprojects', clear: 1),
       evaluation_path('userprojects')
-- if @user.project_manager?
+- if @user.order_responsible?
   = nav 'Meine Projekte', evaluation_path('managed', clear: 1)
 - if @user.management
   = nav 'Kunden',

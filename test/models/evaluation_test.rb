@@ -137,34 +137,16 @@ class EvaluationTest < ActiveSupport::TestCase
     assert_count_times 0, 1, 2, 2
   end
 
-  def no_test_managed_work_items_pascal
-    @evaluation = ManagedWorkItemsEval.new(employees(:pascal))
+  def test_managed_work_items_pascal
+    @evaluation = ManagedOrdersEval.new(employees(:pascal))
     assert_managed employees(:pascal)
 
     divisions = @evaluation.divisions.list
-    assert_equal 1, divisions.size
-    assert_equal work_items(:puzzletime).id, divisions.first.id
-
-    assert_sum_times 0, 6, 18, 18, work_items(:puzzletime)
-
-    assert_equal({ },
-                 @evaluation.sum_times_grouped(@period_day))
-    assert_equal({ work_items(:puzzletime).id => 6.0 },
-                 @evaluation.sum_times_grouped(@period_week))
-    assert_equal({ work_items(:puzzletime).id => 18.0 },
-                 @evaluation.sum_times_grouped(@period_month))
+    assert_equal 0, divisions.size
  end
 
-  def no_test_managed_work_items_pascal_details
-    @evaluation = ManagedWorkItemsEval.new(employees(:pascal))
-    @evaluation.set_division_id work_items(:puzzletime).id
-
-    assert_sum_times 0, 6, 18, 18
-    assert_count_times 0, 1, 3, 3
-  end
-
-  def no_test_managed_work_items_mark
-    @evaluation = ManagedWorkItemsEval.new(employees(:mark))
+  def test_managed_work_items_mark
+    @evaluation = ManagedOrdersEval.new(employees(:mark))
     assert_managed employees(:mark)
 
     divisions = @evaluation.divisions.list
@@ -181,19 +163,38 @@ class EvaluationTest < ActiveSupport::TestCase
                  @evaluation.sum_times_grouped(@period_month))
   end
 
-  def no_test_managed_work_items_mark_details
-    @evaluation = ManagedWorkItemsEval.new(employees(:mark))
+  def test_managed_work_items_mark_details
+    @evaluation = ManagedOrdersEval.new(employees(:mark))
     @evaluation.set_division_id work_items(:allgemein).id
 
     assert_sum_times 0, 14, 14, 15
     assert_count_times 0, 2, 2, 3
   end
 
-  def no_test_managed_work_items_lucien
-    @evaluation = ManagedWorkItemsEval.new(employees(:lucien))
+  def test_managed_work_items_lucien
+    @evaluation = ManagedOrdersEval.new(employees(:lucien))
     assert_managed employees(:lucien)
     divisions = @evaluation.divisions
-    assert_equal 0, divisions.size
+    assert_equal 2, divisions.size
+    assert_equal work_items(:hitobito_demo).id, divisions[0].id
+    assert_equal work_items(:puzzletime).id, divisions[1].id
+
+    assert_sum_times 0, 6, 18, 18, work_items(:puzzletime)
+
+    assert_equal({ },
+                 @evaluation.sum_times_grouped(@period_day))
+    assert_equal({ work_items(:puzzletime).id => 6.0 },
+                 @evaluation.sum_times_grouped(@period_week))
+    assert_equal({ work_items(:puzzletime).id => 18.0 },
+                 @evaluation.sum_times_grouped(@period_month))
+  end
+
+  def test_managed_work_items_lucien_details
+    @evaluation = ManagedOrdersEval.new(employees(:lucien))
+    @evaluation.set_division_id work_items(:puzzletime).id
+
+    assert_sum_times 0, 6, 18, 18
+    assert_count_times 0, 1, 3, 3
   end
 
   def assert_managed(user)

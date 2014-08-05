@@ -155,7 +155,7 @@ class EvaluatorController < ApplicationController
   def set_evaluation
     params[:evaluation] ||= 'userprojects'
     @evaluation = case params[:evaluation].downcase
-        when 'managed' then ManagedWorkItemsEval.new(@user)
+        when 'managed' then ManagedOrdersEval.new(@user)
         when 'absencedetails' then AbsenceDetailsEval.new
         when 'userworkitems' then EmployeeWorkItemsEval.new(@user.id)
         when "employeesubworkitems#{@user.id}", 'usersubworkitems' then
@@ -174,7 +174,7 @@ class EvaluatorController < ApplicationController
         when 'clientworkitems' then ClientWorkItemsEval.new(params[:category_id])
         when 'employeeworkitems' then EmployeeWorkItemsEval.new(params[:category_id])
         when /employeesubworkitems(\d+)/ then EmployeeSubWorkItemsEval.new(params[:category_id], Regexp.last_match[1])
-        when 'departmentprojects' then DepartmentWorkItemsEval.new(params[:category_id])
+        when 'departmentorders' then DepartmentOrdersEval.new(params[:category_id])
         when 'absences' then AbsencesEval.new
         when 'employeeabsences' then EmployeeAbsencesEval.new(params[:category_id])
         else nil
@@ -204,14 +204,14 @@ class EvaluatorController < ApplicationController
 
   def pop_level?(level, current)
     pop = level[0] == current[0]
-    if level[0] =~ /(employee|user)?subprojects(\d*)/
+    if level[0] =~ /(employee|user)?subworkitems(\d*)/
       pop &&= level[1] == current[1]
     end
     pop
   end
 
   def paginate_times
-    @times = @evaluation.times(@period).includes(:employee, :project).page(params[:page])
+    @times = @evaluation.times(@period).includes(:employee, :work_item).page(params[:page])
   end
 
   def set_export_header(filename)
