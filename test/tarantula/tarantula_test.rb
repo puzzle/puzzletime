@@ -65,7 +65,7 @@ class TarantulaTest < ActionDispatch::IntegrationTest
   end
 
   def create_worktimes
-    work_items = WorkItem.all
+    work_items = AccountingPost.all.collect{|w| w.work_item}
     5.times do
       work_item = work_items.sample
       Ordertime.create!(
