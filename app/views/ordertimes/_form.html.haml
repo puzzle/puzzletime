@@ -5,14 +5,13 @@
                                   data: { remote: true,
                                           url: url_for(action: 'existing'),
                                           dynamic_params: 'ordertime[work_date]' })
-  = f.labeled(:account) do
-    = f.text_field(:account,
-                   value: @worktime.account.try(:label_verbose),
-                   placeholder: 'Suchen...',
-                   data: { autocomplete: 'project',
-                           url: search_projects_path,
-                           id_field: 'ordertime_account_id' })
-    = f.hidden_field(:account_id)
+  = f.labeled(:account_id) do
+    = select_tag('ordertime[account_id]',
+                 work_item_option(@worktime.account),
+                 placeholder: 'Suchen...',
+                 data: { autocomplete: 'work_item',
+                         url: search_work_items_path })
+
   = f.labeled_input_field(:ticket, span: 2)
   = f.labeled_text_area(:description)
   = f.labeled_date_field(:work_date,
