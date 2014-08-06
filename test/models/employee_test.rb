@@ -62,6 +62,16 @@ class EmployeeTest < ActiveSupport::TestCase
     assert_equal employee.statistics.overtime(period), - 31_500
   end
 
+  def test_alltime_leaf_work_items
+    e = employees(:pascal)
+    assert_equal work_items(:allgemein, :puzzletime, :webauftritt), e.alltime_leaf_work_items
+  end
+
+  def test_alltime_main_work_items
+    e = employees(:pascal)
+    assert_equal work_items(:puzzle, :swisstopo), e.alltime_main_work_items
+  end
+
   private
 
   def year_period(employee)

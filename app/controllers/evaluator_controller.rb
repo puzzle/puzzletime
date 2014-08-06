@@ -145,7 +145,7 @@ class EvaluatorController < ApplicationController
   end
 
   def set_evaluation
-    params[:evaluation] ||= 'userprojects'
+    params[:evaluation] ||= 'userworkitems'
     @evaluation = case params[:evaluation].downcase
         when 'managed' then ManagedOrdersEval.new(@user)
         when 'absencedetails' then AbsenceDetailsEval.new

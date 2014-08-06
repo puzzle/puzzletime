@@ -79,7 +79,7 @@ class EmployeeStatistics
   def payed_worktime(period)
     @employee.worktimes.joins('LEFT JOIN absences ON absences.id = absence_id').
                         in_period(period).
-                        where('((project_id IS NOT NULL AND absence_id IS NULL) OR absences.payed)').
+                        where('((work_item_id IS NOT NULL AND absence_id IS NULL) OR absences.payed)').
                         sum(:hours).
                         to_f
   end

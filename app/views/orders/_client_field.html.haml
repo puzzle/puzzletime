@@ -10,7 +10,7 @@
                          url: categories_clients_path })
   .col-md-2
     %p.help-block
-      = modal_create_link(new_client_path(format: :js),
+      = modal_create_link(new_client_path,
                           'client_work_item_id',
                           'Kunde erfassen',
                           data: { id_field: 'work_item_id' })

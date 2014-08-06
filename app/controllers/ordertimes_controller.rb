@@ -57,6 +57,7 @@ class OrdertimesController < WorktimesController
     redirect_to evaluation_detail_params.merge!(action: 'split')
   end
 
+  # TODO: still used?
   def running
     if request.env['HTTP_USER_AGENT'] =~ /.*iPhone.*/
       render action: 'running', layout: 'phone'
@@ -65,6 +66,7 @@ class OrdertimesController < WorktimesController
     end
   end
 
+  # TODO: still used?
   def start
     running = running_time
     now = Time.zone.now
@@ -79,6 +81,7 @@ class OrdertimesController < WorktimesController
     redirect_to_running
   end
 
+  # TODO: still used?
   def stop
     running = running_time
     if running

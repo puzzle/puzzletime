@@ -11,16 +11,16 @@ class CapacityReport < BaseCapacityReport
       csv << ['Mitarbeiter', 'Projekt', 'Subprojekt', 'Verrechenbar', 'Nicht verrechenbar', 'Monat', 'Jahr']
       Employee.employed_ones(@period).each do |employee|
         monthly_periods.each do |period|
-          project_time = 0
+          order_time = 0
           processed_ids = []
-          employee.alltime_leaf_projects.each do |project|
-            # get id of parent project on (max) level 1
-            id = project.path_ids[[1, project.path_ids.size - 1].min]
+          employee.alltime_leaf_work_items.each do |item|
+            # get id of parent work item on (max) level 1
+            id = item.path_ids[[1, item.path_ids.size - 1].min]
             unless processed_ids.include? id
               processed_ids.push id
               result = find_billable_time(employee, id, period)
               sum = result.collect { |w| w.hours }.sum
-              parent = child = Project.find(id)
+              parent = child = WorkItem.find(id)
               parent = child.parent if child.parent
               append_entry(csv,
                            employee,
@@ -29,7 +29,7 @@ class CapacityReport < BaseCapacityReport
                            child == parent ? '' : child.label,
                            extract_billable_hours(result, true),
                            extract_billable_hours(result, false))
-              project_time += sum
+              order_time += sum
             end
           end
           # include all absencetimes
@@ -41,11 +41,11 @@ class CapacityReport < BaseCapacityReport
   end
 
   private
-  def append_entry(csv, employee, period, project_label, subproject_label, billable_hours, not_billable_hours)
+  def append_entry(csv, employee, period, work_item_label, sub_work_item_label, billable_hours, not_billable_hours)
     if (billable_hours + not_billable_hours).abs > 0.001
       csv << [employee.shortname,
-              project_label,
-              subproject_label,
+              work_item_label,
+              sub_work_item_label,
               billable_hours,
               not_billable_hours,
               period.startDate.month,
