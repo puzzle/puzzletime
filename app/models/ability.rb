@@ -35,7 +35,7 @@ class Ability
            :export_extended_capacity_csv,
            :export_ma_overview], Evaluation
     elsif user.order_responsible?
-      can :create, Client
+      can [:create, :categories], Client
       can :create, WorkItem
       can :manage, Order, responsible_id: user.id
       can :manage, AccountingPost
