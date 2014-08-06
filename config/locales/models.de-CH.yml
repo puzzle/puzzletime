@@ -8,9 +8,15 @@ de-CH:
       absencetime:
         one: Absenz
         other: Absenzen
+      accounting_post:
+        one: Buchungsposition
+        other: Buchungspositionen
       client:
         one: Kunde
         other: Kunden
+      contact:
+        one: Kontakt
+        other: Kontakte
       department:
         one: Organisationseinheit
         other: Organisationseinheiten
@@ -26,24 +32,42 @@ de-CH:
       holiday:
         one: Feiertag
         other: Feiertage
+      order:
+        one: Auftrag
+        other: Aufträge
+      order_comment:
+        one: Kommentierung
+        other: Kommentierungen
+      order_kind:
+        one: Auftragsart
+        other: Auftragsarten
+      order_status:
+        one: Auftragsstatus
+        other: Auftragsstati
+      order_target:
+        one: Auftragsziel
+        other: Auftragsziele
+      ordertime:
+        one: Zeit
+        other: Zeiten
       overtime_vacation:
         one: Überzeit-Ferien Umbuchung
         other: Überzeit-Ferien Umbuchungen
       planning:
         one: Planung
         other: Planungen
-      order:
-        one: Auftrag
-        other: Aufträge
-      ordertime:
-        one: Zeit
-        other: Zeiten
-      projectmembership:
-        one: Projekt
-        other: Projekte
+      portfolio_item:
+        one: Portfolioposition
+        other: Portfoliopositionen
+      target_scope:
+        one: Zielwert
+        other: Zielwerte
       user_notification:
         one: Nachricht
         other: Nachrichten
+      work_item:
+        one: Position
+        other: Positionen
       worktime:
         one: Arbeitszeit
         other: Arbeitszeiten
@@ -55,10 +79,31 @@ de-CH:
         private: Nicht öffentlich
       absencetime:
         duration: Dauer
+      accounting_post:
+        work_item_id: Position
+        portfolio_item_id: Portfolioposition
+        reference: Referenz
+        offered_hours: Offerierte Stunden
+        offered_rate: Offerierter Stundensatz
+        discount: Rabatt
+        discount_percent: Rabatt (%)
+        discount_fixed: Rabatt (CHF)
+        report_type: Report Typ
+        billable: Verrechenbar
+        description_required: Beschreibung erforderlich
+        ticket_required: Ticket erforderlich
+        closed: Geschlossen
       client:
         name: Name
         shortname: Kürzel
-        contact: Kontaktperson
+      contact:
+        client_id: Kunde
+        lastname: Nachname
+        firstname: Vorname
+        function: Funktion
+        email: E-Mail
+        phone: Telefon
+        mobile: Mobile
       department:
         name: Name
         shortname: Kürzel
@@ -70,7 +115,7 @@ de-CH:
         lastname: Nachname
         shortname: Kürzel
         passwd: Passwort
-        management: GL
+        management: Management
         initial_vacation_days: Anfängliche Ferien
         ldapname: LDAP Name
         current_percent: Prozent
@@ -83,6 +128,35 @@ de-CH:
       holiday:
         holiday_date: Datum
         musthours_day: Muss Stunden
+      order:
+        client: Kunde
+        order: Auftrag
+        kind: Art
+        kind_id: Art
+        responsible: Verantwortliche(r)
+        responsible_id: Verantwortliche(r)
+        status: Status
+        status_id: Status
+        department: Organisationseinheit
+        department_id: Organisationseinheit
+        contract_id: Vertrag
+        billing_address_id: Rechnungsadresse
+        employees: Team
+        employee_ids: Team
+      order_comment:
+        order_id: Auftrag
+        text: Kommentar
+      order_kind:
+        name: Bezeichnung
+      order_status:
+        name: Bezeichnung
+        style: Darstellung
+        closed: Geschlossen
+        position: Position
+      order_target:
+        target_scope_id: Wert
+        rating: Bewertung
+        comment: Kommentar
       overtime_vacation:
         employee_id: Mitarbeiter
         hours: Stunden
@@ -107,30 +181,21 @@ de-CH:
         friday_pm: Freitag Nachmittag
         is_abstract: Abstrakt
         abstract_amount: Anzahl
-      projectmembership:
-        project_id: Projekt
-        employee_id: Mitarbeiter
-        projectmanagement: Projektleitung
-        last_completed: Komplettiert
+      portfolio_item:
+        name: Bezeichnung
         active: Aktiv
+      target_scope:
+        name: Bezeichnung
+        icon: Icon
+        position: Position
       user_notification:
         date_from: Startdatum
         date_to: Enddatum
         message: Nachricht
       work_item:
-        client_id: Kunde
-        department_id: Geschäftsbereich
         name: Name
         shortname: Kürzel
-        client_name: Kunde
-        department_name: Geschäftsbereich
-        description: Bemerkungen
-        report_type: Reporttyp
-        offered_hours: Offerierte Stunden
-        billable: Verrechenbar
-        freeze_until: Eingefroren vor
-        description_required: Bemerkung nötig
-        ticket_required: Ticket nötig
+        description: Beschreibung
       worktime:
         project_id: Projekt
         absence_id: Absenz
