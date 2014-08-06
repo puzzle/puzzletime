@@ -33,8 +33,6 @@ class Worktime < ActiveRecord::Base
   belongs_to :employee
   belongs_to :absence
   belongs_to :work_item
-  has_one :client, through: :project
-  has_one :department, through: :project
 
   validates_presence_of :employee_id, message: 'Ein Mitarbeiter muss vorhanden sein'
   validates :work_date, timeliness: { date: true }
@@ -53,7 +51,7 @@ class Worktime < ActiveRecord::Base
   ###############  ACCESSORS  ##################
 
   # account this worktime is booked for.
-  # defined in subclasses, either Project or Absence
+  # defined in subclasses, either WorkItem or Absence
   # TODO rename to accounting_post, okay?
   def account
     nil

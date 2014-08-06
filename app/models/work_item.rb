@@ -45,7 +45,7 @@ class WorkItem < ActiveRecord::Base
 
   before_validation :upcase_shortname
   before_save :remember_name_changes
-  # yep, this triggers before_update to generate path_ids after the project got its id and saves it again
+  # yep, this triggers before_update to generate path_ids after the work item got its id and saves it again
   after_create :save
   after_create :reset_parent_leaf
   after_destroy :reset_parent_leaf
@@ -133,7 +133,7 @@ class WorkItem < ActiveRecord::Base
   end
 
   def generate_path_ids
-    self.path_ids = top? ? [id] : parent.path_ids.clone.push(id)
+    self.path_ids = parent ? parent.path_ids.clone.push(id) : [id]
   end
 
   def reset_parent_leaf

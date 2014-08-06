@@ -1,6 +1,9 @@
 
 app = window.App ||= {}
 
+prepareModalRequest = (event, xhr, settings) ->
+  settings.url += '.js'
+
 showModal = (event, data, status, xhr) ->
   $this = $(this)
   modal = $($this.data('modal'))
@@ -36,6 +39,7 @@ displayFormWithErrors = (event, xhr, status, error) ->
 
 $ ->
   # wire up modal links
+  $('body').on('ajax:beforeSend', '[data-modal]', prepareModalRequest)
   $('body').on('ajax:success', '[data-modal]', showModal)
 
   # wire up forms in modal dialogs

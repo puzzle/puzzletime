@@ -2,29 +2,15 @@ Rails.application.routes.draw do
 
   root to: 'worktimes#index'
 
-  concern :with_projects do
-    resources :projects, except: [:show] do
-      resources :projects, except: [:show]
-
-      collection do
-        get :search
-      end
-    end
-  end
-
   resources :absences, except: [:show]
 
   resources :clients,except: [:show] do
-    concerns :with_projects
-
     collection do
       get :categories
     end
   end
 
-  resources :departments, except: [:show] do
-    concerns :with_projects
-  end
+  resources :departments, except: [:show]
 
   resources :employees, except: [:show] do
     collection do
@@ -59,8 +45,6 @@ Rails.application.routes.draw do
   resources :target_scopes, except: [:show]
 
   resources :user_notifications, except: [:show]
-
-  concerns :with_projects
 
   resources :worktimes, only: [:index]
 
