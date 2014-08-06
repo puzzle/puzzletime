@@ -16,9 +16,9 @@ class PlanningsController < CrudController
     render template: 'plannings/employee_planning'
   end
 
-  def my_projects
-    @projects = @user.managed_orders.collect{|o| o.work_item}
-    render template: 'plannings/projects'
+  def my_work_items
+    @work_items = WorkItem.joins(:order).where(orders: { responsible_id: current_user.id }).list
+    render template: 'plannings/work_items'
   end
 
   def existing
@@ -27,7 +27,7 @@ class PlanningsController < CrudController
       @period = extended_period(current_week.to_date) if current_week.valid?
     end
     set_employee
-    @graph = EmployeePlanningGraph.new(@employee, @period)
+    @graph = EmployeePlanningGraph.new(@employee, @period) if @employee
   end
 
   def employees
@@ -50,16 +50,16 @@ class PlanningsController < CrudController
     @graph = EmployeesPlanningGraph.new(@employee_list.employees.includes(:employments).list, period)
   end
 
-  def projects
-    @projects = WorkItem.list
+  def work_items
+    @work_items = WorkItem.list
   end
 
-  def project_planning
+  def work_item_planning
     unless params[:work_item_id]
-      return redirect_to(action: 'projects')
+      return redirect_to(action: 'work_items')
     end
-    @project = WorkItem.find(params[:work_item_id])
-    @graph = ProjectPlanningGraph.new(@project, @period)
+    @work_item = WorkItem.find(params[:work_item_id])
+    @graph = WorkItemPlanningGraph.new(@work_item, @period)
   end
 
   def departments
@@ -72,7 +72,7 @@ class PlanningsController < CrudController
     end
     @department = Department.find(params[:department_id])
 
-    employees = planned_employees(@department, @perdiod)
+    employees = planned_employees(@department, @period)
     @graph = EmployeesPlanningGraph.new(employees, @period)
   end
 
@@ -85,7 +85,7 @@ class PlanningsController < CrudController
     set_employee
     @employee ||= @user
     entry.employee = @employee
-    entry.project = Project.find(params[:project_id]) if params[:project_id]
+    entry.work_item = WorkItem.find(params[:work_item_id]) if params[:work_item_id]
     entry.start_week = Week.from_string(params[:date]).to_integer if params[:date]
     super
   end
@@ -100,7 +100,7 @@ class PlanningsController < CrudController
   def build_planning_form
     @employee = entry.employee
     set_employees
-    @projects = WorkItem.list
+    @work_items = WorkItem.where('path_ids[2] = id').list
     @graph = EmployeePlanningGraph.new(@employee, @period)
     @period = extended_period(entry.start_week_date)
   end

@@ -1,12 +1,11 @@
 # encoding: utf-8
 
-class ProjectOverviewPlanningGraph < OverviewPlanningGraph
+class WorkItemOverviewPlanningGraph < OverviewPlanningGraph
 
   attr_reader :employee
 
-  def initialize(project, plannings, plannings_abstr, period)
+  def initialize(work_item, plannings, plannings_abstr, period)
     super(period)
-    @project = project
     add_plannings_to_cache(plannings)
     add_plannings_to_cache(plannings_abstr)
   end

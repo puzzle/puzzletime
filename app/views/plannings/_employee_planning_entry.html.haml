@@ -5,26 +5,26 @@
     = week_overview_tds(employee_planning_graph.overview_graph)
   - else
     = week_overview_tds(employee_planning_graph.overview_graph, 10)
-- employee_planning_graph.projects_abstr.each do |project|
+- employee_planning_graph.work_items_abstr.each do |work_item|
   %tr
     %td &nbsp;&nbsp;P&nbsp;&nbsp;&nbsp;
     %th
-      = link_to project.label_verbose, :controller => 'plannings', :action => 'project_planning', :project_id => project
+      = link_to work_item.label_verbose, :controller => 'plannings', :action => 'work_item_planning', :work_item_id => work_item
     - employee_planning_graph.each_week do |week|
       - if type == :calendar_week
-        = week_planning_td(employee_planning_graph.plannings_abstr, user, project, week)
+        = week_planning_td(employee_planning_graph.plannings_abstr, user, work_item, week)
       - else
-        = day_planning_tds(employee_planning_graph.plannings_abstr, user, project, week)
-- employee_planning_graph.projects.each do |project|
+        = day_planning_tds(employee_planning_graph.plannings_abstr, user, work_item, week)
+- employee_planning_graph.work_items.each do |work_item|
   %tr
     %td &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     %th
-      = link_to project.label_verbose, :controller => 'plannings', :action => 'project_planning', :project_id => project
+      = link_to work_item.label_verbose, :controller => 'plannings', :action => 'work_item_planning', :work_item_id => work_item
     - employee_planning_graph.each_week do |week|
       - if type == :calendar_week
-        = week_planning_td(employee_planning_graph.plannings, user, project, week)
+        = week_planning_td(employee_planning_graph.plannings, user, work_item, week)
       - else
-        = day_planning_tds(employee_planning_graph.plannings, user, project, week)
+        = day_planning_tds(employee_planning_graph.plannings, user, work_item, week)
 %tr
   %td{:style => "width:30px"}
   %th Abwesenheiten

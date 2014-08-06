@@ -221,6 +221,8 @@ class CreateErpTables < ActiveRecord::Migration
     remove_column :projects, :work_item_id
 
     # remove_column :plannings, :project_id
+    change_column :plannings, :project_id, :integer, null: true
+    change_column :plannings, :work_item_id, :integer, null: false
 
     # remove_column :worktimes, :project_id
 

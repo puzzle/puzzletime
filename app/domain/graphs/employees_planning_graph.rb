@@ -26,8 +26,8 @@ class EmployeesPlanningGraph
     @cache[user]
   end
 
-  def color_for(project)
-    @colorMap[project]
+  def color_for(work_item)
+    @colorMap[work_item]
   end
 
 end
