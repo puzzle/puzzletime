@@ -22,6 +22,7 @@
 
 class Ordertime < Worktime
 
+  validates :work_item, presence: true
   validate :validate_accounting_post
   validate :protect_booked, on: :update
   validate :validate_by_project
@@ -33,7 +34,7 @@ class Ordertime < Worktime
   end
 
   def self.account_label
-    'Projekt'
+    'Position'
   end
 
   def account
@@ -67,7 +68,7 @@ class Ordertime < Worktime
     previous = Ordertime.find(id)
     if previous.booked && booked
       errors.add(:base, 'Verbuchte Arbeitszeiten können nicht verändert werden')
-      return false
+      false
     end
   end
 

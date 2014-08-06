@@ -1,18 +1,18 @@
+- work_item = WorkItem.find(@evaluation.account_id)
 %table.table-condensed
   %tr
     %td Kunde
     %td
-      %b= project.client.label
+      %b= work_item.top_item.client.label
   %tr
-    %td Projekt
+    %td Position
     %td
-      %b= project.label_ancestry
+      %b= work_item.label_ancestry
   - if @evaluation.employee_id
-  - employee = Employee.find(@evaluation.employee_id)
     %tr
       %td Mitarbeiter
       %td
-        %b= employee.label
+        %b= Employee.find(@evaluation.employee_id).label
   %tr
     %td Periode
     %td

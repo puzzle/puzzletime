@@ -54,7 +54,14 @@ class Ability
 
     can :manage, EmployeeList
 
-    can [:absencedetails,
+    can [:select_period,
+         :current_period,
+         :change_period,
+         :compose_report,
+         :report,
+         :book_all,
+         :export_csv,
+         :absencedetails,
          :empoloyeesubworkitmes,
          :userworkitems,
          :userabsences,

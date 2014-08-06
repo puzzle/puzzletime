@@ -2,11 +2,11 @@
 %table.table-striped
   %thead
     %tr
-    - if @user.running_project
+    - if @user.running_time
       %tr
         %td
-          = @user.running_project.project.label_verbose
-          seit #{format_time @user.running_project.from_start_time}
+          = @user.running_time.work_item.label_verbose
+          seit #{format_time @user.running_time.from_start_time}
         %td{:align => "center"}
           = link_to 'Stoppen',
                     {:controller => 'ordertimes', :action => 'stop'},
@@ -18,10 +18,10 @@
               %thead
                 %tr
                   %td Bemerkungen:
-                  %td= text_field_tag 'description', @user.running_project.description, :size => 25
+                  %td= text_field_tag 'description', @user.running_time.description, :size => 25
                 %tr
                   %td Ticket/Task:
-                  %td= text_field_tag 'ticket', @user.running_project.ticket, :size => 15
+                  %td= text_field_tag 'ticket', @user.running_time.ticket, :size => 15
 
   %thead
     %tr

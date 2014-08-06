@@ -2,7 +2,7 @@
 
 class WorktimeGraph
 
-  WORKTIME_ORDER = 'work_date, from_start_time, project_id, absence_id'
+  WORKTIME_ORDER = 'work_date, from_start_time, work_item_id, absence_id'
   WORKTIME_CONDITIONS = ['(worktimes.report_type = ? OR worktimes.report_type = ?)',
                          StartStopType::INSTANCE.key,
                          HoursDayType::INSTANCE.key]
@@ -13,7 +13,7 @@ class WorktimeGraph
     @period = extend_to_weeks period
     @employee = employee
 
-    @projects_eval = EmployeeWorkItemsEval.new(@employee.id)
+    @work_items_eval = EmployeeWorkItemsEval.new(@employee.id)
     @absences_eval = EmployeeAbsencesEval.new(@employee.id)
 
     @colorMap = AccountColorMapper.new
@@ -38,11 +38,11 @@ class WorktimeGraph
     @boxes = []
 
     # fill ordertimes
-    append_period_boxes period_boxes[:projects], must_hours
-    append_account_boxes @projects_eval.times(@current).
-                                        where(WORKTIME_CONDITIONS).
-                                        reorder(WORKTIME_ORDER).
-                                        includes(:project)
+    append_period_boxes period_boxes[:work_items], must_hours
+    append_account_boxes @work_items_eval.times(@current).
+                                          where(WORKTIME_CONDITIONS).
+                                          reorder(WORKTIME_ORDER).
+                                          includes(:work_item)
 
     # add absencetimes, payed ones first
     append_period_boxes period_boxes[:absences], must_hours
@@ -83,18 +83,18 @@ class WorktimeGraph
   end
 
   def set_period_boxes(hash, period, report_type)
-    hash[:projects] = get_period_boxes(@projects_eval, period, report_type)
+    hash[:work_items] = get_period_boxes(@work_items_eval, period, report_type)
     hash[:absences] = get_period_boxes(@absences_eval, period, report_type)
   end
 
   def get_period_boxes(evaluation, period, report_type)
-    projects = evaluation.times(period).
-                          where(report_type: report_type.key).
-                          reorder(WORKTIME_ORDER)
+    work_items = evaluation.times(period).
+                            where(report_type: report_type.key).
+                            reorder(WORKTIME_ORDER)
 	  # stretch by employment musttime if employment > 100%
     hours = period.musttime.to_f * must_hours_factor
     return [] if hours == 0
-    projects.collect { |w| Timebox.new(w, color_for(w), Timebox.height_from_hours(w.hours / hours))  }
+    work_items.collect { |w| Timebox.new(w, color_for(w), Timebox.height_from_hours(w.hours / hours))  }
   end
 
   def concat_period_boxes

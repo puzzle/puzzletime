@@ -294,6 +294,7 @@ class CreateErpTables < ActiveRecord::Migration
     Client.find_each do |client|
       # access attributes directly because of delegations
       client.create_work_item!(name: client[:name], shortname: client[:shortname])
+      client.save!
     end
   end
 
@@ -411,7 +412,7 @@ class CreateErpTables < ActiveRecord::Migration
   def assert_all_entries_have_work_items(model_class)
     count = model_class.where('work_item_id is null').count
     if count > 0
-      fail "Missing work_items for #{count} #{model_class.name.downcase.pluralize} (e.g. #{model_class.name} ##{model_class.where('work_item_id is null').first.id})"
+      fail "Missing work_items for #{count} #{model_class.name.downcase.pluralize} (#{model_class.name} # #{model_class.where('work_item_id is null').pluck(:id).join(', ')})"
     end
   end
 
