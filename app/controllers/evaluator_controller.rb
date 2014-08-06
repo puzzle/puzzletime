@@ -2,7 +2,6 @@
 
 class EvaluatorController < ApplicationController
 
-  skip_authorize_resource
   before_action :authorize_action
 
   before_action :set_period
@@ -14,7 +13,6 @@ class EvaluatorController < ApplicationController
   end
 
   def overview
-    set_evaluation
     set_navigation_levels
     @periods = init_periods
     @times = @periods.collect { |p| @evaluation.sum_times_grouped(p) }
@@ -23,7 +21,6 @@ class EvaluatorController < ApplicationController
 
   def details
     redirect_to action: 'absencedetails' if params[:evaluation] == 'absencedetails'
-    set_evaluation
     set_navigation_levels
     set_evaluation_details
     paginate_times
@@ -31,8 +28,6 @@ class EvaluatorController < ApplicationController
 
   def absencedetails
     session[:evalLevels] = []
-    params[:evaluation] = 'absencedetails'
-    set_evaluation
     @period ||= Period.coming_month Date.today, 'Kommender Monat'
     paginate_times
   end
@@ -41,12 +36,10 @@ class EvaluatorController < ApplicationController
   ########################  DETAIL ACTIONS  #########################
 
   def compose_report
-    set_evaluation
     set_evaluation_details
   end
 
   def report
-    set_evaluation
     set_evaluation_details
     condition = params[:only_billable] ? { worktimes: { billable: true } } : {}
     @times = @evaluation.times(@period).where(condition)
@@ -57,7 +50,6 @@ class EvaluatorController < ApplicationController
   end
 
   def export_csv
-    set_evaluation
     set_evaluation_details
     filename = 'puzzletime_' + csv_label(@evaluation.category) + '-' +
                csv_label(@evaluation.division) + '.csv'
@@ -68,7 +60,6 @@ class EvaluatorController < ApplicationController
   end
 
   def book_all
-    set_evaluation
     set_evaluation_details
     @evaluation.times(@period).each do |worktime|
       # worktime cannot be directly updated because it's loaded with :joins
@@ -76,7 +67,7 @@ class EvaluatorController < ApplicationController
     end
     flash[:notice] = 'Alle Arbeitszeiten '
     flash[:notice] += "von #{Employee.find(@evaluation.employee_id).label} " if @evaluation.employee_id
-    flash[:notice] += "für #{Project.find(@evaluation.account_id).label_verbose}" \
+    flash[:notice] += "für #{WorkItem.find(@evaluation.account_id).label_verbose}" \
                      "#{ ' während dem ' + @period.to_s if @period} wurden verbucht."
     redirect_to params.merge(action: 'details', only_path: true)
   end
@@ -149,6 +140,10 @@ class EvaluatorController < ApplicationController
 
   private
 
+  def evaluation
+    @evaluation ||= set_evaluation
+  end
+
   def set_evaluation
     params[:evaluation] ||= 'userprojects'
     @evaluation = case params[:evaluation].downcase
@@ -180,10 +175,11 @@ class EvaluatorController < ApplicationController
     if @evaluation.nil?
       @evaluation = EmployeeWorkItemsEval.new(@user.id)
     end
+    @evaluation
   end
 
   def set_evaluation_details
-    @evaluation.set_division_id(params[:division_id])
+    evaluation.set_division_id(params[:division_id])
     if params[:start_date]
       @period = params[:start_date] == '0' ? nil :
                    Period.retrieve(params[:start_date], params[:end_date])
@@ -330,7 +326,7 @@ class EvaluatorController < ApplicationController
 
   def authorize_action
     params[:evaluation] ||= params[:action].to_s
-    set_evaluation
+    evaluation
     authorize!(params[:evaluation].to_sym, Evaluation)
   end
 

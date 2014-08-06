@@ -74,7 +74,7 @@ class OrdertimesController < WorktimesController
       stop_running running, now
     end
     time = ordertime.new
-    time.project = Project.find(params[:id])
+    time.work_item = WorkItem.find(params[:id])
     start_running time, now
     redirect_to_running
   end
@@ -104,7 +104,7 @@ class OrdertimesController < WorktimesController
     time.report_type = AutoStartType::INSTANCE
     time.work_date = start.to_date
     time.from_start_time = start
-    time.billable = time.project.billable if time.project
+    time.billable = time.work_item.accounting_post.billable if time.work_item && time.work_item.accounting_post
     save_running time, "Die Zeit #{time.account.label_verbose} mit #time_string wurde erfasst.\n"
   end
 
@@ -137,7 +137,7 @@ class OrdertimesController < WorktimesController
   end
 
   def running_time(reload = false)
-    @user.running_project(reload)
+    @user.running_time(reload)
   end
 
 end

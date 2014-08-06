@@ -11,7 +11,8 @@
   |
   = link_to 'Export CSV',
             evaluation_detail_params.merge!(:action => 'export_csv',
-                                            :evaluation => params[:evaluation])
+                                            :evaluation => params[:evaluation]),
+            data: { no_turbolink: true }
   - if @evaluation.report?
     |
     = link_to 'Stundenrapport',
