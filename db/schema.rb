@@ -204,7 +204,7 @@ ActiveRecord::Schema.define(version: 20140714093557) do
 
   create_table "plannings", force: true do |t|
     t.integer  "employee_id",                     null: false
-    t.integer  "project_id",                      null: false
+    t.integer  "project_id"
     t.integer  "start_week",                      null: false
     t.integer  "end_week"
     t.boolean  "definitive",      default: false, null: false
@@ -223,7 +223,7 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.datetime "updated_at"
     t.boolean  "is_abstract"
     t.decimal  "abstract_amount"
-    t.integer  "work_item_id"
+    t.integer  "work_item_id",                    null: false
   end
 
   create_table "portfolio_items", force: true do |t|

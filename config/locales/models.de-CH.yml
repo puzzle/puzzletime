@@ -163,6 +163,7 @@ de-CH:
         transfer_date: Umgebucht am
       planning:
         employee_id: Mitarbeiter
+        work_item_id: Position
         project_id: Projekt
         start_week: Start
         start_week_date: Start

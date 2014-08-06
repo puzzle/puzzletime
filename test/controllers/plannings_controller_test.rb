@@ -79,14 +79,14 @@ class PlanningsControllerTest < ActionController::TestCase
     assert_template 'department_planning'
   end
 
-  def test_project_planning
-    get :project_planning, work_item_id: work_items(:allgemein)
-    assert_template 'project_planning'
+  def test_work_item_planning
+    get :work_item_planning, work_item_id: work_items(:allgemein)
+    assert_template 'work_item_planning'
   end
 
-  def test_projects
-    get :projects
-    assert_template 'projects'
+  def test_work_items
+    get :work_items
+    assert_template 'work_items'
   end
 
   def test_departments

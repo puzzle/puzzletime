@@ -1,29 +1,29 @@
 # encoding: utf-8
 
-class ProjectPlanningGraph
+class WorkItemPlanningGraph
 
 
   # TODO separate view helpers from this class
   include PlanningHelper
 
-  attr_reader :period, :project, :overview_graph, :employees, :employees_abstr, :plannings, :plannings_abstr
+  attr_reader :period, :work_item, :overview_graph, :employees, :employees_abstr, :plannings, :plannings_abstr
 
-  def initialize(project, period = nil)
-    @project = project
+  def initialize(work_item, period = nil)
+    @work_item = work_item
     period ||= Period.current_month
     @period = extend_to_weeks period
     @cache = {}
-    @plannings       = Planning.where('project_id = ? and start_week <= ? and is_abstract=false',
-                                      @project.id,
+    @plannings       = Planning.where('work_item_id = ? and start_week <= ? and is_abstract=false',
+                                      @work_item.id,
                                       Week.from_date(period.endDate).to_integer).
-                                includes(:project, :employee)
-    @plannings_abstr = Planning.where('project_id = ? and start_week <= ? and is_abstract=true',
-                                      @project.id,
+                                includes(:work_item, :employee)
+    @plannings_abstr = Planning.where('work_item_id = ? and start_week <= ? and is_abstract=true',
+                                      @work_item.id,
                                       Week.from_date(period.endDate).to_integer).
-                                includes(:project, :employee)
+                                includes(:work_item, :employee)
     @employees       = @plannings.select { |planning| planning.planned_during?(@period) }.collect { |planning| planning.employee }.uniq.sort
     @employees_abstr = @plannings_abstr.select { |planning| planning.planned_during?(@period) }.collect { |planning| planning.employee }.uniq.sort
-    @overview_graph = ProjectOverviewPlanningGraph.new(@project, @plannings, @plannings_abstr, @period)
+    @overview_graph = WorkItemOverviewPlanningGraph.new(@work_item, @plannings, @plannings_abstr, @period)
   end
 
   def get_absence_graph(employee_id)
