@@ -49,8 +49,8 @@ class EditOtherOrdertimeTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_equal '/evaluator/details', path
     assert_match(/Alle Arbeitszeiten wurden erfasst/, response.body)
-    assert_equal 7.5, ordertime.order(id: :desc).limit(2).second.hours
-    assert_equal 1.0, ordertime.order(id: :desc).limit(2).first.hours
+    assert_equal 7.5, Ordertime.order(id: :desc).limit(2).second.hours
+    assert_equal 1.0, Ordertime.order(id: :desc).limit(2).first.hours
   end
 
   private
