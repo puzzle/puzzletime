@@ -24,7 +24,7 @@ class AccountColorMapper
   def generate_color(account)
     account.is_a?(Absence) ?
         generate_absence_color(account.id) :
-        generate_project_color(account.id)
+        generate_work_item_color(account.id)
   end
 
   def generate_absence_color(id)
@@ -32,7 +32,7 @@ class AccountColorMapper
     '#FF' + random_color(230) + random_color(140)
   end
 
-  def generate_project_color(id)
+  def generate_work_item_color(id)
     srand id
     '#' + random_color(170) + random_color(240) + 'FF'
   end

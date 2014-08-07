@@ -71,12 +71,12 @@ module DryCrud::Form
       text_field(attr, html_options)
     end
 
-    def text_field(attr, html_options)
+    def text_field(attr, html_options = {})
       add_css_class(html_options, 'form-control')
       super(attr, html_options)
     end
 
-    def email_field(attr, html_options)
+    def email_field(attr, html_options = {})
       add_css_class(html_options, 'form-control')
       super(attr, html_options)
     end

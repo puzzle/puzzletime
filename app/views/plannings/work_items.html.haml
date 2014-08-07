@@ -1,12 +1,14 @@
+- @title = 'Planung Positionen'
+
 = render :partial => 'plannings/period_link'
 
-= DryCrud::Table::Builder.table(@projects,
+= DryCrud::Table::Builder.table(@work_items,
                                 self,
                                 class: 'table-condensed table-striped table-hover') do |t|
-  - t.col('Projekt') { |p| p.label_verbose }
+  - t.col('Position') { |p| p.label_verbose }
   - t.action_col do |p|
     = link_to 'Aktuelle Planung',
-              :action => 'project_planning', :project_id => p.id
+              :action => 'work_item_planning', :work_item_id => p.id
   - t.action_col do |p|
     = link_to 'Neue Planung',
-              :action => 'new', :project_id => p.id
+              :action => 'new', :work_item_id => p.id

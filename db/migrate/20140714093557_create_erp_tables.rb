@@ -221,6 +221,8 @@ class CreateErpTables < ActiveRecord::Migration
     remove_column :projects, :work_item_id
 
     # remove_column :plannings, :project_id
+    change_column :plannings, :project_id, :integer, null: true
+    change_column :plannings, :work_item_id, :integer, null: false
 
     # remove_column :worktimes, :project_id
 
@@ -413,7 +415,7 @@ class CreateErpTables < ActiveRecord::Migration
   def assert_all_entries_have_work_items(model_class)
     count = model_class.where('work_item_id is null').count
     if count > 0
-      fail "Missing work_items for #{count} #{model_class.name.downcase.pluralize} (e.g. #{model_class.name} ##{model_class.where('work_item_id is null').first.id})"
+      fail "Missing work_items for #{count} #{model_class.name.downcase.pluralize} (#{model_class.name} # #{model_class.where('work_item_id is null').pluck(:id).join(', ')})"
     end
   end
 

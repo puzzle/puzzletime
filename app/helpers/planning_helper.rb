@@ -62,7 +62,7 @@ module PlanningHelper
     result.html_safe
   end
 
-  # returns a weekly absence column in the project planning graph view
+  # returns a weekly absence column in the work item planning graph view
   def week_absence_td_proj(absence_graph, date)
     absences = []
     5.times do |day|
@@ -96,7 +96,7 @@ module PlanningHelper
     result.html_safe
   end
 
-  # returns daily absence columns in the project planning graph view
+  # returns daily absence columns in the work item planning graph view
   def day_absence_tds_proj(absence_graph, date)
     result = ''
     5.times do |day|
@@ -117,12 +117,12 @@ module PlanningHelper
     "<td #{'class="current"' if Date.today == date } style='width:10px'></td>".html_safe
   end
 
-  # draws an empty cell in the thin row for absences in the project planning graph view
+  # draws an empty cell in the thin row for absences in the work item planning graph view
   def empty_half_day_td_absence(date)
     "<td #{'class="current"' if Date.today == date } style='width:10px; border-width: 0px 1px 0px 0px'></td>".html_safe
   end
 
-  # renders a planned planning cell with a link to the respective project
+  # renders a planned planning cell with a link to the respective work item
   def half_day_with_link_td(employee, date, work_item)
     result = "<td #{'class="current"' if Date.today == date } style='width:10px'>"
     result << '<a href="/plannings/new?'
@@ -188,7 +188,7 @@ module PlanningHelper
     result << '"><a'
     result << " href=\"#{edit_planning_path(planning)}\">&nbsp;"
     result << '<span>'
-    result << "Projekt: #{h(planning.work_item.label_verbose)}<br>"
+    result << "Position: #{h(planning.work_item.label_verbose)}<br>"
     result << 'Bemerkungen: '
     if planning.description.present?
       result << "#{h(planning.description)}"
@@ -207,7 +207,7 @@ module PlanningHelper
   end
 
   private
-  # returns the planning record matching the week and project
+  # returns the planning record matching the week and work item
   def week_planning(plannings, current_week_date, work_item, employee)
     plannings = plannings.select { |planning| planning.work_item == work_item and planning.employee == employee }
     return nil if plannings.empty?

@@ -186,7 +186,15 @@ module FormatHelper
   # Returns true if no link should be created when formatting the given
   # association.
   def assoc_link?(assoc, val)
-    respond_to?("#{val.class.model_name.singular_route_key}_path".to_sym)
+    path_method = "#{val.class.model_name.singular_route_key}_path".to_sym
+    respond_to?(path_method) && show_path_exists?(path_method, val)
+  end
+
+  def show_path_exists?(path_method, val)
+    Rails.application.routes.recognize_path(send(path_method, val), method: :get)
+    true
+  rescue
+    false
   end
 
 end

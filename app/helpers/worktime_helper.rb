@@ -3,13 +3,27 @@
 module WorktimeHelper
 
   def worktime_account(worktime)
-    worktime.work_item.label_verbose if worktime.work_item
+    worktime.account.label_verbose if worktime.account
   end
 
   def worktime_description(worktime)
     description = worktime.description
     description.insert(0, "#{worktime.ticket} - ") if worktime.ticket.present?
     description
+  end
+
+  def work_item_option(item)
+    if item
+      json = { id: item.id,
+               name: item.name,
+               path_shortnames: item.path_shortnames,
+               description: item.description }
+      content_tag(:option,
+                  item.label_verbose,
+                  value: item.id,
+                  selected: true,
+                  data: { data: json.to_json })
+    end
   end
 
   def overview_day_class(worktimes, day)
