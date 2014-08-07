@@ -46,8 +46,8 @@ Rails.application.configure do
 
     Bullet.add_whitelist type: :unused_eager_loading, class_name: "Ordertime", association: :employee
     Bullet.add_whitelist type: :unused_eager_loading, class_name: "Ordertime", association: :absence
-    Bullet.add_whitelist type: :unused_eager_loading, class_name: "Absencetime", association: :project
-    Bullet.add_whitelist type: :unused_eager_loading, class_name: "Planning", association: :project
+    Bullet.add_whitelist type: :unused_eager_loading, class_name: "Absencetime", association: :work_item
+    Bullet.add_whitelist type: :unused_eager_loading, class_name: "Planning", association: :work_item
     Bullet.add_whitelist type: :unused_eager_loading, class_name: "Planning", association: :employee
   end
 end

@@ -106,7 +106,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
     element = find("#category_work_item_id + .selectize-control")
     element.find('.selectize-input').click # open dropdown
     options = element.find('.selectize-dropdown-content')
-    assert options.has_selector?('div', count: 1)
+    assert options.has_selector?('div', count: 2)
     selectize('client_work_item_id', 'Swisstopo')
     assert !options.has_selector?('div')
   end
@@ -121,6 +121,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
     fill_in('work_item_name', with: 'New Category')
     fill_in('work_item_shortname', with: 'NECA')
     click_button 'Speichern'
+    sleep 0.1
     id = find('#category_work_item_id', visible: false)['value']
 
     category = WorkItem.find(id)

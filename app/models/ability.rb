@@ -35,7 +35,8 @@ class Ability
            :export_extended_capacity_csv,
            :export_ma_overview], Evaluation
     elsif user.order_responsible?
-      can :create, Client
+
+      can [:create, :categories], Client
       can :create, WorkItem
       can :manage, Order, responsible_id: user.id
       can :manage, AccountingPost
@@ -43,6 +44,7 @@ class Ability
     end
 
     can :manage, Worktime, employee_id: user.id
+    can :search, WorkItem
 
     can [:change_passwd, :update_passwd, :settings, :update_settings], Employee do |employee|
       employee == user
@@ -54,7 +56,14 @@ class Ability
 
     can :manage, EmployeeList
 
-    can [:absencedetails,
+    can [:select_period,
+         :current_period,
+         :change_period,
+         :compose_report,
+         :report,
+         :book_all,
+         :export_csv,
+         :absencedetails,
          :empoloyeesubworkitmes,
          :userworkitems,
          :userabsences,

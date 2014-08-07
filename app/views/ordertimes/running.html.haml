@@ -1,46 +1,53 @@
 - @title = 'Laufende Zeit'
+
 %table.table-striped
   %thead
     %tr
-    - if @user.running_project
+    - if @user.running_time
       %tr
         %td
-          = @user.running_project.project.label_verbose
-          seit #{format_time @user.running_project.from_start_time}
+          = @user.running_time.work_item.label_verbose
+          seit #{format_time @user.running_time.from_start_time}
         %td{:align => "center"}
           = link_to 'Stoppen',
                     {:controller => 'ordertimes', :action => 'stop'},
-                    id: 'runningProjectStopper'
+                    id: 'runningWorkItemStopper'
       %tr
         %td{:colspan => "2", :style => "text-align: right;"}
-          = form_tag({:controller => 'ordertimes', :action => 'stop'}, :id => 'stop_project_form') do
+          = form_tag({:controller => 'ordertimes', :action => 'stop'}, :id => 'stop_work_item_form') do
             %table{:style => "margin-left: auto; text-align: left;", :width => "100"}
               %thead
                 %tr
                   %td Bemerkungen:
-                  %td= text_field_tag 'description', @user.running_project.description, :size => 25
+                  %td= text_field_tag 'description', @user.running_time.description, :size => 25
                 %tr
                   %td Ticket/Task:
-                  %td= text_field_tag 'ticket', @user.running_project.ticket, :size => 15
+                  %td= text_field_tag 'ticket', @user.running_time.ticket, :size => 15
 
   %thead
     %tr
       %td{:colspan => "2"}
         %br/
-        %b Meine Projekte
+        %b Meine Positionen
   %tbody
-    - @user.alltime_leaf_projects.each do |project|
+    - @user.alltime_leaf_work_items.each do |work_item|
       %tr
-        %td= project.label_verbose
+        %td= work_item.label_verbose
         %td{:align => "center"}
           = link_to 'Starten',
-                    {:controller => 'ordertimes', :action => 'start', :id => project.id},
-                    data: { start_project: project.id }
+                    {:controller => 'ordertimes', :action => 'start', :id => work_item.id},
+                    data: { start_work_item: work_item.id }
 
-= form_tag({:controller => 'ordertimes', :action => 'start'}, :id => 'start_project_form') do
+= form_tag({:controller => 'ordertimes', :action => 'start'}, :id => 'start_work_item_form') do
   = hidden_field_tag 'id'
   = hidden_field_tag 'description', nil, :id => 'start_description'
   = hidden_field_tag 'ticket', nil, :id => 'start_ticket'
 
 %p
-= link_to 'Arbeitszeiten', :controller => 'evaluator', :action => 'details', :evaluation => 'userProjects', :category_id => @user.id, :start_date => Date.today, :end_date => Date.today
+= link_to 'Arbeitszeiten',
+          :controller => 'evaluator',
+          :action => 'details',
+          :evaluation => 'userworkitems',
+          :category_id => @user.id,
+          :start_date => Date.today,
+          :end_date => Date.today

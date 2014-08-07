@@ -12,6 +12,13 @@ module NavigationHelper
     content_tag(:li, link_to(label, url, options), class: nav_active_class(url, active_for))
   end
 
+  def model_nav(model)
+    if can?(:read, model)
+      path = polymorphic_path(model)
+      nav(model.model_name.human(count: 2), path, path)
+    end
+  end
+
   private
 
   def nav_active_class(url, active_for)

@@ -34,7 +34,7 @@ class Employee < ActiveRecord::Base
   has_many :worktimes
   has_many :overtime_vacations, dependent: :destroy
   has_many :managed_orders, class_name: 'Order', foreign_key: :responsible_id
-  has_one :running_project,
+  has_one :running_time,
           -> { where(report_type: AutoStartType::INSTANCE.key) },
           class_name: 'Ordertime'
 
@@ -51,28 +51,30 @@ class Employee < ActiveRecord::Base
 
   scope :list, -> { order('lastname', 'firstname') }
 
-  # Tries to login a user with the passed data.
-  # Returns the logged-in Employee or nil if the login failed.
-  def self.login(username, pwd)
-    find_by_shortname_and_passwd(username.upcase, encode(pwd)) ||
-    LdapAuthenticator.new.login(username, pwd)
-  end
+  class << self
+    # Tries to login a user with the passed data.
+    # Returns the logged-in Employee or nil if the login failed.
+    def login(username, pwd)
+      find_by_shortname_and_passwd(username.upcase, encode(pwd)) ||
+      LdapAuthenticator.new.login(username, pwd)
+    end
 
-  def self.employed_ones(period)
-    joins('left join employments em on em.employee_id = employees.id').
-    where('(em.end_date IS null or em.end_date >= ?) AND em.start_date <= ?',
-          period.startDate, period.endDate).
-    list.
-    uniq
-  end
+    def employed_ones(period)
+      joins('left join employments em on em.employee_id = employees.id').
+      where('(em.end_date IS null or em.end_date >= ?) AND em.start_date <= ?',
+            period.startDate, period.endDate).
+      list.
+      uniq
+    end
 
-  def self.worktimes
-    Worktime.all
-  end
+    def worktimes
+      Worktime.all
+    end
 
-  def self.encode(pwd)
-    Digest::SHA1.hexdigest(pwd)
-    # logger.info "Hash of password: #{Digest::SHA1.hexdigest(pwd)}"
+    def encode(pwd)
+      Digest::SHA1.hexdigest(pwd)
+      # logger.info "Hash of password: #{Digest::SHA1.hexdigest(pwd)}"
+    end
   end
 
   ##### helper methods #####
@@ -106,13 +108,6 @@ class Employee < ActiveRecord::Base
     update_attributes!(passwd: Employee.encode(pwd))
   end
 
-  # TODO remove
-  def managed_projects
-    Project.select("DISTINCT projects.*").
-            joins('INNER JOIN orders ON orders.work_item_id = projects.id').
-            where(orders: { responsible_id: id })
-  end
-
   # main work items this employee ever worked on
   def alltime_main_work_items
     WorkItem.select("DISTINCT work_items.*").
@@ -125,7 +120,7 @@ class Employee < ActiveRecord::Base
 
   def alltime_leaf_work_items
     WorkItem.select("DISTINCT work_items.*").
-             joins('RIGHT JOIN worktimes ON worktimes.project_id = work_items.id').
+             joins('RIGHT JOIN worktimes ON worktimes.work_item_id = work_items.id').
              where(worktimes: { employee_id: id} ).
              where('work_items.id IS NOT NULL').
              list

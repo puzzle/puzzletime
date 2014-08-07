@@ -16,4 +16,9 @@ class ClientsEval < Evaluation
     WorkItem.joins(:client).list
   end
 
+  def set_division_id(division_id = nil)
+    return if division_id.nil?
+    @division = WorkItem.find(division_id.to_i)
+  end
+
 end

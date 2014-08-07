@@ -1,1 +1,2 @@
-$('#existing').html('#{escape_javascript(render 'plannings/existing')}')
+- if @graph
+  $('#existing').html('#{escape_javascript(render 'plannings/existing')}')
