@@ -16,7 +16,7 @@
 #= require modal_create
 #= require worktimes
 #= require week_datepicker
-#= require project_autocomplete
+#= require work_item_autocomplete
 #= require planning
 #= require orders
 #= require turbolinks
@@ -64,7 +64,7 @@ $ ->
   $('[data-enable]').each((i, e) -> toggleEnabled(e))
 
   # wire up autocompletes
-  $('[data-autocomplete=project]').each(app.projectAutocomplete)
+  $('[data-autocomplete=work_item]').each(app.workItemAutocomplete)
 
   # wire up selectize
   $('select.searchable').selectize()

@@ -1,4 +1,0 @@
-- @title = projects_title
-
-= crud_table :name, :description do |t|
-  - t.action_col { |p| link_to('Subprojekte', sub_projects_path(p)) if p.sub_projects? }

@@ -50,7 +50,11 @@ Rails.application.routes.draw do
   resources :order_kinds, except: [:show]
 
   # TODO limit actions
-  resources :work_items
+  resources :work_items do
+    collection do
+      get :search
+    end
+  end
 
   resources :portfolio_items, except: [:show]
 

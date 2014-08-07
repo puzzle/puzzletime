@@ -294,7 +294,9 @@ class CreateErpTables < ActiveRecord::Migration
     Client.find_each do |client|
       # access attributes directly because of delegations
       client.create_work_item!(name: client[:name], shortname: client[:shortname])
+      client.save!
     end
+    assert_all_entries_have_work_items(Client)
   end
 
   def add_work_items_for_projects
