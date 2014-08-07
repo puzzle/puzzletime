@@ -145,4 +145,4 @@ de-CH:
         billable: Verrechenbar
         booked: Verbucht
         ticket: Ticket
-        account: Auftrag
+        work_item: Buchungsposition
