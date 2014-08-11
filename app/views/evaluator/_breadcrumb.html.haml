@@ -1,4 +1,4 @@
-- if session[:evalLevels].size > 1 || params[:action] == 'details'
+- if (session[:evalLevels] && session[:evalLevels].size > 1) || params[:action] == 'details'
   %ol.breadcrumb
     = render :partial => 'evallink',  :collection => session[:evalLevels][0..-1]
 
