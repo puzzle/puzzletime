@@ -28,7 +28,11 @@ Rails.application.routes.draw do
 
   resources :holidays, except: [:show]
 
-  resources :orders
+  resources :orders do
+    collection do
+      post :crm_load
+    end
+  end
 
   resources :order_statuses, except: [:show]
 

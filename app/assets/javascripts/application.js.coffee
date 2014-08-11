@@ -24,9 +24,7 @@
 
 app = window.App ||= {}
 
-toggleEnabled = (element) ->
-  enabled = $(element).prop('checked')
-  selector = $(element).data('enable')
+app.enable = (selector, enabled) ->
   $('input' + selector +
     ', select' + selector +
     ', textarea' + selector).prop('disabled', !enabled)
@@ -37,6 +35,11 @@ toggleEnabled = (element) ->
   else
     affected.addClass('disabled')
     $.each(affected, (i, e) -> if e.selectize then e.selectize.disable())
+
+toggleEnabled = (element) ->
+  selector = $(element).data('enable')
+  enabled = $(element).prop('checked')
+  app.enable(selector, enabled)
 
 
 $ ->
@@ -49,7 +52,8 @@ $ ->
     urlParams = for p in params
       value = $('#' + p.replace('[', '_').replace(']', '')).val() || ''
       encodeURIComponent(p) + "=" + value
-    settings.url = settings.url + "&" + urlParams.join('&')
+    joint = if settings.url.indexOf('?') == -1 then '?' else '&'
+    settings.url = settings.url + joint + urlParams.join('&')
   )
 
   # wire up toggle links
@@ -72,6 +76,18 @@ $ ->
   # wire up direct submit fields
   $('body').on('change', '[data-submit]', (event) ->
     $(this).closest('form').submit()
+  )
+
+  # wire up ajax button with spinners
+  $('body').on('ajax:beforeSend', '[data-spin]', (event, xhr, settings) ->
+    $(this).prop('disable', true).
+            addClass('disabled').
+            siblings('.spinner').show()
+  )
+  $('body').on('ajax:complete', '[data-spin]', (event, xhr, settings) ->
+    $(this).prop('disable', false).
+            removeClass('disabled').
+            siblings('.spinner').hide()
   )
 
   # wire up disabled links

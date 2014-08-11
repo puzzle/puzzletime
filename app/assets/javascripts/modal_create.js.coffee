@@ -2,7 +2,11 @@
 app = window.App ||= {}
 
 prepareModalRequest = (event, xhr, settings) ->
-  settings.url += '.js'
+  index = settings.url.indexOf('?')
+  if index < 1
+    settings.url += '.js'
+  else
+    settings.url = settings.url.substr(0, index) + '.js' + settings.url.substr(index)
 
 showModal = (event, data, status, xhr) ->
   $this = $(this)

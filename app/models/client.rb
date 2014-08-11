@@ -23,6 +23,9 @@ class Client < ActiveRecord::Base
   has_descendants_through_work_item :orders
   has_descendants_through_work_item :accounting_posts
 
+
+  validates :crm_key, uniqueness: true, allow_blank: true
+
   ##### interface methods for Evaluatable #####
 
   def self.worktimes

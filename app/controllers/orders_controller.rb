@@ -17,6 +17,16 @@ class OrdersController < ManageController
   before_action :set_filter_values, only: :index
   before_render_form :set_clients
 
+  def crm_load
+    key = params[:order][:crm_key]
+    @crm = Crm.instance
+    @order = Order.where(crm_key: key).first
+    @crm_order = @crm.find_order(key)
+    if @crm_order
+      @client = Client.where(crm_key: @crm_order[:client][:key].to_s).first
+    end
+  end
+
   private
 
   def list_entries

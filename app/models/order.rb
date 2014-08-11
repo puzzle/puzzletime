@@ -42,6 +42,7 @@ class Order < ActiveRecord::Base
   ### VALIDATIONS
 
   validates :kind_id, :responsible_id, :status_id, :department_id, presence: true
+  validates :crm_key, uniqueness: true, allow_blank: true
   validate :work_item_parent_presence
 
   ### CALLBACKS
