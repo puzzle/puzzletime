@@ -54,6 +54,10 @@ module FormHelper
     standard_form(path_args(entry), *attrs, &block)
   end
 
+  def spinner
+    image_tag('ajax-loader.gif', size: '16x16', class: 'spinner', alt: 'Lädt...', style: 'display: none;')
+  end
+
   private
 
   def default_cancel_url(object)

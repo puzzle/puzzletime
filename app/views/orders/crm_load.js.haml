@@ -1,0 +1,22 @@
+$('#crm_key').removeClass('has-error')
+$('#order_work_item_attributes_name').prop('readonly', false).val('')
+var clientSelect = $('#client_work_item_id')[0].selectize
+clientSelect.setValue('')
+clientSelect.unlock()
+- if @order
+  $('#crm_key').addClass('has-error')
+  $('#crm_key .help-block').html('Dieser Auftrag wurde bereits erfasst')
+- elsif !@crm_order
+  $('#crm_key').addClass('has-error')
+  $('#crm_key .help-block').html('Nicht gefunden')
+- else
+  $('#order_work_item_attributes_name').val('#{@crm_order[:name]}').prop('readonly', true)
+  $('#crm_key .help-block').html('<a href="#{@crm_order[:url]}">#{@crm_order[:url]}</a>')
+  - if @client
+    clientSelect.lock()
+    clientSelect.setValue(#{@client.work_item_id})
+  - else
+    var params = 'client[work_item_attributes][name]=#{@crm_order[:client][:name]}'
+    params += '&client[crm_key]=#{@crm_order[:client][:key]}'
+    $('#client_work_item_id_create_link').data('params', params).click()
+
