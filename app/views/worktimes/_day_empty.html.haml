@@ -4,6 +4,6 @@
     .title
     .description
   .controls
-    = link_to(new_projecttime_path(work_date: localize_date(day))) do
+    = link_to(new_projecttime_path(work_date: localize_date(day)), data: {no_turbolink: true}) do
       Hinzufügen
       %i.icon-duplicate
