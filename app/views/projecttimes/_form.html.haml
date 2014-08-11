@@ -9,6 +9,7 @@
     = f.text_field(:account,
                    value: @worktime.account.try(:label_verbose),
                    placeholder: 'Suchen...',
+                   autofocus: true,
                    data: { autocomplete: 'project',
                            url: search_projects_path,
                            id_field: 'projecttime_account_id' })
