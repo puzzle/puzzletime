@@ -101,7 +101,6 @@ $ ->
     $("#week_date").datepicker
       showWeek: true,
       changeYear: true
-      showButtonPanel: true
       onSelect: (date, instance) ->
         window.location = "/worktimes?week_date=" + date
         return
