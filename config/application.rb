@@ -42,7 +42,7 @@ module Puzzletime
 
     config.cache_store = :dalli_store
 
-    config.assets.precompile += %w(print.css phone.css graph.css)
+    config.assets.precompile += %w(print.css phone.css graph.css *.png *.gif *.jpg)
 
     config.assets.paths << Rails.root.join('app', 'assets', 'fonts')
 
