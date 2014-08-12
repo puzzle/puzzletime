@@ -54,7 +54,7 @@ class EditOtherProjecttimeTest < ActionDispatch::IntegrationTest
   end
 
   private
-  
+
   def create_projecttime
     employee = employees(:mark)
     post_via_redirect '/projecttimes',
@@ -63,7 +63,7 @@ class EditOtherProjecttimeTest < ActionDispatch::IntegrationTest
                      work_date: Date.today,
                      hours: '8:30'  }
     assert_response :success
-    assert_equal '/projecttimes', path
+    assert_equal '/evaluator/details', path
     projecttime = Projecttime.last
     assert_equal 8.5, projecttime.hours
     projecttime

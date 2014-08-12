@@ -4,7 +4,10 @@
     %tr
       - @evaluation.detail_columns.each do |field|
         %th= @evaluation.detail_labels[field]
-      %th
+      - if @evaluation.edit_link?(@user) || @user.management
+        %th
+      - if @evaluation.delete_link?(@user)
+        %th
   %tbody
     = render :partial => 'detailrow', :collection => @times, :locals => {:spacer => spacer}
   %tfoot
@@ -12,11 +15,17 @@
       %td Total insgesamt
       %td{:align => "right"}= format_hour @evaluation.sum_times(@period)
       %td{:colspan => @evaluation.detail_columns.size - 2}
-      %td
+      - if @evaluation.edit_link?(@user) || @user.management
+        %td
+      - if @evaluation.delete_link?(@user)
+        %td
     %tr.times_total_sum
       %td Total verrechenbar
       %td{:align => "right"}= format_hour @evaluation.sum_times(@period, nil, Worktime.where(billable: true))
       %td{:colspan => @evaluation.detail_columns.size - 2}
-      %td
+      - if @evaluation.edit_link?(@user) || @user.management
+        %td
+      - if @evaluation.delete_link?(@user)
+        %td
 
 %p= paginate @times

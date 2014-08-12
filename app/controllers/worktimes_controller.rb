@@ -58,7 +58,7 @@ class WorktimesController < CrudController
     set_worktime_defaults
     true
   end
-  
+
   def set_work_date
     unless @worktime.work_date
       if params[:work_date]
@@ -76,41 +76,6 @@ class WorktimesController < CrudController
       flash[:notice] = 'Sie sind nicht authorisiert, um diese Seite zu öffnen'
       redirect_to root_path
     end
-  end
-
-  def destroy_referer
-    referer = request.env['HTTP_REFERER']
-    if params[:back] && referer && !(referer =~ /time\/edit\/#{@worktime.id}$/)
-      referer.gsub!(/times$/, 'time/new')
-      referer.gsub!(/times\/\d+/, 'time/edit')
-      if referer.include?('work_date')
-        referer.gsub!(/work_date=[0-9]{4}\-[0-9]{2}\-[0-9]{2}/, "work_date=#{@worktime.work_date}")
-      else
-        referer += (referer.include?('?') ? '&' : '?') + "work_date=#{@worktime.work_date}"
-      end
-      referer
-    else
-      detail_times_path
-    end
-  end
-
-  def detail_times_path
-    options = evaluation_detail_params
-    options[:controller] = 'evaluator'
-    options[:action] = 'details'
-    if params[:evaluation].nil?
-      options[:evaluation] = user_evaluation
-      options[:category_id] = @worktime.employee_id
-      options[:division_id] = nil
-      options[:clear] = 1
-      set_period
-      if @period.nil? || ! @period.include?(@worktime.work_date)
-        period = Period.week_for(@worktime.work_date)
-        options[:start_date] = period.startDate
-        options[:end_date] = period.endDate
-      end
-    end
-    options
   end
 
   def check_overlapping
@@ -160,7 +125,20 @@ class WorktimesController < CrudController
   end
 
   def index_url
-    { action: 'index', week_date: entry.work_date }
+    if params[:back_url].present?
+      sanitized_back_url
+    elsif record_other?
+      week = Period.week_for(entry.work_date)
+      { controller: 'evaluator',
+        action: 'details',
+        evaluation: generic_evaluation,
+        division_id: employee_id,
+        start_date: week.startDate,
+        end_date: week.endDate,
+        clear: 1 }
+    else
+      { action: 'index', week_date: entry.work_date }
+    end
   end
 
   def set_statistics
@@ -181,11 +159,6 @@ class WorktimesController < CrudController
 
   # overwrite in subclass
   def set_worktime_defaults
-  end
-
-  # may overwrite in subclass
-  def user_evaluation
-    record_other? ? 'employeeprojects' : 'userProjects'
   end
 
   def record_other?
@@ -224,12 +197,12 @@ class WorktimesController < CrudController
     end
   end
 
-  def ivar_name(klass)
-    klass < Worktime ? Worktime.model_name.param_key : super(klass)
+  def generic_evaluation
+    'employees'
   end
 
-  def evaluation_detail_params
-    params.slice(:evaluation, :category_id, :division_id, :start_date, :end_date, :page)
+  def ivar_name(klass)
+    klass < Worktime ? Worktime.model_name.param_key : super(klass)
   end
 
 end

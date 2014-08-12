@@ -1,4 +1,5 @@
-= render :partial => spacer, :locals => {:time => detailrow} if spacer
+= render spacer, time: detailrow if spacer
+
 %tr
   - @evaluation.detail_columns.each do |field|
     = detail_td detailrow, field
@@ -6,16 +7,12 @@
     %td
       - if @user.management || ! detailrow.booked
         = link_to 'Bearbeiten',
-                  evaluation_detail_params.merge!(:controller => detailrow.controller,
-                                                  :action => 'edit',
-                                                  :id => detailrow.id)
+                  edit_polymorphic_path(detailrow, back_url: request.url)
   - if @evaluation.delete_link?(@user)
     %td
       - if ! detailrow.booked
         = link_to 'Löschen',
-                  evaluation_detail_params.merge!(:controller => detailrow.controller,
-                                                  :action =>'destroy',
-                                                  :id => detailrow.id),
+                  polymorphic_path(detailrow, back_url: request.url),
                   data: { method: :delete,
                           confirm: ti(:confirm_delete) }
 
