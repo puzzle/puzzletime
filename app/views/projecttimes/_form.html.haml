@@ -12,7 +12,8 @@
                    autofocus: true,
                    data: { autocomplete: 'project',
                            url: search_projects_path,
-                           id_field: 'projecttime_account_id' })
+                           id_field: 'projecttime_account_id',
+                           billable_field: 'projecttime_billable' })
     = f.hidden_field(:account_id)
   = f.labeled_input_field(:ticket, span: 2)
   = f.labeled_text_area(:description)
