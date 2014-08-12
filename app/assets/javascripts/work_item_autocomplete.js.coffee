@@ -1,5 +1,6 @@
 app = window.App ||= {}
 
+# TODO update billable
 app.workItemAutocomplete = (i, input) ->
   $(input).selectize(
     valueField: 'id',
@@ -37,6 +38,6 @@ limitText = (string, max) ->
   if !string
     ''
   else if string.length > max
-    string.substr(0, 70) + '…'
+    string.substr(0, max) + '…'
   else
     string
