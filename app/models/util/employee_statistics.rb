@@ -32,7 +32,7 @@ class EmployeeStatistics
   def used_vacations(period)
     return 0 if period.nil?
     @employee.worktimes.where('absence_id = ? AND (work_date BETWEEN ? AND ?)',
-                              Settings.vacation_id, period.startDate, period.endDate).
+                              Settings.vacation_id, period.start_date, period.end_date).
                         sum(:hours).to_f / 8.0
   end
 
@@ -60,14 +60,14 @@ class EmployeeStatistics
   def employments_during(period)
     return [] if period.nil?
     selectedEmployments = @employee.employments.where('(end_date IS NULL OR end_date >= ?) AND start_date <= ?',
-                                                      period.startDate, period.endDate).
+                                                      period.start_date, period.end_date).
                                                 reorder('start_date').
                                                 to_a
     unless selectedEmployments.empty?
-      selectedEmployments.first.start_date = period.startDate if selectedEmployments.first.start_date < period.startDate
+      selectedEmployments.first.start_date = period.start_date if selectedEmployments.first.start_date < period.start_date
       if selectedEmployments.last.end_date.nil? ||
-         selectedEmployments.last.end_date > period.endDate then
-        selectedEmployments.last.end_date = period.endDate
+         selectedEmployments.last.end_date > period.end_date then
+        selectedEmployments.last.end_date = period.end_date
       end
     end
     selectedEmployments
@@ -80,8 +80,8 @@ class EmployeeStatistics
     condArray = ['((project_id IS NOT NULL AND absence_id IS NULL) OR absences.payed)']
     if period
       condArray[0] += ' AND (work_date BETWEEN ? AND ?)'
-      condArray.push period.startDate
-      condArray.push period.endDate
+      condArray.push period.start_date
+      condArray.push period.end_date
     end
     @employee.worktimes.joins('LEFT JOIN absences ON absences.id = absence_id').
                         where(condArray).

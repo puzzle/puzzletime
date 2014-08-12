@@ -126,12 +126,12 @@ class EvaluatorController < ApplicationController
     if params[:shortcut]
       @period = Period.parse(params[:shortcut])
     else
-      @period = Period.retrieve(params[:period][:startDate],
-                                params[:period][:endDate],
+      @period = Period.retrieve(params[:period][:start_date],
+                                params[:period][:end_date],
                                 params[:period][:label])
     end
     fail ArgumentError, 'Start Datum nach End Datum' if @period.negative?
-    session[:period] = [@period.startDate.to_s, @period.endDate.to_s,  @period.label]
+    session[:period] = [@period.start_date.to_s, @period.end_date.to_s,  @period.label]
      # redirect_to_overview
     redirect_to sanitized_back_url
   rescue ArgumentError => ex        # ArgumentError from Period.new or if period.negative?

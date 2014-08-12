@@ -23,7 +23,7 @@ class AbsencePlanningGraph
       end
     end
 
-    @period.startDate.step(@period.endDate) do |day|
+    @period.start_date.step(@period.end_date) do |day|
       if !Holiday.weekend?(day) && (Holiday.regularHoliday?(day) || Holiday.irregular_holiday?(day))
         add_to_cache('Feiertag', day)
       end

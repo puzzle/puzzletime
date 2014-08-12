@@ -3,20 +3,20 @@
 module GraphHelper
 
   def extend_to_weeks(period)
-    Period.new Period.week_for(period.startDate).startDate,
-               Period.week_for(period.endDate).endDate,
+    Period.new Period.week_for(period.start_date).start_date,
+               Period.week_for(period.end_date).end_date,
                period.label
   end
 
   def each_day
-    @period.startDate.step(@period.endDate) do |day|
+    @period.start_date.step(@period.end_date) do |day|
       @current = get_period_week(day)
       yield day
     end
   end
 
   def each_week
-    @period.startDate.step(@period.endDate, 7) do |week|
+    @period.start_date.step(@period.end_date, 7) do |week|
       @current = get_period_week(week)
       yield week
     end
@@ -83,7 +83,7 @@ module GraphHelper
 
   def month_header(span_factor = 1)
   	 header = ''
-  	 current_month = @graph.period.startDate.month
+  	 current_month = @graph.period.start_date.month
   	 span = 0
   	 @graph.each_week do |day|
    	  if day.month != current_month
@@ -106,7 +106,7 @@ module GraphHelper
 
   def year_header(span_factor = 1)
     header = ''
-    current_year = @graph.period.startDate.year
+    current_year = @graph.period.start_date.year
     span = 0
     @graph.each_week do |week|
       if week.year != current_year

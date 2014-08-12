@@ -27,8 +27,8 @@ class UserNotification < ActiveRecord::Base
     current = period.nil?
     period ||= Period.current_week
     custom = list.where('date_from BETWEEN ? AND ? OR date_to BETWEEN ? AND ?',
-                        period.startDate, period.endDate,
-                        period.startDate, period.endDate).
+                        period.start_date, period.end_date,
+                        period.start_date, period.end_date).
                   reorder('date_from')
     list = custom.concat(holiday_notifications(period))
     list.sort!

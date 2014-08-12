@@ -22,7 +22,7 @@ class ExtendedCapacityReport < BaseCapacityReport
             'Soll Arbeitszeit (h)',
             'Überzeit (h)',
             'Überzeit Total (h)',
-            "Ferienguthaben bis Ende #{@period.endDate.year} (d)",
+            "Ferienguthaben bis Ende #{@period.end_date.year} (d)",
             'Abwesenheit (h)',
             'Projektkürzel',
             'Projektname',
@@ -121,7 +121,7 @@ class ExtendedCapacityReport < BaseCapacityReport
       project_total_hours = project_total_billable_hours + project_total_non_billable_hours + internal_project_total_hours
 
       average_percents = employee.statistics.employments_during(@period).sum(&:percent)
-      remaining_vacations = employee.statistics.remaining_vacations(Date.new(@period.endDate.year, 12, 31))
+      remaining_vacations = employee.statistics.remaining_vacations(Date.new(@period.end_date.year, 12, 31))
 
       # append employee overview
       csv << [employee.shortname,
@@ -129,7 +129,7 @@ class ExtendedCapacityReport < BaseCapacityReport
               average_percents,
               employee.statistics.musttime(@period),
               employee.statistics.overtime(@period),
-              employee.statistics.current_overtime(@period.endDate),
+              employee.statistics.current_overtime(@period.end_date),
               remaining_vacations,
               employee_absences(employee, @period),
               '',

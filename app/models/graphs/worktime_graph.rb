@@ -22,7 +22,7 @@ class WorktimeGraph
   end
 
   def each_day
-    set_period_boxes(@monthly_boxes, Period.month_for(@period.startDate), HoursMonthType::INSTANCE)
+    set_period_boxes(@monthly_boxes, Period.month_for(@period.start_date), HoursMonthType::INSTANCE)
     @period.step do |day|
       @current = Period.day_for(day)
       compute_period_times day
@@ -32,7 +32,7 @@ class WorktimeGraph
 
   def timeboxes
     # must_hours are Settings.must_hours_per_day unless employment > 100%
-    must_hours = Holiday.musttime(@current.startDate) * must_hours_factor
+    must_hours = Holiday.musttime(@current.start_date) * must_hours_factor
     period_boxes = concat_period_boxes
     @total_hours = 0
     @boxes = []
@@ -67,7 +67,7 @@ class WorktimeGraph
 
   def must_hours_factor
     p = @current || @period
-    employment = @employee.employment_at(p.startDate)
+    employment = @employee.employment_at(p.start_date)
     employment ? [employment.percent_factor, 1.0].max : 1.0
   end
 
@@ -151,8 +151,8 @@ class WorktimeGraph
   end
 
   def extend_to_weeks(period)
-    Period.new Period.week_for(period.startDate).startDate,
-               Period.week_for(period.endDate).endDate,
+    Period.new Period.week_for(period.start_date).start_date,
+               Period.week_for(period.end_date).end_date,
                period.label
   end
 
