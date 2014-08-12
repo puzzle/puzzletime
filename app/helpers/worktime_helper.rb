@@ -18,11 +18,7 @@ module WorktimeHelper
                name: item.name,
                path_shortnames: item.path_shortnames,
                description: item.description }
-      content_tag(:option,
-                  item.label_verbose,
-                  value: item.id,
-                  selected: true,
-                  data: { data: json.to_json })
+      content_tag(:option, item.label_verbose, value: item.id, selected: true, data: { data: json.to_json })
     end
   end
 
