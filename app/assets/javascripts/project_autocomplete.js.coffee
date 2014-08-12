@@ -14,6 +14,7 @@ projectSelect = (event, item) ->
   input = $(event.target)
   item = item.item
   $('#' + input.data('id-field')).val(item.id)
+  $('#' + input.data('billable-field')).prop('checked', item.billable)
   input.val(item.path_shortnames + ": " + item.name)
   false
 

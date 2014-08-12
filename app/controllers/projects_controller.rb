@@ -23,7 +23,7 @@ class ProjectsController < ManageController
         @projects = Project.list.
                             where(leaf: true).
                             where(search_conditions).
-                            select(:id, :name, :path_shortnames, :inherited_description).
+                            select(:id, :name, :path_shortnames, :inherited_description, :billable).
                             limit(20)
       end
     end
