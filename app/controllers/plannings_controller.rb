@@ -129,7 +129,7 @@ class PlanningsController < CrudController
     memberships = Projectmembership.where(project_id: projects.collect { |p|p.id }, active: true)
     employees = Employee.where(id: memberships.collect { |m| m.employee_id }).includes(:employments).list
     period ||= Period.current_month
-    employees.select { |e| e.employment_at(period.startDate).present? || e.employment_at(period.endDate).present? }
+    employees.select { |e| e.employment_at(period.start_date).present? || e.employment_at(period.end_date).present? }
   end
 
   def assign_attributes

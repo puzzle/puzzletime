@@ -16,7 +16,7 @@ class ManagedProjectsEval < ProjectsEval
                      where(type: 'Projecttime').
                      where(pm: { active: true, projectmanagement: true, employee_id: category.id }).
                      group('pm.project_id')
-    query = query.where('work_date BETWEEN ? AND ?', period.startDate, period.endDate) if period
+    query = query.where('work_date BETWEEN ? AND ?', period.start_date, period.end_date) if period
     query.sum(:hours)
   end
 

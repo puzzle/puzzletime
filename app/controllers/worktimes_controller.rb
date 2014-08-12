@@ -64,7 +64,7 @@ class WorktimesController < CrudController
       if params[:work_date]
         @worktime.work_date = params[:work_date]
       elsif @period && @period.length == 1
-        @worktime.work_date = @period.startDate
+        @worktime.work_date = @period.start_date
       else
         @worktime.work_date = Date.today
       end
@@ -133,8 +133,8 @@ class WorktimesController < CrudController
         action: 'details',
         evaluation: generic_evaluation,
         division_id: employee_id,
-        start_date: week.startDate,
-        end_date: week.endDate,
+        start_date: week.start_date,
+        end_date: week.end_date,
         clear: 1 }
     else
       { action: 'index', week_date: entry.work_date }

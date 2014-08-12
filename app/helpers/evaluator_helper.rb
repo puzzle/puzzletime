@@ -77,13 +77,13 @@ module EvaluatorHelper
 
   def remaining_vacations(employee)
     format_hour(@period ?
-        employee.statistics.remaining_vacations(@period.endDate) :
+        employee.statistics.remaining_vacations(@period.end_date) :
         employee.statistics.current_remaining_vacations) + ' d'
   end
 
   def overtime_vacations_tooltip(employee)
     transfers = employee.overtime_vacations.
-                         where(@period ? ['transfer_date <= ?', @period.endDate] : nil).
+                         where(@period ? ['transfer_date <= ?', @period.end_date] : nil).
                          order('transfer_date').
                          to_a
     tooltip = ''
@@ -110,8 +110,8 @@ module EvaluatorHelper
             [[['Überzeit', stat.overtime(@period).to_f, 'h'],
               ['Bezogene Ferien', stat.used_vacations(@period), 'd'],
               ['Soll Arbeitszeit', stat.musttime(@period), 'h']],
-             [['Abschliessend', stat.current_overtime(@period.endDate), 'h'],
-              ['Verbleibend', stat.remaining_vacations(@period.endDate), 'd']]]  :
+             [['Abschliessend', stat.current_overtime(@period.end_date), 'h'],
+              ['Verbleibend', stat.remaining_vacations(@period.end_date), 'd']]]  :
             [[['Überzeit Gestern', stat.current_overtime, 'h'],
               ['Bezogene Ferien', stat.used_vacations(Period.current_year), 'd'],
               ['Monatliche Arbeitszeit', stat.musttime(Period.current_month), 'h']],

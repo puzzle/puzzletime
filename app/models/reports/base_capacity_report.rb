@@ -8,7 +8,7 @@ class BaseCapacityReport
   end
 
   def filename
-    "#{@filename_prefix}_#{format_date(@period.startDate)}_#{format_date(@period.endDate)}.csv"
+    "#{@filename_prefix}_#{format_date(@period.start_date)}_#{format_date(@period.end_date)}.csv"
   end
 
   def find_billable_time(employee, project_id, period)
@@ -17,7 +17,7 @@ class BaseCapacityReport
                              WHERE w.employee_id = ? AND ? = ANY(p.path_ids)
                              AND w.work_date BETWEEN ? AND ?
                              GROUP BY w.billable"'',
-                          employee.id, project_id, period.startDate, period.endDate]
+                          employee.id, project_id, period.start_date, period.end_date]
   end
 
   def extract_billable_hours(result, billable)
@@ -28,8 +28,8 @@ class BaseCapacityReport
   def employee_absences(employee, period)
     employee.worktimes.includes(:absence).
                        where("type = 'Absencetime' AND absences.payed AND work_date BETWEEN ? AND ?",
-                             period.startDate,
-                             period.endDate).
+                             period.start_date,
+                             period.end_date).
                        sum(:hours).
                        to_f
   end

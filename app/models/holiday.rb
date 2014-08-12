@@ -89,7 +89,7 @@ class Holiday < ActiveRecord::Base
 
   def self.regular_holidays(period)
     holidays = []
-    years = period.startDate.year..period.endDate.year
+    years = period.start_date.year..period.end_date.year
     years.each do |year|
       Settings.regular_holidays.each do |day|
         regular = Date.civil(year, day[1], day[0])
@@ -116,7 +116,7 @@ class Holiday < ActiveRecord::Base
     weeks = length / 7
     hours = weeks * 5 * Settings.must_hours_per_day
     if length % 7 > 0
-      lastPeriod = Period.new(period.startDate + weeks * 7, period.endDate)
+      lastPeriod = Period.new(period.start_date + weeks * 7, period.end_date)
       lastPeriod.step do |day|
         hours += Settings.must_hours_per_day unless self.weekend?(day)
       end

@@ -2,11 +2,11 @@
 = render(:partial => 'period_link')
 - Employee.list.each do |em|
   %h2= em.label
-  Ueberzeit: #{format_hour em.statistics.current_overtime(@period.endDate)} Stunden
+  Ueberzeit: #{format_hour em.statistics.current_overtime(@period.end_date)} Stunden
   %br/
   Bezogene Ferien: #{format_hour em.statistics.used_vacations(@period)} Tage
   %br/
-  Ferienrestguthaben: #{format_hour em.statistics.remaining_vacations(@period.endDate)} Tage
+  Ferienrestguthaben: #{format_hour em.statistics.remaining_vacations(@period.end_date)} Tage
   %br/
   Projekte:
   %table
