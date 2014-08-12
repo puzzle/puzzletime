@@ -50,9 +50,8 @@ class AbsencetimesController < WorktimesController
     @accounts = Absence.list
   end
 
-  def user_evaluation
-    @user.absences(true)
-    record_other? ? 'employeeabsences' : 'userAbsences'
+  def generic_evaluation
+    'absences'
   end
 
 end
