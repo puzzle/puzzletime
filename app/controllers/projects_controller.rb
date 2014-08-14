@@ -51,7 +51,7 @@ class ProjectsController < ManageController
   end
 
   def managed_projects
-    @user.managed_projects.page(params[:page])
+    @user.managed_projects.list.page(params[:page])
   end
 
   def authorized?
