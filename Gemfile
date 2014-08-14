@@ -3,7 +3,6 @@ source 'https://rubygems.org'
 gem 'rails', '4.1.4'
 
 gem 'pg'
-gem 'mysql2' # for puzzle base
 
 gem 'airbrake'
 gem 'acts_as_tree'

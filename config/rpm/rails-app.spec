@@ -2,7 +2,7 @@
 # add your specific settings here
 
 %define app_name     ptime
-%define app_version  1.5
+%define app_version  2.0
 %define ruby_version 1.9.3
 
 ### optional libs
@@ -10,7 +10,7 @@
 # if you need additional things
 # please add conditionals like these
 
-%define use_delayed_job 0
+%define use_delayed_job 1
 %define use_memcached   1
 %define use_sphinx      0
 %define use_imagemagick 0
@@ -23,7 +23,7 @@
 
 # those are set automatically by the ENV variable used
 # to generate the database yml
-%define use_mysql         1
+%define use_mysql         0
 %define use_pgsql         0
 %define use_postgresql92  1
 
