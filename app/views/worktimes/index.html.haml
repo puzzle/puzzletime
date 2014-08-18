@@ -21,18 +21,18 @@
       .weeknav-calendar-row
         = plain_form(Worktime.new, method: :get) do |f|
           = f.date_field(:work_date, id: 'week_date')
-        KW 
+        KW
         = week_number(@selected_date)
         - if @user.management
           = link_to('Fremderfassen', new_projecttime_path(other: 1),
                     {class: 'add-other', id: 'new_other_projecttime_link'})
-      .weeknav-add-row
-        = link_to(new_projecttime_path, {class: 'btn btn-primary',
-                                         title: 'Zeit/Abwesenheit erfassen',
-                                         id: 'new_projecttime_link' }) do
-          %i.icon-add
-          %span.add-text
-            Hinzufügen
+      / .weeknav-add-row
+      / = link_to(new_projecttime_path, {class: 'btn btn-primary',
+      /                                  title: 'Zeit/Abwesenheit erfassen',
+      /                                  id: 'new_projecttime_link' }) do
+      /   %i.icon-add
+      /   %span.add-text
+      /     Hinzufügen
       .weeknav-total.weeknav-element
         .inner
           .weeknav-label Total
