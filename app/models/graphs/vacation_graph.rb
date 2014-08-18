@@ -44,7 +44,7 @@ class VacationGraph
                                              where('NOT absences.private AND (report_type = ?)',
                                                    HoursMonthType::INSTANCE.key)
       @unpaid_absences = empl.statistics.employments_during(period).select { |e| e.percent == 0 }
-      @unpaid_absences.collect! { |e| Period.new(e.start_date, e.end_date ? e.end_date : period.endDate) }
+      @unpaid_absences.collect! { |e| Period.new(e.start_date, e.end_date ? e.end_date : period.end_date) }
       @index = 0
       @monthly_index = 0
       @unpaid_index = 0
@@ -76,11 +76,11 @@ class VacationGraph
   end
 
   def previous_left_vacations
-    employee.statistics.remaining_vacations(@actual_period.startDate - 1).round(1)
+    employee.statistics.remaining_vacations(@actual_period.start_date - 1).round(1)
   end
 
   def following_left_vacations
-    employee.statistics.remaining_vacations(@actual_period.endDate + 1).round(1)
+    employee.statistics.remaining_vacations(@actual_period.end_date + 1).round(1)
   end
 
   def granted_vacations
@@ -110,11 +110,11 @@ class VacationGraph
   end
 
   def add_monthly_absences(times)
-    if @current.startDate.month == @current.endDate.month
+    if @current.start_date.month == @current.end_date.month
 	     add_monthly times, @current
     else
-      part1 = add_monthly times, get_period(@current.startDate, @current.startDate.end_of_month)
-	     part2 = add_monthly times, get_period(@current.endDate.beginning_of_month, @current.endDate)
+      part1 = add_monthly times, get_period(@current.start_date, @current.start_date.end_of_month)
+	     part2 = add_monthly times, get_period(@current.end_date.beginning_of_month, @current.end_date)
       part1 ||= []
       part2 ||= []
       part1.concat part2
@@ -135,7 +135,7 @@ class VacationGraph
   end
 
   def add_monthly(times, period)
-    month = get_period_month(period.startDate)
+    month = get_period_month(period.start_date)
     factor = period.musttime.to_f / month.musttime.to_f
     add_absences(times, month, true, factor) if factor > 0
   end
@@ -155,9 +155,9 @@ class VacationGraph
   end
 
   def iterated_absences(period, collection, index)
-    return [] if index >= collection.size || collection[index].work_date > period.endDate
+    return [] if index >= collection.size || collection[index].work_date > period.end_date
     list = []
-    while index < collection.size && collection[index].work_date <= period.endDate
+    while index < collection.size && collection[index].work_date <= period.end_date
       list.push collection[index]
       index += 1
     end

@@ -6,7 +6,7 @@
           = "#{info[0]}: "
           &nbsp;
         %td{:align => "right"}
-          = format_hour info[1]
+          = info[2] == 'h' ? format_hour(info[1]) : f(info[1])
           = info[2]
         %td &nbsp; &nbsp; &nbsp;
 %br/

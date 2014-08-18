@@ -3,7 +3,7 @@
 class Period
 
   # TODO: use underscore
-  attr_reader :startDate, :endDate, :label
+  attr_reader :start_date, :end_date, :label
 
   # Caches the most used periods
   # Not sure yet if this really works in a stateless fcgi environment
@@ -81,16 +81,16 @@ class Period
     end
   end
 
-  def self.retrieve(startDate = Date.today, endDate = Date.today, label = nil)
-    startDate = parse_date(startDate)
-    endDate = parse_date(endDate)
-    key = [startDate, endDate, label]
-    @@cache.get(key) { Period.new(startDate, endDate, label) }
+  def self.retrieve(start_date = Date.today, end_date = Date.today, label = nil)
+    start_date = parse_date(start_date)
+    end_date = parse_date(end_date)
+    key = [start_date, end_date, label]
+    @@cache.get(key) { Period.new(start_date, end_date, label) }
   end
 
-  def initialize(startDate = Date.today, endDate = Date.today, label = nil)
-    @startDate = self.class.parse_date(startDate)
-    @endDate = self.class.parse_date(endDate)
+  def initialize(start_date = Date.today, end_date = Date.today, label = nil)
+    @start_date = self.class.parse_date(start_date)
+    @end_date = self.class.parse_date(end_date)
     @label = label ? label : to_s
   end
 
@@ -98,13 +98,13 @@ class Period
   #########  public methods  #########
 
   def step
-    @startDate.step(@endDate, 1) do |date|
+    @start_date.step(@end_date, 1) do |date|
       yield date
     end
   end
 
   def length
-    ((@endDate - @startDate) + 1).to_i
+    ((@end_date - @start_date) + 1).to_i
   end
 
   def musttime
@@ -113,19 +113,19 @@ class Period
   end
 
   def include?(date)
-    date.between?(@startDate, @endDate)
+    date.between?(@start_date, @end_date)
   end
 
   def negative?
-    @startDate > @endDate
+    @start_date > @end_date
   end
 
   def url_query_s
-  	 @url_query ||= 'start_date=' + startDate.to_s + '&amp;end_date=' + endDate.to_s
+  	 @url_query ||= 'start_date=' + start_date.to_s + '&amp;end_date=' + end_date.to_s
   end
 
   def to_s
-    (length > 1) ? I18n.l(@startDate) + ' - ' + I18n.l(@endDate) : I18n.l(@startDate)
+    (length > 1) ? I18n.l(@start_date) + ' - ' + I18n.l(@end_date) : I18n.l(@start_date)
   end
 
   def set_label(label)

@@ -61,9 +61,9 @@ class Planning < ActiveRecord::Base
 
   def planned_during?(period)
     if repeat_type_forever?
-      return period.endDate >= start_week_date
+      return period.end_date >= start_week_date
     end
-    !((period.startDate < start_week_date && period.endDate < start_week_date) || (period.startDate > end_week_date && period.endDate > end_week_date))
+    !((period.start_date < start_week_date && period.end_date < start_week_date) || (period.start_date > end_week_date && period.end_date > end_week_date))
   end
 
   def validate_planning

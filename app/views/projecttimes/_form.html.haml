@@ -1,5 +1,9 @@
 - url ||= nil
-= standard_form(@worktime, {url: url, cancel_url: worktimes_path(week_date: @worktime.work_date)}) do |f|
+= standard_form(@worktime,
+                url: url,
+                cancel_url: params[:back_url].presence || worktimes_path(week_date: @worktime.work_date)) do |f|
+  = hidden_field_tag :back_url, params[:back_url]
+
   - if record_other?
     = f.labeled_belongs_to_field(:employee_id,
                                   data: { remote: true,
@@ -12,7 +16,8 @@
                    autofocus: true,
                    data: { autocomplete: 'project',
                            url: search_projects_path,
-                           id_field: 'projecttime_account_id' })
+                           id_field: 'projecttime_account_id',
+                           billable_field: 'projecttime_billable' })
     = f.hidden_field(:account_id)
   = f.labeled_input_field(:ticket, span: 2)
   = f.labeled_text_area(:description)

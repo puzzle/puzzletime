@@ -6,7 +6,8 @@ app.projectAutocomplete = (i, input) ->
     .autocomplete(
       minLength: 2,
       source: $(input).data('url'),
-      select: projectSelect
+      select: projectSelect,
+      focus: (event, ui) -> event.preventDefault()
     )
     .data("ui-autocomplete")._renderItem = projectItem
 
@@ -14,6 +15,7 @@ projectSelect = (event, item) ->
   input = $(event.target)
   item = item.item
   $('#' + input.data('id-field')).val(item.id)
+  $('#' + input.data('billable-field')).prop('checked', item.billable)
   input.val(item.path_shortnames + ": " + item.name)
   false
 

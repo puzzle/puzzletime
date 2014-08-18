@@ -48,18 +48,18 @@ class CapacityReport < BaseCapacityReport
               subproject_label,
               billable_hours,
               not_billable_hours,
-              period.startDate.month,
-              period.startDate.year]
+              period.start_date.month,
+              period.start_date.year]
     end
   end
 
   def monthly_periods
-    month_end = @period.startDate.end_of_month
-    periods = [Period.new(@period.startDate, [month_end, @period.endDate].min)]
-    while @period.endDate > month_end
+    month_end = @period.start_date.end_of_month
+    periods = [Period.new(@period.start_date, [month_end, @period.end_date].min)]
+    while @period.end_date > month_end
       month_start = month_end + 1
       month_end = month_start.end_of_month
-      periods.push Period.new(month_start, [month_end, @period.endDate].min)
+      periods.push Period.new(month_start, [month_end, @period.end_date].min)
     end
     periods
   end

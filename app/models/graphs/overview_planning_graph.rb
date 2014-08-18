@@ -37,13 +37,13 @@ class OverviewPlanningGraph
         add_week_to_cache(planning, Week.from_integer(planning.start_week).to_date)
       elsif planning.repeat_type_until?
         planning.start_week_date.step(planning.end_week_date, 7) do |week|
-          if week >= @period.startDate && week <= @period.endDate
+          if week >= @period.start_date && week <= @period.end_date
             add_week_to_cache(planning, week)
           end
         end
       else # forever
-        planning.start_week_date.step(@period.endDate, 7) do |week|
-          if week >= @period.startDate
+        planning.start_week_date.step(@period.end_date, 7) do |week|
+          if week >= @period.start_date
             add_week_to_cache(planning, week)
           end
         end

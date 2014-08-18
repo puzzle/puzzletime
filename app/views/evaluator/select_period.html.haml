@@ -63,17 +63,17 @@
 = form_tag({ action: 'change_period' }, class: 'form-horizontal', role: 'form') do
   = hidden_field_tag :back_url, params[:back_url]
   .form-group
-    = label('period', 'startDate', 'Von', class: 'col-md-1 control-label')
+    = label('period', 'start_date', 'Von', class: 'col-md-1 control-label')
     .col-md-2
       .input-group
-        = text_field('period', 'startDate', class: 'form-control date', value: I18n.l(@period.startDate))
+        = text_field('period', 'start_date', class: 'form-control date', value: I18n.l(@period.start_date))
         %span.input-group-addon
           %span.glyphicon.glyphicon-calendar
   .form-group
-    = label('period', 'endDate', 'Bis', class: 'col-md-1 control-label')
+    = label('period', 'end_date', 'Bis', class: 'col-md-1 control-label')
     .col-md-2
       .input-group
-        = text_field('period', 'endDate', class: 'form-control date', value: I18n.l(@period.endDate))
+        = text_field('period', 'end_date', class: 'form-control date', value: I18n.l(@period.end_date))
         %span.input-group-addon
           %span.glyphicon.glyphicon-calendar
   .form-group

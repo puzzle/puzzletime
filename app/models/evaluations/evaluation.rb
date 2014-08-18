@@ -99,7 +99,7 @@ class Evaluation
 
   def worktime_query(receiver, period = nil, division = nil)
     query = receiver.worktimes.where(type: worktime_type)
-    query = query.where('work_date BETWEEN ? AND ?', period.startDate, period.endDate) if period
+    query = query.where('work_date BETWEEN ? AND ?', period.start_date, period.end_date) if period
     query = query.where("? = #{category_ref}", category_id) if division && category_ref
     query
   end
