@@ -80,6 +80,10 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
     &:hover, &:active {
       text-decoration: none;
     }
+    i {
+      vertical-align: middle;
+      line-height: 1.5em;
+    }
   }
 
   .weeknav-calendar-row,
@@ -94,8 +98,9 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
   }
   .weeknav-calendar-row {
     @extend .col-xs-offset-1;
-    @extend .col-xs-8;
+    @extend .col-xs-10;
     border-left-width: 1px;
+    border-right-width: 1px;
 
     form {
       display: block;
@@ -217,7 +222,7 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
 
   .weekcontent {
     margin-top: 20px;
-    margin-bottom: $padding-base-vertical;
+    margin-bottom: 480px;
 
     .date-label, .entry {
       background-color: none;
@@ -234,11 +239,12 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
 
     .date-label {
       @extend .row;
-      margin-top: 50px;
+      margin-top: 36px;
       color: $gray;
 
       .date-day,
-      .date-time-value {
+      .date-time-value,
+      .date-action {
         padding-top: 10px;
         padding-bottom: 10px;
       }
@@ -249,6 +255,17 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
       .date-time-value {
         text-align: right;
         @extend .col-xs-1;
+      }
+      .date-action {
+        @extend .col-xs-2;
+        text-align: right;
+        a {
+          margin-right: 82px;
+          text-decoration: none;
+        }
+        i {
+          font-size: 18px;
+        }
       }
     }
 
@@ -331,15 +348,9 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
       }
     }
     .entry.is-empty {
+      padding: 0;
       .controls {
-        @extend .col-xs-5;
-      }
-      .controls a {
-        margin-right: 78px;
-
-        i {
-          margin-left: 0.5em;
-        }
+        @extend .col-xs-12;
       }
     }
   }
