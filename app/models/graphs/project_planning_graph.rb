@@ -15,11 +15,11 @@ class ProjectPlanningGraph
     @cache = {}
     @plannings       = Planning.where('project_id = ? and start_week <= ? and is_abstract=false',
                                       @project.id,
-                                      Week.from_date(period.endDate).to_integer).
+                                      Week.from_date(period.end_date).to_integer).
                                 includes(:project, :employee)
     @plannings_abstr = Planning.where('project_id = ? and start_week <= ? and is_abstract=true',
                                       @project.id,
-                                      Week.from_date(period.endDate).to_integer).
+                                      Week.from_date(period.end_date).to_integer).
                                 includes(:project, :employee)
     @employees       = @plannings.select { |planning| planning.planned_during?(@period) }.collect { |planning| planning.employee }.uniq.sort
     @employees_abstr = @plannings_abstr.select { |planning| planning.planned_during?(@period) }.collect { |planning| planning.employee }.uniq.sort
@@ -27,7 +27,7 @@ class ProjectPlanningGraph
   end
 
   def get_absence_graph(employee_id)
-    absences = Absencetime.where('employee_id = ? AND work_date >= ? AND work_date <= ?', employee_id, @period.startDate, @period.endDate)
+    absences = Absencetime.where('employee_id = ? AND work_date >= ? AND work_date <= ?', employee_id, @period.start_date, @period.end_date)
     AbsencePlanningGraph.new(absences, @period)
   end
 

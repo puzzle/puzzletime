@@ -17,11 +17,11 @@ class ProjecttimesController < WorktimesController
   def split
     set_employees
     @split = session[:split]
-    if @split.nil?
-      redirect_to controller: 'projecttimes', action: 'new'
-    else
+    if @split
       @worktime = @split.worktime_template
       render action: 'split'
+    else
+      redirect_to controller: 'projecttimes', action: 'new'
     end
   end
 
@@ -42,10 +42,10 @@ class ProjecttimesController < WorktimesController
           params[:other] = '1'
           params[:evaluation] = nil
         end
-        redirect_to detail_times_path
+        redirect_to index_url
       else
         session[:split] = @split
-        redirect_to evaluation_detail_params.merge!(action: 'split')
+        redirect_to action: 'split', back_url: params[:back_url]
       end
     else
       render action: 'split'
@@ -54,7 +54,7 @@ class ProjecttimesController < WorktimesController
 
   def delete_part
     session[:split].remove_worktime(params[:part_id].to_i)
-    redirect_to evaluation_detail_params.merge!(action: 'split')
+    redirect_to action: 'split', back_url: params[:back_url]
   end
 
   def running

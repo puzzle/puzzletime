@@ -185,6 +185,12 @@ class Project < ActiveRecord::Base
     end
   end
 
+  def reset_parent_leaf
+    if parent
+      parent.update_column(:leaf, !parent.children.exists?)
+    end
+  end
+
   protected
 
   def latest_freeze_until
@@ -212,11 +218,6 @@ class Project < ActiveRecord::Base
     self.path_ids = top? ? [id] : parent.path_ids.clone.push(id)
   end
 
-  def reset_parent_leaf
-    if parent
-      parent.update_column(:leaf, !parent.children.exists?)
-    end
-  end
 
   def update_child_path_names
     children.each do |c|

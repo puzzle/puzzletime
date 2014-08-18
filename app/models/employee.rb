@@ -69,7 +69,7 @@ class Employee < ActiveRecord::Base
   def self.employed_ones(period)
     joins('left join employments em on em.employee_id = employees.id').
     where('(em.end_date IS null or em.end_date >= ?) AND em.start_date <= ?',
-          period.startDate, period.endDate).
+          period.start_date, period.end_date).
     list.
     uniq
   end
@@ -123,7 +123,7 @@ class Employee < ActiveRecord::Base
           ' LEFT JOIN projects C ON P.id = ANY (C.path_ids))' +
           ' LEFT JOIN worktimes T ON C.id = T.project_id ' +
           "WHERE E.id = #{id} AND PM.projectmanagement"
-    sql += " AND T.work_date BETWEEN '#{period.startDate}' AND '#{period.endDate}'" if period
+    sql += " AND T.work_date BETWEEN '#{period.start_date}' AND '#{period.end_date}'" if period
     self.class.connection.select_value(sql).to_f
   end
 
