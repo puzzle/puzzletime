@@ -3,7 +3,7 @@
 #existing
   = render 'existing'
 
-%ul.nav.nav-tabs.nav-center{role: 'tablist'}
+%ul.nav.nav-tabs{role: 'tablist'}
   %li= link_to 'Arbeitszeit', new_projecttime_path(work_date: params[:work_date],other: record_other?)
   %li.active= link_to 'Absenz', '#'
 

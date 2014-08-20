@@ -1,0 +1,33 @@
+.absence {
+  @extend .table-condensed;
+}
+// Doesn't work with colspan
+// .absence.fixed-first-col {
+//   tbody > tr > td:first-child,
+//   tbody > tr > th:first-child {
+//     background: red;
+//   }
+// }
+
+.absence .head th {
+  text-align:   center;
+}
+
+.absence th {
+  text-align:   left;
+  border-right:   1px solid #bbb;
+  border-bottom:  1px solid #bbb;
+}
+
+.absence td {
+  text-align:   center;
+  /*padding:    0pt;*/
+  font-size:    14px;
+  border-right:   1px solid #bbb;
+  border-bottom:  1px solid #bbb;
+}
+
+.absence td.stat {
+  text-align:   right;
+  padding:    2pt;
+}

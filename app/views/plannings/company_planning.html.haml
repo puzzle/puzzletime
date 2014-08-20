@@ -1,11 +1,15 @@
 - @title = "Planung aller Mitarbeiter"
 = render :partial => 'evaluator/period_link'
 
-%table.absence
-  = render :partial => 'plannings/header', :locals => {:type => :calendar_week}
-  - @graph.employees.each do |employee|
-    = render :partial => 'plannings/employee_planning_entry_overview', :locals => { :user => employee, :employee_planning_graph => @graph.graph_for(employee), :type => :calendar_week}
-  = render :partial => 'plannings/footer', :locals => {:type => :calendar_week, :first_span => 2}
+%div.table-responsive
+  %table.absence
+    %thead
+      = render :partial => 'plannings/header', :locals => {:type => :calendar_week}
+    %tbody
+      - @graph.employees.each do |employee|
+        = render :partial => 'plannings/employee_planning_entry_overview', :locals => { :user => employee, :employee_planning_graph => @graph.graph_for(employee), :type => :calendar_week}
+    %tfoot
+      = render :partial => 'plannings/footer', :locals => {:type => :calendar_week, :first_span => 2}
 
 %br/
 %br/
