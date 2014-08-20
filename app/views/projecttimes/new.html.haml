@@ -1,10 +1,10 @@
-- @title = "Zeit erfassen"
+- @title = "Arbeitszeit erfassen"
 
 #existing
   = render :partial => 'existing'
 
 %ul.nav.nav-tabs.nav-center{role: 'tablist'}
-  %li.active= link_to 'Auftrag', '#'
+  %li.active= link_to 'Arbeitszeit', '#'
   %li= link_to 'Absenz', new_absencetime_path(work_date: params[:work_date], other: record_other?)
 
 %br

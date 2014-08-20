@@ -132,7 +132,7 @@ de-CH:
         date_to: Enddatum
         message: Nachricht
       worktime:
-        project_id: Projekt
+        project_id: Buchungsposition
         absence_id: Absenz
         absence: Absenz
         employee_id: Mitarbeiter
@@ -145,4 +145,4 @@ de-CH:
         billable: Verrechenbar
         booked: Verbucht
         ticket: Ticket
-        account: Auftrag
+        account: Buchungsposition
