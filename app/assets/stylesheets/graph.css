@@ -49,32 +49,7 @@
 	font-size:			13px;
 }
 
-.absence {
-	border-spacing: 0px;
-}
 
-.absence .head th {
-	text-align:		center;
-}
-
-.absence th {
-	text-align: 	left;
-	border-right: 	1px solid #bbb;
-	border-bottom: 	1px solid #bbb;
-}
-
-.absence td {
-	text-align: 	center;
-	padding: 		0pt;
-	font-size:		14px;
-	border-right: 	1px solid #bbb;
-	border-bottom: 	1px solid #bbb;
-}
-
-.absence td.stat {
-	text-align: 	right;
-	padding:		2pt;
-}
 
 td a {
 	text-decoration: none;
@@ -133,30 +108,31 @@ tr .current {
 	vertical-align: middle;
 }
 
-.absence td.tentative {
-	background-color: #99CCFF;
-}
 
 .absence td.definitive {
-	background-color: #99ABFF;
+	background-color: #91C5E5;
 }
 
 .absence td.absence {
-	background-color: #CCCCFF;
+	background-color: #8FADCB;
 }
 
 .absence td.free {
-	background-color: #FFA199;
+	background-color: #EFBCA3;
+}
+
+.absence td.tentative {
+	background-color: #96CBD3;
 }
 
 .absence td.half_planned {
-	background-color: #FFDE99;
+	background-color: #ECEBA0;
 }
 
 .absence td.full_planned {
-	background-color: #99FFA1;
+	background-color: #B0DAA5;
 }
 
 .absence td.over_planned {
-	background-color: red;
+	background-color: #E39797;
 }
