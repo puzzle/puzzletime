@@ -3,7 +3,7 @@
 #existing
   = render :partial => 'existing'
 
-%ul.nav.nav-tabs.nav-center{role: 'tablist'}
+%ul.nav.nav-tabs{role: 'tablist'}
   %li.active= link_to 'Arbeitszeit', '#'
   %li= link_to 'Absenz', new_absencetime_path(work_date: params[:work_date], other: record_other?)
 
