@@ -9,7 +9,7 @@ class ProjecttimesControllerTest < ActionController::TestCase
     get :new
     assert_response :success
     assert_template 'new'
-    assert_match(/Zeit erfassen/, @response.body)
+    assert_match(/Arbeitszeit erfassen/, @response.body)
     assert_no_match(/Mitarbeiter/, @response.body)
     assert_not_nil assigns(:worktime)
   end
