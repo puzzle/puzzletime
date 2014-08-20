@@ -43,7 +43,7 @@
       = render 'breadcrumb'
 
     #content
-      %h1= @title
+      %h1.h3= @title
       #flash
         = render partial: 'layouts/flash', collection: [:notice, :alert], as: :level
       = render partial: 'layouts/notification'
