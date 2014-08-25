@@ -88,11 +88,12 @@ class Puzzlebase::Base < ActiveRecord::Base
 
   def self.find_all
     o = self::FIND_OPTIONS
-    where(o[:conditions]).
-    includes(o[:include]).
-    order(o[:order]).
-    joins(o[:joins]).
-    select(o[:select])
+    query = where(o[:conditions]).
+            includes(o[:include]).
+            order(o[:order]).
+            joins(o[:joins])
+    query = query.select(o[:select]) if o.key?(:select)
+    query
   end
 
   # SQL select conditions for entries with references to other tables
