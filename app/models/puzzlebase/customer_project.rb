@@ -11,6 +11,7 @@ class Puzzlebase::CustomerProject < Puzzlebase::Base
   MAPPINGS = { shortname: :S_PROJECT,
                name: :S_DESCRIPTION }
   FIND_OPTIONS = { include: 'project',
+                   joins: 'project',
                    conditions: ['B_SYNCTOPUZZLETIME AND TBL_PROJECT.FK_PROJECT IS NULL'] }
 
   def self.table_name
@@ -45,6 +46,7 @@ class Puzzlebase::CustomerProject < Puzzlebase::Base
 
   def self.local_find_options(original)
     { include: :client,
+      references: :client,
       conditions: ['projects.shortname = ? AND clients.shortname = ? AND projects.parent_id IS NULL',
                    original.project.S_PROJECT, original.customer.S_CUSTOMER] }
   end
