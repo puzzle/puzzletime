@@ -46,7 +46,7 @@ class Puzzlebase::CustomerProject < Puzzlebase::Base
 
   def self.local_find_options(original)
     { include: :client,
-      references: :client,
+      joins: :client,
       conditions: ['projects.shortname = ? AND clients.shortname = ? AND projects.parent_id IS NULL',
                    original.project.S_PROJECT, original.customer.S_CUSTOMER] }
   end
