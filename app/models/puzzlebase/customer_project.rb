@@ -10,8 +10,8 @@ class Puzzlebase::CustomerProject < Puzzlebase::Base
   MAPS_TO = ::Project
   MAPPINGS = { shortname: :S_PROJECT,
                name: :S_DESCRIPTION }
-  FIND_OPTIONS = { include: 'project',
-                   joins: 'project',
+  FIND_OPTIONS = { include: :project,
+                   joins: :project,
                    conditions: ['B_SYNCTOPUZZLETIME AND TBL_PROJECT.FK_PROJECT IS NULL'] }
 
   def self.table_name
