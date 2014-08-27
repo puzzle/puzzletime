@@ -49,7 +49,7 @@ class Client < ActiveRecord::Base
     Worktime.all
   end
 
-  def worktimes
+  def worktimes(_reload = true)
     Worktime.joins(:project).
              where(projects: { client_id: id })
   end
@@ -58,6 +58,7 @@ class Client < ActiveRecord::Base
 
   def remember_name_changes
     @names_changed = name_changed? || shortname_changed?
+    true
   end
 
   def update_projects_path_names
@@ -67,5 +68,6 @@ class Client < ActiveRecord::Base
       end
       @names_changed = false
     end
+    true
   end
 end

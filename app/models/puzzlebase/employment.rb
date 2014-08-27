@@ -19,7 +19,7 @@ class Puzzlebase::Employment < Puzzlebase::Base
 
   def self.local_find_options(original)
     { include: :employee,
-      references: :employee,
+      joins: :employee,
       conditions: ['employments.start_date = ? AND employees.shortname = ?',
                    original.D_START, original.employee.S_SHORTNAME] }
   end
