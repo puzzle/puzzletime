@@ -22,6 +22,14 @@ class ProjecttimesControllerTest < ActionController::TestCase
     assert_equal template.project, assigns(:worktime).project
     assert_equal '123', assigns(:worktime).ticket
     assert_equal 'desc', assigns(:worktime).description
+    assert assigns(:worktime).billable?
+  end
+  
+  def test_new_without_billable_template
+    template = worktimes(:wt_mw_puzzletime)
+    template.update_attributes(billable: false)
+    get :new, template: template.id
+    assert !assigns(:worktime).billable?
   end
   
   def test_new_other
