@@ -58,5 +58,5 @@ class UtilityHelperTest < ActionView::TestCase
 
     reset_db
   end
-
+  
 end
