@@ -35,6 +35,7 @@ class WorktimesController < CrudController
         @worktime.account_id = template.account_id
         @worktime.ticket = template.ticket
         @worktime.description = template.description
+        @worktime.billable = template.billable
       end
     end
   end
