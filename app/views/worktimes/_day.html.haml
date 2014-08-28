@@ -1,6 +1,6 @@
 .date-label{'data-date' => day}
   .date-day
-    = format_day(day)
+    = format_day(day, true)
   .date-time-value
     = format_hour(sum_hours(day))
   .date-action

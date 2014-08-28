@@ -50,8 +50,11 @@ module FormatHelper
     I18n.l(time, format: :time) if time
   end
 
-  def format_day(date)
-    I18n.l(date, format: "%a %e.%-m.") if date
+  def format_day(date, full_weekday_name=false)
+    if date
+      format = full_weekday_name ? "%A, %e.%-m." : "%a %e.%-m." 
+      I18n.l(date, format: format)
+    end
   end
 
   def localize_date(date)

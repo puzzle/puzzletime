@@ -31,6 +31,7 @@ class FormatHelperTest < ActionView::TestCase
     assert_equal "Mo 16.6.", format_day(Date.new(2014, 6, 16))
     assert_equal "Mi 18.6.", format_day(Date.new(2014, 6, 18))
     assert_equal "Do 18.6.", format_day(Date.new(2099, 6, 18))
+    assert_equal "Donnerstag, 18.6.", format_day(Date.new(2099, 6, 18), true)
   end
 
   test 'format days' do
