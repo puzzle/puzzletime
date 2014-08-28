@@ -26,15 +26,15 @@
                                  url: url_for(action: 'existing'),
                                  dynamic_params: 'projecttime[employee_id]' })
   .form-group
-    = f.label(:from_start_time, class: 'col-md-2 control-label')
+    = f.label(:hours, class: 'col-md-2 control-label')
+    .col-md-1
+      = f.input_field(:hours, value: format_hour(@worktime.hours))
+    = f.label(:from_start_time, class: 'col-md-1 control-label')
     .col-md-1
       = f.text_field(:from_start_time, value: format_time(@worktime.from_start_time))
     = f.label(:to_end_time, class: 'col-md-1 control-label')
     .col-md-1
       = f.text_field(:to_end_time, value: format_time(@worktime.to_end_time))
     / TODO: implement start-stop
-    = f.label(:hours, class: 'col-md-1 control-label')
-    .col-md-1
-      = f.input_field(:hours, value: format_hour(@worktime.hours))
 
   = f.labeled_boolean_field(:billable)
