@@ -18,7 +18,7 @@
   %tbody
     - @graph.each_employee do |employee|
       %tr
-        %th
+        %th.nowrap
           = employee.label
         - if  @user.management
           %td.stat= @graph.previous_left_vacations
@@ -41,10 +41,10 @@
       = month_header
 
 %br/
-%table{:style => "float: left; margin-right: 100px;"}
+%table.table-condensed{:style => "float: left; margin-right: 100px;"}
   = render :partial => "legend", :collection => [Absence]
 - if @user.management
-  %table
+  %table.table-condensed
     %tr
       %td{:colspan => "2"}
         %b Spalten
