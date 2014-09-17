@@ -32,6 +32,18 @@ a.symbol {
     text-align:center;
 }
 
+.nav-tabs > li > a {
+  color: $gray;
+
+  &:hover {
+    color: $gray-darker;
+  }
+}
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover, {
+  color: $gray-darker;
+}
+
 th {
     color:          #0087e3;
 }
@@ -178,4 +190,5 @@ body.loading a:hover {
 
 @import "header";
 @import "worktimes";
+@import "orders";
 @import "icons";

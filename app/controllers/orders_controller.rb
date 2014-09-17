@@ -27,6 +27,10 @@ class OrdersController < ManageController
     end
   end
 
+  def cockpit
+    render action: 'cockpit'
+  end
+
   private
 
   def list_entries
