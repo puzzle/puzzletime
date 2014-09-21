@@ -17,8 +17,8 @@
 #  booked          :boolean          default(FALSE)
 #  type            :string(255)
 #  ticket          :string(255)
+#  work_item_id    :integer
 #
-
 
 class Absencetime < Worktime
 
@@ -43,10 +43,6 @@ class Absencetime < Worktime
   end
 
   def self.account_label
-    'Absenz'
-  end
-
-  def self.label
     'Absenz'
   end
 

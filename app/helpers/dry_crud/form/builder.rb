@@ -71,7 +71,12 @@ module DryCrud::Form
       text_field(attr, html_options)
     end
 
-    def text_field(attr, html_options)
+    def text_field(attr, html_options = {})
+      add_css_class(html_options, 'form-control')
+      super(attr, html_options)
+    end
+
+    def email_field(attr, html_options = {})
       add_css_class(html_options, 'form-control')
       super(attr, html_options)
     end
@@ -240,6 +245,17 @@ module DryCrud::Form
         !v.options.key?(:if) &&
         !v.options.key?(:unless)
       end
+    end
+
+    # Returns true if any errors are found on the passed attribute or its
+    # association.
+    def errors?(attr)
+      attr_plain, attr_id = assoc_and_id_attr(attr)
+      # errors aint a Hash
+      # rubocop:disable HashMethods
+      @object.errors.has_key?(attr_plain.to_sym) ||
+      @object.errors.has_key?(attr_id.to_sym)
+      # rubocop:enable HashMethods
     end
 
     # Render a label for the given attribute with the passed content.

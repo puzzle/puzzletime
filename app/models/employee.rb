@@ -7,94 +7,84 @@
 #  firstname             :string(255)      not null
 #  lastname              :string(255)      not null
 #  shortname             :string(3)        not null
-#  passwd                :string(255)      not null
+#  passwd                :string(255)
 #  email                 :string(255)      not null
 #  management            :boolean          default(FALSE)
 #  initial_vacation_days :float
 #  ldapname              :string(255)
 #  eval_periods          :string(3)        is an Array
+#  department_id         :integer
 #
-
 
 class Employee < ActiveRecord::Base
 
   include Evaluatable
   include ReportType::Accessors
   extend Conditioner
-  extend Manageable
 
   # All dependencies between the models are listed below.
+  belongs_to :department
+
   has_and_belongs_to_many :employee_lists
 
   has_many :employments, dependent: :destroy
-  has_many :projectmemberships,
-           dependent: :destroy
-  has_many :projects,
-           -> { where(projectmemberships: { active: true }) },
-           through: :projectmemberships
-  has_many :clients, -> { order('shortname') }, through: :projects
-  has_many :managed_projects,
-           -> { where(projectmemberships: { projectmanagement: true, active: true }) },
-           class_name: 'Project',
-           through: :projectmemberships
   has_many :absences,
            -> { order('name').uniq },
            through: :worktimes
   has_many :worktimes
   has_many :overtime_vacations, dependent: :destroy
-  has_one :running_project,
+  has_many :managed_orders, class_name: 'Order', foreign_key: :responsible_id
+  has_one :running_time,
           -> { where(report_type: AutoStartType::INSTANCE.key) },
-          class_name: 'Projecttime'
+          class_name: 'Ordertime'
 
   # Validation helpers.
   validates_presence_of :firstname, message: 'Der Vorname muss angegeben werden'
   validates_presence_of :lastname, message: 'Der Nachname muss angegeben werden'
   validates_presence_of :shortname, message: 'Das Kürzel muss angegeben werden'
   validates_presence_of :email, message: 'Die Email Adresse muss angegeben werden'         # Required by database
-  validates_uniqueness_of :shortname, message: 'Dieses Kürzel wird bereits verwendet'
-  validates_uniqueness_of :ldapname, allow_blank: true, message: 'Dieser LDAP Name wird bereits verwendet'
+  validates_uniqueness_of :shortname, case_sensitive: false, message: 'Dieses Kürzel wird bereits verwendet'
+  validates_uniqueness_of :ldapname, allow_blank: true, case_sensitive: false, message: 'Dieser LDAP Name wird bereits verwendet'
   validate :periods_format
 
-  before_destroy :protect_worktimes
+  protect_if :worktimes, 'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Arbeitszeiten zugeordnet sind'
 
   scope :list, -> { order('lastname', 'firstname') }
 
-  # Tries to login a user with the passed data.
-  # Returns the logged-in Employee or nil if the login failed.
-  def self.login(username, pwd)
-    find_by_shortname_and_passwd(username.upcase, encode(pwd)) ||
-    LdapAuthenticator.new.login(username, pwd)
-  end
+  class << self
+    # Tries to login a user with the passed data.
+    # Returns the logged-in Employee or nil if the login failed.
+    def login(username, pwd)
+      find_by_shortname_and_passwd(username.upcase, encode(pwd)) ||
+      LdapAuthenticator.new.login(username, pwd)
+    end
 
-  def self.employed_ones(period)
-    joins('left join employments em on em.employee_id = employees.id').
-    where('(em.end_date IS null or em.end_date >= ?) AND em.start_date <= ?',
-          period.start_date, period.end_date).
-    list.
-    uniq
-  end
+    def employed_ones(period)
+      joins('left join employments em on em.employee_id = employees.id').
+      where('(em.end_date IS null or em.end_date >= ?) AND em.start_date <= ?',
+            period.start_date, period.end_date).
+      list.
+      uniq
+    end
 
-  ##### interface methods for Manageable #####
+    def worktimes
+      Worktime.all
+    end
 
-  def self.puzzlebase_map
-    Puzzlebase::Employee
-  end
-
-  ##### interface methods for Evaluatable #####
-
-  def to_s
-    lastname + ' ' + firstname
-  end
-
-  def self.worktimes
-    Worktime.all
+    def encode(pwd)
+      Digest::SHA1.hexdigest(pwd)
+      # logger.info "Hash of password: #{Digest::SHA1.hexdigest(pwd)}"
+    end
   end
 
   ##### helper methods #####
 
-  # Whether this Employee is a project manager
-  def project_manager?
-    managed_projects.exists?
+  def to_s
+    "#{lastname} #{firstname}"
+  end
+
+  def order_responsible?
+    @order_responsible ||= managed_orders.exists?
   end
 
   # Accessor for the initial vacation days. Default is 0.
@@ -102,9 +92,12 @@ class Employee < ActiveRecord::Base
     super || 0
   end
 
+  def eval_periods
+    super || []
+  end
+
   def before_create
     self.passwd = ''    # disable password login
-    projectmemberships.build(project_id: Settings.default_project_id)
   end
 
   def check_passwd(pwd)
@@ -115,39 +108,22 @@ class Employee < ActiveRecord::Base
     update_attributes!(passwd: Employee.encode(pwd))
   end
 
-  # Sums the worktimes of all managed projects.
-  def sum_managed_projects_worktime(period)
-    sql = 'SELECT sum(hours) AS sum ' \
-          'FROM (((employees E LEFT JOIN projectmemberships PM ON E.id = PM.employee_id) ' +
-	        ' LEFT JOIN projects P ON PM.project_id = P.id)' +
-          ' LEFT JOIN projects C ON P.id = ANY (C.path_ids))' +
-          ' LEFT JOIN worktimes T ON C.id = T.project_id ' +
-          "WHERE E.id = #{id} AND PM.projectmanagement"
-    sql += " AND T.work_date BETWEEN '#{period.start_date}' AND '#{period.end_date}'" if period
-    self.class.connection.select_value(sql).to_f
+  # main work items this employee ever worked on
+  def alltime_main_work_items
+    WorkItem.select("DISTINCT work_items.*").
+             joins('RIGHT JOIN work_items leaves ON leaves.path_ids[1] = work_items.id').
+             joins('RIGHT JOIN worktimes ON worktimes.work_item_id = leaves.id').
+             where(worktimes: { employee_id: id} ).
+             where('work_items.id IS NOT NULL').
+             list
   end
 
-  # parent projects this employee ever worked on
-  def alltime_projects
-    Project.select("DISTINCT projects.*").
-            joins('RIGHT JOIN projects leaves ON leaves.path_ids[1] = projects.id').
-            joins('RIGHT JOIN worktimes ON worktimes.project_id = leaves.id').
-            where(worktimes: { employee_id: id} ).
-            where('projects.id IS NOT NULL').
-            list
-  end
-
-  def worked_on_projects
-    Project.find_by_sql ['SELECT DISTINCT pw.* FROM worktimes w ' \
-                'LEFT JOIN projects pw ON w.project_id = pw.id ' \
-                'WHERE w.employee_id = ? AND pw.id IS NOT NULL ' \
-                'ORDER BY pw.path_shortnames', id]
-  end
-
-  # the leaf projects of the given list or of the current membership projects
-  def leaf_projects(list = nil)
-    list ||= projects
-    list.collect { |p| p.leaves }.flatten.uniq
+  def alltime_leaf_work_items
+    WorkItem.select("DISTINCT work_items.*").
+             joins('RIGHT JOIN worktimes ON worktimes.work_item_id = work_items.id').
+             where(worktimes: { employee_id: id} ).
+             where('work_items.id IS NOT NULL').
+             list
   end
 
   def statistics
@@ -171,15 +147,6 @@ class Employee < ActiveRecord::Base
   # Returns the employement at the given date, nil if none is present.
   def employment_at(date)
     employments.where('start_date <= ? AND (end_date IS NULL OR end_date >= ?)', date, date).first
-  end
-
-  def self.encode(pwd)
-    Digest::SHA1.hexdigest(pwd)
-    # logger.info "Hash of password: #{Digest::SHA1.hexdigest(pwd)}"
-  end
-
-  def eval_periods
-    super || []
   end
 
   private

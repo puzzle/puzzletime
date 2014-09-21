@@ -1,0 +1,11 @@
+= crud_form do |f|
+  = f.labeled_input_field :name
+  = f.labeled :style do
+    = f.collection_select :style,
+                          OrderStatus::STYLES,
+                          :to_s,
+                          :to_s,
+                          { prompt: ta(:please_select) },
+                          class: 'form-control'
+  = f.labeled_input_field :closed, help: 'Für Aufträge mit einem geschlossenem Status können keine Zeiten mehr erfasst werden.'
+  = f.labeled_input_field :position

@@ -1,0 +1,36 @@
+# == Schema Information
+#
+# Table name: orders
+#
+#  id                 :integer          not null, primary key
+#  work_item_id       :integer          not null
+#  kind_id            :integer
+#  responsible_id     :integer
+#  status_id          :integer
+#  department_id      :integer
+#  contract_id        :integer
+#  billing_address_id :integer
+#  created_at         :datetime
+#  updated_at         :datetime
+#
+
+puzzletime:
+  work_item_id: 4
+  responsible_id: 8
+  status: bearbeitung
+  kind: mandat
+  department: devone
+
+allgemein:
+  work_item_id: 3
+  responsible_id: 7
+  status: abgeschlossen
+  kind: mandat
+  department: sys
+
+hitobito_demo:
+  work_item_id: 8
+  responsible_id: 8
+  status: bearbeitung
+  kind: projekt
+  department: devtwo

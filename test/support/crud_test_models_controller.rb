@@ -11,6 +11,10 @@ class CrudTestModelsController < CrudController #:nodoc:
                           :companion_id, :rating, :income, :birthdate,
                           :gets_up_at, :last_seen, :human, :remarks]
 
+  skip_authorize_resource
+  skip_authorization_check
+  skip_before_action :authorize_class
+
   before_create :possibly_redirect
   before_create :handle_name
   before_destroy :handle_name

@@ -1,0 +1,105 @@
+puzzle:
+  id:      1
+  name:    Puzzle
+  shortname: PITC
+  path_ids: [1]
+  path_shortnames: PITC
+  path_names: Puzzle
+
+swisstopo:
+  id:      2
+  name:    Swisstopo
+  shortname: STOP
+  path_ids: [2]
+  path_shortnames: STOP
+  path_names: Swisstopo
+
+allgemein:
+  id:        3
+  parent_id: 1    #puzzle
+  name:      Allgemein
+  shortname: AL
+  path_ids: [1,3]
+  path_shortnames: PITC-AL
+  path_names: "Puzzle ITC\nAllgemein"
+  leaf: true
+  closed: true
+
+puzzletime:
+  id:        4
+  parent_id: 1    #puzzle
+  name:      PuzzleTime
+  shortname: PT
+  path_ids: [1,4]
+  path_shortnames: PITC-PT
+  path_names: "Puzzle ITC\nPuzzleTime"
+  leaf: true
+
+intern:
+  id:      5
+  name:    Interne Projekte
+  shortname: IPR
+  parent_id: 1
+  path_ids: [1, 5]
+  path_shortnames: PITC-IPR
+  path_names: "Puzzle\nInterneProjekte"
+
+webauftritt:
+  id:        6
+  parent_id: 2    #swisstopo
+  name:      Webauftritt
+  shortname: WEB
+  path_ids: [2,6]
+  path_shortnames: STOP-WEB
+  path_names: "Swisstopo\nWebauftritt"
+  leaf: true
+
+hitobito:
+  id:        7
+  parent_id: 1    #puzzle
+  name:      Hitobito
+  shortname: HIT
+  path_ids: [1,7]
+  path_shortnames: PITC-HIT
+  path_names: "Puzzle ITC\nHitobito"
+  leaf: false
+
+hitobito_demo:
+  id:        8
+  parent_id: 7
+  name:      Demo
+  shortname: DEM
+  path_ids: [1,7,8]
+  path_shortnames: PITC-HIT-DEM
+  path_names: "Puzzle ITC\nHitobito\nDemo"
+  leaf: false
+
+hitobito_demo_app:
+  id:        9
+  name:      App
+  shortname: APP
+  parent_id: 8
+  path_ids: [1,7,8,9]
+  path_shortnames: PITC-HIT-DEM-APP
+  path_names: "Puzzle ITC\nHitobito\nDemo\nApp"
+  leaf: true
+
+hitobito_demo_site:
+  id:        10
+  name:      Site
+  shortname: SIT
+  parent_id: 8
+  path_ids: [1,7,8,10]
+  path_shortnames: PITC-HIT-DEM-SIT
+  path_names: "Puzzle ITC\nHitobito\nDemo\nSite"
+  leaf: true
+
+webauftritt:
+  id:        11
+  name:      Webauftritt
+  shortname: WEB
+  parent_id: 2
+  path_ids: [2,11]
+  path_shortnames: STOP-WEB
+  path_names: "Swisstopo\nWebauftritt"
+  leaf: true

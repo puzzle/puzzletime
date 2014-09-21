@@ -16,6 +16,10 @@ module FormHelper
     options[:html][:role] ||= 'form'
     options[:builder] ||= DryCrud::Form::Builder
     options[:cancel_url] ||= default_cancel_url(object)
+    if request.format.js?
+      options[:data] ||= {}
+      options[:data][:remote] = true
+    end
 
     form_for(object, options, &block)
   end
@@ -48,6 +52,10 @@ module FormHelper
     attrs = default_crud_attrs - [:created_at, :updated_at] if attrs.blank?
     attrs << options
     standard_form(path_args(entry), *attrs, &block)
+  end
+
+  def spinner
+    image_tag('ajax-loader.gif', size: '16x16', class: 'spinner', alt: 'Lädt...', style: 'display: none;')
   end
 
   private

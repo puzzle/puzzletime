@@ -10,9 +10,9 @@
       - else
         = content_tag :span, division.label_verbose, :title => division.tooltip
 
-    - if @evaluation.sub_projects_eval
+    - if @evaluation.sub_work_items_eval
       %td
-        - if sub = @evaluation.sub_projects_evaluation(division)
+        - if sub = @evaluation.sub_work_items_evaluation(division)
           = link_to '&crarr;'.html_safe,
                     {:action => sub, :category_id => division.id},
                     :class => 'symbol'

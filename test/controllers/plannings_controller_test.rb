@@ -40,7 +40,7 @@ class PlanningsControllerTest < ActionController::TestCase
   def test_create
     description = 'new planning description'
     post :create, planning: { employee_id: employees(:lucien),
-                              project_id: projects(:puzzletime),
+                              work_item_id: work_items(:puzzletime),
                               start_week_date: '2010 01',
                               repeat_type: 'no',
                               monday_am: '1',
@@ -50,14 +50,14 @@ class PlanningsControllerTest < ActionController::TestCase
   end
 
   def test_create_empty
-    post :create, planning: { employee_id: employees(:lucien), project_id: projects(:puzzletime) }
+    post :create, planning: { employee_id: employees(:lucien), work_item_id: work_items(:puzzletime) }
     assert_nil assigns(:planning).id
     assert_template 'new'
   end
 
   def test_delete
     post :create, planning: { employee_id: employees(:lucien),
-                              project_id: projects(:puzzletime),
+                              work_item_id: work_items(:puzzletime),
                               start_week_date: '2010 01',
                               repeat_type: 'no',
                               monday_am: '1',
@@ -79,15 +79,14 @@ class PlanningsControllerTest < ActionController::TestCase
     assert_template 'department_planning'
   end
 
-  def test_project_planning
-    get :project_planning, project_id: projects(:allgemein)
-    assert_template 'project_planning'
-
+  def test_work_item_planning
+    get :work_item_planning, work_item_id: work_items(:allgemein)
+    assert_template 'work_item_planning'
   end
 
-  def test_projects
-    get :projects
-    assert_template 'projects'
+  def test_work_items
+    get :work_items
+    assert_template 'work_items'
   end
 
   def test_departments

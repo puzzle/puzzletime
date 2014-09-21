@@ -1,0 +1,10 @@
+- @title = @split.page_title
+%h3
+  = @split.original.time_string
+  am #{f(@split.original.work_date)}:
+%table.table-striped{:cellpadding => "0"}
+  %tbody
+    = render :partial => 'part', :collection => @split.worktimes
+%p Die Zeiten wurden noch nicht gespeichert. Bitte schliessen sie dazu den Aufteilungsprozess ab.
+%br
+= render 'form', url: create_part_ordertimes_path

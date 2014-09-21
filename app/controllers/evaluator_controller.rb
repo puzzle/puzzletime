@@ -2,10 +2,8 @@
 
 class EvaluatorController < ApplicationController
 
-  # Checks if employee came from login or from direct url.
-  before_action :authorize, only: [:clients, :employees, :overtime,
-                                   :clientProjects, :employeeProjects, :employeeAbsences,
-                                   :export_capacity_csv, :export_extended_capacity_csv, :export_ma_overview]
+  before_action :authorize_action
+
   before_action :set_period
 
   helper_method :user_view?
@@ -15,9 +13,7 @@ class EvaluatorController < ApplicationController
   end
 
   def overview
-    set_evaluation
     set_navigation_levels
-    @notifications = UserNotification.list_during(@period)
     @periods = init_periods
     @times = @periods.collect { |p| @evaluation.sum_times_grouped(p) }
     render(user_view? ? 'user_overview' : 'overview')
@@ -25,7 +21,6 @@ class EvaluatorController < ApplicationController
 
   def details
     redirect_to action: 'absencedetails' if params[:evaluation] == 'absencedetails'
-    set_evaluation
     set_navigation_levels
     set_evaluation_details
     paginate_times
@@ -33,10 +28,7 @@ class EvaluatorController < ApplicationController
 
   def absencedetails
     session[:evalLevels] = []
-    params[:evaluation] = 'absencedetails'
-    set_evaluation
     @period ||= Period.coming_month Date.today, 'Kommender Monat'
-    @notifications = UserNotification.list_during(@period)
     paginate_times
   end
 
@@ -44,12 +36,10 @@ class EvaluatorController < ApplicationController
   ########################  DETAIL ACTIONS  #########################
 
   def compose_report
-    set_evaluation
     set_evaluation_details
   end
 
   def report
-    set_evaluation
     set_evaluation_details
     condition = params[:only_billable] ? { worktimes: { billable: true } } : {}
     @times = @evaluation.times(@period).where(condition)
@@ -60,7 +50,6 @@ class EvaluatorController < ApplicationController
   end
 
   def export_csv
-    set_evaluation
     set_evaluation_details
     filename = 'puzzletime_' + csv_label(@evaluation.category) + '-' +
                csv_label(@evaluation.division) + '.csv'
@@ -71,7 +60,6 @@ class EvaluatorController < ApplicationController
   end
 
   def book_all
-    set_evaluation
     set_evaluation_details
     @evaluation.times(@period).each do |worktime|
       # worktime cannot be directly updated because it's loaded with :joins
@@ -79,7 +67,7 @@ class EvaluatorController < ApplicationController
     end
     flash[:notice] = 'Alle Arbeitszeiten '
     flash[:notice] += "von #{Employee.find(@evaluation.employee_id).label} " if @evaluation.employee_id
-    flash[:notice] += "für #{Project.find(@evaluation.account_id).label_verbose}" \
+    flash[:notice] += "für #{WorkItem.find(@evaluation.account_id).label_verbose}" \
                      "#{ ' während dem ' + @period.to_s if @period} wurden verbucht."
     redirect_to params.merge(action: 'details', only_path: true)
   end
@@ -152,18 +140,22 @@ class EvaluatorController < ApplicationController
 
   private
 
+  def evaluation
+    @evaluation ||= set_evaluation
+  end
+
   def set_evaluation
-    params[:evaluation] ||= 'userprojects'
+    params[:evaluation] ||= 'userworkitems'
     @evaluation = case params[:evaluation].downcase
-        when 'managed' then ManagedProjectsEval.new(@user)
+        when 'managed' then ManagedOrdersEval.new(@user)
         when 'absencedetails' then AbsenceDetailsEval.new
-        when 'userprojects' then EmployeeProjectsEval.new(@user.id)
-        when "employeesubprojects#{@user.id}", 'usersubprojects' then
-          params[:evaluation] = 'usersubprojects'
-          EmployeeSubProjectsEval.new(params[:category_id], @user.id)
+        when 'userworkitems' then EmployeeWorkItemsEval.new(@user.id)
+        when "employeesubworkitems#{@user.id}", 'usersubworkitems' then
+          params[:evaluation] = 'usersubworkitems'
+          EmployeeSubWorkItemsEval.new(params[:category_id], @user.id)
         when 'userabsences' then EmployeeAbsencesEval.new(@user.id)
-        when 'subprojects' then SubProjectsEval.new(params[:category_id])
-        when 'projectemployees' then ProjectEmployeesEval.new(params[:category_id])
+        when 'subworkitems' then SubWorkItemsEval.new(params[:category_id])
+        when 'workitememployees' then WorkItemEmployeesEval.new(params[:category_id])
         else nil
     end
     if @user.management && @evaluation.nil?
@@ -171,22 +163,23 @@ class EvaluatorController < ApplicationController
         when 'clients' then ClientsEval.new
         when 'employees' then EmployeesEval.new
         when 'departments' then DepartmentsEval.new
-        when 'clientprojects' then ClientProjectsEval.new(params[:category_id])
-        when 'employeeprojects' then EmployeeProjectsEval.new(params[:category_id])
-        when /employeesubprojects(\d+)/ then EmployeeSubProjectsEval.new(params[:category_id], Regexp.last_match[1])
-        when 'departmentprojects' then DepartmentProjectsEval.new(params[:category_id])
+        when 'clientworkitems' then ClientWorkItemsEval.new(params[:category_id])
+        when 'employeeworkitems' then EmployeeWorkItemsEval.new(params[:category_id])
+        when /employeesubworkitems(\d+)/ then EmployeeSubWorkItemsEval.new(params[:category_id], Regexp.last_match[1])
+        when 'departmentorders' then DepartmentOrdersEval.new(params[:category_id])
         when 'absences' then AbsencesEval.new
         when 'employeeabsences' then EmployeeAbsencesEval.new(params[:category_id])
         else nil
       end
     end
     if @evaluation.nil?
-      @evaluation = EmployeeProjectsEval.new(@user.id)
+      @evaluation = EmployeeWorkItemsEval.new(@user.id)
     end
+    @evaluation
   end
 
   def set_evaluation_details
-    @evaluation.set_division_id(params[:division_id])
+    evaluation.set_division_id(params[:division_id])
     if params[:start_date]
       @period = params[:start_date] == '0' ? nil :
                    Period.retrieve(params[:start_date], params[:end_date])
@@ -204,14 +197,14 @@ class EvaluatorController < ApplicationController
 
   def pop_level?(level, current)
     pop = level[0] == current[0]
-    if level[0] =~ /(employee|user)?subprojects(\d*)/
+    if level[0] =~ /(employee|user)?subworkitems(\d*)/
       pop &&= level[1] == current[1]
     end
     pop
   end
 
   def paginate_times
-    @times = @evaluation.times(@period).includes(:employee, :project).page(params[:page])
+    @times = @evaluation.times(@period).includes(:employee, :work_item).page(params[:page])
   end
 
   def set_export_header(filename)
@@ -329,6 +322,12 @@ class EvaluatorController < ApplicationController
     else
       @user.eval_periods.collect { |p| Period.parse(p) }
     end
+  end
+
+  def authorize_action
+    params[:evaluation] ||= params[:action].to_s
+    evaluation
+    authorize!(params[:evaluation].to_sym, Evaluation)
   end
 
 end

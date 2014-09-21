@@ -1,6 +1,7 @@
 - @title = "Zeitrapport Puzzle ITC"
-- project = Project.find(@evaluation.account_id)
-= render :partial => 'report_header', :locals => { :project => project }
+
+= render 'report_header'
+
 %p
 %h3 Rapport Einstellungen
 = form_tag evaluation_detail_params.merge!(:action => 'report'), :method => 'get' do

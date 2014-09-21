@@ -1,0 +1,16 @@
+# == Schema Information
+#
+# Table name: portfolio_items
+#
+#  id     :integer          not null, primary key
+#  name   :string(255)      not null
+#  active :boolean          default(TRUE), not null
+#
+
+web:
+  name: Webapplikationen
+  active: true
+
+mobile:
+  name: Mobile Applikationen
+  active: true

@@ -16,15 +16,13 @@
 class Absence < ActiveRecord::Base
 
   include Evaluatable
-  extend Manageable
 
   # All dependencies between the models are listed below
   has_many :worktimes
   has_many :employees, through: :worktimes
 
   before_destroy :dont_destroy_vacation
-  before_destroy :protect_worktimes
-
+  protect_if :worktimes, 'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Arbeitszeiten zugeordnet sind'
 
   # Validation helpers
   validates_presence_of :name, message: 'Eine Bezeichnung muss angegeben werden'
@@ -32,7 +30,6 @@ class Absence < ActiveRecord::Base
 
   scope :list, -> { order(:name) }
 
-  ##### interface methods for Manageable #####
 
   def dont_destroy_vacation
     errors.add(:base, 'Die Ferien Absenz kann nicht gelöscht werden') if id == Settings.vacation_id

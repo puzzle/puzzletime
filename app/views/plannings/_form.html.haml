@@ -1,8 +1,9 @@
 = crud_form do |f|
   = f.labeled_belongs_to_field(:employee_id,
-                         data: { remote: true,
-                                 url: url_for(action: 'existing'),
-                                 dynamic_params: 'planning[start_week_date]' })
+                               class: 'searchable',
+                               data: { remote: true,
+                                       url: url_for(action: 'existing'),
+                                       dynamic_params: 'planning[start_week_date]' })
   = f.labeled_date_field(:start_week_date,
                          data: { format: :week,
                                  remote: true,
@@ -13,12 +14,12 @@
     #existing
       = render :partial => 'existing'
 
-  = f.labeled_collection_select(:project_id,
-                                @projects,
+  = f.labeled_collection_select(:work_item_id,
+                                @work_items,
                                 :id,
                                 :label_verbose,
-                                f.select_options(:project_id),
-                                class: 'form-control')
+                                f.select_options(:work_item_id),
+                                class: 'form-control searchable')
 
   = f.labeled('Auswahl') do
     .radio

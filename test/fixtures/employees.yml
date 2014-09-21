@@ -6,12 +6,13 @@
 #  firstname             :string(255)      not null
 #  lastname              :string(255)      not null
 #  shortname             :string(3)        not null
-#  passwd                :string(255)      not null
+#  passwd                :string(255)
 #  email                 :string(255)      not null
 #  management            :boolean          default(FALSE)
 #  initial_vacation_days :float
 #  ldapname              :string(255)
 #  eval_periods          :string(3)        is an Array
+#  department_id         :integer
 #
 
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
@@ -65,6 +66,7 @@ pascal:
   passwd:    pz
   email:     pz@bla.ch
   management: false
+  department: devtwo
 
 mark:
   id:        7
@@ -83,3 +85,4 @@ lucien:
   passwd:    lw
   email:     lw@bla.ch
   management: false
+  department: devtwo

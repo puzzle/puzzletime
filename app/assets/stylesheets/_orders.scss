@@ -1,0 +1,146 @@
+.orders {
+  /* margin: -15px; */
+
+  .orders-header {
+    margin: -15px -15px 0 -15px;
+    padding: 15px 15px 0 15px;
+    background-color: $gray-lighter;
+
+    .order-search {
+      @include clearfix;
+
+      label {
+        float: left;
+        margin-right: 20px;
+        padding-top: 7px;
+      }
+      input {
+        width: 500px;
+      }
+    }
+
+    .nav-tabs {
+      margin: 30px -15px 0 -15px;
+    }
+  }
+
+  .orders-actions {
+    margin-top: 20px;
+
+    & > * {
+      float: left;
+      margin-right: 40px;
+    }
+  }
+}
+
+.cockpit {
+  .cockpit-header {
+    @include clearfix;
+    padding: 25px 0;
+    margin: 0 auto;
+    width: 700px;
+  }
+
+  .cockpit-header-item {
+    float: left;
+    margin-right: 50px;
+
+    .figure-label {
+      margin-right: 10px;
+    }
+    .unit {
+      margin-right: 30px;
+    }
+  }
+
+  .title, .figure, .unit {
+    color: $gray-darker;
+  }
+  .title {
+    font-size: 18px;
+    font-weight: 400;
+  }
+  .figure {
+    font-size: 18px;
+    font-weight: 500;
+  }
+  .figure-label, .unit {
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  .cockpit-table {
+    position: relative;
+    height: 505px;
+  }
+
+  table.static,
+  .scrollable table {
+    tr {
+      border-top: 1px solid $gray-light;
+      &:last-child {
+        border-bottom: 1px solid $gray-light;
+      }
+    }
+    td, th {
+      width: 170px;
+      min-width: 170px;
+      max-width: 170px;
+      padding: 17px;
+      @include ellipsis(true);
+    }
+
+    td {
+      height: 150px;
+      vertical-align: top;
+    }
+
+    th {
+      background-color: #f4f4f4;
+      @include ellipsis(true);
+    }
+
+    .data-item {
+      height: 35px;
+    }
+  }
+
+  table.static {
+    position: absolute;
+    left: 0;
+    z-index: 20;
+    @include box-shadow(10px 0 5px -2px rgba(208, 208, 208, 0.4));
+
+    .title, .subtitle {
+      height: 35px;
+    }
+    /* .subtitle { */
+    /*   height: 50px; */
+    /* } */
+    /* .data-item { */
+    /*   height: 20px; */
+    /* } */
+  }
+  .scrollable {
+    position: absolute;
+    left: 170px;
+    right: 0;
+    z-index: 10;
+    overflow-x: auto;
+
+    table {
+      th, td, td .data-item {
+        text-align: right;
+      }
+
+      td:nth-child(2n) {
+        background-color: $gray-lighter;
+      }
+
+      th:nth-child(2n) {
+        background-color: #ebebeb;
+      }
+    }
+  }
+}

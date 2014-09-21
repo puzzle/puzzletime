@@ -1,4 +1,3 @@
-
 .entry.is-empty{'data-date' => day}
-  = link_to(new_projecttime_path(work_date: localize_date(day)), data: {no_turbolink: true}, :class => "controls") do
+  = link_to(new_ordertime_path(work_date: localize_date(day)), data: {no_turbolink: true}, :class => "controls") do
     &nbsp;

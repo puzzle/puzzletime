@@ -1,0 +1,21 @@
+# == Schema Information
+#
+# Table name: order_statuses
+#
+#  id       :integer          not null, primary key
+#  name     :string(255)      not null
+#  style    :string(255)
+#  closed   :boolean          default(FALSE), not null
+#  position :integer          not null
+#
+
+bearbeitung:
+  name: In Bearbeitung
+  style: success
+  position: 10
+
+abgeschlossen:
+  name: Abgeschlossen
+  style: danger
+  position: 20
+  closed: true

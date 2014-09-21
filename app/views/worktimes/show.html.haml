@@ -7,7 +7,7 @@
     %td
       %strong
         - if @worktime.employee == @user ||
-        - (@user.management && @worktime.project_id)
+        - (@user.management && @worktime.work_item_id)
           = link_to 'Bearbeiten',
                     evaluation_detail_params.merge!(:controller => @worktime.controller,
                                                     :action =>'edit',

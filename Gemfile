@@ -3,15 +3,19 @@ source 'https://rubygems.org'
 gem 'rails', '4.1.5'
 
 gem 'pg'
-gem 'mysql2' # for puzzle base
 
 gem 'airbrake'
 gem 'acts_as_tree'
+gem 'cancancan'
 gem 'dalli'
+gem 'delayed_job_active_record'
+gem 'delayed_cron_job'
 gem 'kaminari'
 gem 'kaminari-bootstrap'
 gem 'haml'
+gem 'highrise'
 gem 'jbuilder'
+gem 'protective'
 gem 'rails_config'
 gem 'rails-i18n'
 gem 'net-ldap'
@@ -31,6 +35,7 @@ gem 'jquery-ui-rails'
 gem 'turbolinks'
 gem 'jquery-turbolinks'
 gem 'bootstrap-sass'
+gem 'selectize-rails'
 
 
 
@@ -51,6 +56,10 @@ end
 group :test do
   gem 'fabrication'
   gem 'mocha', require: false
+  gem 'capybara'
+  gem 'headless'
+  gem 'selenium-webdriver', '~> 2.43.0'
+  gem 'database_cleaner'
 end
 
 group :console do

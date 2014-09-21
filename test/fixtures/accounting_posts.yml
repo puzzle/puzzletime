@@ -1,0 +1,30 @@
+# == Schema Information
+#
+# Table name: accounting_posts
+#
+#  id                   :integer          not null, primary key
+#  work_item_id         :integer          not null
+#  portfolio_item_id    :integer
+#  reference            :string(255)
+#  offered_hours        :integer
+#  offered_rate         :integer
+#  discount_percent     :integer
+#  discount_fixed       :integer
+#  report_type          :string(255)
+#  billable             :boolean          default(TRUE), not null
+#  description_required :boolean          default(FALSE), not null
+#  ticket_required      :boolean          default(FALSE), not null
+#  closed               :boolean          default(FALSE), not null
+#
+
+allgemein:
+  work_item_id: 3
+
+puzzletime:
+  work_item_id: 4
+
+hitobito_demo_app:
+  work_item_id: 9
+
+hitobito_demo_site:
+  work_item_id: 10

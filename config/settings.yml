@@ -40,7 +40,15 @@ ldap:
   external_dn: ou=extern,ou=users,dc=puzzle,dc=itc
   group: cn=puzzletime,ou=groups,dc=puzzle,dc=itc
 
+# Highrise configuration
+highrise:
+  url: <%= ENV['RAILS_HIGHRISE_URL'] || 'https://highrisehq.com' %>
+  api_token: <%= ENV['RAILS_HIGHRISE_TOKEN'] %>
+
 # Default values
 defaults:
   report_type: absolute_day
   start_hour: 8
+
+work_items:
+  path_separator: '-'

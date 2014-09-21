@@ -1,29 +1,37 @@
-= nav 'Meine Zeit',
-      evaluation_path('userprojects', clear: 1),
-      evaluation_path('userprojects')
-- if @user.project_manager?
+- if can?(:userworkitems, Evaluation)
+  = nav 'Meine Zeit',
+        evaluation_path('userworkitems', clear: 1),
+        evaluation_path('userworkitems')
+
+- if can?(:managed, Evaluation)
   = nav 'Meine Projekte', evaluation_path('managed', clear: 1)
-- if @user.management
+
+- if can?(:clients, Evaluation)
   = nav 'Kunden',
         evaluation_path('clients', clear: 1),
         evaluation_path('clients'),
-        evaluation_path('clientprojects'),
-        evaluation_path('projectemployees')
+        evaluation_path('clientworkitems'),
+        evaluation_path('workitememployees')
+
+- if can?(:employees, Evaluation)
   = nav 'Mitarbeiter',
         evaluation_path('employees', clear: 1),
         evaluation_path('employees'),
-        evaluation_path('employeeprojects'),
-        evaluation_path('employeesubprojects')
+        evaluation_path('employeeworkitems'),
+        evaluation_path('employeesubworkitems')
+
+- if can?(:departments, Evaluation)
   = nav 'Bereiche',
         evaluation_path('departments', clear: 1),
         evaluation_path('departments'),
-        evaluation_path('departmentprojects')
+        evaluation_path('departmentorders')
 
-= nav 'Meine Absenzen',
-      evaluation_path('userabsences', clear: 1),
-      evaluation_path('userabsences')
+- if can?(:userabsences, Evaluation)
+  = nav 'Meine Absenzen',
+        evaluation_path('userabsences', clear: 1),
+        evaluation_path('userabsences')
 
-- if @user.management
+- if can?(:absences, Evaluation)
   = nav 'Absenzen Mitarbeiter',
         evaluation_path('absences', clear: 1),
         evaluation_path('absences'),
@@ -31,7 +39,11 @@
 
 = nav 'Ferienplan', all_absences_graph_path
 
-- if @user.management
+- if can?(:export_capacity_csv, Evaluation)
   = nav 'Auslastung CSV', evaluation_path('export_capacity_csv'), data: { no_turbolink: true }
+
+- if can?(:export_extended_capacity_csv, Evaluation)
   = nav 'Detaillierte Auslastung CSV', evaluation_path('export_extended_capacity_csv'), data: { no_turbolink: true }
+
+- if can?(:export_ma_overview, Evaluation)
   = nav 'MA Übersicht', evaluation_path('export_ma_overview')
