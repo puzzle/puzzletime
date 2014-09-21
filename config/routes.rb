@@ -2,70 +2,59 @@ Rails.application.routes.draw do
 
   root to: 'worktimes#index'
 
-  concern :memberships do
-    post 'manager/:id', action: 'create_manager'
-    delete 'manager/:id', action: 'destroy_manager'
-    post :membership, action: 'create_membership'
-    delete 'membership/:id', action: 'destroy_membership'
-  end
-
-  concern :with_projects do
-    resources :projects, only: [:index, :edit, :update] do
-      resources :projects, only: [:index, :edit, :update]
-      resource :project_memberships, only: [:show], concerns: :memberships
-
-      collection do
-        post :synchronize
-        get :search
-      end
-    end
-  end
-
   resources :absences, except: [:show]
 
-  resources :clients, only: [:index] do
+  resources :clients,except: [:show] do
     collection do
-      post :synchronize
+      get :categories
     end
-
-    concerns :with_projects
   end
 
-  resources :departments, only: [:index] do
-    collection do
-      post :synchronize
-    end
+  resources :departments, except: [:show]
 
-    concerns :with_projects
-  end
-
-  resources :employees, only: [:index, :edit, :update] do
+  resources :employees, except: [:show] do
     collection do
       get :settings
       patch :settings, to: 'employees#update_settings'
       get :passwd
       post :passwd, to: 'employees#update_passwd'
-      post :synchronize
     end
 
-    resources :employments, only: [:index]
+    resources :employments, except: [:show]
     resources :overtime_vacations, except: [:show]
-    resource :employee_memberships, only: [:show], concerns: :memberships
   end
 
   resources :employee_lists
 
-  resource :employee_memberships, only: [:show], concerns: :memberships
-
   resources :holidays, except: [:show]
+
+  resources :orders do
+    collection do
+      post :crm_load
+
+      get :cockpit
+    end
+  end
+
+  resources :order_statuses, except: [:show]
+
+  resources :order_kinds, except: [:show]
+
+  resources :work_items, only: [:new, :create, :edit, :update, :destroy] do
+    collection do
+      get :search
+    end
+  end
+
+  resources :portfolio_items, except: [:show]
+
+  resources :target_scopes, except: [:show]
 
   resources :user_notifications, except: [:show]
 
-  concerns :with_projects
-
   resources :worktimes, only: [:index]
 
-  resources :projecttimes do
+  resources :ordertimes do
     collection do
       get :existing
       post :start

@@ -1,0 +1,10 @@
+= crud_form do |f|
+  = f.labeled_input_field :name
+  = f.labeled :icon do
+    = f.collection_select :icon,
+                          glyphicons,
+                          :to_s,
+                          :to_s,
+                          { prompt: ta(:please_select) },
+                          class: 'form-control'
+  = f.labeled_input_field :position

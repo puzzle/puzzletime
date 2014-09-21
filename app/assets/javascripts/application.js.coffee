@@ -7,17 +7,40 @@
 #= require jquery.ui.datepicker
 #= require jquery-ui-datepicker-i18n
 #= require jquery.ui.autocomplete
+#= require selectize
 #= require waypoints
 #= require waypoints-sticky
+#= require bootstrap/modal
+#= require bootstrap/tooltip
 #= require_self
+#= require modal_create
 #= require worktimes
 #= require week_datepicker
-#= require project_autocomplete
+#= require work_item_autocomplete
 #= require planning
+#= require orders
 #= require turbolinks
 
 
 app = window.App ||= {}
+
+app.enable = (selector, enabled) ->
+  $('input' + selector +
+    ', select' + selector +
+    ', textarea' + selector).prop('disabled', !enabled)
+  affected = $(selector)
+  if enabled
+    affected.removeClass('disabled')
+    $.each(affected, (i, e) -> if e.selectize then e.selectize.enable())
+  else
+    affected.addClass('disabled')
+    $.each(affected, (i, e) -> if e.selectize then e.selectize.disable())
+
+toggleEnabled = (element) ->
+  selector = $(element).data('enable')
+  enabled = $(element).prop('checked')
+  app.enable(selector, enabled)
+
 
 $ ->
   # wire up date picker
@@ -29,7 +52,8 @@ $ ->
     urlParams = for p in params
       value = $('#' + p.replace('[', '_').replace(']', '')).val() || ''
       encodeURIComponent(p) + "=" + value
-    settings.url = settings.url + "&" + urlParams.join('&')
+    joint = if settings.url.indexOf('?') == -1 then '?' else '&'
+    settings.url = settings.url + joint + urlParams.join('&')
   )
 
   # wire up toggle links
@@ -39,8 +63,41 @@ $ ->
     event.preventDefault()
   )
 
+  # wire up enable links
+  $('body').on('click', '[data-enable]', (event) -> toggleEnabled(this))
+  $('[data-enable]').each((i, e) -> toggleEnabled(e))
+
   # wire up autocompletes
-  $('[data-autocomplete=project]').each(app.projectAutocomplete)
+  $('[data-autocomplete=work_item]').each(app.workItemAutocomplete)
+
+  # wire up selectize
+  $('select.searchable').selectize()
+
+  # wire up direct submit fields
+  $('body').on('change', '[data-submit]', (event) ->
+    $(this).closest('form').submit()
+  )
+
+  # wire up ajax button with spinners
+  $('body').on('ajax:beforeSend', '[data-spin]', (event, xhr, settings) ->
+    $(this).prop('disable', true).
+            addClass('disabled').
+            siblings('.spinner').show()
+  )
+  $('body').on('ajax:complete', '[data-spin]', (event, xhr, settings) ->
+    $(this).prop('disable', false).
+            removeClass('disabled').
+            siblings('.spinner').hide()
+  )
+
+  # wire up disabled links
+  $('body').on('click', 'a.disabled', (event) ->
+   event.preventDefault()
+   event.stopPropagation()
+  )
+
+  # wire up tooltips
+  $('body').tooltip({ selector: '[data-toggle=tooltip]', placement: 'top', html: true })
 
   # change cursor for turbolink requests to give the user a minimal feedback
   $(document).on('page:fetch', ->

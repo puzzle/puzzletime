@@ -49,15 +49,16 @@ module EvaluatorHelper
   end
 
   def worktime_controller
-    @evaluation.absences? ? 'absencetimes' : 'projecttimes'
+    @evaluation.absences? ? 'absencetimes' : 'ordertimes'
   end
 
   #### division supplement functions
 
-  def offered_hours(project)
-    offered = project.offered_hours
+  # TODO: still required?
+  def offered_hours(work_item)
+    offered = work_item.accounting_post.try(:offered_hours)
     if offered
-      total = project.worktimes.where(worktimes: { billable: true }).sum(:hours).to_f
+      total = work_item.worktimes.where(worktimes: { billable: true }).sum(:hours).to_f
       color = 'green'
       if total > offered
         color = 'red'

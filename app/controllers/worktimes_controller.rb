@@ -7,6 +7,7 @@ class WorktimesController < CrudController
 
   helper_method :record_other?
 
+  # TODO check handled with cancan
   before_action :authorize_destroy, only: :destroy
 
   after_save :check_overlapping
@@ -81,7 +82,7 @@ class WorktimesController < CrudController
 
   def check_overlapping
     if @worktime.report_type.is_a? StartStopType
-      conditions = ['NOT (project_id IS NULL AND absence_id IS NULL) AND ' \
+      conditions = ['NOT (work_item_id IS NULL AND absence_id IS NULL) AND ' \
                     'employee_id = :employee_id AND work_date = :work_date AND id <> :id AND (' +
                     '(from_start_time <= :start_time AND to_end_time >= :end_time) OR ' +
                     '(from_start_time >= :start_time AND from_start_time < :end_time) OR ' +
@@ -91,7 +92,7 @@ class WorktimesController < CrudController
                       id: @worktime.id,
                       start_time: @worktime.from_start_time,
                       end_time: @worktime.to_end_time }]
-      overlaps = Worktime.where(conditions).includes(:project).to_a
+      overlaps = Worktime.where(conditions).includes(:work_item).to_a
       if overlaps.present?
         flash[:notice] += " Es besteht eine Überlappung mit mindestens einem anderen Eintrag: <br/>\n".html_safe
         flash[:notice] += overlaps.collect { |o| ERB::Util.h(o) }.join("<br/>\n").html_safe
@@ -102,8 +103,8 @@ class WorktimesController < CrudController
   def set_existing
     @work_date = @worktime.work_date
     @existing = Worktime.where('employee_id = ? AND work_date = ?', @worktime.employee_id, @work_date).
-                         order('type DESC, from_start_time, project_id').
-                         includes(:project, :absence)
+                         order('type DESC, from_start_time, work_item_id').
+                         includes(:work_item, :absence)
   end
 
   def set_week_days
@@ -119,8 +120,8 @@ class WorktimesController < CrudController
 
   def list_entries
     @worktimes = Worktime.where('employee_id = ? AND work_date >= ? AND work_date <= ?', @user.id, @week_days.first, @week_days.last)
-                         .includes(:project, :absence)
-                         .order('work_date, from_start_time, project_id')
+                         .includes(:work_item, :absence)
+                         .order('work_date, from_start_time, work_item_id')
     @daily_worktimes = @worktimes.group_by{ |w| w.work_date }
     @worktimes
   end

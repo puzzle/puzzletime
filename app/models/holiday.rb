@@ -16,7 +16,6 @@ class Holiday < ActiveRecord::Base
 
   include ActionView::Helpers::NumberHelper
   include Comparable
-  extend Manageable
 
   after_save :refresh
 

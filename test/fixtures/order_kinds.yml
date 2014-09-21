@@ -1,0 +1,16 @@
+# == Schema Information
+#
+# Table name: order_kinds
+#
+#  id   :integer          not null, primary key
+#  name :string(255)      not null
+#
+
+projekt:
+  name: Projekt
+
+mandat:
+  name: Mandat
+
+schulung:
+  name: Schulung

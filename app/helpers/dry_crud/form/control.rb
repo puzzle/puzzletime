@@ -71,7 +71,7 @@ module DryCrud::Form
 
     # Create the HTML markup for any labeled content.
     def labeled
-      errors = errors? ? ' has-error' : ''
+      errors = builder.errors?(attr) ? ' has-error' : ''
 
       content_tag(:div, class: "form-group#{errors}") do
         html = builder.label(attr, caption, class: 'col-md-2 control-label')
@@ -129,17 +129,6 @@ module DryCrud::Form
     # If none is set, uses the I18n value of the attribute.
     def caption
       @caption ||= builder.captionize(attr, object.class)
-    end
-
-    # Returns true if any errors are found on the passed attribute or its
-    # association.
-    def errors?
-      attr_plain, attr_id = builder.assoc_and_id_attr(attr)
-      # errors aint a Hash
-      # rubocop:disable HashMethods
-      object.errors.has_key?(attr_plain.to_sym) ||
-      object.errors.has_key?(attr_id.to_sym)
-      # rubocop:enable HashMethods
     end
 
     # Defines the field method to use based on the attribute

@@ -29,18 +29,18 @@ module PlanningHelper
   end
 
   # returns a weekly planned column
-  def week_planning_td(plannings, employee, project, week)
-    planning = week_planning(plannings, week, project, employee)
-    half_day_with_link_td(employee, week, project) # renders a planned cell
+  def week_planning_td(plannings, employee, work_item, week)
+    planning = week_planning(plannings, week, work_item, employee)
+    half_day_with_link_td(employee, week, work_item) # renders a planned cell
   end
 
   # returns daily planned columns
-  def day_planning_tds(plannings, employee, project, date)
-    current_planning = week_planning(plannings, date, project, employee)
+  def day_planning_tds(plannings, employee, work_item, date)
+    current_planning = week_planning(plannings, date, work_item, employee)
     if current_planning
       planned_half_day_tds(current_planning, date)
     else
-      unplanned_half_day_tds(employee, project, date)
+      unplanned_half_day_tds(employee, work_item, date)
     end
   end
 
@@ -62,7 +62,7 @@ module PlanningHelper
     result.html_safe
   end
 
-  # returns a weekly absence column in the project planning graph view
+  # returns a weekly absence column in the work item planning graph view
   def week_absence_td_proj(absence_graph, date)
     absences = []
     5.times do |day|
@@ -96,7 +96,7 @@ module PlanningHelper
     result.html_safe
   end
 
-  # returns daily absence columns in the project planning graph view
+  # returns daily absence columns in the work item planning graph view
   def day_absence_tds_proj(absence_graph, date)
     result = ''
     5.times do |day|
@@ -117,17 +117,17 @@ module PlanningHelper
     "<td #{'class="current"' if Date.today == date } style='width:10px'></td>".html_safe
   end
 
-  # draws an empty cell in the thin row for absences in the project planning graph view
+  # draws an empty cell in the thin row for absences in the work item planning graph view
   def empty_half_day_td_absence(date)
     "<td #{'class="current"' if Date.today == date } style='width:10px; border-width: 0px 1px 0px 0px'></td>".html_safe
   end
 
-  # renders a planned planning cell with a link to the respective project
-  def half_day_with_link_td(employee, date, project)
+  # renders a planned planning cell with a link to the respective work item
+  def half_day_with_link_td(employee, date, work_item)
     result = "<td #{'class="current"' if Date.today == date } style='width:10px'>"
     result << '<a href="/plannings/new?'
     result << "employee_id=#{employee.id}" if employee
-    result << "&project_id=#{project.id}" if project
+    result << "&work_item_id=#{work_item.id}" if work_item
     result << "&date=#{Week.from_date(date).to_integer}\""
     result << '>&nbsp;<span>Neue Planung</span></a>'
     result << '</td>'
@@ -154,21 +154,21 @@ module PlanningHelper
   end
 
 
-  def unplanned_half_day_tds(employee, project, date)
-    result = half_day_with_link_td(employee, date, project)
-    result << half_day_with_link_td(employee, date, project)
+  def unplanned_half_day_tds(employee, work_item, date)
+    result = half_day_with_link_td(employee, date, work_item)
+    result << half_day_with_link_td(employee, date, work_item)
     date = date.next
-    result << half_day_with_link_td(employee, date, project)
-    result << half_day_with_link_td(employee, date, project)
+    result << half_day_with_link_td(employee, date, work_item)
+    result << half_day_with_link_td(employee, date, work_item)
     date = date.next
-    result << half_day_with_link_td(employee, date, project)
-    result << half_day_with_link_td(employee, date, project)
+    result << half_day_with_link_td(employee, date, work_item)
+    result << half_day_with_link_td(employee, date, work_item)
     date = date.next
-    result << half_day_with_link_td(employee, date, project)
-    result << half_day_with_link_td(employee, date, project)
+    result << half_day_with_link_td(employee, date, work_item)
+    result << half_day_with_link_td(employee, date, work_item)
     date = date.next
-    result << half_day_with_link_td(employee, date, project)
-    result << half_day_with_link_td(employee, date, project)
+    result << half_day_with_link_td(employee, date, work_item)
+    result << half_day_with_link_td(employee, date, work_item)
     result.html_safe
   end
 
@@ -188,7 +188,7 @@ module PlanningHelper
     result << '"><a'
     result << " href=\"#{edit_planning_path(planning)}\">&nbsp;"
     result << '<span>'
-    result << "Projekt: #{h(planning.project.label)}<br>"
+    result << "Position: #{h(planning.work_item.label_verbose)}<br>"
     result << 'Bemerkungen: '
     if planning.description.present?
       result << "#{h(planning.description)}"
@@ -207,9 +207,9 @@ module PlanningHelper
   end
 
   private
-  # returns the planning record matching the week and project
-  def week_planning(plannings, current_week_date, project, employee)
-    plannings = plannings.select { |planning| planning.project == project and planning.employee == employee }
+  # returns the planning record matching the week and work item
+  def week_planning(plannings, current_week_date, work_item, employee)
+    plannings = plannings.select { |planning| planning.work_item == work_item and planning.employee == employee }
     return nil if plannings.empty?
 
     current_week = Week.from_date(current_week_date).to_integer

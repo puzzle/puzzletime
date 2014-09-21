@@ -4,7 +4,6 @@
 # Table name: worktimes
 #
 #  id              :integer          not null, primary key
-#  project_id      :integer
 #  absence_id      :integer
 #  employee_id     :integer
 #  report_type     :string(255)      not null
@@ -17,13 +16,15 @@
 #  booked          :boolean          default(FALSE)
 #  type            :string(255)
 #  ticket          :string(255)
+#  work_item_id    :integer
 #
-
 
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz
 
 class Worktime < ActiveRecord::Base
+
+  H_M = /^(\d*):([0-5]\d)/
 
   include ReportType::Accessors
   include Conditioner
@@ -31,9 +32,7 @@ class Worktime < ActiveRecord::Base
 
   belongs_to :employee
   belongs_to :absence
-  belongs_to :project
-  has_one :client, through: :project
-  has_one :department, through: :project
+  belongs_to :work_item
 
   validates_presence_of :employee_id, message: 'Ein Mitarbeiter muss vorhanden sein'
   validates :work_date, timeliness: { date: true }
@@ -41,12 +40,19 @@ class Worktime < ActiveRecord::Base
 
   before_validation :store_hours
 
-  H_M = /^(\d*):([0-5]\d)/
+  scope :in_period, ->(period) do
+    if period
+      where('work_date BETWEEN ? AND ?', period.start_date, period.end_date)
+    else
+      all
+    end
+  end
 
   ###############  ACCESSORS  ##################
 
   # account this worktime is booked for.
-  # defined in subclasses, either Project or Absence
+  # defined in subclasses, either WorkItem or Absence
+  # TODO rename to accounting_post, okay?
   def account
     nil
   end
@@ -130,6 +136,7 @@ class Worktime < ActiveRecord::Base
     newWorktime.account_id = account_id
     newWorktime.billable = billable
     newWorktime.employee_id = employee_id
+    newWorktime.work_item_id = work_item_id
     newWorktime
   end
 
@@ -166,7 +173,7 @@ class Worktime < ActiveRecord::Base
   end
 
   def to_s
-    "#{time_string} #{self.class.label} #{'für ' + account.label_verbose if account}"
+    "#{time_string} #{self.class.model_name.human} #{'für ' + account.label_verbose if account}"
   end
 
   ##################  CLASS METHODS   ######################
@@ -183,11 +190,6 @@ class Worktime < ActiveRecord::Base
   end
 
   #######################  CLASS METHODS FOR EVALUATABLE  ####################
-
-  # label for this worktime class
-  def self.label
-    'Arbeitszeit'
-  end
 
   def self.worktimes
     self

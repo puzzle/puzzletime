@@ -1,0 +1,18 @@
+= crud_form do |f|
+
+  = render('crm_field', f: f) if Crm.instance
+
+  - if entry.new_record?
+    = render 'client_field', f: f
+    = render 'category_field', f: f
+
+  = f.fields_for :work_item, entry.work_item do |fields|
+    = render 'work_items/fields', fields: fields
+  = f.labeled_input_field :department_id, class: 'searchable'
+  = f.labeled_input_field :responsible_id, class: 'searchable'
+  = f.labeled_input_field :kind_id, class: 'searchable'
+  = f.labeled_input_field :status_id, class: 'searchable'
+  = f.labeled_input_field :employee_ids, class: 'searchable', multi: true
+
+
+= render 'shared/modal'

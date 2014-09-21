@@ -1,5 +1,4 @@
 - @title = "Zeitrapport Puzzle ITC"
-- project = Project.find(@evaluation.account_id)
 %html
   %head
     %title= @title
@@ -12,13 +11,13 @@
     .date
       = f Date.today
     %h1= @title
-    = render :partial => 'report_header', :locals => { :project => project }
+    = render 'report_header'
     %p
     %table.table-striped
       %thead
         %tr
           %th
-            = @tckt_view?"Ticket/Task":"Datum"
+            = @tckt_view ? "Ticket/Task" : "Datum"
           %th Stunden
           - if params[:start_stop]
             %th Von

@@ -24,12 +24,17 @@ class CrudController < ListController
   # further down.
   define_render_callbacks :show, :new, :edit
 
+  helper_method :entry, :full_entry_label
+
   hide_action :run_callbacks
+
+  respond_to :js, only: [:new, :create]
+
+  prepend_before_action :entry, only: [:show, :new, :create, :edit, :update, :destroy]
 
   after_save :set_success_notice
   after_destroy :set_success_notice
 
-  helper_method :entry, :full_entry_label
 
   ##############  ACTIONS  ############################################
 
@@ -45,6 +50,7 @@ class CrudController < ListController
   #   GET /entries/new.json
   def new(&block)
     assign_attributes if params[model_identifier]
+    #block = ->(format) { format.js { render partial: 'form' }} unless block_given?
     respond_with(entry, &block)
   end
 
@@ -139,6 +145,11 @@ class CrudController < ListController
   # A label for the current entry, including the model name.
   def full_entry_label
     "#{models_label(false)} <i>#{ERB::Util.h(entry)}</i>".html_safe
+  end
+
+  # json hash representation of an entry used for javascript responses
+  def js_entry
+    { id: entry.id, label: entry.to_s }
   end
 
   # Set a success flash notice when we got a HTML request.

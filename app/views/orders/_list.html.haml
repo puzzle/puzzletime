@@ -1,0 +1,50 @@
+
+%p
+  = render 'filters'
+
+- if entries.present?
+  %table.table.table-striped.table-hover
+    %thead
+      %tr
+        %th
+          = sort_link(:client)
+          %br/
+          = sort_link(:order)
+        %th
+          = sort_link(:kind)
+          %br/
+          = sort_link(:department)
+        %th
+          = sort_link(:responsible)
+          %br/
+          = Order.human_attribute_name(:employee_ids)
+        %th
+          = sort_link(:status)
+        - @target_scopes.each do |scope|
+          %th= sort_link("target_scope_#{scope.id}", icon(scope.icon, title: scope.name))
+
+    %tbody
+      - entries.each do |order|
+        %tr
+          %td
+            %strong= order.parent_names
+            %br/
+            %strong= link_to order, order
+          %td
+            %strong= order.kind
+            %br/
+            = order.department
+          %td
+            %i.icon-user
+            = format_attr(order, :responsible)
+            %br/
+            = order_team_enumeration(order)
+          %td
+            %span{class: "label label-#{order.status.style}"}
+              = order.status.name
+          - @target_scopes.each do |scope|
+            %td
+              = order_target_icon(order.targets.find { |t| t.target_scope.id == scope.id })
+
+- else
+  .table= ti(:no_list_entries)

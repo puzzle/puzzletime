@@ -3,45 +3,28 @@
 #
 # Table name: clients
 #
-#  id        :integer          not null, primary key
-#  name      :string(255)      not null
-#  shortname :string(4)        not null
+#  id           :integer          not null, primary key
+#  name         :string(255)      not null
+#  shortname    :string(4)        not null
+#  work_item_id :integer
 #
-
 
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz
 
 class Client < ActiveRecord::Base
 
+  include BelongingToWorkItem
   include Evaluatable
-  extend Manageable
 
-  # All dependencies between the models are listed below.
-  has_many :projects, -> { where(parent_id: nil) }
-  has_many :all_projects, class_name: 'Project'
+  has_many :contacts
+  has_many :billing_addresses
 
-  # Validation helpers.
-  validates_presence_of :name, message: 'Ein Name muss angegeben sein'
-  validates_uniqueness_of :name, message: 'Dieser Name wird bereits verwendet'
-  validates_presence_of :shortname, message: 'Ein Kürzel muss angegeben werden'
-  validates_uniqueness_of :shortname, message: 'Dieses Kürzel wird bereits verwendet'
+  has_descendants_through_work_item :orders
+  has_descendants_through_work_item :accounting_posts
 
-  before_save :remember_name_changes
-  after_save :update_projects_path_names
-  before_destroy :protect_worktimes
 
-  scope :list, -> { order('name') }
-
-  def to_s
-    name
-  end
-
-  ##### interface methods for Manageable #####
-
-  def self.puzzlebase_map
-    Puzzlebase::CustomerProject
-  end
+  validates :crm_key, uniqueness: true, allow_blank: true
 
   ##### interface methods for Evaluatable #####
 
@@ -49,25 +32,4 @@ class Client < ActiveRecord::Base
     Worktime.all
   end
 
-  def worktimes(_reload = true)
-    Worktime.joins(:project).
-             where(projects: { client_id: id })
-  end
-
-  private
-
-  def remember_name_changes
-    @names_changed = name_changed? || shortname_changed?
-    true
-  end
-
-  def update_projects_path_names
-    if @names_changed
-      projects.find_each do |p|
-        p.update_path_names!
-      end
-      @names_changed = false
-    end
-    true
-  end
 end

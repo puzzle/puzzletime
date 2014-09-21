@@ -12,8 +12,6 @@
 
 class OvertimeVacation < ActiveRecord::Base
 
-  extend Manageable
-
   belongs_to :employee
 
   validates_inclusion_of :hours, in: 0.001...999_999, message: 'Die Stunden müssen positiv sein'
@@ -31,12 +29,8 @@ class OvertimeVacation < ActiveRecord::Base
     self.hours = days * 8
   end
 
-  ##### interface methods for Manageable #####
-
   def to_s
-    result = "von #{hours} Stunden"
-    result << " am #{I18n.l(transfer_date)}" if transfer_date
-    result
+    "von #{hours} Stunden#{" am #{I18n.l(transfer_date)}" if transfer_date}"
   end
 
   ##### caching #####

@@ -1,11 +1,11 @@
-- if @user.management
-  = nav 'Mitarbeiter', employees_path, employees_path
-  = nav 'Kunden', clients_path, clients_path
-- if @user.management || @user.project_manager?
-  = nav 'Zugehörigkeiten', employee_memberships_path, employee_memberships_path
-  = nav 'Projekte', projects_path, projects_path
-- if @user.management
-  = nav 'Organisationseinheiten', departments_path, departments_path
-  = nav 'Feiertage', holidays_path, holidays_path
-  = nav 'Absenzarten', absences_path, absences_path
-  = nav 'Nachrichten', user_notifications_path, user_notifications_path
+= model_nav Employee
+= model_nav Client
+= model_nav Order
+= model_nav Department
+= model_nav Holiday
+= model_nav Absence
+= model_nav UserNotification
+= model_nav OrderKind
+= model_nav OrderStatus
+= model_nav PortfolioItem
+= model_nav TargetScope

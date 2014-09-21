@@ -32,6 +32,18 @@ a.symbol {
     text-align:center;
 }
 
+.nav-tabs > li > a {
+  color: $gray;
+
+  &:hover {
+    color: $gray-darker;
+  }
+}
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover, {
+  color: $gray-darker;
+}
+
 th {
   color: #000;
   font-weight: 400;
@@ -105,7 +117,7 @@ a.tooltip:hover span {
     margin-left: 5px;
 }
 
-.ui-autocomplete li.project-autocomplete {
+.selectize-option {
     text-align: left;
 
     .shortname, .name {
@@ -137,6 +149,32 @@ a.tooltip:hover span {
   margin-top: 20px;
   margin-bottom: 20px;
   width: 500px;
+}
+
+.disabled {
+  color: $btn-link-disabled-color;
+}
+
+.red {
+  color: $brand-danger;
+}
+
+.green {
+  color: $brand-success;
+}
+
+.orange {
+  color: $brand-warning;
+}
+
+.tooltip p {
+  margin-bottom: 0;
+}
+
+a.disabled:hover {
+  cursor: default;
+  text-decoration: none;
+  color: $btn-link-disabled-color;
 }
 
 table.table td.action {
@@ -178,4 +216,5 @@ body.loading a:hover {
 @import "absence";
 @import "header";
 @import "worktimes";
+@import "orders";
 @import "icons";

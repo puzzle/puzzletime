@@ -2,20 +2,22 @@
 #
 # Table name: clients
 #
-#  id        :integer          not null, primary key
-#  name      :string(255)      not null
-#  contact   :string(255)
-#  shortname :string(4)        not null
+#  id           :integer          not null, primary key
+#  name         :string(255)      not null
+#  shortname    :string(4)        not null
+#  work_item_id :integer
 #
 
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 puzzle:
   id:      1
+  work_item_id: 1
   name:    Puzzle
   shortname: PITC
 
 swisstopo:
   id:      2
+  work_item_id: 2
   name:    Swisstopo
   shortname: STOP

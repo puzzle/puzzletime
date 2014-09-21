@@ -8,13 +8,13 @@
   %br/
   Ferienrestguthaben: #{format_hour em.statistics.remaining_vacations(@period.end_date)} Tage
   %br/
-  Projekte:
+  Positionen:
   %table
-    - eval = EmployeeProjectsEval.new(em.id)
-    - projects = eval.times(@period).collect { |w| w.project }
-    - projects.uniq!
-    - projects.sort! {|a,b| a.label_verbose <=> b.label_verbose }
-    - projects.each do |p|
+    - eval = EmployeeWorkItemsEval.new(em.id)
+    - work_items = eval.times(@period).collect { |w| w.work_item }
+    - work_items.uniq!
+    - work_items.sort! {|a,b| a.label_verbose <=> b.label_verbose }
+    - work_items.each do |p|
       %tr
         %td{:align => "right"}
           = format_hour eval.sum_times(@period, p)

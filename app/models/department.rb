@@ -12,13 +12,11 @@
 class Department < ActiveRecord::Base
 
   include Evaluatable
-  extend Manageable
 
-  has_many :projects, -> { where(parent_id: nil) }
+  has_many :orders
 
-  has_many :all_projects, class_name: 'Project'
-
-  before_destroy :protect_worktimes
+  protect_if :worktimes, 'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Arbeitszeiten zugeordnet sind'
+  protect_if :orders, 'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Aufträge zugeordnet sind'
 
   scope :list, -> { order('name') }
 
@@ -27,14 +25,9 @@ class Department < ActiveRecord::Base
   end
 
   def worktimes
-    Worktime.joins(:project).
-             where(projects: { department_id: id })
-  end
-
-  ##### interface methods for Manageable #####
-
-  def self.puzzlebase_map
-    Puzzlebase::Unit
+    Worktime.joins(:work_item).
+             joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)').
+             where(orders: { department_id: id })
   end
 
   ##### interface methods for Evaluatable #####

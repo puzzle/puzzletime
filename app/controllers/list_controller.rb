@@ -15,6 +15,10 @@ class ListController < ApplicationController
   include DryCrud::Rememberable
   include DryCrud::RenderCallbacks
 
+  # customized cancan code to authorize with #model_class
+  authorize_resource except: :index
+  before_action :authorize_class, only: :index
+
   respond_to :html, :json
 
   define_render_callbacks :index
@@ -47,6 +51,10 @@ class ListController < ApplicationController
   def list_entries
     entries = model_class.respond_to?(:list) ? model_scope.list : model_scope
     entries.page(params[:page])
+  end
+
+  def authorize_class
+    authorize!(action_name.to_sym, model_class)
   end
 
   # Include these modules after the #list_entries method is defined.
