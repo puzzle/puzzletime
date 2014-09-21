@@ -63,7 +63,7 @@ class EditOtherOrdertimeTest < ActionDispatch::IntegrationTest
                      work_date: Date.today,
                      hours: '8:30'  }
     assert_response :success
-    assert_equal '/ordertimes', path
+    assert_equal '/evaluator/details', path
     ordertime = Ordertime.last
     assert_equal 8.5, ordertime.hours
     ordertime
