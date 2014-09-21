@@ -1,5 +1,5 @@
-class CrmSyncJob < BaseJob
-
+class CrmSyncJob < CronJob
+  
   self.cron_expression = '34 2 * * *'
 
   def perform
