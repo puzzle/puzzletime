@@ -296,7 +296,7 @@ class CreateErpTables < ActiveRecord::Migration
     Client.find_each do |client|
       # access attributes directly because of delegations
       client.create_work_item!(name: client[:name], shortname: client[:shortname])
-      client.save!
+      client.update_attribute(:work_item_id, client.work_item_id) # workaround because of missing contact column
     end
     assert_all_entries_have_work_items(Client)
   end
