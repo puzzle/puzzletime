@@ -240,6 +240,9 @@ if [ "$1" = 1 ] ; then
 fi
 %endif
 
+# hack until we know why this file is present
+rm -f %{wwwdir}/%{name}/www/tmp/stop.txt
+
 %postun
 # Run after uninstallation
 # $1 will be 1 if the package is upgraded
