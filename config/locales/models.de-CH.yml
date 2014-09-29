@@ -198,7 +198,7 @@ de-CH:
         shortname: Kürzel
         description: Beschreibung
       worktime:
-        project_id: Buchungsposition
+        account_id: Buchungsposition
         absence_id: Absenz
         absence: Absenz
         employee_id: Mitarbeiter
