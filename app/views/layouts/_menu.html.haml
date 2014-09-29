@@ -8,12 +8,12 @@
             absencetimes_path,
             weekly_graph_path
       = nav 'Planung', plannings_path(clear: 1), plannings_path, employee_lists_path
+      = model_nav Order
       = nav 'Auswertungen',
             evaluation_path('userworkitems', clear: 1),
             '/evaluator',
             all_absences_graph_path
       = nav 'Verwalten',
-            orders_path,
             clients_path,
             absences_path,
             departments_path,
