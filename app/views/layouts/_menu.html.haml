@@ -13,15 +13,16 @@
             evaluation_path('userworkitems', clear: 1),
             '/evaluator',
             all_absences_graph_path
-      = nav 'Verwalten',
-            clients_path,
-            absences_path,
-            departments_path,
-            employees_path,
-            user_notifications_path,
-            holidays_path,
-            order_kinds_path,
-            order_statuses_path,
-            portfolio_items_path,
-            target_scopes_path
+      - if can?(:manage, Client)
+        = nav 'Verwalten',
+              clients_path,
+              absences_path,
+              departments_path,
+              employees_path,
+              user_notifications_path,
+              holidays_path,
+              order_kinds_path,
+              order_statuses_path,
+              portfolio_items_path,
+              target_scopes_path
 
