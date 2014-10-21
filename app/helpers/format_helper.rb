@@ -35,15 +35,8 @@ module FormatHelper
     format_type(obj, attr)
   end
 
-  # round time function.
   def format_hour(hour)
-    return unless hour
-    # number_with_precision is not that performant
-    number = (Float(hour) * (100)).round.to_f / 100
-    number = '%01.2f' % number
-    parts = number.split('.')
-    parts[0].gsub!(/(\d)(?=(\d\d\d)+(?!\d))/, "\\1'")
-    parts.join('.')
+    number_with_precision(hour, precision: 2,delimiter: '\'')
   end
 
   def format_time(time)

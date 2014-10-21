@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 class Timebox
-
+  
   PIXEL_PER_HOUR = 8.0
 
   MUST_HOURS_COLOR = '#FF0000'
@@ -26,7 +26,7 @@ class Timebox
   end
 
   def self.must_hours(must_hours)
-    new(nil, MUST_HOURS_COLOR, 1, "Sollzeit (#{must_hours} h)")
+    new(nil, MUST_HOURS_COLOR, 1, "Sollzeit (#{format_hour(must_hours)} h)")
   end
 
   def self.blank(hours)
@@ -38,6 +38,10 @@ class Timebox
   end
 
   private
+  
+  def self.format_hour(hour)
+    ActionController::Base.helpers.number_with_precision(hour, precision: 2,delimiter: '\'')
+  end
 
   def tooltip_for(worktime)
     worktime.time_string + ': ' + worktime.account.label
