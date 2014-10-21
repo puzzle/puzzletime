@@ -23,14 +23,16 @@ class UserNotification < ActiveRecord::Base
 
 
   def self.list_during(period = nil)
-    current = period.nil?
-    period ||= Period.current_week
-    custom = list.where('date_from BETWEEN ? AND ? OR date_to BETWEEN ? AND ?',
-                        period.start_date, period.end_date,
-                        period.start_date, period.end_date).
-                  reorder('date_from')
-    list = custom.concat(holiday_notifications(period))
-    list.sort!
+    # only show notifications for the current week
+    if period.nil?
+      period = Period.current_week
+      custom = list.where('date_from BETWEEN ? AND ? OR date_to BETWEEN ? AND ?',
+                          period.start_date, period.end_date,
+                          period.start_date, period.end_date).
+                    reorder('date_from')
+      list = custom.concat(holiday_notifications(period))
+      list.sort!
+    end
   end
 
   def self.holiday_notifications(period = nil)
