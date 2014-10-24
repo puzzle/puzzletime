@@ -1,6 +1,6 @@
 - type ||= :calendar_day
 %tr
-  %th{:colspan => "2"}= work_item_planning_graph.work_item.label_verbose
+  %th{:colspan => "2", :class => 'nowrap'}= work_item_planning_graph.work_item.label_verbose
   = week_overview_tds(work_item_planning_graph.overview_graph, 10)
 
 - work_item_planning_graph.employees_abstr.each do |employee|
