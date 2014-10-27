@@ -24,7 +24,11 @@
       = render 'breadcrumb'
 
     #content
-      %h1.h3= @title
+      - if content_for?(:content_header)
+        = yield :content_header
+      - else
+        %h1.h3= @title
+
       #flash
         = render partial: 'layouts/flash', collection: [:notice, :alert], as: :level
       = render partial: 'layouts/notification'
