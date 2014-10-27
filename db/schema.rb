@@ -144,6 +144,8 @@ ActiveRecord::Schema.define(version: 20140714093557) do
   create_table "order_comments", force: true do |t|
     t.integer  "order_id",   null: false
     t.text     "text",       null: false
+    t.integer  "creator_id"
+    t.integer  "updater_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["order_id"], :name => "index_order_comments_on_order_id"
