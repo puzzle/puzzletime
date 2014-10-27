@@ -6,6 +6,7 @@
   .orders-header {
     padding: 15px 15px 0 15px;
     background-color: $gray-lighter;
+    margin-bottom: 25px;
 
     .order-search {
       @include clearfix;
@@ -38,7 +39,7 @@
 .orders-cockpit {
   .cockpit-header {
     @include clearfix;
-    padding: 25px 0;
+    padding-bottom: 25px;
     margin: 0 auto;
     width: 700px;
   }

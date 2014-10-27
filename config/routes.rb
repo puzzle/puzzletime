@@ -34,6 +34,13 @@ Rails.application.routes.draw do
 
       get :cockpit
     end
+
+    member do
+      get :cockpit
+      get :targets
+      get :bills
+      get :time_corrections
+    end
   end
 
   resources :order_statuses, except: [:show]

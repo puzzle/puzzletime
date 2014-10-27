@@ -1,4 +1,4 @@
-= crud_form do |f|
+= crud_form cancel_url: polymorphic_url(entry, returning: true) do |f|
 
   - if entry.new_record?
     = render('crm_field', f: f) if Crm.instance

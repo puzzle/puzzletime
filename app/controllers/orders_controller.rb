@@ -15,6 +15,7 @@ class OrdersController < ManageController
     status: 'order_statuses.position' }
 
   before_action :set_filter_values, only: :index
+  before_action :set_choosable_orders, only: [:show, :cockpit, :targets, :bills, :time_corrections]
   before_render_form :set_clients
 
   def crm_load
@@ -28,7 +29,15 @@ class OrdersController < ManageController
   end
 
   def cockpit
-    render action: 'cockpit'
+  end
+
+  def targets
+  end
+
+  def bills
+  end
+
+  def time_corrections
   end
 
   private
@@ -114,6 +123,10 @@ class OrdersController < ManageController
     @order_kinds = OrderKind.list
     @order_statuses = OrderStatus.list
     @target_scopes = TargetScope.list
+  end
+
+  def set_choosable_orders
+    @choosable_orders = Order.list
   end
 
 end

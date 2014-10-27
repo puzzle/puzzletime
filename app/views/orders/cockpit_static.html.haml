@@ -1,8 +1,50 @@
-= render 'header'
+.orders-header
+  .row
+    .col-xs-2
+      = link_to('#') do
+        %i.icon-previous
+        Auftragsliste
+
+    .order-search.col-xs-10
+      %label Auftrag
+      .selectize-control.single
+        %input.selectize-input.items.not-full{type: 'text', placeholder: 'Suchen...'}
+
+  %ul.nav.nav-tabs
+    %li
+      %a{href: '#'} Details
+    %li.active
+      %a{href: '#'} Cockpit
+    %li
+      %a{href: '#'} Ziele
+    %li
+      %a{href: '#'} Rechnungen
+    %li
+      %a{href: '#'} Zeitbereinigung
 
 .orders-cockpit
   .cockpit-header
-    = render 'cockpit_header'
+    .cockpit-header-item
+      Durchschnittlicher Stundenansatz
+      .data-line
+        %span.figure 153.75
+        %span.unit CHF
+
+    .cockpit-header-item
+      Fortschritt
+      .data-item
+        %span.figure 48
+        %span.unit %
+
+    .cockpit-header-item
+      Wirtschaftlichkeit
+      .data-item
+        %span.figure-label Aktuell
+        %span.figure 76
+        %span.unit %
+        %span.figure-label Prognose
+        %span.figure 175
+        %span.unit %
 
   .cockpit-table
     %table.static

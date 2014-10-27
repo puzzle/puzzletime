@@ -143,6 +143,8 @@ de-CH:
         billing_address_id: Rechnungsadresse
         employees: Team
         employee_ids: Team
+        created_at: Erstellt
+        updated_at: Aktualisiert
       order_comment:
         order_id: Auftrag
         text: Kommentar
