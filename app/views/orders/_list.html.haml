@@ -3,7 +3,7 @@
   = render 'filters'
 
 - if entries.present?
-  %table.table.table-striped.table-hover
+  %table.orders-list.table.table-hover
     %thead
       %tr
         %th
@@ -21,23 +21,25 @@
         %th
           = sort_link(:status)
         - @target_scopes.each do |scope|
-          %th= sort_link("target_scope_#{scope.id}", icon(scope.icon, title: scope.name))
+          %th= sort_link("target_scope_#{scope.id}", picon(scope.icon, title: scope.name))
 
     %tbody
       - entries.each do |order|
         %tr
           %td
-            %strong= order.parent_names
+            %span.title= order.parent_names
             %br/
-            %strong= link_to order, order
+            = link_to order, order
           %td
-            %strong= order.kind
+            = order.kind
             %br/
-            = order.department
+            %span.muted= order.department
           %td
-            %i.icon-user
+            = picon('user')
             = format_attr(order, :responsible)
-            %br/
+            %br
+            = picon('group')
+            /
             = order_team_enumeration(order)
           %td
             %span{class: "label label-#{order.status.style}"}

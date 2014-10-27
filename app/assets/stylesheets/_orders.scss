@@ -27,11 +27,19 @@
   }
 
   .orders-actions {
-    padding: 20px 15px 0 15px;
+    padding-top: 20px;
 
     & > * {
       float: left;
       margin-right: 40px;
+    }
+  }
+}
+
+.orders-list {
+  thead {
+    [class^="icon-"], [class*=" icon-"] {
+      font-size: 25px;
     }
   }
 }
@@ -59,10 +67,6 @@
   .title, .figure, .unit {
     color: $gray-darker;
   }
-  .title {
-    font-size: 18px;
-    font-weight: 400;
-  }
   .figure {
     font-size: 18px;
     font-weight: 500;
@@ -83,6 +87,10 @@
       border-top: 1px solid $gray-light;
       &:last-child {
         border-bottom: 1px solid $gray-light;
+      }
+
+      [class^="icon-"], [class*=" icon-"] {
+        color: $brand-primary;
       }
     }
     td, th {
@@ -117,12 +125,6 @@
     .title, .subtitle {
       height: 35px;
     }
-    /* .subtitle { */
-    /*   height: 50px; */
-    /* } */
-    /* .data-item { */
-    /*   height: 20px; */
-    /* } */
   }
   .scrollable {
     position: absolute;

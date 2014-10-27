@@ -1,11 +1,12 @@
-.orders-header
-  .row
-    .col-xs-2
-      = link_to(orders_path(returning: true)) do
-        %i.icon-previous
-        Auftragsliste
+- content_for :content_header do
+  .orders-header
+    .row
+      .col-xs-2
+        = link_to(orders_path(returning: true)) do
+          = picon('chevron-left')
+          Auftragsliste
 
-    .order-search.col-xs-10
-      = render 'chooser'
+      .order-search.col-xs-10
+        = render 'chooser'
 
-  = render 'tabs'
+    = render 'tabs'
