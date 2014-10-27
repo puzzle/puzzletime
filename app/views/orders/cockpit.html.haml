@@ -1,272 +1,271 @@
-.orders
-  .orders-header
-    .row
-      .col-xs-2
-        = link_to('#') do
-          %i.icon-previous
-          Auftragsliste
-
-      .order-search.col-xs-10
-        %label Auftrag
-        .selectize-control.single
-          %input.selectize-input.items.not-full{type: 'text', placeholder: 'Suchen...'}
-
-    %ul.nav.nav-tabs
-      %li
-        %a{href: '#'} Details
-      %li.active
-        %a{href: '#'} Cockpit
-      %li
-        %a{href: '#'} Ziele
-      %li
-        %a{href: '#'} Rechnungen
-      %li
-        %a{href: '#'} Zeitbereinigung
-
-  .cockpit
-    .cockpit-header
-      .cockpit-header-item
-        Durchschnittlicher Stundenansatz
-        .data-line
-          %span.figure 153.75
-          %span.unit CHF
-
-      .cockpit-header-item
-        Fortschritt
-        .data-item
-          %span.figure 48
-          %span.unit %
-
-      .cockpit-header-item
-        Wirtschaftlichkeit
-        .data-item
-          %span.figure-label Aktuell
-          %span.figure 76
-          %span.unit %
-          %span.figure-label Prognose
-          %span.figure 175
-          %span.unit %
-
-    .cockpit-table
-      %table.static
-        %tr
-          %th &nbsp;
-
-        %tr
-          %td
-            .title Total
-
-        %tr
-          %td
-            .title
-              %a{href: '#'} Konzeption
-            .subtitle User Experience
-            .data-item
-              %span.figure 190.00
-              %span.unit CHF/Std.
-
-        %tr
-          %td
-            .title
-              %a{href: '#'} Realisierung
-            .subtitle Ruby on Rails
-            .data-item
-              %span.figure 170.00
-              %span.unit CHF/Std.
-
-      .scrollable
-        %table
-          %tr
-            %th{title: 'Help text'}
-              %i.icon-hint
-              Budget
-            %th{title: 'Help text'}
-              %i.icon-hint
-              Leistungen
-            %th{title: 'Help text'}
-              %i.icon-hint
-              Verrechnet
-            %th{title: 'Help text'}
-              %i.icon-hint
-              Offene Leistungen
-            %th{title: 'Help text'}
-              %i.icon-hint
-              Nicht verrechenbar
-            %th{title: 'Help text'}
-              %i.icon-hint
-              Restaufwand
-            %th{title: 'Help text'}
-              %i.icon-hint
-              Offenes Budget
-
-          %tr
-            %td
-              .data-item
-                %span.figure 120
-                %span.unit Std.
-              .data-item
-                %span.figure 15
-                %span.unit Tage
-              .data-item
-                %span.figure 21'600.00
-                %span.unit CHF
-
-            %td
-              .data-item
-                %span.figure 120
-                %span.unit Std.
-              .data-item
-                %span.figure 15
-                %span.unit Tage
-              .data-item
-                %span.figure 21'600.00
-                %span.unit CHF
-
-            %td
-              .data-item
-                %span.figure 120
-                %span.unit Std.
-              .data-item
-                %span.figure 15
-                %span.unit Tage
-              .data-item
-                %span.figure 21'600.00
-                %span.unit CHF
-
-            %td
-              .data-item
-              .data-item
-                %span.figure 10
-                %span.unit Std.
-              .data-item
-
-            %td
-              .data-item
-              .data-item
-              .data-item
-                %span.figure 10
-                %span.unit Std.
-
-            %td
-              .data-item
-                %span.figure 10
-                %span.unit Std.
-              .data-item
-              .data-item
-
-            %td
-              .data-item
-              .data-item
-              .data-item
-
-          %tr
-            %td
-              .data-item
-                %span.figure 60
-                %span.unit Std.
-              .data-item
-                %span.figure 7.5
-                %span.unit Tage
-              .data-item
-                %span.figure 11'400.00
-                %span.unit CHF
-
-            %td
-              .data-item
-                %span.figure 60
-                %span.unit Std.
-              .data-item
-                %span.figure 7.5
-                %span.unit Tage
-              .data-item
-                %span.figure 11'400.00
-                %span.unit CHF
-
-            %td
-              .data-item
-              .data-item
-              .data-item
-
-            %td
-              .data-item
-              .data-item
-              .data-item
-
-            %td
-              .data-item
-              .data-item
-              .data-item
-
-            %td
-              .data-item
-              .data-item
-              .data-item
-
-          %tr
-            %td
-              .data-item
-                %span.figure 60
-                %span.unit Std.
-              .data-item
-                %span.figure 7.5
-                %span.unit Tage
-              .data-item
-                %span.figure 10'200.00
-                %span.unit CHF
-
-            %td
-              .data-item
-                %span.figure 60
-                %span.unit Std.
-              .data-item
-                %span.figure 7.5
-                %span.unit Tage
-              .data-item
-                %span.figure 10'200.00
-                %span.unit CHF
-
-            %td
-              .data-item
-                %span.figure 60
-                %span.unit Std.
-              .data-item
-                %span.figure 7.5
-                %span.unit Tage
-              .data-item
-                %span.figure 10'200.00
-                %span.unit CHF
-
-            %td
-              .data-item
-                %span.figure 60
-                %span.unit Std.
-              .data-item
-                %span.figure 7.5
-                %span.unit Tage
-              .data-item
-                %span.figure 10'200.00
-                %span.unit CHF
-
-            %td
-              .data-item
-              .data-item
-              .data-item
-
-            %td
-              .data-item
-              .data-item
-              .data-item
-
-            %td
-              .data-item
-              .data-item
-              .data-item
-
-    .orders-actions
+.orders-header
+  .row
+    .col-xs-2
       = link_to('#') do
-        %i.icon-add
-        Buchungsposition hinzufügen
+        %i.icon-previous
+        Auftragsliste
 
-      = link_to('#') do
-        %i.icon-duplicate
-        Auftrag duplizieren
+    .order-search.col-xs-10
+      %label Auftrag
+      .selectize-control.single
+        %input.selectize-input.items.not-full{type: 'text', placeholder: 'Suchen...'}
+
+  %ul.nav.nav-tabs
+    %li
+      %a{href: '#'} Details
+    %li.active
+      %a{href: '#'} Cockpit
+    %li
+      %a{href: '#'} Ziele
+    %li
+      %a{href: '#'} Rechnungen
+    %li
+      %a{href: '#'} Zeitbereinigung
+
+.orders-cockpit
+  .cockpit-header
+    .cockpit-header-item
+      Durchschnittlicher Stundenansatz
+      .data-line
+        %span.figure 153.75
+        %span.unit CHF
+
+    .cockpit-header-item
+      Fortschritt
+      .data-item
+        %span.figure 48
+        %span.unit %
+
+    .cockpit-header-item
+      Wirtschaftlichkeit
+      .data-item
+        %span.figure-label Aktuell
+        %span.figure 76
+        %span.unit %
+        %span.figure-label Prognose
+        %span.figure 175
+        %span.unit %
+
+  .cockpit-table
+    %table.static
+      %tr
+        %th &nbsp;
+
+      %tr
+        %td
+          .title Total
+
+      %tr
+        %td
+          .title
+            %a{href: '#'} Konzeption
+          .subtitle User Experience
+          .data-item
+            %span.figure 190.00
+            %span.unit CHF/Std.
+
+      %tr
+        %td
+          .title
+            %a{href: '#'} Realisierung
+          .subtitle Ruby on Rails
+          .data-item
+            %span.figure 170.00
+            %span.unit CHF/Std.
+
+    .scrollable
+      %table
+        %tr
+          %th{title: 'Help text'}
+            %i.icon-hint
+            Budget
+          %th{title: 'Help text'}
+            %i.icon-hint
+            Leistungen
+          %th{title: 'Help text'}
+            %i.icon-hint
+            Verrechnet
+          %th{title: 'Help text'}
+            %i.icon-hint
+            Offene Leistungen
+          %th{title: 'Help text'}
+            %i.icon-hint
+            Nicht verrechenbar
+          %th{title: 'Help text'}
+            %i.icon-hint
+            Restaufwand
+          %th{title: 'Help text'}
+            %i.icon-hint
+            Offenes Budget
+
+        %tr
+          %td
+            .data-item
+              %span.figure 120
+              %span.unit Std.
+            .data-item
+              %span.figure 15
+              %span.unit Tage
+            .data-item
+              %span.figure 21'600.00
+              %span.unit CHF
+
+          %td
+            .data-item
+              %span.figure 120
+              %span.unit Std.
+            .data-item
+              %span.figure 15
+              %span.unit Tage
+            .data-item
+              %span.figure 21'600.00
+              %span.unit CHF
+
+          %td
+            .data-item
+              %span.figure 120
+              %span.unit Std.
+            .data-item
+              %span.figure 15
+              %span.unit Tage
+            .data-item
+              %span.figure 21'600.00
+              %span.unit CHF
+
+          %td
+            .data-item
+            .data-item
+              %span.figure 10
+              %span.unit Std.
+            .data-item
+
+          %td
+            .data-item
+            .data-item
+            .data-item
+              %span.figure 10
+              %span.unit Std.
+
+          %td
+            .data-item
+              %span.figure 10
+              %span.unit Std.
+            .data-item
+            .data-item
+
+          %td
+            .data-item
+            .data-item
+            .data-item
+
+        %tr
+          %td
+            .data-item
+              %span.figure 60
+              %span.unit Std.
+            .data-item
+              %span.figure 7.5
+              %span.unit Tage
+            .data-item
+              %span.figure 11'400.00
+              %span.unit CHF
+
+          %td
+            .data-item
+              %span.figure 60
+              %span.unit Std.
+            .data-item
+              %span.figure 7.5
+              %span.unit Tage
+            .data-item
+              %span.figure 11'400.00
+              %span.unit CHF
+
+          %td
+            .data-item
+            .data-item
+            .data-item
+
+          %td
+            .data-item
+            .data-item
+            .data-item
+
+          %td
+            .data-item
+            .data-item
+            .data-item
+
+          %td
+            .data-item
+            .data-item
+            .data-item
+
+        %tr
+          %td
+            .data-item
+              %span.figure 60
+              %span.unit Std.
+            .data-item
+              %span.figure 7.5
+              %span.unit Tage
+            .data-item
+              %span.figure 10'200.00
+              %span.unit CHF
+
+          %td
+            .data-item
+              %span.figure 60
+              %span.unit Std.
+            .data-item
+              %span.figure 7.5
+              %span.unit Tage
+            .data-item
+              %span.figure 10'200.00
+              %span.unit CHF
+
+          %td
+            .data-item
+              %span.figure 60
+              %span.unit Std.
+            .data-item
+              %span.figure 7.5
+              %span.unit Tage
+            .data-item
+              %span.figure 10'200.00
+              %span.unit CHF
+
+          %td
+            .data-item
+              %span.figure 60
+              %span.unit Std.
+            .data-item
+              %span.figure 7.5
+              %span.unit Tage
+            .data-item
+              %span.figure 10'200.00
+              %span.unit CHF
+
+          %td
+            .data-item
+            .data-item
+            .data-item
+
+          %td
+            .data-item
+            .data-item
+            .data-item
+
+          %td
+            .data-item
+            .data-item
+            .data-item
+
+  .orders-actions
+    = link_to('#') do
+      %i.icon-add
+      Buchungsposition hinzufügen
+
+    = link_to('#') do
+      %i.icon-duplicate
+      Auftrag duplizieren
