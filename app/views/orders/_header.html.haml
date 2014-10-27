@@ -1,7 +1,7 @@
 - content_for :content_header do
-  .orders-header
+  .orders-header.unindented
     .row
-      .col-xs-2
+      .col-xs-2.back
         = link_to(orders_path(returning: true)) do
           = picon('chevron-left')
           Auftragsliste
