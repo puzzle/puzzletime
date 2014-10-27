@@ -3,19 +3,36 @@
 // Icon font generated with Fontastic http://app.fontastic.me/ by @pierrefritsch
 
 @font-face {
-  font-family: 'puzzletime-icons';
-  src:asset-url('puzzletime-icons.eot?em2ym6');
-  src:asset-url('puzzletime-icons.eot?#iefixem2ym6') format('embedded-opentype'),
-    asset-url('puzzletime-icons.woff?em2ym6') format('woff'),
-    asset-url('puzzletime-icons.ttf?em2ym6') format('truetype'),
-    asset-url('puzzletime-icons.svg?em2ym6#puzzletime-icons') format('svg');
+  font-family: 'puzzletime';
+  src:asset-url('puzzletime.eot?em2ym6');
+  src:asset-url('puzzletime.eot?#iefixem2ym6') format('embedded-opentype'),
+    asset-url('puzzletime.woff?em2ym6') format('woff'),
+    asset-url('puzzletime.ttf?em2ym6') format('truetype'),
+    asset-url('puzzletime.svg?em2ym6#puzzletime') format('svg');
   font-weight: normal;
   font-style: normal;
 }
 
-[class^="icon-"], [class*=" icon-"] {
-  font-family: 'puzzletime-icons';
-  font-style: normal;
+[data-icon]:before {
+  font-family: "puzzletime" !important;
+  content: attr(data-icon);
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[class^="icon-"]:before,
+[class*=" icon-"]:before {
+  font-family: "puzzletime" !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
   speak: none;
   line-height: 1;
   -webkit-font-smoothing: antialiased;
@@ -23,7 +40,7 @@
 }
 
 .icon-add:before {
-  content: "\e600";
+  content: "+";
 }
 .icon-calendar:before {
   content: "c";
@@ -34,42 +51,51 @@
 .icon-user:before {
   content: "u";
 }
-.icon-clock:before {
-  content: "\e602";
-}
-.icon-close:before {
-  content: "\e603";
-}
 .icon-delete:before {
-  content: "\e604";
+  content: "e";
 }
 .icon-dollar:before {
-  content: "\e605";
+  content: "$";
 }
 .icon-duplicate:before {
-  content: "\e606";
+  content: "d";
 }
 .icon-group:before {
-  content: "\e607";
+  content: "g";
 }
-.icon-heart:before {
-  content: "\e608";
+.icon-love:before {
+  content: "l";
 }
 .icon-help:before {
-  content: "\e609";
-}
-.icon-hint:before {
-  content: "\e60a";
-}
-.icon-next:before {
-  content: "\e60b";
-}
-.icon-previous:before {
-  content: "\e60c";
+  content: "h";
 }
 .icon-remove:before {
-  content: "\e60d";
+  content: "-";
 }
-.icon-user:before {
-  content: "\e60e";
+.icon-chevron-right:before {
+  content: ">";
+}
+.icon-chevron-left:before {
+  content: "<";
+}
+.icon-close:before {
+  content: "x";
+}
+.icon-disk:before {
+  content: "a";
+}
+.icon-edit:before {
+  content: "b";
+}
+.icon-export:before {
+  content: "f";
+}
+.icon-info:before {
+  content: "i";
+}
+.icon-square:before {
+  content: "j";
+}
+.icon-triangle:before {
+  content: "k";
 }
