@@ -1,13 +1,15 @@
+# -*- coding: utf-8 -*-
+
 TargetScope.seed(:name,
   { name: 'Kosten',
-    icon: 'usd',
+    icon: 'dollar',
     position: 10 },
 
   { name: 'Termin',
     icon: 'time',
     position: 20 },
 
-  { name: 'Qualiät',
-    icon: 'star-empty',
+  { name: 'Qualität',
+    icon: 'love',
     position: 30 }
 )

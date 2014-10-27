@@ -197,6 +197,48 @@ table.table td.action {
   }
 }
 
+.table {
+  thead {
+    border-top: 1px solid $table-border-color;
+    background-color: $gray-lighter;
+
+    th, a {
+      color: $gray;
+    }
+
+    a {
+      text-decoration: none;
+
+      &:active, &:hover {
+        color: #000;
+      }
+    }
+  }
+  &.table > thead > tr > th {
+    border-bottom: 0;
+  }
+  &.table > thead > tr > th,
+  &.table > tbody > tr > td {
+    padding: 15px;
+
+    &:first-child {
+      padding-left: 30px;
+    }
+    &:last-child {
+      padding-right: 30px;
+    }
+  }
+
+  /* Generic cell content styles */
+  .title {
+    font-size: 18px;
+    font-weight: 400;
+  }
+  .muted {
+    color: $gray;
+  }
+}
+
 #content > .nav-tabs {
   margin-bottom: $line-height-computed * 2;
 }
