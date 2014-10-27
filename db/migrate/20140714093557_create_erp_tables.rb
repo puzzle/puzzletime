@@ -171,6 +171,7 @@ class CreateErpTables < ActiveRecord::Migration
       t.string :reference
       t.integer :offered_hours
       t.integer :offered_rate
+      t.decimal :offered_total, precision: 12, scale: 2
       t.integer :discount_percent
       t.integer :discount_fixed
       t.string :report_type
