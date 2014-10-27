@@ -4,6 +4,8 @@ Rails.application.routes.draw do
 
   resources :absences, except: [:show]
 
+  resources :accounting_posts
+
   resources :clients,except: [:show] do
     collection do
       get :categories
