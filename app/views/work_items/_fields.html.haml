@@ -1,4 +1,6 @@
+- exclude ||= []
+
 = fields.hidden_field :parent_id
-= fields.labeled_input_field :name
-= fields.labeled_input_field :shortname, span: 2
-= fields.labeled_input_field :description
+= fields.labeled_input_field :name unless exclude.include?(:name)
+= fields.labeled_input_field :shortname, span: 2 unless exclude.include?(:shortname)
+= fields.labeled_input_field :description unless exclude.include?(:description)
