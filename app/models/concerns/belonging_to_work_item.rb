@@ -19,7 +19,7 @@ module BelongingToWorkItem
 
     accepts_nested_attributes_for :work_item, update_only: true
 
-    delegate :name, :shortname, to: :work_item, allow_nil: true
+    delegate :name, :shortname, :description, :label_verbose, to: :work_item, allow_nil: true
 
     scope :list, -> do
       includes(:work_item).

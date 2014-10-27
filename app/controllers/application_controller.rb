@@ -25,8 +25,8 @@ class ApplicationController < ActionController::Base
   def authenticate
     unless current_user
       # allow ad-hoc login
-      if request.post? && params[:user] && params[:pwd]
-        return if login_with(params[:user], params[:pwd])
+      if params[:user].present? && params[:pwd].present?
+        return true if login_with(params[:user], params[:pwd])
         flash[:notice] = 'Ungültige Benutzerdaten'
       end
       redirect_to controller: 'login', action: 'login', ref: request.url

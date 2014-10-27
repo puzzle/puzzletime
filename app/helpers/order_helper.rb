@@ -51,6 +51,10 @@ module OrderHelper
     icon(scope.icon)
   end
 
+  def format_order_crm_key(order)
+    link_to(order.crm_key, Crm.instance.order_url(order))
+  end
+
   def glyphicons
     %w(asterisk plus euro minus cloud envelope pencil glass music search heart star star-empty
        user film th-large th th-list ok remove zoom-in zoom-out off signal cog trash home file

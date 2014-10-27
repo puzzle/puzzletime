@@ -1,0 +1,17 @@
+= render 'header'
+
+.orders-cockpit
+  %dl.dl-horizontal
+    = labeled_attr entry, :kind_id
+    = labeled_attr entry, :status_id
+    = labeled_attr entry, :responsible_id
+    = labeled_attr entry, :department_id
+
+    - if Crm.instance
+      = labeled(Crm.instance.crm_key_label, format_attr(entry, :crm_key))
+
+  = render_attrs entry, :created_at, :updated_at
+
+
+%br/
+= render('actions_show')

@@ -17,7 +17,7 @@ class LoginController < ApplicationController
   def login
     if request.post?
       if login_with(params[:user], params[:pwd])
-        redirect_to params[:ref].present? ? params[:ref] : root_path
+        redirect_to params[:ref].presence || root_path
       else
         flash[:notice] = 'Ungültige Benutzerdaten'
       end
