@@ -1,8 +1,9 @@
 .orders {
-  /* margin: -15px; */
+  #content {
+    padding: 0;
+  }
 
   .orders-header {
-    margin: -15px -15px 0 -15px;
     padding: 15px 15px 0 15px;
     background-color: $gray-lighter;
 
@@ -25,7 +26,7 @@
   }
 
   .orders-actions {
-    margin-top: 20px;
+    padding: 20px 15px 0 15px;
 
     & > * {
       float: left;
@@ -34,7 +35,7 @@
   }
 }
 
-.cockpit {
+.orders-cockpit {
   .cockpit-header {
     @include clearfix;
     padding: 25px 0;

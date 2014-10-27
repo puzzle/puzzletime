@@ -9,7 +9,7 @@
     %meta{:content => "width=420", :name => "viewport"}/
     = favicon_link_tag 'favicon.png'
     = stylesheet_link_tag 'phone'
-  %body
+  %body{class: controller.controller_name}
     #header
       #brand
         puzzleTime
