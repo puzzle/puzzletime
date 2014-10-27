@@ -11,7 +11,7 @@
     = stylesheet_link_tag 'https://fonts.googleapis.com/css?family=Roboto:300,400,500', :media => 'all', 'data-turbolinks-track' => true
     = stylesheet_link_tag 'application', :media => 'all', 'data-turbolinks-track' => true
     = javascript_include_tag "application", 'data-turbolinks-track' => true
-  %body
+  %body{class: controller.controller_name}
     = render 'layouts/headerbar'
     - if @user
       = render 'layouts/menu'
