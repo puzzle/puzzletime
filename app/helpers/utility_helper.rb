@@ -12,7 +12,14 @@ module UtilityHelper
   end
 
   def icon(icon, options = {})
+    # Bootstrap icon
     add_css_class(options, "glyphicon glyphicon-#{icon}")
+    content_tag(:span, '', options)
+  end
+
+  def picon(icon, options = {})
+    # Puzzle icon
+    add_css_class(options, "icon-#{icon}")
     content_tag(:span, '', options)
   end
 

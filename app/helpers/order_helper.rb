@@ -16,11 +16,11 @@ module OrderHelper
 
   def order_target_icon(target)
     return unless target
-    icon(order_target_icon_key(target),
-         style: "font-size: 20px;",
-         class: target.rating,
-         title: target.comment? ? simple_format(target.comment) : nil,
-         data: { toggle: :tooltip })
+    picon(order_target_icon_key(target),
+          style: 'font-size: 20px;',
+          class: target.rating,
+          title: target.comment? ? simple_format(target.comment) : nil,
+          data: { toggle: :tooltip })
   end
 
   def order_filter_select(name, label, list)
@@ -37,9 +37,9 @@ module OrderHelper
 
   def order_target_icon_key(target)
     case target.rating
-    when 'green' then 'ok-sign'
-    when 'orange' then 'exclamation-sign'
-    when 'red' then 'remove-sign'
+    when 'green' then 'disk'
+    when 'orange' then 'triangle'
+    when 'red' then 'square'
     end
   end
 
