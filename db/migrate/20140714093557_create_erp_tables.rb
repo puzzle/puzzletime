@@ -174,7 +174,8 @@ class CreateErpTables < ActiveRecord::Migration
       t.decimal :offered_total, precision: 12, scale: 2
       t.integer :discount_percent
       t.integer :discount_fixed
-      t.string :report_type
+      t.integer :remaining_hours
+      t.string :report_type # TODO: remove
       t.boolean :billable, null: false, default: true
       t.boolean :description_required, null: false, default: false
       t.boolean :ticket_required, null: false, default: false

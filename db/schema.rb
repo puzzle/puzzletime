@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.decimal "offered_total",        precision: 12, scale: 2
     t.integer "discount_percent"
     t.integer "discount_fixed"
+    t.integer "remaining_hours"
     t.string  "report_type"
     t.boolean "billable",             default: true,  null: false
     t.boolean "description_required", default: false, null: false
