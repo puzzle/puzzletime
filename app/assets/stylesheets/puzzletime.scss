@@ -3,33 +3,40 @@
 @import "mixins";
 
 p {
-    text-align:     justify;
+    text-align: justify;
 }
 
 div {
-    text-align:     justify;
+    text-align: justify;
 }
 
 a.symbol {
-	text-decoration: none;
-	font-weight: 	 bold;
-	font-size: 		 16px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 16px;
 }
 
 #content {
-    @extend .container-fluid;
-    margin-bottom: 40px;
+  @extend .container-fluid;
+  margin-bottom: 40px;
+  padding-left: $grid-gutter-width;
+  padding-right: $grid-gutter-width;
+}
+
+.unindented {
+  margin-left: -$grid-gutter-width;
+  margin-right: -$grid-gutter-width;
 }
 
 .nav-tabs.nav-center > li, .nav-pills.nav-center > li {
-    float:none;
-    display:inline-block;
-    *display:inline; /* ie7 fix */
-     zoom:1; /* hasLayout ie7 trigger */
+  float:none;
+  display:inline-block;
+  *display:inline; /* ie7 fix */
+  zoom:1; /* hasLayout ie7 trigger */
 }
 
 .nav-tabs.nav-center, .nav-pills.nav-center {
-    text-align:center;
+  text-align:center;
 }
 
 .nav-tabs > li > a {
@@ -56,7 +63,7 @@ th.nowrap {
 }
 
 #evaluation td {
-	white-space: nowrap;
+  white-space: nowrap;
 }
 
 .btn + .cancel {
@@ -64,77 +71,77 @@ th.nowrap {
 }
 
 .times_total_sum {
-    font-weight:    bold;
-    /* color: #f4a460; */
-    padding-top:    10px;
-    padding-bottom: 20px;
-    white-space:    nowrap;
+  font-weight:    bold;
+  /* color: #f4a460; */
+  padding-top:    10px;
+  padding-bottom: 20px;
+  white-space:    nowrap;
 }
 
 .notification {
-    border: 2px solid #C9D8FF;
-    background-color: #f0f0f0;
-    margin: 0;
-    margin-top: -16px;
-	margin-bottom: 10px;
-	padding: 2px;
+  border: 2px solid #C9D8FF;
+  background-color: #f0f0f0;
+  margin: 0;
+  margin-top: -16px;
+  margin-bottom: 10px;
+  padding: 2px;
 }
 
 .notification li {
-	margin-left: 20px;
+  margin-left: 20px;
 }
 
 a.tooltip {
-	font-weight: bolder;
-	text-decoration: none;
+  font-weight: bolder;
+  text-decoration: none;
 }
 
 a.tooltip span {
-	display: 		none;
+  display: none;
 }
 
 a.tooltip:hover {
-	position:		relative;
+  position: relative;
 }
 
 a.tooltip:hover span {
-	display: 		block;
-	position:		absolute;
-	top:			10px;
-	left:			10px;
-	z-index: 		3;
-	background:		#ffffdd;
-	color:			#333;
-	white-space:	nowrap;
-	padding:		1pt;
-	border:			1px solid #ddd;
-	font-weight:	normal;
-	float:			left;
-	text-align:		left;
+  display: block;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 3;
+  background: #ffffdd;
+  color: #333;
+  white-space: nowrap;
+  padding: 1pt;
+  border: 1px solid #ddd;
+  font-weight: normal;
+  float: left;
+  text-align: left;
 }
 
 .calendar {
-    margin-left: 5px;
+  margin-left: 5px;
 }
 
 .selectize-option {
-    text-align: left;
+  text-align: left;
 
-    .shortname, .name {
-        display: inline-block;
-        line-height: 25px;
-        vertical-align: middle;
-    }
-    .shortname {
-        font-weight: bold;
-        margin-right: 10px;
-    }
-    .name {
-        float: right;
-    }
-    .description {
-        font-size: 11px;
-    }
+  .shortname, .name {
+    display: inline-block;
+    line-height: 25px;
+    vertical-align: middle;
+  }
+  .shortname {
+    font-weight: bold;
+    margin-right: 10px;
+  }
+  .name {
+    float: right;
+  }
+  .description {
+    font-size: 11px;
+  }
 }
 
 .right {
