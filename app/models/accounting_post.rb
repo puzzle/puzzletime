@@ -22,7 +22,7 @@ class AccountingPost < ActiveRecord::Base
   include BelongingToWorkItem
   include Closable
 
-  belongs_to :portfolio_itme
+  belongs_to :portfolio_item
 
   has_ancestor_through_work_item :order
   has_ancestor_through_work_item :client

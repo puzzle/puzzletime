@@ -1,0 +1,45 @@
+%table.static
+  %tr
+    %th &nbsp;
+
+  - @cockpit.rows.each do |row|
+    = render "cockpit_#{row.class.name.demodulize.underscore}_head", row: row
+
+.scrollable
+  %table
+    %tr
+      %th{title: 'Help text'}
+        Budget
+        = picon('info')
+      %th{title: 'Help text'}
+        Leistungen
+        = picon('info')
+      %th{title: 'Help text'}
+        Verrechnet
+        = picon('info')
+      %th{title: 'Help text'}
+        Offene Leistungen
+        = picon('info')
+      %th{title: 'Help text'}
+        Nicht verrechenbar
+        = picon('info')
+      %th{title: 'Help text'}
+        Restaufwand
+        = picon('info')
+      %th{title: 'Help text'}
+        Offenes Budget
+        = picon('info')
+
+    - @cockpit.rows.each do |row|
+      %tr
+        - row.cells.each do |cell|
+          %td
+            .data-item
+              %span.figure= f(cell.hours)
+              %span.unit Std.
+            .data-item
+              %span.figure= f(cell.days)
+              %span.unit Tage
+            .data-item
+              %span.figure= f(cell.amount)
+              %span.unit CHF

@@ -29,6 +29,7 @@ class OrdersController < ManageController
   end
 
   def cockpit
+    @cockpit = Order::Cockpit.new(entry)
   end
 
   def targets
