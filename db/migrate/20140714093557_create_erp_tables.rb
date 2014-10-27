@@ -68,6 +68,8 @@ class CreateErpTables < ActiveRecord::Migration
     create_table :order_comments do |t|
       t.belongs_to :order, null: false
       t.text :text, null: false
+      t.integer :creator_id
+      t.integer :updater_id
       t.timestamps
     end
 

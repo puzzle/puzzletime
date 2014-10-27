@@ -19,7 +19,7 @@ gem 'protective'
 gem 'rails_config'
 gem 'rails-i18n'
 gem 'net-ldap'
-#gem 'seed-fu'
+gem 'seed-fu'
 gem 'schema_validations'
 gem 'validates_timeliness'
 

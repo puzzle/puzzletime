@@ -252,6 +252,9 @@ GEM
     sdoc (0.4.0)
       json (~> 1.8)
       rdoc (~> 4.0, < 5.0)
+    seed-fu (2.3.3)
+      activerecord (>= 3.1, < 4.2)
+      activesupport (>= 3.1, < 4.2)
     selectize-rails (0.9.1)
     selenium-webdriver (2.43.0)
       childprocess (~> 0.5)
@@ -358,6 +361,7 @@ DEPENDENCIES
   sass-rails (~> 4.0.3)
   schema_validations
   sdoc
+  seed-fu
   selectize-rails
   selenium-webdriver (~> 2.43.0)
   simplecov-rcov
