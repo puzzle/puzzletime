@@ -1,38 +1,37 @@
-.orders {
-  #content {
-    padding: 0;
+.orders-header {
+  padding: 15px $grid-gutter-width 0 $grid-gutter-width;
+  background-color: $gray-lighter;
+  margin-bottom: 25px;
+
+  .back {
+    padding-top: 7px;
   }
 
-  .orders-header {
-    padding: 15px 15px 0 15px;
-    background-color: $gray-lighter;
-    margin-bottom: 25px;
+  .order-search {
+    @include clearfix;
 
-    .order-search {
-      @include clearfix;
-
-      label {
-        float: left;
-        margin-right: 20px;
-        padding-top: 7px;
-      }
-      input {
-        width: 500px;
-      }
-    }
-
-    .nav-tabs {
-      margin: 30px -15px 0 -15px;
-    }
-  }
-
-  .orders-actions {
-    padding-top: 20px;
-
-    & > * {
+    label {
       float: left;
-      margin-right: 40px;
+      margin-right: 20px;
+      padding-top: 7px;
     }
+    input {
+      width: 500px;
+    }
+  }
+
+  .nav-tabs {
+    margin: 50px -$grid-gutter-width 0 -$grid-gutter-width;
+    padding: 0 $grid-gutter-width;
+  }
+}
+
+.orders-actions {
+  padding-top: 20px;
+
+  & > * {
+    float: left;
+    margin-right: 40px;
   }
 }
 
