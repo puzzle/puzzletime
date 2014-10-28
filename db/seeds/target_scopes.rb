@@ -2,7 +2,7 @@
 
 TargetScope.seed(:name,
   { name: 'Kosten',
-    icon: 'dollar',
+    icon: 'usd',
     position: 10 },
 
   { name: 'Termin',
@@ -10,6 +10,6 @@ TargetScope.seed(:name,
     position: 20 },
 
   { name: 'Qualität',
-    icon: 'love',
+    icon: 'heart-empty',
     position: 30 }
 )

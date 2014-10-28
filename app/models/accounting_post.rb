@@ -28,6 +28,8 @@ class AccountingPost < ActiveRecord::Base
   has_ancestor_through_work_item :client
 
 
+  before_validation :derive_offered_fields
+
   def validate_worktime(worktime)
     if worktime.report_type != AutoStartType::INSTANCE && description_required? && worktime.description.blank?
       worktime.errors.add(:description, 'Es muss eine Bemerkung angegeben werden')
@@ -35,6 +37,16 @@ class AccountingPost < ActiveRecord::Base
 
     if worktime.report_type != AutoStartType::INSTANCE && ticket_required? && worktime.ticket.blank?
       worktime.errors.add(:ticket, 'Es muss ein Ticket angegeben werden')
+    end
+  end
+
+  private
+
+  def derive_offered_fields
+    if offered_hours.present? && offered_rate.present?
+      self.offered_total = offered_hours * offered_rate
+    elsif offered_total.present?
+      self.offered_rate = nil
     end
   end
 
