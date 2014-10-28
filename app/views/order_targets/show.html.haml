@@ -1,4 +1,4 @@
-- @title ||= ti(:title, model: models_label)
+- @title ||= 'Ziele bearbeiten'
 
 = render 'orders/header'
 
@@ -10,10 +10,15 @@
            url: order_order_targets_path(@order),
            builder: DryCrud::Form::Builder,
            html: { role: 'form' }) do |f|
+
+  - if @errors.present?
+    = render 'shared/error_messages', errors: @errors
+
   .row
-    - entries.each do |target|
-      = f.fields_for :targets, target do |fields|
+    - @order_targets.each do |target|
+      = f.fields_for "target_#{target.id}", target do |fields|
         = render 'fields', f: fields
 
-  .form-group
-    //= f.submit_button(ti('button.save'))
+  - if can?('update_targets', @order)
+    .form-group
+      = f.submit_button(ti('button.save'))

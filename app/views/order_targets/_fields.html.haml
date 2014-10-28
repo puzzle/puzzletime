@@ -11,5 +11,5 @@
             = f.radio_button :rating, rating
             = order_target_rating_icon(rating)
 
-  .form-group
+  .form-group{class: "#{f.errors?(:comment) ? 'has-error' : nil}"}
     = f.text_area(:comment)

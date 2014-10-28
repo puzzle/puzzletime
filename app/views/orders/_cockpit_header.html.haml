@@ -1,21 +1,26 @@
-.cockpit-header-item
-  Durchschnittlicher Stundenansatz
-  .data-line
-    %span.figure= f(@cockpit.avarage_rate)
-    %span.unit CHF
+- if @cockpit.avarage_rate
+  .cockpit-header-item
+    Durchschnittlicher Stundenansatz
+    .data-line
+      %span.figure= f(@cockpit.avarage_rate)
+      %span.unit CHF
 
-.cockpit-header-item
-  Fortschritt
-  .data-item
-    %span.figure= f(@cockpit.progress)
-    %span.unit %
+- if @cockpit.progress
+  .cockpit-header-item
+    Fortschritt
+    .data-item
+      %span.figure= f(@cockpit.progress)
+      %span.unit %
 
-.cockpit-header-item
-  Wirtschaftlichkeit
-  .data-item
-    %span.figure-label Aktuell
-    %span.figure= f(@cockpit.cost_effectiveness_current)
-    %span.unit %
-    %span.figure-label Prognose
-    %span.figure= f(@cockpit.cost_effectiveness_forecast)
-    %span.unit %
+- if @cockpit.cost_effectiveness_current || @cockpit.cost_effectiveness_forecast
+  .cockpit-header-item
+    Wirtschaftlichkeit
+    .data-item
+      - if @cockpit.cost_effectiveness_current
+        %span.figure-label Aktuell
+        %span.figure= f(@cockpit.cost_effectiveness_current)
+        %span.unit %
+      - if @cockpit.cost_effectiveness_forecast
+        %span.figure-label Prognose
+        %span.figure= f(@cockpit.cost_effectiveness_forecast)
+        %span.unit %
