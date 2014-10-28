@@ -1,0 +1,44 @@
+puzzletime_time:
+  order: puzzletime
+  target_scope: time
+  rating: green
+
+puzzletime_cost:
+  order: puzzletime
+  target_scope: cost
+  rating: orange
+
+puzzletime_quality:
+  order: puzzletime
+  target_scope: quality
+  rating: green
+
+allgemein_time:
+  order: allgemein
+  target_scope: time
+  rating: red
+
+allgemein_cost:
+  order: allgemein
+  target_scope: cost
+  rating: green
+
+allgemein_quality:
+  order: allgemein
+  target_scope: quality
+  rating: green
+
+hitobito_demo_time:
+  order: hitobito_demo
+  target_scope: time
+  rating: green
+
+hitobito_demo_cost:
+  order: hitobito_demo
+  target_scope: cost
+  rating: green
+
+hitobito_demo_quality:
+  order: hitobito_demo
+  target_scope: quality
+  rating: green

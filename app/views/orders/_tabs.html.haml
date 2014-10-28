@@ -2,7 +2,7 @@
   = nav 'Details', order_path(@order)
   = nav 'Cockpit', cockpit_order_path(@order) if can?(:cockpit, @order)
   //= nav 'Leistungen', services_order_path(@order) if can?(:services, @order)
-  = nav 'Ziele', order_order_targets_path(@order) if can?(:targets, @order)
+  = nav 'Ziele', order_order_targets_path(@order), order_order_targets_path(@order) if can?(:show_targets, @order)
   //= nav 'Vertrag', ''
   //= nav 'Journal', order_order_comments_path(@order) if can?(:comments, @order)
   //= nav 'Rechnungen', bills_order_path(entry)

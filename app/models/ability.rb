@@ -40,7 +40,6 @@ class Ability
       can [:create, :categories], Client
       can :create, WorkItem
       can :manage, Order, responsible_id: user.id
-      can :manage, OrderTarget, order: { responsible_id: user.id }
       can :manage, AccountingPost
       can :managed, Evaluation
     end
@@ -52,7 +51,7 @@ class Ability
       employee == user
     end
 
-    can [:read, :cockpit], Order
+    can [:read, :cockpit, :show_targets], Order
 
     can :manage, Planning
 
