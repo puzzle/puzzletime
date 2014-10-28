@@ -8,38 +8,41 @@
 .scrollable
   %table
     %tr
-      %th{title: 'Help text'}
+      %th{title: 'Budgetierte Stunden und Beträge.'}
         Budget
         = picon('info')
-      %th{title: 'Help text'}
+      %th{title: 'Die effektive Leistung entspricht der erfassten Arbeitszeit und ist unabhängig von der Verrechenbarkeit. '}
         Leistungen
         = picon('info')
-      %th{title: 'Help text'}
+      %th{title: 'Die verrechnete Leistung entspricht den tatsächlich in Rechnung gestellten Leistungen.'}
         Verrechnet
         = picon('info')
-      %th{title: 'Help text'}
+      %th{title: 'Differenz zwischen verrechneter Leistung und effektiver Leistung.'}
         Offene Leistungen
         = picon('info')
-      %th{title: 'Help text'}
+      %th{title: 'Durch den Auftragsverantwortlichen im Rahmen der Zeitbereinigung als nicht verrechenbar markierte Leistungen.'}
         Nicht verrechenbar
         = picon('info')
-      %th{title: 'Help text'}
+      %th{title: 'Geschätzter Aufwand pro Buchungsposition bis der Auftrag abgeschlossen werden kann.'}
         Restaufwand
         = picon('info')
-      %th{title: 'Help text'}
+      %th{title: 'Differenz zwischen verrechneter Leistung und budgetierter Leistung.'}
         Offenes Budget
         = picon('info')
 
     - @cockpit.rows.each do |row|
       %tr
-        - row.cells.each do |cell|
+        - row.cells.each do |key, cell|
           %td
             .data-item
-              %span.figure= f(cell.hours)
-              %span.unit Std.
+              - if cell.hours
+                %span.figure= f(cell.hours)
+                %span.unit Std.
             .data-item
-              %span.figure= f(cell.days)
-              %span.unit Tage
+              - if cell.days
+                %span.figure= f(cell.days)
+                %span.unit Tage
             .data-item
-              %span.figure= f(cell.amount)
-              %span.unit CHF
+              - if cell.amount
+                %span.figure= f(cell.amount)
+                %span.unit CHF

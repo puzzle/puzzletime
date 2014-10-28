@@ -1,21 +1,21 @@
 .cockpit-header-item
   Durchschnittlicher Stundenansatz
   .data-line
-    %span.figure 153.75
+    %span.figure= f(@cockpit.avarage_rate)
     %span.unit CHF
 
 .cockpit-header-item
   Fortschritt
   .data-item
-    %span.figure 48
+    %span.figure= f(@cockpit.progress)
     %span.unit %
 
 .cockpit-header-item
   Wirtschaftlichkeit
   .data-item
     %span.figure-label Aktuell
-    %span.figure 76
+    %span.figure= f(@cockpit.cost_effectiveness_current)
     %span.unit %
     %span.figure-label Prognose
-    %span.figure 175
+    %span.figure= f(@cockpit.cost_effectiveness_forecast)
     %span.unit %

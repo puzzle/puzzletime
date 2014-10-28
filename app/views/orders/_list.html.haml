@@ -22,15 +22,15 @@
           %th
             = sort_link(:status)
           - @target_scopes.each do |scope|
-            %th= sort_link("target_scope_#{scope.id}", picon(scope.icon, title: scope.name))
+            %th= sort_link("target_scope_#{scope.id}", icon(scope.icon, title: scope.name))
 
       %tbody
         - entries.each do |order|
           %tr
             %td
-              %span.title= order.parent_names
+              =order.parent_names
               %br/
-              = link_to order, order
+              %span.title= link_to order, order
             %td
               = order.kind
               %br/
