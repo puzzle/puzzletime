@@ -108,8 +108,8 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.integer  "employee_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.index ["employee_list_id"], :name => "index_employee_lists_employees_on_employee_list_id"
     t.index ["employee_id"], :name => "index_employee_lists_employees_on_employee_id"
+    t.index ["employee_list_id"], :name => "index_employee_lists_employees_on_employee_list_id"
   end
 
   create_table "employees", force: true do |t|
@@ -123,8 +123,8 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.string  "ldapname"
     t.string  "eval_periods",          limit: 3,                              array: true
     t.integer "department_id"
-    t.index ["shortname"], :name => "index_employees_on_shortname", :unique => true
     t.index ["department_id"], :name => "index_employees_on_department_id"
+    t.index ["shortname"], :name => "chk_unique_name", :unique => true
   end
 
   create_table "employees_orders", primary_key: "false", :default => { :expr => "nextval('employees_orders_false_seq'::regclass)" }, force: true do |t|
@@ -254,7 +254,7 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.date "date_from", null: false
     t.date "date_to"
     t.text "message",   null: false
-    t.index ["date_from", "date_to"], :name => "index_user_notifications_dates"
+    t.index ["date_from", "date_to"], :name => "index_user_notifications_on_date_from_and_date_to"
   end
 
   create_table "work_items", force: true do |t|
@@ -285,9 +285,9 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.string  "type"
     t.string  "ticket"
     t.integer "work_item_id"
-    t.index ["work_item_id", "employee_id", "work_date"], :name => "worktimes_work_items"
     t.index ["absence_id", "employee_id", "work_date"], :name => "worktimes_absences"
     t.index ["employee_id", "work_date"], :name => "worktimes_employees"
+    t.index ["work_item_id", "employee_id", "work_date"], :name => "worktimes_work_items"
     t.foreign_key ["absence_id"], "absences", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_times_absences"
     t.foreign_key ["employee_id"], "employees", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_times_employees"
   end

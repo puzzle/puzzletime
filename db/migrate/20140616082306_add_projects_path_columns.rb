@@ -6,6 +6,10 @@ class Project < ActiveRecord::Base
   end
 
   def reset_parent_leaf
+    if parent
+      parent.update_column(:leaf, false)
+      parent.reset_parent_leaf
+    end
   end
 end
 
