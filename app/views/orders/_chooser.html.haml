@@ -3,6 +3,6 @@
 = form_tag(orders_path, method: :get) do
   .col-xs-4
     = select_tag(:id,
-                 options_from_collection_for_select(@choosable_orders, :id, :label_verbose, entry.id),
+                 options_from_collection_for_select(@choosable_orders, :id, :label_verbose, @order.id),
                  id: 'choosable_order_id',
                  class: 'searchable')

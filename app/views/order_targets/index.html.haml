@@ -1,0 +1,6 @@
+- @title ||= ti(:title, models: models_label)
+
+= render 'orders/header'
+
+- entries.each do |target|
+  = render 'fields', target: target

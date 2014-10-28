@@ -14,6 +14,7 @@ class Ability
                     Order,
                     OrderKind,
                     OrderStatus,
+                    OrderTarget,
                     OvertimeVacation,
                     PortfolioItem,
                     TargetScope,
@@ -39,6 +40,7 @@ class Ability
       can [:create, :categories], Client
       can :create, WorkItem
       can :manage, Order, responsible_id: user.id
+      can :manage, OrderTarget, order: { responsible_id: user.id }
       can :manage, AccountingPost
       can :managed, Evaluation
     end
@@ -50,7 +52,7 @@ class Ability
       employee == user
     end
 
-    can :read, Order
+    can [:read, :cockpit], Order
 
     can :manage, Planning
 

@@ -23,7 +23,9 @@ class OrderTarget < ActiveRecord::Base
   validates :rating, inclusion: RATINGS
   validates :comment, presence: { if: :target_critical? }
 
-  scope :list, -> { includes(:target_scope).references(:target_scope).order(target_scopes: :position) }
+  scope :list, -> { includes(:target_scope).
+                    references(:target_scope).
+                    order('target_scopes.position') }
 
   def target_critical?
     rating != RATINGS.first

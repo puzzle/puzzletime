@@ -102,7 +102,7 @@ class OrdersController < ManageController
   end
 
   def index_url
-    order_path(entry)
+    entry.persisted? && !entry.destroyed? ? order_path(entry) : orders_path(returning: true)
   end
 
   def set_clients
