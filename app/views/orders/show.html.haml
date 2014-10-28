@@ -10,6 +10,8 @@
     - if Crm.instance
       = labeled(Crm.instance.crm_key_label, format_attr(entry, :crm_key))
 
+  = render_attrs entry, :employee_ids
+
   = render_attrs entry, :created_at, :updated_at
 
 

@@ -37,11 +37,14 @@ Rails.application.routes.draw do
       get :cockpit
     end
 
+    resources :order_comments, only: [:index, :create]
+    resources :order_targets, only: [:index, :update]
+
     member do
       get :cockpit
       get :targets
       get :bills
-      get :time_corrections
+      get :services, to: 'order_services#index'
     end
   end
 

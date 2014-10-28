@@ -32,14 +32,6 @@ class OrdersController < ManageController
     @cockpit = Order::Cockpit.new(entry)
   end
 
-  def targets
-  end
-
-  def bills
-  end
-
-  def time_corrections
-  end
 
   private
 
@@ -107,6 +99,10 @@ class OrdersController < ManageController
                                    params[:category_work_item_id].presence) ||
                                   params[:client_work_item_id].presence
     end
+  end
+
+  def index_url
+    order_path(entry)
   end
 
   def set_clients
