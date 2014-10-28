@@ -77,7 +77,6 @@
 
   .cockpit-table {
     position: relative;
-    height: 505px;
   }
 
   table.static,
@@ -116,8 +115,7 @@
   }
 
   table.static {
-    position: absolute;
-    left: 0;
+    position: relative;
     z-index: 20;
     @include box-shadow(10px 0 5px -2px rgba(208, 208, 208, 0.4));
 
@@ -127,6 +125,7 @@
   }
   .scrollable {
     position: absolute;
+    top: 0;
     left: 170px;
     right: 0;
     z-index: 10;
