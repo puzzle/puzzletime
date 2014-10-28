@@ -1,6 +1,19 @@
-- @title ||= ti(:title, models: models_label)
+- @title ||= ti(:title, model: models_label)
 
 = render 'orders/header'
 
-- entries.each do |target|
-  = render 'fields', target: target
+%h1.h3= @title
+
+%p
+
+= form_for(@order,
+           url: order_order_targets_path(@order),
+           builder: DryCrud::Form::Builder,
+           html: { role: 'form' }) do |f|
+  .row
+    - entries.each do |target|
+      = f.fields_for :targets, target do |fields|
+        = render 'fields', f: fields
+
+  .form-group
+    //= f.submit_button(ti('button.save'))

@@ -195,7 +195,7 @@ module DryCrud::Form
     end
 
     # Render only a submit button for this form.
-    def submit_action(submit_label = ti('button.save'), cancel_url = nil)
+    def submit_action(submit_label = ti('button.save'))
       content_tag(:div, class: 'form-group') do
         content_tag(:div, class: 'col-md-offset-2 col-md-8') do
           submit_button(submit_label)
