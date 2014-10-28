@@ -106,7 +106,7 @@ class OrdersControllerTest < ActionController::TestCase
                       status_id: order_statuses(:bearbeitung).id }
     end
 
-    assert_redirected_to orders_path(returning: true)
+    assert_redirected_to order_path(assigns(:order))
 
     item = WorkItem.where(name: 'New Order').first
     order = item.order
@@ -119,7 +119,8 @@ class OrdersControllerTest < ActionController::TestCase
   end
 
   test 'PATCH update sets values' do
-    patch :update, id: orders(:puzzletime).id,
+    order = orders(:puzzletime)
+    patch :update, id: order.id,
                    order: {
                      work_item_attributes: {
                        name: 'New Order',
@@ -130,9 +131,9 @@ class OrdersControllerTest < ActionController::TestCase
                      kind_id: order_kinds(:projekt).id,
                      status_id: order_statuses(:bearbeitung).id }
 
-    assert_redirected_to orders_path(returning: true)
+    assert_redirected_to order_path(order)
 
-    order = orders(:puzzletime).reload
+    order.reload
     item = order.work_item
     assert_equal 'New Order', item.name
     assert_equal 'NEO', item.shortname

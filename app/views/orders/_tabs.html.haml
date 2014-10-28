@@ -1,6 +1,6 @@
 %ul.nav.nav-tabs
-  = nav 'Details', order_path(entry)
-  = nav 'Cockpit', cockpit_order_path(entry)
-  = nav 'Journal', order_order_comments_path(entry)
-  = nav 'Ziele', order_order_targets_path(entry)
-  = nav 'Leistungen', services_order_path(entry)
+  = nav 'Details', order_path(@order)
+  = nav 'Cockpit', cockpit_order_path(@order) if can?(:cockpit, @order)
+  = nav 'Journal', order_order_comments_path(@order) if can?(:comments, @order)
+  = nav 'Ziele', order_order_targets_path(@order) if can?(:targets, @order)
+  = nav 'Leistungen', services_order_path(@order) if can?(:services, @order)
