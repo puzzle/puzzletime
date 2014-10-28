@@ -23,7 +23,7 @@ ActiveRecord::Schema.define(version: 20140714093557) do
   end
 
   create_table "accounting_posts", force: true do |t|
-    t.integer "work_item_id",                         null: false
+    t.integer "work_item_id",                                                  null: false
     t.integer "portfolio_item_id"
     t.string  "reference"
     t.integer "offered_hours"
@@ -32,11 +32,10 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.integer "discount_percent"
     t.integer "discount_fixed"
     t.integer "remaining_hours"
-    t.string  "report_type"
-    t.boolean "billable",             default: true,  null: false
-    t.boolean "description_required", default: false, null: false
-    t.boolean "ticket_required",      default: false, null: false
-    t.boolean "closed",               default: false, null: false
+    t.boolean "billable",                                      default: true,  null: false
+    t.boolean "description_required",                          default: false, null: false
+    t.boolean "ticket_required",                               default: false, null: false
+    t.boolean "closed",                                        default: false, null: false
     t.index ["portfolio_item_id"], :name => "index_accounting_posts_on_portfolio_item_id"
     t.index ["work_item_id"], :name => "index_accounting_posts_on_work_item_id"
   end
@@ -54,9 +53,7 @@ ActiveRecord::Schema.define(version: 20140714093557) do
   end
 
   create_table "clients", force: true do |t|
-    t.string  "name"
-    t.string  "shortname"
-    t.integer "work_item_id"
+    t.integer "work_item_id", null: false
     t.string  "crm_key"
   end
 
@@ -203,7 +200,6 @@ ActiveRecord::Schema.define(version: 20140714093557) do
 
   create_table "plannings", force: true do |t|
     t.integer  "employee_id",                     null: false
-    t.integer  "project_id"
     t.integer  "start_week",                      null: false
     t.integer  "end_week"
     t.boolean  "definitive",      default: false, null: false
@@ -228,37 +224,6 @@ ActiveRecord::Schema.define(version: 20140714093557) do
   create_table "portfolio_items", force: true do |t|
     t.string  "name",                  null: false
     t.boolean "active", default: true, null: false
-  end
-
-  create_table "projectmemberships", force: true do |t|
-    t.integer "project_id",                        null: false
-    t.integer "employee_id",                       null: false
-    t.boolean "projectmanagement", default: false, null: false
-    t.boolean "active",            default: true,  null: false
-  end
-
-  create_table "projects", force: true do |t|
-    t.integer "client_id"
-    t.string  "name",                                                 null: false
-    t.text    "description"
-    t.boolean "billable",                           default: true
-    t.string  "report_type",                        default: "month"
-    t.boolean "description_required",               default: false
-    t.string  "shortname",             limit: 3,                      null: false
-    t.float   "offered_hours"
-    t.integer "parent_id"
-    t.integer "department_id"
-    t.integer "path_ids",                                                          array: true
-    t.date    "freeze_until"
-    t.boolean "ticket_required",                    default: false
-    t.string  "path_shortnames"
-    t.string  "path_names",            limit: 2047
-    t.boolean "leaf",                               default: true,    null: false
-    t.text    "inherited_description"
-    t.index ["client_id"], :name => "index_projects_on_client_id"
-    t.foreign_key ["client_id"], "clients", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_projects_clients"
-    t.foreign_key ["department_id"], "departments", ["id"], :on_update => :no_action, :on_delete => :set_null, :name => "fk_project_department"
-    t.foreign_key ["parent_id"], "projects", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_project_parent"
   end
 
   create_table "target_scopes", force: true do |t|
@@ -288,7 +253,6 @@ ActiveRecord::Schema.define(version: 20140714093557) do
   end
 
   create_table "worktimes", force: true do |t|
-    t.integer "project_id"
     t.integer "absence_id"
     t.integer "employee_id"
     t.string  "report_type",                     null: false
@@ -304,10 +268,8 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.integer "work_item_id"
     t.index ["absence_id", "employee_id", "work_date"], :name => "worktimes_absences", :conditions => "((type)::text = 'Absencetime'::text)"
     t.index ["employee_id", "work_date"], :name => "worktimes_attendances", :conditions => "((type)::text = 'Attendancetime'::text)"
-    t.index ["project_id", "employee_id", "work_date"], :name => "worktimes_projects", :conditions => "((type)::text = 'Projecttime'::text)"
     t.foreign_key ["absence_id"], "absences", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_times_absences"
     t.foreign_key ["employee_id"], "employees", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_times_employees"
-    t.foreign_key ["project_id"], "projects", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_times_projects"
   end
 
 end
