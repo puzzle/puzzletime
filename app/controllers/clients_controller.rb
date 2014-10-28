@@ -5,7 +5,7 @@
 
 class ClientsController < ManageController
 
-  self.search_columns = [:name, :shortname]
+  self.search_columns = ['work_items.name', 'work_items.shortname']
 
   self.permitted_attrs = [:crm_key, work_item_attributes: [:name, :shortname, :description]]
 

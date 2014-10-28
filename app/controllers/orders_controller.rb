@@ -1,4 +1,4 @@
-class OrdersController < ManageController
+class OrdersController < CrudController
 
   self.permitted_attrs = [:crm_key, :kind_id, :responsible_id, :department_id, :status_id,
                           work_item_attributes: [:name, :shortname, :description],
