@@ -58,12 +58,17 @@ class CreateErpTables < ActiveRecord::Migration
       t.string :name, null: false
     end
 
+    add_index :order_kinds, :name, unique: true
+
     create_table :order_statuses do |t|
       t.string :name, null: false
       t.string :style
       t.boolean :closed, null: false, default: false
       t.integer :position, null: false
     end
+
+    add_index :order_statuses, :name, unique: true
+    add_index :order_statuses, :position
 
     create_table :order_comments do |t|
       t.belongs_to :order, null: false
@@ -80,6 +85,9 @@ class CreateErpTables < ActiveRecord::Migration
       t.string :icon
       t.integer :position, null: false
     end
+
+    add_index :target_scopes, :name, unique: true
+    add_index :target_scopes, :position
 
     create_table :order_targets do |t|
       t.belongs_to :order, null: false
@@ -150,6 +158,8 @@ class CreateErpTables < ActiveRecord::Migration
       t.boolean :active, null: false, default: true
     end
 
+    add_index :portfolio_items, :name, unique: true
+
     create_table :work_items do |t|
       t.belongs_to :parent
       t.string :name, null: false
@@ -185,13 +195,37 @@ class CreateErpTables < ActiveRecord::Migration
     add_index :accounting_posts, :portfolio_item_id
 
     add_column :clients, :work_item_id, :integer
+    add_index :clients, :work_item_id
+
     add_column :clients, :crm_key, :string
 
     add_column :employees, :department_id, :integer
+    add_index :employees, :department_id
 
     add_column :worktimes, :work_item_id, :integer
+    add_column :worktimes, :absence_id, :integer
+
+    remove_index :worktimes, name: 'worktimes_absences'
+    add_index :worktimes,
+              ["work_item_id", "employee_id", "work_date"],
+              name: "worktimes_work_items"
+    add_index :worktimes,
+              ["absence_id", "employee_id", "work_date"],
+              name: "worktimes_absences"
 
     add_column :plannings, :work_item_id, :integer
+    add_index :plannings, :work_item_id
+    add_index :plannings, :employee_id
+
+    add_index :absences, :name, unique: true
+    add_index :departments, :name, unique: true
+    add_index :departments, :shortname, unique: true
+    add_index :employee_lists, :employee_id
+    add_index :employee_lists_employees, :employee_list_id
+    add_index :employee_lists_employees, :employee_id
+    add_index :holidays, :holiday_date, unique: true
+    add_index :overtime_vacations, :employee_id
+    add_index :user_notifications, [:date_from, :date_to]
 
     add_column :projects, :work_item_id, :integer # just temporary to simplify the migration
 

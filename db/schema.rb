@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.string  "name",                    null: false
     t.boolean "payed",   default: false
     t.boolean "private", default: false
+    t.index ["name"], :name => "index_absences_on_name", :unique => true
   end
 
   create_table "accounting_posts", force: true do |t|
@@ -55,6 +56,7 @@ ActiveRecord::Schema.define(version: 20140714093557) do
   create_table "clients", force: true do |t|
     t.integer "work_item_id", null: false
     t.string  "crm_key"
+    t.index ["work_item_id"], :name => "index_clients_on_work_item_id"
   end
 
   create_table "contacts", force: true do |t|
@@ -89,6 +91,8 @@ ActiveRecord::Schema.define(version: 20140714093557) do
   create_table "departments", force: true do |t|
     t.string "name",                null: false
     t.string "shortname", limit: 3, null: false
+    t.index ["name"], :name => "index_departments_on_name", :unique => true
+    t.index ["shortname"], :name => "index_departments_on_shortname", :unique => true
   end
 
   create_table "employee_lists", force: true do |t|
@@ -96,6 +100,7 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.string   "title",       null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["employee_id"], :name => "index_employee_lists_on_employee_id"
   end
 
   create_table "employee_lists_employees", id: false, force: true do |t|
@@ -103,6 +108,8 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.integer  "employee_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["employee_list_id"], :name => "index_employee_lists_employees_on_employee_list_id"
+    t.index ["employee_id"], :name => "index_employee_lists_employees_on_employee_id"
   end
 
   create_table "employees", force: true do |t|
@@ -116,7 +123,8 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.string  "ldapname"
     t.string  "eval_periods",          limit: 3,                              array: true
     t.integer "department_id"
-    t.index ["shortname"], :name => "chk_unique_name", :unique => true
+    t.index ["shortname"], :name => "index_employees_on_shortname", :unique => true
+    t.index ["department_id"], :name => "index_employees_on_department_id"
   end
 
   create_table "employees_orders", primary_key: "false", :default => { :expr => "nextval('employees_orders_false_seq'::regclass)" }, force: true do |t|
@@ -138,6 +146,7 @@ ActiveRecord::Schema.define(version: 20140714093557) do
   create_table "holidays", force: true do |t|
     t.date  "holiday_date",  null: false
     t.float "musthours_day", null: false
+    t.index ["holiday_date"], :name => "index_holidays_on_holiday_date", :unique => true
   end
 
   create_table "order_comments", force: true do |t|
@@ -152,6 +161,7 @@ ActiveRecord::Schema.define(version: 20140714093557) do
 
   create_table "order_kinds", force: true do |t|
     t.string "name", null: false
+    t.index ["name"], :name => "index_order_kinds_on_name", :unique => true
   end
 
   create_table "order_statuses", force: true do |t|
@@ -159,6 +169,8 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.string  "style"
     t.boolean "closed",   default: false, null: false
     t.integer "position",                 null: false
+    t.index ["name"], :name => "index_order_statuses_on_name", :unique => true
+    t.index ["position"], :name => "index_order_statuses_on_position"
   end
 
   create_table "order_targets", force: true do |t|
@@ -196,6 +208,7 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.float   "hours",         null: false
     t.integer "employee_id",   null: false
     t.date    "transfer_date", null: false
+    t.index ["employee_id"], :name => "index_overtime_vacations_on_employee_id"
   end
 
   create_table "plannings", force: true do |t|
@@ -219,23 +232,29 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.boolean  "is_abstract"
     t.decimal  "abstract_amount"
     t.integer  "work_item_id",                    null: false
+    t.index ["employee_id"], :name => "index_plannings_on_employee_id"
+    t.index ["work_item_id"], :name => "index_plannings_on_work_item_id"
   end
 
   create_table "portfolio_items", force: true do |t|
     t.string  "name",                  null: false
     t.boolean "active", default: true, null: false
+    t.index ["name"], :name => "index_portfolio_items_on_name", :unique => true
   end
 
   create_table "target_scopes", force: true do |t|
     t.string  "name",     null: false
     t.string  "icon"
     t.integer "position", null: false
+    t.index ["name"], :name => "index_target_scopes_on_name", :unique => true
+    t.index ["position"], :name => "index_target_scopes_on_position"
   end
 
   create_table "user_notifications", force: true do |t|
     t.date "date_from", null: false
     t.date "date_to"
     t.text "message",   null: false
+    t.index ["date_from", "date_to"], :name => "index_user_notifications_dates"
   end
 
   create_table "work_items", force: true do |t|
@@ -266,8 +285,9 @@ ActiveRecord::Schema.define(version: 20140714093557) do
     t.string  "type"
     t.string  "ticket"
     t.integer "work_item_id"
-    t.index ["absence_id", "employee_id", "work_date"], :name => "worktimes_absences", :conditions => "((type)::text = 'Absencetime'::text)"
-    t.index ["employee_id", "work_date"], :name => "worktimes_attendances", :conditions => "((type)::text = 'Attendancetime'::text)"
+    t.index ["work_item_id", "employee_id", "work_date"], :name => "worktimes_work_items"
+    t.index ["absence_id", "employee_id", "work_date"], :name => "worktimes_absences"
+    t.index ["employee_id", "work_date"], :name => "worktimes_employees"
     t.foreign_key ["absence_id"], "absences", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_times_absences"
     t.foreign_key ["employee_id"], "employees", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_times_employees"
   end
