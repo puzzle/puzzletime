@@ -2,7 +2,7 @@
 
 require 'test_helper'
 
-class ChosseOrderTest < ActionDispatch::IntegrationTest
+class ChooseOrderTest < ActionDispatch::IntegrationTest
 
   setup :login
 
@@ -15,12 +15,12 @@ class ChosseOrderTest < ActionDispatch::IntegrationTest
   end
 
   test 'keeps current tab when changing orders' do
-    click_link 'Ziele'
-    assert_equal targets_order_path(order), current_path
+    click_link 'Cockpit'
+    assert_equal cockpit_order_path(order), current_path
 
     selectize('choosable_order_id', 'Demo')
-    assert_equal targets_order_path(orders(:hitobito_demo)), current_path
-    assert page.has_selector?('li.active', text: 'Ziele')
+    assert_equal cockpit_order_path(orders(:hitobito_demo)), current_path
+    assert page.has_selector?('li.active', text: 'Cockpit')
   end
 
   private
