@@ -175,7 +175,6 @@ class CreateErpTables < ActiveRecord::Migration
       t.integer :discount_percent
       t.integer :discount_fixed
       t.integer :remaining_hours
-      t.string :report_type # TODO: remove
       t.boolean :billable, null: false, default: true
       t.boolean :description_required, null: false, default: false
       t.boolean :ticket_required, null: false, default: false
@@ -196,6 +195,8 @@ class CreateErpTables < ActiveRecord::Migration
 
     add_column :projects, :work_item_id, :integer # just temporary to simplify the migration
 
+    Planning.reset_column_information
+
     if Client.column_names.include?('contact')
       remove_column :clients, :contact
     end
@@ -215,38 +216,53 @@ class CreateErpTables < ActiveRecord::Migration
 
     TargetScope.create!(name: 'Kosten', icon: 'usd', position: 10)
     TargetScope.create!(name: 'Termin', icon: 'time', position: 20)
-    TargetScope.create!(name: 'Qualität', icon: 'star-empty', position: 30)
+    TargetScope.create!(name: 'Qualität', icon: 'heart-empty', position: 30)
 
     # rename projecttime to ordertime
     Worktime.where(type: 'Projecttime').update_all(type: 'Ordertime')
 
     migrate_projects_to_work_items
 
-    remove_column :projects, :work_item_id
-
-    # remove_column :plannings, :project_id
-    change_column :plannings, :project_id, :integer, null: true
+    remove_column :plannings, :project_id
     change_column :plannings, :work_item_id, :integer, null: false
 
-    # remove_column :worktimes, :project_id
+    remove_column :worktimes, :project_id
 
-    # remove_column :clients, :name
-    # remove_column :clients, :shortname
-    # change_column :clients, :work_item_id, :integer, null: false
-    change_column :clients, :name, :string, null: true
-    change_column :clients, :shortname, :string, null: true
+    remove_column :clients, :name
+    remove_column :clients, :shortname
+    change_column :clients, :work_item_id, :integer, null: false
 
-    # drop_table :projects, :accounting_posts
-    # drop_table :projectmemberships
+    drop_table :projectmemberships
+    drop_table :projects
   end
 
   def down
-    #create_table :projectmemberships do |t|
-    #  t.integer :project_id, null: false
-    #  t.integer :employee_id, null: false
-    #  t.boolean :projectmanagement, null: false, default: false
-    #  t.boolean :active, null: false, default: true
-    #end
+    create_table :projectmemberships do |t|
+      t.integer :project_id, null: false
+      t.integer :employee_id, null: false
+      t.boolean :projectmanagement, null: false, default: false
+      t.boolean :active, null: false, default: true
+    end
+
+    create_table :projects do |t|
+      t.integer "client_id"
+      t.string  "name",                                                 null: false
+      t.text    "description"
+      t.boolean "billable",                           default: true
+      t.string  "report_type",                        default: "month"
+      t.boolean "description_required",               default: false
+      t.string  "shortname",             limit: 3,                      null: false
+      t.float   "offered_hours"
+      t.integer "parent_id"
+      t.integer "department_id"
+      t.integer "path_ids",                                                          array: true
+      t.date    "freeze_until"
+      t.boolean "ticket_required",                    default: false
+      t.string  "path_shortnames"
+      t.string  "path_names",            limit: 2047
+      t.boolean "leaf",                               default: true,    null: false
+      t.text    "inherited_description"
+    end
 
     # rename ordertime to projecttime
     Worktime.where(type: 'Ordertime').update_all(type: 'Projecttime')
@@ -260,11 +276,9 @@ class CreateErpTables < ActiveRecord::Migration
 
     remove_column :plannings, :work_item_id
 
-    # add_column :worktimes, :project_id, :integer
+    add_column :worktimes, :project_id, :integer
 
-    # add_column :plannings, :project_id, :integer
-
-    # create_table :projects
+    add_column :plannings, :project_id, :integer
 
     drop_table :accounting_posts
     drop_table :work_items
@@ -375,6 +389,9 @@ class CreateErpTables < ActiveRecord::Migration
                               description: project[:description],
                               leaf: leaf)
     project.save!
+  rescue
+    p project
+    raise
   end
 
   def create_order!(project)

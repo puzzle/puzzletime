@@ -1,3 +1,14 @@
+# define deleted models that are used in the migration
+class Project < ActiveRecord::Base
+  belongs_to :parent, class_name: 'Project'
+
+  def update_path_names!
+  end
+
+  def reset_parent_leaf
+  end
+end
+
 class AddProjectsPathColumns < ActiveRecord::Migration
   def up
     add_column :projects, :path_shortnames, :string
