@@ -203,15 +203,18 @@ class CreateErpTables < ActiveRecord::Migration
     add_index :employees, :department_id
 
     add_column :worktimes, :work_item_id, :integer
-    add_column :worktimes, :absence_id, :integer
 
     remove_index :worktimes, name: 'worktimes_absences'
+    remove_index :worktimes, name: 'worktimes_attendances'
     add_index :worktimes,
               ["work_item_id", "employee_id", "work_date"],
               name: "worktimes_work_items"
     add_index :worktimes,
               ["absence_id", "employee_id", "work_date"],
               name: "worktimes_absences"
+    add_index :worktimes,
+              ["employee_id", "work_date"],
+              name: "worktimes_employees"
 
     add_column :plannings, :work_item_id, :integer
     add_index :plannings, :work_item_id
@@ -355,7 +358,8 @@ class CreateErpTables < ActiveRecord::Migration
 
   def add_work_items_for_projects
     count = Project.count(leaf: true)
-    Project.where(leaf: true).each_with_index do |project, index|
+    index = 0
+    Project.where(leaf: true).find_each do |project|
       say "   (#{index}/#{count})" if index > 0 && index % 50 == 0
       case project.path_ids.size
       when 1
@@ -370,6 +374,7 @@ class CreateErpTables < ActiveRecord::Migration
 
       # migrate ordertime project ids
       Ordertime.where(project_id: project.id).update_all(work_item_id: project.work_item.id)
+      index += 1
     end
 
     assert_all_entries_have_work_items(Project)
@@ -425,6 +430,7 @@ class CreateErpTables < ActiveRecord::Migration
     project.save!
   rescue
     p project
+    p parent_work_item
     raise
   end
 
