@@ -14,13 +14,18 @@ module OrderHelper
     safe_join(employees, ', ') { |e| link_to(e, e) }
   end
 
+  def order_target_rating_icon(rating, options = {})
+    options[:style] ||= 'font-size: 20px;'
+    add_css_class(options, rating)
+    picon(order_target_icon_key(rating), options)
+  end
+
   def order_target_icon(target)
     return unless target
-    picon(order_target_icon_key(target),
-          style: 'font-size: 20px;',
-          class: target.rating,
-          title: target.comment? ? simple_format(target.comment) : nil,
-          data: { toggle: :tooltip })
+    order_target_rating_icon(
+      target.rating,
+      title: target.comment? ? simple_format(target.comment) : nil,
+      data: { toggle: :tooltip })
   end
 
   def order_filter_select(name, label, list)
@@ -35,8 +40,8 @@ module OrderHelper
     end + ' &nbsp; &nbsp; '.html_safe
   end
 
-  def order_target_icon_key(target)
-    case target.rating
+  def order_target_icon_key(rating)
+    case rating
     when 'green' then 'disk'
     when 'orange' then 'triangle'
     when 'red' then 'square'

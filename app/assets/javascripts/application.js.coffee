@@ -12,6 +12,7 @@
 #= require waypoints-sticky
 #= require bootstrap/modal
 #= require bootstrap/tooltip
+#= require bootstrap/button
 #= require_self
 #= require modal_create
 #= require worktimes
@@ -77,6 +78,9 @@ $ ->
   $('body').on('change', '[data-submit]', (event) ->
     $(this).closest('form').submit()
   )
+
+  # wire up toggle buttons
+  $('[data-toggle=buttons]').button()
 
   # wire up ajax button with spinners
   $('body').on('ajax:beforeSend', '[data-spin]', (event, xhr, settings) ->

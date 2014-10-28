@@ -1,1 +1,15 @@
-.order-target
+.order-target.col-md-3
+  .form-group
+    .btn-toolbar
+      .btn-group.btn-group-justified{data: { toggle: 'buttons' }}
+        .btn-group.center= icon(f.object.target_scope.icon,
+                                style: 'font-size: 20px;',
+                                title: f.object.target_scope.name)
+
+        - OrderTarget::RATINGS.each do |rating|
+          %label.btn.btn-default{class: "#{'active' if f.object.rating == rating}"}
+            = f.radio_button :rating, rating
+            = order_target_rating_icon(rating)
+
+  .form-group
+    = f.text_area(:comment)
