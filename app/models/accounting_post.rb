@@ -40,6 +40,10 @@ class AccountingPost < ActiveRecord::Base
     end
   end
 
+  def to_s
+    work_item.label_verbose
+  end
+
   private
 
   def derive_offered_fields

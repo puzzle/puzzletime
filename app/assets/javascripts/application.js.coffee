@@ -20,6 +20,7 @@
 #= require work_item_autocomplete
 #= require planning
 #= require orders
+#= require accounting_posts
 #= require turbolinks
 
 
