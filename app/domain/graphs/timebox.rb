@@ -44,7 +44,7 @@ class Timebox
   end
 
   def tooltip_for(worktime)
-    worktime.time_string + ': ' + worktime.account.label
+    Timebox.format_hour(worktime.hours) + ' h: ' + worktime.account.label
   end
 
 end
