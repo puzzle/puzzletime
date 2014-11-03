@@ -1,53 +1,26 @@
-= crud_form cancel_url: cockpit_order_path(id: order.id, returning: true) do |f|
+- @title ||= "Buchungsposition für #{order.name}"
+
+= crud_form cancel_url: cockpit_order_path(id: order.id, returning: true) do |form|
   = hidden_field_tag(:order_id, order.id)
-  -unless order_has_other_accounting_posts(entry, order)
-    .form-group
-      %label.col-md-2.control-label
-        Direkt auf Auftrag buchen
-      .col-md-5
-        .radio
-          = radio_button_tag(:book_on_order, true, book_on_order?(entry, order))
-    .form-group
-      %label.col-md-2.control-label
-        Buchungsposition hinzufügen
-      .col-md-5
-        .radio
-          = radio_button_tag(:book_on_order, false, !book_on_order?(entry, order))
+  = render 'book_on_order_radio', form: form if book_on_order_allowed?
   #work_item_fields
-    = f.fields_for :work_item, entry.work_item do |fields|
+    = form.fields_for :work_item, entry.work_item do |fields|
       = render 'work_items/fields', fields: fields
   %hr
   .form-group
-    = f.label(:closed, "Status", class: 'col-md-2 control-label')
+    = form.label(:closed, "Status", class: 'col-md-2 control-label')
     .col-md-5
       .checkbox
         %label
-          = f.check_box :closed
+          = form.check_box :closed
           Geschlossen
 
-  .form-group
-    = f.label(:budget, "Budget", class: 'col-md-2 control-label')
-    = f.label(:offered_hours, "Stunden", class: 'col-md-1 control-label')
-    .col-md-1
-      = f.input_field :offered_hours
-    = f.label :offered_days, "Tage", class: 'col-md-1 control-label'
-    .col-md-2
-      = f.input_field :offered_days, value: days_from_hours(entry.offered_hours)
-  .form-group
-    .col-md-2
-    = f.label :offered_rate, "CHF/Std.", class: 'col-md-1 control-label'
-    .col-md-1
-      = f.input_field :offered_hours
-    = f.label :offered_total, "Total", class: 'col-md-1 control-label'
-    .col-md-2
-      .input-group
-        = f.input_field :offered_total, value: days_from_hours(entry.offered_hours)
-        .input-group-addon
-          CHF
+  = render 'budget_fields', form: form
+  = render 'discount_fields', form: form
 
-  = f.labeled_input_field :portfolio_item_id, caption: 'Portfolio', span: 2
-  = f.labeled_input_field :reference, caption: 'Bestellposition'
-  = f.labeled_input_field :billable, caption: 'Budgetposition ist verrechenbar'
-  = f.labeled_input_field :description_required, caption: 'Beschreibung obligatorisch'
-  = f.labeled_input_field :ticket_required, caption: 'Ticket obligatorisch'
+  = form.labeled_input_field :portfolio_item_id, caption: 'Portfolio', span: 2
+  = form.labeled_input_field :reference, caption: 'Bestellposition'
+  = form.labeled_input_field :billable, caption: 'Budgetposition ist verrechenbar'
+  = form.labeled_input_field :description_required, caption: 'Beschreibung obligatorisch'
+  = form.labeled_input_field :ticket_required, caption: 'Ticket obligatorisch'
 

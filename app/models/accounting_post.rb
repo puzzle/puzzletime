@@ -22,11 +22,14 @@ class AccountingPost < ActiveRecord::Base
   include BelongingToWorkItem
   include Closable
 
+  ### ASSOCIATIONS
+
   belongs_to :portfolio_item
 
   has_ancestor_through_work_item :order
   has_ancestor_through_work_item :client
 
+  ### VALIDATIONS
 
   before_validation :derive_offered_fields
 
@@ -38,6 +41,20 @@ class AccountingPost < ActiveRecord::Base
     if worktime.report_type != AutoStartType::INSTANCE && ticket_required? && worktime.ticket.blank?
       worktime.errors.add(:ticket, 'Es muss ein Ticket angegeben werden')
     end
+  end
+
+  ### INSTANCE METHODS
+
+  def booked_on_order?
+    order.present? && work_item_id == order.work_item_id
+  end
+
+  def offered_days
+    offered_hours.to_f / Settings.must_hours_per_day
+  end
+
+  def no_discount?
+    !(discount_fixed? || discount_percent?)
   end
 
   def to_s

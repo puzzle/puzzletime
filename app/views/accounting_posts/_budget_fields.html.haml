@@ -1,0 +1,19 @@
+.form-group
+  = form.label(:budget, "Budget", class: 'col-md-2 control-label')
+  = form.label(:offered_hours, "Stunden", class: 'col-md-1 control-label')
+  .col-md-1
+    = form.input_field :offered_hours
+  = form.label :offered_days, "Tage", class: 'col-md-1 control-label'
+  .col-md-2
+    = form.input_field :offered_days, value: entry.offered_days, data: {hours_per_day: Settings.must_hours_per_day}
+.form-group
+  .col-md-2
+  = form.label :offered_rate, "CHF/Std.", class: 'col-md-1 control-label'
+  .col-md-1
+    = form.input_field :offered_rate
+  = form.label :offered_total, "Total", class: 'col-md-1 control-label'
+  .col-md-2
+    .input-group
+      = form.input_field :offered_total, value: entry.offered_total
+      .input-group-addon
+        CHF

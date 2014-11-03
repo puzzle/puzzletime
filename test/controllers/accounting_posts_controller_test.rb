@@ -48,7 +48,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
     assert_no_difference "AccountingPost.count" do
       delete :destroy, id: accounting_posts(:puzzletime).id
     end
-    assert_redirected_to controller: :orders, action: :cockpit, id: orders(:puzzletime), returning: 'true'
+    assert_redirected_to controller: :orders, action: :cockpit, id: orders(:puzzletime)
     assert_match(/kann nicht gelöscht werden/, flash[:alert])
   end
 
@@ -57,7 +57,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
     assert_difference "AccountingPost.count", -1 do
       delete :destroy, id: accounting_posts(:puzzletime).id
     end
-    assert_redirected_to controller: :orders, action: :cockpit, id: orders(:puzzletime), returning: 'true'
+    assert_redirected_to controller: :orders, action: :cockpit, id: orders(:puzzletime)
     assert flash[:alert].blank?
   end
 
@@ -77,7 +77,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
         post :create, book_on_order: 'true', order_id: orders(:hitobito_demo), accounting_post: { reference: 'asdf' }
       end
     end
-    assert_redirected_to controller: :orders, action: :cockpit, id: orders(:hitobito_demo), returning: 'true'
+    assert_redirected_to controller: :orders, action: :cockpit, id: orders(:hitobito_demo)
     assert_match(/erfolgreich erstellt/, flash[:notice])
     assert AccountingPost.last.work_item_id = orders(:hitobito_demo).work_item_id
   end
@@ -89,11 +89,41 @@ class AccountingPostsControllerTest < ActionController::TestCase
              accounting_post: { work_item_attributes: { name: 'TEST', shortname: 'TST' }}
       end
     end
-    assert_redirected_to controller: :orders, action: :cockpit, id: orders(:hitobito_demo), returning: 'true'
+    assert_redirected_to controller: :orders, action: :cockpit, id: orders(:hitobito_demo)
     assert_match(/erfolgreich erstellt/, flash[:notice])
     new_work_item = AccountingPost.last.work_item
     assert new_work_item.parent_id = orders(:hitobito_demo).work_item_id
     assert_equal new_work_item.attributes.slice('name', 'shortname'), {'name' => 'TEST', 'shortname' => 'TST'}
+  end
+
+  test 'CREATE sets the attributes' do
+    attributes = {
+        order_id: orders(:hitobito_demo),
+        accounting_post: {
+              work_item_attributes: { name: 'TEST', shortname: 'TST' },
+              closed: 'true',
+              offered_hours: 80,
+              offered_rate: 42,
+              discount_percent: 11,
+              portfolio_item_id: portfolio_items(:mobile).id,
+              reference: 'dummy-reference',
+              billable: true,
+              description_required: true,
+              ticket_required: true
+        }
+    }
+
+    assert_difference "AccountingPost.count", +1 do
+      post :create, attributes
+    end
+    accounting_post = assigns(:accounting_post)
+    attributes[:accounting_post].except(:work_item_attributes).each do |k,v|
+      assert_equal v.to_s, accounting_post.send(k).to_s, "accounting_post.#{k} should eq #{v}"
+    end
+    attributes[:accounting_post][:work_item_attributes].each do |k,v|
+      assert_equal v.to_s, accounting_post.work_item.send(k).to_s, "accounting_post.work_item.#{k} should eq #{v}"
+    end
+
   end
 
   test 'PATCH update with book_on_order true when other accounting_post exists' do
@@ -113,7 +143,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
       assert_difference "WorkItem.count", -1 do
         assert_no_difference "Worktime.count" do
           patch :update, book_on_order: 'true', id: accounting_posts(:hitobito_demo_app), accounting_post: { reference: 'asdf' }
-          assert_redirected_to controller: :orders, action: :cockpit, id: orders(:hitobito_demo), returning: 'true'
+          assert_redirected_to controller: :orders, action: :cockpit, id: orders(:hitobito_demo)
           assert_match(/erfolgreich aktualisiert/, flash[:notice])
         end
       end
@@ -128,7 +158,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
         assert_no_difference "Worktime.count" do
           patch :update, book_on_order: 'false', id: accounting_posts(:puzzletime),
                 accounting_post: { work_item_attributes: { name: 'Refactoring', shortname: 'RFT' } }
-          assert_redirected_to controller: :orders, action: :cockpit, id: orders(:puzzletime), returning: 'true'
+          assert_redirected_to controller: :orders, action: :cockpit, id: orders(:puzzletime)
           assert_match(/erfolgreich aktualisiert/, flash[:notice])
         end
       end

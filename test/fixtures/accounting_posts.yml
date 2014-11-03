@@ -22,6 +22,9 @@ allgemein:
 
 puzzletime:
   work_item_id: 4
+  offered_hours: 100
+  offered_rate: 3
+  discount_percent: 7
 
 hitobito_demo_app:
   work_item_id: 9

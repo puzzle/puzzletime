@@ -5,46 +5,30 @@ class AccountingPostsController < CrudController
                           :portfolio_item_id, :reference, :billable, :description_required, :ticket_required,
                           work_item_attributes: [:name, :shortname, :description]]
 
-  before_action :set_order
+  before_filter :order # make sure order is initialized before destroy/accessing in template
+  before_save :check_book_on_order
   before_update :remember_old_work_item_id
   after_update :move_work_times
 
-  helper_method :order
-
-  def create
-    create_update(:create)
-  end
-
-  def update
-    create_update(:update)
-  end
-
-  def destroy
-    super(location: cockpit_order_path(id: order.id, returning: true))
-  end
+  helper_method :order, :book_on_order_allowed?
 
   private
 
-  attr_reader :order, :old_work_item_id
+  attr_reader :old_work_item_id
 
-  def create_update(action)
-    assign_attributes
-    options = {}
+  def index_url
+    cockpit_order_path(id: order.id)
+  end
+
+  def check_book_on_order
     if book_on_order_requested? && !book_on_order_allowed?
       flash[:alert] = "'Direkt auf Auftrag buchen' gewählt, aber es existieren bereits (andere) Buchungspositionen"
-      options[:success] = false
-      options[:location] = new_accounting_post_path(order_id: order.id)
-    else
-      options[:success] = with_callbacks(action.to_sym, :save) { entry.save }
-      options[:location] = cockpit_order_path(id: order.id, returning: true)
+      false
     end
-    respond_with(entry, options)
   end
 
   def build_entry
-    accounting_post = super
-    accounting_post.build_work_item
-    accounting_post
+    super.tap { |p| p.build_work_item }
   end
 
   def book_on_order_requested?
@@ -52,7 +36,7 @@ class AccountingPostsController < CrudController
   end
 
   def book_on_order_allowed?
-    order.accounting_posts.count == 0 || order.accounting_posts.to_a == [entry]
+    [[], [entry.id]].include?(order.accounting_posts.pluck(:id))
   end
 
   def book_on_order?
@@ -60,7 +44,7 @@ class AccountingPostsController < CrudController
   end
 
   def book_on_order_change?
-    book_on_order? ^ (entry.work_item_id == order.work_item_id)
+    book_on_order? ^ (entry.booked_on_order?)
   end
 
   def assign_attributes
@@ -68,13 +52,9 @@ class AccountingPostsController < CrudController
       entry.work_item = book_on_order? ? order.work_item : WorkItem.new(work_item_attributes)
     else
       if book_on_order_change?
-        if book_on_order?
-          entry.work_item = order.work_item
-        else
-          entry.work_item = WorkItem.new(work_item_attributes)
-        end
-      else
-        entry.attributes = model_params.slice(:work_item_attributes) unless book_on_order?
+        entry.work_item = book_on_order? ? order.work_item : WorkItem.new(work_item_attributes)
+      elsif !book_on_order?
+        entry.attributes = model_params.slice(:work_item_attributes)
       end
     end
     entry.attributes = model_params.except(:work_item_attributes)
@@ -85,8 +65,8 @@ class AccountingPostsController < CrudController
     (model_params[:work_item_attributes] || {}).merge(parent_id: parent_id)
   end
 
-  def set_order
-    @order = entry.new_record? ? Order.find(params.require(:order_id)) : entry.order
+  def order
+    @order ||= entry.new_record? ? Order.find(params.require(:order_id)) : entry.order
   end
 
   def remember_old_work_item_id
