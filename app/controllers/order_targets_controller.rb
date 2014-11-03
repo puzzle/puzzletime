@@ -26,7 +26,8 @@ class OrderTargetsController < ApplicationController
   end
 
   def target_params(target)
-    params.require(:order).require("target_#{target.id}").permit(:rating, :comment)
+    p = params.require(:order)["target_#{target.id}"]
+    p ? p.permit(:rating, :comment) : {}
   end
 
   def set_order
