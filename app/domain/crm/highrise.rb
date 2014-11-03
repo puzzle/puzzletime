@@ -1,8 +1,11 @@
 module Crm
   class Highrise < Base
 
+    include ActionView::Helpers::AssetUrlHelper
+
     def crm_key_label
-      '<img src="/assets/highrise.png" width="19" height="16" /> Highrise ID'.html_safe
+      src = ActionController::Base.helpers.image_path("highrise.png")
+      "<img src=\"#{src}\" width=\"19\" height=\"16\" /> Highrise ID".html_safe
     end
 
     def find_order(key)
