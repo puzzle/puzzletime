@@ -109,6 +109,9 @@ Rails.application.routes.draw do
 
   get 'status', to: 'status#index'
 
+  get '/404', to: 'errors#404'
+  get '/500', to: 'errors#500'
+  get '/503', to: 'errors#503'
 
   # Install the default route as the lowest priority.
   #match '/:controller(/:action(/:id))', via: [:get, :post, :patch]
