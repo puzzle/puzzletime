@@ -39,11 +39,11 @@ Rails.application.routes.draw do
 
     resource :order_comments, only: [:show, :create]
     resource :order_targets, only: [:show, :update]
+    resource :order_services, only: [:show]
 
     member do
       get :cockpit
       get :bills
-      get :services, to: 'order_services#index'
     end
   end
 

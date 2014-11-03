@@ -213,6 +213,10 @@ table.table td.action {
       color: $gray;
     }
 
+    tr > th {
+      border-bottom: 0;
+    }
+
     a {
       text-decoration: none;
 
@@ -221,12 +225,9 @@ table.table td.action {
       }
     }
   }
-  &.table > thead > tr > th {
-    border-bottom: 0;
-  }
-  &.table > thead > tr > th,
-  &.table > tbody > tr > td {
-    padding: 15px;
+
+  > thead > tr > th,
+  > tbody > tr > td {
 
     &:first-child {
       padding-left: 30px;
@@ -244,7 +245,12 @@ table.table td.action {
   .muted {
     color: $gray;
   }
+
+  p {
+    margin: 0;
+  }
 }
+
 
 #content > .nav-tabs {
   margin-bottom: $line-height-computed * 2;

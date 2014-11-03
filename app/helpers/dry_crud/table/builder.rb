@@ -75,7 +75,7 @@ module DryCrud::Table
     def align_class(attr)
       entry = entries.present? ? entry_class.new : nil
       case column_type(entry, attr)
-      when :integer, :float, :decimal
+      when :integer, :float, :decimal, :date, :time, :datetime, :timestamp
         'right' unless association(entry, attr, :belongs_to)
       when :boolean
         'center'
