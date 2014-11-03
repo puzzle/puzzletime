@@ -1,0 +1,12 @@
+.form-group
+  %label.col-md-2.control-label
+    Direkt auf Auftrag buchen
+  .col-md-5
+    .radio
+      = radio_button_tag(:book_on_order, true, entry.booked_on_order?)
+.form-group
+  %label.col-md-2.control-label
+    Buchungsposition hinzufügen
+  .col-md-5
+    .radio
+      = radio_button_tag(:book_on_order, false, !entry.booked_on_order?)

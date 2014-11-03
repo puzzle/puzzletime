@@ -38,6 +38,17 @@ app.enable = (selector, enabled) ->
     affected.addClass('disabled')
     $.each(affected, (i, e) -> if e.selectize then e.selectize.disable())
 
+toggleRadioDependents = (radio) ->
+  $radio = $(radio)
+  inputFields = $("input.#{$radio.attr('name')}")
+  for inputField in inputFields
+    $inputField = $(inputField)
+    if $inputField.hasClass($radio.val())
+      $inputField.prop('disabled', false)
+    else
+      $inputField.prop('disabled', true)
+      $inputField.val('')
+
 toggleEnabled = (element) ->
   selector = $(element).data('enable')
   enabled = $(element).prop('checked')
@@ -103,6 +114,13 @@ $ ->
 
   # wire up tooltips
   $('body').tooltip({ selector: '[data-toggle=tooltip]', placement: 'top', html: true })
+
+  # wire up disable-dependents
+  $('body').on('change', '[data-disable-dependents]', (event) ->
+    toggleRadioDependents(this)
+  )
+  toggleRadioDependents('[data-disable-dependents]:checked')
+
 
   # change cursor for turbolink requests to give the user a minimal feedback
   $(document).on('page:fetch', ->
