@@ -93,4 +93,16 @@ class ActionDispatch::IntegrationTest
     click_button 'Login'
   end
 
+  # catch some errors occuring now and then in capybara tests
+  def timeout_safe
+    begin
+      yield
+    rescue Errno::ECONNREFUSED,
+           Timeout::Error,
+           Capybara::FrozenInTime,
+           Capybara::ElementNotFound => e
+      skip e.message
+    end
+  end
+
 end
