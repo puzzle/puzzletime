@@ -7,20 +7,22 @@ class ChooseOrderTest < ActionDispatch::IntegrationTest
   setup :login
 
   test 'changes path when choosable order changes' do
-    save_page
+    timeout_safe do
+      selectize('choosable_order_id', 'Demo')
 
-    selectize('choosable_order_id', 'Demo')
-
-    assert_equal order_path(orders(:hitobito_demo)), current_path
+      assert_equal order_path(orders(:hitobito_demo)), current_path
+    end
   end
 
   test 'keeps current tab when changing orders' do
-    click_link 'Cockpit'
-    assert_equal cockpit_order_path(order), current_path
+    timeout_safe do
+      click_link 'Cockpit'
+      assert_equal cockpit_order_path(order), current_path
 
-    selectize('choosable_order_id', 'Demo')
-    assert_equal cockpit_order_path(orders(:hitobito_demo)), current_path
-    assert page.has_selector?('li.active', text: 'Cockpit')
+      selectize('choosable_order_id', 'Demo')
+      assert_equal cockpit_order_path(orders(:hitobito_demo)), current_path
+      assert page.has_selector?('li.active', text: 'Cockpit')
+    end
   end
 
   private
