@@ -38,6 +38,7 @@ class TarantulaTest < ActionDispatch::IntegrationTest
     t.allow_404_for /employee_lists(\/\d+)?$/   # invalid employee_ids assigned
     t.allow_404_for /orders(\/\d+)?$/   # invalid employee_ids assigned
     t.allow_404_for /evaluator\/details\?category_id=(0|\d{5,12})\&/   # invalid category
+    t.allow_404_for /accounting_posts$/   # invalid order_id
     t.allow_404_for /work_items\?returning=true$/   # only handled by js
 
     t.handlers << Relevance::Tarantula::InvalidHtmlHandler.new
