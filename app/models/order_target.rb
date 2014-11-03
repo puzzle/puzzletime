@@ -22,6 +22,7 @@ class OrderTarget < ActiveRecord::Base
 
   validates :rating, inclusion: RATINGS
   validates :comment, presence: { if: :target_critical? }
+  validates :target_scope_id, uniqueness: { scope: :order_id }
 
   scope :list, -> { includes(:target_scope).
                     references(:target_scope).
