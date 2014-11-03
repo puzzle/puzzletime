@@ -51,7 +51,7 @@ class Ability
       employee == user
     end
 
-    can [:read, :cockpit, :show_targets], Order
+    can [:read, :cockpit, :services, :show_targets], Order
 
     can :manage, Planning
 
