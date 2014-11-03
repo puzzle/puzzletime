@@ -50,6 +50,16 @@ class Order < ActiveRecord::Base
   after_initialize :set_default_status_id
   after_create :create_order_targets
 
+
+  class << self
+    def choosable_list
+      result = connection.select_all(select('orders.id, work_items.path_shortnames, work_items.name').
+                                     joins(:work_item).
+                                     order('work_items.path_names'))
+      result.collect { |row| ["#{row['path_shortnames']}: #{row['name']}", row['id']] }
+    end
+  end
+
   ### INSTANCE METHODS
 
   def parent_names

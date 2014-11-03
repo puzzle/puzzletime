@@ -1,11 +1,13 @@
 = render 'header'
 
 .orders-cockpit
-  .cockpit-header
-    = render 'cockpit_header'
 
-  .cockpit-table.unindented
-    = render 'cockpit_table'
+  - if @cockpit.accounting_posts.present?
+    .cockpit-header
+      = render 'cockpit_header'
+
+    .cockpit-table.unindented
+      = render 'cockpit_table'
 
   .orders-actions
     = link_to(new_accounting_post_path(order_id: entry.id)) do

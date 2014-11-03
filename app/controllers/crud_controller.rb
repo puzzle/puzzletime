@@ -31,6 +31,7 @@ class CrudController < ListController
   respond_to :js, only: [:new, :create]
 
   prepend_before_action :entry, only: [:show, :new, :create, :edit, :update, :destroy]
+  prepend_before_action :authenticate
 
   after_save :set_success_notice
   after_destroy :set_success_notice

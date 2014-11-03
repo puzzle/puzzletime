@@ -3,7 +3,6 @@ class OrderTargetsController < ApplicationController
   before_action :set_order
   before_action :authorize_class
   before_action :set_order_targets
-  before_action :set_choosable_orders
 
   def show
   end
@@ -36,10 +35,6 @@ class OrderTargetsController < ApplicationController
 
   def set_order_targets
     @order_targets = @order.targets.list.to_a
-  end
-
-  def set_choosable_orders
-    @choosable_orders = Order.list
   end
 
   def authorize_class

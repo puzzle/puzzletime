@@ -16,7 +16,7 @@ class Order::Cockpit
   end
 
   def cost_effectiveness_current
-    if total.cells[:budget].hours
+    if accounting_posts.present? && total.cells[:budget].hours
       ((total.cells[:supplied_services].hours.to_i / total.cells[:budget].hours) * 100).round
     end
   end
