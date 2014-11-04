@@ -1,0 +1,11 @@
+- @title = "Journal"
+
+= render 'orders/header'
+
+= render 'info'
+
+= render 'form'
+
+.list
+  = render partial: :order_comment, collection: entries, locals: {total_count: entries.size}
+

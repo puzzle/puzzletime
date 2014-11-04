@@ -4,5 +4,5 @@
   = nav 'Leistungen', order_order_services_path(@order) if can?(:services, @order)
   = nav 'Ziele', order_order_targets_path(@order), order_order_targets_path(@order) if can?(:show_targets, @order)
   //= nav 'Vertrag', ''
-  //= nav 'Journal', order_order_comments_path(@order) if can?(:comments, @order)
+  = nav 'Journal', order_order_comments_path(@order) if can?(:comments, @order)
   //= nav 'Rechnungen', bills_order_path(entry)

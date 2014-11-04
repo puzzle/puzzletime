@@ -13,8 +13,25 @@
 
 class OrderComment < ActiveRecord::Base
 
-  belongs_to :order
+  ### ASSOCIATIONS
 
-  scope :list, -> { order(:updated_at) }
+  belongs_to :order
+  belongs_to :creator, class_name: "Employee"
+  belongs_to :updater, class_name: "Employee"
+
+  ### VALIDATIONS
+
+  validates_presence_of :text, :creator, :updater
+
+  ### SCOPES
+
+  scope :list, -> { includes(:creator).order('updated_at DESC') }
+
+
+  ### INSTANCE METHODS
+
+  def to_s
+    "#{creator.to_s}: #{text.truncate(20)}"
+  end
 
 end

@@ -1,0 +1,11 @@
+puzzletime_first:
+  order: puzzletime
+  text: Dies ist der erste Journaleintrag
+  creator: mark
+  updater: mark
+
+puzzletime_second:
+  order: puzzletime
+  text: Text mit Link http://example.com/dummy
+  creator: lucien
+  updater: lucien

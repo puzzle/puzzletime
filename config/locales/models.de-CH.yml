@@ -36,8 +36,8 @@ de-CH:
         one: Auftrag
         other: Aufträge
       order_comment:
-        one: Kommentierung
-        other: Kommentierungen
+        one: Journaleintrag
+        other: Journaleinträge
       order_kind:
         one: Auftragsart
         other: Auftragsarten
