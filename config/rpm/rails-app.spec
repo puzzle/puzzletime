@@ -124,6 +124,9 @@ rm -rf $RPM_BUILD_ROOT
 %if "%{?RAILS_DB_ADAPTER}" != ""
   export RAILS_DB_ADAPTER=%RAILS_DB_ADAPTER
 %endif
+%if "%{?RAILS_SECRET_TOKEN}" != ""
+  export RAILS_SECRET_TOKEN=%RAILS_SECRET_TOKEN
+%endif
 ### end setting vars
 
 %if %{use_delayed_job}
