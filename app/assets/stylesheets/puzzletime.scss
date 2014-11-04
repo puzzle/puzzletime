@@ -178,6 +178,10 @@ a.tooltip:hover span {
   margin-bottom: 0;
 }
 
+a.action {
+  margin-right: 50px;
+}
+
 a.disabled:hover {
   cursor: default;
   text-decoration: none;
@@ -266,6 +270,14 @@ footer {
 body.loading,
 body.loading a:hover {
    cursor: progress !important;
+}
+
+[data-row-link] tbody tr td {
+  cursor: pointer;
+
+  &.no-link {
+    cursor: default ;
+  }
 }
 
 @import "absence";

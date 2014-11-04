@@ -7,6 +7,14 @@ class OrderServicesController < ApplicationController
     list_worktimes
   end
 
+  def edit
+
+  end
+
+  def update
+
+  end
+
   private
 
   def list_worktimes

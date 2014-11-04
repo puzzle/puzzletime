@@ -15,7 +15,7 @@ module ActionsHelper
 
   # Outputs an icon for an action with an optional label.
   def action_icon(icon_key, label = nil)
-    html = icon(icon_key)
+    html = picon(icon_key)
     html << ' ' << label if label
     html
   end
@@ -32,14 +32,14 @@ module ActionsHelper
   def edit_action_link(path = nil)
     path ||= path_args(entry)
     path = path.is_a?(String) ? path : edit_polymorphic_path(path)
-    action_link(ti('link.edit'), path)
+    action_link(action_icon('edit', ti('link.edit')), path)
   end
 
   # Standard destroy action to the given path.
   # Uses the current +entry+ if no path is given.
   def destroy_action_link(path = nil)
     path ||= path_args(entry)
-    action_link(ti('link.delete'), path,
+    action_link(action_icon('delete', ti('link.delete')), path,
                 data: { confirm: ti(:confirm_delete),
                         method: :delete })
   end
@@ -57,7 +57,7 @@ module ActionsHelper
   def add_action_link(path = nil, url_options = {})
     path ||= path_args(model_class)
     path = path.is_a?(String) ? path : new_polymorphic_path(path, url_options)
-    action_link(ti('link.add'), path)
+    action_link(action_icon('add', ti('link.add')), path)
   end
 
 end

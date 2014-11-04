@@ -54,6 +54,15 @@ toggleEnabled = (element) ->
   enabled = $(element).prop('checked')
   app.enable(selector, enabled)
 
+toggleCheckAll = (element) ->
+  name = $(element).data('check')
+  $('input[type=checkbox][name="' + name + '"]').prop('checked', $(element).prop('checked'))
+
+openTableRowLink = (cell) ->
+  $row = $(cell).closest('tr')
+  link = $row.closest('[data-row-link]').data('row-link')
+  match = $row.get(0).id.match(/\w+_(\d+)/)
+  window.location = link.replace('/:id/', '/' + match[1] + '/')
 
 $ ->
   # wire up date picker
@@ -121,6 +130,15 @@ $ ->
   )
   toggleRadioDependents('[data-disable-dependents]:checked')
 
+  # wire up check all boxes
+  $('body').on('change', '[data-check]', (event) ->
+    toggleCheckAll(this)
+  )
+
+  # wire up table row links
+  $('body').on('click', '[data-row-link] tbody td:not(.no-link)', (event) ->
+    openTableRowLink(this)
+  )
 
   # change cursor for turbolink requests to give the user a minimal feedback
   $(document).on('page:fetch', ->

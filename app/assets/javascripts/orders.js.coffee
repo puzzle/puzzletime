@@ -19,6 +19,14 @@ $ ->
       window.location = l.replace(/orders\/\d+/, 'orders/' + this.value)
   )
 
+  $(document).on('click', '[data-multi-edit]', (event) ->
+     $this = $(this)
+     params = $($this.data('multi-edit')).serialize()
+     console.log(params)
+     window.location = $this.attr('href') + '?' + params
+     event.preventDefault()
+  )
+
   $('#target_scope_icon').selectize({ render: { option: renderIconItem, item: renderIconItem } })
   $('#order_status_style').selectize({ render: { option: renderStyleItem, item: renderStyleItem } })
 
