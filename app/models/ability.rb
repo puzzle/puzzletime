@@ -15,6 +15,7 @@ class Ability
                     OrderKind,
                     OrderStatus,
                     OrderTarget,
+                    OrderComment,
                     OvertimeVacation,
                     PortfolioItem,
                     TargetScope,

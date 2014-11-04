@@ -1,0 +1,24 @@
+.order_comments {
+  .list {
+    padding-top: 3em;
+    border-top: solid lightgray 1px;
+  }
+
+  .row {
+    &.order_comment {
+      padding-bottom: 3em;
+    }
+
+    .updated_at, .creator_name  {
+      text-align: right;
+    }
+
+    .updated_at {
+      color: darkgrey;
+    }
+
+    .creator_name {
+      font-weight: bold;
+    }
+  }
+}

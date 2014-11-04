@@ -37,7 +37,7 @@ Rails.application.routes.draw do
       get :cockpit
     end
 
-    resource :order_comments, only: [:show, :create]
+    resources :order_comments, only: [:index, :create]
     resource :order_targets, only: [:show, :update]
     resource :order_services, only: [:show, :edit, :update]
 
