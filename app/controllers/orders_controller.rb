@@ -1,5 +1,7 @@
 class OrdersController < CrudController
 
+  include Filterable
+
   self.permitted_attrs = [:crm_key, :kind_id, :responsible_id, :department_id, :status_id,
                           work_item_attributes: [:name, :shortname, :description],
                           employee_ids: []]
@@ -43,16 +45,6 @@ class OrdersController < CrudController
       filter_entries_by(entries, :department_id, :kind_id, :status_id)
     else
       default_filter_entries(entries)
-    end
-  end
-
-  def filter_entries_by(entries, *keys)
-    keys.inject(entries) do |filtered, key|
-      if params[key].present?
-        filtered.where(key => params[key])
-      else
-        filtered
-      end
     end
   end
 

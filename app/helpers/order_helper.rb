@@ -28,7 +28,7 @@ module OrderHelper
       data: { toggle: :tooltip })
   end
 
-  def order_filter_select(name, label, list)
+  def direct_filter_select(name, label, list)
     content_tag(:div, class: 'form-group') do
       label_tag(name, label, class: 'control-label') +
       ' &nbsp; '.html_safe +

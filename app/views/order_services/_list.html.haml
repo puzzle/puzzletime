@@ -1,4 +1,5 @@
 = form_tag(nil, id: 'worktimes', method: :get) do
+  / TODO: can? for edit worktime link
   = plain_table_or_message(@worktimes, data: { row_link: edit_ordertime_path(':id', back_url: url_for(returning: true)) }) do |t|
     - t.col(check_box_tag(:all_worktimes, true, false, data: { check: 'worktime_ids[]' }), class: 'no-link') do |e|
       = check_box_tag('worktime_ids[]', e.id)
