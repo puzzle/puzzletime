@@ -1,0 +1,14 @@
+- if can?(:multi_worktimes, @order)
+  = action_link(action_icon('edit', 'Auswahl bearbeiten'),
+                edit_order_order_services_path(@order),
+                data: { multi_edit: '#worktimes' })
+
+/ TODO: can?
+= action_link(action_icon('export', 'CSV Export'))
+
+/ TODO: can?
+= action_link(action_icon('time', 'Zeitrapport erstellen'))
+
+- if @user.management
+  = action_link(action_icon('add', 'Fremderfassung'),
+                new_ordertime_path(other: 1, back_url: url_for(returning: true)))

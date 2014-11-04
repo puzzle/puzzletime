@@ -39,7 +39,7 @@ Rails.application.routes.draw do
 
     resource :order_comments, only: [:show, :create]
     resource :order_targets, only: [:show, :update]
-    resource :order_services, only: [:show]
+    resource :order_services, only: [:show, :edit, :update]
 
     member do
       get :cockpit

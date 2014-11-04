@@ -5,8 +5,6 @@
 %h1.h3= @title
 
 
-= form_tag do
-  = plain_table_or_message(@worktimes) do |t|
-    - t.col do |e|
-      = check_box_tag(:worktime_id, e.id)
-    - t.attrs(:work_date, :employee_id, :hours, :work_item_id, :ticket, :description, :billable)
+= render 'list'
+
+= render 'actions'
