@@ -8,4 +8,4 @@
       = f(order_comment.updated_at)
     .row.edit
   .col-md-8
-    = auto_link(order_comment.text)
+    = auto_link(simple_format(order_comment.text))
