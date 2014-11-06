@@ -140,7 +140,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       fill_in('work_item_name', with: 'New Category')
       fill_in('work_item_shortname', with: 'NECA')
       click_button 'Speichern'
-      sleep 0.1
+      sleep 0.2
       id = find('#category_work_item_id', visible: false)['value']
 
       category = WorkItem.find(id)
