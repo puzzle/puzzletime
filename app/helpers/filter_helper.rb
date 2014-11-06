@@ -6,6 +6,11 @@ module FilterHelper
      IdValue.new('-2m', 'Vorletzter Monat')]
   end
 
+  def yes_no_options
+    [IdValue.new(true, 'ja'),
+     IdValue.new(false, 'nein')]
+  end
+
   def direct_filter(name, label)
     html = ''.html_safe
     html += label_tag(name, label, class: 'control-label') + ' &nbsp; '.html_safe if label
