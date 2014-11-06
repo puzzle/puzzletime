@@ -29,9 +29,14 @@ class AccountingPost < ActiveRecord::Base
   has_ancestor_through_work_item :order
   has_ancestor_through_work_item :client
 
-  ### VALIDATIONS
+  ### CALLBACKS
 
   before_validation :derive_offered_fields
+
+  ### VALIDATIONS
+
+  validates_presence_of :portfolio_item
+
 
   def validate_worktime(worktime)
     if worktime.report_type != AutoStartType::INSTANCE && description_required? && worktime.description.blank?
