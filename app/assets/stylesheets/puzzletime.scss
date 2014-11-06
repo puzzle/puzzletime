@@ -11,6 +11,10 @@ div {
     text-align: justify;
 }
 
+label.required::after{
+content: " *"
+}
+
 a.symbol {
   text-decoration: none;
   font-weight: bold;
@@ -253,6 +257,15 @@ table.table td.action {
 
   p {
     margin: 0;
+  }
+}
+
+form {
+  .legend {
+    text-align: right;
+    font-weight: bold;
+    padding-top: 0px;
+    padding-bottom: 15px;
   }
 }
 

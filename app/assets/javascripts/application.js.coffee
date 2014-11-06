@@ -151,3 +151,4 @@ $ ->
   # show alert if ajax requests fail
   $(document).on('ajax:error', (event, xhr, status, error) ->
     alert('Sorry, something went wrong\n(' + error + ')'))
+  # wire up label required mark

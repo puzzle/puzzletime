@@ -1,5 +1,5 @@
 .form-group
-  = form.label(:discount, "Rabatt", class: 'col-md-2 control-label')
+  = form.label(:discount, "Rabatt", class: 'col-md-2 control-label required')
   .col-md-1
     .radio
       = radio_button_tag(:discount, "none", entry.no_discount?, data: {disable_dependents: true})
