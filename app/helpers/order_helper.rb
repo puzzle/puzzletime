@@ -28,16 +28,9 @@ module OrderHelper
       data: { toggle: :tooltip })
   end
 
-  def direct_filter_select(name, label, list)
-    content_tag(:div, class: 'form-group') do
-      label_tag(name, label, class: 'control-label') +
-      ' &nbsp; '.html_safe +
-      select_tag(name,
-                 options_from_collection_for_select(list, :id, :to_s, params[name]),
-                 prompt: 'Alle',
-                 class: 'form-control',
-                 data: { submit: true })
-    end + ' &nbsp; &nbsp; '.html_safe
+  def period_chooser_date(date)
+    label = date ? I18n.l(date) : 'egal'
+    link_to(label, '#', data: { popover: '#period_chooser', toggle: 'popover' })
   end
 
   def order_target_icon_key(rating)

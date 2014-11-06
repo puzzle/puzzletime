@@ -1,6 +1,15 @@
 = form_tag(nil, method: :get, class: 'form-inline', role: 'filter') do
   = hidden_field_tag :page, 1
 
+  = direct_filter_date(:start_date, 'Von', @period.start_date)
+  = direct_filter_date(:end_date, 'Bis', @period.end_date)
+  = direct_filter_select(:period, nil, predefined_period_options, 'vordefiniert...')
+
+  &nbsp;
+  &nbsp;
+  &nbsp;
+  &nbsp;
+
   = direct_filter_select(:employee_id, 'Mitarbeiter', @employees)
   = direct_filter_select(:work_item_id, 'Buchungsposition', @accounting_posts)
   = direct_filter_select(:billable, 'Verrechenbar', [IdValue.new(true, 'ja'), IdValue.new(false, 'nein')])
