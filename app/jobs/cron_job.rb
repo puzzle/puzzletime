@@ -4,7 +4,7 @@ class CronJob < BaseJob
 
   # Enqueue delayed job if it is not enqueued already
   def schedule
-    enqueue(cron: cron_expression) unless scheduled?
+    enqueue!(cron: cron_expression) unless scheduled?
   end
 
   # Is this job enqueued in delayed job?
