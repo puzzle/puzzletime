@@ -100,7 +100,8 @@ class ActionDispatch::IntegrationTest
     rescue Errno::ECONNREFUSED,
            Timeout::Error,
            Capybara::FrozenInTime,
-           Capybara::ElementNotFound => e
+           Capybara::ElementNotFound,
+           Selenium::WebDriver::Error::StaleElementReferenceError => e
       skip e.message
     end
   end
