@@ -42,7 +42,15 @@ class Worktime < ActiveRecord::Base
 
   scope :in_period, ->(period) do
     if period
-      where('work_date BETWEEN ? AND ?', period.start_date, period.end_date)
+      if period.start_date && period.end_date
+        where('work_date BETWEEN ? AND ?', period.start_date, period.end_date)
+      elsif period.start_date
+        where('work_date >= ?', period.start_date)
+      elsif period.end_date
+        where('work_date <= ?', period.end_date)
+      else
+        all
+      end
     else
       all
     end

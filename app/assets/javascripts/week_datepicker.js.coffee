@@ -8,18 +8,20 @@ app.datepicker = do ->
     formatWeek($(this), dateString)
     $(this).trigger('change')
 
+  showI18n = (field, options) ->
+    options = $.extend(options, app.datepickerI18n())
+    field.datepicker(options)
+    field.datepicker('show')
+
   show: ->
     field = $(this)
     if field.is('.glyphicon-calendar')
       field = field.closest('.input-group').find('.date')
-    console.log(field)
     options =
       onSelect: track
       showWeek: true
 
-    options = $.extend(options, app.datepickerI18n())
-    field.datepicker(options)
-    field.datepicker('show')
+    showI18n(field, options)
 
 formatWeek = (field, dateString) ->
   if field.data('format') == 'week'

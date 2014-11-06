@@ -2,7 +2,6 @@
 
 class Period
 
-  # TODO: use underscore
   attr_reader :start_date, :end_date, :label
 
   # Caches the most used periods
@@ -117,15 +116,39 @@ class Period
   end
 
   def negative?
-    @start_date > @end_date
+    limited? && @start_date > @end_date
   end
 
   def url_query_s
   	 @url_query ||= 'start_date=' + start_date.to_s + '&amp;end_date=' + end_date.to_s
   end
 
+  def limited?
+    @start_date && @end_date
+  end
+
+  def ==(other)
+    other.is_a?(Period) && other.start_date == start_date && other.end_date == end_date
+  end
+
+  def hash
+    37 * start_date.hash ^ 43 * end_date.hash
+  end
+
   def to_s
-    (length > 1) ? I18n.l(@start_date) + ' - ' + I18n.l(@end_date) : I18n.l(@start_date)
+    if limited?
+      if @start_date == @end_date
+        I18n.l(@start_date)
+      else
+        I18n.l(@start_date) + ' - ' + I18n.l(@end_date)
+      end
+    elsif @start_date
+      I18n.l(@start_date) + ' - egal'
+    elsif @end_date
+      'egal - ' + I18n.l(@end_date)
+    else
+      'egal - egal'
+    end
   end
 
   def set_label(label)
