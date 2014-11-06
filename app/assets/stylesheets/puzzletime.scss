@@ -255,6 +255,9 @@ table.table td.action {
   }
 }
 
+.form-inline .form-group {
+  margin-bottom: 10px;
+}
 
 #content > .nav-tabs {
   margin-bottom: $line-height-computed * 2;

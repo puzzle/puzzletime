@@ -12,4 +12,4 @@
 
   = direct_filter_select(:employee_id, 'Mitarbeiter', @employees)
   = direct_filter_select(:work_item_id, 'Buchungsposition', @accounting_posts)
-  = direct_filter_select(:billable, 'Verrechenbar', [IdValue.new(true, 'ja'), IdValue.new(false, 'nein')])
+  = direct_filter_select(:billable, 'Verrechenbar', yes_no_options)
