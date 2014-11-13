@@ -29,4 +29,3 @@ $ ->
 
   $('#target_scope_icon').selectize({ render: { option: renderIconItem, item: renderIconItem } })
   $('#order_status_style').selectize({ render: { option: renderStyleItem, item: renderStyleItem } })
-
