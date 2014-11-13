@@ -6,8 +6,9 @@
     .cockpit-header
       = render 'cockpit_header'
 
-    .cockpit-table.unindented
-      = render 'cockpit_table'
+    .unindented
+      .cockpit-table 
+        = render 'cockpit_table'
 
   .orders-actions
     = link_to(new_accounting_post_path(order_id: entry.id)) do

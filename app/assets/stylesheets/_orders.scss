@@ -77,7 +77,15 @@
 
   .cockpit-table {
     position: relative;
+    width: 100%;
   }
+
+  // First column with fixed width, the scrollable one is fluid
+  $static-width: 200px;
+
+  // Each row height = 3 lines + vertical padding
+  $row-line-height: 24px;
+  $cell-padding: 12px;
 
   table.static,
   .scrollable table {
@@ -94,13 +102,12 @@
     td, th {
       width: 170px;
       min-width: 170px;
-      max-width: 170px;
-      padding: 17px;
+      padding: $cell-padding;
       @include ellipsis(true);
     }
 
     td {
-      height: 150px;
+      height: ($row-line-height*3) + ($cell-padding*3);
       vertical-align: top;
     }
 
@@ -108,30 +115,36 @@
       background-color: #f4f4f4;
       @include ellipsis(true);
     }
+    th > span {
+      border-bottom: 1px dashed #aaa;
+      cursor: help;
+    }
 
     .data-item {
-      height: 35px;
+      height: $row-line-height;
     }
   }
 
   table.static {
     position: relative;
     z-index: 20;
+    width: $static-width;
     @include box-shadow(10px 0 5px -2px rgba(208, 208, 208, 0.4));
 
     .title, .subtitle {
-      height: 35px;
+      height: $row-line-height;
     }
   }
   .scrollable {
     position: absolute;
     top: 0;
-    left: 170px;
+    left: $static-width;
     right: 0;
     z-index: 10;
     overflow-x: auto;
 
     table {
+      width: 100%;
       th, td, td .data-item {
         text-align: right;
       }
