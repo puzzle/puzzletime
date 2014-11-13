@@ -9,26 +9,33 @@
   %table
     %tr
       %th{title: 'Budgetierte Stunden und Beträge.'}
-        Budget
-        = picon('info')
+        %span
+          Budget
+          = picon('info')
       %th{title: 'Die effektive Leistung entspricht der erfassten Arbeitszeit und ist unabhängig von der Verrechenbarkeit. '}
-        Leistungen
-        = picon('info')
+        %span
+          Leistungen
+          = picon('info')
       %th{title: 'Die verrechnete Leistung entspricht den tatsächlich in Rechnung gestellten Leistungen.'}
-        Verrechnet
-        = picon('info')
+        %span
+          Verrechnet
+          = picon('info')
       %th{title: 'Differenz zwischen verrechneter Leistung und effektiver Leistung.'}
-        Offene Leistungen
-        = picon('info')
+        %span
+          Offene Leistungen
+          = picon('info')
       %th{title: 'Durch den Auftragsverantwortlichen im Rahmen der Zeitbereinigung als nicht verrechenbar markierte Leistungen.'}
-        Nicht verrechenbar
-        = picon('info')
+        %span
+          Nicht verrechenbar
+          = picon('info')
       %th{title: 'Geschätzter Aufwand pro Buchungsposition bis der Auftrag abgeschlossen werden kann.'}
-        Restaufwand
-        = picon('info')
+        %span
+          Restaufwand
+          = picon('info')
       %th{title: 'Differenz zwischen verrechneter Leistung und budgetierter Leistung.'}
-        Offenes Budget
-        = picon('info')
+        %span
+          Offenes Budget
+          = picon('info')
 
     - @cockpit.rows.each do |row|
       %tr

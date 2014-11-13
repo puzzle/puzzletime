@@ -21,13 +21,13 @@ default: &default
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: 5
   timeout: 5000
-  username: <%= ENV['RAILS_DB_USERNAME'] || 'puzzletime' %>
-  password: <%= ENV['RAILS_DB_PASSWORD'] || 'timepuzzle' %>
+  username: <%= ENV['RAILS_DB_USERNAME'] || 'pierrefritsch' %>
+  password: <%= ENV['RAILS_DB_PASSWORD'] || '' %>
   host: <%= ENV['RAILS_DB_HOST'] || '127.0.0.1' %>
 
 development:
   <<: *default
-  database: <%= ENV['RAILS_DB_NAME'] || 'puzzletime_development' %>
+  database: <%= ENV['RAILS_DB_NAME'] || 'pierrefritsch' %>
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
