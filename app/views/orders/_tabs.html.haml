@@ -1,5 +1,6 @@
 %ul.nav.nav-tabs
-  = nav 'Details', order_path(@order)
+  = nav 'Details', order_path(@order), edit_order_path(@order)
+
   - if can?(:cockpit, @order)
     = nav 'Cockpit',
           cockpit_order_path(@order),
@@ -10,7 +11,15 @@
           order_order_services_path(@order),
           order_multi_worktimes_path(@order),
           edit_order_multi_worktimes_path(@order)
-  = nav 'Ziele', order_order_targets_path(@order), order_order_targets_path(@order) if can?(:show_targets, @order)
+
+  - if can?(:show_targets, @order)
+    = nav 'Ziele',
+          order_order_targets_path(@order),
+          order_order_targets_path(@order)
+
   //= nav 'Vertrag', ''
-  = nav 'Journal', order_order_comments_path(@order) if can?(:comments, @order)
+
+  - if can?(:comments, @order)
+    = nav 'Journal', order_order_comments_path(@order)
+
   //= nav 'Rechnungen', bills_order_path(entry)
