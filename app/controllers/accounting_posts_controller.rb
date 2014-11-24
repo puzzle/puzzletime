@@ -20,15 +20,37 @@ class AccountingPostsController < CrudController
     cockpit_order_path(id: order.id)
   end
 
+  def build_entry
+    super.tap { |p| p.build_work_item }
+  end
+
+  def assign_attributes
+    handle_work_item
+    entry.attributes = model_params.except(:work_item_attributes)
+    reset_discount
+  end
+
+  def handle_work_item
+    if entry.new_record?
+      set_work_item
+    else
+      if book_on_order_change?
+        set_work_item
+      elsif !book_on_order?
+        entry.work_item_attributes = model_params[:work_item_attributes] || {}
+      end
+    end
+  end
+
+  def set_work_item
+    entry.work_item = book_on_order? ? order.work_item : WorkItem.new(work_item_attributes)
+  end
+
   def check_book_on_order
     if book_on_order_requested? && !book_on_order_allowed?
       flash[:alert] = "'Direkt auf Auftrag buchen' gewählt, aber es existieren bereits (andere) Buchungspositionen"
       false
     end
-  end
-
-  def build_entry
-    super.tap { |p| p.build_work_item }
   end
 
   def book_on_order_requested?
@@ -47,22 +69,17 @@ class AccountingPostsController < CrudController
     book_on_order? ^ (entry.booked_on_order?)
   end
 
-  def assign_attributes
-    if entry.new_record?
-      entry.work_item = book_on_order? ? order.work_item : WorkItem.new(work_item_attributes)
-    else
-      if book_on_order_change?
-        entry.work_item = book_on_order? ? order.work_item : WorkItem.new(work_item_attributes)
-      elsif !book_on_order?
-        entry.attributes = model_params.slice(:work_item_attributes)
-      end
-    end
-    entry.attributes = model_params.except(:work_item_attributes)
-  end
-
   def work_item_attributes
     parent_id = book_on_order? ? order.work_item.parent_id : order.work_item_id
     (model_params[:work_item_attributes] || {}).merge(parent_id: parent_id)
+  end
+
+  def reset_discount
+    case params[:discount]
+    when 'none', nil then entry.discount_percent = entry.discount_fixed = nil
+    when 'percent' then entry.discount_fixed = nil
+    when 'fixed' then entry.discount_percent = nil
+    end
   end
 
   def order
