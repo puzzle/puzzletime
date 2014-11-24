@@ -1,0 +1,44 @@
+- @title = "#{@worktimes.size} Zeiten bearbeiten"
+
+= render 'orders/header'
+
+%h1.h3= @title
+
+= form_tag(order_multi_worktimes_path(@order),
+           method: 'patch',
+           class: 'form-horizontal',
+           role: 'form') do
+
+  = render 'shared/error_messages', errors: @errors || []
+
+  - @worktimes.each do |t|
+    = hidden_field_tag('worktime_ids[]', t.id)
+
+  = toggleable_field(:work_item_id, 5) do
+    = select_tag(:work_item_id,
+                 work_item_option(@work_item),
+                 placeholder: 'Suchen...',
+                 autocomplete: 'off',
+                 class: 'work_item_id',
+                 data: { autocomplete: 'work_item',
+                         url: search_work_items_path })
+
+  = toggleable_field(:ticket) do
+    = text_field_tag(:ticket,
+                     @ticket,
+                     class: 'form-control ticket')
+
+  = toggleable_field(:billable) do
+    %label.radio-inline.billable
+      = radio_button_tag(:billable, 1, @billable == true, class: 'billable')
+      Ja
+    %label.radio-inline.billable
+      = radio_button_tag(:billable, 0, @billable == false, class: 'billable')
+      Nein
+
+  .form-group
+    .col-md-offset-2.col-md-8
+      = button_tag(ti('button.save'), class: 'btn btn-primary')
+      = link_to(ti('button.cancel'),
+                order_order_services_path(@order, returning: true),
+                class: 'cancel')

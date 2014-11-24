@@ -40,7 +40,9 @@ app.enable = (selector, enabled) ->
 
 toggleRadioDependents = (radio) ->
   $radio = $(radio)
-  inputFields = $("input.#{$radio.attr('name')}")
+  checked = $radio.prop('checked')
+  name = $radio.attr('name')
+  inputFields = $("input.#{name}")
   for inputField in inputFields
     $inputField = $(inputField)
     if $inputField.hasClass($radio.val())
@@ -125,10 +127,10 @@ $ ->
   $('body').tooltip({ selector: '[data-toggle=tooltip]', placement: 'top', html: true })
 
   # wire up disable-dependents
-  $('body').on('change', '[data-disable-dependents]', (event) ->
+  $('body').on('change', '[type=radio][data-disable-dependents]', (event) ->
     toggleRadioDependents(this)
   )
-  toggleRadioDependents('[data-disable-dependents]:checked')
+  $('[type=radio][data-disable-dependents]:checked').each((i, e) -> toggleRadioDependents(e))
 
   # wire up check all boxes
   $('body').on('change', '[data-check]', (event) ->
