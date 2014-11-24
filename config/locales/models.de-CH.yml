@@ -116,6 +116,8 @@ de-CH:
         shortname: Kürzel
         passwd: Passwort
         management: Management
+        department: Organisationseinheit
+        department_id: Organisationseinheit
         initial_vacation_days: Anfängliche Ferien
         ldapname: LDAP Name
         current_percent: Prozent
