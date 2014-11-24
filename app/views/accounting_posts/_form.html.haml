@@ -1,26 +1,20 @@
 - @title ||= "Buchungsposition für #{order.name}"
 
-= crud_form cancel_url: cockpit_order_path(id: order.id, returning: true) do |form|
+= crud_form cancel_url: cockpit_order_path(id: order.id, returning: true) do |f|
   = hidden_field_tag(:order_id, order.id)
-  = render 'book_on_order_radio', form: form if book_on_order_allowed?
+  = render 'book_on_order_radio', form: f if book_on_order_allowed?
   #work_item_fields
-    = form.fields_for :work_item, entry.work_item do |fields|
+    = f.fields_for :work_item, entry.work_item do |fields|
       = render 'work_items/fields', fields: fields
   %hr
-  .form-group
-    = form.label(:closed, "Status", class: 'col-md-2 control-label')
-    .col-md-5
-      .checkbox
-        %label
-          = form.check_box :closed
-          Geschlossen
+  = f.labeled_input_field :closed
 
-  = render 'budget_fields', form: form
-  = render 'discount_fields', form: form
+  = render 'budget_fields', form: f
+  = render 'discount_fields', form: f
 
-  = form.labeled_input_field :portfolio_item_id, caption: 'Portfolio', span: 2
-  = form.labeled_input_field :reference, caption: 'Bestellposition'
-  = form.labeled_input_field :billable, caption: 'Budgetposition ist verrechenbar'
-  = form.labeled_input_field :description_required, caption: 'Beschreibung obligatorisch'
-  = form.labeled_input_field :ticket_required, caption: 'Ticket obligatorisch'
+  = f.labeled_input_field :portfolio_item_id, caption: 'Portfolio', span: 2
+  = f.labeled_input_field :reference, caption: 'Bestellposition'
+  = f.labeled_input_field :billable, caption: 'Budgetposition ist verrechenbar'
+  = f.labeled_input_field :description_required, caption: 'Beschreibung obligatorisch'
+  = f.labeled_input_field :ticket_required, caption: 'Ticket obligatorisch'
 

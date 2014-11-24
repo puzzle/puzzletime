@@ -260,6 +260,14 @@ table.table td.action {
   margin-bottom: 10px;
 }
 
+.form-horizontal .form-group {
+
+  .checkbox input[type="checkbox"],
+  .radio input[type="radio"] {
+    margin-left: 0;
+  }
+}
+
 #content > .nav-tabs {
   margin-bottom: $line-height-computed * 2;
 }

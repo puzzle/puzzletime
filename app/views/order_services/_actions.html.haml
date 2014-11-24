@@ -1,6 +1,6 @@
-- if can?(:multi_worktimes, @order)
+- if can?(:update_multi_worktimes, @order)
   = action_link(action_icon('edit', 'Auswahl bearbeiten'),
-                edit_order_order_services_path(@order),
+                edit_order_multi_worktimes_path(@order),
                 data: { multi_edit: '#worktimes' })
 
 / TODO: can?

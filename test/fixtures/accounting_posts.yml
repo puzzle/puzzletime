@@ -31,3 +31,6 @@ hitobito_demo_app:
 
 hitobito_demo_site:
   work_item_id: 10
+
+webauftritt:
+  work_item_id: 6

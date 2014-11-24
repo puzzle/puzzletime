@@ -37,6 +37,7 @@ Rails.application.routes.draw do
       get :cockpit
     end
 
+    resource :multi_worktimes, only: [:edit, :update]
     resources :order_comments, only: [:index, :create]
     resource :order_targets, only: [:show, :update]
     resource :order_services, only: [:show, :edit, :update]
@@ -51,17 +52,17 @@ Rails.application.routes.draw do
 
   resources :order_kinds, except: [:show]
 
-  resources :work_items, only: [:new, :create, :edit, :update, :destroy] do
-    collection do
-      get :search
-    end
-  end
-
   resources :portfolio_items, except: [:show]
 
   resources :target_scopes, except: [:show]
 
   resources :user_notifications, except: [:show]
+
+  resources :work_items, only: [:new, :create, :edit, :update, :destroy] do
+    collection do
+      get :search
+    end
+  end
 
   resources :worktimes, only: [:index]
 

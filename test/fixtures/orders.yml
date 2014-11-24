@@ -34,3 +34,10 @@ hitobito_demo:
   status: bearbeitung
   kind: projekt
   department: devtwo
+
+webauftritt:
+  work_item_id: 6
+  responsible_id: 5
+  status: bearbeitung
+  kind: projekt
+  department: devone

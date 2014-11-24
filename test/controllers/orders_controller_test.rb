@@ -6,33 +6,33 @@ class OrdersControllerTest < ActionController::TestCase
 
   test 'GET index sorted by order' do
     get :index, sort: 'order', status_id: ''
-    assert_equal orders(:allgemein, :hitobito_demo, :puzzletime), assigns(:orders)
+    assert_equal orders(:allgemein, :hitobito_demo, :puzzletime, :webauftritt), assigns(:orders)
   end
 
   test 'GET index sorted by kind' do
     get :index, sort: 'kind', status_id: ''
-    assert_equal orders(:allgemein, :puzzletime, :hitobito_demo), assigns(:orders)
+    assert_equal orders(:allgemein, :puzzletime, :hitobito_demo, :webauftritt), assigns(:orders)
   end
 
   test 'GET index sorted by department' do
     get :index, sort: 'department', status_id: ''
-    assert_equal orders(:puzzletime, :hitobito_demo, :allgemein), assigns(:orders)
+    assert_equal orders(:puzzletime, :webauftritt, :hitobito_demo, :allgemein), assigns(:orders)
   end
 
   test 'GET index sorted by responsible' do
     get :index, sort: 'responsible', status_id: ''
-    assert_equal orders(:allgemein, :hitobito_demo, :puzzletime), assigns(:orders)
+    assert_equal orders(:webauftritt, :allgemein, :hitobito_demo, :puzzletime), assigns(:orders)
   end
 
   test 'GET index sorted by status' do
     get :index, sort: 'status', status_id: ''
-    assert_equal orders(:hitobito_demo, :puzzletime, :allgemein), assigns(:orders)
+    assert_equal orders(:hitobito_demo, :puzzletime, :webauftritt, :allgemein), assigns(:orders)
   end
 
   test 'GET index with default filter for manager' do
     login_as(:mark)
     get :index
-    assert_equal orders(:hitobito_demo, :puzzletime), assigns(:orders)
+    assert_equal orders(:hitobito_demo, :puzzletime, :webauftritt), assigns(:orders)
   end
 
   test 'GET index with default filter for user' do
@@ -49,17 +49,17 @@ class OrdersControllerTest < ActionController::TestCase
 
   test 'GET index filtered by department' do
     get :index, department_id: departments(:devone).id
-    assert_equal [orders(:puzzletime)], assigns(:orders)
+    assert_equal orders(:puzzletime, :webauftritt), assigns(:orders)
   end
 
   test 'GET index filtered by status' do
     get :index, status_id: order_statuses(:bearbeitung).id
-    assert_equal orders(:hitobito_demo, :puzzletime), assigns(:orders)
+    assert_equal orders(:hitobito_demo, :puzzletime, :webauftritt), assigns(:orders)
   end
 
   test 'GET index filtered by kind' do
     get :index, kind_id: order_kinds(:projekt).id
-    assert_equal [orders(:hitobito_demo)], assigns(:orders)
+    assert_equal orders(:hitobito_demo, :webauftritt), assigns(:orders)
   end
 
   test 'GET index filtered by status and kind' do
