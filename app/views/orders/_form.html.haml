@@ -1,3 +1,10 @@
+- if @order.persisted?
+  = render 'orders/header'
+
+  %h1.h3= @title
+
+  %p &nbsp;
+
 = crud_form cancel_url: polymorphic_url(entry, returning: true) do |f|
 
   - if entry.new_record?
