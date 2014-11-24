@@ -1,6 +1,10 @@
 %ul.nav.nav-tabs
   = nav 'Details', order_path(@order)
-  = nav 'Cockpit', cockpit_order_path(@order) if can?(:cockpit, @order)
+  - if can?(:cockpit, @order)
+    = nav 'Cockpit',
+          cockpit_order_path(@order),
+          accounting_posts_path
+
   - if can?(:services, @order)
     = nav 'Leistungen',
           order_order_services_path(@order),
