@@ -33,18 +33,26 @@ class OrdersControllerTest < ActionController::TestCase
     login_as(:mark)
     get :index
     assert_equal orders(:hitobito_demo, :puzzletime, :webauftritt), assigns(:orders)
+    assert_equal({ 'status_id' => order_statuses(:bearbeitung).id },
+                 session[:list_params]['/orders'])
   end
 
   test 'GET index with default filter for user' do
     login_as(:pascal)
     get :index
     assert_equal [orders(:hitobito_demo)], assigns(:orders)
+    assert_equal({ 'status_id' => order_statuses(:bearbeitung).id,
+                   'department_id' => departments(:devtwo).id },
+                 session[:list_params]['/orders'])
   end
 
   test 'GET index with default filter for responsible' do
     login_as(:lucien)
     get :index
     assert_equal orders(:hitobito_demo, :puzzletime), assigns(:orders)
+    assert_equal({ 'status_id' => order_statuses(:bearbeitung).id,
+                   'responsible_id' => employees(:lucien).id },
+                 session[:list_params]['/orders'])
   end
 
   test 'GET index filtered by department' do
