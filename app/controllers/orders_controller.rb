@@ -6,7 +6,7 @@ class OrdersController < CrudController
                           work_item_attributes: [:name, :shortname, :description],
                           employee_ids: []]
 
-  self.remember_params += %w(department_id kind_id status_id)
+  self.remember_params += %w(department_id kind_id status_id responsible_id)
 
   self.sort_mappings = {
     client: 'work_items.path_names',
@@ -41,25 +41,28 @@ class OrdersController < CrudController
                     order('work_items.path_names')
     entries = sort_entries_by_target_scope(entries)
 
-    if (params.keys & %w(department_id kind_id status_id)).present?
-      filter_entries_by(entries, :department_id, :kind_id, :status_id)
+    if (params.keys & %w(department_id kind_id status_id responsible_id)).present?
+      filter_entries_by(entries, :department_id, :kind_id, :status_id, :responsible_id)
     else
       default_filter_entries(entries)
     end
   end
 
   def default_filter_entries(entries)
-    params[:status_id] = @order_statuses.first.id
-    entries = entries.where(status_id: params[:status_id])
+    entries = remembering_default_filter(entries, :status_id, @order_statuses.first.id)
 
     if !current_user.management? && current_user.order_responsible?
-      entries.where(responsible_id: current_user.id)
+      remembering_default_filter(entries, :responsible_id, current_user.id)
     elsif current_user.department_id?
-      params[:department_id] = current_user.department_id
-      entries.where(department_id: current_user.department_id)
+      remembering_default_filter(entries, :department_id, current_user.department_id)
     else
       entries
     end
+  end
+
+  def remembering_default_filter(entries, attr, value)
+    remembered_params[attr.to_s] = params[attr] = value
+    entries.where(attr => value)
   end
 
   def sort_entries_by_target_scope(entries)
