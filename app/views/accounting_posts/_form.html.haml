@@ -1,4 +1,8 @@
-- @title ||= "Buchungsposition für #{order.name}"
+= render 'orders/header'
+
+%h1.h3= @title
+
+%p &nbsp;
 
 = crud_form cancel_url: cockpit_order_path(id: order.id, returning: true) do |f|
   = hidden_field_tag(:order_id, order.id)
