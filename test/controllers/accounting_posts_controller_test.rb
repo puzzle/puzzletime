@@ -99,6 +99,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
   test 'CREATE sets the attributes' do
     attributes = {
         order_id: orders(:hitobito_demo),
+        discount: 'percent',
         accounting_post: {
               work_item_attributes: { name: 'TEST', shortname: 'TST' },
               closed: 'true',
@@ -167,4 +168,48 @@ class AccountingPostsControllerTest < ActionController::TestCase
     assert_equal accounting_posts(:puzzletime).work_item_id, worktimes(:wt_pz_puzzletime).reload.work_item_id
   end
 
+  test 'PATCH update with discount fixed removes discount percent' do
+    post = accounting_posts(:hitobito_demo_app)
+    post.update!(discount_percent: 5)
+    patch :update,
+          id: post,
+          book_on_order: false,
+          discount: 'fixed',
+          accounting_post:
+            { reference: 123,
+              discount_fixed: 100 }
+    assert_redirected_to cockpit_order_path(orders(:hitobito_demo))
+    assert_equal 100, post.reload.discount_fixed
+    assert_equal nil, post.discount_percent
+  end
+
+  test 'PATCH update with discount percent removes discount fixed' do
+    post = accounting_posts(:hitobito_demo_app)
+    post.update!(discount_fixed: 100)
+    patch :update,
+          id: post,
+          book_on_order: false,
+          discount: 'percent',
+          accounting_post:
+            { reference: 123,
+              discount_percent: 5,
+              discount_fixed: 100 }
+    assert_redirected_to cockpit_order_path(orders(:hitobito_demo))
+    assert_equal nil, post.reload.discount_fixed
+    assert_equal 5, post.discount_percent
+  end
+
+  test 'PATCH update with discount none removes discount fixed' do
+    post = accounting_posts(:hitobito_demo_app)
+    post.update!(discount_fixed: 100)
+    patch :update,
+          id: post,
+          book_on_order: false,
+          discount: 'none',
+          accounting_post:
+            { reference: 123 }
+    assert_redirected_to cockpit_order_path(orders(:hitobito_demo))
+    assert_equal nil, post.reload.discount_fixed
+    assert_equal nil, post.discount_percent
+  end
 end

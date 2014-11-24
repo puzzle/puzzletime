@@ -33,8 +33,6 @@ Rails.application.routes.draw do
   resources :orders do
     collection do
       post :crm_load
-
-      get :cockpit
     end
 
     resource :multi_worktimes, only: [:edit, :update]
