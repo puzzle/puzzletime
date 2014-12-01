@@ -12,7 +12,7 @@
           order_multi_worktimes_path(@order),
           edit_order_multi_worktimes_path(@order)
 
-  - if can?(:show_targets, @order)
+  - if TargetScope.exists? && can?(:show_targets, @order)
     = nav 'Ziele',
           order_order_targets_path(@order),
           order_order_targets_path(@order)
