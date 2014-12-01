@@ -111,7 +111,16 @@ class OrdersControllerTest < ActionController::TestCase
                       department_id: departments(:devtwo).id,
                       responsible_id: employees(:pascal).id,
                       kind_id: order_kinds(:projekt).id,
-                      status_id: order_statuses(:bearbeitung).id }
+                      status_id: order_statuses(:bearbeitung).id,
+                      order_team_members_attributes: {
+                          "0" => { employee_id: employees(:half_year_maria).id, comment: "rolle maria" },
+                          "1" => { employee_id: employees(:next_year_pablo).id, comment: "rolle pablo"}
+                      },
+                      order_contacts_attributes: {
+                          "0" => { contact_id: contacts(:swisstopo_1), comment: "funktion 1"},
+                          "1" => { contact_id: contacts(:swisstopo_2), comment: "funktion 2"}
+                      }
+                    }
     end
 
     assert_redirected_to order_path(assigns(:order))
@@ -124,6 +133,12 @@ class OrdersControllerTest < ActionController::TestCase
     assert_equal employees(:pascal).id, order.responsible_id
     assert_equal order_statuses(:bearbeitung).id, order.status_id
     assert_equal order_kinds(:projekt).id, order.kind_id
+
+    order_contacts = order.order_contacts.map {|oc| [oc.contact_id, oc.comment]}.sort
+    assert_equal [[contacts(:swisstopo_1).id, "funktion 1"], [contacts(:swisstopo_2).id, "funktion 2"]].sort, order_contacts
+
+    order_team_members = order.order_team_members.map {|otm| [otm.employee.id, otm.comment]}.sort
+    assert_equal [[employees(:half_year_maria).id, "rolle maria"], [employees(:next_year_pablo).id, "rolle pablo"]].sort, order_team_members
   end
 
   test 'PATCH update sets values' do
@@ -137,7 +152,16 @@ class OrdersControllerTest < ActionController::TestCase
                      department_id: departments(:devtwo).id,
                      responsible_id: employees(:pascal).id,
                      kind_id: order_kinds(:projekt).id,
-                     status_id: order_statuses(:bearbeitung).id }
+                     status_id: order_statuses(:bearbeitung).id,
+                     order_team_members_attributes: {
+                         "0" => { employee_id: employees(:half_year_maria).id, comment: "rolle maria" },
+                         "1" => { employee_id: employees(:next_year_pablo).id, comment: "rolle pablo"}
+                     },
+                     order_contacts_attributes: {
+                         "0" => { contact_id: contacts(:puzzle_rava), comment: "funktion 1"},
+                         "1" => { contact_id: contacts(:puzzle_hauswart), comment: "funktion 2"}
+                     }
+                   }
 
     assert_redirected_to order_path(order)
 
@@ -150,5 +174,11 @@ class OrdersControllerTest < ActionController::TestCase
     assert_equal employees(:pascal).id, order.responsible_id
     assert_equal order_statuses(:bearbeitung).id, order.status_id
     assert_equal order_kinds(:projekt).id, order.kind_id
+
+    order_contacts = order.order_contacts.map {|oc| [oc.contact_id, oc.comment]}.sort
+    assert_equal [[contacts(:puzzle_rava).id, "funktion 1"], [contacts(:puzzle_hauswart).id, "funktion 2"]].sort, order_contacts
+
+    order_team_members = order.order_team_members.map {|otm| [otm.employee.id, otm.comment]}.sort
+    assert_equal [[employees(:half_year_maria).id, "rolle maria"], [employees(:next_year_pablo).id, "rolle pablo"]].sort, order_team_members
   end
 end

@@ -73,13 +73,6 @@ ActiveRecord::Schema.define(version: 20141106150857) do
     t.index ["client_id"], :name => "index_contacts_on_client_id"
   end
 
-  create_table "contacts_orders", primary_key: "false", :default => { :expr => "nextval('contacts_orders_false_seq'::regclass)" }, force: true do |t|
-    t.integer "contact_id", null: false
-    t.integer "order_id",   null: false
-    t.index ["contact_id"], :name => "index_contacts_orders_on_contact_id"
-    t.index ["order_id"], :name => "index_contacts_orders_on_order_id"
-  end
-
   create_table "contracts", force: true do |t|
     t.string  "number",         null: false
     t.date    "start_date"
@@ -143,13 +136,6 @@ ActiveRecord::Schema.define(version: 20141106150857) do
     t.index ["shortname"], :name => "chk_unique_name", :unique => true
   end
 
-  create_table "employees_orders", primary_key: "false", :default => { :expr => "nextval('employees_orders_false_seq'::regclass)" }, force: true do |t|
-    t.integer "employee_id", null: false
-    t.integer "order_id",    null: false
-    t.index ["employee_id"], :name => "index_employees_orders_on_employee_id"
-    t.index ["order_id"], :name => "index_employees_orders_on_order_id"
-  end
-
   create_table "employments", force: true do |t|
     t.integer "employee_id"
     t.decimal "percent",     precision: 5, scale: 2, null: false
@@ -175,6 +161,14 @@ ActiveRecord::Schema.define(version: 20141106150857) do
     t.index ["order_id"], :name => "index_order_comments_on_order_id"
   end
 
+  create_table "order_contacts", primary_key: "false", :default => { :expr => "nextval('order_contacts_false_seq'::regclass)" }, force: true do |t|
+    t.integer "contact_id", null: false
+    t.integer "order_id",   null: false
+    t.string  "comment"
+    t.index ["contact_id"], :name => "index_order_contacts_on_contact_id"
+    t.index ["order_id"], :name => "index_order_contacts_on_order_id"
+  end
+
   create_table "order_kinds", force: true do |t|
     t.string "name", null: false
     t.index ["name"], :name => "index_order_kinds_on_name", :unique => true
@@ -198,6 +192,14 @@ ActiveRecord::Schema.define(version: 20141106150857) do
     t.datetime "updated_at"
     t.index ["order_id"], :name => "index_order_targets_on_order_id"
     t.index ["target_scope_id"], :name => "index_order_targets_on_target_scope_id"
+  end
+
+  create_table "order_team_members", primary_key: "false", :default => { :expr => "nextval('order_team_members_false_seq'::regclass)" }, force: true do |t|
+    t.integer "employee_id", null: false
+    t.integer "order_id",    null: false
+    t.string  "comment"
+    t.index ["employee_id"], :name => "index_order_team_members_on_employee_id"
+    t.index ["order_id"], :name => "index_order_team_members_on_order_id"
   end
 
   create_table "orders", force: true do |t|
@@ -256,6 +258,19 @@ ActiveRecord::Schema.define(version: 20141106150857) do
     t.string  "name",                  null: false
     t.boolean "active", default: true, null: false
     t.index ["name"], :name => "index_portfolio_items_on_name", :unique => true
+  end
+
+  create_table "projects", force: true do |t|
+    t.integer "client_id"
+    t.string  "name",        null: false
+    t.text    "description"
+  end
+
+  create_table "projectmemberships", force: true do |t|
+    t.integer "project_id"
+    t.integer "employee_id"
+    t.boolean "projectmanagement", default: false
+    t.foreign_key ["project_id"], "projects", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_projectmemberships_projects"
   end
 
   create_table "target_scopes", force: true do |t|

@@ -7,6 +7,7 @@
 #= require jquery.ui.datepicker
 #= require jquery-ui-datepicker-i18n
 #= require jquery.ui.autocomplete
+#= require nested_form_fields
 #= require selectize
 #= require waypoints
 #= require waypoints-sticky
