@@ -11,6 +11,10 @@ div {
   text-align: justify;
 }
 
+label.required::after{
+content: " *"
+}
+
 a.symbol {
   text-decoration: none;
   font-weight: bold;
@@ -27,6 +31,40 @@ a.symbol {
 .unindented {
   margin-left: -$grid-gutter-width;
   margin-right: -$grid-gutter-width;
+}
+
+.nav-tabs.nav-center > li, .nav-pills.nav-center > li {
+  float:none;
+  display:inline-block;
+  *display:inline; /* ie7 fix */
+  zoom:1; /* hasLayout ie7 trigger */
+}
+
+.nav-tabs.nav-center, .nav-pills.nav-center {
+  text-align:center;
+}
+
+.nav-tabs > li > a {
+  color: $gray;
+
+  &:hover {
+    color: $gray-darker;
+  }
+}
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover, {
+  color: $gray-darker;
+}
+
+th {
+  color: #000;
+  font-weight: 400;
+}
+th.periodHead {
+    text-align:     right;
+}
+th.nowrap {
+  white-space: nowrap;
 }
 
 #evaluation td {
@@ -153,6 +191,102 @@ a.disabled:hover {
   cursor: default;
   text-decoration: none;
   color: $btn-link-disabled-color;
+}
+
+table.table td.action {
+  width: 20px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.table-responsive {
+  width: 100%;
+  margin-bottom: 15px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+  border: 1px solid $gray-light;
+
+  table {
+    border: none;
+  }
+}
+
+.table {
+  thead {
+    border-top: 1px solid $table-border-color;
+    background-color: $gray-lighter;
+
+    th, a {
+      color: $gray;
+    }
+
+    tr > th {
+      border-bottom: 0;
+    }
+
+    a {
+      text-decoration: none;
+
+      &:active, &:hover {
+        color: #000;
+      }
+    }
+  }
+
+  > thead > tr > th,
+  > tbody > tr > td {
+
+    &:first-child {
+      padding-left: 30px;
+    }
+    &:last-child {
+      padding-right: 30px;
+    }
+  }
+
+  /* Generic cell content styles */
+  .title {
+    font-size: 18px;
+    font-weight: 400;
+  }
+  .muted {
+    color: $gray;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+form {
+  .legend {
+    text-align: right;
+    font-weight: bold;
+    padding-top: 0px;
+    padding-bottom: 15px;
+  }
+}
+
+.form-inline .form-group {
+  margin-bottom: 10px;
+}
+
+.form-horizontal .form-group {
+
+  .checkbox input[type="checkbox"],
+  .radio input[type="radio"] {
+    margin-left: 0;
+  }
+}
+
+.form-action {
+  @extend .form-control;
+  width: auto;
+  border: 0;
+  box-shadow: none;
+  margin-bottom: 15px;
 }
 
 #content > .nav-tabs {

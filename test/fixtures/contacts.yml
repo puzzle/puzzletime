@@ -1,0 +1,48 @@
+# encoding: utf-8
+# == Schema Information
+#
+# Table name: contacts
+#
+#  id         :integer          not null, primary key
+#  client_id  :integer          not null
+#  lastname   :string(255)
+#  firstname  :string(255)
+#  function   :string(255)
+#  email      :string(255)
+#  phone      :string(255)
+#  mobile     :string(255)
+#  created_at :datetime
+#  updated_at :datetime
+#
+
+swisstopo_1:
+  client: :swisstopo
+  lastname: Stieber
+  firstname: Benno
+  function: Product Owner
+  email: stieber.benno@example.com
+  phone: 0310000000
+  mobile: 0790000000
+
+swisstopo_2:
+  client: :swisstopo
+  lastname: Stein
+  firstname: Erich
+  function: Scheff
+  email: stein.erich@example.com
+  phone: 0320000000
+  mobile: 0780000000
+
+puzzle_rava:
+  client: :puzzle
+  lastname: Rava
+  firstname: Andreas
+  function: Product Owner
+  email: rava@example.com
+
+puzzle_hauswart:
+  client: :puzzle
+  lastname: Hauswart
+  firstname: Hans
+  function: Hauswart
+  email: hauswart@example.com

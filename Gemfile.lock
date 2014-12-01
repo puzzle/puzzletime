@@ -159,6 +159,8 @@ GEM
     mocha (1.1.0)
       metaclass (~> 0.0.1)
     multi_json (1.10.1)
+    nested_form_fields (0.5.3)
+      rails (>= 3.2.0)
     net-ldap (0.6.1)
     nokogiri (1.6.3.1)
       mini_portile (= 0.6.0)
@@ -346,6 +348,7 @@ DEPENDENCIES
   kaminari-bootstrap
   minitest-reporters
   mocha
+  nested_form_fields
   net-ldap
   pg
   protective

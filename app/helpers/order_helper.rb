@@ -1,7 +1,7 @@
 module OrderHelper
 
   def order_team_enumeration(order)
-    list = order.employees.to_a
+    list = order.team_members.to_a
 
     if list.size > 2
       linked_employee_enumeration(list.take(2)) + ', ...'

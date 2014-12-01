@@ -17,11 +17,23 @@
              fields: fields,
              exclude: entry.persisted? && Crm.instance ? [:name] : []
 
+  = f.labeled(:order_contacts, caption: "Ansprechspersonen Kunde") do
+    = f.nested_fields_for :order_contacts, wrapper_tag: :div do |ff|
+      = render 'order_contacts_fields', f: ff
+    .row
+      .col-md-1.form-action
+        = f.add_nested_fields_link :order_contacts, icon(:plus, title: 'Ansprechsperson hinzufügen')
+
   = f.labeled_input_field :department_id, class: 'searchable'
   = f.labeled_input_field :responsible_id, class: 'searchable'
   = f.labeled_input_field :kind_id, class: 'searchable'
   = f.labeled_input_field :status_id, class: 'searchable'
-  = f.labeled_input_field :employee_ids, class: 'searchable', multi: true
 
+  = f.labeled(:order_team_members, caption: "Team") do
+    = f.nested_fields_for :order_team_members, wrapper_tag: :div do |ff|
+      = render 'order_team_members_fields', f: ff
+    .row
+      .col-md-1.form-action
+        = f.add_nested_fields_link :order_team_members, icon(:plus, title: 'Teammitglied hinzufügen')
 
 = render 'shared/modal'
