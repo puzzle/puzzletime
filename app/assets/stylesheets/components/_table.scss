@@ -37,10 +37,10 @@
     padding: 15px;
 
     &:first-child {
-      padding-left: 30px;
+      padding-left: $grid-gutter-width;
     }
     &:last-child {
-      padding-right: 30px;
+      padding-right: $grid-gutter-width;
     }
   }
 
@@ -111,6 +111,17 @@
     }
     &:last-child {
       padding-right: $padding-base-horizontal;
+    }
+  }
+}
+.unindented .table-condensed {
+  & > thead > tr > th,
+  & > tbody > tr > td {
+    &:first-child {
+      padding-left: $grid-gutter-width;
+    }
+    &:last-child {
+      padding-right: $grid-gutter-width;
     }
   }
 }
