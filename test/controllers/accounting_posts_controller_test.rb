@@ -63,7 +63,8 @@ class AccountingPostsControllerTest < ActionController::TestCase
 
   test 'CREATE with book_on_order true when accounting_post exists' do
     assert_no_difference "AccountingPost.count" do
-      post :create, book_on_order: 'true', order_id: orders(:hitobito_demo), accounting_post: { reference: 'asdf' }
+      post :create, book_on_order: 'true', order_id: orders(:hitobito_demo),
+           accounting_post: { reference: 'asdf', portfolio_item_id: portfolio_items(:web).id }
       assert_response :success
       assert_template :new
       assert_match(/es existieren bereits/, flash[:alert])
@@ -74,7 +75,8 @@ class AccountingPostsControllerTest < ActionController::TestCase
     orders(:hitobito_demo).accounting_posts.delete_all
     assert_difference "AccountingPost.count", +1 do
       assert_no_difference "WorkItem.count" do
-        post :create, book_on_order: 'true', order_id: orders(:hitobito_demo), accounting_post: { reference: 'asdf' }
+        post :create, book_on_order: 'true', order_id: orders(:hitobito_demo),
+             accounting_post: { reference: 'asdf', portfolio_item_id: portfolio_items(:web).id }
       end
     end
     assert_redirected_to controller: :orders, action: :cockpit, id: orders(:hitobito_demo)
@@ -86,7 +88,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
     assert_difference "AccountingPost.count", +1 do
       assert_difference "WorkItem.count", +1 do
         post :create, order_id: orders(:hitobito_demo),
-             accounting_post: { work_item_attributes: { name: 'TEST', shortname: 'TST' }}
+             accounting_post: { work_item_attributes: { name: 'TEST', shortname: 'TST' }, portfolio_item_id: portfolio_items(:web).id}
       end
     end
     assert_redirected_to controller: :orders, action: :cockpit, id: orders(:hitobito_demo)
