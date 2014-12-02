@@ -35,14 +35,6 @@
   }
 }
 
-.orders-list {
-  thead {
-    [class^="icon-"], [class*=" icon-"] {
-      font-size: 25px;
-    }
-  }
-}
-
 .orders-cockpit {
   .cockpit-header {
     @include clearfix;

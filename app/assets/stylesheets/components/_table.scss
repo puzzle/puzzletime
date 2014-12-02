@@ -1,0 +1,147 @@
+.table-responsive {
+  width: 100%;
+  margin-bottom: 15px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+  border: 1px solid $gray-light;
+
+  table {
+    border: none;
+  }
+}
+
+.table {
+  & > thead {
+    border-top: 1px solid $table-border-color;
+    background-color: $gray-lighter;
+
+    th, a {
+      color: $gray;
+    }
+
+    a {
+      text-decoration: none;
+
+      &:active, &:hover {
+        color: #000;
+      }
+    }
+  }
+  & > thead > tr > th {
+    border-bottom: 0;
+  }
+  & > thead > tr > th,
+  & > tbody > tr > td {
+    padding: 15px;
+
+    &:first-child {
+      padding-left: 30px;
+    }
+    &:last-child {
+      padding-right: 30px;
+    }
+  }
+
+  /* Generic cell content styles */
+  .title {
+    font-size: 18px;
+    font-weight: 400;
+  }
+  .muted {
+    color: $gray;
+  }
+  .large {
+    font-size: 25px;
+  }
+}
+
+.table-striped {
+ & > thead {
+   & > tr > th:nth-child(2n) {
+     background-color: #ebebeb;
+   }
+ }
+ & > tbody {
+   // odd rows
+   & > tr:nth-child(2n+1) {
+     & > td {
+       background-color: #ffffff;
+     }
+     & > td:nth-child(2n) {
+       background-color: #fcfcfc;
+     }
+   }
+
+   // even rows
+   & > tr:nth-child(2n) {
+     & > td {
+       background-color: #fcfcfc;
+     }
+     & > td:nth-child(2n) {
+       background-color: #f5f5f5;
+     }
+   }
+ }
+}
+
+.table-hover {
+  & > tbody > tr:hover {
+    background-color: #E9F0F8;
+  }
+
+  &.table-striped > tbody > tr:hover {
+    & > td {
+      background-color: #E9F0F8;
+    }
+    & > td:nth-child(2n) {
+      background-color: #E5ECF4;
+    }
+  }
+}
+
+.table-condensed {
+  & > thead > tr > th,
+  & > tbody > tr > td {
+    padding: $padding-base-vertical;
+
+    &:first-child {
+      padding-left: $padding-base-horizontal;
+    }
+    &:last-child {
+      padding-right: $padding-base-horizontal;
+    }
+  }
+}
+
+.table.table-inline {
+  width: auto;
+}
+
+table.table td.action {
+  width: 20px;
+  text-align: center;
+  white-space: nowrap;
+
+  > * {
+    padding-right: 5px;
+    text-decoration: none;
+
+    &:last-child {
+      padding-right: 0;
+    }
+  }
+}
+
+// Legacy?
+th {
+  color: #000;
+  font-weight: 400;
+}
+th.periodHead {
+    text-align:     right;
+}
+th.nowrap {
+  white-space: nowrap;
+}
