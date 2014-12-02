@@ -1,0 +1,20 @@
+form {
+  .legend {
+    text-align: right;
+    font-weight: bold;
+    padding-top: 0px;
+    padding-bottom: 15px;
+  }
+}
+
+.form-inline .form-group {
+  margin-bottom: 10px;
+}
+
+.form-horizontal .form-group {
+
+  .checkbox input[type="checkbox"],
+  .radio input[type="radio"] {
+    margin-left: 0;
+  }
+}
