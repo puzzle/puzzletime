@@ -2,11 +2,10 @@ $worktimes-weeknav-active-bg: #fff;
 $worktimes-weekcontent-hover-bg: $gray-lighter;
 
 .worktimes {
-  margin-left: - $grid-gutter-width / 2;
-  margin-right: - $grid-gutter-width / 2;
-
   .figures {
     @extend .row;
+    margin-left: 0;
+    margin-right: 0;
     padding-bottom: 5px;
     color: $gray;
 
@@ -30,6 +29,7 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
     &.stuck {
       @extend .container-fluid;
       padding-left: 0;
+      padding-right: 0;
       position: fixed;
       top: -$padding-base-vertical;
       left: 0;
@@ -45,6 +45,8 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
 
   .weeknav {
     @extend .row;
+    margin-left: 0;
+    margin-right: 0;
     position: relative;
     border-width: 1px 0;
     border-style: solid;
@@ -242,6 +244,8 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
 
     .date-label {
       @extend .row;
+      margin-left: 0;
+      margin-right: 0;
       margin-top: 36px;
       color: $gray;
 
@@ -274,6 +278,8 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
 
     .entry {
       @extend .row;
+      margin-left: 0;
+      margin-right: 0;
       // min-height: 95px;
       position: relative;
       padding: 15px 0;
