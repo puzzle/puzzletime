@@ -1,4 +1,4 @@
-.worktimes{'data-selected-date' => @selected_date}
+.worktimes.unindented{'data-selected-date' => @selected_date}
   .figures
     .balance
       Überzeitsaldo:
@@ -37,4 +37,3 @@
 
   .weekcontent
     = render partial: 'day', collection: @week_days, as: :day
-
