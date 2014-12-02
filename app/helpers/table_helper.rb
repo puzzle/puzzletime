@@ -36,6 +36,18 @@ module TableHelper
     end
   end
 
+  # Same as plain_table_or_message, but wraps table in .unindented
+  def unindented_plain_table_or_message(entries, *attrs, &block)
+    entries.to_a # force evaluation of relations
+    if entries.present?
+      content_tag(:div, class: 'unindented') do
+        plain_table_or_message(entries, *attrs, &block)
+      end
+    else
+      plain_table_or_message(entries, *attrs, &block)
+    end
+  end
+
   # Create a table of the +entries+ with the default or
   # the passed attributes in its columns. An options hash may be given
   # as the last argument.
