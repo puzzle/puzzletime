@@ -30,7 +30,7 @@ module EvaluatorHelper
           desc += link_to '...', evaluation_detail_params.merge!(
                                   controller: worktime.controller,
                                   action: 'show',
-                                  id: worktime.id)
+                                  id: worktime.id), title: description
         end
         td desc
       end
