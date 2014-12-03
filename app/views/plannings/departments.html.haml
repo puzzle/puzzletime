@@ -2,7 +2,7 @@
 
 = DryCrud::Table::Builder.table(@departments,
                                 self,
-                                class: 'table-condensed table-striped table-hover') do |t|
+                                class: 'table table-condensed table-striped table-hover table-inline') do |t|
   - t.col('Bereich') { |d| d.name }
   - t.action_col do |d|
     = link_to 'Mitarbeiterplanung',

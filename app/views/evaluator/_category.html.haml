@@ -1,4 +1,4 @@
-%table#evaluation.table-striped.table-condensed.table-hover
+%table#evaluation.table.table-striped.table-condensed.table-hover.table-inline
   %thead
     %tr
       %th= @evaluation.division_header
@@ -20,4 +20,3 @@
       - if @evaluation.sub_work_items_eval
         %th
       = render(:partial => 'timecell', :collection => collect_times(@periods, :sum_total_times))
-

@@ -4,7 +4,7 @@
 
 = DryCrud::Table::Builder.table(@employees,
                                 self,
-                                class: 'table-condensed table-striped table-hover') do |t|
+                                class: 'table table-condensed table-striped table-hover table-inline') do |t|
   - t.attrs :lastname, :firstname
   - t.action_col do |e|
     = link_to 'Aktuelle Planung',
