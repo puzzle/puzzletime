@@ -1,8 +1,7 @@
 - @title = 'Ferienplan'
 - @title += " #{Date.today.year}" if @period.nil?
-= stylesheet_link_tag 'graph', :media => 'all'
 = render :partial => 'evaluator/period_link'
-%table.absence.table-striped
+%table.absence
   %thead
     %tr.head
       %th{:rowspan => "2"}
