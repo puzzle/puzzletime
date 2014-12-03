@@ -8,11 +8,40 @@ table.absence {
     text-align:   center;
   }
 
+  // custom tooltips
+  td a {
+    text-decoration: none;
+    color: #333;
+    width: 100%;
+    position: relative;
+    float: left;
+  }
+  td a:hover {
+    border: 0;
+  }
+  td a span {
+    display: none;
+  }
+  td a:hover span {
+    display: block;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 3;
+    background: #ffffdd;
+    white-space:  nowrap;
+    padding: 1pt;
+    border: 1px solid #ddd;
+    font-size: 13px;
+    float: left;
+    text-align: left;
+  }
+
   td.stat {
     text-align:   right;
   }
 
-  td.current {
+  th.current, td.current {
     background-color: #ffffdd !important;
   }
 
