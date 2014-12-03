@@ -1,33 +1,46 @@
-.absence {
+table.absence {
+  @extend .table;
   @extend .table-condensed;
-}
-// Doesn't work with colspan
-// .absence.fixed-first-col {
-//   tbody > tr > td:first-child,
-//   tbody > tr > th:first-child {
-//     background: red;
-//   }
-// }
+  @extend .table-stripedbody;
+  @extend .table-bordered;
 
-.absence .head th {
-  text-align:   center;
-}
+  .head th {
+    text-align:   center;
+  }
 
-.absence th {
-  text-align:   left;
-  border-right:   1px solid #bbb;
-  border-bottom:  1px solid #bbb;
-}
+  td.stat {
+    text-align:   right;
+  }
 
-.absence td {
-  text-align:   center;
-  /*padding:    0pt;*/
-  font-size:    14px;
-  border-right:   1px solid #bbb;
-  border-bottom:  1px solid #bbb;
-}
+  td.current {
+    background-color: #ffffdd !important;
+  }
 
-.absence td.stat {
-  text-align:   right;
-  padding:    2pt;
+  td.definitive {
+    background-color: #91C5E5 !important;
+  }
+
+  td.absence {
+    background-color: #8FADCB !important;
+  }
+
+  td.free {
+    background-color: #EFBCA3 !important;
+  }
+
+  td.tentative {
+    background-color: #96CBD3 !important;
+  }
+
+  td.half_planned {
+    background-color: #ECEBA0 !important;
+  }
+
+  td.full_planned {
+    background-color: #B0DAA5 !important;
+  }
+
+  td.over_planned {
+    background-color: #E39797 !important;
+  }
 }
