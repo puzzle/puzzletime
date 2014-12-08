@@ -32,7 +32,8 @@ class EmployeeStatistics
   def used_vacations(period)
     return 0 if period.nil?
     @employee.worktimes.in_period(period).
-                        where(absence_id: Settings.vacation_id).
+                        joins(:absence).
+                        where(absences: { vacation: true }).
                         sum(:hours).to_f / 8.0
   end
 

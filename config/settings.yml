@@ -2,12 +2,6 @@
 # Global settings for puzzleTime #
 # ############################## #
 
-
-# Significant IDs
-# THIS SHOULD BE SYNCED WITH THE DATABASE !
-vacation_id: 1
-default_project_id: 8   # Puzzle Allgemein
-
 # Array of holidays with a fixed date. [day, month]
 regular_holidays:
   -
