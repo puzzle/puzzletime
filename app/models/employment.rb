@@ -61,15 +61,27 @@ class Employment < ActiveRecord::Base
 
   # updates the end date of the previous employement
   def update_end_date
-    previous_employment = Employment.where('employee_id = ? AND start_date < ? AND end_date IS NULL', employee_id, start_date).first
     if previous_employment
       previous_employment.end_date = start_date - 1
       previous_employment.save
     end
-    later_employment = Employment.where('employee_id = ? AND start_date > ?', employee_id, start_date).order('start_date').first
-    if later_employment
-      self.end_date = later_employment.start_date - 1
+    if following_employment
+      self.end_date = following_employment.start_date - 1
     end
+  end
+
+  def previous_employment
+    @previous_employment ||=
+      Employment.where('employee_id = ? AND start_date < ? AND end_date IS NULL',
+                       employee_id, start_date).
+                 first
+  end
+
+  def following_employment
+    @following_employment ||=
+      Employment.where('employee_id = ? AND start_date > ?', employee_id, start_date).
+                 order('start_date').
+                 first
   end
 
   def period
@@ -81,31 +93,13 @@ class Employment < ActiveRecord::Base
   end
 
   def vacations
-    period.length / 365.25 * Settings.vacation_days_per_year * percent_factor
+    WorkingCondition.sum_of(:vacation_days_per_year, period) do |p, v|
+      p.length / 365.25 * percent_factor * v
+    end
   end
 
   def musttime
     period.musttime * percent_factor
-  end
-
-  ##### cache dates for performance reasons  ######
-
-  def start_date
-  	 @start_date ||= read_attribute(:start_date)
-  end
-
-  def end_date
-  	 @end_date ||= read_attribute(:end_date)
-  end
-
-  def start_date=(value)
-  	 write_attribute(:start_date, value)
-	   @start_date = nil
-  end
-
-  def end_date=(value)
-  	 write_attribute(:end_date, value)
-	   @end_date = nil
   end
 
   def to_s

@@ -55,7 +55,7 @@ class AccountingPost < ActiveRecord::Base
   end
 
   def offered_days
-    offered_hours.to_f / Settings.must_hours_per_day
+    offered_hours.to_f / WorkingCondition.value_at(Date.today, :must_hours_per_day)
   end
 
   def no_discount?

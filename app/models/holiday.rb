@@ -27,24 +27,24 @@ class Holiday < ActiveRecord::Base
 
 
   def self.period_musttime(period)
-    hours = workday_hours(period)
-    holidays(period).each do |holiday|
-      hours -= Settings.must_hours_per_day - holiday.musthours_day
+    WorkingCondition.sum_of(:must_hours_per_day, period) do |p, h|
+      hours = workday_hours(p, h)
+      holidays(p).each do |holiday|
+        hours -= h - holiday.musthours_day
+      end
+      hours
     end
-    hours
   end
 
   # Collection of functions to check if date is holiday or not
   def self.musttime(date)
-    if Holiday.weekend?(date)
-      return 0
-    elsif Holiday.regularHoliday?(date)
-      return 0
+    if Holiday.weekend?(date) || Holiday.regularHoliday?(date)
+      0
     else
       @@irregularHolidays.each do |holiday|
         return holiday.musthours_day if holiday.holiday_date == date
       end
-      return Settings.must_hours_per_day
+      WorkingCondition.value_at(date, :must_hours_per_day)
     end
   end
 
@@ -110,14 +110,14 @@ class Holiday < ActiveRecord::Base
     end
   end
 
-  def self.workday_hours(period)
+  def self.workday_hours(period, must_hours_per_day)
     length = period.length
     weeks = length / 7
-    hours = weeks * 5 * Settings.must_hours_per_day
+    hours = weeks * 5 * must_hours_per_day
     if length % 7 > 0
       lastPeriod = Period.new(period.start_date + weeks * 7, period.end_date)
       lastPeriod.step do |day|
-        hours += Settings.must_hours_per_day unless self.weekend?(day)
+        hours += must_hours_per_day unless self.weekend?(day)
       end
     end
     hours
