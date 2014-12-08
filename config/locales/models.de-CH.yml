@@ -18,8 +18,8 @@ de-CH:
         one: Kontakt
         other: Kontakte
       department:
-        one: Organisationseinheit
-        other: Organisationseinheiten
+        one: Bereich
+        other: Bereiche
       employee_list:
         one: Mitarbeiterliste
         other: Mitarbeiterlisten
