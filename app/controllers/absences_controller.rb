@@ -5,6 +5,6 @@
 
 class AbsencesController < ManageController
 
-  self.permitted_attrs = [:name, :payed, :private]
+  self.permitted_attrs = [:name, :payed, :private, :vacation]
 
 end

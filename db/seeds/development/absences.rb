@@ -1,6 +1,7 @@
 Absence.seed(:name,
   { name: 'Ferien',
-    payed: true },
+    payed: true,
+    vacation: true },
 
   { name: 'Krankheit',
     payed: true },

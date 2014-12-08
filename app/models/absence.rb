@@ -21,7 +21,6 @@ class Absence < ActiveRecord::Base
   has_many :worktimes
   has_many :employees, through: :worktimes
 
-  before_destroy :dont_destroy_vacation
   protect_if :worktimes, 'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Arbeitszeiten zugeordnet sind'
 
   # Validation helpers
@@ -30,13 +29,6 @@ class Absence < ActiveRecord::Base
 
   scope :list, -> { order(:name) }
 
-
-  def dont_destroy_vacation
-    if id == Settings.vacation_id
-      errors.add(:base, 'Die Ferien Absenz kann nicht gelöscht werden')
-      false
-    end
-  end
 
   def to_s
     name

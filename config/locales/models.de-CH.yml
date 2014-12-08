@@ -80,6 +80,7 @@ de-CH:
         name: Bezeichnung
         payed: Bezahlt
         private: Nicht öffentlich
+        vacation: Ferien
       absencetime:
         duration: Dauer
       accounting_post:
