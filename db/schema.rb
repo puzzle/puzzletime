@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141106150857) do
+ActiveRecord::Schema.define(version: 20141208095937) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -135,7 +135,7 @@ ActiveRecord::Schema.define(version: 20141106150857) do
     t.string  "passwd"
     t.string  "email",                                           null: false
     t.boolean "management",                      default: false
-    t.float   "initial_vacation_days", :default => { :expr => "(0)::double precision" }
+    t.float   "initial_vacation_days",           default: 0.0
     t.string  "ldapname"
     t.string  "eval_periods",          limit: 3,                              array: true
     t.integer "department_id"
@@ -285,6 +285,12 @@ ActiveRecord::Schema.define(version: 20141106150857) do
     t.boolean "closed",                       default: false, null: false
     t.index ["parent_id"], :name => "index_work_items_on_parent_id"
     t.index ["path_ids"], :name => "index_work_items_on_path_ids"
+  end
+
+  create_table "working_conditions", force: true do |t|
+    t.date    "valid_from"
+    t.decimal "vacation_days_per_year", precision: 5, scale: 2, null: false
+    t.decimal "must_hours_per_day",     precision: 4, scale: 2, null: false
   end
 
   create_table "worktimes", force: true do |t|

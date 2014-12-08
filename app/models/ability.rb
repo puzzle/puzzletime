@@ -20,6 +20,7 @@ class Ability
                     PortfolioItem,
                     TargetScope,
                     UserNotification,
+                    WorkingCondition,
                     WorkItem]
       can :crud, Employee
       can [:read, :create, :update], Worktime

@@ -2,10 +2,6 @@
 # Global settings for puzzleTime #
 # ############################## #
 
-# Master values for time calculations.
-# DO NOT CHANGE THAT WITHOUT A GOOD REASON AND MIGRATIONS FOR THE EXISTING DATA !
-must_hours_per_day: 8.0
-vacation_days_per_year: 25.0
 
 # Significant IDs
 # THIS SHOULD BE SYNCED WITH THE DATABASE !

@@ -62,6 +62,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :working_conditions, except: [:show]
+
   resources :worktimes, only: [:index]
 
   resources :ordertimes do

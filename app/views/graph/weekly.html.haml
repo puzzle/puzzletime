@@ -25,6 +25,6 @@
   %tr
     %td= timebox_div Timebox.new(nil, '#FF0000', 1, '')
     %td
-      Tagessoll (#{format_hour(Settings.must_hours_per_day * @graph.must_hours_factor)}
+      Tagessoll (#{format_hour(WorkingCondition.value_at(@graph.period.start_date, :must_hours_per_day) * @graph.must_hours_factor)}
       h)
 %br{:clear => "all"}

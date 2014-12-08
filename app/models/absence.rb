@@ -32,7 +32,10 @@ class Absence < ActiveRecord::Base
 
 
   def dont_destroy_vacation
-    errors.add(:base, 'Die Ferien Absenz kann nicht gelöscht werden') if id == Settings.vacation_id
+    if id == Settings.vacation_id
+      errors.add(:base, 'Die Ferien Absenz kann nicht gelöscht werden')
+      false
+    end
   end
 
   def to_s

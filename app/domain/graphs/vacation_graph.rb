@@ -66,7 +66,7 @@ class VacationGraph
   	 max_absence = get_max_absence times
   	 return nil if max_absence.nil?
 
-  	 hours = times[max_absence] / Settings.must_hours_per_day
+  	 hours = times[max_absence] / WorkingCondition.value_at(@current.start_date, :must_hours_per_day)
   	 color = color_for(max_absence) if max_absence
   	 Timebox.new nil, color, hours, tooltip
   end
@@ -80,7 +80,7 @@ class VacationGraph
   end
 
   def following_left_vacations
-    employee.statistics.remaining_vacations(@actual_period.end_date + 1).round(1)
+    employee.statistics.remaining_vacations(@actual_period.end_date).round(1)
   end
 
   def granted_vacations
@@ -126,8 +126,9 @@ class VacationGraph
     @unpaid_absences.each do |unpaid|
       @current.step do |date|
         if unpaid.include?(date) && date.wday > 0 && date.wday < 6
-          times[UNPAID_ABSENCE] += Settings.must_hours_per_day
-          tooltip += "#{I18n.l(date)}: #{Settings.must_hours_per_day}0 h #{UNPAID_ABSENCE.label}<br/>".html_safe
+          must = WorkingCondition.value_at(date, :must_hours_per_day)
+          times[UNPAID_ABSENCE] += must
+          tooltip += "#{I18n.l(date)}: #{must} h #{UNPAID_ABSENCE.label}<br/>".html_safe
         end
       end
     end

@@ -2,7 +2,7 @@
 
 class Period
 
-  attr_reader :start_date, :end_date, :label
+  attr_reader :start_date, :end_date
 
   # Caches the most used periods
   # Not sure yet if this really works in a stateless fcgi environment
@@ -90,7 +90,7 @@ class Period
   def initialize(start_date = Date.today, end_date = Date.today, label = nil)
     @start_date = self.class.parse_date(start_date)
     @end_date = self.class.parse_date(end_date)
-    @label = label ? label : to_s
+    @label = label
   end
 
 
@@ -104,6 +104,10 @@ class Period
 
   def length
     ((@end_date - @start_date) + 1).to_i
+  end
+
+  def label
+    @label ||= to_s
   end
 
   def musttime

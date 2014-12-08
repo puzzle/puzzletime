@@ -68,6 +68,9 @@ de-CH:
       work_item:
         one: Position
         other: Positionen
+      working_condition:
+        one: Arbeitsbedingung
+        other: Arbeitsbedingungen
       worktime:
         one: Arbeitszeit
         other: Arbeitszeiten
@@ -201,6 +204,10 @@ de-CH:
         name: Name
         shortname: Kürzel
         description: Beschreibung
+      working_condition:
+        valid_from: Gültig ab
+        vacation_days_per_year: Ferientage pro Jahr
+        must_hours_per_day: Arbeitszeit pro Tag
       worktime:
         account_id: Buchungsposition
         absence_id: Absenz
