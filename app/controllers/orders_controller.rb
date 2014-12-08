@@ -111,6 +111,7 @@ class OrdersController < CrudController
     else
       @categories = []
     end
+    @contacts = entry.client.contacts if entry.persisted?
   end
 
   def set_filter_values
