@@ -412,6 +412,44 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test 'create order contacts fields' do
+    timeout_safe do
+      assert has_no_field?("order_order_contacts_attributes_0_contact_id")
+      assert_no_selector("a[data-object-class='order-contact'].remove_nested_fields_link")
+
+      find("a[data-object-class='order_contact'].add_nested_fields_link").click
+      assert has_field?("order_order_contacts_attributes_0_contact_id")
+      assert_selector("a[data-object-class='order_contact'].remove_nested_fields_link", count: 1)
+
+      find("a[data-object-class='order_contact'].add_nested_fields_link").click
+      assert has_field?("order_order_contacts_attributes_1_contact_id")
+      assert_selector("a[data-object-class='order_contact'].remove_nested_fields_link", count: 2)
+
+      find("a[data-delete-association-field-name='order[order_contacts_attributes][0][_destroy]']")
+      assert has_no_field?("order_order_contacts_attributes_0_contact_id")
+      assert has_field?("order_order_contacts_attributes_1_contact_id")
+    end
+  end
+
+  test 'create order team members fields' do
+    timeout_safe do
+      assert has_no_field?("order_order_team_members_attributes_0_employee_id")
+      assert_no_selector("a[data-object-class='order-team-member'].remove_nested_fields_link")
+
+      find("a[data-object-class='order_team_member'].add_nested_fields_link").click
+      assert has_field?("order_order_team_members_attributes_0_employee_id")
+      assert_selector("a[data-object-class='order_team_member'].remove_nested_fields_link", count: 1)
+
+      find("a[data-object-class='order_team_member'].add_nested_fields_link").click
+      assert has_field?("order_order_team_members_attributes_1_employee_id")
+      assert_selector("a[data-object-class='order_team_member'].remove_nested_fields_link", count: 2)
+
+      find("a[data-delete-association-field-name='order[order_team_members_attributes][0][_destroy]']").click
+      assert has_no_field?("order_order_team_members_attributes_0_employee_id")
+      assert has_field?("order_order_team_members_attributes_1_employee_id")
+    end
+  end
+
   private
 
   def create_client

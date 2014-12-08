@@ -35,9 +35,11 @@ class Order < ActiveRecord::Base
   has_many :targets, class_name: 'OrderTarget'
   has_descendants_through_work_item :accounting_posts
 
-  has_and_belongs_to_many :employees
-  has_and_belongs_to_many :contacts
-
+  has_many :order_team_members
+  has_many :team_members, through: :order_team_members, source: :employee
+  has_many :order_contacts
+  has_many :contacts, through: :order_contacts
+  accepts_nested_attributes_for :order_team_members, :order_contacts, reject_if: :all_blank, allow_destroy: true
 
   ### VALIDATIONS
 
@@ -47,6 +49,7 @@ class Order < ActiveRecord::Base
 
   ### CALLBACKS
 
+  before_validation :set_self_in_nested
   after_initialize :set_default_status_id
   after_create :create_order_targets
 
@@ -86,6 +89,17 @@ class Order < ActiveRecord::Base
 
   def set_default_status_id
     self.status_id ||= OrderStatus.list.pluck(:id).first
+  end
+
+  def set_self_in_nested
+    # don't try to set self in frozen nested attributes (-> marked for destroy)
+    [order_team_members, order_contacts].each do |c|
+      c.each do |e|
+        unless e.frozen?
+          e.order = self
+        end
+      end
+    end
   end
 
   def create_order_targets

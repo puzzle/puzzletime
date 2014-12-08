@@ -2,9 +2,13 @@ class OrdersController < CrudController
 
   include Filterable
 
-  self.permitted_attrs = [:crm_key, :kind_id, :responsible_id, :department_id, :status_id,
-                          work_item_attributes: [:name, :shortname, :description],
-                          employee_ids: []]
+  self.permitted_attrs = [
+      :crm_key, :kind_id, :responsible_id, :department_id, :status_id,
+          work_item_attributes: [:name, :shortname, :description],
+          order_team_members_attributes: [:id, :employee_id, :comment, :_destroy],
+          order_contacts_attributes: [:id, :contact_id, :comment, :_destroy]
+  ]
+
 
   self.remember_params += %w(department_id kind_id status_id responsible_id)
 
@@ -37,7 +41,7 @@ class OrdersController < CrudController
   private
 
   def list_entries
-    entries = super.includes(:kind, :department, :status, :responsible, :targets, :employees).
+    entries = super.includes(:kind, :department, :status, :responsible, :targets, :team_members).
                     order('work_items.path_names')
     entries = sort_entries_by_target_scope(entries)
 
@@ -115,5 +119,6 @@ class OrdersController < CrudController
     @order_statuses = OrderStatus.list
     @target_scopes = TargetScope.list
   end
+
 
 end
