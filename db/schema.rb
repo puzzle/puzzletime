@@ -128,7 +128,7 @@ ActiveRecord::Schema.define(version: 20141208095937) do
     t.string  "passwd"
     t.string  "email",                                           null: false
     t.boolean "management",                      default: false
-    t.float   "initial_vacation_days",           default: 0.0
+    t.float   "initial_vacation_days", :default => { :expr => "(0)::double precision" }
     t.string  "ldapname"
     t.string  "eval_periods",          limit: 3,                              array: true
     t.integer "department_id"
@@ -258,19 +258,6 @@ ActiveRecord::Schema.define(version: 20141208095937) do
     t.string  "name",                  null: false
     t.boolean "active", default: true, null: false
     t.index ["name"], :name => "index_portfolio_items_on_name", :unique => true
-  end
-
-  create_table "projects", force: true do |t|
-    t.integer "client_id"
-    t.string  "name",        null: false
-    t.text    "description"
-  end
-
-  create_table "projectmemberships", force: true do |t|
-    t.integer "project_id"
-    t.integer "employee_id"
-    t.boolean "projectmanagement", default: false
-    t.foreign_key ["project_id"], "projects", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_projectmemberships_projects"
   end
 
   create_table "target_scopes", force: true do |t|
