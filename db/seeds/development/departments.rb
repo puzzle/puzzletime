@@ -1,4 +1,4 @@
-Department.seed(:name,
+Department.seed(:shortname,
   { name: '/dev/one',
     shortname: 'D1' },
 
