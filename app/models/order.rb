@@ -83,6 +83,10 @@ class Order < ActiveRecord::Base
     end
   end
 
+  def label
+    name
+  end
+
   private
 
   def work_item_parent_presence

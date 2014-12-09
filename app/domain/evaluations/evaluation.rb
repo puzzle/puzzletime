@@ -187,26 +187,6 @@ class Evaluation
     nil
   end
 
-  # Returns a CSV String for all times in this Evaluation
-  def csv_string(period)
-    CSV.generate do |csv|
-      csv << ['Datum', 'Stunden', 'Von Zeit', 'Bis Zeit', 'Reporttyp',
-              'Verrechenbar', 'Mitarbeiter', 'Position', 'Ticket', 'Bemerkungen']
-      times(period).each do |time|
-        csv << [I18n.l(time.work_date),
-                time.hours,
-                (time.start_stop? ? I18n.l(time.from_start_time, format: :time) : ''),
-                (time.start_stop? && time.to_end_time? ? I18n.l(time.to_end_time, format: :time) : ''),
-                time.report_type,
-                time.billable,
-                time.employee.label,
-                time.account.label_verbose,
-                time.ticket,
-                time.description]
-      end
-    end
-  end
-
   protected
 
   # Initializes a new Evaluation with the given category.

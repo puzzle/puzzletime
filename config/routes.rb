@@ -38,7 +38,10 @@ Rails.application.routes.draw do
     resource :multi_worktimes, only: [:edit, :update]
     resources :order_comments, only: [:index, :create]
     resource :order_targets, only: [:show, :update]
-    resource :order_services, only: [:show, :edit, :update]
+
+    resource :order_services, only: [:show, :edit, :update] do
+      get :export_worktimes_csv
+    end
 
     member do
       get :cockpit
