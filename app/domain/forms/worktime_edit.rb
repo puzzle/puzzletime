@@ -18,7 +18,7 @@ class WorktimeEdit < Splitable
   end
 
   def build_worktime
-    empty? ? Projecttime.find(original_id) : Projecttime.new
+    empty? ? Ordertime.find(original_id) : Ordertime.new
   end
 
 end
