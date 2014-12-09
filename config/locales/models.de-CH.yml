@@ -43,7 +43,7 @@ de-CH:
         other: Auftragsarten
       order_status:
         one: Auftragsstatus
-        other: Auftragsstati
+        other: Auftragsstatus
       order_target:
         one: Auftragsziel
         other: Auftragsziele
@@ -137,6 +137,7 @@ de-CH:
         musthours_day: Muss Stunden
       order:
         client: Kunde
+        category: Kategorie
         order: Auftrag
         kind: Art
         kind_id: Art

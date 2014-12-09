@@ -175,7 +175,7 @@ module DryCrud::Form
     end
 
     def static_field(attr, options = {})
-      @template.format_attr(@object, attr)
+      static_text(@template.format_attr(@object, attr))
     end
 
     # Renders a static text where otherwise form inputs appear.

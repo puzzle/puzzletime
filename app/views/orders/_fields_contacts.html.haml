@@ -1,0 +1,12 @@
+= f.labeled(:order_contacts, caption: "Ansprechspersonen Kunde") do
+  = f.nested_fields_for :order_contacts, wrapper_tag: :div do |fields|
+    .row
+      .col-md-5
+        = fields.input_field(:contact_id, class: 'searchable', placeholder: 'Ansprechsperson')
+      .col-md-6
+        = fields.input_field(:comment, placeholder: 'Funktion')
+      .col-md-1.form-action
+        = fields.remove_nested_fields_link(icon('remove', title: 'Ansprechsperson entfernen'))
+  .row
+    .col-md-1.form-action
+      = f.add_nested_fields_link :order_contacts, icon(:plus, title: 'Ansprechsperson hinzufügen')

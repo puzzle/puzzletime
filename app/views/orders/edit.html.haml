@@ -1,0 +1,30 @@
+- @title ||= ti(:title, model: models_label(false))
+
+= render 'orders/header'
+
+= crud_form cancel_url: edit_order_path(entry) do |f|
+
+  = f.labeled_static_field(:client)
+  = f.labeled_static_field(:category)
+
+  = f.fields_for :work_item, entry.work_item do |fields|
+    = render 'work_items/fields',
+             fields: fields,
+             exclude: Crm.instance && entry.crm_key? ? [:name] : []
+
+  = render('field_crm_edit', f: f) if Crm.instance
+
+  = render 'fields_contacts', f: f
+
+  = f.labeled_input_field :department_id, class: 'searchable'
+  = f.labeled_input_field :responsible_id, class: 'searchable'
+  = f.labeled_input_field :kind_id, class: 'searchable'
+  = f.labeled_input_field :status_id, class: 'searchable'
+
+  = render 'fields_team_members', f: f
+
+%br/
+
+= render 'actions_edit'
+
+= render 'shared/modal'
