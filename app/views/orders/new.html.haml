@@ -1,0 +1,20 @@
+- @title ||= ti(:title, model: models_label(false))
+
+= crud_form do |f|
+
+  = render('field_crm_new', f: f) if Crm.instance
+  = render 'field_client', f: f
+  = render 'field_category', f: f
+
+  = f.fields_for :work_item, entry.work_item do |fields|
+    = render 'work_items/fields',
+             fields: fields
+
+  = f.labeled_input_field :department_id, class: 'searchable'
+  = f.labeled_input_field :responsible_id, class: 'searchable'
+  = f.labeled_input_field :kind_id, class: 'searchable'
+  = f.labeled_input_field :status_id, class: 'searchable'
+
+  = render 'fields_team_members', f: f
+
+= render 'shared/modal'

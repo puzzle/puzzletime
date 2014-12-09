@@ -65,6 +65,10 @@ class Order < ActiveRecord::Base
 
   ### INSTANCE METHODS
 
+  def category
+    work_item.parent unless work_item.parent == client
+  end
+
   def parent_names
     work_item.path_names.split("\n")[0..-2].join(" #{Settings.work_items.path_separator} ")
   end
