@@ -19,8 +19,12 @@ class EmployeeStatistics
   # Returns the unused days of vacation remaining until the given date.
   def remaining_vacations(date)
     period = employment_period_to(date)
-    @employee.initial_vacation_days + total_vacations(period) +
-      overtime_vacation_hours(date) / 8.0 - used_vacations(period)
+    return 0 if period.nil?
+
+    @employee.initial_vacation_days +
+      total_vacations(period) +
+      overtime_vacation_days(period) -
+      used_vacations(period)
   end
 
   # Returns the overall amount of granted vacation days for the given period.
@@ -31,10 +35,13 @@ class EmployeeStatistics
   # Returns the used vacation days for the given period
   def used_vacations(period)
     return 0 if period.nil?
-    @employee.worktimes.in_period(period).
-                        joins(:absence).
-                        where(absences: { vacation: true }).
-                        sum(:hours).to_f / 8.0
+
+    WorkingCondition.sum_with(:must_hours_per_day, period) do |p, hours|
+      @employee.worktimes.in_period(p).
+                          joins(:absence).
+                          where(absences: { vacation: true }).
+                          sum(:hours).to_f / hours
+    end
   end
 
 
@@ -78,18 +85,30 @@ class EmployeeStatistics
 
     # Returns the hours this employee worked plus the payed absences for the given period.
   def payed_worktime(period)
-    @employee.worktimes.joins('LEFT JOIN absences ON absences.id = absence_id').
-                        in_period(period).
-                        where('((work_item_id IS NOT NULL AND absence_id IS NULL) OR absences.payed)').
-                        sum(:hours).
-                        to_f
+    @employee.worktimes.
+              joins('LEFT JOIN absences ON absences.id = absence_id').
+              in_period(period).
+              where('((work_item_id IS NOT NULL AND absence_id IS NULL) OR absences.payed)').
+              sum(:hours).
+              to_f
+  end
+
+  # Return the overtime days that were transformed into vacations up to the given date.
+  def overtime_vacation_days(period)
+    WorkingCondition.sum_with(:must_hours_per_day, period) do |p, hours|
+      @employee.overtime_vacations.
+                where('transfer_date BETWEEN ? AND ?', period.start_date, period.end_date).
+                sum(:hours).
+                to_f / hours
+    end
   end
 
   # Return the overtime hours that were transformed into vacations up to the given date.
   def overtime_vacation_hours(date = nil)
-    @employee.overtime_vacations.where(date ? ['transfer_date <= ?', date] : nil).
-                                 sum(:hours).
-                                 to_f
+    @employee.overtime_vacations.
+              where(date ? ['transfer_date <= ?', date] : nil).
+              sum(:hours).
+              to_f
   end
 
 

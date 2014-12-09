@@ -70,7 +70,7 @@ class AbsencePlanningGraph
     if hours == 0
       cached.add(label)
     else
-      cached.add(label, hours / 8 * 10)
+      cached.add(label, hours / WorkingCondition.value_at(date, :must_hours_per_day) * 10)
     end
   end
 

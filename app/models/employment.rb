@@ -93,7 +93,7 @@ class Employment < ActiveRecord::Base
   end
 
   def vacations
-    WorkingCondition.sum_of(:vacation_days_per_year, period) do |p, v|
+    WorkingCondition.sum_with(:vacation_days_per_year, period) do |p, v|
       p.length / 365.25 * percent_factor * v
     end
   end
