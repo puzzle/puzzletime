@@ -143,6 +143,11 @@ $ ->
     openTableRowLink(this)
   )
 
+  # wire up searchable form fields for dynamically added nested form fields
+  $(document).on "fields_added.nested_form_fields", (event,param) ->
+    $('select.searchable').selectize()
+
+
   # change cursor for turbolink requests to give the user a minimal feedback
   $(document).on('page:fetch', ->
     $('body').addClass('loading'))
