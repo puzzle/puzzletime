@@ -123,7 +123,7 @@ class OrdersControllerTest < ActionController::TestCase
                     }
     end
 
-    assert_redirected_to order_path(assigns(:order))
+    assert_redirected_to edit_order_path(assigns(:order))
 
     item = WorkItem.where(name: 'New Order').first
     order = item.order
@@ -163,7 +163,7 @@ class OrdersControllerTest < ActionController::TestCase
                      }
                    }
 
-    assert_redirected_to order_path(order)
+    assert_redirected_to edit_order_path(order)
 
     order.reload
     item = order.work_item

@@ -1,9 +1,6 @@
 - if @order.persisted?
   = render 'orders/header'
 
-  %h1.h3= @title
-
-  %p &nbsp;
 
 = crud_form cancel_url: polymorphic_url(entry, returning: true) do |f|
 
@@ -15,7 +12,11 @@
   = f.fields_for :work_item, entry.work_item do |fields|
     = render 'work_items/fields',
              fields: fields,
-             exclude: entry.persisted? && Crm.instance ? [:name] : []
+             exclude: entry.persisted? && Crm.instance && entry.crm_key? ? [:name] : []
+
+  - if entry.persisted? && Crm.instance
+    = render('crm_field', f: f)
+
   - if entry.persisted?
     = f.labeled(:order_contacts, caption: "Ansprechspersonen Kunde") do
       = f.nested_fields_for :order_contacts, wrapper_tag: :div do |ff|

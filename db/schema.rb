@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141208152845) do
+ActiveRecord::Schema.define(version: 20141209092113) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,8 +55,9 @@ ActiveRecord::Schema.define(version: 20141208152845) do
   end
 
   create_table "clients", force: true do |t|
-    t.integer "work_item_id", null: false
+    t.integer "work_item_id",                 null: false
     t.string  "crm_key"
+    t.boolean "allow_local",  default: false, null: false
     t.index ["work_item_id"], :name => "index_clients_on_work_item_id"
   end
 

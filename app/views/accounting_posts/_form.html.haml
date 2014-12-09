@@ -13,8 +13,6 @@
     = f.fields_for :work_item, entry.work_item do |fields|
       = render 'work_items/fields', fields: fields, required: false
 
-  %hr
-
   = f.labeled_input_field :closed
 
   = render 'budget_fields', form: f
@@ -26,6 +24,3 @@
   = f.labeled_input_field :description_required, caption: 'Beschreibung obligatorisch'
   = f.labeled_input_field :ticket_required, caption: 'Ticket obligatorisch'
 
-  %hr
-  .col-md-2.legend
-    * Pflichtfelder

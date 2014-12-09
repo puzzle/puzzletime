@@ -84,7 +84,10 @@ module DryCrud::Form
     # Render a boolean field.
     def boolean_field(attr, html_options = {})
       content_tag(:div, class: 'checkbox') do
-        check_box(attr, html_options)
+        content_tag(:label) do
+          detail = html_options.delete(:detail) || '&nbsp;'.html_safe
+          safe_join([check_box(attr, html_options), ' ', detail])
+        end
       end
     end
 
