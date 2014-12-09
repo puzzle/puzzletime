@@ -27,7 +27,7 @@ class Splitable
   end
 
   def build_worktime
-    Projecttime.new
+    Ordertime.new
   end
 
   def worktime_template
