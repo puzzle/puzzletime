@@ -9,7 +9,7 @@ module DryCrud::Table
     extend ActiveSupport::Concern
 
     included do
-      delegate :link_to, :path_args, :edit_polymorphic_path, :ti,
+      delegate :link_to, :path_args, :edit_polymorphic_path, :ti, :picon,
                to: :template
     end
 
@@ -18,7 +18,9 @@ module DryCrud::Table
     # A block may be given to define the link path for the row entry.
     def attr_with_show_link(attr, &block)
       sortable_attr(attr) do |e|
-        link_to(format_attr(e, attr), action_path(e, &block))
+        path = action_path(e, &block)
+        path = edit_polymorphic_path(path) unless path.is_a?(String)
+        link_to(format_attr(e, attr), path)
       end
     end
 
@@ -28,11 +30,7 @@ module DryCrud::Table
     def show_action_col(html_options = {}, &block)
       action_col do |e|
         path = action_path(e, &block)
-        if path
-          table_action_link('Anzeigen',
-                            path,
-                            html_options.clone)
-        end
+        link_to('Anzeigen', path, html_options.clone) if path
       end
     end
 
@@ -40,11 +38,12 @@ module DryCrud::Table
     # A block may be given to define the link path for the row entry.
     # If the block returns nil, no link is rendered.
     def edit_action_col(html_options = {}, &block)
+      html_options = html_options.merge(title: 'Bearbeiten')
       action_col do |e|
         path = action_path(e, &block)
         if path
           path = path.is_a?(String) ? path : edit_polymorphic_path(path)
-          table_action_link('Bearbeiten', path, html_options.clone)
+          table_action_link('edit', path, html_options)
         end
       end
     end
@@ -53,15 +52,12 @@ module DryCrud::Table
     # A block may be given to define the link path for the row entry.
     # If the block returns nil, no link is rendered.
     def destroy_action_col(html_options = {}, &block)
+      html_options = html_options.merge(title: 'Löschen',
+                                        data: { confirm: ti(:confirm_delete),
+                                                method: :delete })
       action_col do |e|
         path = action_path(e, &block)
-        if path
-          table_action_link('Löschen',
-                            path,
-                            html_options.merge(
-                              data: { confirm: ti(:confirm_delete),
-                                      method: :delete }))
-        end
+        table_action_link('delete', path, html_options) if path
       end
     end
 
@@ -72,8 +68,8 @@ module DryCrud::Table
     end
 
     # Generic action link inside a table.
-    def table_action_link(label, url, html_options = {})
-      link_to(label, url, html_options)
+    def table_action_link(icon, url, html_options = {})
+      link_to(picon(icon), url, html_options)
     end
 
     private

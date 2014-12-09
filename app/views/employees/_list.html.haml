@@ -1,4 +1,4 @@
-= crud_table :lastname, :firstname, :shortname, :current_percent, :management do |t|
+= crud_table :lastname, :firstname, :shortname, :current_percent, :department_id, :management do |t|
   - t.action_col do |e|
     - link_to('Überzeit', employee_overtime_vacations_path(e) )
   - t.action_col do |e|

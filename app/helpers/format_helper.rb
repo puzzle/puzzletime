@@ -15,6 +15,8 @@ module FormatHelper
     when Float, BigDecimal then
       number_with_precision(value, precision: t('number.format.precision'),
                                    delimiter: t('number.format.delimiter'))
+    when Fixnum then
+      number_with_delimiter(value, delimiter: t('number.format.delimiter'))
     when Date   then l(value, format: :long)
     when Time   then "#{l(value.to_date)} #{l(value, format: :time)}"
     when true   then t('global.yes')
@@ -45,7 +47,7 @@ module FormatHelper
 
   def format_day(date, full_weekday_name=false)
     if date
-      format = full_weekday_name ? "%A, %e.%-m." : "%a %e.%-m." 
+      format = full_weekday_name ? "%A, %e.%-m." : "%a %e.%-m."
       I18n.l(date, format: format)
     end
   end

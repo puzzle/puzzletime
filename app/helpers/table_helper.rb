@@ -68,9 +68,9 @@ module TableHelper
   # An options hash for the table builder may be given as the last argument.
   def crud_table(*attrs, &block)
     attrs, options = explode_attrs_with_options(attrs, &block)
-    #first = attrs.shift
+    first = attrs.shift
     plain_table_or_message(entries, options) do |t|
-      #t.attr_with_show_link(first) if first
+      t.attr_with_show_link(first) if first
       t.sortable_attrs(*attrs)
       yield t if block_given?
       standard_table_actions(t)
