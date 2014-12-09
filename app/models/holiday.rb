@@ -27,7 +27,7 @@ class Holiday < ActiveRecord::Base
 
 
   def self.period_musttime(period)
-    WorkingCondition.sum_of(:must_hours_per_day, period) do |p, h|
+    WorkingCondition.sum_with(:must_hours_per_day, period) do |p, h|
       hours = workday_hours(p, h)
       holidays(p).each do |holiday|
         hours -= h - holiday.musthours_day

@@ -3,6 +3,10 @@
 class WorkingCondition < ActiveRecord::Base
 
   validates :valid_from, uniqueness: true
+  validates :must_hours_per_day,
+            numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 24 }
+  validates :vacation_days_per_year,
+            numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 365 }
   validate :exactly_one_without_valid_from
 
 
@@ -23,7 +27,7 @@ class WorkingCondition < ActiveRecord::Base
       each_of(attr, date, date) { |v, _, _| return v }
     end
 
-    def sum_of(attr, period)
+    def sum_with(attr, period)
       sum = 0
       each_period_of(attr, period) do |p, val|
         sum += yield(p, val)
