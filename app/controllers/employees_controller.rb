@@ -10,6 +10,8 @@ class EmployeesController < ManageController
 
   self.search_columns = [:firstname, :lastname, :shortname]
 
+  self.sort_mappings = { department_id: 'departments.name' }
+
   def settings
   end
 
@@ -42,6 +44,12 @@ class EmployeesController < ManageController
       flash[:notice] = 'Das alte Passwort ist falsch'
       render 'passwd'
     end
+  end
+
+  private
+
+  def list_entries
+    super.includes(:department).references(:department)
   end
 
 end

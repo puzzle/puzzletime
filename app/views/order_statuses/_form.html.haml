@@ -7,5 +7,5 @@
                           :to_s,
                           { prompt: ta(:please_select) },
                           class: 'form-control'
-  = f.labeled_input_field :closed, help: 'Für Aufträge mit einem geschlossenem Status können keine Zeiten mehr erfasst werden.'
+  = f.labeled_input_field :closed, detail: 'Für Aufträge mit einem geschlossenem Status können keine Zeiten mehr erfasst werden.'
   = f.labeled_input_field :position

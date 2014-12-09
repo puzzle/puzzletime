@@ -7,7 +7,7 @@
 
 .scrollable
   %table
-    %tr 
+    %tr
       / First line should be fixed
       / {:data => {:spy => "affix", :top => "-"}}
       %th{title: 'Budgetierte Stunden und Beträge.'}
@@ -53,5 +53,5 @@
                 %span.unit Tage
             .data-item
               - if cell.amount
-                %span.figure= f(cell.amount)
+                %span.figure= f(cell.amount.to_f)
                 %span.unit CHF
