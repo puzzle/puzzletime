@@ -2,6 +2,8 @@
 
 class EvaluatorController < ApplicationController
 
+  include Concerns::WorktimesReport
+
   before_action :authorize_action
 
   before_action :set_period
@@ -53,10 +55,8 @@ class EvaluatorController < ApplicationController
     set_evaluation_details
     filename = 'puzzletime_' + csv_label(@evaluation.category) + '-' +
                csv_label(@evaluation.division) + '.csv'
-    set_export_header(filename)
-    send_data(@evaluation.csv_string(@period),
-              type: 'text/csv; charset=utf-8; header=present',
-              filename: filename)
+    times = @evaluation.times(@period)
+    send_worktimes_csv(times, filename)
   end
 
   def book_all
@@ -156,6 +156,7 @@ class EvaluatorController < ApplicationController
         when 'userabsences' then EmployeeAbsencesEval.new(@user.id)
         when 'subworkitems' then SubWorkItemsEval.new(params[:category_id])
         when 'workitememployees' then WorkItemEmployeesEval.new(params[:category_id])
+        when 'orderworkitems' then OrderWorkItemsEval.new(params[:order_id], params[:work_item_id])
         else nil
     end
     if @user.management && @evaluation.nil?
@@ -180,7 +181,7 @@ class EvaluatorController < ApplicationController
 
   def set_evaluation_details
     evaluation.set_division_id(params[:division_id])
-    if params[:start_date]
+    if params[:start_date].present?
       @period = params[:start_date] == '0' ? nil :
                    Period.retrieve(params[:start_date], params[:end_date])
     end
@@ -205,20 +206,6 @@ class EvaluatorController < ApplicationController
 
   def paginate_times
     @times = @evaluation.times(@period).includes(:employee, :work_item).page(params[:page])
-  end
-
-  def set_export_header(filename)
-    if request.env['HTTP_USER_AGENT'] =~ /msie/i
-      headers['Pragma'] = 'public'
-      headers['Content-type'] = 'text/plain'
-      headers['Cache-Control'] = 'no-cache, must-revalidate, post-check=0, pre-check=0'
-      headers['Content-Disposition'] = "attachment; filename=\"#{filename}\""
-      headers['Expires'] = '0'
-    else
-      headers['Content-Type'] ||= 'text/csv'
-      headers['Content-Disposition'] = "attachment; filename=\"#{filename}\""
-    end
-    headers['Last-Modified'] = Time.now.httpdate
   end
 
   def redirect_to_overview
@@ -307,7 +294,7 @@ class EvaluatorController < ApplicationController
   end
 
   def send_csv(csv_report)
-    set_export_header(csv_report.filename)
+    set_csv_file_export_header(csv_report.filename)
     send_data(csv_report.to_csv, type: 'text/csv; charset=utf-8; header=present', filename: csv_report.filename)
   end
 

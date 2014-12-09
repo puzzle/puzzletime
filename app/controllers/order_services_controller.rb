@@ -4,16 +4,22 @@ class OrderServicesController < ApplicationController
 
   include Filterable
   include DryCrud::Rememberable
+  include Concerns::WorktimesReport
 
   self.remember_params = %w(employee_id work_item_id billable)
 
   before_action :order
   before_action :authorize_class
   before_filter :handle_remember_params, only: [:show]
-  before_action :set_filter_values, only: :show
+  before_action :set_filter_values, only: [:show, :export_worktimes_csv]
 
   def show
     @worktimes = list_worktimes
+  end
+
+  def export_worktimes_csv
+    binding.pry
+    send_worktimes_csv(list_worktimes, worktimes_csv_filename)
   end
 
   private
@@ -24,6 +30,19 @@ class OrderServicesController < ApplicationController
                     order(:work_date).
                     in_period(@period)
     filter_entries_by(entries, :employee_id, :work_item_id, :billable)
+  end
+
+  def worktimes_csv_filename
+    accounting_post_shortnames =
+        params[:work_item_id].present? ? WorkItem.find(params[:work_item_id]).path_shortnames : nil
+    order_shortnames = order.work_item.path_shortnames
+    [
+        'puzzletime',
+        accounting_post_shortnames || order_shortnames,
+        Employee.find(params[:employee_id]).shortname,
+        params[:billable].present? ? "billable_#{params[:billable]}" : nil,
+        '.csv'
+    ].compact.join('-')
   end
 
   def order
