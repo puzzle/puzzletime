@@ -386,7 +386,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       fill_in('order_crm_key', with: '123')
       click_link('Übernehmen')
 
-      assert_match /Nicht gefunden/, find('#crm_key').text
+      assert page.has_selector?('#crm_key', text: 'Nicht gefunden')
     end
   end
 

@@ -28,7 +28,6 @@ class Worktime < ActiveRecord::Base
 
   include ReportType::Accessors
   include Conditioner
-  extend Evaluatable
 
   belongs_to :employee
   belongs_to :absence
@@ -53,6 +52,18 @@ class Worktime < ActiveRecord::Base
       end
     else
       all
+    end
+  end
+
+  class << self
+    # The displayed label of this object.
+    def label
+      'Zeit'
+    end
+
+    # A more complete label, defaults to the normal label method.
+    def label_verbose
+      label
     end
   end
 
