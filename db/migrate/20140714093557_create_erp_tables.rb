@@ -247,7 +247,7 @@ class CreateErpTables < ActiveRecord::Migration
     OrderStatus.create!(name: 'Garantie', style: 'warning', position: 30)
     OrderStatus.create!(name: 'Abgeschlossen', style: 'danger', position: 40)
 
-    ['Web Application Development', 'Enterprise Applikation Development', 'Schulung'].each do |n|
+    ['Null', 'Web Application Development', 'Enterprise Applikation Development', 'Schulung'].each do |n|
       PortfolioItem.create!(name: n)
     end
 
@@ -271,6 +271,8 @@ class CreateErpTables < ActiveRecord::Migration
 
     drop_table :projectmemberships
     drop_table :projects
+
+    drop_table :engine_schema_info rescue nil
   end
 
   def down
@@ -389,16 +391,24 @@ class CreateErpTables < ActiveRecord::Migration
   end
 
   def migrate_depth2_project(project)
-    # TODO whitlist project with depth 2
-
-    # until we have the list, migrate it without creating a category
-    unless project.parent.work_item
-      client = Client.find(project.parent[:client_id])
-      create_work_item!(project.parent, client.work_item, false)
+    if depth2_with_category?(project)
+      migrate_depth2_project_with_category(project)
+    else
+      migrate_depth2_project_with_accounting_posts(project)
     end
+  end
 
+  def migrate_depth2_project_with_category(project)
+    create_client_if_missing(project.parent)
     create_work_item!(project, project.parent.work_item, true)
     create_order!(project)
+    create_accounting_post!(project)
+  end
+
+  def migrate_depth2_project_with_accounting_posts(project)
+    create_client_if_missing(project.parent)
+    create_order!(project.parent)
+    create_work_item!(project, project.parent.work_item, true)
     create_accounting_post!(project)
   end
 
@@ -406,10 +416,7 @@ class CreateErpTables < ActiveRecord::Migration
     l1_project = project.parent.parent
     l2_project = project.parent
 
-    unless l1_project.work_item
-      client = Client.find(l1_project[:client_id])
-      create_work_item!(l1_project, client.work_item, false)
-    end
+    create_client_if_missing(l1_project)
 
     unless l2_project.work_item
       create_work_item!(l2_project, l1_project.work_item, false)
@@ -420,8 +427,14 @@ class CreateErpTables < ActiveRecord::Migration
     create_accounting_post!(project)
   end
 
+  def create_client_if_missing(top_project)
+    unless top_project.work_item
+      client = Client.find(top_project[:client_id])
+      create_work_item!(top_project, client.work_item, false)
+    end
+  end
+
   def create_work_item!(project, parent_work_item, leaf)
-    # TODO clarify if freeze_until has to be migrated
     project.create_work_item!(parent_id: parent_work_item.id,
                               name: project[:name],
                               shortname: project[:shortname],
@@ -435,11 +448,9 @@ class CreateErpTables < ActiveRecord::Migration
   end
 
   def create_order!(project)
-    kind = OrderKind.list.third # 'Projekt'
-    status = OrderStatus.list.first # 'Bearbeitung'
     responsible = project_responsible(project)
-    project.work_item.create_order!(kind: kind,
-                                    status: status,
+    project.work_item.create_order!(kind: default_order_kind,
+                                    status: default_order_status,
                                     responsible: responsible,
                                     department_id: project[:department_id])
   end
@@ -447,7 +458,8 @@ class CreateErpTables < ActiveRecord::Migration
   def create_accounting_post!(project)
     project.work_item.create_accounting_post!(billable: project[:billable],
                                               description_required: project[:description_required],
-                                              ticket_required: project[:ticket_required])
+                                              ticket_required: project[:ticket_required],
+                                              portfolio_item: default_portfolio_item)
   end
 
   def migrate_planning_project_ids
@@ -465,8 +477,7 @@ class CreateErpTables < ActiveRecord::Migration
         membership = projectmanagement_membership(project.parent.parent)
       end
     end
-    # TODO: specify default responsible
-    membership ? membership.employee : Employee.find_by_shortname('MW')
+    membership ? membership.employee : default_order_responsible
   end
 
   def projectmanagement_membership(project)
@@ -477,6 +488,70 @@ class CreateErpTables < ActiveRecord::Migration
     count = model_class.where('work_item_id is null').count
     if count > 0
       fail "Missing work_items for #{count} #{model_class.name.downcase.pluralize} (#{model_class.name} # #{model_class.where('work_item_id is null').pluck(:id).join(', ')})"
+    end
+  end
+
+  def default_order_responsible
+    @default_order_responsible ||= Employee.find_by_shortname('MW')
+  end
+
+  def default_order_kind
+    @default_order_kind ||= OrderKind.find_by_name('Projekt')
+  end
+
+  def default_order_status
+    @default_order_status ||= OrderStatus.find_by_name('Abgeschlossen')
+  end
+
+  def default_portfolio_item
+    @default_portfolio_item ||= PortfolioItem.find_by_name('Null')
+  end
+
+
+
+  DEPTH2_WITH_CATEGORY =
+    [2748, 2881, 2297, 2515, 2691, 3064, 3065, 366, 367, 1226, 2361, 2438, 2441, 2489, 217, 218,
+     223, 224, 225, 226, 227, 568, 2476, 2768, 534, 604, 905, 2226, 2228, 2358, 2439, 2585, 516,
+     517, 2690, 2430, 2359, 2360, 352, 353, 2231, 1063, 2609, 2610, 2677, 2478, 2479, 1096, 149,
+     154, 164, 1542, 303, 2497, 1398, 2248, 2480, 3095, 2216, 2217, 2218, 2215, 2220, 2221, 2222,
+     2490, 2293, 2391, 2597, 2625, 2626, 2336, 2335, 2354, 2355, 2556, 2373, 2374, 2375, 2376,
+     2377, 2378, 2514, 2390, 3202, 3203, 3206, 2509, 2510, 2511, 2484, 2485, 2486, 2487, 2488,
+     2505, 2530, 2583, 2584, 2503, 2482, 2483, 2572, 2586, 2607, 2636, 2642, 2559, 2560, 2524,
+     2527, 2528, 2529, 3102, 3103, 3344, 2641, 2826, 2654, 2784, 3166, 3076, 3077, 2764, 2700,
+     2915, 3392, 3391, 3311, 2740, 2745, 3004, 2747, 2910, 3135, 3007, 2912, 3181, 3182, 2820,
+     2821, 3042, 2892, 3006, 3291, 2845, 2846, 2847, 2848, 2849, 2850, 2851, 2907, 3117, 3289,
+     3313, 2859, 2860, 2861, 2863, 3165, 2870, 3148, 2914, 3043, 3126, 3234, 3321, 3322, 3386,
+     3390, 2895, 3138, 3163, 3285, 2898, 3081, 2903, 2999, 3001, 3040, 3109, 3129, 3142, 3154,
+     3155, 3217, 3242, 3243, 3292, 2998, 3034, 3035, 3036, 3084, 3268, 3329, 3408, 3009, 3021,
+     3136, 3023, 3025, 3029, 3032, 3164, 3038, 3108, 3074, 3168, 3171, 3173, 3079, 3124, 3083,
+     3115, 3116, 3345, 3346, 3141, 3384, 3111, 3131, 3133, 3144, 3282, 3283, 3198, 3199, 3222,
+     3318, 3186, 3208, 3248, 3251, 3253, 3410, 3297, 3396, 3315, 3393, 3353, 3348, 3350, 3371,
+     3398]
+
+  DEPTH2_WITH_ACCOUNTING_POSTS =
+    [2250, 2251, 2362, 2320, 2321, 2493, 2301, 2302, 2303, 2304, 2305, 2306, 2307, 2308, 327, 328,
+     195, 196, 732, 2232, 2785, 3342, 304, 2383, 2322, 2323, 2357, 2567, 2634, 1311, 1312, 720,
+     721, 722, 1313, 1314, 1315, 1316, 1317, 1318, 1319, 1320, 1321, 2219, 2289, 2284, 2285,
+     2286, 2287, 2288, 2290, 2398, 2506, 2507, 2508, 2294, 2917, 2299, 2312, 2440, 2314, 2348,
+     2349, 2350, 2351, 2319, 2329, 2325, 2326, 2327, 2328, 2435, 2575, 2331, 2332, 2333, 2338,
+     2339, 2340, 2342, 2343, 2570, 2345, 2346, 2347, 2653, 2652, 2843, 2381, 2380, 2382, 2395,
+     2396, 2397, 2393, 2394, 2401, 2402, 2403, 2405, 2454, 2455, 2456, 2496, 2458, 2459, 2460,
+     2461, 2462, 2463, 2464, 2465, 2466, 2467, 2468, 2469, 2470, 2471, 2472, 2473, 2475, 2517,
+     2518, 2519, 2520, 2552, 2553, 2542, 2543, 2544, 2545, 2546, 2547, 2549, 2550, 2558, 2814,
+     3075, 3293, 2596, 2582, 2598, 2600, 2619, 2620, 2599, 2589, 2590, 2591, 2604, 2618, 2630,
+     2631, 2633, 2725, 2639, 2646, 2722, 2723, 2697, 3209, 3210, 2730, 2731, 2732, 3201, 3128,
+     2905, 2906, 3113, 2795, 2818, 2797, 2813, 2805, 2806, 2807, 2808, 2810, 2811, 2812, 2836,
+     2837, 3200, 2834, 2833, 3080, 2891, 2919, 2920, 2922, 2923, 2924, 2925, 2927, 2928, 2929,
+     2931, 2932, 2933, 2934, 2936, 2937, 2939, 2940, 2942, 2943, 2945, 2946, 3014, 2948, 2950,
+     2951, 2958, 2959, 3239, 2961, 2962, 2963, 2964, 2965, 2967, 2968, 2970, 2972, 2974, 2976,
+     2977, 2978, 2979, 2980, 2987, 2988, 2985, 2986, 2990, 2991, 2994, 2995, 3189, 3218, 3219,
+     3153, 3157, 3159, 3160, 3343, 3262, 3263, 3264, 3265, 3266, 3267]
+
+  def depth2_with_category?(project)
+    case project.id
+    when *DEPTH2_WITH_CATEGORY then true
+    when *DEPTH2_WITH_ACCOUNTING_POSTS then false
+    else puts("Projekt #{project.id} - #{project.to_s} ist nicht kategorisiert!")
     end
   end
 

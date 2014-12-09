@@ -96,6 +96,7 @@ class Order < ActiveRecord::Base
   end
 
   def set_self_in_nested
+    return unless OrderTeamMember.table_exists? # required until all instances are migrated
     # don't try to set self in frozen nested attributes (-> marked for destroy)
     [order_team_members, order_contacts].each do |c|
       c.each do |e|
