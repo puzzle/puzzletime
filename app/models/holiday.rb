@@ -50,22 +50,20 @@ class Holiday < ActiveRecord::Base
 
   # Checks if date is a regular holiday
   def self.regularHoliday?(date)
-    Settings.regular_holidays.each do |day|
-      return true if date.day == day[0] && date.month == day[1]
+    Settings.regular_holidays.any? do |day|
+      date.day == day[0] && date.month == day[1]
     end
-    false
   end
 
   def self.irregular_holiday?(date)
-    @@irregularHolidays.each do |holiday|
-      return true if holiday.holiday_date == date
+    @@irregularHolidays.any? do |holiday|
+      holiday.holiday_date == date
     end
-    false
   end
 
   # 0 is Sunday, 6 is Saturday
   def self.weekend?(date)
-  	 wday = date.wday
+    wday = date.wday
     wday == 0 || wday == 6
   end
 

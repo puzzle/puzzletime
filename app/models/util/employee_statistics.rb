@@ -97,7 +97,7 @@ class EmployeeStatistics
   def overtime_vacation_days(period)
     WorkingCondition.sum_with(:must_hours_per_day, period) do |p, hours|
       @employee.overtime_vacations.
-                where('transfer_date BETWEEN ? AND ?', period.start_date, period.end_date).
+                where('transfer_date BETWEEN ? AND ?', p.start_date, p.end_date).
                 sum(:hours).
                 to_f / hours
     end
