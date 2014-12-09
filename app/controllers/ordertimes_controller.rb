@@ -7,7 +7,7 @@ class OrdertimesController < WorktimesController
 
   def update
     if entry.employee_id != @user.id
-      session[:split] = WorktimeEdit.new(entry.dup)
+      session[:split] = WorktimeEdit.new(entry)
       create_part
     else
       super
@@ -29,7 +29,7 @@ class OrdertimesController < WorktimesController
     set_employees
     @split = session[:split]
     return create if @split.nil?
-    entry
+    @worktime ||= @split.build_worktime
     @worktime.employee ||= @split.original.employee
     params[:other] = '1'
     assign_attributes

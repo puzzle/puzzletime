@@ -17,5 +17,8 @@ class WorktimeEdit < Splitable
     "Arbeitszeit von #{original.employee.label} bearbeiten"
   end
 
+  def build_worktime
+    empty? ? Projecttime.find(original_id) : Projecttime.new
+  end
 
 end

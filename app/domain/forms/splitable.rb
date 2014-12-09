@@ -5,10 +5,11 @@ class Splitable
   INCOMPLETE_FINISH = true
   SUBMIT_BUTTONS = nil
 
-  attr_reader :original, :worktimes
+  attr_reader :original, :original_id, :worktimes
 
   def initialize(original)
-    @original = original
+    @original = original.dup
+    @original_id = original.id
     @worktimes = []
   end
 
@@ -25,6 +26,10 @@ class Splitable
     @worktimes.delete_at(index) if @worktimes[index].new_record?
   end
 
+  def build_worktime
+    Projecttime.new
+  end
+
   def worktime_template
     worktime = last_worktime.template Ordertime.new
     worktime.hours = remaining_hours
@@ -38,7 +43,7 @@ class Splitable
   end
 
   def save
-    worktimes.each { |wtime|  wtime.save }
+    worktimes.each { |wtime| wtime.save! }
   end
 
   def page_title
@@ -56,13 +61,11 @@ class Splitable
   end
 
   def next_start_time
-    worktimes.empty? ?
-      original.from_start_time :
-      worktimes.last.to_end_time
+    empty? ? original.from_start_time :  worktimes.last.to_end_time
   end
 
   def last_worktime
-    worktimes.empty? ? original : worktimes.last
+    empty? ? original : worktimes.last
   end
 
 end

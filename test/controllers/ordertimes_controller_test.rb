@@ -24,14 +24,14 @@ class OrdertimesControllerTest < ActionController::TestCase
     assert_equal 'desc', assigns(:worktime).description
     assert assigns(:worktime).billable?
   end
-  
+
   def test_new_without_billable_template
     template = worktimes(:wt_mw_puzzletime)
     template.update_attributes(billable: false)
     get :new, template: template.id
     assert !assigns(:worktime).billable?
   end
-  
+
   def test_new_other
     get :new, other: 1
     assert_template 'new'
@@ -116,11 +116,11 @@ class OrdertimesControllerTest < ActionController::TestCase
     assert_nil worktime.to_end_time
     assert_equal 1.5, worktime.hours
   end
-  
+
 
   def test_split
     worktime = worktimes(:wt_pz_allgemein)
-    session[:split] = WorktimeEdit.new(worktime.clone)
+    session[:split] = WorktimeEdit.new(worktime)
     get :split
     assert_template 'split'
   end
@@ -131,7 +131,7 @@ class OrdertimesControllerTest < ActionController::TestCase
     assert_redirected_to action: 'split'
     assert_not_nil assigns(:split)
   end
-  
+
 
   def test_finish_split
     worktime = worktimes(:wt_pz_allgemein)
