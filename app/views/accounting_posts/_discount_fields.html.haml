@@ -2,14 +2,16 @@
   = form.label(:discount, "Rabatt", class: 'col-md-2 control-label required')
   .col-md-1
     .radio
-      = radio_button_tag(:discount, "none", entry.no_discount?, data: {disable_dependents: true})
-      = form.label(:discount, "Kein Rabatt")
+      %label
+        = radio_button_tag(:discount, "none", entry.no_discount?, data: {disable_dependents: true})
+        Kein Rabatt
 .form-group
   .col-md-2
   .col-md-1
     .radio
-      = radio_button_tag(:discount, 'percent', entry.discount_percent?, data: {disable_dependents: true})
-      = form.label(:discount, "Prozentsatz")
+      %label
+        = radio_button_tag(:discount, 'percent', entry.discount_percent?, data: {disable_dependents: true})
+        Prozentsatz
   .col-md-2
     .input-group
       = form.input_field :discount_percent, class: 'discount percent'
@@ -19,8 +21,9 @@
   .col-md-2
   .col-md-1
     .radio
-      = radio_button_tag(:discount, 'fixed', entry.discount_fixed?, data: {disable_dependents: true})
-      = form.label(:discount, "Betrag")
+      %label
+        = radio_button_tag(:discount, 'fixed', entry.discount_fixed?, data: {disable_dependents: true})
+        Betrag
   .col-md-2
     .input-group
       = form.input_field :discount_fixed, class: 'discount fixed'

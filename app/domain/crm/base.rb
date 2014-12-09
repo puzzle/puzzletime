@@ -16,5 +16,9 @@ module Crm
     def sync_all
 
     end
+
+    def restrict_local?
+      false
+    end
   end
 end

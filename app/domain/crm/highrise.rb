@@ -5,7 +5,11 @@ module Crm
 
     def crm_key_label
       src = ActionController::Base.helpers.image_path("highrise.png")
-      "<img src=\"#{src}\" width=\"19\" height=\"16\" /> Highrise ID".html_safe
+      "<img src=\"#{src}\" width=\"19\" height=\"16\" /> #{crm_key_name}".html_safe
+    end
+
+    def crm_key_name
+      'Highrise ID'
     end
 
     def find_order(key)
@@ -50,6 +54,10 @@ module Crm
 
     def order_url(order)
       crm_entity_url('deals', order)
+    end
+
+    def restrict_local?
+      true
     end
 
     private

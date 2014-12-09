@@ -2,10 +2,6 @@
 
 = render 'orders/header'
 
-%h1.h3= @title
-
-%p &nbsp;
-
 = form_for(@order,
            url: order_order_targets_path(@order),
            builder: DryCrud::Form::Builder,

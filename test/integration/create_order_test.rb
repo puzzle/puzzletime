@@ -339,7 +339,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test 'failed create order keeps client  selection' do
+  test 'failed create order keeps client selection' do
     timeout_safe do
       order = Order.new(department: departments(:devone),
                         responsible: employees(:mark),

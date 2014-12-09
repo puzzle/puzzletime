@@ -1,5 +1,5 @@
 %ul.nav.nav-tabs
-  = nav 'Details', order_path(@order), edit_order_path(@order)
+  = nav 'Details', edit_order_path(@order), edit_order_path(@order)
 
   - if can?(:cockpit, @order)
     = nav 'Cockpit',

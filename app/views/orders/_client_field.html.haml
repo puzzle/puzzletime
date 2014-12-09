@@ -14,4 +14,5 @@
                           'client_work_item_id',
                           'Kunde erfassen',
                           class: 'client',
+                          style: Crm.instance && Crm.instance.restrict_local? ? 'display: none;' : nil,
                           data: { id_field: 'work_item_id' })

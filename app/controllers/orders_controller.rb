@@ -21,7 +21,8 @@ class OrdersController < CrudController
     status: 'order_statuses.position' }
 
   before_action :set_filter_values, only: :index
-  before_render_form :set_clients
+
+  before_render_form :set_option_values
 
   def crm_load
     key = params[:order][:crm_key]
@@ -100,18 +101,7 @@ class OrdersController < CrudController
   end
 
   def index_url
-    entry.persisted? && !entry.destroyed? ? order_path(entry) : orders_path(returning: true)
-  end
-
-  def set_clients
-    @clients = Client.list
-    @employees = Employee.list # TODO: restrict only with employment?
-    if params[:client_work_item_id].present?
-      @categories = WorkItem.find(params[:client_work_item_id]).categories.list
-    else
-      @categories = []
-    end
-    @contacts = entry.client.contacts if entry.persisted?
+    entry.persisted? && !entry.destroyed? ? edit_order_path(entry) : orders_path(returning: true)
   end
 
   def set_filter_values
@@ -121,5 +111,34 @@ class OrdersController < CrudController
     @target_scopes = TargetScope.list
   end
 
+  def set_option_values
+    if entry.new_record?
+      load_client_options
+      load_category_options
+    else
+      @contacts = entry.client.contacts
+    end
+
+    @employees = Employee.list # TODO: restrict only with employment?
+  end
+
+  def load_client_options
+    @clients = Client.list
+    if Crm.instance && Crm.instance.restrict_local?
+      @clients = @clients.where(allow_local: true).to_a
+      if params[:client_work_item_id].present?
+        client = Client.find_by_work_item_id(params[:client_work_item_id])
+        @clients << client unless @clients.include?(client)
+      end
+    end
+  end
+
+  def load_category_options
+    if params[:client_work_item_id].present?
+      @categories = WorkItem.find(params[:client_work_item_id]).categories.list
+    else
+      @categories = []
+    end
+  end
 
 end

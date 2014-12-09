@@ -11,14 +11,6 @@ form {
   margin-bottom: 10px;
 }
 
-.form-horizontal .form-group {
-
-  .checkbox input[type="checkbox"],
-  .radio input[type="radio"] {
-    margin-left: 0;
-  }
-}
-
 label.required::after{
   content: " *"
 }

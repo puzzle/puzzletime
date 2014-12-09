@@ -1,7 +1,10 @@
 #crm_key.form-group{class: f.errors?(:crm_key) ? 'has-error' : ''}
   = f.label(:crm_key, Crm.instance.crm_key_label, class: 'col-md-2 control-label')
   .col-md-2
-    = f.input_field :crm_key
+    - if entry.new_record? || entry.crm_key.blank?
+      = f.input_field :crm_key
+    - else
+      %p.form-control-static= format_order_crm_key(entry)
   - if entry.new_record?
     .col-md-2
       = link_to 'Übernehmen',
@@ -12,4 +15,4 @@
       &nbsp;
       = spinner
     %p.col-md-5.col-md-offset-2.help-block
-      = link_to(Crm.instance.order_url(entry), Crm.instance.order_url(entry)) if entry.crm_key
+      = format_order_crm_key(entry) if entry.crm_key

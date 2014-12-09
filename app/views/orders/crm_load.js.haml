@@ -14,6 +14,8 @@ clientSelect.unlock()
   $('#crm_key .help-block').html('<a href="#{@crm_order[:url]}">#{@crm_order[:url]}</a>')
   - if @client
     clientSelect.lock()
+    clientSelect.addOption({ value: '#{@client.work_item_id}', text: '#{@client.to_s}' })
+    clientSelect.refreshOptions(false)
     clientSelect.setValue(#{@client.work_item_id})
   - else
     var params = 'client[work_item_attributes][name]=#{@crm_order[:client][:name]}'
