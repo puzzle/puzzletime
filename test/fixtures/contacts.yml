@@ -16,7 +16,7 @@
 #
 
 swisstopo_1:
-  client: :swisstopo
+  client_id: 2 #swisstopo
   lastname: Stieber
   firstname: Benno
   function: Product Owner
@@ -25,7 +25,7 @@ swisstopo_1:
   mobile: 0790000000
 
 swisstopo_2:
-  client: :swisstopo
+  client_id: 2 #swisstopo
   lastname: Stein
   firstname: Erich
   function: Scheff
@@ -34,14 +34,14 @@ swisstopo_2:
   mobile: 0780000000
 
 puzzle_rava:
-  client: :puzzle
+  client_id: 1 #puzzle
   lastname: Rava
   firstname: Andreas
   function: Product Owner
   email: rava@example.com
 
 puzzle_hauswart:
-  client: :puzzle
+  client_id: 1 #puzzle
   lastname: Hauswart
   firstname: Hans
   function: Hauswart
