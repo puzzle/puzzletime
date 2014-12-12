@@ -2,10 +2,22 @@ module Concerns
   module WorktimesReport
     extend ActiveSupport::Concern
 
-    def send_worktimes_csv(worktimes, filename)
+    def render_report(conditions)
+      @times = @evaluation.times(@period).where(conditions)
+      @tckt_view = params[:combine_on] && (params[:combine] == 'ticket' || params[:combine] == 'ticket_employee')
+      combine_times if params[:combine_on] && params[:combine] == 'time'
+      combine_tickets if @tckt_view
+      render template: 'shared/report', layout: false
+    end
+
+    def send_csv(csv_data, filename)
       set_csv_file_export_header(filename)
-      csv_data = worktimes_csv(worktimes)
       send_data(csv_data, filename: filename, type: 'text/csv; charset=utf-8; header=present')
+    end
+
+    def send_worktimes_csv(worktimes, filename)
+      csv_data = worktimes_csv(worktimes)
+      send_csv(csv_data, filename)
     end
 
     def set_csv_file_export_header(filename)

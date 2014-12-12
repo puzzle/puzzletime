@@ -43,12 +43,8 @@ class EvaluatorController < ApplicationController
 
   def report
     set_evaluation_details
-    condition = params[:only_billable] ? { worktimes: { billable: true } } : {}
-    @times = @evaluation.times(@period).where(condition)
-    @tckt_view = params[:combine_on] && (params[:combine] == 'ticket' || params[:combine] == 'ticket_employee')
-    combine_times if params[:combine_on] && params[:combine] == 'time'
-    combine_tickets if @tckt_view
-    render layout: false
+    conditions = params[:only_billable] ? { worktimes: { billable: true } } : {}
+    render_report(conditions)
   end
 
   def export_csv
@@ -76,7 +72,7 @@ class EvaluatorController < ApplicationController
 
   def export_capacity_csv
     if @period
-      send_csv(CapacityReport.new(@period))
+      send_report_csv(CapacityReport.new(@period))
     else
       flash[:notice] = 'Bitte wählen Sie eine Zeitspanne für die detaillierte Auslastung.'
       redirect_to request.env['HTTP_REFERER'].present? ? :back : root_path
@@ -85,7 +81,7 @@ class EvaluatorController < ApplicationController
 
   def export_extended_capacity_csv
     if @period
-      send_csv(ExtendedCapacityReport.new(@period))
+      send_report_csv(ExtendedCapacityReport.new(@period))
     else
       flash[:notice] = 'Bitte wählen Sie eine Zeitspanne für die Auslastung.'
       redirect_to request.env['HTTP_REFERER'].present? ? :back : root_path
@@ -156,7 +152,6 @@ class EvaluatorController < ApplicationController
         when 'userabsences' then EmployeeAbsencesEval.new(@user.id)
         when 'subworkitems' then SubWorkItemsEval.new(params[:category_id])
         when 'workitememployees' then WorkItemEmployeesEval.new(params[:category_id])
-        when 'orderworkitems' then OrderWorkItemsEval.new(params[:order_id], params[:work_item_id])
         else nil
     end
     if @user.management && @evaluation.nil?
@@ -293,9 +288,8 @@ class EvaluatorController < ApplicationController
     # p "Grouped object: #{ticket_groups}"
   end
 
-  def send_csv(csv_report)
-    set_csv_file_export_header(csv_report.filename)
-    send_data(csv_report.to_csv, type: 'text/csv; charset=utf-8; header=present', filename: csv_report.filename)
+  def send_report_csv(csv_report)
+    send_csv(csv_report.to_csv, csv_report.filename)
   end
 
   def csv_label(item)

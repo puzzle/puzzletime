@@ -6,6 +6,8 @@ de-CH:
   global:
     "yes": "ja"
     "no": "nein"
+    "true": "ja"
+    "false": "nein"
     no_list_entries: Keine Einträge gefunden.
     confirm_delete: Wollen Sie diesen Eintrag wirklich löschen?
 

@@ -17,3 +17,8 @@
     %td Periode
     %td
       %b= @period.to_s
+  -if params[:billable]
+    %tr
+      %td Verrechenbar
+      %td
+        %b= params[:billable].present? ? t("global.#{params[:billable]}") : 'Alle'
