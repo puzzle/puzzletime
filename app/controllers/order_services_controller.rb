@@ -19,7 +19,8 @@ class OrderServicesController < ApplicationController
   end
 
   def export_worktimes_csv
-    send_worktimes_csv(list_worktimes, worktimes_csv_filename)
+    @worktimes = list_worktimes
+    send_worktimes_csv(@worktimes, worktimes_csv_filename)
   end
 
   def report
