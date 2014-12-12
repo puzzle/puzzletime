@@ -1,0 +1,20 @@
+- @title ||= ti(:title, model: models_label(false))
+
+= render 'orders/header'
+
+= crud_form url: order_contract_path(entry, order_id: parent), method: :put,
+    cancel_url: edit_order_contract_path(entry, order_id: parent) do |f|
+
+  = f.labeled_input_field :number, caption: "Vertragsnummer"
+  .form-group
+    = f.label(:budget, "Vertragsdauer", class: 'col-md-2 control-label')
+    .col-md-6
+      = f.label(:start_date, "von", class: 'col-md-1 control-label')
+      .col-md-3
+        = f.input_field :start_date
+      = f.label :end_date, "bis", class: 'col-md-1 control-label'
+      .col-md-3
+        = f.input_field :end_date
+  = f.labeled_input_field :payment_period, caption: "Zahlungsfrist"
+  = f.labeled_text_area :reference, caption: "Kundenreferenz"
+

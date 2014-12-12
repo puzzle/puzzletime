@@ -11,6 +11,7 @@ class Ability
                     Department,
                     Employment,
                     Holiday,
+                    Contract,
                     Order,
                     OrderKind,
                     OrderStatus,

@@ -45,6 +45,8 @@ Rails.application.routes.draw do
       get :report
     end
 
+    resource :contract, only: [:edit, :update]
+
     member do
       get :cockpit
       get :bills
