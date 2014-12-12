@@ -3,15 +3,9 @@
                 edit_order_multi_worktimes_path(@order),
                 data: { multi_edit: '#worktimes' })
 
-= action_link(action_icon('export', 'CSV Export'), params)
+= action_link(action_icon('export', 'CSV Export'), params.merge(action: :export_worktimes_csv))
 
-= action_link(action_icon('time', 'Zeitrapport erstellen'),
-                evaluation_detail_params.merge!(:action => 'compose_report', :controller => 'evaluator',
-                                                :evaluation => 'orderworkitems',
-                                                :order_id => params[:order_id],
-                                                :employee_id => params[:employee_id],
-                                                :work_item_id => params[:work_item_id],
-                                                :billable => params[:billable]))
+= action_link(action_icon('time', 'Zeitrapport erstellen'), params.merge(action: :compose_report))
 
 - if @user.management
   = action_link(action_icon('add', 'Fremderfassung'),

@@ -19,6 +19,7 @@ class Order < ActiveRecord::Base
 
   include BelongingToWorkItem
   include Closable
+  include Evaluatable
 
   ### ASSOCIATIONS
 

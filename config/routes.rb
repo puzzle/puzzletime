@@ -41,6 +41,8 @@ Rails.application.routes.draw do
 
     resource :order_services, only: [:show, :edit, :update] do
       get :export_worktimes_csv
+      get :compose_report
+      get :report
     end
 
     member do

@@ -11,6 +11,7 @@ class OrderServicesController < ApplicationController
   before_action :order
   before_action :authorize_class
   before_filter :handle_remember_params, only: [:show]
+  before_action :set_evaluation, only: [:compose_report, :report]
   before_action :set_filter_values, only: [:show, :export_worktimes_csv]
 
   def show
@@ -18,8 +19,14 @@ class OrderServicesController < ApplicationController
   end
 
   def export_worktimes_csv
-    binding.pry
     send_worktimes_csv(list_worktimes, worktimes_csv_filename)
+  end
+
+  def report
+    conditions = {}
+    conditions[:worktimes] = { billable: params[:billable] } if params[:billable].present?
+    conditions[:employee_id] = params[:employee_id] if params[:employee_id].present?
+    render_report(conditions)
   end
 
   private
@@ -33,16 +40,11 @@ class OrderServicesController < ApplicationController
   end
 
   def worktimes_csv_filename
-    accounting_post_shortnames =
-        params[:work_item_id].present? ? WorkItem.find(params[:work_item_id]).path_shortnames : nil
     order_shortnames = order.work_item.path_shortnames
-    [
-        'puzzletime',
-        accounting_post_shortnames || order_shortnames,
-        Employee.find(params[:employee_id]).shortname,
-        params[:billable].present? ? "billable_#{params[:billable]}" : nil,
-        '.csv'
-    ].compact.join('-')
+    accounting_post_shortnames = WorkItem.find(params[:work_item_id]).path_shortnames if params[:work_item_id].present?
+    employee_shortname = Employee.find(params[:employee_id]).shortname if params[:employee_id].present?
+    billable = "billable_#{params[:billable]}" if params[:billable].present?
+    ['puzzletime', accounting_post_shortnames || order_shortnames, employee_shortname, billable, '.csv'].compact.join('-')
   end
 
   def order
@@ -70,6 +72,14 @@ class OrderServicesController < ApplicationController
 
     params.delete(:start_date)
     params.delete(:end_date)
+  end
+
+  def set_evaluation
+    work_item_id = params[:work_item_id].present? ? params[:work_item_id] : order.work_item_id
+    @evaluation = WorkItemEmployeesEval.new(work_item_id)
+    if params[:start_date].present? && params[:start_date] != '0'
+      @period = Period.retrieve(params[:start_date], params[:end_date])
+    end
   end
 
   def authorize_class
