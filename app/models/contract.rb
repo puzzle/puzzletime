@@ -16,11 +16,11 @@ class Contract < ActiveRecord::Base
 
   has_one :order
 
-  validates :start_at, :finish_at, :payment_period, presence: true
-  validates_date :start_at, :finish_at
+  validates :start_date, :end_date, :payment_period, presence: true
+  validates_date :start_date, :end_date
 
   def to_s
-    number
+    number || ""
   end
 
 end

@@ -6,6 +6,11 @@
           cockpit_order_path(@order),
           accounting_posts_path
 
+  - if can?(:manage, @order)
+    = nav 'Vertrag',
+          edit_order_contract_path(@order)
+
+
   - if can?(:services, @order)
     = nav 'Leistungen',
           order_order_services_path(@order),
