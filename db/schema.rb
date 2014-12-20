@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141209092113) do
+ActiveRecord::Schema.define(version: 20141220120746) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -77,10 +77,11 @@ ActiveRecord::Schema.define(version: 20141209092113) do
 
   create_table "contracts", force: true do |t|
     t.string  "number",         null: false
-    t.date    "start_date"
-    t.date    "end_date"
-    t.integer "payment_period"
-    t.string  "reference"
+    t.date    "start_date",     null: false
+    t.date    "end_date",       null: false
+    t.integer "payment_period", null: false
+    t.text    "reference"
+    t.text    "sla"
   end
 
   create_table "delayed_jobs", force: true do |t|
@@ -260,6 +261,19 @@ ActiveRecord::Schema.define(version: 20141209092113) do
     t.string  "name",                  null: false
     t.boolean "active", default: true, null: false
     t.index ["name"], :name => "index_portfolio_items_on_name", :unique => true
+  end
+
+  create_table "projects", force: true do |t|
+    t.integer "client_id"
+    t.string  "name",        null: false
+    t.text    "description"
+  end
+
+  create_table "projectmemberships", force: true do |t|
+    t.integer "project_id"
+    t.integer "employee_id"
+    t.boolean "projectmanagement", default: false
+    t.foreign_key ["project_id"], "projects", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_projectmemberships_projects"
   end
 
   create_table "target_scopes", force: true do |t|

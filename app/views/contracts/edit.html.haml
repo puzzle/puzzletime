@@ -2,19 +2,18 @@
 
 = render 'orders/header'
 
-= crud_form url: order_contract_path(entry, order_id: parent), method: :put,
+= crud_form url: order_contract_path(order_id: parent), method: :put,
     cancel_url: edit_order_contract_path(entry, order_id: parent) do |f|
 
-  = f.labeled_input_field :number, caption: "Vertragsnummer"
-  .form-group
-    = f.label(:budget, "Vertragsdauer", class: 'col-md-2 control-label')
-    .col-md-6
-      = f.label(:start_date, "von", class: 'col-md-1 control-label')
-      .col-md-3
-        = f.input_field :start_date
-      = f.label :end_date, "bis", class: 'col-md-1 control-label'
-      .col-md-3
-        = f.input_field :end_date
-  = f.labeled_input_field :payment_period, caption: "Zahlungsfrist"
-  = f.labeled_text_area :reference, caption: "Kundenreferenz"
+  = f.labeled_input_field :number, placeholder: 'Bestell- oder Vertragsnummer des Kunden'
+  = f.labeled 'Vertragsdauer', required: true do
+    = f.label :start_date, "von", class: 'col-md-1 control-label'
+    .col-md-5
+      = f.input_field :start_date
+    = f.label :end_date, "bis", class: 'col-md-1 control-label'
+    .col-md-5
+      = f.input_field :end_date
+  = f.labeled_input_field :payment_period, span: 1, help: 'Tage'
+  = f.labeled_input_field :reference, placeholder: 'Referenz des Kunden'
+  = f.labeled_input_field :sla
 

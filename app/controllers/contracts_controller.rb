@@ -1,16 +1,20 @@
 class ContractsController < CrudController
   self.nesting = Order
 
-  self.permitted_attrs = :text
+  self.permitted_attrs = :number, :start_date, :end_date, :payment_period, :reference, :sla
 
   def update
-    super(location: order_contract_path(entry, order_id: parent))
+    super(location: edit_order_contract_path(order_id: parent))
   end
 
   private
 
   def order
     @order ||= Order.find(params[:order_id])
+  end
+
+  def entry
+    order.try(:contract) || build_entry
   end
 
   def build_entry

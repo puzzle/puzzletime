@@ -20,6 +20,7 @@ puzzletime:
   status: bearbeitung
   kind: mandat
   department: devone
+  contract: puzzletime
 
 allgemein:
   work_item_id: 3
