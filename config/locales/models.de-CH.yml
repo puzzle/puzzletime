@@ -17,6 +17,9 @@ de-CH:
       contact:
         one: Kontakt
         other: Kontakte
+      contract:
+        one: Vertrag
+        other: Verträge
       department:
         one: Bereich
         other: Bereiche
@@ -109,6 +112,13 @@ de-CH:
         email: E-Mail
         phone: Telefon
         mobile: Mobile
+      contract:
+        number: Vertragsnummer
+        start_date: von
+        end_date: bis
+        payment_period: Zahlungsfrist
+        reference: Referenz
+        sla: SLA
       department:
         name: Name
         shortname: Kürzel
