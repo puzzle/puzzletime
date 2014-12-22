@@ -384,10 +384,10 @@ class CreateErpTables < ActiveRecord::Migration
   end
 
   def migrate_depth1_project(project)
-      client = Client.find(project[:client_id])
-      create_work_item!(project, client.work_item, true)
-      create_order!(project)
-      create_accounting_post!(project)
+    client = Client.find(project[:client_id])
+    create_work_item!(project, client.work_item, true)
+    create_order!(project)
+    create_accounting_post!(project)
   end
 
   def migrate_depth2_project(project)
@@ -399,15 +399,20 @@ class CreateErpTables < ActiveRecord::Migration
   end
 
   def migrate_depth2_project_with_category(project)
-    create_client_if_missing(project.parent)
+    create_category_if_missing(project.parent)
+
     create_work_item!(project, project.parent.work_item, true)
     create_order!(project)
     create_accounting_post!(project)
   end
 
   def migrate_depth2_project_with_accounting_posts(project)
-    create_client_if_missing(project.parent)
-    create_order!(project.parent)
+    unless project.parent.work_item
+      client = Client.find(project.parent[:client_id])
+      create_work_item!(project.parent, client.work_item, false)
+      create_order!(project.parent)
+    end
+
     create_work_item!(project, project.parent.work_item, true)
     create_accounting_post!(project)
   end
@@ -416,7 +421,7 @@ class CreateErpTables < ActiveRecord::Migration
     l1_project = project.parent.parent
     l2_project = project.parent
 
-    create_client_if_missing(l1_project)
+    create_category_if_missing(l1_project)
 
     unless l2_project.work_item
       create_work_item!(l2_project, l1_project.work_item, false)
@@ -427,7 +432,7 @@ class CreateErpTables < ActiveRecord::Migration
     create_accounting_post!(project)
   end
 
-  def create_client_if_missing(top_project)
+  def create_category_if_missing(top_project)
     unless top_project.work_item
       client = Client.find(top_project[:client_id])
       create_work_item!(top_project, client.work_item, false)
@@ -551,7 +556,7 @@ class CreateErpTables < ActiveRecord::Migration
     case project.id
     when *DEPTH2_WITH_CATEGORY then true
     when *DEPTH2_WITH_ACCOUNTING_POSTS then false
-    else puts("Projekt #{project.id} - #{project.to_s} ist nicht kategorisiert!")
+    else puts("Projekt #{project.id} - #{project.label} ist nicht kategorisiert!")
     end
   end
 
