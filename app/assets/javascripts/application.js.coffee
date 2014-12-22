@@ -14,6 +14,7 @@
 #= require bootstrap/modal
 #= require bootstrap/tooltip
 #= require bootstrap/button
+#= require bootstrap/alert
 #= require_self
 #= require modal_create
 #= require worktimes

@@ -263,19 +263,6 @@ ActiveRecord::Schema.define(version: 20141220120746) do
     t.index ["name"], :name => "index_portfolio_items_on_name", :unique => true
   end
 
-  create_table "projects", force: true do |t|
-    t.integer "client_id"
-    t.string  "name",        null: false
-    t.text    "description"
-  end
-
-  create_table "projectmemberships", force: true do |t|
-    t.integer "project_id"
-    t.integer "employee_id"
-    t.boolean "projectmanagement", default: false
-    t.foreign_key ["project_id"], "projects", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_projectmemberships_projects"
-  end
-
   create_table "target_scopes", force: true do |t|
     t.string  "name",     null: false
     t.string  "icon"

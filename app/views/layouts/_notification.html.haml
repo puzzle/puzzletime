@@ -1,4 +1,6 @@
 - if @notifications && !@notifications.empty?
-  %ul#notifications.alert.alert-info
-    - @notifications.each do |notification|
-      %li= h(notification.message).gsub("\n", "<br/>")
+  #notifications.alert.alert-info
+    %a.close{:'data-dismiss' => 'alert', :href => '#'} &times;
+    %ul
+      - @notifications.each do |notification|
+        %li= h(notification.message).gsub("\n", "<br/>")
