@@ -34,7 +34,7 @@ class OrdertimesController < WorktimesController
     params[:other] = '1'
     assign_attributes
     if @worktime.valid? && @split.add_worktime(@worktime)
-      if @split.complete? || (params[:commit] == FINISH && @split.class::INCOMPLETE_FINISH)
+      if @split.complete? || (params[:commit] == FINISH && @split.incomplete_finish)
         @split.save
         session[:split] = nil
         flash[:notice] = 'Alle Arbeitszeiten wurden erfasst'

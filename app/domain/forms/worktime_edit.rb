@@ -2,7 +2,7 @@
 
 class WorktimeEdit < Splitable
 
-  INCOMPLETE_FINISH = false
+  self.incomplete_finish = false
 
   def add_worktime(worktime)
     if worktime.hours - remaining_hours > 0.00001    # we are working with floats: use delta
