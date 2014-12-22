@@ -13,33 +13,26 @@ module EvaluatorHelper
     url_for(options.merge(controller: :evaluator, action: evaluation))
   end
 
-  def detail_td(worktime, field)
+  def detail_th_align(field)
     case field
-      when :work_date then td f(worktime.work_date), 'right', true
-      when :hours then td format_hour(worktime.hours), 'right', true
-      when :times then td worktime.time_string, nil, true
-      when :employee then td worktime.employee.shortname
-      when :account then td worktime.account.label_verbose
-      when :billable then td(worktime.billable ? '$' : ' ')
-      when :booked then  td(worktime.booked ? '&beta;'.html_safe : ' ')
-      when :ticket then  td worktime.ticket
-      when :description
-        description = worktime.description || ''
-        desc = h description.slice(0..40)
-        if description.length > 40
-          desc += link_to '...', evaluation_detail_params.merge!(
-                                  controller: worktime.controller,
-                                  action: 'show',
-                                  id: worktime.id), title: description
-        end
-        td desc
-      end
+    when :work_date, :hours, :times then 'right'
+    else nil
+    end
   end
 
-  def td(value, align = nil, nowrap = false)
-    align = align ? " align=\"#{align}\"" : ''
-    style = nowrap ? " style=\"white-space: nowrap;\"" : ''
-    "<td#{align}#{style}>#{value}</td>\n".html_safe
+  def detail_td(worktime, field)
+    case field
+    when :work_date then content_tag(:td, f(worktime.work_date), class: 'right nowrap', style: 'width: 160px;')
+    when :hours then content_tag(:td, format_hour(worktime.hours), class: 'right nowrap', style: 'width: 70px;')
+    when :times then content_tag(:td, worktime.time_string, class: 'right nowrap', style: 'width: 150px;')
+    when :employee then content_tag(:td, worktime.employee.shortname, style: 'width: 50px;')
+    when :account then content_tag(:td, worktime.account.label_verbose)
+    when :billable then content_tag(:td, worktime.billable ? '$' : ' ', style: 'width: 20px;')
+    when :booked then content_tag(:td, worktime.booked ? '&beta;'.html_safe : ' ', style: 'width: 20px;')
+    when :ticket then content_tag(:td, worktime.ticket)
+    when :description
+      content_tag(:td, worktime.description, title: worktime.description, class: 'truncated')
+    end
   end
 
   def collect_times(periods, method, *division)
@@ -53,22 +46,6 @@ module EvaluatorHelper
   end
 
   #### division supplement functions
-
-  # TODO: still required?
-  def offered_hours(work_item)
-    offered = work_item.accounting_post.try(:offered_hours)
-    if offered
-      total = work_item.worktimes.where(worktimes: { billable: true }).sum(:hours).to_f
-      color = 'green'
-      if total > offered
-        color = 'red'
-      elsif total > offered * 0.9
-        color = 'orange'
-      end
-      "#{number_with_precision(offered, precision: 0)} " \
-      "(<font color=\"#{color}\">#{format_hour(offered - total)}</font>)".html_safe
-    end
-  end
 
   def overtime(employee)
     format_hour(@period ?

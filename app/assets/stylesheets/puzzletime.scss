@@ -63,7 +63,7 @@ th {
 th.periodHead {
     text-align:     right;
 }
-th.nowrap {
+.nowrap {
   white-space: nowrap;
 }
 
@@ -155,6 +155,13 @@ a.tooltip:hover span {
 
 .center {
   text-align: center;
+}
+
+.truncated {
+  max-width: 400px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .list-search {
