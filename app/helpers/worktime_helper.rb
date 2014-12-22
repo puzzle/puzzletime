@@ -7,9 +7,7 @@ module WorktimeHelper
   end
 
   def worktime_description(worktime)
-    description = worktime.description
-    description.insert(0, "#{worktime.ticket} - ") if worktime.ticket.present?
-    description
+    [worktime.ticket.presence, worktime.description.presence].compact.join(' - ')
   end
 
   def work_item_option(item)
@@ -18,7 +16,11 @@ module WorktimeHelper
                name: item.name,
                path_shortnames: item.path_shortnames,
                description: item.description }
-      content_tag(:option, item.label_verbose, value: item.id, selected: true, data: { data: json.to_json })
+      content_tag(:option,
+                  item.label_verbose,
+                  value: item.id,
+                  selected: true,
+                  data: { data: json.to_json })
     end
   end
 
