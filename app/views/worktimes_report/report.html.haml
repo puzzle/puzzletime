@@ -1,0 +1,13 @@
+- @title = "Zeitrapport Puzzle ITC"
+
+.date
+  = f Date.today
+
+%h1= @title
+= render 'worktimes_report/report_header'
+%p
+
+- if @ticket_view
+  = render 'worktimes_report/tickets'
+- else
+  = render 'worktimes_report/times'

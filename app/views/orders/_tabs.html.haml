@@ -15,7 +15,8 @@
     = nav 'Leistungen',
           order_order_services_path(@order),
           order_multi_worktimes_path(@order),
-          edit_order_multi_worktimes_path(@order)
+          edit_order_multi_worktimes_path(@order),
+          compose_report_order_order_services_path(@order)
 
   - if TargetScope.exists? && can?(:show_targets, @order)
     = nav 'Ziele',
