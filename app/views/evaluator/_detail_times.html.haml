@@ -4,7 +4,7 @@
     %thead
       %tr
         - @evaluation.detail_columns.each do |field|
-          %th= @evaluation.detail_labels[field]
+          %th{class: detail_th_align(field)}= @evaluation.detail_labels[field]
         - if @evaluation.edit_link?(@user) || @user.management || @evaluation.delete_link?(@user)
           %th.action
     %tbody
