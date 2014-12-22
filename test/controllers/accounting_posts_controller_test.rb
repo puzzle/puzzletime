@@ -44,23 +44,6 @@ class AccountingPostsControllerTest < ActionController::TestCase
     assert_no_match(/"book_on_order"/, @response.body)
   end
 
-  test 'DESTROY does not remove reocrd when worktimes exist on workitem' do
-    assert_no_difference "AccountingPost.count" do
-      delete :destroy, id: accounting_posts(:puzzletime).id
-    end
-    assert_redirected_to controller: :orders, action: :cockpit, id: orders(:puzzletime)
-    assert_match(/kann nicht gelöscht werden/, flash[:alert])
-  end
-
-  test 'DESTROY removes record when no worktimes on workitem' do
-    accounting_posts(:puzzletime).work_item.worktimes.clear
-    assert_difference "AccountingPost.count", -1 do
-      delete :destroy, id: accounting_posts(:puzzletime).id
-    end
-    assert_redirected_to controller: :orders, action: :cockpit, id: orders(:puzzletime)
-    assert flash[:alert].blank?
-  end
-
   test 'CREATE with book_on_order true when accounting_post exists' do
     assert_no_difference "AccountingPost.count" do
       post :create, book_on_order: 'true', order_id: orders(:hitobito_demo),
@@ -100,20 +83,20 @@ class AccountingPostsControllerTest < ActionController::TestCase
 
   test 'CREATE sets the attributes' do
     attributes = {
-        order_id: orders(:hitobito_demo),
-        discount: 'percent',
-        accounting_post: {
-              work_item_attributes: { name: 'TEST', shortname: 'TST' },
-              closed: 'true',
-              offered_hours: 80,
-              offered_rate: 42,
-              discount_percent: 11,
-              portfolio_item_id: portfolio_items(:mobile).id,
-              reference: 'dummy-reference',
-              billable: true,
-              description_required: true,
-              ticket_required: true
-        }
+      order_id: orders(:hitobito_demo),
+      discount: 'percent',
+      accounting_post: {
+        work_item_attributes: { name: 'TEST', shortname: 'TST' },
+        closed: 'true',
+        offered_hours: 80,
+        offered_rate: 42,
+        discount_percent: 11,
+        portfolio_item_id: portfolio_items(:mobile).id,
+        reference: 'dummy-reference',
+        billable: true,
+        description_required: true,
+        ticket_required: true
+      }
     }
 
     assert_difference "AccountingPost.count", +1 do
@@ -126,7 +109,34 @@ class AccountingPostsControllerTest < ActionController::TestCase
     attributes[:accounting_post][:work_item_attributes].each do |k,v|
       assert_equal v.to_s, accounting_post.work_item.send(k).to_s, "accounting_post.work_item.#{k} should eq #{v}"
     end
+  end
 
+  test 'PATCH update changes all attributes' do
+    accounting_post = accounting_posts(:hitobito_demo_app)
+    params = {
+      id: accounting_post.id,
+      order_id: orders(:hitobito_demo),
+      discount: 'percent',
+      accounting_post: {
+        work_item_attributes: { name: 'TEST', shortname: 'TST' },
+        closed: 'true',
+        offered_hours: 80,
+        offered_rate: 42,
+        offered_total: 10000.0,
+        discount_percent: 11,
+        portfolio_item_id: portfolio_items(:mobile).id,
+        reference: 'dummy-reference',
+        billable: true,
+        description_required: true,
+        ticket_required: true
+      }
+    }
+
+    patch :update, params
+    accounting_post.reload
+    params[:accounting_post].except(:work_item_attributes).each do |k,v|
+      assert_equal v.to_s, accounting_post.send(k).to_s, "accounting_post.#{k} should eq #{v}"
+    end
   end
 
   test 'PATCH update with book_on_order true when other accounting_post exists' do
@@ -214,4 +224,22 @@ class AccountingPostsControllerTest < ActionController::TestCase
     assert_equal nil, post.reload.discount_fixed
     assert_equal nil, post.discount_percent
   end
+
+  test 'DESTROY does not remove reocrd when worktimes exist on workitem' do
+    assert_no_difference "AccountingPost.count" do
+      delete :destroy, id: accounting_posts(:puzzletime).id
+    end
+    assert_redirected_to controller: :orders, action: :cockpit, id: orders(:puzzletime)
+    assert_match(/kann nicht gelöscht werden/, flash[:alert])
+  end
+
+  test 'DESTROY removes record when no worktimes on workitem' do
+    accounting_posts(:puzzletime).work_item.worktimes.clear
+    assert_difference "AccountingPost.count", -1 do
+      delete :destroy, id: accounting_posts(:puzzletime).id
+    end
+    assert_redirected_to controller: :orders, action: :cockpit, id: orders(:puzzletime)
+    assert flash[:alert].blank?
+  end
+
 end

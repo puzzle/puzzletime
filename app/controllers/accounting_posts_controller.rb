@@ -1,8 +1,9 @@
 # encoding: utf-8
 class AccountingPostsController < CrudController
 
-  self.permitted_attrs = [:closed, :offered_hours, :offered_rate, :discount_percent, :discount_fixed,
-                          :portfolio_item_id, :reference, :billable, :description_required, :ticket_required,
+  self.permitted_attrs = [:closed, :offered_hours, :offered_rate, :offered_total,
+                          :discount_percent, :discount_fixed, :portfolio_item_id, :reference,
+                          :billable, :description_required, :ticket_required,
                           work_item_attributes: [:name, :shortname, :description]]
 
   before_filter :order # make sure order is initialized before destroy/accessing in template
