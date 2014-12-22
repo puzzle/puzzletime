@@ -21,18 +21,15 @@ $ ->
       $('#accounting_post_offered_total').val(parseFloat(hours) * parseFloat(rate))
 
   $hoursPerDay = parseFloat($('[data-hours-per-day]').data('hoursPerDay'))
-  $('#accounting_post_offered_hours').on 'keyup', (event) ->
+  $('#accounting_post_offered_hours').on 'keyup change', (event) ->
     days = parseFloat($(this).val()) / $hoursPerDay
     $('#accounting_post_offered_days').val(days || '')
     updateOfferedTotal()
 
-  $('#accounting_post_offered_days').on 'keyup', (event) ->
+  $('#accounting_post_offered_days').on 'keyup change', (event) ->
     hours = parseFloat($(this).val()) * $hoursPerDay
     $('#accounting_post_offered_hours').val(hours || '')
     updateOfferedTotal()
 
-  $('#accounting_post_offered_rate').on 'keyup', (event) ->
+  $('#accounting_post_offered_rate').on 'keyup change', (event) ->
     updateOfferedTotal()
-
-  $('#accounting_post_offered_total').on 'change', (event) ->
-    $('#accounting_post_offered_rate').val("")

@@ -47,7 +47,7 @@ class EditAccountingPostTest < ActionDispatch::IntegrationTest
 
     fill_in('accounting_post_offered_total', with: 1000.01)
     page.find('body').click
-    assert_equal "", find_field('accounting_post_offered_rate').value
+    assert_equal "1000", find_field('accounting_post_offered_rate').value
   end
 
   def accounting_post

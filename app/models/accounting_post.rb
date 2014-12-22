@@ -35,8 +35,11 @@ class AccountingPost < ActiveRecord::Base
 
   ### VALIDATIONS
 
-  validates_presence_of :portfolio_item
+  validates :offered_rate, presence: { if: :offered_total? }
+  validates :portfolio_item, presence: true
 
+
+  ### INSTANCE METHODS
 
   def validate_worktime(worktime)
     if worktime.report_type != AutoStartType::INSTANCE && description_required? && worktime.description.blank?
@@ -47,8 +50,6 @@ class AccountingPost < ActiveRecord::Base
       worktime.errors.add(:ticket, 'Es muss ein Ticket angegeben werden')
     end
   end
-
-  ### INSTANCE METHODS
 
   def booked_on_order?
     order.present? && work_item_id == order.work_item_id
@@ -69,10 +70,8 @@ class AccountingPost < ActiveRecord::Base
   private
 
   def derive_offered_fields
-    if offered_hours.present? && offered_rate.present?
+    if !offered_total? && offered_hours? && offered_rate?
       self.offered_total = offered_hours * offered_rate
-    elsif offered_total.present?
-      self.offered_rate = nil
     end
   end
 
