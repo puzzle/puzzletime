@@ -117,7 +117,6 @@ class OrdertimesControllerTest < ActionController::TestCase
     assert_equal 1.5, worktime.hours
   end
 
-
   def test_split
     worktime = worktimes(:wt_pz_allgemein)
     session[:split] = WorktimeEdit.new(worktime)
@@ -132,14 +131,62 @@ class OrdertimesControllerTest < ActionController::TestCase
     assert_not_nil assigns(:split)
   end
 
-
-  def test_finish_split
+  def test_complete_split
     worktime = worktimes(:wt_pz_allgemein)
     put :update, id: worktime, ordertime: { hours: '1:00', employee_id: employees(:pascal) }
     assert_not_nil assigns(:split)
     assert_match(/Alle Arbeitszeiten wurden erfasst/, flash[:notice])
     worktime.reload
     assert_equal employees(:pascal), worktime.employee
+  end
+
+  def test_create_completing_part
+    worktime = worktimes(:wt_pz_allgemein)
+    split = WorktimeEdit.new(worktime)
+    worktime.hours = 0.5
+    split.add_worktime(worktime)
+    session[:split] = split
+    put :create_part,
+        id: worktime,
+        ordertime: { hours: '0:30',
+                     employee_id: employees(:pascal),
+                     work_date: worktime.work_date,
+                     account_id: worktime.work_item_id }
+    assert_equal [], assigns(:worktime).errors.full_messages
+    assert_match(/Alle Arbeitszeiten wurden erfasst/, flash[:notice])
+  end
+
+  def test_create_incomplete_part
+    worktime = worktimes(:wt_pz_allgemein)
+    split = WorktimeEdit.new(worktime)
+    worktime.hours = 0.5
+    split.add_worktime(worktime)
+    session[:split] = split
+    put :create_part,
+        id: worktime,
+        ordertime: { hours: '0:24',
+                     employee_id: employees(:pascal),
+                     work_date: worktime.work_date,
+                     account_id: worktime.work_item_id }
+    assert_equal [], assigns(:worktime).errors.full_messages
+    assert_in_delta 0.1, assigns(:split).worktime_template.hours
+    assert_redirected_to action: 'split'
+  end
+
+  def test_create_invalid_part
+    worktime = worktimes(:wt_pz_allgemein)
+    split = WorktimeEdit.new(worktime)
+    worktime.hours = 0.5
+    split.add_worktime(worktime)
+    session[:split] = split
+    put :create_part,
+        id: worktime,
+        ordertime: { hours: '0:24',
+                     employee_id: employees(:mark),
+                     work_date: worktime.work_date + 1,
+                     account_id: worktime.work_item_id }
+    assert_template 'split'
+    assert_match(/kann nicht geändert werden/, assigns(:worktime).errors[:work_date].first)
   end
 
   def test_destroy

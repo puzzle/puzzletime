@@ -161,7 +161,9 @@ class EvaluatorController < ApplicationController
         when 'departments' then DepartmentsEval.new
         when 'clientworkitems' then ClientWorkItemsEval.new(params[:category_id])
         when 'employeeworkitems' then EmployeeWorkItemsEval.new(params[:category_id])
-        when /employeesubworkitems(\d+)/ then EmployeeSubWorkItemsEval.new(params[:category_id], Regexp.last_match[1])
+        when /employeesubworkitems(\d+)/ then
+          params[:evaluation] = 'employeesubworkitems'
+          EmployeeSubWorkItemsEval.new(params[:category_id], Regexp.last_match[1])
         when 'departmentorders' then DepartmentOrdersEval.new(params[:category_id])
         when 'absences' then AbsencesEval.new
         when 'employeeabsences' then EmployeeAbsencesEval.new(params[:category_id])

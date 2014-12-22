@@ -2,8 +2,8 @@
 
 class Splitable
 
-  INCOMPLETE_FINISH = true
-  SUBMIT_BUTTONS = nil
+  class_attribute :incomplete_finish
+  self.incomplete_finish = true
 
   attr_reader :original, :original_id, :worktimes
 
@@ -43,7 +43,9 @@ class Splitable
   end
 
   def save
-    worktimes.each { |wtime| wtime.save! }
+    Worktime.transaction do
+      worktimes.each { |wtime| wtime.save! }
+    end
   end
 
   def page_title
