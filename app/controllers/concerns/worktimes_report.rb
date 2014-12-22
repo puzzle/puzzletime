@@ -1,58 +1,88 @@
-module Concerns
-  module WorktimesReport
-    extend ActiveSupport::Concern
 
-    def render_report(conditions)
-      @times = @evaluation.times(@period).where(conditions)
-      @tckt_view = params[:combine_on] && (params[:combine] == 'ticket' || params[:combine] == 'ticket_employee')
-      combine_times if params[:combine_on] && params[:combine] == 'time'
-      combine_tickets if @tckt_view
-      render template: 'shared/report', layout: false
-    end
+module WorktimesReport
+  extend ActiveSupport::Concern
 
-    def send_csv(csv_data, filename)
-      set_csv_file_export_header(filename)
-      send_data(csv_data, filename: filename, type: 'text/csv; charset=utf-8; header=present')
-    end
+  private
 
-    def send_worktimes_csv(worktimes, filename)
-      csv_data = worktimes_csv(worktimes)
-      send_csv(csv_data, filename)
-    end
+  def render_report(evaluation, period, conditions)
+    @times = evaluation.times(period).where(conditions).includes(:employee)
+    @ticket_view = params[:combine_on] && (params[:combine] == 'ticket' || params[:combine] == 'ticket_employee')
+    combine_times if params[:combine_on] && params[:combine] == 'time'
+    combine_tickets if @ticket_view
+    render template: 'worktimes_report/report', layout: 'print'
+  end
 
-    def set_csv_file_export_header(filename)
-      if request.env['HTTP_USER_AGENT'] =~ /msie/i
-        headers['Pragma'] = 'public'
-        headers['Content-type'] = 'text/plain'
-        headers['Cache-Control'] = 'no-cache, must-revalidate, post-check=0, pre-check=0'
-        headers['Content-Disposition'] = "attachment; filename=\"#{filename}\""
-        headers['Expires'] = '0'
+  def combine_times
+    combined_map = {}
+    combined_times = []
+    @times.each do |time|
+      if time.report_type.kind_of?(StartStopType) && params[:start_stop]
+        combined_times.push time
       else
-        headers['Content-Type'] ||= 'text/csv'
-        headers['Content-Disposition'] = "attachment; filename=\"#{filename}\""
-      end
-      headers['Last-Modified'] = Time.now.httpdate
-    end
-
-    private
-
-    def worktimes_csv(worktimes)
-      CSV.generate do |csv|
-        csv << ['Datum', 'Stunden', 'Von Zeit', 'Bis Zeit', 'Reporttyp',
-                'Verrechenbar', 'Mitarbeiter', 'Position', 'Ticket', 'Bemerkungen']
-        worktimes.each do |time|
-          csv << [I18n.l(time.work_date),
-                  time.hours,
-                  (time.start_stop? ? I18n.l(time.from_start_time, format: :time) : ''),
-                  (time.start_stop? && time.to_end_time? ? I18n.l(time.to_end_time, format: :time) : ''),
-                  time.report_type,
-                  time.billable,
-                  time.employee.label,
-                  time.account.label_verbose,
-                  time.ticket,
-                  time.description]
+        key = "#{time.date_string}$#{time.employee.shortname}"
+        if combined_map.include?(key)
+          combined_map[key].hours += time.hours
+          if time.description.present?
+            if combined_map[key].description
+              combined_map[key].description += "\n" + time.description
+            else
+              combined_map[key].description = time.description
+            end
+          end
+        else
+          combined_map[key] = time
+          combined_times.push time
         end
       end
+    end
+    @times = combined_times
+  end
+
+  # builds a hash which contains all information needed by the report grouped by ticket
+  def combine_tickets
+    @tickets = {}
+
+    @times.group_by(&:ticket).each do |ticket, worktimes|
+      if @tickets[ticket].nil?
+        @tickets[ticket] = { n_entries: 0,
+                             sum: 0,
+                             employees: Hash.new,
+                             date: Array.new(2),
+                             descriptions: Array.new }
+      end
+
+      worktimes.each do |t|
+        @tickets[ticket][:n_entries] += 1
+        @tickets[ticket][:sum] += t.hours
+
+        # employees involved in this ticket
+        if @tickets[ticket][:employees][t.employee.shortname].nil?
+          @tickets[ticket][:employees][t.employee.shortname] = [t.hours, [t.description]]
+        else
+          @tickets[ticket][:employees][t.employee.shortname][0] += t.hours
+          @tickets[ticket][:employees][t.employee.shortname][1] << t.description
+        end
+
+        # date range of this ticket
+        if @tickets[ticket][:date][0].nil?
+          @tickets[ticket][:date][0] = t.work_date
+        else
+          if t.work_date < @tickets[ticket][:date][0]
+            @tickets[ticket][:date][0] = t.work_date
+          end
+        end
+
+        if @tickets[ticket][:date][1].nil?
+          @tickets[ticket][:date][1] = t.work_date
+        else
+          if t.work_date > @tickets[ticket][:date][1]
+            @tickets[ticket][:date][1] = t.work_date
+          end
+        end
+
+        @tickets[ticket][:descriptions] << "\"" + t.description + "\"" if t.description?
+      end
+
     end
 
   end

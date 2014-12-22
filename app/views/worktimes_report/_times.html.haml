@@ -1,0 +1,40 @@
+%table.table-striped
+  %thead
+    %tr
+      %th Datum
+      %th Stunden
+      - if params[:start_stop]
+        %th Von
+        %th Bis
+      - if @evaluation.employee_id.nil?
+        %th Mitarbeiter
+      - if params[:ticket]
+        %th Ticket
+      - if params[:description]
+        %th{:width => "50%"} Bemerkungen
+
+  - total = 0
+  %tbody
+    - @times.each do |time|
+      %tr{class: cycle('even', 'uneven')}
+        %td{:align => "right", :nowrap => true}= time.date_string
+        %td{:align => "right"}
+          = format_hour time.hours
+          \&nbsp;
+        - if params[:start_stop]
+          %td{:align => "center"}= format_time time.from_start_time if time.start_stop?
+          %td{:align => "center"}= format_time time.to_end_time if time.start_stop?
+        - if @evaluation.employee_id.nil?
+          %td{:align => "left"}= time.employee.shortname
+        - if params[:ticket]
+          %td{:align => "right"}= time.ticket
+        - if params[:description]
+          %td= h(time.description).strip.gsub("\n", "<br/>").html_safe
+        - total += time.hours
+
+  %tfoot
+    %tr.times_total_sum
+      %td Total Stunden
+      %td{:align => "right"}
+        = format_hour total
+        \&nbsp;

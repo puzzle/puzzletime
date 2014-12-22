@@ -6,16 +6,17 @@ class OrderServicesControllerTest < ActionController::TestCase
 
   setup :login
 
-  [:show, :export_worktimes_csv].each do |action|
-      test "GET #{action} assigns order employees" do
-      get action, order_id: order.id
-      assert_equal employees(:mark, :lucien, :pascal), assigns(:employees)
-    end
+  test "GET show assigns order employees" do
+    get :show, order_id: order.id
+    assert_equal employees(:mark, :lucien, :pascal), assigns(:employees)
+  end
 
-    test "GET #{action} assigns order accounting posts" do
-      get action, order_id: orders(:hitobito_demo).id
-      assert_equal work_items(:hitobito_demo_app, :hitobito_demo_site), assigns(:accounting_posts)
-    end
+  test "GET show assigns order accounting posts" do
+    get :show, order_id: orders(:hitobito_demo).id
+    assert_equal work_items(:hitobito_demo_app, :hitobito_demo_site), assigns(:accounting_posts)
+  end
+
+  [:show, :export_worktimes_csv].each do |action|
 
     test "GET #{action} filtered by employee" do
       get action, order_id: order.id, employee_id: employees(:pascal).id

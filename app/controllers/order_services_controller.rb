@@ -4,30 +4,36 @@ class OrderServicesController < ApplicationController
 
   include Filterable
   include DryCrud::Rememberable
-  include Concerns::WorktimesReport
+  include WorktimesReport
+  include WorktimesCsv
 
   self.remember_params = %w(employee_id work_item_id billable)
 
   before_action :order
   before_action :authorize_class
   before_filter :handle_remember_params, only: [:show]
-  before_action :set_evaluation, only: [:compose_report, :report]
-  before_action :set_filter_values, only: [:show, :export_worktimes_csv]
+  before_action :set_filter_values, only: [:show]
 
   def show
     @worktimes = list_worktimes
   end
 
   def export_worktimes_csv
+    set_period
     @worktimes = list_worktimes
     send_worktimes_csv(@worktimes, worktimes_csv_filename)
   end
 
+  def compose_report
+    set_report_evaluation
+  end
+
   def report
+    set_report_evaluation
     conditions = {}
     conditions[:worktimes] = { billable: params[:billable] } if params[:billable].present?
     conditions[:employee_id] = params[:employee_id] if params[:employee_id].present?
-    render_report(conditions)
+    render_report(@evaluation, @period, conditions)
   end
 
   private
@@ -75,7 +81,7 @@ class OrderServicesController < ApplicationController
     params.delete(:end_date)
   end
 
-  def set_evaluation
+  def set_report_evaluation
     work_item_id = params[:work_item_id].present? ? params[:work_item_id] : order.work_item_id
     @evaluation = WorkItemEmployeesEval.new(work_item_id)
     if params[:start_date].present? && params[:start_date] != '0'

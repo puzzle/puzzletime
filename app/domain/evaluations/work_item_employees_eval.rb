@@ -30,7 +30,7 @@ class WorkItemEmployeesEval < Evaluation
   end
 
   def set_division_id(division_id = nil)
-    return if division_id.blank?
+    return if division_id.nil?
     @division = Employee.find(division_id.to_i)
   end
 
