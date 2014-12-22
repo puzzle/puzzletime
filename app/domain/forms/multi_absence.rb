@@ -18,7 +18,7 @@ class MultiAbsence
 
   def valid?
     @worktime = worktime_template(@work_date,
-                                  WorkingCondition.value_at(@work_date, :must_hours_per_day))
+                                  WorkingCondition.value_at(work_date, :must_hours_per_day))
     if valid = @worktime.valid?
       if duration <= 0
         valid = false
