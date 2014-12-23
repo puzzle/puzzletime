@@ -14,7 +14,7 @@ app.workItemAutocomplete = (i, input) ->
 
 renderOption = (item, escape) ->
   '<div class="selectize-option">' +
-  '<div class="shortname">' + escape(item.path_shortnames) + '</div>' +
+  '<div class="shortname">' + escape(item.path_shortnames) + ': </div>' +
   '<div class="name">' + escape(limitText(item.name, 70)) + '</div>' +
   (if item.description then '<div class="description">' + escape(limitText(item.description, 120)) + '</div>' else '') +
   '</div>'
