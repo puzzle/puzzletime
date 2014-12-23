@@ -9,6 +9,9 @@ loadContactsWithCrm = () ->
   url = $('form[data-contacts-url]').data('contacts-url')
   return unless url
 
+  # TODO: only one request may exist at one point in time, all others have to be aborted!
+  # e.g. client is changed quickly serveral times -> every change creates a request ->
+  # race conditions
   $.getJSON(url, (data) ->
     original = $('#order_order_contacts_template').html()
     return unless original # probably page was left in the mean time
