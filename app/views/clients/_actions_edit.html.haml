@@ -1,0 +1,4 @@
+= render 'crud/actions_edit'
+
+- if can?(:read, Contact)
+  = action_link('Kontakte', client_contacts_path(entry))

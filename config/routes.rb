@@ -4,10 +4,12 @@ Rails.application.routes.draw do
 
   resources :absences, except: [:show]
 
-  resources :clients,except: [:show] do
+  resources :clients, except: [:show] do
     collection do
       get :categories
     end
+
+    resources :contacts
   end
 
   resources :departments, except: [:show]

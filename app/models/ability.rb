@@ -8,6 +8,7 @@ class Ability
       can :manage, [Absence,
                     AccountingPost,
                     Client,
+                    Contact,
                     Department,
                     Employment,
                     Holiday,
@@ -39,9 +40,11 @@ class Ability
            :export_capacity_csv,
            :export_extended_capacity_csv,
            :export_ma_overview], Evaluation
+
     elsif user.order_responsible?
 
       can [:create, :categories], Client
+      can [:create], Contact
       can :create, WorkItem
       can :manage, Order, responsible_id: user.id
       can :manage, AccountingPost do |post|

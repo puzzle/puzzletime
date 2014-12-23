@@ -1,3 +1,5 @@
 = crud_table :name, :shortname do |t|
   - if Crm.instance
     - t.sortable_attr(:crm_key, Crm.instance.crm_key_label)
+  - t.action_col do |e|
+    - link_to('Kontakte', client_contacts_path(e))
