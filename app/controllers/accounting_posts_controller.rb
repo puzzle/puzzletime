@@ -4,7 +4,8 @@ class AccountingPostsController < CrudController
   self.nesting = [Order]
 
   self.permitted_attrs = [:closed, :offered_hours, :offered_rate, :offered_total,
-                          :discount_percent, :discount_fixed, :portfolio_item_id, :reference,
+                          :discount_percent, :discount_fixed, :remaining_hours,
+                          :portfolio_item_id, :reference,
                           :billable, :description_required, :ticket_required,
                           work_item_attributes: [:name, :shortname, :description]]
   before_save :check_book_on_order
