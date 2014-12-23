@@ -2,7 +2,8 @@
 
 = render 'orders/header'
 
-= crud_form cancel_url: false do |f|
+= crud_form cancel_url: false,
+            data: Crm.instance ? { contacts_url: with_crm_client_contacts_url(entry.client) } : nil do |f|
 
   = f.labeled_static_field(:client)
   = f.labeled_static_field(:category)

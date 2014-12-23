@@ -9,7 +9,11 @@ Rails.application.routes.draw do
       get :categories
     end
 
-    resources :contacts
+    resources :contacts do
+      collection do
+        get :with_crm
+      end
+    end
   end
 
   resources :departments, except: [:show]

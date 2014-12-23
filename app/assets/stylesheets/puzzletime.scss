@@ -283,6 +283,14 @@ table.table td.action {
   margin-top: $line-height-computed * 2;
 }
 
+dd.value {
+  ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin-bottom: 0;
+  }
+}
+
 footer {
   clear: both;
 }

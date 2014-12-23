@@ -1,5 +1,5 @@
 = f.labeled(:order_team_members) do
-  = f.nested_fields_for :order_team_members, wrapper_tag: :div do |fields|
+  = f.nested_fields_for :order_team_members, entry.order_team_members.list, wrapper_tag: :div do |fields|
     .row
       .col-md-5
         = fields.input_field(:employee_id, class: 'searchable', placeholder: 'Member')

@@ -169,7 +169,7 @@ module FormatHelper
   # Formats an ActiveRecord +has_and_belongs_to_many+ or
   # +has_many+ association.
   def format_has_many(obj, assoc)
-    values = obj.send(assoc.name)
+    values = obj.send(assoc.name).list
     if values.size == 1
       assoc_link(assoc, values.first)
     elsif values.present?
