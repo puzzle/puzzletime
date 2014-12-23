@@ -30,6 +30,8 @@ class TarantulaTest < ActionDispatch::IntegrationTest
     t.skip_uri_patterns << /\/login\/logout/ # do not logout during tests
     t.skip_uri_patterns << /\/employees\/#{user.id}$/ # do not modify logged in user
     t.skip_uri_patterns << /\?week_date=(#{outside_four_week_window}.)*$/ # only allows week strings from one week ago until two weeks from now.
+    t.skip_uri_patterns << /evaluator\/change_period\?back_url/
+    t.skip_uri_patterns << /orders\/crm_load/ # js only
 
     t.allow_404_for /^\-?\d+$/  # change period may produce such links in tarantula
     t.allow_404_for /ordertimes\/start$/  # passing invalid work_item_id
@@ -38,8 +40,11 @@ class TarantulaTest < ActionDispatch::IntegrationTest
     t.allow_404_for /employee_lists(\/\d+)?$/   # invalid employee_ids assigned
     t.allow_404_for /orders(\/\d+)?$/   # invalid employee_ids assigned
     t.allow_404_for /evaluator\/details\?category_id=(0|\d{5,12})\&/   # invalid category
+    t.allow_404_for /evaluator\/((export_csv)|(compose_report)|(book_all))\?.*division_id=\d\&/   # division may have been deleted
     t.allow_404_for /accounting_posts$/   # invalid order_id
     t.allow_404_for /work_items\?returning=true$/   # only handled by js
+    t.allow_404_for /order_services\/report/  # may get invalid work_item_id
+    t.allow_404_for /\?.*division_id=8/  # may have been deleted
 
     t.handlers << Relevance::Tarantula::InvalidHtmlHandler.new
 

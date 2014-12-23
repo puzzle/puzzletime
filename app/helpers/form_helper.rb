@@ -15,7 +15,7 @@ module FormHelper
     add_css_class(options[:html], 'form-horizontal')
     options[:html][:role] ||= 'form'
     options[:builder] ||= DryCrud::Form::Builder
-    options[:cancel_url] ||= default_cancel_url(object)
+    options[:cancel_url] ||= default_cancel_url(object) unless options[:cancel_url] == false
     if request.format.js?
       options[:data] ||= {}
       options[:data][:remote] = true

@@ -120,7 +120,7 @@ class EvaluatorController < ApplicationController
      # redirect_to_overview
     redirect_to sanitized_back_url
   rescue ArgumentError => ex        # ArgumentError from Period.new or if period.negative?
-    flash[:notice] = "Ungültige Zeitspanne: #{ex}"
+    flash[:alert] = "Ungültige Zeitspanne: #{ex}"
     render action: 'select_period'
   end
 
