@@ -34,10 +34,6 @@ class OrdersController < CrudController
     end
   end
 
-  def cockpit
-    @cockpit = Order::Cockpit.new(entry)
-  end
-
 
   private
 

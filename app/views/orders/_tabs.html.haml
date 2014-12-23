@@ -1,15 +1,17 @@
 %ul.nav.nav-tabs
-  = nav 'Details', edit_order_path(@order), edit_order_path(@order)
+  - if can?(:update, @order)
+    = nav 'Details',
+          edit_order_path(@order),
+          edit_order_path(@order)
 
-  - if can?(:cockpit, @order)
-    = nav 'Cockpit',
-          cockpit_order_path(@order),
-          accounting_posts_path
+  - if can?(:accounting_posts, @order)
+    = nav 'Positionen',
+          order_accounting_posts_path(@order),
+          order_accounting_posts_path(@order)
 
-  - if can?(:manage, @order)
+  - if can?(:contract, @order)
     = nav 'Vertrag',
           edit_order_contract_path(@order)
-
 
   - if can?(:services, @order)
     = nav 'Leistungen',
@@ -22,8 +24,6 @@
     = nav 'Ziele',
           order_order_targets_path(@order),
           order_order_targets_path(@order)
-
-  //= nav 'Vertrag', ''
 
   - if can?(:comments, @order)
     = nav 'Journal', order_order_comments_path(@order)

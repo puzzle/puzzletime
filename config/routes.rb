@@ -4,8 +4,6 @@ Rails.application.routes.draw do
 
   resources :absences, except: [:show]
 
-  resources :accounting_posts, except: [:index, :show]
-
   resources :clients,except: [:show] do
     collection do
       get :categories
@@ -35,6 +33,16 @@ Rails.application.routes.draw do
       post :crm_load
     end
 
+    member do
+      get :bills
+    end
+
+    resources :accounting_posts, except: [:show]
+
+    resource :contract, only: [:update] do
+      get :index, action: :edit, as: :edit
+    end
+
     resource :multi_worktimes, only: [:edit, :update]
     resources :order_comments, only: [:index, :create]
     resource :order_targets, only: [:show, :update]
@@ -45,14 +53,6 @@ Rails.application.routes.draw do
       get :report
     end
 
-    resource :contract, only: [:update] do
-      get :index, action: :edit, as: :edit
-    end
-
-    member do
-      get :cockpit
-      get :bills
-    end
   end
 
   resources :order_statuses, except: [:show]

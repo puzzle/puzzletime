@@ -51,7 +51,6 @@ class CrudController < ListController
   #   GET /entries/new.json
   def new(&block)
     assign_attributes if params[model_identifier]
-    #block = ->(format) { format.js { render partial: 'form' }} unless block_given?
     respond_with(entry, &block)
   end
 
