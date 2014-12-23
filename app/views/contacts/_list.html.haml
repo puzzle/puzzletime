@@ -1,0 +1,5 @@
+- @title = "Kontakte von #{parent}"
+
+= crud_table :lastname, :firstname, :function, :email, :phone, :mobile do |t|
+  - if Crm.instance
+    - t.sortable_attr(:crm_key, Crm.instance.crm_key_label)

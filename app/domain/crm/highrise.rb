@@ -27,17 +27,6 @@ module Crm
       nil
     end
 
-    def search_clients(term)
-      result = ::Highrise::Company.all(from: "/companies/search.xml", params: { term: term })
-      result.collect { |c| { name: c.name, crm_key: c.id } }
-    end
-
-    def recent_orders
-      since = (Time.zone.now - 30.days).strftime('%Y%m%d%H%M%S')
-      result = ::Highrise::Company.all(params: { status: :won, since: since })
-      result.collect { |c| { name: c.name, crm_key: c.id } }
-    end
-
     def sync_all
       sync_clients
       sync_orders

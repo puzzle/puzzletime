@@ -16,6 +16,7 @@ module DryCrud
       elsif has_errors?
         display_js_errors
       else
+        # answer after create or update
         controller.render text: "'#{controller.send(:js_entry).to_json}'"
       end
     rescue ActionView::MissingTemplate => e
