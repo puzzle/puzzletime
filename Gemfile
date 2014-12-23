@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.1.5'
+gem 'rails', '4.1.8'
 
 gem 'pg'
 
@@ -41,7 +41,6 @@ gem 'bootstrap-sass'
 gem 'selectize-rails'
 
 
-
 group :development, :test do
   gem 'binding_of_caller'
   gem 'codez-tarantula', require: 'tarantula-rails3'
@@ -66,7 +65,6 @@ group :test do
 end
 
 group :console do
-  gem 'debugger'
   gem 'pry-doc'
   gem 'pry-nav'
   gem 'pry-debugger'
@@ -82,4 +80,3 @@ group :metrics do
   gem 'simplecov-rcov'
   gem 'sdoc'
 end
-
