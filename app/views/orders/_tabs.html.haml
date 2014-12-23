@@ -3,6 +3,8 @@
     = nav 'Details',
           edit_order_path(@order),
           edit_order_path(@order)
+  - elsif can?(:show, @order)
+    = nav 'Details', order_path(@order)
 
   - if can?(:accounting_posts, @order)
     = nav 'Positionen',

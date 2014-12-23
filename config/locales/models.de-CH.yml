@@ -159,13 +159,21 @@ de-CH:
         department_id: Organisationseinheit
         contract_id: Vertrag
         billing_address_id: Rechnungsadresse
-        employees: Team
-        employee_ids: Team
+        order_contacts: Ansprechspersonen Kunde
+        order_team_members: Team
         created_at: Erstellt
         updated_at: Aktualisiert
       order_comment:
         order_id: Auftrag
         text: Kommentar
+      order_contact:
+        contact: Ansprechsperson
+        contact_id: Ansprechsperson
+        comment: Funktion
+      order/order_contacts:
+        contact: Ansprechsperson
+      order/team_members:
+        employee: Mitarbeiter
       order_kind:
         name: Bezeichnung
       order_status:

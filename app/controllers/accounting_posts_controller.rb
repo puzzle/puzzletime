@@ -7,8 +7,6 @@ class AccountingPostsController < CrudController
                           :discount_percent, :discount_fixed, :portfolio_item_id, :reference,
                           :billable, :description_required, :ticket_required,
                           work_item_attributes: [:name, :shortname, :description]]
-
-  before_filter :order # make sure order is initialized before destroy/accessing in template
   before_save :check_book_on_order
   before_update :remember_old_work_item_id
   after_update :move_work_times

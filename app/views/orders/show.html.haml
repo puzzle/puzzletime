@@ -1,14 +1,19 @@
 = render 'header'
 
 .orders-cockpit
-  %dl.dl-horizontal
-    = labeled_attr entry, :kind_id
-    = labeled_attr entry, :status_id
-    = labeled_attr entry, :responsible_id
-    = labeled_attr entry, :department_id
 
+  %dl.dl-horizontal
+    = labeled_attr entry, :client
+    = labeled_attr entry, :category
+    = labeled_attr entry.work_item, :name
+    = labeled_attr entry.work_item, :shortname
+    = labeled_attr entry.work_item, :description
     - if Crm.instance
       = labeled(Crm.instance.crm_key_label, format_attr(entry, :crm_key))
+
+  = render_attrs entry, :order_contacts
+
+  = render_attrs entry, :department_id, :responsible_id, :kind_id, :status_id
 
   = render_attrs entry, :order_team_members
 
