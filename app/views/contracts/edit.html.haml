@@ -6,14 +6,13 @@
     cancel_url: edit_order_contract_path(entry, order_id: parent) do |f|
 
   = f.labeled_input_field :number, placeholder: 'Bestell- oder Vertragsnummer des Kunden'
-  = f.labeled 'Vertragsdauer', required: true do
-    = f.label :start_date, "von", class: 'col-md-1 control-label'
-    .col-md-5
-      = f.input_field :start_date
+
+  .form-group{class: "#{f.errors?(:start_date) || f.errors?(:end_date) ? 'has-error' : nil}"}
+    = f.label(:start_date, 'Vertragsdauer von', class: 'col-md-2 control-label required')
+    .col-md-2= f.input_field :start_date
     = f.label :end_date, "bis", class: 'col-md-1 control-label'
-    .col-md-5
-      = f.input_field :end_date
+    .col-md-2= f.input_field :end_date
+
   = f.labeled_input_field :payment_period, span: 1, help: 'Tage'
   = f.labeled_input_field :reference, placeholder: 'Referenz des Kunden'
   = f.labeled_input_field :sla
-

@@ -60,6 +60,7 @@ class Ability
     end
 
     can [:read, :accounting_posts, :services, :show_targets], Order
+    can :read, AccountingPost
 
     can :manage, Planning
 

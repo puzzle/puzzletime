@@ -30,7 +30,10 @@
             %td
               =order.parent_names
               %br/
-              %span.title= link_to order, edit_order_path(order)
+              %span.title
+                = link_to_if(can?(:show, order),
+                             order,
+                             can?(:update, order) ? edit_order_path(order) : order_path(order))
             %td
               = order.kind
               %br/

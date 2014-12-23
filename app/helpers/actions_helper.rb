@@ -23,6 +23,7 @@ module ActionsHelper
   # Standard show action to the given path.
   # Uses the current +entry+ if no path is given.
   def show_action_link(path = nil)
+    return unless can?(:show, entry)
     path ||= path_args(entry)
     action_link(ti('link.show'), path)
   end
@@ -30,6 +31,7 @@ module ActionsHelper
   # Standard edit action to given path.
   # Uses the current +entry+ if no path is given.
   def edit_action_link(path = nil)
+    return unless can?(:edit, entry)
     path ||= path_args(entry)
     path = path.is_a?(String) ? path : edit_polymorphic_path(path)
     action_link(action_icon('edit', ti('link.edit')), path)
@@ -38,6 +40,7 @@ module ActionsHelper
   # Standard destroy action to the given path.
   # Uses the current +entry+ if no path is given.
   def destroy_action_link(path = nil)
+    return unless can?(:delete, entry)
     path ||= path_args(entry)
     action_link(action_icon('delete', ti('link.delete')), path,
                 data: { confirm: ti(:confirm_delete),
