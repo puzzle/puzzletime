@@ -170,7 +170,7 @@ module DryCrud::Form
     # Renders the given content with an addon.
     def with_addon(content, addon)
       content_tag(:div, class: 'input-group') do
-        content_tag(:span, addon, class: 'input-group-addon') + content
+        content + content_tag(:span, addon, class: 'input-group-addon')
       end
     end
 

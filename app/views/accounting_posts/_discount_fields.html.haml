@@ -13,10 +13,7 @@
         = radio_button_tag(:discount, 'percent', entry.discount_percent?, data: {disable_dependents: true})
         Prozentsatz
   .col-md-2
-    .input-group
-      = form.input_field :discount_percent, class: 'discount percent'
-      .input-group-addon
-        \%
+    = form.input_field :discount_percent, class: 'discount percent', addon: '%'
 .form-group
   .col-md-2
   .col-md-1
@@ -25,7 +22,4 @@
         = radio_button_tag(:discount, 'fixed', entry.discount_fixed?, data: {disable_dependents: true})
         Betrag
   .col-md-2
-    .input-group
-      = form.input_field :discount_fixed, class: 'discount fixed'
-      .input-group-addon
-        CHF
+    = form.input_field :discount_fixed, class: 'discount fixed', addon: 'CHF'

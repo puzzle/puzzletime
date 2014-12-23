@@ -92,11 +92,7 @@ module DryCrud::Form
     def content
       @content ||= begin
         content = input
-        if addon
-          content = builder.with_addon(content, addon)
-        elsif required
-          #content = builder.with_addon(content, REQUIRED_MARK)
-        end
+        content = builder.with_addon(content, addon) if addon
         content
       end
     end
