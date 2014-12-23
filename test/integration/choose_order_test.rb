@@ -16,12 +16,12 @@ class ChooseOrderTest < ActionDispatch::IntegrationTest
 
   test 'keeps current tab when changing orders' do
     timeout_safe do
-      click_link 'Cockpit'
-      assert_equal cockpit_order_path(order), current_path
+      click_link 'Positionen'
+      assert_equal order_accounting_posts_path(order), current_path
 
       selectize('choosable_order_id', 'Demo')
-      assert_equal cockpit_order_path(orders(:hitobito_demo)), current_path
-      assert page.has_selector?('li.active', text: 'Cockpit')
+      assert_equal order_accounting_posts_path(orders(:hitobito_demo)), current_path
+      assert page.has_selector?('li.active', text: 'Positionen')
     end
   end
 

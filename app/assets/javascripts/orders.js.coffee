@@ -11,6 +11,7 @@ loadContactsWithCrm = () ->
 
   $.getJSON(url, (data) ->
     original = $('#order_order_contacts_template').html()
+    return unless original # probably page was left in the mean time
     modified = original.replace(/<option value="\d+">.*<\/option>/g, '')
     $.each(data, (index, element) ->
       option = '<option value="' + (element.id || 'crm_' + element.crm_key) + '">' +
