@@ -70,10 +70,10 @@ openTableRowLink = (cell) ->
 
 $ ->
   # wire up date picker
-  $('body').on('click', 'input.date, .input-group .glyphicon-calendar', app.datepicker.show)
+  $(document).on('click', 'input.date, .input-group .glyphicon-calendar', app.datepicker.show)
 
   # wire up data-dynamic-param
-  $('body').on('ajax:beforeSend', '[data-dynamic-params]', (event, xhr, settings) ->
+  $(document).on('ajax:beforeSend', '[data-dynamic-params]', (event, xhr, settings) ->
     params = $(this).data('dynamic-params').split(',')
     urlParams = for p in params
       value = $('#' + p.replace('[', '_').replace(']', '')).val() || ''
@@ -83,14 +83,14 @@ $ ->
   )
 
   # wire up toggle links
-  $('body').on('click', '[data-toggle]', (event) ->
+  $(document).on('click', '[data-toggle]', (event) ->
     id = $(this).data('toggle')
     $('#' + id).slideToggle(200)
     event.preventDefault()
   )
 
   # wire up enable links
-  $('body').on('click', '[data-enable]', (event) -> toggleEnabled(this))
+  $(document).on('click', '[data-enable]', (event) -> toggleEnabled(this))
   $('[data-enable]').each((i, e) -> toggleEnabled(e))
 
   # wire up autocompletes
@@ -100,7 +100,7 @@ $ ->
   $('select.searchable').selectize()
 
   # wire up direct submit fields
-  $('body').on('change', '[data-submit]', (event) ->
+  $(document).on('change', '[data-submit]', (event) ->
     $(this).closest('form').submit()
   )
 
@@ -108,39 +108,39 @@ $ ->
   $('[data-toggle=buttons]').button()
 
   # wire up ajax button with spinners
-  $('body').on('ajax:beforeSend', '[data-spin]', (event, xhr, settings) ->
+  $(document).on('ajax:beforeSend', '[data-spin]', (event, xhr, settings) ->
     $(this).prop('disable', true).
             addClass('disabled').
             siblings('.spinner').show()
   )
-  $('body').on('ajax:complete', '[data-spin]', (event, xhr, settings) ->
+  $(document).on('ajax:complete', '[data-spin]', (event, xhr, settings) ->
     $(this).prop('disable', false).
             removeClass('disabled').
             siblings('.spinner').hide()
   )
 
   # wire up disabled links
-  $('body').on('click', 'a.disabled', (event) ->
+  $(document).on('click', 'a.disabled', (event) ->
    event.preventDefault()
    event.stopPropagation()
   )
 
   # wire up tooltips
-  $('body').tooltip({ selector: '[data-toggle=tooltip]', placement: 'top', html: true })
+  $(document).tooltip({ selector: '[data-toggle=tooltip]', placement: 'top', html: true })
 
   # wire up disable-dependents
-  $('body').on('change', '[type=radio][data-disable-dependents]', (event) ->
+  $(document).on('change', '[type=radio][data-disable-dependents]', (event) ->
     toggleRadioDependents(this)
   )
   $('[type=radio][data-disable-dependents]:checked').each((i, e) -> toggleRadioDependents(e))
 
   # wire up check all boxes
-  $('body').on('change', '[data-check]', (event) ->
+  $(document).on('change', '[data-check]', (event) ->
     toggleCheckAll(this)
   )
 
   # wire up table row links
-  $('body').on('click', '[data-row-link] tbody td:not(.no-link)', (event) ->
+  $(document).on('click', '[data-row-link] tbody td:not(.no-link)', (event) ->
     openTableRowLink(this)
   )
 
@@ -158,4 +158,3 @@ $ ->
   # show alert if ajax requests fail
   $(document).on('ajax:error', (event, xhr, status, error) ->
     alert('Sorry, something went wrong\n(' + error + ')'))
-  # wire up label required mark

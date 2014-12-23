@@ -22,7 +22,7 @@ class Contact < ActiveRecord::Base
   has_many :orders
   has_many :billing_addresses
 
-  validates :firstname, :lastname, presence: true
+  validates :firstname, :lastname, :client_id, presence: true
 
   scope :list, -> { order(:lastname, :firstname) }
 

@@ -111,10 +111,9 @@ class OrdersController < CrudController
     if entry.new_record?
       load_client_options
       load_category_options
-    else
-      @contacts = entry.client.contacts
     end
 
+    @contacts = load_contact_options
     @employees = Employee.list # TODO: restrict only with employment?
   end
 
@@ -134,6 +133,16 @@ class OrdersController < CrudController
       @categories = WorkItem.find(params[:client_work_item_id]).categories.list
     else
       @categories = []
+    end
+  end
+
+  def load_contact_options
+    if entry.new_record?
+      [Contact.new(id: 0)]
+    elsif Crm.instance
+      entry.client.contacts.list.presence || [Contact.new(id: 0)]
+    else
+      entry.client.contacts.list
     end
   end
 

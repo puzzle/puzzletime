@@ -26,6 +26,15 @@ module Crm
     def find_order(key)
     end
 
+    # Find all contacts for a given client in the crm
+    def find_client_contacts(client)
+      []
+    end
+
+    # Find a contact with the given key in the crm
+    def find_person(key)
+    end
+
     # Sync all entities from the crm, discarding local changes.
     def sync_all
     end

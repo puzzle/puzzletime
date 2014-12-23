@@ -27,6 +27,16 @@ module Crm
       nil
     end
 
+    def find_client_contacts(client)
+      company = ::Highrise::Company.new(id: client.crm_key)
+      company.people.collect { |p| contact_attributes(p) }
+    end
+
+    def find_person(key)
+      person = ::Highrise::Person.find(key)
+      contact_attributes(person) if person
+    end
+
     def sync_all
       sync_clients
       sync_orders
@@ -70,16 +80,20 @@ module Crm
     def sync_contacts
       sync_crm_entities(Contact) do |contact|
         person = ::Highrise::Person.find(contact.crm_key)
-        contact.lastname = person.last_name
-        contact.firstname = person.first_name
-        contact.function = person.title
-        emails = person.contact_data.email_addresses
-        contact.email = emails.first.address if emails.present?
-        phones = person.contact_data.phone_numbers
-        contact.phone = phones.find { |p| p.location == 'Work' }.try(:number)
-        contact.mobile = phones.find { |p| p.location == 'Mobile' }.try(:number)
-        contact.save!
+        contact.update!(contact_attributes(person))
       end
+    end
+
+    def contact_attributes(person)
+      emails = person.contact_data.email_addresses
+      phones = person.contact_data.phone_numbers
+      { lastname: person.last_name,
+        firstname: person.first_name,
+        function: person.title,
+        email: emails.first.try(:address),
+        phone: phones.find { |p| p.location == 'Work' }.try(:number),
+        mobile: phones.find { |p| p.location == 'Mobile' }.try(:number),
+        crm_key: person.id }
     end
 
     def sync_crm_entities(entities)
