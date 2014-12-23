@@ -26,10 +26,12 @@ class OrderServicesController < ApplicationController
 
   def compose_report
     set_report_evaluation
+    set_period
   end
 
   def report
     set_report_evaluation
+    set_period
     conditions = {}
     conditions[:worktimes] = { billable: params[:billable] } if params[:billable].present?
     conditions[:employee_id] = params[:employee_id] if params[:employee_id].present?
@@ -84,9 +86,6 @@ class OrderServicesController < ApplicationController
   def set_report_evaluation
     work_item_id = params[:work_item_id].present? ? params[:work_item_id] : order.work_item_id
     @evaluation = WorkItemEmployeesEval.new(work_item_id)
-    if params[:start_date].present? && params[:start_date] != '0'
-      @period = Period.retrieve(params[:start_date], params[:end_date])
-    end
   end
 
   def authorize_class

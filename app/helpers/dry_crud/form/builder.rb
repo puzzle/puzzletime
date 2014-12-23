@@ -214,7 +214,7 @@ module DryCrud::Form
     # Render a cancel link pointing to the given url.
     def cancel_link(url = nil)
       url ||= cancel_url
-      link_to(ti('button.cancel'), url, class: 'cancel')
+      link_to(ti('button.cancel'), url, class: 'cancel') unless url == false
     end
 
     # Depending if the given attribute must be present, return

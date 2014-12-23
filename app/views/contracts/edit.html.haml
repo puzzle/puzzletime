@@ -2,8 +2,9 @@
 
 = render 'orders/header'
 
-= crud_form url: order_contract_path(order_id: parent), method: :put,
-    cancel_url: edit_order_contract_path(entry, order_id: parent) do |f|
+= crud_form url: order_contract_path(order_id: parent),
+            cancel_url: false,
+            method: :put do |f|
 
   = f.labeled_input_field :number, placeholder: 'Bestell- oder Vertragsnummer des Kunden'
 

@@ -2,7 +2,7 @@
 
 = render 'orders/header'
 
-= crud_form cancel_url: edit_order_path(entry), disabled: cannot?(:update, entry) do |f|
+= crud_form cancel_url: false do |f|
 
   = f.labeled_static_field(:client)
   = f.labeled_static_field(:category)

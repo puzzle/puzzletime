@@ -25,9 +25,9 @@ class OrdersController < CrudController
   before_render_form :set_option_values
 
   def crm_load
-    key = params[:order][:crm_key]
+    key = params[:order] && params[:order][:crm_key]
     @crm = Crm.instance
-    @order = Order.where(crm_key: key).first
+    @order = Order.find_by_crm_key(key)
     @crm_order = @crm.find_order(key)
     if @crm_order
       @client = Client.where(crm_key: @crm_order[:client][:key].to_s).first
