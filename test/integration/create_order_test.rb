@@ -195,6 +195,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
         url: 'http://crm/orders/123',
         client: { name: 'New Client', key: '456' }
       })
+      Crm.instance.expects(:find_client_contacts).returns([])
 
       # reload after crm change
       visit(new_order_path)
@@ -226,6 +227,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
         url: 'http://crm/orders/123',
         client: { name: 'New Client', key: '456' }
       })
+      Crm.instance.expects(:find_client_contacts).returns([])
 
       # reload after crm change
       visit(new_order_path)
@@ -263,6 +265,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
         url: 'http://crm/orders/123',
         client: { name: client.name, key: '456' }
       })
+      Crm.instance.expects(:find_client_contacts).returns([])
 
       # reload after crm change
       visit(new_order_path)
@@ -291,6 +294,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
         url: 'http://crm/orders/123',
         client: { name: client.name, key: '456' }
       })
+      Crm.instance.expects(:find_client_contacts).returns([])
 
       # reload after crm change
       visit(new_order_path)
@@ -321,6 +325,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
         url: 'http://crm/orders/123',
         client: { name: client.name, key: '456' }
       })
+      Crm.instance.expects(:find_client_contacts).returns([])
 
       # reload after crm change
       visit(new_order_path)
