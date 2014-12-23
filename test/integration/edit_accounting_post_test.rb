@@ -55,7 +55,7 @@ class EditAccountingPostTest < ActionDispatch::IntegrationTest
   end
 
   def login
-    login_as(:mark, edit_accounting_post_path(accounting_post))
+    login_as(:mark, edit_order_accounting_post_path(accounting_post.order, accounting_post))
   end
 
 end
