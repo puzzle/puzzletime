@@ -1,6 +1,8 @@
 # encoding: utf-8
 class AccountingPostsController < CrudController
 
+  self.nesting = [Order]
+
   self.permitted_attrs = [:closed, :offered_hours, :offered_rate, :offered_total,
                           :discount_percent, :discount_fixed, :portfolio_item_id, :reference,
                           :billable, :description_required, :ticket_required,
@@ -13,13 +15,13 @@ class AccountingPostsController < CrudController
 
   helper_method :order, :book_on_order_allowed?
 
+  def index
+    @cockpit = Order::Cockpit.new(parent)
+  end
+
   private
 
   attr_reader :old_work_item_id
-
-  def index_url
-    cockpit_order_path(id: order.id)
-  end
 
   def build_entry
     super.tap { |p| p.build_work_item }
@@ -29,6 +31,10 @@ class AccountingPostsController < CrudController
     handle_work_item
     entry.attributes = model_params.except(:work_item_attributes)
     reset_discount
+  end
+
+  def index_url
+    order_accounting_posts_path(parent)
   end
 
   def handle_work_item
@@ -84,7 +90,7 @@ class AccountingPostsController < CrudController
   end
 
   def order
-    @order ||= entry.new_record? ? Order.find(params.require(:order_id)) : entry.order
+    parent
   end
 
   def remember_old_work_item_id

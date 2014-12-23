@@ -44,9 +44,13 @@ class Ability
       can [:create, :categories], Client
       can :create, WorkItem
       can :manage, Order, responsible_id: user.id
-      can :manage, AccountingPost
+      can :manage, AccountingPost do |post|
+        post.order.responsible_id == user.id
+      end
       can :managed, Evaluation
     end
+
+    ### EVERYBODY
 
     can :manage, Worktime, employee_id: user.id
     can :search, WorkItem
@@ -55,7 +59,7 @@ class Ability
       employee == user
     end
 
-    can [:read, :cockpit, :services, :show_targets], Order
+    can [:read, :accounting_posts, :services, :show_targets], Order
 
     can :manage, Planning
 

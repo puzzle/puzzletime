@@ -1,4 +1,4 @@
-= render 'header'
+= render 'orders/header'
 
 .orders-cockpit
 
@@ -7,14 +7,10 @@
       = render 'cockpit_header'
 
     .unindented
-      .cockpit-table 
+      .cockpit-table
         = render 'cockpit_table'
 
   .orders-actions
-    = link_to(new_accounting_post_path(order_id: entry.id)) do
+    = link_to(new_order_accounting_post_path(@order)) do
       = picon('add')
       Buchungsposition hinzufügen
-
-    = link_to('#') do
-      = picon('duplicate')
-      Auftrag duplizieren

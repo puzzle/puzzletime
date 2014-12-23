@@ -5,14 +5,14 @@ class AccountingPostsControllerTest < ActionController::TestCase
 
   setup :login
 
-  test 'GET edit' do
-    get :edit, id: accounting_posts(:puzzletime).id
-    assert_template 'edit'
+  test 'GET index' do
+    get :index, order_id: orders(:hitobito_demo).id
+    assert_template 'index'
   end
 
-  test 'GET new requires param order_id' do
-    err = assert_raises(ActionController::ParameterMissing){ get :new }
-    assert_match /\border_id\b/, err.message
+  test 'GET edit' do
+    get :edit, order_id: orders(:puzzletime).id, id: accounting_posts(:puzzletime).id
+    assert_template 'edit'
   end
 
   test 'GET new presets some values' do
@@ -35,18 +35,18 @@ class AccountingPostsControllerTest < ActionController::TestCase
 
   test 'GET edit form includes book_on_order fields when no accounting_post exists for order' do
     accounting_posts(:hitobito_demo_site).delete
-    get :edit, id: accounting_posts(:hitobito_demo_app)
+    get :edit, order_id: orders(:hitobito_demo).id, id: accounting_posts(:hitobito_demo_app)
     assert_match(/"book_on_order"/, @response.body)
   end
 
   test 'GET edit form not includes book_on_order fields when accounting_post exists for order' do
-    get :edit, id: accounting_posts(:hitobito_demo_app)
+    get :edit, order_id: orders(:hitobito_demo).id, id: accounting_posts(:hitobito_demo_app)
     assert_no_match(/"book_on_order"/, @response.body)
   end
 
   test 'CREATE with book_on_order true when accounting_post exists' do
     assert_no_difference "AccountingPost.count" do
-      post :create, book_on_order: 'true', order_id: orders(:hitobito_demo),
+      post :create, book_on_order: 'true', order_id: orders(:hitobito_demo).id,
            accounting_post: { reference: 'asdf', portfolio_item_id: portfolio_items(:web).id }
       assert_response :success
       assert_template :new
@@ -62,7 +62,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
              accounting_post: { reference: 'asdf', portfolio_item_id: portfolio_items(:web).id }
       end
     end
-    assert_redirected_to controller: :orders, action: :cockpit, id: orders(:hitobito_demo)
+    assert_redirected_to order_accounting_posts_path(orders(:hitobito_demo))
     assert_match(/erfolgreich erstellt/, flash[:notice])
     assert AccountingPost.last.work_item_id = orders(:hitobito_demo).work_item_id
   end
@@ -74,7 +74,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
              accounting_post: { work_item_attributes: { name: 'TEST', shortname: 'TST' }, portfolio_item_id: portfolio_items(:web).id}
       end
     end
-    assert_redirected_to controller: :orders, action: :cockpit, id: orders(:hitobito_demo)
+    assert_redirected_to order_accounting_posts_path(orders(:hitobito_demo))
     assert_match(/erfolgreich erstellt/, flash[:notice])
     new_work_item = AccountingPost.last.work_item
     assert new_work_item.parent_id = orders(:hitobito_demo).work_item_id
@@ -83,7 +83,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
 
   test 'CREATE sets the attributes' do
     attributes = {
-      order_id: orders(:hitobito_demo),
+      order_id: orders(:hitobito_demo).id,
       discount: 'percent',
       accounting_post: {
         work_item_attributes: { name: 'TEST', shortname: 'TST' },
@@ -115,7 +115,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
     accounting_post = accounting_posts(:hitobito_demo_app)
     params = {
       id: accounting_post.id,
-      order_id: orders(:hitobito_demo),
+      order_id: orders(:hitobito_demo).id,
       discount: 'percent',
       accounting_post: {
         work_item_attributes: { name: 'TEST', shortname: 'TST' },
@@ -141,7 +141,11 @@ class AccountingPostsControllerTest < ActionController::TestCase
 
   test 'PATCH update with book_on_order true when other accounting_post exists' do
     assert_no_difference "AccountingPost.count" do
-      patch :update, book_on_order: 'true', id: accounting_posts(:hitobito_demo_app), accounting_post: { reference: 'asdf' }
+      patch :update,
+            order_id: orders(:hitobito_demo).id,
+            id: accounting_posts(:hitobito_demo_app),
+            book_on_order: 'true',
+            accounting_post: { reference: 'asdf' }
       assert_response :success
       assert_template :edit
       assert_match(/es existieren bereits/, flash[:alert])
@@ -155,8 +159,12 @@ class AccountingPostsControllerTest < ActionController::TestCase
     assert_no_difference "AccountingPost.count" do
       assert_difference "WorkItem.count", -1 do
         assert_no_difference "Worktime.count" do
-          patch :update, book_on_order: 'true', id: accounting_posts(:hitobito_demo_app), accounting_post: { reference: 'asdf' }
-          assert_redirected_to controller: :orders, action: :cockpit, id: orders(:hitobito_demo)
+          patch :update,
+                order_id: orders(:hitobito_demo).id,
+                id: accounting_posts(:hitobito_demo_app),
+                book_on_order: 'true',
+                accounting_post: { reference: 'asdf' }
+          assert_redirected_to order_accounting_posts_path(orders(:hitobito_demo))
           assert_match(/erfolgreich aktualisiert/, flash[:notice])
         end
       end
@@ -169,9 +177,12 @@ class AccountingPostsControllerTest < ActionController::TestCase
     assert_no_difference "AccountingPost.count" do
       assert_difference "WorkItem.count", +1 do
         assert_no_difference "Worktime.count" do
-          patch :update, book_on_order: 'false', id: accounting_posts(:puzzletime),
+          patch :update,
+                order_id: orders(:puzzletime).id,
+                id: accounting_posts(:puzzletime).id,
+                book_on_order: 'false',
                 accounting_post: { work_item_attributes: { name: 'Refactoring', shortname: 'RFT' } }
-          assert_redirected_to controller: :orders, action: :cockpit, id: orders(:puzzletime)
+          assert_redirected_to order_accounting_posts_path(orders(:puzzletime))
           assert_match(/erfolgreich aktualisiert/, flash[:notice])
         end
       end
@@ -184,13 +195,14 @@ class AccountingPostsControllerTest < ActionController::TestCase
     post = accounting_posts(:hitobito_demo_app)
     post.update!(discount_percent: 5)
     patch :update,
-          id: post,
+          id: post.id,
+          order_id: orders(:hitobito_demo).id,
           book_on_order: false,
           discount: 'fixed',
           accounting_post:
             { reference: 123,
               discount_fixed: 100 }
-    assert_redirected_to cockpit_order_path(orders(:hitobito_demo))
+    assert_redirected_to order_accounting_posts_path(orders(:hitobito_demo))
     assert_equal 100, post.reload.discount_fixed
     assert_equal nil, post.discount_percent
   end
@@ -199,14 +211,15 @@ class AccountingPostsControllerTest < ActionController::TestCase
     post = accounting_posts(:hitobito_demo_app)
     post.update!(discount_fixed: 100)
     patch :update,
-          id: post,
+          id: post.id,
+          order_id: orders(:hitobito_demo).id,
           book_on_order: false,
           discount: 'percent',
           accounting_post:
             { reference: 123,
               discount_percent: 5,
               discount_fixed: 100 }
-    assert_redirected_to cockpit_order_path(orders(:hitobito_demo))
+    assert_redirected_to order_accounting_posts_path(orders(:hitobito_demo))
     assert_equal nil, post.reload.discount_fixed
     assert_equal 5, post.discount_percent
   end
@@ -215,30 +228,35 @@ class AccountingPostsControllerTest < ActionController::TestCase
     post = accounting_posts(:hitobito_demo_app)
     post.update!(discount_fixed: 100)
     patch :update,
-          id: post,
+          id: post.id,
+          order_id: orders(:hitobito_demo).id,
           book_on_order: false,
           discount: 'none',
           accounting_post:
             { reference: 123 }
-    assert_redirected_to cockpit_order_path(orders(:hitobito_demo))
+    assert_redirected_to order_accounting_posts_path(orders(:hitobito_demo))
     assert_equal nil, post.reload.discount_fixed
     assert_equal nil, post.discount_percent
   end
 
   test 'DESTROY does not remove reocrd when worktimes exist on workitem' do
     assert_no_difference "AccountingPost.count" do
-      delete :destroy, id: accounting_posts(:puzzletime).id
+      delete :destroy,
+            id: accounting_posts(:puzzletime).id,
+            order_id: orders(:puzzletime).id
     end
-    assert_redirected_to controller: :orders, action: :cockpit, id: orders(:puzzletime)
+    assert_redirected_to order_accounting_posts_path(orders(:puzzletime))
     assert_match(/kann nicht gelöscht werden/, flash[:alert])
   end
 
   test 'DESTROY removes record when no worktimes on workitem' do
     accounting_posts(:puzzletime).work_item.worktimes.clear
     assert_difference "AccountingPost.count", -1 do
-      delete :destroy, id: accounting_posts(:puzzletime).id
+      delete :destroy,
+             order_id: orders(:puzzletime).id,
+             id: accounting_posts(:puzzletime).id
     end
-    assert_redirected_to controller: :orders, action: :cockpit, id: orders(:puzzletime)
+    assert_redirected_to order_accounting_posts_path(orders(:puzzletime))
     assert flash[:alert].blank?
   end
 

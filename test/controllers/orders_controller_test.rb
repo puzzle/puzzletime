@@ -87,11 +87,6 @@ class OrdersControllerTest < ActionController::TestCase
     assert_template 'show'
   end
 
-  test 'GET cockpit' do
-    get :cockpit, id: orders(:hitobito_demo).id
-    assert_template 'cockpit'
-  end
-
   test 'GET new presets some values' do
     get :new
     user = employees(:mark)
