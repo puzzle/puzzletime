@@ -1,5 +1,5 @@
 = f.labeled(:order_contacts) do
-  = f.nested_fields_for :order_contacts, entry.order_contacts.list, wrapper_tag: :div do |fields|
+  = f.nested_fields_for(:order_contacts, entry.order_contacts, wrapper_tag: :div) do |fields|
     .row
       .col-md-5
         = fields.input_field(:contact_id, class: 'searchable', placeholder: 'Ansprechsperson')
@@ -9,4 +9,5 @@
         = fields.remove_nested_fields_link(picon('delete', title: 'Ansprechsperson entfernen'))
   .row
     .col-md-1.form-action
-      = f.add_nested_fields_link :order_contacts, picon(:add, title: 'Ansprechsperson hinzufügen')
+      = f.add_nested_fields_link(:order_contacts, picon(:add, title: 'Ansprechsperson hinzufügen'))
+      = spinner

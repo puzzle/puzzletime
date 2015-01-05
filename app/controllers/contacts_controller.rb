@@ -11,7 +11,7 @@ class ContactsController < ManageController
     if Crm.instance
       existing = @entries.collect(&:crm_key).compact
       Crm.instance.find_client_contacts(parent).each do |c|
-        @entries << parent.contacts.new(c) unless existing.include?(c[:crm_key])
+        @entries << parent.contacts.new(c) unless existing.include?(c[:crm_key].to_s)
       end
     end
   end

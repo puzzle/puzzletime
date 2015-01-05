@@ -336,12 +336,7 @@ module DryCrud::Form
     # Automatically load the entries for the given association.
     def load_association_entries(assoc)
       klass = assoc.klass
-      list = if Rails.version >= '4.0'
-               klass.all.merge(assoc.scope)
-             else
-               klass.where(assoc.options[:conditions])
-                    .order(assoc.options[:order])
-             end
+      list = klass.all.merge(assoc.scope)
       # Use special scopes if they are defined
       if klass.respond_to?(:options_list)
         list.options_list
