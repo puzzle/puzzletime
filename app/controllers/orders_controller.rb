@@ -137,7 +137,7 @@ class OrdersController < CrudController
   end
 
   def load_contact_options
-    if entry.new_record?
+    if entry.client.nil?
       [Contact.new(id: 0)]
     elsif Crm.instance
       entry.client.contacts.list.presence || [Contact.new(id: 0)]

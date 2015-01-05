@@ -43,15 +43,15 @@ displayFormWithErrors = (event, xhr, status, error) ->
 
 $ ->
   # wire up modal links
-  $('body').on('ajax:beforeSend', '[data-modal]', prepareModalRequest)
-  $('body').on('ajax:success', '[data-modal]', showModal)
+  $(document).on('ajax:beforeSend', '[data-modal]', prepareModalRequest)
+  $(document).on('ajax:success', '[data-modal]', showModal)
 
   # wire up forms in modal dialogs
-  $('body').on('ajax:success', '.modal form', processCreatedEntry)
-  $('body').on('ajax:error', '.modal form', displayFormWithErrors)
+  $(document).on('ajax:success', '.modal form', processCreatedEntry)
+  $(document).on('ajax:error', '.modal form', displayFormWithErrors)
 
   # wire up cancel links in modal dialogs
-  $('body').on('click', '.modal .cancel', (event) ->
+  $(document).on('click', '.modal .cancel', (event) ->
     $(this).closest('.modal').modal('hide')
     event.preventDefault()
   )

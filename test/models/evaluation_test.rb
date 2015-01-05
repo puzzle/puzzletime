@@ -17,9 +17,10 @@ class EvaluationTest < ActiveSupport::TestCase
     assert ! @evaluation.total_details
 
     divisions = @evaluation.divisions.list
-    assert_equal 2, divisions.size
-    assert_equal work_items(:puzzle), divisions[0]
-    assert_equal work_items(:swisstopo), divisions[1]
+    assert_equal 3, divisions.size
+    assert_equal work_items(:pbs), divisions[0]
+    assert_equal work_items(:puzzle), divisions[1]
+    assert_equal work_items(:swisstopo), divisions[2]
 
     assert_sum_times 0, 20, 32, 33, work_items(:puzzle)
     assert_sum_times 3, 10, 21, 21, work_items(:swisstopo)

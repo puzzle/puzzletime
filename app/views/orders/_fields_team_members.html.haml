@@ -2,7 +2,7 @@
   = f.nested_fields_for :order_team_members, entry.order_team_members, wrapper_tag: :div do |fields|
     .row
       .col-md-5
-        = fields.input_field(:employee_id, class: 'searchable', placeholder: 'Member')
+        = fields.input_field(:employee_id, class: 'searchable', placeholder: 'Member', required: false)
       .col-md-6
         = fields.input_field(:comment, placeholder: 'Rolle im Projekt')
       .col-md-1.form-action

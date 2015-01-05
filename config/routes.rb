@@ -7,13 +7,10 @@ Rails.application.routes.draw do
   resources :clients, except: [:show] do
     collection do
       get :categories
+      get :contacts_with_crm, to: 'contacts#with_crm'
     end
 
-    resources :contacts do
-      collection do
-        get :with_crm
-      end
-    end
+    resources :contacts
   end
 
   resources :departments, except: [:show]

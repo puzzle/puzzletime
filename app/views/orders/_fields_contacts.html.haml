@@ -2,7 +2,7 @@
   = f.nested_fields_for(:order_contacts, entry.order_contacts, wrapper_tag: :div) do |fields|
     .row
       .col-md-5
-        = fields.input_field(:contact_id, class: 'searchable', placeholder: 'Ansprechsperson')
+        = fields.input_field(:contact_id, class: 'searchable', placeholder: 'Ansprechsperson', required: false)
       .col-md-6
         = fields.input_field(:comment, placeholder: 'Funktion')
       .col-md-1.form-action

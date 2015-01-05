@@ -92,6 +92,12 @@ class WorkItem < ActiveRecord::Base
     !leaf
   end
 
+  def with_ancestors(&block)
+    return enum_for(:with_ancestors) unless block_given?
+    yield self
+    parent.with_ancestors(&block) if parent_id?
+  end
+
   def self_and_descendants
     WorkItem.where('? = ANY (path_ids)', id)
   end
