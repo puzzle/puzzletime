@@ -14,6 +14,15 @@ swisstopo:
   path_shortnames: STOP
   path_names: Swisstopo
 
+pbs:
+  id: 11
+  name: PBS
+  shortname: PBS
+  path_ids: [11]
+  path_shortnames: PBS
+  path_names: PBS
+  leaf: true
+
 allgemein:
   id:        3
   parent_id: 1    #puzzle

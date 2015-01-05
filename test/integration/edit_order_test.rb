@@ -21,8 +21,6 @@ class EditOrderTest < ActionDispatch::IntegrationTest
     assert_selector("a[data-object-class='order_contact'].remove_nested_fields_link", count: 2)
   end
 
-  # (Matrix: with/out crm, with/out local/crm contacts, new, edit, after validate failed)
-
   test 'EDIT without crm, contacts are populated according to client' do
     click_add_contact
     assert_selector("#order_order_contacts_attributes_0_contact_id + .selectize-control")

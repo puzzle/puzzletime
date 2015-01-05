@@ -17,3 +17,7 @@ puzzle:
 swisstopo:
   id:      2
   work_item_id: 2
+
+pbs:
+  id: 3
+  work_item_id: 11

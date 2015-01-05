@@ -1,6 +1,6 @@
 - @title ||= ti(:title, model: models_label(false))
 
-= crud_form do |f|
+= crud_form(data: { contacts_url: contacts_with_crm_clients_url }) do |f|
 
   = render('field_crm_new', f: f) if Crm.instance
   = render 'field_client', f: f
@@ -9,6 +9,8 @@
   = f.fields_for :work_item, entry.work_item do |fields|
     = render 'work_items/fields',
              fields: fields
+
+  = render 'fields_contacts', f: f
 
   = f.labeled_input_field :department_id, class: 'searchable'
   = f.labeled_input_field :responsible_id, class: 'searchable'

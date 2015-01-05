@@ -2,8 +2,10 @@
 
 = render 'orders/header'
 
-= crud_form cancel_url: false,
-            data: Crm.instance ? { contacts_url: with_crm_client_contacts_url(entry.client) } : nil do |f|
+= crud_form(cancel_url: false,
+            data: { contacts_url: contacts_with_crm_clients_url }) do |f|
+
+  = hidden_field_tag :client_work_item_id, entry.client.work_item_id
 
   = f.labeled_static_field(:client)
   = f.labeled_static_field(:category)
@@ -27,3 +29,7 @@
 %br/
 
 = render 'actions_edit'
+
+- if Crm.instance
+  - content_for :javascript do
+    window.App.loadContactsWithCrm();

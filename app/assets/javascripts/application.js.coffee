@@ -7,7 +7,6 @@
 #= require jquery.ui.datepicker
 #= require jquery-ui-datepicker-i18n
 #= require jquery.ui.autocomplete
-#= require nested_form_fields
 #= require selectize
 #= require waypoints
 #= require waypoints-sticky
@@ -16,6 +15,8 @@
 #= require bootstrap/button
 #= require bootstrap/alert
 #= require_self
+# after self to disable links
+#= require nested_form_fields
 #= require modal_create
 #= require worktimes
 #= require week_datepicker
@@ -120,10 +121,11 @@ $ ->
             siblings('.spinner').hide()
   )
 
-  # wire up disabled links
-  $(document).on('click', 'a.disabled', (event) ->
-   event.preventDefault()
-   event.stopPropagation()
+  # wire up disabled links. Bind on body to handle event before document
+  $('body').on('click', 'a.disabled', (event) ->
+    event.preventDefault()
+    event.stopImmediatePropagation()
+    event.stopPropagation()
   )
 
   # wire up tooltips

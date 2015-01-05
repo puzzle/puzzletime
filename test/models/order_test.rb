@@ -9,9 +9,24 @@ class OrderTest < ActiveSupport::TestCase
   end
 
   test 'order with client is valid' do
-    order = Fabricate(:order)
+    order = Fabricate.build(:order)
     item = order.build_work_item(name: 'New Order', shortname: 'NEOR', parent_id: work_items(:puzzle).id)
     assert order.valid?, order.errors.full_messages.join(', ')
+    assert_equal clients(:puzzle), order.client
+    order.save!
+    order = Order.find(order.id)
+    assert_equal clients(:puzzle), order.client
+  end
+
+  test 'order with category and client is valid' do
+    order = Fabricate.build(:order)
+    cat = order.create_work_item!(name: 'New Cat', shortname: 'NECA', parent_id: work_items(:puzzle).id)
+    item = order.build_work_item(name: 'New Order', shortname: 'NEOR', parent_id: cat.id)
+    assert order.valid?, order.errors.full_messages.join(', ')
+    assert_equal clients(:puzzle), order.client
+    order.save!
+    order = Order.find(order.id)
+    assert_equal clients(:puzzle), order.client
   end
 
   test 'order is created with status' do

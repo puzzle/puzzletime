@@ -10,12 +10,24 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
 
   test 'create order with existing client, without category' do
     timeout_safe do
+      click_add_contact # disabled
+      assert page.has_no_selector?('#order_order_contacts_attributes_0_contact_id')
+
+      click_link('category_work_item_id_create_link') # disabled
+      assert page.has_no_selector?('#work_item_name')
+
       selectize('client_work_item_id', 'Swisstopo')
+
+      click_add_contact
+      selectize('order_order_contacts_attributes_0_contact_id', 'Stein Erich')
+      fill_in('order_order_contacts_attributes_0_comment', with: 'Director')
+
       fill_mandatory_fields
 
       assert_creatable
       order = WorkItem.where(name: 'New Order').first
       assert_equal clients(:swisstopo).work_item_id, order.parent_id
+      assert_equal [contacts(:swisstopo_2)], order.order.contacts
     end
   end
 
@@ -164,6 +176,28 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test 'create order with changing clients load contacts for last one' do
+    timeout_safe do
+      selectize('client_work_item_id', 'Swisstopo')
+      selectize('client_work_item_id', 'Puzzle')
+      selectize('client_work_item_id', 'PBS')
+
+      click_add_contact
+
+      selectize = find("#order_order_contacts_attributes_0_contact_id + .selectize-control")
+      selectize.find('.selectize-input').click # populate & open dropdown
+      assert selectize.has_no_selector?(".selectize-dropdown-content .option")
+
+      selectize('client_work_item_id', 'Puzzle')
+
+      click_add_contact
+
+      selectize = find("#order_order_contacts_attributes_1_contact_id + .selectize-control")
+      selectize.find('.selectize-input').click # populate & open dropdown
+      assert selectize.has_selector?(".selectize-dropdown-content .option", count: 2)
+    end
+  end
+
   test 'failed create order keeps client and category selection' do
     timeout_safe do
       order = Order.new(department: departments(:devone),
@@ -195,7 +229,12 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
         url: 'http://crm/orders/123',
         client: { name: 'New Client', key: '456' }
       })
-      Crm.instance.expects(:find_client_contacts).returns([])
+      Crm.instance.expects(:find_client_contacts).returns(
+        [{ lastname: 'Miller', firstname: 'John', crm_key: 123 },
+         { lastname: 'Nader', firstname: 'Fred', crm_key: 456 }]
+      ).twice
+      Crm.instance.expects(:find_person).with('456').returns(
+        { lastname: 'Nader', firstname: 'Fred', crm_key: 456 })
 
       # reload after crm change
       visit(new_order_path)
@@ -209,12 +248,19 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
 
       assert_equal 'New Order', find('#order_work_item_attributes_name')['value']
 
+      click_add_contact
+      selectize('order_order_contacts_attributes_0_contact_id', 'Nader Fred')
+
       fill_mandatory_fields(false)
 
       assert_creatable
       client = WorkItem.where(name: 'New Client').first
       order = WorkItem.where(name: 'New Order').first
       assert_equal client.id, order.parent_id
+      contact = Contact.find_by_lastname('Nader')
+      assert_equal '456', contact.crm_key
+      assert_equal client.client, contact.client
+      assert_equal [contact], order.order.contacts
     end
   end
 
@@ -227,7 +273,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
         url: 'http://crm/orders/123',
         client: { name: 'New Client', key: '456' }
       })
-      Crm.instance.expects(:find_client_contacts).returns([])
+      Crm.instance.expects(:find_client_contacts).returns([]).twice
 
       # reload after crm change
       visit(new_order_path)
@@ -256,7 +302,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
 
   test 'order name and existing client is filled from crm' do
     timeout_safe do
-      Crm.instance = Crm::Highrise.new
+      Crm.instance = Crm::Base.new
       client = clients(:swisstopo)
       client.update!(crm_key: '456')
       Crm.instance.expects(:find_order).with('123').returns({
@@ -265,7 +311,12 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
         url: 'http://crm/orders/123',
         client: { name: client.name, key: '456' }
       })
-      Crm.instance.expects(:find_client_contacts).returns([])
+      Crm.instance.expects(:find_client_contacts).returns(
+        [{ lastname: 'Miller', firstname: 'John', crm_key: 123 },
+         { lastname: 'Nader', firstname: 'Fred', crm_key: 456 }]
+      ).twice
+      Crm.instance.expects(:find_person).with('456').returns(
+        { lastname: 'Nader', firstname: 'Fred', crm_key: 456 })
 
       # reload after crm change
       visit(new_order_path)
@@ -275,11 +326,15 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
 
       assert_equal 'New Order', find('#order_work_item_attributes_name')['value']
 
+      click_add_contact
+
+      selectize('order_order_contacts_attributes_0_contact_id', 'Nader Fred')
       fill_mandatory_fields(false)
 
       assert_creatable
       order = WorkItem.where(name: 'New Order').first
       assert_equal clients(:swisstopo).work_item_id, order.parent_id
+      assert_equal [Contact.find_by_lastname('Nader')], order.order.contacts
     end
   end
 
@@ -294,7 +349,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
         url: 'http://crm/orders/123',
         client: { name: client.name, key: '456' }
       })
-      Crm.instance.expects(:find_client_contacts).returns([])
+      Crm.instance.expects(:find_client_contacts).returns([]).twice
 
       # reload after crm change
       visit(new_order_path)
@@ -325,7 +380,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
         url: 'http://crm/orders/123',
         client: { name: client.name, key: '456' }
       })
-      Crm.instance.expects(:find_client_contacts).returns([])
+      Crm.instance.expects(:find_client_contacts).returns([]).twice
 
       # reload after crm change
       visit(new_order_path)
@@ -361,12 +416,16 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
         url: 'http://crm/orders/123',
         client: { name: client.name, key: '456' }
       })
+      Crm.instance.expects(:find_client_contacts).returns([])
 
       # reload after crm change
       visit(new_order_path)
 
       fill_in('order_crm_key', with: '123')
       click_link('Übernehmen')
+
+      click_add_contact
+      selectize('order_order_contacts_attributes_0_contact_id', 'Hauswart Hans')
 
       fill_mandatory_fields(false)
 
@@ -377,6 +436,11 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       assert_equal work_items(:puzzle).id.to_s, find('#client_work_item_id', visible: false)['value']
       assert_equal 'New Order', find('#order_work_item_attributes_name')['value']
       assert has_unchecked_field?('category_active')
+
+      selecti = find("#order_order_contacts_attributes_0_contact_id + .selectize-control")
+      assert selecti.find('.selectize-input').has_content?('Hauswart Hans')
+      selecti.find('.selectize-input').click # populate & open dropdown
+      assert selecti.has_selector?(".selectize-dropdown-content .option", count: 2)
     end
   end
 
@@ -446,6 +510,10 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
     fill_in('work_item_name', with: 'New Category')
     fill_in('work_item_shortname', with: 'NECA')
     click_button 'Speichern'
+  end
+
+  def click_add_contact
+    find("a.add_nested_fields_link[data-object-class='order_contact']").click
   end
 
   def fill_mandatory_fields(with_name = true)
