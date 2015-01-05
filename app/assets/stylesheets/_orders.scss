@@ -81,6 +81,8 @@
 
   table.static,
   .scrollable table {
+    table-layout: fixed;
+
     tr {
       border-top: 1px solid $gray-light;
       &:last-child {
@@ -105,7 +107,6 @@
 
     th {
       background-color: #f4f4f4;
-      @include ellipsis(true);
     }
     th > span {
       border-bottom: 1px dashed #aaa;
@@ -125,6 +126,9 @@
 
     .title, .subtitle {
       height: $row-line-height;
+    }
+    td > * {
+      @include ellipsis(true);
     }
   }
   .scrollable {

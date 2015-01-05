@@ -1,10 +1,10 @@
 %tr
   %td
-    .title
+    .title{title: row.label}
       = link_to_if(can?(:update, row.accounting_post),
                    row.label,
                    edit_order_accounting_post_path(@order, row.accounting_post))
-    .subtitle= row.portfolio
+    .subtitle{title: row.portfolio}= row.portfolio
     .data-item
       %span.figure= f(row.offered_rate)
       %span.unit CHF/Std.
