@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class OrderContact < ActiveRecord::Base
 
   belongs_to :contact
