@@ -36,9 +36,9 @@ class Order < ActiveRecord::Base
   has_many :targets, class_name: 'OrderTarget'
   has_descendants_through_work_item :accounting_posts
 
-  has_many :order_team_members
+  has_many :order_team_members, -> { list }
   has_many :team_members, through: :order_team_members, source: :employee
-  has_many :order_contacts
+  has_many :order_contacts, -> { list }
   has_many :contacts, through: :order_contacts
   accepts_nested_attributes_for :order_team_members, :order_contacts, reject_if: :all_blank, allow_destroy: true
 
