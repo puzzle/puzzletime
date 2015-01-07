@@ -14,7 +14,7 @@ class OrderContactTest < ActiveSupport::TestCase
   test 'crm ids are replaced' do
     Crm.instance = Crm::Highrise.new
     Crm.instance.expects(:find_person).returns(lastname: 'Miller', firstname: 'Fred', crm_key: '123')
-    c = OrderContact.new(order: Fabricate(:order), contact_id: 'crm_123')
+    c = OrderContact.new(order: Fabricate(:order), contact_id_or_crm: 'crm_123')
     assert_difference('OrderContact.count') do
       assert_difference('Contact.count') do
         assert c.save

@@ -19,8 +19,7 @@ replaceContactsWithCrm = (data) ->
   return unless original # probably page was left in the mean time
   modified = original.replace(/<option value=".+">.*<\/option>/g, '')
   $.each(data, (index, element) ->
-    option = '<option value="' + (element.id || 'crm_' + element.crm_key) + '">' +
-             element.label + '</option>'
+    option = '<option value="' + element.id_or_crm + '">' + element.label + '</option>'
     modified = modified.replace(/<\/select>/, option + '</select>')
   )
   $('#order_order_contacts_template').html(modified)

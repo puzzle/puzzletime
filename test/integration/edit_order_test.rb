@@ -9,22 +9,22 @@ class EditOrderTest < ActionDispatch::IntegrationTest
   teardown :reset_crm
 
   test 'create order contacts fields' do
-    assert has_no_field?("order_order_contacts_attributes_0_contact_id")
+    assert has_no_field?("order_order_contacts_attributes_0_contact_id_or_crm")
     assert_no_selector("a[data-object-class='order-contact'].remove_nested_fields_link")
 
     click_add_contact
-    assert find_field("order_order_contacts_attributes_0_contact_id", visible: false)[:class].include?('selectized')
+    assert find_field("order_order_contacts_attributes_0_contact_id_or_crm", visible: false)[:class].include?('selectized')
     assert_selector("a[data-object-class='order_contact'].remove_nested_fields_link", count: 1)
 
     click_add_contact
-    assert find_field("order_order_contacts_attributes_1_contact_id", visible: false)[:class].include?('selectized')
+    assert find_field("order_order_contacts_attributes_1_contact_id_or_crm", visible: false)[:class].include?('selectized')
     assert_selector("a[data-object-class='order_contact'].remove_nested_fields_link", count: 2)
   end
 
   test 'EDIT without crm, contacts are populated according to client' do
     click_add_contact
-    assert_selector("#order_order_contacts_attributes_0_contact_id + .selectize-control")
-    selectize = find("#order_order_contacts_attributes_0_contact_id + .selectize-control")
+    assert_selector("#order_order_contacts_attributes_0_contact_id_or_crm + .selectize-control")
+    selectize = find("#order_order_contacts_attributes_0_contact_id_or_crm + .selectize-control")
     selectize.find('.selectize-input').click # populate & open dropdown
     assert selectize.has_selector?(".selectize-dropdown-content .option", count: 2)
   end
@@ -33,7 +33,10 @@ class EditOrderTest < ActionDispatch::IntegrationTest
     Contact.destroy_all
     visit edit_order_path(order)
     click_add_contact
-    assert page.has_content?('keine verfügbar')
+    assert_selector("#order_order_contacts_attributes_0_contact_id_or_crm + .selectize-control")
+    selectize = find("#order_order_contacts_attributes_0_contact_id_or_crm + .selectize-control")
+    selectize.find('.selectize-input').click # populate & open dropdown
+    assert selectize.has_no_selector?(".selectize-dropdown-content .option")
   end
 
   test 'EDIT with crm, contacts are populated according to client' do
@@ -41,8 +44,8 @@ class EditOrderTest < ActionDispatch::IntegrationTest
     setup_crm_contacts
     visit edit_order_path(order)
     click_add_contact
-    assert_selector("#order_order_contacts_attributes_0_contact_id + .selectize-control")
-    selectize = find("#order_order_contacts_attributes_0_contact_id + .selectize-control")
+    assert_selector("#order_order_contacts_attributes_0_contact_id_or_crm + .selectize-control")
+    selectize = find("#order_order_contacts_attributes_0_contact_id_or_crm + .selectize-control")
     selectize.find('.selectize-input').click # populate & open dropdown
     assert selectize.has_selector?(".selectize-dropdown-content .option", count: 3)
   end
@@ -52,8 +55,8 @@ class EditOrderTest < ActionDispatch::IntegrationTest
     setup_crm_contacts([])
     visit edit_order_path(order)
     click_add_contact
-    assert_selector("#order_order_contacts_attributes_0_contact_id + .selectize-control")
-    selectize = find("#order_order_contacts_attributes_0_contact_id + .selectize-control")
+    assert_selector("#order_order_contacts_attributes_0_contact_id_or_crm + .selectize-control")
+    selectize = find("#order_order_contacts_attributes_0_contact_id_or_crm + .selectize-control")
     selectize.find('.selectize-input').click # populate & open dropdown
     assert selectize.has_no_selector?(".selectize-dropdown-content .option")
   end

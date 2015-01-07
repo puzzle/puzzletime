@@ -112,8 +112,8 @@ class OrdersControllerTest < ActionController::TestCase
                           "1" => { employee_id: employees(:next_year_pablo).id, comment: "rolle pablo"}
                       },
                       order_contacts_attributes: {
-                          "0" => { contact_id: contacts(:swisstopo_1), comment: "funktion 1"},
-                          "1" => { contact_id: contacts(:swisstopo_2), comment: "funktion 2"}
+                          "0" => { contact_id_or_crm: contacts(:swisstopo_1).id, comment: "funktion 1"},
+                          "1" => { contact_id_or_crm: contacts(:swisstopo_2).id, comment: "funktion 2"}
                       }
                     }
     end
@@ -153,8 +153,8 @@ class OrdersControllerTest < ActionController::TestCase
                          "1" => { employee_id: employees(:next_year_pablo).id, comment: "rolle pablo"}
                      },
                      order_contacts_attributes: {
-                         "0" => { contact_id: contacts(:puzzle_rava), comment: "funktion 1"},
-                         "1" => { contact_id: contacts(:puzzle_hauswart), comment: "funktion 2"}
+                         "0" => { contact_id_or_crm: contacts(:puzzle_rava), comment: "funktion 1"},
+                         "1" => { contact_id_or_crm: contacts(:puzzle_hauswart), comment: "funktion 2"}
                      }
                    }
 
