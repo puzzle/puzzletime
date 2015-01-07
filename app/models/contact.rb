@@ -17,6 +17,8 @@
 
 class Contact < ActiveRecord::Base
 
+  CRM_ID_PREFIX = 'crm_'
+
   belongs_to :client
 
   has_many :orders
@@ -28,6 +30,10 @@ class Contact < ActiveRecord::Base
 
   def to_s
     "#{lastname} #{firstname}"
+  end
+
+  def id_or_crm
+    id || "#{CRM_ID_PREFIX}#{crm_key}"
   end
 
 end

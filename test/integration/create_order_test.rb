@@ -11,7 +11,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
   test 'create order with existing client, without category' do
     timeout_safe do
       click_add_contact # disabled
-      assert page.has_no_selector?('#order_order_contacts_attributes_0_contact_id')
+      assert page.has_no_selector?('#order_order_contacts_attributes_0_contact_id_or_crm')
 
       click_link('category_work_item_id_create_link') # disabled
       assert page.has_no_selector?('#work_item_name')
@@ -19,7 +19,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       selectize('client_work_item_id', 'Swisstopo')
 
       click_add_contact
-      selectize('order_order_contacts_attributes_0_contact_id', 'Stein Erich')
+      selectize('order_order_contacts_attributes_0_contact_id_or_crm', 'Stein Erich')
       fill_in('order_order_contacts_attributes_0_comment', with: 'Director')
 
       fill_mandatory_fields
@@ -184,7 +184,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
 
       click_add_contact
 
-      selectize = find("#order_order_contacts_attributes_0_contact_id + .selectize-control")
+      selectize = find("#order_order_contacts_attributes_0_contact_id_or_crm + .selectize-control")
       selectize.find('.selectize-input').click # populate & open dropdown
       assert selectize.has_no_selector?(".selectize-dropdown-content .option")
 
@@ -192,7 +192,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
 
       click_add_contact
 
-      selectize = find("#order_order_contacts_attributes_1_contact_id + .selectize-control")
+      selectize = find("#order_order_contacts_attributes_1_contact_id_or_crm + .selectize-control")
       selectize.find('.selectize-input').click # populate & open dropdown
       assert selectize.has_selector?(".selectize-dropdown-content .option", count: 2)
     end
@@ -249,7 +249,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       assert_equal 'New Order', find('#order_work_item_attributes_name')['value']
 
       click_add_contact
-      selectize('order_order_contacts_attributes_0_contact_id', 'Nader Fred')
+      selectize('order_order_contacts_attributes_0_contact_id_or_crm', 'Nader Fred')
 
       fill_mandatory_fields(false)
 
@@ -328,7 +328,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
 
       click_add_contact
 
-      selectize('order_order_contacts_attributes_0_contact_id', 'Nader Fred')
+      selectize('order_order_contacts_attributes_0_contact_id_or_crm', 'Nader Fred')
       fill_mandatory_fields(false)
 
       assert_creatable
@@ -416,7 +416,12 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
         url: 'http://crm/orders/123',
         client: { name: client.name, key: '456' }
       })
-      Crm.instance.expects(:find_client_contacts).returns([])
+      Crm.instance.expects(:find_client_contacts).returns(
+        [{ lastname: 'Miller', firstname: 'John', crm_key: 123 },
+         { lastname: 'Nader', firstname: 'Fred', crm_key: 456 }]
+      )
+      Crm.instance.expects(:find_person).with('456').returns(
+        { lastname: 'Nader', firstname: 'Fred', crm_key: 456 })
 
       # reload after crm change
       visit(new_order_path)
@@ -425,7 +430,9 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       click_link('Übernehmen')
 
       click_add_contact
-      selectize('order_order_contacts_attributes_0_contact_id', 'Hauswart Hans')
+      selectize('order_order_contacts_attributes_0_contact_id_or_crm', 'Hauswart Hans')
+      click_add_contact
+      selectize('order_order_contacts_attributes_1_contact_id_or_crm', 'Nader Fred')
 
       fill_mandatory_fields(false)
 
@@ -437,10 +444,13 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       assert_equal 'New Order', find('#order_work_item_attributes_name')['value']
       assert has_unchecked_field?('category_active')
 
-      selecti = find("#order_order_contacts_attributes_0_contact_id + .selectize-control")
-      assert selecti.find('.selectize-input').has_content?('Hauswart Hans')
-      selecti.find('.selectize-input').click # populate & open dropdown
-      assert selecti.has_selector?(".selectize-dropdown-content .option", count: 2)
+      selecti0 = find("#order_order_contacts_attributes_0_contact_id_or_crm + .selectize-control")
+      assert selecti0.find('.selectize-input').has_content?('Hauswart Hans')
+      selecti0.find('.selectize-input').click # populate & open dropdown
+      assert selecti0.has_selector?(".selectize-dropdown-content .option", count: 3)
+
+      selecti1 = find("#order_order_contacts_attributes_1_contact_id_or_crm + .selectize-control")
+      assert selecti1.find('.selectize-input').has_content?('Nader Fred')
     end
   end
 

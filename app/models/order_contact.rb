@@ -17,12 +17,22 @@ class OrderContact < ActiveRecord::Base
     [contact, comment.presence].compact.join(': ')
   end
 
+  def contact_id_or_crm
+    @contact_id_or_crm ||= contact_id
+  end
+
+  def contact_id_or_crm=(value)
+    self.contact_id = value
+    @contact_id_or_crm = value
+  end
+
   private
 
   def create_crm_contact
-    if Crm.instance && contact_id_before_type_cast.to_s.start_with?('crm_')
-      crm_key = contact_id_before_type_cast.sub('crm_', '')
+    if Crm.instance && contact_id_or_crm.to_s.start_with?(Contact::CRM_ID_PREFIX)
+      crm_key = contact_id_or_crm.sub(Contact::CRM_ID_PREFIX, '')
       person = Crm.instance.find_person(crm_key)
+      self.contact_id = nil
       build_contact(person.merge(client_id: order.client.id)) if person
     end
   end

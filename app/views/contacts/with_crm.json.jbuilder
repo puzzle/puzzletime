@@ -1,5 +1,4 @@
 json.array! @entries do |contact|
-  json.id contact.id
+  json.id_or_crm contact.id_or_crm
   json.label contact.to_s
-  json.crm_key contact.crm_key
 end

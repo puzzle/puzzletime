@@ -6,7 +6,7 @@ class OrdersController < CrudController
       :crm_key, :kind_id, :responsible_id, :department_id, :status_id,
           work_item_attributes: [:name, :shortname, :description],
           order_team_members_attributes: [:id, :employee_id, :comment, :_destroy],
-          order_contacts_attributes: [:id, :contact_id, :comment, :_destroy]
+          order_contacts_attributes: [:id, :contact_id_or_crm, :comment, :_destroy]
   ]
 
 
@@ -109,30 +109,31 @@ class OrdersController < CrudController
 
   def set_option_values
     if entry.new_record?
-      load_client_options
-      load_category_options
+      @clients = load_client_options
+      @categories = load_category_options
     end
 
-    @contacts = load_contact_options
-    @employees = Employee.list # TODO: restrict only with employment?
+    @contacts = append_crm_contacts(load_contact_options)
+    @employees = load_employee_options
   end
 
   def load_client_options
-    @clients = Client.list
+    clients = Client.list
     if Crm.instance && Crm.instance.restrict_local?
-      @clients = @clients.where(allow_local: true).to_a
+      clients = clients.where(allow_local: true).to_a
       if params[:client_work_item_id].present?
         client = Client.find_by_work_item_id(params[:client_work_item_id])
-        @clients << client unless @clients.include?(client)
+        clients << client unless clients.include?(client)
       end
     end
+    clients
   end
 
   def load_category_options
     if params[:client_work_item_id].present?
-      @categories = WorkItem.find(params[:client_work_item_id]).categories.list
+      WorkItem.find(params[:client_work_item_id]).categories.list
     else
-      @categories = []
+      []
     end
   end
 
@@ -144,6 +145,19 @@ class OrdersController < CrudController
     else
       entry.client.contacts.list
     end
+  end
+
+  def append_crm_contacts(contacts)
+    entry.order_contacts.each do |oc|
+      if oc.contact.id.nil?
+        contacts << oc.contact
+      end
+    end
+    contacts
+  end
+
+  def load_employee_options
+    Employee.list # TODO: restrict only with employment?
   end
 
 end
