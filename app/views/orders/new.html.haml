@@ -20,3 +20,7 @@
   = render 'fields_team_members', f: f
 
 = render 'shared/modal'
+
+- if Crm.instance && entry.client
+  - content_for :javascript do
+    window.App.loadContactsWithCrm();

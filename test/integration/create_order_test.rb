@@ -419,7 +419,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       Crm.instance.expects(:find_client_contacts).returns(
         [{ lastname: 'Miller', firstname: 'John', crm_key: 123 },
          { lastname: 'Nader', firstname: 'Fred', crm_key: 456 }]
-      )
+      ).twice
       Crm.instance.expects(:find_person).with('456').returns(
         { lastname: 'Nader', firstname: 'Fred', crm_key: 456 })
 
@@ -451,6 +451,9 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
 
       selecti1 = find("#order_order_contacts_attributes_1_contact_id_or_crm + .selectize-control")
       assert selecti1.find('.selectize-input').has_content?('Nader Fred')
+
+      click_add_contact
+      selectize('order_order_contacts_attributes_2_contact_id_or_crm', 'Miller John')
     end
   end
 
