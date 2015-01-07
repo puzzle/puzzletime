@@ -138,13 +138,7 @@ class OrdersController < CrudController
   end
 
   def load_contact_options
-    if entry.client.nil?
-      [Contact.new(id: 0)]
-    elsif Crm.instance
-      entry.client.contacts.list.presence || [Contact.new(id: 0)]
-    else
-      entry.client.contacts.list
-    end
+    entry.client ? entry.client.contacts.list : []
   end
 
   def append_crm_contacts(contacts)
