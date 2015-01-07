@@ -119,6 +119,10 @@ class WorkItem < ActiveRecord::Base
              uniq
   end
 
+  def move_times!(target)
+    worktimes.update_all(work_item_id: target)
+  end
+
   def update_path_names!
     store_path_names
     save!
