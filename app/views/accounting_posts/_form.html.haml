@@ -7,7 +7,7 @@
 = crud_form do |f|
   = hidden_field_tag(:order_id, order.id)
 
-  = render 'book_on_order_radio', form: f if book_on_order_allowed?
+  = render 'book_on_order_radio', form: f if entry.book_on_order_allowed?
 
   #work_item_fields
     = f.fields_for :work_item, entry.work_item do |fields|

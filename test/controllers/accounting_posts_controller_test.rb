@@ -46,17 +46,19 @@ class AccountingPostsControllerTest < ActionController::TestCase
 
   test 'CREATE with book_on_order true when accounting_post exists' do
     assert_no_difference "AccountingPost.count" do
-      post :create, book_on_order: 'true', order_id: orders(:hitobito_demo).id,
+      post :create,
+           order_id: orders(:hitobito_demo).id,
+           book_on_order: 'true',
            accounting_post: { reference: 'asdf', portfolio_item_id: portfolio_items(:web).id }
       assert_response :success
       assert_template :new
-      assert_match(/es existieren bereits/, flash[:alert])
+      assert_match(/es existieren bereits/, assigns(:accounting_post).errors.full_messages.join)
     end
   end
 
   test 'CREATE with book_on_order true when no accounting_post exists on order sets work_item to order.work_item' do
     orders(:hitobito_demo).accounting_posts.delete_all
-    assert_difference "AccountingPost.count", +1 do
+    assert_difference "AccountingPost.count", 1 do
       assert_no_difference "WorkItem.count" do
         post :create, book_on_order: 'true', order_id: orders(:hitobito_demo),
              accounting_post: { reference: 'asdf', portfolio_item_id: portfolio_items(:web).id }
@@ -68,8 +70,8 @@ class AccountingPostsControllerTest < ActionController::TestCase
   end
 
   test 'CREATE with new work_item with order.work_item as parent' do
-    assert_difference "AccountingPost.count", +1 do
-      assert_difference "WorkItem.count", +1 do
+    assert_difference "AccountingPost.count", 1 do
+      assert_difference "WorkItem.count", 1 do
         post :create, order_id: orders(:hitobito_demo),
              accounting_post: { work_item_attributes: { name: 'TEST', shortname: 'TST' }, portfolio_item_id: portfolio_items(:web).id}
       end
@@ -79,6 +81,49 @@ class AccountingPostsControllerTest < ActionController::TestCase
     new_work_item = AccountingPost.last.work_item
     assert new_work_item.parent_id = orders(:hitobito_demo).work_item_id
     assert_equal new_work_item.attributes.slice('name', 'shortname'), {'name' => 'TEST', 'shortname' => 'TST'}
+  end
+
+  test 'CREATE second accounting post moves existing post from order to own work item' do
+    order = orders(:puzzletime)
+    assert_difference "AccountingPost.count", 1 do
+      assert_difference "WorkItem.count", 2 do
+        post :create,
+             order_id: order.id,
+             accounting_post: {
+               work_item_attributes: { name: 'TEST', shortname: 'TST' },
+               portfolio_item_id: portfolio_items(:web).id}
+      end
+    end
+    assert_redirected_to order_accounting_posts_path(order)
+    assert_match(/erfolgreich erstellt/, flash[:notice])
+    order.reload
+    assert_equal nil, order.work_item.accounting_post
+    assert_equal 2, order.accounting_posts.size
+    assert_equal accounting_posts(:puzzletime), order.accounting_posts.list.first
+    assert_equal 'TEST', order.accounting_posts.list.last.name
+    assert_equal work_items(:puzzletime), accounting_posts(:puzzletime).work_item.parent
+    assert_equal work_items(:puzzletime).worktimes, accounting_posts(:puzzletime).work_item.worktimes
+  end
+
+  test 'CREATE second accounting post does not touch existing post on own work item' do
+    order = orders(:hitobito_demo)
+    assert_difference "AccountingPost.count", 1 do
+      assert_difference "WorkItem.count", 1 do
+        post :create,
+             order_id: order.id,
+             accounting_post: {
+               work_item_attributes: { name: 'TEST', shortname: 'TST' },
+               portfolio_item_id: portfolio_items(:web).id}
+      end
+    end
+    assert_redirected_to order_accounting_posts_path(order)
+    assert_match(/erfolgreich erstellt/, flash[:notice])
+    order.reload
+    assert_equal nil, order.work_item.accounting_post
+    assert_equal 3, order.accounting_posts.size
+    assert_equal accounting_posts(:hitobito_demo_app), order.accounting_posts.list.first
+    assert_equal 'TEST', order.accounting_posts.list.last.name
+    assert_equal work_items(:hitobito_demo), accounting_posts(:hitobito_demo_app).work_item.parent
   end
 
   test 'CREATE sets the attributes' do
@@ -148,7 +193,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
             accounting_post: { reference: 'asdf' }
       assert_response :success
       assert_template :edit
-      assert_match(/es existieren bereits/, flash[:alert])
+      assert_match(/es existieren bereits/, assigns(:accounting_post).errors.full_messages.join)
     end
   end
 
