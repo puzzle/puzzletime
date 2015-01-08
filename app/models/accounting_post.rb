@@ -132,4 +132,8 @@ class AccountingPost < ActiveRecord::Base
     end
   end
 
+  def exclusive_work_item?
+    work_item.order.nil?
+  end
+  
 end

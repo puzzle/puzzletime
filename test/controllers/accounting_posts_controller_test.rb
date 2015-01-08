@@ -296,13 +296,27 @@ class AccountingPostsControllerTest < ActionController::TestCase
 
   test 'DESTROY removes record when no worktimes on workitem' do
     accounting_posts(:puzzletime).work_item.worktimes.clear
-    assert_difference "AccountingPost.count", -1 do
-      delete :destroy,
-             order_id: orders(:puzzletime).id,
-             id: accounting_posts(:puzzletime).id
+    assert_no_difference "WorkItem.count" do
+      assert_difference "AccountingPost.count", -1 do
+        delete :destroy,
+               order_id: orders(:puzzletime).id,
+               id: accounting_posts(:puzzletime).id
+      end
     end
     assert_redirected_to order_accounting_posts_path(orders(:puzzletime))
     assert flash[:alert].blank?
   end
 
+  test 'DESTROY removes record and work item when no worktimes on workitem' do
+    accounting_posts(:hitobito_demo_app).work_item.worktimes.clear
+    assert_difference "WorkItem.count", -1 do
+      assert_difference "AccountingPost.count", -1 do
+        delete :destroy,
+               order_id: orders(:hitobito_demo).id,
+               id: accounting_posts(:hitobito_demo_app).id
+      end
+    end
+    assert_redirected_to order_accounting_posts_path(orders(:hitobito_demo))
+    assert flash[:alert].blank?
+  end
 end

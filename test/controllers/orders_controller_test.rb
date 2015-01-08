@@ -176,4 +176,30 @@ class OrdersControllerTest < ActionController::TestCase
     order_team_members = order.order_team_members.map {|otm| [otm.employee.id, otm.comment]}.sort
     assert_equal [[employees(:half_year_maria).id, "rolle maria"], [employees(:next_year_pablo).id, "rolle pablo"]].sort, order_team_members
   end
+
+  test 'DELETE destroys order and work item' do
+    order = orders(:puzzletime)
+    order.worktimes.destroy_all
+    assert_difference "WorkItem.count", -1 do
+      assert_difference "Order.count", -1 do
+        assert_difference "AccountingPost.count", -1 do
+          delete :destroy, id: order.id
+        end
+      end
+    end
+    assert_redirected_to orders_path(returning: true)
+  end
+
+  test 'DELETE destroys order and all accounting posts' do
+    order = orders(:hitobito_demo)
+    order.worktimes.destroy_all
+    assert_difference "WorkItem.count", -3 do
+      assert_difference "Order.count", -1 do
+        assert_difference "AccountingPost.count", -2 do
+          delete :destroy, id: order.id
+        end
+      end
+    end
+    assert_redirected_to orders_path(returning: true)
+  end
 end
