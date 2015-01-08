@@ -81,7 +81,7 @@ class AccountingPost < ActiveRecord::Base
   end
 
   def offered_days
-    offered_hours.to_f / WorkingCondition.value_at(Date.today, :must_hours_per_day)
+    offered_hours.to_f / WorkingCondition.todays_value(:must_hours_per_day)
   end
 
   def no_discount?
@@ -135,5 +135,5 @@ class AccountingPost < ActiveRecord::Base
   def exclusive_work_item?
     work_item.order.nil?
   end
-  
+
 end

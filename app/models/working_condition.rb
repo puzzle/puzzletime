@@ -23,6 +23,14 @@ class WorkingCondition < ActiveRecord::Base
 
   class << self
 
+    def todays_value(attr)
+      if @today != Date.today
+        @today = Date.today
+        @todays_values = {}
+      end
+      @todays_values[attr.to_s] ||= value_at(@today, attr)
+    end
+
     def value_at(date, attr)
       each_of(attr, date, date) { |v, _, _| return v }
     end
