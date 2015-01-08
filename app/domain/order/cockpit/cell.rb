@@ -6,7 +6,7 @@ class Order::Cockpit
     end
 
     def must_hours_per_day
-      WorkingCondition.value_at(Date.today, :must_hours_per_day)
+      WorkingCondition.todays_value(:must_hours_per_day)
     end
 
   end

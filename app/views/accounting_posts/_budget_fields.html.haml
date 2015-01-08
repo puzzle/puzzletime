@@ -7,7 +7,7 @@
   .col-md-2
     = form.input_field :offered_days,
                        value: entry.offered_days,
-                       data: { hours_per_day: WorkingCondition.value_at(Date.today, :must_hours_per_day) }
+                       data: { hours_per_day: WorkingCondition.todays_value(:must_hours_per_day) }
 .form-group
   .col-md-2
   = form.label :offered_rate, "CHF/Std.", class: 'col-md-1 control-label'
