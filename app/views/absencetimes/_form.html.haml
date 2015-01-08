@@ -8,7 +8,7 @@
                                  data: { remote: true,
                                          url: url_for(action: 'existing'),
                                          dynamic_params: 'absencetime[work_date]' })
-  = f.labeled_belongs_to_field(:absence_id)
+  = f.labeled_belongs_to_field(:absence_id, class: 'initial-focus')
   = f.labeled_text_area(:description)
   = f.labeled_date_field(:work_date,
                          data: { remote: true,

@@ -1,19 +1,16 @@
 %center
-  = form_tag({:controller => 'login', :action => 'login'}, :name => 'form') do
+  = form_tag({controller: 'login', action: 'login'}, name: 'form') do
     = hidden_field_tag 'ref', params[:ref]
     %table.table-condensed
       %tr
         %td
           %label.control-label Login
-        %td= text_field_tag 'user', nil, :size => 20, :class => 'form-control'
+        %td= text_field_tag 'user', nil, size: 20, class: 'form-control initial-focus'
       %tr
         %td
           %label.control-label Passwort
-        %td= password_field_tag 'pwd', nil, :size => 20, :class => 'form-control'
+        %td= password_field_tag 'pwd', nil, size: 20, class: 'form-control'
       %tr
         %td
         %td
-          %input{:type => "submit", :value => "Login", :class => 'btn btn-primary'}
-
-:javascript
-  document.form.user.focus();
+          %input{type: "submit", value: "Login", class: 'btn btn-primary'}
