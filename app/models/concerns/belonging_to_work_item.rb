@@ -8,12 +8,11 @@ module BelongingToWorkItem
     # must be before associations to prevent their destruction
     protect_if :worktimes, 'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Arbeitszeiten zugeordnet sind'
 
-    belongs_to :work_item,
-               validate: true,
-               autosave: true,
-               dependent: :destroy
+    belongs_to :work_item, validate: true, autosave: true
 
     has_descendants_through_work_item :worktimes
+
+    after_destroy :destroy_exclusive_work_item
 
     validates :work_item, presence: true
 
@@ -31,6 +30,20 @@ module BelongingToWorkItem
   def to_s
     work_item.to_s if work_item
   end
+
+  private
+
+  def destroy_exclusive_work_item
+    if !@item_destroying && exclusive_work_item?
+      @item_destroying = true
+      work_item.destroy
+    end
+  end
+
+  def exclusive_work_item?
+    true
+  end
+
 
   module ClassMethods
 
