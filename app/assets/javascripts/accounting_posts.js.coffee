@@ -14,22 +14,43 @@ $ ->
 
   handle_book_on_order_radio($('input[name=book_on_order]:checked').val())
 
-  updateOfferedTotal = ->
-    hours = $('#accounting_post_offered_hours').val()
-    rate = $('#accounting_post_offered_rate').val()
-    if !!hours && !!rate
-      $('#accounting_post_offered_total').val(parseFloat(hours) * parseFloat(rate))
-
   $hoursPerDay = parseFloat($('[data-hours-per-day]').data('hoursPerDay'))
-  $('#accounting_post_offered_hours').on 'keyup change', (event) ->
-    days = parseFloat($(this).val()) / $hoursPerDay
-    $('#accounting_post_offered_days').val(days || '')
-    updateOfferedTotal()
+  activeSource = null
 
-  $('#accounting_post_offered_days').on 'keyup change', (event) ->
-    hours = parseFloat($(this).val()) * $hoursPerDay
-    $('#accounting_post_offered_hours').val(hours || '')
-    updateOfferedTotal()
+  updateOfferedValues = ->
+    source = $(this).attr('id')
 
-  $('#accounting_post_offered_rate').on 'keyup change', (event) ->
-    updateOfferedTotal()
+    hours = parseFloat($('#accounting_post_offered_hours').val())
+    days = parseFloat($('#accounting_post_offered_days').val())
+    rate = parseFloat($('#accounting_post_offered_rate').val())
+    total = parseFloat($('#accounting_post_offered_total').val())
+    newHours = newDays = null
+
+    if !isNaN(rate) && rate > 0 && (source.endsWith('_total') ||
+       source.endsWith('_rate') && activeSource.endsWith('_total'))
+
+      newHours = total / rate
+      newDays = hours / $hoursPerDay
+    else if !isNaN(hours) && hours > 0 && (source.endsWith('_hours') ||
+            source.endsWith('_rate') && activeSource.endsWith('_hours'))
+
+      newDays = hours / $hoursPerDay
+      $('#accounting_post_offered_total').val(!isNaN(rate) && rate > 0 && hours * rate || '')
+    else if !isNaN(days) && days > 0 && (source.endsWith('_days') ||
+            source.endsWith('_rate') && activeSource.endsWith('_days'))
+
+      newHours = days * $hoursPerDay
+      $('#accounting_post_offered_total').val(!isNaN(rate) && rate > 0 && newHours * rate || '')
+
+    if newHours isnt null
+      $('#accounting_post_offered_hours').val(newHours || '')
+    if newDays isnt null
+      $('#accounting_post_offered_days').val(newDays || '')
+
+    if !source.endsWith('_rate')
+      activeSource = source
+
+  $('#accounting_post_offered_hours, ' +
+    '#accounting_post_offered_days, ' +
+    '#accounting_post_offered_rate, ' +
+    '#accounting_post_offered_total').on 'keyup change', updateOfferedValues

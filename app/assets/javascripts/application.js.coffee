@@ -30,6 +30,10 @@
 
 app = window.App ||= {}
 
+if typeof String.prototype.endsWith isnt 'function'
+  String.prototype.endsWith = (suffix) ->
+    return this.indexOf(suffix, this.length - suffix.length) isnt -1
+
 app.enable = (selector, enabled) ->
   $('input' + selector +
     ', select' + selector +
