@@ -6,7 +6,8 @@
             cancel_url: false,
             method: :put do |f|
 
-  = f.labeled_input_field :number, placeholder: 'Bestell- oder Vertragsnummer des Kunden'
+  = f.labeled_input_field :number, placeholder: 'Bestell- oder Vertragsnummer des Kunden',
+                                   help: 'erscheint auf Rechnung'
 
   .form-group{class: "#{f.errors?(:start_date) || f.errors?(:end_date) ? 'has-error' : nil}"}
     = f.label(:start_date, 'Vertragsdauer von', class: 'col-md-2 control-label required')
@@ -15,5 +16,6 @@
     .col-md-2= f.input_field :end_date
 
   = f.labeled_input_field :payment_period, span: 1, help: 'Tage'
-  = f.labeled_input_field :reference, placeholder: 'Referenz des Kunden'
+  = f.labeled_input_field :reference, placeholder: 'Referenz des Kunden',
+                                      help: 'erscheint auf Rechnung'
   = f.labeled_input_field :sla

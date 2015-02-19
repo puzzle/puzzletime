@@ -185,7 +185,7 @@ module DryCrud::Form
 
     # Generates a help block for fields
     def help_block(text)
-      content_tag(:p, text, class: 'help-block')
+      content_tag(:p, text, class: 'help-block col-md-5')
     end
 
     # Render a submit button and a cancel link for this form.
