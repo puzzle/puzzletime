@@ -24,7 +24,7 @@ module FilterHelper
       content_tag(:div, class: 'input-group') do
         text_field_tag(name,
                        date && I18n.l(date),
-                       size: 8,
+                       size: 9,
                        class: 'form-control date',
                        data: { submit: true }) +
         content_tag(:div, icon(:calendar), class: 'input-group-addon')
