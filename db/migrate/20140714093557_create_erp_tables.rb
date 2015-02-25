@@ -410,8 +410,8 @@ class CreateErpTables < ActiveRecord::Migration
     unless project.parent.work_item
       client = Client.find(project.parent[:client_id])
       create_work_item!(project.parent, client.work_item, false)
-      create_order!(project.parent)
     end
+    create_order!(project.parent) unless project.parent.work_item.order
 
     create_work_item!(project, project.parent.work_item, true)
     create_accounting_post!(project)
@@ -465,6 +465,9 @@ class CreateErpTables < ActiveRecord::Migration
                                               description_required: project[:description_required],
                                               ticket_required: project[:ticket_required],
                                               portfolio_item: default_portfolio_item)
+  rescue
+    p project
+    raise
   end
 
   def migrate_planning_project_ids
@@ -556,7 +559,7 @@ class CreateErpTables < ActiveRecord::Migration
     case project.id
     when *DEPTH2_WITH_CATEGORY then true
     when *DEPTH2_WITH_ACCOUNTING_POSTS then false
-    else puts("Projekt #{project.id} - #{project.label} ist nicht kategorisiert!")
+    else puts("Projekt #{project.id} - #{project.path_shortnames} ist nicht kategorisiert!")
     end
   end
 

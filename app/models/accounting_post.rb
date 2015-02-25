@@ -121,7 +121,6 @@ class AccountingPost < ActiveRecord::Base
 
   def move_order_accounting_post_work_item
     return if work_item_id == order.work_item_id
-
     post = order.accounting_posts.where(work_item_id: order.work_item_id).first
     if post
       post.work_item = WorkItem.new(name: order.work_item.name,
