@@ -47,30 +47,17 @@ class ExtendedCapacityReport < BaseCapacityReport
       internal_work_item_total_hours = 0      # Interne Projekte Total (h)
 
       # split billable and non-billable work_items
-      processed_ids = []
       billable_work_items = []
       non_billable_work_items = []
+
       employee.alltime_leaf_work_items.each do |work_item|
-        # get id of parent work_item on (max) level 1
-        id = work_item.path_ids[[1, work_item.path_ids.size - 1].min]
-        unless processed_ids.include? id
-          processed_ids.push id
-          work_item = WorkItem.find(id)
-          # TODO define how to handle as billable is only defined on accounting post
-          # which is the lowest, not highest work item
-          if work_item.billable
-            billable_work_items.push work_item
-          else
-            non_billable_work_items.push work_item
-          end
-        end
+        work_item.accounting_post.billable ? billable_work_items.push work_item : non_billable_work_items.push work_item
       end
 
       # process billable (customer) work_items
       csv_billable_lines = []
       billable_work_items.each do |work_item|
         times = find_billable_time(employee, work_item.id, @period)
-        sum = times.collect { |w| w.hours }.sum
         parent = child = work_item
         parent = child.parent if child.parent
 
@@ -100,7 +87,6 @@ class ExtendedCapacityReport < BaseCapacityReport
       csv_non_billable_lines = []
       non_billable_work_items.each do |work_item|
         times = find_billable_time(employee, work_item.id, @period)
-        sum = times.collect { |w| w.hours }.sum
         parent = child = work_item
         parent = child.parent if child.parent
 
