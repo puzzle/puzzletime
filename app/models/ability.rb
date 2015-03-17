@@ -46,9 +46,7 @@ class Ability
       can [:create, :categories], Client
       can [:create], Contact
       can :create, WorkItem
-      can :manage, Order do |order|
-        order.persisted? && order.responsible_id == user.id
-      end
+      can :manage, Order, responsible_id: user.id
       [AccountingPost, Contract, OrderComment].each do |model|
         can :manage, model do |instance|
           instance.order.responsible_id == user.id
