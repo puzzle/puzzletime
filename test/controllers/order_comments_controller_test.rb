@@ -1,10 +1,27 @@
+# encoding: UTF-8
+
 require 'test_helper'
 
 class OrderCommentsControllerTest < ActionController::TestCase
 
   setup :login
 
-  test 'GET index renders comments with links' do
+  test 'GET index as member redirects and sets flash alert' do
+    login_as :pascal
+    get :index, order_id: order.id
+    assert_response :redirect
+    assert_equal 'Sie sind nicht authorisiert, um diese Seite zu öffnen', flash[:alert]
+  end
+
+  test 'GET index as responsible renders comments with links' do
+    login_as :lucien
+    get :index, order_id: order.id
+    assert_template :index
+    assert_equal order_comments(:puzzletime_first, :puzzletime_second), assigns(:order_comments)
+    assert response.body.include?('<a href="http://example.com/dummy">')
+  end
+
+  test 'GET index as management renders comments with links' do
     get :index, order_id: order.id
     assert_template :index
     assert_equal order_comments(:puzzletime_first, :puzzletime_second), assigns(:order_comments)
