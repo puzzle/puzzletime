@@ -14,7 +14,7 @@
     .weeknav
       = link_to(worktimes_url(week_date: @previous_week_date),
                 {class: 'weeknav-link previous', title: 'Vorherige Woche'}) do
-        %i.icon-previous
+        %i.icon-chevron-left
 
       %ul.weeknav-days
         = render partial: 'overview_day', collection: @week_days, as: :day
@@ -33,7 +33,7 @@
 
       = link_to(worktimes_url(week_date: @next_week_date),
                 {class: 'weeknav-link next', title: 'Nächste Woche'}) do
-        %i.icon-next
+        %i.icon-chevron-right
 
   .weekcontent
     = render partial: 'day', collection: @week_days, as: :day
