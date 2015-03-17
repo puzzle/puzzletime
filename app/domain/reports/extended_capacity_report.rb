@@ -51,7 +51,11 @@ class ExtendedCapacityReport < BaseCapacityReport
       non_billable_work_items = []
 
       employee.alltime_leaf_work_items.each do |work_item|
-        work_item.accounting_post.billable ? billable_work_items.push work_item : non_billable_work_items.push work_item
+        if work_item.accounting_post.billable
+          billable_work_items.push(work_item)
+        else
+          non_billable_work_items.push(work_item)
+        end
       end
 
       # process billable (customer) work_items
