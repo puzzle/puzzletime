@@ -4,16 +4,31 @@ require 'test_helper'
 
 class ContractsControllerTest < ActionController::TestCase
 
-  setup :login
+  test 'GET edit as member redirects and sets flash alert' do
+    login_as :pascal
+    get :edit, order_id: test_entry.order
+    assert_response :redirect
+    assert_equal 'Sie sind nicht authorisiert, um diese Seite zu öffnen', flash[:alert]
+  end
 
-  def test_edit
+  test 'GET edit as responsible' do
+    login_as :lucien
     get :edit, order_id: test_entry.order
     assert_response :success
     assert_template 'edit'
     assert_equal test_entry, entry
   end
 
-  def test_update
+  test 'GET edit as management' do
+    login_as :mark
+    get :edit, order_id: test_entry.order
+    assert_response :success
+    assert_template 'edit'
+    assert_equal test_entry, entry
+  end
+
+  test 'PATCH update' do
+    login
     patch :update, order_id: test_entry.order, contract: test_entry_attrs
     assert_redirected_to edit_order_contract_path(order_id: test_entry.order)
     assert entry.persisted?
