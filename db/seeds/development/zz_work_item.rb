@@ -68,9 +68,7 @@ Order.seed(:work_item_id,
     responsible_id: Employee.find_by_shortname('AR').id,
     status_id: OrderStatus.find_by_name('Bearbeitung').id,
     department_id: Department.find_by_name('/dev/two').id,
-    employee_ids: [Employee.find_by_shortname('BS').id,
-                   Employee.find_by_shortname('PZ').id,
-                   Employee.find_by_shortname('DI').id] },
+    order_team_members: %w(BS PZ DI).map {|short| OrderTeamMember.new(employee: Employee.find_by_shortname(short)) }},
 
   # Tech Talk
   { work_item_id: orders[1].id,
@@ -92,8 +90,7 @@ Order.seed(:work_item_id,
     responsible_id: Employee.find_by_shortname('AR').id,
     status_id: OrderStatus.find_by_name('Bearbeitung').id,
     department_id: Department.find_by_name('/dev/two').id,
-    employee_ids: [Employee.find_by_shortname('PZ').id,
-                   Employee.find_by_shortname('BS').id] },
+    order_team_members: %w(PZ BS).map {|short| OrderTeamMember.new(employee: Employee.find_by_shortname(short)) }},
 
   # FIS Grundpacket
   { work_item_id: orders[4].id,
@@ -108,7 +105,7 @@ Order.seed(:work_item_id,
     responsible_id: Employee.find_by_shortname('AR').id,
     status_id: OrderStatus.find_by_name('Abschluss').id,
     department_id: Department.find_by_name('/dev/two').id,
-    employee_ids: [Employee.find_by_shortname('DI').id]  },
+    order_team_members: [OrderTeamMember.new(employee: Employee.find_by_shortname('DI'))] },
 
   # DIS
   { work_item_id: orders[6].id,
@@ -116,7 +113,7 @@ Order.seed(:work_item_id,
     responsible_id: Employee.find_by_shortname('BS').id,
     status_id: OrderStatus.find_by_name('Bearbeitung').id,
     department_id: Department.find_by_name('/dev/two').id,
-    employee_ids: [Employee.find_by_shortname('DI').id] }
+    order_team_members: [OrderTeamMember.new(employee: Employee.find_by_shortname('DI'))] },
 )
 
 accounting_posts = WorkItem.seed(:shortname, :parent_id,
