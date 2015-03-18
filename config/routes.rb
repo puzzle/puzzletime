@@ -15,7 +15,7 @@ Rails.application.routes.draw do
 
   resources :departments, except: [:show]
 
-  resources :employees, except: [:show] do
+  resources :employees do
     collection do
       get :settings
       patch :settings, to: 'employees#update_settings'
