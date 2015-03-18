@@ -39,12 +39,10 @@ module ActionsHelper
 
   # Standard destroy action to the given path.
   # Uses the current +entry+ if no path is given.
-  def destroy_action_link(path = nil)
+  def destroy_action_link(path = nil, disabled = false, disabled_tooltip = nil)
     return unless can?(:delete, entry)
     path ||= path_args(entry)
-    action_link(action_icon('delete', ti('link.delete')), path,
-                data: { confirm: ti(:confirm_delete),
-                        method: :delete })
+    disabled ? destroy_action_link_disabled(disabled_tooltip) : destroy_action_link_enabled(path)
   end
 
   # Standard list action to the given path.
@@ -61,6 +59,18 @@ module ActionsHelper
     path ||= path_args(model_class)
     path = path.is_a?(String) ? path : new_polymorphic_path(path, url_options)
     action_link(action_icon('add', ti('link.add')), path)
+  end
+
+  private
+
+  def destroy_action_link_enabled(path)
+    action_link(action_icon('delete', ti('link.delete')), path,
+                data: {confirm: ti(:confirm_delete),
+                       method: :delete})
+  end
+
+  def destroy_action_link_disabled(disabled_tooltip)
+    content_tag(:a, action_icon('delete', ti('link.delete')), class: 'disabled', title: disabled_tooltip)
   end
 
 end
