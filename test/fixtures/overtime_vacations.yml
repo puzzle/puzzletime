@@ -10,5 +10,5 @@
 
 pascal_1:
   hours: 20
-  employee: pascal
+  employee_id: 6
   transfer_date: 2013-12-31

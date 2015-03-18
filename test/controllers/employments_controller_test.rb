@@ -15,7 +15,7 @@ class EmploymentsControllerTest < ActionController::TestCase
     assert_equal Date.new(2006, 12, 31), employments(:for_half_year).end_date
     post :create, employment: { percent: 100,
                                start_date: Date.new(2006, 10, 1),
-                               end_date: Date.new(2007, 5, 31)}, employee_id: employees(:half_year_maria).id
+                               end_date: Date.new(2007, 5, 31)}, employee_id: 1
     assert response.body.include? "Für diese Zeitspanne ist bereits eine andere Anstellung definiert"
   end
 
