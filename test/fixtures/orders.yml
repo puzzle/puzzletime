@@ -16,7 +16,7 @@
 
 puzzletime:
   work_item_id: 4
-  responsible_id: 8
+  responsible: lucien
   status: bearbeitung
   kind: mandat
   department: devone
@@ -24,21 +24,21 @@ puzzletime:
 
 allgemein:
   work_item_id: 3
-  responsible_id: 7
+  responsible: mark
   status: abgeschlossen
   kind: mandat
   department: sys
 
 hitobito_demo:
   work_item_id: 8
-  responsible_id: 8
+  responsible: lucien
   status: bearbeitung
   kind: projekt
   department: devtwo
 
 webauftritt:
   work_item_id: 6
-  responsible_id: 5
+  responsible: long_time_john
   status: bearbeitung
   kind: projekt
   department: devone
