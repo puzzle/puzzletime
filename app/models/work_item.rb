@@ -23,7 +23,7 @@ class WorkItem < ActiveRecord::Base
   acts_as_tree order: 'shortname'
 
   has_one :client, dependent: :destroy, inverse_of: :work_item
-  has_one :order, dependent: :destroy, inverse_of: :work_item, inverse_of: :work_item
+  has_one :order, dependent: :destroy, inverse_of: :work_item
   has_one :accounting_post, dependent: :destroy, inverse_of: :work_item
 
   has_many :worktimes,

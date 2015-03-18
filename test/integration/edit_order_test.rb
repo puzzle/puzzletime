@@ -61,6 +61,18 @@ class EditOrderTest < ActionDispatch::IntegrationTest
     assert selectize.has_no_selector?(".selectize-dropdown-content .option")
   end
 
+  test 'order with worktimes has disabled destroy link' do
+    visit edit_order_path(order)
+    assert find('a.disabled', text: 'Löschen')
+    assert has_no_link?('Löschen', href: order_path(order))
+  end
+
+  test 'order without worktimes has active destroy link' do
+    visit edit_order_path(order_without_worktimes)
+    assert has_link?('Löschen', href: order_path(order_without_worktimes))
+    assert refute_selector('a.disabled', text: 'Löschen')
+  end
+
   private
 
   def click_add_contact
@@ -73,6 +85,10 @@ class EditOrderTest < ActionDispatch::IntegrationTest
 
   def order
     orders(:puzzletime)
+  end
+
+  def order_without_worktimes
+    orders(:hitobito_demo)
   end
 
   def setup_crm_contacts(contacts = nil)
