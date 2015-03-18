@@ -35,6 +35,10 @@ module Crm
     def find_person(key)
     end
 
+    # Find people with the given email
+    def find_people_by_email(email)
+    end
+
     # Sync all entities from the crm, discarding local changes.
     def sync_all
     end

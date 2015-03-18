@@ -37,6 +37,11 @@ module Crm
       contact_attributes(person) if person
     end
 
+    def find_people_by_email(email)
+      # TODO: test
+      ::Highrise::Person.search(email: email)
+    end
+
     def sync_all
       sync_clients
       sync_orders
