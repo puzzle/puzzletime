@@ -22,7 +22,7 @@
 wt_pz_allgemein:
   id: 1
   work_item_id: 3
-  employee: pascal
+  employee_id: 6
   report_type: absolute_day
   work_date: 2006-11-29
   hours: 1
@@ -31,7 +31,7 @@ wt_pz_allgemein:
 wt_pz_puzzletime:
   id: 2
   work_item_id: 4
-  employee: pascal
+  employee_id: 6
   report_type: absolute_day
   work_date: 2006-12-03
   hours: 2
@@ -42,7 +42,7 @@ wt_pz_puzzletime:
 wt_pz_webauftritt:
   id: 3
   work_item_id: 6
-  employee: pascal
+  employee_id: 6
   report_type: absolute_day
   work_date: 2006-12-04
   hours: 3
@@ -53,7 +53,7 @@ wt_pz_webauftritt:
 wt_pz_vacation:
   id: 4
   absence_id: 1
-  employee: pascal
+  employee_id: 6
   report_type: absolute_day
   work_date: 2006-12-05
   hours: 4
@@ -62,7 +62,7 @@ wt_pz_vacation:
 wt_mw_allgemein:
   id: 5
   work_item_id: 3
-  employee: mark
+  employee_id: 7
   report_type: absolute_day
   work_date: 2006-12-06
   hours: 5
@@ -71,7 +71,7 @@ wt_mw_allgemein:
 wt_mw_puzzletime:
   id: 6
   work_item_id: 4
-  employee: mark
+  employee_id: 7
   report_type: absolute_day
   work_date: 2006-12-07
   hours: 6
@@ -81,7 +81,7 @@ wt_mw_puzzletime:
 wt_mw_webauftritt:
   id: 7
   work_item_id: 6
-  employee: mark
+  employee_id: 7
   report_type: absolute_day
   work_date: 2006-12-08
   hours: 7
@@ -90,7 +90,7 @@ wt_mw_webauftritt:
 wt_mw_service:
   id: 8
   absence_id: 2
-  employee: mark
+  employee_id: 7
   report_type: absolute_day
   work_date: 2006-12-09
   hours: 8
@@ -99,7 +99,7 @@ wt_mw_service:
 wt_lw_allgemein:
   id: 9
   work_item_id: 3
-  employee: lucien
+  employee_id: 8
   report_type: absolute_day
   work_date: 2006-12-10
   hours: 9
@@ -108,7 +108,7 @@ wt_lw_allgemein:
 wt_lw_puzzletime:
   id: 10
   work_item_id: 4
-  employee: lucien
+  employee_id: 8
   report_type: absolute_day
   work_date: 2006-12-11
   hours: 10
@@ -118,7 +118,7 @@ wt_lw_puzzletime:
 wt_lw_webauftritt:
   id: 11
   work_item_id: 6
-  employee: lucien
+  employee_id: 8
   report_type: absolute_day
   work_date: 2006-12-12
   hours: 11
@@ -127,7 +127,7 @@ wt_lw_webauftritt:
 wt_lw_doctor:
   id: 12
   absence_id: 3
-  employee: lucien
+  employee_id: 8
   report_type: absolute_day
   work_date: 2006-12-13
   hours: 12
@@ -136,7 +136,7 @@ wt_lw_doctor:
 wt_pz_doctor:
   id: 13
   absence_id: 3
-  employee: pascal
+  employee_id: 6
   report_type: absolute_day
   work_date: 2006-12-14
   hours: 13

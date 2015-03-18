@@ -21,7 +21,7 @@ class OvertimeVacationsControllerTest < ActionController::TestCase
 
   # Attribute hash used in several tests.
   def test_entry_attrs
-    { employee_id: employees(:pascal).id,
+    { employee_id: 6,
       hours: 40,
       transfer_date: Date.today }
   end

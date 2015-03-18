@@ -17,6 +17,7 @@
 
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 half_year_maria:
+  id:        1
   firstname: Maria
   lastname:  Dolores
   shortname: GGG
@@ -25,6 +26,7 @@ half_year_maria:
   management: true
   eval_periods: ["-1m", "0"]
 various_pedro:
+  id:        2
   firstname: Pedro
   lastname:  Dolores
   shortname: GIG
@@ -32,6 +34,7 @@ various_pedro:
   email:     bol@bla.ch
   management: false
 next_year_pablo:
+  id:        3
   firstname: Pablo
   lastname:  Sanchez
   shortname: PS
@@ -39,6 +42,7 @@ next_year_pablo:
   email:     ps@bla.ch
   management: false
 left_this_year_macy:
+  id:        4
   firstname: Macy
   lastname:  Grey
   shortname: MG
@@ -46,6 +50,7 @@ left_this_year_macy:
   email:     mg@bla.ch
   management: false
 long_time_john:
+  id:        5
   firstname: John
   lastname:  Neverends
   shortname: JN
@@ -54,6 +59,7 @@ long_time_john:
   management: false
 
 pascal:
+  id:        6
   firstname: Pascal
   lastname:  Zumkehr
   shortname: PZ
@@ -63,6 +69,7 @@ pascal:
   department: devtwo
 
 mark:
+  id:        7
   firstname: Mark
   lastname:  Waber
   shortname: MW
@@ -71,6 +78,7 @@ mark:
   management: true
 
 lucien:
+  id:        8
   firstname: Lucien
   lastname:  Weller
   shortname: LW

@@ -12,43 +12,43 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 for_half_year:
   id:           1
-  employee:     half_year_maria
+  employee_id:  1
   percent:      100
   start_date:   2006.07.01
   end_date:     2006.12.31
 various_40:
   id:           2
-  employee:     various_pedro
+  employee_id:  2
   percent:      40
   start_date:   2005.11.01
   end_date:     2006.01.31
 various_20:
   id:           3
-  employee:     various_pedro
+  employee_id:  2
   percent:      20
   start_date:   2006.02.01
   end_date:     2006.09.15
 various_100:
   id:           4
-  employee:     various_pedro
+  employee_id:  2
   percent:      100
   start_date:   2006.09.16
   end_date:     null
 next_year:
   id:           5
-  employee:     next_year_pablo
+  employee_id:  3
   percent:      100
   start_date:   2007.03.01
   end_date:     null
 left_this_year:
   id:           6
-  employee:     left_this_year_macy
+  employee_id:  4
   percent:      80
   start_date:   2005.01.01
   end_date:     2006.06.30
 long_time:
   id:           7
-  employee:     long_time_john
+  employee_id:  5
   percent:      90
   start_date:   1990.01.01
   end_date:     null
