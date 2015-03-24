@@ -60,14 +60,15 @@ group :test do
   gem 'mocha', require: false
   gem 'capybara'
   gem 'headless'
-  gem 'selenium-webdriver', '~> 2.43.0'
+  gem 'selenium-webdriver'
   gem 'database_cleaner'
 end
 
 group :console do
   gem 'pry-doc'
   gem 'pry-nav'
-  gem 'pry-debugger'
+  gem 'pry-debugger', platforms: :ruby_19
+  gem 'pry-byebug', platforms: [:ruby_20, :ruby_21]
 end
 
 group :metrics do
