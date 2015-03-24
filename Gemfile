@@ -68,7 +68,7 @@ group :console do
   gem 'pry-doc'
   gem 'pry-nav'
   gem 'pry-debugger', platforms: :ruby_19
-  gem 'pry-byebug', platforms: [:ruby_20, :ruby_21]
+  gem 'pry-byebug', platforms: [:ruby_20]
 end
 
 group :metrics do
