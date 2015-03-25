@@ -2,7 +2,7 @@
 
 = render 'orders/header'
 
-= render 'form'
+= render 'form' if can?(:create_comment, @order)
 
 .list
   = render partial: :order_comment, collection: entries, locals: {total_count: entries.size}
