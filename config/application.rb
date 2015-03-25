@@ -36,9 +36,8 @@ module Puzzletime
 
     config.middleware.insert_before Rack::ETag, Rack::Deflater
 
-    config.assets.precompile += %w(print.css phone.css *.png *.gif *.jpg *.svg)
-
-    config.assets.paths << Rails.root.join('app', 'assets', 'fonts')
+    # Do not swallow errors in after_commit/after_rollback callbacks.
+    config.active_record.raise_in_transactional_callbacks = true
 
     config.to_prepare do |_|
       if Settings.highrise.api_token

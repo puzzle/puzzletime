@@ -56,10 +56,6 @@ DotPosition:
 EmptyLines:
   Enabled: false
 
-# We thinks that's fine
-EmptyLinesAroundBody:
-  Enabled: false
-
 # Missing UTF-8 encoding statements should always be created.
 Encoding:
   Severity: error

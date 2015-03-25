@@ -11,8 +11,8 @@
  * file per style scope.
  *
  *= require jquery-ui-1.10.0.custom
- *= require jquery.ui.datepicker
- *= require jquery.ui.autocomplete
+ *= require jquery-ui/datepicker
+ *= require jquery-ui/autocomplete
  *= require selectize
  *= require selectize.bootstrap3
  *= require puzzletime

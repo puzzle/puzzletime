@@ -42,7 +42,7 @@ class OrdertimesController < WorktimesController
           params[:other] = '1'
           params[:evaluation] = nil
         end
-        redirect_to index_url
+        redirect_to index_path
       else
         session[:split] = @split
         redirect_to action: 'split', back_url: params[:back_url]

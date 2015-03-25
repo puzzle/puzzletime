@@ -39,7 +39,7 @@ class AccountingPostsController < CrudController
     end
   end
 
-  def index_url
+  def index_path
     order_accounting_posts_path(parent)
   end
 

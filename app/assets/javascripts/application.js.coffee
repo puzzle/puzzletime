@@ -4,9 +4,9 @@
 #= require jquery
 #= require jquery.turbolinks
 #= require jquery_ujs
-#= require jquery.ui.datepicker
+#= require jquery-ui/datepicker
 #= require jquery-ui-datepicker-i18n
-#= require jquery.ui.autocomplete
+#= require jquery-ui/autocomplete
 #= require selectize
 #= require waypoints
 #= require waypoints-sticky

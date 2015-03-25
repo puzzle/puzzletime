@@ -96,7 +96,7 @@ class OrdersController < CrudController
     end
   end
 
-  def index_url
+  def index_path
     entry.persisted? && !entry.destroyed? ? edit_order_path(entry) : orders_path(returning: true)
   end
 

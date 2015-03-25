@@ -93,7 +93,7 @@ class PlanningsController < CrudController
 
   private
 
-  def index_url
+  def index_path
     { action: 'employee_planning', employee_id: entry.employee_id }
   end
 

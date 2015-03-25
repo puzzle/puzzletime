@@ -27,19 +27,20 @@ class Order < ActiveRecord::Base
   belongs_to :status, class_name: 'OrderStatus'
   belongs_to :responsible, class_name: 'Employee'
   belongs_to :department
-  belongs_to :contract
+  belongs_to :contract, dependent: :destroy
   belongs_to :billing_address
 
   has_ancestor_through_work_item :client
 
-  has_many :comments, class_name: 'OrderComment'
-  has_many :targets, class_name: 'OrderTarget'
+  has_many :comments, class_name: 'OrderComment', dependent: :destroy
+  has_many :targets, class_name: 'OrderTarget', dependent: :destroy
   has_descendants_through_work_item :accounting_posts
 
-  has_many :order_team_members, -> { list }
+  has_many :order_team_members, -> { list }, dependent: :destroy
   has_many :team_members, through: :order_team_members, source: :employee
-  has_many :order_contacts, -> { list }
+  has_many :order_contacts, -> { list }, dependent: :destroy
   has_many :contacts, through: :order_contacts
+
   accepts_nested_attributes_for :order_team_members, :order_contacts, reject_if: :all_blank, allow_destroy: true
 
   ### VALIDATIONS

@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.1.8'
+gem 'rails', '4.2.0'
 
 gem 'pg'
 
@@ -38,7 +38,7 @@ gem 'jquery-ui-rails'
 gem 'turbolinks'
 gem 'jquery-turbolinks'
 gem 'bootstrap-sass'
-gem 'selectize-rails'
+gem 'selectize-rails', '0.9.1'  # newer needs fix for create order
 
 
 group :development, :test do
@@ -50,7 +50,7 @@ end
 
 group :development do
   gem 'spring'
-  gem 'better_errors'
+  gem 'better_errors', '< 2.0.0'
   gem 'bullet'
   gem 'quiet_assets'
 end
