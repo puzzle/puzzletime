@@ -11,9 +11,10 @@
           order_accounting_posts_path(@order),
           order_accounting_posts_path(@order)
 
-  - if can?(:contract, @order)
-    = nav 'Vertrag',
-          edit_order_contract_path(@order)
+  - if can?(:edit_contract, @order)
+    = nav 'Vertrag', edit_order_contract_path(@order)
+  - elsif can?(:show_contract, @order)
+    = nav 'Vertrag', order_contract_path(@order)
 
   - if can?(:services, @order)
     = nav 'Leistungen',
@@ -27,7 +28,9 @@
           order_order_targets_path(@order),
           order_order_targets_path(@order)
 
-  - if can?(:comments, @order)
+  - if can?(:show_comments, @order)
     = nav 'Journal', order_order_comments_path(@order)
+  - elsif can?(:edit_comments, @order)
+    = nav 'Journal', edit_order_order_comments_path(@order)
 
   //= nav 'Rechnungen', bills_order_path(entry)

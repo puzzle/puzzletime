@@ -6,26 +6,21 @@ class OrderCommentsControllerTest < ActionController::TestCase
 
   setup :login
 
-  test 'GET index as member redirects and sets flash alert' do
+  test 'GET index as member renders without form and comments with links' do
     login_as :pascal
-    get :index, order_id: order.id
-    assert_response :redirect
-    assert_equal 'Sie sind nicht authorisiert, um diese Seite zu öffnen', flash[:alert]
+    get_and_assert_comments_with_links
+    assert_template partial: '_form', count: 0
   end
 
-  test 'GET index as responsible renders comments with links' do
+  test 'GET index as responsible renders form and comments with links' do
     login_as :lucien
-    get :index, order_id: order.id
-    assert_template :index
-    assert_equal order_comments(:puzzletime_first, :puzzletime_second), assigns(:order_comments)
-    assert response.body.include?('<a href="http://example.com/dummy">')
+    get_and_assert_comments_with_links
+    assert_template partial: '_form'
   end
 
-  test 'GET index as management renders comments with links' do
-    get :index, order_id: order.id
-    assert_template :index
-    assert_equal order_comments(:puzzletime_first, :puzzletime_second), assigns(:order_comments)
-    assert response.body.include?('<a href="http://example.com/dummy">')
+  test 'GET index as management renders form and comments with links' do
+    get_and_assert_comments_with_links
+    assert_template partial: '_form'
   end
 
   test 'POST index with empty text does not persist comment' do
@@ -46,6 +41,15 @@ class OrderCommentsControllerTest < ActionController::TestCase
     assert_equal employees(:mark), comment.updater
   end
 
+  test 'POST index as member with correct attributes' do
+    login_as :pascal
+    assert_no_difference "OrderComment.count" do
+      post :create, order_id: order.id, order_comment: {text: 'hello world'}
+    end
+    assert_equal 'Sie sind nicht authorisiert, um diese Seite zu öffnen', flash[:alert]
+    assert_response :redirect
+  end
+
   test 'GET show has no configured route' do
     assert_raises ActionController::UrlGenerationError do
       get :show, order_id: order.id
@@ -60,5 +64,12 @@ class OrderCommentsControllerTest < ActionController::TestCase
 
   def order
     @order ||= orders(:puzzletime)
+  end
+
+  def get_and_assert_comments_with_links
+    get :index, order_id: order.id
+    assert_template :index
+    assert_equal order_comments(:puzzletime_first, :puzzletime_second), assigns(:order_comments)
+    assert response.body.include?('<a href="http://example.com/dummy">')
   end
 end
