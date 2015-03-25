@@ -86,6 +86,26 @@ class OrdertimesControllerTest < ActionController::TestCase
     assert_match(/Anfangszeit ist ungültig/, @response.body)
   end
 
+  def test_create_with_hours_when_from_to_times_required
+    accounting_posts(:puzzletime).update_column(:from_to_times_required, true)
+    work_date = Date.today + 10
+    post :create, ordertime: { account_id: work_items(:puzzletime),
+                               work_date: work_date,
+                               hours: '00:45' }
+    assert_equal ["Von muss angegeben werden", "Bis muss angegeben werden"], assigns(:worktime).errors.full_messages
+    assert_match(/Von muss angegeben werden/, @response.body)
+  end
+
+  def test_create_with_from_to_times_when_required
+    accounting_posts(:puzzletime).update_column(:from_to_times_required, true)
+    work_date = Date.today + 10
+    post :create, ordertime: { account_id: work_items(:puzzletime),
+                               work_date: work_date,
+                               from_start_time: '00:45',
+                               to_end_time: '00:46'}
+    assert assigns(:worktime).valid?
+  end
+
   def test_create_other
     post :create, ordertime: { account_id: work_items(:allgemein),
                                work_date: Date.today,
