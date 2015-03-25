@@ -40,36 +40,36 @@ table.absence {
   td.stat {
     text-align:   right;
   }
-
-  th.current, td.current {
+  .current {
     background-color: #ffffdd !important;
   }
-
-  td.definitive {
+  .definitive {
     background-color: #91C5E5 !important;
   }
-
-  td.absence {
+  .absence {
     background-color: #8FADCB !important;
   }
-
-  td.free {
+  .free {
     background-color: #EFBCA3 !important;
   }
-
-  td.tentative {
-    background-color: #96CBD3 !important;
+  .tentative {
+    background-color: #9BCBD4 !important;
+    background-image: repeating-linear-gradient(
+      -45deg,
+      #9BCBD4,
+      #9BCBD4 6px,
+      rgba(#fff, 0.5) 6px,
+      rgba(#fff, 0.5) 12px
+    ) !important;
   }
-
-  td.half_planned {
+  .half_planned {
     background-color: #ECEBA0 !important;
   }
-
-  td.full_planned {
+  .full_planned {
     background-color: #B0DAA5 !important;
   }
-
-  td.over_planned {
+  .over_planned {
     background-color: #E39797 !important;
   }
 }
+

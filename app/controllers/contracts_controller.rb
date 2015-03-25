@@ -3,6 +3,9 @@ class ContractsController < CrudController
 
   self.permitted_attrs = :number, :start_date, :end_date, :payment_period, :reference, :sla
 
+  skip_authorize_resource
+  before_action :authorize_class
+
   def update
     super(location: edit_order_contract_path(order_id: parent))
   end
@@ -13,8 +16,12 @@ class ContractsController < CrudController
     @order ||= Order.find(params[:order_id])
   end
 
+  def contract
+    @contract ||= order.try(:contract)
+  end
+
   def entry
-    order.try(:contract) || build_entry
+    contract || build_entry
   end
 
   def build_entry
@@ -23,6 +30,10 @@ class ContractsController < CrudController
 
   def parent_scope
     parent.send(:contract)
+  end
+
+  def authorize_class
+    authorize!(:"#{action_name}_contract", order)
   end
 
 end

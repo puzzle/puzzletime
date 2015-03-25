@@ -4,6 +4,13 @@ require 'test_helper'
 
 class ContractsControllerTest < ActionController::TestCase
 
+  test 'GET show as member' do
+    login_as :pascal
+    get :show, order_id: test_entry.order
+    assert_response :success
+    assert_template 'show'
+  end
+
   test 'GET edit as member redirects and sets flash alert' do
     login_as :pascal
     get :edit, order_id: test_entry.order
@@ -37,6 +44,13 @@ class ContractsControllerTest < ActionController::TestCase
     end
     assert_equal test_entry_start_date, entry.start_date
     assert_equal test_entry_end_date, entry.end_date
+  end
+
+  test 'PATCH update as member' do
+    login_as :pascal
+    patch :update, order_id: test_entry.order, contract: test_entry_attrs
+    assert_response :redirect
+    assert_equal 'Sie sind nicht authorisiert, um diese Seite zu öffnen', flash[:alert]
   end
 
   private
