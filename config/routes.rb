@@ -42,9 +42,7 @@ Rails.application.routes.draw do
 
     resources :accounting_posts, except: [:show]
 
-    resource :contract, only: [:update] do
-      get :index, action: :edit, as: :edit
-    end
+    resource :contract, only: [:show, :edit, :update]
 
     resource :multi_worktimes, only: [:edit, :update]
     resources :order_comments, only: [:index, :create]

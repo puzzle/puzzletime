@@ -46,11 +46,9 @@ class Ability
       can [:create, :categories], Client
       can [:create], Contact
       can :create, WorkItem
-      can :manage, Order, responsible_id: user.id
-      [AccountingPost, Contract, OrderComment].each do |model|
-        can :manage, model do |instance|
-          instance.order.responsible_id == user.id
-        end
+      can [:manage, :create_comment], Order, responsible_id: user.id
+      can :manage, [AccountingPost, Contract, OrderComment] do |instance|
+        instance.order.responsible_id == user.id
       end
       can :managed, Evaluation
     end
@@ -64,8 +62,8 @@ class Ability
       employee == user
     end
 
-    can [:read, :accounting_posts, :services, :show_targets], Order
-    can :read, AccountingPost
+    can [:read, :accounting_posts, :services, :show_targets, :show_contract, :show_comments], Order
+    can :read, [AccountingPost, OrderComment]
 
     can :manage, Planning
 
