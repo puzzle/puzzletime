@@ -263,7 +263,7 @@ GEM
     rubocop-checkstyle_formatter (0.1.1)
       rubocop (>= 0.14.0)
     ruby-graphviz (1.0.9)
-    ruby-progressbar (1.7.4)
+    ruby-progressbar (1.7.1)
     ruby2ruby (2.0.8)
       ruby_parser (~> 3.1)
       sexp_processor (~> 4.0)
