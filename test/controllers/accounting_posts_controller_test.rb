@@ -173,7 +173,8 @@ class AccountingPostsControllerTest < ActionController::TestCase
         reference: 'dummy-reference',
         billable: true,
         description_required: true,
-        ticket_required: true
+        ticket_required: true,
+        exact_times_required: true,
       }
     }
 
