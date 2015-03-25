@@ -63,9 +63,9 @@ class PlanningsControllerTest < ActionController::TestCase
                               monday_am: '1',
                               description: 'description' }
     assert_not_nil assigns(:planning)
-    assert Planning.exists?(assigns(:planning))
+    assert Planning.exists?(assigns(:planning).id)
     delete :destroy, planning: assigns(:planning)
-    assert !Planning.exists?(assigns(:planning))
+    assert !Planning.exists?(assigns(:planning).id)
     assert_redirected_to action: 'employee_planning', employee_id: employees(:lucien)
   end
 

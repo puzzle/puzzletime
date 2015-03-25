@@ -23,14 +23,14 @@ class FormHelperTest < ActionView::TestCase
     end
 
     assert_match /form .*?action="\/crud_test_models\/#{e.id}"
-                       .*?class="special\ form-horizontal"
                        .*?method="post"/x, f
-    assert_match /input .*?name="_method"
-                        .*?type="hidden"
+    assert_match /form .*?class="special\ form-horizontal"/x, f
+    assert_match /input .*?type="hidden"
+                        .*?name="_method"
                         .*?value="(patch|put)"/x, f
-    assert_match /input .*?name="crud_test_model\[name\]"
-                        .*?type="text"
-                        .*?value="AAAAA"/x, f
+    assert_match /input .*?type="text"
+                        .*?value="AAAAA"
+                        .*?name="crud_test_model\[name\]"/x, f
   end
 
   test 'standard form' do
@@ -45,22 +45,22 @@ class FormHelperTest < ActionView::TestCase
     end
 
     assert_match /form .*?action="\/crud_test_models\/#{e.id}"
-                       .*?class="special\ form-horizontal"
-                      .*?method="post"/x, f
-    assert_match /input .*?name="_method"
-                        .*?type="hidden"
+                       .*?method="post"/x, f
+    assert_match /form .*?class="special\ form-horizontal"/x, f
+    assert_match /input .*?type="hidden"
+                        .*?name="_method"
                         .*?value="(patch|put)"/x, f
-    assert_match /input .*?name="crud_test_model\[name\]"
-                        .*?type="text"
-                        .*?value="AAAAA"/x, f
-    assert_match /input .*?name="crud_test_model\[birthdate\]"
-                        .*?type="text"/x, f
-    assert_match /input .*?name="crud_test_model\[children\]"
-                        .*?type="text"
-                        .*?value=\"9\"/x, f
-    assert_match /input .*?name="crud_test_model\[human\]"
-                        .*?type="checkbox"/x, f
-    assert_match /button\ .*?type="submit"\>
+    assert_match /input .*?type="text"
+                        .*?value="AAAAA"
+                        .*?name="crud_test_model\[name\]"/x, f
+    assert_match /input .*?type="text"
+                        .*?name="crud_test_model\[birthdate\]"/x, f
+    assert_match /input .*?type="text"
+                        .*?value="9"
+                        .*?name="crud_test_model\[children\]"/x, f
+    assert_match /input .*?type="checkbox"
+                        .*?name="crud_test_model\[human\]"/x, f
+    assert_match /button\ .*?type="submit".*\>
                   #{t('global.button.save')}
                   \<\/button\>/x, f
   end
@@ -80,17 +80,16 @@ class FormHelperTest < ActionView::TestCase
 
     assert_match /form .*?action="\/crud_test_models\/#{e.id}"
                        .*?method="post"/x, f
-    assert_match /input .*?name="_method"
-                        .*?type="hidden"
+    assert_match /input .*?type="hidden"
+                        .*?name="_method"
                         .*?value="(patch|put)"/x, f
     assert_match /div[^>]* id='error_explanation'/, f
-    skip('error class not attached in test')
-    assert_match /div\ class="fieldWithErrors"\>.*?
-                  \<input .*?name="crud_test_model\[name\]"
-                          .*?type="text"/x, f
-    assert_match /input .*?name="crud_test_model\[birthdate\]"
+    assert_match /div\ class="field_with_errors"\>.*?
+                  \<input .*?type="text"
+                          .*?name="crud_test_model\[name\]"/x, f
+    assert_match /input .*?value="01.01.1910"
                         .*?type="text"
-                        .*?value="1910-01-01"/x, f
+                        .*?name="crud_test_model\[birthdate\]"/x, f
   end
 
   test 'crud form' do
@@ -103,20 +102,20 @@ class FormHelperTest < ActionView::TestCase
                         .*?type="text"/x, f
     assert_match /input .*?name="crud_test_model\[whatever\]"
                         .*?type="text"/x, f
-    assert_match /input .*?name="crud_test_model\[children\]"
-                        .*?type="text"/x, f
+    assert_match /input .*?type="text"
+                        .*?name="crud_test_model\[children\]"/x, f
     assert_match /input .*?name="crud_test_model\[rating\]"
                         .*?type="text"/x, f
     assert_match /input .*?name="crud_test_model\[income\]"
                         .*?type="text"/x, f
-    assert_match /input .*?name="crud_test_model\[birthdate\]"
-                        .*?type="text"/x, f
-    assert_match /input .*?name="crud_test_model\[gets_up_at\]"
-                        .*?type="time"/x, f
-    assert_match /input .*?name="crud_test_model\[last_seen\]"
-                        .*?type="datetime"/x, f
-    assert_match /input .*?name="crud_test_model\[human\]"
-                        .*?type="checkbox"/x, f
+    assert_match /input .*?type="text"
+                        .*?name="crud_test_model\[birthdate\]"/x, f
+    assert_match /input .*?type="time"
+                        .*?name="crud_test_model\[gets_up_at\]"/x, f
+    assert_match /input .*?type="datetime"
+                        .*?name="crud_test_model\[last_seen\]"/x, f
+    assert_match /input .*?type="checkbox"
+                        .*?name="crud_test_model\[human\]"/x, f
     assert_match /select .*?name="crud_test_model\[companion_id\]"/, f
     assert_match /textarea .*?name="crud_test_model\[remarks\]"/, f
   end

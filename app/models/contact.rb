@@ -21,8 +21,9 @@ class Contact < ActiveRecord::Base
 
   belongs_to :client
 
-  has_many :orders
-  has_many :billing_addresses
+  has_many :order_contacts, dependent: :destroy
+  has_many :orders, through: :order_contacts
+  has_many :billing_addresses, dependent: :destroy
 
   validates :firstname, :lastname, :client_id, presence: true
 

@@ -32,20 +32,17 @@ class CrudTestModelsController < CrudController #:nodoc:
   layout false
 
   def index
-    super do |format|
-      format.js { render text: 'index js'}
-    end
+    entries
+    render text: 'index js' if request.format.js?
   end
 
   def show
-    super do |format|
-      format.html { render text: 'custom html' } if entry.name == 'BBBBB'
-    end
+    render text: 'custom html' if entry.name == 'BBBBB'
   end
 
   def create
-    super do |format|
-      flash[:notice] = 'model got created' if entry.persisted?
+    super do |_format, success|
+      flash[:notice] = 'model got created' if success
     end
   end
 

@@ -26,18 +26,17 @@ class WorktimesController < CrudController
   end
 
   def show
-    redirect_to index_url
+    redirect_to index_path
   end
 
   def new
-    super do |format|
-      if params[:template]
-        template = Worktime.find(params[:template])
-        @worktime.account_id = template.account_id
-        @worktime.ticket = template.ticket
-        @worktime.description = template.description
-        @worktime.billable = template.billable
-      end
+    super
+    if params[:template]
+      template = Worktime.find(params[:template])
+      @worktime.account_id = template.account_id
+      @worktime.ticket = template.ticket
+      @worktime.description = template.description
+      @worktime.billable = template.billable
     end
   end
 
@@ -126,7 +125,7 @@ class WorktimesController < CrudController
     @worktimes
   end
 
-  def index_url
+  def index_path
     if params[:back_url].present?
       sanitized_back_url
     elsif record_other?

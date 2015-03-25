@@ -3,7 +3,9 @@ class OrderCommentsController < CrudController
   self.permitted_attrs = :text
 
   def create
-    super(action: :index)
+    super do |format, success|
+      format.html { render :index } unless success
+    end
   end
 
   private

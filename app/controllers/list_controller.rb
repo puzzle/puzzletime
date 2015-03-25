@@ -19,8 +19,6 @@ class ListController < ApplicationController
   authorize_resource except: :index
   before_action :authorize_class, only: :index
 
-  respond_to :html, :json
-
   define_render_callbacks :index
 
   helper_method :entries
@@ -30,8 +28,8 @@ class ListController < ApplicationController
   # List all entries of this model.
   #   GET /entries
   #   GET /entries.json
-  def index(&block)
-    respond_with(entries, &block)
+  def index
+    entries
   end
 
   private

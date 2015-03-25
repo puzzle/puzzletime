@@ -11,8 +11,6 @@
 # action procedures without overriding the entire method.
 class CrudController < ListController
 
-  self.responder = DryCrud::Responder
-
   class_attribute :permitted_attrs
 
   # Defines before and after callback hooks for create, update, save and
@@ -28,13 +26,8 @@ class CrudController < ListController
 
   hide_action :run_callbacks
 
-  respond_to :js, only: [:new, :create]
-
   prepend_before_action :entry, only: [:show, :new, :create, :edit, :update, :destroy]
   prepend_before_action :authenticate
-
-  after_save :set_success_notice
-  after_destroy :set_success_notice
 
 
   ##############  ACTIONS  ############################################
@@ -42,16 +35,14 @@ class CrudController < ListController
   # Show one entry of this model.
   #   GET /entries/1
   #   GET /entries/1.json
-  def show(&block)
-    respond_with(entry, &block)
+  def show
   end
 
   # Display a form to create a new entry of this model.
   #   GET /entries/new
   #   GET /entries/new.json
-  def new(&block)
+  def new
     assign_attributes if params[model_identifier]
-    respond_with(entry, &block)
   end
 
   # Create a new entry of this model from the passed params.
@@ -63,15 +54,25 @@ class CrudController < ListController
   #   POST /entries.json
   def create(options = {}, &block)
     assign_attributes
-    options[:success] = with_callbacks(:create, :save) { entry.save }
-    options[:location] ||= index_url
-    respond_with(entry, options, &block)
+    created = with_callbacks(:create, :save) { entry.save }
+
+    respond_to do |format|
+      block.call(format, created) if block_given?
+      if created
+        format.html { redirect_on_success(options) }
+        format.json { render :show, status: :created, location: show_path }
+        format.js   { render text: "'#{js_entry.to_json}'" }
+      else
+        format.html { render :new }
+        format.json { render json: entry.errors, status: :unprocessable_entity }
+        format.js   { render partial: 'form', status: :unprocessable_entity}
+      end
+    end
   end
 
   # Display a form to edit an exisiting entry of this model.
   #   GET /entries/1/edit
-  def edit(&block)
-    respond_with(entry, &block)
+  def edit
   end
 
   # Update an existing entry of this model from the passed params.
@@ -83,9 +84,18 @@ class CrudController < ListController
   #   PUT /entries/1.json
   def update(options = {}, &block)
     assign_attributes
-    options[:success] = with_callbacks(:update, :save) { entry.save }
-    options[:location] ||= index_url
-    respond_with(entry, options, &block)
+    updated = with_callbacks(:update, :save) { entry.save }
+
+    respond_to do |format|
+      block.call(format, updated) if block_given?
+      if updated
+        format.html { redirect_on_success(options) }
+        format.json { render :show, status: :ok, location: show_path }
+      else
+        format.html { render :edit }
+        format.json { render json: entry.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   # Destroy an existing entry of this model.
@@ -97,14 +107,17 @@ class CrudController < ListController
   #   DELETE /entries/1.json
   def destroy(options = {}, &block)
     destroyed = run_callbacks(:destroy) { entry.destroy }
-    unless destroyed
-      set_failure_notice
-      location = request.env['HTTP_REFERER'].presence
+
+    respond_to do |format|
+      block.call(format, destroyed) if block_given?
+      if destroyed
+        format.html { redirect_on_success(options) }
+        format.json { head :no_content }
+      else
+        format.html { redirect_on_failure(options) }
+        format.json { render json: entry.errors, status: :unprocessable_entity }
+      end
     end
-    location ||= index_url
-    respond_options = options.reverse_merge(success: destroyed,
-                                            location: location)
-    respond_with(entry, respond_options, &block)
   end
 
 
@@ -137,33 +150,30 @@ class CrudController < ListController
     params.require(model_identifier).permit(permitted_attrs)
   end
 
-  # Url of the index page to return to.
-  def index_url
-    polymorphic_url(path_args(model_class), returning: true)
+  # Path of the index page to return to.
+  def index_path
+    polymorphic_path(path_args(model_class), returning: true)
   end
 
-  # A label for the current entry, including the model name.
-  def full_entry_label
-    "#{models_label(false)} <i>#{ERB::Util.h(entry)}</i>".html_safe
+  # Path of the show page.
+  def show_path
+    path_args(entry)
   end
 
-  # json hash representation of an entry used for javascript responses
-  def js_entry
-    { id: entry.id, label: entry.to_s }
+  # Perform a redirect after a successfull operation and set a flash notice.
+  def redirect_on_success(options = {})
+    location = options[:location] || index_path
+    flash[:notice] ||= flash_message(:success)
+    redirect_to location
   end
 
-  # Set a success flash notice when we got a HTML request.
-  def set_success_notice
-    if request.format == :html
-      flash[:notice] ||= flash_message(:success)
-    end
-  end
-
-  # Set a failure flash notice when we got a HTML request.
-  def set_failure_notice
-    if request.format == :html
-      flash[:alert] ||= error_messages.presence || flash_message(:failure)
-    end
+  # Perform a redirect after a failed operation and set a flash alert.
+  def redirect_on_failure(options = {})
+    location = options[:location] ||
+               request.env['HTTP_REFERER'].presence ||
+               index_path
+    flash[:alert] ||= error_messages.presence || flash_message(:failure)
+    redirect_to location
   end
 
   # Get an I18n flash message.
@@ -175,13 +185,23 @@ class CrudController < ListController
             :"#{controller_name}.#{scope}",
             :"crud.#{scope}_html",
             :"crud.#{scope}"]
-    I18n.t(keys.shift, model: full_entry_label, default: keys).html_safe
+    I18n.t(keys.shift, model: full_entry_label, default: keys)
+  end
+
+  # A label for the current entry, including the model name.
+  def full_entry_label
+    "#{models_label(false)} <i>#{ERB::Util.h(entry)}</i>".html_safe
   end
 
   # Html safe error messages of the current entry.
   def error_messages
     escaped = entry.errors.full_messages.map { |m| ERB::Util.html_escape(m) }
     escaped.join('<br/>').html_safe
+  end
+
+  # json hash representation of an entry used for javascript responses
+  def js_entry
+    { id: entry.id, label: entry.to_s }
   end
 
   # Class methods for CrudActions.

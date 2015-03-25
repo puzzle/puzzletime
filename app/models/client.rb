@@ -17,8 +17,8 @@ class Client < ActiveRecord::Base
   include BelongingToWorkItem
   include Evaluatable
 
-  has_many :contacts
-  has_many :billing_addresses
+  has_many :contacts, dependent: :destroy
+  has_many :billing_addresses, dependent: :destroy
 
   has_descendants_through_work_item :orders
   has_descendants_through_work_item :accounting_posts

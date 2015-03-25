@@ -448,12 +448,12 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       assert has_unchecked_field?('category_active')
 
       selecti0 = find("#order_order_contacts_attributes_0_contact_id_or_crm + .selectize-control")
-      assert selecti0.find('.selectize-input').has_content?('Hauswart Hans')
+      assert selecti0.has_selector?('.selectize-input .item', text: 'Hauswart Hans')
       selecti0.find('.selectize-input').click # populate & open dropdown
       assert selecti0.has_selector?(".selectize-dropdown-content .option", count: 3)
 
       selecti1 = find("#order_order_contacts_attributes_1_contact_id_or_crm + .selectize-control")
-      assert selecti1.find('.selectize-input').has_content?('Nader Fred')
+      assert selecti1.has_selector?('.selectize-input .item', text: 'Nader Fred')
 
       click_add_contact
       selectize('order_order_contacts_attributes_2_contact_id_or_crm', 'Miller John')

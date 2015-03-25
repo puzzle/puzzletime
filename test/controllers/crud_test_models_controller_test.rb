@@ -234,7 +234,6 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     end
     assert_response :unprocessable_entity
     assert entry.new_record?
-    assert_match /errors/, @response.body
     assert_equal [:before_create, :before_save], @controller.called_callbacks
   end
 
@@ -257,7 +256,6 @@ class CrudTestModelsControllerTest < ActionController::TestCase
                  format: 'json'
     assert_response :unprocessable_entity
     assert entry.changed?
-    assert_match /errors/, @response.body
     assert flash[:notice].blank?
     assert_equal 20, entry.rating
     assert_equal [:before_update, :before_save], @controller.called_callbacks
@@ -291,7 +289,6 @@ class CrudTestModelsControllerTest < ActionController::TestCase
                                    format: 'json')
     end
     assert_response :unprocessable_entity
-    assert_match /errors/, @response.body
     assert flash[:notice].blank?
   end
 
