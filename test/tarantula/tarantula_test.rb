@@ -13,7 +13,7 @@ class TarantulaTest < ActionDispatch::IntegrationTest
   CREDENTIALS = ['FOO', 'secret']
 
 
-  def test_as_manager
+  def on_test_as_manager
     crawl_as_user(true)
   end
 
@@ -33,6 +33,7 @@ class TarantulaTest < ActionDispatch::IntegrationTest
     t.skip_uri_patterns << /evaluator\/change_period\?back_url/
     t.skip_uri_patterns << /orders\/crm_load/ # js only
 
+    t.allow_500_for /^\-\d+$/  # change period may produce such links in tarantula
     t.allow_404_for /^\-?\d+$/  # change period may produce such links in tarantula
     t.allow_404_for /ordertimes\/start$/  # passing invalid work_item_id
     t.allow_404_for /absencetimes\/\d+/   # absencetime deleted elsewhere
