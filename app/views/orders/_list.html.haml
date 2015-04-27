@@ -18,7 +18,7 @@
           %th
             = sort_link(:responsible)
             %br/
-            = Order.human_attribute_name(:employee_ids)
+            = Order.human_attribute_name(:order_team_members)
           %th
             = sort_link(:status)
           - @target_scopes.each do |scope|
