@@ -11,111 +11,113 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141220120746) do
+ActiveRecord::Schema.define(version: 20150325153624) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "absences", force: true do |t|
-    t.string  "name",                     null: false
-    t.boolean "payed",    default: false
-    t.boolean "private",  default: false
-    t.boolean "vacation", default: false, null: false
+  create_table "absences", force: :cascade do |t|
+    t.string  "name",     limit: 255,                 null: false
+    t.boolean "payed",                default: false
+    t.boolean "private",              default: false
+    t.boolean "vacation",             default: false, null: false
     t.index ["name"], :name => "index_absences_on_name", :unique => true
   end
 
-  create_table "accounting_posts", force: true do |t|
-    t.integer "work_item_id",                                                  null: false
+  create_table "accounting_posts", force: :cascade do |t|
+    t.integer "work_item_id",                                                                null: false
     t.integer "portfolio_item_id"
-    t.string  "reference"
+    t.string  "reference",              limit: 255
     t.integer "offered_hours"
     t.integer "offered_rate"
-    t.decimal "offered_total",        precision: 12, scale: 2
+    t.decimal "offered_total",                      precision: 12, scale: 2
     t.integer "discount_percent"
     t.integer "discount_fixed"
     t.integer "remaining_hours"
-    t.boolean "billable",                                      default: true,  null: false
-    t.boolean "description_required",                          default: false, null: false
-    t.boolean "ticket_required",                               default: false, null: false
-    t.boolean "closed",                                        default: false, null: false
+    t.boolean "billable",                                                    default: true,  null: false
+    t.boolean "description_required",                                        default: false, null: false
+    t.boolean "ticket_required",                                             default: false, null: false
+    t.boolean "closed",                                                      default: false, null: false
+    t.boolean "times_required",                                              default: false, null: false
+    t.boolean "from_to_times_required",                                      default: false, null: false
     t.index ["portfolio_item_id"], :name => "index_accounting_posts_on_portfolio_item_id"
     t.index ["work_item_id"], :name => "index_accounting_posts_on_work_item_id"
   end
 
-  create_table "billing_addresses", force: true do |t|
-    t.integer "client_id",  null: false
-    t.integer "contact_id", null: false
-    t.string  "supplement"
-    t.string  "street"
-    t.string  "zip_code"
-    t.string  "town"
-    t.string  "country"
+  create_table "billing_addresses", force: :cascade do |t|
+    t.integer "client_id",              null: false
+    t.integer "contact_id",             null: false
+    t.string  "supplement", limit: 255
+    t.string  "street",     limit: 255
+    t.string  "zip_code",   limit: 255
+    t.string  "town",       limit: 255
+    t.string  "country",    limit: 255
     t.index ["client_id"], :name => "index_billing_addresses_on_client_id"
     t.index ["contact_id"], :name => "index_billing_addresses_on_contact_id"
   end
 
-  create_table "clients", force: true do |t|
-    t.integer "work_item_id",                 null: false
-    t.string  "crm_key"
-    t.boolean "allow_local",  default: false, null: false
+  create_table "clients", force: :cascade do |t|
+    t.integer "work_item_id",                             null: false
+    t.string  "crm_key",      limit: 255
+    t.boolean "allow_local",              default: false, null: false
     t.index ["work_item_id"], :name => "index_clients_on_work_item_id"
   end
 
-  create_table "contacts", force: true do |t|
-    t.integer  "client_id",  null: false
-    t.string   "lastname"
-    t.string   "firstname"
-    t.string   "function"
-    t.string   "email"
-    t.string   "phone"
-    t.string   "mobile"
-    t.string   "crm_key"
+  create_table "contacts", force: :cascade do |t|
+    t.integer  "client_id",              null: false
+    t.string   "lastname",   limit: 255
+    t.string   "firstname",  limit: 255
+    t.string   "function",   limit: 255
+    t.string   "email",      limit: 255
+    t.string   "phone",      limit: 255
+    t.string   "mobile",     limit: 255
+    t.string   "crm_key",    limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["client_id"], :name => "index_contacts_on_client_id"
   end
 
-  create_table "contracts", force: true do |t|
-    t.string  "number",         null: false
-    t.date    "start_date",     null: false
-    t.date    "end_date",       null: false
-    t.integer "payment_period", null: false
+  create_table "contracts", force: :cascade do |t|
+    t.string  "number",         limit: 255, null: false
+    t.date    "start_date",                 null: false
+    t.date    "end_date",                   null: false
+    t.integer "payment_period",             null: false
     t.text    "reference"
     t.text    "sla"
   end
 
-  create_table "delayed_jobs", force: true do |t|
-    t.integer  "priority",   default: 0, null: false
-    t.integer  "attempts",   default: 0, null: false
-    t.text     "handler",                null: false
+  create_table "delayed_jobs", force: :cascade do |t|
+    t.integer  "priority",               default: 0, null: false
+    t.integer  "attempts",               default: 0, null: false
+    t.text     "handler",                            null: false
     t.text     "last_error"
     t.datetime "run_at"
     t.datetime "locked_at"
     t.datetime "failed_at"
-    t.string   "locked_by"
-    t.string   "queue"
-    t.string   "cron"
+    t.string   "locked_by",  limit: 255
+    t.string   "queue",      limit: 255
+    t.string   "cron",       limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["priority", "run_at"], :name => "delayed_jobs_priority"
   end
 
-  create_table "departments", force: true do |t|
-    t.string "name",                null: false
-    t.string "shortname", limit: 3, null: false
+  create_table "departments", force: :cascade do |t|
+    t.string "name",      limit: 255, null: false
+    t.string "shortname", limit: 3,   null: false
     t.index ["name"], :name => "index_departments_on_name", :unique => true
     t.index ["shortname"], :name => "index_departments_on_shortname", :unique => true
   end
 
-  create_table "employee_lists", force: true do |t|
-    t.integer  "employee_id", null: false
-    t.string   "title",       null: false
+  create_table "employee_lists", force: :cascade do |t|
+    t.integer  "employee_id",             null: false
+    t.string   "title",       limit: 255, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["employee_id"], :name => "index_employee_lists_on_employee_id"
   end
 
-  create_table "employee_lists_employees", id: false, force: true do |t|
+  create_table "employee_lists_employees", id: false, force: :cascade do |t|
     t.integer  "employee_list_id"
     t.integer  "employee_id"
     t.datetime "created_at"
@@ -124,22 +126,22 @@ ActiveRecord::Schema.define(version: 20141220120746) do
     t.index ["employee_list_id"], :name => "index_employee_lists_employees_on_employee_list_id"
   end
 
-  create_table "employees", force: true do |t|
-    t.string  "firstname",                                       null: false
-    t.string  "lastname",                                        null: false
-    t.string  "shortname",             limit: 3,                 null: false
-    t.string  "passwd"
-    t.string  "email",                                           null: false
-    t.boolean "management",                      default: false
-    t.float   "initial_vacation_days", :default => { :expr => "(0)::double precision" }
-    t.string  "ldapname"
-    t.string  "eval_periods",          limit: 3,                              array: true
+  create_table "employees", force: :cascade do |t|
+    t.string  "firstname",             limit: 255,                 null: false
+    t.string  "lastname",              limit: 255,                 null: false
+    t.string  "shortname",             limit: 3,                   null: false
+    t.string  "passwd",                limit: 255
+    t.string  "email",                 limit: 255,                 null: false
+    t.boolean "management",                        default: false
+    t.float   "initial_vacation_days"
+    t.string  "ldapname",              limit: 255
+    t.string  "eval_periods",                                                   array: true
     t.integer "department_id"
     t.index ["department_id"], :name => "index_employees_on_department_id"
     t.index ["shortname"], :name => "chk_unique_name", :unique => true
   end
 
-  create_table "employments", force: true do |t|
+  create_table "employments", force: :cascade do |t|
     t.integer "employee_id"
     t.decimal "percent",     precision: 5, scale: 2, null: false
     t.date    "start_date",                          null: false
@@ -148,13 +150,13 @@ ActiveRecord::Schema.define(version: 20141220120746) do
     t.foreign_key ["employee_id"], "employees", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_employments_employees"
   end
 
-  create_table "holidays", force: true do |t|
+  create_table "holidays", force: :cascade do |t|
     t.date  "holiday_date",  null: false
     t.float "musthours_day", null: false
     t.index ["holiday_date"], :name => "index_holidays_on_holiday_date", :unique => true
   end
 
-  create_table "order_comments", force: true do |t|
+  create_table "order_comments", force: :cascade do |t|
     t.integer  "order_id",   null: false
     t.text     "text",       null: false
     t.integer  "creator_id"
@@ -164,32 +166,32 @@ ActiveRecord::Schema.define(version: 20141220120746) do
     t.index ["order_id"], :name => "index_order_comments_on_order_id"
   end
 
-  create_table "order_contacts", primary_key: "false", :default => { :expr => "nextval('order_contacts_false_seq'::regclass)" }, force: true do |t|
-    t.integer "contact_id", null: false
-    t.integer "order_id",   null: false
-    t.string  "comment"
+  create_table "order_contacts", primary_key: "false", :default => { :expr => "nextval('order_contacts_false_seq'::regclass)" }, force: :cascade do |t|
+    t.integer "contact_id",             null: false
+    t.integer "order_id",               null: false
+    t.string  "comment",    limit: 255
     t.index ["contact_id"], :name => "index_order_contacts_on_contact_id"
     t.index ["order_id"], :name => "index_order_contacts_on_order_id"
   end
 
-  create_table "order_kinds", force: true do |t|
-    t.string "name", null: false
+  create_table "order_kinds", force: :cascade do |t|
+    t.string "name", limit: 255, null: false
     t.index ["name"], :name => "index_order_kinds_on_name", :unique => true
   end
 
-  create_table "order_statuses", force: true do |t|
-    t.string  "name",                     null: false
-    t.string  "style"
-    t.boolean "closed",   default: false, null: false
-    t.integer "position",                 null: false
+  create_table "order_statuses", force: :cascade do |t|
+    t.string  "name",     limit: 255,                 null: false
+    t.string  "style",    limit: 255
+    t.boolean "closed",               default: false, null: false
+    t.integer "position",                             null: false
     t.index ["name"], :name => "index_order_statuses_on_name", :unique => true
     t.index ["position"], :name => "index_order_statuses_on_position"
   end
 
-  create_table "order_targets", force: true do |t|
-    t.integer  "order_id",                          null: false
-    t.integer  "target_scope_id",                   null: false
-    t.string   "rating",          default: "green", null: false
+  create_table "order_targets", force: :cascade do |t|
+    t.integer  "order_id",                                      null: false
+    t.integer  "target_scope_id",                               null: false
+    t.string   "rating",          limit: 255, default: "green", null: false
     t.text     "comment"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -197,23 +199,23 @@ ActiveRecord::Schema.define(version: 20141220120746) do
     t.index ["target_scope_id"], :name => "index_order_targets_on_target_scope_id"
   end
 
-  create_table "order_team_members", primary_key: "false", :default => { :expr => "nextval('order_team_members_false_seq'::regclass)" }, force: true do |t|
-    t.integer "employee_id", null: false
-    t.integer "order_id",    null: false
-    t.string  "comment"
+  create_table "order_team_members", primary_key: "false", :default => { :expr => "nextval('order_team_members_false_seq'::regclass)" }, force: :cascade do |t|
+    t.integer "employee_id",             null: false
+    t.integer "order_id",                null: false
+    t.string  "comment",     limit: 255
     t.index ["employee_id"], :name => "index_order_team_members_on_employee_id"
     t.index ["order_id"], :name => "index_order_team_members_on_order_id"
   end
 
-  create_table "orders", force: true do |t|
-    t.integer  "work_item_id",       null: false
+  create_table "orders", force: :cascade do |t|
+    t.integer  "work_item_id",                   null: false
     t.integer  "kind_id"
     t.integer  "responsible_id"
     t.integer  "status_id"
     t.integer  "department_id"
     t.integer  "contract_id"
     t.integer  "billing_address_id"
-    t.string   "crm_key"
+    t.string   "crm_key",            limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["billing_address_id"], :name => "index_orders_on_billing_address_id"
@@ -225,14 +227,14 @@ ActiveRecord::Schema.define(version: 20141220120746) do
     t.index ["work_item_id"], :name => "index_orders_on_work_item_id"
   end
 
-  create_table "overtime_vacations", force: true do |t|
+  create_table "overtime_vacations", force: :cascade do |t|
     t.float   "hours",         null: false
     t.integer "employee_id",   null: false
     t.date    "transfer_date", null: false
     t.index ["employee_id"], :name => "index_overtime_vacations_on_employee_id"
   end
 
-  create_table "plannings", force: true do |t|
+  create_table "plannings", force: :cascade do |t|
     t.integer  "employee_id",                     null: false
     t.integer  "start_week",                      null: false
     t.integer  "end_week"
@@ -257,34 +259,34 @@ ActiveRecord::Schema.define(version: 20141220120746) do
     t.index ["work_item_id"], :name => "index_plannings_on_work_item_id"
   end
 
-  create_table "portfolio_items", force: true do |t|
-    t.string  "name",                  null: false
-    t.boolean "active", default: true, null: false
+  create_table "portfolio_items", force: :cascade do |t|
+    t.string  "name",   limit: 255,                null: false
+    t.boolean "active",             default: true, null: false
     t.index ["name"], :name => "index_portfolio_items_on_name", :unique => true
   end
 
-  create_table "target_scopes", force: true do |t|
-    t.string  "name",     null: false
-    t.string  "icon"
-    t.integer "position", null: false
+  create_table "target_scopes", force: :cascade do |t|
+    t.string  "name",     limit: 255, null: false
+    t.string  "icon",     limit: 255
+    t.integer "position",             null: false
     t.index ["name"], :name => "index_target_scopes_on_name", :unique => true
     t.index ["position"], :name => "index_target_scopes_on_position"
   end
 
-  create_table "user_notifications", force: true do |t|
+  create_table "user_notifications", force: :cascade do |t|
     t.date "date_from", null: false
     t.date "date_to"
     t.text "message",   null: false
     t.index ["date_from", "date_to"], :name => "index_user_notifications_on_date_from_and_date_to"
   end
 
-  create_table "work_items", force: true do |t|
+  create_table "work_items", force: :cascade do |t|
     t.integer "parent_id"
-    t.string  "name",                                         null: false
+    t.string  "name",            limit: 255,                  null: false
     t.string  "shortname",       limit: 5,                    null: false
     t.text    "description"
     t.integer "path_ids",                                                  array: true
-    t.string  "path_shortnames"
+    t.string  "path_shortnames", limit: 255
     t.string  "path_names",      limit: 2047
     t.boolean "leaf",                         default: true,  null: false
     t.boolean "closed",                       default: false, null: false
@@ -292,25 +294,25 @@ ActiveRecord::Schema.define(version: 20141220120746) do
     t.index ["path_ids"], :name => "index_work_items_on_path_ids"
   end
 
-  create_table "working_conditions", force: true do |t|
+  create_table "working_conditions", force: :cascade do |t|
     t.date    "valid_from"
     t.decimal "vacation_days_per_year", precision: 5, scale: 2, null: false
     t.decimal "must_hours_per_day",     precision: 4, scale: 2, null: false
   end
 
-  create_table "worktimes", force: true do |t|
+  create_table "worktimes", force: :cascade do |t|
     t.integer "absence_id"
     t.integer "employee_id"
-    t.string  "report_type",                     null: false
-    t.date    "work_date",                       null: false
+    t.string  "report_type",     limit: 255,                 null: false
+    t.date    "work_date",                                   null: false
     t.float   "hours"
     t.time    "from_start_time"
     t.time    "to_end_time"
     t.text    "description"
-    t.boolean "billable",        default: true
-    t.boolean "booked",          default: false
-    t.string  "type"
-    t.string  "ticket"
+    t.boolean "billable",                    default: true
+    t.boolean "booked",                      default: false
+    t.string  "type",            limit: 255
+    t.string  "ticket",          limit: 255
     t.integer "work_item_id"
     t.index ["absence_id", "employee_id", "work_date"], :name => "worktimes_absences"
     t.index ["employee_id", "work_date"], :name => "worktimes_employees"
