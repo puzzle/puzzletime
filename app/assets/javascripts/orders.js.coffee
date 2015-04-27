@@ -4,6 +4,26 @@ renderIconItem = (item, escape) ->
 renderStyleItem = (item, escape) ->
   '<div><span class="label label-' + item.value + '">' + escape(item.value) + '</span></div>'
 
+
+
+################################################################
+# because of turbolinks.jquery, do bind ALL document events here
+
+# order cockpit: change order when choosable order changes.
+$(document).on('change', '#choosable_order_id', ->
+  if this.value
+    l = window.location.toString()
+    window.location = l.replace(/orders\/\d+/, 'orders/' + this.value)
+)
+
+$(document).on('click', '[data-multi-edit]', (event) ->
+   $this = $(this)
+   params = $($this.data('multi-edit')).serialize()
+   window.location = $this.attr('href') + '?' + params
+   event.preventDefault()
+)
+
+
 $ ->
   # new order: once a client is selected, activate the category checkbox
   cwi = $('#client_work_item_id')
@@ -11,20 +31,6 @@ $ ->
     cwi[0].selectize.on('change', (element) ->
       $('#category_active').prop('disabled', false)
     )
-
-  # order cockpit: change order when choosable order changes.
-  $(document).on('change', '#choosable_order_id', ->
-    if this.value
-      l = window.location.toString()
-      window.location = l.replace(/orders\/\d+/, 'orders/' + this.value)
-  )
-
-  $(document).on('click', '[data-multi-edit]', (event) ->
-     $this = $(this)
-     params = $($this.data('multi-edit')).serialize()
-     window.location = $this.attr('href') + '?' + params
-     event.preventDefault()
-  )
 
   $('#target_scope_icon').selectize({ render: { option: renderIconItem, item: renderIconItem } })
   $('#order_status_style').selectize({ render: { option: renderStyleItem, item: renderStyleItem } })

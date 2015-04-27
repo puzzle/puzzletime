@@ -24,7 +24,13 @@ replaceContactsWithCrm = (data) ->
   )
   $('#order_order_contacts_template').html(modified)
 
+
+
+################################################################
+# because of turbolinks.jquery, do bind ALL document events here
+
+$(document).on('change', '#new_order #client_work_item_id', app.loadContactsWithCrm)
+
 $ ->
   unless $('#client_work_item_id').val()
     $('.add_nested_fields_link[data-association-path=order_order_contacts]').addClass('disabled')
-  $(document).on('change', '#new_order #client_work_item_id', app.loadContactsWithCrm)

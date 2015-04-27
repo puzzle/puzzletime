@@ -74,97 +74,105 @@ openTableRowLink = (cell) ->
   match = $row.get(0).id.match(/\w+_(\d+)/)
   window.location = link.replace('/:id/', '/' + match[1] + '/')
 
+
+################################################################
+# because of turbolinks.jquery, do bind ALL document events here
+
+# wire up data-dynamic-param
+$(document).on('ajax:beforeSend', '[data-dynamic-params]', (event, xhr, settings) ->
+  params = $(this).data('dynamic-params').split(',')
+  urlParams = for p in params
+    value = $('#' + p.replace('[', '_').replace(']', '')).val() || ''
+    encodeURIComponent(p) + "=" + value
+  joint = if settings.url.indexOf('?') == -1 then '?' else '&'
+  settings.url = settings.url + joint + urlParams.join('&')
+)
+
+# wire up toggle links
+$(document).on('click', '[data-toggle]', (event) ->
+  id = $(this).data('toggle')
+  $('#' + id).slideToggle(200)
+  event.preventDefault()
+)
+
+# wire up enable links
+$(document).on('click', '[data-enable]', (event) -> toggleEnabled(this))
+
+# wire up direct submit fields
+$(document).on('change', '[data-submit]', (event) ->
+  $(this).closest('form').submit()
+)
+
+# wire up ajax button with spinners
+$(document).on('ajax:beforeSend', '[data-spin]', (event, xhr, settings) ->
+  $(this).prop('disable', true).
+          addClass('disabled').
+          siblings('.spinner').show()
+)
+$(document).on('ajax:complete', '[data-spin]', (event, xhr, settings) ->
+  $(this).prop('disable', false).
+          removeClass('disabled').
+          siblings('.spinner').hide()
+)
+
+# wire up tooltips
+$(document).tooltip({ selector: '[data-toggle=tooltip]', placement: 'top', html: true })
+
+# wire up disable-dependents
+$(document).on('change', '[type=radio][data-disable-dependents]', (event) ->
+  toggleRadioDependents(this)
+)
+
+# wire up check all boxes
+$(document).on('change', '[data-check]', (event) ->
+  toggleCheckAll(this)
+)
+
+# wire up table row links
+$(document).on('click', '[data-row-link] tbody td:not(.no-link)', (event) ->
+  openTableRowLink(this)
+)
+
+# wire up searchable form fields for dynamically added nested form fields
+$(document).on "fields_added.nested_form_fields", (event,param) ->
+  $('select.searchable').selectize()
+
+# change cursor for turbolink requests to give the user a minimal feedback
+$(document).on('page:fetch', ->
+  $('body').addClass('loading'))
+$(document).on('page:change', ->
+  $('body').removeClass('loading'))
+
+# show alert if ajax requests fail
+$(document).on('ajax:error', (event, xhr, status, error) ->
+  alert('Sorry, something went wrong\n(' + error + ')'))
+
+
+
+################################################################
+# only bind events for non-document elemenets in $ ->
 $ ->
-  # wire up date picker
-  $(document).on('click', 'input.date, .input-group .glyphicon-calendar', app.datepicker.show)
-
-  # wire up data-dynamic-param
-  $(document).on('ajax:beforeSend', '[data-dynamic-params]', (event, xhr, settings) ->
-    params = $(this).data('dynamic-params').split(',')
-    urlParams = for p in params
-      value = $('#' + p.replace('[', '_').replace(']', '')).val() || ''
-      encodeURIComponent(p) + "=" + value
-    joint = if settings.url.indexOf('?') == -1 then '?' else '&'
-    settings.url = settings.url + joint + urlParams.join('&')
-  )
-
-  # wire up toggle links
-  $(document).on('click', '[data-toggle]', (event) ->
-    id = $(this).data('toggle')
-    $('#' + id).slideToggle(200)
-    event.preventDefault()
-  )
-
-  # wire up enable links
-  $(document).on('click', '[data-enable]', (event) -> toggleEnabled(this))
-  $('[data-enable]').each((i, e) -> toggleEnabled(e))
-
   # wire up autocompletes
   $('[data-autocomplete=work_item]').each(app.workItemAutocomplete)
 
   # wire up selectize
   $('select.searchable').selectize()
 
-  # wire up direct submit fields
-  $(document).on('change', '[data-submit]', (event) ->
-    $(this).closest('form').submit()
-  )
-
   # wire up toggle buttons
   $('[data-toggle=buttons]').button()
 
-  # wire up ajax button with spinners
-  $(document).on('ajax:beforeSend', '[data-spin]', (event, xhr, settings) ->
-    $(this).prop('disable', true).
-            addClass('disabled').
-            siblings('.spinner').show()
-  )
-  $(document).on('ajax:complete', '[data-spin]', (event, xhr, settings) ->
-    $(this).prop('disable', false).
-            removeClass('disabled').
-            siblings('.spinner').hide()
-  )
+  # wire up enable elements
+  $('[data-enable]').each((i, e) -> toggleEnabled(e))
 
-  # wire up disabled links. Bind on body to handle event before document
+  # wire up disabled links. Bind on body to handle bubbling event before document
   $('body').on('click', 'a.disabled', (event) ->
     event.preventDefault()
     event.stopImmediatePropagation()
     event.stopPropagation()
   )
 
-  # wire up tooltips
-  $(document).tooltip({ selector: '[data-toggle=tooltip]', placement: 'top', html: true })
-
   # wire up disable-dependents
-  $(document).on('change', '[type=radio][data-disable-dependents]', (event) ->
-    toggleRadioDependents(this)
-  )
   $('[type=radio][data-disable-dependents]:checked').each((i, e) -> toggleRadioDependents(e))
-
-  # wire up check all boxes
-  $(document).on('change', '[data-check]', (event) ->
-    toggleCheckAll(this)
-  )
-
-  # wire up table row links
-  $(document).on('click', '[data-row-link] tbody td:not(.no-link)', (event) ->
-    openTableRowLink(this)
-  )
-
-  # wire up searchable form fields for dynamically added nested form fields
-  $(document).on "fields_added.nested_form_fields", (event,param) ->
-    $('select.searchable').selectize()
-
-
-  # change cursor for turbolink requests to give the user a minimal feedback
-  $(document).on('page:fetch', ->
-    $('body').addClass('loading'))
-  $(document).on('page:change', ->
-    $('body').removeClass('loading'))
-
-  # show alert if ajax requests fail
-  $(document).on('ajax:error', (event, xhr, status, error) ->
-    alert('Sorry, something went wrong\n(' + error + ')'))
 
   # set initial focus
   $('.initial-focus').focus()
