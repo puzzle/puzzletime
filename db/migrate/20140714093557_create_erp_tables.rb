@@ -462,6 +462,7 @@ class CreateErpTables < ActiveRecord::Migration
 
   def create_accounting_post!(project)
     project.work_item.create_accounting_post!(billable: project[:billable],
+                                              offered_hours: project[:offered_hours],
                                               description_required: project[:description_required],
                                               ticket_required: project[:ticket_required],
                                               portfolio_item: default_portfolio_item)
