@@ -17,7 +17,7 @@ class ExtendedCapacityReport < BaseCapacityReport
 
   def add_header(csv)
     csv << ['Mitarbeiter',
-            'Bereich',
+            'Organisationseinheit',
             'Anstellungsgrad (%)',
             'Soll Arbeitszeit (h)',
             'Überzeit (h)',

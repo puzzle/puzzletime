@@ -21,8 +21,8 @@ de-CH:
         one: Vertrag
         other: Verträge
       department:
-        one: Bereich
-        other: Bereiche
+        one: Organisationseinheit
+        other: Organisationseinheiten
       employee_list:
         one: Mitarbeiterliste
         other: Mitarbeiterlisten
