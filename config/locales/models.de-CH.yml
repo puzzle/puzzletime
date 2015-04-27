@@ -234,6 +234,7 @@ de-CH:
       worktime:
         account_id: Buchungsposition
         absence_id: Absenz
+        work_item: Buchungsposition
         work_item_id: Buchungsposition
         absence: Absenz
         employee_id: Mitarbeiter

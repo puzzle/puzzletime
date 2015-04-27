@@ -34,7 +34,7 @@ class MultiWorktimesController < ApplicationController
   end
 
   def worktimes
-    @worktimes ||= Worktime.find(params[:worktime_ids])
+    @worktimes ||= Worktime.where(id: params[:worktime_ids])
   end
 
   def load_field_presets
@@ -55,7 +55,8 @@ class MultiWorktimesController < ApplicationController
 
   def update_worktimes
     Worktime.transaction do
-      worktimes.each do |t|
+      worktimes.includes(work_item: :accounting_post).each do |t|
+        # update each individually to run validations
         t.update!(params.permit(*changed_attrs))
       end
     end
