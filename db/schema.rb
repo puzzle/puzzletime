@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150325153624) do
+ActiveRecord::Schema.define(version: 20150427113249) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,7 +38,6 @@ ActiveRecord::Schema.define(version: 20150325153624) do
     t.boolean "description_required",                                        default: false, null: false
     t.boolean "ticket_required",                                             default: false, null: false
     t.boolean "closed",                                                      default: false, null: false
-    t.boolean "times_required",                                              default: false, null: false
     t.boolean "from_to_times_required",                                      default: false, null: false
     t.index ["portfolio_item_id"], :name => "index_accounting_posts_on_portfolio_item_id"
     t.index ["work_item_id"], :name => "index_accounting_posts_on_work_item_id"
@@ -84,6 +83,7 @@ ActiveRecord::Schema.define(version: 20150325153624) do
     t.integer "payment_period",             null: false
     t.text    "reference"
     t.text    "sla"
+    t.text    "notes"
   end
 
   create_table "delayed_jobs", force: :cascade do |t|

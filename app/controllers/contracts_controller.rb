@@ -1,7 +1,7 @@
 class ContractsController < CrudController
   self.nesting = Order
 
-  self.permitted_attrs = :number, :start_date, :end_date, :payment_period, :reference, :sla
+  self.permitted_attrs = :number, :start_date, :end_date, :payment_period, :reference, :notes, :sla
 
   skip_authorize_resource
   before_action :authorize_class

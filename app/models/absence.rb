@@ -3,12 +3,12 @@
 #
 # Table name: absences
 #
-#  id      :integer          not null, primary key
-#  name    :string(255)      not null
-#  payed   :boolean          default(FALSE)
-#  private :boolean          default(FALSE)
+#  id       :integer          not null, primary key
+#  name     :string(255)      not null
+#  payed    :boolean          default(FALSE)
+#  private  :boolean          default(FALSE)
+#  vacation :boolean          default(FALSE), not null
 #
-
 
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz

@@ -1,12 +1,11 @@
 # encoding: utf-8
-
 # == Schema Information
 #
 # Table name: billing_addresses
 #
 #  id         :integer          not null, primary key
-#  client_id  :integer
-#  contact_id :integer
+#  client_id  :integer          not null
+#  contact_id :integer          not null
 #  supplement :string(255)
 #  street     :string(255)
 #  zip_code   :string(255)

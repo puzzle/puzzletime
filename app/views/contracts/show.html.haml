@@ -2,4 +2,4 @@
 
 - @title ||= ti(:title, model: full_entry_label).html_safe
 
-= render 'attrs'
+= render_attrs @contract, :number, :start_date, :end_date, :payment_period, :reference, :notes, :sla

@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: order_team_members
+#
+#  false       :integer          not null, primary key
+#  employee_id :integer          not null
+#  order_id    :integer          not null
+#  comment     :string(255)
+#
+
 class OrderTeamMember < ActiveRecord::Base
   belongs_to :employee
   belongs_to :order

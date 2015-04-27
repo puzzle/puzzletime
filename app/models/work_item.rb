@@ -5,7 +5,7 @@
 #  id              :integer          not null, primary key
 #  parent_id       :integer
 #  name            :string(255)      not null
-#  shortname       :string(255)      not null
+#  shortname       :string(5)        not null
 #  description     :text
 #  path_ids        :integer          is an Array
 #  path_shortnames :string(255)

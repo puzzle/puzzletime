@@ -119,6 +119,7 @@ de-CH:
         end_date: bis
         payment_period: Zahlungsfrist
         reference: Referenz
+        notes: Notizen
         sla: SLA
       department:
         name: Name

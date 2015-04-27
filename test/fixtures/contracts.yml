@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: contracts
+#
+#  id             :integer          not null, primary key
+#  number         :string(255)      not null
+#  start_date     :date             not null
+#  end_date       :date             not null
+#  payment_period :integer          not null
+#  reference      :text
+#  sla            :text
+#  notes          :text
+#
+
 puzzletime:
   number: "asdf1234"
   start_date: 2014-01-01

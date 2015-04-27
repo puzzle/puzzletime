@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: order_contacts
+#
+#  false      :integer          not null, primary key
+#  contact_id :integer          not null
+#  order_id   :integer          not null
+#  comment    :string(255)
+#
+
 require 'test_helper'
 
 class OrderContactTest < ActiveSupport::TestCase
