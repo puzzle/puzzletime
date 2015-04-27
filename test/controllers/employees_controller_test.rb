@@ -8,9 +8,27 @@ class EmployeesControllerTest < ActionController::TestCase
 
   setup :login
 
-  not_existing :test_show,
-               :test_show_json,
-               :test_show_with_non_existing_id_raises_record_not_found
+  teardown ->{ Crm.instance = nil }
+
+  def test_show_with_crm_existing_profile
+    Crm.instance = Crm::Base.new
+    Crm.instance.expects(:find_people_by_email).with(test_entry.email).returns([OpenStruct.new(id: 123)])
+    Crm.instance.expects(:contact_url).with(123).returns('http://example.com/profile-123')
+
+    get :show, test_params(id: test_entry.id)
+    assert_redirected_to('http://example.com/profile-123')
+  end
+
+  def test_show_with_crm_missing_profile
+    Crm.instance = Crm::Base.new
+    Crm.instance.expects(:find_people_by_email).with(test_entry.email).returns([])
+
+    get :show, test_params(id: test_entry.id)
+    assert_response :success
+    assert_template 'show'
+    assert_equal test_entry, entry
+    assert_equal "Person mit Email '#{test_entry.email}' nicht gefunden in CRM.", flash[:alert]
+  end
 
   def test_destroy
     @test_entry = Fabricate(:employee)
