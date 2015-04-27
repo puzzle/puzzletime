@@ -17,10 +17,12 @@
     Wirtschaftlichkeit
     .data-item
       - if @cockpit.cost_effectiveness_current
-        %span.figure-label Aktuell
-        %span.figure= f(@cockpit.cost_effectiveness_current)
-        %span.unit %
+        .cost_effectiveness_current{title: 'Ist-R[h] / Ist[h] x 100'}
+          %span.figure-label Aktuell
+          %span.figure= f(@cockpit.cost_effectiveness_current)
+          %span.unit %
       - if @cockpit.cost_effectiveness_forecast
-        %span.figure-label Prognose
-        %span.figure= f(@cockpit.cost_effectiveness_forecast)
-        %span.unit %
+        .cost_effectiveness_forecast{title: '(Ist[h]-Ist-NV[h]) / Ist[h] x 100'}
+          %span.figure-label Prognose
+          %span.figure= f(@cockpit.cost_effectiveness_forecast)
+          %span.unit %
