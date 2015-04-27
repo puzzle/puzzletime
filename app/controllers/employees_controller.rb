@@ -13,12 +13,12 @@ class EmployeesController < ManageController
   self.sort_mappings = { department_id: 'departments.name' }
 
   def show
-    # TODO: test
-    if Crm.instance.present? && person = Crm.instance.find_people_by_email(entry.email).first
-      redirect_to Crm.instance.contact_url(person.id)
-    else
-      flash[:alert] = "Person mit Email '#{entry.email}' nicht gefunden in CRM."
-      render :crm_person_not_found
+    if Crm.instance.present?
+      if person = Crm.instance.find_people_by_email(entry.email).first
+        redirect_to Crm.instance.contact_url(person.id)
+      else
+        flash[:alert] = "Person mit Email '#{entry.email}' nicht gefunden in CRM."
+      end
     end
   end
 
