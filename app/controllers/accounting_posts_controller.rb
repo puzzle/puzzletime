@@ -6,7 +6,7 @@ class AccountingPostsController < CrudController
   self.permitted_attrs = [:closed, :offered_hours, :offered_rate, :offered_total,
                           :discount_percent, :discount_fixed, :remaining_hours,
                           :portfolio_item_id, :reference, :billable,
-                          :description_required, :ticket_required, :exact_times_required,
+                          :description_required, :ticket_required, :from_to_times_required,
                           work_item_attributes: [:name, :shortname, :description]]
 
   helper_method :order
