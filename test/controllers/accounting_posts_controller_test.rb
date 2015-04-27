@@ -174,7 +174,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
         billable: true,
         description_required: true,
         ticket_required: true,
-        exact_times_required: true,
+        from_to_times_required: true,
       }
     }
 
