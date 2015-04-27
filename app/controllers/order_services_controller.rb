@@ -70,11 +70,11 @@ class OrderServicesController < ApplicationController
   def convert_predefined_period
     if params[:period].present?
       @period = Period.parse(params.delete(:period))
-      params[:start_date] = I18n.l(@period.start_date)
-      params[:end_date] = I18n.l(@period.end_date)
+      if @period
+        params[:start_date] = I18n.l(@period.start_date)
+        params[:end_date] = I18n.l(@period.end_date)
+      end
     end
-  rescue ArgumentError => ex
-    flash.now[:alert] = "Ungültige Zeitspanne"
   end
 
   def set_period

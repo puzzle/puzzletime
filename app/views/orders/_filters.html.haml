@@ -2,6 +2,6 @@
 = form_tag(nil, method: :get, class: 'form-inline', role: 'filter') do
   = hidden_field_tag :page, 1
 
-  = direct_filter_select(:department_id, 'Bereich', @departments)
+  = direct_filter_select(:department_id, 'OE', @departments)
   = direct_filter_select(:kind_id, 'Auftragsart', @order_kinds)
   = direct_filter_select(:status_id, 'im Status', @order_statuses)
