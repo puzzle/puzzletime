@@ -16,6 +16,12 @@ class OrderServicesControllerTest < ActionController::TestCase
     assert_equal work_items(:hitobito_demo_app, :hitobito_demo_site), assigns(:accounting_posts)
   end
 
+  test "GET show assigns tickets" do
+    worktimes(:wt_pz_puzzletime).update!(ticket: 'foo')
+    get :show, order_id: order.id
+    assert_equal %w([leer] foo), assigns(:tickets)
+  end
+
   test "GET show filtered by predefined period, ignores start_date" do
     get :show, order_id: order.id, period: '-1m', start_date: '1.12.2006'
     assert_equal [], assigns(:worktimes)
@@ -80,6 +86,18 @@ class OrderServicesControllerTest < ActionController::TestCase
     test "GET #{action} filtered by period and employee" do
       get action, order_id: order.id, end_date: '10.12.2006', employee_id: employees(:pascal).id
       assert_equal [worktimes(:wt_pz_puzzletime)], assigns(:worktimes)
+    end
+
+    test "GET #{action} filtered by ticket" do
+      worktimes(:wt_pz_puzzletime).update!(ticket: 'foo')
+      get action, order_id: order.id, ticket: 'foo'
+      assert_equal [worktimes(:wt_pz_puzzletime)], assigns(:worktimes)
+    end
+
+    test "GET #{action} filtered by empty ticket" do
+      worktimes(:wt_pz_puzzletime).update!(ticket: 'foo')
+      get action, order_id: order.id, ticket: '[leer]'
+      assert_equal worktimes(:wt_mw_puzzletime, :wt_lw_puzzletime), assigns(:worktimes)
     end
 
     test "GET #{action} filtered by invalid start date" do

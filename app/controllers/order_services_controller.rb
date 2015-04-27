@@ -2,12 +2,14 @@
 
 class OrderServicesController < ApplicationController
 
+  EMPTY_TICKET = '[leer]'
+
   include Filterable
   include DryCrud::Rememberable
   include WorktimesReport
   include WorktimesCsv
 
-  self.remember_params = %w(start_date end_date employee_id work_item_id billable)
+  self.remember_params = %w(start_date end_date employee_id work_item_id ticket billable)
 
   before_action :order
   before_action :authorize_class
@@ -36,6 +38,7 @@ class OrderServicesController < ApplicationController
     conditions = {}
     conditions[:worktimes] = { billable: params[:billable] } if params[:billable].present?
     conditions[:employee_id] = params[:employee_id] if params[:employee_id].present?
+    conditions[:ticket] = params[:ticket] if params[:ticket].present?
     render_report(@evaluation, @period, conditions)
   end
 
@@ -46,7 +49,19 @@ class OrderServicesController < ApplicationController
                     includes(:employee, :work_item).
                     order(:work_date).
                     in_period(@period)
+
+    entries = filter_entries_by_ticket(entries)
     filter_entries_by(entries, :employee_id, :work_item_id, :billable)
+  end
+
+  def filter_entries_by_ticket(entries)
+    if params[:ticket] == EMPTY_TICKET
+      entries.where(ticket: ['', nil])
+    elsif params[:ticket].present?
+      entries.where(ticket: params[:ticket])
+    else
+      entries
+    end
   end
 
   def worktimes_csv_filename
@@ -54,7 +69,8 @@ class OrderServicesController < ApplicationController
     accounting_post_shortnames = WorkItem.find(params[:work_item_id]).path_shortnames if params[:work_item_id].present?
     employee_shortname = Employee.find(params[:employee_id]).shortname if params[:employee_id].present?
     billable = "billable_#{params[:billable]}" if params[:billable].present?
-    ['puzzletime', accounting_post_shortnames || order_shortnames, employee_shortname, billable, '.csv'].compact.join('-')
+    ticket = "ticket_#{params[:ticket]}" if params[:ticket].present?
+    ['puzzletime', accounting_post_shortnames || order_shortnames, employee_shortname, ticket, billable, '.csv'].compact.join('-')
   end
 
   def order
@@ -64,6 +80,7 @@ class OrderServicesController < ApplicationController
   def set_filter_values
     set_period
     @employees = Employee.where(id: order.worktimes.select(:employee_id)).list
+    @tickets = [EMPTY_TICKET] + order.worktimes.order(:ticket).uniq.pluck(:ticket).select(&:present?)
     @accounting_posts = order.work_item.self_and_descendants.leaves.list
   end
 

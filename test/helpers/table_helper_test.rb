@@ -23,7 +23,7 @@ class TableHelperTest < ActionView::TestCase
   def format_string_size(obj)
     "#{f(obj.size)} chars"
   end
-  
+
   def empty_params
     def params
       {}
@@ -41,7 +41,7 @@ class TableHelperTest < ActionView::TestCase
       t.attrs :size, :upcase
     end
     assert result.html_safe?
-    assert_match(/^\<table.*\<\/table\>$/, result)
+    assert_match(/^\<div class="unindented"><table.*\<\/table\><\/div>$/, result)
   end
 
   test 'table with attrs' do
@@ -213,20 +213,6 @@ class TableHelperTest < ActionView::TestCase
     assert_count 6, REGEXP_HEADERS, table
     assert_count 6, /<span>.+?<\/span>/m, table
     assert_count 12, REGEXP_ACTION_CELL, table      # edit, delete links
-  end
-
-  test 'empty unindented table should render message' do
-    result = unindented_plain_table_or_message([]) {}
-    assert result.html_safe?
-    assert_match /\<div class=["']table["']\>.*\<\/div\>/, result
-  end
-
-  test 'non empty unindented table should render table' do
-    result = unindented_plain_table_or_message(%w(foo bar)) do |t|
-      t.attrs :size, :upcase
-    end
-    assert result.html_safe?
-    assert_match(%r{^\<div class="unindented"\>\<table.*\<\/table\><\/div\>$}, result)
   end
 
   def entry
