@@ -28,3 +28,7 @@ formatWeek = (field, dateString) ->
     date = $.datepicker.parseDate(app.datepickerI18n().dateFormat, dateString)
     val = $.datepicker.formatDate('yy', date) + ' ' + $.datepicker.iso8601Week(date)
     field.val(val)
+
+
+# wire up date picker
+$(document).on('click', 'input.date, .input-group .glyphicon-calendar', app.datepicker.show)

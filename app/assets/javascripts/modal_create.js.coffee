@@ -2,6 +2,7 @@
 app = window.App ||= {}
 
 prepareModalRequest = (event, xhr, settings) ->
+  console.log('prepare')
   index = settings.url.indexOf('?')
   if index < 1
     settings.url += '.js'
@@ -41,17 +42,20 @@ displayFormWithErrors = (event, xhr, status, error) ->
   event.stopPropagation()
 
 
-$ ->
-  # wire up modal links
-  $(document).on('ajax:beforeSend', '[data-modal]', prepareModalRequest)
-  $(document).on('ajax:success', '[data-modal]', showModal)
 
-  # wire up forms in modal dialogs
-  $(document).on('ajax:success', '.modal form', processCreatedEntry)
-  $(document).on('ajax:error', '.modal form', displayFormWithErrors)
+################################################################
+# because of turbolinks.jquery, do bind ALL document events here
 
-  # wire up cancel links in modal dialogs
-  $(document).on('click', '.modal .cancel', (event) ->
-    $(this).closest('.modal').modal('hide')
-    event.preventDefault()
-  )
+# wire up modal links
+$(document).on('ajax:beforeSend', '[data-modal]', prepareModalRequest)
+$(document).on('ajax:success', '[data-modal]', showModal)
+
+# wire up forms in modal dialogs
+$(document).on('ajax:success', '.modal form', processCreatedEntry)
+$(document).on('ajax:error', '.modal form', displayFormWithErrors)
+
+# wire up cancel links in modal dialogs
+$(document).on('click', '.modal .cancel', (event) ->
+  $(this).closest('.modal').modal('hide')
+  event.preventDefault()
+)
