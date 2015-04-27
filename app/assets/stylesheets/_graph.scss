@@ -77,7 +77,13 @@ table.graph {
   }
 }
 
+table.legend {
+  border-spacing: 5px;
+  border-collapse: separate;
+}
+
 body.graph table.legend {
+  border-spacing: 0;
   width: 320px;
   margin-left:  20px;
 
