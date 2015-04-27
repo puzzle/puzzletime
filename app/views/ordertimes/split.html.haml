@@ -3,14 +3,12 @@
 .panel.panel-info
   .panel-heading
     %h3.panel-title
-      = @split.original.time_string
-      am #{f(@split.original.work_date)}:
+      #{@split.original.time_string} am #{f(@split.original.work_date)}.
+      Die Zeiten wurden noch nicht gespeichert.
+      Bitte schliessen sie dazu den Aufteilungsprozess ab.
   %table.table.table-condensed.table-striped
     %tbody
       = render :partial => 'part', :collection => @split.worktimes
-
-  .panel-body
-    Die Zeiten wurden noch nicht gespeichert. Bitte schliessen sie dazu den Aufteilungsprozess ab.
 
 %br
 

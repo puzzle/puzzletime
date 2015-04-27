@@ -43,11 +43,9 @@ class OrderCommentsControllerTest < ActionController::TestCase
 
   test 'POST index as member with correct attributes' do
     login_as :pascal
-    assert_no_difference "OrderComment.count" do
+    assert_raises(CanCan::AccessDenied) do
       post :create, order_id: order.id, order_comment: {text: 'hello world'}
     end
-    assert_equal 'Sie sind nicht authorisiert, um diese Seite zu öffnen', flash[:alert]
-    assert_response :redirect
   end
 
   test 'GET show has no configured route' do
