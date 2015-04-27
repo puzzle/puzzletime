@@ -55,8 +55,9 @@ class OrderTargetsControllerTest < ActionController::TestCase
 
   test 'PATCH update as normal user fails' do
     login_as(:pascal)
-    patch :update, order_id: order.id
-    assert_redirected_to root_path
+    assert_raises(CanCan::AccessDenied) do
+      patch :update, order_id: order.id
+    end
   end
 
   def order

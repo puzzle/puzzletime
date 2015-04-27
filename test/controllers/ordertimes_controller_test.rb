@@ -6,6 +6,7 @@ class OrdertimesControllerTest < ActionController::TestCase
   setup :login
 
   def test_new
+    login_as(:pascal)
     get :new
     assert_response :success
     assert_template 'new'
@@ -64,6 +65,7 @@ class OrdertimesControllerTest < ActionController::TestCase
   end
 
   def test_create_start_stop_type
+    login_as(:pascal)
     work_date = Date.today + 10
     post :create, ordertime: { account_id: work_items(:allgemein),
                                work_date: work_date,
@@ -114,13 +116,23 @@ class OrdertimesControllerTest < ActionController::TestCase
     assert_equal employees(:lucien), Ordertime.last.employee
   end
 
-  def test_create_other_without_permission
+  def test_create_other_without_permission_changes_employee_id
     login_as(:lucien)
-    post :create, ordertime: { account_id: work_items(:allgemein),
-                               work_date: Date.today,
-                               hours: '5:30',
-                               employee_id: employees(:mark) }
-    assert_equal employees(:lucien), Ordertime.last.employee # assigns the projettime to himself
+
+    assert_difference('Ordertime.count') do
+      post :create, ordertime: { account_id: work_items(:allgemein),
+                                 work_date: Date.today,
+                                 hours: '5:30',
+                                 employee_id: employees(:mark).id }
+      assert_equal employees(:lucien).id, Ordertime.last.employee_id
+    end
+  end
+
+  def test_edit_other_without_permission
+    login_as(:lucien)
+    assert_raises(CanCan::AccessDenied) do
+      get :edit, id: worktimes(:wt_mw_puzzletime).id
+    end
   end
 
   def test_update
@@ -215,6 +227,15 @@ class OrdertimesControllerTest < ActionController::TestCase
     delete :destroy, id: worktime
     assert_redirected_to action: 'index', week_date: work_date
     assert_nil Ordertime.find_by_id(worktime.id)
+  end
+
+  def test_destroy_without_permission
+    worktime = worktimes(:wt_pz_puzzletime)
+    assert_no_difference('Worktime.count') do
+      assert_raises(CanCan::AccessDenied) do
+        delete :destroy, id: worktime.id
+      end
+    end
   end
 
 end

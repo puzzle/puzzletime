@@ -15,8 +15,10 @@ class ApplicationController < ActionController::Base
 
   helper_method :sanitized_back_url, :current_user
 
-  rescue_from CanCan::AccessDenied do |exception|
-    redirect_to root_url, alert: 'Sie sind nicht authorisiert, um diese Seite zu öffnen'
+  if Rails.env.production?
+    rescue_from CanCan::AccessDenied do |exception|
+      redirect_to root_url, alert: 'Sie sind nicht authorisiert, um diese Seite zu öffnen'
+    end
   end
 
   private

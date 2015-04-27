@@ -13,9 +13,9 @@ class ContractsControllerTest < ActionController::TestCase
 
   test 'GET edit as member redirects and sets flash alert' do
     login_as :pascal
-    get :edit, order_id: test_entry.order
-    assert_response :redirect
-    assert_equal 'Sie sind nicht authorisiert, um diese Seite zu öffnen', flash[:alert]
+    assert_raises(CanCan::AccessDenied) do
+      get :edit, order_id: test_entry.order
+    end
   end
 
   test 'GET edit as responsible' do
@@ -48,9 +48,9 @@ class ContractsControllerTest < ActionController::TestCase
 
   test 'PATCH update as member' do
     login_as :pascal
-    patch :update, order_id: test_entry.order, contract: test_entry_attrs
-    assert_response :redirect
-    assert_equal 'Sie sind nicht authorisiert, um diese Seite zu öffnen', flash[:alert]
+    assert_raises(CanCan::AccessDenied) do
+      patch :update, order_id: test_entry.order, contract: test_entry_attrs
+    end
   end
 
   private

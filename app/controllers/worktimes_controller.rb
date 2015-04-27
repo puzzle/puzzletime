@@ -5,10 +5,9 @@
 
 class WorktimesController < CrudController
 
-  helper_method :record_other?
+  authorize_resource :worktime, except: :index, parent: false
 
-  # TODO check handled with cancan
-  before_action :authorize_destroy, only: :destroy
+  helper_method :record_other?
 
   after_save :check_overlapping
 
@@ -69,13 +68,6 @@ class WorktimesController < CrudController
       else
         @worktime.work_date = Date.today
       end
-    end
-  end
-
-  def authorize_destroy
-    unless entry.employee == @user
-      flash[:notice] = 'Sie sind nicht authorisiert, um diese Seite zu öffnen'
-      redirect_to root_path
     end
   end
 
@@ -180,6 +172,12 @@ class WorktimesController < CrudController
     attrs = self.class.permitted_attrs.clone
     attrs << :employee_id if @user.management
     attrs
+  end
+
+  def build_entry
+    super.tap do |worktime|
+      worktime.employee ||= @user
+    end
   end
 
   def assign_attributes
