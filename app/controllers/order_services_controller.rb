@@ -7,11 +7,12 @@ class OrderServicesController < ApplicationController
   include WorktimesReport
   include WorktimesCsv
 
-  self.remember_params = %w(employee_id work_item_id billable)
+  self.remember_params = %w(start_date end_date employee_id work_item_id billable)
 
   before_action :order
   before_action :authorize_class
-  before_filter :handle_remember_params, only: [:show]
+  before_action :convert_predefined_period, only: [:show]
+  before_action :handle_remember_params, only: [:show]
   before_action :set_filter_values, only: [:show]
 
   def show
@@ -66,15 +67,19 @@ class OrderServicesController < ApplicationController
     @accounting_posts = order.work_item.self_and_descendants.leaves.list
   end
 
-  def set_period
+  def convert_predefined_period
     if params[:period].present?
       @period = Period.parse(params.delete(:period))
       params[:start_date] = I18n.l(@period.start_date)
       params[:end_date] = I18n.l(@period.end_date)
-    else
-      @period = Period.retrieve(params[:start_date].presence,
-                                params[:end_date].presence)
     end
+  rescue ArgumentError => ex
+    flash.now[:alert] = "Ungültige Zeitspanne"
+  end
+
+  def set_period
+    @period = Period.retrieve(params[:start_date].presence,
+                              params[:end_date].presence)
     fail ArgumentError, 'Start Datum nach End Datum' if @period.negative?
   rescue ArgumentError => ex
     # from Period.retrieve or if period.negative?

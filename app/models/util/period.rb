@@ -76,7 +76,7 @@ class Period
       when 'm' then month_for Time.new.advance(months: shift).to_date
       when 'q' then quarter_for Date.civil(Time.new.year, shift * 3, 1)
       when 'y' then year_for Time.new.advance(years: shift).to_date
-      else nil
+      else fail(ArgumentError)
     end
   end
 

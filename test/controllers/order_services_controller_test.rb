@@ -16,6 +16,17 @@ class OrderServicesControllerTest < ActionController::TestCase
     assert_equal work_items(:hitobito_demo_app, :hitobito_demo_site), assigns(:accounting_posts)
   end
 
+  test "GET show filtered by predefined period, ignores start_date" do
+    get :show, order_id: order.id, period: '-1m', start_date: '1.12.2006'
+    assert_equal [], assigns(:worktimes)
+    period = Period.parse('-1m')
+    assert_equal period, assigns(:period)
+    assert_equal({ "/orders/#{order.id}/order_services" =>
+                   { 'start_date' => I18n.l(period.start_date),
+                     'end_date' => I18n.l(period.end_date) } },
+                  session[:list_params])
+  end
+
   [:show, :export_worktimes_csv].each do |action|
 
     test "GET #{action} filtered by employee" do
@@ -64,12 +75,6 @@ class OrderServicesControllerTest < ActionController::TestCase
     test "GET #{action} filtered by period with start and end" do
       get action, order_id: order.id, start_date: '5.12.2006', end_date: '10.12.2006'
       assert_equal [worktimes(:wt_mw_puzzletime)], assigns(:worktimes)
-    end
-
-    test "GET #{action} filtered by predefined period, ignores start_date" do
-      get action, order_id: order.id, period: '-1m', start_date: '1.12.2006'
-      assert_equal [], assigns(:worktimes)
-      assert_equal Period.parse('-1m'), assigns(:period)
     end
 
     test "GET #{action} filtered by period and employee" do
