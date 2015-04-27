@@ -4,9 +4,9 @@
 # Table name: clients
 #
 #  id           :integer          not null, primary key
-#  name         :string(255)      not null
-#  shortname    :string(4)        not null
-#  work_item_id :integer
+#  work_item_id :integer          not null
+#  crm_key      :string(255)
+#  allow_local  :boolean          default(FALSE), not null
 #
 
 # (c) Puzzle itc, Berne

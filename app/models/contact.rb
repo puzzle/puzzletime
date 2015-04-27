@@ -11,6 +11,7 @@
 #  email      :string(255)
 #  phone      :string(255)
 #  mobile     :string(255)
+#  crm_key    :string(255)
 #  created_at :datetime
 #  updated_at :datetime
 #

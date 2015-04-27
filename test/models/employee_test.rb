@@ -1,4 +1,21 @@
 # encoding: utf-8
+# == Schema Information
+#
+# Table name: employees
+#
+#  id                    :integer          not null, primary key
+#  firstname             :string(255)      not null
+#  lastname              :string(255)      not null
+#  shortname             :string(3)        not null
+#  passwd                :string(255)
+#  email                 :string(255)      not null
+#  management            :boolean          default(FALSE)
+#  initial_vacation_days :float
+#  ldapname              :string(255)
+#  eval_periods          :string           is an Array
+#  department_id         :integer
+#
+
 
 require 'test_helper'
 

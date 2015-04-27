@@ -4,7 +4,6 @@
 # Table name: worktimes
 #
 #  id              :integer          not null, primary key
-#  project_id      :integer
 #  absence_id      :integer
 #  employee_id     :integer
 #  report_type     :string(255)      not null

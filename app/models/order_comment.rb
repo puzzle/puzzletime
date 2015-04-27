@@ -1,5 +1,4 @@
 # encoding: utf-8
-
 # == Schema Information
 #
 # Table name: order_comments
@@ -7,6 +6,8 @@
 #  id         :integer          not null, primary key
 #  order_id   :integer          not null
 #  text       :text             not null
+#  creator_id :integer
+#  updater_id :integer
 #  created_at :datetime
 #  updated_at :datetime
 #

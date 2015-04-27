@@ -1,4 +1,14 @@
 # encoding: utf-8
+# == Schema Information
+#
+# Table name: order_contacts
+#
+#  false      :integer          not null, primary key
+#  contact_id :integer          not null
+#  order_id   :integer          not null
+#  comment    :string(255)
+#
+
 
 class OrderContact < ActiveRecord::Base
 

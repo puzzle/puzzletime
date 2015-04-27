@@ -11,6 +11,7 @@
 #  department_id      :integer
 #  contract_id        :integer
 #  billing_address_id :integer
+#  crm_key            :string(255)
 #  created_at         :datetime
 #  updated_at         :datetime
 #
