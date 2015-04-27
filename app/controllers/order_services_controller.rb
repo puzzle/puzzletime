@@ -69,6 +69,8 @@ class OrderServicesController < ApplicationController
   def set_period
     if params[:period].present?
       @period = Period.parse(params.delete(:period))
+      params[:start_date] = I18n.l(@period.start_date)
+      params[:end_date] = I18n.l(@period.end_date)
     else
       @period = Period.retrieve(params[:start_date].presence,
                                 params[:end_date].presence)
