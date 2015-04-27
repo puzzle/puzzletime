@@ -30,7 +30,9 @@ module TableHelper
   def plain_table_or_message(entries, *attrs, &block)
     entries.to_a # force evaluation of relations
     if entries.present?
-      plain_table(entries, *attrs, &block)
+      content_tag(:div, class: 'unindented') do
+        plain_table(entries, *attrs, &block)
+      end
     else
       content_tag(:div, ti(:no_list_entries), class: 'table')
     end

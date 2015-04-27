@@ -175,6 +175,10 @@ class Evaluation
     for? user
   end
 
+  def action_links?(user)
+    user.management || edit_link?(user) || delete_link?(user)
+  end
+
   def report?
     account_id && !absences?    # && employee_id
   end

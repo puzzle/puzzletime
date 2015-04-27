@@ -3,13 +3,13 @@
 %tr
   - @evaluation.detail_columns.each do |field|
     = detail_td detailrow, field
-  - if @evaluation.edit_link?(@user) || @user.management || @evaluation.delete_link?(@user)
+  - if @evaluation.action_links?(@user)
     %td.action
-      - if @user.management || ! detailrow.booked
+      - if !detailrow.booked && can?(:update, detailrow)
         = link_to(edit_polymorphic_path(detailrow, back_url: request.url), title: 'Bearbeiten') do
           = picon('edit')
-
-      - if ! detailrow.booked
+    %td.action
+      - if !detailrow.booked && can?(:destroy, detailrow)
         = link_to(polymorphic_path(detailrow, back_url: request.url),
                   data: { method: :delete, confirm: ti(:confirm_delete) },
                   title: 'Löschen') do
