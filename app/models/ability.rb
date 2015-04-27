@@ -44,7 +44,7 @@ class Ability
     elsif user.order_responsible?
 
       can [:create, :categories], Client
-      can [:create], Contact
+      can [:create, :with_crm], Contact
       can :create, WorkItem
       can [:manage, :create_comment], Order, responsible_id: user.id
       can :manage, [AccountingPost, Contract, OrderComment] do |instance|
