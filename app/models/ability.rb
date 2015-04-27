@@ -36,6 +36,7 @@ class Ability
            :managed,
            :employeeworkitems,
            :employeesubworkitems,
+           :absences,
            :employeeabsences,
            :export_capacity_csv,
            :export_extended_capacity_csv,
