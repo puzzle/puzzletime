@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require 'test_helper'
 
 class Order::CockpitTest < ActiveSupport::TestCase
@@ -120,6 +121,16 @@ class Order::CockpitTest < ActiveSupport::TestCase
     assert_equal 184, budget.hours
     assert_equal 23.0, budget.days
     assert_equal 22_080.0, budget.amount
+  end
+
+  test 'cost_effectiveness_forecast' do
+    define_worktimes
+    forecast = (22.0 / 26 * 100).round
+    assert_equal forecast, cockpit.cost_effectiveness_forecast
+  end
+
+  test 'cost_effectiveness-forecast with no worktimes' do
+    assert_equal '―', cockpit.cost_effectiveness_forecast
   end
 
   def define_offered_fields

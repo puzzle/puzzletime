@@ -1,6 +1,9 @@
+# encoding: UTF-8
 class Order::Cockpit
 
   attr_reader :order, :rows
+
+  EM_DASH = '―'
 
   def initialize(order)
     @order = order
@@ -16,13 +19,12 @@ class Order::Cockpit
   end
 
   def cost_effectiveness_current
-    if accounting_posts.present? && total.cells[:budget].hours
-      ((total.cells[:supplied_services].hours.to_f / total.cells[:budget].hours) * 100).round
-    end
+    # Ist-R[h] / Ist[h] x 100
   end
 
   def cost_effectiveness_forecast
-    # (Ist[h] + RA[h])/ Soll[h] x 100
+    forecast = (1 - total.cells[:not_billable].hours.to_f / total.cells[:supplied_services].hours) * 100
+    forecast.finite? ? forecast.round : EM_DASH
   end
 
   def accounting_posts
