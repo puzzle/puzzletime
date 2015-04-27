@@ -39,21 +39,7 @@ class Order::CockpitTest < ActiveSupport::TestCase
     assert_equal 24_000, budget.amount
   end
 
-  test 'supplied_services values are zero if nothing is offered' do
-    total = cockpit.rows.first
-    supplied = total.cells[:supplied_services]
-    assert_equal 0, supplied.hours
-    assert_equal 0, supplied.days
-    assert_equal nil, supplied.amount
-
-    a1 = cockpit.rows.second
-    supplied = a1.cells[:supplied_services]
-    assert_equal 0, supplied.hours
-    assert_equal 0, supplied.days
-    assert_equal nil, supplied.amount
-  end
-
-  test 'productivity values are zero if no worktimes exist' do
+  test 'supplied_services values are zero if no worktimes exist' do
     define_offered_fields
 
     total = cockpit.rows.first
@@ -69,7 +55,7 @@ class Order::CockpitTest < ActiveSupport::TestCase
     assert_equal 0, supplied.amount
   end
 
-  test 'productivity values are calculated if worktimes exist' do
+  test 'supplied_services values are calculated if worktimes exist' do
     define_offered_fields
     define_worktimes
 
@@ -107,6 +93,33 @@ class Order::CockpitTest < ActiveSupport::TestCase
     assert_equal 0, not_billable.hours
     assert_equal 0, not_billable.days
     assert_equal nil, not_billable.amount
+  end
+
+  test 'open budget current values are nil if nothing is offered' do
+    define_worktimes
+
+    total = cockpit.rows.first
+    budget = total.cells[:open_budget_current]
+    assert_equal nil, budget.hours
+    assert_equal nil, budget.days
+    assert_equal nil, budget.amount
+  end
+
+  test 'open budget current values are calculated if worktimes exist' do
+    define_offered_fields
+    define_worktimes
+
+    total = cockpit.rows.first
+    budget = total.cells[:open_budget_current]
+    assert_equal 274, budget.hours
+    assert_equal 34.25, budget.days
+    assert_equal 35_580.0, budget.amount
+
+    a1 = cockpit.rows.second
+    budget = a1.cells[:open_budget_current]
+    assert_equal 184, budget.hours
+    assert_equal 23.0, budget.days
+    assert_equal 22_080.0, budget.amount
   end
 
   def define_offered_fields

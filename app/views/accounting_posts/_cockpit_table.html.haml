@@ -36,7 +36,11 @@
           = picon('info')
       %th{title: 'Differenz zwischen verrechneter Leistung und budgetierter Leistung.'}
         %span
-          Offenes Budget
+          Offenes Budget (verrechnet)
+          = picon('info')
+      %th{title: 'Differenz zwischen effektiver Leistung (unabhängig von der Verrechenbarkeit) und budgetierter Leistung.'}
+        %span
+          Offenes Budget (laufend)
           = picon('info')
 
     - @cockpit.rows.each do |row|
