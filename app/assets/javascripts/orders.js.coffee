@@ -16,13 +16,11 @@ $(document).on('change', '#choosable_order_id', ->
     window.location = l.replace(/orders\/\d+/, 'orders/' + this.value)
 )
 
-$(document).on('click', '[data-multi-edit]', (event) ->
-   $this = $(this)
-   params = $($this.data('multi-edit')).serialize()
-   window.location = $this.attr('href') + '?' + params
-   event.preventDefault()
+$(document).on('click', '[data-submit-form]', (event) ->
+  form_id = $(this).attr('data-submit-form')
+  $(form_id).submit()
+  event.preventDefault()
 )
-
 
 $ ->
   # new order: once a client is selected, activate the category checkbox

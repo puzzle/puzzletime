@@ -1,4 +1,4 @@
-= form_tag(nil, id: 'worktimes', method: :get) do
+= form_tag(edit_order_multi_worktimes_path(@order), id: 'worktimes', method: :post) do
   - data = {}
   - data[:row_link] = edit_ordertime_path(':id', back_url: url_for(returning: true)) if can?(:update, Ordertime.new)
 
