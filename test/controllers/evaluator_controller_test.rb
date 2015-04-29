@@ -4,6 +4,25 @@ class EvaluatorControllerTest < ActionController::TestCase
 
   setup :login
 
+  def expected_csv_header
+    'Datum,Stunden,Von Zeit,Bis Zeit,Reporttyp,Verrechenbar,Mitarbeiter,Position,Ticket,Bemerkungen'
+  end
+
+  def csv_header
+    response.body.lines.first
+  end
+
+  def csv_data_lines
+    _, *lines = response.body.lines.to_a
+    lines
+  end
+
+  def assert_csv_http_headers(filename)
+    assert_includes response.headers, 'Content-Type', 'Content-Disposition'
+    assert_equal response.headers['Content-Type'], 'text/csv'
+    assert_equal response.headers['Content-Disposition'], "attachment; filename=\"#{filename}\""
+  end
+
   %w(userworkitems userabsences).each do |evaluation|
 
     test "GET index #{evaluation}" do
@@ -13,9 +32,16 @@ class EvaluatorControllerTest < ActionController::TestCase
 
     test "GET export csv #{evaluation}" do
       get :export_csv, evaluation: evaluation
-      assert_match /Datum,Stunden/, response.body
+      assert_csv_http_headers('puzzletime-waber_mark.csv')
+      assert_match expected_csv_header, csv_header
     end
+  end
 
+  test "GET export_csv userworkitems csv format" do
+    get :export_csv, evaluation: 'userworkitems'
+    assert_match expected_csv_header, csv_header
+    assert_equal 3, csv_data_lines.size
+    assert_match '06.12.2006,5.0,"","",absolute_day,true,Waber Mark,PITC-AL: Allgemein,,', csv_data_lines.first
   end
 
   %w(clients employees departments).each do |evaluation|
@@ -32,7 +58,10 @@ class EvaluatorControllerTest < ActionController::TestCase
 
     test "GET export csv #{evaluation}" do
       get :export_csv, evaluation: evaluation
-      assert_match /Datum,Stunden/, response.body
+      assert_csv_http_headers('puzzletime.csv')
+      assert_match expected_csv_header, csv_header
+      assert_equal 9, csv_data_lines.size
+      assert_match '29.11.2006,1.0,"","",absolute_day,true,Zumkehr Pascal,PITC-AL: Allgemein,,', csv_data_lines.first
     end
 
   end
