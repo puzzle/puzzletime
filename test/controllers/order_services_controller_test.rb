@@ -115,6 +115,36 @@ class OrderServicesControllerTest < ActionController::TestCase
     end
   end
 
+  test 'GET report contains all hours' do
+    get :report, order_id: order.id
+
+    assert_template 'report'
+    total = assigns(:times).sum(:hours)
+    assert_match /Total Stunden.*#{total}/m, response.body
+  end
+
+  test 'GET report contains all hours with combined tickets' do
+    Worktime.where(employee_id: employees(:pascal).id).destroy_all
+    Fabricate(:ordertime,
+              employee: employees(:pascal),
+              work_item: work_items(:puzzletime),
+              ticket: 123)
+    Fabricate(:ordertime,
+              employee: employees(:pascal),
+              work_item: work_items(:puzzletime),
+              hours: 5)
+
+    get :report, order_id: orders(:puzzletime).id,
+                 employee_id: employees(:pascal),
+                 combine_on: true,
+                 combine: 'ticket'
+
+    assert_template 'report'
+    total = assigns(:times).sum(:hours)
+    assert_equal 7, total
+    assert_match /Total Stunden.*#{total}/m, response.body
+  end
+
   private
 
   def order
