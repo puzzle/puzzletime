@@ -50,8 +50,8 @@ class EvaluatorController < ApplicationController
 
   def export_csv
     set_evaluation_details
-    filename = 'puzzletime_' + csv_label(@evaluation.category) + '-' +
-               csv_label(@evaluation.division) + '.csv'
+    filename = ['puzzletime', csv_label(@evaluation.category),
+               csv_label(@evaluation.division)].compact.join('-') + '.csv'
     times = @evaluation.times(@period)
     send_worktimes_csv(times, filename)
   end
@@ -216,8 +216,7 @@ class EvaluatorController < ApplicationController
   end
 
   def csv_label(item)
-    item.nil? || !item.respond_to?(:label) ? '' :
-      item.label.downcase.gsub(/[^0-9a-z]/, '_')
+    item.respond_to?(:label) ? item.label.downcase.gsub(/[^0-9a-z]/, '_') : nil
   end
 
   def init_periods
