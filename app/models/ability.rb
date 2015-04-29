@@ -63,6 +63,8 @@ class Ability
       employee == user
     end
 
+    can :read, Employee
+
     can [:read, :accounting_posts, :services, :show_targets, :show_contract, :show_comments], Order
     can :read, [AccountingPost, OrderComment]
 
