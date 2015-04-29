@@ -44,7 +44,10 @@ Rails.application.routes.draw do
 
     resource :contract, only: [:show, :edit, :update]
 
-    resource :multi_worktimes, only: [:edit, :update]
+    resource :multi_worktimes, only: [:update] do
+      post :edit
+    end
+
     resources :order_comments, only: [:index, :create]
     resource :order_targets, only: [:show, :update]
 
