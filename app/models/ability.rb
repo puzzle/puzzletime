@@ -2,7 +2,7 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
-    alias_action :create, :read, :update, :destroy, :to => :crud
+    alias_action :create, :read, :update, :destroy, :delete, :to => :crud
 
     if user.management?
       can :manage, [Absence,
@@ -47,7 +47,7 @@ class Ability
       can [:create, :categories], Client
       can [:create, :with_crm], Contact
       can :create, WorkItem
-      can [:manage, :create_comment], Order, responsible_id: user.id
+      can :manage, Order, responsible_id: user.id
       can :manage, [AccountingPost, Contract, OrderComment] do |instance|
         instance.order.responsible_id == user.id
       end

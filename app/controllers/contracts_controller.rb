@@ -16,12 +16,8 @@ class ContractsController < CrudController
     @order ||= Order.find(params[:order_id])
   end
 
-  def contract
-    @contract ||= order.try(:contract)
-  end
-
   def entry
-    contract || build_entry
+    @contract ||= order.try(:contract) || build_entry
   end
 
   def build_entry

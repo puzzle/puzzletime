@@ -30,6 +30,10 @@ class TableHelperTest < ActionView::TestCase
     end
   end
 
+  def can?(action, resource)
+    true
+  end
+
   test 'empty table should render message' do
     result = plain_table_or_message([]) {}
     assert result.html_safe?

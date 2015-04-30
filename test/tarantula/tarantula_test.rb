@@ -13,7 +13,7 @@ class TarantulaTest < ActionDispatch::IntegrationTest
   CREDENTIALS = ['FOO', 'secret']
 
 
-  def on_test_as_manager
+  def test_as_manager
     crawl_as_user(true)
   end
 
@@ -46,6 +46,12 @@ class TarantulaTest < ActionDispatch::IntegrationTest
     t.allow_404_for /work_items\?returning=true$/   # only handled by js
     t.allow_404_for /order_services\/report/  # may get invalid work_item_id
     t.allow_404_for /\?.*division_id=8/  # may have been deleted
+
+    unless user.management?
+      # forms contain url but no submit button
+      t.skip_uri_patterns << /orders\/\d+\/order_targets/
+      t.skip_uri_patterns << /orders\/\d+\/multi_worktimes\/edit/
+    end
 
     t.handlers << Relevance::Tarantula::InvalidHtmlHandler.new
 
