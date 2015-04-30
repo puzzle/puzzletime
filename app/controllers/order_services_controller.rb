@@ -36,7 +36,7 @@ class OrderServicesController < ApplicationController
     set_report_evaluation
     set_period
     conditions = {}
-    conditions[:worktimes] = { billable: params[:billable] } if params[:billable].present?
+    conditions[:worktimes] = { billable: %w(true yes 1).include?(params[:billable].downcase) } if params[:billable].present?
     conditions[:employee_id] = params[:employee_id] if params[:employee_id].present?
     conditions[:ticket] = params[:ticket] if params[:ticket].present?
     render_report(@evaluation, @period, conditions)
