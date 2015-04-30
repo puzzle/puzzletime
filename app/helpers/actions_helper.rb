@@ -48,6 +48,7 @@ module ActionsHelper
   # Standard list action to the given path.
   # Uses the current +model_class+ if no path is given.
   def index_action_link(path = nil, url_options = { returning: true })
+    return unless can?(:index, model_class)
     path ||= path_args(model_class)
     path = path.is_a?(String) ? path : polymorphic_path(path, url_options)
     action_link(ti('link.list', model: models_label(true)), path)
@@ -56,6 +57,7 @@ module ActionsHelper
   # Standard add action to given path.
   # Uses the current +model_class+ if no path is given.
   def add_action_link(path = nil, url_options = {})
+    return unless can?(:new, model_class)
     path ||= path_args(model_class)
     path = path.is_a?(String) ? path : new_polymorphic_path(path, url_options)
     action_link(action_icon('add', ti('link.add')), path)
