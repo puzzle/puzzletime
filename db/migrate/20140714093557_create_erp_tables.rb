@@ -179,7 +179,7 @@ class CreateErpTables < ActiveRecord::Migration
       t.belongs_to :work_item, null: false
       t.belongs_to :portfolio_item
       t.string :reference
-      t.integer :offered_hours
+      t.float :offered_hours
       t.integer :offered_rate
       t.decimal :offered_total, precision: 12, scale: 2
       t.integer :discount_percent
