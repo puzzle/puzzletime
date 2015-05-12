@@ -497,6 +497,19 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test 'crm error returns message' do
+    timeout_safe do
+      Crm.instance = Crm::Highrise.new
+      Crm.instance.stubs(:find_order).raises(Crm::Error.new('crm error occurred'))
+
+      fill_in('order_crm_key', with: '123')
+      click_link('Übernehmen')
+
+      assert_match /crm error occurred/, find('#crm_key .help-block').text
+      assert_equal "", find('#client_work_item_id', visible: false)['value']
+    end
+  end
+
   test 'create order team members fields' do
     visit(new_order_path)
 
