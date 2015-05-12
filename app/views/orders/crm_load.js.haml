@@ -6,6 +6,9 @@ clientSelect.unlock()
 - if @order
   $('#crm_key').addClass('has-error')
   $('#crm_key .help-block').html('Dieser Auftrag wurde bereits erfasst')
+- elsif @crm_error.present?
+  $('#crm_key').addClass('has-error')
+  $('#crm_key .help-block').html('#{@crm_error}')
 - elsif !@crm_order
   $('#crm_key').addClass('has-error')
   $('#crm_key .help-block').html('Nicht gefunden')

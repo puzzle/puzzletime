@@ -14,6 +14,7 @@ module Crm
 
     def find_order(key)
       deal = ::Highrise::Deal.find(key)
+      verify_deal_party_type(deal)
       {
         key: deal.id,
         name: deal.name,
@@ -25,6 +26,12 @@ module Crm
       }
     rescue ActiveResource::ResourceNotFound
       nil
+    end
+
+    def verify_deal_party_type(deal)
+      unless deal.party.type.downcase == 'company'
+        raise Crm::Error.new(I18n.t('error.crm.highrise.order_not_on_company', party_type: deal.party.type))
+      end
     end
 
     def find_client_contacts(client)

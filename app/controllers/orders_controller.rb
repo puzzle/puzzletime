@@ -32,6 +32,8 @@ class OrdersController < CrudController
     if @crm_order
       @client = Client.where(crm_key: @crm_order[:client][:key].to_s).first
     end
+  rescue Crm::Error => e
+    @crm_error = e.message
   end
 
 
