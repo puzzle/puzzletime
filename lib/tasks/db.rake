@@ -14,7 +14,7 @@ namespace :db do
   end
 
   desc 'Create testusers unless exist'
-  task :create_testuser do
+  task :create_testuser => :environment do
     mb1 = Employee.where(shortname: 'MB1').first_or_create!(firstname: 'First', lastname: 'Member', passwd: Employee.encode('member'), email: 'mb1@puzzle.ch', management: false)
     Employment.where(employee_id: mb1.id).first_or_create!(percent: 100, start_date: Date.new(2010, 1, 1))
 
