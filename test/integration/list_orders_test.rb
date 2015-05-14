@@ -18,7 +18,7 @@ class ListOrdersTest < ActionDispatch::IntegrationTest
 
   test 'list orders as management has create link' do
     timeout_safe do
-      list_orders_as :lucien
+      list_orders_as :mark
       assert has_link?("Erstellen")
     end
   end

@@ -128,8 +128,15 @@ class OrdertimesControllerTest < ActionController::TestCase
     end
   end
 
-  def test_edit_other_without_permission
+  def test_edit_other_as_order_responsible
     login_as(:lucien)
+    assert_nothing_raised do
+      get :edit, id: worktimes(:wt_mw_puzzletime).id
+    end
+  end
+
+  def test_edit_other_without_permission
+    login_as(:long_time_john)
     assert_raises(CanCan::AccessDenied) do
       get :edit, id: worktimes(:wt_mw_puzzletime).id
     end
@@ -147,6 +154,23 @@ class OrdertimesControllerTest < ActionController::TestCase
     assert_nil worktime.from_start_time
     assert_nil worktime.to_end_time
     assert_equal 1.5, worktime.hours
+  end
+
+  def test_update_other_as_order_responsible
+    worktime = worktimes(:wt_mw_puzzletime)
+    login_as(:lucien)
+    assert_nothing_raised do
+      put :update, id: worktime, ordertime: { hours: '1:30' }
+    end
+    assert_redirected_to action: 'split'
+  end
+
+  def test_update_other_without_permission
+    worktime = worktimes(:wt_mw_puzzletime)
+    login_as(:long_time_john)
+    assert_raises(CanCan::AccessDenied) do
+      put :update, id: worktime, ordertime: { hours: '1:30' }
+    end
   end
 
   def test_split

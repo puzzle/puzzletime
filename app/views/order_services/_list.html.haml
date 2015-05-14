@@ -1,6 +1,6 @@
 = form_tag(edit_order_multi_worktimes_path(@order), id: 'worktimes', method: :post) do
   - data = {}
-  - data[:row_link] = edit_ordertime_path(':id', back_url: url_for(returning: true)) if can?(:update, Ordertime.new)
+  - data[:row_link] = edit_ordertime_path(':id', back_url: url_for(returning: true)) if can?(:update, Ordertime.new(work_item: @order.work_item))
 
   = plain_table_or_message(@worktimes, data: data) do |t|
     - t.col(check_box_tag(:all_worktimes, true, false, data: { check: 'worktime_ids[]' }), class: 'no-link') do |e|

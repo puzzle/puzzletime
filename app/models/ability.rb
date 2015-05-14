@@ -48,7 +48,7 @@ class Ability
       can [:create, :with_crm], Contact
       can :create, WorkItem
       can :manage, Order, responsible_id: user.id
-      can :manage, [AccountingPost, Contract, OrderComment] do |instance|
+      can :manage, [AccountingPost, Contract, OrderComment, Worktime] do |instance|
         instance.order.responsible_id == user.id
       end
       can :managed, Evaluation
