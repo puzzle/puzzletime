@@ -67,8 +67,8 @@ end
 group :console do
   gem 'pry-doc'
   gem 'pry-nav'
-  gem 'pry-debugger', platforms: :ruby_19
-  gem 'pry-byebug', platforms: [:ruby_20]
+  gem 'pry-debugger', platforms: :ruby_19, require: ENV['RM_INFO'].to_s.empty?
+  gem 'pry-byebug', platforms: [:ruby_20], require: ENV['RM_INFO'].to_s.empty?
 end
 
 group :metrics do
