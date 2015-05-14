@@ -85,6 +85,10 @@ class Worktime < ActiveRecord::Base
   def account_id=(value)
   end
 
+  def order
+    work_item.try(:order)
+  end
+
   # set the hours, either as number or as a string with the format
   # h:mm or h.dd (8:45 <-> 8.75)
   def hours=(value)
