@@ -29,6 +29,7 @@ puzzletime:
   offered_rate: 3
   discount_percent: 7
   portfolio_item: web
+  billable: false
 
 hitobito_demo_app:
   work_item_id: 9
