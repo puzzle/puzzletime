@@ -32,6 +32,21 @@ class CreateOrdertimeTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test 'create ordertime select accounting_post with billable=true checks billable checkbox' do
+    find('#ordertime_billable').set(false)
+    assert_not find('#ordertime_billable').checked?
+    selectize_find('ordertime_account_id', 'Webauftritt')
+    assert find('#ordertime_billable').checked?
+  end
+
+
+  test 'create ordertime select accounting_post with billable=false unchecks billable checkbox' do
+    assert find('#ordertime_billable').checked?
+    selectize_find('ordertime_account_id', 'PuzzleTime')
+    assert_not find('#ordertime_billable').checked?
+  end
+
+
   def selectize_find(id, value)
     element = find("##{id} + .selectize-control")
     element.find('.selectize-input input').set(value)

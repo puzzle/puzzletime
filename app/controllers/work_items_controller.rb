@@ -10,6 +10,8 @@ class WorkItemsController < ManageController
         @work_items = WorkItem.recordable.
                                list.
                                where(search_conditions).
+                               joins(:accounting_post).
+                               includes(:accounting_post).
                                select(:id, :name, :path_shortnames, :description).
                                limit(20)
       end
