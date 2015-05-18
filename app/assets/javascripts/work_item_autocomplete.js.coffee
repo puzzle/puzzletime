@@ -3,7 +3,8 @@ app = window.App ||= {}
 app.workItemAutocomplete = (i, input) ->
   $(input).selectize(
     valueField: 'id',
-    searchField: ['name','path_shortnames','description'],
+    searchField: ['name','path_shortnames','description','path_names'],
+    selectOnTab: true,
     render: {
       option: renderOption,
       item: renderItem
