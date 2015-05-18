@@ -12,7 +12,6 @@ class WorkItemsController < ManageController
                                where(search_conditions).
                                joins(:accounting_post).
                                includes(:accounting_post).
-                               select(:id, :name, :path_shortnames, :description).
                                limit(20)
       end
     end
