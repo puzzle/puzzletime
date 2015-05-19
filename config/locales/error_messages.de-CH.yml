@@ -3,6 +3,6 @@ de-CH:
     crm:
       highrise:
         order_not_on_company: >
-          Auftrag muss im Highrise einer Firma (Typ "Company") zugeordnet sein.
-          Aktuell ist der Auftrag an Objekt von Typ "%{party_type}" zugeordnet.
+          Der Auftrag muss im Highrise einer Firma zugeordnet sein.
+          Aktuell ist er einem Objekt von Typ "%{party_type}" zugeordnet.
           Bitte im Highrise korrigieren.
