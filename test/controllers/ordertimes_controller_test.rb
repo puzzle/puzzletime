@@ -129,10 +129,12 @@ class OrdertimesControllerTest < ActionController::TestCase
   end
 
   def test_edit_other_as_order_responsible
+    ordertime = Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal))
     login_as(:lucien)
     assert_nothing_raised do
-      get :edit, id: worktimes(:wt_mw_puzzletime).id
+      get :edit, id: ordertime.id
     end
+
   end
 
   def test_edit_other_without_permission
@@ -157,10 +159,10 @@ class OrdertimesControllerTest < ActionController::TestCase
   end
 
   def test_update_other_as_order_responsible
-    worktime = worktimes(:wt_mw_puzzletime)
+    ordertime = Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal))
     login_as(:lucien)
     assert_nothing_raised do
-      put :update, id: worktime, ordertime: { hours: '1:30' }
+      put :update, id: ordertime, ordertime: { hours: '1:30' }
     end
     assert_redirected_to action: 'split'
   end

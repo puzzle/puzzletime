@@ -32,6 +32,8 @@ class AccountingPost < ActiveRecord::Base
   has_ancestor_through_work_item :order
   has_ancestor_through_work_item :client
 
+  delegate :responsible_id, to: :order
+
   ### CALLBACKS
 
   before_validation :derive_offered_fields
