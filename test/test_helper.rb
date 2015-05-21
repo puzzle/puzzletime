@@ -85,7 +85,7 @@ class ActionDispatch::IntegrationTest
   end
 
   def login_as(user, ref_path = nil)
-    employee = employees(user)
+    employee = user.is_a?(Employee) ? user : employees(user)
     employee.set_passwd('foobar')
     visit login_path(ref: ref_path)
     fill_in 'user', with: employee.shortname
