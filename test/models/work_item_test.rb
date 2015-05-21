@@ -132,4 +132,10 @@ class WorkItemTest < ActiveSupport::TestCase
     WorkItem.any_instance.expects(:store_path_names).never
     p.update_attributes!(description: 'foo')
   end
+
+  test 'destroys dependent plannings when destroyed' do
+    planning = plannings(:hitobito_demo_app_planning1)
+    planning.work_item.destroy
+    refute Planning.exists?(planning.id)
+  end
 end

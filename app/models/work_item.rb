@@ -25,6 +25,7 @@ class WorkItem < ActiveRecord::Base
   has_one :client, dependent: :destroy, inverse_of: :work_item
   has_one :order, dependent: :destroy, inverse_of: :work_item
   has_one :accounting_post, dependent: :destroy, inverse_of: :work_item
+  has_many :plannings, dependent: :destroy
 
   has_many :worktimes,
            ->(work_item) do
