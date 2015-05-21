@@ -114,6 +114,8 @@ module Crm
           yield entity
         rescue ActiveResource::ResourceNotFound
           entity.update_attribute(:crm_key, nil)
+        rescue => ex
+          Airbrake.notify(ex)
         end
       end
     end
