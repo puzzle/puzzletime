@@ -22,6 +22,13 @@ class OrderServicesControllerTest < ActionController::TestCase
     assert_equal %w([leer] foo), assigns(:tickets)
   end
 
+  test "GET show responds with success when no accounting posts present" do
+    order.worktimes.destroy_all
+    order.accounting_posts.destroy_all
+    get :show, order_id: order.id
+    assert_response :success
+  end
+
   test "GET show filtered by predefined period, ignores start_date" do
     get :show, order_id: order.id, period: '-1m', start_date: '1.12.2006'
     assert_equal [], assigns(:worktimes)
