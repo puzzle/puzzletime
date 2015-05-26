@@ -37,7 +37,8 @@ class TarantulaTest < ActionDispatch::IntegrationTest
     t.allow_404_for /^\-?\d+$/  # change period may produce such links in tarantula
     t.allow_404_for /ordertimes\/start$/  # passing invalid work_item_id
     t.allow_404_for /absencetimes\/\d+/   # absencetime deleted elsewhere
-    t.allow_404_for /ordertimes\/\d+/   # ordertime deleted elsewhere
+    t.allow_404_for /ordertimes\/\d+/     # ordertime deleted elsewhere
+    t.allow_404_for /plannings\/\d+/      # planning deleted elsewhere
     t.allow_404_for /employee_lists(\/\d+)?$/   # invalid employee_ids assigned
     t.allow_404_for /orders(\/\d+)?$/   # invalid employee_ids assigned
     t.allow_404_for /evaluator\/details\?category_id=(0|\d{5,12})\&/   # invalid category
