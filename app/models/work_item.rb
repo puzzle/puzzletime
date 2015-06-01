@@ -162,13 +162,8 @@ class WorkItem < ActiveRecord::Base
   end
 
   def store_path_names
-    if parent
-      self.path_shortnames = parent.path_shortnames + Settings.work_items.path_separator + shortname
-      self.path_names = parent.path_names + "\n" + name
-    else
-      self.path_shortnames = shortname
-      self.path_names = name
-    end
+    self.path_shortnames = [parent.try(:path_shortnames), shortname].compact.join(Settings.work_items.path_separator)
+    self.path_names = [parent.try(:path_names), name].compact.join("\n")
   end
 
   def upcase_shortname
