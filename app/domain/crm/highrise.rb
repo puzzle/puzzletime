@@ -114,8 +114,10 @@ module Crm
           yield entity
         rescue ActiveResource::ResourceNotFound
           entity.update_attribute(:crm_key, nil)
-        rescue => ex
-          Airbrake.notify(ex)
+        rescue ActiveRecord::RecordInvalid => error
+          notify_sync_error(error, entity, error.record)
+        rescue => error
+          notify_sync_error(error, entity)
         end
       end
     end
@@ -129,6 +131,23 @@ module Crm
 
     def base_url
       Settings.highrise.url
+    end
+
+    def notify_sync_error(error, synced_entity, invalid_record = nil)
+      parameters = record_to_params(synced_entity, 'synced_entity').tap do |params|
+        params.merge!(record_to_params(invalid_record, 'invalid_record')) if invalid_record.present?
+      end
+      Airbrake.notify(error, cgi_data: ENV.to_hash, parameters: parameters)
+    end
+
+    def record_to_params(record, prefix = 'record')
+      {
+          "#{prefix}_type"    => record.class.name,
+          "#{prefix}_id"      => record.id,
+          "#{prefix}_label"   => record.try(:label) || record.to_s,
+          "#{prefix}_errors"  => record.errors.messages,
+          "#{prefix}_changes" => record.changes
+      }
     end
   end
 end
