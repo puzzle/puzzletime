@@ -49,7 +49,7 @@
           %td
             .data-item
               - if cell.hours
-                %span.figure= f(cell.hours)
+                %span.figure= f(cell.hours.to_f)
                 %span.unit Std.
             .data-item
               - if cell.days

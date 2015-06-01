@@ -18,11 +18,11 @@ class Order::Cockpit
     end
 
     def supplied_services_hours
-      accounting_post_hours.values.sum.round
+      accounting_post_hours.values.sum
     end
 
     def not_billable_hours
-      (accounting_post_hours[false] || 0).round
+      accounting_post_hours[false] || 0
     end
 
     private
@@ -66,7 +66,7 @@ class Order::Cockpit
     def build_remaining_cell
       # Soll[h] - Ist-R[h]
       # Soll[CHF] - Ist-R[CHF]
-      Cell.new(accounting_post.remaining_hours || 0, nil)
+      Cell.new(accounting_post.remaining_hours || 0.0, nil)
     end
 
     # TODO
