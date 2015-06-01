@@ -8,7 +8,7 @@
         %th Bis
       - if @evaluation.employee_id.nil?
         %th Mitarbeiter
-      - if params[:ticket]
+      - if params[:show_ticket]
         %th Ticket
       - if params[:description]
         %th{:width => "50%"} Bemerkungen
@@ -26,7 +26,7 @@
           %td{:align => "center"}= format_time time.to_end_time if time.start_stop?
         - if @evaluation.employee_id.nil?
           %td{:align => "left"}= time.employee.shortname
-        - if params[:ticket]
+        - if params[:show_ticket]
           %td{:align => "right"}= time.ticket
         - if params[:description]
           %td= h(time.description).strip.gsub("\n", "<br/>").html_safe

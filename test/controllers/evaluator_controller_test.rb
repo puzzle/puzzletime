@@ -98,6 +98,22 @@ class EvaluatorControllerTest < ActionController::TestCase
     assert_match /Total Stunden.*#{total}/m, response.body
   end
 
+  test 'GET report with param show_ticket=1 shows tickets' do
+    ticket_label = 'ticket-123'
+    Fabricate(:ordertime,
+              employee: employees(:pascal),
+              work_item: work_items(:allgemein),
+              ticket: ticket_label)
+    get :report, evaluation: 'workitememployees',
+                 category_id: work_items(:allgemein),
+                 division_id: employees(:pascal),
+                 show_ticket: "1"
+
+    assert_template 'report'
+    assert_match %r(<th>Ticket</th>), response.body
+    assert_match %r(<td[^>]*>#{ticket_label}</td>), response.body
+  end
+
   def division_id(evaluation)
     evaluation.singularize.classify.constantize.first.id
   end
