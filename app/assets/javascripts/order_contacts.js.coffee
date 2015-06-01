@@ -2,8 +2,14 @@
 app = window.App ||= {}
 
 app.loadContactsWithCrm = () ->
+  clientId = $('#client_work_item_id').val()
+
+  if clientId.length < 1
+    $('.add_nested_fields_link[data-association-path=order_order_contacts]').addClass('disabled')
+    return
+
   url = $('form[data-contacts-url]').data('contacts-url')
-  url = url += '?client_work_item_id=' + $('#client_work_item_id').val()
+  url = url += '?client_work_item_id=' + clientId
 
   addButton = $('.add_nested_fields_link[data-association-path=order_order_contacts]')
   addButton.hide().siblings('.spinner').show()
