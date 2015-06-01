@@ -15,7 +15,7 @@
             data: { no_turbolink: true }
   - if @evaluation.report?
     |
-    = link_to 'Stundenrapport',
+    = link_to 'Zeitrapport erstellen',
               evaluation_detail_params.merge!(:action => 'compose_report')
     |
     = link_to 'Alle verbuchen',
