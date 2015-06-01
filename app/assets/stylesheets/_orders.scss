@@ -58,13 +58,21 @@
   .title, .figure, .unit {
     color: $gray-darker;
   }
+  
   .figure {
     font-size: 18px;
     font-weight: 500;
   }
+
   .figure-label, .unit {
     font-size: 12px;
     font-weight: 400;
+  }
+
+  .unit {
+    min-width: 2.4em;
+    display: inline-block;
+    text-align: left;
   }
 
   .cockpit-table {
