@@ -8,5 +8,5 @@ class ExtendedCapacityReportTest < ActiveSupport::TestCase
     # File.open('/tmp/csvtest', 'w'){|f| f << ExtendedCapacityReport.new(period).to_csv }
   end
 
-  test 'business'
+  test 'business' #TODO implement business tests
 end

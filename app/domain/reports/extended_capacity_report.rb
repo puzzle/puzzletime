@@ -17,7 +17,7 @@ class ExtendedCapacityReport < BaseCapacityReport
 
   def add_header(csv)
     csv << ['Mitarbeiter',
-            'Organisationseinheit',
+            'Auftrag Organisationseinheit',
             'Anstellungsgrad (%)',
             'Soll Arbeitszeit (h)',
             'Überzeit (h)',
@@ -71,7 +71,7 @@ class ExtendedCapacityReport < BaseCapacityReport
         work_item_total_non_billable_hours += work_item_non_billable_hours
 
         if (work_item_billable_hours + work_item_non_billable_hours).abs > 0.001
-          csv_billable_lines << [employee.shortname, '', '', '', '', '', '', '',
+          csv_billable_lines << [employee.shortname, work_item_department(work_item), '', '', '', '', '', '',
                                  work_item_code(parent, child),
                                  work_item_label(parent),
                                  subwork_item_label(parent, child),
@@ -99,7 +99,7 @@ class ExtendedCapacityReport < BaseCapacityReport
         internal_work_item_total_hours += internal_work_item_hours
 
         if internal_work_item_hours.abs > 0.001
-          csv_non_billable_lines << [employee.shortname, '', '', '', '', '', '', '',
+          csv_non_billable_lines << [employee.shortname, work_item_department(work_item), '', '', '', '', '', '',
                                      work_item_code(parent, child),
                                      work_item_label(parent),
                                      subwork_item_label(parent, child),
@@ -156,6 +156,10 @@ class ExtendedCapacityReport < BaseCapacityReport
 
   def work_item_label(work_item)
     work_item.label_verbose
+  end
+
+  def work_item_department(work_item)
+    work_item.accounting_post.order.department
   end
 
   def subwork_item_label(work_item, subwork_item)
