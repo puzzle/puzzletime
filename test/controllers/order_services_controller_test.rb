@@ -152,6 +152,20 @@ class OrderServicesControllerTest < ActionController::TestCase
     assert_match /Total Stunden.*#{total}/m, response.body
   end
 
+  test 'GET report with param show_ticket=1 shows tickets' do
+    ticket_label = 'ticket-123'
+    Fabricate(:ordertime,
+              employee: employees(:pascal),
+              work_item: work_items(:puzzletime),
+              ticket: ticket_label)
+    get :report, order_id: orders(:puzzletime).id,
+                 show_ticket: "1"
+
+    assert_template 'report'
+    assert_match %r(<th>Ticket</th>), response.body
+    assert_match %r(<td[^>]*>#{ticket_label}</td>), response.body
+  end
+
   private
 
   def order
