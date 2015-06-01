@@ -48,6 +48,10 @@ class Ordertime < Worktime
     self.work_item_id = value
   end
 
+  def order
+    work_item.accounting_post.order
+  end
+
   def template(newWorktime = nil)
     newWorktime = super newWorktime
     newWorktime
