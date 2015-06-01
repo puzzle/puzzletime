@@ -71,7 +71,6 @@ class Worktime < ActiveRecord::Base
 
   # account this worktime is booked for.
   # defined in subclasses, either WorkItem or Absence
-  # TODO rename to accounting_post, okay?
   def account
     nil
   end
@@ -83,10 +82,6 @@ class Worktime < ActiveRecord::Base
   # sets the account id.
   # overwrite in subclass
   def account_id=(value)
-  end
-
-  def order
-    work_item.try(:order)
   end
 
   # set the hours, either as number or as a string with the format
