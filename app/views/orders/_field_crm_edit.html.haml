@@ -1,5 +1,2 @@
 = f.labeled(:crm_key, caption: Crm.instance.crm_key_label, span: 2) do
-  - if entry.crm_key.blank?
-    = f.input_field :crm_key
-  - else
-    %p.form-control-static= format_order_crm_key(entry)
+  = f.input_field :crm_key

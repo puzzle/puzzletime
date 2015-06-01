@@ -144,6 +144,7 @@ class OrdersControllerTest < ActionController::TestCase
                        name: 'New Order',
                        shortname: 'NEO'
                      },
+                     crm_key: 'puzzletime-crm-key',
                      department_id: departments(:devtwo).id,
                      responsible_id: employees(:pascal).id,
                      kind_id: order_kinds(:projekt).id,
@@ -169,6 +170,7 @@ class OrdersControllerTest < ActionController::TestCase
     assert_equal employees(:pascal).id, order.responsible_id
     assert_equal order_statuses(:bearbeitung).id, order.status_id
     assert_equal order_kinds(:projekt).id, order.kind_id
+    assert_equal 'puzzletime-crm-key', order.crm_key
 
     order_contacts = order.order_contacts.map {|oc| [oc.contact_id, oc.comment]}.sort
     assert_equal [[contacts(:puzzle_rava).id, "funktion 1"], [contacts(:puzzle_hauswart).id, "funktion 2"]].sort, order_contacts
