@@ -29,6 +29,7 @@ class ExtendedCapacityReport < BaseCapacityReport
             'Subprojektname',
             'Projekte Total (h)',
             'Projekte Total - Detail (h)',
+            'Stundensatz',
             'Kunden-Projekte Total (h)',
             'Kunden-Projekte Total - Detail (h)',
             'Kunden-Projekte Total verrechenbar (h)',
@@ -77,6 +78,7 @@ class ExtendedCapacityReport < BaseCapacityReport
                                  subwork_item_label(parent, child),
                                  '',
                                  work_item_billable_hours + work_item_non_billable_hours,
+                                 offered_rate(work_item),
                                  '',
                                  work_item_billable_hours + work_item_non_billable_hours,
                                  '',
@@ -105,6 +107,7 @@ class ExtendedCapacityReport < BaseCapacityReport
                                      subwork_item_label(parent, child),
                                      '',
                                      internal_work_item_hours,
+                                     offered_rate(work_item),
                                      '', '', '', '', '', '', '',
                                      internal_work_item_hours]
         end
@@ -128,6 +131,7 @@ class ExtendedCapacityReport < BaseCapacityReport
               '',
               '',
               work_item_total_hours,
+              '',
               '',
               work_item_total_billable_hours + work_item_total_non_billable_hours,
               '',
@@ -156,6 +160,10 @@ class ExtendedCapacityReport < BaseCapacityReport
 
   def work_item_label(work_item)
     work_item.label_verbose
+  end
+
+  def offered_rate(work_item)
+    work_item.accounting_post.offered_rate
   end
 
   def work_item_department(work_item)
