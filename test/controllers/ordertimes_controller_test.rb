@@ -108,6 +108,25 @@ class OrdertimesControllerTest < ActionController::TestCase
     assert assigns(:worktime).valid?
   end
 
+  def test_create_with_overlapping
+    work_date = Date.today + 10
+    Fabricate(:ordertime,
+              employee: employees(:pascal),
+              work_date: work_date,
+              from_start_time: '9:00',
+              to_end_time: '10:00',
+              work_item: work_items(:webauftritt))
+    login_as(:pascal)
+    post :create, ordertime: { account_id: work_items(:allgemein),
+                               work_date: work_date,
+                               from_start_time: '8:00',
+                               to_end_time: '10:15' }
+    assert_redirected_to action: 'index', week_date: work_date
+    assert flash[:alert].blank?
+    assert_match(/Zeit.*erfolgreich erstellt/, flash[:notice])
+    assert_match(/Überlappung.*Webauftritt/m, flash[:notice])
+  end
+
   def test_create_other
     post :create, ordertime: { account_id: work_items(:allgemein),
                                work_date: Date.today,
