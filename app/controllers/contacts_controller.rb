@@ -7,7 +7,7 @@ class ContactsController < ManageController
   self.search_columns = [:lastname, :firstname]
 
   def with_crm
-    @client = Client.find_by_work_item_id(params[:client_work_item_id])
+    @client = Client.find_by_work_item_id!(params[:client_work_item_id])
     @entries = @client.contacts.list.to_a
     if Crm.instance
       existing = @entries.collect(&:crm_key).compact
