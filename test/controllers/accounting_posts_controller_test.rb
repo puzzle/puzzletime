@@ -133,8 +133,8 @@ class AccountingPostsControllerTest < ActionController::TestCase
       accounting_post: {
         work_item_attributes: { name: 'TEST', shortname: 'TST' },
         closed: 'true',
-        offered_hours: 80,
-        offered_rate: 42,
+        offered_hours: 80.0,
+        offered_rate: 42.0,
         discount_percent: 11,
         portfolio_item_id: portfolio_items(:mobile).id,
         reference: 'dummy-reference',
@@ -165,8 +165,8 @@ class AccountingPostsControllerTest < ActionController::TestCase
       accounting_post: {
         work_item_attributes: { name: 'TEST', shortname: 'TST' },
         closed: 'true',
-        offered_hours: 80,
-        offered_rate: 42,
+        offered_hours: 80.0,
+        offered_rate: 42.0,
         offered_total: 10000.0,
         discount_percent: 11,
         portfolio_item_id: portfolio_items(:mobile).id,
