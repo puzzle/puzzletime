@@ -41,6 +41,7 @@ class Order < ActiveRecord::Base
   has_many :team_members, through: :order_team_members, source: :employee
   has_many :order_contacts, -> { list }, dependent: :destroy
   has_many :contacts, through: :order_contacts
+  has_many :invoices, dependent: :destroy
 
   accepts_nested_attributes_for :order_team_members, :order_contacts, reject_if: :all_blank, allow_destroy: true
 

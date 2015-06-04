@@ -1,4 +1,4 @@
-module Crm
+module Invoicing
   class Error < StandardError
   end
 end

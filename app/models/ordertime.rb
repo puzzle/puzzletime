@@ -17,9 +17,12 @@
 #  type            :string(255)
 #  ticket          :string(255)
 #  work_item_id    :integer
+#  invoice_id      :integer
 #
 
 class Ordertime < Worktime
+
+  belongs_to :invoice
 
   validates :work_item, presence: true
   validate :validate_accounting_post
