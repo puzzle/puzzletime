@@ -29,15 +29,15 @@ class Order::CockpitTest < ActiveSupport::TestCase
 
     total = cockpit.rows.first
     budget = total.cells[:budget]
-    assert_equal 300, budget.hours
-    assert_equal 37.5, budget.days
-    assert_equal 39_000.0, budget.amount
+    assert_equal 300.2, budget.hours
+    assert_equal 300.2/8, budget.days
+    assert_equal 39_057.02, budget.amount
 
     a1 = cockpit.rows.second
     budget = a1.cells[:budget]
-    assert_equal 200, budget.hours
-    assert_equal 25.0, budget.days
-    assert_equal 24_000, budget.amount
+    assert_equal 200.1, budget.hours
+    assert_equal 200.1/8, budget.days
+    assert_equal 24_032.01, budget.amount
   end
 
   test 'supplied_services values are zero if no worktimes exist' do
@@ -64,13 +64,13 @@ class Order::CockpitTest < ActiveSupport::TestCase
     supplied = total.cells[:supplied_services]
     assert_equal 26, supplied.hours
     assert_equal 3.25, supplied.days
-    assert_equal 3420.0, supplied.amount
+    assert_equal 3422.6, supplied.amount
 
     a1 = cockpit.rows.second
     supplied = a1.cells[:supplied_services]
     assert_equal 16, supplied.hours
     assert_equal 2.0, supplied.days
-    assert_equal 1920, supplied.amount
+    assert_equal 1921.6, supplied.amount
   end
 
   test 'not billable values are calculated if worktimes exist' do
@@ -112,15 +112,15 @@ class Order::CockpitTest < ActiveSupport::TestCase
 
     total = cockpit.rows.first
     budget = total.cells[:open_budget_current]
-    assert_equal 274, budget.hours
-    assert_equal 34.25, budget.days
-    assert_equal 35_580.0, budget.amount
+    assert_equal 274.2, budget.hours.to_f
+    assert_equal 274.2/8, budget.days.to_f
+    assert_equal 35_634.42, budget.amount
 
     a1 = cockpit.rows.second
     budget = a1.cells[:open_budget_current]
-    assert_equal 184, budget.hours
-    assert_equal 23.0, budget.days
-    assert_equal 22_080.0, budget.amount
+    assert_equal 184.1, budget.hours
+    assert_equal 184.1/8, budget.days
+    assert_equal 22_110.41, budget.amount
   end
 
   test 'cost_effectiveness_forecast' do
@@ -134,8 +134,8 @@ class Order::CockpitTest < ActiveSupport::TestCase
   end
 
   def define_offered_fields
-    accounting_posts(:hitobito_demo_app).update!(offered_hours: 200, offered_rate: 120)
-    accounting_posts(:hitobito_demo_site).update!(offered_hours: 100, offered_rate: 150)
+    accounting_posts(:hitobito_demo_app).update!(offered_hours: 200.1, offered_rate: 120.1)
+    accounting_posts(:hitobito_demo_site).update!(offered_hours: 100.1, offered_rate: 150.1)
   end
 
   def define_worktimes

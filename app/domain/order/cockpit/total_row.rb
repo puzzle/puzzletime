@@ -14,7 +14,7 @@ class Order::Cockpit
       if master
         master.keys.each do |key|
           hash[key] =
-            Cell.new(sum_non_nil_values(cells, key, :hours, :to_i),
+            Cell.new(sum_non_nil_values(cells, key, :hours, :to_d),
                      sum_non_nil_values(cells, key, :amount, :to_d))
         end
       end
