@@ -9,13 +9,6 @@ renderStyleItem = (item, escape) ->
 ################################################################
 # because of turbolinks.jquery, do bind ALL document events here
 
-# order cockpit: change order when choosable order changes.
-$(document).on('change', '#choosable_order_id', ->
-  if this.value
-    l = window.location.toString()
-    window.location = l.replace(/orders\/\d+/, 'orders/' + this.value)
-)
-
 $(document).on('click', '[data-submit-form]', (event) ->
   form_id = $(this).attr('data-submit-form')
   $(form_id).submit()
@@ -32,3 +25,11 @@ $ ->
 
   $('#target_scope_icon').selectize({ render: { option: renderIconItem, item: renderIconItem } })
   $('#order_status_style').selectize({ render: { option: renderStyleItem, item: renderStyleItem } })
+
+  # order cockpit: change order when choosable order changes.
+  $('#choosable_order_id').selectize(
+    selectOnTab: true,
+    onItemAdd: (value, item) ->
+      if value
+        window.location = window.location.toString().replace(/orders\/\d+/, 'orders/' + value)
+  )

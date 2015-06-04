@@ -5,4 +5,4 @@
     = select_tag(:id,
                  options_for_select(Order.choosable_list, @order.id),
                  id: 'choosable_order_id',
-                 class: 'searchable')
+                 autocomplete: 'off')

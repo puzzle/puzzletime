@@ -14,6 +14,16 @@ class ChooseOrderTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test 'changes path when hitting TAB key in order chooser' do
+    timeout_safe do
+      control = find("#choosable_order_id + .selectize-control")
+      control.find(".selectize-input").click # open dropdown
+      control.find(".item + input").native.send_keys(:backspace, 's', :tab)
+
+      assert_equal order_path(orders(:webauftritt)), current_path
+    end
+  end
+
   test 'keeps current tab when changing orders' do
     timeout_safe do
       click_link 'Positionen'
