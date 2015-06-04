@@ -12,7 +12,6 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema.define(version: 20150604103444) do
-
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -44,35 +43,39 @@ ActiveRecord::Schema.define(version: 20150604103444) do
   end
 
   create_table "billing_addresses", force: :cascade do |t|
-    t.integer "client_id",              null: false
-    t.integer "contact_id",             null: false
-    t.string  "supplement", limit: 255
-    t.string  "street",     limit: 255
-    t.string  "zip_code",   limit: 255
-    t.string  "town",       limit: 255
-    t.string  "country",    limit: 255
+    t.integer "client_id",                 null: false
+    t.integer "contact_id"
+    t.string  "supplement",    limit: 255
+    t.string  "street",        limit: 255
+    t.string  "zip_code",      limit: 255
+    t.string  "town",          limit: 255
+    t.string  "country",       limit: 255
+    t.string  "invoicing_key"
     t.index ["client_id"], :name => "index_billing_addresses_on_client_id"
     t.index ["contact_id"], :name => "index_billing_addresses_on_contact_id"
   end
 
   create_table "clients", force: :cascade do |t|
-    t.integer "work_item_id",                             null: false
-    t.string  "crm_key",      limit: 255
-    t.boolean "allow_local",              default: false, null: false
+    t.integer "work_item_id",                                    null: false
+    t.string  "crm_key",             limit: 255
+    t.boolean "allow_local",                     default: false, null: false
+    t.integer "last_invoice_number",             default: 0
+    t.string  "invoicing_key"
     t.index ["work_item_id"], :name => "index_clients_on_work_item_id"
   end
 
   create_table "contacts", force: :cascade do |t|
-    t.integer  "client_id",              null: false
-    t.string   "lastname",   limit: 255
-    t.string   "firstname",  limit: 255
-    t.string   "function",   limit: 255
-    t.string   "email",      limit: 255
-    t.string   "phone",      limit: 255
-    t.string   "mobile",     limit: 255
-    t.string   "crm_key",    limit: 255
+    t.integer  "client_id",                 null: false
+    t.string   "lastname",      limit: 255
+    t.string   "firstname",     limit: 255
+    t.string   "function",      limit: 255
+    t.string   "email",         limit: 255
+    t.string   "phone",         limit: 255
+    t.string   "mobile",        limit: 255
+    t.string   "crm_key",       limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "invoicing_key"
     t.index ["client_id"], :name => "index_contacts_on_client_id"
   end
 
@@ -154,6 +157,23 @@ ActiveRecord::Schema.define(version: 20150604103444) do
     t.date  "holiday_date",  null: false
     t.float "musthours_day", null: false
     t.index ["holiday_date"], :name => "index_holidays_on_holiday_date", :unique => true
+  end
+
+  create_table "invoices", force: :cascade do |t|
+    t.integer "order_id",                                                   null: false
+    t.date    "billing_date",                                               null: false
+    t.date    "due_date",                                                   null: false
+    t.decimal "total_amount",       precision: 12, scale: 2,                null: false
+    t.float   "total_hours",                                                null: false
+    t.string  "reference",                                                  null: false
+    t.date    "period_from",                                                null: false
+    t.date    "period_to",                                                  null: false
+    t.string  "status",                                                     null: false
+    t.boolean "add_vat",                                     default: true, null: false
+    t.integer "billing_address_id",                                         null: false
+    t.string  "invoicing_key"
+    t.index ["billing_address_id"], :name => "index_invoices_on_billing_address_id"
+    t.index ["order_id"], :name => "index_invoices_on_order_id"
   end
 
   create_table "order_comments", force: :cascade do |t|
@@ -314,8 +334,10 @@ ActiveRecord::Schema.define(version: 20150604103444) do
     t.string  "type",            limit: 255
     t.string  "ticket",          limit: 255
     t.integer "work_item_id"
+    t.integer "invoice_id"
     t.index ["absence_id", "employee_id", "work_date"], :name => "worktimes_absences"
     t.index ["employee_id", "work_date"], :name => "worktimes_employees"
+    t.index ["invoice_id"], :name => "index_worktimes_on_invoice_id"
     t.index ["work_item_id", "employee_id", "work_date"], :name => "worktimes_work_items"
     t.foreign_key ["absence_id"], "absences", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_times_absences"
     t.foreign_key ["employee_id"], "employees", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_times_employees"

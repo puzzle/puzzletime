@@ -40,12 +40,8 @@ module Puzzletime
     config.active_record.raise_in_transactional_callbacks = true
 
     config.to_prepare do |_|
-      if Settings.highrise.api_token
-        Crm.instance = Crm::Highrise.new
-        if Delayed::Job.table_exists?
-          CrmSyncJob.new.schedule
-        end
-      end
+      Crm.init
+      Invoicing.init
     end
   end
 

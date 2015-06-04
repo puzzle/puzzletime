@@ -35,10 +35,29 @@ highrise:
   url: <%= ENV['RAILS_HIGHRISE_URL'] || 'https://highrisehq.com' %>
   api_token: <%= ENV['RAILS_HIGHRISE_TOKEN'] %>
 
+small_invoice:
+  url: https://api.smallinvoice.com
+  api_token: <%= ENV['RAILS_SMALL_INVOICE_TOKEN'] %>
+  constants:
+    currency: CHF
+    account_id: 485417264
+    esr: true
+    esr_number: 0145031
+    esr_singlepage: false
+    lsvplus: false
+    debit_direct: false
+    language: de
+    paypal: false
+    paypal_url:
+    client_type: 1 # company
+    vat: 8
+
+
 # Default values
 defaults:
   report_type: absolute_day
   start_hour: 8
+  country: CH
 
 work_items:
   path_separator: '-'
