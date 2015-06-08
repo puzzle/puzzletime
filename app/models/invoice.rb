@@ -30,6 +30,7 @@ class Invoice < ActiveRecord::Base
   validates_date :billing_date, :due_date, :period_from, :period_to
   validates :status, inclusion: STATUSES
   validate :assert_positive_period
+  validate :assert_billing_address_belongs_to_order_client
 
 
   before_validate :generate_reference, on: :create
@@ -65,6 +66,12 @@ class Invoice < ActiveRecord::Base
   def assert_positive_period
     if period_to && period_from && period_to < period_from
       errors.add(:period_to, 'muss nach von sein.')
+    end
+  end
+
+  def assert_billing_address_belongs_to_order_client
+    if billing_address && order && billing_address.client_id != order.client.id
+      errors.add(:billing_address_id, 'muss zum Auftragskunden gehören.')
     end
   end
 
