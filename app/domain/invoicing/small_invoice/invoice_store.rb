@@ -9,16 +9,16 @@ module Invoicing
         @invoice = invoice
       end
 
-      # Save an invoice with the given positions to remote
+      # Save an invoice with the given positions to remote and returns the invoicing_key
       def save(positions)
         assert_remote_client_exists
 
         data = Invoicing::SmallInvoice::Entity::Invoice.new(invoice, positions).to_hash
         if invoice.invoicing_key?
           api.edit(:invoice, invoice.invoicing_key, data)
+          invoice.invoicing_key
         else
-          id = api.add(:invoice, data)
-          invoice.update_column(:invoicing_key, id)
+          api.add(:invoice, data)
         end
       end
 

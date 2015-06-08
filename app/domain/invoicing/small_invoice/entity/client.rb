@@ -9,7 +9,7 @@ module Invoicing
             type: constant(:client_type),
             language: constant(:language),
             addresses: entry.billing_addresses.collect { |a| Address.new(a).to_hash },
-            contacts: entry.contacts.collect { |c| Contact.new(c).to_hash }
+            contacts: entry.contacts.collect { |c| Entity::Contact.new(c).to_hash }
           }
         end
       end

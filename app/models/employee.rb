@@ -26,6 +26,7 @@ class Employee < ActiveRecord::Base
   belongs_to :department
 
   has_and_belongs_to_many :employee_lists
+  has_and_belongs_to_many :invoices
 
   has_many :employments, dependent: :destroy
   has_many :absences,

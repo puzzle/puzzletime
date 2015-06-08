@@ -34,15 +34,25 @@ module Invoicing
       private
 
       def get_request(endpoint, action, params = {})
-        response = Net::HTTP.get_response(uri(endpoint, action, params))
+        url = uri(endpoint, action, params)
+
+        request = Net::HTTP::Get.new(url.path)
+
+        response = http(url).request(request)
         handle_response(response)
       end
 
       def post_request(endpoint, action, data, params = {})
         url = uri(endpoint, action, params)
-        body = data ? { data: data.to_json } : {}
-        response = Net::HTTP.post_form(url, body)
+        request = Net::HTTP::Post.new(url.path)
+        request.set_form_data(data ? { data: data.to_json } : {})
+
+        response = http(url).request(request)
         handle_response(response)
+      end
+
+      def http(url)
+        Net::HTTP.new(url.host, url.port).tap {|http| http.use_ssl = url.scheme == 'https' }
       end
 
       def uri(endpoint, action, params = {})

@@ -19,7 +19,7 @@ module Invoicing
             client_contact_id: entry.billing_address.contact.try(:invoicing_key),
             currency:          constant(:currency),
             title:             entry.title,
-            period:            entry.period,
+            period:            entry.period.to_s,
             date:              entry.billing_date,
             due:               entry.due_date,
             account_id:        constant(:account_id),

@@ -28,6 +28,7 @@ class Order < ActiveRecord::Base
   belongs_to :status, class_name: 'OrderStatus'
   belongs_to :responsible, class_name: 'Employee'
   belongs_to :department
+  belongs_to :contact
   belongs_to :contract, dependent: :destroy
   belongs_to :billing_address
 

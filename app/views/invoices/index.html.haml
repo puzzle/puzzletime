@@ -1,0 +1,17 @@
+= render 'orders/header'
+
+- @title ||= ti(:title, models: models_label)
+
+= render 'info'
+
+- if search_support?
+  .list-search
+    = render 'search'
+
+= render 'list'
+
+%p= paginate entries
+
+%br/
+
+%p= render 'actions_index'

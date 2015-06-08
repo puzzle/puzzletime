@@ -25,6 +25,7 @@
 #= require orders
 #= require order_contacts
 #= require accounting_posts
+#= require invoices
 #= require turbolinks
 
 

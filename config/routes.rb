@@ -59,6 +59,11 @@ Rails.application.routes.draw do
       get :report
     end
 
+    resources :invoices do
+      collection do
+        get :preview_total
+      end
+    end
   end
 
   resources :order_statuses, except: [:show]

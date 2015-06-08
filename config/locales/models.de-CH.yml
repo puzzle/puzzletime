@@ -38,6 +38,9 @@ de-CH:
       holiday:
         one: Feiertag
         other: Feiertage
+      invoice:
+        one: Rechnung
+        other: Rechnungen
       order:
         one: Auftrag
         other: Aufträge
@@ -159,6 +162,23 @@ de-CH:
       holiday:
         holiday_date: Datum
         musthours_day: Muss Stunden
+      invoice:
+        add_vat: zzgl. MWST 8.0%
+        billing_address: Rechnungsadresse
+        billing_date: Rechnungsdatum
+        due_date: Fälligkeitsdatum
+        employees: Members
+        grouping: Gruppierung
+        invoice_posts: Rechnungspositionen
+        manual_invoice: Manuelle Rechnung
+        order: Auftrag
+        period: Leistungsperiode
+        period_from: von
+        period_to: bis
+        reference: Referenz
+        total_amount: Rechnungsbetrag
+        total_hours: Total Stunden
+        work_items: Buchungspositionen
       order:
         client: Kunde
         category: Kategorie

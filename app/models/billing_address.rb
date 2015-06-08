@@ -1,5 +1,4 @@
 # encoding: utf-8
-
 # == Schema Information
 #
 # Table name: billing_addresses
@@ -11,7 +10,7 @@
 #  street        :string(255)
 #  zip_code      :string(255)
 #  town          :string(255)
-#  country       :string(2)
+#  country       :string(255)
 #  invoicing_key :string
 #
 

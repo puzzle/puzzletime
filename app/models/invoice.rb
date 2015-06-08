@@ -1,5 +1,4 @@
 # encoding: utf-8
-
 # == Schema Information
 #
 # Table name: invoices
@@ -17,19 +16,21 @@
 #  add_vat            :boolean          default(TRUE), not null
 #  billing_address_id :integer          not null
 #  invoicing_key      :string
-#  created_at         :datetime
-#  updated_at         :datetime
+#  grouping           :integer          default(0)
 #
 
 class Invoice < ActiveRecord::Base
 
   STATUSES = %w(draft sent paid)
+  enum grouping: %w(accounting_posts employees manual)
 
   belongs_to :order
   belongs_to :billing_address
 
   has_many :ordertimes, dependent: :nullify
 
+  has_and_belongs_to_many :work_items
+  has_and_belongs_to_many :employees
 
   validates_date :billing_date, :due_date, :period_from, :period_to
   validates :invoicing_key, uniqueness: true, allow_blank: true
@@ -41,9 +42,12 @@ class Invoice < ActiveRecord::Base
   before_validation :set_default_status
   before_validation :generate_reference, on: :create
   before_validation :generate_due_date
+  before_validation :update_totals
   before_create :lock_client_invoice_number
   after_create :update_client_invoice_number
+  before_save :save_remote_invoice, if: ->{ Invoicing.instance.present? }
 
+  scope :list, ->{ includes(:billing_address) }
 
   def title
     title = order.name
@@ -53,8 +57,12 @@ class Invoice < ActiveRecord::Base
     title
   end
 
+  def to_s
+    reference
+  end
+
   def period
-    "#{I18n.l(period_from)} - #{I18n.l(period_to)}"
+    Period.new(period_from, period_to)
   end
 
   def payment_period
@@ -65,7 +73,59 @@ class Invoice < ActiveRecord::Base
     order.contract.try(:reference)
   end
 
+  def manual_invoice?
+    manual?
+  end
+
+  def calculate_total_amount
+    sum = positions.collect(&:total_amount).sum
+    if add_vat?
+      total = sum * (1 + Settings.small_invoice.constants.vat / 100.0)
+    else
+      total = sum
+    end
+    "%.02f" % total.round(2)
+  end
+
   private
+
+  def positions
+    @positions ||= build_positions
+  end
+
+  def build_positions
+    case grouping.to_s
+    when 'manual' then [manual_position]
+    when 'employees' then employee_positions
+    else accounting_post_positions
+    end
+  end
+
+  def manual_position
+    Invoicing::Position.new(AccountingPost.new(offered_rate: 1), 1, 'Manuell')
+  end
+
+  def accounting_post_positions
+    worktimes.group(:work_item_id).sum(:hours).collect do |work_item_id, hours|
+      post = AccountingPost.find_by_work_item_id!(work_item_id)
+      Invoicing::Position.new(post, hours)
+    end.sort_by(&:name)
+  end
+
+  def employee_positions
+    worktimes.group(:work_item_id, :employee_id).sum(:hours).collect do |groups, hours|
+      post = AccountingPost.find_by_work_item_id!(groups.first)
+      employee = Employee.find(groups.last)
+      Invoicing::Position.new(post, hours, "#{post.name} - #{employee}")
+    end.sort_by(&:name)
+  end
+
+  def worktimes
+    Ordertime.in_period(period).
+      where(billable: true).
+      where(work_item_id: work_item_ids).
+      where(employee_id: employee_ids)
+  end
 
   def lock_client_invoice_number
     order.client.lock!
@@ -74,6 +134,16 @@ class Invoice < ActiveRecord::Base
 
   def update_client_invoice_number
     order.client.update_column(:last_invoice_number, order.client.last_invoice_number + 1)
+  end
+
+  def update_totals
+    if manual_invoice?
+      self.total_hours = 0
+      self.total_amount ||= positions.collect(&:total_amount).sum
+    else
+      self.total_hours = positions.collect(&:total_hours).sum
+      self.total_amount = positions.collect(&:total_amount).sum
+    end
   end
 
   def generate_reference
@@ -105,6 +175,14 @@ class Invoice < ActiveRecord::Base
     unless order.contract
       errors.add(:order_id, 'muss einen definierten Vertrag haben.')
     end
+  end
+
+  def save_remote_invoice
+    self.invoicing_key = Invoicing.instance.save_invoice(self, positions)
+    true
+  rescue Invoicing::Error => e
+    errors.add(:base, "Invoicing Service Error: #{e.message}")
+    false
   end
 
 end
