@@ -22,9 +22,18 @@ class BillingAddress < ActiveRecord::Base
   has_many :orders, dependent: :nullify
   has_many :invoices, dependent: :nullify
 
-  validates :client_id, :street, :zip_code, :town, presence: true
+  validates :client_id, :street, :zip_code, :town, :country, presence: true
+  validate :assert_contact_belongs_to_client
 
 
-  # TODO country contains country code from country_select gem, default from settings
+  # TODO country contains uppercase country code from country_select gem, default from settings
+
+  private
+
+  def assert_contact_belongs_to_client
+    if contact_id && client_id && contact.client_id != client_id
+      errors.add(:contact_id, 'muss zum gleichen Kunden gehören.')
+    end
+  end
 
 end

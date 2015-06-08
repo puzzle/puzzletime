@@ -1,0 +1,12 @@
+webauftritt_may:
+  order: webauftritt
+  billing_date: 2015-06-15
+  due_date: 2015-07-14
+  reference: STOPWEBD10001
+  total_amount: 40000.45
+  total_hours: 50
+  period_from: 2015-05-01
+  period_to: 2015-05-31
+  status: draft
+  add_vat: true
+  billing_address: swisstopo

@@ -1,7 +1,6 @@
 module Invoicing
-  class SmallInvoice
+  module SmallInvoice
     class Api
-
       def list(endpoint)
         response = get_request("#{endpoint}/list")
         response['items']
@@ -48,7 +47,6 @@ module Invoicing
           json
         end
       end
-
     end
   end
 end

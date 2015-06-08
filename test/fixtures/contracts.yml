@@ -19,3 +19,11 @@ puzzletime:
   payment_period: 15
   reference: "order asdf 1234"
   sla: "Reaktionszeit: 1ms"
+
+webauftritt:
+  number: "web1234"
+  start_date: 2005-01-01
+  end_date: 2020-07-30
+  payment_period: 45
+  reference: "order webauftritt 1234"
+  sla: "Reaktionszeit: 1ms"

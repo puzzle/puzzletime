@@ -32,13 +32,17 @@ class Invoice < ActiveRecord::Base
   validate :assert_positive_period
   validate :assert_billing_address_belongs_to_order_client
 
-
-  before_validate :generate_reference, on: :create
-  before_validate :generate_due_date
+  before_validation :set_default_status
+  before_validation :generate_reference, on: :create
+  before_validation :generate_due_date
 
 
   def title
-    "#{order.name}#{" gemäss Vertrag #{order.contract.number}" if order.contract.number?}"
+    title = order.name
+    if order.contract && order.contract.number?
+      title += " gemäss Vertrag #{order.contract.number}"
+    end
+    title
   end
 
   def period
@@ -46,11 +50,11 @@ class Invoice < ActiveRecord::Base
   end
 
   def payment_period
-    order.contract.payment_period
+    order.contract.try(:payment_period)
   end
 
   def contract_reference
-    order.contract.reference
+    order.contract.try(:reference)
   end
 
   private
@@ -60,7 +64,11 @@ class Invoice < ActiveRecord::Base
   end
 
   def generate_due_date
-    self.due_date ||= billing_date + payment_period.days
+    self.due_date ||= billing_date + payment_period.days if order.contract
+  end
+
+  def set_default_status
+    self.status ||= STATUSES.first
   end
 
   def assert_positive_period

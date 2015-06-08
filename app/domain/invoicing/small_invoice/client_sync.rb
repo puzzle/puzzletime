@@ -1,12 +1,18 @@
 module Invoicing
-  class SmallInvoice
+  module SmallInvoice
     class ClientSync
-
       class << self
+
         def perform
           ::Client.includes(:work_item, :contacts, :billing_addresses).find_each do |client|
-            new(client, remote_keys).sync
+            if client.billing_addresses.present? # required by small invoice
+              new(client, remote_keys).sync
+            end
           end
+        end
+
+        def api
+          Invoicing.instance.api
         end
 
         private
@@ -16,6 +22,7 @@ module Invoicing
             hash[client['name']] = client['id']
           end
         end
+        
       end
 
       attr_reader :client, :remote_keys
@@ -26,8 +33,6 @@ module Invoicing
       end
 
       def sync
-        return if client.billing_addresses.empty? # required by small invoice
-
         if key
           update_remote
         else
@@ -35,8 +40,6 @@ module Invoicing
         end
 
         set_association_keys
-
-        nil
       end
 
       private
@@ -52,16 +55,21 @@ module Invoicing
       end
 
       def data
-        Client.new(client).to_hash
+        Invoicing::SmallInvoice::Entity::Client.new(client).to_hash
       end
 
       def set_association_keys
         remote = api.get(:client, key)
-        set_association_key(client.billing_addresses, Address, remote['addresses'])
-        set_association_key(client.contacts, Contact, remote['contacts'])
+        set_association_key(Invoicing::SmallInvoice::Entity::Address,
+                            client.billing_addresses,
+                            remote['addresses'])
+        set_association_key(Invoicing::SmallInvoice::Entity::Contact,
+                            client.contacts,
+                            remote['contacts'])
+        nil
       end
 
-      def set_association_key(list, entity, remote_list)
+      def set_association_key(entity, list, remote_list)
         list.reject(&:invoicing_key?).each do |item|
           item_data = entity.new(item).to_hash.stringify_keys
           remote_data = remote_list.find do |h|
@@ -78,7 +86,7 @@ module Invoicing
       end
 
       def api
-        Invoicing.instance.api
+        self.class.api
       end
     end
   end
