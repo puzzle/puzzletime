@@ -2,6 +2,13 @@ module Invoicing
   module SmallInvoice
     module Entity
       class Invoice < Base
+        attr_reader :positions
+
+        def initialize(invoice, positions)
+          super(invoice)
+          @positions = positions
+        end
+
         def to_hash
           {
             number:            entry.reference,
@@ -26,7 +33,9 @@ module Invoicing
             paypal_url:        constant(:paypay_url),
             vat_included:      !entry.add_vat ? 1 : 0,
             totalamount:       entry.total_amount,
-            positions:         []
+            positions:         positions.collect do |p|
+                                 Invoicing::SmallInvoice::Entity::Position.new(p).to_hash
+                               end
           }
         end
 

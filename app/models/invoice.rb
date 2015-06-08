@@ -28,13 +28,17 @@ class Invoice < ActiveRecord::Base
 
 
   validates_date :billing_date, :due_date, :period_from, :period_to
+  validates :invoicing_key, uniqueness: true, allow_blank: true
   validates :status, inclusion: STATUSES
   validate :assert_positive_period
   validate :assert_billing_address_belongs_to_order_client
+  validate :assert_order_has_contract
 
   before_validation :set_default_status
   before_validation :generate_reference, on: :create
   before_validation :generate_due_date
+  before_create :lock_client_invoice_number
+  after_create :update_client_invoice_number
 
 
   def title
@@ -59,8 +63,18 @@ class Invoice < ActiveRecord::Base
 
   private
 
+  def lock_client_invoice_number
+    order.client.lock!
+    generate_reference
+  end
+
+  def update_client_invoice_number
+    order.client.update_column(:last_invoice_number, order.client.last_invoice_number + 1)
+  end
+
   def generate_reference
-    # TODO, PrefixKunde.KurznameAuftrag.KurznameOrganisationseinheit.KurznameLaufnummerProKunde
+    self.reference = "#{order.client.shortname}#{order.shortname}#{order.department.shortname}" \
+                     "#{'%04d' % (order.client.last_invoice_number + 1)}"
   end
 
   def generate_due_date
@@ -80,6 +94,12 @@ class Invoice < ActiveRecord::Base
   def assert_billing_address_belongs_to_order_client
     if billing_address && order && billing_address.client_id != order.client.id
       errors.add(:billing_address_id, 'muss zum Auftragskunden gehören.')
+    end
+  end
+
+  def assert_order_has_contract
+    unless order.contract
+      errors.add(:order_id, 'muss einen definierten Vertrag haben.')
     end
   end
 

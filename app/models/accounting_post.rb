@@ -41,6 +41,7 @@ class AccountingPost < ActiveRecord::Base
 
   ### VALIDATIONS
 
+  validates :work_item_id, uniqueness: true
   validates :offered_rate, presence: { if: :offered_total? }
   validates :portfolio_item, presence: true
   validate :check_booked_on_order

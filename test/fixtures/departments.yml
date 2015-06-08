@@ -11,14 +11,12 @@
 
 devone:
   name:      devone
-  shortname: d1
-  
+  shortname: D1
+
 devtwo:
   name:      devtwo
-  shortname: d2
-  
+  shortname: D2
+
 sys:
   name:      sys
-  shortname: sys
-  
-      
+  shortname: SYS

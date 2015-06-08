@@ -20,10 +20,13 @@ class BillingAddress < ActiveRecord::Base
   belongs_to :contact
 
   has_many :orders, dependent: :nullify
-  has_many :invoices, dependent: :nullify
+  has_many :invoices
 
   validates :client_id, :street, :zip_code, :town, :country, presence: true
+  validates :invoicing_key, uniqueness: true, allow_blank: true
   validate :assert_contact_belongs_to_client
+
+  protect_if :invoices, 'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Rechnungen zugeordnet sind'
 
 
   # TODO country contains uppercase country code from country_select gem, default from settings

@@ -25,8 +25,9 @@ class Client < ActiveRecord::Base
   has_descendants_through_work_item :orders
   has_descendants_through_work_item :accounting_posts
 
-
+  validates :work_item_id, uniqueness: true
   validates :crm_key, uniqueness: true, allow_blank: true
+  validates :invoicing_key, uniqueness: true, allow_blank: true
 
   ##### interface methods for Evaluatable #####
 

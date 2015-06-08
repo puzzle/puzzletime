@@ -2,7 +2,6 @@ module Invoicing
   module SmallInvoice
     class ClientSync
       class << self
-
         def perform
           ::Client.includes(:work_item, :contacts, :billing_addresses).find_each do |client|
             if client.billing_addresses.present? # required by small invoice
@@ -22,12 +21,11 @@ module Invoicing
             hash[client['name']] = client['id']
           end
         end
-        
       end
 
       attr_reader :client, :remote_keys
 
-      def initialize(client, remote_keys = [])
+      def initialize(client, remote_keys = {})
         @client = client
         @remote_keys = remote_keys
       end
@@ -82,7 +80,7 @@ module Invoicing
       end
 
       def key
-        client.invoicing_key.presence || remote_client_keys[client.name]
+        client.invoicing_key.presence || remote_keys[client.name]
       end
 
       def api

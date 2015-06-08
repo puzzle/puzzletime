@@ -3,19 +3,32 @@ module Invoicing
     module Entity
       class Position < Base
         def to_hash
-          # TODO
           {
-            type: 1,
+            type: constant(:position_type_id),
             number: nil,
-            name: 'Service Y',
-            description: 'Cleaning house',
-            cost: 0,
-            unit: 7,
-            amount: 1,
+            name: entry.name,
+            description: nil,
+            cost: post.offered_rate,
+            unit: constant(:unit_id),
+            amount: entry.total_hours,
             vat: constant(:vat),
-            discount: nil,
-            discount_type: 0
+            discount: discount,
+            discount_type: discount_type
           }
+        end
+
+        private
+
+        def discount_type
+          post.discount_percent? ? 0 : 1
+        end
+
+        def discount
+          post.discount_percent.presence || post.discount_fixed.presence
+        end
+
+        def post
+          entry.accounting_post
         end
       end
     end

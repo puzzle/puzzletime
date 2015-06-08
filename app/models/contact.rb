@@ -28,6 +28,7 @@ class Contact < ActiveRecord::Base
   has_many :billing_addresses, dependent: :nullify
 
   validates :firstname, :lastname, :client_id, presence: true
+  validates :invoicing_key, uniqueness: true, allow_blank: true
 
   scope :list, -> { order(:lastname, :firstname) }
 

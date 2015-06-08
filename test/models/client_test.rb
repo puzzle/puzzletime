@@ -24,6 +24,7 @@ class ClientTest < ActiveSupport::TestCase
 
   test 'client without worktimes is destroyed with entire structure' do
     Worktime.destroy_all
+    Invoice.destroy_all
     assert_difference('WorkItem.count', -2) do
       assert_difference('Client.count', -1) do
         clients(:swisstopo).destroy

@@ -18,11 +18,37 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_not_valid invoice, :billing_address_id
   end
 
+  test 'generates invoice number' do
+    i = invoice.dup
+    i.reference = nil
+    i.save!
+    assert_equal 'STOPWEBD10002', i.reference
+  end
 
   private
 
   def invoice
     invoices(:webauftritt_may)
+  end
+
+end
+
+class InvoiceTransactionTest < ActiveSupport::TestCase
+
+  self.use_transactional_fixtures = false
+
+  test 'generates different parallel invoice numbers' do
+    ActiveRecord::Base.clear_active_connections!
+    10.times.collect do
+      Thread.new do
+        ActiveRecord::Base.connection_pool.with_connection do
+          invoices(:webauftritt_may).dup.save!
+        end
+      end
+    end.each(&:join)
+
+    assert_equal 11, clients(:swisstopo).last_invoice_number
+    assert_equal 11, Invoice.pluck(:reference).uniq.size
   end
 
 end
