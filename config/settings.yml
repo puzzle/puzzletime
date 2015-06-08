@@ -42,7 +42,7 @@ small_invoice:
     currency: CHF
     account_id: 485417264
     esr: true
-    esr_number: 0145031
+    esr_number: 0145031 # post account number
     esr_singlepage: false
     lsvplus: false
     debit_direct: false
@@ -51,6 +51,10 @@ small_invoice:
     paypal_url:
     client_type: 1 # company
     vat: 8
+    position_type_id: 1 # service
+    unit_id: 1 # hours
+    gender_id: 2 # female
+    show_department: true
 
 
 # Default values

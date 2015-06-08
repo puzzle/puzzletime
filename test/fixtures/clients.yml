@@ -19,6 +19,7 @@ puzzle:
 swisstopo:
   id:      2
   work_item_id: 2
+  last_invoice_number: 1
 
 pbs:
   id: 3
