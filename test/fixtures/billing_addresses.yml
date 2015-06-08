@@ -1,0 +1,15 @@
+swisstopo:
+  client_id: 2 # swisstopo
+  contact: swisstopo_1
+  supplement: Webservices
+  street: Seftigenstrasse 264
+  zip_code: 3084
+  town: Wabern
+  country: CH
+
+puzzle:
+  client_id: 1 # puzzle
+  street: Eigerplatz 4
+  zip_code: 3007
+  town: Bern
+  country: CH
