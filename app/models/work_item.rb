@@ -55,9 +55,9 @@ class WorkItem < ActiveRecord::Base
 
   ### SCOPES
 
-  scope :list,       -> { order('path_shortnames') }
-  scope :leaves,     -> { where(leaf: true) }
-  scope :recordable, -> { leaves.where(closed: false) }
+  scope :list,         -> { order('path_shortnames') }
+  scope :leaves,       -> { where(leaf: true) }
+  scope :recordable,   -> { leaves.where(closed: false) }
 
   ### INSTANCE METHODS
 

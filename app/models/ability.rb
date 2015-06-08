@@ -26,6 +26,7 @@ class Ability
                   Contact,
                   Department,
                   Employment,
+                  Invoice,
                   Holiday,
                   Contract,
                   Order,
@@ -79,8 +80,8 @@ class Ability
       employee == user
     end
 
-    can [:read, :accounting_posts, :services, :show_targets, :show_contract, :show_comments], Order
-    can :read, [AccountingPost, OrderComment]
+    can [:read, :accounting_posts, :services, :show_targets, :show_contract, :show_comments, :show_invoices], Order
+    can :read, [AccountingPost, Invoice, OrderComment]
 
     can :manage, Planning
 

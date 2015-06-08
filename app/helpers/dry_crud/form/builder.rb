@@ -174,13 +174,14 @@ module DryCrud::Form
       end
     end
 
-    def static_field(attr, options = {})
-      static_text(@template.format_attr(@object, attr))
+    def static_field(attr, html_options = {})
+      static_text(@template.format_attr(@object, attr), html_options)
     end
 
     # Renders a static text where otherwise form inputs appear.
-    def static_text(text)
-      content_tag(:p, text, class: 'form-control-static')
+    def static_text(text, html_options = {})
+      add_css_class(html_options, 'form-control-static')
+      content_tag(:p, text, html_options)
     end
 
     # Generates a help block for fields

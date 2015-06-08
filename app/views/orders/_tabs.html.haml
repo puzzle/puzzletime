@@ -16,6 +16,10 @@
   - elsif can?(:show_contract, @order)
     = nav 'Vertrag', order_contract_path(@order)
 
+  - if can?(:show_invoices, @order)
+    = nav 'Rechnungen',
+          order_invoices_path(@order)
+
   - if can?(:services, @order)
     = nav 'Leistungen',
           order_order_services_path(@order),

@@ -63,6 +63,7 @@ group :test do
   gem 'headless'
   gem 'selenium-webdriver'
   gem 'database_cleaner'
+  gem 'm'
 end
 
 group :console do

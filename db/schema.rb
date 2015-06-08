@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150609140059) do
+ActiveRecord::Schema.define(version: 20150702152630) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -50,18 +50,19 @@ ActiveRecord::Schema.define(version: 20150609140059) do
     t.string  "street",        limit: 255
     t.string  "zip_code",      limit: 255
     t.string  "town",          limit: 255
-    t.string  "country",       limit: 2
+    t.string  "country",       limit: 255
     t.string  "invoicing_key"
     t.index ["client_id"], :name => "index_billing_addresses_on_client_id"
     t.index ["contact_id"], :name => "index_billing_addresses_on_contact_id"
   end
 
   create_table "clients", force: :cascade do |t|
-    t.integer "work_item_id",                                    null: false
-    t.string  "crm_key",             limit: 255
-    t.boolean "allow_local",                     default: false, null: false
-    t.integer "last_invoice_number",             default: 0
+    t.integer "work_item_id",                                        null: false
+    t.string  "crm_key",                 limit: 255
+    t.boolean "allow_local",                         default: false, null: false
+    t.integer "last_invoice_number",                 default: 0
     t.string  "invoicing_key"
+    t.integer "last_billing_address_id"
     t.index ["work_item_id"], :name => "index_clients_on_work_item_id"
   end
 
@@ -145,6 +146,13 @@ ActiveRecord::Schema.define(version: 20150609140059) do
     t.index ["shortname"], :name => "chk_unique_name", :unique => true
   end
 
+  create_table "employees_invoices", id: false, force: :cascade do |t|
+    t.integer "employee_id"
+    t.integer "invoice_id"
+    t.index ["employee_id"], :name => "index_employees_invoices_on_employee_id"
+    t.index ["invoice_id"], :name => "index_employees_invoices_on_invoice_id"
+  end
+
   create_table "employments", force: :cascade do |t|
     t.integer "employee_id"
     t.decimal "percent",     precision: 5, scale: 2, null: false
@@ -161,22 +169,28 @@ ActiveRecord::Schema.define(version: 20150609140059) do
   end
 
   create_table "invoices", force: :cascade do |t|
-    t.integer  "order_id",                                                   null: false
-    t.date     "billing_date",                                               null: false
-    t.date     "due_date",                                                   null: false
-    t.decimal  "total_amount",       precision: 12, scale: 2,                null: false
-    t.float    "total_hours",                                                null: false
-    t.string   "reference",                                                  null: false
-    t.date     "period_from",                                                null: false
-    t.date     "period_to",                                                  null: false
-    t.string   "status",                                                     null: false
-    t.boolean  "add_vat",                                     default: true, null: false
-    t.integer  "billing_address_id",                                         null: false
-    t.string   "invoicing_key"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer "order_id",                                                   null: false
+    t.date    "billing_date",                                               null: false
+    t.date    "due_date",                                                   null: false
+    t.decimal "total_amount",       precision: 12, scale: 2,                null: false
+    t.float   "total_hours",                                                null: false
+    t.string  "reference",                                                  null: false
+    t.date    "period_from",                                                null: false
+    t.date    "period_to",                                                  null: false
+    t.string  "status",                                                     null: false
+    t.boolean "add_vat",                                     default: true, null: false
+    t.integer "billing_address_id",                                         null: false
+    t.string  "invoicing_key"
+    t.integer "grouping",                                    default: 0,    null: false
     t.index ["billing_address_id"], :name => "index_invoices_on_billing_address_id"
     t.index ["order_id"], :name => "index_invoices_on_order_id"
+  end
+
+  create_table "invoices_work_items", id: false, force: :cascade do |t|
+    t.integer "work_item_id"
+    t.integer "invoice_id"
+    t.index ["invoice_id"], :name => "index_invoices_work_items_on_invoice_id"
+    t.index ["work_item_id"], :name => "index_invoices_work_items_on_work_item_id"
   end
 
   create_table "order_comments", force: :cascade do |t|

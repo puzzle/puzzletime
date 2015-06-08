@@ -16,7 +16,7 @@ module Invoicing
         private
 
         def remote_keys
-          @remote_keys ||= Api.instance.list(:client).each_with_object({}) do |client, hash|
+          @remote_keys ||= SmallInvoice::Api.instance.list(:client).each_with_object({}) do |client, hash|
             hash[client['name']] = client['id']
           end
         end
@@ -32,7 +32,7 @@ module Invoicing
 
       def sync
         if key
-          update_remote
+          update_remote # TODO: does not work "Invoicing::Error: This client number already exists"
         else
           create_remote
         end

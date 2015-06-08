@@ -15,8 +15,7 @@
 #  add_vat            :boolean          default(TRUE), not null
 #  billing_address_id :integer          not null
 #  invoicing_key      :string
-#  created_at         :datetime
-#  updated_at         :datetime
+#  grouping           :integer          default(0)
 #
 
 webauftritt_may:
@@ -26,8 +25,8 @@ webauftritt_may:
   reference: STOPWEBD10001
   total_amount: 40000.45
   total_hours: 50
-  period_from: 2015-05-01
-  period_to: 2015-05-31
+  period_from: 2006-12-01
+  period_to: 2006-12-31
   status: draft
   add_vat: true
   billing_address: swisstopo
