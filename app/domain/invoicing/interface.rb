@@ -1,5 +1,5 @@
 module Invoicing
-  class Base
+  class Interface
     # Stores a new or an existing invoice with the given positions in the remote system.
     def save_invoice(invoice, positions)
     end

@@ -49,7 +49,7 @@ ActiveRecord::Schema.define(version: 20150604103444) do
     t.string  "street",        limit: 255
     t.string  "zip_code",      limit: 255
     t.string  "town",          limit: 255
-    t.string  "country",       limit: 255
+    t.string  "country",       limit: 2
     t.string  "invoicing_key"
     t.index ["client_id"], :name => "index_billing_addresses_on_client_id"
     t.index ["contact_id"], :name => "index_billing_addresses_on_contact_id"
