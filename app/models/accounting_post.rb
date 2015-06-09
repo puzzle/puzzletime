@@ -101,6 +101,10 @@ class AccountingPost < ActiveRecord::Base
     work_item.label_verbose
   end
 
+  def propagate_closed!
+    work_item.propagate_closed!(order.status.closed? || closed?)
+  end
+
   private
 
   def derive_offered_fields
@@ -134,7 +138,8 @@ class AccountingPost < ActiveRecord::Base
     if post
       post.work_item = WorkItem.new(name: order.work_item.name,
                                     shortname: order.work_item.shortname,
-                                    parent_id: order.work_item.id)
+                                    parent_id: order.work_item.id,
+                                    closed: post.closed? || order.status.closed?)
       post.save!
       order.work_item.move_times!(post.work_item)
     end

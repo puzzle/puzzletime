@@ -79,11 +79,11 @@ class Order < ActiveRecord::Base
   end
 
   def propagate_closed!
-    if status.closed
+    if status.closed?
       work_item.propagate_closed!(status.closed)
     else
       accounting_posts.each do |post|
-        post.propagate_closed!
+        post.work_item.propagate_closed!(post.closed?)
       end
     end
   end
