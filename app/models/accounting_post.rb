@@ -7,8 +7,8 @@
 #  work_item_id           :integer          not null
 #  portfolio_item_id      :integer
 #  reference              :string(255)
-#  offered_hours          :integer
-#  offered_rate           :integer
+#  offered_hours          :float
+#  offered_rate           :decimal(12, 2)
 #  offered_total          :decimal(12, 2)
 #  discount_percent       :integer
 #  discount_fixed         :integer

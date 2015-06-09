@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150604103444) do
+ActiveRecord::Schema.define(version: 20150609140059) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,8 +28,8 @@ ActiveRecord::Schema.define(version: 20150604103444) do
     t.integer "work_item_id",                                                                null: false
     t.integer "portfolio_item_id"
     t.string  "reference",              limit: 255
-    t.integer "offered_hours"
-    t.float   "offered_rate"
+    t.float   "offered_hours"
+    t.decimal "offered_rate",                       precision: 12, scale: 2
     t.decimal "offered_total",                      precision: 12, scale: 2
     t.integer "discount_percent"
     t.integer "discount_fixed"
