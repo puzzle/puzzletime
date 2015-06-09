@@ -162,6 +162,11 @@ a.tooltip:hover span {
   text-align: center;
 }
 
+.align-with-heading {
+  display: inline-block;
+  margin: 10px 0;
+}
+
 .truncated {
   max-width: 400px;
   text-overflow: ellipsis;
