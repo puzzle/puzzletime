@@ -42,7 +42,7 @@ module Invoicing
       def handle_response(response)
         json = JSON.parse(response.body)
         if json['error']
-          fail Invoicing::Error, "#{json['errormessage']} (#{json['errorcode']})"
+          fail Invoicing::Error, json['errormessage'], json['errorcode']
         else
           json
         end

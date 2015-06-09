@@ -20,12 +20,7 @@ module Invoicing
     def save
       success = false
       Invoice.transaction do
-        positions = build_positions
-
-        success = update_total_values(positions) &&
-                  save_remote_invoice(positions) &&
-                  update_worktime_invoice_ids
-
+        success = save_internal
         fail ActiveRecord::Rollback unless success
       end
       success
@@ -40,6 +35,14 @@ module Invoicing
     end
 
     private
+
+    def save_internal
+      positions = build_positions
+
+      update_total_values(positions) &&
+      save_remote_invoice(positions) &&
+      update_worktime_invoice_ids
+    end
 
     def update_total_values(positions)
       invoice.total_hours = positions.collect(&:total_hours).sum

@@ -1,6 +1,6 @@
 class InvoicingSyncJob < CronJob
 
-  self.cron_expression = '34 3 * * *'
+  self.cron_expression = '34 5 * * *'
 
   def perform
     Invoicing.instance.sync_all

@@ -22,7 +22,6 @@ module Invoicing
             due:               entry.due_date,
             account_id:        constant(:account_id),
             esr:               bool_constant(:esr),
-            esr_number:        constant(:esr_number),
             esr_singlepage:    bool_constant(:esr_singlepage),
             lsvplus:           bool_constant(:lsvplus),
             dd:                bool_constant(:debit_direct),
