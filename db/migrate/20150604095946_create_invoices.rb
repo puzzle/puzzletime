@@ -13,6 +13,8 @@ class CreateInvoices < ActiveRecord::Migration
       t.boolean :add_vat, null: false, default: true
       t.belongs_to :billing_address, null: false
       t.string :invoicing_key
+      
+      t.timestamps
     end
 
     add_index :invoices, :order_id

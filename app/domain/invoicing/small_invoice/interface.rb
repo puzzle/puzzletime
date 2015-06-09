@@ -12,15 +12,16 @@ module Invoicing
         InvoiceSync.new(invoice).sync
       end
 
+      def delete_invoice(invoice)
+        return unless invoice.invoicing_key?
+
+        Api.instance.delete(:invoice, invoice.invoicing_key)
+      end
+
       def sync_all
         ClientSync.perform
         InvoiceSync.sync_unpaid
       end
-
-      def api
-        @api ||= Api.new
-      end
-
     end
   end
 end

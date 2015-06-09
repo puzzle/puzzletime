@@ -13,14 +13,10 @@ module Invoicing
           end
         end
 
-        def api
-          Invoicing.instance.api
-        end
-
         private
 
         def remote_keys
-          @remote_keys ||= api.list(:client).each_with_object({}) do |client, hash|
+          @remote_keys ||= Api.instance.list(:client).each_with_object({}) do |client, hash|
             hash[client['name']] = client['id']
           end
         end
@@ -88,7 +84,7 @@ module Invoicing
       end
 
       def api
-        self.class.api
+        Api.instance
       end
     end
   end
