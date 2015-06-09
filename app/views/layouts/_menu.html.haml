@@ -2,7 +2,7 @@
   .container-fluid
     %ul.nav.navbar-nav
       = nav 'Zeiterfassung',
-            worktimes_path(clear: 1),
+            root_path,
             worktimes_path,
             ordertimes_path,
             absencetimes_path,
@@ -16,6 +16,7 @@
       - if can?(:manage, Client)
         = nav 'Verwalten',
               clients_path,
+              clients_path,
               absences_path,
               departments_path,
               employees_path,
@@ -26,4 +27,3 @@
               portfolio_items_path,
               target_scopes_path,
               working_conditions_path
-

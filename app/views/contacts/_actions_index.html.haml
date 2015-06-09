@@ -1,0 +1,4 @@
+= render 'manage/actions_index'
+
+- if can?(:read, BillingAddress)
+  = action_link('Rechnungsadressen', client_billing_addresses_path(@client))

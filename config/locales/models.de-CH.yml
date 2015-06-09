@@ -11,6 +11,9 @@ de-CH:
       accounting_post:
         one: Buchungsposition
         other: Buchungspositionen
+      billing_address:
+        one: Rechnungsadresse
+        other: Rechnungsadressen
       client:
         one: Kunde
         other: Kunden
@@ -101,6 +104,15 @@ de-CH:
         description_required: Beschreibung erforderlich
         ticket_required: Ticket erforderlich
         closed: Geschlossen
+      billing_address:
+        client_id: Kunde
+        contact_id: Kontakt
+        supplement: Zusatz
+        street: Strasse
+        zip_code: PLZ
+        town: Ort
+        country: Land
+        country_name: Land
       client:
         name: Name
         shortname: Kürzel
@@ -248,3 +260,7 @@ de-CH:
         booked: Verbucht
         ticket: Ticket
         account: Buchungsposition
+
+    associations:
+      contact:
+        no_entry: "(keiner)"
