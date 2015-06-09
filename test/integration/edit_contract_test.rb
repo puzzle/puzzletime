@@ -10,7 +10,7 @@ class EditContractTest < ActionDispatch::IntegrationTest
     assert_equal 'asdf1234', find_field('contract_number').value
     assert_equal '01.01.2014', find_field('contract_start_date').value
     assert_equal '30.07.2015', find_field('contract_end_date').value
-    assert_equal '15', find_field('contract_payment_period').value
+    assert_equal '30', find_field('contract_payment_period').value
     assert_equal 'order asdf 1234', find_field('contract_reference').value
     assert_equal 'Reaktionszeit: 1ms', find_field('contract_sla').value
 

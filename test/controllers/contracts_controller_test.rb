@@ -65,7 +65,7 @@ class ContractsControllerTest < ActionController::TestCase
         number: "asdf123456",
         start_date: "2014-01-02",
         end_date: "2015-07-29",
-        payment_period: 3,
+        payment_period: 45,
         reference: "order asdf 123456",
         sla: "Reaktionszeit: 1.5ms"
     }

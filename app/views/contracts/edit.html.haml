@@ -15,8 +15,16 @@
     = f.label :end_date, "bis", class: 'col-md-1 control-label'
     .col-md-2= f.input_field :end_date
 
-  = f.labeled_input_field :payment_period, span: 1, help: 'Tage'
+  = f.labeled(:payment_period, span: 1, help: 'Tage') do
+    = f.collection_select(:payment_period,
+                          Settings.defaults.payment_periods,
+                          :to_s,
+                          :to_s,
+                          { prompt: true },
+                          class: 'form-control')
+
   = f.labeled_input_field :reference, placeholder: 'Referenz des Kunden',
                                       help: 'erscheint auf Rechnung'
+
   = f.labeled_input_field :notes, placeholder: 'Weitere Vereinbarungen'
   = f.labeled_input_field :sla

@@ -49,7 +49,7 @@ small_invoice:
     paypal: false
     paypal_url:
     client_type: 1 # company
-    vat: 8
+    vat: 8 # percent
     position_type_id: 1 # service
     unit_id: 1 # hours
     gender_id: 2 # female
@@ -61,6 +61,11 @@ defaults:
   report_type: absolute_day
   start_hour: 8
   country: CH
+  payment_period: 30 # days
+  payment_periods:
+    - 30
+    - 45
+    - 60
 
 work_items:
   path_separator: '-'
