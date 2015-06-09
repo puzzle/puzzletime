@@ -83,7 +83,7 @@ module Invoicing
       end
 
       def api
-        Api.instance
+        Invoicing.instance.api
       end
 
     end
