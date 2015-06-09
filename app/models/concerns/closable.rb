@@ -4,6 +4,7 @@ module Closable
   included do
     before_update :remember_closed_change
     after_update :propagate_closed_change
+    after_create :propagate_closed!
   end
 
   def propagate_closed!

@@ -60,39 +60,44 @@ class AccountingPostsControllerTest < ActionController::TestCase
   end
 
   test 'CREATE with book_on_order true when no accounting_post exists on order sets work_item to order.work_item' do
-    orders(:hitobito_demo).accounting_posts.delete_all
+    order = orders(:hitobito_demo)
+    order.accounting_posts.destroy_all
     assert_difference "AccountingPost.count", 1 do
       assert_no_difference "WorkItem.count" do
         post :create,
             book_on_order: 'true',
-            order_id: orders(:hitobito_demo),
+            order_id: order.id,
              accounting_post: {
                reference: 'asdf',
                portfolio_item_id: portfolio_items(:web).id,
+               closed: true,
                offered_rate: 155 }
       end
     end
-    assert_redirected_to order_accounting_posts_path(orders(:hitobito_demo))
+    assert_redirected_to order_accounting_posts_path(order)
     assert_match(/erfolgreich erstellt/, flash[:notice])
-    assert AccountingPost.last.work_item_id = orders(:hitobito_demo).work_item_id
+    assert AccountingPost.last.work_item_id = order.work_item_id
+    assert_equal true, order.work_item.reload.closed
   end
 
   test 'CREATE with new work_item with order.work_item as parent' do
     assert_difference "AccountingPost.count", 1 do
       assert_difference "WorkItem.count", 1 do
         post :create,
-             order_id: orders(:hitobito_demo),
+             order_id: orders(:hitobito_demo).id,
              accounting_post: {
                work_item_attributes: { name: 'TEST', shortname: 'TST' },
                portfolio_item_id: portfolio_items(:web).id,
-               offered_rate: 120 }
+               offered_rate: 120,
+               closed: true }
       end
     end
     assert_redirected_to order_accounting_posts_path(orders(:hitobito_demo))
     assert_match(/erfolgreich erstellt/, flash[:notice])
     new_work_item = AccountingPost.last.work_item
     assert new_work_item.parent_id = orders(:hitobito_demo).work_item_id
-    assert_equal new_work_item.attributes.slice('name', 'shortname'), {'name' => 'TEST', 'shortname' => 'TST'}
+    assert_equal new_work_item.attributes.slice('name', 'shortname', 'closed'),
+                 { 'name' => 'TEST', 'shortname' => 'TST', 'closed' => true }
   end
 
   test 'CREATE second accounting post moves existing post from order to own work item' do
