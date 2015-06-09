@@ -28,6 +28,7 @@ class CreateInvoices < ActiveRecord::Migration
     add_column :contacts, :invoicing_key, :string
 
     change_column :billing_addresses, :contact_id, :integer, null: true
+    change_column :billing_addresses, :country, :string, limit: 2
   end
 
   def down
