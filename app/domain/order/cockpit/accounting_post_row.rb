@@ -83,7 +83,7 @@ class Order::Cockpit
     end
 
     def build_cell_with_amount(hours)
-      amount = offered_rate && offered_rate * hours
+      amount = offered_rate && offered_rate * hours.to_d
       Cell.new(hours, amount)
     end
 
