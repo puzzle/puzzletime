@@ -49,7 +49,10 @@ class AccountingPostsControllerTest < ActionController::TestCase
       post :create,
            order_id: orders(:hitobito_demo).id,
            book_on_order: 'true',
-           accounting_post: { reference: 'asdf', portfolio_item_id: portfolio_items(:web).id }
+           accounting_post: {
+             reference: 'asdf',
+             portfolio_item_id: portfolio_items(:web).id,
+             offered_rate: 120 }
       assert_response :success
       assert_template :new
       assert_match(/es existieren bereits/, assigns(:accounting_post).errors.full_messages.join)
@@ -60,8 +63,13 @@ class AccountingPostsControllerTest < ActionController::TestCase
     orders(:hitobito_demo).accounting_posts.delete_all
     assert_difference "AccountingPost.count", 1 do
       assert_no_difference "WorkItem.count" do
-        post :create, book_on_order: 'true', order_id: orders(:hitobito_demo),
-             accounting_post: { reference: 'asdf', portfolio_item_id: portfolio_items(:web).id }
+        post :create,
+            book_on_order: 'true',
+            order_id: orders(:hitobito_demo),
+             accounting_post: {
+               reference: 'asdf',
+               portfolio_item_id: portfolio_items(:web).id,
+               offered_rate: 155 }
       end
     end
     assert_redirected_to order_accounting_posts_path(orders(:hitobito_demo))
@@ -72,8 +80,12 @@ class AccountingPostsControllerTest < ActionController::TestCase
   test 'CREATE with new work_item with order.work_item as parent' do
     assert_difference "AccountingPost.count", 1 do
       assert_difference "WorkItem.count", 1 do
-        post :create, order_id: orders(:hitobito_demo),
-             accounting_post: { work_item_attributes: { name: 'TEST', shortname: 'TST' }, portfolio_item_id: portfolio_items(:web).id}
+        post :create,
+             order_id: orders(:hitobito_demo),
+             accounting_post: {
+               work_item_attributes: { name: 'TEST', shortname: 'TST' },
+               portfolio_item_id: portfolio_items(:web).id,
+               offered_rate: 120 }
       end
     end
     assert_redirected_to order_accounting_posts_path(orders(:hitobito_demo))
@@ -91,7 +103,8 @@ class AccountingPostsControllerTest < ActionController::TestCase
              order_id: order.id,
              accounting_post: {
                work_item_attributes: { name: 'TEST', shortname: 'TST' },
-               portfolio_item_id: portfolio_items(:web).id}
+               portfolio_item_id: portfolio_items(:web).id,
+               offered_rate: 150 }
       end
     end
     assert_redirected_to order_accounting_posts_path(order)
@@ -113,7 +126,8 @@ class AccountingPostsControllerTest < ActionController::TestCase
              order_id: order.id,
              accounting_post: {
                work_item_attributes: { name: 'TEST', shortname: 'TST' },
-               portfolio_item_id: portfolio_items(:web).id}
+               portfolio_item_id: portfolio_items(:web).id,
+               offered_rate: 150 }
       end
     end
     assert_redirected_to order_accounting_posts_path(order)

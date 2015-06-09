@@ -19,7 +19,7 @@
 
 class Invoice < ActiveRecord::Base
 
-  STATUSES = %w(draft sent payed)
+  STATUSES = %w(draft sent paid)
 
   belongs_to :order
   belongs_to :billing_address

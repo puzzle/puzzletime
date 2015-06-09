@@ -22,6 +22,7 @@
 allgemein:
   work_item_id: 3
   portfolio_item: web
+  offered_rate: 0
 
 puzzletime:
   work_item_id: 4
@@ -34,10 +35,12 @@ puzzletime:
 hitobito_demo_app:
   work_item_id: 9
   portfolio_item: web
+  offered_rate: 170
 
 hitobito_demo_site:
   work_item_id: 10
   portfolio_item: web
+  offered_rate: 170
 
 webauftritt:
   work_item_id: 6
