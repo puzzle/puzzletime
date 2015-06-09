@@ -47,6 +47,7 @@ Rails.application.routes.draw do
 
     resource :multi_worktimes, only: [:update] do
       post :edit
+      get :edit, to: redirect('/orders/%{order_id}/order_services')
     end
 
     resources :order_comments, only: [:index, :create]
