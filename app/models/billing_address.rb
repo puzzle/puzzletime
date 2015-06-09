@@ -10,7 +10,7 @@
 #  street        :string(255)
 #  zip_code      :string(255)
 #  town          :string(255)
-#  country       :string(255)
+#  country       :string(2)
 #  invoicing_key :string
 #
 

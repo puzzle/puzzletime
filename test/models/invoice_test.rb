@@ -1,3 +1,24 @@
+# == Schema Information
+#
+# Table name: invoices
+#
+#  id                 :integer          not null, primary key
+#  order_id           :integer          not null
+#  billing_date       :date             not null
+#  due_date           :date             not null
+#  total_amount       :decimal(12, 2)   not null
+#  total_hours        :float            not null
+#  reference          :string           not null
+#  period_from        :date             not null
+#  period_to          :date             not null
+#  status             :string           not null
+#  add_vat            :boolean          default(TRUE), not null
+#  billing_address_id :integer          not null
+#  invoicing_key      :string
+#  created_at         :datetime
+#  updated_at         :datetime
+#
+
 require 'test_helper'
 
 class InvoiceTest < ActiveSupport::TestCase

@@ -160,18 +160,20 @@ ActiveRecord::Schema.define(version: 20150604103444) do
   end
 
   create_table "invoices", force: :cascade do |t|
-    t.integer "order_id",                                                   null: false
-    t.date    "billing_date",                                               null: false
-    t.date    "due_date",                                                   null: false
-    t.decimal "total_amount",       precision: 12, scale: 2,                null: false
-    t.float   "total_hours",                                                null: false
-    t.string  "reference",                                                  null: false
-    t.date    "period_from",                                                null: false
-    t.date    "period_to",                                                  null: false
-    t.string  "status",                                                     null: false
-    t.boolean "add_vat",                                     default: true, null: false
-    t.integer "billing_address_id",                                         null: false
-    t.string  "invoicing_key"
+    t.integer  "order_id",                                                   null: false
+    t.date     "billing_date",                                               null: false
+    t.date     "due_date",                                                   null: false
+    t.decimal  "total_amount",       precision: 12, scale: 2,                null: false
+    t.float    "total_hours",                                                null: false
+    t.string   "reference",                                                  null: false
+    t.date     "period_from",                                                null: false
+    t.date     "period_to",                                                  null: false
+    t.string   "status",                                                     null: false
+    t.boolean  "add_vat",                                     default: true, null: false
+    t.integer  "billing_address_id",                                         null: false
+    t.string   "invoicing_key"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["billing_address_id"], :name => "index_invoices_on_billing_address_id"
     t.index ["order_id"], :name => "index_invoices_on_order_id"
   end

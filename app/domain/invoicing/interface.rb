@@ -9,6 +9,10 @@ module Invoicing
     def sync_invoice(invoice)
     end
 
+    # Delete a given invoice in the remote system.
+    def delete_invoice(invoice)
+    end
+
     # Sync all entities to the invoicing system, overriding remote changes.
     def sync_all
     end
