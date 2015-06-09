@@ -81,21 +81,24 @@
 .icon-close:before {
   content: "x";
 }
-.icon-disk:before {
+.icon-document:before {
   content: "a";
 }
-.icon-edit:before {
+.icon-disk:before {
   content: "b";
 }
-.icon-export:before {
+.icon-edit:before {
   content: "f";
 }
-.icon-info:before {
+.icon-export:before {
   content: "i";
 }
-.icon-square:before {
+.icon-info:before {
   content: "j";
 }
-.icon-triangle:before {
+.icon-square:before {
   content: "k";
+}
+.icon-triangle:before {
+  content: "m";
 }

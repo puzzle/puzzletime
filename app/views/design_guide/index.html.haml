@@ -419,3 +419,115 @@
           %br
           %span.muted ad minim
         %td ut aliquip ex ea
+
+
+
+
+/ Invoice / Show example
+
+%h1.h3 Rechnungen
+.row
+  .col-md-3
+    %h2.h4 Vorauszahlungen
+  .col-md-9
+    %a.align-with-heading{href: '#'}
+      %i.icon-add
+      Neue Vorauszahlung erstellen
+
+.unindented
+  %table.table.table-striped
+    %thead
+      %tr
+        %th Datum
+        %th Referenz
+        %th Betrag
+        %th Bemerkungen
+        %th Status
+        %th Fälligkeit
+        %th &nbsp;
+
+    %tbody
+      %tr
+        %td 30.03.2014
+        %td BLSR001D1KON
+        %td CHF 10'000.00
+        %td Anzahlung 30% bei Auftragserteilung
+        %td bezahlt
+        %td 
+          %span.red 30.04.2014
+        %td.action
+          %a{href: '#'}
+            %i.icon-edit
+          %a{href: '#'}
+            %i.icon-delete
+          %a{href: '#'}
+            %i.icon-time
+          %a{href: '#'}
+            %i.icon-document
+
+
+/ Invoice / Add example
+
+%h1.h3 Neue Rechnung erstellen
+
+%form.form-horizontal{:action => ""}
+  .form-group
+    %label.col-md-2.control-label Projekt
+    .col-md-5
+      %p.form-control-static BLS-DAX-WEI   Weiterentwicklung 2014
+  .form-group
+    %label.col-md-2.control-label{:for => "start_date"} Leistungsperiode von
+    .col-md-2
+      .input-group
+        %input#start_date.date.form-control{:name => "start_date", :size => "15", :type => "text"}/
+        %span.input-group-addon
+          %span.glyphicon.glyphicon-calendar
+    %label.col-md-1.control-label{:for => "end_date"} bis
+    .col-md-2
+      .input-group
+        %input#end_date.date.form-control{:name => "end_date", :size => "15", :type => "text"}/
+        %span.input-group-addon
+          %span.glyphicon.glyphicon-calendar
+  .form-group
+    .col-md-offset-2.col-md-8
+      .checkbox
+        %label
+          %input{:type => "checkbox"}/
+          Manuelle Rechnung
+      %p.help-block Alle Rechnungspositionen/Leistungen werden manuell erfasst.
+  .form-group
+    %label.col-md-2.control-label Members
+    .col-md-2
+      .checkbox
+        %label
+          %input{:type => "checkbox"}/
+          Andreas Lingenhag
+      .checkbox
+        %label
+          %input{:type => "checkbox"}/
+          Ruggero Botteon
+      .checkbox
+        %label
+          %input{:type => "checkbox"}/
+          Max Burri
+      .checkbox
+        %label
+          %input{:type => "checkbox"}/
+          Philipp Suter
+      .checkbox
+        %label
+          %input{:type => "checkbox"}/
+          Philipp Murkowsky
+  .form-group
+    %label.col-md-2.control-label Rechnungspositionen
+    .col-md-2
+      %p.form-control-static Gruppieren nach:
+      .radio
+        %label
+          %input{:type => "radio", :name => "invoice_order", :checked => "checked"}/
+          Buchungspositionen
+      .radio
+        %label
+          %input{:type => "radio", :name => "invoice_order"}/
+          Members
+      
