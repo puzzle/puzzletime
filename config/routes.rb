@@ -10,6 +10,7 @@ Rails.application.routes.draw do
       get :contacts_with_crm, to: 'contacts#with_crm'
     end
 
+    resources :billing_addresses
     resources :contacts
   end
 

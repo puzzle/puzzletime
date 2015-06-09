@@ -1,0 +1,11 @@
+- @title = ti(:title, model: "#{models_label(false)} von #{h(parent)}")
+
+=  crud_form do |f|
+  = f.labeled_input_fields :contact_id, :supplement
+  = f.labeled_text_area :street, rows: 2
+  = f.labeled_input_fields :zip_code, :town
+  = f.labeled(:country) do
+    = country_select(:billing_address,
+                     :country,
+                     { priority_countries: %w(CH LI DE AT FR IT), selected: entry.country, locale: :de },
+                     { required: true, class: 'form-control searchable' })

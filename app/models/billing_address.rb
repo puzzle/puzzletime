@@ -24,12 +24,23 @@ class BillingAddress < ActiveRecord::Base
 
   validates :client_id, :street, :zip_code, :town, :country, presence: true
   validates :invoicing_key, uniqueness: true, allow_blank: true
+  validates :country, inclusion: ISO3166::Country.all.collect(&:last)
   validate :assert_contact_belongs_to_client
+
+  after_initialize :set_default_country
 
   protect_if :invoices, 'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Rechnungen zugeordnet sind'
 
+  scope :list, -> { includes(:contact).order(:country, :zip_code, :street) }
 
-  # TODO country contains uppercase country code from country_select gem, default from settings
+  def to_s
+    ''
+  end
+
+  def country_name
+    c = ISO3166::Country[country]
+    c.translations['de'] || c.name
+  end
 
   private
 
@@ -37,6 +48,10 @@ class BillingAddress < ActiveRecord::Base
     if contact_id && client_id && contact.client_id != client_id
       errors.add(:contact_id, 'muss zum gleichen Kunden gehören.')
     end
+  end
+
+  def set_default_country
+    self.country ||= 'CH'
   end
 
 end

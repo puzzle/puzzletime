@@ -2,3 +2,6 @@
 
 - if can?(:read, Contact)
   = action_link('Kontakte', client_contacts_path(entry))
+
+- if can?(:read, BillingAddress)
+  = action_link('Rechnungsadressen', client_billing_addresses_path(entry))

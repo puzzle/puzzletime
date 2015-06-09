@@ -1,5 +1,9 @@
 = add_action_link
+
 - if parent
-  = '|'
-  = link_to "Übersicht #{parent.class.model_name.human(count: 2)}",
-            polymorphic_path(parent.class, returning: true)
+  - if can?(:edit, parent)
+    = action_link "#{parent.class.model_name.human} bearbeiten",
+                  edit_polymorphic_path(parent)
+
+  = action_link "Übersicht #{parent.class.model_name.human(count: 2)}",
+                polymorphic_path(parent.class, returning: true)
