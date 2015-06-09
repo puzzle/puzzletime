@@ -16,7 +16,7 @@ puzzletime:
   number: "asdf1234"
   start_date: 2014-01-01
   end_date: 2015-07-30
-  payment_period: 15
+  payment_period: 30
   reference: "order asdf 1234"
   sla: "Reaktionszeit: 1ms"
 

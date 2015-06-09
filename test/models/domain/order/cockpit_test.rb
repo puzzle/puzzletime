@@ -114,13 +114,13 @@ class Order::CockpitTest < ActiveSupport::TestCase
     budget = total.cells[:open_budget_current]
     assert_equal 274.2, budget.hours.to_f
     assert_equal 274.2/8, budget.days.to_f
-    assert_equal 35_634.42, budget.amount
+    assert_equal 35_634.42, budget.amount.round(2)
 
     a1 = cockpit.rows.second
     budget = a1.cells[:open_budget_current]
     assert_equal 184.1, budget.hours
     assert_equal 184.1/8, budget.days
-    assert_equal 22_110.41, budget.amount
+    assert_equal 22_110.41, budget.amount.round(2)
   end
 
   test 'cost_effectiveness_forecast' do

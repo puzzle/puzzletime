@@ -18,9 +18,19 @@ class Contract < ActiveRecord::Base
   has_one :order
 
   validates_date :start_date, :end_date
+  validates :payment_period, inclusion: Settings.defaults.payment_periods
+
+
+  after_initialize :set_default_payment_period
 
   def to_s
     number || ""
+  end
+
+  private
+
+  def set_default_payment_period
+    self.payment_period ||= Settings.defaults.payment_period
   end
 
 end
