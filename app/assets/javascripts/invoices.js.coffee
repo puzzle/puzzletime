@@ -20,7 +20,7 @@ $ ->
     params = $('form.invoice').serialize()
     url = "#{base_url}?#{params}"
     update_html = (data) ->
-      $("#invoice_total_amount").html(data)
+      $("span#total_amount").html(data.trim())
     $.get(url, update_html)
 
 
