@@ -16,24 +16,21 @@ class InvoicesController < CrudController
   end
 
   def preview_total
-    assign_attributes
+    app/controllers/invoices_controller.rb
     @total = entry.calculate_total_amount
     render layout: false
   end
 
   private
 
-  def assign_attributes
-    super
-    entry.billing_date ||= Date.today
-    entry.due_date ||= calculate_due_date(entry.billing_date)
-    entry.billing_address ||= default_billing_address
-    entry.employees = Employee.where(id: entry.employee_ids) if entry.employee_ids.present?
-    entry.work_items = WorkItem.where(id: entry.work_item_ids) if entry.work_item_ids.present?
-  end
-
   def model_params
     (params[model_identifier] || ActionController::Parameters.new).permit(permitted_attrs).tap do |attrs|
+      # defaults
+      attrs[:billing_date] ||= Date.today
+      attrs[:due_date] ||= calculate_due_date(attrs[:billing_date])
+      attrs[:billing_address] ||= default_billing_address
+
+      # map attributes from oder_services filter form
       attrs[:period_from] ||= params[:start_date]
       attrs[:period_to] ||= params[:end_date]
       attrs[:grouping] = 'manual' if params[:manual_invoice]
