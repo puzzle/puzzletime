@@ -81,11 +81,10 @@ class Invoice < ActiveRecord::Base
   def calculated_total_amount
     sum = positions.collect(&:total_amount).sum
     if add_vat?
-      total = sum * (1 + Settings.small_invoice.constants.vat / 100.0)
+      sum * (1 + Settings.small_invoice.constants.vat / 100.0)
     else
-      total = sum
+      sum
     end
-    "%.02f" % total.round(2)
   end
 
   private

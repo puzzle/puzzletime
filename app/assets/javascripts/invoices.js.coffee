@@ -20,7 +20,8 @@ $ ->
     params = $('form.invoice').serialize()
     url = "#{base_url}?#{params}"
     update_html = (data) ->
-      $("span#total_amount").html(data)
+      amount = Number.parseFloat(data).toFixed(2)
+      $("span#total_amount").html(amount)
     $.get(url, update_html)
 
 

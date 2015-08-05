@@ -3,7 +3,7 @@
 %h1.h3= @title
 
 %p &nbsp;
-= crud_form html: { class: 'invoice', data: { preview_total_path: preview_total_order_invoices_path } } do |f|
+= crud_form html: { class: 'invoice', data: { preview_total_path: preview_total_order_invoices_path(id: entry.id) } } do |f|
   = hidden_field_tag(:order_id, order.id)
 
   = f.labeled_static_field :order
