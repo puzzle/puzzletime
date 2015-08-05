@@ -24,6 +24,7 @@ require 'test_helper'
 class InvoiceTest < ActiveSupport::TestCase
 
   setup do
+    @worktime_lw2 = worktimes(:wt_lw_webauftritt).dup.tap {|w| w.work_date += 1.day; w.hours= 10; w.save! }
     Invoicing.instance = nil
     invoice.employees = [employees(:pascal), employees(:mark), employees(:lucien)]
     invoice.work_items << work_items(:webauftritt)
@@ -45,6 +46,26 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_not_valid invoice, :billing_address_id
   end
 
+  test 'validates period_from and period to' do
+    invoice.period_from = invoice.period_to = nil
+    refute invoice.valid?
+    assert_includes invoice.errors.messages[:period_from], 'muss ausgefüllt werden'
+    assert_includes invoice.errors.messages[:period_to], 'muss ausgefüllt werden'
+
+    invoice.period_from = invoice.period_to = '01.20.2000'
+    refute invoice.valid?
+    assert_includes invoice.errors.messages[:period_from], 'muss ausgefüllt werden'
+    assert_includes invoice.errors.messages[:period_to], 'muss ausgefüllt werden'
+
+    invoice.period_from = '02.12.2000'
+    invoice.period_to = '01.12.2000'
+    refute invoice.valid?
+    assert_includes invoice.errors.messages[:period_to], 'muss nach von sein.'
+
+    invoice.period_to = invoice.period_from
+    assert invoice.valid?
+  end
+
   test 'generates invoice number' do
     i = invoice.dup
     i.reference = nil
@@ -55,8 +76,8 @@ class InvoiceTest < ActiveSupport::TestCase
   test 'updates totals when validating' do
     invoice.total_amount = invoice.total_hours = 0
     invoice.valid?
-    assert_equal 18, invoice.total_hours
-    assert_equal 2520, invoice.total_amount
+    assert_equal 28, invoice.total_hours.to_f
+    assert_equal 3920, invoice.total_amount.to_f
   end
 
   test 'manual_invoice? is true only when grouping == "manual"' do
@@ -80,68 +101,112 @@ class InvoiceTest < ActiveSupport::TestCase
     end
   end
 
-  test 'calculate_total_amount' do
-    skip 'not implemented'
+  test 'calculated_total_amount when grouping = manual and add_vat is false' do
+    invoice.manual!
+    invoice.add_vat = false
+    assert_equal 1, invoice.calculated_total_amount.to_f
   end
 
-  test 'positions' do
-    skip 'not implemented'
+  test 'calculated_total_amount when grouping = manual and add_vat is true' do
+    invoice.manual!
+    invoice.add_vat = true
+    assert_equal 1 * (1 + Settings.small_invoice.constants.vat/100.0), invoice.calculated_total_amount.to_f
+  end
+
+  ['employees', 'accounting_posts'].each do |grouping|
+    test "calculated_total_amount when grouping = #{grouping} and add_vat is false" do
+      invoice.grouping = grouping
+      invoice.add_vat = false
+      assert_equal 3920, invoice.calculated_total_amount.to_f
+    end
+
+    test "calculated_total_amount when grouping = #{grouping} and add_vat is true" do
+      invoice.grouping = grouping
+      invoice.add_vat = true
+      assert_equal 3920 * (1 + Settings.small_invoice.constants.vat/100.0), invoice.calculated_total_amount.to_f
+    end
   end
 
   test 'worktimes' do
-    skip 'not implemented'
+    worktimes = invoice.send(:worktimes)
+    assert_equal 3, worktimes.size
+    assert_equal [worktimes(:wt_mw_webauftritt), worktimes(:wt_lw_webauftritt), @worktime_lw2].sort, worktimes.sort
   end
 
-  test 'save_remote_invoice' do
-    skip 'not implemented'
+  test 'worktimes does not include worktimes belonging to other invoice' do
+    @worktime_lw2.update_attribute(:invoice_id, invoice.id + 1)
+    worktimes = invoice.send(:worktimes)
+    assert_equal 2, worktimes.size
+    assert_equal [worktimes(:wt_mw_webauftritt), worktimes(:wt_lw_webauftritt)].sort, worktimes.sort
   end
 
-
-
-  test 'all employees' do
-    skip 'anpassen'
-    assert_equal employees(:mark, :lucien, :pascal), builder.all_employees
+  test 'build_positions when grouping is manual' do
+    invoice.manual!
+    positions = invoice.send(:build_positions)
+    assert 1, positions.size
+    assert_equal 'Manuell', positions.first.name
+    assert_equal 1, positions.first.total_hours
+    assert_equal 1, positions.first.total_amount
   end
 
-  test 'all accounting posts' do
-    skip 'anpassen'
-    assert_equal [accounting_posts(:webauftritt)], builder.all_accounting_posts
-  end
-
-  test 'build all positions' do
-    skip 'anpassen'
-    invoice.period_from = Date.new(2006, 1, 1)
-    positions = builder.build_positions
-    assert_equal 1, positions.size
-    assert_equal 'Webauftritt', positions.first.name
-    assert_equal 18, positions.first.total_hours
-    assert_equal 18 * 140, positions.first.total_amount
-  end
-
-  test 'build all employees' do
-    skip 'anpassen'
-    builder.grouping = :employees
-    invoice.period_from = Date.new(2006, 1, 1)
-    positions = builder.build_positions
+  test 'build_positions when grouping is employees' do
+    invoice.employees!
+    positions = invoice.send(:build_positions).sort_by(&:name)
     assert_equal 2, positions.size
-    assert_equal 'Webauftritt - Waber Mark', positions.first.name
+    expected_position_names = [employees(:mark), employees(:lucien)].map {|e| "Webauftritt - #{e.to_s}"}
+    assert_equal expected_position_names, positions.map(&:name)
+
     assert_equal 7, positions.first.total_hours
-    assert_equal 7 * 140, positions.first.total_amount
-    assert_equal 'Webauftritt - Weller Lucien', positions.last.name
-    assert_equal 11, positions.last.total_hours
+    assert_equal 980, positions.first.total_amount.to_f
+
+    assert_equal 21, positions.second.total_hours
+    assert_equal 2940, positions.second.total_amount.to_f
   end
 
-  test 'build selected employees' do
-    skip 'anpassen'
-    builder.grouping = :employees
-    builder.employees = employees(:mark)
-    invoice.period_from = Date.new(2006, 1, 1)
-    positions = builder.build_positions
+  test 'build_positions when grouping is work_items' do
+    invoice.accounting_posts!
+    positions = invoice.send(:build_positions)
     assert_equal 1, positions.size
-    assert_equal 'Webauftritt - Waber Mark', positions.first.name
-    assert_equal 7, positions.first.total_hours
-    assert_equal 7 * 140, positions.first.total_amount
+    assert_equal accounting_posts(:webauftritt).name, positions.first.name
+
+    assert_equal 28, positions.first.total_hours
+    assert_equal 3920, positions.first.total_amount.to_f
   end
+
+  test 'save assigns invoicing key when successful' do
+    Invoicing.instance = mock
+    Invoicing.instance.stubs(:save_invoice).returns('abc123')
+    invoice.save!
+    assert_equal 'abc123', invoice.invoicing_key
+  end
+
+  test 'save does not succeed when Invoicing::Error, adds validation error' do
+    Invoicing.instance = mock
+    Invoicing.instance.stubs(:save_invoice).raises(Invoicing::Error.new('some invoicing error'))
+    invoice.save
+    assert invoice.changed?
+    assert_equal nil, invoice.invoicing_key
+    assert_equal invoice.errors.messages, base: ['Invoicing Service Error: some invoicing error']
+  end
+
+  test 'save assigns worktimes to invoice when successful' do
+    Invoicing.instance = mock
+    Invoicing.instance.stubs(:save_invoice).returns('abc123')
+    invoice.save!
+    assert_equal invoice, worktimes(:wt_mw_webauftritt).reload.invoice
+    assert_equal invoice, worktimes(:wt_lw_webauftritt).reload.invoice
+    assert_equal invoice, @worktime_lw2.reload.invoice
+  end
+
+  test 'save does not assign worktimes when Invoicing::Error' do
+    Invoicing.instance = mock
+    Invoicing.instance.stubs(:save_invoice).raises(Invoicing::Error.new('some invoicing error'))
+    invoice.save
+    refute_equal invoice, worktimes(:wt_mw_webauftritt).reload.invoice
+    refute_equal invoice, worktimes(:wt_lw_webauftritt).reload.invoice
+    refute_equal invoice, @worktime_lw2.reload.invoice
+  end
+
 
   test 'save' do
     skip 'anpassen'
@@ -151,58 +216,10 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal true, builder.save
 
     invoice.reload
-    assert_equal 18, invoice.total_hours
-    assert_equal 18 * 140, invoice.total_amount
+    assert_equal 28, invoice.total_hours
+    assert_equal 28 * 140, invoice.total_amount
     assert_equal invoice.id, worktimes(:wt_mw_webauftritt).invoice_id
     assert_equal invoice.id, worktimes(:wt_lw_webauftritt).invoice_id
-    assert_equal nil, worktimes(:wt_pz_webauftritt).invoice_id
-  end
-
-  test 'save with validation error' do
-    skip 'anpassen'
-    Invoicing.instance = mock
-    Invoicing.instance.expects(:save_invoice).never
-    invoice.period_from = Date.new(2015, 12, 1)
-
-    assert_equal false, builder.save
-    assert_match /nach von/, invoice.errors.full_messages.join
-
-    assert_equal nil, worktimes(:wt_mw_webauftritt).invoice_id
-    assert_equal nil, worktimes(:wt_lw_webauftritt).invoice_id
-    assert_equal nil, worktimes(:wt_pz_webauftritt).invoice_id
-  end
-
-  test 'save with exception' do
-    skip 'anpassen'
-    invoice.update!(total_hours: 0, total_amount: 0)
-    Invoicing.instance = mock
-    Invoicing.instance.expects(:save_invoice).raises(Invoicing::Error.new('No good'))
-    invoice.period_from = Date.new(2006, 1, 1)
-
-    assert_equal false, builder.save
-    assert_equal 'No good', invoice.errors.full_messages.join
-
-    invoice.reload
-    assert_equal 0, invoice.total_hours
-    assert_equal 0, invoice.total_amount
-    assert_equal nil, worktimes(:wt_mw_webauftritt).invoice_id
-    assert_equal nil, worktimes(:wt_lw_webauftritt).invoice_id
-    assert_equal nil, worktimes(:wt_pz_webauftritt).invoice_id
-  end
-
-  test 'save manual' do
-    skip 'anpassen'
-    Invoicing.instance = stub(:save_invoice)
-    invoice.period_from = Date.new(2006, 1, 1)
-    builder.grouping = :manual
-
-    assert_equal true, builder.save
-
-    invoice.reload
-    assert_equal 0, invoice.total_hours
-    assert_equal 0, invoice.total_amount
-    assert_equal nil, worktimes(:wt_mw_webauftritt).invoice_id
-    assert_equal nil, worktimes(:wt_lw_webauftritt).invoice_id
     assert_equal nil, worktimes(:wt_pz_webauftritt).invoice_id
   end
 
