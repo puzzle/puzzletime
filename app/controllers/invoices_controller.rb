@@ -24,18 +24,20 @@ class InvoicesController < CrudController
   private
 
   def model_params
-    (params[model_identifier] || ActionController::Parameters.new).permit(permitted_attrs).tap do |attrs|
-      # defaults
-      attrs[:billing_date] ||= Date.today
-      attrs[:due_date] ||= calculate_due_date(attrs[:billing_date])
-      attrs[:billing_address] ||= default_billing_address
-
+    p = (params[model_identifier] || ActionController::Parameters.new).permit(permitted_attrs).tap do |attrs|
       # map attributes from oder_services filter form
       attrs[:period_from] ||= params[:start_date]
       attrs[:period_to] ||= params[:end_date]
       attrs[:grouping] = 'manual' if params[:manual_invoice]
-      attrs[:employee_ids] = Array(attrs[:employee_ids]) << params[:employee_id] if params[:employee_id]
-      attrs[:work_item_ids] = Array(attrs[:work_item_ids]) << params[:work_item_id] if params[:work_item_id]
+      attrs[:employee_ids] = Array(attrs[:employee_ids]) << params[:employee_id] if params[:employee_id].present?
+      attrs[:work_item_ids] = Array(attrs[:work_item_ids]) << params[:work_item_id] if params[:work_item_id].present?
+
+      # defaults
+      attrs[:billing_date] ||= Date.today
+      attrs[:due_date] ||= l(calculate_due_date(attrs[:billing_date]))
+      attrs[:billing_address] ||= default_billing_address
+      attrs[:employee_ids] = all_employee_ids if attrs[:employee_ids].blank?
+      attrs[:work_item_ids] = all_work_item_ids if attrs[:work_item_ids].blank?
     end
   end
 
@@ -48,7 +50,11 @@ class InvoicesController < CrudController
   end
 
   def all_work_items
-    order.accounting_posts.list.map(&:work_item)
+    order.accounting_posts.map(&:work_item)
+  end
+
+  def all_work_item_ids
+    all_work_items.map(&:id)
   end
 
   def checked_work_item_ids
@@ -57,6 +63,10 @@ class InvoicesController < CrudController
 
   def all_employees
     Employee.where(id: order.worktimes.select(:employee_id)).list
+  end
+
+  def all_employee_ids
+    all_employees.map(&:id)
   end
 
   def checked_employee_ids
