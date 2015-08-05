@@ -46,6 +46,7 @@ class Invoice < ActiveRecord::Base
   before_create :lock_client_invoice_number
   after_create :update_client_invoice_number
   before_save :save_remote_invoice, if: ->{ Invoicing.instance.present? }
+  after_save :assign_worktimes
 
   scope :list, ->{ includes(:billing_address) }
 
@@ -184,6 +185,10 @@ class Invoice < ActiveRecord::Base
   rescue Invoicing::Error => e
     errors.add(:base, "Invoicing Service Error: #{e.message}")
     false
+  end
+
+  def assign_worktimes
+    self.ordertimes = worktimes
   end
 
 end
