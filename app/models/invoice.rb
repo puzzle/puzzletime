@@ -124,7 +124,8 @@ class Invoice < ActiveRecord::Base
     Ordertime.in_period(period).
       where(billable: true).
       where(work_item_id: work_item_ids).
-      where(employee_id: employee_ids)
+      where(employee_id: employee_ids).
+      where(invoice_id: [id, nil])
   end
 
   def lock_client_invoice_number

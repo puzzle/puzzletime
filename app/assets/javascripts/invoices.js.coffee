@@ -27,3 +27,6 @@ $ ->
   $('form.invoice').on 'change', (event) ->
     update_total()
 
+  $('input#invoice_period_from, input#invoice_period_to').on 'blur', (event) ->
+    update_total()
+
