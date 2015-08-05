@@ -33,8 +33,8 @@ class InvoicesController < CrudController
       attrs[:work_item_ids] = Array(attrs[:work_item_ids]) << params[:work_item_id] if params[:work_item_id].present?
 
       # defaults
-      attrs[:billing_date] ||= Date.today
-      attrs[:due_date] ||= l(calculate_due_date(attrs[:billing_date]))
+      attrs[:billing_date] ||= l(billing_date)
+      attrs[:due_date] ||= l(due_date) if due_date.present?
       attrs[:billing_address] ||= default_billing_address
       attrs[:employee_ids] = all_employee_ids if attrs[:employee_ids].blank?
       attrs[:work_item_ids] = all_work_item_ids if attrs[:work_item_ids].blank?
@@ -85,7 +85,11 @@ class InvoicesController < CrudController
     order.contract.try(:payment_period)
   end
 
-  def calculate_due_date(billing_date)
-    billing_date + payment_period.days if payment_period.present?
+  def billing_date
+    entry.billing_date || Date.today
+  end
+
+  def due_date
+    entry.due_date || billing_date + payment_period.days if payment_period.present?
   end
 end
