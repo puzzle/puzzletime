@@ -280,6 +280,7 @@ de-CH:
         booked: Verbucht
         ticket: Ticket
         account: Buchungsposition
+        invoice_id: Rechnung
 
     associations:
       contact:
