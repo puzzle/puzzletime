@@ -52,7 +52,7 @@ class InvoicesControllerTest < ActionController::TestCase
     assert_equal(Date.today + contracts(:webauftritt).payment_period.days, entry.due_date)
     assert_equal([employees(:pascal), employees(:mark), employees(:lucien)].sort, entry.employees.sort)
     assert_equal([work_items(:webauftritt)], entry.work_items)
-    assert(test_entry.client.default_billing_address, entry.billing_address)
+    assert(test_entry.order.client.default_billing_address, entry.billing_address)
   end
 
   test 'GET preview_total' do
