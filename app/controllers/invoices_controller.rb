@@ -62,7 +62,7 @@ class InvoicesController < CrudController
   end
 
   def all_employees
-    Employee.where(id: order.worktimes.select(:employee_id)).list
+    Employee.where(id: order.worktimes.billable.select(:employee_id).uniq).list
   end
 
   def all_employee_ids
