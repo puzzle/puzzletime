@@ -23,7 +23,7 @@ class Client < ActiveRecord::Base
   has_many :contacts, dependent: :destroy
   has_many :billing_addresses, dependent: :destroy
 
-  belongs_to :last_billing_address
+  belongs_to :last_billing_address, class_name: BillingAddress.name
 
   has_descendants_through_work_item :orders
   has_descendants_through_work_item :accounting_posts

@@ -22,6 +22,15 @@ swisstopo:
   town: Wabern
   country: CH
 
+swisstopo_2:
+  client_id: 2 # swisstopo
+  contact: swisstopo_2
+  supplement: Other address
+  street: Seftigenstrasse 264
+  zip_code: 3084
+  town: Wabern
+  country: CH
+
 puzzle:
   client_id: 1 # puzzle
   street: Eigerplatz 4

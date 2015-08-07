@@ -42,4 +42,18 @@ class ClientTest < ActiveSupport::TestCase
     end
   end
 
+  test 'default_billing_address when last_billing_address is blank' do
+    client = Fabricate(:client)
+    client.last_billing_address = nil
+    assert_equal(client.billing_addresses.first, client.default_billing_address)
+  end
+
+  test 'default_billing_address when last_billing_address is set' do
+    client = Fabricate(:client)
+    [billing_addresses(:swisstopo), billing_addresses(:swisstopo_2)].each do |address|
+      client.last_billing_address = address
+      assert_equal(address, client.default_billing_address)
+    end
+  end
+
 end
