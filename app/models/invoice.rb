@@ -16,7 +16,7 @@
 #  add_vat            :boolean          default(TRUE), not null
 #  billing_address_id :integer          not null
 #  invoicing_key      :string
-#  grouping           :integer          default(0)
+#  grouping           :integer          default(0), not null
 #
 
 class Invoice < ActiveRecord::Base

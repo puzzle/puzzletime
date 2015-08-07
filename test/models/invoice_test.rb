@@ -16,7 +16,7 @@
 #  add_vat            :boolean          default(TRUE), not null
 #  billing_address_id :integer          not null
 #  invoicing_key      :string
-#  grouping           :integer          default(0)
+#  grouping           :integer          default(0), not null
 #
 
 require 'test_helper'
@@ -67,10 +67,8 @@ class InvoiceTest < ActiveSupport::TestCase
   end
 
   test 'generates invoice number' do
-    i = invoice.dup
-    i.reference = nil
-    i.save!
-    assert_equal 'STOPWEBD10002', i.reference
+    second_invoice = invoice.dup.tap {|i| i.reference = nil; i.save! }
+    assert_equal 'STOPWEBD10002', second_invoice.reference
   end
 
   test 'updates totals when validating' do
@@ -138,6 +136,21 @@ class InvoiceTest < ActiveSupport::TestCase
     worktimes = invoice.send(:worktimes)
     assert_equal 2, worktimes.size
     assert_equal [worktimes(:wt_mw_webauftritt), worktimes(:wt_lw_webauftritt)].sort, worktimes.sort
+  end
+
+  test 'worktimes included only for selected invoice employees' do
+    invoice.employees = [employees(:mark)]
+    worktimes = invoice.send(:worktimes)
+    assert_equal 1, worktimes.size
+    assert_equal [worktimes(:wt_mw_webauftritt)], worktimes
+  end
+
+  test 'worktimes included only for selected invoice work_items' do
+    other_work_item = Fabricate(:work_item, parent_id: work_items(:webauftritt).parent_id)
+    worktimes(:wt_lw_webauftritt).update_column(:work_item_id, other_work_item.id)
+    worktimes = invoice.send(:worktimes)
+    assert_equal 2, worktimes.size
+    assert_equal [worktimes(:wt_mw_webauftritt), @worktime_lw2].sort, worktimes.sort
   end
 
   test 'build_positions when grouping is manual' do
