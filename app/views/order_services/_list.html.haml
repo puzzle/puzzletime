@@ -8,4 +8,4 @@
       = check_box_tag('worktime_ids[]', e.id)
     - t.attrs(:work_date, :employee_id, :hours, :work_item_id, :ticket)
     - t.attr(:description) { |w| w.description.to_s.truncate(40) }
-    - t.attr(:billable)
+    - t.attrs(:billable, :invoice_id)
