@@ -56,6 +56,8 @@ class Worktime < ActiveRecord::Base
     end
   end
 
+  scope :billable, -> { where(billable: true) }
+
   class << self
     # The displayed label of this object.
     def label

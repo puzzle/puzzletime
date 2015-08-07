@@ -49,6 +49,23 @@ module CustomAssertions
     end
   end
 
+  def assert_change(expression, message = nil, &block)
+    expressions = Array(expression)
+
+    exps = expressions.map { |e|
+      e.respond_to?(:call) ? e : lambda { eval(e, block.binding) }
+    }
+    before = exps.map { |e| e.call }
+
+    yield
+
+    expressions.zip(exps).each_with_index do |(code, e), i|
+      error  = "#{code.inspect} didn't change"
+      error  = "#{message}.\n#{error}" if message
+      refute_equal(before, e.call, error)
+    end
+  end
+
   # The method used to by Test::Unit to format arguments.
   # Prints ActiveRecord objects in a simpler format.
   def mu_pp(obj)
