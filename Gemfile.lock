@@ -140,8 +140,14 @@ GEM
     faker (1.4.3)
       i18n (~> 0.5)
     fastercsv (1.5.5)
-    ffi (1.9.10)
-    globalid (0.3.6)
+    ffi (1.9.8)
+    gems (0.8.3)
+    gemsurance (0.6.0)
+      bundler (~> 1.2)
+      gems (~> 0.8)
+      git (~> 1.2)
+    git (1.2.9.1)
+    globalid (0.3.3)
       activesupport (>= 4.1.0)
     haml (4.0.7)
       tilt
@@ -204,7 +210,6 @@ GEM
     pg (0.18.2)
     powerpack (0.1.1)
     protective (0.1.0)
-      activerecord
       activerecord
     pry (0.10.1)
       coderay (~> 1.1.0)
@@ -378,6 +383,7 @@ DEPENDENCIES
   delayed_job_active_record
   fabrication
   faker
+  gemsurance
   haml
   headless
   highrise

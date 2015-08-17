@@ -4,7 +4,7 @@ module Invoicing
 
       include Singleton
 
-      ENDPOINTS = %w(invoice client)
+      ENDPOINTS = %w(invoice invoice/pdf client)
 
       def list(endpoint)
         response = get_request(endpoint, :list)
@@ -31,15 +31,23 @@ module Invoicing
         nil
       end
 
+      def raw(endpoint, id, method = :get)
+        get_raw(endpoint, method, id: id)
+      end
+
       private
 
       def get_request(endpoint, action, params = {})
+        raw = params.delete(:raw_response)
+
+        raw_response = get_raw(endpoint, action, params)
+        raw ? raw_response : handle_response(raw_response)
+      end
+
+      def get_raw(endpoint, action, params = {})
         url = uri(endpoint, action, params)
-
         request = Net::HTTP::Get.new(url.path)
-
-        response = http(url).request(request)
-        handle_response(response)
+        http(url).request(request).body
       end
 
       def post_request(endpoint, action, data, params = {})
