@@ -64,6 +64,7 @@ group :test do
   gem 'selenium-webdriver'
   gem 'database_cleaner'
   gem 'm'
+  gem 'gemsurance'
 end
 
 group :console do
