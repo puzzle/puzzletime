@@ -28,11 +28,6 @@ module OrderHelper
       data: { toggle: :tooltip })
   end
 
-  def period_chooser_date(date)
-    label = date ? I18n.l(date) : 'egal'
-    link_to(label, '#', data: { popover: '#period_chooser', toggle: 'popover' })
-  end
-
   def order_target_icon_key(rating)
     case rating
     when 'green' then 'disk'
