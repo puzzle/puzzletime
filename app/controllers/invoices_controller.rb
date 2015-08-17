@@ -41,10 +41,6 @@ class InvoicesController < CrudController
     end
   end
 
-  def index_path
-    order_accounting_posts_path(entry.order)
-  end
-
   def order
     @order ||= Order.find(params[:order_id])
   end
