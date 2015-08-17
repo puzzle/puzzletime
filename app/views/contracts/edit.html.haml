@@ -7,7 +7,8 @@
             method: :put do |f|
 
   = f.labeled_input_field :number, placeholder: 'Bestell- oder Vertragsnummer des Kunden',
-                                   help: 'erscheint auf Rechnung'
+                                   help: 'erscheint auf Rechnung',
+                                   class: 'initial-focus'
 
   .form-group{class: "#{f.errors?(:start_date) || f.errors?(:end_date) ? 'has-error' : nil}"}
     = f.label(:start_date, 'Vertragsdauer von', class: 'col-md-2 control-label required')

@@ -1,7 +1,7 @@
 #crm_key.form-group{class: f.errors?(:crm_key) ? 'has-error' : ''}
   = f.label(:crm_key, Crm.instance.crm_key_label, class: 'col-md-2 control-label required')
   .col-md-2
-    = f.input_field :crm_key
+    = f.input_field :crm_key, class: 'initial-focus'
   .col-md-2
     = link_to 'Übernehmen',
               crm_load_orders_path,
