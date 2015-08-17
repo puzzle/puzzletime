@@ -16,6 +16,13 @@ class AccountingPostsController < CrudController
   end
 
   private
+  def find_entry
+    super
+  rescue ActiveRecord::RecordNotFound => e
+    # happens when changing order in top dropdown while editing accounting post.
+    redirect_to order_accounting_posts_path(order)
+    AccountingPost.new
+  end
 
   def build_entry
     super.tap { |p| p.build_work_item(parent_id: order.work_item_id) }

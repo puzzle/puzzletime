@@ -46,13 +46,14 @@ class InvoicesControllerTest < ActionController::TestCase
   end
 
   test 'GET new without params sets defaults' do
+    worktimes(:wt_pz_webauftritt).update!(billable: true)
     get :new, order_id: test_entry.order_id
     assert_response :success
     assert_equal(Date.today, entry.billing_date)
     assert_equal(Date.today + contracts(:webauftritt).payment_period.days, entry.due_date)
     assert_equal([employees(:pascal), employees(:mark), employees(:lucien)].sort, entry.employees.sort)
     assert_equal([work_items(:webauftritt)], entry.work_items)
-    assert(test_entry.order.client.default_billing_address, entry.billing_address)
+    assert(test_entry.order.default_billing_address_id, entry.billing_address_id)
   end
 
   test 'GET preview_total' do

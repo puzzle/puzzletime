@@ -18,6 +18,7 @@
 
   - if can?(:show_invoices, @order)
     = nav 'Rechnungen',
+          order_invoices_path(@order),
           order_invoices_path(@order)
 
   - if can?(:services, @order)

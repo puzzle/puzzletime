@@ -166,8 +166,9 @@ de-CH:
         add_vat: zzgl. MWST 8.0%
         billing_address: Rechnungsadresse
         billing_date: Rechnungsdatum
+        calculated_total_amount: Total Leistungen
         due_date: Fälligkeitsdatum
-        employees: Members
+        employees: Mitarbeiter
         grouping: Gruppierung
         invoice_posts: Rechnungspositionen
         manual_invoice: Manuelle Rechnung

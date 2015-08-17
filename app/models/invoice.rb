@@ -45,7 +45,7 @@ class Invoice < ActiveRecord::Base
   before_validation :update_totals
   before_create :lock_client_invoice_number
   after_create :update_client_invoice_number
-  before_save :save_remote_invoice, if: ->{ Invoicing.instance.present? }
+  before_save :save_remote_invoice, if: -> { Invoicing.instance.present? }
   after_save :assign_worktimes
 
   scope :list, ->{ includes(:billing_address) }
@@ -135,6 +135,7 @@ class Invoice < ActiveRecord::Base
 
   def update_client_invoice_number
     order.client.update_column(:last_invoice_number, order.client.last_invoice_number + 1)
+    order.update_column(:billing_address_id, billing_address_id)
   end
 
   def update_totals
@@ -182,7 +183,7 @@ class Invoice < ActiveRecord::Base
     self.invoicing_key = Invoicing.instance.save_invoice(self, positions)
     true
   rescue Invoicing::Error => e
-    errors.add(:base, "Invoicing Service Error: #{e.message}")
+    errors.add(:base, "Fehler im Invoicing Service: #{e.message}")
     false
   end
 

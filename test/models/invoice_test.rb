@@ -199,7 +199,7 @@ class InvoiceTest < ActiveSupport::TestCase
     invoice.save
     assert invoice.changed?
     assert_equal nil, invoice.invoicing_key
-    assert_equal invoice.errors.messages, base: ['Invoicing Service Error: some invoicing error']
+    assert_equal invoice.errors.messages, base: ['Fehler im Invoicing Service: some invoicing error']
   end
 
   test 'save assigns worktimes to invoice when successful' do
@@ -220,6 +220,13 @@ class InvoiceTest < ActiveSupport::TestCase
     refute_equal invoice, @worktime_lw2.reload.invoice
   end
 
+  test 'create stores last billing address' do
+    invoice = Invoice.new(invoices(:webauftritt_may).attributes)
+    invoice.id = nil
+    invoice.billing_address = billing_addresses(:swisstopo_2)
+    invoice.save!
+    assert_equal billing_addresses(:swisstopo_2), orders(:webauftritt).billing_address
+  end
 
   test 'save' do
     skip 'anpassen'

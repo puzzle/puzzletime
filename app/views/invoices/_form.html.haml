@@ -32,7 +32,7 @@
             = check_box.object.label_verbose
 
     = f.labeled :invoice_posts do
-      %p.form-control-static='gruppieren nach:'
+      %p.form-control-static='Gruppieren nach:'
       .radio
         %label
           = radio_button(:invoice, :grouping, 'accounting_posts')
@@ -51,7 +51,12 @@
   = f.labeled_input_fields :due_date
 
   = f.labeled :billing_address do
-    = collection_radio_buttons(:invoice, :billing_address_id, billing_addresses, :id, :to_s, checked: entry.billing_address_id) do |radio|
+    = collection_radio_buttons(:invoice,
+                               :billing_address_id,
+                               billing_addresses,
+                               :id,
+                               :to_s,
+                               checked: entry.billing_address_id || entry.order.default_billing_address_id) do |radio|
       .billing_address_radio.radio
         %label
           = radio.radio_button
