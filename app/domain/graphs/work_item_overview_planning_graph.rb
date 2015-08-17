@@ -11,7 +11,7 @@ class WorkItemOverviewPlanningGraph < OverviewPlanningGraph
   end
 
   def style(date)
-    cached = @cache[date]
+    cached = cache[date]
     if cached
       cached.style
     else

@@ -57,14 +57,20 @@ class Period
   end
 
   def self.past_month(date = Date.today, label = nil)
-    date = date.to_date if date.kind_of? Time
+    date = date.to_date if date.is_a?(Time)
     retrieve(date - 28, date + 7, label)
   end
 
   def self.coming_month(date = Date.today, label = nil)
-    date = date.to_date if date.kind_of? Time
+    date = date.to_date if date.is_a?(Time)
     date -= (date.wday - 1) % 7
     retrieve(date, date + 28, label)
+  end
+
+  def self.next_three_months(date = Date.today, label = nil)
+    date = date.to_date if date.is_a?(Time)
+    date -= (date.wday - 1) % 7
+    retrieve(date, date + 3.months, label)
   end
 
   def self.parse(shortcut)
@@ -159,6 +165,11 @@ class Period
     @label = label
   end
 
+  def extend_to_weeks
+    Period.new(Period.week_for(start_date).start_date,
+               Period.week_for(end_date).end_date,
+               label)
+  end
 
   private
 

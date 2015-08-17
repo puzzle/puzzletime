@@ -10,7 +10,7 @@ class WorktimeGraph
   attr_reader :period, :employee
 
   def initialize(period, employee)
-    @period = extend_to_weeks period
+    @period = period.extend_to_weeks
     @employee = employee
 
     @work_items_eval = EmployeeWorkItemsEval.new(@employee.id)
@@ -148,12 +148,6 @@ class WorktimeGraph
 
   def color_for(worktime)
     @colorMap[worktime.account]
-  end
-
-  def extend_to_weeks(period)
-    Period.new Period.week_for(period.start_date).start_date,
-               Period.week_for(period.end_date).end_date,
-               period.label
   end
 
 end

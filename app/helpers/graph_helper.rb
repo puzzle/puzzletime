@@ -2,55 +2,6 @@
 
 module GraphHelper
 
-  def extend_to_weeks(period)
-    Period.new Period.week_for(period.start_date).start_date,
-               Period.week_for(period.end_date).end_date,
-               period.label
-  end
-
-  def each_day
-    @period.start_date.step(@period.end_date) do |day|
-      @current = get_period_week(day)
-      yield day
-    end
-  end
-
-  def each_week
-    @period.start_date.step(@period.end_date, 7) do |week|
-      @current = get_period_week(week)
-      yield week
-    end
-  end
-
-  def get_period_month(date)
-    get_set_cache(date.month) { Period.new(date.beginning_of_month, date.end_of_month) }
-  end
-
-  def get_period_week(from)
-    get_period(from, from + 6)
-  end
-
-  def get_period(from, to)
-    get_set_cache([from, to]) { Period.new(from, to) }
-  end
-
-  def get_set_cache(key)
-    val = @cache[key]
-    if val.nil?
-      val = yield
-      @cache[key] = val
-    end
-    val
-  end
-
-  def is_current_week
-    @current.to_s == @todays_week
-  end
-
-  def is_current_day
-    @current.to_s == @today
-  end
-
   def weekday_header
     names = I18n.t(:'date.day_names')[1..6] + [I18n.t(:'date.day_names')[0]]
     names.collect! { |n| "<th>#{n[0..1]}</th>" }

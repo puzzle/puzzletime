@@ -2,9 +2,7 @@
 
 class EmployeeOverviewPlanningGraph < OverviewPlanningGraph
 
-
-  # TODO separate view helpers from this class
-  include PlanningHelper
+  include PeriodIteratable
 
   attr_reader :employee
 
@@ -43,7 +41,7 @@ class EmployeeOverviewPlanningGraph < OverviewPlanningGraph
   end
 
   def label(date)
-    cached = @cache[date]
+    cached = cache[date]
     cached.label if cached
   end
 
