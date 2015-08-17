@@ -6,28 +6,8 @@ class InvoicesControllerTest < ActionController::TestCase
 
   include CrudControllerTestHelper
 
+  setup { Invoicing.instance = nil }
   setup :login
-
-  def test_update
-    skip 'not implemented'
-  end
-
-  def test_update_json
-    skip 'not implemented'
-  end
-
-  def test_destroy
-    skip 'not implemented'
-  end
-
-  def test_create_json
-    skip 'not implemented'
-  end
-
-  def test_create
-    skip 'not implemented'
-  end
-
 
   test 'GET new with params from order_services view filter assigns correct attributes' do
     login_as :mark
@@ -51,7 +31,7 @@ class InvoicesControllerTest < ActionController::TestCase
     assert_response :success
     assert_equal(Date.today, entry.billing_date)
     assert_equal(Date.today + contracts(:webauftritt).payment_period.days, entry.due_date)
-    assert_equal([employees(:pascal), employees(:mark), employees(:lucien)].sort, entry.employees.sort)
+    assert_equal([employees(:mark), employees(:lucien)].sort, entry.employees.sort)
     assert_equal([work_items(:webauftritt)], entry.work_items)
     assert(test_entry.order.default_billing_address_id, entry.billing_address_id)
   end
@@ -61,8 +41,8 @@ class InvoicesControllerTest < ActionController::TestCase
         order_id: test_entry.order_id,
                 employee_id: employees(:mark).id,
                 work_item_id: work_items(:webauftritt).id,
-                start_date: start_date = '01.12.2006',
-                end_date: end_date = '31.12.2006'
+                start_date: '01.12.2006',
+                end_date: '31.12.2006'
     }
 
     get :preview_total, params
@@ -77,5 +57,15 @@ class InvoicesControllerTest < ActionController::TestCase
   # Test object used in several tests.
   def test_entry
     invoices(:webauftritt_may)
+  end
+
+  def test_entry_attrs
+    {
+        order_id: orders(:webauftritt).id,
+        employee_ids: Array(employees(:pascal).id),
+        work_item_ids: Array(work_items(:webauftritt).id),
+        period_from: Date.parse('01.12.2006'),
+        period_to: Date.parse('15.12.2006')
+    }
   end
 end
