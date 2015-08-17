@@ -2,16 +2,14 @@
 
 class OverviewPlanningGraph
 
-  # TODO separate view helpers from this class
-  include PlanningHelper
+  include PeriodIteratable
 
   def initialize(period)
     @period = period
-    @cache = {}
   end
 
   def style(date)
-    cached = @cache[date]
+    cached = cache[date]
     if cached
       cached.style
     else
@@ -22,7 +20,7 @@ class OverviewPlanningGraph
   def planned_percent(week)
     percent = 0
     week.step(week + 5, 1) do |date|
-      cached = @cache[date]
+      cached = cache[date]
       if cached
         percent += cached.percent
       end
@@ -77,10 +75,10 @@ class OverviewPlanningGraph
   end
 
   def add_to_cache(label, date, abstract_amount = 0)
-    cached = @cache[date]
+    cached = cache[date]
     unless cached
       cached = DayOverview.new
-      @cache[date] = cached
+      cache[date] = cached
     end
     cached.add(label, abstract_amount)
   end

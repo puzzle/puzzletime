@@ -2,10 +2,7 @@
 
 class VacationGraph
 
-  include ActionView::Helpers::NumberHelper
-
-  # TODO separate view helpers from this class
-  include GraphHelper
+  include PeriodIteratable
 
   attr_reader :period, :day
 
@@ -16,13 +13,12 @@ class VacationGraph
   def initialize(period = nil)
     period ||= Period.current_year
     @actual_period = period
-    @period = extend_to_weeks period
+    @period = period.extend_to_weeks
     @todays_week = Period.week_for(Date.today).to_s
 
     @absences_eval = AbsencesEval.new
 
     @colorMap = AccountColorMapper.new
-    @cache = {}
   end
 
   def each_employee
@@ -50,6 +46,20 @@ class VacationGraph
       @unpaid_index = 0
       @month = nil
       yield empl
+    end
+  end
+
+  def each_day
+    super do |day|
+      @current = get_period_week(day)
+      yield day
+    end
+  end
+
+  def each_week
+    super do |week|
+      @current = get_period_week(week)
+      yield week
     end
   end
 
@@ -97,6 +107,10 @@ class VacationGraph
 
   def accounts_legend(type = Absence)
     @colorMap.accounts_legend(type)
+  end
+
+  def is_current_week
+    @current.to_s == @todays_week
   end
 
   private
@@ -180,4 +194,24 @@ class VacationGraph
     @colorMap[absence]
   end
 
+  def get_period_week(from)
+    get_period(from, from + 6)
+  end
+
+  def get_period_month(date)
+    get_set_cache(date.month) { Period.new(date.beginning_of_month, date.end_of_month) }
+  end
+
+  def get_period(from, to)
+    get_set_cache([from, to]) { Period.new(from, to) }
+  end
+
+  def get_set_cache(key)
+    val = cache[key]
+    if val.nil?
+      val = yield
+      cache[key] = val
+    end
+    val
+  end
 end

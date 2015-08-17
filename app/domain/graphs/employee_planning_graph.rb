@@ -1,17 +1,16 @@
 # encoding: utf-8
 
 class EmployeePlanningGraph
-  # TODO separate view helpers from this class
-  include PlanningHelper
+
+  include PeriodIteratable
 
   attr_reader :period, :plannings, :plannings_abstr, :work_items, :work_items_abstr, :employee, :overview_graph, :absence_graph
 
   def initialize(employee, period = nil)
     @employee = employee
-    period ||= Period.current_month
+    period ||= Period.next_three_months
     @actual_period = period
-    @period = extend_to_weeks(period)
-    @cache = {}
+    @period = period.extend_to_weeks
     @colorMap = AccountColorMapper.new
     employee_plannings = Planning.where('start_week <= ?', Week.from_date(@period.end_date).to_integer).
                                   where(employee_id: @employee.id)

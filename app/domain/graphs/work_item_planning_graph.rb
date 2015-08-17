@@ -2,17 +2,14 @@
 
 class WorkItemPlanningGraph
 
-
-  # TODO separate view helpers from this class
-  include PlanningHelper
+  include PeriodIteratable
 
   attr_reader :period, :work_item, :overview_graph, :employees, :employees_abstr, :plannings, :plannings_abstr
 
   def initialize(work_item, period = nil)
     @work_item = work_item
-    period ||= Period.current_month
-    @period = extend_to_weeks period
-    @cache = {}
+    period ||= Period.next_three_months
+    @period = period.extend_to_weeks
     @plannings       = Planning.where('work_item_id = ? and start_week <= ? and is_abstract=false',
                                       @work_item.id,
                                       Week.from_date(period.end_date).to_integer).

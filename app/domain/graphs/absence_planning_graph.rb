@@ -2,13 +2,10 @@
 
 class AbsencePlanningGraph
 
-
-  # TODO separate view helpers from this class
-  include PlanningHelper
+  include PeriodIteratable
 
   def initialize(absences, period)
     @period = period
-    @cache = {}
 
     absences.each do |absence|
       case absence.report_type
@@ -31,10 +28,11 @@ class AbsencePlanningGraph
   end
 
   def absence(date)
-    @cache[date]
+    cache[date]
   end
 
   private
+
   def add_start_stop_absence(absence)
     add_to_cache(absence.time_string, absence.work_date, absence.hours * 1)
   end
@@ -62,10 +60,10 @@ class AbsencePlanningGraph
   end
 
   def add_to_cache(label, date, hours = 0)
-    cached = @cache[date]
+    cached = cache[date]
     unless cached
       cached = DayOverview.new
-      @cache[date] = cached
+      cache[date] = cached
     end
     if hours == 0
       cached.add(label)
