@@ -502,6 +502,9 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       Crm.instance = Crm::Highrise.new
       Crm.instance.stubs(:find_order).raises(Crm::Error.new('crm error occurred'))
 
+      # reload after crm change
+      visit(new_order_path)
+
       fill_in('order_crm_key', with: '123')
       click_link('Übernehmen')
 

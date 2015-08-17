@@ -102,7 +102,7 @@ class ActionDispatch::IntegrationTest
            Capybara::FrozenInTime,
            Capybara::ElementNotFound,
            Selenium::WebDriver::Error::StaleElementReferenceError => e
-      skip e.message
+      skip e.message || e.class.name
     end
   end
 

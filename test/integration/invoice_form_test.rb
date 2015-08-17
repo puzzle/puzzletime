@@ -32,13 +32,13 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
     assert affected_selectors.all? {|selector| all(selector).present? }
   end
 
-  test 'updates calculated total on page load' do
-    expected_total = '%.2f' % (billable_hours * rate * (1 + Settings.defaults.vat / 100.0)).round(2)
-    assert_equal expected_total, find('span#total_amount').text
+  test 'sets calculated total on page load' do
+    expected_total = '%.2f' % (billable_hours * rate).round(2)
+    assert_match expected_total, find('#invoice_total_amount').text.delete("'")
   end
 
   test 'check employee checkbox updates calculated total' do
-    assert_change ->{ find('span#total_amount').text } do
+    assert_change -> { find('#invoice_total_amount').text } do
       find_field("invoice_employee_ids_#{employees(:mark).id}").click
       sleep(0.5) # give the xhr request some time to complete
     end

@@ -26,6 +26,7 @@ class EditAccountingPostTest < ActionDispatch::IntegrationTest
   end
 
   test 'calculate correct budget values' do
+    WorkingCondition.clear_cache
     must_hours_per_day = WorkingCondition.value_at(Date.today, :must_hours_per_day).to_f
 
     assert_equal accounting_post.offered_hours, find_field('accounting_post_offered_hours').value.to_f

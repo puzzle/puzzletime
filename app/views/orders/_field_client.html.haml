@@ -4,7 +4,7 @@
     = select_tag(:client_work_item_id,
                  options_from_collection_for_select(@clients, :work_item_id, :to_s, params[:client_work_item_id]),
                  prompt: ta(:please_select),
-                 class: "searchable client #{'initial-focus' unless Crm.instance}",
+                 class: "searchable client",
                  required: true,
                  data: { remote: true,
                          url: categories_clients_path })
