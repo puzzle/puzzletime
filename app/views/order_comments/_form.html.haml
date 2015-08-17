@@ -1,5 +1,5 @@
 = plain_form path_args(entry)  do |form|
-  = form.labeled_input_field :text, caption: 'Eintrag schreiben', span: 8
+  = form.labeled_input_field :text, caption: 'Eintrag schreiben', span: 8, class: 'initial-focus'
   .form-group
     .col-md-offset-2.col-md-8
       = form.button("Eintrag speichern", class: 'btn btn-primary')

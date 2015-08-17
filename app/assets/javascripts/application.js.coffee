@@ -176,4 +176,4 @@ $ ->
   $('[type=radio][data-disable-dependents]:checked').each((i, e) -> toggleRadioDependents(e))
 
   # set initial focus
-  $('.initial-focus').focus()
+  $('.initial-focus, .initial-focus input').focus()
