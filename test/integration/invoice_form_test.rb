@@ -32,6 +32,11 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
     assert affected_selectors.all? {|selector| all(selector).present? }
   end
 
+  test 'updates calculated total on page load' do
+    expected_total = '%.2f' % (billable_hours * rate * (1 + Settings.small_invoice.constants.vat / 100.0)).round(2)
+    assert_equal expected_total, find('span#total_amount').text
+  end
+
   test 'check employee checkbox updates calculated total' do
     assert_change ->{ find('span#total_amount').text } do
       find_field("invoice_employee_ids_#{employees(:mark).id}").click
@@ -49,6 +54,14 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
 
   def order_work_items
     order.accounting_posts.map(&:work_item)
+  end
+
+  def billable_hours
+    order.worktimes.billable.sum(:hours)
+  end
+
+  def rate
+    accounting_posts(:webauftritt).offered_rate
   end
 
   def login
