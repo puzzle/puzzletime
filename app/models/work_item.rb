@@ -37,9 +37,8 @@ class WorkItem < ActiveRecord::Base
 
   ### VALIDATIONS
 
-  schema_validations except: :path_ids
+  validates_by_schema except: :path_ids
   validates :name, :shortname,
-            presence: true,
             uniqueness: { scope: :parent_id, case_sensitive: false }
 
   ### CALLBACKS

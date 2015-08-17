@@ -34,7 +34,8 @@ class Worktime < ActiveRecord::Base
   belongs_to :absence
   belongs_to :work_item
 
-  validates_presence_of :employee_id, message: 'Ein Mitarbeiter muss vorhanden sein'
+  validates_by_schema
+  validates :employee_id, presence: true
   validates :work_date, timeliness: { date: true }
   validate :validate_by_report_type
 

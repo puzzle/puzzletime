@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.2.0'
+gem 'rails', '4.2.3'
 
 gem 'pg'
 
@@ -20,11 +20,11 @@ gem 'jbuilder'
 gem 'nested_form_fields'
 gem 'protective'
 gem 'rails_autolink'
-gem 'rails_config'
+gem 'config'
 gem 'rails-i18n'
 gem 'net-ldap'
 gem 'seed-fu'
-gem 'schema_validations'
+gem 'codez-validates_by_schema', require: 'validates_by_schema'
 gem 'validates_timeliness'
 
 

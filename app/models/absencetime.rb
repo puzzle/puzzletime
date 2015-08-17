@@ -22,6 +22,7 @@
 
 class Absencetime < Worktime
 
+  validates_by_schema
   validates :absence, presence: true
 
   attr_accessor :duration # used for multiabsence and not persisted

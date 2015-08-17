@@ -8,9 +8,9 @@ module Invoicing
             number: nil,
             name: entry.name,
             description: nil,
-            cost: post.offered_rate,
+            cost: post.offered_rate.try(:round, 2),
             unit: constant(:unit_id),
-            amount: entry.total_hours,
+            amount: entry.total_hours.round(2),
             vat: constant(:vat),
             discount: discount,
             discount_type: discount_type

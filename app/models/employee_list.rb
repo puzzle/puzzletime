@@ -15,7 +15,7 @@ class EmployeeList < ActiveRecord::Base
 
   has_and_belongs_to_many :employees
 
-  validates_presence_of :title, message: 'Name der Mitarbeiterliste fehlt.'
+  validates_by_schema
 
   def to_s
     title

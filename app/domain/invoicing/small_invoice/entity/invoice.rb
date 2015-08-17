@@ -33,7 +33,7 @@ module Invoicing
             paypal:            bool_constant(:paypal),
             paypal_url:        constant(:paypay_url),
             vat_included:      !entry.add_vat ? 1 : 0,
-            totalamount:       entry.total_amount,
+            totalamount:       entry.total_amount.round(2),
             positions:         positions.collect do |p|
                                  Invoicing::SmallInvoice::Entity::Position.new(p).to_hash
                                end

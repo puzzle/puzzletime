@@ -22,6 +22,7 @@ class BillingAddress < ActiveRecord::Base
   has_many :orders, dependent: :nullify
   has_many :invoices
 
+  validates_by_schema
   validates :client_id, :street, :zip_code, :town, :country, presence: true
   validates :invoicing_key, uniqueness: true, allow_blank: true
   validates :country, inclusion: ISO3166::Country.all.collect(&:last)

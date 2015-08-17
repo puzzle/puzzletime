@@ -15,6 +15,7 @@ class OrderContact < ActiveRecord::Base
   belongs_to :contact
   belongs_to :order
 
+  validates_by_schema
   validate :assert_contact_from_same_client
 
   before_validation :create_crm_contact

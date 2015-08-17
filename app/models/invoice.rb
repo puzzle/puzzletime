@@ -32,6 +32,7 @@ class Invoice < ActiveRecord::Base
   has_and_belongs_to_many :work_items
   has_and_belongs_to_many :employees
 
+  validates_by_schema
   validates_date :billing_date, :due_date, :period_from, :period_to
   validates :invoicing_key, uniqueness: true, allow_blank: true
   validates :status, inclusion: STATUSES

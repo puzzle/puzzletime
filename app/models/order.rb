@@ -48,6 +48,7 @@ class Order < ActiveRecord::Base
 
   ### VALIDATIONS
 
+  validates_by_schema
   validates :work_item_id, uniqueness: true
   validates :kind_id, :responsible_id, :status_id, :department_id, presence: true
   validates :crm_key, uniqueness: true, allow_blank: true

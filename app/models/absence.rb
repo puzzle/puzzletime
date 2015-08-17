@@ -24,8 +24,8 @@ class Absence < ActiveRecord::Base
   protect_if :worktimes, 'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Arbeitszeiten zugeordnet sind'
 
   # Validation helpers
-  validates_presence_of :name, message: 'Eine Bezeichnung muss angegeben werden'
-  validates_uniqueness_of :name, message: 'Diese Bezeichnung wird bereits verwendet'
+  validates_by_schema
+  validates :name, uniqueness: true
 
   scope :list, -> { order(:name) }
 

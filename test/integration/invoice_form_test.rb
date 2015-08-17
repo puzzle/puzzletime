@@ -13,7 +13,7 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
     assert_checkboxes(all("input[name='invoice[work_item_ids][]']"), order_work_items)
 
     assert_equal I18n.l(Date.today + order.contract.payment_period.days), find_field('invoice_due_date').value
-    assert find_field("invoice_billing_address_id_#{order.client.default_billing_address.id}").checked?
+    assert find_field("invoice_billing_address_id_#{order.default_billing_address_id}").checked?
   end
 
   test 'click on manual toggles invoice filters visibility' do

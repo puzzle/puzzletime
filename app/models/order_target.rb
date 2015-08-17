@@ -19,6 +19,7 @@ class OrderTarget < ActiveRecord::Base
   belongs_to :order
   belongs_to :target_scope
 
+  validates_by_schema
   validates :rating, inclusion: RATINGS
   validates :comment, presence: { if: :target_critical? }
   validates :target_scope_id, uniqueness: { scope: :order_id }

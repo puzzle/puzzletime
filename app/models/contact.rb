@@ -27,6 +27,7 @@ class Contact < ActiveRecord::Base
   has_many :orders, through: :order_contacts
   has_many :billing_addresses, dependent: :nullify
 
+  validates_by_schema
   validates :firstname, :lastname, :client_id, presence: true
   validates :invoicing_key, uniqueness: true, allow_blank: true
 

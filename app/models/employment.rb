@@ -19,9 +19,9 @@ class Employment < ActiveRecord::Base
   attr_accessor :final
 
   # All dependencies between the models are listed below.
-  validates_inclusion_of :percent, in: 0..200, message: 'Die Prozente müssen angegeben werden'
-  validates_presence_of :start_date, message: 'Das Start Datum muss angegeben werden'
-  validates_presence_of :employee_id, message: 'Es muss ein Mitarbeiter angegeben werden'
+  validates_by_schema
+  validates :percent, inclusion: 0..200
+  validates :employee_id, presence: true
   validates :start_date, :end_date, timeliness: { date: true, allow_blank: true }
   validate :valid_period
 

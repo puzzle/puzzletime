@@ -14,7 +14,9 @@ class TargetScope < ActiveRecord::Base
 
   has_many :order_targets, dependent: :destroy
 
-  validates :name, :position, :icon, presence: true, uniqueness: true
+  validates_by_schema
+  validates :name, :position, :icon, uniqueness: true
+  validates :icon, presence: true
 
   after_create :create_order_targets
 
