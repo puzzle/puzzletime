@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150702152630) do
+ActiveRecord::Schema.define(version: 20150817104051) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -57,12 +57,11 @@ ActiveRecord::Schema.define(version: 20150702152630) do
   end
 
   create_table "clients", force: :cascade do |t|
-    t.integer "work_item_id",                                        null: false
-    t.string  "crm_key",                 limit: 255
-    t.boolean "allow_local",                         default: false, null: false
-    t.integer "last_invoice_number",                 default: 0
+    t.integer "work_item_id",                                    null: false
+    t.string  "crm_key",             limit: 255
+    t.boolean "allow_local",                     default: false, null: false
+    t.integer "last_invoice_number",             default: 0
     t.string  "invoicing_key"
-    t.integer "last_billing_address_id"
     t.index ["work_item_id"], :name => "index_clients_on_work_item_id"
   end
 

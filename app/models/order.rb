@@ -93,6 +93,10 @@ class Order < ActiveRecord::Base
     name
   end
 
+  def default_billing_address_id
+    billing_address_id || client.billing_addresses.list.pluck(:id).first
+  end
+
   private
 
   def work_item_parent_presence

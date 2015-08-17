@@ -102,4 +102,23 @@ class OrderTest < ActiveSupport::TestCase
     assert !work_items(:hitobito_demo_app).closed
   end
 
+  test 'default_billing_address_id is nil when last_billing_address is blank' do
+    order = Fabricate(:order)
+    order.billing_address = nil
+    assert_equal(nil, order.default_billing_address_id)
+  end
+
+  test 'default_billing_address_id from client when last_billing_address is blank' do
+    order = Fabricate(:order, work_item: Fabricate(:work_item, parent: clients(:swisstopo).work_item))
+    order.billing_address = nil
+    assert_equal(billing_addresses(:swisstopo).id, order.default_billing_address_id)
+  end
+
+  test 'default_billing_address when last_billing_address is set' do
+    order = Fabricate(:order, work_item: Fabricate(:work_item, parent: clients(:swisstopo).work_item))
+    [billing_addresses(:swisstopo), billing_addresses(:swisstopo_2)].each do |address|
+      order.billing_address = address
+      assert_equal(address.id, order.default_billing_address_id)
+    end
+  end
 end

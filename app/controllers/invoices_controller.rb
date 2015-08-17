@@ -35,7 +35,7 @@ class InvoicesController < CrudController
       # defaults
       attrs[:billing_date] ||= l(billing_date)
       attrs[:due_date] ||= l(due_date) if due_date.present?
-      attrs[:billing_address] ||= default_billing_address
+      attrs[:billing_address_id] ||= default_billing_address_id
       attrs[:employee_ids] = all_employee_ids if attrs[:employee_ids].blank?
       attrs[:work_item_ids] = all_work_item_ids if attrs[:work_item_ids].blank?
     end
@@ -77,8 +77,8 @@ class InvoicesController < CrudController
     order.client.billing_addresses
   end
 
-  def default_billing_address
-    order.client.default_billing_address
+  def default_billing_address_id
+    order.default_billing_address_id
   end
 
   def payment_period
