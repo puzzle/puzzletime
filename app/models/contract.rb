@@ -17,6 +17,7 @@ class Contract < ActiveRecord::Base
 
   has_one :order
 
+  validates_by_schema
   validates_date :start_date, :end_date
   validates :payment_period, inclusion: Settings.defaults.payment_periods
 

@@ -18,6 +18,7 @@ class OrderStatus < ActiveRecord::Base
 
   has_many :orders, foreign_key: :status_id
 
+  validates_by_schema
   validates :name, :position, uniqueness: true
   validates :style, inclusion: STYLES
 

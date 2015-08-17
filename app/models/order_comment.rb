@@ -22,7 +22,8 @@ class OrderComment < ActiveRecord::Base
 
   ### VALIDATIONS
 
-  validates_presence_of :text, :creator, :updater
+  validates_by_schema
+  validates :creator, :updater, presence: true
 
   ### SCOPES
 

@@ -24,6 +24,7 @@ class Ordertime < Worktime
 
   belongs_to :invoice
 
+  validates_by_schema
   validates :work_item, presence: true
   validate :validate_accounting_post
   validate :protect_booked, on: :update

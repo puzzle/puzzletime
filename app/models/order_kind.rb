@@ -12,6 +12,7 @@ class OrderKind < ActiveRecord::Base
 
   has_many :orders, foreign_key: :kind_id
 
+  validates_by_schema
   validates :name, uniqueness: true
 
   protect_if :orders, 'Der Eintrag kann nicht gelöscht werden, da ihm noch Aufträge zugeordnet sind'

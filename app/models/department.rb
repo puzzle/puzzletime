@@ -15,6 +15,8 @@ class Department < ActiveRecord::Base
 
   has_many :orders
 
+  validates_by_schema
+
   protect_if :worktimes, 'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Arbeitszeiten zugeordnet sind'
   protect_if :orders, 'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Aufträge zugeordnet sind'
 

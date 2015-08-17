@@ -12,6 +12,7 @@
 
 class WorkingCondition < ActiveRecord::Base
 
+  validates_by_schema
   validates :valid_from, uniqueness: true
   validates :must_hours_per_day,
             numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 24 }

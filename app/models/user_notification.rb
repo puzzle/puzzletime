@@ -14,8 +14,7 @@ class UserNotification < ActiveRecord::Base
   include Comparable
 
   # Validation helpers
-  validates_presence_of :date_from, message: 'Eine Startdatum muss angegeben werden'
-  validates_presence_of :message, message: 'Eine Nachricht muss angegeben werden'
+  validates_by_schema
   validates :date_from, :date_to, timeliness: { date: true, allow_blank: true }
   validate :validate_period
 

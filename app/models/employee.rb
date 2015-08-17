@@ -41,12 +41,9 @@ class Employee < ActiveRecord::Base
           class_name: 'Ordertime'
 
   # Validation helpers.
-  validates_presence_of :firstname, message: 'Der Vorname muss angegeben werden'
-  validates_presence_of :lastname, message: 'Der Nachname muss angegeben werden'
-  validates_presence_of :shortname, message: 'Das Kürzel muss angegeben werden'
-  validates_presence_of :email, message: 'Die Email Adresse muss angegeben werden'         # Required by database
-  validates_uniqueness_of :shortname, case_sensitive: false, message: 'Dieses Kürzel wird bereits verwendet'
-  validates_uniqueness_of :ldapname, allow_blank: true, case_sensitive: false, message: 'Dieser LDAP Name wird bereits verwendet'
+  validates_by_schema
+  validates :shortname, uniqueness: { case_sensitive: false }
+  validates :ldapname, uniqueness: { allow_blank: true, case_sensitive: false }
   validate :periods_format
 
   protect_if :worktimes, 'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Arbeitszeiten zugeordnet sind'

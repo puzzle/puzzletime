@@ -17,6 +17,7 @@ class PortfolioItem < ActiveRecord::Base
 
   protect_if :accounting_posts, 'Der Eintrag kann nicht gelöscht werden, da ihm noch Budgetpositionen zugeordnet sind'
 
+  validates_by_schema
   validates :name, uniqueness: true
 
   def to_s

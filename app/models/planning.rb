@@ -28,7 +28,7 @@
 
 class Planning < ActiveRecord::Base
 
-  validates_presence_of :employee_id, :work_item_id, :start_week
+  validates_by_schema
   validate :validate_planning
 
   belongs_to :employee
@@ -144,7 +144,6 @@ class Planning < ActiveRecord::Base
     result
   end
 
-  private
   def overlaps?(other_planning)
     return false if other_planning == self
     return true if self.repeat_type_forever? && other_planning.repeat_type_forever?
@@ -157,8 +156,9 @@ class Planning < ActiveRecord::Base
     p1_end_week ||= 999_950
 
     p1_end_week >= p2_start_week
-
   end
+
+  private
 
   def valid_week?(week)
     Week.valid?(week)

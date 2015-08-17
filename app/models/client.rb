@@ -25,6 +25,7 @@ class Client < ActiveRecord::Base
   has_descendants_through_work_item :orders
   has_descendants_through_work_item :accounting_posts
 
+  validates_by_schema
   validates :work_item_id, uniqueness: true
   validates :crm_key, uniqueness: true, allow_blank: true
   validates :invoicing_key, uniqueness: true, allow_blank: true

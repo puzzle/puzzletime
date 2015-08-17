@@ -41,6 +41,7 @@ class AccountingPost < ActiveRecord::Base
 
   ### VALIDATIONS
 
+  validates_by_schema
   validates :work_item_id, uniqueness: true
   validates :offered_rate, presence: true
   validates :portfolio_item, presence: true
