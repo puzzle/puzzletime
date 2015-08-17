@@ -65,7 +65,7 @@ class Ability
     can :manage, [Client, BillingAddress, Contact]
     can :create, WorkItem
     can :manage, Order, responsible_id: user.id
-    can :manage, [AccountingPost, Contract, OrderComment, Ordertime] do |instance|
+    can :manage, [AccountingPost, Contract, Invoice, OrderComment, Ordertime] do |instance|
       instance.order.responsible_id == user.id
     end
     can :managed, Evaluation

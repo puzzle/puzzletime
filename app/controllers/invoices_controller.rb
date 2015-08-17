@@ -20,6 +20,11 @@ class InvoicesController < CrudController
     render layout: false
   end
 
+  def pdf
+    pdf = Invoicing.instance.get_pdf(entry)
+    send_data(pdf, filename: "#{entry.reference}.pdf", type: 'application/pdf', disposition: :inline)
+  end
+
   private
 
   def model_params

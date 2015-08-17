@@ -13,4 +13,13 @@ module InvoiceHelper
   def format_invoice_calculated_total_amount(entry)
     f(entry.calculated_total_amount) + ' ' + Settings.defaults.currency
   end
+
+  def format_billing_date(entry)
+    l(entry.billing_date)
+  end
+
+  def format_due_date(entry)
+    l(entry.due_date)
+  end
+
 end

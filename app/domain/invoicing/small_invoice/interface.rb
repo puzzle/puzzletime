@@ -22,6 +22,10 @@ module Invoicing
         ClientSync.perform
         InvoiceSync.sync_unpaid
       end
+
+      def get_pdf(invoice)
+        Api.instance.raw('invoice', invoice.invoicing_key, :pdf)
+      end
     end
   end
 end
