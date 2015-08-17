@@ -46,7 +46,7 @@ class OrderServicesController < ApplicationController
 
   def list_worktimes
     entries = order.worktimes.
-                    includes(:employee, :work_item).
+                    includes(:employee, :work_item, :invoice).
                     order(:work_date).
                     in_period(@period)
 

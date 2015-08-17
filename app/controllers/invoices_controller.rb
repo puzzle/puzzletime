@@ -17,7 +17,6 @@ class InvoicesController < CrudController
 
   def preview_total
     assign_attributes
-    @total = entry.calculated_total_amount
     render layout: false
   end
 

@@ -33,6 +33,7 @@ class Worktime < ActiveRecord::Base
   belongs_to :employee
   belongs_to :absence
   belongs_to :work_item
+  belongs_to :invoice
 
   validates_by_schema
   validates :employee_id, presence: true

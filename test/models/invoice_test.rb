@@ -102,13 +102,13 @@ class InvoiceTest < ActiveSupport::TestCase
   test 'calculated_total_amount when grouping = manual and add_vat is false' do
     invoice.manual!
     invoice.add_vat = false
-    assert_equal 1, invoice.calculated_total_amount.to_f
+    assert_equal 1.0, invoice.calculated_total_amount.to_f
   end
 
   test 'calculated_total_amount when grouping = manual and add_vat is true' do
     invoice.manual!
     invoice.add_vat = true
-    assert_equal 1 * (1 + Settings.small_invoice.constants.vat/100.0), invoice.calculated_total_amount.to_f
+    assert_equal 1.0, invoice.calculated_total_amount.to_f
   end
 
   ['employees', 'accounting_posts'].each do |grouping|
@@ -121,7 +121,7 @@ class InvoiceTest < ActiveSupport::TestCase
     test "calculated_total_amount when grouping = #{grouping} and add_vat is true" do
       invoice.grouping = grouping
       invoice.add_vat = true
-      assert_equal 3920 * (1 + Settings.small_invoice.constants.vat/100.0), invoice.calculated_total_amount.to_f
+      assert_equal 3920, invoice.calculated_total_amount.to_f
     end
   end
 
@@ -256,7 +256,6 @@ class InvoiceTransactionTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = false
 
   test 'generates different parallel invoice numbers' do
-    skip 'failing'
     ActiveRecord::Base.clear_active_connections!
     10.times.collect do
       Thread.new do

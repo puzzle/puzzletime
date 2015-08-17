@@ -67,7 +67,7 @@ module Invoicing
 
       def total_amount(item)
         if item['vat_included'] == 0
-          item['totalamount'] / (1 + Settings.small_invoice.constants.vat / 100.0)
+          item['totalamount'] / (1 + Settings.defaults.vat / 100.0)
         else
           item['totalamount']
         end
