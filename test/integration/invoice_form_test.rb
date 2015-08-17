@@ -33,7 +33,7 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
   end
 
   test 'updates calculated total on page load' do
-    expected_total = '%.2f' % (billable_hours * rate * (1 + Settings.small_invoice.constants.vat / 100.0)).round(2)
+    expected_total = '%.2f' % (billable_hours * rate * (1 + Settings.defaults.vat / 100.0)).round(2)
     assert_equal expected_total, find('span#total_amount').text
   end
 

@@ -11,7 +11,7 @@ module Invoicing
             cost: post.offered_rate.try(:round, 2),
             unit: constant(:unit_id),
             amount: entry.total_hours.round(2),
-            vat: constant(:vat),
+            vat: Settings.defaults.vat,
             discount: discount,
             discount_type: discount_type
           }

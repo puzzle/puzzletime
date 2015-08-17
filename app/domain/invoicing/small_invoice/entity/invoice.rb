@@ -17,7 +17,7 @@ module Invoicing
             client_id:         entry.order.client.invoicing_key,
             client_address_id: entry.billing_address.invoicing_key,
             client_contact_id: entry.billing_address.contact.try(:invoicing_key),
-            currency:          constant(:currency),
+            currency:          Settings.defaults.currency,
             title:             entry.title,
             period:            entry.period.to_s,
             date:              entry.billing_date,

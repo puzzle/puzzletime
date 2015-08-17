@@ -1,33 +1,37 @@
 app = window.App ||= {}
 
+toggleInvoiceFilters = (value) ->
+  invoiceFilters = $('#invoice_filters')
+  if value == true
+    invoiceFilters.hide()
+  else
+    invoiceFilters.show()
+
+updateTotal = ->
+  base_url = $('form.invoice').data('preview-total-path')
+  params = $('form.invoice').serialize()
+  url = "#{base_url}?#{params}"
+  $.getScript(url)
+
+
+
+################################################################
+# because of turbolinks.jquery, do bind ALL document events here
+
+$(document).on('change', 'form.invoice', (event) ->
+  updateTotal()
+)
+
+$(document).on('blur', 'input#invoice_period_from, input#invoice_period_to', (event) ->
+  updateTotal()
+)
+
+$(document).on('change', 'input[name=manual_invoice]', (event) ->
+  checked = $(event.target).is(':checked')
+  toggleInvoiceFilters(checked)
+)
+
+
 $ ->
-  toggle_invoice_filters = (value) ->
-    invoice_filters = $('#invoice_filters')
-    if value == true
-      invoice_filters.hide()
-    else
-      invoice_filters.show()
-
-  $('input[name=manual_invoice]').on 'change', (event) ->
-    checked = $(event.target).is(':checked')
-    toggle_invoice_filters(checked)
-
-  toggle_invoice_filters($('input[name=manual_invoice]').is(':checked'))
-
-
-  update_total = ->
-    base_url = $('form.invoice').data('preview-total-path')
-    params = $('form.invoice').serialize()
-    url = "#{base_url}?#{params}"
-    update_html = (data) ->
-      amount = Number.parseFloat(data).toFixed(2)
-      $("span#total_amount").html(amount)
-    $.get(url, update_html)
-
-
-  $('form.invoice').on 'change', (event) ->
-    update_total()
-
-  $('input#invoice_period_from, input#invoice_period_to').on 'blur', (event) ->
-    update_total()
+  toggleInvoiceFilters($('input[name=manual_invoice]').is(':checked'))
 

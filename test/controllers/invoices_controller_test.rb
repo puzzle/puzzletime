@@ -45,11 +45,11 @@ class InvoicesControllerTest < ActionController::TestCase
                 end_date: '31.12.2006'
     }
 
-    get :preview_total, params
-    preview_value = response.body
+    xhr :get, :preview_total, params.merge(format: :js)
+    preview_value = response.body[/html\('(.+) CHF'\)/, 1].to_f
 
     get :create, params
-    assert_equal(entry.calculated_total_amount.to_s, preview_value.chomp)
+    assert_equal(entry.calculated_total_amount, preview_value)
   end
 
   private

@@ -1,2 +1,1 @@
-:javascript
-  $("#invoice_total_amount").html("#{ 'asdf' }")
+$("#invoice_total_amount").html('#{format_attr(entry, :calculated_total_amount)}');
