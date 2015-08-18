@@ -1,28 +1,36 @@
-- if @cockpit.avarage_rate
-  .cockpit-header-item
-    Durchschnittlicher Stundenansatz
-    .data-line
-      %span.figure= f(@cockpit.avarage_rate)
+.cockpit-header-item
+  Budget
+  .data-item{title: 'Ist-R[CHF]'}
+    %span.figure-label verrechnet
+    %span.figure
+      = f(@cockpit.budget_billed)
       %span.unit CHF
-
-- if @cockpit.progress
-  .cockpit-header-item
-    Fortschritt
-    .data-item
-      %span.figure= f(@cockpit.progress)
-      %span.unit %
+  .data-item{title: 'Soll[CHF] - Ist-R[CHF]'}
+    %span.figure-label offen
+    %span.figure
+      = f(@cockpit.budget_open)
+      %span.unit CHF
 
 - if @cockpit.cost_effectiveness_current || @cockpit.cost_effectiveness_forecast
   .cockpit-header-item
     Wirtschaftlichkeit
+    - if @cockpit.cost_effectiveness_current
+      .data-item{title: 'Ist-R[h] / Ist[h] x 100'}
+        %span.figure-label Aktuell
+        %span.figure
+          = f(@cockpit.cost_effectiveness_current)
+          %span.unit %
+    - if @cockpit.cost_effectiveness_forecast
+      .data-item{title: '(Ist[h] - Ist-NV[h]) / Ist[h] x 100'}
+        %span.figure-label Prognose
+        %span.figure
+          = f(@cockpit.cost_effectiveness_forecast)
+          %span.unit %
+
+- if @cockpit.average_rate
+  .cockpit-header-item{title: 'Ist-R[CHF] / (Ist[h] per letztem Rechnungsdatum)'}
+    Durchschnittlicher Stundenansatz
     .data-item
-      - if @cockpit.cost_effectiveness_current
-        .cost_effectiveness_current{title: 'Ist-R[h] / Ist[h] x 100'}
-          %span.figure-label Aktuell
-          %span.figure= f(@cockpit.cost_effectiveness_current)
-          %span.unit %
-      - if @cockpit.cost_effectiveness_forecast
-        .cost_effectiveness_forecast{title: '(Ist[h]-Ist-NV[h]) / Ist[h] x 100'}
-          %span.figure-label Prognose
-          %span.figure= f(@cockpit.cost_effectiveness_forecast)
-          %span.unit %
+      %span.figure
+        = f(@cockpit.average_rate)
+        %span.unit CHF

@@ -25,17 +25,21 @@ class Order::Cockpit
       accounting_post_hours[false] || 0
     end
 
+    def shortnames
+      accounting_post.work_item.path_shortnames
+    end
+
+    def name
+      accounting_post.work_item.name
+    end
+
     private
 
     def build_cells
       { budget:              build_budget_cell,
         supplied_services:   build_supplied_services_cell,
-        billed:              build_billed_cell,
         open_services:       build_open_services_cell,
-        not_billable:        build_not_billable_cell,
-        remaining:           build_remaining_cell,
-        open_budget_billed:  build_open_budget_billed_cell,
-        open_budget_current: build_open_budget_current_cell }
+        not_billable:        build_not_billable_cell }
     end
 
     def build_budget_cell
@@ -46,35 +50,11 @@ class Order::Cockpit
       build_cell_with_amount(supplied_services_hours)
     end
 
-    # TODO
-    def build_billed_cell
-      # (Ist-R[h])
-      Cell.new(0, 0)
-    end
-
-    # TODO
-    def build_open_services_cell
-      # (Ist[h] - Ist-R[h])*Soll[CHF/h]
-      Cell.new(0, 0)
-    end
-
     def build_not_billable_cell
       Cell.new(not_billable_hours, nil)
     end
 
-    # TODO
-    def build_remaining_cell
-      # Soll[h] - Ist-R[h]
-      # Soll[CHF] - Ist-R[CHF]
-      Cell.new(accounting_post.remaining_hours || 0.0, nil)
-    end
-
-    # TODO
-    def build_open_budget_billed_cell
-      Cell.new(0, 0)
-    end
-
-    def build_open_budget_current_cell
+    def build_open_services_cell
       if accounting_post.offered_hours?
         build_cell_with_amount(accounting_post.offered_hours - supplied_services_hours)
       else

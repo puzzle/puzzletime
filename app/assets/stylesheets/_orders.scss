@@ -38,30 +38,47 @@
 .orders-cockpit {
   .cockpit-header {
     @include clearfix;
-    padding-bottom: 25px;
     margin: 0 auto;
-    width: 700px;
+    max-width: 800px;
   }
 
   .cockpit-header-item {
     float: left;
     margin-right: 50px;
+    padding-bottom: 25px;
 
-    .figure-label {
-      margin-right: 10px;
-    }
-    .unit {
-      margin-right: 30px;
+    .data-item {
+      clear: both;
+
+      .figure-label {
+        margin-right: 20px;
+        float: left;
+        line-height: 250%;
+      }
+      .figure {
+        text-align: right;
+        float: right;
+      }
+      .unit {
+        margin-right: 30px;
+      }
+
     }
   }
 
   .title, .figure, .unit {
     color: $gray-darker;
   }
-  
+
   .figure {
     font-size: 18px;
     font-weight: 500;
+
+    &.small {
+      font-size: 14px;
+      line-height: 200%;
+      font-weight: 400;
+    }
   }
 
   .figure-label, .unit {
@@ -134,7 +151,13 @@
 
     .title, .subtitle {
       height: $row-line-height;
+
+      .small {
+        color: $gray;
+        line-height: 21.8px;
+      }
     }
+
     td > * {
       @include ellipsis(true);
     }
