@@ -126,7 +126,7 @@ module Crm
       if entity.respond_to?(:crm_key)
         entity = entity.crm_key
       end
-      "#{base_url}/#{model}/#{entity}"
+      "#{base_url}/#{model}/#{entity}" if entity.present?
     end
 
     def base_url

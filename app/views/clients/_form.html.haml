@@ -2,6 +2,8 @@
   = f.fields_for :work_item, entry.work_item do |fields|
     = render 'work_items/fields', fields: fields
   - if Crm.instance
-    = f.labeled_input_field :crm_key, caption: Crm.instance.crm_key_label, span: 2
+    - url = Crm.instance.client_url(entry)
+    - link = url ? link_to('Öffnen', url, target: :blank) : nil
+    = f.labeled_input_field :crm_key, caption: Crm.instance.crm_key_label, span: 2, help: link
     - if Crm.instance.restrict_local?
       = f.labeled_input_field :allow_local, detail: "Nur für Kunden mit diesem Flag können Aufträge ohne #{Crm.instance.crm_key_name} erstellt werden."
