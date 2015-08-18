@@ -1,11 +1,2 @@
 = form_tag(edit_order_multi_worktimes_path(@order), id: 'worktimes', method: :post) do
-  - data = {}
-  - if can?(:update, @order)
-    - data[:row_link] = edit_ordertime_path(':id', back_url: url_for(returning: true))
-
-  = plain_table_or_message(@worktimes, data: data) do |t|
-    - t.col(check_box_tag(:all_worktimes, true, false, data: { check: 'worktime_ids[]' }), class: 'no-link') do |e|
-      = check_box_tag('worktime_ids[]', e.id)
-    - t.attrs(:work_date, :employee_id, :hours, :work_item_id, :ticket)
-    - t.attr(:description) { |w| w.description.to_s.truncate(40) }
-    - t.attrs(:billable, :invoice_id)
+  = summed_worktimes_table(@worktimes)
