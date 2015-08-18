@@ -10,21 +10,31 @@ class Order::Cockpit
     @rows = build_rows
   end
 
-  def avarage_rate
-    # Ist-R[CHF] / (Ist[h] per letztem Rechnungsdatum)
+  def budget_billed
+    @budget_billed ||= order.invoices.sum(:total_amount).to_f
   end
 
-  def progress
-    # 100/(Ist[h] + RA[h])*Ist[h]
+  def budget_open
+    total.cells[:budget].amount.to_f - budget_billed
+  end
+
+  def average_rate
+    # Ist-R[CHF] / (Ist[h] per letztem Rechnungsdatum)
+    if last_invoice_date
+      budget_billed / total_hours_at_last_invoice
+    end
   end
 
   def cost_effectiveness_current
     # Ist-R[h] / Ist[h] x 100
+    result = (order.invoices.sum(:total_hours).to_f / total_hours) * 100.0
+    result.finite? ? result.round : EM_DASH
   end
 
   def cost_effectiveness_forecast
-    forecast = (1 - total.cells[:not_billable].hours.to_f / total.cells[:supplied_services].hours) * 100
-    forecast.finite? ? forecast.round : EM_DASH
+    # (Ist[h]-Ist-NV[h]) / Ist[h] x 100
+    result = (1 - not_billable_hours / total_hours) * 100.0
+    result.finite? ? result.round : EM_DASH
   end
 
   def accounting_posts
@@ -32,6 +42,25 @@ class Order::Cockpit
   end
 
   private
+
+  # hours by the last invoice date. including non-billable
+  def total_hours_at_last_invoice
+
+    order.worktimes.in_period(Period.new(nil, last_invoice_date)).sum(:hours).to_f
+  end
+
+  def not_billable_hours
+    total.cells[:not_billable].hours.to_f
+  end
+
+  def total_hours
+    total.cells[:supplied_services].hours.to_f
+  end
+
+  def last_invoice_date
+    @last_invoice_date ||=
+       order.invoices.select(:period_to).order(period_to: :desc).last.try(:period_to)
+  end
 
   def build_rows
     if sub_levels?

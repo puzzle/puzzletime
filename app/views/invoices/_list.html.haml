@@ -1,5 +1,5 @@
 = list_table do |t|
-  - t.attrs :billing_date, :reference, :total_amount, :status, :due_date
+  - t.sortable_attrs :reference, :total_amount, :total_hours, :period, :billing_date, :due_date, :status
   - standard_table_actions(t)
   - t.action_col do |e|
     - t.table_action_link('time',

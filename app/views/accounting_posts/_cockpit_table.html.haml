@@ -16,31 +16,15 @@
           = picon('info')
       %th{title: 'Die effektive Leistung entspricht der erfassten Arbeitszeit und ist unabhängig von der Verrechenbarkeit. '}
         %span
-          Leistungen
+          Geleistete Stunden
           = picon('info')
-      %th{title: 'Die verrechnete Leistung entspricht den tatsächlich in Rechnung gestellten Leistungen.'}
+      %th{title: 'Differenz zwischen budgetierten Stunden und geleisteten Stunden.'}
         %span
-          Verrechnet
-          = picon('info')
-      %th{title: 'Differenz zwischen verrechneter Leistung und effektiver Leistung.'}
-        %span
-          Offene Leistungen
+          Offene Stunden
           = picon('info')
       %th{title: 'Durch den Auftragsverantwortlichen im Rahmen der Zeitbereinigung als nicht verrechenbar markierte Leistungen.'}
         %span
           Nicht verrechenbar
-          = picon('info')
-      %th{title: 'Geschätzter Aufwand pro Buchungsposition bis der Auftrag abgeschlossen werden kann.'}
-        %span
-          Restaufwand
-          = picon('info')
-      %th{title: 'Differenz zwischen verrechneter Leistung und budgetierter Leistung.'}
-        %span
-          Offenes Budget (verrechnet)
-          = picon('info')
-      %th{title: 'Differenz zwischen effektiver Leistung (unabhängig von der Verrechenbarkeit) und budgetierter Leistung.'}
-        %span
-          Offenes Budget (laufend)
           = picon('info')
 
     - @cockpit.rows.each do |row|
@@ -57,5 +41,5 @@
                 %span.unit Tage
             .data-item
               - if cell.amount
-                %span.figure= f(cell.amount.to_f)
+                %span.figure.small= f(cell.amount.to_f)
                 %span.unit CHF
