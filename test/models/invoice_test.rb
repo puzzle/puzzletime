@@ -30,6 +30,10 @@ class InvoiceTest < ActiveSupport::TestCase
     invoice.work_items << work_items(:webauftritt)
   end
 
+  teardown do
+    Invoicing.instance = nil
+  end
+
   test 'title with contract' do
     assert_equal 'Webauftritt gemäss Vertrag web1234', invoice.title
   end
