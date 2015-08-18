@@ -30,6 +30,7 @@ class Planning < ActiveRecord::Base
 
   validates_by_schema
   validate :validate_planning
+  validate :validate_overlappings
 
   belongs_to :employee
   belongs_to :work_item
@@ -62,50 +63,9 @@ class Planning < ActiveRecord::Base
     if repeat_type_forever?
       return period.end_date >= start_week_date
     end
-    !((period.start_date < start_week_date && period.end_date < start_week_date) || (period.start_date > end_week_date && period.end_date > end_week_date))
-  end
 
-  def validate_planning
-    errors.add(:start_week, 'Von Format ist ungültig') unless valid_week?(start_week)
-    errors.add(:end_week, 'Bis Format ist ungültig') if end_week && !valid_week?(end_week)
-    errors.add(:end_week, 'Bis Datum ist ungültig') if end_week && (end_week < start_week)
-
-    halfday_selected = (monday_am || monday_pm || tuesday_am || tuesday_pm || wednesday_am || wednesday_pm || thursday_am || thursday_pm || friday_am || friday_pm)
-
-    if !is_abstract && !halfday_selected
-      errors.add(:start_date, 'Mindestens ein halber Tag muss selektiert werden')
-    end
-
-    if is_abstract && abstract_amount > 0 && halfday_selected
-      errors.add(:start_date, 'Abstrakte Planungen entweder mit der Selektion von Halbtagen oder durch Auswählen des Umfangs (Dropdown-Box) spezifizieren (nicht beides).')
-    end
-
-    if abstract_amount == 0 && !halfday_selected
-      errors.add(:start_date, 'Entweder Halbtag selektieren oder Umfang auswählen (Dropdown-Box).')
-    end
-
-    existing_plannings = Planning.where('work_item_id = ? and employee_id = ? and is_abstract=false', work_item_id, employee_id) # todo: limit search result by date
-    existing_plannings_abstr = Planning.where('work_item_id = ? and employee_id = ? and is_abstract=true', work_item_id, employee_id) # todo: limit search result by date
-
-    if is_abstract == false
-      existing_plannings.each do |planning|
-        if overlaps?(planning)
-          errors.add(:start_date, 'Dieses Projekt ist in diesem Zeitraum bereits geplant')
-          break
-        end
-      end
-    end
-
-    if is_abstract
-      existing_plannings_abstr.each do |planning|
-        if overlaps?(planning)
-          errors.add(:start_date, 'Dieses Projekt ist in diesem Zeitraum bereits abstrakt geplant')
-          break
-        end
-      end
-    else
-
-    end
+    !((period.start_date < start_week_date && period.end_date < start_week_date) ||
+      (period.start_date > end_week_date && period.end_date > end_week_date))
   end
 
   def monday
@@ -158,9 +118,49 @@ class Planning < ActiveRecord::Base
     p1_end_week >= p2_start_week
   end
 
+
   private
+
+  def validate_planning
+    errors.add(:start_week, 'Von Format ist ungültig') unless valid_week?(start_week)
+    errors.add(:end_week, 'Bis Format ist ungültig') if end_week && !valid_week?(end_week)
+    errors.add(:end_week, 'Bis Datum ist ungültig') if end_week && (end_week < start_week)
+
+    if abstract_amount == 0 && !halfday_selected
+      errors.add(:start_date, 'Entweder Halbtag selektieren oder Umfang auswählen (Dropdown-Box).')
+    end
+
+    if is_abstract? && abstract_amount > 0 && halfday_selected
+      errors.add(:start_date, 'Abstrakte Planungen entweder mit der Selektion von Halbtagen oder durch Auswählen des Umfangs (Dropdown-Box) spezifizieren (nicht beides).')
+    end
+
+    if !is_abstract? && !halfday_selected
+      errors.add(:start_date, 'Mindestens ein halber Tag muss selektiert werden')
+    end
+  end
+
+  def validate_overlappings
+    # todo: limit search result by date
+    existing = Planning.where(work_item_id: work_item_id,
+                              employee_id: employee_id,
+                              is_abstract: is_abstract?)
+    existing.each do |planning|
+      if overlaps?(planning)
+        errors.add(:start_date, "Dieses Projekt ist in diesem Zeitraum bereits #{is_abstract ? 'abstrakt' : ''} geplant")
+      end
+    end
+  end
 
   def valid_week?(week)
     Week.valid?(week)
   end
+
+  def halfday_selected
+     monday_am || monday_pm ||
+     tuesday_am || tuesday_pm ||
+     wednesday_am || wednesday_pm ||
+     thursday_am || thursday_pm ||
+     friday_am || friday_pm
+   end
+
 end

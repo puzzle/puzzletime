@@ -38,7 +38,6 @@ class PlanningsController < CrudController
     set_employee
     if params[:week_date].present?
       @period = extended_period(Date.parse(params[:week_date]))
-    # else: use default period
     end
     @graph = EmployeePlanningGraph.new(@employee, @period)
   end
@@ -46,7 +45,7 @@ class PlanningsController < CrudController
   def employee_lists_planning
     @employee_list = EmployeeList.find_by_id(params[:employee_list_id])
     @employee_list_name = @employee_list.title
-    period = @period.present? ? @period : Period.current_month
+    period = @period.present? ? @period : Period.next_three_months
     @graph = EmployeesPlanningGraph.new(@employee_list.employees.includes(:employments).list, period)
   end
 
@@ -77,7 +76,7 @@ class PlanningsController < CrudController
   end
 
   def company_planning
-    period = @period.present? ? @period : Period.current_month
+    period = @period.present? ? @period : Period.next_three_months
     @graph = EmployeesPlanningGraph.new(Employee.employed_ones(period).includes(:employments).list, period)
   end
 
@@ -113,7 +112,7 @@ class PlanningsController < CrudController
 
   def set_employees
     unless @period
-      @period = Period.current_month
+      @period = Period.next_three_months
     end
     @employees = Employee.employed_ones(@period)
   end
@@ -125,7 +124,7 @@ class PlanningsController < CrudController
 
   def planned_employees(department, period)
     employees = Employee.where(department_id: department).includes(:employments).list
-    period ||= Period.current_month
+    period ||= Period.next_three_months
     employees.select { |e| e.employment_at(period.start_date).present? || e.employment_at(period.end_date).present? }
   end
 
