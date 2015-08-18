@@ -22,6 +22,7 @@
 class Invoice < ActiveRecord::Base
 
   STATUSES = %w(draft sent paid)
+
   enum grouping: %w(accounting_posts employees manual)
 
   belongs_to :order
@@ -48,6 +49,9 @@ class Invoice < ActiveRecord::Base
   after_create :update_client_invoice_number
   before_save :save_remote_invoice, if: -> { Invoicing.instance.present? }
   after_save :assign_worktimes
+  after_destroy :delete_remote_invoice, if: -> { Invoicing.instance.present? }
+
+  protect_if :paid?, 'Bezahlte Rechnungen können nicht gelöscht werden.'
 
   scope :list, -> { order(billing_date: :desc) }
 
@@ -81,6 +85,12 @@ class Invoice < ActiveRecord::Base
 
   def calculated_total_amount
     positions.collect(&:total_amount).sum
+  end
+
+  STATUSES.each do |status|
+    define_method("#{status}?") do
+      self.status == status
+    end
   end
 
   private
@@ -181,6 +191,13 @@ class Invoice < ActiveRecord::Base
   rescue Invoicing::Error => e
     errors.add(:base, "Fehler im Invoicing Service: #{e.message}")
     false
+  end
+
+  def delete_remote_invoice
+    Invoicing.instance.delete_invoice(self)
+  rescue Invoicing::Error => e
+    errors.add(:base, "Fehler im Invoicing Service: #{e.message}")
+    fail ActiveRecord::Rollback
   end
 
   def assign_worktimes

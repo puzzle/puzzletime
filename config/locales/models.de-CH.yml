@@ -178,9 +178,14 @@ de-CH:
         period_from: von
         period_to: bis
         reference: Referenz
+        status: Status
         total_amount: Rechnungsbetrag
         total_hours: Total Stunden
         work_items: Buchungspositionen
+      invoice/statuses:
+        draft: Entwurf
+        sent: Gesendet
+        paid: Bezahlt
       order:
         client: Kunde
         category: Kategorie

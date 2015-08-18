@@ -17,6 +17,7 @@ class ApplicationController < ActionController::Base
 
   if Rails.env.production?
     rescue_from ActionController::UnknownFormat, with: :not_found
+    rescue_from ActionView::MissingTemplate, with: :not_found
 
     rescue_from CanCan::AccessDenied do |exception|
       redirect_to root_url, alert: 'Sie sind nicht authorisiert, um diese Seite zu öffnen'

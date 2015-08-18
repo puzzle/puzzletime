@@ -243,6 +243,20 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal nil, worktimes(:wt_pz_webauftritt).invoice_id
   end
 
+  test 'delete deletes remote as well' do
+    Invoicing.instance = mock
+    Invoicing.instance.expects(:delete_invoice)
+    assert_difference('Invoice.count', -1) { assert invoice.destroy }
+  end
+
+  test 'delete adds error message if invoicing error' do
+    Invoicing.instance = mock
+    Invoicing.instance.expects(:delete_invoice).raises(Invoicing::Error.new('some invoicing error'))
+    assert_no_difference('Invoice.count') { assert !invoice.destroy }
+    assert_equal ['Fehler im Invoicing Service: some invoicing error'], invoice.errors[:base]
+  end
+
+
   private
 
   def invoice
