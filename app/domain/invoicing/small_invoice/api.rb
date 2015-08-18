@@ -7,12 +7,12 @@ module Invoicing
       ENDPOINTS = %w(invoice invoice/pdf client)
 
       def list(endpoint)
-        response = get_request(endpoint, :list)
+        response = get_json(endpoint, :list)
         response['items']
       end
 
       def get(endpoint, id)
-        response = get_request(endpoint, :get, id: id)
+        response = get_json(endpoint, :get, id: id)
         response['item']
       end
 
@@ -31,23 +31,21 @@ module Invoicing
         nil
       end
 
-      def raw(endpoint, id, method = :get)
-        get_raw(endpoint, method, id: id)
+      def get_raw(endpoint, action, id)
+        get_request(endpoint, action, id: id).body
       end
 
       private
 
-      def get_request(endpoint, action, params = {})
-        raw = params.delete(:raw_response)
-
-        raw_response = get_raw(endpoint, action, params)
-        raw ? raw_response : handle_response(raw_response)
+      def get_json(endpoint, action, params = {})
+        response = get_request(endpoint, action, params)
+        handle_json_response(response)
       end
 
-      def get_raw(endpoint, action, params = {})
+      def get_request(endpoint, action, params = {})
         url = uri(endpoint, action, params)
         request = Net::HTTP::Get.new(url.path)
-        http(url).request(request).body
+        http(url).request(request)
       end
 
       def post_request(endpoint, action, data, params = {})
@@ -56,7 +54,7 @@ module Invoicing
         request.set_form_data(data ? { data: data.to_json } : {})
 
         response = http(url).request(request)
-        handle_response(response)
+        handle_json_response(response)
       end
 
       def http(url)
@@ -71,7 +69,7 @@ module Invoicing
         URI("#{Settings.small_invoice.url}/#{endpoint}/#{action}/#{args}")
       end
 
-      def handle_response(response)
+      def handle_json_response(response)
         json = JSON.parse(response.body)
         if json['error']
           fail Invoicing::Error.new(json['errormessage'], json['errorcode'])
