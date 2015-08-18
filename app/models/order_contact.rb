@@ -49,7 +49,7 @@ class OrderContact < ActiveRecord::Base
   end
 
   def assert_contact_from_same_client
-    if contact.client_id != order.client.id
+    if contact && order && contact.client_id != order.client.id
       errors.add(:contact_id, 'muss zum selben Kunden wie der Auftrag gehören.')
     end
   end
