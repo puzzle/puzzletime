@@ -3,4 +3,6 @@
 = crud_form do |f|
   = f.labeled_input_fields :lastname, :firstname, :function, :email, :phone, :mobile
   - if Crm.instance
-    = f.labeled_input_field :crm_key, caption: Crm.instance.crm_key_label, span: 2
+    - url = Crm.instance.contact_url(entry)
+    - link = url ? link_to('Öffnen', url, target: :blank) : nil
+    = f.labeled_input_field :crm_key, caption: Crm.instance.crm_key_label, span: 2, help: link

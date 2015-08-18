@@ -1,2 +1,4 @@
-= f.labeled(:crm_key, caption: Crm.instance.crm_key_label, span: 2) do
+- url = Crm.instance.order_url(entry)
+- link = url ? link_to('Öffnen', url, target: :blank) : nil
+= f.labeled(:crm_key, caption: Crm.instance.crm_key_label, span: 2, help: link) do
   = f.input_field :crm_key

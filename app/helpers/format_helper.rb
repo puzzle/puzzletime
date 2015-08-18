@@ -22,6 +22,7 @@ module FormatHelper
     when true   then t('global.yes')
     when false  then t('global.no')
     when nil    then UtilityHelper::EMPTY_STRING
+    when ActiveRecord::Base then assoc_link(value)
     else value.to_s
     end
   end
@@ -160,7 +161,7 @@ module FormatHelper
   def format_belongs_to(obj, assoc)
     val = obj.send(assoc.name)
     if val
-      assoc_link(assoc, val)
+      assoc_link(val)
     else
       ta(:no_entry, assoc)
     end
@@ -171,24 +172,24 @@ module FormatHelper
   def format_has_many(obj, assoc)
     values = obj.send(assoc.name).list
     if values.size == 1
-      assoc_link(assoc, values.first)
+      assoc_link(values.first)
     elsif values.present?
-      simple_list(values) { |val| assoc_link(assoc, val) }
+      simple_list(values) { |val| assoc_link(val) }
     else
       ta(:no_entry, assoc)
     end
   end
 
   # Renders a link to the given association entry.
-  def assoc_link(assoc, val)
-    link_to_if(assoc_link?(assoc, val), val.to_s, val)
-  end
-
-  # Returns true if no link should be created when formatting the given
-  # association.
-  def assoc_link?(assoc, val)
-    path_method = "#{val.class.model_name.singular_route_key}_path".to_sym
-    respond_to?(path_method) && show_path_exists?(path_method, val)
+  def assoc_link(val)
+    path_method = "#{val.class.model_name.singular_route_key}_path"
+    if show_path_exists?(path_method, val) && can?(:show, val)
+      link_to(val.to_s, val)
+    elsif show_path_exists?("edit_#{path_method}", val) && can?(:edit, val)
+      link_to(val.to_s, edit_polymorphic_path(val))
+    else
+      val.to_s
+    end
   end
 
   def show_path_exists?(path_method, val)
