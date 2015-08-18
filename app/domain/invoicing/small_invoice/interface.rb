@@ -24,7 +24,7 @@ module Invoicing
       end
 
       def get_pdf(invoice)
-        Api.instance.raw('invoice', invoice.invoicing_key, :pdf)
+        Api.instance.get_raw('invoice', :pdf, invoice.invoicing_key)
       end
     end
   end
