@@ -9,6 +9,12 @@ class InvoicesControllerTest < ActionController::TestCase
   setup { Invoicing.instance = nil }
   setup :login
 
+  def test_show_with_non_existing_id_raises_record_not_found
+    # we redirect to allow order changes with dropdown
+    get :show, id: 42, order_id: test_entry.order_id
+    assert_redirected_to order_invoices_path(test_entry.order_id)
+  end
+
   test 'GET new with params from order_services view filter assigns correct attributes' do
     login_as :mark
     get :new,

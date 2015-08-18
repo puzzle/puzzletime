@@ -22,4 +22,8 @@ module InvoiceHelper
     l(entry.due_date)
   end
 
+  def format_invoice_status(invoice)
+    Invoice.human_attribute_name(:"statuses.#{invoice.status}") if invoice.status?
+  end
+
 end
