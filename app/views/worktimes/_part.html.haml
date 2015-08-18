@@ -1,7 +1,7 @@
 %tr
-  %td= h(part.account.label_verbose)
-  %td= h truncate(part.description, :length => 50) if part.description
   %td{:align => "right", :style => "white-space: nowrap;"}= part.time_string
+  %td= h(part.account.label_verbose)
+  %td.truncated{title: part.description}= part.description
   - if part.new_record?
     %td
       = link_to 'Löschen',

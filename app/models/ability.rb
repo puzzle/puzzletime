@@ -76,7 +76,7 @@ class Ability
     can :search, WorkItem
 
     can :read, Employee
-    can [:change_passwd, :update_passwd, :settings, :update_settings], Employee do |employee|
+    can [:passwd, :update_passwd, :settings, :update_settings], Employee do |employee|
       employee == user
     end
 

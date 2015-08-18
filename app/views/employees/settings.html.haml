@@ -1,6 +1,11 @@
 - @title = "Benutzereinstellungen"
 
 = standard_form(@user, url: settings_employees_path, cancel_url: root_path) do |f|
+  - if Settings.ldap.connection.host.blank?
+    = f.labeled('Passwort') do
+      %p.form-control-static
+        = link_to 'Ändern', passwd_employees_path
+
   = f.labeled('Zeitspannen') do
     %table.table-condensed
       %tr{:valign => "top"}
@@ -35,10 +40,9 @@
 %br/
 
 
-%h2 Benutzerinformationen
 .row
   .col-md-4
-    %h3 Anstellungen
+    %h4 Anstellungen
     = plain_table(@user.employments.list) do |t|
       - t.attr(:start_date)
       - t.attr(:end_date)
@@ -46,7 +50,7 @@
 
   - unless @user.overtime_vacations.empty?
     .col-md-4
-      %h3 Überzeit-Ferien Umbuchungen
+      %h4 Überzeit-Ferien Umbuchungen
       = plain_table(@user.overtime_vacations.list) do |t|
         - t.attr(:transfer_date)
         - t.attr(:hours)

@@ -1,21 +1,23 @@
 - @title = 'Passwort ändern'
 
-= form_tag passwd_employees_path do
-  %table
-    %tr
-      %td Altes Passwort:
-      %td
-        %input#employee_pwd{:name => "pwd", :size => "30", :type => "password"}/
-    %tr
-      %td Neues Passwort:
-      %td
-        %input#change_pwd{:name => "change_pwd", :size => "30", :type => "password"}/
-    %tr
-      %td Bestätigung:
-      %td
-        %input#change_pwd_confirmation{:name => "change_pwd_confirmation", :size => "30", :type => "password"}/
+= form_tag passwd_employees_path, name: 'form' do
+  %table.table-condensed
     %tr
       %td
-      %td= submit_tag 'Speichern'
+        %label.control-label Altes Passwort
+      %td= password_field_tag 'pwd', nil, size: 30, class: 'form-control initial-focus'
+    %tr
+      %td
+        %label.control-label Neues Passwort
+      %td= password_field_tag 'change_pwd', nil, size: 30, class: 'form-control'
+    %tr
+      %td
+        %label.control-label Bestätigung
+      %td= password_field_tag 'change_pwd_confirmation', nil, size: 30, class: 'form-control'
+    %tr
+      %td
+      %td
+        %input{type: "submit", value: "Speichern", class: 'btn btn-primary'}
+        = link_to('Abbrechen', settings_employees_path, class: 'cancel')
 
-%p= link_to 'Meine Zeit', :controller => 'evaluator'
+
