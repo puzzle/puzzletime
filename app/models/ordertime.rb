@@ -54,6 +54,10 @@ class Ordertime < Worktime
     work_item.accounting_post.order
   end
 
+  def amount
+    hours * (work_item.accounting_post.offered_rate || 0)
+  end
+
   def template(newWorktime = nil)
     newWorktime = super newWorktime
     newWorktime

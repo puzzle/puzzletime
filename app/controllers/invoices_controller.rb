@@ -74,7 +74,7 @@ class InvoicesController < CrudController
   end
 
   def billing_addresses
-    order.client.billing_addresses
+    order.client.billing_addresses.includes(:contact)
   end
 
   def default_billing_address_id
