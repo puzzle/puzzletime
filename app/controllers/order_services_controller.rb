@@ -51,7 +51,7 @@ class OrderServicesController < ApplicationController
                     in_period(@period)
 
     entries = filter_entries_by_ticket(entries)
-    filter_entries_by(entries, :employee_id, :work_item_id, :billable)
+    filter_entries_by(entries, :employee_id, :work_item_id, :billable, :invoice_id)
   end
 
   def filter_entries_by_ticket(entries)

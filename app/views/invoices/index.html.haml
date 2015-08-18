@@ -1,12 +1,6 @@
-= render 'orders/header'
-
 - @title ||= ti(:title, models: models_label)
 
-= render 'info'
-
-- if search_support?
-  .list-search
-    = render 'search'
+= render 'orders/header'
 
 = render 'list'
 

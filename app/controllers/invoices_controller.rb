@@ -9,7 +9,20 @@ class InvoicesController < CrudController
   helper_method :all_work_items, :checked_work_item_ids, :all_employees, :checked_employee_ids,
                 :order, :billing_addresses
 
-  before_action :order
+  def show
+    respond_to do |format|
+      format.html
+      format.json
+      format.pdf do
+        if Invoicing.instance
+          pdf = Invoicing.instance.get_pdf(entry)
+          send_data(pdf, filename: "#{entry.reference}.pdf", type: 'application/pdf', disposition: :inline)
+        else
+          fail ActionController::UnknownFormat
+        end
+      end
+    end
+  end
 
   def new
     assign_attributes
@@ -20,12 +33,27 @@ class InvoicesController < CrudController
     render layout: false
   end
 
-  def pdf
-    pdf = Invoicing.instance.get_pdf(entry)
-    send_data(pdf, filename: "#{entry.reference}.pdf", type: 'application/pdf', disposition: :inline)
+  def sync
+    if Invoicing.instance
+      begin
+        Invoicing.instance.sync_invoice(entry)
+        flash[:notice] = "Die Rechnung #{entry} wurde aktualisiert."
+      rescue Invoicing::Error => e
+        flash[:error] = "Fehler im Invoicing Service: #{e.message}"
+      end
+    end
+    redirect_to index_path
   end
 
   private
+
+  def find_entry
+    super
+  rescue ActiveRecord::RecordNotFound => e
+    # happens when changing order in top dropdown while editing invoice.
+    redirect_to order_invoices_path(order)
+    Invoice.new
+  end
 
   def model_params
     p = (params[model_identifier] || ActionController::Parameters.new).permit(permitted_attrs).tap do |attrs|
@@ -46,7 +74,7 @@ class InvoicesController < CrudController
   end
 
   def order
-    @order ||= Order.find(params[:order_id])
+    parent
   end
 
   def all_work_items

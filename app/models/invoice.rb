@@ -49,7 +49,7 @@ class Invoice < ActiveRecord::Base
   before_save :save_remote_invoice, if: -> { Invoicing.instance.present? }
   after_save :assign_worktimes
 
-  scope :list, ->{ includes(:billing_address) }
+  scope :list, -> { order(billing_date: :desc) }
 
   def title
     title = order.name

@@ -16,6 +16,8 @@ class ApplicationController < ActionController::Base
   helper_method :sanitized_back_url, :current_user
 
   if Rails.env.production?
+    rescue_from ActionController::UnknownFormat, with: :not_found
+
     rescue_from CanCan::AccessDenied do |exception|
       redirect_to root_url, alert: 'Sie sind nicht authorisiert, um diese Seite zu öffnen'
     end

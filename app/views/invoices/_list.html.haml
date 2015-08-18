@@ -2,8 +2,18 @@
   - t.attrs :billing_date, :reference, :total_amount, :status, :due_date
   - standard_table_actions(t)
   - t.action_col do |e|
-    - t.table_action_link('time', order_order_services_path(order_id: e.order_id, invoice_id: e.id))
+    - t.table_action_link('time',
+                          order_order_services_path(order_id: e.order_id, invoice_id: e.id),
+                          title: 'Leistungen anzeigen')
   - if Invoicing.instance
     - t.action_col do |e|
-      - link_to(icon('file'), pdf_order_invoices_path(order_id: e.order_id, id: e.id))
+      - t.table_action_link('document',
+                            order_invoice_path(order_id: e.order_id, id: e.id, format: :pdf),
+                            target: :blank,
+                            title: 'PDF anzeigen')
+    - t.action_col do |e|
+      - t.table_action_link('chevron-left',
+                            sync_order_invoice_path(order_id: e.order_id, id: e.id),
+                            title: 'Daten aus Invoicing übernehmen',
+                            data: { method: :put })
 
