@@ -16,6 +16,7 @@ class AccountingPostsController < CrudController
   end
 
   private
+
   def find_entry
     super
   rescue ActiveRecord::RecordNotFound => e
