@@ -26,7 +26,9 @@ module OrderServicesHelper
       t.attrs(:work_date, :employee_id, :hours)
       t.attr(:amount, 'CHF', class: 'right')
       t.attrs(:work_item_id, :ticket)
-      t.attr(:description) { |w| w.description.to_s.truncate(40) }
+      t.attr(:description, nil, class: 'truncated', style: 'max-width: 250px;') do |w|
+        content_tag(:span, w.description.to_s, title: w.description)
+      end
       t.attrs(:billable, :invoice_id)
     end
   end

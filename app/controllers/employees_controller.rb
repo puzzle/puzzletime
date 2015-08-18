@@ -47,11 +47,11 @@ class EmployeesController < ManageController
         flash[:notice] = 'Das Passwort wurde aktualisiert'
         redirect_to controller: 'evaluator'
       else
-        flash[:notice] = 'Die Passwort Bestätigung stimmt nicht mit dem Passwort überein'
+        flash.now[:notice] = 'Die Passwort Bestätigung stimmt nicht mit dem Passwort überein'
         render 'passwd'
       end
     else
-      flash[:notice] = 'Das alte Passwort ist falsch'
+      flash.now[:notice] = 'Das alte Passwort ist falsch'
       render 'passwd'
     end
   end

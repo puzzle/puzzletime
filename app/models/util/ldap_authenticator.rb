@@ -5,6 +5,8 @@ class LdapAuthenticator
   # Performs a login over LDAP with the passed data.
   # Returns the logged-in Employee or nil if the login failed.
   def login(username, pwd)
+    return nil if Settings.ldap.connection.host.blank?
+
     if !username.strip.empty? &&
        (auth_user(Settings.ldap.user_dn, username, pwd) ||
         (auth_user(Settings.ldap.external_dn, username, pwd) && group_member(username)))
