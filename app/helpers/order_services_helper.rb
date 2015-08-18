@@ -23,7 +23,11 @@ module OrderServicesHelper
       t.col(check_all, class: 'no-link') do |e|
         check_box_tag('worktime_ids[]', e.id)
       end
-      t.attrs(:work_date, :employee_id, :hours)
+      t.attr(:work_date)
+      t.attr(:employee_id) do |e|
+        e.employee.to_s
+      end
+      t.attr(:hours)
       t.attr(:amount, 'CHF', class: 'right')
       t.attrs(:work_item_id, :ticket)
       t.attr(:description, nil, class: 'truncated', style: 'max-width: 250px;') do |w|
