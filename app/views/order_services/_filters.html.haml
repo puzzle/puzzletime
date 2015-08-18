@@ -1,4 +1,4 @@
-= form_tag(nil, method: :get, class: 'form-inline', role: 'filter') do
+= form_tag(nil, method: :get, class: 'form-inline', role: 'filter', remote: true) do
   = hidden_field_tag :page, 1
 
   = direct_filter_date(:start_date, 'Von', @period.start_date)
