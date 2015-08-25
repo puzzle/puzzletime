@@ -9,7 +9,7 @@ module JavascriptHelper
                           type: :html,
                           update: 'selectize')
     link_to(path, options) do
-      icon(:plus) + " Erfassen".html_safe
+      picon(:add) + " Erfassen".html_safe
     end
   end
 end

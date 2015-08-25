@@ -79,7 +79,7 @@ Rails.application.routes.draw do
 
   resources :user_notifications, except: [:show]
 
-  resources :work_items, only: [:new, :create, :edit, :update, :destroy] do
+  resources :work_items, only: [:new, :create] do
     collection do
       get :search
     end
