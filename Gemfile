@@ -29,9 +29,9 @@ gem 'validates_timeliness'
 
 
 ## assets
-gem 'sass-rails', '~> 4.0.3'
-gem 'uglifier', '>= 1.3.0'
-gem 'coffee-rails', '~> 4.0.0'
+gem 'sass-rails'
+gem 'uglifier'
+gem 'coffee-rails'
 gem 'therubyracer',  platforms: :ruby
 
 gem 'jquery-rails'
@@ -51,7 +51,7 @@ end
 
 group :development do
   gem 'spring'
-  gem 'better_errors', '< 2.0.0'
+  gem 'better_errors', '< 2.0.0' # higher requires ruby 2.0
   gem 'bullet'
   gem 'quiet_assets'
 end
@@ -76,7 +76,7 @@ end
 
 group :metrics do
   gem 'annotate'
-  gem 'brakeman', '2.5.0'
+  gem 'brakeman' #, '2.5.0'
   gem 'minitest-reporters'
   gem 'rails-erd'
   gem 'rubocop'
