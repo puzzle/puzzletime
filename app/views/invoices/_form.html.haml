@@ -45,11 +45,12 @@
 
     = f.labeled_static_field :calculated_total_amount, id: 'invoice_total_amount'
 
-    = f.labeled :add_vat do
-      .checkbox
-        %label
-          = f.check_box :add_vat
-          zzgl. #{f(Settings.defaults.vat)} % MWSt
+    -#
+      = f.labeled :add_vat do
+        .checkbox
+          %label
+            = f.check_box :add_vat
+            zzgl. #{f(Settings.defaults.vat)} % MWSt (Stundensatz excl. MWSt)
 
     %hr
 
