@@ -232,21 +232,6 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal billing_addresses(:swisstopo_2), orders(:webauftritt).billing_address
   end
 
-  test 'save' do
-    skip 'anpassen'
-    Invoicing.instance = stub(:save_invoice)
-    invoice.period_from = Date.new(2006, 1, 1)
-
-    assert_equal true, builder.save
-
-    invoice.reload
-    assert_equal 28, invoice.total_hours
-    assert_equal 28 * 140, invoice.total_amount
-    assert_equal invoice.id, worktimes(:wt_mw_webauftritt).invoice_id
-    assert_equal invoice.id, worktimes(:wt_lw_webauftritt).invoice_id
-    assert_equal nil, worktimes(:wt_pz_webauftritt).invoice_id
-  end
-
   test 'delete deletes remote as well' do
     Invoicing.instance = mock
     Invoicing.instance.expects(:delete_invoice)
