@@ -14,3 +14,4 @@
   = direct_filter_select(:work_item_id, 'Buchungsposition', @accounting_posts)
   = direct_filter_select(:ticket, 'Ticket', @tickets, 'Alle', :to_s)
   = direct_filter_select(:billable, 'Verrechenbar', yes_no_options)
+  = direct_filter_select(:invoice_id, 'Rechnungsnr.', @invoices, 'Alle', :id, :reference)

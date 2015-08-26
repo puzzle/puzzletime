@@ -107,6 +107,20 @@ class OrderServicesControllerTest < ActionController::TestCase
       assert_equal worktimes(:wt_mw_puzzletime, :wt_lw_puzzletime), assigns(:worktimes)
     end
 
+    test "GET #{action} filtered by invoice" do
+      invoice_id = invoices(:webauftritt_may).id
+      worktimes(:wt_mw_webauftritt).update!(invoice_id: invoice_id)
+      get action, order_id: orders(:webauftritt).id, invoice_id: invoice_id
+      assert_equal [worktimes(:wt_mw_webauftritt)], assigns(:worktimes)
+    end
+
+    test "GET #{action} filtered by empty invoice" do
+      invoice_id = invoices(:webauftritt_may).id
+      worktimes(:wt_mw_webauftritt).update!(invoice_id: invoice_id)
+      get action, order_id: orders(:webauftritt).id, invoice_id: '[leer]'
+      assert_equal worktimes(:wt_pz_webauftritt, :wt_lw_webauftritt), assigns(:worktimes)
+    end
+
     test "GET #{action} filtered by invalid start date" do
       get action, order_id: order.id, start_date: 'abc'
       assert_equal worktimes(:wt_pz_puzzletime, :wt_mw_puzzletime, :wt_lw_puzzletime), assigns(:worktimes)
