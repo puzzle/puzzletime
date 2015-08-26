@@ -74,4 +74,12 @@ class InvoicesControllerTest < ActionController::TestCase
         period_to: Date.parse('15.12.2006')
     }
   end
+
+  def edit_entry_attrs
+    {
+        employee_ids: Array(employees(:lucien).id),
+        period_from: Date.parse('01.12.2007'),
+        period_to: Date.parse('15.12.2007')
+    }
+  end
 end
