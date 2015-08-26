@@ -32,10 +32,10 @@ module FilterHelper
     end
   end
 
-  def direct_filter_select(name, label, list, prompt = 'Alle', value_method = :id)
+  def direct_filter_select(name, label, list, prompt = 'Alle', value_method = :id, text_method = :to_s)
     direct_filter(name, label) do
       select_tag(name,
-                 options_from_collection_for_select(list, value_method, :to_s, params[name]),
+                 options_from_collection_for_select(list, value_method, text_method, params[name]),
                  prompt: prompt,
                  class: 'form-control',
                  data: { submit: true })

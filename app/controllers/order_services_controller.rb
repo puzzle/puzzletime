@@ -2,7 +2,9 @@
 
 class OrderServicesController < ApplicationController
 
-  EMPTY_TICKET = '[leer]'
+  EMPTY = '[leer]'
+  EMPTY_TICKET = EMPTY
+  EMPTY_INVOICE = OpenStruct.new(id: EMPTY, reference: EMPTY)
 
   include Filterable
   include DryCrud::Rememberable
@@ -49,19 +51,8 @@ class OrderServicesController < ApplicationController
                     includes(:employee, :invoice, work_item: :accounting_post).
                     order(:work_date).
                     in_period(@period)
-
-    entries = filter_entries_by_ticket(entries)
-    filter_entries_by(entries, :employee_id, :work_item_id, :billable, :invoice_id)
-  end
-
-  def filter_entries_by_ticket(entries)
-    if params[:ticket] == EMPTY_TICKET
-      entries.where(ticket: ['', nil])
-    elsif params[:ticket].present?
-      entries.where(ticket: params[:ticket])
-    else
-      entries
-    end
+    entries = filter_entries_allow_empty_by(entries, EMPTY, :ticket, :invoice_id)
+    filter_entries_by(entries, :employee_id, :work_item_id, :billable)
   end
 
   def worktimes_csv_filename
@@ -82,6 +73,7 @@ class OrderServicesController < ApplicationController
     @employees = Employee.where(id: order.worktimes.select(:employee_id)).list
     @tickets = [EMPTY_TICKET] + order.worktimes.order(:ticket).uniq.pluck(:ticket).select(&:present?)
     @accounting_posts = order.work_item.self_and_descendants.leaves.list
+    @invoices = [EMPTY_INVOICE] + order.invoices
   end
 
   def convert_predefined_period
