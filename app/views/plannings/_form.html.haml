@@ -90,7 +90,7 @@
         Provisorisch
     .radio
       %label
-        = f.radio_button('type', 'definitive', :checked => (@planning.definitive || @planning.new_record?))
+        = f.radio_button('type', 'definitive', :checked => @planning.definitive)
         Definitiv
 
   = f.labeled_text_area(:description)
