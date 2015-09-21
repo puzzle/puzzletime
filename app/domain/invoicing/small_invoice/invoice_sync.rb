@@ -52,16 +52,17 @@ module Invoicing
       end
 
       def update_values(item)
-        invoice.status = STATUS[item['status']]
-        invoice.due_date = item['due']
-        invoice.billing_date = item['date']
-        invoice.add_vat = item['vat_included'] == 0
-        invoice.total_amount = total_amount(item)
-        invoice.total_hours = total_hours(item)
-        invoice.save!
+        invoice.update_columns({
+          status: STATUS[item['status']],
+          due_date: item['due'],
+          billing_date: item['date'],
+          add_vat: item['vat_included'] == 0,
+          total_amount: total_amount(item),
+          total_hours: total_hours(item)
+        })
       end
 
-      def destroy
+      def destroy_unpaid
         invoice.destroy! unless invoice.status == 'paid'
       end
 
