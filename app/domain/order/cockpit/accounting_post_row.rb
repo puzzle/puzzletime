@@ -51,20 +51,20 @@ class Order::Cockpit
     end
 
     def build_not_billable_cell
-      Cell.new(not_billable_hours, nil)
+      Cell.new(not_billable_hours, calculate_amount(not_billable_hours))
     end
 
     def build_open_services_cell
-      if accounting_post.offered_hours?
-        build_cell_with_amount(accounting_post.offered_hours - supplied_services_hours)
-      else
-        Cell.new(nil, nil)
-      end
+      hours = (accounting_post.offered_hours || 0) - supplied_services_hours
+      build_cell_with_amount(hours)
     end
 
     def build_cell_with_amount(hours)
-      amount = offered_rate && offered_rate * hours.to_d
-      Cell.new(hours, amount)
+      Cell.new(hours, calculate_amount(hours))
+    end
+
+    def calculate_amount(hours)
+      offered_rate && offered_rate * hours.to_d
     end
 
     def accounting_post_hours

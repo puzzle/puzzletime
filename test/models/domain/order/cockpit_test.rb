@@ -81,19 +81,19 @@ class Order::CockpitTest < ActiveSupport::TestCase
     not_billable = total.cells[:not_billable]
     assert_equal 4, not_billable.hours
     assert_equal 0.5, not_billable.days
-    assert_equal nil, not_billable.amount
+    assert_equal 480.4, not_billable.amount
 
     a1 = cockpit.rows.second
     not_billable = a1.cells[:not_billable]
     assert_equal 4, not_billable.hours
     assert_equal 0.5, not_billable.days
-    assert_equal nil, not_billable.amount
+    assert_equal 480.4, not_billable.amount
 
     a2 = cockpit.rows.third
     not_billable = a2.cells[:not_billable]
     assert_equal 0, not_billable.hours
     assert_equal 0, not_billable.days
-    assert_equal nil, not_billable.amount
+    assert_equal 0, not_billable.amount
   end
 
   test 'open budget current values are nil if nothing is offered' do
@@ -101,9 +101,9 @@ class Order::CockpitTest < ActiveSupport::TestCase
 
     total = cockpit.rows.first
     budget = total.cells[:open_services]
-    assert_equal nil, budget.hours
-    assert_equal nil, budget.days
-    assert_equal nil, budget.amount
+    assert_equal -26, budget.hours
+    assert_equal -3.25, budget.days
+    assert_equal -4420, budget.amount
   end
 
   test 'open budget current values are calculated if worktimes exist' do
