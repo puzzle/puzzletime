@@ -2,7 +2,7 @@
 
 class OverviewPlanningGraph
 
-  include PeriodIteratable
+  include PeriodIterable
 
   def initialize(period)
     @period = period
@@ -26,6 +26,11 @@ class OverviewPlanningGraph
       end
     end
     percent
+  end
+
+  def period_average_planned_percent
+    weeks_percents = enumerate_weeks.map {|week| planned_percent(week) }
+    weeks_percents.compact.sum / weeks_percents.size.to_f
   end
 
   protected

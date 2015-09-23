@@ -1,4 +1,4 @@
-
+# encoding: utf-8
 # == Schema Information
 #
 # Table name: plannings
@@ -26,22 +26,19 @@
 #  work_item_id    :integer          not null
 #
 
-hitobito_demo_app_planning1:
-  employee_id: 6 # pascal
-  start_week: 201514
-  end_week: 201549
-  definitive: true
-  description: "Integration, Stabilisierung, Bugfixing"
-  monday_am: false
-  monday_pm: false
-  tuesday_am: false
-  tuesday_pm: false
-  wednesday_am: false
-  wednesday_pm: false
-  thursday_am: false
-  thursday_pm: false
-  friday_am: false
-  friday_pm: false
-  is_abstract: true
-  abstract_amount: 50
-  work_item_id: 9
+Fabricator(:planning) do |f|
+  start_week      { Date.today.cweek }
+  end_week        { f.start_week + 1 }
+  monday_am       true
+  monday_pm       true
+  tuesday_am      true
+  tuesday_pm      true
+  wednesday_am    true
+  wednesday_pm    true
+  thursday_am     true
+  thursday_pm     true
+  friday_am       true
+  friday_pm       true
+  is_abstract     false
+  work_item
+end

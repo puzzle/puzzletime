@@ -2,7 +2,7 @@
 
 class VacationGraph
 
-  include PeriodIteratable
+  include PeriodIterable
 
   attr_reader :period, :day
 
