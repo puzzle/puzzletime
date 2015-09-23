@@ -1,11 +1,11 @@
 class MetalRunner
   def env(*)
-    "test"
+    'test'
   end
 
   def exec_name
-    "m"
+    'm'
   end
 end
 
-Spring.register_command "m", MetalRunner.new
+Spring.register_command 'm', MetalRunner.new

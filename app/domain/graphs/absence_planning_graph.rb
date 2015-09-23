@@ -2,7 +2,7 @@
 
 class AbsencePlanningGraph
 
-  include PeriodIteratable
+  include PeriodIterable
 
   def initialize(absences, period)
     @period = period
