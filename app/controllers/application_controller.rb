@@ -63,4 +63,8 @@ class ApplicationController < ActionController::Base
     uri.query ? "#{uri.path}?#{uri.query}" : uri.path
   end
 
+  def not_found
+    fail ActionController::RoutingError, 'Not Found'
+  end
+
 end
