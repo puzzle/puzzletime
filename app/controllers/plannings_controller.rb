@@ -77,7 +77,7 @@ class PlanningsController < CrudController
 
   def company_planning
     period = @period.present? ? @period : Period.next_three_months
-    @graph = EmployeesPlanningGraph.new(Employee.employed_ones(period).includes(:employments).list, period)
+    @graph = EmployeesPlanningGraph.new(Employee.employed_ones(period).includes(:employments).list, period, true)
   end
 
   def new

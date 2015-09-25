@@ -35,7 +35,7 @@ class EmployeeOverviewPlanningGraph < OverviewPlanningGraph
 
   def period_load
     if period_average_employment_percent > 0
-      period_average_planned_percent / period_average_employment_percent.to_f
+      period_average_planned_percent.to_f / period_average_employment_percent.to_f
     else
       Float::INFINITY
     end
