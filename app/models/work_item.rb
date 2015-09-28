@@ -92,6 +92,10 @@ class WorkItem < ActiveRecord::Base
     !leaf
   end
 
+  def open?
+    !closed
+  end
+
   def with_ancestors(&block)
     return enum_for(:with_ancestors) unless block_given?
     yield self

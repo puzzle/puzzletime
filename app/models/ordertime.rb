@@ -22,6 +22,9 @@
 
 class Ordertime < Worktime
 
+  alias_attribute :account, :work_item
+  alias_attribute :account_id, :work_item_id
+
   validates_by_schema
   validates :work_item, presence: true
   validate :validate_accounting_post
@@ -36,14 +39,6 @@ class Ordertime < Worktime
 
   def self.account_label
     'Position'
-  end
-
-  def account
-    work_item
-  end
-
-  def account_id
-    work_item_id
   end
 
   def account_id=(value)
