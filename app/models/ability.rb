@@ -43,7 +43,10 @@ class Ability
 
     can :crud, Employee # cannot change settings of other employees
 
-    can [:read, :create, :update], Worktime
+    can [:create, :create_part, :update], Worktime do |worktime|
+      worktime.is_a?(Ordertime) ? worktime.work_item.open? : true
+    end
+    can :read, Worktime
 
     can [:clients,
          :employees,
@@ -65,14 +68,19 @@ class Ability
     can :manage, [Client, BillingAddress, Contact]
     can :create, WorkItem
     can :manage, Order, responsible_id: user.id
-    can :manage, [AccountingPost, Contract, Invoice, OrderComment, Ordertime] do |instance|
-      instance.order.responsible_id == user.id
+    can :manage, [AccountingPost, Contract, Invoice, OrderComment], order: { responsible_id: user.id }
+    can [:create, :create_part, :update], Ordertime do |instance|
+      instance.order.responsible_id == user.id && instance.work_item.open?
     end
     can :managed, Evaluation
   end
 
   def everyone_abilities
-    can :manage, Worktime, employee_id: user.id
+    can :manage, Worktime do |worktime|
+      worktime.employee_id == user.id && (worktime.is_a?(Ordertime) ? worktime.work_item.open? : true)
+    end
+    can :read, Worktime, employee_id: user.id
+
     can :search, WorkItem
 
     can :read, Employee

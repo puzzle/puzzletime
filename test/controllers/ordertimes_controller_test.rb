@@ -65,6 +65,7 @@ class OrdertimesControllerTest < ActionController::TestCase
   end
 
   def test_create_start_stop_type
+    work_items(:allgemein).update(closed: false)
     login_as(:pascal)
     work_date = Date.today + 10
     post :create, ordertime: { account_id: work_items(:allgemein),
@@ -81,6 +82,7 @@ class OrdertimesControllerTest < ActionController::TestCase
   end
 
   def test_create_with_missing_start_time
+    work_items(:allgemein).update(closed: false)
     work_date = Date.today + 10
     post :create, ordertime: { account_id: work_items(:allgemein),
                                work_date: work_date,
@@ -89,6 +91,7 @@ class OrdertimesControllerTest < ActionController::TestCase
   end
 
   def test_create_with_hours_when_from_to_times_required
+    work_items(:allgemein).update(closed: false)
     accounting_posts(:puzzletime).update_column(:from_to_times_required, true)
     work_date = Date.today + 10
     post :create, ordertime: { account_id: work_items(:puzzletime),
@@ -116,6 +119,7 @@ class OrdertimesControllerTest < ActionController::TestCase
               from_start_time: '9:00',
               to_end_time: '10:00',
               work_item: work_items(:webauftritt))
+    work_items(:allgemein).update(closed: false)
     login_as(:pascal)
     post :create, ordertime: { account_id: work_items(:allgemein),
                                work_date: work_date,
@@ -128,6 +132,7 @@ class OrdertimesControllerTest < ActionController::TestCase
   end
 
   def test_create_other
+    work_items(:allgemein).update(closed: false)
     post :create, ordertime: { account_id: work_items(:allgemein),
                                work_date: Date.today,
                                hours: '5:30',
@@ -136,6 +141,7 @@ class OrdertimesControllerTest < ActionController::TestCase
   end
 
   def test_create_other_without_permission_changes_employee_id
+    work_items(:allgemein).update(closed: false)
     login_as(:lucien)
 
     assert_difference('Ordertime.count') do
@@ -144,6 +150,21 @@ class OrdertimesControllerTest < ActionController::TestCase
                                  hours: '5:30',
                                  employee_id: employees(:mark).id }
       assert_equal employees(:lucien).id, Ordertime.last.employee_id
+    end
+  end
+
+  [:employee, :responsible, :manager].each do |role|
+    test "create_as_#{role}_on_closed_order" do
+      user = roles_users[role]
+      work_items(:puzzletime).update(closed: true)
+
+      assert_authorized(user, false) do
+        post :create, ordertime: { account_id: work_items(:puzzletime),
+                                   work_date: Date.today,
+                                   ticket: '#1',
+                                   description: 'desc',
+                                   hours: '00:45'}
+      end
     end
   end
 
@@ -160,6 +181,17 @@ class OrdertimesControllerTest < ActionController::TestCase
     login_as(:long_time_john)
     assert_raises(CanCan::AccessDenied) do
       get :edit, id: worktimes(:wt_mw_puzzletime).id
+    end
+  end
+
+  [:employee, :responsible, :manager].each do |role|
+    test "edit_as_#{role}_on_closed_order" do
+      user = roles_users[role]
+      ordertime = Fabricate(:ordertime, work_item: work_items(:puzzletime), employee: employees(user))
+      work_items(:puzzletime).update(closed: true)
+      assert_authorized(user, false) do
+        get :edit, id: ordertime.id
+      end
     end
   end
 
@@ -279,6 +311,38 @@ class OrdertimesControllerTest < ActionController::TestCase
     assert_no_difference('Worktime.count') do
       assert_raises(CanCan::AccessDenied) do
         delete :destroy, id: worktime.id
+      end
+    end
+  end
+
+  [:employee, :responsible, :manager].each do |role|
+    test "destroy_as_#{role}_on_closed_order" do
+      user = roles_users[role]
+      work_items(:puzzletime).update(closed: true)
+      ordertime = Fabricate(:ordertime, work_item: work_items(:puzzletime), employee: employees(user))
+      assert_authorized(user, false) do
+        delete :destroy, id: ordertime.id
+      end
+    end
+  end
+
+  private
+
+  def roles_users
+    {
+        employee:    :pascal,
+        responsible: :lucien,
+        manager:     :mark
+    }
+  end
+
+  def assert_authorized(user, permitted = false)
+    login_as(user)
+    if permitted
+      yield
+    else
+      assert_raises(CanCan::AccessDenied) do
+        yield
       end
     end
   end
