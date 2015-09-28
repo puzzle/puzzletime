@@ -31,6 +31,7 @@ class EmployeeOverviewPlanningGraphTest < ActiveSupport::TestCase
   end
 
   test '#period_average_planned_percent' do
+    Planning.delete_all
     assert_equal 0, graph.period_average_planned_percent.to_f
 
     planning1 = Fabricate(:planning,
@@ -52,8 +53,8 @@ class EmployeeOverviewPlanningGraphTest < ActiveSupport::TestCase
 
     planning3 = Fabricate(:planning,
               employee: @employee,
-              start_week: week(start_date - 100),
-              end_week: week(start_date + 100))
+              start_week: week(start_date - 10),
+              end_week: week(start_date + 10))
     assert_equal 175, graph(planning1, planning2, planning3).period_average_planned_percent.to_f
   end
 
