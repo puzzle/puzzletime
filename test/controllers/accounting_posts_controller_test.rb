@@ -50,7 +50,6 @@ class AccountingPostsControllerTest < ActionController::TestCase
            order_id: orders(:hitobito_demo).id,
            book_on_order: 'true',
            accounting_post: {
-             reference: 'asdf',
              portfolio_item_id: portfolio_items(:web).id,
              offered_rate: 120 }
       assert_response :success
@@ -148,15 +147,12 @@ class AccountingPostsControllerTest < ActionController::TestCase
   test 'CREATE sets the attributes' do
     attributes = {
       order_id: orders(:hitobito_demo).id,
-      discount: 'percent',
       accounting_post: {
         work_item_attributes: { name: 'TEST', shortname: 'TST' },
         closed: 'true',
         offered_hours: 80.0,
         offered_rate: 42.0,
-        discount_percent: 11,
         portfolio_item_id: portfolio_items(:mobile).id,
-        reference: 'dummy-reference',
         billable: true,
         description_required: true,
         ticket_required: true
@@ -180,16 +176,13 @@ class AccountingPostsControllerTest < ActionController::TestCase
     params = {
       id: accounting_post.id,
       order_id: orders(:hitobito_demo).id,
-      discount: 'percent',
       accounting_post: {
         work_item_attributes: { name: 'TEST', shortname: 'TST' },
         closed: 'true',
         offered_hours: 80.0,
         offered_rate: 42.0,
         offered_total: 10000.0,
-        discount_percent: 11,
         portfolio_item_id: portfolio_items(:mobile).id,
-        reference: 'dummy-reference',
         billable: true,
         description_required: true,
         ticket_required: true,
@@ -210,7 +203,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
             order_id: orders(:hitobito_demo).id,
             id: accounting_posts(:hitobito_demo_app),
             book_on_order: 'true',
-            accounting_post: { reference: 'asdf' }
+            accounting_post: { description: 'asdf' }
       assert_response :success
       assert_template :edit
       assert_match(/es existieren bereits/, assigns(:accounting_post).errors.full_messages.join)
@@ -254,54 +247,6 @@ class AccountingPostsControllerTest < ActionController::TestCase
     end
     assert_equal orders(:puzzletime).work_item_id, accounting_posts(:puzzletime).reload.work_item.parent_id
     assert_equal accounting_posts(:puzzletime).work_item_id, worktimes(:wt_pz_puzzletime).reload.work_item_id
-  end
-
-  test 'PATCH update with discount fixed removes discount percent' do
-    post = accounting_posts(:hitobito_demo_app)
-    post.update!(discount_percent: 5)
-    patch :update,
-          id: post.id,
-          order_id: orders(:hitobito_demo).id,
-          book_on_order: false,
-          discount: 'fixed',
-          accounting_post:
-            { reference: 123,
-              discount_fixed: 100 }
-    assert_redirected_to order_accounting_posts_path(orders(:hitobito_demo))
-    assert_equal 100, post.reload.discount_fixed
-    assert_equal nil, post.discount_percent
-  end
-
-  test 'PATCH update with discount percent removes discount fixed' do
-    post = accounting_posts(:hitobito_demo_app)
-    post.update!(discount_fixed: 100)
-    patch :update,
-          id: post.id,
-          order_id: orders(:hitobito_demo).id,
-          book_on_order: false,
-          discount: 'percent',
-          accounting_post:
-            { reference: 123,
-              discount_percent: 5,
-              discount_fixed: 100 }
-    assert_redirected_to order_accounting_posts_path(orders(:hitobito_demo))
-    assert_equal nil, post.reload.discount_fixed
-    assert_equal 5, post.discount_percent
-  end
-
-  test 'PATCH update with discount none removes discount fixed' do
-    post = accounting_posts(:hitobito_demo_app)
-    post.update!(discount_fixed: 100)
-    patch :update,
-          id: post.id,
-          order_id: orders(:hitobito_demo).id,
-          book_on_order: false,
-          discount: 'none',
-          accounting_post:
-            { reference: 123 }
-    assert_redirected_to order_accounting_posts_path(orders(:hitobito_demo))
-    assert_equal nil, post.reload.discount_fixed
-    assert_equal nil, post.discount_percent
   end
 
   test 'DESTROY does not remove reocrd when worktimes exist on workitem' do
