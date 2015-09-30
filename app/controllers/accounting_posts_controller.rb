@@ -4,8 +4,7 @@ class AccountingPostsController < CrudController
   self.nesting = [Order]
 
   self.permitted_attrs = [:closed, :offered_hours, :offered_rate, :offered_total,
-                          :discount_percent, :discount_fixed, :remaining_hours,
-                          :portfolio_item_id, :reference, :billable,
+                          :remaining_hours, :portfolio_item_id, :billable,
                           :description_required, :ticket_required, :from_to_times_required,
                           work_item_attributes: [:name, :shortname, :description]]
 
@@ -32,19 +31,10 @@ class AccountingPostsController < CrudController
   def assign_attributes
     entry.attributes = model_params.except(:work_item_attributes)
     entry.attach_work_item(order, model_params[:work_item_attributes], book_on_order?)
-    reset_discount
   end
 
   def book_on_order?
     params[:book_on_order].to_s == 'true'
-  end
-
-  def reset_discount
-    case params[:discount]
-    when 'none', nil then entry.discount_percent = entry.discount_fixed = nil
-    when 'percent' then entry.discount_fixed = nil
-    when 'fixed' then entry.discount_percent = nil
-    end
   end
 
   def index_path

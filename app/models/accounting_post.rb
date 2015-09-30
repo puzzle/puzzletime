@@ -94,10 +94,6 @@ class AccountingPost < ActiveRecord::Base
     offered_hours.to_f / WorkingCondition.todays_value(:must_hours_per_day)
   end
 
-  def no_discount?
-    !(discount_fixed? || discount_percent?)
-  end
-
   def to_s
     work_item.label_verbose
   end

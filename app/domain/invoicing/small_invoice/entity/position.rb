@@ -11,21 +11,11 @@ module Invoicing
             cost: post.offered_rate.try(:round, 2),
             unit: constant(:unit_id),
             amount: entry.total_hours.round(2),
-            vat: Settings.defaults.vat,
-            discount: discount,
-            discount_type: discount_type
+            vat: Settings.defaults.vat
           }
         end
 
         private
-
-        def discount_type
-          post.discount_percent? ? 0 : 1
-        end
-
-        def discount
-          post.discount_percent.presence || post.discount_fixed.presence
-        end
 
         def post
           entry.accounting_post

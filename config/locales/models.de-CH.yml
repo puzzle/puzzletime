@@ -98,9 +98,6 @@ de-CH:
         reference: Referenz
         offered_hours: Offerierte Stunden
         offered_rate: Offerierter Stundensatz
-        discount: Rabatt
-        discount_percent: Rabatt (%)
-        discount_fixed: Rabatt (CHF)
         remaining_hours: Restaufwand
         report_type: Report Typ
         billable: Verrechenbar
