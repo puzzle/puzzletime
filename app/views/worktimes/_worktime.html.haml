@@ -6,7 +6,7 @@
     = time_range(worktime)
   .time-value= format_hour(worktime.hours)
   .controls
-    - if can?(:update, worktime)
+    - if worktime_modifiable?(worktime)
       = link_to(new_polymorphic_url(worktime, template: worktime),
                 {title: 'Kopieren'}) do
         %i.icon-duplicate
@@ -15,4 +15,4 @@
                 data: { method: :delete,
                         confirm: 'Wollen Sie diesen Eintrag wirklich löschen?' }) do
         %i.icon-delete
-  = link_to_if(can?(:destroy, worktime), '', edit_polymorphic_url(worktime), {class: 'entry-link'})
+  = link_to_if(worktime_modifiable?(worktime), '', edit_polymorphic_url(worktime), {class: 'entry-link'})

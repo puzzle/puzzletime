@@ -5,6 +5,14 @@ class OrdertimesControllerTest < ActionController::TestCase
 
   setup :login
 
+  def roles_users
+    {
+        employee:    :pascal,
+        responsible: :lucien,
+        manager:     :mark
+    }
+  end
+
   def test_new
     login_as(:pascal)
     get :new
@@ -155,16 +163,17 @@ class OrdertimesControllerTest < ActionController::TestCase
 
   [:employee, :responsible, :manager].each do |role|
     test "create_as_#{role}_on_closed_order" do
-      user = roles_users[role]
+      login_as(roles_users[role])
       work_items(:puzzletime).update(closed: true)
 
-      assert_authorized(user, false) do
+      assert_no_difference('Ordertime.count') do
         post :create, ordertime: { account_id: work_items(:puzzletime),
                                    work_date: Date.today,
                                    ticket: '#1',
                                    description: 'desc',
                                    hours: '00:45'}
       end
+      assert_includes assigns(:worktime).errors.messages[:base], 'Auf geschlossene Positionen kann nicht gebucht werden.'
     end
   end
 
@@ -181,17 +190,6 @@ class OrdertimesControllerTest < ActionController::TestCase
     login_as(:long_time_john)
     assert_raises(CanCan::AccessDenied) do
       get :edit, id: worktimes(:wt_mw_puzzletime).id
-    end
-  end
-
-  [:employee, :responsible, :manager].each do |role|
-    test "edit_as_#{role}_on_closed_order" do
-      user = roles_users[role]
-      ordertime = Fabricate(:ordertime, work_item: work_items(:puzzletime), employee: employees(user))
-      work_items(:puzzletime).update(closed: true)
-      assert_authorized(user, false) do
-        get :edit, id: ordertime.id
-      end
     end
   end
 
@@ -223,6 +221,18 @@ class OrdertimesControllerTest < ActionController::TestCase
     login_as(:long_time_john)
     assert_raises(CanCan::AccessDenied) do
       put :update, id: worktime, ordertime: { hours: '1:30' }
+    end
+  end
+
+  [:employee, :responsible, :manager].each do |role|
+    test "update_as_#{role}_on_closed_order" do
+      user = roles_users[role]
+      login_as(user)
+      ordertime = Fabricate(:ordertime, work_item: work_items(:puzzletime), employee: employees(user))
+      work_items(:puzzletime).update(closed: true)
+      post :update, id: ordertime.id, hours: 4
+      assert_equal ordertime.attributes, ordertime.reload.attributes
+      assert_includes assigns(:worktime).errors.messages[:base], 'Auf geschlossene Positionen kann nicht gebucht werden.'
     end
   end
 
@@ -318,32 +328,13 @@ class OrdertimesControllerTest < ActionController::TestCase
   [:employee, :responsible, :manager].each do |role|
     test "destroy_as_#{role}_on_closed_order" do
       user = roles_users[role]
-      work_items(:puzzletime).update(closed: true)
+      login_as(user)
       ordertime = Fabricate(:ordertime, work_item: work_items(:puzzletime), employee: employees(user))
-      assert_authorized(user, false) do
+      work_items(:puzzletime).update(closed: true)
+      assert_no_difference('Ordertime.count') do
         delete :destroy, id: ordertime.id
       end
-    end
-  end
-
-  private
-
-  def roles_users
-    {
-        employee:    :pascal,
-        responsible: :lucien,
-        manager:     :mark
-    }
-  end
-
-  def assert_authorized(user, permitted = false)
-    login_as(user)
-    if permitted
-      yield
-    else
-      assert_raises(CanCan::AccessDenied) do
-        yield
-      end
+      assert_includes assigns(:worktime).errors.messages[:base], 'Kann nicht gelöscht werden da Position geschlossen.'
     end
   end
 
