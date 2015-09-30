@@ -10,6 +10,10 @@ module WorktimeHelper
     [worktime.ticket.presence, worktime.description.presence].compact.join(' - ')
   end
 
+  def worktime_modifiable?(worktime)
+    worktime.work_item.try(:open?)
+  end
+
   def work_item_option(item)
     if item
       json = { id: item.id,

@@ -5,8 +5,6 @@
 
 class WorktimesController < CrudController
 
-  before_filter :assign_attributes, only: [:new, :create]
-  before_filter :entry, except: [:new, :create]
   authorize_resource :worktime, except: :index, parent: false
 
   helper_method :record_other?
@@ -28,6 +26,17 @@ class WorktimesController < CrudController
 
   def show
     redirect_to index_path
+  end
+
+  def new
+    super
+    if params[:template]
+      template = Worktime.find(params[:template])
+      @worktime.account_id = template.account_id
+      @worktime.ticket = template.ticket
+      @worktime.description = template.description
+      @worktime.billable = template.billable
+    end
   end
 
   # ajax action
@@ -185,13 +194,6 @@ class WorktimesController < CrudController
         entry.to_end_time = nil
         entry.report_type = HoursDayType::INSTANCE
       end
-    end
-    if params[:template]
-      template = Worktime.find(params[:template])
-      entry.account_id = template.account_id
-      entry.ticket = template.ticket
-      entry.description = template.description
-      entry.billable = template.billable
     end
   end
 
