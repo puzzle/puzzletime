@@ -5,11 +5,12 @@ module Invoicing
         def to_hash
           with_id(surname: entry.lastname,
                   name: entry.firstname,
-                  department: entry.billing_addresses.first.try(:supplement), # undocumented, may not work
+                  # department: entry.billing_addresses.first.try(:supplement), # undocumented, may not work
                   email: entry.email,
                   phone: entry.phone,
                   gender: constant(:gender_id),
-                  show_department: bool_constant(:show_department))
+                  # show_department: bool_constant(:show_department)
+          )
         end
       end
     end
