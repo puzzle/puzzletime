@@ -23,7 +23,7 @@
 
   - if can?(:services, @order)
     = nav 'Leistungen',
-          order_order_services_path(@order),
+          order_order_services_path(@order, invoice_id: OrderServicesController::EMPTY),
           order_multi_worktimes_path(@order),
           edit_order_multi_worktimes_path(@order),
           compose_report_order_order_services_path(@order)
