@@ -43,10 +43,14 @@ class PlanningsController < CrudController
   end
 
   def employee_lists_planning
-    @employee_list = EmployeeList.find_by_id(params[:employee_list_id])
-    @employee_list_name = @employee_list.title
-    period = @period.present? ? @period : Period.next_three_months
-    @graph = EmployeesPlanningGraph.new(@employee_list.employees.includes(:employments).list, period)
+    if @employee_list = EmployeeList.find_by_id(params[:employee_list_id])
+      @employee_list_name = @employee_list.try :title
+      period = @period.present? ? @period : Period.next_three_months
+      @graph = EmployeesPlanningGraph.new(@employee_list.employees.includes(:employments).list, period)
+    else
+      flash[:alert] = 'Liste nicht gefunden'
+      redirect_to controller: 'employee_lists', action: 'index'
+    end
   end
 
   def work_items
