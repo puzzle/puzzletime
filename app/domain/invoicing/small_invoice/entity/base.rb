@@ -12,7 +12,6 @@ module Invoicing
           self_hash = stringify(to_hash)
           other_hash = stringify(other.to_hash)
           keys = self_hash.keys & other_hash.keys
-          binding.pry
           keys.all? { |key| self_hash[key] == other_hash[key] }
         end
 
