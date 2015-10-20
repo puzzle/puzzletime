@@ -2,7 +2,7 @@
 
 class WorkItemPlanningGraph
 
-  include PeriodIteratable
+  include PeriodIterable
 
   attr_reader :period, :work_item, :overview_graph, :employees, :employees_abstr, :plannings, :plannings_abstr
 

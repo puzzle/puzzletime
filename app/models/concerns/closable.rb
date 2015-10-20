@@ -11,6 +11,10 @@ module Closable
     work_item.propagate_closed!(closed?)
   end
 
+  def open?
+    !closed
+  end
+
   private
 
   def remember_closed_change

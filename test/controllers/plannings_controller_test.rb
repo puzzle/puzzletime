@@ -74,6 +74,13 @@ class PlanningsControllerTest < ActionController::TestCase
     assert_template 'company_planning'
   end
 
+  def test_company_planning_employee_ordering
+    get :company_planning
+    employee_graphs = assigns(:graph).employee_graphs
+    loads = employee_graphs.map(&:period_load)
+    assert_equal loads.sort, loads
+  end
+
   def test_department_planning
     get :department_planning, department_id: departments(:devone)
     assert_template 'department_planning'

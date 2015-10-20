@@ -5,6 +5,14 @@ class OrdertimesControllerTest < ActionController::TestCase
 
   setup :login
 
+  def roles_users
+    {
+        employee:    :pascal,
+        responsible: :lucien,
+        manager:     :mark
+    }
+  end
+
   def test_new
     login_as(:pascal)
     get :new
@@ -65,6 +73,7 @@ class OrdertimesControllerTest < ActionController::TestCase
   end
 
   def test_create_start_stop_type
+    work_items(:allgemein).update(closed: false)
     login_as(:pascal)
     work_date = Date.today + 10
     post :create, ordertime: { account_id: work_items(:allgemein),
@@ -81,6 +90,7 @@ class OrdertimesControllerTest < ActionController::TestCase
   end
 
   def test_create_with_missing_start_time
+    work_items(:allgemein).update(closed: false)
     work_date = Date.today + 10
     post :create, ordertime: { account_id: work_items(:allgemein),
                                work_date: work_date,
@@ -89,6 +99,7 @@ class OrdertimesControllerTest < ActionController::TestCase
   end
 
   def test_create_with_hours_when_from_to_times_required
+    work_items(:allgemein).update(closed: false)
     accounting_posts(:puzzletime).update_column(:from_to_times_required, true)
     work_date = Date.today + 10
     post :create, ordertime: { account_id: work_items(:puzzletime),
@@ -116,6 +127,7 @@ class OrdertimesControllerTest < ActionController::TestCase
               from_start_time: '9:00',
               to_end_time: '10:00',
               work_item: work_items(:webauftritt))
+    work_items(:allgemein).update(closed: false)
     login_as(:pascal)
     post :create, ordertime: { account_id: work_items(:allgemein),
                                work_date: work_date,
@@ -128,6 +140,7 @@ class OrdertimesControllerTest < ActionController::TestCase
   end
 
   def test_create_other
+    work_items(:allgemein).update(closed: false)
     post :create, ordertime: { account_id: work_items(:allgemein),
                                work_date: Date.today,
                                hours: '5:30',
@@ -136,6 +149,7 @@ class OrdertimesControllerTest < ActionController::TestCase
   end
 
   def test_create_other_without_permission_changes_employee_id
+    work_items(:allgemein).update(closed: false)
     login_as(:lucien)
 
     assert_difference('Ordertime.count') do
@@ -144,6 +158,22 @@ class OrdertimesControllerTest < ActionController::TestCase
                                  hours: '5:30',
                                  employee_id: employees(:mark).id }
       assert_equal employees(:lucien).id, Ordertime.last.employee_id
+    end
+  end
+
+  [:employee, :responsible, :manager].each do |role|
+    test "create_as_#{role}_on_closed_order" do
+      login_as(roles_users[role])
+      work_items(:puzzletime).update(closed: true)
+
+      assert_no_difference('Ordertime.count') do
+        post :create, ordertime: { account_id: work_items(:puzzletime),
+                                   work_date: Date.today,
+                                   ticket: '#1',
+                                   description: 'desc',
+                                   hours: '00:45'}
+      end
+      assert_includes assigns(:worktime).errors.messages[:base], 'Auf geschlossene Positionen kann nicht gebucht werden.'
     end
   end
 
@@ -191,6 +221,18 @@ class OrdertimesControllerTest < ActionController::TestCase
     login_as(:long_time_john)
     assert_raises(CanCan::AccessDenied) do
       put :update, id: worktime, ordertime: { hours: '1:30' }
+    end
+  end
+
+  [:employee, :responsible, :manager].each do |role|
+    test "update_as_#{role}_on_closed_order" do
+      user = roles_users[role]
+      login_as(user)
+      ordertime = Fabricate(:ordertime, work_item: work_items(:puzzletime), employee: employees(user))
+      work_items(:puzzletime).update(closed: true)
+      post :update, id: ordertime.id, hours: 4
+      assert_equal ordertime.attributes, ordertime.reload.attributes
+      assert_includes assigns(:worktime).errors.messages[:base], 'Auf geschlossene Positionen kann nicht gebucht werden.'
     end
   end
 
@@ -280,6 +322,19 @@ class OrdertimesControllerTest < ActionController::TestCase
       assert_raises(CanCan::AccessDenied) do
         delete :destroy, id: worktime.id
       end
+    end
+  end
+
+  [:employee, :responsible, :manager].each do |role|
+    test "destroy_as_#{role}_on_closed_order" do
+      user = roles_users[role]
+      login_as(user)
+      ordertime = Fabricate(:ordertime, work_item: work_items(:puzzletime), employee: employees(user))
+      work_items(:puzzletime).update(closed: true)
+      assert_no_difference('Ordertime.count') do
+        delete :destroy, id: ordertime.id
+      end
+      assert_includes assigns(:worktime).errors.messages[:base], 'Kann nicht gelöscht werden da Position geschlossen.'
     end
   end
 

@@ -6,24 +6,6 @@ class EditAccountingPostTest < ActionDispatch::IntegrationTest
   fixtures :all
   setup :login
 
-  test 'select correct discount radio and input values' do
-    choose('discount_fixed')
-    fill_in('accounting_post_discount_fixed', with: '1234')
-    assert !page.has_selector?('#accounting_post_discount_fixed:disabled')
-    assert page.has_selector?('#accounting_post_discount_percent:disabled')
-
-    choose('discount_percent')
-    assert page.has_selector?('#accounting_post_discount_fixed:disabled')
-    assert !page.has_selector?('#accounting_post_discount_percent:disabled')
-    assert_equal '', find_field('accounting_post_discount_fixed', disabled: true).value
-    fill_in('accounting_post_discount_percent', with: '1234')
-
-    choose('discount_none')
-    assert page.has_selector?('#accounting_post_discount_fixed:disabled')
-    assert page.has_selector?('#accounting_post_discount_percent:disabled')
-    assert_equal '', find_field('accounting_post_discount_fixed', disabled: true).value
-    assert_equal '', find_field('accounting_post_discount_percent', disabled: true).value
-  end
 
   test 'calculate correct budget values' do
     WorkingCondition.clear_cache

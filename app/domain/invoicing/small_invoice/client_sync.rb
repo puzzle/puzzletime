@@ -68,14 +68,12 @@ module Invoicing
       end
 
       def set_association_key(entity, list, remote_list)
-        list.reject(&:invoicing_key?).each do |item|
-          item_data = entity.new(item).to_hash.stringify_keys
-          remote_data = remote_list.find do |h|
-            h = h.slice(*item_data.keys)
-            h.each { |k, v| h[k] = v.to_s } # convert all values to string
-            h == item_data
+        list.each do |item|
+          local_item = entity.new(item)
+          remote_data = remote_list.find { |h| local_item == h }
+          if remote_data.try(:[], 'id') && remote_data['id'] != item.invoicing_key
+            item.update_column(:invoicing_key, remote_data['id'])
           end
-          item.update_column(:invoicing_key, remote_data['id']) if remote_data
         end
       end
 

@@ -2,9 +2,11 @@
 
 class EmployeePlanningGraph
 
-  include PeriodIteratable
+  include PeriodIterable
 
   attr_reader :period, :plannings, :plannings_abstr, :work_items, :work_items_abstr, :employee, :overview_graph, :absence_graph
+
+  delegate :period_load, to: :overview_graph
 
   def initialize(employee, period = nil)
     @employee = employee

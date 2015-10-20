@@ -22,13 +22,18 @@
 
 class Ordertime < Worktime
 
+  alias_attribute :account, :work_item
+  alias_attribute :account_id, :work_item_id
+
   validates_by_schema
   validates :work_item, presence: true
   validate :validate_accounting_post
   validate :protect_booked, on: :update
   validate :validate_by_work_item
+  validate :validate_work_item_open
 
   before_destroy :protect_booked
+  before_destroy :protect_work_item_closed
 
   def self.valid_attributes
     super + [:account, :account_id, :description, :billable, :booked]
@@ -36,14 +41,6 @@ class Ordertime < Worktime
 
   def self.account_label
     'Position'
-  end
-
-  def account
-    work_item
-  end
-
-  def account_id
-    work_item_id
   end
 
   def account_id=(value)
@@ -70,7 +67,11 @@ class Ordertime < Worktime
   end
 
   def validate_accounting_post
-    errors.add(:accounting_post_id, 'Der Auftrag hat keine Buchungsposition.') if work_item && !work_item.accounting_post
+    errors.add(:work_item_id, 'Der Auftrag hat keine Buchungsposition.') if work_item && !work_item.accounting_post
+  end
+
+  def validate_work_item_open
+    errors.add(:base, 'Auf geschlossene Positionen kann nicht gebucht werden.') if work_item && work_item.closed?
   end
 
   def protect_booked
@@ -78,6 +79,15 @@ class Ordertime < Worktime
     if previous.booked && booked
       errors.add(:base, 'Verbuchte Arbeitszeiten können nicht verändert werden')
       false
+    end
+  end
+
+  def protect_work_item_closed
+    if work_item.try(:closed?)
+      errors.add(:base, 'Kann nicht gelöscht werden da Position geschlossen.')
+      false
+    else
+      true
     end
   end
 
