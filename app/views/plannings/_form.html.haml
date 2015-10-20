@@ -5,6 +5,7 @@
                                        url: url_for(action: 'existing'),
                                        dynamic_params: 'planning[start_week_date]' })
   = f.labeled_date_field(:start_week_date,
+                         required: true,
                          data: { format: :week,
                                  remote: true,
                                  url: url_for(action: 'existing'),

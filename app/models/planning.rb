@@ -122,31 +122,32 @@ class Planning < ActiveRecord::Base
   private
 
   def validate_planning
-    errors.add(:start_week, 'Von Format ist ungültig') unless valid_week?(start_week)
+    errors.add(:start_week, 'Start Format ist ungültig') unless valid_week?(start_week)
     errors.add(:end_week, 'Bis Format ist ungültig') if end_week && !valid_week?(end_week)
     errors.add(:end_week, 'Bis Datum ist ungültig') if end_week && (end_week < start_week)
 
     if abstract_amount == 0 && !halfday_selected
-      errors.add(:start_date, 'Entweder Halbtag selektieren oder Umfang auswählen (Dropdown-Box).')
+      errors.add(:is_abstract, 'Entweder Halbtag selektieren oder Umfang auswählen (Dropdown-Box).')
     end
 
     if is_abstract? && abstract_amount > 0 && halfday_selected
-      errors.add(:start_date, 'Abstrakte Planungen entweder mit der Selektion von Halbtagen oder durch Auswählen des Umfangs (Dropdown-Box) spezifizieren (nicht beides).')
+      errors.add(:is_abstract, 'Abstrakte Planungen entweder mit der Selektion von Halbtagen oder durch Auswählen des Umfangs (Dropdown-Box) spezifizieren (nicht beides).')
     end
 
     if !is_abstract? && !halfday_selected
-      errors.add(:start_date, 'Mindestens ein halber Tag muss selektiert werden')
+      errors.add(:is_abstract, 'Mindestens ein halber Tag muss selektiert werden')
     end
   end
 
   def validate_overlappings
+    return if start_week.blank?
     # todo: limit search result by date
     existing = Planning.where(work_item_id: work_item_id,
                               employee_id: employee_id,
                               is_abstract: is_abstract?)
     existing.each do |planning|
       if overlaps?(planning)
-        errors.add(:start_date, "Dieses Projekt ist in diesem Zeitraum bereits #{is_abstract ? 'abstrakt' : ''} geplant")
+        errors.add(:start_week, "Dieses Projekt ist in diesem Zeitraum bereits #{is_abstract ? 'abstrakt' : ''} geplant")
       end
     end
   end
