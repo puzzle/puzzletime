@@ -1,0 +1,49 @@
+- billable_option ||= false
+
+%h3 Rapport Einstellungen
+
+= form_tag evaluation_detail_params.merge!(:action => 'report'), :method => 'get' do
+
+  = hidden_field_tag 'evaluation', params[:evaluation]
+  = hidden_field_tag 'category_id', params[:category_id]
+  = hidden_field_tag('division_id', params[:division_id]) if params[:division_id]
+  = hidden_field_tag('work_item_id', params[:work_item_id]) if params[:work_item_id]
+  = hidden_field_tag('employee_id', params[:employee_id]) if params[:employee_id]
+  = hidden_field_tag('billable', params[:billable]) if params[:billable]
+  = hidden_field_tag 'end_date', params[:end_date]
+  = hidden_field_tag 'start_date', params[:start_date]
+
+  %table.table-condensed
+    - if billable_option
+      %tr
+        %td= check_box_tag 'only_billable', '1', true
+        %td Nur verrechenbare Stunden
+    %tr
+      %td= check_box_tag 'combine_on'
+      %td Einträge zusammenfassen
+    %tr
+      %td &nbsp;
+      %td
+        = radio_button_tag 'combine', 'time', true
+        pro Tag
+    %tr
+      %td &nbsp;
+      %td
+        = radio_button_tag 'combine', 'ticket'
+        pro Ticket/Task
+    %tr
+      %td &nbsp;
+      %td
+        = radio_button_tag 'combine', 'ticket_employee'
+        pro Ticket/Task und Mitarbeiter
+    %tr
+      %td= check_box_tag 'start_stop'
+      %td Von/Bis Zeit anzeigen
+    %tr
+      %td= check_box_tag 'show_ticket', '1', true
+      %td Ticket anzeigen
+    %tr
+      %td= check_box_tag 'description', '1', true
+      %td Bemerkungen anzeigen
+    %tr
+      %td{:colspan => "2"}= submit_tag 'Rapport'

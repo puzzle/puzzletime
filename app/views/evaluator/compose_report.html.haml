@@ -2,44 +2,4 @@
 
 = render 'worktimes_report/report_header'
 
-%p
-%h3 Rapport Einstellungen
-= form_tag evaluation_detail_params.merge!(:action => 'report'), :method => 'get' do
-  = hidden_field_tag 'evaluation', params[:evaluation]
-  = hidden_field_tag 'category_id', params[:category_id]
-  = hidden_field_tag('division_id', params[:division_id]) if params[:division_id]
-  = hidden_field_tag 'end_date', params[:end_date]
-  = hidden_field_tag 'start_date', params[:start_date]
-  %table.table-condensed
-    %tr
-      %td= check_box_tag 'only_billable'
-      %td Nur verrechenbare Stunden
-    %tr
-      %td= check_box_tag 'combine_on'
-      %td Einträge zusammenfassen
-    %tr
-      %td &nbsp;
-      %td
-        = radio_button_tag 'combine', 'time', true
-        pro Tag
-    %tr
-      %td &nbsp;
-      %td
-        = radio_button_tag 'combine', 'ticket'
-        pro Ticket/Task
-    %tr
-      %td &nbsp;
-      %td
-        = radio_button_tag 'combine', 'ticket_employee'
-        pro Ticket/Task und Mitarbeiter
-    %tr
-      %td= check_box_tag 'start_stop'
-      %td Von/Bis Zeit anzeigen
-    %tr
-      %td= check_box_tag 'show_ticket', '1', true
-      %td Ticket anzeigen
-    %tr
-      %td= check_box_tag 'description', '1', true
-      %td Bemerkungen anzeigen
-    %tr
-      %td{:colspan => "2"}= submit_tag 'Rapport'
+= render 'worktimes_report/report_config', billable_option: true
