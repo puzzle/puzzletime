@@ -124,7 +124,7 @@ class Planning < ActiveRecord::Base
   def validate_planning
     errors.add(:start_week, 'Start Format ist ungültig') unless valid_week?(start_week)
     errors.add(:end_week, 'Bis Format ist ungültig') if end_week && !valid_week?(end_week)
-    errors.add(:end_week, 'Bis Datum ist ungültig') if end_week && (end_week < start_week)
+    errors.add(:end_week, 'Bis Datum ist ungültig') if end_week && start_week && (end_week < start_week)
 
     if abstract_amount == 0 && !halfday_selected
       errors.add(:is_abstract, 'Entweder Halbtag selektieren oder Umfang auswählen (Dropdown-Box).')
