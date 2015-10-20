@@ -6,4 +6,5 @@ module EmploymentsHelper
     p = employment.percent
     "#{p == p.to_i ? p.to_i : p} %"
   end
+
 end

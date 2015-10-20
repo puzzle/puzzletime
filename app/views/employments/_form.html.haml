@@ -1,4 +1,5 @@
 - @title = ti(:title, model: "#{models_label(false)} von #{h(parent)}")
 
 = crud_form do |f|
-  =f.labeled_input_fields :percent, :start_date, :end_date
+  = f.labeled_input_fields :start_date, :end_date, :percent
+  = f.labeled_input_field :vacation_days_per_year, help: 'Feld leer lassen, um den Wert aus den allgemeinen Anstellungsbedingungen zu verwenden.'

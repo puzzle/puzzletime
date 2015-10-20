@@ -9,7 +9,7 @@
 #  street        :string(255)
 #  zip_code      :string(255)
 #  town          :string(255)
-#  country       :string(255)
+#  country       :string(2)
 #  invoicing_key :string
 #
 
@@ -26,7 +26,7 @@ swisstopo_2:
   client_id: 2 # swisstopo
   contact: swisstopo_2
   supplement: Other address
-  street: Seftigenstrasse 264
+  street: Zurlindenstrasse 1
   zip_code: 3084
   town: Wabern
   country: CH

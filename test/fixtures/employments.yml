@@ -2,11 +2,12 @@
 #
 # Table name: employments
 #
-#  id          :integer          not null, primary key
-#  employee_id :integer
-#  percent     :decimal(5, 2)    not null
-#  start_date  :date             not null
-#  end_date    :date
+#  id                     :integer          not null, primary key
+#  employee_id            :integer
+#  percent                :decimal(5, 2)    not null
+#  start_date             :date             not null
+#  end_date               :date
+#  vacation_days_per_year :decimal(5, 2)
 #
 
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
@@ -28,6 +29,7 @@ various_20:
   percent:      20
   start_date:   2006.02.01
   end_date:     2006.09.15
+  vacation_days_per_year: 30
 various_100:
   id:           4
   employee_id:  2

@@ -5,12 +5,9 @@
 #  id                     :integer          not null, primary key
 #  work_item_id           :integer          not null
 #  portfolio_item_id      :integer
-#  reference              :string(255)
 #  offered_hours          :float
 #  offered_rate           :decimal(12, 2)
 #  offered_total          :decimal(12, 2)
-#  discount_percent       :integer
-#  discount_fixed         :integer
 #  remaining_hours        :integer
 #  billable               :boolean          default(TRUE), not null
 #  description_required   :boolean          default(FALSE), not null

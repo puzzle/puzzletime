@@ -156,6 +156,7 @@ de-CH:
         start_date: Startdatum
         end_date: Enddatum
         percent: Prozent
+        vacation_days_per_year: Ferientage pro Jahr
       holiday:
         holiday_date: Datum
         musthours_day: Muss Stunden

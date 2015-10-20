@@ -3,13 +3,12 @@
 #
 # Table name: clients
 #
-#  id                      :integer          not null, primary key
-#  work_item_id            :integer          not null
-#  crm_key                 :string(255)
-#  allow_local             :boolean          default(FALSE), not null
-#  last_invoice_number     :integer          default(0)
-#  invoicing_key           :string
-#  last_billing_address_id :integer
+#  id                  :integer          not null, primary key
+#  work_item_id        :integer          not null
+#  crm_key             :string(255)
+#  allow_local         :boolean          default(FALSE), not null
+#  last_invoice_number :integer          default(0)
+#  invoicing_key       :string
 #
 
 Fabricator(:client) do
