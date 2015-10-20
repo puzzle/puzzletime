@@ -26,8 +26,10 @@ test/reports
 /doc/models.png
 rubocop-results.xml
 brakeman-output.tabs
+/gemsurance_report.html
 
 dump*.sql
+/db/data.yml
 
 config/settings.local.yml
 config/settings/*.local.yml

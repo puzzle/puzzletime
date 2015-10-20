@@ -28,7 +28,6 @@ puzzletime:
   work_item_id: 4
   offered_hours: 100
   offered_rate: 3
-  discount_percent: 7
   portfolio_item: web
   billable: false
 

@@ -191,7 +191,6 @@ AccountingPost.seed(:work_item_id,
     portfolio_item_id: PortfolioItem.find_by_name('Java EE').id,
     offered_hours: 2000,
     offered_rate: 140,
-    discount_percent: 2,
     billable: true },
 
   # FIS Frontend
@@ -206,7 +205,6 @@ AccountingPost.seed(:work_item_id,
     portfolio_item_id: PortfolioItem.find_by_name('Java EE').id,
     offered_hours: 200,
     offered_rate: 150,
-    discount_fixed: 4000,
     billable: true },
 
   # TechTalk

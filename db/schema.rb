@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150817104051) do
+ActiveRecord::Schema.define(version: 20150930143851) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,114 +21,120 @@ ActiveRecord::Schema.define(version: 20150817104051) do
     t.boolean "payed",                default: false
     t.boolean "private",              default: false
     t.boolean "vacation",             default: false, null: false
-    t.index ["name"], :name => "index_absences_on_name", :unique => true
   end
+
+  add_index "absences", ["name"], name: "index_absences_on_name", unique: true, using: :btree
 
   create_table "accounting_posts", force: :cascade do |t|
-    t.integer "work_item_id",                                                                null: false
+    t.integer "work_item_id",                                                    null: false
     t.integer "portfolio_item_id"
-    t.string  "reference",              limit: 255
     t.float   "offered_hours"
-    t.decimal "offered_rate",                       precision: 12, scale: 2
-    t.decimal "offered_total",                      precision: 12, scale: 2
-    t.integer "discount_percent"
-    t.integer "discount_fixed"
+    t.decimal "offered_rate",           precision: 12, scale: 2
+    t.decimal "offered_total",          precision: 12, scale: 2
     t.integer "remaining_hours"
-    t.boolean "billable",                                                    default: true,  null: false
-    t.boolean "description_required",                                        default: false, null: false
-    t.boolean "ticket_required",                                             default: false, null: false
-    t.boolean "closed",                                                      default: false, null: false
-    t.boolean "from_to_times_required",                                      default: false, null: false
-    t.index ["portfolio_item_id"], :name => "index_accounting_posts_on_portfolio_item_id"
-    t.index ["work_item_id"], :name => "index_accounting_posts_on_work_item_id"
+    t.boolean "billable",                                        default: true,  null: false
+    t.boolean "description_required",                            default: false, null: false
+    t.boolean "ticket_required",                                 default: false, null: false
+    t.boolean "from_to_times_required",                          default: false, null: false
+    t.boolean "closed",                                          default: false, null: false
   end
+
+  add_index "accounting_posts", ["portfolio_item_id"], name: "index_accounting_posts_on_portfolio_item_id", using: :btree
+  add_index "accounting_posts", ["work_item_id"], name: "index_accounting_posts_on_work_item_id", using: :btree
 
   create_table "billing_addresses", force: :cascade do |t|
-    t.integer "client_id",                 null: false
+    t.integer "client_id",               null: false
     t.integer "contact_id"
-    t.string  "supplement",    limit: 255
-    t.string  "street",        limit: 255
-    t.string  "zip_code",      limit: 255
-    t.string  "town",          limit: 255
+    t.string  "supplement"
+    t.string  "street"
+    t.string  "zip_code"
+    t.string  "town"
     t.string  "country",       limit: 2
     t.string  "invoicing_key"
-    t.index ["client_id"], :name => "index_billing_addresses_on_client_id"
-    t.index ["contact_id"], :name => "index_billing_addresses_on_contact_id"
   end
+
+  add_index "billing_addresses", ["client_id"], name: "index_billing_addresses_on_client_id", using: :btree
+  add_index "billing_addresses", ["contact_id"], name: "index_billing_addresses_on_contact_id", using: :btree
 
   create_table "clients", force: :cascade do |t|
-    t.integer "work_item_id",                                    null: false
-    t.string  "crm_key",             limit: 255
-    t.boolean "allow_local",                     default: false, null: false
-    t.integer "last_invoice_number",             default: 0
+    t.integer "work_item_id",                        null: false
+    t.string  "crm_key"
+    t.boolean "allow_local",         default: false, null: false
+    t.integer "last_invoice_number", default: 0
     t.string  "invoicing_key"
-    t.index ["work_item_id"], :name => "index_clients_on_work_item_id"
   end
 
+  add_index "clients", ["work_item_id"], name: "index_clients_on_work_item_id", using: :btree
+
   create_table "contacts", force: :cascade do |t|
-    t.integer  "client_id",                 null: false
-    t.string   "lastname",      limit: 255
-    t.string   "firstname",     limit: 255
-    t.string   "function",      limit: 255
-    t.string   "email",         limit: 255
-    t.string   "phone",         limit: 255
-    t.string   "mobile",        limit: 255
-    t.string   "crm_key",       limit: 255
+    t.integer  "client_id",     null: false
+    t.string   "lastname"
+    t.string   "firstname"
+    t.string   "function"
+    t.string   "email"
+    t.string   "phone"
+    t.string   "mobile"
+    t.string   "crm_key"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "invoicing_key"
-    t.index ["client_id"], :name => "index_contacts_on_client_id"
   end
 
+  add_index "contacts", ["client_id"], name: "index_contacts_on_client_id", using: :btree
+
   create_table "contracts", force: :cascade do |t|
-    t.string  "number",         limit: 255, null: false
-    t.date    "start_date",                 null: false
-    t.date    "end_date",                   null: false
-    t.integer "payment_period",             null: false
+    t.string  "number",         null: false
+    t.date    "start_date",     null: false
+    t.date    "end_date",       null: false
+    t.integer "payment_period", null: false
     t.text    "reference"
     t.text    "sla"
     t.text    "notes"
   end
 
   create_table "delayed_jobs", force: :cascade do |t|
-    t.integer  "priority",               default: 0, null: false
-    t.integer  "attempts",               default: 0, null: false
-    t.text     "handler",                            null: false
+    t.integer  "priority",   default: 0, null: false
+    t.integer  "attempts",   default: 0, null: false
+    t.text     "handler",                null: false
     t.text     "last_error"
     t.datetime "run_at"
     t.datetime "locked_at"
     t.datetime "failed_at"
-    t.string   "locked_by",  limit: 255
-    t.string   "queue",      limit: 255
-    t.string   "cron",       limit: 255
+    t.string   "locked_by"
+    t.string   "queue"
+    t.string   "cron"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.index ["priority", "run_at"], :name => "delayed_jobs_priority"
   end
+
+  add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
 
   create_table "departments", force: :cascade do |t|
     t.string "name",      limit: 255, null: false
     t.string "shortname", limit: 3,   null: false
-    t.index ["name"], :name => "index_departments_on_name", :unique => true
-    t.index ["shortname"], :name => "index_departments_on_shortname", :unique => true
   end
+
+  add_index "departments", ["name"], name: "index_departments_on_name", unique: true, using: :btree
+  add_index "departments", ["shortname"], name: "index_departments_on_shortname", unique: true, using: :btree
 
   create_table "employee_lists", force: :cascade do |t|
     t.integer  "employee_id",             null: false
     t.string   "title",       limit: 255, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.index ["employee_id"], :name => "index_employee_lists_on_employee_id"
   end
+
+  add_index "employee_lists", ["employee_id"], name: "index_employee_lists_on_employee_id", using: :btree
 
   create_table "employee_lists_employees", id: false, force: :cascade do |t|
     t.integer  "employee_list_id"
     t.integer  "employee_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.index ["employee_id"], :name => "index_employee_lists_employees_on_employee_id"
-    t.index ["employee_list_id"], :name => "index_employee_lists_employees_on_employee_list_id"
   end
+
+  add_index "employee_lists_employees", ["employee_id"], name: "index_employee_lists_employees_on_employee_id", using: :btree
+  add_index "employee_lists_employees", ["employee_list_id"], name: "index_employee_lists_employees_on_employee_list_id", using: :btree
 
   create_table "employees", force: :cascade do |t|
     t.string  "firstname",             limit: 255,                 null: false
@@ -141,31 +147,34 @@ ActiveRecord::Schema.define(version: 20150817104051) do
     t.string  "ldapname",              limit: 255
     t.string  "eval_periods",                                                   array: true
     t.integer "department_id"
-    t.index ["department_id"], :name => "index_employees_on_department_id"
-    t.index ["shortname"], :name => "chk_unique_name", :unique => true
   end
+
+  add_index "employees", ["department_id"], name: "index_employees_on_department_id", using: :btree
+  add_index "employees", ["shortname"], name: "chk_unique_name", unique: true, using: :btree
 
   create_table "employees_invoices", id: false, force: :cascade do |t|
     t.integer "employee_id"
     t.integer "invoice_id"
-    t.index ["employee_id"], :name => "index_employees_invoices_on_employee_id"
-    t.index ["invoice_id"], :name => "index_employees_invoices_on_invoice_id"
   end
+
+  add_index "employees_invoices", ["employee_id"], name: "index_employees_invoices_on_employee_id", using: :btree
+  add_index "employees_invoices", ["invoice_id"], name: "index_employees_invoices_on_invoice_id", using: :btree
 
   create_table "employments", force: :cascade do |t|
     t.integer "employee_id"
     t.decimal "percent",     precision: 5, scale: 2, null: false
     t.date    "start_date",                          null: false
     t.date    "end_date"
-    t.index ["employee_id"], :name => "index_employments_on_employee_id"
-    t.foreign_key ["employee_id"], "employees", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_employments_employees"
   end
+
+  add_index "employments", ["employee_id"], name: "index_employments_on_employee_id", using: :btree
 
   create_table "holidays", force: :cascade do |t|
     t.date  "holiday_date",  null: false
     t.float "musthours_day", null: false
-    t.index ["holiday_date"], :name => "index_holidays_on_holiday_date", :unique => true
   end
+
+  add_index "holidays", ["holiday_date"], name: "index_holidays_on_holiday_date", unique: true, using: :btree
 
   create_table "invoices", force: :cascade do |t|
     t.integer  "order_id",                                                   null: false
@@ -183,16 +192,18 @@ ActiveRecord::Schema.define(version: 20150817104051) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "grouping",                                    default: 0,    null: false
-    t.index ["billing_address_id"], :name => "index_invoices_on_billing_address_id"
-    t.index ["order_id"], :name => "index_invoices_on_order_id"
   end
+
+  add_index "invoices", ["billing_address_id"], name: "index_invoices_on_billing_address_id", using: :btree
+  add_index "invoices", ["order_id"], name: "index_invoices_on_order_id", using: :btree
 
   create_table "invoices_work_items", id: false, force: :cascade do |t|
     t.integer "work_item_id"
     t.integer "invoice_id"
-    t.index ["invoice_id"], :name => "index_invoices_work_items_on_invoice_id"
-    t.index ["work_item_id"], :name => "index_invoices_work_items_on_work_item_id"
   end
+
+  add_index "invoices_work_items", ["invoice_id"], name: "index_invoices_work_items_on_invoice_id", using: :btree
+  add_index "invoices_work_items", ["work_item_id"], name: "index_invoices_work_items_on_work_item_id", using: :btree
 
   create_table "order_comments", force: :cascade do |t|
     t.integer  "order_id",   null: false
@@ -201,76 +212,84 @@ ActiveRecord::Schema.define(version: 20150817104051) do
     t.integer  "updater_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.index ["order_id"], :name => "index_order_comments_on_order_id"
   end
 
-  create_table "order_contacts", primary_key: "false", :default => { :expr => "nextval('order_contacts_false_seq'::regclass)" }, force: :cascade do |t|
-    t.integer "contact_id",             null: false
-    t.integer "order_id",               null: false
-    t.string  "comment",    limit: 255
-    t.index ["contact_id"], :name => "index_order_contacts_on_contact_id"
-    t.index ["order_id"], :name => "index_order_contacts_on_order_id"
+  add_index "order_comments", ["order_id"], name: "index_order_comments_on_order_id", using: :btree
+
+  create_table "order_contacts", primary_key: "false", force: :cascade do |t|
+    t.integer "contact_id", null: false
+    t.integer "order_id",   null: false
+    t.string  "comment"
   end
+
+  add_index "order_contacts", ["contact_id"], name: "index_order_contacts_on_contact_id", using: :btree
+  add_index "order_contacts", ["order_id"], name: "index_order_contacts_on_order_id", using: :btree
 
   create_table "order_kinds", force: :cascade do |t|
-    t.string "name", limit: 255, null: false
-    t.index ["name"], :name => "index_order_kinds_on_name", :unique => true
+    t.string "name", null: false
   end
+
+  add_index "order_kinds", ["name"], name: "index_order_kinds_on_name", unique: true, using: :btree
 
   create_table "order_statuses", force: :cascade do |t|
-    t.string  "name",     limit: 255,                 null: false
-    t.string  "style",    limit: 255
-    t.boolean "closed",               default: false, null: false
-    t.integer "position",                             null: false
-    t.index ["name"], :name => "index_order_statuses_on_name", :unique => true
-    t.index ["position"], :name => "index_order_statuses_on_position"
+    t.string  "name",                     null: false
+    t.string  "style"
+    t.boolean "closed",   default: false, null: false
+    t.integer "position",                 null: false
   end
 
+  add_index "order_statuses", ["name"], name: "index_order_statuses_on_name", unique: true, using: :btree
+  add_index "order_statuses", ["position"], name: "index_order_statuses_on_position", using: :btree
+
   create_table "order_targets", force: :cascade do |t|
-    t.integer  "order_id",                                      null: false
-    t.integer  "target_scope_id",                               null: false
-    t.string   "rating",          limit: 255, default: "green", null: false
+    t.integer  "order_id",                          null: false
+    t.integer  "target_scope_id",                   null: false
+    t.string   "rating",          default: "green", null: false
     t.text     "comment"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.index ["order_id"], :name => "index_order_targets_on_order_id"
-    t.index ["target_scope_id"], :name => "index_order_targets_on_target_scope_id"
   end
 
-  create_table "order_team_members", primary_key: "false", :default => { :expr => "nextval('order_team_members_false_seq'::regclass)" }, force: :cascade do |t|
-    t.integer "employee_id",             null: false
-    t.integer "order_id",                null: false
-    t.string  "comment",     limit: 255
-    t.index ["employee_id"], :name => "index_order_team_members_on_employee_id"
-    t.index ["order_id"], :name => "index_order_team_members_on_order_id"
+  add_index "order_targets", ["order_id"], name: "index_order_targets_on_order_id", using: :btree
+  add_index "order_targets", ["target_scope_id"], name: "index_order_targets_on_target_scope_id", using: :btree
+
+  create_table "order_team_members", primary_key: "false", force: :cascade do |t|
+    t.integer "employee_id", null: false
+    t.integer "order_id",    null: false
+    t.string  "comment"
   end
+
+  add_index "order_team_members", ["employee_id"], name: "index_order_team_members_on_employee_id", using: :btree
+  add_index "order_team_members", ["order_id"], name: "index_order_team_members_on_order_id", using: :btree
 
   create_table "orders", force: :cascade do |t|
-    t.integer  "work_item_id",                   null: false
+    t.integer  "work_item_id",       null: false
     t.integer  "kind_id"
     t.integer  "responsible_id"
     t.integer  "status_id"
     t.integer  "department_id"
     t.integer  "contract_id"
     t.integer  "billing_address_id"
-    t.string   "crm_key",            limit: 255
+    t.string   "crm_key"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.index ["billing_address_id"], :name => "index_orders_on_billing_address_id"
-    t.index ["contract_id"], :name => "index_orders_on_contract_id"
-    t.index ["department_id"], :name => "index_orders_on_department_id"
-    t.index ["kind_id"], :name => "index_orders_on_kind_id"
-    t.index ["responsible_id"], :name => "index_orders_on_responsible_id"
-    t.index ["status_id"], :name => "index_orders_on_status_id"
-    t.index ["work_item_id"], :name => "index_orders_on_work_item_id"
   end
+
+  add_index "orders", ["billing_address_id"], name: "index_orders_on_billing_address_id", using: :btree
+  add_index "orders", ["contract_id"], name: "index_orders_on_contract_id", using: :btree
+  add_index "orders", ["department_id"], name: "index_orders_on_department_id", using: :btree
+  add_index "orders", ["kind_id"], name: "index_orders_on_kind_id", using: :btree
+  add_index "orders", ["responsible_id"], name: "index_orders_on_responsible_id", using: :btree
+  add_index "orders", ["status_id"], name: "index_orders_on_status_id", using: :btree
+  add_index "orders", ["work_item_id"], name: "index_orders_on_work_item_id", using: :btree
 
   create_table "overtime_vacations", force: :cascade do |t|
     t.float   "hours",         null: false
     t.integer "employee_id",   null: false
     t.date    "transfer_date", null: false
-    t.index ["employee_id"], :name => "index_overtime_vacations_on_employee_id"
   end
+
+  add_index "overtime_vacations", ["employee_id"], name: "index_overtime_vacations_on_employee_id", using: :btree
 
   create_table "plannings", force: :cascade do |t|
     t.integer  "employee_id",                     null: false
@@ -293,44 +312,49 @@ ActiveRecord::Schema.define(version: 20150817104051) do
     t.boolean  "is_abstract"
     t.decimal  "abstract_amount"
     t.integer  "work_item_id",                    null: false
-    t.index ["employee_id"], :name => "index_plannings_on_employee_id"
-    t.index ["work_item_id"], :name => "index_plannings_on_work_item_id"
   end
+
+  add_index "plannings", ["employee_id"], name: "index_plannings_on_employee_id", using: :btree
+  add_index "plannings", ["work_item_id"], name: "index_plannings_on_work_item_id", using: :btree
 
   create_table "portfolio_items", force: :cascade do |t|
-    t.string  "name",   limit: 255,                null: false
-    t.boolean "active",             default: true, null: false
-    t.index ["name"], :name => "index_portfolio_items_on_name", :unique => true
+    t.string  "name",                  null: false
+    t.boolean "active", default: true, null: false
   end
 
+  add_index "portfolio_items", ["name"], name: "index_portfolio_items_on_name", unique: true, using: :btree
+
   create_table "target_scopes", force: :cascade do |t|
-    t.string  "name",     limit: 255, null: false
-    t.string  "icon",     limit: 255
-    t.integer "position",             null: false
-    t.index ["name"], :name => "index_target_scopes_on_name", :unique => true
-    t.index ["position"], :name => "index_target_scopes_on_position"
+    t.string  "name",     null: false
+    t.string  "icon"
+    t.integer "position", null: false
   end
+
+  add_index "target_scopes", ["name"], name: "index_target_scopes_on_name", unique: true, using: :btree
+  add_index "target_scopes", ["position"], name: "index_target_scopes_on_position", using: :btree
 
   create_table "user_notifications", force: :cascade do |t|
     t.date "date_from", null: false
     t.date "date_to"
     t.text "message",   null: false
-    t.index ["date_from", "date_to"], :name => "index_user_notifications_on_date_from_and_date_to"
   end
+
+  add_index "user_notifications", ["date_from", "date_to"], name: "index_user_notifications_on_date_from_and_date_to", using: :btree
 
   create_table "work_items", force: :cascade do |t|
     t.integer "parent_id"
-    t.string  "name",            limit: 255,                  null: false
+    t.string  "name",                                         null: false
     t.string  "shortname",       limit: 5,                    null: false
     t.text    "description"
     t.integer "path_ids",                                                  array: true
-    t.string  "path_shortnames", limit: 255
+    t.string  "path_shortnames"
     t.string  "path_names",      limit: 2047
     t.boolean "leaf",                         default: true,  null: false
     t.boolean "closed",                       default: false, null: false
-    t.index ["parent_id"], :name => "index_work_items_on_parent_id"
-    t.index ["path_ids"], :name => "index_work_items_on_path_ids"
   end
+
+  add_index "work_items", ["parent_id"], name: "index_work_items_on_parent_id", using: :btree
+  add_index "work_items", ["path_ids"], name: "index_work_items_on_path_ids", using: :btree
 
   create_table "working_conditions", force: :cascade do |t|
     t.date    "valid_from"
@@ -353,12 +377,14 @@ ActiveRecord::Schema.define(version: 20150817104051) do
     t.string  "ticket",          limit: 255
     t.integer "work_item_id"
     t.integer "invoice_id"
-    t.index ["absence_id", "employee_id", "work_date"], :name => "worktimes_absences"
-    t.index ["employee_id", "work_date"], :name => "worktimes_employees"
-    t.index ["invoice_id"], :name => "index_worktimes_on_invoice_id"
-    t.index ["work_item_id", "employee_id", "work_date"], :name => "worktimes_work_items"
-    t.foreign_key ["absence_id"], "absences", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_times_absences"
-    t.foreign_key ["employee_id"], "employees", ["id"], :on_update => :no_action, :on_delete => :cascade, :name => "fk_times_employees"
   end
 
+  add_index "worktimes", ["absence_id", "employee_id", "work_date"], name: "worktimes_absences", using: :btree
+  add_index "worktimes", ["employee_id", "work_date"], name: "worktimes_employees", using: :btree
+  add_index "worktimes", ["invoice_id"], name: "index_worktimes_on_invoice_id", using: :btree
+  add_index "worktimes", ["work_item_id", "employee_id", "work_date"], name: "worktimes_work_items", using: :btree
+
+  add_foreign_key "employments", "employees", name: "fk_employments_employees", on_delete: :cascade
+  add_foreign_key "worktimes", "absences", name: "fk_times_absences", on_delete: :cascade
+  add_foreign_key "worktimes", "employees", name: "fk_times_employees", on_delete: :cascade
 end

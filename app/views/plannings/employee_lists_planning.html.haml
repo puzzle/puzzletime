@@ -1,13 +1,13 @@
 - @title = @employee_list_name
 = render :partial => 'plannings/period_link', :locals => {:id => @employee}
-- unless @graph.employees.present?
+- unless @graph.employee_graphs.present?
   Keine Mitarbeiter gefunden
 - else
   %div.table-responsive
     %table.absence
       = render :partial => 'plannings/header', :locals => { :type => :calendar_week_not_yet_implemented }
-      - @graph.employees.each do |employee|
-        = render :partial => 'plannings/employee_planning_entry', :locals =>{ :user => employee, :employee_planning_graph => @graph.graph_for(employee), :type => :calendar_week_not_yet_implemented}
+      - @graph.employee_graphs.each do |employee_graph|
+        = render :partial => 'plannings/employee_planning_entry', :locals =>{ :user => employee_graph.employee, :employee_planning_graph => employee_graph, :type => :calendar_week_not_yet_implemented}
       = render :partial => 'plannings/footer', :locals => {:type => :calendar_week_not_yet_implemented, :first_span => 2}
 
 = link_to 'Zurück', employee_lists_path

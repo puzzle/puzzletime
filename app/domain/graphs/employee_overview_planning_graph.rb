@@ -2,7 +2,7 @@
 
 class EmployeeOverviewPlanningGraph < OverviewPlanningGraph
 
-  include PeriodIteratable
+  include PeriodIterable
 
   attr_reader :employee
 
@@ -15,10 +15,8 @@ class EmployeeOverviewPlanningGraph < OverviewPlanningGraph
   end
 
   def week_style(week)
-    employment_percent = employement_percent(week)
-    employment_percent = employment_percent.present? ? employment_percent : 0
-    planned = planned_percent(week)
-    planned = planned.present? ? planned : 0
+    employment_percent = employement_percent(week) || 0
+    planned = planned_percent(week) || 0
     free = employment_percent - planned
     if free == 0
       'full_planned'
@@ -32,11 +30,19 @@ class EmployeeOverviewPlanningGraph < OverviewPlanningGraph
   end
 
   def planned_days(week)
-    (planned_percent(week) / 20.0 * 10).round.to_f / 10
+    (planned_percent(week) / 20.0).round(1)
+  end
+
+  def period_load
+    if period_average_employment_percent > 0
+      period_average_planned_percent.to_f / period_average_employment_percent.to_f
+    else
+      Float::INFINITY
+    end
   end
 
   def week_label(week)
-    planned_perc = (planned_percent(week) * 10).round.to_f / 10
+    planned_perc = planned_percent(week).round(1)
     "#{planned_perc}%/#{employement_percent(week)}%"
   end
 
@@ -60,6 +66,11 @@ class EmployeeOverviewPlanningGraph < OverviewPlanningGraph
   def employement_percent(date)
     employments = @employee.employments.select { |e| e.start_date <= date && (e.end_date.nil? or e.end_date >= date) }
     employments[0].percent if employments.size == 1
+  end
+
+  def period_average_employment_percent
+    weeks_percents = enumerate_weeks.map {|week| employement_percent(week) || 0 }
+    weeks_percents.sum / weeks_percents.size.to_f
   end
 
 end
