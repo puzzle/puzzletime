@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 class EmployeesPlanningGraph
-
   include PeriodIterable
 
   attr_reader :period
@@ -21,5 +20,4 @@ class EmployeesPlanningGraph
   def color_for(work_item)
     @colorMap[work_item]
   end
-
 end

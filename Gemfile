@@ -32,14 +32,14 @@ gem 'validates_timeliness'
 gem 'sass-rails'
 gem 'uglifier'
 gem 'coffee-rails'
-gem 'therubyracer',  platforms: :ruby
+gem 'therubyracer', platforms: :ruby
 
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'turbolinks'
 gem 'jquery-turbolinks'
 gem 'bootstrap-sass'
-gem 'selectize-rails', '0.9.1'  # newer needs fix for create order
+gem 'selectize-rails', '0.9.1' # newer needs fix for create order
 
 
 group :development, :test do
@@ -76,7 +76,7 @@ end
 
 group :metrics do
   gem 'annotate'
-  gem 'brakeman' #, '2.5.0'
+  gem 'brakeman' # , '2.5.0'
   gem 'minitest-reporters'
   gem 'rails-erd'
   gem 'rubocop'

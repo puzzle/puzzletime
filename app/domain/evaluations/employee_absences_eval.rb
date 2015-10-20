@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 class EmployeeAbsencesEval < Evaluation
-
   self.division_method  = :absences
   self.division_column  = :absence_id
   self.label            = 'Absenzen'
@@ -25,5 +24,4 @@ class EmployeeAbsencesEval < Evaluation
   def account_id
     division.id if division
   end
-
 end

@@ -8,7 +8,6 @@ require 'support/crud_controller_test_helper'
 # (CrudTestModel). This is useful to test the general behavior
 # of CrudController.
 class CrudTestModelsControllerTest < ActionController::TestCase
-
   include CrudControllerTestHelper
   include CrudTestHelper
 
@@ -178,7 +177,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_equal [:before_destroy, :after_destroy],
                  @controller.called_callbacks
     assert_equal I18n.t('crud.destroy.flash.success',
-                         model: 'Crud Test Model <i>AAAAA</i>'),
+                        model: 'Crud Test Model <i>AAAAA</i>'),
                  flash[:notice]
   end
 

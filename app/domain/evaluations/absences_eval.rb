@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 class AbsencesEval < Evaluation
-
   self.sub_evaluation   = 'employeeabsences'
   self.division_column  = :employee_id
   self.label            = 'Mitarbeiter Absenzen'
@@ -22,9 +21,8 @@ class AbsencesEval < Evaluation
     division.id if division
   end
 
-  def division_supplement(user)
+  def division_supplement(_user)
     [[:remaining_vacations, 'Übrige Ferien', 'right'],
      [:overtime_vacations_tooltip, '', 'left']]
  end
-
 end

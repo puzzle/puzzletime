@@ -1,5 +1,4 @@
 class OrderTargetsController < ApplicationController
-
   before_action :set_order
   before_action :authorize_class
   before_action :set_order_targets
@@ -9,7 +8,7 @@ class OrderTargetsController < ApplicationController
 
   def update
     update_targets
-    flash.now[:notice] = I18n.t("crud.update.flash.success", model: 'Ziele') if @errors.blank?
+    flash.now[:notice] = I18n.t('crud.update.flash.success', model: 'Ziele') if @errors.blank?
     render 'show'
   end
 
@@ -40,5 +39,4 @@ class OrderTargetsController < ApplicationController
   def authorize_class
     authorize!(:"#{action_name}_targets", @order)
   end
-
 end

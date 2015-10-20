@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 class Splitable
-
   class_attribute :incomplete_finish
   self.incomplete_finish = true
 
@@ -39,12 +38,12 @@ class Splitable
   end
 
   def complete?
-    remaining_hours < 0.00001     # we are working with floats: use delta
+    remaining_hours < 0.00001 # we are working with floats: use delta
   end
 
   def save
     Worktime.transaction do
-      worktimes.each { |wtime| wtime.save! }
+      worktimes.each(&:save!)
     end
   end
 
@@ -63,11 +62,10 @@ class Splitable
   end
 
   def next_start_time
-    empty? ? original.from_start_time :  worktimes.last.to_end_time
+    empty? ? original.from_start_time : worktimes.last.to_end_time
   end
 
   def last_worktime
     empty? ? original : worktimes.last
   end
-
 end

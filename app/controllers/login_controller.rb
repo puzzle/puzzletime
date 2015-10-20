@@ -5,7 +5,6 @@
 
 
 class LoginController < ApplicationController
-
   skip_before_action :authenticate, except: [:logout]
   skip_authorization_check
 
@@ -30,5 +29,4 @@ class LoginController < ApplicationController
     flash[:notice] = 'Sie wurden ausgeloggt'
     redirect_to action: 'login'
   end
-
 end

@@ -19,5 +19,4 @@ class OrderCommentsController < CrudController
   def parent_scope
     parent.send(:comments)
   end
-
 end

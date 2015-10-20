@@ -1,12 +1,11 @@
 class OrdersController < CrudController
-
   include Filterable
 
   self.permitted_attrs = [
-      :crm_key, :kind_id, :responsible_id, :department_id, :status_id,
-          work_item_attributes: [:name, :shortname, :description],
-          order_team_members_attributes: [:id, :employee_id, :comment, :_destroy],
-          order_contacts_attributes: [:id, :contact_id_or_crm, :comment, :_destroy]
+    :crm_key, :kind_id, :responsible_id, :department_id, :status_id,
+    work_item_attributes: [:name, :shortname, :description],
+    order_team_members_attributes: [:id, :employee_id, :comment, :_destroy],
+    order_contacts_attributes: [:id, :contact_id_or_crm, :comment, :_destroy]
   ]
 
 
@@ -40,8 +39,8 @@ class OrdersController < CrudController
   private
 
   def list_entries
-    entries = super.includes(:kind, :department, :status, :responsible, :team_members, :targets => :target_scope).
-                    order('work_items.path_names')
+    entries = super.includes(:kind, :department, :status, :responsible, :team_members, targets: :target_scope).
+              order('work_items.path_names')
     entries = sort_entries_by_target_scope(entries)
 
     if (params.keys & %w(department_id kind_id status_id responsible_id)).present?
@@ -94,7 +93,7 @@ class OrdersController < CrudController
     if entry.new_record?
       entry.work_item.parent_id = (params[:category_active] &&
                                    params[:category_work_item_id].presence) ||
-                                  params[:client_work_item_id].presence
+        params[:client_work_item_id].presence
     end
   end
 
@@ -155,5 +154,4 @@ class OrdersController < CrudController
   def load_employee_options
     Employee.list # TODO: restrict only with employment?
   end
-
 end

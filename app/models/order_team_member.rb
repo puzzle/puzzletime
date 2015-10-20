@@ -9,7 +9,6 @@
 #
 
 class OrderTeamMember < ActiveRecord::Base
-
   belongs_to :employee
   belongs_to :order
 
@@ -22,5 +21,4 @@ class OrderTeamMember < ActiveRecord::Base
   def to_s
     [employee, comment.presence].compact.join(': ')
   end
-
 end

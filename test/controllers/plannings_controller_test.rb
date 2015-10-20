@@ -3,7 +3,6 @@
 require 'test_helper'
 
 class PlanningsControllerTest < ActionController::TestCase
-
   setup :login
 
   def test_show_index
@@ -17,7 +16,7 @@ class PlanningsControllerTest < ActionController::TestCase
 
     graph = assigns(:graph)
     assert_not_nil graph
-    assert graph.kind_of?(EmployeePlanningGraph)
+    assert graph.is_a?(EmployeePlanningGraph)
     assert_equal employees(:mark), graph.employee
     assert_equal 0, graph.plannings.size
   end
@@ -100,5 +99,4 @@ class PlanningsControllerTest < ActionController::TestCase
     get :departments
     assert_template 'departments'
   end
-
 end

@@ -18,7 +18,6 @@
 #
 
 class AccountingPost < ActiveRecord::Base
-
   include BelongingToWorkItem
   include Closable
 
@@ -128,7 +127,7 @@ class AccountingPost < ActiveRecord::Base
 
   def move_order_accounting_post_work_item
     return if work_item_id == order.work_item_id
-    post = order.accounting_posts.where(work_item_id: order.work_item_id).first
+    post = order.accounting_posts.find_by(work_item_id: order.work_item_id)
     if post
       post.work_item = WorkItem.new(name: order.work_item.name,
                                     shortname: order.work_item.shortname,
@@ -142,5 +141,4 @@ class AccountingPost < ActiveRecord::Base
   def exclusive_work_item?
     work_item.order.nil?
   end
-
 end

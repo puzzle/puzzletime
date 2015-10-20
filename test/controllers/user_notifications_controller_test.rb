@@ -3,7 +3,6 @@
 require 'test_helper'
 
 class UserNotificationsControllerTest < ActionController::TestCase
-
   include CrudControllerTestHelper
 
   setup :login
@@ -22,7 +21,7 @@ class UserNotificationsControllerTest < ActionController::TestCase
   # Attribute hash used in several tests.
   def test_entry_attrs
     { message: 'Foo',
-      date_from: Date.today,
-      date_to: Date.today + 10.days }
+      date_from: Time.zone.today,
+      date_to: Time.zone.today + 10.days }
   end
 end

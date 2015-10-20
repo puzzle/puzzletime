@@ -7,5 +7,4 @@ class HalfDayAbstract < HalfDay
     super(label)
     @abstract_amount = abstract_amount
   end
-
 end

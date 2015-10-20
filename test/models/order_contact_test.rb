@@ -11,7 +11,6 @@
 require 'test_helper'
 
 class OrderContactTest < ActiveSupport::TestCase
-
   teardown :reset_crm
 
   test 'list scope is ordered by contact' do

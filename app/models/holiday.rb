@@ -13,7 +13,6 @@
 # Diplomarbeit 2149, Xavier Hayoz
 
 class Holiday < ActiveRecord::Base
-
   include ActionView::Helpers::NumberHelper
   include Comparable
 
@@ -27,7 +26,6 @@ class Holiday < ActiveRecord::Base
   scope :list, -> { order('holiday_date DESC') }
 
   class << self
-
     def period_musttime(period)
       WorkingCondition.sum_with(:must_hours_per_day, period) do |p, h|
         hours = workday_hours(p, h)
@@ -40,10 +38,10 @@ class Holiday < ActiveRecord::Base
 
     # Collection of functions to check if date is holiday or not
     def musttime(date)
-      if Holiday.weekend?(date) || Holiday.regularHoliday?(date)
+      if Holiday.weekend?(date) || Holiday.regular_holiday?(date)
         0
       else
-        @@irregularHolidays.each do |holiday|
+        @@irregular_holidays.each do |holiday|
           return holiday.musthours_day if holiday.holiday_date == date
         end
         WorkingCondition.value_at(date, :must_hours_per_day)
@@ -51,14 +49,14 @@ class Holiday < ActiveRecord::Base
     end
 
     # Checks if date is a regular holiday
-    def regularHoliday?(date)
+    def regular_holiday?(date)
       Settings.regular_holidays.any? do |day|
         date.day == day[0] && date.month == day[1]
       end
     end
 
     def irregular_holiday?(date)
-      @@irregularHolidays.any? do |holiday|
+      @@irregular_holidays.any? do |holiday|
         holiday.holiday_date == date
       end
     end
@@ -71,14 +69,14 @@ class Holiday < ActiveRecord::Base
 
     def holiday?(date)
       self.weekend?(date) ||
-        self.regularHoliday?(date) ||
+        self.regular_holiday?(date) ||
         self.irregular_holiday?(date)
     end
 
     # returns all holidays for the given period which fall on a weekday
     def holidays(period)
-      holidays = @@irregularHolidays.select { |holiday|  period.include?(holiday.holiday_date) }
-      irregulars = holidays.collect { |holiday| holiday.holiday_date }
+      holidays = @@irregular_holidays.select { |holiday| period.include?(holiday.holiday_date) }
+      irregulars = holidays.collect(&:holiday_date)
       regulars = regular_holidays(period)
       regulars.each do |holiday|
         holidays.push holiday unless irregulars.include?(holiday.holiday_date)
@@ -101,8 +99,8 @@ class Holiday < ActiveRecord::Base
     end
 
     def refresh
-      @@irregularHolidays = Holiday.order('holiday_date')
-      @@irregularHolidays = @@irregularHolidays.select do |holiday|
+      @@irregular_holidays = Holiday.order('holiday_date')
+      @@irregular_holidays = @@irregular_holidays.select do |holiday|
         !weekend?(holiday.holiday_date)
       end
     end
@@ -122,7 +120,6 @@ class Holiday < ActiveRecord::Base
       end
       hours
     end
-
   end
 
   public
@@ -134,11 +131,10 @@ class Holiday < ActiveRecord::Base
   refresh
 
   def to_s
-    holiday_date? ? "am #{I18n.l(holiday_date, format: :long)}" : ""
+    holiday_date? ? "am #{I18n.l(holiday_date, format: :long)}" : ''
   end
 
   def <=>(other)
     holiday_date <=> other.holiday_date
   end
-
 end

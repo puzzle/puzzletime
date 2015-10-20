@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 class EmployeeListsController < CrudController
-
   before_action :set_period
 
   before_render_show :set_employees
@@ -32,7 +31,6 @@ class EmployeeListsController < CrudController
   end
 
   def model_params
-    params.require(:employee_list).permit(:title, :employee_ids => [])
+    params.require(:employee_list).permit(:title, employee_ids: [])
   end
-
 end

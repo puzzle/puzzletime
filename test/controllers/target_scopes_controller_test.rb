@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class TargetScopesControllerTest < ActionController::TestCase
-
   include CrudControllerTestHelper
 
   setup :login

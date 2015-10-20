@@ -1,5 +1,4 @@
 module OrderServicesHelper
-
   def summed_worktimes_table(entries)
     table = checkable_worktimes_table(entries)
     if entries.present?
@@ -43,16 +42,15 @@ module OrderServicesHelper
   def summed_worktimes_row(entries)
     content_tag(:tr, class: 'times_total_sum') do
       content_tag(:td) +
-      content_tag(:td, 'Total') +
-      content_tag(:td) +
-      content_tag(:td, f(entries.to_a.sum(&:hours)), class: 'right') +
-      content_tag(:td, f(entries.to_a.sum(&:amount)), class: 'right') +
-      content_tag(:td) +
-      content_tag(:td) +
-      content_tag(:td) +
-      content_tag(:td) +
-      content_tag(:td)
+        content_tag(:td, 'Total') +
+        content_tag(:td) +
+        content_tag(:td, f(entries.to_a.sum(&:hours)), class: 'right') +
+        content_tag(:td, f(entries.to_a.sum(&:amount)), class: 'right') +
+        content_tag(:td) +
+        content_tag(:td) +
+        content_tag(:td) +
+        content_tag(:td) +
+        content_tag(:td)
     end
   end
-
 end

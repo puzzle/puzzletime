@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 class WorktimeGraph
-
   WORKTIME_ORDER = 'work_date, from_start_time, work_item_id, absence_id'
   WORKTIME_CONDITIONS = ['(worktimes.report_type = ? OR worktimes.report_type = ?)',
                          StartStopType::INSTANCE.key,
@@ -40,9 +39,9 @@ class WorktimeGraph
     # fill ordertimes
     append_period_boxes period_boxes[:work_items], must_hours
     append_account_boxes @work_items_eval.times(@current).
-                                          where(WORKTIME_CONDITIONS).
-                                          reorder(WORKTIME_ORDER).
-                                          includes(:work_item)
+      where(WORKTIME_CONDITIONS).
+      reorder(WORKTIME_ORDER).
+      includes(:work_item)
 
     # add absencetimes, payed ones first
     append_period_boxes period_boxes[:absences], must_hours
@@ -89,12 +88,12 @@ class WorktimeGraph
 
   def get_period_boxes(evaluation, period, report_type)
     work_items = evaluation.times(period).
-                            where(report_type: report_type.key).
-                            reorder(WORKTIME_ORDER)
-	  # stretch by employment musttime if employment > 100%
+                 where(report_type: report_type.key).
+                 reorder(WORKTIME_ORDER)
+    # stretch by employment musttime if employment > 100%
     hours = period.musttime.to_f * must_hours_factor
     return [] if hours == 0
-    work_items.collect { |w| Timebox.new(w, color_for(w), Timebox.height_from_hours(w.hours / hours))  }
+    work_items.collect { |w| Timebox.new(w, color_for(w), Timebox.height_from_hours(w.hours / hours)) }
   end
 
   def concat_period_boxes
@@ -149,5 +148,4 @@ class WorktimeGraph
   def color_for(worktime)
     @colorMap[worktime.account]
   end
-
 end

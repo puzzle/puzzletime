@@ -2,7 +2,6 @@
 require 'test_helper'
 
 class AccountingPostsControllerTest < ActionController::TestCase
-
   setup :login
 
   test 'GET index' do
@@ -45,7 +44,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
   end
 
   test 'CREATE with book_on_order true when accounting_post exists' do
-    assert_no_difference "AccountingPost.count" do
+    assert_no_difference 'AccountingPost.count' do
       post :create,
            order_id: orders(:hitobito_demo).id,
            book_on_order: 'true',
@@ -61,11 +60,11 @@ class AccountingPostsControllerTest < ActionController::TestCase
   test 'CREATE with book_on_order true when no accounting_post exists on order sets work_item to order.work_item' do
     order = orders(:hitobito_demo)
     order.accounting_posts.destroy_all
-    assert_difference "AccountingPost.count", 1 do
-      assert_no_difference "WorkItem.count" do
+    assert_difference 'AccountingPost.count', 1 do
+      assert_no_difference 'WorkItem.count' do
         post :create,
-            book_on_order: 'true',
-            order_id: order.id,
+             book_on_order: 'true',
+             order_id: order.id,
              accounting_post: {
                reference: 'asdf',
                portfolio_item_id: portfolio_items(:web).id,
@@ -80,8 +79,8 @@ class AccountingPostsControllerTest < ActionController::TestCase
   end
 
   test 'CREATE with new work_item with order.work_item as parent' do
-    assert_difference "AccountingPost.count", 1 do
-      assert_difference "WorkItem.count", 1 do
+    assert_difference 'AccountingPost.count', 1 do
+      assert_difference 'WorkItem.count', 1 do
         post :create,
              order_id: orders(:hitobito_demo).id,
              accounting_post: {
@@ -96,13 +95,13 @@ class AccountingPostsControllerTest < ActionController::TestCase
     new_work_item = AccountingPost.last.work_item
     assert new_work_item.parent_id = orders(:hitobito_demo).work_item_id
     assert_equal new_work_item.attributes.slice('name', 'shortname', 'closed'),
-                 { 'name' => 'TEST', 'shortname' => 'TST', 'closed' => true }
+                 'name' => 'TEST', 'shortname' => 'TST', 'closed' => true
   end
 
   test 'CREATE second accounting post moves existing post from order to own work item' do
     order = orders(:puzzletime)
-    assert_difference "AccountingPost.count", 1 do
-      assert_difference "WorkItem.count", 2 do
+    assert_difference 'AccountingPost.count', 1 do
+      assert_difference 'WorkItem.count', 2 do
         post :create,
              order_id: order.id,
              accounting_post: {
@@ -124,8 +123,8 @@ class AccountingPostsControllerTest < ActionController::TestCase
 
   test 'CREATE second accounting post does not touch existing post on own work item' do
     order = orders(:hitobito_demo)
-    assert_difference "AccountingPost.count", 1 do
-      assert_difference "WorkItem.count", 1 do
+    assert_difference 'AccountingPost.count', 1 do
+      assert_difference 'WorkItem.count', 1 do
         post :create,
              order_id: order.id,
              accounting_post: {
@@ -159,14 +158,14 @@ class AccountingPostsControllerTest < ActionController::TestCase
       }
     }
 
-    assert_difference "AccountingPost.count", +1 do
+    assert_difference 'AccountingPost.count',+1 do
       post :create, attributes
     end
     accounting_post = assigns(:accounting_post)
-    attributes[:accounting_post].except(:work_item_attributes).each do |k,v|
+    attributes[:accounting_post].except(:work_item_attributes).each do |k, v|
       assert_equal v.to_s, accounting_post.send(k).to_s, "accounting_post.#{k} should eq #{v}"
     end
-    attributes[:accounting_post][:work_item_attributes].each do |k,v|
+    attributes[:accounting_post][:work_item_attributes].each do |k, v|
       assert_equal v.to_s, accounting_post.work_item.send(k).to_s, "accounting_post.work_item.#{k} should eq #{v}"
     end
   end
@@ -181,24 +180,24 @@ class AccountingPostsControllerTest < ActionController::TestCase
         closed: 'true',
         offered_hours: 80.0,
         offered_rate: 42.0,
-        offered_total: 10000.0,
+        offered_total: 10_000.0,
         portfolio_item_id: portfolio_items(:mobile).id,
         billable: true,
         description_required: true,
         ticket_required: true,
-        from_to_times_required: true,
+        from_to_times_required: true
       }
     }
 
     patch :update, params
     accounting_post.reload
-    params[:accounting_post].except(:work_item_attributes).each do |k,v|
+    params[:accounting_post].except(:work_item_attributes).each do |k, v|
       assert_equal v.to_s, accounting_post.send(k).to_s, "accounting_post.#{k} should eq #{v}"
     end
   end
 
   test 'PATCH update with book_on_order true when other accounting_post exists' do
-    assert_no_difference "AccountingPost.count" do
+    assert_no_difference 'AccountingPost.count' do
       patch :update,
             order_id: orders(:hitobito_demo).id,
             id: accounting_posts(:hitobito_demo_app),
@@ -213,10 +212,10 @@ class AccountingPostsControllerTest < ActionController::TestCase
   test 'PATCH update with book_on_order changes work_item to order.work_item and moves worktimes' do
     accounting_posts(:hitobito_demo_site).delete
     worktime = Worktime.create!(work_item_id: accounting_posts(:hitobito_demo_app).work_item_id, employee_id: Employee.first.id,
-                                work_date: Date.today, hours: 4.2, report_type: 'absolute_day')
-    assert_no_difference "AccountingPost.count" do
-      assert_difference "WorkItem.count", -1 do
-        assert_no_difference "Worktime.count" do
+                                work_date: Time.zone.today, hours: 4.2, report_type: 'absolute_day')
+    assert_no_difference 'AccountingPost.count' do
+      assert_difference 'WorkItem.count', -1 do
+        assert_no_difference 'Worktime.count' do
           patch :update,
                 order_id: orders(:hitobito_demo).id,
                 id: accounting_posts(:hitobito_demo_app),
@@ -232,9 +231,9 @@ class AccountingPostsControllerTest < ActionController::TestCase
   end
 
   test 'PATCH update with new work_item sets parent_id to order.work_item_id and moves worktimes' do
-    assert_no_difference "AccountingPost.count" do
-      assert_difference "WorkItem.count", +1 do
-        assert_no_difference "Worktime.count" do
+    assert_no_difference 'AccountingPost.count' do
+      assert_difference 'WorkItem.count',+1 do
+        assert_no_difference 'Worktime.count' do
           patch :update,
                 order_id: orders(:puzzletime).id,
                 id: accounting_posts(:puzzletime).id,
@@ -250,10 +249,10 @@ class AccountingPostsControllerTest < ActionController::TestCase
   end
 
   test 'DESTROY does not remove reocrd when worktimes exist on workitem' do
-    assert_no_difference "AccountingPost.count" do
+    assert_no_difference 'AccountingPost.count' do
       delete :destroy,
-            id: accounting_posts(:puzzletime).id,
-            order_id: orders(:puzzletime).id
+             id: accounting_posts(:puzzletime).id,
+             order_id: orders(:puzzletime).id
     end
     assert_redirected_to order_accounting_posts_path(orders(:puzzletime))
     assert_match(/kann nicht gelöscht werden/, flash[:alert])
@@ -261,8 +260,8 @@ class AccountingPostsControllerTest < ActionController::TestCase
 
   test 'DESTROY removes record when no worktimes on workitem' do
     accounting_posts(:puzzletime).work_item.worktimes.clear
-    assert_no_difference "WorkItem.count" do
-      assert_difference "AccountingPost.count", -1 do
+    assert_no_difference 'WorkItem.count' do
+      assert_difference 'AccountingPost.count', -1 do
         delete :destroy,
                order_id: orders(:puzzletime).id,
                id: accounting_posts(:puzzletime).id
@@ -274,8 +273,8 @@ class AccountingPostsControllerTest < ActionController::TestCase
 
   test 'DESTROY removes record and work item when no worktimes on workitem' do
     accounting_posts(:hitobito_demo_app).work_item.worktimes.clear
-    assert_difference "WorkItem.count", -1 do
-      assert_difference "AccountingPost.count", -1 do
+    assert_difference 'WorkItem.count', -1 do
+      assert_difference 'AccountingPost.count', -1 do
         delete :destroy,
                order_id: orders(:hitobito_demo).id,
                id: accounting_posts(:hitobito_demo_app).id

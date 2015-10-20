@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class PortfolioItemsControllerTest < ActionController::TestCase
-
   include CrudControllerTestHelper
 
   setup :login

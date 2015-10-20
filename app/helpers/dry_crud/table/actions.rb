@@ -17,7 +17,7 @@ module DryCrud::Table
     # Renders the passed attr with a link to the show action for
     # the current entry.
     # A block may be given to define the link path for the row entry.
-    def attr_with_show_link(attr, &block)
+    def attr_with_show_link(attr, &_block)
       sortable_attr(attr) do |e|
         path = path_args(e)
         if can?(:edit, e)
@@ -33,7 +33,7 @@ module DryCrud::Table
     # Action column to show the row entry.
     # A block may be given to define the link path for the row entry.
     # If the block returns nil, no link is rendered.
-    def show_action_col(html_options = {}, &block)
+    def show_action_col(html_options = {}, &_block)
       action_col do |e|
         link_to_if(can?(:show, e), 'Anzeigen', path_args(e), html_options.clone)
       end
@@ -42,7 +42,7 @@ module DryCrud::Table
     # Action column to edit the row entry.
     # A block may be given to define the link path for the row entry.
     # If the block returns nil, no link is rendered.
-    def edit_action_col(html_options = {}, &block)
+    def edit_action_col(html_options = {}, &_block)
       html_options = html_options.merge(title: 'Bearbeiten')
       action_col do |e|
         path = path_args(e)
@@ -55,7 +55,7 @@ module DryCrud::Table
     # Action column to destroy the row entry.
     # A block may be given to define the link path for the row entry.
     # If the block returns nil, no link is rendered.
-    def destroy_action_col(html_options = {}, &block)
+    def destroy_action_col(html_options = {}, &_block)
       html_options = html_options.merge(title: 'Löschen',
                                         data: { confirm: ti(:confirm_delete),
                                                 method: :delete })
@@ -74,6 +74,5 @@ module DryCrud::Table
     def table_action_link(icon, url, html_options = {})
       link_to(picon(icon), url, html_options)
     end
-
   end
 end

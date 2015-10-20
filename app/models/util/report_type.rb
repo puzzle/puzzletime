@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 class ReportType
-
   include Comparable
 
   attr_reader :key, :name, :accuracy
@@ -9,7 +8,7 @@ class ReportType
   START_STOP = false
 
   def self.[](key)
-  	 ALL_INSTANCES.each { |type| return type if type.key == key }
+    ALL_INSTANCES.each { |type| return type if type.key == key }
   end
 
   def to_s
@@ -38,13 +37,13 @@ class ReportType
 
   module Accessors
     def report_type
-      type = read_attribute('report_type')
+      type = self['report_type']
       type.is_a?(String) ? ReportType[type] : type
     end
 
     def report_type=(type)
       type = type.key if type.is_a? ReportType
-      write_attribute('report_type', type)
+      self['report_type'] = type
     end
   end
 
@@ -58,11 +57,10 @@ class ReportType
 
   def rounded_hours(worktime)
     hour = worktime.hours || 0.0
-    minutes = ((hour - hour.floor) * 60).round.to_s.rjust(2, "0")
-    hours = ActiveSupport::NumberHelper.number_to_delimited(hour.floor, :delimiter => "'")
+    minutes = ((hour - hour.floor) * 60).round.to_s.rjust(2, '0')
+    hours = ActiveSupport::NumberHelper.number_to_delimited(hour.floor, delimiter: "'")
     "#{hours}:#{minutes}".html_safe
   end
-
 end
 
 class StartStopType < ReportType
@@ -109,7 +107,7 @@ class AutoStartType < StartStopType
 
   def validate_worktime(worktime)
     # set defaults
-    worktime.work_date = Date.today
+    worktime.work_date = Time.zone.today
     worktime.hours = 0
     worktime.to_end_time = nil
     # validate

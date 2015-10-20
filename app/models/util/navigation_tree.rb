@@ -61,5 +61,4 @@ class NavigationTree
   def create(model_class, group_id, page)
     { model: model_class, group_id: group_id, page: page }
   end
-
 end

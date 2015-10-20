@@ -3,7 +3,6 @@
 require 'test_helper'
 
 class InvoicesControllerTest < ActionController::TestCase
-
   include CrudControllerTestHelper
 
   setup { Invoicing.instance = nil }
@@ -35,8 +34,8 @@ class InvoicesControllerTest < ActionController::TestCase
     worktimes(:wt_pz_webauftritt).update!(billable: true)
     get :new, order_id: test_entry.order_id
     assert_response :success
-    assert_equal(Date.today, entry.billing_date)
-    assert_equal(Date.today + contracts(:webauftritt).payment_period.days, entry.due_date)
+    assert_equal(Time.zone.today, entry.billing_date)
+    assert_equal(Time.zone.today + contracts(:webauftritt).payment_period.days, entry.due_date)
     assert_equal(employees(:mark, :lucien, :pascal).sort, entry.employees.sort)
     assert_equal([work_items(:webauftritt)], entry.work_items)
     assert(test_entry.order.default_billing_address_id, entry.billing_address_id)
@@ -44,11 +43,11 @@ class InvoicesControllerTest < ActionController::TestCase
 
   test 'GET preview_total' do
     params = {
-        order_id: test_entry.order_id,
-                employee_id: employees(:mark).id,
-                work_item_id: work_items(:webauftritt).id,
-                start_date: '01.12.2006',
-                end_date: '31.12.2006'
+      order_id: test_entry.order_id,
+      employee_id: employees(:mark).id,
+      work_item_id: work_items(:webauftritt).id,
+      start_date: '01.12.2006',
+      end_date: '31.12.2006'
     }
 
     xhr :get, :preview_total, params.merge(format: :js)
@@ -67,19 +66,19 @@ class InvoicesControllerTest < ActionController::TestCase
 
   def test_entry_attrs
     {
-        order_id: orders(:webauftritt).id,
-        employee_ids: Array(employees(:pascal).id),
-        work_item_ids: Array(work_items(:webauftritt).id),
-        period_from: Date.parse('01.12.2006'),
-        period_to: Date.parse('15.12.2006')
+      order_id: orders(:webauftritt).id,
+      employee_ids: Array(employees(:pascal).id),
+      work_item_ids: Array(work_items(:webauftritt).id),
+      period_from: Date.parse('01.12.2006'),
+      period_to: Date.parse('15.12.2006')
     }
   end
 
   def edit_entry_attrs
     {
-        employee_ids: Array(employees(:lucien).id),
-        period_from: Date.parse('01.12.2007'),
-        period_to: Date.parse('15.12.2007')
+      employee_ids: Array(employees(:lucien).id),
+      period_from: Date.parse('01.12.2007'),
+      period_to: Date.parse('15.12.2007')
     }
   end
 end

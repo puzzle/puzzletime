@@ -1,7 +1,6 @@
 module Invoicing
   module SmallInvoice
     class Api
-
       include Singleton
 
       ENDPOINTS = %w(invoice invoice/pdf client)
@@ -58,7 +57,7 @@ module Invoicing
       end
 
       def http(url)
-        Net::HTTP.new(url.host, url.port).tap {|http| http.use_ssl = url.scheme == 'https' }
+        Net::HTTP.new(url.host, url.port).tap { |http| http.use_ssl = url.scheme == 'https' }
       end
 
       def uri(endpoint, action, params = {})

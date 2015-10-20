@@ -12,7 +12,6 @@
 require 'test_helper'
 
 class OrderStatusTest < ActiveSupport::TestCase
-
   test 'closed is propagated to all order work items' do
     status = order_statuses(:bearbeitung)
     status.update!(closed: true)

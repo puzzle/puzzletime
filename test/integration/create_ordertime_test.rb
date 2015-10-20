@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class CreateOrdertimeTest < ActionDispatch::IntegrationTest
-
   setup :login
 
   test 'create ordertime is successfull' do
@@ -56,5 +55,4 @@ class CreateOrdertimeTest < ActionDispatch::IntegrationTest
   def login
     login_as(:pascal, new_ordertime_path)
   end
-
 end

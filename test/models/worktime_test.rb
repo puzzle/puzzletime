@@ -23,7 +23,6 @@
 require 'test_helper'
 
 class WorktimeTest < ActiveSupport::TestCase
-
   def setup
     @worktime = Worktime.new
   end
@@ -110,7 +109,7 @@ class WorktimeTest < ActiveSupport::TestCase
   def test_start_stop_validation
     @worktime.report_type = StartStopType::INSTANCE
     @worktime.employee = employees(:various_pedro)
-    @worktime.work_date = Date.today
+    @worktime.work_date = Time.zone.today
     assert !@worktime.valid?
     @worktime.from_start_time = '8:00'
     @worktime.to_end_time = '9:00'
@@ -146,10 +145,9 @@ class WorktimeTest < ActiveSupport::TestCase
   def assert_equal_time(time1, time2)
     if time1.is_a?(Time) && time2.is_a?(Time)
       assert_equal(time1.hour, time2.hour) &&
-      assert_equal(time1.min, time2.min)
+        assert_equal(time1.min, time2.min)
     else
       assert_equal time1, time2
     end
   end
-
 end

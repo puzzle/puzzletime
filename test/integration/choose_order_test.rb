@@ -3,7 +3,6 @@
 require 'test_helper'
 
 class ChooseOrderTest < ActionDispatch::IntegrationTest
-
   setup :login
 
   test 'changes path when choosable order changes' do
@@ -16,9 +15,9 @@ class ChooseOrderTest < ActionDispatch::IntegrationTest
 
   test 'changes path when hitting TAB key in order chooser' do
     timeout_safe do
-      control = find("#choosable_order_id + .selectize-control")
-      control.find(".selectize-input").click # open dropdown
-      control.find(".item + input").native.send_keys(:backspace, 's', :tab)
+      control = find('#choosable_order_id + .selectize-control')
+      control.find('.selectize-input').click # open dropdown
+      control.find('.item + input').native.send_keys(:backspace, 's', :tab)
 
       assert_equal order_path(orders(:webauftritt)), current_path
     end
@@ -45,5 +44,4 @@ class ChooseOrderTest < ActionDispatch::IntegrationTest
   def login
     login_as(:mark, order_path(order))
   end
-
 end

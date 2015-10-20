@@ -11,7 +11,6 @@
 #
 
 class OrderStatus < ActiveRecord::Base
-
   STYLES = %w(default success info warning danger)
 
   include Closable
@@ -32,9 +31,6 @@ class OrderStatus < ActiveRecord::Base
   end
 
   def propagate_closed!
-    orders.includes(:status).find_each do |order|
-      order.propagate_closed!
-    end
+    orders.includes(:status).find_each(&:propagate_closed!)
   end
-
 end

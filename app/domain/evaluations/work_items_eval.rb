@@ -2,7 +2,6 @@
 
 # abstract class for evaluation with work item divisions
 class WorkItemsEval < Evaluation
-
   self.division_method   = :work_items
   self.division_column   = 'work_items.path_ids[1]'
   self.division_join     = :work_item
@@ -13,5 +12,4 @@ class WorkItemsEval < Evaluation
   def account_id
     division.id if division
   end
-
 end

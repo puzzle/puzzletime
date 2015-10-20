@@ -17,7 +17,6 @@
 #
 
 class Order < ActiveRecord::Base
-
   include BelongingToWorkItem
   include Closable
   include Evaluatable
@@ -136,5 +135,4 @@ class Order < ActiveRecord::Base
       false
     end
   end
-
 end

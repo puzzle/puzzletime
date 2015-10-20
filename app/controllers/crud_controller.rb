@@ -10,7 +10,6 @@
 # With the help of additional callbacks, it is possible to hook into the
 # action procedures without overriding the entire method.
 class CrudController < ListController
-
   class_attribute :permitted_attrs
 
   # Defines before and after callback hooks for create, update, save and
@@ -65,7 +64,7 @@ class CrudController < ListController
       else
         format.html { render :new }
         format.json { render json: entry.errors, status: :unprocessable_entity }
-        format.js   { render partial: 'form', status: :unprocessable_entity}
+        format.js   { render partial: 'form', status: :unprocessable_entity }
       end
     end
   end
@@ -213,5 +212,4 @@ class CrudController < ListController
       before_render_edit(*methods)
     end
   end
-
 end

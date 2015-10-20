@@ -3,7 +3,6 @@
 require 'test_helper'
 
 class EditOtherOrdertimeTest < ActionDispatch::IntegrationTest
-
   fixtures :all
   setup :login
 
@@ -42,10 +41,10 @@ class EditOtherOrdertimeTest < ActionDispatch::IntegrationTest
     assert_equal 8.5, ordertime.hours
 
     post_via_redirect create_part_ordertimes_path,
-      ordertime: { employee_id: employees(:mark).id,
-                     account_id: work_items(:allgemein).id,
-                     work_date: Date.today,
-                     hours: '1:00'  }
+                      ordertime: { employee_id: employees(:mark).id,
+                                   account_id: work_items(:allgemein).id,
+                                   work_date: Time.zone.today,
+                                   hours: '1:00' }
     assert_response :success
     assert_equal '/evaluator/details', path
     assert_match(/Alle Arbeitszeiten wurden erfasst/, response.body)
@@ -54,14 +53,14 @@ class EditOtherOrdertimeTest < ActionDispatch::IntegrationTest
   end
 
   private
-  
+
   def create_ordertime
     employee = employees(:mark)
     post_via_redirect '/ordertimes',
-      ordertime: { employee_id: employee.id,
-                     account_id: work_items(:allgemein).id,
-                     work_date: Date.today,
-                     hours: '8:30'  }
+                      ordertime: { employee_id: employee.id,
+                                   account_id: work_items(:allgemein).id,
+                                   work_date: Time.zone.today,
+                                   hours: '8:30' }
     assert_response :success
     assert_equal '/evaluator/details', path
     ordertime = Ordertime.last

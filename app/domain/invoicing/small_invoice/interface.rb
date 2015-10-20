@@ -1,7 +1,6 @@
 module Invoicing
   module SmallInvoice
     class Interface < Invoicing::Interface
-
       def save_invoice(invoice, positions)
         InvoiceStore.new(invoice).save(positions)
       end

@@ -2,11 +2,13 @@ require 'test_helper'
 
 class ShowOrderServices < ActionDispatch::IntegrationTest
 
+  attr_reader :ordertime
+
   test 'click on worktime row as employee does not open edit view' do
     timeout_safe do
       create_ordertime_show_order_services_as employee_without_responsibilities
       click_worktime_row
-      assert has_no_text?("Zeit bearbeiten")
+      assert has_no_text?('Zeit bearbeiten')
       assert_equal order_order_services_path(order_id: order), current_path
     end
   end
@@ -15,7 +17,7 @@ class ShowOrderServices < ActionDispatch::IntegrationTest
     timeout_safe do
       create_ordertime_show_order_services_as employee_responsible_for_order
       click_worktime_row
-      assert has_text?("Zeit bearbeiten")
+      assert has_text?('Zeit bearbeiten')
       assert_equal edit_ordertime_path(id: ordertime.id), current_path
     end
   end
@@ -24,7 +26,7 @@ class ShowOrderServices < ActionDispatch::IntegrationTest
     timeout_safe do
       create_ordertime_show_order_services_as employee_responsible_for_different_order
       click_worktime_row
-      assert has_no_text?("Zeit bearbeiten")
+      assert has_no_text?('Zeit bearbeiten')
       assert_equal order_order_services_path(order_id: order), current_path
     end
   end
@@ -33,7 +35,7 @@ class ShowOrderServices < ActionDispatch::IntegrationTest
     timeout_safe do
       create_ordertime_show_order_services_as manager_not_responsible_for_any_order
       click_worktime_row
-      assert has_text?("Zeit bearbeiten")
+      assert has_text?('Zeit bearbeiten')
       assert_equal edit_ordertime_path(id: ordertime.id), current_path
     end
   end
@@ -76,17 +78,13 @@ class ShowOrderServices < ActionDispatch::IntegrationTest
 
   def create_ordertime(employee)
     @ordertime = Ordertime.create!(
-        employee: employee,
-        work_date: Date.today,
-        report_type: :absolute_day,
-        hours: 0.5,
-        description: "some doodling",
-        work_item: work_items(:hitobito_demo_app)
+      employee: employee,
+      work_date: Time.zone.today,
+      report_type: :absolute_day,
+      hours: 0.5,
+      description: 'some doodling',
+      work_item: work_items(:hitobito_demo_app)
     )
-  end
-
-  def ordertime
-    @ordertime
   end
 
   def order

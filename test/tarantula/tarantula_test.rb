@@ -10,7 +10,7 @@ class TarantulaTest < ActionDispatch::IntegrationTest
   # loading all fixtures.
   fixtures :all
 
-  CREDENTIALS = ['FOO', 'secret']
+  CREDENTIALS = %w(FOO secret)
 
 
   def test_as_manager
@@ -33,22 +33,22 @@ class TarantulaTest < ActionDispatch::IntegrationTest
     t.skip_uri_patterns << /evaluator\/change_period\?back_url/
     t.skip_uri_patterns << /orders\/crm_load/ # js only
 
-    t.allow_500_for /^\-\d+$/  # change period may produce such links in tarantula
-    t.allow_404_for /^\-?\d+$/  # change period may produce such links in tarantula
+    t.allow_500_for /^\-\d+$/ # change period may produce such links in tarantula
+    t.allow_404_for /^\-?\d+$/ # change period may produce such links in tarantula
     t.allow_404_for /ordertimes\/start$/  # passing invalid work_item_id
     t.allow_404_for /absencetimes\/\d+/   # absencetime deleted elsewhere
     t.allow_404_for /ordertimes\/\d+/     # ordertime deleted elsewhere
     t.allow_404_for /plannings\/\d+/      # planning deleted elsewhere
-    t.allow_404_for /employee_lists(\/\d+)?$/   # invalid employee_ids assigned
-    t.allow_404_for /invoices(\/\d+)?$/   # invalid employee_ids assigned
-    t.allow_404_for /orders(\/\d+)?$/   # invalid employee_ids assigned
-    t.allow_404_for /evaluator\/details\?category_id=(0|\d{5,12})\&/   # invalid category
-    t.allow_404_for /evaluator\/((export_csv)|(compose_report)|(book_all))\?.*division_id=\d+\&/   # division may have been deleted
-    t.allow_404_for /accounting_posts$/   # invalid order_id
+    t.allow_404_for /employee_lists(\/\d+)?$/ # invalid employee_ids assigned
+    t.allow_404_for /invoices(\/\d+)?$/ # invalid employee_ids assigned
+    t.allow_404_for /orders(\/\d+)?$/ # invalid employee_ids assigned
+    t.allow_404_for /evaluator\/details\?category_id=(0|\d{5,12})\&/ # invalid category
+    t.allow_404_for /evaluator\/((export_csv)|(compose_report)|(book_all))\?.*division_id=\d+\&/ # division may have been deleted
+    t.allow_404_for /accounting_posts$/ # invalid order_id
     t.allow_404_for /orders\/\d+\/accounting_posts\/\d+/ # may have been deleted
-    t.allow_404_for /work_items\?returning=true$/   # only handled by js
-    t.allow_404_for /order_services\/report/  # may get invalid work_item_id
-    t.allow_404_for /\?.*division_id=8/  # may have been deleted
+    t.allow_404_for /work_items\?returning=true$/ # only handled by js
+    t.allow_404_for /order_services\/report/ # may get invalid work_item_id
+    t.allow_404_for /\?.*division_id=8/ # may have been deleted
 
     unless user.management?
       # forms contain url but no submit button
@@ -83,7 +83,7 @@ class TarantulaTest < ActionDispatch::IntegrationTest
   end
 
   def create_worktimes
-    work_items = AccountingPost.all.collect{|w| w.work_item}
+    work_items = AccountingPost.all.collect(&:work_item)
     5.times do
       work_item = work_items.sample
       Ordertime.create!(
@@ -91,7 +91,7 @@ class TarantulaTest < ActionDispatch::IntegrationTest
         work_item_id: work_item.id,
         report_type: ReportType['absolute_day'],
         hours: (1..9).to_a.sample,
-        work_date: Date.today - (0..8).to_a.sample.days,
+        work_date: Time.zone.today - (0..8).to_a.sample.days,
         description: 'yada yada')
     end
     Absencetime.create!(
@@ -99,7 +99,7 @@ class TarantulaTest < ActionDispatch::IntegrationTest
       absence_id: Absence.all.sample.id,
       report_type: ReportType['absolute_day'],
       hours: 4,
-      work_date: Date.today - 1.week)
+      work_date: Time.zone.today - 1.week)
   end
 
   def create_plannings
@@ -109,8 +109,8 @@ class TarantulaTest < ActionDispatch::IntegrationTest
       Planning.create!(
         employee_id: user.id,
         work_item_id: work_item.id,
-        start_week: Week.from_date(Date.today + ((i-1) * 7)).to_integer,
-        end_week: Week.from_date(Date.today + ((i+1) * 7)).to_integer,
+        start_week: Week.from_date(Time.zone.today + ((i - 1) * 7)).to_integer,
+        end_week: Week.from_date(Time.zone.today + ((i + 1) * 7)).to_integer,
         monday_am: [true, false].sample,
         monday_pm: [true, false].sample,
         tuesday_am: [true, false].sample,
@@ -132,10 +132,9 @@ class TarantulaTest < ActionDispatch::IntegrationTest
 
   # Creates a regexp that only allows week strings from one week ago until two weeks from now.
   def outside_four_week_window
-    today = Date.today
+    today = Time.zone.today
     [today - 7, today, today + 7, today + 14].collect do |d|
       "(?!#{d.cwyear}#{d.cweek})"
     end.join
   end
-
 end

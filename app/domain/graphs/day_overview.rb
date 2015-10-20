@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 class DayOverview
-
   def initialize
     @half_days = []
     @half_days_abstract = []
@@ -30,9 +29,9 @@ class DayOverview
 
   def style
     case @half_days.size
-      when 0 then 'free'
-      when 1 then 'half_planned'
-      when 2 then 'full_planned'
+    when 0 then 'free'
+    when 1 then 'half_planned'
+    when 2 then 'full_planned'
     else 'over_planned'
     end
   end
@@ -45,5 +44,4 @@ class DayOverview
     end
     perc
   end
-
 end

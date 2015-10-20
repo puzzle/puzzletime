@@ -1,8 +1,7 @@
 # encoding: utf-8
 
 class EmployeesEval < Evaluation
-
-  self.division_column   = 'employee_id'
+  self.division_column = 'employee_id'
   self.sub_evaluation   = 'employeeworkitems'
   self.label            = 'Mitarbeiter Zeit'
   self.total_details    = false
@@ -19,9 +18,8 @@ class EmployeesEval < Evaluation
     division.id if division
   end
 
-  def division_supplement(user)
+  def division_supplement(_user)
     [[:overtime, 'Überzeit', 'right'],
      [:overtime_vacations_tooltip, '', 'left']]
   end
-
 end

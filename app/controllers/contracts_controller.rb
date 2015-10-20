@@ -31,5 +31,4 @@ class ContractsController < CrudController
   def authorize_class
     authorize!(:"#{action_name}_contract", order)
   end
-
 end

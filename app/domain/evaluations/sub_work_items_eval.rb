@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 class SubWorkItemsEval < WorkItemsEval
-
   self.division_method  = :children
   self.label            = 'Subpositionen'
 
@@ -24,6 +23,6 @@ class SubWorkItemsEval < WorkItemsEval
   end
 
   def division_column
-    "work_items.path_ids[#{category.path_ids.size+1}]"
+    "work_items.path_ids[#{category.path_ids.size + 1}]"
   end
 end

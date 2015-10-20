@@ -3,12 +3,11 @@
 require 'test_helper'
 
 class EmployeesControllerTest < ActionController::TestCase
-
   include CrudControllerTestHelper
 
   setup :login
 
-  teardown ->{ Crm.instance = nil }
+  teardown -> { Crm.instance = nil }
 
   def test_show_with_crm_existing_profile
     Crm.instance = Crm::Base.new
@@ -64,5 +63,4 @@ class EmployeesControllerTest < ActionController::TestCase
       initial_vacation_days: 5,
       management: false }
   end
-
 end

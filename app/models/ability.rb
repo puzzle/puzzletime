@@ -5,7 +5,7 @@ class Ability
 
   def initialize(user)
     @user = user
-    alias_action :create, :read, :update, :destroy, :delete, :to => :crud
+    alias_action :create, :read, :update, :destroy, :delete, to: :crud
 
     if user.management?
       management_abilities

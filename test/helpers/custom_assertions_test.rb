@@ -3,7 +3,6 @@ require 'test_helper'
 
 # Test CustomAssertions
 class CustomAssertionsTest < ActiveSupport::TestCase
-
   include CustomAssertions
 
   include CrudTestHelper
@@ -79,5 +78,4 @@ class CustomAssertionsTest < ActiveSupport::TestCase
     m.rating = 42
     m
   end
-
 end

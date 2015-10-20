@@ -10,7 +10,6 @@
 #
 
 class UserNotification < ActiveRecord::Base
-
   include Comparable
 
   # Validation helpers
@@ -28,7 +27,7 @@ class UserNotification < ActiveRecord::Base
       custom = list.where('date_from BETWEEN ? AND ? OR date_to BETWEEN ? AND ?',
                           period.start_date, period.end_date,
                           period.start_date, period.end_date).
-                    reorder('date_from')
+               reorder('date_from')
       list = custom.concat(holiday_notifications(period))
       list.sort!
     end
@@ -74,22 +73,21 @@ class UserNotification < ActiveRecord::Base
 
   def date_to
     # cache date to prevent endless string_to_date conversion
-    @date_to ||= read_attribute(:date_to)
+    @date_to ||= self[:date_to]
   end
 
   def date_to=(value)
-    write_attribute(:date_to, value)
+    self[:date_to] = value
     @date_to = nil
   end
 
   def date_from
     # cache date to prevent endless string_to_date conversion
-    @date_from ||= read_attribute(:date_from)
+    @date_from ||= self[:date_from]
   end
 
   def date_from=(value)
-    write_attribute(:date_from, value)
+    self[:date_from] = value
     @date_from = nil
   end
-
 end

@@ -1,6 +1,5 @@
 
 class BaseJob
-
   # Define the instance variables defining this job instance.
   # Only these variables will be serizalized when a job is enqueued.
   # Used as airbrake information when the job fails.
@@ -41,5 +40,4 @@ class BaseJob
       coder[key.to_s] = value
     end
   end
-
 end

@@ -15,7 +15,6 @@
 #
 
 class WorkItem < ActiveRecord::Base
-
   include Evaluatable
 
   ### ASSOCIATIONS
@@ -30,9 +29,9 @@ class WorkItem < ActiveRecord::Base
   has_many :worktimes,
            ->(work_item) do
              joins(:work_item).
-             unscope(where: :work_item_id).
-             where('worktimes.work_item_id = work_items.id AND ' \
-                   "? = ANY (work_items.path_ids)", work_item.id)
+               unscope(where: :work_item_id).
+               where('worktimes.work_item_id = work_items.id AND ' \
+                   '? = ANY (work_items.path_ids)', work_item.id)
            end
 
   ### VALIDATIONS
@@ -109,18 +108,18 @@ class WorkItem < ActiveRecord::Base
   # children that are not assigned to a special entity like client or order
   def categories
     children.joins('LEFT JOIN clients ON clients.work_item_id = work_items.id').
-             joins('LEFT JOIN orders ON orders.work_item_id = work_items.id').
-             joins('LEFT JOIN accounting_posts ON accounting_posts.work_item_id = work_items.id').
-             where(clients: { id: nil },
-                   orders: { id: nil },
-                   accounting_posts: { id: nil })
+      joins('LEFT JOIN orders ON orders.work_item_id = work_items.id').
+      joins('LEFT JOIN accounting_posts ON accounting_posts.work_item_id = work_items.id').
+      where(clients: { id: nil },
+            orders: { id: nil },
+            accounting_posts: { id: nil })
   end
 
   def employees
     Employee.joins(worktimes: :work_item).
-             where('? = ANY (work_items.path_ids)', id).
-             list.
-             uniq
+      where('? = ANY (work_items.path_ids)', id).
+      list.
+      uniq
   end
 
   def move_times!(target)
@@ -157,9 +156,7 @@ class WorkItem < ActiveRecord::Base
   end
 
   def update_child_path_names
-    children.each do |c|
-      c.update_path_names!
-    end
+    children.each(&:update_path_names!)
     @names_changed = false
     true
   end
@@ -172,5 +169,4 @@ class WorkItem < ActiveRecord::Base
   def upcase_shortname
     shortname.upcase! if shortname
   end
-
 end

@@ -17,7 +17,6 @@
 #
 
 class Employee < ActiveRecord::Base
-
   include Evaluatable
   include ReportType::Accessors
   extend Conditioner
@@ -55,15 +54,15 @@ class Employee < ActiveRecord::Base
     # Returns the logged-in Employee or nil if the login failed.
     def login(username, pwd)
       find_by_shortname_and_passwd(username.upcase, encode(pwd)) ||
-      LdapAuthenticator.new.login(username, pwd)
+        LdapAuthenticator.new.login(username, pwd)
     end
 
     def employed_ones(period)
       joins('left join employments em on em.employee_id = employees.id').
-      where('(em.end_date IS null or em.end_date >= ?) AND em.start_date <= ?',
-            period.start_date, period.end_date).
-      list.
-      uniq
+        where('(em.end_date IS null or em.end_date >= ?) AND em.start_date <= ?',
+              period.start_date, period.end_date).
+        list.
+        uniq
     end
 
     def worktimes
@@ -96,7 +95,7 @@ class Employee < ActiveRecord::Base
   end
 
   def before_create
-    self.passwd = ''    # disable password login
+    self.passwd = '' # disable password login
   end
 
   def check_passwd(pwd)
@@ -109,20 +108,20 @@ class Employee < ActiveRecord::Base
 
   # main work items this employee ever worked on
   def alltime_main_work_items
-    WorkItem.select("DISTINCT work_items.*").
-             joins('RIGHT JOIN work_items leaves ON leaves.path_ids[1] = work_items.id').
-             joins('RIGHT JOIN worktimes ON worktimes.work_item_id = leaves.id').
-             where(worktimes: { employee_id: id} ).
-             where('work_items.id IS NOT NULL').
-             list
+    WorkItem.select('DISTINCT work_items.*').
+      joins('RIGHT JOIN work_items leaves ON leaves.path_ids[1] = work_items.id').
+      joins('RIGHT JOIN worktimes ON worktimes.work_item_id = leaves.id').
+      where(worktimes: { employee_id: id }).
+      where('work_items.id IS NOT NULL').
+      list
   end
 
   def alltime_leaf_work_items
-    WorkItem.select("DISTINCT work_items.*").
-             joins('RIGHT JOIN worktimes ON worktimes.work_item_id = work_items.id').
-             where(worktimes: { employee_id: id} ).
-             where('work_items.id IS NOT NULL').
-             list
+    WorkItem.select('DISTINCT work_items.*').
+      joins('RIGHT JOIN worktimes ON worktimes.work_item_id = work_items.id').
+      where(worktimes: { employee_id: id }).
+      where('work_items.id IS NOT NULL').
+      list
   end
 
   def statistics
@@ -134,7 +133,7 @@ class Employee < ActiveRecord::Base
   # Returns the current employement percent value.
   # Returns nil if no current employement is present.
   def current_percent
-    percent(Date.today)
+    percent(Time.zone.today)
   end
 
   # Returns the employment percent value for a given employment date
@@ -145,7 +144,7 @@ class Employee < ActiveRecord::Base
 
   # Returns the employement at the given date, nil if none is present.
   def employment_at(date)
-    employments.where('start_date <= ? AND (end_date IS NULL OR end_date >= ?)', date, date).first
+    employments.find_by('start_date <= ? AND (end_date IS NULL OR end_date >= ?)', date, date)
   end
 
   private
@@ -161,5 +160,4 @@ class Employee < ActiveRecord::Base
       end
     end
   end
-
 end

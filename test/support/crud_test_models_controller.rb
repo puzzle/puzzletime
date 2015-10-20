@@ -52,8 +52,8 @@ class CrudTestModelsController < CrudController #:nodoc:
     entries = super
     if params[:filter]
       entries = entries.where(['rating < ?', 3])
-                       .except(:order)
-                       .order('children DESC')
+                .except(:order)
+                .order('children DESC')
     end
     entries
   end
@@ -88,20 +88,20 @@ class CrudTestModelsController < CrudController #:nodoc:
 
   # create callback methods that record the before/after callbacks
   [:create, :update, :save, :destroy].each do |a|
-    callback = "before_#{a.to_s}"
+    callback = "before_#{a}"
     send(callback.to_sym, :"#{HANDLE_PREFIX}#{callback}")
-    callback = "after_#{a.to_s}"
+    callback = "after_#{a}"
     send(callback.to_sym, :"#{HANDLE_PREFIX}#{callback}")
   end
 
   # create callback methods that record the before_render callbacks
   [:index, :show, :new, :edit, :form].each do |a|
-    callback = "before_render_#{a.to_s}"
+    callback = "before_render_#{a}"
     send(callback.to_sym, :"#{HANDLE_PREFIX}#{callback}")
   end
 
   # handle the called callbacks
-  def method_missing(sym, *args)
+  def method_missing(sym, *_args)
     if sym.to_s.starts_with?(HANDLE_PREFIX)
       called_callback(sym.to_s[HANDLE_PREFIX.size..-1].to_sym)
     end
@@ -112,5 +112,4 @@ class CrudTestModelsController < CrudController #:nodoc:
     @called_callbacks ||= []
     @called_callbacks << callback
   end
-
 end

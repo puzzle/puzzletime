@@ -1,6 +1,5 @@
 # encoding: UTF-8
 class Order::Cockpit
-
   attr_reader :order, :rows
 
   EM_DASH = '―'
@@ -45,7 +44,6 @@ class Order::Cockpit
 
   # hours by the last invoice date. including non-billable
   def total_hours_at_last_invoice
-
     order.worktimes.in_period(Period.new(nil, last_invoice_date)).sum(:hours).to_f
   end
 
@@ -78,7 +76,6 @@ class Order::Cockpit
 
   def sub_levels?
     accounting_posts.size != 1 ||
-    accounting_posts.first.work_item_id != order.work_item_id
+      accounting_posts.first.work_item_id != order.work_item_id
   end
-
 end

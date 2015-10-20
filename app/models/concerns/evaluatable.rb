@@ -5,7 +5,6 @@
 # A class mixin Evaluatable has to provide a has_many relation for worktimes.
 # See Evaluation for further details.
 module Evaluatable
-
   include Comparable
   include Conditioner
 
@@ -25,8 +24,7 @@ module Evaluatable
   end
 
   def <=>(other)
-    return super(other) if self.kind_of? Class
+    return super(other) if self.is_a? Class
     label_verbose <=> other.label_verbose
   end
-
 end

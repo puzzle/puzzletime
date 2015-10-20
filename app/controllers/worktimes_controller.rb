@@ -4,7 +4,6 @@
 # Diplomarbeit 2149, Xavier Hayoz
 
 class WorktimesController < CrudController
-
   authorize_resource :worktime, except: :index, parent: false
 
   helper_method :record_other?
@@ -66,7 +65,7 @@ class WorktimesController < CrudController
       elsif @period && @period.length == 1
         @worktime.work_date = @period.start_date
       else
-        @worktime.work_date = Date.today
+        @worktime.work_date = Time.zone.today
       end
     end
   end
@@ -74,9 +73,9 @@ class WorktimesController < CrudController
   def check_overlapping
     if @worktime.report_type.is_a? StartStopType
       conditions = ['NOT (work_item_id IS NULL AND absence_id IS NULL) AND ' \
-                    'employee_id = :employee_id AND work_date = :work_date AND id <> :id AND (' +
-                    '(from_start_time <= :start_time AND to_end_time >= :end_time) OR ' +
-                    '(from_start_time >= :start_time AND from_start_time < :end_time) OR ' +
+                    'employee_id = :employee_id AND work_date = :work_date AND id <> :id AND (' \
+                    '(from_start_time <= :start_time AND to_end_time >= :end_time) OR ' \
+                    '(from_start_time >= :start_time AND from_start_time < :end_time) OR ' \
                     '(to_end_time > :start_time AND to_end_time <= :end_time))',
                     { employee_id: @worktime.employee_id,
                       work_date: @worktime.work_date,
@@ -95,12 +94,12 @@ class WorktimesController < CrudController
   def set_existing
     @work_date = @worktime.work_date
     @existing = Worktime.where('employee_id = ? AND work_date = ?', @worktime.employee_id, @work_date).
-                         order('type DESC, from_start_time, work_item_id').
-                         includes(:work_item, :absence)
+                order('type DESC, from_start_time, work_item_id').
+                includes(:work_item, :absence)
   end
 
   def set_week_days
-    @selected_date = params[:week_date].present? ? Date.parse(params[:week_date]) : Date.today
+    @selected_date = params[:week_date].present? ? Date.parse(params[:week_date]) : Time.zone.today
     @week_days = (@selected_date.at_beginning_of_week..@selected_date.at_end_of_week).to_a
     @next_week_date = @week_days.last + 1.day
     @previous_week_date = @week_days.first - 7.day
@@ -112,9 +111,9 @@ class WorktimesController < CrudController
 
   def list_entries
     @worktimes = Worktime.where('employee_id = ? AND work_date >= ? AND work_date <= ?', @user.id, @week_days.first, @week_days.last)
-                         .includes(:work_item, :absence)
-                         .order('work_date, from_start_time, work_item_id')
-    @daily_worktimes = @worktimes.group_by{ |w| w.work_date }
+                 .includes(:work_item, :absence)
+                 .order('work_date, from_start_time, work_item_id')
+    @daily_worktimes = @worktimes.group_by(&:work_date)
     @worktimes
   end
 
@@ -161,8 +160,8 @@ class WorktimesController < CrudController
 
   def other_employee_param?
     params.key?(model_identifier) &&
-    model_params[:employee_id] &&
-    model_params[:employee_id] != @user.id
+      model_params[:employee_id] &&
+      model_params[:employee_id] != @user.id
   end
 
   def append_flash(msg)
@@ -204,5 +203,4 @@ class WorktimesController < CrudController
   def ivar_name(klass)
     klass < Worktime ? Worktime.model_name.param_key : super(klass)
   end
-
 end

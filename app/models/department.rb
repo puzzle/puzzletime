@@ -10,7 +10,6 @@
 
 
 class Department < ActiveRecord::Base
-
   include Evaluatable
 
   has_many :orders
@@ -28,8 +27,8 @@ class Department < ActiveRecord::Base
 
   def worktimes
     Worktime.joins(:work_item).
-             joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)').
-             where(orders: { department_id: id })
+      joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)').
+      where(orders: { department_id: id })
   end
 
   ##### interface methods for Evaluatable #####
@@ -37,5 +36,4 @@ class Department < ActiveRecord::Base
   def self.worktimes
     Worktime.all
   end
-
 end

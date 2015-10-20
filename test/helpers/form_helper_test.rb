@@ -3,7 +3,6 @@ require 'test_helper'
 
 # Test FormHelper
 class FormHelperTest < ActionView::TestCase
-
   include UtilityHelper
   include FormatHelper
   include I18nHelper

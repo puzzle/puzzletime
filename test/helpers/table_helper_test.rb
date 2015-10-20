@@ -3,7 +3,6 @@ require 'test_helper'
 
 # Test TableHelper
 class TableHelperTest < ActionView::TestCase
-
   include UtilityHelper
   include FormatHelper
   include I18nHelper
@@ -30,7 +29,7 @@ class TableHelperTest < ActionView::TestCase
     end
   end
 
-  def can?(action, resource)
+  def can?(_action, _resource)
     true
   end
 
@@ -50,8 +49,8 @@ class TableHelperTest < ActionView::TestCase
 
   test 'table with attrs' do
     expected = DryCrud::Table::Builder.table(
-                 %w(foo bar), self,
-                 class: 'table table-striped table-hover table-condensed') do |t|
+      %w(foo bar), self,
+      class: 'table table-striped table-hover table-condensed') do |t|
       t.attrs :size, :upcase
     end
     actual = plain_table(%w(foo bar), :size, :upcase)
@@ -222,5 +221,4 @@ class TableHelperTest < ActionView::TestCase
   def entry
     @entry ||= CrudTestModel.first
   end
-
 end

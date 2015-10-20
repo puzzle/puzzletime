@@ -3,7 +3,6 @@ require 'test_helper'
 
 # Test FormatHelper
 class FormatHelperTest < ActionView::TestCase
-
   include UtilityHelper
   include I18nHelper
   include CrudTestHelper
@@ -21,29 +20,29 @@ class FormatHelperTest < ActionView::TestCase
 
   test 'format hour' do
     assert_nil format_hour(nil)
-    assert_equal "0.00", format_hour(0.0001)
-    assert_equal "0.50", format_hour(0.5)
-    assert_equal "8.33", format_hour(8.33333)
-    assert_equal "1&#39;234.56", format_hour(1234.56)
+    assert_equal '0.00', format_hour(0.0001)
+    assert_equal '0.50', format_hour(0.5)
+    assert_equal '8.33', format_hour(8.33333)
+    assert_equal '1&#39;234.56', format_hour(1234.56)
   end
 
   test 'format day' do
-    assert_equal "Mo 16.6.", format_day(Date.new(2014, 6, 16))
-    assert_equal "Mi 18.6.", format_day(Date.new(2014, 6, 18))
-    assert_equal "Do 18.6.", format_day(Date.new(2099, 6, 18))
-    assert_equal "Donnerstag, 18.6.", format_day(Date.new(2099, 6, 18), true)
+    assert_equal 'Mo 16.6.', format_day(Date.new(2014, 6, 16))
+    assert_equal 'Mi 18.6.', format_day(Date.new(2014, 6, 18))
+    assert_equal 'Do 18.6.', format_day(Date.new(2099, 6, 18))
+    assert_equal 'Donnerstag, 18.6.', format_day(Date.new(2099, 6, 18), true)
   end
 
   test 'format days' do
-    assert_equal "5.0 Tage", format_days(5.0001)
-    assert_equal "-1.23 Tage", format_days(-1.23)
+    assert_equal '5.0 Tage', format_days(5.0001)
+    assert_equal '-1.23 Tage', format_days(-1.23)
   end
 
   test 'labeled text as block' do
     result = labeled('label') { 'value' }
 
     assert result.html_safe?
-    assert_dom_equal '<dt>label</dt> ' +
+    assert_dom_equal '<dt>label</dt> ' \
                      "<dd class='value'>value</dd>",
                      result.squish
   end
@@ -52,7 +51,7 @@ class FormatHelperTest < ActionView::TestCase
     result = labeled('label', '')
 
     assert result.html_safe?
-    assert_dom_equal '<dt>label</dt> ' +
+    assert_dom_equal '<dt>label</dt> ' \
                      "<dd class='value'>#{EMPTY_STRING}</dd>",
                      result.squish
   end
@@ -61,7 +60,7 @@ class FormatHelperTest < ActionView::TestCase
     result = labeled('label', 'value <unsafe>')
 
     assert result.html_safe?
-    assert_dom_equal '<dt>label</dt> ' +
+    assert_dom_equal '<dt>label</dt> ' \
                      "<dd class='value'>value &lt;unsafe&gt;</dd>",
                      result.squish
   end
@@ -69,7 +68,7 @@ class FormatHelperTest < ActionView::TestCase
   test 'labeled attr' do
     result = labeled_attr('foo', :size)
     assert result.html_safe?
-    assert_dom_equal '<dt>Size</dt> ' +
+    assert_dom_equal '<dt>Size</dt> ' \
                      "<dd class='value'>3 chars</dd>",
                      result.squish
   end
@@ -123,7 +122,7 @@ class FormatHelperTest < ActionView::TestCase
       m = crud_test_models(:AAAAA)
       assert_equal '1.10', format_type(m, :rating)
 
-      m.rating = 3.145001   # you never know with these floats..
+      m.rating = 3.145001 # you never know with these floats..
       assert_equal '3.15', format_type(m, :rating)
     end
 
@@ -190,5 +189,4 @@ class FormatHelperTest < ActionView::TestCase
     assert_equal 'With Object', captionize('With object', Object.new)
     assert !captionize('bad <title>').html_safe?
   end
-
 end

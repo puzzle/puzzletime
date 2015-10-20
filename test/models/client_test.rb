@@ -13,7 +13,6 @@
 require 'test_helper'
 
 class ClientTest < ActiveSupport::TestCase
-
   test 'client with worktimes may not be destroyed' do
     assert_no_difference('WorkItem.count') do
       assert_no_difference('Client.count') do
@@ -40,5 +39,4 @@ class ClientTest < ActiveSupport::TestCase
       end
     end
   end
-
 end

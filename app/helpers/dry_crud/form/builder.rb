@@ -1,7 +1,6 @@
 # encoding: UTF-8
 
 module DryCrud::Form
-
   # A form builder that automatically selects the corresponding input field
   # for ActiveRecord column types. Convenience methods for each column type
   # allow one to customize the different fields.
@@ -15,7 +14,6 @@ module DryCrud::Form
   # See the Control class for how to customize the html rendered for a
   # single input field.
   class Builder < ActionView::Helpers::FormBuilder
-
     class_attribute :control_class
     self.control_class = Control
 
@@ -246,8 +244,8 @@ module DryCrud::Form
                    @object.class.validators_on(attr_id)
       validators.any? do |v|
         v.kind == :presence &&
-        !v.options.key?(:if) &&
-        !v.options.key?(:unless)
+          !v.options.key?(:if) &&
+          !v.options.key?(:unless)
       end
     end
 
@@ -257,8 +255,8 @@ module DryCrud::Form
       attr_plain, attr_id = assoc_and_id_attr(attr)
       # errors aint a Hash
       # rubocop:disable HashMethods
-      @object.errors.has_key?(attr_plain.to_sym) ||
-      @object.errors.has_key?(attr_id.to_sym)
+      @object.errors.key?(attr_plain.to_sym) ||
+        @object.errors.key?(attr_id.to_sym)
       # rubocop:enable HashMethods
     end
 
@@ -356,6 +354,5 @@ module DryCrud::Form
                                   options[:cancel_url_edit]
       url || options[:cancel_url]
     end
-
   end
 end

@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 class ExtendedCapacityReport < BaseCapacityReport
-
   def initialize(current_period)
     super(current_period, 'puzzletime_detaillierte_auslastung')
   end
@@ -97,7 +96,7 @@ class ExtendedCapacityReport < BaseCapacityReport
         parent = child.parent if child.parent
 
         internal_work_item_hours = extract_billable_hours(times, false)
-        internal_work_item_hours += extract_billable_hours(times, true) # hack because there may be entries with wrong $-flag
+        internal_work_item_hours += extract_billable_hours(times, true) # HACK: because there may be entries with wrong $-flag
         internal_work_item_total_hours += internal_work_item_hours
 
         if internal_work_item_hours.abs > 0.001
@@ -154,7 +153,7 @@ class ExtendedCapacityReport < BaseCapacityReport
     end
   end
 
-  def work_item_code(work_item, subwork_item)
+  def work_item_code(_work_item, subwork_item)
     subwork_item.path_shortnames
   end
 
@@ -173,5 +172,4 @@ class ExtendedCapacityReport < BaseCapacityReport
   def subwork_item_label(work_item, subwork_item)
     subwork_item == work_item ? '' : subwork_item.label
   end
-
 end

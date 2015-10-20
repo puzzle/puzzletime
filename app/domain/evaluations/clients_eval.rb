@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 class ClientsEval < Evaluation
-
   self.division_column   = 'work_items.path_ids[1]'
   self.division_join     = :work_item
   self.sub_evaluation   = 'clientworkitems'
@@ -12,7 +11,7 @@ class ClientsEval < Evaluation
     super(Client)
   end
 
-  def divisions(period = nil)
+  def divisions(_period = nil)
     WorkItem.joins(:client).list
   end
 
@@ -20,5 +19,4 @@ class ClientsEval < Evaluation
     return if division_id.nil?
     @division = WorkItem.find(division_id.to_i)
   end
-
 end

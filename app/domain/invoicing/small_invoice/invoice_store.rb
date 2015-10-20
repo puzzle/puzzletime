@@ -2,7 +2,6 @@ module Invoicing
   module SmallInvoice
     # Saves invoices to Small Invoice
     class InvoiceStore
-
       attr_reader :invoice
 
       def initialize(invoice)
@@ -38,7 +37,6 @@ module Invoicing
       def api
         Api.instance
       end
-
     end
   end
 end

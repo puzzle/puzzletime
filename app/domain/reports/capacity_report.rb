@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 class CapacityReport < BaseCapacityReport
-
   def initialize(period)
     super(period, 'puzzletime_auslastung')
   end
@@ -19,7 +18,7 @@ class CapacityReport < BaseCapacityReport
             unless processed_ids.include? id
               processed_ids.push id
               result = find_billable_time(employee, id, period)
-              sum = result.collect { |w| w.hours }.sum
+              sum = result.collect(&:hours).sum
               parent = child = WorkItem.find(id)
               parent = child.parent if child.parent
               append_entry(csv,
@@ -41,6 +40,7 @@ class CapacityReport < BaseCapacityReport
   end
 
   private
+
   def append_entry(csv, employee, period, work_item_label, sub_work_item_label, billable_hours, not_billable_hours)
     if (billable_hours + not_billable_hours).abs > 0.001
       csv << [employee.shortname,
@@ -63,5 +63,4 @@ class CapacityReport < BaseCapacityReport
     end
     periods
   end
-
 end

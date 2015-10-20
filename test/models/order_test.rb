@@ -18,7 +18,6 @@
 require 'test_helper'
 
 class OrderTest < ActiveSupport::TestCase
-
   test 'order without client is not valid' do
     order = Fabricate(:order)
     item = order.build_work_item(name: 'New Order', shortname: 'NEOR')

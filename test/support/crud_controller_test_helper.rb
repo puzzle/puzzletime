@@ -24,7 +24,7 @@ module CrudControllerTestHelper
   def test_index_search # :nodoc:
     field = @controller.search_columns.first
     val = field && test_entry[field].to_s
-    return if val.blank?   # does not support search or no value in this field
+    return if val.blank? # does not support search or no value in this field
 
     get :index, test_params(q: val[0..((val.size + 1) / 2)])
     assert_response :success
@@ -162,12 +162,12 @@ module CrudControllerTestHelper
   def assert_entry_attrs_equal(object, attrs)
     attrs.each do |key, value|
       if key.to_s.end_with?('_attributes')
-        sub_entry = object.send(key.to_s[0..(-'_attributes'.size-1)])
+        sub_entry = object.send(key.to_s[0..(-'_attributes'.size - 1)])
         assert_entry_attrs_equal(sub_entry, value)
       else
         actual = object.send(key)
         assert_equal value, actual,
-                     "#{key} is expected to be <#{value.inspect}>, " +
+                     "#{key} is expected to be <#{value.inspect}>, " \
                      "got <#{actual.inspect}>"
       end
     end

@@ -3,7 +3,6 @@
 require 'test_helper'
 
 class CreateOrderTest < ActionDispatch::IntegrationTest
-
   setup :login
 
   teardown :reset_crm
@@ -132,7 +131,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
     timeout_safe do
       selectize('client_work_item_id', 'Puzzle')
       check('category_active')
-      element = find("#category_work_item_id + .selectize-control")
+      element = find('#category_work_item_id + .selectize-control')
       element.find('.selectize-input').click # open dropdown
       options = element.find('.selectize-dropdown-content')
       assert options.has_selector?('div', count: 2)
@@ -153,9 +152,9 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       fill_in('work_item_shortname', with: 'NECA')
       click_button 'Speichern'
 
-      assert find("#category_work_item_id + .selectize-control").
+      assert find('#category_work_item_id + .selectize-control').
         has_selector?('.selectize-input .item', text: 'New Category')
-      #sleep 0.2
+      # sleep 0.2
       id = find('#category_work_item_id', visible: false)['value']
 
       category = WorkItem.find(id)
@@ -187,17 +186,17 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
 
       click_add_contact
 
-      selectize = find("#order_order_contacts_attributes_0_contact_id_or_crm + .selectize-control")
+      selectize = find('#order_order_contacts_attributes_0_contact_id_or_crm + .selectize-control')
       selectize.find('.selectize-input').click # populate & open dropdown
-      assert selectize.has_no_selector?(".selectize-dropdown-content .option")
+      assert selectize.has_no_selector?('.selectize-dropdown-content .option')
 
       selectize('client_work_item_id', 'Puzzle')
 
       click_add_contact
 
-      selectize = find("#order_order_contacts_attributes_1_contact_id_or_crm + .selectize-control")
+      selectize = find('#order_order_contacts_attributes_1_contact_id_or_crm + .selectize-control')
       selectize.find('.selectize-input').click # populate & open dropdown
-      assert selectize.has_selector?(".selectize-dropdown-content .option", count: 2)
+      assert selectize.has_selector?('.selectize-dropdown-content .option', count: 2)
     end
   end
 
@@ -226,18 +225,16 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
   test 'order name and new client is filled from crm' do
     timeout_safe do
       Crm.instance = Crm::Highrise.new
-      Crm.instance.expects(:find_order).with('123').returns({
-        name: 'New Order',
-        key: 123,
-        url: 'http://crm/orders/123',
-        client: { name: 'New Client', key: '456' }
-      })
+      Crm.instance.expects(:find_order).with('123').returns(name: 'New Order',
+                                                            key: 123,
+                                                            url: 'http://crm/orders/123',
+                                                            client: { name: 'New Client', key: '456' })
       Crm.instance.expects(:find_client_contacts).returns(
         [{ lastname: 'Miller', firstname: 'John', crm_key: 123 },
          { lastname: 'Nader', firstname: 'Fred', crm_key: 456 }]
       ).twice
       Crm.instance.expects(:find_person).with('456').returns(
-        { lastname: 'Nader', firstname: 'Fred', crm_key: 456 })
+        lastname: 'Nader', firstname: 'Fred', crm_key: 456)
 
       # reload after crm change
       visit(new_order_path)
@@ -270,12 +267,10 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
   test 'order name and new client is filled from crm, category is added' do
     timeout_safe do
       Crm.instance = Crm::Highrise.new
-      Crm.instance.expects(:find_order).with('123').returns({
-        name: 'New Order',
-        key: 123,
-        url: 'http://crm/orders/123',
-        client: { name: 'New Client', key: '456' }
-      })
+      Crm.instance.expects(:find_order).with('123').returns(name: 'New Order',
+                                                            key: 123,
+                                                            url: 'http://crm/orders/123',
+                                                            client: { name: 'New Client', key: '456' })
       Crm.instance.expects(:find_client_contacts).returns([]).twice
 
       # reload after crm change
@@ -308,18 +303,16 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       Crm.instance = Crm::Base.new
       client = clients(:swisstopo)
       client.update!(crm_key: '456')
-      Crm.instance.expects(:find_order).with('123').returns({
-        name: 'New Order',
-        key: 123,
-        url: 'http://crm/orders/123',
-        client: { name: client.name, key: '456' }
-      })
+      Crm.instance.expects(:find_order).with('123').returns(name: 'New Order',
+                                                            key: 123,
+                                                            url: 'http://crm/orders/123',
+                                                            client: { name: client.name, key: '456' })
       Crm.instance.expects(:find_client_contacts).returns(
         [{ lastname: 'Miller', firstname: 'John', crm_key: 123 },
          { lastname: 'Nader', firstname: 'Fred', crm_key: 456 }]
       ).twice
       Crm.instance.expects(:find_person).with('456').returns(
-        { lastname: 'Nader', firstname: 'Fred', crm_key: 456 })
+        lastname: 'Nader', firstname: 'Fred', crm_key: 456)
 
       # reload after crm change
       visit(new_order_path)
@@ -346,12 +339,10 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       Crm.instance = Crm::Highrise.new
       client = clients(:swisstopo)
       client.update!(crm_key: '456')
-      Crm.instance.expects(:find_order).with('123').returns({
-        name: 'New Order',
-        key: 123,
-        url: 'http://crm/orders/123',
-        client: { name: client.name, key: '456' }
-      })
+      Crm.instance.expects(:find_order).with('123').returns(name: 'New Order',
+                                                            key: 123,
+                                                            url: 'http://crm/orders/123',
+                                                            client: { name: client.name, key: '456' })
       Crm.instance.expects(:find_client_contacts).returns([]).twice
 
       # reload after crm change
@@ -377,12 +368,10 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       Crm.instance = Crm::Highrise.new
       client = clients(:puzzle)
       client.update!(crm_key: '456')
-      Crm.instance.expects(:find_order).with('123').returns({
-        name: 'New Order',
-        key: 123,
-        url: 'http://crm/orders/123',
-        client: { name: client.name, key: '456' }
-      })
+      Crm.instance.expects(:find_order).with('123').returns(name: 'New Order',
+                                                            key: 123,
+                                                            url: 'http://crm/orders/123',
+                                                            client: { name: client.name, key: '456' })
       Crm.instance.expects(:find_client_contacts).returns([]).twice
 
       # reload after crm change
@@ -413,18 +402,16 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       Crm.instance = Crm::Highrise.new
       client = clients(:puzzle)
       client.update!(crm_key: '456')
-      Crm.instance.expects(:find_order).with('123').returns({
-        name: 'New Order',
-        key: 123,
-        url: 'http://crm/orders/123',
-        client: { name: client.name, key: '456' }
-      })
+      Crm.instance.expects(:find_order).with('123').returns(name: 'New Order',
+                                                            key: 123,
+                                                            url: 'http://crm/orders/123',
+                                                            client: { name: client.name, key: '456' })
       Crm.instance.expects(:find_client_contacts).returns(
         [{ lastname: 'Miller', firstname: 'John', crm_key: 123 },
          { lastname: 'Nader', firstname: 'Fred', crm_key: 456 }]
       ).twice
       Crm.instance.expects(:find_person).with('456').returns(
-        { lastname: 'Nader', firstname: 'Fred', crm_key: 456 })
+        lastname: 'Nader', firstname: 'Fred', crm_key: 456)
 
       # reload after crm change
       visit(new_order_path)
@@ -447,12 +434,12 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       assert_equal 'New Order', find('#order_work_item_attributes_name')['value']
       assert has_unchecked_field?('category_active')
 
-      selecti0 = find("#order_order_contacts_attributes_0_contact_id_or_crm + .selectize-control")
+      selecti0 = find('#order_order_contacts_attributes_0_contact_id_or_crm + .selectize-control')
       assert selecti0.has_selector?('.selectize-input .item', text: 'Hauswart Hans')
       selecti0.find('.selectize-input').click # populate & open dropdown
-      assert selecti0.has_selector?(".selectize-dropdown-content .option", count: 3)
+      assert selecti0.has_selector?('.selectize-dropdown-content .option', count: 3)
 
-      selecti1 = find("#order_order_contacts_attributes_1_contact_id_or_crm + .selectize-control")
+      selecti1 = find('#order_order_contacts_attributes_1_contact_id_or_crm + .selectize-control')
       assert selecti1.has_selector?('.selectize-input .item', text: 'Nader Fred')
 
       click_add_contact
@@ -480,12 +467,10 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       Crm.instance = Crm::Highrise.new
       order = orders(:puzzletime)
       order.update!(crm_key: '123')
-      Crm.instance.expects(:find_order).with('123').returns({
-        name: 'New Order',
-        key: 123,
-        url: 'http://crm/orders/123',
-        client: { name: 'Puzzle', key: '456' }
-      })
+      Crm.instance.expects(:find_order).with('123').returns(name: 'New Order',
+                                                            key: 123,
+                                                            url: 'http://crm/orders/123',
+                                                            client: { name: 'Puzzle', key: '456' })
 
       # reload after crm change
       visit(new_order_path)
@@ -509,22 +494,22 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       click_link('Übernehmen')
 
       assert_match /crm error occurred/, find('#crm_key .help-block').text
-      assert_equal "", find('#client_work_item_id', visible: false)['value']
+      assert_equal '', find('#client_work_item_id', visible: false)['value']
     end
   end
 
   test 'create order team members fields' do
     visit(new_order_path)
 
-    assert has_no_field?("order_order_team_members_attributes_0_employee_id")
+    assert has_no_field?('order_order_team_members_attributes_0_employee_id')
     assert_no_selector("a[data-object-class='order-team-member'].remove_nested_fields_link")
 
     find("a[data-object-class='order_team_member'].add_nested_fields_link").click
-    assert find_field("order_order_team_members_attributes_0_employee_id", visible: false)[:class].include?('selectized')
+    assert find_field('order_order_team_members_attributes_0_employee_id', visible: false)[:class].include?('selectized')
     assert_selector("a[data-object-class='order_team_member'].remove_nested_fields_link", count: 1)
 
     find("a[data-object-class='order_team_member'].add_nested_fields_link").click
-    assert find_field("order_order_team_members_attributes_1_employee_id", visible: false)[:class].include?('selectized')
+    assert find_field('order_order_team_members_attributes_1_employee_id', visible: false)[:class].include?('selectized')
     assert_selector("a[data-object-class='order_team_member'].remove_nested_fields_link", count: 2)
   end
 

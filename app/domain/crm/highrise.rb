@@ -1,10 +1,9 @@
 module Crm
   class Highrise < Base
-
     include ActionView::Helpers::AssetUrlHelper
 
     def crm_key_label
-      src = ActionController::Base.helpers.image_path("highrise.png")
+      src = ActionController::Base.helpers.image_path('highrise.png')
       "<img src=\"#{src}\" width=\"19\" height=\"16\" /> #{crm_key_name}".html_safe
     end
 
@@ -30,7 +29,7 @@ module Crm
 
     def verify_deal_party_type(deal)
       unless deal.party.type.downcase == 'company'
-        raise Crm::Error.new(I18n.t('error.crm.highrise.order_not_on_company', party_type: deal.party.type))
+        fail Crm::Error.new(I18n.t('error.crm.highrise.order_not_on_company', party_type: deal.party.type))
       end
     end
 
@@ -142,11 +141,11 @@ module Crm
 
     def record_to_params(record, prefix = 'record')
       {
-          "#{prefix}_type"    => record.class.name,
-          "#{prefix}_id"      => record.id,
-          "#{prefix}_label"   => record.try(:label) || record.to_s,
-          "#{prefix}_errors"  => record.errors.messages,
-          "#{prefix}_changes" => record.changes
+        "#{prefix}_type"    => record.class.name,
+        "#{prefix}_id"      => record.id,
+        "#{prefix}_label"   => record.try(:label) || record.to_s,
+        "#{prefix}_errors"  => record.errors.messages,
+        "#{prefix}_changes" => record.changes
       }
     end
   end

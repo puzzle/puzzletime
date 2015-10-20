@@ -13,7 +13,6 @@
 #
 
 class OrderTarget < ActiveRecord::Base
-
   RATINGS = %w(green orange red)
 
   belongs_to :order
@@ -24,12 +23,13 @@ class OrderTarget < ActiveRecord::Base
   validates :comment, presence: { if: :target_critical? }
   validates :target_scope_id, uniqueness: { scope: :order_id }
 
-  scope :list, -> { includes(:target_scope).
-                    references(:target_scope).
-                    order('target_scopes.position') }
+  scope :list, lambda {
+    includes(:target_scope).
+      references(:target_scope).
+      order('target_scopes.position')
+  }
 
   def target_critical?
     rating != RATINGS.first
   end
-
 end

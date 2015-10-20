@@ -3,7 +3,6 @@
 require 'test_helper'
 
 class MultiWorktimesControllerTest < ActionController::TestCase
-
   setup :login
 
   test 'GET edit without worktimes fails' do
@@ -101,5 +100,4 @@ class MultiWorktimesControllerTest < ActionController::TestCase
   def order
     orders(:puzzletime)
   end
-
 end

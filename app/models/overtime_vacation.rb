@@ -11,7 +11,6 @@
 
 
 class OvertimeVacation < ActiveRecord::Base
-
   belongs_to :employee
 
   validates_by_schema
@@ -23,5 +22,4 @@ class OvertimeVacation < ActiveRecord::Base
   def to_s
     "von #{hours} Stunden#{" am #{I18n.l(transfer_date)}" if transfer_date}"
   end
-
 end

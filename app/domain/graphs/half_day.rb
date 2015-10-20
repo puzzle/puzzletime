@@ -6,5 +6,4 @@ class HalfDay
   def initialize(label)
     @label = label
   end
-
 end

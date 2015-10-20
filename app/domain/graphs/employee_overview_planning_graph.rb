@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 class EmployeeOverviewPlanningGraph < OverviewPlanningGraph
-
   include PeriodIterable
 
   attr_reader :employee
@@ -52,6 +51,7 @@ class EmployeeOverviewPlanningGraph < OverviewPlanningGraph
   end
 
   private
+
   def add_absences_to_cache(absence_graph)
     absence_graph.each_day do |date|
       absence = absence_graph.absence(date)
@@ -64,13 +64,12 @@ class EmployeeOverviewPlanningGraph < OverviewPlanningGraph
   end
 
   def employement_percent(date)
-    employments = @employee.employments.select { |e| e.start_date <= date && (e.end_date.nil? or e.end_date >= date) }
+    employments = @employee.employments.select { |e| e.start_date <= date && (e.end_date.nil? || e.end_date >= date) }
     employments[0].percent if employments.size == 1
   end
 
   def period_average_employment_percent
-    weeks_percents = enumerate_weeks.map {|week| employement_percent(week) || 0 }
+    weeks_percents = enumerate_weeks.map { |week| employement_percent(week) || 0 }
     weeks_percents.sum / weeks_percents.size.to_f
   end
-
 end

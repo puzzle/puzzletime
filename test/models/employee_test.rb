@@ -20,7 +20,6 @@
 require 'test_helper'
 
 class EmployeeTest < ActiveSupport::TestCase
-
   def test_half_year_employment
     employee = Employee.find(1)
     period = year_period(employee)
@@ -94,5 +93,4 @@ class EmployeeTest < ActiveSupport::TestCase
   def year_period(employee)
     employee.statistics.send :employment_period_to, Date.new(2006, 12, 31)
   end
-
 end

@@ -3,7 +3,6 @@ require 'test_helper'
 
 # Test I18nHelper
 class I18nHelperTest < ActionView::TestCase
-
   include CrudTestHelper
 
   test 'translate inheritable lookup' do
@@ -74,5 +73,4 @@ class I18nHelperTest < ActionView::TestCase
 
     assert_equal 'global', ta(:test_key)
   end
-
 end

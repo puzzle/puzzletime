@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 class DepartmentOrdersEval < WorkItemsEval
-
   self.division_join     = nil
   self.division_column   = 'orders.work_item_id'
 
@@ -9,8 +8,7 @@ class DepartmentOrdersEval < WorkItemsEval
     super(Department.find(department_id))
   end
 
-  def divisions(period = nil)
+  def divisions(_period = nil)
     WorkItem.joins(:order).where(orders: { department_id: category.id }).list
   end
-
 end

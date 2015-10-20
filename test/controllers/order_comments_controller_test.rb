@@ -3,7 +3,6 @@
 require 'test_helper'
 
 class OrderCommentsControllerTest < ActionController::TestCase
-
   setup :login
 
   test 'GET index as member renders without form and comments with links' do
@@ -24,15 +23,15 @@ class OrderCommentsControllerTest < ActionController::TestCase
   end
 
   test 'POST index with empty text does not persist comment' do
-    assert_no_difference "OrderComment.count" do
-      post :create, order_id: order.id, order_comment: {text: ''}
+    assert_no_difference 'OrderComment.count' do
+      post :create, order_id: order.id, order_comment: { text: '' }
     end
     assert_template :index
   end
 
   test 'POST index with text persists comment with correct attributes' do
-    assert_difference "OrderComment.count", +1 do
-      post :create, order_id: order.id, order_comment: {text: 'hello world'}
+    assert_difference 'OrderComment.count',+1 do
+      post :create, order_id: order.id, order_comment: { text: 'hello world' }
     end
     assert_match(/wurde erfolgreich erstellt/, flash[:notice])
     comment = assigns(:order_comment)
@@ -44,7 +43,7 @@ class OrderCommentsControllerTest < ActionController::TestCase
   test 'POST index as member with correct attributes' do
     login_as :pascal
     assert_raises(CanCan::AccessDenied) do
-      post :create, order_id: order.id, order_comment: {text: 'hello world'}
+      post :create, order_id: order.id, order_comment: { text: 'hello world' }
     end
   end
 

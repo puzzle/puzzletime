@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 class VacationGraph
-
   include PeriodIterable
 
   attr_reader :period, :day
@@ -14,7 +13,7 @@ class VacationGraph
     period ||= Period.current_year
     @actual_period = period
     @period = period.extend_to_weeks
-    @todays_week = Period.week_for(Date.today).to_s
+    @todays_week = Period.week_for(Time.zone.today).to_s
 
     @absences_eval = AbsencesEval.new
 
@@ -26,19 +25,19 @@ class VacationGraph
       @absences_eval.set_division_id empl.id
       # trade some memory for speed
       @absencetimes = @absences_eval.times(period).
-                                     reorder('work_date, from_start_time, employee_id, absence_id').
-                                     includes(:absence).
-                                     references(:absence).
-                                     where('NOT absences.private AND (report_type = ? OR report_type = ? OR report_type = ?)',
-                                           StartStopType::INSTANCE.key,
-                                           HoursDayType::INSTANCE.key,
-                                           HoursWeekType::INSTANCE.key)
+                      reorder('work_date, from_start_time, employee_id, absence_id').
+                      includes(:absence).
+                      references(:absence).
+                      where('NOT absences.private AND (report_type = ? OR report_type = ? OR report_type = ?)',
+                            StartStopType::INSTANCE.key,
+                            HoursDayType::INSTANCE.key,
+                            HoursWeekType::INSTANCE.key)
       @monthly_absencetimes = @absences_eval.times(period).
-                                             reorder('work_date, from_start_time, employee_id, absence_id').
-                                             includes(:absence).
-                                             references(:absence).
-                                             where('NOT absences.private AND (report_type = ?)',
-                                                   HoursMonthType::INSTANCE.key)
+                              reorder('work_date, from_start_time, employee_id, absence_id').
+                              includes(:absence).
+                              references(:absence).
+                              where('NOT absences.private AND (report_type = ?)',
+                                    HoursMonthType::INSTANCE.key)
       @unpaid_absences = empl.statistics.employments_during(period).select { |e| e.percent == 0 }
       @unpaid_absences.collect! { |e| Period.new(e.start_date, e.end_date ? e.end_date : period.end_date) }
       @index = 0
@@ -73,12 +72,12 @@ class VacationGraph
     tooltip += '<br />'.html_safe if !tooltip.empty? && !absences.empty?
     tooltip += add_unpaid_absences times
 
-  	 max_absence = get_max_absence times
-  	 return nil if max_absence.nil?
+    max_absence = get_max_absence times
+    return nil if max_absence.nil?
 
-  	 hours = times[max_absence] / WorkingCondition.value_at(@current.start_date, :must_hours_per_day)
-  	 color = color_for(max_absence) if max_absence
-  	 Timebox.new nil, color, hours, tooltip
+    hours = times[max_absence] / WorkingCondition.value_at(@current.start_date, :must_hours_per_day)
+    color = color_for(max_absence) if max_absence
+    Timebox.new nil, color, hours, tooltip
   end
 
   def employee
@@ -116,7 +115,7 @@ class VacationGraph
   private
 
   def add_absences(times, period = @current, monthly = false, factor = 1)
-    absences = monthly ?  monthly_absences_during(period) : absences_during(period)
+    absences = monthly ? monthly_absences_during(period) : absences_during(period)
     absences.each do |time|
       times[time.absence] += time.hours * factor
     end
@@ -125,10 +124,10 @@ class VacationGraph
 
   def add_monthly_absences(times)
     if @current.start_date.month == @current.end_date.month
-	     add_monthly times, @current
+      add_monthly times, @current
     else
       part1 = add_monthly times, get_period(@current.start_date, @current.start_date.end_of_month)
-	     part2 = add_monthly times, get_period(@current.end_date.beginning_of_month, @current.end_date)
+      part2 = add_monthly times, get_period(@current.end_date.beginning_of_month, @current.end_date)
       part1 ||= []
       part2 ||= []
       part1.concat part2

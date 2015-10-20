@@ -1,5 +1,4 @@
 module PeriodIterable
-
   def each_day
     @period.start_date.step(@period.end_date) do |day|
       yield day
@@ -16,7 +15,7 @@ module PeriodIterable
     Enumerator.new do |y|
       current = @period.start_date
       loop do
-        raise StopIteration if current > @period.end_date
+        fail StopIteration if current > @period.end_date
         y << current
         current += 7
       end
@@ -26,5 +25,4 @@ module PeriodIterable
   def cache
     @cache ||= {}
   end
-
 end

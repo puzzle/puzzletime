@@ -1,5 +1,4 @@
 module SortHelper
-
   def sort_link(attr, label = nil)
     label ||= entry.class.human_attribute_name(attr)
     link_to(label, sort_params(attr)) + current_mark(attr)
@@ -30,5 +29,4 @@ module SortHelper
   def sort_dir(attr)
     current_sort?(attr) && params[:sort_dir] == 'asc' ? 'desc' : 'asc'
   end
-
 end

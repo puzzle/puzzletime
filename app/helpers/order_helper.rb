@@ -1,5 +1,4 @@
 module OrderHelper
-
   def order_team_enumeration(order)
     list = order.team_members.to_a
 

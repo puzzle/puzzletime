@@ -22,7 +22,6 @@
 #
 
 class Invoice < ActiveRecord::Base
-
   STATUSES = %w(draft sent paid)
 
   enum grouping: %w(accounting_posts employees manual)
@@ -199,11 +198,10 @@ class Invoice < ActiveRecord::Base
     Invoicing.instance.delete_invoice(self)
   rescue Invoicing::Error => e
     errors.add(:base, "Fehler im Invoicing Service: #{e.message}")
-    fail ActiveRecord::Rollback
+    raise ActiveRecord::Rollback
   end
 
   def assign_worktimes
     self.ordertimes = worktimes
   end
-
 end

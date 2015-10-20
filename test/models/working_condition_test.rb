@@ -11,7 +11,6 @@
 require 'test_helper'
 
 class WorkingConditionTest < ActiveSupport::TestCase
-
   setup { WorkingCondition.clear_cache }
 
   test 'second condition with valid_from is fine' do
@@ -29,7 +28,7 @@ class WorkingConditionTest < ActiveSupport::TestCase
 
   test 'assigning valid_from to default is not possible' do
     c = working_conditions(:default)
-    c.valid_from = Date.today
+    c.valid_from = Time.zone.today
     assert_not_valid c, :valid_from
   end
 

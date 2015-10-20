@@ -2,14 +2,13 @@
 require 'test_helper'
 
 class OrdertimesControllerTest < ActionController::TestCase
-
   setup :login
 
   def roles_users
     {
-        employee:    :pascal,
-        responsible: :lucien,
-        manager:     :mark
+      employee:    :pascal,
+      responsible: :lucien,
+      manager:     :mark
     }
   end
 
@@ -55,12 +54,12 @@ class OrdertimesControllerTest < ActionController::TestCase
   end
 
   def test_create_hours_day_type
-    work_date = Date.today - 7
+    work_date = Time.zone.today - 7
     post :create, ordertime: { account_id: work_items(:puzzletime),
                                work_date: work_date,
                                ticket: '#1',
                                description: 'desc',
-                               hours: '00:45'}
+                               hours: '00:45' }
     assert_redirected_to action: 'index', week_date: work_date
     assert flash[:alert].blank?
     assert_match(/Zeit.*erfolgreich erstellt/, flash[:notice])
@@ -75,7 +74,7 @@ class OrdertimesControllerTest < ActionController::TestCase
   def test_create_start_stop_type
     work_items(:allgemein).update(closed: false)
     login_as(:pascal)
-    work_date = Date.today + 10
+    work_date = Time.zone.today + 10
     post :create, ordertime: { account_id: work_items(:allgemein),
                                work_date: work_date,
                                from_start_time: '8:00',
@@ -91,7 +90,7 @@ class OrdertimesControllerTest < ActionController::TestCase
 
   def test_create_with_missing_start_time
     work_items(:allgemein).update(closed: false)
-    work_date = Date.today + 10
+    work_date = Time.zone.today + 10
     post :create, ordertime: { account_id: work_items(:allgemein),
                                work_date: work_date,
                                to_end_time: '10:15' }
@@ -101,26 +100,26 @@ class OrdertimesControllerTest < ActionController::TestCase
   def test_create_with_hours_when_from_to_times_required
     work_items(:allgemein).update(closed: false)
     accounting_posts(:puzzletime).update_column(:from_to_times_required, true)
-    work_date = Date.today + 10
+    work_date = Time.zone.today + 10
     post :create, ordertime: { account_id: work_items(:puzzletime),
                                work_date: work_date,
                                hours: '00:45' }
-    assert_equal ["Von muss angegeben werden", "Bis muss angegeben werden"], assigns(:worktime).errors.full_messages
+    assert_equal ['Von muss angegeben werden', 'Bis muss angegeben werden'], assigns(:worktime).errors.full_messages
     assert_match(/Von muss angegeben werden/, @response.body)
   end
 
   def test_create_with_from_to_times_when_required
     accounting_posts(:puzzletime).update_column(:from_to_times_required, true)
-    work_date = Date.today + 10
+    work_date = Time.zone.today + 10
     post :create, ordertime: { account_id: work_items(:puzzletime),
                                work_date: work_date,
                                from_start_time: '00:45',
-                               to_end_time: '00:46'}
+                               to_end_time: '00:46' }
     assert assigns(:worktime).valid?
   end
 
   def test_create_with_overlapping
-    work_date = Date.today + 10
+    work_date = Time.zone.today + 10
     Fabricate(:ordertime,
               employee: employees(:pascal),
               work_date: work_date,
@@ -142,7 +141,7 @@ class OrdertimesControllerTest < ActionController::TestCase
   def test_create_other
     work_items(:allgemein).update(closed: false)
     post :create, ordertime: { account_id: work_items(:allgemein),
-                               work_date: Date.today,
+                               work_date: Time.zone.today,
                                hours: '5:30',
                                employee_id: employees(:lucien) }
     assert_equal employees(:lucien), Ordertime.last.employee
@@ -154,7 +153,7 @@ class OrdertimesControllerTest < ActionController::TestCase
 
     assert_difference('Ordertime.count') do
       post :create, ordertime: { account_id: work_items(:allgemein),
-                                 work_date: Date.today,
+                                 work_date: Time.zone.today,
                                  hours: '5:30',
                                  employee_id: employees(:mark).id }
       assert_equal employees(:lucien).id, Ordertime.last.employee_id
@@ -168,10 +167,10 @@ class OrdertimesControllerTest < ActionController::TestCase
 
       assert_no_difference('Ordertime.count') do
         post :create, ordertime: { account_id: work_items(:puzzletime),
-                                   work_date: Date.today,
+                                   work_date: Time.zone.today,
                                    ticket: '#1',
                                    description: 'desc',
-                                   hours: '00:45'}
+                                   hours: '00:45' }
       end
       assert_includes assigns(:worktime).errors.messages[:base], 'Auf geschlossene Positionen kann nicht gebucht werden.'
     end
@@ -183,7 +182,6 @@ class OrdertimesControllerTest < ActionController::TestCase
     assert_nothing_raised do
       get :edit, id: ordertime.id
     end
-
   end
 
   def test_edit_other_without_permission
@@ -337,5 +335,4 @@ class OrdertimesControllerTest < ActionController::TestCase
       assert_includes assigns(:worktime).errors.messages[:base], 'Kann nicht gelöscht werden da Position geschlossen.'
     end
   end
-
 end

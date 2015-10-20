@@ -4,7 +4,6 @@
 # Diplomarbeit 2149, Xavier Hayoz
 
 class GraphController < ApplicationController
-
   before_action :set_period
 
   skip_authorization_check
@@ -16,5 +15,4 @@ class GraphController < ApplicationController
   def all_absences
     @graph = VacationGraph.new(@period)
   end
-
 end

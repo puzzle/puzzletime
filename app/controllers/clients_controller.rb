@@ -4,7 +4,6 @@
 # Diplomarbeit 2149, Xavier Hayoz
 
 class ClientsController < ManageController
-
   self.search_columns = ['work_items.name', 'work_items.shortname']
 
   self.permitted_attrs = [:crm_key, :allow_local,

@@ -3,7 +3,6 @@ require 'test_helper'
 
 # Test DryCrud::Table::Builder
 class DryCrud::Table::BuilderTest < ActionView::TestCase
-
   # set dummy helper class for ActionView::TestCase
   self.helper_class = UtilityHelper
 
@@ -122,12 +121,11 @@ class DryCrud::Table::BuilderTest < ActionView::TestCase
     FIN
     dom.gsub!(/[\n\t]/, '').gsub!(/\s{2,}/, '')
 
-   table = DryCrud::Table::Builder.new([], self)
+    table = DryCrud::Table::Builder.new([], self)
     table.col('head', class: 'left') { |e| link_to e, '/' }
     table.attrs :upcase, :size
     table.col { |e| "Never #{e}" }
 
     assert_dom_equal dom, table.to_html
   end
-
 end

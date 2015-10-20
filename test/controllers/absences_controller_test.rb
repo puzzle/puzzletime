@@ -3,7 +3,6 @@
 require 'test_helper'
 
 class AbsencesControllerTest < ActionController::TestCase
-
   include CrudControllerTestHelper
 
   setup :login

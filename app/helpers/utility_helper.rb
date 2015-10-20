@@ -2,8 +2,7 @@
 
 # View helpers for basic functions used in various other helpers.
 module UtilityHelper
-
-  EMPTY_STRING = '&nbsp;'.html_safe   # non-breaking space asserts better css.
+  EMPTY_STRING = '&nbsp;'.html_safe # non-breaking space asserts better css.
 
   # Render a content tag with the collected contents rendered
   # by &block for each item in collection.
@@ -91,5 +90,4 @@ module UtilityHelper
       [attr, "#{attr}_id"]
     end
   end
-
 end

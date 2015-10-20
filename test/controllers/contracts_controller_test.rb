@@ -3,7 +3,6 @@
 require 'test_helper'
 
 class ContractsControllerTest < ActionController::TestCase
-
   test 'GET show as member' do
     login_as :pascal
     get :show, order_id: test_entry.order
@@ -62,12 +61,12 @@ class ContractsControllerTest < ActionController::TestCase
 
   def test_entry_attrs
     {
-        number: "asdf123456",
-        start_date: "2014-01-02",
-        end_date: "2015-07-29",
-        payment_period: 45,
-        reference: "order asdf 123456",
-        sla: "Reaktionszeit: 1.5ms"
+      number: 'asdf123456',
+      start_date: '2014-01-02',
+      end_date: '2015-07-29',
+      payment_period: 45,
+      reference: 'order asdf 123456',
+      sla: 'Reaktionszeit: 1.5ms'
     }
   end
 
@@ -87,6 +86,4 @@ class ContractsControllerTest < ActionController::TestCase
   def entry
     @controller.send(:entry)
   end
-
-
 end

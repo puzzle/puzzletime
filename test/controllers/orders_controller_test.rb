@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class OrdersControllerTest < ActionController::TestCase
-
   setup :login
 
   test 'GET index sorted by order' do
@@ -108,12 +107,12 @@ class OrdersControllerTest < ActionController::TestCase
                       kind_id: order_kinds(:projekt).id,
                       status_id: order_statuses(:bearbeitung).id,
                       order_team_members_attributes: {
-                          "0" => { employee_id: employees(:half_year_maria).id, comment: "rolle maria" },
-                          "1" => { employee_id: employees(:next_year_pablo).id, comment: "rolle pablo"}
+                        '0' => { employee_id: employees(:half_year_maria).id, comment: 'rolle maria' },
+                        '1' => { employee_id: employees(:next_year_pablo).id, comment: 'rolle pablo' }
                       },
                       order_contacts_attributes: {
-                          "0" => { contact_id_or_crm: contacts(:swisstopo_1).id, comment: "funktion 1"},
-                          "1" => { contact_id_or_crm: contacts(:swisstopo_2).id, comment: "funktion 2"}
+                        '0' => { contact_id_or_crm: contacts(:swisstopo_1).id, comment: 'funktion 1' },
+                        '1' => { contact_id_or_crm: contacts(:swisstopo_2).id, comment: 'funktion 2' }
                       }
                     }
     end
@@ -129,11 +128,11 @@ class OrdersControllerTest < ActionController::TestCase
     assert_equal order_statuses(:bearbeitung).id, order.status_id
     assert_equal order_kinds(:projekt).id, order.kind_id
 
-    order_contacts = order.order_contacts.map {|oc| [oc.contact_id, oc.comment]}.sort
-    assert_equal [[contacts(:swisstopo_1).id, "funktion 1"], [contacts(:swisstopo_2).id, "funktion 2"]].sort, order_contacts
+    order_contacts = order.order_contacts.map { |oc| [oc.contact_id, oc.comment] }.sort
+    assert_equal [[contacts(:swisstopo_1).id, 'funktion 1'], [contacts(:swisstopo_2).id, 'funktion 2']].sort, order_contacts
 
-    order_team_members = order.order_team_members.map {|otm| [otm.employee.id, otm.comment]}.sort
-    assert_equal [[employees(:half_year_maria).id, "rolle maria"], [employees(:next_year_pablo).id, "rolle pablo"]].sort, order_team_members
+    order_team_members = order.order_team_members.map { |otm| [otm.employee.id, otm.comment] }.sort
+    assert_equal [[employees(:half_year_maria).id, 'rolle maria'], [employees(:next_year_pablo).id, 'rolle pablo']].sort, order_team_members
   end
 
   test 'PATCH update sets values' do
@@ -150,12 +149,12 @@ class OrdersControllerTest < ActionController::TestCase
                      kind_id: order_kinds(:projekt).id,
                      status_id: order_statuses(:bearbeitung).id,
                      order_team_members_attributes: {
-                         "0" => { employee_id: employees(:half_year_maria).id, comment: "rolle maria" },
-                         "1" => { employee_id: employees(:next_year_pablo).id, comment: "rolle pablo"}
+                       '0' => { employee_id: employees(:half_year_maria).id, comment: 'rolle maria' },
+                       '1' => { employee_id: employees(:next_year_pablo).id, comment: 'rolle pablo' }
                      },
                      order_contacts_attributes: {
-                         "0" => { contact_id_or_crm: contacts(:puzzle_rava), comment: "funktion 1"},
-                         "1" => { contact_id_or_crm: contacts(:puzzle_hauswart), comment: "funktion 2"}
+                       '0' => { contact_id_or_crm: contacts(:puzzle_rava), comment: 'funktion 1' },
+                       '1' => { contact_id_or_crm: contacts(:puzzle_hauswart), comment: 'funktion 2' }
                      }
                    }
 
@@ -172,19 +171,19 @@ class OrdersControllerTest < ActionController::TestCase
     assert_equal order_kinds(:projekt).id, order.kind_id
     assert_equal 'puzzletime-crm-key', order.crm_key
 
-    order_contacts = order.order_contacts.map {|oc| [oc.contact_id, oc.comment]}.sort
-    assert_equal [[contacts(:puzzle_rava).id, "funktion 1"], [contacts(:puzzle_hauswart).id, "funktion 2"]].sort, order_contacts
+    order_contacts = order.order_contacts.map { |oc| [oc.contact_id, oc.comment] }.sort
+    assert_equal [[contacts(:puzzle_rava).id, 'funktion 1'], [contacts(:puzzle_hauswart).id, 'funktion 2']].sort, order_contacts
 
-    order_team_members = order.order_team_members.map {|otm| [otm.employee.id, otm.comment]}.sort
-    assert_equal [[employees(:half_year_maria).id, "rolle maria"], [employees(:next_year_pablo).id, "rolle pablo"]].sort, order_team_members
+    order_team_members = order.order_team_members.map { |otm| [otm.employee.id, otm.comment] }.sort
+    assert_equal [[employees(:half_year_maria).id, 'rolle maria'], [employees(:next_year_pablo).id, 'rolle pablo']].sort, order_team_members
   end
 
   test 'DELETE destroys order and work item' do
     order = orders(:puzzletime)
     order.worktimes.destroy_all
-    assert_difference "WorkItem.count", -1 do
-      assert_difference "Order.count", -1 do
-        assert_difference "AccountingPost.count", -1 do
+    assert_difference 'WorkItem.count', -1 do
+      assert_difference 'Order.count', -1 do
+        assert_difference 'AccountingPost.count', -1 do
           delete :destroy, id: order.id
         end
       end
@@ -195,9 +194,9 @@ class OrdersControllerTest < ActionController::TestCase
   test 'DELETE destroys order and all accounting posts' do
     order = orders(:hitobito_demo)
     order.worktimes.destroy_all
-    assert_difference "WorkItem.count", -3 do
-      assert_difference "Order.count", -1 do
-        assert_difference "AccountingPost.count", -2 do
+    assert_difference 'WorkItem.count', -3 do
+      assert_difference 'Order.count', -1 do
+        assert_difference 'AccountingPost.count', -2 do
           delete :destroy, id: order.id
         end
       end

@@ -1,6 +1,5 @@
 class Order::Cockpit
   class AccountingPostRow < Row
-
     attr_reader :cells, :accounting_post
 
     def initialize(accounting_post, label = nil)

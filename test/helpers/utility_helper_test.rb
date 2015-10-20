@@ -3,7 +3,6 @@ require 'test_helper'
 
 # Test UtilityHelper
 class UtilityHelperTest < ActionView::TestCase
-
   include CrudTestHelper
 
   test 'content_tag_nested escapes safe correctly' do
@@ -61,5 +60,4 @@ class UtilityHelperTest < ActionView::TestCase
 
     reset_db
   end
-
 end

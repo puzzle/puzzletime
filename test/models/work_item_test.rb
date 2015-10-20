@@ -19,7 +19,6 @@
 require 'test_helper'
 
 class WorkItemTest < ActiveSupport::TestCase
-
   test 'new work_item get path names set' do
     p = Fabricate(:work_item,
                   parent_id: 1,
@@ -92,16 +91,16 @@ class WorkItemTest < ActiveSupport::TestCase
                   name: 'Foo',
                   shortname: 'FOO')
     c1 = Fabricate(:work_item,
-                  parent_id: 1,
-                  parent: p,
-                  description: 'yada',
-                  name: 'Bar',
-                  shortname: 'BAR')
+                   parent_id: 1,
+                   parent: p,
+                   description: 'yada',
+                   name: 'Bar',
+                   shortname: 'BAR')
     c2 = Fabricate(:work_item,
-                  parent_id: 1,
-                  parent: c1,
-                  name: 'Baz',
-                  shortname: 'BAZ')
+                   parent_id: 1,
+                   parent: c1,
+                   name: 'Baz',
+                   shortname: 'BAZ')
 
     p.reload
     p.update_attributes!(shortname: 'FUU', description: 'bla')

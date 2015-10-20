@@ -13,12 +13,11 @@
 #
 
 class OrderComment < ActiveRecord::Base
-
   ### ASSOCIATIONS
 
   belongs_to :order
-  belongs_to :creator, class_name: "Employee"
-  belongs_to :updater, class_name: "Employee"
+  belongs_to :creator, class_name: 'Employee'
+  belongs_to :updater, class_name: 'Employee'
 
   ### VALIDATIONS
 
@@ -33,7 +32,6 @@ class OrderComment < ActiveRecord::Base
   ### INSTANCE METHODS
 
   def to_s
-    "#{creator.to_s}: #{text.truncate(20)}"
+    "#{creator}: #{text.truncate(20)}"
   end
-
 end

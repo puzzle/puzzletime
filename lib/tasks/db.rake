@@ -1,9 +1,9 @@
 namespace :db do
   namespace :dump do
     desc 'Load a db dump from the given FILE'
-    task :load => ['db:drop', 'db:create'] do
+    task load: ['db:drop', 'db:create'] do
       c = ActiveRecord::Base.connection_config
-      sh({'PGPASSWORD' => c[:password]},
+      sh({ 'PGPASSWORD' => c[:password] },
          %W(psql
             -U #{c[:username]}
             -f #{ENV['FILE']}
@@ -14,7 +14,7 @@ namespace :db do
   end
 
   desc 'Create testusers unless exist'
-  task :create_testuser => :environment do
+  task create_testuser: :environment do
     mb1 = Employee.where(shortname: 'MB1').first_or_create!(firstname: 'First', lastname: 'Member', passwd: Employee.encode('member'), email: 'mb1@puzzle.ch', management: false)
     Employment.where(employee_id: mb1.id).first_or_create!(percent: 100, start_date: Date.new(2010, 1, 1))
 
@@ -24,5 +24,4 @@ namespace :db do
     mgt = Employee.where(shortname: 'MGT').first_or_create!(firstname: 'First', lastname: 'Manager', passwd: Employee.encode('management'), email: 'mgt@puzzle.ch', management: true)
     Employment.where(employee_id: mgt.id).first_or_create!(percent: 90, start_date: Date.new(2015, 1, 1))
   end
-
 end

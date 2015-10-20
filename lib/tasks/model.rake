@@ -1,19 +1,18 @@
-desc "Add column annotations to active records"
+desc 'Add column annotations to active records'
 task :annotate do
   sh 'annotate -p before'
 end
 
 namespace :erd do
-  task :options => :customize
+  task options: :customize
   task :customize do
     require Rails.root.join('lib', 'tasks', 'erd_patch.rb')
     mkdir_p Rails.root.join('doc')
-    ENV['attributes']  ||= 'content,inheritance,foreign_keys,timestamps'
-    ENV['indirect']    ||= 'false'
+    ENV['attributes'] ||= 'content,inheritance,foreign_keys,timestamps'
+    ENV['indirect'] ||= 'false'
     ENV['orientation'] ||= 'vertical'
-    ENV['notation']    ||= 'uml'
-    ENV['filename']    ||= 'doc/models'
-    ENV['filetype']    ||= 'png'
+    ENV['notation'] ||= 'uml'
+    ENV['filename'] ||= 'doc/models'
+    ENV['filetype'] ||= 'png'
   end
 end
-

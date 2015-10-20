@@ -29,5 +29,4 @@ module Closable
     end
     @closed_changed = nil
   end
-
 end

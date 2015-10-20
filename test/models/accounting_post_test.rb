@@ -19,7 +19,6 @@
 require 'test_helper'
 
 class AccountingPostTest < ActiveSupport::TestCase
-
   test 'order work item with accounting post is moved when creating new accounting post' do
     post = accounting_posts(:webauftritt)
     order = post.order
@@ -28,9 +27,9 @@ class AccountingPostTest < ActiveSupport::TestCase
     fresh = nil
     assert_difference('WorkItem.count', 2) do
       fresh = AccountingPost.create!(
-                work_item: WorkItem.new(name: 'Foo', shortname: 'FOO', parent: post.work_item),
-                portfolio_item: PortfolioItem.first,
-                offered_rate: 150)
+        work_item: WorkItem.new(name: 'Foo', shortname: 'FOO', parent: post.work_item),
+        portfolio_item: PortfolioItem.first,
+        offered_rate: 150)
     end
     post.reload
     fresh.reload
@@ -85,5 +84,4 @@ class AccountingPostTest < ActiveSupport::TestCase
   def post
     accounting_posts(:hitobito_demo_app)
   end
-
 end
