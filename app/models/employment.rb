@@ -3,72 +3,35 @@
 #
 # Table name: employments
 #
-#  id          :integer          not null, primary key
-#  employee_id :integer
-#  percent     :decimal(5, 2)    not null
-#  start_date  :date             not null
-#  end_date    :date
+#  id                     :integer          not null, primary key
+#  employee_id            :integer
+#  percent                :decimal(5, 2)    not null
+#  start_date             :date             not null
+#  end_date               :date
+#  vacation_days_per_year :decimal(5, 2)
 #
-
 
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz
 
 class Employment < ActiveRecord::Base
 
-  attr_accessor :final
+  DAYS_PER_YEAR = 365.25
+
+  belongs_to :employee
 
   # All dependencies between the models are listed below.
   validates_by_schema
   validates :percent, inclusion: 0..200
   validates :employee_id, presence: true
+  validates :vacation_days_per_year,
+            numericality: { greater_or_equal_than: 0, less_than_or_equal_to: 366, allow_blank: true }
   validates :start_date, :end_date, timeliness: { date: true, allow_blank: true }
   validate :valid_period
 
-  before_validation :reset_end_date
-  before_create :update_end_date
-  belongs_to :employee
-
+  before_create :update_previous_end_date
 
   scope :list, -> { order('start_date DESC') }
-
-  def valid_period
-    if end_date && period && period.negative?
-      errors.add(:base, 'Die Zeitspanne ist ungültig')
-    elsif parallel_employments?
-      errors.add(:base, 'Für diese Zeitspanne ist bereits eine andere Anstellung definiert')
-    end
-  end
-
-  def reset_end_date
-    write_attribute('end_date', nil) unless final
-  end
-
-  def final
-    @final = (end_date) if @final.nil?
-    @final
-  end
-
-  def final=(value)
-    value = value.to_i > 0 unless value.is_a?(TrueClass) || value.is_a?(FalseClass)
-    @final = value
-  end
-
-  def update_attributes(attr)
-    self.final = attr[:final]
-    super(attr)
-  end
-
-  # updates the end date of the previous employement
-  def update_end_date
-    if previous_employment
-      previous_employment.end_date = start_date - 1
-      previous_employment.save
-    end
-    if following_employment
-      self.end_date = following_employment.start_date - 1
-    end
-  end
 
   def previous_employment
     @previous_employment ||=
@@ -85,7 +48,7 @@ class Employment < ActiveRecord::Base
   end
 
   def period
-    return Period.retrieve(start_date, end_date ? end_date : Date.today) if start_date
+    Period.retrieve(start_date, end_date ? end_date : Date.today) if start_date
   end
 
   def percent_factor
@@ -93,8 +56,12 @@ class Employment < ActiveRecord::Base
   end
 
   def vacations
-    WorkingCondition.sum_with(:vacation_days_per_year, period) do |p, v|
-      p.length / 365.25 * percent_factor * v
+    if vacation_days_per_year
+      vacations_per_period(period, vacation_days_per_year)
+    else
+      WorkingCondition.sum_with(:vacation_days_per_year, period) do |p, v|
+        vacations_per_period(p, v)
+      end
     end
   end
 
@@ -112,6 +79,30 @@ class Employment < ActiveRecord::Base
 
   private
 
+  def vacations_per_period(period, days_per_year)
+    period.length / DAYS_PER_YEAR * percent_factor * days_per_year
+  end
+
+  # updates the end date of the previous employement
+  def update_previous_end_date
+    if previous_employment
+      previous_employment.end_date = start_date - 1
+      previous_employment.save!
+    end
+    if following_employment
+      self.end_date ||= following_employment.start_date - 1
+    end
+    true
+  end
+
+  def valid_period
+    if end_date && period && period.negative?
+      errors.add(:base, 'Die Zeitspanne ist ungültig')
+    elsif parallel_employments?
+      errors.add(:base, 'Für diese Zeitspanne ist bereits eine andere Anstellung definiert')
+    end
+  end
+
   def parallel_employments?
     conditions = ['employee_id = ? ', employee_id]
     if id
@@ -120,8 +111,8 @@ class Employment < ActiveRecord::Base
     end
     if end_date
       conditions[0] += ' AND (' \
-         '(start_date <= ? AND (end_date >= ?' + (new_record? ? '' : ' OR end_date IS NULL') + ') ) OR' +
-        '(start_date <= ? AND (end_date >= ?' + (new_record? ? '' : ' OR end_date IS NULL') + ') ) OR ' +
+        '(start_date <= ? AND (end_date >= ?' + (new_record? ? '' : ' OR end_date IS NULL') + ') ) OR ' \
+        '(start_date <= ? AND (end_date >= ?' + (new_record? ? '' : ' OR end_date IS NULL') + ') ) OR ' \
         '(start_date >= ? AND end_date <= ? ))'
       conditions.push(start_date, start_date, end_date, end_date, start_date, end_date)
     else

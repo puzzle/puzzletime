@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150930143851) do
+ActiveRecord::Schema.define(version: 20151020085313) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -162,9 +162,10 @@ ActiveRecord::Schema.define(version: 20150930143851) do
 
   create_table "employments", force: :cascade do |t|
     t.integer "employee_id"
-    t.decimal "percent",     precision: 5, scale: 2, null: false
-    t.date    "start_date",                          null: false
+    t.decimal "percent",                precision: 5, scale: 2, null: false
+    t.date    "start_date",                                     null: false
     t.date    "end_date"
+    t.decimal "vacation_days_per_year", precision: 5, scale: 2
   end
 
   add_index "employments", ["employee_id"], name: "index_employments_on_employee_id", using: :btree

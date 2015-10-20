@@ -16,6 +16,8 @@
 #  add_vat            :boolean          default(TRUE), not null
 #  billing_address_id :integer          not null
 #  invoicing_key      :string
+#  created_at         :datetime
+#  updated_at         :datetime
 #  grouping           :integer          default(0), not null
 #
 
