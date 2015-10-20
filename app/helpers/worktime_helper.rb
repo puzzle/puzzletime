@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 module WorktimeHelper
-
   def worktime_account(worktime)
     worktime.account.label_verbose if worktime.account
   end
@@ -27,18 +26,18 @@ module WorktimeHelper
                   data: { data: json.to_json }) end
   end
 
-  def overview_day_class(worktimes, day)
-    if day == Date.today
+  def overview_day_class(_worktimes, day)
+    if day == Time.zone.today
       'today'
     elsif Holiday.holiday?(day)
       'holiday'
-    elsif day < Date.today && sum_hours(day) <= 0
+    elsif day < Time.zone.today && sum_hours(day) <= 0
       'missing'
     end
   end
 
   def time_range(worktime)
-    result = "&nbsp;"
+    result = '&nbsp;'
     if worktime.from_start_time.present?
       result = "#{format_time(worktime.from_start_time)} - "
       if worktime.to_end_time.present?
@@ -49,7 +48,7 @@ module WorktimeHelper
   end
 
   def week_number(date)
-    date.strftime("%V").to_i if date
+    date.strftime('%V').to_i if date
   end
 
   def monthly_worktime
@@ -57,12 +56,11 @@ module WorktimeHelper
   end
 
   # sum worktime hours for a given date. if no date is given, sum all worktime hours
-  def sum_hours(day=nil)
+  def sum_hours(day = nil)
     if day
       @daily_worktimes[day] ? @daily_worktimes[day].map(&:hours).sum : 0
     else
       @worktimes.map(&:hours).sum
     end
   end
-
 end

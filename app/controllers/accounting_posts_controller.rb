@@ -1,6 +1,5 @@
 # encoding: utf-8
 class AccountingPostsController < CrudController
-
   self.nesting = [Order]
 
   self.permitted_attrs = [:closed, :offered_hours, :offered_rate, :offered_total,
@@ -44,5 +43,4 @@ class AccountingPostsController < CrudController
   def order
     parent
   end
-
 end

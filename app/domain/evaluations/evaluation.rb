@@ -8,7 +8,6 @@
 #
 # This class is abstract, subclasses generally override the class constants for customization.
 class Evaluation
-
   class_attribute :division_method, :division_column, :division_join,
                   :sub_evaluation, :sub_work_items_eval, :label, :absences,
                   :total_details, :category_ref, :detail_columns, :detail_labels
@@ -58,13 +57,13 @@ class Evaluation
 
   # Returns a list of all division objects for the represented category.
   # May be parameterized by a period. This is ignored by default.
-  def divisions(period = nil)
+  def divisions(_period = nil)
     category.send(division_method).list
   end
 
   # The record identifier of the category, 0 if category is not an active record
   def category_id
-  	 category.is_a?(Class) ? 0 : category.id
+    category.is_a?(Class) ? 0 : category.id
   end
 
   def sum_times_grouped(period)
@@ -128,7 +127,7 @@ class Evaluation
   # information or links to certain actions.
   # No methods are called by default.
   # See EmployeeWorkItemsEval for an example.
-  def division_supplement(user)
+  def division_supplement(_user)
     []
   end
 
@@ -138,7 +137,7 @@ class Evaluation
 
   # Returns whether this Evaluation is personally for the current user.
   # Default is false.
-  def for?(user)
+  def for?(_user)
     false
   end
 
@@ -180,7 +179,7 @@ class Evaluation
   end
 
   def report?
-    account_id && !absences?    # && employee_id
+    account_id && !absences? # && employee_id
   end
 
   def employee_id
@@ -205,12 +204,11 @@ class Evaluation
   end
 
   def detail_label(item)
-    return '' if item.nil? || item.kind_of?(Class)
+    return '' if item.nil? || item.is_a?(Class)
     item.class.model_name.human + ': ' + item.label
   end
 
   def class_category?
-    category.kind_of? Class
+    category.is_a? Class
   end
-
 end

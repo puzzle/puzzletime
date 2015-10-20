@@ -7,7 +7,6 @@
 # Likewise, all the methods added will be available for all controllers.
 
 class ApplicationController < ActionController::Base
-
   protect_from_forgery with: :exception
 
   before_action :authenticate
@@ -19,7 +18,7 @@ class ApplicationController < ActionController::Base
     rescue_from ActionController::UnknownFormat, with: :not_found
     rescue_from ActionView::MissingTemplate, with: :not_found
 
-    rescue_from CanCan::AccessDenied do |exception|
+    rescue_from CanCan::AccessDenied do |_exception|
       redirect_to root_url, alert: 'Sie sind nicht authorisiert, um diese Seite zu öffnen'
     end
   end
@@ -53,7 +52,7 @@ class ApplicationController < ActionController::Base
   def set_period
     @period = nil
     p = session[:period]
-    if p.kind_of? Array
+    if p.is_a? Array
       @period = Period.retrieve(*p)
     end
   end
@@ -66,5 +65,4 @@ class ApplicationController < ActionController::Base
   def not_found
     fail ActionController::RoutingError, 'Not Found'
   end
-
 end

@@ -1,5 +1,5 @@
 - @title = 'Ferienplan'
-- @title += " #{Date.today.year}" if @period.nil?
+- @title += " #{Time.zone.today.year}" if @period.nil?
 = render :partial => 'evaluator/period_link'
 %table.absence
   %thead

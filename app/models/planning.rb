@@ -27,7 +27,6 @@
 #
 
 class Planning < ActiveRecord::Base
-
   validates_by_schema
   validate :validate_planning
   validate :validate_overlappings
@@ -36,7 +35,7 @@ class Planning < ActiveRecord::Base
   belongs_to :work_item
 
   def to_s
-    "für #{employee.to_s}" if employee
+    "für #{employee}" if employee
   end
 
   def start_week_date
@@ -141,7 +140,7 @@ class Planning < ActiveRecord::Base
 
   def validate_overlappings
     return if start_week.blank?
-    # todo: limit search result by date
+    # TODO: limit search result by date
     existing = Planning.where(work_item_id: work_item_id,
                               employee_id: employee_id,
                               is_abstract: is_abstract?)
@@ -157,11 +156,10 @@ class Planning < ActiveRecord::Base
   end
 
   def halfday_selected
-     monday_am || monday_pm ||
-     tuesday_am || tuesday_pm ||
-     wednesday_am || wednesday_pm ||
-     thursday_am || thursday_pm ||
-     friday_am || friday_pm
+    monday_am || monday_pm ||
+      tuesday_am || tuesday_pm ||
+      wednesday_am || wednesday_pm ||
+      thursday_am || thursday_pm ||
+      friday_am || friday_pm
    end
-
 end

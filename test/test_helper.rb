@@ -34,7 +34,6 @@ Dir[Rails.root.join('test/support/**/*.rb')].sort.each { |f| require f }
 
 
 class ActiveSupport::TestCase
-
   include CustomAssertions
 
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
@@ -59,7 +58,6 @@ class ActiveSupport::TestCase
 end
 
 class ActionDispatch::IntegrationTest
-
   include Capybara::DSL
 
   DatabaseCleaner.strategy = :truncation
@@ -95,15 +93,12 @@ class ActionDispatch::IntegrationTest
 
   # catch some errors occuring now and then in capybara tests
   def timeout_safe
-    begin
-      yield
-    rescue Errno::ECONNREFUSED,
-           Timeout::Error,
-           Capybara::FrozenInTime,
-           Capybara::ElementNotFound,
-           Selenium::WebDriver::Error::StaleElementReferenceError => e
-      skip e.message || e.class.name
-    end
+    yield
+  rescue Errno::ECONNREFUSED,
+         Timeout::Error,
+         Capybara::FrozenInTime,
+         Capybara::ElementNotFound,
+         Selenium::WebDriver::Error::StaleElementReferenceError => e
+    skip e.message || e.class.name
   end
-
 end

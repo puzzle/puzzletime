@@ -2,7 +2,6 @@
 
 # always call with RAILS_GROUPS=assets
 class ErrorPageGenerator < Rails::Generators::NamedBase
-
   desc 'Generate a static error page based on the layout.'
 
   def generate_page
@@ -18,5 +17,4 @@ class ErrorPageGenerator < Rails::Generators::NamedBase
     _, _, body = *Puzzletime::Application.call(request)
     create_file "public/#{error}.html", body.join, force: true
   end
-
 end

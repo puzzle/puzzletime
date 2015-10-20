@@ -10,7 +10,6 @@ module DryCrud::Table
   #     t.attrs :name, :city
   #   end
   class Builder
-
     include Sorting
     include Actions
 
@@ -66,7 +65,7 @@ module DryCrud::Table
     def to_html
       content_tag :table, options do
         content_tag(:thead, html_header) +
-        content_tag_nested(:tbody, entries) { |e| html_row(e) }
+          content_tag_nested(:tbody, entries) { |e| html_row(e) }
       end
     end
 
@@ -91,7 +90,7 @@ module DryCrud::Table
 
     # Renders the header row of the table.
     def html_header
-      content_tag_nested(:tr, cols) { |c| c.html_header }
+      content_tag_nested(:tr, cols, &:html_header)
     end
 
     # Renders a table row for the given entry.
@@ -110,6 +109,5 @@ module DryCrud::Table
         entries.first.class
       end
     end
-
   end
 end

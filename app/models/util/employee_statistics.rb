@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 class EmployeeStatistics
-
   attr_reader :employee
 
   def initialize(employee)
@@ -13,7 +12,7 @@ class EmployeeStatistics
 
   # Returns the unused days of vacation remaining until the end of the current year.
   def current_remaining_vacations
-    remaining_vacations(Date.new(Date.today.year, 12, 31))
+    remaining_vacations(Date.new(Time.zone.today.year, 12, 31))
   end
 
   # Returns the unused days of vacation remaining until the given date.
@@ -38,9 +37,9 @@ class EmployeeStatistics
 
     WorkingCondition.sum_with(:must_hours_per_day, period) do |p, hours|
       @employee.worktimes.in_period(p).
-                          joins(:absence).
-                          where(absences: { vacation: true }).
-                          sum(:hours).to_f / hours
+        joins(:absence).
+        where(absences: { vacation: true }).
+        sum(:hours).to_f / hours
     end
   end
 
@@ -49,7 +48,7 @@ class EmployeeStatistics
 
   # Returns the overall overtime hours until the given date.
   # Default is yesterday.
-  def current_overtime(date = Date.today - 1)
+  def current_overtime(date = Time.zone.today - 1)
     overtime(employment_period_to(date)) - overtime_vacation_hours(date)
   end
 
@@ -69,12 +68,12 @@ class EmployeeStatistics
     return [] if period.nil?
     selectedEmployments = @employee.employments.where('(end_date IS NULL OR end_date >= ?) AND start_date <= ?',
                                                       period.start_date, period.end_date).
-                                                reorder('start_date').
-                                                to_a
+                          reorder('start_date').
+                          to_a
     unless selectedEmployments.empty?
       selectedEmployments.first.start_date = period.start_date if selectedEmployments.first.start_date < period.start_date
       if selectedEmployments.last.end_date.nil? ||
-         selectedEmployments.last.end_date > period.end_date then
+         selectedEmployments.last.end_date > period.end_date
         selectedEmployments.last.end_date = period.end_date
       end
     end
@@ -83,32 +82,32 @@ class EmployeeStatistics
 
   private
 
-    # Returns the hours this employee worked plus the payed absences for the given period.
+  # Returns the hours this employee worked plus the payed absences for the given period.
   def payed_worktime(period)
     @employee.worktimes.
-              joins('LEFT JOIN absences ON absences.id = absence_id').
-              in_period(period).
-              where('((work_item_id IS NOT NULL AND absence_id IS NULL) OR absences.payed)').
-              sum(:hours).
-              to_f
+      joins('LEFT JOIN absences ON absences.id = absence_id').
+      in_period(period).
+      where('((work_item_id IS NOT NULL AND absence_id IS NULL) OR absences.payed)').
+      sum(:hours).
+      to_f
   end
 
   # Return the overtime days that were transformed into vacations up to the given date.
   def overtime_vacation_days(period)
     WorkingCondition.sum_with(:must_hours_per_day, period) do |p, hours|
       @employee.overtime_vacations.
-                where('transfer_date BETWEEN ? AND ?', p.start_date, p.end_date).
-                sum(:hours).
-                to_f / hours
+        where('transfer_date BETWEEN ? AND ?', p.start_date, p.end_date).
+        sum(:hours).
+        to_f / hours
     end
   end
 
   # Return the overtime hours that were transformed into vacations up to the given date.
   def overtime_vacation_hours(date = nil)
     @employee.overtime_vacations.
-              where(date ? ['transfer_date <= ?', date] : nil).
-              sum(:hours).
-              to_f
+      where(date ? ['transfer_date <= ?', date] : nil).
+      sum(:hours).
+      to_f
   end
 
 
@@ -122,6 +121,4 @@ class EmployeeStatistics
     return nil if first_employment.nil? || first_employment.start_date > date
     Period.retrieve(first_employment.start_date, date)
   end
-
-
 end

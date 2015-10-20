@@ -1,12 +1,10 @@
 # encoding: UTF-8
 
 module DryCrud::Form
-
   # Internal class to handle the rendering of a single form control,
   # consisting of a label, input field, addon, help text or
   # required mark.
   class Control
-
     attr_reader :builder, :attr, :args, :options, :span, :addon, :help
 
     delegate :content_tag, :object,

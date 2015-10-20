@@ -3,7 +3,6 @@
 require 'test_helper'
 
 class PeriodTest < ActiveSupport::TestCase
-
   def setup
     @half_year = Period.new(Date.new(2006, 1, 1), Date.new(2006, 6, 30))
     @one_month = Period.new(Date.new(2006, 3, 1), Date.new(2006, 3, 31))
@@ -30,17 +29,16 @@ class PeriodTest < ActiveSupport::TestCase
 
   def test_step
     count = 0
-    @half_year.step { |d| count += 1 }
+    @half_year.step { |_d| count += 1 }
     assert_equal count, 181
     count = 0
-    @one_month.step { |d| count += 1 }
+    @one_month.step { |_d| count += 1 }
     assert_equal count, 31
     count = 0
-    @two_month.step { |d| count += 1 }
+    @two_month.step { |_d| count += 1 }
     assert_equal count, 62
     count = 0
-    @one_day.step { |d| count += 1 }
+    @one_day.step { |_d| count += 1 }
     assert_equal count, 1
   end
-
 end

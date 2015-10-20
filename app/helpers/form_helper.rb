@@ -8,7 +8,6 @@
 # * #crud_form - A #standard_form for the current +entry+, with the given
 #   attributes or default.
 module FormHelper
-
   # Renders a form using Crud::FormBuilder.
   def plain_form(object, options = {}, &block)
     options[:html] ||= {}
@@ -65,5 +64,4 @@ module FormHelper
     url_object[-1] = url_object[-1].class if url_object[-1].is_a?(ActiveRecord::Base)
     polymorphic_url(url_object, returning: true)
   end
-
 end

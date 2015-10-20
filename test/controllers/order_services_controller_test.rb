@@ -3,33 +3,32 @@
 require 'test_helper'
 
 class OrderServicesControllerTest < ActionController::TestCase
-
   setup :login
 
-  test "GET show assigns order employees" do
+  test 'GET show assigns order employees' do
     get :show, order_id: order.id
     assert_equal employees(:mark, :lucien, :pascal), assigns(:employees)
   end
 
-  test "GET show assigns order accounting posts" do
+  test 'GET show assigns order accounting posts' do
     get :show, order_id: orders(:hitobito_demo).id
     assert_equal work_items(:hitobito_demo_app, :hitobito_demo_site), assigns(:accounting_posts)
   end
 
-  test "GET show assigns tickets" do
+  test 'GET show assigns tickets' do
     worktimes(:wt_pz_puzzletime).update!(ticket: 'foo')
     get :show, order_id: order.id
     assert_equal %w([leer] foo), assigns(:tickets)
   end
 
-  test "GET show responds with success when no accounting posts present" do
+  test 'GET show responds with success when no accounting posts present' do
     order.worktimes.destroy_all
     order.accounting_posts.destroy_all
     get :show, order_id: order.id
     assert_response :success
   end
 
-  test "GET show filtered by predefined period, ignores start_date" do
+  test 'GET show filtered by predefined period, ignores start_date' do
     get :show, order_id: order.id, period: '-1m', start_date: '1.12.2006'
     assert_equal [], assigns(:worktimes)
     period = Period.parse('-1m')
@@ -37,11 +36,10 @@ class OrderServicesControllerTest < ActionController::TestCase
     assert_equal({ "/orders/#{order.id}/order_services" =>
                    { 'start_date' => I18n.l(period.start_date),
                      'end_date' => I18n.l(period.end_date) } },
-                  session[:list_params])
+                 session[:list_params])
   end
 
   [:show, :export_worktimes_csv].each do |action|
-
     test "GET #{action} filtered by employee" do
       get action, order_id: order.id, employee_id: employees(:pascal).id
       assert_equal [worktimes(:wt_pz_puzzletime)], assigns(:worktimes)
@@ -69,9 +67,9 @@ class OrderServicesControllerTest < ActionController::TestCase
 
     test "GET #{action} filtered by employee, accounting post and billable" do
       get action, order_id: order.id,
-                 employee_id: employees(:pascal),
-                 work_item_id: work_items(:puzzletime).id,
-                 billable: 'true'
+                  employee_id: employees(:pascal),
+                  work_item_id: work_items(:puzzletime).id,
+                  billable: 'true'
       assert_equal [worktimes(:wt_pz_puzzletime)], assigns(:worktimes)
     end
 
@@ -173,11 +171,11 @@ class OrderServicesControllerTest < ActionController::TestCase
               work_item: work_items(:puzzletime),
               ticket: ticket_label)
     get :report, order_id: orders(:puzzletime).id,
-                 show_ticket: "1"
+                 show_ticket: '1'
 
     assert_template 'report'
-    assert_match %r(<th>Ticket</th>), response.body
-    assert_match %r(<td[^>]*>#{ticket_label}</td>), response.body
+    assert_match %r{<th>Ticket</th>}, response.body
+    assert_match %r{<td[^>]*>#{ticket_label}</td>}, response.body
   end
 
   private
@@ -185,5 +183,4 @@ class OrderServicesControllerTest < ActionController::TestCase
   def order
     orders(:puzzletime)
   end
-
 end

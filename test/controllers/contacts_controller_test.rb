@@ -2,7 +2,6 @@
 require 'test_helper'
 
 class ContactsControllerTest < ActionController::TestCase
-
   include CrudControllerTestHelper
 
   setup :login

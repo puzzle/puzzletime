@@ -24,7 +24,6 @@
 # Diplomarbeit 2149, Xavier Hayoz
 
 class Worktime < ActiveRecord::Base
-
   H_M = /^(\d*):([0-5]\d)/
 
   include ReportType::Accessors
@@ -86,7 +85,7 @@ class Worktime < ActiveRecord::Base
 
   # sets the account id.
   # overwrite in subclass
-  def account_id=(value)
+  def account_id=(_value)
   end
 
   # set the hours, either as number or as a string with the format
@@ -95,7 +94,7 @@ class Worktime < ActiveRecord::Base
     if md = H_M.match(value.to_s)
       value = md[1].to_i + md[2].to_i / 60.0
     end
-    write_attribute 'hours', value.to_f
+    self['hours'] = value.to_f
   end
 
   # set the start time, either as number or as a string with the format
@@ -122,11 +121,11 @@ class Worktime < ActiveRecord::Base
 
   def work_date
     # cache date to prevent endless string_to_date conversion
-    @work_date ||= read_attribute(:work_date)
+    @work_date ||= self[:work_date]
   end
 
   def work_date=(value)
-    write_attribute(:work_date, value)
+    self[:work_date] = value
     @work_date = nil
   end
 
@@ -187,7 +186,7 @@ class Worktime < ActiveRecord::Base
     if start_stop? && from_start_time && to_end_time
       self.hours = (to_end_time.seconds_since_midnight - from_start_time.seconds_since_midnight) / 3600.0
     end
-    self.work_date = Date.today if report_type.kind_of? AutoStartType
+    self.work_date = Time.zone.today if report_type.is_a? AutoStartType
   end
 
   # Name of the corresponding controller
@@ -222,8 +221,8 @@ class Worktime < ActiveRecord::Base
 
   # allow time formats such as 14, 1400, 14:00 and 14.0 (1430, 14:30, 14.5)
   def write_converted_time(attribute, value)
-    value = I18n.l(value, format: :time) if value.kind_of? Time
-    if value.kind_of?(String) && ! (value =~ H_M)
+    value = I18n.l(value, format: :time) if value.is_a? Time
+    if value.is_a?(String) && ! (value =~ H_M)
       if value.size > 0 && value =~ /^\d*\.?\d*$/
         # military time: 1400
         if value.size > 2 && !value.include?('.')
@@ -236,7 +235,6 @@ class Worktime < ActiveRecord::Base
         value = nil
       end
     end
-    write_attribute attribute, value
+    self[attribute] = value
   end
-
 end

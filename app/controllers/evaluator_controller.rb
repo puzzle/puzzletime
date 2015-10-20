@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 class EvaluatorController < ApplicationController
-
   include WorktimesReport
   include WorktimesCsv
 
@@ -31,7 +30,7 @@ class EvaluatorController < ApplicationController
 
   def absencedetails
     session[:evalLevels] = []
-    @period ||= Period.coming_month Date.today, 'Kommender Monat'
+    @period ||= Period.coming_month Time.zone.today, 'Kommender Monat'
     paginate_times
   end
 
@@ -51,7 +50,7 @@ class EvaluatorController < ApplicationController
   def export_csv
     set_evaluation_details
     filename = ['puzzletime', csv_label(@evaluation.category),
-               csv_label(@evaluation.division)].compact.join('-') + '.csv'
+                csv_label(@evaluation.division)].compact.join('-') + '.csv'
     times = @evaluation.times(@period)
     send_worktimes_csv(times, filename)
   end
@@ -65,7 +64,7 @@ class EvaluatorController < ApplicationController
     flash[:notice] = 'Alle Arbeitszeiten '
     flash[:notice] += "von #{Employee.find(@evaluation.employee_id).label} " if @evaluation.employee_id
     flash[:notice] += "für #{WorkItem.find(@evaluation.account_id).label_verbose}" \
-                     "#{ ' während dem ' + @period.to_s if @period} wurden verbucht."
+                     "#{' während dem ' + @period.to_s if @period} wurden verbucht."
     redirect_to params.merge(action: 'details', only_path: true).to_hash
   end
 
@@ -92,7 +91,7 @@ class EvaluatorController < ApplicationController
   def export_ma_overview
     unless @period
       flash[:notice] = 'Bitte wählen Sie eine Zeitspanne für die Auswertung.'
-      redirect_to :action => 'employees'
+      redirect_to action: 'employees'
     end
   end
 
@@ -116,17 +115,17 @@ class EvaluatorController < ApplicationController
                                 params[:period][:label])
     end
     fail ArgumentError, 'Start Datum nach End Datum' if @period.negative?
-    session[:period] = [@period.start_date.to_s, @period.end_date.to_s,  @period.label]
-     # redirect_to_overview
+    session[:period] = [@period.start_date.to_s, @period.end_date.to_s, @period.label]
+    # redirect_to_overview
     redirect_to sanitized_back_url
-  rescue ArgumentError => ex        # ArgumentError from Period.new or if period.negative?
+  rescue ArgumentError => ex # ArgumentError from Period.new or if period.negative?
     flash[:alert] = "Ungültige Zeitspanne: #{ex}"
     render action: 'select_period'
   end
 
 
   # Dispatches evaluation names used as actions
-  def action_missing(action, *args)
+  def action_missing(action, *_args)
     params[:evaluation] = action.to_s
     overview
   end
@@ -144,32 +143,30 @@ class EvaluatorController < ApplicationController
   def set_evaluation
     params[:evaluation] ||= 'userworkitems'
     @evaluation = case params[:evaluation].downcase
-        when 'managed' then ManagedOrdersEval.new(@user)
-        when 'absencedetails' then AbsenceDetailsEval.new
-        when 'userworkitems' then EmployeeWorkItemsEval.new(@user.id)
-        when "employeesubworkitems#{@user.id}", 'usersubworkitems' then
-          params[:evaluation] = 'usersubworkitems'
-          EmployeeSubWorkItemsEval.new(params[:category_id], @user.id)
-        when 'userabsences' then EmployeeAbsencesEval.new(@user.id)
-        when 'subworkitems' then SubWorkItemsEval.new(params[:category_id])
-        when 'workitememployees' then WorkItemEmployeesEval.new(params[:category_id])
-        else nil
-    end
+                  when 'managed' then ManagedOrdersEval.new(@user)
+                  when 'absencedetails' then AbsenceDetailsEval.new
+                  when 'userworkitems' then EmployeeWorkItemsEval.new(@user.id)
+                  when "employeesubworkitems#{@user.id}", 'usersubworkitems' then
+                    params[:evaluation] = 'usersubworkitems'
+                    EmployeeSubWorkItemsEval.new(params[:category_id], @user.id)
+                  when 'userabsences' then EmployeeAbsencesEval.new(@user.id)
+                  when 'subworkitems' then SubWorkItemsEval.new(params[:category_id])
+                  when 'workitememployees' then WorkItemEmployeesEval.new(params[:category_id])
+                  end
     if @user.management && @evaluation.nil?
       @evaluation = case params[:evaluation].downcase
-        when 'clients' then ClientsEval.new
-        when 'employees' then EmployeesEval.new
-        when 'departments' then DepartmentsEval.new
-        when 'clientworkitems' then ClientWorkItemsEval.new(params[:category_id])
-        when 'employeeworkitems' then EmployeeWorkItemsEval.new(params[:category_id])
-        when /employeesubworkitems(\d+)/ then
-          params[:evaluation] = 'employeesubworkitems'
-          EmployeeSubWorkItemsEval.new(params[:category_id], Regexp.last_match[1])
-        when 'departmentorders' then DepartmentOrdersEval.new(params[:category_id])
-        when 'absences' then AbsencesEval.new
-        when 'employeeabsences' then EmployeeAbsencesEval.new(params[:category_id])
-        else nil
-      end
+                    when 'clients' then ClientsEval.new
+                    when 'employees' then EmployeesEval.new
+                    when 'departments' then DepartmentsEval.new
+                    when 'clientworkitems' then ClientWorkItemsEval.new(params[:category_id])
+                    when 'employeeworkitems' then EmployeeWorkItemsEval.new(params[:category_id])
+                    when /employeesubworkitems(\d+)/ then
+                      params[:evaluation] = 'employeesubworkitems'
+                      EmployeeSubWorkItemsEval.new(params[:category_id], Regexp.last_match[1])
+                    when 'departmentorders' then DepartmentOrdersEval.new(params[:category_id])
+                    when 'absences' then AbsencesEval.new
+                    when 'employeeabsences' then EmployeeAbsencesEval.new(params[:category_id])
+                    end
     end
     if @evaluation.nil?
       @evaluation = EmployeeWorkItemsEval.new(@user.id)
@@ -232,5 +229,4 @@ class EvaluatorController < ApplicationController
     evaluation
     authorize!(params[:evaluation].to_sym, Evaluation)
   end
-
 end

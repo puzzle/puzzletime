@@ -1,6 +1,5 @@
 # encoding: utf-8
 class AbsencetimesController < WorktimesController
-
   self.permitted_attrs = [:absence_id, :report_type, :work_date, :hours,
                           :from_start_time, :to_end_time, :description]
 
@@ -46,12 +45,11 @@ class AbsencetimesController < WorktimesController
     @worktime.absence_id ||= params[:account_id]
   end
 
-  def set_accounts(all = false)
+  def set_accounts(_all = false)
     @accounts = Absence.list
   end
 
   def generic_evaluation
     'absences'
   end
-
 end

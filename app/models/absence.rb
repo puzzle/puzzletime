@@ -14,7 +14,6 @@
 # Diplomarbeit 2149, Xavier Hayoz
 
 class Absence < ActiveRecord::Base
-
   include Evaluatable
 
   # All dependencies between the models are listed below
@@ -33,5 +32,4 @@ class Absence < ActiveRecord::Base
   def to_s
     name
   end
-
 end

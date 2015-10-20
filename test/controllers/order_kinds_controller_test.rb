@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class OrderKindsControllerTest < ActionController::TestCase
-
   include CrudControllerTestHelper
 
   setup :login
@@ -12,7 +11,7 @@ class OrderKindsControllerTest < ActionController::TestCase
                :test_destroy_json
 
   def test_destroy # :nodoc:
-    assert_no_difference("OrderKind.count") do
+    assert_no_difference('OrderKind.count') do
       delete :destroy, id: test_entry.id
     end
     assert_redirected_to_index
@@ -20,7 +19,7 @@ class OrderKindsControllerTest < ActionController::TestCase
 
   def test_destroy_unreferenced
     kind = Fabricate(:order_kind)
-    assert_difference("OrderKind.count", -1) do
+    assert_difference('OrderKind.count', -1) do
       delete :destroy, id: kind.id
     end
     assert_redirected_to_index

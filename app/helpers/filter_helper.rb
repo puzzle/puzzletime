@@ -1,5 +1,4 @@
 module FilterHelper
-
   def predefined_period_options
     [IdValue.new('0m', 'Dieser Monat'),
      IdValue.new('-1m', 'Letzter Monat'),
@@ -16,7 +15,7 @@ module FilterHelper
     html += label_tag(name, label, class: 'control-label') + ' &nbsp; '.html_safe if label
     html += yield
     content_tag(:div, html, class: 'form-group') +
-    ' &nbsp; &nbsp; '.html_safe
+      ' &nbsp; &nbsp; '.html_safe
   end
 
   def direct_filter_date(name, label, date)
@@ -27,7 +26,7 @@ module FilterHelper
                        size: 9,
                        class: 'form-control date',
                        data: { submit: true }) +
-        content_tag(:div, icon(:calendar), class: 'input-group-addon')
+          content_tag(:div, icon(:calendar), class: 'input-group-addon')
       end
     end
   end
@@ -41,5 +40,4 @@ module FilterHelper
                  data: { submit: true })
     end
   end
-
 end

@@ -2,5 +2,4 @@
 
 # adds generic manage view templates
 class ManageController < CrudController
-
 end

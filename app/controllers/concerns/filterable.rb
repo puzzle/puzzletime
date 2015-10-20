@@ -1,5 +1,4 @@
 module Filterable
-
   private
 
   def filter_entries_by(entries, *keys)
@@ -21,5 +20,4 @@ module Filterable
       end
     end
   end
-
 end

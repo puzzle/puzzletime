@@ -11,7 +11,6 @@
 
 
 class OrderContact < ActiveRecord::Base
-
   belongs_to :contact
   belongs_to :order
 
@@ -53,5 +52,4 @@ class OrderContact < ActiveRecord::Base
       errors.add(:contact_id, 'muss zum selben Kunden wie der Auftrag gehören.')
     end
   end
-
 end

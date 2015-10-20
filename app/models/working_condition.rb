@@ -11,7 +11,6 @@
 
 
 class WorkingCondition < ActiveRecord::Base
-
   validates_by_schema
   validates :valid_from, uniqueness: true
   validates :must_hours_per_day,
@@ -33,10 +32,9 @@ class WorkingCondition < ActiveRecord::Base
 
 
   class << self
-
     def todays_value(attr)
       if @today != Time.zone.today
-        @today =  Time.zone.today
+        @today = Time.zone.today
         @todays_values = {}
       end
       @todays_values[attr.to_s] ||= value_at(@today, attr)
@@ -84,7 +82,6 @@ class WorkingCondition < ActiveRecord::Base
       @todays_values = {}
       true
     end
-
   end
 
   def to_s
@@ -106,5 +103,4 @@ class WorkingCondition < ActiveRecord::Base
       false
     end
   end
-
 end

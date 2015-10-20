@@ -1,6 +1,6 @@
 module JavascriptHelper
   def modal_create_link(path, element, title, options = {})
-    options[:id]   ||= "#{element}_create_link"
+    options[:id] ||= "#{element}_create_link"
     options[:data] ||= {}
     options[:data].merge!(modal: '#modal',
                           title: title,
@@ -9,7 +9,7 @@ module JavascriptHelper
                           type: :html,
                           update: 'selectize')
     link_to(path, options) do
-      picon(:add) + " Erfassen".html_safe
+      picon(:add) + ' Erfassen'.html_safe
     end
   end
 end

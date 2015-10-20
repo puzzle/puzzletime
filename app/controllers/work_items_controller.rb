@@ -1,5 +1,4 @@
 class WorkItemsController < ManageController
-
   self.permitted_attrs = :name, :shortname, :description, :parent_id
   self.search_columns = [:path_shortnames, :path_names, :description]
 
@@ -8,11 +7,11 @@ class WorkItemsController < ManageController
     respond_to do |format|
       format.json do
         @work_items = WorkItem.recordable.
-                               list.
-                               where(search_conditions).
-                               joins(:accounting_post).
-                               includes(:accounting_post).
-                               limit(20)
+                      list.
+                      where(search_conditions).
+                      joins(:accounting_post).
+                      includes(:accounting_post).
+                      limit(20)
       end
     end
   end
@@ -23,5 +22,4 @@ class WorkItemsController < ManageController
   def search_support?
     false
   end
-
 end

@@ -11,32 +11,32 @@ module Crm
     end
 
     # CRM Url for the given client
-    def client_url(client)
+    def client_url(_client)
     end
 
     # CRM Url for the given contact
-    def contact_url(contact)
+    def contact_url(_contact)
     end
 
     # CRM Url for the given order
-    def order_url(order)
+    def order_url(_order)
     end
 
     # Find an order with the given key in the crm
-    def find_order(key)
+    def find_order(_key)
     end
 
     # Find all contacts for a given client in the crm
-    def find_client_contacts(client)
+    def find_client_contacts(_client)
       []
     end
 
     # Find a contact with the given key in the crm
-    def find_person(key)
+    def find_person(_key)
     end
 
     # Find people with the given email
-    def find_people_by_email(email)
+    def find_people_by_email(_email)
     end
 
     # Sync all entities from the crm, discarding local changes.

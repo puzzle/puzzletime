@@ -24,9 +24,8 @@
 require 'test_helper'
 
 class InvoiceTest < ActiveSupport::TestCase
-
   setup do
-    @worktime_lw2 = worktimes(:wt_lw_webauftritt).dup.tap {|w| w.work_date += 1.day; w.hours= 10; w.save! }
+    @worktime_lw2 = worktimes(:wt_lw_webauftritt).dup.tap { |w| w.work_date += 1.day; w.hours = 10; w.save! }
     Invoicing.instance = nil
     invoice.employees = [employees(:pascal), employees(:mark), employees(:lucien)]
     invoice.work_items << work_items(:webauftritt)
@@ -73,7 +72,7 @@ class InvoiceTest < ActiveSupport::TestCase
   end
 
   test 'generates invoice number' do
-    second_invoice = invoice.dup.tap {|i| i.reference = nil; i.save! }
+    second_invoice = invoice.dup.tap { |i| i.reference = nil; i.save! }
     assert_equal 'STOPWEBD10002', second_invoice.reference
   end
 
@@ -117,7 +116,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 1.0, invoice.calculated_total_amount.to_f
   end
 
-  ['employees', 'accounting_posts'].each do |grouping|
+  %w(employees accounting_posts).each do |grouping|
     test "calculated_total_amount when grouping = #{grouping} and add_vat is false" do
       invoice.grouping = grouping
       invoice.add_vat = false
@@ -172,7 +171,7 @@ class InvoiceTest < ActiveSupport::TestCase
     invoice.employees!
     positions = invoice.send(:build_positions).sort_by(&:name)
     assert_equal 2, positions.size
-    expected_position_names = [employees(:mark), employees(:lucien)].map {|e| "Webauftritt - #{e.to_s}"}
+    expected_position_names = [employees(:mark), employees(:lucien)].map { |e| "Webauftritt - #{e}" }
     assert_equal expected_position_names, positions.map(&:name)
 
     assert_equal 7, positions.first.total_hours
@@ -253,11 +252,9 @@ class InvoiceTest < ActiveSupport::TestCase
   def invoice
     invoices(:webauftritt_may)
   end
-
 end
 
 class InvoiceTransactionTest < ActiveSupport::TestCase
-
   self.use_transactional_fixtures = false
 
   test 'generates different parallel invoice numbers' do
@@ -273,5 +270,4 @@ class InvoiceTransactionTest < ActiveSupport::TestCase
     assert_equal 11, clients(:swisstopo).last_invoice_number
     assert_equal 11, Invoice.pluck(:reference).uniq.size
   end
-
 end

@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 class AccountColorMapper
-
   def initialize
     @map = {}
   end
@@ -46,5 +45,4 @@ class AccountColorMapper
   def accounts(type)
     @map.keys.select { |key| key.is_a? type }
   end
-
 end

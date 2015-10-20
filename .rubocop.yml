@@ -10,25 +10,34 @@ AllCops:
     - tmp/**/*
     - app/assets/config.rb
 
-# This cop is currently buggy (0.21.0)
-Delegate:
-  Enabled: false
 
-ClassLength:
+
+Metrics/AbcSize:
+  Max: 25
+  Severity: error
+
+Metrics/ClassLength:
   Max: 200
   Severity: error
 
-MethodLength:
+Metrics/CyclomaticComplexity:
   Max: 10
   Severity: error
 
-CyclomaticComplexity:
-  Max: 6
+Metrics/LineLength:
+  Max: 120 # try to reduce to 100
+  Severity: warning
+
+Metrics/MethodLength:
+  Max: 25 # try to reduce to 10
   Severity: error
 
-LineLength:
-  Max: 100
-  Severity: warning
+Metrics/ModuleLength:
+  Max: 200
+  Severity: error
+
+Metrics/PerceivedComplexity:
+  Max: 10
 
 
 # Keep for now, easier with superclass definitions
@@ -42,6 +51,10 @@ ClassVars:
 # map instead of collect, reduce instead of inject.
 # Probably later
 CollectionMethods:
+  Enabled: false
+
+# This cop is currently buggy (0.21.0)
+Delegate:
   Enabled: false
 
 # Well, well, well
@@ -66,4 +79,8 @@ IfUnlessModifier:
 
 # We thinks that's fine
 HasAndBelongsToMany:
+  Enabled: false
+
+# We do. But some other methods are still called 'attr', do not complain about them
+Style/Attr:
   Enabled: false

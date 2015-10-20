@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 class AbsencePlanningGraph
-
   include PeriodIterable
 
   def initialize(absences, period)
@@ -9,19 +8,19 @@ class AbsencePlanningGraph
 
     absences.each do |absence|
       case absence.report_type
-        when StartStopType
-          add_start_stop_absence(absence)
-        when HoursDayType
-          add_day_absence(absence)
-        when HoursWeekType
-          add_weekly_absence(absence)
-        when HoursMonthType
-          add_month_absence(absence)
+      when StartStopType
+        add_start_stop_absence(absence)
+      when HoursDayType
+        add_day_absence(absence)
+      when HoursWeekType
+        add_weekly_absence(absence)
+      when HoursMonthType
+        add_month_absence(absence)
       end
     end
 
     @period.start_date.step(@period.end_date) do |day|
-      if !Holiday.weekend?(day) && (Holiday.regularHoliday?(day) || Holiday.irregular_holiday?(day))
+      if !Holiday.weekend?(day) && (Holiday.regular_holiday?(day) || Holiday.irregular_holiday?(day))
         add_to_cache('Feiertag', day)
       end
     end
@@ -53,7 +52,7 @@ class AbsencePlanningGraph
     dateFrom = Date.civil(absence.work_date.year, absence.work_date.month, 1)
     dateTo = Date.civil(dateFrom.year, dateFrom.month, -1)
     # TODO: consider holidays as Christmas or Eastern while calculating workdays
-    workdays = (dateFrom..dateTo).select { |day| [1, 2, 3, 4, 5].include?(day.wday) }.size # number of work days in the month
+    workdays = (dateFrom..dateTo).count { |day| [1, 2, 3, 4, 5].include?(day.wday) } # number of work days in the month
     dateFrom.step(dateTo, 1) do |date|
       add_to_cache(absence.time_string, date, absence.hours / workdays)
     end
@@ -71,5 +70,4 @@ class AbsencePlanningGraph
       cached.add(label, hours / WorkingCondition.value_at(date, :must_hours_per_day) * 10)
     end
   end
-
 end

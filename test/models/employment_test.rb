@@ -14,7 +14,6 @@
 require 'test_helper'
 
 class EmploymentTest < ActiveSupport::TestCase
-
   def test_musttime
     half_year = Employment.find(1)
     assert_equal half_year.period.length, 184

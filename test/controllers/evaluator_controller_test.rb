@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class EvaluatorControllerTest < ActionController::TestCase
-
   setup :login
 
   def expected_csv_header
@@ -24,7 +23,6 @@ class EvaluatorControllerTest < ActionController::TestCase
   end
 
   %w(userworkitems userabsences).each do |evaluation|
-
     test "GET index #{evaluation}" do
       get :index, evaluation: evaluation
       assert_template 'user_overview'
@@ -37,7 +35,7 @@ class EvaluatorControllerTest < ActionController::TestCase
     end
   end
 
-  test "GET export_csv userworkitems csv format" do
+  test 'GET export_csv userworkitems csv format' do
     get :export_csv, evaluation: 'userworkitems'
     assert_match expected_csv_header, csv_header
     assert_equal 3, csv_data_lines.size
@@ -45,7 +43,6 @@ class EvaluatorControllerTest < ActionController::TestCase
   end
 
   %w(clients employees departments).each do |evaluation|
-
     test "GET index #{evaluation}" do
       get :index, evaluation: evaluation
       assert_template 'overview'
@@ -63,7 +60,6 @@ class EvaluatorControllerTest < ActionController::TestCase
       assert_equal 9, csv_data_lines.size
       assert_match '29.11.2006,1.0,"","",absolute_day,true,Zumkehr Pascal,PITC-AL: Allgemein,,', csv_data_lines.first
     end
-
   end
 
   test 'GET report contains all hours' do
@@ -107,15 +103,14 @@ class EvaluatorControllerTest < ActionController::TestCase
     get :report, evaluation: 'workitememployees',
                  category_id: work_items(:allgemein),
                  division_id: employees(:pascal),
-                 show_ticket: "1"
+                 show_ticket: '1'
 
     assert_template 'report'
-    assert_match %r(<th>Ticket</th>), response.body
-    assert_match %r(<td[^>]*>#{ticket_label}</td>), response.body
+    assert_match %r{<th>Ticket</th>}, response.body
+    assert_match %r{<td[^>]*>#{ticket_label}</td>}, response.body
   end
 
   def division_id(evaluation)
     evaluation.singularize.classify.constantize.first.id
   end
-
 end

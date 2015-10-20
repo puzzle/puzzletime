@@ -15,7 +15,6 @@
 # Diplomarbeit 2149, Xavier Hayoz
 
 class Client < ActiveRecord::Base
-
   include BelongingToWorkItem
   include Evaluatable
 
@@ -36,5 +35,4 @@ class Client < ActiveRecord::Base
   def self.worktimes
     Worktime.all
   end
-
 end

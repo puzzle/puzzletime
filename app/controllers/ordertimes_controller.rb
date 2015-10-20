@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 class OrdertimesController < WorktimesController
-
   self.permitted_attrs = [:account_id, :report_type, :work_date, :hours,
                           :from_start_time, :to_end_time, :description, :billable, :booked, :ticket]
 
@@ -112,7 +111,7 @@ class OrdertimesController < WorktimesController
   end
 
   def stop_running(time = running_time, stop = Time.zone.now)
-    time.to_end_time = time.work_date == Date.today ? stop : '23:59'
+    time.to_end_time = time.work_date == Time.zone.today ? stop : '23:59'
     time.report_type = StartStopType::INSTANCE
     time.store_hours
     if time.hours < 0.0166
@@ -129,7 +128,7 @@ class OrdertimesController < WorktimesController
       append_flash message.sub('#time_string', time.time_string)
     else
       append_flash "Die #{time.class.model_name.human} konnte nicht gespeichert werden:\n"
-      time.errors.each { |attr, msg| flash[:notice] += '<br/> - ' + msg + "\n" }
+      time.errors.each { |_attr, msg| flash[:notice] += '<br/> - ' + msg + "\n" }
     end
     running_time(true)
     time
@@ -142,5 +141,4 @@ class OrdertimesController < WorktimesController
   def running_time(reload = false)
     @user.running_time(reload)
   end
-
 end

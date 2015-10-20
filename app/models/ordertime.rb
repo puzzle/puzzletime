@@ -21,7 +21,6 @@
 #
 
 class Ordertime < Worktime
-
   alias_attribute :account, :work_item
   alias_attribute :account_id, :work_item_id
 
@@ -90,5 +89,4 @@ class Ordertime < Worktime
       true
     end
   end
-
 end

@@ -3,7 +3,6 @@
 require 'test_helper'
 
 class WeekTest < ActiveSupport::TestCase
-
   def test_from_string
     week = Week.from_string('2009 10')
     assert_equal 10, week.week
@@ -26,7 +25,6 @@ class WeekTest < ActiveSupport::TestCase
     week = Week.from_integer(197_004)
     assert_equal 4, week.week
     assert_equal 1970, week.year
-
   end
 
   def test_to_integer
@@ -49,5 +47,4 @@ class WeekTest < ActiveSupport::TestCase
     assert Week.valid?(201_001)
     assert !Week.valid?(201_053)
   end
-
 end

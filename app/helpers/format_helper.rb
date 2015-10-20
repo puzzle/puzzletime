@@ -8,7 +8,6 @@
 # Futher helpers standartize the layout of multiple attributes (#render_attrs),
 # values with labels (#labeled) and simple lists.
 module FormatHelper
-
   # Formats a basic value based on its Ruby class.
   def f(value)
     case value
@@ -34,27 +33,27 @@ module FormatHelper
   # Otherwise, calls format_type.
   def format_attr(obj, attr)
     format_with_helper(obj, attr) ||
-    format_association(obj, attr) ||
-    format_type(obj, attr)
+      format_association(obj, attr) ||
+      format_type(obj, attr)
   end
 
   def format_hour(hour)
-    number_with_precision(hour, precision: 2,delimiter: '\'')
+    number_with_precision(hour, precision: 2, delimiter: '\'')
   end
 
   def format_time(time)
     I18n.l(time, format: :time) if time
   end
 
-  def format_day(date, full_weekday_name=false)
+  def format_day(date, full_weekday_name = false)
     if date
-      format = full_weekday_name ? "%A, %e.%-m." : "%a %e.%-m."
+      format = full_weekday_name ? '%A, %e.%-m.' : '%a %e.%-m.'
       I18n.l(date, format: format)
     end
   end
 
   def localize_date(date)
-    I18n.l(date, format: "%d.%m.%Y") if date
+    I18n.l(date, format: '%d.%m.%Y') if date
   end
 
   def format_days(number)
@@ -68,7 +67,7 @@ module FormatHelper
   # Renders a simple unordered list, which will
   # simply render all passed items or yield them
   # to your block.
-  def simple_list(items, ul_options = {}, &block)
+  def simple_list(items, ul_options = {}, &_block)
     content_tag_nested(:ul, items, ul_options) do |item|
       content_tag(:li, block_given? ? yield(item) : f(item))
     end
@@ -110,7 +109,7 @@ module FormatHelper
   # Checks whether a format_{class}_{attr} or format_{attr} helper method is
   # defined and calls it if is.
   def format_with_helper(obj, attr)
-    class_name = obj.class.name.underscore.gsub('/', '_')
+    class_name = obj.class.name.underscore.tr('/', '_')
     format_type_attr_method = :"format_#{class_name}_#{attr}"
     format_attr_method = :"format_#{attr}"
 
@@ -198,5 +197,4 @@ module FormatHelper
   rescue
     false
   end
-
 end

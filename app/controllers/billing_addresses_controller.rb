@@ -1,5 +1,4 @@
 class BillingAddressesController < ManageController
-
   self.nesting = [Client]
 
   self.permitted_attrs = [:contact_id, :supplement, :street, :zip_code, :town, :country]
@@ -11,5 +10,4 @@ class BillingAddressesController < ManageController
   def set_contacts
     @contacts = parent.contacts.list
   end
-
 end

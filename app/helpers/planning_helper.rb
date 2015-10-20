@@ -18,7 +18,7 @@ module PlanningHelper
     label = overview_graph.week_label(week)
 
     if colspan > 0
-      result <<  label
+      result << label
     else
       result << "<a href=\"#{url_for(action: 'employee_planning', employee_id: overview_graph.employee, week_date: week)}\">"
       result << "#{overview_graph.planned_days(week)}"
@@ -47,7 +47,7 @@ module PlanningHelper
   # returns a weekly absence column
   def week_absence_td(absence_graph, date)
     absences = []
-    5.times do |day|
+    5.times do |_day|
       absences << absence_graph.absence(date)
     end
     result = '<td '
@@ -65,7 +65,7 @@ module PlanningHelper
   # returns a weekly absence column in the work item planning graph view
   def week_absence_td_proj(absence_graph, date)
     absences = []
-    5.times do |day|
+    5.times do |_day|
       absences << absence_graph.absence(date)
     end
     result = '<td border=\"0\"'
@@ -83,7 +83,7 @@ module PlanningHelper
   # returns daily absence columns
   def day_absence_tds(absence_graph, date)
     result = ''
-    5.times do |day|
+    5.times do |_day|
       absence = absence_graph.absence(date)
       if absence
         result << "<td colspan=2 class=\"absence\"><a>&nbsp;<span>#{absence.label}</span></a></td>"
@@ -99,7 +99,7 @@ module PlanningHelper
   # returns daily absence columns in the work item planning graph view
   def day_absence_tds_proj(absence_graph, date)
     result = ''
-    5.times do |day|
+    5.times do |_day|
       absence = absence_graph.absence(date)
       if absence
         result << "<td class=\"absence\" border=\"0\" colspan=\"2\"></td>"
@@ -114,17 +114,17 @@ module PlanningHelper
 
   # draw an empty cell in the planning graph views
   def empty_half_day_td(date)
-    "<td #{'class="current"' if Date.today == date } style='width:10px'></td>".html_safe
+    "<td #{'class="current"' if Time.zone.today == date} style='width:10px'></td>".html_safe
   end
 
   # draws an empty cell in the thin row for absences in the work item planning graph view
   def empty_half_day_td_absence(date)
-    "<td #{'class="current"' if Date.today == date } style='width:10px; border-width: 0px 1px 0px 0px'></td>".html_safe
+    "<td #{'class="current"' if Time.zone.today == date} style='width:10px; border-width: 0px 1px 0px 0px'></td>".html_safe
   end
 
   # renders a planned planning cell with a link to the respective work item
   def half_day_with_link_td(employee, date, work_item)
-    result = "<td #{'class="current"' if Date.today == date } style='width:10px'>"
+    result = "<td #{'class="current"' if Time.zone.today == date} style='width:10px'>"
     result << '<a href="/plannings/new?'
     result << "employee_id=#{employee.id}" if employee
     result << "&work_item_id=#{work_item.id}" if work_item
@@ -207,9 +207,10 @@ module PlanningHelper
   end
 
   private
+
   # returns the planning record matching the week and work item
   def week_planning(plannings, current_week_date, work_item, employee)
-    plannings = plannings.select { |planning| planning.work_item == work_item and planning.employee == employee }
+    plannings = plannings.select { |planning| planning.work_item == work_item && planning.employee == employee }
     return nil if plannings.empty?
 
     current_week = Week.from_date(current_week_date).to_integer
@@ -219,5 +220,4 @@ module PlanningHelper
     end
     nil
   end
-
 end

@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 class MultiWorktimesController < ApplicationController
-
   before_action :order
   before_action :authorize_class
 

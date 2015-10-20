@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 class WorkItemEmployeesEval < Evaluation
-
   self.division_method  = :employees
   self.division_column  = :employee_id
   self.label            = 'Mitarbeiter'
@@ -33,5 +32,4 @@ class WorkItemEmployeesEval < Evaluation
     return if division_id.nil?
     @division = Employee.find(division_id.to_i)
   end
-
 end

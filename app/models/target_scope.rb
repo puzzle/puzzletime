@@ -11,7 +11,6 @@
 
 
 class TargetScope < ActiveRecord::Base
-
   has_many :order_targets, dependent: :destroy
 
   validates_by_schema
@@ -33,5 +32,4 @@ class TargetScope < ActiveRecord::Base
       o.targets.create!(target_scope: self, rating: OrderTarget::RATINGS.first)
     end
   end
-
 end

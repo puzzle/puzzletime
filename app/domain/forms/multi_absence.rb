@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 class MultiAbsence
-
   attr_reader :absence_id, :employee, :work_date, :duration, :description, :worktime
   attr_writer :employee
 
@@ -66,7 +65,7 @@ class MultiAbsence
   private
 
   def date_or_nil(value)
-    unless value.kind_of? Date
+    unless value.is_a? Date
       begin
         value = Date.parse(value)
       rescue
@@ -86,5 +85,4 @@ class MultiAbsence
     worktime.hours = hours
     worktime
   end
-
 end

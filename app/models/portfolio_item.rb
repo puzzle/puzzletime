@@ -10,7 +10,6 @@
 #
 
 class PortfolioItem < ActiveRecord::Base
-
   has_many :accounting_posts
 
   scope :list, -> { order(:name) }
@@ -23,5 +22,4 @@ class PortfolioItem < ActiveRecord::Base
   def to_s
     name
   end
-
 end

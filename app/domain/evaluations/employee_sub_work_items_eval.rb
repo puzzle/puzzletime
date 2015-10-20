@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 class EmployeeSubWorkItemsEval < SubWorkItemsEval
-
   include Conditioner
 
   self.sub_work_items_eval = 'employeesubworkitems'
@@ -26,5 +25,4 @@ class EmployeeSubWorkItemsEval < SubWorkItemsEval
   def sub_work_items_evaluation(division = nil)
     sub_work_items_eval + employee_id.to_s if division.children?
   end
-
 end

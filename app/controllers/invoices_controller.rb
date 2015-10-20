@@ -1,6 +1,5 @@
 # encoding: utf-8
 class InvoicesController < CrudController
-
   self.nesting = [Order]
 
   self.permitted_attrs = [:due_date, :period_from, :period_to, :add_vat, :billing_address_id, :grouping,
@@ -114,7 +113,7 @@ class InvoicesController < CrudController
   end
 
   def billing_date
-    entry.billing_date || Date.today
+    entry.billing_date || Time.zone.today
   end
 
   def due_date

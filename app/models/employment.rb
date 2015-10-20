@@ -15,7 +15,6 @@
 # Diplomarbeit 2149, Xavier Hayoz
 
 class Employment < ActiveRecord::Base
-
   DAYS_PER_YEAR = 365.25
 
   belongs_to :employee
@@ -35,20 +34,19 @@ class Employment < ActiveRecord::Base
 
   def previous_employment
     @previous_employment ||=
-      Employment.where('employee_id = ? AND start_date < ? AND end_date IS NULL',
-                       employee_id, start_date).
-                 first
+      Employment.find_by('employee_id = ? AND start_date < ? AND end_date IS NULL',
+                         employee_id, start_date)
   end
 
   def following_employment
     @following_employment ||=
       Employment.where('employee_id = ? AND start_date > ?', employee_id, start_date).
-                 order('start_date').
-                 first
+      order('start_date').
+      first
   end
 
   def period
-    Period.retrieve(start_date, end_date ? end_date : Date.today) if start_date
+    Period.retrieve(start_date, end_date ? end_date : Time.zone.today) if start_date
   end
 
   def percent_factor
@@ -121,5 +119,4 @@ class Employment < ActiveRecord::Base
     end
     Employment.where(conditions).count > 0
   end
-
 end

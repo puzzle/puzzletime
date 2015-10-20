@@ -14,7 +14,6 @@
 #
 
 class Contract < ActiveRecord::Base
-
   has_one :order
 
   validates_by_schema
@@ -25,7 +24,7 @@ class Contract < ActiveRecord::Base
   after_initialize :set_default_payment_period
 
   def to_s
-    number || ""
+    number || ''
   end
 
   private
@@ -33,5 +32,4 @@ class Contract < ActiveRecord::Base
   def set_default_payment_period
     self.payment_period ||= Settings.defaults.payment_period
   end
-
 end

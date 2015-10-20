@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 module GraphHelper
-
   def weekday_header
     names = I18n.t(:'date.day_names')[1..6] + [I18n.t(:'date.day_names')[0]]
     names.collect! { |n| "<th>#{n[0..1]}</th>" }
@@ -9,9 +8,9 @@ module GraphHelper
   end
 
   def day_name_header(span = 0)
-  	 header = ''
+    header = ''
     @graph.each_day do |day|
-      header += "<th colspan=\"#{span}\" #{'class="current"' if Date.today == day }>#{I18n.t(:'date.day_names')[day.wday][0..1]}</th>\n" unless Holiday.weekend?(day)
+      header += "<th colspan=\"#{span}\" #{'class="current"' if Time.zone.today == day}>#{I18n.t(:'date.day_names')[day.wday][0..1]}</th>\n" unless Holiday.weekend?(day)
     end
     header.html_safe
   end
@@ -19,7 +18,7 @@ module GraphHelper
   def day_date_header(span = 0)
     header = ''
     @graph.each_day do |day|
-      header += "<th colspan=\"#{span}\" #{'class="current"' if Date.today == day }>#{day.mday}</th>\n" unless Holiday.weekend?(day)
+      header += "<th colspan=\"#{span}\" #{'class="current"' if Time.zone.today == day}>#{day.mday}</th>\n" unless Holiday.weekend?(day)
     end
     header.html_safe
   end
@@ -29,30 +28,30 @@ module GraphHelper
     @graph.each_week do |day|
       header += "<th colspan=\"#{span}\">#{'%02d' % day.cweek}</th>\n"
     end
-	   header.html_safe
+    header.html_safe
   end
 
   def month_header(span_factor = 1)
-  	 header = ''
-  	 current_month = @graph.period.start_date.month
-  	 span = 0
-  	 @graph.each_week do |day|
-   	  if day.month != current_month
-     		 header += append_month(current_month, span * span_factor)
-     		 current_month = day.month
-     		 span = 0
-       end
+    header = ''
+    current_month = @graph.period.start_date.month
+    span = 0
+    @graph.each_week do |day|
+      if day.month != current_month
+        header += append_month(current_month, span * span_factor)
+        current_month = day.month
+        span = 0
+      end
       span += 1
-   	end
-  	 header += append_month(current_month, span * span_factor)
-  	 header.html_safe
+    end
+    header += append_month(current_month, span * span_factor)
+    header.html_safe
   end
 
   def append_month(current_month, span)
-  	 header = "<th colspan=\"#{span}\">"
-  	 header += I18n.t(:'date.month_names')[current_month] if span > 2
-  	 header += "</th>\n"
-  	 header
+    header = "<th colspan=\"#{span}\">"
+    header += I18n.t(:'date.month_names')[current_month] if span > 2
+    header += "</th>\n"
+    header
   end
 
   def year_header(span_factor = 1)
@@ -79,13 +78,13 @@ module GraphHelper
   end
 
   def weekbox_td(box, current)
-  	 if box
-   	  "<td style=\"background-color: #{box.color};\"><a>#{box.height}<span>#{h(box.tooltip)}</span></a></td>".html_safe
-   	elsif current
+    if box
+      "<td style=\"background-color: #{box.color};\"><a>#{box.height}<span>#{h(box.tooltip)}</span></a></td>".html_safe
+    elsif current
       '<td class="current"></td>'.html_safe
-     else
-   	   '<td></td>'.html_safe
- 	  end
+    else
+      '<td></td>'.html_safe
+    end
   end
 
   def timebox_div(box)
@@ -110,5 +109,4 @@ module GraphHelper
   def day_td(date, &block)
     content_tag(:td, class: ('holiday' if Holiday.holiday?(date)), &block)
   end
-
 end

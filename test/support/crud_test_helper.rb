@@ -1,16 +1,15 @@
 # encoding: utf-8
 
 #:nodoc:
-REGEXP_ROWS = /<tr.+?<\/tr>/m  #:nodoc:
-REGEXP_HEADERS = /<th.+?<\/th>/m  #:nodoc:
-REGEXP_SORT_HEADERS = /<th.*?><a .*?sort_dir=asc.*?>.*?<\/a><\/th>/m  #:nodoc:
-REGEXP_ACTION_CELL = /<td class=\"action\"><a .*?href.+?<\/a><\/td>/m  #:nodoc:
+REGEXP_ROWS = /<tr.+?<\/tr>/m #:nodoc:
+REGEXP_HEADERS = /<th.+?<\/th>/m #:nodoc:
+REGEXP_SORT_HEADERS = /<th.*?><a .*?sort_dir=asc.*?>.*?<\/a><\/th>/m #:nodoc:
+REGEXP_ACTION_CELL = /<td class=\"action\"><a .*?href.+?<\/a><\/td>/m #:nodoc:
 
 # A simple test helper to prepare the test database with a CrudTestModel model.
 # This helper is used to test the CrudController and various helpers
 # without the need for an application based model.
 module CrudTestHelper
-
   # Controller helper methods for the tests
 
   def model_class
@@ -33,7 +32,7 @@ module CrudTestHelper
     entry
   end
 
-  def sortable?(attr)
+  def sortable?(_attr)
     true
   end
 
@@ -61,19 +60,19 @@ module CrudTestHelper
 
   def create_crud_test_models(c)
     c.create_table :crud_test_models, force: true do |t|
-      t.string   :name, null: false, limit: 50
-      t.string   :email
-      t.string   :password
-      t.string   :whatever
-      t.integer  :children
-      t.integer  :companion_id
-      t.float    :rating
-      t.decimal  :income, precision: 14, scale: 4
-      t.date     :birthdate
-      t.time     :gets_up_at
+      t.string :name, null: false, limit: 50
+      t.string :email
+      t.string :password
+      t.string :whatever
+      t.integer :children
+      t.integer :companion_id
+      t.float :rating
+      t.decimal :income, precision: 14, scale: 4
+      t.date :birthdate
+      t.time :gets_up_at
       t.datetime :last_seen
-      t.boolean  :human, default: true
-      t.text     :remarks
+      t.boolean :human, default: true
+      t.text :remarks
 
       t.timestamps null: false
     end
@@ -81,8 +80,8 @@ module CrudTestHelper
 
   def create_other_crud_test_models(c)
     c.create_table :other_crud_test_models, force: true do |t|
-      t.string   :name, null: false, limit: 50
-      t.integer  :more_id
+      t.string :name, null: false, limit: 50
+      t.integer :more_id
     end
   end
 
@@ -148,7 +147,7 @@ module CrudTestHelper
       birthdate: "#{1900 + 10 * index}-#{index}-#{index}",
       # store entire date to avoid time zone issues
       gets_up_at: Time.local(2000, 1, 1, index, index),
-      last_seen: "#{2000 + 10 * index}-#{index}-#{index} " +
+      last_seen: "#{2000 + 10 * index}-#{index}-#{index} " \
                     "1#{index}:2#{index}",
       human: index.even?,
       remarks: "#{c} #{str(index + 1)} #{str(index + 2)}\n" *
@@ -184,5 +183,4 @@ module CrudTestHelper
 
     c.execute('BEGIN') if start_transaction
   end
-
 end

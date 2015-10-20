@@ -18,7 +18,6 @@
 #
 
 class Contact < ActiveRecord::Base
-
   CRM_ID_PREFIX = 'crm_'
 
   belongs_to :client
@@ -40,5 +39,4 @@ class Contact < ActiveRecord::Base
   def id_or_crm
     id || "#{CRM_ID_PREFIX}#{crm_key}"
   end
-
 end

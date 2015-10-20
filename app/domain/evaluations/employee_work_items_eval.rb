@@ -1,12 +1,11 @@
 # encoding: utf-8
 
 class EmployeeWorkItemsEval < WorkItemsEval
-
   self.category_ref      = :employee_id
   self.sub_evaluation    = nil
   self.division_method   = :alltime_main_work_items
   self.sub_work_items_eval = 'employeesubworkitems'
-  self.detail_columns    = detail_columns.collect { |i| i == :hours ? :times : i }
+  self.detail_columns = detail_columns.collect { |i| i == :hours ? :times : i }
 
 
   def initialize(employee_id)
@@ -17,7 +16,7 @@ class EmployeeWorkItemsEval < WorkItemsEval
     category == user
   end
 
-  def division_supplement(user)
+  def division_supplement(_user)
     []
   end
 

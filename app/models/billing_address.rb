@@ -15,7 +15,6 @@
 #
 
 class BillingAddress < ActiveRecord::Base
-
   belongs_to :client
   belongs_to :contact
 
@@ -54,5 +53,4 @@ class BillingAddress < ActiveRecord::Base
   def set_default_country
     self.country ||= 'CH'
   end
-
 end

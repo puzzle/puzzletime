@@ -3,7 +3,6 @@
 module DryCrud::Table
   # Helper class to store column information.
   class Col < Struct.new(:header, :html_options, :template, :block) #:nodoc:
-
     delegate :content_tag, :capture, to: :template
 
     # Runs the Col block for the given entry.
@@ -20,6 +19,5 @@ module DryCrud::Table
     def html_cell(entry)
       content_tag(:td, content(entry), html_options)
     end
-
   end
 end

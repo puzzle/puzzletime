@@ -30,7 +30,6 @@
 require 'test_helper'
 
 class PlanningTest < ActiveSupport::TestCase
-
   def test_overlapping_with_no_repeat_and_no_repeat
     p1 = build_planning(201_010, 201_010)
     p1.save!
@@ -193,6 +192,7 @@ class PlanningTest < ActiveSupport::TestCase
 
 
   private
+
   def build_planning(start_week, end_week)
     Planning.new(start_week: start_week,
                  end_week: end_week,
@@ -200,5 +200,4 @@ class PlanningTest < ActiveSupport::TestCase
                  employee_id: employees(:long_time_john).id,
                  work_item_id: work_items(:allgemein).id)
   end
-
 end

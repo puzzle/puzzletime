@@ -25,7 +25,7 @@ Fabricator(:invoice) do
   billing_address { |attrs| Fabricate(:billing_address, client: attrs[:order].client) }
   work_items(count: 2)
   employees(count: 2)
-  billing_date { Date.today }
-  period_from { (Date.today - 1.month).at_beginning_of_month }
-  period_to { (Date.today - 1.month).at_end_of_month }
+  billing_date { Time.zone.today }
+  period_from { (Time.zone.today - 1.month).at_beginning_of_month }
+  period_to { (Time.zone.today - 1.month).at_end_of_month }
 end

@@ -4,7 +4,6 @@
 # Diplomarbeit 2149, Xavier Hayoz
 
 class EmployeesController < ManageController
-
   self.permitted_attrs = [:firstname, :lastname, :shortname, :email, :ldapname,
                           :initial_vacation_days, :department_id, :management]
 
@@ -28,7 +27,7 @@ class EmployeesController < ManageController
   def update_settings
     attrs = params.require(:user).permit(eval_periods: [])
     if @user.update_attributes(attrs)
-      flash[:notice] =  'Die Benutzereinstellungen wurden aktualisiert'
+      flash[:notice] = 'Die Benutzereinstellungen wurden aktualisiert'
       redirect_to root_path
     else
       flash[:notice] = 'Die Benutzereinstellungen konnten nicht aktualisiert werden'
@@ -61,5 +60,4 @@ class EmployeesController < ManageController
   def list_entries
     super.includes(:department).references(:department)
   end
-
 end

@@ -3,7 +3,6 @@
 require 'test_helper'
 
 class DepartmentsControllerTest < ActionController::TestCase
-
   include CrudControllerTestHelper
 
   setup :login

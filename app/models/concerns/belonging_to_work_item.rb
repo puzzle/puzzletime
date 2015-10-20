@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 module BelongingToWorkItem
-
   extend ActiveSupport::Concern
 
   included do
@@ -22,8 +21,8 @@ module BelongingToWorkItem
 
     scope :list, -> do
       includes(:work_item).
-      references(:work_item).
-      order('work_items.path_names')
+        references(:work_item).
+        order('work_items.path_names')
     end
   end
 
@@ -46,7 +45,6 @@ module BelongingToWorkItem
 
 
   module ClassMethods
-
     def has_ancestor_through_work_item(name)
       memoized_method(name) do |model|
         if new_record?
@@ -54,8 +52,7 @@ module BelongingToWorkItem
         else
           model.joins('LEFT JOIN work_items ON ' \
                       "#{model.table_name}.work_item_id = ANY (work_items.path_ids)").
-                where('work_items.id = ?', work_item_id).
-                first
+            find_by('work_items.id = ?', work_item_id)
         end
       end
     end
@@ -63,7 +60,7 @@ module BelongingToWorkItem
     def has_descendants_through_work_item(name)
       memoized_method(name) do |model|
         model.joins(:work_item).
-              where("? = ANY (work_items.path_ids)", work_item_id)
+          where('? = ANY (work_items.path_ids)', work_item_id)
       end
     end
 
@@ -73,10 +70,8 @@ module BelongingToWorkItem
       model = name.to_s.classify.constantize
       define_method(name) do
         instance_variable_get("@#{name}") ||
-        instance_variable_set("@#{name}", instance_exec(model, &block))
+          instance_variable_set("@#{name}", instance_exec(model, &block))
       end
     end
-
   end
-
 end

@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 class OverviewPlanningGraph
-
   include PeriodIterable
 
   def initialize(period)
@@ -29,11 +28,12 @@ class OverviewPlanningGraph
   end
 
   def period_average_planned_percent
-    weeks_percents = enumerate_weeks.map {|week| planned_percent(week) }
+    weeks_percents = enumerate_weeks.map { |week| planned_percent(week) }
     weeks_percents.compact.sum / weeks_percents.size.to_f
   end
 
   protected
+
   def add_plannings_to_cache(plannings)
     plannings.each do |planning|
       if planning.repeat_type_no?
@@ -55,7 +55,6 @@ class OverviewPlanningGraph
   end
 
   def add_week_to_cache(planning, date)
-
     # abstract plannings which are quantified by a integer 'abstract_amount'
     if planning.is_abstract && planning.abstract_amount > 0
       add_to_cache(planning.work_item.label_verbose, date, planning.abstract_amount)
@@ -87,5 +86,4 @@ class OverviewPlanningGraph
     end
     cached.add(label, abstract_amount)
   end
-
 end

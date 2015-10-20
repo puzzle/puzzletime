@@ -3,7 +3,6 @@
 require 'test_helper'
 
 class EvaluationTest < ActiveSupport::TestCase
-
   def setup
     @period_week = Period.new('4.12.2006', '10.12.2006')
     @period_month = Period.new('1.12.2006', '31.12.2006')
@@ -25,11 +24,11 @@ class EvaluationTest < ActiveSupport::TestCase
     assert_sum_times 0, 20, 32, 33, work_items(:puzzle)
     assert_sum_times 3, 10, 21, 21, work_items(:swisstopo)
 
-    assert_equal({ work_items(:swisstopo).id => 3.0},
+    assert_equal({ work_items(:swisstopo).id => 3.0 },
                  @evaluation.sum_times_grouped(@period_day))
-    assert_equal({ work_items(:puzzle).id => 20.0, work_items(:swisstopo).id => 10.0},
+    assert_equal({ work_items(:puzzle).id => 20.0, work_items(:swisstopo).id => 10.0 },
                  @evaluation.sum_times_grouped(@period_week))
-    assert_equal({ work_items(:puzzle).id => 32.0, work_items(:swisstopo).id => 21.0},
+    assert_equal({ work_items(:puzzle).id => 32.0, work_items(:swisstopo).id => 21.0 },
                  @evaluation.sum_times_grouped(@period_month))
   end
 
@@ -61,7 +60,7 @@ class EvaluationTest < ActiveSupport::TestCase
     assert_sum_times 0, 9, 30, 30, employees(:lucien)
     assert_sum_times 3, 3, 5, 6, employees(:pascal)
 
-    assert_equal({ employees(:pascal).id => 3.0},
+    assert_equal({ employees(:pascal).id => 3.0 },
                  @evaluation.sum_times_grouped(@period_day))
     assert_equal({ employees(:mark).id => 18.0, employees(:lucien).id => 9.0, employees(:pascal).id => 3.0 },
                  @evaluation.sum_times_grouped(@period_week))
@@ -106,7 +105,7 @@ class EvaluationTest < ActiveSupport::TestCase
     assert_sum_times 0, 0, 12, 12, employees(:lucien)
     assert_sum_times 0, 4, 17, 17, employees(:pascal)
 
-    assert_equal({ },
+    assert_equal({},
                  @evaluation.sum_times_grouped(@period_day))
     assert_equal({ employees(:mark).id => 8.0, employees(:pascal).id => 4.0 },
                  @evaluation.sum_times_grouped(@period_week))
@@ -156,7 +155,7 @@ class EvaluationTest < ActiveSupport::TestCase
 
     assert_sum_times 0, 14, 14, 15, work_items(:allgemein)
 
-    assert_equal({ },
+    assert_equal({},
                  @evaluation.sum_times_grouped(@period_day))
     assert_equal({ work_items(:allgemein).id => 14.0 },
                  @evaluation.sum_times_grouped(@period_week))
@@ -182,7 +181,7 @@ class EvaluationTest < ActiveSupport::TestCase
 
     assert_sum_times 0, 6, 18, 18, work_items(:puzzletime)
 
-    assert_equal({ },
+    assert_equal({},
                  @evaluation.sum_times_grouped(@period_day))
     assert_equal({ work_items(:puzzletime).id => 6.0 },
                  @evaluation.sum_times_grouped(@period_week))
@@ -222,7 +221,7 @@ class EvaluationTest < ActiveSupport::TestCase
     assert_sum_times 0, 14, 14, 15, work_items(:allgemein)
     assert_sum_times 0, 6, 18, 18, work_items(:puzzletime)
 
-    assert_equal({ },
+    assert_equal({},
                  @evaluation.sum_times_grouped(@period_day))
     assert_equal({ work_items(:allgemein).id => 14.0, work_items(:puzzletime).id => 6.0 },
                  @evaluation.sum_times_grouped(@period_week))
@@ -290,7 +289,7 @@ class EvaluationTest < ActiveSupport::TestCase
     assert_sum_times 0, 11, 11, 11, work_items(:puzzle)
     assert_sum_times 0, 7, 7, 7, work_items(:swisstopo)
 
-    assert_equal({ },
+    assert_equal({},
                  @evaluation.sum_times_grouped(@period_day))
     assert_equal({ work_items(:puzzle).id => 11.0, work_items(:swisstopo).id => 7.0 },
                  @evaluation.sum_times_grouped(@period_week))
@@ -319,9 +318,9 @@ class EvaluationTest < ActiveSupport::TestCase
     assert_sum_times 0, 9, 19, 19, work_items(:puzzle)
     assert_sum_times 0, 0, 11, 11, work_items(:swisstopo)
 
-    assert_equal({ },
+    assert_equal({},
                  @evaluation.sum_times_grouped(@period_day))
-    assert_equal({ work_items(:puzzle).id => 9.0},
+    assert_equal({ work_items(:puzzle).id => 9.0 },
                  @evaluation.sum_times_grouped(@period_week))
     assert_equal({ work_items(:swisstopo).id => 11.0, work_items(:puzzle).id => 19.0 },
                  @evaluation.sum_times_grouped(@period_month))
@@ -350,7 +349,7 @@ class EvaluationTest < ActiveSupport::TestCase
     assert_sum_times 0, 9, 9, 9, employees(:lucien)
     assert_sum_times 0, 0, 0, 1, employees(:pascal)
 
-    assert_equal({ },
+    assert_equal({},
                  @evaluation.sum_times_grouped(@period_day))
     assert_equal({ employees(:mark).id => 5.0, employees(:lucien).id => 9.0 },
                  @evaluation.sum_times_grouped(@period_week))
@@ -386,7 +385,7 @@ class EvaluationTest < ActiveSupport::TestCase
     assert_sum_times 0, 0, 10, 10, employees(:lucien)
     assert_sum_times 0, 0, 2, 2, employees(:pascal)
 
-    assert_equal({ },
+    assert_equal({},
                  @evaluation.sum_times_grouped(@period_day))
     assert_equal({ employees(:mark).id => 6.0 },
                  @evaluation.sum_times_grouped(@period_week))
@@ -450,7 +449,7 @@ class EvaluationTest < ActiveSupport::TestCase
     assert_sum_times 0, 4, 4, 4, absences(:vacation)
     assert_sum_times 0, 0, 13, 13, absences(:doctor)
 
-    assert_equal({ },
+    assert_equal({},
                  @evaluation.sum_times_grouped(@period_day))
     assert_equal({ absences(:vacation).id => 4.0 },
                  @evaluation.sum_times_grouped(@period_week))
@@ -483,7 +482,7 @@ class EvaluationTest < ActiveSupport::TestCase
     assert_sum_times 0, 8, 8, 8
     assert_sum_times 0, 8, 8, 8, absences(:civil_service)
 
-    assert_equal({ },
+    assert_equal({},
                  @evaluation.sum_times_grouped(@period_day))
     assert_equal({ absences(:civil_service).id => 8.0 },
                  @evaluation.sum_times_grouped(@period_week))
@@ -512,9 +511,9 @@ class EvaluationTest < ActiveSupport::TestCase
     assert_sum_times 0, 0, 12, 12
     assert_sum_times 0, 0, 12, 12, absences(:doctor)
 
-    assert_equal({ },
+    assert_equal({},
                  @evaluation.sum_times_grouped(@period_day))
-    assert_equal({  },
+    assert_equal({},
                  @evaluation.sum_times_grouped(@period_week))
     assert_equal({ absences(:doctor).id => 12.0 },
                  @evaluation.sum_times_grouped(@period_month))
@@ -541,5 +540,4 @@ class EvaluationTest < ActiveSupport::TestCase
     assert_equal month, @evaluation.times(@period_month).size
     assert_equal all, @evaluation.times(nil).size
   end
-
 end

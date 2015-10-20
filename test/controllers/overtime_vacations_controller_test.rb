@@ -3,7 +3,6 @@
 require 'test_helper'
 
 class OvertimeVacationsControllerTest < ActionController::TestCase
-
   include CrudControllerTestHelper
 
   setup :login
@@ -23,6 +22,6 @@ class OvertimeVacationsControllerTest < ActionController::TestCase
   def test_entry_attrs
     { employee_id: 6,
       hours: 40,
-      transfer_date: Date.today }
+      transfer_date: Time.zone.today }
   end
 end

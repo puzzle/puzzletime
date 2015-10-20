@@ -4,7 +4,6 @@ require 'support/crud_test_model'
 
 # Test DryCrud::Form::Builder
 class DryCrud::Form::BuilderTest < ActionView::TestCase
-
   include FormatHelper
   include I18nHelper
   include CrudTestHelper
@@ -21,7 +20,7 @@ class DryCrud::Form::BuilderTest < ActionView::TestCase
     @entry = CrudTestModel.first
     if Rails.version < '4.0'
       @form = DryCrud::Form::Builder.new(:entry, @entry, self, {},
-                                    ->(form) { form })
+                                         ->(form) { form })
     else
       @form = DryCrud::Form::Builder.new(:entry, @entry, self, {})
     end

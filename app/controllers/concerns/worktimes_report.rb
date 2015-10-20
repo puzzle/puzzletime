@@ -16,7 +16,7 @@ module WorktimesReport
     combined_map = {}
     combined_times = []
     @times.each do |time|
-      if time.report_type.kind_of?(StartStopType) && params[:start_stop]
+      if time.report_type.is_a?(StartStopType) && params[:start_stop]
         combined_times.push time
       else
         key = "#{time.date_string}$#{time.employee.shortname}"
@@ -46,9 +46,9 @@ module WorktimesReport
       if @tickets[ticket].nil?
         @tickets[ticket] = { n_entries: 0,
                              sum: 0,
-                             employees: Hash.new,
+                             employees: {},
                              date: Array.new(2),
-                             descriptions: Array.new }
+                             descriptions: [] }
       end
 
       worktimes.each do |t|
@@ -82,8 +82,6 @@ module WorktimesReport
 
         @tickets[ticket][:descriptions] << "\"" + t.description + "\"" if t.description?
       end
-
     end
-
   end
 end

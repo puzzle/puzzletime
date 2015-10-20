@@ -27,18 +27,18 @@
 #
 
 Fabricator(:planning) do |f|
-  start_week      { Date.today.cweek }
+  start_week      { Time.zone.today.cweek }
   end_week        { f.start_week + 1 }
-  monday_am       true
-  monday_pm       true
-  tuesday_am      true
-  tuesday_pm      true
-  wednesday_am    true
-  wednesday_pm    true
-  thursday_am     true
-  thursday_pm     true
-  friday_am       true
-  friday_pm       true
-  is_abstract     false
+  monday_am true
+  monday_pm true
+  tuesday_am true
+  tuesday_pm true
+  wednesday_am true
+  wednesday_pm true
+  thursday_am true
+  thursday_pm true
+  friday_am true
+  friday_pm true
+  is_abstract false
   work_item
 end

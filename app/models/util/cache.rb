@@ -1,10 +1,9 @@
 # encoding: utf-8
 
 class Cache
-
   attr_accessor :max_size, :timeout
 
-  def initialize(timeout = 60 * 60 * 24 , max_size = 256)
+  def initialize(timeout = 60 * 60 * 24, max_size = 256)
     self.max_size =  max_size
     self.timeout = timeout
     @map = {}
@@ -29,7 +28,7 @@ class Cache
 
   def cleanup
     now = Time.zone.now
-    @map.delete_if { |key, value| now - value[1] > timeout }
+    @map.delete_if { |_key, value| now - value[1] > timeout }
     force_cleanup if full?
   end
 
@@ -48,5 +47,4 @@ class Cache
     times = times[0, destroy]
     times.each { |time| @map.delete(time[0]) }
   end
-
 end

@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 class Period
-
   attr_reader :start_date, :end_date
 
   # Caches the most used periods
@@ -12,19 +11,19 @@ class Period
   ####### constructors ########
 
   def self.current_day
-    day_for(Date.today)
+    day_for(Time.zone.today)
   end
 
   def self.current_week
-    week_for(Date.today)
+    week_for(Time.zone.today)
   end
 
   def self.current_month
-    month_for(Date.today)
+    month_for(Time.zone.today)
   end
 
   def self.current_year
-    year_for(Date.today)
+    year_for(Time.zone.today)
   end
 
   def self.day_for(date, label = nil)
@@ -33,14 +32,14 @@ class Period
   end
 
   def self.week_for(date, label = nil)
-    date = date.to_date if date.kind_of? Time
+    date = date.to_date if date.is_a? Time
     label ||= week_label date
     date -= (date.wday - 1) % 7
     retrieve(date, date + 6, label)
   end
 
   def self.month_for(date, label = nil)
-    date = date.to_date if date.kind_of? Time
+    date = date.to_date if date.is_a? Time
     label ||= month_label date
     date -= date.day - 1
     retrieve(date, date + Time.days_in_month(date.month, date.year) - 1, label)
@@ -56,18 +55,18 @@ class Period
     retrieve(Date.civil(date.year, 1, 1), Date.civil(date.year, 12, 31), label)
   end
 
-  def self.past_month(date = Date.today, label = nil)
+  def self.past_month(date = Time.zone.today, label = nil)
     date = date.to_date if date.is_a?(Time)
     retrieve(date - 28, date + 7, label)
   end
 
-  def self.coming_month(date = Date.today, label = nil)
+  def self.coming_month(date = Time.zone.today, label = nil)
     date = date.to_date if date.is_a?(Time)
     date -= (date.wday - 1) % 7
     retrieve(date, date + 28, label)
   end
 
-  def self.next_three_months(date = Date.today, label = nil)
+  def self.next_three_months(date = Time.zone.today, label = nil)
     date = date.to_date if date.is_a?(Time)
     date -= (date.wday - 1) % 7
     retrieve(date, date + 3.months, label)
@@ -77,23 +76,22 @@ class Period
     range = shortcut[-1..-1]
     shift = shortcut[0..-2].to_i if range != '0'
     case range
-      when 'd' then day_for Time.new.advance(days: shift).to_date
-      when 'w' then week_for Time.new.advance(days: shift * 7).to_date
-      when 'm' then month_for Time.new.advance(months: shift).to_date
-      when 'q' then quarter_for Date.civil(Time.new.year, shift * 3, 1)
-      when 'y' then year_for Time.new.advance(years: shift).to_date
-      else nil
+    when 'd' then day_for Time.new.advance(days: shift).to_date
+    when 'w' then week_for Time.new.advance(days: shift * 7).to_date
+    when 'm' then month_for Time.new.advance(months: shift).to_date
+    when 'q' then quarter_for Date.civil(Time.new.year, shift * 3, 1)
+    when 'y' then year_for Time.new.advance(years: shift).to_date
     end
   end
 
-  def self.retrieve(start_date = Date.today, end_date = Date.today, label = nil)
+  def self.retrieve(start_date = Time.zone.today, end_date = Time.zone.today, label = nil)
     start_date = parse_date(start_date)
     end_date = parse_date(end_date)
     key = [start_date, end_date, label]
     @@cache.get(key) { Period.new(start_date, end_date, label) }
   end
 
-  def initialize(start_date = Date.today, end_date = Date.today, label = nil)
+  def initialize(start_date = Time.zone.today, end_date = Time.zone.today, label = nil)
     @start_date = self.class.parse_date(start_date)
     @end_date = self.class.parse_date(end_date)
     @label = label
@@ -117,7 +115,7 @@ class Period
   end
 
   def musttime
-  	# cache musttime because computation is expensive
+    # cache musttime because computation is expensive
     @musttime ||= Holiday.period_musttime(self)
   end
 
@@ -130,7 +128,7 @@ class Period
   end
 
   def url_query_s
-  	 @url_query ||= 'start_date=' + start_date.to_s + '&amp;end_date=' + end_date.to_s
+    @url_query ||= 'start_date=' + start_date.to_s + '&amp;end_date=' + end_date.to_s
   end
 
   def limited?
@@ -175,12 +173,12 @@ class Period
 
   def self.day_label(date)
     case date
-      when Date.today then 'Heute'
-      when Date.yesterday then 'Gestern'
-      when Time.new.advance(days: -2).to_date then 'Vorgestern'
-      when Date.tomorrow then 'Morgen'
-      when Time.new.advance(days: 2).to_date then 'Übermorgen'
-      else I18n.l(date)
+    when Time.zone.today then 'Heute'
+    when Date.yesterday then 'Gestern'
+    when Time.new.advance(days: -2).to_date then 'Vorgestern'
+    when Date.tomorrow then 'Morgen'
+    when Time.new.advance(days: 2).to_date then 'Übermorgen'
+    else I18n.l(date)
     end
   end
 
@@ -201,15 +199,14 @@ class Period
   end
 
   def self.parse_date(date)
-    if date.kind_of? String
+    if date.is_a? String
       begin
         date = Date.strptime(date, I18n.t('date.formats.default'))
       rescue
         date = Date.parse(date)
       end
     end
-    date = date.to_date if date.kind_of? Time
+    date = date.to_date if date.is_a? Time
     date
   end
-
 end

@@ -2,7 +2,6 @@
 require 'test_helper'
 
 class BillingAddressesControllerTest < ActionController::TestCase
-
   include CrudControllerTestHelper
 
   setup :login

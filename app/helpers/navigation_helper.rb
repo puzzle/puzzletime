@@ -1,7 +1,6 @@
 # encoding: UTF-8
 
 module NavigationHelper
-
   # Create a list item for navigations.
   # If active_for are given, and they appear in the request url,
   # the corresponding item is active.

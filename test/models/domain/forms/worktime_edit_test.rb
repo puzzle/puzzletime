@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class WorktimeEditTest < ActiveSupport::TestCase
-
   test 'may add original' do
     assert edit.add_worktime(worktime)
     assert_equal [worktime], edit.worktimes
@@ -49,5 +48,4 @@ class WorktimeEditTest < ActiveSupport::TestCase
   def worktime
     worktimes(:wt_pz_allgemein)
   end
-
 end

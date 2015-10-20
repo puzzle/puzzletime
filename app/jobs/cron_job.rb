@@ -1,5 +1,4 @@
 class CronJob < BaseJob
-
   class_attribute :cron_expression
 
   # Enqueue delayed job if it is not enqueued already
@@ -11,5 +10,4 @@ class CronJob < BaseJob
   def scheduled?
     delayed_jobs.present?
   end
-
 end

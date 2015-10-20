@@ -9,7 +9,6 @@
 #
 
 class OrderKind < ActiveRecord::Base
-
   has_many :orders, foreign_key: :kind_id
 
   validates_by_schema
@@ -22,5 +21,4 @@ class OrderKind < ActiveRecord::Base
   def to_s
     name
   end
-
 end

@@ -1,6 +1,5 @@
 require 'test_helper'
 class EmployeeOverviewPlanningGraphTest < ActiveSupport::TestCase
-
   def setup
     @employee = Fabricate(:employee)
     @employment = Fabricate(:employment, employee: @employee, percent: 80)
@@ -8,7 +7,7 @@ class EmployeeOverviewPlanningGraphTest < ActiveSupport::TestCase
   end
 
   def start_date
-    @today ||= Date.today.beginning_of_week
+    @today ||= Time.zone.today.beginning_of_week
   end
 
   def week(date)
@@ -31,30 +30,32 @@ class EmployeeOverviewPlanningGraphTest < ActiveSupport::TestCase
   end
 
   test '#period_average_planned_percent' do
+    WorkingCondition.clear_cache
+    Holiday.refresh
     Planning.delete_all
     assert_equal 0, graph.period_average_planned_percent.to_f
 
     planning1 = Fabricate(:planning,
-              employee: @employee,
-              start_week: week(start_date),
-              end_week: week(start_date))
+                          employee: @employee,
+                          start_week: week(start_date),
+                          end_week: week(start_date))
     assert_equal 50, graph(planning1).period_average_planned_percent.to_f
 
     planning2 = Fabricate(:planning,
-              employee: @employee,
-              start_week: week(start_date + 1),
-              end_week: week(start_date + 1),
-              wednesday_pm: false,
-              thursday_am: false,
-              thursday_pm: false,
-              friday_am: false,
-              friday_pm: false)
+                          employee: @employee,
+                          start_week: week(start_date + 1),
+                          end_week: week(start_date + 1),
+                          wednesday_pm: false,
+                          thursday_am: false,
+                          thursday_pm: false,
+                          friday_am: false,
+                          friday_pm: false)
     assert_equal 75, graph(planning1, planning2).period_average_planned_percent.to_f
 
     planning3 = Fabricate(:planning,
-              employee: @employee,
-              start_week: week(start_date - 10),
-              end_week: week(start_date + 10))
+                          employee: @employee,
+                          start_week: week(start_date - 10),
+                          end_week: week(start_date + 10))
     assert_equal 175, graph(planning1, planning2, planning3).period_average_planned_percent.to_f
   end
 

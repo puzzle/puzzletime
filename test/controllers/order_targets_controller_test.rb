@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class OrderTargetsControllerTest < ActionController::TestCase
-
   setup :login
 
   test 'GET show renders targets' do

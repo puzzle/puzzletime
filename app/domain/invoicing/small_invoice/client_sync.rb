@@ -2,9 +2,7 @@ module Invoicing
   module SmallInvoice
     # One-way sync from PuzzleTime to Small Invoice for clients, contacts and billing addresses.
     class ClientSync
-
       class << self
-
         def perform
           ::Client.includes(:work_item, :contacts, :billing_addresses).find_each do |client|
             if client.billing_addresses.present? # required by small invoice
@@ -20,7 +18,6 @@ module Invoicing
             hash[client['name']] = client['id']
           end
         end
-
       end
 
       attr_reader :client, :remote_keys

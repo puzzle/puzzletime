@@ -5,7 +5,6 @@
 # of action links, change the method #action_link, e.g. to generate a button.
 # The common crud actions show, edit, destroy, index and add are provided here.
 module ActionsHelper
-
   # A generic helper method to create action links.
   # These link could be styled to look like buttons, for example.
   def action_link(label, url = {}, html_options = {})
@@ -67,12 +66,11 @@ module ActionsHelper
 
   def destroy_action_link_enabled(path)
     action_link(action_icon('delete', ti('link.delete')), path,
-                data: {confirm: ti(:confirm_delete),
-                       method: :delete})
+                data: { confirm: ti(:confirm_delete),
+                        method: :delete })
   end
 
   def destroy_action_link_disabled(disabled_tooltip)
     content_tag(:a, action_icon('delete', ti('link.delete')), class: 'disabled', title: disabled_tooltip)
   end
-
 end

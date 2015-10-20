@@ -2,7 +2,6 @@
 require 'test_helper'
 
 class AbsencetimesControllerTest < ActionController::TestCase
-
   setup :login
 
   def test_new
@@ -37,7 +36,7 @@ class AbsencetimesControllerTest < ActionController::TestCase
   end
 
   def test_create_hours_day_type
-    work_date = Date.today-7
+    work_date = Time.zone.today - 7
     post :create, absencetime: { absence_id: absences(:doctor),
                                  work_date: work_date,
                                  description: 'desc',
@@ -55,7 +54,7 @@ class AbsencetimesControllerTest < ActionController::TestCase
   end
 
   def test_create_start_stop_type
-    work_date = Date.today + 10
+    work_date = Time.zone.today + 10
     post :create, absencetime: { absence_id: absences(:vacation),
                                  work_date: work_date,
                                  from_start_time: '7:30',
@@ -99,7 +98,7 @@ class AbsencetimesControllerTest < ActionController::TestCase
 
   def test_create_multiabsence_with_errors
     login_as(:long_time_john)
-    work_date = Date.today + 3
+    work_date = Time.zone.today + 3
     post :create, absencetime: { absence_id: absences(:vacation),
                                  work_date: work_date,
                                  create_multi: 'true',
@@ -131,5 +130,4 @@ class AbsencetimesControllerTest < ActionController::TestCase
     assert_redirected_to action: 'index', week_date: work_date
     assert_nil Absencetime.find_by_id(worktime.id)
   end
-
 end

@@ -1,11 +1,10 @@
 # encoding: utf-8
 
 module Conditioner
-
   def append_conditions(existing, appends, cat = 'AND')
     if existing.nil?
       existing = ['']
-    elsif existing.empty?   # keep object reference
+    elsif existing.empty? # keep object reference
       existing.push ''
     else
       existing[0] = "( #{existing[0]} ) #{cat} "
@@ -25,5 +24,4 @@ module Conditioner
     options[:conditions] = clone_conditions options[:conditions]
     options
   end
-
 end

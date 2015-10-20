@@ -1,7 +1,6 @@
 # encoding: UTF-8
 
 class LdapAuthenticator
-
   # Performs a login over LDAP with the passed data.
   # Returns the logged-in Employee or nil if the login failed.
   def login(username, pwd)
@@ -39,5 +38,4 @@ class LdapAuthenticator
     config[:encryption] = config[:encryption].to_sym if config[:encryption]
     Net::LDAP.new(config)
   end
-
 end

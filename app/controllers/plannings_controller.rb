@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 class PlanningsController < CrudController
-
   before_action :set_period
 
   before_render_form :build_planning_form
@@ -122,7 +121,7 @@ class PlanningsController < CrudController
   end
 
   def extended_period(date)
-    date ||= Date.today
+    date ||= Time.zone.today
     Period.new(date - 14, date + 21)
   end
 
@@ -141,12 +140,12 @@ class PlanningsController < CrudController
     entry.is_abstract = planning_params[:abstract_concrete] == 'abstract'
     entry.abstract_amount = (planning_params[:abstract_amount].blank? ? 0 : planning_params[:abstract_amount])
     case planning_params[:repeat_type]
-      when 'no'
-        entry.end_week = entry.start_week
-      when 'until'
-        entry.end_week = Week.from_string(planning_params[:end_week_date]).to_integer if planning_params[:end_week_date].present?
-      when 'forever'
-        entry.end_week = nil
+    when 'no'
+      entry.end_week = entry.start_week
+    when 'until'
+      entry.end_week = Week.from_string(planning_params[:end_week_date]).to_integer if planning_params[:end_week_date].present?
+    when 'forever'
+      entry.end_week = nil
     end
     entry.monday_am = boolean_param(planning_params[:monday_am])
     entry.monday_pm = boolean_param(planning_params[:monday_pm])
@@ -164,5 +163,4 @@ class PlanningsController < CrudController
   def boolean_param(param)
     param.present? ? param : false
   end
-
 end

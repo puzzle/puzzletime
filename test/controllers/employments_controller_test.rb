@@ -2,7 +2,6 @@
 require 'test_helper'
 
 class EmploymentsControllerTest < ActionController::TestCase
-
   include CrudControllerTestHelper
 
   setup :login
@@ -14,9 +13,9 @@ class EmploymentsControllerTest < ActionController::TestCase
   def test_overlapping
     assert_equal Date.new(2006, 12, 31), employments(:for_half_year).end_date
     post :create, employment: { percent: 100,
-                               start_date: Date.new(2006, 10, 1),
-                               end_date: Date.new(2007, 5, 31)}, employee_id: 1
-    assert response.body.include? "Für diese Zeitspanne ist bereits eine andere Anstellung definiert"
+                                start_date: Date.new(2006, 10, 1),
+                                end_date: Date.new(2007, 5, 31) }, employee_id: 1
+    assert response.body.include? 'Für diese Zeitspanne ist bereits eine andere Anstellung definiert'
   end
 
 
@@ -30,7 +29,7 @@ class EmploymentsControllerTest < ActionController::TestCase
   # Attribute hash used in several tests.
   def test_entry_attrs
     { percent: 80,
-      start_date: Date.today - 1.year,
-      end_date: Date.today }
+      start_date: Time.zone.today - 1.year,
+      end_date: Time.zone.today }
   end
 end

@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 class BaseCapacityReport
-
   def initialize(period, filename_prefix)
     @period = period
     @filename_prefix = filename_prefix
@@ -21,16 +20,16 @@ class BaseCapacityReport
   end
 
   def extract_billable_hours(result, billable)
-    entry = result.select { |w| w.billable == billable }.first
+    entry = result.find { |w| w.billable == billable }
     entry ? entry.hours : 0
   end
 
   def employee_absences(employee, period)
     employee.worktimes.includes(:absence).
-                       in_period(period).
-                       where(type: 'Absencetime', absences: { payed: true }).
-                       sum(:hours).
-                       to_f
+      in_period(period).
+      where(type: 'Absencetime', absences: { payed: true }).
+      sum(:hours).
+      to_f
   end
 
   private
@@ -38,5 +37,4 @@ class BaseCapacityReport
   def format_date(date)
     I18n.l(date, format: '%Y%m%d')
   end
-
 end
