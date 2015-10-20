@@ -6,27 +6,27 @@
 = render :partial => 'detail_times'
 
 %p
-  = link_to 'Übersicht',
-            :action => params[:evaluation], :category_id => params[:category_id]
-  |
-  = link_to 'Export CSV',
-            evaluation_detail_params.merge!(:action => 'export_csv',
-                                            :evaluation => params[:evaluation]),
-            data: { no_turbolink: true }
+  = action_link 'Übersicht',
+                :action => params[:evaluation], :category_id => params[:category_id]
+
+  = action_link action_icon('export', 'CSV Export'),
+                evaluation_detail_params.merge!(:action => 'export_csv',
+                                                :evaluation => params[:evaluation]),
+                data: { no_turbolink: true }
+
   - if @evaluation.report?
-    |
-    = link_to 'Zeitrapport erstellen',
-              evaluation_detail_params.merge!(:action => 'compose_report')
-    |
-    = link_to 'Alle verbuchen',
-              evaluation_detail_params.merge!(:action => 'book_all'),
-              :method => :post,
-              :confirm => 'Wollen sie wirklich alle hier dargestellten Arbeitszeiten verbuchen?'
+    = action_link action_icon('time', 'Zeitrapport erstellen'),
+                  evaluation_detail_params.merge!(:action => 'compose_report')
+
+    = action_link 'Alle verbuchen',
+                  evaluation_detail_params.merge!(:action => 'book_all'),
+                  :method => :post,
+                  :confirm => 'Wollen sie wirklich alle hier dargestellten Arbeitszeiten verbuchen?'
+
   - if @user.management
-    |
-    = link_to 'Fremderfassen',
-              evaluation_detail_params.merge!(:controller => worktime_controller,
-                                              :action => 'new',
-                                              :other => 1,
-                                              :account_id => @evaluation.account_id,
-                                              :employee_id => @evaluation.employee_id)
+    = action_link action_icon('add', 'Fremderfassung'),
+                  evaluation_detail_params.merge!(:controller => worktime_controller,
+                                                  :action => 'new',
+                                                  :other => 1,
+                                                  :account_id => @evaluation.account_id,
+                                                  :employee_id => @evaluation.employee_id)

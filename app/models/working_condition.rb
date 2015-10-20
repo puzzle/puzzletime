@@ -35,8 +35,8 @@ class WorkingCondition < ActiveRecord::Base
   class << self
 
     def todays_value(attr)
-      if @today != Date.today
-        @today = Date.today
+      if @today != Time.zone.today
+        @today =  Time.zone.today
         @todays_values = {}
       end
       @todays_values[attr.to_s] ||= value_at(@today, attr)
@@ -81,6 +81,7 @@ class WorkingCondition < ActiveRecord::Base
 
     def clear_cache
       Rails.cache.clear(model_name.route_key)
+      @todays_values = {}
       true
     end
 

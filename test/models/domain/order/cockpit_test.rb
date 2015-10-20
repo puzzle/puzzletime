@@ -3,6 +3,8 @@ require 'test_helper'
 
 class Order::CockpitTest < ActiveSupport::TestCase
 
+  setup { WorkingCondition.clear_cache }
+
   test 'cockpit has row for each accounting post and total' do
     assert_equal 3, cockpit.rows.size
     assert_kind_of Order::Cockpit::TotalRow, cockpit.rows.first
