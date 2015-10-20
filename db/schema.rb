@@ -35,20 +35,20 @@ ActiveRecord::Schema.define(version: 20150930143851) do
     t.boolean "billable",                                        default: true,  null: false
     t.boolean "description_required",                            default: false, null: false
     t.boolean "ticket_required",                                 default: false, null: false
-    t.boolean "from_to_times_required",                          default: false, null: false
     t.boolean "closed",                                          default: false, null: false
+    t.boolean "from_to_times_required",                          default: false, null: false
   end
 
   add_index "accounting_posts", ["portfolio_item_id"], name: "index_accounting_posts_on_portfolio_item_id", using: :btree
   add_index "accounting_posts", ["work_item_id"], name: "index_accounting_posts_on_work_item_id", using: :btree
 
   create_table "billing_addresses", force: :cascade do |t|
-    t.integer "client_id",               null: false
+    t.integer "client_id",                 null: false
     t.integer "contact_id"
-    t.string  "supplement"
-    t.string  "street"
-    t.string  "zip_code"
-    t.string  "town"
+    t.string  "supplement",    limit: 255
+    t.string  "street",        limit: 255
+    t.string  "zip_code",      limit: 255
+    t.string  "town",          limit: 255
     t.string  "country",       limit: 2
     t.string  "invoicing_key"
   end
@@ -57,24 +57,24 @@ ActiveRecord::Schema.define(version: 20150930143851) do
   add_index "billing_addresses", ["contact_id"], name: "index_billing_addresses_on_contact_id", using: :btree
 
   create_table "clients", force: :cascade do |t|
-    t.integer "work_item_id",                        null: false
-    t.string  "crm_key"
-    t.boolean "allow_local",         default: false, null: false
-    t.integer "last_invoice_number", default: 0
+    t.integer "work_item_id",                                    null: false
+    t.string  "crm_key",             limit: 255
+    t.boolean "allow_local",                     default: false, null: false
+    t.integer "last_invoice_number",             default: 0
     t.string  "invoicing_key"
   end
 
   add_index "clients", ["work_item_id"], name: "index_clients_on_work_item_id", using: :btree
 
   create_table "contacts", force: :cascade do |t|
-    t.integer  "client_id",     null: false
-    t.string   "lastname"
-    t.string   "firstname"
-    t.string   "function"
-    t.string   "email"
-    t.string   "phone"
-    t.string   "mobile"
-    t.string   "crm_key"
+    t.integer  "client_id",                 null: false
+    t.string   "lastname",      limit: 255
+    t.string   "firstname",     limit: 255
+    t.string   "function",      limit: 255
+    t.string   "email",         limit: 255
+    t.string   "phone",         limit: 255
+    t.string   "mobile",        limit: 255
+    t.string   "crm_key",       limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "invoicing_key"
@@ -83,26 +83,26 @@ ActiveRecord::Schema.define(version: 20150930143851) do
   add_index "contacts", ["client_id"], name: "index_contacts_on_client_id", using: :btree
 
   create_table "contracts", force: :cascade do |t|
-    t.string  "number",         null: false
-    t.date    "start_date",     null: false
-    t.date    "end_date",       null: false
-    t.integer "payment_period", null: false
+    t.string  "number",         limit: 255, null: false
+    t.date    "start_date",                 null: false
+    t.date    "end_date",                   null: false
+    t.integer "payment_period",             null: false
     t.text    "reference"
     t.text    "sla"
     t.text    "notes"
   end
 
   create_table "delayed_jobs", force: :cascade do |t|
-    t.integer  "priority",   default: 0, null: false
-    t.integer  "attempts",   default: 0, null: false
-    t.text     "handler",                null: false
+    t.integer  "priority",               default: 0, null: false
+    t.integer  "attempts",               default: 0, null: false
+    t.text     "handler",                            null: false
     t.text     "last_error"
     t.datetime "run_at"
     t.datetime "locked_at"
     t.datetime "failed_at"
-    t.string   "locked_by"
-    t.string   "queue"
-    t.string   "cron"
+    t.string   "locked_by",  limit: 255
+    t.string   "queue",      limit: 255
+    t.string   "cron",       limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -217,34 +217,34 @@ ActiveRecord::Schema.define(version: 20150930143851) do
   add_index "order_comments", ["order_id"], name: "index_order_comments_on_order_id", using: :btree
 
   create_table "order_contacts", primary_key: "false", force: :cascade do |t|
-    t.integer "contact_id", null: false
-    t.integer "order_id",   null: false
-    t.string  "comment"
+    t.integer "contact_id",             null: false
+    t.integer "order_id",               null: false
+    t.string  "comment",    limit: 255
   end
 
   add_index "order_contacts", ["contact_id"], name: "index_order_contacts_on_contact_id", using: :btree
   add_index "order_contacts", ["order_id"], name: "index_order_contacts_on_order_id", using: :btree
 
   create_table "order_kinds", force: :cascade do |t|
-    t.string "name", null: false
+    t.string "name", limit: 255, null: false
   end
 
   add_index "order_kinds", ["name"], name: "index_order_kinds_on_name", unique: true, using: :btree
 
   create_table "order_statuses", force: :cascade do |t|
-    t.string  "name",                     null: false
-    t.string  "style"
-    t.boolean "closed",   default: false, null: false
-    t.integer "position",                 null: false
+    t.string  "name",     limit: 255,                 null: false
+    t.string  "style",    limit: 255
+    t.boolean "closed",               default: false, null: false
+    t.integer "position",                             null: false
   end
 
   add_index "order_statuses", ["name"], name: "index_order_statuses_on_name", unique: true, using: :btree
   add_index "order_statuses", ["position"], name: "index_order_statuses_on_position", using: :btree
 
   create_table "order_targets", force: :cascade do |t|
-    t.integer  "order_id",                          null: false
-    t.integer  "target_scope_id",                   null: false
-    t.string   "rating",          default: "green", null: false
+    t.integer  "order_id",                                      null: false
+    t.integer  "target_scope_id",                               null: false
+    t.string   "rating",          limit: 255, default: "green", null: false
     t.text     "comment"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -254,23 +254,23 @@ ActiveRecord::Schema.define(version: 20150930143851) do
   add_index "order_targets", ["target_scope_id"], name: "index_order_targets_on_target_scope_id", using: :btree
 
   create_table "order_team_members", primary_key: "false", force: :cascade do |t|
-    t.integer "employee_id", null: false
-    t.integer "order_id",    null: false
-    t.string  "comment"
+    t.integer "employee_id",             null: false
+    t.integer "order_id",                null: false
+    t.string  "comment",     limit: 255
   end
 
   add_index "order_team_members", ["employee_id"], name: "index_order_team_members_on_employee_id", using: :btree
   add_index "order_team_members", ["order_id"], name: "index_order_team_members_on_order_id", using: :btree
 
   create_table "orders", force: :cascade do |t|
-    t.integer  "work_item_id",       null: false
+    t.integer  "work_item_id",                   null: false
     t.integer  "kind_id"
     t.integer  "responsible_id"
     t.integer  "status_id"
     t.integer  "department_id"
     t.integer  "contract_id"
     t.integer  "billing_address_id"
-    t.string   "crm_key"
+    t.string   "crm_key",            limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -318,16 +318,16 @@ ActiveRecord::Schema.define(version: 20150930143851) do
   add_index "plannings", ["work_item_id"], name: "index_plannings_on_work_item_id", using: :btree
 
   create_table "portfolio_items", force: :cascade do |t|
-    t.string  "name",                  null: false
-    t.boolean "active", default: true, null: false
+    t.string  "name",   limit: 255,                null: false
+    t.boolean "active",             default: true, null: false
   end
 
   add_index "portfolio_items", ["name"], name: "index_portfolio_items_on_name", unique: true, using: :btree
 
   create_table "target_scopes", force: :cascade do |t|
-    t.string  "name",     null: false
-    t.string  "icon"
-    t.integer "position", null: false
+    t.string  "name",     limit: 255, null: false
+    t.string  "icon",     limit: 255
+    t.integer "position",             null: false
   end
 
   add_index "target_scopes", ["name"], name: "index_target_scopes_on_name", unique: true, using: :btree
@@ -343,11 +343,11 @@ ActiveRecord::Schema.define(version: 20150930143851) do
 
   create_table "work_items", force: :cascade do |t|
     t.integer "parent_id"
-    t.string  "name",                                         null: false
+    t.string  "name",            limit: 255,                  null: false
     t.string  "shortname",       limit: 5,                    null: false
     t.text    "description"
     t.integer "path_ids",                                                  array: true
-    t.string  "path_shortnames"
+    t.string  "path_shortnames", limit: 255
     t.string  "path_names",      limit: 2047
     t.boolean "leaf",                         default: true,  null: false
     t.boolean "closed",                       default: false, null: false
