@@ -1,9 +1,14 @@
-= crud_form :firstname,
-            :lastname,
-            :shortname,
-            :email,
-            :ldapname,
-            :department_id,
-            :initial_vacation_days,
-            :management
+= crud_form do |f|
+  = f.labeled_input_fields :firstname,
+                           :lastname,
+                           :shortname,
+                           :email,
+                           :ldapname,
+                           :department_id
+
+  - if Settings.employees.initial_vacation_days_editable
+    = f.labeled_input_field :initial_vacation_days
+  - elsif entry.initial_vacation_days > 0
+    = f.labeled_static_field :initial_vacation_days
+  = f.labeled_input_field :management
 

@@ -69,3 +69,8 @@ defaults:
 
 work_items:
   path_separator: '-'
+
+employees:
+  # The initial vacation days are used to transfer the current vacation balance of each employee
+  # when introducing puzzle time. At some point, it will no be required to edit that value anymore.
+  initial_vacation_days_editable: false

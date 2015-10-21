@@ -60,7 +60,6 @@ class EmployeesControllerTest < ActionController::TestCase
       shortname: 'fm',
       email: 'muster@puzzle.ch',
       ldapname: 'fmuster',
-      initial_vacation_days: 5,
       management: false }
   end
 end
