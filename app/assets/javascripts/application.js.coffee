@@ -27,6 +27,7 @@
 #= require accounting_posts
 #= require invoices
 #= require turbolinks
+#= require progress_bar
 
 
 app = window.App ||= {}
@@ -137,12 +138,6 @@ $(document).on('click', '[data-row-link] tbody td:not(.no-link)', (event) ->
 # wire up searchable form fields for dynamically added nested form fields
 $(document).on "fields_added.nested_form_fields", (event,param) ->
   $('select.searchable').selectize()
-
-# change cursor for turbolink requests to give the user a minimal feedback
-$(document).on('page:fetch', ->
-  $('body').addClass('loading'))
-$(document).on('page:change', ->
-  $('body').removeClass('loading'))
 
 # show alert if ajax requests fail
 $(document).on('ajax:error', (event, xhr, status, error) ->

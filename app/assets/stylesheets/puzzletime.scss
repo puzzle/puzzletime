@@ -308,17 +308,17 @@ footer {
   clear: both;
 }
 
-body.loading,
-body.loading a:hover {
-  cursor: progress !important;
-}
-
 [data-row-link] tbody tr td {
   cursor: pointer;
 
   &.no-link {
     cursor: default ;
   }
+}
+
+html.turbolinks-progress-bar::before {
+  background-color: $brand-blue-dark !important;
+  height: 2px !important;
 }
 
 
