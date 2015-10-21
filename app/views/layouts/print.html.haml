@@ -1,10 +1,15 @@
-%html
+!!! 5
+%html{lang: 'de'}
   %head
+    %meta{charset: 'utf-8'}
     %title= @title
-    %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}/
+
+    %meta{name: 'viewport', content: 'width=device-width, initial-scale=1.0'}
     %meta{:content => "no-cache", "http-equiv" => "pragma"}/
     %meta{:content => "no-cache", "http-equiv" => "cache-control"}/
+
     = favicon_link_tag "favicon.png"
-    = stylesheet_link_tag 'print', :media => 'all'
+    = stylesheet_link_tag 'print', media: 'all'
+
   %body
     = yield

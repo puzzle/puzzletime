@@ -1,18 +1,17 @@
-- work_item = WorkItem.find(@evaluation.account_id)
 %table.table-condensed
   %tr
     %td Kunde
     %td
-      %b= work_item.top_item.client.label
+      %b= @work_item.top_item.client.label
   %tr
     %td Position
     %td
-      %b= work_item.label_ancestry
-  - if @evaluation.employee_id
+      %b= @work_item.label_ancestry
+  - if @employee
     %tr
       %td Mitarbeiter
       %td
-        %b= Employee.find(@evaluation.employee_id).label
+        %b= @employee.label
   %tr
     %td Periode
     %td
@@ -22,3 +21,5 @@
       %td Verrechenbar
       %td
         %b= params[:billable].present? ? t("global.#{params[:billable]}") : 'Alle'
+
+%p &nbsp;

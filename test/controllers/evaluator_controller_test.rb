@@ -68,7 +68,7 @@ class EvaluatorControllerTest < ActionController::TestCase
                  division_id: employees(:pascal)
 
     assert_template 'report'
-    total = assigns(:times).sum(:hours)
+    total = assigns(:worktimes).sum(:hours)
     assert_match /Total Stunden.*#{total}/m, response.body
   end
 
@@ -89,7 +89,7 @@ class EvaluatorControllerTest < ActionController::TestCase
                  combine: 'ticket'
 
     assert_template 'report'
-    total = assigns(:times).sum(:hours)
+    total = assigns(:worktimes).sum(:hours)
     assert_equal 8, total
     assert_match /Total Stunden.*#{total}/m, response.body
   end
@@ -106,7 +106,7 @@ class EvaluatorControllerTest < ActionController::TestCase
                  show_ticket: '1'
 
     assert_template 'report'
-    assert_match %r{<th>Ticket</th>}, response.body
+    assert_match %r{<th class='right'>Ticket</th>}, response.body
     assert_match %r{<td[^>]*>#{ticket_label}</td>}, response.body
   end
 

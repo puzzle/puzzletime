@@ -3,9 +3,8 @@
 .date
   = f Time.zone.today
 
-%h1= @title
+%h1.h3= @title
 = render 'worktimes_report/report_header'
-%p
 
 - if @ticket_view
   = render 'worktimes_report/tickets'

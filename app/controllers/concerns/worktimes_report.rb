@@ -4,9 +4,10 @@ module WorktimesReport
 
   private
 
-  def render_report(evaluation, period, conditions)
-    @times = evaluation.times(period).where(conditions).includes(:employee)
-    @ticket_view = params[:combine_on] && (params[:combine] == 'ticket' || params[:combine] == 'ticket_employee')
+  def render_report(times)
+    @worktimes = times.includes(:employee)
+    @ticket_view = params[:combine_on] &&
+      (params[:combine] == 'ticket' || params[:combine] == 'ticket_employee')
     combine_times if params[:combine_on] && params[:combine] == 'time'
     combine_tickets if @ticket_view
     render template: 'worktimes_report/report', layout: 'print'
@@ -15,7 +16,7 @@ module WorktimesReport
   def combine_times
     combined_map = {}
     combined_times = []
-    @times.each do |time|
+    @worktimes.each do |time|
       if time.report_type.is_a?(StartStopType) && params[:start_stop]
         combined_times.push time
       else
@@ -35,14 +36,14 @@ module WorktimesReport
         end
       end
     end
-    @times = combined_times
+    @worktimes = combined_times
   end
 
   # builds a hash which contains all information needed by the report grouped by ticket
   def combine_tickets
     @tickets = {}
 
-    @times.group_by(&:ticket).each do |ticket, worktimes|
+    @worktimes.group_by(&:ticket).each do |ticket, worktimes|
       if @tickets[ticket].nil?
         @tickets[ticket] = { n_entries: 0,
                              sum: 0,

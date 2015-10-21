@@ -1,49 +1,54 @@
 - billable_option ||= false
 
-%h3 Rapport Einstellungen
+%h4 Einstellungen
 
-= form_tag evaluation_detail_params.merge!(:action => 'report'), :method => 'get' do
+= form_tag({ action: 'report' }, method: 'get') do
 
-  = hidden_field_tag 'evaluation', params[:evaluation]
-  = hidden_field_tag 'category_id', params[:category_id]
-  = hidden_field_tag('division_id', params[:division_id]) if params[:division_id]
-  = hidden_field_tag('work_item_id', params[:work_item_id]) if params[:work_item_id]
-  = hidden_field_tag('employee_id', params[:employee_id]) if params[:employee_id]
-  = hidden_field_tag('billable', params[:billable]) if params[:billable]
-  = hidden_field_tag 'end_date', params[:end_date]
-  = hidden_field_tag 'start_date', params[:start_date]
+  - %w(evaluation end_date start_date category_id division_id work_item_id employee_id ticket invoice_id billable).each do |p|
+    = hidden_field_tag p, params[p] if params[p]
 
-  %table.table-condensed
-    - if billable_option
-      %tr
-        %td= check_box_tag 'only_billable', '1', true
-        %td Nur verrechenbare Stunden
-    %tr
-      %td= check_box_tag 'combine_on'
-      %td Einträge zusammenfassen
-    %tr
-      %td &nbsp;
-      %td
-        = radio_button_tag 'combine', 'time', true
-        pro Tag
-    %tr
-      %td &nbsp;
-      %td
-        = radio_button_tag 'combine', 'ticket'
-        pro Ticket/Task
-    %tr
-      %td &nbsp;
-      %td
-        = radio_button_tag 'combine', 'ticket_employee'
-        pro Ticket/Task und Mitarbeiter
-    %tr
-      %td= check_box_tag 'start_stop'
-      %td Von/Bis Zeit anzeigen
-    %tr
-      %td= check_box_tag 'show_ticket', '1', true
-      %td Ticket anzeigen
-    %tr
-      %td= check_box_tag 'description', '1', true
-      %td Bemerkungen anzeigen
-    %tr
-      %td{:colspan => "2"}= submit_tag 'Rapport'
+  - if billable_option
+    .checkbox
+      %label
+        = check_box_tag 'only_billable', '1', true
+        Nur verrechenbare Stunden
+
+  .checkbox
+    %label
+      = check_box_tag 'combine_on'
+      Einträge zusammenfassen
+
+  .radio
+    %label
+      &nbsp; &nbsp;
+      = radio_button_tag 'combine', 'time', true
+      pro Tag
+
+  .radio
+    %label
+      &nbsp; &nbsp;
+      = radio_button_tag 'combine', 'ticket'
+      pro Ticket/Task
+
+  .radio
+    %label
+      &nbsp; &nbsp;
+      = radio_button_tag 'combine', 'ticket_employee'
+      pro Ticket/Task und Mitarbeiter
+
+  .checkbox
+    %label
+      = check_box_tag 'start_stop'
+      Von/Bis Zeit anzeigen
+
+  .checkbox
+    %label
+      = check_box_tag 'show_ticket', '1', true
+      Ticket anzeigen
+
+  .checkbox
+    %label
+      = check_box_tag 'description', '1', true
+      Bemerkungen anzeigen
+
+  = submit_tag('Rapport', class: 'btn btn-primary')
