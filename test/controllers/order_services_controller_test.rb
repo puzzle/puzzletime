@@ -39,7 +39,7 @@ class OrderServicesControllerTest < ActionController::TestCase
                  session[:list_params])
   end
 
-  [:show, :export_worktimes_csv].each do |action|
+  [:show, :export_worktimes_csv, :report].each do |action|
     test "GET #{action} filtered by employee" do
       get action, order_id: order.id, employee_id: employees(:pascal).id
       assert_equal [worktimes(:wt_pz_puzzletime)], assigns(:worktimes)
@@ -138,8 +138,28 @@ class OrderServicesControllerTest < ActionController::TestCase
     get :report, order_id: order.id
 
     assert_template 'report'
-    total = assigns(:times).sum(:hours)
+    total = assigns(:worktimes).sum(:hours)
     assert_match /Total Stunden.*#{total}/m, response.body
+  end
+
+  test 'GET report with invoice_id gets all hours and sets period' do
+    invoice = invoices(:webauftritt_may)
+    worktimes(:wt_mw_webauftritt).update!(invoice_id: invoice.id, work_date: invoice.period_from - 2.days)
+    get :report, order_id: orders(:webauftritt).id, invoice_id: invoice.id
+
+    assert_equal [worktimes(:wt_mw_webauftritt)], assigns(:worktimes)
+    assert_equal invoice.period_from, assigns(:period).start_date
+    assert_equal invoice.period_to, assigns(:period).end_date
+  end
+
+  test 'GET report with invoice_id gets only hours in defined period' do
+    invoice = invoices(:webauftritt_may)
+    worktimes(:wt_mw_webauftritt).update!(invoice_id: invoice.id, work_date: invoice.period_from)
+    get :report, order_id: orders(:webauftritt).id, invoice_id: invoice.id, start_date: '2006-12-15'
+
+    assert_equal [], assigns(:worktimes)
+    assert_equal Date.parse('2006-12-15'), assigns(:period).start_date
+    assert_equal nil, assigns(:period).end_date
   end
 
   test 'GET report contains all hours with combined tickets' do
@@ -159,7 +179,7 @@ class OrderServicesControllerTest < ActionController::TestCase
                  combine: 'ticket'
 
     assert_template 'report'
-    total = assigns(:times).sum(:hours)
+    total = assigns(:worktimes).sum(:hours)
     assert_equal 7, total
     assert_match /Total Stunden.*#{total}/m, response.body
   end
@@ -174,7 +194,7 @@ class OrderServicesControllerTest < ActionController::TestCase
                  show_ticket: '1'
 
     assert_template 'report'
-    assert_match %r{<th>Ticket</th>}, response.body
+    assert_match %r{<th class='right'>Ticket</th>}, response.body
     assert_match %r{<td[^>]*>#{ticket_label}</td>}, response.body
   end
 

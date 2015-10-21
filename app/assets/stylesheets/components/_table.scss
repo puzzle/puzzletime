@@ -21,6 +21,10 @@
       color: $gray;
     }
 
+    tr > th {
+      border-bottom: 0;
+    }
+
     a {
       text-decoration: none;
 
@@ -55,6 +59,9 @@
   }
   .large {
     font-size: 25px;
+  }
+  p {
+    margin: 0;
   }
 }
 

@@ -14,42 +14,36 @@ class OrderServicesController < ApplicationController
 
   before_action :order
   before_action :authorize_class
-  before_action :convert_predefined_period, only: [:show]
-  before_action :handle_remember_params, only: [:show]
-  before_action :set_filter_values, only: [:show]
 
   def show
-    @worktimes = list_worktimes
+    convert_predefined_period
+    handle_remember_params
+    set_filter_values
+    @worktimes = list_worktimes(@period).includes(:invoice, work_item: :accounting_post)
   end
 
   def export_worktimes_csv
     set_period
-    @worktimes = list_worktimes
+    @worktimes = list_worktimes(@period).includes(:work_item)
     send_worktimes_csv(@worktimes, worktimes_csv_filename)
   end
 
   def compose_report
-    set_report_evaluation
-    set_period
+    prepare_report_header
   end
 
   def report
-    set_report_evaluation
-    set_period
-    conditions = {}
-    conditions[:worktimes] = { billable: true?(params[:billable]) } if params[:billable].present?
-    conditions[:employee_id] = params[:employee_id] if params[:employee_id].present?
-    conditions[:ticket] = params[:ticket] if params[:ticket].present?
-    render_report(@evaluation, @period, conditions)
+    period = prepare_report_header
+    render_report(list_worktimes(period))
   end
 
   private
 
-  def list_worktimes
+  def list_worktimes(period)
     entries = order.worktimes.
-              includes(:employee, :invoice, work_item: :accounting_post).
+              includes(:employee).
               order(:work_date).
-              in_period(@period)
+              in_period(period)
     entries = filter_entries_allow_empty_by(entries, EMPTY, :ticket, :invoice_id)
     filter_entries_by(entries, :employee_id, :work_item_id, :billable)
   end
@@ -94,10 +88,28 @@ class OrderServicesController < ApplicationController
     end
   end
 
+  def prepare_report_header
+    @work_item = WorkItem.find(params[:work_item_id].present? ? params[:work_item_id] : order.work_item_id)
+    @employee = Employee.find(params[:employee_id]) if params[:employee_id].present?
+    set_period_with_invoice
+  end
+
+  def set_period_with_invoice
+    if params[:invoice_id].present? && params[:invoice_id] != EMPTY &&
+      params[:start_date].blank? && params[:end_date].blank?
+      invoice = Invoice.find(params[:invoice_id])
+      @period = Period.retrieve(invoice.period_from, invoice.period_to)
+      Period.new(nil, nil)
+    else
+      set_period
+    end
+  end
+
   def set_period
     @period = Period.retrieve(params[:start_date].presence,
                               params[:end_date].presence)
     fail ArgumentError, 'Start Datum nach End Datum' if @period.negative?
+    @period
   rescue ArgumentError => ex
     # from Period.retrieve or if period.negative?
     flash.now[:alert] = "Ungültige Zeitspanne: #{ex}"
@@ -105,18 +117,11 @@ class OrderServicesController < ApplicationController
 
     params.delete(:start_date)
     params.delete(:end_date)
-  end
-
-  def set_report_evaluation
-    work_item_id = params[:work_item_id].present? ? params[:work_item_id] : order.work_item_id
-    @evaluation = WorkItemEmployeesEval.new(work_item_id)
+    @period
   end
 
   def authorize_class
     authorize!(:services, order)
   end
 
-  def true?(string)
-    %w(true yes 1).include?(string.downcase)
-  end
 end

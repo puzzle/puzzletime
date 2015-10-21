@@ -1,0 +1,46 @@
+@import "bootstrap-sprockets";
+@import "bootstrap_variables";
+@import "bootstrap";
+
+body {
+    background:     #FFFFFF;
+}
+
+.right {
+    text-align: right;
+}
+
+.center {
+    text-align: center;
+}
+
+table {
+    font-size: $font-size-base;
+}
+
+.table-condensed > thead > tr > th,
+.table-condensed > thead > tr > td,
+.table-condensed > tbody > tr > th,
+.table-condensed > tbody > tr > td,
+.table-condensed > tfoot > tr > th,
+.table-condensed > tfoot > tr > td {
+    padding: 2px;
+}
+
+td {
+    vertical-align: top;
+}
+
+th {
+    white-space:    nowrap;
+}
+
+.times_total_sum {
+    font-weight:    bold;
+    white-space:    nowrap;
+}
+
+.date {
+    text-align:     right;
+    font-size:      13px;
+}

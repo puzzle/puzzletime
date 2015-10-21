@@ -38,13 +38,13 @@ class EvaluatorController < ApplicationController
   ########################  DETAIL ACTIONS  #########################
 
   def compose_report
-    set_evaluation_details
+    prepare_report_header
   end
 
   def report
-    set_evaluation_details
+    prepare_report_header
     conditions = params[:only_billable] ? { worktimes: { billable: true } } : {}
-    render_report(@evaluation, @period, conditions)
+    render_report(@evaluation.times(@period).where(conditions))
   end
 
   def export_csv
@@ -174,11 +174,16 @@ class EvaluatorController < ApplicationController
     @evaluation
   end
 
+  def prepare_report_header
+    set_evaluation_details
+    @employee = Employee.find(@evaluation.employee_id) if @evaluation.employee_id
+    @work_item = WorkItem.find(@evaluation.account_id)
+  end
+
   def set_evaluation_details
     evaluation.set_division_id(params[:division_id])
-    if params[:start_date].present?
-      @period = params[:start_date] == '0' ? nil :
-                   Period.retrieve(params[:start_date], params[:end_date])
+    if params[:start_date].present? && params[:start_date] != '0'
+      @period = Period.retrieve(params[:start_date], params[:end_date])
     end
   end
 
