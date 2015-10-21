@@ -4,8 +4,12 @@
 # Diplomarbeit 2149, Xavier Hayoz
 
 class EmployeesController < ManageController
+
   self.permitted_attrs = [:firstname, :lastname, :shortname, :email, :ldapname,
-                          :initial_vacation_days, :department_id, :management]
+                          :department_id, :management]
+  if Settings.employees.initial_vacation_days_editable
+    self.permitted_attrs += [:initial_vacation_days]
+  end
 
   self.search_columns = [:firstname, :lastname, :shortname]
 
