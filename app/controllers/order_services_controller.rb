@@ -10,7 +10,7 @@ class OrderServicesController < ApplicationController
   include WorktimesReport
   include WorktimesCsv
 
-  self.remember_params = %w(start_date end_date employee_id work_item_id ticket billable)
+  self.remember_params = %w(start_date end_date employee_id work_item_id ticket billable invoice_id)
 
   before_action :order
   before_action :authorize_class
@@ -37,7 +37,7 @@ class OrderServicesController < ApplicationController
     set_report_evaluation
     set_period
     conditions = {}
-    conditions[:worktimes] = { billable: %w(true yes 1).include?(params[:billable].downcase) } if params[:billable].present?
+    conditions[:worktimes] = { billable: true?(params[:billable]) } if params[:billable].present?
     conditions[:employee_id] = params[:employee_id] if params[:employee_id].present?
     conditions[:ticket] = params[:ticket] if params[:ticket].present?
     render_report(@evaluation, @period, conditions)
@@ -56,11 +56,20 @@ class OrderServicesController < ApplicationController
 
   def worktimes_csv_filename
     order_shortnames = order.work_item.path_shortnames
-    accounting_post_shortnames = WorkItem.find(params[:work_item_id]).path_shortnames if params[:work_item_id].present?
-    employee_shortname = Employee.find(params[:employee_id]).shortname if params[:employee_id].present?
+    if params[:work_item_id].present?
+      accounting_post_shortnames = WorkItem.find(params[:work_item_id]).path_shortnames
+    end
+    if params[:employee_id].present?
+      employee_shortname = Employee.find(params[:employee_id]).shortname
+    end
     billable = "billable_#{params[:billable]}" if params[:billable].present?
     ticket = "ticket_#{params[:ticket]}" if params[:ticket].present?
-    ['puzzletime', accounting_post_shortnames || order_shortnames, employee_shortname, ticket, billable, '.csv'].compact.join('-')
+    ['puzzletime',
+     accounting_post_shortnames || order_shortnames,
+     employee_shortname,
+     ticket,
+     billable,
+     '.csv'].compact.join('-')
   end
 
   def order
@@ -76,12 +85,12 @@ class OrderServicesController < ApplicationController
   end
 
   def convert_predefined_period
-    if params[:period].present?
-      @period = Period.parse(params.delete(:period))
-      if @period
-        params[:start_date] = I18n.l(@period.start_date)
-        params[:end_date] = I18n.l(@period.end_date)
-      end
+    return if params[:period].blank?
+
+    @period = Period.parse(params.delete(:period))
+    if @period
+      params[:start_date] = I18n.l(@period.start_date)
+      params[:end_date] = I18n.l(@period.end_date)
     end
   end
 
@@ -105,5 +114,9 @@ class OrderServicesController < ApplicationController
 
   def authorize_class
     authorize!(:services, order)
+  end
+
+  def true?(string)
+    %w(true yes 1).include?(string.downcase)
   end
 end
