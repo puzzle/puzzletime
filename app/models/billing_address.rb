@@ -24,7 +24,7 @@ class BillingAddress < ActiveRecord::Base
   validates_by_schema
   validates :client_id, :street, :zip_code, :town, :country, presence: true
   validates :invoicing_key, uniqueness: true, allow_blank: true
-  validates :country, inclusion: ISO3166::Country.all.collect(&:last)
+  validates :country, inclusion: ISO3166::Data.codes
   validate :assert_contact_belongs_to_client
 
   after_initialize :set_default_country
@@ -38,7 +38,7 @@ class BillingAddress < ActiveRecord::Base
   end
 
   def country_name
-    c = ISO3166::Country[country]
+    c = ISO3166::Country.new(country)
     c.translations['de'] || c.name
   end
 

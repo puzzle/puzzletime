@@ -1,12 +1,12 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.2.3'
+gem 'rails', '4.2.4'
 
 gem 'pg'
 
 gem 'airbrake'
 gem 'acts_as_tree'
-gem 'cancancan'
+gem 'cancancan', '< 1.13' # higher requires ruby 2.0
 gem 'country_select'
 gem 'daemons'
 gem 'dalli'
