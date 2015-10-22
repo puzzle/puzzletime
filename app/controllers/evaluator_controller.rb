@@ -65,7 +65,7 @@ class EvaluatorController < ApplicationController
     flash[:notice] += "von #{Employee.find(@evaluation.employee_id).label} " if @evaluation.employee_id
     flash[:notice] += "für #{WorkItem.find(@evaluation.account_id).label_verbose}" \
                      "#{' während dem ' + @period.to_s if @period} wurden verbucht."
-    redirect_to params.merge(action: 'details', only_path: true).to_hash
+    redirect_to params.merge(action: 'details', only_path: true)
   end
 
   ######################  OVERVIEW ACTIONS  #####################3
@@ -170,6 +170,7 @@ class EvaluatorController < ApplicationController
     end
     if @evaluation.nil?
       @evaluation = EmployeeWorkItemsEval.new(@user.id)
+      params[:evaluation] = 'userworkitems'
     end
     @evaluation
   end
