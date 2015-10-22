@@ -2,12 +2,12 @@ AllCops:
   RunRailsCops: true
   Exclude:
     - Rakefile
+    - bin/**/*
     - db/**/*
     - config/**/*
-    - bin/**/*
-    - spec/**/*
-    - vendor/**/*
+    - test/**/*
     - tmp/**/*
+    - vendor/**/*
     - app/assets/config.rb
 
 

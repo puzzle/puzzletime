@@ -76,11 +76,11 @@ class Period
     range = shortcut[-1..-1]
     shift = shortcut[0..-2].to_i if range != '0'
     case range
-    when 'd' then day_for Time.new.advance(days: shift).to_date
-    when 'w' then week_for Time.new.advance(days: shift * 7).to_date
-    when 'm' then month_for Time.new.advance(months: shift).to_date
-    when 'q' then quarter_for Date.civil(Time.new.year, shift * 3, 1)
-    when 'y' then year_for Time.new.advance(years: shift).to_date
+    when 'd' then day_for Time.zone.now.advance(days: shift).to_date
+    when 'w' then week_for Time.zone.now.advance(days: shift * 7).to_date
+    when 'm' then month_for Time.zone.now.advance(months: shift).to_date
+    when 'q' then quarter_for Date.civil(Time.zone.now.year, shift * 3, 1)
+    when 'y' then year_for Time.zone.now.advance(years: shift).to_date
     end
   end
 
