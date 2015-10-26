@@ -1,11 +1,11 @@
 %tr
   %td
     .title{title: row.label}
+      - if row.accounting_post.closed?
+        %span.small.pull-right geschlossen
       = link_to_if(can?(:update, row.accounting_post),
                    row.shortnames,
                    edit_order_accounting_post_path(@order, row.accounting_post))
-      - if row.accounting_post.closed?
-        %span.small.pull-right geschlossen
     .subtitle{title: row.name}= row.name
     .data-item
       %span.figure= f(row.offered_rate)
