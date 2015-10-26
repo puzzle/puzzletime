@@ -90,9 +90,11 @@ class CrudController < ListController
       if updated
         format.html { redirect_on_success(options) }
         format.json { render :show, status: :ok, location: show_path }
+        format.js   { render text: "'#{js_entry.to_json}'" }
       else
         format.html { render :edit }
         format.json { render json: entry.errors, status: :unprocessable_entity }
+        format.js   { render partial: 'form', status: :unprocessable_entity }
       end
     end
   end

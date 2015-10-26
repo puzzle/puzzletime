@@ -23,17 +23,28 @@
           = f.date_field(:work_date, id: 'week_date')
         KW
         = week_number(@selected_date)
+        = link_to('Zeiten freigeben',
+                  edit_employee_worktimes_commit_path(current_user),
+                  class: 'add-other',
+                  data: { modal: '#modal',
+                          title: 'Zeiten freigeben',
+                          remote: true,
+                          type: :html })
+        %span.add-other
+          &nbsp; | &nbsp;
         - if @user.management
           = link_to('Fremderfassen', new_ordertime_path(other: 1),
-                    {class: 'add-other', id: 'new_other_ordertime_link'})
+                    { class: 'add-other', id: 'new_other_ordertime_link' })
       .weeknav-total.weeknav-element
         .inner
           .weeknav-label Total
           .weeknav-time= format_hour(sum_hours)
 
       = link_to(worktimes_url(week_date: @next_week_date),
-                {class: 'weeknav-link next', title: 'Nächste Woche'}) do
+                { class: 'weeknav-link next', title: 'Nächste Woche' }) do
         %i.icon-chevron-right
 
   .weekcontent
     = render partial: 'day', collection: @week_days, as: :day
+
+= render 'shared/modal'

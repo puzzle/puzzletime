@@ -151,6 +151,7 @@ de-CH:
         ldapname: LDAP Name
         current_percent: Prozent
         eval_periods: Zeitspannen Auswertungen
+        committed_worktimes_at: Letzte freigegebene Periode
       employment:
         employee_id: Mitarbeiter
         start_date: Startdatum

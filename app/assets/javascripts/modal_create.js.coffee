@@ -2,7 +2,6 @@
 app = window.App ||= {}
 
 prepareModalRequest = (event, xhr, settings) ->
-  console.log('prepare')
   index = settings.url.indexOf('?')
   if index < 1
     settings.url += '.js'
@@ -16,16 +15,17 @@ showModal = (event, data, status, xhr) ->
   title = $this.data('title')
   if title
     modal.find('.modal-title').html(title)
-  modal.attr('data-originator', '#' + $this[0].id)
-  modal.data('originator', '#' + $this[0].id)
+  modal.data('originator', $this)
   modal.modal('show')
 
 processCreatedEntry = (event, data, status, xhr) ->
   data = $.parseJSON(eval(data))
   modal = $(this).closest('.modal')
-  originator = $(modal.data('originator'))
+  originator = modal.data('originator')
   if originator.data('update') == 'selectize'
     addOptionToSelectize(originator, data)
+  else if originator.data('update') == 'element'
+    replaceElementModalContent(originator, data)
   modal.modal('hide')
 
 addOptionToSelectize = (originator, data) ->
@@ -35,6 +35,12 @@ addOptionToSelectize = (originator, data) ->
   selectize.addOption({ value: id, text: data.label })
   selectize.refreshOptions(false)
   selectize.addItem(id)
+
+replaceElementModalContent = (originator, data) ->
+  element = $(originator.data('element'))
+  contentField = originator.data('contentField')
+  content = if contentField then data[contentField] else data.content
+  element.html(content)
 
 displayFormWithErrors = (event, xhr, status, error) ->
   $this = $(this)

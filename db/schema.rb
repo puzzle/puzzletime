@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151020085313) do
+ActiveRecord::Schema.define(version: 20151026140401) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -137,16 +137,17 @@ ActiveRecord::Schema.define(version: 20151020085313) do
   add_index "employee_lists_employees", ["employee_list_id"], name: "index_employee_lists_employees_on_employee_list_id", using: :btree
 
   create_table "employees", force: :cascade do |t|
-    t.string  "firstname",             limit: 255,                 null: false
-    t.string  "lastname",              limit: 255,                 null: false
-    t.string  "shortname",             limit: 3,                   null: false
-    t.string  "passwd",                limit: 255
-    t.string  "email",                 limit: 255,                 null: false
-    t.boolean "management",                        default: false
+    t.string  "firstname",              limit: 255,                 null: false
+    t.string  "lastname",               limit: 255,                 null: false
+    t.string  "shortname",              limit: 3,                   null: false
+    t.string  "passwd",                 limit: 255
+    t.string  "email",                  limit: 255,                 null: false
+    t.boolean "management",                         default: false
     t.float   "initial_vacation_days"
-    t.string  "ldapname",              limit: 255
-    t.string  "eval_periods",                                                   array: true
+    t.string  "ldapname",               limit: 255
+    t.string  "eval_periods",           limit: 3,                                array: true
     t.integer "department_id"
+    t.date    "committed_worktimes_at"
   end
 
   add_index "employees", ["department_id"], name: "index_employees_on_department_id", using: :btree

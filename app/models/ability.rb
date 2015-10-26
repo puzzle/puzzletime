@@ -41,7 +41,10 @@ class Ability
                   WorkingCondition,
                   WorkItem]
 
-    can :crud, Employee # cannot change settings of other employees
+    # cannot change settings of other employees
+    can [:crud, :update_committed_worktimes], Employee do |_|
+      true
+    end
 
     can [:read, :create, :update], Worktime
 
@@ -76,11 +79,14 @@ class Ability
     can :search, WorkItem
 
     can :read, Employee
-    can [:passwd, :update_passwd, :settings, :update_settings], Employee do |employee|
+    can [:passwd, :update_passwd, :settings, :update_settings,
+         :update_committed_worktimes], Employee do |employee|
       employee == user
     end
 
-    can [:read, :accounting_posts, :services, :show_targets, :show_contract, :show_comments, :show_invoices], Order
+    can [:read, :accounting_posts, :services, :show_targets, :show_contract, :show_comments,
+         :show_invoices], Order
+
     can :read, [AccountingPost, Invoice, OrderComment]
 
     can :manage, Planning

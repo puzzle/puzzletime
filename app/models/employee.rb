@@ -3,17 +3,18 @@
 #
 # Table name: employees
 #
-#  id                    :integer          not null, primary key
-#  firstname             :string(255)      not null
-#  lastname              :string(255)      not null
-#  shortname             :string(3)        not null
-#  passwd                :string(255)
-#  email                 :string(255)      not null
-#  management            :boolean          default(FALSE)
-#  initial_vacation_days :float
-#  ldapname              :string(255)
-#  eval_periods          :string           is an Array
-#  department_id         :integer
+#  id                     :integer          not null, primary key
+#  firstname              :string(255)      not null
+#  lastname               :string(255)      not null
+#  shortname              :string(3)        not null
+#  passwd                 :string(255)
+#  email                  :string(255)      not null
+#  management             :boolean          default(FALSE)
+#  initial_vacation_days  :float
+#  ldapname               :string(255)
+#  eval_periods           :string(3)        is an Array
+#  department_id          :integer
+#  committed_worktimes_at :date
 #
 
 class Employee < ActiveRecord::Base
@@ -126,6 +127,10 @@ class Employee < ActiveRecord::Base
 
   def statistics
     @statistics ||= EmployeeStatistics.new(self)
+  end
+
+  def recently_committed_worktimes?
+    committed_worktimes_at && committed_worktimes_at >= Time.zone.today.end_of_month - 1.month
   end
 
   ######### employment information ######################
