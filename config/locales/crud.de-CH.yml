@@ -41,6 +41,7 @@ de-CH:
     formats:
       long: "%a, %d.%m.%Y"
       week: "%Y %V"
+      month: "%B %Y"
   time:
     formats:
       time: "%H:%M"

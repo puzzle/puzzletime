@@ -74,6 +74,34 @@ module EvaluatorHelper
     tooltip.html_safe
   end
 
+  def worktime_commits(employee)
+    return unless employee.committed_worktimes_at
+
+    content = content_tag(:span, id: "committed_worktimes_at_#{employee.id}") do
+      worktime_commits_icon(employee) << ' ' << format_attr(employee, :committed_worktimes_at)
+    end
+
+    if can?(:update_committed_worktimes, employee)
+      content << ' &nbsp; '.html_safe << link_to(picon('edit'),
+                                       edit_employee_worktimes_commit_path(employee),
+                                       data: { modal: '#modal',
+                                               title: 'Freigabe bearbeiten',
+                                               update: 'element',
+                                               element: "#committed_worktimes_at_#{employee.id}",
+                                               remote: true,
+                                               type: :html })
+    end
+    content
+  end
+
+  def worktime_commits_icon(employee)
+    if employee.recently_committed_worktimes?
+      picon('disk', class: 'green')
+    else
+      picon('square', class: 'red')
+    end
+  end
+
   ### period and time helpers
 
   def period_link(label, shortcut)

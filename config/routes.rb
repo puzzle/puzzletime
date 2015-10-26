@@ -26,6 +26,7 @@ Rails.application.routes.draw do
 
     resources :employments, except: [:show]
     resources :overtime_vacations, except: [:show]
+    resource :worktimes_commit, only: [:edit, :update]
   end
 
   resources :employee_lists

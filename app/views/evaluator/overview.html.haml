@@ -1,8 +1,10 @@
 - @title = @evaluation.title
 
-= render :partial => 'period_link'
+= render 'period_link'
 
 - if @evaluation.category.respond_to?(:tooltip) && @evaluation.category.tooltip.present?
   %p= h(@evaluation.category.tooltip)
 
-= render :partial => 'category'
+= render 'category'
+
+= render 'shared/modal'
