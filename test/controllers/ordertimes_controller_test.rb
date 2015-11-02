@@ -172,7 +172,7 @@ class OrdertimesControllerTest < ActionController::TestCase
                                    description: 'desc',
                                    hours: '00:45' }
       end
-      assert_includes assigns(:worktime).errors.messages[:base], 'Auf geschlossene Positionen kann nicht gebucht werden.'
+      assert_includes assigns(:worktime).errors.messages[:base], 'Auf geschlossene Aufträge und/oder Positionen kann nicht gebucht werden.'
     end
   end
 
@@ -230,7 +230,7 @@ class OrdertimesControllerTest < ActionController::TestCase
       work_items(:puzzletime).update(closed: true)
       post :update, id: ordertime.id, hours: 4
       assert_equal ordertime.attributes, ordertime.reload.attributes
-      assert_includes assigns(:worktime).errors.messages[:base], 'Auf geschlossene Positionen kann nicht gebucht werden.'
+      assert_includes assigns(:worktime).errors.messages[:base], 'Auf geschlossene Aufträge und/oder Positionen kann nicht gebucht werden.'
     end
   end
 
@@ -332,7 +332,7 @@ class OrdertimesControllerTest < ActionController::TestCase
       assert_no_difference('Ordertime.count') do
         delete :destroy, id: ordertime.id
       end
-      assert_includes assigns(:worktime).errors.messages[:base], 'Kann nicht gelöscht werden da Position geschlossen.'
+      assert_includes assigns(:worktime).errors.messages[:base], 'Kann nicht gelöscht werden, da Auftrag und/oder Position geschlossen ist.'
     end
   end
 end
