@@ -43,7 +43,7 @@ class TarantulaTest < ActionDispatch::IntegrationTest
     t.allow_404_for /invoices(\/\d+)?$/ # invalid employee_ids assigned
     t.allow_404_for /orders(\/\d+)?$/ # invalid employee_ids assigned
     t.allow_404_for /evaluator\/details\?category_id=(0|\d{5,12})\&/ # invalid category
-    t.allow_404_for /evaluator\/((export_csv)|(compose_report)|(book_all))\?.*division_id=\d+\&/ # division may have been deleted
+    t.allow_404_for /evaluator\/((export_csv)|(compose_report))\?.*division_id=\d+\&/ # division may have been deleted
     t.allow_404_for /accounting_posts$/ # invalid order_id
     t.allow_404_for /orders\/\d+\/accounting_posts\/\d+/ # may have been deleted
     t.allow_404_for /work_items\?returning=true$/ # only handled by js

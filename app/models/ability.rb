@@ -98,7 +98,6 @@ class Ability
          :change_period,
          :compose_report,
          :report,
-         :book_all,
          :export_csv,
          :absencedetails,
          :userworkitems,

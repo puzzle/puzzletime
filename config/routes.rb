@@ -112,7 +112,6 @@ Rails.application.routes.draw do
   scope '/evaluator', controller: 'evaluator' do
     get ':action'
 
-    post :book_all
     post :change_period
   end
 

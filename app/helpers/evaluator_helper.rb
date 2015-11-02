@@ -26,7 +26,6 @@ module EvaluatorHelper
     when :employee then content_tag(:td, worktime.employee.shortname, style: 'width: 50px;')
     when :account then content_tag(:td, worktime.account.label_verbose)
     when :billable then content_tag(:td, worktime.billable ? '$' : ' ', style: 'width: 20px;')
-    when :booked then content_tag(:td, worktime.booked ? '&beta;'.html_safe : ' ', style: 'width: 20px;')
     when :ticket then content_tag(:td, worktime.ticket)
     when :description
       content_tag(:td, worktime.description, title: worktime.description, class: 'truncated')

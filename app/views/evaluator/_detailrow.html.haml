@@ -5,11 +5,11 @@
     = detail_td detailrow, field
   - if @evaluation.action_links?(@user)
     %td.action
-      - if !detailrow.booked && can?(:update, detailrow)
+      - if can?(:update, detailrow)
         = link_to(edit_polymorphic_path(detailrow, back_url: request.url), title: 'Bearbeiten') do
           = picon('edit')
     %td.action
-      - if !detailrow.booked && can?(:destroy, detailrow)
+      - if can?(:destroy, detailrow)
         = link_to(polymorphic_path(detailrow, back_url: request.url),
                   data: { method: :delete, confirm: ti(:confirm_delete) },
                   title: 'Löschen') do

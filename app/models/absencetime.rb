@@ -13,7 +13,6 @@
 #  to_end_time     :time
 #  description     :text
 #  billable        :boolean          default(TRUE)
-#  booked          :boolean          default(FALSE)
 #  type            :string(255)
 #  ticket          :string(255)
 #  work_item_id    :integer
@@ -21,6 +20,9 @@
 #
 
 class Absencetime < Worktime
+
+  self.account_label = 'Absenz'
+
   validates_by_schema
   validates :absence, presence: true
 
@@ -40,14 +42,6 @@ class Absencetime < Worktime
 
   def absence?
     true
-  end
-
-  def self.account_label
-    'Absenz'
-  end
-
-  def self.valid_attributes
-    super + [:account, :account_id, :description]
   end
 
   def billable

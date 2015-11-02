@@ -34,7 +34,7 @@ class Evaluation
   self.category_ref     = nil
 
   # Columns to display in the detail view
-  self.detail_columns   = [:work_date, :hours, :employee, :account, :billable, :booked,
+  self.detail_columns   = [:work_date, :hours, :employee, :account, :billable,
                            :ticket, :description]
 
   # Table captions for detail columns
@@ -44,7 +44,6 @@ class Evaluation
                             employee: 'Wer',
                             account: 'Projekt',
                             billable: '$',
-                            booked: '&beta;'.html_safe,
                             ticket: 'Ticket',
                             description: 'Bemerkungen' }
 

@@ -13,7 +13,6 @@
 #  to_end_time     :time
 #  description     :text
 #  billable        :boolean          default(TRUE)
-#  booked          :boolean          default(FALSE)
 #  type            :string(255)
 #  ticket          :string(255)
 #  work_item_id    :integer
@@ -28,6 +27,8 @@ class Worktime < ActiveRecord::Base
 
   include ReportType::Accessors
   include Conditioner
+
+  class_attribute :account_label
 
   belongs_to :employee
   belongs_to :absence
@@ -119,16 +120,6 @@ class Worktime < ActiveRecord::Base
     report_type.date_string(work_date)
   end
 
-  def work_date
-    # cache date to prevent endless string_to_date conversion
-    @work_date ||= self[:work_date]
-  end
-
-  def work_date=(value)
-    self[:work_date] = value
-    @work_date = nil
-  end
-
   ###################  TESTS  ####################
 
   # Whether this Worktime is for an absence or not
@@ -139,11 +130,6 @@ class Worktime < ActiveRecord::Base
   # Whether the report typ of this Worktime contains start and stop times
   def start_stop?
     report_type.start_stop? if report_type
-  end
-
-  # Whether this Worktime contains the passed attribute
-  def has_column?(attr)
-    self.class.valid_attributes.include? attr
   end
 
   ##################  HELPERS  ####################
@@ -198,18 +184,6 @@ class Worktime < ActiveRecord::Base
     "#{time_string} #{self.class.model_name.human} #{'für ' + account.label_verbose if account}"
   end
 
-  ##################  CLASS METHODS   ######################
-
-  # Returns an Array of the valid attributes for this Worktime
-  def self.valid_attributes
-    [:work_date, :hours, :from_start_time, :to_end_time, :employee_id, :report_type]
-  end
-
-  # label for the account class
-  # overwrite in subclass
-  def self.account_label
-    ''
-  end
 
   #######################  CLASS METHODS FOR EVALUATABLE  ####################
 
@@ -237,4 +211,5 @@ class Worktime < ActiveRecord::Base
     end
     self[attribute] = value
   end
+
 end

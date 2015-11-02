@@ -18,11 +18,6 @@
     = action_link action_icon('time', 'Zeitrapport erstellen'),
                   evaluation_detail_params.merge!(:action => 'compose_report')
 
-    = action_link 'Alle verbuchen',
-                  evaluation_detail_params.merge!(:action => 'book_all'),
-                  :method => :post,
-                  :confirm => 'Wollen sie wirklich alle hier dargestellten Arbeitszeiten verbuchen?'
-
   - if @user.management
     = action_link action_icon('add', 'Fremderfassung'),
                   evaluation_detail_params.merge!(:controller => worktime_controller,

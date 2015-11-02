@@ -13,7 +13,6 @@
 #  to_end_time     :time
 #  description     :text
 #  billable        :boolean          default(TRUE)
-#  booked          :boolean          default(FALSE)
 #  type            :string(255)
 #  ticket          :string(255)
 #  work_item_id    :integer

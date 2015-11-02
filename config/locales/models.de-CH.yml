@@ -283,7 +283,6 @@ de-CH:
         to_end_time: Bis
         description: Bemerkungen
         billable: Verrechenbar
-        booked: Verbucht
         ticket: Ticket
         account: Buchungsposition
         invoice_id: Rechnung

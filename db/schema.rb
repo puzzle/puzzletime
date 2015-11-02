@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151026140401) do
+ActiveRecord::Schema.define(version: 20151102155610) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -367,14 +367,13 @@ ActiveRecord::Schema.define(version: 20151026140401) do
   create_table "worktimes", force: :cascade do |t|
     t.integer "absence_id"
     t.integer "employee_id"
-    t.string  "report_type",     limit: 255,                 null: false
-    t.date    "work_date",                                   null: false
+    t.string  "report_type",     limit: 255,                null: false
+    t.date    "work_date",                                  null: false
     t.float   "hours"
     t.time    "from_start_time"
     t.time    "to_end_time"
     t.text    "description"
     t.boolean "billable",                    default: true
-    t.boolean "booked",                      default: false
     t.string  "type",            limit: 255
     t.string  "ticket",          limit: 255
     t.integer "work_item_id"
