@@ -55,19 +55,6 @@ class EvaluatorController < ApplicationController
     send_worktimes_csv(times, filename)
   end
 
-  def book_all
-    set_evaluation_details
-    @evaluation.times(@period).each do |worktime|
-      # worktime cannot be directly updated because it's loaded with :joins
-      Worktime.update worktime.id, booked: 1
-    end
-    flash[:notice] = 'Alle Arbeitszeiten '
-    flash[:notice] += "von #{Employee.find(@evaluation.employee_id).label} " if @evaluation.employee_id
-    flash[:notice] += "für #{WorkItem.find(@evaluation.account_id).label_verbose}" \
-                     "#{' während dem ' + @period.to_s if @period} wurden verbucht."
-    redirect_to params.merge(action: 'details', only_path: true).to_hash
-  end
-
   ######################  OVERVIEW ACTIONS  #####################3
 
   def export_capacity_csv

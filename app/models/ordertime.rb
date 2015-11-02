@@ -13,7 +13,6 @@
 #  to_end_time     :time
 #  description     :text
 #  billable        :boolean          default(TRUE)
-#  booked          :boolean          default(FALSE)
 #  type            :string(255)
 #  ticket          :string(255)
 #  work_item_id    :integer
@@ -21,29 +20,22 @@
 #
 
 class Ordertime < Worktime
+
+  self.account_label = 'Position'
+
   alias_attribute :account, :work_item
   alias_attribute :account_id, :work_item_id
 
   validates_by_schema
   validates :work_item, presence: true
   validate :validate_accounting_post
-  validate :protect_booked, on: :update
   validate :validate_by_work_item
   validate :validate_work_item_open
   validate :validate_worktimes_committed
 
-  before_destroy :protect_booked
   before_destroy :protect_work_item_closed
   before_destroy :protect_committed_worktimes
 
-
-  def self.valid_attributes
-    super + [:account, :account_id, :description, :billable, :booked]
-  end
-
-  def self.account_label
-    'Position'
-  end
 
   def account_id=(value)
     self.work_item_id = value
@@ -83,14 +75,6 @@ class Ordertime < Worktime
       date = I18n.l(employee.committed_worktimes_at, format: :month)
       errors.add(:work_date, "Die Zeiten bis und mit #{date} wurden freigegeben "  \
                              'und können nicht mehr bearbeitet werden.')
-    end
-  end
-
-  def protect_booked
-    previous = Ordertime.find(id)
-    if previous.booked && booked
-      errors.add(:base, 'Verbuchte Arbeitszeiten können nicht verändert werden')
-      false
     end
   end
 
