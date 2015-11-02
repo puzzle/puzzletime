@@ -20,40 +20,62 @@ class UserNotification < ActiveRecord::Base
   scope :list, -> { order('date_from DESC, date_to DESC') }
 
 
-  def self.list_during(period = nil)
-    # only show notifications for the current week
-    if period.nil?
+  class << self
+
+    def list_during(period = nil, current_user = nil)
+      # only show notifications for the current week
+      return if period
+
       period = Period.current_week
       custom = list.where('date_from BETWEEN ? AND ? OR date_to BETWEEN ? AND ?',
                           period.start_date, period.end_date,
                           period.start_date, period.end_date).
                reorder('date_from')
       list = custom.concat(holiday_notifications(period))
+      list.push(worktimes_commit_notification) if show_worktimes_commit_notification?(current_user)
       list.sort!
     end
+
+    def holiday_notifications(period = nil)
+      period ||= Period.current_week
+      regular = Holiday.holidays(period)
+      regular.collect! { |holiday| new_holiday_notification(holiday) }
+    end
+
+
+    def show_worktimes_commit_notification?(employee)
+      today = Time.zone.today
+
+      committed = employee && employee.committed_worktimes_at
+      config = Settings.committed_worktimes.notification
+
+      show_range = today.at_end_of_month - today < config.days_at_end_of_month ||
+                   today - today.at_beginning_of_month < config.days_at_beginning_of_month
+
+      !(committed && today - committed <= config.days_at_beginning_of_month) && show_range
+    end
+
+    private
+
+    def worktimes_commit_notification
+      new(date_from: Time.zone.today,
+          date_to: Time.zone.today,
+          message: 'Bitte Zeiten bis spätestens am ersten Arbeitstag des Monats freigeben.')
+    end
+
+    def new_holiday_notification(holiday)
+      new(date_from: holiday.holiday_date,
+          date_to: holiday.holiday_date,
+          message: holiday_message(holiday))
+    end
+
+    def holiday_message(holiday)
+      I18n.l(holiday.holiday_date, format: :long) +
+        ' ist ein Feiertag (' + ('%01.2f' % holiday.musthours_day).to_s +
+        ' Stunden Sollarbeitszeit)'
+    end
+
   end
-
-  def self.holiday_notifications(period = nil)
-    period ||= Period.current_week
-    regular = Holiday.holidays(period)
-    regular.collect! { |holiday| new_holiday_notification(holiday) }
-  end
-
-  private
-
-  def self.new_holiday_notification(holiday)
-    new date_from: holiday.holiday_date,
-        date_to: holiday.holiday_date,
-        message: holiday_message(holiday)
-  end
-
-  def self.holiday_message(holiday)
-    I18n.l(holiday.holiday_date, format: :long) +
-      ' ist ein Feiertag (' + ('%01.2f' % holiday.musthours_day).to_s +
-      ' Stunden Sollarbeitszeit)'
-  end
-
-  public
 
   def <=>(other)
     date_from <=> other.date_from
@@ -63,31 +85,12 @@ class UserNotification < ActiveRecord::Base
     message.truncate(30)
   end
 
+  private
+
   def validate_period
     if date_from && date_to && date_from > date_to
       errors.add(:date_to, 'Enddatum muss nach Startdatum sein.')
     end
   end
 
-  #### caching #####
-
-  def date_to
-    # cache date to prevent endless string_to_date conversion
-    @date_to ||= self[:date_to]
-  end
-
-  def date_to=(value)
-    self[:date_to] = value
-    @date_to = nil
-  end
-
-  def date_from
-    # cache date to prevent endless string_to_date conversion
-    @date_from ||= self[:date_from]
-  end
-
-  def date_from=(value)
-    self[:date_from] = value
-    @date_from = nil
-  end
 end

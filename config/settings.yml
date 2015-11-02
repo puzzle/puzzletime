@@ -74,3 +74,8 @@ employees:
   # The initial vacation days are used to transfer the current vacation balance of each employee
   # when introducing puzzle time. At some point, it will no be required to edit that value anymore.
   initial_vacation_days_editable: false
+
+committed_worktimes:
+  notification:
+    days_at_end_of_month: 7
+    days_at_beginning_of_month: 3

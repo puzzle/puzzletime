@@ -58,6 +58,7 @@ long_time_john:
   passwd:    sdf
   email:     jn@bla.ch
   management: false
+  committed_worktimes_at: 31-07-2015
 
 pascal:
   id:        6
