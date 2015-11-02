@@ -58,7 +58,7 @@ class OrdertimeTest < ActiveSupport::TestCase
     assert_not_valid t, :work_date
   end
 
-  test 'committed worktimes may not change work date' do
+  test 'committed worktimes may not change work date forwards' do
     e = employees(:pascal)
     t = Ordertime.create!(employee: e,
                           work_date: '2015-08-31',
@@ -68,6 +68,19 @@ class OrdertimeTest < ActiveSupport::TestCase
     e.update!(committed_worktimes_at: '2015-09-30')
     t.reload
     t.work_date = '2015-10-10'
+    assert_not_valid t, :work_date
+  end
+
+  test 'committed worktimes may not change work date backwards' do
+    e = employees(:pascal)
+    t = Ordertime.create!(employee: e,
+                          work_date: '2015-10-10',
+                          hours: 2,
+                          work_item: work_items(:webauftritt),
+                          report_type: 'absolute_day')
+    e.update!(committed_worktimes_at: '2015-09-30')
+    t.reload
+    t.work_date = '2015-08-31'
     assert_not_valid t, :work_date
   end
 
@@ -83,4 +96,40 @@ class OrdertimeTest < ActiveSupport::TestCase
     assert_equal false, t.destroy
     assert_match /September 2015 wurden freigegeben/, t.errors.full_messages.join
   end
+
+  test 'closed worktimes may not change anymore' do
+    t = Ordertime.create!(employee: employees(:pascal),
+                          work_date: '2015-10-10',
+                          hours: 2,
+                          work_item: work_items(:webauftritt),
+                          report_type: 'absolute_day')
+    work_items(:webauftritt).update!(closed: true)
+    t.reload
+    t.work_date = '2015-08-31'
+    assert_not_valid t, :base
+  end
+
+  test 'closed worktimes may not change work_item anymore' do
+    t = Ordertime.create!(employee: employees(:pascal),
+                          work_date: '2015-10-10',
+                          hours: 2,
+                          work_item: work_items(:webauftritt),
+                          report_type: 'absolute_day')
+    work_items(:webauftritt).update!(closed: true)
+    t.reload
+    t.work_item = work_items(:hitobito_demo_app)
+    assert_not_valid t, :base
+  end
+
+  test 'worktimes may not change to closed work_item' do
+    t = Ordertime.create!(employee: employees(:pascal),
+                          work_date: '2015-10-10',
+                          hours: 2,
+                          work_item: work_items(:webauftritt),
+                          report_type: 'absolute_day')
+    work_items(:hitobito_demo_app).update!(closed: true)
+    t.work_item = work_items(:hitobito_demo_app)
+    assert_not_valid t, :base
+  end
+
 end
