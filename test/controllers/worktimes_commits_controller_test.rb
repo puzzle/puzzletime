@@ -26,7 +26,7 @@ class WorktimesCommitsControllerTest < ActionController::TestCase
 
     selection = assigns(:commit_dates)
     assert_equal selection.size, 2
-    assert_equal selection.first.first, Time.zone.today.end_of_month - 1.month
+    assert_equal selection.first.first, (Time.zone.today.end_of_month - 1.month).end_of_month
   end
 
   def test_edit_as_regular_user_is_not_allowed_for_somebody_else
@@ -39,7 +39,7 @@ class WorktimesCommitsControllerTest < ActionController::TestCase
   def test_update
     employee = employees(:various_pedro)
     employee.update!(committed_worktimes_at: Date.new(2015, 8, 31))
-    eom = Time.zone.now.end_of_month.to_date
+    eom = (Time.zone.today - 1.month).end_of_month
     patch :update,
           employee_id: employee.id,
           employee: { committed_worktimes_at: eom }
@@ -49,7 +49,6 @@ class WorktimesCommitsControllerTest < ActionController::TestCase
   def test_update_is_not_allowed_with_arbitrary_dates
     employee = employees(:various_pedro)
     employee.update!(committed_worktimes_at: Date.new(2015, 8, 31))
-    eom = Time.zone.now.end_of_month
     patch :update,
           employee_id: employee.id,
           employee: { committed_worktimes_at: Date.new(2015, 10, 15) }

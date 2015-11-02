@@ -19,7 +19,7 @@ class WorktimesController < CrudController
 
   def index
     set_week_days
-    @notifications = UserNotification.list_during(@period)
+    @notifications = UserNotification.list_during(@period, current_user)
     super
   end
 

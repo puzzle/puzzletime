@@ -30,9 +30,12 @@ class Ordertime < Worktime
   validate :protect_booked, on: :update
   validate :validate_by_work_item
   validate :validate_work_item_open
+  validate :validate_worktimes_committed
 
   before_destroy :protect_booked
   before_destroy :protect_work_item_closed
+  before_destroy :protect_committed_worktimes
+
 
   def self.valid_attributes
     super + [:account, :account_id, :description, :billable, :booked]
@@ -54,29 +57,48 @@ class Ordertime < Worktime
     hours * (work_item.accounting_post.offered_rate || 0)
   end
 
-  def template(newWorktime = nil)
-    newWorktime = super newWorktime
-    newWorktime
-  end
-
   ########### validation helpers ###########
 
   def validate_by_work_item
-    work_item.accounting_post.validate_worktime(self) if work_item && work_item.accounting_post
+    if work_item && work_item.accounting_post
+      work_item.accounting_post.validate_worktime(self)
+    end
   end
 
   def validate_accounting_post
-    errors.add(:work_item_id, 'Der Auftrag hat keine Buchungsposition.') if work_item && !work_item.accounting_post
+    if work_item && !work_item.accounting_post
+      errors.add(:work_item_id, 'Der Auftrag hat keine Buchungsposition.')
+    end
   end
 
   def validate_work_item_open
-    errors.add(:base, 'Auf geschlossene Positionen kann nicht gebucht werden.') if work_item && work_item.closed?
+    if work_item && work_item.closed?
+      errors.add(:base, 'Auf geschlossene Positionen kann nicht gebucht werden.')
+    end
+  end
+
+  def validate_worktimes_committed
+    if employee.committed_worktimes_at &&
+      employee.committed_worktimes_at >= (work_date_was || work_date)
+      date = I18n.l(employee.committed_worktimes_at, format: :month)
+      errors.add(:work_date, "Die Zeiten bis und mit #{date} wurden freigegeben "  \
+                             'und können nicht mehr bearbeitet werden.')
+    end
   end
 
   def protect_booked
     previous = Ordertime.find(id)
     if previous.booked && booked
       errors.add(:base, 'Verbuchte Arbeitszeiten können nicht verändert werden')
+      false
+    end
+  end
+
+  def protect_committed_worktimes
+    if employee.committed_worktimes_at && employee.committed_worktimes_at >= work_date
+      date = I18n.l(employee.committed_worktimes_at, format: :month)
+      errors.add(:base, "Die Zeiten bis und mit #{date} wurden freigegeben "  \
+                        'und können nicht gelöscht werden.')
       false
     end
   end

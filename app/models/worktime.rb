@@ -149,17 +149,17 @@ class Worktime < ActiveRecord::Base
   ##################  HELPERS  ####################
 
   # Returns a copy of this Worktime with default values set
-  def template(newWorktime = nil)
-    newWorktime ||= self.class.new
-    newWorktime.from_start_time = report_type.is_a?(StartStopType) ?
+  def template(new_worktime = nil)
+    new_worktime ||= self.class.new
+    new_worktime.from_start_time = report_type.is_a?(StartStopType) ?
                  to_end_time : Time.zone.now.change(hour: Settings.defaults.start_hour)
-    newWorktime.report_type = report_type
-    newWorktime.work_date = work_date
-    newWorktime.account_id = account_id
-    newWorktime.billable = billable
-    newWorktime.employee_id = employee_id
-    newWorktime.work_item_id = work_item_id
-    newWorktime
+    new_worktime.report_type = report_type
+    new_worktime.work_date = work_date
+    new_worktime.account_id = account_id
+    new_worktime.billable = billable
+    new_worktime.employee_id = employee_id
+    new_worktime.work_item_id = work_item_id
+    new_worktime
   end
 
   def copy_from(other)
