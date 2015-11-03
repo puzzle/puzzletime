@@ -2,7 +2,6 @@
 
 %h1.h3= @title
 
-%p &nbsp;
 = crud_form html: { class: 'invoice', data: { preview_total_path: preview_total_order_invoices_path(id: entry.id, format: :js) } } do |f|
   = hidden_field_tag(:order_id, order.id)
 
@@ -11,60 +10,22 @@
   = f.labeled :manual_invoice do
     .checkbox
       %label
-        = check_box_tag :manual_invoice, 1, entry.manual_invoice?
+        = check_box_tag :manual_invoice, 1, entry.manual_invoice?, data: { hide: '#invoice_filters' }
 
   %hr
 
   #invoice_filters
-    = f.labeled :employee_ids do
-      = collection_check_boxes(:invoice, :employee_ids, all_employees, :id, :to_s, checked: checked_employee_ids) do |b|
-        .employees_radio.checkbox
-          = b.label do
-            = b.check_box
-            = b.text
-
-    = f.labeled :work_item_ids do
-      = collection_check_boxes(:invoice, :work_item_ids, all_work_items, :id, :label_verbose, checked: checked_work_item_ids) do |b|
-        .work_items_radio.checkbox
-          = b.label do
-            = b.check_box
-            = b.text
-
-    = f.labeled :invoice_posts do
-      %p.form-control-static='Gruppieren nach:'
-      .radio
-        %label
-          = radio_button(:invoice, :grouping, 'accounting_posts')
-          Buchungspositionen
-      .radio
-        %label
-          = radio_button(:invoice, :grouping, 'employees')
-          Members
-
-    %hr
-
-    = f.labeled_static_field :calculated_total_amount, id: 'invoice_total_amount'
-
-    -#
-      = f.labeled :add_vat do
-        .checkbox
-          %label
-            = f.check_box :add_vat
-            zzgl. #{f(Settings.defaults.vat)} % MWSt (Stundensatz excl. MWSt)
-
-    %hr
+    = render 'filter_fields', f: f
 
   = f.labeled_input_fields :due_date
 
+  = f.labeled_belongs_to_field :billing_client_id,
+                               list: @billing_clients,
+                               class: 'searchable',
+                               required: true,
+                               data: { remote: true,
+                                       url: billing_addresses_order_invoices_path(order_id: order.id) }
+
   = f.labeled :billing_address do
-    = collection_radio_buttons(:invoice,
-                               :billing_address_id,
-                               billing_addresses,
-                               :id,
-                               :to_s,
-                               checked: entry.billing_address_id || entry.order.default_billing_address_id) do |radio|
-      .billing_address_radio.radio
-        %label
-          = radio.radio_button
-          .billing_address_text= render_address(radio.object)
-    = link_to('Rechnungsadressen bearbeiten', client_billing_addresses_path(client_id: order.client))
+    #billing_addresses
+      = render 'billing_addresses_fields'

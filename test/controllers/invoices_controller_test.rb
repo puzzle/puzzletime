@@ -57,6 +57,13 @@ class InvoicesControllerTest < ActionController::TestCase
     assert_equal(entry.calculated_total_amount, preview_value)
   end
 
+  test 'GET billing_addresses' do
+    xhr :get, :billing_addresses, order_id: test_entry.order_id, invoice: { billing_client_id: clients(:swisstopo).id }
+
+    assert_equal clients(:swisstopo), assigns(:billing_client)
+    assert_equal billing_addresses(:swisstopo, :swisstopo_2), assigns(:billing_addresses)
+  end
+
   private
 
   # Test object used in several tests.

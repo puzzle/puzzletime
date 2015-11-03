@@ -18,6 +18,7 @@
 #
 
 class Employee < ActiveRecord::Base
+
   include Evaluatable
   include ReportType::Accessors
   extend Conditioner
@@ -41,7 +42,7 @@ class Employee < ActiveRecord::Base
           class_name: 'Ordertime'
 
   # Validation helpers.
-  validates_by_schema
+  validates_by_schema except: :eval_periods
   validates :shortname, uniqueness: { case_sensitive: false }
   validates :ldapname, uniqueness: { allow_blank: true, case_sensitive: false }
   validate :periods_format

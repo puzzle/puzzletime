@@ -29,7 +29,7 @@ module Invoicing
 
       def sync
         if key
-          update_remote # TODO: does not work "Invoicing::Error: This client number already exists"
+          update_remote
         else
           create_remote
         end
