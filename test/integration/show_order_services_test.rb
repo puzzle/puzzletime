@@ -40,6 +40,19 @@ class ShowOrderServices < ActionDispatch::IntegrationTest
     end
   end
 
+  test 'click on unmodifiable worktime row as management does not open edit view' do
+    timeout_safe do
+      user = manager_not_responsible_for_any_order
+      create_ordertime user
+      user.update!(committed_worktimes_at: Time.zone.today.end_of_month)
+      login_as user
+      visit order_order_services_path(order_id: order)
+      click_worktime_row
+      assert has_no_text?('Zeit bearbeiten')
+      assert_equal order_order_services_path(order_id: order), current_path
+    end
+  end
+
   private
 
   def employee_without_responsibilities

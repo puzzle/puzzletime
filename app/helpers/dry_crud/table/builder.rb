@@ -61,6 +61,10 @@ module DryCrud::Table
       col(header, html_options, &block)
     end
 
+    def row_attrs(&block)
+      @row_attrs = block
+    end
+
     # Renders the table as HTML.
     def to_html
       content_tag :table, options do
@@ -95,8 +99,8 @@ module DryCrud::Table
 
     # Renders a table row for the given entry.
     def html_row(entry)
-      attrs = {}
-      attrs[:id] = dom_id(entry) if entry.respond_to?(:to_key)
+      attrs = @row_attrs ? @row_attrs.call(entry) : {}
+      attrs[:id] ||= dom_id(entry) if entry.respond_to?(:to_key)
       content_tag_nested(:tr, cols, attrs) { |c| c.html_cell(entry) }
     end
 

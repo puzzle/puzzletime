@@ -50,6 +50,22 @@ class Ordertime < Worktime
     hours * (work_item.accounting_post.offered_rate || 0)
   end
 
+  def work_item_closed?
+    (work_item && work_item.closed?) ||
+    (work_item_id_was && work_item_id_was != work_item_id &&
+      WorkItem.where(id: work_item_id_was, closed: true).exists?)
+  end
+
+  def worktimes_committed?
+    committed_at = employee.committed_worktimes_at
+
+    committed_at &&
+    ((work_date && committed_at >= work_date) ||
+     (work_date_was && committed_at >= work_date_was))
+  end
+
+  private
+
   ########### validation helpers ###########
 
   def validate_by_work_item
@@ -65,28 +81,23 @@ class Ordertime < Worktime
   end
 
   def validate_work_item_open
-    work_item_was = work_item_id_was && WorkItem.find(work_item_id_was)
-    if (work_item && work_item.closed?) ||
-       (work_item_was && work_item_was.closed?)
+    if work_item_closed?
       errors.add(:base, 'Auf geschlossene Aufträge und/oder Positionen kann nicht gebucht werden.')
     end
   end
 
   def validate_worktimes_committed
-    committed_at = employee.committed_worktimes_at
-    return if committed_at.nil?
-
-    if committed_at >= work_date || (work_date_was &&  committed_at >= work_date_was)
-      date = I18n.l(committed_at, format: :month)
-      errors.add(:work_date, "Die Zeiten bis und mit #{date} wurden freigegeben "  \
+    if worktimes_committed?
+      date = I18n.l(employee.committed_worktimes_at, format: :month)
+      errors.add(:work_date, "Die Zeiten bis und mit #{date} wurden freigegeben " \
                              'und können nicht mehr bearbeitet werden.')
     end
   end
 
   def protect_committed_worktimes
-    if employee.committed_worktimes_at && employee.committed_worktimes_at >= work_date
+    if worktimes_committed?
       date = I18n.l(employee.committed_worktimes_at, format: :month)
-      errors.add(:base, "Die Zeiten bis und mit #{date} wurden freigegeben "  \
+      errors.add(:base, "Die Zeiten bis und mit #{date} wurden freigegeben " \
                         'und können nicht gelöscht werden.')
       false
     else
@@ -95,7 +106,7 @@ class Ordertime < Worktime
   end
 
   def protect_work_item_closed
-    if work_item.try(:closed?)
+    if work_item_closed?
       errors.add(:base, 'Kann nicht gelöscht werden, da Auftrag und/oder Position geschlossen ist.')
       false
     else
