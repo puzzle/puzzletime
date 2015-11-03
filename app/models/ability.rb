@@ -85,7 +85,7 @@ class Ability
   end
 
   def everyone_abilities
-    can [:read, :split, :create_part, :delete_part, :existing, :running],
+    can [:read, :existing, :split, :create_part, :delete_part],
         Worktime,
         employee_id: user.id
 

@@ -93,13 +93,9 @@ Rails.application.routes.draw do
   resources :ordertimes do
     collection do
       get :existing
-      post :start
-      post :stop
+      get :split
       match :create_part, via: [:post, :patch]
       match :delete_part, via: [:post, :delete]
-
-      get :running
-      get :split
     end
   end
 
