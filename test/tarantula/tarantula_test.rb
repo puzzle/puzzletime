@@ -30,6 +30,7 @@ class TarantulaTest < ActionDispatch::IntegrationTest
     t.skip_uri_patterns << /\/login\/logout/ # do not logout during tests
     t.skip_uri_patterns << /\/employees\/#{user.id}$/ # do not modify logged in user
     t.skip_uri_patterns << /\?week_date=(#{outside_four_week_window}.)*$/ # only allows week strings from one week ago until two weeks from now.
+    t.skip_uri_patterns << /\/employees\/#{user.id}\/worktimes_commit$/ # do not commit worktimes as this will fail all update and destroy actions.
     t.skip_uri_patterns << /evaluator\/change_period\?back_url/
     t.skip_uri_patterns << /orders\/crm_load/ # js only
 

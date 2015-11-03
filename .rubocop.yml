@@ -84,3 +84,7 @@ HasAndBelongsToMany:
 # We do. But some other methods are still called 'attr', do not complain about them
 Style/Attr:
   Enabled: false
+
+# We think that's fine most of the time
+Style/GuardClause:
+  Enabled: false
