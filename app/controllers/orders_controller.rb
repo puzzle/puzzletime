@@ -152,6 +152,6 @@ class OrdersController < CrudController
   end
 
   def load_employee_options
-    Employee.list # TODO: restrict only with employment?
+    Employee.list
   end
 end
