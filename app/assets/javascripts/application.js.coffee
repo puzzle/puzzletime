@@ -131,7 +131,7 @@ $(document).on('change', '[data-check]', (event) ->
 )
 
 # wire up table row links
-$(document).on('click', '[data-row-link] tbody td:not(.no-link)', (event) ->
+$(document).on('click', '[data-row-link] tbody tr:not([data-no-link=true]) td:not(.no-link)', (event) ->
   openTableRowLink(this)
 )
 

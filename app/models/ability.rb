@@ -46,7 +46,11 @@ class Ability
       true
     end
 
-    can [:read, :create, :update], Worktime
+    can [:read], Worktime
+    can [:create, :update], Absencetime
+    can [:create, :update], Ordertime do |t|
+      !t.worktimes_committed? && !t.work_item_closed?
+    end
 
     can [:clients,
          :employees,
@@ -68,14 +72,29 @@ class Ability
     can :manage, [Client, BillingAddress, Contact]
     can :create, WorkItem
     can :manage, Order, responsible_id: user.id
-    can :manage, [AccountingPost, Contract, Invoice, OrderComment, Ordertime] do |instance|
+    can :manage, [AccountingPost, Contract, Invoice, OrderComment] do |instance|
       instance.order.responsible_id == user.id
+    end
+    can :read, Ordertime do |t|
+      t.order.responsible_id == user.id
+    end
+    can :manage, Ordertime do |t|
+      !t.worktimes_committed? && !t.work_item_closed? && t.order.responsible_id == user.id
     end
     can :managed, Evaluation
   end
 
   def everyone_abilities
-    can :manage, Worktime, employee_id: user.id
+    can [:read, :split, :create_part, :delete_part, :existing, :running],
+        Worktime,
+        employee_id: user.id
+
+    can :manage, Absencetime, employee_id: user.id
+
+    can :manage, Ordertime do |t|
+      t.employee_id == user.id && !t.worktimes_committed? && !t.work_item_closed?
+    end
+
     can :search, WorkItem
 
     can :read, Employee

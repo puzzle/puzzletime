@@ -18,6 +18,7 @@ module OrderServicesHelper
     end
 
     plain_table_or_message(entries, data: data) do |t|
+      t.row_attrs { |e| { data: { no_link: cannot?(:update, e) } } }
       check_all = check_box_tag(:all_worktimes, true, false, data: { check: 'worktime_ids[]' })
       t.col(check_all, class: 'no-link') do |e|
         check_box_tag('worktime_ids[]', e.id)

@@ -241,12 +241,8 @@ footer {
   clear: both;
 }
 
-[data-row-link] tbody tr td {
+[data-row-link] tbody tr:not([data-no-link=true]) td:not(.no-link) {
   cursor: pointer;
-
-  &.no-link {
-    cursor: default ;
-  }
 }
 
 html.turbolinks-progress-bar::before {

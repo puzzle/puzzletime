@@ -228,9 +228,9 @@ class OrdertimesControllerTest < ActionController::TestCase
       login_as(user)
       ordertime = Fabricate(:ordertime, work_item: work_items(:puzzletime), employee: employees(user))
       work_items(:puzzletime).update(closed: true)
-      post :update, id: ordertime.id, hours: 4
-      assert_equal ordertime.attributes, ordertime.reload.attributes
-      assert_includes assigns(:worktime).errors.messages[:base], 'Auf geschlossene Aufträge und/oder Positionen kann nicht gebucht werden.'
+      assert_raises(CanCan::AccessDenied) do
+        post :update, id: ordertime.id, hours: 4
+      end
     end
   end
 
@@ -330,9 +330,10 @@ class OrdertimesControllerTest < ActionController::TestCase
       ordertime = Fabricate(:ordertime, work_item: work_items(:puzzletime), employee: employees(user))
       work_items(:puzzletime).update(closed: true)
       assert_no_difference('Ordertime.count') do
-        delete :destroy, id: ordertime.id
+        assert_raises(CanCan::AccessDenied) do
+          delete :destroy, id: ordertime.id
+        end
       end
-      assert_includes assigns(:worktime).errors.messages[:base], 'Kann nicht gelöscht werden, da Auftrag und/oder Position geschlossen ist.'
     end
   end
 end
