@@ -66,6 +66,11 @@ toggleEnabled = (element) ->
   enabled = $(element).prop('checked')
   app.enable(selector, enabled)
 
+toggleHide = (element) ->
+  selector = $(element).data('hide')
+  hide = $(element).prop('checked')
+  $(selector).toggle(!hide)
+
 toggleCheckAll = (element) ->
   name = $(element).data('check')
   $('input[type=checkbox][name="' + name + '"]').prop('checked', $(element).prop('checked'))
@@ -99,6 +104,9 @@ $(document).on('click', '[data-toggle]', (event) ->
 
 # wire up enable links
 $(document).on('click', '[data-enable]', (event) -> toggleEnabled(this))
+
+# wire up hide links
+$(document).on('click', '[data-hide]', (event) -> toggleHide(this))
 
 # wire up direct submit fields
 $(document).on('change', '[data-submit]', (event) ->
@@ -152,13 +160,17 @@ $ ->
   $('[data-autocomplete=work_item]').each(app.workItemAutocomplete)
 
   # wire up selectize
-  $('select.searchable').selectize()
+  $('select.searchable').selectize(
+    selectOnTab: true)
 
   # wire up toggle buttons
   $('[data-toggle=buttons]').button()
 
   # wire up enable elements
   $('[data-enable]').each((i, e) -> toggleEnabled(e))
+
+  # wire up hide elements
+  $('[data-toggle-hide]').each((i, e) -> toggleHide(e))
 
   # wire up disabled links. Bind on body to handle bubbling event before document
   $('body').on('click', 'a.disabled', (event) ->

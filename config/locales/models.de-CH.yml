@@ -164,6 +164,7 @@ de-CH:
       invoice:
         add_vat: Mehrwertssteuer
         billing_address: Rechnungsadresse
+        billing_client_id: Rechnungskunde
         billing_date: Rechnungsdatum
         calculated_total_amount: Total Leistungen
         due_date: Fälligkeitsdatum

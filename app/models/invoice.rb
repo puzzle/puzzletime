@@ -39,7 +39,6 @@ class Invoice < ActiveRecord::Base
   validates :invoicing_key, uniqueness: true, allow_blank: true
   validates :status, inclusion: STATUSES
   validate :assert_positive_period
-  validate :assert_billing_address_belongs_to_order_client
   validate :assert_order_has_contract
 
   before_validation :set_default_status
@@ -86,6 +85,16 @@ class Invoice < ActiveRecord::Base
 
   def calculated_total_amount
     positions.collect(&:total_amount).sum
+  end
+
+  def billing_client
+    billing_address.try(:client) ||
+    order.billing_address.try(:client) ||
+    order.client
+  end
+
+  def billing_client_id
+    billing_client.try(:id)
   end
 
   STATUSES.each do |status|
@@ -174,12 +183,6 @@ class Invoice < ActiveRecord::Base
     end
   end
 
-  def assert_billing_address_belongs_to_order_client
-    if billing_address && order && billing_address.client_id != order.client.id
-      errors.add(:billing_address_id, 'muss zum Auftragskunden gehören.')
-    end
-  end
-
   def assert_order_has_contract
     unless order.contract
       errors.add(:order_id, 'muss einen definierten Vertrag haben.')
@@ -191,6 +194,7 @@ class Invoice < ActiveRecord::Base
     true
   rescue Invoicing::Error => e
     errors.add(:base, "Fehler im Invoicing Service: #{e.message}")
+    Rails.logger.error(e.class.name + ': ' + e.message + "\n" + e.backtrace.join("\n"))
     false
   end
 
@@ -198,6 +202,7 @@ class Invoice < ActiveRecord::Base
     Invoicing.instance.delete_invoice(self)
   rescue Invoicing::Error => e
     errors.add(:base, "Fehler im Invoicing Service: #{e.message}")
+    Rails.logger.error(e.class.name + ': ' + e.message + "\n" + e.backtrace.join("\n"))
     raise ActiveRecord::Rollback
   end
 

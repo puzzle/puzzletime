@@ -46,9 +46,9 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_not_valid invoice, :period_to
   end
 
-  test 'billing address must belong to order client' do
+  test 'billing address may belong to any client' do
     invoice.billing_address = billing_addresses(:puzzle)
-    assert_not_valid invoice, :billing_address_id
+    assert_valid invoice
   end
 
   test 'validates period_from and period to' do
@@ -210,6 +210,8 @@ class InvoiceTest < ActiveSupport::TestCase
   test 'save assigns worktimes to invoice when successful' do
     Invoicing.instance = mock
     Invoicing.instance.stubs(:save_invoice).returns('abc123')
+    # committed worktimes may still be assigned to an invoice
+    employees(:lucien).update!(committed_worktimes_at: '31.1.2015')
     invoice.save!
     assert_equal invoice, worktimes(:wt_mw_webauftritt).reload.invoice
     assert_equal invoice, worktimes(:wt_lw_webauftritt).reload.invoice

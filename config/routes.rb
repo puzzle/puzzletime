@@ -63,6 +63,7 @@ Rails.application.routes.draw do
     resources :invoices do
       collection do
         get :preview_total
+        get :billing_addresses
       end
       member do
         put :sync

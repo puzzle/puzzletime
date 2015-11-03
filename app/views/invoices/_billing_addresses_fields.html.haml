@@ -1,0 +1,14 @@
+= collection_radio_buttons(:invoice,
+                           :billing_address_id,
+                           @billing_addresses,
+                           :id,
+                           :to_s,
+                           checked: @billing_address_id) do |radio|
+  .billing_address_radio.radio
+    %label
+      = radio.radio_button
+      .billing_address_text= render_address(radio.object)
+
+- if @billing_client
+  .form-control-static
+    = link_to('Rechnungsadressen bearbeiten', client_billing_addresses_path(client_id: @billing_client))

@@ -14,7 +14,7 @@ module Invoicing
         def to_hash
           {
             number:            entry.reference,
-            client_id:         entry.order.client.invoicing_key,
+            client_id:         entry.billing_address.client.invoicing_key,
             client_address_id: entry.billing_address.invoicing_key,
             client_contact_id: entry.billing_address.contact.try(:invoicing_key),
             currency:          Settings.defaults.currency,

@@ -44,6 +44,11 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test 'change of billing client changes billing addresses' do
+    selectize('invoice_billing_client_id', 'Puzzle')
+    assert find('#billing_addresses').has_content?('Eigerplatz')
+  end
+
   def order
     orders(:webauftritt)
   end
