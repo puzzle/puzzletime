@@ -79,16 +79,8 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-%(id -un)
 
 This is a rails application
 
-%pre
-# Run before the package is installed.
-# Creates the user and group which will be used to run the
-# application.
-getent group %{name} > /dev/null || groupadd -r %{name}
-getent passwd %{name} > /dev/null || \
-  useradd -r -g %{name} -d %{wwwdir}/%{name} -s /sbin/nologin \
-  -c "Rails Application %{name}" %{name}
-exit 0
 
+# == Build Scripts
 
 %prep
 # prepare the source to install it during the package building
@@ -156,11 +148,6 @@ echo "# Rotate rails logs for %{name}
 
 %if %{use_sphinx}
 touch config/production.sphinx.conf
-mkdir $RPM_BUILD_ROOT/%{_sysconfdir}/cron.d
-echo "# Reindex sphinx for %{name}
-# Created by %{name}.rpm
-*/15 * * * *  %{name}  cd /%{wwwdir}/%{name}/www && . /%{wwwdir}/%{name}/.bash_profile && bundle exec rake ts:index > /dev/null 2>&1
-" > $RPM_BUILD_ROOT/%{_sysconfdir}/cron.d/%{name}
 %endif
 
 export PATH=%{ruby_bindir}:$PATH
@@ -203,14 +190,58 @@ install -p -d -m0755 $RPM_BUILD_ROOT/etc/sphinx
 # fix shebangs
 grep -sHE '^#!/usr/(local/)?bin/ruby' $RPM_BUILD_ROOT/%{wwwdir}/%{name}/www/vendor/bundle -r | awk -F: '{ print $1 }' | uniq | while read line; do sed -i 's@^#\!/usr/\(local/\)\?bin/ruby@#\!/bin/env ruby@' $line; done
 
+
+# == Install Scripts
+#
+# On upgrade, the scripts are run in the following order:
+#
+# %pretrans of new package
+# %pre of new package
+# (package install)
+# %post of new package
+# %triggerin of other packages (set off by installing new package)
+# %triggerin of new package (if any are true)
+# %triggerun of old package (if it's set off by uninstalling the old package)
+# %triggerun of other packages (set off by uninstalling old package)
+# %preun of old package
+# (removal of old package)
+# %postun of old package
+# %triggerpostun of old package (if it's set off by uninstalling the old package)
+# %triggerpostun of other packages (if they're setu off by uninstalling the old package)
+# %posttrans of new package
+
+%pre
+# Run before the package is installed.
+# Creates the user and group which will be used to run the
+# application.
+getent group %{name} > /dev/null || groupadd -r %{name}
+getent passwd %{name} > /dev/null || \
+  useradd -r -g %{name} -d %{wwwdir}/%{name} -s /sbin/nologin \
+  -c "Rails Application %{name}" %{name}
+
+if [ -d %{appdir} ] ; then
+  touch %{appdir}/tmp/stop.txt
+fi
+
+%if %{use_delayed_job}
+/sbin/service %{name}-workers stop >/dev/null 2>&1
+%endif
+
+exit 0
+
 %post
 # Runs after the package got installed.
 # Configure here any services etc.
 
+# the following old files would be loaded on startup and must
+# be explicitly deleted to load the stop script
+rm -f %{appdir}/db/migrate/20150930143851_remove_discount_reference_from_accounting_post.rb
+
 su - %{name} -c "cd %{wwwdir}/%{name}/www/; %{bundle_cmd} exec rake db:migrate" || exit 1
 
 %if %{use_sphinx}
-su - %{name} -c "cd %{wwwdir}/%{name}/www/; %{bundle_cmd} exec rake ts:config" || exit 1
+su - %{name} -c "cd %{wwwdir}/%{name}/www/; %{bundle_cmd} exec rake ts:configure" || exit 1
+
 ln -s %{wwwdir}/%{name}/www/config/production.sphinx.conf /etc/sphinx/%{name}.conf || :
 /sbin/chkconfig --add searchd || :
 /sbin/service searchd condrestart >/dev/null 2>&1 || :
@@ -222,13 +253,6 @@ ln -s %{wwwdir}/%{name}/www/config/production.sphinx.conf /etc/sphinx/%{name}.co
   /sbin/service memcached start >/dev/null 2>&1) && /sbin/service memcached condrestart
 %endif
 
-%if %{use_delayed_job}
-/sbin/chkconfig --add %{name}-workers || :
-/sbin/service %{name}-workers restart >/dev/null 2>&1
-%endif
-
-touch %{wwwdir}/%{name}/www/tmp/restart.txt
-rm -f %{wwwdir}/%{name}/www/tmp/stop.txt
 
 %preun
 # Run before uninstallation
@@ -240,14 +264,8 @@ if [ "$1" = 0 ] ; then
   /sbin/service %{name}-workers stop > /dev/null 2>&1
   /sbin/chkconfig --del %{name}-workers || :
 fi
-if [ "$1" = 1 ] ; then
-  touch %{wwwdir}/%{name}/www/tmp/stop.txt
-  /sbin/service %{name}-workers stop >/dev/null 2>&1
-fi
 %endif
 
-# hack until we know why this file is present
-rm -f %{wwwdir}/%{name}/www/tmp/stop.txt
 
 %postun
 # Run after uninstallation
@@ -255,14 +273,21 @@ rm -f %{wwwdir}/%{name}/www/tmp/stop.txt
 # and 0 if the package is deinstalled.
 
 
+%posttrans
+%if %{use_delayed_job}
+/sbin/chkconfig --add %{name}-workers || :
+/sbin/service %{name}-workers restart >/dev/null 2>&1
+%endif
+
+touch %{appdir}/tmp/restart.txt
+rm -f %{appdir}/tmp/stop.txt
+
+
 %files
 # describe all the files that should be included in the package
 %defattr(-,root,root,)
 %{_sysconfdir}/sysconfig/%{name}
 %{_sysconfdir}/logrotate.d/%{name}
-%if %{use_sphinx}
-%{_sysconfdir}/cron.d/%{name}
-%endif
 
 %attr(-,root,%{name}) %{wwwdir}/%{name}/*
 # run application as dedicated user
