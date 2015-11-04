@@ -47,19 +47,19 @@ class AccountingPost < ActiveRecord::Base
   ### INSTANCE METHODS
 
   def validate_worktime(worktime)
-    if worktime.report_type != AutoStartType::INSTANCE
-      if description_required? && worktime.description.blank?
-        worktime.errors.add(:description, 'Es muss eine Bemerkung angegeben werden')
-      end
+    return if worktime.report_type == AutoStartType::INSTANCE
 
-      if ticket_required? && worktime.ticket.blank?
-        worktime.errors.add(:ticket, 'Es muss ein Ticket angegeben werden')
-      end
+    if description_required? && worktime.description.blank?
+      worktime.errors.add(:description, 'Es muss eine Bemerkung angegeben werden')
+    end
 
-      if from_to_times_required?
-        worktime.errors.add(:from_start_time, 'muss angegeben werden') if worktime.from_start_time.blank?
-        worktime.errors.add(:to_end_time, 'muss angegeben werden') if worktime.to_end_time.blank?
-      end
+    if ticket_required? && worktime.ticket.blank?
+      worktime.errors.add(:ticket, 'Es muss ein Ticket angegeben werden')
+    end
+
+    if from_to_times_required?
+      worktime.errors.add(:from_start_time, 'muss angegeben werden') if worktime.from_start_time.blank?
+      worktime.errors.add(:to_end_time, 'muss angegeben werden') if worktime.to_end_time.blank?
     end
   end
 

@@ -31,8 +31,8 @@ class Ordertime < Worktime
   validates :work_item, presence: true
   validate :validate_accounting_post
   validate :validate_by_work_item
-  validate :validate_work_item_open, unless: :only_invoice_id_changed?
-  validate :validate_worktimes_committed, unless: :only_invoice_id_changed?
+  validate :validate_work_item_open
+  validate :validate_worktimes_committed
 
   before_destroy :protect_work_item_closed
   before_destroy :protect_committed_worktimes
@@ -67,10 +67,6 @@ class Ordertime < Worktime
   private
 
   ########### validation helpers ###########
-
-  def only_invoice_id_changed?
-    changes.keys == %w(invoice_id)
-  end
 
   def validate_by_work_item
     if work_item && work_item.accounting_post

@@ -158,6 +158,7 @@ source /opt/rh/postgresql92/enable
 %{bundle_cmd} install --deployment --without %{bundle_without_groups}
 %{bundle_cmd} exec rake assets:precompile
 RAILS_GROUPS=assets %{bundle_cmd} exec rails generate error_page 404
+RAILS_GROUPS=assets %{bundle_cmd} exec rails generate error_page 422
 RAILS_GROUPS=assets %{bundle_cmd} exec rails generate error_page 500
 RAILS_GROUPS=assets %{bundle_cmd} exec rails generate error_page 503
 

@@ -1,0 +1,13 @@
+-# required to find client contacts
+= hidden_field_tag :client_work_item_id, entry.client.work_item_id
+
+= f.labeled_static_field(:client)
+= f.labeled_static_field(:category)
+= f.labeled_static_field(:name) if Crm.instance && entry.crm_key?
+
+= f.fields_for :work_item, entry.work_item do |fields|
+  = render 'work_items/fields',
+         fields: fields,
+         exclude: Crm.instance && entry.crm_key? ? [:name] : []
+
+= render('field_crm_edit', f: f) if Crm.instance

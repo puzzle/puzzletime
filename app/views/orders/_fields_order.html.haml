@@ -1,0 +1,12 @@
+= render 'fields_contacts', f: f
+
+= f.labeled_input_field :department_id, class: 'searchable'
+= f.labeled_input_field :responsible_id, class: 'searchable'
+= f.labeled_input_field :kind_id, class: 'searchable'
+= f.labeled_input_field :status_id, class: 'searchable'
+
+= render 'fields_team_members', f: f
+
+- if Crm.instance
+  - content_for :javascript do
+    window.App.loadContactsWithCrm();

@@ -1,1 +1,6 @@
-= destroy_action_link entry, entry.worktimes.any?, 'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Arbeitszeiten zugeordnet sind'
+- if can?(:new, Order)
+  = action_link(action_icon('duplicate', ti('link.duplicate')), new_order_path(copy_id: entry.id))
+
+= destroy_action_link(entry,
+                      entry.worktimes.any?,
+                      'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Arbeitszeiten zugeordnet sind')

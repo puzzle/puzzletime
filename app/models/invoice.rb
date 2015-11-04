@@ -22,6 +22,7 @@
 #
 
 class Invoice < ActiveRecord::Base
+
   STATUSES = %w(draft sent paid)
 
   enum grouping: %w(accounting_posts employees manual)
@@ -207,6 +208,6 @@ class Invoice < ActiveRecord::Base
   end
 
   def assign_worktimes
-    self.ordertimes = worktimes
+    worktimes.update_all(invoice_id: id)
   end
 end
