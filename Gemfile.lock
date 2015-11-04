@@ -212,7 +212,6 @@ GEM
     powerpack (0.1.1)
     protective (0.1.0)
       activerecord
-      activerecord
     pry (0.10.3)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)

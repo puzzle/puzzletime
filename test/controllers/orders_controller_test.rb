@@ -96,25 +96,26 @@ class OrdersControllerTest < ActionController::TestCase
 
   test 'POST create sets values' do
     assert_difference('Order.count') do
-      post :create, client_work_item_id: clients(:swisstopo).id,
-                    order: {
-                      work_item_attributes: {
-                        name: 'New Order',
-                        shortname: 'NEO'
-                      },
-                      department_id: departments(:devtwo).id,
-                      responsible_id: employees(:pascal).id,
-                      kind_id: order_kinds(:projekt).id,
-                      status_id: order_statuses(:bearbeitung).id,
-                      order_team_members_attributes: {
-                        '0' => { employee_id: employees(:half_year_maria).id, comment: 'rolle maria' },
-                        '1' => { employee_id: employees(:next_year_pablo).id, comment: 'rolle pablo' }
-                      },
-                      order_contacts_attributes: {
-                        '0' => { contact_id_or_crm: contacts(:swisstopo_1).id, comment: 'funktion 1' },
-                        '1' => { contact_id_or_crm: contacts(:swisstopo_2).id, comment: 'funktion 2' }
-                      }
-                    }
+      post :create,
+           client_work_item_id: clients(:swisstopo).id,
+           order: {
+              work_item_attributes: {
+                name: 'New Order',
+                shortname: 'NEO'
+              },
+              department_id: departments(:devtwo).id,
+              responsible_id: employees(:pascal).id,
+              kind_id: order_kinds(:projekt).id,
+              status_id: order_statuses(:bearbeitung).id,
+              order_team_members_attributes: {
+                '0' => { employee_id: employees(:half_year_maria).id, comment: 'rolle maria' },
+                '1' => { employee_id: employees(:next_year_pablo).id, comment: 'rolle pablo' }
+              },
+              order_contacts_attributes: {
+                '0' => { contact_id_or_crm: contacts(:swisstopo_1).id, comment: 'funktion 1' },
+                '1' => { contact_id_or_crm: contacts(:swisstopo_2).id, comment: 'funktion 2' }
+              }
+            }
     end
 
     assert_redirected_to edit_order_path(assigns(:order))
@@ -133,6 +134,53 @@ class OrdersControllerTest < ActionController::TestCase
 
     order_team_members = order.order_team_members.map { |otm| [otm.employee.id, otm.comment] }.sort
     assert_equal [[employees(:half_year_maria).id, 'rolle maria'], [employees(:next_year_pablo).id, 'rolle pablo']].sort, order_team_members
+  end
+
+  test 'POST create copies accounting posts and everything' do
+    source = orders(:hitobito_demo)
+    source.order_team_members.create!(employee: employees(:pascal), comment: 'Coder')
+    source.order_team_members.create!(employee: employees(:lucien), comment: 'PL')
+    source.order_contacts.create!(contact: contacts(:puzzle_rava), comment: 'BL')
+    source.create_contract!(number: 'hito1234', start_date: '2005-01-01', end_date: '2020-07-30')
+
+    post :create,
+         client_work_item_id: clients(:puzzle).id,
+         copy_id: source.id,
+         order: {
+           work_item_attributes: {
+             parent_id: source.work_item.parent.id,
+             name: 'New Order',
+             shortname: 'NEO'
+           },
+           department_id: departments(:devtwo).id,
+           responsible_id: employees(:pascal).id,
+           kind_id: order_kinds(:projekt).id,
+           status_id: order_statuses(:bearbeitung).id,
+           order_team_members_attributes: {
+             '0' => { employee_id: employees(:half_year_maria).id, comment: 'rolle maria' },
+             '1' => { employee_id: employees(:next_year_pablo).id, comment: 'rolle pablo' }
+           },
+           order_contacts_attributes: {
+             '0' => { contact_id_or_crm: contacts(:puzzle_rava).id, comment: 'funktion 1' }
+           }
+         }
+
+    assert_equal [], assigns(:order).errors.full_messages
+    assert_redirected_to edit_order_path(assigns(:order))
+
+    item = WorkItem.where(name: 'New Order').first
+    order = item.order
+    assert_equal order_statuses(:bearbeitung).id, order.status_id
+    assert_equal order_kinds(:projekt).id, order.kind_id
+
+    order_contacts = order.order_contacts.map { |oc| [oc.contact_id, oc.comment] }.sort
+    assert_equal [[contacts(:puzzle_rava).id, 'funktion 1']], order_contacts
+
+    order_team_members = order.order_team_members.map { |otm| [otm.employee.id, otm.comment] }.sort
+    assert_equal [[employees(:half_year_maria).id, 'rolle maria'], [employees(:next_year_pablo).id, 'rolle pablo']].sort, order_team_members
+
+    assert_equal 'hito1234', order.contract.number
+    assert_not_equal source.contract_id, order.contract_id
   end
 
   test 'PATCH update sets values' do

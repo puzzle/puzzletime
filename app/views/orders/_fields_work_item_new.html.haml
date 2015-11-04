@@ -1,0 +1,7 @@
+= render('field_crm_new', f: f) if Crm.instance
+= render 'field_client', f: f
+= render 'field_category', f: f
+
+= f.fields_for :work_item, entry.work_item do |fields|
+  = render 'work_items/fields',
+           fields: fields

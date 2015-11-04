@@ -98,16 +98,16 @@ class Order < ActiveRecord::Base
     billing_address_id || client.billing_addresses.list.pluck(:id).first
   end
 
+  def set_default_status_id
+    self.status_id ||= OrderStatus.list.pluck(:id).first
+  end
+
   private
 
   def work_item_parent_presence
     if work_item && work_item.parent_id.nil?
       errors.add(:base, 'Kunde darf nicht leer sein')
     end
-  end
-
-  def set_default_status_id
-    self.status_id ||= OrderStatus.list.pluck(:id).first
   end
 
   def set_self_in_nested

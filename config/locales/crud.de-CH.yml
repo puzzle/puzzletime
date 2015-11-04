@@ -30,6 +30,7 @@ de-CH:
       edit: Bearbeiten
       add: Erstellen
       delete: Löschen
+      duplicate: Duplizieren
 
     errors:
       header:

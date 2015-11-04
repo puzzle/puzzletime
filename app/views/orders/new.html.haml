@@ -2,25 +2,13 @@
 
 = crud_form(data: { contacts_url: contacts_with_crm_clients_url }) do |f|
 
-  = render('field_crm_new', f: f) if Crm.instance
-  = render 'field_client', f: f
-  = render 'field_category', f: f
+  - if params[:copy_id]
+    = hidden_field_tag :copy_id, params[:copy_id]
+    = render 'fields_work_item_edit', f: f
+  - else
+    = render 'fields_work_item_new', f: f
 
-  = f.fields_for :work_item, entry.work_item do |fields|
-    = render 'work_items/fields',
-             fields: fields
-
-  = render 'fields_contacts', f: f
-
-  = f.labeled_input_field :department_id, class: 'searchable'
-  = f.labeled_input_field :responsible_id, class: 'searchable'
-  = f.labeled_input_field :kind_id, class: 'searchable'
-  = f.labeled_input_field :status_id, class: 'searchable'
-
-  = render 'fields_team_members', f: f
+  = render 'fields_order', f: f
 
 = render 'shared/modal'
 
-- if Crm.instance && entry.client
-  - content_for :javascript do
-    window.App.loadContactsWithCrm();

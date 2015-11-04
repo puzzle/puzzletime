@@ -21,7 +21,20 @@ class OrdersController < CrudController
 
   before_action :set_filter_values, only: :index
 
+  after_create :copy_associations
+
   before_render_form :set_option_values
+
+
+  ### ACTIONS
+
+  def new
+    if params[:copy_id]
+      @order = Order::Copier.new(Order.find(params[:copy_id])).copy
+    else
+      super
+    end
+  end
 
   def crm_load
     key = params[:order] && params[:order][:crm_key]
@@ -93,8 +106,15 @@ class OrdersController < CrudController
     if entry.new_record?
       entry.work_item.parent_id = (params[:category_active] &&
                                    params[:category_work_item_id].presence) ||
-        params[:client_work_item_id].presence
+                                  params[:client_work_item_id].presence
     end
+  end
+
+  def copy_associations
+    return unless params[:copy_id]
+
+    Order::Copier.new(Order.find(params[:copy_id])).copy_associations(entry)
+    entry.save
   end
 
   def index_path

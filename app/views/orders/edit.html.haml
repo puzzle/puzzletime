@@ -5,31 +5,11 @@
 = crud_form(cancel_url: false,
             data: { contacts_url: contacts_with_crm_clients_url }) do |f|
 
-  = hidden_field_tag :client_work_item_id, entry.client.work_item_id
+  = render 'fields_work_item_edit', f: f
 
-  = f.labeled_static_field(:client)
-  = f.labeled_static_field(:category)
-
-  = f.fields_for :work_item, entry.work_item do |fields|
-    = render 'work_items/fields',
-             fields: fields,
-             exclude: Crm.instance && entry.crm_key? ? [:name] : []
-
-  = render('field_crm_edit', f: f) if Crm.instance
-
-  = render 'fields_contacts', f: f
-
-  = f.labeled_input_field :department_id, class: 'searchable'
-  = f.labeled_input_field :responsible_id, class: 'searchable'
-  = f.labeled_input_field :kind_id, class: 'searchable'
-  = f.labeled_input_field :status_id, class: 'searchable'
-
-  = render 'fields_team_members', f: f
+  = render 'fields_order', f: f
 
 %br/
 
 = render 'actions_edit'
 
-- if Crm.instance
-  - content_for :javascript do
-    window.App.loadContactsWithCrm();
