@@ -35,6 +35,8 @@ class TarantulaTest < ActionDispatch::IntegrationTest
     t.skip_uri_patterns << /orders\/crm_load/ # js only
 
     t.allow_500_for /^\-\d+$/ # change period may produce such links in tarantula
+    t.allow_500_for /\/ordertimes\/\d+$/ # access denied if order got closed in the mean time
+    t.allow_500_for /\/ordertimes\/\d+\/edit/ # access denied if order got closed in the mean time
     t.allow_404_for /^\-?\d+$/ # change period may produce such links in tarantula
     t.allow_404_for /ordertimes\/start$/  # passing invalid work_item_id
     t.allow_404_for /absencetimes\/\d+/   # absencetime deleted elsewhere
