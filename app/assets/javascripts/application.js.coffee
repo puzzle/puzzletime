@@ -15,6 +15,7 @@
 #= require bootstrap/button
 #= require bootstrap/alert
 #= require_self
+#= require_tree ./modules
 # after self to disable links
 #= require nested_form_fields
 #= require modal_create
@@ -25,7 +26,6 @@
 #= require orders
 #= require order_contacts
 #= require accounting_posts
-#= require invoices
 #= require turbolinks
 #= require progress_bar
 
@@ -36,64 +36,9 @@ if typeof String.prototype.endsWith isnt 'function'
   String.prototype.endsWith = (suffix) ->
     return this.indexOf(suffix, this.length - suffix.length) isnt -1
 
-app.enable = (selector, enabled) ->
-  $('input' + selector +
-    ', select' + selector +
-    ', textarea' + selector).prop('disabled', !enabled)
-  affected = $(selector)
-  if enabled
-    affected.removeClass('disabled')
-    $.each(affected, (i, e) -> if e.selectize then e.selectize.enable())
-  else
-    affected.addClass('disabled')
-    $.each(affected, (i, e) -> if e.selectize then e.selectize.disable())
-
-toggleRadioDependents = (radio) ->
-  $radio = $(radio)
-  checked = $radio.prop('checked')
-  name = $radio.attr('name')
-  inputFields = $("input.#{name}")
-  for inputField in inputFields
-    $inputField = $(inputField)
-    if $inputField.hasClass($radio.val())
-      $inputField.prop('disabled', false)
-    else
-      $inputField.prop('disabled', true)
-      $inputField.val('')
-
-toggleEnabled = (element) ->
-  selector = $(element).data('enable')
-  enabled = $(element).prop('checked')
-  app.enable(selector, enabled)
-
-toggleHide = (element) ->
-  selector = $(element).data('hide')
-  hide = $(element).prop('checked')
-  $(selector).toggle(!hide)
-
-toggleCheckAll = (element) ->
-  name = $(element).data('check')
-  $('input[type=checkbox][name="' + name + '"]').prop('checked', $(element).prop('checked'))
-
-openTableRowLink = (cell) ->
-  $row = $(cell).closest('tr')
-  link = $row.closest('[data-row-link]').data('row-link')
-  match = $row.get(0).id.match(/\w+_(\d+)/)
-  window.location = link.replace('/:id/', '/' + match[1] + '/')
-
 
 ################################################################
 # because of turbolinks.jquery, do bind ALL document events here
-
-# wire up data-dynamic-param
-$(document).on('ajax:beforeSend', '[data-dynamic-params]', (event, xhr, settings) ->
-  params = $(this).data('dynamic-params').split(',')
-  urlParams = for p in params
-    value = $('#' + p.replace('[', '_').replace(']', '')).val() || ''
-    encodeURIComponent(p) + "=" + value
-  joint = if settings.url.indexOf('?') == -1 then '?' else '&'
-  settings.url = settings.url + joint + urlParams.join('&')
-)
 
 # wire up toggle links
 $(document).on('click', '[data-toggle]', (event) ->
@@ -102,46 +47,13 @@ $(document).on('click', '[data-toggle]', (event) ->
   event.preventDefault()
 )
 
-# wire up enable links
-$(document).on('click', '[data-enable]', (event) -> toggleEnabled(this))
-
-# wire up hide links
-$(document).on('click', '[data-hide]', (event) -> toggleHide(this))
-
 # wire up direct submit fields
 $(document).on('change', '[data-submit]', (event) ->
   $(this).closest('form').submit()
 )
 
-# wire up ajax button with spinners
-$(document).on('ajax:beforeSend', '[data-spin]', (event, xhr, settings) ->
-  $(this).prop('disable', true).
-          addClass('disabled').
-          siblings('.spinner').show()
-)
-$(document).on('ajax:complete', '[data-spin]', (event, xhr, settings) ->
-  $(this).prop('disable', false).
-          removeClass('disabled').
-          siblings('.spinner').hide()
-)
-
 # wire up tooltips
 $(document).tooltip({ selector: '[data-toggle=tooltip]', placement: 'top', html: true })
-
-# wire up disable-dependents
-$(document).on('change', '[type=radio][data-disable-dependents]', (event) ->
-  toggleRadioDependents(this)
-)
-
-# wire up check all boxes
-$(document).on('change', '[data-check]', (event) ->
-  toggleCheckAll(this)
-)
-
-# wire up table row links
-$(document).on('click', '[data-row-link] tbody tr:not([data-no-link=true]) td:not(.no-link)', (event) ->
-  openTableRowLink(this)
-)
 
 # wire up searchable form fields for dynamically added nested form fields
 $(document).on "fields_added.nested_form_fields", (event,param) ->
@@ -160,17 +72,10 @@ $ ->
   $('[data-autocomplete=work_item]').each(app.workItemAutocomplete)
 
   # wire up selectize
-  $('select.searchable').selectize(
-    selectOnTab: true)
+  $('select.searchable').selectize(selectOnTab: true)
 
   # wire up toggle buttons
   $('[data-toggle=buttons]').button()
-
-  # wire up enable elements
-  $('[data-enable]').each((i, e) -> toggleEnabled(e))
-
-  # wire up hide elements
-  $('[data-toggle-hide]').each((i, e) -> toggleHide(e))
 
   # wire up disabled links. Bind on body to handle bubbling event before document
   $('body').on('click', 'a.disabled', (event) ->
