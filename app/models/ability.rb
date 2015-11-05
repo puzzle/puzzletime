@@ -36,6 +36,8 @@ class Ability
                   OrderComment,
                   OvertimeVacation,
                   PortfolioItem,
+                  Sector,
+                  Service,
                   TargetScope,
                   UserNotification,
                   WorkingCondition,

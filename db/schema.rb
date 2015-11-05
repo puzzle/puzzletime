@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151102155610) do
+ActiveRecord::Schema.define(version: 20151105101420) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,9 +37,11 @@ ActiveRecord::Schema.define(version: 20151102155610) do
     t.boolean "ticket_required",                                 default: false, null: false
     t.boolean "closed",                                          default: false, null: false
     t.boolean "from_to_times_required",                          default: false, null: false
+    t.integer "service_id"
   end
 
   add_index "accounting_posts", ["portfolio_item_id"], name: "index_accounting_posts_on_portfolio_item_id", using: :btree
+  add_index "accounting_posts", ["service_id"], name: "index_accounting_posts_on_service_id", using: :btree
   add_index "accounting_posts", ["work_item_id"], name: "index_accounting_posts_on_work_item_id", using: :btree
 
   create_table "billing_addresses", force: :cascade do |t|
@@ -62,8 +64,10 @@ ActiveRecord::Schema.define(version: 20151102155610) do
     t.boolean "allow_local",                     default: false, null: false
     t.integer "last_invoice_number",             default: 0
     t.string  "invoicing_key"
+    t.integer "sector_id"
   end
 
+  add_index "clients", ["sector_id"], name: "index_clients_on_sector_id", using: :btree
   add_index "clients", ["work_item_id"], name: "index_clients_on_work_item_id", using: :btree
 
   create_table "contacts", force: :cascade do |t|
@@ -325,6 +329,16 @@ ActiveRecord::Schema.define(version: 20151102155610) do
   end
 
   add_index "portfolio_items", ["name"], name: "index_portfolio_items_on_name", unique: true, using: :btree
+
+  create_table "sectors", force: :cascade do |t|
+    t.string  "name",                  null: false
+    t.boolean "active", default: true, null: false
+  end
+
+  create_table "services", force: :cascade do |t|
+    t.string  "name",                  null: false
+    t.boolean "active", default: true, null: false
+  end
 
   create_table "target_scopes", force: :cascade do |t|
     t.string  "name",     limit: 255, null: false

@@ -2,6 +2,7 @@
 require 'test_helper'
 
 class AccountingPostsControllerTest < ActionController::TestCase
+
   setup :login
 
   test 'GET index' do
@@ -50,6 +51,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
            book_on_order: 'true',
            accounting_post: {
              portfolio_item_id: portfolio_items(:web).id,
+             service_id: services(:software).id,
              offered_rate: 120 }
       assert_response :success
       assert_template :new
@@ -68,6 +70,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
              accounting_post: {
                reference: 'asdf',
                portfolio_item_id: portfolio_items(:web).id,
+               service_id: services(:software).id,
                closed: true,
                offered_rate: 155 }
       end
@@ -86,6 +89,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
              accounting_post: {
                work_item_attributes: { name: 'TEST', shortname: 'TST' },
                portfolio_item_id: portfolio_items(:web).id,
+               service_id: services(:software).id,
                offered_rate: 120,
                closed: true }
       end
@@ -107,6 +111,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
              accounting_post: {
                work_item_attributes: { name: 'TEST', shortname: 'TST' },
                portfolio_item_id: portfolio_items(:web).id,
+               service_id: services(:software).id,
                offered_rate: 150 }
       end
     end
@@ -130,6 +135,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
              accounting_post: {
                work_item_attributes: { name: 'TEST', shortname: 'TST' },
                portfolio_item_id: portfolio_items(:web).id,
+               service_id: services(:software).id,
                offered_rate: 150 }
       end
     end
@@ -152,6 +158,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
         offered_hours: 80.0,
         offered_rate: 42.0,
         portfolio_item_id: portfolio_items(:mobile).id,
+        service_id: services(:software).id,
         billable: true,
         description_required: true,
         ticket_required: true
@@ -182,6 +189,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
         offered_rate: 42.0,
         offered_total: 10_000.0,
         portfolio_item_id: portfolio_items(:mobile).id,
+        service_id: services(:software).id,
         billable: true,
         description_required: true,
         ticket_required: true,

@@ -9,6 +9,7 @@
 #  allow_local         :boolean          default(FALSE), not null
 #  last_invoice_number :integer          default(0)
 #  invoicing_key       :string
+#  sector_id           :integer
 #
 
 Fabricator(:client) do

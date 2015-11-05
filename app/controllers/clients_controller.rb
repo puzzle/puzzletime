@@ -4,10 +4,13 @@
 # Diplomarbeit 2149, Xavier Hayoz
 
 class ClientsController < ManageController
+
   self.search_columns = ['work_items.name', 'work_items.shortname']
 
-  self.permitted_attrs = [:crm_key, :allow_local,
+  self.permitted_attrs = [:crm_key, :allow_local, :sector_id,
                           work_item_attributes: [:name, :shortname, :description]]
+
+  self.sort_mappings = { sector_id: 'sectors.name' }
 
   def categories
     if params[:client_work_item_id].present?
@@ -24,6 +27,10 @@ class ClientsController < ManageController
     client = super
     client.build_work_item
     client
+  end
+
+  def list_entries
+    super.includes(:sector).references(:sector)
   end
 
   def js_entry(object = entry)

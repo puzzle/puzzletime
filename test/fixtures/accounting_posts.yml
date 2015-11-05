@@ -14,11 +14,13 @@
 #  ticket_required        :boolean          default(FALSE), not null
 #  closed                 :boolean          default(FALSE), not null
 #  from_to_times_required :boolean          default(FALSE), not null
+#  service_id             :integer
 #
 
 allgemein:
   work_item_id: 3
   portfolio_item: web
+  service: beratung
   offered_rate: 0
 
 puzzletime:
@@ -26,19 +28,23 @@ puzzletime:
   offered_hours: 100
   offered_rate: 3
   portfolio_item: web
+  service: software
   billable: false
 
 hitobito_demo_app:
   work_item_id: 9
   portfolio_item: web
+  service: software
   offered_rate: 170
 
 hitobito_demo_site:
   work_item_id: 10
   portfolio_item: web
+  service: software
   offered_rate: 170
 
 webauftritt:
   work_item_id: 6
   portfolio_item: web
+  service: software
   offered_rate: 140

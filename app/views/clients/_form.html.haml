@@ -1,6 +1,9 @@
 = crud_form do |f|
   = f.fields_for :work_item, entry.work_item do |fields|
     = render 'work_items/fields', fields: fields
+
+  = f.labeled_input_field :sector_id
+
   - if Crm.instance
     - url = Crm.instance.client_url(entry)
     - link = url ? link_to('Öffnen', url, target: :blank) : nil

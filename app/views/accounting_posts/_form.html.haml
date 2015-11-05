@@ -18,7 +18,8 @@
   = render 'budget_fields', form: f
 
   = f.labeled_input_field :remaining_hours, addon: 'h'
-  = f.labeled_input_field :portfolio_item_id, caption: 'Portfolio', span: 2
+  = f.labeled_input_field :portfolio_item_id, span: 5
+  = f.labeled_input_field :service_id, span: 5
   = f.labeled_input_field :billable, caption: 'Budgetposition ist verrechenbar'
   = f.labeled_input_field :description_required, caption: 'Beschreibung obligatorisch'
   = f.labeled_input_field :ticket_required, caption: 'Ticket obligatorisch'

@@ -1,0 +1,20 @@
+# == Schema Information
+#
+# Table name: sectors
+#
+#  id     :integer          not null, primary key
+#  name   :string           not null
+#  active :boolean          default(TRUE), not null
+#
+
+verwaltung:
+  name: Verwaltung
+  active: true
+
+oev:
+  name: Öffentlicher Verkehr
+  active: true
+
+banken:
+  name: Banken
+  active: false
