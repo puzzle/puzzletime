@@ -3,7 +3,7 @@ class AccountingPostsController < CrudController
   self.nesting = [Order]
 
   self.permitted_attrs = [:closed, :offered_hours, :offered_rate, :offered_total,
-                          :remaining_hours, :portfolio_item_id, :billable,
+                          :remaining_hours, :portfolio_item_id, :service_id, :billable,
                           :description_required, :ticket_required, :from_to_times_required,
                           work_item_attributes: [:name, :shortname, :description]]
 

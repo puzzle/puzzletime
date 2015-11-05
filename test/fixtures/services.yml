@@ -1,0 +1,24 @@
+# == Schema Information
+#
+# Table name: services
+#
+#  id     :integer          not null, primary key
+#  name   :string           not null
+#  active :boolean          default(TRUE), not null
+#
+
+software:
+  name: Software Entwicklung
+  active: true
+
+system:
+  name: System Engineering
+  active: true
+
+beratung:
+  name: Beratung
+  active: true
+
+kanalarbeiten:
+  name: Kanalarbeiten
+  active: false

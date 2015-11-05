@@ -77,6 +77,10 @@ Rails.application.routes.draw do
 
   resources :portfolio_items, except: [:show]
 
+  resources :sectors, except: [:show]
+
+  resources :services, except: [:show]
+
   resources :target_scopes, except: [:show]
 
   resources :user_notifications, except: [:show]

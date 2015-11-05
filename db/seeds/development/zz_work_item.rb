@@ -12,9 +12,11 @@ clients = WorkItem.seed(:shortname, :parent_id,
 Client.seed(:work_item_id,
   { work_item_id: clients[0].id },
 
-  { work_item_id: clients[1].id },
+  { work_item_id: clients[1].id,
+    sector_id: Sector.find_by_name('Verwaltung').id },
 
-  { work_item_id: clients[2].id },
+  { work_item_id: clients[2].id,
+    sector_id: Sector.find_by_name('Öffentlicher Verkehr').id },
 )
 
 categories = WorkItem.seed(:shortname, :parent_id,
@@ -154,18 +156,21 @@ AccountingPost.seed(:work_item_id,
   # Puzzletime 1.5
   { work_item_id: accounting_posts[0].id,
     portfolio_item_id: PortfolioItem.find_by_name('Ruby on Rails').id,
+    service_id: Service.find_by_name('Software-Entwicklung').id,
     offered_hours: 500,
     billable: false },
 
   # Puzzletime ERP
   { work_item_id: accounting_posts[1].id,
     portfolio_item_id: PortfolioItem.find_by_name('Ruby on Rails').id,
+    service_id: Service.find_by_name('Software-Entwicklung').id,
     offered_hours: 500,
     billable: false },
 
   # Enclouder 2013
   { work_item_id: accounting_posts[2].id,
     portfolio_item_id: PortfolioItem.find_by_name('Ruby on Rails').id,
+    service_id: Service.find_by_name('Software-Entwicklung').id,
     offered_hours: 800,
     offered_rate: 150,
     billable: true,
@@ -174,6 +179,7 @@ AccountingPost.seed(:work_item_id,
   # Enclouder 2014
   { work_item_id: accounting_posts[3].id,
     portfolio_item_id: PortfolioItem.find_by_name('Ruby on Rails').id,
+    service_id: Service.find_by_name('Software-Entwicklung').id,
     offered_hours: 600,
     offered_rate: 160,
     billable: true },
@@ -181,6 +187,7 @@ AccountingPost.seed(:work_item_id,
   # FIS Grundpacket 0
   { work_item_id: accounting_posts[4].id,
     portfolio_item_id: PortfolioItem.find_by_name('Java EE').id,
+    service_id: Service.find_by_name('Software-Entwicklung').id,
     offered_hours: 200,
     offered_rate: 140,
     billable: true,
@@ -189,6 +196,7 @@ AccountingPost.seed(:work_item_id,
   # FIS Backend
   { work_item_id: accounting_posts[5].id,
     portfolio_item_id: PortfolioItem.find_by_name('Java EE').id,
+    service_id: Service.find_by_name('Software-Entwicklung').id,
     offered_hours: 2000,
     offered_rate: 140,
     billable: true },
@@ -196,6 +204,7 @@ AccountingPost.seed(:work_item_id,
   # FIS Frontend
   { work_item_id: accounting_posts[6].id,
     portfolio_item_id: PortfolioItem.find_by_name('Java EE').id,
+    service_id: Service.find_by_name('Software-Entwicklung').id,
     offered_hours: 1200,
     offered_rate: 140,
     billable: true },
@@ -203,6 +212,7 @@ AccountingPost.seed(:work_item_id,
   # FIS Middleware
   { work_item_id: accounting_posts[7].id,
     portfolio_item_id: PortfolioItem.find_by_name('Java EE').id,
+    service_id: Service.find_by_name('Software-Entwicklung').id,
     offered_hours: 200,
     offered_rate: 150,
     billable: true },
@@ -210,16 +220,19 @@ AccountingPost.seed(:work_item_id,
   # TechTalk
   { work_item_id: orders[1].id,
     portfolio_item_id: PortfolioItem.find_by_name('Java EE').id,
+    service_id: Service.find_by_name('Beratung').id,
     billable: false },
 
   # Workshops
   { work_item_id: orders[2].id,
     portfolio_item_id: PortfolioItem.find_by_name('Java EE').id,
+    service_id: Service.find_by_name('Beratung').id,
     billable: false },
 
   # DIS
   { work_item_id: orders[6].id,
     portfolio_item_id: PortfolioItem.find_by_name('Java EE').id,
+    service_id: Service.find_by_name('Software-Entwicklung').id,
     offered_hours: 5000,
     offered_rate: 145,
     billable: true },

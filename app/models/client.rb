@@ -9,14 +9,18 @@
 #  allow_local         :boolean          default(FALSE), not null
 #  last_invoice_number :integer          default(0)
 #  invoicing_key       :string
+#  sector_id           :integer
 #
 
 # (c) Puzzle itc, Berne
 # Diplomarbeit 2149, Xavier Hayoz
 
 class Client < ActiveRecord::Base
+
   include BelongingToWorkItem
   include Evaluatable
+
+  belongs_to :sector
 
   has_many :contacts, dependent: :destroy
   has_many :billing_addresses, dependent: :destroy

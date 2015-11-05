@@ -15,6 +15,7 @@
 #  ticket_required        :boolean          default(FALSE), not null
 #  closed                 :boolean          default(FALSE), not null
 #  from_to_times_required :boolean          default(FALSE), not null
+#  service_id             :integer
 #
 
 class AccountingPost < ActiveRecord::Base
@@ -24,6 +25,7 @@ class AccountingPost < ActiveRecord::Base
   ### ASSOCIATIONS
 
   belongs_to :portfolio_item
+  belongs_to :service
 
   has_ancestor_through_work_item :order
   has_ancestor_through_work_item :client
@@ -39,8 +41,7 @@ class AccountingPost < ActiveRecord::Base
 
   validates_by_schema
   validates :work_item_id, uniqueness: true
-  validates :offered_rate, presence: true
-  validates :portfolio_item, presence: true
+  validates :offered_rate, :portfolio_item, :service, presence: true
   validate :check_booked_on_order
 
 

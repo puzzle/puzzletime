@@ -68,6 +68,12 @@ de-CH:
       portfolio_item:
         one: Portfolioposition
         other: Portfoliopositionen
+      sector:
+        one: Branche
+        other: Branchen
+      service:
+        one: Dienstleistung
+        other: Dienstleistungen
       target_scope:
         one: Zielwert
         other: Zielwerte
@@ -94,7 +100,8 @@ de-CH:
         duration: Dauer
       accounting_post:
         work_item_id: Position
-        portfolio_item_id: Portfolioposition
+        portfolio_item_id: Portfolio
+        service_id: Dienstleistung
         reference: Referenz
         offered_hours: Offerierte Stunden
         offered_rate: Offerierter Stundensatz
@@ -117,6 +124,7 @@ de-CH:
         name: Name
         shortname: Kürzel
         allow_local: Lokale Aufträge zulassen
+        sector_id: Branche
       contact:
         client_id: Kunde
         lastname: Nachname
@@ -252,6 +260,12 @@ de-CH:
         is_abstract: Abstrakt
         abstract_amount: Anzahl
       portfolio_item:
+        name: Bezeichnung
+        active: Aktiv
+      sector:
+        name: Bezeichnung
+        active: Aktiv
+      service:
         name: Bezeichnung
         active: Aktiv
       target_scope:

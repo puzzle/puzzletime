@@ -1,9 +1,11 @@
-= crud_table :name, :shortname do |t|
+= crud_table :name, :shortname, :sector_id do |t|
   - if Crm.instance
     - t.sortable_attr(:crm_key, Crm.instance.crm_key_label)
+
   - if can?(:read, Contact)
     - t.action_col do |e|
       - link_to('Kontakte', client_contacts_path(e))
+
   - if can?(:read, BillingAddress)
     - t.action_col do |e|
       - link_to('Adressen', client_billing_addresses_path(e))

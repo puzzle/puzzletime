@@ -14,6 +14,7 @@
 #  ticket_required        :boolean          default(FALSE), not null
 #  closed                 :boolean          default(FALSE), not null
 #  from_to_times_required :boolean          default(FALSE), not null
+#  service_id             :integer
 #
 
 require 'test_helper'
@@ -29,6 +30,7 @@ class AccountingPostTest < ActiveSupport::TestCase
       fresh = AccountingPost.create!(
         work_item: WorkItem.new(name: 'Foo', shortname: 'FOO', parent: post.work_item),
         portfolio_item: PortfolioItem.first,
+        service: Service.first,
         offered_rate: 150)
     end
     post.reload
