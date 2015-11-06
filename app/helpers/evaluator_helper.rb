@@ -74,8 +74,6 @@ module EvaluatorHelper
   end
 
   def worktime_commits(employee)
-    return unless employee.committed_worktimes_at
-
     content = content_tag(:span, id: "committed_worktimes_at_#{employee.id}") do
       worktime_commits_icon(employee) << ' ' << format_attr(employee, :committed_worktimes_at)
     end
