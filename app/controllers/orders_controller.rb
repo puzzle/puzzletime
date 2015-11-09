@@ -83,11 +83,7 @@ class OrdersController < CrudController
   def sort_entries_by_target_scope(entries)
     match = params[:sort].to_s.match(/\Atarget_scope_(\d+)\z/)
     if match
-      entries.
-        joins('LEFT JOIN order_targets sort_target ' \
-              'ON sort_target.order_id = orders.id ').
-        where('sort_target.target_scope_id = ? OR sort_target.id IS NULL', match[1]).
-        reorder('sort_target.rating')
+      entries.order_by_target_scope(match[1])
     else
       entries
     end

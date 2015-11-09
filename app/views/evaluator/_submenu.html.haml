@@ -13,6 +13,11 @@
         evaluation_path('clientworkitems'),
         evaluation_path('workitememployees')
 
+- if can?(:reports, Order)
+  = nav 'Aufträge',
+        reports_orders_path(clear: 1),
+        reports_orders_path
+
 - if can?(:employees, Evaluation)
   = nav 'Mitarbeiter',
         evaluation_path('employees', clear: 1),

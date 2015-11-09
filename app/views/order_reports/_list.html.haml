@@ -1,0 +1,82 @@
+- if @report.present?
+  .unindented
+    %table.orders-report.table.table-hover
+      %thead
+        %tr
+          - # TODO tooltips
+          %th
+            = sort_link(:client, 'Kunde')
+            %br/
+            Auftrag
+          %th= sort_link(:status, 'Status')
+          %th Budget
+          %th Geleistet
+          %th Verrechenbar
+          %th Verrechnet
+          %th= sort_link(:billability, 'Verrechenbarkeit')
+          %th= sort_link(:coverage_rate, 'Deckungsbeitrag')
+          %th Verrechnete Stundensatz
+          %th= sort_link(:average_hourly_rate, 'Durchschnittlicher Stundensatz')
+          - @target_scopes.each do |scope|
+            %th.large= sort_link("target_scope_#{scope.id}", icon(scope.icon, title: scope.name))
+
+      %tbody
+        - # TODO total
+        - @report.each do |order|
+          %tr
+            %td
+              = order.parent_names
+              %br/
+              %span.title
+                = link_to_if(can?(:show, order.order),
+                             order,
+                             can?(:update, order.order) ? edit_order_path(order) : order_path(order))
+            %td
+              %span{class: "label label-#{order.status.style}"}
+                = order.status.name
+            %td
+              .data-item
+                %span.figure= f(order.offered_amount.to_f)
+                %span.unit CHF
+            %td
+              .data-item
+                %span.figure= f(order.supplied_amount.to_f)
+                %span.unit CHF
+            %td
+              .data-item
+                %span.figure= f(order.billable_amount.to_f)
+                %span.unit CHF
+            %td.right
+              .data-item
+                %span.figure= f(order.billed_amount.to_f)
+                %span.unit CHF
+            %td.right
+              .data-item
+                - if order.billability
+                  %span.figure= f(order.billability)
+                  %span.unit %
+            %td
+              .data-item
+                - if order.profit_margin
+                  %span.figure= f(order.profit_margin)
+                  %span.unit CHF/Std.
+            %td
+              .data-item
+                - if order.billed_rate
+                  %span.figure= f(order.billed_rate)
+                  %span.unit CHF/Std.
+            %td
+              .data-item
+                - if order.average_rate
+                  %span.figure= f(order.average_rate)
+                  %span.unit CHF/Std.
+            - @target_scopes.each do |scope|
+              %td
+                = order_target_icon(order.targets.find { |t| t.target_scope.id == scope.id })
+
+  %p= paginate @report
+
+- else
+  .table= ti(:no_list_entries)
+
+
