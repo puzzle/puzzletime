@@ -11,7 +11,7 @@ class EmployeesEval < Evaluation
   end
 
   def divisions(period = nil)
-    Employee.employed_ones(period || Period.current_year)
+    period ? Employee.list : Employee.employed_ones(Period.current_year)
   end
 
   def employee_id
