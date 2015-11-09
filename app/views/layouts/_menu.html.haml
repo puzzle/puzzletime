@@ -12,6 +12,7 @@
       = nav 'Auswertungen',
             evaluation_path('userworkitems', clear: 1),
             '/evaluator',
+            reports_orders_path,
             all_absences_graph_path
       - if can?(:manage, Client)
         = nav 'Verwalten',

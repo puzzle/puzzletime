@@ -127,6 +127,10 @@ Rails.application.routes.draw do
     get :all_absences
   end
 
+  scope '/reports' do
+    get '/orders', to: 'order_reports#index', as: :reports_orders
+  end
+
   scope '/login', controller: 'login' do
     match :login, via: [:get, :post]
     post :logout

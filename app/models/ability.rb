@@ -106,7 +106,7 @@ class Ability
     end
 
     can [:read, :accounting_posts, :services, :show_targets, :show_contract, :show_comments,
-         :show_invoices], Order
+         :show_invoices, :reports], Order
 
     can :read, [AccountingPost, Invoice, OrderComment]
 

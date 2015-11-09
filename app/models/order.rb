@@ -68,6 +68,13 @@ class Order < ActiveRecord::Base
                                      order('work_items.path_names'))
       result.collect { |row| ["#{row['path_shortnames']}: #{row['name']}", row['id']] }
     end
+
+    def order_by_target_scope(target_scope_id)
+      joins('LEFT JOIN order_targets sort_target ' \
+              'ON sort_target.order_id = orders.id ').
+        where('sort_target.target_scope_id = ? OR sort_target.id IS NULL', target_scope_id).
+        reorder('sort_target.rating')
+    end
   end
 
   ### INSTANCE METHODS
