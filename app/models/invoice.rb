@@ -166,8 +166,15 @@ class Invoice < ActiveRecord::Base
   end
 
   def generate_reference
-    self.reference = "#{order.client.shortname}#{order.shortname}#{order.department.shortname}" \
-                     "#{'%04d' % (order.client.last_invoice_number + 1)}"
+    reference_segments = [
+        order.client.shortname,
+        order.category.try(:shortname),
+        order.shortname,
+        order.department.shortname,
+        '%04d' % (order.client.last_invoice_number + 1)
+
+    ]
+    self.reference = reference_segments.compact * Settings.work_items.path_separator
   end
 
   def generate_due_date
