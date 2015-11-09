@@ -99,6 +99,9 @@ class OrderServicesController < ApplicationController
       params[:start_date].blank? && params[:end_date].blank?
       invoice = Invoice.find(params[:invoice_id])
       @period = Period.retrieve(invoice.period_from, invoice.period_to)
+      # return an open period to get all worktimes for the given invoice_id,
+      # even if they are not in the defined invoice period.
+      # (@period is only used to display from and to dates)
       Period.new(nil, nil)
     else
       set_period
