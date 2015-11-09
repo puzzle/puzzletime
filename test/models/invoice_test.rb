@@ -71,9 +71,16 @@ class InvoiceTest < ActiveSupport::TestCase
     assert invoice.valid?
   end
 
+  PATH_SEPARATOR = Settings.work_items.path_separator
+
   test 'generates invoice number' do
     second_invoice = invoice.dup.tap { |i| i.reference = nil; i.save! }
-    assert_equal 'STOPWEBD10002', second_invoice.reference
+    assert_equal %w(STOP WEB D1 0002) * PATH_SEPARATOR, second_invoice.reference
+  end
+
+  test 'includes category shortname in invoice number' do
+    second_invoice = invoice_with_category.dup.tap { |i| i.reference = nil; i.save! }
+    assert_equal %w(PITC HIT DEM D2 0002) * PATH_SEPARATOR, second_invoice.reference
   end
 
   test 'updates totals when validating' do
@@ -253,6 +260,19 @@ class InvoiceTest < ActiveSupport::TestCase
 
   def invoice
     invoices(:webauftritt_may)
+  end
+
+  def invoice_with_category
+    @invoice_with_category ||= begin
+      order = orders(:hitobito_demo)
+      Fabricate(:contract, order: order) unless order.contract
+      Fabricate(:invoice, {
+        order: order,
+        work_items: [work_items(:hitobito_demo_app)],
+        employees: [employees(:pascal)],
+        period_to: Time.zone.today.at_end_of_month
+      })
+    end
   end
 end
 
