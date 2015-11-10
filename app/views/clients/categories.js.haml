@@ -1,8 +1,0 @@
-selectize = $('#category_work_item_id')[0].selectize
-selectize.clearOptions()
-- @categories.each do |c|
-  selectize.addOption({ value: '#{c.id}', text: '#{c.to_s}' })
-selectize.refreshOptions(false)
-
-var categoryParam = 'work_item[parent_id]=#{params[:client_work_item_id]}'
-$('#category_work_item_id_create_link').attr('data-params', categoryParam).data('params', categoryParam)

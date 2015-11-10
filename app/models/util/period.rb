@@ -169,6 +169,16 @@ class Period
                label)
   end
 
+  def where_condition(column)
+    if start_date && end_date
+      ["#{column} BETWEEN ? AND ?", start_date, end_date]
+    elsif start_date
+      ["#{column} >= ?", start_date]
+    elsif end_date
+      ["#{column} <= ?", end_date]
+    end
+  end
+
   private
 
   def self.day_label(date)

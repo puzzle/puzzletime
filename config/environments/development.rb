@@ -36,6 +36,8 @@ Rails.application.configure do
   # Raises helpful error messages.
   config.assets.raise_runtime_errors = true
 
+  config.middleware.insert_before ActionDispatch::Cookies, Rack::RequestProfiler, printer: RubyProf::CallStackPrinter
+
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
   config.after_initialize do
