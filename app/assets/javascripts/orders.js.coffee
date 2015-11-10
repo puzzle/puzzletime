@@ -21,6 +21,10 @@ $ ->
   if cwi.length > 0 && cwi[0].selectize
     cwi[0].selectize.on('change', (element) ->
       $('#category_active').prop('disabled', false)
+      categoryParam = 'work_item[parent_id]=' + element
+      $('#category_work_item_id_create_link').
+        attr('data-params', categoryParam).
+        data('params', categoryParam)
     )
 
   $('#target_scope_icon').selectize({ render: { option: renderIconItem, item: renderIconItem } })

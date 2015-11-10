@@ -5,20 +5,20 @@
         %tr
           - # TODO tooltips
           %th
-            = sort_link(:client, 'Kunde')
+            = sort_link('', 'Kunde')
             %br/
             Auftrag
-          %th= sort_link(:status, 'Status')
-          %th Budget
-          %th Geleistet
-          %th Verrechenbar
-          %th Verrechnet
+          %th Status
+          %th= sort_link(:offered_amount, 'Budget')
+          %th= sort_link(:supplied_amount, 'Geleistet')
+          %th= sort_link(:billable_amount, 'Verrechenbar')
+          %th= sort_link(:billed_amount, 'Verrechnet')
           %th= sort_link(:billability, 'Verrechenbarkeit')
-          %th= sort_link(:coverage_rate, 'Deckungsbeitrag')
-          %th Verrechnete Stundensatz
-          %th= sort_link(:average_hourly_rate, 'Durchschnittlicher Stundensatz')
+          %th= sort_link(:offered_rate, 'Offerierter Stundensatz')
+          %th= sort_link(:billed_rate, 'Verrechneter Stundensatz')
+          %th= sort_link(:average_rate, 'Durchschnittlicher Stundensatz')
           - @target_scopes.each do |scope|
-            %th.large= sort_link("target_scope_#{scope.id}", icon(scope.icon, title: scope.name))
+            %th.large= icon(scope.icon, title: scope.name)
 
       %tbody
         - # TODO total
@@ -57,8 +57,8 @@
                   %span.unit %
             %td
               .data-item
-                - if order.profit_margin
-                  %span.figure= f(order.profit_margin)
+                - if order.offered_rate
+                  %span.figure= f(order.offered_rate)
                   %span.unit CHF/Std.
             %td
               .data-item

@@ -12,8 +12,18 @@ class OrderReportsController < ApplicationController
 
   def index
     set_period
-    set_filter_values
-    @report = Order::Report.new(params)
+    @report = Order::Report.new(@period, params)
+    respond_to do |format|
+      format.html do
+        set_filter_values
+      end
+      format.js do
+        set_filter_values
+      end
+      format.csv do
+        send_data(@report.to_csv, type: 'text/csv; charset=utf-8; header=present')
+      end
+    end
   end
 
   private
@@ -21,7 +31,10 @@ class OrderReportsController < ApplicationController
   def set_filter_values
     @departments = Department.list
     @clients = WorkItem.joins(:client).list
-    @categories = [] # TODO
+    @categories = []
+    if params[:client_work_item_id].present?
+      @categories = WorkItem.find(params[:client_work_item_id]).categories.list
+    end
     @order_kinds = OrderKind.list
     @order_status = OrderStatus.list
     @order_responsibles = Employee.joins(:managed_orders).uniq.list
@@ -35,7 +48,6 @@ class OrderReportsController < ApplicationController
     fail ArgumentError, 'Start Datum nach End Datum' if @period.negative?
     @period
   rescue ArgumentError => ex
-    # from Period.retrieve or if period.negative?
     flash.now[:alert] = "Ungültige Zeitspanne: #{ex}"
     @period = Period.new(nil, nil)
 

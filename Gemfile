@@ -48,6 +48,7 @@ group :development, :test do
   gem 'codez-tarantula', require: 'tarantula-rails3'
   gem 'faker'
   gem 'pry-rails'
+  gem 'request_profiler'
 end
 
 group :development do

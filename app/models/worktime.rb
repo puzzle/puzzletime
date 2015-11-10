@@ -42,21 +42,13 @@ class Worktime < ActiveRecord::Base
 
   before_validation :store_hours
 
-  scope :in_period, ->(period) do
+  scope :in_period, (lambda do |period|
     if period
-      if period.start_date && period.end_date
-        where('work_date BETWEEN ? AND ?', period.start_date, period.end_date)
-      elsif period.start_date
-        where('work_date >= ?', period.start_date)
-      elsif period.end_date
-        where('work_date <= ?', period.end_date)
-      else
-        all
-      end
+      where(period.where_condition('work_date'))
     else
       all
     end
-  end
+  end)
 
   scope :billable, -> { where(billable: true) }
 
