@@ -30,7 +30,15 @@
                          class: 'searchable',
                          style: 'width: 180px;')
 
-  = direct_filter_select(:target, 'Ziel', @order_targets)
+  = direct_filter(:target, 'Ziel') do
+    - select_tag(:target,
+                 options_for_select([['Orange', 'orange'],
+                                     ['Rot', 'red'],
+                                     ['Orange und Rot', 'red_orange']],
+                                     params[:target]),
+                 prompt: 'Alle',
+                 class: 'form-control',
+                 data: { submit: true })
 
   .form-group
     = spinner

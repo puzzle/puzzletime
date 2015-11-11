@@ -13,6 +13,7 @@
 #
 
 class OrderTarget < ActiveRecord::Base
+
   RATINGS = %w(green orange red)
 
   belongs_to :order
@@ -32,4 +33,5 @@ class OrderTarget < ActiveRecord::Base
   def target_critical?
     rating != RATINGS.first
   end
+
 end

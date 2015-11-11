@@ -9,31 +9,34 @@
             %br/
             Auftrag
           %th Status
-          %th= sort_link(:offered_amount, 'Budget')
-          %th= sort_link(:supplied_amount, 'Geleistet')
-          %th= sort_link(:billable_amount, 'Verrechenbar')
-          %th= sort_link(:billed_amount, 'Verrechnet')
-          %th= sort_link(:billability, 'Verrechenbarkeit')
+          %th.nowrap= sort_link(:offered_amount, 'Budget')
+          %th.nowrap= sort_link(:supplied_amount, 'Geleistet')
+          %th.nowrap= sort_link(:billable_amount, 'Verrechenbar')
+          %th.nowrap= sort_link(:billed_amount, 'Verrechnet')
+          %th.nowrap= sort_link(:billability, 'Verrechenbarkeit')
           %th= sort_link(:offered_rate, 'Offerierter Stundensatz')
           %th= sort_link(:billed_rate, 'Verrechneter Stundensatz')
           %th= sort_link(:average_rate, 'Durchschnittlicher Stundensatz')
           - @target_scopes.each do |scope|
-            %th.large= icon(scope.icon, title: scope.name)
+            %th.large.nowrap= sort_link("target_scope_#{scope.id}", icon(scope.icon, title: scope.name))
 
       %tbody
-        - # TODO total
-        - @report.each do |order|
+        - @report.page do |order|
           %tr
             %td
-              = order.parent_names
-              %br/
-              %span.title
-                = link_to_if(can?(:show, order.order),
-                             order,
-                             can?(:update, order.order) ? edit_order_path(order) : order_path(order))
+              - if order.order
+                = order.parent_names
+                %br/
+                %span.title
+                  = link_to_if(can?(:show, order.order),
+                               order,
+                               can?(:update, order.order) ? edit_order_path(order) : order_path(order))
+              - else
+                %span.title= order
             %td
-              %span{class: "label label-#{order.status.style}"}
-                = order.status.name
+              - if order.status
+                %span{class: "label label-#{order.status.style}"}
+                  = order.status.name
             %td
               .data-item
                 %span.figure= f(order.offered_amount.to_f)
@@ -51,6 +54,7 @@
                 %span.figure= f(order.billed_amount.to_f)
                 %span.unit CHF
             %td.right
+              -# TODO: color coding
               .data-item
                 - if order.billability
                   %span.figure= f(order.billability)
@@ -67,12 +71,13 @@
                   %span.unit CHF/Std.
             %td
               .data-item
+                - # TODO color coding
                 - if order.average_rate
                   %span.figure= f(order.average_rate)
                   %span.unit CHF/Std.
             - @target_scopes.each do |scope|
               %td
-                = order_target_icon(order.targets.find { |t| t.target_scope.id == scope.id })
+                = order_target_icon(order.target(scope.id))
 
   %p= paginate @report
 

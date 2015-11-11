@@ -44,7 +44,10 @@ class Order < ActiveRecord::Base
   has_many :contacts, through: :order_contacts
   has_many :invoices, dependent: :destroy
 
-  accepts_nested_attributes_for :order_team_members, :order_contacts, reject_if: :all_blank, allow_destroy: true
+  accepts_nested_attributes_for :order_team_members,
+                                :order_contacts,
+                                reject_if: :all_blank,
+                                allow_destroy: true
 
   ### VALIDATIONS
 
@@ -69,11 +72,11 @@ class Order < ActiveRecord::Base
       result.collect { |row| ["#{row['path_shortnames']}: #{row['name']}", row['id']] }
     end
 
-    def order_by_target_scope(target_scope_id)
+    def order_by_target_scope(target_scope_id, desc = false)
       joins('LEFT JOIN order_targets sort_target ' \
               'ON sort_target.order_id = orders.id ').
         where('sort_target.target_scope_id = ? OR sort_target.id IS NULL', target_scope_id).
-        reorder('sort_target.rating')
+        reorder("sort_target.rating #{desc ? 'asc' : 'desc'}")
     end
   end
 

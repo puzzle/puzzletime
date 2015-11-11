@@ -52,7 +52,7 @@ class OrdersController < CrudController
   private
 
   def list_entries
-    entries = super.includes(:kind, :department, :status, :responsible, :team_members, targets: :target_scope).
+    entries = super.includes(:kind, :department, :status, :responsible, :team_members, :targets).
               order('work_items.path_names')
     entries = sort_entries_by_target_scope(entries)
 
@@ -83,7 +83,7 @@ class OrdersController < CrudController
   def sort_entries_by_target_scope(entries)
     match = params[:sort].to_s.match(/\Atarget_scope_(\d+)\z/)
     if match
-      entries.order_by_target_scope(match[1])
+      entries.order_by_target_scope(match[1], params[:sort_dir].to_s.downcase == 'desc')
     else
       entries
     end
