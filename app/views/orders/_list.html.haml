@@ -50,7 +50,7 @@
                 = order.status.name
             - @target_scopes.each do |scope|
               %td
-                = order_target_icon(order.targets.find { |t| t.target_scope.id == scope.id })
+                = order_target_icon(order.targets.find { |t| t.target_scope_id == scope.id })
 
 - else
   .table= ti(:no_list_entries)

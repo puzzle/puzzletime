@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 class Order::Copier
-
   attr_reader :source, :copy
 
   def initialize(source)

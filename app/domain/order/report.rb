@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 class Order::Report
-
   include Filterable
 
   attr_reader :period, :params
@@ -11,30 +10,30 @@ class Order::Report
     @params = params
   end
 
-  def each(&block)
+  def page(&block)
     section = entries[((current_page - 1) * limit_value)...(current_page * limit_value)]
-    section.each(&block)
+    ([total] + section).each(&block) if section.present?
   end
 
   def entries
     @entries ||= Order.benchmark('load all') { sort_entries(load_entries) }
   end
 
+  def total
+    @total ||= Order::Report::Total.new(self)
+  end
+
   def to_csv
     entries
+    scopes = TargetScope.list.to_a
     Order.benchmark('csv') do
-    CSV.generate do |csv|
-      csv << ['Kunde', 'Kategorie', 'Auftrag', 'Status', 'Budget', 'Geleistet',
-              'Verrechenbar', 'Verrechnet', 'Verrechenbarkeit', 'Offerierter Stundensatz',
-              'Verrechnete Stundensatz', 'Durchschnittlicher Stundensatz']
-      entries.each do |e|
-        # TODO category
-        csv << [e.work_item.path_names.first, '', e.name, e.status.to_s,
-                e.offered_amount, e.supplied_amount,
-                e.billable_amount, e.billed_amount, e.billability,
-                e.offered_rate, e.billed_rate, e.average_rate]
+      CSV.generate do |csv|
+        csv << csv_header(scopes)
+
+        entries.each do |e|
+          csv << csv_row(e, scopes)
+        end
       end
-    end
     end
   end
 
@@ -50,6 +49,10 @@ class Order::Report
     20
   end
 
+  def present?
+    entries.present?
+  end
+
   private
 
   def load_entries
@@ -61,9 +64,9 @@ class Order::Report
   end
 
   def load_orders
-    entries = Order.list.includes(:status, targets: :target_scope)
-    # TODO: filter by  target
+    entries = Order.list.includes(:status, :targets)
     entries = filter_by_parent(entries)
+    entries = filter_by_target(entries)
     filter_entries_by(entries, :kind_id, :responsible_id, :status_id, :department_id)
   end
 
@@ -87,7 +90,7 @@ class Order::Report
     Worktime.joins(:work_item).
              joins('INNER JOIN accounting_posts ON ' \
                    'accounting_posts.work_item_id = ANY (work_items.path_ids)').
-             where(accounting_posts: { id: accounting_posts.collect { |h| h.keys }.flatten }).
+             where(accounting_posts: { id: accounting_posts.collect(&:keys).flatten }).
              in_period(period).
              group('accounting_posts.id, worktimes.billable').
              pluck('accounting_posts.id, worktimes.billable, SUM(worktimes.hours)')
@@ -131,27 +134,60 @@ class Order::Report
     end
   end
 
-  def sort_entries(entries)
-    return entries unless valid_sorting?
-
-    dir = params[:sort_dir] == 'desc' ? 1 : -1
-    entries.sort_by do |e|
-      e.send(params[:sort]) * dir
+  def filter_by_target(orders)
+    if params[:target].present?
+      ratings = params[:target].split('_')
+      orders.joins('LEFT JOIN order_targets filter_targets ON filter_targets.order_id = orders.id').
+             where(filter_targets: { rating: ratings })
+    else
+      orders
     end
   end
 
-  def valid_sorting?
-    Order::Report::Entry.public_instance_methods(false).collect(&:to_s).include?(params[:sort])
-  end
-
-  def sort_by_target_scope(entries)
-    match = params[:sort].to_s.match(/\Atarget_scope_(\d+)\z/)
+  def sort_entries(entries)
+    dir = params[:sort_dir] == 'desc' ? 1 : -1
+    match = sort_by_target?
     if match
-      entries.order_by_target_scope(match[1])
+      sort_by_target(entries, match[1], dir)
+    elsif sort_by_value?
+      sort_by_value(entries, dir)
     else
       entries
     end
   end
 
-end
+  def sort_by_value?
+    Order::Report::Entry.public_instance_methods(false).collect(&:to_s).include?(params[:sort])
+  end
 
+  def sort_by_target?
+    params[:sort].to_s.match(/\Atarget_scope_(\d+)\z/)
+  end
+
+  def sort_by_value(entries, dir)
+    entries.sort_by do |e|
+      e.send(params[:sort]).to_f * dir
+    end
+  end
+
+  def sort_by_target(entries, target_scope_id, dir)
+    entries.sort_by do |e|
+      dir * OrderTarget::RATINGS.index(e.target(target_scope_id).try(:rating)).to_i
+    end
+  end
+
+  def csv_header(scopes)
+    ['Kunde', 'Kategorie', 'Auftrag', 'Status', 'Budget', 'Geleistet',
+     'Verrechenbar', 'Verrechnet', 'Verrechenbarkeit', 'Offerierter Stundensatz',
+     'Verrechnete Stundensatz', 'Durchschnittlicher Stundensatz', *scopes.collect(&:name)]
+  end
+
+  def csv_row(e, scopes)
+    ratings = scopes.collect { |scope| e.target(scope.id).try(:rating) }
+
+    [e.client, e.category, e.name, e.status.to_s, e.offered_amount, e.supplied_amount,
+     e.billable_amount, e.billed_amount, e.billability, e.offered_rate,
+     e.billed_rate, e.average_rate, *ratings]
+  end
+
+end

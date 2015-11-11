@@ -1,5 +1,4 @@
 class Order::Report::Entry < SimpleDelegator
-
   attr_reader :order, :accounting_posts, :hours, :invoices
 
   def initialize(order, accounting_posts, hours, invoices)
@@ -8,6 +7,14 @@ class Order::Report::Entry < SimpleDelegator
     @accounting_posts = accounting_posts
     @hours = hours
     @invoices = invoices
+  end
+
+  def client
+    work_item.path_names.lines.first.strip
+  end
+
+  def category
+    work_item.path_ids.size > 2 ? work_item.path_names.lines.second.strip : nil
   end
 
   def offered_amount
@@ -70,6 +77,10 @@ class Order::Report::Entry < SimpleDelegator
     @average_rate ||= supplied_hours > 0 ? billed_amount / supplied_hours : nil
   end
 
+  def target(scope_id)
+    targets.find { |t| t.target_scope_id == scope_id.to_i }
+  end
+
   private
 
   def sum_accounting_posts(&block)
@@ -91,4 +102,8 @@ class Order::Report::Entry < SimpleDelegator
     accounting_posts[id][key] || 0
   end
 
+  # caching these explicitly gives quite a performance benefit if many orders are exported
+  def targets
+    @targets ||= order.targets.to_a
+  end
 end

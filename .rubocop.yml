@@ -1,5 +1,6 @@
 AllCops:
   RunRailsCops: true
+  DisplayCopNames: true
   Exclude:
     - Rakefile
     - bin/**/*
@@ -85,6 +86,14 @@ HasAndBelongsToMany:
 Style/Attr:
   Enabled: false
 
+# We think it's fine to have empty lines inside the class body
+Style/EmptyLinesAroundClassBody:
+  Enabled: false
+
 # We think that's fine most of the time
 Style/GuardClause:
+  Enabled: false
+
+# We think that's fine
+Style/MultilineOperationIndentation:
   Enabled: false

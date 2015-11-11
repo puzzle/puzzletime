@@ -39,7 +39,6 @@ class OrderReportsController < ApplicationController
     @order_status = OrderStatus.list
     @order_responsibles = Employee.joins(:managed_orders).uniq.list
     @target_scopes = TargetScope.list
-    @order_targets = [] # TODO
   end
 
   def set_period
