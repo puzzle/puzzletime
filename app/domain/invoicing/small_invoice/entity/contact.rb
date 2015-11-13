@@ -5,7 +5,6 @@ module Invoicing
         def to_hash
           with_id(surname: entry.lastname,
                   name: entry.firstname,
-                  department: entry.billing_addresses.first.try(:supplement),
                   email: entry.email,
                   phone: entry.phone,
                   gender: constant(:gender_id),
