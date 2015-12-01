@@ -78,3 +78,16 @@ committed_worktimes:
   notification:
     days_at_end_of_month: 7
     days_at_beginning_of_month: 3
+
+orders:
+  # The minimum values for a given color in order reports.
+  reports:
+    billability:
+      green: 90
+      orange: 80
+      red: 0
+    average_rate:
+      green: 150
+      yellow: 130
+      orange: 100
+      red: 0
