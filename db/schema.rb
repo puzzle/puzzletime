@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151105101420) do
+ActiveRecord::Schema.define(version: 20151201153220) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -65,6 +65,7 @@ ActiveRecord::Schema.define(version: 20151105101420) do
     t.integer "last_invoice_number",             default: 0
     t.string  "invoicing_key"
     t.integer "sector_id"
+    t.string  "e_bill_account_key"
   end
 
   add_index "clients", ["sector_id"], name: "index_clients_on_sector_id", using: :btree

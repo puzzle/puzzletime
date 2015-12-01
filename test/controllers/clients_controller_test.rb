@@ -44,7 +44,9 @@ class ClientsControllerTest < ActionController::TestCase
   def test_entry_attrs
     { work_item_attributes:
         { name: 'Initech',
-          shortname: 'INIT' }
+          shortname: 'INIT' },
+      e_bill_account_key: '41105678901234567',
+      sector_id: sectors(:verwaltung).id
     }
   end
 end

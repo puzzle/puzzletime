@@ -10,6 +10,7 @@
 #  last_invoice_number :integer          default(0)
 #  invoicing_key       :string
 #  sector_id           :integer
+#  e_bill_account_key  :string
 #
 
 Fabricator(:client) do
