@@ -60,7 +60,7 @@ class Order::Report::Total
     if offered_hours > 0
       (offered_amount / offered_hours).to_d
     elsif entries.size > 0
-      entries.sum(&:offered_rate) / entries.size
+      entries.collect(&:offered_rate).compact.sum / entries.size
     end
   end
 

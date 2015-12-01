@@ -47,6 +47,14 @@ module OrderHelper
     link_to(order.crm_key, Crm.instance.order_url(order), target: :blank) if order.crm_key?
   end
 
+  def format_order_billability(value)
+    content_tag(:span, f(value), class: order_report_billability_class(value))
+  end
+
+  def format_order_average_rate(value)
+    content_tag(:span, f(value), class: order_report_average_rate_class(value))
+  end
+
   def glyphicons
     %w(asterisk plus euro minus cloud envelope pencil glass music search heart star star-empty
        user film th-large th th-list ok remove zoom-in zoom-out off signal cog trash home file
@@ -71,4 +79,31 @@ module OrderHelper
        sound-5-1 sound-6-1 sound-7-1 copyright-mark registration-mark cloud-download cloud-upload
        tree-conifer tree-deciduous)
   end
+
+  private
+
+  def order_report_billability_class(value)
+    config = Settings.orders.reports.billability
+    if value >= config.green
+      'green'
+    elsif value >= config.orange
+      'orange'
+    else
+      'red'
+    end
+  end
+
+  def order_report_average_rate_class(value)
+    config = Settings.orders.reports.average_rate
+    if value >= config.green
+      'green'
+    elsif value >= config.yellow
+      'yellow'
+    elsif value >= config.orange
+      'orange'
+    else
+      'red'
+    end
+  end
+
 end

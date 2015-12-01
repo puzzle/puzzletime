@@ -66,15 +66,15 @@ class Order::Report::Entry < SimpleDelegator
   end
 
   def billability
-    @billability ||= supplied_hours > 0 ? (billed_hours / supplied_hours * 100).round : nil
+    @billability ||= supplied_hours > 0 ? (billable_hours / supplied_hours * 100).round : nil
   end
 
   def billed_rate
-    @billed_rate ||= billed_hours > 0 ? billed_amount / billed_hours : nil
+    @billed_rate ||= billed_hours > 0 ? billed_amount / billable_hours : nil
   end
 
   def average_rate
-    @average_rate ||= supplied_hours > 0 ? billed_amount / supplied_hours : nil
+    @average_rate ||= supplied_hours > 0 ? billable_amount / supplied_hours : nil
   end
 
   def target(scope_id)

@@ -1,87 +1,94 @@
-- if @report.present?
-  .unindented
-    %table.orders-report.table.table-hover
-      %thead
-        %tr
-          - # TODO tooltips
-          %th
-            = sort_link('', 'Kunde')
-            %br/
-            Auftrag
-          %th Status
-          %th.nowrap= sort_link(:offered_amount, 'Budget')
-          %th.nowrap= sort_link(:supplied_amount, 'Geleistet')
-          %th.nowrap= sort_link(:billable_amount, 'Verrechenbar')
-          %th.nowrap= sort_link(:billed_amount, 'Verrechnet')
-          %th.nowrap= sort_link(:billability, 'Verrechenbarkeit')
-          %th= sort_link(:offered_rate, 'Offerierter Stundensatz')
-          %th= sort_link(:billed_rate, 'Verrechneter Stundensatz')
-          %th= sort_link(:average_rate, 'Durchschnittlicher Stundensatz')
-          - @target_scopes.each do |scope|
-            %th.large.nowrap= sort_link("target_scope_#{scope.id}", icon(scope.icon, title: scope.name))
-
-      %tbody
-        - @report.page do |order|
+- if @report.filters_defined?
+  - if @report.present?
+    .unindented
+      %table.orders-report.table.table-hover
+        %thead
           %tr
-            %td
-              - if order.order
-                = order.parent_names
-                %br/
-                %span.title
-                  = link_to_if(can?(:show, order.order),
-                               order,
-                               can?(:update, order.order) ? edit_order_path(order) : order_path(order))
-              - else
-                %span.title= order
-            %td
-              - if order.status
-                %span{class: "label label-#{order.status.style}"}
-                  = order.status.name
-            %td
-              .data-item
-                %span.figure= f(order.offered_amount.to_f)
-                %span.unit CHF
-            %td
-              .data-item
-                %span.figure= f(order.supplied_amount.to_f)
-                %span.unit CHF
-            %td
-              .data-item
-                %span.figure= f(order.billable_amount.to_f)
-                %span.unit CHF
-            %td.right
-              .data-item
-                %span.figure= f(order.billed_amount.to_f)
-                %span.unit CHF
-            %td.right
-              -# TODO: color coding
-              .data-item
-                - if order.billability
-                  %span.figure= f(order.billability)
-                  %span.unit %
-            %td
-              .data-item
-                - if order.offered_rate
-                  %span.figure= f(order.offered_rate)
-                  %span.unit CHF/Std.
-            %td
-              .data-item
-                - if order.billed_rate
-                  %span.figure= f(order.billed_rate)
-                  %span.unit CHF/Std.
-            %td
-              .data-item
-                - # TODO color coding
-                - if order.average_rate
-                  %span.figure= f(order.average_rate)
-                  %span.unit CHF/Std.
+            %th
+              = sort_link('', 'Kunde')
+              %br/
+              Auftrag
+            %th Status
+            %th.nowrap{title: 'Summe aus allen Buchungspositionen'}
+              = sort_link(:offered_amount, 'Budget')
+            %th.nowrap{title: 'Produkt aus allen geleisteten Stunden und offeriertem Stundensatz'}
+              = sort_link(:supplied_amount, 'Geleistet')
+            %th.nowrap{title: 'Produkt aus allen verrechenbaren Stunden und offeriertem Stundensatz'}
+              = sort_link(:billable_amount, 'Verrechenbar')
+            %th.nowrap{title: 'Summe aller Rechnungen im gewählten Zeitraum'}
+              = sort_link(:billed_amount, 'Verrechnet')
+            %th.nowrap{title: 'Verhältnis von verrechenbaren Stunden zu geleisteten Stunden'}
+              = sort_link(:billability, 'Verrechenbarkeit')
+            %th{title: 'Durchschnitt der offerierten Stundensätze aller Buchungspositionen'}
+              = sort_link(:offered_rate, 'Offerierter Stundensatz')
+            %th{title: 'Verhältnis von verrechneten Beträgen zu verrechenbaren Stunden'}
+              = sort_link(:billed_rate, 'Verrechneter Stundensatz')
+            %th{title: 'Verhältnis von verrechenbaren Beträgen zu verrechenbaren Stunden'}
+              = sort_link(:average_rate, 'Durchschnittlicher Stundensatz')
             - @target_scopes.each do |scope|
-              %td
-                = order_target_icon(order.target(scope.id))
+              %th.large.nowrap= sort_link("target_scope_#{scope.id}", icon(scope.icon, title: scope.name))
 
-  %p= paginate @report
+        %tbody
+          - @report.page do |order|
+            %tr
+              %td
+                - if order.order
+                  = order.parent_names
+                  %br/
+                  %span.title
+                    = link_to_if(can?(:show, order.order),
+                                 order,
+                                 can?(:update, order.order) ? edit_order_path(order) : order_path(order))
+                - else
+                  %span.title= order
+              %td
+                - if order.status
+                  %span{class: "label label-#{order.status.style}"}
+                    = order.status.name
+              %td
+                .data-item
+                  %span.figure= f(order.offered_amount.to_f)
+                  %span.unit CHF
+              %td
+                .data-item
+                  %span.figure= f(order.supplied_amount.to_f)
+                  %span.unit CHF
+              %td
+                .data-item
+                  %span.figure= f(order.billable_amount.to_f)
+                  %span.unit CHF
+              %td.right
+                .data-item
+                  %span.figure= f(order.billed_amount.to_f)
+                  %span.unit CHF
+              %td.right
+                .data-item
+                  - if order.billability
+                    %span.figure= format_order_billability(order.billability)
+                    %span.unit %
+              %td
+                .data-item
+                  - if order.offered_rate
+                    %span.figure= f(order.offered_rate)
+                    %span.unit CHF/Std.
+              %td
+                .data-item
+                  - if order.billed_rate
+                    %span.figure= f(order.billed_rate)
+                    %span.unit CHF/Std.
+              %td
+                .data-item
+                  - if order.average_rate
+                    %span.figure= format_order_average_rate(order.average_rate)
+                    %span.unit CHF/Std.
+              - @target_scopes.each do |scope|
+                %td
+                  = order_target_icon(order.target(scope.id))
+
+    %p= paginate @report
+
+  - else
+    .table= ti(:no_list_entries)
 
 - else
-  .table= ti(:no_list_entries)
-
-
+  .table Bitte wählen Sie mindestes einen Filter aus.

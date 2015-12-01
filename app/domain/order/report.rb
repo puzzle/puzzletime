@@ -53,6 +53,11 @@ class Order::Report
     entries.present?
   end
 
+  def filters_defined?
+    filters = params.except(:action, :controller, :format, :utf8, :page, :clear)
+    filters.present? && filters.values.any?(&:present?)
+  end
+
   private
 
   def load_entries
@@ -104,7 +109,7 @@ class Order::Report
 
   def load_invoices(orders)
     Invoice.where(order_id: orders.collect(&:id)).
-            where(period.where_condition('due_date')).
+            where(period.where_condition('billing_date')).
             group('order_id').
             pluck('order_id, SUM(total_amount) AS total_amount, SUM(total_hours) AS total_hours')
   end
