@@ -23,6 +23,7 @@
           = f.date_field(:work_date, id: 'week_date')
         KW
         = week_number(@selected_date)
+        
         = link_to('Zeiten freigeben',
                   edit_employee_worktimes_commit_path(current_user),
                   class: 'add-other',
@@ -30,9 +31,9 @@
                           title: 'Zeiten freigeben',
                           remote: true,
                           type: :html })
-        %span.add-other
-          &nbsp; | &nbsp;
         - if @user.management
+          %span.add-other
+            &nbsp; | &nbsp;
           = link_to('Fremderfassen', new_ordertime_path(other: 1),
                     { class: 'add-other', id: 'new_other_ordertime_link' })
       .weeknav-total.weeknav-element
