@@ -44,7 +44,7 @@ class ShowOrderServices < ActionDispatch::IntegrationTest
     timeout_safe do
       user = manager_not_responsible_for_any_order
       create_ordertime user
-      user.update!(committed_worktimes_at: Time.zone.today.end_of_month)
+      accounting_posts(:hitobito_demo_app).update!(closed: true)
       login_as user
       visit order_order_services_path(order_id: order)
       click_worktime_row
