@@ -23,7 +23,7 @@
           = f.date_field(:work_date, id: 'week_date')
         KW
         = week_number(@selected_date)
-        
+
         = link_to('Zeiten freigeben',
                   edit_employee_worktimes_commit_path(current_user),
                   class: 'add-other',
