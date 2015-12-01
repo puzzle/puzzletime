@@ -71,16 +71,14 @@ class InvoiceTest < ActiveSupport::TestCase
     assert invoice.valid?
   end
 
-  PATH_SEPARATOR = Settings.work_items.path_separator
-
   test 'generates invoice number' do
     second_invoice = invoice.dup.tap { |i| i.reference = nil; i.save! }
-    assert_equal %w(STOP WEB D1 0002) * PATH_SEPARATOR, second_invoice.reference
+    assert_equal %w(WEB D1 0002).join, second_invoice.reference
   end
 
   test 'includes category shortname in invoice number' do
     second_invoice = invoice_with_category.dup.tap { |i| i.reference = nil; i.save! }
-    assert_equal %w(PITC HIT DEM D2 0002) * PATH_SEPARATOR, second_invoice.reference
+    assert_equal %w(HIT DEM D2 0002).join, second_invoice.reference
   end
 
   test 'updates totals when validating' do
