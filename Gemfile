@@ -39,6 +39,7 @@ gem 'jquery-ui-rails'
 gem 'turbolinks'
 gem 'jquery-turbolinks'
 gem 'bootstrap-sass'
+gem 'autoprefixer-rails', '< 6.1.0' # dependency of bootstrap, newer requires ruby 2.0
 gem 'selectize-rails', '0.9.1' # newer needs fix for create order
 
 
