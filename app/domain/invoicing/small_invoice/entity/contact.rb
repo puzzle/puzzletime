@@ -7,8 +7,7 @@ module Invoicing
                   name: entry.firstname,
                   email: entry.email,
                   phone: entry.phone,
-                  gender: constant(:gender_id),
-                  show_department: bool_constant(:show_department))
+                  gender: constant(:gender_id))
         end
       end
     end
