@@ -51,7 +51,6 @@ small_invoice:
     position_type_id: 1 # service
     unit_id: 1 # hours
     gender_id: 2 # female
-    show_department: true
 
 
 # Default values
