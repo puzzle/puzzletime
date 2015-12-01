@@ -32,10 +32,8 @@ class Ordertime < Worktime
   validate :validate_accounting_post
   validate :validate_by_work_item
   validate :validate_work_item_open
-  validate :validate_worktimes_committed
 
   before_destroy :protect_work_item_closed
-  before_destroy :protect_committed_worktimes
 
 
   def account_id=(value)
@@ -83,25 +81,6 @@ class Ordertime < Worktime
   def validate_work_item_open
     if work_item_closed?
       errors.add(:base, 'Auf geschlossene Aufträge und/oder Positionen kann nicht gebucht werden.')
-    end
-  end
-
-  def validate_worktimes_committed
-    if worktimes_committed?
-      date = I18n.l(employee.committed_worktimes_at, format: :month)
-      errors.add(:work_date, "Die Zeiten bis und mit #{date} wurden freigegeben " \
-                             'und können nicht mehr bearbeitet werden.')
-    end
-  end
-
-  def protect_committed_worktimes
-    if worktimes_committed?
-      date = I18n.l(employee.committed_worktimes_at, format: :month)
-      errors.add(:base, "Die Zeiten bis und mit #{date} wurden freigegeben " \
-                        'und können nicht gelöscht werden.')
-      false
-    else
-      true
     end
   end
 

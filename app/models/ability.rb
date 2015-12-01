@@ -51,7 +51,7 @@ class Ability
     can [:read], Worktime
     can [:create, :update], Absencetime
     can [:create, :update], Ordertime do |t|
-      !t.worktimes_committed? && !t.work_item_closed?
+      !t.work_item_closed?
     end
 
     can [:clients,
@@ -80,8 +80,8 @@ class Ability
     can :read, Ordertime do |t|
       t.order.responsible_id == user.id
     end
-    can :manage, Ordertime do |t|
-      !t.worktimes_committed? && !t.work_item_closed? && t.order.responsible_id == user.id
+    can [:create, :update], Ordertime do |t|
+      t.order.responsible_id == user.id && !t.work_item_closed?
     end
     can :managed, Evaluation
   end
