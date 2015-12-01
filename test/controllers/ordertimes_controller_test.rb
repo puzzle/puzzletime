@@ -336,4 +336,109 @@ class OrdertimesControllerTest < ActionController::TestCase
       end
     end
   end
+
+  test 'committed worktimes may not be created by user' do
+    e = employees(:pascal)
+    e.update!(committed_worktimes_at: '2015-08-31')
+    login_as(:pascal)
+    post :create, ordertime: { account_id: work_items(:webauftritt).id,
+                               work_date: '2015-08-31',
+                               hours: '2',
+                               employee_id: e.id }
+    assert_template('new')
+    assert assigns(:worktime).errors[:work_date].present?
+  end
+
+  test 'uncommitted worktimes may be created by user' do
+    e = employees(:pascal)
+    e.update!(committed_worktimes_at: '2015-08-31')
+    login_as(:pascal)
+    post :create, ordertime: { account_id: work_items(:webauftritt).id,
+                               work_date: '2015-09-01',
+                               hours: '2',
+                               employee_id: e.id }
+    assert flash[:notice].present?
+  end
+
+  test 'committed worktimes may be created by manager' do
+    e = employees(:pascal)
+    e.update!(committed_worktimes_at: '2015-08-31')
+    login_as(:mark)
+    post :create, ordertime: { account_id: work_items(:webauftritt).id,
+                               work_date: '2015-08-31',
+                               hours: '2',
+                               employee_id: e.id }
+    assert flash[:notice].present?
+  end
+
+  test 'committed worktimes may not be updated by user' do
+    e = employees(:pascal)
+    t = Ordertime.create!(employee: e,
+                          work_date: '2015-08-31',
+                          hours: 2,
+                          work_item: work_items(:webauftritt),
+                          report_type: 'absolute_day')
+    e.update!(committed_worktimes_at: '2015-09-30')
+    login_as(:pascal)
+    assert_raises(CanCan::AccessDenied) do
+      put :update, id: t.id, ordertime: { hours: '3' }
+    end
+  end
+
+  test 'committed worktimes may be updated by manager' do
+    e = employees(:pascal)
+    t = Ordertime.create!(employee: e,
+                          work_date: '2015-08-31',
+                          hours: 2,
+                          work_item: work_items(:webauftritt),
+                          report_type: 'absolute_day')
+    e.update!(committed_worktimes_at: '2015-09-30')
+    login_as(:mark)
+    put :update, id: t.id, ordertime: { description: 'bla bla' }
+    assert flash[:notice].present?
+    assert_equal 'bla bla', t.reload.description
+  end
+
+  test 'committed worktimes may not change work date forwards by user' do
+    e = employees(:pascal)
+    t = Ordertime.create!(employee: e,
+                          work_date: '2015-08-31',
+                          hours: 2,
+                          work_item: work_items(:webauftritt),
+                          report_type: 'absolute_day')
+    e.update!(committed_worktimes_at: '2015-09-30')
+    login_as(:pascal)
+    assert_raises(CanCan::AccessDenied) do
+      put :update, id: t.id, ordertime: { work_date: '2015-10-10' }
+    end
+  end
+
+  test 'committed worktimes may not change work date backwards by user' do
+    e = employees(:pascal)
+    t = Ordertime.create!(employee: e,
+                          work_date: '2015-10-10',
+                          hours: 2,
+                          work_item: work_items(:webauftritt),
+                          report_type: 'absolute_day')
+    e.update!(committed_worktimes_at: '2015-09-30')
+    login_as(:pascal)
+
+    put :update, id: t.id, ordertime: { work_date: '2015-08-31' }
+    assert_template('edit')
+    assert assigns(:worktime).errors[:work_date].present?
+  end
+
+  test 'committed worktimes may not be destroyed by user' do
+    e = employees(:pascal)
+    t = Ordertime.create!(employee: e,
+                          work_date: '2015-08-31',
+                          hours: 2,
+                          work_item: work_items(:webauftritt),
+                          report_type: 'absolute_day')
+    e.update!(committed_worktimes_at: '2015-09-30')
+    login_as(:pascal)
+
+    assert_raises(CanCan::AccessDenied) { delete :destroy, id: t.id }
+  end
+
 end

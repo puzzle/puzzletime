@@ -5,6 +5,8 @@ class OrdertimesController < WorktimesController
   self.permitted_attrs = [:account_id, :report_type, :work_date, :hours,
                           :from_start_time, :to_end_time, :description, :billable, :ticket]
 
+  before_save :check_worktimes_committed
+
   def update
     if entry.employee_id != @user.id
       session[:split] = WorktimeEdit.new(entry)
@@ -61,6 +63,15 @@ class OrdertimesController < WorktimesController
 
   def set_worktime_defaults
     @worktime.work_item_id ||= params[:account_id]
+  end
+
+  def check_worktimes_committed
+    if entry.employee_id == @user.id && entry.worktimes_committed?
+      date = I18n.l(@user.committed_worktimes_at, format: :month)
+      entry.errors.add(:work_date, "Die Zeiten bis und mit #{date} wurden freigegeben " \
+                                   'und können nicht mehr bearbeitet werden.')
+      false
+    end
   end
 
 end
