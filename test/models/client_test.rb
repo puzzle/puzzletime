@@ -9,11 +9,13 @@
 #  last_invoice_number :integer          default(0)
 #  invoicing_key       :string
 #  sector_id           :integer
+#  e_bill_account_key  :string
 #
 
 require 'test_helper'
 
 class ClientTest < ActiveSupport::TestCase
+
   test 'client with worktimes may not be destroyed' do
     assert_no_difference('WorkItem.count') do
       assert_no_difference('Client.count') do
@@ -39,5 +41,27 @@ class ClientTest < ActiveSupport::TestCase
         client.destroy
       end
     end
+  end
+
+  test 'e bill account key has 17 digits' do
+    client = Client.new
+    client.valid?
+    assert client.errors[:e_bill_account_key].blank?
+
+    client.e_bill_account_key = '41105678901234567'
+    client.valid?
+    assert client.errors[:e_bill_account_key].blank?
+
+    client.e_bill_account_key = '411056789012345678'
+    client.valid?
+    assert client.errors[:e_bill_account_key].present?
+
+    client.e_bill_account_key = '4110567890123456'
+    client.valid?
+    assert client.errors[:e_bill_account_key].present?
+
+    client.e_bill_account_key = '12345678901234567'
+    client.valid?
+    assert client.errors[:e_bill_account_key].present?
   end
 end

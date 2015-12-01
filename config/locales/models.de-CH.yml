@@ -125,6 +125,7 @@ de-CH:
         shortname: Kürzel
         allow_local: Lokale Aufträge zulassen
         sector_id: Branche
+        e_bill_account_key: eBillAccountID
       contact:
         client_id: Kunde
         lastname: Nachname
@@ -305,3 +306,10 @@ de-CH:
     associations:
       contact:
         no_entry: "(keiner)"
+
+    errors:
+      models:
+        client:
+          attributes:
+            e_bill_account_key:
+              number: muss eine 17-stellige Zahl sein und mit 4110 beginnen

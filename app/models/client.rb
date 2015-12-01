@@ -10,6 +10,7 @@
 #  last_invoice_number :integer          default(0)
 #  invoicing_key       :string
 #  sector_id           :integer
+#  e_bill_account_key  :string
 #
 
 # (c) Puzzle itc, Berne
@@ -32,6 +33,7 @@ class Client < ActiveRecord::Base
   validates :work_item_id, uniqueness: true
   validates :crm_key, uniqueness: true, allow_blank: true
   validates :invoicing_key, uniqueness: true, allow_blank: true
+  validates :e_bill_account_key, format: { with: /\A4110\d{13}\z/, allow_blank: true, message: :number }
 
 
   ##### interface methods for Evaluatable #####
@@ -39,4 +41,5 @@ class Client < ActiveRecord::Base
   def self.worktimes
     Worktime.all
   end
+
 end
