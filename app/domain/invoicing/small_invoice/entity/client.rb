@@ -4,7 +4,7 @@ module Invoicing
       class Client < Base
         def to_hash
           {
-            number: entry.id,
+            number: entry.shortname,
             name: entry.name,
             type: constant(:client_type),
             language: constant(:language),
