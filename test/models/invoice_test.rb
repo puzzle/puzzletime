@@ -232,12 +232,21 @@ class InvoiceTest < ActiveSupport::TestCase
     refute_equal invoice, @worktime_lw2.reload.invoice
   end
 
-  test 'create stores last billing address' do
+  test 'create stores last billing address on order' do
+    assert_nil orders(:webauftritt).billing_address_id
     invoice = Invoice.new(invoices(:webauftritt_may).attributes)
     invoice.id = nil
     invoice.billing_address = billing_addresses(:swisstopo_2)
     invoice.save!
-    assert_equal billing_addresses(:swisstopo_2), orders(:webauftritt).billing_address
+    assert_equal billing_addresses(:swisstopo_2).id, orders(:webauftritt).reload.billing_address_id
+  end
+
+  test 'update stores last billing address on order' do
+    assert_nil orders(:webauftritt).billing_address_id
+    invoice = invoices(:webauftritt_may)
+    invoice.billing_address = billing_addresses(:swisstopo_2)
+    invoice.save!
+    assert_equal billing_addresses(:swisstopo_2).id, orders(:webauftritt).reload.billing_address_id
   end
 
   test 'delete deletes remote as well' do
