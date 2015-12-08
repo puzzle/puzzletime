@@ -19,7 +19,7 @@ echo "$NAME $VERSION.$BUILD_NUMBER built `date +"%d.%m.%Y %H:%M"`" > $DIR/VERSIO
 #(git submodule --quiet foreach "pwd | awk -v dir=`pwd`/ '{sub(dir,\"\"); print}'") | xargs tar c | (cd $DIR && tar -xf -)
 
 sed -i s/BUILD_NUMBER/$BUILD_NUMBER/ $DIR/config/rpm/*.spec
-sed -i s/RPM_NAME/$RPM_NAME/ sources/config/rpm/*.spec
+sed -i s/RPM_NAME/$RPM_NAME/ $DIR/config/rpm/*.spec
 
 tar czf $TAR $DIR
 rm -rf $DIR
