@@ -1,13 +1,14 @@
 #!/bin/bash -e
 
-if [ -z $BUILD_NUMBER ]; then
-  echo "Usage: BUILD_NUMBER=123 build_rpm.sh"
+if [[ (-z $BUILD_NUMBER) || (-z $RPM_NAME) ]]; then
+  echo "Usage: BUILD_NUMBER=123 RPM_NAME=ptime build_rpm.sh"
   exit 1
 fi
+
 git tag -a build_$BUILD_NUMBER -m "automatic build tag $BUILD_NUMBER"
 NAME=`grep -E '^%define app_name' config/rpm/*.spec | head -n 1 | awk '{ print $3 }'`
 VERSION=`grep -E '^%define app_version' config/rpm/*.spec | head -n 1 | awk '{ print $3 }'`
-DIR=$NAME-$VERSION.$BUILD_NUMBER
+DIR=$RPM_NAME-$VERSION.$BUILD_NUMBER
 TAR=$DIR.tar.gz
 mkdir $DIR
 git archive --format=tar build_$BUILD_NUMBER | (cd $DIR && tar -xf -)
@@ -18,6 +19,8 @@ echo "$NAME $VERSION.$BUILD_NUMBER built `date +"%d.%m.%Y %H:%M"`" > $DIR/VERSIO
 #(git submodule --quiet foreach "pwd | awk -v dir=`pwd`/ '{sub(dir,\"\"); print}'") | xargs tar c | (cd $DIR && tar -xf -)
 
 sed -i s/BUILD_NUMBER/$BUILD_NUMBER/ $DIR/config/rpm/*.spec
+sed -i s/RPM_NAME/$RPM_NAME/ sources/config/rpm/*.spec
+
 tar czf $TAR $DIR
 rm -rf $DIR
 build=`rpmbuild -ts $TAR`
