@@ -33,6 +33,9 @@ class EmployeeOverviewPlanningGraphTest < ActiveSupport::TestCase
     WorkingCondition.clear_cache
     Holiday.refresh
     Planning.delete_all
+    # act as if there were no absences/holidays in today's week. this is required
+    # for successfull tests even if the current week contains holidays.
+    EmployeeOverviewPlanningGraph.any_instance.stubs(:add_absences_to_cache)
     assert_equal 0, graph.period_average_planned_percent.to_f
 
     planning1 = Fabricate(:planning,
