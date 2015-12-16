@@ -31,7 +31,7 @@ module Invoicing
 
         def stringify(hash)
           hash.inject({}) do |memo, (key, value)|
-            memo[key.to_s] = value.to_s
+            memo[key.to_s] = value.to_s.strip
             memo
           end
         end

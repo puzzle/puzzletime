@@ -64,7 +64,7 @@ class OrdersController < CrudController
   end
 
   def default_filter_entries(entries)
-    entries = remembering_default_filter(entries, :status_id, @order_statuses.first.id)
+    entries = remembering_default_filter(entries, :status_id, @order_statuses.first.try(:id))
 
     if !current_user.management? && current_user.order_responsible?
       remembering_default_filter(entries, :responsible_id, current_user.id)
