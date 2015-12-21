@@ -34,7 +34,9 @@ module Invoicing
           create_remote
         end
 
-        set_association_keys
+        remote = fetch_remote
+        set_association_keys(remote) if remote
+        nil
       end
 
       private
@@ -53,15 +55,26 @@ module Invoicing
         Invoicing::SmallInvoice::Entity::Client.new(client).to_hash
       end
 
-      def set_association_keys
-        remote = api.get(:client, key)
+      def fetch_remote
+        api.get(:client, key)
+      rescue Invoicing::Error => e
+        if e.message == 'No Objects or too many found'
+          client.update_column(:invoicing_key, nil)
+          client.billing_addresses.update_all(invoicing_key: nil)
+          client.contacts.update_all(invoicing_key: nil)
+          nil
+        else
+          raise
+        end
+      end
+
+      def set_association_keys(remote)
         set_association_key(Invoicing::SmallInvoice::Entity::Address,
                             client.billing_addresses,
                             remote['addresses'])
         set_association_key(Invoicing::SmallInvoice::Entity::Contact,
                             client.contacts,
                             remote['contacts'])
-        nil
       end
 
       def set_association_key(entity, list, remote_list)
