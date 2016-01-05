@@ -181,6 +181,8 @@ class OrdersControllerTest < ActionController::TestCase
 
     assert_equal 'hito1234', order.contract.number
     assert_not_equal source.contract_id, order.contract_id
+
+    assert_equal source.work_item.parent_id, item.parent_id
   end
 
   test 'PATCH update sets values' do
