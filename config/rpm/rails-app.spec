@@ -234,6 +234,10 @@ exit 0
 # Runs after the package got installed.
 # Configure here any services etc.
 
+# write error output to file
+mkdir -p /var/log/rpm-postinstall
+exec 2> /var/log/rpm-postinstall/%{name}.log
+
 # the following old files would be loaded on startup and must
 # be explicitly deleted to load the stop script
 rm -f %{appdir}/db/migrate/20150930143851_remove_discount_reference_from_accounting_post.rb
