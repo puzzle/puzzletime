@@ -11,7 +11,7 @@ class EmployeeOverviewPlanningGraphTest < ActiveSupport::TestCase
   end
 
   def week(date)
-    "#{date.year}#{date.cweek}"
+    date.strftime('%Y%W')
   end
 
   def graph(*plannings)
