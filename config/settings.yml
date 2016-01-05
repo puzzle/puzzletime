@@ -72,7 +72,7 @@ work_items:
 employees:
   # The initial vacation days are used to transfer the current vacation balance of each employee
   # when introducing puzzle time. At some point, it will no be required to edit that value anymore.
-  initial_vacation_days_editable: <%= ENV['PTIME_INITIAL_VACATION_DAYS_EDITABLE'].try(:downcase) == 'true' %>
+  initial_vacation_days_editable: <%= ENV['RAILS_PTIME_INITIAL_VACATION_DAYS_EDITABLE'].try(:downcase) == 'true' %>
 
 committed_worktimes:
   notification:
