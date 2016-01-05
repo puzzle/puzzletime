@@ -3,7 +3,7 @@ class OrdersController < CrudController
 
   self.permitted_attrs = [
     :crm_key, :kind_id, :responsible_id, :department_id, :status_id,
-    work_item_attributes: [:name, :shortname, :description],
+    work_item_attributes: [:name, :shortname, :description, :parent_id],
     order_team_members_attributes: [:id, :employee_id, :comment, :_destroy],
     order_contacts_attributes: [:id, :contact_id_or_crm, :comment, :_destroy]
   ]
@@ -104,7 +104,7 @@ class OrdersController < CrudController
   def assign_attributes
     super
     if entry.new_record?
-      entry.work_item.parent_id = (params[:category_active] &&
+      entry.work_item.parent_id ||= (params[:category_active] &&
                                    params[:category_work_item_id].presence) ||
                                   params[:client_work_item_id].presence
     end
