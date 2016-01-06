@@ -35,4 +35,9 @@ namespace :rubocop do
     end
     true
   end
+
+  desc 'Run .rubocop.yml on changed files'
+  task :changed do
+    sh "git ls-files -m -o -x spec -x test | grep '.rb$' | xargs rubocop"
+  end
 end
