@@ -29,12 +29,12 @@ class EmployeesController < ManageController
   end
 
   def update_settings
-    attrs = params.require(:user).permit(eval_periods: [])
+    attrs = (params[:user] && params.require(:user).permit(eval_periods: [])) || {}
+    attrs[:eval_periods] = [] if attrs[:eval_periods].blank?
     if @user.update_attributes(attrs)
       flash[:notice] = 'Die Benutzereinstellungen wurden aktualisiert'
       redirect_to root_path
     else
-      flash[:notice] = 'Die Benutzereinstellungen konnten nicht aktualisiert werden'
       render action: 'settings'
     end
   end
