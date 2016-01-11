@@ -173,10 +173,11 @@ class Invoice < ActiveRecord::Base
 
   def generate_reference
     reference_segments = [
-        order.category.try(:shortname),
-        order.shortname,
-        order.department.shortname,
-        sprintf('%04d', order.client.last_invoice_number + 1)]
+      order.client.shortname,
+      order.category.try(:shortname),
+      order.shortname,
+      order.department.shortname,
+      sprintf('%04d', order.client.last_invoice_number + 1)]
     self.reference = reference_segments.compact.join
   end
 
