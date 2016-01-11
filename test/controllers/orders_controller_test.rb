@@ -97,7 +97,7 @@ class OrdersControllerTest < ActionController::TestCase
   test 'POST create sets values' do
     assert_difference('Order.count') do
       post :create,
-           client_work_item_id: clients(:swisstopo).id,
+           client_work_item_id: clients(:swisstopo).work_item_id,
            order: {
               work_item_attributes: {
                 name: 'New Order',
@@ -136,7 +136,7 @@ class OrdersControllerTest < ActionController::TestCase
     assert_equal [[employees(:half_year_maria).id, 'rolle maria'], [employees(:next_year_pablo).id, 'rolle pablo']].sort, order_team_members
   end
 
-  test 'POST create copies accounting posts and everything' do
+  test 'POST create copies sub accounting posts and everything' do
     source = orders(:hitobito_demo)
     source.order_team_members.create!(employee: employees(:pascal), comment: 'Coder')
     source.order_team_members.create!(employee: employees(:lucien), comment: 'PL')
@@ -144,7 +144,7 @@ class OrdersControllerTest < ActionController::TestCase
     source.create_contract!(number: 'hito1234', start_date: '2005-01-01', end_date: '2020-07-30')
 
     post :create,
-         client_work_item_id: clients(:puzzle).id,
+         client_work_item_id: clients(:puzzle).work_item_id,
          copy_id: source.id,
          order: {
            work_item_attributes: {
@@ -183,6 +183,90 @@ class OrdersControllerTest < ActionController::TestCase
     assert_not_equal source.contract_id, order.contract_id
 
     assert_equal source.work_item.parent_id, item.parent_id
+
+    assert_equal 2, order.accounting_posts.count
+    assert_not_equal work_items(:hitobito_demo_app), order.accounting_posts.first
+    assert_equal work_items(:hitobito_demo_app).name, order.accounting_posts.first.name
+  end
+
+  test 'POST create copies same level accounting post' do
+    source = orders(:webauftritt)
+
+    post :create,
+         client_work_item_id: clients(:swisstopo).work_item_id,
+         copy_id: source.id,
+         order: {
+           work_item_attributes: {
+             parent_id: source.work_item.parent.id,
+             name: 'New Order',
+             shortname: 'NEO'
+           },
+           department_id: departments(:devtwo).id,
+           responsible_id: employees(:pascal).id,
+           kind_id: order_kinds(:projekt).id,
+           status_id: order_statuses(:bearbeitung).id
+         }
+
+    assert_equal [], assigns(:order).errors.full_messages
+    assert_redirected_to edit_order_path(assigns(:order))
+
+    item = WorkItem.where(name: 'New Order').first
+    order = item.order
+    assert_equal order_statuses(:bearbeitung).id, order.status_id
+    assert_equal order_kinds(:projekt).id, order.kind_id
+
+    assert_equal [], order.order_contacts
+    assert_equal [], order.order_team_members
+
+    assert_not_equal source.contract_id, order.contract_id
+
+    assert_equal source.work_item.parent_id, item.parent_id
+
+    assert_equal 1, order.accounting_posts.count
+    post = order.accounting_posts.first
+    assert_not_equal work_items(:webauftritt), post.work_item
+    assert_equal order.work_item, post.work_item
+    assert_equal 140, post.offered_rate
+  end
+
+  test 'POST create copies same level accounting post with category' do
+    source = Fabricate(:order, work_item: Fabricate(:work_item, parent: work_items(:intern), name: 'test', shortname: 'tst'))
+    Fabricate(:accounting_post, work_item: source.work_item)
+
+    post :create,
+         client_work_item_id: clients(:puzzle).work_item_id,
+         copy_id: source.id,
+         order: {
+           work_item_attributes: {
+             parent_id: source.work_item.parent.id,
+             name: 'New Order',
+             shortname: 'NEO'
+           },
+           department_id: departments(:devtwo).id,
+           responsible_id: employees(:pascal).id,
+           kind_id: order_kinds(:projekt).id,
+           status_id: order_statuses(:bearbeitung).id
+         }
+
+    assert_equal [], assigns(:order).errors.full_messages
+    assert_redirected_to edit_order_path(assigns(:order))
+
+    item = WorkItem.where(name: 'New Order').first
+    order = item.order
+    assert_equal order_statuses(:bearbeitung).id, order.status_id
+    assert_equal order_kinds(:projekt).id, order.kind_id
+
+    assert_equal [], order.order_contacts
+    assert_equal [], order.order_team_members
+
+    assert_equal nil, order.contract_id
+
+    assert_equal source.work_item.parent_id, item.parent_id
+
+    assert_equal 1, order.accounting_posts.count
+    post = order.accounting_posts.first
+    assert_not_equal source.work_item, post.work_item
+    assert_equal order.work_item, post.work_item
   end
 
   test 'PATCH update sets values' do
