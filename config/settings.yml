@@ -23,12 +23,12 @@ regular_holidays:
 # LDAP configuration
 ldap:
   connection:
-    host: ldapi.rz.puzzle.ch
-    port: 636
+    host: <%= ENV['RAILS_PTIME_LDAP_HOST'] %>
+    port: <%= ENV['RAILS_PTIME_LDAP_PORT'] || 636 %>
     encryption: simple_tls
-  user_dn: ou=puzzle,ou=users,dc=puzzle,dc=itc
-  external_dn: ou=extern,ou=users,dc=puzzle,dc=itc
-  group: cn=puzzletime,ou=groups,dc=puzzle,dc=itc
+  user_dn: <%= ENV['RAILS_PTIME_LDAP_USER_DN'] %>
+  external_dn: <%= ENV['RAILS_PTIME_LDAP_EXTERNAL_DN'] %>
+  group: <%= ENV['RAILS_PTIME_LDAP_GROUP_DN'] %>
 
 # Highrise configuration
 highrise:
