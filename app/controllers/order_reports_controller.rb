@@ -44,10 +44,13 @@ class OrderReportsController < ApplicationController
   def set_period
     @period = Period.retrieve(params[:start_date].presence,
                               params[:end_date].presence)
-    fail ArgumentError, 'Start Datum nach End Datum' if @period.negative?
+    if @period.negative?
+      flash.now[:alert] = 'Ungültige Zeitspanne: Start Datum nach End Datum'
+      fail ArgumentError
+    end
     @period
-  rescue ArgumentError => ex
-    flash.now[:alert] = "Ungültige Zeitspanne: #{ex}"
+  rescue ArgumentError => _
+    flash.now[:alert] ||= 'Ungültiges Datum'
     @period = Period.new(nil, nil)
 
     params.delete(:start_date)
@@ -58,6 +61,5 @@ class OrderReportsController < ApplicationController
   def authorize_class
     authorize!(:reports, Order)
   end
-
 
 end
