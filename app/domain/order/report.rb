@@ -16,7 +16,7 @@ class Order::Report
   end
 
   def entries
-    @entries ||= Order.benchmark('load all') { sort_entries(load_entries) }
+    @entries ||= sort_entries(load_entries)
   end
 
   def total
@@ -26,13 +26,11 @@ class Order::Report
   def to_csv
     entries
     scopes = TargetScope.list.to_a
-    Order.benchmark('csv') do
-      CSV.generate do |csv|
-        csv << csv_header(scopes)
+    CSV.generate do |csv|
+      csv << csv_header(scopes)
 
-        entries.each do |e|
-          csv << csv_row(e, scopes)
-        end
+      entries.each do |e|
+        csv << csv_row(e, scopes)
       end
     end
   end
@@ -61,10 +59,10 @@ class Order::Report
   private
 
   def load_entries
-    orders = Order.benchmark('orders') { load_orders.to_a }
-    accounting_posts = Order.benchmark('accounting posts') { accounting_posts_to_hash(load_accounting_posts(orders)) }
-    hours = Order.benchmark('hours') { hours_to_hash(load_accounting_post_hours(accounting_posts.values)) }
-    invoices = Order.benchmark('invoices') { invoices_to_hash(load_invoices(orders)) }
+    orders = load_orders.to_a
+    accounting_posts = accounting_posts_to_hash(load_accounting_posts(orders))
+    hours = hours_to_hash(load_accounting_post_hours(accounting_posts.values))
+    invoices = invoices_to_hash(load_invoices(orders))
     orders.collect { |o| build_entry(o, accounting_posts, hours, invoices) }.compact
   end
 
@@ -150,18 +148,24 @@ class Order::Report
   end
 
   def sort_entries(entries)
-    dir = params[:sort_dir] == 'desc' ? 1 : -1
+    dir = params[:sort_dir].to_s.downcase == 'desc' ? 1 : -1
     match = sort_by_target?
     if match
       sort_by_target(entries, match[1], dir)
-    elsif sort_by_value?
-      sort_by_value(entries, dir)
+    elsif sort_by_string?
+      sort_by_string(entries, dir)
+    elsif sort_by_number?
+      sort_by_number(entries, dir)
     else
       entries
     end
   end
 
-  def sort_by_value?
+  def sort_by_string?
+    %w(client).include?(params[:sort])
+  end
+
+  def sort_by_number?
     Order::Report::Entry.public_instance_methods(false).collect(&:to_s).include?(params[:sort])
   end
 
@@ -169,7 +173,15 @@ class Order::Report
     params[:sort].to_s.match(/\Atarget_scope_(\d+)\z/)
   end
 
-  def sort_by_value(entries, dir)
+  def sort_by_string(entries, dir)
+    sorted = entries.sort_by do |e|
+      e.send(params[:sort])
+    end
+    sorted.reverse! if dir > 0
+    sorted
+  end
+
+  def sort_by_number(entries, dir)
     entries.sort_by do |e|
       e.send(params[:sort]).to_f * dir
     end

@@ -27,6 +27,7 @@ puzzletime:
   work_item_id: 4
   offered_hours: 100
   offered_rate: 3
+  offered_total: 300
   portfolio_item: web
   service: software
   billable: false
@@ -48,3 +49,4 @@ webauftritt:
   portfolio_item: web
   service: software
   offered_rate: 140
+  offered_total: 140000
