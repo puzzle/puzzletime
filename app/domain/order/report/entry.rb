@@ -32,13 +32,7 @@ class Order::Report::Entry < SimpleDelegator
   end
 
   def offered_hours
-    @offered_hours ||=
-      sum_accounting_posts do |id|
-        rate = post_value(id, :offered_rate)
-        post_value(id, :offered_hours) ||
-          (rate && (post_value(id, :offered_total) / rate.to_f)) ||
-          0
-      end
+    @offered_hours ||= sum_accounting_posts { |id| post_value(id, :offered_hours) }
   end
 
   def supplied_amount
@@ -70,7 +64,7 @@ class Order::Report::Entry < SimpleDelegator
   end
 
   def billed_rate
-    @billed_rate ||= billed_hours > 0 ? billed_amount / billable_hours : nil
+    @billed_rate ||= billable_hours > 0 ? billed_amount / billable_hours : nil
   end
 
   def average_rate

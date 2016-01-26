@@ -23,18 +23,6 @@ class Order::Report
     @total ||= Order::Report::Total.new(self)
   end
 
-  def to_csv
-    entries
-    scopes = TargetScope.list.to_a
-    CSV.generate do |csv|
-      csv << csv_header(scopes)
-
-      entries.each do |e|
-        csv << csv_row(e, scopes)
-      end
-    end
-  end
-
   def current_page
     (params[:page] || 1).to_i
   end
@@ -191,20 +179,6 @@ class Order::Report
     entries.sort_by do |e|
       dir * OrderTarget::RATINGS.index(e.target(target_scope_id).try(:rating)).to_i
     end
-  end
-
-  def csv_header(scopes)
-    ['Kunde', 'Kategorie', 'Auftrag', 'Status', 'Budget', 'Geleistet',
-     'Verrechenbar', 'Verrechnet', 'Verrechenbarkeit', 'Offerierter Stundensatz',
-     'Verrechnete Stundensatz', 'Durchschnittlicher Stundensatz', *scopes.collect(&:name)]
-  end
-
-  def csv_row(e, scopes)
-    ratings = scopes.collect { |scope| e.target(scope.id).try(:rating) }
-
-    [e.client, e.category, e.name, e.status.to_s, e.offered_amount, e.supplied_amount,
-     e.billable_amount, e.billed_amount, e.billability, e.offered_rate,
-     e.billed_rate, e.average_rate, *ratings]
   end
 
 end
