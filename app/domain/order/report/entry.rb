@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class Order::Report::Entry < SimpleDelegator
   attr_reader :order, :accounting_posts, :hours, :invoices
 
