@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'test_helper'
 
 class Order::ReportTest < ActiveSupport::TestCase
@@ -259,7 +261,7 @@ class Order::ReportTest < ActiveSupport::TestCase
   end
 
   test 'csv includes target scopes' do
-    csv = Order::Report::Csv.new(report).generate.lines
+    csv = Order::Report::Csv.new(report).generate.lines.to_a
     assert_match /Termin,Kosten,Qualität$/, csv.first
     assert_match /red,green,green$/, csv.second
   end
