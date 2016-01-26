@@ -102,16 +102,167 @@ class Order::ReportTest < ActiveSupport::TestCase
 
   ### calculating
 
-  # TODO
+  test '#offered_amount is sum of all accounting posts' do
+    order = orders(:hitobito_demo)
+    accounting_posts(:hitobito_demo_app).update!(offered_total: 10000)
+    post = AccountingPost.create!(work_item_attributes:
+                                    { name: 'Maintenance',
+                                      shortname: 'MNT',
+                                      parent_id: order.work_item_id },
+                                  offered_rate: 120,
+                                  offered_total: 5000,
+                                  portfolio_item: portfolio_items(:web),
+                                  service: services(:software))
+    Fabricate(:ordertime, work_item_id: post.work_item_id, employee: employees(:pascal))
+    entry = report.entries.find { |e| e.order == order }
 
+    assert_equal 15_000, entry.offered_amount
+    assert_equal 155_300, report.total.offered_amount
+  end
 
-  ### pagination
+  test '#offered_rate is based on hours' do
+    order = orders(:hitobito_demo)
+    accounting_posts(:hitobito_demo_app).update!(offered_total: 10000, offered_hours: 100, offered_rate: 100)
+    accounting_posts(:hitobito_demo_site).update!(offered_total: 10000, offered_hours: 50, offered_rate: 200)
+    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal))
+    entry = report.entries.find { |e| e.order == order }
 
-  # TODO
+    assert_in_delta 133.33, entry.offered_rate, 0.1
+    assert_in_delta 128.24, report.total.offered_rate, 0.1
+  end
 
-  ### csv
+  test '#offered_rate is based on rate if no hours given' do
+    order = orders(:hitobito_demo)
+    AccountingPost.update_all(offered_hours: nil, offered_total: nil)
+    accounting_posts(:hitobito_demo_app).update!(offered_rate: 100)
+    accounting_posts(:hitobito_demo_site).update!(offered_rate: 200)
+    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal))
+    entry = report.entries.find { |e| e.order == order }
 
-  # TODO
+    assert_in_delta 150, entry.offered_rate, 0.1
+    # total offered rate bases on avg order rate, not avg accounting post rate
+    assert_in_delta 73.25, report.total.offered_rate, 0.1
+  end
+
+  test '#offered_rate is based on rate if only total given' do
+    order = orders(:hitobito_demo)
+    accounting_posts(:hitobito_demo_app).update!(offered_total: 10000, offered_rate: 100)
+    accounting_posts(:hitobito_demo_site).update!(offered_total: 5000, offered_rate: 200)
+    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal))
+    entry = report.entries.find { |e| e.order == order }
+
+    assert_in_delta 120, entry.offered_rate, 0.1
+  end
+
+  test '#offered_rate is based on hours even if some are missing' do
+    order = orders(:hitobito_demo)
+    accounting_posts(:hitobito_demo_app).update!(offered_hours: 100, offered_rate: 100)
+    accounting_posts(:hitobito_demo_site).update!(offered_rate: 200)
+    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal))
+    entry = report.entries.find { |e| e.order == order }
+
+    assert_in_delta 100, entry.offered_rate, 0.1
+  end
+
+  test '#offered_rate is based on hours even if only total is given' do
+    order = orders(:hitobito_demo)
+    accounting_posts(:hitobito_demo_app).update!(offered_hours: 100, offered_rate: 100)
+    accounting_posts(:hitobito_demo_site).update!(offered_total: 10000, offered_rate: 200)
+    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal))
+    entry = report.entries.find { |e| e.order == order }
+
+    assert_in_delta 133.33, entry.offered_rate, 0.1
+  end
+
+  test '#offered_hours is based on hours' do
+    order = orders(:hitobito_demo)
+    accounting_posts(:hitobito_demo_app).update!(offered_hours: 100)
+    post = AccountingPost.create!(work_item_attributes:
+                                                  { name: 'Maintenance',
+                                                    shortname: 'MNT',
+                                                    parent_id: order.work_item_id },
+                                  offered_rate: 120,
+                                  offered_hours: 200,
+                                  portfolio_item: portfolio_items(:web),
+                                  service: services(:software))
+    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal))
+    entry = report.entries.find { |e| e.order == order }
+
+    assert_equal 300, entry.offered_hours
+    assert_equal 1400, report.total.offered_hours
+  end
+
+  test '#supplied and billed amount/hours is based on rate and worktime hours' do
+    order = orders(:hitobito_demo)
+    accounting_posts(:hitobito_demo_app).update!(offered_rate: 200)
+    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal), hours: 2)
+    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal), hours: 8)
+    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_site), employee: employees(:pascal), hours: 5, billable: false)
+    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_site), employee: employees(:pascal), hours: 5, billable: false, work_date: 2.years.ago)
+    entry = report(period: Period.new(1.year.ago, nil)).entries.find { |e| e.order == order }
+
+    assert_equal 2850, entry.supplied_amount
+    assert_equal 2000, entry.billable_amount
+    assert_equal 15, entry.supplied_hours
+    assert_equal 10, entry.billable_hours
+    assert_equal 67, entry.billability
+    assert_in_delta 133.333, entry.average_rate, 0.001
+  end
+
+  test '#total values are the sums' do
+    order = orders(:hitobito_demo)
+    accounting_posts(:hitobito_demo_app).update!(offered_rate: 200)
+    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal), hours: 2)
+    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal), hours: 8)
+    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_site), employee: employees(:pascal), hours: 5, billable: false)
+    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_site), employee: employees(:pascal), hours: 5, billable: false, work_date: 2.years.ago)
+    total = report(period: Period.new(1.year.ago, nil)).total
+
+    assert_equal 2850, total.supplied_amount
+    assert_equal 2000, total.billable_amount
+    assert_equal 15, total.supplied_hours
+    assert_equal 10, total.billable_hours
+    assert_equal 67, total.billability
+    assert_in_delta 133.333, total.average_rate, 0.001
+  end
+
+  test 'billed values without invoices are nil' do
+    order = orders(:hitobito_demo)
+    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal), hours: 2)
+    entry = report.entries.find { |e| e.order == order }
+
+    assert_equal 0, entry.billed_amount
+    assert_equal 0, entry.billed_hours
+    assert_equal 0, entry.billed_rate
+  end
+
+  test 'billed values with invoices' do
+    order = orders(:hitobito_demo)
+    Fabricate(:contract, order: order)
+    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal), hours: 10, work_date: 1.month.ago)
+    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal), hours: 2, work_date: 1.month.ago)
+    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal), hours: 2, work_date: 1.month.ago, billable: false)
+    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal), hours: 20, work_date: 2.years.ago)
+    i1 = Fabricate(:invoice, order: order, work_items: work_items(:hitobito_demo_app, :hitobito_demo_site), employees: [employees(:pascal)])
+    i2 = Fabricate(:invoice, order: order, work_items: [work_items(:hitobito_demo_app)], employees: [employees(:pascal)], billing_date: 2.years.ago, period_from: 2.years.ago.at_beginning_of_month, period_to: 2.years.ago.at_end_of_month)
+    assert_equal 12*170, i1.total_amount
+    assert_equal 20*170, i2.total_amount
+    entry = report(period: Period.new(1.year.ago, nil)).entries.find { |e| e.order == order }
+
+    assert_equal 12*170, entry.billed_amount.to_i
+    assert_equal 12, entry.billed_hours
+    assert_equal 170, entry.billed_rate
+
+    assert_equal 12*170, report.total.billed_amount
+    assert_equal 12, report.total.billed_hours
+    assert_equal 170, report.total.billed_rate
+  end
+
+  test 'csv includes target scopes' do
+    csv = Order::Report::Csv.new(report).generate.lines
+    assert_match /Termin,Kosten,Qualität$/, csv.first
+    assert_match /red,green,green$/, csv.second
+  end
 
   private
 

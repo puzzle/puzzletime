@@ -104,6 +104,8 @@ class AccountingPost < ActiveRecord::Base
   def derive_offered_fields
     if !offered_total? && offered_hours? && offered_rate?
       self.offered_total = offered_hours * offered_rate
+    elsif !offered_hours? && offered_total? && offered_rate?
+      self.offered_hours = offered_total / offered_rate
     end
   end
 

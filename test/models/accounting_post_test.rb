@@ -81,6 +81,27 @@ class AccountingPostTest < ActiveSupport::TestCase
     end
   end
 
+  test 'offered total is derived from hours' do
+    post.update!(offered_rate: 100, offered_hours: 10, offered_total: nil)
+
+    assert_equal 10, post.offered_hours
+    assert_equal 1000, post.offered_total
+  end
+
+  test 'offered hours is derived from total' do
+    post.update!(offered_rate: 100, offered_hours: ' ', offered_total: 1000)
+
+    assert_equal 10, post.offered_hours
+    assert_equal 1000, post.offered_total
+  end
+
+  test 'offered hours and total is not derived if given' do
+    post.update!(offered_rate: 100, offered_hours: 5, offered_total: 1000)
+
+    assert_equal 5, post.offered_hours
+    assert_equal 1000, post.offered_total
+  end
+
   private
 
   def post

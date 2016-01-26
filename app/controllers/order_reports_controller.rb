@@ -21,7 +21,8 @@ class OrderReportsController < ApplicationController
         set_filter_values
       end
       format.csv do
-        send_data(@report.to_csv, type: 'text/csv; charset=utf-8; header=present')
+        send_data(Order::Report::Csv.new(@report).generate,
+                  type: 'text/csv; charset=utf-8; header=present')
       end
     end
   end
