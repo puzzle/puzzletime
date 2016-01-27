@@ -12,11 +12,11 @@ class Order::Report::Entry < SimpleDelegator
   end
 
   def client
-    work_item.path_names.lines.first.strip
+    work_item.path_names.lines.to_a.first.strip
   end
 
   def category
-    work_item.path_ids.size > 2 ? work_item.path_names.lines.second.strip : nil
+    work_item.path_ids.size > 2 ? work_item.path_names.lines.to_a.second.strip : nil
   end
 
   def offered_amount
