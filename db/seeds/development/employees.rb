@@ -32,7 +32,14 @@ employees = Employee.seed(:shortname,
     shortname: 'DI',
     passwd: '86f7e437faa5a7fce15d1ddcb9eaeaea377667b8', # a
     email: 'illi@puzzle.ch',
-    management: true }
+    management: true },
+
+  { firstname: 'Päscu',
+    lastname: 'Simon',
+    shortname: 'PSI',
+    passwd: '86f7e437faa5a7fce15d1ddcb9eaeaea377667b8', # a
+    email: 'simon@puzzle.ch',
+    management: false }
 )
 
 Employment.seed(:employee_id, :start_date,
