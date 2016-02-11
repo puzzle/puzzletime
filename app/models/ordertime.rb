@@ -54,14 +54,6 @@ class Ordertime < Worktime
       WorkItem.where(id: work_item_id_was, closed: true).exists?)
   end
 
-  def worktimes_committed?
-    committed_at = employee.committed_worktimes_at
-
-    committed_at &&
-    ((work_date && committed_at >= work_date) ||
-     (work_date_was && committed_at >= work_date_was))
-  end
-
   private
 
   ########### validation helpers ###########

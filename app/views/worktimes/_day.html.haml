@@ -3,9 +3,10 @@
     = format_day(day, true)
   .date-time-value
     = format_hour(sum_hours(day))
-  .date-action
-    = link_to(new_ordertime_path(work_date: localize_date(day)), data: {no_turbolink: true}) do
-      %i.icon-add
+  - unless current_user.committed_date?(day)
+    .date-action
+      = link_to(new_ordertime_path(work_date: localize_date(day)), data: {no_turbolink: true}) do
+        %i.icon-add
 
 - worktimes = @daily_worktimes[day]
 - if worktimes.present?

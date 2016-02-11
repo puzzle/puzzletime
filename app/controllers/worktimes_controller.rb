@@ -8,6 +8,7 @@ class WorktimesController < CrudController
 
   helper_method :record_other?
 
+  before_save :check_worktimes_committed
   after_save :check_overlapping
 
   before_render_index :set_statistics
@@ -202,5 +203,14 @@ class WorktimesController < CrudController
 
   def ivar_name(klass)
     klass < Worktime ? Worktime.model_name.param_key : super(klass)
+  end
+
+  def check_worktimes_committed
+    if entry.employee_id == @user.id && entry.worktimes_committed?
+      date = I18n.l(@user.committed_worktimes_at, format: :month)
+      entry.errors.add(:work_date, "Die Zeiten bis und mit #{date} wurden freigegeben " \
+                                   'und können nicht mehr bearbeitet werden.')
+      false
+    end
   end
 end

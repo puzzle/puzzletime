@@ -91,7 +91,9 @@ class Ability
         Worktime,
         employee_id: user.id
 
-    can :manage, Absencetime, employee_id: user.id
+    can :manage, Absencetime do |t|
+      t.employee_id == user.id && !t.worktimes_committed?
+    end
 
     can :manage, Ordertime do |t|
       t.employee_id == user.id && !t.worktimes_committed? && !t.work_item_closed?
