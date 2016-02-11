@@ -28,4 +28,5 @@ Fabricator(:absencetime) do
   work_date { Time.zone.today }
   hours 2
   report_type 'absolute_day'
+  absence { Absence.first }
 end

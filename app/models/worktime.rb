@@ -183,6 +183,14 @@ class Worktime < ActiveRecord::Base
     self
   end
 
+  def worktimes_committed?
+    committed_at = employee.committed_worktimes_at
+
+    committed_at &&
+    ((ork_date && committed_at >= work_date) ||
+     (work_date_was && committed_at >= work_date_was))
+  end
+
   private
 
   # allow time formats such as 14, 1400, 14:00 and 14.0 (1430, 14:30, 14.5)

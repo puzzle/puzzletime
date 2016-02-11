@@ -134,6 +134,11 @@ class Employee < ActiveRecord::Base
     committed_worktimes_at && committed_worktimes_at >= Time.zone.today.end_of_month - 1.month
   end
 
+  def committed_date?(date)
+    return false unless committed_worktimes_at.present?
+    date <= committed_worktimes_at
+  end
+
   ######### employment information ######################
 
   # Returns the current employement percent value.
