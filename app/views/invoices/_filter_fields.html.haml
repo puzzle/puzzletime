@@ -6,6 +6,8 @@
         = b.check_box
         = b.text
 
+= f.labeled :employee_ids2
+
 = f.labeled :work_item_ids do
   = collection_check_boxes(:invoice, :work_item_ids, @work_items, :id, :label_verbose, checked: checked_work_item_ids) do |b|
     .work_items_radio.checkbox

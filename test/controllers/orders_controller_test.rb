@@ -337,4 +337,40 @@ class OrdersControllerTest < ActionController::TestCase
     end
     assert_redirected_to orders_path(returning: true)
   end
+
+  test 'ajax GET #employees includes only those with worktimes in given period' do
+    order = orders(:webauftritt)
+    lucien = employees(:lucien)
+
+    xhr :get, :employees, id: order.id, period_from: '11.12.2006', period_to: '01.03.2007'
+
+    empls = JSON.parse(response.body)
+    assert_equal 1, empls.size
+    empl = empls.first
+    assert_equal lucien.id, empl['id']
+    assert_equal lucien.lastname, empl['lastname']
+    assert_equal lucien.firstname, empl['firstname']
+  end
+
+  test 'ajax GET #employees includes all with worktimes if no period specified' do
+    order = orders(:webauftritt)
+    lucien = employees(:lucien)
+    mark = employees(:mark)
+
+    xhr :get, :employees, id: order.id
+
+    empls = JSON.parse(response.body)
+    assert_equal 2, empls.size
+    assert empls.any? {|e| e['id'] == lucien.id }
+    assert empls.any? {|e| e['id'] == mark.id }
+  end
+
+  test 'ajax GET #employees empty if no worktimes for given period' do
+    order = orders(:webauftritt)
+
+    xhr :get, :employees, id: order.id, period_from: '11.12.2007', period_to: '01.03.2008'
+
+    empls = JSON.parse(response.body)
+    assert_equal 0, empls.size
+  end
 end
