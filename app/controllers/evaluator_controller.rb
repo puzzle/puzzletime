@@ -8,7 +8,7 @@ class EvaluatorController < ApplicationController
 
   before_action :set_period
 
-  helper_method :user_view?
+  helper_method :user_view?, :pagination_params
 
   def index
     overview
@@ -123,6 +123,10 @@ class EvaluatorController < ApplicationController
 
   private
 
+  def pagination_params
+    @pagination_params ||= {}
+  end
+
   def evaluation
     @evaluation ||= set_evaluation
   end
@@ -148,7 +152,9 @@ class EvaluatorController < ApplicationController
                     when 'clientworkitems' then ClientWorkItemsEval.new(params[:category_id])
                     when 'employeeworkitems' then EmployeeWorkItemsEval.new(params[:category_id])
                     when /employeesubworkitems(\d+)/ then
-                      params[:evaluation] = 'employeesubworkitems'
+                      pagination_params[:evaluation] = params[:evaluation]
+                      # override evaluation without employee id to authorize resource (cancan)
+                      params[:evaluation] = 'employeesubworkitems' 
                       EmployeeSubWorkItemsEval.new(params[:category_id], Regexp.last_match[1])
                     when 'departmentorders' then DepartmentOrdersEval.new(params[:category_id])
                     when 'absences' then AbsencesEval.new
