@@ -40,6 +40,7 @@ Rails.application.routes.draw do
 
     member do
       get :bills
+      get :employees
     end
 
     resources :accounting_posts, except: [:show]

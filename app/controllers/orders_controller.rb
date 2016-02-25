@@ -48,6 +48,13 @@ class OrdersController < CrudController
     @crm_error = e.message
   end
 
+  # returns all employees with billable worktimes in given period
+  def employees
+    from = params[:period_from]
+    to = params[:period_to]
+    employees = Employee.with_worktimes_in_period(entry, from, to)
+    render json: employees
+  end
 
   private
 

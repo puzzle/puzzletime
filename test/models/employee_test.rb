@@ -88,6 +88,28 @@ class EmployeeTest < ActiveSupport::TestCase
     assert_equal work_items(:puzzle, :swisstopo), e.alltime_main_work_items
   end
 
+  test 'includes only those employees with billable worktimes in given period' do
+    order = orders(:webauftritt)
+    from = '01.12.2006'
+    to = '11.12.2006'
+
+    empls = Employee.with_worktimes_in_period(order, from, to)
+    assert 1, empls.size
+    assert_includes empls, employees(:mark)
+  end
+
+  test 'includes all employees with billable worktimes for given order if no period specified' do
+    order = orders(:webauftritt)
+    from = nil
+    to = nil
+
+    empls = Employee.with_worktimes_in_period(order, from, to)
+
+    assert_equal 2, empls.size
+    assert_includes empls, employees(:mark)
+    assert_includes empls, employees(:lucien)
+  end
+
   private
 
   def year_period(employee)

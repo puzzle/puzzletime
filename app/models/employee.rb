@@ -75,6 +75,14 @@ class Employee < ActiveRecord::Base
       Digest::SHA1.hexdigest(pwd)
       # logger.info "Hash of password: #{Digest::SHA1.hexdigest(pwd)}"
     end
+
+    def with_worktimes_in_period(order, from, to)
+      e_ids = order.worktimes.
+        in_period(Period.new(from, to)).
+        billable.
+        select(:employee_id)
+      Employee.where(id: e_ids)
+    end
   end
 
   ##### helper methods #####
@@ -156,6 +164,14 @@ class Employee < ActiveRecord::Base
   # Returns the employement at the given date, nil if none is present.
   def employment_at(date)
     employments.find_by('start_date <= ? AND (end_date IS NULL OR end_date >= ?)', date, date)
+  end
+
+  def as_json(options)
+    h = {}
+    h[:id] = id
+    h[:firstname] = firstname
+    h[:lastname] = lastname
+    h
   end
 
   private
