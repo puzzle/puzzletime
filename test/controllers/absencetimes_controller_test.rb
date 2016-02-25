@@ -179,6 +179,8 @@ class AbsencetimesControllerTest < ActionController::TestCase
     end
   end
 
+  # TODO currently it's not possible to edit a user's absence time as manager
+  # see issue #15629
   #test 'committed absencetimes may be updated by manager' do
     #e = employees(:pascal)
     #t = Absencetime.create!(employee: e,
@@ -189,50 +191,51 @@ class AbsencetimesControllerTest < ActionController::TestCase
 
     #e.update!(committed_worktimes_at: '2015-09-30')
     #login_as(:mark)
-    #put :update, id: t.id, absencetime: { description: 'bla bla' }
+    #patch :update, id: t.id, absencetime: { description: 'bla bla' }
     #assert flash[:notice].present?
     #assert_equal 'bla bla', t.reload.description
   #end
 
-  #test 'committed absencetimes may not change work date forwards by user' do
-    #e = employees(:pascal)
-    #t = Ordertime.create!(employee: e,
-                          #work_date: '2015-08-31',
-                          #hours: 2,
-                          #work_item: work_items(:webauftritt),
-                          #report_type: 'absolute_day')
-    #e.update!(committed_worktimes_at: '2015-09-30')
-    #login_as(:pascal)
-    #assert_raises(CanCan::AccessDenied) do
-      #put :update, id: t.id, ordertime: { work_date: '2015-10-10' }
-    #end
-  #end
+  test 'committed absencetimes may not change work date forward by user' do
+    e = employees(:pascal)
+    t = Absencetime.create!(employee: e,
+                          work_date: '2015-08-31',
+                          hours: 2,
+                          report_type: 'absolute_day',
+                          absence: absences(:vacation))
+    e.update!(committed_worktimes_at: '2015-09-30')
+    login_as(:pascal)
+    assert_raises(CanCan::AccessDenied) do
+      patch :update, id: t.id, absencetime: { work_date: '2015-10-10' }
+    end
+  end
 
-  #test 'committed absencetimes may not change work date backwards by user' do
-    #e = employees(:pascal)
-    #t = Ordertime.create!(employee: e,
-                          #work_date: '2015-10-10',
-                          #hours: 2,
-                          #work_item: work_items(:webauftritt),
-                          #report_type: 'absolute_day')
-    #e.update!(committed_worktimes_at: '2015-09-30')
-    #login_as(:pascal)
+  #test 'committed absencetimes may not change work date backward by user' do
+  test '2' do
+    e = employees(:pascal)
+    t = Absencetime.create!(employee: e,
+                          work_date: '2015-10-10',
+                          hours: 2,
+                          report_type: 'absolute_day',
+                          absence: absences(:vacation))
+    e.update!(committed_worktimes_at: '2015-09-30')
+    login_as(:pascal)
 
-    #put :update, id: t.id, ordertime: { work_date: '2015-08-31' }
-    #assert_template('edit')
-    #assert assigns(:worktime).errors[:work_date].present?
-  #end
+    patch :update, id: t.id, absencetime: { work_date: '2015-08-31' }
+    assert_template('edit')
+    assert assigns(:worktime).errors[:work_date].present?
+  end
 
-  #test 'committed absencetimes may not be destroyed by user' do
-    #e = employees(:pascal)
-    #t = Ordertime.create!(employee: e,
-                          #work_date: '2015-08-31',
-                          #hours: 2,
-                          #work_item: work_items(:webauftritt),
-                          #report_type: 'absolute_day')
-    #e.update!(committed_worktimes_at: '2015-09-30')
-    #login_as(:pascal)
+  test 'committed absencetimes may not be destroyed by user' do
+    e = employees(:pascal)
+    t = Absencetime.create!(employee: e,
+                          work_date: '2015-08-31',
+                          hours: 2,
+                          report_type: 'absolute_day',
+                          absence: absences(:vacation))
+    e.update!(committed_worktimes_at: '2015-09-30')
+    login_as(:pascal)
 
-    #assert_raises(CanCan::AccessDenied) { delete :destroy, id: t.id }
-  #end
+    assert_raises(CanCan::AccessDenied) { delete :destroy, id: t.id }
+  end
 end
