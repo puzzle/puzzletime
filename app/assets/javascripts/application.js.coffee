@@ -14,8 +14,10 @@
 #= require bootstrap/tooltip
 #= require bootstrap/button
 #= require bootstrap/alert
+#= require handlebars
 #= require_self
 #= require_tree ./modules
+#= require_tree ./templates
 # after self to disable links
 #= require nested_form_fields
 #= require modal_create
