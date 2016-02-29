@@ -16,12 +16,12 @@ class app.InvoiceEmployees
     return datepicker_date('input#invoice_period_to')
 
   datepicker_date = (input_field) ->
-    $(input_field).datepicker({dateFormat: 'dd.mm.yy'}, 'getDate').val()
+    $(input_field).val()
 
   load_employees = ->
     from = from_date
     to = to_date
-    order_id = $('input#order_id').attr('value')
+    order_id = $('input#order_id').val()
     url = '/orders/' + order_id + '/employees'
     $.get(url, { period_from: from, period_to: to}).done (data) ->
       render_checkboxes(data)
