@@ -50,8 +50,8 @@ class OrdersController < CrudController
 
   # returns all employees with billable worktimes in given period
   def employees
-    from = params[:period_from]
-    to = params[:period_to]
+    from = params[:period_from].presence
+    to = params[:period_to].presence
     employees = Employee.with_worktimes_in_period(entry, from, to)
     render json: employees
   end

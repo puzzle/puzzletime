@@ -4,28 +4,19 @@ app = window.App ||= {}
 class app.InvoiceEmployees
   constructor: () ->
 
-  employee_checkboxes = (employees) ->
-    content = ''
-    $.each(employees, ->
-      content += HandlebarsTemplates['invoice_employee_checkbox'](this)
-    )
-    return content
-
   render_checkboxes = (employees) ->
-    checkbox_container = $('label[for="invoice_employee_ids2"]').next()
-    if employees.length == 0
-      checkbox_container.html('keine Buchungen in der gewählten Periode vorhanden')
-    else
-      content = employee_checkboxes(employees)
-      checkbox_container.html(content)
+    checkbox_container = $('label[for="invoice_employee_ids"]').next()
+    content = HandlebarsTemplates['invoice_employee_checkbox'](employees)
+    checkbox_container.html(content)
 
   from_date = () ->
-    #$('input#invoice_period_from').datepicker('getDate')
-    return '01.01.2016'
+    return datepicker_date('input#invoice_period_from')
 
   to_date = () ->
-    #$('input#invoice_period_to')
-    return '01.01.2017'
+    return datepicker_date('input#invoice_period_to')
+
+  datepicker_date = (input_field) ->
+    $(input_field).datepicker({dateFormat: 'dd.mm.yy'}, 'getDate').val()
 
   load_employees = ->
     from = from_date
@@ -40,8 +31,7 @@ class app.InvoiceEmployees
 
   # public methods
   bind: ->
-    $(document).on('ready', -> reload())
-    $(document).on('blur', 'input#invoice_period_from', (event) -> reload())
-    $(document).on('blur', 'input#invoice_period_to', (event) -> reload())
+    $(document).on('change', 'input#invoice_period_from', (event) -> reload())
+    $(document).on('change', 'input#invoice_period_to', (event) -> reload())
 
 new app.InvoiceEmployees().bind()

@@ -1,12 +1,9 @@
-
 = f.labeled :employee_ids do
   = collection_check_boxes(:invoice, :employee_ids, @employees, :id, :to_s, checked: checked_employee_ids) do |b|
     .employees_radio.checkbox
       = b.label do
         = b.check_box
         = b.text
-
-= f.labeled :employee_ids2
 
 = f.labeled :work_item_ids do
   = collection_check_boxes(:invoice, :work_item_ids, @work_items, :id, :label_verbose, checked: checked_work_item_ids) do |b|
