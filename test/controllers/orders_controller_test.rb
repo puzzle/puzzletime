@@ -373,4 +373,22 @@ class OrdersControllerTest < ActionController::TestCase
     empls = JSON.parse(response.body)
     assert_equal 0, empls.size
   end
+
+  test 'GET #edit redirects to #show if no write access on given order' do
+    login_as(:lucien)
+
+    order = orders(:webauftritt)
+
+    get :edit, id: order.id
+
+    assert_redirected_to order_path(order)
+  end
+
+  test 'GET #edit shows edit form if write access' do
+    order = orders(:webauftritt)
+
+    get :edit, id: order.id
+
+    assert_template :edit
+  end
 end
