@@ -21,6 +21,9 @@ class OrdersController < CrudController
 
   before_action :set_filter_values, only: :index
 
+  skip_authorization_check only: [:edit]
+  skip_authorize_resource only: [:edit]
+
   after_create :copy_associations
 
   before_render_form :set_option_values
@@ -33,6 +36,15 @@ class OrdersController < CrudController
       @order = Order::Copier.new(Order.find(params[:copy_id])).copy
     else
       super
+    end
+  end
+
+  def edit
+    if can?(:write, entry)
+      authorize! :edit, entry
+      super
+    else
+      redirect_to order_path(entry)
     end
   end
 
@@ -177,4 +189,5 @@ class OrdersController < CrudController
   def load_employee_options
     Employee.list
   end
+
 end
