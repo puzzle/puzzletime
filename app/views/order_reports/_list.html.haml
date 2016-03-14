@@ -4,27 +4,27 @@
       %table.orders-report.table.table-hover
         %thead
           %tr
-            %th
+            %th{style: 'width: 24%;'}
               = sort_link(:client, 'Kunde')
               %br/
               Auftrag
             %th Status
-            %th.nowrap{title: 'Summe aus allen Buchungspositionen'}
+            %th.right.nowrap{title: 'Summe aus allen Buchungspositionen'}
               = sort_link(:offered_amount, 'Budget')
-            %th.nowrap{title: 'Produkt aus allen geleisteten Stunden und offeriertem Stundensatz'}
+            %th.right.nowrap{title: 'Produkt aus allen geleisteten Stunden und offeriertem Stundensatz'}
               = sort_link(:supplied_amount, 'Geleistet')
-            %th.nowrap{title: 'Produkt aus allen verrechenbaren Stunden und offeriertem Stundensatz'}
+            %th.right.nowrap{title: 'Produkt aus allen verrechenbaren Stunden und offeriertem Stundensatz'}
               = sort_link(:billable_amount, 'Verrechenbar')
-            %th.nowrap{title: 'Summe aller Rechnungen im gewählten Zeitraum'}
+            %th.right.nowrap{title: 'Summe aller Rechnungen mit Datum im gewählten Zeitraum'}
               = sort_link(:billed_amount, 'Verrechnet')
-            %th.nowrap{title: 'Verhältnis von verrechenbaren Stunden zu geleisteten Stunden'}
-              = sort_link(:billability, 'Verrechenbarkeit')
-            %th{title: 'Durchschnitt der offerierten Stundensätze aller Buchungspositionen'}
+            %th.right{title: 'Verhältnis von verrechenbaren Stunden zu geleisteten Stunden'}
+              = sort_link(:billability, 'Verrechen&shy;barkeit'.html_safe)
+            %th.right{title: 'Durchschnitt der offerierten Stundensätze aller Buchungspositionen'}
               = sort_link(:offered_rate, 'Offerierter Stundensatz')
-            %th{title: 'Verhältnis von verrechneten Beträgen zu verrechenbaren Stunden'}
+            %th.right{title: 'Verhältnis von verrechneten Beträgen zu verrechenbaren Stunden'}
               = sort_link(:billed_rate, 'Verrechneter Stundensatz')
-            %th{title: 'Verhältnis von verrechenbaren Beträgen zu verrechenbaren Stunden'}
-              = sort_link(:average_rate, 'Durchschnittlicher Stundensatz')
+            %th.right{title: 'Verhältnis von verrechenbaren Beträgen zu geleisteten Stunden'}
+              = sort_link(:average_rate, 'Durchschnittl. Stundensatz')
             - @target_scopes.each do |scope|
               %th.large.nowrap= sort_link("target_scope_#{scope.id}", icon(scope.icon, title: scope.name))
 
