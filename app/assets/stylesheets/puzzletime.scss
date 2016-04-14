@@ -56,7 +56,7 @@ a.symbol {
   }
 }
 .nav-tabs > li.active > a,
-.nav-tabs > li.active > a:hover, {
+.nav-tabs > li.active > a:hover {
   color: $gray-darker;
 }
 
@@ -184,6 +184,10 @@ a.tooltip:hover span {
   color: $btn-link-disabled-color;
 }
 
+.forbidden {
+  @extend .disabled;
+}
+
 .red {
   color: $brand-danger;
 }
@@ -212,6 +216,11 @@ a.disabled:hover {
   cursor: default;
   text-decoration: none;
   color: $btn-link-disabled-color;
+}
+
+a.forbidden:hover {
+  @extend a.disabled:hover;
+  cursor: not-allowed;
 }
 
 .form-action {
