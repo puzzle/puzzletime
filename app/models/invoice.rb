@@ -219,6 +219,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def assign_worktimes
-    worktimes.update_all(invoice_id: id)
+    worktime_invoice_id = manual_invoice? ? nil : id
+    worktimes.update_all(invoice_id: worktime_invoice_id)
   end
 end

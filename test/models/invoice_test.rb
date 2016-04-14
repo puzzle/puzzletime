@@ -232,6 +232,14 @@ class InvoiceTest < ActiveSupport::TestCase
     refute_equal invoice, @worktime_lw2.reload.invoice
   end
 
+  test 'save clears worktimes when setting grouping to manual' do
+    invoice.save
+    refute_empty Worktime.where(invoice_id: invoice.id)
+    invoice.grouping = 'manual'
+    invoice.save
+    assert_empty Worktime.where(invoice_id: invoice.id)
+  end
+
   test 'create stores last billing address on order' do
     assert_nil orders(:webauftritt).billing_address_id
     invoice = Invoice.new(invoices(:webauftritt_may).attributes)
