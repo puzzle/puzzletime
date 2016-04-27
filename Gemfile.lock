@@ -152,11 +152,6 @@ GEM
       activesupport (>= 4.1.0)
     haml (4.0.7)
       tilt
-    handlebars_assets (0.23.0)
-      execjs (~> 2.0)
-      multi_json (~> 1.0)
-      sprockets (>= 2.0.0)
-      tilt (>= 1.2)
     headless (2.2.0)
     highline (1.7.8)
     highrise (3.2.1)
@@ -398,7 +393,6 @@ DEPENDENCIES
   faker
   gemsurance
   haml
-  handlebars_assets
   headless
   highrise
   jbuilder

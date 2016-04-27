@@ -1,0 +1,5 @@
+= collection_check_boxes(:invoice, :employee_ids, @employees, :id, :to_s, checked: checked_employee_ids) do |b|
+  .employees_radio.checkbox
+    = b.label do
+      = b.check_box
+      = b.text

@@ -2,7 +2,7 @@
 
 %h1.h3= @title
 
-= crud_form html: { class: 'invoice', data: { preview_total_path: preview_total_order_invoices_path(id: entry.id, format: :js) } } do |f|
+= crud_form html: {  class: 'invoice' } do |f|
   = hidden_field_tag(:order_id, order.id)
 
   = f.labeled_input_field :period_from, caption: 'Leistungsperiode von'
@@ -29,3 +29,7 @@
   = f.labeled :billing_address do
     #billing_addresses
       = render 'billing_addresses_fields'
+
+- content_for(:javascript) do
+  new window.App.FormUpdater("#{preview_total_order_invoices_path(id: entry.id, format: :js)}", 'change', 'form.invoice', 'form.invoice');
+  new window.App.FormUpdater("#{period_employees_order_invoices_path(id: entry.id, format: :js)}", 'change', 'form.invoice', 'input#invoice_period_from', 'input#invoice_period_to');
