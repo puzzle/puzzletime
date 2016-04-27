@@ -44,6 +44,30 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test 'set from date updates employee checkboxes' do
+    # check precondition
+    assert has_css?("#employee_checkboxes", text: "Waber Mark")
+
+    # set date, assert
+    change_date('invoice_period_from', '09.12.2006')
+    refute has_css?("#employee_checkboxes", text: "Waber Mark")
+
+    change_date('invoice_period_from', '08.12.2006')
+    assert has_css?("#employee_checkboxes", text: "Waber Mark")
+  end
+
+  test 'set to date updates employee checkboxes' do
+    # check precondition
+    assert has_css?("#employee_checkboxes", text: "Waber Mark")
+
+    # set date, assert
+    change_date('invoice_period_to', '07.12.2006')
+    refute has_css?("#employee_checkboxes", text: "Waber Mark")
+
+    change_date('invoice_period_to', '08.12.2006')
+    assert has_css?("#employee_checkboxes", text: "Waber Mark")
+  end
+
   test 'change of billing client changes billing addresses' do
     selectize('invoice_billing_client_id', 'Puzzle')
     assert find('#billing_addresses').has_content?('Eigerplatz')
@@ -71,6 +95,13 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
 
   def login
     login_as(:mark, new_order_invoice_path(order))
+  end
+
+  def change_date(label, date_string)
+    page.find("##{label}").click
+    fill_in(label, with: date_string)
+    page.find("#ui-datepicker-div .ui-datepicker-current-day a").click
+    sleep(0.5) # give the xhr request some time to complete
   end
 
   # asserts that the checkboxes match the models by value/id and the checked state

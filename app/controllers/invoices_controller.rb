@@ -58,6 +58,13 @@ class InvoicesController < CrudController
     @billing_address_id = @billing_addresses.first.id if @billing_addresses.size == 1
   end
 
+  # AJAX
+  def period_employees
+    from = model_params[:period_from]
+    to = model_params[:period_to]
+    @employees = Employee.with_worktimes_in_period(order, from, to)
+  end
+
   private
 
   def find_entry

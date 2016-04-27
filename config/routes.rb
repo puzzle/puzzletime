@@ -65,6 +65,7 @@ Rails.application.routes.draw do
       collection do
         get :preview_total
         get :billing_addresses
+        get :period_employees
       end
       member do
         put :sync

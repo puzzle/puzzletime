@@ -209,6 +209,8 @@ class Period
   end
 
   def self.parse_date(date)
+    return nil unless date.present?
+
     if date.is_a? String
       begin
         date = Date.strptime(date, I18n.t('date.formats.default'))
