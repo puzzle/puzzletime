@@ -50,7 +50,7 @@ class Invoice < ActiveRecord::Base
   after_create :update_client_invoice_number
   after_save :update_order_billing_address
   before_save :save_remote_invoice, if: -> { Invoicing.instance.present? }
-  after_save :assign_worktimes
+  before_save :assign_worktimes
   after_destroy :delete_remote_invoice, if: -> { Invoicing.instance.present? }
 
   protect_if :paid?, 'Bezahlte Rechnungen können nicht gelöscht werden.'
@@ -219,7 +219,6 @@ class Invoice < ActiveRecord::Base
   end
 
   def assign_worktimes
-    worktime_invoice_id = manual_invoice? ? nil : id
-    worktimes.update_all(invoice_id: worktime_invoice_id)
+    self.ordertimes = manual_invoice? ? [] : worktimes
   end
 end
