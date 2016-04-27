@@ -240,6 +240,17 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_empty Worktime.where(invoice_id: invoice.id)
   end
 
+  test 'save removes worktimes of employees not assigned to invoice' do
+    invoice.save
+    # assert precondition
+    refute_empty Worktime.where(employee: employees(:mark), invoice: invoice)
+
+    # remove employee, assert worktimes unassigned
+    invoice.employees -= [employees(:mark)]
+    invoice.save
+    assert_empty Worktime.where(employee: employees(:mark), invoice: invoice)
+  end
+
   test 'create stores last billing address on order' do
     assert_nil orders(:webauftritt).billing_address_id
     invoice = Invoice.new(invoices(:webauftritt_may).attributes)
