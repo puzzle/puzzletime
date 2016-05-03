@@ -132,12 +132,19 @@ class AccountingPost < ActiveRecord::Base
     return if work_item_id == order.work_item_id
     post = order.accounting_posts.find_by(work_item_id: order.work_item_id)
     if post
-      post.work_item = WorkItem.new(name: order.work_item.name,
-                                    shortname: order.work_item.shortname,
-                                    parent_id: order.work_item.id,
-                                    closed: post.closed? || order.status.closed?)
-      post.save!
-      order.work_item.move_times!(post.work_item)
+      begin
+        post.work_item = WorkItem.new(name: order.work_item.name,
+                                      shortname: order.work_item.shortname,
+                                      parent_id: order.work_item.id,
+                                      closed: post.closed? || order.status.closed?)
+        post.save!
+      rescue ActiveRecord::RecordInvalid => error
+        validation_messages = post.errors.full_messages.join(', ')
+        msg = "Bestehende Buchungsposition ist ungültig und muss zuerst korrigiert werden: #{validation_messages}"
+        errors.add(:base, msg)
+        raise error
+      end
+        order.work_item.move_times!(post.work_item)
     end
   end
 

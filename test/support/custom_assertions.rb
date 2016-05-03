@@ -48,6 +48,13 @@ module CustomAssertions
     end
   end
 
+  def assert_error_message(record, attr, message)
+    msg = message do
+      "Expected #{mu_pp(record)} to have error message on attribute #{attr}."
+    end
+    assert record.errors.messages[attr.to_sym].any? {|m| message =~ m }, msg
+  end
+
   def assert_change(expression, message = nil, &block)
     expressions = Array(expression)
 
