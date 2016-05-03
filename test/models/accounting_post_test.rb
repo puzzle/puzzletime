@@ -1,3 +1,4 @@
+# Encoding: utf-8
 # == Schema Information
 #
 # Table name: accounting_posts
@@ -41,6 +42,25 @@ class AccountingPostTest < ActiveSupport::TestCase
     assert_equal true, post.work_item.leaf
     assert_equal true, fresh.work_item.closed
     assert_equal true, post.work_item.closed
+  end
+
+  test 'creating new accounting post when order workitem is invalid sets flash message' do
+    post = accounting_posts(:webauftritt)
+    post.update_column(:offered_rate, nil)
+    refute post.reload.valid?
+    order = post.order
+    assert_equal post.work_item_id, order.work_item_id
+    assert_no_difference('WorkItem.count') do
+      fresh = AccountingPost.create(
+        work_item: WorkItem.new(name: 'Foo', shortname: 'FOO', parent: post.work_item),
+        portfolio_item: PortfolioItem.first,
+        service: Service.first,
+        offered_rate: 150)
+
+      post.reload
+      assert_equal post.work_item_id, order.work_item_id
+      assert_error_message fresh, :base, /Bestehende Buchungsposition ist ungültig/
+    end
   end
 
   test 'opening post with closed order does not open work items' do
