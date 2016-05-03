@@ -12,4 +12,6 @@
 
   .orders-actions
     - if can?(:create, AccountingPost)
-      = add_accounting_post_link(@order)
+      = link_to(new_order_accounting_post_path(@order)) do
+        = picon('add')
+        Buchungsposition hinzufügen

@@ -112,10 +112,6 @@ class Order < ActiveRecord::Base
     self.status_id ||= OrderStatus.list.pluck(:id).first
   end
 
-  def booked_on_order?
-    work_item.accounting_post.present?
-  end
-
   private
 
   def work_item_parent_presence
