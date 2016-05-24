@@ -254,6 +254,12 @@ html.turbolinks-progress-bar::before {
   height: 2px !important;
 }
 
+table.reports-workload {
+  tbody.employee-ordertimes {
+    display: none;
+  }
+}
+
 
 @import "components/form";
 @import "components/nav_tabs";
@@ -265,5 +271,6 @@ html.turbolinks-progress-bar::before {
 @import "worktimes";
 @import "orders";
 @import "order_comments";
+@import "reports_workload";
 @import "icons";
 

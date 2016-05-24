@@ -1,0 +1,6 @@
+$('.summary').html('#{j(render('summary'))}');
+$('.list').html('#{j(render('list') + render('actions'))}');
+- if flash[:alert]
+  $('#flash').html('#{j(render('layouts/flash', level: :alert))}');
+- else
+  $('#flash').html('');

@@ -1,0 +1,67 @@
+- if @report.filters_defined?
+  - if @report.present?
+    .unindented
+      %table.orders-report.table.table-hover
+        %thead
+          %tr
+            %th{style: 'width: 14%;'} Bereich
+            %th.right.nowrap{style: 'width: 8.6%;'} FTE
+            %th.right.nowrap{style: 'width: 8.6%;'} Soll
+            %th.right.nowrap{style: 'width: 8.6%;'} Ist
+            %th.right.nowrap{style: 'width: 8.6%;'} Absenzen
+            %th.right.nowrap{style: 'width: 8.6%;'} Über-/Unterzeit
+            %th.right.nowrap{style: 'width: 8.6%;'} Kundenprojekte
+            %th.right.nowrap{style: 'width: 8.6%;'} Verrechenbar
+            %th.right.nowrap{style: 'width: 8.6%;'} Auslastung
+            %th.right.nowrap{style: 'width: 8.6%;'} Verrechenbarkeit
+            %th.right.nowrap{style: 'width: 8.6%;'} abs. Verrechenbarkeit
+
+        %tbody
+          - @report.summary.each do |entry|
+            %tr
+              %td.nowrap= entry.to_s
+              %td.right
+                .data-item
+                  %span.figure= f entry.employment_fte
+              %td.right
+                .data-item
+                  %span.figure= format_workload_hours(entry.must_hours)
+                  %span.unit h
+              %td.right
+                .data-item
+                  %span.figure= format_workload_hours(entry.ordertime_hours)
+                  %span.unit h
+              %td.right
+                .data-item
+                  %span.figure= format_workload_hours(entry.paid_absence_hours)
+                  %span.unit h
+              %td.right
+                .data-item
+                  %span.figure= format_workload_hours(entry.worktime_balance)
+                  %span.unit h
+              %td.right
+                .data-item
+                  %span.figure= format_workload_hours(entry.external_client_hours)
+                  %span.unit h
+              %td.right
+                .data-item
+                  %span.figure= format_workload_hours(entry.billable_hours)
+                  %span.unit h
+              %td.right
+                .data-item
+                  %span.figure= format_workload_load(entry.workload)
+                  %span.unit %
+              %td.right
+                .data-item
+                  %span.figure= format_workload_billability(entry.billability)
+                  %span.unit %
+              %td.right
+                .data-item
+                  %span.figure= format_workload_billability(entry.absolute_billability)
+                  %span.unit %
+
+  - else
+    .table= ti(:no_list_entries)
+
+- else
+  .table Bitte wählen Sie mindestes einen Filter aus.

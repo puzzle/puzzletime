@@ -50,6 +50,7 @@ class Worktime < ActiveRecord::Base
     end
   end)
 
+
   scope :billable, -> { where(billable: true) }
 
   class << self

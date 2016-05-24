@@ -1,0 +1,8 @@
+= form_tag(nil, method: :get, class: 'form-inline', role: 'filter', remote: true, data: { spin: true }) do
+  = direct_filter_date(:start_date, 'Von', @period.start_date)
+  = direct_filter_date(:end_date, 'Bis', @period.end_date)
+
+  = direct_filter_select(:department_id, 'OE', @departments)
+
+  .form-group
+    = spinner

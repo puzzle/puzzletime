@@ -43,6 +43,16 @@ class EmployeeStatistics
     end
   end
 
+  ###########  absence information  ###################
+
+  def absences(period, payed = nil)
+    worktimes = @employee.worktimes.joins(:absence).in_period(period)
+
+    worktimes = worktimes.where(absences: {payed: payed}) if payed.in? [true, false]
+
+    worktimes.sum(:hours).to_f
+  end
+
 
   ###########  overtime information  ###################
 

@@ -20,6 +20,8 @@ class Department < ActiveRecord::Base
   protect_if :orders, 'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Aufträge zugeordnet sind'
 
   scope :list, -> { order('name') }
+  scope :having_employees, -> { where("EXISTS (SELECT 1 FROM employees WHERE department_id = departments.id)") }
+
 
   def to_s
     name

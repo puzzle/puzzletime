@@ -80,9 +80,12 @@ committed_worktimes:
     days_at_end_of_month: 7
     days_at_beginning_of_month: 3
 
-orders:
+clients:
+  id_of_ourselfs: 4
+
+reports:
   # The minimum values for a given color in order reports.
-  reports:
+  orders:
     billability:
       green: 90
       orange: 80
@@ -92,3 +95,15 @@ orders:
       yellow: 130
       orange: 100
       red: 0
+  workload:
+    billability:
+      green: 95
+      orange: 90
+      red: 0
+    load:
+      green: 90
+      orange: 80
+      red: 0
+    worktime_balance:
+      lower_limit: 0
+

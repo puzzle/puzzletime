@@ -1,0 +1,71 @@
+- if @report.present?
+  .unindented
+    %table.reports-workload.table.table-hover
+      %thead
+        %tr
+          %th.nowrap{style: 'width: 14%;'}= sort_link(:employee, 'Member')
+          %th.right.nowrap= sort_link(:must_hours, 'Soll')
+          %th.right.nowrap= sort_link(:worktime_balance, 'Über-/Unterzeit')
+          %th.right.nowrap Absenzen
+          %th.nowrap Auftrag
+          %th.nowrap Beschreibung
+          %th.right.nowrap= sort_link(:ordertime_hours, 'Arbeitszeit')
+          %th.right.nowrap= sort_link(:workload, 'Auslastung')
+          %th.right.nowrap= sort_link(:billability, 'Verrechenbarkeit')
+
+      - @report.entries.each do |entry|
+        %tbody{id: "employee-#{entry.employee.id}-summary"}
+          %tr
+            %td= entry.employee.to_s
+            %td
+              .data-item
+                %span.figure= format_workload_hours(entry.must_hours)
+                %span.unit h
+            %td
+              .data-item
+                %span.figure= format_workload_worktime_balance(entry.worktime_balance)
+                %span.unit h
+            %td
+              .data-item
+                %span.figure= format_workload_hours(entry.paid_absence_hours)
+                %span.unit h
+            %td
+              %a{data: {toggle_visibility: ".employee-#{entry.employee.id}-ordertimes"}} Details
+            %td
+            %td
+              .data-item
+                %span.figure= format_workload_hours(entry.ordertime_hours)
+                %span.unit h
+            %td
+              .data-item
+                %span.figure= format_workload_load(entry.workload)
+                %span.unit %
+            %td
+              .data-item
+                %span.figure= format_workload_billability(entry.billability)
+                %span.unit %
+        - if entry.entries.present?
+          %tbody{class: ['employee-ordertimes', "employee-#{entry.employee.id}-ordertimes"]}
+            - entry.entries.each do |ordertime_entry|
+              %tr
+                %td
+                %td
+                %td
+                %td
+                %td= ordertime_entry.label
+                %td= ordertime_entry.description
+                %td
+                  .data-item
+                    %span.figure= format_workload_hours(ordertime_entry.hours)
+                    %span.unit h
+                %td
+                %td
+                  .data-item
+                    %span.figure= format_workload_billability(ordertime_entry.billability_percent)
+                    %span.unit %
+
+
+
+- else
+  .table= ti(:no_list_entries)
+
