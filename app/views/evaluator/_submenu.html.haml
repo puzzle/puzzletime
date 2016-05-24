@@ -44,8 +44,8 @@
 
 = nav 'Ferienplan', all_absences_graph_path
 
-- if can?(:export_capacity_csv, Evaluation)
-  = nav 'Auslastung CSV', evaluation_path('export_capacity_csv'), data: { no_turbolink: true }
+- if can?(:read, Worktime)
+  = nav 'Auslastung', reports_workload_path
 
 - if can?(:export_extended_capacity_csv, Evaluation)
   = nav 'Detaillierte Auslastung CSV', evaluation_path('export_extended_capacity_csv'), data: { no_turbolink: true }

@@ -63,7 +63,7 @@ class Employment < ActiveRecord::Base
     end
   end
 
-  def musttime
+  def musttime(period = period)
     period.musttime * percent_factor
   end
 

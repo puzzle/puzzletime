@@ -89,7 +89,7 @@ module OrderHelper
   private
 
   def order_report_billability_class(value)
-    config = Settings.orders.reports.billability
+    config = Settings.reports.orders.billability
     if value >= config.green
       'green'
     elsif value >= config.orange
@@ -100,7 +100,7 @@ module OrderHelper
   end
 
   def order_report_average_rate_class(value)
-    config = Settings.orders.reports.average_rate
+    config = Settings.reports.orders.average_rate
     if value >= config.green
       'green'
     elsif value >= config.yellow

@@ -1,0 +1,15 @@
+- @title ||= 'Auslastung'
+
+%p= render 'filters'
+
+- if @report.filters_defined?
+  .summary
+    = render 'summary'
+
+  .list
+    = render 'list'
+
+    = render 'actions'
+
+-else
+  .table Bitte wählen Sie eine Organisationseinheit aus.

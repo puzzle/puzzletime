@@ -41,4 +41,22 @@ class PeriodTest < ActiveSupport::TestCase
     @one_day.step { |_d| count += 1 }
     assert_equal count, 1
   end
+
+  def test_intersect
+    assert_equal Period.new(nil, nil), Period.new(nil, nil) & Period.new(nil, nil)
+
+    assert_equal Period.new('1.1.1000', nil), Period.new(nil, nil) & Period.new('1.1.1000', nil)
+    assert_equal Period.new('1.1.1000', nil), Period.new('1.1.1000', nil) & Period.new(nil, nil)
+
+    assert_equal Period.new(nil, '1.1.1000'), Period.new(nil, nil) & Period.new(nil, '1.1.1000')
+    assert_equal Period.new(nil, '1.1.1000'), Period.new(nil, '1.1.1000') & Period.new(nil, nil)
+
+    assert_equal Period.new('1.1.1000', '1.1.2000'), Period.new(nil, nil) & Period.new('1.1.1000', '1.1.2000')
+    assert_equal Period.new('1.1.1000', '1.1.2000'), Period.new('1.1.1000', '1.1.2000') & Period.new(nil, nil)
+
+    assert_equal Period.new('1.1.1000', '1.1.2000'), Period.new('1.1.1000', nil) & Period.new(nil, '1.1.2000')
+    assert_equal Period.new('1.1.1000', '1.1.2000'), Period.new(nil, '1.1.2000') & Period.new('1.1.1000', nil)
+
+    assert_equal Period.new('1.1.2000', '1.1.3000'), Period.new('1.1.1000', '1.1.3000') & Period.new('1.1.2000', '1.1.4000')
+  end
 end

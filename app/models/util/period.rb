@@ -100,6 +100,12 @@ class Period
 
   #########  public methods  #########
 
+  def &(other_period)
+    new_start_date = [start_date, other_period.start_date].compact.max
+    new_end_date = [end_date, other_period.end_date].compact.min
+    Period.new(new_start_date, new_end_date)
+  end
+
   def step
     @start_date.step(@end_date, 1) do |date|
       yield date

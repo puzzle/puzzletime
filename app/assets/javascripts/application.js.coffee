@@ -77,6 +77,11 @@ $ ->
   # wire up toggle buttons
   $('[data-toggle=buttons]').button()
 
+  # wire up visibility toggler elements
+  $('[data-toggle-visibility]').each((index, element) ->
+    new app.VisibilityToggler(element)
+  )
+
   # wire up disabled links. Bind on body to handle bubbling event before document
   $('body').on('click', 'a.disabled', (event) ->
     event.preventDefault()
