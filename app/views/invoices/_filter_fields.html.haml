@@ -3,11 +3,8 @@
     = render 'period_employees'
 
 = f.labeled :work_item_ids do
-  = collection_check_boxes(:invoice, :work_item_ids, @work_items, :id, :label_verbose, checked: checked_work_item_ids) do |b|
-    .work_items_radio.checkbox
-      = b.label do
-        = b.check_box
-        = b.text
+  #work_item_checkboxes
+    = render 'period_work_items'
 
 = f.labeled :invoice_posts do
   %p.form-control-static='Gruppieren nach:'

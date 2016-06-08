@@ -1,5 +1,6 @@
 # encoding: utf-8
 ENV['RAILS_ENV'] = 'test'
+Settings.reload!
 
 if ENV['TEST_REPORTS']
   require 'simplecov'
@@ -100,5 +101,9 @@ class ActionDispatch::IntegrationTest
          Capybara::ElementNotFound,
          Selenium::WebDriver::Error::StaleElementReferenceError => e
     skip e.message || e.class.name
+  end
+
+  Capybara.add_selector(:name) do
+    xpath { |name| XPath.descendant[XPath.attr(:name).contains(name)] }
   end
 end

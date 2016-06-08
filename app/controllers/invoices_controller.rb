@@ -62,7 +62,14 @@ class InvoicesController < CrudController
   def period_employees
     from = model_params[:period_from]
     to = model_params[:period_to]
-    @employees = Employee.with_worktimes_in_period(order, from, to)
+    @employees = employees_for_period(from, to)
+  end
+
+  # AJAX
+  def period_work_items
+    from = model_params[:period_from]
+    to = model_params[:period_to]
+    @work_items = work_items_for_period(from, to)
   end
 
   private
@@ -93,8 +100,12 @@ class InvoicesController < CrudController
       attrs[:billing_date] ||= l(billing_date)
       attrs[:due_date] ||= l(due_date) if due_date.present?
       attrs[:billing_address_id] ||= default_billing_address_id
-      attrs[:employee_ids] = all_employee_ids if attrs[:employee_ids].blank?
-      attrs[:work_item_ids] = all_work_item_ids if attrs[:work_item_ids].blank?
+      if attrs[:employee_ids].blank?
+        attrs[:employee_ids] = employees_for_period(attrs[:period_from], attrs[:period_to]).map(&:id)
+      end
+      if attrs[:work_item_ids].blank?
+        attrs[:work_item_ids] = work_items_for_period(attrs[:period_from], attrs[:period_to]).map(&:id)
+      end
     end
   end
 
@@ -103,36 +114,29 @@ class InvoicesController < CrudController
   end
 
   def load_associations
-    @employees = all_employees
-    @work_items = all_work_items
+    @employees = employees_for_period(entry.period_from, entry.period_to)
+    @work_items = work_items_for_period(entry.period_from, entry.period_to)
     @billing_clients = Client.list
     @billing_client = entry.billing_client
     @billing_addresses = load_billing_addresses(@billing_client)
     @billing_address_id = entry.billing_address_id || entry.order.default_billing_address_id
   end
 
-  def all_work_items
-    order.accounting_posts.map(&:work_item)
+  def employees_for_period(from, to)
+    Employee.with_worktimes_in_period(order, from, to)
   end
 
-  def all_work_item_ids
-    all_work_items.map(&:id)
+  def work_items_for_period(from, to)
+    WorkItem.with_worktimes_in_period(order, from, to)
   end
 
   def checked_work_item_ids
-    entry.work_item_ids.presence || all_work_items.map(&:id)
-  end
-
-  def all_employees
-    Employee.where(id: order.worktimes.billable.select(:employee_id).uniq).list
-  end
-
-  def all_employee_ids
-    all_employees.map(&:id)
+    entry.work_item_ids.presence || work_items_for_period(entry.period_from, entry.period_to).pluck(:id)
   end
 
   def checked_employee_ids
-    entry.employee_ids.presence || all_employees.pluck(:id)
+    entry.employee_ids.presence || employees_for_period(entry.period_from, entry.period_to).pluck(:id)
+    ##entry.employee_ids.presence || period_employees.pluck(:id)
   end
 
   def billing_clients

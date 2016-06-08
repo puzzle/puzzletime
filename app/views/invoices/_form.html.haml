@@ -33,3 +33,4 @@
 - content_for(:javascript) do
   new window.App.FormUpdater("#{preview_total_order_invoices_path(id: entry.id, format: :js)}", 'change', 'form.invoice', 'form.invoice');
   new window.App.FormUpdater("#{period_employees_order_invoices_path(id: entry.id, format: :js)}", 'change', 'form.invoice', 'input#invoice_period_from', 'input#invoice_period_to');
+  new window.App.FormUpdater("#{period_work_items_order_invoices_path(id: entry.id, format: :js)}", 'change', 'form.invoice', 'input#invoice_period_from', 'input#invoice_period_to');

@@ -57,6 +57,10 @@ class WorkItem < ActiveRecord::Base
   scope :leaves,       -> { where(leaf: true) }
   scope :recordable,   -> { leaves.where(closed: false) }
 
+  scope :with_worktimes_in_period, ->(order, from, to) {
+    where(id: order.worktimes.in_period(Period.new(from, to)).billable.select(:work_item_id))
+  }
+
   ### INSTANCE METHODS
 
   def to_s
