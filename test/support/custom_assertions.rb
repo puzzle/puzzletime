@@ -72,6 +72,14 @@ module CustomAssertions
     end
   end
 
+  def assert_arrays_match(expected, actual)
+    transform = ->(array) do
+      block_given? ? array.map {|element| yield(element) }.sort : array.sort
+    end
+
+    assert_equal(transform[expected], transform[actual])
+  end
+
   # The method used to by Test::Unit to format arguments.
   # Prints ActiveRecord objects in a simpler format.
   def mu_pp(obj)

@@ -137,4 +137,25 @@ class WorkItemTest < ActiveSupport::TestCase
     planning.work_item.destroy
     refute Planning.exists?(planning.id)
   end
+
+  test '.with_worktimes_in_period includes only those work_items with billable worktimes in given period' do
+    order = Fabricate(:order)
+    work_items = Fabricate.times(4, :work_item, parent: order.work_item)
+    work_items.each {|w| Fabricate(:accounting_post, work_item: w) }
+
+    from, to = Date.parse('09.12.2006'), Date.parse('12.12.2006')
+
+    (from..to).each_with_index do |date, index|
+      Fabricate(:ordertime,
+                work_date: date,
+                work_item: work_items[index],
+                employee: employees(:pascal)
+      )
+    end
+
+    result = WorkItem.with_worktimes_in_period(order, from, to)
+    assert 2, result.size
+    assert_includes result, work_items.second
+    assert_includes result, work_items.third
+  end
 end

@@ -37,6 +37,55 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
     assert_match expected_total, find('#invoice_total_amount').text.delete("'")
   end
 
+  test 'lists only employees with ordertimes on page load' do
+    all(:name, 'invoice[employee_ids][]').map(&:value)
+    assert_arrays_match employees(:mark, :lucien).map(&:id).map(&:to_s), all(:name, 'invoice[employee_ids][]').map(&:value)
+
+    reload(invoice: {period_to: '8.12.2006'})
+    assert_arrays_match [employees(:mark).id.to_s], all(:name, 'invoice[employee_ids][]').map(&:value)
+
+    reload(invoice: {period_from: '12.12.2006'})
+    assert_arrays_match [employees(:lucien).id.to_s], all(:name, 'invoice[employee_ids][]').map(&:value)
+
+    reload(invoice: {period_from: '09.12.2006', period_to: '11.12.2006'})
+    assert_empty all(:name, 'invoice[employee_ids][]')
+  end
+
+
+  test 'lists only work_items with ordertimes on page load' do
+    order = Fabricate(:order)
+    work_items = Fabricate.times(2, :work_item, parent: order.work_item)
+    work_items.each {|w| Fabricate(:accounting_post, work_item: w) }
+
+    from, to = Date.parse('09.12.2006'), Date.parse('10.12.2006')
+
+    (from..to).each_with_index do |date, index|
+      Fabricate(:ordertime,
+                work_date: date,
+                work_item: work_items[index],
+                employee: employees(:pascal)
+      )
+    end
+
+    reload(order: order)
+    assert_arrays_match work_items.map {|w| w.id.to_s }, all(:name, 'invoice[work_item_ids][]').map(&:value)
+
+    reload(order: order, invoice: {period_from: '11.12.2006'})
+    assert_empty all(:name, 'invoice[work_item_ids][]').map(&:value)
+
+    reload(order: order, invoice: {period_to: '08.12.2006'})
+    assert_empty all(:name, 'invoice[work_item_ids][]').map(&:value)
+
+    reload(order: order, invoice: {period_from: '10.12.2006'})
+    assert_arrays_match [work_items.last.id.to_s], all(:name, 'invoice[work_item_ids][]').map(&:value)
+
+    reload(order: order, invoice: {period_to: '09.12.2006'})
+    assert_arrays_match [work_items.first.id.to_s], all(:name, 'invoice[work_item_ids][]').map(&:value)
+
+    reload(order: order, invoice: {period_from: '09.12.2006', period_to: '10.12.2006'})
+    assert_arrays_match work_items.map {|w| w.id.to_s }, all(:name, 'invoice[work_item_ids][]').map(&:value)
+  end
+
   test 'check employee checkbox updates calculated total' do
     assert_change -> { find('#invoice_total_amount').text } do
       find_field("invoice_employee_ids_#{employees(:mark).id}").click
@@ -68,6 +117,18 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
     assert has_css?("#employee_checkboxes", text: "Waber Mark")
   end
 
+  test 'set to date updates work_items checkboxes' do
+    # check precondition
+    assert has_css?("#work_item_checkboxes", text: "STOP-WEB: Webauftritt")
+
+    # set date, assert
+    change_date('invoice_period_to', '07.12.2006')
+    refute has_css?("#work_item_checkboxes", text: "STOP-WEB: Webauftritt")
+
+    change_date('invoice_period_to', '08.12.2006')
+    assert has_css?("#work_item_checkboxes", text: "STOP-WEB: Webauftritt")
+  end
+
   test 'change of billing client changes billing addresses' do
     selectize('invoice_billing_client_id', 'Puzzle')
     assert find('#billing_addresses').has_content?('Eigerplatz')
@@ -93,8 +154,13 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
     accounting_posts(:webauftritt).offered_rate
   end
 
-  def login
-    login_as(:mark, new_order_invoice_path(order))
+  def login(params = {})
+    login_as(:mark, new_order_invoice_path(order, params))
+  end
+
+  def reload(params = {})
+    order = params.delete(:order) || self.order
+    visit(new_order_invoice_path(order, params))
   end
 
   def change_date(label, date_string)
