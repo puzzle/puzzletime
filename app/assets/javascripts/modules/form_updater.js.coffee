@@ -6,7 +6,7 @@ class app.FormUpdater
     @url = url
     @event = event
     @form = $(formSelector)
-    @watchedElements = $(watchSelectors)
+    @watchedElements = watchSelectors.join(', ')
 
     @_bind()
 
