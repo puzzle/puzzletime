@@ -9,8 +9,10 @@ module Invoicing
                   5 => 'sent',  # 3rd reminder
                   6 => 'draft', # cancelled
                   7 => 'draft', # draft
+                  11 => 'partially_paid', # partially paid
+                  12 => 'sent', # reminder
                   99 => 'deleted', # deleted
-                 }
+                 }.tap {|h| h.default = 'unknown' } # unknown status value (i.e. newly introduced status)
 
       attr_reader :invoice
 

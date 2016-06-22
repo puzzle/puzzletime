@@ -23,7 +23,7 @@
 
 class Invoice < ActiveRecord::Base
 
-  STATUSES = %w(draft sent paid)
+  STATUSES = %w(draft sent paid partially_paid unknown)
 
   enum grouping: %w(accounting_posts employees manual)
 
