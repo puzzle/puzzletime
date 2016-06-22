@@ -42,7 +42,14 @@ module Invoicing
       private
 
       def update_remote
-        client.update_column(:invoicing_key, key) unless client.invoicing_key?
+        if client.invoicing_key != key
+          binding.pry
+          # conflicting datasets in ptime <=> smallinvoice. we need to update in ptime the invoicing_key of the client
+          # and clear the invoicing_keys of the addresses and contacts otherwise sync will abort because of conflicts
+          client.billing_addresses.update_all(invoicing_key: nil)
+          client.contacts.update_all(invoicing_key: nil)
+          client.update_column(:invoicing_key, key)
+        end
         api.edit(:client, key, data)
       end
 
@@ -81,14 +88,18 @@ module Invoicing
         list.each do |item|
           local_item = entity.new(item)
           remote_data = remote_list.find { |h| local_item == h }
-          if remote_data.try(:[], 'id') && remote_data['id'] != item.invoicing_key
+          if remote_data.try(:[], 'id') && remote_data['id'].to_s != item.invoicing_key
             item.update_column(:invoicing_key, remote_data['id'])
           end
         end
       end
 
       def key
-        client.invoicing_key.presence || remote_keys[client.name]
+        if client.invoicing_key.present? && remote_keys.values.map(&:to_s).include?(client.invoicing_key)
+          client.invoicing_key
+        else
+          remote_keys[client.name]
+        end
       end
 
       def api
