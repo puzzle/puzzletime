@@ -195,6 +195,8 @@ de-CH:
         draft: Entwurf
         sent: Gesendet
         paid: Bezahlt
+        partially_paid: Teilbezahlt
+        unknown: Unbekannt
       order:
         client: Kunde
         category: Kategorie
