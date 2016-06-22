@@ -31,6 +31,7 @@ class InvoicesController < CrudController
 
   def new
     assign_attributes
+    @autoselect_workitems_and_employees = true
   end
 
   def sync
@@ -59,16 +60,10 @@ class InvoicesController < CrudController
   end
 
   # AJAX
-  def period_employees
+  def filter_fields
     from = model_params[:period_from]
     to = model_params[:period_to]
     @employees = employees_for_period(from, to)
-  end
-
-  # AJAX
-  def period_work_items
-    from = model_params[:period_from]
-    to = model_params[:period_to]
     @work_items = work_items_for_period(from, to)
   end
 
@@ -131,12 +126,11 @@ class InvoicesController < CrudController
   end
 
   def checked_work_item_ids
-    entry.work_item_ids.presence || work_items_for_period(entry.period_from, entry.period_to).pluck(:id)
+    autoselect_all? ? work_items_for_period(entry.period_from, entry.period_to).pluck(:id) : entry.work_item_ids.presence
   end
 
   def checked_employee_ids
-    entry.employee_ids.presence || employees_for_period(entry.period_from, entry.period_to).pluck(:id)
-    ##entry.employee_ids.presence || period_employees.pluck(:id)
+    autoselect_all? ? employees_for_period(entry.period_from, entry.period_to).pluck(:id) : entry.employee_ids.presence
   end
 
   def billing_clients
@@ -161,5 +155,9 @@ class InvoicesController < CrudController
 
   def due_date
     entry.due_date || billing_date + payment_period.days if payment_period.present?
+  end
+
+  def autoselect_all?
+    @autoselect_workitems_and_employees == true
   end
 end

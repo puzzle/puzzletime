@@ -4,7 +4,6 @@
 
 = crud_form html: {  class: 'invoice' } do |f|
   = hidden_field_tag(:order_id, order.id)
-
   = f.labeled_input_field :period_from, caption: 'Leistungsperiode von'
   = f.labeled_input_field :period_to
   = f.labeled :manual_invoice do
@@ -32,5 +31,4 @@
 
 - content_for(:javascript) do
   new window.App.FormUpdater("#{preview_total_order_invoices_path(id: entry.id, format: :js)}", 'change', 'form.invoice', 'form.invoice');
-  new window.App.FormUpdater("#{period_employees_order_invoices_path(id: entry.id, format: :js)}", 'change', 'form.invoice', 'input#invoice_period_from', 'input#invoice_period_to');
-  new window.App.FormUpdater("#{period_work_items_order_invoices_path(id: entry.id, format: :js)}", 'change', 'form.invoice', 'input#invoice_period_from', 'input#invoice_period_to');
+  new window.App.FormUpdater("#{filter_fields_order_invoices_path(id: entry.id, format: :js)}", 'change', 'form.invoice', 'input#invoice_period_from', 'input#invoice_period_to');
