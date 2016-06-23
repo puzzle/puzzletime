@@ -15,7 +15,7 @@ module Invoicing
 
         def remote_keys
           @remote_keys ||= SmallInvoice::Api.instance.list(:client).each_with_object({}) do |client, hash|
-            hash[client['name']] = client['id']
+            hash[client['number']] = client['id']
           end
         end
       end
@@ -34,7 +34,7 @@ module Invoicing
           create_remote
         end
 
-        remote = fetch_remote
+        remote = fetch_remote(client.invoicing_key)
         set_association_keys(remote) if remote
         nil
       end
@@ -43,7 +43,6 @@ module Invoicing
 
       def update_remote
         if client.invoicing_key != key
-          binding.pry
           # conflicting datasets in ptime <=> smallinvoice. we need to update in ptime the invoicing_key of the client
           # and clear the invoicing_keys of the addresses and contacts otherwise sync will abort because of conflicts
           client.billing_addresses.update_all(invoicing_key: nil)
@@ -62,7 +61,7 @@ module Invoicing
         Invoicing::SmallInvoice::Entity::Client.new(client).to_hash
       end
 
-      def fetch_remote
+      def fetch_remote(key)
         api.get(:client, key)
       rescue Invoicing::Error => e
         if e.message == 'No Objects or too many found'
@@ -98,7 +97,7 @@ module Invoicing
         if client.invoicing_key.present? && remote_keys.values.map(&:to_s).include?(client.invoicing_key)
           client.invoicing_key
         else
-          remote_keys[client.name]
+          remote_keys[client.shortname]
         end
       end
 
