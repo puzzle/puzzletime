@@ -15,6 +15,8 @@ module Invoicing
                  }.tap {|h| h.default = 'unknown' } # unknown status value (i.e. newly introduced status)
 
       attr_reader :invoice
+      class_attribute :rate_limiter
+      self.rate_limiter = RateLimiter.new(Settings.small_invoice.request_rate)
 
       class << self
         def sync_unpaid
@@ -30,7 +32,7 @@ module Invoicing
 
       # Fetch an invoice from remote and update the local values
       def sync
-        item = api.get(:invoice, invoice.invoicing_key)
+        item = rate_limiter.run { api.get(:invoice, invoice.invoicing_key) }
         sync_remote(item)
       rescue Invoicing::Error => e
         if e.code == 15_016 # no rights / not found
