@@ -38,6 +38,7 @@ highrise:
 small_invoice:
   url: https://api.smallinvoice.com
   api_token: <%= ENV['RAILS_SMALL_INVOICE_TOKEN'] %>
+  request_rate: <%= ENV['RAILS_SMALL_INVOICE_REQUEST_RATE'] || 1 %>
   constants:
     account_id: 0 # none
     esr: true

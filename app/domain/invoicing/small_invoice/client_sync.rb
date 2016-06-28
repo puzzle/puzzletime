@@ -21,6 +21,8 @@ module Invoicing
       end
 
       attr_reader :client, :remote_keys
+      class_attribute :rate_limiter
+      self.rate_limiter = RateLimiter.new(Settings.small_invoice.request_rate)
 
       def initialize(client, remote_keys = {})
         @client = client
@@ -49,11 +51,11 @@ module Invoicing
           client.contacts.update_all(invoicing_key: nil)
           client.update_column(:invoicing_key, key)
         end
-        api.edit(:client, key, data)
+        rate_limiter.run { api.edit(:client, key, data) }
       end
 
       def create_remote
-        key = api.add(:client, data)
+        key = rate_limiter.run { api.add(:client, data) }
         client.update_column(:invoicing_key, key)
       end
 
@@ -62,7 +64,7 @@ module Invoicing
       end
 
       def fetch_remote(key)
-        api.get(:client, key)
+        rate_limiter.run { api.get(:client, key) }
       rescue Invoicing::Error => e
         if e.message == 'No Objects or too many found'
           client.update_column(:invoicing_key, nil)
