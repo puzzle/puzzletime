@@ -3,6 +3,7 @@
 class SubWorkItemsEval < WorkItemsEval
   self.division_method  = :children
   self.label            = 'Subpositionen'
+  self.billing_hours     = true
 
   def initialize(item_id)
     super(WorkItem.find(item_id))

@@ -5,11 +5,23 @@
       -if @evaluation.sub_work_items_eval
         %th
       - @periods.each do |p|
-        %th.periodHead
+        %th.periodHead{colspan: @evaluation.class.billing_hours ? 2 : nil}
           = p ? p.label : 'Total'
           &nbsp; &nbsp;
       - @evaluation.division_supplement(@user, @period).each do |supp|
         %th= supp[1]
+    - if @evaluation.class.billing_hours
+      %tr
+        %th.subhead
+        -if @evaluation.sub_work_items_eval
+          %th.subhead
+        - @periods.each do |p|
+          %th.subhead.period-subhead
+            Geleistet
+          %th.subhead.period-subhead
+            Verrechenbar
+        - @evaluation.division_supplement(@user, @period).each do |supp|
+          %th.subhead
 
   %tbody
     = render(:partial => 'division', :collection => @evaluation.divisions(@period))

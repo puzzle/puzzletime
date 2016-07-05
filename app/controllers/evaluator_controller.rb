@@ -154,7 +154,7 @@ class EvaluatorController < ApplicationController
                     when /employeesubworkitems(\d+)/ then
                       pagination_params[:evaluation] = params[:evaluation]
                       # override evaluation without employee id to authorize resource (cancan)
-                      params[:evaluation] = 'employeesubworkitems' 
+                      params[:evaluation] = 'employeesubworkitems'
                       EmployeeSubWorkItemsEval.new(params[:category_id], Regexp.last_match[1])
                     when 'departmentorders' then DepartmentOrdersEval.new(params[:category_id])
                     when 'absences' then AbsencesEval.new

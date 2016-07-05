@@ -167,13 +167,36 @@ table.table td.action {
   }
 }
 
+th.periodHead {
+  text-align: center;
+}
+th.period-subhead {
+  text-align: right;
+}
+th.subhead {
+  font-size: 75%;
+  height: 0;
+
+  .table thead & {
+    color: darken($gray, 15%);
+  }
+
+  &, .table-condensed > thead > tr > & {
+    padding-bottom: 2px;
+    padding-top: 2px;
+  }
+
+  &, .table-striped > thead > tr > &:nth-child(2n) {
+    background-color: $gray-light;
+  }
+}
+
+
+
 // Legacy?
 th {
   color: #000;
   font-weight: 400;
-}
-th.periodHead {
-    text-align:     right;
 }
 th.nowrap {
   white-space: nowrap;
