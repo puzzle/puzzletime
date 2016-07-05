@@ -112,6 +112,10 @@ class Order < ActiveRecord::Base
     self.status_id ||= OrderStatus.list.pluck(:id).first
   end
 
+  def recently_completed_month_end?
+    completed_month_end_at && completed_month_end_at >= Time.zone.today.end_of_month - 1.month
+  end
+
   private
 
   def work_item_parent_presence

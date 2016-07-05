@@ -16,7 +16,7 @@ class EmployeeWorkItemsEval < WorkItemsEval
     category == user
   end
 
-  def division_supplement(_user)
+  def division_supplement(_user, period = nil)
     []
   end
 

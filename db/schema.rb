@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151201153220) do
+ActiveRecord::Schema.define(version: 20160704123722) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -270,7 +270,7 @@ ActiveRecord::Schema.define(version: 20151201153220) do
   add_index "order_team_members", ["order_id"], name: "index_order_team_members_on_order_id", using: :btree
 
   create_table "orders", force: :cascade do |t|
-    t.integer  "work_item_id",       null: false
+    t.integer  "work_item_id",           null: false
     t.integer  "kind_id"
     t.integer  "responsible_id"
     t.integer  "status_id"
@@ -280,6 +280,7 @@ ActiveRecord::Schema.define(version: 20151201153220) do
     t.string   "crm_key"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.date     "completed_month_end_at"
   end
 
   add_index "orders", ["billing_address_id"], name: "index_orders_on_billing_address_id", using: :btree

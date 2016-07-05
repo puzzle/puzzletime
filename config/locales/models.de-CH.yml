@@ -213,6 +213,7 @@ de-CH:
         billing_address_id: Rechnungsadresse
         order_contacts: Ansprechspersonen Kunde
         order_team_members: Team
+        completed_month_end_at: Letzter erledigter Abschluss
         created_at: Erstellt
         updated_at: Aktualisiert
       order_comment:
