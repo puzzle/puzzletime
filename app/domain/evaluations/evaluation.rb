@@ -10,7 +10,7 @@
 class Evaluation
   class_attribute :division_method, :division_column, :division_join,
                   :sub_evaluation, :sub_work_items_eval, :label, :absences,
-                  :total_details, :category_ref, :detail_columns, :detail_labels
+                  :total_details, :billing_hours, :category_ref, :detail_columns, :detail_labels
 
   # The method to send to the category object to retrieve a list of divisions.
   self.division_method   = :list
@@ -28,6 +28,9 @@ class Evaluation
 
   # Whether details for totals are possible.
   self.total_details     = true
+
+  # Whether to show billing hours beside total hours
+  self.billing_hours     = false
 
   # The field of a division referencing the category entry in the database.
   # May be nil if not required for this Evaluation (default).
@@ -66,10 +69,10 @@ class Evaluation
   end
 
   def sum_times_grouped(period)
-    worktime_query(category, period).
+    query = worktime_query(category, period).
       joins(division_join).
-      group(division_column).
-      sum(:hours)
+      group(division_column)
+    query_time_sums(query, division_column)
   end
 
   # Sums all worktimes for a given period.
@@ -85,7 +88,8 @@ class Evaluation
 
   # Sums all worktimes for the category in a given period.
   def sum_total_times(period = nil)
-    worktime_query(category, period).sum(:hours).to_f
+    query = worktime_query(category, period)
+    query_time_sums(query)
   end
 
   # Returns a list of all Worktime entries for this Evaluation in the given period
@@ -194,6 +198,29 @@ class Evaluation
   # Initializes a new Evaluation with the given category.
   def initialize(category)
     @category = category
+  end
+
+  def query_time_sums(query, group_by_column = nil)
+    if billing_hours
+      columns = ['SUM("worktimes"."hours") AS sum_hours',
+                'SUM(CASE WHEN "worktimes"."billable" = TRUE ' +
+                    'THEN "worktimes"."hours" ' +
+                    'ELSE 0 END) ' +
+                    'AS sum_billable_hours']
+      columns.unshift(group_by_column) if group_by_column.present?
+
+      result = query.pluck(*columns)
+      if group_by_column.present?
+        result.each_with_object({}) do |e, o|
+          o[e[0]] = { hours: e[1].to_f, billable_hours: e[2].to_f }
+        end
+      else
+        { hours: result.first.first.to_f, billable_hours: result.first.second.to_f }
+      end
+    else
+      result = query.sum(:hours)
+      result.is_a?(Hash) ? result : result.to_f
+    end
   end
 
   private

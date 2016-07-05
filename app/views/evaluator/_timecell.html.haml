@@ -2,11 +2,13 @@
 - #  division_id, action
 - p = @periods[timecell_counter]
 - timecell = @times[timecell_counter][division] if defined? division
+- hours = (timecell.is_a?(Hash) ? timecell[:hours] : timecell).to_f
+- billable_hours = (timecell.is_a?(Hash) ? timecell[:billable_hours] : nil).to_f
 - division_id = nil if ! defined? division_id
 - division_id = division.id if defined? division
 - action ||= 'details'
 %td{:align => "right"}
-  = format_hour timecell.to_f
+  = format_hour hours
   - if division_id || @evaluation.total_details
     - link = url_for(controller: controller.controller_name,
                      action: action,
@@ -18,3 +20,10 @@
     %a{:href => link.html_safe}= image_tag('lupe.gif', 'size' => '19x11', 'alt' => 'Details')
   - else
     = image_tag( 'space.gif', 'size' => '19x11' )
+
+- if @evaluation.class.billing_hours
+  %td{:align => "right"}
+    %span.billable-hours-difference.muted
+      = format_hour billable_hours - hours
+      = "(#{number_to_percentage(hours > 0 ? billable_hours/hours*100 : 0, precision: 0)})"
+    = format_hour billable_hours

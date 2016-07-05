@@ -3,6 +3,7 @@
 class ManagedOrdersEval < WorkItemsEval
   self.label             = 'Geleitete Aufträge'
   self.total_details     = false
+  self.billing_hours     = true
 
   def category_label
     'Kunde: ' + division.order.client.name
@@ -13,21 +14,21 @@ class ManagedOrdersEval < WorkItemsEval
   end
 
   def sum_times_grouped(period)
-    Worktime.joins(:work_item).
+    query = Worktime.joins(:work_item).
       joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)').
       where(type: 'Ordertime').
       where(orders: { responsible_id: category.id }).
       in_period(period).
-      group('orders.work_item_id').
-      sum(:hours)
+      group('orders.work_item_id')
+    query_time_sums(query, 'orders.work_item_id')
   end
 
   def sum_total_times(period = nil)
-    Worktime.joins(:work_item).
+    query = Worktime.joins(:work_item).
       joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)').
       where(type: 'Ordertime').
       where(orders: { responsible_id: category.id }).
-      in_period(period).
-      sum(:hours).to_f
+      in_period(period)
+    query_time_sums(query)
   end
 end
