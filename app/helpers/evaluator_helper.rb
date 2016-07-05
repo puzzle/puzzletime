@@ -99,6 +99,32 @@ module EvaluatorHelper
     end
   end
 
+  def order_month_end_completions(work_item)
+    order = work_item.order
+    content = content_tag(:span, id: "order_month_end_completion_#{order.id}") do
+      order_month_end_completions_icon(order) << ' ' << format_attr(order, :completed_month_end_at)
+    end
+    if can?(:update_month_end_completions, order)
+      content << ' &nbsp; '.html_safe << link_to(picon('edit'),
+                                                 edit_order_month_end_completion_path(order),
+                                                 data: { modal: '#modal',
+                                                         title: 'Monatsabschluss bearbeiten',
+                                                         update: 'element',
+                                                         element: "#order_month_end_completion_#{order.id}",
+                                                         remote: true,
+                                                         type: :html })
+    end
+    content
+  end
+
+  def order_month_end_completions_icon(order)
+    if order.recently_completed_month_end?
+      picon('disk', class: 'green')
+    else
+      picon('square', class: 'red')
+    end
+  end
+
   ### period and time helpers
 
   def period_link(label, shortcut)

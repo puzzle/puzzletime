@@ -71,6 +71,8 @@ Rails.application.routes.draw do
         put :sync
       end
     end
+
+    resource :month_end_completion, only: [:edit, :update]
   end
 
   resources :order_statuses, except: [:show]

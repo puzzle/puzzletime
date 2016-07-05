@@ -21,7 +21,7 @@ class AbsencesEval < Evaluation
     division.id if division
   end
 
-  def division_supplement(_user)
+  def division_supplement(_user, period = nil)
     [[:remaining_vacations, 'Übrige Ferien', 'right'],
      [:overtime_vacations_tooltip, '', 'left']]
  end

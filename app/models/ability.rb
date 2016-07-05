@@ -48,6 +48,8 @@ class Ability
       true
     end
 
+    can [:update_month_end_completions], Order
+
     can [:read], Worktime
     can [:create, :update], Absencetime
     can [:create, :update], Ordertime do |t|
@@ -73,7 +75,7 @@ class Ability
   def order_responsible_abilities
     can :manage, [Client, BillingAddress, Contact]
     can :create, WorkItem
-    can :manage, Order, responsible_id: user.id
+    can [:manage, :update_month_end_completions], Order, responsible_id: user.id
     can :manage, [AccountingPost, Contract, Invoice, OrderComment] do |instance|
       instance.order.responsible_id == user.id
     end
