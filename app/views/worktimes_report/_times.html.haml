@@ -1,13 +1,15 @@
 %table.table.table-condensed.table-striped
   %thead
     %tr
-      %th.right Datum
+      %th Datum
       %th.right Stunden
       - if params[:start_stop]
         %th.center Von
         %th.center Bis
       - unless @employee
         %th.left Mitarbeiter
+      - if params[:show_work_item]
+        %th Buchungsposition
       - if params[:show_ticket]
         %th.right Ticket
       - if params[:description]
@@ -17,7 +19,7 @@
   %tbody
     - @worktimes.each do |time|
       %tr
-        %td.right{nowrap: true}= time.date_string
+        %td{nowrap: true}= time.date_string
         %td.right
           = format_hour time.hours
           \&nbsp;
@@ -25,7 +27,9 @@
           %td.center= format_time time.from_start_time if time.start_stop?
           %td.center= format_time time.to_end_time if time.start_stop?
         - unless @employee
-          %td.left= time.employee.shortname
+          %td.left= time.employee.to_s
+        - if params[:show_work_item]
+          %td= time.work_item.to_s
         - if params[:show_ticket]
           %td.right= time.ticket
         - if params[:description]
@@ -42,6 +46,8 @@
         %td
         %td
       - unless @employee
+        %td
+      - if params[:show_work_item]
         %td
       - if params[:show_ticket]
         %td

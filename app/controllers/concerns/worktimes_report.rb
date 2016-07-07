@@ -42,6 +42,7 @@ module WorktimesReport
   # builds a hash which contains all information needed by the report grouped by ticket
   def combine_tickets
     @tickets = {}
+    @employees = {}
 
     @worktimes.group_by(&:ticket).each do |ticket, worktimes|
       if @tickets[ticket].nil?
@@ -57,6 +58,7 @@ module WorktimesReport
         @tickets[ticket][:sum] += t.hours
 
         # employees involved in this ticket
+        @employees[t.employee.shortname] = t.employee.to_s if @employees[t.employee.shortname].nil?
         if @tickets[ticket][:employees][t.employee.shortname].nil?
           @tickets[ticket][:employees][t.employee.shortname] = [t.hours, [t.description]]
         else

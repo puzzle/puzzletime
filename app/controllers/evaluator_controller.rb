@@ -44,7 +44,7 @@ class EvaluatorController < ApplicationController
   def report
     prepare_report_header
     conditions = params[:only_billable] ? { worktimes: { billable: true } } : {}
-    render_report(@evaluation.times(@period).where(conditions))
+    render_report(@evaluation.times(@period).includes(:work_item).where(conditions))
   end
 
   def export_csv

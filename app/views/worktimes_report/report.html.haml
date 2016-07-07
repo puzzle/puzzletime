@@ -1,12 +1,13 @@
 - @title = "Zeitrapport Puzzle ITC"
 
-.date
-  = f Time.zone.today
+.container-fluid
+  .date
+    = f Time.zone.today
 
-%h1.h3= @title
-= render 'worktimes_report/report_header'
+  %h1.h3= @title
+  = render 'worktimes_report/report_header'
 
-- if @ticket_view
-  = render 'worktimes_report/tickets'
-- else
-  = render 'worktimes_report/times'
+  - if @ticket_view
+    = render 'worktimes_report/tickets'
+  - else
+    = render 'worktimes_report/times'
