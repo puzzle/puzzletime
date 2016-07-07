@@ -40,65 +40,77 @@
 }
 
 .icon-add:before {
-  content: "+";
+  content: "\2b";
 }
 .icon-calendar:before {
-  content: "c";
+  content: "\63";
 }
 .icon-time:before {
-  content: "t";
+  content: "\74";
 }
 .icon-user:before {
-  content: "u";
+  content: "\75";
 }
 .icon-delete:before {
-  content: "e";
+  content: "\65";
 }
 .icon-dollar:before {
-  content: "$";
+  content: "\24";
 }
 .icon-duplicate:before {
-  content: "d";
+  content: "\64";
 }
 .icon-group:before {
-  content: "g";
+  content: "\67";
 }
 .icon-love:before {
-  content: "l";
+  content: "\6c";
 }
 .icon-help:before {
-  content: "h";
+  content: "\68";
 }
 .icon-remove:before {
-  content: "-";
+  content: "\2d";
 }
 .icon-chevron-right:before {
-  content: ">";
+  content: "\3e";
 }
 .icon-chevron-left:before {
-  content: "<";
+  content: "\3c";
 }
 .icon-close:before {
-  content: "x";
-}
-.icon-document:before {
-  content: "a";
+  content: "\78";
 }
 .icon-disk:before {
-  content: "b";
+  content: "\62";
 }
 .icon-edit:before {
-  content: "f";
+  content: "\66";
 }
 .icon-export:before {
-  content: "i";
+  content: "\69";
 }
 .icon-info:before {
-  content: "j";
+  content: "\6a";
 }
 .icon-square:before {
-  content: "k";
+  content: "\6b";
 }
 .icon-triangle:before {
-  content: "m";
+  content: "\6d";
+}
+.icon-document:before {
+  content: "\61";
+}
+.icon-calculator:before {
+  content: "\6e";
+}
+.icon-calendar-1:before {
+  content: "\6f";
+}
+.icon-calendar-check-o:before {
+  content: "\70";
+}
+.icon-dollar-stroke:before {
+  content: "\71";
 }

@@ -62,12 +62,15 @@
       .unit {
         margin-right: 30px;
       }
-
     }
   }
 
   .title, .figure, .unit {
     color: $gray-darker;
+  }
+
+  .title {
+    position: relative;
   }
 
   .figure {
@@ -184,6 +187,13 @@
         background-color: #ebebeb;
       }
     }
+  }
+
+  table.static tr .billable-icon {
+    position: absolute;
+    right: 0;
+    font-size: $font-size-large;
+    color: $gray;
   }
 }
 

@@ -6,6 +6,10 @@
       = link_to_if(can?(:update, row.accounting_post),
                    row.shortnames,
                    edit_order_accounting_post_path(@order, row.accounting_post))
+      - if row.accounting_post.billable
+        %i.billable-icon.icon-dollar
+      - else
+        %i.billable-icon.icon-dollar-stroke
     .subtitle{title: row.name}= row.name
     .data-item
       %span.figure= f(row.offered_rate)
