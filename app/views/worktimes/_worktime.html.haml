@@ -1,4 +1,6 @@
 .entry{'data-date' => day}
+  - unless worktime.billable
+    %i.billable-icon.icon-dollar-stroke
   .title-description
     .title= worktime_account(worktime)
     .description= worktime_description(worktime)

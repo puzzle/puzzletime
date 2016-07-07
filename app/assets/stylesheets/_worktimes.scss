@@ -304,6 +304,15 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
         z-index: 0;
       }
 
+      .billable-icon {
+        @extend .col-xs-offset-1;
+        display: block;
+        position: absolute;
+        left: -35px;
+        padding-left: $grid-gutter-width / 2;
+        font-size: 22px;
+      }
+
       .title-description {
         @extend .col-xs-offset-1;
         @extend .col-xs-5;
