@@ -23,7 +23,7 @@ module OrderHelper
     return unless target
     order_target_rating_icon(
       target.rating,
-      title: target.comment? ? simple_format(target.comment) : nil,
+      title: target.comment? ? simple_format(target.comment).gsub(/"/, '&quot;') : nil,
       data: { toggle: :tooltip })
   end
 
