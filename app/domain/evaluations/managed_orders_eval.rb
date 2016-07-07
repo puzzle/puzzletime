@@ -3,7 +3,7 @@
 class ManagedOrdersEval < WorkItemsEval
   self.label             = 'Geleitete Aufträge'
   self.total_details     = false
-  self.billing_hours     = true
+  self.billable_hours    = true
 
   def category_label
     'Kunde: ' + division.order.client.name

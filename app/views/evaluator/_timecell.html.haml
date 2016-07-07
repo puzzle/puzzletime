@@ -4,11 +4,18 @@
 - timecell = @times[timecell_counter][division] if defined? division
 - hours = (timecell.is_a?(Hash) ? timecell[:hours] : timecell).to_f
 - billable_hours = (timecell.is_a?(Hash) ? timecell[:billable_hours] : nil).to_f
+- planned_hours = (timecell.is_a?(Hash) ? timecell[:planned_hours] : nil).to_f
 - division_id = nil if ! defined? division_id
 - division_id = division.id if defined? division
 - action ||= 'details'
 %td{:align => "right"}
-  = format_hour hours
+  - if @evaluation.class.billable_hours
+    %span.additional-figure.muted{title: 'gesamthaft geleistete Stunden'}
+      = "(#{format_hour hours})"
+    %span{title: 'verrechenbare Stunden'}
+      = format_hour billable_hours
+  - else
+    = format_hour hours
   - if division_id || @evaluation.total_details
     - link = url_for(controller: controller.controller_name,
                      action: action,
@@ -21,9 +28,8 @@
   - else
     = image_tag( 'space.gif', 'size' => '19x11' )
 
-- if @evaluation.class.billing_hours
+- if @evaluation.class.planned_hours
   %td{:align => "right"}
-    %span.billable-hours-difference.muted
-      = format_hour billable_hours - hours
-      = "(#{number_to_percentage(hours > 0 ? billable_hours/hours*100 : 0, precision: 0)})"
-    = format_hour billable_hours
+    = format_hour planned_hours
+  %td{:align => "right"}
+    = format_hour billable_hours - planned_hours

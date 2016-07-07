@@ -7,7 +7,7 @@ class DepartmentsEval < Evaluation
   self.sub_evaluation   = 'departmentorders'
   self.label            = 'Geschäftsbereiche'
   self.total_details    = false
-  self.billing_hours    = true
+  self.billable_hours   = true
 
   def initialize
     super(Department)

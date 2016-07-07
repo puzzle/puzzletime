@@ -8,9 +8,10 @@
 #
 # This class is abstract, subclasses generally override the class constants for customization.
 class Evaluation
-  class_attribute :division_method, :division_column, :division_join,
+  class_attribute :division_method, :division_column, :division_join, :division_planning_join,
                   :sub_evaluation, :sub_work_items_eval, :label, :absences,
-                  :total_details, :billing_hours, :category_ref, :detail_columns, :detail_labels
+                  :total_details, :billable_hours, :planned_hours, :category_ref, :detail_columns,
+                  :detail_labels
 
   # The method to send to the category object to retrieve a list of divisions.
   self.division_method   = :list
@@ -29,8 +30,11 @@ class Evaluation
   # Whether details for totals are possible.
   self.total_details     = true
 
-  # Whether to show billing hours beside total hours
-  self.billing_hours     = false
+  # Whether to show billing hours beside performed hours
+  self.billable_hours     = false
+
+  # Whether to show planned hours and difference in separate columns
+  self.planned_hours     = false
 
   # The field of a division referencing the category entry in the database.
   # May be nil if not required for this Evaluation (default).
@@ -201,7 +205,7 @@ class Evaluation
   end
 
   def query_time_sums(query, group_by_column = nil)
-    if billing_hours
+    if billable_hours
       columns = ['SUM("worktimes"."hours") AS sum_hours',
                 'SUM(CASE WHEN "worktimes"."billable" = TRUE ' +
                     'THEN "worktimes"."hours" ' +
@@ -211,8 +215,8 @@ class Evaluation
 
       result = query.pluck(*columns)
       if group_by_column.present?
-        result.each_with_object({}) do |e, o|
-          o[e[0]] = { hours: e[1].to_f, billable_hours: e[2].to_f }
+        result.each_with_object({}) do |e, h|
+          h[e[0]] = { hours: e[1].to_f, billable_hours: e[2].to_f }
         end
       else
         { hours: result.first.first.to_f, billable_hours: result.first.second.to_f }
