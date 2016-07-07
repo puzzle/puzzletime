@@ -190,6 +190,155 @@ class PlanningTest < ActiveSupport::TestCase
     assert p1.overlaps?(p2)
   end
 
+  def test_period_planning_time_with_abstract_planning_and_no_repeat
+    p = build_planning_simple(201_010, 201_010)
+    p.is_abstract = true
+    p.abstract_amount = 20.0
+
+    # period within
+    assert_planning_hours p, 6.4, Date.civil(2010, 3, 8), Date.civil(2010, 3, 11)
+
+    # period starting before
+    assert_planning_hours p, 3.2, Date.civil(2010, 3, 1), Date.civil(2010, 3, 9)
+
+    # period ending after
+    assert_planning_hours p, 3.2, Date.civil(2010, 3, 11), Date.civil(2010, 3, 31)
+
+    # period starting and ending outside
+    assert_planning_hours p, 8.0, Date.civil(2010, 3, 1), Date.civil(2010, 3, 31)
+
+    p.abstract_amount = 50.0
+    assert_planning_hours p, 16.0, Date.civil(2010, 3, 8), Date.civil(2010, 3, 11)
+  end
+
+  def test_period_planning_time_with_abstract_planning_and_repeat_until
+    p = build_planning_simple(201_010, 201_011)
+    p.is_abstract = true
+    p.abstract_amount = 20.0
+
+    # period within
+    assert_planning_hours p, 6.4, Date.civil(2010, 3, 11), Date.civil(2010, 3, 16)
+
+    # period starting before
+    assert_planning_hours p, 3.2, Date.civil(2010, 3, 1), Date.civil(2010, 3, 9)
+
+    # period ending after
+    assert_planning_hours p, 3.2, Date.civil(2010, 3, 18), Date.civil(2010, 3, 31)
+
+    # period starting and ending outside
+    assert_planning_hours p, 16, Date.civil(2010, 3, 1), Date.civil(2010, 3, 31)
+
+    p.abstract_amount = 50.0
+    assert_planning_hours p, 16.0, Date.civil(2010, 3, 11), Date.civil(2010, 3, 16)
+  end
+
+  def test_period_planning_time_with_abstract_planning_and_repeat_forever
+    p = build_planning_simple(201_010, nil)
+    p.is_abstract = true
+    p.abstract_amount = 20.0
+
+    # period within
+    assert_planning_hours p, 6.4, Date.civil(2010, 3, 8), Date.civil(2010, 3, 11)
+
+    # period starting before
+    assert_planning_hours p, 3.2, Date.civil(2010, 3, 1), Date.civil(2010, 3, 9)
+
+    # period ending after
+    assert_planning_hours p, 24.0, Date.civil(2010, 3, 11), Date.civil(2010, 3, 31)
+
+    # period starting and ending outside
+    assert_planning_hours p, 28.8, Date.civil(2010, 3, 1), Date.civil(2010, 3, 31)
+
+    p.abstract_amount = 50.0
+    assert_planning_hours p, 16.0, Date.civil(2010, 3, 8), Date.civil(2010, 3, 11)
+  end
+
+  def test_period_planning_time_with_concrete_planning_and_no_repeat
+    p = build_planning_simple(201_010, 201_010)
+    p.is_abstract = false
+    p.monday_am = true
+    p.monday_pm = true
+    p.tuesday_am = true
+    p.tuesday_pm = true
+    p.wednesday_am = true
+
+    # period within
+    assert_planning_hours p, 16.0, Date.civil(2010, 3, 8), Date.civil(2010, 3, 9)
+
+    # period starting before
+    assert_planning_hours p, 16.0, Date.civil(2010, 3, 1), Date.civil(2010, 3, 9)
+
+    # period ending after
+    assert_planning_hours p, 12.0, Date.civil(2010, 3, 9), Date.civil(2010, 3, 31)
+
+    # period starting and ending outside
+    assert_planning_hours p, 20.0, Date.civil(2010, 3, 1), Date.civil(2010, 3, 31)
+
+    p.wednesday_pm = true
+    p.thursday_am = true
+    p.thursday_pm = true
+    p.friday_am = true
+    p.friday_pm = true
+    assert_planning_hours p, 40.0, Date.civil(2010, 3, 8), Date.civil(2010, 3, 12)
+  end
+
+  def test_period_planning_time_with_concrete_planning_and_repeat_until
+    p = build_planning_simple(201_010, 201_011)
+    p.is_abstract = false
+    p.monday_am = true
+    p.monday_pm = true
+    p.tuesday_am = true
+    p.tuesday_pm = true
+    p.wednesday_am = true
+
+    # period within
+    assert_planning_hours p, 36.0, Date.civil(2010, 3, 8), Date.civil(2010, 3, 16)
+
+    # period starting before
+    assert_planning_hours p, 16.0, Date.civil(2010, 3, 1), Date.civil(2010, 3, 9)
+
+    # period ending after
+    assert_planning_hours p, 12.0, Date.civil(2010, 3, 16), Date.civil(2010, 3, 31)
+
+    # period starting and ending outside
+    assert_planning_hours p, 40.0, Date.civil(2010, 3, 1), Date.civil(2010, 3, 31)
+
+    p.wednesday_pm = true
+    p.thursday_am = true
+    p.thursday_pm = true
+    p.friday_am = true
+    p.friday_pm = true
+    assert_planning_hours p, 56.0, Date.civil(2010, 3, 8), Date.civil(2010, 3, 16)
+  end
+
+  def test_period_planning_time_with_concrete_planning_and_repeat_forever
+    p = build_planning_simple(201_010, nil)
+    p.is_abstract = false
+    p.monday_am = true
+    p.monday_pm = true
+    p.tuesday_am = true
+    p.tuesday_pm = true
+    p.wednesday_am = true
+
+    # period within
+    assert_planning_hours p, 16.0, Date.civil(2010, 3, 8), Date.civil(2010, 3, 9)
+
+    # period starting before
+    assert_planning_hours p, 16.0, Date.civil(2010, 3, 1), Date.civil(2010, 3, 9)
+
+    # period ending after
+    assert_planning_hours p, 72.0, Date.civil(2010, 3, 9), Date.civil(2010, 3, 31)
+
+    # period starting and ending outside
+    assert_planning_hours p, 80.0, Date.civil(2010, 3, 1), Date.civil(2010, 3, 31)
+
+    p.wednesday_pm = true
+    p.thursday_am = true
+    p.thursday_pm = true
+    p.friday_am = true
+    p.friday_pm = true
+    assert_planning_hours p, 56.0, Date.civil(2010, 3, 8), Date.civil(2010, 3, 16)
+  end
 
   private
 
@@ -199,5 +348,17 @@ class PlanningTest < ActiveSupport::TestCase
                  monday_am: true,
                  employee_id: employees(:long_time_john).id,
                  work_item_id: work_items(:allgemein).id)
+  end
+
+  def build_planning_simple(start_week, end_week)
+    Planning.new(start_week: start_week,
+                 end_week: end_week,
+                 employee_id: employees(:long_time_john).id,
+                 work_item_id: work_items(:allgemein).id)
+  end
+
+  def assert_planning_hours(planning, hours, period_start_date, period_end_date)
+    period = Period.retrieve(period_start_date, period_end_date)
+    assert_equal hours.to_f, planning.period_planning_time(period).to_f
   end
 end

@@ -117,6 +117,38 @@ class Planning < ActiveRecord::Base
     p1_end_week >= p2_start_week
   end
 
+  def period_planning_time(period)
+    if is_abstract
+      relevant_period(period).musttime / 100.0 * abstract_amount
+    else
+      hours = 0
+      relevant_period(period).step do |date|
+        hours += day_planning_time(date)
+      end
+      hours
+    end
+  end
+
+  def day_planning_time(date)
+    musttime = Holiday.musttime(date);
+    if musttime > 0
+      if date.monday? && (monday_am || monday_pm)
+        monday ? musttime : musttime / 2
+      elsif date.tuesday? && (tuesday_am || tuesday_pm)
+        tuesday ? musttime : musttime / 2
+      elsif date.wednesday? && (wednesday_am || wednesday_pm)
+        wednesday ? musttime : musttime / 2
+      elsif date.thursday? && (thursday_am || thursday_pm)
+        thursday ? musttime : musttime / 2
+      elsif date.friday? && (friday_am || friday_pm)
+        friday ? musttime : musttime / 2
+      else
+        0.0
+      end
+    else
+      0.0
+    end
+  end
 
   private
 
@@ -161,5 +193,11 @@ class Planning < ActiveRecord::Base
       wednesday_am || wednesday_pm ||
       thursday_am || thursday_pm ||
       friday_am || friday_pm
-   end
+  end
+
+  def relevant_period(period)
+    end_date = end_week_date.present? && end_week_date.advance(days: 6)
+    Period.retrieve(period.start_date < start_week_date ? start_week_date : period.start_date,
+                    end_date && period.end_date > end_date ? end_date : period.end_date)
+  end
 end
