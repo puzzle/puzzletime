@@ -41,7 +41,7 @@ class OrderServicesController < ApplicationController
 
   def list_worktimes(period)
     entries = order.worktimes.
-              includes(:employee).
+              includes(:employee, :work_item).
               order(:work_date).
               in_period(period)
     entries = filter_entries_allow_empty_by(entries, EMPTY, :ticket, :invoice_id)
