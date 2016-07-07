@@ -3,7 +3,7 @@
 class DepartmentOrdersEval < WorkItemsEval
   self.division_join     = nil
   self.division_column   = 'orders.work_item_id'
-  self.billing_hours     = true
+  self.billable_hours    = true
 
   def initialize(department_id)
     super(Department.find(department_id))
