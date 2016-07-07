@@ -167,6 +167,8 @@ de-CH:
         end_date: Enddatum
         percent: Prozent
         vacation_days_per_year: Ferientage pro Jahr
+        comment: Kommentar
+        probation_period_end_date: Ende Probezeit
       holiday:
         holiday_date: Datum
         musthours_day: Muss Stunden
