@@ -75,6 +75,14 @@ class ActionDispatch::IntegrationTest
     DatabaseCleaner.clean
   end
 
+  if ENV['FIREFOX_PATH']
+    Capybara.register_driver :selenium do |app|
+      require 'selenium/webdriver'
+      Selenium::WebDriver::Firefox::Binary.path = ENV['FIREFOX_PATH']
+      Capybara::Selenium::Driver.new(app, :browser => :firefox)
+    end
+  end
+
   private
 
   def selectize(id, value)
