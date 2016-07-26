@@ -1,6 +1,5 @@
 # encoding: utf-8
 ENV['RAILS_ENV'] = 'test'
-Settings.reload!
 
 if ENV['TEST_REPORTS']
   require 'simplecov'
@@ -17,6 +16,7 @@ Rails.env = 'test'
 require 'rails/test_help'
 require 'mocha/mini_test'
 require 'capybara/rails'
+Settings.reload!
 
 if ENV['TEST_REPORTS']
   require 'minitest/reporters'

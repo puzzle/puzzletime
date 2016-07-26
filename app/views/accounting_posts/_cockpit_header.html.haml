@@ -3,7 +3,7 @@
   .data-item{title: 'Ist-R[CHF]'}
     %span.figure-label verrechnet
     %span.figure
-      = f(@cockpit.budget_billed)
+      = f(@cockpit.billed_amount)
       %span.unit CHF
   .data-item{title: 'Soll[CHF] - Ist-R[CHF]'}
     %span.figure-label offen
@@ -27,10 +27,10 @@
           = f(@cockpit.cost_effectiveness_forecast)
           %span.unit %
 
-- if @cockpit.average_rate
-  .cockpit-header-item{title: 'Ist-R[CHF] / (Ist[h] per letztem Rechnungsdatum)'}
-    Durchschnittlicher Stundenansatz
+- if @cockpit.billed_rate
+  .cockpit-header-item{title: 'Ist-R[CHF] / Ist-V[h]'}
+    Verrechneter Stundenansatz
     .data-item
       %span.figure
-        = f(@cockpit.average_rate)
+        = f(@cockpit.billed_rate)
         %span.unit CHF
