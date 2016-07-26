@@ -146,15 +146,15 @@ class Order::CockpitTest < ActiveSupport::TestCase
     assert_equal '―', cockpit.cost_effectiveness_current
   end
 
-  test 'budget billed without invoices is zero' do
-    assert_equal 0.0, cockpit.budget_billed
+  test 'billed_amount without invoices is zero' do
+    assert_equal 0.0, cockpit.billed_amount
   end
 
-  test 'budget billed is total from invoices' do
+  test 'billed_amount is total from invoices' do
     define_worktimes
     create_invoice
 
-    assert_equal 2_040.0, cockpit.budget_billed
+    assert_equal 2_040.0, cockpit.billed_amount
   end
 
   test 'budget open without invoices without offering is zero' do
@@ -182,16 +182,16 @@ class Order::CockpitTest < ActiveSupport::TestCase
     assert_equal 39_057.02 - 1_441.2, cockpit.budget_open
   end
 
-  test 'average rate without invoice is nil' do
-    assert_equal nil, cockpit.average_rate
+  test 'billed rate without invoice is nil' do
+    assert_equal nil, cockpit.billed_rate
   end
 
-  test 'average rate is invoice total / hours at last period_to' do
+  test 'billed rate is invoice total / hours' do
     define_offered_fields
     define_worktimes
     create_invoice(period_to: Time.zone.today - 1)
 
-    assert_equal 26.69, cockpit.average_rate.round(2)
+    assert_equal 21.84, cockpit.billed_rate.round(2)
   end
 
 
