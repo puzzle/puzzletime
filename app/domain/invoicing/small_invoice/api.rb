@@ -53,7 +53,7 @@ module Invoicing
         request.set_form_data(data ? { data: data.to_json } : {})
 
         response = http(url).request(request)
-        handle_json_response(response)
+        handle_json_response(response, data)
       end
 
       def http(url)
@@ -68,10 +68,10 @@ module Invoicing
         URI("#{Settings.small_invoice.url}/#{endpoint}/#{action}/#{args}")
       end
 
-      def handle_json_response(response)
+      def handle_json_response(response, data = nil)
         json = JSON.parse(response.body)
         if json['error']
-          fail Invoicing::Error.new(json['errormessage'], json['errorcode'])
+          fail Invoicing::Error.new(json['errormessage'], json['errorcode'], data)
         else
           json
         end
