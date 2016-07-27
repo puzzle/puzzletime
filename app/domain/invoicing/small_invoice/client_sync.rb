@@ -79,10 +79,10 @@ module Invoicing
       def set_association_keys(remote)
         set_association_key(Invoicing::SmallInvoice::Entity::Address,
                             client.billing_addresses,
-                            remote['addresses'])
+                            remote.fetch('addresses', []))
         set_association_key(Invoicing::SmallInvoice::Entity::Contact,
                             client.contacts,
-                            remote['contacts'])
+                            remote.fetch('contacts', []))
       end
 
       def set_association_key(entity, list, remote_list)
