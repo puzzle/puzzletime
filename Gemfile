@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.2.6'
+gem 'rails', '4.2.7'
 
 gem 'pg'
 
@@ -27,6 +27,8 @@ gem 'seed-fu'
 gem 'codez-validates_by_schema', require: 'validates_by_schema'
 gem 'validates_timeliness'
 
+# fixed versions for indirect dependencies
+gem 'mime-types', '~> 2.99.1'
 
 ## assets
 gem 'sass-rails'
