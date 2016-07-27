@@ -14,7 +14,6 @@ class EditAccountingPostTest < ActionDispatch::IntegrationTest
     assert_equal accounting_post.offered_hours, find_field('accounting_post_offered_hours').value.to_f
     assert_equal accounting_post.offered_days, find_field('accounting_post_offered_days').value.to_f
     assert_equal accounting_post.offered_rate, find_field('accounting_post_offered_rate').value.to_f
-    assert_equal accounting_post.offered_rate, find_field('accounting_post_offered_rate').value.to_f
 
     fill_in('accounting_post_offered_hours', with: 200.5)
     fill_in('accounting_post_offered_rate', with: 7.4)
