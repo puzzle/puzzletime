@@ -118,11 +118,13 @@ class InvoicesController < CrudController
   end
 
   def employees_for_period(from, to)
-    Employee.with_worktimes_in_period(order, from, to)
+    p = Period.with(from, to)
+    Employee.with_worktimes_in_period(order, p.start_date, p.end_date)
   end
 
   def work_items_for_period(from, to)
-    WorkItem.with_worktimes_in_period(order, from, to)
+    p = Period.with(from, to)
+    WorkItem.with_worktimes_in_period(order, p.start_date, p.end_date)
   end
 
   def checked_work_item_ids
@@ -160,4 +162,5 @@ class InvoicesController < CrudController
   def autoselect_all?
     @autoselect_workitems_and_employees == true
   end
+
 end
