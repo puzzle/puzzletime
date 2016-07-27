@@ -1,7 +1,7 @@
 
 %label Auftrag
 = form_tag(orders_path, method: :get) do
-  .col-xs-4
+  .col-sm-10.col-md-8.col-lg-6
     = select_tag(:id,
                  options_for_select(Order.choosable_list, @order.id),
                  id: 'choosable_order_id',
