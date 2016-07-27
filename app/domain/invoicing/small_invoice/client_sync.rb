@@ -4,6 +4,7 @@ module Invoicing
     class ClientSync
       class << self
         def perform
+          remote_keys = fetch_remote_keys
           ::Client.includes(:work_item, :contacts, :billing_addresses).find_each do |client|
             if client.billing_addresses.present? # required by small invoice
               new(client, remote_keys).sync
@@ -11,10 +12,8 @@ module Invoicing
           end
         end
 
-        private
-
-        def remote_keys
-          @remote_keys ||= SmallInvoice::Api.instance.list(:client).each_with_object({}) do |client, hash|
+        def fetch_remote_keys
+          SmallInvoice::Api.instance.list(:client).each_with_object({}) do |client, hash|
             hash[client['number']] = client['id']
           end
         end
@@ -24,9 +23,9 @@ module Invoicing
       class_attribute :rate_limiter
       self.rate_limiter = RateLimiter.new(Settings.small_invoice.request_rate)
 
-      def initialize(client, remote_keys = {})
+      def initialize(client, remote_keys = nil)
         @client = client
-        @remote_keys = remote_keys
+        @remote_keys = remote_keys || self.class.fetch_remote_keys
       end
 
       def sync
@@ -45,8 +44,9 @@ module Invoicing
 
       def update_remote
         if client.invoicing_key != key
-          # conflicting datasets in ptime <=> smallinvoice. we need to update in ptime the invoicing_key of the client
-          # and clear the invoicing_keys of the addresses and contacts otherwise sync will abort because of conflicts
+          # Conflicting datasets in ptime <=> smallinvoice. We need to update the invoicing_key
+          # of the client in ptime and clear the invoicing_keys of the addresses and contacts,
+          # otherwise sync will abort because of conflicts.
           client.billing_addresses.update_all(invoicing_key: nil)
           client.contacts.update_all(invoicing_key: nil)
           client.update_column(:invoicing_key, key)
@@ -96,11 +96,16 @@ module Invoicing
       end
 
       def key
-        if client.invoicing_key.present? && remote_keys.values.map(&:to_s).include?(client.invoicing_key)
+        if key_exists_remotely?
           client.invoicing_key
         else
           remote_keys[client.shortname]
         end
+      end
+
+      def key_exists_remotely?
+        client.invoicing_key.present? &&
+          remote_keys.values.map(&:to_s).include?(client.invoicing_key)
       end
 
       def api
