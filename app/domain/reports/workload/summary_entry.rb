@@ -20,7 +20,11 @@ module Reports
       end
 
       def absolute_billability
-        100 * billable_hours / ordertime_hours
+        if ordertime_hours > 0
+          100 * billable_hours / ordertime_hours
+        else
+          0
+        end
       end
 
       private

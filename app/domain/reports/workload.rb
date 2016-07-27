@@ -60,7 +60,9 @@ class Reports::Workload
   end
 
   def department_worktimes
-    @department_worktimes ||= worktimes.select {|worktime_entry| worktime_entry.department_id == department.id }
+    @department_worktimes ||= worktimes.select do |worktime_entry|
+      worktime_entry.department_id == department.id
+    end
   end
 
   private
