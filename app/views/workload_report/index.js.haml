@@ -1,5 +1,5 @@
-$('.summary').html('#{j(render('summary'))}');
-$('.list').html('#{j(render('list') + render('actions'))}');
+$('.results').html('#{j(render('results'))}');
+
 - if flash[:alert]
   $('#flash').html('#{j(render('layouts/flash', level: :alert))}');
 - else

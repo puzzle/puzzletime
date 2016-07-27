@@ -12,7 +12,7 @@ module Reports
       end
 
       def must_hours
-        @must_hours ||= employments.sum {|e| e.musttime(period) }
+        @must_hours ||= employments.sum { |e| e.musttime(period) }
       end
 
       def ordertime_hours
