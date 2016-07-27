@@ -91,6 +91,13 @@ class Period
     @@cache.get(key) { Period.new(start_date, end_date, label) }
   end
 
+  # Build a period, even with illegal arguments
+  def self.with(start_date = Time.zone.today, end_date = Time.zone_today, label = nil)
+    start_date = parse_date(start_date) rescue nil
+    end_date = parse_date(end_date) rescue nil
+    new(start_date, end_date, label)
+  end
+
   def initialize(start_date = Time.zone.today, end_date = Time.zone.today, label = nil)
     @start_date = self.class.parse_date(start_date)
     @end_date = self.class.parse_date(end_date)

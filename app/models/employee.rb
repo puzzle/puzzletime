@@ -73,7 +73,6 @@ class Employee < ActiveRecord::Base
 
     def encode(pwd)
       Digest::SHA1.hexdigest(pwd)
-      # logger.info "Hash of password: #{Digest::SHA1.hexdigest(pwd)}"
     end
 
     def with_worktimes_in_period(order, from, to)
