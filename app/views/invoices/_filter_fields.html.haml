@@ -10,7 +10,7 @@
   %p.form-control-static='Gruppieren nach:'
   .radio
     %label
-      = radio_button(:invoice, :grouping, 'accounting_posts')
+      = radio_button(:invoice, :grouping, 'accounting_posts', checked: entry.grouping != 'employees')
       Buchungspositionen
   .radio
     %label

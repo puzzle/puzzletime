@@ -57,5 +57,7 @@ Rails.application.configure do
     Bullet.add_whitelist type: :unused_eager_loading, class_name: "Planning", association: :employee
 
     Bullet.add_whitelist type: :n_plus_one_query, class_name: "WorkItem", association: :parent
+    Bullet.add_whitelist type: :n_plus_one_query, class_name: "BillingAddress", association: :client
+    Bullet.add_whitelist type: :n_plus_one_query, class_name: "BillingAddress", association: :contact
   end
 end
