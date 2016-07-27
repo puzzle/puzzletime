@@ -164,7 +164,7 @@ class Invoice < ActiveRecord::Base
   def update_totals
     if manual_invoice?
       self.total_hours = 0
-      self.total_amount ||= positions.collect(&:total_amount).sum
+      self.total_amount = positions.collect(&:total_amount).sum if grouping_changed?
     else
       self.total_hours = positions.collect(&:total_hours).sum
       self.total_amount = positions.collect(&:total_amount).sum
