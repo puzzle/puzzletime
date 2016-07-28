@@ -1,0 +1,4 @@
+- if flash[:alert]
+  $('#flash').html('#{j(render('layouts/flash', level: :alert))}');
+- else
+  $('#flash').html('');

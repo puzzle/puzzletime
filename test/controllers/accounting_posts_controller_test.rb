@@ -123,7 +123,8 @@ class AccountingPostsControllerTest < ActionController::TestCase
     assert_equal accounting_posts(:puzzletime), order.accounting_posts.list.first
     assert_equal 'TEST', order.accounting_posts.list.last.name
     assert_equal work_items(:puzzletime), accounting_posts(:puzzletime).work_item.parent
-    assert_equal work_items(:puzzletime).worktimes, accounting_posts(:puzzletime).work_item.worktimes
+    assert_equal work_items(:puzzletime).worktimes.order(:id),
+                 accounting_posts(:puzzletime).work_item.worktimes.order(:id)
   end
 
   test 'CREATE second accounting post does not touch existing post on own work item' do
