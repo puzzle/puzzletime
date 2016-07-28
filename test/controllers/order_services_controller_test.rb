@@ -11,8 +11,34 @@ class OrderServicesControllerTest < ActionController::TestCase
   end
 
   test 'GET show assigns order accounting posts' do
+    Ordertime.create!(employee: employees(:pascal),
+                      work_item: work_items(:hitobito_demo_app),
+                      work_date: '1.5.2016',
+                      hours: 2,
+                      report_type: 'absolute_day')
+    Ordertime.create!(employee: employees(:lucien),
+                      work_item: work_items(:hitobito_demo_site),
+                      work_date: '6.6.2016',
+                      hours: 4,
+                      report_type: 'absolute_day')
     get :show, order_id: orders(:hitobito_demo).id
     assert_equal work_items(:hitobito_demo_app, :hitobito_demo_site), assigns(:accounting_posts)
+  end
+
+  test 'GET show assigns employees and accounting_posts based on period' do
+    Ordertime.create!(employee: employees(:pascal),
+                      work_item: work_items(:hitobito_demo_app),
+                      work_date: '1.5.2016',
+                      hours: 2,
+                      report_type: 'absolute_day')
+    Ordertime.create!(employee: employees(:lucien),
+                      work_item: work_items(:hitobito_demo_site),
+                      work_date: '6.6.2016',
+                      hours: 4,
+                      report_type: 'absolute_day')
+    get :show, order_id: orders(:hitobito_demo).id, start_date: '1.5.2016', end_date: '1.6.2016'
+    assert_equal [work_items(:hitobito_demo_app)], assigns(:accounting_posts)
+    assert_equal [employees(:pascal)], assigns(:employees)
   end
 
   test 'GET show assigns tickets' do

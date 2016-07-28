@@ -49,21 +49,7 @@ class OrderServicesController < ApplicationController
   end
 
   def worktimes_csv_filename
-    order_shortnames = order.work_item.path_shortnames
-    if params[:work_item_id].present?
-      accounting_post_shortnames = WorkItem.find(params[:work_item_id]).path_shortnames
-    end
-    if params[:employee_id].present?
-      employee_shortname = Employee.find(params[:employee_id]).shortname
-    end
-    billable = "billable_#{params[:billable]}" if params[:billable].present?
-    ticket = "ticket_#{params[:ticket]}" if params[:ticket].present?
-    ['puzzletime',
-     accounting_post_shortnames || order_shortnames,
-     employee_shortname,
-     ticket,
-     billable,
-     '.csv'].compact.join('-')
+    Order::Services::CsvFilenameGenerator.new(order, params).filename
   end
 
   def order
@@ -72,10 +58,10 @@ class OrderServicesController < ApplicationController
 
   def set_filter_values
     set_period
-    @employees = Employee.where(id: order.worktimes.select(:employee_id)).list
-    @tickets = [EMPTY_TICKET] + order.worktimes.order(:ticket).uniq.pluck(:ticket).select(&:present?)
-    @accounting_posts = order.work_item.self_and_descendants.leaves.list
-    @invoices = [EMPTY_INVOICE] + order.invoices
+    set_filter_employees
+    set_filter_tickets
+    set_filter_accounting_posts
+    set_filter_invoices
   end
 
   def convert_predefined_period
@@ -89,7 +75,8 @@ class OrderServicesController < ApplicationController
   end
 
   def prepare_report_header
-    @work_item = WorkItem.find(params[:work_item_id].present? ? params[:work_item_id] : order.work_item_id)
+    work_item_id = params[:work_item_id].present? ? params[:work_item_id] : order.work_item_id
+    @work_item = WorkItem.find(work_item_id)
     @employee = Employee.find(params[:employee_id]) if params[:employee_id].present?
     set_period_with_invoice
   end
@@ -121,6 +108,29 @@ class OrderServicesController < ApplicationController
     params.delete(:start_date)
     params.delete(:end_date)
     @period
+  end
+
+  def set_filter_employees
+    ids = order.worktimes.in_period(@period).select(:employee_id).uniq
+    @employees = Employee.where(id: ids).list
+  end
+
+  def set_filter_tickets
+    @tickets = [EMPTY_TICKET] +
+        order.worktimes.in_period(@period)
+            .order(:ticket)
+            .uniq
+            .pluck(:ticket)
+            .select(&:present?)
+  end
+
+  def set_filter_accounting_posts
+    ids = order.worktimes.in_period(@period).select(:work_item_id).uniq
+    @accounting_posts = WorkItem.where(id: ids).list
+  end
+
+  def set_filter_invoices
+    @invoices = [EMPTY_INVOICE] + order.invoices.list
   end
 
   def authorize_class
