@@ -30,6 +30,8 @@
 require 'test_helper'
 
 class PlanningTest < ActiveSupport::TestCase
+  setup { WorkingCondition.clear_cache }
+
   def test_overlapping_with_no_repeat_and_no_repeat
     p1 = build_planning(201_010, 201_010)
     p1.save!

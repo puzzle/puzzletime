@@ -4,8 +4,8 @@ class InvoicesController < CrudController
 
   self.nesting = [Order]
 
-  self.permitted_attrs = [:due_date, :period_from, :period_to, :add_vat, :billing_address_id,
-                          :grouping, employee_ids: [], work_item_ids: []]
+  self.permitted_attrs = [:billing_date, :due_date, :period_from, :period_to, :add_vat,
+                          :billing_address_id, :grouping, employee_ids: [], work_item_ids: []]
 
   helper_method :checked_work_item_ids, :checked_employee_ids, :order
 
@@ -71,36 +71,44 @@ class InvoicesController < CrudController
 
   def find_entry
     super
-  rescue ActiveRecord::RecordNotFound => e
+  rescue ActiveRecord::RecordNotFound
     # happens when changing order in top dropdown while editing invoice.
     redirect_to order_invoices_path(order)
     Invoice.new
   end
 
   def model_params
-    (params[model_identifier] || ActionController::Parameters.new).
-      permit(permitted_attrs).tap do |attrs|
-      # map attributes from oder_services filter form
-      attrs[:period_from] ||= params[:start_date]
-      attrs[:period_to] ||= params[:end_date]
-      attrs[:grouping] = 'manual' if params[:manual_invoice]
-      if params[:employee_id].present?
-        attrs[:employee_ids] = Array(attrs[:employee_ids]) << params[:employee_id]
-      end
-      if params[:work_item_id].present?
-        attrs[:work_item_ids] = Array(attrs[:work_item_ids]) << params[:work_item_id]
-      end
+    model_params = params[model_identifier] || ActionController::Parameters.new
+    model_params.permit(permitted_attrs).tap do |attrs|
+      # map attributes from order_services filter form
+      copy_attrs_from_params(attrs)
+      init_default_attrs(attrs)
+    end
+  end
 
-      # defaults
-      attrs[:billing_date] ||= l(billing_date)
-      attrs[:due_date] ||= l(due_date) if due_date.present?
-      attrs[:billing_address_id] ||= default_billing_address_id
-      if attrs[:employee_ids].blank?
-        attrs[:employee_ids] = employees_for_period(attrs[:period_from], attrs[:period_to]).map(&:id)
-      end
-      if attrs[:work_item_ids].blank?
-        attrs[:work_item_ids] = work_items_for_period(attrs[:period_from], attrs[:period_to]).map(&:id)
-      end
+  def copy_attrs_from_params(attrs)
+    attrs[:period_from] ||= params[:start_date]
+    attrs[:period_to] ||= params[:end_date]
+    attrs[:grouping] = 'manual' if params[:manual_invoice]
+    if params[:employee_id].present?
+      attrs[:employee_ids] = Array(attrs[:employee_ids]) << params[:employee_id]
+    end
+    if params[:work_item_id].present?
+      attrs[:work_item_ids] = Array(attrs[:work_item_ids]) << params[:work_item_id]
+    end
+  end
+
+  def init_default_attrs(attrs)
+    attrs[:billing_date] ||= l(billing_date)
+    attrs[:due_date] ||= l(due_date) if due_date.present?
+    attrs[:billing_address_id] ||= default_billing_address_id
+    if attrs[:employee_ids].blank?
+      attrs[:employee_ids] = employees_for_period(attrs[:period_from],
+                                                  attrs[:period_to]).map(&:id)
+    end
+    if attrs[:work_item_ids].blank?
+      attrs[:work_item_ids] = work_items_for_period(attrs[:period_from],
+                                                    attrs[:period_to]).map(&:id)
     end
   end
 
@@ -128,11 +136,19 @@ class InvoicesController < CrudController
   end
 
   def checked_work_item_ids
-    autoselect_all? ? work_items_for_period(entry.period_from, entry.period_to).pluck(:id) : entry.work_item_ids.presence
+    if autoselect_all?
+      work_items_for_period(entry.period_from, entry.period_to).pluck(:id)
+    else
+      entry.work_item_ids.presence
+    end
   end
 
   def checked_employee_ids
-    autoselect_all? ? employees_for_period(entry.period_from, entry.period_to).pluck(:id) : entry.employee_ids.presence
+    if autoselect_all?
+      employees_for_period(entry.period_from, entry.period_to).pluck(:id)
+    else
+      entry.employee_ids.presence
+    end
   end
 
   def billing_clients

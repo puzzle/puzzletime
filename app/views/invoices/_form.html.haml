@@ -16,7 +16,7 @@
   #invoice_filters
     = render 'filter_fields', f: f
 
-  = f.labeled_input_fields :due_date
+  = f.labeled_input_fields :billing_date, :due_date
 
   = f.labeled_belongs_to_field :billing_client_id,
                                list: @billing_clients,

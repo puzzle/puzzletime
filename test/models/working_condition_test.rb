@@ -12,6 +12,7 @@ require 'test_helper'
 
 class WorkingConditionTest < ActiveSupport::TestCase
   setup { WorkingCondition.clear_cache }
+  teardown { WorkingCondition.clear_cache }
 
   test 'second condition with valid_from is fine' do
     c = WorkingCondition.new(valid_from: Date.new(2012, 1, 1),
