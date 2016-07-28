@@ -15,6 +15,10 @@ label.required::after{
   content: " *"
 }
 
+.selectize-dropdown, .selectize-input, .selectize-input input {
+  color: inherit;
+}
+
 .form-inline {
   .selectize-control {
     min-width: 180px;

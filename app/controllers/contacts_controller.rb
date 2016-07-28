@@ -3,6 +3,8 @@ class ContactsController < ManageController
 
   self.permitted_attrs = [:lastname, :firstname, :function, :email, :phone, :mobile, :crm_key]
 
+  self.search_columns = [:lastname, :firstname, :function, :email]
+
   def with_crm
     @client = Client.find_by_work_item_id!(params[:client_work_item_id])
     @entries = @client.contacts.list.to_a

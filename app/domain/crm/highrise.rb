@@ -29,7 +29,8 @@ module Crm
 
     def verify_deal_party_type(deal)
       unless deal.party.type.downcase == 'company'
-        fail Crm::Error.new(I18n.t('error.crm.highrise.order_not_on_company', party_type: deal.party.type))
+        fail Crm::Error, I18n.t('error.crm.highrise.order_not_on_company',
+                                party_type: deal.party.type)
       end
     end
 
@@ -51,6 +52,7 @@ module Crm
       sync_clients
       sync_orders
       sync_contacts
+      import_client_contacts
     end
 
     def client_url(client)
@@ -87,11 +89,29 @@ module Crm
       end
     end
 
+    # Syncs existing contacts
     def sync_contacts
       sync_crm_entities(Contact) do |contact|
         person = ::Highrise::Person.find(contact.crm_key)
         contact.update!(contact_attributes(person))
       end
+    end
+
+    # Imports missing contacts for existing clients
+    def import_client_contacts
+      sync_crm_entities(Client) do |client|
+        people = ::Highrise::Company.new(id: client.crm_key).people
+        existing = existing_contact_crm_keys(people.collect(&:id))
+        people.reject { |p| existing.include?(p.id) }
+              .each { |p| client.contacts.create(contact_attributes(p)) }
+      end
+    end
+
+    def existing_contact_crm_keys(keys)
+      client.contacts
+          .where(crm_key: keys)
+          .pluck(:crm_key)
+          .collect(&:to_i)
     end
 
     def contact_attributes(person)

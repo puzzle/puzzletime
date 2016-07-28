@@ -1,7 +1,8 @@
 - @title = ti(:title, model: "#{models_label(false)} von #{h(parent)}")
 
 =  crud_form do |f|
-  = f.labeled_input_fields :contact_id, :supplement
+  = f.labeled_input_field :contact_id, class: 'searchable'
+  = f.labeled_input_field :supplement
   = f.labeled_text_area :street, rows: 2
   = f.labeled_input_fields :zip_code, :town
   = f.labeled(:country) do
