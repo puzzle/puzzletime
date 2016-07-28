@@ -11,16 +11,17 @@
                                  url: url_for(action: 'existing'),
                                  dynamic_params: 'planning[employee_id]' })
 
-  = f.labeled(:p, caption: 'Aktuelle Planung') do
+  = f.labeled(:p, caption: 'Aktuelle Planung', span: 10) do
     #existing
       = render :partial => 'existing'
 
-  = f.labeled_collection_select(:work_item_id,
-                                @work_items,
-                                :id,
-                                :label_verbose,
-                                f.select_options(:work_item_id),
-                                class: 'form-control searchable')
+  = f.labeled(:work_item_id) do
+    = select_tag('planning[work_item_id]',
+                 work_item_option(entry.work_item),
+                 placeholder: 'Suchen...',
+                 autocomplete: 'off',
+                 data: { autocomplete: 'work_item',
+                         url: search_work_items_path })
 
   = f.labeled('Auswahl') do
     .radio
@@ -57,28 +58,29 @@
             %td= check_box 'planning', 'thursday', data: { switch_half_day: 'planning_thursday' }
             %td= check_box 'planning', 'friday', data: { switch_half_day: 'planning_friday' }
 
-    .row
-      .col-md-2
-        .radio
-          %label
-            = f.radio_button('abstract_concrete', 'abstract', :checked => @planning.is_abstract)
-            Prozentplanung
-      .col-md-2
-        = f.select("abstract_amount", (1..44).collect {|x| ["#{x*2.5}%", x*2.5]}, {:include_blank => true}, class: 'form-control')
+    .radio
+      %label
+        = f.radio_button('abstract_concrete', 'abstract', :checked => @planning.is_abstract)
+        Prozentplanung
+      &nbsp;
+      = f.select("abstract_amount",
+                 (1..44).collect {|x| ["#{x*2.5}%", x*2.5]},
+                 { :include_blank => true },
+                 class: 'form-control',
+                 style: 'display: inline-block; width: auto;')
 
   = f.labeled('Wiederholung') do
     .radio
       %label
         = f.radio_button('repeat_type', 'no', :checked => (@planning.repeat_type_no? || @planning.new_record?))
         Keine
-    .row
-      .col-md-1
-        .radio
-          %label
-            = f.radio_button('repeat_type', 'until', :checked => @planning.repeat_type_until?)
-            Bis KW
-      .col-md-3
-        = f.date_field :end_week_date, class: 'col-md-3', data: { format: :week }
+    .radio
+      %label
+        = f.radio_button('repeat_type', 'until', :checked => @planning.repeat_type_until?)
+        Bis KW
+      &nbsp;
+      %div{style: 'width: 33.33%; display: inline-block; vertical-align: middle;'}
+        = f.date_field :end_week_date, data: { format: :week }
     .radio
       %label
         = f.radio_button('repeat_type', 'forever', :checked => (!@planning.new_record? && @planning.repeat_type_forever?))
