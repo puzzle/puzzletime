@@ -16,7 +16,14 @@ class PlanningsController < CrudController
   end
 
   def my_work_items
-    @work_items = WorkItem.joins(:order).where(orders: { responsible_id: current_user.id }).list
+    @work_items = WorkItem
+      .recordable
+      .joins(:accounting_post)
+      .joins('LEFT JOIN orders ON ' \
+             'orders.work_item_id = ANY (work_items.path_ids)')
+      .where(orders: { responsible_id: current_user.id })
+      .list
+
     render template: 'plannings/work_items'
   end
 
@@ -42,10 +49,12 @@ class PlanningsController < CrudController
   end
 
   def employee_lists_planning
-    if @employee_list = EmployeeList.find_by_id(params[:employee_list_id])
+    @employee_list = EmployeeList.find_by_id(params[:employee_list_id])
+    if @employee_list
       @employee_list_name = @employee_list.try :title
       period = @period.present? ? @period : Period.next_three_months
-      @graph = EmployeesPlanningGraph.new(@employee_list.employees.includes(:employments).list, period)
+      employees = @employee_list.employees.includes(:employments).list
+      @graph = EmployeesPlanningGraph.new(employees, period)
     else
       flash[:alert] = 'Liste nicht gefunden'
       redirect_to controller: 'employee_lists', action: 'index'
@@ -53,7 +62,7 @@ class PlanningsController < CrudController
   end
 
   def work_items
-    @work_items = WorkItem.list
+    @work_items = WorkItem.recordable.joins(:accounting_post).list
   end
 
   def work_item_planning
@@ -80,7 +89,8 @@ class PlanningsController < CrudController
 
   def company_planning
     period = @period.present? ? @period : Period.next_three_months
-    @graph = EmployeesPlanningGraph.new(Employee.employed_ones(period).includes(:employments).list, period, true)
+    employees = Employee.employed_ones(period).includes(:employments).list
+    @graph = EmployeesPlanningGraph.new(employees, period, true)
   end
 
   def new
@@ -92,7 +102,6 @@ class PlanningsController < CrudController
     super
   end
 
-
   private
 
   def index_path
@@ -102,7 +111,6 @@ class PlanningsController < CrudController
   def build_planning_form
     @employee = entry.employee
     set_employees
-    @work_items = WorkItem.where('path_ids[2] = id').list
     @graph = EmployeePlanningGraph.new(@employee, @period)
     @period = extended_period(entry.start_week_date)
   end
@@ -128,36 +136,47 @@ class PlanningsController < CrudController
   def planned_employees(department, period)
     employees = Employee.where(department_id: department).includes(:employments).list
     period ||= Period.next_three_months
-    employees.select { |e| e.employment_at(period.start_date).present? || e.employment_at(period.end_date).present? }
+    employees.select do |e|
+      e.employment_at(period.start_date).present? ||
+          e.employment_at(period.end_date).present?
+    end
   end
 
-  def assign_attributes
-    planning_params = params[:planning]
-    entry.employee = Employee.find(planning_params[:employee_id]) if planning_params[:employee_id].present?
-    entry.work_item = WorkItem.find(planning_params[:work_item_id]) if planning_params[:work_item_id].present?
-    entry.start_week = Week.from_string(planning_params[:start_week_date]).to_integer if planning_params[:start_week_date].present?
-    entry.definitive = planning_params[:type] == 'definitive'
-    entry.is_abstract = planning_params[:abstract_concrete] == 'abstract'
-    entry.abstract_amount = (planning_params[:abstract_amount].blank? ? 0 : planning_params[:abstract_amount])
-    case planning_params[:repeat_type]
-    when 'no'
-      entry.end_week = entry.start_week
-    when 'until'
-      entry.end_week = Week.from_string(planning_params[:end_week_date]).to_integer if planning_params[:end_week_date].present?
-    when 'forever'
-      entry.end_week = nil
+  def assign_attributes # rubocop:disable Metrics/AbcSize
+    p = params[:planning]
+    entry.employee = Employee.find(p[:employee_id]) if p[:employee_id].present?
+    entry.work_item = WorkItem.find(p[:work_item_id]) if p[:work_item_id].present?
+    if p[:start_week_date].present?
+      entry.start_week = Week.from_string(p[:start_week_date]).to_integer
     end
-    entry.monday_am = boolean_param(planning_params[:monday_am])
-    entry.monday_pm = boolean_param(planning_params[:monday_pm])
-    entry.tuesday_am = boolean_param(planning_params[:tuesday_am])
-    entry.tuesday_pm = boolean_param(planning_params[:tuesday_pm])
-    entry.wednesday_am = boolean_param(planning_params[:wednesday_am])
-    entry.wednesday_pm = boolean_param(planning_params[:wednesday_pm])
-    entry.thursday_am = boolean_param(planning_params[:thursday_am])
-    entry.thursday_pm = boolean_param(planning_params[:thursday_pm])
-    entry.friday_am = boolean_param(planning_params[:friday_am])
-    entry.friday_pm = boolean_param(planning_params[:friday_pm])
-    entry.description = planning_params[:description]
+    entry.definitive = p[:type] == 'definitive'
+    entry.is_abstract = p[:abstract_concrete] == 'abstract'
+    entry.abstract_amount = p[:abstract_amount].blank? ? 0 : p[:abstract_amount]
+    entry.end_week = end_of_week_param(p)
+    assign_week_day_params(p)
+    entry.description = p[:description]
+  end
+
+  def end_of_week_param(p)
+    case p[:repeat_type]
+    when 'no'
+      entry.start_week
+    when 'until'
+      if p[:end_week_date].present?
+        Week.from_string(p[:end_week_date]).to_integer
+      end
+    when 'forever'
+      nil
+    end
+  end
+
+  def assign_week_day_params(p)
+    %w(monday tuesday wednesday thursday friday).each do |day|
+      %w(am pm).each do |part|
+        attr = "#{day}_#{part}"
+        entry.send("#{attr}=", boolean_param(p[attr]))
+      end
+    end
   end
 
   def boolean_param(param)
