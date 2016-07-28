@@ -72,7 +72,7 @@ $ ->
   $('[data-autocomplete=work_item]').each(app.workItemAutocomplete)
 
   # wire up selectize
-  $('select.searchable').selectize(selectOnTab: true)
+  $('select.searchable').selectize(plugins: ['remove_button'], selectOnTab: true)
 
   # wire up toggle buttons
   $('[data-toggle=buttons]').button()

@@ -4,7 +4,11 @@
   = direct_filter_date(:start_date, 'Von', @period.start_date)
   = direct_filter_date(:end_date, 'Bis', @period.end_date)
 
-  = direct_filter_select(:department_id, 'OE', @departments)
+  = direct_filter_select(:department_id,
+                         'OE',
+                         @departments,
+                         class: 'searchable',
+                         multiple: true)
 
   = direct_filter_select(:client_work_item_id,
                          'Kunde',
@@ -20,15 +24,23 @@
                          class: 'searchable',
                          style: 'width: 240px;')
 
-  = direct_filter_select(:kind_id, 'Auftragsart', @order_kinds)
+  = direct_filter_select(:kind_id,
+                         'Auftragsart',
+                         @order_kinds,
+                         class: 'searchable',
+                         multiple: true)
 
-  = direct_filter_select(:status_id, 'Status', @order_status)
+  = direct_filter_select(:status_id,
+                         'Status',
+                         @order_status,
+                         class: 'searchable',
+                         multiple: true)
 
   = direct_filter_select(:responsible_id,
                          'Verantwortlich',
                          @order_responsibles,
                          class: 'searchable',
-                         style: 'width: 180px;')
+                         multiple: true)
 
   = direct_filter(:target, 'Ziel') do
     - select_tag(:target,

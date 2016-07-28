@@ -133,27 +133,6 @@ a.tooltip:hover span {
   margin-left: 5px;
 }
 
-.selectize-option {
-  text-align: left;
-
-  .shortname, .name {
-    display: inline-block;
-    line-height: 25px;
-    vertical-align: middle;
-  }
-  .shortname {
-    font-weight: bold;
-    margin-right: 5px;
-  }
-
-  .name {
-  }
-
-  .description {
-    font-size: 11px;
-  }
-}
-
 .right {
   text-align: right;
 }

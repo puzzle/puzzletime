@@ -15,7 +15,6 @@ class OrderReportsTest < ActionDispatch::IntegrationTest
       fill_in('end_date', with: '1.12.2006')
       fill_in('start_date', with: '2.11.2006') # required to lose focus on end_date
       assert_selector('table.orders-report tbody tr', count: 2)
-
     end
   end
 
