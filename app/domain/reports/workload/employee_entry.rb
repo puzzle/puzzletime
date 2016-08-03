@@ -12,9 +12,11 @@ module Reports
         super(period, employments, worktimes)
       end
 
-      def entries
-        @entries ||= build_entries
+      def order_entries
+        @order_entries ||= build_entries
       end
+
+      alias_method :entries, :order_entries # TODO: remove
 
       private
 
