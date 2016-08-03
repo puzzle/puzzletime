@@ -133,6 +133,10 @@ a.tooltip:hover span {
   margin-left: 5px;
 }
 
+[data-toggle-visibility] {
+  cursor: zoom-in;
+}
+
 .right {
   text-align: right;
 }

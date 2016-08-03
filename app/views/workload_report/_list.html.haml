@@ -30,7 +30,8 @@
                 %span.figure= format_workload_hours(entry.paid_absence_hours)
                 %span.unit h
             %td
-              %a{data: {toggle_visibility: ".employee-#{entry.employee.id}-ordertimes"}} Details
+              - if entry.entries.present?
+                %a{data: {toggle_visibility: ".employee-#{entry.employee.id}-ordertimes"}} Details
             %td
             %td
               .data-item
