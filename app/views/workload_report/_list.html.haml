@@ -30,7 +30,7 @@
                 %span.figure= format_workload_hours(entry.paid_absence_hours)
                 %span.unit h
             %td
-              - if entry.entries.present?
+              - if entry.order_entries.present?
                 %a{data: {toggle_visibility: ".employee-#{entry.employee.id}-ordertimes"}} Details
             %td
             %td
@@ -45,9 +45,9 @@
               .data-item
                 %span.figure= format_workload_billability(entry.billability)
                 %span.unit %
-        - if entry.entries.present?
+        - if entry.order_entries.present?
           %tbody{class: ['employee-ordertimes', "employee-#{entry.employee.id}-ordertimes"]}
-            - entry.entries.each do |ordertime_entry|
+            - entry.order_entries.each do |ordertime_entry|
               %tr
                 %td
                 %td

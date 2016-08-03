@@ -12,21 +12,21 @@ class OrderReportsControllerTest < ActionController::TestCase
   test 'GET index with department filter contains correct entries' do
     get :index, department_id: departments(:devone).id
     assert_equal true, assigns(:report).filters_defined?
-    assert_equal orders(:puzzletime, :webauftritt), assigns(:report).entries.collect(&:order)
+    assert_equal orders(:puzzletime, :webauftritt), assigns(:report).entries.map(&:order)
   end
 
   test 'GET index with multiple kind filter contains correct entries' do
     orders(:webauftritt).update!(kind: order_kinds(:schulung))
     orders(:puzzletime).update!(kind: order_kinds(:mandat))
-    get :index, kind_id: order_kinds(:mandat, :projekt).collect(&:id)
+    get :index, kind_id: order_kinds(:mandat, :projekt).map(&:id)
     assert_equal true, assigns(:report).filters_defined?
-    assert_equal orders(:allgemein, :puzzletime), assigns(:report).entries.collect(&:order)
+    assert_equal orders(:allgemein, :puzzletime), assigns(:report).entries.map(&:order)
   end
 
   test 'GET index with period filter contains correct entries' do
     get :index, start_date: '6.12.2006', end_date: '7.12.2006'
     assert_equal true, assigns(:report).filters_defined?
-    assert_equal orders(:allgemein, :puzzletime), assigns(:report).entries.collect(&:order)
+    assert_equal orders(:allgemein, :puzzletime), assigns(:report).entries.map(&:order)
   end
 
   test 'GET index with invalid period filter shows error' do

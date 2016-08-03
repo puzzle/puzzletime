@@ -102,25 +102,13 @@ class Reports::Workload
   end
 
   def period_employments
-    @period_employments ||= adjust_employments_dates!(load_employments)
+    @period_employments ||= load_employments
   end
 
   def load_employments
     Employment.
       where('(end_date IS NULL OR end_date >= ?) AND start_date <= ?', period.start_date, period.end_date).
       reorder('start_date').to_a
-  end
-
-  def adjust_employments_dates!(employments)
-    adjust_empoyment_dates!(employments.first) if employments.size > 0
-    adjust_empoyment_dates!(employments.last) if employments.size > 1
-    employments
-  end
-
-  def adjust_empoyment_dates!(employment)
-    new_period = employment.period & period
-    employment.start_date = new_period.start_date
-    employment.end_date = new_period.end_date
   end
 
   def sort_entries(entries)

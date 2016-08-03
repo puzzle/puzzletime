@@ -42,6 +42,13 @@ class EmploymentTest < ActiveSupport::TestCase
     assert_in_delta 3.73, with_vacations.vacations, 0.005
   end
 
+  def test_musttime_for_period
+    period = Period.new("1.9.2007", "30.9.2007")
+
+    assert_equal period.musttime, employments(:various_100).musttime(period)
+    assert_equal period.musttime * 0.9, employments(:long_time).musttime(period)
+  end
+
   def test_periods_must_not_overlap
     employee = Employee.find(6)
     one = Employment.create!(employee: employee, start_date: '1.1.2015', end_date: '31.5.2015', percent: 80)
