@@ -20,6 +20,7 @@
 #= require nested_form_fields
 #= require modal_create
 #= require worktimes
+#= require workload_report
 #= require week_datepicker
 #= require work_item_autocomplete
 #= require planning
