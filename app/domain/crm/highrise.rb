@@ -101,13 +101,13 @@ module Crm
     def import_client_contacts
       sync_crm_entities(Client) do |client|
         people = ::Highrise::Company.new(id: client.crm_key).people
-        existing = existing_contact_crm_keys(people.collect(&:id))
+        existing = existing_contact_crm_keys(client, people.collect(&:id))
         people.reject { |p| existing.include?(p.id) }
               .each { |p| client.contacts.create(contact_attributes(p)) }
       end
     end
 
-    def existing_contact_crm_keys(keys)
+    def existing_contact_crm_keys(client, keys)
       client.contacts
           .where(crm_key: keys)
           .pluck(:crm_key)
