@@ -71,7 +71,7 @@ class Ordertime < Worktime
   end
 
   def validate_work_item_open
-    if work_item_closed?
+    if changed != %w(invoice_id) && work_item_closed?
       errors.add(:base, 'Auf geschlossene Aufträge und/oder Positionen kann nicht gebucht werden.')
     end
   end

@@ -16,7 +16,7 @@ module Reports
       end
 
       def employment_fte
-        must_hours / must_hours_100procent
+        must_hours / must_hours_100_procent
       end
 
       def absolute_billability
@@ -29,9 +29,10 @@ module Reports
 
       private
 
-      def must_hours_100procent
-        Employment.new(percent: 100, start_date: period.start_date, end_date: period.end_date).musttime
+      def must_hours_100_procent
+        period.musttime
       end
+
     end
   end
 end
