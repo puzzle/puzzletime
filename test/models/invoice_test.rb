@@ -223,6 +223,16 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal invoice, @worktime_lw2.reload.invoice
   end
 
+  test 'save assigns worktimes of closed accounting posts to invoice when successful' do
+    Invoicing.instance = mock
+    Invoicing.instance.stubs(:save_invoice).returns('abc123')
+    accounting_posts(:webauftritt).update!(closed: true)
+    invoice.save!
+    assert_equal invoice, worktimes(:wt_mw_webauftritt).reload.invoice
+    assert_equal invoice, worktimes(:wt_lw_webauftritt).reload.invoice
+    assert_equal invoice, @worktime_lw2.reload.invoice
+  end
+
   test 'save does not assign worktimes when Invoicing::Error' do
     Invoicing.instance = mock
     Invoicing.instance.stubs(:save_invoice).raises(Invoicing::Error.new('some invoicing error'))

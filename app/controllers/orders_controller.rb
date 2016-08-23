@@ -178,7 +178,7 @@ class OrdersController < CrudController
 
   def append_crm_contacts(contacts)
     entry.order_contacts.each do |oc|
-      if oc.contact.id.nil?
+      if oc.contact && oc.contact.id.nil?
         contacts << oc.contact
       end
     end

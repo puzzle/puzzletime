@@ -25,7 +25,7 @@ class Reports::Workload
   end
 
   def filters_defined?
-    department.present?
+    period.limited? && department.present?
   end
 
   def present?
