@@ -48,7 +48,11 @@ module WorktimeHelper
   end
 
   def monthly_worktime
-    "#{format_hour(@monthly_worktime)} (#{format_hour(@pending_worktime)} verbleibend)"
+    safe_join([
+      format_hour(@monthly_worktime),
+      ' (', format_hour(@pending_worktime),
+      ' verbleibend)'
+    ])
   end
 
   # sum worktime hours for a given date. if no date is given, sum all worktime hours
