@@ -1,6 +1,7 @@
 %tr
   %td{:align => "right", :style => "white-space: nowrap;"}= part.time_string
   %td= h(part.account.label_verbose)
+  %td= part.ticket
   %td.truncated{title: part.description}= part.description
   - if part.new_record?
     %td
