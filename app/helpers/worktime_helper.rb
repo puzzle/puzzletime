@@ -50,7 +50,8 @@ module WorktimeHelper
   def monthly_worktime
     safe_join([
       format_hour(@monthly_worktime),
-      ' (', format_hour(@pending_worktime),
+      ' (',
+      format_hour(@pending_worktime),
       ' verbleibend)'
     ])
   end
