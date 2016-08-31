@@ -33,7 +33,7 @@ class Splitable
     worktime = last_worktime.template Ordertime.new
     worktime.hours = remaining_hours
     worktime.from_start_time = next_start_time
-    worktime.to_end_time = original.to_end_time
+    worktime.to_end_time = original.to_end_time if next_start_time
     worktime
   end
 
