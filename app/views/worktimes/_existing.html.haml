@@ -4,6 +4,10 @@
     .panel-body
       Am #{f(@work_date)} bereits erfasste Zeiten:
     %table.table.table-condensed.table-striped
+      %colgroup
+        %col{width: 100}
+        %col{width: '*'}
+        %col{width: 150}
       %tbody
         = render :partial => 'part', :collection => @existing
   - else
