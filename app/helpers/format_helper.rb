@@ -37,8 +37,12 @@ module FormatHelper
       format_type(obj, attr)
   end
 
+  def format_number(number, precision = 2)
+    number_with_precision(number, precision: precision, delimiter: '\'')
+  end
+
   def format_hour(hour, precision = 2)
-    number_with_precision(hour, precision: precision, delimiter: '\'')
+    safe_join([format_number(hour, precision), ' h'])
   end
 
   def format_time(time)

@@ -2,11 +2,11 @@
 = render(:partial => 'period_link')
 - Employee.list.each do |em|
   %h2= em.label
-  Ueberzeit: #{format_hour em.statistics.current_overtime(@period.end_date)} Stunden
+  Ueberzeit: #{format_number em.statistics.current_overtime(@period.end_date)} Stunden
   %br/
-  Bezogene Ferien: #{format_hour em.statistics.used_vacations(@period)} Tage
+  Bezogene Ferien: #{format_number em.statistics.used_vacations(@period)} Tage
   %br/
-  Ferienrestguthaben: #{format_hour em.statistics.remaining_vacations(@period.end_date)} Tage
+  Ferienrestguthaben: #{format_number em.statistics.remaining_vacations(@period.end_date)} Tage
   %br/
   Positionen:
   %table
@@ -16,8 +16,7 @@
     - work_items.sort! {|a,b| a.label_verbose <=> b.label_verbose }
     - work_items.each do |p|
       %tr
-        %td{:align => "right"}
+        %td.text-right
           = format_hour eval.sum_times(@period, p)
-          h
         %td= p.label_verbose
   %hr/
