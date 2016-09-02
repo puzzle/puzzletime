@@ -19,7 +19,8 @@ module WorktimeHelper
                   item.label_verbose,
                   value: item.id,
                   selected: true,
-                  data: { data: json.to_json }) end
+                  data: { data: json.to_json })
+    end
   end
 
   def overview_day_class(_worktimes, day)
