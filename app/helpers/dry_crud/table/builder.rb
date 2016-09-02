@@ -79,9 +79,9 @@ module DryCrud::Table
       entry = entries.present? ? entry_class.new : nil
       case column_type(entry, attr)
       when :integer, :float, :decimal, :date, :time, :datetime, :timestamp
-        'right' unless association(entry, attr, :belongs_to)
+        'text-right' unless association(entry, attr, :belongs_to)
       when :boolean
-        'center'
+        'text-center'
       end
     end
 
