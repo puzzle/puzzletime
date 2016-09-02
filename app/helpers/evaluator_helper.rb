@@ -80,13 +80,13 @@ module EvaluatorHelper
 
     if can?(:update_committed_worktimes, employee)
       content << ' &nbsp; '.html_safe << link_to(picon('edit'),
-                                       edit_employee_worktimes_commit_path(employee),
-                                       data: { modal: '#modal',
-                                               title: 'Freigabe bearbeiten',
-                                               update: 'element',
-                                               element: "#committed_worktimes_at_#{employee.id}",
-                                               remote: true,
-                                               type: :html })
+                                                 edit_employee_worktimes_commit_path(employee),
+                                                 data: { modal: '#modal',
+                                                         title: 'Freigabe bearbeiten',
+                                                         update: 'element',
+                                                         element: "#committed_worktimes_at_#{employee.id}",
+                                                         remote: true,
+                                                         type: :html })
     end
     content
   end
