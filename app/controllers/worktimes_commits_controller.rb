@@ -8,7 +8,7 @@ class WorktimesCommitsController < CrudController
   before_action :authorize_employee
 
   before_save :validate_commit_date
-  before_render_form :set_commit_dates
+  before_render_form :set_commit_dates, :set_selected_month
 
   class << self
     def model_class
@@ -27,6 +27,14 @@ class WorktimesCommitsController < CrudController
       entry.errors.add(:committed_worktimes_at, 'ist nicht erlaubt')
       false
     end
+  end
+
+  def set_selected_month
+    # Selecting a month in the future is fine, as an invalid selection
+    # or even no selection ends up selecting the first (and most recent)
+    # month.
+    @selected_month = entry.committed_worktimes_at + 1.month
+    @selected_month = @selected_month.end_of_month
   end
 
   def set_commit_dates
