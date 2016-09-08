@@ -111,5 +111,4 @@ module OrderHelper
       'red'
     end
   end
-
 end
