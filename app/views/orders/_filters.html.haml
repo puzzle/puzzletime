@@ -4,4 +4,4 @@
 
   = direct_filter_select(:department_id, 'OE', @departments)
   = direct_filter_select(:kind_id, 'Auftragsart', @order_kinds)
-  = direct_filter_select(:status_id, 'im Status', @order_statuses)
+  = direct_filter_select(:status_id, 'im Status', @order_statuses, { class: 'searchable', multiple: true })
