@@ -1,1 +1,33 @@
 - @title ||= @order.label_verbose
+
+.planning-board
+  %header.header
+    %h1.title
+      Projekt ABCDEFGHIJKLMNOPQRSTUVWXYZ
+    .planned
+      150 von 400 Stunden verplant
+    .timeresolution
+      %label
+        Von
+        %input{ type: 'month' }
+      %label
+        Bis
+        %input{ type: 'month' }
+      %select
+        %option Freie Zeitspanne
+  %section.content
+    .legend
+    .planning-calendar{ 'style': "--days: #{15 * 5}" }
+      .planning-calendar-weeks
+        - for $kw in 21..35
+          .planning-calendar-week
+            .kw KW #{$kw}
+            .planned 150%
+      .planning-calendar-days-header
+        - for $day in 1..(5 * 15)
+          .dayheader= $day
+      - for $row in 1..60
+        .planning-calendar-days
+          - for $day in 1..(5 * 15)
+            .day{ class: cycle('', '-temporary', '-planned') }
+              = Random.rand(1..10) * 10

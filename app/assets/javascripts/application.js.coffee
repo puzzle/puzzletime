@@ -7,6 +7,7 @@
 #= require jquery-ui/datepicker
 #= require jquery-ui-datepicker-i18n
 #= require jquery-ui/autocomplete
+#= require jquery-ui/selectable
 #= require selectize
 #= require waypoints
 #= require waypoints-sticky
@@ -23,7 +24,7 @@
 #= require workload_report
 #= require week_datepicker
 #= require work_item_autocomplete
-#= require planning
+#= require plannings
 #= require orders
 #= require order_contacts
 #= require accounting_posts

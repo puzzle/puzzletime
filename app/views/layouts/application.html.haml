@@ -28,7 +28,7 @@
 
       = render 'breadcrumb'
 
-    #content
+    %main#content{ role: 'main' }
       - if content_for?(:content_header)
         = yield :content_header
       - else
