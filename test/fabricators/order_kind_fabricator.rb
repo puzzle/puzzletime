@@ -3,7 +3,7 @@
 # Table name: order_kinds
 #
 #  id   :integer          not null, primary key
-#  name :string(255)      not null
+#  name :string           not null
 #
 
 Fabricator(:order_kind) do

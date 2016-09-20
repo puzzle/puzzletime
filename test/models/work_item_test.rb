@@ -5,16 +5,15 @@
 #
 #  id              :integer          not null, primary key
 #  parent_id       :integer
-#  name            :string(255)      not null
+#  name            :string           not null
 #  shortname       :string(5)        not null
 #  description     :text
 #  path_ids        :integer          is an Array
-#  path_shortnames :string(255)
+#  path_shortnames :string
 #  path_names      :string(2047)
 #  leaf            :boolean          default(TRUE), not null
 #  closed          :boolean          default(FALSE), not null
 #
-
 
 require 'test_helper'
 

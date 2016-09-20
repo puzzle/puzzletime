@@ -6,10 +6,10 @@
 #  id            :integer          not null, primary key
 #  client_id     :integer          not null
 #  contact_id    :integer
-#  supplement    :string(255)
-#  street        :string(255)
-#  zip_code      :string(255)
-#  town          :string(255)
+#  supplement    :string
+#  street        :string
+#  zip_code      :string
+#  town          :string
 #  country       :string(2)
 #  invoicing_key :string
 #
