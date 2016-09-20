@@ -3,26 +3,32 @@ module Plannings
 
     include WithPeriod
 
+    define_render_callbacks :show, :new, :update
+
     before_action :authorize_class
     before_action :set_period
 
+    before_render_show :set_board
+    before_render_new :set_board
+    before_render_update :set_board
+
     def show
+      @plannings = load_plannings
     end
 
     # new row for plannings
     def new
       @employee = Employee.find(params[:employee_id])
       @work_item = WorkItem.find(params[:work_item_id])
-      list = load_plannings.where(employee_id: @employee.id,
-                                  work_item_id: @work_item.id)
-      @plannings = grouped_plannings(list)
+      @plannings = load_plannings.where(employee_id: @employee.id,
+                                        work_item_id: @work_item.id)
     end
 
     def update
       creator = Plannings::Creator.new(params)
       respond_to do |format|
         if creator.create_or_update
-          format.js { @plannings = changed_plannings(creator.plannings) }
+          format.js { @plannings = full_plannings_row(creator.plannings) }
         else
           format.js { render :errors }
         end
@@ -33,17 +39,13 @@ module Plannings
       destroy_plannings
       respond_to do |format|
         format.js do
-          @plannings = changed_plannings(@plannings)
+          @plannings = full_plannings_row(@plannings)
           render :update
         end
       end
     end
 
     private
-
-    def grouped_plannings(plannings = load_plannings)
-      plannings
-    end
 
     def load_plannings
       Planning.in_period(@period).list
@@ -56,14 +58,18 @@ module Plannings
       end
     end
 
-    def changed_plannings(plannings)
+    def full_plannings_row(plannings)
       condition = ['']
       plannings.collect { |p| [p.work_item_id, p.employee_id] }.uniq.each do |work_item_id, employee_id|
         condition[0] += ' OR ' unless condition.first.blank?
         condition[0] += '(plannings.work_item_id = ? AND plannings.employee_id = ?)'
         condition << work_item_id << employee_id
       end
-      grouped_plannings(load_plannings.where(condition))
+      load_plannings.where(condition)
+    end
+
+    def set_board
+      @board = Plannings::Board.new(@period, @plannings)
     end
 
     def set_period
