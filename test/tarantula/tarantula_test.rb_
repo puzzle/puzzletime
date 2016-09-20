@@ -112,16 +112,9 @@ class TarantulaTest < ActionDispatch::IntegrationTest
       Planning.create!(
         employee_id: user.id,
         work_item_id: work_item.id,
-        start_week: Week.from_date(Time.zone.today + ((i - 1) * 7)).to_integer,
-        end_week: Week.from_date(Time.zone.today + ((i + 1) * 7)).to_integer,
-        monday_am: [true, false].sample,
-        monday_pm: [true, false].sample,
-        tuesday_am: [true, false].sample,
-        tuesday_pm: [true, false].sample,
-        wednesday_am: [true, false].sample,
-        wednesday_pm: [true, false].sample,
-        thursday_am: [true, false].sample,
-        thursday_pm: true # select at least one half day
+        date: Date.today,
+        percent: 50,
+        definitive: true
       )
     end
   end

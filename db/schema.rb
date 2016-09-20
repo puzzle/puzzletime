@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160728092507) do
+ActiveRecord::Schema.define(version: 20160919101807) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -302,28 +302,14 @@ ActiveRecord::Schema.define(version: 20160728092507) do
   add_index "overtime_vacations", ["employee_id"], name: "index_overtime_vacations_on_employee_id", using: :btree
 
   create_table "plannings", force: :cascade do |t|
-    t.integer  "employee_id",                     null: false
-    t.integer  "start_week",                      null: false
-    t.integer  "end_week"
-    t.boolean  "definitive",      default: false, null: false
-    t.text     "description"
-    t.boolean  "monday_am",       default: false, null: false
-    t.boolean  "monday_pm",       default: false, null: false
-    t.boolean  "tuesday_am",      default: false, null: false
-    t.boolean  "tuesday_pm",      default: false, null: false
-    t.boolean  "wednesday_am",    default: false, null: false
-    t.boolean  "wednesday_pm",    default: false, null: false
-    t.boolean  "thursday_am",     default: false, null: false
-    t.boolean  "thursday_pm",     default: false, null: false
-    t.boolean  "friday_am",       default: false, null: false
-    t.boolean  "friday_pm",       default: false, null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "is_abstract"
-    t.decimal  "abstract_amount"
-    t.integer  "work_item_id",                    null: false
+    t.integer "employee_id",                  null: false
+    t.integer "work_item_id",                 null: false
+    t.date    "date",                         null: false
+    t.integer "percent",                      null: false
+    t.boolean "definitive",   default: false, null: false
   end
 
+  add_index "plannings", ["employee_id", "work_item_id", "date"], name: "index_plannings_on_employee_id_and_work_item_id_and_date", unique: true, using: :btree
   add_index "plannings", ["employee_id"], name: "index_plannings_on_employee_id", using: :btree
   add_index "plannings", ["work_item_id"], name: "index_plannings_on_work_item_id", using: :btree
 
