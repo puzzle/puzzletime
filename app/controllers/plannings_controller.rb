@@ -9,6 +9,8 @@ class PlanningsController < CrudController
     redirect_to action: 'my_planning'
   end
 
+  def redesign;end
+
   def my_planning
     @employee = @user
     @graph = EmployeePlanningGraph.new(@employee, @period)
