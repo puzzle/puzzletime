@@ -120,10 +120,15 @@ Rails.application.routes.draw do
     post :change_period
   end
 
-  resources :plannings do
-    collection do
-      get ':action'
+  namespace :plannings do
+    resources :orders, only: [:index, :show, :update, :destroy] do
+      get 'new', on: :member, as: 'new'
     end
+    resources :employees, only: [:index, :show, :update, :destroy] do
+      get 'new', on: :member, as: 'new'
+    end
+    resource :multi_orders, only: [:show, :new, :update, :destroy]
+    resource :multi_employees, only: [:show, :new, :update, :destroy]
   end
 
   resource :graph, only: [], controller: :graph do
