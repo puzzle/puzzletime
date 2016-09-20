@@ -8,8 +8,12 @@ module Plannings
       @plannings = plannings
     end
 
-    def row(employee_id, work_item_id)
+    def items(employee_id, work_item_id)
       rows[key(employee_id, work_item_id)]
+    end
+
+    def work_days
+      @work_days ||= @period.length / 7 * 5
     end
 
     def rows
@@ -19,11 +23,16 @@ module Plannings
     private
 
     def build_rows
-      rows = Hash.new { |h, k| h[k] = Array.new(period.length) }
-      plannings.each do |p|
-        rows[key(p.employee_id, p.work_item_id)][p.date - period.start_date] = p
+      plannings.each_with_object({}) do |p, rows|
+        k = key(p.employee_id, p.work_item_id)
+        rows[k] = Array.new(work_days) unless rows.key?(k)
+        rows[k][item_index(p.date)] = p
       end
-      rows
+    end
+
+    def item_index(date)
+      diff = (date - period.start_date).to_i
+      diff - (diff / 7 * 2).to_i
     end
 
     def key(employee_id, work_item_id)

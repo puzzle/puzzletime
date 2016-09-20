@@ -1,33 +1,20 @@
 - @title ||= @order.label_verbose
 
-.planning-board
-  %header.header
-    %h1.title
-      Projekt ABCDEFGHIJKLMNOPQRSTUVWXYZ
-    .planned
-      150 von 400 Stunden verplant
-    .timeresolution
-      %label
-        Von
-        %input{ type: 'month' }
-      %label
-        Bis
-        %input{ type: 'month' }
-      %select
-        %option Freie Zeitspanne
-  %section.content
-    .legend
-    .planning-calendar{ 'style': "--days: #{15 * 5}" }
-      .planning-calendar-weeks
-        - for $kw in 21..35
-          .planning-calendar-week
-            .kw KW #{$kw}
-            .planned 150%
-      .planning-calendar-days-header
-        - for $day in 1..(5 * 15)
-          .dayheader= $day
-      - for $row in 1..60
-        .planning-calendar-days
-          - for $day in 1..(5 * 15)
-            .day{ class: cycle('', '-temporary', '-planned') }
-              = Random.rand(1..10) * 10
+.legend
+  - @accounting_posts.each do |post|
+    %div
+      %strong= post
+    - @employees.each do |employee|
+      - if @board.items(employee.id, post.work_item_id)
+        %div= employee
+
+.planning-calendar{ style: "--days: #{@board.work_days}" }
+  = render 'board_header'
+
+  - @accounting_posts.each do |post|
+    - @employees.each do |employee|
+      - items = @board.items(employee.id, post.work_item_id)
+      - if items
+        .planning-calendar-days{ id: "planning_row_employee_#{employee.id}_work_item_#{post.work_item_id}" }
+          = render 'row', items: items
+
