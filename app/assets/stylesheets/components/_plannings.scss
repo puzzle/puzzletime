@@ -81,7 +81,7 @@
     background-repeat: repeat;
     background-clip: content-box;
   }
-  > .day.-selected, .day.-planned, .day.-temporary {
+  > .day.-selected, > .day.-planned, > .day.-temporary {
     font-weight: normal;
   }
   > .day.-selected {
@@ -111,4 +111,11 @@
     background-image: linear-gradient(-45deg, #9bcbd4 25%, #cde5ea 0, #cde5ea 50%, #9bcbd4 0, #9bcbd4 75%, #cde5ea 0);
     color: #50696e;
   }
+}
+
+.planning-panel {
+  position: absolute;
+}
+.planning-percent-group {
+  width: 8em;
 }
