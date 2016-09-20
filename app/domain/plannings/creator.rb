@@ -16,7 +16,9 @@ module Plannings
     def create_or_update
       return false unless form_valid?
 
-      # TODO @plannings =
+      Planning.transaction do
+        # TODO @plannings =
+      end
       true
     end
 

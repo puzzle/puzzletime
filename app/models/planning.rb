@@ -18,6 +18,17 @@ class Planning < ActiveRecord::Base
   belongs_to :employee
   belongs_to :work_item
 
+  scope :in_period, (lambda do |period|
+    if period
+      where(period.where_condition('date'))
+    else
+      all
+    end
+  end)
+
+  scope :list, -> { order(:date) }
+
+
   def to_s
     "#{percent}% auf #{work_item} am #{I18n.l(date)} für #{employee}"
   end

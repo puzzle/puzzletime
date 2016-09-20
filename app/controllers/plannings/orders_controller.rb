@@ -7,10 +7,6 @@ module Plannings
       @employees = load_employees
     end
 
-    def new
-      @employee = Employee.find(params[:employee_id])
-    end
-
     private
 
     def order
@@ -27,7 +23,7 @@ module Plannings
     end
 
     def load_employees
-      Employee.where(id: @plannings.values.map(&:keys).flatten.uniq).list.group_by(&:id)
+      Employee.where(id: @plannings.values.map(&:keys).flatten.uniq).list
     end
 
     def grouped_plannings(plannings = load_plannings)
