@@ -2,7 +2,7 @@
   .container-fluid
     .navbar-header
       .navbar-brand
-        = image_tag 'logo.svg', :size => '41x40'
+        = image_tag 'logo.svg', size: '41x40'
         PuzzleTime
         %span.version
           = Puzzletime.version
@@ -17,4 +17,4 @@
           %i.icon-help
       - if @user
         %li
-          = link_to 'Logout',  {:controller => 'login',  :action => 'logout'}, :method => 'post'
+          = link_to 'Logout', logout_path, method: :post

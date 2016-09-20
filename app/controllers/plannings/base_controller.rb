@@ -1,5 +1,5 @@
 module Plannings
-  class BaseController < ApplicationController
+  class BaseController < ListController
 
     include WithPeriod
 
@@ -11,17 +11,20 @@ module Plannings
 
     # new row for plannings
     def new
+      @employee = Employee.find(params[:employee_id])
+      @work_item = WorkItem.find(params[:work_item_id])
+      list = load_plannings.where(employee_id: @employee.id,
+                                  work_item_id: @work_item.id)
+      @plannings = grouped_plannings(list)
     end
 
     def update
-      @creator = Plannings::Creator.new(params)
+      creator = Plannings::Creator.new(params)
       respond_to do |format|
-        if @creator.create_or_update
-          format.js   { }
-          format.json { render :show, status: :ok }
+        if creator.create_or_update
+          format.js { @plannings = changed_plannings(creator.plannings) }
         else
-          format.js   { render :errors }
-          format.json { render json: @creator.errors, status: :unprocessable_entity }
+          format.js { render :errors }
         end
       end
     end
@@ -29,8 +32,10 @@ module Plannings
     def destroy
       destroy_plannings
       respond_to do |format|
-        format.js   { render :update }
-        format.json { head :no_content }
+        format.js do
+          @plannings = changed_plannings(@plannings)
+          render :update
+        end
       end
     end
 
@@ -49,6 +54,16 @@ module Plannings
         @plannings = Planning.where(id: Array(params[:planning_ids]))
         @plannings.each(&:destroy)
       end
+    end
+
+    def changed_plannings(plannings)
+      condition = ['']
+      plannings.collect { |p| [p.work_item_id, p.employee_id] }.uniq.each do |work_item_id, employee_id|
+        condition[0] += ' OR ' unless condition.first.blank?
+        condition[0] += '(plannings.work_item_id = ? AND plannings.employee_id = ?)'
+        condition << work_item_id << employee_id
+      end
+      grouped_plannings(load_plannings.where(condition))
     end
 
     def set_period
