@@ -1,0 +1,114 @@
+.planning-board {
+  > .header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+  > .content {
+    display: flex;
+  }
+  > .content > .legend {
+    flex: 0 0 300px;
+  }
+}
+
+.planning-calendar {
+  flex: 1 0 600px;
+  height: 800px;
+  overflow-x: auto;
+}
+.planning-calendar-weeks {
+  display: flex;
+  flex: 1;
+  position: sticky;
+  top: 0;
+}
+.planning-calendar-week {
+  display: flex;
+  max-width: calc(36px * 5);
+  min-width: calc(36px * 5);
+  justify-content: space-between;
+  background-color: #eee;
+
+  > .planned, > .kw {
+    padding: 0.25rem 1rem;
+  }
+
+  &:not(:last-child) > .planned {
+    border-right: 1px solid #fff;
+  }
+}
+.planning-calendar-days-header {
+  background-color: #ccc;
+  cursor: default;
+  position: sticky;
+  top: 25px;
+  border-top: 1px solid #ccc;
+}
+.planning-calendar-days, .planning-calendar-days-header {
+  display: flex;
+  width: calc(var(--days, 1) * 36px);
+}
+.planning-calendar-days > .day, .planning-calendar-days-header > .dayheader {
+  min-width: 36px;
+  max-width: 36px;
+  text-align: center;
+  border-right: 1px solid #ccc;
+
+  &:first-child {
+    border-left: 1px solid #ccc;
+  }
+}
+.planning-calendar-days {
+  height: 4rem;
+
+  &:nth-child(odd) {
+    background: #efefef;
+  }
+
+  &:nth-child(odd) > .day {
+    color: #cacaca;
+  }
+  > .day {
+    cursor: pointer;
+    height: 4rem;
+    line-height: 3.5rem;
+    padding: 3px 0;
+    font-weight: lighter;
+    color: #dadada;
+    background-size: 16px 16px;
+    background-position: center;
+    background-repeat: repeat;
+    background-clip: content-box;
+  }
+  > .day.-selected, .day.-planned, .day.-temporary {
+    font-weight: normal;
+  }
+  > .day.-selected {
+    position: relative;
+    background-clip: border-box;
+    //background-color: #073763;
+    //background-color: #fff99f;
+    //box-shadow: inset 0 0 0 5px #fff99f;
+    color: #50696e;
+  }
+  > .day.-selected::after {
+    position: absolute;
+    content: '';
+    background: lightblue;
+    opacity: 0.7;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+  }
+  > .day.-planned {
+    background-color: #2b78e4;
+    color: #cde5ea;
+  }
+  > .day.-temporary {
+    background-color: transparent;
+    background-image: linear-gradient(-45deg, #9bcbd4 25%, #cde5ea 0, #cde5ea 50%, #9bcbd4 0, #9bcbd4 75%, #cde5ea 0);
+    color: #50696e;
+  }
+}
