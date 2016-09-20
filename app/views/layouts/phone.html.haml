@@ -17,5 +17,5 @@
     %h1= @title
     - if flash.has_key?(:notice)
       #notice= flash[:notice]
-    %div
+    %main{ role: 'main' }
       = yield
