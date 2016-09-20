@@ -6,6 +6,7 @@ class OrderServicesController < ApplicationController
   EMPTY_INVOICE = OpenStruct.new(id: EMPTY, reference: EMPTY)
 
   include Filterable
+  include WithPeriod
   include DryCrud::Rememberable
   include WorktimesReport
   include WorktimesCsv
@@ -93,21 +94,6 @@ class OrderServicesController < ApplicationController
     else
       set_period
     end
-  end
-
-  def set_period
-    @period = Period.retrieve(params[:start_date].presence,
-                              params[:end_date].presence)
-    fail ArgumentError, 'Start Datum nach End Datum' if @period.negative?
-    @period
-  rescue ArgumentError => ex
-    # from Period.retrieve or if period.negative?
-    flash.now[:alert] = "Ungültige Zeitspanne: #{ex}"
-    @period = Period.new(nil, nil)
-
-    params.delete(:start_date)
-    params.delete(:end_date)
-    @period
   end
 
   def set_filter_employees
