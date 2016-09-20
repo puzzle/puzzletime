@@ -81,7 +81,7 @@
     background-repeat: repeat;
     background-clip: content-box;
   }
-  > .day.-selected, .day.-planned, .day.-temporary {
+  > .day.-selected, > .day.-planned, > .day.-temporary {
     font-weight: normal;
   }
   > .day.-selected {
