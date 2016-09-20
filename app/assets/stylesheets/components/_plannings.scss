@@ -102,11 +102,11 @@
     bottom: 0;
     right: 0;
   }
-  > .day.-planned {
+  > .day.-definitive {
     background-color: #2b78e4;
     color: #cde5ea;
   }
-  > .day.-temporary {
+  > .day.-provisional {
     background-color: transparent;
     background-image: linear-gradient(-45deg, #9bcbd4 25%, #cde5ea 0, #cde5ea 50%, #9bcbd4 0, #9bcbd4 75%, #cde5ea 0);
     color: #50696e;

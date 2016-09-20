@@ -114,8 +114,8 @@ class Period
     Period.retrieve(new_start_date, new_end_date)
   end
 
-  def step
-    @start_date.step(@end_date, 1) do |date|
+  def step(size = 1)
+    @start_date.step(@end_date, size) do |date|
       yield date
     end
   end

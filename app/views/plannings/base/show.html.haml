@@ -1,2 +1,19 @@
-= render 'board'
+.planning-board
+  %header.header
+    %h1.title
+      Projekt ABCDEFGHIJKLMNOPQRSTUVWXYZ
+    .planned
+      150 von 400 Stunden verplant
+    .timeresolution
+      %label
+        Von
+        %input{ type: 'month' }
+      %label
+        Bis
+        %input{ type: 'month' }
+      %select
+        %option Freie Zeitspanne
+
+  %section.content
+    = render 'board'
 
