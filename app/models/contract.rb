@@ -4,7 +4,7 @@
 # Table name: contracts
 #
 #  id             :integer          not null, primary key
-#  number         :string(255)      not null
+#  number         :string           not null
 #  start_date     :date             not null
 #  end_date       :date             not null
 #  payment_period :integer          not null

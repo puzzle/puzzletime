@@ -4,11 +4,10 @@
 # Table name: target_scopes
 #
 #  id       :integer          not null, primary key
-#  name     :string(255)      not null
-#  icon     :string(255)
+#  name     :string           not null
+#  icon     :string
 #  position :integer          not null
 #
-
 
 class TargetScope < ActiveRecord::Base
   has_many :order_targets, dependent: :destroy

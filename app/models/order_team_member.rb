@@ -5,7 +5,7 @@
 #  false       :integer          not null, primary key
 #  employee_id :integer          not null
 #  order_id    :integer          not null
-#  comment     :string(255)
+#  comment     :string
 #
 
 class OrderTeamMember < ActiveRecord::Base

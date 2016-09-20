@@ -1,11 +1,10 @@
 # encoding: utf-8
-
 # == Schema Information
 #
 # Table name: portfolio_items
 #
 #  id     :integer          not null, primary key
-#  name   :string(255)      not null
+#  name   :string           not null
 #  active :boolean          default(TRUE), not null
 #
 
