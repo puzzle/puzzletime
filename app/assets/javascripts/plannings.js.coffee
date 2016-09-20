@@ -4,7 +4,7 @@ app.plannings = {}
 
 
 app.plannings.panel = do ->
-  panel = '.plannings-panel'
+  panel = '.planning-panel'
 
   show: (selectedElements) ->
     $(panel).show()
@@ -16,26 +16,36 @@ app.plannings.panel = do ->
 
 
 app.plannings.selectable = do ->
-  selectable = '.plannings-grid'
-  selectee = '.plannings-day'
+  selectable = '.planning-calendar'
+  selectee = '.day'
 
   start = (event, ui) ->
     app.plannings.panel.hide()
 
   stop = (event, ui) ->
+    $(event.target).find('.ui-selected').addClass('-selected')
     app.plannings.panel.show($(event.target).find('.ui-selected'))
 
-  unselect = (event) ->
-    console.log('unselect', event)
-    $(selectable + ' .ui-selected').removeClass('ui-selected')
+  selecting = (event, ui) ->
+    $(ui.selecting).addClass('-selected')
+
+  unselecting = (event, ui) ->
+    $(ui.unselecting).removeClass('-selected')
+
+  unselect = ->
+    $(selectable).find('.ui-selected').removeClass('ui-selected -selected')
     app.plannings.panel.hide()
 
   init: ->
-    console.log('init')
     $(selectable).selectable({
       filter: selectee,
+      classes: {
+        'ui-selected': '-selected'
+      }
       start: start,
-      stop: stop
+      stop: stop,
+      selecting: selecting,
+      unselecting: unselecting
     })
 
     $(document).on('click', ':not(' + selectee + ')', unselect)
