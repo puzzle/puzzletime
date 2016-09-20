@@ -1,0 +1,22 @@
+.planning-panel.panel.panel-default
+  .panel-body
+    %form
+    .form-group
+      %label{for: :planning_percent} Pensum
+      .input-group.planning-percent-group
+        %input#planning_percent.form-control{type: :number}
+        .input-group-addon %
+    .form-group
+      %label Status
+      %div
+        .btn-group{role: :group}
+          %button.btn.btn-default{type: :button} provisorisch
+          %button.btn.btn-default{type: :button} fix
+    .form-group
+      .checkbox
+        %label
+          %input{type: :checkbox}
+          Wiederholung wöchentlich
+    .form-group.right
+      %button.planning-cancel.btn.btn-link Abbrechen
+      %button.btn.btn-primary OK
