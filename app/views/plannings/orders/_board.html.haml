@@ -31,3 +31,5 @@
           - for $day in 1..(5 * 15)
             .day{ class: cycle('', '-temporary', '-planned') }
               = Random.rand(1..10) * 10
+
+= render 'panel'
