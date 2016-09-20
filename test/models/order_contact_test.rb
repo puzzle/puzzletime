@@ -5,7 +5,7 @@
 #  false      :integer          not null, primary key
 #  contact_id :integer          not null
 #  order_id   :integer          not null
-#  comment    :string(255)
+#  comment    :string
 #
 
 require 'test_helper'

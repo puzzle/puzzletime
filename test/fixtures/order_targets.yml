@@ -5,7 +5,7 @@
 #  id              :integer          not null, primary key
 #  order_id        :integer          not null
 #  target_scope_id :integer          not null
-#  rating          :string(255)      default("green"), not null
+#  rating          :string           default("green"), not null
 #  comment         :text
 #  created_at      :datetime
 #  updated_at      :datetime
