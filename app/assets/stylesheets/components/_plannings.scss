@@ -1,4 +1,4 @@
-.p-board {
+.planning-board {
   > .header {
     display: flex;
     align-items: baseline;
@@ -12,18 +12,18 @@
   }
 }
 
-.p-calendar {
+.planning-calendar {
   flex: 1 0 600px;
   height: 800px;
   overflow-x: auto;
 }
-.p-calendar-weeks {
+.planning-calendar-weeks {
   display: flex;
   flex: 1;
   position: sticky;
   top: 0;
 }
-.p-calendar-week {
+.planning-calendar-week {
   display: flex;
   max-width: calc(36px * 5);
   min-width: calc(36px * 5);
@@ -38,18 +38,18 @@
     border-right: 1px solid #fff;
   }
 }
-.p-calendar-days-header {
+.planning-calendar-days-header {
   background-color: #ccc;
   cursor: default;
   position: sticky;
   top: 25px;
   border-top: 1px solid #ccc;
 }
-.p-calendar-days, .p-calendar-days-header {
+.planning-calendar-days, .planning-calendar-days-header {
   display: flex;
   width: calc(var(--days, 1) * 36px);
 }
-.p-calendar-days > .day, .p-calendar-days-header > .dayheader {
+.planning-calendar-days > .day, .planning-calendar-days-header > .dayheader {
   min-width: 36px;
   max-width: 36px;
   text-align: center;
@@ -59,7 +59,7 @@
     border-left: 1px solid #ccc;
   }
 }
-.p-calendar-days {
+.planning-calendar-days {
   height: 4rem;
 
   &:nth-child(odd) {
