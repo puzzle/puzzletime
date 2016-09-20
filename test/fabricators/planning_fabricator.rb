@@ -3,27 +3,12 @@
 #
 # Table name: plannings
 #
-#  id              :integer          not null, primary key
-#  employee_id     :integer          not null
-#  start_week      :integer          not null
-#  end_week        :integer
-#  definitive      :boolean          default(FALSE), not null
-#  description     :text
-#  monday_am       :boolean          default(FALSE), not null
-#  monday_pm       :boolean          default(FALSE), not null
-#  tuesday_am      :boolean          default(FALSE), not null
-#  tuesday_pm      :boolean          default(FALSE), not null
-#  wednesday_am    :boolean          default(FALSE), not null
-#  wednesday_pm    :boolean          default(FALSE), not null
-#  thursday_am     :boolean          default(FALSE), not null
-#  thursday_pm     :boolean          default(FALSE), not null
-#  friday_am       :boolean          default(FALSE), not null
-#  friday_pm       :boolean          default(FALSE), not null
-#  created_at      :datetime
-#  updated_at      :datetime
-#  is_abstract     :boolean
-#  abstract_amount :decimal(, )
-#  work_item_id    :integer          not null
+#  id           :integer          not null, primary key
+#  employee_id  :integer          not null
+#  work_item_id :integer          not null
+#  date         :date             not null
+#  percent      :integer          not null
+#  definitive   :boolean          default(FALSE), not null
 #
 
 Fabricator(:planning) do |f|

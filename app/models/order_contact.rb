@@ -6,9 +6,8 @@
 #  false      :integer          not null, primary key
 #  contact_id :integer          not null
 #  order_id   :integer          not null
-#  comment    :string(255)
+#  comment    :string
 #
-
 
 class OrderContact < ActiveRecord::Base
   belongs_to :contact

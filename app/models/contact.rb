@@ -5,13 +5,13 @@
 #
 #  id            :integer          not null, primary key
 #  client_id     :integer          not null
-#  lastname      :string(255)
-#  firstname     :string(255)
-#  function      :string(255)
-#  email         :string(255)
-#  phone         :string(255)
-#  mobile        :string(255)
-#  crm_key       :string(255)
+#  lastname      :string
+#  firstname     :string
+#  function      :string
+#  email         :string
+#  phone         :string
+#  mobile        :string
+#  crm_key       :string
 #  created_at    :datetime
 #  updated_at    :datetime
 #  invoicing_key :string
