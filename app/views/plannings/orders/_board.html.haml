@@ -9,11 +9,12 @@
         %div= employee
 
 .planning-calendar{ style: "--days: #{@board.work_days}" }
-  = render 'board_header'
+  .planning-calendar-inner
+    = render 'board_header'
 
-  - @accounting_posts.each do |post|
-    - @employees.each do |employee|
-      - items = @board.items(employee.id, post.work_item_id)
-      - if items
-        .planning-calendar-days{ id: "planning_row_employee_#{employee.id}_work_item_#{post.work_item_id}" }
-          = render 'row', items: items
+    - @accounting_posts.each do |post|
+      - @employees.each do |employee|
+        - items = @board.items(employee.id, post.work_item_id)
+        - if items
+          .planning-calendar-days{ id: "planning_row_employee_#{employee.id}_work_item_#{post.work_item_id}" }
+            = render 'row', items: items
