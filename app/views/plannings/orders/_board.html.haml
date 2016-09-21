@@ -1,20 +1,16 @@
 - @title ||= @order.label_verbose
 
-.legend
-  - @accounting_posts.each do |post|
-    %div
-      %strong= post
-    - @employees.each do |employee|
-      - if @board.items(employee.id, post.work_item_id)
-        %div= employee
-
 .planning-calendar{ style: "--days: #{@board.work_days}" }
   .planning-calendar-inner
     = render 'board_header'
 
     - @accounting_posts.each do |post|
+      .groupheader
+        %strong= post
+        - for i in 1..(@board.work_days)
+          .day
       - @employees.each do |employee|
         - items = @board.items(employee.id, post.work_item_id)
         - if items
           .planning-calendar-days{ id: "planning_row_employee_#{employee.id}_work_item_#{post.work_item_id}" }
-            = render 'row', items: items
+            = render 'row', employee: employee, items: items
