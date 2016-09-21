@@ -34,7 +34,7 @@ $legend-width: 300px;
   background-color: #eee;
 
   > .planned, > .kw {
-    padding: 0.25rem 1rem;
+    padding: 0.25rem 0.5rem;
   }
 
   &:not(:last-child) > .planned {
@@ -49,20 +49,20 @@ $legend-width: 300px;
   > .dayheader {
     border-top: 1px solid #ccc;
     background-color: #ccc;
+    padding-left: 0.5rem;
   }
 }
 .planning-calendar-days,
 .planning-calendar-days-header,
 .planning-calendar-inner > .groupheader {
   display: flex;
-  width: calc(var(--days, 1) * $cell-width + $legend-width);
+  width: calc(var(--days, 1) * #{$cell-width} + #{$legend-width});
 }
 .planning-calendar-days > .day,
 .planning-calendar-days-header > .dayheader,
 .planning-calendar-inner > .groupheader > .day {
   min-width: $cell-width;
   max-width: $cell-width;
-  text-align: center;
   border-left: 1px solid #ccc;
 
   &:last-child {
@@ -101,6 +101,7 @@ $legend-width: 300px;
 }
 .planning-calendar-days {
   > .day {
+    text-align: center;
     cursor: pointer;
     font-weight: lighter;
     color: #dadada;
