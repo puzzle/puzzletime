@@ -7,15 +7,16 @@
   > .content {
     display: flex;
   }
-  > .content > .legend {
-    flex: 0 0 300px;
-  }
 }
 
 .planning-calendar {
   flex: 1 0 600px;
   height: 800px;
   overflow-x: auto;
+}
+.planning-calendar-weeks,
+.planning-calendar-days-header {
+  padding-left: 300px;
 }
 .planning-calendar-weeks {
   display: flex;
@@ -39,49 +40,74 @@
   }
 }
 .planning-calendar-days-header {
-  background-color: #ccc;
   cursor: default;
   position: sticky;
   top: 25px;
-  border-top: 1px solid #ccc;
+
+  > .dayheader {
+    border-top: 1px solid #ccc;
+    background-color: #ccc;
+  }
 }
-.planning-calendar-days, .planning-calendar-days-header {
+.planning-calendar-days,
+.planning-calendar-days-header,
+.planning-calendar-inner > .groupheader {
   display: flex;
-  width: calc(var(--days, 1) * 36px);
+  width: calc(var(--days, 1) * 36px + 300px);
 }
-.planning-calendar-days > .day, .planning-calendar-days-header > .dayheader {
+.planning-calendar-days > .day,
+.planning-calendar-days-header > .dayheader,
+.planning-calendar-inner > .groupheader > .day {
   min-width: 36px;
   max-width: 36px;
   text-align: center;
-  border-right: 1px solid #ccc;
+  border-left: 1px solid #ccc;
 
-  &:first-child {
-    border-left: 1px solid #ccc;
+  &:last-child {
+    border-right: 1px solid #ccc;
   }
 }
-.planning-calendar-days {
+.planning-calendar-inner > .groupheader > strong,
+.planning-calendar-days > .legend {
+  left: 0;
+  position: sticky;
+  display: flex;
+  align-items: center;
+  min-width: 300px;
+  max-width: 300px;
+  padding-right: 0.5em;
+  background: #fff;
+  color: black;
+  height: 4rem;
+}
+.planning-calendar-inner > .groupheader, .planning-calendar-days {
   height: 4rem;
 
-  &:nth-child(odd) {
-    background: #efefef;
-  }
-
-  &:nth-child(odd) > .day {
-    color: #cacaca;
-  }
   > .day {
-    cursor: pointer;
     height: 4rem;
     line-height: 3.5rem;
     padding: 3px 0;
+  }
+}
+.planning-calendar-inner > .groupheader, .planning-calendar-days {
+  &:nth-child(odd) {
+    background: #efefef;
+  }
+  &:nth-child(odd) > .day {
+    color: #cacaca;
+  }
+}
+.planning-calendar-days {
+  > .day {
+    cursor: pointer;
     font-weight: lighter;
     color: #dadada;
-    background-size: 16px 16px;
-    background-position: center;
+    background-size: 18px 18px;
+    background-position: left;
     background-repeat: repeat;
     background-clip: content-box;
   }
-  > .day.-selected, > .day.-planned, > .day.-temporary {
+  > .day.-selected, > .day.-definitive, > .day.-provisional {
     font-weight: normal;
   }
   > .day.-selected {

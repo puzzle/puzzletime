@@ -1,7 +1,8 @@
+.legend= employee
 - items.each do |item|
   - case item
     - when Planning
       .day{ class: item.definitive? ? '-definitive' : '-provisional' }
         = item.percent
     - when nil
-      .day &nbsp;
+      .day
