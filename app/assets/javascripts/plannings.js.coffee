@@ -4,7 +4,7 @@ app.plannings = {}
 
 
 app.plannings.selectable = do ->
-  selectable = '.planning-calendar'
+  selectable = '.planning-calendar-inner'
   selectee = '.day'
 
   start = (event, ui) ->
@@ -24,7 +24,10 @@ app.plannings.selectable = do ->
     $(selectable).find('.ui-selected').removeClass('ui-selected -selected')
     app.plannings.panel.hide()
 
-  init: ->
+  initOnce: ->
+    $(document).on('click', app.plannings.selectable.clear)
+
+  initOnPageChange: ->
     $(selectable).selectable({
       filter: selectee,
       classes: {
@@ -36,39 +39,41 @@ app.plannings.selectable = do ->
       unselecting: unselecting
     })
 
-    $(document).on('click', ':not(' + selectee + ')', app.plannings.selectable.clear)
-
-  destroy: ->
-    $(selectable).selectable('destroy');
-    $(document).off('click', app.plannings.selectable.clear)
-
 
 app.plannings.panel = do ->
   panel = '.planning-panel'
   container = '.planning-calendar'
 
-  init: ->
-    $(document).find(panel).find('.planning-cancel')
-      .on('click', ->
-        app.plannings.panel.hide()
-        app.plannings.selectable.clear()
-      )
+  position = ->
+    if $(panel).length == 0 || $(panel).is(':hidden')
+      return
+
+    $(panel).position({
+      my: 'right top',
+      at: 'right bottom',
+      of: $(container).find('.ui-selected').last(),
+      within: container
+    })
 
   show: (selectedElements) ->
     $(panel)
       .show()
-      .position({
-        my: 'right top',
-        at: 'right bottom',
-        of: selectedElements.last(),
-        within: container
-      })
       .on('click', (event) -> event.stopPropagation())
+    position()
 
   hide: ->
     $(panel).hide()
 
+  initOnPageChange: ->
+    $(container).on('scroll', position)
+    $(panel).find('.planning-cancel').on('click', ->
+      app.plannings.panel.hide()
+      app.plannings.selectable.clear()
+    )
+
+
+app.plannings.selectable.initOnce()
 
 $ ->
-  app.plannings.selectable.init()
-  app.plannings.panel.init()
+  app.plannings.selectable.initOnPageChange()
+  app.plannings.panel.initOnPageChange()
