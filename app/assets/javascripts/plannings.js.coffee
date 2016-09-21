@@ -24,10 +24,11 @@ app.plannings.selectable = do ->
     $(selectable).find('.ui-selected').removeClass('ui-selected -selected')
     app.plannings.panel.hide()
 
-  initOnce: ->
-    $(document).on('click', app.plannings.selectable.clear)
+  init: ->
+    if $(selectable).length == 0
+      return
 
-  initOnPageChange: ->
+    $(document).on('click', app.plannings.selectable.clear)
     $(selectable).selectable({
       filter: selectee,
       classes: {
@@ -38,6 +39,9 @@ app.plannings.selectable = do ->
       selecting: selecting,
       unselecting: unselecting
     })
+
+  destroy: ->
+    $(document).off('click', app.plannings.selectable.clear)
 
 
 app.plannings.panel = do ->
@@ -55,6 +59,11 @@ app.plannings.panel = do ->
       within: container
     })
 
+  hideOnEscape = (event) ->
+    if event.key == "Escape"
+      app.plannings.panel.hide()
+      app.plannings.selectable.clear()
+
   show: (selectedElements) ->
     $(panel)
       .show()
@@ -64,16 +73,23 @@ app.plannings.panel = do ->
   hide: ->
     $(panel).hide()
 
-  initOnPageChange: ->
+  init: ->
+    if $(panel).length == 0
+      return
+
+    $(document).on('keyup', hideOnEscape)
     $(container).on('scroll', position)
     $(panel).find('.planning-cancel').on('click', ->
       app.plannings.panel.hide()
       app.plannings.selectable.clear()
     )
 
-
-app.plannings.selectable.initOnce()
+  destroy: ->
+    $(document).off('keyup', hideOnEscape)
 
 $ ->
-  app.plannings.selectable.initOnPageChange()
-  app.plannings.panel.initOnPageChange()
+  app.plannings.selectable.destroy()
+  app.plannings.selectable.init()
+
+  app.plannings.panel.destroy()
+  app.plannings.panel.init()
