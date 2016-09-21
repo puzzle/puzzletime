@@ -79,8 +79,10 @@ app.plannings.panel = do ->
 
     $(document).on('keyup', hideOnEscape)
     $(container).on('scroll', position)
-    $(panel).find('.planning-cancel').on('click', ->
+    $(panel).find('.planning-cancel').on('click', (event) ->
       app.plannings.panel.hide()
+      $(event.target).blur()
+
       app.plannings.selectable.clear()
     )
 
