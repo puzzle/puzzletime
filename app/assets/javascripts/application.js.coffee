@@ -26,6 +26,7 @@
 #= require work_item_autocomplete
 #= require plannings_panel
 #= require plannings_selectable
+#= require plannings_service
 #= require orders
 #= require order_contacts
 #= require accounting_posts

@@ -2,16 +2,17 @@
   = form_tag(plannings_order_path) do
     .panel-body
       .form-group
-        = label_tag(:planning_percent, 'Pensum')
+        = label_tag(:percent, 'Pensum')
         .input-group.planning-percent-group
-          = number_field_tag(:planning_percent, nil, class: 'form-control')
+          = number_field_tag(:percent, nil, class: 'form-control')
           .input-group-addon %
       .form-group
         = label_tag(nil, 'Status')
         %div
-          .btn-group{role: :group}
-            = button_tag('provisorisch', class: 'btn btn-default')
-            = button_tag('fix', class: 'btn btn-default')
+          = hidden_field_tag(:definitive)
+          .btn-group.planning-definitive-group{role: :group}
+            = button_tag('provisorisch', type: :button, class: 'planning-provisional btn btn-default')
+            = button_tag('fix', type: :button, class: 'planning-definitive btn btn-default')
       .form-group
         .checkbox
           = label_tag do
