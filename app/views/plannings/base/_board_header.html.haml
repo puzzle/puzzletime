@@ -6,4 +6,4 @@
 .planning-calendar-days-header
   - @period.step do |date|
     - unless date.saturday? || date.sunday?
-      .dayheader= date.day
+      .dayheader{ data: { date: date.strftime('%Y-%m-%d') } }= date.day

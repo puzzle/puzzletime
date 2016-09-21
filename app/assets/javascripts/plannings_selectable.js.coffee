@@ -3,14 +3,17 @@ app.plannings ||= {}
 
 app.plannings.selectable = do ->
   selectable = '.planning-calendar-inner'
-  selectee = '.day'
+  selectee = '.planning-calendar-days > .day'
 
   start = (event, ui) ->
     app.plannings.panel.hide()
 
   stop = (event, ui) ->
-    $(event.target).find('.ui-selected').addClass('-selected')
-    app.plannings.panel.show($(event.target).find('.ui-selected'))
+    selectedElements = $(event.target).find('.ui-selected')
+    selectedElements.addClass('-selected')
+
+    if selectedElements.length > 0
+      app.plannings.panel.show(selectedElements)
 
   selecting = (event, ui) ->
     $(ui.selecting).addClass('-selected')
@@ -21,6 +24,24 @@ app.plannings.selectable = do ->
   clear: ->
     $(selectable).find('.ui-selected').removeClass('ui-selected -selected')
     app.plannings.panel.hide()
+
+  getEmptySelectedDays: ->
+    $(selectable).find('.ui-selected:not(.-definitive,.-provisional)')
+      .toArray()
+      .map((element) ->
+        row = $(element).parent()
+        rowId = row.prop('id')
+          .match(/planning_row_employee_(\d+)_work_item_(\d+)/)
+        date = $(selectable).find('.planning-calendar-days-header .dayheader')
+          .eq(row.children('.day').index(element)).data('date')
+
+        { employee_id: rowId[1], work_item_id: rowId[2], date: date }
+      )
+
+  getSelectedIds: ->
+    $(selectable).find('.ui-selected.-definitive,.ui-selected.-provisional')
+      .toArray()
+      .map((element) -> $(element).data('id'))
 
   init: ->
     if $(selectable).length == 0

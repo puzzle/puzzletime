@@ -2,7 +2,7 @@
 - items.each do |item|
   - case item
     - when Planning
-      .day{ class: item.definitive? ? '-definitive' : '-provisional' }
+      .day{ class: item.definitive? ? '-definitive' : '-provisional', data: { id: item.id } }
         = item.percent
     - when nil
       .day
