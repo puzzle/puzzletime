@@ -4,11 +4,14 @@ app.plannings ||= {}
 app.plannings.selectable = do ->
   selectable = '.planning-calendar-inner'
   selectee = '.planning-calendar-days > .day'
+  isSelecting = false
 
   start = (event, ui) ->
-    app.plannings.panel.hide()
+    isSelecting = true
+    setTimeout((-> isSelecting && app.plannings.panel.hide()), 100) # avoid flickering
 
   stop = (event, ui) ->
+    isSelecting = false
     selectedElements = $(event.target).find('.ui-selected')
     selectedElements.addClass('-selected')
 
