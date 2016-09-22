@@ -14,6 +14,7 @@
 class Planning < ActiveRecord::Base
 
   validates_by_schema
+  validate :date_must_be_weekday
 
   belongs_to :employee
   belongs_to :work_item
@@ -31,6 +32,14 @@ class Planning < ActiveRecord::Base
 
   def to_s
     "#{percent}% auf #{work_item} am #{I18n.l(date)} für #{employee}"
+  end
+
+  private
+
+  def date_must_be_weekday
+    if date.saturday? || date.sunday?
+      errors.add(:weekday, 'muss ein Werktag sein')
+    end
   end
 
 end
