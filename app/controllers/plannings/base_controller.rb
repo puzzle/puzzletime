@@ -32,7 +32,7 @@ module Plannings
         if creator.create_or_update
           format.js { @plannings = full_plannings_row(creator.plannings) }
         else
-          format.js { render :errors }
+          format.js { render :errors, locals: { errors: creator.errors } }
         end
       end
     end
