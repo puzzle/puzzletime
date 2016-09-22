@@ -21,7 +21,13 @@ module Plannings
       return false unless form_valid?
 
       Planning.transaction do
-        @plannings = create.concat(update)
+        begin
+          @plannings = create.concat(update)
+        rescue ActiveRecord::RecordNotFound
+          # @errors << 'Eintrag existiert nicht'
+          raise ActiveRecord::Rollback
+        end
+
         # TODO: append errors to @errors
         @plannings.all?(&:valid?)
       end
@@ -93,7 +99,7 @@ module Plannings
     def update
       return [] unless params[:update].present?
 
-      params[:update].collect { |id| puts "id:#{id}";Planning.update(id, planning_params) }
+      params[:update].collect { |id| Planning.update(id, planning_params) }
       # TODO: use update_all (and skip validations!) to have only one query?
     end
 
