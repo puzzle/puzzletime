@@ -142,6 +142,7 @@ $legend-width: 300px;
 .planning-panel {
   position: absolute;
   display: none;
+  max-width: 350px;
 
   .panel-footer {
     display: flex;

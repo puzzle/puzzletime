@@ -1,2 +1,4 @@
 - @board.rows.each do |(employee_id, work_item_id), items|
-  $('#planning_row_employee_#{employee_id}_work_item_#{work_item_id}').html('#{j(render(:row, items: items))}')
+  - employee = Employee.find(employee_id) # TODO: n+1
+  $('#planning_row_employee_#{employee_id}_work_item_#{work_item_id}').html('#{j(render(partial: 'row', locals: { items: items, employee: employee }))}');
+  App.plannings.panel.close();

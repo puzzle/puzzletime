@@ -1,10 +1,11 @@
 .planning-panel.panel.panel-default
   = form_tag(plannings_order_path) do
     .panel-body
+      .alerts{ style: 'display: none' }
       .form-group
         = label_tag(:percent, 'Pensum')
         .input-group.planning-percent-group
-          = number_field_tag(:percent, nil, class: 'form-control')
+          = number_field_tag(:percent, nil, class: 'form-control', min: '0', max: '999')
           .input-group-addon %
       .form-group
         = label_tag(nil, 'Status')

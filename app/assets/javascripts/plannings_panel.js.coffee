@@ -32,16 +32,13 @@ app.plannings.panel = do ->
       within: container
     })
 
-  cancel = ->
-    app.plannings.panel.hide()
-    app.plannings.selectable.clear()
-
-  cancelOnEscape = (event) ->
+  closeOnEscape = (event) ->
     if event.key == "Escape"
-      cancel()
+      app.plannings.panel.close()
 
   submit = (event) ->
     event.preventDefault()
+    app.plannings.panel.hideErrors()
     data = $(event.target).serializeArray()
       .reduce(((prev, curr) -> prev[curr.name] = curr.value; prev), {})
     app.plannings.service.updateSelected(data)
@@ -57,6 +54,7 @@ app.plannings.panel = do ->
       .on('click', (event) -> event.stopPropagation())
     position()
 
+    app.plannings.panel.hideErrors()
     setPercent('')
     setDefinitive(true)
 
@@ -65,23 +63,39 @@ app.plannings.panel = do ->
   hide: ->
     $(panel).hide()
 
+  close: ->
+    app.plannings.panel.hide()
+    app.plannings.selectable.clear()
+
+  showErrors: (errors) ->
+    alerts = $(panel).find('.alerts').empty().show()
+    if errors && errors.length > 0
+      errors.forEach((error) ->
+        alerts.append($('<div class="alert alert-danger">' + error + '</div>')))
+    else
+      alerts.append($('<div class="alert alert-danger">Ein Fehler ist aufgetreten</div>'))
+    position()
+
+  hideErrors: ->
+    $(panel).find('.alert').hide()
+
   init: ->
     if $(panel).length == 0
       return
 
-    $(document).on('keyup', cancelOnEscape)
+    $(document).on('keyup', closeOnEscape)
     $(container).on('scroll', position)
 
     $(panel).find('.planning-definitive-group button').on('click', definitiveChange)
     $(panel).find('.planning-cancel').on('click', (event) ->
       $(event.target).blur()
-      cancel()
+      app.plannings.panel.close()
     )
     $(panel).find('form').on('submit', submit)
     $(panel).find('.planning-delete').on('click', deleteSelected)
 
   destroy: ->
-    $(document).off('keyup', cancelOnEscape)
+    $(document).off('keyup', closeOnEscape)
 
 $ ->
   app.plannings.panel.destroy()
