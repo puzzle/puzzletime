@@ -8,6 +8,10 @@ module Plannings
       @employee = employee
     end
 
+    def row_legend(_employee_id, work_item_id)
+      accounting_posts.detect { |post| post.work_item_id == work_item_id.to_i }
+    end
+
     private
 
     def load_plannings

@@ -114,7 +114,8 @@ module Plannings
     end
 
     def included_plannings_condition
-      return if @included_rows.blank?
+      return if @included_rows.nil?
+      return '0 = 1' if @included_rows.blank?
 
       [''].tap do |condition|
         @included_rows.each do |employee_id, work_item_id|
@@ -134,7 +135,7 @@ module Plannings
     end
 
     def included_key_ids(name, position)
-      @included_rows.present? ? @included_rows.map(&position) : @plannings.map(&name)
+      @included_rows ? @included_rows.map(&position) : @plannings.map(&name)
     end
 
   end

@@ -18,7 +18,7 @@
         - if items
           .planning-calendar-days{ id: "planning_row_employee_#{employee.id}_work_item_#{post.work_item_id}" }
             = render 'row',
-                     legend: link_to(employee, plannings_employee_path(employee)),
+                     legend: employee,
                      items: items
       .actions{ data: { work_item_id: post.work_item_id } }
         .buttons

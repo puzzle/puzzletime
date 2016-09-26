@@ -73,8 +73,15 @@ app.plannings.panel = do ->
   showErrors: (errors) ->
     alerts = $(panel).find('.alerts').empty().show()
     if errors && errors.length > 0
-      errors.forEach((error) ->
-        alerts.append($('<div class="alert alert-danger">', text: error)))
+      alert = '<div class="alert alert-danger">'
+      if errors.length > 1
+        alert += '<ul>';
+        errors.forEach((error) -> alert += '<li>' + error + '</li>');
+        alert += '</ul>';
+      else
+        alert += errors[0];
+      alert += '</div>'
+      alerts.append($(alert));
     else
       alerts.append($('<div class="alert alert-danger">Ein Fehler ist aufgetreten</div>'))
     position()

@@ -8,6 +8,10 @@ module Plannings
       @order = order
     end
 
+    def row_legend(employee_id, _work_item_id)
+      employees.detect { |e| e.id == employee_id.to_i }
+    end
+
     private
 
     def load_plannings
