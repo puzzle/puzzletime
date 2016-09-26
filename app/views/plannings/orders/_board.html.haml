@@ -1,5 +1,3 @@
-- @title ||= @order.label_verbose
-
 .planning-calendar{ style: "--days: #{@board.work_days}" }
   .planning-calendar-inner
     = render 'board_header'
@@ -13,4 +11,4 @@
         - items = @board.items(employee.id, post.work_item_id)
         - if items
           .planning-calendar-days{ id: "planning_row_employee_#{employee.id}_work_item_#{post.work_item_id}" }
-            = render 'row', employee: employee, items: items
+            = render 'row', legend: employee, items: items

@@ -3,14 +3,15 @@ $cell-height: 4rem;
 $legend-width: 300px;
 
 .planning-board {
-  > .header {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-  }
   > .content {
     display: flex;
   }
+}
+
+.planning-board-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
 }
 
 .planning-calendar {

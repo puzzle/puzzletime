@@ -14,6 +14,7 @@ module Plannings
     def order
       @order ||= Order.find(params[:id])
     end
+    alias_method :entry, :order
 
     def load_plannings
       super.joins(:work_item)
