@@ -1,12 +1,12 @@
 module Plannings
   class Board
 
-    attr_reader :period, :plannings, :absences
+    attr_reader :period, :plannings, :absencetimes
 
-    def initialize(period, plannings, absences)
+    def initialize(period, plannings, absencetimes)
       @period = period
       @plannings = plannings
-      @absences = absences
+      @absencetimes = absencetimes
     end
 
     def items(employee_id, work_item_id)
@@ -32,7 +32,7 @@ module Plannings
       {}.tap do |rows|
         build_default_rows(rows)
         build_planning_rows(rows)
-        add_absences_to_rows(rows)
+        add_absencetimes_to_rows(rows)
       end
     end
 
@@ -51,12 +51,12 @@ module Plannings
       end
     end
 
-    def add_absences_to_rows(rows)
-      absences.each do |absence|
+    def add_absencetimes_to_rows(rows)
+      absencetimes.each do |time|
         rows.each do |key, items|
-          if key.first == absence.employee_id
-            index = item_index(absence.work_date)
-            items[index] = absence if index
+          if key.first == time.employee_id
+            index = item_index(time.work_date)
+            items[index] = time if index
           end
         end
       end
