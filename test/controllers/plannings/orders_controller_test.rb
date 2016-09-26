@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'test_helper'
 
 module Plannings
@@ -40,6 +42,28 @@ module Plannings
           id: orders(:hitobito_demo).id,
           period: '6M'
       assert assigns(:period).length > 180
+    end
+
+    test 'PATCH update with valid params' do
+      patch :update, xhr: true, format: :js, id: orders(:puzzletime).id,
+            planning: { percent: '50', definitive: 'true' },
+            items: { '1' => { employee_id: employees(:pascal).id.to_s,
+                              work_item_id: work_items(:puzzletime).id.to_s,
+                              date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
+      assert_equal 200, response.status
+      assert_equal 1, assigns(:plannings).length
+      assert response.body.include?('Zumkehr Pascal')
+      assert response.body.include?('50')
+    end
+
+    test 'PATCH update with invalid params' do
+      patch :update, xhr: true, format: :js, id: orders(:puzzletime).id,
+            planning: {},
+            items: { '1' => { employee_id: employees(:pascal).id.to_s,
+                              work_item_id: work_items(:puzzletime).id.to_s,
+                              date: '2000-01-03' } }
+      assert_equal 200, response.status
+      assert response.body.include?('Bitte füllen Sie das Formular aus')
     end
 
   end
