@@ -25,9 +25,7 @@ app.plannings.panel = new class
     $(document).off('keyup', @closeOnEscape)
 
   show: (selectedElements) ->
-    @panel()
-      .show()
-      .on('click', (event) -> event.stopPropagation())
+    @panel().show()
     @position()
 
     @hideErrors()
