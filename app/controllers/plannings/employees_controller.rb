@@ -3,6 +3,8 @@
 module Plannings
   class EmployeesController < BaseController
 
+    self.search_columns = [:firstname, :lastname, :shortname]
+
     before_render_show :load_accounting_posts
 
     private
