@@ -11,4 +11,6 @@
         - items = @board.items(employee.id, post.work_item_id)
         - if items
           .planning-calendar-days{ id: "planning_row_employee_#{employee.id}_work_item_#{post.work_item_id}" }
-            = render 'row', legend: employee, items: items
+            = render 'row',
+                     legend: link_to(employee, plannings_employee_path(employee)),
+                     items: items

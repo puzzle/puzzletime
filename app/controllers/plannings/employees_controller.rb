@@ -5,8 +5,6 @@ module Plannings
 
     self.search_columns = [:firstname, :lastname, :shortname]
 
-    before_render_show :load_accounting_posts
-
     private
 
     def list_entries
@@ -23,10 +21,14 @@ module Plannings
     end
 
     def load_accounting_posts
-      @accounting_posts = AccountingPost
+      AccountingPost
         .where(work_item_id: @plannings.map(&:work_item_id).uniq)
         .includes(:work_item)
         .list
+    end
+
+    def load_employees
+      employee
     end
 
   end

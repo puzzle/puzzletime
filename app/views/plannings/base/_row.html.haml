@@ -4,5 +4,11 @@
     - when Planning
       .day{ class: item.definitive? ? '-definitive' : '-provisional', data: { id: item.id } }
         = item.percent
+    - when Absencetime
+      .day{ title: "#{item.absence.name}: #{format_hour(item.hours)}" }
+        X
     - when nil
       .day
+    - else
+      .day
+        ?
