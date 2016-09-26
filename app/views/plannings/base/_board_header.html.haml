@@ -1,9 +1,5 @@
 .planning-calendar-weeks
-  - @period.step(7) do |date|
-    .planning-calendar-week
-      .kw KW #{date.cweek}
-      .planned 150%
+  = render 'calendar_weeks'
 .planning-calendar-days-header
-  - @period.step do |date|
-    - unless date.saturday? || date.sunday?
-      .dayheader{ data: { date: date.strftime('%Y-%m-%d') } }= date.day
+  = render 'calendar_days'
+

@@ -16,19 +16,8 @@ module Plannings
     end
     alias_method :entry, :employee
 
-    def load_plannings
-      super.where(employee_id: employee.id)
-    end
-
-    def load_accounting_posts
-      AccountingPost
-        .where(work_item_id: @plannings.map(&:work_item_id).uniq)
-        .includes(:work_item)
-        .list
-    end
-
-    def load_employees
-      employee
+    def build_board
+      Plannings::EmployeeBoard.new(employee, @period)
     end
 
   end

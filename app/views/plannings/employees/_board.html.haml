@@ -2,7 +2,7 @@
   .planning-calendar-inner
     = render 'board_header'
 
-    - @accounting_posts.each do |post|
+    - @board.accounting_posts.each do |post|
       - items = @board.items(@employee.id, post.work_item_id)
       - if items
         .planning-calendar-days{ id: "planning_row_employee_#{@employee.id}_work_item_#{post.work_item_id}" }

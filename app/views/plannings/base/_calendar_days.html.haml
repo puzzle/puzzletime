@@ -1,0 +1,3 @@
+- @period.step do |date|
+  - unless date.saturday? || date.sunday?
+    .dayheader{ data: { date: date.strftime('%Y-%m-%d') } }= date.day

@@ -13,17 +13,8 @@ module Plannings
     end
     alias_method :entry, :order
 
-    def load_plannings
-      super.joins(:work_item)
-           .where('? = ANY (work_items.path_ids)', order.work_item_id)
-    end
-
-    def load_accounting_posts
-      order.accounting_posts.where(closed: false).list.includes(:work_item)
-    end
-
-    def load_employees
-      Employee.where(id: @plannings.map(&:employee_id).uniq).list
+    def build_board
+      Plannings::OrderBoard.new(order, @period)
     end
 
   end

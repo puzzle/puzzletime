@@ -21,9 +21,9 @@ module Plannings
                        percent: 20)
       get :show, id: employees(:lucien).id
       assert_equal accounting_posts(:hitobito_demo_app, :hitobito_demo_site),
-                   assigns(:accounting_posts)
-      assert_equal employees(:lucien),
-                   assigns(:employees)
+                   assigns(:board).accounting_posts
+      assert_equal [employees(:lucien)],
+                   assigns(:board).employees
     end
 
   end
