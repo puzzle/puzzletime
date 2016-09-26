@@ -3,6 +3,9 @@
 module Plannings
   class OrdersController < BaseController
 
+    self.search_columns = %w(work_items.name work_items.shortname
+                             work_items.path_names work_items.path_shortnames)
+
     before_render_show :load_accounting_posts
     before_render_show :load_employees
 
