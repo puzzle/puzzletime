@@ -26,7 +26,7 @@ app.plannings.selectable = new class
     $(document).off('click', @clear)
 
   clear: (e) =>
-    unless ($(e.target).closest('.panel').length)
+    unless e && $(e.target).closest('.panel').length
       @selectable('.ui-selected').removeClass('ui-selected -selected')
       app.plannings.panel.hide()
 

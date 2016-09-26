@@ -7,6 +7,13 @@ app.plannings = new class
   add_employee_selectize = null
   add_employee_options = []
 
+  init: ->
+    @initListeners()
+    @initSelectize()
+
+  destroy: ->
+    @destroyListeners()
+
   add: (event) =>
     @showSelect(event)
 
@@ -16,9 +23,9 @@ app.plannings = new class
     add_employee_selectize.clearOptions()
     add_employee_options
       .filter((option) -> option?.value)
-      .forEach((option) ->
+      .forEach((option) =>
         employee_id = option.value
-        return if $(board).has("#planning_row_employee_#{employee_id}_work_item_#{work_item_id}").length
+        return if @board().has("#planning_row_employee_#{employee_id}_work_item_#{work_item_id}").length
 
         add_employee_selectize.addOption(option)
       )
@@ -27,7 +34,7 @@ app.plannings = new class
       .closest('.buttons')
       .prepend(add_employee_select)
 
-    $(board).find('.add').show()
+    @board('.add').show()
     $(event.target).hide()
     add_employee_select.show()
     requestAnimationFrame(() => add_employee_selectize.refreshOptions())
@@ -35,11 +42,14 @@ app.plannings = new class
   add_employee: (employee_id, work_item_id) ->
     app.plannings.service
       .addPlanningRow(employee_id, work_item_id)
-      .then(() ->
+      .then(() =>
         add_employee_select.detach()
 
-        $(board).find('.add').show()
+        @board('.add').show()
       )
+
+  initListeners: ->
+    @board().on('click', '.actions .add', @add)
 
   initSelectize: ->
     add_employee_select = $('#add_employee_id')
@@ -65,18 +75,14 @@ app.plannings = new class
         .map((key) -> add_employee_selectize.options[key])...
     ]
 
-  initListeners: ->
-    $(board).on('click', '.actions .add', @add)
-
   destroyListeners: ->
-    $(board).off('click', @add)
+    @board().off('click', @add)
 
-  destroy: ->
-    @destroyListeners()
-
-  init: ->
-    @initListeners()
-    @initSelectize()
+  board: (selector) ->
+    if selector
+      $(selector, board)
+    else
+      $(board)
 
 $ ->
   app.plannings.destroy()
