@@ -1,7 +1,7 @@
 app = window.App ||= {}
 app.plannings ||= {}
 
-app.plannings.service = do ->
+app.plannings.service = new class
   updateSelected: (url, planning) ->
     utf8 = planning.utf8
     planning.utf8 = undefined
@@ -21,3 +21,11 @@ app.plannings.service = do ->
 
   deleteSelected: (url) ->
     console.log('delete')
+
+  addPlanningRow: (employee_id, work_item_id) ->
+    $.ajax(
+      url: "#{window.location}/new"
+      data:
+        employee_id: employee_id
+        work_item_id: work_item_id
+    )
