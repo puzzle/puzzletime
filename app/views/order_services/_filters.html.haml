@@ -3,7 +3,7 @@
 
   = direct_filter_date(:start_date, 'Von', @period.start_date)
   = direct_filter_date(:end_date, 'Bis', @period.end_date)
-  = direct_filter_select(:period, nil, predefined_period_options, prompt: 'vordefiniert...')
+  = direct_filter_select(:period, nil, predefined_past_period_options, prompt: 'vordefiniert...')
 
   &nbsp;
 

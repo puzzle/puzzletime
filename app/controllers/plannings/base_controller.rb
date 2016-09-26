@@ -77,8 +77,19 @@ module Plannings
     end
 
     def set_period
+      convert_predefined_period
       period = super
       @period = period.limited? ? period.extend_to_weeks : default_period
+    end
+
+    def convert_predefined_period
+      return if params[:period].blank?
+
+      @period = Period.parse(params.delete(:period))
+      if @period
+        params[:start_date] = I18n.l(@period.start_date)
+        params[:end_date] = I18n.l(@period.end_date)
+      end
     end
 
     def default_period

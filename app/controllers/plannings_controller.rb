@@ -52,7 +52,7 @@ class PlanningsController < CrudController
     @employee_list = EmployeeList.find_by_id(params[:employee_list_id])
     if @employee_list
       @employee_list_name = @employee_list.try :title
-      period = @period.present? ? @period : Period.next_three_months
+      period = @period.present? ? @period : Period.next_n_months(3)
       employees = @employee_list.employees.includes(:employments).list
       @graph = EmployeesPlanningGraph.new(employees, period)
     else
@@ -88,7 +88,7 @@ class PlanningsController < CrudController
   end
 
   def company_planning
-    period = @period.present? ? @period : Period.next_three_months
+    period = @period.present? ? @period : Period.next_n_months(3)
     employees = Employee.employed_ones(period).includes(:employments).list
     @graph = EmployeesPlanningGraph.new(employees, period, true)
   end
@@ -123,7 +123,7 @@ class PlanningsController < CrudController
 
   def set_employees
     unless @period
-      @period = Period.next_three_months
+      @period = Period.next_n_months(3)
     end
     @employees = Employee.employed_ones(@period)
   end
@@ -135,7 +135,7 @@ class PlanningsController < CrudController
 
   def planned_employees(department, period)
     employees = Employee.where(department_id: department).includes(:employments).list
-    period ||= Period.next_three_months
+    period ||= Period.next_n_months(3)
     employees.select do |e|
       e.employment_at(period.start_date).present? ||
           e.employment_at(period.end_date).present?
