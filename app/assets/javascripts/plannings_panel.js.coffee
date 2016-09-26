@@ -16,7 +16,7 @@ app.plannings.panel = new class
     @panel('.planning-definitive-group button').on('click', @definitiveChange)
     @panel('.planning-cancel').on('click', (event) =>
       $(event.target).blur()
-      @close()
+      @close(event)
     )
     @panel('form').on('submit', @submit)
     @panel('.planning-delete').on('click', @deleteSelected)
@@ -40,13 +40,13 @@ app.plannings.panel = new class
   hide: ->
     $(panel).hide()
 
-  close: =>
+  close: (event) =>
     @hide()
-    app.plannings.selectable.clear()
+    app.plannings.selectable.clear(event)
 
   closeOnEscape: (event) =>
-    if event.key == "Escape"
-      @close()
+    if event.key == 'Escape'
+      @close(event)
 
   showErrors: (errors) ->
     alerts = @panel('.alerts').empty().show()
