@@ -24,9 +24,10 @@ app.plannings.selectable = new class
   unselecting = (event, ui) ->
     $(ui.unselecting).removeClass('-selected')
 
-  clear: ->
-    $(selectable).find('.ui-selected').removeClass('ui-selected -selected')
-    app.plannings.panel.hide()
+  clear: (e) =>
+    unless ($(e.target).closest('.panel').length)
+      $(selectable).find('.ui-selected').removeClass('ui-selected -selected')
+      app.plannings.panel.hide()
 
   getSelectedDays: ->
     $(selectable).find('.ui-selected')
