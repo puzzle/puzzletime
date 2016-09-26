@@ -41,24 +41,45 @@ app.plannings.selectable = new class
         { employee_id, work_item_id, date }
       )
 
+  getSelectedPercentValues: ->
+    $(selectable).find('.ui-selected')
+      .toArray()
+      .map((element) -> $(element).text().trim())
+      .filter((value, index, self) -> self.indexOf(value) == index)
+
+  getSelectedDefinitiveValues: ->
+    $(selectable).find('.ui-selected')
+      .toArray()
+      .map(((element) ->
+        if $(element).hasClass('-definitive')
+          return true
+        else if ($(element).hasClass('-provisional'))
+          return false
+        return null
+      ))
+      .filter((value, index, self) -> self.indexOf(value) == index)
+
+  selectionHasExistingPlannings: ->
+    @getSelectedPercentValues().find((v) => v != '')
+
   init: ->
     if $(selectable).length == 0
       return
 
-    $(document).on('click', app.plannings.selectable.clear)
+    $(document).on('click', @clear)
     $(selectable).selectable({
       filter: selectee,
       classes: {
         'ui-selected': '-selected'
       }
-      start: start,
-      stop: stop,
-      selecting: selecting,
-      unselecting: unselecting
+      start,
+      stop,
+      selecting,
+      unselecting
     })
 
   destroy: ->
-    $(document).off('click', app.plannings.selectable.clear)
+    $(document).off('click', @clear)
 
 $ ->
   app.plannings.selectable.destroy()
