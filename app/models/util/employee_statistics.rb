@@ -48,7 +48,7 @@ class EmployeeStatistics
   def absences(period, payed = nil)
     worktimes = @employee.worktimes.joins(:absence).in_period(period)
 
-    worktimes = worktimes.where(absences: {payed: payed}) if payed.in? [true, false]
+    worktimes = worktimes.where(absences: { payed: payed }) if payed.in? [true, false]
 
     worktimes.sum(:hours).to_f
   end
@@ -76,18 +76,21 @@ class EmployeeStatistics
   # an empty Array if no employments exist.
   def employments_during(period)
     return [] if period.nil?
-    selectedEmployments = @employee.employments.where('(end_date IS NULL OR end_date >= ?) AND start_date <= ?',
-                                                      period.start_date, period.end_date).
-                          reorder('start_date').
-                          to_a
-    unless selectedEmployments.empty?
-      selectedEmployments.first.start_date = period.start_date if selectedEmployments.first.start_date < period.start_date
-      if selectedEmployments.last.end_date.nil? ||
-         selectedEmployments.last.end_date > period.end_date
-        selectedEmployments.last.end_date = period.end_date
+    selected_employments =
+        @employee.employments.where('(end_date IS NULL OR end_date >= ?) AND start_date <= ?',
+                                    period.start_date, period.end_date).
+                              reorder('start_date').
+                              to_a
+    unless selected_employments.empty?
+      if selected_employments.first.start_date < period.start_date
+        selected_employments.first.start_date = period.start_date
+      end
+      if selected_employments.last.end_date.nil? ||
+          selected_employments.last.end_date > period.end_date
+        selected_employments.last.end_date = period.end_date
       end
     end
-    selectedEmployments
+    selected_employments
   end
 
   private

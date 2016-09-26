@@ -1,8 +1,16 @@
 module FilterHelper
-  def predefined_period_options
+
+  def predefined_past_period_options
     [IdValue.new('0m', 'Dieser Monat'),
      IdValue.new('-1m', 'Letzter Monat'),
      IdValue.new('-2m', 'Vorletzter Monat')]
+  end
+
+  def predefined_future_period_options
+    [IdValue.new('3M', 'Nächste 3 Monate'),
+     IdValue.new('6M', 'Nächste 6 Monate'),
+     IdValue.new('9M', 'Nächste 9 Monate'),
+     IdValue.new('12M', 'Nächste 12 Monate')]
   end
 
   def yes_no_options

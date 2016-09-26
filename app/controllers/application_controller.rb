@@ -33,7 +33,7 @@ class ApplicationController < ActionController::Base
         return true if login_with(params[:user], params[:pwd])
         flash[:notice] = 'Ungültige Benutzerdaten'
       end
-      redirect_to controller: 'login', action: 'login', ref: request.url
+      redirect_to login_path(ref: request.url)
     end
   end
 

@@ -3,9 +3,7 @@ $cell-height: 4rem;
 $legend-width: 300px;
 
 .planning-board {
-  > .content {
-    display: flex;
-  }
+  display: flex;
 }
 
 .planning-board-header {
