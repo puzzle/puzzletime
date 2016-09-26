@@ -45,35 +45,6 @@ module Plannings
 
     private
 
-    def new_items_hashes
-      return [] unless params[:items].present?
-      @new_items_hashes ||= params[:items].values.select do |item|
-        !existing_items_hashes.include?(item)
-      end
-    end
-
-    def existing_items_hashes
-      @existing_items_hashes ||= existing_items.pluck(*ITEM_FIELDS).map do |values|
-        h = {}
-        values.each_with_index do |v, i|
-          h[ITEM_FIELDS[i].to_s] = v.is_a?(Date) ? v.strftime('%Y-%m-%d') : v.to_s
-        end
-        h
-      end
-    end
-
-    def existing_items
-      return Planning.none unless params[:items].present?
-      @existing_items ||= Planning.where(existing_items_condition(params[:items].values))
-    end
-
-    def existing_items_condition(items)
-      table = Planning.arel_table
-      items.collect do |item|
-        ITEM_FIELDS.collect { |attr| table[attr].eq(item[attr]) }.reduce(:and)
-      end.reduce(:or)
-    end
-
     def validate_create(p)
       if create? && !repeat_only?
         if p[:percent].blank?
@@ -120,11 +91,7 @@ module Plannings
         Planning.create(planning_params.merge(params))
       end
 
-      if plannings.any? { |p| p.errors.present? }
-        # should not happen after form validations
-        @errors << 'Eintrag konnte nicht erstellt werden'
-        fail ActiveRecord::Rollback
-      end
+      handle_save_errors(plannings)
 
       plannings
     end
@@ -137,6 +104,40 @@ module Plannings
     def planning_params
       p = params[:planning].delete_if { |_k, v| v.blank? && v != false }
       ActionController::Parameters.new(p).permit(PERMITTED_ATTRIBUTES)
+    end
+
+    def handle_save_errors(plannings)
+      save_errors = plannings.map { |p| p.errors.full_messages }.flatten.compact
+      if save_errors.present?
+        # should not happen after form validations
+        @errors << 'Eintrag konnte nicht erstellt werden: ' + save_errors.uniq.join(', ')
+        fail ActiveRecord::Rollback
+      end
+    end
+
+    def new_items_hashes
+      return [] unless params[:items].present?
+      @new_items_hashes ||= params[:items].values - existing_items_hashes
+    end
+
+    def existing_items_hashes
+      @existing_items_hashes ||= existing_items.pluck(*ITEM_FIELDS).map do |values|
+        { 'employee_id'  => values.first.to_s,
+          'work_item_id' => values.second.to_s,
+          'date'         => values.third.strftime('%Y-%m-%d') }
+      end
+    end
+
+    def existing_items
+      return Planning.none unless params[:items].present?
+      @existing_items ||= Planning.where(existing_items_condition(params[:items].values))
+    end
+
+    def existing_items_condition(items)
+      table = Planning.arel_table
+      items.collect do |item|
+        ITEM_FIELDS.collect { |attr| table[attr].eq(item[attr]) }.reduce(:and)
+      end.reduce(:or)
     end
 
   end

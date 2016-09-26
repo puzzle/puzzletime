@@ -19,8 +19,9 @@ module Plannings
     # new row for plannings
     def new
       board = build_board
-      board.for_rows([params[:employee_id], params[:work_item_id]])
+      board.for_rows([[params[:employee_id], params[:work_item_id]]])
       @items = board.rows.values.first
+      @legend = board.row_legend(params[:employee_id], params[:work_item_id])
     end
 
     def update

@@ -4,19 +4,7 @@ module Plannings
   class BoardTest < ActiveSupport::TestCase
 
     test 'build rows for given plannings' do
-      date = Date.today.at_beginning_of_week + 1.week
-      p1 = Planning.create!(work_item_id: work_items(:hitobito_demo_app).id,
-                            employee_id: employees(:pascal).id,
-                            date: date,
-                            percent: 80)
-      p2 = Planning.create!(work_item_id: work_items(:hitobito_demo_app).id,
-                            employee_id: employees(:lucien).id,
-                            date: date,
-                            percent: 60)
-      p3 = Planning.create!(work_item_id: work_items(:hitobito_demo_site).id,
-                            employee_id: employees(:lucien).id,
-                            date: date + 1.weeks,
-                            percent: 20)
+      p1, p2, p3 = create_plannings
       board = Plannings::OrderBoard.new(order, period)
 
       assert_equal [[employees(:lucien).id, work_items(:hitobito_demo_site).id],
@@ -39,19 +27,7 @@ module Plannings
     end
 
     test 'absencetimes overwrite plannings' do
-      date = Date.today.at_beginning_of_week + 1.week
-      p1 = Planning.create!(work_item_id: work_items(:hitobito_demo_app).id,
-                            employee_id: employees(:pascal).id,
-                            date: date,
-                            percent: 80)
-      p2 = Planning.create!(work_item_id: work_items(:hitobito_demo_app).id,
-                            employee_id: employees(:lucien).id,
-                            date: date,
-                            percent: 60)
-      p3 = Planning.create!(work_item_id: work_items(:hitobito_demo_site).id,
-                            employee_id: employees(:lucien).id,
-                            date: date + 1.weeks,
-                            percent: 20)
+      create_plannings
       a1 = Absencetime.create!(absence_id: absences(:vacation).id,
                                employee_id: employees(:lucien).id,
                                work_date: date - 1.day,
@@ -95,20 +71,16 @@ module Plannings
       assert_equal a2, items[6]
     end
 
+    test 'no rows are returned if included rows is set to empty array' do
+      create_plannings
+
+      board = Plannings::OrderBoard.new(order, period)
+      board.for_rows([])
+      assert_equal({}, board.rows)
+    end
+
     test '#week_totals are calculated for entire view, even if included rows are limited' do
-      date = Date.today.at_beginning_of_week + 1.week
-      p1 = Planning.create!(work_item_id: work_items(:hitobito_demo_app).id,
-                            employee_id: employees(:pascal).id,
-                            date: date,
-                            percent: 100)
-      p2 = Planning.create!(work_item_id: work_items(:hitobito_demo_app).id,
-                            employee_id: employees(:lucien).id,
-                            date: date,
-                            percent: 100)
-      p3 = Planning.create!(work_item_id: work_items(:hitobito_demo_site).id,
-                            employee_id: employees(:lucien).id,
-                            date: date + 1.week,
-                            percent: 20)
+      create_plannings
 
       board = Plannings::OrderBoard.new(order, period)
       board.for_rows([[employees(:lucien).id, work_items(:hitobito_demo_app).id]])
@@ -125,6 +97,26 @@ module Plannings
 
     def order
       orders(:hitobito_demo)
+    end
+
+    def date
+      @date ||= Date.today.at_beginning_of_week + 1.week
+    end
+
+    def create_plannings
+      p1 = Planning.create!(work_item_id: work_items(:hitobito_demo_app).id,
+                            employee_id: employees(:pascal).id,
+                            date: date,
+                            percent: 100)
+      p2 = Planning.create!(work_item_id: work_items(:hitobito_demo_app).id,
+                            employee_id: employees(:lucien).id,
+                            date: date,
+                            percent: 100)
+      p3 = Planning.create!(work_item_id: work_items(:hitobito_demo_site).id,
+                            employee_id: employees(:lucien).id,
+                            date: date + 1.weeks,
+                            percent: 50)
+      [p1, p2, p3]
     end
 
   end
