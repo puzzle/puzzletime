@@ -9,9 +9,14 @@ module Plannings
 
     private
 
+    def list_entries
+      super.employed_ones(Period.current_year)
+    end
+
     def employee
       @employee ||= Employee.find(params[:id])
     end
+    alias_method :entry, :employee
 
     def load_plannings
       super.where(employee_id: employee.id)

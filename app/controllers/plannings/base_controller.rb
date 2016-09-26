@@ -14,6 +14,8 @@ module Plannings
     before_render_new :set_board
     before_render_update :set_board
 
+    helper_method :entry
+
     def show
       @plannings = load_plannings
     end
