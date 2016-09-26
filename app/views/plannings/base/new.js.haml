@@ -1,1 +1,8 @@
--# find parent section, append last row
+:plain
+  (function() {
+    var target = '.actions[data-work-item-id="#{params[:work_item_id]}"]';
+    var container = '<div id="planning_row_employee_#{params[:employee_id]}_work_item_#{params[:work_item_id]}" class="planning-calendar-days">';
+    var row = '#{j(render('row', items: @items, legend: @employee))}';
+
+    $(target).before($(container).html(row));
+  })();

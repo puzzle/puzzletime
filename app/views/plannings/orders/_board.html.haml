@@ -1,3 +1,9 @@
+#add_employee_id{ hidden: true }
+  = select_tag(:id,
+               options_from_collection_for_select(Employee.list, :id, :to_s),
+               autocomplete: 'off',
+               include_blank: true)
+
 .planning-calendar{ style: "--days: #{@board.work_days}" }
   .planning-calendar-inner
     = render 'board_header'
@@ -14,3 +20,8 @@
             = render 'row',
                      legend: link_to(employee, plannings_employee_path(employee)),
                      items: items
+      .actions{ data: { work_item_id: post.work_item_id } }
+        .buttons
+          %button.add &#x2795;
+        - for i in 1..(@board.work_days)
+          .day

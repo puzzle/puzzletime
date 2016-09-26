@@ -35,6 +35,7 @@ Dir[Rails.root.join('test/support/**/*.rb')].sort.each { |f| require f }
 
 
 class ActiveSupport::TestCase
+
   include CustomAssertions
 
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
@@ -56,10 +57,13 @@ class ActiveSupport::TestCase
   def logout
     @request.session[:user_id] = nil
   end
+
 end
 
 class ActionDispatch::IntegrationTest
+
   include Capybara::DSL
+  include IntegrationHelper
 
   DatabaseCleaner.strategy = :truncation
 
@@ -83,35 +87,4 @@ class ActionDispatch::IntegrationTest
     end
   end
 
-  private
-
-  def selectize(id, value)
-    element = find("##{id} + .selectize-control")
-    element.find('.selectize-input').click # open dropdown
-    element.find('.selectize-dropdown-content').find('div', text: value).click
-  end
-
-  def login_as(user, ref_path = nil)
-    employee = user.is_a?(Employee) ? user : employees(user)
-    employee.set_passwd('foobar')
-    visit login_path(ref: ref_path)
-    fill_in 'user', with: employee.shortname
-    fill_in 'pwd', with: 'foobar'
-    click_button 'Login'
-  end
-
-  # catch some errors occuring now and then in capybara tests
-  def timeout_safe
-    yield
-  rescue Errno::ECONNREFUSED,
-         Timeout::Error,
-         Capybara::FrozenInTime,
-         Capybara::ElementNotFound,
-         Selenium::WebDriver::Error::StaleElementReferenceError => e
-    skip e.message || e.class.name
-  end
-
-  Capybara.add_selector(:name) do
-    xpath { |name| XPath.descendant[XPath.attr(:name).contains(name)] }
-  end
 end
