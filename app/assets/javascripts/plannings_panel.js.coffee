@@ -1,77 +1,55 @@
 app = window.App ||= {}
 app.plannings ||= {}
 
-app.plannings.panel = do ->
+app.plannings.panel = new class
   panel = '.planning-panel'
   container = '.planning-calendar'
+  positioning = false
 
-  setPercent = (percent) ->
-    $(panel).find('#percent').val(percent)
-
-  setDefinitive = (definitive) ->
-    $(panel).find('.planning-definitive').toggleClass('active', definitive == true)
-    $(panel).find('.planning-provisional').toggleClass('active', definitive == false)
-
-    value = if definitive? then definitive.toString() else ''
-    $(panel).find('#definitive').val(value)
-
-
-  definitiveChange = (event) ->
-    source = $(event.target).hasClass('planning-definitive')
-    current = $(panel).find('#definitive').val()
-    setDefinitive(if source.toString() == current then null else source)
-
-  position = ->
-    if $(panel).length == 0 || $(panel).is(':hidden')
+  init: ->
+    if @panel().length == 0
       return
 
-    $(panel).position({
-      my: 'right top',
-      at: 'right bottom',
-      of: $(container).find('.ui-selected').last(),
-      within: container
-    })
+    $(document).on('keyup', @closeOnEscape)
+    $(container).on('scroll', @position)
 
-  closeOnEscape = (event) ->
-    if event.key == "Escape"
-      app.plannings.panel.close()
+    @panel('.planning-definitive-group button').on('click', @definitiveChange)
+    @panel('.planning-cancel').on('click', (event) =>
+      $(event.target).blur()
+      @close(event)
+    )
+    @panel('form').on('submit', @submit)
+    @panel('.planning-delete').on('click', @deleteSelected)
 
-  submit = (event) ->
-    event.preventDefault()
-    app.plannings.panel.hideErrors()
-    data = $(event.target).serializeArray()
-      .reduce(((prev, curr) -> prev[curr.name] = curr.value; prev), {})
-    app.plannings.service.updateSelected(getFormAction(), data)
-
-  deleteSelected = (event) ->
-    event.preventDefault()
-    # TODO: show confirmation dialog (or make it work via link_to confirm)
-    app.plannings.service.deleteSelected(getFormAction())
-
-  getFormAction = ->
-    $(panel).find('form').prop('action')
+  destroy: ->
+    $(document).off('keyup', @closeOnEscape)
 
   show: (selectedElements) ->
-    $(panel)
-      .show()
-      .on('click', (event) -> event.stopPropagation())
-    position()
+    @panel().show()
+    @position()
 
-    app.plannings.panel.hideErrors()
-    setPercent('')
-    setDefinitive(true)
+    @hideErrors()
+    @initPercent()
+    @initDefinitive()
 
-    $(panel).find('#percent').focus()
+    if app.plannings.selectable.selectionHasExistingPlannings()
+      @panel('.planning-delete').css('visibility', 'visible')
+    else
+      @panel('.planning-delete').css('visibility', 'hidden')
 
   hide: ->
     $(panel).hide()
 
-  close: ->
-    app.plannings.panel.hide()
-    app.plannings.selectable.clear()
+  close: (event) =>
+    @hide()
+    app.plannings.selectable.clear(event)
+
+  closeOnEscape: (event) =>
+    if event.key == 'Escape'
+      @close(event)
 
   showErrors: (errors) ->
-    alerts = $(panel).find('.alerts').empty().show()
+    alerts = @panel('.alerts').empty().show()
     if errors && errors.length > 0
       alert = '<div class="alert alert-danger">'
       if errors.length > 1
@@ -84,33 +62,79 @@ app.plannings.panel = do ->
       alerts.append($(alert));
     else
       alerts.append($('<div class="alert alert-danger">Ein Fehler ist aufgetreten</div>'))
-    position()
+    @position()
 
   hideErrors: ->
-    $(panel).find('.alert').hide()
+    @panel('.alert').hide()
 
-  init: ->
-    if $(panel).length == 0
+  submit: (event) =>
+    event.preventDefault()
+    @hideErrors()
+    data = $(event.target).serializeArray()
+      .reduce(((prev, curr) -> prev[curr.name] = curr.value; prev), {})
+    app.plannings.service.updateSelected(@getFormAction(), data)
+
+  deleteSelected: (event) =>
+    event.preventDefault()
+    # TODO: show confirmation dialog (or make it work via link_to confirm)
+    app.plannings.service.deleteSelected(@getFormAction())
+
+  getFormAction: ->
+    @panel('form').prop('action')
+
+  setPercent: (percent, focus, indefinite) ->
+    input = @panel('#percent')
+      .val(percent)
+      .prop('placeholder', if indefinite then '?' else '')
+    if focus then input.focus().select() else input.blur()
+
+  initPercent: () ->
+    values = app.plannings.selectable.getSelectedPercentValues()
+    if values.length == 1
+      @setPercent(values[0], true)
+    else
+      @setPercent('', false, true)
+
+  setDefinitive: (definitive) ->
+    @panel('.planning-definitive').toggleClass('active', definitive == true)
+    @panel('.planning-provisional').toggleClass('active', definitive == false)
+
+    value = if definitive? then definitive.toString() else ''
+    @panel('#definitive').val(value)
+
+  initDefinitive: ->
+    values = app.plannings.selectable.getSelectedDefinitiveValues()
+    if values.length == 1
+      @setDefinitive(if values[0] == null then true else values[0])
+    else
+      @setDefinitive(null)
+
+  definitiveChange: (event) =>
+    source = $(event.target).hasClass('planning-definitive')
+    current = @panel('#definitive').val()
+    @setDefinitive(if source.toString() == current then null else source)
+
+  position: =>
+    if @panel().length == 0 || @panel().is(':hidden')
       return
 
-    $(document).on('keyup', closeOnEscape)
+    unless positioning
+      requestAnimationFrame(() =>
+        @panel().position({
+          my: 'right top',
+          at: 'right bottom',
+          of: $(container).find('.ui-selected').last(),
+          within: container
+        })
+        positioning = false
+      )
+    positioning = true
 
-    ticking = false
-    $(container).on('scroll', () ->
-      requestAnimationFrame(() -> position(); ticking = false) unless ticking
-      ticking = true
-    )
-
-    $(panel).find('.planning-definitive-group button').on('click', definitiveChange)
-    $(panel).find('.planning-cancel').on('click', (event) ->
-      $(event.target).blur()
-      app.plannings.panel.close()
-    )
-    $(panel).find('form').on('submit', submit)
-    $(panel).find('.planning-delete').on('click', deleteSelected)
-
-  destroy: ->
-    $(document).off('keyup', closeOnEscape)
+  panel: (selector) ->
+    if selector
+      $(selector, panel)
+    else
+      $(panel)
 
 $ ->
   app.plannings.panel.destroy()

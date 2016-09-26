@@ -35,6 +35,11 @@ module IntegrationHelper
     mouse_driver.up
   end
 
+  def keyup(key)
+    script = "var e = $.Event('keyup', { key: '#{key}' }); $(document).trigger(e);"
+    page.driver.browser.execute_script(script)
+  end
+
   Capybara.add_selector(:name) do
     xpath { |name| XPath.descendant[XPath.attr(:name).contains(name)] }
   end
