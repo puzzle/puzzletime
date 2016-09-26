@@ -107,7 +107,8 @@ class Reports::Workload
 
   def load_employments
     Employment.
-      where('(end_date IS NULL OR end_date >= ?) AND start_date <= ?', period.start_date, period.end_date).
+      where('(end_date IS NULL OR end_date >= ?) AND start_date <= ?',
+            period.start_date, period.end_date).
       reorder('start_date').to_a
   end
 

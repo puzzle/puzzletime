@@ -17,9 +17,6 @@ module Plannings
 
     def show
       @plannings = load_plannings
-      @employees = load_employees
-      @accounting_posts = load_accounting_posts
-      @absencetimes = load_absencetimes
     end
 
     # new row for plannings
@@ -83,6 +80,9 @@ module Plannings
     end
 
     def set_board
+      @employees = load_employees
+      @accounting_posts = load_accounting_posts
+      @absencetimes = load_absencetimes
       @board = Plannings::Board.new(@period, @plannings, @absencetimes)
     end
 
