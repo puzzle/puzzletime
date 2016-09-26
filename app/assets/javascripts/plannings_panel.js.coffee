@@ -87,7 +87,12 @@ app.plannings.panel = do ->
       return
 
     $(document).on('keyup', closeOnEscape)
-    $(container).on('scroll', position)
+
+    ticking = false
+    $(container).on('scroll', () ->
+      requestAnimationFrame(() -> position(); ticking = false) unless ticking
+      ticking = true
+    )
 
     $(panel).find('.planning-definitive-group button').on('click', definitiveChange)
     $(panel).find('.planning-cancel').on('click', (event) ->
