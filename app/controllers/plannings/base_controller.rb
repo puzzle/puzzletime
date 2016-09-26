@@ -11,21 +11,27 @@ module Plannings
     before_action :set_period
 
     before_render_show :set_board
-    before_render_new :set_board
     before_render_update :set_board
 
     helper_method :entry
 
     def show
       @plannings = load_plannings
+      @employees = load_employees
+      @accounting_posts = load_accounting_posts
+      @absencetimes = load_absencetimes
     end
 
     # new row for plannings
     def new
       @employee = Employee.find(params[:employee_id])
       @work_item = WorkItem.find(params[:work_item_id])
-      @plannings = load_plannings.where(employee_id: @employee.id,
+      plannings = load_plannings.where(employee_id: @employee.id,
                                         work_item_id: @work_item.id)
+      absencetimes = load_absencetimes(@employee)
+      board = Plannings::Board.new(@period, plannings, absencetimes)
+      board.default_row(@employee.id, @work_item.id)
+      @items = board.rows.values.first
     end
 
     def update
@@ -55,6 +61,10 @@ module Plannings
       Planning.in_period(@period).list
     end
 
+    def load_absencetimes(employe_ids = @employees)
+      Absencetime.in_period(@period).includes(:absence).where(employee_id: employe_ids)
+    end
+
     def destroy_plannings
       Planning.transaction do
         @plannings = Planning.where(id: Array(params[:planning_ids]))
@@ -73,7 +83,7 @@ module Plannings
     end
 
     def set_board
-      @board = Plannings::Board.new(@period, @plannings)
+      @board = Plannings::Board.new(@period, @plannings, @absencetimes)
     end
 
     def set_period
