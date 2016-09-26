@@ -24,6 +24,7 @@
 #= require workload_report
 #= require week_datepicker
 #= require work_item_autocomplete
+#= require plannings
 #= require plannings_panel
 #= require plannings_selectable
 #= require plannings_service
