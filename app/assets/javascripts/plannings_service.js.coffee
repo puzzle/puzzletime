@@ -2,7 +2,7 @@ app = window.App ||= {}
 app.plannings ||= {}
 
 app.plannings.service = do ->
-  updateSelected: (planning) ->
+  updateSelected: (url, planning) ->
     utf8 = planning.utf8
     planning.utf8 = undefined
     token = planning.authenticity_token
@@ -10,15 +10,14 @@ app.plannings.service = do ->
 
     $.ajax({
       type: 'PATCH',
-#      url: '',
+      url: url,
       data: {
         utf8: utf8,
         authenticity_token: token,
         planning: planning,
-        create: app.plannings.selectable.getEmptySelectedDays(),
-        update: app.plannings.selectable.getSelectedIds()
+        items: app.plannings.selectable.getSelectedDays(),
       },
     }).fail((res) -> console.log('update error', res.status, res.statusText))
 
-  deleteSelected: ->
+  deleteSelected: (url) ->
     console.log('delete')
