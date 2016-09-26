@@ -12,7 +12,7 @@ app.plannings.panel = do ->
     $(panel).find('.planning-definitive').toggleClass('active', definitive == true)
     $(panel).find('.planning-provisional').toggleClass('active', definitive == false)
 
-    value = if definitive == null || definitive == undefined then '' else definitive.toString()
+    value = if definitive? then definitive.toString() else ''
     $(panel).find('#definitive').val(value)
 
 
@@ -74,7 +74,7 @@ app.plannings.panel = do ->
     alerts = $(panel).find('.alerts').empty().show()
     if errors && errors.length > 0
       errors.forEach((error) ->
-        alerts.append($('<div class="alert alert-danger">' + error + '</div>')))
+        alerts.append($('<div class="alert alert-danger">', text: error)))
     else
       alerts.append($('<div class="alert alert-danger">Ein Fehler ist aufgetreten</div>'))
     position()
