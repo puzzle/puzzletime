@@ -13,7 +13,7 @@ class CreatorTest < ActiveSupport::TestCase
     refute_empty c.errors
   end
 
-  test '#create_or_update with no creates and no updates does nothing' do
+  test '#create_or_update with no new/existing items does nothing' do
     c = Plannings::Creator.new({ planning: { percent: 50 } })
     assert_difference 'Planning.count', 0 do
       assert c.create_or_update
@@ -24,15 +24,15 @@ class CreatorTest < ActiveSupport::TestCase
 
   test '#create_or_update creates new plannings' do
     params = { planning: { percent: 50, definitive: true },
-               create: {
-                 '1' => { employee_id: employees(:pascal).id,
-                          work_item_id: work_items(:puzzletime).id,
+               items: {
+                 '1' => { employee_id: employees(:pascal).id.to_s,
+                          work_item_id: work_items(:puzzletime).id.to_s,
                           date: '2000-01-03' },
-                 '2' => { employee_id: employees(:pascal).id,
-                          work_item_id: work_items(:puzzletime).id,
+                 '2' => { employee_id: employees(:pascal).id.to_s,
+                          work_item_id: work_items(:puzzletime).id.to_s,
                           date: '2000-01-04' },
-                 '3' => { employee_id: employees(:mark).id,
-                          work_item_id: work_items(:puzzletime).id,
+                 '3' => { employee_id: employees(:mark).id.to_s,
+                          work_item_id: work_items(:puzzletime).id.to_s,
                           date: '2000-01-04' }
                }
     }
@@ -74,7 +74,16 @@ class CreatorTest < ActiveSupport::TestCase
                             percent: 50,
                             definitive: true })
 
-    params = { planning: { percent: 25, definitive: false }, update: [p1.id, p3.id] }
+    params = { planning: { percent: 25, definitive: false },
+               items: {
+                 '1' => { employee_id: employees(:pascal).id.to_s,
+                          work_item_id: work_items(:puzzletime).id.to_s,
+                          date: '2000-01-03' },
+                 '2' => { employee_id: employees(:mark).id.to_s,
+                          work_item_id: work_items(:puzzletime).id.to_s,
+                          date: '2000-01-04' }
+               }
+    }
     c = Plannings::Creator.new(ActionController::Parameters.new(params))
     assert_difference 'Planning.count', 0 do
       assert c.create_or_update
@@ -98,7 +107,16 @@ class CreatorTest < ActiveSupport::TestCase
     assert_equal 25, p3.percent
     assert !p3.definitive
 
-    params = { planning: { percent: 30, definitive: '' }, update: [p1.id, p2.id] }
+    params = { planning: { percent: 30, definitive: '' },
+               items: {
+                 '1' => { employee_id: employees(:pascal).id.to_s,
+                          work_item_id: work_items(:puzzletime).id.to_s,
+                          date: '2000-01-03' },
+                 '2' => { employee_id: employees(:pascal).id.to_s,
+                          work_item_id: work_items(:puzzletime).id.to_s,
+                          date: '2000-01-04' }
+               }
+    }
     c = Plannings::Creator.new(ActionController::Parameters.new(params))
     assert_difference 'Planning.count', 0 do
       assert c.create_or_update
@@ -122,7 +140,13 @@ class CreatorTest < ActiveSupport::TestCase
     assert_equal 25, p3.percent
     assert !p3.definitive
 
-    params = { planning: { definitive: true }, update: [p3.id] }
+    params = { planning: { definitive: true },
+               items: {
+                 '1' => { employee_id: employees(:mark).id.to_s,
+                          work_item_id: work_items(:puzzletime).id.to_s,
+                          date: '2000-01-04' }
+               }
+    }
     c = Plannings::Creator.new(ActionController::Parameters.new(params))
     assert_difference 'Planning.count', 0 do
       assert c.create_or_update
@@ -154,11 +178,13 @@ class CreatorTest < ActiveSupport::TestCase
                             percent: 30,
                             definitive: false })
     params = { planning: { percent: 50, definitive: true },
-               update: [p1.id],
-               create: {
-                 '1' => { employee_id: employees(:pascal).id,
-                          work_item_id: work_items(:puzzletime).id,
+               items: {
+                 '1' => { employee_id: employees(:pascal).id.to_s,
+                          work_item_id: work_items(:puzzletime).id.to_s,
                           date: '2000-01-03' },
+                 '2' => { employee_id: employees(:mark).id.to_s,
+                          work_item_id: work_items(:puzzletime).id.to_s,
+                          date: '2000-01-04' }
                }
     }
     c = Plannings::Creator.new(ActionController::Parameters.new(params))
@@ -180,20 +206,6 @@ class CreatorTest < ActiveSupport::TestCase
     assert Planning.last.definitive
   end
 
-  test '#create_or_update returns false and sets errors on creation failure' do
-    # create with employee_id/work_item_id/date that already exist
-  end
-
-  test '#create_or_update returns false and sets errors on update failure' do
-    params = { planning: { percent: 25, definitive: false }, update: [-1] }
-    c = Plannings::Creator.new(ActionController::Parameters.new(params))
-    assert_difference 'Planning.count', 0 do
-      assert !c.create_or_update
-    end
-    assert_nil c.plannings
-    # assert c.errors.include?('Eintrag existiert nicht')
-  end
-
   test '#form_valid? with no planning params returns false and sets errors' do
     [{}, { plannings: nil }, { plannings: {} }].each do |p|
       c = Plannings::Creator.new(p)
@@ -203,29 +215,29 @@ class CreatorTest < ActiveSupport::TestCase
     end
   end
 
-  test '#form_valid? for create with missing percent or definitive returns false and sets errors' do
+  test '#form_valid? for new items with missing percent/definitive returns false and sets errors' do
     [{ percent: '', definitive: true, repeat_until: '2016 42' },
      { definitive: true, repeat_until: '2016 42' }].each do |p|
-      c = Plannings::Creator.new({ planning: p, create: [{}] })
+      c = Plannings::Creator.new({ planning: p, items: items_to_create })
       assert !c.form_valid?, "Expected to be invalid for #{p}"
       assert c.errors.include?('Prozent müssen angegeben werden, um neue Planungen zu erstellen'),
              "Expected to contain error for #{p}"
     end
 
-    [{ percent: 50, definitive: '', repeat_until: '2016 42' },
-     { percent: 50, repeat_until: '2016 42' }].each do |p|
-      c = Plannings::Creator.new({ planning: p, create: [{}] })
+    [{ percent: '50', definitive: '', repeat_until: '2016 42' },
+     { percent: '50', repeat_until: '2016 42' }].each do |p|
+      c = Plannings::Creator.new({ planning: p, items: items_to_create })
       assert !c.form_valid?, "Expected to be invalid for #{p}"
       assert c.errors.include?('Status muss angegeben werden, um neue Planungen zu erstellen'),
              "Expected to contain error for #{p}"
     end
   end
 
-  test '#form_valid? for create with percent and definitive or repeat only returns true' do
+  test '#form_valid? for new items with percent/definitive or repeat only returns true' do
     [{ percent: 50, definitive: true, repeat_until: '2016 42' },
      { percent: 50, definitive: false, repeat_until: '2016 42' },
      { repeat_until: '2016 42' }].each do |p|
-      c = Plannings::Creator.new({ planning: p, create: [{}] })
+      c = Plannings::Creator.new({ planning: p, items: items_to_create })
       assert c.form_valid?, "Expected to be valid for #{p}"
       assert !c.errors.include?('Prozent müssen angegeben werden, um neue Planungen zu erstellen'),
              "Expected to not contain error for #{p}"
@@ -271,7 +283,7 @@ class CreatorTest < ActiveSupport::TestCase
   end
 
   test '#repeat_only? returns true if :repeat_until is set and other values are not present' do
-    c = Plannings::Creator.new({ planning: { repeat_until: '2016 42' }, create: {} })
+    c = Plannings::Creator.new({ planning: { repeat_until: '2016 42' } })
     assert c.repeat_only?
   end
 
@@ -285,9 +297,16 @@ class CreatorTest < ActiveSupport::TestCase
      { percent: '', definitive: false, repeat_until: '2016 42' },
      { percent: 50, repeat_until: '2016 42' },
      { percent: 50, definitive: '', repeat_until: '2016 42' }].each do |p|
-      c = Plannings::Creator.new({ planning: p, create: {} })
+      c = Plannings::Creator.new({ planning: p })
       assert !c.repeat_only?, "Expected to be false for #{p}"
     end
   end
 
+  private
+
+  def items_to_create
+    { '1' => { employee_id: employees(:pascal).id.to_s,
+               work_item_id: work_items(:puzzletime).id.to_s,
+               date: '2000-01-03' } }
+  end
 end

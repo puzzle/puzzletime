@@ -41,12 +41,15 @@ app.plannings.panel = do ->
     app.plannings.panel.hideErrors()
     data = $(event.target).serializeArray()
       .reduce(((prev, curr) -> prev[curr.name] = curr.value; prev), {})
-    app.plannings.service.updateSelected(data)
+    app.plannings.service.updateSelected(getFormAction(), data)
 
   deleteSelected = (event) ->
     event.preventDefault()
     # TODO: show confirmation dialog (or make it work via link_to confirm)
-    app.plannings.service.deleteSelected()
+    app.plannings.service.deleteSelected(getFormAction())
+
+  getFormAction = ->
+    $(panel).find('form').prop('action')
 
   show: (selectedElements) ->
     $(panel)
