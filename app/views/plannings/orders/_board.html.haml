@@ -23,5 +23,5 @@
       .actions{ data: { work_item_id: post.work_item_id } }
         .buttons
           %button.add &#x2795;
-        - for i in 1..(@board.work_days)
+        - @board.work_days.times do
           .day
