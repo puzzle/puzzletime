@@ -6,6 +6,30 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
   setup :list_plannings
 
+  test 'close panel on cancel' do
+    row_mark.all('.day')[0].click
+    page.assert_selector('.planning-panel', visible: true)
+    within '.planning-panel' do
+      click_button 'Abbrechen'
+    end
+    page.assert_selector('.planning-panel', visible: false)
+  end
+
+  test 'close panel on click outside' do
+    row_mark.all('.day')[0].click
+    page.assert_selector('.planning-panel', visible: true)
+    find('.navbar-brand').click
+    page.assert_selector('.planning-panel', visible: false)
+  end
+
+  test 'close panel on escape' do
+    row_mark.all('.day')[0].click
+    page.assert_selector('.planning-panel', visible: true)
+    keyup('Escape')
+    find('body').click
+    page.assert_selector('.planning-panel', visible: false)
+  end
+
   test 'create planning entries' do
     page.assert_selector('.-definitive', count: 2)
     page.assert_selector('.-provisional', count: 0)
@@ -77,6 +101,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
     within '.planning-panel' do
       fill_in 'percent', with: '100'
+      click_button 'fix'
       click_button 'OK'
     end
 
