@@ -101,6 +101,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
     within '.planning-panel' do
       fill_in 'percent', with: '100'
+      click_button 'fix'
       click_button 'OK'
     end
 
