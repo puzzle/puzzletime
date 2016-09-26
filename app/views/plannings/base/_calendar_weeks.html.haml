@@ -1,0 +1,4 @@
+- @period.step(7) do |date|
+  .planning-calendar-week
+    .kw KW #{date.cweek}
+    .planned #{@board.week_totals[date].round}%

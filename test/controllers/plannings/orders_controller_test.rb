@@ -23,9 +23,9 @@ module Plannings
                        percent: 20)
       get :show, id: orders(:hitobito_demo).id
       assert_equal accounting_posts(:hitobito_demo_app, :hitobito_demo_site),
-                   assigns(:accounting_posts)
+                   assigns(:board).accounting_posts
       assert_equal employees(:lucien, :pascal),
-                   assigns(:employees)
+                   assigns(:board).employees
     end
 
     test 'GET#show with start and end date changes period' do
@@ -51,7 +51,6 @@ module Plannings
                               work_item_id: work_items(:puzzletime).id.to_s,
                               date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
       assert_equal 200, response.status
-      assert_equal 1, assigns(:plannings).length
       assert response.body.include?('Zumkehr Pascal')
       assert response.body.include?('50')
     end
