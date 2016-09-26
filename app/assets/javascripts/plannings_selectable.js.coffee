@@ -28,8 +28,8 @@ app.plannings.selectable = do ->
     $(selectable).find('.ui-selected').removeClass('ui-selected -selected')
     app.plannings.panel.hide()
 
-  getEmptySelectedDays: ->
-    $(selectable).find('.ui-selected:not(.-definitive,.-provisional)')
+  getSelectedDays: ->
+    $(selectable).find('.ui-selected')
       .toArray()
       .map((element) ->
         row = $(element).parent()
@@ -40,11 +40,6 @@ app.plannings.selectable = do ->
 
         { employee_id: rowId[1], work_item_id: rowId[2], date: date }
       )
-
-  getSelectedIds: ->
-    $(selectable).find('.ui-selected.-definitive,.ui-selected.-provisional')
-      .toArray()
-      .map((element) -> $(element).data('id'))
 
   init: ->
     if $(selectable).length == 0

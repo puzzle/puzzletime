@@ -6,11 +6,11 @@ module Plannings
     attr_reader :params, :errors, :plannings
 
     PERMITTED_ATTRIBUTES = [:id, :employee_id, :work_item_id, :date, :percent, :definitive]
+    ITEM_FIELDS = [:employee_id, :work_item_id, :date]
 
     # params:
     # { planning: { percent: 50, definitive: true, repeat_until: '2016 42' },
-    #   update: [ 1, 3, 4 ],
-    #   create: [
+    #   items: [
     #       { employee_id: 2, work_item_id: 3, date: '2016-03-01' }
     #   ] }
     def initialize(params)
@@ -18,18 +18,10 @@ module Plannings
     end
 
     def create_or_update
-      return false unless form_valid?
-
       Planning.transaction do
-        begin
-          @plannings = create.concat(update)
-        rescue ActiveRecord::RecordNotFound
-          # @errors << 'Eintrag existiert nicht'
-          raise ActiveRecord::Rollback
-        end
-
-        # TODO: append errors to @errors
-        @plannings.all?(&:valid?)
+        return false unless form_valid?
+        @plannings = update.concat(create)
+        @errors.blank?
       end
     end
 
@@ -53,8 +45,37 @@ module Plannings
 
     private
 
+    def new_items_hashes
+      return [] unless params[:items].present?
+      @new_items_hashes ||= params[:items].values.select do |item|
+        !existing_items_hashes.include?(item)
+      end
+    end
+
+    def existing_items_hashes
+      @existing_items_hashes ||= existing_items.pluck(*ITEM_FIELDS).map do |values|
+        h = {}
+        values.each_with_index do |v, i|
+          h[ITEM_FIELDS[i].to_s] = v.is_a?(Date) ? v.strftime('%Y-%m-%d') : v.to_s
+        end
+        h
+      end
+    end
+
+    def existing_items
+      return Planning.none unless params[:items].present?
+      @existing_items ||= Planning.where(existing_items_condition(params[:items].values))
+    end
+
+    def existing_items_condition(items)
+      table = Planning.arel_table
+      items.collect do |item|
+        ITEM_FIELDS.collect { |attr| table[attr].eq(item[attr]) }.reduce(:and)
+      end.reduce(:or)
+    end
+
     def validate_create(p)
-      if params[:create].present? && !repeat_only?
+      if create? && !repeat_only?
         if p[:percent].blank?
           @errors << 'Prozent müssen angegeben werden, um neue Planungen zu erstellen'
         end
@@ -73,7 +94,7 @@ module Plannings
     def validate_repeat(p)
       if p[:repeat_until].present?
         week = Week.from_string(p[:repeat_until])
-        if !week.valid?
+        unless week.valid?
           @errors << 'Wiederholungsdatum ist ungültig'
         end
       end
@@ -87,24 +108,35 @@ module Plannings
       end
     end
 
-    def create
-      return [] unless params[:create].present?
+    def create?
+      new_items_hashes.present?
+    end
 
-      params[:create].values.collect do |day|
-        day_params = ActionController::Parameters.new(day).permit(PERMITTED_ATTRIBUTES)
-        Planning.create(planning_params.merge(day_params))
+    def create
+      return [] unless create?
+
+      plannings = new_items_hashes.collect do |item|
+        params = ActionController::Parameters.new(item).permit(PERMITTED_ATTRIBUTES)
+        Planning.create(planning_params.merge(params))
       end
+
+      if plannings.any? { |p| p.errors.present? }
+        # should not happen after form validations
+        @errors << 'Eintrag konnte nicht erstellt werden'
+        fail ActiveRecord::Rollback
+      end
+
+      plannings
     end
 
     def update
-      return [] unless params[:update].present?
-
-      params[:update].collect { |id| Planning.update(id, planning_params) }
-      # TODO: use update_all (and skip validations!) to have only one query?
+      existing_items.update_all(planning_params)
+      existing_items.reload
     end
 
     def planning_params
-      params[:planning].delete_if { |k, v| v.blank? && v != false }.permit(PERMITTED_ATTRIBUTES)
+      p = params[:planning].delete_if { |_k, v| v.blank? && v != false }
+      ActionController::Parameters.new(p).permit(PERMITTED_ATTRIBUTES)
     end
 
   end
