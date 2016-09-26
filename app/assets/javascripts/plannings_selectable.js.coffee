@@ -33,12 +33,12 @@ app.plannings.selectable = new class
       .toArray()
       .map((element) ->
         row = $(element).parent()
-        rowId = row.prop('id')
+        [ _match, employee_id, work_item_id ] = row.prop('id')
           .match(/planning_row_employee_(\d+)_work_item_(\d+)/)
         date = $(selectable).find('.planning-calendar-days-header .dayheader')
           .eq(row.children('.day').index(element)).data('date')
 
-        { employee_id: rowId[1], work_item_id: rowId[2], date: date }
+        { employee_id, work_item_id, date }
       )
 
   init: ->
