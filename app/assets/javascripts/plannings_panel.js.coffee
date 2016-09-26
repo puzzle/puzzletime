@@ -50,7 +50,7 @@ app.plannings.panel = new class
 
   showErrors: (errors) ->
     alerts = @panel('.alerts').empty().show()
-    if errors && errors.length > 0
+    if errors?.length
       errors.forEach((error) ->
         alerts.append($('<div class="alert alert-danger">').text(error)))
     else
