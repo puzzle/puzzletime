@@ -22,10 +22,14 @@ module IntegrationHelper
     skip e.message || e.class.name
   end
 
-  def selectize(id, value)
+  def open_selectize(id)
     element = find("##{id} + .selectize-control")
-    element.find('.selectize-input').click # open dropdown
-    element.find('.selectize-dropdown-content').find('div', text: value).click
+    element.find('.selectize-input').click
+    find('.selectize-dropdown-content')
+  end
+
+  def selectize(id, value)
+    open_selectize(id).find('div', text: value).click
   end
 
   def drag(from_node, to_node)
