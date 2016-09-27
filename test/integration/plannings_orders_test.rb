@@ -30,6 +30,62 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     page.assert_selector('.planning-panel', visible: false)
   end
 
+  test 'form values' do
+    date = Date.today.beginning_of_week
+    Planning.create!({ employee_id: employees(:pascal).id,
+                       work_item_id: work_item_id,
+                       date: (date + 1.days).strftime('%Y-%m-%d'),
+                       percent: 25,
+                       definitive: true })
+    Planning.create!({ employee_id: employees(:pascal).id,
+                       work_item_id: work_item_id,
+                       date: (date + 2.days).strftime('%Y-%m-%d'),
+                       percent: 25,
+                       definitive: false })
+    Planning.create!({ employee_id: employees(:pascal).id,
+                       work_item_id: work_item_id,
+                       date: (date + 3.days).strftime('%Y-%m-%d'),
+                       percent: 40,
+                       definitive: false })
+    visit plannings_order_path(orders(:puzzletime))
+    page.assert_selector('.-definitive', count: 3)
+    page.assert_selector('.-provisional', count: 2)
+    page.assert_selector('.-selected', count: 0)
+    page.assert_selector('.planning-panel', visible: false)
+
+    drag(row_pascal.all('.day')[0], row_pascal.all('.day')[1])
+    page.assert_selector('#percent:focus')
+    assert_equal '25', find('#percent').value
+    assert_equal '', find('#percent')['placeholder']
+    page.assert_selector('.planning-definitive.active')
+    page.assert_selector('.planning-provisional:not(.active)')
+    assert_equal 'true', find('#definitive', visible: false).value
+
+    drag(row_pascal.all('.day')[0], row_pascal.all('.day')[2])
+    page.assert_selector('#percent:focus')
+    assert_equal '25', find('#percent').value
+    assert_equal '', find('#percent')['placeholder']
+    page.assert_selector('.planning-definitive:not(.active)')
+    page.assert_selector('.planning-provisional:not(.active)')
+    assert_equal '', find('#definitive', visible: false).value
+
+    drag(row_pascal.all('.day')[2], row_pascal.all('.day')[3])
+    page.assert_selector('#percent:not(:focus)')
+    assert_equal '', find('#percent').value
+    assert_equal '?', find('#percent')['placeholder']
+    page.assert_selector('.planning-definitive:not(.active)')
+    page.assert_selector('.planning-provisional.active')
+    assert_equal 'false', find('#definitive', visible: false).value
+
+    drag(row_pascal.all('.day')[0], row_pascal.all('.day')[4])
+    page.assert_selector('#percent:not(:focus)')
+    assert_equal '', find('#percent').value
+    assert_equal '?', find('#percent')['placeholder']
+    page.assert_selector('.planning-definitive:not(.active)')
+    page.assert_selector('.planning-provisional:not(.active)')
+    assert_equal '', find('#definitive', visible: false).value
+  end
+
   test 'create planning entries' do
     page.assert_selector('.-definitive', count: 2)
     page.assert_selector('.-provisional', count: 0)
