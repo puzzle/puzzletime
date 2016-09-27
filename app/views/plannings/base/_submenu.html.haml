@@ -1,4 +1,5 @@
 = nav 'Meine Planung', plannings_employee_path(current_user)
-= nav 'Mitarbeiter', plannings_employees_path
-= nav 'Aufträge', plannings_orders_path
+= nav 'Meine Aufträge', plannings_orders_path(mine: true)
+= nav 'Mitarbeiter', plannings_employees_path, plannings_employees_path
+= nav 'Aufträge', plannings_orders_path, plannings_orders_path
 

@@ -8,6 +8,14 @@ module Plannings
 
     private
 
+    def list_entries
+      if params[:mine]
+        super.where(responsible_id: current_user.id)
+      else
+        super
+      end
+    end
+
     def order
       @order ||= Order.find(params[:id])
     end
