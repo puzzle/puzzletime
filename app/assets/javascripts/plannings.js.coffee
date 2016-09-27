@@ -3,9 +3,9 @@ app.plannings ||= {}
 
 app.plannings = new class
   board = '.planning-calendar'
-  add_employee_select = null
-  add_employee_selectize = null
-  add_employee_options = []
+  addEmployeeSelect = null
+  addEmployeeSelectize = null
+  addEmployeeOptions = []
 
   init: ->
     @initListeners()
@@ -19,31 +19,31 @@ app.plannings = new class
 
   showSelect: (event) ->
     work_item_id = $(event.target).closest('.actions').data('work-item-id')
-    add_employee_selectize.setValue(null)
-    add_employee_selectize.clearOptions()
-    add_employee_options
+    addEmployeeSelectize.setValue(null)
+    addEmployeeSelectize.clearOptions()
+    addEmployeeOptions
       .filter((option) -> option?.value)
       .forEach((option) =>
         employee_id = option.value
         return if @board().has("#planning_row_employee_#{employee_id}_work_item_#{work_item_id}").length
 
-        add_employee_selectize.addOption(option)
+        addEmployeeSelectize.addOption(option)
       )
 
     $(event.target)
       .closest('.buttons')
-      .prepend(add_employee_select)
+      .prepend(addEmployeeSelect)
 
     @board('.add').show()
     $(event.target).hide()
-    add_employee_select.show()
-    requestAnimationFrame(() => add_employee_selectize.refreshOptions())
+    addEmployeeSelect.show()
+    requestAnimationFrame(() => addEmployeeSelectize.refreshOptions())
 
-  add_employee: (employee_id, work_item_id) ->
+  addEmployee: (employee_id, work_item_id) ->
     app.plannings.service
       .addPlanningRow(employee_id, work_item_id)
       .then(() =>
-        add_employee_select.detach()
+        addEmployeeSelect.detach()
 
         @board('.add').show()
       )
@@ -52,8 +52,8 @@ app.plannings = new class
     @board().on('click', '.actions .add', @add)
 
   initSelectize: ->
-    add_employee_select = $('#add_employee_id')
-    add_employee_selectize = add_employee_select
+    addEmployeeSelect = $('#add_employee_id')
+    addEmployeeSelectize = addEmployeeSelect
       .children('select')
       .selectize(
         selectOnTab: true
@@ -61,18 +61,18 @@ app.plannings = new class
         onItemAdd: (value) =>
           if value
             employee_id = value
-            work_item_id = add_employee_select
+            work_item_id = addEmployeeSelect
               .closest('.actions')
               .data('work-item-id')
 
-            @add_employee(employee_id, work_item_id)
+            @addEmployee(employee_id, work_item_id)
       )
       .get(0).selectize
 
-    add_employee_options = [
+    addEmployeeOptions = [
       undefined,
-      Object.keys(add_employee_selectize.options)
-        .map((key) -> add_employee_selectize.options[key])...
+      Object.keys(addEmployeeSelectize.options)
+        .map((key) -> addEmployeeSelectize.options[key])...
     ]
 
   destroyListeners: ->
