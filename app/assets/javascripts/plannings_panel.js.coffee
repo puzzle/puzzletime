@@ -10,19 +10,17 @@ app.plannings.panel = new class
     if @panel().length == 0
       return
 
-    $(document).on('keyup', @closeOnEscape)
     $(container).on('scroll', @position)
 
     @panel('.planning-definitive-group button').on('click', @definitiveChange)
     @panel('.planning-cancel').on('click', (event) =>
       $(event.target).blur()
-      @close(event)
+      app.plannings.selectable.clear()
     )
     @panel('form').on('submit', @submit)
     @panel('.planning-delete').on('click', @deleteSelected)
 
   destroy: ->
-    $(document).off('keyup', @closeOnEscape)
 
   show: (selectedElements) ->
     @panel().show()
@@ -32,21 +30,11 @@ app.plannings.panel = new class
     @initPercent()
     @initDefinitive()
 
-    if app.plannings.selectable.selectionHasExistingPlannings()
-      @panel('.planning-delete').css('visibility', 'visible')
-    else
-      @panel('.planning-delete').css('visibility', 'hidden')
+    hasExisting = app.plannings.selectable.selectionHasExistingPlannings()
+    @panel('.planning-delete').css('visibility', if hasExisting then 'visible' else 'hidden')
 
   hide: ->
     $(panel).hide()
-
-  close: (event) =>
-    @hide()
-    app.plannings.selectable.clear(event)
-
-  closeOnEscape: (event) =>
-    if event.key == 'Escape'
-      @close(event)
 
   showErrors: (errors) ->
     alerts = @panel('.alerts').empty().show()
@@ -54,7 +42,7 @@ app.plannings.panel = new class
       alert = '<div class="alert alert-danger">'
       if errors.length > 1
         alert += '<ul>'
-        errors.forEach((error) -> alert += '<li>' + error + '</li>')
+        errors.forEach((error) -> alert += "<li>#{error}</li>")
         alert += '</ul>'
       else
         alert += errors[0]
@@ -75,9 +63,12 @@ app.plannings.panel = new class
     app.plannings.service.updateSelected(@getFormAction(), data)
 
   deleteSelected: (event) =>
-    event.preventDefault()
-    # TODO: show confirmation dialog (or make it work via link_to confirm)
-    app.plannings.service.deleteSelected(@getFormAction())
+    if confirm('Bist du sicher, dass du die selektierte Planung löschen willst?')
+      event.preventDefault()
+      app.plannings.service.delete(
+        @getFormAction(),
+        app.plannings.selectable.getSelectedPlanningIds()
+      )
 
   getFormAction: ->
     @panel('form').prop('action')

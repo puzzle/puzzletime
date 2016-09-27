@@ -11,6 +11,8 @@ app.plannings.selectable = new class
       return
 
     $(document).on('click', @clear)
+    $(document).on('keyup', @clearOnEscape)
+
     @selectable().selectable({
       filter: selectee,
       classes: {
@@ -24,11 +26,16 @@ app.plannings.selectable = new class
 
   destroy: ->
     $(document).off('click', @clear)
+    $(document).off('keyup', @clearOnEscape)
 
   clear: (e) =>
     unless e && $(e.target).closest('.panel').length
       @selectable('.ui-selected').removeClass('ui-selected -selected')
       app.plannings.panel.hide()
+
+  clearOnEscape: (event) =>
+    if event.key == 'Escape'
+      @clear()
 
   getSelectedDays: ->
     @selectable('.ui-selected')
@@ -42,6 +49,12 @@ app.plannings.selectable = new class
 
         { employee_id, work_item_id, date }
       )
+
+  getSelectedPlanningIds: ->
+    @selectable('.ui-selected')
+      .toArray()
+      .map((el) -> el.dataset.id)
+      .filter((id) -> id)
 
   getSelectedPercentValues: ->
     @selectable('.ui-selected')

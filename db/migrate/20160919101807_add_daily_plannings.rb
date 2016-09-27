@@ -1,7 +1,7 @@
 class AddDailyPlannings < ActiveRecord::Migration
   OLD_TABLE = :plannings
   NEW_TABLE = :plannings_new
-  IGNORE_BEFORE = Date.today.beginning_of_month - 1.months
+  IGNORE_BEFORE = Date.today.beginning_of_year - 6.months
   UNLIMITED_REPEAT_DURATION = 6.months
   BATCH_SIZE = 1000
 

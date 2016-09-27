@@ -1,4 +1,4 @@
-App.plannings.panel.close();
+App.plannings.selectable.clear();
 $('.planning-calendar-weeks').html('#{j(render 'calendar_weeks')}');
 - @board.rows.each do |(employee_id, work_item_id), items|
   $('#planning_row_employee_#{employee_id}_work_item_#{work_item_id}').html('#{j(render('row', items: items, legend: @board.row_legend(employee_id, work_item_id)))}');
