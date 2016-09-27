@@ -19,8 +19,13 @@ app.plannings.service = new class
       },
     }).fail((res) -> console.log('update error', res.status, res.statusText))
 
-  deleteSelected: (url) ->
-    console.log('delete')
+  delete: (url, ids) ->
+    $.ajax(
+      type: 'DELETE'
+      url: url
+      data:
+        planning_ids: ids
+    )
 
   addPlanningRow: (employee_id, work_item_id) ->
     $.ajax(

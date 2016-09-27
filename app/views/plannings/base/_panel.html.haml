@@ -20,10 +20,7 @@
             = check_box_tag(:repetition)
             Wiederholung wöchentlich
     .panel-footer
-      = link_to(plannings_order_path,
-                title: 'Löschen',
-                class: 'planning-delete btn text-danger',
-                data: { confirm: 'Bist du sicher, dass du die selektierte Planung löschen willst?' }) do
+      = button_tag('Löschen', type: :button, title: 'Löschen', class: 'planning-delete btn text-danger') do
         %i.icon-delete
       = button_tag('Abbrechen', type: :button, class: 'planning-cancel btn btn-link')
       = button_tag('OK', type: :submit, class: 'btn btn-primary')
