@@ -20,7 +20,7 @@
             = render 'row',
                      legend: employee,
                      items: items
-      .actions{ data: { work_item_id: post.work_item_id } }
+      .actions{ data: { type: 'employee', work_item_id: post.work_item_id } }
         .buttons
           %button.add &#x2795;
         - @board.work_days.times do

@@ -15,7 +15,7 @@ app.plannings.selectable = new class
 
     @selectable().selectable({
       filter: selectee,
-      cancel: 'a',
+      cancel: 'a, .actions',
       classes: {
         'ui-selected': '-selected'
       },

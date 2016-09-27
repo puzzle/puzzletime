@@ -3,9 +3,9 @@ app.plannings ||= {}
 
 app.plannings = new class
   board = '.planning-calendar'
-  addEmployeeSelect = null
-  addEmployeeSelectize = null
-  addEmployeeOptions = []
+  addRowSelect = null
+  addRowSelectize = null
+  addRowOptions = []
 
   init: ->
     @initListeners()
@@ -18,61 +18,72 @@ app.plannings = new class
     @showSelect(event)
 
   showSelect: (event) ->
-    work_item_id = $(event.target).closest('.actions').data('work-item-id')
-    addEmployeeSelectize.setValue(null)
-    addEmployeeSelectize.clearOptions()
-    addEmployeeOptions
+    actionData = $(event.target).closest('.actions').data()
+    addRowSelectize.setValue(null)
+    addRowSelectize.clearOptions()
+    addRowOptions
       .filter((option) -> option?.value)
       .forEach((option) =>
-        employee_id = option.value
-        return if @board().has("#planning_row_employee_#{employee_id}_work_item_#{work_item_id}").length
+        actionData["#{actionData.type}Id"] = option.value
 
-        addEmployeeSelectize.addOption(option)
+        return if @board().has("#planning_row_employee_#{actionData.employeeId}_work_item_#{actionData.workItemId}").length
+
+        addRowSelectize.addOption(option)
       )
 
     $(event.target)
       .closest('.buttons')
-      .prepend(addEmployeeSelect)
+      .prepend(addRowSelect)
 
     @board('.add').show()
     $(event.target).hide()
-    addEmployeeSelect.show()
-    requestAnimationFrame(() => addEmployeeSelectize.refreshOptions())
+    addRowSelect.show()
+    requestAnimationFrame(() => addRowSelectize.refreshOptions())
 
-  addEmployee: (employee_id, work_item_id) ->
+  addRow: (employeeId, workItemId) ->
     app.plannings.service
-      .addPlanningRow(employee_id, work_item_id)
+      .addPlanningRow(employeeId, workItemId)
       .then(() =>
-        addEmployeeSelect.detach()
+        addRowSelect.detach()
 
         @board('.add').show()
       )
+
+  onAddSelect: (value) =>
+    if value
+      if addRowSelect.is('#add_employee_id')
+        employeeId = value
+        workItemId = addRowSelect
+          .closest('.actions')
+          .data('work-item-id')
+      else if addRowSelect.is('#add_work_item_id')
+        workItemId = value
+        employeeId = addRowSelect
+          .closest('.actions')
+          .data('employee-id')
+      else
+        throw new Error('Unknown select!')
+
+      @addRow(employeeId, workItemId)
 
   initListeners: ->
     @board().on('click', '.actions .add', @add)
 
   initSelectize: ->
-    addEmployeeSelect = $('#add_employee_id')
-    addEmployeeSelectize = addEmployeeSelect
+    addRowSelect = $('#add_employee_id,#add_work_item_id')
+    addRowSelectize = addRowSelect
       .children('select')
       .selectize(
         selectOnTab: true
         dropdownParent: 'body'
-        onItemAdd: (value) =>
-          if value
-            employee_id = value
-            work_item_id = addEmployeeSelect
-              .closest('.actions')
-              .data('work-item-id')
-
-            @addEmployee(employee_id, work_item_id)
+        onItemAdd: @onAddSelect
       )
       .get(0).selectize
 
-    addEmployeeOptions = [
+    addRowOptions = [
       undefined,
-      Object.keys(addEmployeeSelectize.options)
-        .map((key) -> addEmployeeSelectize.options[key])...
+      Object.keys(addRowSelectize.options)
+        .map((key) -> addRowSelectize.options[key])...
     ]
 
   destroyListeners: ->
