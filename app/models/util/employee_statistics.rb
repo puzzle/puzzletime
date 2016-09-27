@@ -76,18 +76,21 @@ class EmployeeStatistics
   # an empty Array if no employments exist.
   def employments_during(period)
     return [] if period.nil?
-    selectedEmployments = @employee.employments.where('(end_date IS NULL OR end_date >= ?) AND start_date <= ?',
-                                                      period.start_date, period.end_date).
-                          reorder('start_date').
-                          to_a
-    unless selectedEmployments.empty?
-      selectedEmployments.first.start_date = period.start_date if selectedEmployments.first.start_date < period.start_date
-      if selectedEmployments.last.end_date.nil? ||
-         selectedEmployments.last.end_date > period.end_date
-        selectedEmployments.last.end_date = period.end_date
-      end
+
+    conditions = []
+    bindings = []
+    if period.start_date.present?
+      conditions << '(end_date IS NULL OR end_date >= ?)'
+      bindings << period.start_date
     end
-    selectedEmployments
+    if period.end_date.present?
+      conditions << 'start_date <= ?'
+      bindings << period.end_date
+    end
+    employments = @employee.employments.where(conditions.join(' AND '), *bindings).
+                                        reorder('start_date').
+                                        to_a
+    normalize_employments_boundaries(employments, period)
   end
 
   private
@@ -130,5 +133,18 @@ class EmployeeStatistics
     first_employment = @employee.employments.reorder('start_date ASC').first
     return nil if first_employment.nil? || first_employment.start_date > date
     Period.retrieve(first_employment.start_date, date)
+  end
+
+  def normalize_employments_boundaries(employments, period)
+    unless employments.empty?
+      if period.start_date.present? && employments.first.start_date < period.start_date
+        employments.first.start_date = period.start_date
+      end
+      if period.end_date.present? && (employments.last.end_date.nil? ||
+        employments.last.end_date > period.end_date
+        employments.last.end_date = period.end_date)
+      end
+    end
+    employments
   end
 end
