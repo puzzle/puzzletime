@@ -1,3 +1,9 @@
+#add_work_item_id{ hidden: true }
+  = select_tag(:id,
+               options_from_collection_for_select(WorkItem.list, :id, :label_verbose),
+               autocomplete: 'off',
+               include_blank: true)
+
 .planning-calendar{ style: "--days: #{@board.work_days}" }
   .planning-calendar-inner
     = render 'board_header'
@@ -7,3 +13,8 @@
       - if items
         .planning-calendar-days{ id: "planning_row_employee_#{@employee.id}_work_item_#{post.work_item_id}" }
           = render 'row', legend: post, items: items
+    .actions{ data: { type: 'workItem', employee_id: @employee.id } }
+      .buttons
+        %button.add &#x2795;
+      - @board.work_days.times do
+        .day

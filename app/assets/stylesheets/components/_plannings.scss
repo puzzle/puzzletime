@@ -4,7 +4,7 @@ $weekdays: 5;
 $week-width: $cell-width * $weekdays;
 $legend-width: 300px;
 
-#add_employee_id {
+#add_employee_id, #add_work_item_id {
   flex: 1;
 }
 
