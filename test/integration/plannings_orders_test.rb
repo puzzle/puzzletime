@@ -173,6 +173,24 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     row_pascal.all('.day')[2].assert_text('')
   end
 
+  test 'Adding a new employee to the board' do
+    page.assert_selector('.add', count: 1)
+    page.assert_no_selector('#planning_row_employee_2_work_item_4')
+
+    find('.add').click
+
+    selectize('add_employee_select_id', 'Dolores Pedro')
+    page.assert_selector('#planning_row_employee_2_work_item_4', text: 'Dolores Pedro')
+    page.assert_selector('#planning_row_employee_2_work_item_4 .day', count: 70)
+    page.assert_no_selector('#add_employee_id')
+  end
+
+  test 'Select does not show already present employees' do
+    assert find('#planning_row_employee_7_work_item_4 .legend').text.include?('Waber Mark')
+    find('.add').click
+    assert_not open_selectize('add_employee_select_id').text.include?('Waber Mark')
+  end
+
   private
 
   def row_mark
