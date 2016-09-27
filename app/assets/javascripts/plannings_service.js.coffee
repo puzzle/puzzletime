@@ -8,7 +8,7 @@ app.plannings.service = new class
     token = planning.authenticity_token
     planning.authenticity_token = undefined
 
-    $.ajax({
+    return $.ajax({
       type: 'PATCH',
       url: url,
       data: {
@@ -28,7 +28,7 @@ app.plannings.service = new class
     )
 
   addPlanningRow: (employee_id, work_item_id) ->
-    $.ajax(
+    return $.ajax(
       url: "#{window.location}/new"
       data:
         employee_id: employee_id
