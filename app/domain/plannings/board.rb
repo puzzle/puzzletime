@@ -32,6 +32,10 @@ module Plannings
       end
     end
 
+    def week_totals_state(_date)
+      nil
+    end
+
     def accounting_posts
       rows
       @accounting_posts ||= load_accounting_posts
