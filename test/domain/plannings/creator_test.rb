@@ -206,6 +206,74 @@ class CreatorTest < ActiveSupport::TestCase
     assert Planning.last.definitive
   end
 
+  test '#create_or_update builds repetitions with new and existing items' do
+    p1 = Planning.create!(employee_id: employees(:pascal).id,
+                          work_item_id: work_items(:hitobito_demo_app).id,
+                          date: '2016-09-27',
+                          percent: 30,
+                          definitive: false)
+    p2 = Planning.create!(employee_id: employees(:pascal).id,
+                          work_item_id: work_items(:hitobito_demo_app).id,
+                          date: '2016-10-03',
+                          percent: 30,
+                          definitive: false)
+    p3 = Planning.create!(employee_id: employees(:pascal).id,
+                          work_item_id: work_items(:hitobito_demo_app).id,
+                          date: '2016-10-04',
+                          percent: 30,
+                          definitive: false)
+    items = [
+      { employee_id: employees(:pascal).id.to_s, work_item_id: work_items(:hitobito_demo_app).id.to_s, date: '2016-09-27' },
+      { employee_id: employees(:pascal).id.to_s, work_item_id: work_items(:hitobito_demo_app).id.to_s, date: '2016-09-28' },
+      { employee_id: employees(:pascal).id.to_s, work_item_id: work_items(:hitobito_demo_app).id.to_s, date: '2016-09-29' },
+    ]
+    c = Plannings::Creator.new(planning: { percent: 50, definitive: false, repeat_until: '201642' }, items: items)
+
+    assert_difference('Planning.count', 10) do
+      c.create_or_update
+    end
+
+    assert_equal 50, p1.reload.percent
+    assert_equal 30, p2.reload.percent
+    assert_equal 50, p3.reload.percent
+  end
+
+  test '#create_or_update builds repetitions without changing attributes' do
+    p1 = Planning.create!(employee_id: employees(:pascal).id,
+                          work_item_id: work_items(:hitobito_demo_app).id,
+                          date: '2016-09-27',
+                          percent: 30,
+                          definitive: false)
+    p1 = Planning.create!(employee_id: employees(:pascal).id,
+                          work_item_id: work_items(:hitobito_demo_app).id,
+                          date: '2016-09-28',
+                          percent: 30,
+                          definitive: false)
+    p3 = Planning.create!(employee_id: employees(:pascal).id,
+                          work_item_id: work_items(:hitobito_demo_app).id,
+                          date: '2016-10-03',
+                          percent: 50,
+                          definitive: true)
+    p4 = Planning.create!(employee_id: employees(:pascal).id,
+                          work_item_id: work_items(:hitobito_demo_app).id,
+                          date: '2016-10-04',
+                          percent: 20,
+                          definitive: false)
+    items = [
+        { employee_id: employees(:pascal).id.to_s, work_item_id: work_items(:hitobito_demo_app).id.to_s, date: '2016-09-27' },
+        { employee_id: employees(:pascal).id.to_s, work_item_id: work_items(:hitobito_demo_app).id.to_s, date: '2016-09-28' },
+        { employee_id: employees(:pascal).id.to_s, work_item_id: work_items(:hitobito_demo_app).id.to_s, date: '2016-09-29' },
+        { employee_id: employees(:pascal).id.to_s, work_item_id: work_items(:hitobito_demo_app).id.to_s, date: '2016-10-03' },
+    ]
+    c = Plannings::Creator.new(planning: { percent: '', definitive: '', repeat_until: '201643' }, items: items)
+
+    assert_difference('Planning.count', 5) do
+      c.create_or_update
+    end
+
+    assert_equal 20, p4.reload.percent
+  end
+
   test '#form_valid? with no planning params returns false and sets errors' do
     [{}, { plannings: nil }, { plannings: {} }].each do |p|
       c = Plannings::Creator.new(p)

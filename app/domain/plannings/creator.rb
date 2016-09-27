@@ -20,7 +20,8 @@ module Plannings
     def create_or_update
       Planning.transaction do
         return false unless form_valid?
-        @plannings = update.concat(create)
+        @plannings = update.concat(create) unless repeat_only?
+        repeat if repeat_until_week
         @errors.blank?
       end
     end
@@ -62,12 +63,9 @@ module Plannings
       end
     end
 
-    def validate_repeat(p)
-      if p[:repeat_until].present?
-        week = Week.from_string(p[:repeat_until])
-        unless week.valid?
-          @errors << 'Wiederholungsdatum ist ungültig'
-        end
+    def validate_repeat(_p)
+      if repeat_until_week && !repeat_until_week.valid?
+        @errors << 'Wiederholungsdatum ist ungültig'
       end
     end
 
@@ -101,6 +99,41 @@ module Plannings
       existing_items.reload
     end
 
+    def repeat
+      dates = repetition_source.collect(&:date).sort
+      interval = Period.new(dates.first.at_beginning_of_week, dates.last.at_end_of_week)
+      end_date = repeat_until_week.to_date + 6.days
+      if end_date > interval.end_date
+        create_repetitions(interval, end_date)
+      end
+    end
+
+    def create_repetitions(interval, end_date)
+      repetitions = (end_date - interval.start_date).to_i / interval.length.to_i
+      repetitions.times do |i|
+        offset = ((i + 1) * interval.length).days
+        repeat_plannings(offset, end_date)
+      end
+    end
+
+    def repeat_plannings(offset, end_date)
+      repetition_source.each do |planning|
+        date = planning.date + offset
+        next if date > end_date
+
+        p = Planning.where(employee_id: planning.employee_id,
+                           work_item_id: planning.work_item_id,
+                           date: date).first_or_initialize
+        p.percent = planning.percent
+        p.definitive = planning.definitive
+        p.save!
+      end
+    end
+
+    def repetition_source
+      @plannings.presence || existing_items
+    end
+
     def planning_params
       p = params[:planning].delete_if { |_k, v| v.blank? && v != false }
       ActionController::Parameters.new(p).permit(PERMITTED_ATTRIBUTES)
@@ -116,8 +149,8 @@ module Plannings
     end
 
     def new_items_hashes
-      return [] unless params[:items].present?
-      @new_items_hashes ||= params[:items].values - existing_items_hashes
+      return [] unless items.present?
+      @new_items_hashes ||= items - existing_items_hashes
     end
 
     def existing_items_hashes
@@ -129,15 +162,28 @@ module Plannings
     end
 
     def existing_items
-      return Planning.none unless params[:items].present?
-      @existing_items ||= Planning.where(existing_items_condition(params[:items].values))
+      return Planning.none unless items.present?
+      @existing_items ||= Planning.where(existing_items_condition)
     end
 
-    def existing_items_condition(items)
+    def existing_items_condition
       table = Planning.arel_table
       items.collect do |item|
-        ITEM_FIELDS.collect { |attr| table[attr].eq(item[attr]) }.reduce(:and)
+        ITEM_FIELDS.collect { |attr| table[attr].eq(item[attr.to_s]) }.reduce(:and)
       end.reduce(:or)
+    end
+
+    def items
+      @items ||= begin
+        items = params[:items] || []
+        items = items.values if items.is_a?(Hash)
+        items.collect(&:stringify_keys)
+      end
+    end
+
+    def repeat_until_week
+      r = params[:planning][:repeat_until]
+      @repeat_until_week ||= Week.from_string(r) if r.present?
     end
 
   end
