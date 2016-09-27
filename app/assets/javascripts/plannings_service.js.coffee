@@ -8,7 +8,7 @@ app.plannings.service = new class
     token = planning.authenticity_token
     planning.authenticity_token = undefined
 
-    $.ajax({
+    return $.ajax({
       type: 'PATCH',
       url: url,
       data: {
@@ -19,11 +19,16 @@ app.plannings.service = new class
       },
     }).fail((res) -> console.log('update error', res.status, res.statusText))
 
-  deleteSelected: (url) ->
-    console.log('delete')
+  delete: (url, ids) ->
+    $.ajax(
+      type: 'DELETE'
+      url: url
+      data:
+        planning_ids: ids
+    )
 
   addPlanningRow: (employee_id, work_item_id) ->
-    $.ajax(
+    return $.ajax(
       url: "#{window.location}/new"
       data:
         employee_id: employee_id
