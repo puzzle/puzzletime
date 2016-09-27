@@ -75,9 +75,12 @@ app.plannings.panel = new class
     app.plannings.service.updateSelected(@getFormAction(), data)
 
   deleteSelected: (event) =>
-    event.preventDefault()
-    # TODO: show confirmation dialog (or make it work via link_to confirm)
-    app.plannings.service.deleteSelected(@getFormAction())
+    if confirm('Bist du sicher, dass du die selektierte Planung löschen willst?')
+      event.preventDefault()
+      app.plannings.service.delete(
+        @getFormAction(),
+        app.plannings.selectable.getSelectedPlanningIds()
+      )
 
   getFormAction: ->
     @panel('form').prop('action')

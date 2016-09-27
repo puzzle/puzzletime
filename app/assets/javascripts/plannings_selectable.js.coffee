@@ -43,6 +43,12 @@ app.plannings.selectable = new class
         { employee_id, work_item_id, date }
       )
 
+  getSelectedPlanningIds: ->
+    @selectable('.ui-selected')
+      .toArray()
+      .map((el) -> el.dataset.id)
+      .filter((id) -> id)
+
   getSelectedPercentValues: ->
     @selectable('.ui-selected')
       .toArray()
