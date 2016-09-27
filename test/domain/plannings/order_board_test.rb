@@ -1,7 +1,7 @@
 require 'test_helper'
 
 module Plannings
-  class BoardTest < ActiveSupport::TestCase
+  class OrderBoardTest < ActiveSupport::TestCase
 
     test 'build rows for given plannings' do
       p1, p2, p3 = create_plannings
