@@ -63,9 +63,9 @@ class Order::Report
 
   def load_accounting_posts(orders)
     AccountingPost.joins(:work_item).
-                   joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)').
-                   where(orders: { id: orders.collect(&:id) }).
-                   pluck('orders.id, accounting_posts.id, accounting_posts.offered_total, ' \
+      joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)').
+      where(orders: { id: orders.collect(&:id) }).
+      pluck('orders.id, accounting_posts.id, accounting_posts.offered_total, ' \
                          'accounting_posts.offered_rate, accounting_posts.offered_hours')
   end
 
@@ -79,12 +79,12 @@ class Order::Report
 
   def load_accounting_post_hours(accounting_posts)
     Worktime.joins(:work_item).
-             joins('INNER JOIN accounting_posts ON ' \
+      joins('INNER JOIN accounting_posts ON ' \
                    'accounting_posts.work_item_id = ANY (work_items.path_ids)').
-             where(accounting_posts: { id: accounting_posts.collect(&:keys).flatten }).
-             in_period(period).
-             group('accounting_posts.id, worktimes.billable').
-             pluck('accounting_posts.id, worktimes.billable, SUM(worktimes.hours)')
+      where(accounting_posts: { id: accounting_posts.collect(&:keys).flatten }).
+      in_period(period).
+      group('accounting_posts.id, worktimes.billable').
+      pluck('accounting_posts.id, worktimes.billable, SUM(worktimes.hours)')
   end
 
   def hours_to_hash(result)
@@ -95,9 +95,9 @@ class Order::Report
 
   def load_invoices(orders)
     Invoice.where(order_id: orders.collect(&:id)).
-            where(period.where_condition('billing_date')).
-            group('order_id').
-            pluck('order_id, SUM(total_amount) AS total_amount, SUM(total_hours) AS total_hours')
+      where(period.where_condition('billing_date')).
+      group('order_id').
+      pluck('order_id, SUM(total_amount) AS total_amount, SUM(total_hours) AS total_hours')
   end
 
   def invoices_to_hash(result)
@@ -129,14 +129,14 @@ class Order::Report
     if params[:target].present?
       ratings = params[:target].split('_')
       orders.joins('LEFT JOIN order_targets filter_targets ON filter_targets.order_id = orders.id').
-             where(filter_targets: { rating: ratings })
+        where(filter_targets: { rating: ratings })
     else
       orders
     end
   end
 
   def sort_entries(entries)
-    dir = params[:sort_dir].to_s.downcase == 'desc' ? 1 : -1
+    dir = params[:sort_dir].to_s.casecmp('desc').zero? ? 1 : -1
     match = sort_by_target?
     if match
       sort_by_target(entries, match[1], dir)

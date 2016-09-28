@@ -1,6 +1,5 @@
 # encoding: utf-8
 module WithPeriod
-
   private
 
   def set_period
@@ -24,5 +23,4 @@ module WithPeriod
   def default_period
     Period.new(nil, nil)
   end
-
 end

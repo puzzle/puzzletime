@@ -18,7 +18,7 @@
 #
 
 class Contact < ActiveRecord::Base
-  CRM_ID_PREFIX = 'crm_'
+  CRM_ID_PREFIX = 'crm_'.freeze
 
   belongs_to :client
 

@@ -68,9 +68,9 @@ class Holiday < ActiveRecord::Base
     end
 
     def holiday?(date)
-      self.weekend?(date) ||
-        self.regular_holiday?(date) ||
-        self.irregular_holiday?(date)
+      weekend?(date) ||
+        regular_holiday?(date) ||
+        irregular_holiday?(date)
     end
 
     # returns all holidays for the given period which fall on a weekday
@@ -90,7 +90,7 @@ class Holiday < ActiveRecord::Base
       years.each do |year|
         Settings.regular_holidays.each do |day|
           regular = Date.civil(year, day[1], day[0])
-          if period.include?(regular) && !self.weekend?(regular)
+          if period.include?(regular) && !weekend?(regular)
             holidays.push new(holiday_date: regular, musthours_day: 0)
           end
         end
@@ -115,7 +115,7 @@ class Holiday < ActiveRecord::Base
       if length % 7 > 0
         lastPeriod = Period.new(period.start_date + weeks * 7, period.end_date)
         lastPeriod.step do |day|
-          hours += must_hours_per_day unless self.weekend?(day)
+          hours += must_hours_per_day unless weekend?(day)
         end
       end
       hours

@@ -49,7 +49,7 @@ class MultiAbsence
 
   def save
     count = 0
-    period.step do|date|
+    period.step do |date|
       if employment = @employee.employment_at(date)
         must = Holiday.musttime(date) * employment.percent_factor
         if must > 0

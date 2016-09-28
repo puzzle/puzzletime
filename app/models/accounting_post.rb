@@ -144,7 +144,7 @@ class AccountingPost < ActiveRecord::Base
         errors.add(:base, msg)
         raise error
       end
-        order.work_item.move_times!(post.work_item)
+      order.work_item.move_times!(post.work_item)
     end
   end
 

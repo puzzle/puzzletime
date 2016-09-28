@@ -24,7 +24,7 @@ module Evaluatable
   end
 
   def <=>(other)
-    return super(other) if self.is_a? Class
+    return super(other) if is_a? Class
     label_verbose <=> other.label_verbose
   end
 end

@@ -33,7 +33,7 @@ class WorkloadReportController < ApplicationController
   end
 
   def default_period
-    month = Date.today.last_month
+    month = Time.zone.today.last_month
     Period.retrieve(month.beginning_of_month, month.end_of_month)
   end
 

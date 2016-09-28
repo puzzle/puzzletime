@@ -1,10 +1,10 @@
 # encoding: utf-8
 
 class WorktimeGraph
-  WORKTIME_ORDER = 'work_date, from_start_time, work_item_id, absence_id'
+  WORKTIME_ORDER = 'work_date, from_start_time, work_item_id, absence_id'.freeze
   WORKTIME_CONDITIONS = ['(worktimes.report_type = ? OR worktimes.report_type = ?)',
                          StartStopType::INSTANCE.key,
-                         HoursDayType::INSTANCE.key]
+                         HoursDayType::INSTANCE.key].freeze
 
   attr_reader :period, :employee
 

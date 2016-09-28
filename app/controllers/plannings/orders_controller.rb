@@ -21,7 +21,7 @@ module Plannings
     def order
       @order ||= Order.find(params[:id])
     end
-    alias_method :subject, :order
+    alias subject order
 
     def build_board
       Plannings::OrderBoard.new(order, @period)
@@ -38,7 +38,7 @@ module Plannings
 
     def plannings_to_destroy
       super.joins(:work_item).
-            where('? = ANY (work_items.path_ids)', order.work_item_id)
+        where('? = ANY (work_items.path_ids)', order.work_item_id)
     end
 
   end

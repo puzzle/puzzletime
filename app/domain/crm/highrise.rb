@@ -28,7 +28,7 @@ module Crm
     end
 
     def verify_deal_party_type(deal)
-      unless deal.party.type.downcase == 'company'
+      unless deal.party.type.casecmp('company').zero?
         fail Crm::Error, I18n.t('error.crm.highrise.order_not_on_company',
                                 party_type: deal.party.type)
       end
@@ -109,9 +109,9 @@ module Crm
 
     def existing_contact_crm_keys(client, keys)
       client.contacts
-          .where(crm_key: keys)
-          .pluck(:crm_key)
-          .collect(&:to_i)
+            .where(crm_key: keys)
+            .pluck(:crm_key)
+            .collect(&:to_i)
     end
 
     def contact_attributes(person)

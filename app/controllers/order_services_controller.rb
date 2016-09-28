@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 class OrderServicesController < ApplicationController
-  EMPTY = '[leer]'
+  EMPTY = '[leer]'.freeze
   EMPTY_TICKET = EMPTY
   EMPTY_INVOICE = OpenStruct.new(id: EMPTY, reference: EMPTY)
 
@@ -104,10 +104,10 @@ class OrderServicesController < ApplicationController
   def set_filter_tickets
     @tickets = [EMPTY_TICKET] +
         order.worktimes.in_period(@period)
-            .order(:ticket)
-            .uniq
-            .pluck(:ticket)
-            .select(&:present?)
+               .order(:ticket)
+               .uniq
+               .pluck(:ticket)
+               .select(&:present?)
   end
 
   def set_filter_accounting_posts

@@ -5,8 +5,8 @@ module Plannings
 
     attr_reader :params, :errors, :plannings
 
-    PERMITTED_ATTRIBUTES = [:id, :employee_id, :work_item_id, :date, :percent, :definitive]
-    ITEM_FIELDS = [:employee_id, :work_item_id, :date]
+    PERMITTED_ATTRIBUTES = [:id, :employee_id, :work_item_id, :date, :percent, :definitive].freeze
+    ITEM_FIELDS = [:employee_id, :work_item_id, :date].freeze
 
     # params:
     # { planning: { percent: 50, definitive: true, repeat_until: '2016 42' },

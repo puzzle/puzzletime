@@ -77,10 +77,10 @@ class EmployeeStatistics
   def employments_during(period)
     return [] if period.nil?
     selected_employments =
-        @employee.employments.where('(end_date IS NULL OR end_date >= ?) AND start_date <= ?',
-                                    period.start_date, period.end_date).
-                              reorder('start_date').
-                              to_a
+      @employee.employments.where('(end_date IS NULL OR end_date >= ?) AND start_date <= ?',
+                                  period.start_date, period.end_date).
+      reorder('start_date').
+      to_a
     unless selected_employments.empty?
       if selected_employments.first.start_date < period.start_date
         selected_employments.first.start_date = period.start_date

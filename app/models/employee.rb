@@ -77,9 +77,9 @@ class Employee < ActiveRecord::Base
 
     def with_worktimes_in_period(order, from, to)
       e_ids = order.worktimes.
-        in_period(Period.new(from, to)).
-        billable.
-        select(:employee_id)
+              in_period(Period.new(from, to)).
+              billable.
+              select(:employee_id)
       Employee.where(id: e_ids)
     end
   end
@@ -165,7 +165,7 @@ class Employee < ActiveRecord::Base
     employments.find_by('start_date <= ? AND (end_date IS NULL OR end_date >= ?)', date, date)
   end
 
-  def as_json(options)
+  def as_json(_options)
     h = {}
     h[:id] = id
     h[:firstname] = firstname

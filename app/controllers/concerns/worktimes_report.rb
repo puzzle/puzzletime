@@ -83,7 +83,7 @@ module WorktimesReport
           end
         end
 
-        @tickets[ticket][:descriptions] << "\"" + t.description + "\"" if t.description?
+        @tickets[ticket][:descriptions] << '"' + t.description + '"' if t.description?
       end
     end
   end

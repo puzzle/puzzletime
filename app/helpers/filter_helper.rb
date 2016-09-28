@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 module FilterHelper
-
   def predefined_past_period_options
     [IdValue.new('0m', 'Dieser Monat'),
      IdValue.new('-1m', 'Letzter Monat'),

@@ -23,7 +23,7 @@
 
 class Invoice < ActiveRecord::Base
 
-  STATUSES = %w(draft sent paid partially_paid unknown)
+  STATUSES = %w(draft sent paid partially_paid unknown).freeze
 
   enum grouping: %w(accounting_posts employees manual)
 
@@ -177,7 +177,8 @@ class Invoice < ActiveRecord::Base
       order.category.try(:shortname),
       order.shortname,
       order.department.shortname,
-      sprintf('%04d', order.client.last_invoice_number + 1)]
+      sprintf('%04d', order.client.last_invoice_number + 1)
+    ]
     self.reference = reference_segments.compact.join
   end
 

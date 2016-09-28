@@ -6,16 +6,16 @@ class Reports::Workload
   attr_reader :period, :params, :department
 
   WORKTIME_FIELDS = [
-      :type,
-      :employee_id,
-      :department_id,
-      :hours,
-      :work_item_id,
-      :path_ids,
-      :billable,
-      :absence_id,
-      :payed
-  ]
+    :type,
+    :employee_id,
+    :department_id,
+    :hours,
+    :work_item_id,
+    :path_ids,
+    :billable,
+    :absence_id,
+    :payed
+  ].freeze
 
 
   def initialize(period, department, params = {})
@@ -38,20 +38,20 @@ class Reports::Workload
 
   def department_period_employments
     @department_period_employments ||= begin
-      department_employee_ids = all_employees.select {|e| e.department_id == department.id }.map(&:id)
-      period_employments.select {|e| department_employee_ids.include?(e.employee_id) }
+      department_employee_ids = all_employees.select { |e| e.department_id == department.id }.map(&:id)
+      period_employments.select { |e| department_employee_ids.include?(e.employee_id) }
     end
   end
 
   def department_period_employees_with_employment_or_worktime
     employee_ids = (department_period_employments + department_worktimes).map(&:employee_id).uniq
-    all_employees.select {|employee| employee_ids.include?(employee.id) }
+    all_employees.select { |employee| employee_ids.include?(employee.id) }
   end
 
   def summary
     [
-        Reports::Workload::SummaryEntry.new('Puzzle ITC', period, period_employments, worktimes),
-        Reports::Workload::SummaryEntry.new(department, period, department_period_employments, department_worktimes)
+      Reports::Workload::SummaryEntry.new('Puzzle ITC', period, period_employments, worktimes),
+      Reports::Workload::SummaryEntry.new(department, period, department_period_employments, department_worktimes)
     ]
   end
 
@@ -77,7 +77,7 @@ class Reports::Workload
     worktimes_query.pluck(*WORKTIME_FIELDS).map do |row|
       WorktimeEntry.new(*row).tap do |worktime_entry|
         if worktime_entry.ordertime?
-          worktime_entry.order_work_item = order_work_items.detect {|work_item| worktime_entry.path_ids.include?(work_item.id) }
+          worktime_entry.order_work_item = order_work_items.detect { |work_item| worktime_entry.path_ids.include?(work_item.id) }
         end
       end
     end
@@ -85,10 +85,10 @@ class Reports::Workload
 
   def worktimes_query
     Worktime.
-        in_period(period).
-        joins("LEFT OUTER JOIN work_items ON work_items.id = worktimes.work_item_id").
-        joins("LEFT OUTER JOIN absences ON absences.id = worktimes.absence_id").
-        joins(:employee)
+      in_period(period).
+      joins('LEFT OUTER JOIN work_items ON work_items.id = worktimes.work_item_id').
+      joins('LEFT OUTER JOIN absences ON absences.id = worktimes.absence_id').
+      joins(:employee)
   end
 
   def build_entries
@@ -113,7 +113,7 @@ class Reports::Workload
   end
 
   def sort_entries(entries)
-    dir = params[:sort_dir].to_s.downcase == 'desc' ? 1 : -1
+    dir = params[:sort_dir].to_s.casecmp('desc').zero? ? 1 : -1
     if sort_by_employee?
       sort_by_employee(entries, dir)
     elsif sort_by_number?
@@ -131,7 +131,7 @@ class Reports::Workload
     %w(must_hours worktime_balance ordertime_hours workload billability).include?(params[:sort]) end
 
   def sort_by_employee(entries, dir)
-    entries.sort_by {|entry| entry.to_s }.tap do |entries|
+    entries.sort_by(&:to_s).tap do |entries|
       entries.reverse! if dir > 0
     end
   end

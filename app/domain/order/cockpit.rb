@@ -2,7 +2,7 @@
 class Order::Cockpit
   attr_reader :order, :rows
 
-  EM_DASH = '―'
+  EM_DASH = '―'.freeze
 
   def initialize(order)
     @order = order

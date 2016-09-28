@@ -3,7 +3,7 @@ module Invoicing
     class Api
       include Singleton
 
-      ENDPOINTS = %w(invoice invoice/pdf client)
+      ENDPOINTS = %w(invoice invoice/pdf client).freeze
 
       def list(endpoint)
         response = get_json(endpoint, :list)

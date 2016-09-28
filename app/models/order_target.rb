@@ -14,7 +14,7 @@
 
 class OrderTarget < ActiveRecord::Base
 
-  RATINGS = %w(green orange red)
+  RATINGS = %w(green orange red).freeze
 
   belongs_to :order
   belongs_to :target_scope

@@ -3,7 +3,7 @@
 module Plannings
   class EmployeeBoard < Board
 
-    alias_method :employee, :subject
+    alias employee subject
 
     def initialize(employee, period)
       super(employee, period)

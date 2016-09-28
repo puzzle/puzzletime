@@ -3,7 +3,7 @@
 module Plannings
   class OrderBoard < Board
 
-    alias_method :order, :subject
+    alias order subject
 
     def row_legend(employee_id, _work_item_id)
       employees.detect { |e| e.id == employee_id.to_i }

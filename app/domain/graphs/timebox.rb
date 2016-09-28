@@ -3,8 +3,8 @@
 class Timebox
   PIXEL_PER_HOUR = 8.0
 
-  MUST_HOURS_COLOR = '#FF0000'
-  BLANK_COLOR = 'transparent'
+  MUST_HOURS_COLOR = '#FF0000'.freeze
+  BLANK_COLOR = 'transparent'.freeze
 
   attr_reader :height, :color, :tooltip, :worktime
   attr_writer :height, :worktime
