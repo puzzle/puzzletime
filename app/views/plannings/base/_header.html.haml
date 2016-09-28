@@ -1,0 +1,5 @@
+%header.planning-board-header
+  %h1.h3= @board.caption
+  .planned{ id: "planned_#{dom_id(@board.subject)}" }
+    150 von 400 Stunden verplant
+  = render 'date_filter' if filter

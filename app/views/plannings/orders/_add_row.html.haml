@@ -1,0 +1,5 @@
+#add_employee_id{ hidden: true }
+  = select_tag(:add_employee_select_id,
+               options_from_collection_for_select(Employee.list, :id, :to_s),
+               autocomplete: 'off',
+               include_blank: true)

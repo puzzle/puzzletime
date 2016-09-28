@@ -137,7 +137,8 @@ class WorkItem < ActiveRecord::Base
   end
 
   def propagate_closed!(closed)
-    self_and_descendants.leaves.update_all(closed: closed)
+    self_and_descendants.update_all(closed: closed)
+    self.closed = closed
   end
 
   private

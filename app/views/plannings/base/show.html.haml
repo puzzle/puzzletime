@@ -1,11 +1,8 @@
 - content_for(:content_header) do
-  %header.planning-board-header
-    %h1.h3= entry.label_verbose
-    .planned
-      150 von 400 Stunden verplant
-    = render 'date_filter'
+  = render 'header', filter: true
 
 #planning-board
+  = render 'add_row'
   = render 'board'
 
 = render 'legend'

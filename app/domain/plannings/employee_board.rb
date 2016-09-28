@@ -1,11 +1,12 @@
+# encoding: utf-8
+
 module Plannings
   class EmployeeBoard < Board
 
-    attr_reader :employee
+    alias_method :employee, :subject
 
     def initialize(employee, period)
-      super(period)
-      @employee = employee
+      super(employee, period)
       @employments = employee.statistics.employments_during(period)
     end
 

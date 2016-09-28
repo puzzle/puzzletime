@@ -19,7 +19,6 @@ module Plannings
     def order
       @order ||= Order.find(params[:id])
     end
-    alias_method :entry, :order
 
     def build_board
       Plannings::OrderBoard.new(order, @period)

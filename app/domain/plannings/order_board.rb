@@ -1,12 +1,9 @@
+# encoding: utf-8
+
 module Plannings
   class OrderBoard < Board
 
-    attr_reader :order
-
-    def initialize(order, period)
-      super(period)
-      @order = order
-    end
+    alias_method :order, :subject
 
     def row_legend(employee_id, _work_item_id)
       employees.detect { |e| e.id == employee_id.to_i }

@@ -1,11 +1,6 @@
-:plain
-  (function() {
-    var filter = [
-      '[data-work-item-id="#{params[:work_item_id]}"]',
-      '[data-employee-id="#{params[:employee_id]}"]'
-    ].join(',');
-    var container = '<div id="planning_row_employee_#{params[:employee_id]}_work_item_#{params[:work_item_id]}" class="planning-calendar-days">';
-    var row = '#{j(render('row', items: @items, legend: @legend))}';
+- filter = "[data-work-item-id=\"#{params[:work_item_id]}\"],[data-employee-id=\"#{params[:employee_id]}\"]".html_safe
+- container = "<div id=\"#{planning_row_id(params[:employee_id], params[:work_item_id])}\" class=\"planning-calendar-days\">".html_safe
+- row = j(render('row', items: @items, legend: @legend))
 
-    $('.actions').filter(filter).before($(container).html(row));
-  })();
+$('.actions').filter('#{filter}').before($('#{container}').html('#{row}'));
+

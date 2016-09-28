@@ -127,8 +127,10 @@ Rails.application.routes.draw do
     resources :employees, only: [:index, :show, :update, :destroy] do
       get 'new', on: :member, as: 'new'
     end
-    resource :multi_orders, only: [:show, :new, :update, :destroy]
-    resource :multi_employees, only: [:show, :new, :update, :destroy]
+    resources :departments, only: [:index] do
+      resource :multi_orders, only: [:show, :new, :update, :destroy]
+      resource :multi_employees, only: [:show, :new, :update, :destroy]
+    end
   end
 
   resource :graph, only: [], controller: :graph do

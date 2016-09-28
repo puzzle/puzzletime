@@ -1,4 +1,5 @@
 # encoding: utf-8
+
 # == Schema Information
 #
 # Table name: departments
@@ -7,12 +8,12 @@
 #  name      :string(255)      not null
 #  shortname :string(3)        not null
 #
-
-
 class Department < ActiveRecord::Base
+
   include Evaluatable
 
   has_many :orders
+  has_many :employees, dependent: :nullify
 
   validates_by_schema
 

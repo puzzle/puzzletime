@@ -73,31 +73,32 @@ class OrderTest < ActiveSupport::TestCase
     assert_equal clients(:puzzle), order.client
   end
 
-  test 'closed status is propagated to all leaves' do
+  test 'closed status is propagated to all descendants' do
     order = orders(:hitobito_demo)
     order.status = order_statuses(:abgeschlossen)
     order.save!
 
-    assert_equal [true], order.work_item.self_and_descendants.leaves.collect(&:closed).uniq
+    assert_equal [true], order.work_item.self_and_descendants.collect(&:closed).uniq
 
     order.status = order_statuses(:bearbeitung)
     order.save!
 
-    assert_equal [false], order.work_item.self_and_descendants.leaves.collect(&:closed).uniq
+    assert_equal [false], order.work_item.self_and_descendants.collect(&:closed).uniq
   end
 
-  test 'non-closed status is propagated to all leaves according to accounting posts' do
+  test 'non-closed status is propagated to all descendants according to accounting posts' do
     order = orders(:hitobito_demo)
     order.status = order_statuses(:abgeschlossen)
     order.save!
 
     accounting_posts(:hitobito_demo_site).update!(closed: true)
 
-    assert_equal [true], order.work_item.self_and_descendants.leaves.collect(&:closed).uniq
+    assert_equal [true], order.work_item.self_and_descendants.collect(&:closed).uniq
 
     order.status = order_statuses(:bearbeitung)
     order.save!
 
+    assert !work_items(:hitobito_demo).closed
     assert work_items(:hitobito_demo_site).closed
     assert !work_items(:hitobito_demo_app).closed
   end
