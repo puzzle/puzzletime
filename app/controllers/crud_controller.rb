@@ -10,6 +10,7 @@
 # With the help of additional callbacks, it is possible to hook into the
 # action procedures without overriding the entire method.
 class CrudController < ListController
+
   class_attribute :permitted_attrs
 
   # Defines before and after callback hooks for create, update, save and

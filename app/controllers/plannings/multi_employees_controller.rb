@@ -4,8 +4,10 @@ module Plannings
   class MultiEmployeesController < EmployeesController
 
     skip_load_and_authorize_resource
+    skip_before_action :authorize_subject_planning, only: :show
 
     def show
+      authorize!(:read, Planning)
       @boards = employees.collect { |e| Plannings::EmployeeBoard.new(e, @period) }
     end
 
@@ -26,14 +28,15 @@ module Plannings
     def employee
       @employee ||= Employee.find(relevant_employee_id)
     end
+    alias_method :subject, :employee
 
     def relevant_employee_id
       if params[:employee_id] # new
         params[:employee_id]
       elsif params[:items].present? # update
         Array(params[:items].first).last[:employee_id]
-      elsif @plannings.present? # destroy
-        @plannings.first.employee_id
+      elsif params[:planning_ids].present? # destroy
+        Planning.find(params[:planning_ids].first).employee_id
       else
         raise ActiveRecord::RecordNotFound
       end

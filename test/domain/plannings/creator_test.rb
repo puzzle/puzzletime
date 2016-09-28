@@ -24,17 +24,17 @@ class CreatorTest < ActiveSupport::TestCase
 
   test '#create_or_update creates new plannings' do
     params = { planning: { percent: 50, definitive: true },
-               items: {
-                 '1' => { employee_id: employees(:pascal).id.to_s,
-                          work_item_id: work_items(:puzzletime).id.to_s,
-                          date: '2000-01-03' },
-                 '2' => { employee_id: employees(:pascal).id.to_s,
-                          work_item_id: work_items(:puzzletime).id.to_s,
-                          date: '2000-01-04' },
-                 '3' => { employee_id: employees(:mark).id.to_s,
-                          work_item_id: work_items(:puzzletime).id.to_s,
-                          date: '2000-01-04' }
-               }
+               items: [
+                 { employee_id: employees(:pascal).id.to_s,
+                   work_item_id: work_items(:puzzletime).id.to_s,
+                   date: '2000-01-03' },
+                 { employee_id: employees(:pascal).id.to_s,
+                   work_item_id: work_items(:puzzletime).id.to_s,
+                   date: '2000-01-04' },
+                 { employee_id: employees(:mark).id.to_s,
+                   work_item_id: work_items(:puzzletime).id.to_s,
+                   date: '2000-01-04' }
+               ]
     }
     c = Plannings::Creator.new(ActionController::Parameters.new(params))
     assert_difference 'Planning.count', 3 do
@@ -58,31 +58,31 @@ class CreatorTest < ActiveSupport::TestCase
   end
 
   test '#create_or_update updates existing plannings and changes only present values' do
-    p1 = Planning.create!({ employee_id: employees(:pascal).id,
-                            work_item_id: work_items(:puzzletime).id,
-                            date: '2000-01-03',
-                            percent: 50,
-                            definitive: true })
-    p2 = Planning.create!({ employee_id: employees(:pascal).id,
-                            work_item_id: work_items(:puzzletime).id,
-                            date: '2000-01-04',
-                            percent: 50,
-                            definitive: true })
-    p3 = Planning.create!({ employee_id: employees(:mark).id,
-                            work_item_id: work_items(:puzzletime).id,
-                            date: '2000-01-04',
-                            percent: 50,
-                            definitive: true })
+    p1 = Planning.create!(employee_id: employees(:pascal).id,
+                          work_item_id: work_items(:puzzletime).id,
+                          date: '2000-01-03',
+                          percent: 50,
+                          definitive: true)
+    p2 = Planning.create!(employee_id: employees(:pascal).id,
+                          work_item_id: work_items(:puzzletime).id,
+                          date: '2000-01-04',
+                          percent: 50,
+                          definitive: true)
+    p3 = Planning.create!(employee_id: employees(:mark).id,
+                          work_item_id: work_items(:puzzletime).id,
+                          date: '2000-01-04',
+                          percent: 50,
+                          definitive: true)
 
     params = { planning: { percent: 25, definitive: false },
-               items: {
-                 '1' => { employee_id: employees(:pascal).id.to_s,
-                          work_item_id: work_items(:puzzletime).id.to_s,
-                          date: '2000-01-03' },
-                 '2' => { employee_id: employees(:mark).id.to_s,
-                          work_item_id: work_items(:puzzletime).id.to_s,
-                          date: '2000-01-04' }
-               }
+               items: [
+                 { employee_id: employees(:pascal).id.to_s,
+                   work_item_id: work_items(:puzzletime).id.to_s,
+                   date: '2000-01-03' },
+                 { employee_id: employees(:mark).id.to_s,
+                   work_item_id: work_items(:puzzletime).id.to_s,
+                   date: '2000-01-04' }
+               ]
     }
     c = Plannings::Creator.new(ActionController::Parameters.new(params))
     assert_difference 'Planning.count', 0 do
@@ -108,14 +108,14 @@ class CreatorTest < ActiveSupport::TestCase
     assert !p3.definitive
 
     params = { planning: { percent: 30, definitive: '' },
-               items: {
-                 '1' => { employee_id: employees(:pascal).id.to_s,
-                          work_item_id: work_items(:puzzletime).id.to_s,
-                          date: '2000-01-03' },
-                 '2' => { employee_id: employees(:pascal).id.to_s,
-                          work_item_id: work_items(:puzzletime).id.to_s,
-                          date: '2000-01-04' }
-               }
+               items: [
+                 { employee_id: employees(:pascal).id.to_s,
+                   work_item_id: work_items(:puzzletime).id.to_s,
+                   date: '2000-01-03' },
+                 { employee_id: employees(:pascal).id.to_s,
+                   work_item_id: work_items(:puzzletime).id.to_s,
+                   date: '2000-01-04' }
+               ]
     }
     c = Plannings::Creator.new(ActionController::Parameters.new(params))
     assert_difference 'Planning.count', 0 do
@@ -141,11 +141,11 @@ class CreatorTest < ActiveSupport::TestCase
     assert !p3.definitive
 
     params = { planning: { definitive: true },
-               items: {
-                 '1' => { employee_id: employees(:mark).id.to_s,
-                          work_item_id: work_items(:puzzletime).id.to_s,
-                          date: '2000-01-04' }
-               }
+               items: [
+                 { employee_id: employees(:mark).id.to_s,
+                   work_item_id: work_items(:puzzletime).id.to_s,
+                   date: '2000-01-04' }
+               ]
     }
     c = Plannings::Creator.new(ActionController::Parameters.new(params))
     assert_difference 'Planning.count', 0 do
@@ -172,21 +172,20 @@ class CreatorTest < ActiveSupport::TestCase
   end
 
   test '#create_or_update creates and updates plannings' do
-    p1 = Planning.create!({ employee_id: employees(:mark).id,
-                            work_item_id: work_items(:puzzletime).id,
-                            date: '2000-01-04',
-                            percent: 30,
-                            definitive: false })
+    p1 = Planning.create!(employee_id: employees(:mark).id,
+                          work_item_id: work_items(:puzzletime).id,
+                          date: '2000-01-04',
+                          percent: 30,
+                          definitive: false)
     params = { planning: { percent: 50, definitive: true },
-               items: {
-                 '1' => { employee_id: employees(:pascal).id.to_s,
-                          work_item_id: work_items(:puzzletime).id.to_s,
-                          date: '2000-01-03' },
-                 '2' => { employee_id: employees(:mark).id.to_s,
-                          work_item_id: work_items(:puzzletime).id.to_s,
-                          date: '2000-01-04' }
-               }
-    }
+               items: [
+                 { employee_id: employees(:pascal).id.to_s,
+                   work_item_id: work_items(:puzzletime).id.to_s,
+                   date: '2000-01-03' },
+                 { employee_id: employees(:mark).id.to_s,
+                   work_item_id: work_items(:puzzletime).id.to_s,
+                   date: '2000-01-04' }
+               ] }
     c = Plannings::Creator.new(ActionController::Parameters.new(params))
     assert_difference 'Planning.count', 1 do
       assert c.create_or_update
@@ -373,8 +372,8 @@ class CreatorTest < ActiveSupport::TestCase
   private
 
   def items_to_create
-    { '1' => { employee_id: employees(:pascal).id.to_s,
-               work_item_id: work_items(:puzzletime).id.to_s,
-               date: '2000-01-03' } }
+    [{ employee_id: employees(:pascal).id.to_s,
+       work_item_id: work_items(:puzzletime).id.to_s,
+       date: '2000-01-03' }]
   end
 end

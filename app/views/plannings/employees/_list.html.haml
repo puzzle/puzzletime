@@ -1,2 +1,3 @@
 = list_table do |t|
-  - t.attr(:name) { |e| link_to(e.label_verbose, plannings_employee_path(e)) }
+  - t.attr(:name) do |e|
+    - link_to_if(can?(:show_plannings, e), e.label_verbose, plannings_employee_path(e))

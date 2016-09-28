@@ -97,3 +97,7 @@ Style/GuardClause:
 # We think that's fine
 Style/MultilineOperationIndentation:
   Enabled: false
+
+# We think that's fine
+Style/SignalException:
+  Enabled: false

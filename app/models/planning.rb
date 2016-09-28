@@ -34,6 +34,13 @@ class Planning < ActiveRecord::Base
     "#{percent}% auf #{work_item} am #{I18n.l(date)} für #{employee}"
   end
 
+  def order
+    @order ||=
+      Order.joins('LEFT JOIN work_items ON ' \
+                  'orders.work_item_id = ANY (work_items.path_ids)').
+          find_by('work_items.id = ?', work_item_id)
+  end
+
   private
 
   def date_must_be_weekday

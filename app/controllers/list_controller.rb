@@ -9,6 +9,7 @@
 # Furthermore, it remembers the last search and sort parameters after the
 # user returns from a displayed or edited entry.
 class ListController < ApplicationController
+
   include DryCrud::GenericModel
   include DryCrud::Nestable
   include DryCrud::Rememberable

@@ -94,5 +94,34 @@ module Plannings
       assert_equal employees(:lucien), assigns(:board).subject
     end
 
+    test 'DELETE destroy as regular user fails' do
+      p = Planning.create!(employee: employees(:pascal),
+                           work_item: work_items(:hitobito_demo),
+                           date: Date.today.beginning_of_week,
+                           percent: 80)
+      login_as(:lucien)
+      assert_raises(CanCan::AccessDenied) do
+        patch :update,
+              xhr: true,
+              format: :js,
+              department_id: departments(:devone).id,
+              planning_ids: [p.id]
+      end
+    end
+
+    test 'DELETE destroy for own plannings succeeds' do
+      p = Planning.create!(employee: employees(:pascal),
+                           work_item: work_items(:hitobito_demo),
+                           date: Date.today.beginning_of_week,
+                           percent: 80)
+      login_as(:pascal)
+      patch :update,
+            xhr: true,
+            format: :js,
+            department_id: departments(:devone).id,
+            planning_ids: [p.id]
+      assert_equal 200, response.status
+    end
+
   end
 end

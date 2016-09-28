@@ -115,10 +115,10 @@ $legend-width: 300px;
     padding: 3px 0;
   }
 }
+
 .planning-calendar-days {
   > .day {
     text-align: center;
-    cursor: pointer;
     font-weight: lighter;
     color: #dadada;
     background-size: 18px 18px;
@@ -144,6 +144,9 @@ $legend-width: 300px;
     bottom: 0;
     right: 0;
   }
+}
+.planning-calendar-inner.editable .planning-calendar-days > .day {
+  cursor: pointer;
 }
 
 .planning-panel {
