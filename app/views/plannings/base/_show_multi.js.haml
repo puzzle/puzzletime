@@ -1,0 +1,4 @@
+- @boards.each do |board|
+  - @board = board
+  $('#board_#{dom_id(board.subject)}').html('#{j(render('board'))}');
+= render 'shared/flash_alert'
