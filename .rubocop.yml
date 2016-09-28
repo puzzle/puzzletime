@@ -1,5 +1,4 @@
 AllCops:
-  RunRailsCops: true
   DisplayCopNames: true
   Exclude:
     - Rakefile
@@ -11,7 +10,8 @@ AllCops:
     - vendor/**/*
     - app/assets/config.rb
 
-
+Rails:
+  Enabled: true
 
 Metrics/AbcSize:
   Max: 25
