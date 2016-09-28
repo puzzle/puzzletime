@@ -78,7 +78,9 @@ app.plannings = new class
         dropdownParent: 'body'
         onItemAdd: @onAddSelect
       )
-      .get(0).selectize
+      .get(0)?.selectize
+
+    return unless addRowSelectize
 
     addRowOptions = [
       undefined,
