@@ -1,0 +1,18 @@
+- if @boards.present?
+  - content_for(:content_header) do
+    %div
+
+  - @boards.each_with_index do |board, i|
+    - @board = board
+    = render 'header', filter: i == 0
+
+    .planning-board
+      = render 'board'
+
+  = render 'legend'
+
+  = render 'panel'
+  = render 'add_row'
+
+- else
+  %p Keine Einträge vorhanden

@@ -8,7 +8,7 @@ class AddDailyPlanningsTest < ActiveSupport::TestCase
     AddDailyPlannings::OLD_TABLE = :plannings_old
     AddDailyPlannings::NEW_TABLE = :plannings
     AddDailyPlannings::IGNORE_BEFORE = Date.new(2016, 9, 1)
-    migration.migrate_data
+    migration.migrate_plannings
 
     plannings = Planning.where(work_item_id: 3)
     assert_equal 5, plannings.count

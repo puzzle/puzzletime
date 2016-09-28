@@ -122,8 +122,8 @@ class WorkloadTest < ActiveSupport::TestCase
     Fabricate(:ordertime, hours: 2.5, work_item: work_items(:webauftritt),
               employee: employees(:lucien), work_date: period.start_date, billable: false)
 
-    assert_equal work_items(:webauftritt, :hitobito_demo),
-        report.entries.first.order_entries.map(&:work_item)
+    assert_equal work_items(:webauftritt, :hitobito_demo).to_set,
+                 report.entries.first.order_entries.map(&:work_item).to_set
   end
 
   test 'summary fte' do

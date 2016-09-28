@@ -1,10 +1,17 @@
+# encoding: utf-8
+
 module Plannings
   class Board
 
-    attr_reader :period, :employees
+    attr_reader :subject, :period, :employees
 
-    def initialize(period)
+    def initialize(subject, period)
+      @subject = subject
       @period = period
+    end
+
+    def caption
+      subject.label_verbose
     end
 
     def for_rows(keys)

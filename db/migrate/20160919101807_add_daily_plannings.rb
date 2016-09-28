@@ -17,7 +17,8 @@ class AddDailyPlannings < ActiveRecord::Migration
 
     reversible do |dir|
       dir.up do
-        migrate_data
+        migrate_order_closed
+        migrate_plannings
       end
     end
 
@@ -25,7 +26,13 @@ class AddDailyPlannings < ActiveRecord::Migration
     rename_table NEW_TABLE, OLD_TABLE
   end
 
-  def migrate_data
+  def migrate_order_closed
+    WorkItem.joins(order: :order_status).
+             where(order_status: { closed: true }, work_items: { closed: false }).
+             update_all(closed: true)
+  end
+
+  def migrate_plannings
     offset = 0
     has_rows = true
 

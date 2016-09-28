@@ -1,0 +1,5 @@
+= list_table do |t|
+  - t.attr(:name) { |e| e.label_verbose }
+  - t.col() { |d| link_to('Mitarbeiter', plannings_department_multi_employees_path(d.id)) }
+  - t.col() { |d| link_to('Aufträge', plannings_department_multi_orders_path(d.id)) }
+  - t.col('', style: 'width: 100%;') { |d| }

@@ -1,27 +1,19 @@
-#add_employee_id{ hidden: true }
-  = select_tag(:add_employee_select_id,
-               options_from_collection_for_select(Employee.list, :id, :to_s),
-               autocomplete: 'off',
-               include_blank: true)
-
 .planning-calendar{ style: "--days: #{@board.work_days}" }
   .planning-calendar-inner
     = render 'board_header'
 
     - @board.accounting_posts.each do |post|
-      .groupheader
-        %strong= post
-        - @board.work_days.times do
-          .day
+      - if @board.accounting_posts.size > 1 || post.work_item_id != @board.order.work_item_id
+        .groupheader
+          %strong= post
+          - @board.work_days.times do
+            .day
+
       - @board.employees.each do |employee|
         - items = @board.items(employee.id, post.work_item_id)
         - if items
-          .planning-calendar-days{ id: "planning_row_employee_#{employee.id}_work_item_#{post.work_item_id}" }
-            = render 'row',
-                     legend: employee,
-                     items: items
+          .planning-calendar-days{ id: planning_row_id(employee.id, post.work_item_id) }
+            = render 'row', legend: employee, items: items
+
       .actions{ data: { type: 'employee', work_item_id: post.work_item_id } }
-        .buttons
-          %button.add &#x2795;
-        - @board.work_days.times do
-          .day
+        = render 'add_button'

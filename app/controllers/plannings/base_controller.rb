@@ -10,8 +10,6 @@ module Plannings
     before_action :authorize_class
     before_action :set_period
 
-    helper_method :entry
-
     def show
       @board = build_board
     end
