@@ -13,8 +13,8 @@ class AbsencesEval < Evaluation
     super(Employee)
   end
 
-  def divisions(period = Period.current_year)
-    Employee.employed_ones(period)
+  def divisions(period = nil)
+    Employee.employed_ones(period || Period.current_year)
   end
 
   def employee_id
