@@ -151,6 +151,9 @@ $legend-width: 300px;
 .planning-percent-group {
   width: 8em;
 }
+.planning-definitive-group button:focus {
+  background-color: transparent;
+}
 .planning-delete {
   margin-right: auto;
 }
