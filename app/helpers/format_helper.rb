@@ -42,7 +42,8 @@ module FormatHelper
   end
 
   def format_hour(hour, precision = 2)
-    safe_join([format_number(hour, precision), ' h'])
+    number = format_number(hour, precision)
+    number && safe_join([number, ' h'])
   end
 
   def format_time(time)
