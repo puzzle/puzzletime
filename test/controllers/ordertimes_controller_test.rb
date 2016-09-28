@@ -300,10 +300,10 @@ class OrdertimesControllerTest < ActionController::TestCase
         id: worktime,
         ordertime: { hours: '0:24',
                      employee_id: employees(:mark),
-                     work_date: worktime.work_date + 1,
+                     work_date: nil,
                      account_id: worktime.work_item_id }
     assert_template 'split'
-    assert_match(/kann nicht geändert werden/, assigns(:worktime).errors[:work_date].first)
+    assert_match(/muss ausgefüllt werden/, assigns(:worktime).errors[:work_date].first)
   end
 
   def test_destroy
