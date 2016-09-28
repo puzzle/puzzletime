@@ -26,5 +26,66 @@ module Plannings
                    assigns(:board).employees
     end
 
+    test 'GET#show as regular user is allowed' do
+      login_as(:pascal)
+      get :show, id: employees(:lucien).id
+      assert_equal 200, response.status
+    end
+
+    test 'PATCH#update as regular user fails' do
+      login_as(:pascal)
+      assert_raises(CanCan::AccessDenied) do
+        patch :update,
+              xhr: true,
+              format: :js,
+              id: employees(:lucien).id,
+              planning: { percent: '50', definitive: 'true' },
+              items: { '1' => { employee_id: employees(:lucien).id.to_s,
+                                work_item_id: work_items(:puzzletime).id.to_s,
+                                date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
+      end
+    end
+
+    test 'PATCH#update for herself is allowed as regular user' do
+      login_as(:pascal)
+      patch :update,
+            xhr: true,
+            format: :js,
+            id: employees(:pascal).id,
+            planning: { percent: '50', definitive: 'true' },
+            items: { '1' => { employee_id: employees(:pascal).id.to_s,
+                              work_item_id: work_items(:puzzletime).id.to_s,
+                              date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
+      assert_equal 200, response.status
+    end
+
+    test 'PATCH#update on own board but for different user does not work' do
+      login_as(:pascal)
+      assert_no_difference('Planning.count') do
+        patch :update,
+              xhr: true,
+              format: :js,
+              id: employees(:pascal).id,
+              planning: { percent: '50', definitive: 'true' },
+              items: { '1' => { employee_id: employees(:lucien).id.to_s,
+                                work_item_id: work_items(:puzzletime).id.to_s,
+                                date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
+      end
+    end
+
+    test 'DELETE#destroy on own board but for different user does not work' do
+      p = Planning.create!(employee: employees(:pascal),
+                           work_item: work_items(:hitobito_demo),
+                           date: Date.today.beginning_of_week,
+                           percent: 80)
+      login_as(:lucien)
+      assert_no_difference('Planning.count') do
+        delete :destroy,
+               xhr: true,
+               format: :js,
+               id: employees(:lucien).id,
+               planning_ids: [p.id]
+      end
+    end
   end
 end

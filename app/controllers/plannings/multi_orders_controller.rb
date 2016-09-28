@@ -4,8 +4,10 @@ module Plannings
   class MultiOrdersController < OrdersController
 
     skip_load_and_authorize_resource
+    skip_before_action :authorize_subject_planning, only: :show
 
     def show
+      authorize!(:read, Planning)
       @boards = orders.collect { |o| Plannings::OrderBoard.new(o, @period) }
     end
 
@@ -26,14 +28,15 @@ module Plannings
     def order
       @order ||= order_for_work_item_id(relevant_work_item_id)
     end
+    alias_method :subject, :order
 
     def relevant_work_item_id
-      if params[:work_item_id]
+      if params[:work_item_id] # new
         params[:work_item_id]
-      elsif params[:items].present?
+      elsif params[:items].present? # update
         Array(params[:items].first).last[:work_item_id]
-      elsif @plannings.present?
-        @plannings.first.work_item_id
+      elsif params[:planning_ids].present? # destroy
+        Planning.find(params[:planning_ids].first).work_item_id
       else
         raise ActiveRecord::RecordNotFound
       end

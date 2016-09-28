@@ -2,7 +2,7 @@ app = window.App ||= {}
 app.plannings ||= {}
 
 app.plannings.selectable = new class
-  selectable = '.planning-calendar-inner'
+  selectable = '.planning-calendar-inner.editable'
   selectee = '.planning-calendar-days > .day'
   isSelecting = false
 

@@ -5,9 +5,10 @@ module Plannings
 
     include WithPeriod
 
+    before_action :authorize_subject_planning
+
     define_render_callbacks :show, :new, :update
 
-    before_action :authorize_class
     before_action :set_period
 
     def show
@@ -23,7 +24,7 @@ module Plannings
     end
 
     def update
-      creator = Plannings::Creator.new(params)
+      creator = Plannings::Creator.new(params_with_restricted_items)
       respond_to do |format|
         if creator.create_or_update
           format.js { @board = build_board_for(creator.plannings) }
@@ -47,9 +48,18 @@ module Plannings
 
     def destroy_plannings
       Planning.transaction do
-        @plannings = Planning.where(id: Array(params[:planning_ids]))
+        @plannings = plannings_to_destroy
         @plannings.each(&:destroy)
       end
+    end
+
+    def plannings_to_destroy
+      Planning.where(id: Array(params[:planning_ids]))
+    end
+
+    def params_with_restricted_items
+      { items: params[:items].is_a?(Hash) ? params[:items].values : params[:items] || [],
+        planning: params[:planning] || {} }
     end
 
     def build_board_for(plannings)
@@ -76,11 +86,15 @@ module Plannings
 
     def default_period
       today = Time.zone.today
-      Period.retrieve(today.at_beginning_of_week, (today + 3.month).at_end_of_week)
+      Period.retrieve(today.at_beginning_of_week, (today + 3.months).at_end_of_week)
     end
 
-    def authorize_class
-      authorize!(action_name.to_sym, Planning)
+    def authorize_subject_planning
+      case action_name
+      when 'index' then authorize!(:read, Planning)
+      when 'show' then  authorize!(:show_plannings, subject)
+      else authorize!(:manage_plannings, subject)
+      end
     end
 
   end

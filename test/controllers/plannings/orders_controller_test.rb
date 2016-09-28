@@ -44,8 +44,18 @@ module Plannings
       assert assigns(:period).length > 180
     end
 
+    test 'GET#show as regular user is allowed' do
+      login_as(:pascal)
+
+      get :show, id: orders(:hitobito_demo).id
+      assert_equal 200, response.status
+    end
+
     test 'PATCH update with valid params' do
-      patch :update, xhr: true, format: :js, id: orders(:puzzletime).id,
+      patch :update,
+            xhr: true,
+            format: :js,
+            id: orders(:puzzletime).id,
             planning: { percent: '50', definitive: 'true' },
             items: { '1' => { employee_id: employees(:pascal).id.to_s,
                               work_item_id: work_items(:puzzletime).id.to_s,
@@ -56,13 +66,77 @@ module Plannings
     end
 
     test 'PATCH update with invalid params' do
-      patch :update, xhr: true, format: :js, id: orders(:puzzletime).id,
+      patch :update,
+            xhr: true,
+            format: :js,
+            id: orders(:puzzletime).id,
             planning: {},
             items: { '1' => { employee_id: employees(:pascal).id.to_s,
                               work_item_id: work_items(:puzzletime).id.to_s,
                               date: '2000-01-03' } }
       assert_equal 200, response.status
       assert response.body.include?('Bitte füllen Sie das Formular aus')
+    end
+
+    test 'PATCH#update as regular user fails' do
+      login_as(:pascal)
+      assert_raises(CanCan::AccessDenied) do
+        patch :update,
+              xhr: true,
+              format: :js,
+              id: orders(:puzzletime).id,
+              planning: { percent: '50', definitive: 'true' },
+              items: { '1' => { employee_id: employees(:pascal).id.to_s,
+                                work_item_id: work_items(:puzzletime).id.to_s,
+                                date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
+      end
+    end
+
+    test 'PATCH#update as order responsible is allowed' do
+      orders(:puzzletime).update!(responsible: employees(:pascal))
+      login_as(:pascal)
+
+      patch :update,
+            xhr: true,
+            format: :js,
+            id: orders(:puzzletime).id,
+            planning: { percent: '50', definitive: 'true' },
+            items: { '1' => { employee_id: employees(:pascal).id.to_s,
+                              work_item_id: work_items(:puzzletime).id.to_s,
+                              date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
+
+      assert_equal 200, response.status
+    end
+
+    test 'PATCH#update on responsible board but for different order does not work' do
+      orders(:puzzletime).update!(responsible: employees(:pascal))
+      login_as(:pascal)
+
+      assert_no_difference('Planning.count') do
+        patch :update,
+              xhr: true,
+              format: :js,
+              id: orders(:puzzletime).id,
+              planning: { percent: '50', definitive: 'true' },
+              items: { '1' => { employee_id: employees(:pascal).id.to_s,
+                                work_item_id: work_items(:webauftritt).id.to_s,
+                                date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
+      end
+    end
+
+    test 'DELETE#destroy on responsible board but for different order does not work' do
+      p = Planning.create!(employee: employees(:pascal),
+                           work_item: work_items(:webauftritt),
+                           date: Date.today.beginning_of_week,
+                           percent: 80)
+      login_as(:lucien)
+      assert_no_difference('Planning.count') do
+        delete :destroy,
+               xhr: true,
+               format: :js,
+               id: orders(:hitobito_demo).id,
+               planning_ids: [p.id]
+      end
     end
 
   end

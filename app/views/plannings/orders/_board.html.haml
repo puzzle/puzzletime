@@ -1,5 +1,5 @@
 .planning-calendar{ style: "--days: #{@board.work_days}" }
-  .planning-calendar-inner
+  .planning-calendar-inner{ class: can?(:manage_plannings, @board.subject) ? 'editable' : nil }
     = render 'board_header'
 
     - @board.accounting_posts.each do |post|
@@ -15,5 +15,6 @@
           .planning-calendar-days{ id: planning_row_id(employee.id, post.work_item_id) }
             = render 'row', legend: employee, items: items
 
-      .actions{ data: { type: 'employee', work_item_id: post.work_item_id } }
-        = render 'add_button'
+      - if can?(:manage_plannings, @board.subject)
+        .actions{ data: { type: 'employee', work_item_id: post.work_item_id } }
+          = render 'add_button'

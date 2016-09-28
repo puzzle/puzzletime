@@ -3,5 +3,11 @@ module Plannings
 
     self.search_columns = %w(name shortname)
 
+    private
+
+    def authorize_class
+      authorize!(:read, Planning)
+    end
+
   end
 end

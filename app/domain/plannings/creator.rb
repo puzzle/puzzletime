@@ -70,9 +70,10 @@ module Plannings
     end
 
     def validate_present(p)
-      if p.blank? || (p[:percent].blank? &&
-                      p[:definitive].blank? && p[:definitive] != false &&
-                      p[:repeat_until].blank?)
+      if p.blank? ||
+          (p[:percent].blank? &&
+           p[:definitive].blank? && p[:definitive] != false &&
+           p[:repeat_until].blank?)
         @errors << 'Bitte füllen Sie das Formular aus'
       end
     end
@@ -174,11 +175,7 @@ module Plannings
     end
 
     def items
-      @items ||= begin
-        items = params[:items] || []
-        items = items.values if items.is_a?(Hash)
-        items.collect(&:stringify_keys)
-      end
+      @items ||= (params[:items] || []).collect(&:stringify_keys)
     end
 
     def repeat_until_week
