@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module FilterHelper
 
   def predefined_past_period_options

@@ -31,7 +31,7 @@
                 %span.unit h
             %td
               - if entry.order_entries.present?
-                %a{data: {toggle_visibility: ".employee-#{entry.employee.id}-ordertimes"}} Details
+                %a{data: {toggle: "employee-#{entry.employee.id}-ordertimes"}} Details
             %td
             %td
               .data-item
@@ -46,7 +46,7 @@
                 %span.figure= format_workload_billability(entry.billability)
                 %span.unit %
         - if entry.order_entries.present?
-          %tbody{class: ['employee-ordertimes', "employee-#{entry.employee.id}-ordertimes"]}
+          %tbody.employee-ordertimes{id: "employee-#{entry.employee.id}-ordertimes", style: 'display: none;'}
             - entry.order_entries.each do |ordertime_entry|
               %tr
                 %td

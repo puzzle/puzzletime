@@ -21,7 +21,6 @@
 #= require nested_form_fields
 #= require modal_create
 #= require worktimes
-#= require workload_report
 #= require week_datepicker
 #= require work_item_autocomplete
 #= require plannings
@@ -73,7 +72,6 @@ $(document).on('ajax:error', (event, xhr, status, error) ->
   alert('Sorry, something went wrong\n(' + error + ')'))
 
 
-
 ################################################################
 # only bind events for non-document elemenets in $ ->
 $ ->
@@ -86,11 +84,6 @@ $ ->
 
   # wire up toggle buttons
   $('[data-toggle=buttons]').button()
-
-  # wire up visibility toggler elements
-  $('[data-toggle-visibility]').each((index, element) ->
-    new app.VisibilityToggler(element)
-  )
 
   # wire up disabled links. Bind on body to handle bubbling event before document
   $('body').on('click', 'a.disabled', (event) ->

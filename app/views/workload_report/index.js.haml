@@ -1,6 +1,3 @@
 $('.results').html('#{j(render('results'))}');
 
-- if flash[:alert]
-  $('#flash').html('#{j(render('layouts/flash', level: :alert))}');
-- else
-  $('#flash').html('');
+= render 'shared/flash_alert'
