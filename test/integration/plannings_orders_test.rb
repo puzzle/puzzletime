@@ -48,8 +48,8 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
                        percent: 40,
                        definitive: false })
     visit plannings_order_path(orders(:puzzletime))
-    page.assert_selector('.-definitive', count: 3)
-    page.assert_selector('.-provisional', count: 2)
+    page.assert_selector('div.-definitive', count: 3)
+    page.assert_selector('div.-provisional', count: 2)
     page.assert_selector('.-selected', count: 0)
     page.assert_selector('.planning-panel', visible: false)
 
@@ -87,8 +87,8 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
   end
 
   test 'create planning entries' do
-    page.assert_selector('.-definitive', count: 2)
-    page.assert_selector('.-provisional', count: 0)
+    page.assert_selector('div.-definitive', count: 2)
+    page.assert_selector('div.-provisional', count: 0)
     page.assert_selector('.-selected', count: 0)
     page.assert_selector('.planning-panel', visible: false)
     row_mark.all('.day')[0].assert_text('50')
@@ -104,8 +104,8 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
       click_button 'OK'
     end
 
-    page.assert_selector('.-definitive', count: 5)
-    page.assert_selector('.-provisional', count: 0)
+    page.assert_selector('div.-definitive', count: 5)
+    page.assert_selector('div.-provisional', count: 0)
     page.assert_selector('.-selected', count: 0)
     page.assert_selector('.planning-panel', visible: false)
     row_mark.all('.day')[0].assert_text('50')
@@ -117,8 +117,8 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
   end
 
   test 'update planning entries' do
-    page.assert_selector('.-definitive', count: 2)
-    page.assert_selector('.-provisional', count: 0)
+    page.assert_selector('div.-definitive', count: 2)
+    page.assert_selector('div.-provisional', count: 0)
     page.assert_selector('.-selected', count: 0)
     page.assert_selector('.planning-panel', visible: false)
     row_mark.all('.day')[0].assert_text('50')
@@ -134,8 +134,8 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
       click_button 'OK'
     end
 
-    page.assert_selector('.-definitive', count: 0)
-    page.assert_selector('.-provisional', count: 2)
+    page.assert_selector('div.-definitive', count: 0)
+    page.assert_selector('div.-provisional', count: 2)
     page.assert_selector('.-selected', count: 0)
     page.assert_selector('.planning-panel', visible: false)
     row_mark.all('.day')[0].assert_text('50')
@@ -143,8 +143,8 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
   end
 
   test 'create & update planning entries' do
-    page.assert_selector('.-definitive', count: 2)
-    page.assert_selector('.-provisional', count: 0)
+    page.assert_selector('div.-definitive', count: 2)
+    page.assert_selector('div.-provisional', count: 0)
     page.assert_selector('.-selected', count: 0)
     page.assert_selector('.planning-panel', visible: false)
     row_mark.all('.day')[0].assert_text('50')
@@ -161,8 +161,8 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
       click_button 'OK'
     end
 
-    page.assert_selector('.-definitive', count: 4)
-    page.assert_selector('.-provisional', count: 0)
+    page.assert_selector('div.-definitive', count: 4)
+    page.assert_selector('div.-provisional', count: 0)
     page.assert_selector('.-selected', count: 0)
     page.assert_selector('.planning-panel', visible: false)
     row_mark.all('.day')[0].assert_text('100')
