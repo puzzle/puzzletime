@@ -1,7 +1,7 @@
 # Place your application-specific JavaScript functions and classes here
 # This file is automatically included by javascript_include_tag :defaults
 #
-#= require jquery
+#= require jquery3
 #= require jquery.turbolinks
 #= require jquery_ujs
 #= require jquery-ui/datepicker
@@ -41,6 +41,10 @@ if typeof String.prototype.endsWith isnt 'function'
   String.prototype.endsWith = (suffix) ->
     return this.indexOf(suffix, this.length - suffix.length) isnt -1
 
+Object.defineProperty(Object.prototype, 'do', value: (callback) ->
+  callback.call(this, this)
+  this
+)
 
 ################################################################
 # because of turbolinks.jquery, do bind ALL document events here
