@@ -9,9 +9,7 @@ app.plannings.selectable = new class
   init: ->
     return if @selectable().length == 0
 
-    $(document).on('click', @clear)
-    $(document).on('keyup', @clearOnEscape)
-
+    @bindListeners()
     @selectable().selectable({
       filter: selectee,
       cancel: 'a, .actions',
