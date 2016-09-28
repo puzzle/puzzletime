@@ -2,12 +2,13 @@
   - content_for(:content_header) do
     %div
 
-  - @boards.each_with_index do |board, i|
-    - @board = board
-    = render 'header', filter: i == 0
+  #boards
+    - @boards.each_with_index do |board, i|
+      - @board = board
+      = render 'header', filter: i == 0
 
-    .planning-board
-      = render 'board'
+      .planning-board{ id: "board_#{dom_id(board.subject)}" }
+        = render 'board'
 
   = render 'legend'
 
