@@ -31,6 +31,7 @@ app.plannings.panel = new class
     @hideErrors()
     @initPercent()
     @initDefinitive()
+    @initRepetition()
 
     hasExisting = app.plannings.selectable.selectionHasExistingPlannings()
     @panel('.planning-delete').css('visibility', if hasExisting then 'visible' else 'hidden')
@@ -110,6 +111,16 @@ app.plannings.panel = new class
     source = $(event.target).hasClass('planning-definitive')
     current = @panel('#definitive').val()
     @setDefinitive(if source.toString() == current then null else source)
+
+  initRepetition: () ->
+    @panel('#repetition').prop('checked', false)
+    @panel('.planning-repetition-group').hide()
+    @panel('#repeat_until').val('')
+
+  repetitionChange: (event) =>
+    enabled = $(event.target).prop('checked')
+    @panel('.planning-repetition-group')[if enabled then 'show' else 'hide']()
+    @panel('#repeat_until').val('')
 
   position: =>
     if @panel().length == 0 || @panel().is(':hidden')

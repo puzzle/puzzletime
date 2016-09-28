@@ -249,6 +249,13 @@ html.turbolinks-progress-bar::before {
 }
 
 
+/* jQuery UI customizations */
+#ui-datepicker-div {
+  // make sure datepicker dialog is visible when used in bootstrap modals
+  z-index: $zindex-modal + 1 !important;
+}
+
+
 @import "components/*";
 
 @import "absence";
