@@ -17,12 +17,12 @@ class PlanningsController < CrudController
 
   def my_work_items
     @work_items = WorkItem
-      .recordable
-      .joins(:accounting_post)
-      .joins('LEFT JOIN orders ON ' \
+                  .recordable
+                  .joins(:accounting_post)
+                  .joins('LEFT JOIN orders ON ' \
              'orders.work_item_id = ANY (work_items.path_ids)')
-      .where(orders: { responsible_id: current_user.id })
-      .list
+                  .where(orders: { responsible_id: current_user.id })
+                  .list
 
     render template: 'plannings/work_items'
   end

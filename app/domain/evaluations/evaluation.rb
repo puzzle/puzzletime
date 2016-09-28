@@ -31,10 +31,10 @@ class Evaluation
   self.total_details     = true
 
   # Whether to show billing hours beside performed hours
-  self.billable_hours     = false
+  self.billable_hours = false
 
   # Whether to show planned hours and difference in separate columns
-  self.planned_hours     = false
+  self.planned_hours = false
 
   # The field of a division referencing the category entry in the database.
   # May be nil if not required for this Evaluation (default).
@@ -74,8 +74,8 @@ class Evaluation
 
   def sum_times_grouped(period)
     query = worktime_query(category, period).
-      joins(division_join).
-      group(division_column)
+            joins(division_join).
+            group(division_column)
     query_time_sums(query, division_column)
   end
 
@@ -134,7 +134,7 @@ class Evaluation
   # information or links to certain actions.
   # No methods are called by default.
   # See EmployeeWorkItemsEval for an example.
-  def division_supplement(_user, period = nil)
+  def division_supplement(_user, _period = nil)
     []
   end
 
@@ -207,10 +207,10 @@ class Evaluation
   def query_time_sums(query, group_by_column = nil)
     if billable_hours
       columns = ['SUM("worktimes"."hours") AS sum_hours',
-                'SUM(CASE WHEN "worktimes"."billable" = TRUE ' +
-                    'THEN "worktimes"."hours" ' +
-                    'ELSE 0 END) ' +
-                    'AS sum_billable_hours']
+                 'SUM(CASE WHEN "worktimes"."billable" = TRUE ' \
+                     'THEN "worktimes"."hours" ' \
+                     'ELSE 0 END) ' \
+                     'AS sum_billable_hours']
       columns.unshift(group_by_column) if group_by_column.present?
 
       result = query.pluck(*columns)

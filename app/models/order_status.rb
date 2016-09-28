@@ -11,7 +11,7 @@
 #
 
 class OrderStatus < ActiveRecord::Base
-  STYLES = %w(default success info warning danger)
+  STYLES = %w(default success info warning danger).freeze
 
   include Closable
 

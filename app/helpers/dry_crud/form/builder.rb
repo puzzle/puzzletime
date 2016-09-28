@@ -125,9 +125,9 @@ module DryCrud::Form
       text_field(attr, html_options)
     end
 
-    alias_method :integer_field, :number_field
-    alias_method :float_field, :number_field
-    alias_method :decimal_field, :number_field
+    alias integer_field number_field
+    alias float_field number_field
+    alias decimal_field number_field
 
     # Render a select element for a :belongs_to association defined by attr.
     # Use additional html_options for the select element.
@@ -254,7 +254,6 @@ module DryCrud::Form
     def errors?(attr)
       attr_plain, attr_id = assoc_and_id_attr(attr)
       # errors aint a Hash
-      # rubocop:disable HashMethods
       @object.errors.key?(attr_plain.to_sym) ||
         @object.errors.key?(attr_id.to_sym)
       # rubocop:enable HashMethods

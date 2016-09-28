@@ -46,7 +46,7 @@ class WorktimesCommitsController < CrudController
   def commit_dates
     today = Time.zone.today
     if current_user.management?
-      12.times.collect { |i| (today - i.months).end_of_month } + [nil]
+      Array.new(12) { |i| (today - i.months).end_of_month } + [nil]
     else
       [today - 1.month, today].collect(&:end_of_month)
     end

@@ -197,8 +197,8 @@ class Worktime < ActiveRecord::Base
   # allow time formats such as 14, 1400, 14:00 and 14.0 (1430, 14:30, 14.5)
   def write_converted_time(attribute, value)
     value = I18n.l(value, format: :time) if value.is_a? Time
-    if value.is_a?(String) && ! (value =~ H_M)
-      if value.size > 0 && value =~ /^\d*\.?\d*$/
+    if value.is_a?(String) && !(value =~ H_M)
+      if !value.empty? && value =~ /^\d*\.?\d*$/
         # military time: 1400
         if value.size > 2 && !value.include?('.')
           hour = value.to_i / 100

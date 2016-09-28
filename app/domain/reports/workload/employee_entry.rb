@@ -16,7 +16,7 @@ module Reports
         @order_entries ||= build_entries
       end
 
-      alias_method :entries, :order_entries # TODO: remove
+      alias entries order_entries # TODO: remove
 
       private
 

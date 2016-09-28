@@ -15,6 +15,5 @@ namespace :ci do
                  'erd',
                  'rubocop:report',
                  'brakeman',
-                 'gemsurance'
-                ]
+                 'gemsurance']
 end

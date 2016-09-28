@@ -55,11 +55,10 @@ class EmployeeOverviewPlanningGraph < OverviewPlanningGraph
   def add_absences_to_cache(absence_graph)
     absence_graph.each_day do |date|
       absence = absence_graph.absence(date)
-      if absence
-        add_to_cache(absence.label, date, absence.percent)
-        add_to_cache(absence.label, date, absence.percent)
-        # TODO: implement real half day absences
-      end
+      next unless absence
+      add_to_cache(absence.label, date, absence.percent)
+      add_to_cache(absence.label, date, absence.percent)
+      # TODO: implement real half day absences
     end
   end
 

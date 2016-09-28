@@ -1,5 +1,4 @@
 namespace :test do
-
   desc 'Run only non-integration tests'
   task units: ['test:models', 'test:domain', 'test:controllers', 'test:helpers', 'test:mailers']
 
@@ -8,5 +7,4 @@ namespace :test do
     t.libs << 'test'
     t.pattern = 'test/domain/**/*_test.rb'
   end
-
 end

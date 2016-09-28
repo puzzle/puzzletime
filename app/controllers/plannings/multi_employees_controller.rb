@@ -28,7 +28,7 @@ module Plannings
     def employee
       @employee ||= Employee.find(relevant_employee_id)
     end
-    alias_method :subject, :employee
+    alias subject employee
 
     def relevant_employee_id
       if params[:employee_id] # new

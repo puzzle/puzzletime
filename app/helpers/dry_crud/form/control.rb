@@ -11,15 +11,15 @@ module DryCrud::Form
              to: :builder
 
     # Html displayed to mark an input as required.
-    REQUIRED_MARK = '*'
+    REQUIRED_MARK = '*'.freeze
 
     # Number of default input field span columns depending
     # on the #field_method.
     INPUT_SPANS = Hash.new(5)
     INPUT_SPANS[:number_field] =
       INPUT_SPANS[:integer_field] =
-      INPUT_SPANS[:float_field]   =
-      INPUT_SPANS[:decimal_field] = 2
+        INPUT_SPANS[:float_field] =
+          INPUT_SPANS[:decimal_field] = 2
     INPUT_SPANS[:date_field] =
       INPUT_SPANS[:time_field] = 2
 

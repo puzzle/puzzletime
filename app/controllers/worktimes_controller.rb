@@ -16,7 +16,7 @@ class WorktimesController < CrudController
   before_render_form :set_existing
   before_render_form :set_employees
 
-  FINISH = 'Abschliessen'
+  FINISH = 'Abschliessen'.freeze
 
   def index
     set_week_days
@@ -61,13 +61,13 @@ class WorktimesController < CrudController
 
   def set_work_date
     unless @worktime.work_date
-      if params[:work_date]
-        @worktime.work_date = params[:work_date]
-      elsif @period && @period.length == 1
-        @worktime.work_date = @period.start_date
-      else
-        @worktime.work_date = Time.zone.today
-      end
+      @worktime.work_date = if params[:work_date]
+                              params[:work_date]
+                            elsif @period && @period.length == 1
+                              @period.start_date
+                            else
+                              Time.zone.today
+                            end
     end
   end
 
@@ -103,7 +103,7 @@ class WorktimesController < CrudController
     @selected_date = params[:week_date].present? ? Date.parse(params[:week_date]) : Time.zone.today
     @week_days = (@selected_date.at_beginning_of_week..@selected_date.at_end_of_week).to_a
     @next_week_date = @week_days.last + 1.day
-    @previous_week_date = @week_days.first - 7.day
+    @previous_week_date = @week_days.first - 7.days
   end
 
   def set_employees
@@ -112,8 +112,8 @@ class WorktimesController < CrudController
 
   def list_entries
     @worktimes = Worktime.where('employee_id = ? AND work_date >= ? AND work_date <= ?', @user.id, @week_days.first, @week_days.last)
-                 .includes(:work_item, :absence, :employee)
-                 .order('work_date, from_start_time, work_item_id')
+                         .includes(:work_item, :absence, :employee)
+                         .order('work_date, from_start_time, work_item_id')
     @daily_worktimes = @worktimes.group_by(&:work_date)
     @worktimes
   end

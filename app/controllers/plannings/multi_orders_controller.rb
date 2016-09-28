@@ -28,7 +28,7 @@ module Plannings
     def order
       @order ||= order_for_work_item_id(relevant_work_item_id)
     end
-    alias_method :subject, :order
+    alias subject order
 
     def relevant_work_item_id
       if params[:work_item_id] # new
@@ -45,7 +45,7 @@ module Plannings
     def order_for_work_item_id(work_item_id)
       Order.joins('LEFT JOIN work_items ON ' \
                   'orders.work_item_id = ANY (work_items.path_ids)').
-            find_by('work_items.id = ?', work_item_id)
+        find_by('work_items.id = ?', work_item_id)
     end
 
   end

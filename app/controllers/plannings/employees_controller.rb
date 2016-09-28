@@ -16,7 +16,7 @@ module Plannings
     def employee
       @employee ||= Employee.find(params[:id])
     end
-    alias_method :subject, :employee
+    alias subject employee
 
     def build_board
       Plannings::EmployeeBoard.new(employee, @period)

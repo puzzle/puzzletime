@@ -70,22 +70,21 @@ class ExtendedCapacityReport < BaseCapacityReport
         work_item_non_billable_hours = extract_billable_hours(times, false)
         work_item_total_non_billable_hours += work_item_non_billable_hours
 
-        if (work_item_billable_hours + work_item_non_billable_hours).abs > 0.001
-          csv_billable_lines << [employee.shortname, work_item_department(work_item), '', '', '', '', '', '',
-                                 work_item_code(parent, child),
-                                 work_item_label(parent),
-                                 subwork_item_label(parent, child),
-                                 '',
-                                 work_item_billable_hours + work_item_non_billable_hours,
-                                 offered_rate(work_item),
-                                 '',
-                                 work_item_billable_hours + work_item_non_billable_hours,
-                                 '',
-                                 work_item_billable_hours,
-                                 '',
-                                 work_item_non_billable_hours,
-                                 '']
-        end
+        next unless (work_item_billable_hours + work_item_non_billable_hours).abs > 0.001
+        csv_billable_lines << [employee.shortname, work_item_department(work_item), '', '', '', '', '', '',
+                               work_item_code(parent, child),
+                               work_item_label(parent),
+                               subwork_item_label(parent, child),
+                               '',
+                               work_item_billable_hours + work_item_non_billable_hours,
+                               offered_rate(work_item),
+                               '',
+                               work_item_billable_hours + work_item_non_billable_hours,
+                               '',
+                               work_item_billable_hours,
+                               '',
+                               work_item_non_billable_hours,
+                               '']
       end
 
       # process non billable (internal) work_items
@@ -99,17 +98,16 @@ class ExtendedCapacityReport < BaseCapacityReport
         internal_work_item_hours += extract_billable_hours(times, true) # HACK: because there may be entries with wrong $-flag
         internal_work_item_total_hours += internal_work_item_hours
 
-        if internal_work_item_hours.abs > 0.001
-          csv_non_billable_lines << [employee.shortname, work_item_department(work_item), '', '', '', '', '', '',
-                                     work_item_code(parent, child),
-                                     work_item_label(parent),
-                                     subwork_item_label(parent, child),
-                                     '',
-                                     internal_work_item_hours,
-                                     offered_rate(work_item),
-                                     '', '', '', '', '', '', '',
-                                     internal_work_item_hours]
-        end
+        next unless internal_work_item_hours.abs > 0.001
+        csv_non_billable_lines << [employee.shortname, work_item_department(work_item), '', '', '', '', '', '',
+                                   work_item_code(parent, child),
+                                   work_item_label(parent),
+                                   subwork_item_label(parent, child),
+                                   '',
+                                   internal_work_item_hours,
+                                   offered_rate(work_item),
+                                   '', '', '', '', '', '', '',
+                                   internal_work_item_hours]
       end
 
       work_item_total_hours = work_item_total_billable_hours + work_item_total_non_billable_hours + internal_work_item_total_hours

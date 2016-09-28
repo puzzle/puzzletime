@@ -38,7 +38,7 @@ class Planning < ActiveRecord::Base
     @order ||=
       Order.joins('LEFT JOIN work_items ON ' \
                   'orders.work_item_id = ANY (work_items.path_ids)').
-          find_by('work_items.id = ?', work_item_id)
+      find_by('work_items.id = ?', work_item_id)
   end
 
   private

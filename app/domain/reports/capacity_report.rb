@@ -15,21 +15,20 @@ class CapacityReport < BaseCapacityReport
           employee.alltime_leaf_work_items.each do |item|
             # get id of parent work item on (max) level 1
             id = item.path_ids[[1, item.path_ids.size - 1].min]
-            unless processed_ids.include? id
-              processed_ids.push id
-              result = find_billable_time(employee, id, period)
-              sum = result.collect(&:hours).sum
-              parent = child = WorkItem.find(id)
-              parent = child.parent if child.parent
-              append_entry(csv,
-                           employee,
-                           period,
-                           parent.label_verbose,
-                           child == parent ? '' : child.label,
-                           extract_billable_hours(result, true),
-                           extract_billable_hours(result, false))
-              order_time += sum
-            end
+            next if processed_ids.include? id
+            processed_ids.push id
+            result = find_billable_time(employee, id, period)
+            sum = result.collect(&:hours).sum
+            parent = child = WorkItem.find(id)
+            parent = child.parent if child.parent
+            append_entry(csv,
+                         employee,
+                         period,
+                         parent.label_verbose,
+                         child == parent ? '' : child.label,
+                         extract_billable_hours(result, true),
+                         extract_billable_hours(result, false))
+            order_time += sum
           end
           # include all absencetimes
           absences = employee_absences(employee, period)

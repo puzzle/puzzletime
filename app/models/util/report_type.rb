@@ -160,6 +160,6 @@ class ReportType
   INSTANCES = [StartStopType::INSTANCE,
                HoursDayType::INSTANCE,
                HoursWeekType::INSTANCE,
-               HoursMonthType::INSTANCE]
+               HoursMonthType::INSTANCE].freeze
   ALL_INSTANCES = INSTANCES + [AutoStartType::INSTANCE]
 end

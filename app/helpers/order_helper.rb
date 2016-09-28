@@ -24,7 +24,8 @@ module OrderHelper
     order_target_rating_icon(
       target.rating,
       title: target.comment? ? simple_format(target.comment).gsub(/"/, '&quot;') : nil,
-      data: { toggle: :tooltip })
+      data: { toggle: :tooltip }
+    )
   end
 
   def order_target_icon_key(rating)

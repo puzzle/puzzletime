@@ -1,5 +1,4 @@
 module ReportsWorkloadHelper
-
   def format_workload_hours(value)
     content_tag(:span, format_hour(value, 0), title: value)
   end
@@ -22,8 +21,6 @@ module ReportsWorkloadHelper
     config = Settings.reports.workload.worktime_balance
     if value < config.lower_limit
       'red'
-    else
-      nil
     end
   end
 
@@ -48,5 +45,4 @@ module ReportsWorkloadHelper
       'red'
     end
   end
-
 end

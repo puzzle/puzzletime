@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 module PlanningsHelper
-
   def planning_legend_path(legend)
     case legend
     when Employee then plannings_employee_path(legend)
@@ -13,5 +12,4 @@ module PlanningsHelper
   def planning_row_id(employee_id, work_item_id)
     "planning_row_employee_#{employee_id}_work_item_#{work_item_id}"
   end
-
 end

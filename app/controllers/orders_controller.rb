@@ -17,7 +17,8 @@ class OrdersController < CrudController
     kind: 'order_kinds.name',
     department: 'departments.name',
     responsible: 'employees.lastname || employees.firstname',
-    status: 'order_statuses.position' }
+    status: 'order_statuses.position'
+  }
 
   before_action :set_filter_values, only: :index
 
@@ -101,7 +102,7 @@ class OrdersController < CrudController
   def sort_entries_by_target_scope(entries)
     match = params[:sort].to_s.match(/\Atarget_scope_(\d+)\z/)
     if match
-      entries.order_by_target_scope(match[1], params[:sort_dir].to_s.downcase == 'desc')
+      entries.order_by_target_scope(match[1], params[:sort_dir].to_s.casecmp('desc').zero?)
     else
       entries
     end
