@@ -141,8 +141,8 @@ class EmployeeStatistics
         employments.first.start_date = period.start_date
       end
       if period.end_date.present? && (employments.last.end_date.nil? ||
-        employments.last.end_date > period.end_date
-        employments.last.end_date = period.end_date)
+        employments.last.end_date > period.end_date)
+        employments.last.end_date = period.end_date
       end
     end
     employments
