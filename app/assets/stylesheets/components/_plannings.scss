@@ -36,14 +36,15 @@ $legend-width: 300px;
   max-width: $week-width;
   min-width: $week-width;
   justify-content: space-between;
+  border-left: 1px solid #bbb;
   background-color: #eee;
+
+  &:last-child {
+    border-right: 1px solid #bbb;
+  }
 
   > .planned, > .kw {
     padding: 0.25rem 0.5rem;
-  }
-
-  &:not(:last-child) > .planned {
-    border-right: 1px solid #fff;
   }
 }
 .planning-calendar-days-header {
@@ -68,11 +69,17 @@ $legend-width: 300px;
   .day, .dayheader {
     min-width: $cell-width;
     max-width: $cell-width;
-    border-left: 1px solid #ccc;
+    border-left: 1px solid #e0e0e0;
 
     &:last-child {
-      border-right: 1px solid #ccc;
+      border-right: 1px solid #e0e0e0;
     }
+  }
+  .dayheader {
+    border-color: transparent;
+  }
+  .day:nth-child(5n+2), .dayheader:nth-child(5n+1) {
+    border-left-color: #bbb;
   }
 }
 .planning-calendar-inner > .groupheader > strong,
