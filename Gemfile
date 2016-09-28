@@ -2,9 +2,9 @@ source 'https://rubygems.org'
 
 gem 'rails', '4.2.7.1'
 
-gem 'pg'
+gem 'pg', '< 0.19' # higher requires ruby 2.0
 
-gem 'airbrake'
+gem 'airbrake', '< 5.0' # would require newer errbit
 gem 'acts_as_tree'
 gem 'cancancan', '< 1.13' # higher requires ruby 2.0
 gem 'country_select'
@@ -20,14 +20,14 @@ gem 'jbuilder'
 gem 'nested_form_fields'
 gem 'protective'
 gem 'rails_autolink'
-gem 'config'
+gem 'config', '< 1.1' # higher requires ruby 2.0
 gem 'rails-i18n'
-gem 'net-ldap'
+gem 'net-ldap', '< 0.13' # higher requires ruby 2.0
 gem 'seed-fu'
 gem 'codez-validates_by_schema', require: 'validates_by_schema'
 gem 'validates_timeliness'
 
-# fixed versions for indirect dependencies
+# fixed version for indirect dependencies
 gem 'mime-types', '~> 2.99.1'
 
 ## assets
@@ -38,7 +38,7 @@ gem 'therubyracer', platforms: :ruby
 
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
-gem 'turbolinks'
+gem 'turbolinks', '< 5.0' # upgrade to 5.0 together with rails
 gem 'jquery-turbolinks'
 gem 'bootstrap-sass'
 gem 'autoprefixer-rails', '< 6.1.0' # dependency of bootstrap, newer requires ruby 2.0
@@ -82,7 +82,7 @@ group :metrics do
   gem 'brakeman'
   gem 'minitest-reporters'
   gem 'rails-erd'
-  gem 'rubocop'
+  gem 'rubocop', '< 0.42' # higher requires ruby 2.0
   gem 'rubocop-checkstyle_formatter', require: false
   gem 'simplecov-rcov'
   gem 'sdoc'
