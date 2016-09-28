@@ -13,6 +13,7 @@ app.plannings.selectable = new class
     $(document).on('click', @clear)
     $(document).on('keyup', @clearOnEscape)
 
+    @selectable().click((e) -> e.stopPropagation())
     @selectable().on('mousedown', '.ui-selected', (e) =>
       if e.shiftKey
         e.stopPropagation()
