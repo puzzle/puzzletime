@@ -32,7 +32,7 @@ app.worktimes.activateLastNavDay = ->
 
 app.worktimes.scrollToDayWithDate = (date) ->
   dateLabel = $('.worktimes .weekcontent .date-label[data-date="' + date + '"]')
-  if dateLabel.size() is 0
+  if dateLabel.length is 0
     return
 
   offset = dateLabel.offset().top - $('.worktimes .weeknav').height() - 20;
@@ -79,12 +79,12 @@ $ ->
     e.preventDefault()
     window.location.href = $(this). attr('href') + '&work_date=' + $("#week_date").val();
 
-  if $('.worktimes').size()
+  if $('.worktimes').length
     $('.worktimes .weekcontent .date-label').
       waypoint({ handler: (direction) ->
         if direction == 'down'
           app.worktimes.activateNavDayWithDate($(this).data('date'))
-        else if direction == 'up' && $(this).prev().size()
+        else if direction == 'up' && $(this).prev().length
           app.worktimes.activateNavDayWithDate($(this).prev().data('date'))
       , offset: -> $('.weeknav').height() })
 
@@ -106,7 +106,7 @@ $ ->
         return
 
     selectedDate = $('.worktimes').data('selectedDate')
-    if selectedDate && $('.worktimes .weeknav .day[data-date="' + selectedDate + '"]').size()
+    if selectedDate && $('.worktimes .weeknav .day[data-date="' + selectedDate + '"]').length
       $('.worktimes .weeknav .day[data-date="' + selectedDate + '"]').click()
 
   # toggle from/to and hour input fields
