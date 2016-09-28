@@ -7,20 +7,22 @@ app.plannings.panel = new class
   positioning = false
 
   init: ->
-    if @panel().length == 0
-      return
-
-    $(container).on('scroll', @position)
-
-    @panel('.planning-definitive-group button').on('click', @definitiveChange)
-    @panel('.planning-cancel').on('click', (event) =>
-      $(event.target).blur()
-      app.plannings.selectable.clear()
-    )
-    @panel('form').on('submit', @submit)
-    @panel('.planning-delete').on('click', @deleteSelected)
+    return if @panel().length == 0
+    @bindListeners()
 
   destroy: ->
+    @bindListeners(true)
+
+  bindListeners: (unbind) ->
+    func = if unbind then 'off' else 'on'
+
+    $(container)[func]('scroll', @position)
+
+    @panel('.planning-definitive-group button')[func]('click', @definitiveChange)
+    @panel('#repetition')[func]('click', @repetitionChange)
+    @panel('.planning-cancel')[func]('click', @cancel)
+    @panel('form')[func]('submit', @submit)
+    @panel('.planning-delete')[func]('click', @deleteSelected)
 
   show: (selectedElements) ->
     @panel().show()
@@ -35,6 +37,10 @@ app.plannings.panel = new class
 
   hide: ->
     $(panel).hide()
+
+  cancel: (event) =>
+    $(event.target).blur()
+    app.plannings.selectable.clear()
 
   showErrors: (errors) ->
     alerts = @panel('.alerts').empty().show()
