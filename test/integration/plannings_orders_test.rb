@@ -191,6 +191,30 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     assert_not open_selectize('add_employee_select_id').text.include?('Waber Mark')
   end
 
+  test 'switching period' do
+    assert_equal '', find('#period').value
+    page.assert_selector('#start_date', visible: true)
+    page.assert_selector('#end_date', visible: true)
+
+    select 'Nächste 6 Monate', from: 'period'
+    find('.navbar-brand').click # blur select
+    page.assert_selector('.planning-calendar-weeks',
+                         text: "KW #{(Date.today + 6.months - 1.weeks).cweek}")
+    page.assert_selector('#start_date', visible: false)
+    page.assert_selector('#end_date', visible: false)
+
+    drag(row_mark.all('.day')[0], row_pascal.all('.day')[1])
+    page.assert_selector('.-selected', count: 4)
+
+    select 'benutzerdefiniert', from: 'period'
+    find('.navbar-brand').click # blur select
+    page.assert_selector('#start_date', visible: true)
+    page.assert_selector('#end_date', visible: true)
+
+    drag(row_mark.all('.day')[0], row_pascal.all('.day')[2])
+    page.assert_selector('.-selected', count: 6)
+  end
+
   private
 
   def row_mark

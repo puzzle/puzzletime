@@ -9,9 +9,17 @@ app.plannings.selectable = new class
   init: ->
     return if @selectable().length == 0
 
-    $(document).on('click', @clear)
-    $(document).on('keyup', @clearOnEscape)
+<<<<<<< HEAD
+    @selectable().click((e) -> e.stopPropagation())
+    @selectable().on('mousedown', '.ui-selected', (e) =>
+      if e.shiftKey
+        e.stopPropagation()
+        @startTranslate(e)
+    )
 
+=======
+    @bindListeners()
+>>>>>>> plannings: fix listener binding on period change, refs #20575
     @selectable().selectable({
       filter: selectee,
       cancel: 'a, .actions',
@@ -34,94 +42,7 @@ app.plannings.selectable = new class
     $(document)[func]('click', @clear)
     $(document)[func]('keyup', @clearOnEscape)
 
-    @selectable()[func]('click', @stopPropagation)
-    @selectable()[func]('mousedown', '.ui-selected', @startTranslate)
-
-  clear: (e) =>
-    unless @preventClear(e)
-      @selectable('.ui-selected').removeClass('ui-selected -selected')
-      app.plannings.panel.hide()
-
-  preventClear: (e) =>
-    ignoredContainers = '.panel, .ui-datepicker'
-    e && ($(e.target).closest(ignoredContainers).length ||
-      $(e.target).is(':hidden') # ignore clicks on detached nodes (i.e. datepicker previous/next)
-    )
-
-  clearOnEscape: (event) =>
-    if event.key == 'Escape'
-      @clear()
-
-  stopPropagation: (event) -> event.stopPropagation()
-
-  getSelectedDays: ->
-    @selectable('.ui-selected')
-      .toArray()
-      .map((element) =>
-        row = $(element).parent()
-        [ _match, employee_id, work_item_id ] = row.prop('id')
-          .match(/planning_row_employee_(\d+)_work_item_(\d+)/)
-        date = @selectable('.planning-calendar-days-header .dayheader')
-          .eq(row.children('.day').index(element)).data('date')
-
-        { employee_id, work_item_id, date }
-      )
-
-  getSelectedPlanningIds: ->
-    @selectable('.ui-selected')
-      .toArray()
-      .map((el) -> el.dataset.id)
-      .filter((id) -> id)
-
-  getSelectedPercentValues: ->
-    @selectable('.ui-selected')
-      .toArray()
-      .map((element) -> $(element).text().trim())
-      .filter((value, index, self) -> self.indexOf(value) == index)
-
-  getSelectedDefinitiveValues: ->
-    @selectable('.ui-selected')
-      .toArray()
-      .map(((element) ->
-        if $(element).hasClass('-definitive')
-          return true
-        else if ($(element).hasClass('-provisional'))
-          return false
-        return null
-      ))
-      .filter((value, index, self) -> self.indexOf(value) == index)
-
-  selectionHasExistingPlannings: ->
-    @getSelectedPercentValues().find((v) => v != '')
-
-  start: (event, ui) ->
-    isSelecting = true
-    setTimeout((-> isSelecting && app.plannings.panel.hide()), 100) # avoid flickering
-
-  stop: (event, ui) ->
-    isSelecting = false
-    selectedElements = $(event.target).find('.ui-selected')
-    selectedElements.addClass('-selected')
-
-    if selectedElements.length > 0
-      app.plannings.panel.show(selectedElements)
-
-  selecting: (event, ui) ->
-    $(ui.selecting).addClass('-selected')
-
-  unselecting: (event, ui) ->
-    $(ui.unselecting).removeClass('-selected')
-
-  selectable: (selector) ->
-    if selector
-      $(selector, selectable)
-    else
-      $(selectable)
-
-  startTranslate: (e) =>
-    return unless e.shiftKey
-    e.stopPropagation()
-
+  startTranslate: (e) ->
     currentlySelected = @selectable('.ui-selected')
     children = e.target.parentNode.children
     startNodeIndex = $(children).index(e.target)
@@ -197,6 +118,84 @@ app.plannings.selectable = new class
   updateDayTranslation: ->
     console.log('updateDayTranslation')
 
+  clear: (e) =>
+    unless @preventClear(e)
+      @selectable('.ui-selected').removeClass('ui-selected -selected')
+      app.plannings.panel.hide()
+
+  preventClear: (e) =>
+    ignoredContainers = '.panel, .ui-datepicker'
+    e && ($(e.target).closest(ignoredContainers).length ||
+      $(e.target).is(':hidden') # ignore clicks on detached nodes (i.e. datepicker previous/next)
+    )
+
+  clearOnEscape: (event) =>
+    if event.key == 'Escape'
+      @clear()
+
+  getSelectedDays: ->
+    @selectable('.ui-selected')
+      .toArray()
+      .map((element) =>
+        row = $(element).parent()
+        [ _match, employee_id, work_item_id ] = row.prop('id')
+          .match(/planning_row_employee_(\d+)_work_item_(\d+)/)
+        date = @selectable('.planning-calendar-days-header .dayheader')
+          .eq(row.children('.day').index(element)).data('date')
+
+        { employee_id, work_item_id, date }
+      )
+
+  getSelectedPlanningIds: ->
+    @selectable('.ui-selected')
+      .toArray()
+      .map((el) -> el.dataset.id)
+      .filter((id) -> id)
+
+  getSelectedPercentValues: ->
+    @selectable('.ui-selected')
+      .toArray()
+      .map((element) -> $(element).text().trim())
+      .filter((value, index, self) -> self.indexOf(value) == index)
+
+  getSelectedDefinitiveValues: ->
+    @selectable('.ui-selected')
+      .toArray()
+      .map(((element) ->
+        if $(element).hasClass('-definitive')
+          return true
+        else if ($(element).hasClass('-provisional'))
+          return false
+        return null
+      ))
+      .filter((value, index, self) -> self.indexOf(value) == index)
+
+  selectionHasExistingPlannings: ->
+    @getSelectedPercentValues().find((v) => v != '')
+
+  start: (event, ui) ->
+    isSelecting = true
+    setTimeout((-> isSelecting && app.plannings.panel.hide()), 100) # avoid flickering
+
+  stop: (event, ui) ->
+    isSelecting = false
+    selectedElements = $(event.target).find('.ui-selected')
+    selectedElements.addClass('-selected')
+
+    if selectedElements.length > 0
+      app.plannings.panel.show(selectedElements)
+
+  selecting: (event, ui) ->
+    $(ui.selecting).addClass('-selected')
+
+  unselecting: (event, ui) ->
+    $(ui.unselecting).removeClass('-selected')
+
+  selectable: (selector) ->
+    if selector
+      $(selector, selectable)
+    else
+      $(selectable)
 
 $ ->
   app.plannings.selectable.destroy()
