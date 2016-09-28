@@ -67,7 +67,7 @@ app.plannings = new class
       @addRow(employeeId, workItemId)
 
   initListeners: ->
-    @board().on('click', '.actions .add', @add)
+    @board('.actions .add').click(@add)
 
   initSelectize: ->
     addRowSelect = $('#add_employee_id,#add_work_item_id')
@@ -89,7 +89,7 @@ app.plannings = new class
     ]
 
   destroyListeners: ->
-    @board().off('click', @add)
+    @board('.actions .add').off(@add)
 
   board: (selector) ->
     if selector
