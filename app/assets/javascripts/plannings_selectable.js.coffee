@@ -13,6 +13,12 @@ app.plannings.selectable = new class
     $(document).on('click', @clear)
     $(document).on('keyup', @clearOnEscape)
 
+    @selectable().on('mousedown', '.ui-selected', (e) =>
+      if e.shiftKey
+        e.stopPropagation()
+        @startTranslate(e)
+    )
+
     @selectable().selectable({
       filter: selectee,
       cancel: 'a, .actions',
@@ -24,6 +30,82 @@ app.plannings.selectable = new class
       selecting: @selecting,
       unselecting: @unselecting
     })
+
+  startTranslate: (e) ->
+    currentlySelected = @selectable('.ui-selected')
+    children = e.target.parentNode.children
+    startNodeIndex = $(children).index(e.target)
+    selectedIndexes = Array.from(currentlySelected, (el) ->
+      $(el.parentNode.children).index(el)
+    )
+    minTranslateBy = -selectedIndexes.reduce((a, b) -> Math.min(a, b))
+    maxSelectedIndex = selectedIndexes.reduce((a, b) -> Math.max(a, b))
+    maxTranslateBy = children.length - maxSelectedIndex
+    translateBy = 0
+    getRows = (elements) -> $.unique(elements.map(-> @parentNode))
+    originalRows = getRows(currentlySelected).clone()
+
+    @selectable().on('mousemove', (e) =>
+      if e.target.matches('.day')
+        e.stopPropagation()
+
+        app.plannings.panel.hide()
+
+        currentNodeIndex = $(e.target.parentNode.children).index(e.target)
+        currentTranslateBy = currentNodeIndex - startNodeIndex
+
+        return if translateBy == currentTranslateBy ||
+          currentTranslateBy <= minTranslateBy ||
+          currentTranslateBy >= maxTranslateBy
+
+        translateBy = currentTranslateBy
+
+        @resetCellsOfRows(
+          getRows(@selectable('.ui-selected')),
+          originalRows,
+          translateBy
+        )
+        @translateDays(currentlySelected, translateBy)
+    )
+
+    @selectable().on('mouseup', (e) =>
+      @selectable().off('mousemove')
+      @updateDayTranslation()
+    )
+
+  resetCellsOfRows: (rows, originalRows, unselect) ->
+    Array.from(rows, (row, i) ->
+      Array.from(row.children, (cell, j) ->
+        cell.innerHTML = originalRows[i].children[j].innerHTML
+        cell.className = originalRows[i].children[j].className
+        cell.classList.remove('ui-selected', '-selected') if unselect
+        cell
+      )
+    )
+
+  translateDays: (days, translateBy) ->
+    return unless translateBy
+
+    Array
+      .from(days, (el) -> [
+        $(el.parentNode.children).index(el)
+        el.parentNode
+      ])
+      .map(([ i, parentNode ]) -> [
+        parentNode.children[i]
+        parentNode.children[i + translateBy]
+      ])
+      .do(-> @reverse() if translateBy > 0)
+      .forEach(([ from, to ]) ->
+        to.innerHTML = from.innerHTML
+        to.className = from.className
+        from.className = 'day'
+        from.innerHTML = ''
+        to.classList.add('ui-selected', '-selected')
+      )
+
+  updateDayTranslation: ->
+    console.log('updateDayTranslation')
 
   destroy: ->
     $(document).off('click', @clear)

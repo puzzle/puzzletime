@@ -41,6 +41,10 @@ if typeof String.prototype.endsWith isnt 'function'
   String.prototype.endsWith = (suffix) ->
     return this.indexOf(suffix, this.length - suffix.length) isnt -1
 
+Object.defineProperty(Object.prototype, 'do', value: (callback) ->
+  callback.call(this, this)
+  this
+)
 
 ################################################################
 # because of turbolinks.jquery, do bind ALL document events here
