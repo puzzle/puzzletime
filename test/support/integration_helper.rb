@@ -32,10 +32,10 @@ module IntegrationHelper
     open_selectize(id).find('div', text: value).click
   end
 
-  def drag(from_node, to_node)
+  def drag(from_node, *to_node)
     mouse_driver = page.driver.browser.mouse
     mouse_driver.down(from_node.native)
-    mouse_driver.move_to(to_node.native)
+    to_node.each { |node| mouse_driver.move_to(node.native) }
     mouse_driver.up
   end
 

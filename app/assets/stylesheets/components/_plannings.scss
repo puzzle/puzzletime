@@ -145,8 +145,14 @@ $legend-width: 300px;
     right: 0;
   }
 }
-.planning-calendar-inner.editable .planning-calendar-days > .day {
-  cursor: pointer;
+.planning-calendar-inner.editable .planning-calendar-days {
+  > .day {
+    cursor: pointer;
+
+    &.-selected {
+      cursor: move;
+    }
+  }
 }
 
 .planning-panel {

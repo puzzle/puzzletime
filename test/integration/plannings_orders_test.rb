@@ -191,6 +191,30 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     assert_not open_selectize('add_employee_select_id').text.include?('Waber Mark')
   end
 
+  test 'Should not be able to move an empty selection' do
+    drag(row_mark.all('.day')[5], row_pascal.all('.day')[9])
+    page.assert_selector('.day.-selected', count: 10)
+    drag(row_pascal.all('.day')[5], row_pascal.all('.day')[3])
+    page.assert_selector('.day.-selected', count: 3)
+  end
+
+  test 'Moving planning over exiting planning overwrites the planning' do
+    drag(row_mark.all('.day')[5], row_pascal.all('.day')[9])
+
+    within '.planning-panel' do
+      fill_in 'percent', with: '100'
+      click_button 'OK'
+    end
+
+    page.assert_selector('div.-definitive', count: 12)
+
+    drag(row_mark.all('.day')[5], row_pascal.all('.day')[9])
+    page.assert_selector('.day.-selected', count: 10)
+    drag(row_pascal.all('.day.-selected')[2], row_mark.all('.day')[0], row_mark.all('*')[0])
+    row_mark.assert_selector('.day.-selected.-definitive:nth-child(2)')
+    page.assert_selector('.day.-selected', count: 10)
+  end
+
   private
 
   def row_mark
