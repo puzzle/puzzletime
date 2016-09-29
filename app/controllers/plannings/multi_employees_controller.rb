@@ -19,8 +19,8 @@ module Plannings
           d = Department.find(params[:department_id])
           @title = "Planung der Mitarbeiter von #{d}"
           d.employees.employed_ones(@period).list
-        elsif params[:employee_list_id]
-          EmployeeList.find(params[:employee_list_id]).employees.list
+        elsif params[:custom_list_id]
+          CustomList.where(item_type: Employee.sti_name).find(params[:custom_list_id]).items.list
         else
           raise ActiveRecord::RecordNotFound
         end

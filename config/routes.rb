@@ -132,7 +132,8 @@ Rails.application.routes.draw do
       resource :multi_employees, only: [:show, :new, :update, :destroy]
     end
 
-    resources :employee_lists do
+    resources :custom_lists do
+      resource :multi_orders, only: [:show, :new, :update, :destroy]
       resource :multi_employees, only: [:show, :new, :update, :destroy]
     end
 

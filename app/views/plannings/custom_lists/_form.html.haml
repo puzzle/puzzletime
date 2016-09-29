@@ -1,0 +1,11 @@
+= crud_form do |f|
+  = f.hidden_field :item_type
+
+  = f.labeled_text_field :name
+
+  = f.labeled(:item_ids, caption: '&nbsp;'.html_safe, span: 8) do
+    - @available_items.each_slice(@available_items.size / 2 + 1) do |slice|
+      .col-md-6
+        = f.collection_check_boxes :item_ids, slice, :id, :label_verbose do |b|
+          .checkbox
+            = b.label { b.check_box + ' ' + b.text }

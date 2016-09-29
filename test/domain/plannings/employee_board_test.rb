@@ -3,10 +3,10 @@ require 'test_helper'
 module Plannings
   class EmployeeBoardTest < ActiveSupport::TestCase
 
-    test '#week_totals_state is under planned if no plannings' do
+    test '#week_totals_state is nil if no plannings' do
       employee.employments.create!(start_date: 1.year.ago, percent: 80)
       board = Plannings::EmployeeBoard.new(employee, period)
-      assert_equal :under_planned, board.week_totals_state(date)
+      assert_equal nil, board.week_totals_state(date)
     end
 
     test '#week_totals_state is fully planned if plannings match employment' do

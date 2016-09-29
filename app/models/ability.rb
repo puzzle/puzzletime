@@ -139,7 +139,7 @@ class Ability
     can :read, Planning
     can :manage, Planning, employee_id: user.id
 
-    can :manage, EmployeeList, employee_id: user.id
+    can :manage, CustomList, employee_id: user.id
 
     can [:select_period,
          :current_period,

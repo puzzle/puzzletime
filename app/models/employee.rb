@@ -36,7 +36,7 @@ class Employee < ActiveRecord::Base
   has_many :overtime_vacations, dependent: :destroy
   has_many :managed_orders, class_name: 'Order', foreign_key: :responsible_id, dependent: :nullify
   has_many :order_team_members, dependent: :destroy
-  has_many :employee_lists
+  has_many :custom_lists, dependent: :destroy
   has_one :running_time,
           -> { where(report_type: AutoStartType::INSTANCE.key) },
           class_name: 'Ordertime'
