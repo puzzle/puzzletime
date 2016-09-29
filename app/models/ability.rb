@@ -48,7 +48,6 @@ class Ability
 
     # :crud instead of :manage because cannot change settings of other employees
     can [:crud, :update_committed_worktimes, :manage_plannings], Employee
-    can :manage, EmployeeList, employee_id: user.id
 
     can [:read], Worktime
     can [:create, :update], Absencetime
@@ -139,6 +138,8 @@ class Ability
 
     can :read, Planning
     can :manage, Planning, employee_id: user.id
+
+    can :manage, EmployeeList, employee_id: user.id
 
     can [:select_period,
          :current_period,

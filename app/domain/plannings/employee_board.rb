@@ -17,7 +17,9 @@ module Plannings
     def week_totals_state(date)
       total = week_totals[date]
       employed = weekly_employment_percent(date)
-      if (total - employed).abs < 1
+      if total.zero?
+        nil
+      elsif (total - employed).abs < 1
         :fully_planned
       elsif total > employed
         :over_planned
@@ -40,7 +42,6 @@ module Plannings
     def load_employees
       [employee]
     end
-
 
     def compute_weekly_employement_percent(date)
       @employments.each_with_index do |e, i|
