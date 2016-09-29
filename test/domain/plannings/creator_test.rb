@@ -232,6 +232,9 @@ class CreatorTest < ActiveSupport::TestCase
       c.create_or_update
     end
 
+    assert_equal 12, c.plannings.length
+    assert_empty c.errors
+
     assert_equal 50, p1.reload.percent
     assert_equal 30, p2.reload.percent
     assert_equal 50, p3.reload.percent
@@ -269,6 +272,9 @@ class CreatorTest < ActiveSupport::TestCase
     assert_difference('Planning.count', 5) do
       c.create_or_update
     end
+
+    assert_equal 6, c.plannings.length
+    assert_empty c.errors
 
     assert_equal 20, p4.reload.percent
   end
