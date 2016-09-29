@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 class VacationGraph
-  include PeriodIterable
 
   attr_reader :period, :day
 
@@ -49,14 +48,14 @@ class VacationGraph
   end
 
   def each_day
-    super do |day|
+    @period.step do |day|
       @current = get_period_week(day)
       yield day
     end
   end
 
   def each_week
-    super do |week|
+    @period.step(7) do |week|
       @current = get_period_week(week)
       yield week
     end
@@ -213,4 +212,9 @@ class VacationGraph
     end
     val
   end
+
+  def cache
+    @cache ||= {}
+  end
+
 end
