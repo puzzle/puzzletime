@@ -5,4 +5,5 @@
   = nav 'Mitarbeiter', plannings_employees_path, plannings_employees_path
   = nav 'Aufträge', plannings_orders_path, plannings_orders_path
   = nav 'Organisationseinheiten', plannings_departments_path, plannings_departments_path
-
+  - if can?(:manage, EmployeeList)
+    = nav 'Listen', plannings_employee_lists_path, plannings_employee_lists_path

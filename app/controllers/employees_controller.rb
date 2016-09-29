@@ -46,7 +46,7 @@ class EmployeesController < ManageController
   def update_passwd
     if @user.check_passwd(params[:pwd])
       if params[:change_pwd] === params[:change_pwd_confirmation]
-        @user.set_passwd(params[:change_pwd])
+        @user.update_passwd!(params[:change_pwd])
         flash[:notice] = 'Das Passwort wurde aktualisiert'
         redirect_to controller: 'evaluator'
       else
