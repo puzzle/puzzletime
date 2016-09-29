@@ -89,7 +89,7 @@ module GraphHelper
       url = url_for(controller: worktime.controller, action: :edit, id: worktime.id)
       "<a href=\"#{url}\" class=\"has-tooltip\">"
     else
-      '<a>'
+      '<a class="has-tooltip">'
     end
   end
 
