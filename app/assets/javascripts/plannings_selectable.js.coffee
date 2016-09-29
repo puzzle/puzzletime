@@ -37,7 +37,12 @@ app.plannings.selectable = new class
 
   clear: (e) =>
     unless @preventClear(e)
-      @selectable('.ui-selected').removeClass('ui-selected -selected')
+      selected = @selectable('.ui-selected')
+      if e?.type == 'selectablestart'
+        # clear selections on other boards
+        selected = @selectable().not(e.target).find('.ui-selected')
+
+      selected.removeClass('ui-selected -selected')
       app.plannings.panel.hide()
 
   preventClear: (e) =>
@@ -92,8 +97,9 @@ app.plannings.selectable = new class
   selectionHasExistingPlannings: ->
     @getSelectedPercentValues().find((v) => v != '')
 
-  start: (event, ui) ->
+  start: (event, ui) =>
     isSelecting = true
+    @clear(event)
     setTimeout((-> isSelecting && app.plannings.panel.hide()), 100) # avoid flickering
 
   stop: (event, ui) ->

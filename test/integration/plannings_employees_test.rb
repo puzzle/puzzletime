@@ -37,13 +37,7 @@ class PlanningsEmployeesTest < ActionDispatch::IntegrationTest
     all('.planning-calendar-week')[0].assert_text('50%')
     all('.planning-calendar-week')[1].assert_text('0%')
     page.assert_selector('.planning-panel', visible: false)
-    row.all('.day')[0].assert_text('50')
-    row.all('.day')[1].assert_text('50')
-    row.all('.day')[2].assert_text('50')
-    row.all('.day')[3].assert_text('50')
-    row.all('.day')[4].assert_text('50')
-    row.all('.day')[5].assert_text('')
-    row.all('.day')[6].assert_text('')
+    assert_percents ['50', '50', '50', '50', '50', '', '', ''], row
 
     drag(row.all('.day')[3], row.all('.day')[6])
     page.assert_selector('.planning-calendar .-selected', count: 4)
@@ -61,16 +55,14 @@ class PlanningsEmployeesTest < ActionDispatch::IntegrationTest
     all('.planning-calendar-week')[0].assert_text('60%')
     all('.planning-calendar-week')[1].assert_text('30%')
     page.assert_selector('.planning-panel', visible: false)
-    row.all('.day')[0].assert_text('50')
-    row.all('.day')[1].assert_text('50')
-    row.all('.day')[2].assert_text('50')
-    row.all('.day')[3].assert_text('75')
-    row.all('.day')[4].assert_text('75')
-    row.all('.day')[5].assert_text('75')
-    row.all('.day')[6].assert_text('75')
+    assert_percents ['50', '50', '50', '75', '75', '75', '75', ''], row
   end
 
   private
+
+  def assert_percents(percents, row)
+    assert_equal percents, row.all('.day')[0..(percents.length - 1)].map(&:text)
+  end
 
   def row_selector
     "#planning_row_employee_#{employees(:mark).id}_work_item_#{work_items(:puzzletime).id}"
