@@ -1,0 +1,14 @@
+- @title = "Meine Listen"
+
+= list_table do |t|
+  - t.attr(:name) do |l|
+    - case l.item_type
+    - when Employee.sti_name
+      - link_to l, plannings_custom_list_multi_employees_path(l.id)
+    - when Order.sti_name
+      - link_to l, plannings_custom_list_multi_orders_path(l.id)
+    - else
+      - l
+  - t.attr(:item_type)
+  - t.edit_action_col
+  - t.destroy_action_col

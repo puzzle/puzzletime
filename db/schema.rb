@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160919101807) do
+ActiveRecord::Schema.define(version: 20160929150008) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -97,6 +97,13 @@ ActiveRecord::Schema.define(version: 20160919101807) do
     t.text    "notes"
   end
 
+  create_table "custom_lists", force: :cascade do |t|
+    t.string  "name",        null: false
+    t.integer "employee_id"
+    t.string  "item_type",   null: false
+    t.integer "item_ids",    null: false, array: true
+  end
+
   create_table "delayed_jobs", force: :cascade do |t|
     t.integer  "priority",   default: 0, null: false
     t.integer  "attempts",   default: 0, null: false
@@ -121,25 +128,6 @@ ActiveRecord::Schema.define(version: 20160919101807) do
 
   add_index "departments", ["name"], name: "index_departments_on_name", unique: true, using: :btree
   add_index "departments", ["shortname"], name: "index_departments_on_shortname", unique: true, using: :btree
-
-  create_table "employee_lists", force: :cascade do |t|
-    t.integer  "employee_id",             null: false
-    t.string   "title",       limit: 255, null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "employee_lists", ["employee_id"], name: "index_employee_lists_on_employee_id", using: :btree
-
-  create_table "employee_lists_employees", id: false, force: :cascade do |t|
-    t.integer  "employee_list_id"
-    t.integer  "employee_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "employee_lists_employees", ["employee_id"], name: "index_employee_lists_employees_on_employee_id", using: :btree
-  add_index "employee_lists_employees", ["employee_list_id"], name: "index_employee_lists_employees_on_employee_list_id", using: :btree
 
   create_table "employees", force: :cascade do |t|
     t.string  "firstname",              limit: 255,                 null: false
