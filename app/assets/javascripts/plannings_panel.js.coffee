@@ -25,7 +25,6 @@ app.plannings.panel = new class
     @panel('.planning-delete')[func]('click', @deleteSelected)
 
   show: (selectedElements) ->
-    @panel().show()
     @position()
 
     @hideErrors()
@@ -44,7 +43,7 @@ app.plannings.panel = new class
     app.plannings.selectable.clear()
 
   showErrors: (errors) ->
-    alerts = @panel('.alerts').empty().show()
+    alerts = @panel('.alerts').empty()
     if errors?.length
       alert = '<div class="alert alert-danger">'
       if errors.length > 1
@@ -57,6 +56,7 @@ app.plannings.panel = new class
       alerts.append($(alert))
     else
       alerts.append($('<div class="alert alert-danger">Ein Fehler ist aufgetreten</div>'))
+    alerts.show()
     @position()
 
   hideErrors: ->
@@ -122,13 +122,14 @@ app.plannings.panel = new class
     @panel('.planning-repetition-group')[if enabled then 'show' else 'hide']()
     @panel('#repeat_until').val('')
 
-  position: =>
-    if @panel().length == 0 || @panel().is(':hidden')
+  position: (e) =>
+    if @panel().length == 0 || (e?.type == 'scroll' && @panel().is(':hidden'))
       return
+
 
     unless positioning
       requestAnimationFrame(() =>
-        @panel().position({
+        @panel().show().position({
           my: 'right top',
           at: 'right bottom',
           of: $(container).find('.ui-selected').last(),
