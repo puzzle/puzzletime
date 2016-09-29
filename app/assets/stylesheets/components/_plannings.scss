@@ -229,10 +229,20 @@ table.company-planning {
     text-align:   center;
     border-bottom: 0;
   }
+
   tbody td {
     text-align: center;
   }
+
+  tbody td.head {
+    text-align: left;
+  }
+
   td a {
     color: #333;
+  }
+
+  td.head a {
+    color: $link-color;
   }
 }

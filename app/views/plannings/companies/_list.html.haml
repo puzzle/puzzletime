@@ -4,7 +4,11 @@
   %tbody
     - @boards.each do |board|
       %tr
-        %th.nowrap= link_to board.employee.label, plannings_employee_path(board.employee)
+        %td.head.nowrap
+          = link_to_if(can?(:show_plannings, board.employee),
+                       board.employee.label,
+                       plannings_employee_path(board.employee))
+
         - @period.step(7) do |date|
           %td{ class: board.week_totals_state(date) }
             = link_to '#', class: 'has-tooltip' do
