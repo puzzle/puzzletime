@@ -7,20 +7,22 @@ app.plannings.panel = new class
   positioning = false
 
   init: ->
-    if @panel().length == 0
-      return
-
-    $(container).on('scroll', @position)
-
-    @panel('.planning-definitive-group button').on('click', @definitiveChange)
-    @panel('.planning-cancel').on('click', (event) =>
-      $(event.target).blur()
-      app.plannings.selectable.clear()
-    )
-    @panel('form').on('submit', @submit)
-    @panel('.planning-delete').on('click', @deleteSelected)
+    return if @panel().length == 0
+    @bindListeners()
 
   destroy: ->
+    @bindListeners(true)
+
+  bindListeners: (unbind) ->
+    func = if unbind then 'off' else 'on'
+
+    $(container)[func]('scroll', @position)
+
+    @panel('.planning-definitive-group button')[func]('click', @definitiveChange)
+    @panel('#repetition')[func]('click', @repetitionChange)
+    @panel('.planning-cancel')[func]('click', @cancel)
+    @panel('form')[func]('submit', @submit)
+    @panel('.planning-delete')[func]('click', @deleteSelected)
 
   show: (selectedElements) ->
     @panel().show()
@@ -29,12 +31,17 @@ app.plannings.panel = new class
     @hideErrors()
     @initPercent()
     @initDefinitive()
+    @initRepetition()
 
     hasExisting = app.plannings.selectable.selectionHasExistingPlannings()
     @panel('.planning-delete').css('visibility', if hasExisting then 'visible' else 'hidden')
 
   hide: ->
     $(panel).hide()
+
+  cancel: (event) =>
+    $(event.target).blur()
+    app.plannings.selectable.clear()
 
   showErrors: (errors) ->
     alerts = @panel('.alerts').empty().show()
@@ -104,6 +111,16 @@ app.plannings.panel = new class
     source = $(event.target).hasClass('planning-definitive')
     current = @panel('#definitive').val()
     @setDefinitive(if source.toString() == current then null else source)
+
+  initRepetition: () ->
+    @panel('#repetition').prop('checked', false)
+    @panel('.planning-repetition-group').hide()
+    @panel('#repeat_until').val('')
+
+  repetitionChange: (event) =>
+    enabled = $(event.target).prop('checked')
+    @panel('.planning-repetition-group')[if enabled then 'show' else 'hide']()
+    @panel('#repeat_until').val('')
 
   position: =>
     if @panel().length == 0 || @panel().is(':hidden')
