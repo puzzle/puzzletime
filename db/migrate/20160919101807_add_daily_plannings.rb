@@ -27,8 +27,8 @@ class AddDailyPlannings < ActiveRecord::Migration
   end
 
   def migrate_order_closed
-    WorkItem.joins(order: :order_status).
-             where(order_status: { closed: true }, work_items: { closed: false }).
+    WorkItem.joins(order: :status).
+             where(order_statuses: { closed: true }, work_items: { closed: false }).
              update_all(closed: true)
   end
 
@@ -37,11 +37,10 @@ class AddDailyPlannings < ActiveRecord::Migration
     has_rows = true
 
     while has_rows
-      plannings = Arel::Table.new(OLD_TABLE)
-      query = plannings
+      query = old_table
         .project(Arel.sql('*'))
-        .where(plannings[:end_week].gteq(IGNORE_BEFORE.cwyear * 100 + IGNORE_BEFORE.cweek)
-                 .or(plannings[:end_week].eq(nil)))
+        .where(old_table[:end_week].gteq(IGNORE_BEFORE.cwyear * 100 + IGNORE_BEFORE.cweek)
+                 .or(old_table[:end_week].eq(nil)))
         .take(BATCH_SIZE)
         .skip(offset)
       has_rows = select_all(query.to_sql).each { |row| migrate_row(row) }.length > 0
@@ -91,11 +90,33 @@ class AddDailyPlannings < ActiveRecord::Migration
   end
 
   def create_planning(entry)
+    insert_planning(entry) unless planning_exists?(entry)
+  end
+
+  def planning_exists?(entry)
+    condition = [:employee_id, :work_item_id, :date]
+      .map { |k| new_table[k].eq(entry[k]) }
+      .reduce(:and)
+    query = new_table
+      .project(new_table[:id].count.as('count'))
+      .where(condition)
+    select_one(query.to_sql)['count'] != '0'
+  end
+
+  def insert_planning(entry)
     query = Arel::Nodes::InsertStatement.new
-    query.relation = Arel::Table.new(NEW_TABLE)
-    query.columns = entry.keys.map { |k| Arel::Table.new(NEW_TABLE)[k] }
+    query.relation = new_table
+    query.columns = entry.keys.map { |k| new_table[k] }
     query.values = Arel::Nodes::Values.new(entry.values, query.columns)
     insert(query.to_sql)
+  end
+
+  def old_table
+    @old_table ||= Arel::Table.new(OLD_TABLE)
+  end
+
+  def new_table
+    @new_table ||= Arel::Table.new(NEW_TABLE)
   end
 end
 
