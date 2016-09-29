@@ -29,8 +29,6 @@ Rails.application.routes.draw do
     resource :worktimes_commit, only: [:edit, :update]
   end
 
-  resources :employee_lists
-
   resources :holidays, except: [:show]
 
   resources :orders do
@@ -129,6 +127,10 @@ Rails.application.routes.draw do
     end
     resources :departments, only: [:index] do
       resource :multi_orders, only: [:show, :new, :update, :destroy]
+      resource :multi_employees, only: [:show, :new, :update, :destroy]
+    end
+
+    resources :employee_lists do
       resource :multi_employees, only: [:show, :new, :update, :destroy]
     end
   end

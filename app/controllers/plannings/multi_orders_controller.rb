@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 module Plannings
-  class MultiOrdersController < OrdersController
+  class MultiOrdersController < Plannings::OrdersController
 
     skip_load_and_authorize_resource
     skip_before_action :authorize_subject_planning, only: :show

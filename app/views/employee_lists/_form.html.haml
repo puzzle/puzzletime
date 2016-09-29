@@ -1,6 +1,0 @@
-= crud_form do |f|
-  = f.labeled_text_field :title
-  = f.labeled(:employee_ids, caption: '&nbsp;'.html_safe) do
-    = f.collection_check_boxes :employee_ids, @curr_employees, :id, :label do |b|
-      .radio
-        = b.label { b.check_box + ' ' + b.text }

@@ -1,0 +1,9 @@
+= crud_form do |f|
+  = f.labeled_text_field :title
+  = f.labeled(:employee_ids, caption: '&nbsp;'.html_safe) do
+
+    - @curr_employees.each_slice(@curr_employees.size/3 + 1) do |slice|
+      .col-md-4
+        = f.collection_check_boxes :employee_ids, slice, :id, :label do |b|
+          .checkbox
+            = b.label { b.check_box + ' ' + b.text }

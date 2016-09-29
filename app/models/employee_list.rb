@@ -12,6 +12,9 @@
 
 
 class EmployeeList < ActiveRecord::Base
+
+  belongs_to :employee
+
   has_and_belongs_to_many :employees
 
   validates_by_schema
@@ -19,4 +22,5 @@ class EmployeeList < ActiveRecord::Base
   def to_s
     title
   end
+
 end
