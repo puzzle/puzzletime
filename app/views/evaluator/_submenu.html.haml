@@ -42,7 +42,7 @@
         evaluation_path('absences'),
         evaluation_path('employeeabsences')
 
-= nav 'Ferienplan', all_absences_graph_path
+= nav 'Ferienplan', vacations_path
 
 - if can?(:read, Worktime)
   = nav 'Auslastung', reports_workload_path
