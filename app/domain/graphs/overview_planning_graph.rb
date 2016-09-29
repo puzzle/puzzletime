@@ -7,6 +7,7 @@ class OverviewPlanningGraph
     @period = period
   end
 
+
   def style(date)
     cached = cache[date]
     if cached

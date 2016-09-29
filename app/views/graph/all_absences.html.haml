@@ -1,23 +1,25 @@
 - @title = 'Ferienplan'
 - @title += " #{Time.zone.today.year}" if @period.nil?
+
 = render :partial => 'evaluator/period_link'
-%table.absence
-  %thead
+
+%table.table-condensed.table-stripedbody.table-bordered.absence
+  %thead.center
     %tr.head
       %th{:rowspan => "2"}
       - if @user.management
         %th{:rowspan => "2"} Üb
         %th{:rowspan => "2"} Gh
-      = month_header
+      = month_header(@graph.period)
       - if @user.management
         %th{:rowspan => "2"} Bz
         %th{:rowspan => "2"} Üb
     %tr.head
-      = week_header
+      = week_header(@graph.period)
   %tbody
     - @graph.each_employee do |employee|
       %tr
-        %th.nowrap
+        %td.nowrap
           = employee.label
         - if  @user.management
           %td.stat= @graph.previous_left_vacations
@@ -33,11 +35,11 @@
         %th{:colspan => "3", :rowspan => "2"}
       - else
         %th{:rowspan => "2"}
-      = week_header
+      = week_header(@graph.period)
       - if @user.management
         %th{:colspan => "2", :rowspan => "2"}
     %tr.head
-      = month_header
+      = month_header(@graph.period)
 
 %br/
 %table.table-condensed{:style => "float: left; margin-right: 100px;"}

@@ -122,9 +122,11 @@ Rails.application.routes.draw do
     resources :orders, only: [:index, :show, :update, :destroy] do
       get 'new', on: :member, as: 'new'
     end
+
     resources :employees, only: [:index, :show, :update, :destroy] do
       get 'new', on: :member, as: 'new'
     end
+
     resources :departments, only: [:index] do
       resource :multi_orders, only: [:show, :new, :update, :destroy]
       resource :multi_employees, only: [:show, :new, :update, :destroy]
@@ -133,6 +135,8 @@ Rails.application.routes.draw do
     resources :employee_lists do
       resource :multi_employees, only: [:show, :new, :update, :destroy]
     end
+
+    resource :company, only: :show
   end
 
   resource :graph, only: [], controller: :graph do

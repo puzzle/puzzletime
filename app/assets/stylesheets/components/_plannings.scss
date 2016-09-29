@@ -206,11 +206,26 @@ $legend-width: 300px;
 }
 
 .over_planned {
-  background-color: lighten($brand-red, 10%);
+  background-color: #E39797 !important;
 }
 .under_planned {
-  background-color: lighten($brand-warning, 10%);
+  background-color: #ECDBA0 !important;
 }
 .fully_planned {
-  background-color: $brand-green-light;
+  background-color: #B0DAA5 !important;
+}
+
+table.company-planning {
+  width: 100%;
+
+  .head th {
+    text-align:   center;
+    border-bottom: 0;
+  }
+  tbody td {
+    text-align: center;
+  }
+  td a {
+    color: #333;
+  }
 }
