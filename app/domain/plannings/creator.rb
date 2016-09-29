@@ -20,12 +20,16 @@ module Plannings
     def create_or_update
       Planning.transaction do
         return false unless form_valid?
+
         @plannings = []
         unless repeat_only?
           @plannings.push(*create)
           @plannings.push(*update)
         end
+        repeat if repeat_until_week
         @plannings.push(*repeat) if repeat_until_week
+        @plannings.uniq!
+
         @errors.blank?
       end
     end
