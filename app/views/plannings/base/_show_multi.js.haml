@@ -1,4 +1,8 @@
 - @boards.each do |board|
   - @board = board
   $('#board_#{dom_id(board.subject)}').html('#{j(render('board'))}');
+
+App.plannings.reloadAll()
+App.plannings.dateFilterChanged()
+
 = render 'shared/flash_alert'
