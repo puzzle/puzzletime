@@ -5,12 +5,11 @@ class EmployeeOverviewPlanningGraph < OverviewPlanningGraph
 
   attr_reader :employee
 
-  def initialize(employee, plannings, plannings_abstr, absence_graph, period)
+  def initialize(employee, plannings, absence_graph, period)
     super(period)
     @employee = employee
     add_absences_to_cache(absence_graph)
     add_plannings_to_cache(plannings)
-    add_plannings_to_cache(plannings_abstr)
   end
 
   def week_style(week)
@@ -58,7 +57,6 @@ class EmployeeOverviewPlanningGraph < OverviewPlanningGraph
       next unless absence
       add_to_cache(absence.label, date, absence.percent)
       add_to_cache(absence.label, date, absence.percent)
-      # TODO: implement real half day absences
     end
   end
 

@@ -6,9 +6,8 @@ class EmployeesPlanningGraph
   attr_reader :period
   attr_reader :employee_graphs
 
-  def initialize(employees, period = nil, sort_by_load = false)
+  def initialize(employees, period = Period.next_three_months, sort_by_load = false)
     @employees = employees
-    period ||= Period.next_three_months
     @actual_period = period
     @period = period.extend_to_weeks
     @colorMap = AccountColorMapper.new

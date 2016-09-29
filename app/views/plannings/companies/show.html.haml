@@ -1,0 +1,13 @@
+- @title = 'Planung aller Mitarbeiter'
+
+= render 'plannings/base/date_filter'
+
+#plannings
+  = render 'list'
+
+%br/
+
+%h5 Legende
+%table.planning-legend
+  = render 'plannings/employees/legend_extension'
+

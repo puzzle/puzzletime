@@ -111,25 +111,24 @@ th.periodHead {
   margin-left: 20px;
 }
 
-a.tooltip {
-  font-weight: bolder;
+a.has-tooltip {
   text-decoration: none;
 }
 
-a.tooltip span {
+a.has-tooltip span {
   display: none;
 }
 
-a.tooltip:hover {
+a.has-tooltip:hover {
   position: relative;
 }
 
-a.tooltip:hover span {
+a.has-tooltip:hover span {
   display: block;
   position: absolute;
   top: 10px;
   left: 10px;
-  z-index: 3;
+  z-index: 1000;
   background: #ffffdd;
   color: #333;
   white-space: nowrap;

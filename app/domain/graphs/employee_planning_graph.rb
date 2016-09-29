@@ -7,26 +7,23 @@ class EmployeePlanningGraph
 
   delegate :period_load, to: :overview_graph
 
-  def initialize(employee, period = nil)
+  def initialize(employee, period = Period.next_n_months(3))
     @employee = employee
-    period ||= Period.next_three_months
     @actual_period = period
     @period = period.extend_to_weeks
     @colorMap = AccountColorMapper.new
-    employee_plannings = Planning.where('start_week <= ?', Week.from_date(@period.end_date).to_integer).
+    employee_plannings = Planning.where('date <= ?', @period.end_date).
                          where(employee_id: @employee.id)
-    @plannings       = employee_plannings.where(is_abstract: false).includes(:work_item, :employee)
-    @plannings_abstr = employee_plannings.where(is_abstract: true).includes(:work_item, :employee)
+    @plannings       = employee_plannings.includes(:work_item, :employee)
     @work_items       = collect_work_items(@plannings)
-    @work_items_abstr = collect_work_items(@plannings_abstr)
     absences = Absencetime.where('employee_id = ? AND work_date >= ? AND work_date <= ?',
                                  @employee.id, @period.start_date, @period.end_date)
     @absence_graph = AbsencePlanningGraph.new(absences, @period)
-    @overview_graph = EmployeeOverviewPlanningGraph.new(@employee, @plannings, @plannings_abstr, absence_graph, @period)
+    @overview_graph = EmployeeOverviewPlanningGraph.new(@employee, @plannings, absence_graph, @period)
   end
 
   def collect_work_items(plannings)
-    plannings.select { |planning| planning.planned_during?(@period) }.
+    plannings.
       collect(&:work_item).
       uniq.
       sort

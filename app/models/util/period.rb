@@ -235,9 +235,7 @@ class Period
   end
 
   def extend_to_weeks
-    Period.new(Period.week_for(start_date).start_date,
-               Period.week_for(end_date).end_date,
-               label)
+    Period.new(start_date.at_beginning_of_week, end_date.at_end_of_week, label)
   end
 
   def where_condition(column)

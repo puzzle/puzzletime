@@ -1,0 +1,15 @@
+%table.table-condensed.table-bordered.table-stripedbody.company-planning
+  %thead
+    = render 'header'
+  %tbody
+    - @boards.each do |board|
+      %tr
+        %th.nowrap= link_to board.employee.label, plannings_employee_path(board.employee)
+        - @period.step(7) do |date|
+          %td{ class: board.week_totals_state(date) }
+            = link_to '#', class: 'has-tooltip' do
+              = board.week_totals[date].to_f.round
+              %span #{board.week_totals[date].round}% / #{board.weekly_employment_percent(date).round}%
+
+  %tfoot
+    = render 'header'

@@ -63,7 +63,7 @@ module EvaluatorHelper
                 to_a
     tooltip = ''
     unless transfers.empty?
-      tooltip = '<a href="#" class="tooltip">&lt;-&gt;<span>Überzeit-Ferien Umbuchungen:<br/>'
+      tooltip = '<a href="#" class="has-tooltip">&lt;-&gt;<span>Überzeit-Ferien Umbuchungen:<br/>'
       transfers.collect! do |t|
         " - #{f(t.transfer_date)}: #{format_hour(t.hours)} h"
       end
