@@ -14,15 +14,15 @@ app.plannings.selectable = new class
     $(document).on('keyup', @clearOnEscape)
 
     @selectable().click((e) -> e.stopPropagation())
-    @selectable().on('mousedown', '.ui-selected', (e) =>
-      if e.shiftKey
-        e.stopPropagation()
-        @startTranslate(e)
-    )
+    @selectable().on('mousedown', '.ui-selected', @startTranslate)
 
     @selectable().selectable({
       filter: selectee,
-      cancel: 'a, .actions',
+      cancel: [
+        'a'
+        '.actions'
+        '.legend'
+      ].join(',')
       classes: {
         'ui-selected': '-selected'
       },
@@ -32,8 +32,11 @@ app.plannings.selectable = new class
       unselecting: @unselecting
     })
 
-  startTranslate: (e) ->
+  startTranslate: (e) =>
+    return unless @selectionHasExistingPlannings()
+
     currentlySelected = @selectable('.ui-selected')
+    daysToUpdate = @getSelectedDays()
     children = e.target.parentNode.children
     startNodeIndex = $(children).index(e.target)
     selectedIndexes = Array.from(currentlySelected, (el) ->
@@ -47,19 +50,20 @@ app.plannings.selectable = new class
     originalRows = getRows(currentlySelected).clone()
 
     @selectable().on('mousemove', (e) =>
-      if e.target.matches('.day')
-        e.stopPropagation()
+      e.stopPropagation()
 
+      if e.target.matches('.day')
         app.plannings.panel.hide()
 
         currentNodeIndex = $(e.target.parentNode.children).index(e.target)
         currentTranslateBy = currentNodeIndex - startNodeIndex
 
-        return if translateBy == currentTranslateBy ||
-          currentTranslateBy <= minTranslateBy ||
-          currentTranslateBy >= maxTranslateBy
+        return unless currentTranslateBy
 
-        translateBy = currentTranslateBy
+        translateBy = Math.max(
+          minTranslateBy + 1,
+          Math.min(maxTranslateBy - 1, currentTranslateBy)
+        )
 
         @resetCellsOfRows(
           getRows(@selectable('.ui-selected')),
@@ -71,18 +75,22 @@ app.plannings.selectable = new class
 
     @selectable().on('mouseup', (e) =>
       @selectable().off('mousemove')
-      @updateDayTranslation()
+      @updateDayTranslation(daysToUpdate, translateBy)
     )
 
   resetCellsOfRows: (rows, originalRows, unselect) ->
     Array.from(rows, (row, i) ->
       Array.from(row.children, (cell, j) ->
-        cell.innerHTML = originalRows[i].children[j].innerHTML
-        cell.className = originalRows[i].children[j].className
+        copyCell(cell, originalRows[i].children[j])
         cell.classList.remove('ui-selected', '-selected') if unselect
         cell
       )
     )
+
+  copyCell = (to, from) ->
+    to.innerHTML = from.innerHTML
+    to.className = from.className
+    to
 
   translateDays: (days, translateBy) ->
     return unless translateBy
@@ -98,15 +106,14 @@ app.plannings.selectable = new class
       ])
       .do(-> @reverse() if translateBy > 0)
       .forEach(([ from, to ]) ->
-        to.innerHTML = from.innerHTML
-        to.className = from.className
+        copyCell(to, from)
+        to.classList.add('ui-selected', '-selected')
         from.className = 'day'
         from.innerHTML = ''
-        to.classList.add('ui-selected', '-selected')
       )
 
-  updateDayTranslation: ->
-    console.log('updateDayTranslation')
+  updateDayTranslation: (ids, translateBy)->
+    console.log('updateDayTranslation', { ids, translateBy })
 
   destroy: ->
     $(document).off('click', @clear)

@@ -5,7 +5,15 @@ module Plannings
 
     attr_reader :params, :errors, :plannings
 
-    PERMITTED_ATTRIBUTES = [:id, :employee_id, :work_item_id, :date, :percent, :definitive].freeze
+    PERMITTED_ATTRIBUTES = [
+      :id,
+      :employee_id,
+      :work_item_id,
+      :date,
+      :percent,
+      :definitive,
+      :translate_by
+    ].freeze
     ITEM_FIELDS = [:employee_id, :work_item_id, :date].freeze
 
     # params:
@@ -96,7 +104,18 @@ module Plannings
     end
 
     def update
-      existing_items.update_all(planning_params)
+      if planning_params[:translate_by].present?
+        existing_items.each do |item|
+          item.update!(
+            planning_params.merge(
+              date: item.date + planning_params[:translate_by].days
+            )
+          )
+        end
+      else
+        existing_items.update_all(planning_params)
+      end
+
       existing_items.reload
     end
 

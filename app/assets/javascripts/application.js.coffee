@@ -45,6 +45,22 @@ Object.defineProperty(Object.prototype, 'do', value: (callback) ->
   this
 )
 
+if typeof Object.assign != 'function'
+  Object.assign = (target) ->
+    'use strict'
+    unless target?
+      throw new TypeError('Cannot convert undefined or null to object')
+    output = Object(target)
+    index = 1
+    while index < arguments.length
+      source = arguments[index]
+      if source != undefined and source != null
+        for nextKey of source
+          if source.hasOwnProperty(nextKey)
+            output[nextKey] = source[nextKey]
+      index++
+    output
+
 ################################################################
 # because of turbolinks.jquery, do bind ALL document events here
 
