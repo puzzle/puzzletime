@@ -89,6 +89,7 @@ module Plannings
       if p.blank? ||
           (p[:percent].blank? &&
            p[:definitive].blank? && p[:definitive] != false &&
+           p[:translate_by].blank? &&
            p[:repeat_until].blank?)
         @errors << 'Bitte füllen Sie das Formular aus'
       end
@@ -111,14 +112,24 @@ module Plannings
       plannings
     end
 
+    def translate_date(date, translate_by)
+      translate_by = translate_by.to_i
+      direction = translate_by < 0 ? -1 : 1
+      translate_by.abs.times do
+        date += direction.day
+        date += direction.day if date.saturday? || date.sunday?
+        date += direction.day if date.saturday? || date.sunday?
+      end
+      date
+    end
+
     def update
       if planning_params[:translate_by].present?
         existing_items.each do |item|
-          item.update!(
-            planning_params.merge(
-              date: item.date + planning_params[:translate_by].days
-            )
-          )
+          date = translate_date(item.date, planning_params[:translate_by].to_i)
+          changeset = planning_params.merge(date: date)
+          changeset.delete(:translate_by)
+          item.update!(changeset)
         end
       else
         existing_items.update_all(planning_params)

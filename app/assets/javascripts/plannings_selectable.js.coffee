@@ -61,8 +61,8 @@ app.plannings.selectable = new class
 
   stopPropagation: (event) -> event.stopPropagation()
 
-  getSelectedDays: ->
-    @selectable('.ui-selected')
+  getSelectedDays: (elements = @selectable('.ui-selected')) ->
+    elements
       .toArray()
       .map((element) =>
         row = $(element).parent()
@@ -127,11 +127,13 @@ app.plannings.selectable = new class
       $(selectable)
 
   startTranslate: (e) =>
-    return unless e.shiftKey
+    return unless e.target.matches('.-definitive,.-provisional')
     e.stopPropagation()
 
     currentlySelected = @selectable('.ui-selected')
-    daysToUpdate = @getSelectedDays()
+    daysToUpdate = @getSelectedDays(
+      currentlySelected.filter('.-definitive,.-provisional')
+    )
     children = e.target.parentNode.children
     startNodeIndex = $(children).index(e.target)
     selectedIndexes = Array.from(currentlySelected, (el) ->
@@ -169,7 +171,7 @@ app.plannings.selectable = new class
     )
 
     @selectable().on('mouseup', (e) =>
-      @selectable().off('mousemove')
+      @selectable().off('mousemove mouseup')
       @updateDayTranslation(daysToUpdate, translateBy)
     )
 
@@ -207,9 +209,13 @@ app.plannings.selectable = new class
         from.innerHTML = ''
       )
 
-  updateDayTranslation: (ids, translateBy)->
-    console.log('updateDayTranslation', { ids, translateBy })
-
+  updateDayTranslation: (items, translateBy) ->
+    app.plannings.service.update(
+      "#{window.location.origin}#{window.location.pathname}",
+      items: items
+      planning:
+        translate_by: translateBy
+    )
 
 $ ->
   app.plannings.selectable.destroy()
