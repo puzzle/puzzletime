@@ -49,8 +49,6 @@ class Ability
     # :crud instead of :manage because cannot change settings of other employees
     can [:crud, :update_committed_worktimes, :manage_plannings], Employee
 
-    can [:update_month_end_completions, :manage_plannings], Order
-
     can [:read], Worktime
     can [:create, :update], Absencetime
     can [:create, :update], Ordertime do |t|
@@ -78,11 +76,7 @@ class Ability
     can :manage, [Client, BillingAddress, Contact]
     can :create, WorkItem
 
-    can [:manage,
-         :update_month_end_completions,
-         :manage_plannings],
-        Order,
-        responsible_id: user.id
+    can :manage, Order, responsible_id: user.id
 
     can :manage, [AccountingPost, Contract, Invoice, OrderComment] do |instance|
       instance.order.responsible_id == user.id
@@ -126,9 +120,8 @@ class Ability
          :update_settings,
          :update_committed_worktimes,
          :manage_plannings],
-        Employee do |employee|
-      employee == user
-    end
+        Employee,
+        id: user.id
 
     can [:read,
          :accounting_posts,
@@ -146,7 +139,7 @@ class Ability
     can :read, Planning
     can :manage, Planning, employee_id: user.id
 
-    can :manage, EmployeeList
+    can :manage, CustomList, employee_id: user.id
 
     can [:select_period,
          :current_period,

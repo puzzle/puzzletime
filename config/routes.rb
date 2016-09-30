@@ -29,8 +29,6 @@ Rails.application.routes.draw do
     resource :worktimes_commit, only: [:edit, :update]
   end
 
-  resources :employee_lists
-
   resources :holidays, except: [:show]
 
   resources :orders do
@@ -124,19 +122,26 @@ Rails.application.routes.draw do
     resources :orders, only: [:index, :show, :update, :destroy] do
       get 'new', on: :member, as: 'new'
     end
+
     resources :employees, only: [:index, :show, :update, :destroy] do
       get 'new', on: :member, as: 'new'
     end
+
     resources :departments, only: [:index] do
       resource :multi_orders, only: [:show, :new, :update, :destroy]
       resource :multi_employees, only: [:show, :new, :update, :destroy]
     end
+
+    resources :custom_lists do
+      resource :multi_orders, only: [:show, :new, :update, :destroy]
+      resource :multi_employees, only: [:show, :new, :update, :destroy]
+    end
+
+    resource :company, only: :show
   end
 
-  resource :graph, only: [], controller: :graph do
-    get :weekly
-    get :all_absences
-  end
+  get :weekly_graph, to: 'weekly_graph#show'
+  get :vacations, to: 'vacations#show'
 
   scope '/reports' do
     get '/orders', to: 'order_reports#index', as: :reports_orders
@@ -156,62 +161,4 @@ Rails.application.routes.draw do
 
   get 'design_guide', to: 'design_guide#index'
 
-  # Install the default route as the lowest priority.
-  #match '/:controller(/:action(/:id))', via: [:get, :post, :patch]
-
-
-  # The priority is based upon order of creation: first created -> highest priority.
-  # See how all your routes lay out with "rake routes".
-
-  # You can have the root of your site routed with "root"
-  # root 'welcome#index'
-
-  # Example of regular route:
-  #   get 'products/:id' => 'catalog#view'
-
-  # Example of named route that can be invoked with purchase_url(id: product.id)
-  #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
-
-  # Example resource route (maps HTTP verbs to controller actions automatically):
-  #   resources :products
-
-  # Example resource route with options:
-  #   resources :products do
-  #     member do
-  #       get 'short'
-  #       post 'toggle'
-  #     end
-  #
-  #     collection do
-  #       get 'sold'
-  #     end
-  #   end
-
-  # Example resource route with sub-resources:
-  #   resources :products do
-  #     resources :comments, :sales
-  #     resource :seller
-  #   end
-
-  # Example resource route with more complex sub-resources:
-  #   resources :products do
-  #     resources :comments
-  #     resources :sales do
-  #       get 'recent', on: :collection
-  #     end
-  #   end
-
-  # Example resource route with concerns:
-  #   concern :toggleable do
-  #     post 'toggle'
-  #   end
-  #   resources :posts, concerns: :toggleable
-  #   resources :photos, concerns: :toggleable
-
-  # Example resource route within a namespace:
-  #   namespace :admin do
-  #     # Directs /admin/products/* to Admin::ProductsController
-  #     # (app/controllers/admin/products_controller.rb)
-  #     resources :products
-  #   end
 end

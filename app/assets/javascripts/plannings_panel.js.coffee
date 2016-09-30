@@ -7,28 +7,30 @@ app.plannings.panel = new class
   positioning = false
 
   init: ->
-    if @panel().length == 0
-      return
-
-    $(container).on('scroll', @position)
-
-    @panel('.planning-definitive-group button').on('click', @definitiveChange)
-    @panel('.planning-cancel').on('click', (event) =>
-      $(event.target).blur()
-      app.plannings.selectable.clear()
-    )
-    @panel('form').on('submit', @submit)
-    @panel('.planning-delete').on('click', @deleteSelected)
+    return if @panel().length == 0
+    @bindListeners()
 
   destroy: ->
+    @bindListeners(true)
+
+  bindListeners: (unbind) ->
+    func = if unbind then 'off' else 'on'
+
+    $(container)[func]('scroll', @position)
+
+    @panel('.planning-definitive-group button')[func]('click', @definitiveChange)
+    @panel('#repetition')[func]('click', @repetitionChange)
+    @panel('.planning-cancel')[func]('click', @cancel)
+    @panel('form')[func]('submit', @submit)
+    @panel('.planning-delete')[func]('click', @deleteSelected)
 
   show: (selectedElements) ->
-    @panel().show()
     @position()
 
     @hideErrors()
     @initPercent()
     @initDefinitive()
+    @initRepetition()
 
     hasExisting = app.plannings.selectable.selectionHasExistingPlannings()
     @panel('.planning-delete').css('visibility', if hasExisting then 'visible' else 'hidden')
@@ -36,8 +38,12 @@ app.plannings.panel = new class
   hide: ->
     $(panel).hide()
 
+  cancel: (event) =>
+    $(event.target).blur()
+    app.plannings.selectable.clear()
+
   showErrors: (errors) ->
-    alerts = @panel('.alerts').empty().show()
+    alerts = @panel('.alerts').empty()
     if errors?.length
       alert = '<div class="alert alert-danger">'
       if errors.length > 1
@@ -50,6 +56,7 @@ app.plannings.panel = new class
       alerts.append($(alert))
     else
       alerts.append($('<div class="alert alert-danger">Ein Fehler ist aufgetreten</div>'))
+    alerts.show()
     @position()
 
   hideErrors: ->
@@ -105,13 +112,24 @@ app.plannings.panel = new class
     current = @panel('#definitive').val()
     @setDefinitive(if source.toString() == current then null else source)
 
-  position: =>
-    if @panel().length == 0 || @panel().is(':hidden')
+  initRepetition: () ->
+    @panel('#repetition').prop('checked', false)
+    @panel('.planning-repetition-group').hide()
+    @panel('#repeat_until').val('')
+
+  repetitionChange: (event) =>
+    enabled = $(event.target).prop('checked')
+    @panel('.planning-repetition-group')[if enabled then 'show' else 'hide']()
+    @panel('#repeat_until').val('')
+
+  position: (e) =>
+    if @panel().length == 0 || (e?.type == 'scroll' && @panel().is(':hidden'))
       return
+
 
     unless positioning
       requestAnimationFrame(() =>
-        @panel().position({
+        @panel().show().position({
           my: 'right top',
           at: 'right bottom',
           of: $(container).find('.ui-selected').last(),

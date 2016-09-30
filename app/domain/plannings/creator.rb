@@ -28,8 +28,16 @@ module Plannings
     def create_or_update
       Planning.transaction do
         return false unless form_valid?
-        @plannings = update.concat(create) unless repeat_only?
+
+        @plannings = []
+        unless repeat_only?
+          @plannings.push(*create)
+          @plannings.push(*update)
+        end
         repeat if repeat_until_week
+        @plannings.push(*repeat) if repeat_until_week
+        @plannings.uniq!
+
         @errors.blank?
       end
     end
@@ -125,19 +133,21 @@ module Plannings
       end_date = repeat_until_week.to_date + 6.days
       if end_date > interval.end_date
         create_repetitions(interval, end_date)
+      else
+        []
       end
     end
 
     def create_repetitions(interval, end_date)
       repetitions = (end_date - interval.start_date).to_i / interval.length.to_i
-      repetitions.times do |i|
+      repetitions.times.map do |i|
         offset = ((i + 1) * interval.length).days
         repeat_plannings(offset, end_date)
-      end
+      end.flatten
     end
 
     def repeat_plannings(offset, end_date)
-      repetition_source.each do |planning|
+      repetition_source.map do |planning|
         date = planning.date + offset
         next if date > end_date
 
@@ -147,6 +157,7 @@ module Plannings
         p.percent = planning.percent
         p.definitive = planning.definitive
         p.save!
+        p
       end
     end
 

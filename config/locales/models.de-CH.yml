@@ -26,9 +26,9 @@ de-CH:
       department:
         one: Organisationseinheit
         other: Organisationseinheiten
-      employee_list:
-        one: Mitarbeiterliste
-        other: Mitarbeiterlisten
+      custom_list:
+        one: Liste
+        other: Listen
       employee:
         one: Mitarbeiter
         other: Mitarbeiter
@@ -142,12 +142,12 @@ de-CH:
         reference: Referenz
         notes: Notizen
         sla: SLA
+      custom_list:
+        name: Name
+        item_type: Typ
       department:
         name: Name
         shortname: Kürzel
-      employee_list:
-        title: Bezeichnung
-        employee_id: Mitarbeiter
       employee:
         firstname: Vorname
         lastname: Nachname

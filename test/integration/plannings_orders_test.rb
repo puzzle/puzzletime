@@ -50,8 +50,6 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     visit plannings_order_path(orders(:puzzletime))
     page.assert_selector('div.-definitive', count: 3)
     page.assert_selector('div.-provisional', count: 2)
-    page.assert_selector('.-selected', count: 0)
-    page.assert_selector('.planning-panel', visible: false)
 
     drag(row_pascal.all('.day')[0], row_pascal.all('.day')[1])
     page.assert_selector('#percent:focus')
@@ -86,16 +84,17 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     assert_equal '', find('#definitive', visible: false).value
   end
 
-  test 'create planning entries' do
+  test 'initial board state' do
     page.assert_selector('div.-definitive', count: 2)
     page.assert_selector('div.-provisional', count: 0)
     page.assert_selector('.-selected', count: 0)
     page.assert_selector('.planning-panel', visible: false)
-    row_mark.all('.day')[0].assert_text('50')
-    row_pascal.all('.day')[0].assert_text('25')
+    assert_percents ['50', '', '', '', '', ''], row_mark
+    assert_percents ['25', '', '', '', '', ''], row_pascal
+  end
 
+  test 'create planning entries' do
     drag(row_pascal.all('.day')[2], row_pascal.all('.day')[4])
-
     page.assert_selector('.-selected', count: 3)
     page.assert_selector('.planning-panel', visible: true)
 
@@ -108,24 +107,12 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     page.assert_selector('div.-provisional', count: 0)
     page.assert_selector('.-selected', count: 0)
     page.assert_selector('.planning-panel', visible: false)
-    row_mark.all('.day')[0].assert_text('50')
-    row_pascal.all('.day')[0].assert_text('25')
-    row_pascal.all('.day')[2].assert_text('')
-    row_pascal.all('.day')[2].assert_text('100')
-    row_pascal.all('.day')[3].assert_text('100')
-    row_pascal.all('.day')[4].assert_text('100')
+    assert_percents ['50', '', '', '', '', ''], row_mark
+    assert_percents ['25', '', '100', '100', '100', ''], row_pascal
   end
 
   test 'update planning entries' do
-    page.assert_selector('div.-definitive', count: 2)
-    page.assert_selector('div.-provisional', count: 0)
-    page.assert_selector('.-selected', count: 0)
-    page.assert_selector('.planning-panel', visible: false)
-    row_mark.all('.day')[0].assert_text('50')
-    row_pascal.all('.day')[0].assert_text('25')
-
     drag(row_mark.all('.day')[0], row_pascal.all('.day')[0])
-
     page.assert_selector('.-selected', count: 2)
     page.assert_selector('.planning-panel', visible: true)
 
@@ -138,20 +125,12 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     page.assert_selector('div.-provisional', count: 2)
     page.assert_selector('.-selected', count: 0)
     page.assert_selector('.planning-panel', visible: false)
-    row_mark.all('.day')[0].assert_text('50')
-    row_pascal.all('.day')[0].assert_text('25')
+    assert_percents ['50', '', '', '', '', ''], row_mark
+    assert_percents ['25', '', '', '', '', ''], row_pascal
   end
 
   test 'create & update planning entries' do
-    page.assert_selector('div.-definitive', count: 2)
-    page.assert_selector('div.-provisional', count: 0)
-    page.assert_selector('.-selected', count: 0)
-    page.assert_selector('.planning-panel', visible: false)
-    row_mark.all('.day')[0].assert_text('50')
-    row_pascal.all('.day')[0].assert_text('25')
-
     drag(row_mark.all('.day')[0], row_pascal.all('.day')[1])
-
     page.assert_selector('.-selected', count: 4)
     page.assert_selector('.planning-panel', visible: true)
 
@@ -165,12 +144,55 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     page.assert_selector('div.-provisional', count: 0)
     page.assert_selector('.-selected', count: 0)
     page.assert_selector('.planning-panel', visible: false)
-    row_mark.all('.day')[0].assert_text('100')
-    row_mark.all('.day')[1].assert_text('100')
-    row_mark.all('.day')[2].assert_text('')
-    row_pascal.all('.day')[0].assert_text('100')
-    row_pascal.all('.day')[1].assert_text('100')
-    row_pascal.all('.day')[2].assert_text('')
+    assert_percents ['100', '100', '', '', '', ''], row_mark
+    assert_percents ['100', '100', '', '', '', ''], row_pascal
+  end
+
+  test 'create repetition' do
+    drag(row_mark.all('.day')[0], row_mark.all('.day')[4])
+    page.assert_selector('.-selected', count: 5)
+    page.assert_selector('.planning-panel', visible: true)
+
+    within '.planning-panel' do
+      page.assert_no_selector('#repeat_until', visible: true)
+      check 'repetition'
+      page.assert_selector('#repeat_until', visible: true)
+
+      fill_in 'repeat_until', with: (Date.today + 2.weeks).strftime('%Y %U')
+      click_button 'OK'
+    end
+
+    page.assert_selector('div.-definitive', count: 4)
+    page.assert_selector('div.-provisional', count: 0)
+    page.assert_selector('.-selected', count: 0)
+    page.assert_selector('.planning-panel', visible: false)
+
+    percents = ['50', '', '', '', '', '50', '', '', '', '', '50', '', '', '', '', '']
+    assert_percents percents, row_mark
+
+    drag(row_mark.all('.day')[0], row_mark.all('.day')[3])
+    page.assert_selector('.-selected', count: 4)
+    page.assert_selector('.planning-panel', visible: true)
+
+    within '.planning-panel' do
+      fill_in 'percent', with: '30'
+      click_button 'provisorisch'
+
+      page.assert_no_selector('#repeat_until', visible: true)
+      check 'repetition'
+      page.assert_selector('#repeat_until', visible: true)
+
+      fill_in 'repeat_until', with: (Date.today + 1.weeks).strftime('%Y %U')
+      click_button 'OK'
+    end
+
+    page.assert_selector('div.-definitive', count: 2)
+    page.assert_selector('div.-provisional', count: 8)
+    page.assert_selector('.-selected', count: 0)
+    page.assert_selector('.planning-panel', visible: false)
+
+    percents = ['30', '30', '30', '30', '', '30', '30', '30', '30', '', '50', '', '', '', '', '']
+    assert_percents percents, row_mark
   end
 
   test 'Adding a new employee to the board' do
@@ -215,7 +237,35 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     page.assert_selector('.day.-selected', count: 10)
   end
 
+  test 'switching period' do
+    assert_equal '', find('#period').value
+    page.assert_selector('#start_date', visible: true)
+    page.assert_selector('#end_date', visible: true)
+
+    select 'Nächste 6 Monate', from: 'period'
+    find('.navbar-brand').click # blur select
+    page.assert_selector('.planning-calendar-weeks',
+                         text: "KW #{(Date.today + 6.months - 1.weeks).cweek}")
+    page.assert_selector('#start_date', visible: false)
+    page.assert_selector('#end_date', visible: false)
+
+    drag(row_mark.all('.day')[0], row_pascal.all('.day')[1])
+    page.assert_selector('.-selected', count: 4)
+
+    select 'benutzerdefiniert', from: 'period'
+    find('.navbar-brand').click # blur select
+    page.assert_selector('#start_date', visible: true)
+    page.assert_selector('#end_date', visible: true)
+
+    drag(row_mark.all('.day')[0], row_pascal.all('.day')[2])
+    page.assert_selector('.-selected', count: 6)
+  end
+
   private
+
+  def assert_percents(percents, row)
+    assert_equal percents, row.all('.day')[0..(percents.length - 1)].map(&:text)
+  end
 
   def row_mark
     find("#planning_row_employee_#{employees(:mark).id}_work_item_#{work_item_id}")

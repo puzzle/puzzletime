@@ -112,7 +112,6 @@ module Plannings
     def load_accounting_posts
       AccountingPost
         .where(work_item_id: included_work_item_ids)
-        .includes(:work_item)
         .list
     end
 

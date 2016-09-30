@@ -1,6 +1,0 @@
-- if @graph.accounts? legend
-  %tr
-    %th{colspan: "2"}
-      %b= legend.model_name.human(count: 2)
-  - @graph.accounts_legend(legend).each do |l|
-    = render 'legend_item', legend_item: l

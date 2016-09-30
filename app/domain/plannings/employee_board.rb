@@ -10,10 +10,16 @@ module Plannings
       @employments = employee.statistics.employments_during(period)
     end
 
+    def row_legend(_employee_id, work_item_id)
+      accounting_posts.detect { |post| post.work_item_id == work_item_id.to_i }
+    end
+
     def week_totals_state(date)
       total = week_totals[date]
       employed = weekly_employment_percent(date)
-      if (total - employed).abs < 1
+      if total.zero?
+        nil
+      elsif (total - employed).abs < 1
         :fully_planned
       elsif total > employed
         :over_planned
@@ -22,8 +28,9 @@ module Plannings
       end
     end
 
-    def row_legend(_employee_id, work_item_id)
-      accounting_posts.detect { |post| post.work_item_id == work_item_id.to_i }
+    def weekly_employment_percent(date)
+      @weekly_employment_percent ||= {}
+      @weekly_employment_percent[date] ||= compute_weekly_employement_percent(date)
     end
 
     private
@@ -36,7 +43,7 @@ module Plannings
       [employee]
     end
 
-    def weekly_employment_percent(date)
+    def compute_weekly_employement_percent(date)
       @employments.each_with_index do |e, i|
         period = e.period
         if period.include?(date)

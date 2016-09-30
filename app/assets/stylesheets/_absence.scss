@@ -1,75 +1,20 @@
 table.absence {
-  @extend .table;
-  @extend .table-condensed;
-  @extend .table-stripedbody;
-  @extend .table-bordered;
-
   .head th {
     text-align:   center;
+    border-bottom: 0;
   }
 
-  // custom tooltips
   td a {
-    text-decoration: none;
     color: #333;
-    width: 100%;
-    position: relative;
-    float: left;
-  }
-  td a:hover {
-    border: 0;
-  }
-  td a span {
-    display: none;
-  }
-  td a:hover span {
-    display: block;
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    z-index: 3;
-    background: #ffffdd;
-    white-space:  nowrap;
-    padding: 1pt;
-    border: 1px solid #ddd;
-    font-size: 13px;
-    float: left;
-    text-align: left;
   }
 
   td.stat {
     text-align:   right;
   }
+
   .current {
     background-color: #ffffdd !important;
   }
-  .definitive {
-    background-color: #91C5E5 !important;
-  }
-  .absence {
-    background-color: #8FADCB !important;
-  }
-  .free {
-    background-color: #FFFFFF !important;
-  }
-  .tentative {
-    background-color: #9BCBD4 !important;
-    background-image: repeating-linear-gradient(
-      -45deg,
-      #9BCBD4,
-      #9BCBD4 6px,
-      rgba(#fff, 0.5) 6px,
-      rgba(#fff, 0.5) 12px
-    ) !important;
-  }
-  .half_planned {
-    background-color: #ECEBA0 !important;
-  }
-  .full_planned {
-    background-color: #B0DAA5 !important;
-  }
-  .over_planned {
-    background-color: #E39797 !important;
-  }
+
 }
 

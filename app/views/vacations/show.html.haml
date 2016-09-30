@@ -1,0 +1,63 @@
+- @title = 'Ferienplan'
+- @title += " #{Time.zone.today.year}" if @period.nil?
+
+= render 'evaluator/period_link'
+
+%table.table-condensed.table-stripedbody.table-bordered.absence
+  %thead.center
+    %tr.head
+      %th{rowspan: 2}
+      - if @user.management
+        %th{rowspan: 2} Üb
+        %th{rowspan: 2} Gh
+      = month_header(@graph.period)
+      - if @user.management
+        %th{rowspan: 2} Bz
+        %th{rowspan: 2} Üb
+    %tr.head
+      = week_header(@graph.period)
+  %tbody
+    - @graph.each_employee do |employee|
+      %tr
+        %td.nowrap
+          = employee.label
+        - if  @user.management
+          %td.stat= @graph.previous_left_vacations
+          %td.stat= @graph.granted_vacations
+        - @graph.each_week do |day|
+          = weekbox_td @graph.timebox, @graph.is_current_week
+        - if  @user.management
+          %td.stat= @graph.used_vacations
+          %td.stat= @graph.following_left_vacations
+  %tfoot
+    %tr.head
+      - if @user.management
+        %th{colspan: 3, rowspan: 2}
+      - else
+        %th{rowspan: 2}
+      = week_header(@graph.period)
+      - if @user.management
+        %th{colspan: 2, rowspan: 2}
+    %tr.head
+      = month_header(@graph.period)
+
+%br/
+%table.table-condensed{style: 'float: left; margin-right: 100px;'}
+  = render partial: 'weekly_graph/legend', collection: [Absence]
+
+- if @user.management
+  %table.table-condensed
+    %tr
+      %td{colspan: 2}
+        %b Spalten
+    %tr
+      %td Üb
+      %td Ferien Übertrag vor/nach der gewählten Zeitspanne
+    %tr
+      %td Gh
+      %td Ferien Guthaben während der gewählten Zeitspanne
+    %tr
+      %td Bz
+      %td Bezogene Ferien während der gewählten Zeitspanne
+
+%br{clear: 'all'}/

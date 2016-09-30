@@ -5,4 +5,6 @@
   = nav 'Mitarbeiter', plannings_employees_path, plannings_employees_path
   = nav 'Aufträge', plannings_orders_path, plannings_orders_path
   = nav 'Organisationseinheiten', plannings_departments_path, plannings_departments_path
-
+  = nav 'Unternehmen', plannings_company_path
+  - if can?(:manage, CustomList)
+    = nav 'Listen', plannings_custom_lists_path, plannings_custom_lists_path

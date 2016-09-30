@@ -46,35 +46,6 @@ table.graph {
     text-align: center;
     font-size: 13px;
   }
-
-  // custom tooltips
-  td a {
-    text-decoration: none;
-    color: #333;
-    width: 100%;
-    position: relative;
-    float: left;
-  }
-  td a:hover {
-    border: 0;
-  }
-  td a span {
-    display: none;
-  }
-  td a:hover span {
-    display: block;
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    z-index: 3;
-    background: #ffffdd;
-    white-space:  nowrap;
-    padding: 1pt;
-    border: 1px solid #ddd;
-    font-size: 13px;
-    float: left;
-    text-align: left;
-  }
 }
 
 table.legend {
@@ -82,9 +53,8 @@ table.legend {
   border-collapse: separate;
 }
 
-body.graph table.legend {
+body.weekly_graph table.legend {
   border-spacing: 0;
-  width: 320px;
   margin-left:  20px;
 
   tr {

@@ -9,16 +9,18 @@
             weekly_graph_path
       = model_nav Order
       = nav 'Planung',
-            plannings_orders_path,
+            plannings_employee_path(current_user.id),
             plannings_orders_path,
             plannings_employees_path,
-            plannings_departments_path
+            plannings_departments_path,
+            plannings_company_path,
+            plannings_custom_lists_path
       = nav 'Auswertungen',
             evaluation_path('userworkitems', clear: 1),
             '/evaluator',
             reports_orders_path,
             reports_workload_path,
-            all_absences_graph_path
+            vacations_path
       - if can?(:manage, Client)
         = nav 'Verwalten',
               clients_path,
