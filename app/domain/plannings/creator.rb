@@ -123,19 +123,29 @@ module Plannings
       date
     end
 
+    def translate_plannings
+      items = existing_items.collect(&:dup)
+      existing_items.delete_all
+      items.collect do |item|
+        date = translate_date(item.date, planning_params[:translate_by].to_i)
+        item.date = date
+        Planning.delete_all(
+          employee_id: item.employee_id,
+          work_item_id: item.work_item_id,
+          date: date
+        )
+        item.save!
+        item
+      end
+    end
+
     def update
       if planning_params[:translate_by].present?
-        existing_items.each do |item|
-          date = translate_date(item.date, planning_params[:translate_by].to_i)
-          changeset = planning_params.merge(date: date)
-          changeset.delete(:translate_by)
-          item.update!(changeset)
-        end
+        translate_plannings
       else
         existing_items.update_all(planning_params)
+        existing_items.reload
       end
-
-      existing_items.reload
     end
 
     def repeat
