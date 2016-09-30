@@ -71,7 +71,8 @@ module Plannings
     def set_period
       convert_predefined_period
       period = super
-      @period = period.limited? ? period.extend_to_weeks : default_period
+      period = default_period unless period.limited?
+      @period = period.extend_to_weeks
     end
 
     def convert_predefined_period
@@ -85,8 +86,7 @@ module Plannings
     end
 
     def default_period
-      today = Time.zone.today
-      Period.retrieve(today.at_beginning_of_week, (today + 3.months).at_end_of_week)
+      Period.next_n_months(3)
     end
 
     def authorize_subject_planning

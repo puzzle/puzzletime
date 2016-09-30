@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 module Plannings
-  class MultiEmployeesController < EmployeesController
+  class MultiEmployeesController < Plannings::EmployeesController
 
     skip_load_and_authorize_resource
     skip_before_action :authorize_subject_planning, only: :show
@@ -19,6 +19,8 @@ module Plannings
           d = Department.find(params[:department_id])
           @title = "Planung der Mitarbeiter von #{d}"
           d.employees.employed_ones(@period).list
+        elsif params[:custom_list_id]
+          CustomList.where(item_type: Employee.sti_name).find(params[:custom_list_id]).items.list
         else
           raise ActiveRecord::RecordNotFound
         end

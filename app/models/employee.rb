@@ -26,7 +26,6 @@ class Employee < ActiveRecord::Base
   # All dependencies between the models are listed below.
   belongs_to :department
 
-  has_and_belongs_to_many :employee_lists
   has_and_belongs_to_many :invoices
 
   has_many :employments, dependent: :destroy
@@ -37,6 +36,7 @@ class Employee < ActiveRecord::Base
   has_many :overtime_vacations, dependent: :destroy
   has_many :managed_orders, class_name: 'Order', foreign_key: :responsible_id, dependent: :nullify
   has_many :order_team_members, dependent: :destroy
+  has_many :custom_lists, dependent: :destroy
   has_one :running_time,
           -> { where(report_type: AutoStartType::INSTANCE.key) },
           class_name: 'Ordertime'
@@ -111,7 +111,7 @@ class Employee < ActiveRecord::Base
     passwd == Employee.encode(pwd)
   end
 
-  def set_passwd(pwd)
+  def update_passwd!(pwd)
     update_attributes!(passwd: Employee.encode(pwd))
   end
 

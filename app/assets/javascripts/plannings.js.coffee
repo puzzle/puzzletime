@@ -8,11 +8,21 @@ app.plannings = new class
   addRowOptions = []
 
   init: ->
-    @initListeners()
+    @bindListeners()
     @initSelectize()
 
   destroy: ->
-    @destroyListeners()
+    @bindListeners(true)
+
+  reloadAll: ->
+    [@, app.plannings.selectable, app.plannings.panel].forEach((p) =>
+      p.destroy()
+      p.init()
+    )
+
+  dateFilterChanged: ->
+    $('#start_date,#end_date').closest('.form-group')
+      .css('visibility', if !$('#period').val() then 'visible' else 'hidden')
 
   add: (event) =>
     @showSelect(event)
@@ -66,8 +76,10 @@ app.plannings = new class
 
       @addRow(employeeId, workItemId)
 
-  initListeners: ->
-    @board('.actions .add').click(@add)
+  bindListeners: (unbind) ->
+    func = if unbind then 'off' else 'on'
+
+    @board('.actions .add')[func]('click', @add)
 
   initSelectize: ->
     addRowSelect = $('#add_employee_id,#add_work_item_id')
@@ -87,9 +99,6 @@ app.plannings = new class
       Object.keys(addRowSelectize.options)
         .map((key) -> addRowSelectize.options[key])...
     ]
-
-  destroyListeners: ->
-    @board('.actions .add').off(@add)
 
   board: (selector) ->
     if selector

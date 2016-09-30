@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 module Plannings
-  class MultiOrdersController < OrdersController
+  class MultiOrdersController < Plannings::OrdersController
 
     skip_load_and_authorize_resource
     skip_before_action :authorize_subject_planning, only: :show
@@ -19,6 +19,8 @@ module Plannings
           d = Department.find(params[:department_id])
           @title = "Planung der Aufträge von #{d}"
           d.orders.where('work_items.closed = ?', false).list
+        elsif params[:custom_list_id]
+          CustomList.where(item_type: Order.sti_name).find(params[:custom_list_id]).items.list
         else
           raise ActiveRecord::RecordNotFound
         end

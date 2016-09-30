@@ -1,9 +1,0 @@
-- @title = "Organisationseinheiten"
-
-= DryCrud::Table::Builder.table(@departments,
-                                self,
-                                class: 'table table-condensed table-striped table-hover table-inline') do |t|
-  - t.col('Organisationseinheit') { |d| d.name }
-  - t.action_col do |d|
-    = link_to 'Mitarbeiterplanung',
-               :action => 'department_planning', :department_id => d.id

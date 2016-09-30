@@ -168,6 +168,9 @@ $legend-width: 300px;
 .planning-percent-group {
   width: 8em;
 }
+.planning-repetition-group {
+  width: 9em;
+}
 .planning-definitive-group button:focus {
   background-color: transparent;
 }
@@ -201,7 +204,14 @@ $legend-width: 300px;
 .day.-definitive {
   background-color: #2b78e4 !important;
   color: #cde5ea !important;
+
+  @for $i from 1 through 9 {
+    &.-percent-#{$i * 10} {
+      background-color: lighten(#2b78e4, (100 - $i * 10) / 4) !important;
+    }
+  }
 }
+
 .day.-provisional {
   background-color: transparent;
   background-image: linear-gradient(-45deg, #9bcbd4 25%, #cde5ea 0, #cde5ea 50%, #9bcbd4 0, #9bcbd4 75%, #cde5ea 0);
@@ -209,11 +219,36 @@ $legend-width: 300px;
 }
 
 .over_planned {
-  background-color: lighten($brand-red, 10%);
+  background-color: #E39797 !important;
 }
 .under_planned {
-  background-color: lighten($brand-warning, 10%);
+  background-color: #ECDBA0 !important;
 }
 .fully_planned {
-  background-color: $brand-green-light;
+  background-color: #B0DAA5 !important;
+}
+
+table.company-planning {
+  width: 100%;
+
+  .head th {
+    text-align:   center;
+    border-bottom: 0;
+  }
+
+  tbody td {
+    text-align: center;
+  }
+
+  tbody td.head {
+    text-align: left;
+  }
+
+  td a {
+    color: #333;
+  }
+
+  td.head a {
+    color: $link-color;
+  }
 }
