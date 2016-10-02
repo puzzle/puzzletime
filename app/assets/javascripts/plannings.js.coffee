@@ -54,7 +54,7 @@ app.plannings = new class
     app.plannings.service
       .addPlanningRow(employeeId, workItemId)
       .then(() =>
-        addRowSelect.detach()
+        addRowSelect.hide()
 
         @board('.add').show()
       )
