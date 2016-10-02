@@ -296,6 +296,27 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     page.assert_selector('.-selected', count: 6)
   end
 
+  test 'add row still works after switching period' do
+    find('.add').click
+    page.assert_selector('.selectize-dropdown')
+
+    select 'Nächste 6 Monate', from: 'period'
+    find('.navbar-brand').click # blur select
+    page.assert_selector('.planning-calendar-weeks',
+                         text: "KW #{(Date.today + 6.months - 1.weeks).cweek}")
+    page.assert_selector('#start_date,#end_date', visible: false)
+
+    page.assert_no_selector('#add_employee_id')
+    page.assert_no_selector('.selectize-dropdown')
+
+    find('.add').click
+
+    selectize('add_employee_select_id', 'Dolores Pedro')
+    page.assert_selector('#planning_row_employee_2_work_item_4', text: 'Dolores Pedro')
+    page.assert_selector('#planning_row_employee_2_work_item_4 .day', count: 70)
+    page.assert_no_selector('#add_employee_id')
+  end
+
   private
 
   def assert_percents(percents, row)
