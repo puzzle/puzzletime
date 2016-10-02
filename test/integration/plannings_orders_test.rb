@@ -234,7 +234,42 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     page.assert_selector('.day.-selected', count: 10)
     drag(row_pascal.all('.day.-selected')[2], row_mark.all('.day')[0], row_mark.all('*')[0])
     row_mark.assert_selector('.day.-selected.-definitive:nth-child(2)')
-    page.assert_selector('.day.-selected', count: 10)
+    page.assert_selector('.day.-definitive:not(.-selected)', count: 10, text: 100)
+  end
+
+  test 'Moving by one cell to the left' do
+    drag(row_pascal.all('.day')[1], row_pascal.all('.day')[2])
+
+    within '.planning-panel' do
+      fill_in 'percent', with: '100'
+      click_button 'OK'
+    end
+
+    page.assert_selector('div.-definitive', count: 4)
+
+    drag(row_pascal.all('.day')[1], row_pascal.all('.day')[2])
+    page.assert_selector('.day.-selected', count: 2)
+    drag(row_pascal.all('.day.-selected')[1], row_pascal.all('.day')[0])
+    row_pascal.assert_selector('.day.-definitive:not(.-selected)', count: 2)
+    row_pascal.assert_selector('.day.-definitive:not(.-selected)', count: 2, text: 100)
+  end
+
+  test 'Moving by one cell to the right' do
+    drag(row_pascal.all('.day')[1], row_pascal.all('.day')[2])
+
+    within '.planning-panel' do
+      fill_in 'percent', with: '100'
+      click_button 'OK'
+    end
+
+    page.assert_selector('div.-definitive', count: 4)
+
+    drag(row_pascal.all('.day')[1], row_pascal.all('.day')[2])
+    page.assert_selector('.day.-selected', count: 2)
+    drag(row_pascal.all('.day.-selected')[1], row_pascal.all('.day')[3])
+    row_pascal.assert_selector('.day.-definitive:not(.-selected)', count: 3)
+    row_pascal.assert_selector('.day.-definitive:not(.-selected)', count: 1, text: 25)
+    row_pascal.assert_selector('.day.-definitive:not(.-selected)', count: 2, text: 100)
   end
 
   test 'switching period' do
