@@ -7,6 +7,19 @@ module Plannings
 
     setup :login
 
+    test 'GET #new renders row for given employee' do
+      xhr :get,
+          :new,
+          format: :js,
+          id: orders(:hitobito_demo).id,
+          employee_id: employees(:long_time_john).id,
+          work_item_id: work_items(:hitobito_demo_app).id
+      assert_equal 200, response.status
+      refute_empty assigns(:items)
+      assert_equal employees(:long_time_john), assigns(:legend)
+      assert response.body.include?('Neverends John')
+    end
+
     test 'GET#show renders board' do
       date = Date.today.at_beginning_of_week + 1.week
       Planning.create!(work_item_id: work_items(:hitobito_demo_app).id,
@@ -52,28 +65,28 @@ module Plannings
     end
 
     test 'PATCH update with valid params' do
-      patch :update,
-            xhr: true,
-            format: :js,
-            id: orders(:puzzletime).id,
-            planning: { percent: '50', definitive: 'true' },
-            items: { '1' => { employee_id: employees(:pascal).id.to_s,
-                              work_item_id: work_items(:puzzletime).id.to_s,
-                              date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
+      xhr :patch,
+          :update,
+          format: :js,
+          id: orders(:puzzletime).id,
+          planning: { percent: '50', definitive: 'true' },
+          items: { '1' => { employee_id: employees(:pascal).id.to_s,
+                            work_item_id: work_items(:puzzletime).id.to_s,
+                            date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
       assert_equal 200, response.status
       assert response.body.include?('Zumkehr Pascal')
       assert response.body.include?('50')
     end
 
     test 'PATCH update with invalid params' do
-      patch :update,
-            xhr: true,
-            format: :js,
-            id: orders(:puzzletime).id,
-            planning: {},
-            items: { '1' => { employee_id: employees(:pascal).id.to_s,
-                              work_item_id: work_items(:puzzletime).id.to_s,
-                              date: '2000-01-03' } }
+      xhr :patch,
+          :update,
+          format: :js,
+          id: orders(:puzzletime).id,
+          planning: {},
+          items: { '1' => { employee_id: employees(:pascal).id.to_s,
+                            work_item_id: work_items(:puzzletime).id.to_s,
+                            date: '2000-01-03' } }
       assert_equal 200, response.status
       assert response.body.include?('Bitte füllen Sie das Formular aus')
     end
@@ -81,14 +94,14 @@ module Plannings
     test 'PATCH#update as regular user fails' do
       login_as(:pascal)
       assert_raises(CanCan::AccessDenied) do
-        patch :update,
-              xhr: true,
-              format: :js,
-              id: orders(:puzzletime).id,
-              planning: { percent: '50', definitive: 'true' },
-              items: { '1' => { employee_id: employees(:pascal).id.to_s,
-                                work_item_id: work_items(:puzzletime).id.to_s,
-                                date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
+        xhr :patch,
+            :update,
+            format: :js,
+            id: orders(:puzzletime).id,
+            planning: { percent: '50', definitive: 'true' },
+            items: { '1' => { employee_id: employees(:pascal).id.to_s,
+                              work_item_id: work_items(:puzzletime).id.to_s,
+                              date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
       end
     end
 
@@ -96,14 +109,14 @@ module Plannings
       orders(:puzzletime).update!(responsible: employees(:pascal))
       login_as(:pascal)
 
-      patch :update,
-            xhr: true,
-            format: :js,
-            id: orders(:puzzletime).id,
-            planning: { percent: '50', definitive: 'true' },
-            items: { '1' => { employee_id: employees(:pascal).id.to_s,
-                              work_item_id: work_items(:puzzletime).id.to_s,
-                              date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
+      xhr :patch,
+          :update,
+          format: :js,
+          id: orders(:puzzletime).id,
+          planning: { percent: '50', definitive: 'true' },
+          items: { '1' => { employee_id: employees(:pascal).id.to_s,
+                            work_item_id: work_items(:puzzletime).id.to_s,
+                            date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
 
       assert_equal 200, response.status
     end
@@ -113,14 +126,14 @@ module Plannings
       login_as(:pascal)
 
       assert_no_difference('Planning.count') do
-        patch :update,
-              xhr: true,
-              format: :js,
-              id: orders(:puzzletime).id,
-              planning: { percent: '50', definitive: 'true' },
-              items: { '1' => { employee_id: employees(:pascal).id.to_s,
-                                work_item_id: work_items(:webauftritt).id.to_s,
-                                date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
+        xhr :patch,
+            :update,
+            format: :js,
+            id: orders(:puzzletime).id,
+            planning: { percent: '50', definitive: 'true' },
+            items: { '1' => { employee_id: employees(:pascal).id.to_s,
+                              work_item_id: work_items(:webauftritt).id.to_s,
+                              date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
       end
     end
 
@@ -131,11 +144,11 @@ module Plannings
                            percent: 80)
       login_as(:lucien)
       assert_no_difference('Planning.count') do
-        delete :destroy,
-               xhr: true,
-               format: :js,
-               id: orders(:hitobito_demo).id,
-               planning_ids: [p.id]
+        xhr :delete,
+            :destroy,
+            format: :js,
+            id: orders(:hitobito_demo).id,
+            planning_ids: [p.id]
       end
     end
 
