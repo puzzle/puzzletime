@@ -1,5 +1,5 @@
 #add_work_item_id{ hidden: true }
   = select_tag(:add_work_item_select_id,
-               options_from_collection_for_select(WorkItem.leaves.list, :id, :label_verbose),
+               options_from_collection_for_select(@possible_work_items, :id, :label_verbose),
                autocomplete: 'off',
                include_blank: true)

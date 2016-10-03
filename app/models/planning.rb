@@ -17,7 +17,7 @@ class Planning < ActiveRecord::Base
   validate :date_must_be_weekday
 
   belongs_to :employee
-  belongs_to :work_item
+  belongs_to :work_item # must be work item with accounting post
 
   scope :in_period, (lambda do |period|
     if period

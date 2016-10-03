@@ -8,6 +8,8 @@ module Plannings
 
     skip_authorize_resource
 
+    before_action :load_possible_employees, only: [:new, :show]
+
     private
 
     def list_entries
@@ -25,6 +27,10 @@ module Plannings
 
     def build_board
       Plannings::OrderBoard.new(order, @period)
+    end
+
+    def load_possible_employees
+      @possible_employees  ||= Employee.employed_ones(@period)
     end
 
     def params_with_restricted_items
