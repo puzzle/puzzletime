@@ -2,6 +2,9 @@
   - @board = board
   $('#board_#{dom_id(board.subject)}').html('#{j(render('board'))}');
 
+$('#add_employee_id,#add_work_item_id').remove()
+$('#boards').parent().append('#{j(render('add_row'))}')
+
 App.plannings.reloadAll()
 App.plannings.dateFilterChanged()
 

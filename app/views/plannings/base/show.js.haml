@@ -2,7 +2,8 @@
   $('#add_employee_id,#add_work_item_id').remove()
   $('.planning-board')
     .html('#{j(render('board'))}')
-    .before('#{j(render('add_row'))}')
+    .parent().append('#{j(render('add_row'))}')
+
   App.plannings.reloadAll()
   App.plannings.dateFilterChanged()
 
