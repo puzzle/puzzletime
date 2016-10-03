@@ -86,6 +86,20 @@ module Plannings
       end
     end
 
+    test 'DELETE#destroy deletes given plannings' do
+      p = Planning.create!(employee: employees(:mark),
+                           work_item: work_items(:puzzletime),
+                           date: Date.today.beginning_of_week,
+                           percent: 80)
+      assert_difference('Planning.count', -1) do
+        xhr :delete,
+            :destroy,
+            format: :js,
+            id: employees(:mark).id,
+            planning_ids: [p.id]
+      end
+    end
+
     test 'DELETE#destroy on own board but for different user does not work' do
       p = Planning.create!(employee: employees(:pascal),
                            work_item: work_items(:hitobito_demo),
