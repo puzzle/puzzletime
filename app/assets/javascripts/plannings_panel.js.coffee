@@ -5,6 +5,7 @@ app.plannings.panel = new class
   panel = '.planning-panel'
   container = '.planning-calendar'
   positioning = false
+  focusPercentOnShow = false
 
   init: ->
     return if @panel().length == 0
@@ -80,18 +81,16 @@ app.plannings.panel = new class
   getFormAction: ->
     @panel('form').prop('action')
 
-  setPercent: (percent, focus, indefinite) ->
-    input = @panel('#percent')
+  setPercent: (percent, indefinite) ->
+    @panel('#percent')
       .val(percent)
       .prop('placeholder', if indefinite then '?' else '')
-    if focus then input.focus().select() else input.blur()
 
   initPercent: () ->
     values = app.plannings.selectable.getSelectedPercentValues()
-    if values.length == 1
-      @setPercent(values[0], true)
-    else
-      @setPercent('', false, true)
+    percent = if values.length == 1 then values[0] else ''
+    @setPercent(percent, values.length > 1)
+    focusPercentOnShow = values.length == 1
 
   setDefinitive: (definitive) ->
     @panel('.planning-definitive').toggleClass('active', definitive == true)
@@ -126,9 +125,10 @@ app.plannings.panel = new class
     if @panel().length == 0 || (e?.type == 'scroll' && @panel().is(':hidden'))
       return
 
-
     unless positioning
       requestAnimationFrame(() =>
+        wasHidden = @panel().is(':hidden')
+
         @panel().show().position({
           my: 'right top',
           at: 'right bottom',
@@ -136,6 +136,12 @@ app.plannings.panel = new class
           within: container
         })
         positioning = false
+
+        if wasHidden
+          if focusPercentOnShow
+            @panel('#percent').focus().select()
+          else
+            @panel('#percent').blur()
       )
     positioning = true
 

@@ -58,6 +58,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     page.assert_selector('.planning-definitive.active')
     page.assert_selector('.planning-provisional:not(.active)')
     assert_equal 'true', find('#definitive', visible: false).value
+    find('.planning-cancel').click
 
     drag(row_pascal.all('.day')[0], row_pascal.all('.day')[2])
     page.assert_selector('#percent:focus')
@@ -66,6 +67,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     page.assert_selector('.planning-definitive:not(.active)')
     page.assert_selector('.planning-provisional:not(.active)')
     assert_equal '', find('#definitive', visible: false).value
+    find('.planning-cancel').click
 
     drag(row_pascal.all('.day')[2], row_pascal.all('.day')[3])
     page.assert_selector('#percent:not(:focus)')
@@ -74,6 +76,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     page.assert_selector('.planning-definitive:not(.active)')
     page.assert_selector('.planning-provisional.active')
     assert_equal 'false', find('#definitive', visible: false).value
+    find('.planning-cancel').click
 
     drag(row_pascal.all('.day')[0], row_pascal.all('.day')[4])
     page.assert_selector('#percent:not(:focus)')
