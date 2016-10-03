@@ -7,7 +7,7 @@
       .day{ class: (item.definitive? ? '-definitive' : '-provisional') + " -percent-#{item.percent.round(-1)}", data: { id: item.id } }
         = item.percent
     - when Absencetime
-      .day{ title: "#{item.absence.name}: #{format_hour(item.hours)}" }
+      .day.-absence{ title: "#{item.absence.name}: #{format_hour(item.hours)}" }
         X
     - when nil
       .day
