@@ -17,7 +17,7 @@ module Plannings
     ITEM_FIELDS = [:employee_id, :work_item_id, :date].freeze
 
     # params:
-    # { planning: { percent: 50, definitive: true, repeat_until: '2016 42' },
+    # { planning: { percent: 50, definitive: true, repeat_until: '2016 42', translate_by: -3 },
     #   items: [
     #       { employee_id: 2, work_item_id: 3, date: '2016-03-01' }
     #   ] }
@@ -112,33 +112,6 @@ module Plannings
       plannings
     end
 
-    def translate_date(date, translate_by)
-      translate_by = translate_by.to_i
-      direction = translate_by < 0 ? -1 : 1
-      translate_by.abs.times do
-        date += direction.day
-        date += direction.day if date.saturday? || date.sunday?
-        date += direction.day if date.saturday? || date.sunday?
-      end
-      date
-    end
-
-    def translate_plannings
-      items = existing_items.collect(&:dup)
-      existing_items.delete_all
-      items.collect do |item|
-        date = translate_date(item.date, planning_params[:translate_by].to_i)
-        item.date = date
-        Planning.delete_all(
-          employee_id: item.employee_id,
-          work_item_id: item.work_item_id,
-          date: date
-        )
-        item.save!
-        item
-      end
-    end
-
     def update
       if planning_params[:translate_by].present?
         translate_plannings
@@ -157,6 +130,35 @@ module Plannings
       else
         []
       end
+    end
+
+    def translate_plannings
+      return [] if planning_params[:translate_by].to_i == 0
+
+      items = existing_items.collect(&:dup)
+      existing_items.delete_all
+      items.collect do |item|
+        date = translate_date(item.date, planning_params[:translate_by].to_i)
+        item.date = date
+        Planning.delete_all(
+          employee_id: item.employee_id,
+          work_item_id: item.work_item_id,
+          date: date
+        )
+        item.save!
+        item
+      end
+    end
+
+    def translate_date(date, translate_by)
+      translate_by = translate_by.to_i
+      direction = translate_by < 0 ? -1 : 1
+      translate_by.abs.times do
+        date += direction.day
+        date += direction.day if date.saturday? || date.sunday?
+        date += direction.day if date.saturday? || date.sunday?
+      end
+      date
     end
 
     def create_repetitions(interval, end_date)
