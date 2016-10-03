@@ -99,7 +99,7 @@ app.plannings.selectable = new class
       .filter((value, index, self) -> self.indexOf(value) == index)
 
   selectionHasExistingPlannings: ->
-    @getSelectedPercentValues().find((v) => v != '')
+    @selectable('.ui-selected.-definitive,.ui-selected.-provisional').length > 0
 
   start: (event, ui) =>
     isSelecting = true
