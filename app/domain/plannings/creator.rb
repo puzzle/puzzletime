@@ -48,6 +48,7 @@ module Plannings
       validate_present(p)
       if p.present?
         validate_create(p)
+        validate_work_items(p)
         validate_percent(p)
         validate_repeat(p)
       end
@@ -89,9 +90,21 @@ module Plannings
       if p.blank? ||
           (p[:percent].blank? &&
            p[:definitive].blank? && p[:definitive] != false &&
-           p[:translate_by].blank? &&
-           p[:repeat_until].blank?)
+           p[:repeat_until].blank? &&
+           p[:translate_by].blank?)
         @errors << 'Bitte füllen Sie das Formular aus'
+      end
+    end
+
+    def validate_work_items(_p)
+      if create?
+        work_item_ids = new_items_hashes.map { |item| item['work_item_id'] }.compact.uniq
+        return if work_item_ids.blank?
+
+        items = WorkItem.joins(:accounting_post).where(id: work_item_ids)
+        unless work_item_ids.length == items.count
+          @errors << 'Nur Positionen mit Buchungsposition sind möglich'
+        end
       end
     end
 

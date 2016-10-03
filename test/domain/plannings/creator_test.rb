@@ -385,6 +385,22 @@ class CreatorTest < ActiveSupport::TestCase
     end
   end
 
+  test '#form_valid? for work items without accounting post returns false' do
+    params = { planning: { percent: 50, definitive: true },
+               items: [
+                 { employee_id: employees(:pascal).id.to_s,
+                   work_item_id: work_items(:puzzle).id.to_s,
+                   date: '2000-01-03' },
+                 { employee_id: employees(:pascal).id.to_s,
+                   work_item_id: work_items(:puzzletime).id.to_s,
+                   date: '2000-01-04' }
+               ]
+    }
+    c = Plannings::Creator.new(params)
+    refute c.form_valid?
+    assert c.errors.include?('Nur Positionen mit Buchungsposition sind möglich')
+  end
+
   test '#form_valid? with percent > 0 returns true' do
     ['1', '100'].each do |percent|
       c = Plannings::Creator.new({ planning: { percent: percent } })

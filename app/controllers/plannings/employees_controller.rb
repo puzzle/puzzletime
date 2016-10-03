@@ -7,6 +7,8 @@ module Plannings
 
     skip_authorize_resource
 
+    before_action :load_possible_work_items, only: [:new, :show]
+
     private
 
     def list_entries
@@ -20,6 +22,10 @@ module Plannings
 
     def build_board
       Plannings::EmployeeBoard.new(employee, @period)
+    end
+
+    def load_possible_work_items
+      @possible_work_items ||= WorkItem.joins(:accounting_post).list
     end
 
     def params_with_restricted_items
