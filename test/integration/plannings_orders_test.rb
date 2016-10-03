@@ -272,6 +272,31 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     row_pascal.assert_selector('.day.-definitive:not(.-selected)', count: 2, text: 100)
   end
 
+  test 'delete plannings' do
+    row_mark.all('.day')[1].click
+    page.assert_selector('.planning-panel', visible: true)
+    page.assert_no_selector('.planning-delete', visible: true)
+    find('.planning-cancel').click
+    page.assert_selector('.planning-panel', visible: false)
+
+    drag(row_mark.all('.day')[0], row_pascal.all('.day')[0])
+    page.assert_selector('.planning-panel', visible: true)
+    page.assert_selector('.planning-delete', visible: true)
+    find('.planning-cancel').click
+    page.assert_selector('.planning-panel', visible: false)
+
+    drag(row_mark.all('.day')[0], row_pascal.all('.day')[1])
+    page.assert_selector('.planning-panel', visible: true)
+    page.assert_selector('.planning-delete', visible: true)
+
+    assert_difference('Planning.count', -2) do
+      find('.planning-delete').click
+      accept_confirmation('Bist du sicher, dass du die selektierte Planung löschen willst?')
+      page.assert_selector('.planning-panel', visible: false)
+      page.assert_selector('div.day.-definitive', count: 0)
+    end
+  end
+
   test 'switching period' do
     assert_equal '', find('#period').value
     page.assert_selector('#start_date', visible: true)

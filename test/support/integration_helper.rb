@@ -44,6 +44,20 @@ module IntegrationHelper
     page.driver.browser.execute_script(script)
   end
 
+  def accept_confirmation(expected_message = nil)
+    if expected_message.present?
+      assert_equal expected_message, page.driver.browser.switch_to.alert.text
+    end
+    page.driver.browser.switch_to.alert.accept
+  end
+
+  def dismiss_confirmation(expected_message = nil)
+    if expected_message.present?
+      assert_equal expected_message, page.driver.browser.switch_to.alert.text
+    end
+    page.driver.browser.switch_to.alert.dismiss
+  end
+
   Capybara.add_selector(:name) do
     xpath { |name| XPath.descendant[XPath.attr(:name).contains(name)] }
   end

@@ -137,6 +137,20 @@ module Plannings
       end
     end
 
+    test 'DELETE#destroy deletes given plannings' do
+      p = Planning.create!(employee: employees(:mark),
+                           work_item: work_items(:puzzletime),
+                           date: Date.today.beginning_of_week,
+                           percent: 80)
+      assert_difference('Planning.count', -1) do
+        xhr :delete,
+            :destroy,
+            format: :js,
+            id: orders(:puzzletime).id,
+            planning_ids: [p.id]
+      end
+    end
+
     test 'DELETE#destroy on responsible board but for different order does not work' do
       p = Planning.create!(employee: employees(:pascal),
                            work_item: work_items(:webauftritt),
