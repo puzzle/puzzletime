@@ -6,13 +6,17 @@ app.plannings = new class
   addRowSelect = null
   addRowSelectize = null
   addRowOptions = []
+  waypoints = []
+  positioningWaypoints = false
 
   init: ->
     @bindListeners()
     @initSelectize()
+    @initWaypoints()
 
   destroy: ->
     @bindListeners(true)
+    @destroyWaypoints()
 
   reloadAll: ->
     [@, app.plannings.selectable, app.plannings.panel].forEach((p) =>
@@ -80,6 +84,7 @@ app.plannings = new class
     func = if unbind then 'off' else 'on'
 
     @board('.actions .add')[func]('click', @add)
+    $(document)[func]('scroll', @positionWaypoints) unless Modernizr.csspositionsticky
 
   initSelectize: ->
     addRowSelect = $('#add_employee_id,#add_work_item_id')
@@ -99,6 +104,83 @@ app.plannings = new class
       Object.keys(addRowSelectize.options)
         .map((key) -> addRowSelectize.options[key])...
     ]
+
+  initWaypoints: ->
+    return if Modernizr.csspositionsticky
+    waypoints = []
+
+    @initTopHeaderWaypoints();
+    @initLeftHeaderWaypoints();
+
+  initTopHeaderWaypoints: ->
+    $('.planning-calendar').each((_i, element) ->
+      navHeight = 140
+      planningHeaderHeight = $(element).find('.planning-calendar-weeks')[0].clientHeight +
+        $(element).find('.planning-calendar-days-header')[0].clientHeight
+      waypoints.push(new Waypoint.Sticky({
+        element: $(element).find('.planning-calendar-weeks'),
+        offset: navHeight
+      }))
+      waypoints.push(new Waypoint.Sticky({
+        element: $(element).find('.planning-calendar-days-header'),
+        offset: navHeight
+      }))
+      waypoints.push(new Waypoint({
+        element: element,
+        handler: ((direction) ->
+          headerElements = $('.planning-calendar-weeks,.planning-calendar-days-header', element)
+          if direction == 'down'
+            headerElements.removeClass('stuck')
+          if direction == 'up'
+            headerElements.addClass('stuck')
+        ),
+        offset: () -> navHeight - this.element.clientHeight + planningHeaderHeight
+      }))
+    )
+
+  initLeftHeaderWaypoints: ->
+    @getLeftHeaderElements().each((_i, element) ->
+      waypoints.push(new Waypoint.Sticky({ element: element, horizontal: true }))
+    )
+
+  positionWaypoints: =>
+    unless positioningWaypoints
+      requestAnimationFrame(=>
+        $('.planning-calendar-weeks,.planning-calendar-days-header').each((_i, element) =>
+          @positionTopHeaderWaypoint(element)
+        )
+
+        @getLeftHeaderElements().each((_i, element) =>
+          @positionLeftHeaderWaypoint(element)
+        )
+
+        positioningWaypoints = false
+      )
+    positioningWaypoints = true
+
+  positionTopHeaderWaypoint: (element) ->
+    if $(element).hasClass('stuck')
+      firstDay = $(element).parent().parent().find('.day:first')
+      offset = firstDay[0].getBoundingClientRect().left - 300
+      $(element).css('left', offset + 'px')
+    else
+      $(element).css('left', 'auto')
+
+  positionLeftHeaderWaypoint: (element) ->
+    if $(element).hasClass('stuck')
+      offset = $(element).parent().parent()[0].getBoundingClientRect().top
+      $(element).css('top', offset + 'px')
+    else
+      $(element).css('top', 'auto')
+
+  getLeftHeaderElements: ->
+    $(['.planning-calendar-inner > .groupheader strong',
+       '.planning-calendar-inner > .actions .buttons',
+       '.planning-calendar-days .legend'].join(','))
+
+  destroyWaypoints: ->
+    waypoints.forEach((waypoint) -> waypoint.destroy())
+    waypoints = []
 
   board: (selector) ->
     if selector

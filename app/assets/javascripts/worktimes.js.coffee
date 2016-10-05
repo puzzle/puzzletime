@@ -83,11 +83,10 @@ $ ->
     $('.worktimes .weekcontent .date-label').
       waypoint({ handler: (direction) ->
         if direction == 'down'
-          app.worktimes.activateNavDayWithDate($(this).data('date'))
-        else if direction == 'up' && $(this).prev().length
-          app.worktimes.activateNavDayWithDate($(this).prev().data('date'))
+          app.worktimes.activateNavDayWithDate($(this.element).data('date'))
+        else if direction == 'up' && $(this.element).prev().length
+          app.worktimes.activateNavDayWithDate($(this.element).prev().data('date'))
       , offset: -> $('.weeknav').height() })
-
 
     $('.worktimes .weeknav .day').on('click', (event) ->
       event.preventDefault();
@@ -96,7 +95,7 @@ $ ->
       app.worktimes.scrollToDayWithDate($(event.currentTarget).data('date'))
     )
 
-    $('.worktimes .weeknav-container').waypoint('sticky')
+    new Waypoint.Sticky({ element: $('.worktimes .weeknav-container')[0] })
 
     $("#week_date").datepicker
       showWeek: true,

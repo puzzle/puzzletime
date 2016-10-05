@@ -4,6 +4,35 @@ $weekdays: 5;
 $week-width: $cell-width * $weekdays;
 $legend-width: 300px;
 
+$headerbar-height: 40px;
+$menu-height: 50px;
+$submenu-height: 50px;
+$nav-height: $headerbar-height + $menu-height + $submenu-height;
+
+body.employees,
+body.orders,
+body.multi_employees,
+body.multi_orders,
+body.custom_lists {
+  padding-top: $nav-height;
+
+  .navbar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: $zindex-navbar;
+  }
+  #headerbar {
+    top: 0;
+  }
+  #menu {
+    top: $headerbar-height;
+  }
+  #submenu {
+    top: $headerbar-height + $menu-height;
+  }
+}
+
 #add_employee_id, #add_work_item_id {
   flex: 1;
 }
@@ -20,7 +49,6 @@ $legend-width: 300px;
 }
 
 .planning-calendar {
-  overflow-x: auto;
 }
 .planning-calendar-weeks,
 .planning-calendar-days-header {
@@ -29,8 +57,14 @@ $legend-width: 300px;
 .planning-calendar-weeks {
   display: flex;
   flex: 1;
-  position: sticky;
-  top: 0;
+  top: $nav-height + 0;
+
+  .csspositionsticky & {
+    position: sticky;
+  }
+  &.stuck {
+    position: fixed;
+  }
 }
 .planning-calendar-week {
   display: flex;
@@ -50,8 +84,14 @@ $legend-width: 300px;
 }
 .planning-calendar-days-header {
   cursor: default;
-  position: sticky;
-  top: 25px;
+  top: $nav-height + 25px;
+
+  .csspositionsticky & {
+    position: sticky;
+  }
+  &.stuck {
+    position: fixed;
+  }
 
   > .dayheader {
     border-top: 1px solid #ccc;
@@ -84,18 +124,28 @@ $legend-width: 300px;
   }
 }
 .planning-calendar-inner > .groupheader > strong,
+.planning-calendar-inner > .groupheader > .sticky-wrapper > strong,
 .planning-calendar-inner > .actions > .buttons,
-.planning-calendar-days > .legend {
+.planning-calendar-inner > .actions > .sticky-wrapper > .buttons,
+.planning-calendar-days > .legend,
+.planning-calendar-days > .sticky-wrapper > .legend {
   left: 0;
-  position: sticky;
   display: flex;
   align-items: center;
   min-width: $legend-width;
   max-width: $legend-width;
+  width: $legend-width;
   padding-right: 0.5em;
   background: #fff;
   color: black;
   height: $cell-height;
+
+  .csspositionsticky & {
+    position: sticky;
+  }
+  &.stuck {
+    position: fixed;
+  }
 }
 .planning-calendar-inner > .groupheader,
 .planning-calendar-inner > .actions,
@@ -252,3 +302,4 @@ table.company-planning {
     color: $link-color;
   }
 }
+
