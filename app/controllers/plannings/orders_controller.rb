@@ -30,7 +30,7 @@ module Plannings
     end
 
     def load_possible_employees
-      @possible_employees  ||= Employee.employed_ones(@period)
+      @possible_employees ||= Employee.employed_ones(@period)
     end
 
     def params_with_restricted_items
