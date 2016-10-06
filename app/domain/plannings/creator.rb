@@ -169,7 +169,7 @@ module Plannings
 
     def create_repetitions(interval, end_date)
       repetitions = (end_date - interval.start_date).to_i / interval.length.to_i
-      Array.new(repetitions).map do |i|
+      Array.new(repetitions) do |i|
         offset = ((i + 1) * interval.length).days
         repeat_plannings(offset, end_date)
       end.flatten
