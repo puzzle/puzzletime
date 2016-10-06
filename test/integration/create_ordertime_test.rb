@@ -5,7 +5,7 @@ class CreateOrdertimeTest < ActionDispatch::IntegrationTest
 
   test 'create ordertime is successfull' do
     timeout_safe do
-      selectize_find('ordertime_account_id', 'Site')
+      selectize('ordertime_account_id', 'Site', 'site')
       fill_in('ordertime_hours', with: 2)
       click_button 'Speichern'
 
@@ -19,7 +19,7 @@ class CreateOrdertimeTest < ActionDispatch::IntegrationTest
     timeout_safe do
       accounting_posts(:hitobito_demo_site).update!(description_required: true)
 
-      selectize_find('ordertime_account_id', 'Site')
+      selectize('ordertime_account_id', 'Site', 'site')
       fill_in('ordertime_hours', with: 2)
       click_button 'Speichern'
 
@@ -34,22 +34,15 @@ class CreateOrdertimeTest < ActionDispatch::IntegrationTest
   test 'create ordertime select accounting_post with billable=true checks billable checkbox' do
     find('#ordertime_billable').set(false)
     assert_not find('#ordertime_billable').checked?
-    selectize_find('ordertime_account_id', 'Webauftritt')
+    selectize('ordertime_account_id', 'Webauftritt', 'web')
     assert find('#ordertime_billable').checked?
   end
 
 
   test 'create ordertime select accounting_post with billable=false unchecks billable checkbox' do
     assert find('#ordertime_billable').checked?
-    selectize_find('ordertime_account_id', 'PuzzleTime')
+    selectize('ordertime_account_id', 'PuzzleTime', 'time')
     assert_not find('#ordertime_billable').checked?
-  end
-
-
-  def selectize_find(id, value)
-    element = find("##{id} + .selectize-control")
-    element.find('.selectize-input input').set(value)
-    element.find('.selectize-dropdown-content').find('div.selectize-option', text: value).click
   end
 
   def login
