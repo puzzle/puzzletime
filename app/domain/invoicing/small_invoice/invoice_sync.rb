@@ -20,8 +20,29 @@ module Invoicing
       class << self
         def sync_unpaid
           Invoice.where.not(status: 'paid', invoicing_key: nil).find_each do |invoice|
-            new(invoice).sync
+            begin
+              new(invoice).sync
+            rescue => error
+              notify_sync_error(error, invoice)
+            end
           end
+        end
+
+        private
+
+        def notify_sync_error(error, invoice)
+          parameters = record_to_params(invoice)
+          Airbrake.notify(error, cgi_data: ENV.to_hash, parameters: parameters)
+        end
+
+        def record_to_params(record, prefix = 'invoice')
+          {
+            "#{prefix}_id"            => record.id,
+            "#{prefix}_invoicing_key" => record.invoicing_key,
+            "#{prefix}_label"         => record.try(:label) || record.to_s,
+            "#{prefix}_errors"        => record.errors.messages,
+            "#{prefix}_changes"       => record.changes
+          }
         end
       end
 

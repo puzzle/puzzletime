@@ -25,7 +25,11 @@ class Timebox
   end
 
   def self.must_hours(must_hours)
-    new(nil, MUST_HOURS_COLOR, 1, "Sollzeit (#{format_hour(must_hours)} h)")
+    new(nil, MUST_HOURS_COLOR, 1, safe_join([
+      'Sollzeit (',
+      format_hour(must_hours),
+      ')'
+    ]))
   end
 
   def self.blank(hours)
@@ -43,6 +47,10 @@ class Timebox
   end
 
   def tooltip_for(worktime)
-    Timebox.format_hour(worktime.hours) + ' h: ' + worktime.account.label
+    safe_join([
+      Timebox.format_hour(worktime.hours),
+      ': ',
+      worktime.account.label
+    ])
   end
 end

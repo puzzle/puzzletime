@@ -7,7 +7,11 @@ module Invoicing
           remote_keys = fetch_remote_keys
           ::Client.includes(:work_item, :contacts, :billing_addresses).find_each do |client|
             if client.billing_addresses.present? # required by small invoice
-              new(client, remote_keys).sync
+              begin
+                new(client, remote_keys).sync
+              rescue => error
+                notify_sync_error(error, client)
+              end
             end
           end
         end
@@ -16,6 +20,23 @@ module Invoicing
           SmallInvoice::Api.instance.list(:client).each_with_object({}) do |client, hash|
             hash[client['number']] = client['id']
           end
+        end
+
+        private
+
+        def notify_sync_error(error, client)
+          parameters = record_to_params(client)
+          Airbrake.notify(error, cgi_data: ENV.to_hash, parameters: parameters)
+        end
+
+        def record_to_params(record, prefix = 'client')
+          {
+            "#{prefix}_id"            => record.id,
+            "#{prefix}_invoicing_key" => record.invoicing_key,
+            "#{prefix}_label"         => record.try(:label) || record.to_s,
+            "#{prefix}_errors"        => record.errors.messages,
+            "#{prefix}_changes"       => record.changes
+          }
         end
       end
 
