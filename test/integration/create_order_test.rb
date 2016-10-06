@@ -186,17 +186,13 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
 
       click_add_contact
 
-      selectize = find('#order_order_contacts_attributes_0_contact_id_or_crm + .selectize-control')
-      selectize.find('.selectize-input').click # populate & open dropdown
-      assert selectize.has_no_selector?('.selectize-dropdown-content .option')
-
+      open_selectize('order_order_contacts_attributes_0_contact_id_or_crm', assert_empty: true)
       selectize('client_work_item_id', 'Puzzle')
 
       click_add_contact
 
-      selectize = find('#order_order_contacts_attributes_1_contact_id_or_crm + .selectize-control')
-      selectize.find('.selectize-input').click # populate & open dropdown
-      assert selectize.has_selector?('.selectize-dropdown-content .option', count: 2)
+      open_selectize('order_order_contacts_attributes_1_contact_id_or_crm')
+        .assert_selector('.option', count: 2)
     end
   end
 
