@@ -25,7 +25,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
   test 'close panel on escape' do
     row_mark.all('.day')[0].click
     page.assert_selector('.planning-panel', visible: true)
-    keyup('Escape')
+    find('body').send_keys :escape
     find('body').click
     page.assert_selector('.planning-panel', visible: false)
   end

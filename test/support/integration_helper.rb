@@ -22,14 +22,19 @@ module IntegrationHelper
     skip e.message || e.class.name
   end
 
-  def open_selectize(id)
+  def open_selectize(id, options = {})
     element = find("##{id} + .selectize-control")
     element.find('.selectize-input').click
-    find('.selectize-dropdown-content')
+    element.find('.selectize-input input').set(options[:term]) if options[:term].present?
+    if options[:assert_empty]
+      page.assert_no_selector('.selectize-dropdown-content')
+    else
+      find('.selectize-dropdown-content')
+    end
   end
 
-  def selectize(id, value)
-    open_selectize(id).find('div', text: value).click
+  def selectize(id, value, options = {})
+    open_selectize(id, options).find('div.selectize-option', text: value).click
   end
 
   def drag(from_node, *to_node)
@@ -37,11 +42,6 @@ module IntegrationHelper
     mouse_driver.down(from_node.native)
     to_node.each { |node| mouse_driver.move_to(node.native) }
     mouse_driver.up
-  end
-
-  def keyup(key)
-    script = "var e = $.Event('keyup', { key: '#{key}' }); $(document).trigger(e);"
-    page.driver.browser.execute_script(script)
   end
 
   def accept_confirmation(expected_message = nil)
