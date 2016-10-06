@@ -66,6 +66,7 @@ class EditOrderTest < ActionDispatch::IntegrationTest
 
   def click_add_contact
     find("a.add_nested_fields_link[data-object-class='order_contact']").click
+    page.assert_selector('#order_order_contacts_attributes_0_contact_id_or_crm', visible: false)
   end
 
   def login

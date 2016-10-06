@@ -5,7 +5,7 @@ class CreateOrdertimeTest < ActionDispatch::IntegrationTest
 
   test 'create ordertime is successfull' do
     timeout_safe do
-      selectize('ordertime_account_id', 'Site', 'site')
+      selectize('ordertime_account_id', 'Site', term: 'site')
       fill_in('ordertime_hours', with: 2)
       click_button 'Speichern'
 
@@ -19,7 +19,7 @@ class CreateOrdertimeTest < ActionDispatch::IntegrationTest
     timeout_safe do
       accounting_posts(:hitobito_demo_site).update!(description_required: true)
 
-      selectize('ordertime_account_id', 'Site', 'site')
+      selectize('ordertime_account_id', 'Site', term: 'site')
       fill_in('ordertime_hours', with: 2)
       click_button 'Speichern'
 
@@ -34,14 +34,14 @@ class CreateOrdertimeTest < ActionDispatch::IntegrationTest
   test 'create ordertime select accounting_post with billable=true checks billable checkbox' do
     find('#ordertime_billable').set(false)
     assert_not find('#ordertime_billable').checked?
-    selectize('ordertime_account_id', 'Webauftritt', 'web')
+    selectize('ordertime_account_id', 'Webauftritt', term: 'web')
     assert find('#ordertime_billable').checked?
   end
 
 
   test 'create ordertime select accounting_post with billable=false unchecks billable checkbox' do
     assert find('#ordertime_billable').checked?
-    selectize('ordertime_account_id', 'PuzzleTime', 'time')
+    selectize('ordertime_account_id', 'PuzzleTime', term: 'time')
     assert_not find('#ordertime_billable').checked?
   end
 

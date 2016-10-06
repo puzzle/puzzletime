@@ -29,12 +29,13 @@ module IntegrationHelper
     if options[:assert_empty]
       page.assert_no_selector('.selectize-dropdown-content')
     else
+      page.assert_selector('.selectize-dropdown-content')
       find('.selectize-dropdown-content')
     end
   end
 
   def selectize(id, value, options = {})
-    open_selectize(id, options).find('div.selectize-option', text: value).click
+    open_selectize(id, options).find('.selectize-option,.option', text: value).click
   end
 
   def drag(from_node, *to_node)
