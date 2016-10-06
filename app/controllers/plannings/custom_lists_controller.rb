@@ -22,10 +22,10 @@ module Plannings
         when Employee.sti_name
           Employee.employed_ones(Period.current_year).list
         when Order.sti_name
-          Order.joins(:status).
-                where(order_statuses: { closed: false }).
-                list.
-                reorder('work_items.path_shortnames')
+          Order.joins(:status)
+               .where(order_statuses: { closed: false })
+               .list
+               .reorder('work_items.path_shortnames')
         when String
           entry.item_type.constantize.list
         else

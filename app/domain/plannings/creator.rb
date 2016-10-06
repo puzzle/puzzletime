@@ -5,15 +5,8 @@ module Plannings
 
     attr_reader :params, :errors, :plannings
 
-    PERMITTED_ATTRIBUTES = [
-      :id,
-      :employee_id,
-      :work_item_id,
-      :date,
-      :percent,
-      :definitive,
-      :translate_by
-    ].freeze
+    PERMITTED_ATTRIBUTES = [:id, :employee_id, :work_item_id, :date, :percent, :definitive,
+                            :translate_by].freeze
     ITEM_FIELDS = [:employee_id, :work_item_id, :date].freeze
 
     # params:
@@ -31,11 +24,11 @@ module Plannings
 
         @plannings = []
         unless repeat_only?
-          @plannings.push(*create)
-          @plannings.push(*update)
+          @plannings = @plannings.concat(create)
+          @plannings = @plannings.concat(update)
         end
         repeat if repeat_until_week
-        @plannings.push(*repeat) if repeat_until_week
+        @plannings = @plannings.concat(repeat) if repeat_until_week
         @plannings.uniq!
 
         @errors.blank?
@@ -176,7 +169,7 @@ module Plannings
 
     def create_repetitions(interval, end_date)
       repetitions = (end_date - interval.start_date).to_i / interval.length.to_i
-      repetitions.times.map do |i|
+      Array.new(repetitions).map do |i|
         offset = ((i + 1) * interval.length).days
         repeat_plannings(offset, end_date)
       end.flatten
