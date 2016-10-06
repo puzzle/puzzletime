@@ -3,7 +3,7 @@ module OrderHelper
     list = order.team_members.to_a
 
     if list.size > 2
-      linked_employee_enumeration(list.take(2)) + ', ...'
+      linked_employee_enumeration(list.take(2)) + ', &hellip;'.html_safe
     else
       linked_employee_enumeration(list)
     end
@@ -11,6 +11,13 @@ module OrderHelper
 
   def linked_employee_enumeration(employees)
     safe_join(employees, ', ') { |e| link_to(e, e) }
+  end
+
+  def order_contacts_enumeration(order)
+    list = order.contacts.to_a
+    contacts = safe_join(list.take(2), ', ')
+    contacts << ', &hellip;'.html_safe if list.size > 2
+    contacts
   end
 
   def order_target_rating_icon(rating, options = {})

@@ -76,6 +76,23 @@ class EmployeeStatistics
   # an empty Array if no employments exist.
   def employments_during(period)
     return [] if period.nil?
+<<<<<<< HEAD
+    selected_employments =
+      @employee.employments.where('(end_date IS NULL OR end_date >= ?) AND start_date <= ?',
+                                  period.start_date, period.end_date).
+      reorder('start_date').
+      to_a
+    unless selected_employments.empty?
+      if selected_employments.first.start_date < period.start_date
+        selected_employments.first.start_date = period.start_date
+      end
+      if selected_employments.last.end_date.nil? ||
+          selected_employments.last.end_date > period.end_date
+        selected_employments.last.end_date = period.end_date
+      end
+    end
+    selected_employments
+=======
 
     conditions = []
     bindings = []
@@ -91,6 +108,7 @@ class EmployeeStatistics
                                         reorder('start_date').
                                         to_a
     normalize_employments_boundaries(employments, period)
+>>>>>>> master
   end
 
   private

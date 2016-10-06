@@ -1,0 +1,36 @@
+- @title = 'Wochengrafik'
+= render('evaluator/period_link')
+
+%table.graph
+  %tr.head
+    %th
+    = weekday_header
+    - @graph.each_day do |day|
+      - if day.wday == 1
+        = '</tr><tr>'.html_safe
+        %th
+          KW #{day.cweek} &nbsp;
+      = day_td day do
+        - @graph.timeboxes.reverse_each do |box|
+          = timebox_div box
+        .dateLabel= I18n.l(day)
+
+
+%table.legend.table-condensed
+  = render partial: 'legend', collection: [WorkItem, Absence]
+  %tr
+    %th{colspan: 2}
+      %b Weiteres
+  = render(partial: 'legend_item', collection: [['Wochenende / Feiertag', '#DDDDDD' ]])
+  %tr
+    %td= timebox_div Timebox.new(nil, '#FF0000', 1, '')
+    %td
+<<<<<<< HEAD:app/views/weekly_graph/show.html.haml
+      Tagessoll (#{format_hour(WorkingCondition.value_at(@graph.period.start_date, :must_hours_per_day) * @graph.must_hours_factor)}
+      h)
+
+%br{clear: 'all'}/
+=======
+      Tagessoll (#{format_hour(WorkingCondition.value_at(@graph.period.start_date, :must_hours_per_day) * @graph.must_hours_factor)})
+%br{:clear => "all"}
+>>>>>>> master:app/views/graph/weekly.html.haml

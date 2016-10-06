@@ -69,6 +69,7 @@ module Invoicing
       end
 
       def handle_json_response(response, data = nil)
+        return {} if response.body.blank?
         json = JSON.parse(response.body)
         if json['error']
           fail Invoicing::Error.new(json['errormessage'], json['errorcode'], data)

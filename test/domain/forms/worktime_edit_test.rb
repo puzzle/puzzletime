@@ -20,11 +20,11 @@ class WorktimeEditTest < ActiveSupport::TestCase
     assert_equal [], edit.worktimes
   end
 
-  test 'may not add different date' do
+  test 'may add different date' do
     wt = Ordertime.new(hours: worktime.hours, work_date: worktime.work_date + 10)
     edit.add_worktime(wt)
-    assert wt.errors[:work_date].present?
-    assert_equal [], edit.worktimes
+    assert wt.errors[:work_date].blank?
+    assert_equal [wt], edit.worktimes
   end
 
   test 'is complete if sum hours equal original hours' do
