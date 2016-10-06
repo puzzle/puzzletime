@@ -7,12 +7,13 @@ app.plannings = new class
   addRowSelectize = null
   addRowOptions = []
   waypoints = []
-  positioningWaypoints = false
+  positioningHeaders = false
 
   init: ->
     @bindListeners()
     @initSelectize()
     @initWaypoints()
+    @positionHeaders()
 
   destroy: ->
     @bindListeners(true)
@@ -84,7 +85,7 @@ app.plannings = new class
     func = if unbind then 'off' else 'on'
 
     @board('.actions .add')[func]('click', @add)
-    $(document)[func]('scroll', @positionWaypoints) unless Modernizr.csspositionsticky
+    $(document)[func]('scroll', @positionHeaders)
 
   initSelectize: ->
     addRowSelect = $('#add_employee_id,#add_work_item_id')
@@ -109,10 +110,10 @@ app.plannings = new class
     return if Modernizr.csspositionsticky
     waypoints = []
 
-    @initTopHeaderWaypoints();
-    @initLeftHeaderWaypoints();
+    @initTopCalendarHeaderWaypoints();
+    @initLeftCalendarHeaderWaypoints();
 
-  initTopHeaderWaypoints: ->
+  initTopCalendarHeaderWaypoints: ->
     $('.planning-calendar').each((_i, element) ->
       navHeight = 140
       planningHeaderHeight = $(element).find('.planning-calendar-weeks')[0].clientHeight +
@@ -138,42 +139,46 @@ app.plannings = new class
       }))
     )
 
-  initLeftHeaderWaypoints: ->
-    @getLeftHeaderElements().each((_i, element) ->
+  initLeftCalendarHeaderWaypoints: ->
+    @getLeftCalendarHeaderElements().each((_i, element) ->
       waypoints.push(new Waypoint.Sticky({ element: element, horizontal: true }))
     )
 
-  positionWaypoints: =>
-    unless positioningWaypoints
+  positionHeaders: =>
+    unless positioningHeaders
       requestAnimationFrame(=>
-        $('.planning-calendar-weeks,.planning-calendar-days-header').each((_i, element) =>
-          @positionTopHeaderWaypoint(element)
-        )
+        @positionBoardHeader()
 
-        @getLeftHeaderElements().each((_i, element) =>
-          @positionLeftHeaderWaypoint(element)
-        )
+        unless Modernizr.csspositionsticky
+          $('.planning-calendar-weeks,.planning-calendar-days-header').each((_i, element) =>
+            @positionTopCalendarHeader(element))
+          @getLeftCalendarHeaderElements().each((_i, element) =>
+            @positionLeftCalendarHeader(element))
 
-        positioningWaypoints = false
+        positioningHeaders = false
       )
-    positioningWaypoints = true
+    positioningHeaders = true
 
-  positionTopHeaderWaypoint: (element) ->
+  positionBoardHeader: ->
+    $('.planning-board-header').css('left', $(document).scrollLeft() + 'px')
+
+  positionTopCalendarHeader: (element) ->
     if $(element).hasClass('stuck')
+      leftHeaderWidth = 300
       firstDay = $(element).parent().parent().find('.day:first')
-      offset = firstDay[0].getBoundingClientRect().left - 300
+      offset = firstDay[0].getBoundingClientRect().left - leftHeaderWidth
       $(element).css('left', offset + 'px')
     else
       $(element).css('left', 'auto')
 
-  positionLeftHeaderWaypoint: (element) ->
+  positionLeftCalendarHeader: (element) ->
     if $(element).hasClass('stuck')
       offset = $(element).parent().parent()[0].getBoundingClientRect().top
       $(element).css('top', offset + 'px')
     else
       $(element).css('top', 'auto')
 
-  getLeftHeaderElements: ->
+  getLeftCalendarHeaderElements: ->
     $(['.planning-calendar-inner > .groupheader strong',
        '.planning-calendar-inner > .actions .buttons',
        '.planning-calendar-days .legend'].join(','))
