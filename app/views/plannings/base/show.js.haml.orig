@@ -1,3 +1,0 @@
-$('.planning_board').html('#{j(render('board'))}');
-App.plannings.reloadAll()
-App.plannings.dateFilterChanged()

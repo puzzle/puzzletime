@@ -43,6 +43,7 @@ body.custom_lists {
 }
 
 .planning-board-header {
+  position: relative;
   display: flex;
   align-items: baseline;
   justify-content: space-between;
@@ -146,6 +147,11 @@ body.custom_lists {
   &.stuck {
     position: fixed;
   }
+}
+.planning-calendar-inner > .groupheader > .sticky-wrapper,
+.planning-calendar-inner > .actions > .sticky-wrapper,
+.planning-calendar-days > .sticky-wrapper {
+  width: $legend-width; // set width since Waypoint.Sticky only sets height
 }
 .planning-calendar-inner > .groupheader,
 .planning-calendar-inner > .actions,
