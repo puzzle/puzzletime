@@ -16,7 +16,7 @@
     = stylesheet_link_tag 'application', :media => 'all', 'data-turbolinks-track' => true
     = javascript_include_tag "application", 'data-turbolinks-track' => true
 
-  %body{class: controller.controller_name}
+  %body{class: "#{controller.controller_module_name} #{controller.controller_name}"}
     = render 'layouts/headerbar'
     - if @user
       = render 'layouts/menu'

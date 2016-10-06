@@ -9,11 +9,11 @@ $menu-height: 50px;
 $submenu-height: 50px;
 $nav-height: $headerbar-height + $menu-height + $submenu-height;
 
-body.employees,
-body.orders,
-body.multi_employees,
-body.multi_orders,
-body.custom_lists {
+body.plannings.employees,
+body.plannings.orders,
+body.plannings.multi_employees,
+body.plannings.multi_orders,
+body.plannings.custom_lists {
   padding-top: $nav-height;
 
   .navbar {
