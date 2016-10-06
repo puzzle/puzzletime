@@ -23,6 +23,11 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def controller_module_name
+    module_name = self.class.name.deconstantize.underscore.gsub('/', '_')
+    module_name.empty? ? 'root' : module_name
+  end
+
   private
 
   # Filter for check if user is logged in or not
