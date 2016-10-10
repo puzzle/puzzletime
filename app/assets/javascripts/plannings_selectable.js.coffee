@@ -89,13 +89,14 @@ app.plannings.selectable = new class
   getSelectedDefinitiveValues: ->
     @selectable('.ui-selected')
       .toArray()
-      .map(((element) ->
+      .map((element) ->
         if $(element).hasClass('-definitive')
-          return true
+          true
         else if ($(element).hasClass('-provisional'))
-          return false
-        return null
-      ))
+          false
+        else
+          null
+      )
       .filter((value, index, self) -> self.indexOf(value) == index)
 
   selectionHasExistingPlannings: ->
