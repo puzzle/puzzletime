@@ -3,7 +3,7 @@ app.plannings ||= {}
 
 app.plannings.selectable = new class
   selectable = '.planning-calendar-inner.editable'
-  selectee = '.planning-calendar-days > .day'
+  selectee = '.planning-calendar-days > .day:not(.-absence)'
   isSelecting = false
 
   init: ->
@@ -16,6 +16,7 @@ app.plannings.selectable = new class
         'a'
         '.actions'
         '.legend'
+        '.-absence'
       ].join(',')
       classes: {
         'ui-selected': '-selected'
