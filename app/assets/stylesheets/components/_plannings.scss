@@ -164,6 +164,9 @@ body.plannings.custom_lists {
   &:nth-child(odd) > .day {
     color: #cacaca;
   }
+  &:last-child {
+    border-bottom: 1px solid #bbb;
+  }
 
   > .day {
     height: $cell-height;
@@ -201,7 +204,7 @@ body.plannings.custom_lists {
     right: 0;
   }
 }
-.planning-calendar-inner.editable .planning-calendar-days {
+.planning-calendar-inner.editable > .planning-calendar-days {
   > .day {
     cursor: pointer;
 
