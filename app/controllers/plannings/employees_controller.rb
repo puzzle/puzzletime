@@ -25,7 +25,10 @@ module Plannings
     end
 
     def load_possible_work_items
-      @possible_work_items ||= WorkItem.joins(:accounting_post).list
+      @possible_work_items ||= WorkItem
+        .joins(:accounting_post)
+        .where(closed: false)
+        .list
     end
 
     def params_with_restricted_items
