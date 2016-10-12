@@ -17,7 +17,7 @@ app.plannings.panel = new class
   bindListeners: (unbind) ->
     func = if unbind then 'off' else 'on'
 
-    $(container)[func]('scroll', @position)
+    $('main')[func]('scroll', @position)
 
     @panel('.planning-definitive-group button')[func]('click', @definitiveChange)
     @panel('#repetition')[func]('click', @repetitionChange)

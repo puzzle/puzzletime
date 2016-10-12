@@ -9,27 +9,20 @@ $menu-height: 50px;
 $submenu-height: 50px;
 $nav-height: $headerbar-height + $menu-height + $submenu-height;
 
-body.plannings.employees,
-body.plannings.orders,
-body.plannings.multi_employees,
-body.plannings.multi_orders,
-body.plannings.custom_lists {
-  padding-top: $nav-height;
+body.plannings {
+  &.employees,
+  &.orders,
+  &.multi_employees,
+  &.multi_orders,
+  &.custom_lists {
+    height: 100vh;
+    overflow: hidden;
 
-  .navbar {
-    position: fixed;
-    left: 0;
-    right: 0;
-    z-index: $zindex-navbar;
-  }
-  #headerbar {
-    top: 0;
-  }
-  #menu {
-    top: $headerbar-height;
-  }
-  #submenu {
-    top: $headerbar-height + $menu-height;
+    > main {
+      overflow-y: auto;
+      margin-right: 0;
+      margin-bottom: 0;
+    }
   }
 }
 
@@ -58,13 +51,14 @@ body.plannings.custom_lists {
 .planning-calendar-weeks {
   display: flex;
   flex: 1;
-  top: $nav-height + 0;
+  top: 0;
 
   .csspositionsticky & {
     position: sticky;
   }
   &.stuck {
     position: fixed;
+    top: $nav-height;
   }
 }
 .planning-calendar-week {
@@ -85,13 +79,14 @@ body.plannings.custom_lists {
 }
 .planning-calendar-days-header {
   cursor: default;
-  top: $nav-height + 25px;
+  top: 25px;
 
   .csspositionsticky & {
     position: sticky;
   }
   &.stuck {
     position: fixed;
+    top: $nav-height + 25px;
   }
 
   > .dayheader {
@@ -146,6 +141,8 @@ body.plannings.custom_lists {
   }
   &.stuck {
     position: fixed;
+    z-index: 1;
+    left: $grid-gutter-width;
   }
 }
 .planning-calendar-inner > .groupheader > .sticky-wrapper,

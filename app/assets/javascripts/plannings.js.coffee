@@ -85,7 +85,7 @@ app.plannings = new class
     func = if unbind then 'off' else 'on'
 
     @board('.actions .add')[func]('click', @add)
-    $(document)[func]('scroll', @positionHeaders)
+    $('main')[func]('scroll', @positionHeaders)
 
   initSelectize: ->
     addRowSelect = $('#add_employee_id,#add_work_item_id')
@@ -110,39 +110,34 @@ app.plannings = new class
     return if Modernizr.csspositionsticky
     waypoints = []
 
-    @initTopCalendarHeaderWaypoints();
-    @initLeftCalendarHeaderWaypoints();
+    @initTopCalendarHeaderWaypoints()
+    @initLeftCalendarHeaderWaypoints()
 
   initTopCalendarHeaderWaypoints: ->
-    $('.planning-calendar').each((_i, element) ->
-      navHeight = 140
-      planningHeaderHeight = $(element).find('.planning-calendar-weeks')[0].clientHeight +
-        $(element).find('.planning-calendar-days-header')[0].clientHeight
-      waypoints.push(new Waypoint.Sticky({
-        element: $(element).find('.planning-calendar-weeks'),
-        offset: navHeight
-      }))
-      waypoints.push(new Waypoint.Sticky({
-        element: $(element).find('.planning-calendar-days-header'),
-        offset: navHeight
-      }))
-      waypoints.push(new Waypoint({
-        element: element,
-        handler: ((direction) ->
-          headerElements = $('.planning-calendar-weeks,.planning-calendar-days-header', element)
-          if direction == 'down'
-            headerElements.removeClass('stuck')
-          if direction == 'up'
-            headerElements.addClass('stuck')
-        ),
-        offset: () -> navHeight - this.element.clientHeight + planningHeaderHeight
-      }))
-    )
+    $('.planning-calendar')
+      .toArray()
+      .map (el) ->
+        [
+          $(el).find('.planning-calendar-weeks')
+          $(el).find('.planning-calendar-days-header')
+        ]
+      .forEach ([ weeks, daysHeader ]) ->
+        waypoints.push(new Waypoint.Sticky(
+          element: weeks
+          context: $('main')
+        ))
+        waypoints.push(new Waypoint.Sticky(
+          element: daysHeader
+          context: $('main')
+        ))
 
   initLeftCalendarHeaderWaypoints: ->
-    @getLeftCalendarHeaderElements().each((_i, element) ->
-      waypoints.push(new Waypoint.Sticky({ element: element, horizontal: true }))
-    )
+    @getLeftCalendarHeaderElements().each (_i, element) ->
+      waypoints.push(new Waypoint.Sticky(
+        element: element
+        context: $('main')
+        horizontal: true
+      ))
 
   positionHeaders: =>
     unless positioningHeaders
@@ -165,8 +160,10 @@ app.plannings = new class
   positionTopCalendarHeader: (element) ->
     if $(element).hasClass('stuck')
       leftHeaderWidth = 300
-      firstDay = $(element).parent().parent().find('.day:first')
-      offset = firstDay[0].getBoundingClientRect().left - leftHeaderWidth
+      firstDay = $(element)
+        .closest('.planning-calendar-inner')
+        .find('.day:first')
+      offset = firstDay[0]?.getBoundingClientRect().left - leftHeaderWidth
       $(element).css('left', offset + 'px')
     else
       $(element).css('left', 'auto')
