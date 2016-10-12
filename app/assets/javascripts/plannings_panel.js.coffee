@@ -130,10 +130,11 @@ app.plannings.panel = new class
         wasHidden = @panel().is(':hidden')
 
         @panel().show().position({
-          my: 'right top',
-          at: 'right bottom',
-          of: $(container).find('.ui-selected').last(),
-          within: container
+          my: 'right top'
+          at: 'right bottom'
+          of: $(container).find('.ui-selected').last()
+          within: 'main'
+          collision: 'flipfit flipfit'
         })
         positioning = false
 
