@@ -10,8 +10,11 @@ body {
 }
 
 main {
+  @extend .container-fluid;
+  margin: 0 $grid-gutter-width 40px;
+  padding: 0;
   flex: 1;
-  width: 100vw;
+  width: calc(100vw - ${$grid-gutter-width * 2});
 }
 
 h1.h3 {
@@ -34,13 +37,6 @@ a.symbol {
   text-decoration: none;
   font-weight: bold;
   font-size: 16px;
-}
-
-#content {
-  @extend .container-fluid;
-  margin-bottom: 40px;
-  padding-left: $grid-gutter-width;
-  padding-right: $grid-gutter-width;
 }
 
 .unindented {
@@ -225,10 +221,10 @@ a.disabled:hover {
   margin-bottom: 15px;
 }
 
-#content > .nav-tabs {
+main > .nav-tabs {
   margin-bottom: $line-height-computed * 2;
 }
-#content > .form-horizontal {
+main > .form-horizontal {
   margin-top: $line-height-computed * 2;
 }
 
