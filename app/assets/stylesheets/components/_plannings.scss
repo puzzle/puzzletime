@@ -258,20 +258,57 @@ body.plannings {
 }
 
 .day.-definitive {
-  background-color: #2b78e4 !important;
+  $blue: #2b78e4;
+  $gradient: linear-gradient(0deg, $blue, $blue);
+  background-image: $gradient;
   color: #cde5ea !important;
 
+  &.-absence {
+    background-image: linear-gradient(0deg, #fff, #fff), $gradient;
+  }
+
+  .planning-calendar-days:nth-child(odd) &.-absence {
+    background-image: linear-gradient(0deg, #efefef, #efefef), $gradient;
+  }
+
   @for $i from 1 through 9 {
+    $lightBlue: lighten($blue, (100 - $i * 10) / 4);
+    $gradient: linear-gradient(0deg, $lightBlue, $lightBlue);
+
     &.-percent-#{$i * 10} {
-      background-color: lighten(#2b78e4, (100 - $i * 10) / 4) !important;
+      background-image: $gradient;
+
+      &.-absence {
+        background-image: linear-gradient(0deg, #fff, #fff), $gradient;
+      }
+
+      .planning-calendar-days:nth-child(odd) &.-absence {
+        background-image: linear-gradient(0deg, #efefef, #efefef), $gradient;
+      }
     }
   }
 }
 
 .day.-provisional {
+  $gradient: linear-gradient(-45deg, #9bcbd4 25%, #cde5ea 0, #cde5ea 50%, #9bcbd4 0, #9bcbd4 75%, #cde5ea 0);
   background-color: transparent;
-  background-image: linear-gradient(-45deg, #9bcbd4 25%, #cde5ea 0, #cde5ea 50%, #9bcbd4 0, #9bcbd4 75%, #cde5ea 0);
+  background-image: $gradient;
   color: #50696e !important;
+
+  &.-absence {
+    background-image: linear-gradient(0deg, #fff, #fff), $gradient;
+  }
+
+  .planning-calendar-days:nth-child(odd) &.-absence {
+    background-image: linear-gradient(0deg, #efefef, #efefef), $gradient;
+  }
+}
+
+.day.-absence {
+  &, &.-selected {
+    color: #50696e !important;
+    background-clip: content-box, border-box;
+  }
 }
 
 .over_planned {

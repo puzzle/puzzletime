@@ -76,16 +76,26 @@ module Plannings
         k = key(p.employee_id, p.work_item_id)
         rows[k] = empty_row unless rows.key?(k)
         index = item_index(p.date)
-        rows[k][index] = p if index
+
+        if index
+          (rows[k][index] ||= Item.new).tap do |item|
+            item.planning = p
+          end
+        end
       end
     end
 
     def add_absencetimes_to_rows(rows)
       @absencetimes.each do |time|
         rows.each do |key, items|
-          if key.first == time.employee_id
-            index = item_index(time.work_date)
-            items[index] = time if index
+          next unless key.first == time.employee_id
+
+          index = item_index(time.work_date)
+
+          if index
+            (items[index] ||= Item.new).tap do |item|
+              item.absencetime = time
+            end
           end
         end
       end
