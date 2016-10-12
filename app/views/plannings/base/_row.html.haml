@@ -2,15 +2,8 @@
   = link_to_if(can?(:show_plannings, legend), legend, planning_legend_path(legend))
 
 - items.each do |item|
-  - case item
-    - when Planning
-      .day{ class: (item.definitive? ? '-definitive' : '-provisional') + " -percent-#{item.percent.round(-1)}", data: { id: item.id } }
-        = item.percent
-    - when Absencetime
-      .day.-absence{ title: "#{item.absence.name}: #{format_hour(item.hours)}" }
-        X
-    - when nil
-      .day
-    - else
-      .day
-        ?
+  - if item
+    .day{ item.day_params }
+      = item
+  - else
+    .day
