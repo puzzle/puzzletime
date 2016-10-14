@@ -11,7 +11,7 @@
 %td.text-right
   - if @evaluation.class.billable_hours
     %span.additional-figure.muted{title: 'gesamthaft geleistete Stunden'}
-      = "(#{format_hour hours})"
+      = safe_join([ '(', format_hour(hours), ')' ])
     %span{title: 'verrechenbare Stunden'}
       = format_hour billable_hours
   - else
