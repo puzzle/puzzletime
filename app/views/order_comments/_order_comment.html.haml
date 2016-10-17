@@ -6,6 +6,9 @@
       = order_comment.creator.to_s
     .row.updated_at
       = f(order_comment.updated_at)
-    .row.edit
+    - if can?(:edit, order_comment)
+      .row.edit.text-right
+        = link_to(picon('edit'),
+                  edit_order_order_comment_path(@order, order_comment))
   .col-md-8
     = auto_link(simple_format(order_comment.text))

@@ -33,7 +33,6 @@ class Ability
                   OrderKind,
                   OrderStatus,
                   OrderTarget,
-                  OrderComment,
                   OvertimeVacation,
                   PortfolioItem,
                   Sector,
@@ -42,6 +41,11 @@ class Ability
                   UserNotification,
                   WorkingCondition,
                   WorkItem]
+
+    can :update, OrderComment do |c|
+      c.creator_id == user.id
+    end
+    can [:create, :read], OrderComment
 
     # cannot change settings of other employees
     can [:crud, :update_committed_worktimes], Employee do |_|
@@ -76,7 +80,13 @@ class Ability
     can :manage, [Client, BillingAddress, Contact]
     can :create, WorkItem
     can [:manage, :update_month_end_completions], Order, responsible_id: user.id
-    can :manage, [AccountingPost, Contract, Invoice, OrderComment] do |instance|
+
+    can :update, OrderComment do |c|
+      c.creator_id == user.id
+    end
+    can [:create, :read], OrderComment
+
+    can :manage, [AccountingPost, Contract, Invoice] do |instance|
       instance.order.responsible_id == user.id
     end
     can :read, Ordertime do |t|
