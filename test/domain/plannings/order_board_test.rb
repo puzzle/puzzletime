@@ -16,7 +16,7 @@ module Plannings
       items = board.items(employees(:lucien).id, work_items(:hitobito_demo_app).id)
       assert_equal 20, items.size
       assert items.one? { |i| !i.nil? }
-      assert_equal p2, items[5]
+      assert_equal p2, items[5].planning
     end
 
     test 'sets included row' do
@@ -26,7 +26,7 @@ module Plannings
                    board.rows.keys.to_set
     end
 
-    test 'absencetimes overwrite plannings' do
+    test 'absencetimes can coexist with plannings' do
       create_plannings
       a1 = Absencetime.create!(absence_id: absences(:vacation).id,
                                employee_id: employees(:lucien).id,
@@ -43,7 +43,7 @@ module Plannings
 
       items = board.items(employees(:lucien).id, work_items(:hitobito_demo_app).id)
       items.one? { |i| !i.nil? }
-      assert_equal a2, items[6]
+      assert_equal a2, items[6].absencetime
     end
 
     test 'absencetimes show with default rows when no plannings are given' do
@@ -67,8 +67,8 @@ module Plannings
       assert_equal [[employees(:lucien).id, work_items(:hitobito_demo_app).id]].to_set,
                    board.rows.keys.to_set
       items = board.items(employees(:lucien).id, work_items(:hitobito_demo_app).id)
-      assert_equal a1, items[5]
-      assert_equal a2, items[6]
+      assert_equal a1, items[5].absencetime
+      assert_equal a2, items[6].absencetime
     end
 
     test 'no rows are returned if included rows is set to empty array' do
