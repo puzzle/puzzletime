@@ -89,14 +89,15 @@ body.plannings {
 }
 .planning-calendar-days-header {
   cursor: default;
-  top: 45px;
+  $top: 45px;
+  top: $top;
 
   .csspositionsticky & {
     position: sticky;
   }
   &.stuck {
     position: fixed;
-    top: $nav-height + 25px;
+    top: $nav-height + $top;
   }
 
   > .dayheader {
