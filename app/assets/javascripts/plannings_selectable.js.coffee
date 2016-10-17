@@ -156,8 +156,6 @@ app.plannings.selectable = new class
         currentNodeIndex = $(e.target.parentNode.children).index(e.target)
         currentTranslateBy = currentNodeIndex - startNodeIndex
 
-        return unless currentTranslateBy
-
         translateBy = Math.max(
           minTranslateBy + 1,
           Math.min(maxTranslateBy - 1, currentTranslateBy)
@@ -173,7 +171,7 @@ app.plannings.selectable = new class
 
     @selectable().on('mouseup', (e) =>
       @selectable().off('mousemove mouseup')
-      @updateDayTranslation(daysToUpdate, translateBy)
+      @updateDayTranslation(daysToUpdate, translateBy) if translateBy
     )
 
   resetCellsOfRows: (rows, originalRows, unselect) ->

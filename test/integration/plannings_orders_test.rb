@@ -275,6 +275,30 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     row_pascal.assert_selector('.day.-definitive:not(.-selected)', count: 2, text: 100)
   end
 
+  test 'Can move selection back to original position' do
+    drag(row_pascal.all('.day')[1], row_pascal.all('.day')[2])
+
+    within '.planning-panel' do
+      fill_in 'percent', with: '100'
+      click_button 'OK'
+    end
+
+    page.assert_selector('div.-definitive', count: 4)
+
+    drag(row_pascal.all('.day')[1], row_pascal.all('.day')[2])
+    page.assert_selector('.day.-selected', count: 2)
+    drag(
+      row_pascal.all('.day')[2],
+      row_pascal.all('.day')[8],
+      row_pascal.all('.day')[2]
+    )
+    row_pascal.assert_selector('.day.-definitive', count: 3)
+    row_pascal.assert_selector('.day.-definitive.-selected', count: 2)
+    row_pascal.assert_selector('.day.-definitive:nth-child(2)', text: 25)
+    row_pascal.assert_selector('.day.-definitive:nth-child(3)', text: 100)
+    row_pascal.assert_selector('.day.-definitive:nth-child(4)', text: 100)
+  end
+
   test 'delete plannings' do
     row_mark.all('.day')[1].click
     page.assert_selector('.planning-panel', visible: true)
