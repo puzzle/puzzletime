@@ -42,7 +42,8 @@ body.plannings {
   justify-content: space-between;
 }
 
-.planning-calendar {
+.planning-calendar-inner {
+  border-right: 1px solid #bbb;
 }
 .planning-calendar-weeks,
 .planning-calendar-days-header {
@@ -61,17 +62,26 @@ body.plannings {
     top: $nav-height;
   }
 }
+.planning-calendar-month {
+  background-color: #eee;
+
+  > .title {
+    text-align: center;
+    border-left: 1px solid #bbb;
+  }
+  > .title > .year {
+    color: #666;
+  }
+}
+.planning-calendar-month-weeks {
+  display: flex;
+}
 .planning-calendar-week {
   display: flex;
   max-width: $week-width;
   min-width: $week-width;
   justify-content: space-between;
   border-left: 1px solid #bbb;
-  background-color: #eee;
-
-  &:last-child {
-    border-right: 1px solid #bbb;
-  }
 
   > .planned, > .kw {
     padding: 0.25rem 0.5rem;
@@ -79,7 +89,7 @@ body.plannings {
 }
 .planning-calendar-days-header {
   cursor: default;
-  top: 25px;
+  top: 45px;
 
   .csspositionsticky & {
     position: sticky;
@@ -107,10 +117,6 @@ body.plannings {
     min-width: $cell-width;
     max-width: $cell-width;
     border-left: 1px solid #e0e0e0;
-
-    &:last-child {
-      border-right: 1px solid #e0e0e0;
-    }
   }
   .dayheader {
     border-color: transparent;
