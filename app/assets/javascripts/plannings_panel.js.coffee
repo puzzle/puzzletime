@@ -122,12 +122,17 @@ app.plannings.panel = new class
     @panel('#repeat_until').val('')
 
   position: (e) =>
+    hasSelection = () -> $(container).find('.ui-selected').length
     return if @panel().length == 0 ||
       (e?.type == 'scroll' && @panel().is(':hidden')) ||
-      !$(container).find('.ui-selected').length
+      !hasSelection()
 
     unless positioning
       requestAnimationFrame(() =>
+        if !hasSelection()
+          positioning = false
+          return
+
         wasHidden = @panel().is(':hidden')
 
         @panel().show().position({
