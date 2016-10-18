@@ -34,8 +34,8 @@
           order_order_targets_path(@order)
 
   - if can?(:show_comments, @order)
-    = nav 'Journal', order_order_comments_path(@order)
-  - elsif can?(:edit_comments, @order)
-    = nav 'Journal', edit_order_order_comments_path(@order)
+    = nav 'Journal',
+          order_order_comments_path(@order),
+          order_order_comments_path(@order)
 
   //= nav 'Rechnungen', bills_order_path(entry)

@@ -50,7 +50,7 @@ Rails.application.routes.draw do
       get :edit, to: redirect('/orders/%{order_id}/order_services')
     end
 
-    resources :order_comments, only: [:index, :create]
+    resources :order_comments, only: [:index, :create, :edit, :update]
     resource :order_targets, only: [:show, :update]
 
     resource :order_services, only: [:show, :edit, :update] do

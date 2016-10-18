@@ -35,7 +35,6 @@ class Ability
          OrderKind,
          OrderStatus,
          OrderTarget,
-         OrderComment,
          OvertimeVacation,
          Planning,
          PortfolioItem,
@@ -48,6 +47,16 @@ class Ability
 
     # :crud instead of :manage because cannot change settings of other employees
     can [:crud, :update_committed_worktimes, :manage_plannings], Employee
+
+    can :update, OrderComment do |c|
+      c.creator_id == user.id
+    end
+    can [:create, :read], OrderComment
+
+    # cannot change settings of other employees
+    can [:crud, :update_committed_worktimes], Employee do |_|
+      true
+    end
 
     can [:read], Worktime
     can [:create, :update], Absencetime
@@ -78,7 +87,12 @@ class Ability
 
     can :manage, Order, responsible_id: user.id
 
-    can :manage, [AccountingPost, Contract, Invoice, OrderComment] do |instance|
+    can :update, OrderComment do |c|
+      c.creator_id == user.id
+    end
+    can [:create, :read], OrderComment
+
+    can :manage, [AccountingPost, Contract, Invoice] do |instance|
       instance.order.responsible_id == user.id
     end
     can :read, Ordertime do |t|
