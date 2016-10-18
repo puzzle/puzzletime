@@ -1,18 +1,20 @@
-- # local variables:
-- #  division_id, action
-- p = @periods[timecell_counter]
-- timecell = @times[timecell_counter][division] if defined? division
-- hours = (timecell.is_a?(Hash) ? timecell[:hours] : timecell).to_f
-- billable_hours = (timecell.is_a?(Hash) ? timecell[:billable_hours] : nil).to_f
-- planned_hours = (timecell.is_a?(Hash) ? timecell[:planned_hours] : nil).to_f
-- division_id = nil if ! defined? division_id
-- division_id = division.id if defined? division
-- action ||= 'details'
+-#
+  local variables:
+  division_id, action
+:ruby
+  p = @periods[timecell_counter]
+  timecell = @times[timecell_counter][division] if defined? division
+  hours = (timecell.is_a?(Hash) ? timecell[:hours] : timecell).to_f
+  billable_hours = (timecell.is_a?(Hash) ? timecell[:billable_hours] : nil).to_f
+  planned_hours = (timecell.is_a?(Hash) ? timecell[:planned_hours] : nil).to_f
+  division_id = nil if ! defined? division_id
+  division_id = division.id if defined? division
+  action ||= 'details'
 %td.text-right
   - if @evaluation.class.billable_hours
-    %span.additional-figure.muted{title: 'gesamthaft geleistete Stunden'}
-      = "(#{format_hour hours})"
-    %span{title: 'verrechenbare Stunden'}
+    %span.additional-figure.muted{ title: 'gesamthaft geleistete Stunden' }
+      = safe_join([ '(', format_hour(hours), ')' ])
+    %span{ title: 'verrechenbare Stunden' }
       = format_hour billable_hours
   - else
     = format_hour hours
@@ -23,8 +25,8 @@
                      category_id: @evaluation.category_id,
                      division_id: division_id.presence)
     - link += '&amp;' + ( p ? p.url_query_s : 'start_date=0' )
-    - # use html link instead of link_to for performance reasons
-    %a{:href => link.html_safe}= image_tag('lupe.gif', 'size' => '19x11', 'alt' => 'Details')
+    -# use html link instead of link_to for performance reasons
+    %a{ href: link.html_safe }= image_tag('lupe.gif', size: '19x11', alt: 'Details')
   - else
     = image_tag( 'space.gif', 'size' => '19x11' )
 
