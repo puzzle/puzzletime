@@ -263,6 +263,10 @@ body.plannings {
     padding: 2px;
   }
 
+  td:empty::before {
+    content: '\a0'
+  }
+
   td:first-child {
     min-width: $cell-width;
     max-width: $cell-width;
