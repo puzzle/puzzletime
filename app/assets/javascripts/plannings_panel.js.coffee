@@ -139,7 +139,7 @@ app.plannings.panel = new class
           my: 'right top'
           at: 'right bottom'
           of: $(container).find('.ui-selected').last()
-          within: 'main'
+          within: 'body'
           collision: 'flipfit flipfit'
         })
         positioning = false
