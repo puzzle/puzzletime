@@ -206,7 +206,8 @@ class WorktimesController < CrudController
   end
 
   def check_worktimes_committed
-    if entry.employee_id == @user.id && entry.worktimes_committed?
+    if entry.order.responsible_id != @user.id &&
+        entry.employee_id == @user.id && entry.worktimes_committed?
       date = I18n.l(@user.committed_worktimes_at, format: :month)
       entry.errors.add(:work_date, "Die Zeiten bis und mit #{date} wurden freigegeben " \
                                    'und können nicht mehr bearbeitet werden.')
