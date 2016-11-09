@@ -15,6 +15,7 @@ class WorkloadReportTest < ActionDispatch::IntegrationTest
     find('input#start_date').click
     all('td[data-handler=selectDay]').last.click
 
+    assert_no_selector 'tbody#employee-6-ordertimes'
     find('a[data-toggle="employee-6-ordertimes"]').click
     assert_selector 'tbody#employee-6-ordertimes'
   end
