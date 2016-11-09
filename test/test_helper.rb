@@ -70,6 +70,7 @@ class ActionDispatch::IntegrationTest
   self.use_transactional_fixtures = false
 
   setup do
+    Capybara.server_port = ENV['CAPYBARA_SERVER_PORT'].to_i if ENV['CAPYBARA_SERVER_PORT']
     Capybara.default_driver = :selenium
     Capybara.default_max_wait_time = 5
     DatabaseCleaner.start
