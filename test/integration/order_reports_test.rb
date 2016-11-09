@@ -24,11 +24,11 @@ class OrderReportsTest < ActionDispatch::IntegrationTest
 
       fill_in('start_date', with: '1.11.2006')
       fill_in('end_date', with: '1.10.2006')
-      select('devone', from: 'department_id') # required to lose focus on end_date
+      select('Rot', from: 'target') # required to lose focus on end_date
       assert_selector('#flash .alert-danger')
 
       fill_in('end_date', with: '1.12.2006')
-      select('Alle', from: 'department_id') # required to lose focus on end_date
+      select('Orange', from: 'target') # required to lose focus on end_date
       assert_no_selector('#flash .alert-danger')
     end
   end
