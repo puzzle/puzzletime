@@ -64,6 +64,48 @@ class InvoicesControllerTest < ActionController::TestCase
     assert_equal billing_addresses(:swisstopo, :swisstopo_2), assigns(:billing_addresses)
   end
 
+  test 'PUT sync as management' do
+    login_as :mark
+    params = {
+      order_id: test_entry.order_id,
+      id: test_entry.id
+    }
+    put :sync, params
+    assert_response :redirect
+  end
+
+  test 'PUT sync as order responsible for responsible order' do
+    login_as :long_time_john
+    params = {
+      order_id: test_entry.order_id,
+      id: test_entry.id
+    }
+    put :sync, params
+    assert_response :redirect
+  end
+
+  test 'PUT sync as order responsible for not responsible order' do
+    login_as :lucien
+    params = {
+      order_id: test_entry.order_id,
+      id: test_entry.id
+    }
+    assert_raise CanCan::AccessDenied do
+      put :sync, params
+    end
+  end
+
+  test 'PUT sync as non order responsible' do
+    login_as :pascal
+    params = {
+      order_id: test_entry.order_id,
+      id: test_entry.id
+    }
+    assert_raise CanCan::AccessDenied do
+      put :sync, params
+    end
+  end
+
   private
 
   # Test object used in several tests.
