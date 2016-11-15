@@ -16,8 +16,8 @@
                             target: :blank,
                             title: 'PDF anzeigen')
     - t.action_col do |e|
-      - t.table_action_link('chevron-left',
-                            sync_order_invoice_path(order_id: e.order_id, id: e.id),
-                            title: 'Daten aus Invoicing übernehmen',
-                            data: { method: :put })
-
+      - if can?(:sync, e)
+        - t.table_action_link('chevron-left',
+                              sync_order_invoice_path(order_id: e.order_id, id: e.id),
+                              title: 'Daten aus Invoicing übernehmen',
+                              data: { method: :put })

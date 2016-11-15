@@ -9,6 +9,8 @@ class InvoicesController < CrudController
 
   helper_method :checked_work_item_ids, :checked_employee_ids, :order
 
+  prepend_before_action :entry, only: [:show, :new, :create, :edit, :update, :destroy, :sync]
+
   before_render_form :load_associations
 
   def show
