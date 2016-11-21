@@ -50,6 +50,33 @@ class InvoicesController < CrudController
     redirect_to index_path
   end
 
+  def destroy(options = {})
+    destroyed = run_callbacks(:destroy) do
+      if entry.destroyable?
+        entry.destroy
+      else
+        Invoice.transaction do
+          entry.status = 'deleted'
+          entry.ordertimes.each do |ordertime|
+            ordertime.invoice_id = nil
+            ordertime.save
+          end
+          entry.save
+        end
+      end
+    end
+
+    respond_to do |format|
+      if destroyed
+        format.html { redirect_on_success(options) }
+        format.json { head :no_content }
+      else
+        format.html { redirect_on_failure(options) }
+        format.json { render json: entry.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
   # AJAX
   def preview_total
     assign_attributes

@@ -23,7 +23,7 @@
 
 class Invoice < ActiveRecord::Base
 
-  STATUSES = %w(draft sent paid partially_paid unknown).freeze
+  STATUSES = %w(draft sent paid partially_paid deleted unknown).freeze
 
   enum grouping: %w(accounting_posts employees manual)
 
@@ -103,6 +103,10 @@ class Invoice < ActiveRecord::Base
 
   def order_closed?
     order.status.closed?
+  end
+
+  def destroyable?
+    draft?
   end
 
   STATUSES.each do |status|

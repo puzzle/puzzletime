@@ -28,7 +28,6 @@ class Ability
          Contact,
          Department,
          Employment,
-         Invoice,
          Holiday,
          Contract,
          Order,
@@ -56,6 +55,11 @@ class Ability
     # cannot change settings of other employees
     can [:crud, :update_committed_worktimes], Employee do |_|
       true
+    end
+
+    can [:create, :read, :sync], Invoice
+    can [:edit, :update, :destroy], Invoice do |i|
+      i.status != 'deleted'
     end
 
     can [:read], Worktime
@@ -93,9 +97,17 @@ class Ability
     end
     can [:create, :read], OrderComment
 
-    can :manage, [AccountingPost, Contract, Invoice] do |instance|
+    can :manage, [AccountingPost, Contract] do |instance|
       instance.order.responsible_id == user.id
     end
+
+    can [:create, :read, :sync], Invoice do |i|
+      i.order.responsible_id == user.id
+    end
+    can [:edit, :update, :destroy], Invoice do |i|
+      i.order.responsible_id == user.id && i.status != 'deleted'
+    end
+
     can :read, Ordertime do |t|
       t.order.responsible_id == user.id
     end

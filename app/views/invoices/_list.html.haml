@@ -1,4 +1,7 @@
 = list_table do |t|
+  - t.row_attrs do |e|
+    - { class: "invoice-row invoice-row--#{e.status}" }
+
   - if @order.status.closed?
     - t.sortable_attr(:reference)
   - else
