@@ -41,7 +41,7 @@ class Ordertime < Worktime
   end
 
   def order
-    work_item.accounting_post.order
+    work_item.accounting_post && work_item.accounting_post.order
   end
 
   def amount

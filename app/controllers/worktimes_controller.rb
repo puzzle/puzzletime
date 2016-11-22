@@ -8,7 +8,7 @@ class WorktimesController < CrudController
 
   helper_method :record_other?
 
-  before_save :check_worktimes_committed
+  before_save :check_has_accounting_post, :check_worktimes_committed
   after_save :check_overlapping
 
   before_render_index :set_statistics
@@ -203,6 +203,13 @@ class WorktimesController < CrudController
 
   def ivar_name(klass)
     klass < Worktime ? Worktime.model_name.param_key : super(klass)
+  end
+
+  def check_has_accounting_post
+    unless entry.work_item.respond_to?(:accounting_post)
+      entry.errors.add(:work_item, 'Bitte wähle eine Buchungsposition aus')
+      false
+    end
   end
 
   def check_worktimes_committed

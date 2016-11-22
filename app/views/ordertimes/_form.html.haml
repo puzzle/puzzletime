@@ -15,6 +15,7 @@
                  placeholder: 'Suchen...',
                  autocomplete: 'off',
                  class: entry.new_record? ? 'initial-focus' : '',
+                 required: true,
                  data: { autocomplete: 'work_item',
                          url: search_work_items_path })
   = f.labeled_input_field(:ticket, span: 2)
