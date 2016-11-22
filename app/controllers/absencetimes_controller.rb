@@ -52,4 +52,8 @@ class AbsencetimesController < WorktimesController
   def generic_evaluation
     'absences'
   end
+
+  def check_has_accounting_post
+    true
+  end
 end
