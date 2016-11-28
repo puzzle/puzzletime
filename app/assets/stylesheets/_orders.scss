@@ -70,7 +70,12 @@
   }
 
   .title {
-    position: relative;
+    display: flex;
+    align-items: baseline;
+
+    > a {
+      margin-right: auto;
+    }
   }
 
   .figure {
@@ -190,8 +195,8 @@
   }
 
   table.static tr .billable-icon {
-    position: absolute;
-    right: 0;
+    margin-left: 0.5rem;
+    align-self: center;
     font-size: $font-size-large;
     color: $gray;
   }
