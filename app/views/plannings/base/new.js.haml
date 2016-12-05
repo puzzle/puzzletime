@@ -3,4 +3,5 @@
 - row = j(render('row', items: @items, legend: @legend))
 
 $('.actions').filter('#{filter}').before($('#{container}').html('#{row}'));
+if (!Modernizr.csspositionsticky) $('main').scroll();
 
