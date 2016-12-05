@@ -170,7 +170,9 @@ app.plannings = new class
 
   positionLeftCalendarHeader: (element) ->
     if $(element).hasClass('stuck')
-      offset = $(element).parent().parent()[0].getBoundingClientRect().top
+      offset = $(element)
+        .closest('.sticky-wrapper')[0]
+        .getBoundingClientRect().top
       $(element).css('top', offset + 'px')
     else
       $(element).css('top', 'auto')
@@ -178,7 +180,10 @@ app.plannings = new class
   getLeftCalendarHeaderElements: ->
     $(['.planning-calendar-inner > .groupheader strong',
        '.planning-calendar-inner > .actions .buttons',
-       '.planning-calendar-days .legend'].join(','))
+       '.planning-calendar-days .legend',
+       '.planning-board-header',
+       '.planning-legend'
+      ].join(','))
 
   destroyWaypoints: ->
     waypoints.forEach((waypoint) -> waypoint.destroy())

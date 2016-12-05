@@ -42,12 +42,16 @@ body.plannings {
 }
 
 .planning-board-header {
-  position: relative;
+  position: sticky;
   display: flex;
   align-items: baseline;
   justify-content: space-between;
 }
-
+.planning-board-header.stuck {
+  position: fixed;
+  padding-left: 30px;
+  right: 0;
+}
 .planning-calendar-inner {
   border-right: 1px solid $grey-light;
 }
@@ -259,6 +263,15 @@ body.plannings {
 }
 
 .planning-legend {
+  display: inline-block;
+  position: sticky;
+  left: 0;
+}
+.planning-legend.stuck {
+  position: fixed;
+  padding-left: 30px;
+}
+.planning-legend-table {
   td {
     padding: 2px;
   }

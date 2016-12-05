@@ -1,17 +1,17 @@
-%br/
-
-%h5 Legende
-%table.planning-legend
-  %tr
-    %td.day.-definitive.-percent-80 80
-    %td Fix verplant 80%
-  %tr
-    %td.day.-provisional.-percent-40 40
-    %td Provisorisch verplant 40%
-  %tr
-    %td.day
-    %td Unverplant
-  %tr
-    %td.day X
-    %td Abwesenheit
-  = render 'legend_extension'
+.planning-legend
+  %h5 Legende
+  %table.planning-legend-table
+    %tbody
+      %tr
+        %td.day.-definitive.-percent-80 80
+        %td Fix verplant 80%
+      %tr
+        %td.day.-provisional.-percent-40 40
+        %td Provisorisch verplant 40%
+      %tr
+        %td.day
+        %td Unverplant
+      %tr
+        %td.day X
+        %td Abwesenheit
+      = render 'legend_extension'
