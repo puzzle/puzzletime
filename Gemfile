@@ -7,6 +7,7 @@ gem 'pg', '< 0.19' # higher requires ruby 2.0
 gem 'airbrake', '< 5.0' # would require newer errbit
 gem 'acts_as_tree'
 gem 'cancancan', '< 1.13' # higher requires ruby 2.0
+gem 'config', '< 1.1' # higher requires ruby 2.0
 gem 'country_select'
 gem 'daemons'
 gem 'dalli'
@@ -18,13 +19,13 @@ gem 'haml'
 gem 'highrise'
 gem 'jbuilder'
 gem 'nested_form_fields'
+gem 'net-ldap', '< 0.13' # higher requires ruby 2.0
 gem 'protective'
 gem 'rails_autolink'
-gem 'config', '< 1.1' # higher requires ruby 2.0
 gem 'rails-i18n'
-gem 'net-ldap', '< 0.13' # higher requires ruby 2.0
+gem 'request_store'
 gem 'seed-fu'
-gem 'codez-validates_by_schema', require: 'validates_by_schema'
+gem 'validates_by_schema'
 gem 'validates_timeliness'
 
 # fixed version for indirect dependencies

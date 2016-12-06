@@ -13,10 +13,12 @@
 # Diplomarbeit 2149, Xavier Hayoz
 
 class Holiday < ActiveRecord::Base
+
   include ActionView::Helpers::NumberHelper
   include Comparable
 
-  after_save :refresh
+  after_save :clear_cache
+  after_destroy :clear_cache
 
   validates_by_schema
   validates :holiday_date,
@@ -41,10 +43,7 @@ class Holiday < ActiveRecord::Base
       if Holiday.weekend?(date) || Holiday.regular_holiday?(date)
         0
       else
-        @@irregular_holidays.each do |holiday|
-          return holiday.musthours_day if holiday.holiday_date == date
-        end
-        WorkingCondition.value_at(date, :must_hours_per_day)
+        cached[date] || WorkingCondition.value_at(date, :must_hours_per_day)
       end
     end
 
@@ -56,9 +55,7 @@ class Holiday < ActiveRecord::Base
     end
 
     def irregular_holiday?(date)
-      @@irregular_holidays.any? do |holiday|
-        holiday.holiday_date == date
-      end
+      cached.keys.include?(date)
     end
 
     # 0 is Sunday, 6 is Saturday
@@ -75,10 +72,9 @@ class Holiday < ActiveRecord::Base
 
     # returns all holidays for the given period which fall on a weekday
     def holidays(period)
-      holidays = @@irregular_holidays.select { |holiday| period.include?(holiday.holiday_date) }
-      irregulars = holidays.collect(&:holiday_date)
-      regulars = regular_holidays(period)
-      regulars.each do |holiday|
+      irregulars = cached.keys.select { |day| period.include?(day) }
+      holidays = irregulars.collect { |day| new(holiday_date: day, musthours_day: cached[day]) }
+      regular_holidays(period).each do |holiday|
         holidays.push holiday unless irregulars.include?(holiday.holiday_date)
       end
       holidays
@@ -98,15 +94,22 @@ class Holiday < ActiveRecord::Base
       holidays
     end
 
-    def refresh
-      @@irregular_holidays = Holiday.order('holiday_date')
-      @@irregular_holidays = @@irregular_holidays.select do |holiday|
-        !weekend?(holiday.holiday_date)
-      end
+    def cached
+      RequestStore.store[model_name.route_key] ||=
+          Rails.cache.fetch(model_name.route_key) do
+            Hash[Holiday.order('holiday_date').
+                reject { |h| weekend?(h.holiday_date) }.
+                collect { |h| [h.holiday_date, h.musthours_day] }]
+          end
+    end
+
+    def clear_cache
+      RequestStore.store[model_name.route_key] = nil
+      Rails.cache.clear(model_name.route_key)
+      true
     end
 
     private
-
 
     def workday_hours(period, must_hours_per_day)
       length = period.length
@@ -120,15 +123,14 @@ class Holiday < ActiveRecord::Base
       end
       hours
     end
+
   end
 
   public
 
-  def refresh
-    Holiday.refresh
+  def clear_cache
+    Holiday.clear_cache
   end
-
-  refresh
 
   def to_s
     holiday_date? ? "am #{I18n.l(holiday_date, format: :long)}" : ''

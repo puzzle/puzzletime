@@ -11,6 +11,7 @@
 
 
 class WorkingCondition < ActiveRecord::Base
+
   validates_by_schema
   validates :valid_from, uniqueness: true
   validates :must_hours_per_day,
@@ -24,12 +25,9 @@ class WorkingCondition < ActiveRecord::Base
   after_save :clear_cache
   after_destroy :clear_cache
 
-
   delegate :clear_cache, to: :class
 
-
   scope :list, -> { order('(CASE WHEN valid_from IS NULL THEN 0 ELSE 1 END) DESC, valid_from DESC') }
-
 
   class << self
     def todays_value(attr)
@@ -72,12 +70,15 @@ class WorkingCondition < ActiveRecord::Base
     end
 
     def cached
-      Rails.cache.fetch(model_name.route_key) do
-        order('(CASE WHEN valid_from IS NULL THEN 0 ELSE 1 END), valid_from').collect(&:attributes)
-      end
+      # double cache for best performance
+      RequestStore.store[model_name.route_key] ||=
+        Rails.cache.fetch(model_name.route_key) do
+          order('(CASE WHEN valid_from IS NULL THEN 0 ELSE 1 END), valid_from').collect(&:attributes)
+        end
     end
 
     def clear_cache
+      RequestStore.store[model_name.route_key] = nil
       Rails.cache.clear(model_name.route_key)
       @todays_values = {}
       true
