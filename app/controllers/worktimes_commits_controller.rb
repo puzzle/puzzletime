@@ -33,8 +33,10 @@ class WorktimesCommitsController < CrudController
     # Selecting a month in the future is fine, as an invalid selection
     # or even no selection ends up selecting the first (and most recent)
     # month.
-    @selected_month = entry.committed_worktimes_at + 1.month
-    @selected_month = @selected_month.end_of_month
+    if entry.committed_worktimes_at.present?
+      @selected_month = entry.committed_worktimes_at + 1.month
+      @selected_month = @selected_month.end_of_month
+    end
   end
 
   def set_commit_dates
