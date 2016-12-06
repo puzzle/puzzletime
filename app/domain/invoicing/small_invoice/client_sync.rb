@@ -71,18 +71,16 @@ module Invoicing
           # Conflicting datasets in ptime <=> smallinvoice. We need to update the invoicing_key
           # of the client in ptime and clear the invoicing_keys of the addresses and contacts,
           # otherwise sync will abort because of conflicts.
-          client.billing_addresses.update_all(invoicing_key: nil)
-          client.contacts.update_all(invoicing_key: nil)
-          client.update_column(:invoicing_key, key)
+          reset_invoicing_keys(key)
         end
         rate_limiter.run { api.edit(:client, key, data) }
       end
 
       def create_remote
-        # reset invalid invoice keys to not cause a small invoice error
-        client.invoicing_key = nil
-        client.billing_addresses.each { |a| a.invoicing_key = nil }
-        client.contacts.each { |c| c.invoicing_key = nil }
+        # Local clients may have an invoice key that does't exist in smallinvoice (e.g. when
+        # using a productive dump on ptime integration). So reset the invoicing keys before
+        # executing the add action to avoid 15016 "no rights / not found" errors.
+        reset_invoicing_keys
 
         key = rate_limiter.run { api.add(:client, data) }
         client.update_column(:invoicing_key, key)
@@ -96,9 +94,7 @@ module Invoicing
         rate_limiter.run { api.get(:client, key) }
       rescue Invoicing::Error => e
         if e.message == 'No Objects or too many found'
-          client.update_column(:invoicing_key, nil)
-          client.billing_addresses.update_all(invoicing_key: nil)
-          client.contacts.update_all(invoicing_key: nil)
+          reset_invoicing_keys
           nil
         else
           raise
@@ -122,6 +118,12 @@ module Invoicing
             item.update_column(:invoicing_key, remote_data['id'])
           end
         end
+      end
+
+      def reset_invoicing_keys(client_invoicing_key = nil)
+        client.update_column(:invoicing_key, client_invoicing_key)
+        client.billing_addresses.update_all(invoicing_key: nil)
+        client.contacts.update_all(invoicing_key: nil)
       end
 
       def key
