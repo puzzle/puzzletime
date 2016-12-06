@@ -9,7 +9,7 @@ module Plannings
       super(employee, period)
       @employments = employee.statistics.employments_during(period)
       @absences = employee.worktimes.joins(:absence).in_period(period).group(:work_date).sum(:hours)
-      @holidays = Holiday.holidays(period).group_by(&:holiday_date)
+      @holidays = fetch_holidays
     end
 
     def row_legend(_employee_id, work_item_id)
@@ -17,7 +17,9 @@ module Plannings
     end
 
     def week_total(date)
-      week_totals[date] + week_absences(date)
+      @week_percent ||= {}
+      @week_percent[date] ||=
+        week_totals[date] + week_absence_percent(date) + week_holiday_percent(date)
     end
 
     # date is always monday of the requested week
@@ -27,6 +29,7 @@ module Plannings
       if total.zero? && employed.zero?
         :fully_planned
       elsif total.zero?
+
         nil
       elsif (total - employed).abs < 1
         :fully_planned
@@ -40,8 +43,7 @@ module Plannings
     # date is always monday of the requested week
     def weekly_employment_percent(date)
       @weekly_employment_percent ||= {}
-      @weekly_employment_percent[date] ||=
-        compute_weekly_must_hours(date) / must_hours_per_week(date) * 100
+      @weekly_employment_percent[date] ||= compute_weekly_percent(date)
     end
 
     def overall_free_capacity
@@ -62,14 +64,24 @@ module Plannings
       [employee]
     end
 
-    def week_absences(date)
+    def week_absence_percent(date)
       absence_hours = 7.times.sum { |i| @absences[date + i].to_f }
-      absence_hours * 100 / must_hours_per_week(date)
+      absence_hours / (must_hours_per_day(date) * 5) * 100
     end
 
-    def must_hours_per_week(date)
-      # we ignore must hour changes during a single week
-      must_hours_per_day(date) * 5
+    def week_holiday_percent(date)
+      must_hours = must_hours_per_day(date)
+      @employments.each_with_index do |e, i|
+        percent = percent_for_employment(date, e, i) do |d|
+          if @holidays[d]
+            (must_hours - @holidays[d].to_f) / must_hours
+          else
+            0
+          end
+        end
+        return percent if percent
+      end
+      0
     end
 
     def must_hours_per_day(date)
@@ -77,55 +89,48 @@ module Plannings
       @must_hours_per_day[date] ||= WorkingCondition.value_at(date, :must_hours_per_day)
     end
 
-    def compute_weekly_must_hours(date)
+    def compute_weekly_percent(date)
       @employments.each_with_index do |e, i|
-        hours = must_hours_for_employment(date, e, i)
-        return hours if hours
+        percent = percent_for_employment(date, e, i)
+        return percent if percent
       end
       0
     end
 
-    def must_hours_for_employment(date, employment, i)
+    def percent_for_employment(date, employment, i, &block)
       period = employment.period
       if period.include?(date) && period.include?(date + 4)
         # employment covers entire week
-        must_hours_for_single_employment(employment, date)
+        employment_percent_during(employment, date, date + 4, &block)
       elsif period.include?(date)
         # employment changes in the middle of the week
         # we assume max one employment change per week
-        must_hours_for_multiple_employments(employment, date, i)
+        percent_for_multiple_employments(employment, date, i, &block)
       elsif period.start_date > date && period.include?(date + 4)
         # first employment starts in the middle of the week
-        must_hours_for_beginning_employment(employment, date)
+        employment_percent_during(employment, employment.start_date, date + 4, &block)
       end
     end
 
-    def must_hours_for_single_employment(employment, date)
-      employment_must_hours_during(employment, date, date + 4)
-    end
-
-    def must_hours_for_multiple_employments(employment, date, i)
-      hours = employment_must_hours_during(employment, date, employment.period.end_date)
+    def percent_for_multiple_employments(employment, date, i, &block)
+      percent = employment_percent_during(employment, date, employment.period.end_date, &block)
       next_employment = @employments[i + 1]
       if next_employment && next_employment.start_date <= date + 4
-        hours += employment_must_hours_during(next_employment, next_employment.start_date, date + 4)
+        percent += employment_percent_during(next_employment, next_employment.start_date, date + 4, &block)
       end
-      hours
+      percent
     end
 
-    def must_hours_for_beginning_employment(employment, date)
-      employment_must_hours_during(employment, employment.start_date, date + 4)
-    end
-
-    def employment_must_hours_during(employment, from, to)
-      must_hours = must_hours_per_day(from)
+    def employment_percent_during(employment, from, to)
       (from..to).sum do |date|
-        daily_must_hours(date, must_hours) * employment.percent / 100.0
+        employment.percent * (block_given? ? yield(date) : 1) / 5.0
       end
     end
 
-    def daily_must_hours(date, must_hours)
-      @holidays[date].try(:first).try(:musthours_day) || must_hours
+    def fetch_holidays
+      Holiday.holidays(period).each_with_object({}) do |h, hash|
+        hash[h.holiday_date] = h.musthours_day
+      end
     end
 
   end

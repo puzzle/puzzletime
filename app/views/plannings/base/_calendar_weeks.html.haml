@@ -1,18 +1,8 @@
-:ruby
-  months = []
-  @period.step(7) { |date| months << date }
-  months = months
-           .uniq(&:at_beginning_of_month)
-           .map do |month|
-             Period.new(month, [@period.end_date, month.at_end_of_month].min)
-           end
-- months.each do |month|
+- months_from_monday.each do |month|
   .planning-calendar-month
     .title
       %span.month= format_month(month.start_date)
       %small.year= format_year(month.start_date)
     .planning-calendar-month-weeks
       - month.step(7) do |date|
-        .planning-calendar-week{ class: @board.week_totals_state(date) }
-          .kw KW #{date.cweek}
-          .planned #{@board.week_total(date).round}%
+        = render 'week_header', date: date

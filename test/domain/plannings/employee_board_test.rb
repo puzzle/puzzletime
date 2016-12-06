@@ -77,56 +77,56 @@ module Plannings
       assert_equal 90, board.week_total(date)
     end
 
+    test '#week_total includes regular holidays' do
+      @date = Date.new(2014, 12, 22)
+      employee.employments.create!(start_date: date - 1.year, percent: 80)
+      board = Plannings::EmployeeBoard.new(employee, period)
+      assert_equal 32, board.week_total(date)
+    end
+
+    test '#week_total includes irregular holidays' do
+      employee.employments.create!(start_date: date - 1.year, percent: 100)
+      Holiday.create!(holiday_date: date + 1.day, musthours_day: 6)
+      Holiday.create!(holiday_date: date + 2.days, musthours_day: 0)
+      board = Plannings::EmployeeBoard.new(employee, period)
+      assert_equal 25, board.week_total(date)
+    end
+
+    test '#week_total includes holidays on employment changes' do
+      employee.employments.create!(start_date: date - 1.year, percent: 100)
+      employee.employments.create!(start_date: date + 3.days, percent: 60)
+      Holiday.create!(holiday_date: date + 2.days, musthours_day: 0)
+      board = Plannings::EmployeeBoard.new(employee, period)
+      assert_equal 20, board.week_total(date)
+    end
+
+    test '#week_total excludes holidays before first employment' do
+      employee.employments.create!(start_date: date + 2.days, percent: 80)
+      Holiday.create!(holiday_date: date, musthours_day: 0)
+      board = Plannings::EmployeeBoard.new(employee, period)
+      assert_equal 0, board.week_total(date)
+    end
+
+    test '#week_total includes holidays after first employment' do
+      employee.employments.create!(start_date: date + 2.days, percent: 80)
+      Holiday.create!(holiday_date: date + 4.days, musthours_day: 0)
+      board = Plannings::EmployeeBoard.new(employee, period)
+      assert_equal 16, board.week_total(date)
+    end
+
+    test '#week_total excludes holidays after final employment' do
+      employee.employments.create!(start_date: date - 1.year, end_date: date + 1.day, percent: 80)
+      employee.employments.create!(start_date: date + 1.year, percent: 80)
+      Holiday.create!(holiday_date: date + 4.days, musthours_day: 0)
+      board = Plannings::EmployeeBoard.new(employee, period)
+      assert_equal 0, board.week_total(date)
+    end
+
     test '#weekly_employment_percent respects unpaid holidays' do
       employee.employments.create!(start_date: date - 1.year, percent: 100)
       employee.employments.create!(start_date: date + 2.days, percent: 0)
       board = Plannings::EmployeeBoard.new(employee, period)
       assert_equal 40, board.weekly_employment_percent(date)
-    end
-
-    test '#weekly_employment_percent respects regular holidays' do
-      @date = Date.new(2014, 12, 22)
-      employee.employments.create!(start_date: date - 1.year, percent: 80)
-      board = Plannings::EmployeeBoard.new(employee, period)
-      assert_equal 48, board.weekly_employment_percent(date)
-    end
-
-    test '#weekly_employment_percent respects irregular holidays' do
-      employee.employments.create!(start_date: date - 1.year, percent: 100)
-      Holiday.create!(holiday_date: date + 1.day, musthours_day: 6)
-      Holiday.create!(holiday_date: date + 2.days, musthours_day: 0)
-      board = Plannings::EmployeeBoard.new(employee, period)
-      assert_equal 75, board.weekly_employment_percent(date)
-    end
-
-    test '#weekly_employment_percent respects holidays on employment changes' do
-      employee.employments.create!(start_date: date - 1.year, percent: 100)
-      employee.employments.create!(start_date: date + 3.days, percent: 60)
-      Holiday.create!(holiday_date: date + 2.days, musthours_day: 0)
-      board = Plannings::EmployeeBoard.new(employee, period)
-      assert_equal 64, board.weekly_employment_percent(date)
-    end
-
-    test '#weekly_employment_percent respects holidays before first employment' do
-      employee.employments.create!(start_date: date + 2.days, percent: 80)
-      Holiday.create!(holiday_date: date, musthours_day: 0)
-      board = Plannings::EmployeeBoard.new(employee, period)
-      assert_equal 48, board.weekly_employment_percent(date)
-    end
-
-    test '#weekly_employment_percent respects holidays after first employment' do
-      employee.employments.create!(start_date: date + 2.days, percent: 80)
-      Holiday.create!(holiday_date: date + 4.days, musthours_day: 0)
-      board = Plannings::EmployeeBoard.new(employee, period)
-      assert_equal 32, board.weekly_employment_percent(date)
-    end
-
-    test '#weekly_employment_percent respects holidays after final employment' do
-      employee.employments.create!(start_date: date - 1.year, end_date: date + 1.day, percent: 80)
-      employee.employments.create!(start_date: date + 1.year, percent: 80)
-      Holiday.create!(holiday_date: date + 4.days, musthours_day: 0)
-      board = Plannings::EmployeeBoard.new(employee, period)
-      assert_equal 32, board.weekly_employment_percent(date)
     end
 
     private
