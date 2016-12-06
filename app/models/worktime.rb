@@ -40,6 +40,7 @@ class Worktime < ActiveRecord::Base
   validates :work_date, timeliness: { date: true }
   validate :validate_by_report_type
 
+  before_validation :guess_report_type
   before_validation :store_hours
 
   scope :in_period, (lambda do |period|
@@ -158,6 +159,17 @@ class Worktime < ActiveRecord::Base
   # Validate callback before saving
   def validate_by_report_type
     report_type.validate_worktime(self) if report_type
+  end
+
+  def guess_report_type
+    if from_start_time || to_end_time
+      self.hours = nil
+      self.report_type = StartStopType::INSTANCE
+    else
+      self.from_start_time = nil
+      self.to_end_time = nil
+      self.report_type = HoursDayType::INSTANCE
+    end
   end
 
   # Store hour information from start/stop times.

@@ -186,14 +186,6 @@ class WorktimesController < CrudController
       params[:other] = '1' if model_params[:employee_id] && @user.management
       super
       entry.employee = @user unless record_other?
-      if model_params[:from_start_time].present? || model_params[:to_end_time].present?
-        entry.hours = nil
-        entry.report_type = StartStopType::INSTANCE
-      else
-        entry.from_start_time = nil
-        entry.to_end_time = nil
-        entry.report_type = HoursDayType::INSTANCE
-      end
     end
   end
 
