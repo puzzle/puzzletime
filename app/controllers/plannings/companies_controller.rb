@@ -7,7 +7,7 @@ module Plannings
     before_action :set_period
 
     def show
-      @boards = sort_boards_by_workload(create_boards)
+      @boards = create_boards.sort_by { |b| -b.overall_free_capacity }
     end
 
     private
@@ -15,18 +15,6 @@ module Plannings
     def create_boards
       employees = Employee.employed_ones(@period).list
       employees.map { |e| Plannings::EmployeeBoard.new(e, @period) }
-    end
-
-    def sort_boards_by_workload(boards)
-      monthly_employment_percent = {}
-      boards.each do |board|
-        monthly_employment_percent[board] = board.week_totals
-                                                 .values
-                                                 .inject(0, :+)
-      end
-      boards.sort do |a, b|
-        monthly_employment_percent[a] <=> monthly_employment_percent[b]
-      end
     end
 
     def set_period

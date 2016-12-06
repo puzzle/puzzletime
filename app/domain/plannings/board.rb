@@ -31,12 +31,8 @@ module Plannings
       @rows ||= build_rows
     end
 
-    def week_totals
-      @week_totals ||= Hash.new(0.0).tap do |totals|
-        load_plannings.group(:date).sum(:percent).each do |date, percent|
-          totals[date.at_beginning_of_week.to_date] += percent / 5.0
-        end
-      end
+    def week_total(date)
+      week_totals[date]
     end
 
     def week_totals_state(_date)
@@ -49,6 +45,14 @@ module Plannings
     end
 
     private
+
+    def week_totals
+      @week_totals ||= Hash.new(0.0).tap do |totals|
+        load_plannings.group(:date).sum(:percent).each do |date, percent|
+          totals[date.at_beginning_of_week.to_date] += percent / 5.0
+        end
+      end
+    end
 
     def build_rows
       load_data

@@ -47,7 +47,6 @@ module Plannings
     end
 
     test 'absencetimes show with default rows when no plannings are given' do
-      date = Date.today.at_beginning_of_week + 1.week
       a1 = Absencetime.create!(absence_id: absences(:vacation).id,
                                employee_id: employees(:lucien).id,
                                work_date: date,
@@ -85,14 +84,13 @@ module Plannings
       board = Plannings::OrderBoard.new(order, period)
       board.for_rows([[employees(:lucien).id, work_items(:hitobito_demo_app).id]])
 
-      assert_equal 40.0, board.week_totals[date]
+      assert_equal 40.0, board.week_total(date)
     end
 
     private
 
     def period
-      start = Time.zone.now.at_beginning_of_week
-      @period ||= Period.new(start, start + 4.weeks - 1.day)
+      @period ||= Period.new(date - 1.week, date + 3.weeks - 1.day)
     end
 
     def order
@@ -100,7 +98,7 @@ module Plannings
     end
 
     def date
-      @date ||= Date.today.at_beginning_of_week + 1.week
+      @date ||= Date.new(2016, 10, 10)
     end
 
     def create_plannings

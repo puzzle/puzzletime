@@ -15,4 +15,4 @@
       - month.step(7) do |date|
         .planning-calendar-week{ class: @board.week_totals_state(date) }
           .kw KW #{date.cweek}
-          .planned #{@board.week_totals[date].round}%
+          .planned #{@board.week_total(date).round}%

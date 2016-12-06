@@ -12,8 +12,8 @@
         - @period.step(7) do |date|
           %td{ class: board.week_totals_state(date) }
             = link_to '#', class: 'has-tooltip' do
-              = board.week_totals[date].to_f.round
-              %span #{board.week_totals[date].round}% / #{board.weekly_employment_percent(date).round}%
+              = board.week_total(date).to_f.round
+              %span #{board.week_total(date).round}% / #{board.weekly_employment_percent(date).round}%
 
   %tfoot
     = render 'header'
