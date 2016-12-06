@@ -15,6 +15,7 @@ class WorktimesCommitsControllerTest < ActionController::TestCase
     selection = assigns(:commit_dates)
     assert_equal selection.size, 13
     assert_equal selection.first.first, Time.zone.today.end_of_month
+    assert_equal assigns(:selected_month), Date.new(2015, 9, 30)
   end
 
   def test_edit_as_regular_user
@@ -27,6 +28,20 @@ class WorktimesCommitsControllerTest < ActionController::TestCase
     selection = assigns(:commit_dates)
     assert_equal selection.size, 2
     assert_equal selection.first.first, (Time.zone.today.end_of_month - 1.month).end_of_month
+    assert_equal assigns(:selected_month), Date.new(2015, 9, 30)
+  end
+
+  def test_edit_as_new_regular_user
+    login_as(:various_pedro)
+    employee = employees(:various_pedro)
+    employee.update!(committed_worktimes_at: nil)
+    get :edit, employee_id: employee.id
+    assert_template '_form'
+
+    selection = assigns(:commit_dates)
+    assert_equal selection.size, 2
+    assert_equal selection.first.first, (Time.zone.today.end_of_month - 1.month).end_of_month
+    assert_equal assigns(:selected_month), nil
   end
 
   def test_edit_as_regular_user_is_not_allowed_for_somebody_else

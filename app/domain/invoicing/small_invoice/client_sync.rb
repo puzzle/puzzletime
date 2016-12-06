@@ -26,6 +26,8 @@ module Invoicing
 
         def notify_sync_error(error, client)
           parameters = record_to_params(client)
+          parameters[:code] = error.code if error.respond_to?(:code)
+          parameters[:data] = error.data if error.respond_to?(:data)
           Airbrake.notify(error, cgi_data: ENV.to_hash, parameters: parameters)
         end
 
@@ -33,6 +35,7 @@ module Invoicing
           {
             "#{prefix}_id"            => record.id,
             "#{prefix}_invoicing_key" => record.invoicing_key,
+            "#{prefix}_shortname"     => record.try(:shortname),
             "#{prefix}_label"         => record.try(:label) || record.to_s,
             "#{prefix}_errors"        => record.errors.messages,
             "#{prefix}_changes"       => record.changes
@@ -68,14 +71,17 @@ module Invoicing
           # Conflicting datasets in ptime <=> smallinvoice. We need to update the invoicing_key
           # of the client in ptime and clear the invoicing_keys of the addresses and contacts,
           # otherwise sync will abort because of conflicts.
-          client.billing_addresses.update_all(invoicing_key: nil)
-          client.contacts.update_all(invoicing_key: nil)
-          client.update_column(:invoicing_key, key)
+          reset_invoicing_keys(key)
         end
         rate_limiter.run { api.edit(:client, key, data) }
       end
 
       def create_remote
+        # Local clients may have an invoice key that does't exist in smallinvoice (e.g. when
+        # using a productive dump on ptime integration). So reset the invoicing keys before
+        # executing the add action to avoid 15016 "no rights / not found" errors.
+        reset_invoicing_keys
+
         key = rate_limiter.run { api.add(:client, data) }
         client.update_column(:invoicing_key, key)
       end
@@ -88,9 +94,7 @@ module Invoicing
         rate_limiter.run { api.get(:client, key) }
       rescue Invoicing::Error => e
         if e.message == 'No Objects or too many found'
-          client.update_column(:invoicing_key, nil)
-          client.billing_addresses.update_all(invoicing_key: nil)
-          client.contacts.update_all(invoicing_key: nil)
+          reset_invoicing_keys
           nil
         else
           raise
@@ -114,6 +118,12 @@ module Invoicing
             item.update_column(:invoicing_key, remote_data['id'])
           end
         end
+      end
+
+      def reset_invoicing_keys(client_invoicing_key = nil)
+        client.update_column(:invoicing_key, client_invoicing_key)
+        client.billing_addresses.update_all(invoicing_key: nil)
+        client.contacts.update_all(invoicing_key: nil)
       end
 
       def key

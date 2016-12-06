@@ -17,23 +17,31 @@ app.plannings.service = new class
     $.ajax({
       type: 'PATCH',
       url: url,
-      data: Object.assign(utf8: '✓', data)
+      data: @_buildParams(data)
     })
 
   delete: (url, ids) ->
     $.ajax(
       type: 'DELETE'
       url: url
-      data:
-        utf8: '✓'
-        planning_ids: ids
+      data: @_buildParams(planning_ids: ids)
     )
 
   addPlanningRow: (employee_id, work_item_id) ->
-    return $.ajax(
+    $.ajax(
       url: "#{window.location.origin}#{window.location.pathname}/new"
-      data:
-        utf8: '✓'
+      data: @_buildParams(
         employee_id: employee_id
         work_item_id: work_item_id
+      )
     )
+
+  _buildParams: (params) ->
+    $.extend(utf8: '✓', params, @_getFilterParams())
+
+  _getFilterParams: () ->
+    form = $('#planning_filter_form')
+    form.serializeArray().reduce(((data, field) ->
+      data[field.name] = field.value
+      data
+    ), {})

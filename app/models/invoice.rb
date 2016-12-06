@@ -226,9 +226,12 @@ class Invoice < ActiveRecord::Base
   def delete_remote_invoice
     Invoicing.instance.delete_invoice(self)
   rescue Invoicing::Error => e
-    errors.add(:base, "Fehler im Invoicing Service: #{e.message}")
-    Rails.logger.error(e.class.name + ': ' + e.message + "\n" + e.backtrace.join("\n"))
-    raise ActiveRecord::Rollback
+    # Ignore "no rights / not found" errors, the invoice does not exist remotly in this case.
+    unless e.code == 15_016
+      errors.add(:base, "Fehler im Invoicing Service: #{e.message}")
+      Rails.logger.error(e.class.name + ': ' + e.message + "\n" + e.backtrace.join("\n"))
+      raise ActiveRecord::Rollback
+    end
   end
 
   def assign_worktimes
