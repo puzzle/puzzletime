@@ -314,8 +314,10 @@ class CreatorTest < ActiveSupport::TestCase
     assert_equal 2, c.plannings.length
     assert_empty c.errors
 
-    p1 = c.plannings.first
-    p2 = c.plannings.second
+    plannings = c.plannings.sort_by(&:date)
+
+    p1 = plannings.first
+    p2 = plannings.second
 
     assert_equal Date.new(2000, 1, 11), p1.date
     assert_equal Date.new(2000, 1, 12), p2.date
