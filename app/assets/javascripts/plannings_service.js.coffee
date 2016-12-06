@@ -28,7 +28,7 @@ app.plannings.service = new class
     )
 
   addPlanningRow: (employee_id, work_item_id) ->
-    return $.ajax(
+    $.ajax(
       url: "#{window.location.origin}#{window.location.pathname}/new"
       data: @_buildParams(
         employee_id: employee_id
