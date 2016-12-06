@@ -132,7 +132,7 @@ class EmployeeStatistics
   def employment_period_to(date)
     first_employment = @employee.employments.reorder('start_date ASC').first
     return nil if first_employment.nil? || first_employment.start_date > date
-    Period.retrieve(first_employment.start_date, date)
+    Period.new(first_employment.start_date, date)
   end
 
   def normalize_employments_boundaries(employments, period)

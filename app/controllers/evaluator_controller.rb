@@ -97,7 +97,7 @@ class EvaluatorController < ApplicationController
     if params[:shortcut]
       @period = Period.parse(params[:shortcut])
     else
-      @period = Period.retrieve(params[:period][:start_date],
+      @period = Period.new(params[:period][:start_date],
                                 params[:period][:end_date],
                                 params[:period][:label])
     end
@@ -170,7 +170,7 @@ class EvaluatorController < ApplicationController
   def set_evaluation_details
     evaluation.set_division_id(params[:division_id])
     if params[:start_date].present? && params[:start_date] != '0'
-      @period = Period.retrieve(params[:start_date], params[:end_date])
+      @period = Period.new(params[:start_date], params[:end_date])
     end
   end
 

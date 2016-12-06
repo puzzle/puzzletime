@@ -149,14 +149,14 @@ class OrderServicesControllerTest < ActionController::TestCase
       get action, order_id: order.id, start_date: 'abc'
       assert_equal worktimes(:wt_pz_puzzletime, :wt_mw_puzzletime, :wt_lw_puzzletime), assigns(:worktimes)
       assert_match /ungültig/i, flash[:alert]
-      assert_equal Period.retrieve(nil, nil), assigns(:period)
+      assert_equal Period.new(nil, nil), assigns(:period)
     end
 
     test "GET #{action} filtered by start date after end date" do
       get action, order_id: order.id, start_date: '1.12.2006', end_date: '1.1.2006'
       assert_equal worktimes(:wt_pz_puzzletime, :wt_mw_puzzletime, :wt_lw_puzzletime), assigns(:worktimes)
       assert_match /ungültig/i, flash[:alert]
-      assert_equal Period.retrieve(nil, nil), assigns(:period)
+      assert_equal Period.new(nil, nil), assigns(:period)
     end
   end
 

@@ -58,7 +58,7 @@ class ApplicationController < ActionController::Base
     @period = nil
     p = session[:period]
     if p.is_a? Array
-      @period = Period.retrieve(*p)
+      @period = Period.new(*p)
     end
   end
 

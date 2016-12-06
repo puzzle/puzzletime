@@ -3,9 +3,6 @@
 class Period
   attr_reader :start_date, :end_date
 
-  # Caches the most used periods
-  @@cache = Cache.new
-
   ####### constructors ########
 
   class << self
@@ -28,49 +25,49 @@ class Period
 
     def day_for(date, label = nil)
       label ||= day_label(date)
-      retrieve(date, date, label)
+      new(date, date, label)
     end
 
     def week_for(date, label = nil)
       date = date.to_date if date.is_a? Time
       label ||= week_label(date)
       date -= (date.wday - 1) % 7
-      retrieve(date, date + 6, label)
+      new(date, date + 6, label)
     end
 
     def month_for(date, label = nil)
       date = date.to_date if date.is_a? Time
       label ||= month_label(date)
       date -= date.day - 1
-      retrieve(date, date + Time.days_in_month(date.month, date.year) - 1, label)
+      new(date, date + Time.days_in_month(date.month, date.year) - 1, label)
     end
 
     def quarter_for(date, label = nil)
       label ||= quarter_label(date)
-      retrieve(Date.civil(date.year, date.month - 2, 1), date + Time.days_in_month(date.month, date.year) - 1, label)
+      new(Date.civil(date.year, date.month - 2, 1), date + Time.days_in_month(date.month, date.year) - 1, label)
     end
 
     def year_for(date, label = nil)
       label ||= year_label(date)
-      retrieve(Date.civil(date.year, 1, 1), Date.civil(date.year, 12, 31), label)
+      new(Date.civil(date.year, 1, 1), Date.civil(date.year, 12, 31), label)
     end
 
     def past_month(date = Time.zone.today, label = nil)
       date = date.to_date if date.is_a?(Time)
-      retrieve(date - 28, date + 7, label)
+      new(date - 28, date + 7, label)
     end
 
     def coming_month(date = Time.zone.today, label = nil)
       date = date.to_date if date.is_a?(Time)
       date -= (date.wday - 1) % 7
-      retrieve(date, date + 28, label)
+      new(date, date + 28, label)
     end
 
     def next_n_months(n, date = Time.zone.today, label = nil)
       date = date.to_date if date.is_a?(Time)
       date -= (date.wday - 1) % 7
       label ||= next_n_months_label(n)
-      retrieve(date, date + n.months, label)
+      new(date, date + n.months, label)
     end
 
     def parse(shortcut)
@@ -84,13 +81,6 @@ class Period
       when 'q' then quarter_for(Date.civil(now.year, shift * 3, 1))
       when 'y' then year_for(now.advance(years: shift).to_date)
       end
-    end
-
-    def retrieve(start_date = Time.zone.today, end_date = Time.zone.today, label = nil)
-      start_date = parse_date(start_date)
-      end_date = parse_date(end_date)
-      key = [start_date, end_date, label]
-      @@cache.get(key) { Period.new(start_date, end_date, label) }
     end
 
     # Build a period, even with illegal arguments
@@ -170,7 +160,7 @@ class Period
     return self if self == other
     new_start_date = [start_date, other.start_date].compact.max
     new_end_date = [end_date, other.end_date].compact.min
-    Period.retrieve(new_start_date, new_end_date)
+    Period.new(new_start_date, new_end_date)
   end
 
   def step(size = 1)

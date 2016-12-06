@@ -48,7 +48,7 @@ class Employment < ActiveRecord::Base
   end
 
   def period
-    Period.retrieve(start_date, end_date ? end_date : Time.zone.today) if start_date
+    Period.new(start_date, end_date ? end_date : Time.zone.today) if start_date
   end
 
   def percent_factor

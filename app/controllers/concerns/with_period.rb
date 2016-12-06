@@ -9,11 +9,11 @@ module WithPeriod
   def build_period
     return nil if params[:start_date].blank? && params[:end_date].blank?
 
-    Period.retrieve(params[:start_date].presence, params[:end_date].presence).tap do |period|
+    Period.new(params[:start_date].presence, params[:end_date].presence).tap do |period|
       fail ArgumentError, 'Start Datum nach End Datum' if period.negative?
     end
   rescue ArgumentError => ex
-    # from Period.retrieve or if period.negative?
+    # from Period.new or if period.negative?
     flash.now[:alert] = "Ungültige Zeitspanne: #{ex}"
     params.delete(:start_date)
     params.delete(:end_date)

@@ -34,7 +34,7 @@ class WorkloadReportController < ApplicationController
 
   def default_period
     month = Time.zone.today.last_month
-    Period.retrieve(month.beginning_of_month, month.end_of_month)
+    Period.new(month.beginning_of_month, month.end_of_month)
   end
 
   def authorize_class
