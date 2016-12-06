@@ -2,6 +2,11 @@ namespace :db do
   namespace :dump do
     desc 'Load a db dump from the given FILE'
     task load: ['db:drop', 'db:create'] do
+      if ENV['FILE'].blank?
+        STDERR.puts 'Usage: FILE=/path/to/dump.sql rake db:dump:load'
+        exit 1
+      end
+
       c = ActiveRecord::Base.connection_config
       sh({ 'PGPASSWORD' => c[:password] },
          %W(psql
