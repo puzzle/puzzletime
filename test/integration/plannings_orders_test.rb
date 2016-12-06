@@ -31,7 +31,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
   end
 
   test 'form values' do
-    date = Date.today.beginning_of_week
+    date = Time.zone.today.beginning_of_week
     Planning.create!({ employee_id: employees(:pascal).id,
                        work_item_id: work_item_id,
                        date: (date + 1.days).strftime('%Y-%m-%d'),
@@ -161,7 +161,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
       check 'repetition'
       page.assert_selector('#repeat_until', visible: true)
 
-      fill_in 'repeat_until', with: (Date.today + 2.weeks).strftime('%Y %U')
+      fill_in 'repeat_until', with: (Time.zone.today + 2.weeks).strftime('%Y %U')
       click_button 'OK'
     end
 
@@ -185,7 +185,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
       check 'repetition'
       page.assert_selector('#repeat_until', visible: true)
 
-      fill_in 'repeat_until', with: (Date.today + 1.weeks).strftime('%Y %U')
+      fill_in 'repeat_until', with: (Time.zone.today + 1.weeks).strftime('%Y %U')
       click_button 'OK'
     end
 
@@ -206,7 +206,9 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
     selectize('add_employee_select_id', 'Dolores Pedro')
     page.assert_selector('#planning_row_employee_2_work_item_4', text: 'Dolores Pedro')
-    page.assert_selector('#planning_row_employee_2_work_item_4 .day', count: 70)
+    page.assert_selector('#planning_row_employee_2_work_item_4 .day',
+                         count: workdays_next_n_months(3)
+                        )
     page.assert_no_selector('#add_employee_id')
   end
 
@@ -332,7 +334,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     select 'Nächste 6 Monate', from: 'period'
     find('.navbar-brand').click # blur select
     page.assert_selector('.planning-calendar-weeks',
-                         text: "KW #{(Date.today + 6.months - 1.weeks).cweek}")
+                         text: "KW #{(Time.zone.today + 6.months - 1.weeks).cweek}")
     page.assert_selector('#start_date', visible: false)
     page.assert_selector('#end_date', visible: false)
 
@@ -355,7 +357,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     select 'Nächste 6 Monate', from: 'period'
     find('.navbar-brand').click # blur select
     page.assert_selector('.planning-calendar-weeks',
-                         text: "KW #{(Date.today + 6.months - 1.weeks).cweek}")
+                         text: "KW #{(Time.zone.today + 6.months - 1.weeks).cweek}")
     page.assert_selector('#start_date,#end_date', visible: false)
 
     page.assert_no_selector('#add_employee_id')
@@ -365,11 +367,20 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
     selectize('add_employee_select_id', 'Dolores Pedro')
     page.assert_selector('#planning_row_employee_2_work_item_4', text: 'Dolores Pedro')
-    page.assert_selector('#planning_row_employee_2_work_item_4 .day', count: 70)
+    page.assert_selector('#planning_row_employee_2_work_item_4 .day',
+                         count: workdays_next_n_months(6)
+                        )
     page.assert_no_selector('#add_employee_id')
   end
 
   private
+
+  def workdays_next_n_months(n, date = Time.zone.today)
+    date = date.to_date if date.is_a?(Time)
+    date -= (date.wday - 1) % 7
+    diff = (date + n.months).end_of_week + 1.week - date.beginning_of_week
+    diff.to_i / 7 * 5
+  end
 
   def assert_percents(percents, row)
     assert_equal percents, row.all('.day')[0..(percents.length - 1)].map(&:text)
@@ -388,7 +399,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
   end
 
   def create_plannings
-    date = Date.today.beginning_of_week.strftime('%Y-%m-%d')
+    date = Time.zone.today.beginning_of_week.strftime('%Y-%m-%d')
     Planning.create!({ employee_id: employees(:pascal).id,
                        work_item_id: work_item_id,
                        date: date,
