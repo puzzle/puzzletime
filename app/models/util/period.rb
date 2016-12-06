@@ -4,8 +4,6 @@ class Period
   attr_reader :start_date, :end_date
 
   # Caches the most used periods
-  # Not sure yet if this really works in a stateless fcgi environment
-  # At least for single requests...
   @@cache = Cache.new
 
   ####### constructors ########
