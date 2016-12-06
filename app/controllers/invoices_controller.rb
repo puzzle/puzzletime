@@ -7,6 +7,8 @@ class InvoicesController < CrudController
   self.permitted_attrs = [:billing_date, :due_date, :period_from, :period_to, :add_vat,
                           :billing_address_id, :grouping, employee_ids: [], work_item_ids: []]
 
+  self.sort_mappings = { period: :period_from, manual?: :grouping }
+
   helper_method :checked_work_item_ids, :checked_employee_ids, :order
 
   prepend_before_action :entry, only: [:show, :new, :create, :edit, :update, :destroy, :sync]

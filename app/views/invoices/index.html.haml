@@ -2,10 +2,15 @@
 
 = render 'orders/header'
 
+- if @order.status.closed
+  .alert.alert-warning
+    Dieser Auftrag ist geschlossen. Die Rechnungen können nicht mehr bearbeitet werden.
+
 = render 'list'
 
 %p= paginate entries
 
 %br/
 
-%p= render 'actions_index'
+- unless @order.status.closed?
+  %p= render 'actions_index'

@@ -65,4 +65,5 @@ module WorktimeHelper
       @worktimes.map(&:hours).sum
     end
   end
+
 end

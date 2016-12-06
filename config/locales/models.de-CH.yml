@@ -183,6 +183,7 @@ de-CH:
         grouping: Gruppierung
         invoice_posts: Rechnungspositionen
         manual_invoice: Manuelle Rechnung
+        manual?: Manuell
         order: Auftrag
         order_id: Auftrag
         period: Leistungsperiode

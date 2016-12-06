@@ -1,9 +1,17 @@
 = list_table do |t|
-  - t.attr_with_show_link(:reference)
+  - if @order.status.closed?
+    - t.sortable_attr(:reference)
+  - else
+    - t.attr_with_show_link(:reference)
 
-  - t.sortable_attrs :total_amount, :total_hours, :period, :billing_date, :due_date, :status
+  - t.sortable_attrs :total_amount, :total_hours
 
-  - standard_table_actions(t)
+  - t.sortable_attr(:manual?, nil, class: 'center')
+
+  - t.sortable_attrs :period, :billing_date, :due_date, :status
+
+  - unless @order.status.closed?
+    - standard_table_actions(t)
 
   - t.action_col do |e|
     - t.table_action_link('time',

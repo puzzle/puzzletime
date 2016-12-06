@@ -71,6 +71,16 @@ class InvoiceTest < ActiveSupport::TestCase
     assert invoice.valid?
   end
 
+  test 'validates order ist not closed' do
+    orders(:webauftritt).update!(status: order_statuses(:abgeschlossen))
+    refute invoice.valid?
+  end
+
+  test 'invoices with closed order cannot be destroyed' do
+    orders(:webauftritt).update!(status: order_statuses(:abgeschlossen))
+    refute invoice.destroy
+  end
+
   test 'generates invoice number' do
     second_invoice = invoice.dup.tap { |i| i.reference = nil; i.save! }
     assert_equal %w(STOP WEB D1 0002).join, second_invoice.reference

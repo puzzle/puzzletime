@@ -163,7 +163,8 @@ class Worktime < ActiveRecord::Base
   # Store hour information from start/stop times.
   def store_hours
     if start_stop? && from_start_time && to_end_time
-      self.hours = (to_end_time.seconds_since_midnight - from_start_time.seconds_since_midnight) / 3600.0
+      value = (to_end_time.seconds_since_midnight - from_start_time.seconds_since_midnight) / 3600.0
+      self.hours = value if (hours.to_f - value).abs > 0.0001 # don't cause a change for every minor diff
     end
     self.work_date = Time.zone.today if report_type.is_a? AutoStartType
   end

@@ -41,6 +41,7 @@ class Invoice < ActiveRecord::Base
   validates :status, inclusion: STATUSES
   validate :assert_positive_period
   validate :assert_order_has_contract
+  validate :assert_order_not_closed
 
   before_validation :set_default_status
   before_validation :generate_reference, on: :create
@@ -54,6 +55,7 @@ class Invoice < ActiveRecord::Base
   after_destroy :delete_remote_invoice, if: -> { Invoicing.instance.present? }
 
   protect_if :paid?, 'Bezahlte Rechnungen können nicht gelöscht werden.'
+  protect_if :order_closed?, 'Rechnungen von geschlossenen Aufträgen können nicht gelöscht werden.'
 
   scope :list, -> { order(billing_date: :desc) }
 
@@ -97,6 +99,10 @@ class Invoice < ActiveRecord::Base
 
   def billing_client_id
     billing_client.try(:id)
+  end
+
+  def order_closed?
+    order.status.closed?
   end
 
   STATUSES.each do |status|
@@ -199,6 +205,12 @@ class Invoice < ActiveRecord::Base
   def assert_order_has_contract
     unless order.contract
       errors.add(:order_id, 'muss einen definierten Vertrag haben.')
+    end
+  end
+
+  def assert_order_not_closed
+    if order_closed?
+      errors.add(:order, 'darf nicht geschlossen sein.')
     end
   end
 
