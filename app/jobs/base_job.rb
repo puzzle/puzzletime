@@ -17,8 +17,9 @@ class BaseJob
   def error(_job, exception, payload = parameters)
     logger.error(exception.message)
     logger.error(exception.backtrace.join("\n"))
-    if exception.respond_to?(:data) && payload.is_a?(Hash)
-      payload[:data] = exception.data
+    if payload.is_a?(Hash)
+      payload[:code] = exception.code if exception.respond_to?(:code)
+      payload[:data] = exception.data if exception.respond_to?(:data)
     end
     Airbrake.notify(exception, cgi_data: ENV.to_hash, parameters: payload)
   end

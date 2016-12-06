@@ -26,6 +26,8 @@ module Invoicing
 
         def notify_sync_error(error, client)
           parameters = record_to_params(client)
+          parameters[:code] = error.code if error.respond_to?(:code)
+          parameters[:data] = error.data if error.respond_to?(:data)
           Airbrake.notify(error, cgi_data: ENV.to_hash, parameters: parameters)
         end
 
@@ -33,6 +35,7 @@ module Invoicing
           {
             "#{prefix}_id"            => record.id,
             "#{prefix}_invoicing_key" => record.invoicing_key,
+            "#{prefix}_shortname"     => record.try(:shortname),
             "#{prefix}_label"         => record.try(:label) || record.to_s,
             "#{prefix}_errors"        => record.errors.messages,
             "#{prefix}_changes"       => record.changes
@@ -76,6 +79,11 @@ module Invoicing
       end
 
       def create_remote
+        # reset invalid invoice keys to not cause a small invoice error
+        client.invoicing_key = nil
+        client.billing_addresses.each { |a| a.invoicing_key = nil }
+        client.contacts.each { |c| c.invoicing_key = nil }
+
         key = rate_limiter.run { api.add(:client, data) }
         client.update_column(:invoicing_key, key)
       end
