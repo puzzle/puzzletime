@@ -15,7 +15,7 @@ module Plannings
       assert_equal 20, board.work_days
       items = board.items(employees(:lucien).id, work_items(:hitobito_demo_app).id)
       assert_equal 20, items.size
-      assert items.one? { |i| !i.nil? }
+      assert items.one? { |i| i.planning }
       assert_equal p2, items[5].planning
     end
 
