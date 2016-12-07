@@ -216,7 +216,6 @@ body.plannings {
   > .day.-selected {
     position: relative;
     background-clip: border-box;
-    color: #50696e;
   }
   > .day.-selected::after {
     position: absolute;
@@ -293,9 +292,15 @@ body.plannings {
     background-clip: content-box;
   }
 
-  td.day {
+  .day {
     background-color: #efefef;
   }
+}
+
+.day.-absence {
+  border: none;
+  background-color: #cc2767;
+  background-clip: border-box;
 }
 
 .day.-definitive {
@@ -305,11 +310,7 @@ body.plannings {
   color: #cde5ea !important;
 
   &.-absence {
-    background-image: linear-gradient(0deg, #fff, #fff), $gradient;
-  }
-
-  .planning-calendar-days:nth-child(odd) &.-absence {
-    background-image: linear-gradient(0deg, #efefef, #efefef), $gradient;
+    background-image: $gradient, linear-gradient(0deg, #cc2767, #cc2767);
   }
 
   @for $i from 1 through 9 {
@@ -320,11 +321,7 @@ body.plannings {
       background-image: $gradient;
 
       &.-absence {
-        background-image: linear-gradient(0deg, #fff, #fff), $gradient;
-      }
-
-      .planning-calendar-days:nth-child(odd) &.-absence {
-        background-image: linear-gradient(0deg, #efefef, #efefef), $gradient;
+        background-image: $gradient, linear-gradient(0deg, #cc2767, #cc2767);
       }
     }
   }
@@ -337,18 +334,17 @@ body.plannings {
   color: #50696e !important;
 
   &.-absence {
-    background-image: linear-gradient(0deg, #fff, #fff), $gradient;
-  }
-
-  .planning-calendar-days:nth-child(odd) &.-absence {
-    background-image: linear-gradient(0deg, #efefef, #efefef), $gradient;
+    background-image: $gradient, linear-gradient(0deg, #cc2767, #cc2767);
   }
 }
 
-.day.-absence {
-  &, &.-selected {
-    color: #50696e !important;
-    background-clip: content-box, border-box;
+.day {
+  &.-definitive, &.-provisional {
+    &.-absence {
+      &, &.-selected {
+        background-clip: content-box, border-box;
+      }
+    }
   }
 }
 

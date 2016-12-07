@@ -16,10 +16,10 @@ module Plannings
     end
 
     def to_s
-      if @absencetime
-        'X'
-      elsif @planning
+      if @planning
         @planning.percent
+      elsif @absencetime
+        ''
       else
         '?'
       end
