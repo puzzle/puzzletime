@@ -7,7 +7,7 @@ module Plannings
     def initialize
     end
 
-    def day_params
+    def day_attrs
       {}.tap do |params|
         params[:class] = class_name
         params[:title] = title
@@ -40,7 +40,10 @@ module Plannings
         class_names << "-percent-#{@planning.percent.round(-1)}"
       end
 
-      class_names << '-absence' if @absencetime
+      if @absencetime
+        class_names << '-absence'
+        class_names << '-absence-unpaid' unless @absencetime.absence.payed
+      end
 
       class_names * ' '
     end
