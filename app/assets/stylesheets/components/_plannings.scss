@@ -181,13 +181,6 @@ body.plannings {
   height: $cell-height;
   border-bottom: 1px solid $grey-light;
 
-  // &:nth-child(odd) {
-  //   background: #efefef;
-  // }
-  &:nth-child(odd) > .day {
-    color: #cacaca;
-  }
-
   > .day {
     height: $cell-height;
     line-height: 3.5rem;
