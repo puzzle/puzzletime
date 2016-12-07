@@ -8,6 +8,7 @@ module Plannings
     def initialize(subject, period)
       @subject = subject
       @period = period
+      @holidays = fetch_holidays
     end
 
     def caption
@@ -56,6 +57,7 @@ module Plannings
         build_default_rows(rows)
         build_planning_rows(rows)
         add_absencetimes_to_rows(rows)
+        add_holidays_to_rows(rows)
       end
     end
 
@@ -77,10 +79,10 @@ module Plannings
         rows[k] = empty_row unless rows.key?(k)
         index = item_index(p.date)
 
-        if index
-          (rows[k][index] ||= Item.new).tap do |item|
-            item.planning = p
-          end
+        next unless index
+
+        rows[k][index].tap do |item|
+          item.planning = p
         end
       end
     end
@@ -92,10 +94,24 @@ module Plannings
 
           index = item_index(time.work_date)
 
-          if index
-            (items[index] ||= Item.new).tap do |item|
-              item.absencetime = time
-            end
+          next unless index
+
+          items[index].tap do |item|
+            item.absencetime = time
+          end
+        end
+      end
+    end
+
+    def add_holidays_to_rows(rows)
+      @holidays.each do |holiday|
+        rows.each do |key, items|
+          index = item_index(holiday[0])
+
+          next unless index
+
+          items[index].tap do |item|
+            item.holiday = holiday
           end
         end
       end
@@ -112,7 +128,7 @@ module Plannings
     end
 
     def empty_row
-      Array.new(work_days)
+      Array.new(work_days) { Item.new }
     end
 
     def load_plannings
@@ -156,6 +172,12 @@ module Plannings
 
     def included_key_ids(name, position)
       @included_rows ? @included_rows.map(&position) : @plannings.map(&name)
+    end
+
+    def fetch_holidays
+      Holiday.holidays(period).each_with_object({}) do |h, hash|
+        hash[h.holiday_date] = h.musthours_day
+      end
     end
 
   end

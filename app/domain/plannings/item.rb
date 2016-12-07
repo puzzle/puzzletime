@@ -2,7 +2,7 @@
 
 module Plannings
   class Item
-    attr_accessor :planning, :absencetime
+    attr_accessor :planning, :absencetime, :holiday
 
     def initialize
     end
@@ -19,6 +19,8 @@ module Plannings
       if @planning
         @planning.percent
       elsif @absencetime
+        ''
+      elsif !@absencetime && !@planning
         ''
       else
         '?'
@@ -43,6 +45,10 @@ module Plannings
       if @absencetime
         class_names << '-absence'
         class_names << '-absence-unpaid' unless @absencetime.absence.payed
+      end
+
+      if @holiday
+        class_names << '-holiday'
       end
 
       class_names * ' '

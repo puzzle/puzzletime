@@ -297,6 +297,7 @@ body.plannings {
   }
 }
 
+.day.-holiday,
 .day.-absence,
 .day.-absence-unpaid {
   border: none;
@@ -306,6 +307,10 @@ body.plannings {
 
 .day.-absence-unpaid {
   background-color: #cc9557;
+}
+
+.day.-holiday {
+  background-color: #92afcc;
 }
 
 .day.-definitive {
@@ -322,6 +327,10 @@ body.plannings {
     background-image: $gradient, linear-gradient(0deg, #cc9557, #cc9557);
   }
 
+  &.-holiday {
+    background-image: $gradient, linear-gradient(0deg, #92afcc, #92afcc);
+  }
+
   @for $i from 1 through 9 {
     $lightBlue: lighten($blue, (100 - $i * 10) / 4);
     $gradient: linear-gradient(0deg, $lightBlue, $lightBlue);
@@ -335,6 +344,10 @@ body.plannings {
 
       &.-absence-unpaid {
         background-image: $gradient, linear-gradient(0deg, #cc9557, #cc9557);
+      }
+
+      &.-holiday {
+        background-image: $gradient, linear-gradient(0deg, #92afcc, #92afcc);
       }
     }
   }
@@ -352,6 +365,10 @@ body.plannings {
 
   &.-absence-unpaid {
     background-image: $gradient, linear-gradient(0deg, #cc9557, #cc9557);
+  }
+
+  &.-holiday {
+    background-image: $gradient, linear-gradient(0deg, #92afcc, #92afcc);
   }
 }
 

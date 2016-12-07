@@ -9,7 +9,6 @@ module Plannings
       super(employee, period)
       @employments = employee.statistics.employments_during(period)
       @absences = employee.worktimes.joins(:absence).in_period(period).group(:work_date).sum(:hours)
-      @holidays = fetch_holidays
     end
 
     def row_legend(_employee_id, work_item_id)
@@ -124,12 +123,6 @@ module Plannings
     def employment_percent_during(employment, from, to)
       (from..to).sum do |date|
         employment.percent * (block_given? ? yield(date) : 1) / 5.0
-      end
-    end
-
-    def fetch_holidays
-      Holiday.holidays(period).each_with_object({}) do |h, hash|
-        hash[h.holiday_date] = h.musthours_day
       end
     end
 
