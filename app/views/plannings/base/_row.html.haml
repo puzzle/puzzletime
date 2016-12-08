@@ -1,4 +1,4 @@
-.legend
+.legend{ title: legend }
   = link_to_if(can?(:show_plannings, legend), legend, planning_legend_path(legend))
 
 - items.each do |item|

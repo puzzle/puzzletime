@@ -170,6 +170,12 @@ body.plannings {
     left: $grid-gutter-width;
   }
 }
+
+.planning-calendar-days > .legend > a {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 .planning-calendar-inner > .groupheader > .sticky-wrapper,
 .planning-calendar-inner > .actions > .sticky-wrapper,
 .planning-calendar-days > .sticky-wrapper {
