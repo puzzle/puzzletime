@@ -2,7 +2,7 @@
 
 = render 'orders/header'
 
-- if @order.status.closed
+- if @order.status.closed && can?(:create_invoices, @order)
   .alert.alert-warning
     Dieser Auftrag ist geschlossen. Die Rechnungen können nicht mehr bearbeitet werden.
 
