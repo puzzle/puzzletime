@@ -29,7 +29,13 @@ module Plannings
 
     def title
       if @absencetime
-        "#{@absencetime.absence.name}: #{@absencetime.hours}"
+        return "#{@absencetime.absence.name}: #{@absencetime.hours}"
+      elsif @holiday
+        if @holiday[1] > 0
+          "Feiertag: #{@holiday[1]} Muss Stunden"
+        else
+          'Feiertag: Keine muss Stunden'
+        end
       end
     end
 
