@@ -102,7 +102,7 @@ app.plannings.panel = new class
   initDefinitive: ->
     values = app.plannings.selectable.getSelectedDefinitiveValues()
     if values.length == 1
-      @setDefinitive(if values[0] == null then true else values[0])
+      @setDefinitive(if values[0] == null then false else values[0])
     else
       @setDefinitive(null)
 

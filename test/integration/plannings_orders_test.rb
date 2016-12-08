@@ -106,8 +106,8 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
       click_button 'OK'
     end
 
-    page.assert_selector('div.-definitive', count: 5)
-    page.assert_selector('div.-provisional', count: 0)
+    page.assert_selector('div.-provisional', count: 3)
+    page.assert_selector('div.-definitive', count: 2)
     page.assert_selector('.-selected', count: 0)
     page.assert_selector('.planning-panel', visible: false)
     assert_percents ['50', '', '', '', '', ''], row_mark
@@ -230,6 +230,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
     within '.planning-panel' do
       fill_in 'percent', with: '100'
+      click_button 'fix'
       click_button 'OK'
     end
 
@@ -247,6 +248,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
     within '.planning-panel' do
       fill_in 'percent', with: '100'
+      click_button 'fix'
       click_button 'OK'
     end
 
@@ -264,6 +266,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
     within '.planning-panel' do
       fill_in 'percent', with: '100'
+      click_button 'fix'
       click_button 'OK'
     end
 
@@ -282,6 +285,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
     within '.planning-panel' do
       fill_in 'percent', with: '100'
+      click_button 'fix'
       click_button 'OK'
     end
 

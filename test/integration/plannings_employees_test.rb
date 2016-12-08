@@ -28,6 +28,7 @@ class PlanningsEmployeesTest < ActionDispatch::IntegrationTest
 
     within '.planning-panel' do
       fill_in 'percent', with: '50'
+      click_button 'fix'
       click_button 'OK'
     end
 
