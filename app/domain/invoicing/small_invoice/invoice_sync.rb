@@ -19,7 +19,7 @@ module Invoicing
 
       class << self
         def sync_unpaid
-          Invoice.where.not(status: 'paid', invoicing_key: nil).find_each do |invoice|
+          unpaid_invoices.find_each do |invoice|
             begin
               new(invoice).sync
             rescue => error
@@ -29,6 +29,12 @@ module Invoicing
         end
 
         private
+
+        def unpaid_invoices
+          Invoice
+            .joins(order: :status)
+            .where.not(status: 'paid', invoicing_key: nil, order_statuses: { closed: true })
+        end
 
         def notify_sync_error(error, invoice)
           parameters = record_to_params(invoice)
