@@ -12,6 +12,7 @@ app.plannings = new class
   init: ->
     @bindListeners()
     @initSelectize()
+    @initGroupheaders()
     @initWaypoints()
     @positionHeaders()
 
@@ -105,6 +106,41 @@ app.plannings = new class
       Object.keys(addRowSelectize.options)
         .map((key) -> addRowSelectize.options[key])...
     ]
+
+  initGroupheaders: ->
+    $('.groupheader').click (e) ->
+      return if $(e.target).hasClass('day')
+
+      collapsed = $(this).hasClass('collapsed')
+
+      $(this)
+        .toggleClass('collapsed', !collapsed)
+        .find('.glyphicon')
+          .toggleClass('glyphicon-chevron-left', !collapsed)
+          .toggleClass('glyphicon-chevron-down', collapsed)
+        .end()
+        .nextUntil('.groupheader')
+        .toggle(collapsed)
+
+      if collapsed
+        $(this).children().removeClass('has-planning')
+
+        if $(this).next('.actions').length
+          $(this).next('.actions').find('.add').click()
+      else
+        children = $(this).children()
+
+        $(this)
+          .nextUntil('.actions')
+          .find('.day')
+          .filter('.-definitive,.-provisional')
+          .map -> children.get($(this.parentNode.children).index(this))
+          .addClass('has-planning')
+
+
+    $('.groupheader')
+      .filter -> $(this).next('.actions').length
+      .click()
 
   initWaypoints: ->
     return if Modernizr.csspositionsticky

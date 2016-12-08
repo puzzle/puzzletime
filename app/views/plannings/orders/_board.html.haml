@@ -5,7 +5,9 @@
     - @board.accounting_posts.each do |post|
       - if @board.accounting_posts.size > 1 || post.work_item_id != @board.order.work_item_id
         .groupheader
-          %strong= post
+          %strong
+            = post
+            %i{ class: 'glyphicon glyphicon-chevron-down' }
           - @board.work_days.times do
             .day
 

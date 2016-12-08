@@ -194,7 +194,13 @@ body.plannings {
   }
 }
 
-.planning-calendar-days {
+.planning-calendar-inner > .groupheader > strong {
+  display: flex;
+  justify-content: space-between;
+}
+
+.planning-calendar-days,
+.groupheader {
   > .day {
     text-align: center;
     font-weight: lighter !important;
@@ -204,6 +210,8 @@ body.plannings {
     background-repeat: repeat;
     background-clip: content-box;
   }
+}
+.planning-calendar-days {
   > .day.-selected, > .day.-definitive, > .day.-provisional {
     font-weight: normal;
     + {
@@ -225,6 +233,13 @@ body.plannings {
     left: 0;
     bottom: 0;
     right: 0;
+  }
+}
+.groupheader {
+  > .day.has-planning {
+    + .has-planning {
+      border-left: none;
+    }
   }
 }
 .planning-calendar-inner.editable > .planning-calendar-days {
@@ -294,6 +309,10 @@ body.plannings {
   .day {
     background-color: #efefef;
   }
+}
+
+.day.has-planning {
+  background-color: #eee;
 }
 
 .day.-holiday,
