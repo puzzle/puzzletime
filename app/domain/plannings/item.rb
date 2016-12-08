@@ -17,7 +17,7 @@ module Plannings
 
     def to_s
       if @planning
-        @planning.percent
+        @planning.percent.to_s
       elsif @absencetime
         ''
       elsif !@absencetime && !@planning
