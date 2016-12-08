@@ -392,7 +392,7 @@ body.plannings {
 
 .day {
   &.-definitive, &.-provisional {
-    &.-absence {
+    &.-absence, &.-holiday {
       &, &.-selected {
         background-clip: content-box, border-box;
       }
