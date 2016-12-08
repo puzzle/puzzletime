@@ -124,4 +124,34 @@ class PlanningItemTest < ActiveSupport::TestCase
     assert i.day_attrs == expected
     assert i.to_s == '70'
   end
+
+  test 'with holiday without must hours' do
+    h1 = holidays(:pfingstmontag)
+
+    i = Plannings::Item.new
+    i.holiday = [h1.holiday_date, h1.musthours_day]
+
+    expected = {
+      class: '-holiday',
+      title: 'Feiertag: Keine muss Stunden'
+    }
+
+    assert i.day_attrs == expected
+    assert i.to_s == ''
+  end
+
+  test 'with holiday with must hours' do
+    h1 = holidays(:zibelemaerit)
+
+    i = Plannings::Item.new
+    i.holiday = [h1.holiday_date, h1.musthours_day]
+
+    expected = {
+      class: '-holiday',
+      title: 'Feiertag: 6.0 Muss Stunden'
+    }
+
+    assert i.day_attrs == expected
+    assert i.to_s == ''
+  end
 end
