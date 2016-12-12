@@ -129,6 +129,20 @@ module Plannings
       assert_equal 40, board.weekly_employment_percent(date)
     end
 
+    test '#total_row_hours includes only plannings for period' do
+      create_plannings
+      Planning.create!(work_item_id: work_items(:hitobito_demo_app).id,
+                       employee_id: employee.id,
+                       date: date - 28.days,
+                       percent: 100)
+      Absencetime.create!(work_date: date + 4.days,
+                          hours: 4,
+                          employee_id: employee.id,
+                          absence: absences(:doctor))
+      board = Plannings::EmployeeBoard.new(employee, period)
+      assert_equal 24, board.total_row_hours(employee.id, work_items(:hitobito_demo_app).id)
+    end
+
     test '#total_hours includes plannings plus absencetimes' do
       create_plannings
       Absencetime.create!(work_date: date + 4.days,
@@ -137,6 +151,13 @@ module Plannings
                           absence: absences(:doctor))
       board = Plannings::EmployeeBoard.new(employee, period)
       assert_equal 40, board.total_hours
+    end
+
+    test '#total_hours is for all employee work items, even if included rows are limited' do
+      create_plannings
+      board = Plannings::EmployeeBoard.new(employee, period)
+      board.for_rows([[employees(:lucien).id, work_items(:hitobito_demo_app).id]])
+      assert_equal 36, board.total_hours
     end
 
     test '#plannable_hours includes employement minus holidays' do

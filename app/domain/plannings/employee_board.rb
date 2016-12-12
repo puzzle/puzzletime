@@ -61,16 +61,19 @@ module Plannings
       employee.statistics.musttime(period)
     end
 
+    # total planned hours on this employee for the current period.
     def total_hours
       rows # assert data is loaded
-      @plannings.to_a.sum { |p| p.percent / 100.0 * must_hours_per_day(p.date) } +
+      WorkingCondition.sum_with(:must_hours_per_day, period) do |p, val|
+        load_plannings(p).sum(:percent) / 100.0 * val
+      end +
         @absencetimes.to_a.sum(&:hours)
     end
 
     private
 
-    def load_plannings
-      super.where(employee_id: employee.id)
+    def load_plannings(p = period)
+      super(p).where(employee_id: employee.id)
     end
 
     def load_employees

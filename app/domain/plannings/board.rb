@@ -20,7 +20,7 @@ module Plannings
     end
 
     def items(employee_id, work_item_id)
-      rows[key(employee_id, work_item_id)]
+      rows[key(employee_id.to_i, work_item_id.to_i)]
     end
 
     def work_days
@@ -46,6 +46,10 @@ module Plannings
 
     def total_hours
       0
+    end
+
+    def total_row_hours(employee_id, work_item_id)
+      items(employee_id, work_item_id).sum(&:planned_hours)
     end
 
     def must_hours_per_day(date)
@@ -74,7 +78,7 @@ module Plannings
     end
 
     def load_data
-      @plannings = load_plannings.where(included_plannings_condition)
+      @plannings = load_plannings.where(included_plannings_condition).list
       @employees = load_employees
       @absencetimes = load_absencetimes
       @holidays = load_holidays
@@ -137,8 +141,8 @@ module Plannings
       Array.new(work_days) { Item.new }
     end
 
-    def load_plannings
-      Planning.in_period(period).list
+    def load_plannings(p = period)
+      Planning.in_period(p)
     end
 
     def load_accounting_posts

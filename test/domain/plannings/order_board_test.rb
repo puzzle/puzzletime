@@ -87,6 +87,18 @@ module Plannings
       assert_equal 40.0, board.week_total(date)
     end
 
+    test '#total_row_hours includes plannings from all times' do
+      create_plannings
+      Planning.create!(work_item_id: work_items(:hitobito_demo_app).id,
+                      employee_id: employees(:lucien).id,
+                      date: date - 28.days,
+                      percent: 100)
+
+      board = Plannings::OrderBoard.new(order, period)
+
+      assert_equal 16, board.total_row_hours(employees(:lucien).id, work_items(:hitobito_demo_app).id)
+    end
+
     test '#plannable_hours are calculated for entire view, even if included rows are limited' do
       accounting_posts(:hitobito_demo_app).update!(offered_hours: 250)
       accounting_posts(:hitobito_demo_site).update!(offered_hours: 40)

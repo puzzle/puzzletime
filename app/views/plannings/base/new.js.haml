@@ -1,6 +1,6 @@
 - filter = "[data-work-item-id=\"#{params[:work_item_id]}\"],[data-employee-id=\"#{params[:employee_id]}\"]".html_safe
 - container = "<div id=\"#{planning_row_id(params[:employee_id], params[:work_item_id])}\" class=\"planning-calendar-days\">".html_safe
-- row = j(render('row', items: @items, legend: @legend))
+- row = j(render('row', items: @items, legend: @legend, row_total: @row_total))
 
 $('.actions').filter('#{filter}').before($('#{container}').html('#{row}'));
 if (!Modernizr.csspositionsticky) $('main').scroll();

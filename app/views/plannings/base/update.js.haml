@@ -2,6 +2,9 @@ App.plannings.selectable.clear();
 $('#weeks_header_#{dom_id(@board.subject)}').html('#{j(render 'calendar_weeks')}');
 $('#planned_#{dom_id(@board.subject)}').html('#{j(render('header_planned'))}');
 - @board.rows.each do |(employee_id, work_item_id), items|
-  - row = j(render('row', items: items, legend: @board.row_legend(employee_id, work_item_id)))
+  - row = j(render('row',
+                   items: items,
+                   legend: @board.row_legend(employee_id, work_item_id),
+                   row_total: @board.total_row_hours(employee_id, work_item_id)))
   $('##{planning_row_id(employee_id, work_item_id)}').html('#{row}');
 

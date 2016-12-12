@@ -15,7 +15,10 @@
         - items = @board.items(employee.id, post.work_item_id)
         - if items
           .planning-calendar-days{ id: planning_row_id(employee.id, post.work_item_id) }
-            = render 'row', legend: employee, items: items
+            = render 'row',
+                     legend: employee,
+                     items: items,
+                     row_total: @board.total_row_hours(employee.id, post.work_item_id)
 
       - if can?(:manage_plannings, @board.subject)
         .actions{ data: { type: 'employee', work_item_id: post.work_item_id } }
