@@ -52,8 +52,10 @@ class WorkingCondition < ActiveRecord::Base
 
     def each_period_of(attr, period)
       each_of(attr, period.start_date, period.end_date) do |val, from, following|
-        start = from && from > period.start_date ? from : period.start_date
-        finish = following && following <= period.end_date ? following - 1 : period.end_date
+        not_first_from = from && (period.start_date.nil? || from > period.start_date)
+        not_last_following = following && (period.end_date.nil? || following <= period.end_date)
+        start = not_first_from ? from : period.start_date
+        finish = not_last_following ? following - 1 : period.end_date
         yield(Period.new(start, finish), val)
       end
     end
@@ -63,7 +65,8 @@ class WorkingCondition < ActiveRecord::Base
       conditions.each_cons(2) do |a, b|
         from = a['valid_from']
         following = b['valid_from']
-        if (from.nil? || from <= end_date) && (following.nil? || following > start_date)
+        if (from.nil? || end_date.nil? || from <= end_date) &&
+           (following.nil? || start_date.nil? || following > start_date)
           yield(a[attr.to_s], from, following)
         end
       end

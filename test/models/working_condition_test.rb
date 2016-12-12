@@ -57,21 +57,17 @@ class WorkingConditionTest < ActiveSupport::TestCase
     assert c.destroyed?
   end
 
-  test 'each_for iterates over single condition' do
+  test 'each_period_of iterates over single condition' do
     period = Period.new(Date.new(2012, 1, 1), Date.new(2014, 12, 31))
-    ps = []
-    vs = []
-    WorkingCondition.each_period_of(:vacation_days_per_year, period) do |p, v|
-      ps << p
-      vs << v
-    end
+
+    ps, vs = each_period_of(period)
     assert_equal 1, ps.size
     assert_equal Date.new(2012, 1, 1), ps.first.start_date
     assert_equal Date.new(2014, 12, 31), ps.first.end_date
     assert_equal 25, vs.first
   end
 
-  test 'each_for iterates over multiple conditions' do
+  test 'each_period_of iterates over multiple conditions' do
     WorkingCondition.create!(valid_from: Date.new(2010, 1, 1),
                              vacation_days_per_year: 10,
                              must_hours_per_day: 8.4)
@@ -83,12 +79,8 @@ class WorkingConditionTest < ActiveSupport::TestCase
                              must_hours_per_day: 8.4)
 
     period = Period.new(Date.new(2012, 1, 1), Date.new(2013, 12, 31))
-    ps = []
-    vs = []
-    WorkingCondition.each_period_of(:vacation_days_per_year, period) do |p, v|
-      ps << p
-      vs << v
-    end
+
+    ps, vs = each_period_of(period)
     assert_equal 2, ps.size
     assert_equal Date.new(2012, 1, 1), ps.first.start_date
     assert_equal Date.new(2012, 12, 31), ps.first.end_date
@@ -98,7 +90,7 @@ class WorkingConditionTest < ActiveSupport::TestCase
     assert_equal 13, vs.second
   end
 
-  test 'each_for iterates from first to last day of period' do
+  test 'each_period_of iterates from first to last day of period' do
     WorkingCondition.create!(valid_from: Date.new(2010, 1, 1),
                              vacation_days_per_year: 10,
                              must_hours_per_day: 8.4)
@@ -116,12 +108,8 @@ class WorkingConditionTest < ActiveSupport::TestCase
                              must_hours_per_day: 8.4)
 
     period = Period.new(Date.new(2011, 1, 1), Date.new(2014, 12, 31))
-    ps = []
-    vs = []
-    WorkingCondition.each_period_of(:vacation_days_per_year, period) do |p, v|
-      ps << p
-      vs << v
-    end
+
+    ps, vs = each_period_of(period)
     assert_equal 2, ps.size
     assert_equal Date.new(2011, 1, 1), ps.first.start_date
     assert_equal Date.new(2012, 12, 31), ps.first.end_date
@@ -131,7 +119,7 @@ class WorkingConditionTest < ActiveSupport::TestCase
     assert_equal 13, vs.second
   end
 
-  test 'each_for iterates from first to last day of period with just one more' do
+  test 'each_period_of iterates from first to last day of period with just one more' do
     WorkingCondition.create!(valid_from: Date.new(2010, 1, 1),
                              vacation_days_per_year: 10,
                              must_hours_per_day: 8.4)
@@ -149,12 +137,8 @@ class WorkingConditionTest < ActiveSupport::TestCase
                              must_hours_per_day: 8.4)
 
     period = Period.new(Date.new(2010, 12, 31), Date.new(2015, 1, 1))
-    ps = []
-    vs = []
-    WorkingCondition.each_period_of(:vacation_days_per_year, period) do |p, v|
-      ps << p
-      vs << v
-    end
+
+    ps, vs = each_period_of(period)
     assert_equal 4, ps.size
     assert_equal Date.new(2010, 12, 31), ps.first.start_date
     assert_equal Date.new(2010, 12, 31), ps.first.end_date
@@ -166,4 +150,84 @@ class WorkingConditionTest < ActiveSupport::TestCase
     assert_equal Date.new(2015, 1, 1), ps.fourth.end_date
     assert_equal [10, 11, 13, 15], vs
   end
+  test 'each_period_of iterates over single periods with open start' do
+    period = Period.new(nil, Date.new(2014, 1, 1))
+
+    ps, vs = each_period_of(period)
+    assert_equal 1, ps.size
+    assert_equal nil, ps.first.start_date
+    assert_equal Date.new(2014, 1, 1), ps.first.end_date
+    assert_equal [25], vs
+  end
+
+  test 'each_period_of iterates over multiple periods with open start' do
+    WorkingCondition.create!(valid_from: Date.new(2010, 1, 1),
+                             vacation_days_per_year: 10,
+                             must_hours_per_day: 8.4)
+    WorkingCondition.create!(valid_from: Date.new(2015, 1, 1),
+                             vacation_days_per_year: 12,
+                             must_hours_per_day: 8)
+    period = Period.new(nil, Date.new(2014, 1, 1))
+
+    ps, vs = each_period_of(period)
+    assert_equal 2, ps.size
+    assert_equal nil, ps.first.start_date
+    assert_equal Date.new(2009, 12, 31), ps.first.end_date
+    assert_equal Date.new(2010, 1, 1), ps.second.start_date
+    assert_equal Date.new(2014, 1, 1), ps.second.end_date
+    assert_equal [25, 10], vs
+  end
+
+  test 'each_period_of iterates over periods with open end' do
+    WorkingCondition.create!(valid_from: Date.new(2015, 1, 1),
+                             vacation_days_per_year: 12,
+                             must_hours_per_day: 8)
+    period = Period.new(Date.new(2014, 1, 1), nil)
+
+    ps, vs = each_period_of(period)
+    assert_equal 2, ps.size
+    assert_equal Date.new(2014, 1, 1), ps.first.start_date
+    assert_equal Date.new(2014, 12, 31), ps.first.end_date
+    assert_equal Date.new(2015, 1, 1), ps.second.start_date
+    assert_equal nil, ps.second.end_date
+    assert_equal [25, 12], vs
+  end
+
+  test 'each_period_of iterates over single period with open start and end' do
+    period = Period.new(nil, nil)
+
+    ps, vs = each_period_of(period)
+    assert_equal 1, ps.size
+    assert_equal nil, ps.first.start_date
+    assert_equal nil, ps.first.end_date
+    assert_equal [25], vs
+  end
+
+  test 'each_period_of iterates over multiple periods with open start and end' do
+    WorkingCondition.create!(valid_from: Date.new(2015, 1, 1),
+                             vacation_days_per_year: 12,
+                             must_hours_per_day: 8)
+    period = Period.new(nil, nil)
+
+    ps, vs = each_period_of(period)
+    assert_equal 2, ps.size
+    assert_equal nil, ps.first.start_date
+    assert_equal Date.new(2014, 12, 31), ps.first.end_date
+    assert_equal Date.new(2015, 1, 1), ps.second.start_date
+    assert_equal nil, ps.second.end_date
+    assert_equal [25, 12], vs
+  end
+
+  private
+
+  def each_period_of(period)
+    ps = []
+    vs = []
+    WorkingCondition.each_period_of(:vacation_days_per_year, period) do |p, v|
+      ps << p
+      vs << v
+    end
+    [ps, vs]
+  end
+
 end

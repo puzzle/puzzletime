@@ -13,6 +13,12 @@ module Plannings
       accounting_posts.to_a.sum { |p| p.offered_hours.to_f }
     end
 
+    def total_hours
+      WorkingCondition.sum_with(:must_hours_per_day, Period.new(nil, nil)) do |period, val|
+        sum_planning_percent(period) / 100.0 * val
+      end
+    end
+
     private
 
     def load_plannings
@@ -26,6 +32,14 @@ module Plannings
         where(closed: false).
         includes(:work_item).
         list
+    end
+
+    def sum_planning_percent(period)
+      Planning.
+        in_period(period).
+        joins(:work_item).
+        where('? = ANY (work_items.path_ids)', order.work_item_id).
+        sum(:percent)
     end
 
   end
