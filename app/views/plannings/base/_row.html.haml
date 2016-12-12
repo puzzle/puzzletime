@@ -2,8 +2,5 @@
   = link_to_if(can?(:show_plannings, legend), legend, planning_legend_path(legend))
 
 - items.each do |item|
-  - if item
-    .day{ item.day_attrs }
-      = item
-  - else
-    .day
+  .day{ item.day_attrs }
+    = item

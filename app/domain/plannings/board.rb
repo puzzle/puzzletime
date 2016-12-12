@@ -77,13 +77,11 @@ module Plannings
       @plannings.each do |p|
         k = key(p.employee_id, p.work_item_id)
         rows[k] = empty_row unless rows.key?(k)
-        index = item_index(p.date)
 
+        index = item_index(p.date)
         next unless index
 
-        rows[k][index].tap do |item|
-          item.planning = p
-        end
+        rows[k][index].planning = p
       end
     end
 
@@ -93,12 +91,9 @@ module Plannings
           next unless key.first == time.employee_id
 
           index = item_index(time.work_date)
-
           next unless index
 
-          items[index].tap do |item|
-            item.absencetime = time
-          end
+          items[index].absencetime = time
         end
       end
     end
@@ -107,12 +102,9 @@ module Plannings
       @holidays.each do |holiday|
         rows.each do |key, items|
           index = item_index(holiday[0])
-
           next unless index
 
-          items[index].tap do |item|
-            item.holiday = holiday
-          end
+          items[index].holiday = holiday
         end
       end
     end
