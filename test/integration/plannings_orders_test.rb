@@ -360,6 +360,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
     select 'Nächste 6 Monate', from: 'period'
     find('.navbar-brand').click # blur select
+    select 'Nächste 6 Monate', from: 'period' # seems to only update value when selecting 2-times
     page.assert_selector('.planning-calendar-weeks',
                          text: "KW #{(Time.zone.today + 6.months - 1.weeks).cweek}")
     page.assert_selector('#start_date,#end_date', visible: false)
