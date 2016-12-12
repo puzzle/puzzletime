@@ -9,6 +9,10 @@ module Plannings
       employees.detect { |e| e.id == employee_id.to_i }
     end
 
+    def plannable_hours
+      accounting_posts.to_a.sum { |p| p.offered_hours.to_f }
+    end
+
     private
 
     def load_plannings

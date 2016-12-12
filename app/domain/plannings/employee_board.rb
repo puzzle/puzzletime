@@ -8,14 +8,18 @@ module Plannings
     def initialize(employee, period)
       super(employee, period)
       @employments = employee.statistics.employments_during(period)
-      @absences = employee.worktimes.joins(:absence).in_period(period).group(:work_date).sum(:hours)
     end
 
     def row_legend(_employee_id, work_item_id)
       accounting_posts.detect { |post| post.work_item_id == work_item_id.to_i }
     end
 
+    def row_sum(accounting_post)
+      accounting_post
+    end
+
     def week_total(date)
+      rows # assert data is loaded
       @week_percent ||= {}
       @week_percent[date] ||=
         week_totals[date] + week_absence_percent(date) + week_holiday_percent(date)
@@ -53,6 +57,16 @@ module Plannings
       sum
     end
 
+    def plannable_hours
+      employee.statistics.musttime(period)
+    end
+
+    def total_hours
+      rows # assert data is loaded
+      @plannings.to_a.sum { |p| p.percent / 100.0 * must_hours_per_day(p.date) } +
+        @absencetimes.to_a.sum(&:hours)
+    end
+
     private
 
     def load_plannings
@@ -63,8 +77,13 @@ module Plannings
       [employee]
     end
 
+    def included_employee_ids
+      [employee.id]
+    end
+
     def week_absence_percent(date)
-      absence_hours = 7.times.sum { |i| @absences[date + i].to_f }
+      week = date..(date + 7)
+      absence_hours = @absencetimes.select { |t| week.cover?(t.work_date) }.sum(&:hours)
       absence_hours / (must_hours_per_day(date) * 5) * 100
     end
 
@@ -81,11 +100,6 @@ module Plannings
         return percent if percent
       end
       0
-    end
-
-    def must_hours_per_day(date)
-      @must_hours_per_day ||= {}
-      @must_hours_per_day[date] ||= WorkingCondition.value_at(date, :must_hours_per_day)
     end
 
     def compute_weekly_percent(date)

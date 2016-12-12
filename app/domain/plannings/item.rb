@@ -2,7 +2,7 @@
 
 module Plannings
   class Item
-    attr_accessor :planning, :absencetime, :holiday
+    attr_accessor :planning, :absencetime, :holiday, :general_must_hours
 
     def initialize
     end
@@ -18,12 +18,8 @@ module Plannings
     def to_s
       if planning
         planning.percent.to_s
-      elsif absencetime
-        ''
-      elsif !absencetime && !planning
-        ''
       else
-        '?'
+        ''
       end
     end
 
@@ -59,5 +55,14 @@ module Plannings
 
       class_names.join(' ')
     end
+
+    def planned_hours
+      if planning
+        planning.percent / 100.0 * general_must_hours
+      else
+        0
+      end
+    end
+
   end
 end

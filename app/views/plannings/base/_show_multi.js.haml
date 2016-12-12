@@ -1,6 +1,7 @@
 - @boards.each do |board|
   - @board = board
   $('#board_#{dom_id(board.subject)}').html('#{j(render('board'))}');
+  $('#planned_#{dom_id(board.subject)}').html('#{j(render('header_planned'))}');
 
 $('#add_employee_id,#add_work_item_id').remove()
 $('#boards').parent().append('#{j(render('add_row'))}')

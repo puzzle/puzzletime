@@ -129,6 +129,24 @@ module Plannings
       assert_equal 40, board.weekly_employment_percent(date)
     end
 
+    test '#total_hours includes plannings plus absencetimes' do
+      create_plannings
+      Absencetime.create!(work_date: date + 4.days,
+                          hours: 4,
+                          employee_id: employee.id,
+                          absence: absences(:doctor))
+      board = Plannings::EmployeeBoard.new(employee, period)
+      assert_equal 40, board.total_hours
+    end
+
+    test '#plannable_hours includes employement minus holidays' do
+      employee.employments.create!(start_date: date - 1.year, percent: 80)
+      Holiday.create!(holiday_date: date + 2.days, musthours_day: 6)
+      Holiday.create!(holiday_date: date + 3.days, musthours_day: 0)
+      board = Plannings::EmployeeBoard.new(employee, period)
+      assert_equal 120, board.plannable_hours
+    end
+
     private
 
     def period

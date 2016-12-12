@@ -8,7 +8,6 @@ module Plannings
     def initialize(subject, period)
       @subject = subject
       @period = period
-      @holidays = fetch_holidays
     end
 
     def caption
@@ -41,6 +40,19 @@ module Plannings
       @accounting_posts ||= load_accounting_posts
     end
 
+    def plannable_hours
+      0
+    end
+
+    def total_hours
+      0
+    end
+
+    def must_hours_per_day(date)
+      @must_hours_per_day ||= {}
+      @must_hours_per_day[date] ||= WorkingCondition.value_at(date, :must_hours_per_day)
+    end
+
     private
 
     def week_totals
@@ -65,6 +77,7 @@ module Plannings
       @plannings = load_plannings.where(included_plannings_condition)
       @employees = load_employees
       @absencetimes = load_absencetimes
+      @holidays = load_holidays
     end
 
     def build_default_rows(rows)
@@ -82,6 +95,7 @@ module Plannings
         next unless index
 
         rows[k][index].planning = p
+        rows[k][index].general_must_hours = must_hours_per_day(p.date)
       end
     end
 
@@ -141,6 +155,12 @@ module Plannings
       Absencetime.in_period(period).includes(:absence).where(employee_id: included_employee_ids)
     end
 
+    def load_holidays
+      Holiday.holidays(period).each_with_object({}) do |h, hash|
+        hash[h.holiday_date] = h.musthours_day
+      end
+    end
+
     def included_plannings_condition
       return if @included_rows.nil?
       return '0 = 1' if @included_rows.blank?
@@ -164,12 +184,6 @@ module Plannings
 
     def included_key_ids(name, position)
       @included_rows ? @included_rows.map(&position) : @plannings.map(&name)
-    end
-
-    def fetch_holidays
-      Holiday.holidays(period).each_with_object({}) do |h, hash|
-        hash[h.holiday_date] = h.musthours_day
-      end
     end
 
   end

@@ -50,7 +50,7 @@ body.plannings {
 .planning-board-header.stuck {
   position: fixed;
   padding-left: 30px;
-  right: 0;
+  right: 30px;
 }
 .planning-calendar-inner {
   border-right: 1px solid $grey-light;
@@ -169,12 +169,18 @@ body.plannings {
     z-index: 1;
     left: $grid-gutter-width;
   }
+
+  .sum {
+    margin-left: auto;
+    white-space: nowrap;
+  }
 }
 
-.planning-calendar-days > .legend > a {
+.planning-calendar-days .legend > a {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  margin-right: 0.5em;
 }
 .planning-calendar-inner > .groupheader > .sticky-wrapper,
 .planning-calendar-inner > .actions > .sticky-wrapper,

@@ -1,6 +1,9 @@
 .legend{ title: legend }
   = link_to_if(can?(:show_plannings, legend), legend, planning_legend_path(legend))
 
+  .sum
+    = render 'row_sum', items: items
+
 - items.each do |item|
   .day{ item.day_attrs }
     = item

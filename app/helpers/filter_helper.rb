@@ -23,8 +23,7 @@ module FilterHelper
     html = ''.html_safe
     html += label_tag(name, label, class: 'control-label') + ' &nbsp; '.html_safe if label
     html += yield
-    content_tag(:div, html, class: 'form-group') +
-      ' &nbsp; &nbsp; '.html_safe
+    content_tag(:div, html, class: 'form-group')
   end
 
   def direct_filter_date(name, label, date)
