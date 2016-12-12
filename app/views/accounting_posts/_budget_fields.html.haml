@@ -16,3 +16,11 @@
   = form.label :offered_total, "Total", class: 'col-md-1 control-label'
   .col-md-2
     = form.input_field :offered_total, value: entry.offered_total, addon: 'CHF'
+
+.form-group
+  .col-md-2
+  .help-block.col-md-5
+    Änderungen am Stundensatz wirken sich auf die Auswertungen von Finanzzahlen
+    dieser Buchungsposition aus, vergangener wie zukünftigen. Falls der Stundensatz
+    nur für zukünftige und nicht für vergangene Zeiten angepasst werden soll,
+    muss eine neue Buchungsposition erstellt werden.
