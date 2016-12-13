@@ -17,6 +17,7 @@ class PeriodTest < ActiveSupport::TestCase
     assert_equal '3M', period.shortcut
     assert_equal Date.new(2000, 1, 3), period.start_date
     assert_equal Date.new(2000, 1, 3) + 3.months, period.end_date
+    travel_back
   end
 
   def test_intersect
