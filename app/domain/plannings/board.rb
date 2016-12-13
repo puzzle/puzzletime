@@ -20,7 +20,7 @@ module Plannings
     end
 
     def items(employee_id, work_item_id)
-      rows[key(employee_id.to_i, work_item_id.to_i)]
+      rows[key(employee_id.to_i, work_item_id.to_i)] || []
     end
 
     def work_days
