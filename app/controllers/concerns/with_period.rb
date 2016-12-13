@@ -14,11 +14,9 @@ module WithPeriod
   end
 
   def build_period
-    if params[:shortcut].present?
+    if build_shortcut_period?
       Period.parse(params[:shortcut])
-    elsif self.allow_unlimited_period &&
-      (params[:start_date].present? || params[:end_date].present?) ||
-      !self.allow_unlimited_period && params[:start_date].present? && params[:end_date].present?
+    elsif build_start_end_period?
       Period.new(params[:start_date].presence, params[:end_date].presence).tap do |period|
         fail ArgumentError, 'Start Datum nach End Datum' if period.negative?
       end
@@ -34,5 +32,14 @@ module WithPeriod
 
   def default_period
     Period.new(nil, nil)
+  end
+
+  def build_shortcut_period?
+    params[:shortcut].present?
+  end
+
+  def build_start_end_period?
+    allow_unlimited_period && (params[:start_date].present? || params[:end_date].present?) ||
+      !allow_unlimited_period && params[:start_date].present? && params[:end_date].present?
   end
 end
