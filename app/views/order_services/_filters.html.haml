@@ -1,9 +1,9 @@
-= form_tag(nil, method: :get, class: 'form-inline', role: 'filter', remote: true) do
+= form_tag(nil, method: :get, id: 'order_services_filter_form', class: 'form-inline', role: 'filter', remote: true) do
   = hidden_field_tag :page, 1
 
   = direct_filter_date(:start_date, 'Von', @period.start_date)
   = direct_filter_date(:end_date, 'Bis', @period.end_date)
-  = direct_filter_select(:period, nil, predefined_past_period_options, prompt: 'vordefiniert...')
+  = direct_filter_select(:shortcut, nil, predefined_past_period_options, value: @period.shortcut, prompt: 'benutzerdefiniert')
 
   &nbsp;
 

@@ -5,6 +5,8 @@ module Plannings
 
     include WithPeriod
 
+    self.allow_unlimited_period = false
+
     before_action :authorize_subject_planning
 
     define_render_callbacks :show, :new, :update
@@ -70,20 +72,14 @@ module Plannings
     end
 
     def set_period
-      convert_predefined_period
-      period = super
-      period = default_period unless period.limited?
-      @period = period.extend_to_weeks
-    end
-
-    def convert_predefined_period
-      return if params[:period].blank?
-
-      @period = Period.parse(params.delete(:period))
-      if @period
-        params[:start_date] = I18n.l(@period.start_date)
-        params[:end_date] = I18n.l(@period.end_date)
+      period = build_period
+      if period.nil?
+        period = session[:planning_period] || default_period
+      elsif period.unlimited?
+        period = default_period
       end
+      period = period.extend_to_weeks
+      @period = session[:planning_period] = period
     end
 
     def default_period

@@ -1,3 +1,4 @@
 $('.list').html('#{j(render('list') + render('actions'))}');
 $('#value_filters').html('#{j(render('value_filters'))}');
+App.orderServices.dateFilterChanged();
 = render 'shared/flash_alert'

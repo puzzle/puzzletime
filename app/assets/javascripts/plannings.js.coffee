@@ -11,6 +11,7 @@ app.plannings = new class
 
   init: ->
     @bindListeners()
+    @dateFilterChanged()
     @initSelectize()
     @initGroupheaders()
     @initWaypoints()
@@ -27,8 +28,8 @@ app.plannings = new class
     )
 
   dateFilterChanged: ->
-    $('#start_date,#end_date').closest('.form-group')
-      .css('visibility', if !$('#period').val() then 'visible' else 'hidden')
+    $('#planning_filter_form').find('#start_date,#end_date').closest('.form-group')
+      .css('visibility', if !$('#shortcut').val() then 'visible' else 'hidden')
 
   add: (event) =>
     @showSelect(event)

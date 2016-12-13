@@ -37,11 +37,4 @@ app.plannings.service = new class
     )
 
   _buildParams: (params) ->
-    $.extend(utf8: '✓', params, @_getFilterParams())
-
-  _getFilterParams: () ->
-    form = $('#planning_filter_form')
-    form.serializeArray().reduce(((data, field) ->
-      data[field.name] = field.value
-      data
-    ), {})
+    $.extend(utf8: '✓', params)

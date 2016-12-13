@@ -40,14 +40,14 @@ module FilterHelper
   end
 
   def direct_filter_select(name, label, list, options = {})
-    options.reverse_merge!(prompt: 'Alle', value_method: :id, text_method: :to_s)
+    options.reverse_merge!(prompt: 'Alle', value_method: :id, text_method: :to_s, value: params[name])
     add_css_class(options, 'form-control')
     options[:data] ||= {}
     options[:data][:submit] = true
     select_options = options_from_collection_for_select(list,
                                                         options.delete(:value_method),
                                                         options.delete(:text_method),
-                                                        params[name])
+                                                        options.delete(:value))
     direct_filter(name, label) do
       select_tag(name, select_options, options)
     end

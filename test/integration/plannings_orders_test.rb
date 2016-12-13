@@ -331,36 +331,65 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
   end
 
   test 'switching period' do
-    assert_equal '', find('#period').value
-    page.assert_selector('#start_date', visible: true)
-    page.assert_selector('#end_date', visible: true)
+    page.assert_selector('#start_date', visible: false)
+    page.assert_selector('#end_date', visible: false)
+    assert_equal '3M', find('#shortcut').value
 
-    select 'Nächste 6 Monate', from: 'period'
+    select 'Nächste 6 Monate', from: 'shortcut'
     find('.navbar-brand').click # blur select
     page.assert_selector('.planning-calendar-weeks',
                          text: "KW #{(Time.zone.today + 6.months - 1.weeks).cweek}")
     page.assert_selector('#start_date', visible: false)
     page.assert_selector('#end_date', visible: false)
+    assert_equal '6M', find('#shortcut').value
 
     drag(row_mark.all('.day')[0], row_pascal.all('.day')[1])
     page.assert_selector('.-selected', count: 4)
 
-    select 'benutzerdefiniert', from: 'period'
+    select 'benutzerdefiniert', from: 'shortcut'
     find('.navbar-brand').click # blur select
     page.assert_selector('#start_date', visible: true)
     page.assert_selector('#end_date', visible: true)
+    assert_equal '', find('#shortcut').value
 
     drag(row_mark.all('.day')[0], row_pascal.all('.day')[2])
     page.assert_selector('.-selected', count: 6)
+  end
+
+  test 'period is remembered across planning views' do
+    page.assert_selector('.planning-board-header', text: 'PITC-PT: PuzzleTime')
+    select 'Nächste 6 Monate', from: 'shortcut'
+    find('.navbar-brand').click # blur select
+    page.assert_selector('.planning-calendar-weeks',
+                         text: "KW #{(Time.zone.today + 6.months - 1.weeks).cweek}")
+    page.assert_selector('#start_date', visible: false)
+    page.assert_selector('#end_date', visible: false)
+    assert_equal '6M', find('#shortcut').value
+
+    visit plannings_employee_path(employees(:mark))
+    page.assert_selector('.planning-board-header', text: 'Waber Mark')
+    page.assert_selector('.planning-calendar-weeks',
+                         text: "KW #{(Time.zone.today + 6.months - 1.weeks).cweek}")
+    page.assert_selector('#start_date', visible: false)
+    page.assert_selector('#end_date', visible: false)
+    assert_equal '6M', find('#shortcut').value
+
+    visit plannings_company_path
+    page.assert_selector('h1', text: 'Planung aller Mitarbeiter')
+    page.assert_selector('#plannings thead',
+                         text: (Time.zone.today + 6.months - 1.weeks).cweek)
+    page.assert_selector('#start_date', visible: false)
+    page.assert_selector('#end_date', visible: false)
+    assert_equal '6M', find('#shortcut').value
   end
 
   test 'add row still works after switching period' do
     find('.add').click
     page.assert_selector('.selectize-dropdown')
 
-    select 'Nächste 6 Monate', from: 'period'
+    select 'Nächste 6 Monate', from: 'shortcut'
     find('.navbar-brand').click # blur select
-    select 'Nächste 6 Monate', from: 'period' # seems to only update value when selecting 2-times
+    select 'Nächste 6 Monate', from: 'shortcut' # seems to only update value when selecting 2-times
     page.assert_selector('.planning-calendar-weeks',
                          text: "KW #{(Time.zone.today + 6.months - 1.weeks).cweek}")
     page.assert_selector('#start_date,#end_date', visible: false)

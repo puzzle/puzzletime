@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 class Period
-  attr_reader :start_date, :end_date
+  attr_reader :start_date, :end_date, :shortcut
 
   ####### constructors ########
 
@@ -23,63 +23,68 @@ class Period
       year_for(Time.zone.today)
     end
 
-    def day_for(date, label = nil)
-      label ||= day_label(date)
-      new(date, date, label)
+    def day_for(date, options = {})
+      options[:label] ||= day_label(date)
+      new(date, date, options[:label], options[:shortcut])
     end
 
-    def week_for(date, label = nil)
+    def week_for(date, options = {})
       date = date.to_date if date.is_a? Time
-      label ||= week_label(date)
+      options[:label] ||= week_label(date)
       date -= (date.wday - 1) % 7
-      new(date, date + 6, label)
+      new(date, date + 6, options[:label], options[:shortcut])
     end
 
-    def month_for(date, label = nil)
+    def month_for(date, options = {})
       date = date.to_date if date.is_a? Time
-      label ||= month_label(date)
+      options[:label] ||= month_label(date)
       date -= date.day - 1
-      new(date, date + Time.days_in_month(date.month, date.year) - 1, label)
+      new(date, date + Time.days_in_month(date.month, date.year) - 1, options[:label],
+          options[:shortcut])
     end
 
-    def quarter_for(date, label = nil)
-      label ||= quarter_label(date)
-      new(Date.civil(date.year, date.month - 2, 1), date + Time.days_in_month(date.month, date.year) - 1, label)
+    def quarter_for(date, options = {})
+      options[:label] ||= quarter_label(date)
+      new(Date.civil(date.year, date.month - 2, 1),
+          date + Time.days_in_month(date.month, date.year) - 1,
+          options[:label], options[:shortcut])
     end
 
-    def year_for(date, label = nil)
-      label ||= year_label(date)
-      new(Date.civil(date.year, 1, 1), Date.civil(date.year, 12, 31), label)
+    def year_for(date, options = {})
+      options[:label] ||= year_label(date)
+      new(Date.civil(date.year, 1, 1), Date.civil(date.year, 12, 31), options[:label],
+          options[:shortcut])
     end
 
-    def past_month(date = Time.zone.today, label = nil)
+    def past_month(date = Time.zone.today, options = {})
       date = date.to_date if date.is_a?(Time)
-      new(date - 28, date + 7, label)
+      new(date - 28, date + 7, options[:label], options[:shortcut])
     end
 
-    def coming_month(date = Time.zone.today, label = nil)
-      date = date.to_date if date.is_a?(Time)
-      date -= (date.wday - 1) % 7
-      new(date, date + 28, label)
-    end
-
-    def next_n_months(n, date = Time.zone.today, label = nil)
+    def coming_month(date = Time.zone.today, options = {})
       date = date.to_date if date.is_a?(Time)
       date -= (date.wday - 1) % 7
-      label ||= next_n_months_label(n)
-      new(date, date + n.months, label)
+      new(date, date + 28, options[:label], options[:shortcut])
+    end
+
+    def next_n_months(n, date = Time.zone.today, options = {})
+      date = date.to_date if date.is_a?(Time)
+      date -= (date.wday - 1) % 7
+      options[:label] ||= next_n_months_label(n)
+      options[:shortcut] ||= "#{n}M"
+      new(date, date + n.months, options[:label], options[:shortcut])
     end
 
     def parse(shortcut)
       range, shift = parse_shortcut(shortcut)
       now = Time.zone.now
       case range
-      when 'd' then day_for(now.advance(days: shift).to_date)
-      when 'w' then week_for(now.advance(days: shift * 7).to_date)
-      when 'm' then month_for(now.advance(months: shift).to_date)
-      when 'M' then next_n_months(shift)
-      when 'q' then quarter_for(Date.civil(now.year, shift * 3, 1))
-      when 'y' then year_for(now.advance(years: shift).to_date)
+      when 'd' then day_for(now.advance(days: shift).to_date, shortcut: shortcut)
+      when 'w' then week_for(now.advance(days: shift * 7).to_date, shortcut: shortcut)
+      when 'm' then month_for(now.advance(months: shift).to_date, shortcut: shortcut)
+      when 'M' then next_n_months(shift, now)
+      when 'q' then quarter_for(Date.civil(now.year, shift * 3, 1), shortcut: shortcut)
+      when 'y' then year_for(now.advance(years: shift).to_date, shortcut: shortcut)
       end
     end
 
@@ -147,10 +152,12 @@ class Period
 
   end
 
-  def initialize(start_date = Time.zone.today, end_date = Time.zone.today, label = nil)
+  def initialize(start_date = Time.zone.today, end_date = Time.zone.today, label = nil,
+                 shortcut = nil)
     @start_date = self.class.parse_date(start_date)
     @end_date = self.class.parse_date(end_date)
     @label = label
+    @shortcut = shortcut
   end
 
 
@@ -198,6 +205,10 @@ class Period
     @start_date && @end_date
   end
 
+  def unlimited?
+    !limited?
+  end
+
   def ==(other)
     other.is_a?(Period) && other.start_date == start_date && other.end_date == end_date
   end
@@ -223,7 +234,7 @@ class Period
   end
 
   def extend_to_weeks
-    Period.new(start_date.at_beginning_of_week, end_date.at_end_of_week, label)
+    Period.new(start_date.at_beginning_of_week, end_date.at_end_of_week, label, shortcut)
   end
 
   def where_condition(column)

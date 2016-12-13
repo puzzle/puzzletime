@@ -11,13 +11,13 @@ class OrderServicesController < ApplicationController
   include WorktimesReport
   include WorktimesCsv
 
-  self.remember_params = %w(start_date end_date employee_id work_item_id ticket billable invoice_id)
+  self.remember_params = %w(start_date end_date shortcut employee_id work_item_id ticket billable
+                            invoice_id)
 
   before_action :order
   before_action :authorize_class
 
   def show
-    convert_predefined_period
     handle_remember_params
     set_filter_values
     @worktimes = list_worktimes(@period).includes(:invoice, work_item: :accounting_post)
@@ -63,16 +63,6 @@ class OrderServicesController < ApplicationController
     set_filter_tickets
     set_filter_accounting_posts
     set_filter_invoices
-  end
-
-  def convert_predefined_period
-    return if params[:period].blank?
-
-    @period = Period.parse(params.delete(:period))
-    if @period
-      params[:start_date] = I18n.l(@period.start_date)
-      params[:end_date] = I18n.l(@period.end_date)
-    end
   end
 
   def prepare_report_header

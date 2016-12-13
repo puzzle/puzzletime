@@ -55,13 +55,12 @@ class OrderServicesControllerTest < ActionController::TestCase
   end
 
   test 'GET show filtered by predefined period, ignores start_date' do
-    get :show, order_id: order.id, period: '-1m', start_date: '1.12.2006'
+    get :show, order_id: order.id, shortcut: '-1m', start_date: '1.12.2006'
     assert_equal [], assigns(:worktimes)
     period = Period.parse('-1m')
     assert_equal period, assigns(:period)
     assert_equal({ "/orders/#{order.id}/order_services" =>
-                   { 'start_date' => I18n.l(period.start_date),
-                     'end_date' => I18n.l(period.end_date) } },
+                     { 'shortcut' => '-1m', 'start_date' => '1.12.2006' } },
                  session[:list_params])
   end
 

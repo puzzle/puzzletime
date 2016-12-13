@@ -23,7 +23,7 @@
 #= require nested_form_fields
 #= require modal_create
 #= require worktimes
-#= require week_datepicker
+#= require datepicker
 #= require work_item_autocomplete
 #= require plannings
 #= require plannings_panel
@@ -31,6 +31,7 @@
 #= require plannings_service
 #= require orders
 #= require order_contacts
+#= require order_services
 #= require accounting_posts
 #= require turbolinks
 #= require progress_bar
