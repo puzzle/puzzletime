@@ -142,6 +142,10 @@ class Evaluation
     sub_work_items_eval if sub_work_items_eval && division.children?
   end
 
+  def include_no_period_zero_totals
+    !category.is_a?(Employee)
+  end
+
   # Returns whether this Evaluation is personally for the current user.
   # Default is false.
   def for?(_user)

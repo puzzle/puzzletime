@@ -21,6 +21,10 @@ class DepartmentOrdersEval < WorkItemsEval
     supplement
   end
 
+  def include_no_period_zero_totals
+    false
+  end
+
   private
 
   def show_month_end_completions?(user, period)
