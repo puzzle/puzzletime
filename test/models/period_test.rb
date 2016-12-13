@@ -12,10 +12,11 @@ class PeriodTest < ActiveSupport::TestCase
   end
 
   def test_parse
+    travel_to Date.new(2000, 1, 5)
     period = Period.parse('3M')
     assert_equal '3M', period.shortcut
-    assert_equal Date.today, period.start_date
-    assert_equal Date.today + 3.months, period.end_date
+    assert_equal Date.new(2000, 1, 3), period.start_date
+    assert_equal Date.new(2000, 1, 3) + 3.months, period.end_date
   end
 
   def test_intersect
