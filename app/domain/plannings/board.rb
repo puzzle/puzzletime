@@ -20,7 +20,7 @@ module Plannings
     end
 
     def items(employee_id, work_item_id)
-      rows[key(employee_id.to_i, work_item_id.to_i)] || []
+      rows[key(employee_id.to_i, work_item_id.to_i)]
     end
 
     def work_days
@@ -49,7 +49,7 @@ module Plannings
     end
 
     def total_row_hours(employee_id, work_item_id)
-      items(employee_id, work_item_id).sum(&:planned_hours)
+      (items(employee_id, work_item_id) || []).sum(&:planned_hours)
     end
 
     def must_hours_per_day(date)
