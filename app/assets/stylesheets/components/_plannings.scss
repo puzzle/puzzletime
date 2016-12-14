@@ -419,8 +419,9 @@ body.plannings {
 table.company-planning {
   width: 100%;
 
-  .head th {
-    text-align:   center;
+  .head th,
+  .head td {
+    text-align: center;
     border-bottom: 0;
   }
 
@@ -439,4 +440,9 @@ table.company-planning {
   td.head a {
     color: $link-color;
   }
+}
+
+.planning-company-totals {
+  color: #000;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 }
