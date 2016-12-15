@@ -10,4 +10,4 @@ app.orderServices = new class
       .datepicker('option', 'disabled', $('#shortcut').val())
 
 $ ->
-  app.plannings.init()
+  app.orderServices.init()
