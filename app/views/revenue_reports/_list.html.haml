@@ -1,0 +1,49 @@
+%table.revenue-report.table.table-striped.table-condensed.table-hover.table-inline
+  %thead
+    %tr
+      %th
+        Organisationseinheit
+      - @report.step_past_months do |date|
+        %th
+          = with_tooltip('Verrechenbare Stunden', :div) do
+            = l(date, format: :month)
+      - if @report.past_months?
+        %th
+          = with_tooltip('Summe der verrechenbaren Stunden der vergangenen Monate', :div) do
+            Total
+        %th{ class: @report.future_months? && 'table-column-border-right' }
+          = with_tooltip('Durchschnitt der verrechenbaren Stunden der vergangenen Monate', :div) do
+            ⌀
+      - @report.step_future_months do |date|
+        %th
+          = with_tooltip('Definitiv geplante Stunden', :div) do
+            = l(date, format: :month)
+
+  %tbody
+    - @report.entries.each do |department|
+      %tr
+        %td
+          = department
+        - @report.step_past_months do |date|
+          %td= format_number(@report.ordertime_hours[[department.id, date]] || 0, 0) + ' ' + Settings.defaults.currency
+        - if @report.past_months?
+          %td
+            = format_number(@report.total_ordertime_hours_per_department(department), 0) + ' ' + Settings.defaults.currency
+          %td{ class: @report.future_months? && 'table-column-border-right' }
+            = format_number(@report.average_ordertime_hours_per_department(department), 0) + ' ' + Settings.defaults.currency
+        - @report.step_future_months do |date|
+          %td.revenue-planning-value= format_number(@report.planning_hours[[department.id, date]] || 0, 0) + ' ' + Settings.defaults.currency
+
+  %tfoot
+    %tr.times_total_sum
+      %td
+        Total
+      - @report.step_past_months do |date|
+        %td= format_number(@report.total_ordertime_hours_per_month[date] || 0, 0) + ' ' + Settings.defaults.currency
+      - if @report.past_months?
+        %td
+          = format_number(@report.total_ordertime_hours_overall, 0) + ' ' + Settings.defaults.currency
+        %td{ class: @report.future_months? && 'table-column-border-right' }
+          = format_number(@report.average_ordertime_hours_overall, 0) + ' ' + Settings.defaults.currency
+      - @report.step_future_months do |date|
+        %td.revenue-planning-value= format_number(@report.total_planning_hours_per_month[date] || 0, 0) + ' ' + Settings.defaults.currency

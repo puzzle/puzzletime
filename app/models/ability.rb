@@ -79,6 +79,8 @@ class Ability
          :export_extended_capacity_csv,
          :export_ma_overview],
         Evaluation
+
+    can [:revenue_reports], Department
   end
 
   def order_responsible_abilities

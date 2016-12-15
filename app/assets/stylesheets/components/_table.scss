@@ -138,6 +138,14 @@
   width: auto;
 }
 
+.table-column-border-left {
+  border-left: 1px solid $table-border-color;
+}
+
+.table-column-border-right {
+  border-right: 1px solid $table-border-color;
+}
+
 table.table td.action {
   width: 20px;
   text-align: center;

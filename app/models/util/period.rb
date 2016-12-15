@@ -75,6 +75,14 @@ class Period
       new(date, date + n.months, options[:label], options[:shortcut])
     end
 
+    def business_year_for(date, options = {})
+      options[:label] ||= business_year_label(date)
+      options[:shortcut] = 'b'
+      year = date.month < Settings.business_year_start_month ? date.year - 1 : date.year
+      business_year_start = Date.civil(year, Settings.business_year_start_month, 1)
+      new(business_year_start, (date + 3.months).end_of_month, options[:label], options[:shortcut])
+    end
+
     def parse(shortcut)
       range, shift = parse_shortcut(shortcut)
       now = Time.zone.now
@@ -85,6 +93,7 @@ class Period
       when 'M' then next_n_months(shift, now)
       when 'q' then quarter_for(Date.civil(now.year, shift * 3, 1), shortcut: shortcut)
       when 'y' then year_for(now.advance(years: shift).to_date, shortcut: shortcut)
+      when 'b' then business_year_for(now.to_date)
       end
     end
 
@@ -150,6 +159,10 @@ class Period
       [range, shift]
     end
 
+    def business_year_label(_date)
+      'Geschäftsjahr/Ausblick'
+    end
+
   end
 
   def initialize(start_date = Time.zone.today, end_date = Time.zone.today, label = nil,
@@ -173,6 +186,13 @@ class Period
   def step(size = 1)
     @start_date.step(@end_date, size) do |date|
       yield date
+    end
+  end
+
+  def step_months
+    return if unlimited?
+    @start_date.beginning_of_month.step(@end_date.beginning_of_month) do |date|
+      yield date if date.day == 1
     end
   end
 
