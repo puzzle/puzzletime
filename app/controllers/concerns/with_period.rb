@@ -15,7 +15,7 @@ module WithPeriod
 
   def build_period
     if build_shortcut_period?
-      Period.parse(params[:shortcut])
+      Period.parse(params[:period_shortcut])
     elsif build_start_end_period?
       Period.new(params[:start_date].presence, params[:end_date].presence).tap do |period|
         fail ArgumentError, 'Start Datum nach End Datum' if period.negative?
@@ -26,7 +26,7 @@ module WithPeriod
     flash.now[:alert] = "Ungültige Zeitspanne: #{ex}"
     params.delete(:start_date)
     params.delete(:end_date)
-    params.delete(:shortcut)
+    params.delete(:period_shortcut)
     Period.new(nil, nil)
   end
 
@@ -35,7 +35,7 @@ module WithPeriod
   end
 
   def build_shortcut_period?
-    params[:shortcut].present?
+    params[:period_shortcut].present?
   end
 
   def build_start_end_period?

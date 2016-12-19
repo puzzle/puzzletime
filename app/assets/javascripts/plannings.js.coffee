@@ -29,7 +29,7 @@ app.plannings = new class
 
   dateFilterChanged: ->
     $('#planning_filter_form').find('#start_date,#end_date').closest('.form-group')
-      .css('visibility', if !$('#shortcut').val() then 'visible' else 'hidden')
+      .css('visibility', if !$('#period_shortcut').val() then 'visible' else 'hidden')
 
   add: (event) =>
     @showSelect(event)

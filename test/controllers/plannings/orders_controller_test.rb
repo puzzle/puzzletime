@@ -53,7 +53,7 @@ module Plannings
     test 'GET#show with predefined period' do
       get :show,
           id: orders(:hitobito_demo).id,
-          shortcut: '6M'
+          period_shortcut: '6M'
       assert assigns(:period).length > 180
     end
 

@@ -7,7 +7,7 @@ app.orderServices = new class
 
   dateFilterChanged: ->
     $('#order_services_filter_form').find('#start_date,#end_date')
-      .datepicker('option', 'disabled', $('#shortcut').val())
+      .datepicker('option', 'disabled', $('#period_shortcut').val())
 
 $ ->
   app.orderServices.init()

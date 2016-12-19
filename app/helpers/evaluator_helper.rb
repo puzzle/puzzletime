@@ -128,7 +128,7 @@ module EvaluatorHelper
   ### period and time helpers
 
   def period_link(label, shortcut)
-    link_to label, action: 'change_period', shortcut: shortcut, back_url: params[:back_url]
+    link_to label, action: 'change_period', period_shortcut: shortcut, back_url: params[:back_url]
   end
 
   def time_info

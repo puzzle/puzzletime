@@ -94,8 +94,8 @@ class EvaluatorController < ApplicationController
   end
 
   def change_period
-    if params[:shortcut]
-      @period = Period.parse(params[:shortcut])
+    if params[:period_shortcut]
+      @period = Period.parse(params[:period_shortcut])
     else
       @period = Period.new(params[:period][:start_date],
                                 params[:period][:end_date],
