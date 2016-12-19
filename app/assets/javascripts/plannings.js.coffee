@@ -64,6 +64,7 @@ app.plannings = new class
         addRowSelect.hide()
 
         @board('.add').show()
+        @initWaypoints()
       )
 
   onAddSelect: (value) =>
@@ -149,6 +150,7 @@ app.plannings = new class
     return if Modernizr.csspositionsticky
     waypoints = []
 
+    @destroyWaypoints()
     @initTopCalendarHeaderWaypoints()
     @initLeftCalendarHeaderWaypoints()
 
@@ -217,7 +219,7 @@ app.plannings = new class
       $(element).css('top', 'auto')
 
   getLeftCalendarHeaderElements: ->
-    $(['.planning-calendar-inner > .groupheader .legend',
+    $(['.planning-calendar-inner > .groupheader > .groupheader-title',
        '.planning-calendar-inner > .actions .buttons',
        '.planning-calendar-days .legend',
        '.planning-board-header',
@@ -227,6 +229,9 @@ app.plannings = new class
   destroyWaypoints: ->
     waypoints.forEach((waypoint) -> waypoint.destroy())
     waypoints = []
+
+    $('.stuck').removeClass('stuck')
+    $('.sticky-wrapper').replaceWith -> @children
 
   board: (selector) ->
     if selector
