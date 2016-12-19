@@ -8,3 +8,4 @@ $('#planned_#{dom_id(@board.subject)}').html('#{j(render('header_planned'))}');
                    row_total: @board.total_row_hours(employee_id, work_item_id)))
   $('##{planning_row_id(employee_id, work_item_id)}').html('#{row}');
 
+App.plannings.initWaypoints();
