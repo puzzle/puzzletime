@@ -200,7 +200,7 @@ app.plannings = new class
 
   positionTopCalendarHeader: (element) ->
     if $(element).hasClass('stuck')
-      leftHeaderWidth = 300
+      leftHeaderWidth = parseInt($('.legend').first().css('width'), 10)
       firstDay = $(element)
         .closest('.planning-calendar-inner')
         .find('.day:first')
@@ -219,7 +219,7 @@ app.plannings = new class
       $(element).css('top', 'auto')
 
   getLeftCalendarHeaderElements: ->
-    $(['.planning-calendar-inner > .groupheader > .groupheader-title',
+    $(['.planning-calendar-inner > .groupheader .legend',
        '.planning-calendar-inner > .actions .buttons',
        '.planning-calendar-days .legend',
        '.planning-board-header',
