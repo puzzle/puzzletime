@@ -77,20 +77,10 @@ class EmployeeStatistics
   def employments_during(period)
     return [] if period.nil?
 
-    conditions = []
-    bindings = []
-    if period.start_date.present?
-      conditions << '(end_date IS NULL OR end_date >= ?)'
-      bindings << period.start_date
-    end
-    if period.end_date.present?
-      conditions << 'start_date <= ?'
-      bindings << period.end_date
-    end
-    employments = @employee.employments.where(conditions.join(' AND '), *bindings).
+    employments = @employee.employments.during(period).
                                         reorder('start_date').
                                         to_a
-    normalize_employments_boundaries(employments, period)
+    Employment.normalize_boundaries(employments, period)
   end
 
   private
@@ -135,16 +125,4 @@ class EmployeeStatistics
     Period.new(first_employment.start_date, date)
   end
 
-  def normalize_employments_boundaries(employments, period)
-    unless employments.empty?
-      if period.start_date.present? && employments.first.start_date < period.start_date
-        employments.first.start_date = period.start_date
-      end
-      if period.end_date.present? && (employments.last.end_date.nil? ||
-        employments.last.end_date > period.end_date)
-        employments.last.end_date = period.end_date
-      end
-    end
-    employments
-  end
 end

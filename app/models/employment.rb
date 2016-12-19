@@ -33,6 +33,39 @@ class Employment < ActiveRecord::Base
   before_create :update_previous_end_date
 
   scope :list, -> { order('start_date DESC') }
+  scope :during, (lambda do |period|
+    return all unless period
+
+    conditions = []
+    bindings = []
+
+    if period.start_date.present?
+      conditions << '(end_date is NULL OR end_date >= ?)'
+      bindings << period.start_date
+    end
+
+    if period.end_date.present?
+      conditions << 'start_date <= ?'
+      bindings << period.end_date
+    end
+
+    where(conditions.join(' AND '), *bindings)
+  end)
+
+  class << self
+    def normalize_boundaries(employments, period)
+      unless employments.empty?
+        if period.start_date.present? && employments.first.start_date < period.start_date
+          employments.first.start_date = period.start_date
+        end
+        if period.end_date.present? && (employments.last.end_date.nil? ||
+            employments.last.end_date > period.end_date)
+          employments.last.end_date = period.end_date
+        end
+      end
+      employments
+    end
+  end
 
   def previous_employment
     @previous_employment ||=

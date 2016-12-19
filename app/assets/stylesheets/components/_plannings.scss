@@ -405,7 +405,7 @@ body.plannings {
 
 .day {
   &.-definitive, &.-provisional {
-    &.-absence, &.-holiday {
+    &.-absence, &.-absence-unpaid, &.-holiday {
       &, &.-selected {
         background-clip: content-box, border-box;
       }

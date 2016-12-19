@@ -82,17 +82,17 @@ class PlanningItemTest < ActiveSupport::TestCase
   end
 
   test 'with unpaid absence' do
-    a1 = Absencetime.create!(work_date: '2000-01-03',
-                             hours: 40,
-                             employee_id: employees(:pascal).id,
-                             absence: absences(:compensation))
+    e1 = Employment.create!(employee_id: employees(:pascal).id,
+                            percent: 0,
+                            start_date: '2000-01-03',
+                            end_date: '2000-02-03')
 
     i = Plannings::Item.new
-    i.absencetime = a1
+    i.employment = e1
 
     expected = {
-      class: '-absence -absence-unpaid',
-      title: 'Überzeitkompensation: 40.0'
+      class: '-absence-unpaid',
+      title: nil
     }
 
     assert i.day_attrs == expected

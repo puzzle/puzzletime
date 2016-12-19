@@ -73,6 +73,7 @@ module Plannings
         build_default_rows(rows)
         build_planning_rows(rows)
         add_absencetimes_to_rows(rows)
+        add_employments_to_rows(rows)
         add_holidays_to_rows(rows)
       end
     end
@@ -82,6 +83,13 @@ module Plannings
       @employees = load_employees
       @absencetimes = load_absencetimes
       @holidays = load_holidays
+      load_employments
+    end
+
+    def load_employments
+      @employments = Employment.during(@period)
+                               .where(employee_id: @employees.map(&:id))
+      @employments = Employment.normalize_boundaries(@employments, @period)
     end
 
     def build_default_rows(rows)
@@ -116,9 +124,28 @@ module Plannings
       end
     end
 
+    def add_employments_to_rows(rows)
+      @employments.each do |employment|
+        rows.each do |key, items|
+          next unless key.first == employment.employee_id
+
+          end_date = employment.end_date || @period.end_date
+
+          (employment.start_date..end_date).each do |date|
+            index = item_index(date)
+            next unless index
+
+            if items[index]
+              items[index].employment = employment
+            end
+          end
+        end
+      end
+    end
+
     def add_holidays_to_rows(rows)
       @holidays.each do |holiday|
-        rows.each do |key, items|
+        rows.each do |_key, items|
           index = item_index(holiday[0])
           next unless index
 
