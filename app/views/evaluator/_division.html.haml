@@ -22,6 +22,6 @@
              :collection => periodTimes,
              :locals => {:division_id => division.id})
 
-    - @evaluation.division_supplement(@user, @period).each do |supp|
+    - @evaluation.division_supplement(@user).each do |supp|
       %td{align: supp[2].presence}
         = self.send(supp[0], division)

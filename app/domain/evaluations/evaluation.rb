@@ -134,7 +134,7 @@ class Evaluation
   # information or links to certain actions.
   # No methods are called by default.
   # See EmployeeWorkItemsEval for an example.
-  def division_supplement(_user, _period = nil)
+  def division_supplement(_user)
     []
   end
 

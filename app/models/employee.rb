@@ -137,13 +137,8 @@ class Employee < ActiveRecord::Base
     @statistics ||= EmployeeStatistics.new(self)
   end
 
-  def recently_committed_worktimes?
-    committed_worktimes_at && committed_worktimes_at >= Time.zone.today.end_of_month - 1.month
-  end
-
   def committed_date?(date)
-    return false unless committed_worktimes_at.present?
-    date <= committed_worktimes_at
+    committed_worktimes_at && date <= committed_worktimes_at
   end
 
   ######### employment information ######################

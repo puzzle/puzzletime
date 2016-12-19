@@ -1,0 +1,23 @@
+= plain_form(entry, url: url, class: 'wide-labels') do |f|
+  = f.error_messages
+
+  .form-group
+    = f.label(completable_attr, nil, class: 'col-md-3 control-label')
+    .col-md-3
+      %p.form-control-static
+        = format_month(entry.send(completable_attr))
+
+  .form-group
+    = f.label(completable_attr, select_label, class: 'col-md-3 control-label')
+    .col-md-3
+      = f.collection_select(completable_attr,
+                            @dates,
+                            :first,
+                            :last,
+                            { selected: @selected_month },
+                            class: 'form-control')
+
+  .form-group
+    .col-md-offset-3.col-md-8
+      = f.submit_button
+      = f.cancel_link(cancel_url)

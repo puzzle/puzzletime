@@ -5,25 +5,10 @@ class DepartmentOrdersEvalTest < ActiveSupport::TestCase
     @eval = DepartmentOrdersEval.new(department.id)
   end
 
-  test 'adds month end supplement if last month and has ability' do
-    supplement = @eval.division_supplement(employees(:mark), Period.parse('-1m'))
-    assert_equal 1, supplement.length
-    assert_equal :order_month_end_completions, supplement.first.first
-  end
-
-  test 'does not add month end supplement if before last month but has ability' do
-    supplement = @eval.division_supplement(employees(:mark), Period.parse('-2m'))
-    assert_equal [], supplement
-  end
-
-  test 'does not add month end supplement if coming month but has ability' do
-    supplement = @eval.division_supplement(employees(:mark), Period.parse('+1m'))
-    assert_equal [], supplement
-  end
-
-  test 'does not add month end supplement if last month but has no ability' do
-    supplement = @eval.division_supplement(employees(:various_pedro), Period.parse('-1m'))
-    assert_equal [], supplement
+  test 'adds completed supplement' do
+    supplement = @eval.division_supplement(employees(:mark))
+    assert_equal 2, supplement.length
+    assert_equal :order_completed, supplement.first.first
   end
 
   private

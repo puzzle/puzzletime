@@ -8,7 +8,7 @@
         %th.periodHead{colspan: @evaluation.class.planned_hours ? 3 : nil}
           = p ? p.label : 'Total'
           &nbsp; &nbsp;
-      - @evaluation.division_supplement(@user, @period).each do |supp|
+      - @evaluation.division_supplement(@user).each do |supp|
         %th= supp[1]
     - if @evaluation.class.planned_hours
       %tr
@@ -22,7 +22,7 @@
             Geplant
           %th.subhead.period-subhead
             Δ
-        - @evaluation.division_supplement(@user, @period).each do |supp|
+        - @evaluation.division_supplement(@user).each do |supp|
           %th.subhead
 
   %tbody
@@ -34,5 +34,5 @@
       - if @evaluation.sub_work_items_eval
         %th
       = render(:partial => 'timecell', :collection => collect_times(@periods, :sum_total_times))
-      - @evaluation.division_supplement(@user, @period).each do |supp|
+      - @evaluation.division_supplement(@user).each do |supp|
         %th

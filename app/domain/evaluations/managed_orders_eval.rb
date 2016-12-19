@@ -10,7 +10,12 @@ class ManagedOrdersEval < WorkItemsEval
   end
 
   def divisions(_period = nil)
-    WorkItem.joins(:order).where(orders: { responsible_id: category.id }).list
+    WorkItem.joins(:order).includes(:order).where(orders: { responsible_id: category.id }).list
+  end
+
+  def division_supplement(user)
+    [[:order_completed, 'Abschluss erledigt', 'left'],
+     [:order_committed, 'Abschluss freigegeben', 'left']]
   end
 
   def sum_times_grouped(period)

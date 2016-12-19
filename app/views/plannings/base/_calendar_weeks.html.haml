@@ -1,8 +1,8 @@
 - months_from_monday.each do |month|
   .planning-calendar-month
     .title
-      %span.month= format_month(month.start_date)
-      %small.year= format_year(month.start_date)
+      %span.month= l(month.start_date, format: '%B')
+      %small.year= l(month.start_date, format: '%Y')
     .planning-calendar-month-weeks
       - month.step(7) do |date|
         = render 'week_header', date: date

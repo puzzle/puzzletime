@@ -65,14 +65,6 @@ module FormatHelper
     "#{number.round(2)} Tage"
   end
 
-  def format_month(date)
-    I18n.l(date, format: '%B')
-  end
-
-  def format_year(date)
-    I18n.l(date, format: '%Y')
-  end
-
   def format_percent(value)
     (value == value.to_i ? value.to_i.to_s : value.to_s) + ' %'
   end

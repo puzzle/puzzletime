@@ -26,7 +26,7 @@ Rails.application.routes.draw do
 
     resources :employments, except: [:show]
     resources :overtime_vacations, except: [:show]
-    resource :worktimes_commit, only: [:edit, :update]
+    resource :worktimes_commit, only: [:edit, :update], controller: 'employees/worktimes_commit'
   end
 
   resources :holidays, except: [:show]
@@ -37,7 +37,6 @@ Rails.application.routes.draw do
     end
 
     member do
-      get :bills
       get :employees
     end
 
@@ -70,7 +69,8 @@ Rails.application.routes.draw do
       end
     end
 
-    resource :month_end_completion, only: [:edit, :update]
+    resource :completed, only: [:edit, :update], controller: 'orders/completed'
+    resource :committed, only: [:edit, :update], controller: 'orders/committed'
   end
 
   resources :order_statuses, except: [:show]

@@ -2,7 +2,7 @@
 
 require 'test_helper'
 
-class WorktimesCommitsControllerTest < ActionController::TestCase
+class Employees::WorktimesCommitControllerTest < ActionController::TestCase
 
   setup :login
 
@@ -12,7 +12,7 @@ class WorktimesCommitsControllerTest < ActionController::TestCase
     get :edit, employee_id: employee.id
     assert_template '_form'
 
-    selection = assigns(:commit_dates)
+    selection = assigns(:dates)
     assert_equal selection.size, 13
     assert_equal selection.first.first, Time.zone.today.end_of_month
     assert_equal assigns(:selected_month), Date.new(2015, 9, 30)
@@ -25,7 +25,7 @@ class WorktimesCommitsControllerTest < ActionController::TestCase
     get :edit, employee_id: employee.id
     assert_template '_form'
 
-    selection = assigns(:commit_dates)
+    selection = assigns(:dates)
     assert_equal selection.size, 2
     assert_equal selection.first.first, (Time.zone.today.end_of_month - 1.month).end_of_month
     assert_equal assigns(:selected_month), Date.new(2015, 9, 30)
@@ -38,7 +38,7 @@ class WorktimesCommitsControllerTest < ActionController::TestCase
     get :edit, employee_id: employee.id
     assert_template '_form'
 
-    selection = assigns(:commit_dates)
+    selection = assigns(:dates)
     assert_equal selection.size, 2
     assert_equal selection.first.first, (Time.zone.today.end_of_month - 1.month).end_of_month
     assert_equal assigns(:selected_month), nil

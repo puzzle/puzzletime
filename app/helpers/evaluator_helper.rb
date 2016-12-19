@@ -75,54 +75,64 @@ module EvaluatorHelper
 
   def worktime_commits(employee)
     content = content_tag(:span, id: "committed_worktimes_at_#{employee.id}") do
-      worktime_commits_icon(employee) << ' ' << format_attr(employee, :committed_worktimes_at)
+      completed_icon(employee.committed_worktimes_at) <<
+        ' ' <<
+        format_month(employee.committed_worktimes_at)
     end
 
     if can?(:update_committed_worktimes, employee)
-      content << ' &nbsp; '.html_safe << link_to(picon('edit'),
-                                                 edit_employee_worktimes_commit_path(employee),
-                                                 data: { modal: '#modal',
-                                                         title: 'Freigabe bearbeiten',
-                                                         update: 'element',
-                                                         element: "#committed_worktimes_at_#{employee.id}",
-                                                         remote: true,
-                                                         type: :html })
+      content <<
+        ' &nbsp; '.html_safe <<
+        link_to(picon('edit'),
+                edit_employee_worktimes_commit_path(employee),
+                data: { modal: '#modal',
+                        title: 'Freigabe bearbeiten',
+                        update: 'element',
+                        element: "#committed_worktimes_at_#{employee.id}",
+                        remote: true,
+                        type: :html })
     end
     content
   end
 
-  def worktime_commits_icon(employee)
-    if employee.recently_committed_worktimes?
-      picon('disk', class: 'green')
-    else
-      picon('square', class: 'red')
-    end
-  end
-
-  def order_month_end_completions(work_item)
+  def order_completed(work_item)
     order = work_item.order
-    content = content_tag(:span, id: "order_month_end_completion_#{order.id}") do
-      order_month_end_completions_icon(order) << ' ' << format_attr(order, :completed_month_end_at)
+    content = content_tag(:span, id: "order_completed_#{order.id}") do
+      completed_icon(order.completed_at) << ' ' << format_month(order.completed_at)
     end
-    if can?(:update_month_end_completions, order)
-      content << ' &nbsp; '.html_safe << link_to(picon('edit'),
-                                                 edit_order_month_end_completion_path(order),
-                                                 data: { modal: '#modal',
-                                                         title: 'Monatsabschluss bearbeiten',
-                                                         update: 'element',
-                                                         element: "#order_month_end_completion_#{order.id}",
-                                                         remote: true,
-                                                         type: :html })
+    if can?(:update_completed, order)
+      content <<
+        ' &nbsp; '.html_safe <<
+        link_to(picon('edit'),
+                edit_order_completed_path(order),
+                data: { modal: '#modal',
+                        title: 'Monatsabschluss erledigen',
+                        update: 'element',
+                        element: "#order_completed_#{order.id}",
+                        remote: true,
+                        type: :html })
     end
     content
   end
 
-  def order_month_end_completions_icon(order)
-    if order.recently_completed_month_end?
-      picon('disk', class: 'green')
-    else
-      picon('square', class: 'red')
+  def order_committed(work_item)
+    order = work_item.order
+    content = content_tag(:span, id: "order_committed_#{order.id}") do
+      completed_icon(order.committed_at) << ' ' << format_month(order.committed_at)
     end
+    if can?(:update_committed, order)
+      content <<
+          ' &nbsp; '.html_safe <<
+          link_to(picon('edit'),
+                  edit_order_committed_path(order),
+                  data: { modal: '#modal',
+                          title: 'Monatsabschluss freigeben',
+                          update: 'element',
+                          element: "#order_committed_#{order.id}",
+                          remote: true,
+                          type: :html })
+    end
+    content
   end
 
   ### period and time helpers

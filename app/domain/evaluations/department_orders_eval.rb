@@ -13,26 +13,13 @@ class DepartmentOrdersEval < WorkItemsEval
     WorkItem.joins(:order).includes(:order).where(orders: { department_id: category.id }).list
   end
 
-  def division_supplement(_user, period = nil)
-    supplement = []
-    if show_month_end_completions?(_user, period)
-      supplement << [:order_month_end_completions, 'Abschluss erledigt', 'left']
-    end
-    supplement
+  def division_supplement(user)
+    [[:order_completed, 'Abschluss erledigt', 'left'],
+     [:order_committed, 'Abschluss freigegeben', 'left']]
   end
 
   def include_no_period_zero_totals
     false
   end
 
-  private
-
-  def show_month_end_completions?(user, period)
-    ability = Ability.new(user)
-    past_month = Period.parse('-1m')
-    period.present? &&
-        period.start_date == past_month.start_date &&
-        period.end_date == past_month.end_date &&
-        category.orders.any? { |order| ability.can?(:update_month_end_completions, order) }
-  end
 end

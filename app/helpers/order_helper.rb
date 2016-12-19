@@ -63,12 +63,6 @@ module OrderHelper
     content_tag(:span, f(value), class: order_report_average_rate_class(value))
   end
 
-  def format_order_completed_month_end_at(order)
-    if order.completed_month_end_at
-      I18n.l(order.completed_month_end_at, format: :month)
-    end
-  end
-
   def glyphicons
     %w(asterisk plus euro minus cloud envelope pencil glass music search heart star star-empty
        user film th-large th th-list ok remove zoom-in zoom-out off signal cog trash home file

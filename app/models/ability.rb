@@ -86,6 +86,7 @@ class Ability
     can :create, WorkItem
 
     can :manage, Order, responsible_id: user.id
+    cannot :update_committed, Order
 
     can :update, OrderComment do |c|
       c.creator_id == user.id
