@@ -6,14 +6,14 @@
       %td.head.nowrap
         Total
       - @period.step(7) do |date|
-        %td{ class: company_week_totals_state(date) }
+        %td{ class: @overview.week_totals_state(date) }
           = link_to '#', class: 'has-tooltip' do
-            #{(company_week_total(date) / 100).round(1)}/#{(company_weekly_employment_percent(date) / 100).round(1)} FTE
+            #{(@overview.week_total(date) / 100).round(1)}/#{(@overview.weekly_employment_percent(date) / 100).round(1)} FTE
             %span
-              #{(company_week_total(date)).round}% / #{(company_weekly_employment_percent(date)).round}%
+              #{(@overview.week_total(date)).round}% / #{(@overview.weekly_employment_percent(date)).round}%
               %br
               FTE = Anzahl Vollzeitstellen
-    - @boards.each do |board|
+    - @overview.boards.each do |board|
       %tr
         %td.head.nowrap
           = link_to_if(can?(:show_plannings, board.employee),

@@ -21,32 +21,4 @@ module PlanningsHelper
     end
   end
 
-  def company_week_total(date)
-    @company_week_total ||= {}
-    @company_week_total[date] ||= @boards.sum { |board| board.week_total(date) }
-  end
-
-  def company_weekly_employment_percent(date)
-    @company_weekly_employment_percent ||= {}
-    @company_weekly_employment_percent[date] ||=
-      @boards.sum { |board| board.weekly_employment_percent(date) }
-  end
-
-  # date is always monday of the requested week
-  def company_week_totals_state(date)
-    total = company_week_total(date)
-    employed = company_weekly_employment_percent(date)
-    if total.zero? && employed.zero?
-      :fully_planned
-    elsif total.zero?
-
-      nil
-    elsif (total - employed).abs < 1
-      :fully_planned
-    elsif total > employed
-      :over_planned
-    else
-      :under_planned
-    end
-  end
 end

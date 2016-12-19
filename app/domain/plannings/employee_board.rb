@@ -3,6 +3,24 @@
 module Plannings
   class EmployeeBoard < Board
 
+    class << self
+
+      def week_totals_state(total, employed)
+        if total.zero? && employed.zero?
+          :fully_planned
+        elsif total.zero?
+          nil
+        elsif (total - employed).abs < 1
+          :fully_planned
+        elsif total > employed
+          :over_planned
+        else
+          :under_planned
+        end
+      end
+
+    end
+
     alias employee subject
 
     def initialize(employee, period)
@@ -27,20 +45,7 @@ module Plannings
 
     # date is always monday of the requested week
     def week_totals_state(date)
-      total = week_total(date)
-      employed = weekly_employment_percent(date)
-      if total.zero? && employed.zero?
-        :fully_planned
-      elsif total.zero?
-
-        nil
-      elsif (total - employed).abs < 1
-        :fully_planned
-      elsif total > employed
-        :over_planned
-      else
-        :under_planned
-      end
+      self.class.week_totals_state(week_total(date), weekly_employment_percent(date))
     end
 
     # date is always monday of the requested week

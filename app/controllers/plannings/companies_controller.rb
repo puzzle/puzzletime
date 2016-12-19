@@ -9,15 +9,10 @@ module Plannings
     before_action :set_period
 
     def show
-      @boards = create_boards.sort_by { |b| -b.overall_free_capacity }
+      @overview = Plannings::CompanyOverview.new(@period)
     end
 
     private
-
-    def create_boards
-      employees = Employee.employed_ones(@period).list
-      employees.map { |e| Plannings::EmployeeBoard.new(e, @period) }
-    end
 
     def set_period
       period = build_period
