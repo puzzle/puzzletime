@@ -407,6 +407,36 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     page.assert_no_selector('#add_employee_id')
   end
 
+  test 'collapsable groups' do
+    create_plannings(work_items(:hitobito_demo_app).id)
+
+    visit plannings_order_path(orders(:hitobito_demo))
+
+    page.assert_selector('.groupheader', count: 2)
+    page.assert_selector('.groupheader.collapsed', count: 1)
+    page.assert_selector('.planning-calendar-days', count: 2)
+
+    find('.groupheader:not(.collapsed) .legend').click
+
+    page.assert_selector('.groupheader', count: 2)
+    page.assert_selector('.groupheader.collapsed', count: 2)
+    page.assert_selector('.planning-calendar-days', count: 0)
+
+    all('.groupheader .legend')[0].click
+
+    page.assert_selector('.groupheader', count: 2)
+    page.assert_selector('.groupheader.collapsed', count: 1)
+    page.assert_selector('.planning-calendar-days', count: 2)
+    page.assert_selector('.selectize-dropdown-content', count: 0)
+
+    all('.groupheader .legend')[1].click
+
+    page.assert_selector('.groupheader', count: 2)
+    page.assert_selector('.groupheader.collapsed', count: 0)
+    page.assert_selector('.planning-calendar-days', count: 2)
+    page.assert_selector('.selectize-dropdown-content', count: 1)
+  end
+
   private
 
   def workdays_next_n_months(n, date = Time.zone.today)
@@ -432,7 +462,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     work_items(:puzzletime).id
   end
 
-  def create_plannings
+  def create_plannings(work_item_id)
     date = Time.zone.today.beginning_of_week.strftime('%Y-%m-%d')
     Planning.create!({ employee_id: employees(:pascal).id,
                        work_item_id: work_item_id,
@@ -447,7 +477,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
   end
 
   def list_plannings
-    create_plannings
+    create_plannings(work_item_id)
     login_as :mark
     visit plannings_order_path(orders(:puzzletime))
   end
