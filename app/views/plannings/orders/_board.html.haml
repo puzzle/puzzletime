@@ -11,7 +11,7 @@
               %i{ class: 'glyphicon glyphicon-chevron-down' }
             %br/
             %span.small
-              = format_number(@board.total_post_hours(post), 0)
+              = format_number(@board.total_post_planned_hours(post), 0)
               \/
               = format_hour(post.offered_hours.to_f, 0)
           - @board.work_days.times do
@@ -24,7 +24,7 @@
             = render 'row',
                      legend: employee,
                      items: items,
-                     row_total: @board.total_row_hours(employee.id, post.work_item_id)
+                     row_total: @board.total_row_planned_hours(employee.id, post.work_item_id)
 
       - if can?(:manage_plannings, @board.subject)
         .actions{ data: { type: 'employee', work_item_id: post.work_item_id } }

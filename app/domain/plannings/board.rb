@@ -31,8 +31,8 @@ module Plannings
       @rows ||= build_rows
     end
 
-    def week_total(date)
-      week_totals[date]
+    def weekly_planned_percent(date)
+      weekly_planned_percents[date]
     end
 
     def accounting_posts
@@ -40,15 +40,15 @@ module Plannings
       @accounting_posts ||= load_accounting_posts
     end
 
-    def plannable_hours
+    def total_plannable_hours
       0
     end
 
-    def total_hours
+    def total_planned_hours
       0
     end
 
-    def total_row_hours(employee_id, work_item_id)
+    def total_row_planned_hours(employee_id, work_item_id)
       (items(employee_id, work_item_id) || []).sum(&:planned_hours)
     end
 
@@ -59,8 +59,8 @@ module Plannings
 
     private
 
-    def week_totals
-      @week_totals ||= Hash.new(0.0).tap do |totals|
+    def weekly_planned_percents
+      @weekly_planned_percents ||= Hash.new(0.0).tap do |totals|
         load_plannings.group(:date).sum(:percent).each do |date, percent|
           totals[date.at_beginning_of_week.to_date] += percent / 5.0
         end

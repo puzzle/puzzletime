@@ -6,11 +6,11 @@
       %td.head.nowrap
         Total
       - @period.step(7) do |date|
-        %td{ class: @overview.week_totals_state(date) }
+        %td{ class: @overview.week_planning_state(date) }
           = link_to '#', class: 'has-tooltip' do
-            #{(@overview.week_total(date) / 100).round(1)}/#{(@overview.weekly_employment_percent(date) / 100).round(1)} FTE
+            #{(@overview.weekly_planned_percent(date) / 100).round(1)}/#{(@overview.weekly_employment_percent(date) / 100).round(1)} FTE
             %span
-              #{(@overview.week_total(date)).round}% / #{(@overview.weekly_employment_percent(date)).round}%
+              #{(@overview.weekly_planned_percent(date)).round}% / #{(@overview.weekly_employment_percent(date)).round}%
               %br
               FTE = Anzahl Vollzeitstellen
     - @overview.boards.each do |board|
@@ -21,10 +21,10 @@
                        plannings_employee_path(board.employee))
 
         - @period.step(7) do |date|
-          %td{ class: board.week_totals_state(date) }
+          %td{ class: board.week_planning_state(date) }
             = link_to '#', class: 'has-tooltip' do
-              = board.week_total(date).to_f.round
-              %span #{board.week_total(date).round}% / #{board.weekly_employment_percent(date).round}%
+              = board.weekly_planned_percent(date).to_f.round
+              %span #{board.weekly_planned_percent(date).round}% / #{board.weekly_employment_percent(date).round}%
 
   %tfoot
     = render 'header'

@@ -23,7 +23,7 @@ module Plannings
       board.for_rows([[params[:employee_id], params[:work_item_id]]])
       @items = board.rows.values.first
       @legend = board.row_legend(params[:employee_id], params[:work_item_id])
-      @row_total = board.total_row_hours(params[:employee_id], params[:work_item_id])
+      @row_total = board.total_row_planned_hours(params[:employee_id], params[:work_item_id])
     end
 
     def update

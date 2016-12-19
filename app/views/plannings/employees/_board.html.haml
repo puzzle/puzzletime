@@ -9,7 +9,7 @@
           = render 'row',
                    legend: post,
                    items: items,
-                   row_total: @board.total_row_hours(@board.employee.id, post.work_item_id)
+                   row_total: @board.total_row_planned_hours(@board.employee.id, post.work_item_id)
 
     - if can?(:manage_plannings, @board.subject)
       .actions{ data: { type: 'workItem', employee_id: @board.employee.id } }

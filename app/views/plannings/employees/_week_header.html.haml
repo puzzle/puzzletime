@@ -1,3 +1,3 @@
-.planning-calendar-week{ class: @board.week_totals_state(date) }
+.planning-calendar-week{ class: @board.week_planning_state(date) }
   .kw KW #{date.cweek}
-  .planned #{@board.week_total(date).round}%/#{@board.weekly_employment_percent(date).round}%
+  .planned #{@board.weekly_planned_percent(date).round}%/#{@board.weekly_employment_percent(date).round}%

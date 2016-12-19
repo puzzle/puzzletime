@@ -5,7 +5,7 @@ module Plannings
 
     class << self
 
-      def week_totals_state(total, employed)
+      def week_planning_state(total, employed)
         if total.zero? && employed.zero?
           :fully_planned
         elsif total.zero?
@@ -36,16 +36,16 @@ module Plannings
       accounting_post
     end
 
-    def week_total(date)
+    def weekly_planned_percent(date)
       rows # assert data is loaded
-      @week_percent ||= {}
-      @week_percent[date] ||=
-        week_totals[date] + week_absence_percent(date) + week_holiday_percent(date)
+      @weekly_planned_and_absence_percent ||= {}
+      @weekly_planned_and_absence_percent[date] ||=
+        weekly_planned_percents[date] + weekly_absence_percent(date) + weekly_holiday_percent(date)
     end
 
     # date is always monday of the requested week
-    def week_totals_state(date)
-      self.class.week_totals_state(week_total(date), weekly_employment_percent(date))
+    def week_planning_state(date)
+      self.class.week_planning_state(weekly_planned_percent(date), weekly_employment_percent(date))
     end
 
     # date is always monday of the requested week
@@ -57,17 +57,17 @@ module Plannings
     def overall_free_capacity
       sum = 0
       @period.step(7) do |date|
-        sum += weekly_employment_percent(date) - week_total(date)
+        sum += weekly_employment_percent(date) - weekly_planned_percent(date)
       end
       sum
     end
 
-    def plannable_hours
+    def total_plannable_hours
       employee.statistics.musttime(period)
     end
 
     # total planned hours on this employee for the current period.
-    def total_hours
+    def total_planned_hours
       rows # assert data is loaded
       WorkingCondition.sum_with(:must_hours_per_day, period) do |p, val|
         load_plannings(p).sum(:percent) / 100.0 * val
@@ -89,13 +89,13 @@ module Plannings
       [employee.id]
     end
 
-    def week_absence_percent(date)
+    def weekly_absence_percent(date)
       week = date..(date + 7)
       absence_hours = @absencetimes.select { |t| week.cover?(t.work_date) }.sum(&:hours)
       absence_hours / (must_hours_per_day(date) * 5) * 100
     end
 
-    def week_holiday_percent(date)
+    def weekly_holiday_percent(date)
       must_hours = must_hours_per_day(date)
       @employments.each_with_index do |e, i|
         percent = percent_for_employment(date, e, i) do |d|

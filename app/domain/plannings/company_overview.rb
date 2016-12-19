@@ -8,13 +8,13 @@ module Plannings
       @boards = create_boards.sort_by { |b| -b.overall_free_capacity }
     end
 
-    def week_totals_state(date)
-      Plannings::EmployeeBoard.week_totals_state(week_total(date), weekly_employment_percent(date))
+    def week_planning_state(date)
+      Plannings::EmployeeBoard.week_planning_state(weekly_planned_percent(date), weekly_employment_percent(date))
     end
 
-    def week_total(date)
-      @week_total ||= {}
-      @week_total[date] ||= boards.sum { |board| board.week_total(date) }
+    def weekly_planned_percent(date)
+      @weekly_planned_percent ||= {}
+      @weekly_planned_percent[date] ||= boards.sum { |board| board.weekly_planned_percent(date) }
     end
 
     def weekly_employment_percent(date)
