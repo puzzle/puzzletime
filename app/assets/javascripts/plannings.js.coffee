@@ -123,6 +123,8 @@ app.plannings = new class
         .nextUntil('.groupheader')
         .toggle(collapsed)
 
+      app.plannings.positionHeaders()
+
       if collapsed
         $(this).children().removeClass('has-planning')
 
