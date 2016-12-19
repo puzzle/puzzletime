@@ -6,9 +6,11 @@
       - if post.work_item_id != @board.order.work_item_id
         .groupheader
           .legend
-            .groupheader-title
-              %strong
-                %span= post
+            .groupheader-wrapper
+              .groupheader-title
+                %span{ title: post }
+                  %strong #{post.work_item.path_shortnames}:
+                  =post.work_item.name
                 %i.glyphicon.glyphicon-chevron-down
               %small.text-muted
                 = format_number(@board.total_post_hours(post), 0)

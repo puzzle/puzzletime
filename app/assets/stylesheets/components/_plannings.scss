@@ -2,7 +2,7 @@ $cell-width: 36px;
 $cell-height: 4rem;
 $weekdays: 5;
 $week-width: $cell-width * $weekdays;
-$legend-width: 300px;
+$legend-width: 420px;
 $grey: #ddd;
 $grey-light: #f3f3f3;
 
@@ -176,7 +176,8 @@ body.plannings {
   }
 }
 
-.planning-calendar-days .legend > a {
+.planning-calendar-days .legend > a,
+.planning-calendar-inner .groupheader-wrapper > .groupheader-title > span {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -200,11 +201,11 @@ body.plannings {
   }
 }
 
-.planning-calendar-inner .groupheader-title {
+.planning-calendar-inner .groupheader-wrapper {
   width: 100%;
   cursor: pointer;
 }
-.planning-calendar-inner .groupheader-title > strong {
+.planning-calendar-inner .groupheader-wrapper > .groupheader-title {
   display: flex;
   align-items: center;
   justify-content: space-between;
