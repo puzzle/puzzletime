@@ -46,6 +46,7 @@ body.plannings {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
+  max-width: calc(100vw - 45px);
 }
 .planning-board-header.stuck {
   position: fixed;

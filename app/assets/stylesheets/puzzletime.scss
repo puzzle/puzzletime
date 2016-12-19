@@ -256,6 +256,7 @@ html.turbolinks-progress-bar::before {
   z-index: $zindex-modal + 1 !important;
 }
 
+@import "layout";
 
 @import "components/*";
 
