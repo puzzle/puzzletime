@@ -14,6 +14,10 @@ module Plannings
       @total_row_hours[key(employee_id.to_i, work_item_id.to_i)] || 0
     end
 
+    def total_post_hours(post)
+      employees.to_a.sum { |e| total_row_hours(e.id, post.work_item_id) }
+    end
+
     def plannable_hours
       accounting_posts.to_a.sum { |p| p.offered_hours.to_f }
     end

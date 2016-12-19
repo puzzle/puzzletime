@@ -215,7 +215,7 @@ app.plannings = new class
       $(element).css('top', 'auto')
 
   getLeftCalendarHeaderElements: ->
-    $(['.planning-calendar-inner > .groupheader strong',
+    $(['.planning-calendar-inner > .groupheader .legend',
        '.planning-calendar-inner > .actions .buttons',
        '.planning-calendar-days .legend',
        '.planning-board-header',

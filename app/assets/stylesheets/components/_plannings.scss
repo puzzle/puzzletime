@@ -143,8 +143,8 @@ body.plannings {
     border-left: 1px solid $grey;
   }
 }
-.planning-calendar-inner > .groupheader > strong,
-.planning-calendar-inner > .groupheader > .sticky-wrapper > strong,
+.planning-calendar-inner > .groupheader > .legend,
+.planning-calendar-inner > .groupheader > .sticky-wrapper > .legend,
 .planning-calendar-inner > .actions > .buttons,
 .planning-calendar-inner > .actions > .sticky-wrapper > .buttons,
 .planning-calendar-days > .legend,
@@ -200,7 +200,7 @@ body.plannings {
   }
 }
 
-.planning-calendar-inner > .groupheader > strong {
+.planning-calendar-inner > .groupheader > .legend {
   display: flex;
   justify-content: space-between;
 }
