@@ -29,7 +29,15 @@ class Department < ActiveRecord::Base
   end
 
   def worktimes
-    Worktime.joins(:work_item).
+    Worktime.
+      joins(:work_item).
+      joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)').
+      where(orders: { department_id: id })
+  end
+
+  def plannings
+    Planning.
+      joins(:work_item).
       joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)').
       where(orders: { department_id: id })
   end
@@ -39,4 +47,9 @@ class Department < ActiveRecord::Base
   def self.worktimes
     Worktime.all
   end
+
+  def self.plannings
+    Planning.all
+  end
+
 end

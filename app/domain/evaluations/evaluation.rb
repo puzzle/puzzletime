@@ -110,6 +110,29 @@ class Evaluation
     query
   end
 
+  ############### Planning Evaluation Functions ###############
+
+  def sum_plannings_grouped(period)
+    query = planning_query(category).joins(division_planning_join).group(division_column)
+    if division_column
+      query_grouped_planning_sums(query, period, division_column)
+    else
+      query_planning_sums(query, period)
+    end
+  end
+
+  def sum_total_plannings(period = nil)
+    query_planning_sums(planning_query(category), period)
+  end
+
+  def planning_query(receiver, division = nil)
+    query = receiver.plannings.
+              joins(:work_item).
+              joins('INNER JOIN accounting_posts ON accounting_posts.work_item_id = ANY (work_items.path_ids)')
+    query = query.where("? = #{category_ref}", category_id) if division && category_ref
+    query
+  end
+
   ################ Methods for overview ##############
 
   # The title for this Evaluation
@@ -201,7 +224,7 @@ class Evaluation
     nil
   end
 
-  protected
+  private
 
   # Initializes a new Evaluation with the given category.
   def initialize(category)
@@ -210,20 +233,11 @@ class Evaluation
 
   def query_time_sums(query, group_by_column = nil)
     if billable_hours
-      columns = ['SUM("worktimes"."hours") AS sum_hours',
-                 'SUM(CASE WHEN "worktimes"."billable" = TRUE ' \
-                     'THEN "worktimes"."hours" ' \
-                     'ELSE 0 END) ' \
-                     'AS sum_billable_hours']
-      columns.unshift(group_by_column) if group_by_column.present?
-
-      result = query.pluck(*columns)
       if group_by_column.present?
-        result.each_with_object({}) do |e, h|
-          h[e[0]] = { hours: e[1].to_f, billable_hours: e[2].to_f }
-        end
+        query_grouped_time_sums(query, group_by_column)
       else
-        { hours: result.first.first.to_f, billable_hours: result.first.second.to_f }
+        result = query.pluck(*hours_and_billable_hours_columns).first
+        { hours: result.first.to_f, billable_hours: result.second.to_f }
       end
     else
       result = query.sum(:hours)
@@ -231,7 +245,51 @@ class Evaluation
     end
   end
 
-  private
+  def query_grouped_time_sums(query, group_by_column)
+    result = query.pluck(group_by_column, *hours_and_billable_hours_columns)
+    result.each_with_object({}) do |e, h|
+      h[e[0]] = { hours: e[1].to_f, billable_hours: e[2].to_f }
+    end
+  end
+
+  def hours_and_billable_hours_columns
+    ['SUM(worktimes.hours) AS sum_hours',
+     'SUM(CASE WHEN worktimes.billable = TRUE ' \
+         'THEN worktimes.hours ' \
+         'ELSE 0 END) ' \
+         'AS sum_billable_hours']
+  end
+
+  def query_planning_sums(query, period)
+    { hours: 0, billable_hours: 0 }.tap do |result|
+      WorkingCondition.each_period_of(:must_hours_per_day, period) do |p, hours|
+        r = query.in_period(p).pluck(*plannings_and_billable_plannings_columns(hours)).first
+        result[:hours] += r.first.to_f
+        result[:billable_hours] += r.second.to_f
+      end
+    end
+  end
+
+  def query_grouped_planning_sums(query, period, group_by_column)
+    {}.tap do |result|
+      WorkingCondition.each_period_of(:must_hours_per_day, period) do |p, hours|
+        r = query.in_period(p).pluck(group_by_column, *plannings_and_billable_plannings_columns(hours))
+        r.each do |e|
+          result[e[0]] ||= { hours: 0, billable_hours: 0 }
+          result[e[0]][:hours] += e[1].to_f
+          result[e[0]][:billable_hours] += e[2].to_f
+        end
+      end
+    end
+  end
+
+  def plannings_and_billable_plannings_columns(must_hours)
+    ["SUM(plannings.percent / 100.0 * #{must_hours.to_f}) AS sum_hours",
+     'SUM(CASE WHEN accounting_posts.billable = TRUE ' \
+         "THEN plannings.percent / 100.0 * #{must_hours.to_f} " \
+         'ELSE 0 END) ' \
+         'AS sum_billable_hours']
+  end
 
   def worktime_type
     absences? ? 'Absencetime' : 'Ordertime'

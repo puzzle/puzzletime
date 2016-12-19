@@ -42,4 +42,8 @@ class Client < ActiveRecord::Base
     Worktime.all
   end
 
+  def self.plannings
+    Planning.all
+  end
+
 end

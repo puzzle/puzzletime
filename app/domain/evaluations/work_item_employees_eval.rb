@@ -5,6 +5,8 @@ class WorkItemEmployeesEval < Evaluation
   self.division_column  = :employee_id
   self.label            = 'Mitarbeiter'
   self.category_ref     = 'ANY ( path_ids )'
+  self.billable_hours    = true
+  self.planned_hours     = true
 
   def initialize(item_id)
     super(WorkItem.find(item_id))

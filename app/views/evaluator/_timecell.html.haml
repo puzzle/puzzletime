@@ -2,22 +2,29 @@
   local variables:
   division_id, action
 :ruby
-  p = @periods[timecell_counter]
-  timecell = @times[timecell_counter][division] if defined? division
-  hours = (timecell.is_a?(Hash) ? timecell[:hours] : timecell).to_f
-  billable_hours = (timecell.is_a?(Hash) ? timecell[:billable_hours] : nil).to_f
-  planned_hours = (timecell.is_a?(Hash) ? timecell[:planned_hours] : nil).to_f
   division_id = nil if ! defined? division_id
   division_id = division.id if defined? division
+  p = @periods[timecell_counter]
+  if @evaluation.planned_hours
+    if division_id
+      plancell = @plannings[timecell_counter][division_id]
+    else
+      plancell = @evaluation.sum_total_plannings(p)
+    end
+  end
+  hours = (timecell.is_a?(Hash) ? timecell[:hours] : timecell).to_f
+  billable_hours = (timecell.is_a?(Hash) ? timecell[:billable_hours] : nil).to_f
+  planned_hours = (plancell.is_a?(Hash) ? plancell[:hours] : nil).to_f
+  planned_billable_hours = (plancell.is_a?(Hash) ? plancell[:billable_hours] : nil).to_f
   action ||= 'details'
 %td.text-right
   - if @evaluation.class.billable_hours
     %span.additional-figure.muted{ title: 'gesamthaft geleistete Stunden' }
-      = safe_join([ '(', format_hour(hours), ')' ])
+      = safe_join(['(', format_hour(hours), ')'])
     %span{ title: 'verrechenbare Stunden' }
-      = format_hour billable_hours
+      = format_hour(billable_hours)
   - else
-    = format_hour hours
+    = format_hour(hours)
   - if division_id || @evaluation.total_details
     - link = url_for(controller: controller.controller_name,
                      action: action,
@@ -28,10 +35,16 @@
     -# use html link instead of link_to for performance reasons
     %a{ href: link.html_safe }= image_tag('lupe.gif', size: '19x11', alt: 'Details')
   - else
-    = image_tag( 'space.gif', 'size' => '19x11' )
+    = image_tag('space.gif', size: '19x11')
 
 - if @evaluation.class.planned_hours
   %td.text-right
-    = format_hour planned_hours
+    %span.additional-figure.muted{ title: 'gesamthaft geplante Stunden' }
+      = safe_join(['(', format_hour(planned_hours), ')'])
+    %span{ title: 'verrechenbar geplante Stunden' }
+      = format_hour(planned_billable_hours)
   %td.text-right
-    = format_hour billable_hours - planned_hours
+    %span.additional-figure.muted{ title: 'Stundendifferenz gesamthaft' }
+      = safe_join(['(', format_hour(hours - planned_hours), ')'])
+    %span{ title: 'Stundendifferenz verrechenbare' }
+      = format_hour(billable_hours - planned_billable_hours)

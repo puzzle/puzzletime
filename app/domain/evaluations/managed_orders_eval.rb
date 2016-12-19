@@ -2,8 +2,10 @@
 
 class ManagedOrdersEval < WorkItemsEval
   self.label             = 'Geleitete Aufträge'
+  self.division_column   = 'orders.work_item_id'
   self.total_details     = false
   self.billable_hours    = true
+  self.planned_hours     = true
 
   def category_label
     'Kunde: ' + division.order.client.name
@@ -18,22 +20,27 @@ class ManagedOrdersEval < WorkItemsEval
      [:order_committed, 'Abschluss freigegeben', 'left']]
   end
 
-  def sum_times_grouped(period)
-    query = Worktime.joins(:work_item).
-            joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)').
-            where(type: 'Ordertime').
-            where(orders: { responsible_id: category.id }).
-            in_period(period).
-            group('orders.work_item_id')
-    query_time_sums(query, 'orders.work_item_id')
+  private
+
+  def worktime_query(receiver, period = nil, division = nil)
+    if receiver === category
+      Worktime.
+        joins(:work_item).
+        joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)').
+        where(type: 'Ordertime').
+        where(orders: { responsible_id: category.id }).
+        in_period(period)
+    else
+      super(receiver, period, division)
+    end
   end
 
-  def sum_total_times(period = nil)
-    query = Worktime.joins(:work_item).
-            joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)').
-            where(type: 'Ordertime').
-            where(orders: { responsible_id: category.id }).
-            in_period(period)
-    query_time_sums(query)
+  def planning_query(receiver, division = nil)
+    Planning.
+      joins(:work_item).
+      joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)').
+      joins('INNER JOIN accounting_posts ON accounting_posts.work_item_id = ANY (work_items.path_ids)').
+      where(orders: { responsible_id: category.id })
   end
+
 end

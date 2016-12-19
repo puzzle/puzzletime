@@ -6,6 +6,8 @@ class ClientsEval < Evaluation
   self.sub_evaluation   = 'clientworkitems'
   self.label            = 'Kunden'
   self.total_details    = false
+  self.billable_hours    = true
+  self.planned_hours     = true
 
   def initialize
     super(Client)

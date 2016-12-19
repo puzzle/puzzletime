@@ -18,6 +18,9 @@ class EvaluatorController < ApplicationController
     set_navigation_levels
     @periods = init_periods
     @times = @periods.collect { |p| @evaluation.sum_times_grouped(p) }
+    if @evaluation.planned_hours
+      @plannings = @periods.collect { |p| @evaluation.sum_plannings_grouped(p) }
+    end
     render(user_view? ? 'user_overview' : 'overview')
   end
 

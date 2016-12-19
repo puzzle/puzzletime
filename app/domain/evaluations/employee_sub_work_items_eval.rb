@@ -6,6 +6,8 @@ class EmployeeSubWorkItemsEval < SubWorkItemsEval
   self.sub_work_items_eval = 'employeesubworkitems'
   self.sub_evaluation    = nil
   self.detail_columns    = detail_columns.collect { |i| i == :hours ? :times : i }
+  self.billable_hours    = false
+  self.planned_hours     = false
 
   attr_reader :employee_id
 

@@ -24,7 +24,15 @@ class WorkItem < ActiveRecord::Base
   has_one :client, dependent: :destroy, inverse_of: :work_item
   has_one :order, dependent: :destroy, inverse_of: :work_item
   has_one :accounting_post, dependent: :destroy, inverse_of: :work_item
-  has_many :plannings, dependent: :destroy
+
+  has_many :plannings,
+           ->(work_item) do
+             joins(:work_item).
+                 unscope(where: :work_item_id).
+                 where('plannings.work_item_id = work_items.id AND ' \
+                   '? = ANY (work_items.path_ids)', work_item.id)
+           end,
+           dependent: :destroy
 
   has_many :worktimes,
            ->(work_item) do
