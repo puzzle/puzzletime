@@ -200,8 +200,13 @@ body.plannings {
   }
 }
 
-.planning-calendar-inner > .groupheader .legend {
+.planning-calendar-inner .groupheader-title {
+  width: 100%;
+  cursor: pointer;
+}
+.planning-calendar-inner .groupheader-title > strong {
   display: flex;
+  align-items: center;
   justify-content: space-between;
 }
 

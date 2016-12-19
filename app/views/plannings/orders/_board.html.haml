@@ -6,14 +6,14 @@
       - if post.work_item_id != @board.order.work_item_id
         .groupheader
           .legend
-            %strong
-              %span= post
-              %i{ class: 'glyphicon glyphicon-chevron-down' }
-            %br/
-            %span.small
-              = format_number(@board.total_post_hours(post), 0)
-              \/
-              = format_hour(post.offered_hours.to_f, 0)
+            .groupheader-title
+              %strong
+                %span= post
+                %i.glyphicon.glyphicon-chevron-down
+              %small.text-muted
+                = format_number(@board.total_post_hours(post), 0)
+                \/
+                = format_hour(post.offered_hours.to_f, 0)
           - @board.work_days.times do
             .day
 
