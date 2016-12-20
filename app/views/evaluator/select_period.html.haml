@@ -57,7 +57,8 @@
       %td
         = period_link '4. Quartal', '4q'
       %td &nbsp;
-      %td &nbsp;
+      %td
+        = period_link 'Geschäftsjahr/Ausblick', 'b', title: 'Aktuelles Geschäftsjahr bis heute + drei Monate'
 
 %h3 Beliebig
 = form_tag({ action: 'change_period' }, class: 'form-horizontal', role: 'form') do

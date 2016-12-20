@@ -27,6 +27,8 @@ class Planning < ActiveRecord::Base
     end
   end)
 
+  scope :definitive, -> { where(definitive: true) }
+
   scope :list, -> { order(:date) }
 
 

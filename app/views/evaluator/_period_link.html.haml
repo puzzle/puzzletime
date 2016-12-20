@@ -1,6 +1,7 @@
 %p
   - if @period
-    Zeiten während #{@period} &nbsp;
+    - entities_name ||= 'Zeiten'
+    #{entities_name} während #{@period} &nbsp;
     = link_to 'Aktuelle Zeitspanne',
               :controller => 'evaluator',
               :action => 'current_period',

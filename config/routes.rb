@@ -150,6 +150,7 @@ Rails.application.routes.draw do
   scope '/reports' do
     get '/orders', to: 'order_reports#index', as: :reports_orders
     get '/workload', to: 'workload_report#index', as: :reports_workload
+    get '/revenue', to: 'revenue_reports#index', as: :reports_revenue
   end
 
   scope '/login', controller: 'login' do

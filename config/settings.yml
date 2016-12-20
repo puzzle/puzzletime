@@ -75,6 +75,9 @@ employees:
   # when introducing puzzle time. At some point, it will no be required to edit that value anymore.
   initial_vacation_days_editable: <%= ENV['RAILS_PTIME_INITIAL_VACATION_DAYS_EDITABLE'].try(:downcase) == 'true' %>
 
+# Month number the business year starts (e.g. 1 for 1.1.YYYY, 7 for 1.7.YYYY)
+business_year_start_month: 7
+
 committed_worktimes:
   notification:
     days_at_end_of_month: 7

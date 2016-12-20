@@ -20,6 +20,70 @@ class PeriodTest < ActiveSupport::TestCase
     travel_back
   end
 
+  def test_parse_business_year
+    Settings.business_year_start_month = 1
+
+    travel_to Date.new(2000, 1, 15)
+    period = Period.parse('b')
+    assert_equal 'b', period.shortcut
+    assert_equal Date.new(2000, 1, 1), period.start_date
+    assert_equal Date.new(2000, 4, 30), period.end_date
+
+    travel_to Date.new(2000, 2, 15)
+    period = Period.parse('b')
+    assert_equal 'b', period.shortcut
+    assert_equal Date.new(2000, 1, 1), period.start_date
+    assert_equal Date.new(2000, 5, 31), period.end_date
+
+    travel_to Date.new(2000, 12, 15)
+    period = Period.parse('b')
+    assert_equal 'b', period.shortcut
+    assert_equal Date.new(2000, 1, 1), period.start_date
+    assert_equal Date.new(2001, 3, 31), period.end_date
+
+    travel_to Date.new(2001, 1, 15)
+    period = Period.parse('b')
+    assert_equal 'b', period.shortcut
+    assert_equal Date.new(2001, 1, 1), period.start_date
+    assert_equal Date.new(2001, 4, 30), period.end_date
+
+    travel_to Date.new(1999, 12, 15)
+    period = Period.parse('b')
+    assert_equal 'b', period.shortcut
+    assert_equal Date.new(1999, 1, 1), period.start_date
+    assert_equal Date.new(2000, 3, 31), period.end_date
+
+    Settings.business_year_start_month = 3
+
+    travel_to Date.new(2000, 1, 15)
+    period = Period.parse('b')
+    assert_equal 'b', period.shortcut
+    assert_equal Date.new(1999, 3, 1), period.start_date
+    assert_equal Date.new(2000, 4, 30), period.end_date
+
+    Settings.business_year_start_month = 7
+
+    travel_to Date.new(2000, 1, 15)
+    period = Period.parse('b')
+    assert_equal 'b', period.shortcut
+    assert_equal Date.new(1999, 7, 1), period.start_date
+    assert_equal Date.new(2000, 4, 30), period.end_date
+
+    travel_to Date.new(2000, 6, 15)
+    period = Period.parse('b')
+    assert_equal 'b', period.shortcut
+    assert_equal Date.new(1999, 7, 1), period.start_date
+    assert_equal Date.new(2000, 9, 30), period.end_date
+
+    travel_to Date.new(2000, 7, 15)
+    period = Period.parse('b')
+    assert_equal 'b', period.shortcut
+    assert_equal Date.new(2000, 7, 1), period.start_date
+    assert_equal Date.new(2000, 10, 31), period.end_date
+
+    travel_back
+  end
+
   def test_intersect
     assert_equal Period.new(nil, nil), Period.new(nil, nil) & Period.new(nil, nil)
 
@@ -51,6 +115,25 @@ class PeriodTest < ActiveSupport::TestCase
     count = 0
     @one_day.step { |_d| count += 1 }
     assert_equal count, 1
+  end
+
+  def test_step_months
+    count = 0
+    @half_year.step_months { |_d| count += 1 }
+    assert_equal count, 6
+    count = 0
+    @one_month.step_months { |_d| count += 1 }
+    assert_equal count, 1
+    count = 0
+    @two_month.step_months { |_d| count += 1 }
+    assert_equal count, 2
+    count = 0
+    @one_day.step_months { |_d| count += 1 }
+    assert_equal count, 1
+    count = 0
+    two_months_middle = Period.new(Date.new(2005, 12, 15), Date.new(2006, 1, 15))
+    two_months_middle.step_months { |_d| count += 1}
+    assert_equal count, 2
   end
 
   def test_length
