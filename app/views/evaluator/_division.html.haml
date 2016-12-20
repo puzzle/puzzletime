@@ -1,7 +1,4 @@
-- periodTimes = @periods.each_with_index.collect { |p, i| @times[i][division.id] }
-- totalPeriodTimes = periodTimes.map { |t| t.is_a?(Hash) ? t[:hours].to_f : t.to_f }.sum
-
-- if (@period.nil? && @evaluation.include_no_period_zero_totals) || totalPeriodTimes > 0
+- if has_times_or_plannings?(division)
   %tr
     %td
       - if sub = @evaluation.sub_evaluation
@@ -19,7 +16,7 @@
                     class: 'symbol')
 
     = render(partial: 'timecell',
-             collection: periodTimes,
+             collection: @periods.each_with_index.collect { |_p, i| @times[i][division.id] },
              locals: { division_id: division.id })
 
     - @evaluation.division_supplement(@user).each do |supp|

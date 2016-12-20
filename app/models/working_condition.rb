@@ -51,6 +51,7 @@ class WorkingCondition < ActiveRecord::Base
     end
 
     def each_period_of(attr, period)
+      period ||= Period.new(nil, nil)
       each_of(attr, period.start_date, period.end_date) do |val, from, following|
         not_first_from = from && (period.start_date.nil? || from > period.start_date)
         not_last_following = following && (period.end_date.nil? || following <= period.end_date)

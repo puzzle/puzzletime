@@ -38,6 +38,18 @@ module EvaluatorHelper
     end
   end
 
+  def has_times_or_plannings?(division)
+    @periods.each_with_index.any? do |_p, i|
+      time = @times[i][division.id]
+      val = (time.is_a?(Hash) ? time[:hours] : time).to_f
+      if @evaluation.planned_hours
+        plan = @plannings[i][division.id]
+        val += (plan.is_a?(Hash) ? plan[:hours] : 0).to_f
+      end
+      val > 0.001
+    end
+  end
+
   def worktime_controller
     @evaluation.absences? ? 'absencetimes' : 'ordertimes'
   end
@@ -74,64 +86,49 @@ module EvaluatorHelper
   end
 
   def worktime_commits(employee)
-    content = content_tag(:span, id: "committed_worktimes_at_#{employee.id}") do
-      completed_icon(employee.committed_worktimes_at) <<
-        ' ' <<
-        format_month(employee.committed_worktimes_at)
-    end
-
-    if can?(:update_committed_worktimes, employee)
-      content <<
-        ' &nbsp; '.html_safe <<
-        link_to(picon('edit'),
-                edit_employee_worktimes_commit_path(employee),
-                data: { modal: '#modal',
-                        title: 'Freigabe bearbeiten',
-                        update: 'element',
-                        element: "#committed_worktimes_at_#{employee.id}",
-                        remote: true,
-                        type: :html })
-    end
-    content
+    completable_cell("committed_worktimes_at_#{employee.id}",
+                     employee.committed_worktimes_at,
+                     can?(:update_committed_worktimes, employee),
+                     edit_employee_worktimes_commit_path(employee),
+                     'Freigabe bearbeiten')
   end
 
   def order_completed(work_item)
     order = work_item.order
-    content = content_tag(:span, id: "order_completed_#{order.id}") do
-      completed_icon(order.completed_at) << ' ' << format_month(order.completed_at)
-    end
-    if can?(:update_completed, order)
-      content <<
-        ' &nbsp; '.html_safe <<
-        link_to(picon('edit'),
-                edit_order_completed_path(order),
-                data: { modal: '#modal',
-                        title: 'Monatsabschluss erledigen',
-                        update: 'element',
-                        element: "#order_completed_#{order.id}",
-                        remote: true,
-                        type: :html })
-    end
-    content
+    completable_cell("order_completed_#{order.id}",
+                     order.completed_at,
+                     can?(:update_completed, order),
+                     edit_order_completed_path(order),
+                     'Monatsabschluss erledigen')
   end
 
   def order_committed(work_item)
     order = work_item.order
-    content = content_tag(:span, id: "order_committed_#{order.id}") do
-      completed_icon(order.committed_at) << ' ' << format_month(order.committed_at)
-    end
-    if can?(:update_committed, order)
+    completable_cell("order_committed_#{order.id}",
+                     order.committed_at,
+                     can?(:update_committed, order),
+                     edit_order_committed_path(order),
+                     'Monatsabschluss freigeben')
+  end
+
+  def completable_cell(content_id, date, editable, edit_path, edit_title)
+    content = content_tag(:span,
+                          completed_icon(date) << ' ' << format_month(date),
+                          id: content_id)
+
+    if editable
       content <<
-          ' &nbsp; '.html_safe <<
-          link_to(picon('edit'),
-                  edit_order_committed_path(order),
-                  data: { modal: '#modal',
-                          title: 'Monatsabschluss freigeben',
-                          update: 'element',
-                          element: "#order_committed_#{order.id}",
-                          remote: true,
-                          type: :html })
+        ' &nbsp; '.html_safe <<
+        link_to(picon('edit'),
+                edit_path,
+                data: { modal: '#modal',
+                        title: edit_title,
+                        update: 'element',
+                        element: "##{content_id}",
+                        remote: true,
+                        type: :html })
     end
+
     content
   end
 

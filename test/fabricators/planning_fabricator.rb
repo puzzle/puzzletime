@@ -12,18 +12,8 @@
 #
 
 Fabricator(:planning) do |f|
-  start_week      { Time.zone.today.cweek }
-  end_week        { f.start_week + 1 }
-  monday_am true
-  monday_pm true
-  tuesday_am true
-  tuesday_pm true
-  wednesday_am true
-  wednesday_pm true
-  thursday_am true
-  thursday_pm true
-  friday_am true
-  friday_pm true
-  is_abstract false
-  work_item
+  date      { Time.zone.now.at_beginning_of_week.to_date + rand(5) }
+  percent   { (rand(10) + 1) * 10 }
+  employee  { Employee.find(Employee.pluck(:id).sample) }
+  work_item { WorkItem.find(WorkItem.pluck(:id).sample) }
 end

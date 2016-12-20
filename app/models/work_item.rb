@@ -119,7 +119,8 @@ class WorkItem < ActiveRecord::Base
 
   # children that are not assigned to a special entity like client or order
   def categories
-    children.joins('LEFT JOIN clients ON clients.work_item_id = work_items.id').
+    children.
+      joins('LEFT JOIN clients ON clients.work_item_id = work_items.id').
       joins('LEFT JOIN orders ON orders.work_item_id = work_items.id').
       joins('LEFT JOIN accounting_posts ON accounting_posts.work_item_id = work_items.id').
       where(clients: { id: nil },
@@ -128,10 +129,11 @@ class WorkItem < ActiveRecord::Base
   end
 
   def employees
-    Employee.joins(worktimes: :work_item).
-      where('? = ANY (work_items.path_ids)', id).
-      list.
-      uniq
+    Employee.
+      where('id IN (?) OR id IN (?)',
+            plannings.select(:employee_id),
+            worktimes.select(:employee_id)).
+      list
   end
 
   def move_times!(target)
