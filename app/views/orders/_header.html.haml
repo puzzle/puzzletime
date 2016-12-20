@@ -1,5 +1,5 @@
-- content_for :content_header do
-  .orders-header.unindented
+- content_for :extra_header do
+  .orders-header
     .row
       .col-xs-2.back
         = link_to(orders_path(returning: true)) do
@@ -10,3 +10,6 @@
         = render 'orders/chooser'
 
     = render 'orders/tabs'
+
+- content_for(:content_header) do
+  %span

@@ -69,6 +69,10 @@ Rails.application.routes.draw do
       end
     end
 
+    resource :order_plannings, only: [:index, :show, :update, :destroy] do
+      get 'new', on: :member, as: 'new'
+    end
+
     resource :completed, only: [:edit, :update], controller: 'orders/completed'
     resource :committed, only: [:edit, :update], controller: 'orders/committed'
   end

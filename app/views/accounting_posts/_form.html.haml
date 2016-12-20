@@ -1,8 +1,6 @@
 = render 'orders/header'
 
-%h1.h3= @title
-
-%p &nbsp;
+%h1.h3.top= @title
 
 = crud_form do |f|
   = hidden_field_tag(:order_id, order.id)

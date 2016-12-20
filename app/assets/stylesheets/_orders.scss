@@ -1,7 +1,7 @@
 .orders-header {
   padding: 15px $grid-gutter-width 0 $grid-gutter-width;
   background-color: $gray-lighter;
-  margin-bottom: 25px;
+  z-index: 2;
 
   .back {
     padding-top: 7px;
@@ -21,9 +21,20 @@
   }
 
   .nav-tabs {
-    margin: 50px -$grid-gutter-width 0 -$grid-gutter-width;
+    margin-top: 20px;
+    margin-left: -$grid-gutter-width;
+    margin-bottom: 0;
+    margin-right: -$grid-gutter-width;
     padding: 0 $grid-gutter-width;
   }
+}
+
+.orders-header + main {
+  padding-top: 25px;
+}
+
+h1.top {
+  margin-top: 0;
 }
 
 .orders-actions {

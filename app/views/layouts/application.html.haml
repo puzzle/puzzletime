@@ -28,6 +28,8 @@
 
       = render 'breadcrumb'
 
+    = yield :extra_header if content_for?(:extra_header)
+
     %main#content{ role: 'main' }
       - if content_for?(:content_header)
         = yield :content_header

@@ -2,7 +2,7 @@
 
 = render 'orders/header'
 
-%h1.h3= @title
+%h1.h3.top= @title
 
 = form_tag(order_multi_worktimes_path(@order),
            method: 'patch',

@@ -28,6 +28,11 @@
           order_invoices_path(@order),
           order_invoices_path(@order)
 
+  - if can?(:show_plannings, @order)
+    = nav 'Planung',
+          order_order_plannings_path(@order),
+          order_order_plannings_path(@order)
+
   - if TargetScope.exists? && can?(:show_targets, @order)
     = nav 'Ziele',
           order_order_targets_path(@order),

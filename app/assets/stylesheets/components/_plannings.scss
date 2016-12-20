@@ -11,20 +11,17 @@ $menu-height: 50px;
 $submenu-height: 50px;
 $nav-height: $headerbar-height + $menu-height + $submenu-height;
 
-body.plannings {
-  &.employees,
-  &.orders,
-  &.multi_employees,
-  &.multi_orders,
-  &.custom_lists {
-    height: 100vh;
-    overflow: hidden;
+$planning-calendar-days-header-top: 45px;
 
-    > main {
-      overflow-y: auto;
-      margin-right: 0;
-      margin-bottom: 0;
-    }
+body.plannings,
+body.order_plannings {
+  height: 100vh;
+  overflow: hidden;
+
+  > main {
+    overflow-y: auto;
+    margin-right: 0;
+    margin-bottom: 0;
   }
 
   > .ui-selectable-helper {
@@ -70,9 +67,27 @@ body.plannings {
   }
   &.stuck {
     position: fixed;
-    top: $nav-height;
   }
 }
+
+body.plannings {
+  .planning-calendar-weeks.stuck {
+    top: $nav-height;
+  }
+  .planning-calendar-days-header.stuck {
+    top: $nav-height + $planning-calendar-days-header-top;
+  }
+}
+
+body.order_plannings {
+  .planning-calendar-weeks.stuck {
+    top: 207px;
+  }
+  .planning-calendar-days-header.stuck {
+    top: 207px + $planning-calendar-days-header-top;
+  }
+}
+
 .planning-calendar-month {
   background-color: #eee;
 
@@ -105,15 +120,13 @@ body.plannings {
 }
 .planning-calendar-days-header {
   cursor: default;
-  $top: 45px;
-  top: $top;
+  top: $planning-calendar-days-header-top;
 
   .csspositionsticky & {
     position: sticky;
   }
   &.stuck {
     position: fixed;
-    top: $nav-height + $top;
   }
 
   > .dayheader {
