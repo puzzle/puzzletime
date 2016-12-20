@@ -2,7 +2,11 @@
 
 module Plannings
   class Item
-    attr_accessor :planning, :absencetime, :holiday, :general_must_hours
+    attr_accessor :planning,
+                  :absencetime,
+                  :holiday,
+                  :general_must_hours,
+                  :employment
 
     def initialize
     end
@@ -46,7 +50,10 @@ module Plannings
 
       if absencetime
         class_names << '-absence'
-        class_names << '-absence-unpaid' unless absencetime.absence.payed
+      end
+
+      if employment && employment.percent == 0
+        class_names << '-absence-unpaid'
       end
 
       if holiday

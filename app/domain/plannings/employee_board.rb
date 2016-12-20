@@ -23,8 +23,7 @@ module Plannings
 
     alias employee subject
 
-    def initialize(employee, period)
-      super(employee, period)
+    def load_employments
       @employments = employee.statistics.employments_during(period)
     end
 
@@ -111,6 +110,7 @@ module Plannings
     end
 
     def compute_weekly_percent(date)
+      rows # assert data is loaded
       @employments.each_with_index do |e, i|
         percent = percent_for_employment(date, e, i)
         return percent if percent
