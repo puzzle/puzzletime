@@ -15,7 +15,9 @@ class RevenueReportsControllerTest < ActionController::TestCase
     session[:period] = nil
     get :index
     assert_equal Period.parse('b'), assigns(:period)
+  end
 
+  test 'uses limited period' do
     period = Period.parse('-1m')
     session[:period] = [period.start_date, period.end_date, period.label, period.shortcut]
     get :index

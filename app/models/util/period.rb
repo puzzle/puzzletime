@@ -257,6 +257,10 @@ class Period
     Period.new(start_date.at_beginning_of_week, end_date.at_end_of_week, label, shortcut)
   end
 
+  def extend_to_months
+    Period.new(start_date.beginning_of_month, end_date.end_of_month, label, shortcut)
+  end
+
   def where_condition(column)
     if start_date && end_date
       ["#{column} BETWEEN ? AND ?", start_date, end_date]

@@ -4,7 +4,7 @@ class Reports::Revenue
   attr_reader :period, :params
 
   def initialize(period, params = {})
-    @period = period
+    @period = period.extend_to_months
     @params = params
   end
 
