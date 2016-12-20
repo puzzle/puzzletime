@@ -6,13 +6,13 @@ module Plannings
     class << self
 
       def week_planning_state(total, employed)
-        if total.zero? && employed.zero?
+        if total.zero? && !employed.nil? && employed.zero?
           :fully_planned
         elsif total.zero?
           nil
-        elsif (total - employed).abs < 1
+        elsif (total - employed.to_f).abs < 1
           :fully_planned
-        elsif total > employed
+        elsif total > employed.to_f
           :over_planned
         else
           :under_planned
@@ -24,7 +24,7 @@ module Plannings
     alias employee subject
 
     def load_employments
-      @employments = employee.statistics.employments_during(period)
+      employee.statistics.employments_during(period)
     end
 
     def row_legend(_employee_id, work_item_id)
@@ -50,13 +50,17 @@ module Plannings
     # date is always monday of the requested week
     def weekly_employment_percent(date)
       @weekly_employment_percent ||= {}
-      @weekly_employment_percent[date] ||= compute_weekly_percent(date)
+      if @weekly_employment_percent.key?(date) # ||= does not work if nil values are possible
+        @weekly_employment_percent[date]
+      else
+        @weekly_employment_percent[date] = compute_weekly_employment_percent(date)
+      end
     end
 
     def overall_free_capacity
       sum = 0
       @period.step(7) do |date|
-        sum += weekly_employment_percent(date) - weekly_planned_percent(date)
+        sum += weekly_employment_percent(date).to_f - weekly_planned_percent(date)
       end
       sum
     end
@@ -109,13 +113,13 @@ module Plannings
       0
     end
 
-    def compute_weekly_percent(date)
+    def compute_weekly_employment_percent(date)
       rows # assert data is loaded
       @employments.each_with_index do |e, i|
         percent = percent_for_employment(date, e, i)
         return percent if percent
       end
-      0
+      nil
     end
 
     def percent_for_employment(date, employment, i, &block)

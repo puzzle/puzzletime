@@ -83,13 +83,15 @@ module Plannings
       @employees = load_employees
       @absencetimes = load_absencetimes
       @holidays = load_holidays
-      load_employments
+      @employments = load_employments
     end
 
     def load_employments
-      @employments = Employment.during(@period)
-                               .where(employee_id: @employees.map(&:id))
-      @employments = Employment.normalize_boundaries(@employments, @period)
+      list = Employment.
+               during(@period).
+               where(employee_id: @employees.map(&:id)).
+               reorder('start_date')
+      Employment.normalize_boundaries(list.to_a, @period)
     end
 
     def build_default_rows(rows)
@@ -129,15 +131,11 @@ module Plannings
         rows.each do |key, items|
           next unless key.first == employment.employee_id
 
-          end_date = employment.end_date || @period.end_date
-
-          (employment.start_date..end_date).each do |date|
+          employment.period.step do |date|
             index = item_index(date)
             next unless index
 
-            if items[index]
-              items[index].employment = employment
-            end
+            items[index].employment = employment
           end
         end
       end

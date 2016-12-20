@@ -2,9 +2,10 @@
 require 'test_helper'
 
 class EditWorktimesCommitTest < ActionDispatch::IntegrationTest
-  setup :login
 
   test 'change worktimes commit date updates label' do
+    Fabricate(:ordertime, employee: employees(:long_time_john), work_item: work_items(:allgemein))
+    login
     current_month = I18n.l(Time.zone.today.at_end_of_month, format: :month)
     label = find("#committed_worktimes_at_#{employees(:long_time_john).id}")
     assert label.has_selector?('.icon-square.red')

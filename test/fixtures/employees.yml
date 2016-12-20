@@ -78,6 +78,10 @@ mark:
   passwd:    mw
   email:     mw@bla.ch
   management: true
+  eval_periods:
+    - '-1m'
+    - '0m'
+    - '0y'
 
 lucien:
   id:        8

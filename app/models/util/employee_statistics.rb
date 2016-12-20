@@ -77,9 +77,7 @@ class EmployeeStatistics
   def employments_during(period)
     return [] if period.nil?
 
-    employments = @employee.employments.during(period).
-                                        reorder('start_date').
-                                        to_a
+    employments = @employee.employments.during(period).reorder('start_date').to_a
     Employment.normalize_boundaries(employments, period)
   end
 

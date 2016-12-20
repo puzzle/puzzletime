@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 module PlanningsHelper
+
   def planning_legend_path(legend)
     case legend
     when Employee then plannings_employee_path(legend)
@@ -19,6 +20,16 @@ module PlanningsHelper
     mondays.uniq(&:at_beginning_of_month).map do |first|
       Period.new(first, [@period.end_date, first.at_end_of_month].min)
     end
+  end
+
+  def weekly_planned_of_total_percent(board, date)
+    content = "#{board.weekly_planned_percent(date).round}% / "
+    if board.weekly_employment_percent(date)
+      content << "#{board.weekly_employment_percent(date).round}%"
+    else
+      content << '-'
+    end
+    content
   end
 
 end
