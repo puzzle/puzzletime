@@ -47,7 +47,7 @@
 - if can?(:read, Worktime)
   = nav 'Auslastung', reports_workload_path
 
-- if can?(:revenuereports, Department)
+- if can?(:revenue_reports, Department)
   = nav 'Umsatz', reports_revenue_path
 
 - if can?(:export_extended_capacity_csv, Evaluation)

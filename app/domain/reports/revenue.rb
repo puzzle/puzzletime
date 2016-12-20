@@ -31,7 +31,7 @@ class Reports::Revenue
     hours = ordertime_hours
             .select { |(department_id, _date), _hours| department.id == department_id }
             .values
-    hours.empty? ? 0 : hours.reduce(:+).to_f / hours.size
+    hours.empty? ? 0 : hours.sum.to_f / hours.size
   end
 
   def total_ordertime_hours_overall
@@ -40,7 +40,7 @@ class Reports::Revenue
 
   def average_ordertime_hours_overall
     hours = total_ordertime_hours_per_month.values
-    hours.empty? ? 0 : hours.reduce(:+).to_f / hours.size
+    hours.empty? ? 0 : hours.sum.to_f / hours.size
   end
 
   def planning_hours
