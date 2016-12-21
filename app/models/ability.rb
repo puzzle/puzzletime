@@ -57,7 +57,13 @@ class Ability
       true
     end
 
-    can [:create, :read, :sync], Invoice
+    can [:create,
+         :read,
+         :sync,
+         :preview_total,
+         :billing_addresses,
+         :filter_fields],
+        Invoice
     can [:edit, :update, :destroy], Invoice do |i|
       i.status != 'deleted'
     end
@@ -101,7 +107,13 @@ class Ability
       instance.order.responsible_id == user.id
     end
 
-    can [:create, :read, :sync], Invoice do |i|
+    can [:create,
+         :read,
+         :sync,
+         :preview_total,
+         :billing_addresses,
+         :filter_fields],
+        Invoice do |i|
       i.order.responsible_id == user.id
     end
     can [:edit, :update, :destroy], Invoice do |i|

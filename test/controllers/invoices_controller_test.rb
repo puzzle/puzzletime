@@ -106,6 +106,74 @@ class InvoicesControllerTest < ActionController::TestCase
     end
   end
 
+  test 'DELETE as management' do
+    login_as :mark
+    params = {
+      order_id: test_entry.order_id,
+      id: test_entry.id
+    }
+    delete :destroy, params
+    assert_response :redirect
+  end
+
+  test 'DELETE as order responsible for responsible order' do
+    login_as :long_time_john
+    params = {
+      order_id: test_entry.order_id,
+      id: test_entry.id
+    }
+    delete :destroy, params
+    assert_response :redirect
+  end
+
+  test 'DELETE as order responsible for not responsible order' do
+    login_as :lucien
+    params = {
+      order_id: test_entry.order_id,
+      id: test_entry.id
+    }
+    assert_raise CanCan::AccessDenied do
+      delete :destroy, params
+    end
+  end
+
+  test 'DELETE as non order responsible' do
+    login_as :pascal
+    params = {
+      order_id: test_entry.order_id,
+      id: test_entry.id
+    }
+    assert_raise CanCan::AccessDenied do
+      delete :destroy, params
+    end
+  end
+
+  test 'DELETE draft destroys record' do
+    login_as :mark
+    params = {
+      order_id: test_entry.order_id,
+      id: test_entry.id
+    }
+    delete :destroy, params
+
+    assert_raise ActiveRecord::RecordNotFound do
+      Invoice.find(test_entry.id)
+    end
+  end
+
+  test 'DELETE non-draft marks record as deleted' do
+    login_as :mark
+    test_entry.status = 'sent'
+    test_entry.save!
+    params = {
+      order_id: test_entry.order_id,
+      id: test_entry.id
+    }
+    delete :destroy, params
+
+    assert Invoice.find(test_entry.id).status == 'deleted'
+  end
+
   private
 
   # Test object used in several tests.
