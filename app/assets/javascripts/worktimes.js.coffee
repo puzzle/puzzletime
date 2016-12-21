@@ -97,12 +97,11 @@ $ ->
 
     new Waypoint.Sticky({ element: $('.worktimes .weeknav-container')[0] })
 
-    $("#week_date").datepicker
-      showWeek: true,
-      changeYear: true
-      onSelect: (date, instance) ->
-        window.location = "/worktimes?week_date=" + date
-        return
+    $('#week_date').on('change', (event) ->
+      date = event.target.value
+      window.location = "/worktimes?week_date=" + date
+      return
+    )
 
     selectedDate = $('.worktimes').data('selectedDate')
     if selectedDate && $('.worktimes .weeknav .day[data-date="' + selectedDate + '"]').length

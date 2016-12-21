@@ -19,7 +19,10 @@ app.datepicker = new class
   options = $.extend({ onSelect: onSelect, showWeek: true }, i18n())
 
   init: ->
-    $('input.date').datepicker(options)
+    $('input.date').each((_i, elem) ->
+      $(elem).datepicker($.extend({}, options, {
+        changeYear: $(elem).data('changeyear')
+      })))
     @bindListeners()
 
   destroy: ->

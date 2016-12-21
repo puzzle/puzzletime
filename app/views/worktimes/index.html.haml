@@ -20,7 +20,7 @@
         = render partial: 'overview_day', collection: @week_days, as: :day
       .weeknav-calendar-row
         = plain_form(Worktime.new, method: :get) do |f|
-          = f.date_field(:work_date, id: 'week_date')
+          = f.date_field(:work_date, id: 'week_date', data: { changeyear: true })
         KW
         = week_number(@selected_date)
 
