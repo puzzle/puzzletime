@@ -26,6 +26,7 @@ class EvaluatorControllerTest < ActionController::TestCase
     test "GET index #{evaluation}" do
       get :index, evaluation: evaluation
       assert_template 'user_overview'
+      assert_equal %w(-1m 0m -1y 0y 0).map { |p| Period.parse(p) }, assigns(:periods)
     end
 
     test "GET export csv #{evaluation}" do

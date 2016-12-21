@@ -79,9 +79,11 @@ mark:
   email:     mw@bla.ch
   management: true
   eval_periods:
-    - '-1m'
+    - '0'
     - '0m'
+    - '-1m'
     - '0y'
+    - '-1y'
 
 lucien:
   id:        8
