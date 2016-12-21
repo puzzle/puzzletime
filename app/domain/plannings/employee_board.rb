@@ -93,7 +93,7 @@ module Plannings
     end
 
     def weekly_absence_percent(date)
-      week = date..(date + 7)
+      week = date..(date + 6)
       absence_hours = @absencetimes.select { |t| week.cover?(t.work_date) }.sum(&:hours)
       absence_hours / (must_hours_per_day(date) * 5) * 100
     end

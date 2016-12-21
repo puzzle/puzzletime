@@ -27,6 +27,7 @@ module Plannings
     test '#week_planning_state is fully planned if absencetimes match employment' do
       employee.employments.create!(start_date: date - 1.year, percent: 100)
       Absencetime.create!(work_date: date, hours: 40, employee: employee, absence: absences(:vacation))
+      Absencetime.create!(work_date: date + 7, hours: 8, employee: employee, absence: absences(:vacation))
       board = Plannings::EmployeeBoard.new(employee, period)
       assert_equal :fully_planned, board.week_planning_state(date)
     end
