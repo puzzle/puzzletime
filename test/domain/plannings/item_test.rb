@@ -92,7 +92,7 @@ class PlanningItemTest < ActiveSupport::TestCase
 
     expected = {
       class: '-absence-unpaid',
-      title: nil
+      title: 'Unbezahlte Abwesenheit'
     }
 
     assert i.day_attrs == expected
