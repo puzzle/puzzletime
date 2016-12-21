@@ -143,6 +143,11 @@ app.plannings = new class
 
 
     $('.groupheader')
+      .filter -> !$(this).nextUntil('.groupheader').length
+      .find('.glyphicon')
+      .remove()
+
+    $('.groupheader')
       .filter ->
         $(this).next('.actions,.groupheader').length ||
         $(this).is(':last-child')
