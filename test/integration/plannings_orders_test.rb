@@ -97,6 +97,8 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
   end
 
   test 'create planning entries' do
+    page.assert_selector("#planned_order_#{orders(:puzzletime).id}",
+                         text: '6 von 100 Stunden verplant')
     drag(row_pascal.all('.day')[2], row_pascal.all('.day')[4])
     page.assert_selector('.-selected', count: 3)
     page.assert_selector('.planning-panel', visible: true)
@@ -112,6 +114,38 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     page.assert_selector('.planning-panel', visible: false)
     assert_percents ['50', '', '', '', '', ''], row_mark
     assert_percents ['25', '', '100', '100', '100', ''], row_pascal
+    page.assert_selector("#planned_order_#{orders(:puzzletime).id}",
+                         text: '30 von 100 Stunden verplant')
+  end
+
+  test 'create planning entries with multiple accounting posts' do
+    create_plannings(work_items(:hitobito_demo_app).id)
+    create_plannings(work_items(:hitobito_demo_site).id)
+
+    visit plannings_order_path(orders(:hitobito_demo))
+
+    page.assert_selector("#planned_order_#{orders(:hitobito_demo).id}",
+                         text: '16 von 0 Stunden verplant')
+    page.assert_selector("#group_header_times_accounting_post_#{accounting_posts(:hitobito_demo_app).id}",
+                         text: '10 / 0 h')
+    page.assert_selector("#group_header_times_accounting_post_#{accounting_posts(:hitobito_demo_site).id}",
+                         text: '6 / 0 h')
+
+    row = find("#planning_row_employee_#{employees(:pascal).id}_work_item_#{work_items(:hitobito_demo_app).id}")
+    drag(row.all('.day')[2], row.all('.day')[4])
+    page.assert_selector('.planning-panel', visible: true)
+
+    within '.planning-panel' do
+      fill_in 'percent', with: '100'
+      click_button 'OK'
+    end
+
+    page.assert_selector("#planned_order_#{orders(:hitobito_demo).id}",
+                         text: '40 von 0 Stunden verplant')
+    page.assert_selector("#group_header_times_accounting_post_#{accounting_posts(:hitobito_demo_app).id}",
+                         text: '34 / 0 h')
+    page.assert_selector("#group_header_times_accounting_post_#{accounting_posts(:hitobito_demo_site).id}",
+                         text: '6 / 0 h')
   end
 
   test 'update planning entries' do
