@@ -3,6 +3,11 @@
         evaluation_path('userworkitems', clear: 1),
         evaluation_path('userworkitems')
 
+- if can?(:userabsences, Evaluation)
+  = nav 'Meine Absenzen',
+        evaluation_path('userabsences', clear: 1),
+        evaluation_path('userabsences')
+
 - if can?(:managed, Evaluation)
   = nav 'Meine Aufträge', evaluation_path('managed', clear: 1)
 
@@ -13,10 +18,11 @@
         evaluation_path('clientworkitems'),
         evaluation_path('workitememployees')
 
-- if can?(:reports, Order)
-  = nav 'Aufträge',
-        reports_orders_path(clear: 1),
-        reports_orders_path
+- if can?(:departments, Evaluation)
+  = nav 'Organisationseinheiten',
+        evaluation_path('departments', clear: 1),
+        evaluation_path('departments'),
+        evaluation_path('departmentorders')
 
 - if can?(:employees, Evaluation)
   = nav 'Mitarbeiter',
@@ -25,33 +31,27 @@
         evaluation_path('employeeworkitems'),
         evaluation_path('employeesubworkitems')
 
-- if can?(:departments, Evaluation)
-  = nav 'Organisationseinheiten',
-        evaluation_path('departments', clear: 1),
-        evaluation_path('departments'),
-        evaluation_path('departmentorders')
+- if can?(:reports, Order)
+  = nav 'Aufträge',
+        reports_orders_path(clear: 1),
+        reports_orders_path
 
-- if can?(:userabsences, Evaluation)
-  = nav 'Meine Absenzen',
-        evaluation_path('userabsences', clear: 1),
-        evaluation_path('userabsences')
+- if can?(:read, Worktime)
+  = nav 'Auslastung', reports_workload_path
+
+- if can?(:export_extended_capacity_csv, Evaluation)
+  = nav 'Detaillierte Auslastung CSV', evaluation_path('export_extended_capacity_csv'), data: { no_turbolink: true }
+
+- if can?(:revenue_reports, Department)
+  = nav 'Umsatz', reports_revenue_path
+
+= nav 'Ferienplan', vacations_path
 
 - if can?(:absences, Evaluation)
   = nav 'Absenzen Mitarbeiter',
         evaluation_path('absences', clear: 1),
         evaluation_path('absences'),
         evaluation_path('employeeabsences')
-
-= nav 'Ferienplan', vacations_path
-
-- if can?(:read, Worktime)
-  = nav 'Auslastung', reports_workload_path
-
-- if can?(:revenue_reports, Department)
-  = nav 'Umsatz', reports_revenue_path
-
-- if can?(:export_extended_capacity_csv, Evaluation)
-  = nav 'Detaillierte Auslastung CSV', evaluation_path('export_extended_capacity_csv'), data: { no_turbolink: true }
 
 - if can?(:export_ma_overview, Evaluation)
   = nav 'MA Übersicht', evaluation_path('export_ma_overview')
