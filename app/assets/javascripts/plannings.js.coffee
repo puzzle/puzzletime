@@ -135,7 +135,7 @@ app.plannings = new class
         children = $(this).children()
 
         $(this)
-          .nextUntil('.actions')
+          .nextUntil('.actions,.groupheader')
           .find('.day')
           .filter('.-definitive,.-provisional')
           .map -> children.get($(this.parentNode.children).index(this))
@@ -143,7 +143,9 @@ app.plannings = new class
 
 
     $('.groupheader')
-      .filter -> $(this).next('.actions').length
+      .filter ->
+        $(this).next('.actions,.groupheader').length ||
+        $(this).is(':last-child')
       .click()
 
   initWaypoints: ->
