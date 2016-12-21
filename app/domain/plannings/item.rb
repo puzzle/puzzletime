@@ -36,7 +36,9 @@ module Plannings
         else
           'Feiertag: Keine muss Stunden'
         end
-      elsif has_zero_employment
+      elsif employment.nil?
+        'Nicht angestellt'
+      elsif employment.percent == 0
         'Unbezahlte Abwesenheit'
       end
     end
@@ -54,7 +56,7 @@ module Plannings
         class_names << '-absence'
       end
 
-      if has_zero_employment
+      if employment.nil? || employment.percent == 0
         class_names << '-absence-unpaid'
       end
 
@@ -71,12 +73,6 @@ module Plannings
       else
         0
       end
-    end
-
-    private
-
-    def has_zero_employment
-      employment && employment.percent == 0
     end
 
   end
