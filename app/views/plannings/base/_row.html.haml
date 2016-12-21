@@ -2,7 +2,10 @@
   = link_to_if(can?(:show_plannings, legend), legend, planning_legend_path(legend))
 
   .sum
-    = format_hour(row_total, 0)
+    - row_total_overall = true if local_assigns[:row_total_overall].nil?
+    - total_tooltip = row_total_overall ? 'Total der auf dieser Position geplanten Zeit' : 'Total der auf dieser Position geplanten Zeit im dargestellten Zeitbereich'
+    = with_tooltip(total_tooltip) do
+      = format_hour(row_total, 0)
 
 - items.each do |item|
   .day{ item.day_attrs }

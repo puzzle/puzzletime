@@ -24,7 +24,8 @@
             = render 'row',
                      legend: employee,
                      items: items,
-                     row_total: @board.total_row_planned_hours(employee.id, post.work_item_id)
+                     row_total: @board.total_row_planned_hours(employee.id, post.work_item_id),
+                     row_total_overall: true
 
       - if can?(:manage_plannings, @board.subject)
         .actions{ data: { type: 'employee', work_item_id: post.work_item_id } }

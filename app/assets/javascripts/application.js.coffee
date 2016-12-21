@@ -80,7 +80,12 @@ $(document).on('change', '[data-submit]', (event) ->
 )
 
 # wire up tooltips
-$(document).tooltip({ selector: '[data-toggle=tooltip]', placement: 'top', html: true })
+$(document).tooltip({
+  selector: '[data-toggle=tooltip]',
+  container: 'body',
+  placement: 'top',
+  html: true
+})
 
 # wire up searchable form fields for dynamically added nested form fields
 $(document).on "fields_added.nested_form_fields", (event,param) ->
