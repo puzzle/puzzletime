@@ -1,10 +1,11 @@
 module ReportsWorkloadHelper
+
   def format_workload_hours(value)
-    content_tag(:span, format_hour(value, 0), title: value)
+    content_tag(:span, format_number(value, 0), title: value)
   end
 
   def format_workload_worktime_balance(value)
-    content_tag(:span, format_hour(value, 0), title: value, class: workload_worktime_balance_class(value))
+    content_tag(:span, format_number(value, 0), title: value, class: workload_worktime_balance_class(value))
   end
 
   def format_workload_billability(value)
@@ -45,4 +46,5 @@ module ReportsWorkloadHelper
       'red'
     end
   end
+
 end
