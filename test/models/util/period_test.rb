@@ -21,7 +21,7 @@ class PeriodTest < ActiveSupport::TestCase
   end
 
   def test_parse_business_year
-    Settings.business_year_start_month = 1
+    Settings.defaults.business_year_start_month = 1
 
     travel_to Date.new(2000, 1, 15)
     period = Period.parse('b')
@@ -53,7 +53,7 @@ class PeriodTest < ActiveSupport::TestCase
     assert_equal Date.new(1999, 1, 1), period.start_date
     assert_equal Date.new(2000, 3, 31), period.end_date
 
-    Settings.business_year_start_month = 3
+    Settings.defaults.business_year_start_month = 3
 
     travel_to Date.new(2000, 1, 15)
     period = Period.parse('b')
@@ -61,7 +61,7 @@ class PeriodTest < ActiveSupport::TestCase
     assert_equal Date.new(1999, 3, 1), period.start_date
     assert_equal Date.new(2000, 4, 30), period.end_date
 
-    Settings.business_year_start_month = 7
+    Settings.defaults.business_year_start_month = 7
 
     travel_to Date.new(2000, 1, 15)
     period = Period.parse('b')

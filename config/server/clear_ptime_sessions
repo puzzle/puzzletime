@@ -1,6 +1,0 @@
-#!/bin/bash
-# clear any sessions older than a day
-find /home/puzzletime/www/puzzletime/tmp/sessions/ -name "ruby_sess*" -ctime +1 -exec rm {} \;
-
-# clear compress cache older than 10 days
-find /home/puzzletime/www/puzzletime/tmp/cache/ -type f -mtime +10 -exec rm {} \;

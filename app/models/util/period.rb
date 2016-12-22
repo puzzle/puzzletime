@@ -78,8 +78,8 @@ class Period
     def business_year_for(date, options = {})
       options[:label] ||= business_year_label(date)
       options[:shortcut] = 'b'
-      year = date.month < Settings.business_year_start_month ? date.year - 1 : date.year
-      business_year_start = Date.civil(year, Settings.business_year_start_month, 1)
+      year = date.month < Settings.defaults.business_year_start_month ? date.year - 1 : date.year
+      business_year_start = Date.civil(year, Settings.defaults.business_year_start_month, 1)
       new(business_year_start, (date + 3.months).end_of_month, options[:label], options[:shortcut])
     end
 
