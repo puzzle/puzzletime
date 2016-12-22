@@ -3,7 +3,7 @@ require 'test_helper'
 class WorkloadTest < ActiveSupport::TestCase
 
   test 'has correct summary entries' do
-    assert_equal ['Alle', departments(:devtwo)], report.summary.map(&:label)
+    assert_equal ['Puzzle', departments(:devtwo)], report.summary.map(&:label)
   end
 
   test 'has entries for employees of department with worktime without employment' do
