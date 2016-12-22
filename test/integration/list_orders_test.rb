@@ -22,6 +22,18 @@ class ListOrdersTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test 'list orders filters list by name' do
+    timeout_safe do
+      list_orders_as :mark
+      assert page.has_selector?('table.orders-list tbody tr', count: 3)
+      fill_in 'Name', with: 'swiss'
+      page.find('input#q').native.send_keys(:enter)
+      assert page.has_selector?('table.orders-list tbody tr', count: 1)
+      find('.has-clear [data-clear]').click
+      assert page.has_selector?('table.orders-list tbody tr', count: 3)
+    end
+  end
+
   private
 
   def list_orders_as(employee)

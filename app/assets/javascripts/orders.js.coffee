@@ -29,11 +29,3 @@ $ ->
 
   $('#target_scope_icon').selectize({ render: { option: renderIconItem, item: renderIconItem } })
   $('#order_status_style').selectize({ render: { option: renderStyleItem, item: renderStyleItem } })
-
-  # order cockpit: change order when choosable order changes.
-  $('#choosable_order_id').selectize(
-    selectOnTab: true,
-    onItemAdd: (value, item) ->
-      if value
-        window.location = window.location.toString().replace(/orders\/\d+/, 'orders/' + value)
-  )

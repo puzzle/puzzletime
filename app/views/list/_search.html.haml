@@ -1,8 +1,11 @@
 = form_tag(nil, { method: :get, class: 'form-inline', role: 'search' }) do
   = hidden_field_tag :returning, true
   = hidden_field_tag :page, 1
-  .input-group
+
+  .input-group.has-feedback.has-clear
     = search_field_tag :q, params[:q], class: 'form-control initial-focus'
+    %span.form-control-feedback{ data: { clear: true }, style: 'right: 73px;' }
+      = icon(:remove)
     %span.input-group-btn
       = submit_tag ti(:"button.search"), class: 'btn btn-default'
 

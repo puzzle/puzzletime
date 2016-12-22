@@ -3,6 +3,9 @@
 = form_tag(orders_path, method: :get) do
   .col-sm-10.col-md-8.col-lg-6
     = select_tag(:id,
-                 options_for_select(Order.choosable_list, @order.id),
+                 choosable_order_options,
                  id: 'choosable_order_id',
-                 autocomplete: 'off')
+                 placeholder: 'Suchen...',
+                 autocomplete: 'off',
+                 data: { autocomplete: 'order',
+                         url: search_orders_path })

@@ -1,9 +1,11 @@
 # encoding: utf-8
 
 class OrderServicesController < ApplicationController
+
   EMPTY = '[leer]'.freeze
   EMPTY_TICKET = EMPTY
   EMPTY_INVOICE = OpenStruct.new(id: EMPTY, reference: EMPTY)
+  MAX_ENTRIES = 250
 
   include Filterable
   include WithPeriod
@@ -20,7 +22,10 @@ class OrderServicesController < ApplicationController
   def show
     handle_remember_params
     set_filter_values
-    @worktimes = list_worktimes(@period).includes(:invoice, work_item: :accounting_post)
+    @worktimes =
+      list_worktimes(@period).
+        includes(:invoice, work_item: :accounting_post).
+        limit(MAX_ENTRIES)
   end
 
   def export_worktimes_csv

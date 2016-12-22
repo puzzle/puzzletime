@@ -33,6 +33,7 @@ Rails.application.routes.draw do
 
   resources :orders do
     collection do
+      get :search
       post :crm_load
     end
 

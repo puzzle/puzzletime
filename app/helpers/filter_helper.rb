@@ -19,10 +19,10 @@ module FilterHelper
      IdValue.new(false, 'nein')]
   end
 
-  def direct_filter(name, label)
+  def direct_filter(name, label, &block)
     html = ''.html_safe
     html += label_tag(name, label, class: 'control-label') + ' &nbsp; '.html_safe if label
-    html += yield
+    html += capture(&block)
     content_tag(:div, html, class: 'form-group')
   end
 

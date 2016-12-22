@@ -88,6 +88,25 @@ module OrderHelper
        tree-conifer tree-deciduous)
   end
 
+  def choosable_order_options
+    managed_orders = current_user.managed_orders.where(work_items: { closed: false }).list.minimal
+    order_option(@order, true) + safe_join(managed_orders) { |o| order_option(o) }
+  end
+
+  def order_option(order, selected = false)
+    if order
+      json = { id: order.id,
+               name: order.name,
+               path_shortnames: order.path_shortnames }
+      content_tag(:option,
+                  order.label_verbose,
+                  value: order.id,
+                  selected: selected,
+                  data: { data: json.to_json })
+    end
+  end
+
+
   private
 
   def order_report_billability_class(value)

@@ -3,6 +3,9 @@ module OrderServicesHelper
     table = checkable_worktimes_table(entries)
     if entries.present?
       footer = summed_worktimes_row(entries)
+      if entries.size == OrderServicesController::MAX_ENTRIES
+        footer = too_many_entries_row + footer
+      end
       table.gsub(/<\/tbody>\s*<\/table>/m, "</tbody><tfoot>#{footer}</tfoot></table>").html_safe
     else
       table
@@ -52,6 +55,12 @@ module OrderServicesHelper
         content_tag(:td) +
         content_tag(:td) +
         content_tag(:td)
+    end
+  end
+
+  def too_many_entries_row
+    content_tag(:tr, class: 'center') do
+      content_tag(:td, 'Weitere Einträge werden nicht angezeigt. Bitte passen Sie die Filterkriterien an, um die Anzahl Einträge zu reduzieren.', colspan: 10)
     end
   end
 end

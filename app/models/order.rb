@@ -65,15 +65,11 @@ class Order < ActiveRecord::Base
   after_initialize :set_default_status_id
   after_create :create_order_targets
 
+  scope :minimal, -> do
+    select('orders.id, work_items.name, work_items.path_names, work_items.path_shortnames')
+  end
 
   class << self
-    def choosable_list
-      result = connection.select_all(select('orders.id, work_items.path_shortnames, work_items.name').
-                                     joins(:work_item).
-                                     order('work_items.path_names'))
-      result.collect { |row| ["#{row['path_shortnames']}: #{row['name']}", row['id']] }
-    end
-
     def order_by_target_scope(target_scope_id, desc = false)
       joins('LEFT JOIN order_targets sort_target ' \
               'ON sort_target.order_id = orders.id ').

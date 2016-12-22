@@ -24,7 +24,6 @@
 #= require modal_create
 #= require worktimes
 #= require datepicker
-#= require work_item_autocomplete
 #= require plannings
 #= require plannings_panel
 #= require plannings_selectable
@@ -99,9 +98,6 @@ $(document).on('ajax:error', (event, xhr, status, error) ->
 ################################################################
 # only bind events for non-document elemenets in $ ->
 $ ->
-  # wire up autocompletes
-  $('[data-autocomplete=work_item]').each(app.workItemAutocomplete)
-
   # wire up selectize
   $('select.searchable:not([multiple])').selectize(selectOnTab: true)
   $('select[multiple].searchable').selectize(plugins: ['remove_button'], selectOnTab: true)
@@ -115,9 +111,6 @@ $ ->
     event.stopImmediatePropagation()
     event.stopPropagation()
   )
-
-  # wire up disable-dependents
-  $('[type=radio][data-disable-dependents]:checked').each((i, e) -> toggleRadioDependents(e))
 
   # set initial focus
   $('.initial-focus, .initial-focus input').focus()

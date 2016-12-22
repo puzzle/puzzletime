@@ -20,6 +20,8 @@ class OrdersController < CrudController
     status: 'order_statuses.position'
   }
 
+  self.search_columns = %w(work_items.path_shortnames work_items.path_names)
+
   before_action :set_filter_values, only: :index
 
   skip_authorization_check only: [:edit]
@@ -66,6 +68,15 @@ class OrdersController < CrudController
     p = Period.with(params[:period_from].presence, params[:period_to].presence)
     employees = Employee.with_worktimes_in_period(entry, p.start_date, p.end_date)
     render json: employees
+  end
+
+  def search
+    params[:q] ||= params[:term]
+    respond_to do |format|
+      format.json do
+        @orders = Order.list.where(search_conditions).minimal.limit(20)
+      end
+    end
   end
 
   private
@@ -189,6 +200,11 @@ class OrdersController < CrudController
 
   def load_employee_options
     Employee.list
+  end
+
+  # No search box even with search columns defined (only used for search action).
+  def search_support?
+    false
   end
 
 end
