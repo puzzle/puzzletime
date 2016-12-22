@@ -40,7 +40,7 @@ module Reports
       end
 
       def billability
-        ordertime_hours > 0 ? 100 * billable_hours / ordertime_hours : 0
+        external_client_hours > 0 ? 100 * billable_hours / external_client_hours : 0
       end
 
       private

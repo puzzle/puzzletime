@@ -16,8 +16,6 @@ module Reports
         @order_entries ||= build_entries
       end
 
-      alias entries order_entries # TODO: remove
-
       private
 
       def build_entries

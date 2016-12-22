@@ -50,7 +50,7 @@ class Reports::Workload
 
   def summary
     [
-      Reports::Workload::SummaryEntry.new('Puzzle ITC', period, period_employments, worktimes),
+      Reports::Workload::SummaryEntry.new('Alle', period, period_employments, worktimes),
       Reports::Workload::SummaryEntry.new(department, period, department_period_employments, department_worktimes)
     ]
   end

@@ -1,10 +1,10 @@
 class Reports::Workload::WorktimeEntry < Struct.new(*Reports::Workload::WORKTIME_FIELDS, :order_work_item)
 
-  delegate :ourselfs_client, to: :class
+  delegate :company_work_item_id, to: :class
 
   class << self
-    def ourselfs_client
-      @ourselfs_client ||= Client.find(Settings.clients.id_of_ourselfs)
+    def company_work_item_id
+      @company_work_item_id ||= Client.find(Settings.clients.id_of_ourselfs).work_item_id
     end
   end
 
@@ -17,6 +17,6 @@ class Reports::Workload::WorktimeEntry < Struct.new(*Reports::Workload::WORKTIME
   end
 
   def external_client?
-    Array.wrap(path_ids).exclude?(ourselfs_client.work_item_id)
+    Array.wrap(path_ids).exclude?(company_work_item_id)
   end
 end

@@ -3,7 +3,7 @@ require 'test_helper'
 class WorkloadTest < ActiveSupport::TestCase
 
   test 'has correct summary entries' do
-    assert_equal ["Puzzle ITC", departments(:devtwo)], report.summary.map(&:label)
+    assert_equal ['Alle', departments(:devtwo)], report.summary.map(&:label)
   end
 
   test 'has entries for employees of department with worktime without employment' do
@@ -92,7 +92,7 @@ class WorkloadTest < ActiveSupport::TestCase
     Fabricate(:ordertime, hours: 2.5, work_item: work_items(:webauftritt),
               employee: employees(:lucien), work_date: period.start_date)
 
-    # Non-Billable hours on external Projek
+    # Non-Billable hours on external Project
     Fabricate(:ordertime, hours: 2.5, work_item: work_items(:webauftritt),
               employee: employees(:lucien), work_date: period.start_date, billable: false)
 
@@ -104,8 +104,12 @@ class WorkloadTest < ActiveSupport::TestCase
     Fabricate(:ordertime, hours: 6, work_item: work_items(:webauftritt),
               employee: employees(:lucien), work_date: period.start_date)
 
-    # Non-Billable hours on external Projekct
+    # Non-Billable hours on external Project
     Fabricate(:ordertime, hours: 2, work_item: work_items(:webauftritt),
+              employee: employees(:lucien), work_date: period.start_date, billable: false)
+
+    # Non-Billable hours on internal Project
+    Fabricate(:ordertime, hours: 2, work_item: work_items(:allgemein),
               employee: employees(:lucien), work_date: period.start_date, billable: false)
 
     assert_equal 75, report.entries.first.billability
