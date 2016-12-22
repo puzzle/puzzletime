@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module OrderServicesHelper
   def summed_worktimes_table(entries)
     table = checkable_worktimes_table(entries)
