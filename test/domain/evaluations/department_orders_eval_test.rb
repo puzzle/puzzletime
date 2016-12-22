@@ -25,7 +25,7 @@ class DepartmentOrdersEvalTest < ActiveSupport::TestCase
               percent: 100, definitive: true)
     Fabricate(:planning, work_item: work_items(:allgemein), date: '2006-12-04',
               percent: 100, definitive: true)
-    Fabricate(:planning, work_item: work_items(:puzzletime), date: '2006-11-01',
+    Fabricate(:planning, work_item: work_items(:puzzletime), date: '2006-11-02',
               percent: 80, definitive: false) # provisional (ignored)
 
     assert_equal({ work_items(:puzzletime).id => { hours: 8.0, billable_hours: 0.0 } },
