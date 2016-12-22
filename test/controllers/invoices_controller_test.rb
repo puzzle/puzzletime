@@ -15,6 +15,7 @@ class InvoicesControllerTest < ActionController::TestCase
   end
 
   test 'GET new with params from order_services view filter assigns correct attributes' do
+    test_entry.destroy!
     login_as :mark
     get :new,
         order_id: test_entry.order_id,
@@ -28,9 +29,11 @@ class InvoicesControllerTest < ActionController::TestCase
     assert_equal([work_items(:webauftritt)], entry.work_items)
     assert_equal(Date.parse(start_date), entry.period_from)
     assert_equal(Date.parse(end_date), entry.period_to)
+    assert_equal(nil, entry.grouping)
   end
 
   test 'GET new without params sets defaults' do
+    test_entry.update!(grouping: 'manual')
     worktimes(:wt_pz_webauftritt).update!(billable: true)
     get :new, order_id: test_entry.order_id
     assert_response :success
@@ -39,6 +42,7 @@ class InvoicesControllerTest < ActionController::TestCase
     assert_equal(employees(:mark, :lucien, :pascal).sort, entry.employees.sort)
     assert_equal([work_items(:webauftritt)], entry.work_items)
     assert(test_entry.order.default_billing_address_id, entry.billing_address_id)
+    assert_equal('manual', entry.grouping)
   end
 
   test 'GET preview_total' do

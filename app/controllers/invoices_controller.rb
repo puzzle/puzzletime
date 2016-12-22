@@ -133,6 +133,7 @@ class InvoicesController < CrudController
     attrs[:billing_date] ||= l(billing_date)
     attrs[:due_date] ||= l(due_date) if due_date.present?
     attrs[:billing_address_id] ||= default_billing_address_id
+    attrs[:grouping] ||= last_grouping
     if attrs[:employee_ids].blank?
       attrs[:employee_ids] = employees_for_period(attrs[:period_from],
                                                   attrs[:period_to]).map(&:id)
@@ -204,6 +205,10 @@ class InvoicesController < CrudController
 
   def due_date
     entry.due_date || billing_date + payment_period.days if payment_period.present?
+  end
+
+  def last_grouping
+    order.invoices.list.first.try(:grouping)
   end
 
   def autoselect_all?
