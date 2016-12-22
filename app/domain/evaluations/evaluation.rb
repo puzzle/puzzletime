@@ -128,7 +128,8 @@ class Evaluation
   def planning_query(receiver, division = nil)
     query = receiver.plannings.
               joins(:work_item).
-              joins('INNER JOIN accounting_posts ON accounting_posts.work_item_id = ANY (work_items.path_ids)')
+              joins('INNER JOIN accounting_posts ON accounting_posts.work_item_id = ANY (work_items.path_ids)').
+              definitive
     query = query.where("? = #{category_ref}", category_id) if division && category_ref
     query
   end
