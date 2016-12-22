@@ -4,7 +4,8 @@
                            :shortname,
                            :email,
                            :ldapname,
-                           :department_id
+                           :department_id,
+                           :probation_period_end_date
 
   - if Settings.employees.initial_vacation_days_editable
     = f.labeled_input_field :initial_vacation_days

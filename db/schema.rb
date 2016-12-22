@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161219123545) do
+ActiveRecord::Schema.define(version: 20161222162235) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,6 +53,7 @@ ActiveRecord::Schema.define(version: 20161219123545) do
     t.string  "town"
     t.string  "country",       limit: 2
     t.string  "invoicing_key"
+    t.string  "client_name"
   end
 
   add_index "billing_addresses", ["client_id"], name: "index_billing_addresses_on_client_id", using: :btree
@@ -130,17 +131,18 @@ ActiveRecord::Schema.define(version: 20161219123545) do
   add_index "departments", ["shortname"], name: "index_departments_on_shortname", unique: true, using: :btree
 
   create_table "employees", force: :cascade do |t|
-    t.string  "firstname",              limit: 255,                 null: false
-    t.string  "lastname",               limit: 255,                 null: false
-    t.string  "shortname",              limit: 3,                   null: false
-    t.string  "passwd",                 limit: 255
-    t.string  "email",                  limit: 255,                 null: false
-    t.boolean "management",                         default: false
+    t.string  "firstname",                 limit: 255,                 null: false
+    t.string  "lastname",                  limit: 255,                 null: false
+    t.string  "shortname",                 limit: 3,                   null: false
+    t.string  "passwd",                    limit: 255
+    t.string  "email",                     limit: 255,                 null: false
+    t.boolean "management",                            default: false
     t.float   "initial_vacation_days"
-    t.string  "ldapname",               limit: 255
-    t.string  "eval_periods",           limit: 3,                                array: true
+    t.string  "ldapname",                  limit: 255
+    t.string  "eval_periods",              limit: 3,                                array: true
     t.integer "department_id"
     t.date    "committed_worktimes_at"
+    t.date    "probation_period_end_date"
   end
 
   add_index "employees", ["department_id"], name: "index_employees_on_department_id", using: :btree
@@ -156,12 +158,11 @@ ActiveRecord::Schema.define(version: 20161219123545) do
 
   create_table "employments", force: :cascade do |t|
     t.integer "employee_id"
-    t.decimal "percent",                   precision: 5, scale: 2, null: false
-    t.date    "start_date",                                        null: false
+    t.decimal "percent",                precision: 5, scale: 2, null: false
+    t.date    "start_date",                                     null: false
     t.date    "end_date"
-    t.decimal "vacation_days_per_year",    precision: 5, scale: 2
+    t.decimal "vacation_days_per_year", precision: 5, scale: 2
     t.string  "comment"
-    t.date    "probation_period_end_date"
   end
 
   add_index "employments", ["employee_id"], name: "index_employments_on_employee_id", using: :btree

@@ -60,6 +60,8 @@ class EmployeesControllerTest < ActionController::TestCase
       shortname: 'fm',
       email: 'muster@puzzle.ch',
       ldapname: 'fmuster',
-      management: false }
+      management: false,
+      department_id: departments(:devone).id,
+      probation_period_end_date: Date.new(2015, 10, 3) }
   end
 end

@@ -161,6 +161,7 @@ de-CH:
         current_percent: Prozent
         eval_periods: Zeitspannen Auswertungen
         committed_worktimes_at: Letzte freigegebene Periode
+        probation_period_end_date: Ende Probezeit
       employment:
         employee_id: Mitarbeiter
         start_date: Startdatum
@@ -168,7 +169,6 @@ de-CH:
         percent: Prozent
         vacation_days_per_year: Ferientage pro Jahr
         comment: Kommentar
-        probation_period_end_date: Ende Probezeit
       holiday:
         holiday_date: Datum
         musthours_day: Muss Stunden

@@ -30,6 +30,7 @@ class EmploymentsControllerTest < ActionController::TestCase
   def test_entry_attrs
     { percent: 80,
       start_date: Time.zone.today - 1.year,
-      end_date: Time.zone.today }
+      end_date: Time.zone.today,
+      comment: 'bla bla' }
   end
 end

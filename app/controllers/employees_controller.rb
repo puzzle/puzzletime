@@ -6,7 +6,8 @@
 class EmployeesController < ManageController
 
   self.permitted_attrs = [:firstname, :lastname, :shortname, :email, :ldapname,
-                          :department_id, :management]
+                          :department_id, :probation_period_end_date, :management]
+
   if Settings.employees.initial_vacation_days_editable
     self.permitted_attrs += [:initial_vacation_days]
   end
