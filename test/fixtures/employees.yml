@@ -82,6 +82,7 @@ mark:
   eval_periods:
     - '0'
     - '0m'
+    - '-2m'
     - '-1m'
     - '0y'
     - '-1y'

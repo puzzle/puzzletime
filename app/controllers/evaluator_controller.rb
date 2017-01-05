@@ -217,8 +217,10 @@ class EvaluatorController < ApplicationController
     else
       @user.eval_periods.
         collect { |p| Period.parse(p) }.
-        sort_by { |p| p.try(:start_date) || Date.today }.
-        sort_by { |p| p.nil? || p.unlimited? ? 999_999 : p.length }
+        sort_by do |p|
+          [p.nil? || p.unlimited? ? 999_999 : p.length.round(-1),
+           p.try(:start_date) || Date.today]
+        end
     end
   end
 
