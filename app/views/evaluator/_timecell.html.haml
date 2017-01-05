@@ -19,9 +19,9 @@
   action ||= 'details'
 %td.text-right
   - if @evaluation.class.billable_hours
-    = with_tooltip('Geleistet gesamthaft', class: 'additional-figure muted') do
+    = with_tooltip('Geleistet - gesamthaft', class: 'additional-figure muted') do
       = safe_join(['(', format_hour(hours), ')'])
-    = with_tooltip('Geleistet verrechenbar') do
+    = with_tooltip('Geleistet - verrechenbar') do
       = format_hour(billable_hours)
   - else
     = format_hour(hours)
@@ -39,12 +39,12 @@
 
 - if @evaluation.class.planned_hours
   %td.text-right
-    = with_tooltip('Geplant gesamthaft', class: 'additional-figure muted') do
+    = with_tooltip('Fix geplant - gesamthaft', class: 'additional-figure muted') do
       = safe_join(['(', format_hour(planned_hours), ')'])
-    = with_tooltip('Geplant verrechenbar') do
+    = with_tooltip('Fix geplant - verrechenbar') do
       = format_hour(planned_billable_hours)
   %td.text-right
-    = with_tooltip('Abweichung gesamthaft', class: 'additional-figure muted') do
+    = with_tooltip('Abweichung - gesamthaft', class: 'additional-figure muted') do
       = safe_join(['(', format_hour(hours - planned_hours), ')'])
-    = with_tooltip('Abweichung verrechenbar') do
+    = with_tooltip('Abweichung - verrechenbar') do
       = format_hour(billable_hours - planned_billable_hours)
