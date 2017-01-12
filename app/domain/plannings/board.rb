@@ -20,7 +20,7 @@ module Plannings
     end
 
     def items(employee_id, work_item_id)
-      rows[key(employee_id.to_i, work_item_id.to_i)]
+      rows[key(employee_id, work_item_id)]
     end
 
     def work_days
@@ -88,9 +88,9 @@ module Plannings
 
     def load_employments
       list = Employment.
-               during(@period).
-               where(employee_id: @employees.map(&:id)).
-               reorder('start_date')
+             during(@period).
+             where(employee_id: @employees.map(&:id)).
+             reorder('start_date')
       Employment.normalize_boundaries(list.to_a, @period)
     end
 

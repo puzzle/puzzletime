@@ -19,11 +19,12 @@ module Plannings
 
     # new row for plannings
     def new
+      key = [params[:employee_id].to_i, params[:work_item_id].to_i]
       board = build_board
-      board.for_rows([[params[:employee_id], params[:work_item_id]]])
+      board.for_rows([key])
       @items = board.rows.values.first
-      @legend = board.row_legend(params[:employee_id], params[:work_item_id])
-      @row_total = board.total_row_planned_hours(params[:employee_id], params[:work_item_id])
+      @legend = board.row_legend(*key)
+      @row_total = board.total_row_planned_hours(*key)
     end
 
     def update

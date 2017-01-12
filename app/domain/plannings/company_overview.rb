@@ -20,7 +20,7 @@ module Plannings
     def weekly_employment_percent(date)
       @weekly_employment_percent ||= {}
       @weekly_employment_percent[date] ||=
-          boards.sum { |board| board.weekly_employment_percent(date).to_f }
+        boards.sum { |board| board.weekly_employment_percent(date).to_f }
     end
 
     private

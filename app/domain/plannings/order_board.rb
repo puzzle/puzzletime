@@ -6,12 +6,12 @@ module Plannings
     alias order subject
 
     def row_legend(employee_id, _work_item_id)
-      employees.detect { |e| e.id == employee_id.to_i }
+      employees.detect { |e| e.id == employee_id }
     end
 
     def total_row_planned_hours(employee_id, work_item_id)
       @total_row_planned_hours ||= load_total_included_rows_planned_hours
-      @total_row_planned_hours[key(employee_id.to_i, work_item_id.to_i)] || 0
+      @total_row_planned_hours[key(employee_id, work_item_id)] || 0
     end
 
     def total_post_planned_hours(post)
@@ -33,7 +33,7 @@ module Plannings
     def weekly_planned_hours(date)
       @weekly_planned_hours ||= Hash.new(0.0).tap do |totals|
         load_plannings.group(:date).sum(:percent).each do |d, percent|
-          totals[d.at_beginning_of_week.to_date] +=percent_to_hours(percent, must_hours_per_day(d))
+          totals[d.at_beginning_of_week.to_date] += percent_to_hours(percent, must_hours_per_day(d))
         end
       end
       @weekly_planned_hours[date]
@@ -78,10 +78,10 @@ module Plannings
       hours = {}
       WorkingCondition.each_period_of(:must_hours_per_day, Period.new(nil, nil)) do |period, val|
         load_plannings(period).
-            where(work_item_id: included_work_item_ids).
-            group(:work_item_id).
-            sum(:percent).
-            each do |w, p|
+          where(work_item_id: included_work_item_ids).
+          group(:work_item_id).
+          sum(:percent).
+          each do |w, p|
           hours[w] ||= 0
           hours[w] += percent_to_hours(p, val)
         end

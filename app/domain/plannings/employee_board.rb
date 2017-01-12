@@ -28,7 +28,7 @@ module Plannings
     end
 
     def row_legend(_employee_id, work_item_id)
-      accounting_posts.detect { |post| post.work_item_id == work_item_id.to_i }
+      accounting_posts.detect { |post| post.work_item_id == work_item_id }
     end
 
     def row_sum(accounting_post)
