@@ -135,6 +135,10 @@ a.has-tooltip:hover span {
   margin-left: 5px;
 }
 
+a[data-toggle] {
+  cursor: pointer;
+}
+
 [data-toggle-visibility] {
   cursor: zoom-in;
 }

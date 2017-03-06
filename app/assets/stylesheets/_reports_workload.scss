@@ -1,31 +1,18 @@
 .reports-workload {
-
   .data-item {
-    clear: both;
     text-align: right;
     white-space: nowrap;
 
     .figure {
       text-align: right;
-      font-weight: 400;
-
-      &.small {
-        font-size: 14px;
-        line-height: 200%;
-        font-weight: 400;
-      }
     }
+
     .unit {
-      min-width: 2.4em;
-      display: inline-block;
-      text-align: left;
       font-size: 12px;
-      font-weight: 400;
     }
 
     .figure, .unit {
       color: $gray-darker;
     }
-
   }
 }
