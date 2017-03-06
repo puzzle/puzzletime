@@ -3,7 +3,7 @@
     %table.reports-workload.table.table-hover
       %thead
         %tr
-          %th.nowrap{style: 'width: 14%;'}= sort_link(:employee, 'Member')
+          %th.nowrap{style: 'width: 14%;'}= sort_link(:employee, 'Member', default: true, default_dir: 'asc')
           %th.right.nowrap= sort_link(:must_hours, 'Soll')
           %th.right.nowrap= sort_link(:worktime_balance, 'Über-/Unterzeit')
           %th.right.nowrap Absenzen

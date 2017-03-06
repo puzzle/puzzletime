@@ -1,32 +1,33 @@
 module SortHelper
-  def sort_link(attr, label = nil)
+  def sort_link(attr, label = nil, options = {})
     label ||= entry.class.human_attribute_name(attr)
-    link_to(label, sort_params(attr)) + current_mark(attr)
+    link_to(label, sort_params(attr, options)) + current_mark(attr, options)
   end
 
   private
 
   # Request params for the sort link.
-  def sort_params(attr)
-    params.merge(sort: attr, sort_dir: sort_dir(attr))
+  def sort_params(attr, options)
+    params.merge(sort: attr, sort_dir: sort_dir(attr, options))
   end
 
   # The sort mark, if any, for the given attribute.
-  def current_mark(attr)
-    if current_sort?(attr)
-      (sort_dir(attr) == 'asc' ? ' &uarr;' : ' &darr;').html_safe
+  def current_mark(attr, options)
+    if current_sort?(attr, options)
+      (sort_dir(attr, options) == 'asc' ? ' &uarr;' : ' &darr;').html_safe
     else
       ''
     end
   end
 
   # Returns true if the given attribute is the current sort column.
-  def current_sort?(attr)
-    params[:sort] == attr.to_s
+  def current_sort?(attr, options)
+    params[:sort] == attr.to_s || options[:default]
   end
 
   # The sort direction to use in the sort link for the given attribute.
-  def sort_dir(attr)
-    current_sort?(attr) && params[:sort_dir] == 'asc' ? 'desc' : 'asc'
+  def sort_dir(attr, options)
+    current_sort?(attr, options) &&
+      (params[:sort_dir] || options[:default_dir]) == 'asc' ? 'desc' : 'asc'
   end
 end
