@@ -114,3 +114,4 @@ $ ->
 
   # set initial focus
   $('.initial-focus, .initial-focus input').focus()
+  setTimeout(-> $('.initial-focus.selectized').next('.selectize-control').find('input').focus())
