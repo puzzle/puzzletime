@@ -63,7 +63,7 @@ class CrudController < ListController
         format.json { render :show, status: :created, location: show_path }
         format.js   { render text: "'#{js_entry.to_json}'" }
       else
-        format.html { render :new }
+        format.html { render :new, status: :unprocessable_entity }
         format.json { render json: entry.errors, status: :unprocessable_entity }
         format.js   { render partial: 'form', status: :unprocessable_entity }
       end
@@ -93,7 +93,7 @@ class CrudController < ListController
         format.json { render :show, status: :ok, location: show_path }
         format.js   { render text: "'#{js_entry.to_json}'" }
       else
-        format.html { render :edit }
+        format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: entry.errors, status: :unprocessable_entity }
         format.js   { render partial: 'form', status: :unprocessable_entity }
       end
