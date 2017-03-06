@@ -185,7 +185,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_no_difference('CrudTestModel.count') do
       post :create, crud_test_model: { name: 'illegal', children: 2 }
     end
-    assert_response :success
+    assert_response :unprocessable_entity
     assert_template 'new'
     assert entry.new_record?
     assert assigns(:companions).present?
@@ -215,7 +215,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_no_difference('CrudTestModel.count') do
       post :create, crud_test_model: { children: 2 }
     end
-    assert_response :success
+    assert_response :unprocessable_entity
     assert_template 'new'
     assert entry.new_record?
     assert assigns(:companions)
@@ -238,7 +238,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
 
   def test_update_with_failure
     put :update, id: test_entry.id, crud_test_model: { rating: 20 }
-    assert_response :success
+    assert_response :unprocessable_entity
     assert_template 'edit'
     assert entry.changed?
     assert flash[:notice].blank?

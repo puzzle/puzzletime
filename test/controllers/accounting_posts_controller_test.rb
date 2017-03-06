@@ -53,7 +53,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
              portfolio_item_id: portfolio_items(:web).id,
              service_id: services(:software).id,
              offered_rate: 120 }
-      assert_response :success
+      assert_response :unprocessable_entity
       assert_template :new
       assert_match(/es existieren bereits/, assigns(:accounting_post).errors.full_messages.join)
     end
@@ -212,7 +212,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
             id: accounting_posts(:hitobito_demo_app),
             book_on_order: 'true',
             accounting_post: { description: 'asdf' }
-      assert_response :success
+      assert_response :unprocessable_entity
       assert_template :edit
       assert_match(/es existieren bereits/, assigns(:accounting_post).errors.full_messages.join)
     end
