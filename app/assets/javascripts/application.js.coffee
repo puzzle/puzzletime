@@ -22,8 +22,8 @@
 # after self to disable links
 #= require nested_form_fields
 #= require modal_create
-#= require worktimes
 #= require datepicker
+#= require worktimes
 #= require plannings
 #= require plannings_panel
 #= require plannings_selectable

@@ -10,32 +10,32 @@ app.worktimes.activateNavDayWithDate = (date) ->
   unless app.worktimes.activationEnabled
     return
 
-  $('.worktimes .weeknav .day').removeClass('active')
-  $('.worktimes .weeknav .day[data-date="' + date + '"]').addClass('active')
+  $('.worktimes-container .weeknav .day').removeClass('active')
+  $('.worktimes-container .weeknav .day[data-date="' + date + '"]').addClass('active')
 
 
 app.worktimes.activateFirstNavDay = ->
   unless app.worktimes.activationEnabled
     return
 
-  $('.worktimes .weeknav .day').removeClass('active')
-  $('.worktimes .weeknav .day:first-child').addClass('active')
+  $('.worktimes-container .weeknav .day').removeClass('active')
+  $('.worktimes-container .weeknav .day:first-child').addClass('active')
 
 
 app.worktimes.activateLastNavDay = ->
   unless app.worktimes.activationEnabled
     return
 
-  $('.worktimes .weeknav .day').removeClass('active')
-  $('.worktimes .weeknav .day:last-child').addClass('active')
+  $('.worktimes-container .weeknav .day').removeClass('active')
+  $('.worktimes-container .weeknav .day:last-child').addClass('active')
 
 
 app.worktimes.scrollToDayWithDate = (date) ->
-  dateLabel = $('.worktimes .weekcontent .date-label[data-date="' + date + '"]')
+  dateLabel = $('.worktimes-container .weekcontent .date-label[data-date="' + date + '"]')
   if dateLabel.length is 0
     return
 
-  offset = dateLabel.offset().top - $('.worktimes .weeknav').height() - 20;
+  offset = dateLabel.offset().top - $('.worktimes-container .weeknav').height() - 20;
   app.worktimes.scrollTo(offset, app.worktimes.activateNavDayWithDate, date)
 
 
@@ -50,8 +50,8 @@ app.worktimes.scrollTo = (offset, callback, date) ->
 
       if date
         # hightlight entries
-        entries = $('.worktimes .weekcontent .date-label[data-date="' + date + '"], ' + \
-          '.worktimes .weekcontent .entry[data-date="' + date + '"]')
+        entries = $('.worktimes-container .weekcontent .date-label[data-date="' + date + '"], ' + \
+          '.worktimes-container .weekcontent .entry[data-date="' + date + '"]')
         entries.addClass('highlight')
         setTimeout((-> entries.removeClass('highlight')), 400)
     ))
@@ -73,6 +73,8 @@ worktimesWaypoint = null
 
 $ ->
 
+  worktimes = $('.worktimes-container')
+
   $('#new_ordertime_link').click (e) ->
     e.preventDefault()
     window.location.href = $(this). attr('href') + '?work_date=' + $("#week_date").val();
@@ -85,8 +87,8 @@ $ ->
     worktimesWaypoint.destroy()
     worktimesWaypoint = null
 
-  if $('.worktimes').length
-    $('.worktimes .weekcontent .date-label').
+  if worktimes.length
+    $('.weekcontent .date-label', worktimes).
       waypoint({ handler: (direction) ->
         if direction == 'down'
           app.worktimes.activateNavDayWithDate($(this.element).data('date'))
@@ -94,10 +96,10 @@ $ ->
           app.worktimes.activateNavDayWithDate($(this.element).prev().data('date'))
       , offset: -> $('.weeknav').height() })
 
-    $('.worktimes .weeknav .day').on('click', (event) ->
+    $('.weeknav .day', worktimes).on('click', (event) ->
       event.preventDefault()
       date = new Date($(event.currentTarget).data('date'))
-      $("#week_date").datepicker({dateFormat: 'yyyy-mm-dd'}).datepicker('setDate', date)
+      $("#week_date").datepicker('setDate', date)
       app.worktimes.scrollToDayWithDate($(event.currentTarget).data('date'))
     )
 
@@ -112,9 +114,9 @@ $ ->
       return
     )
 
-    selectedDate = $('.worktimes').data('selectedDate')
-    if selectedDate && $('.worktimes .weeknav .day[data-date="' + selectedDate + '"]').length
-      $('.worktimes .weeknav .day[data-date="' + selectedDate + '"]').click()
+    selectedDate = worktimes.data('selectedDate')
+    if selectedDate && $('.weeknav .day[data-date="' + selectedDate + '"]', worktimes).length
+      $('.weeknav .day[data-date="' + selectedDate + '"]', worktimes).click()
 
   # toggle from/to and hour input fields
   toggle = (selector_id, disable) ->

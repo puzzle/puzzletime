@@ -1,7 +1,7 @@
 $worktimes-weeknav-active-bg: #fff;
 $worktimes-weekcontent-hover-bg: $gray-lighter;
 
-.worktimes {
+.worktimes-container {
   .figures {
     @extend .row;
     margin-left: 0;
