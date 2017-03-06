@@ -23,26 +23,6 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
     }
   }
 
-  .weeknav-container {
-    padding: $padding-base-vertical 0;
-
-    &.stuck {
-      @extend .container-fluid;
-      padding-left: 0;
-      padding-right: 0;
-      position: fixed;
-      top: -$padding-base-vertical;
-      left: 0;
-      right: 0;
-      z-index: 2;
-
-      .weeknav {
-        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
-      }
-    }
-
-  }
-
   .weeknav {
     @extend .row;
     margin-left: 0;
@@ -372,6 +352,18 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
         @extend .col-xs-12;
       }
     }
+  }
+}
+
+.weeknav-container {
+  position: sticky;
+  top: -6px;
+  z-index: 2;
+  padding: $padding-base-vertical 0;
+
+  &.stuck {
+    position: fixed;
+    width: 100%;
   }
 }
 

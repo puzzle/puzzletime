@@ -2,8 +2,8 @@ app = window.App ||= {}
 
 app.worktimes = {}
 
-app.worktimes.scrollSpeed = 300;
-app.worktimes.activationEnabled = true;
+app.worktimes.scrollSpeed = 300
+app.worktimes.activationEnabled = true
 
 
 app.worktimes.activateNavDayWithDate = (date) ->
@@ -69,6 +69,8 @@ showRegularAbsence = (e) ->
   $('#multi').hide()
   e.preventDefault() if e
 
+worktimesWaypoint = null
+
 $ ->
 
   $('#new_ordertime_link').click (e) ->
@@ -78,6 +80,10 @@ $ ->
   $('#new_other_ordertime_link').click (e) ->
     e.preventDefault()
     window.location.href = $(this). attr('href') + '&work_date=' + $("#week_date").val();
+
+  if worktimesWaypoint
+    worktimesWaypoint.destroy()
+    worktimesWaypoint = null
 
   if $('.worktimes').length
     $('.worktimes .weekcontent .date-label').
@@ -89,13 +95,16 @@ $ ->
       , offset: -> $('.weeknav').height() })
 
     $('.worktimes .weeknav .day').on('click', (event) ->
-      event.preventDefault();
+      event.preventDefault()
       date = new Date($(event.currentTarget).data('date'))
       $("#week_date").datepicker({dateFormat: 'yyyy-mm-dd'}).datepicker('setDate', date)
       app.worktimes.scrollToDayWithDate($(event.currentTarget).data('date'))
     )
 
-    new Waypoint.Sticky({ element: $('.worktimes .weeknav-container')[0] })
+    unless Modernizr.csspositionsticky
+      setTimeout () ->
+        worktimesWaypoint = new Waypoint.Sticky
+          element: $('.weeknav-container')[0]
 
     $('#week_date').on('change', (event) ->
       date = event.target.value
