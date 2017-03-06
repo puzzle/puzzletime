@@ -1,12 +1,12 @@
 .worktimes.unindented{'data-selected-date' => @selected_date}
   .figures
-    .balance
+    .balance{ title: 'Saldo per Gestern', 'data-toggle' => 'tooltip' }
       Überzeitsaldo:
       = format_hour(@current_overtime)
     .monthly
       Monatliche Arbeitszeit:
       = monthly_worktime
-    .holidays
+    .holidays{ title: 'Der Saldo berücksichtigt bereits geplante Ferien.', 'data-toggle' => 'tooltip' }
       Feriensaldo:
       = format_days(@remaining_vacations)
 
