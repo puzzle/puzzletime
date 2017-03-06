@@ -22,7 +22,7 @@ module SortHelper
 
   # Returns true if the given attribute is the current sort column.
   def current_sort?(attr, options)
-    params[:sort] == attr.to_s || options[:default]
+    params[:sort] == attr.to_s || (options[:default] && !params[:sort])
   end
 
   # The sort direction to use in the sort link for the given attribute.
