@@ -6,7 +6,7 @@
           %th.nowrap{style: 'width: 14%;'}= sort_link(:employee, 'Member', default: true, default_dir: 'asc')
           %th.right.nowrap= sort_link(:must_hours, 'Soll')
           %th.right.nowrap= sort_link(:worktime_balance, 'Über-/Unterzeit')
-          %th.right.nowrap Absenzen
+          %th.right.nowrap= sort_link(:absencetime_hours, 'Absenzen')
           %th.nowrap Auftrag
           %th.nowrap Beschreibung
           %th.right.nowrap= sort_link(:ordertime_hours, 'Arbeitszeit')

@@ -15,6 +15,10 @@ module Reports
         @must_hours ||= employments.sum { |e| e.musttime(period) }
       end
 
+      def absencetime_hours
+        @absencetime_hours ||= absencetimes.sum(&:hours)
+      end
+
       def ordertime_hours
         @ordertime_hours ||= ordertimes.sum(&:hours)
       end

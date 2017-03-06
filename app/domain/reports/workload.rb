@@ -128,7 +128,8 @@ class Reports::Workload
   end
 
   def sort_by_number?
-    %w(must_hours worktime_balance ordertime_hours workload billability).include?(params[:sort]) end
+    %w(must_hours worktime_balance ordertime_hours absencetime_hours workload billability).include?(params[:sort])
+  end
 
   def sort_by_employee(entries, dir)
     entries.sort_by(&:to_s).tap do |entries|
