@@ -13,8 +13,8 @@ class OrderServicesController < ApplicationController
   include WorktimesReport
   include WorktimesCsv
 
-  self.remember_params = %w(start_date end_date period_shortcut employee_id work_item_id ticket billable
-                            invoice_id)
+  self.remember_params = %w(start_date end_date period_shortcut employee_id work_item_id ticket
+                            billable invoice_id)
 
   before_action :order
   before_action :authorize_class

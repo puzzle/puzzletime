@@ -4,7 +4,7 @@
 
 = form_tag({ action: 'report' }, method: 'get') do
 
-  - %w(evaluation end_date start_date category_id division_id work_item_id employee_id ticket invoice_id billable).each do |p|
+  - %w(evaluation start_date end_date period_shortcut category_id division_id work_item_id employee_id ticket invoice_id billable).each do |p|
     = hidden_field_tag p, params[p] if params[p]
 
   - if billable_option
