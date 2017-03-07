@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.2.7.1'
+gem 'rails', '4.2.8'
 
 gem 'pg', '< 0.19' # higher requires ruby 2.0
 
@@ -20,11 +20,14 @@ gem 'highrise'
 gem 'jbuilder'
 gem 'nested_form_fields'
 gem 'net-ldap', '< 0.13' # higher requires ruby 2.0
+gem 'nokogiri', '< 1.7.0' # higher requires ruby 2.1
 gem 'protective'
+gem 'public_suffix', '< 1.5.0' # higher requires ruby 2.0
 gem 'rails_autolink'
 gem 'rails-i18n'
 gem 'request_store'
 gem 'seed-fu'
+gem 'sort_alphabetical', '< 1.1.0' # higher requires ruby 2.0
 gem 'validates_by_schema'
 gem 'validates_timeliness'
 
