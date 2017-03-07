@@ -87,28 +87,33 @@ class OrdersController < CrudController
               order('work_items.path_names')
     entries = sort_entries_by_target_scope(entries)
 
-    if (params.keys & %w(department_id kind_id status_id responsible_id)).present?
-      filter_entries_by(entries, :department_id, :kind_id, :status_id, :responsible_id)
+    filter_entries_by(entries, :department_id, :kind_id, :status_id, :responsible_id)
+  end
+
+  def handle_remember_params
+    if filter_params_present?
+      remembered = remembered_params
+      store_current_params(remembered)
+      clear_void_params(remembered)
+    elsif remembered_params?
+      restore_params(remembered_params)
     else
-      default_filter_entries(entries)
+      set_default_filter_params
+      store_current_params(remembered_params)
     end
   end
 
-  def default_filter_entries(entries)
-    entries = remembering_default_filter(entries, :status_id, @order_statuses.first.try(:id))
+  def filter_params_present?
+    (params.keys & %w(department_id kind_id status_id responsible_id)).present?
+  end
 
+  def set_default_filter_params
+    params[:status_id] = OrderStatus.list.select(:id).first.try(:id)
     if !current_user.management? && current_user.order_responsible?
-      remembering_default_filter(entries, :responsible_id, current_user.id)
+      params[:responsible_id] = current_user.id
     elsif current_user.department_id?
-      remembering_default_filter(entries, :department_id, current_user.department_id)
-    else
-      entries
+      params[:department_id] = current_user.department_id
     end
-  end
-
-  def remembering_default_filter(entries, attr, value)
-    remembered_params[attr.to_s] = params[attr] = value
-    entries.where(attr => value)
   end
 
   def sort_entries_by_target_scope(entries)
@@ -150,9 +155,20 @@ class OrdersController < CrudController
 
   def set_filter_values
     @departments = Department.list
+    @responsibles = load_responsibles
     @order_kinds = OrderKind.list
     @order_statuses = OrderStatus.list
     @target_scopes = TargetScope.list
+  end
+
+  def load_responsibles
+    Employee
+      .joins(:managed_orders)
+      .employed_ones(Period.current_year)
+      .select('employees.*, ' \
+              "CASE WHEN employees.id = #{current_user.id.to_s(:db)} THEN 1 " \
+              'ELSE 2 END AS employee_order') # current user should be on top
+      .reorder('employee_order, lastname, firstname')
   end
 
   def set_option_values

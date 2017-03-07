@@ -57,29 +57,80 @@ class OrdersControllerTest < ActionController::TestCase
   test 'GET index filtered by department' do
     get :index, department_id: departments(:devone).id
     assert_equal orders(:puzzletime, :webauftritt), assigns(:orders)
+    assert_equal({ 'department_id' => departments(:devone).id.to_s },
+                 session[:list_params]['/orders'])
+  end
+
+  test 'GET index filtered by responsible' do
+    get :index, responsible_id: employees(:lucien).id
+    assert_equal orders(:hitobito_demo, :puzzletime), assigns(:orders)
+    assert_equal({ 'responsible_id' => employees(:lucien).id.to_s },
+                 session[:list_params]['/orders'])
   end
 
   test 'GET index filtered by status' do
     get :index, status_id: order_statuses(:bearbeitung).id
     assert_equal orders(:hitobito_demo, :puzzletime, :webauftritt), assigns(:orders)
+    assert_equal({ 'status_id' => order_statuses(:bearbeitung).id.to_s },
+                 session[:list_params]['/orders'])
   end
 
   test 'GET index filtered by kind' do
     get :index, kind_id: order_kinds(:projekt).id
     assert_equal orders(:hitobito_demo, :webauftritt), assigns(:orders)
+    assert_equal({ 'kind_id' => order_kinds(:projekt).id.to_s },
+                 session[:list_params]['/orders'])
   end
 
   test 'GET index filtered by status and kind' do
-    get :index, status_id: order_statuses(:bearbeitung), kind_id: order_kinds(:mandat).id
+    get :index, status_id: order_statuses(:bearbeitung).id, kind_id: order_kinds(:mandat).id
     assert_equal [orders(:puzzletime)], assigns(:orders)
+    assert_equal({ 'status_id' => order_statuses(:bearbeitung).id.to_s,
+                   'kind_id' => order_kinds(:mandat).id.to_s },
+                 session[:list_params]['/orders'])
   end
 
-  test 'GET index filtered by department, status and kind' do
-    get :index, department_id: departments(:devtwo),
-                status_id: order_statuses(:bearbeitung),
+  test 'GET index filtered by department, responsible, status and kind' do
+    get :index, department_id: departments(:devtwo).id,
+                responsible_id: employees(:lucien).id,
+                status_id: order_statuses(:bearbeitung).id,
                 kind_id: order_kinds(:mandat).id
     assert_equal [], assigns(:orders)
+    assert_equal({ 'department_id' => departments(:devtwo).id.to_s,
+                   'responsible_id' => employees(:lucien).id.to_s,
+                   'status_id' => order_statuses(:bearbeitung).id.to_s,
+                   'kind_id' => order_kinds(:mandat).id.to_s },
+                 session[:list_params]['/orders'])
   end
+
+  test 'GET index uses remembered params if no params are given' do
+    session[:list_params] = {
+      '/orders' => {
+        'status_id' => order_statuses(:bearbeitung).id.to_s,
+        'kind_id' => order_kinds(:mandat).id.to_s
+      }
+    }
+    get :index
+    assert_equal [orders(:puzzletime)], assigns(:orders)
+    assert_equal({ 'status_id' => order_statuses(:bearbeitung).id.to_s,
+                   'kind_id' => order_kinds(:mandat).id.to_s },
+                 session[:list_params]['/orders'])
+  end
+
+  test 'GET index overwrites remembered params if params are given' do
+    session[:list_params] = {
+      '/orders' => {
+        'status_id' => order_statuses(:bearbeitung).id.to_s,
+        'kind_id' => order_kinds(:mandat).id.to_s
+      }
+    }
+    get :index, status_id: order_statuses(:abgeschlossen).id, responsible_id: employees(:mark).id
+    assert_equal [orders(:allgemein)], assigns(:orders)
+    assert_equal({ 'status_id' => order_statuses(:abgeschlossen).id.to_s,
+                   'responsible_id' => employees(:mark).id.to_s },
+                 session[:list_params]['/orders'])
+  end
+
 
   test 'GET show' do
     get :show, id: orders(:hitobito_demo).id

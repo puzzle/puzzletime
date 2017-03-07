@@ -33,9 +33,11 @@ module DryCrud
     end
 
     def restore_params_on_return(remembered)
-      if params[:returning]
-        remember_params.each { |p| params[p] ||= remembered[p] }
-      end
+      restore_params(remembered) if params[:returning]
+    end
+
+    def restore_params(remembered)
+      remember_params.each { |p| params[p] ||= remembered[p] }
     end
 
     def store_current_params(remembered)
@@ -53,6 +55,11 @@ module DryCrud
     def remembered_params
       session[:list_params] ||= {}
       session[:list_params][remember_key] ||= {}
+    end
+
+    # Whether params have been stored in the session.
+    def remembered_params?
+      session[:list_params] && session[:list_params][remember_key]
     end
 
     # Params are stored by request path to play nice when a controller
