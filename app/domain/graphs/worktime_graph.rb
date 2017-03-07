@@ -15,7 +15,7 @@ class WorktimeGraph
     @work_items_eval = EmployeeWorkItemsEval.new(@employee.id)
     @absences_eval = EmployeeAbsencesEval.new(@employee.id)
 
-    @colorMap = AccountColorMapper.new
+    @color_map = AccountColorMapper.new
     @weekly_boxes = {}
     @monthly_boxes = {}
   end
@@ -57,11 +57,11 @@ class WorktimeGraph
   end
 
   def accounts?(type)
-    @colorMap.accounts? type
+    @color_map.accounts? type
   end
 
   def accounts_legend(type)
-    @colorMap.accounts_legend type
+    @color_map.accounts_legend type
   end
 
   def must_hours_factor
@@ -146,6 +146,6 @@ class WorktimeGraph
   end
 
   def color_for(worktime)
-    @colorMap[worktime.account]
+    @color_map[worktime.account]
   end
 end

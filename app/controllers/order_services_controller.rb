@@ -23,9 +23,9 @@ class OrderServicesController < ApplicationController
     handle_remember_params
     set_filter_values
     @worktimes =
-      list_worktimes(@period).
-        includes(:invoice, work_item: :accounting_post).
-        limit(MAX_ENTRIES)
+      list_worktimes(@period)
+      .includes(:invoice, work_item: :accounting_post)
+      .limit(MAX_ENTRIES)
   end
 
   def export_worktimes_csv

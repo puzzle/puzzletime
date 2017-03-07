@@ -38,7 +38,7 @@ module EvaluatorHelper
     end
   end
 
-  def has_times_or_plannings?(division)
+  def times_or_plannings?(division)
     @periods.each_with_index.any? do |_p, i|
       time = @times[i][division.id]
       val = (time.is_a?(Hash) ? time[:hours] : time).to_f
@@ -57,15 +57,21 @@ module EvaluatorHelper
   #### division supplement functions
 
   def overtime(employee)
-    format_hour(@period ?
-        employee.statistics.overtime(@period) :
-        employee.statistics.current_overtime)
+    value = if @period
+              employee.statistics.overtime(@period)
+            else
+              employee.statistics.current_overtime
+            end
+    format_hour(value)
   end
 
   def remaining_vacations(employee)
-    format_days(@period ?
-        employee.statistics.remaining_vacations(@period.end_date) :
-        employee.statistics.current_remaining_vacations)
+    value = if @period
+              employee.statistics.remaining_vacations(@period.end_date)
+            else
+              employee.statistics.current_remaining_vacations
+            end
+    format_days(value)
   end
 
   def overtime_vacations_tooltip(employee)
@@ -144,18 +150,21 @@ module EvaluatorHelper
 
   def time_info
     stat = @user.statistics
-    infos = @period ?
-            [[['Überzeit', stat.overtime(@period).to_f, 'h'],
-              ['Bezogene Ferien', stat.used_vacations(@period), 'd'],
-              ['Soll Arbeitszeit', stat.musttime(@period), 'h']],
-             [['Abschliessend', stat.current_overtime(@period.end_date), 'h'],
-              ['Verbleibend', stat.remaining_vacations(@period.end_date), 'd']]] :
-            [[['Überzeit Gestern', stat.current_overtime, 'h'],
-              ['Bezogene Ferien', stat.used_vacations(Period.current_year), 'd'],
-              ['Monatliche Arbeitszeit', stat.musttime(Period.current_month), 'h']],
-             [['Überzeit Heute', stat.current_overtime(Time.zone.today), 'h'],
-              ['Verbleibend', stat.current_remaining_vacations, 'd'],
-              ['Verbleibend', 0 - stat.overtime(Period.current_month).to_f, 'h']]]
+
+    infos = if @period
+              [[['Überzeit', stat.overtime(@period).to_f, 'h'],
+                ['Bezogene Ferien', stat.used_vacations(@period), 'd'],
+                ['Soll Arbeitszeit', stat.musttime(@period), 'h']],
+               [['Abschliessend', stat.current_overtime(@period.end_date), 'h'],
+                ['Verbleibend', stat.remaining_vacations(@period.end_date), 'd']]]
+            else
+              [[['Überzeit Gestern', stat.current_overtime, 'h'],
+                ['Bezogene Ferien', stat.used_vacations(Period.current_year), 'd'],
+                ['Monatliche Arbeitszeit', stat.musttime(Period.current_month), 'h']],
+               [['Überzeit Heute', stat.current_overtime(Time.zone.today), 'h'],
+                ['Verbleibend', stat.current_remaining_vacations, 'd'],
+                ['Verbleibend', 0 - stat.overtime(Period.current_month).to_f, 'h']]]
+            end
     render partial: 'timeinfo', locals: { infos: infos }
   end
 end

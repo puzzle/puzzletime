@@ -16,7 +16,7 @@ class VacationGraph
 
     @absences_eval = AbsencesEval.new
 
-    @colorMap = AccountColorMapper.new
+    @color_map = AccountColorMapper.new
   end
 
   def each_employee
@@ -100,11 +100,11 @@ class VacationGraph
   end
 
   def accounts?(type = Absence)
-    @colorMap.accounts?(type)
+    @color_map.accounts?(type)
   end
 
   def accounts_legend(type = Absence)
-    @colorMap.accounts_legend(type)
+    @color_map.accounts_legend(type)
   end
 
   def is_current_week
@@ -189,7 +189,7 @@ class VacationGraph
   end
 
   def color_for(absence)
-    @colorMap[absence]
+    @color_map[absence]
   end
 
   def get_period_week(from)

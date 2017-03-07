@@ -20,20 +20,7 @@ module WorktimesReport
       if time.report_type.is_a?(StartStopType) && params[:start_stop]
         combined_times.push time
       else
-        key = "#{time.date_string}$#{time.employee.shortname}"
-        if combined_map.include?(key)
-          combined_map[key].hours += time.hours
-          if time.description.present?
-            if combined_map[key].description
-              combined_map[key].description += "\n" + time.description
-            else
-              combined_map[key].description = time.description
-            end
-          end
-        else
-          combined_map[key] = time
-          combined_times.push time
-        end
+        combine_time(combined_map, combined_times, time)
       end
     end
     @worktimes = combined_times
@@ -53,38 +40,57 @@ module WorktimesReport
                              descriptions: [] }
       end
 
-      worktimes.each do |t|
-        @tickets[ticket][:n_entries] += 1
-        @tickets[ticket][:sum] += t.hours
+      worktimes.each { |worktime| combine_ticket(@tickets[ticket], @employees, worktime) }
+    end
+  end
 
-        # employees involved in this ticket
-        @employees[t.employee.shortname] = t.employee.to_s if @employees[t.employee.shortname].nil?
-        if @tickets[ticket][:employees][t.employee.shortname].nil?
-          @tickets[ticket][:employees][t.employee.shortname] = [t.hours, [t.description]]
+  def combine_time(combined_map, combined_times, time)
+    key = "#{time.date_string}$#{time.employee.shortname}"
+    if combined_map.include?(key)
+      combined_map[key].hours += time.hours
+      if time.description.present?
+        if combined_map[key].description
+          combined_map[key].description += "\n" + time.description
         else
-          @tickets[ticket][:employees][t.employee.shortname][0] += t.hours
-          @tickets[ticket][:employees][t.employee.shortname][1] << t.description
+          combined_map[key].description = time.description
         end
-
-        # date range of this ticket
-        if @tickets[ticket][:date][0].nil?
-          @tickets[ticket][:date][0] = t.work_date
-        else
-          if t.work_date < @tickets[ticket][:date][0]
-            @tickets[ticket][:date][0] = t.work_date
-          end
-        end
-
-        if @tickets[ticket][:date][1].nil?
-          @tickets[ticket][:date][1] = t.work_date
-        else
-          if t.work_date > @tickets[ticket][:date][1]
-            @tickets[ticket][:date][1] = t.work_date
-          end
-        end
-
-        @tickets[ticket][:descriptions] << '"' + t.description + '"' if t.description?
       end
+    else
+      combined_map[key] = time
+      combined_times.push time
+    end
+  end
+
+  def combine_ticket(combined_tickets, employees, worktime)
+    combined_tickets[:n_entries] += 1
+    combined_tickets[:sum] += worktime.hours
+    combine_ticket_employees(combined_tickets, employees, worktime)
+    combine_ticket_date_range(combined_tickets[:date], worktime)
+    combined_tickets[:descriptions] << '"' + worktime.description + '"' if worktime.description?
+  end
+
+  def combine_ticket_employees(combined_tickets, employees, worktime)
+    shortname = worktime.employee.shortname
+    employees[shortname] = worktime.employee.to_s if employees[shortname].nil?
+    if combined_tickets[:employees][shortname].nil?
+      combined_tickets[:employees][shortname] = [worktime.hours, [worktime.description]]
+    else
+      combined_tickets[:employees][shortname][0] += worktime.hours
+      combined_tickets[:employees][shortname][1] << worktime.description
+    end
+  end
+
+  def combine_ticket_date_range(date_range, worktime)
+    if date_range[0].nil?
+      date_range[0] = worktime.work_date
+    elsif worktime.work_date < date_range[0]
+      date_range[0] = worktime.work_date
+    end
+
+    if date_range[1].nil?
+      date_range[1] = worktime.work_date
+    elsif worktime.work_date > date_range[1]
+      date_range[1] = worktime.work_date
     end
   end
 end

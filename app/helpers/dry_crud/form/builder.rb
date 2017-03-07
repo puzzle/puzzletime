@@ -349,8 +349,11 @@ module DryCrud::Form
     # 1. Use :cancel_url_new or :cancel_url_edit option, if present
     # 2. Use :cancel_url option, if present
     def cancel_url
-      url = @object.new_record? ? options[:cancel_url_new] :
-                                  options[:cancel_url_edit]
+      url = if @object.new_record?
+              options[:cancel_url_new]
+            else
+              options[:cancel_url_edit]
+            end
       url || options[:cancel_url]
     end
   end

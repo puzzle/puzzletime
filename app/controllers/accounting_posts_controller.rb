@@ -17,7 +17,7 @@ class AccountingPostsController < CrudController
 
   def find_entry
     super
-  rescue ActiveRecord::RecordNotFound => e
+  rescue ActiveRecord::RecordNotFound
     # happens when changing order in top dropdown while editing accounting post.
     redirect_to order_accounting_posts_path(order)
     AccountingPost.new

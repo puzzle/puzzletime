@@ -15,7 +15,7 @@ task :brakeman do
             -q
             --no-progress).join(' ')
     end
-  rescue Timeout::Error => e
+  rescue Timeout::Error
     puts "\nBrakeman took too long. Aborting."
   end
 end

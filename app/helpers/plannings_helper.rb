@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 module PlanningsHelper
-
   def planning_legend_path(legend)
     case legend
     when Employee then plannings_employee_path(legend)
@@ -24,12 +23,10 @@ module PlanningsHelper
 
   def weekly_planned_of_total_percent(board, date)
     content = "#{board.weekly_planned_percent(date).round}% / "
-    if board.weekly_employment_percent(date)
-      content << "#{board.weekly_employment_percent(date).round}%"
-    else
-      content << '-'
-    end
-    content
+    content << if board.weekly_employment_percent(date)
+                 "#{board.weekly_employment_percent(date).round}%"
+               else
+                 '-'
+               end
   end
-
 end

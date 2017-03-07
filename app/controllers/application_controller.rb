@@ -24,7 +24,7 @@ class ApplicationController < ActionController::Base
   end
 
   def controller_module_name
-    module_name = self.class.name.deconstantize.underscore.gsub('/', '_')
+    module_name = self.class.name.deconstantize.underscore.tr('/', '_')
     module_name.empty? ? 'root' : module_name
   end
 

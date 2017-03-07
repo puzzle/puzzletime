@@ -8,19 +8,19 @@ class WorkloadTest < ActiveSupport::TestCase
 
   test 'has entries for employees of department with worktime without employment' do
     # one entry for each employee of the department during the period
-    report = report(period: Period.new("1.1.2006", "31.12.2006"))
+    report = report(period: Period.new('1.1.2006', '31.12.2006'))
     assert_equal employees(:lucien, :pascal), report.entries.map(&:employee)
   end
 
   test 'has entries for employees of department with employment during period' do
     employees(:half_year_maria).update(department: departments(:devtwo))
-    report = report(period: Period.new("1.1.2006", "31.12.2006"))
+    report = report(period: Period.new('1.1.2006', '31.12.2006'))
     assert_includes(report.entries.map(&:employee), employees(:half_year_maria))
   end
 
   test 'employee must_hours' do
     employment1 = Fabricate(:employment, employee: employees(:lucien),
-                           start_date: "1.9.1900", end_date: "15.9.1900")
+                                         start_date: '1.9.1900', end_date: '15.9.1900')
     assert_equal 1, report.entries.count
 
     employment1.update(percent: 100)
@@ -29,11 +29,11 @@ class WorkloadTest < ActiveSupport::TestCase
     employment1.update(percent: 70)
     assert_equal employment1.musttime(period), report.entries.first.must_hours
 
-    employment1.update(start_date: "1.1.1800")
+    employment1.update(start_date: '1.1.1800')
     assert_equal employment1.musttime(period), report.entries.first.must_hours
 
     employment2 = Fabricate(:employment, employee: employees(:lucien), percent: 50,
-                            start_date: "16.9.1900", end_date: "30.9.1900")
+                                         start_date: '16.9.1900', end_date: '30.9.1900')
 
     expected = employment1.musttime(period) + employment2.musttime(period)
     assert_equal expected, report.entries.first.must_hours
@@ -41,9 +41,9 @@ class WorkloadTest < ActiveSupport::TestCase
 
   test 'employee ordertime_hours' do
     Fabricate(:ordertime, hours: 2, work_item: work_items(:webauftritt),
-              employee: employees(:lucien), work_date: period.start_date)
+                          employee: employees(:lucien), work_date: period.start_date)
     Fabricate(:ordertime, hours: 3, work_item: work_items(:hitobito_demo_app),
-              employee: employees(:lucien), work_date: period.end_date)
+                          employee: employees(:lucien), work_date: period.end_date)
 
     assert_equal 5, report.entries.first.ordertime_hours
   end
@@ -57,44 +57,44 @@ class WorkloadTest < ActiveSupport::TestCase
 
   test 'employee worktime_balance' do
     Fabricate(:employment, percent: 50, employee: employees(:lucien),
-              start_date: period.start_date, end_date: period.end_date)
+                           start_date: period.start_date, end_date: period.end_date)
 
-    assert_equal -80, report.entries.first.worktime_balance
+    assert_equal(-80, report.entries.first.worktime_balance)
 
     Fabricate(:ordertime, hours: 2.5, work_item: work_items(:webauftritt),
-              employee: employees(:lucien), work_date: period.start_date)
-    assert_equal -77.5, report.entries.first.worktime_balance
+                          employee: employees(:lucien), work_date: period.start_date)
+    assert_equal(-77.5, report.entries.first.worktime_balance)
 
     Fabricate(:absencetime, hours: 10.5, employee: employees(:lucien), work_date: period.end_date)
-    assert_equal -67, report.entries.first.worktime_balance
+    assert_equal(-67, report.entries.first.worktime_balance)
 
     Fabricate(:ordertime, hours: 68, work_item: work_items(:webauftritt),
-              employee: employees(:lucien), work_date: period.start_date)
+                          employee: employees(:lucien), work_date: period.start_date)
     assert_equal 1, report.entries.first.worktime_balance
   end
 
   test 'employee billable_hours' do
     Fabricate(:ordertime, billable: false, hours: 2.5, work_item: work_items(:webauftritt),
-              employee: employees(:lucien), work_date: period.start_date)
+                          employee: employees(:lucien), work_date: period.start_date)
     assert_equal 0, report.entries.first.billable_hours
 
     Fabricate(:ordertime, billable: true, hours: 2.5, work_item: work_items(:webauftritt),
-              employee: employees(:lucien), work_date: period.start_date)
+                          employee: employees(:lucien), work_date: period.start_date)
     assert_equal 2.5, report.entries.first.billable_hours
   end
 
   test 'employee workload' do
     # Hours on internal Project
     Fabricate(:ordertime, hours: 5, work_item: work_items(:hitobito_demo_site),
-              employee: employees(:lucien), work_date: period.start_date)
+                          employee: employees(:lucien), work_date: period.start_date)
 
     # Billable hours on external Project
     Fabricate(:ordertime, hours: 2.5, work_item: work_items(:webauftritt),
-              employee: employees(:lucien), work_date: period.start_date)
+                          employee: employees(:lucien), work_date: period.start_date)
 
     # Non-Billable hours on external Project
     Fabricate(:ordertime, hours: 2.5, work_item: work_items(:webauftritt),
-              employee: employees(:lucien), work_date: period.start_date, billable: false)
+                          employee: employees(:lucien), work_date: period.start_date, billable: false)
 
     assert_equal 50, report.entries.first.workload
   end
@@ -102,15 +102,15 @@ class WorkloadTest < ActiveSupport::TestCase
   test 'employee billability' do
     # Billable hours on external Project
     Fabricate(:ordertime, hours: 6, work_item: work_items(:webauftritt),
-              employee: employees(:lucien), work_date: period.start_date)
+                          employee: employees(:lucien), work_date: period.start_date)
 
     # Non-Billable hours on external Project
     Fabricate(:ordertime, hours: 2, work_item: work_items(:webauftritt),
-              employee: employees(:lucien), work_date: period.start_date, billable: false)
+                          employee: employees(:lucien), work_date: period.start_date, billable: false)
 
     # Non-Billable hours on internal Project
     Fabricate(:ordertime, hours: 2, work_item: work_items(:allgemein),
-              employee: employees(:lucien), work_date: period.start_date, billable: false)
+                          employee: employees(:lucien), work_date: period.start_date, billable: false)
 
     assert_equal 75, report.entries.first.billability
   end
@@ -118,13 +118,13 @@ class WorkloadTest < ActiveSupport::TestCase
   test 'employee worktime_entries' do
     # Hours on Projekt A
     Fabricate(:ordertime, hours: 5, work_item: work_items(:hitobito_demo_site),
-              employee: employees(:lucien), work_date: period.start_date)
+                          employee: employees(:lucien), work_date: period.start_date)
 
     # Hours on Projekt B
     Fabricate(:ordertime, hours: 2.5, work_item: work_items(:webauftritt),
-              employee: employees(:lucien), work_date: period.start_date)
+                          employee: employees(:lucien), work_date: period.start_date)
     Fabricate(:ordertime, hours: 2.5, work_item: work_items(:webauftritt),
-              employee: employees(:lucien), work_date: period.start_date, billable: false)
+                          employee: employees(:lucien), work_date: period.start_date, billable: false)
 
     assert_equal work_items(:webauftritt, :hitobito_demo).to_set,
                  report.entries.first.order_entries.map(&:work_item).to_set
@@ -133,13 +133,13 @@ class WorkloadTest < ActiveSupport::TestCase
   test 'summary fte' do
     # employments for selected department
     Fabricate(:employment, percent: 50, employee: employees(:pascal),
-              start_date: period.start_date, end_date: period.end_date)
+                           start_date: period.start_date, end_date: period.end_date)
     Fabricate(:employment, percent: 30, employee: employees(:lucien),
-              start_date: period.start_date, end_date: period.end_date)
+                           start_date: period.start_date, end_date: period.end_date)
 
     # employment for other department
     Fabricate(:employment, percent: 60, employee: employees(:mark),
-              start_date: period.start_date, end_date: period.end_date)
+                           start_date: period.start_date, end_date: period.end_date)
 
     puzzle_summary, department_summary = report.summary
 
@@ -150,13 +150,13 @@ class WorkloadTest < ActiveSupport::TestCase
   test 'summary must_hour' do
     # Employments for selected department
     e1 = Fabricate(:employment, percent: 50, employee: employees(:pascal),
-              start_date: "1.1.1900", end_date: "31.12.1900")
+                                start_date: "1.1.1900", end_date: "31.12.1900")
     e2 = Fabricate(:employment, percent: 30, employee: employees(:lucien),
-              start_date: "1.1.1900", end_date: "31.12.1900")
+                                start_date: "1.1.1900", end_date: "31.12.1900")
 
     # Employment for other department
     e3 = Fabricate(:employment, percent: 60, employee: employees(:mark),
-              start_date: "1.1.1900", end_date: "31.12.1900")
+                                start_date: "1.1.1900", end_date: "31.12.1900")
 
     puzzle_summary, department_summary = report.summary
 
@@ -170,19 +170,19 @@ class WorkloadTest < ActiveSupport::TestCase
   test 'summary ordertime_hours' do
     # Hours on internal project
     t1 = Fabricate(:ordertime, hours: 5, work_item: work_items(:hitobito_demo_site),
-              employee: employees(:lucien), work_date: period.start_date)
+                               employee: employees(:lucien), work_date: period.start_date)
 
     # Billable hours on external project
     t2 = Fabricate(:ordertime, hours: 2.5, work_item: work_items(:webauftritt),
-              employee: employees(:lucien), work_date: period.start_date)
+                               employee: employees(:lucien), work_date: period.start_date)
 
     # Non-Billable hours on external project
     t3 = Fabricate(:ordertime, hours: 2.5, work_item: work_items(:webauftritt),
-              employee: employees(:lucien), work_date: period.start_date, billable: false)
+                               employee: employees(:lucien), work_date: period.start_date, billable: false)
 
     # Hours for other department
     o = Fabricate(:ordertime, hours: 2.5, work_item: work_items(:webauftritt),
-              employee: employees(:mark), work_date: period.start_date)
+                              employee: employees(:mark), work_date: period.start_date)
 
     puzzle_summary, department_summary = report.summary
 
@@ -208,24 +208,24 @@ class WorkloadTest < ActiveSupport::TestCase
 
   test 'summary external_client_hours' do
     # Hours on internal project
-    i1 = Fabricate(:ordertime, hours: 5, work_item: work_items(:hitobito_demo_site),
-              employee: employees(:lucien), work_date: period.start_date)
+    _i1 = Fabricate(:ordertime, hours: 5, work_item: work_items(:hitobito_demo_site),
+                                employee: employees(:lucien), work_date: period.start_date)
 
     # Billable hours on external project
     t1 = Fabricate(:ordertime, hours: 2.5, work_item: work_items(:webauftritt),
-              employee: employees(:lucien), work_date: period.start_date)
+                               employee: employees(:lucien), work_date: period.start_date)
 
     # Non-Billable hours on external project
     t2 = Fabricate(:ordertime, hours: 2.5, work_item: work_items(:webauftritt),
-              employee: employees(:lucien), work_date: period.start_date, billable: false)
+                               employee: employees(:lucien), work_date: period.start_date, billable: false)
 
     # Hours for other department on internal project
-    i2 = Fabricate(:ordertime, hours: 5, work_item: work_items(:hitobito_demo_site),
-              employee: employees(:mark), work_date: period.start_date)
+    _i2 = Fabricate(:ordertime, hours: 5, work_item: work_items(:hitobito_demo_site),
+                                employee: employees(:mark), work_date: period.start_date)
 
     # Hours for other department on external project
     o1 = Fabricate(:ordertime, hours: 2.5, work_item: work_items(:webauftritt),
-              employee: employees(:mark), work_date: period.start_date)
+                               employee: employees(:mark), work_date: period.start_date)
 
     puzzle_summary, department_summary = report.summary
 
@@ -239,19 +239,19 @@ class WorkloadTest < ActiveSupport::TestCase
   test 'summary billable_hours' do
     # Billable hours on external project
     t = Fabricate(:ordertime, hours: 2.5, work_item: work_items(:webauftritt),
-              employee: employees(:lucien), work_date: period.start_date)
+                              employee: employees(:lucien), work_date: period.start_date)
 
     # Non-Billable hours on external project
-    n1 = Fabricate(:ordertime, hours: 3.6, work_item: work_items(:webauftritt),
-              employee: employees(:lucien), work_date: period.start_date, billable: false)
+    _n1 = Fabricate(:ordertime, hours: 3.6, work_item: work_items(:webauftritt),
+                                employee: employees(:lucien), work_date: period.start_date, billable: false)
 
     # Billable hours for other department on external project
     o = Fabricate(:ordertime, hours: 4.7, work_item: work_items(:webauftritt),
-              employee: employees(:mark), work_date: period.start_date)
+                              employee: employees(:mark), work_date: period.start_date)
 
     # Non-Billable hours for other department on external project
-    n2 = Fabricate(:ordertime, hours: 5.8, work_item: work_items(:webauftritt),
-              employee: employees(:mark), work_date: period.start_date, billable: false)
+    _n2 = Fabricate(:ordertime, hours: 5.8, work_item: work_items(:webauftritt),
+                                employee: employees(:mark), work_date: period.start_date, billable: false)
 
     puzzle_summary, department_summary = report.summary
 
@@ -265,13 +265,15 @@ class WorkloadTest < ActiveSupport::TestCase
   ### filtering
 
   test 'contains entries for all employees with worktimes' do
-    assert_equal employees(:lucien, :pascal), report(period: Period.new('1.1.2006', '31.12.2006')).entries.map(&:employee)
+    assert_equal employees(:lucien, :pascal),
+                 report(period: Period.new('1.1.2006', '31.12.2006')).entries.map(&:employee)
   end
 
   test 'contains entries for all employees with employments' do
     Worktime.delete_all
     create_employments
-    assert_equal employees(:lucien, :pascal), report(period: Period.new('1.1.2006', '31.12.2006')).entries.map(&:employee)
+    assert_equal employees(:lucien, :pascal),
+                 report(period: Period.new('1.1.2006', '31.12.2006')).entries.map(&:employee)
   end
 
   test 'filter too restrictive' do
@@ -309,53 +311,53 @@ class WorkloadTest < ActiveSupport::TestCase
 
   test 'sort by must_hours' do
     create_employments
-    r = report(sort: "must_hours", period: Period.new('1.1.2006', '31.12.2006'))
+    r = report(sort: 'must_hours', period: Period.new('1.1.2006', '31.12.2006'))
     assert_equal employees(:lucien, :pascal), r.entries.map(&:employee)
   end
 
   test 'sort by must_hours desc' do
     create_employments
-    r = report(sort: "must_hours", sort_dir: 'desc', period: Period.new('1.1.2006', '31.12.2006'))
+    r = report(sort: 'must_hours', sort_dir: 'desc', period: Period.new('1.1.2006', '31.12.2006'))
     assert_equal employees(:pascal, :lucien), r.entries.map(&:employee)
   end
 
   test 'sort by worktime_balance' do
-    r = report(sort: "worktime_balance", period: Period.new('1.1.2006', '31.12.2006'))
+    r = report(sort: 'worktime_balance', period: Period.new('1.1.2006', '31.12.2006'))
     assert_equal employees(:lucien, :pascal), r.entries.map(&:employee)
   end
 
   test 'sort by worktime_balance desc' do
-    r = report(sort: "worktime_balance", sort_dir: 'desc', period: Period.new('1.1.2006', '31.12.2006'))
+    r = report(sort: 'worktime_balance', sort_dir: 'desc', period: Period.new('1.1.2006', '31.12.2006'))
     assert_equal employees(:pascal, :lucien), r.entries.map(&:employee)
   end
 
   test 'sort by ordertime_hours' do
-    r = report(sort: "ordertime_hours", period: Period.new('1.1.2006', '31.12.2006'))
+    r = report(sort: 'ordertime_hours', period: Period.new('1.1.2006', '31.12.2006'))
     assert_equal employees(:lucien, :pascal), r.entries.map(&:employee)
   end
 
   test 'sort by ordertime_hours desc' do
-    r = report(sort: "ordertime_hours", sort_dir: 'desc', period: Period.new('1.1.2006', '31.12.2006'))
+    r = report(sort: 'ordertime_hours', sort_dir: 'desc', period: Period.new('1.1.2006', '31.12.2006'))
     assert_equal employees(:pascal, :lucien), r.entries.map(&:employee)
   end
 
   test 'sort by workload' do
-    r = report(sort: "workload", period: Period.new('1.1.2006', '31.12.2006'))
+    r = report(sort: 'workload', period: Period.new('1.1.2006', '31.12.2006'))
     assert_equal employees(:pascal, :lucien), r.entries.map(&:employee)
   end
 
   test 'sort by workload desc' do
-    r = report(sort: "workload", sort_dir: 'desc', period: Period.new('1.1.2006', '31.12.2006'))
+    r = report(sort: 'workload', sort_dir: 'desc', period: Period.new('1.1.2006', '31.12.2006'))
     assert_equal employees(:lucien, :pascal), r.entries.map(&:employee)
   end
 
   test 'sort by billability' do
-    r = report(sort: "billability", period: Period.new('1.1.2006', '31.12.2006'))
+    r = report(sort: 'billability', period: Period.new('1.1.2006', '31.12.2006'))
     assert_equal employees(:lucien, :pascal), r.entries.map(&:employee)
   end
 
   test 'sort by billability desc' do
-    r = report(sort: "billability", sort_dir: 'desc', period: Period.new('1.1.2006', '31.12.2006'))
+    r = report(sort: 'billability', sort_dir: 'desc', period: Period.new('1.1.2006', '31.12.2006'))
     assert_equal employees(:pascal, :lucien), r.entries.map(&:employee)
   end
 

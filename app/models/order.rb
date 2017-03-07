@@ -65,9 +65,9 @@ class Order < ActiveRecord::Base
   after_initialize :set_default_status_id
   after_create :create_order_targets
 
-  scope :minimal, -> do
+  scope :minimal, lambda {
     select('orders.id, work_items.name, work_items.path_names, work_items.path_shortnames')
-  end
+  }
 
   class << self
     def order_by_target_scope(target_scope_id, desc = false)

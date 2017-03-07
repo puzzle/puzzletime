@@ -4,13 +4,13 @@ class RateLimiter
 
   def initialize(rate_per_second)
     @rate_per_second = rate_per_second
-    @last_run_at = Time.at(0)
+    @last_run_at = Time.zone.at(0)
     @interval = (1.0 / rate_per_second).seconds
   end
 
   def run
     sleep(sleep_time)
-    self.last_run_at = Time.now
+    self.last_run_at = Time.zone.now
     yield
   end
 
@@ -20,7 +20,7 @@ class RateLimiter
   attr_accessor :last_run_at
 
   def sleep_time
-    [0, next_run_at - Time.now].max
+    [0, next_run_at - Time.zone.now].max
   end
 
   def next_run_at

@@ -95,7 +95,10 @@ class ExtendedCapacityReport < BaseCapacityReport
         parent = child.parent if child.parent
 
         internal_work_item_hours = extract_billable_hours(times, false)
-        internal_work_item_hours += extract_billable_hours(times, true) # HACK: because there may be entries with wrong $-flag
+
+        # HACK: because there may be entries with wrong $-flag
+        internal_work_item_hours += extract_billable_hours(times, true)
+
         internal_work_item_total_hours += internal_work_item_hours
 
         next unless internal_work_item_hours.abs > 0.001
@@ -110,7 +113,9 @@ class ExtendedCapacityReport < BaseCapacityReport
                                    internal_work_item_hours]
       end
 
-      work_item_total_hours = work_item_total_billable_hours + work_item_total_non_billable_hours + internal_work_item_total_hours
+      work_item_total_hours = work_item_total_billable_hours +
+        work_item_total_non_billable_hours +
+        internal_work_item_total_hours
 
       average_percents = employee.statistics.employments_during(@period).sum(&:percent)
       remaining_vacations = employee.statistics.remaining_vacations(Date.new(@period.end_date.year, 12, 31))

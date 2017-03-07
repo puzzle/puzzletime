@@ -1,5 +1,4 @@
 module CompletableHelper
-
   def completed_icon(date)
     if recently_completed(date)
       picon('disk', class: 'green')
@@ -17,5 +16,4 @@ module CompletableHelper
       I18n.l(date, format: :month)
     end
   end
-
 end

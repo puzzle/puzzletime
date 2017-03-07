@@ -15,7 +15,7 @@ class ManagedOrdersEval < WorkItemsEval
     WorkItem.joins(:order).includes(:order).where(orders: { responsible_id: category.id }).list
   end
 
-  def division_supplement(user)
+  def division_supplement(_user)
     [[:order_completed, 'Abschluss erledigt', 'left'],
      [:order_committed, 'Abschluss freigegeben', 'left']]
   end
@@ -23,7 +23,7 @@ class ManagedOrdersEval < WorkItemsEval
   private
 
   def worktime_query(receiver, period = nil, division = nil)
-    if receiver === category
+    if receiver == category
       Worktime.
         joins(:work_item).
         joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)').
@@ -35,7 +35,7 @@ class ManagedOrdersEval < WorkItemsEval
     end
   end
 
-  def planning_query(receiver, division = nil)
+  def planning_query(_receiver, _division = nil)
     Planning.
       joins(:work_item).
       joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)').

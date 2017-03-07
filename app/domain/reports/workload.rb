@@ -77,7 +77,9 @@ class Reports::Workload
     worktimes_query.pluck(*WORKTIME_FIELDS).map do |row|
       WorktimeEntry.new(*row).tap do |worktime_entry|
         if worktime_entry.ordertime?
-          worktime_entry.order_work_item = order_work_items.detect { |work_item| worktime_entry.path_ids.include?(work_item.id) }
+          worktime_entry.order_work_item = order_work_items.detect do |work_item|
+            worktime_entry.path_ids.include?(work_item.id)
+          end
         end
       end
     end
@@ -132,8 +134,8 @@ class Reports::Workload
   end
 
   def sort_by_employee(entries, dir)
-    entries.sort_by(&:to_s).tap do |entries|
-      entries.reverse! if dir > 0
+    entries.sort_by(&:to_s).tap do |sorted_entries|
+      sorted_entries.reverse! if dir > 0
     end
   end
 

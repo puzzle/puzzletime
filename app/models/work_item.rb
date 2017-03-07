@@ -26,21 +26,21 @@ class WorkItem < ActiveRecord::Base
   has_one :accounting_post, dependent: :destroy, inverse_of: :work_item
 
   has_many :plannings,
-           ->(work_item) do
+           lambda { |work_item|
              joins(:work_item).
-                 unscope(where: :work_item_id).
-                 where('plannings.work_item_id = work_items.id AND ' \
-                   '? = ANY (work_items.path_ids)', work_item.id)
-           end,
+               unscope(where: :work_item_id).
+               where('plannings.work_item_id = work_items.id AND ' \
+                     '? = ANY (work_items.path_ids)', work_item.id)
+           },
            dependent: :destroy
 
   has_many :worktimes,
-           ->(work_item) do
+           lambda { |work_item|
              joins(:work_item).
                unscope(where: :work_item_id).
                where('worktimes.work_item_id = work_items.id AND ' \
                    '? = ANY (work_items.path_ids)', work_item.id)
-           end
+           }
 
   ### VALIDATIONS
 
@@ -65,7 +65,7 @@ class WorkItem < ActiveRecord::Base
   scope :leaves,       -> { where(leaf: true) }
   scope :recordable,   -> { leaves.where(closed: false) }
 
-  scope :with_worktimes_in_period, ->(order, from, to) {
+  scope :with_worktimes_in_period, lambda { |order, from, to|
     where(id: order.worktimes.in_period(Period.new(from, to)).billable.select(:work_item_id))
   }
 

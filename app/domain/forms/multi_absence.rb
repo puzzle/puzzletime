@@ -18,7 +18,8 @@ class MultiAbsence
   def valid?
     @worktime = worktime_template(@work_date,
                                   WorkingCondition.value_at(work_date, :must_hours_per_day))
-    if valid = @worktime.valid?
+    valid = @worktime.valid?
+    if valid
       if duration <= 0
         valid = false
         @worktime.errors.add(:work_date, 'Die Dauer muss grösser als 0 sein.')
@@ -50,7 +51,8 @@ class MultiAbsence
   def save
     count = 0
     period.step do |date|
-      if employment = @employee.employment_at(date)
+      employment = @employee.employment_at(date)
+      if employment
         must = Holiday.musttime(date) * employment.percent_factor
         if must > 0
           absence = worktime_template(date, must)

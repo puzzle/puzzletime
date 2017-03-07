@@ -18,7 +18,8 @@ class EmployeesController < ManageController
 
   def show
     if Crm.instance.present?
-      if person = Crm.instance.find_people_by_email(entry.email).first
+      person = Crm.instance.find_people_by_email(entry.email).first
+      if person
         redirect_to Crm.instance.contact_url(person.id)
       else
         flash[:alert] = "Person mit Email '#{entry.email}' nicht gefunden in CRM."
@@ -46,7 +47,7 @@ class EmployeesController < ManageController
   # Update userpwd
   def update_passwd
     if @user.check_passwd(params[:pwd])
-      if params[:change_pwd] === params[:change_pwd_confirmation]
+      if params[:change_pwd] == params[:change_pwd_confirmation]
         @user.update_passwd!(params[:change_pwd])
         flash[:notice] = 'Das Passwort wurde aktualisiert'
         redirect_to controller: 'evaluator'

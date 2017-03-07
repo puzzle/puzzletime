@@ -1,5 +1,4 @@
 module ReportsWorkloadHelper
-
   def format_workload_hours(value)
     content_tag(:span, format_number(value, 0), title: value)
   end
@@ -46,5 +45,4 @@ module ReportsWorkloadHelper
       'red'
     end
   end
-
 end

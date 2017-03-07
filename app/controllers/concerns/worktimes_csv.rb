@@ -9,11 +9,11 @@ module WorktimesCsv
   end
 
   def send_csv(csv_data, filename)
-    set_csv_file_export_header(filename)
+    csv_file_export_header(filename)
     send_data(csv_data, filename: filename, type: 'text/csv; charset=utf-8; header=present')
   end
 
-  def set_csv_file_export_header(filename)
+  def csv_file_export_header(filename)
     if request.env['HTTP_USER_AGENT'] =~ /msie/i
       headers['Pragma'] = 'public'
       headers['Content-type'] = 'text/plain'
@@ -24,7 +24,7 @@ module WorktimesCsv
       headers['Content-Type'] ||= 'text/csv'
       headers['Content-Disposition'] = "attachment; filename=\"#{filename}\""
     end
-    headers['Last-Modified'] = Time.now.httpdate
+    headers['Last-Modified'] = Time.zone.now.httpdate
   end
 
   def worktimes_csv(worktimes)

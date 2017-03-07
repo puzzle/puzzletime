@@ -1,5 +1,4 @@
 module Completable
-
   extend ActiveSupport::Concern
 
   include ActionView::Helpers::JavaScriptHelper
@@ -69,5 +68,4 @@ module Completable
   def entry_date
     entry.send(completable_attr)
   end
-
 end

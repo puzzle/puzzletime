@@ -30,7 +30,7 @@ module Puzzletime
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     config.i18n.default_locale = :'de-CH'
 
-    config.encoding = "utf-8"
+    config.encoding = 'utf-8'
 
     config.cache_store = :dalli_store
 

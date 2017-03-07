@@ -7,7 +7,7 @@ class OrdertimesController < WorktimesController
 
   def update
     if entry.employee_id != @user.id
-      session[:split] = WorktimeEdit.new(entry)
+      build_splitable
       create_part
     else
       super
@@ -16,35 +16,25 @@ class OrdertimesController < WorktimesController
 
   def split
     set_employees
-    @split = session[:split]
-    if @split.nil?
+    if splitable.nil?
       redirect_to controller: 'ordertimes', action: 'new'
     else
-      @worktime = @split.worktime_template
+      @worktime = splitable.worktime_template
       render action: 'split'
     end
   end
 
   def create_part
     set_employees
-    @split = session[:split]
-    return create if @split.nil?
-    @worktime ||= @split.build_worktime
-    @worktime.employee ||= @split.original.employee
+    return create if splitable.nil?
+    build_worktime
     params[:other] = '1'
     assign_attributes
-    if @worktime.valid? && @split.add_worktime(@worktime)
-      if @split.complete? || (params[:commit] == FINISH && @split.incomplete_finish)
-        @split.save
-        session[:split] = nil
-        flash[:notice] = 'Alle Arbeitszeiten wurden erfasst'
-        if @worktime.employee != @user
-          params[:other] = '1'
-          params[:evaluation] = nil
-        end
-        redirect_to index_path
+    if @worktime.valid? && splitable.add_worktime(@worktime)
+      if split_complete?
+        save_split_and_return
       else
-        session[:split] = @split
+        session[:split] = splitable
         redirect_to action: 'split', back_url: params[:back_url]
       end
     else
@@ -61,6 +51,40 @@ class OrdertimesController < WorktimesController
 
   def set_worktime_defaults
     @worktime.work_item_id ||= params[:account_id]
+  end
+
+  private
+
+  def split_complete?
+    splitable.complete? || (params[:commit] == FINISH && splitable.incomplete_finish)
+  end
+
+  def save_split_and_return
+    splitable.save
+    session[:split] = nil
+    flash[:notice] = 'Alle Arbeitszeiten wurden erfasst'
+    if worktime_employee?
+      params[:other] = '1'
+      params[:evaluation] = nil
+    end
+    redirect_to index_path
+  end
+
+  def worktime_employee?
+    @worktime.employee != @user
+  end
+
+  def splitable
+    @split ||= session[:split]
+  end
+
+  def build_splitable
+    @split = session[:split] = WorktimeEdit.new(entry)
+  end
+
+  def build_worktime
+    @worktime ||= splitable.build_worktime
+    @worktime.employee ||= splitable.original.employee
   end
 
 end

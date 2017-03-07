@@ -97,13 +97,7 @@ class EvaluatorController < ApplicationController
   end
 
   def change_period
-    if params[:period_shortcut]
-      @period = Period.parse(params[:period_shortcut])
-    else
-      @period = Period.new(params[:period][:start_date],
-                                params[:period][:end_date],
-                                params[:period][:label])
-    end
+    @period = period_from_params
     fail ArgumentError, 'Start Datum nach End Datum' if @period.negative?
     session[:period] = [@period.start_date.to_s, @period.end_date.to_s, @period.label]
     # redirect_to_overview
@@ -132,6 +126,18 @@ class EvaluatorController < ApplicationController
 
   def set_evaluation
     params[:evaluation] ||= 'userworkitems'
+    set_default_evaluation
+    if @user.management && @evaluation.nil?
+      set_management_evaluation
+    end
+    if @evaluation.nil?
+      @evaluation = EmployeeWorkItemsEval.new(@user.id)
+      params[:evaluation] = 'userworkitems'
+    end
+    @evaluation
+  end
+
+  def set_default_evaluation
     @evaluation = case params[:evaluation].downcase
                   when 'managed' then ManagedOrdersEval.new(@user)
                   when 'absencedetails' then AbsenceDetailsEval.new
@@ -143,26 +149,24 @@ class EvaluatorController < ApplicationController
                   when 'subworkitems' then SubWorkItemsEval.new(params[:category_id])
                   when 'workitememployees' then WorkItemEmployeesEval.new(params[:category_id])
                   end
-    if @user.management && @evaluation.nil?
-      @evaluation = case params[:evaluation].downcase
-                    when 'clients' then ClientsEval.new
-                    when 'employees' then EmployeesEval.new
-                    when 'departments' then DepartmentsEval.new
-                    when 'clientworkitems' then ClientWorkItemsEval.new(params[:category_id])
-                    when 'employeeworkitems' then EmployeeWorkItemsEval.new(params[:category_id])
-                    when /employeesubworkitems(\d+)/ then
-                      EmployeeSubWorkItemsEval.new(params[:category_id], Regexp.last_match[1])
-                    when 'departmentorders' then DepartmentOrdersEval.new(params[:category_id])
-                    when 'absences' then AbsencesEval.new
-                    when 'employeeabsences' then EmployeeAbsencesEval.new(params[:category_id])
-                    end
-    end
-    if @evaluation.nil?
-      @evaluation = EmployeeWorkItemsEval.new(@user.id)
-      params[:evaluation] = 'userworkitems'
-    end
-    @evaluation
   end
+
+  # rubocop:disable Metrics/AbcSize
+  def set_management_evaluation
+    @evaluation = case params[:evaluation].downcase
+                  when 'clients' then ClientsEval.new
+                  when 'employees' then EmployeesEval.new
+                  when 'departments' then DepartmentsEval.new
+                  when 'clientworkitems' then ClientWorkItemsEval.new(params[:category_id])
+                  when 'employeeworkitems' then EmployeeWorkItemsEval.new(params[:category_id])
+                  when /employeesubworkitems(\d+)/ then
+                    EmployeeSubWorkItemsEval.new(params[:category_id], Regexp.last_match[1])
+                  when 'departmentorders' then DepartmentOrdersEval.new(params[:category_id])
+                  when 'absences' then AbsencesEval.new
+                  when 'employeeabsences' then EmployeeAbsencesEval.new(params[:category_id])
+                  end
+  end
+  # rubocop:enable Metrics/AbcSize
 
   def prepare_report_header
     set_evaluation_details
@@ -219,8 +223,18 @@ class EvaluatorController < ApplicationController
         collect { |p| Period.parse(p) }.
         sort_by do |p|
           [p.nil? || p.unlimited? ? 999_999 : p.length.round(-1),
-           p.try(:start_date) || Date.today]
+           p.try(:start_date) || Time.zone.today]
         end
+    end
+  end
+
+  def period_from_params
+    if params[:period_shortcut]
+      Period.parse(params[:period_shortcut])
+    else
+      Period.new(params[:period][:start_date],
+                 params[:period][:end_date],
+                 params[:period][:label])
     end
   end
 

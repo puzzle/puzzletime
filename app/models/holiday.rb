@@ -96,11 +96,11 @@ class Holiday < ActiveRecord::Base
 
     def cached
       RequestStore.store[model_name.route_key] ||=
-          Rails.cache.fetch(model_name.route_key) do
-            Hash[Holiday.order('holiday_date').
-                reject { |h| weekend?(h.holiday_date) }.
-                collect { |h| [h.holiday_date, h.musthours_day] }]
-          end
+        Rails.cache.fetch(model_name.route_key) do
+          Hash[Holiday.order('holiday_date').
+               reject { |h| weekend?(h.holiday_date) }.
+               collect { |h| [h.holiday_date, h.musthours_day] }]
+        end
     end
 
     def clear_cache
@@ -116,8 +116,8 @@ class Holiday < ActiveRecord::Base
       weeks = length / 7
       hours = weeks * 5 * must_hours_per_day
       if length % 7 > 0
-        lastPeriod = Period.new(period.start_date + weeks * 7, period.end_date)
-        lastPeriod.step do |day|
+        last_period = Period.new(period.start_date + weeks * 7, period.end_date)
+        last_period.step do |day|
           hours += must_hours_per_day unless weekend?(day)
         end
       end
@@ -125,8 +125,6 @@ class Holiday < ActiveRecord::Base
     end
 
   end
-
-  public
 
   def clear_cache
     Holiday.clear_cache
