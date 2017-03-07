@@ -13,7 +13,7 @@ gem 'daemons'
 gem 'dalli'
 gem 'delayed_job_active_record'
 gem 'delayed_cron_job'
-gem 'kaminari'
+gem 'kaminari', '< 1.0.0' # higher requires ruby 2.0
 gem 'kaminari-bootstrap'
 gem 'haml'
 gem 'highrise'
@@ -51,7 +51,7 @@ gem 'selectize-rails', '0.12.2'
 group :development, :test do
   gem 'binding_of_caller'
   gem 'codez-tarantula', require: 'tarantula-rails3'
-  gem 'faker'
+  gem 'faker', '< 1.6.4' # higher requires ruby 2.0
   gem 'pry-rails'
   gem 'request_profiler'
 end
@@ -78,7 +78,7 @@ group :console do
   gem 'pry-doc'
   gem 'pry-nav'
   gem 'pry-debugger', platforms: :ruby_19, require: ENV['RM_INFO'].to_s.empty?
-  gem 'pry-byebug', platforms: [:ruby_20], require: ENV['RM_INFO'].to_s.empty?
+  gem 'pry-byebug', '>= 1.3.3', platforms: [:ruby_20], require: ENV['RM_INFO'].to_s.empty?
 end
 
 group :metrics do
