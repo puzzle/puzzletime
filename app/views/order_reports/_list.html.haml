@@ -37,7 +37,7 @@
                   %br/
                   %span.title
                     = link_to_if(can?(:show, order.order),
-                                 order,
+                                 "#{order.work_item.path_shortnames}: #{order}",
                                  can?(:update, order.order) ? edit_order_path(order) : order_path(order))
                 - else
                   %span.title= order
