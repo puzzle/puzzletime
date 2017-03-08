@@ -1,9 +1,10 @@
 require 'test_helper'
 
-class RevenueTest < ActiveSupport::TestCase
+class DepartmentRevenueReportTest < ActiveSupport::TestCase
 
   setup do
     travel_to Date.new(2000, 9, 5)
+    Worktime.destroy_all
   end
 
   teardown do
@@ -87,12 +88,12 @@ class RevenueTest < ActiveSupport::TestCase
     assert_equal [], r.entries
     assert_equal Hash[], r.ordertime_hours
     assert_equal Hash[], r.total_ordertime_hours_per_month
-    assert_equal 0, r.total_ordertime_hours_per_department(devone)
-    assert_equal 0, r.total_ordertime_hours_per_department(devtwo)
-    assert_equal 0, r.total_ordertime_hours_per_department(sys)
-    assert_equal 0, r.average_ordertime_hours_per_department(devone)
-    assert_equal 0, r.average_ordertime_hours_per_department(devtwo)
-    assert_equal 0, r.average_ordertime_hours_per_department(sys)
+    assert_equal 0, r.total_ordertime_hours_per_entry(devone)
+    assert_equal 0, r.total_ordertime_hours_per_entry(devtwo)
+    assert_equal 0, r.total_ordertime_hours_per_entry(sys)
+    assert_equal 0, r.average_ordertime_hours_per_entry(devone)
+    assert_equal 0, r.average_ordertime_hours_per_entry(devtwo)
+    assert_equal 0, r.average_ordertime_hours_per_entry(sys)
     assert_equal 0, r.total_ordertime_hours_overall
     assert_equal 0, r.average_ordertime_hours_overall
     assert_equal Hash[], r.planning_hours
@@ -126,12 +127,12 @@ class RevenueTest < ActiveSupport::TestCase
                       [devtwo.id, Date.new(2000, 7, 1)] => 170.0,
                       [sys.id, Date.new(2000, 7, 1)] => 0.0], r.ordertime_hours
     assert_equal Hash[Date.new(2000, 7, 1) => 176.0, Date.new(2000, 8, 1) => 3.0], r.total_ordertime_hours_per_month
-    assert_equal 9.0, r.total_ordertime_hours_per_department(devone)
-    assert_equal 170.0, r.total_ordertime_hours_per_department(devtwo)
-    assert_equal 0.0, r.total_ordertime_hours_per_department(sys)
-    assert_equal 4.5, r.average_ordertime_hours_per_department(devone)
-    assert_equal 170.0, r.average_ordertime_hours_per_department(devtwo)
-    assert_equal 0.0, r.average_ordertime_hours_per_department(sys)
+    assert_equal 9.0, r.total_ordertime_hours_per_entry(devone)
+    assert_equal 170.0, r.total_ordertime_hours_per_entry(devtwo)
+    assert_equal 0.0, r.total_ordertime_hours_per_entry(sys)
+    assert_equal 4.5, r.average_ordertime_hours_per_entry(devone)
+    assert_equal 170.0, r.average_ordertime_hours_per_entry(devtwo)
+    assert_equal 0.0, r.average_ordertime_hours_per_entry(sys)
     assert_equal 179.0, r.total_ordertime_hours_overall
     assert_equal 89.5, r.average_ordertime_hours_overall
     assert_equal Hash[[devtwo.id, Date.new(2000, 9, 1)] => 6.4 * 170.0,
@@ -145,7 +146,7 @@ class RevenueTest < ActiveSupport::TestCase
   private
 
   def report(report_period = period, report_params = {})
-    Reports::Revenue.new(report_period, report_params)
+    Reports::Revenue::Department.new(report_period, report_params)
   end
 
   def period(start_date = Date.new(2000, 7, 1), end_date = Date.new(2000, 11, 30))

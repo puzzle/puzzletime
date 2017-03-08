@@ -1,4 +1,7 @@
-- @title ||= 'Umsatz pro Organisationseinheit'
+- @title ||= 'Umsatz'
+
+= form_tag(nil, method: :get, class: 'form-inline', role: 'filter') do
+  = direct_filter_select(:grouping, 'Gruppieren nach', @report_types, prompt: nil, value_method: :grouping_name, text_method: :grouping_name_human)
 
 = render 'evaluator/period_link', entities_name: 'Umsätze'
 

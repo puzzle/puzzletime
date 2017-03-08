@@ -2,7 +2,7 @@
   %thead
     %tr
       %th
-        Organisationseinheit
+        = @report.grouping_name_human
 
       - @report.step_past_months do |date|
         %th.right
@@ -23,28 +23,28 @@
             = l(date, format: :month)
 
   %tbody
-    - @report.entries.each do |department|
+    - @report.entries.each do |entry|
       %tr
         %td
-          = department
+          = entry
 
         - @report.step_past_months do |date|
           %td.right
-            = format_number(@report.ordertime_hours[[department.id, date]] || 0, 0)
+            = format_number(@report.ordertime_hours[[entry.id, date]] || 0, 0)
             = Settings.defaults.currency
 
         - if @report.past_months?
           %td.right
-            = format_number(@report.total_ordertime_hours_per_department(department), 0)
+            = format_number(@report.total_ordertime_hours_per_entry(entry), 0)
             = Settings.defaults.currency
 
           %td.right{ class: @report.future_months? && 'table-column-border-right' }
-            = format_number(@report.average_ordertime_hours_per_department(department), 0)
+            = format_number(@report.average_ordertime_hours_per_entry(entry), 0)
             = Settings.defaults.currency
 
         - @report.step_future_months do |date|
           %td.revenue-planning-value.right
-            = format_number(@report.planning_hours[[department.id, date]] || 0, 0)
+            = format_number(@report.planning_hours[[entry.id, date]] || 0, 0)
             = Settings.defaults.currency
 
   %tfoot
