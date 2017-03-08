@@ -11,6 +11,8 @@
 # action procedures without overriding the entire method.
 class CrudController < ListController
 
+  include ActionView::Helpers::TagHelper
+
   class_attribute :permitted_attrs
 
   # Defines before and after callback hooks for create, update, save and
@@ -192,13 +194,12 @@ class CrudController < ListController
 
   # A label for the current entry, including the model name.
   def full_entry_label
-    "#{models_label(false)} <i>#{ERB::Util.h(entry)}</i>".html_safe
+    safe_join([models_label(false).to_s, ' ', content_tag(:i, ERB::Util.h(entry))])
   end
 
   # Html safe error messages of the current entry.
   def error_messages
-    escaped = entry.errors.full_messages.map { |m| ERB::Util.html_escape(m) }
-    escaped.join('<br/>').html_safe
+    safe_join(entry.errors.full_messages, tag(:br))
   end
 
   # json hash representation of an entry used for javascript responses

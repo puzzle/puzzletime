@@ -8,8 +8,6 @@ module JavascriptHelper
                           remote: true,
                           type: :html,
                           update: 'selectize')
-    link_to(path, options) do
-      picon(:add) + ' Erfassen'.html_safe
-    end
+    link_to(path, options) { safe_join([picon(:add), ' Erfassen']) }
   end
 end

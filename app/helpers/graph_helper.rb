@@ -1,96 +1,88 @@
 # encoding: utf-8
 
 module GraphHelper
-
   def weekday_header
     names = I18n.t(:'date.day_names')[1..6] + [I18n.t(:'date.day_names')[0]]
-    names.collect! { |n| "<th>#{n[0..1]}</th>" }
-    names.join("\n").html_safe
+    safe_join(names.collect { |n| content_tag(:th, n[0..1]) })
   end
 
   def week_header(period)
-    header = ''
-    period.step(7) do |day|
-      header += "<th>#{'%02d' % day.cweek}</th>\n"
-    end
-    header.html_safe
+    cells = []
+    period.step(7) { |day| cells << content_tag(:th, format('%02d', day.cweek)) }
+    safe_join(cells)
   end
 
   def month_header(period)
-    header = ''
+    cells = []
     current_month = period.start_date.month
     span = 0
     period.step(7) do |day|
       if day.month != current_month
-        header += append_month(current_month, span)
+        cells << month_cell(current_month, span)
         current_month = day.month
         span = 0
       end
       span += 1
     end
-    header += append_month(current_month, span)
-    header.html_safe
+    cells << month_cell(current_month, span)
+    safe_join(cells)
   end
 
-  def append_month(current_month, span)
-    header = "<th colspan=\"#{span}\">"
-    header += I18n.t(:'date.month_names')[current_month] if span > 2
-    header += "</th>\n"
-    header
+  def month_cell(month, span)
+    name = span > 2 ? I18n.t(:'date.month_names')[month] : ''
+    content_tag(:th, name, colspan: span)
   end
 
   def year_header
-    header = ''
+    cells = []
     current_year = @period.start_date.year
     span = 0
     @period.step(7) do |week|
       if week.year != current_year
-        header += append_year(current_year, span)
+        cells << year_cell(current_year, span)
         current_year = week.year
         span = 0
       end
       span += 1
     end
-    header += append_year(current_year, span)
-    header.html_safe
+    cells << year_cell(current_year, span)
+    safe_join(cells)
   end
 
-  def append_year(current_year, span)
-    header = "<th colspan=\"#{span}\">"
-    header += current_year.to_s if span > 2
-    header += "</th>\n"
-    header
+  def year_cell(current_year, span)
+    name = span > 2 ? current_year.to_s : ''
+    content_tag(:th, name, colspan: span)
   end
 
   def weekbox_td(box, current)
     if box
-      "<td style=\"background-color: #{box.color};\">" \
-      "<a class=\"has-tooltip\">#{box.height}<span>#{h(box.tooltip)}</span></a>" \
-      "</td>".html_safe
+      content_tag(:td, nil, style: "background-color: #{box.color};") do
+        content_tag(:a, nil, class: 'has-tooltip') do
+          safe_join([box.height, content_tag(:span, h(box.tooltip))])
+        end
+      end
     elsif current
-      '<td class="current"></td>'.html_safe
+      content_tag(:td, nil, class: 'current')
     else
-      '<td></td>'.html_safe
+      content_tag(:td)
     end
   end
 
   def timebox_div(box)
-    div = worktime_link box.worktime
-    div += image_tag('space.gif',
-                     'height' => "#{box.height}px",
-                     'style' => "background-color: #{box.color};")
-    div += "<span>#{h(box.tooltip)}</span>".html_safe unless box.tooltip.strip.empty?
-    div += '</a>'
-    div.html_safe
+    worktime_link box.worktime do
+      content = [image_tag('space.gif',
+                           'height' => "#{box.height}px",
+                           'style' => "background-color: #{box.color};")]
+      content << content_tag(:span, h(box.tooltip)) unless box.tooltip.strip.empty?
+      safe_join(content)
+    end
   end
 
-  def worktime_link(worktime)
-    if worktime && !worktime.new_record?
-      url = url_for(controller: worktime.controller, action: :edit, id: worktime.id)
-      "<a href=\"#{url}\" class=\"has-tooltip\">"
-    else
-      '<a class="has-tooltip">'
-    end
+  def worktime_link(worktime, &block)
+    url = if worktime && !worktime.new_record?
+            url_for(controller: worktime.controller, action: :edit, id: worktime.id)
+          end
+    content_tag(:a, class: 'has-tooltip', href: url, &block)
   end
 
   def day_td(date, &block)
