@@ -43,6 +43,6 @@ class Timebox
   end
 
   def tooltip_for(worktime)
-    Timebox.format_hour(worktime.hours) << ': ' << worktime.account.label
+    Timebox.format_hour(worktime.hours) << ': ' << worktime.account.label_verbose
   end
 end
