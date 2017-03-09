@@ -15,6 +15,24 @@ module ReportsWorkloadHelper
     content_tag(:span, value.round, title: value, class: workload_worktime_load_class(value))
   end
 
+  def workload_hours_url(ordertime_entry, entry, report)
+    url_for(category_id: ordertime_entry.id,
+            evaluation: "employeesubworkitems#{entry.employee.id}",
+            start_date: report.period.start_date,
+            end_date: report.period.end_date,
+            controller: 'evaluator',
+            action: 'details')
+  end
+
+  def workload_absences_url(employee_id, report)
+    url_for(category_id: employee_id,
+            evaluation: 'employeeabsences',
+            start_date: report.period.start_date,
+            end_date: report.period.end_date,
+            controller: 'evaluator',
+            action: 'details')
+  end
+
   private
 
   def workload_worktime_balance_class(value)

@@ -1,18 +1,22 @@
 .reports-workload {
   .data-item {
+    display: block;
     text-align: right;
     white-space: nowrap;
+  }
+  a.data-item span {
+    color: $link-color;
+  }
 
-    .figure {
-      text-align: right;
-    }
+  .figure {
+    text-align: right;
+  }
 
-    .unit {
-      font-size: 12px;
-    }
+  .unit {
+    font-size: 12px;
+  }
 
-    .figure, .unit {
-      color: $gray-darker;
-    }
+  .figure, .unit {
+    color: $gray-darker;
   }
 }

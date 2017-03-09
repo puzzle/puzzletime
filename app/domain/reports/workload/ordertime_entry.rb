@@ -1,4 +1,8 @@
 class Reports::Workload::OrdertimeEntry < Struct.new(:work_item, :hours, :billability)
+  def id
+    work_item.id
+  end
+
   def label
     work_item.path_shortnames
   end

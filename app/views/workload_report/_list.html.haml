@@ -26,7 +26,7 @@
                 %span.figure= format_workload_worktime_balance(entry.worktime_balance)
                 %span.unit h
             %td
-              .data-item
+              %a.data-item{ href: workload_absences_url(entry.employee.id, @report) }
                 %span.figure= format_workload_hours(entry.paid_absence_hours)
                 %span.unit h
             %td
@@ -56,7 +56,7 @@
                 %td= ordertime_entry.label
                 %td= ordertime_entry.description
                 %td
-                  .data-item
+                  %a.data-item{href: workload_hours_url(ordertime_entry, entry, @report)}
                     %span.figure= format_workload_hours(ordertime_entry.hours)
                     %span.unit h
                 %td
