@@ -65,7 +65,7 @@ class Ability
          :filter_fields],
         Invoice
     can [:edit, :update, :destroy], Invoice do |i|
-      i.status != 'deleted'
+      i.status != 'deleted' && i.status != 'paid'
     end
 
     can [:read], Worktime
