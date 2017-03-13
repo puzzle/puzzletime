@@ -12,9 +12,12 @@
             %th.right.nowrap{style: 'width: 8.6%;'} Über-/Unterzeit
             %th.right.nowrap{style: 'width: 8.6%;'} Kundenprojekte
             %th.right.nowrap{style: 'width: 8.6%;'} Verrechenbar
-            %th.right.nowrap{style: 'width: 8.6%;'} Auslastung
-            %th.right.nowrap{style: 'width: 8.6%;'} Verrechenbarkeit
-            %th.right.nowrap{style: 'width: 8.6%;'} abs. Verrechenbarkeit
+            %th.right.nowrap{style: 'width: 8.6%;',
+                             title: 'Kundenprojekte / Ist (ohne Absenzen)'} Auslastung
+            %th.right.nowrap{style: 'width: 8.6%;',
+                             title: 'Verrechenbar / Kundenprojekte'} Verrechenbarkeit
+            %th.right.nowrap{style: 'width: 8.6%;',
+                             title: 'Verrechenbar / Ist (ohne Absenzen)' } abs. Verrechenbarkeit
 
         %tbody
           - @report.summary.each do |entry|
