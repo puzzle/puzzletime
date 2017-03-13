@@ -117,7 +117,9 @@ class Ability
       i.order.responsible_id == user.id
     end
     can [:edit, :update, :destroy], Invoice do |i|
-      i.order.responsible_id == user.id && i.status != 'deleted'
+      i.order.responsible_id == user.id &&
+        i.status != 'deleted' &&
+        i.status != 'paid'
     end
 
     can :read, Ordertime do |t|
