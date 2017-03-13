@@ -199,6 +199,7 @@ de-CH:
         sent: Gesendet
         paid: Bezahlt
         partially_paid: Teilbezahlt
+        deleted: Storniert
         unknown: Unbekannt
       order:
         client: Kunde
