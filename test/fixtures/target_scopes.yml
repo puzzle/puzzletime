@@ -2,10 +2,13 @@
 #
 # Table name: target_scopes
 #
-#  id       :integer          not null, primary key
-#  name     :string           not null
-#  icon     :string
-#  position :integer          not null
+#  id                        :integer          not null, primary key
+#  name                      :string           not null
+#  icon                      :string
+#  position                  :integer          not null
+#  rating_green_description  :string
+#  rating_orange_description :string
+#  rating_red_description    :string
 #
 
 time:

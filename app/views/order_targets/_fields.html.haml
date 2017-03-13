@@ -7,7 +7,9 @@
                                 title: f.object.target_scope.name)
 
         - OrderTarget::RATINGS.each do |rating|
-          %label.btn.btn-default{class: "#{'active' if f.object.rating == rating}"}
+          %label.btn.btn-default{class: "#{'active' if f.object.rating == rating}",
+                                 data: { toggle: :tooltip },
+                                 title: f.object.target_scope.send("rating_#{rating}_description")}
             = f.radio_button :rating, rating
             = order_target_rating_icon(rating)
 

@@ -8,3 +8,10 @@
                           { prompt: ta(:please_select) },
                           class: 'form-control'
   = f.labeled_input_field :position
+  - OrderTarget::RATINGS.each do |rating|
+    .form-group
+      = label_tag("rating_#{rating}_description", class: 'col-md-2 control-label') do
+        Beschreibung für Bewertung
+        = order_target_rating_icon(rating, style: 'font-size: 16px; vertical-align: middle;')
+      .col-md-5
+        = f.input_field "rating_#{rating}_description"

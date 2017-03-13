@@ -281,6 +281,9 @@ de-CH:
         name: Bezeichnung
         icon: Icon
         position: Position
+        rating_green_description: Beschreibung Bewertung grün
+        rating_orange_description: Beschreibung Bewertung orange
+        rating_red_description: Beschreibung Bewertung rot
       user_notification:
         date_from: Startdatum
         date_to: Enddatum

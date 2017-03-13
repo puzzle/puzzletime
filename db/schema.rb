@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161222162235) do
+ActiveRecord::Schema.define(version: 20170313103521) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,7 +53,6 @@ ActiveRecord::Schema.define(version: 20161222162235) do
     t.string  "town"
     t.string  "country",       limit: 2
     t.string  "invoicing_key"
-    t.string  "client_name"
   end
 
   add_index "billing_addresses", ["client_id"], name: "index_billing_addresses_on_client_id", using: :btree
@@ -321,9 +320,12 @@ ActiveRecord::Schema.define(version: 20161222162235) do
   end
 
   create_table "target_scopes", force: :cascade do |t|
-    t.string  "name",     null: false
+    t.string  "name",                      null: false
     t.string  "icon"
-    t.integer "position", null: false
+    t.integer "position",                  null: false
+    t.string  "rating_green_description"
+    t.string  "rating_orange_description"
+    t.string  "rating_red_description"
   end
 
   add_index "target_scopes", ["name"], name: "index_target_scopes_on_name", unique: true, using: :btree

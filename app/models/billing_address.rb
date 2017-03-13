@@ -12,7 +12,6 @@
 #  town          :string
 #  country       :string(2)
 #  invoicing_key :string
-#  client_name   :string
 #
 
 class BillingAddress < ActiveRecord::Base

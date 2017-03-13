@@ -11,7 +11,6 @@
 #  town          :string
 #  country       :string(2)
 #  invoicing_key :string
-#  client_name   :string
 #
 
 Fabricator(:billing_address) do
