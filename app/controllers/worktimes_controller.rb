@@ -193,6 +193,11 @@ class WorktimesController < CrudController
 
   def assign_attributes
     if params.key?(model_identifier)
+      # Set start/end time to nil, this way we correctly unset
+      # the time on "hours" change with entry.attributes = model_params
+      # Otherwise the start/end time recalculate the hours property.
+      params[:ordertime][:from_start_time] ||= nil
+      params[:ordertime][:to_end_time] ||= nil
       params[:other] = '1' if model_params[:employee_id] && @user.management
       super
       entry.employee = @user unless record_other?
