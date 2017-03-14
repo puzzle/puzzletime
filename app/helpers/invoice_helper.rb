@@ -30,13 +30,13 @@ module InvoiceHelper
     f(entries
       .select(&:paid?)
       .map(&:calculated_total_amount)
-      .reduce { |a, e| a + e })
+      .reduce(0, :+))
   end
 
   def format_total_billing_hours(entries)
     f(entries
       .select(&:paid?)
       .map(&:total_hours)
-      .reduce { |a, e| a + e })
+      .reduce(0, :+))
   end
 end

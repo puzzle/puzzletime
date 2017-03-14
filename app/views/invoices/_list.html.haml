@@ -34,9 +34,9 @@
                               data: { method: :put })
   - if t.entries.total_pages == 1
     - t.foot do |entries|
-      %tr
+      %tr.times_total_sum
         %td.text-right
-          Total bezahlte:
+          Total bezahlte
         %td.text-right
           = format_total_billing_amount(entries)
         %td.text-right
