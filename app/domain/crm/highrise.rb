@@ -4,7 +4,7 @@ module Crm
 
     def crm_key_label
       src = ActionController::Base.helpers.image_path('highrise.png')
-      "<img src=\"#{src}\" width=\"19\" height=\"16\" /> #{crm_key_name}".html_safe
+      "<img src=\"#{src}\" width=\"19\" height=\"16\" alt=\"\" /> #{crm_key_name}".html_safe
     end
 
     def crm_key_name

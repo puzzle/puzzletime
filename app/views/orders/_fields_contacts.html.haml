@@ -9,10 +9,13 @@
                                    { prompt: ta(:please_select) },
                                    class: 'form-control searchable',
                                    placeholder: 'Ansprechsperson')
-      .col-md-6
+      %div{ class: "col-md-#{ Crm.instance ? '4' : '6' }" }
         = fields.input_field(:comment, placeholder: 'Funktion')
       .col-md-1.form-action
-        = fields.remove_nested_fields_link(picon('delete', title: 'Ansprechsperson entfernen'))
+        - if Crm.instance && fields.object.contact && fields.object.contact.crm_key
+          %a{ href: Crm.instance.contact_url(fields.object.contact) }
+            Highrise Kontakt
+        = fields.remove_nested_fields_link(picon('delete', title: 'Ansprechsperson entfernen'), class: 'remove-order-contact')
   .row
     .col-md-1.form-action
       = f.add_nested_fields_link(:order_contacts, picon(:add, title: 'Ansprechsperson hinzufügen'))
