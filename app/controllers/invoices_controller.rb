@@ -215,4 +215,8 @@ class InvoicesController < CrudController
     @autoselect_workitems_and_employees == true
   end
 
+  def list_entries
+    super.per(70)
+  end
+
 end

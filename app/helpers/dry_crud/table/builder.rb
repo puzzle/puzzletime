@@ -23,6 +23,7 @@ module DryCrud::Table
       @entries = entries
       @template = template
       @options = options
+      @footer = nil
       @cols = []
     end
 
@@ -69,7 +70,8 @@ module DryCrud::Table
     def to_html
       content_tag :table, options do
         content_tag(:thead, html_header) +
-          content_tag_nested(:tbody, entries) { |e| html_row(e) }
+          content_tag_nested(:tbody, entries) { |e| html_row(e) } +
+          (@footer ? content_tag(:tfoot, @footer) : '')
       end
     end
 
@@ -88,6 +90,11 @@ module DryCrud::Table
     # Creates a header string for the given attr.
     def attr_header(attr)
       captionize(attr, entry_class)
+    end
+
+    # Create a table footer with arbitrary html
+    def foot(&block)
+      @footer = template.capture(entries, &block)
     end
 
     private
