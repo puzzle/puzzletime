@@ -1,2 +1,2 @@
 = form_tag(edit_order_multi_worktimes_path(@order), id: 'worktimes', method: :post) do
-  = summed_worktimes_table(@worktimes)
+  = summed_worktimes_table(@worktimes, checkbox_requires_permission: :update)

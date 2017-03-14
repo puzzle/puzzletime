@@ -61,7 +61,54 @@ class WorktimesControllerTest < ActionController::TestCase
     assert_no_modify_buttons
   end
 
+  test 'destroy button/edit link for invoice with status \'draft\'' do
+    create_time_entries(:pascal)
+    @ordertime.update(invoice: create_invoice('draft'))
+    login_as(:pascal)
+
+    get :index, week_date: months_first_day.to_s
+    assert_modify_buttons
+    assert_select('a.entry-link', count: 2)
+  end
+
+  test 'no destroy button/edit link for invoice with status \'sent\'' do
+    create_time_entries(:pascal)
+    @ordertime.update(invoice: create_invoice('sent'))
+    login_as(:pascal)
+
+    get :index, week_date: months_first_day.to_s
+    assert_select('a i.icon-duplicate', count: 2)
+    assert_select('a i.icon-delete', count: 1)
+    assert_select('a i.icon-add', count: 7)
+    assert_select('a.entry-link', count: 1)
+  end
+
+  test 'no destroy button/edit link for invoice with status \'paid\'' do
+    create_time_entries(:pascal)
+    @ordertime.update(invoice: create_invoice('paid'))
+    login_as(:pascal)
+
+    get :index, week_date: months_first_day.to_s
+    assert_select('a i.icon-duplicate', count: 2)
+    assert_select('a i.icon-delete', count: 1)
+    assert_select('a i.icon-add', count: 7)
+    assert_select('a.entry-link', count: 1)
+  end
+
+  test 'no destroy button/edit link for invoice with status \'partially_paid\'' do
+    create_time_entries(:pascal)
+    @ordertime.update(invoice: create_invoice('partially_paid'))
+    login_as(:pascal)
+
+    get :index, week_date: months_first_day.to_s
+    assert_select('a i.icon-duplicate', count: 2)
+    assert_select('a i.icon-delete', count: 1)
+    assert_select('a i.icon-add', count: 7)
+    assert_select('a.entry-link', count: 1)
+  end
+
   private
+
   def assert_modify_buttons
     assert_select('a i.icon-duplicate', count: 2)
     assert_select('a i.icon-delete', count: 2)
@@ -76,10 +123,14 @@ class WorktimesControllerTest < ActionController::TestCase
 
   def create_time_entries(name)
     @ordertime = Fabricate(:ordertime, employee: employees(name),
-                           work_item: work_items(:puzzletime),
-                           work_date: months_first_day)
+                                       work_item: work_items(:puzzletime),
+                                       work_date: months_first_day)
     @absencetime = Fabricate(:absencetime, employee: employees(name),
-                             work_date: months_first_day)
+                                           work_date: months_first_day)
+  end
+
+  def create_invoice(status)
+    Fabricate(:invoice, order: orders(:puzzletime), status: status, due_date: Date.new(2000, 1, 23))
   end
 
   def commit_times(name)

@@ -65,13 +65,13 @@ class Ability
          :filter_fields],
         Invoice
     can [:edit, :update, :destroy], Invoice do |i|
-      i.status != 'deleted' && i.status != 'paid'
+      !%w(deleted paid partially_paid).include?(i.status)
     end
 
     can [:read], Worktime
     can [:create, :update], Absencetime
     can [:create, :update], Ordertime do |t|
-      !t.work_item_closed?
+      !t.work_item_closed? && !t.invoice_sent_or_paid?
     end
 
     can [:clients,
@@ -118,15 +118,14 @@ class Ability
     end
     can [:edit, :update, :destroy], Invoice do |i|
       i.order.responsible_id == user.id &&
-        i.status != 'deleted' &&
-        i.status != 'paid'
+        !%w(deleted paid partially_paid).include?(i.status)
     end
 
     can :read, Ordertime do |t|
       t.order.responsible_id == user.id
     end
     can [:create, :update], Ordertime do |t|
-      t.order.responsible_id == user.id && !t.work_item_closed?
+      t.order.responsible_id == user.id && !t.work_item_closed? && !t.invoice_sent_or_paid?
     end
     can :managed, Evaluation
 
@@ -149,7 +148,7 @@ class Ability
     end
 
     can :manage, Ordertime do |t|
-      t.employee_id == user.id && !t.worktimes_committed? && !t.work_item_closed?
+      t.employee_id == user.id && !t.worktimes_committed? && !t.work_item_closed? && !t.invoice_sent_or_paid?
     end
 
     can :search, WorkItem

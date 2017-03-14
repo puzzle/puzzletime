@@ -223,7 +223,46 @@ class OrderServicesControllerTest < ActionController::TestCase
     assert_match %r{<td[^>]*>#{ticket_label}</td>}, response.body
   end
 
+  test 'GET report renders checkboxes for entries not associated with sent/paid invoice' do
+    Worktime.where(work_item_id: work_items(:puzzletime).id).destroy_all
+    o1 = Fabricate(:ordertime,
+                   employee: employees(:pascal),
+                   work_item: work_items(:puzzletime),
+                   hours: 1)
+    o2 = Fabricate(:ordertime,
+                   employee: employees(:pascal),
+                   work_item: work_items(:puzzletime),
+                   invoice: create_invoice('draft'),
+                   hours: 1)
+    o3 = Fabricate(:ordertime,
+                   employee: employees(:pascal),
+                   work_item: work_items(:puzzletime),
+                   invoice: create_invoice('sent'),
+                   hours: 2)
+    o4 = Fabricate(:ordertime,
+                   employee: employees(:pascal),
+                   work_item: work_items(:puzzletime),
+                   invoice: create_invoice('paid'),
+                   hours: 3)
+    o5 = Fabricate(:ordertime,
+                   employee: employees(:pascal),
+                   work_item: work_items(:puzzletime),
+                   invoice: create_invoice('partially_paid'),
+                   hours: 4)
+
+    get :show, order_id: order.id
+    assert_select "input[type=\"checkbox\"][value=\"#{o1.id}\"]", count: 1
+    assert_select "input[type=\"checkbox\"][value=\"#{o2.id}\"]", count: 1
+    assert_select "input[type=\"checkbox\"][value=\"#{o3.id}\"]", count: 0
+    assert_select "input[type=\"checkbox\"][value=\"#{o4.id}\"]", count: 0
+    assert_select "input[type=\"checkbox\"][value=\"#{o5.id}\"]", count: 0
+  end
+
   private
+
+  def create_invoice(status)
+    Fabricate(:invoice, order: order, status: status, due_date: Date.new(2000, 1, 23))
+  end
 
   def order
     orders(:puzzletime)

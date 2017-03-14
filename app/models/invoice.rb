@@ -187,7 +187,7 @@ class Invoice < ActiveRecord::Base
       order.category.try(:shortname),
       order.shortname,
       order.department.shortname,
-      sprintf('%04d', order.client.last_invoice_number + 1)
+      format('%04d', order.client.last_invoice_number + 1)
     ]
     self.reference = reference_segments.compact.join
   end

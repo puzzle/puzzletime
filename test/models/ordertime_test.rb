@@ -58,4 +58,18 @@ class OrdertimeTest < ActiveSupport::TestCase
     assert_not_valid t, :base
   end
 
+  test '#invoice_sent_or_paid?' do
+    t = Ordertime.new
+    assert !t.invoice_sent_or_paid?
+
+    [['draft', false],
+     ['sent', true],
+     ['paid', true],
+     ['partially_paid', true],
+     ['deleted', false]].each do |status, result|
+      t.invoice = Invoice.new(status: status)
+      assert_equal result, t.invoice_sent_or_paid?, "Status '#{status}', result should be #{result}"
+    end
+  end
+
 end

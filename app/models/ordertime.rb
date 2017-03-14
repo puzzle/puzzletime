@@ -54,6 +54,10 @@ class Ordertime < Worktime
       WorkItem.where(id: work_item_id_was, closed: true).exists?)
   end
 
+  def invoice_sent_or_paid?
+    invoice && (invoice.sent? || invoice.paid? || invoice.partially_paid?)
+  end
+
   private
 
   ########### validation helpers ###########
