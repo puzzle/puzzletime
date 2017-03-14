@@ -1,8 +1,9 @@
 - url ||= nil
-= standard_form(@worktime,
+= plain_form(@worktime,
                 url: url,
                 cancel_url: params[:back_url].presence || worktimes_path(week_date: @worktime.work_date)) do |f|
   = hidden_field_tag :back_url, params[:back_url]
+  = f.error_messages
 
   - if record_other?
     = f.labeled_belongs_to_field(:employee_id,
@@ -36,3 +37,13 @@
       = f.text_field(:to_end_time, value: format_time(@worktime.to_end_time))
 
   = f.labeled_boolean_field(:billable)
+
+  .form-group
+    .col-md-offset-2.col-md-8
+      - unless @worktime.id
+        = f.button('Speichern & Neu',
+                   class: 'btn btn-primary',
+                   name: 'redirect_to_self',
+                   value: 'true')
+      = f.submit_button(ti('button.save'))
+      = f.cancel_link
