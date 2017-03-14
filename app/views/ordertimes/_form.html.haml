@@ -40,10 +40,10 @@
 
   .form-group
     .col-md-offset-2.col-md-8
+      = f.submit_button(ti('button.save'))
       - unless @worktime.id
         = f.button('Speichern & Neu',
-                   class: 'btn btn-primary',
+                   class: 'btn btn-default',
                    name: 'redirect_to_self',
                    value: 'true')
-      = f.submit_button(ti('button.save'))
       = f.cancel_link
