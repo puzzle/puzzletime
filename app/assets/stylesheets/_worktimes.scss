@@ -212,9 +212,6 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
     .date-label, .entry {
       background-color: none;
 
-      -moz-transition: background-color 400ms ease-in;
-      -webkit-transition: background-color 400ms ease-in;
-      -o-transition: background-color 400ms ease-in;
       transition: background-color 400ms ease-in;
 
       &.highlight {
@@ -268,9 +265,6 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
       @include clearfix;
 
       &:hover, &:active {
-        -moz-transition: none;
-        -webkit-transition: none;
-        -o-transition: none;
         transition: none;
 
         background-color: $worktimes-weekcontent-hover-bg;
