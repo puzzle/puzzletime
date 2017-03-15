@@ -114,7 +114,11 @@ module Invoicing
         list.each do |item|
           local_item = entity.new(item)
           remote_data = remote_list.find { |h| local_item == h }
-          if remote_data.try(:[], 'id') && remote_data['id'].to_s != item.invoicing_key
+          next unless remote_data.try(:[], 'id') && remote_data['id'].to_s != item.invoicing_key
+          if entity.where(invoicing_key: remote_data['id']).exists?
+            notify_sync_error('Unable to sync from remote, record with invoicing_key already exists',
+                              invoicing_key: remote_data['id'], type: entity.name)
+          else
             item.update_column(:invoicing_key, remote_data['id'])
           end
         end
@@ -141,6 +145,10 @@ module Invoicing
 
       def api
         Api.instance
+      end
+
+      def notify_sync_error(error, parameters)
+        Airbrake.notify(error, cgi_data: ENV.to_hash, parameters: parameters)
       end
     end
   end
