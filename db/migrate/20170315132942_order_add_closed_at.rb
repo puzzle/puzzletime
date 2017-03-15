@@ -18,8 +18,13 @@ class OrderAddClosedAt < ActiveRecord::Migration
 
     order_status_closed = OrderStatus.find_by(name: 'Abgeschlossen')
 
+    return unless order_status_closed
+
     status_to_migrate.each do |(name, closed_at)|
       order_status = OrderStatus.find_by(name: name)
+
+      next unless order_status
+
       Order.where(status_id: order_status.id)
            .update_all(status_id: order_status_closed.id,
                        closed_at: closed_at)
