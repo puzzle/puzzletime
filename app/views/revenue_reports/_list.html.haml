@@ -23,14 +23,17 @@
             = l(date, format: :month)
 
   %tbody
-    - @report.entries.each do |entry|
+    - (@report.hours_without_entry? ? @report.entries + [nil] : @report.entries).each do |entry|
       %tr
         %td
-          = entry
+          - if entry.present?
+            = entry
+          - else
+            #{@report.grouping_name_human} nicht zugewiesen
 
         - @report.step_past_months do |date|
           %td.right
-            = format_number(@report.ordertime_hours[[entry.id, date]] || 0, 0)
+            = format_number(@report.ordertime_hours[[entry.try(:id), date]] || 0, 0)
             = Settings.defaults.currency
 
         - if @report.past_months?
@@ -44,7 +47,7 @@
 
         - @report.step_future_months do |date|
           %td.revenue-planning-value.right
-            = format_number(@report.planning_hours[[entry.id, date]] || 0, 0)
+            = format_number(@report.planning_hours[[entry.try(:id), date]] || 0, 0)
             = Settings.defaults.currency
 
   %tfoot

@@ -13,13 +13,13 @@ module Reports::Revenue
     def load_ordertimes(period = past_period)
       super
         .joins(work_item: { accounting_post: :service })
-        .where(services: { active: true })
+        .where('service_id IS NULL OR services.active = TRUE')
     end
 
     def load_plannings(period)
       super
         .joins(work_item: { accounting_post: :service })
-        .where(services: { active: true })
+        .where('service_id IS NULL OR services.active = TRUE')
     end
 
 

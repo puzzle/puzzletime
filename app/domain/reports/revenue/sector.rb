@@ -14,14 +14,14 @@ module Reports::Revenue
       super
         .joins('LEFT JOIN clients ON clients.work_item_id = ANY (work_items.path_ids)')
         .joins('LEFT JOIN sectors ON sectors.id = clients.sector_id')
-        .where('sectors.active = TRUE')
+        .where('sector_id IS NULL OR sectors.active = TRUE')
     end
 
     def load_plannings(period)
       super
         .joins('LEFT JOIN clients ON clients.work_item_id = ANY (work_items.path_ids)')
         .joins('LEFT JOIN sectors ON sectors.id = clients.sector_id')
-        .where('sectors.active = TRUE')
+        .where('sector_id IS NULL OR sectors.active = TRUE')
     end
 
   end

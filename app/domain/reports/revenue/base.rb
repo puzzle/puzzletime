@@ -25,6 +25,11 @@ module Reports::Revenue
       @entries ||= load_entries
     end
 
+    def hours_without_entry?
+      ordertime_hours.any? { |(entry_id, _time), _sum_hours| entry_id.nil? } ||
+      planning_hours.any? { |(entry_id, _date), _sum_hours| entry_id.nil? }
+    end
+
     def ordertime_hours
       @ordertime_hours ||= load_ordertime_hours
     end
@@ -35,14 +40,14 @@ module Reports::Revenue
 
     def total_ordertime_hours_per_entry(entry)
       ordertime_hours
-        .select { |(entry_id, _date), _hours| entry.id == entry_id }
+        .select { |(entry_id, _date), _hours| entry_id == entry.try(:id) }
         .values
         .sum
     end
 
     def average_ordertime_hours_per_entry(entry)
       hours = ordertime_hours
-              .select { |(entry_id, _date), _hours| entry.id == entry_id }
+              .select { |(entry_id, _date), _hours| entry_id == entry.try(:id) }
               .values
       hours.empty? ? 0 : hours.sum.to_f / hours.size
     end
