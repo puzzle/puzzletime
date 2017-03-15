@@ -9,6 +9,26 @@ class Timebox
   attr_reader :height, :color, :tooltip, :worktime
   attr_writer :height, :worktime
 
+  include ActionView::Helpers::OutputSafetyHelper
+
+  class << self
+    def must_hours(must_hours)
+      new(nil, MUST_HOURS_COLOR, 1, 'Sollzeit ('.html_safe << format_hour(must_hours) << ')')
+    end
+
+    def blank(hours)
+      new(nil, BLANK_COLOR, height_from_hours(hours), '')
+    end
+
+    def height_from_hours(hours)
+      hours * PIXEL_PER_HOUR
+    end
+
+    def format_hour(hour)
+      ActionController::Base.helpers.number_with_precision(hour, precision: 2, delimiter: '\'')
+    end
+  end
+
   def initialize(worktime, color = nil, hgt = nil, tooltip = nil)
     if worktime
       @worktime = worktime
@@ -24,23 +44,7 @@ class Timebox
     @height *= factor
   end
 
-  def self.must_hours(must_hours)
-    new(nil, MUST_HOURS_COLOR, 1, 'Sollzeit ('.html_safe << format_hour(must_hours) << ')')
-  end
-
-  def self.blank(hours)
-    new(nil, BLANK_COLOR, height_from_hours(hours), '')
-  end
-
-  def self.height_from_hours(hours)
-    hours * PIXEL_PER_HOUR
-  end
-
   private
-
-  def self.format_hour(hour)
-    ActionController::Base.helpers.number_with_precision(hour, precision: 2, delimiter: '\'')
-  end
 
   def tooltip_for(worktime)
     Timebox.format_hour(worktime.hours) << ': ' << worktime.account.label_verbose

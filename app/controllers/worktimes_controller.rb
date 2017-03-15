@@ -109,10 +109,16 @@ class WorktimesController < CrudController
   end
 
   def set_week_days
-    @selected_date = params[:week_date].present? ? Date.parse(params[:week_date]) : Time.zone.today
+    set_selected_date
     @week_days = (@selected_date.at_beginning_of_week..@selected_date.at_end_of_week).to_a
     @next_week_date = @week_days.last + 1.day
     @previous_week_date = @week_days.first - 7.days
+  end
+
+  def set_selected_date
+    @selected_date = params[:week_date].present? ? Date.parse(params[:week_date]) : Time.zone.today
+  rescue ArgumentError
+    @selected_date = Time.zone.today
   end
 
   def set_employees
