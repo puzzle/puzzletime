@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170313103521) do
+ActiveRecord::Schema.define(version: 20170315132942) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -272,6 +272,7 @@ ActiveRecord::Schema.define(version: 20170313103521) do
     t.datetime "updated_at"
     t.date     "completed_at"
     t.date     "committed_at"
+    t.date     "closed_at"
   end
 
   add_index "orders", ["billing_address_id"], name: "index_orders_on_billing_address_id", using: :btree

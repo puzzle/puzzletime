@@ -61,6 +61,7 @@ class Order < ActiveRecord::Base
 
   ### CALLBACKS
 
+  before_update :set_closed_at
   before_validation :set_self_in_nested
   after_initialize :set_default_status_id
   after_create :create_order_targets
@@ -128,6 +129,14 @@ class Order < ActiveRecord::Base
           e.order = self
         end
       end
+    end
+  end
+
+  def set_closed_at
+    if status.closed
+      self.closed_at ||= Time.zone.today
+    else
+      self.closed_at = nil
     end
   end
 
