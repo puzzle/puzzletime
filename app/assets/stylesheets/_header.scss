@@ -40,6 +40,13 @@
   }
 
   .navbar-nav {
+    display: flex;
+
+    > .navbar-user {
+      margin-left: 1rem;
+      margin-right: auto;
+    }
+
     > li > a {
       padding-top: ((40px - $line-height-computed) / 2);
       padding-bottom: ((40px - $line-height-computed) / 2);

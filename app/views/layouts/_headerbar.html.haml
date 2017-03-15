@@ -8,7 +8,7 @@
           = Puzzletime.version
     %ul.nav.navbar-nav.navbar-right
       - if @user
-        %li
+        %li.navbar-user
           = link_to(settings_employees_path) do
             %i.icon-user
             = @user.label
