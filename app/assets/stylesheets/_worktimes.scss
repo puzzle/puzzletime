@@ -32,9 +32,6 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
     border-style: solid;
     border-color: $gray-light;
     background-color: $gray-lighter;
-
-    .controls {
-    }
   }
 
   .weeknav-element {
@@ -49,8 +46,6 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
       margin-bottom: 10px;
     }
 
-    .weeknav-label {
-    }
     .weeknav-time {
       font-weight: 300;
     }
@@ -117,7 +112,6 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
         color: $gray-dark;
       }
     }
-
 
     .add-other {
       float: right
