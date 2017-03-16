@@ -30,20 +30,18 @@ class SectorRevenueReportTest < ActiveSupport::TestCase
   test 'entries and values' do
     clients(:puzzle).update_attribute(:sector_id, verwaltung.id)
     clients(:pbs).update_attribute(:sector_id, oev.id)
-    clients(:swisstopo).update_attribute(:sector_id, banken.id)
     work_items(:hitobito).update!(parent_id: work_items(:pbs).id)
+    oev.update(active: false)
 
     ordertime(Date.new(2000, 7, 10), :puzzletime)
     ordertime(Date.new(2000, 7, 11), :puzzletime)
     ordertime(Date.new(2000, 8, 10), :puzzletime)
-    ordertime(Date.new(2000, 7, 10), :hitobito_demo_app)
-    ordertime(Date.new(2000, 7, 10), :webauftritt) # inactive sector (ignored)
+    ordertime(Date.new(2000, 7, 10), :hitobito_demo_app) # inactive sector
 
-    planning(Date.new(2000, 9, 11), :hitobito_demo_app)
-    planning(Date.new(2000, 11, 10), :hitobito_demo_app)
-    planning(Date.new(2000, 11, 13), :hitobito_demo_app)
+    planning(Date.new(2000, 9, 11), :hitobito_demo_app) # inactive sector
+    planning(Date.new(2000, 11, 10), :hitobito_demo_app) # inactive sector
+    planning(Date.new(2000, 11, 13), :hitobito_demo_app) # inactive sector
     planning(Date.new(2000, 11, 10), :allgemein)
-    planning(Date.new(2000, 11, 10), :webauftritt) # inactive sector (ignored)
 
     r = report
     assert_equal [oev, verwaltung], r.entries.to_a
@@ -98,10 +96,6 @@ class SectorRevenueReportTest < ActiveSupport::TestCase
 
   def oev
     sectors(:oev)
-  end
-
-  def banken
-    sectors(:banken)
   end
 
 end

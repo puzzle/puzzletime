@@ -29,19 +29,17 @@ class ServiceRevenueReportTest < ActiveSupport::TestCase
 
   test 'entries and values' do
     accounting_posts(:hitobito_demo_app).update_attribute(:service_id, system.id)
-    accounting_posts(:allgemein).update_attribute(:service_id, kanalarbeiten.id)
+    system.update(active: false)
 
     ordertime(Date.new(2000, 7, 10), :puzzletime)
     ordertime(Date.new(2000, 7, 11), :puzzletime)
     ordertime(Date.new(2000, 8, 10), :puzzletime)
-    ordertime(Date.new(2000, 7, 10), :hitobito_demo_app)
-    ordertime(Date.new(2000, 7, 10), :allgemein) # inactive service (ignored)
+    ordertime(Date.new(2000, 7, 10), :hitobito_demo_app) # inactive service
 
-    planning(Date.new(2000, 9, 11), :hitobito_demo_app)
-    planning(Date.new(2000, 11, 10), :hitobito_demo_app)
-    planning(Date.new(2000, 11, 13), :hitobito_demo_app)
+    planning(Date.new(2000, 9, 11), :hitobito_demo_app) # inactive service
+    planning(Date.new(2000, 11, 10), :hitobito_demo_app) # inactive service
+    planning(Date.new(2000, 11, 13), :hitobito_demo_app) # inactive service
     planning(Date.new(2000, 11, 10), :webauftritt)
-    planning(Date.new(2000, 11, 10), :allgemein) # inactive service (ignored)
 
     r = report
     assert_equal [software, system], r.entries.to_a
@@ -96,10 +94,6 @@ class ServiceRevenueReportTest < ActiveSupport::TestCase
 
   def system
     services(:system)
-  end
-
-  def kanalarbeiten
-    services(:kanalarbeiten)
   end
 
 end
