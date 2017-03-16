@@ -68,7 +68,7 @@ class WorktimesControllerTest < ActionController::TestCase
 
     get :index, week_date: months_first_day.to_s
     assert_modify_buttons
-    assert_select('a.entry-link', count: 2)
+    assert_select('.entry:not(.is-empty) a.entry-link', count: 2)
   end
 
   test 'no destroy button/edit link for invoice with status \'sent\'' do
@@ -79,8 +79,8 @@ class WorktimesControllerTest < ActionController::TestCase
     get :index, week_date: months_first_day.to_s
     assert_select('a i.icon-duplicate', count: 2)
     assert_select('a i.icon-delete', count: 1)
-    assert_select('a i.icon-add', count: 7)
-    assert_select('a.entry-link', count: 1)
+    assert_select('a i.icon-add', count: 7 * 2)
+    assert_select('.entry:not(.is-empty) a.entry-link', count: 1)
   end
 
   test 'no destroy button/edit link for invoice with status \'paid\'' do
@@ -91,8 +91,8 @@ class WorktimesControllerTest < ActionController::TestCase
     get :index, week_date: months_first_day.to_s
     assert_select('a i.icon-duplicate', count: 2)
     assert_select('a i.icon-delete', count: 1)
-    assert_select('a i.icon-add', count: 7)
-    assert_select('a.entry-link', count: 1)
+    assert_select('a i.icon-add', count: 7 * 2)
+    assert_select('.entry:not(.is-empty) a.entry-link', count: 1)
   end
 
   test 'no destroy button/edit link for invoice with status \'partially_paid\'' do
@@ -103,8 +103,8 @@ class WorktimesControllerTest < ActionController::TestCase
     get :index, week_date: months_first_day.to_s
     assert_select('a i.icon-duplicate', count: 2)
     assert_select('a i.icon-delete', count: 1)
-    assert_select('a i.icon-add', count: 7)
-    assert_select('a.entry-link', count: 1)
+    assert_select('a i.icon-add', count: 7 * 2)
+    assert_select('.entry:not(.is-empty) a.entry-link', count: 1)
   end
 
   private
@@ -112,7 +112,7 @@ class WorktimesControllerTest < ActionController::TestCase
   def assert_modify_buttons
     assert_select('a i.icon-duplicate', count: 2)
     assert_select('a i.icon-delete', count: 2)
-    assert_select('a i.icon-add', count: 7)
+    assert_select('a i.icon-add', count: 7 * 2)
   end
 
   def assert_no_modify_buttons

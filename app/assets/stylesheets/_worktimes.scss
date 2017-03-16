@@ -343,9 +343,17 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
   }
 }
 
+.worktimes-day-no-entries,
 .worktimes-day-add-link {
   @extend .col-xs-offset-1;
   @extend .col-xs-10;
+}
+
+.worktimes-day-no-entries {
+  color: $gray-light;
+}
+
+.worktimes-day-add-link {
   display: flex;
   line-height: 18px;
 
