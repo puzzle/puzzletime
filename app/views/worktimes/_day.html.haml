@@ -5,12 +5,10 @@
     = format_hour(sum_hours(day))
   - unless current_user.committed_date?(day)
     .date-action
-      = link_to(new_ordertime_path(work_date: localize_date(day)), data: {no_turbolink: true}) do
-        Neuer Eintrag
+      = link_to(new_ordertime_path(work_date: localize_date(day)), data: {no_turbolink: true}, class: 'date-action-add') do
         %i.icon-add
 
 - worktimes = @daily_worktimes[day]
 - if worktimes.present?
   = render partial: 'worktime', collection: worktimes, as: :worktime, locals: {day: day}
-- else
-  = render partial: 'day_empty', locals: {day: day}
+= render partial: 'empty_entry', locals: {day: day}

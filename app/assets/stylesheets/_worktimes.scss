@@ -243,8 +243,11 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
         }
         i {
           font-size: 18px;
-          vertical-align: middle;
         }
+      }
+      .date-action-add {
+        display: flex;
+        justify-content: flex-end;
       }
     }
 
@@ -252,7 +255,6 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
       @extend .row;
       margin-left: 0;
       margin-right: 0;
-      // min-height: 95px;
       position: relative;
       padding: 15px 0;
       border-top: 1px solid $gray-light;
@@ -335,13 +337,26 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
         z-index: 1;
       }
     }
-    .entry.is-empty {
-      padding: 0;
-      .controls {
-        @extend .col-xs-12;
-      }
+    .entry.is-empty .controls {
+      @extend .col-xs-12;
     }
   }
+}
+
+.worktimes-day-add-link {
+  @extend .col-xs-offset-1;
+  @extend .col-xs-10;
+  display: flex;
+  line-height: 18px;
+
+  .entry:hover & {
+    color: $link-hover-color;
+  }
+}
+
+.worktimes-day-add-link-icon {
+  margin-right: $padding-xs-horizontal;
+  font-size: 18px;
 }
 
 .weeknav-container {

@@ -1,0 +1,7 @@
+.entry.is-empty{title: 'Neuer Eintrag', 'data-date' => day}
+  %a{class: 'worktimes-day-add-link'}
+    %i.icon-add.worktimes-day-add-link-icon
+    %span Neuer Eintrag
+  = link_to('', new_ordertime_path(work_date: localize_date(day)),
+                                   data: { no_turbolink: true },
+                                   class: 'entry-link')
