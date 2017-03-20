@@ -18,7 +18,7 @@ class OrderStatusesControllerTest < ActionController::TestCase
   end
 
   def test_destroy_unreferenced
-    status = Fabricate(:order_status)
+    status = Fabricate(:order_status, position: 30)
     assert_difference('OrderStatus.count', -1) do
       delete :destroy, id: status.id
     end
