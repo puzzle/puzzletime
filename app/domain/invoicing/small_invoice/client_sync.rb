@@ -115,7 +115,7 @@ module Invoicing
           local_item = entity.new(item)
           remote_data = remote_list.find { |h| local_item == h }
           next unless remote_data.try(:[], 'id') && remote_data['id'].to_s != item.invoicing_key
-          if entity.where(invoicing_key: remote_data['id']).exists?
+          if list.model.where(invoicing_key: remote_data['id']).exists?
             notify_sync_error('Unable to sync from remote, record with invoicing_key already exists',
                               invoicing_key: remote_data['id'], type: entity.name)
           else
