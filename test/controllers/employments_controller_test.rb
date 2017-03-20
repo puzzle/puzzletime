@@ -1,4 +1,4 @@
-# encoding: UTF-8
+# encoding: utf-8
 require 'test_helper'
 
 class EmploymentsControllerTest < ActionController::TestCase
@@ -15,7 +15,7 @@ class EmploymentsControllerTest < ActionController::TestCase
     post :create, employment: { percent: 100,
                                 start_date: Date.new(2006, 10, 1),
                                 end_date: Date.new(2007, 5, 31) }, employee_id: 1
-    assert response.body.include? 'Für diese Zeitspanne ist bereits eine andere Anstellung definiert'
+    assert response.body.include? 'Für diese Zeitspanne ist bereits ein anderer Beschäftigungsgrad definiert'
   end
 
 

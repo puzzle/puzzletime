@@ -103,7 +103,7 @@ class Employment < ActiveRecord::Base
   end
 
   def to_s
-    "die Anstellung vom #{date_label start_date} - #{date_label end_date}"
+    "der Beschäftigungsgrad vom #{date_label start_date} - #{date_label end_date}"
   end
 
   def date_label(date)
@@ -132,7 +132,7 @@ class Employment < ActiveRecord::Base
     if end_date && period && period.negative?
       errors.add(:base, 'Die Zeitspanne ist ungültig')
     elsif parallel_employments?
-      errors.add(:base, 'Für diese Zeitspanne ist bereits eine andere Anstellung definiert')
+      errors.add(:base, 'Für diese Zeitspanne ist bereits ein anderer Beschäftigungsgrad definiert')
     end
   end
 

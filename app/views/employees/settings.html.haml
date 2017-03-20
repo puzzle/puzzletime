@@ -42,7 +42,7 @@
 
 .row
   .col-md-4
-    %h4 Anstellungen
+    %h4 Beschäftigungsgrade
     = plain_table(@user.employments.list) do |t|
       - t.attr(:start_date)
       - t.attr(:end_date)
