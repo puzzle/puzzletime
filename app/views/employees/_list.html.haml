@@ -8,7 +8,7 @@
 
   - if can?(:manage, OvertimeVacation)
     - t.action_col do |e|
-      - link_to('Überzeit', employee_overtime_vacations_path(e) )
+      - link_to('Überstunden', employee_overtime_vacations_path(e) )
   - if can?(:manage, Employment)
     - t.action_col do |e|
       - link_to('Anstellungen', employee_employments_path(e))

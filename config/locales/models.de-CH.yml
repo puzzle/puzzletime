@@ -60,8 +60,8 @@ de-CH:
         one: Zeit
         other: Zeiten
       overtime_vacation:
-        one: Überzeit-Ferien Umbuchung
-        other: Überzeit-Ferien Umbuchungen
+        one: Überstunden-Ferien Umbuchung
+        other: Überstunden-Ferien Umbuchungen
       planning:
         one: Planung
         other: Planungen

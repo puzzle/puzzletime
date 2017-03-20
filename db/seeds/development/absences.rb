@@ -1,3 +1,4 @@
+# coding: utf-8
 Absence.seed(:name,
   { name: 'Ferien',
     payed: true,
@@ -15,6 +16,6 @@ Absence.seed(:name,
   { name: 'Umzug',
     payed: true },
 
-  { name: 'Überzeitkompensation',
+  { name: 'Überstundenkompensation',
     payed: false },
 )

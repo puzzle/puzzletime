@@ -51,7 +51,7 @@
 
   - unless @user.overtime_vacations.empty?
     .col-md-4
-      %h4 Überzeit-Ferien Umbuchungen
+      %h4 Überstunden-Ferien Umbuchungen
       = plain_table(@user.overtime_vacations.list) do |t|
         - t.attr(:transfer_date)
         - t.attr(:hours)

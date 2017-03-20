@@ -81,7 +81,7 @@ module EvaluatorHelper
                 to_a
     tooltip = ''
     unless transfers.empty?
-      tooltip = '<a href="#" class="has-tooltip">&lt;-&gt;<span>Überzeit-Ferien Umbuchungen:<br/>'
+      tooltip = '<a href="#" class="has-tooltip">&lt;-&gt;<span>Überstunden-Ferien Umbuchungen:<br/>'
       transfers.collect! do |t|
         " - #{f(t.transfer_date)}: #{format_hour(t.hours)}"
       end
@@ -152,16 +152,16 @@ module EvaluatorHelper
     stat = @user.statistics
 
     infos = if @period
-              [[['Überzeit', stat.overtime(@period).to_f, 'h'],
+              [[['Überstunden', stat.overtime(@period).to_f, 'h'],
                 ['Bezogene Ferien', stat.used_vacations(@period), 'd'],
                 ['Soll Arbeitszeit', stat.musttime(@period), 'h']],
                [['Abschliessend', stat.current_overtime(@period.end_date), 'h'],
                 ['Verbleibend', stat.remaining_vacations(@period.end_date), 'd']]]
             else
-              [[['Überzeit Gestern', stat.current_overtime, 'h'],
+              [[['Überstunden Gestern', stat.current_overtime, 'h'],
                 ['Bezogene Ferien', stat.used_vacations(Period.current_year), 'd'],
                 ['Monatliche Arbeitszeit', stat.musttime(Period.current_month), 'h']],
-               [['Überzeit Heute', stat.current_overtime(Time.zone.today), 'h'],
+               [['Überstunden Heute', stat.current_overtime(Time.zone.today), 'h'],
                 ['Verbleibend', stat.current_remaining_vacations, 'd'],
                 ['Verbleibend', 0 - stat.overtime(Period.current_month).to_f, 'h']]]
             end

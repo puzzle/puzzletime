@@ -28,5 +28,5 @@ doctor:
 
 compensation:
   id:    4
-  name:  Überzeitkompensation
+  name:  Überstundenkompensation
   payed: false
