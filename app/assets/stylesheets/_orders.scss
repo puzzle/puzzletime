@@ -208,6 +208,10 @@ h1.top {
 }
 
 .orders-report {
+  > thead {
+    position: sticky;
+    top: 0;
+  }
 
   .data-item {
     clear: both;

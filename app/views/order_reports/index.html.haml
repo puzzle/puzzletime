@@ -1,3 +1,9 @@
+%ul.nav.nav-tabs{ role: 'tablist' }
+  %li{ class: ('active' unless params[:closed]) }
+    = link_to('Laufende', reports_orders_path)
+  %li{ class: ('active' if params[:closed]) }
+    = link_to('Abgeschlossene', reports_orders_path(closed: true))
+
 - @title ||= 'Auftrags-Controlling'
 
 %p= render 'filters'

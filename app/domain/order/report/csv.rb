@@ -22,17 +22,18 @@ class Order::Report::Csv
   private
 
   def header
-    ['Kunde', 'Kategorie', 'Auftrag', 'Status', 'Budget', 'Geleistet',
-     'Verrechenbar', 'Verrechnet', 'Verrechenbarkeit', 'Offerierter Stundensatz',
-     'Verrechnete Stundensatz', 'Durchschnittlicher Stundensatz', *target_scopes.collect(&:name)]
+    ['Kunde', 'Kategorie', 'Auftrag', 'Status', 'Abgeschlossen am', 'Budget',
+     'Geleistet', 'Verrechenbar', 'Verrechnet', 'Verrechenbarkeit',
+     'Offerierter Stundensatz', 'Verrechnete Stundensatz',
+     'Durchschnittlicher Stundensatz', *target_scopes.collect(&:name)]
   end
 
   def row(e)
     ratings = target_scopes.collect { |scope| e.target(scope.id).try(:rating) }
 
-    [e.client, e.category, e.name, e.status.to_s, e.offered_amount, e.supplied_amount,
-     e.billable_amount, e.billed_amount, e.billability, e.offered_rate,
-     e.billed_rate, e.average_rate, *ratings]
+    [e.client, e.category, e.name, e.status.to_s, e.closed_at,
+     e.offered_amount, e.supplied_amount, e.billable_amount, e.billed_amount,
+     e.billability, e.offered_rate, e.billed_rate, e.average_rate, *ratings]
   end
 
   def target_scopes

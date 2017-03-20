@@ -40,7 +40,8 @@ class Order::Report
   end
 
   def filters_defined?
-    filters = params.except(:action, :controller, :format, :utf8, :page, :clear)
+    filters = params.except(:action, :controller, :format, :utf8, :page,
+                            :clear, :closed)
     filters.present? && filters.values.any?(&:present?)
   end
 
@@ -56,6 +57,7 @@ class Order::Report
 
   def load_orders
     entries = Order.list.includes(:status, :targets)
+    entries = filter_by_closed(entries)
     entries = filter_by_parent(entries)
     entries = filter_by_target(entries)
     filter_entries_by(entries, :kind_id, :responsible_id, :status_id, :department_id)
@@ -78,11 +80,18 @@ class Order::Report
   end
 
   def load_accounting_post_hours(accounting_posts)
-    Worktime.joins(:work_item).
-      joins('INNER JOIN accounting_posts ON ' \
-                   'accounting_posts.work_item_id = ANY (work_items.path_ids)').
-      where(accounting_posts: { id: accounting_posts.collect(&:keys).flatten }).
-      in_period(period).
+    accounting_post_hours =
+      Worktime
+      .joins(:work_item)
+      .joins('INNER JOIN accounting_posts ON ' \
+                   'accounting_posts.work_item_id = ANY (work_items.path_ids)')
+      .where(accounting_posts: { id: accounting_posts.collect(&:keys).flatten })
+
+    unless params[:closed]
+      accounting_post_hours = accounting_post_hours.in_period(period)
+    end
+
+    accounting_post_hours.
       group('accounting_posts.id, worktimes.billable').
       pluck('accounting_posts.id, worktimes.billable, SUM(worktimes.hours)')
   end
@@ -94,10 +103,15 @@ class Order::Report
   end
 
   def load_invoices(orders)
-    Invoice.where(order_id: orders.collect(&:id)).
-      where(period.where_condition('billing_date')).
-      group('order_id').
-      pluck('order_id, SUM(total_amount) AS total_amount, SUM(total_hours) AS total_hours')
+    invoices = Invoice.where(order_id: orders.collect(&:id))
+
+    unless params[:closed]
+      invoices = invoices.where(period.where_condition('billing_date'))
+    end
+
+    invoices
+      .group('order_id')
+      .pluck('order_id, SUM(total_amount) AS total_amount, SUM(total_hours) AS total_hours')
   end
 
   def invoices_to_hash(result)
@@ -135,6 +149,14 @@ class Order::Report
     end
   end
 
+  def filter_by_closed(orders)
+    return orders unless params[:closed]
+
+    orders
+      .where(order_statuses: { closed: true })
+      .where(period.where_condition('closed_at'))
+  end
+
   def sort_entries(entries)
     dir = params[:sort_dir].to_s.casecmp('desc').zero? ? 1 : -1
     match = sort_by_target?
@@ -154,7 +176,9 @@ class Order::Report
   end
 
   def sort_by_number?
-    Order::Report::Entry.public_instance_methods(false).collect(&:to_s).include?(params[:sort])
+    Order::Report::Entry.public_instance_methods(false)
+                        .collect(&:to_s)
+                        .include?(params[:sort])
   end
 
   def sort_by_target?

@@ -16,6 +16,7 @@
 #  updated_at         :datetime
 #  completed_at       :date
 #  committed_at       :date
+#  closed_at          :date
 #
 
 class Order < ActiveRecord::Base

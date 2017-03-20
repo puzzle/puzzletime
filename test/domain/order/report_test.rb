@@ -79,6 +79,11 @@ class Order::ReportTest < ActiveSupport::TestCase
     assert_equal orders(:allgemein, :puzzletime), report.entries.collect(&:order)
   end
 
+  test 'filter by closed' do
+    report(closed: true)
+    assert_equal [orders(:allgemein)], report.entries.collect(&:order)
+  end
+
   ### sorting
 
   test 'sort by client' do

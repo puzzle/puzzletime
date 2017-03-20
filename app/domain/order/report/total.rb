@@ -22,6 +22,10 @@ class Order::Report::Total
     nil
   end
 
+  def closed_at
+    nil
+  end
+
   def targets
     []
   end
