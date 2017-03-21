@@ -10,6 +10,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   before_action :authenticate
+  before_action :set_paper_trail_whodunnit
   check_authorization
 
   helper_method :sanitized_back_url, :current_user

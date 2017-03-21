@@ -30,6 +30,7 @@ gem 'seed-fu'
 gem 'sort_alphabetical', '< 1.1.0' # higher requires ruby 2.0
 gem 'validates_by_schema'
 gem 'validates_timeliness'
+gem 'paper_trail'
 
 # fixed version for indirect dependencies
 gem 'mime-types', '~> 2.99.1'

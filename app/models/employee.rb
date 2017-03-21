@@ -20,9 +20,19 @@
 
 class Employee < ActiveRecord::Base
 
+  has_paper_trail
+
   include Evaluatable
   include ReportType::Accessors
   extend Conditioner
+
+  enum marital_status: %w(
+    single
+    married
+    widowed
+    civil_partnership
+    divorced
+  ).freeze
 
   # All dependencies between the models are listed below.
   belongs_to :department

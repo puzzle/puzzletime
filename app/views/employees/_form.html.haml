@@ -5,6 +5,7 @@
                            :email,
                            :ldapname,
                            :department_id,
+                           :crm_key,
                            :probation_period_end_date
 
   - if Settings.employees.initial_vacation_days_editable
@@ -13,3 +14,15 @@
     = f.labeled_static_field :initial_vacation_days
   = f.labeled_input_field :management
 
+  %hr
+
+  = f.labeled_input_fields :phone_office,
+                           :phone_private,
+                           :street,
+                           :postal_code,
+                           :city,
+                           :birthday,
+                           :emergency_contact_name,
+                           :emergency_contact_phone,
+                           :marital_status,
+                           :social_insurance

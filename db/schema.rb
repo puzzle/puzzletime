@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170315132942) do
+ActiveRecord::Schema.define(version: 20170321121326) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -142,6 +142,17 @@ ActiveRecord::Schema.define(version: 20170315132942) do
     t.integer "department_id"
     t.date    "committed_worktimes_at"
     t.date    "probation_period_end_date"
+    t.string  "phone_office"
+    t.string  "phone_private"
+    t.string  "street"
+    t.string  "postal_code"
+    t.string  "city"
+    t.date    "birthday"
+    t.string  "emergency_contact_name"
+    t.string  "emergency_contact_phone"
+    t.integer "marital_status",                        default: 0
+    t.string  "social_insurance"
+    t.string  "crm_key"
   end
 
   add_index "employees", ["department_id"], name: "index_employees_on_department_id", using: :btree
@@ -339,6 +350,17 @@ ActiveRecord::Schema.define(version: 20170315132942) do
   end
 
   add_index "user_notifications", ["date_from", "date_to"], name: "index_user_notifications_on_date_from_and_date_to", using: :btree
+
+  create_table "versions", force: :cascade do |t|
+    t.string   "item_type",  null: false
+    t.integer  "item_id",    null: false
+    t.string   "event",      null: false
+    t.string   "whodunnit"
+    t.text     "object"
+    t.datetime "created_at"
+  end
+
+  add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
 
   create_table "work_items", force: :cascade do |t|
     t.integer "parent_id"
