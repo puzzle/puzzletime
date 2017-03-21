@@ -16,30 +16,37 @@
                 {class: 'weeknav-link previous', title: 'Vorherige Woche'}) do
         %i.icon-chevron-left
 
-      %ul.weeknav-days
-        = render partial: 'overview_day', collection: @week_days, as: :day
-      .weeknav-calendar-row
-        = plain_form(Worktime.new, method: :get) do |f|
-          = f.date_field(:work_date, id: 'week_date', data: { changeyear: true })
-        KW
-        = week_number(@selected_date)
+      .weeknav-content
+        .weeknav-calendar-row
+          = plain_form(Worktime.new, method: :get) do |f|
 
-        = link_to('Zeiten freigeben',
-                  edit_employee_worktimes_commit_path(current_user),
-                  class: 'add-other',
-                  data: { modal: '#modal',
-                          title: 'Zeiten freigeben',
-                          remote: true,
-                          type: :html })
-        - if @user.management
-          %span.add-other
-            &nbsp; | &nbsp;
-          = link_to('Fremderfassen', new_ordertime_path(other: 1),
-                    { class: 'add-other', id: 'new_other_ordertime_link' })
-      .weeknav-total.weeknav-element
-        .inner
-          .weeknav-label Total
-          .weeknav-time= format_hour(sum_hours)
+            .nowrap
+              = f.date_field(:work_date,
+                             id: 'week_date',
+                             data: { changeyear: true })
+
+              KW
+              = week_number(@selected_date)
+
+          .weeknav-actions.nowrap
+            = link_to('Zeiten freigeben',
+                      edit_employee_worktimes_commit_path(current_user),
+                      class: 'add-other',
+                      data: { modal: '#modal',
+                              title: 'Zeiten freigeben',
+                              remote: true,
+                              type: :html })
+            - if @user.management
+              %span.add-other
+                &nbsp;|&nbsp;
+              = link_to('Fremderfassen', new_ordertime_path(other: 1),
+                        { class: 'add-other', id: 'new_other_ordertime_link' })
+        %ul.weeknav-days
+          = render partial: 'overview_day', collection: @week_days, as: :day
+          %li.weeknav-total.weeknav-element
+            .inner
+              .weeknav-label Total
+              .weeknav-time= format_hour(sum_hours)
 
       = link_to(worktimes_url(week_date: @next_week_date),
                 { class: 'weeknav-link next', title: 'Nächste Woche' }) do

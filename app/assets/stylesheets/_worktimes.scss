@@ -2,6 +2,10 @@ $worktimes-weeknav-active-bg: #fff;
 $worktimes-weekcontent-hover-bg: $gray-lighter;
 
 .worktimes-container {
+  @media (max-width: 480px) {
+    font-size: 11px;
+  }
+
   .figures {
     @extend .row;
     margin-left: 0;
@@ -24,19 +28,25 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
   }
 
   .weeknav {
-    @extend .row;
+    display: flex;
     margin-left: 0;
     margin-right: 0;
-    position: relative;
     border-width: 1px 0;
     border-style: solid;
     border-color: $gray-light;
     background-color: $gray-lighter;
   }
 
+  .weeknav-content {
+    flex: 1;
+  }
+
+  .weeknav-actions {
+    margin-left: auto;
+  }
+
   .weeknav-element {
     line-height: 90px;
-    display: table-cell;
     text-align: center;
 
     .inner {
@@ -52,23 +62,21 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
   }
 
   .weeknav-link {
-    @extend .col-xs-1;
-    line-height: 90px + 30px;
-    text-align: center;
-    vertical-align: middle;
+    width: percentage(1 / 12);
+    max-width: 64px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-size: 30px;
+
     &:hover, &:active {
       text-decoration: none;
-    }
-    i {
-      vertical-align: middle;
-      line-height: 1.5em;
     }
   }
 
   .weeknav-calendar-row,
   .weeknav-add-row {
-    position: absolute;
+    padding: 0 $grid-gutter-width / 2;
     line-height: 30px;
     vertical-align: middle;
     border-width: 0 0 1px 0;
@@ -77,17 +85,14 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
     background-color: #fff;
   }
   .weeknav-calendar-row {
-    @extend .col-xs-offset-1;
-    @extend .col-xs-10;
+    display: flex;
+    flex-wrap: wrap;
     border-left-width: 1px;
     border-right-width: 1px;
 
-    form {
-      display: block;
-      float: left;
-      width: 100px;
-
+    > form {
       .input-group-addon {
+        display: inline-block;
         padding: 0;
         border: 0;
         background: transparent;
@@ -99,10 +104,11 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
         }
       }
       .input-group {
-        width: 100px;
+        display: inline-table;
+        vertical-align: middle;
       }
       input {
-        width: 200px;
+        width: 100px;
         height: 30px;
         padding: 0;
         border: 0;
@@ -140,14 +146,15 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
   }
 
   .weeknav-days {
-    @extend .col-xs-7;
+    width: 100%;
+    display: flex;
     list-style: none;
-    margin: 30px 0 0 0;
     padding: 0;
+    margin: 0;
 
     .day {
-      @extend .col-xs-1;
-      width: percentage(1 / 7);
+      flex: 1 1 auto;
+      max-width: percentage(1 / 8);
       cursor: pointer;
       border-width: 0 1px 0 0;
       border-style: solid;
@@ -193,10 +200,10 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
   }
 
   .weeknav-total {
-      @extend .col-xs-3;
-      margin-top: 30px;
-      border-right: 1px solid $gray-light;
-      text-align: right;
+    flex: 2 1 auto;
+    border-right: 1px solid $gray-light;
+    text-align: right;
+    padding-right: $grid-gutter-width / 2;
   }
 
   .weekcontent {
