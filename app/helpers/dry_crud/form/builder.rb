@@ -129,6 +129,18 @@ module DryCrud::Form
     alias float_field number_field
     alias decimal_field number_field
 
+    def enum_field(attr, html_options = {})
+      add_css_class(html_options, 'form-control')
+      attr_s = attr.to_s
+      list = object.class.defined_enums[attr_s].map do |key, value|
+        [value,
+         object.class.human_attribute_name([attr_s.pluralize, key].join('.'))]
+      end
+      collection_select(attr, list, :first, :second,
+                        select_options(attr, html_options),
+                        html_options)
+    end
+
     # Render a select element for a :belongs_to association defined by attr.
     # Use additional html_options for the select element.
     # To pass a custom element list, specify the list with the :list key or

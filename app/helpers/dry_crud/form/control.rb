@@ -139,6 +139,8 @@ module DryCrud::Form
         :password_field
       elsif attr.to_s.include?('email')
         :email_field
+      elsif object.class.defined_enums.key?(attr.to_s)
+        :enum_field
       elsif builder.respond_to?(:"#{type}_field")
         :"#{type}_field"
       else

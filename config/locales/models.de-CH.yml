@@ -162,6 +162,22 @@ de-CH:
         eval_periods: Zeitspannen Auswertungen
         committed_worktimes_at: Letzte freigegebene Periode
         probation_period_end_date: Ende Probezeit
+        phone_office: Telefon Büro
+        phone_private: Telefon Privat
+        street: Strasse
+        postal_code: PLZ
+        city: Ort
+        birthday: Geburtstag
+        emergency_contact_name: Notfallperson
+        emergency_contact_phone: Notfallnummer
+        marital_status: Zivilstand
+        social_insurance: AHV-Nummer
+      employee/marital_statuses:
+        married: Verheiratet
+        single: Ledig
+        widowed: Verwittwet
+        civil_partnership: Eingetragene Partnerschaft
+        divorced: Geschieden
       employment:
         employee_id: Mitarbeiter
         start_date: Startdatum

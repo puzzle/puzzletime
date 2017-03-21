@@ -8,7 +8,7 @@ class EmployeeMasterData < ActiveRecord::Migration
     add_column :employees, :birthday, :date
     add_column :employees, :emergency_contact_name, :string
     add_column :employees, :emergency_contact_phone, :string
-    add_column :employees, :marital_status, :integer, default: 0
+    add_column :employees, :marital_status, :integer
     add_column :employees, :social_insurance, :string
     add_column :employees, :crm_key, :string
   end
