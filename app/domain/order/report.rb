@@ -87,7 +87,7 @@ class Order::Report
                    'accounting_posts.work_item_id = ANY (work_items.path_ids)')
       .where(accounting_posts: { id: accounting_posts.collect(&:keys).flatten })
 
-    unless params[:closed]
+    if params[:closed].blank?
       accounting_post_hours = accounting_post_hours.in_period(period)
     end
 
@@ -105,7 +105,7 @@ class Order::Report
   def load_invoices(orders)
     invoices = Invoice.where(order_id: orders.collect(&:id))
 
-    unless params[:closed]
+    if params[:closed].blank?
       invoices = invoices.where(period.where_condition('billing_date'))
     end
 
@@ -150,7 +150,7 @@ class Order::Report
   end
 
   def filter_by_closed(orders)
-    return orders unless params[:closed]
+    return orders if params[:closed].blank?
 
     orders
       .where(order_statuses: { closed: true })

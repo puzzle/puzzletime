@@ -8,7 +8,7 @@
               = sort_link(:client, 'Kunde')
               %br/
               Auftrag
-            - unless params[:closed]
+            - if params[:closed].blank?
               %th Status
             %th.right.nowrap
               = sort_link(:closed_at, 'Abgeschlossen am')
@@ -44,7 +44,7 @@
                                  can?(:update, order.order) ? edit_order_path(order) : order_path(order))
                 - else
                   %span.title= order
-              - unless params[:closed]
+              - if params[:closed].blank?
                 %td
                   - if order.status
                     %span{class: "label label-#{order.status.style}"}

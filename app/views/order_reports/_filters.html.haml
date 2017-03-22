@@ -2,8 +2,10 @@
   = hidden_field_tag :page, 1
   = hidden_field_tag :closed, params[:closed]
 
-  = direct_filter_date(:start_date, 'Von', @period.start_date)
-  = direct_filter_date(:end_date, 'Bis', @period.end_date)
+  - start_label = params[:closed].present? ? 'Abgeschlossen zwischen' : 'Zeiten von'
+  - end_label = params[:closed].present? ? 'und' : 'bis'
+  = direct_filter_date(:start_date, start_label, @period.start_date)
+  = direct_filter_date(:end_date, end_label, @period.end_date)
 
   = direct_filter_select(:department_id,
                          'OE',
@@ -31,7 +33,7 @@
                          class: 'searchable',
                          multiple: true)
 
-  - unless params[:closed]
+  - if params[:closed].blank?
     = direct_filter_select(:status_id,
                            'Status',
                            @order_status,
