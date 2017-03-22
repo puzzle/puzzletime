@@ -20,11 +20,13 @@
 
 class Employee < ActiveRecord::Base
 
-  has_paper_trail
+  INTERNAL_ATTRS = %w(id passwd committed_worktimes_at eval_periods).freeze
 
   include Evaluatable
   include ReportType::Accessors
   extend Conditioner
+
+  has_paper_trail skip: Employee::INTERNAL_ATTRS
 
   enum marital_status: %w(
     single

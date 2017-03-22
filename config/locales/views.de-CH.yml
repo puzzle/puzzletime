@@ -1,0 +1,6 @@
+de-CH:
+  version:
+    attribute_change:
+      from_to: "%{attr} wurde von «%{from}» auf «%{to}» geändert."
+      from: "%{attr} «%{from}» wurde gelöscht."
+      to: "%{attr} wurde auf «%{to}» gesetzt."

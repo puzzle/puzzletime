@@ -24,6 +24,10 @@ Rails.application.routes.draw do
       post :passwd, to: 'employees#update_passwd'
     end
 
+    member do
+      get :log, to: 'employees/log#index'
+    end
+
     resources :employments, except: [:show]
     resources :overtime_vacations, except: [:show]
     resource :worktimes_commit, only: [:edit, :update], controller: 'employees/worktimes_commit'

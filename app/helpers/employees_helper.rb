@@ -14,4 +14,39 @@ module EmployeesHelper
     object = instance_variable_get("@#{object_name}")
     check_box_tag "#{object_name}[#{field}][]", value, object.send(field).include?(value)
   end
+
+  def version_author(version)
+    if version.version_author.present?
+      employee = Employee.where(id: version.version_author).first
+      employee.to_s if employee.present?
+    end
+  end
+
+  def version_changes(version)
+    item_class = version.item_type.constantize
+    safe_join(version.changeset) do |attr, (from, to)|
+      content_tag(:div, version_attribute_change(item_class, attr, from, to))
+    end
+  end
+
+  def version_attribute_change(item_class, attr, from, to)
+    key = version_attribute_change_key(from, to)
+    t("version.attribute_change.#{key}", version_attribute_change_args(item_class, attr, from, to))
+  end
+
+  def version_attribute_change_key(from, to)
+    if from.present? && to.present?
+      'from_to'
+    elsif from.present?
+      'from'
+    elsif to.present?
+      'to'
+    end
+  end
+
+  def version_attribute_change_args(item_class, attr, from, to)
+    { attr: item_class.human_attribute_name(attr),
+      from: f(from),
+      to: f(to) }
+  end
 end

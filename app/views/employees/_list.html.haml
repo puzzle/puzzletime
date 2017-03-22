@@ -12,3 +12,6 @@
   - if can?(:manage, Employment)
     - t.action_col do |e|
       - link_to('Beschäftigungsgrade', employee_employments_path(e))
+  - if can?(:log, Employment)
+    - t.action_col do |e|
+      - link_to('Log', log_employee_path(e))

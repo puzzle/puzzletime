@@ -1,0 +1,6 @@
+- if can?(:edit, @employee)
+  = action_link "#{Employee.model_name.human} bearbeiten",
+                edit_polymorphic_path(@employee)
+
+= action_link "Übersicht #{Employee.model_name.human(count: 2)}",
+              polymorphic_path(Employee, returning: true)
