@@ -132,8 +132,8 @@ module DryCrud::Form
     def enum_field(attr, html_options = {})
       add_css_class(html_options, 'form-control')
       attr_s = attr.to_s
-      list = object.class.defined_enums[attr_s].map do |key, value|
-        [value,
+      list = object.class.defined_enums[attr_s].map do |key, _value|
+        [key,
          object.class.human_attribute_name([attr_s.pluralize, key].join('.'))]
       end
       collection_select(attr, list, :first, :second,
