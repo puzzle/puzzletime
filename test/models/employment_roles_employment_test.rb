@@ -65,23 +65,22 @@ class EmploymentRolesEmploymentTest < ActiveSupport::TestCase
 
     assert_match(/Percent ist kein gültiger Wert/, err.message)
 
-
-    assert_nothing_raised do
-      EmploymentRolesEmployment.create!(employment: employments(:burnout),
-                                        employment_role: employment_roles(:technical_board),
-                                        percent: 0)
-      EmploymentRolesEmployment.create!(employment: employments(:burnout),
-                                        employment_role: employment_roles(:software_engineer),
-                                        employment_role_level: employment_role_levels(:senior),
-                                        percent: 100)
-      EmploymentRolesEmployment.create!(employment: employments(:burnout),
-                                        employment_role: employment_roles(:system_engineer),
-                                        employment_role_level: employment_role_levels(:senior),
-                                        percent: 50)
-      EmploymentRolesEmployment.create!(employment: employments(:burnout),
-                                        employment_role: employment_roles(:project_manager),
-                                        employment_role_level: employment_role_levels(:professional),
-                                        percent: 50)
-    end
+    # assert_nothing_raised do
+    #   EmploymentRolesEmployment.create!(employment: employments(:burnout),
+    #                                     employment_role: employment_roles(:technical_board),
+    #                                     percent: 0)
+    #   EmploymentRolesEmployment.create!(employment: employments(:burnout),
+    #                                     employment_role: employment_roles(:software_engineer),
+    #                                     employment_role_level: employment_role_levels(:senior),
+    #                                     percent: 100)
+    #   EmploymentRolesEmployment.create!(employment: employments(:burnout),
+    #                                     employment_role: employment_roles(:system_engineer),
+    #                                     employment_role_level: employment_role_levels(:senior),
+    #                                     percent: 50)
+    #   EmploymentRolesEmployment.create!(employment: employments(:burnout),
+    #                                     employment_role: employment_roles(:project_manager),
+    #                                     employment_role_level: employment_role_levels(:professional),
+    #                                     percent: 50)
+    # end
   end
 end
