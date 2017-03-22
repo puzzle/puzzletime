@@ -5,8 +5,16 @@
                            :email,
                            :ldapname,
                            :department_id,
-                           :crm_key,
                            :probation_period_end_date
+
+  - if Crm.instance
+    - url = Crm.instance.contact_url(entry)
+    - crm_link = url && link_to('Highrise Kontakt', url, target: '_blank',
+                                                         rel: 'noopener noreferrer')
+    = f.labeled :crm_key, caption: Crm.instance.crm_key_label,
+                          span: 2,
+                          help: crm_link do
+      = f.input_field :crm_key
 
   - if Settings.employees.initial_vacation_days_editable
     = f.labeled_input_field :initial_vacation_days
