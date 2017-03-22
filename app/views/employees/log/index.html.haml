@@ -1,21 +1,14 @@
 - @title ||= "Log von #{@employee.to_s}"
 
 - if @versions.present?
-  %table.table.table-striped.table-condensed
-    %thead
-      %tr
-        %th Datum/Autor
-        %th Änderungen
-    %tbody
-      - @versions.group_by(&:created_at).each do |created_at, versions|
-        %tr.log-item
-          %td
-            %small.log-created.text-muted= f(created_at)
-            - if version_author(versions.first)
-              %h4.log-author= version_author(versions.first)
-          %td.log-infos
-            - versions.each do |v|
-              = version_changes(v)
+  = plain_table(@versions.group_by(&:created_at).each) do |t|
+    - t.col('Datum/Autor') do |created_at, versions|
+      %small.text-muted= f(created_at)
+      - if version_author(versions.first)
+        %h4= version_author(versions.first)
+    - t.col('Änderungen') do |created_at, versions|
+      - versions.each do |v|
+        = version_changes(v)
 
 - else
   Keine Änderungen

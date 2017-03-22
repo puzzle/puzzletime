@@ -55,3 +55,6 @@
 
 - if can?(:export_ma_overview, Evaluation)
   = nav 'MA Übersicht', evaluation_path('export_ma_overview')
+
+- if can?(:read, Employee)
+  = nav 'Mitarbeiterliste', employee_summaries_path

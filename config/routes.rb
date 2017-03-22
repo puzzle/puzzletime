@@ -33,6 +33,8 @@ Rails.application.routes.draw do
     resource :worktimes_commit, only: [:edit, :update], controller: 'employees/worktimes_commit'
   end
 
+  resources :employee_summaries, only: [:index, :show]
+
   resources :holidays, except: [:show]
 
   resources :orders do
