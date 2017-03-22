@@ -1,0 +1,65 @@
+# == Schema Information
+#
+# Table name: employment_roles
+#
+#  id                          :integer          not null, primary key
+#  name                        :string           not null
+#  billable                   :boolean          not null
+#  levels                     :boolean          not null
+#  employment_role_category_id :integer
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+system_technician:
+  name: System Technician
+  billable: true
+  levels: true
+
+system_engineer:
+  name: System Engineer
+  billable: true
+  levels: true
+
+software_developer:
+  name: Software Developer
+  billable: true
+  levels: true
+
+software_engineer:
+  name: Software Engineer
+  billable: true
+  levels: true
+
+project_manager:
+  name: Project Manager
+  billable: true
+  levels: true
+
+graphics_designer:
+  name: Graphics Designer
+  billable: true
+  levels: true
+
+ux_consultant:
+  name: UX Consultant
+  billable: true
+  levels: true
+
+technical_board:
+  name: Member of the Technical Board
+  billable: false
+  levels: false
+  employment_role_category: technical_board
+
+head_of_department:
+  name: Head of Department
+  billable: false
+  levels: true
+  employment_role_category: management
+
+management_assistant:
+  name: Management Assistant
+  billable: false
+  levels: true
+  employment_role_category: assistant

@@ -15,6 +15,17 @@
 #  department_id             :integer
 #  committed_worktimes_at    :date
 #  probation_period_end_date :date
+#  phone_office              :string
+#  phone_private             :string
+#  street                    :string
+#  postal_code               :string
+#  city                      :string
+#  birthday                  :date
+#  emergency_contact_name    :string
+#  emergency_contact_phone   :string
+#  marital_status            :integer
+#  social_insurance          :string
+#  crm_key                   :string
 #
 
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
@@ -96,3 +107,11 @@ lucien:
   email:     lw@bla.ch
   management: false
   department: devtwo
+
+burnout_nero:
+  id:        9
+  firstname: Nero
+  lastname:  Germanicus
+  shortname: NG
+  passwd:    ng
+  email:     ng@bla.ch

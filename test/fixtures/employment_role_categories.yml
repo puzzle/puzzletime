@@ -1,0 +1,18 @@
+# == Schema Information
+#
+# Table name: employment_role_categories
+#
+#  id   :integer          not null, primary key
+#  name :string           not null
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+technical_board:
+  name: Technical Board
+
+management:
+  name: Management
+
+assistant:
+  name: Unterstützend

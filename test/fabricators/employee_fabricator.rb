@@ -15,6 +15,17 @@
 #  department_id             :integer
 #  committed_worktimes_at    :date
 #  probation_period_end_date :date
+#  phone_office              :string
+#  phone_private             :string
+#  street                    :string
+#  postal_code               :string
+#  city                      :string
+#  birthday                  :date
+#  emergency_contact_name    :string
+#  emergency_contact_phone   :string
+#  marital_status            :integer
+#  social_insurance          :string
+#  crm_key                   :string
 #
 
 Fabricator(:employee) do

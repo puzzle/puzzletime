@@ -150,7 +150,7 @@ ActiveRecord::Schema.define(version: 20170321143841) do
     t.date    "birthday"
     t.string  "emergency_contact_name"
     t.string  "emergency_contact_phone"
-    t.integer "marital_status",                        default: 0
+    t.integer "marital_status"
     t.string  "social_insurance"
     t.string  "crm_key"
   end
@@ -165,6 +165,30 @@ ActiveRecord::Schema.define(version: 20170321143841) do
 
   add_index "employees_invoices", ["employee_id"], name: "index_employees_invoices_on_employee_id", using: :btree
   add_index "employees_invoices", ["invoice_id"], name: "index_employees_invoices_on_invoice_id", using: :btree
+
+  create_table "employment_role_categories", force: :cascade do |t|
+    t.string "name", null: false
+  end
+
+  create_table "employment_role_levels", force: :cascade do |t|
+    t.string "name", null: false
+  end
+
+  create_table "employment_roles", force: :cascade do |t|
+    t.string  "name",                        null: false
+    t.boolean "billable",                    null: false
+    t.boolean "levels",                      null: false
+    t.integer "employment_role_category_id"
+  end
+
+  create_table "employment_roles_employments", id: false, force: :cascade do |t|
+    t.integer "employment_id",                                    null: false
+    t.integer "employment_role_id",                               null: false
+    t.decimal "percent",                  precision: 5, scale: 2, null: false
+    t.integer "employment_role_level_id"
+  end
+
+  add_index "employment_roles_employments", ["employment_id", "employment_role_id"], name: "index_unique_employment_employment_role", unique: true, using: :btree
 
   create_table "employments", force: :cascade do |t|
     t.integer "employee_id"
@@ -405,6 +429,8 @@ ActiveRecord::Schema.define(version: 20170321143841) do
   add_index "worktimes", ["invoice_id"], name: "index_worktimes_on_invoice_id", using: :btree
   add_index "worktimes", ["work_item_id", "employee_id", "work_date"], name: "worktimes_work_items", using: :btree
 
+  add_foreign_key "employment_roles", "employment_role_categories"
+  add_foreign_key "employment_roles_employments", "employment_role_levels"
   add_foreign_key "employments", "employees", name: "fk_employments_employees", on_delete: :cascade
   add_foreign_key "worktimes", "absences", name: "fk_times_absences", on_delete: :cascade
   add_foreign_key "worktimes", "employees", name: "fk_times_employees", on_delete: :cascade

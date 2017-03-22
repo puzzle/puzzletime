@@ -1,0 +1,18 @@
+# == Schema Information
+#
+# Table name: employment_role_levels
+#
+#  id   :integer          not null, primary key
+#  name :string           not null
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+junior:
+  name: Junior
+
+professional:
+  name: Professional
+
+senior:
+  name: Senior
