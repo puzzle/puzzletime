@@ -33,8 +33,6 @@ Rails.application.routes.draw do
     resource :worktimes_commit, only: [:edit, :update], controller: 'employees/worktimes_commit'
   end
 
-  resources :employee_summaries, only: [:index, :show]
-
   resources :holidays, except: [:show]
 
   resources :orders do
@@ -124,6 +122,8 @@ Rails.application.routes.draw do
   end
 
   scope '/evaluator', controller: 'evaluator' do
+    resources :employee_master_data, only: [:index, :show]
+
     get ':action'
 
     post :change_period
