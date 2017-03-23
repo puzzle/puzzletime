@@ -23,11 +23,11 @@ class Employees::LogControllerTest < ActionController::TestCase
     pedro.update_attributes(phone_private: '+41791234567')
     pedro.update_attributes(committed_worktimes_at: Time.zone.now) # should not appear in log
     get :index, id: pedro.id
-    assert_select('.log-item', count: 2)
-    assert_select('.log-item:nth-child(1) .log-infos', text: 'Telefon Privat wurde auf «+41791234567» gesetzt.')
-    assert_select('.log-item:nth-child(2) .log-infos', text: 'Strasse wurde auf «Belpstrasse 37» gesetzt.' \
-                                                             'PLZ wurde auf «3007» gesetzt.' \
-                                                             'Ort wurde auf «Bern» gesetzt.')
+    assert_select('.log tbody tr', count: 2)
+    assert_select('.log tbody tr:nth-child(1) td:nth-child(2)', text: 'Telefon Privat wurde auf «+41791234567» gesetzt.')
+    assert_select('.log tbody tr:nth-child(2) td:nth-child(2)', text: 'Strasse wurde auf «Belpstrasse 37» gesetzt.' \
+                                                                      'PLZ wurde auf «3007» gesetzt.' \
+                                                                      'Ort wurde auf «Bern» gesetzt.')
   end
 
   private

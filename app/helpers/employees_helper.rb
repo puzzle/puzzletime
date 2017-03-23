@@ -34,7 +34,9 @@ module EmployeesHelper
   def version_changes(version)
     item_class = version.item_type.constantize
     safe_join(version.changeset) do |attr, (from, to)|
-      content_tag(:div, version_attribute_change(item_class, attr, from, to))
+      unless from.blank? && to.blank?
+        content_tag(:div, version_attribute_change(item_class, attr, from, to))
+      end
     end
   end
 
