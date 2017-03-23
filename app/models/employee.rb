@@ -53,6 +53,10 @@ class Employee < ActiveRecord::Base
   has_and_belongs_to_many :invoices
 
   has_many :employments, dependent: :destroy
+  has_one :current_employment, lambda {
+    where('employments.start_date <= ? AND ' \
+          '(employments.end_date IS NULL OR employments.end_date >= ?)', Time.zone.today, Time.zone.today)
+  }, class_name: 'Employment'
   has_many :absences,
            -> { order('name').uniq },
            through: :worktimes

@@ -15,6 +15,15 @@ module EmployeesHelper
     check_box_tag "#{object_name}[#{field}][]", value, object.send(field).include?(value)
   end
 
+  def format_current_employment_roles(employee)
+    employment = employee.current_employment
+    employment.employment_roles_employments.map do |ere|
+      [ere.employment_role.name,
+       ere.employment_role_level.present? ? ere.employment_role_level.name : nil,
+       format_percent(ere.percent)].compact.join(' ')
+    end.join(', ')
+  end
+
   def version_author(version)
     if version.version_author.present?
       employee = Employee.where(id: version.version_author).first
