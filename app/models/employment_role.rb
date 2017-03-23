@@ -4,8 +4,8 @@
 #
 #  id                          :integer          not null, primary key
 #  name                        :string           not null
-#  billable?                   :boolean          not null
-#  levels?                     :boolean          not null
+#  billable                    :boolean          not null
+#  level                       :boolean          not null
 #  employment_role_category_id :integer
 #
 

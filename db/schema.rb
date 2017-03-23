@@ -177,7 +177,7 @@ ActiveRecord::Schema.define(version: 20170321143841) do
   create_table "employment_roles", force: :cascade do |t|
     t.string  "name",                        null: false
     t.boolean "billable",                    null: false
-    t.boolean "levels",                      null: false
+    t.boolean "level",                       null: false
     t.integer "employment_role_category_id"
   end
 
@@ -429,8 +429,6 @@ ActiveRecord::Schema.define(version: 20170321143841) do
   add_index "worktimes", ["invoice_id"], name: "index_worktimes_on_invoice_id", using: :btree
   add_index "worktimes", ["work_item_id", "employee_id", "work_date"], name: "worktimes_work_items", using: :btree
 
-  add_foreign_key "employment_roles", "employment_role_categories"
-  add_foreign_key "employment_roles_employments", "employment_role_levels"
   add_foreign_key "employments", "employees", name: "fk_employments_employees", on_delete: :cascade
   add_foreign_key "worktimes", "absences", name: "fk_times_absences", on_delete: :cascade
   add_foreign_key "worktimes", "employees", name: "fk_times_employees", on_delete: :cascade
