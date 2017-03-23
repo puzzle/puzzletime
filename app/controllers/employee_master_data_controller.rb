@@ -1,6 +1,9 @@
 class EmployeeMasterDataController < ApplicationController
 
   delegate :model_class, to: 'self.class'
+
+  helper_method :model_class
+
   class << self
     def model_class
       Employee
@@ -22,6 +25,7 @@ class EmployeeMasterDataController < ApplicationController
   def list_entries
     Employee.select('employees.*, ' \
                     'em.percent AS current_percent_value, ' \
+                    'departments.name, ' \
                     'CONCAT(lastname, \' \', firstname) AS fullname')
             .employed_ones(Period.current_day)
             .joins('LEFT JOIN departments ON departments.id = employees.department_id')

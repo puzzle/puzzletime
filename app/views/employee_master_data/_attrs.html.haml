@@ -1,0 +1,61 @@
+.row
+  .col-md-6
+    .row
+      .col-md-12
+        %address.well
+          .name
+            %strong
+              = @employee.firstname
+              = @employee.lastname
+          - if @employee.street.present?
+            .street= @employee.street
+          - if @employee.postal_code.present? || @employee.city.present?
+            .location
+              = @employee.postal_code
+              = @employee.city
+          - if @employee.phone_private.present?
+            .phone-private{title: captionize(:phone_private, @employee.class)}
+              %i.glyphicon.glyphicon-phone
+              = link_to @employee.phone_private, "tel:#{@employee.phone_private}"
+          - if @employee.phone_office.present?
+            .phone-office{title: captionize(:phone_office, @employee.class)}
+              %i.glyphicon.glyphicon-phone-alt
+              = link_to @employee.phone_office, "tel:#{@employee.phone_office}"
+          - if @employee.email.present?
+            .email
+              %i.glyphicon.glyphicon-envelope
+              = link_to @employee.email, @employee.email
+
+    .row
+      .col-md-6
+        %h4 Personendaten
+        = labeled_attr(@employee, :shortname)
+        - if @employee.birthday.present?
+          = labeled(captionize(:birthday, @employee.class)) do
+            = localize_date(@employee.birthday)
+        - if @employee.marital_status.present?
+          = labeled(captionize(:marital_status, @employee.class)) do
+            = @employee.class.human_attribute_name("marital_statuses.#{@employee.marital_status}")
+        - if @employee.social_insurance.present?
+          = labeled_attr(@employee, :social_insurance)
+        - if Crm.instance && @employee.crm_key.present?
+          = labeled(Crm.instance.crm_key_label) do
+            %a{ href: Crm.instance.contact_url(@employee) }
+              Kontakt
+
+        - if @employee.emergency_contact_name.present? || @employee.emergency_contact_phone.present?
+          %br
+          %h4 Notfallkontakt
+          .alert.alert-danger
+            - if @employee.emergency_contact_name.present?
+              = labeled_attr(@employee, :emergency_contact_name)
+            - if @employee.emergency_contact_phone.present?
+              = labeled(captionize(:emergency_contact_phone, @employee.class)) do
+                %i.icon-help
+                = link_to @employee.emergency_contact_phone, "tel:#{@employeeemergency_contact_phone}"
+
+      .col-md-6
+        %h4 Anstellung
+        = labeled_attr(@employee, :department_id)
+        = labeled_attr(@employee, :current_percent)
+        = labeled('Rollen', format_current_employment_roles(@employee, tag(:br)))

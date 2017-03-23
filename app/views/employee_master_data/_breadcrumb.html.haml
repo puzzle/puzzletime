@@ -1,0 +1,4 @@
+- if params[:action] == 'show'
+  %ol.breadcrumb
+    %li= link_to 'Mitarbeiterliste', employee_master_data_path
+    %li= @employee.to_s

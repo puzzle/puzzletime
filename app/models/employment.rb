@@ -19,7 +19,7 @@ class Employment < ActiveRecord::Base
   DAYS_PER_YEAR = 365.25
 
   belongs_to :employee
-  has_many :employment_roles_employments
+  has_many :employment_roles_employments, -> { order(percent: :desc) }
 
   # All dependencies between the models are listed below.
   validates_by_schema

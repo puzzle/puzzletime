@@ -4,10 +4,10 @@
   - t.sortable_attr(:shortname)
   - t.sortable_attr(:email) do |e|
     = link_to_if e.email.present?, e.email, e.email
-  - t.sortable_attr(:phone_office) do |e|
-    = link_to_if e.phone_office.present?, e.phone_office, "tel:#{e.phone_office}"
   - t.sortable_attr(:phone_private) do |e|
     = link_to_if e.phone_private.present?, e.phone_private, "tel:#{e.phone_private}"
+  - t.sortable_attr(:phone_office) do |e|
+    = link_to_if e.phone_office.present?, e.phone_office, "tel:#{e.phone_office}"
   - t.sortable_attr(:birthday) do |e|
     = localize_date(e.birthday)
   - t.sortable_attr(:department)
