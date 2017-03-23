@@ -1,0 +1,17 @@
+= plain_table(@employees) do |t|
+  - t.sortable_attr(:fullname, 'Name') do |e|
+    = link_to e.to_s, employee_master_datum_path(e.id)
+  - t.sortable_attr(:shortname)
+  - t.sortable_attr(:email) do |e|
+    = link_to_if e.email.present?, e.email, e.email
+  - t.sortable_attr(:phone_office) do |e|
+    = link_to_if e.phone_office.present?, e.phone_office, "tel:#{e.phone_office}"
+  - t.sortable_attr(:phone_private) do |e|
+    = link_to_if e.phone_private.present?, e.phone_private, "tel:#{e.phone_private}"
+  - t.sortable_attr(:birthday) do |e|
+    = localize_date(e.birthday)
+  - t.sortable_attr(:department)
+  - t.sortable_attr(:current_percent_value, 'Beschäftigungsgrad') do |e|
+    = format_percent(e.current_percent_value) if e.current_percent_value.present?
+  - t.attr(:roles, 'Rollen') do |e|
+    = format_current_employment_roles(e)

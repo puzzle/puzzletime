@@ -1,45 +1,46 @@
-class EmployeeMasterDataController < ListController
+class EmployeeMasterDataController < ApplicationController
 
-  # self.search_columns = []
+  delegate :model_class, to: 'self.class'
+  class << self
+    def model_class
+      Employee
+    end
+  end
 
-  self.sort_mappings = {
-    department: 'departments.name',
-    fullname: 'fullname',
-    current_percent_value: 'current_percent_value'
-  }
-
-  # before_action :authorize_action
+  def index
+    authorize!(:read, Employee)
+    @employees = list_entries
+  end
 
   def show
     @employee = Employee.find(params[:id])
+    authorize!(:read, @employee)
   end
 
   private
 
-  def list_entries_without_sort
+  def list_entries
     Employee.select('employees.*, ' \
                     'em.percent AS current_percent_value, ' \
                     'CONCAT(lastname, \' \', firstname) AS fullname')
             .employed_ones(Period.current_day)
+            .joins('LEFT JOIN departments ON departments.id = employees.department_id')
             .includes(:department, current_employment: {
                         employment_roles_employments: [:employment_role, :employment_role_level]
                       })
             .list
   end
 
-  def employments_join
-    today = Time.zone.today
-    'LEFT JOIN employments ON employees.id = employments.employee_id AND ' \
-    "employments.start_date <= #{Employment.sanitize(today)} AND " \
-    "(employments.end_date IS NULL OR employments.end_date >= #{Employment.sanitize(today)})"
-  end
+  # Must be included after the #list_entries method is defined.
+  include DryCrud::Searchable
+  include DryCrud::Sortable
 
-  def model_class
-    Employee
-  end
-
-  # def authorize_action
-  #   authorize!(:read, Employee)
-  # end
+  # Must be defined after searchable/sortable modules have been included.
+  self.search_columns = ['lastname', 'firstname', 'shortname', 'departments.name']
+  self.sort_mappings_with_indifferent_access = {
+    department: 'departments.name',
+    fullname: 'fullname',
+    current_percent_value: 'current_percent_value'
+  }.with_indifferent_access
 
 end
