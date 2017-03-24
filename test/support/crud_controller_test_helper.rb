@@ -162,14 +162,24 @@ module CrudControllerTestHelper
   def assert_entry_attrs_equal(object, attrs)
     attrs.each do |key, value|
       if key.to_s.end_with?('_attributes')
-        sub_entry = object.send(key.to_s[0..(-'_attributes'.size - 1)])
-        assert_entry_attrs_equal(sub_entry, value)
+        assert_entry_attrs_sub_entry(object, key, value)
       else
         actual = object.send(key)
         assert_equal value, actual,
                      "#{key} is expected to be <#{value.inspect}>, " \
                      "got <#{actual.inspect}>"
       end
+    end
+  end
+
+  def assert_entry_attrs_sub_entry(object, key, value)
+    sub_entry = object.send(key.to_s[0..(-'_attributes'.size - 1)])
+    if sub_entry.is_a? ActiveRecord::Associations::CollectionProxy
+      sub_entry.each_with_index do |array_sub_entry, index|
+        assert_entry_attrs_equal(array_sub_entry, value[index.to_s])
+      end
+    else
+      assert_entry_attrs_equal(sub_entry, value)
     end
   end
 

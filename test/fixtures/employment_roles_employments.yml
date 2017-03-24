@@ -9,3 +9,9 @@
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+left_this_year_role:
+  employment_id: left_this_year
+  employment_role: software_developer
+  employment_role_level: junior
+  percent: 80
