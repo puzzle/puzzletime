@@ -42,6 +42,9 @@ class Ability
          TargetScope,
          UserNotification,
          WorkingCondition,
+         EmploymentRole,
+         EmploymentRoleLevel,
+         EmploymentRoleCategory,
          WorkItem]
 
     # :crud instead of :manage because cannot change settings of other employees

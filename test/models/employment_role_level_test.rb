@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # == Schema Information
 #
 # Table name: employment_role_levels
@@ -9,7 +11,7 @@
 require 'test_helper'
 
 class EmploymentRoleLevelTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+  test 'string representation matches name' do
+    assert_equal employment_role_levels(:senior).to_s, 'Senior'
+  end
 end

@@ -35,6 +35,15 @@ de-CH:
       employment:
         one: Beschäftigungsgrad
         other: Beschäftigungsgrade
+      employment_role:
+        one: Anstellungs Rolle
+        other: Anstellungs Rollen
+      employment_role_level:
+        one: Anstellungs Level
+        other: Anstellungs Levels
+      employment_role_category:
+        one: Anstellungs Kategorie
+        other: Anstellungs Kategorien
       holiday:
         one: Feiertag
         other: Feiertage
@@ -185,6 +194,15 @@ de-CH:
         percent: Prozent
         vacation_days_per_year: Ferientage pro Jahr
         comment: Kommentar
+      employment_role:
+        name: Name
+        billable: Verrechenbar
+        level: Hat Anstellungs Level
+        employment_role_category_id: Anstellungs Kategorie
+      employment_role_level:
+        name: Name
+      employment_role_category:
+        name: Name
       holiday:
         holiday_date: Datum
         musthours_day: Muss Stunden

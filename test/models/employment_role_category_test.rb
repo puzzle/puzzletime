@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # == Schema Information
 #
 # Table name: employment_role_categories
@@ -9,7 +11,7 @@
 require 'test_helper'
 
 class EmploymentRoleCategoryTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+  test 'string representation matches name' do
+    assert_equal employment_role_categories(:management).to_s, 'Management'
+  end
 end

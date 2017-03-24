@@ -11,4 +11,8 @@
 
 class EmploymentRole < ActiveRecord::Base
   belongs_to :employment_role_category
+
+  def to_s
+    name
+  end
 end
