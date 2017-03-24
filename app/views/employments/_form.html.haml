@@ -22,7 +22,8 @@
                                      @employment_role_levels,
                                      :id,
                                      :to_s,
-                                     { prompt: ta(:please_select) },
+                                     { prompt: ta(:please_select),
+                                       include_blank: true },
                                      class: 'form-control',
                                      placeholder: 'Level'
         .col-md-2
