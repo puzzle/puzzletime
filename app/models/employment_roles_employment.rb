@@ -17,6 +17,18 @@ class EmploymentRolesEmployment < ActiveRecord::Base
   validates :percent, inclusion: 0..200
   validate :valid_level
 
+  scope :list, -> { order('percent DESC') }
+
+  def to_s
+    level = if employment_role_level_id
+              " #{employment_role_level}"
+            else
+              ''
+            end
+
+    "#{percent.round}% #{employment_role}#{level}"
+  end
+
   private
 
   def valid_level

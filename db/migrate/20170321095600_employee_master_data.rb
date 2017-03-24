@@ -27,9 +27,11 @@
       t.string :name, null: false
     end
 
-    create_join_table :employments, :employment_roles do |t|
-      t.decimal :percent, precision: 5, scale: 2, null: false
+    create_table :employment_roles_employments do |t|
+      t.belongs_to :employment, null: false
+      t.belongs_to :employment_role, null: false
       t.belongs_to :employment_role_level
+      t.decimal :percent, precision: 5, scale: 2, null: false
     end
 
     add_index :employment_roles_employments,

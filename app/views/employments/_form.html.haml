@@ -3,4 +3,38 @@
 = crud_form do |f|
   = f.labeled_input_fields :start_date, :end_date, :percent
   = f.labeled_input_field :vacation_days_per_year, help: 'Feld leer lassen, um den Wert aus den allgemeinen Anstellungsbedingungen zu verwenden.'
+  = f.labeled :employment_roles_employments do
+    = f.nested_fields_for :employment_roles_employments,
+                          entry.employment_roles_employments,
+                          wrapper_tag: :div do |fields|
+      = fields.hidden_field :id
+      .row
+        .col-md-5
+          = fields.collection_select :employment_role_id,
+                                     @employment_roles,
+                                     :id,
+                                     :to_s,
+                                     { prompt: ta(:please_select) },
+                                     class: 'form-control',
+                                     placeholder: 'Rolle'
+        .col-md-2
+          = fields.number_field :percent, min: 0, max: 200, step: 5
+        .col-md-3
+          = fields.collection_select :employment_role_level_id,
+                                     @employment_role_levels,
+                                     :id,
+                                     :to_s,
+                                     { prompt: ta(:please_select) },
+                                     class: 'form-control',
+                                     placeholder: 'Level'
+        .col-md-1
+          = fields.remove_nested_fields_link(picon('delete',
+                                                   title: 'Rolle entfernen',
+                                                   class: 'remove-employment-role'))
+    .row
+      .col-md-1.form-action
+        = f.add_nested_fields_link(:employment_roles_employments,
+                                   picon(:add, title: 'Rolle hinzufügen'))
+        = spinner
+
   = f.labeled_text_area :comment

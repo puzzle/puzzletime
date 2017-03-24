@@ -21,6 +21,10 @@ class Employment < ActiveRecord::Base
   belongs_to :employee
   has_many :employment_roles_employments, -> { order(percent: :desc) }
 
+  accepts_nested_attributes_for :employment_roles_employments,
+                                reject_if: :all_blank,
+                                allow_destroy: true
+
   # All dependencies between the models are listed below.
   validates_by_schema
   validates :percent, inclusion: 0..200

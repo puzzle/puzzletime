@@ -12,6 +12,17 @@
 require 'test_helper'
 
 class EmploymentRolesEmploymentTest < ActiveSupport::TestCase
+  test 'string representation matches name' do
+    e = EmploymentRolesEmployment.create!(
+      employment: employments(:long_time),
+      employment_role: employment_roles(:software_engineer),
+      employment_role_level: employment_role_levels(:senior),
+      percent: 90
+    )
+
+    assert_equal e.to_s, '90% Software Engineer Senior'
+  end
+
   test 'role with required level validation' do
     err = assert_raises ActiveRecord::RecordInvalid do
       EmploymentRolesEmployment.create!(employment: employments(:long_time),

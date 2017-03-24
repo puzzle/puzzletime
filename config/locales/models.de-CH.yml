@@ -191,8 +191,9 @@ de-CH:
         employee_id: Mitarbeiter
         start_date: Startdatum
         end_date: Enddatum
-        percent: Prozent
+        percent: Beschäftigungsgrad
         vacation_days_per_year: Ferientage pro Jahr
+        employment_roles_employments: Rollenanteile
         comment: Kommentar
       employment_role:
         name: Name
