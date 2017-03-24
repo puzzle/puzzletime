@@ -17,8 +17,6 @@
                                      { prompt: ta(:please_select) },
                                      class: 'form-control',
                                      placeholder: 'Rolle'
-        .col-md-2
-          = fields.number_field :percent, min: 0, max: 200, step: 5
         .col-md-3
           = fields.collection_select :employment_role_level_id,
                                      @employment_role_levels,
@@ -27,6 +25,8 @@
                                      { prompt: ta(:please_select) },
                                      class: 'form-control',
                                      placeholder: 'Level'
+        .col-md-2
+          = fields.number_field :percent, min: 0, max: 200, step: 5
         .col-md-1
           = fields.remove_nested_fields_link(picon('delete',
                                                    title: 'Rolle entfernen',
