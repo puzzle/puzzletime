@@ -100,7 +100,7 @@ class FormHelperTest < ActionView::TestCase
     assert_match /input .*?name="crud_test_model\[name\]"
                         .*?type="text"/x, f
     assert_match /input .*?name="crud_test_model\[whatever\]"
-                        .*?type="text"/x, f
+                        .*?type="number"/x, f
     assert_match /input .*?type="text"
                         .*?name="crud_test_model\[children\]"/x, f
     assert_match /input .*?name="crud_test_model\[rating\]"
