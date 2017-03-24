@@ -122,6 +122,7 @@ module DryCrud::Form
 
     def number_field(attr, html_options = {})
       html_options[:size] ||= 15
+      html_options[:type] ||= 'number'
       text_field(attr, html_options)
     end
 
