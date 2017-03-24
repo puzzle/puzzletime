@@ -19,6 +19,8 @@ class EmploymentsController < ManageController
   before_render_form :load_employment_roles
   before_render_form :load_employment_role_levels
 
+  before_save :check_percent
+
   def list_entries
     super.includes(employment_roles_employments: [:employment_role,
                                                   :employment_role_level])
@@ -32,5 +34,16 @@ class EmploymentsController < ManageController
 
   def load_employment_role_levels
     @employment_role_levels = EmploymentRoleLevel.all
+  end
+
+  def check_percent
+    role_percent = entry.employment_roles_employments
+                        .collect(&:percent)
+                        .sum
+
+    if entry.percent.to_i != role_percent.to_i
+      entry.errors.add(:percent, 'Rollenanteile und Beschäftigungsgrad stimmen nicht überein.')
+      false
+    end
   end
 end
