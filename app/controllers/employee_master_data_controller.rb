@@ -18,6 +18,12 @@ class EmployeeMasterDataController < ApplicationController
   def show
     @employee = Employee.find(params[:id])
     authorize!(:read, @employee)
+
+    respond_to do |format|
+      format.html
+      format.vcf
+      format.svg { render text: qr_code.as_svg }
+    end
   end
 
   private
@@ -33,6 +39,10 @@ class EmployeeMasterDataController < ApplicationController
                         employment_roles_employments: [:employment_role, :employment_role_level]
                       })
             .list
+  end
+
+  def qr_code
+    RQRCode::QRCode.new(employee_master_datum_url(id: params[:id], format: :vcf))
   end
 
   # Must be included after the #list_entries method is defined.

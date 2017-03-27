@@ -1,0 +1,8 @@
+.master-data-vcard-qrcode {
+  display: block;
+  width: 100px;
+
+  @media (min-width: $screen-md-min) {
+    padding-top: 20px;
+  }
+}

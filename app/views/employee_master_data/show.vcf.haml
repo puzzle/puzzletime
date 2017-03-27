@@ -1,0 +1,14 @@
+BEGIN:VCARD
+VERSION:3.0
+N:#{@employee.lastname};#{@employee.firstname};;;
+FN:#{@employee.to_s}
+- if @employee.street.present? || @employee.city.present? || @employee.postal_code.present?
+  ADR;TYPE=HOME,PREF:;;#{@employee.street};#{@employee.city};;#{@employee.postal_code};
+- if @employee.phone_office.present?
+  TEL;TYPE=WORK,VOICE:#{@employee.phone_office}
+- if @employee.phone_private.present?
+  TEL;TYPE=CELL,PREF,VOICE:#{@employee.phone_private}
+EMAIL;TYPE=WORK,PREF:#{@employee.email}
+- if @employee.birthday.present?
+  BDAY:#{@employee.birthday.strftime('%Y%m%d')}
+END:VCARD

@@ -1,7 +1,7 @@
 .row
   .col-md-6
     .row
-      .col-md-12
+      .col-md-6
         %address.well
           .name
             %strong
@@ -14,17 +14,21 @@
               = @employee.postal_code
               = @employee.city
           - if @employee.phone_private.present?
-            .phone-private{title: captionize(:phone_private, @employee.class)}
+            .phone-private{ title: captionize(:phone_private, @employee.class) }
               %i.glyphicon.glyphicon-phone
               = link_to @employee.phone_private, "tel:#{@employee.phone_private}"
           - if @employee.phone_office.present?
-            .phone-office{title: captionize(:phone_office, @employee.class)}
+            .phone-office{ title: captionize(:phone_office, @employee.class) }
               %i.glyphicon.glyphicon-phone-alt
               = link_to @employee.phone_office, "tel:#{@employee.phone_office}"
           - if @employee.email.present?
             .email
               %i.glyphicon.glyphicon-envelope
               = link_to @employee.email, @employee.email
+      .col-md-6
+        = link_to format: :vcf do
+          %img.master-data-vcard-qrcode{ class: 'qr-code', src: employee_master_datum_url(id: @employee.id, format: :svg) }
+          vCard herunterladen
 
     .row
       .col-md-6

@@ -35,4 +35,11 @@ class EmployeeMasterDataControllerTest < ActionController::TestCase
     assert_equal employees(:various_pedro), assigns(:employee)
   end
 
+  test 'GET show vcard' do
+    get :show, id: employees(:various_pedro).id, format: :vcf
+    assert_equal employees(:various_pedro), assigns(:employee)
+    assert_match(/^BEGIN:VCARD/, response.body)
+    assert_match(/Pedro/, response.body)
+  end
+
 end

@@ -26,6 +26,7 @@ gem 'public_suffix', '< 1.5.0' # higher requires ruby 2.0
 gem 'rails_autolink'
 gem 'rails-i18n'
 gem 'request_store'
+gem 'rqrcode'
 gem 'seed-fu'
 gem 'sort_alphabetical', '< 1.1.0' # higher requires ruby 2.0
 gem 'validates_by_schema'
