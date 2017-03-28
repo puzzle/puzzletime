@@ -19,7 +19,7 @@ class EmploymentsControllerTest < ActionController::TestCase
                                 start_date: Date.new(2006, 10, 1),
                                 end_date: Date.new(2007, 5, 31) }, employee_id: 1
     assert_response :unprocessable_entity
-    assert response.body.include? 'Für diese Zeitspanne ist bereits ein anderer Beschäftigungsgrad definiert'
+    assert response.body.include? 'Für diese Zeitspanne ist bereits eine andere Anstellung definiert'
   end
 
 
