@@ -88,12 +88,12 @@ class Employee < ActiveRecord::Base
         LdapAuthenticator.new.login(username, pwd)
     end
 
-    def employed_ones(period)
-      joins('left join employments em on em.employee_id = employees.id').
-        where('(em.end_date IS null or em.end_date >= ?) AND em.start_date <= ?',
-              period.start_date, period.end_date).
-        list.
-        uniq
+    def employed_ones(period, sort = true)
+      result = joins('left join employments em on em.employee_id = employees.id').
+               where('(em.end_date IS null or em.end_date >= ?) AND em.start_date <= ?',
+                     period.start_date, period.end_date).
+               uniq
+      sort ? result.list : result
     end
 
     def worktimes

@@ -36,14 +36,14 @@ de-CH:
         one: Beschäftigungsgrad
         other: Beschäftigungsgrade
       employment_role:
-        one: Anstellungs Rolle
-        other: Anstellungs Rollen
+        one: Anstellungsrolle
+        other: Anstellungsrollen
       employment_role_level:
-        one: Anstellungs Level
-        other: Anstellungs Levels
+        one: Anstellungsstufe
+        other: Anstellungsstufen
       employment_role_category:
-        one: Anstellungs Kategorie
-        other: Anstellungs Kategorien
+        one: Anstellungskategorie
+        other: Anstellungskategorien
       holiday:
         one: Feiertag
         other: Feiertage
@@ -198,7 +198,7 @@ de-CH:
       employment_role:
         name: Name
         billable: Verrechenbar
-        level: Hat Anstellungs Level
+        level: Hat Anstellungsstufe
         employment_role_category_id: Anstellungs Kategorie
       employment_role_level:
         name: Name

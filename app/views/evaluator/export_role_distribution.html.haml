@@ -1,0 +1,14 @@
+- @title = "Rollenanteile"
+
+= form_tag(url_for(controller: 'evaluator', action: 'export_role_distribution', format: :csv), method: :get, class: 'form-horizontal', role: 'form') do
+  .form-group
+    %label.col-md-2.control-label.required
+      Stichdatum
+    .col-md-5
+      .input-group
+        = text_field_tag(:date, I18n.l(Time.zone.today.beginning_of_month), class: 'form-control date')
+        .input-group-addon= icon(:calendar)
+
+  .form-group
+    .col-md-offset-2.col-md-8
+      %button.btn.btn-primary{type: :submit} CSV herunterladen

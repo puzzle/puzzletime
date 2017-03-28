@@ -78,6 +78,21 @@ class EvaluatorController < ApplicationController
     end
   end
 
+  def export_role_distribution
+    authorize!(:export_role_distribution, Evaluation)
+    respond_to do |format|
+      format.html
+      format.csv do
+        if params[:date].present?
+          send_report_csv(RoleDistributionReport.new(Time.zone.parse(params[:date])))
+        else
+          flash[:alert] = 'Bitte wählen Sie ein Stichdatum.'
+          redirect_to request.env['HTTP_REFERER'].present? ? :back : root_path
+        end
+      end
+    end
+  end
+
   def export_ma_overview
     unless @period
       flash[:notice] = 'Bitte wählen Sie eine Zeitspanne für die Auswertung.'

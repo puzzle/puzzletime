@@ -90,6 +90,7 @@ class Ability
          :employeeabsences,
          :export_capacity_csv,
          :export_extended_capacity_csv,
+         :export_role_distribution,
          :export_ma_overview],
         Evaluation
   end

@@ -58,3 +58,6 @@
 
 - if can?(:read, Employee)
   = nav 'Mitarbeiterliste', employee_master_data_path
+
+-if can?(:export_role_distribution, Evaluation)
+  = nav 'Rollenanteile', evaluation_path('export_role_distribution'), data: { no_turbolink: true }

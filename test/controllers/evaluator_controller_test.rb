@@ -111,6 +111,26 @@ class EvaluatorControllerTest < ActionController::TestCase
     assert_match %r{<td[^>]*>#{ticket_label}</td>}, response.body
   end
 
+  test 'GET export_role_distribution denies access for non-managment employee' do
+    employees(:mark).update!(management: false)
+    assert_raises CanCan::AccessDenied do
+      get :export_role_distribution
+    end
+  end
+
+  test 'GET export_role_distribution renders page to select date' do
+    get :export_role_distribution
+    assert_template 'export_role_distribution'
+    assert_match(/Stichdatum/, response.body)
+    assert_match(/CSV herunterladen/, response.body)
+  end
+
+  test 'GET export_role_distribution with format csv renders csv' do
+    get :export_role_distribution, date: I18n.l(Date.new(2000, 1, 23)), format: :csv
+    assert_csv_http_headers('puzzletime_rollenanteile_20000123.csv')
+    assert_match(/Rollenverteilung per 23.01.2000/, response.body)
+  end
+
   def division_id(evaluation)
     evaluation.singularize.classify.constantize.first.id
   end
