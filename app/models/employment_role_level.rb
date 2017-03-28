@@ -7,6 +7,8 @@
 #
 
 class EmploymentRoleLevel < ActiveRecord::Base
+  has_many :employment_roles_employments, dependent: :restrict_with_exception
+
   def to_s
     name
   end

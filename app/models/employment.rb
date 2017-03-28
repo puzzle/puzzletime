@@ -19,7 +19,8 @@ class Employment < ActiveRecord::Base
   DAYS_PER_YEAR = 365.25
 
   belongs_to :employee
-  has_many :employment_roles_employments, -> { order(percent: :desc) }
+  has_many :employment_roles_employments, -> { order(percent: :desc) },
+           dependent: :destroy
 
   accepts_nested_attributes_for :employment_roles_employments,
                                 reject_if: :all_blank,
