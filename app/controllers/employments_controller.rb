@@ -20,6 +20,7 @@ class EmploymentsController < ManageController
   before_render_form :load_employment_role_levels
 
   before_save :check_percent
+  before_save :check_employment_role_uniqueness
 
   def list_entries
     super.includes(employment_roles_employments: [:employment_role,
@@ -43,6 +44,16 @@ class EmploymentsController < ManageController
 
     if entry.percent.to_i != role_percent.to_i
       entry.errors.add(:percent, 'Rollenanteile und Beschäftigungsgrad stimmen nicht überein.')
+      false
+    end
+  end
+
+  def check_employment_role_uniqueness
+    employment_role_ids = entry.employment_roles_employments
+                               .collect(&:employment_role_id)
+
+    if employment_role_ids.length != employment_role_ids.uniq.length
+      entry.errors.add(:employment_roles_employments, 'Rollen können nicht doppelt erfasst werden.')
       false
     end
   end

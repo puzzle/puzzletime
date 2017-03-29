@@ -22,6 +22,28 @@ class EmploymentsControllerTest < ActionController::TestCase
     assert response.body.include? 'Für diese Zeitspanne ist bereits eine andere Anstellung definiert'
   end
 
+  def test_employment_percent
+    post :create, employment: { percent: 60,
+                                employment_roles_employments_attributes: {
+                                  '0' => test_employment_role_80
+                                },
+                                start_date: Date.new(2008, 10, 1),
+                                end_date: Date.new(2009, 5, 31) }, employee_id: 1
+    assert_response :unprocessable_entity
+    assert response.body.include? 'Rollenanteile und Beschäftigungsgrad stimmen nicht überein.'
+  end
+
+  def test_employment_role_uniqueness
+    post :create, employment: { percent: 160,
+                                employment_roles_employments_attributes: {
+                                  '0' => test_employment_role_80,
+                                  '1' => test_employment_role_80
+                                },
+                                start_date: Date.new(2008, 10, 1),
+                                end_date: Date.new(2009, 5, 31) }, employee_id: 1
+    assert_response :unprocessable_entity
+    assert response.body.include? 'Rollen können nicht doppelt erfasst werden.'
+  end
 
   private
 
