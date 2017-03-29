@@ -1,12 +1,15 @@
-%p
+%section
+  - entities_name ||= 'Zeiten'
   - if @period
-    - entities_name ||= 'Zeiten'
     #{entities_name} während #{@period} &nbsp;
     = link_to 'Aktuelle Zeitspanne',
               :controller => 'evaluator',
               :action => 'current_period',
               :back_url => request.original_fullpath
     |
+  - else
+    #{entities_name} während #{@periods.map(&:label).join(', ')} &nbsp;
+
   = link_to 'Andere Zeitspanne',
             :controller => 'evaluator',
             :action => 'select_period',
