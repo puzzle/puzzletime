@@ -7,7 +7,7 @@
               :action => 'current_period',
               :back_url => request.original_fullpath
     |
-  - else
+  - elsif @periods
     #{entities_name} während #{@periods.map(&:label).join(', ')} &nbsp;
 
   = link_to 'Andere Zeitspanne',

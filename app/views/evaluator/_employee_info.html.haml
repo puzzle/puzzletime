@@ -1,4 +1,13 @@
 %section
+  %p
+    = link_to 'Mitarbeiterstammdaten', employee_master_datum_url(@user.id)
+    %br
+    -# TODO: per user weekly graph
+    = link_to 'Wochengrafik', weekly_graph_url
+  %label #{@user.class.human_attribute_name(:committed_worktimes_at)}:
+  = I18n.l(@user.committed_worktimes_at, format: :month)
+
+%section
   %h4 Übersicht
 
   Beschäftigungsgrad: TBD
