@@ -4,14 +4,14 @@ require 'test_helper'
 class RoleDistributionReportTest < ActiveSupport::TestCase
 
   test '#filename' do
-    assert_equal 'puzzletime_rollenanteile_20100123.csv', report.filename
+    assert_equal 'puzzletime_funktionsanteile_20100123.csv', report.filename
   end
 
   test '#to_csv' do
     setup_employments
 
     title, header, *lines = CSV.parse(report.to_csv)
-    assert_equal 'Rollenverteilung per 23.01.2010, GJ 2009/2010', title.first
+    assert_equal 'Funktionsanteile per 23.01.2010, GJ 2009/2010', title.first
     assert_equal ['Mitarbeiter', 'Anstellung', 'Wertschöpfung', 'Technical Board', 'Unterstützend'], header
 
     lines = lines.select { |l| l.any?(&:present?) } # remove empty lines

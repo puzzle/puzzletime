@@ -30,7 +30,7 @@ class EmploymentRolesEmploymentTest < ActiveSupport::TestCase
                                         percent: 90)
     end
 
-    assert_match(/Die Rolle 'Software Engineer' erfordert eine Stufe\./,
+    assert_match(/Die Funktion 'Software Engineer' erfordert eine Stufe\./,
                  err.message)
 
     assert_nothing_raised do
@@ -49,7 +49,7 @@ class EmploymentRolesEmploymentTest < ActiveSupport::TestCase
                                         percent: 90)
     end
 
-    assert_match(/Die Rolle 'Member of the Technical Board' hat keine Stufen\./,
+    assert_match(/Die Funktion 'Member of the Technical Board' hat keine Stufen\./,
                  err.message)
 
     assert_nothing_raised do
@@ -66,7 +66,7 @@ class EmploymentRolesEmploymentTest < ActiveSupport::TestCase
                                         percent: -1)
     end
 
-    assert_match(/Percent ist kein gültiger Wert/, err.message)
+    assert_match(/Pensum ist kein gültiger Wert/, err.message)
 
     err = assert_raises ActiveRecord::RecordInvalid do
       EmploymentRolesEmployment.create!(employment: employments(:long_time),
@@ -74,7 +74,7 @@ class EmploymentRolesEmploymentTest < ActiveSupport::TestCase
                                         percent: 201)
     end
 
-    assert_match(/Percent ist kein gültiger Wert/, err.message)
+    assert_match(/Pensum ist kein gültiger Wert/, err.message)
 
     # assert_nothing_raised do
     #   EmploymentRolesEmployment.create!(employment: employments(:burnout),

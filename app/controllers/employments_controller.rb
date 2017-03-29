@@ -43,7 +43,7 @@ class EmploymentsController < ManageController
                         .sum
 
     if entry.percent.to_i != role_percent.to_i
-      entry.errors.add(:percent, 'Rollenanteile und Beschäftigungsgrad stimmen nicht überein.')
+      entry.errors.add(:percent, 'Funktionsanteile und Beschäftigungsgrad stimmen nicht überein.')
       false
     end
   end
@@ -53,7 +53,7 @@ class EmploymentsController < ManageController
                                .collect(&:employment_role_id)
 
     if employment_role_ids.length != employment_role_ids.uniq.length
-      entry.errors.add(:employment_roles_employments, 'Rollen können nicht doppelt erfasst werden.')
+      entry.errors.add(:employment_roles_employments, 'Funktionen können nicht doppelt erfasst werden.')
       false
     end
   end

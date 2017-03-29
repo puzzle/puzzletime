@@ -4,7 +4,7 @@ class RoleDistributionReport
 
   def initialize(date)
     @date = date
-    @filename_prefix = 'puzzletime_rollenanteile'
+    @filename_prefix = 'puzzletime_funktionsanteile'
   end
 
   def filename
@@ -26,7 +26,7 @@ class RoleDistributionReport
       'Anstellung',
       'Wertschöpfung'
     ] + categories.map(&:second)
-    csv << ["Rollenverteilung per #{format_date_long(@date)}, #{format_business_year(@date)}"] +
+    csv << ["Funktionsanteile per #{format_date_long(@date)}, #{format_business_year(@date)}"] +
       Array.new(header.length - 1, '')
     csv << header
   end

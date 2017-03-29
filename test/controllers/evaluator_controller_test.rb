@@ -127,8 +127,8 @@ class EvaluatorControllerTest < ActionController::TestCase
 
   test 'GET export_role_distribution with format csv renders csv' do
     get :export_role_distribution, date: I18n.l(Date.new(2000, 1, 23)), format: :csv
-    assert_csv_http_headers('puzzletime_rollenanteile_20000123.csv')
-    assert_match(/Rollenverteilung per 23.01.2000/, response.body)
+    assert_csv_http_headers('puzzletime_funktionsanteile_20000123.csv')
+    assert_match(/Funktionsanteile per 23.01.2000/, response.body)
   end
 
   def division_id(evaluation)

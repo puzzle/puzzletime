@@ -16,7 +16,7 @@
                                      :to_s,
                                      { prompt: ta(:please_select) },
                                      class: 'form-control',
-                                     placeholder: 'Rolle'
+                                     placeholder: 'Funktion'
         .col-md-3
           = fields.collection_select :employment_role_level_id,
                                      @employment_role_levels,
@@ -25,17 +25,17 @@
                                      { prompt: ta(:please_select),
                                        include_blank: true },
                                      class: 'form-control',
-                                     placeholder: 'Level'
+                                     placeholder: 'Stufe'
         .col-md-2
           = fields.number_field :percent, min: 0, max: 200, step: 5
         .col-md-1.form-action
           = fields.remove_nested_fields_link(picon('delete',
-                                                   title: 'Rolle entfernen',
+                                                   title: 'Funktion entfernen',
                                                    class: 'remove-employment-role'))
     .row
       .col-md-1.form-action
         = f.add_nested_fields_link(:employment_roles_employments,
-                                   picon(:add, title: 'Rolle hinzufügen'))
+                                   picon(:add, title: 'Funktion hinzufügen'))
         = spinner
 
   = f.labeled_text_area :comment

@@ -30,7 +30,7 @@ class EmploymentsControllerTest < ActionController::TestCase
                                 start_date: Date.new(2008, 10, 1),
                                 end_date: Date.new(2009, 5, 31) }, employee_id: 1
     assert_response :unprocessable_entity
-    assert response.body.include? 'Rollenanteile und Beschäftigungsgrad stimmen nicht überein.'
+    assert response.body.include? 'Funktionsanteile und Beschäftigungsgrad stimmen nicht überein.'
   end
 
   def test_employment_role_uniqueness
@@ -42,7 +42,7 @@ class EmploymentsControllerTest < ActionController::TestCase
                                 start_date: Date.new(2008, 10, 1),
                                 end_date: Date.new(2009, 5, 31) }, employee_id: 1
     assert_response :unprocessable_entity
-    assert response.body.include? 'Rollen können nicht doppelt erfasst werden.'
+    assert response.body.include? 'Funktionen können nicht doppelt erfasst werden.'
   end
 
   private

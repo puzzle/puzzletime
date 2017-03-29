@@ -34,10 +34,10 @@ class EmploymentRolesEmployment < ActiveRecord::Base
   def valid_level
     if employment_role.level? && !employment_role_level_id
       errors.add(:employment_role_level_id,
-                 "Die Rolle '#{employment_role.name}' erfordert eine Stufe.")
+                 "Die Funktion '#{employment_role.name}' erfordert eine Stufe.")
     elsif !employment_role.level? && employment_role_level_id
       errors.add(:employment_role_level_id,
-                 "Die Rolle '#{employment_role.name}' hat keine Stufen.")
+                 "Die Funktion '#{employment_role.name}' hat keine Stufen.")
     end
   end
 end

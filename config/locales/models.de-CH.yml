@@ -193,7 +193,7 @@ de-CH:
         end_date: Enddatum
         percent: Beschäftigungsgrad
         vacation_days_per_year: Ferientage pro Jahr
-        employment_roles_employments: Rollenanteile
+        employment_roles_employments: Funktionsanteile
         comment: Kommentar
       employment_role:
         name: Name
@@ -204,6 +204,8 @@ de-CH:
         name: Name
       employment_role_category:
         name: Name
+      employment_roles_employment:
+        percent: Pensum
       holiday:
         holiday_date: Datum
         musthours_day: Muss Stunden
