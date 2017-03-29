@@ -28,7 +28,7 @@
                                      placeholder: 'Level'
         .col-md-2
           = fields.number_field :percent, min: 0, max: 200, step: 5
-        .col-md-1
+        .col-md-1.form-action
           = fields.remove_nested_fields_link(picon('delete',
                                                    title: 'Rolle entfernen',
                                                    class: 'remove-employment-role'))
