@@ -8,8 +8,6 @@ class EvaluatorController < ApplicationController
 
   before_action :set_period
 
-  helper_method :user_view?
-
   def index
     overview
   end
@@ -21,7 +19,8 @@ class EvaluatorController < ApplicationController
     if @evaluation.planned_hours
       @plannings = @periods.collect { |p| @evaluation.sum_plannings_grouped(p) }
     end
-    render(user_view? ? 'user_overview' : 'overview')
+
+    render(employee_overview? ? 'overview_employee' : 'overview')
   end
 
   def details
@@ -129,8 +128,8 @@ class EvaluatorController < ApplicationController
     overview
   end
 
-  def user_view?
-    params[:evaluation] =~ /^user/
+  def employee_overview?
+    params[:evaluation] =~ /^userworkitems$|^employeeworkitems$/
   end
 
   private

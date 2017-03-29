@@ -1,0 +1,6 @@
+- @title = "#{@evaluation.is_a?(EmployeeSubWorkItemsEval) ? @evaluation.category.label : @user.label}"
+= render('period_link')
+
+= render('employee_info')
+= render('employee_positions')
+= render('employee_budgeted_positions')
