@@ -107,11 +107,3 @@ lucien:
   email:     lw@bla.ch
   management: false
   department: devtwo
-
-#burnout_nero:
-#  id:        9
-#  firstname: Nero
-#  lastname:  Germanicus
-#  shortname: NG
-#  passwd:    ng
-#  email:     ng@bla.ch
