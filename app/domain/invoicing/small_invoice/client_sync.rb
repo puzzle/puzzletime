@@ -24,8 +24,8 @@ module Invoicing
 
         private
 
-        def notify_sync_error(error, client)
-          parameters = record_to_params(client)
+        def notify_sync_error(error, client = nil)
+          parameters = client.present? ? record_to_params(client) : {}
           parameters[:code] = error.code if error.respond_to?(:code)
           parameters[:data] = error.data if error.respond_to?(:data)
           Airbrake.notify(error, cgi_data: ENV.to_hash, parameters: parameters)
@@ -116,8 +116,11 @@ module Invoicing
           remote_data = remote_list.find { |h| local_item == h }
           next unless remote_data.try(:[], 'id') && remote_data['id'].to_s != item.invoicing_key
           if list.model.where(invoicing_key: remote_data['id']).exists?
-            notify_sync_error('Unable to sync from remote, record with invoicing_key already exists',
-                              invoicing_key: remote_data['id'], type: entity.name)
+
+            notify_sync_error(Invoicing::Error.new('Unable to sync from remote, ' \
+                                                   'record with invoicing_key already exists',
+                                                   nil,
+                                                   invoicing_key: remote_data['id'], type: entity.name))
           else
             item.update_column(:invoicing_key, remote_data['id'])
           end
@@ -145,10 +148,6 @@ module Invoicing
 
       def api
         Api.instance
-      end
-
-      def notify_sync_error(error, parameters)
-        Airbrake.notify(error, cgi_data: ENV.to_hash, parameters: parameters)
       end
     end
   end
