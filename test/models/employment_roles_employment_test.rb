@@ -20,7 +20,7 @@ class EmploymentRolesEmploymentTest < ActiveSupport::TestCase
       percent: 90
     )
 
-    assert_equal e.to_s, '90% Software Engineer Senior'
+    assert_equal 'Software Engineer Senior 90%', e.to_s
   end
 
   test 'role with required level validation' do
