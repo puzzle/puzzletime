@@ -16,7 +16,10 @@ class EmployeeMasterDataController < ApplicationController
   end
 
   def show
-    @employee = Employee.find(params[:id])
+    @employee = Employee.includes(current_employment: {
+                                    employment_roles_employments: [:employment_role, :employment_role_level]
+                                  })
+                        .find(params[:id])
     authorize!(:read, @employee)
 
     respond_to do |format|
