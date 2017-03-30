@@ -5,12 +5,21 @@
 
 class WeeklyGraphController < ApplicationController
 
+  before_action :authorize
   before_action :set_period
 
-  skip_authorization_check
-
   def show
-    @graph = WorktimeGraph.new(@period || Period.past_month, @user)
+    @graph = WorktimeGraph.new(@period || Period.past_month, worktime_graph_user)
+  end
+
+  private
+
+  def worktime_graph_user
+    @worktime_graph_user ||= Employee.find(params[:employee_id])
+  end
+
+  def authorize
+    authorize!(:show_worktime_graph, worktime_graph_user)
   end
 
 end

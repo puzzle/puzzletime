@@ -48,7 +48,12 @@ class Ability
          WorkItem]
 
     # :crud instead of :manage because cannot change settings of other employees
-    can [:crud, :update_committed_worktimes, :manage_plannings, :log], Employee
+    can [:crud,
+         :update_committed_worktimes,
+         :manage_plannings,
+         :show_worktime_graph,
+         :log],
+        Employee
 
     can :update, OrderComment do |c|
       c.creator_id == user.id
@@ -163,6 +168,7 @@ class Ability
          :settings,
          :update_settings,
          :update_committed_worktimes,
+         :show_worktime_graph,
          :manage_plannings],
         Employee,
         id: user.id

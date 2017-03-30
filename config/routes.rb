@@ -28,6 +28,8 @@ Rails.application.routes.draw do
       get :log, to: 'employees/log#index'
     end
 
+    get :weekly_graph, to: 'weekly_graph#show'
+
     resources :employments, except: [:show]
     resources :overtime_vacations, except: [:show]
     resource :worktimes_commit, only: [:edit, :update], controller: 'employees/worktimes_commit'
@@ -155,7 +157,6 @@ Rails.application.routes.draw do
     resource :company, only: :show
   end
 
-  get :weekly_graph, to: 'weekly_graph#show'
   get :vacations, to: 'vacations#show'
 
   scope '/reports' do

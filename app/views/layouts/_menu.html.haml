@@ -6,7 +6,7 @@
             worktimes_path,
             ordertimes_path,
             absencetimes_path,
-            weekly_graph_path
+            employee_weekly_graph_path(current_user.id)
       = model_nav Order
       = nav 'Planung',
             plannings_employee_path(current_user.id),
