@@ -26,7 +26,7 @@ class EmploymentRolesEmployment < ActiveRecord::Base
               ''
             end
 
-    "#{percent.round}% #{employment_role}#{level}"
+    "#{employment_role}#{level} #{percent.round}%"
   end
 
   private
