@@ -36,20 +36,9 @@
         %td
           = multiple_check_box 'user', 'eval_periods', '0'
           Total
-%br/
-%br/
 
-
-.row
-  .col-md-4
-    %h4 Anstellungen
-    = plain_table(@user.employments.list) do |t|
-      - t.attr(:start_date)
-      - t.attr(:end_date)
-      - t.attr(:percent)
-      - t.attr(:vacation_days_per_year)
-
-  - unless @user.overtime_vacations.empty?
+- unless @user.overtime_vacations.empty?
+  .row
     .col-md-4
       %h4 Überstunden-Ferien Umbuchungen
       = plain_table(@user.overtime_vacations.list) do |t|
