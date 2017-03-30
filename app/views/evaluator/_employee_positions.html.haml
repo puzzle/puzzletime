@@ -1,11 +1,16 @@
+- employee = @evaluation.category
 %section
   %h4 Positionen
 
+  - workload_report_employee_entry =
+  -   employee_info_workload_report_employee_entry(employee)
   %p
-    %label Auslastung:
-    TBD
+    %label
+      Auslastung:
+      = format_percent(workload_report_employee_entry.workload.round)
     %br
-    %label Verrechenbarkeit:
-    TBD
+    %label
+      Verrechenbarkeit:
+      = format_percent(workload_report_employee_entry.billability.round)
 
   = render('category')

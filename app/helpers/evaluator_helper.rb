@@ -211,4 +211,22 @@ module EvaluatorHelper
       content_tag(:span, class: i > 0 ? 'text-muted' : 'employee-info-primary-value') { v }
     end, tag(:br))
   end
+
+  def employee_info_workload_report_employee_entry(employee)
+    worktimes = employee_info_worktimes(employee)
+    Reports::Workload::EmployeeEntry.new(employee, @period, [], worktimes)
+  end
+
+  def employee_info_worktimes(employee)
+    Worktime
+      .in_period(@period)
+      .joins(
+        'LEFT OUTER JOIN work_items ON work_items.id = worktimes.work_item_id'
+      )
+      .joins('LEFT OUTER JOIN absences ON absences.id = worktimes.absence_id')
+      .joins(:employee)
+      .where(employee_id: employee.id)
+      .pluck(*Reports::Workload::WORKTIME_FIELDS)
+      .map { |w| Reports::Workload::WorktimeEntry.new(*w) }
+  end
 end
