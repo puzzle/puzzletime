@@ -3,7 +3,7 @@
   %p
     = link_to 'Mitarbeiterstammdaten', employee_master_datum_url(employee.id)
     %br
-    = link_to 'Wochengrafik', employee_weekly_graph_url(@user.id)
+    = link_to 'Wochengrafik', employee_weekly_graph_url(employee.id)
   %label #{employee.class.human_attribute_name(:committed_worktimes_at)}:
   - if employee.committed_worktimes_at
     = I18n.l(employee.committed_worktimes_at, format: :month)
