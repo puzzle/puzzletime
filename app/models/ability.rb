@@ -173,6 +173,8 @@ class Ability
         Employee,
         id: user.id
 
+    can :index, Employment, employee_id: user.id
+
     can [:read,
          :accounting_posts,
          :services,
