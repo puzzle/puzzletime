@@ -138,7 +138,7 @@ module EvaluatorHelper
     content
   end
 
-  ### period and time helpers
+  ### period and info helpers
 
   def period_link(label, shortcut, options = {})
     link_to(label,
@@ -148,23 +148,67 @@ module EvaluatorHelper
             options)
   end
 
-  def time_info
-    stat = @user.statistics
+  def employee_infos(employee, period = nil)
+    [employment_infos(employee, period)].compact +
+      if period
+        employee_period_time_infos(employee.statistics, period) +
+          employee_period_vacation_infos(employee.statistics, period)
+      else
+        employment_noperiod_infos(employee.statistics)
+      end
+  end
 
-    infos = if @period
-              [[['Überstunden', stat.overtime(@period).to_f, 'h'],
-                ['Bezogene Ferien', stat.used_vacations(@period), 'd'],
-                ['Soll Arbeitszeit', stat.musttime(@period), 'h']],
-               [['Abschliessend', stat.current_overtime(@period.end_date), 'h'],
-                ['Verbleibend', stat.remaining_vacations(@period.end_date), 'd']]]
-            else
-              [[['Überstunden Gestern', stat.current_overtime, 'h'],
-                ['Bezogene Ferien', stat.used_vacations(Period.current_year), 'd'],
-                ['Monatliche Arbeitszeit', stat.musttime(Period.current_month), 'h']],
-               [['Überstunden Heute', stat.current_overtime(Time.zone.today), 'h'],
-                ['Verbleibend', stat.current_remaining_vacations, 'd'],
-                ['Verbleibend', 0 - stat.overtime(Period.current_month).to_f, 'h']]]
-            end
-    render partial: 'timeinfo', locals: { infos: infos }
+  def employment_infos(employee, period)
+    employment_period = period ? Period.day_for(period.end_date) : Period.current_day
+    employment = employee.employments.during(employment_period).first
+    if employment.present?
+      [['Beschäftigungsgrad', format_percent(employment.percent)]] +
+        employment.employment_roles_employments
+                  .includes(:employment_role, :employment_role_level)
+                  .order('percent DESC')
+                  .map do |ere|
+          role = ere.employment_role.name
+          role += ' ' + ere.employment_role_level.name if ere.employment_role_level.present?
+          [role, format_percent(ere.percent)]
+        end
+    end
+  end
+
+  def employee_period_time_infos(stats, period)
+    until_end = Period.with(Time.zone.today, period.end_date)
+    [[['Überstundensaldo', format_hour(stats.current_overtime(period.end_date).to_f)],
+      ['per Gestern', format_hour(stats.current_overtime.to_f)]],
+     [['Soll Arbeitszeit ab heute', format_hour(stats.musttime(until_end))]]]
+  end
+
+  def employee_period_vacation_infos(stats, period)
+    year = Period.year_for(period.end_date)
+    end_of_year = period.end_date.end_of_year
+    infos = [['Feriensaldo', format_days(stats.remaining_vacations(period.end_date), true)]]
+    if period.end_date != end_of_year
+      infos << ["per #{l(end_of_year)}", format_days(stats.remaining_vacations(end_of_year), true)]
+    end
+    infos << ["Anspruch im #{end_of_year.year}", format_days(stats.total_vacations(year), true)]
+    [infos]
+  end
+
+  def employment_noperiod_infos(stats)
+    year = Period.current_year
+    end_of_year = year.end_date.end_of_year
+    [[['Überstundensaldo Gestern', format_hour(stats.current_overtime)]],
+     [["Feriensaldo per #{l(end_of_year)}", format_days(stats.remaining_vacations(end_of_year), true)],
+      ["Anspruch im #{end_of_year.year}", format_days(stats.total_vacations(year), true)]]]
+  end
+
+  def employee_info_labels(info)
+    safe_join(info.map(&:first).map.with_index do |l, i|
+      content_tag(i == 0 ? :label : :span, class: i > 0 ? 'text-muted' : '') { l }
+    end, tag(:br))
+  end
+
+  def employee_info_values(info)
+    safe_join(info.map(&:second).map.with_index do |v, i|
+      content_tag(:span, class: i > 0 ? 'text-muted' : 'employee-info-primary-value') { v }
+    end, tag(:br))
   end
 end

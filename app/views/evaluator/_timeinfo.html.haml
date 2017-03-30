@@ -1,9 +1,0 @@
-%table.table.table-inline.table-condensed
-  - for row in infos
-    %tr
-      - for info in row
-        %td
-          = "#{info[0]}: "
-        %td.text-right
-          = info[2] == 'h' ? format_number(info[1]) : f(info[1])
-          = info[2]

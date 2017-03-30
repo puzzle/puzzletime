@@ -61,8 +61,8 @@ module FormatHelper
     I18n.l(date, format: '%d.%m.%Y') if date
   end
 
-  def format_days(number)
-    "#{number.round(2)} Tage"
+  def format_days(number, short = false)
+    "#{number.round(2)} #{short ? 'T' : 'Tage'}"
   end
 
   def format_percent(value)

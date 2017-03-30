@@ -1,17 +1,24 @@
+- employee = @evaluation.category
 %section
   %p
-    = link_to 'Mitarbeiterstammdaten', employee_master_datum_url(@user.id)
+    = link_to 'Mitarbeiterstammdaten', employee_master_datum_url(employee.id)
     %br
     = link_to 'Wochengrafik', employee_weekly_graph_url(@user.id)
-  %label #{@user.class.human_attribute_name(:committed_worktimes_at)}:
-  - if @user.committed_worktimes_at
-    = I18n.l(@user.committed_worktimes_at, format: :month)
+  %label #{employee.class.human_attribute_name(:committed_worktimes_at)}:
+  - if employee.committed_worktimes_at
+    = I18n.l(employee.committed_worktimes_at, format: :month)
   - else
     Keine
 
 %section
-  %h4 Übersicht
+  %h4
+    Übersicht
+    - if @period
+      %small per #{I18n.l(@period.end_date)}
 
-  Beschäftigungsgrad: TBD
-
-  = time_info
+  %table.table.table-inline.table-striped.table-condensed
+    %tbody
+      - employee_infos(employee, @period).each do |info|
+        %tr
+          %td= employee_info_labels(info)
+          %td.text-right= employee_info_values(info)
