@@ -213,13 +213,14 @@ module EvaluatorHelper
   end
 
   def employee_info_workload_report_employee_entry(employee)
-    worktimes = employee_info_worktimes(employee)
-    Reports::Workload::EmployeeEntry.new(employee, @period, [], worktimes)
+    period = @period || Period.current_month
+    worktimes = employee_info_worktimes(employee, period)
+    Reports::Workload::EmployeeEntry.new(employee, period, [], worktimes)
   end
 
-  def employee_info_worktimes(employee)
+  def employee_info_worktimes(employee, period)
     Worktime
-      .in_period(@period)
+      .in_period(period)
       .joins(
         'LEFT OUTER JOIN work_items ON work_items.id = worktimes.work_item_id'
       )

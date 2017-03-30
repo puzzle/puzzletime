@@ -6,11 +6,17 @@
   -   employee_info_workload_report_employee_entry(employee)
   %p
     %label
-      Auslastung:
+      - if @period
+        Auslastung:
+      - else
+        Auslastung aktueller Monat:
       = format_percent(workload_report_employee_entry.workload.round)
     %br
     %label
-      Verrechenbarkeit:
+      - if @period
+        Verrechenbarkeit:
+      - else
+        Verrechenbarkeit aktueller Monat:
       = format_percent(workload_report_employee_entry.billability.round)
 
   = render('category')
