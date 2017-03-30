@@ -8,7 +8,7 @@
               :back_url => request.original_fullpath
     |
   - elsif @periods
-    #{entities_name} während #{@periods.map(&:label).join(', ')} &nbsp;
+    #{entities_name} während #{@periods.compact.map(&:label).join(', ')} &nbsp;
 
   = link_to 'Andere Zeitspanne',
             :controller => 'evaluator',

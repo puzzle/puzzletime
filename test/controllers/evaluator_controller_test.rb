@@ -25,7 +25,7 @@ class EvaluatorControllerTest < ActionController::TestCase
   %w(userworkitems userabsences).each do |evaluation|
     test "GET index #{evaluation}" do
       get :index, evaluation: evaluation
-      assert_template 'user_overview'
+      assert_template evaluation == 'userworkitems' ? 'overview_employee' : 'overview'
       assert_equal %w(-2m -1m 0m -1y 0y 0).map { |p| Period.parse(p) }, assigns(:periods)
     end
 
