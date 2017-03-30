@@ -162,7 +162,7 @@ module EvaluatorHelper
     employment_period = period ? Period.day_for(period.end_date) : Period.current_day
     employment = employee.employments.during(employment_period).first
     if employment.present?
-      [['Beschäftigungsgrad', format_percent(employment.percent)]] +
+      [[link_to('Beschäftigungsgrad', employee_employments_url(employee.id)), format_percent(employment.percent)]] +
         employment.employment_roles_employments
                   .includes(:employment_role, :employment_role_level)
                   .order('percent DESC')
