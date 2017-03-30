@@ -92,13 +92,6 @@ class EvaluatorController < ApplicationController
     end
   end
 
-  def export_ma_overview
-    unless @period
-      flash[:notice] = 'Bitte wählen Sie eine Zeitspanne für die Auswertung.'
-      redirect_to action: 'employees'
-    end
-  end
-
   ########################  PERIOD ACTIONS  #########################
 
   def select_period

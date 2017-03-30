@@ -53,9 +53,6 @@
         evaluation_path('absences'),
         evaluation_path('employeeabsences')
 
-- if can?(:export_ma_overview, Evaluation)
-  = nav 'MA Übersicht', evaluation_path('export_ma_overview')
-
 - if can?(:read, Employee)
   = nav 'Mitarbeiterliste', employee_master_data_path
 
