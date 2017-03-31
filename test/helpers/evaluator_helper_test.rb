@@ -10,7 +10,7 @@ class EvaluatorHelperTest < ActionView::TestCase
     setup_employment
     period = Period.with(Date.new(2010, 1, 1), Date.new(2010, 1, 31))
     infos = employee_infos(employees(:various_pedro), period)
-    assert_equal [['Beschäftigungsgrad', '100 %'],
+    assert_equal [['<a href="http://test.host/employees/2/employments">Beschäftigungsgrad</a>', '100 %'],
                   ['Software Engineer Senior', '80 %'],
                   ['Member of the Technical Board', '20 %']], infos.first
     assert_equal ['Überstundensaldo', 'per Gestern'], infos.second.map(&:first)
@@ -21,7 +21,7 @@ class EvaluatorHelperTest < ActionView::TestCase
   test '#employee_infos without period' do
     setup_employment
     infos = employee_infos(employees(:various_pedro))
-    assert_equal [['Beschäftigungsgrad', '100 %'],
+    assert_equal [['<a href="http://test.host/employees/2/employments">Beschäftigungsgrad</a>', '100 %'],
                   ['Software Engineer Senior', '80 %'],
                   ['Member of the Technical Board', '20 %']], infos.first
     assert_equal ['Überstundensaldo Gestern'], infos.second.map(&:first)
