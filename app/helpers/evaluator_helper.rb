@@ -188,7 +188,7 @@ module EvaluatorHelper
     if period.end_date != end_of_year
       infos << ["per #{l(end_of_year)}", format_days(stats.remaining_vacations(end_of_year), true)]
     end
-    infos << ["Anspruch im #{end_of_year.year}", format_days(stats.total_vacations(year), true)]
+    infos << ["Guthaben im #{end_of_year.year}", format_days(stats.total_vacations(year), true)]
     [infos]
   end
 
@@ -197,7 +197,7 @@ module EvaluatorHelper
     end_of_year = year.end_date.end_of_year
     [[['Überstundensaldo Gestern', format_hour(stats.current_overtime)]],
      [["Feriensaldo per #{l(end_of_year)}", format_days(stats.remaining_vacations(end_of_year), true)],
-      ["Anspruch im #{end_of_year.year}", format_days(stats.total_vacations(year), true)]]]
+      ["Guthaben im #{end_of_year.year}", format_days(stats.total_vacations(year), true)]]]
   end
 
   def employee_info_labels(info)
