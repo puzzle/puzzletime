@@ -32,10 +32,14 @@ marital_status_map = {
   'geschieden' => :divorced
 }
 
+phone_converter = ->(v) { v.tr('-', ' ') }
+
 converters = {
   shortname: ->(v) { v ? v.strip.upcase : nil },
   birthday: ->(v) { Date.parse(v) },
-  marital_status: ->(v) { v ? marital_status_map[v.downcase] : nil }
+  marital_status: ->(v) { v ? marital_status_map[v.downcase] : nil },
+  phone_office: phone_converter,
+  phone_private: phone_converter
 }
 converters.default = ->(v) { v.is_a?(String) ? v.strip : v }
 
