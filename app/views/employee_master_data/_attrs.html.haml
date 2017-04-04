@@ -24,7 +24,7 @@
           - if @employee.email.present?
             .email
               %i.glyphicon.glyphicon-envelope
-              = link_to @employee.email, @employee.email
+              = link_to @employee.email, "mailto:#{@employee.email}"
       .col-md-6
         = link_to format: :vcf do
           %img.master-data-vcard-qrcode{ class: 'qr-code', src: employee_master_datum_url(id: @employee.id, format: :svg) }

@@ -3,7 +3,7 @@
     = link_to e.to_s, employee_master_datum_path(e.id)
   - t.sortable_attr(:shortname)
   - t.sortable_attr(:email) do |e|
-    = link_to_if e.email.present?, e.email, e.email
+    = link_to_if e.email.present?, e.email, "mailto:#{e.email}"
   - t.sortable_attr(:phone_private) do |e|
     = link_to_if e.phone_private.present?, e.phone_private, "tel:#{e.phone_private}"
   - t.sortable_attr(:phone_office) do |e|
