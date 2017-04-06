@@ -181,6 +181,7 @@ de-CH:
         emergency_contact_phone: Notfallnummer
         marital_status: Zivilstand
         social_insurance: AHV-Nummer
+        additional_information: Zusätzliche Informationen
       employee/marital_statuses:
         married: Verheiratet
         single: Ledig

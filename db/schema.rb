@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170321143841) do
+ActiveRecord::Schema.define(version: 20170406120705) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -153,6 +153,7 @@ ActiveRecord::Schema.define(version: 20170321143841) do
     t.integer "marital_status"
     t.string  "social_insurance"
     t.string  "crm_key"
+    t.text    "additional_information"
   end
 
   add_index "employees", ["department_id"], name: "index_employees_on_department_id", using: :btree
@@ -170,9 +171,13 @@ ActiveRecord::Schema.define(version: 20170321143841) do
     t.string "name", null: false
   end
 
+  add_index "employment_role_categories", ["name"], name: "index_employment_role_categories_on_name", unique: true, using: :btree
+
   create_table "employment_role_levels", force: :cascade do |t|
     t.string "name", null: false
   end
+
+  add_index "employment_role_levels", ["name"], name: "index_employment_role_levels_on_name", unique: true, using: :btree
 
   create_table "employment_roles", force: :cascade do |t|
     t.string  "name",                        null: false
@@ -181,7 +186,9 @@ ActiveRecord::Schema.define(version: 20170321143841) do
     t.integer "employment_role_category_id"
   end
 
-  create_table "employment_roles_employments", id: false, force: :cascade do |t|
+  add_index "employment_roles", ["name"], name: "index_employment_roles_on_name", unique: true, using: :btree
+
+  create_table "employment_roles_employments", force: :cascade do |t|
     t.integer "employment_id",                                    null: false
     t.integer "employment_role_id",                               null: false
     t.decimal "percent",                  precision: 5, scale: 2, null: false
@@ -429,6 +436,8 @@ ActiveRecord::Schema.define(version: 20170321143841) do
   add_index "worktimes", ["invoice_id"], name: "index_worktimes_on_invoice_id", using: :btree
   add_index "worktimes", ["work_item_id", "employee_id", "work_date"], name: "worktimes_work_items", using: :btree
 
+  add_foreign_key "employment_roles", "employment_role_categories"
+  add_foreign_key "employment_roles_employments", "employment_role_levels"
   add_foreign_key "employments", "employees", name: "fk_employments_employees", on_delete: :cascade
   add_foreign_key "worktimes", "absences", name: "fk_times_absences", on_delete: :cascade
   add_foreign_key "worktimes", "employees", name: "fk_times_employees", on_delete: :cascade
