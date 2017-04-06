@@ -22,14 +22,14 @@ module Invoicing
           end
         end
 
-        private
-
         def notify_sync_error(error, client = nil)
           parameters = client.present? ? record_to_params(client) : {}
           parameters[:code] = error.code if error.respond_to?(:code)
           parameters[:data] = error.data if error.respond_to?(:data)
           Airbrake.notify(error, cgi_data: ENV.to_hash, parameters: parameters)
         end
+
+        private
 
         def record_to_params(record, prefix = 'client')
           {
@@ -43,6 +43,7 @@ module Invoicing
         end
       end
 
+      delegate :notify_sync_error, to: 'self.class'
       attr_reader :client, :remote_keys
       class_attribute :rate_limiter
       self.rate_limiter = RateLimiter.new(Settings.small_invoice.request_rate)
