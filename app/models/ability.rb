@@ -45,6 +45,7 @@ class Ability
          EmploymentRole,
          EmploymentRoleLevel,
          EmploymentRoleCategory,
+         Reports::Workload,
          WorkItem]
 
     # :crud instead of :manage because cannot change settings of other employees

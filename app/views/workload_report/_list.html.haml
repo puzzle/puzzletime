@@ -7,8 +7,9 @@
           %th.right.nowrap= sort_link(:must_hours, 'Soll')
           %th.right.nowrap= sort_link(:worktime_balance, 'Über-/Unterzeit')
           %th.right.nowrap= sort_link(:absencetime_hours, 'Absenzen')
-          %th.nowrap Auftrag
-          %th.nowrap Beschreibung
+          - if can?(:manage, Reports::Workload)
+            %th.nowrap Auftrag
+            %th.nowrap Beschreibung
           %th.right.nowrap= sort_link(:ordertime_hours, 'Arbeitszeit')
           %th.right.nowrap= sort_link(:workload, 'Auslastung')
           %th.right.nowrap= sort_link(:billability, 'Verrechenbarkeit')
@@ -26,13 +27,19 @@
                 %span.figure= format_workload_worktime_balance(entry.worktime_balance)
                 %span.unit h
             %td
-              %a.data-item{ href: workload_absences_url(entry.employee.id, @report) }
-                %span.figure= format_workload_hours(entry.paid_absence_hours)
-                %span.unit h
-            %td
-              - if entry.order_entries.present?
-                %a{data: {toggle: "employee-#{entry.employee.id}-ordertimes"}} Details
-            %td
+              - if can?(:manage, Reports::Workload)
+                %a.data-item{ href: workload_absences_url(entry.employee.id, @report) }
+                  %span.figure= format_workload_hours(entry.paid_absence_hours)
+                  %span.unit h
+              - else
+                .data-item
+                  %span.figure= format_workload_hours(entry.paid_absence_hours)
+                  %span.unit h
+            - if can?(:manage, Reports::Workload)
+              %td
+                - if entry.order_entries.present?
+                  %a{data: {toggle: "employee-#{entry.employee.id}-ordertimes"}} Details
+              %td
             %td
               .data-item
                 %span.figure= format_workload_hours(entry.ordertime_hours)
@@ -45,7 +52,7 @@
               .data-item
                 %span.figure= format_workload_billability(entry.billability)
                 %span.unit %
-        - if entry.order_entries.present?
+        - if can?(:manage, Reports::Workload) && entry.order_entries.present?
           %tbody.employee-ordertimes{id: "employee-#{entry.employee.id}-ordertimes", style: 'display: none;'}
             - entry.order_entries.each do |ordertime_entry|
               %tr
