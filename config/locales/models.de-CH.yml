@@ -182,6 +182,7 @@ de-CH:
         marital_status: Zivilstand
         social_insurance: AHV-Nummer
         additional_information: Zusätzliche Informationen
+        crm_key: Highrise ID
       employee/marital_statuses:
         married: Verheiratet
         single: Ledig
