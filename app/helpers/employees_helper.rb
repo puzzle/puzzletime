@@ -56,6 +56,11 @@ module EmployeesHelper
   end
 
   def version_attribute_change_args(item_class, attr, from, to)
+    attr_s = attr.to_s
+    if item_class.defined_enums[attr_s]
+      to = item_class.human_attribute_name([attr_s.pluralize, to].join('.'))
+    end
+
     { attr: item_class.human_attribute_name(attr),
       from: f(from),
       to: f(to) }
