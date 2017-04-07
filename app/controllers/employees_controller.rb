@@ -10,7 +10,7 @@ class EmployeesController < ManageController
                           :management, :phone_office, :phone_private, :street,
                           :postal_code, :city, :birthday, :emergency_contact_name,
                           :emergency_contact_phone, :marital_status,
-                          :social_insurance, :additional_info]
+                          :social_insurance, :additional_information]
 
   if Settings.employees.initial_vacation_days_editable
     self.permitted_attrs += [:initial_vacation_days]
