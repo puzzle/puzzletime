@@ -20,6 +20,10 @@ class RoleDistributionReport
 
   private
 
+  def period
+    Period.day_for(@date)
+  end
+
   def add_header(csv)
     header = [
       Employee.model_name.human,
@@ -103,7 +107,7 @@ class RoleDistributionReport
                                    'em.percent AS current_percent_value, ' \
                                    'brp.percent AS unbillable_percent, ' \
                                    '(em.percent - COALESCE(brp.percent, 0)) AS added_value_percent')
-                           .employed_ones(Period.day_for(@date))
+                           .employed_ones(period)
                            .joins(:department)
                            .joins("LEFT JOIN (#{unbillable_roles_percent.to_sql}) AS brp ON employees.id = brp.id")
                            .reorder('department_name, lastname, firstname')
@@ -111,7 +115,7 @@ class RoleDistributionReport
 
   def unbillable_roles_percent
     Employee.select('employees.id, SUM(eres.percent) AS percent')
-            .employed_ones(Period.day_for(@date), false)
+            .employed_ones(period, false)
             .joins('LEFT JOIN employment_roles_employments eres ON (em.id = eres.employment_id)')
             .joins('INNER JOIN employment_roles ers ON (eres.employment_role_id = ers.id AND NOT ers.billable)')
             .group('employees.id')
@@ -119,7 +123,7 @@ class RoleDistributionReport
 
   def categories
     @categories ||=
-      Employee.employed_ones(Period.day_for(@date))
+      Employee.employed_ones(period)
               .joins('INNER JOIN employment_roles_employments ere ON ere.employment_id = em.id')
               .joins('INNER JOIN employment_roles er ON er.id = ere.employment_role_id')
               .joins('INNER JOIN employment_role_categories erc ON erc.id = er.employment_role_category_id')
@@ -129,7 +133,7 @@ class RoleDistributionReport
 
   def category_percents
     @category_percents ||=
-      Employee.employed_ones(Period.day_for(@date), false)
+      Employee.employed_ones(period, false)
               .joins('INNER JOIN employment_roles_employments ere ON ere.employment_id = em.id')
               .joins('INNER JOIN employment_roles er ON er.id = ere.employment_role_id')
               .joins('INNER JOIN employment_role_categories erc ON erc.id = er.employment_role_category_id')
