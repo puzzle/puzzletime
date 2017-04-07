@@ -129,7 +129,7 @@ class RoleDistributionReport
 
   def category_percents
     @category_percents ||=
-      Employee.employed_ones(Period.current_day, false)
+      Employee.employed_ones(Period.day_for(@date), false)
               .joins('INNER JOIN employment_roles_employments ere ON ere.employment_id = em.id')
               .joins('INNER JOIN employment_roles er ON er.id = ere.employment_role_id')
               .joins('INNER JOIN employment_role_categories erc ON erc.id = er.employment_role_category_id')
