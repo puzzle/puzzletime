@@ -13,8 +13,7 @@
 %section
   %h4
     Übersicht
-    - if @period
-      %small per #{I18n.l(@period.end_date)}
+    %small per #{I18n.l(@period.present? ? @period.end_date : Time.zone.today)}
 
   %table.table.table-inline.table-striped.table-condensed
     %tbody

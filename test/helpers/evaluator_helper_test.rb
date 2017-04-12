@@ -14,8 +14,7 @@ class EvaluatorHelperTest < ActionView::TestCase
                   ['Software Engineer Senior', '80 %'],
                   ['Member of the Technical Board', '20 %']], infos.first
     assert_equal ['Überstundensaldo', 'per Gestern'], infos.second.map(&:first)
-    assert_equal ['Soll Arbeitszeit ab heute'], infos.third.map(&:first)
-    assert_equal ['Feriensaldo', 'per 31.12.2010', 'Guthaben im 2010'], infos.fourth.map(&:first)
+    assert_equal ['Feriensaldo per 31.12.2010', 'Guthaben 2010', 'Übertrag 2009'], infos.third.map(&:first)
   end
 
   test '#employee_infos without period' do
@@ -24,8 +23,10 @@ class EvaluatorHelperTest < ActionView::TestCase
     assert_equal [['<a href="http://test.host/employees/2/employments">Beschäftigungsgrad</a>', '100 %'],
                   ['Software Engineer Senior', '80 %'],
                   ['Member of the Technical Board', '20 %']], infos.first
-    assert_equal ['Überstundensaldo Gestern'], infos.second.map(&:first)
-    assert_equal ['Feriensaldo per 31.12.2017', 'Guthaben im 2017'], infos.third.map(&:first)
+    assert_equal ['Überstundensaldo', 'per Gestern'], infos.second.map(&:first)
+    assert_equal ["Feriensaldo per 31.12.#{Time.zone.today.year}",
+                  "Guthaben #{Time.zone.today.year}",
+                  "Übertrag #{Time.zone.today.year - 1}"], infos.third.map(&:first)
   end
 
   private
@@ -43,4 +44,5 @@ class EvaluatorHelperTest < ActionView::TestCase
       percent: 20
     )
   end
+
 end
