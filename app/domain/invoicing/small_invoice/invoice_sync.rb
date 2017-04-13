@@ -64,7 +64,7 @@ module Invoicing
         sync_remote(item)
       rescue Invoicing::Error => e
         if e.code == 15_016 # no rights / not found
-          delete_invoice
+          delete_invoice(true)
         else
           raise
         end
@@ -89,8 +89,8 @@ module Invoicing
                                total_hours: total_hours(item))
       end
 
-      def delete_invoice
-        if invoice.destroyable?
+      def delete_invoice(force = false)
+        if invoice.destroyable? || force
           invoice.destroy!
         elsif invoice.status != 'deleted'
           invoice.status = 'deleted'
