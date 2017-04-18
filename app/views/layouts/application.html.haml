@@ -17,15 +17,18 @@
     = javascript_include_tag "application", 'data-turbolinks-track' => true
 
   %body{class: "#{controller.controller_module_name} #{controller.controller_name}"}
-    = render 'layouts/headerbar'
+    %header
+      = render 'layouts/headerbar'
+      - if @user
+        %nav
+          = render 'layouts/menu'
+
+          #submenu.navbar.navbar.navbar-default
+            .container-fluid
+              %ul.nav.navbar-nav
+                = render 'submenu'
+
     - if @user
-      = render 'layouts/menu'
-
-      #submenu.navbar.navbar.navbar-default
-        .container-fluid
-          %ul.nav.navbar-nav
-            = render 'submenu'
-
       = render 'breadcrumb'
 
     = yield :extra_header if content_for?(:extra_header)
