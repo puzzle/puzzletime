@@ -184,7 +184,7 @@ module EvaluatorHelper
     date = period.present? ? period.end_date : Time.zone.today
     [[["Feriensaldo per #{l(date.end_of_year)}", format_days(stats.remaining_vacations(date.end_of_year), true)],
       ["Guthaben #{date.year}", format_days(stats.total_vacations(Period.year_for(date)), true)],
-      ["Übertrag #{(date - 1.year).year}", format_days(stats.remaining_vacations(date - 1.year), true)]]]
+      ["Übertrag #{(date - 1.year).year}", format_days(stats.remaining_vacations((date - 1.year).end_of_year), true)]]]
   end
 
   def employee_info_labels(info)
