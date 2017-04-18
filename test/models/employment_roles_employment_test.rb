@@ -3,10 +3,11 @@
 #
 # Table name: employment_roles_employments
 #
+#  id                       :integer          not null, primary key
 #  employment_id            :integer          not null
 #  employment_role_id       :integer          not null
-#  percent                  :decimal(5, 2)    not null
 #  employment_role_level_id :integer
+#  percent                  :decimal(5, 2)    not null
 #
 
 require 'test_helper'

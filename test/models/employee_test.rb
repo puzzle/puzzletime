@@ -27,6 +27,7 @@
 #  marital_status            :integer
 #  social_insurance          :string
 #  crm_key                   :string
+#  additional_information    :text
 #
 
 require 'test_helper'
