@@ -11,8 +11,10 @@
             %th.nowrap Auftrag
             %th.nowrap Beschreibung
           %th.right.nowrap= sort_link(:ordertime_hours, 'Arbeitszeit')
-          %th.right.nowrap= sort_link(:workload, 'Auslastung')
-          %th.right.nowrap= sort_link(:billability, 'Verrechenbarkeit')
+          %th.right.nowrap{ title: 'Kundenprojekte / Ist (ohne Absenzen)' }
+            = sort_link(:workload, 'Auslastung')
+          %th.right.nowrap{ title: 'Verrechenbar / Kundenprojekte' }
+            = sort_link(:billability, 'Verrechenbarkeit')
 
       - @report.entries.each do |entry|
         %tbody{id: "employee-#{entry.employee.id}-summary"}
