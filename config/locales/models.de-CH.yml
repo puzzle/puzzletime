@@ -167,7 +167,7 @@ de-CH:
         department_id: Organisationseinheit
         initial_vacation_days: Anfängliche Ferien
         ldapname: LDAP Name
-        current_percent: Prozent
+        current_percent: Beschäftigungsgrad
         eval_periods: Zeitspannen Auswertungen
         committed_worktimes_at: Letzte freigegebene Periode
         probation_period_end_date: Ende Probezeit
