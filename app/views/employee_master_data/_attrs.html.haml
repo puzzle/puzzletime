@@ -64,6 +64,9 @@
         = labeled_attr(@employee, :current_percent)
         = labeled('Rollen', format_current_employment_roles(@employee, tag(:br)))
 
-        - if @employee.additional_information
+        - if @employee.additional_information.present?
           %h4 Zusätzliche Informationen
-          = @employee.additional_information
+          %div{ style: 'white-space: pre-wrap' }<
+            = preserve do
+              :escaped
+                #{@employee.additional_information}
