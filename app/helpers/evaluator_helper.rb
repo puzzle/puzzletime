@@ -32,17 +32,17 @@ module EvaluatorHelper
     end
   end
 
-  def collect_times(periods, method, *division)
+  def collect_times(evaluation, periods, method, *division)
     periods.collect do |p|
-      @evaluation.send(method, p, *division)
+      evaluation.send(method, p, *division)
     end
   end
 
-  def times_or_plannings?(division)
+  def times_or_plannings?(evaluation, division, times)
     @periods.each_with_index.any? do |_p, i|
-      time = @times[i][division.id]
+      time = times[i][division.id]
       val = (time.is_a?(Hash) ? time[:hours] : time).to_f
-      if @evaluation.planned_hours
+      if evaluation.planned_hours
         plan = @plannings[i][division.id]
         val += (plan.is_a?(Hash) ? plan[:hours] : 0).to_f
       end

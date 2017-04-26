@@ -5,11 +5,11 @@
   division_id = nil if ! defined? division_id
   division_id = division.id if defined? division
   p = @periods[timecell_counter]
-  if @evaluation.planned_hours
+  if evaluation.planned_hours
     if division_id
       plancell = @plannings[timecell_counter][division_id]
     else
-      plancell = @evaluation.sum_total_plannings(p)
+      plancell = evaluation.sum_total_plannings(p)
     end
   end
   hours = (timecell.is_a?(Hash) ? timecell[:hours] : timecell).to_f
@@ -18,18 +18,18 @@
   planned_billable_hours = (plancell.is_a?(Hash) ? plancell[:billable_hours] : nil).to_f
   action ||= 'details'
 %td.text-right
-  - if @evaluation.class.billable_hours
+  - if evaluation.class.billable_hours
     = with_tooltip('Geleistet - gesamthaft', class: 'additional-figure muted') do
       = safe_join(['(', format_hour(hours), ')'])
     = with_tooltip('Geleistet - verrechenbar') do
       = format_hour(billable_hours)
   - else
     = format_hour(hours)
-  - if division_id || @evaluation.total_details
+  - if division_id || evaluation.total_details
     - link = url_for(controller: controller.controller_name,
                      action: action,
-                     evaluation: params[:evaluation],
-                     category_id: @evaluation.category_id,
+                     evaluation: evaluation_name,
+                     category_id: evaluation.category_id,
                      division_id: division_id.presence)
     - link += '&amp;' + ( p ? p.url_query_s : 'start_date=0' )
     -# use html link instead of link_to for performance reasons
@@ -37,7 +37,7 @@
   - else
     = image_tag('space.gif', size: '19x11')
 
-- if @evaluation.class.planned_hours
+- if evaluation.class.planned_hours
   %td.text-right
     = with_tooltip('Fix geplant - gesamthaft', class: 'additional-figure muted') do
       = safe_join(['(', format_hour(planned_hours), ')'])

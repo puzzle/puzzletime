@@ -1,19 +1,26 @@
+:ruby
+  unless defined? evaluation
+    evaluation = @evaluation
+    times = @times
+    evaluation_name = params[:evaluation]
+  end
+
 %table#evaluation.table.table-striped.table-condensed.table-hover.table-inline
   %thead
     %tr
-      %th= @evaluation.division_header
-      -if @evaluation.sub_work_items_eval
+      %th= evaluation.division_header
+      -if evaluation.sub_work_items_eval
         %th
       - @periods.each do |p|
-        %th.periodHead{colspan: @evaluation.class.planned_hours ? 3 : nil}
+        %th.periodHead{colspan: evaluation.class.planned_hours ? 3 : nil}
           = p ? p.label : 'Total'
           &nbsp; &nbsp;
-      - @evaluation.division_supplement(@user).each do |supp|
+      - evaluation.division_supplement(@user).each do |supp|
         %th= supp[1]
-    - if @evaluation.class.planned_hours
+    - if evaluation.class.planned_hours
       %tr
         %th.subhead
-        -if @evaluation.sub_work_items_eval
+        -if evaluation.sub_work_items_eval
           %th.subhead
         - @periods.each do |p|
           %th.subhead.period-subhead
@@ -22,17 +29,24 @@
             Geplant
           %th.subhead.period-subhead
             Abweichung
-        - @evaluation.division_supplement(@user).each do |supp|
+        - evaluation.division_supplement(@user).each do |supp|
           %th.subhead
 
   %tbody
-    = render(partial: 'division', collection: @evaluation.divisions(@period))
+    = render(partial: 'division',
+             collection: evaluation.divisions(@period),
+             locals: { evaluation: evaluation,
+                       evaluation_name: evaluation_name,
+                       times: times })
 
   %tfoot
     %tr.times_total_sum
       %td Total Zeit
-      - if @evaluation.sub_work_items_eval
+      - if evaluation.sub_work_items_eval
         %th
-      = render(partial: 'timecell', collection: collect_times(@periods, :sum_total_times))
-      - @evaluation.division_supplement(@user).each do |supp|
+      = render(partial: 'timecell',
+               collection: collect_times(evaluation, @periods, :sum_total_times),
+               locals: { evaluation: evaluation,
+                         evaluation_name: evaluation_name })
+      - evaluation.division_supplement(@user).each do |supp|
         %th
