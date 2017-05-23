@@ -1,17 +1,49 @@
-version: '2'
-
+version: '3'
 services:
-
-  ptimedb:
-    image: postgres
+  rails:
+    image: "puzzle.ch/puzzletime:development"
+    volumes:
+      - /mnt/puzzletime_rails_root:/opt/app-root/local-src
     ports:
-      - '5432:5432'
+      - "3000:8080"
+    environment:
+      - RAILS_ENV=development
+      - RAILS_DB_HOST=database
+      - RAILS_DB_PORT=5432
+      - RAILS_DB_ADAPTER=postgresql
+      - RAILS_DB_NAME=puzzletime_development
+      - RAILS_DB_USERNAME=puzzletime
+      - RAILS_DB_PASSWORD=puzzletime
+      - RAILS_TEST_DB_HOST=test_database
+      - RAILS_TEST_DB_NAME=puzzletime_test
+      - RAILS_TEST_DB_USERNAME=puzzletime
+      - RAILS_TEST_DB_PASSWORD=puzzletime
+      - MEMCACHED_HOST=cache
+      - MEMCACHED_PORT=11211
+    depends_on:
+      - database
+      - test_database
+      - cache
+  database:
+    image: postgres:9.3
     environment:
       - POSTGRES_DB=puzzletime_development
       - POSTGRES_USER=puzzletime
-      - POSTGRES_PASSWORD=timepuzzle
-
-  ptimecache:
+      - POSTGRES_PASSWORD=puzzletime
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - /mnt/puzzletime_postgres_files/dev/pgdata:/var/lib/postgresql/data/pgdata
+  test_database:
+    image: postgres:9.3
+    environment:
+      - POSTGRES_DB=puzzletime_test
+      - POSTGRES_USER=puzzletime
+      - POSTGRES_PASSWORD=puzzletime
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - /mnt/puzzletime_postgres_files/test/pgdata:/var/lib/postgresql/data/pgdata
+  debug:
+    image: busybox
+    command: tail -f /etc/hosts
+  cache:
     image: memcached
-    ports:
-      - '11211:11211'

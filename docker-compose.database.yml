@@ -1,0 +1,17 @@
+version: '2'
+
+services:
+
+  ptimedb:
+    image: postgres
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_DB=puzzletime_development
+      - POSTGRES_USER=puzzletime
+      - POSTGRES_PASSWORD=timepuzzle
+
+  ptimecache:
+    image: memcached
+    ports:
+      - '11211:11211'
