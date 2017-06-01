@@ -38,11 +38,16 @@ class EmploymentsController < ManageController
   end
 
   def check_percent
-    role_percent = entry.employment_roles_employments
-                        .collect(&:percent)
-                        .sum
+    employment_roles_employments =
+      params[:employment][:employment_roles_employments_attributes]
 
-    if entry.percent.to_i != role_percent.to_i
+    role_percent = employment_roles_employments
+                   .values
+                   .select { |v| !v[:_destroy] }
+                   .collect { |v| v[:percent].to_i }
+                   .sum
+
+    if entry.percent.to_i != role_percent
       entry.errors.add(:percent, 'Funktionsanteile und Beschäftigungsgrad stimmen nicht überein.')
       false
     end
