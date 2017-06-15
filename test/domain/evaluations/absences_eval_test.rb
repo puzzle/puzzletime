@@ -12,8 +12,8 @@ class AbsencesEvalTest < ActiveSupport::TestCase
 
   def test_absences
     assert @evaluation.absences?
-    assert ! @evaluation.for?(employees(:pascal))
-    assert ! @evaluation.total_details
+    assert !@evaluation.for?(employees(:pascal))
+    assert @evaluation.total_details
 
     divisions = @evaluation.divisions
     assert_equal 3, divisions.size
