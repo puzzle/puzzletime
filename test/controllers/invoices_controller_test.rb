@@ -165,7 +165,7 @@ class InvoicesControllerTest < ActionController::TestCase
     end
   end
 
-  test 'DELETE non-draft marks record as deleted' do
+  test 'DELETE sent marks record as cancelled' do
     login_as :mark
     test_entry.status = 'sent'
     test_entry.save!
@@ -175,7 +175,39 @@ class InvoicesControllerTest < ActionController::TestCase
     }
     delete :destroy, params
 
-    assert Invoice.find(test_entry.id).status == 'deleted'
+    assert Invoice.find(test_entry.id).status == 'cancelled'
+  end
+
+  %w(cancelled unknown).each do |status|
+    test "DELETE #{status} marks record as deleted" do
+      login_as :mark
+
+      test_entry.status = status
+      test_entry.save!
+      params = {
+        order_id: test_entry.order_id,
+        id: test_entry.id
+      }
+      delete :destroy, params
+
+      assert Invoice.find(test_entry.id).status == 'deleted'
+    end
+  end
+
+  %w(deleted paid partially_paid).each do |status|
+    test "DELETE #{status} is not permitted" do
+      login_as :mark
+
+      test_entry.status = status
+      test_entry.save!
+      params = {
+        order_id: test_entry.order_id,
+        id: test_entry.id
+      }
+      assert_raise CanCan::AccessDenied do
+        delete :destroy, params
+      end
+    end
   end
 
   private

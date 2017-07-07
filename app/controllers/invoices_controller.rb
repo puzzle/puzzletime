@@ -212,7 +212,7 @@ class InvoicesController < CrudController
         entry.destroy
       else
         Invoice.transaction do
-          entry.status = status == 'sent' ? 'cancelled' : 'deleted'
+          entry.status = entry.status == 'sent' ? 'cancelled' : 'deleted'
           entry.ordertimes.each do |ordertime|
             ordertime.invoice_id = nil
             ordertime.save
