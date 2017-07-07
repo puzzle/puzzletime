@@ -41,7 +41,7 @@
   .form-group
     .col-md-offset-2.col-md-8
       = f.submit_button(ti('button.save'))
-      - unless @worktime.id
+      - unless @worktime.id || params[:other]
         = f.button('Speichern & Neu',
                    class: 'btn btn-default',
                    name: 'redirect_to_self',
