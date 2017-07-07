@@ -7,7 +7,7 @@ module Invoicing
                   3 => 'sent',  # 1st reminder
                   4 => 'sent',  # 2nd reminder
                   5 => 'sent',  # 3rd reminder
-                  6 => 'draft', # cancelled
+                  6 => 'cancelled', # cancelled
                   7 => 'draft', # draft
                   11 => 'partially_paid', # partially paid
                   12 => 'sent', # reminder

@@ -239,6 +239,7 @@ de-CH:
         paid: Bezahlt
         partially_paid: Teilbezahlt
         deleted: Gelöscht
+        cancelled: Storniert
         unknown: Unbekannt
       order:
         client: Kunde

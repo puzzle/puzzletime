@@ -23,7 +23,7 @@
 
 class Invoice < ActiveRecord::Base
 
-  STATUSES = %w(draft sent paid partially_paid deleted unknown).freeze
+  STATUSES = %w(draft sent paid partially_paid cancelled deleted unknown).freeze
 
   enum grouping: %w(accounting_posts employees manual)
 
