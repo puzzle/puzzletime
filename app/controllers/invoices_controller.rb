@@ -51,20 +51,7 @@ class InvoicesController < CrudController
   end
 
   def destroy(options = {})
-    destroyed = run_callbacks(:destroy) do
-      if entry.destroyable?
-        entry.destroy
-      else
-        Invoice.transaction do
-          entry.status = 'deleted'
-          entry.ordertimes.each do |ordertime|
-            ordertime.invoice_id = nil
-            ordertime.save
-          end
-          entry.save
-        end
-      end
-    end
+    destroyed = attempt_destroy_record
 
     respond_to do |format|
       if destroyed
@@ -217,6 +204,23 @@ class InvoicesController < CrudController
 
   def list_entries
     super.per(70)
+  end
+
+  def attempt_destroy_record
+    run_callbacks(:destroy) do
+      if entry.destroyable?
+        entry.destroy
+      else
+        Invoice.transaction do
+          entry.status = status == 'sent' ? 'cancelled' : 'deleted'
+          entry.ordertimes.each do |ordertime|
+            ordertime.invoice_id = nil
+            ordertime.save
+          end
+          entry.save
+        end
+      end
+    end
   end
 
 end
