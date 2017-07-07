@@ -39,7 +39,7 @@ class EmploymentsController < ManageController
 
   def check_percent
     employment_roles_employments =
-      params[:employment][:employment_roles_employments_attributes]
+      params[:employment][:employment_roles_employments_attributes] || {}
 
     role_percent = employment_roles_employments
                    .values
