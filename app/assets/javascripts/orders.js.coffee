@@ -15,7 +15,7 @@ $(document).on('click', '[data-submit-form]', (event) ->
   event.preventDefault()
 )
 
-$ ->
+$(document).on('turbolinks:load', ->
   # new order: once a client is selected, activate the category checkbox
   cwi = $('#client_work_item_id')
   if cwi.length > 0 && cwi[0].selectize
@@ -29,3 +29,4 @@ $ ->
 
   $('#target_scope_icon').selectize({ render: { option: renderIconItem, item: renderIconItem } })
   $('#order_status_style').selectize({ render: { option: renderStyleItem, item: renderStyleItem } })
+)

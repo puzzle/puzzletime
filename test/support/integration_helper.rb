@@ -40,10 +40,9 @@ module IntegrationHelper
   end
 
   def drag(from_node, *to_node)
-    mouse_driver = page.driver.browser.mouse
-    mouse_driver.down(from_node.native)
-    to_node.each { |node| mouse_driver.move_to(node.native) }
-    mouse_driver.up
+    action = page.driver.browser.action.click_and_hold(from_node.native)
+    to_node.each { |node| action = action.move_to(node.native) }
+    action.release.perform
   end
 
   def accept_confirmation(expected_message = nil)

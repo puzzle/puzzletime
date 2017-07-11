@@ -17,5 +17,6 @@ class app.WorkItemAutocomplete extends app.Autocomplete
     "<div data-billable=#{ item.billable }>#{ escape(item.path_shortnames) }: #{ escape(item.name) }</div>"
 
 
-$ ->
+$(document).on('turbolinks:load', ->
   $('[data-autocomplete=work_item]').each((i, element) -> new app.WorkItemAutocomplete().bind(element))
+)

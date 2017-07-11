@@ -37,6 +37,7 @@ replaceContactsWithCrm = (data) ->
 
 $(document).on('change', '#new_order #client_work_item_id', app.loadContactsWithCrm)
 
-$ ->
+$(document).on('turbolinks:load', ->
   unless $('#client_work_item_id').val()
     $('.add_nested_fields_link[data-association-path=order_order_contacts]').addClass('disabled')
+)

@@ -6,5 +6,6 @@ class app.OrderAutocomplete extends app.Autocomplete
     if value
       window.location = window.location.toString().replace(/orders\/\d+/, 'orders/' + value)
 
-$ ->
+$(document).on('turbolinks:load', ->
   $('[data-autocomplete=order]').each((i, element) -> new app.OrderAutocomplete().bind(element))
+)

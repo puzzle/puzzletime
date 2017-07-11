@@ -158,6 +158,7 @@ app.plannings.panel = new class
     else
       $(panel)
 
-$ ->
+$(document).on('turbolinks:load', ->
   app.plannings.panel.destroy()
   app.plannings.panel.init()
+)

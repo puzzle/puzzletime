@@ -246,6 +246,7 @@ app.plannings = new class
     else
       $(board)
 
-$ ->
+$(document).on('turbolinks:load', ->
   app.plannings.destroy()
   app.plannings.init()
+)

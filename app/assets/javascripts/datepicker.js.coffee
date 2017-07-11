@@ -40,6 +40,7 @@ app.datepicker = new class
       field = field.closest('.input-group').find('.date')
     field.datepicker('show')
 
-$ ->
+$(document).on('turbolinks:load', ->
   app.datepicker.destroy()
   app.datepicker.init()
+)

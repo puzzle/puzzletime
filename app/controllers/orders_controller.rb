@@ -177,7 +177,7 @@ class OrdersController < CrudController
       @categories = load_category_options
     end
 
-    @contacts = append_crm_contacts(load_contact_options)
+    @contacts = append_crm_contacts(load_contact_options.to_a)
     @employees = load_employee_options
   end
 

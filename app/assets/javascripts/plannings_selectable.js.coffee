@@ -216,6 +216,7 @@ app.plannings.selectable = new class
         translate_by: translateBy
     )
 
-$ ->
+$(document).on('turbolinks:load', ->
   app.plannings.selectable.destroy()
   app.plannings.selectable.init()
+)

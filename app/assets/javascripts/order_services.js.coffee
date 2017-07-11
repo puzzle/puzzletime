@@ -18,8 +18,12 @@ app.orderServices = new class
     $('[data-submit-form="#worktimes"]')
       .prop('hidden', !$('[name="worktime_ids[]"]:checked').length)
 
-$ ->
-  app.orderServices.init()
 
-  $('#order_services_filter_form').on 'ajax:success', ->
-    app.orderServices.init()
+
+$(document).on('ajax:success', '#order_services_filter_form', ->
+  app.orderServices.init()
+)
+
+$(document).on('turbolinks:load', ->
+  app.orderServices.init()
+)

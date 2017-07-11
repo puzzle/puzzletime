@@ -33,7 +33,6 @@
 #= require order_services
 #= require accounting_posts
 #= require turbolinks
-#= require progress_bar
 
 
 app = window.App ||= {}
@@ -96,8 +95,8 @@ $(document).on('ajax:error', (event, xhr, status, error) ->
 
 
 ################################################################
-# only bind events for non-document elemenets in $ ->
-$ ->
+# only bind events for non-document elements in $ ->
+$(document).on('turbolinks:load', ->
   # wire up selectize
   $('select.searchable:not([multiple])').selectize(selectOnTab: true)
   $('select[multiple].searchable').selectize(plugins: ['remove_button'], selectOnTab: true)
@@ -115,3 +114,4 @@ $ ->
   # set initial focus
   $('.initial-focus, .initial-focus input').focus()
   setTimeout(-> $('.initial-focus.selectized').next('.selectize-control').find('input').focus())
+)

@@ -71,7 +71,7 @@ showRegularAbsence = (e) ->
 
 worktimesWaypoint = null
 
-$ ->
+$(document).on('turbolinks:load', ->
 
   worktimes = $('.worktimes-container')
 
@@ -147,3 +147,4 @@ $ ->
 
   $('#multi_absence_link').click(showMultiAbsence)
   $('#regular_absence_link').click(showRegularAbsence)
+)

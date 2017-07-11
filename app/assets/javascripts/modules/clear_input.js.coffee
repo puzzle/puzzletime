@@ -23,5 +23,6 @@ class ClearInput
 
 new ClearInput().bind()
 
-$ ->
+$(document).on('turbolinks:load', ->
   $('.has-clear input[type=search]').each((i, e) -> new ClearInput().toggleHide($(e)))
+)

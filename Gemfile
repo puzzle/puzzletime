@@ -22,19 +22,14 @@ gem 'nested_form_fields'
 gem 'net-ldap'
 gem 'nokogiri'
 gem 'protective'
-#gem 'public_suffix'
 gem 'rails_autolink'
 gem 'rails-i18n'
 gem 'request_store'
 gem 'rqrcode'
 gem 'seed-fu'
-#gem 'sort_alphabetical'
 gem 'validates_by_schema'
 gem 'validates_timeliness'
 gem 'paper_trail'
-
-# fixed version for indirect dependencies
-#gem 'mime-types', '~> 2.99.1'
 
 ## assets
 gem 'sass-rails'
@@ -44,11 +39,10 @@ gem 'therubyracer', platforms: :ruby
 
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
-gem 'turbolinks' #, '< 5.0' # upgrade to 5.0 together with rails
+gem 'turbolinks'
 gem 'jquery-turbolinks'
 gem 'bootstrap-sass'
-#gem 'autoprefixer-rails', '< 6.1.0' # dependency of bootstrap, newer requires ruby 2.0
-gem 'selectize-rails' #, '0.12.2'
+gem 'selectize-rails'
 
 group :development, :test do
   gem 'binding_of_caller'

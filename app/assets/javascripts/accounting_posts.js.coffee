@@ -1,6 +1,6 @@
 app = window.App ||= {}
 
-$ ->
+$(document).on('turbolinks:load', ->
   handle_book_on_order_radio = (value) ->
     work_item_fields = $('#work_item_fields')
     if value == 'true'
@@ -54,3 +54,4 @@ $ ->
     '#accounting_post_offered_days, ' +
     '#accounting_post_offered_rate, ' +
     '#accounting_post_offered_total').on 'keyup change', updateOfferedValues
+)

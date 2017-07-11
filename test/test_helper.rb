@@ -84,7 +84,8 @@ class ActionDispatch::IntegrationTest
     Capybara.register_driver :selenium do |app|
       require 'selenium/webdriver'
       Selenium::WebDriver::Firefox::Binary.path = ENV['FIREFOX_PATH']
-      Capybara::Selenium::Driver.new(app, browser: :firefox)
+      capa = Selenium::WebDriver::Remote::Capabilities.firefox(marionette: false)
+      Capybara::Selenium::Driver.new(app, browser: :firefox, desired_capabilities: capa)
     end
   end
 
