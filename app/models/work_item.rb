@@ -137,7 +137,7 @@ class WorkItem < ActiveRecord::Base
   end
 
   def move_times!(target)
-    worktimes.update_all(work_item_id: target)
+    worktimes.update_all(work_item_id: target.is_a?(Integer) ? target : target.id)
   end
 
   def update_path_names!
@@ -154,10 +154,16 @@ class WorkItem < ActiveRecord::Base
   private
 
   def remember_name_changes
-    @names_changed = parent_id_changed? ||
-                     name_changed? ||
-                     shortname_changed?
-    store_path_names if @names_changed
+    if @save_after_create
+      @save_after_create = false
+      true
+    else
+      @save_after_create = new_record?
+      @names_changed = parent_id_changed? ||
+                       name_changed? ||
+                       shortname_changed?
+      store_path_names if @names_changed
+    end
   end
 
   def generate_path_ids

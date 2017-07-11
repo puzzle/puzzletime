@@ -9,7 +9,7 @@ class Orders::CommittedControllerTest < ActionController::TestCase
   def test_edit_as_manager
     order = orders(:puzzletime)
     order.update!(committed_at: Date.new(2015, 8, 31))
-    get :edit, order_id: order.id
+    get :edit, params: { order_id: order.id }
     assert_template '_form'
 
     selection = assigns(:dates)
@@ -21,7 +21,7 @@ class Orders::CommittedControllerTest < ActionController::TestCase
     login_as(:lucien)
     order = orders(:puzzletime)
     assert_raise(CanCan::AccessDenied) do
-      get :edit, order_id: order.id
+      get :edit, params: { order_id: order.id }
     end
   end
 
@@ -29,7 +29,7 @@ class Orders::CommittedControllerTest < ActionController::TestCase
     login_as(:various_pedro)
     order = orders(:puzzletime)
     assert_raise(CanCan::AccessDenied) do
-      get :edit, order_id: order.id
+      get :edit, params: { order_id: order.id }
     end
   end
 
@@ -38,8 +38,10 @@ class Orders::CommittedControllerTest < ActionController::TestCase
     order.update!(committed_at: Date.new(2015, 8, 31))
     eom = (Time.zone.today - 1.month).end_of_month
     patch :update,
-          order_id: order.id,
-          order: { committed_at: eom }
+          params: {
+            order_id: order.id,
+            order: { committed_at: eom }
+          }
     assert_equal eom, order.reload.committed_at
   end
 
@@ -47,8 +49,10 @@ class Orders::CommittedControllerTest < ActionController::TestCase
     order = orders(:puzzletime)
     order.update!(committed_at: Date.new(2015, 8, 31))
     patch :update,
-          order_id: order.id,
-          order: { committed_at: Date.new(2015, 10, 15) }
+          params: {
+            order_id: order.id,
+            order: { committed_at: Date.new(2015, 10, 15) }
+          }
     assert_equal Date.new(2015, 8, 31), order.reload.committed_at
     assert_template '_form'
     assert_match /nicht erlaubt/, assigns(:order).errors.full_messages.join

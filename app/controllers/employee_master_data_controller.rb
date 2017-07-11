@@ -25,7 +25,7 @@ class EmployeeMasterDataController < ApplicationController
     respond_to do |format|
       format.html
       format.vcf
-      format.svg { render text: qr_code.as_svg }
+      format.svg { render plain: qr_code.as_svg }
     end
   end
 

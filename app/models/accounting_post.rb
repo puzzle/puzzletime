@@ -24,8 +24,8 @@ class AccountingPost < ActiveRecord::Base
 
   ### ASSOCIATIONS
 
-  belongs_to :portfolio_item
-  belongs_to :service
+  belongs_to :portfolio_item, optional: true
+  belongs_to :service, optional: true
 
   has_ancestor_through_work_item :order
   has_ancestor_through_work_item :client

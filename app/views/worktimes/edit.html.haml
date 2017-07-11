@@ -7,6 +7,6 @@
 
 - if @user == @worktime.employee
   %p= link_to 'Löschen',
-              evaluation_detail_params.merge!(:action =>'destroy', :id => @worktime.id),
+              evaluation_detail_params.merge!(action: 'destroy', id: @worktime.id),
               data: { method: :delete,
                       confirm: ti(:confirm_delete) }

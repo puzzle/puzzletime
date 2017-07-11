@@ -36,7 +36,7 @@ module Plannings
       if params[:employee_id] # new
         params[:employee_id]
       elsif params[:items].present? # update
-        Array(params[:items].first).last[:employee_id]
+        Array(params[:items].to_unsafe_h.first).last[:employee_id]
       elsif params[:planning_ids].present? # destroy
         Planning.find(params[:planning_ids].first).employee_id
       else

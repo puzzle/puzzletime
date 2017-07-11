@@ -4,7 +4,7 @@ class OrderTargetsControllerTest < ActionController::TestCase
   setup :login
 
   test 'GET show renders targets' do
-    get :show, order_id: order.id
+    get :show, params: { order_id: order.id }
     assert_template :show
     assert_equal order_targets(:puzzletime_time, :puzzletime_cost, :puzzletime_quality),
                  assigns(:order_targets)
@@ -12,21 +12,23 @@ class OrderTargetsControllerTest < ActionController::TestCase
 
   test 'GET show as normal user renders targets' do
     login_as(:long_time_john)
-    get :show, order_id: order.id
+    get :show, params: { order_id: order.id }
     assert_template :show
     assert_equal 3, assigns(:order_targets).size
   end
 
   test 'PATCH update updates targets' do
     patch :update,
-          order_id: order.id,
-          order: {
-            "target_#{order_targets(:puzzletime_time).id}" =>
-              { rating: 'orange', comment: 'bla bla' },
-            "target_#{order_targets(:puzzletime_cost).id}" =>
-              { rating: 'green', comment: 'bla bla' },
-            "target_#{order_targets(:puzzletime_quality).id}" =>
-              { rating: 'red', comment: 'bla bla' } }
+          params: {
+            order_id: order.id,
+            order: {
+              "target_#{order_targets(:puzzletime_time).id}" =>
+                { rating: 'orange', comment: 'bla bla' },
+              "target_#{order_targets(:puzzletime_cost).id}" =>
+                { rating: 'green', comment: 'bla bla' },
+              "target_#{order_targets(:puzzletime_quality).id}" =>
+                { rating: 'red', comment: 'bla bla' } }
+          }
 
     assert_template :show
     assert_equal 'orange', order_targets(:puzzletime_time).reload.rating
@@ -39,14 +41,16 @@ class OrderTargetsControllerTest < ActionController::TestCase
 
   test 'PATCH update with errors fails' do
     patch :update,
-          order_id: order.id,
-          order: {
-            "target_#{order_targets(:puzzletime_time).id}" =>
-              { rating: 'orange', comment: '' },
-            "target_#{order_targets(:puzzletime_cost).id}" =>
-              { rating: 'green', comment: '' },
-            "target_#{order_targets(:puzzletime_quality).id}" =>
-              { rating: 'red', comment: 'bla bla' } }
+          params: {
+            order_id: order.id,
+            order: {
+              "target_#{order_targets(:puzzletime_time).id}" =>
+                { rating: 'orange', comment: '' },
+              "target_#{order_targets(:puzzletime_cost).id}" =>
+                { rating: 'green', comment: '' },
+              "target_#{order_targets(:puzzletime_quality).id}" =>
+                { rating: 'red', comment: 'bla bla' } }
+          }
 
     assert_template :show
     assert assigns(:errors).present?
@@ -55,7 +59,7 @@ class OrderTargetsControllerTest < ActionController::TestCase
   test 'PATCH update as normal user fails' do
     login_as(:pascal)
     assert_raises(CanCan::AccessDenied) do
-      patch :update, order_id: order.id
+      patch :update, params: { order_id: order.id }
     end
   end
 

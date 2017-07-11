@@ -12,7 +12,7 @@ class OrderKindsControllerTest < ActionController::TestCase
 
   def test_destroy # :nodoc:
     assert_no_difference('OrderKind.count') do
-      delete :destroy, id: test_entry.id
+      delete :destroy, params: { id: test_entry.id }
     end
     assert_redirected_to_index
   end
@@ -20,7 +20,7 @@ class OrderKindsControllerTest < ActionController::TestCase
   def test_destroy_unreferenced
     kind = Fabricate(:order_kind)
     assert_difference('OrderKind.count', -1) do
-      delete :destroy, id: kind.id
+      delete :destroy, params: { id: kind.id }
     end
     assert_redirected_to_index
   end

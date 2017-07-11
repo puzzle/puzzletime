@@ -62,7 +62,9 @@ module Plannings
     end
 
     def params_with_restricted_items
-      { items: params[:items].is_a?(Hash) ? params[:items].values : params[:items] || [],
+      items = params[:items] || []
+      items = items.values if items.is_a?(Hash) || items.is_a?(ActionController::Parameters)
+      { items: items,
         planning: params[:planning] || {} }
     end
 

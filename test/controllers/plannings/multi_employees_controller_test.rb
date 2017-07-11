@@ -29,19 +29,21 @@ module Plannings
                        date: date + 1.weeks + 1.day,
                        percent: 20)
 
-      get :show, department_id: departments(:devtwo).id
+      get :show, params: { department_id: departments(:devtwo).id }
 
       assert_equal employees(:lucien, :pascal),
                    assigns(:boards).collect(&:subject)
     end
 
     test 'GET new' do
-      xhr :get,
-          :new,
-          format: :js,
-          department_id: departments(:devtwo).id,
-          work_item_id: work_items(:puzzletime).id,
-          employee_id: employees(:lucien).id
+      get :new,
+          xhr: true,
+          params: {
+            format: :js,
+            department_id: departments(:devtwo).id,
+            work_item_id: work_items(:puzzletime).id,
+            employee_id: employees(:lucien).id
+          }
 
       assert_equal 200, response.status
       assert response.body.include?('PuzzleTime'), response.body
@@ -50,12 +52,14 @@ module Plannings
     test 'PATCH update' do
       patch :update,
             xhr: true,
-            format: :js,
-            department_id: departments(:devtwo).id,
-            planning: { percent: '50', definitive: 'true' },
-            items: { '1' => { employee_id: employees(:pascal).id.to_s,
-                              work_item_id: work_items(:puzzletime).id.to_s,
-                              date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
+            params: {
+              format: :js,
+              department_id: departments(:devtwo).id,
+              planning: { percent: '50', definitive: 'true' },
+              items: { '1' => { employee_id: employees(:pascal).id.to_s,
+                                work_item_id: work_items(:puzzletime).id.to_s,
+                                date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
+            }
       assert_equal 200, response.status
 
       assert_equal employees(:pascal), assigns(:board).employee
@@ -85,9 +89,11 @@ module Plannings
       assert_difference('Planning.count', -2) do
         delete :destroy,
                xhr: true,
-               format: :js,
-               department_id: departments(:devtwo).id,
-               planning_ids: [p2.id, p4.id]
+               params: {
+                 format: :js,
+                 department_id: departments(:devtwo).id,
+                 planning_ids: [p2.id, p4.id]
+               }
       end
 
       assert_equal 200, response.status
@@ -103,9 +109,11 @@ module Plannings
       assert_raises(CanCan::AccessDenied) do
         patch :update,
               xhr: true,
-              format: :js,
-              department_id: departments(:devone).id,
-              planning_ids: [p.id]
+              params: {
+                format: :js,
+                department_id: departments(:devone).id,
+                planning_ids: [p.id]
+              }
       end
     end
 
@@ -117,9 +125,11 @@ module Plannings
       login_as(:pascal)
       patch :update,
             xhr: true,
-            format: :js,
-            department_id: departments(:devone).id,
-            planning_ids: [p.id]
+            params: {
+              format: :js,
+              department_id: departments(:devone).id,
+              planning_ids: [p.id]
+            }
       assert_equal 200, response.status
     end
 

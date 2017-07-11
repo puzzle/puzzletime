@@ -109,7 +109,7 @@ module Plannings
       return [] unless create?
 
       plannings = new_items_hashes.collect do |item|
-        params = ActionController::Parameters.new(item).permit(PERMITTED_ATTRIBUTES)
+        params = convert_to_parameters(item).permit(PERMITTED_ATTRIBUTES)
         Planning.create(planning_params.merge(params))
       end
 
@@ -122,7 +122,7 @@ module Plannings
       if planning_params[:translate_by].present?
         translate_plannings
       else
-        existing_items.update_all(planning_params)
+        existing_items.update_all(planning_params.to_hash)
         existing_items.reload
       end
     end
@@ -146,11 +146,11 @@ module Plannings
       items.collect do |item|
         date = translate_date(item.date, planning_params[:translate_by].to_i)
         item.date = date
-        Planning.delete_all(
+        Planning.where(
           employee_id: item.employee_id,
           work_item_id: item.work_item_id,
           date: date
-        )
+        ).delete_all
         item.save!
         item
       end
@@ -195,8 +195,18 @@ module Plannings
     end
 
     def planning_params
-      p = params[:planning].delete_if { |_k, v| v.blank? && v != false }
-      ActionController::Parameters.new(p).permit(PERMITTED_ATTRIBUTES)
+      @planning_params ||= begin
+        p = params[:planning].delete_if { |_k, v| v.blank? && v != false }
+        convert_to_parameters(p).permit(PERMITTED_ATTRIBUTES)
+      end
+    end
+
+    def convert_to_parameters(value)
+      if value.is_a?(ActionController::Parameters)
+        value
+      else
+        ActionController::Parameters.new(value)
+      end
     end
 
     def handle_save_errors(plannings)
@@ -234,7 +244,9 @@ module Plannings
     end
 
     def items
-      @items ||= (params[:items] || []).collect(&:stringify_keys)
+      @items ||= (params[:items] || []).collect do |i|
+        convert_to_parameters(i).permit(*ITEM_FIELDS).to_h
+      end
     end
 
     def repeat_until_week

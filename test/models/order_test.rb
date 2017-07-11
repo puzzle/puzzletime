@@ -29,7 +29,7 @@ class OrderTest < ActiveSupport::TestCase
 
   test 'order with client is valid' do
     order = Fabricate.build(:order)
-    item = order.build_work_item(name: 'New Order', shortname: 'NEOR', parent_id: work_items(:puzzle).id)
+    _item = order.build_work_item(name: 'New Order', shortname: 'NEOR', parent_id: work_items(:puzzle).id)
     assert order.valid?, order.errors.full_messages.join(', ')
     assert_equal clients(:puzzle), order.client
     order.save!
@@ -39,8 +39,8 @@ class OrderTest < ActiveSupport::TestCase
 
   test 'order with category and client is valid' do
     order = Fabricate.build(:order)
-    cat = order.create_work_item!(name: 'New Cat', shortname: 'NECA', parent_id: work_items(:puzzle).id)
-    item = order.build_work_item(name: 'New Order', shortname: 'NEOR', parent_id: cat.id)
+    cat = Fabricate(:work_item, name: 'New Cat', shortname: 'NECA', parent_id: work_items(:puzzle).id)
+    _item = order.build_work_item(name: 'New Order', shortname: 'NEOR', parent_id: cat.id)
     assert order.valid?, order.errors.full_messages.join(', ')
     assert_equal clients(:puzzle), order.client
     order.save!
@@ -108,7 +108,7 @@ class OrderTest < ActiveSupport::TestCase
   test 'default_billing_address_id is nil when last_billing_address is blank' do
     order = Fabricate(:order)
     order.billing_address = nil
-    assert_equal(nil, order.default_billing_address_id)
+    assert_nil order.default_billing_address_id
   end
 
   test 'default_billing_address_id from client when last_billing_address is blank' do

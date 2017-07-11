@@ -11,7 +11,7 @@
 
 class CustomList < ActiveRecord::Base
 
-  belongs_to :employee
+  belongs_to :employee, optional: true
 
   validates_by_schema except: :item_ids
 

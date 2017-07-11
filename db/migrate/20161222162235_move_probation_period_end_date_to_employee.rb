@@ -1,4 +1,4 @@
-class MoveProbationPeriodEndDateToEmployee < ActiveRecord::Migration
+class MoveProbationPeriodEndDateToEmployee < ActiveRecord::Migration[5.1]
   def change
     add_column :employees, :probation_period_end_date, :date
 

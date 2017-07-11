@@ -1,4 +1,4 @@
-class CreateCustomLists < ActiveRecord::Migration
+class CreateCustomLists < ActiveRecord::Migration[5.1]
   def up
     create_table :custom_lists do |t|
       t.string :name, null: false

@@ -5,7 +5,7 @@ require 'test_helper'
 class ContractsControllerTest < ActionController::TestCase
   test 'GET show as member' do
     login_as :pascal
-    get :show, order_id: test_entry.order
+    get :show, params: { order_id: test_entry.order }
     assert_response :success
     assert_template 'show'
   end
@@ -13,13 +13,13 @@ class ContractsControllerTest < ActionController::TestCase
   test 'GET edit as member redirects and sets flash alert' do
     login_as :pascal
     assert_raises(CanCan::AccessDenied) do
-      get :edit, order_id: test_entry.order
+      get :edit, params: { order_id: test_entry.order }
     end
   end
 
   test 'GET edit as responsible' do
     login_as :lucien
-    get :edit, order_id: test_entry.order
+    get :edit, params: { order_id: test_entry.order }
     assert_response :success
     assert_template 'edit'
     assert_equal test_entry, entry
@@ -27,7 +27,7 @@ class ContractsControllerTest < ActionController::TestCase
 
   test 'GET edit as management' do
     login_as :mark
-    get :edit, order_id: test_entry.order
+    get :edit, params: { order_id: test_entry.order }
     assert_response :success
     assert_template 'edit'
     assert_equal test_entry, entry
@@ -35,7 +35,7 @@ class ContractsControllerTest < ActionController::TestCase
 
   test 'PATCH update' do
     login
-    patch :update, order_id: test_entry.order, contract: test_entry_attrs
+    patch :update, params: { order_id: test_entry.order, contract: test_entry_attrs }
     assert_redirected_to edit_order_contract_path(order_id: test_entry.order)
     assert entry.persisted?
     test_entry_attrs_except_dates.each do |attr_name, attr_value|
@@ -48,7 +48,7 @@ class ContractsControllerTest < ActionController::TestCase
   test 'PATCH update as member' do
     login_as :pascal
     assert_raises(CanCan::AccessDenied) do
-      patch :update, order_id: test_entry.order, contract: test_entry_attrs
+      patch :update, params: { order_id: test_entry.order, contract: test_entry_attrs }
     end
   end
 

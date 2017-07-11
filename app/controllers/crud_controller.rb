@@ -26,8 +26,6 @@ class CrudController < ListController
 
   helper_method :entry, :full_entry_label
 
-  hide_action :run_callbacks
-
   prepend_before_action :entry, only: [:show, :new, :create, :edit, :update, :destroy]
   prepend_before_action :authenticate
 
@@ -63,7 +61,7 @@ class CrudController < ListController
       if created
         format.html { redirect_on_success(options) }
         format.json { render :show, status: :created, location: show_path }
-        format.js   { render text: "'#{js_entry.to_json}'" }
+        format.js   { render plain: "'#{js_entry.to_json}'" }
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: entry.errors, status: :unprocessable_entity }
@@ -93,7 +91,7 @@ class CrudController < ListController
       if updated
         format.html { redirect_on_success(options) }
         format.json { render :show, status: :ok, location: show_path }
-        format.js   { render text: "'#{js_entry.to_json}'" }
+        format.js   { render plain: "'#{js_entry.to_json}'" }
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: entry.errors, status: :unprocessable_entity }

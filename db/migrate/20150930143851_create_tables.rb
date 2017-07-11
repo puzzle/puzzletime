@@ -1,4 +1,4 @@
-class CreateTables < ActiveRecord::Migration
+class CreateTables < ActiveRecord::Migration[5.1]
   def change
     create_table 'absences' do |t|
       t.string 'name', limit: 255, null: false

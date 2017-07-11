@@ -31,9 +31,9 @@ class Worktime < ActiveRecord::Base
   class_attribute :account_label
 
   belongs_to :employee
-  belongs_to :absence
-  belongs_to :work_item
-  belongs_to :invoice
+  belongs_to :absence, optional: true
+  belongs_to :work_item, optional: true
+  belongs_to :invoice, optional: true
 
   validates_by_schema
   validates :employee_id, presence: true

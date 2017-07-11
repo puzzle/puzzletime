@@ -39,7 +39,7 @@ class OrderReportsController < ApplicationController
     end
     @order_kinds = OrderKind.list
     @order_status = OrderStatus.list
-    @order_responsibles = Employee.joins(:managed_orders).uniq.list
+    @order_responsibles = Employee.joins(:managed_orders).distinct.list
     @target_scopes = TargetScope.list
   end
 

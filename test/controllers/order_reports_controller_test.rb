@@ -10,7 +10,7 @@ class OrderReportsControllerTest < ActionController::TestCase
   end
 
   test 'GET index with department filter contains correct entries' do
-    get :index, department_id: departments(:devone).id
+    get :index, params: { department_id: departments(:devone).id }
     assert_equal true, assigns(:report).filters_defined?
     assert_equal orders(:puzzletime, :webauftritt), assigns(:report).entries.map(&:order)
   end
@@ -18,26 +18,26 @@ class OrderReportsControllerTest < ActionController::TestCase
   test 'GET index with multiple kind filter contains correct entries' do
     orders(:webauftritt).update!(kind: order_kinds(:schulung))
     orders(:puzzletime).update!(kind: order_kinds(:mandat))
-    get :index, kind_id: order_kinds(:mandat, :projekt).map(&:id)
+    get :index, params: { kind_id: order_kinds(:mandat, :projekt).map(&:id) }
     assert_equal true, assigns(:report).filters_defined?
     assert_equal orders(:allgemein, :puzzletime), assigns(:report).entries.map(&:order)
   end
 
   test 'GET index with period filter contains correct entries' do
-    get :index, start_date: '6.12.2006', end_date: '7.12.2006'
+    get :index, params: { start_date: '6.12.2006', end_date: '7.12.2006' }
     assert_equal true, assigns(:report).filters_defined?
     assert_equal orders(:allgemein, :puzzletime), assigns(:report).entries.map(&:order)
   end
 
   test 'GET index with invalid period filter shows error' do
-    get :index, start_date: '31.12.2006', end_date: '1.12.2006'
+    get :index, params: { start_date: '31.12.2006', end_date: '1.12.2006' }
     assert_equal false, assigns(:report).filters_defined?
     assert flash[:alert].present?
     assert_equal Period.new(nil, nil), assigns(:period)
   end
 
   test 'GET index csv exports csv file' do
-    get :index, responsible_id: employees(:lucien).id, format: :csv
+    get :index, params: { responsible_id: employees(:lucien).id }, format: :csv
     assert_match /Kunde,Kategorie,Auftrag/, response.body
   end
 

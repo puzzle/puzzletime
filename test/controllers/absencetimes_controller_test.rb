@@ -17,19 +17,19 @@ class AbsencetimesControllerTest < ActionController::TestCase
     template = worktimes(:wt_pz_vacation)
     template.update_attributes(description: 'desc')
 
-    get :new, template: template.id
+    get :new, params: { template: template.id }
     assert_equal template.absence, assigns(:worktime).absence
     assert_equal 'desc', assigns(:worktime).description
   end
 
   def test_show
     worktime = worktimes(:wt_pz_vacation)
-    get :show, id: worktime.id
+    get :show, params: { id: worktime.id }
     assert_redirected_to action: 'index', week_date: worktime.work_date
   end
 
   def test_edit
-    get :edit, id: worktimes(:wt_mw_service)
+    get :edit, params: { id: worktimes(:wt_mw_service) }
     assert_template 'edit'
     assert_match(/Absenz bearbeiten/, @response.body)
     assert_no_match(/Mehrwöchige/, @response.body)
@@ -37,11 +37,13 @@ class AbsencetimesControllerTest < ActionController::TestCase
 
   def test_create_hours_day_type
     work_date = Time.zone.today - 7
-    post :create, absencetime: { absence_id: absences(:doctor),
-                                 work_date: work_date,
-                                 description: 'desc',
-                                 hours: '2:45'
-                                 }
+    post :create, params: {
+                                 absencetime: { absence_id: absences(:doctor),
+                                                              work_date: work_date,
+                                                              description: 'desc',
+                                                              hours: '2:45'
+                                                              }
+    }
     assert_redirected_to action: 'index', week_date: work_date
     assert flash[:alert].blank?
     assert_match(/Absenz.*erfolgreich erstellt/, flash[:notice])
@@ -55,11 +57,13 @@ class AbsencetimesControllerTest < ActionController::TestCase
 
   def test_create_start_stop_type
     work_date = Time.zone.today + 10
-    post :create, absencetime: { absence_id: absences(:vacation),
-                                 work_date: work_date,
-                                 from_start_time: '7:30',
-                                 to_end_time: '12:00'
-                                 }
+    post :create, params: {
+                                 absencetime: { absence_id: absences(:vacation),
+                                                              work_date: work_date,
+                                                              from_start_time: '7:30',
+                                                              to_end_time: '12:00'
+                                                              }
+    }
     assert_redirected_to action: 'index', week_date: work_date
     assert flash[:alert].blank?
     assert_match(/Absenz.*erfolgreich erstellt/, flash[:notice])
@@ -73,11 +77,13 @@ class AbsencetimesControllerTest < ActionController::TestCase
   def test_create_multiabsence
     login_as(:long_time_john)
     work_date = Date.new(2014, 7, 7) # no offical holidays in the next 3 weeks
-    post :create, absencetime: { absence_id: absences(:vacation),
-                                 work_date: work_date,
-                                 create_multi: 'true',
-                                 duration: '3'
-                                 }
+    post :create, params: {
+                                 absencetime: { absence_id: absences(:vacation),
+                                                              work_date: work_date,
+                                                              create_multi: 'true',
+                                                              duration: '3'
+                                                              }
+    }
     assert_redirected_to action: 'index', week_date: work_date
     assert flash[:alert].blank?
     assert_match(/15 Absenzen wurden erfasst/, flash[:notice])
@@ -85,12 +91,14 @@ class AbsencetimesControllerTest < ActionController::TestCase
 
   def test_create_other_multiabsence
     work_date = Date.new(2014, 7, 1)
-    post :create, absencetime: { absence_id: absences(:vacation),
-                                 work_date: work_date,
-                                 create_multi: 'true',
-                                 duration: '2',
-                                 employee_id: employees(:various_pedro)
-                                 }
+    post :create, params: {
+                                 absencetime: { absence_id: absences(:vacation),
+                                                              work_date: work_date,
+                                                              create_multi: 'true',
+                                                              duration: '2',
+                                                              employee_id: employees(:various_pedro)
+                                                              }
+    }
     assert_redirected_to action: 'index', week_date: work_date
     assert flash[:alert].blank?
     assert_match(/10 Absenzen wurden erfasst/, flash[:notice])
@@ -99,11 +107,13 @@ class AbsencetimesControllerTest < ActionController::TestCase
   def test_create_multiabsence_with_errors
     login_as(:long_time_john)
     work_date = Time.zone.today + 3
-    post :create, absencetime: { absence_id: absences(:vacation),
-                                 work_date: work_date,
-                                 create_multi: 'true',
-                                 duration: '-3'
-                                 }
+    post :create, params: {
+                                 absencetime: { absence_id: absences(:vacation),
+                                                              work_date: work_date,
+                                                              create_multi: 'true',
+                                                              duration: '-3'
+                                                              }
+    }
     assert_template 'new'
     assert_match(/Dauer muss grösser als 0 sein/, assigns(:worktime).errors.full_messages.join)
   end
@@ -111,7 +121,7 @@ class AbsencetimesControllerTest < ActionController::TestCase
   def test_update
     worktime = worktimes(:wt_mw_service)
     assert_equal HoursDayType::INSTANCE, worktime.report_type
-    put :update, id: worktime, absencetime: { from_start_time: '8:15', to_end_time: '10:00' }
+    put :update, params: { id: worktime, absencetime: { from_start_time: '8:15', to_end_time: '10:00' } }
 
     worktime.reload
     assert_redirected_to action: 'index', week_date: worktime.work_date
@@ -126,7 +136,7 @@ class AbsencetimesControllerTest < ActionController::TestCase
   def test_destroy
     worktime = worktimes(:wt_mw_service)
     work_date = worktime.work_date
-    delete :destroy, id: worktime
+    delete :destroy, params: { id: worktime }
     assert_redirected_to action: 'index', week_date: work_date
     assert_nil Absencetime.find_by_id(worktime.id)
   end
@@ -135,9 +145,11 @@ class AbsencetimesControllerTest < ActionController::TestCase
     e = employees(:pascal)
     e.update!(committed_worktimes_at: '2015-08-31')
     login_as(:pascal)
-    post :create, absencetime: { absence_id: absences(:vacation).id,
-                               work_date: '2015-08-31',
-                               hours: '2' }
+    post :create, params: {
+                               absencetime: { absence_id: absences(:vacation).id,
+                                                          work_date: '2015-08-31',
+                                                          hours: '2' }
+    }
     assert_template('new')
     assert assigns(:worktime).errors[:work_date].present?
   end
@@ -145,9 +157,11 @@ class AbsencetimesControllerTest < ActionController::TestCase
   test 'uncommitted absencetimes may be created by user' do
     e = employees(:pascal)
     login_as(:pascal)
-    post :create, absencetime: { absence_id: absences(:vacation).id,
-                               work_date: '2015-08-31',
-                               hours: '2' }
+    post :create, params: {
+                               absencetime: { absence_id: absences(:vacation).id,
+                                                          work_date: '2015-08-31',
+                                                          hours: '2' }
+    }
 
     assert flash[:notice].present?
   end
@@ -156,10 +170,12 @@ class AbsencetimesControllerTest < ActionController::TestCase
     e = employees(:pascal)
     e.update!(committed_worktimes_at: '2015-08-31')
     login_as(:mark)
-    post :create, absencetime: { absence_id: absences(:vacation).id,
-                               work_date: '2015-08-31',
-                               hours: '2',
-                               employee_id: e.id }
+    post :create, params: {
+                               absencetime: { absence_id: absences(:vacation).id,
+                                                          work_date: '2015-08-31',
+                                                          hours: '2',
+                                                          employee_id: e.id }
+    }
 
     assert flash[:notice].present?
   end
@@ -175,7 +191,7 @@ class AbsencetimesControllerTest < ActionController::TestCase
     e.update!(committed_worktimes_at: '2015-09-30')
     login_as(:pascal)
     assert_raises(CanCan::AccessDenied) do
-      put :update, id: t.id, absencetime: { hours: '3' }
+      put :update, params: { id: t.id, absencetime: { hours: '3' } }
     end
   end
 
@@ -206,7 +222,7 @@ class AbsencetimesControllerTest < ActionController::TestCase
     e.update!(committed_worktimes_at: '2015-09-30')
     login_as(:pascal)
     assert_raises(CanCan::AccessDenied) do
-      patch :update, id: t.id, absencetime: { work_date: '2015-10-10' }
+      patch :update, params: { id: t.id, absencetime: { work_date: '2015-10-10' } }
     end
   end
 
@@ -221,7 +237,7 @@ class AbsencetimesControllerTest < ActionController::TestCase
     e.update!(committed_worktimes_at: '2015-09-30')
     login_as(:pascal)
 
-    patch :update, id: t.id, absencetime: { work_date: '2015-08-31' }
+    patch :update, params: { id: t.id, absencetime: { work_date: '2015-08-31' } }
     assert_template('edit')
     assert assigns(:worktime).errors[:work_date].present?
   end
@@ -236,6 +252,6 @@ class AbsencetimesControllerTest < ActionController::TestCase
     e.update!(committed_worktimes_at: '2015-09-30')
     login_as(:pascal)
 
-    assert_raises(CanCan::AccessDenied) { delete :destroy, id: t.id }
+    assert_raises(CanCan::AccessDenied) { delete :destroy, params: { id: t.id } }
   end
 end

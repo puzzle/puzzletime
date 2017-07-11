@@ -86,7 +86,7 @@ class ShowOrderServices < ActionDispatch::IntegrationTest
   end
 
   def responsible_ids
-    Order.select(:responsible_id).uniq.pluck(:responsible_id)
+    Order.select(:responsible_id).distinct.pluck(:responsible_id)
   end
 
   def create_ordertime(employee)

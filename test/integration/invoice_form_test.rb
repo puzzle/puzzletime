@@ -139,7 +139,7 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
   end
 
   def order_employees
-    Employee.where(id: order.worktimes.billable.select(:employee_id).uniq)
+    Employee.where(id: order.worktimes.billable.select(:employee_id).distinct)
   end
 
   def order_work_items

@@ -135,6 +135,7 @@ class Holiday < ActiveRecord::Base
   end
 
   def <=>(other)
+    return unless other.is_a?(Holiday)
     holiday_date <=> other.holiday_date
   end
 end

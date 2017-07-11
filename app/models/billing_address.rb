@@ -17,7 +17,7 @@
 class BillingAddress < ActiveRecord::Base
 
   belongs_to :client
-  belongs_to :contact
+  belongs_to :contact, optional: true
 
   has_many :orders, dependent: :nullify
   has_many :invoices

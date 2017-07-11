@@ -16,6 +16,7 @@ class ReportType
   end
 
   def <=>(other)
+    return unless other.is_a?(ReportType)
     accuracy <=> other.accuracy
   end
 

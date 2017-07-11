@@ -11,7 +11,7 @@
 class ListController < ApplicationController
 
   include DryCrud::GenericModel
-  include DryCrud::Nestable
+  prepend DryCrud::Nestable
   include DryCrud::Rememberable
   include DryCrud::RenderCallbacks
 

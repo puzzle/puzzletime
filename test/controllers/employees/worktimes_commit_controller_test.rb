@@ -9,7 +9,7 @@ class Employees::WorktimesCommitControllerTest < ActionController::TestCase
   def test_edit_as_manager
     employee = employees(:various_pedro)
     employee.update!(committed_worktimes_at: Date.new(2015, 8, 31))
-    get :edit, employee_id: employee.id
+    get :edit, params: { employee_id: employee.id }
     assert_template '_form'
 
     selection = assigns(:dates)
@@ -22,7 +22,7 @@ class Employees::WorktimesCommitControllerTest < ActionController::TestCase
     login_as(:various_pedro)
     employee = employees(:various_pedro)
     employee.update!(committed_worktimes_at: Date.new(2015, 8, 31))
-    get :edit, employee_id: employee.id
+    get :edit, params: { employee_id: employee.id }
     assert_template '_form'
 
     selection = assigns(:dates)
@@ -35,19 +35,19 @@ class Employees::WorktimesCommitControllerTest < ActionController::TestCase
     login_as(:various_pedro)
     employee = employees(:various_pedro)
     employee.update!(committed_worktimes_at: nil)
-    get :edit, employee_id: employee.id
+    get :edit, params: { employee_id: employee.id }
     assert_template '_form'
 
     selection = assigns(:dates)
     assert_equal selection.size, 2
     assert_equal selection.first.first, (Time.zone.today.end_of_month - 1.month).end_of_month
-    assert_equal assigns(:selected_month), nil
+    assert_nil assigns(:selected_month)
   end
 
   def test_edit_as_regular_user_is_not_allowed_for_somebody_else
     login_as(:various_pedro)
     assert_raise(CanCan::AccessDenied) do
-      get :edit, employee_id: employees(:mark).id
+      get :edit, params: { employee_id: employees(:mark).id }
     end
   end
 
@@ -56,8 +56,10 @@ class Employees::WorktimesCommitControllerTest < ActionController::TestCase
     employee.update!(committed_worktimes_at: Date.new(2015, 8, 31))
     eom = (Time.zone.today - 1.month).end_of_month
     patch :update,
-          employee_id: employee.id,
-          employee: { committed_worktimes_at: eom }
+          params: {
+            employee_id: employee.id,
+            employee: { committed_worktimes_at: eom }
+          }
     assert_equal eom, employee.reload.committed_worktimes_at
   end
 
@@ -65,8 +67,10 @@ class Employees::WorktimesCommitControllerTest < ActionController::TestCase
     employee = employees(:various_pedro)
     employee.update!(committed_worktimes_at: Date.new(2015, 8, 31))
     patch :update,
-          employee_id: employee.id,
-          employee: { committed_worktimes_at: Date.new(2015, 10, 15) }
+          params: {
+            employee_id: employee.id,
+            employee: { committed_worktimes_at: Date.new(2015, 10, 15) }
+          }
     assert_equal Date.new(2015, 8, 31), employee.reload.committed_worktimes_at
     assert_template '_form'
     assert_match /nicht erlaubt/, assigns(:employee).errors.full_messages.join

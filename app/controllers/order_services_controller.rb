@@ -92,7 +92,7 @@ class OrderServicesController < ApplicationController
   end
 
   def set_filter_employees
-    ids = order.worktimes.in_period(@period).select(:employee_id).uniq
+    ids = order.worktimes.in_period(@period).select(:employee_id).distinct
     @employees = Employee.where(id: ids).list
   end
 
@@ -100,13 +100,13 @@ class OrderServicesController < ApplicationController
     @tickets = [EMPTY_TICKET] +
         order.worktimes.in_period(@period)
                .order(:ticket)
-               .uniq
+               .distinct
                .pluck(:ticket)
                .select(&:present?)
   end
 
   def set_filter_accounting_posts
-    ids = order.worktimes.in_period(@period).select(:work_item_id).uniq
+    ids = order.worktimes.in_period(@period).select(:work_item_id).distinct
     @accounting_posts = WorkItem.where(id: ids).list
   end
 

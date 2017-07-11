@@ -1,4 +1,4 @@
-class UseAccountingPostsForPlannings < ActiveRecord::Migration
+class UseAccountingPostsForPlannings < ActiveRecord::Migration[5.1]
   def up
     Planning.find_each do |p|
       first = p.work_item.self_and_descendants.joins(:accounting_post).list.select(:id).first

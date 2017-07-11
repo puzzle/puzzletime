@@ -83,11 +83,11 @@ class Evaluation
   # If a division is passed or set previously, their sum will be returned.
   # Otherwise the sum of all worktimes in the main category is returned.
   def sum_times(period, div = nil, scope = nil)
-    worktime_query(div || division || category,
-                   period,
-                   div || division).
-      merge(scope).
-      sum(:hours).to_f
+    query = worktime_query(div || division || category,
+                           period,
+                           div || division)
+    query = query.merge(scope) if scope
+    query.sum(:hours).to_f
   end
 
   # Sums all worktimes for the category in a given period.

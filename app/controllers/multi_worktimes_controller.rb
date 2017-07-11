@@ -54,7 +54,9 @@ class MultiWorktimesController < ApplicationController
   end
 
   def changed_attrs
-    @changed_attrs ||= %w(work_item_id ticket billable).select { |attr| params["change_#{attr}"] }
+    @changed_attrs ||= %w(work_item_id ticket billable).select do |attr|
+      ActiveRecord::Type::Boolean.new.deserialize(params["change_#{attr}"])
+    end
   end
 
   def update_worktimes

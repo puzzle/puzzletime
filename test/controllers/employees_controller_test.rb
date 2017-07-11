@@ -14,7 +14,7 @@ class EmployeesControllerTest < ActionController::TestCase
     Crm.instance.expects(:find_people_by_email).with(test_entry.email).returns([OpenStruct.new(id: 123)])
     Crm.instance.expects(:contact_url).with(123).returns('http://example.com/profile-123')
 
-    get :show, test_params(id: test_entry.id)
+    get :show, params: test_params(id: test_entry.id)
     assert_redirected_to('http://example.com/profile-123')
   end
 
@@ -22,7 +22,7 @@ class EmployeesControllerTest < ActionController::TestCase
     Crm.instance = Crm::Base.new
     Crm.instance.expects(:find_people_by_email).with(test_entry.email).returns([])
 
-    get :show, test_params(id: test_entry.id)
+    get :show, params: test_params(id: test_entry.id)
     assert_response :success
     assert_template 'show'
     assert_equal test_entry, entry
@@ -41,7 +41,7 @@ class EmployeesControllerTest < ActionController::TestCase
 
   def test_destroy_protected
     assert_no_difference("#{model_class.name}.count") do
-      delete :destroy, test_params(id: test_entry.id)
+      delete :destroy, params: test_params(id: test_entry.id)
     end
     assert_redirected_to_index
   end

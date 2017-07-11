@@ -50,16 +50,16 @@ class Employee < ActiveRecord::Base
   ).freeze
 
   # All dependencies between the models are listed below.
-  belongs_to :department
+  belongs_to :department, optional: true
 
   has_and_belongs_to_many :invoices
 
   has_many :employments, dependent: :destroy
   has_one :current_employment, -> { during(Period.current_day) }, class_name: 'Employment'
-  has_many :absences,
-           -> { order('name').uniq },
-           through: :worktimes
   has_many :worktimes
+  has_many :absences,
+           -> { order('name').distinct },
+           through: :worktimes
   has_many :overtime_vacations, dependent: :destroy
   has_many :managed_orders, class_name: 'Order', foreign_key: :responsible_id, dependent: :nullify
   has_many :order_team_members, dependent: :destroy
@@ -91,7 +91,7 @@ class Employee < ActiveRecord::Base
       result = joins('left join employments em on em.employee_id = employees.id').
                where('(em.end_date IS null or em.end_date >= ?) AND em.start_date <= ?',
                      period.start_date, period.end_date).
-               uniq
+               distinct
       sort ? result.list : result
     end
 

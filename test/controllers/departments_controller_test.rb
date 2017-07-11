@@ -23,7 +23,7 @@ class DepartmentsControllerTest < ActionController::TestCase
 
   def test_destroy_protected
     assert_no_difference("#{model_class.name}.count") do
-      delete :destroy, test_params(id: test_entry.id)
+      delete :destroy, params: test_params(id: test_entry.id)
     end
     assert_redirected_to_index
   end

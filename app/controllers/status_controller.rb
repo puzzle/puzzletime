@@ -6,6 +6,6 @@ class StatusController < ApplicationController
 
   def index
     result = ActiveRecord::Base.connected? ? 'OK' : 'ERROR: Can not connect to the database'
-    render text: result
+    render plain: result
   end
 end

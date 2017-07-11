@@ -6,15 +6,17 @@ module Plannings
     setup :login
 
     test 'GET #new renders row for given work item' do
-      xhr :get,
-          :new,
-          format: :js,
-          id: employees(:lucien).id,
-          employee_id: employees(:lucien).id,
-          work_item_id: work_items(:hitobito_demo_app).id
+      get :new,
+          xhr: true,
+          params: {
+            format: :js,
+            id: employees(:lucien).id,
+            employee_id: employees(:lucien).id,
+            work_item_id: work_items(:hitobito_demo_app).id
+          }
       assert_equal 200, response.status
       refute_empty assigns(:items)
-      assert_equal work_items(:hitobito_demo_app), assigns(:legend)
+      assert_equal accounting_posts(:hitobito_demo_app), assigns(:legend)
       assert response.body.include?('PITC-HIT-DEM-APP: App')
     end
 
@@ -32,7 +34,7 @@ module Plannings
                        employee_id: employees(:lucien).id,
                        date: date + 1.weeks,
                        percent: 20)
-      get :show, id: employees(:lucien).id
+      get :show, params: { id: employees(:lucien).id }
       assert_equal accounting_posts(:hitobito_demo_app, :hitobito_demo_site),
                    assigns(:board).accounting_posts
       assert_equal [employees(:lucien)],
@@ -41,7 +43,7 @@ module Plannings
 
     test 'GET#show as regular user is allowed' do
       login_as(:pascal)
-      get :show, id: employees(:lucien).id
+      get :show, params: { id: employees(:lucien).id }
       assert_equal 200, response.status
     end
 
@@ -50,39 +52,45 @@ module Plannings
       assert_raises(CanCan::AccessDenied) do
         patch :update,
               xhr: true,
-              format: :js,
-              id: employees(:lucien).id,
-              planning: { percent: '50', definitive: 'true' },
-              items: { '1' => { employee_id: employees(:lucien).id.to_s,
-                                work_item_id: work_items(:puzzletime).id.to_s,
-                                date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
+              params: {
+                format: :js,
+                id: employees(:lucien).id,
+                planning: { percent: '50', definitive: 'true' },
+                items: { '1' => { employee_id: employees(:lucien).id.to_s,
+                                  work_item_id: work_items(:puzzletime).id.to_s,
+                                  date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
+              }
       end
     end
 
     test 'PATCH#update for herself is allowed as regular user' do
       login_as(:pascal)
-      xhr :patch,
-          :update,
-          format: :js,
-          id: employees(:pascal).id,
-          planning: { percent: '50', definitive: 'true' },
-          items: { '1' => { employee_id: employees(:pascal).id.to_s,
-                            work_item_id: work_items(:puzzletime).id.to_s,
-                            date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
+      patch :update,
+            xhr: true,
+            params: {
+              format: :js,
+              id: employees(:pascal).id,
+              planning: { percent: '50', definitive: 'true' },
+              items: { '1' => { employee_id: employees(:pascal).id.to_s,
+                                work_item_id: work_items(:puzzletime).id.to_s,
+                                date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
+            }
       assert_equal 200, response.status
     end
 
     test 'PATCH#update on own board but for different user does not work' do
       login_as(:pascal)
       assert_no_difference('Planning.count') do
-        xhr :patch,
-            :update,
-            format: :js,
-            id: employees(:pascal).id,
-            planning: { percent: '50', definitive: 'true' },
-            items: { '1' => { employee_id: employees(:lucien).id.to_s,
-                              work_item_id: work_items(:puzzletime).id.to_s,
-                              date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
+        patch :update,
+              xhr: true,
+              params: {
+                format: :js,
+                id: employees(:pascal).id,
+                planning: { percent: '50', definitive: 'true' },
+                items: { '1' => { employee_id: employees(:lucien).id.to_s,
+                                  work_item_id: work_items(:puzzletime).id.to_s,
+                                  date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
+              }
       end
     end
 
@@ -92,11 +100,13 @@ module Plannings
                            date: Date.today.beginning_of_week,
                            percent: 80)
       assert_difference('Planning.count', -1) do
-        xhr :delete,
-            :destroy,
-            format: :js,
-            id: employees(:mark).id,
-            planning_ids: [p.id]
+        delete :destroy,
+               xhr: true,
+               params: {
+                 format: :js,
+                 id: employees(:mark).id,
+                 planning_ids: [p.id]
+               }
       end
     end
 
@@ -107,11 +117,13 @@ module Plannings
                            percent: 80)
       login_as(:lucien)
       assert_no_difference('Planning.count') do
-        xhr :delete,
-            :destroy,
-            format: :js,
-            id: employees(:lucien).id,
-            planning_ids: [p.id]
+        delete :destroy,
+               xhr: true,
+               params: {
+                 format: :js,
+                 id: employees(:lucien).id,
+                 planning_ids: [p.id]
+               }
       end
     end
   end

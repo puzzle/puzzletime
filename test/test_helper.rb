@@ -67,7 +67,7 @@ class ActionDispatch::IntegrationTest
 
   DatabaseCleaner.strategy = :truncation
 
-  self.use_transactional_fixtures = false
+  self.use_transactional_tests = false
 
   setup do
     Capybara.server_port = ENV['CAPYBARA_SERVER_PORT'].to_i if ENV['CAPYBARA_SERVER_PORT']

@@ -105,7 +105,7 @@ class WorkingCondition < ActiveRecord::Base
   def protect_blank_valid_from
     if valid_from.blank?
       errors.add(:base, 'Der erste Eintrag darf nicht gelöscht werden.')
-      false
+      throw :abort
     end
   end
 end

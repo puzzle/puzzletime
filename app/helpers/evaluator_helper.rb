@@ -4,8 +4,9 @@
 # Diplomarbeit 2149, Xavier Hayoz
 
 module EvaluatorHelper
+
   def evaluation_detail_params
-    params.slice(:evaluation, :category_id, :division_id, :start_date, :end_date, :page)
+    params.permit(:evaluation, :category_id, :division_id, :start_date, :end_date, :page)
   end
 
   def evaluation_path(evaluation, options = {})

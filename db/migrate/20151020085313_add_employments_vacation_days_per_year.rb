@@ -1,4 +1,4 @@
-class AddEmploymentsVacationDaysPerYear < ActiveRecord::Migration
+class AddEmploymentsVacationDaysPerYear < ActiveRecord::Migration[5.1]
   def change
     add_column :employments, :vacation_days_per_year, :decimal, precision: 5, scale: 2
   end

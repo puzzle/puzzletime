@@ -18,26 +18,26 @@ class EvaluatorControllerTest < ActionController::TestCase
 
   def assert_csv_http_headers(filename)
     assert_includes response.headers, 'Content-Type', 'Content-Disposition'
-    assert_equal response.headers['Content-Type'], 'text/csv'
-    assert_equal response.headers['Content-Disposition'], "attachment; filename=\"#{filename}\""
+    assert_equal 'text/csv; charset=utf-8; header=present', response.headers['Content-Type']
+    assert_equal "attachment; filename=\"#{filename}\"", response.headers['Content-Disposition']
   end
 
   %w(userworkitems userabsences).each do |evaluation|
     test "GET index #{evaluation}" do
-      get :index, evaluation: evaluation
+      get :index, params: { evaluation: evaluation }
       assert_template evaluation == 'userworkitems' ? 'overview_employee' : 'overview'
       assert_equal %w(-2m -1m 0m -1y 0y 0).map { |p| Period.parse(p) }, assigns(:periods)
     end
 
     test "GET export csv #{evaluation}" do
-      get :export_csv, evaluation: evaluation
+      get :export_csv, params: { evaluation: evaluation }
       assert_csv_http_headers('puzzletime-waber_mark.csv')
       assert_match expected_csv_header, csv_header
     end
   end
 
   test 'GET export_csv userworkitems csv format' do
-    get :export_csv, evaluation: 'userworkitems'
+    get :export_csv, params: { evaluation: 'userworkitems' }
     assert_match expected_csv_header, csv_header
     assert_equal 3, csv_data_lines.size
     assert_match '06.12.2006,5.0,"","",absolute_day,true,Waber Mark,PITC-AL: Allgemein,,', csv_data_lines.first
@@ -50,19 +50,19 @@ class EvaluatorControllerTest < ActionController::TestCase
 
   %w(clients departments).each do |evaluation|
     test "GET index #{evaluation}" do
-      get :index, evaluation: evaluation
+      get :index, params: { evaluation: evaluation }
       assert_template 'overview'
     end
   end
 
   %w(clients employees departments).each do |evaluation|
     test "GET details #{evaluation}" do
-      get :details, evaluation: evaluation, category_id: division_id(evaluation)
+      get :details, params: { evaluation: evaluation, category_id: division_id(evaluation) }
       assert_template 'details'
     end
 
     test "GET export csv #{evaluation}" do
-      get :export_csv, evaluation: evaluation
+      get :export_csv, params: { evaluation: evaluation }
       assert_csv_http_headers('puzzletime.csv')
       assert_match expected_csv_header, csv_header
       assert_equal 9, csv_data_lines.size
@@ -71,9 +71,11 @@ class EvaluatorControllerTest < ActionController::TestCase
   end
 
   test 'GET report contains all hours' do
-    get :report, evaluation: 'workitememployees',
-                 category_id: work_items(:allgemein),
-                 division_id: employees(:pascal)
+    get :report, params: {
+                   evaluation: 'workitememployees',
+                   category_id: work_items(:allgemein),
+                   division_id: employees(:pascal)
+                 }
 
     assert_template 'report'
     total = assigns(:worktimes).sum(:hours)
@@ -90,11 +92,13 @@ class EvaluatorControllerTest < ActionController::TestCase
               work_item: work_items(:allgemein),
               hours: 5)
 
-    get :report, evaluation: 'workitememployees',
-                 category_id: work_items(:allgemein),
-                 division_id: employees(:pascal),
-                 combine_on: true,
-                 combine: 'ticket'
+    get :report, params: {
+                   evaluation: 'workitememployees',
+                   category_id: work_items(:allgemein),
+                   division_id: employees(:pascal),
+                   combine_on: true,
+                   combine: 'ticket'
+                 }
 
     assert_template 'report'
     total = assigns(:worktimes).sum(:hours)
@@ -108,10 +112,12 @@ class EvaluatorControllerTest < ActionController::TestCase
               employee: employees(:pascal),
               work_item: work_items(:allgemein),
               ticket: ticket_label)
-    get :report, evaluation: 'workitememployees',
-                 category_id: work_items(:allgemein),
-                 division_id: employees(:pascal),
-                 show_ticket: '1'
+    get :report, params: {
+                   evaluation: 'workitememployees',
+                   category_id: work_items(:allgemein),
+                   division_id: employees(:pascal),
+                   show_ticket: '1'
+                 }
 
     assert_template 'report'
     assert_match %r{<th class='right'>Ticket</th>}, response.body
@@ -133,7 +139,7 @@ class EvaluatorControllerTest < ActionController::TestCase
   end
 
   test 'GET export_role_distribution with format csv renders csv' do
-    get :export_role_distribution, date: I18n.l(Date.new(2000, 1, 23)), format: :csv
+    get :export_role_distribution, params: { date: I18n.l(Date.new(2000, 1, 23)) }, format: :csv
     assert_csv_http_headers('puzzletime_funktionsanteile_20000123.csv')
     assert_match(/Funktionsanteile per 23.01.2000/, response.body)
   end

@@ -10,7 +10,7 @@ class InvoicesControllerTest < ActionController::TestCase
 
   def test_show_with_non_existing_id_raises_record_not_found
     # we redirect to allow order changes with dropdown
-    get :show, id: 42, order_id: test_entry.order_id
+    get :show, params: { id: 42, order_id: test_entry.order_id }
     assert_redirected_to order_invoices_path(test_entry.order_id)
   end
 
@@ -18,24 +18,26 @@ class InvoicesControllerTest < ActionController::TestCase
     test_entry.destroy!
     login_as :mark
     get :new,
-        order_id: test_entry.order_id,
-        employee_id: employees(:pascal).id,
-        work_item_id: work_items(:webauftritt).id,
-        start_date: start_date = '01.12.2006',
-        end_date: end_date = '31.12.2006'
+        params: {
+          order_id: test_entry.order_id,
+          employee_id: employees(:pascal).id,
+          work_item_id: work_items(:webauftritt).id,
+          start_date: start_date = '01.12.2006',
+          end_date: end_date = '31.12.2006'
+        }
     assert_response :success
     assert_template 'invoices/_form'
     assert_equal([employees(:pascal)], entry.employees)
     assert_equal([work_items(:webauftritt)], entry.work_items)
     assert_equal(Date.parse(start_date), entry.period_from)
     assert_equal(Date.parse(end_date), entry.period_to)
-    assert_equal(nil, entry.grouping)
+    assert_nil entry.grouping
   end
 
   test 'GET new without params sets defaults' do
     test_entry.update!(grouping: 'manual')
     worktimes(:wt_pz_webauftritt).update!(billable: true)
-    get :new, order_id: test_entry.order_id
+    get :new, params: { order_id: test_entry.order_id }
     assert_response :success
     assert_equal(Time.zone.today, entry.billing_date)
     assert_equal(Time.zone.today + contracts(:webauftritt).payment_period.days, entry.due_date)
@@ -54,15 +56,19 @@ class InvoicesControllerTest < ActionController::TestCase
       end_date: '31.12.2006'
     }
 
-    xhr :get, :preview_total, params.merge(format: :js)
-    preview_value = response.body[/html\('(.+) CHF'\)/, 1].to_f
+    get :preview_total, xhr: true, params: params.merge(format: :js)
 
-    get :create, params
+    preview_value = response.body[/html\('(.+) CHF'\)/, 1].to_f
     assert_equal(entry.calculated_total_amount, preview_value)
   end
 
   test 'GET billing_addresses' do
-    xhr :get, :billing_addresses, order_id: test_entry.order_id, invoice: { billing_client_id: clients(:swisstopo).id }
+    get :billing_addresses,
+        xhr: true,
+        params: {
+            order_id: test_entry.order_id,
+            invoice: { billing_client_id: clients(:swisstopo).id }
+        }
 
     assert_equal clients(:swisstopo), assigns(:billing_client)
     assert_equal billing_addresses(:swisstopo, :swisstopo_2), assigns(:billing_addresses)
@@ -74,7 +80,7 @@ class InvoicesControllerTest < ActionController::TestCase
       order_id: test_entry.order_id,
       id: test_entry.id
     }
-    put :sync, params
+    put :sync, params: params
     assert_response :redirect
   end
 
@@ -84,7 +90,7 @@ class InvoicesControllerTest < ActionController::TestCase
       order_id: test_entry.order_id,
       id: test_entry.id
     }
-    put :sync, params
+    put :sync, params: params
     assert_response :redirect
   end
 
@@ -95,7 +101,7 @@ class InvoicesControllerTest < ActionController::TestCase
       id: test_entry.id
     }
     assert_raise CanCan::AccessDenied do
-      put :sync, params
+      put :sync, params: params
     end
   end
 
@@ -106,7 +112,7 @@ class InvoicesControllerTest < ActionController::TestCase
       id: test_entry.id
     }
     assert_raise CanCan::AccessDenied do
-      put :sync, params
+      put :sync, params: params
     end
   end
 
@@ -116,7 +122,7 @@ class InvoicesControllerTest < ActionController::TestCase
       order_id: test_entry.order_id,
       id: test_entry.id
     }
-    delete :destroy, params
+    delete :destroy, params: params
     assert_response :redirect
   end
 
@@ -126,7 +132,7 @@ class InvoicesControllerTest < ActionController::TestCase
       order_id: test_entry.order_id,
       id: test_entry.id
     }
-    delete :destroy, params
+    delete :destroy, params: params
     assert_response :redirect
   end
 
@@ -137,7 +143,7 @@ class InvoicesControllerTest < ActionController::TestCase
       id: test_entry.id
     }
     assert_raise CanCan::AccessDenied do
-      delete :destroy, params
+      delete :destroy, params: params
     end
   end
 
@@ -148,7 +154,7 @@ class InvoicesControllerTest < ActionController::TestCase
       id: test_entry.id
     }
     assert_raise CanCan::AccessDenied do
-      delete :destroy, params
+      delete :destroy, params: params
     end
   end
 
@@ -158,7 +164,7 @@ class InvoicesControllerTest < ActionController::TestCase
       order_id: test_entry.order_id,
       id: test_entry.id
     }
-    delete :destroy, params
+    delete :destroy, params: params
 
     assert_raise ActiveRecord::RecordNotFound do
       Invoice.find(test_entry.id)
@@ -173,7 +179,7 @@ class InvoicesControllerTest < ActionController::TestCase
       order_id: test_entry.order_id,
       id: test_entry.id
     }
-    delete :destroy, params
+    delete :destroy, params: params
 
     assert Invoice.find(test_entry.id).status == 'cancelled'
   end
@@ -188,7 +194,7 @@ class InvoicesControllerTest < ActionController::TestCase
         order_id: test_entry.order_id,
         id: test_entry.id
       }
-      delete :destroy, params
+      delete :destroy, params: params
 
       assert Invoice.find(test_entry.id).status == 'deleted'
     end
@@ -205,7 +211,7 @@ class InvoicesControllerTest < ActionController::TestCase
         id: test_entry.id
       }
       assert_raise CanCan::AccessDenied do
-        delete :destroy, params
+        delete :destroy, params: params
       end
     end
   end

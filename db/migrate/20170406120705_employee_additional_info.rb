@@ -1,4 +1,4 @@
-class EmployeeAdditionalInfo < ActiveRecord::Migration
+class EmployeeAdditionalInfo < ActiveRecord::Migration[5.1]
   def change
     change_table :employees do |t|
       t.text :additional_information

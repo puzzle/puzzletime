@@ -6,53 +6,55 @@ class AccountingPostsControllerTest < ActionController::TestCase
   setup :login
 
   test 'GET index' do
-    get :index, order_id: orders(:hitobito_demo).id
+    get :index, params: { order_id: orders(:hitobito_demo).id }
     assert_template 'index'
   end
 
   test 'GET edit' do
-    get :edit, order_id: orders(:puzzletime).id, id: accounting_posts(:puzzletime).id
+    get :edit, params: { order_id: orders(:puzzletime).id, id: accounting_posts(:puzzletime).id }
     assert_template 'edit'
   end
 
   test 'GET new presets some values' do
-    get :new, order_id: accounting_posts(:puzzletime).order.id
+    get :new, params: { order_id: accounting_posts(:puzzletime).order.id }
     assert_equal accounting_posts(:puzzletime).order, assigns(:order)
   end
 
   test 'GET new form includes book_on_order fields when no accounting_post exists for order' do
     order = orders(:hitobito_demo)
     order.accounting_posts.delete_all
-    get :new, order_id: order.id
+    get :new, params: { order_id: order.id }
     assert_match(/"book_on_order"/, @response.body)
   end
 
   test 'GET new form not includes book_on_order fields when accounting_post exists for order' do
     order = orders(:hitobito_demo)
-    get :new, order_id: order.id
+    get :new, params: { order_id: order.id }
     assert_no_match(/"book_on_order"/, @response.body)
   end
 
   test 'GET edit form includes book_on_order fields when no accounting_post exists for order' do
     accounting_posts(:hitobito_demo_site).delete
-    get :edit, order_id: orders(:hitobito_demo).id, id: accounting_posts(:hitobito_demo_app)
+    get :edit, params: { order_id: orders(:hitobito_demo).id, id: accounting_posts(:hitobito_demo_app) }
     assert_match(/"book_on_order"/, @response.body)
   end
 
   test 'GET edit form not includes book_on_order fields when accounting_post exists for order' do
-    get :edit, order_id: orders(:hitobito_demo).id, id: accounting_posts(:hitobito_demo_app)
+    get :edit, params: { order_id: orders(:hitobito_demo).id, id: accounting_posts(:hitobito_demo_app) }
     assert_no_match(/"book_on_order"/, @response.body)
   end
 
   test 'CREATE with book_on_order true when accounting_post exists' do
     assert_no_difference 'AccountingPost.count' do
       post :create,
-           order_id: orders(:hitobito_demo).id,
-           book_on_order: 'true',
-           accounting_post: {
-             portfolio_item_id: portfolio_items(:web).id,
-             service_id: services(:software).id,
-             offered_rate: 120 }
+           params: {
+             order_id: orders(:hitobito_demo).id,
+             book_on_order: 'true',
+             accounting_post: {
+               portfolio_item_id: portfolio_items(:web).id,
+               service_id: services(:software).id,
+               offered_rate: 120 }
+           }
       assert_response :unprocessable_entity
       assert_template :new
       assert_match(/es existieren bereits/, assigns(:accounting_post).errors.full_messages.join)
@@ -65,14 +67,16 @@ class AccountingPostsControllerTest < ActionController::TestCase
     assert_difference 'AccountingPost.count', 1 do
       assert_no_difference 'WorkItem.count' do
         post :create,
-             book_on_order: 'true',
-             order_id: order.id,
-             accounting_post: {
-               reference: 'asdf',
-               portfolio_item_id: portfolio_items(:web).id,
-               service_id: services(:software).id,
-               closed: true,
-               offered_rate: 155 }
+             params: {
+               book_on_order: 'true',
+               order_id: order.id,
+               accounting_post: {
+                 reference: 'asdf',
+                 portfolio_item_id: portfolio_items(:web).id,
+                 service_id: services(:software).id,
+                 closed: true,
+                 offered_rate: 155 }
+             }
       end
     end
     assert_redirected_to order_accounting_posts_path(order)
@@ -85,13 +89,15 @@ class AccountingPostsControllerTest < ActionController::TestCase
     assert_difference 'AccountingPost.count', 1 do
       assert_difference 'WorkItem.count', 1 do
         post :create,
-             order_id: orders(:hitobito_demo).id,
-             accounting_post: {
-               work_item_attributes: { name: 'TEST', shortname: 'TST' },
-               portfolio_item_id: portfolio_items(:web).id,
-               service_id: services(:software).id,
-               offered_rate: 120,
-               closed: true }
+             params: {
+               order_id: orders(:hitobito_demo).id,
+               accounting_post: {
+                 work_item_attributes: { name: 'TEST', shortname: 'TST' },
+                 portfolio_item_id: portfolio_items(:web).id,
+                 service_id: services(:software).id,
+                 offered_rate: 120,
+                 closed: true }
+             }
       end
     end
     assert_redirected_to order_accounting_posts_path(orders(:hitobito_demo))
@@ -107,12 +113,14 @@ class AccountingPostsControllerTest < ActionController::TestCase
     assert_difference 'AccountingPost.count', 1 do
       assert_difference 'WorkItem.count', 2 do
         post :create,
-             order_id: order.id,
-             accounting_post: {
-               work_item_attributes: { name: 'TEST', shortname: 'TST' },
-               portfolio_item_id: portfolio_items(:web).id,
-               service_id: services(:software).id,
-               offered_rate: 150 }
+             params: {
+               order_id: order.id,
+               accounting_post: {
+                 work_item_attributes: { name: 'TEST', shortname: 'TST' },
+                 portfolio_item_id: portfolio_items(:web).id,
+                 service_id: services(:software).id,
+                 offered_rate: 150 }
+             }
       end
     end
     assert_redirected_to order_accounting_posts_path(order)
@@ -132,12 +140,14 @@ class AccountingPostsControllerTest < ActionController::TestCase
     assert_difference 'AccountingPost.count', 1 do
       assert_difference 'WorkItem.count', 1 do
         post :create,
-             order_id: order.id,
-             accounting_post: {
-               work_item_attributes: { name: 'TEST', shortname: 'TST' },
-               portfolio_item_id: portfolio_items(:web).id,
-               service_id: services(:software).id,
-               offered_rate: 150 }
+             params: {
+               order_id: order.id,
+               accounting_post: {
+                 work_item_attributes: { name: 'TEST', shortname: 'TST' },
+                 portfolio_item_id: portfolio_items(:web).id,
+                 service_id: services(:software).id,
+                 offered_rate: 150 }
+             }
       end
     end
     assert_redirected_to order_accounting_posts_path(order)
@@ -167,7 +177,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
     }
 
     assert_difference 'AccountingPost.count',+1 do
-      post :create, attributes
+      post :create, params: attributes
     end
     accounting_post = assigns(:accounting_post)
     attributes[:accounting_post].except(:work_item_attributes).each do |k, v|
@@ -198,7 +208,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
       }
     }
 
-    patch :update, params
+    patch :update, params: params
     accounting_post.reload
     params[:accounting_post].except(:work_item_attributes).each do |k, v|
       assert_equal v.to_s, accounting_post.send(k).to_s, "accounting_post.#{k} should eq #{v}"
@@ -208,10 +218,12 @@ class AccountingPostsControllerTest < ActionController::TestCase
   test 'PATCH update with book_on_order true when other accounting_post exists' do
     assert_no_difference 'AccountingPost.count' do
       patch :update,
-            order_id: orders(:hitobito_demo).id,
-            id: accounting_posts(:hitobito_demo_app),
-            book_on_order: 'true',
-            accounting_post: { description: 'asdf' }
+            params: {
+              order_id: orders(:hitobito_demo).id,
+              id: accounting_posts(:hitobito_demo_app),
+              book_on_order: 'true',
+              accounting_post: { description: 'asdf' }
+            }
       assert_response :unprocessable_entity
       assert_template :edit
       assert_match(/es existieren bereits/, assigns(:accounting_post).errors.full_messages.join)
@@ -226,10 +238,12 @@ class AccountingPostsControllerTest < ActionController::TestCase
       assert_difference 'WorkItem.count', -1 do
         assert_no_difference 'Worktime.count' do
           patch :update,
-                order_id: orders(:hitobito_demo).id,
-                id: accounting_posts(:hitobito_demo_app),
-                book_on_order: 'true',
-                accounting_post: { reference: 'asdf' }
+                params: {
+                  order_id: orders(:hitobito_demo).id,
+                  id: accounting_posts(:hitobito_demo_app),
+                  book_on_order: 'true',
+                  accounting_post: { reference: 'asdf' }
+                }
           assert_redirected_to order_accounting_posts_path(orders(:hitobito_demo))
           assert_match(/erfolgreich aktualisiert/, flash[:notice])
         end
@@ -244,10 +258,12 @@ class AccountingPostsControllerTest < ActionController::TestCase
       assert_difference 'WorkItem.count',+1 do
         assert_no_difference 'Worktime.count' do
           patch :update,
-                order_id: orders(:puzzletime).id,
-                id: accounting_posts(:puzzletime).id,
-                book_on_order: 'false',
-                accounting_post: { work_item_attributes: { name: 'Refactoring', shortname: 'RFT' } }
+                params: {
+                  order_id: orders(:puzzletime).id,
+                  id: accounting_posts(:puzzletime).id,
+                  book_on_order: 'false',
+                  accounting_post: { work_item_attributes: { name: 'Refactoring', shortname: 'RFT' } }
+                }
           assert_redirected_to order_accounting_posts_path(orders(:puzzletime))
           assert_match(/erfolgreich aktualisiert/, flash[:notice])
         end
@@ -260,8 +276,10 @@ class AccountingPostsControllerTest < ActionController::TestCase
   test 'DESTROY does not remove reocrd when worktimes exist on workitem' do
     assert_no_difference 'AccountingPost.count' do
       delete :destroy,
-             id: accounting_posts(:puzzletime).id,
-             order_id: orders(:puzzletime).id
+             params: {
+               id: accounting_posts(:puzzletime).id,
+               order_id: orders(:puzzletime).id
+             }
     end
     assert_redirected_to order_accounting_posts_path(orders(:puzzletime))
     assert_match(/kann nicht gelöscht werden/, flash[:alert])
@@ -272,8 +290,10 @@ class AccountingPostsControllerTest < ActionController::TestCase
     assert_no_difference 'WorkItem.count' do
       assert_difference 'AccountingPost.count', -1 do
         delete :destroy,
-               order_id: orders(:puzzletime).id,
-               id: accounting_posts(:puzzletime).id
+               params: {
+                 order_id: orders(:puzzletime).id,
+                 id: accounting_posts(:puzzletime).id
+               }
       end
     end
     assert_redirected_to order_accounting_posts_path(orders(:puzzletime))
@@ -285,8 +305,10 @@ class AccountingPostsControllerTest < ActionController::TestCase
     assert_difference 'WorkItem.count', -1 do
       assert_difference 'AccountingPost.count', -1 do
         delete :destroy,
-               order_id: orders(:hitobito_demo).id,
-               id: accounting_posts(:hitobito_demo_app).id
+               params: {
+                 order_id: orders(:hitobito_demo).id,
+                 id: accounting_posts(:hitobito_demo_app).id
+               }
       end
     end
     assert_redirected_to order_accounting_posts_path(orders(:hitobito_demo))

@@ -220,11 +220,10 @@ class Invoice < ActiveRecord::Base
 
   def save_remote_invoice
     self.invoicing_key = Invoicing.instance.save_invoice(self, positions)
-    true
   rescue Invoicing::Error => e
     errors.add(:base, "Fehler im Invoicing Service: #{e.message}")
     Rails.logger.error(e.class.name + ': ' + e.message + "\n" + e.backtrace.join("\n"))
-    false
+    throw :abort
   end
 
   def delete_remote_invoice

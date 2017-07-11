@@ -4,27 +4,27 @@ class OrdersControllerTest < ActionController::TestCase
   setup :login
 
   test 'GET index sorted by order' do
-    get :index, sort: 'order', status_id: ''
+    get :index, params: { sort: 'order', status_id: '' }
     assert_equal orders(:allgemein, :hitobito_demo, :puzzletime, :webauftritt), assigns(:orders)
   end
 
   test 'GET index sorted by kind' do
-    get :index, sort: 'kind', status_id: ''
+    get :index, params: { sort: 'kind', status_id: '' }
     assert_equal orders(:allgemein, :puzzletime, :hitobito_demo, :webauftritt), assigns(:orders)
   end
 
   test 'GET index sorted by department' do
-    get :index, sort: 'department', status_id: ''
+    get :index, params: { sort: 'department', status_id: '' }
     assert_equal orders(:puzzletime, :webauftritt, :hitobito_demo, :allgemein), assigns(:orders)
   end
 
   test 'GET index sorted by responsible' do
-    get :index, sort: 'responsible', status_id: ''
+    get :index, params: { sort: 'responsible', status_id: '' }
     assert_equal orders(:webauftritt, :allgemein, :hitobito_demo, :puzzletime), assigns(:orders)
   end
 
   test 'GET index sorted by status' do
-    get :index, sort: 'status', status_id: ''
+    get :index, params: { sort: 'status', status_id: '' }
     assert_equal orders(:hitobito_demo, :puzzletime, :webauftritt, :allgemein), assigns(:orders)
   end
 
@@ -55,35 +55,35 @@ class OrdersControllerTest < ActionController::TestCase
   end
 
   test 'GET index filtered by department' do
-    get :index, department_id: departments(:devone).id
+    get :index, params: { department_id: departments(:devone).id }
     assert_equal orders(:puzzletime, :webauftritt), assigns(:orders)
     assert_equal({ 'department_id' => departments(:devone).id.to_s },
                  session[:list_params]['/orders'])
   end
 
   test 'GET index filtered by responsible' do
-    get :index, responsible_id: employees(:lucien).id
+    get :index, params: { responsible_id: employees(:lucien).id }
     assert_equal orders(:hitobito_demo, :puzzletime), assigns(:orders)
     assert_equal({ 'responsible_id' => employees(:lucien).id.to_s },
                  session[:list_params]['/orders'])
   end
 
   test 'GET index filtered by status' do
-    get :index, status_id: order_statuses(:bearbeitung).id
+    get :index, params: { status_id: order_statuses(:bearbeitung).id }
     assert_equal orders(:hitobito_demo, :puzzletime, :webauftritt), assigns(:orders)
     assert_equal({ 'status_id' => order_statuses(:bearbeitung).id.to_s },
                  session[:list_params]['/orders'])
   end
 
   test 'GET index filtered by kind' do
-    get :index, kind_id: order_kinds(:projekt).id
+    get :index, params: { kind_id: order_kinds(:projekt).id }
     assert_equal orders(:hitobito_demo, :webauftritt), assigns(:orders)
     assert_equal({ 'kind_id' => order_kinds(:projekt).id.to_s },
                  session[:list_params]['/orders'])
   end
 
   test 'GET index filtered by status and kind' do
-    get :index, status_id: order_statuses(:bearbeitung).id, kind_id: order_kinds(:mandat).id
+    get :index, params: { status_id: order_statuses(:bearbeitung).id, kind_id: order_kinds(:mandat).id }
     assert_equal [orders(:puzzletime)], assigns(:orders)
     assert_equal({ 'status_id' => order_statuses(:bearbeitung).id.to_s,
                    'kind_id' => order_kinds(:mandat).id.to_s },
@@ -91,10 +91,12 @@ class OrdersControllerTest < ActionController::TestCase
   end
 
   test 'GET index filtered by department, responsible, status and kind' do
-    get :index, department_id: departments(:devtwo).id,
-                responsible_id: employees(:lucien).id,
-                status_id: order_statuses(:bearbeitung).id,
-                kind_id: order_kinds(:mandat).id
+    get :index, params: {
+                  department_id: departments(:devtwo).id,
+                  responsible_id: employees(:lucien).id,
+                  status_id: order_statuses(:bearbeitung).id,
+                  kind_id: order_kinds(:mandat).id
+                }
     assert_equal [], assigns(:orders)
     assert_equal({ 'department_id' => departments(:devtwo).id.to_s,
                    'responsible_id' => employees(:lucien).id.to_s,
@@ -124,7 +126,7 @@ class OrdersControllerTest < ActionController::TestCase
         'kind_id' => order_kinds(:mandat).id.to_s
       }
     }
-    get :index, status_id: order_statuses(:abgeschlossen).id, responsible_id: employees(:mark).id
+    get :index, params: { status_id: order_statuses(:abgeschlossen).id, responsible_id: employees(:mark).id }
     assert_equal [orders(:allgemein)], assigns(:orders)
     assert_equal({ 'status_id' => order_statuses(:abgeschlossen).id.to_s,
                    'responsible_id' => employees(:mark).id.to_s },
@@ -133,7 +135,7 @@ class OrdersControllerTest < ActionController::TestCase
 
 
   test 'GET show' do
-    get :show, id: orders(:hitobito_demo).id
+    get :show, params: { id: orders(:hitobito_demo).id }
     assert_template 'show'
   end
 
@@ -141,32 +143,34 @@ class OrdersControllerTest < ActionController::TestCase
     get :new
     user = employees(:mark)
     order = assigns(:order)
-    assert_equal user.department_id, order.department_id
+    assert_nil order.department_id
     assert_equal user, order.responsible
   end
 
   test 'POST create sets values' do
     assert_difference('Order.count') do
       post :create,
-           client_work_item_id: clients(:swisstopo).work_item_id,
-           order: {
-              work_item_attributes: {
-                name: 'New Order',
-                shortname: 'NEO'
-              },
-              department_id: departments(:devtwo).id,
-              responsible_id: employees(:pascal).id,
-              kind_id: order_kinds(:projekt).id,
-              status_id: order_statuses(:bearbeitung).id,
-              order_team_members_attributes: {
-                '0' => { employee_id: employees(:half_year_maria).id, comment: 'rolle maria' },
-                '1' => { employee_id: employees(:next_year_pablo).id, comment: 'rolle pablo' }
-              },
-              order_contacts_attributes: {
-                '0' => { contact_id_or_crm: contacts(:swisstopo_1).id, comment: 'funktion 1' },
-                '1' => { contact_id_or_crm: contacts(:swisstopo_2).id, comment: 'funktion 2' }
+           params: {
+             client_work_item_id: clients(:swisstopo).work_item_id,
+             order: {
+                work_item_attributes: {
+                  name: 'New Order',
+                  shortname: 'NEO'
+                },
+                department_id: departments(:devtwo).id,
+                responsible_id: employees(:pascal).id,
+                kind_id: order_kinds(:projekt).id,
+                status_id: order_statuses(:bearbeitung).id,
+                order_team_members_attributes: {
+                  '0' => { employee_id: employees(:half_year_maria).id, comment: 'rolle maria' },
+                  '1' => { employee_id: employees(:next_year_pablo).id, comment: 'rolle pablo' }
+                },
+                order_contacts_attributes: {
+                  '0' => { contact_id_or_crm: contacts(:swisstopo_1).id, comment: 'funktion 1' },
+                  '1' => { contact_id_or_crm: contacts(:swisstopo_2).id, comment: 'funktion 2' }
+                }
               }
-            }
+           }
     end
 
     assert_redirected_to edit_order_path(assigns(:order))
@@ -195,24 +199,26 @@ class OrdersControllerTest < ActionController::TestCase
     source.create_contract!(number: 'hito1234', start_date: '2005-01-01', end_date: '2020-07-30')
 
     post :create,
-         client_work_item_id: clients(:puzzle).work_item_id,
-         copy_id: source.id,
-         order: {
-           work_item_attributes: {
-             parent_id: source.work_item.parent.id,
-             name: 'New Order',
-             shortname: 'NEO'
-           },
-           department_id: departments(:devtwo).id,
-           responsible_id: employees(:pascal).id,
-           kind_id: order_kinds(:projekt).id,
-           status_id: order_statuses(:bearbeitung).id,
-           order_team_members_attributes: {
-             '0' => { employee_id: employees(:half_year_maria).id, comment: 'rolle maria' },
-             '1' => { employee_id: employees(:next_year_pablo).id, comment: 'rolle pablo' }
-           },
-           order_contacts_attributes: {
-             '0' => { contact_id_or_crm: contacts(:puzzle_rava).id, comment: 'funktion 1' }
+         params: {
+           client_work_item_id: clients(:puzzle).work_item_id,
+           copy_id: source.id,
+           order: {
+             work_item_attributes: {
+               parent_id: source.work_item.parent.id,
+               name: 'New Order',
+               shortname: 'NEO'
+             },
+             department_id: departments(:devtwo).id,
+             responsible_id: employees(:pascal).id,
+             kind_id: order_kinds(:projekt).id,
+             status_id: order_statuses(:bearbeitung).id,
+             order_team_members_attributes: {
+               '0' => { employee_id: employees(:half_year_maria).id, comment: 'rolle maria' },
+               '1' => { employee_id: employees(:next_year_pablo).id, comment: 'rolle pablo' }
+             },
+             order_contacts_attributes: {
+               '0' => { contact_id_or_crm: contacts(:puzzle_rava).id, comment: 'funktion 1' }
+             }
            }
          }
 
@@ -244,18 +250,20 @@ class OrdersControllerTest < ActionController::TestCase
     source = orders(:webauftritt)
 
     post :create,
-         client_work_item_id: clients(:swisstopo).work_item_id,
-         copy_id: source.id,
-         order: {
-           work_item_attributes: {
-             parent_id: source.work_item.parent.id,
-             name: 'New Order',
-             shortname: 'NEO'
-           },
-           department_id: departments(:devtwo).id,
-           responsible_id: employees(:pascal).id,
-           kind_id: order_kinds(:projekt).id,
-           status_id: order_statuses(:bearbeitung).id
+         params: {
+           client_work_item_id: clients(:swisstopo).work_item_id,
+           copy_id: source.id,
+           order: {
+             work_item_attributes: {
+               parent_id: source.work_item.parent.id,
+               name: 'New Order',
+               shortname: 'NEO'
+             },
+             department_id: departments(:devtwo).id,
+             responsible_id: employees(:pascal).id,
+             kind_id: order_kinds(:projekt).id,
+             status_id: order_statuses(:bearbeitung).id
+           }
          }
 
     assert_equal [], assigns(:order).errors.full_messages
@@ -285,18 +293,20 @@ class OrdersControllerTest < ActionController::TestCase
     Fabricate(:accounting_post, work_item: source.work_item)
 
     post :create,
-         client_work_item_id: clients(:puzzle).work_item_id,
-         copy_id: source.id,
-         order: {
-           work_item_attributes: {
-             parent_id: source.work_item.parent.id,
-             name: 'New Order',
-             shortname: 'NEO'
-           },
-           department_id: departments(:devtwo).id,
-           responsible_id: employees(:pascal).id,
-           kind_id: order_kinds(:projekt).id,
-           status_id: order_statuses(:bearbeitung).id
+         params: {
+           client_work_item_id: clients(:puzzle).work_item_id,
+           copy_id: source.id,
+           order: {
+             work_item_attributes: {
+               parent_id: source.work_item.parent.id,
+               name: 'New Order',
+               shortname: 'NEO'
+             },
+             department_id: departments(:devtwo).id,
+             responsible_id: employees(:pascal).id,
+             kind_id: order_kinds(:projekt).id,
+             status_id: order_statuses(:bearbeitung).id
+           }
          }
 
     assert_equal [], assigns(:order).errors.full_messages
@@ -322,24 +332,26 @@ class OrdersControllerTest < ActionController::TestCase
 
   test 'PATCH update sets values' do
     order = orders(:puzzletime)
-    patch :update, id: order.id,
-                   order: {
-                     work_item_attributes: {
-                       name: 'New Order',
-                       shortname: 'NEO'
-                     },
-                     crm_key: 'puzzletime-crm-key',
-                     department_id: departments(:devtwo).id,
-                     responsible_id: employees(:pascal).id,
-                     kind_id: order_kinds(:projekt).id,
-                     status_id: order_statuses(:bearbeitung).id,
-                     order_team_members_attributes: {
-                       '0' => { employee_id: employees(:half_year_maria).id, comment: 'rolle maria' },
-                       '1' => { employee_id: employees(:next_year_pablo).id, comment: 'rolle pablo' }
-                     },
-                     order_contacts_attributes: {
-                       '0' => { contact_id_or_crm: contacts(:puzzle_rava), comment: 'funktion 1' },
-                       '1' => { contact_id_or_crm: contacts(:puzzle_hauswart), comment: 'funktion 2' }
+    patch :update, params: {
+                     id: order.id,
+                     order: {
+                       work_item_attributes: {
+                         name: 'New Order',
+                         shortname: 'NEO'
+                       },
+                       crm_key: 'puzzletime-crm-key',
+                       department_id: departments(:devtwo).id,
+                       responsible_id: employees(:pascal).id,
+                       kind_id: order_kinds(:projekt).id,
+                       status_id: order_statuses(:bearbeitung).id,
+                       order_team_members_attributes: {
+                         '0' => { employee_id: employees(:half_year_maria).id, comment: 'rolle maria' },
+                         '1' => { employee_id: employees(:next_year_pablo).id, comment: 'rolle pablo' }
+                       },
+                       order_contacts_attributes: {
+                         '0' => { contact_id_or_crm: contacts(:puzzle_rava), comment: 'funktion 1' },
+                         '1' => { contact_id_or_crm: contacts(:puzzle_hauswart), comment: 'funktion 2' }
+                       }
                      }
                    }
 
@@ -369,7 +381,7 @@ class OrdersControllerTest < ActionController::TestCase
     assert_difference 'WorkItem.count', -1 do
       assert_difference 'Order.count', -1 do
         assert_difference 'AccountingPost.count', -1 do
-          delete :destroy, id: order.id
+          delete :destroy, params: { id: order.id }
         end
       end
     end
@@ -382,7 +394,7 @@ class OrdersControllerTest < ActionController::TestCase
     assert_difference 'WorkItem.count', -3 do
       assert_difference 'Order.count', -1 do
         assert_difference 'AccountingPost.count', -2 do
-          delete :destroy, id: order.id
+          delete :destroy, params: { id: order.id }
         end
       end
     end
@@ -393,7 +405,9 @@ class OrdersControllerTest < ActionController::TestCase
     order = orders(:webauftritt)
     lucien = employees(:lucien)
 
-    xhr :get, :employees, id: order.id, period_from: '11.12.2006', period_to: '01.03.2007'
+    get :employees,
+        xhr: true,
+        params: { id: order.id, period_from: '11.12.2006', period_to: '01.03.2007' }
 
     empls = JSON.parse(response.body)
     assert_equal 1, empls.size
@@ -408,7 +422,7 @@ class OrdersControllerTest < ActionController::TestCase
     lucien = employees(:lucien)
     mark = employees(:mark)
 
-    xhr :get, :employees, id: order.id
+    get :employees, xhr: true, params: { id: order.id }
 
     empls = JSON.parse(response.body)
     assert_equal 2, empls.size
@@ -419,7 +433,9 @@ class OrdersControllerTest < ActionController::TestCase
   test 'ajax GET #employees empty if no worktimes for given period' do
     order = orders(:webauftritt)
 
-    xhr :get, :employees, id: order.id, period_from: '11.12.2007', period_to: '01.03.2008'
+    get :employees,
+        xhr: true,
+        params: { id: order.id, period_from: '11.12.2007', period_to: '01.03.2008' }
 
     empls = JSON.parse(response.body)
     assert_equal 0, empls.size
@@ -430,7 +446,7 @@ class OrdersControllerTest < ActionController::TestCase
 
     order = orders(:webauftritt)
 
-    get :edit, id: order.id
+    get :edit, params: { id: order.id }
 
     assert_redirected_to order_path(order)
   end
@@ -438,7 +454,7 @@ class OrdersControllerTest < ActionController::TestCase
   test 'GET #edit shows edit form if write access' do
     order = orders(:webauftritt)
 
-    get :edit, id: order.id
+    get :edit, params: { id: order.id }
 
     assert_template :edit
   end

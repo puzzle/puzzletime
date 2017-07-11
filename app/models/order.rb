@@ -27,13 +27,13 @@ class Order < ActiveRecord::Base
 
   ### ASSOCIATIONS
 
-  belongs_to :kind, class_name: 'OrderKind'
-  belongs_to :status, class_name: 'OrderStatus'
-  belongs_to :responsible, class_name: 'Employee'
-  belongs_to :department
-  belongs_to :contact
-  belongs_to :contract, dependent: :destroy
-  belongs_to :billing_address
+  belongs_to :kind, class_name: 'OrderKind', optional: true
+  belongs_to :status, class_name: 'OrderStatus', optional: true
+  belongs_to :responsible, class_name: 'Employee', optional: true
+  belongs_to :department, optional: true
+  belongs_to :contact, optional: true
+  belongs_to :contract, optional: true, dependent: :destroy
+  belongs_to :billing_address, optional: true
 
   has_ancestor_through_work_item :client
 

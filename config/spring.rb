@@ -1,11 +1,6 @@
-class MetalRunner
-  def env(*)
-    'test'
-  end
-
-  def exec_name
-    'm'
-  end
-end
-
-Spring.register_command 'm', MetalRunner.new
+%w(
+  .ruby-version
+  .rbenv-vars
+  tmp/restart.txt
+  tmp/caching-dev.txt
+).each { |path| Spring.watch(path) }

@@ -1,6 +1,8 @@
+require 'rake/testtask.rb'
+
 namespace :test do
   desc 'Run only non-integration tests'
-  task units: ['test:models', 'test:domain', 'test:controllers', 'test:helpers', 'test:mailers']
+  task units: ['test:models', 'test:domain', 'test:controllers', 'test:helpers']
 
   desc 'Run tests for domain'
   Rake::TestTask.new('domain') do |t|

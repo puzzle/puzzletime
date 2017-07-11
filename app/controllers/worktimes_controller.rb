@@ -222,7 +222,7 @@ class WorktimesController < CrudController
   def check_has_accounting_post
     unless entry.work_item.respond_to?(:accounting_post)
       entry.errors.add(:work_item, 'Bitte wähle eine Buchungsposition aus')
-      false
+      throw :abort
     end
   end
 
@@ -232,7 +232,7 @@ class WorktimesController < CrudController
       date = I18n.l(@user.committed_worktimes_at, format: :month)
       entry.errors.add(:work_date, "Die Zeiten bis und mit #{date} wurden freigegeben " \
                                    'und können nicht mehr bearbeitet werden.')
-      false
+      throw :abort
     end
   end
 end

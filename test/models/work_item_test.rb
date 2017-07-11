@@ -76,7 +76,7 @@ class WorkItemTest < ActiveSupport::TestCase
                   shortname: 'BAR')
 
     p.reload
-    p.update_attributes!(name: 'Fuu', description: 'bala bala')
+    p.update!(name: 'Fuu', description: 'bala bala')
     c.reload
 
     assert_equal 'PITC-FOO-BAR', c.path_shortnames

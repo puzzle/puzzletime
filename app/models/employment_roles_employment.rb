@@ -13,7 +13,7 @@
 class EmploymentRolesEmployment < ActiveRecord::Base
   belongs_to :employment
   belongs_to :employment_role
-  belongs_to :employment_role_level
+  belongs_to :employment_role_level, optional: true
 
   validates :percent, inclusion: 0..200
   validate :valid_level

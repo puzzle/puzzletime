@@ -39,7 +39,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   end
 
   def test_index_js
-    xhr :get, :index, test_params
+    get :index, xhr: true, params: test_params
     assert_response :success
     assert_equal 'index js', @response.body
     assert entries.present?
@@ -52,7 +52,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   end
 
   def test_index_with_custom_options
-    get :index, filter: true
+    get :index, params: { filter: true }
     assert_response :success
     assert_template 'index'
     assert entries.present?
@@ -61,7 +61,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   end
 
   def test_index_search_with_custom_options
-    get :index, q: 'DDD', filter: true
+    get :index, params: { q: 'DDD', filter: true }
     assert_response :success
     assert_template 'index'
     assert entries.present?
@@ -71,7 +71,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   end
 
   def test_sort_given_column
-    get :index, sort: 'children', sort_dir: 'asc'
+    get :index, params: { sort: 'children', sort_dir: 'asc' }
     assert_response :success
     assert_template 'index'
     assert entries.present?
@@ -82,7 +82,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   end
 
   def test_sort_virtual_column
-    get :index, sort: 'chatty', sort_dir: 'desc'
+    get :index, params: { sort: 'chatty', sort_dir: 'desc' }
     assert_response :success
     assert_template 'index'
     assert entries.present?
@@ -101,7 +101,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   end
 
   def test_sort_with_search
-    get :index, q: 'DDD', sort: 'chatty', sort_dir: 'asc'
+    get :index, params: { q: 'DDD', sort: 'chatty', sort_dir: 'asc' }
     assert_response :success
     assert_template 'index'
     assert entries.present?
@@ -116,7 +116,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     session[:list_params]['/crud_test_models'] = { q: 'DDD',
                                                    sort: 'chatty',
                                                    sort_dir: 'desc' }.with_indifferent_access
-    get :index, returning: true
+    get :index, params: { returning: true }
     assert_response :success
     assert_template 'index'
     assert entries.present?
@@ -141,7 +141,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   end
 
   def test_show_with_custom
-    get :show, test_params(id: crud_test_models(:BBBBB).id)
+    get :show, params: test_params(id: crud_test_models(:BBBBB).id)
     assert_response :success
     assert_equal 'custom html', @response.body
   end
@@ -183,7 +183,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
 
   def test_create_with_before_callback
     assert_no_difference('CrudTestModel.count') do
-      post :create, crud_test_model: { name: 'illegal', children: 2 }
+      post :create, params: { crud_test_model: { name: 'illegal', children: 2 } }
     end
     assert_response :unprocessable_entity
     assert_template 'new'
@@ -198,7 +198,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   def test_create_with_before_callback_redirect
     @controller.should_redirect = true
     assert_no_difference('CrudTestModel.count') do
-      post :create, crud_test_model: { name: 'illegal', children: 2 }
+      post :create, params: { crud_test_model: { name: 'illegal', children: 2 } }
     end
     assert_redirected_to action: 'index'
     assert_nil @controller.called_callbacks
@@ -213,7 +213,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
 
   def test_create_with_failure
     assert_no_difference('CrudTestModel.count') do
-      post :create, crud_test_model: { children: 2 }
+      post :create, params: { crud_test_model: { children: 2 } }
     end
     assert_response :unprocessable_entity
     assert_template 'new'
@@ -229,7 +229,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
 
   def test_create_with_failure_json
     assert_no_difference('CrudTestModel.count') do
-      post :create, crud_test_model: { children: 2 }, format: 'json'
+      post :create, params: { crud_test_model: { children: 2 } }, format: 'json'
     end
     assert_response :unprocessable_entity
     assert entry.new_record?
@@ -237,7 +237,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   end
 
   def test_update_with_failure
-    put :update, id: test_entry.id, crud_test_model: { rating: 20 }
+    put :update, params: { id: test_entry.id, crud_test_model: { rating: 20 } }
     assert_response :unprocessable_entity
     assert_template 'edit'
     assert entry.changed?
@@ -250,8 +250,10 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   end
 
   def test_update_with_failure_json
-    put :update, id: test_entry.id,
-                 crud_test_model: { rating: 20 },
+    put :update, params: {
+                   id: test_entry.id,
+                   crud_test_model: { rating: 20 }
+                 },
                  format: 'json'
     assert_response :unprocessable_entity
     assert entry.changed?
@@ -264,7 +266,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_no_difference("#{model_class.name}.count") do
       @request.env['HTTP_REFERER'] =
         crud_test_model_url(crud_test_models(:BBBBB))
-      delete :destroy, test_params(id: crud_test_models(:BBBBB).id)
+      delete :destroy, params: test_params(id: crud_test_models(:BBBBB).id)
     end
     assert_redirected_to_show(entry)
     assert_match /companion/, flash[:alert]
@@ -275,7 +277,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     e = crud_test_models(:AAAAA)
     e.update_attribute :name, 'illegal'
     assert_no_difference("#{model_class.name}.count") do
-      delete :destroy, test_params(id: e.id)
+      delete :destroy, params: test_params(id: e.id)
     end
     assert_redirected_to_index
     assert_match /illegal name/, flash[:alert]
@@ -284,8 +286,8 @@ class CrudTestModelsControllerTest < ActionController::TestCase
 
   def test_destroy_failure_json
     assert_no_difference("#{model_class.name}.count") do
-      delete :destroy, test_params(id: crud_test_models(:BBBBB).id,
-                                   format: 'json')
+      delete :destroy, params: test_params(id: crud_test_models(:BBBBB).id,
+                                           format: 'json')
     end
     assert_response :unprocessable_entity
     assert flash[:notice].blank?

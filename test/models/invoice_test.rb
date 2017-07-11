@@ -323,7 +323,7 @@ class InvoiceTest < ActiveSupport::TestCase
 end
 
 class InvoiceTransactionTest < ActiveSupport::TestCase
-  self.use_transactional_fixtures = false
+  self.use_transactional_tests = false
 
   test 'generates different parallel invoice numbers' do
     ActiveRecord::Base.clear_active_connections!
@@ -336,6 +336,6 @@ class InvoiceTransactionTest < ActiveSupport::TestCase
     end.each(&:join)
 
     assert_equal 11, clients(:swisstopo).last_invoice_number
-    assert_equal 11, Invoice.pluck(:reference).uniq.size
+    assert_equal 11, Invoice.distinct.pluck(:reference).size
   end
 end

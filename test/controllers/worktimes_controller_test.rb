@@ -13,21 +13,21 @@ class WorktimesControllerTest < ActionController::TestCase
   end
 
   def test_week_switcher
-    get :index, week_date: '2013-12-31'
+    get :index, params: { week_date: '2013-12-31' }
     assert_equal 7, assigns(:week_days).count
     assert_equal Date.new(2013, 12, 30), assigns(:week_days).first
     assert_equal Date.new(2014, 1, 5), assigns(:week_days).last
   end
 
   def test_date_picker_week_switcher
-    get :index, week_date: '31.12.2013' # datepicker uses german locale
+    get :index, params: { week_date: '31.12.2013' } # datepicker uses german locale
     assert_equal 7, assigns(:week_days).count
     assert_equal Date.new(2013, 12, 30), assigns(:week_days).first
     assert_equal Date.new(2014, 1, 5), assigns(:week_days).last
   end
 
   def test_worktimes
-    get :index, week_date: '2006-12-8'
+    get :index, params: { week_date: '2006-12-8' }
     assert_equal 4, assigns(:worktimes).count
     assert_equal Date.new(2006, 12, 6), assigns(:worktimes).first.work_date
     assert_equal Date.new(2006, 12, 9), assigns(:worktimes).last.work_date
@@ -39,7 +39,7 @@ class WorktimesControllerTest < ActionController::TestCase
 
     commit_times(:pascal)
 
-    get :index, week_date: months_first_day.to_s
+    get :index, params: { week_date: months_first_day.to_s }
     assert_no_modify_buttons
   end
 
@@ -47,7 +47,7 @@ class WorktimesControllerTest < ActionController::TestCase
     create_time_entries(:pascal)
     login_as(:pascal)
 
-    get :index, week_date: months_first_day.to_s
+    get :index, params: { week_date: months_first_day.to_s }
     assert_modify_buttons
   end
 
@@ -57,7 +57,7 @@ class WorktimesControllerTest < ActionController::TestCase
 
     commit_times(:mark)
 
-    get :index, week_date: months_first_day.to_s
+    get :index, params: { week_date: months_first_day.to_s }
     assert_no_modify_buttons
   end
 
@@ -66,7 +66,7 @@ class WorktimesControllerTest < ActionController::TestCase
     @ordertime.update(invoice: create_invoice('draft'))
     login_as(:pascal)
 
-    get :index, week_date: months_first_day.to_s
+    get :index, params: { week_date: months_first_day.to_s }
     assert_modify_buttons
     assert_select('.entry:not(.is-empty) a.entry-link', count: 2)
   end
@@ -76,7 +76,7 @@ class WorktimesControllerTest < ActionController::TestCase
     @ordertime.update(invoice: create_invoice('sent'))
     login_as(:pascal)
 
-    get :index, week_date: months_first_day.to_s
+    get :index, params: { week_date: months_first_day.to_s }
     assert_select('a i.icon-duplicate', count: 2)
     assert_select('a i.icon-delete', count: 1)
     assert_select('a i.icon-add', count: 7 * 2)
@@ -88,7 +88,7 @@ class WorktimesControllerTest < ActionController::TestCase
     @ordertime.update(invoice: create_invoice('paid'))
     login_as(:pascal)
 
-    get :index, week_date: months_first_day.to_s
+    get :index, params: { week_date: months_first_day.to_s }
     assert_select('a i.icon-duplicate', count: 2)
     assert_select('a i.icon-delete', count: 1)
     assert_select('a i.icon-add', count: 7 * 2)
@@ -100,7 +100,7 @@ class WorktimesControllerTest < ActionController::TestCase
     @ordertime.update(invoice: create_invoice('partially_paid'))
     login_as(:pascal)
 
-    get :index, week_date: months_first_day.to_s
+    get :index, params: { week_date: months_first_day.to_s }
     assert_select('a i.icon-duplicate', count: 2)
     assert_select('a i.icon-delete', count: 1)
     assert_select('a i.icon-add', count: 7 * 2)

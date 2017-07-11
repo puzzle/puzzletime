@@ -8,7 +8,7 @@ module Plannings
     setup :login
 
     def test_new
-      get :new, custom_list: { item_type: 'Employee' }
+      get :new, params: { custom_list: { item_type: 'Employee' } }
       assert_response :success
       assert_template 'new'
       assert entry.new_record?

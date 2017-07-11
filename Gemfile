@@ -1,40 +1,40 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.2.8'
+gem 'rails', '5.0.4'
 
-gem 'pg', '< 0.19' # higher requires ruby 2.0
+gem 'pg'
 
-gem 'airbrake', '< 5.0' # would require newer errbit
+gem 'airbrake'
 gem 'acts_as_tree'
-gem 'cancancan', '< 1.13' # higher requires ruby 2.0
-gem 'config', '< 1.1' # higher requires ruby 2.0
+gem 'cancancan'
+gem 'config'
 gem 'country_select'
 gem 'daemons'
 gem 'dalli'
 gem 'delayed_job_active_record'
 gem 'delayed_cron_job'
-gem 'kaminari', '< 1.0.0' # higher requires ruby 2.0
+gem 'kaminari'
 gem 'kaminari-bootstrap'
 gem 'haml'
 gem 'highrise'
 gem 'jbuilder'
 gem 'nested_form_fields'
-gem 'net-ldap', '< 0.13' # higher requires ruby 2.0
-gem 'nokogiri', '< 1.7.0' # higher requires ruby 2.1
+gem 'net-ldap'
+gem 'nokogiri'
 gem 'protective'
-gem 'public_suffix', '< 1.5.0' # higher requires ruby 2.0
+#gem 'public_suffix'
 gem 'rails_autolink'
 gem 'rails-i18n'
 gem 'request_store'
 gem 'rqrcode'
 gem 'seed-fu'
-gem 'sort_alphabetical', '< 1.1.0' # higher requires ruby 2.0
+#gem 'sort_alphabetical'
 gem 'validates_by_schema'
 gem 'validates_timeliness'
 gem 'paper_trail'
 
 # fixed version for indirect dependencies
-gem 'mime-types', '~> 2.99.1'
+#gem 'mime-types', '~> 2.99.1'
 
 ## assets
 gem 'sass-rails'
@@ -44,25 +44,25 @@ gem 'therubyracer', platforms: :ruby
 
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
-gem 'turbolinks', '< 5.0' # upgrade to 5.0 together with rails
+gem 'turbolinks' #, '< 5.0' # upgrade to 5.0 together with rails
 gem 'jquery-turbolinks'
 gem 'bootstrap-sass'
-gem 'autoprefixer-rails', '< 6.1.0' # dependency of bootstrap, newer requires ruby 2.0
-gem 'selectize-rails', '0.12.4'
+#gem 'autoprefixer-rails', '< 6.1.0' # dependency of bootstrap, newer requires ruby 2.0
+gem 'selectize-rails' #, '0.12.2'
 
 group :development, :test do
   gem 'binding_of_caller'
   gem 'codez-tarantula', require: 'tarantula-rails3'
-  gem 'faker', '< 1.6.4' # higher requires ruby 2.0
+  gem 'faker'
   gem 'pry-rails'
   gem 'request_profiler'
 end
 
 group :development do
+  gem 'puma'
   gem 'spring'
-  gem 'better_errors', '< 2.0.0' # higher requires ruby 2.0
+  #gem 'better_errors'
   gem 'bullet'
-  gem 'quiet_assets'
 end
 
 group :test do
@@ -74,13 +74,13 @@ group :test do
   gem 'database_cleaner'
   gem 'm'
   gem 'gemsurance'
+  gem 'rails-controller-testing'
 end
 
 group :console do
   gem 'pry-doc'
   gem 'pry-nav'
-  gem 'pry-debugger', platforms: :ruby_19, require: ENV['RM_INFO'].to_s.empty?
-  gem 'pry-byebug', '>= 1.3.3', platforms: [:ruby_20], require: ENV['RM_INFO'].to_s.empty?
+  gem 'pry-byebug', require: ENV['RM_INFO'].to_s.empty?
 end
 
 group :metrics do

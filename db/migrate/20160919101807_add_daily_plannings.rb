@@ -1,4 +1,4 @@
-class AddDailyPlannings < ActiveRecord::Migration
+class AddDailyPlannings < ActiveRecord::Migration[5.1]
   OLD_TABLE = :plannings
   NEW_TABLE = :plannings_new
   IGNORE_BEFORE = Date.today.beginning_of_year - 6.months

@@ -9,12 +9,12 @@ class Employees::LogControllerTest < ActionController::TestCase
   test 'denies access for non-management users' do
     employees(:mark).update_attributes(management: false)
     assert_raise CanCan::AccessDenied do
-      get :index, id: pedro.id
+      get :index, params: { id: pedro.id }
     end
   end
 
   test 'renders empty log' do
-    get :index, id: pedro.id
+    get :index, params: { id: pedro.id }
     assert_match(/Keine Änderungen/, response.body)
   end
 
@@ -22,7 +22,7 @@ class Employees::LogControllerTest < ActionController::TestCase
     pedro.update_attributes(street: 'Belpstrasse 37', postal_code: '3007', city: 'Bern')
     pedro.update_attributes(phone_private: '+41791234567')
     pedro.update_attributes(committed_worktimes_at: Time.zone.now) # should not appear in log
-    get :index, id: pedro.id
+    get :index, params: { id: pedro.id }
     assert_select('.log tbody tr', count: 2)
     assert_select('.log tbody tr:nth-child(1) td:nth-child(2)', text: 'Telefon Privat wurde auf «+41791234567» gesetzt.')
     assert_select('.log tbody tr:nth-child(2) td:nth-child(2)', text: 'Strasse wurde auf «Belpstrasse 37» gesetzt.' \

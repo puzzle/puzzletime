@@ -3,25 +3,26 @@
 %h3= @evaluation.category_label
 %h3= @evaluation.division_label
 
-= render :partial => 'detail_times'
+= render 'detail_times'
 
 %p
   = action_link 'Übersicht',
-                :action => params[:evaluation], :category_id => params[:category_id]
+                action: params[:evaluation],
+                category_id: params[:category_id]
 
   = action_link action_icon('export', 'CSV Export'),
-                evaluation_detail_params.merge!(:action => 'export_csv',
-                                                :evaluation => params[:evaluation]),
+                evaluation_detail_params.merge!(action: 'export_csv',
+                                                evaluation: params[:evaluation]),
                 data: { no_turbolink: true }
 
   - if @evaluation.report?
     = action_link action_icon('time', 'Zeitrapport erstellen'),
-                  evaluation_detail_params.merge!(:action => 'compose_report')
+                  evaluation_detail_params.merge!(action: 'compose_report')
 
   - if @user.management
     = action_link action_icon('add', 'Fremderfassung'),
-                  evaluation_detail_params.merge!(:controller => worktime_controller,
-                                                  :action => 'new',
-                                                  :other => 1,
-                                                  :account_id => @evaluation.account_id,
-                                                  :employee_id => @evaluation.employee_id)
+                  evaluation_detail_params.merge!(controller: worktime_controller,
+                                                  action: 'new',
+                                                  other: 1,
+                                                  account_id: @evaluation.account_id,
+                                                  employee_id: @evaluation.employee_id)

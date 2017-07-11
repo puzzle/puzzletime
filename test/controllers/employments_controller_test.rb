@@ -12,35 +12,35 @@ class EmploymentsControllerTest < ActionController::TestCase
 
   def test_overlapping
     assert_equal Date.new(2006, 12, 31), employments(:for_half_year).end_date
-    post :create, employment: { percent: 80,
+    post :create, params: { employment: { percent: 80,
                                 employment_roles_employments_attributes: {
                                   '0' => test_employment_role_80
                                 },
                                 start_date: Date.new(2006, 10, 1),
-                                end_date: Date.new(2007, 5, 31) }, employee_id: 1
+                                end_date: Date.new(2007, 5, 31) }, employee_id: 1 }
     assert_response :unprocessable_entity
     assert response.body.include? 'Für diese Zeitspanne ist bereits eine andere Anstellung definiert'
   end
 
   def test_employment_percent
-    post :create, employment: { percent: 60,
+    post :create, params: { employment: { percent: 60,
                                 employment_roles_employments_attributes: {
                                   '0' => test_employment_role_80
                                 },
                                 start_date: Date.new(2008, 10, 1),
-                                end_date: Date.new(2009, 5, 31) }, employee_id: 1
+                                end_date: Date.new(2009, 5, 31) }, employee_id: 1 }
     assert_response :unprocessable_entity
     assert response.body.include? 'Funktionsanteile und Beschäftigungsgrad stimmen nicht überein.'
   end
 
   def test_employment_role_uniqueness
-    post :create, employment: { percent: 160,
+    post :create, params: { employment: { percent: 160,
                                 employment_roles_employments_attributes: {
                                   '0' => test_employment_role_80,
                                   '1' => test_employment_role_80
                                 },
                                 start_date: Date.new(2008, 10, 1),
-                                end_date: Date.new(2009, 5, 31) }, employee_id: 1
+                                end_date: Date.new(2009, 5, 31) }, employee_id: 1 }
     assert_response :unprocessable_entity
     assert response.body.include? 'Funktionen können nicht doppelt erfasst werden.'
   end

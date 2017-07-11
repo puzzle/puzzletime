@@ -75,7 +75,7 @@ class Order::CopierTest < ActiveSupport::TestCase
     assert_equal order.kind_id, copy.kind_id
     assert_equal order.responsible_id, copy.responsible_id
     assert_equal order.department_id, copy.department_id
-    assert_equal order.billing_address_id, copy.billing_address_id
+    assert_nil copy.billing_address_id
     assert_equal [], copy.order_team_members
     assert_equal [], copy.order_contacts
     assert_nil copy.contract
@@ -88,7 +88,7 @@ class Order::CopierTest < ActiveSupport::TestCase
     assert_nil copy.work_item.id
     assert_equal order.work_item.name, copy.work_item.name
     assert_equal order.work_item.shortname, copy.work_item.shortname
-    assert_equal order.work_item.description, copy.work_item.description
+    assert_nil copy.work_item.description
     assert_equal order.work_item.parent_id, copy.work_item.parent_id
   end
 
@@ -121,7 +121,7 @@ class Order::CopierTest < ActiveSupport::TestCase
     assert_nil item.id
     assert_equal 'App', item.name
     assert_equal 'APP', item.shortname
-    assert_equal copy.work_item_id, item.parent_id
+    assert_nil copy.work_item_id
 
     assert_nil copy.contract.id
     assert_equal order.contract.number, copy.contract.number

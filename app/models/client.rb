@@ -21,7 +21,7 @@ class Client < ActiveRecord::Base
   include BelongingToWorkItem
   include Evaluatable
 
-  belongs_to :sector
+  belongs_to :sector, optional: true
 
   has_many :contacts, dependent: :destroy
   has_many :billing_addresses, dependent: :destroy

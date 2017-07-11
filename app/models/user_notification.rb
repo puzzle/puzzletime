@@ -31,7 +31,7 @@ class UserNotification < ActiveRecord::Base
                           period.start_date, period.end_date,
                           period.start_date, period.end_date).
                reorder('date_from')
-      list = custom.concat(holiday_notifications(period))
+      list = custom.to_a.concat(holiday_notifications(period))
       list.push(worktimes_commit_notification) if show_worktimes_commit_notification?(current_user)
       list.sort!
     end
@@ -78,6 +78,7 @@ class UserNotification < ActiveRecord::Base
   end
 
   def <=>(other)
+    return unless other.is_a?(UserNotification)
     date_from <=> other.date_from
   end
 

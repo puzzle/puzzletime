@@ -23,7 +23,7 @@ module Completable
   def validate_date
     unless completion_dates.include?(entry_date)
       entry.errors.add(completable_attr, 'ist nicht erlaubt')
-      false
+      throw(:abort)
     end
   end
 

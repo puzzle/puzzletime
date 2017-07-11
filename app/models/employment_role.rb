@@ -10,7 +10,7 @@
 #
 
 class EmploymentRole < ActiveRecord::Base
-  belongs_to :employment_role_category
+  belongs_to :employment_role_category, optional: true
   has_many :employment_roles_employments, dependent: :restrict_with_exception
 
   validates :name, uniqueness: { case_sensitive: false }
