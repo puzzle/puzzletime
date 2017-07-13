@@ -294,7 +294,7 @@ GEM
     seed-fu (2.3.6)
       activerecord (>= 3.1)
       activesupport (>= 3.1)
-    selectize-rails (0.12.2)
+    selectize-rails (0.12.4)
     selenium-webdriver (2.53.4)
       childprocess (~> 0.5)
       rubyzip (~> 1.0)
@@ -408,7 +408,7 @@ DEPENDENCIES
   sass-rails
   sdoc
   seed-fu
-  selectize-rails (= 0.12.2)
+  selectize-rails (= 0.12.4)
   selenium-webdriver
   simplecov-rcov
   sort_alphabetical (< 1.1.0)

@@ -48,7 +48,7 @@ gem 'turbolinks', '< 5.0' # upgrade to 5.0 together with rails
 gem 'jquery-turbolinks'
 gem 'bootstrap-sass'
 gem 'autoprefixer-rails', '< 6.1.0' # dependency of bootstrap, newer requires ruby 2.0
-gem 'selectize-rails', '0.12.2'
+gem 'selectize-rails', '0.12.4'
 
 group :development, :test do
   gem 'binding_of_caller'

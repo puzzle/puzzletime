@@ -11,7 +11,7 @@ class WorkItemsController < ManageController
                       where(search_conditions).
                       joins(:accounting_post).
                       includes(:accounting_post).
-                      limit(20)
+                      limit(100)
       end
     end
   end

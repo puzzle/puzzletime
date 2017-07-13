@@ -13,13 +13,12 @@ class app.SelectizeRefresher
   ## public methods
 
   load: ->
-    self = this
-    $.getJSON(@url(), @params(), (data) -> self.refresh(data))
+    $.getJSON(@url(), @params(), (data) => @refresh(data))
 
   refresh: (data) ->
     selectize = @selectize()
     selectize.clearOptions()
-    $.each(data, (i, e) -> selectize.addOption({ value: e.id, text: e.label }))
+    data.forEach((e) -> selectize.addOption(value: e.id, text: e.label))
     selectize.refreshOptions(false)
 
 
