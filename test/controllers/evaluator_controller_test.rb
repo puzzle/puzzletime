@@ -43,12 +43,19 @@ class EvaluatorControllerTest < ActionController::TestCase
     assert_match '06.12.2006,5.0,"","",absolute_day,true,Waber Mark,PITC-AL: Allgemein,,', csv_data_lines.first
   end
 
-  %w(clients employees departments).each do |evaluation|
+  test "GET index employees" do
+    get :index, evaluation: evaluation
+    assert_template 'employees'
+  end
+
+  %w(clients departments).each do |evaluation|
     test "GET index #{evaluation}" do
       get :index, evaluation: evaluation
       assert_template 'overview'
     end
+  end
 
+  %w(clients employees departments).each do |evaluation|
     test "GET details #{evaluation}" do
       get :details, evaluation: evaluation, category_id: division_id(evaluation)
       assert_template 'details'
