@@ -6,7 +6,7 @@ class EmployeesEval < Evaluation
   self.label            = 'Mitarbeiter Zeit'
   self.total_details    = false
 
-  def initialize(department_id)
+  def initialize(department_id = 0)
     @department_id = department_id.to_i
     super(Employee)
   end
