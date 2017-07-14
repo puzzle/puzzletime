@@ -7,6 +7,12 @@
   = direct_filter_date(:start_date, start_label, @period.start_date)
   = direct_filter_date(:end_date, end_label, @period.end_date)
 
+  = direct_filter_select(:period_shortcut,
+    nil,
+    params[:closed].blank? ? predefined_past_period_options : predefined_past_quarter_period_options,
+    value: @period.shortcut,
+    prompt: 'benutzerdefiniert')
+
   = direct_filter_select(:department_id,
                          'OE',
                          @departments,
