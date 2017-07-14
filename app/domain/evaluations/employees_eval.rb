@@ -21,6 +21,7 @@ class EmployeesEval < Evaluation
   def division_supplement(_user)
     [[:overtime, 'Überstunden', 'right'],
      [:overtime_vacations_tooltip, '', 'left'],
-     [:worktime_commits, 'Freigabe', 'left']]
+     [:worktime_commits, 'Freigabe', 'left'],
+     [:worktime_reviews, 'Kontrolle', 'left']]
   end
 end

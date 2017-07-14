@@ -170,6 +170,7 @@ de-CH:
         current_percent: Beschäftigungsgrad
         eval_periods: Zeitspannen Auswertungen
         committed_worktimes_at: Letzte freigegebene Periode
+        reviewed_worktimes_at: Letzte kontrollierte Periode
         probation_period_end_date: Ende Probezeit
         phone_office: Telefon Büro
         phone_private: Telefon Privat

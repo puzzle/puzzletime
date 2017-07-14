@@ -28,6 +28,7 @@
 #  social_insurance          :string
 #  crm_key                   :string
 #  additional_information    :text
+#  reviewed_worktimes_at     :date
 #
 
 require 'test_helper'

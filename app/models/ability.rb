@@ -51,6 +51,7 @@ class Ability
     # :crud instead of :manage because cannot change settings of other employees
     can [:crud,
          :update_committed_worktimes,
+         :update_reviewed_worktimes,
          :manage_plannings,
          :show_worktime_graph,
          :log],

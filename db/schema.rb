@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170406120705) do
+ActiveRecord::Schema.define(version: 20170714071631) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -154,6 +154,7 @@ ActiveRecord::Schema.define(version: 20170406120705) do
     t.string  "social_insurance"
     t.string  "crm_key"
     t.text    "additional_information"
+    t.date    "reviewed_worktimes_at"
   end
 
   add_index "employees", ["department_id"], name: "index_employees_on_department_id", using: :btree
@@ -191,8 +192,8 @@ ActiveRecord::Schema.define(version: 20170406120705) do
   create_table "employment_roles_employments", force: :cascade do |t|
     t.integer "employment_id",                                    null: false
     t.integer "employment_role_id",                               null: false
-    t.decimal "percent",                  precision: 5, scale: 2, null: false
     t.integer "employment_role_level_id"
+    t.decimal "percent",                  precision: 5, scale: 2, null: false
   end
 
   add_index "employment_roles_employments", ["employment_id", "employment_role_id"], name: "index_unique_employment_employment_role", unique: true, using: :btree
@@ -436,8 +437,6 @@ ActiveRecord::Schema.define(version: 20170406120705) do
   add_index "worktimes", ["invoice_id"], name: "index_worktimes_on_invoice_id", using: :btree
   add_index "worktimes", ["work_item_id", "employee_id", "work_date"], name: "worktimes_work_items", using: :btree
 
-  add_foreign_key "employment_roles", "employment_role_categories"
-  add_foreign_key "employment_roles_employments", "employment_role_levels"
   add_foreign_key "employments", "employees", name: "fk_employments_employees", on_delete: :cascade
   add_foreign_key "worktimes", "absences", name: "fk_times_absences", on_delete: :cascade
   add_foreign_key "worktimes", "employees", name: "fk_times_employees", on_delete: :cascade

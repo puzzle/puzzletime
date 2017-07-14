@@ -99,6 +99,14 @@ module EvaluatorHelper
                      'Freigabe bearbeiten')
   end
 
+  def worktime_reviews(employee)
+    completable_cell("reviewed_worktimes_at_#{employee.id}",
+                     employee.reviewed_worktimes_at,
+                     can?(:update_reviewed_worktimes, employee),
+                     edit_employee_worktimes_review_path(employee),
+                     'Kontrolle bearbeiten')
+  end
+
   def order_completed(work_item)
     order = work_item.order
     completable_cell("order_completed_#{order.id}",
