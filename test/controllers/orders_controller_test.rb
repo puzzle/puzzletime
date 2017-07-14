@@ -310,7 +310,7 @@ class OrdersControllerTest < ActionController::TestCase
     assert_equal [], order.order_contacts
     assert_equal [], order.order_team_members
 
-    assert_equal nil, order.contract_id
+    assert_nil order.contract_id
 
     assert_equal source.work_item.parent_id, item.parent_id
 

@@ -218,7 +218,7 @@ class InvoiceTest < ActiveSupport::TestCase
     Invoicing.instance.stubs(:save_invoice).raises(Invoicing::Error.new('some invoicing error'))
     invoice.save
     assert invoice.changed?
-    assert_equal nil, invoice.invoicing_key
+    assert_nil invoice.invoicing_key
     assert_equal invoice.errors.messages, base: ['Fehler im Invoicing Service: some invoicing error']
   end
 

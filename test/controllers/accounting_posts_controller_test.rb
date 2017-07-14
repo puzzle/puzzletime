@@ -118,7 +118,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
     assert_redirected_to order_accounting_posts_path(order)
     assert_match(/erfolgreich erstellt/, flash[:notice])
     order.reload
-    assert_equal nil, order.work_item.accounting_post
+    assert_nil order.work_item.accounting_post
     assert_equal 2, order.accounting_posts.size
     assert_equal accounting_posts(:puzzletime), order.accounting_posts.list.first
     assert_equal 'TEST', order.accounting_posts.list.last.name
@@ -143,7 +143,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
     assert_redirected_to order_accounting_posts_path(order)
     assert_match(/erfolgreich erstellt/, flash[:notice])
     order.reload
-    assert_equal nil, order.work_item.accounting_post
+    assert_nil order.work_item.accounting_post
     assert_equal 3, order.accounting_posts.size
     assert_equal accounting_posts(:hitobito_demo_app), order.accounting_posts.list.first
     assert_equal 'TEST', order.accounting_posts.list.last.name

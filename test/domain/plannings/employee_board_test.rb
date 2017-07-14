@@ -8,7 +8,7 @@ module Plannings
     test '#week_planning_state is nil if no plannings' do
       employee.employments.create!(start_date: date - 1.year, percent: 80)
       board = Plannings::EmployeeBoard.new(employee, period)
-      assert_equal nil, board.week_planning_state(date)
+      assert_nil board.week_planning_state(date)
     end
 
     test '#week_planning_state is fully planned if no plannings and unpaid absence' do

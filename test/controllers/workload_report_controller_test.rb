@@ -28,7 +28,7 @@ class WorkloadReportControllerTest < ActionController::TestCase
 
   test 'GET index with invalid period filter shows error' do
     get :index, start_date: '31.12.2006', end_date: '1.12.2006'
-    assert_equal nil, assigns(:report).filters_defined?
+    assert_nil assigns(:report).filters_defined?
     assert flash[:alert].present?
     assert_equal Period.new(nil, nil), assigns(:period)
   end

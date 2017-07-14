@@ -184,7 +184,7 @@ class OrderServicesControllerTest < ActionController::TestCase
 
     assert_equal [], assigns(:worktimes)
     assert_equal Date.parse('2006-12-15'), assigns(:period).start_date
-    assert_equal nil, assigns(:period).end_date
+    assert_nil assigns(:period).end_date
   end
 
   test 'GET report contains all hours with combined tickets' do

@@ -57,7 +57,7 @@ class WorktimeHelperTest < ActionView::TestCase
   end
 
   test 'normal time class' do
-    assert_equal nil, overview_day_class(@worktimes, Date.new(2040, 6, 15))
+    assert_nil overview_day_class(@worktimes, Date.new(2040, 6, 15))
   end
 
   test 'time range without' do

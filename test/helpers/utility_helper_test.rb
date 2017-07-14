@@ -49,7 +49,7 @@ class UtilityHelperTest < ActionView::TestCase
     assert_equal :string, column_type(m, :name)
     assert_equal :integer, column_type(m, :children)
     assert_equal :integer, column_type(m, :companion_id)
-    assert_equal nil, column_type(m, :companion)
+    assert_nil column_type(m, :companion)
     assert_equal :float, column_type(m, :rating)
     assert_equal :decimal, column_type(m, :income)
     assert_equal :date, column_type(m, :birthdate)

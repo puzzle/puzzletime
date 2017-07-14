@@ -155,7 +155,7 @@ class WorkingConditionTest < ActiveSupport::TestCase
 
     ps, vs = each_period_of(period)
     assert_equal 1, ps.size
-    assert_equal nil, ps.first.start_date
+    assert_nil ps.first.start_date
     assert_equal Date.new(2014, 1, 1), ps.first.end_date
     assert_equal [25], vs
   end
@@ -171,7 +171,7 @@ class WorkingConditionTest < ActiveSupport::TestCase
 
     ps, vs = each_period_of(period)
     assert_equal 2, ps.size
-    assert_equal nil, ps.first.start_date
+    assert_nil ps.first.start_date
     assert_equal Date.new(2009, 12, 31), ps.first.end_date
     assert_equal Date.new(2010, 1, 1), ps.second.start_date
     assert_equal Date.new(2014, 1, 1), ps.second.end_date
@@ -189,7 +189,7 @@ class WorkingConditionTest < ActiveSupport::TestCase
     assert_equal Date.new(2014, 1, 1), ps.first.start_date
     assert_equal Date.new(2014, 12, 31), ps.first.end_date
     assert_equal Date.new(2015, 1, 1), ps.second.start_date
-    assert_equal nil, ps.second.end_date
+    assert_nil ps.second.end_date
     assert_equal [25, 12], vs
   end
 
@@ -198,8 +198,8 @@ class WorkingConditionTest < ActiveSupport::TestCase
 
     ps, vs = each_period_of(period)
     assert_equal 1, ps.size
-    assert_equal nil, ps.first.start_date
-    assert_equal nil, ps.first.end_date
+    assert_nil ps.first.start_date
+    assert_nil ps.first.end_date
     assert_equal [25], vs
   end
 
@@ -211,10 +211,10 @@ class WorkingConditionTest < ActiveSupport::TestCase
 
     ps, vs = each_period_of(period)
     assert_equal 2, ps.size
-    assert_equal nil, ps.first.start_date
+    assert_nil ps.first.start_date
     assert_equal Date.new(2014, 12, 31), ps.first.end_date
     assert_equal Date.new(2015, 1, 1), ps.second.start_date
-    assert_equal nil, ps.second.end_date
+    assert_nil ps.second.end_date
     assert_equal [25, 12], vs
   end
 

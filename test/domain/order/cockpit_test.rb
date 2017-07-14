@@ -14,15 +14,15 @@ class Order::CockpitTest < ActiveSupport::TestCase
   test 'budget values are nil if nothing is offered' do
     total = cockpit.rows.first
     budget = total.cells[:budget]
-    assert_equal nil, budget.hours
-    assert_equal nil, budget.days
-    assert_equal nil, budget.amount
+    assert_nil budget.hours
+    assert_nil budget.days
+    assert_nil budget.amount
 
     a1 = cockpit.rows.second
     budget = a1.cells[:budget]
-    assert_equal nil, budget.hours
-    assert_equal nil, budget.days
-    assert_equal nil, budget.amount
+    assert_nil budget.hours
+    assert_nil budget.days
+    assert_nil budget.amount
   end
 
   test 'budget values are based on offered fields' do
@@ -183,7 +183,7 @@ class Order::CockpitTest < ActiveSupport::TestCase
   end
 
   test 'billed rate without invoice is nil' do
-    assert_equal nil, cockpit.billed_rate
+    assert_nil cockpit.billed_rate
   end
 
   test 'billed rate is invoice total / hours' do
