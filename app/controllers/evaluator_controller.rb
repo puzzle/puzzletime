@@ -20,7 +20,15 @@ class EvaluatorController < ApplicationController
       @plannings = @periods.collect { |p| @evaluation.sum_plannings_grouped(p) }
     end
 
-    render(employee_overview? ? 'overview_employee' : 'overview')
+    template = if employee_overview?
+                 'overview_employee'
+               elsif employees_overview?
+                 'employees'
+               else
+                 'overview'
+               end
+
+    render(template)
   end
 
   def details
@@ -125,6 +133,10 @@ class EvaluatorController < ApplicationController
     params[:evaluation] =~ /^userworkitems$|^employeeworkitems$/
   end
 
+  def employees_overview?
+    params[:evaluation] == 'employees'
+  end
+
   private
 
   def evaluation
@@ -162,7 +174,7 @@ class EvaluatorController < ApplicationController
   def set_management_evaluation
     @evaluation = case params[:evaluation].downcase
                   when 'clients' then ClientsEval.new
-                  when 'employees' then EmployeesEval.new
+                  when 'employees' then EmployeesEval.new(params[:department_id])
                   when 'departments' then DepartmentsEval.new
                   when 'clientworkitems' then ClientWorkItemsEval.new(params[:category_id])
                   when 'employeeworkitems' then EmployeeWorkItemsEval.new(params[:category_id])

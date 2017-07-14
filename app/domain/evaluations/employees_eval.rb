@@ -6,12 +6,23 @@ class EmployeesEval < Evaluation
   self.label            = 'Mitarbeiter Zeit'
   self.total_details    = false
 
-  def initialize
+  def initialize(department_id)
+    @department_id = department_id.to_i
     super(Employee)
   end
 
   def divisions(period = nil)
-    period ? Employee.list : Employee.employed_ones(Period.current_year)
+    employees = if period
+                  Employee.list
+                else
+                  Employee.employed_ones(Period.current_year)
+                end
+
+    if @department_id != 0
+      employees.where(department_id: @department_id)
+    else
+      employees
+    end
   end
 
   def employee_id

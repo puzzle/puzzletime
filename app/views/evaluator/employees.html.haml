@@ -1,0 +1,13 @@
+- @title = @evaluation.title
+
+= render 'period_link'
+
+- if @evaluation.category.respond_to?(:tooltip) && @evaluation.category.tooltip.present?
+  %p= h(@evaluation.category.tooltip)
+
+= form_tag(nil, method: :get, class: 'form-inline', role: 'filter') do
+  = direct_filter_select(:department_id, 'Organisationseinheit', Department.list)
+
+= render 'category'
+
+= render 'shared/modal'
