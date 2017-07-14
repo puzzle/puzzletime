@@ -19,21 +19,46 @@ class MultiWorktimesControllerTest < ActionController::TestCase
     assert_equal 2, assigns(:worktimes).size
   end
 
+  test 'GET edit loads worktimes of non-management' do
+    login_as(:pascal)
+    get :edit,
+        order_id: order.id,
+        worktime_ids: [worktimes(:wt_pz_puzzletime).id]
+    assert_template 'edit'
+    assert_equal 1, assigns(:worktimes).size
+  end
+
+  test 'GET edit validates own worktimes' do
+    login_as(:pascal)
+
+    assert_raise(CanCan::AccessDenied) do
+      get :edit,
+          order_id: order.id,
+          worktime_ids: [worktimes(:wt_mw_puzzletime).id]
+    end
+
+    assert_raise(CanCan::AccessDenied) do
+      get :edit,
+          order_id: order.id,
+          worktime_ids: worktimes(:wt_mw_puzzletime, :wt_pz_puzzletime).collect(&:id)
+    end
+  end
+
   test 'GET edit presets work_item if all are equal' do
     get :edit,
         order_id: order.id,
         worktime_ids: worktimes(:wt_mw_puzzletime, :wt_pz_puzzletime).collect(&:id)
     assert_equal work_items(:puzzletime), assigns(:work_item)
     assert_equal true, assigns(:billable)
-    assert_equal nil, assigns(:ticket)
+    assert_nil assigns(:ticket)
   end
 
   test 'GET edit presets ticket if all are equal' do
     get :edit,
         order_id: order.id,
         worktime_ids: worktimes(:wt_pz_webauftritt, :wt_pz_puzzletime).collect(&:id)
-    assert_equal nil, assigns(:work_item)
-    assert_equal nil, assigns(:billable)
+    assert_nil assigns(:work_item)
+    assert_nil assigns(:billable)
     assert_equal 'rc1', assigns(:ticket)
   end
 
@@ -72,7 +97,7 @@ class MultiWorktimesControllerTest < ActionController::TestCase
     assert_match(/keine Änderungen/, flash[:notice])
 
     t1 = worktimes(:wt_mw_puzzletime).reload
-    assert_equal nil, t1.ticket
+    assert_nil t1.ticket
     assert_equal true, t1.billable
     assert_equal work_items(:puzzletime).id, t1.work_item_id
   end
@@ -93,6 +118,30 @@ class MultiWorktimesControllerTest < ActionController::TestCase
     t1 = worktimes(:wt_pz_puzzletime).reload
     assert_equal 'rc1', t1.ticket
     assert_equal true, t1.billable
+  end
+
+  test 'PATCH update with foreign worktime is now allowed' do
+    login_as(:pascal)
+
+    assert_raise(CanCan::AccessDenied) do
+      patch :update,
+            order_id: order.id,
+            worktime_ids: [worktimes(:wt_mw_puzzletime).id],
+            change_ticket: true,
+            ticket: '',
+            change_billable: true,
+            billable: false
+    end
+
+    assert_raise(CanCan::AccessDenied) do
+      patch :update,
+            order_id: order.id,
+            worktime_ids: worktimes(:wt_mw_puzzletime, :wt_pz_webauftritt).collect(&:id),
+            change_ticket: true,
+            ticket: '',
+            change_billable: true,
+            billable: false
+    end
   end
 
   private

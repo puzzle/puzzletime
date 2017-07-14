@@ -1,5 +1,4 @@
-- if can?(:update_multi_worktimes, @order)
-  = action_link(action_icon('edit', 'Auswahl bearbeiten'), '#', data: { submit_form: '#worktimes' })
+= action_link(action_icon('edit', 'Auswahl bearbeiten'), '#', hidden: true, data: { submit_form: '#worktimes' })
 
 = action_link(action_icon('export', 'CSV Export'), params.merge(action: :export_worktimes_csv))
 

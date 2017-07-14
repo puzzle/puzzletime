@@ -1,6 +1,8 @@
 # encoding: utf-8
 
 class MultiWorktimesController < ApplicationController
+  skip_authorization_check
+
   before_action :order
   before_action :authorize_class
 
@@ -33,7 +35,10 @@ class MultiWorktimesController < ApplicationController
   end
 
   def worktimes
-    @worktimes ||= Worktime.where(id: params[:worktime_ids])
+    @worktimes ||=
+      Worktime
+      .where(id: params[:worktime_ids])
+      .includes([:employee, :work_item, :invoice])
   end
 
   def load_field_presets
@@ -70,6 +75,8 @@ class MultiWorktimesController < ApplicationController
   end
 
   def authorize_class
-    authorize!(:update_multi_worktimes, order)
+    worktimes.each do |worktime|
+      authorize!(:edit, worktime)
+    end
   end
 end

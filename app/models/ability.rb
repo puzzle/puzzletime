@@ -158,7 +158,8 @@ class Ability
     end
 
     can :manage, Ordertime do |t|
-      t.employee_id == user.id && !t.worktimes_committed? && !t.work_item_closed? && !t.invoice_sent_or_paid?
+      t.employee_id == user.id && !t.worktimes_committed? &&
+        !t.work_item_closed? && !t.invoice_sent_or_paid?
     end
 
     can :search, WorkItem
