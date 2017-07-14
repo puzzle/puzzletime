@@ -32,12 +32,5 @@ namespace :db do
                                                             email: 'mb2@puzzle.ch',
                                                             management: false)
     Employment.where(employee_id: mb2.id).first_or_create!(percent: 80, start_date: Date.new(2014, 9, 1))
-
-    mgt = Employee.where(shortname: 'MGT').first_or_create!(firstname: 'First',
-                                                            lastname: 'Manager',
-                                                            passwd: Employee.encode('management'),
-                                                            email: 'mgt@puzzle.ch',
-                                                            management: true)
-    Employment.where(employee_id: mgt.id).first_or_create!(percent: 90, start_date: Date.new(2015, 1, 1))
   end
 end
