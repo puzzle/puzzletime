@@ -16,6 +16,8 @@
 #  completed_at       :date
 #  committed_at       :date
 #  closed_at          :date
+#  major_risk_value   :integer
+#  major_chance_value :integer
 #
 
 Fabricator(:order) do

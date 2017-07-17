@@ -17,6 +17,8 @@
 #  completed_at       :date
 #  committed_at       :date
 #  closed_at          :date
+#  major_risk_value   :integer
+#  major_chance_value :integer
 #
 
 class Order < ActiveRecord::Base
@@ -39,6 +41,8 @@ class Order < ActiveRecord::Base
 
   has_many :comments, class_name: 'OrderComment', dependent: :destroy
   has_many :targets, class_name: 'OrderTarget', dependent: :destroy
+  has_many :risks, class_name: 'OrderRisk', dependent: :destroy
+  has_many :chances, class_name: 'OrderChance', dependent: :destroy
   has_descendants_through_work_item :accounting_posts
 
   has_many :order_team_members, -> { list }, dependent: :destroy
@@ -111,6 +115,14 @@ class Order < ActiveRecord::Base
 
   def set_default_status_id
     self.status_id ||= OrderStatus.list.pluck(:id).first
+  end
+
+  def major_risk
+    OrderUncertainty.risk(major_risk_value)
+  end
+
+  def major_chance
+    OrderUncertainty.risk(major_chance_value)
   end
 
   private

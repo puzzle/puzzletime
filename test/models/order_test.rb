@@ -16,6 +16,8 @@
 #  completed_at       :date
 #  committed_at       :date
 #  closed_at          :date
+#  major_risk_value   :integer
+#  major_chance_value :integer
 #
 
 require 'test_helper'
@@ -123,5 +125,31 @@ class OrderTest < ActiveSupport::TestCase
       order.billing_address = address
       assert_equal(address.id, order.default_billing_address_id)
     end
+  end
+
+  test '#major_risk' do
+    assert_nil Order.new.major_risk
+    assert_equal :low, Order.new(major_risk_value: 1).major_risk
+    assert_equal :low, Order.new(major_risk_value: 2).major_risk
+    assert_equal :medium, Order.new(major_risk_value: 3).major_risk
+    assert_equal :medium, Order.new(major_risk_value: 4).major_risk
+    assert_equal :medium, Order.new(major_risk_value: 6).major_risk
+    assert_equal :high, Order.new(major_risk_value: 8).major_risk
+    assert_equal :high, Order.new(major_risk_value: 9).major_risk
+    assert_equal :high, Order.new(major_risk_value: 12).major_risk
+    assert_equal :high, Order.new(major_risk_value: 16).major_risk
+  end
+
+  test '#major_chance' do
+    assert_nil Order.new.major_chance
+    assert_equal :low, Order.new(major_chance_value: 1).major_chance
+    assert_equal :low, Order.new(major_chance_value: 2).major_chance
+    assert_equal :medium, Order.new(major_chance_value: 3).major_chance
+    assert_equal :medium, Order.new(major_chance_value: 4).major_chance
+    assert_equal :medium, Order.new(major_chance_value: 6).major_chance
+    assert_equal :high, Order.new(major_chance_value: 8).major_chance
+    assert_equal :high, Order.new(major_chance_value: 9).major_chance
+    assert_equal :high, Order.new(major_chance_value: 12).major_chance
+    assert_equal :high, Order.new(major_chance_value: 16).major_chance
   end
 end
