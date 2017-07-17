@@ -125,7 +125,7 @@ class AccountingPost < ActiveRecord::Base
 
     old_item = WorkItem.find(@old_work_item_id)
     old_item.move_times!(work_item_id)
-    old_item.destroy! unless old_item.id == order.work_item_id
+    old_item.destroy! if old_item.id != order.work_item_id
   end
 
   def move_order_accounting_post_work_item
@@ -142,7 +142,7 @@ class AccountingPost < ActiveRecord::Base
         validation_messages = post.errors.full_messages.join(', ')
         msg = "Bestehende Buchungsposition ist ungültig und muss zuerst korrigiert werden: #{validation_messages}"
         errors.add(:base, msg)
-        raise error
+        throw(:abort)
       end
       order.work_item.move_times!(post.work_item)
     end

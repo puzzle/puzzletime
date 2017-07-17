@@ -52,12 +52,10 @@ class WorkItem < ActiveRecord::Base
 
   before_validation :upcase_shortname
   before_save :remember_name_changes
-  # yep, this triggers before_update to generate path_ids after the work item got its id and saves it again
-  after_create :save
-  after_create :reset_parent_leaf
-  after_destroy :reset_parent_leaf
   before_update :generate_path_ids
+  after_create :reset_parent_leaf
   after_save :update_child_path_names, if: -> { @names_changed }
+  after_destroy :reset_parent_leaf
 
   ### SCOPES
 
@@ -151,23 +149,47 @@ class WorkItem < ActiveRecord::Base
     self.closed = closed
   end
 
+  def save(*args, &block)
+    if new_record?
+      # Block is run immediately after insert statement.
+      # After create callback is too late since Rails 5.1
+      super do |item|
+        generate_path_ids!
+        yield item if block_given?
+      end
+    else
+      super
+    end
+  end
+
+  def save!(*args, &block)
+    if new_record?
+      # Block is run immediately after insert statement.
+      # After create callback is too late since Rails 5.1
+      super do |item|
+        generate_path_ids!
+        yield item if block_given?
+      end
+    else
+      super
+    end
+  end
+
   private
 
   def remember_name_changes
-    if @save_after_create
-      @save_after_create = false
-      true
-    else
-      @save_after_create = new_record?
-      @names_changed = parent_id_changed? ||
-                       name_changed? ||
-                       shortname_changed?
-      store_path_names if @names_changed
-    end
+    @names_changed = parent_id_changed? ||
+                     name_changed? ||
+                     shortname_changed?
+    store_path_names if @names_changed
   end
 
   def generate_path_ids
     self.path_ids = parent ? parent.path_ids.clone.push(id) : [id]
+  end
+
+  def generate_path_ids!
+    update_column(:path_ids, generate_path_ids)
   end
 
   def reset_parent_leaf

@@ -70,7 +70,6 @@ class WorkItemTest < ActiveSupport::TestCase
                   name: 'Foo',
                   shortname: 'FOO')
     c = Fabricate(:work_item,
-                  parent_id: 1,
                   parent: p,
                   name: 'Bar',
                   shortname: 'BAR')

@@ -26,6 +26,7 @@ class AccountingPostTest < ActiveSupport::TestCase
     order = post.order
     order.update!(status: order_statuses(:abgeschlossen))
     assert_equal post.work_item_id, order.work_item_id
+    assert_equal true, post.work_item.closed
     fresh = nil
     assert_difference('WorkItem.count', 2) do
       fresh = AccountingPost.create!(

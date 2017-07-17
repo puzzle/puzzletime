@@ -94,7 +94,7 @@ class Order < ActiveRecord::Base
     if status.closed?
       work_item.propagate_closed!(status.closed)
     else
-      work_item.update!(closed: false)
+      work_item.update_column(:closed, false)
       accounting_posts.each do |post|
         post.work_item.propagate_closed!(post.closed?)
       end

@@ -229,7 +229,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
         [{ lastname: 'Miller', firstname: 'John', crm_key: 123 },
          { lastname: 'Nader', firstname: 'Fred', crm_key: 456 }]
       ).twice
-      Crm.instance.expects(:find_person).with('456').returns(
+      Crm.instance.expects(:find_person).with('456').twice.returns(
         lastname: 'Nader', firstname: 'Fred', crm_key: 456)
 
       # reload after crm change
@@ -307,7 +307,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
         [{ lastname: 'Miller', firstname: 'John', crm_key: 123 },
          { lastname: 'Nader', firstname: 'Fred', crm_key: 456 }]
       ).twice
-      Crm.instance.expects(:find_person).with('456').returns(
+      Crm.instance.expects(:find_person).with('456').twice.returns(
         lastname: 'Nader', firstname: 'Fred', crm_key: 456)
 
       # reload after crm change
