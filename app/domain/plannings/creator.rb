@@ -219,7 +219,7 @@ module Plannings
     end
 
     def new_items_hashes
-      return [] unless items.present?
+      return [] if items.blank?
       @new_items_hashes ||= items - existing_items_hashes
     end
 
@@ -232,7 +232,7 @@ module Plannings
     end
 
     def existing_items
-      return Planning.none unless items.present?
+      return Planning.none if items.blank?
       @existing_items ||= Planning.where(existing_items_condition)
     end
 

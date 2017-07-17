@@ -9,7 +9,7 @@ class LdapAuthenticator
     if !username.strip.empty? &&
        (auth_user(Settings.ldap.user_dn, username, pwd) ||
         (auth_user(Settings.ldap.external_dn, username, pwd) && group_member(username)))
-      Employee.find_by_ldapname(username)
+      Employee.find_by(ldapname: username)
     end
   end
 

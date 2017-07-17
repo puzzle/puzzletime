@@ -83,7 +83,7 @@ class Employee < ActiveRecord::Base
     # Tries to login a user with the passed data.
     # Returns the logged-in Employee or nil if the login failed.
     def login(username, pwd)
-      find_by_shortname_and_passwd(username.upcase, encode(pwd)) ||
+      find_by(shortname: username.upcase, passwd: encode(pwd)) ||
         LdapAuthenticator.new.login(username, pwd)
     end
 

@@ -196,7 +196,7 @@ module Plannings
 
       [''].tap do |condition|
         @included_rows.each do |employee_id, work_item_id|
-          condition[0] += ' OR ' unless condition.first.blank?
+          condition[0] += ' OR ' if condition.first.present?
           condition[0] += '(plannings.work_item_id = ? AND plannings.employee_id = ?)'
           condition << work_item_id << employee_id
         end

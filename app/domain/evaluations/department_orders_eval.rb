@@ -14,7 +14,7 @@ class DepartmentOrdersEval < WorkItemsEval
     WorkItem.joins(:order).includes(:order).where(orders: { department_id: category.id }).list
   end
 
-  def division_supplement(user)
+  def division_supplement(_user)
     [[:order_completed, 'Abschluss erledigt', 'left'],
      [:order_committed, 'Abschluss freigegeben', 'left']]
   end

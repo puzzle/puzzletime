@@ -9,6 +9,10 @@ if ENV['TEST_REPORTS']
   SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
   SimpleCov.command_name 'Unit Tests'
   SimpleCov.start 'rails'
+
+  require 'minitest/reporters'
+  MiniTest::Reporters.use! [MiniTest::Reporters::DefaultReporter.new,
+                            MiniTest::Reporters::JUnitReporter.new]
 end
 
 require File.expand_path('../../config/environment', __FILE__)
@@ -18,11 +22,20 @@ require 'mocha/mini_test'
 require 'capybara/rails'
 Settings.reload!
 
-if ENV['TEST_REPORTS']
-  require 'minitest/reporters'
-  MiniTest::Reporters.use! [MiniTest::Reporters::DefaultReporter.new,
-                            MiniTest::Reporters::JUnitReporter.new]
+Dir[Rails.root.join('test/support/**/*.rb')].sort.each { |f| require f }
+
+
+Capybara.register_driver :selenium do |app|
+  require 'selenium/webdriver'
+
+  Selenium::WebDriver::Firefox::Binary.path = ENV['FIREFOX_PATH'] if ENV['FIREFOX_PATH']
+  capa = Selenium::WebDriver::Remote::Capabilities.firefox(marionette: false)
+  Capybara::Selenium::Driver.new(app, browser: :firefox, desired_capabilities: capa)
 end
+
+Capybara.server_port = ENV['CAPYBARA_SERVER_PORT'].to_i if ENV['CAPYBARA_SERVER_PORT']
+Capybara.default_driver = :selenium
+Capybara.default_max_wait_time = 5
 
 unless ENV['HEADLESS'] == 'false'
   require 'headless'
@@ -30,8 +43,6 @@ unless ENV['HEADLESS'] == 'false'
   headless = Headless.new(destroy_at_exit: false)
   headless.start
 end
-
-Dir[Rails.root.join('test/support/**/*.rb')].sort.each { |f| require f }
 
 
 class ActiveSupport::TestCase
@@ -60,6 +71,7 @@ class ActiveSupport::TestCase
 
 end
 
+
 class ActionDispatch::IntegrationTest
 
   include Capybara::DSL
@@ -70,23 +82,11 @@ class ActionDispatch::IntegrationTest
   self.use_transactional_tests = false
 
   setup do
-    Capybara.server_port = ENV['CAPYBARA_SERVER_PORT'].to_i if ENV['CAPYBARA_SERVER_PORT']
-    Capybara.default_driver = :selenium
-    Capybara.default_max_wait_time = 5
     DatabaseCleaner.start
   end
 
   teardown do
     DatabaseCleaner.clean
-  end
-
-  if ENV['FIREFOX_PATH']
-    Capybara.register_driver :selenium do |app|
-      require 'selenium/webdriver'
-      Selenium::WebDriver::Firefox::Binary.path = ENV['FIREFOX_PATH']
-      capa = Selenium::WebDriver::Remote::Capabilities.firefox(marionette: false)
-      Capybara::Selenium::Driver.new(app, browser: :firefox, desired_capabilities: capa)
-    end
   end
 
 end

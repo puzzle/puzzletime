@@ -107,7 +107,7 @@ class Period
     end
 
     def parse_date(date)
-      return nil unless date.present?
+      return nil if date.blank?
 
       if date.is_a? String
         begin

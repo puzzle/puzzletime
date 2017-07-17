@@ -54,7 +54,7 @@ class OrdersController < CrudController
   def crm_load
     key = params[:order] && params[:order][:crm_key]
     @crm = Crm.instance
-    @order = Order.find_by_crm_key(key)
+    @order = Order.find_by(crm_key: key)
     @crm_order = @crm.find_order(key)
     if @crm_order
       @client = Client.where(crm_key: @crm_order[:client][:key].to_s).first
@@ -186,7 +186,7 @@ class OrdersController < CrudController
     if Crm.instance && Crm.instance.restrict_local?
       clients = clients.where(allow_local: true).to_a
       if params[:client_work_item_id].present?
-        client = Client.find_by_work_item_id(params[:client_work_item_id])
+        client = Client.find_by(work_item_id: params[:client_work_item_id])
         clients << client unless clients.include?(client)
       end
     end

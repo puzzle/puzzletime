@@ -43,7 +43,7 @@ class EmploymentsController < ManageController
 
     role_percent = employment_roles_employments
                    .values
-                   .select { |v| !v[:_destroy] }
+                   .reject { |v| v[:_destroy] }
                    .collect { |v| v[:percent].to_i }
                    .sum
 

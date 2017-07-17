@@ -30,9 +30,8 @@ module Invoicing
         end
 
         def stringify(hash)
-          hash.inject({}) do |memo, (key, value)|
+          hash.each_with_object({}) do |(key, value), memo|
             memo[key.to_s] = value.to_s.strip
-            memo
           end
         end
       end

@@ -99,10 +99,10 @@ class OrderServicesController < ApplicationController
   def set_filter_tickets
     @tickets = [EMPTY_TICKET] +
         order.worktimes.in_period(@period)
-               .order(:ticket)
+             .order(:ticket)
                .distinct
                .pluck(:ticket)
-               .select(&:present?)
+             .select(&:present?)
   end
 
   def set_filter_accounting_posts

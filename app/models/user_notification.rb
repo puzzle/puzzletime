@@ -42,7 +42,6 @@ class UserNotification < ActiveRecord::Base
       regular.collect! { |holiday| new_holiday_notification(holiday) }
     end
 
-
     def show_worktimes_commit_notification?(employee)
       today = Time.zone.today
 
@@ -71,7 +70,7 @@ class UserNotification < ActiveRecord::Base
 
     def holiday_message(holiday)
       I18n.l(holiday.holiday_date, format: :long) +
-        ' ist ein Feiertag (' + ('%01.2f' % holiday.musthours_day).to_s +
+        ' ist ein Feiertag (' + format('%01.2f', holiday.musthours_day).to_s +
         ' Stunden Sollarbeitszeit)'
     end
 
