@@ -307,11 +307,7 @@ GEM
       activerecord (>= 3.1)
       activesupport (>= 3.1)
     selectize-rails (0.12.4)
-<<<<<<< 31fd89a0af2e7621817f96c8b69c8f0589995a7c
-    selenium-webdriver (2.53.4)
-=======
     selenium-webdriver (3.4.3)
->>>>>>> updated to rails 5.0
       childprocess (~> 0.5)
       rubyzip (~> 1.0)
     simplecov (0.14.1)
@@ -424,11 +420,7 @@ DEPENDENCIES
   sass-rails
   sdoc
   seed-fu
-<<<<<<< 31fd89a0af2e7621817f96c8b69c8f0589995a7c
-  selectize-rails (= 0.12.4)
-=======
   selectize-rails
->>>>>>> updated to rails 5.0
   selenium-webdriver
   simplecov-rcov
   spring

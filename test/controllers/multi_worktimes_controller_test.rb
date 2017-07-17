@@ -24,8 +24,10 @@ class MultiWorktimesControllerTest < ActionController::TestCase
   test 'GET edit loads worktimes of non-management' do
     login_as(:pascal)
     get :edit,
-        order_id: order.id,
-        worktime_ids: [worktimes(:wt_pz_puzzletime).id]
+        params: {
+          order_id: order.id,
+          worktime_ids: [worktimes(:wt_pz_puzzletime).id]
+        }
     assert_template 'edit'
     assert_equal 1, assigns(:worktimes).size
   end
@@ -35,14 +37,18 @@ class MultiWorktimesControllerTest < ActionController::TestCase
 
     assert_raise(CanCan::AccessDenied) do
       get :edit,
-          order_id: order.id,
-          worktime_ids: [worktimes(:wt_mw_puzzletime).id]
+          params: {
+            order_id: order.id,
+            worktime_ids: [worktimes(:wt_mw_puzzletime).id]
+          }
     end
 
     assert_raise(CanCan::AccessDenied) do
       get :edit,
-          order_id: order.id,
-          worktime_ids: worktimes(:wt_mw_puzzletime, :wt_pz_puzzletime).collect(&:id)
+          params: {
+            order_id: order.id,
+            worktime_ids: worktimes(:wt_mw_puzzletime, :wt_pz_puzzletime).collect(&:id)
+          }
     end
   end
 
@@ -137,22 +143,26 @@ class MultiWorktimesControllerTest < ActionController::TestCase
 
     assert_raise(CanCan::AccessDenied) do
       patch :update,
-            order_id: order.id,
-            worktime_ids: [worktimes(:wt_mw_puzzletime).id],
-            change_ticket: true,
-            ticket: '',
-            change_billable: true,
-            billable: false
+            params: {
+              order_id: order.id,
+              worktime_ids: [worktimes(:wt_mw_puzzletime).id],
+              change_ticket: true,
+              ticket: '',
+              change_billable: true,
+              billable: false
+            }
     end
 
     assert_raise(CanCan::AccessDenied) do
       patch :update,
-            order_id: order.id,
-            worktime_ids: worktimes(:wt_mw_puzzletime, :wt_pz_webauftritt).collect(&:id),
-            change_ticket: true,
-            ticket: '',
-            change_billable: true,
-            billable: false
+            params: {
+              order_id: order.id,
+              worktime_ids: worktimes(:wt_mw_puzzletime, :wt_pz_webauftritt).collect(&:id),
+              change_ticket: true,
+              ticket: '',
+              change_billable: true,
+              billable: false
+            }
     end
   end
 

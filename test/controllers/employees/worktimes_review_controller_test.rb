@@ -8,7 +8,7 @@ class Employees::WorktimesReviewControllerTest < ActionController::TestCase
     login_as(:mark)
     employee = employees(:various_pedro)
     employee.update!(reviewed_worktimes_at: Date.new(2015, 8, 31))
-    get :edit, employee_id: employee.id
+    get :edit, params: { employee_id: employee.id }
     assert_template '_form'
 
     selection = assigns(:dates)
@@ -20,14 +20,14 @@ class Employees::WorktimesReviewControllerTest < ActionController::TestCase
   def test_edit_as_regular_user_is_not_allowed
     login_as(:various_pedro)
     assert_raise(CanCan::AccessDenied) do
-      get :edit, employee_id: employees(:various_pedro).id
+      get :edit, params: { employee_id: employees(:various_pedro).id }
     end
   end
 
   def test_edit_as_regular_user_is_not_allowed_for_somebody_else
     login_as(:various_pedro)
     assert_raise(CanCan::AccessDenied) do
-      get :edit, employee_id: employees(:mark).id
+      get :edit, params: { employee_id: employees(:mark).id }
     end
   end
 end

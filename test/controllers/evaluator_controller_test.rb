@@ -44,7 +44,7 @@ class EvaluatorControllerTest < ActionController::TestCase
   end
 
   test "GET index employees" do
-    get :index, evaluation: 'employees'
+    get :index, params: { evaluation: 'employees' }
     assert_template 'employees'
   end
 
