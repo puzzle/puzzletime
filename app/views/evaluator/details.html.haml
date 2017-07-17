@@ -7,7 +7,8 @@
 
 %p
   = action_link 'Übersicht',
-                action: params[:evaluation],
+                action: 'overview',
+                evaluation: params[:evaluation],
                 category_id: params[:category_id]
 
   = action_link action_icon('export', 'CSV Export'),

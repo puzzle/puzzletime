@@ -122,13 +122,6 @@ class EvaluatorController < ApplicationController
     render action: 'select_period'
   end
 
-
-  # Dispatches evaluation names used as actions
-  def action_missing(action, *_args)
-    params[:evaluation] = action.to_s
-    overview
-  end
-
   def employee_overview?
     params[:evaluation] =~ /^userworkitems$|^employeeworkitems$/
   end

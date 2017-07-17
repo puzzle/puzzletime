@@ -1,12 +1,14 @@
-require 'rake/testtask.rb'
 
 namespace :test do
   desc 'Run only non-integration tests'
-  task units: ['test:models', 'test:domain', 'test:controllers', 'test:helpers']
+  task unit: 'test:prepare' do
+    $: << 'test'
+    Minitest.rake_run(['test/models', 'test/helpers', 'test/controllers', 'test/domain'])
+  end
 
   desc 'Run tests for domain'
-  Rake::TestTask.new('domain') do |t|
-    t.libs << 'test'
-    t.pattern = 'test/domain/**/*_test.rb'
+  task domain: 'test:prepare' do
+    $: << 'test'
+    Minitest.rake_run(['test/domain'])
   end
 end

@@ -131,9 +131,23 @@ Rails.application.routes.draw do
   scope '/evaluator', controller: 'evaluator' do
     resources :employee_master_data, only: [:index, :show]
 
-    get ':action'
+    get :index
+    get :overview
+    get :details
+    get :absencedetails
 
-    post :change_period
+    get :compose_report
+    get :report
+    get :export_csv
+    get :export_capacity_csv
+    get :export_extended_capacity_csv
+    get :export_role_distribution
+
+    get :select_period
+    get :current_period
+    match :change_period, via: [:get, :post]
+
+    get ':evaluation', to: 'evaluator#overview'
   end
 
   namespace :plannings do

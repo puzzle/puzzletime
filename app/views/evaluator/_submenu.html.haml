@@ -40,7 +40,9 @@
   = nav 'Auslastung', reports_workload_path
 
 - if can?(:export_extended_capacity_csv, Evaluation)
-  = nav 'Detaillierte Auslastung CSV', evaluation_path('export_extended_capacity_csv'), data: { no_turbolink: true }
+  = nav 'Detaillierte Auslastung CSV',
+        export_extended_capacity_csv_path,
+        data: { no_turbolink: true }
 
 - if can?(:revenue_reports, Department)
   = nav 'Umsatz', reports_revenue_path
@@ -57,4 +59,6 @@
   = nav 'Mitarbeiterliste', employee_master_data_path
 
 -if can?(:export_role_distribution, Evaluation)
-  = nav 'Funktionsanteile', evaluation_path('export_role_distribution'), data: { no_turbolink: true }
+  = nav 'Funktionsanteile',
+        export_role_distribution_path,
+        data: { no_turbolink: true }

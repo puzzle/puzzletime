@@ -3,7 +3,7 @@
     %td
       - if sub = evaluation.sub_evaluation
         = link_to(division.label_verbose,
-                  { action: sub, category_id: division.id },
+                  { action: 'overview', evaluation: sub, category_id: division.id },
                   title: division.tooltip)
       - else
         = content_tag :span, division.label_verbose, title: division.tooltip
@@ -12,7 +12,7 @@
       %td
         - if sub = evaluation.sub_work_items_evaluation(division)
           = link_to('&crarr;'.html_safe,
-                    { action: sub, category_id: division.id },
+                    { action: 'overview', evaluation: sub, category_id: division.id },
                     class: 'symbol')
 
     = render(partial: 'timecell',

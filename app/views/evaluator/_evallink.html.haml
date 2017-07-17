@@ -1,5 +1,6 @@
 %li
-  = link_to_if params[:action] != evallink[0] || params[:category_id] != evallink[1].to_s, |
-    evallink[2],                                                                           |
-    :action => evallink[0],                                                                |
-    :category_id => evallink[1]                                                            |
+  = link_to_if params[:action] != 'overview' || params[:category_id] != evallink[1].to_s,
+               evallink[2],
+               action: 'overview',
+               evaluation: evallink[0],
+               category_id: evallink[1]
