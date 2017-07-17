@@ -68,7 +68,7 @@ group :test do
   gem 'm'
   gem 'mocha', require: false
   gem 'rails-controller-testing'
-  gem 'selenium-webdriver'
+  gem 'selenium-webdriver', '!= 3.4.4'
 end
 
 group :console do

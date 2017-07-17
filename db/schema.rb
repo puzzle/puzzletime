@@ -50,6 +50,7 @@ ActiveRecord::Schema.define(version: 20170717095522) do
     t.string "town"
     t.string "country", limit: 2
     t.string "invoicing_key"
+    t.string "client_name"
     t.index ["client_id"], name: "index_billing_addresses_on_client_id"
     t.index ["contact_id"], name: "index_billing_addresses_on_contact_id"
   end
@@ -179,8 +180,8 @@ ActiveRecord::Schema.define(version: 20170717095522) do
   create_table "employment_roles_employments", id: :serial, force: :cascade do |t|
     t.integer "employment_id", null: false
     t.integer "employment_role_id", null: false
-    t.decimal "percent", precision: 5, scale: 2, null: false
     t.integer "employment_role_level_id"
+    t.decimal "percent", precision: 5, scale: 2, null: false
     t.index ["employment_id", "employment_role_id"], name: "index_unique_employment_employment_role", unique: true
   end
 
