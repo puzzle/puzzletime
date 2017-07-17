@@ -18,7 +18,7 @@
 #  invoicing_key      :string
 #  created_at         :datetime
 #  updated_at         :datetime
-#  grouping           :integer          default(0), not null
+#  grouping           :integer          default("accounting_posts"), not null
 #
 
 require 'test_helper'

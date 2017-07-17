@@ -1,0 +1,32 @@
+# == Schema Information
+#
+# Table name: order_uncertainties
+#
+#  id          :integer          not null, primary key
+#  order_id    :integer          not null
+#  type        :string           not null
+#  name        :string           not null
+#  probability :integer          default("improbable"), not null
+#  impact      :integer          default("none"), not null
+#  measure     :text
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+atomic_desaster:
+  order: :puzzletime
+  type: OrderRisk
+  name: Atomic desaster
+  probability: improbable_probability
+  impact: high_impact
+  measure: Duck and cover
+
+world_domination:
+  order: :puzzletime
+  type: OrderChance
+  name: World domination
+  probability: low_probability
+  impact: high_impact
+  measure: Declare world peace

@@ -12,6 +12,7 @@
 /.envrc
 .idea/
 *.iml
+/.byebug_history
 
 # Ignore the default SQLite database.
 /db/*.sqlite3
