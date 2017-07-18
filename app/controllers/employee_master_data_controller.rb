@@ -17,7 +17,10 @@ class EmployeeMasterDataController < ApplicationController
 
   def show
     @employee = Employee.includes(current_employment: {
-                                    employment_roles_employments: [:employment_role, :employment_role_level]
+                                    employment_roles_employments: [
+                                      :employment_role,
+                                      :employment_role_level
+                                    ]
                                   })
                         .find(params[:id])
     authorize!(:read, @employee)
@@ -32,16 +35,32 @@ class EmployeeMasterDataController < ApplicationController
   private
 
   def list_entries
-    Employee.select('employees.*, ' \
-                    'em.percent AS current_percent_value, ' \
-                    'departments.name, ' \
-                    'CONCAT(lastname, \' \', firstname) AS fullname')
-            .employed_ones(Period.current_day)
-            .joins('LEFT JOIN departments ON departments.id = employees.department_id')
-            .includes(:department, current_employment: {
-                        employment_roles_employments: [:employment_role, :employment_role_level]
-                      })
-            .list
+    list_entries_includes(
+      Employee.select('employees.*, ' \
+                      'em.percent AS current_percent_value, ' \
+                      'departments.name, ' \
+                      'CONCAT(lastname, \' \', firstname) AS fullname')
+      .employed_ones(Period.current_day)
+      .joins('LEFT JOIN departments ON departments.id = employees.department_id')
+    ).list
+  end
+
+  def list_entries_includes(list)
+    if can?(:manage, Employment)
+      list.includes(:department, :employments, current_employment: {
+        employment_roles_employments: [
+          :employment_role,
+          :employment_role_level
+        ]
+      })
+    else
+      list.includes(:department, current_employment: {
+        employment_roles_employments: [
+          :employment_role,
+          :employment_role_level
+        ]
+      })
+    end
   end
 
   def qr_code
