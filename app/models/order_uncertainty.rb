@@ -50,6 +50,10 @@ class OrderUncertainty < ActiveRecord::Base
     end
   end
 
+  def to_s
+    name
+  end
+
   def risk_value
     probability_value * impact_value
   end

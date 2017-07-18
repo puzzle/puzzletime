@@ -6,6 +6,10 @@ class OrderUncertaintiesController < CrudController
 
   private
 
+  def entry
+    @entry ||= params[:id] ? find_entry : build_entry
+  end
+
   def list_entries
     model_scope.list
   end
