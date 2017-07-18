@@ -13,12 +13,20 @@ class OrderUncertaintiesController < CrudController
     @entry ||= params[:id] ? find_entry : build_entry
   end
 
-  def index_path
-    order_order_uncertainties_path(path_args(model_class), returning: true)
+  def entries
+    @entries ||= list_entries
   end
 
   def list_entries
     model_scope.list
+  end
+
+  def index_path
+    order_order_uncertainties_path(order, returning: true)
+  end
+
+  def order
+    @order ||= Order.find(params[:order_id])
   end
 
   def model_scope
@@ -29,10 +37,6 @@ class OrderUncertaintiesController < CrudController
     else
       order.order_uncertainties
     end
-  end
-
-  def order
-    @order ||= Order.find(params[:order_id])
   end
 
   def model_class

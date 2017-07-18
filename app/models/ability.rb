@@ -114,7 +114,7 @@ class Ability
     end
     can [:create, :read], OrderComment
 
-    can :manage, [AccountingPost, Contract] do |instance|
+    can :manage, [AccountingPost, Contract, OrderUncertainty] do |instance|
       instance.order.responsible_id == user.id
     end
 
@@ -190,7 +190,7 @@ class Ability
          :show_plannings],
         Order
 
-    can :read, [AccountingPost, Invoice, OrderComment]
+    can :read, [AccountingPost, Invoice, OrderUncertainty, OrderComment]
 
     can :read, Planning
     can :manage, Planning, employee_id: user.id

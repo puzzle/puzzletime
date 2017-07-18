@@ -19,14 +19,14 @@ atomic_desaster:
   order: :puzzletime
   type: OrderRisk
   name: Atomic desaster
-  probability: improbable_probability
-  impact: high_impact
+  probability: 1
+  impact: 4
   measure: Duck and cover
 
 world_domination:
   order: :puzzletime
   type: OrderChance
   name: World domination
-  probability: low_probability
-  impact: high_impact
+  probability: 2
+  impact: 4
   measure: Declare world peace
