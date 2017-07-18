@@ -22,7 +22,7 @@ class OrderChance < OrderUncertainty
   end
 
   def major_order_value
-    order.chances
+    order.order_chances
          .where(type: OrderChance.sti_name)
          .pluck('MAX(probability * impact)')
          .first

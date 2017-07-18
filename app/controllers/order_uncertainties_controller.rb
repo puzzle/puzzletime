@@ -1,5 +1,8 @@
 class OrderUncertaintiesController < CrudController
   self.nesting = Order
+  self.permitted_attrs = [:name, :probability, :impact, :measure]
+
+  helper_method :index_path
 
   def show
   end
@@ -10,15 +13,45 @@ class OrderUncertaintiesController < CrudController
     @entry ||= params[:id] ? find_entry : build_entry
   end
 
+  def index_path
+    order_order_uncertainties_path(path_args(model_class), returning: true)
+  end
+
   def list_entries
     model_scope.list
   end
 
   def model_scope
-    order.order_uncertainties
+    if params[:type] == 'OrderRisk'
+      order.order_risks
+    elsif params[:type] == 'OrderChance'
+      order.order_chances
+    else
+      order.order_uncertainties
+    end
   end
 
   def order
     @order ||= Order.find(params[:order_id])
+  end
+
+  def model_class
+    if params[:type] == 'OrderRisk'
+      OrderRisk
+    elsif params[:type] == 'OrderChance'
+      OrderChance
+    else
+      OrderUncertainty
+    end
+  end
+
+  def model_identifier
+    if params[:type] == 'OrderRisk'
+      'order_risk'
+    elsif params[:type] == 'OrderChance'
+      'order_chance'
+    else
+      'order_uncertainty'
+    end
   end
 end

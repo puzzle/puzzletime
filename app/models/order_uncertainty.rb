@@ -70,6 +70,10 @@ class OrderUncertainty < ActiveRecord::Base
     OrderUncertainty.impacts[impact]
   end
 
+  def to_s
+    name
+  end
+
   protected
 
   def update_major_order_value

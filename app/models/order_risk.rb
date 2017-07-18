@@ -22,7 +22,7 @@ class OrderRisk < OrderUncertainty
   end
 
   def major_order_value
-    order.risks
+    order.order_risks
          .pluck('MAX(probability * impact)')
          .first
   end

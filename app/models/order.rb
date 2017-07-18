@@ -42,8 +42,8 @@ class Order < ActiveRecord::Base
   has_many :comments, class_name: 'OrderComment', dependent: :destroy
   has_many :targets, class_name: 'OrderTarget', dependent: :destroy
   has_many :order_uncertainties, dependent: :destroy
-  has_many :risks, class_name: 'OrderRisk'
-  has_many :chances, class_name: 'OrderChance'
+  has_many :order_risks, class_name: 'OrderRisk'
+  has_many :order_chances, class_name: 'OrderChance'
   has_descendants_through_work_item :accounting_posts
 
   has_many :order_team_members, -> { list }, dependent: :destroy
