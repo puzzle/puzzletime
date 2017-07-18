@@ -63,6 +63,9 @@ Rails.application.routes.draw do
 
     resources :order_comments, only: [:index, :create, :edit, :update]
     resource :order_targets, only: [:show, :update]
+    resources :order_uncertainties, only: [:index]
+    resources :order_risks, except: [:index, :show], controller: 'order_uncertainties'
+    resources :order_chances, except: [:index, :show], controller: 'order_uncertainties'
 
     resource :order_services, only: [:show, :edit, :update] do
       get :export_worktimes_csv

@@ -53,18 +53,27 @@ de-CH:
       order:
         one: Auftrag
         other: Aufträge
+      order_chance:
+        one: Chance
+        other: Chancen
       order_comment:
         one: Journaleintrag
         other: Journaleinträge
       order_kind:
         one: Auftragsart
         other: Auftragsarten
+      order_risk:
+        one: Risiko
+        other: Risiken
       order_status:
         one: Auftragsstatus
         other: Auftragsstatus
       order_target:
         one: Auftragsziel
         other: Auftragsziele
+      order_uncertainty:
+        one: Chance/Risiko
+        other: Chancen/Risiken
       ordertime:
         one: Zeit
         other: Zeiten
@@ -284,6 +293,26 @@ de-CH:
         target_scope_id: Wert
         rating: Bewertung
         comment: Kommentar
+      order_uncertainty:
+        name: Name
+        probability: Eintrittswahrscheinlichkeit
+        impact: Auswirkung
+        measure: Massnahmen
+        risk: Risiko
+        probabilities:
+          improbable: unwahrscheinlich
+          low: gering
+          medium: mittel
+          high: gross
+        impacts:
+          none: keine oder sehr geringe
+          low: geringe
+          medium: mittlere
+          high: grosse
+        risks:
+          low: gering
+          medium: mittel
+          high: gross
       overtime_vacation:
         employee_id: Mitarbeiter
         hours: Stunden

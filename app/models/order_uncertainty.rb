@@ -34,6 +34,8 @@ class OrderUncertainty < ActiveRecord::Base
   after_save :update_major_order_value
   after_destroy :update_major_order_value
 
+  scope :list, -> { order(:order_id, 'probability * impact DESC') }
+
   class << self
     def risk(value)
       return unless value.present?

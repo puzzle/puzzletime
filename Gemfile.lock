@@ -372,6 +372,7 @@ DEPENDENCIES
   acts_as_tree
   airbrake
   annotate
+  autoprefixer-rails
   binding_of_caller
   bootstrap-sass
   brakeman

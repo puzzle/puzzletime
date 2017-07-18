@@ -1,16 +1,21 @@
 @charset "UTF-8";
 
-// Icon font generated with Fontastic http://app.fontastic.me/ by @pierrefritsch
+// Icon font generated with Fontastic http://app.fontastic.me/ by pierre@wearecube.ch
+// (credentials in Cryptopus under We Are Cube).
+
+// Credits:
+// clover icon by Stock Image Folio from the Noun Project, CC BY 3.0 US
 
 @font-face {
-  font-family: 'puzzletime';
-  src:asset-url('puzzletime.eot?em2ym6');
-  src:asset-url('puzzletime.eot?#iefixem2ym6') format('embedded-opentype'),
-    asset-url('puzzletime.woff?em2ym6') format('woff'),
-    asset-url('puzzletime.ttf?em2ym6') format('truetype'),
-    asset-url('puzzletime.svg?em2ym6#puzzletime') format('svg');
+  font-family: "puzzletime";
+  src:url("puzzletime.eot");
+  src:url("puzzletime.eot?#iefix") format("embedded-opentype"),
+    url("puzzletime.woff") format("woff"),
+    url("puzzletime.ttf") format("truetype"),
+    url("puzzletime.svg#puzzletime") format("svg");
   font-weight: normal;
   font-style: normal;
+
 }
 
 [data-icon]:before {
@@ -113,4 +118,10 @@
 }
 .icon-dollar-stroke:before {
   content: "\71";
+}
+.icon-cloud:before {
+  content: "\72";
+}
+.icon-clover:before {
+  content: "\73";
 }

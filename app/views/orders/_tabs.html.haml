@@ -38,6 +38,11 @@
           order_order_targets_path(@order),
           order_order_targets_path(@order)
 
+  - if can?(:show_uncertainties, @order)
+    = nav 'Chancen/Risiken',
+          order_order_uncertainties_path(@order),
+          order_order_uncertainties_path(@order)
+
   - if can?(:show_comments, @order)
     = nav 'Journal',
           order_order_comments_path(@order),

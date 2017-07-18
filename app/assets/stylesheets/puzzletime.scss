@@ -35,6 +35,10 @@ a.symbol {
   font-size: 16px;
 }
 
+.pre-line {
+  white-space: pre-line;
+}
+
 .unindented {
   margin-left: -$grid-gutter-width;
   margin-right: -$grid-gutter-width;
@@ -271,6 +275,7 @@ html.turbolinks-progress-bar::before {
 @import "worktimes";
 @import "orders";
 @import "order_comments";
+@import "order_uncertainty";
 @import "reports_workload";
 @import "reports_revenue";
 @import "icons";

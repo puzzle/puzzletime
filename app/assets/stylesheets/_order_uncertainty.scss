@@ -1,0 +1,35 @@
+table.order-uncertainty-table {
+  table-layout: fixed;
+}
+
+th.order-certainty-table-risk {
+  width: min-content;
+}
+
+table.order-uncertainty-table th.action {
+  width: 50px;
+}
+
+.order-risk-icon {
+  &.low {
+    color: lighten($brand-danger, 40%);
+  }
+  &.medium {
+    color: lighten($brand-danger, 20%);
+  }
+  &.high {
+    color: $brand-danger;
+  }
+}
+
+.order-chance-icon {
+  &.low {
+    color: lighten($brand-success, 35%);
+  }
+  &.medium {
+    color: lighten($brand-success, 15%);
+  }
+  &.high {
+    color: $brand-success;
+  }
+}

@@ -33,6 +33,7 @@ gem 'validates_timeliness'
 gem 'paper_trail'
 
 ## assets
+gem 'autoprefixer-rails'
 gem 'coffee-rails'
 gem 'sass-rails'
 gem 'therubyracer', platforms: :ruby
