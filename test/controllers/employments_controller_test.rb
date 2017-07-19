@@ -45,6 +45,19 @@ class EmploymentsControllerTest < ActionController::TestCase
     assert response.body.include? 'Funktionen können nicht doppelt erfasst werden.'
   end
 
+  def test_prefill_from_newest_employment
+    pedro_employment = employees(:various_pedro).employments.list.first
+    pedro_employment.employment_roles_employments.create!(
+      employment_role: employment_roles(:software_developer),
+      employment_role_level: employment_role_levels(:junior),
+      percent: 100
+    )
+
+    get :new, params: { employee_id: employees(:various_pedro) }
+    assert_equal 100, assigns(:employment).percent
+    assert_equal 1, assigns(:employment).employment_roles_employments.length
+  end
+
   private
 
   # Test object used in several tests.

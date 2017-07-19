@@ -18,6 +18,7 @@ class EmploymentsController < ManageController
 
   before_render_form :load_employment_roles
   before_render_form :load_employment_role_levels
+  before_render_form :prefill_from_newest_employment
 
   before_save :check_percent
   before_save :check_employment_role_uniqueness
@@ -35,6 +36,16 @@ class EmploymentsController < ManageController
 
   def load_employment_role_levels
     @employment_role_levels = EmploymentRoleLevel.all
+  end
+
+  def prefill_from_newest_employment
+    return if entry.persisted? || params[:employment].present?
+
+    newest = parent.employments.list.first
+    if newest.present?
+      entry.percent = newest.percent
+      entry.employment_roles_employments = newest.employment_roles_employments.map(&:dup)
+    end
   end
 
   def check_percent
