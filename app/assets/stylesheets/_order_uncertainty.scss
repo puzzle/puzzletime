@@ -3,7 +3,7 @@ table.order-uncertainty-table {
 }
 
 th.order-certainty-table-risk {
-  width: min-content;
+  width: 3 * 17px + 2 * 3px + $table-condensed-cell-padding;
 }
 
 table.order-uncertainty-table th.action {
@@ -11,25 +11,22 @@ table.order-uncertainty-table th.action {
 }
 
 .order-risk-icon {
-  &.low {
-    color: lighten($brand-danger, 40%);
-  }
-  &.medium {
-    color: lighten($brand-danger, 20%);
-  }
-  &.high {
-    color: $brand-danger;
-  }
+  color: $brand-danger;
 }
 
 .order-chance-icon {
-  &.low {
-    color: lighten($brand-success, 35%);
+  color: $brand-success;
+}
+
+.order-risk-icon,
+.order-chance-icon {
+  margin-right: 3px;
+
+  &:last-child {
+    margin-right: 0;
   }
-  &.medium {
-    color: lighten($brand-success, 15%);
-  }
-  &.high {
-    color: $brand-success;
+
+  &.inactive {
+    color: $gray-light;
   }
 }
