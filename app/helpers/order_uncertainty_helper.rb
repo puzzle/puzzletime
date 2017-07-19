@@ -1,4 +1,5 @@
 module OrderUncertaintyHelper
+
   def format_probability(value)
     t("activerecord.attributes.order_uncertainty/probabilities.#{value.probability}")
   end
@@ -34,8 +35,7 @@ module OrderUncertaintyHelper
     when :high then 3
     when :medium then 2
     when :low then 1
-    else
-      0
+    else 0
     end
   end
 end

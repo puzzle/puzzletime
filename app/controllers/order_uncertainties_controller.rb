@@ -4,22 +4,12 @@ class OrderUncertaintiesController < CrudController
 
   helper_method :index_path
 
-  def show
+  def index
+    @chances = order.order_chances.list
+    @risks = order.order_risks.list
   end
 
   private
-
-  def entry
-    @entry ||= params[:id] ? find_entry : build_entry
-  end
-
-  def entries
-    @entries ||= list_entries
-  end
-
-  def list_entries
-    model_scope.list
-  end
 
   def index_path
     order_order_uncertainties_path(order, returning: true)
@@ -30,32 +20,32 @@ class OrderUncertaintiesController < CrudController
   end
 
   def model_scope
-    if params[:type] == 'OrderRisk'
-      order.order_risks
-    elsif params[:type] == 'OrderChance'
-      order.order_chances
-    else
-      order.order_uncertainties
+    case params.fetch(:type)
+    when 'OrderRisk' then order.order_risks
+    when 'OrderChance' then order.order_chances
+    else not_found
     end
   end
 
   def model_class
-    if params[:type] == 'OrderRisk'
-      OrderRisk
-    elsif params[:type] == 'OrderChance'
-      OrderChance
-    else
-      OrderUncertainty
+    case params[:type]
+    when 'OrderRisk' then OrderRisk
+    when 'OrderChance' then OrderChance
+    else OrderUncertainty
     end
   end
 
   def model_identifier
-    if params[:type] == 'OrderRisk'
-      'order_risk'
-    elsif params[:type] == 'OrderChance'
-      'order_chance'
-    else
-      'order_uncertainty'
-    end
+    params.fetch(:type).underscore
   end
+
+  # A human readable plural name of the model.
+  def models_label(plural = true)
+    opts = { count: (plural ? 3 : 1) }
+    opts[:default] = model_class.model_name.human.titleize
+    opts[:default] = opts[:default].pluralize if plural
+
+    model_class.model_name.human(opts)
+  end
+
 end

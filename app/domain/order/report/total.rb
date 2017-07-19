@@ -30,6 +30,14 @@ class Order::Report::Total
     []
   end
 
+  def major_chance
+    nil
+  end
+
+  def major_risk
+    nil
+  end
+
   def offered_amount
     @offered_amount ||= entries.sum(&:offered_amount)
   end

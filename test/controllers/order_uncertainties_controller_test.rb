@@ -1,25 +1,29 @@
 require 'test_helper'
 
 class OrderUncertaintiesControllerTest < ActionController::TestCase
+
   test 'GET index as member' do
     login_as :pascal
     get :index, params: { order_id: order.id }
     assert_template :index
-    assert_equal 2, assigns(:entries).count
+    assert_equal 1, assigns(:risks).count
+    assert_equal 1, assigns(:chances).count
   end
 
   test 'GET index as responsible' do
     login_as :lucien
     get :index, params: { order_id: order.id }
     assert_template :index
-    assert_equal 2, assigns(:entries).count
+    assert_equal 1, assigns(:risks).count
+    assert_equal 1, assigns(:chances).count
   end
 
   test 'GET index as management' do
     login_as :mark
     get :index, params: { order_id: order.id }
     assert_template :index
-    assert_equal 2, assigns(:entries).count
+    assert_equal 1, assigns(:risks).count
+    assert_equal 1, assigns(:chances).count
   end
 
   test 'POST create as member' do
@@ -79,21 +83,21 @@ class OrderUncertaintiesControllerTest < ActionController::TestCase
   test 'DELETE destroy as member' do
     login_as :pascal
     assert_raises(CanCan::AccessDenied) do
-      delete :destroy, params: { order_id: order.id, id: test_entry.id }
+      delete :destroy, params: { order_id: order.id, id: test_entry.id, type: 'OrderRisk' }
     end
   end
 
   test 'DELETE destroy as responsible' do
     login_as :lucien
     assert_difference 'order.order_risks.count', -1 do
-      delete :destroy, params: { order_id: order.id, id: test_entry.id }
+      delete :destroy, params: { order_id: order.id, id: test_entry.id, type: 'OrderRisk' }
     end
   end
 
   test 'DELETE destroy as management' do
     login_as :mark
     assert_difference 'order.order_risks.count', -1 do
-      delete :destroy, params: { order_id: order.id, id: test_entry.id }
+      delete :destroy, params: { order_id: order.id, id: test_entry.id, type: 'OrderRisk' }
     end
   end
 

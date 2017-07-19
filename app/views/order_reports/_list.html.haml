@@ -30,6 +30,8 @@
               = sort_link(:average_rate, 'Durchschnittl. Stundensatz')
             - @target_scopes.each do |scope|
               %th.large.nowrap= sort_link("target_scope_#{scope.id}", icon(scope.icon, title: scope.name))
+            %th.large.text-center= sort_link('major_chance_value', picon('clover', title: OrderChance.model_name.human))
+            %th.large.text-center= sort_link('major_risk_value', picon('cloud', title: OrderRisk.model_name.human))
 
         %tbody
           - @report.page do |order|
@@ -91,6 +93,8 @@
               - @target_scopes.each do |scope|
                 %td
                   = order_target_icon(order.target(scope.id))
+              %td= format_major_uncertainty(order.major_chance, OrderChance.sti_name)
+              %td= format_major_uncertainty(order.major_risk, OrderRisk.sti_name)
 
     %p= paginate @report
 

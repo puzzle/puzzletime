@@ -41,7 +41,9 @@
   - if can?(:show_uncertainties, @order)
     = nav 'Chancen/Risiken',
           order_order_uncertainties_path(@order),
-          order_order_uncertainties_path(@order)
+          order_order_uncertainties_path(@order),
+          order_order_risks_path(@order),
+          order_order_chances_path(@order)
 
   - if can?(:show_comments, @order)
     = nav 'Journal',

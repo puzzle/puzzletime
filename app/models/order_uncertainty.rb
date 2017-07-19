@@ -31,10 +31,12 @@ class OrderUncertainty < ActiveRecord::Base
     high: 4
   }, _suffix: true
 
+  validates_by_schema
+
   after_save :update_major_order_value
   after_destroy :update_major_order_value
 
-  scope :list, -> { order(:order_id, 'probability * impact DESC') }
+  scope :list, -> { order('probability * impact DESC') }
 
   class << self
     def risk(value)

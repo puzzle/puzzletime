@@ -52,13 +52,6 @@
                          class: 'searchable',
                          multiple: true)
 
-  = direct_filter_select(:major_chance_value,
-                         'Chance',
-                         order_uncertainty_options)
-  = direct_filter_select(:major_risk_value,
-                        'Risiko',
-                         order_uncertainty_options)
-
   = direct_filter(:target, 'Ziel') do
     - select_tag(:target,
                  options_for_select([['Orange', 'orange'],
@@ -68,6 +61,13 @@
                  prompt: 'Alle',
                  class: 'form-control',
                  data: { submit: true })
+
+  = direct_filter_select(:major_chance_value,
+                         'Chance',
+                         order_uncertainty_options)
+  = direct_filter_select(:major_risk_value,
+                        'Risiko',
+                         order_uncertainty_options)
 
   .form-group
     = spinner

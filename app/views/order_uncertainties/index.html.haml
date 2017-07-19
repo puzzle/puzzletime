@@ -2,6 +2,9 @@
 
 = render 'orders/header'
 
-= render 'info'
+= render 'list', model: OrderChance, entries: @chances
 
-= render 'list'
+%br/
+%br/
+
+= render 'list', model: OrderRisk, entries: @risks

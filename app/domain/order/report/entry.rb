@@ -3,6 +3,8 @@
 class Order::Report::Entry < SimpleDelegator
   attr_reader :order, :accounting_posts, :hours, :invoices
 
+  delegate :major_chance, :major_chance_value, :major_risk, :major_risk_value, to: :order
+
   def initialize(order, accounting_posts, hours, invoices)
     super(order)
     @order = order

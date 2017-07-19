@@ -16,15 +16,15 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 atomic_desaster:
-  order: :puzzletime
+  order: puzzletime
   type: OrderRisk
   name: Atomic desaster
   probability: 1
-  impact: 4
+  impact: 3
   measure: Duck and cover
 
 world_domination:
-  order: :puzzletime
+  order: puzzletime
   type: OrderChance
   name: World domination
   probability: 2
