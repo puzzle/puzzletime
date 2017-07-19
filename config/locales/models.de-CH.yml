@@ -299,20 +299,20 @@ de-CH:
         impact: Auswirkung
         measure: Massnahmen
         risk: Risiko
-        probabilities:
-          improbable: unwahrscheinlich
-          low: gering
-          medium: mittel
-          high: gross
-        impacts:
-          none: keine oder sehr geringe
-          low: geringe
-          medium: mittlere
-          high: grosse
-        risks:
-          low: gering
-          medium: mittel
-          high: gross
+      order_uncertainty/probabilities:
+        improbable: unwahrscheinlich
+        low: gering
+        medium: mittel
+        high: gross
+      order_uncertainty/impacts:
+        none: keine oder sehr geringe
+        low: geringe
+        medium: mittlere
+        high: grosse
+      order_uncertainty/risks:
+        low: gering
+        medium: mittel
+        high: gross
       overtime_vacation:
         employee_id: Mitarbeiter
         hours: Stunden
