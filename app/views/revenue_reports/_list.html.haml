@@ -2,25 +2,25 @@
   %thead
     %tr
       %th
-        = @report.grouping_name_human
+        = sort_link(:grouping, @report.grouping_name_human)
 
       - @report.step_past_months do |date|
         %th.right
           = with_tooltip('Verrechenbare Stunden') do
-            = l(date, format: :month)
+            = sort_link(date, l(date, format: :month))
 
       - if @report.past_months?
         %th.right
           = with_tooltip('Summe der verrechenbaren Stunden der vergangenen Monate') do
-            Total
+            = sort_link(:total, 'Total')
 
         %th.right{ class: @report.future_months? && 'table-column-border-right' }
           = with_tooltip('Durchschnitt der verrechenbaren Stunden der vergangenen Monate') do
-            ⌀
+            = sort_link(:average, '⌀')
       - @report.step_future_months do |date|
         %th.right
           = with_tooltip('Fix geplante Stunden') do
-            = l(date, format: :month)
+            = sort_link(date, l(date, format: :month))
 
   %tbody
     - (@report.hours_without_entry? ? @report.entries + [nil] : @report.entries).each do |entry|

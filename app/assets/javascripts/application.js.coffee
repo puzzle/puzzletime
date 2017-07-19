@@ -68,8 +68,9 @@ if typeof Object.assign != 'function'
 # wire up toggle links
 $(document).on('click', '[data-toggle]', (event) ->
   id = $(this).data('toggle')
-  $('#' + id).slideToggle(200)
-  event.preventDefault()
+  if id != 'tooltip'
+    $('#' + id).slideToggle(200)
+    event.preventDefault()
 )
 
 # wire up direct submit fields

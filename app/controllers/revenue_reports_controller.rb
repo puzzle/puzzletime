@@ -13,11 +13,7 @@ class RevenueReportsController < ApplicationController
   ].freeze
 
   def index
-    @report_types = REPORT_TYPES
     @report = report_type.new(@period, params)
-    respond_to do |format|
-      format.html {}
-    end
   end
 
   private

@@ -22,7 +22,7 @@ module Reports::Revenue
     end
 
     def entries
-      @entries ||= load_entries
+      @entries ||= directed_sort(sorted(load_entries))
     end
 
     def hours_without_entry?
@@ -90,6 +90,40 @@ module Reports::Revenue
     end
 
     private
+
+    def sorted(entries)
+      case params[:sort]
+      when 'total'
+        entries.sort_by { |e| total_ordertime_hours_per_entry(e) }
+      when 'average'
+        entries.sort_by { |e| average_ordertime_hours_per_entry(e) }
+      when /^\d{4}\-\d{2}\-\d{2}$/
+        sorted_month(entries)
+      else
+        entries
+      end
+    end
+
+    def sorted_month(entries)
+      begin
+        date = Date.parse(params[:sort]).beginning_of_month
+        if date < current_month
+          entries.sort_by { |e| ordertime_hours[[e.id, date]] || 0 }
+        else
+          entries.sort_by { |e| planning_hours[[e.id, date]] || 0 }
+        end
+      rescue ArgumentError
+        entries
+      end
+    end
+
+    def directed_sort(entries)
+      if params[:sort_dir].to_s.downcase == 'desc'
+        entries.reverse
+      else
+        entries
+      end
+    end
 
     def load_entries
       entry_ids = ordertime_hours

@@ -1,7 +1,14 @@
 - @title ||= 'Umsatz'
 
 = form_tag(nil, method: :get, class: 'form-inline', role: 'filter') do
-  = direct_filter_select(:grouping, 'Gruppieren nach', @report_types, prompt: nil, value_method: :grouping_name, text_method: :grouping_name_human)
+  = hidden_field_tag :sort, params[:sort]
+  = hidden_field_tag :sort_dir, params[:sort_dir]
+  = direct_filter_select(:grouping,
+                         'Gruppieren nach',
+                         RevenueReportsController::REPORT_TYPES,
+                         prompt: nil,
+                         value_method: :grouping_name,
+                         text_method: :grouping_name_human)
 
 = render 'evaluator/period_link', entities_name: 'Umsätze'
 
