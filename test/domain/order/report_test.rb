@@ -30,6 +30,16 @@ class Order::ReportTest < ActiveSupport::TestCase
     assert_equal [orders(:webauftritt)], report.entries.collect(&:order)
   end
 
+  test 'filter by risk value' do
+    report(major_risk_value: 'low')
+    assert_equal [orders(:puzzletime)], report.entries.collect(&:order)
+  end
+
+  test 'filter by chance value' do
+    report(major_chance_value: 'medium')
+    assert_equal [orders(:puzzletime)], report.entries.collect(&:order)
+  end
+
   test 'filter by responsible and department' do
     report(responsible_id: employees(:lucien).id, department_id: departments(:devone).id)
     assert_equal [orders(:puzzletime)], report.entries.collect(&:order)

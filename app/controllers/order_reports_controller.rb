@@ -5,8 +5,10 @@ class OrderReportsController < ApplicationController
   include DryCrud::Rememberable
   include WithPeriod
 
-  self.remember_params = %w(start_date end_date department_id client_work_item_id
-                            category_work_item_id kind_id status_id responsible_id target)
+  self.remember_params = %w(start_date end_date department_id
+                            client_work_item_id category_work_item_id kind_id
+                            status_id responsible_id target major_chance_value
+                            major_risk_value)
 
 
   before_action :authorize_class

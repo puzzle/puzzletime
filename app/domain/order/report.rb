@@ -60,6 +60,7 @@ class Order::Report
     entries = filter_by_closed(entries)
     entries = filter_by_parent(entries)
     entries = filter_by_target(entries)
+    entries = filter_by_uncertainties(entries)
     filter_entries_by(entries, :kind_id, :responsible_id, :status_id, :department_id)
   end
 
@@ -155,6 +156,33 @@ class Order::Report
     orders
       .where(order_statuses: { closed: true })
       .where(period.where_condition('closed_at'))
+  end
+
+  def filter_by_uncertainties(orders)
+    unless params[:major_chance_value].blank?
+      orders = orders.where(
+        major_chance_value: map_uncertainties_filter(params[:major_chance_value])
+      )
+    end
+
+    unless params[:major_risk_value].blank?
+      orders = orders.where(
+        major_risk_value: map_uncertainties_filter(params[:major_risk_value])
+      )
+    end
+
+    orders
+  end
+
+  def map_uncertainties_filter(value)
+    case value
+    when 'low'
+      0..3
+    when 'medium'
+      3..8
+    when 'high'
+      8..16
+    end
   end
 
   def sort_entries(entries)

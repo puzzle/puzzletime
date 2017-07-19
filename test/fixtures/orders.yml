@@ -27,6 +27,8 @@ puzzletime:
   kind: mandat
   department: devone
   contract: puzzletime
+  major_risk_value: 3
+  major_chance_value: 8
 
 allgemein:
   work_item_id: 3

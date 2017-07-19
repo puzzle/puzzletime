@@ -24,6 +24,12 @@ module FilterHelper
      IdValue.new(false, 'nein')]
   end
 
+  def order_uncertainty_options
+    [IdValue.new(:low, 'gering'),
+     IdValue.new(:medium, 'mittel'),
+     IdValue.new(:high, 'gross')]
+  end
+
   def direct_filter(name, label, &block)
     html = ''.html_safe
     html += label_tag(name, label, class: 'control-label') + ' &nbsp; '.html_safe if label
