@@ -300,15 +300,15 @@ de-CH:
         measure: Massnahmen
         risk: Risiko
       order_uncertainty/probabilities:
-        improbable: unwahrscheinlich
-        low: gering
-        medium: mittel
-        high: gross
+        improbable: unwahrscheinlich (< 5%)
+        low: gering (> 5% - < 20%)
+        medium: mittel (> 20% - < 50%)
+        high: gross (> 50%)
       order_uncertainty/impacts:
-        none: keine oder sehr geringe
-        low: geringe
-        medium: mittlere
-        high: grosse
+        none: keine oder sehr geringe (< 5%)
+        low: geringe (> 5% - < 20%)
+        medium: mittlere (> 20% - < 50%)
+        high: grosse (> 50%)
       order_uncertainty/risks:
         low: gering
         medium: mittel

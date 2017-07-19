@@ -38,7 +38,7 @@ class OrderUncertainty < ActiveRecord::Base
 
   class << self
     def risk(value)
-      return unless value.present?
+      return if value.blank?
 
       if value < 3
         :low
@@ -68,10 +68,6 @@ class OrderUncertainty < ActiveRecord::Base
 
   def impact_value
     OrderUncertainty.impacts[impact]
-  end
-
-  def to_s
-    name
   end
 
   protected

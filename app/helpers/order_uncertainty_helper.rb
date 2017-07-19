@@ -9,14 +9,13 @@ module OrderUncertaintyHelper
 
   def format_risk(value)
     content_tag(:span, safe_join(risk_icons(value.risk, value.type)),
-                title: t("activerecord.attributes.order_uncertainty/risks.#{value.risk}"))
+                title: t("activerecord.attributes.order_uncertainty/risks.#{value.risk}"),
+                data: { toggle: :tooltip })
   end
 
   def format_measure(value)
     auto_link(value.measure)
   end
-
-  private
 
   def risk_icons(risk, type)
     count = risk_icon_count(risk)
@@ -32,12 +31,9 @@ module OrderUncertaintyHelper
 
   def risk_icon_count(risk)
     case risk
-    when :high
-      3
-    when :medium
-      2
-    when :low
-      1
+    when :high then 3
+    when :medium then 2
+    when :low then 1
     else
       0
     end

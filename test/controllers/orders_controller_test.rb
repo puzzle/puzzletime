@@ -1,3 +1,5 @@
+# coding: utf-8
+
 require 'test_helper'
 
 class OrdersControllerTest < ActionController::TestCase
@@ -26,6 +28,24 @@ class OrdersControllerTest < ActionController::TestCase
   test 'GET index sorted by status' do
     get :index, params: { sort: 'status', status_id: '' }
     assert_equal orders(:hitobito_demo, :puzzletime, :webauftritt, :allgemein), assigns(:orders)
+  end
+
+  test 'GET index sorted by major_chance_value' do
+    order_uncertainties(:atomic_desaster).save!
+    order_uncertainties(:world_domination).save!
+    orders(:allgemein).order_chances.create!(name: 'Aare is above 18°', probability: :medium, impact: :low)
+    get :index, params: { sort: 'major_chance_value', status_id: '' }
+    assert_equal orders(:allgemein, :puzzletime), assigns(:orders)[0..1]
+    assert_equal orders(:hitobito_demo, :webauftritt).to_set, assigns(:orders)[2..3].to_set
+  end
+
+  test 'GET index sorted by major_risk_value' do
+    order_uncertainties(:atomic_desaster).save!
+    order_uncertainties(:world_domination).save!
+    orders(:allgemein).order_risks.create!(name: 'Aare is below 18°', probability: :medium, impact: :low)
+    get :index, params: { sort: 'major_risk_value', status_id: '' }
+    assert_equal orders(:puzzletime, :allgemein), assigns(:orders)[0..1]
+    assert_equal orders(:hitobito_demo, :webauftritt).to_set, assigns(:orders)[2..3].to_set
   end
 
   test 'GET index with default filter for manager' do

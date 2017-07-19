@@ -63,6 +63,13 @@ module OrderHelper
     content_tag(:span, f(value), class: order_report_average_rate_class(value))
   end
 
+  def format_major_uncertainty(risk_value, type)
+    content_tag(:span, safe_join(risk_icons(risk_value, type)),
+                style: 'font-size: 20px;',
+                title: t("activerecord.attributes.order_uncertainty/risks.#{risk_value}"),
+                data: { toggle: :tooltip })
+  end
+
   def glyphicons
     %w(asterisk plus euro minus cloud envelope pencil glass music search heart star star-empty
        user film th-large th th-list ok remove zoom-in zoom-out off signal cog trash home file

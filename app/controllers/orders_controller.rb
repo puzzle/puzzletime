@@ -86,6 +86,7 @@ class OrdersController < CrudController
                              :team_members, :targets, :contacts).
               order('work_items.path_names')
     entries = sort_entries_by_target_scope(entries)
+    entries = sort_entries_by_uncertainty(entries)
 
     filter_entries_by(entries, :department_id, :kind_id, :status_id, :responsible_id)
   end
@@ -120,6 +121,14 @@ class OrdersController < CrudController
     match = params[:sort].to_s.match(/\Atarget_scope_(\d+)\z/)
     if match
       entries.order_by_target_scope(match[1], params[:sort_dir].to_s.casecmp('desc').zero?)
+    else
+      entries
+    end
+  end
+
+  def sort_entries_by_uncertainty(entries)
+    if params[:sort] == 'major_chance_value' || params[:sort] == 'major_risk_value'
+      entries.reorder("#{params[:sort]} #{params[:sort_dir]} NULLS LAST")
     else
       entries
     end
