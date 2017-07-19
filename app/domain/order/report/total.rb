@@ -11,7 +11,7 @@ class Order::Report::Total
   end
 
   def to_s
-    'Total'
+    "Total (#{entries.count})"
   end
 
   def order

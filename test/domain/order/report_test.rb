@@ -124,6 +124,14 @@ class Order::ReportTest < ActiveSupport::TestCase
 
   ### calculating
 
+  test 'it counts orders' do
+    assert_equal report().total.to_s, 'Total (3)'
+  end
+
+  test 'it counts filtered orders' do
+    assert_equal report(closed: true).total.to_s, 'Total (1)'
+  end
+
   test '#offered_amount is sum of all accounting posts' do
     order = orders(:hitobito_demo)
     accounting_posts(:hitobito_demo_app).update!(offered_total: 10000)
