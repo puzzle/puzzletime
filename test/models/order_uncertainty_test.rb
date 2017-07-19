@@ -51,34 +51,34 @@ class OrderRiskTest < ActiveSupport::TestCase
     assert_nil order.major_risk_value
     assert_nil order.major_chance_value
 
-    order.risks.create!(name: 'Atomic desaster',
-                        probability: :improbable,
-                        impact: :high)
+    order.order_risks.create!(name: 'Atomic desaster',
+                              probability: :improbable,
+                              impact: :high)
 
     order.reload
     assert_equal 4, order.major_risk_value
     assert_nil order.major_chance_value
 
-    order.risks.create!(name: 'Earthquake',
-                        probability: :low,
-                        impact: :medium)
-
-    order.reload
-    assert_equal 6, order.major_risk_value
-    assert_nil order.major_chance_value
-
-    order.risks.create!(name: 'Trump tweets true facts',
-                        probability: :improbable,
-                        impact: :none)
-
-    order.reload
-    assert_equal 6, order.major_risk_value
-    assert_nil order.major_chance_value
-
-
-    r = order.chances.create!(name: 'World domination',
+    order.order_risks.create!(name: 'Earthquake',
                               probability: :low,
-                              impact: :high)
+                              impact: :medium)
+
+    order.reload
+    assert_equal 6, order.major_risk_value
+    assert_nil order.major_chance_value
+
+    order.order_risks.create!(name: 'Trump tweets true facts',
+                              probability: :improbable,
+                              impact: :none)
+
+    order.reload
+    assert_equal 6, order.major_risk_value
+    assert_nil order.major_chance_value
+
+
+    r = order.order_chances.create!(name: 'World domination',
+                                    probability: :low,
+                                    impact: :high)
 
     order.reload
     assert_equal 6, order.major_risk_value
@@ -90,7 +90,7 @@ class OrderRiskTest < ActiveSupport::TestCase
     assert_equal 6, order.major_risk_value
     assert_equal 12, order.major_chance_value
 
-    order.risks.destroy_all
+    order.order_risks.destroy_all
 
     order.reload
     assert_nil order.major_risk_value
