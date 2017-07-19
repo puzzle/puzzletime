@@ -31,6 +31,7 @@
 #= require order_contacts
 #= require order_services
 #= require accounting_posts
+#= require reports_orders
 #= require turbolinks
 
 
