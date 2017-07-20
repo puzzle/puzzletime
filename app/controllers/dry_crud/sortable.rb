@@ -59,7 +59,11 @@ module DryCrud
 
       # The sort direction, either 'asc' or 'desc'.
       def sort_dir
-        params[:sort_dir] == 'desc' ? 'DESC' : 'ASC'
+        if number_null_order?
+          params[:sort_dir] == 'desc' ? 'DESC NULLS LAST' : 'ASC NULLS FIRST'
+        else
+          params[:sort_dir] == 'desc' ? 'DESC' : 'ASC'
+        end
       end
 
       # Returns true if the passed attribute is sortable.
@@ -67,6 +71,12 @@ module DryCrud
         attr.present? && (
         model_class.column_names.include?(attr.to_s) ||
         sort_mappings_with_indifferent_access.include?(attr))
+      end
+
+      def number_null_order?
+        type = model_class.columns_hash[params[:sort]].try(:type)
+        !sort_mappings_with_indifferent_access.key?(params[:sort]) &&
+          type == :integer || type == :float
       end
 
     end
