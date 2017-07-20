@@ -57,7 +57,10 @@ module Invoicing
       end
 
       def http(url)
-        Net::HTTP.new(url.host, url.port).tap { |http| http.use_ssl = url.scheme == 'https' }
+        Net::HTTP.new(url.host, url.port).tap do |http|
+          http.use_ssl = url.scheme == 'https'
+          http.read_timeout = 300 # seconds
+        end
       end
 
       def uri(endpoint, action, params = {})

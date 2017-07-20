@@ -114,19 +114,24 @@ module Invoicing
       def set_association_key(entity, list, remote_list)
         list.each do |item|
           local_item = entity.new(item)
-          remote_data = remote_list.find { |h| local_item == h }
-          next unless remote_data.try(:[], 'id') && remote_data['id'].to_s != item.invoicing_key
-          if list.model.where(invoicing_key: remote_data['id']).exists?
+          remote_keys = remote_list.select { |h| local_item == h }.map { |h| h['id'].to_s.presence }.compact
+          next if remote_keys.blank? || remote_keys.include?(item.invoicing_key)
 
+          local_keys = list.model.where(invoicing_key: remote_keys).pluck(:invoicing_key)
+          new_remote_keys = remote_keys - local_keys
+          if new_remote_keys.blank?
             notify_sync_error(Invoicing::Error.new('Unable to sync from remote, ' \
                                                    'record with invoicing_key already exists',
                                                    nil,
-                                                   invoicing_key: remote_data['id'], type: entity.name))
+                                                   local_item: item.id,
+                                                   invoicing_keys: remote_keys,
+                                                   type: entity.name))
           else
-            item.update_column(:invoicing_key, remote_data['id'])
+            item.update_column(:invoicing_key, new_remote_keys.first)
           end
         end
       end
+
 
       def reset_invoicing_keys(client_invoicing_key = nil)
         client.update_column(:invoicing_key, client_invoicing_key)

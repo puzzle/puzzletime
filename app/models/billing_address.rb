@@ -16,6 +16,9 @@
 
 class BillingAddress < ActiveRecord::Base
 
+  protect_if :invoices,
+             'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Rechnungen zugeordnet sind'
+
   belongs_to :client
   belongs_to :contact, optional: true
 
@@ -29,8 +32,6 @@ class BillingAddress < ActiveRecord::Base
   validate :assert_contact_belongs_to_client
 
   after_initialize :set_default_country
-
-  protect_if :invoices, 'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Rechnungen zugeordnet sind'
 
   scope :list, -> { includes(:contact).order(:country, :zip_code, :street) }
 

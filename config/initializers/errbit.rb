@@ -10,6 +10,8 @@ Airbrake.configure do |config|
   config.blacklist_keys << 'RAILS_DB_PASSWORD'
   config.blacklist_keys << 'RAILS_AIRBRAKE_API_KEY'
   config.blacklist_keys << 'RAILS_SECRET_TOKEN'
+  config.blacklist_keys << 'RAILS_HIGHRISE_TOKEN'
+  config.blacklist_keys << 'RAILS_SMALL_INVOICE_TOKEN'
 end
 
 ignored_exceptions = %w(ActionController::MethodNotAllowed
