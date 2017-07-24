@@ -94,9 +94,8 @@ class WorktimesController < CrudController
                       end_time: @worktime.to_end_time }]
       overlaps = Worktime.where(conditions).includes(:work_item).to_a
       if overlaps.present?
-        flash[:notice] = flash_message(:success)
-        flash[:notice] += " Es besteht eine Überlappung mit mindestens einem anderen Eintrag:\n".html_safe
-        flash[:notice] += overlaps.collect { |o| ERB::Util.h(o) }.join("\n").html_safe
+        flash[:warning] = "#{@worktime}: Es besteht eine Überlappung mit mindestens einem anderen Eintrag:\n".html_safe
+        flash[:warning] += overlaps.collect { |o| ERB::Util.h(o) }.join("\n").html_safe
       end
     end
   end

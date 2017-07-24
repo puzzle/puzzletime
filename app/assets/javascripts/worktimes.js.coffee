@@ -101,7 +101,7 @@ app.worktimes = new class
             element: @container()[0]
 
   initScroll: ->
-    if @container().length
+    if @container().length && !$('.alert:not(.alert-success)', '#flash').length
       selectedDate = @container().data('selectedDate')
       return unless selectedDate
       day = @container(".weeknav .day[data-date=\"#{selectedDate}\"]")
