@@ -9,7 +9,7 @@ class WorktimesController < CrudController
   helper_method :record_other?
 
   before_save :check_has_accounting_post, :check_worktimes_committed
-  after_save :check_overlapping
+  after_save :check_overlapping, :check_employment
 
   before_render_index :set_statistics
   before_render_new :create_default_worktime
@@ -97,6 +97,22 @@ class WorktimesController < CrudController
         flash[:warning] = "#{@worktime}: Es besteht eine Überlappung mit mindestens einem anderen Eintrag:\n".html_safe
         flash[:warning] += overlaps.collect { |o| ERB::Util.h(o) }.join("\n").html_safe
       end
+    end
+  end
+
+  def check_employment
+    employment = @worktime.employee.employments.during(
+      Period.day_for(@worktime.work_date)
+    ).first
+
+    if !employment
+      flash[:warning] = "#{@worktime}: Es besteht keine Anstellung am #{@worktime.work_date}".html_safe
+      return
+    end
+
+    if employment.percent.zero?
+      flash[:warning] = "#{@worktime}: Es besteht eine 0% Anstellung am #{@worktime.work_date}".html_safe
+      return
     end
   end
 

@@ -131,13 +131,13 @@ class OrdertimesControllerTest < ActionController::TestCase
   def test_create_with_overlapping
     work_date = Time.zone.today + 10
     Fabricate(:ordertime,
-              employee: employees(:pascal),
+              employee: employees(:long_time_john),
               work_date: work_date,
               from_start_time: '9:00',
               to_end_time: '10:00',
               work_item: work_items(:webauftritt))
     work_items(:allgemein).update(closed: false)
-    login_as(:pascal)
+    login_as(:long_time_john)
     post :create, params: {
                                ordertime: { account_id: work_items(:allgemein),
                                                           work_date: work_date,
@@ -147,7 +147,50 @@ class OrdertimesControllerTest < ActionController::TestCase
     assert_redirected_to action: 'index', week_date: work_date
     assert flash[:alert].blank?
     assert_match(/Zeit.*erfolgreich erstellt/, flash[:notice])
-    assert_match(/Überlappung.*Webauftritt/m, flash[:notice])
+    assert_match(/Überlappung.*Webauftritt/m, flash[:warning])
+  end
+
+  def test_create_with_no_employment
+    # half_year_maria 2006-07-01 - 2006-12-31
+    work_date = '2017-07-24'
+
+    login_as :half_year_maria
+
+    post :create, params: {
+      ordertime: {
+        account_id: work_items(:allgemein),
+        work_date: work_date,
+        hours: 8
+      }
+    }
+    assert_redirected_to action: 'index', week_date: work_date
+    assert flash[:alert].blank?
+    assert_match(/Zeit.*erfolgreich erstellt/, flash[:notice])
+    assert_match(/keine Anstellung/, flash[:warning])
+  end
+
+  def test_create_with_zero_percent_employment
+    # half_year_maria 2006-07-01 - 2006-12-31
+    work_date = '2017-07-24'
+
+    Fabricate(:employment,
+              employee: employees(:half_year_maria),
+              percent: 0,
+              start_date: '2017-01-01')
+
+    login_as :half_year_maria
+
+    post :create, params: {
+      ordertime: {
+        account_id: work_items(:allgemein),
+        work_date: work_date,
+        hours: 8
+      }
+    }
+    assert_redirected_to action: 'index', week_date: work_date
+    assert flash[:alert].blank?
+    assert_match(/Zeit.*erfolgreich erstellt/, flash[:notice])
+    assert_match(/0% Anstellung/, flash[:warning])
   end
 
   def test_create_other

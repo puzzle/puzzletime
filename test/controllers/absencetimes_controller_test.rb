@@ -254,4 +254,47 @@ class AbsencetimesControllerTest < ActionController::TestCase
 
     assert_raises(CanCan::AccessDenied) { delete :destroy, params: { id: t.id } }
   end
+
+  def test_create_with_no_employment
+    # half_year_maria 2006-07-01 - 2006-12-31
+    work_date = '2017-07-24'
+
+    login_as :half_year_maria
+
+    post :create, params: {
+      absencetime: {
+        absence_id: absences(:vacation).id,
+        work_date: work_date,
+        hours: 8
+      }
+    }
+    assert_redirected_to action: 'index', week_date: work_date
+    assert flash[:alert].blank?
+    assert_match(/Absenz.*erfolgreich erstellt/, flash[:notice])
+    assert_match(/keine Anstellung/, flash[:warning])
+  end
+
+  def test_create_with_zero_percent_employment
+    # half_year_maria 2006-07-01 - 2006-12-31
+    work_date = '2017-07-24'
+
+    Fabricate(:employment,
+              employee: employees(:half_year_maria),
+              percent: 0,
+              start_date: '2017-01-01')
+
+    login_as :half_year_maria
+
+    post :create, params: {
+      absencetime: {
+        absence_id: absences(:vacation).id,
+        work_date: work_date,
+        hours: 8
+      }
+    }
+    assert_redirected_to action: 'index', week_date: work_date
+    assert flash[:alert].blank?
+    assert_match(/Absenz.*erfolgreich erstellt/, flash[:notice])
+    assert_match(/0% Anstellung/, flash[:warning])
+  end
 end
