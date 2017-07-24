@@ -105,7 +105,7 @@ class WorktimesController < CrudController
       Period.day_for(@worktime.work_date)
     ).first
 
-    if !employment
+    unless employment
       flash[:warning] = "#{@worktime}: Es besteht keine Anstellung am #{@worktime.work_date}".html_safe
       return
     end
