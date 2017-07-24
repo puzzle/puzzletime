@@ -20,7 +20,7 @@
             = check_box_tag(:repetition)
             Wiederholung wöchentlich
         .input-group.planning-repetition-group{ style: 'display: none' }
-          = text_field_tag(:repeat_until, nil, class: 'form-control date', data: { format: :week })
+          = text_field_tag(:repeat_until, nil, disabled: true, class: 'form-control date', data: { format: :week })
           .input-group-addon= icon(:calendar)
     .panel-footer
       = button_tag('Löschen', type: :button, title: 'Löschen', class: 'planning-delete btn text-danger') do

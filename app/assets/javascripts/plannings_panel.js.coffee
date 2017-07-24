@@ -123,10 +123,12 @@ app.plannings.panel = new class
   initRepetition: () ->
     @panel('#repetition').prop('checked', false)
     @panel('.planning-repetition-group').hide()
+    @panel('#repeat_until').prop('disabled', true)
     @initDatepickerValue()
 
   repetitionChange: (event) =>
     enabled = $(event.target).prop('checked')
+    @panel('#repeat_until').prop('disabled', !enabled)
     @panel('.planning-repetition-group')[if enabled then 'show' else 'hide']()
     @initDatepickerValue()
 
