@@ -2,6 +2,7 @@ app = window.App ||= {}
 app.plannings ||= {}
 
 app.plannings.panel = new class
+  default_repeat_offset = 7 # days
   panel = '.planning-panel'
   container = '.planning-calendar'
   positioning = false
@@ -111,15 +112,23 @@ app.plannings.panel = new class
     current = @panel('#definitive').val()
     @setDefinitive(if source.toString() == current then null else source)
 
+  initDatepickerValue: () ->
+    [{ date }] = app.plannings.selectable.getSelectedDays()
+    date = new Date(date)
+    date.setDate(date.getDate() + default_repeat_offset)
+    @panel('#repeat_until')
+      .datepicker('option', 'defaultDate', date)
+      .val(app.datepicker.formatWeek(date))
+
   initRepetition: () ->
     @panel('#repetition').prop('checked', false)
     @panel('.planning-repetition-group').hide()
-    @panel('#repeat_until').val('')
+    @initDatepickerValue()
 
   repetitionChange: (event) =>
     enabled = $(event.target).prop('checked')
     @panel('.planning-repetition-group')[if enabled then 'show' else 'hide']()
-    @panel('#repeat_until').val('')
+    @initDatepickerValue()
 
   position: (e) =>
     hasSelection = () -> $(container).find('.ui-selected').length

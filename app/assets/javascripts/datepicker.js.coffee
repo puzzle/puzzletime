@@ -6,17 +6,17 @@ app.datepicker = new class
   i18n = ->
     $.datepicker.regional[$('html').attr('lang')]
 
-  formatWeek = (field, dateString) ->
-    if field.data('format') == 'week'
+  formatWeek = (date) ->
+    $.datepicker.formatDate('yy', date) + ' ' + $.datepicker.iso8601Week(date)
+
+  onSelect = (dateString, instance) =>
+    if instance.input.data('format') == 'week'
       date = $.datepicker.parseDate(i18n().dateFormat, dateString)
-      val = $.datepicker.formatDate('yy', date) + ' ' + $.datepicker.iso8601Week(date)
-      field.val(val)
+      instance.input
+        .val(formatWeek(date))
+        .trigger('change')
 
-  onSelect = (dateString, instance) ->
-    formatWeek(instance.input, dateString)
-    instance.input.trigger('change')
-
-  options = $.extend({ onSelect: onSelect, showWeek: true }, i18n())
+  options = $.extend({ onSelect, showWeek: true }, i18n())
 
   init: ->
     $('input.date').each((_i, elem) ->
@@ -24,6 +24,8 @@ app.datepicker = new class
         changeYear: $(elem).data('changeyear')
       })))
     @bindListeners()
+
+  formatWeek: formatWeek
 
   destroy: ->
     $('input.date').datepicker('destroy')
