@@ -93,8 +93,8 @@
               - @target_scopes.each do |scope|
                 %td
                   = order_target_icon(order.target(scope.id))
-              %td= format_major_uncertainty(order.major_chance, OrderChance.sti_name)
-              %td= format_major_uncertainty(order.major_risk, OrderRisk.sti_name)
+              %td= format_major_chance(order.order)
+              %td= format_major_risk(order.order)
 
     %p= paginate @report
 

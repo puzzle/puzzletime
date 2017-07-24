@@ -15,6 +15,9 @@
 
 class OrderUncertainty < ActiveRecord::Base
 
+  MEDIUM_THRESHOLD = 3
+  HIGH_THRESHOLD = 8
+
   belongs_to :order
 
   enum probability: {
@@ -39,12 +42,13 @@ class OrderUncertainty < ActiveRecord::Base
   scope :list, -> { order('probability * impact DESC') }
 
   class << self
+
     def risk(value)
       return if value.blank?
 
-      if value < 3
+      if value < MEDIUM_THRESHOLD
         :low
-      elsif value < 8
+      elsif value < HIGH_THRESHOLD
         :medium
       else
         :high

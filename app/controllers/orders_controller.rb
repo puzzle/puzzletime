@@ -83,7 +83,7 @@ class OrdersController < CrudController
 
   def list_entries
     entries = super.includes(:kind, :department, :status, :responsible,
-                             :team_members, :targets, :contacts)
+                             :team_members, :targets, :contacts, :order_uncertainties)
     entries = sort_entries_by_target_scope(entries)
     entries = entries.order('work_items.path_names')
 

@@ -56,7 +56,7 @@ class Order::Report
   end
 
   def load_orders
-    entries = Order.list.includes(:status, :targets)
+    entries = Order.list.includes(:status, :targets, :order_uncertainties)
     entries = filter_by_closed(entries)
     entries = filter_by_parent(entries)
     entries = filter_by_target(entries)

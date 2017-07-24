@@ -63,10 +63,19 @@ module OrderHelper
     content_tag(:span, f(value), class: order_report_average_rate_class(value))
   end
 
-  def format_major_uncertainty(risk_value, type)
-    content_tag(:span, safe_join(risk_icons(risk_value, type)),
+  def format_major_chance(order)
+    return if order.nil?
+    content_tag(:span, safe_join(risk_icons(order.major_chance, OrderChance.sti_name)),
                 style: 'font-size: 20px;',
-                title: t("activerecord.attributes.order_uncertainty/risks.#{risk_value}"),
+                title: uncertainties_tooltip(order, OrderChance.sti_name),
+                data: { toggle: :tooltip })
+  end
+
+  def format_major_risk(order)
+    return if order.nil?
+    content_tag(:span, safe_join(risk_icons(order.major_risk, OrderRisk.sti_name)),
+                style: 'font-size: 20px;',
+                title: uncertainties_tooltip(order, OrderRisk.sti_name),
                 data: { toggle: :tooltip })
   end
 
@@ -138,5 +147,24 @@ module OrderHelper
     else
       'red'
     end
+  end
+
+  def uncertainties_tooltip(order, uncertainty_type)
+    uncertainties = uncertainties_grouped_by_risk(order, uncertainty_type)
+    [:high, :medium, :low]
+      .select { |risk| uncertainties.keys.include?(risk) }
+      .reduce('') do |result, risk|
+        title = t("activerecord.attributes.order_uncertainty/risks.#{risk}")
+        names = uncertainties[risk].map { |u| "<li>#{h(u.name)}</li>" }.join
+        result + "<h5>#{title}:</h5><ul class=\"list-unstyled\">#{names}</ul>"
+      end
+  end
+
+  def uncertainties_grouped_by_risk(order, uncertainty_type)
+    order.order_uncertainties
+         .to_a
+         .select { |u| u.type == uncertainty_type }
+         .sort_by(&:risk_value)
+         .group_by(&:risk)
   end
 end
