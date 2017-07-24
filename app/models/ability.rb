@@ -80,7 +80,7 @@ class Ability
     end
 
     can [:read], Worktime
-    can [:create, :update], Absencetime
+    can [:create], Absencetime
     can [:create, :update], Ordertime do |t|
       !t.work_item_closed? && !t.invoice_sent_or_paid?
     end
