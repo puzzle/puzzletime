@@ -33,7 +33,11 @@ class BillingAddress < ActiveRecord::Base
 
   after_initialize :set_default_country
 
-  scope :list, -> { includes(:contact).order(:country, :zip_code, :street) }
+  scope :list, (lambda do
+    includes(:contact)
+      .references(:contact)
+      .order(:country, :zip_code, :street, 'contacts.lastname', 'contacts.firstname', :id)
+  end)
 
   def to_s
     ''
