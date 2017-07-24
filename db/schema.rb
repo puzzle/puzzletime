@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170717095522) do
+ActiveRecord::Schema.define(version: 20170724095653) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,6 +41,13 @@ ActiveRecord::Schema.define(version: 20170717095522) do
     t.index ["work_item_id"], name: "index_accounting_posts_on_work_item_id"
   end
 
+  create_table "additional_crm_orders", force: :cascade do |t|
+    t.bigint "order_id", null: false
+    t.string "crm_key", null: false
+    t.string "name"
+    t.index ["order_id"], name: "index_additional_crm_orders_on_order_id"
+  end
+
   create_table "billing_addresses", id: :serial, force: :cascade do |t|
     t.integer "client_id", null: false
     t.integer "contact_id"
@@ -50,7 +57,6 @@ ActiveRecord::Schema.define(version: 20170717095522) do
     t.string "town"
     t.string "country", limit: 2
     t.string "invoicing_key"
-    t.string "client_name"
     t.index ["client_id"], name: "index_billing_addresses_on_client_id"
     t.index ["contact_id"], name: "index_billing_addresses_on_contact_id"
   end
@@ -129,7 +135,7 @@ ActiveRecord::Schema.define(version: 20170717095522) do
     t.string "passwd", limit: 255
     t.string "email", limit: 255, null: false
     t.boolean "management", default: false
-    t.float "initial_vacation_days", default: -> { "(0)::double precision" }
+    t.float "initial_vacation_days"
     t.string "ldapname", limit: 255
     t.string "eval_periods", limit: 3, array: true
     t.integer "department_id"
@@ -180,8 +186,8 @@ ActiveRecord::Schema.define(version: 20170717095522) do
   create_table "employment_roles_employments", id: :serial, force: :cascade do |t|
     t.integer "employment_id", null: false
     t.integer "employment_role_id", null: false
-    t.integer "employment_role_level_id"
     t.decimal "percent", precision: 5, scale: 2, null: false
+    t.integer "employment_role_level_id"
     t.index ["employment_id", "employment_role_id"], name: "index_unique_employment_employment_role", unique: true
   end
 
@@ -419,6 +425,8 @@ ActiveRecord::Schema.define(version: 20170717095522) do
     t.index ["work_item_id", "employee_id", "work_date"], name: "worktimes_work_items"
   end
 
+  add_foreign_key "employment_roles", "employment_role_categories"
+  add_foreign_key "employment_roles_employments", "employment_role_levels"
   add_foreign_key "employments", "employees", name: "fk_employments_employees", on_delete: :cascade
   add_foreign_key "order_uncertainties", "orders"
   add_foreign_key "worktimes", "absences", name: "fk_times_absences", on_delete: :cascade

@@ -1,6 +1,6 @@
 = crud_table :name, :shortname, :sector_id do |t|
   - if Crm.instance
-    - t.sortable_attr(:crm_key, Crm.instance.crm_key_label)
+    - t.sortable_attr(:crm_key, Crm.instance.crm_key_name)
 
   - if can?(:read, Contact)
     - t.action_col do |e|

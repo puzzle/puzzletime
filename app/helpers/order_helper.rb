@@ -52,7 +52,7 @@ module OrderHelper
   end
 
   def format_order_crm_key(order)
-    link_to(order.crm_key, Crm.instance.order_url(order), target: :blank) if order.crm_key?
+    crm_order_link(order)
   end
 
   def format_order_billability(value)

@@ -9,7 +9,7 @@
     = labeled_attr entry.work_item, :shortname
     = labeled_attr entry.work_item, :description
     - if Crm.instance
-      = labeled(Crm.instance.crm_key_label, format_attr(entry, :crm_key))
+      = labeled(Crm.instance.crm_key_name, crm_order_link(entry, entry.crm_key))
 
   = render_attrs entry, :order_contacts
 

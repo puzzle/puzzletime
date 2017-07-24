@@ -1,0 +1,13 @@
+= f.labeled(:additional_crm_orders, caption: "Weitere #{Crm.instance.crm_key_name_plural}") do
+  -# No .list to keep changed items after a failed update
+  = f.nested_fields_for(:additional_crm_orders, entry.additional_crm_orders, wrapper_tag: :div) do |fields|
+    .row
+      .col-md-5
+        = fields.input_field :crm_key, placeholder: Crm.instance.crm_key_name, required: false
+      .col-md-6.help-block
+        = crm_order_link(fields.object, fields.object.to_s)
+      .col-md-1.form-action
+        = fields.remove_nested_fields_link(picon('delete', title: 'Auftrag entfernen'))
+  .row
+    .col-md-1.form-action
+      = f.add_nested_fields_link(:additional_crm_orders, picon(:add, title: 'Auftrag hinzufügen'))

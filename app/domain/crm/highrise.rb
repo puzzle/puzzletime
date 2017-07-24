@@ -1,14 +1,20 @@
 module Crm
   class Highrise < Base
-    include ActionView::Helpers::AssetUrlHelper
-
-    def crm_key_label
-      src = ActionController::Base.helpers.image_path('highrise.png')
-      "<img src=\"#{src}\" width=\"19\" height=\"16\" alt=\"\" /> #{crm_key_name}".html_safe
-    end
 
     def crm_key_name
       'Highrise ID'
+    end
+
+    def crm_key_name_plural
+      'Highrise IDs'
+    end
+
+    def name
+      'Highrise'
+    end
+
+    def icon
+      'highrise.png'
     end
 
     def find_order(key)
@@ -82,10 +88,11 @@ module Crm
     end
 
     def sync_orders
-      sync_crm_entities(Order.includes(:work_item)) do |order|
+      sync_crm_entities(Order.includes(:work_item, :additional_crm_orders)) do |order|
         deal = ::Highrise::Deal.find(order.crm_key)
         item = order.work_item
         item.update!(name: deal.name) unless item.name == deal.name
+        sync_additional_orders(order.additional_crm_orders)
       end
     end
 
@@ -94,6 +101,17 @@ module Crm
       sync_crm_entities(Contact) do |contact|
         person = ::Highrise::Person.find(contact.crm_key)
         contact.update!(contact_attributes(person))
+      end
+    end
+
+    def sync_additional_orders(additional_crm_orders)
+      additional_crm_orders.each do |additional|
+        begin
+          deal = ::Highrise::Deal.find(additional.crm_key)
+          additional.update!(name: deal.name) unless additional.name == deal.name
+        rescue ActiveResource::ResourceNotFound
+          additional.destroy!
+        end
       end
     end
 

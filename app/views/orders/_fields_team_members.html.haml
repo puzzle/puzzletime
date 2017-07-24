@@ -1,4 +1,5 @@
 = f.labeled(:order_team_members) do
+  -# No .list to keep changed items after a failed update
   = f.nested_fields_for :order_team_members, entry.order_team_members, wrapper_tag: :div do |fields|
     .row
       .col-md-5

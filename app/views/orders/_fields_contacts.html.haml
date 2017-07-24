@@ -1,4 +1,5 @@
 = f.labeled(:order_contacts) do
+  -# No .list to keep changed items after a failed update
   = f.nested_fields_for(:order_contacts, entry.order_contacts, wrapper_tag: :div) do |fields|
     .row
       .col-md-5
@@ -11,10 +12,10 @@
                                    placeholder: 'Ansprechsperson')
       %div{ class: "col-md-#{ Crm.instance ? '4' : '6' }" }
         = fields.input_field(:comment, placeholder: 'Funktion')
+      - if Crm.instance
+        .col-md-2.help-block
+          = crm_contact_link(fields.object.contact)
       .col-md-1.form-action
-        - if Crm.instance && fields.object.contact && fields.object.contact.crm_key
-          %a{ href: Crm.instance.contact_url(fields.object.contact) }
-            Highrise Kontakt
         = fields.remove_nested_fields_link(picon('delete', title: 'Ansprechsperson entfernen'), class: 'remove-order-contact')
   .row
     .col-md-1.form-action

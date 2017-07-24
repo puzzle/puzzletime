@@ -7,8 +7,10 @@
   = f.labeled_input_field :e_bill_account_key
 
   - if Crm.instance
-    - url = Crm.instance.client_url(entry)
-    - link = url ? link_to('Highrise Firma', url, target: :blank) : nil
-    = f.labeled_input_field :crm_key, caption: Crm.instance.crm_key_label, span: 2, help: link
+    = f.labeled_input_field :crm_key,
+                            caption: Crm.instance.crm_key_name,
+                            span: 2,
+                            help: crm_client_link(entry)
     - if Crm.instance.restrict_local?
-      = f.labeled_input_field :allow_local, detail: "Nur für Kunden mit diesem Flag können Aufträge ohne #{Crm.instance.crm_key_name} erstellt werden."
+      = f.labeled_input_field :allow_local,
+                              detail: "Nur für Kunden mit diesem Flag können Aufträge ohne #{Crm.instance.crm_key_name} erstellt werden."

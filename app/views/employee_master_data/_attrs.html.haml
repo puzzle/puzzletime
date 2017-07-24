@@ -43,9 +43,8 @@
         - if @employee.social_insurance.present?
           = labeled_attr(@employee, :social_insurance)
         - if Crm.instance && @employee.crm_key.present?
-          = labeled(Crm.instance.crm_key_label) do
-            %a{ href: Crm.instance.contact_url(@employee) }
-              Kontakt
+          = labeled(Crm.instance.crm_key_name) do
+            = crm_contact_link(@employee, @employee.crm_key)
 
         - if @employee.emergency_contact_name.present? || @employee.emergency_contact_phone.present?
           %br

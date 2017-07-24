@@ -1,3 +1,5 @@
+= render('fields_additional_crm_orders', f: f) if Crm.instance
+
 = render 'fields_contacts', f: f
 
 = f.labeled_input_field :department_id, class: 'searchable'

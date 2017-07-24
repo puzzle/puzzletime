@@ -1,5 +1,4 @@
-- url = Crm.instance.order_url(entry)
-- link = url ? link_to('Highrise Deal', url, target: '_blank',
-                                             rel: 'noopener noreferrer') : nil
-= f.labeled(:crm_key, caption: Crm.instance.crm_key_label, span: 2, help: link) do
-  = f.input_field :crm_key
+= f.labeled_input_field :crm_key,
+                        caption: Crm.instance.crm_key_name,
+                        span: 2,
+                        help: crm_order_link(entry, entry.to_s)

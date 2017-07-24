@@ -1,13 +1,23 @@
 module Crm
   class Base
-    # Fully styled html label for the crm key.
-    def crm_key_label
-      crm_key_name
-    end
 
     # String with the name of the crm key.
     def crm_key_name
       'CRM Key'
+    end
+
+    # Plural String with the name of the crm key.
+    def crm_key_name_plural
+      'CRM Keys'
+    end
+
+    # Name of the CRM
+    def name
+      'CRM'
+    end
+
+    # CRM icon to display for links
+    def icon
     end
 
     # CRM Url for the given client
