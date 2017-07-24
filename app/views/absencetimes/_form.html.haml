@@ -18,7 +18,7 @@
     .form-group
       = f.label(:hours, class: 'col-md-2 control-label')
       .col-md-1
-        = f.input_field(:hours, value: format_hour(@worktime.hours))
+        = f.input_field(:hours, value: @worktime.hours)
       = f.label(:from_start_time, class: 'col-md-1 control-label')
       .col-md-1
         = f.text_field(:from_start_time, value: format_time(@worktime.from_start_time))
