@@ -41,119 +41,120 @@ class ExtendedCapacityReport < BaseCapacityReport
 
   def add_employees(csv)
     Employee.employed_ones(@period).each do |employee|
-      # initialize statistic data
-      work_item_total_billable_hours = 0      # Projekte Total verrechenbar (h)
-      work_item_total_non_billable_hours = 0  # Projekte Total nicht verrechenbar (h)
-      internal_work_item_total_hours = 0      # Interne Projekte Total (h)
-
-      # split billable and non-billable work_items
-      billable_work_items = []
-      non_billable_work_items = []
-
+      work_items = { billable: [], non_billable: [], internal: [] }
       employee.alltime_leaf_work_items.each do |work_item|
-        if work_item.accounting_post.billable
-          billable_work_items.push(work_item)
+        if internal?(work_item)
+          work_items[:internal] << work_item
+        elsif work_item.accounting_post.billable
+          work_items[:billable] << work_item
         else
-          non_billable_work_items.push(work_item)
+          work_items[:non_billable] << work_item
         end
       end
 
-      # process billable (customer) work_items
-      csv_billable_lines = []
-      billable_work_items.each do |work_item|
-        times = find_billable_time(employee, work_item.id, @period)
-        parent = child = work_item
-        parent = child.parent if child.parent
+      customer_rows = employee_customer_rows(employee, work_items[:billable] + work_items[:non_billable])
+      internal_rows = employee_internal_rows(employee, work_items[:internal])
+      all_rows = customer_rows + internal_rows
 
-        work_item_billable_hours = extract_billable_hours(times, true)
-        work_item_total_billable_hours += work_item_billable_hours
-        work_item_non_billable_hours = extract_billable_hours(times, false)
-        work_item_total_non_billable_hours += work_item_non_billable_hours
-
-        next unless (work_item_billable_hours + work_item_non_billable_hours).abs > 0.001
-        csv_billable_lines << [employee.shortname, work_item_department(work_item), '', '', '', '', '', '',
-                               work_item_code(parent, child),
-                               work_item_label(parent),
-                               subwork_item_label(parent, child),
-                               '',
-                               work_item_billable_hours + work_item_non_billable_hours,
-                               offered_rate(work_item),
-                               '',
-                               work_item_billable_hours + work_item_non_billable_hours,
-                               '',
-                               work_item_billable_hours,
-                               '',
-                               work_item_non_billable_hours,
-                               '']
-      end
-
-      # process non billable (internal) work_items
-      csv_non_billable_lines = []
-      non_billable_work_items.each do |work_item|
-        times = find_billable_time(employee, work_item.id, @period)
-        parent = child = work_item
-        parent = child.parent if child.parent
-
-        internal_work_item_hours = extract_billable_hours(times, false)
-
-        # HACK: because there may be entries with wrong $-flag
-        internal_work_item_hours += extract_billable_hours(times, true)
-
-        internal_work_item_total_hours += internal_work_item_hours
-
-        next unless internal_work_item_hours.abs > 0.001
-        csv_non_billable_lines << [employee.shortname, work_item_department(work_item), '', '', '', '', '', '',
-                                   work_item_code(parent, child),
-                                   work_item_label(parent),
-                                   subwork_item_label(parent, child),
-                                   '',
-                                   internal_work_item_hours,
-                                   offered_rate(work_item),
-                                   '', '', '', '', '', '', '',
-                                   internal_work_item_hours]
-      end
-
-      work_item_total_hours = work_item_total_billable_hours +
-        work_item_total_non_billable_hours +
-        internal_work_item_total_hours
-
-      average_percents = employee.statistics.employments_during(@period).sum(&:percent)
-      remaining_vacations = employee.statistics.remaining_vacations(Date.new(@period.end_date.year, 12, 31))
-
-      # append employee overview
-      csv << [employee.shortname,
-              '',
-              average_percents,
-              employee.statistics.musttime(@period),
-              employee.statistics.overtime(@period),
-              employee.statistics.current_overtime(@period.end_date),
-              remaining_vacations,
-              employee_absences(employee, @period),
-              '',
-              '',
-              '',
-              work_item_total_hours,
-              '',
-              '',
-              work_item_total_billable_hours + work_item_total_non_billable_hours,
-              '',
-              work_item_total_billable_hours,
-              '',
-              work_item_total_non_billable_hours,
-              '',
-              internal_work_item_total_hours,
-              '']
-
-      # append billable work_item lines
-      csv_billable_lines.each do |line|
-        csv << line
-      end
-
-      # append non-billable work_item lines
-      csv_non_billable_lines.each do |line|
-        csv << line
-      end
+      csv << employee_summary_row(employee, all_rows)
+      all_rows.each { |row| csv << row }
     end
+  end
+
+  def employee_summary_row(employee, rows)
+    [employee.shortname,
+     '',
+     employee_average_percents(employee),
+     employee.statistics.musttime(@period),
+     employee.statistics.overtime(@period),
+     employee.statistics.current_overtime(@period.end_date),
+     employee_remaining_vacations(employee),
+     employee_absences(employee, @period),
+     '',
+     '',
+     '',
+     rows.map { |r| r[12] }.sum, # Projekte Total (h)
+     '',
+     '',
+     rows.map { |r| r[15] }.sum, # Kunden-Projekte Total (h)
+     '',
+     rows.map { |r| r[17] }.sum, # Kunden-Projekte Total verrechenbar (h)
+     '',
+     rows.map { |r| r[19] }.sum, # Kunden-Projekte Total nicht verrechenbar (h)
+     '',
+     rows.map { |r| r[21] }.sum, # Interne Projekte Total (h)
+     '']
+  end
+
+  def employee_customer_rows(employee, work_items)
+    rows = []
+    work_items.each do |work_item|
+      times = find_billable_time(employee, work_item.id, @period)
+
+      billable_hours = extract_billable_hours(times, true)
+      non_billable_hours = extract_billable_hours(times, false)
+
+      next unless (billable_hours + non_billable_hours).abs > 0.001
+      rows << build_employee_row(employee, work_item,
+                                 billable_hours: billable_hours,
+                                 non_billable_hours: non_billable_hours)
+    end
+    rows
+  end
+
+  def employee_internal_rows(employee, work_items)
+    rows = []
+    work_items.each do |work_item|
+      times = find_billable_time(employee, work_item.id, @period)
+
+      internal_hours = extract_billable_hours(times, false) +
+                       extract_billable_hours(times, true)
+
+      next unless internal_hours.abs > 0.001
+      rows << build_employee_row(employee, work_item,
+                                 internal_hours: internal_hours)
+    end
+    rows
+  end
+
+  def build_employee_row(employee, work_item, data = {})
+    parent = child = work_item
+    parent = child.parent if child.parent
+
+    [employee.shortname,
+     work_item_department(work_item),
+     '',
+     '',
+     '',
+     '',
+     '',
+     '',
+     work_item_code(parent, child),
+     work_item_label(parent),
+     subwork_item_label(parent, child),
+     '',
+     data.fetch(:billable_hours, 0) + data.fetch(:non_billable_hours, 0) + data.fetch(:internal_hours, 0),
+     offered_rate(work_item),
+     '',
+     data.fetch(:billable_hours, 0) + data.fetch(:non_billable_hours, 0),
+     '',
+     data.fetch(:billable_hours, 0),
+     '',
+     data.fetch(:non_billable_hours, 0),
+     '',
+     data.fetch(:internal_hours, 0)]
+  end
+
+  def internal?(work_item)
+    Array.wrap(work_item.path_ids).include?(Company.work_item_id)
+  end
+
+  def employee_average_percents(employee)
+    employee.statistics.employments_during(@period).sum(&:percent)
+  end
+
+  def employee_remaining_vacations(employee)
+    employee.statistics.remaining_vacations(Date.new(@period.end_date.year, 12, 31))
   end
 
   def work_item_code(_work_item, subwork_item)

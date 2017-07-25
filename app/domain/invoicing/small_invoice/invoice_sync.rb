@@ -84,7 +84,7 @@ module Invoicing
         invoice.update_columns(status: STATUS[item['status']],
                                due_date: item['due'],
                                billing_date: item['date'],
-                               add_vat: item['vat_included'] == 0,
+                               add_vat: item['vat_included'].zero?,
                                total_amount: total_amount(item),
                                total_hours: total_hours(item))
       end
@@ -99,7 +99,7 @@ module Invoicing
       end
 
       def total_amount(item)
-        if item['vat_included'] == 0
+        if item['vat_included'].zero?
           item['totalamount'] / (1 + Settings.defaults.vat / 100.0)
         else
           item['totalamount']
