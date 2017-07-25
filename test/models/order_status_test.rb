@@ -7,6 +7,7 @@
 #  style    :string
 #  closed   :boolean          default(FALSE), not null
 #  position :integer          not null
+#  default  :boolean          default(FALSE), not null
 #
 
 require 'test_helper'
@@ -24,5 +25,9 @@ class OrderStatusTest < ActiveSupport::TestCase
     status = order_statuses(:abgeschlossen)
     status.update!(closed: false)
     assert !work_items(:allgemein).closed
+  end
+
+  test 'defaults scope lists only default statuses' do
+    assert_equal OrderStatus.defaults, [ order_statuses(:bearbeitung) ]
   end
 end

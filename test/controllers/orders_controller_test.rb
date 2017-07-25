@@ -46,7 +46,7 @@ class OrdersControllerTest < ActionController::TestCase
     login_as(:mark)
     get :index
     assert_equal orders(:hitobito_demo, :puzzletime, :webauftritt), assigns(:orders)
-    assert_equal({ 'status_id' => order_statuses(:bearbeitung).id },
+    assert_equal({ 'status_id' => [order_statuses(:bearbeitung).id] },
                  session[:list_params]['/orders'])
   end
 
@@ -54,7 +54,7 @@ class OrdersControllerTest < ActionController::TestCase
     login_as(:pascal)
     get :index
     assert_equal [orders(:hitobito_demo)], assigns(:orders)
-    assert_equal({ 'status_id' => order_statuses(:bearbeitung).id,
+    assert_equal({ 'status_id' => [order_statuses(:bearbeitung).id],
                    'department_id' => departments(:devtwo).id },
                  session[:list_params]['/orders'])
   end
@@ -63,7 +63,7 @@ class OrdersControllerTest < ActionController::TestCase
     login_as(:lucien)
     get :index
     assert_equal orders(:hitobito_demo, :puzzletime), assigns(:orders)
-    assert_equal({ 'status_id' => order_statuses(:bearbeitung).id,
+    assert_equal({ 'status_id' => [order_statuses(:bearbeitung).id],
                    'responsible_id' => employees(:lucien).id },
                  session[:list_params]['/orders'])
   end
@@ -87,6 +87,23 @@ class OrdersControllerTest < ActionController::TestCase
     assert_equal orders(:hitobito_demo, :puzzletime, :webauftritt), assigns(:orders)
     assert_equal({ 'status_id' => order_statuses(:bearbeitung).id.to_s },
                  session[:list_params]['/orders'])
+  end
+
+  test 'GET index filtered by multiple default statuses' do
+    offeriert = order_statuses(:offeriert)
+    offeriert.default = true
+    offeriert.save!
+
+    get :index
+    assert_equal(
+      {
+        'status_id' => [
+          order_statuses(:offeriert).id,
+          order_statuses(:bearbeitung).id
+        ]
+      },
+      session[:list_params]['/orders']
+    )
   end
 
   test 'GET index filtered by kind' do

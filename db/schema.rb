@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170724095653) do
+ActiveRecord::Schema.define(version: 20170725060354) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -262,6 +262,7 @@ ActiveRecord::Schema.define(version: 20170724095653) do
     t.string "style"
     t.boolean "closed", default: false, null: false
     t.integer "position", null: false
+    t.boolean "default", default: false, null: false
     t.index ["name"], name: "index_order_statuses_on_name", unique: true
     t.index ["position"], name: "index_order_statuses_on_position"
   end

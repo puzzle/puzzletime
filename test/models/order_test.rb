@@ -52,7 +52,7 @@ class OrderTest < ActiveSupport::TestCase
 
   test 'order is created with status' do
     order = Fabricate(:order)
-    assert_equal OrderStatus.list.first, order.status
+    assert_equal OrderStatus.defaults.first, order.status
   end
 
   test 'created order comes with order targets' do

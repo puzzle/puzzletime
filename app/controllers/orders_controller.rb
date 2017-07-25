@@ -109,7 +109,7 @@ class OrdersController < CrudController
   end
 
   def set_default_filter_params
-    params[:status_id] = OrderStatus.list.select(:id).first.try(:id)
+    params[:status_id] = OrderStatus.defaults.pluck(:id)
     if !current_user.management? && current_user.order_responsible?
       params[:responsible_id] = current_user.id
     elsif current_user.department_id?

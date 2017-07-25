@@ -117,7 +117,7 @@ class Order < ActiveRecord::Base
   end
 
   def set_default_status_id
-    self.status_id ||= OrderStatus.list.pluck(:id).first
+    self.status_id ||= OrderStatus.defaults.pluck(:id).first
   end
 
   def major_risk

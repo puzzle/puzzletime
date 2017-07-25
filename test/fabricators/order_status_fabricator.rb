@@ -7,6 +7,7 @@
 #  style    :string
 #  closed   :boolean          default(FALSE), not null
 #  position :integer          not null
+#  default  :boolean          default(FALSE), not null
 #
 
 Fabricator(:order_status) do

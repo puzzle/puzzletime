@@ -80,7 +80,7 @@ class Order::CopierTest < ActiveSupport::TestCase
     assert_equal [], copy.order_contacts
     assert_nil copy.contract
 
-    assert_equal OrderStatus.list.pluck(:id).first, copy.status_id
+    assert_equal OrderStatus.defaults.pluck(:id).first, copy.status_id
     assert_nil copy.crm_key
   end
 
@@ -177,7 +177,7 @@ class Order::CopierTest < ActiveSupport::TestCase
     copier.copy_associations(copy)
     copy.save!
 
-    assert_equal OrderStatus.list.pluck(:id).first, copy.status_id
+    assert_equal OrderStatus.defaults.pluck(:id).first, copy.status_id
     assert_equal false, copy.work_item.children.first.reload.closed
   end
 

@@ -8,6 +8,7 @@
 #  style    :string
 #  closed   :boolean          default(FALSE), not null
 #  position :integer          not null
+#  default  :boolean          default(FALSE), not null
 #
 
 class OrderStatus < ActiveRecord::Base
@@ -24,6 +25,7 @@ class OrderStatus < ActiveRecord::Base
   protect_if :orders, 'Der Eintrag kann nicht gelöscht werden, da ihm noch Aufträge zugeordnet sind'
 
   scope :list, -> { order(:position) }
+  scope :defaults, -> { list.where(default: true) }
 
 
   def to_s
