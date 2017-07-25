@@ -96,7 +96,7 @@ $(document).on('ajax:error', (event, xhr, status, error) ->
 
 
 ################################################################
-# only bind events for non-document elements in $ ->
+# only bind events for non-document elements on turbolinks:load
 $(document).on('turbolinks:load', ->
   # wire up selectize
   $('select.searchable:not([multiple])').selectize(selectOnTab: true)
