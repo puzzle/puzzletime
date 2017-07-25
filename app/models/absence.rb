@@ -28,8 +28,8 @@ class Absence < ActiveRecord::Base
 
   scope :list, -> { order(:name) }
 
-
   def to_s
     name
   end
+
 end

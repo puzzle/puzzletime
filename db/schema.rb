@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170725060354) do
+ActiveRecord::Schema.define(version: 20170725121120) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -18,7 +18,6 @@ ActiveRecord::Schema.define(version: 20170725060354) do
   create_table "absences", id: :serial, force: :cascade do |t|
     t.string "name", limit: 255, null: false
     t.boolean "payed", default: false
-    t.boolean "private", default: false
     t.boolean "vacation", default: false, null: false
     t.index ["name"], name: "index_absences_on_name", unique: true
   end

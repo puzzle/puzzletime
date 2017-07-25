@@ -21,7 +21,6 @@ class AbsencesControllerTest < ActionController::TestCase
   # Attribute hash used in several tests.
   def test_entry_attrs
     { name: 'Geburt',
-      payed: true,
-      private: false }
+      payed: true }
   end
 end
