@@ -80,7 +80,15 @@ module GraphHelper
 
   def worktime_link(worktime, &block)
     url = if worktime && !worktime.new_record?
-            url_for(controller: worktime.controller, action: :edit, id: worktime.id)
+            if can?(:edit, worktime)
+              url_for(controller: worktime.controller,
+                      action: :edit,
+                      id: worktime.id)
+            else
+              url_for(controller: 'ordertimes',
+                      action: :index,
+                      week_date: worktime.work_date)
+            end
           end
     content_tag(:a, class: 'has-tooltip', href: url, &block)
   end
