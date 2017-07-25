@@ -27,7 +27,7 @@ class VacationGraph
                       reorder('work_date, from_start_time, employee_id, absence_id').
                       includes(:absence).
                       references(:absence).
-                      where('NOT absences.private AND (report_type = ? OR report_type = ? OR report_type = ?)',
+                      where('report_type = ? OR report_type = ? OR report_type = ?',
                             StartStopType::INSTANCE.key,
                             HoursDayType::INSTANCE.key,
                             HoursWeekType::INSTANCE.key)
@@ -35,7 +35,7 @@ class VacationGraph
                               reorder('work_date, from_start_time, employee_id, absence_id').
                               includes(:absence).
                               references(:absence).
-                              where('NOT absences.private AND (report_type = ?)',
+                              where('report_type = ?',
                                     HoursMonthType::INSTANCE.key)
       @unpaid_absences = empl.statistics.employments_during(period).select { |e| e.percent == 0 }
       @unpaid_absences.collect! { |e| Period.new(e.start_date, e.end_date ? e.end_date : period.end_date) }
@@ -71,11 +71,11 @@ class VacationGraph
     tooltip += '<br />'.html_safe if !tooltip.empty? && !absences.empty?
     tooltip += add_unpaid_absences times
 
-    max_absence = get_max_absence times
-    return nil if max_absence.nil?
+    return nil if times.blank?
+    max_absence = get_max_absence(times)
 
-    hours = times[max_absence] / WorkingCondition.value_at(@current.start_date, :must_hours_per_day)
-    color = color_for(max_absence) if max_absence
+    hours = times.values.sum / WorkingCondition.value_at(@current.start_date, :must_hours_per_day)
+    color = color_for(max_absence)
     Timebox.new nil, color, hours, tooltip
   end
 
@@ -183,13 +183,18 @@ class VacationGraph
 
   def create_tooltip(absences)
     entries = absences.collect do |time|
-      "#{I18n.l(time.work_date)}: #{time.time_string} #{ERB::Util.h(time.absence.label)}"
+      "#{I18n.l(time.work_date)}: #{time.time_string} Abwesenheit"
     end
     entries.join('<br/>').html_safe
   end
 
   def color_for(absence)
-    @color_map[absence]
+    # @color_map[absence]
+    if absence == UNPAID_ABSENCE
+      '#cc9557'
+    else
+      '#cc2767'
+    end
   end
 
   def get_period_week(from)

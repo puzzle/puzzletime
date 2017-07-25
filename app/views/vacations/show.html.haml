@@ -43,7 +43,15 @@
 
 %br/
 %table.table-condensed{style: 'float: left; margin-right: 100px;'}
-  = render partial: 'weekly_graph/legend', collection: [Absence]
+  %tr
+    %th{colspan: 2}
+      %b= Absence.model_name.human(count: 2)
+  %tr
+    %td= timebox_div Timebox.new(nil, '#cc2767', 10, '')
+    %td Abwesenheit
+  %tr
+    %td= timebox_div Timebox.new(nil, '#cc9557', 10, '')
+    %td Unbezahlter Urlaub
 
 - if @user.management
   %table.table-condensed
