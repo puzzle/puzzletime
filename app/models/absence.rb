@@ -6,7 +6,6 @@
 #  id       :integer          not null, primary key
 #  name     :string(255)      not null
 #  payed    :boolean          default(FALSE)
-#  private  :boolean          default(FALSE)
 #  vacation :boolean          default(FALSE), not null
 #
 

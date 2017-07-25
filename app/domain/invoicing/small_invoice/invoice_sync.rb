@@ -11,7 +11,7 @@ module Invoicing
                   7 => 'draft', # draft
                   11 => 'partially_paid', # partially paid
                   12 => 'sent', # reminder
-                  99 => 'deleted' }.freeze # deleted.tap { |h| h.default = 'unknown' } # unknown status value (i.e. newly introduced status)
+                  99 => 'deleted' }.freeze # deleted
 
       attr_reader :invoice
       class_attribute :rate_limiter
@@ -84,8 +84,7 @@ module Invoicing
         invoice.update_columns(status: STATUS[item['status']],
                                due_date: item['due'],
                                billing_date: item['date'],
-                               add_vat: item['vat_included'].zero?,
-                               total_amount: total_amount(item),
+                               total_amount: total_amount_without_vat(item),
                                total_hours: total_hours(item))
       end
 
@@ -98,14 +97,6 @@ module Invoicing
         end
       end
 
-      def total_amount(item)
-        if item['vat_included'].zero?
-          item['totalamount'] / (1 + Settings.defaults.vat / 100.0)
-        else
-          item['totalamount']
-        end
-      end
-
       def total_hours(item)
         item['positions'].select do |p|
           p['type'] == Settings.small_invoice.constants.position_type_id &&
@@ -113,6 +104,34 @@ module Invoicing
         end.collect do |p|
           p['amount']
         end.sum
+      end
+
+      # item['totalamount'] always includes vat
+      # item['vat_included'] tells whether position totals already include vat or not.
+      def total_amount_without_vat(item)
+        vat_included = !item['vat_included'].zero?
+        item['positions'].select { |p| p['cost'] }.map do |p|
+          total = p['cost'] * p['amount']
+          total -= position_discount(p, total)
+          total -= position_included_vat(p, total) if vat_included
+          total
+        end.sum
+      end
+
+      def position_discount(p, total)
+        return 0 unless p['discount']
+
+        if p['discount_type'].zero? # percent
+          total * p['discount'] / 100.0
+        else # amount
+          p['discount']
+        end
+      end
+
+      def position_included_vat(p, total)
+        return 0 unless p['vat']
+
+        total * p['vat'] / (100.0 + p['vat'])
       end
 
       def api

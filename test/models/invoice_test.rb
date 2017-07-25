@@ -13,7 +13,6 @@
 #  period_from        :date             not null
 #  period_to          :date             not null
 #  status             :string           not null
-#  add_vat            :boolean          default(TRUE), not null
 #  billing_address_id :integer          not null
 #  invoicing_key      :string
 #  created_at         :datetime
@@ -119,28 +118,14 @@ class InvoiceTest < ActiveSupport::TestCase
     end
   end
 
-  test 'calculated_total_amount when grouping = manual and add_vat is false' do
+  test 'calculated_total_amount when grouping = manual' do
     invoice.manual!
-    invoice.add_vat = false
-    assert_equal 1.0, invoice.calculated_total_amount.to_f
-  end
-
-  test 'calculated_total_amount when grouping = manual and add_vat is true' do
-    invoice.manual!
-    invoice.add_vat = true
     assert_equal 1.0, invoice.calculated_total_amount.to_f
   end
 
   %w(employees accounting_posts).each do |grouping|
-    test "calculated_total_amount when grouping = #{grouping} and add_vat is false" do
+    test "calculated_total_amount when grouping = #{grouping}" do
       invoice.grouping = grouping
-      invoice.add_vat = false
-      assert_equal 3920, invoice.calculated_total_amount.to_f
-    end
-
-    test "calculated_total_amount when grouping = #{grouping} and add_vat is true" do
-      invoice.grouping = grouping
-      invoice.add_vat = true
       assert_equal 3920, invoice.calculated_total_amount.to_f
     end
   end

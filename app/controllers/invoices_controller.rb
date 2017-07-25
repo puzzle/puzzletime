@@ -4,7 +4,7 @@ class InvoicesController < CrudController
 
   self.nesting = [Order]
 
-  self.permitted_attrs = [:billing_date, :due_date, :period_from, :period_to, :add_vat,
+  self.permitted_attrs = [:billing_date, :due_date, :period_from, :period_to,
                           :billing_address_id, :grouping, employee_ids: [], work_item_ids: []]
 
   self.sort_mappings = { period: :period_from, manual?: :grouping }

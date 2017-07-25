@@ -48,6 +48,7 @@ small_invoice:
     language: de
     paypal: false
     paypal_url:
+    vat_included: false
     client_type: 1 # company
     position_type_id: 1 # service
     unit_id: 1 # hours

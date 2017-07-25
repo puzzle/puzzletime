@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170725121120) do
+ActiveRecord::Schema.define(version: 20170725144313) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -216,7 +216,6 @@ ActiveRecord::Schema.define(version: 20170725121120) do
     t.date "period_from", null: false
     t.date "period_to", null: false
     t.string "status", null: false
-    t.boolean "add_vat", default: true, null: false
     t.integer "billing_address_id", null: false
     t.string "invoicing_key"
     t.datetime "created_at"

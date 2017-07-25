@@ -12,7 +12,6 @@
 #  period_from        :date             not null
 #  period_to          :date             not null
 #  status             :string           not null
-#  add_vat            :boolean          default(TRUE), not null
 #  billing_address_id :integer          not null
 #  invoicing_key      :string
 #  created_at         :datetime

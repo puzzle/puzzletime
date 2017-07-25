@@ -222,7 +222,6 @@ de-CH:
         holiday_date: Datum
         musthours_day: Muss Stunden
       invoice:
-        add_vat: Mehrwertssteuer
         billing_address: Rechnungsadresse
         billing_client_id: Rechnungskunde
         billing_date: Rechnungsdatum
