@@ -73,12 +73,12 @@ class PlanningItemTest < ActiveSupport::TestCase
                              absence: absences(:vacation))
 
     i = Plannings::Item.new
-    i.absencetime = a1
+    i.absencetimes << a1
     i.employment = Employment.new(percent: 100)
 
     expected = {
       class: '-absence',
-      title: 'Ferien: 40.0'
+      title: 'Abwesenheit: 40.0 h'
     }
 
     assert i.day_attrs == expected
@@ -129,12 +129,12 @@ class PlanningItemTest < ActiveSupport::TestCase
 
     i = Plannings::Item.new
     i.planning = p1
-    i.absencetime = a1
+    i.absencetimes << a1
     i.employment = Employment.new(percent: 100)
 
     expected = {
       class: '-provisional -percent-70 -absence',
-      title: 'Ferien: 40.0',
+      title: 'Abwesenheit: 40.0 h',
       :"data-id" => p1.id
     }
 

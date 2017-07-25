@@ -3,12 +3,13 @@
 module Plannings
   class Item
     attr_accessor :planning,
-                  :absencetime,
+                  :absencetimes,
                   :holiday,
                   :general_must_hours,
                   :employment
 
     def initialize
+      @absencetimes = []
     end
 
     def day_attrs
@@ -28,8 +29,8 @@ module Plannings
     end
 
     def title
-      if absencetime
-        "#{absencetime.absence.name}: #{absencetime.hours}"
+      if absencetimes.present?
+        absencetimes.map { |a| "Abwesenheit: #{a.hours} h" }.join("\n")
       elsif holiday
         if holiday[1] > 0
           "Feiertag: #{holiday[1]} Muss Stunden"
@@ -52,7 +53,7 @@ module Plannings
         class_names << "-percent-#{planning.percent.round(-1)}"
       end
 
-      if absencetime
+      if absencetimes.present?
         class_names << '-absence'
       end
 

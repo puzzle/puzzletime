@@ -121,7 +121,7 @@ module Plannings
           index = item_index(time.work_date)
           next unless index
 
-          items[index].absencetime = time
+          items[index].absencetimes << time
         end
       end
     end
@@ -181,7 +181,7 @@ module Plannings
     end
 
     def load_absencetimes
-      Absencetime.in_period(period).includes(:absence).where(employee_id: included_employee_ids)
+      Absencetime.in_period(period).where(employee_id: included_employee_ids)
     end
 
     def load_holidays

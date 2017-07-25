@@ -43,7 +43,7 @@ module Plannings
 
       items = board.items(employees(:lucien).id, work_items(:hitobito_demo_app).id)
       items.one? { |i| !i.nil? }
-      assert_equal a2, items[6].absencetime
+      assert_equal [a2], items[6].absencetimes
     end
 
     test 'absencetimes show with default rows when no plannings are given' do
@@ -55,7 +55,12 @@ module Plannings
       a2 = Absencetime.create!(absence_id: absences(:vacation).id,
                                employee_id: employees(:lucien).id,
                                work_date: date + 1.day,
-                               hours: 8,
+                               hours: 6,
+                               report_type: 'absolute_day')
+      a3 = Absencetime.create!(absence_id: absences(:doctor).id,
+                               employee_id: employees(:lucien).id,
+                               work_date: date + 1.day,
+                               hours: 2,
                                report_type: 'absolute_day')
 
       board = Plannings::OrderBoard.new(order, period)
@@ -66,8 +71,8 @@ module Plannings
       assert_equal [[employees(:lucien).id, work_items(:hitobito_demo_app).id]].to_set,
                    board.rows.keys.to_set
       items = board.items(employees(:lucien).id, work_items(:hitobito_demo_app).id)
-      assert_equal a1, items[5].absencetime
-      assert_equal a2, items[6].absencetime
+      assert_equal [a1], items[5].absencetimes
+      assert_equal [a2, a3].to_set, items[6].absencetimes.to_set
     end
 
     test 'no rows are returned if included rows is set to empty array' do
