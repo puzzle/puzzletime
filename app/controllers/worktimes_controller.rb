@@ -106,12 +106,12 @@ class WorktimesController < CrudController
     ).first
 
     unless employment
-      flash[:warning] = "#{@worktime}: Es besteht keine Anstellung am #{@worktime.work_date}".html_safe
+      flash[:warning] = "#{@worktime}: Es besteht keine Anstellung am #{l(@worktime.work_date)}".html_safe
       return
     end
 
     if employment.percent.zero?
-      flash[:warning] = "#{@worktime}: Es besteht eine 0% Anstellung am #{@worktime.work_date}".html_safe
+      flash[:warning] = "#{@worktime}: Es besteht eine 0% Anstellung am #{l(@worktime.work_date)}".html_safe
       return
     end
   end
