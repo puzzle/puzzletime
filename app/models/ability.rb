@@ -190,6 +190,8 @@ class Ability
          :show_plannings],
         Order
 
+    can :show_plannings, AccountingPost
+
     can :read, [AccountingPost, Invoice, OrderUncertainty, OrderComment]
 
     can :read, Planning
