@@ -1,6 +1,6 @@
 # Dockerized Development
 
-There is a dockerized development environment, a work in progress. See [dockerized development](dockerized_development.md)
+There is a dockerized development environment, a work in progress.
 
 ## Prerequisites
 

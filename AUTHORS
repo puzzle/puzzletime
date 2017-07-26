@@ -1,0 +1,36 @@
+PuzzleTime is created by the following people:
+
+Code:
+  Andreas Maierhofer, Puzzle ITC
+  Bruno Santschi, Puzzle ITC
+  Damian Senn, Puzzle ITC
+  Daniel Illi, Puzzle ITC
+  Mathis Hofer, Puzzle ITC
+  Pascal Simon, Puzzle ITC
+  Pascal Zumkehr, Puzzle ITC
+  Simon Fankhauser, Puzzle ITC
+  Xavier Hayoz
+
+Design & Style:
+  Martin Hertig, Puzzle ITC
+  Pierre Fritsch, Puzzle ITC
+
+Deployment & Operations:
+  Philipp Gassmann, Puzzle ITC
+  Severin Räz, Puzzle ITC
+  Simon Josi, Puzzle ITC
+  Sophia Katzy, Puzzle ITC
+
+Conceptual Design:
+  Andreas Rava, Puzzle ITC
+  Lucien Weller, Puzzle ITC
+  Mark Waber, Puzzle ITC
+
+With help from many libraries and frameworks including:
+  Ruby on Rails
+  Twitter Bootstrap
+  Dry Crud
+  Haml
+  CanCan
+  Delayed Job
+  ...and many others
