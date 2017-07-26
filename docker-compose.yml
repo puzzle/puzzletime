@@ -8,11 +8,16 @@ version: '3'
 services:
   rails:
     image: "puzzle.ch/puzzletime:development"
+    # for prod env:
+    # image: "puzzle.ch/puzzletime"
     volumes:
       - /mnt/puzzletime_rails_root:/opt/app-root/local-src
     ports:
       - "3000:8080"
     environment:
+      # for prod env:
+      # - RAILS_ENV=production
+      # - SECRET_KEY_BASE=qwefjqweofjqewfojewfoe
       - RAILS_ENV=development
       - RAILS_DB_HOST=database
       - RAILS_DB_PORT=5432
