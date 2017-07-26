@@ -17,11 +17,11 @@ class BaseCapacityReport
   end
 
   def find_billable_time(employee, work_item_id, period)
-    Worktime.find_by_sql(['SELECT SUM(w.hours) AS HOURS, w.billable FROM worktimes w \
-                           LEFT JOIN work_items p ON p.id = w.work_item_id \
-                           WHERE w.employee_id = ? AND ? = ANY(p.path_ids) \
-                           AND w.work_date BETWEEN ? AND ? \
-                           GROUP BY w.billable',
+    Worktime.find_by_sql(['SELECT SUM(w.hours) AS HOURS, w.billable FROM worktimes w ' \
+                          'LEFT JOIN work_items p ON p.id = w.work_item_id ' \
+                          'WHERE w.employee_id = ? AND ? = ANY(p.path_ids) ' \
+                          'AND w.work_date BETWEEN ? AND ? ' \
+                          'GROUP BY w.billable',
                           employee.id, work_item_id, period.start_date, period.end_date])
   end
 
