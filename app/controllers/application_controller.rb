@@ -1,8 +1,5 @@
 # encoding: utf-8
 
-# (c) Puzzle itc, Berne
-# Diplomarbeit 2149, Xavier Hayoz
-
 # Filters added to this controller will be run for all controllers in the application.
 # Likewise, all the methods added will be available for all controllers.
 

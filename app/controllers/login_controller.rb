@@ -1,9 +1,5 @@
 # encoding: utf-8
 
-# (c) Puzzle itc, Berne
-# Diplomarbeit 2149, Xavier Hayoz
-
-
 class LoginController < ApplicationController
   skip_before_action :authenticate, except: [:logout]
   skip_authorization_check

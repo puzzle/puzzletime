@@ -1,4 +1,5 @@
 # encoding: utf-8
+
 # == Schema Information
 #
 # Table name: employments
@@ -11,9 +12,6 @@
 #  vacation_days_per_year :decimal(5, 2)
 #  comment                :string
 #
-
-# (c) Puzzle itc, Berne
-# Diplomarbeit 2149, Xavier Hayoz
 
 class Employment < ActiveRecord::Base
   DAYS_PER_YEAR = 365.25

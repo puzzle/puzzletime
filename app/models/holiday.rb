@@ -1,4 +1,5 @@
 # encoding: utf-8
+
 # == Schema Information
 #
 # Table name: holidays
@@ -7,10 +8,6 @@
 #  holiday_date  :date             not null
 #  musthours_day :float            not null
 #
-
-
-# (c) Puzzle itc, Berne
-# Diplomarbeit 2149, Xavier Hayoz
 
 class Holiday < ActiveRecord::Base
 

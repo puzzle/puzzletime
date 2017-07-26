@@ -1,4 +1,5 @@
 # encoding: utf-8
+
 # == Schema Information
 #
 # Table name: worktimes
@@ -18,9 +19,6 @@
 #  work_item_id    :integer
 #  invoice_id      :integer
 #
-
-# (c) Puzzle itc, Berne
-# Diplomarbeit 2149, Xavier Hayoz
 
 class Worktime < ActiveRecord::Base
   H_M = /^(\d*):([0-5]\d)/

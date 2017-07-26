@@ -1,4 +1,5 @@
 # encoding: utf-8
+
 # == Schema Information
 #
 # Table name: clients
@@ -12,9 +13,6 @@
 #  sector_id           :integer
 #  e_bill_account_key  :string
 #
-
-# (c) Puzzle itc, Berne
-# Diplomarbeit 2149, Xavier Hayoz
 
 class Client < ActiveRecord::Base
 

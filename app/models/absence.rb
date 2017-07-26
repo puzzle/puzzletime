@@ -1,4 +1,5 @@
 # encoding: utf-8
+
 # == Schema Information
 #
 # Table name: absences
@@ -8,9 +9,6 @@
 #  payed    :boolean          default(FALSE)
 #  vacation :boolean          default(FALSE), not null
 #
-
-# (c) Puzzle itc, Berne
-# Diplomarbeit 2149, Xavier Hayoz
 
 class Absence < ActiveRecord::Base
   include Evaluatable
