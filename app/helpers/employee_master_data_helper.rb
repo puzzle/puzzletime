@@ -2,7 +2,7 @@
 
 module EmployeeMasterDataHelper
   def format_latest_employment(employee)
-    get_latest_employment_date(employee)
+    localize_date(get_latest_employment_date(employee))
   end
 
   def format_year_of_service(employee)
