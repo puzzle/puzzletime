@@ -14,11 +14,11 @@
 
 @font-face {
   font-family: "puzzletime";
-  src:url("puzzletime.eot");
-  src:url("puzzletime.eot?#iefix") format("embedded-opentype"),
-    url("puzzletime.woff") format("woff"),
-    url("puzzletime.ttf") format("truetype"),
-    url("puzzletime.svg#puzzletime") format("svg");
+  src:asset-url("puzzletime.eot");
+  src:asset-url("puzzletime.eot?#iefix") format("embedded-opentype"),
+    asset-url("puzzletime.woff") format("woff"),
+    asset-url("puzzletime.ttf") format("truetype"),
+    asset-url("puzzletime.svg#puzzletime") format("svg");
   font-weight: normal;
   font-style: normal;
 
