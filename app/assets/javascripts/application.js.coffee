@@ -4,6 +4,7 @@
 #= require jquery3
 #= require jquery_ujs
 #= require jquery-ui/widgets/datepicker
+#= require jquery-ui-datepicker-i18n
 #= require jquery-ui/widgets/autocomplete
 #= require jquery-ui/widgets/selectable
 #= require selectize
@@ -11,11 +12,10 @@
 #= require bootstrap/tooltip
 #= require bootstrap/button
 #= require bootstrap/alert
-#= require vendor/jquery-ui-datepicker-i18n
-#= require vendor/modernizr-custom
-#= require vendor/waypoints/jquery.waypoints
-#= require vendor/waypoints/shortcuts/sticky
-#= require vendor/waypoints/shortcuts/inview
+#= require waypoints/jquery.waypoints
+#= require waypoints/shortcuts/sticky
+#= require waypoints/shortcuts/inview
+#= require modernizr-custom
 #= require_self
 #= require_tree ./modules
 # after self to disable links
