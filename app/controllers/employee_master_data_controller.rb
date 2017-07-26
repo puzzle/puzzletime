@@ -12,7 +12,11 @@ class EmployeeMasterDataController < ApplicationController
 
   def index
     authorize!(:read, Employee)
-    @employees = list_entries
+    @employees = list_entries.to_a
+    if can?(:manage, Employment)
+      fetch_latest_employment_dates(@employees)
+      sort_by_latest_employment(@employees)
+    end
   end
 
   def show
@@ -60,6 +64,36 @@ class EmployeeMasterDataController < ApplicationController
           :employment_role_level
         ]
       })
+    end
+  end
+
+  def fetch_latest_employment_dates(list)
+    return if @employee_employment
+
+    @employee_employment = {}
+    list.each do |employee|
+      @employee_employment[employee] = get_latest_employment_date(employee)
+    end
+  end
+
+  def get_latest_employment_date(employee)
+    employment = employee.employments.find do |e|
+      next unless e.end_date
+
+      start_date = e.end_date - 1.day
+
+      employee.employments.find { |em| em.start_date == start_date }
+    end
+    employment ||= employee.employments.last
+    employment.start_date
+  end
+
+  def sort_by_latest_employment(list)
+    if params[:sort] == 'latest_employment'
+      list.sort! { |a, b| @employee_employment[a] <=> @employee_employment[b] }
+      if params[:sort_dir] == 'asc'
+        list.reverse!
+      end
     end
   end
 

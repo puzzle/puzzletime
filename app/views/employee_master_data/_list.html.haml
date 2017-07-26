@@ -16,7 +16,7 @@
   - t.attr(:roles, 'Rollen') do |e|
     = format_current_employment_roles(e)
   - if can?(:manage, Employment)
-    - t.attr(:latest_employment, 'Angestellt am') do |e|
-      = format_latest_employment(e)
+    - t.attr(:latest_employment, t.sort_header(:latest_employment, 'Angestellt am')) do |e|
+      = f(@employee_employment[e])
     - t.attr(:year_of_service, 'Dienstjahr') do |e|
-      = format_year_of_service(e)
+      = format_year_of_service(@employee_employment[e])
