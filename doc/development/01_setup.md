@@ -1,6 +1,6 @@
 ## Setup der Entwicklungsumgebung
 
-Die Applikation läuft unter Ruby >= 2.2.2, Rails 5 und PostgreSQL (development und production).
+Die Applikation läuft unter Ruby >= 2.2.2, Rails 5 und PostgreSQL (development, test und production).
 
 
 ### System
@@ -126,12 +126,11 @@ muss Delayed Job gestartet werden:
 | `rake ci` | Führt die Tasks für einen Commit Build aus. |
 | `rake ci:nightly` | Führt die Tasks für einen Nightly Build aus. |
 | `rake db:dump` | Lädt einen Datenbankdump von `FILE`. |
-| `rake db:create_testuser | Erstellt die Testbenutzer `MB1` und `MB2` mit Passwort `member` |
+| `rake db:create_testuser` | Erstellt die Testbenutzer `MB1` und `MB2` mit Passwort `member` |
 | `rake erd` | Erstellt ein Entitiy Relationship Diagram in `doc/models.png` |
 | `rake gemsurance` | Ruby Gems nach Vulnerabilities überprüfen |
 | `rake license:insert` | Fügt die Lizenz in alle Dateien ein. |
 | `rake license:remove` | Entfernt die Lizenz aus allen Dateien. |
 | `rake license:update` | Aktualisiert die Lizenz in allen Dateien oder fügt sie neu ein. |
-<!-- | `rake rubocop` | Führt die Rubocop Must Checks (`rubocop-must.yml`) aus und schlägt fehl, falls welche gefunden werden. | -->
 | `rake rubocop:changed` | Führt die Rubocop Standard Checks (`.rubocop.yml`) auf den geänderten files aus. |
 | `rake rubocop:report` | Führt die Rubocop Standard Checks (`.rubocop.yml`) aus und generiert einen Report für Jenkins. |

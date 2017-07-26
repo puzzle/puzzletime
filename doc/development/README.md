@@ -1,4 +1,4 @@
-# Entwicklungs Dokumentation
+# Entwicklungsdokumentation
 
 Diese Dokumente beschreiben verschiedene Aspekte, welche bei der Entwicklung zu beachten sind.
 
