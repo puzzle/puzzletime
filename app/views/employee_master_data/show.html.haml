@@ -3,9 +3,10 @@
 -#  or later. See the COPYING file at the top-level directory or at
 -#  https://github.com/puzzle/puzzletime.
 
+- @title = @employee.to_s
 
 = render 'attrs'
 
 %br/
 = action_link(ti('link.list', model: Employee.model_name.human), employee_master_data_path)
--# = render('actions_show')
+

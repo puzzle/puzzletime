@@ -1,0 +1,17 @@
+-#  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
+-#  PuzzleTime and licensed under the Affero General Public License version 3
+-#  or later. See the COPYING file at the top-level directory or at
+-#  https://github.com/puzzle/puzzletime.
+
+.order-target.col-md-3
+  .row
+    .col-md-12{ style: 'font-size: 20px;' }
+      = icon(target.target_scope.icon)
+      = target.target_scope.name
+      - OrderTarget::RATINGS.find { |r| r === target.rating }.tap do |rating|
+        &nbsp;
+        %span{ title: target.target_scope.send("rating_#{rating}_description") }
+          = order_target_rating_icon(rating)
+  .row
+    .col-md-12
+      = format_attr(target, :comment)

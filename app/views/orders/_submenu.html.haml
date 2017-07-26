@@ -3,4 +3,31 @@
 -#  or later. See the COPYING file at the top-level directory or at
 -#  https://github.com/puzzle/puzzletime.
 
+- if can?(:read, Order)
+  - path = polymorphic_path(Order)
+  = nav('Auftragsliste', path, path)
 
+- if can?(:reports, Order)
+  = nav 'Controlling',
+        reports_orders_path(clear: 1),
+        reports_orders_path
+
+- if can?(:managed, Evaluation)
+  = nav 'Meine Aufträge', evaluation_path('managed', clear: 1)
+
+- if can?(:clients, Evaluation)
+  = nav 'Kunden',
+        evaluation_path('clients', clear: 1),
+        evaluation_path('clients'),
+        evaluation_path('clientworkitems'),
+        evaluation_path('workitememployees'),
+        evaluation_path('subworkitems')
+
+- if can?(:departments, Evaluation)
+  = nav 'Organisationseinheiten',
+        evaluation_path('departments', clear: 1),
+        evaluation_path('departments'),
+        evaluation_path('departmentorders')
+
+- if can?(:revenue_reports, Department)
+  = nav 'Umsatz', reports_revenue_path

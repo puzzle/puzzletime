@@ -13,6 +13,7 @@
 - elsif entries.to_a.blank?
   .table= ti(:no_list_entries)
 
-.list
-  = render partial: :order_comment, collection: entries, locals: {total_count: entries.size}
+- if entries.to_a.present?
+  .list
+    = render partial: :order_comment, collection: entries, locals: { total_count: entries.size }
 

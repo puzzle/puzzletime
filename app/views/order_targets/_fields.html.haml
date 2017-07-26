@@ -4,20 +4,23 @@
 -#  https://github.com/puzzle/puzzletime.
 
 
-.order-target.col-md-3
+.order-target.col-lg-3.col-md-4
   .form-group
     .btn-toolbar
-      .btn-group.btn-group-justified{data: { toggle: 'buttons' }}
-        .btn-group.center= icon(f.object.target_scope.icon,
-                                style: 'font-size: 20px;',
-                                title: f.object.target_scope.name)
+      .row
+        .col-sm-6
+          .btn-group{ style: 'font-size: 20px;' }
+            = icon(f.object.target_scope.icon)
+            = f.object.target_scope.name
 
-        - OrderTarget::RATINGS.each do |rating|
-          %label.btn.btn-default{class: "#{'active' if f.object.rating == rating}",
-                                 data: { toggle: :tooltip },
-                                 title: f.object.target_scope.send("rating_#{rating}_description")}
-            = f.radio_button :rating, rating
-            = order_target_rating_icon(rating)
+        .col-sm-6
+          .btn-group.btn-group-justified{ data: { toggle: 'buttons' } }
+            - OrderTarget::RATINGS.each do |rating|
+              %label.btn.btn-default{class: "#{'active' if f.object.rating == rating}",
+                                     data: { toggle: :tooltip },
+                                     title: f.object.target_scope.send("rating_#{rating}_description")}
+                = f.radio_button :rating, rating
+                = order_target_rating_icon(rating)
 
   .form-group{class: "#{f.errors?(:comment) ? 'has-error' : nil}"}
-    = f.text_area(:comment)
+    = f.text_area(:comment, rows: 10)

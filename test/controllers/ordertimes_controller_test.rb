@@ -23,7 +23,6 @@ class OrdertimesControllerTest < ActionController::TestCase
     assert_response :success
     assert_template 'new'
     assert_match(/Arbeitszeit erfassen/, @response.body)
-    assert_no_match(/Mitarbeiter/, @response.body)
     assert_not_nil assigns(:worktime)
   end
 

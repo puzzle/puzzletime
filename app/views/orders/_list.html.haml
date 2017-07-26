@@ -39,7 +39,7 @@
             %td
               =order.parent_names
               %br/
-              %span.title
+              %span.subtitle
                 = link_to_if(can?(:show, order),
                              "#{order.work_item.path_shortnames}: #{order}",
                              can?(:update, order) ? edit_order_path(order) : order_path(order))

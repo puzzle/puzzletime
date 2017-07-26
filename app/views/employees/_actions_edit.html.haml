@@ -6,6 +6,7 @@
 
 = render 'crud/actions_edit'
 
+= action_link('Stammdaten', employee_master_datum_path(entry))
 = action_link('Überstunden', employee_overtime_vacations_path(entry) )
 = action_link('Anstellungen', employee_employments_path(entry))
 = action_link('Log', log_employee_path(entry))

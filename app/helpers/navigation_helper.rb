@@ -5,6 +5,7 @@
 
 
 module NavigationHelper
+
   # Create a list item for navigations.
   # If active_for are given, and they appear in the request url,
   # the corresponding item is active.
@@ -26,7 +27,7 @@ module NavigationHelper
 
   def nav_active_class(url, active_for)
     if current_page?(url) ||
-       active_for.any? { |p| request.path =~ %r{^#{p}(/.*)?$} }
+       active_for.any? { |p| request.path =~ %r{^#{p}} }
       'active'
     end
   end

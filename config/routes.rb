@@ -20,6 +20,8 @@ Rails.application.routes.draw do
     resources :contacts
   end
 
+  get 'configurations', to: 'configurations#index'
+
   resources :departments, except: [:show]
 
   resources :employees do

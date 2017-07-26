@@ -3,20 +3,23 @@
 -#  or later. See the COPYING file at the top-level directory or at
 -#  https://github.com/puzzle/puzzletime.
 
-
-= model_nav Employee
 = model_nav Client
+= model_nav Employee
 = model_nav Department
-= model_nav Holiday
-= model_nav Absence
-= model_nav UserNotification
-= model_nav OrderKind
-= model_nav OrderStatus
-= model_nav PortfolioItem
-= model_nav Service
-= model_nav Sector
-= model_nav TargetScope
-= model_nav WorkingCondition
-= model_nav EmploymentRole
-= model_nav EmploymentRoleLevel
-= model_nav EmploymentRoleCategory
+- if current_user.management?
+  = nav('Konfiguration',
+        configurations_path,
+        holidays_path,
+        absences_path,
+        user_notifications_path,
+        order_kinds_path,
+        order_statuses_path,
+        portfolio_items_path,
+        services_path,
+        sectors_path,
+        target_scopes_path,
+        working_conditions_path,
+        employment_roles_path,
+        employment_role_levels_path,
+        employment_role_categories_path)
+

@@ -21,6 +21,7 @@ module EmployeesHelper
 
   def format_current_employment_roles(employee, separator = ', ')
     employment = employee.current_employment
+    return if employment.nil?
     safe_join(employment.employment_roles_employments.map do |ere|
       [ere.employment_role.name,
        ere.employment_role_level.present? ? ere.employment_role_level.name : nil,

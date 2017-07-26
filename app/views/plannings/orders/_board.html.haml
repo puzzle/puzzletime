@@ -6,6 +6,9 @@
 
 .planning-calendar{ style: "--days: #{@board.work_days}" }
   .planning-calendar-inner{ class: can?(:manage_plannings, @board.subject) ? 'editable' : nil }
+    .planning-calendar-header
+      = link_to('Auftrag', order_accounting_posts_path(@board.subject))
+
     = render 'board_header'
 
     - @board.accounting_posts.each do |post|

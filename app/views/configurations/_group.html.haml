@@ -1,0 +1,15 @@
+-#  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
+-#  PuzzleTime and licensed under the Affero General Public License version 3
+-#  or later. See the COPYING file at the top-level directory or at
+-#  https://github.com/puzzle/puzzletime.
+
+.col-lg-4.col-sm-6
+  .panel.panel-default
+    .panel-heading
+      %h3.panel-title= title
+
+    %ul.list-group
+      - models.each do |model|
+        - if can?(:read, model)
+          %li.list-group-item
+            = link_to(model.model_name.human(count: 2), model)

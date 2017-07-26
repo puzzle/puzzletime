@@ -9,3 +9,8 @@
 %p= render 'filters'
 
 .results= render 'results'
+
+- if can?(:capacity_report, Evaluation)
+  = action_link(action_icon('export', 'CSV Detaillierte Auslastung'),
+                reports_capacity_path,
+                data: { turbolinks: false })

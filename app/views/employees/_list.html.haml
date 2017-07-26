@@ -12,6 +12,8 @@
              :management,
              :probation_period_end_date do |t|
 
+  - t.action_col do |e|
+    - link_to('Stammdaten', employee_master_datum_path(e))
   - if can?(:manage, OvertimeVacation)
     - t.action_col do |e|
       - link_to('Überstunden', employee_overtime_vacations_path(e) )

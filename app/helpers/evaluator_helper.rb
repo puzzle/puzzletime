@@ -148,21 +148,7 @@ module EvaluatorHelper
     content
   end
 
-  ### period and info helpers
-
-  def employee_infos(employee, period = nil)
-    employment_infos(employee, period) +
-      employee_time_infos(employee.statistics, period) +
-      employee_vacation_infos(employee.statistics, period)
-  end
-
-  def employment_infos(employee, period)
-    employment_period = period ? Period.day_for(period.end_date) : Period.current_day
-    employment = employee.employments.during(employment_period).first
-    return [] if employment.blank?
-    [[[link_to('Beschäftigungsgrad', employee_employments_url(employee.id)), format_percent(employment.percent)]] +
-      employment_role_infos(employment)]
-  end
+  ### info helpers
 
   def employment_role_infos(employment)
     employment
@@ -172,33 +158,8 @@ module EvaluatorHelper
       .map do |ere|
         role = ere.employment_role.name
         role += ' ' + ere.employment_role_level.name if ere.employment_role_level.present?
-        [role, format_percent(ere.percent)]
+        [role, ere.percent]
       end
-  end
-
-  def employee_time_infos(stats, period)
-    date = period.present? ? period.end_date : Time.zone.today
-    [[['Überstundensaldo', format_hour(stats.current_overtime(date).to_f)],
-      ['per Gestern', format_hour(stats.current_overtime.to_f)]]]
-  end
-
-  def employee_vacation_infos(stats, period)
-    date = period.present? ? period.end_date : Time.zone.today
-    [[["Feriensaldo per #{l(date.end_of_year)}", format_days(stats.remaining_vacations(date.end_of_year), true)],
-      ["Guthaben #{date.year}", format_days(stats.total_vacations(Period.year_for(date)), true)],
-      ["Übertrag #{(date - 1.year).year}", format_days(stats.remaining_vacations((date - 1.year).end_of_year), true)]]]
-  end
-
-  def employee_info_labels(info)
-    safe_join(info.map(&:first).map.with_index do |l, i|
-      content_tag(i.zero? ? :label : :span, class: i > 0 ? 'text-muted' : '') { l }
-    end, tag(:br))
-  end
-
-  def employee_info_values(info)
-    safe_join(info.map(&:second).map.with_index do |v, i|
-      content_tag(:span, class: i > 0 ? 'text-muted' : 'employee-info-primary-value') { v }
-    end, tag(:br))
   end
 
   def employee_info_workload_report_employee_entry(employee)
@@ -219,4 +180,5 @@ module EvaluatorHelper
       .pluck(*Reports::Workload::WORKTIME_FIELDS)
       .map { |w| Reports::Workload::WorktimeEntry.new(*w) }
   end
+
 end

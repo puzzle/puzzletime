@@ -12,8 +12,23 @@
             worktimes_path,
             ordertimes_path,
             absencetimes_path,
-            weekly_graph_path(current_user.id)
-      = model_nav Order
+            weekly_graph_path(current_user.id),
+            evaluation_path('userworkitems'),
+            evaluation_path('userabsences')
+
+      = nav 'Aufträge',
+            orders_path,
+            orders_path,
+            reports_orders_path,
+            reports_revenue_path,
+            evaluation_path('clients'),
+            evaluation_path('departments'),
+            evaluation_path('managed'),
+            evaluation_path('clientworkitems'),
+            evaluation_path('workitememployees'),
+            evaluation_path('departmentorders'),
+            evaluation_path('subworkitems')
+
       = nav 'Planung',
             plannings_employee_path(current_user.id),
             plannings_orders_path,
@@ -21,21 +36,26 @@
             plannings_departments_path,
             plannings_company_path,
             plannings_custom_lists_path
-      = nav 'Auswertungen',
-            evaluation_path('userworkitems', clear: 1),
-            '/evaluator',
-            reports_orders_path,
+
+      = nav 'Mitarbeiter',
+            employee_master_data_path,
+            employee_master_data_path,
+            evaluation_path('employees') + '$',
+            evaluation_path('employeeworkitems'),
+            evaluation_path('absences'),
+            evaluation_path('employeeabsences'),
             reports_workload_path,
-            reports_revenue_path,
             reports_role_distribution_path,
             vacations_path
+
       - if can?(:manage, Client)
         = nav 'Verwalten',
               clients_path,
               clients_path,
-              absences_path,
-              departments_path,
               employees_path,
+              departments_path,
+              configurations_path,
+              absences_path,
               user_notifications_path,
               holidays_path,
               order_kinds_path,

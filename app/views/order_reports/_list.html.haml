@@ -14,10 +14,8 @@
               = sort_link(:client, 'Kunde')
               %br/
               Auftrag
-            - if params[:closed].blank?
-              %th Status
-            %th.right.nowrap
-              = sort_link(:closed_at, 'Abgeschlossen am')
+            %th.nowrap
+              Status
             %th.right.nowrap{title: 'Summe aus allen Buchungspositionen'}
               = sort_link(:offered_amount, 'Budget')
             %th.right.nowrap{title: 'Produkt aus allen geleisteten Stunden und offeriertem Stundensatz'}
@@ -36,8 +34,8 @@
               = sort_link(:average_rate, 'Durchschnittl. Stundensatz')
             - @target_scopes.each do |scope|
               %th.large.nowrap= sort_link("target_scope_#{scope.id}", icon(scope.icon, title: scope.name))
-            %th.large.text-center= sort_link('major_chance_value', picon('clover', title: OrderChance.model_name.human))
-            %th.large.text-center= sort_link('major_risk_value', picon('cloud', title: OrderRisk.model_name.human))
+            %th.large.nowrap.text-center= sort_link('major_chance_value', picon('clover', title: OrderChance.model_name.human))
+            %th.large.nowrap.text-center= sort_link('major_risk_value', picon('cloud', title: OrderRisk.model_name.human))
 
         %tbody
           - @report.page do |order|
@@ -46,20 +44,21 @@
                 - if order.order
                   = order.parent_names
                   %br/
-                  %span.title
+                  %span.subtitle
                     = link_to_if(can?(:show, order.order),
                                  "#{order.work_item.path_shortnames}: #{order}",
                                  can?(:update, order.order) ? edit_order_path(order) : order_path(order))
                 - else
-                  %span.title= order
-              - if params[:closed].blank?
-                %td
-                  - if order.status
-                    %span{class: "label label-#{order.status.style}"}
-                      = order.status.name
-              %td
+                  %span.subtitle= order
+              %td.center
+                - if order.status
+                  %span{class: "label label-#{order.status.style}"}
+                    = order.status.name
+                  %br/
                 - if order.closed_at
-                  = f(order.closed_at)
+                  %span.data-item
+                    %span.unit
+                      = I18n.l(order.closed_at, format: '%d.%m.%Y')
               %td
                 .data-item
                   %span.figure= f(order.offered_amount.to_f)

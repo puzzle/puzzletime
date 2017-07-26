@@ -1,0 +1,31 @@
+-#  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
+-#  PuzzleTime and licensed under the Affero General Public License version 3
+-#  or later. See the COPYING file at the top-level directory or at
+-#  https://github.com/puzzle/puzzletime.
+
+- if can?(:read, Employee)
+  = nav 'Mitarbeiterliste',
+        employee_master_data_path,
+        employee_master_data_path
+
+- if can?(:employees, Evaluation)
+  = nav 'Zeiten',
+        evaluation_path('employees', clear: 1),
+        evaluation_path('employees'),
+        evaluation_path('employeeworkitems'),
+        evaluation_path('employeesubworkitems')
+
+- if can?(:absences, Evaluation)
+  = nav 'Absenzen',
+        evaluation_path('absences', clear: 1),
+        evaluation_path('absences'),
+        evaluation_path('employeeabsences')
+
+- if can?(:read, Worktime)
+  = nav 'Auslastung', reports_workload_path
+
+= nav 'Ferienplan', vacations_path
+
+-if can?(:role_distribution_report, Evaluation)
+  = nav 'Funktionsanteile',
+        reports_role_distribution_path

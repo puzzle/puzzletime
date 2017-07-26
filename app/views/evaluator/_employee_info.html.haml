@@ -5,31 +5,72 @@
 
 
 - employee = @evaluation.category
-%section
-  %p
-    = link_to 'Mitarbeiterstammdaten', employee_master_datum_path(employee.id)
-    |
-    = link_to 'Wochengrafik', weekly_graph_path(employee.id)
-  %div
-    %label #{employee.class.human_attribute_name(:committed_worktimes_at)}:
-    - if employee.committed_worktimes_at
-      = I18n.l(employee.committed_worktimes_at, format: :month)
-    - else
-      Keine
-  - if can?(:update_reviewed_worktimes, employee)
-    %div
-      %label #{employee.class.human_attribute_name(:reviewed_worktimes_at)}:
-      = worktime_reviews(employee)
-      = render 'shared/modal'
+- date = @period.present? ? @period.end_date : Time.zone.today
 
 %section
-  %h4
-    Übersicht
-    %small per #{I18n.l(@period.present? ? @period.end_date : Time.zone.today)}
-
   %table.table.table-inline.table-striped.table-condensed
     %tbody
-      - employee_infos(employee, @period).each do |info|
+
+      %tr
+        %td
+          %label= employee.class.human_attribute_name(:committed_worktimes_at)
+          .muted= employee.class.human_attribute_name(:reviewed_worktimes_at)
+        %td.text-right
+          .employee-info-primary-value= employee.committed_worktimes_at ? I18n.l(employee.committed_worktimes_at, format: :month) : 'Keine'
+          .muted= worktime_reviews(employee)
+
+      %tr
+        %td
+          %label
+            Auslastung
+            - unless @period
+              aktueller Monat
+          .muted
+            Verrechenbarkeit
+            - unless @period
+              aktueller Monat
+        %td.text-right
+          - workload_report_employee_entry = employee_info_workload_report_employee_entry(employee)
+          .employee-info-primary-value= format_percent(workload_report_employee_entry.workload.round)
+          .muted=   format_percent(workload_report_employee_entry.billability.round)
+
+      %tr
+        %td
+          %label Überstundensaldo per #{l(date)}
+          .muted per Gestern
+        %td.text-right
+          .employee-info-primary-value= format_hour(employee.statistics.current_overtime(date).to_f)
+          .muted= format_hour(employee.statistics.current_overtime.to_f)
+
+      %tr
+        %td
+          %label Feriensaldo per #{l(date.end_of_year)}
+          .muted Guthaben #{date.year}
+          .muted Übertrag #{date.year - 1}
+        %td.text-right
+          .employee-info-primary-value= format_days(employee.statistics.remaining_vacations(date.end_of_year), true)
+          .muted= format_days(employee.statistics.total_vacations(Period.year_for(date)), true)
+          .muted= format_days(employee.statistics.remaining_vacations((date - 1.year).end_of_year), true)
+
+      - employment = employee.employments.during(Period.day_for(date)).first
+      - if employment
+        - infos = employment_role_infos(employment)
         %tr
-          %td= employee_info_labels(info)
-          %td.text-right= employee_info_values(info)
+          %td
+            %label
+              Beschäftigungsgrad per #{l(date)}
+            - infos.each do |i|
+              .muted= i.first
+          %td.text-right
+            .employee-info-primary-value= format_percent(employment.percent)
+            - infos.each do |i|
+              .muted= format_percent(i.last)
+
+      %tr
+        %td{colspan: 2}
+          .muted= link_to 'Stammdaten', employee_master_datum_path(employee.id)
+          .muted= link_to 'Wochengrafik', weekly_graph_path(employee.id)
+          .muted= link_to 'Anstellungen', employee_employments_path(employee.id)
+
+- if can?(:update_reviewed_worktimes, employee)
+  = render 'shared/modal'

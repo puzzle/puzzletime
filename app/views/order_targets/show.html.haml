@@ -23,16 +23,7 @@
           = render 'fields', f: fields
     - else
       - @order_targets.each do |target|
-        .order-target.col-md-3.row
-          .col-md-1
-            = icon(target.target_scope.icon,
-                   style: 'font-size: 20px;',
-                   title: target.target_scope.name)
-          - OrderTarget::RATINGS.find { |r| r === target.rating }.tap do |rating|
-            .col-md-1{ title: target.target_scope.send("rating_#{rating}_description") }
-              = order_target_rating_icon(rating)
-          .col-md-12
-            %pre=target.comment
+        = render 'target', target: target
 
   - if can?('update_targets', @order)
     .form-group

@@ -94,6 +94,12 @@ body.order_plannings {
   }
 }
 
+.planning-calendar-header {
+  position: relative;
+  height: 0;
+  z-index: 10;
+}
+
 .planning-calendar-month {
   background-color: #eee;
 

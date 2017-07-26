@@ -185,6 +185,7 @@ class Ability
 
     can [:read,
          :accounting_posts,
+         :search,
          :services,
          :show_targets,
          :show_uncertainties,

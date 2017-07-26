@@ -3,25 +3,7 @@
 -#  or later. See the COPYING file at the top-level directory or at
 -#  https://github.com/puzzle/puzzletime.
 
-
-- employee = @evaluation.category
 %section
   %h4 Positionen
-
-  - workload_report_employee_entry = employee_info_workload_report_employee_entry(employee)
-  %p
-    %label
-      - if @period
-        Auslastung:
-      - else
-        Auslastung aktueller Monat:
-      = format_percent(workload_report_employee_entry.workload.round)
-    %br
-    %label
-      - if @period
-        Verrechenbarkeit:
-      - else
-        Verrechenbarkeit aktueller Monat:
-      = format_percent(workload_report_employee_entry.billability.round)
 
   = render('category')

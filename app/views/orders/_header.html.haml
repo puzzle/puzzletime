@@ -7,12 +7,7 @@
 - content_for :extra_header do
   .orders-header
     .row
-      .col-xs-2.back
-        = link_to(orders_path(returning: true)) do
-          = picon('chevron-left')
-          Auftragsliste
-
-      .order-search.col-xs-10
+      .order-search.col-xs-11.col-xs-offset-1
         = render 'orders/chooser'
 
     = render 'orders/tabs'
