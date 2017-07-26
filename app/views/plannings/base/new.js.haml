@@ -1,3 +1,9 @@
+-#  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
+-#  PuzzleTime and licensed under the Affero General Public License version 3
+-#  or later. See the COPYING file at the top-level directory or at
+-#  https://github.com/puzzle/puzzletime.
+
+
 - filter = "[data-work-item-id=\"#{params[:work_item_id]}\"],[data-employee-id=\"#{params[:employee_id]}\"]".html_safe
 - container = "<div id=\"#{planning_row_id(params[:employee_id], params[:work_item_id])}\" class=\"planning-calendar-days\">".html_safe
 - row = j(render('row', items: @items, legend: @legend, row_total: @row_total))

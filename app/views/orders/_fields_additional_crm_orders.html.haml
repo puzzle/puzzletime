@@ -1,3 +1,9 @@
+-#  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
+-#  PuzzleTime and licensed under the Affero General Public License version 3
+-#  or later. See the COPYING file at the top-level directory or at
+-#  https://github.com/puzzle/puzzletime.
+
+
 = f.labeled(:additional_crm_orders, caption: "Weitere #{Crm.instance.crm_key_name_plural}") do
   -# No .list to keep changed items after a failed update
   = f.nested_fields_for(:additional_crm_orders, entry.additional_crm_orders, wrapper_tag: :div) do |fields|

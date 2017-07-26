@@ -1,5 +1,11 @@
 # encoding: utf-8
 
+#  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
+#  PuzzleTime and licensed under the Affero General Public License version 3
+#  or later. See the COPYING file at the top-level directory or at
+#  https://github.com/puzzle/puzzletime.
+
+
 class ClientsEval < Evaluation
   self.division_column   = 'work_items.path_ids[1]'
   self.division_join     = :work_item

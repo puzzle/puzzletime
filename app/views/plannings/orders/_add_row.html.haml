@@ -1,3 +1,9 @@
+-#  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
+-#  PuzzleTime and licensed under the Affero General Public License version 3
+-#  or later. See the COPYING file at the top-level directory or at
+-#  https://github.com/puzzle/puzzletime.
+
+
 #add_employee_id{ hidden: true }
   = select_tag(:add_employee_select_id,
                options_from_collection_for_select(@possible_employees, :id, :to_s),

@@ -1,4 +1,10 @@
-# encoding: UTF-8
+# encoding: utf-8
+
+#  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
+#  PuzzleTime and licensed under the Affero General Public License version 3
+#  or later. See the COPYING file at the top-level directory or at
+#  https://github.com/puzzle/puzzletime.
+
 
 # A handful of convenient assertions. The aim of custom assertions is to
 # provide more specific error messages and to perform complex checks.

@@ -1,3 +1,9 @@
+-#  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
+-#  PuzzleTime and licensed under the Affero General Public License version 3
+-#  or later. See the COPYING file at the top-level directory or at
+-#  https://github.com/puzzle/puzzletime.
+
+
 = collection_check_boxes(:invoice, :employee_ids, @employees, :id, :to_s, checked: checked_employee_ids) do |b|
   .employees_radio.checkbox
     = b.label do
