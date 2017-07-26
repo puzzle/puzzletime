@@ -27,9 +27,11 @@ class AccountColorMapper
   private
 
   def generate_color(account)
-    account.is_a?(Absence) ?
-        generate_absence_color(account.id) :
-        generate_work_item_color(account.id)
+    if account.is_a?(Absence)
+      generate_absence_color(account.id)
+    else
+      generate_work_item_color(account.id)
+    end
   end
 
   def generate_absence_color(id)

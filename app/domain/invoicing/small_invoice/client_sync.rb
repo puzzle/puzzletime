@@ -140,7 +140,6 @@ module Invoicing
         end
       end
 
-
       def reset_invoicing_keys(client_invoicing_key = nil)
         client.update_column(:invoicing_key, client_invoicing_key)
         client.billing_addresses.update_all(invoicing_key: nil)

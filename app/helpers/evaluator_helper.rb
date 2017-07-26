@@ -201,7 +201,7 @@ module EvaluatorHelper
 
   def employee_info_labels(info)
     safe_join(info.map(&:first).map.with_index do |l, i|
-      content_tag(i == 0 ? :label : :span, class: i > 0 ? 'text-muted' : '') { l }
+      content_tag(i.zero? ? :label : :span, class: i > 0 ? 'text-muted' : '') { l }
     end, tag(:br))
   end
 

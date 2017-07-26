@@ -45,7 +45,7 @@ module Plannings
         end
       elsif employment.nil?
         'Nicht angestellt'
-      elsif employment.percent == 0
+      elsif employment.percent.zero?
         'Unbezahlte Abwesenheit'
       end
     end
@@ -63,7 +63,7 @@ module Plannings
         class_names << '-absence'
       end
 
-      if employment.nil? || employment.percent == 0
+      if employment.nil? || employment.percent.zero?
         class_names << '-absence-unpaid'
       end
 

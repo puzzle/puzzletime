@@ -31,7 +31,7 @@
           %td.stat= @graph.previous_left_vacations
           %td.stat= @graph.granted_vacations
         - @graph.each_week do |day|
-          = weekbox_td @graph.timebox, @graph.is_current_week
+          = weekbox_td @graph.timebox, @graph.current_week?
         - if  @user.management
           %td.stat= @graph.used_vacations
           %td.stat= @graph.following_left_vacations

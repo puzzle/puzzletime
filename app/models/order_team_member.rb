@@ -22,9 +22,9 @@ class OrderTeamMember < ActiveRecord::Base
 
   validates_by_schema
 
-  scope :list, -> do
+  scope :list, lambda {
     includes(:employee).references(:employee).order('employees.lastname, employees.firstname')
-  end
+  }
 
   def to_s
     [employee, comment.presence].compact.join(': ')

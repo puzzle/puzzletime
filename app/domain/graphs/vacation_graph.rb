@@ -43,7 +43,7 @@ class VacationGraph
                               references(:absence).
                               where('report_type = ?',
                                     HoursMonthType::INSTANCE.key)
-      @unpaid_absences = empl.statistics.employments_during(period).select { |e| e.percent == 0 }
+      @unpaid_absences = empl.statistics.employments_during(period).select { |e| e.percent.zero? }
       @unpaid_absences.collect! { |e| Period.new(e.start_date, e.end_date ? e.end_date : period.end_date) }
       @index = 0
       @monthly_index = 0
@@ -113,7 +113,7 @@ class VacationGraph
     @color_map.accounts_legend(type)
   end
 
-  def is_current_week
+  def current_week?
     @current.to_s == @todays_week
   end
 

@@ -98,7 +98,7 @@ class WorktimeGraph
                  reorder(WORKTIME_ORDER)
     # stretch by employment musttime if employment > 100%
     hours = period.musttime.to_f * must_hours_factor
-    return [] if hours == 0
+    return [] if hours.zero?
     work_items.collect { |w| Timebox.new(w, color_for(w), Timebox.height_from_hours(w.hours / hours)) }
   end
 
@@ -143,7 +143,7 @@ class WorktimeGraph
           @boxes.insert(i + 1, Timebox.must_hours(must_hours))
           @boxes.insert(i + 2, Timebox.new(@boxes[i].worktime, @boxes[i].color, diff, @boxes[i].tooltip))
           break
-        elsif diff == 0
+        elsif diff.zero?
           @boxes.insert(i + 1, Timebox.must_hours(must_hours))
           break
         end

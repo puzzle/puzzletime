@@ -135,8 +135,12 @@ class Worktime < ActiveRecord::Base
   # Returns a copy of this Worktime with default values set
   def template(new_worktime = nil)
     new_worktime ||= self.class.new
-    new_worktime.from_start_time = report_type.is_a?(StartStopType) ?
-                 to_end_time : Time.zone.now.change(hour: Settings.defaults.start_hour)
+    new_worktime.from_start_time =
+      if report_type.is_a?(StartStopType)
+        to_end_time
+      else
+        Time.zone.now.change(hour: Settings.defaults.start_hour)
+      end
     new_worktime.report_type = report_type
     new_worktime.work_date = work_date
     new_worktime.account_id = account_id

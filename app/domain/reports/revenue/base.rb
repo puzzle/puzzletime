@@ -111,20 +111,18 @@ module Reports::Revenue
     end
 
     def sorted_month(entries)
-      begin
-        date = Date.parse(params[:sort]).beginning_of_month
-        if date < current_month
-          entries.sort_by { |e| ordertime_hours[[e.id, date]] || 0 }
-        else
-          entries.sort_by { |e| planning_hours[[e.id, date]] || 0 }
-        end
-      rescue ArgumentError
-        entries
+      date = Date.parse(params[:sort]).beginning_of_month
+      if date < current_month
+        entries.sort_by { |e| ordertime_hours[[e.id, date]] || 0 }
+      else
+        entries.sort_by { |e| planning_hours[[e.id, date]] || 0 }
       end
+    rescue ArgumentError
+      entries
     end
 
     def directed_sort(entries)
-      if params[:sort_dir].to_s.downcase == 'desc'
+      if params[:sort_dir].to_s.casecmp('desc') >= 0
         entries.reverse
       else
         entries

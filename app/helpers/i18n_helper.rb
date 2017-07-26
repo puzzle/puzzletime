@@ -20,7 +20,7 @@ module I18nHelper
   #  - ...
   #  - global.{key}
   def translate_inheritable(key, variables = {})
-    partial = @virtual_path ? @virtual_path.gsub(/.*\/_?/, '') : nil
+    partial = @virtual_path ? @virtual_path.gsub(%r(.*\/_?), '') : nil
     defaults = inheritable_translation_defaults(key, partial)
     variables[:default] ||= defaults
     t(defaults.shift, variables)

@@ -145,7 +145,7 @@ module Plannings
     end
 
     def translate_plannings
-      return [] if planning_params[:translate_by].to_i == 0
+      return [] if planning_params[:translate_by].to_i.zero?
 
       items = existing_items.collect(&:dup)
       existing_items.delete_all

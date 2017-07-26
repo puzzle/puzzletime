@@ -64,7 +64,7 @@ class Holiday < ActiveRecord::Base
     # 0 is Sunday, 6 is Saturday
     def weekend?(date)
       wday = date.wday
-      wday == 0 || wday == 6
+      wday.zero? || wday == 6
     end
 
     def holiday?(date)

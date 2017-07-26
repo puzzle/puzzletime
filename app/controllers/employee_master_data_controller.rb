@@ -60,18 +60,18 @@ class EmployeeMasterDataController < ApplicationController
   def list_entries_includes(list)
     if can?(:manage, Employment)
       list.includes(:department, :employments, current_employment: {
-        employment_roles_employments: [
-          :employment_role,
-          :employment_role_level
-        ]
-      })
+                      employment_roles_employments: [
+                        :employment_role,
+                        :employment_role_level
+                      ]
+                    })
     else
       list.includes(:department, current_employment: {
-        employment_roles_employments: [
-          :employment_role,
-          :employment_role_level
-        ]
-      })
+                      employment_roles_employments: [
+                        :employment_role,
+                        :employment_role_level
+                      ]
+                    })
     end
   end
 

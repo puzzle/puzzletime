@@ -27,11 +27,11 @@ module BelongingToWorkItem
              to: :work_item,
              allow_nil: true
 
-    scope :list, -> do
+    scope :list, lambda {
       includes(:work_item).
         references(:work_item).
         order('work_items.path_names')
-    end
+    }
   end
 
   def to_s

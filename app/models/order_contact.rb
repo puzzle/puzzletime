@@ -25,9 +25,9 @@ class OrderContact < ActiveRecord::Base
 
   before_validation :create_crm_contact
 
-  scope :list, -> do
+  scope :list, lambda {
     includes(:contact).references(:contact).order('contacts.lastname, contacts.firstname')
-  end
+  }
 
   def to_s
     [contact, comment.presence].compact.join(': ')
