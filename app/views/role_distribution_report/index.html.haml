@@ -6,7 +6,7 @@
 
 - @title = "Funktionsanteile"
 
-= form_tag(url_for(controller: 'evaluator', action: 'export_role_distribution', format: :csv), method: :get, class: 'form-horizontal', role: 'form') do
+= form_tag(reports_role_distribution_path(format: :csv), method: :get, class: 'form-horizontal', role: 'form') do
   .form-group
     %label.col-md-2.control-label.required
       Stichdatum

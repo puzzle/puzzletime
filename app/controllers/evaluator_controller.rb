@@ -26,15 +26,7 @@ class EvaluatorController < ApplicationController
       @plannings = @periods.collect { |p| @evaluation.sum_plannings_grouped(p) }
     end
 
-    template = if employee_overview?
-                 'overview_employee'
-               elsif employees_overview?
-                 'employees'
-               else
-                 'overview'
-               end
-
-    render(template)
+    render(overview_template)
   end
 
   def details
@@ -69,71 +61,6 @@ class EvaluatorController < ApplicationController
                 csv_label(@evaluation.division)].compact.join('-') + '.csv'
     times = @evaluation.times(@period)
     send_worktimes_csv(times, filename)
-  end
-
-  ######################  OVERVIEW ACTIONS  #####################3
-
-  def export_capacity_csv
-    if @period
-      send_report_csv(CapacityReport.new(@period))
-    else
-      flash[:notice] = 'Bitte wählen Sie eine Zeitspanne für die detaillierte Auslastung.'
-      redirect_to request.env['HTTP_REFERER'].present? ? :back : root_path
-    end
-  end
-
-  def export_extended_capacity_csv
-    if @period
-      send_report_csv(ExtendedCapacityReport.new(@period))
-    else
-      flash[:notice] = 'Bitte wählen Sie eine Zeitspanne für die Auslastung.'
-      redirect_to request.env['HTTP_REFERER'].present? ? :back : root_path
-    end
-  end
-
-  def export_role_distribution
-    authorize!(:export_role_distribution, Evaluation)
-    respond_to do |format|
-      format.html
-      format.csv do
-        if params[:date].present?
-          send_report_csv(RoleDistributionReport.new(Time.zone.parse(params[:date])))
-        else
-          flash[:alert] = 'Bitte wählen Sie ein Stichdatum.'
-          redirect_to request.env['HTTP_REFERER'].present? ? :back : root_path
-        end
-      end
-    end
-  end
-
-  ########################  PERIOD ACTIONS  #########################
-
-  def select_period
-    @period = Period.new if @period.nil?
-  end
-
-  def current_period
-    session[:period] = nil
-    redirect_to sanitized_back_url
-  end
-
-  def change_period
-    @period = period_from_params
-    fail ArgumentError, 'Start Datum nach End Datum' if @period.negative?
-    session[:period] = [@period.start_date.to_s, @period.end_date.to_s, @period.label]
-    # redirect_to_overview
-    redirect_to sanitized_back_url
-  rescue ArgumentError => ex # ArgumentError from Period.new or if period.negative?
-    flash[:alert] = "Ungültige Zeitspanne: #{ex}"
-    render action: 'select_period'
-  end
-
-  def employee_overview?
-    params[:evaluation] =~ /^userworkitems$|^employeeworkitems$/
-  end
-
-  def employees_overview?
-    params[:evaluation] == 'employees'
   end
 
   private
@@ -186,6 +113,16 @@ class EvaluatorController < ApplicationController
   end
   # rubocop:enable Metrics/AbcSize
 
+  def overview_template
+    if params[:evaluation] =~ /^userworkitems$|^employeeworkitems$/
+     'overview_employee'
+    elsif params[:evaluation] == 'employees'
+      'employees'
+    else
+      'overview'
+    end
+  end
+
   def prepare_report_header
     set_evaluation_details
     @employee = Employee.find(@evaluation.employee_id) if @evaluation.employee_id
@@ -217,7 +154,10 @@ class EvaluatorController < ApplicationController
   end
 
   def paginate_times
-    @times = @evaluation.times(@period).includes(:employee, :work_item).page(params[:page])
+    @times = @evaluation
+             .times(@period)
+             .includes(:employee, :work_item, :invoice)
+             .page(params[:page])
   end
 
   def redirect_to_overview
@@ -243,16 +183,6 @@ class EvaluatorController < ApplicationController
           [p.nil? || p.unlimited? ? 999_999 : p.length.round(-1),
            p.try(:start_date) || Time.zone.today]
         end
-    end
-  end
-
-  def period_from_params
-    if params[:period_shortcut]
-      Period.parse(params[:period_shortcut])
-    else
-      Period.new(params[:period][:start_date],
-                 params[:period][:end_date],
-                 params[:period][:label])
     end
   end
 

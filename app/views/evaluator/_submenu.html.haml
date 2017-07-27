@@ -45,9 +45,9 @@
 - if can?(:read, Worktime)
   = nav 'Auslastung', reports_workload_path
 
-- if can?(:export_extended_capacity_csv, Evaluation)
+- if can?(:capacity_report, Evaluation)
   = nav 'Detaillierte Auslastung CSV',
-        export_extended_capacity_csv_path,
+        reports_capacity_path,
         data: { turbolinks: false }
 
 - if can?(:revenue_reports, Department)
@@ -64,6 +64,6 @@
 - if can?(:read, Employee)
   = nav 'Mitarbeiterliste', employee_master_data_path
 
--if can?(:export_role_distribution, Evaluation)
+-if can?(:role_distribution_report, Evaluation)
   = nav 'Funktionsanteile',
-        export_role_distribution_path
+        reports_role_distribution_path

@@ -47,7 +47,7 @@ class WorktimeGraph
     append_account_boxes @work_items_eval.times(@current).
       where(WORKTIME_CONDITIONS).
       reorder(WORKTIME_ORDER).
-      includes(:work_item)
+      includes(:work_item, :invoice)
 
     # add absencetimes, payed ones first
     append_period_boxes period_boxes[:absences], must_hours

@@ -152,14 +152,6 @@ module EvaluatorHelper
 
   ### period and info helpers
 
-  def period_link(label, shortcut, options = {})
-    link_to(label,
-            { action: 'change_period',
-              period_shortcut: shortcut,
-              back_url: params[:back_url] },
-            options)
-  end
-
   def employee_infos(employee, period = nil)
     employment_infos(employee, period) +
       employee_time_infos(employee.statistics, period) +

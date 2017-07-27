@@ -7,9 +7,9 @@
 - employee = @evaluation.category
 %section
   %p
-    = link_to 'Mitarbeiterstammdaten', employee_master_datum_url(employee.id)
+    = link_to 'Mitarbeiterstammdaten', employee_master_datum_path(employee.id)
     |
-    = link_to 'Wochengrafik', employee_weekly_graph_url(employee.id)
+    = link_to 'Wochengrafik', weekly_graph_path(employee.id)
   %div
     %label #{employee.class.human_attribute_name(:committed_worktimes_at)}:
     - if employee.committed_worktimes_at

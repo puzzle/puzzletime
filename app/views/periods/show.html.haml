@@ -67,7 +67,7 @@
         = period_link 'Geschäftsjahr/Ausblick', 'b', title: 'Aktuelles Geschäftsjahr bis heute + drei Monate'
 
 %h3 Beliebig
-= form_tag({ action: 'change_period' }, class: 'form-horizontal', role: 'form') do
+= form_tag(periods_path, method: :patch, class: 'form-horizontal', role: 'form') do
   = hidden_field_tag :back_url, params[:back_url]
   .form-group
     = label('period', 'start_date', 'Von', class: 'col-md-1 control-label')

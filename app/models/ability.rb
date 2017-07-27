@@ -104,9 +104,8 @@ class Ability
          :employeesubworkitems,
          :absences,
          :employeeabsences,
-         :export_capacity_csv,
-         :export_extended_capacity_csv,
-         :export_role_distribution],
+         :capacity_report,
+         :role_distribution_report],
         Evaluation
   end
 
@@ -207,10 +206,7 @@ class Ability
 
     can :manage, CustomList, employee_id: user.id
 
-    can [:select_period,
-         :current_period,
-         :change_period,
-         :compose_report,
+    can [:compose_report,
          :report,
          :export_csv,
          :absencedetails,

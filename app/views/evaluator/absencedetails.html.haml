@@ -5,5 +5,5 @@
 
 
 - @title = "Abwesenheiten #{@period.label}"
-= render :partial => 'period_link'
-= render :partial => 'detail_times', :locals => {:spacer => 'blankrow'}
+= render 'period_link'
+= render 'detail_times', spacer: 'blankrow'

@@ -9,11 +9,8 @@
     - entities_name ||= 'Zeiten'
     #{entities_name} während #{@period} &nbsp;
     = link_to 'Aktuelle Zeitspanne',
-              :controller => 'evaluator',
-              :action => 'current_period',
-              :back_url => request.original_fullpath
+              periods_path(back_url: request.original_fullpath),
+              data: { method: :delete }
     |
   = link_to 'Andere Zeitspanne',
-            :controller => 'evaluator',
-            :action => 'select_period',
-            :back_url => request.original_fullpath
+            periods_path(back_url: request.original_fullpath)

@@ -36,8 +36,6 @@ Rails.application.routes.draw do
       get :log, to: 'employees/log#index'
     end
 
-    get :weekly_graph, to: 'weekly_graph#show'
-
     resources :employments, except: [:show]
     resources :overtime_vacations, except: [:show]
     resource :worktimes_commit, only: [:edit, :update], controller: 'employees/worktimes_commit'
@@ -143,9 +141,9 @@ Rails.application.routes.draw do
     end
   end
 
-  scope '/evaluator', controller: 'evaluator' do
-    resources :employee_master_data, only: [:index, :show]
+  resources :employee_master_data, only: [:index, :show]
 
+  scope '/evaluator', controller: 'evaluator' do
     get :index
     get :overview
     get :details
@@ -154,16 +152,11 @@ Rails.application.routes.draw do
     get :compose_report
     get :report
     get :export_csv
-    get :export_capacity_csv
-    get :export_extended_capacity_csv
-    get :export_role_distribution
-
-    get :select_period
-    get :current_period
-    match :change_period, via: [:get, :post]
 
     get ':evaluation', to: 'evaluator#overview'
   end
+
+  resource :periods, only: [:show, :update, :destroy]
 
   namespace :plannings do
     resources :orders, only: [:index, :show, :update, :destroy] do
@@ -188,11 +181,14 @@ Rails.application.routes.draw do
   end
 
   get :vacations, to: 'vacations#show'
+  get 'weekly_graph/:employee_id', to: 'weekly_graph#show', as: :weekly_graph
 
   scope '/reports' do
-    get '/orders', to: 'order_reports#index', as: :reports_orders
-    get '/workload', to: 'workload_report#index', as: :reports_workload
-    get '/revenue', to: 'revenue_reports#index', as: :reports_revenue
+    get :orders, to: 'order_reports#index', as: :reports_orders
+    get :workload, to: 'workload_report#index', as: :reports_workload
+    get :revenue, to: 'revenue_reports#index', as: :reports_revenue
+    get :capacity, to: 'capacity_report#index', as: :reports_capacity
+    get :role_distribution, to: 'role_distribution_report#index', as: :reports_role_distribution
   end
 
   scope '/login', controller: 'login' do

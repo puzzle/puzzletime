@@ -4,11 +4,14 @@
 -#  https://github.com/puzzle/puzzletime.
 
 
-- @title = "Journal"
+- @title = 'Journal'
 
 = render 'orders/header'
 
-= render 'form' if can?(:create_comment, @order)
+- if can?(:create_comment, @order)
+  = render 'form'
+- elsif entries.to_a.blank?
+  .table= ti(:no_list_entries)
 
 .list
   = render partial: :order_comment, collection: entries, locals: {total_count: entries.size}

@@ -12,7 +12,7 @@
             worktimes_path,
             ordertimes_path,
             absencetimes_path,
-            employee_weekly_graph_path(current_user.id)
+            weekly_graph_path(current_user.id)
       = model_nav Order
       = nav 'Planung',
             plannings_employee_path(current_user.id),
@@ -27,6 +27,7 @@
             reports_orders_path,
             reports_workload_path,
             reports_revenue_path,
+            reports_role_distribution_path,
             vacations_path
       - if can?(:manage, Client)
         = nav 'Verwalten',

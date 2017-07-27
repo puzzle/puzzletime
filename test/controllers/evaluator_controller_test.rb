@@ -9,26 +9,8 @@
 require 'test_helper'
 
 class EvaluatorControllerTest < ActionController::TestCase
+
   setup :login
-
-  def expected_csv_header
-    'Datum,Stunden,Von Zeit,Bis Zeit,Reporttyp,Verrechenbar,Mitarbeiter,Position,Ticket,Bemerkungen'
-  end
-
-  def csv_header
-    response.body.lines.first
-  end
-
-  def csv_data_lines
-    _, *lines = response.body.lines.to_a
-    lines
-  end
-
-  def assert_csv_http_headers(filename)
-    assert_includes response.headers, 'Content-Type', 'Content-Disposition'
-    assert_equal 'text/csv; charset=utf-8; header=present', response.headers['Content-Type']
-    assert_equal "attachment; filename=\"#{filename}\"", response.headers['Content-Disposition']
-  end
 
   %w(userworkitems userabsences).each do |evaluation|
     test "GET index #{evaluation}" do
@@ -132,27 +114,29 @@ class EvaluatorControllerTest < ActionController::TestCase
     assert_match %r{<td[^>]*>#{ticket_label}</td>}, response.body
   end
 
-  test 'GET export_role_distribution denies access for non-managment employee' do
-    employees(:mark).update!(management: false)
-    assert_raises CanCan::AccessDenied do
-      get :export_role_distribution
-    end
+  private
+
+  def expected_csv_header
+    'Datum,Stunden,Von Zeit,Bis Zeit,Reporttyp,Verrechenbar,Mitarbeiter,Position,Ticket,Bemerkungen'
   end
 
-  test 'GET export_role_distribution renders page to select date' do
-    get :export_role_distribution
-    assert_template 'export_role_distribution'
-    assert_match(/Stichdatum/, response.body)
-    assert_match(/CSV herunterladen/, response.body)
+  def csv_header
+    response.body.lines.first
   end
 
-  test 'GET export_role_distribution with format csv renders csv' do
-    get :export_role_distribution, params: { date: I18n.l(Date.new(2000, 1, 23)) }, format: :csv
-    assert_csv_http_headers('puzzletime_funktionsanteile_20000123.csv')
-    assert_match(/Funktionsanteile per 23.01.2000/, response.body)
+  def csv_data_lines
+    _, *lines = response.body.lines.to_a
+    lines
+  end
+
+  def assert_csv_http_headers(filename)
+    assert_includes response.headers, 'Content-Type', 'Content-Disposition'
+    assert_equal 'text/csv; charset=utf-8; header=present', response.headers['Content-Type']
+    assert_equal "attachment; filename=\"#{filename}\"", response.headers['Content-Disposition']
   end
 
   def division_id(evaluation)
     evaluation.singularize.classify.constantize.first.id
   end
+
 end

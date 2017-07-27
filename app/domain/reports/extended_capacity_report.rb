@@ -6,9 +6,10 @@
 #  https://github.com/puzzle/puzzletime.
 
 
-class ExtendedCapacityReport < BaseCapacityReport
+class ExtendedCapacityReport
+
   def initialize(current_period)
-    super(current_period, 'puzzletime_detaillierte_auslastung')
+    @period = current_period
   end
 
   def to_csv
@@ -16,6 +17,10 @@ class ExtendedCapacityReport < BaseCapacityReport
       add_header(csv)
       add_employees(csv)
     end
+  end
+
+  def filename
+    "puzzletime_detaillierte_auslastung_#{format_date(@period.start_date)}_#{format_date(@period.end_date)}.csv"
   end
 
   private
@@ -151,6 +156,28 @@ class ExtendedCapacityReport < BaseCapacityReport
      data.fetch(:internal_hours, 0)]
   end
 
+  def find_billable_time(employee, work_item_id, period)
+    Worktime.find_by_sql(['SELECT SUM(w.hours) AS HOURS, w.billable FROM worktimes w ' \
+                          'LEFT JOIN work_items p ON p.id = w.work_item_id ' \
+                          'WHERE w.employee_id = ? AND ? = ANY(p.path_ids) ' \
+                          'AND w.work_date BETWEEN ? AND ? ' \
+                          'GROUP BY w.billable',
+                          employee.id, work_item_id, period.start_date, period.end_date])
+  end
+
+  def employee_absences(employee, period)
+    employee.worktimes.includes(:absence).
+        in_period(period).
+        where(type: 'Absencetime', absences: { payed: true }).
+        sum(:hours).
+        to_f
+  end
+
+  def extract_billable_hours(result, billable)
+    entry = result.find { |w| w.billable == billable }
+    entry ? entry.hours : 0
+  end
+
   def internal?(work_item)
     Array.wrap(work_item.path_ids).include?(Company.work_item_id)
   end
@@ -182,4 +209,9 @@ class ExtendedCapacityReport < BaseCapacityReport
   def subwork_item_label(work_item, subwork_item)
     subwork_item == work_item ? '' : subwork_item.label
   end
+
+  def format_date(date)
+    I18n.l(date, format: '%Y%m%d')
+  end
+
 end
