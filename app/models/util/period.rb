@@ -95,7 +95,7 @@ class Period
       when 'w' then week_for(now.advance(days: shift * 7).to_date, shortcut: shortcut)
       when 'm' then month_for(now.advance(months: shift).to_date, shortcut: shortcut)
       when 'M' then next_n_months(shift, now)
-      when 'q' then parse_quarter(now, shift, shortcut)
+      when 'Q' then parse_quarter(now, shift, shortcut)
       when 'y' then year_for(now.advance(years: shift).to_date, shortcut: shortcut)
       when 'b' then business_year_for(now.to_date)
       end

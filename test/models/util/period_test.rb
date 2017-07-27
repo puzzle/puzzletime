@@ -27,33 +27,33 @@ class PeriodTest < ActiveSupport::TestCase
   def test_parse_quarter
     travel_to Date.new(2000, 1, 1)
 
-    period = Period.parse('1q')
-    assert_equal '1q', period.shortcut
+    period = Period.parse('1Q')
+    assert_equal '1Q', period.shortcut
     assert_equal Date.new(2000, 1, 1), period.start_date
     assert_equal Date.new(2000, 1, 1) + 3.months - 1.day, period.end_date
-    period = Period.parse('2q')
-    assert_equal '2q', period.shortcut
+    period = Period.parse('2Q')
+    assert_equal '2Q', period.shortcut
     assert_equal Date.new(2000, 4, 1), period.start_date
     assert_equal Date.new(2000, 4, 1) + 3.months - 1.day, period.end_date
-    period = Period.parse('3q')
-    assert_equal '3q', period.shortcut
+    period = Period.parse('3Q')
+    assert_equal '3Q', period.shortcut
     assert_equal Date.new(2000, 7, 1), period.start_date
     assert_equal Date.new(2000, 7, 1) + 3.months - 1.day, period.end_date
-    period = Period.parse('4q')
-    assert_equal '4q', period.shortcut
+    period = Period.parse('4Q')
+    assert_equal '4Q', period.shortcut
     assert_equal Date.new(2000, 10, 1), period.start_date
     assert_equal Date.new(2000, 10, 1) + 3.months - 1.day, period.end_date
 
     assert_raises ArgumentError do
-      Period.parse('-1q')
+      Period.parse('-1Q')
     end
 
     assert_raises ArgumentError do
-      Period.parse('0q')
+      Period.parse('0Q')
     end
 
     assert_raises ArgumentError do
-      Period.parse('5q')
+      Period.parse('5Q')
     end
 
     travel_back
