@@ -41,8 +41,8 @@ module Puzzletime
 
     config.encoding = 'utf-8'
 
-    memcached_host = ENV['MEMCACHED_HOST'] || 'localhost'
-    memcached_port = ENV['MEMCACHED_PORT'] || '11211'
+    memcached_host = ENV['RAILS_MEMCACHED_HOST'] || 'localhost'
+    memcached_port = ENV['RAILS_MEMCACHED_PORT'] || '11211'
     config.cache_store = :dalli_store, "#{memcached_host}:#{memcached_port}"
 
     config.middleware.insert_before Rack::ETag, Rack::Deflater

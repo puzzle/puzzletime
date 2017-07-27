@@ -29,12 +29,12 @@ regular_holidays:
 # LDAP configuration
 ldap:
   connection:
-    host: <%= ENV['RAILS_PTIME_LDAP_HOST'] %>
-    port: <%= ENV['RAILS_PTIME_LDAP_PORT'] || 636 %>
-    encryption: <%= ENV['RAILS_PTIME_LDAP_ENCRYPTION'] || 'simple_tls' %>
-  user_dn: <%= ENV['RAILS_PTIME_LDAP_USER_DN'] %>
-  external_dn: <%= ENV['RAILS_PTIME_LDAP_EXTERNAL_DN'] %>
-  group: <%= ENV['RAILS_PTIME_LDAP_GROUP_DN'] %>
+    host: <%= ENV['RAILS_LDAP_HOST'] %>
+    port: <%= ENV['RAILS_LDAP_PORT'] || 636 %>
+    encryption: <%= ENV['RAILS_LDAP_ENCRYPTION'] || 'simple_tls' %>
+  user_dn: <%= ENV['RAILS_LDAP_USER_DN'] %>
+  external_dn: <%= ENV['RAILS_LDAP_EXTERNAL_DN'] %>
+  group: <%= ENV['RAILS_LDAP_GROUP_DN'] %>
 
 # Highrise configuration
 highrise:

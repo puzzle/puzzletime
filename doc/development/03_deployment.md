@@ -29,8 +29,8 @@ gesetzt werden. Werte ohne Default müssen in der Regel definiert werden.
 | RAILS_DB_PORT | Port der Datenbank | - |
 | RAILS_DB_ADAPTER | Datenbank adapter | `postgresql` |
 | RAILS_SECRET_TOKEN | Secret token für die Sessions (128 byte hex). Muss für jede laufende Instanz eindeutig sein. Generierbar mit `rake secret` | - |
-| MEMCACHED_HOST | Hostname des Memcache Dienstes | localhost |
-| MEMCACHED_PORT | Port des Memcache Dienstes  | 11211 |
+| RAILS_MEMCACHED_HOST | Hostname des Memcache Dienstes | localhost |
+| RAILS_MEMCACHED_PORT | Port des Memcache Dienstes  | 11211 |
 | RAILS_SERVE_STATIC_FILES | Ob statische Dateien in der Produktivumgebung geserved werden sollen  | false |
 | RAILS_AIRBRAKE_HOST | Hostname der Airbrake/Errbit Instanz, an welche Fehler gesendet werden sollen. Falls diese Variable nicht gesetzt ist, werden keine Fehlermeldungen verschickt. | - |
 | RAILS_AIRBRAKE_PORT | Port der Airbrake/Errbit Instanz | 443 |
@@ -39,8 +39,9 @@ gesetzt werden. Werte ohne Default müssen in der Regel definiert werden.
 | RAILS_HIGHRISE_TOKEN | Highrise API Key der Applikation (im Highrise: Account & Settings > My Info > API Token) | - |
 | RAILS_SMALL_INVOICE_TOKEN | Smallinvoice API Key der Applikation | - |
 | RAILS_SMALL_INVOICE_REQUEST_RATE | | 1 |
-| RAILS_PTIME_LDAP_HOST |  | - |
-| RAILS_PTIME_LDAP_PORT |  | 636 |
-| RAILS_PTIME_LDAP_USER_DN |  | - |
-| RAILS_PTIME_LDAP_EXTERNAL_DN |  | - |
-| RAILS_PTIME_LDAP_GROUP_DN |  | - |
+| RAILS_LDAP_HOST |  | - |
+| RAILS_LDAP_PORT |  | 636 |
+| RAILS_LDAP_USER_DN |  | - |
+| RAILS_LDAP_ENCRYPTION |  | simple_tls |
+| RAILS_LDAP_EXTERNAL_DN |  | - |
+| RAILS_LDAP_GROUP_DN |  | - |
