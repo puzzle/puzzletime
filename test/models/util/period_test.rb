@@ -44,6 +44,18 @@ class PeriodTest < ActiveSupport::TestCase
     assert_equal Date.new(2000, 10, 1), period.start_date
     assert_equal Date.new(2000, 10, 1) + 3.months - 1.day, period.end_date
 
+    assert_raises ArgumentError do
+      Period.parse('-1q')
+    end
+
+    assert_raises ArgumentError do
+      Period.parse('0q')
+    end
+
+    assert_raises ArgumentError do
+      Period.parse('5q')
+    end
+
     travel_back
   end
 
