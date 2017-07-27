@@ -5,7 +5,7 @@
 
 
 module EmployeeMasterDataHelper
-  def format_year_of_service(employment)
-    Time.zone.now.year - employment.year
+  def format_year_of_service(employment_date)
+    ((Date.current - employment_date) / 365).floor
   end
 end
