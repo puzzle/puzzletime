@@ -31,6 +31,26 @@ class EmployeeMasterDataControllerTest < ActionController::TestCase
     assert_equal %w(John Pablo Pedro), assigns(:employees).map(&:firstname)
   end
 
+  test 'GET index with sorting by last employment' do
+    employments(:next_year).tap do |e|
+      e.end_date = Date.new(2007, 12, 31)
+      e.save!
+    end
+    Fabricate(:employment, {
+      employee: employees(:next_year_pablo),
+      percent: 100,
+      start_date: Date.new(2017, 7, 24),
+      end_date: nil
+    })
+    get :index, params: { sort: 'latest_employment', sort_dir: 'desc' }
+    assert_equal %w(John Pedro Pablo), assigns(:employees).map(&:firstname)
+    expected = [Date.new(1990, 1, 1), Date.new(2005, 11, 1), Date.new(2017, 7, 24)]
+    actual = assigns(:employees).map do |e|
+      assigns(:employee_employment)[e]
+    end
+    assert_equal expected, actual
+  end
+
   test 'GET index with searching' do
     get :index, params: { q: 'ped' }
     assert_equal %w(Pedro), assigns(:employees).map(&:firstname)
