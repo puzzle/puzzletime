@@ -69,6 +69,7 @@ Rails.application.configure do
     Bullet.add_whitelist type: :unused_eager_loading, class_name: "Order", association: :status
     Bullet.add_whitelist type: :unused_eager_loading, class_name: "Order", association: :responsible
     Bullet.add_whitelist type: :unused_eager_loading, class_name: "Order", association: :targets
+    Bullet.add_whitelist type: :unused_eager_loading, class_name: "Order", association: :order_uncertainties
 
     Bullet.add_whitelist type: :n_plus_one_query, class_name: "Order", association: :order_team_members
     Bullet.add_whitelist type: :n_plus_one_query, class_name: "Order", association: :team_members

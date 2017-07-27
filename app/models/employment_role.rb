@@ -18,12 +18,15 @@
 #
 
 class EmploymentRole < ActiveRecord::Base
+
   belongs_to :employment_role_category, optional: true
   has_many :employment_roles_employments, dependent: :restrict_with_exception
 
+  validates_by_schema
   validates :name, uniqueness: { case_sensitive: false }
 
   def to_s
     name
   end
+
 end
