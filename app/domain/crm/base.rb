@@ -59,6 +59,10 @@ module Crm
     def sync_all
     end
 
+    # Sync a single AdditionalCrmOrder
+    def sync_additional_order(additional)
+    end
+
     # Whether only orders from the CRM are allowed or also local ones.
     def restrict_local?
       false

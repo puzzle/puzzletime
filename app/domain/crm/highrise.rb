@@ -67,6 +67,13 @@ module Crm
       import_client_contacts
     end
 
+    def sync_additional_order(additional)
+      deal = ::Highrise::Deal.find(additional.crm_key)
+      additional.update!(name: deal.name) unless additional.name == deal.name
+    rescue ActiveResource::ResourceNotFound
+      additional.destroy!
+    end
+
     def client_url(client)
       crm_entity_url('companies', client)
     end
@@ -98,7 +105,9 @@ module Crm
         deal = ::Highrise::Deal.find(order.crm_key)
         item = order.work_item
         item.update!(name: deal.name) unless item.name == deal.name
-        sync_additional_orders(order.additional_crm_orders)
+        order.additional_crm_orders.each do |additional|
+          sync_additional_order(additional)
+        end
       end
     end
 
@@ -107,17 +116,6 @@ module Crm
       sync_crm_entities(Contact) do |contact|
         person = ::Highrise::Person.find(contact.crm_key)
         contact.update!(contact_attributes(person))
-      end
-    end
-
-    def sync_additional_orders(additional_crm_orders)
-      additional_crm_orders.each do |additional|
-        begin
-          deal = ::Highrise::Deal.find(additional.crm_key)
-          additional.update!(name: deal.name) unless additional.name == deal.name
-        rescue ActiveResource::ResourceNotFound
-          additional.destroy!
-        end
       end
     end
 

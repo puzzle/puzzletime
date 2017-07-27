@@ -20,10 +20,20 @@ class AdditionalCrmOrder < ActiveRecord::Base
 
   validates_by_schema
 
+  after_save :sync_name, if: :saved_change_to_crm_key?
+
   scope :list, -> { order(:name) }
 
   def to_s
     name
+  end
+
+  private
+
+  def sync_name
+    if Crm.instance
+      Crm.instance.delay.sync_additional_order(self)
+    end
   end
 
 end
