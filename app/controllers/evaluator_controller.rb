@@ -30,18 +30,10 @@ class EvaluatorController < ApplicationController
   end
 
   def details
-    redirect_to action: 'absencedetails' if params[:evaluation] == 'absencedetails'
     set_navigation_levels
     set_evaluation_details
     paginate_times
   end
-
-  def absencedetails
-    session[:evalLevels] = []
-    @period ||= Period.coming_month Time.zone.today, 'Kommender Monat'
-    paginate_times
-  end
-
 
   ########################  DETAIL ACTIONS  #########################
 
@@ -85,7 +77,6 @@ class EvaluatorController < ApplicationController
   def set_default_evaluation
     @evaluation = case params[:evaluation].downcase
                   when 'managed' then ManagedOrdersEval.new(@user)
-                  when 'absencedetails' then AbsenceDetailsEval.new
                   when 'userworkitems' then EmployeeWorkItemsEval.new(@user.id)
                   when "employeesubworkitems#{@user.id}", 'usersubworkitems' then
                     params[:evaluation] = 'usersubworkitems'
@@ -156,8 +147,14 @@ class EvaluatorController < ApplicationController
   def paginate_times
     @times = @evaluation
              .times(@period)
-             .includes(:employee, :work_item, :invoice)
+             .includes(:employee, :work_item)
              .page(params[:page])
+    if @evaluation.absences
+      @times = @times.includes(:absence)
+    else
+      @times = @times.includes(:invoice)
+    end
+    @times
   end
 
   def redirect_to_overview

@@ -147,7 +147,6 @@ Rails.application.routes.draw do
     get :index
     get :overview
     get :details
-    get :absencedetails
 
     get :compose_report
     get :report

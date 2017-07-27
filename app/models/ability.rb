@@ -209,7 +209,6 @@ class Ability
     can [:compose_report,
          :report,
          :export_csv,
-         :absencedetails,
          :userworkitems,
          :userabsences,
          :usersubworkitems,

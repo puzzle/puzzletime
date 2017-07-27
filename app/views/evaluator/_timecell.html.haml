@@ -23,6 +23,7 @@
   planned_hours = (plancell.is_a?(Hash) ? plancell[:hours] : nil).to_f
   planned_billable_hours = (plancell.is_a?(Hash) ? plancell[:billable_hours] : nil).to_f
   action ||= 'details'
+
 %td.text-right
   - if evaluation.class.billable_hours
     = with_tooltip('Geleistet - gesamthaft', class: 'additional-figure muted') do

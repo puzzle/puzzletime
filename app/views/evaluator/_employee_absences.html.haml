@@ -11,4 +11,4 @@
   = render('category',
            evaluation: evaluation,
            times: @periods.collect { |p| evaluation.sum_times_grouped(p) },
-           evaluation_name: 'employeeabsences')
+           evaluation_name: params[:evaluation] == 'userworkitems' ? 'userabsences' : 'employeeabsences')
