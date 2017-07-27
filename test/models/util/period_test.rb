@@ -24,6 +24,29 @@ class PeriodTest < ActiveSupport::TestCase
     travel_back
   end
 
+  def test_parse_quarter
+    travel_to Date.new(2000, 1, 1)
+
+    period = Period.parse('1q')
+    assert_equal '1q', period.shortcut
+    assert_equal Date.new(2000, 1, 1), period.start_date
+    assert_equal Date.new(2000, 1, 1) + 3.months - 1.day, period.end_date
+    period = Period.parse('2q')
+    assert_equal '2q', period.shortcut
+    assert_equal Date.new(2000, 4, 1), period.start_date
+    assert_equal Date.new(2000, 4, 1) + 3.months - 1.day, period.end_date
+    period = Period.parse('3q')
+    assert_equal '3q', period.shortcut
+    assert_equal Date.new(2000, 7, 1), period.start_date
+    assert_equal Date.new(2000, 7, 1) + 3.months - 1.day, period.end_date
+    period = Period.parse('4q')
+    assert_equal '4q', period.shortcut
+    assert_equal Date.new(2000, 10, 1), period.start_date
+    assert_equal Date.new(2000, 10, 1) + 3.months - 1.day, period.end_date
+
+    travel_back
+  end
+
   def test_parse_business_year
     Settings.defaults.business_year_start_month = 1
 
