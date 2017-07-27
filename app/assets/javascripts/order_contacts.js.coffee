@@ -4,7 +4,6 @@
 #  https://github.com/puzzle/puzzletime.
 
 
-
 app = window.App ||= {}
 
 app.loadContactsWithCrm = () ->
