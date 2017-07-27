@@ -80,20 +80,17 @@ class EmployeeMasterDataController < ApplicationController
 
     @employee_employment = {}
     list.each do |employee|
-      @employee_employment[employee] = get_latest_employment_date(employee)
+      @employee_employment[employee] = get_latest_employment(employee).start_date
     end
   end
 
-  def get_latest_employment_date(employee)
-    employment = employee.employments.find do |e|
-      next unless e.end_date
+  def get_latest_employment(employee)
+    employments = employee.employments.sort_by(&:start_date).reverse!
 
-      start_date = e.end_date - 1.day
-
-      employee.employments.find { |em| em.start_date == start_date }
+    employments.reduce do |newer_employment, older_employment|
+      has_gap = newer_employment.start_date - 1.day != older_employment.end_date
+      has_gap ? newer_employment : older_employment
     end
-    employment ||= employee.employments.last
-    employment.start_date
   end
 
   def sort_by_latest_employment(list)
