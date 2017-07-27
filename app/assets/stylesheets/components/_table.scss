@@ -201,3 +201,12 @@ th {
 th.nowrap {
   white-space: nowrap;
 }
+
+table .assoc_employment_roles_employments {
+  padding: 0;
+  margin-bottom: 0;
+
+  li {
+    list-style: none;
+  }
+}

@@ -178,11 +178,11 @@ module FormatHelper
   # Formats an ActiveRecord +has_and_belongs_to_many+ or
   # +has_many+ association.
   def format_has_many(obj, assoc)
-    values = obj.send(assoc.name).list
+    values = obj.send(assoc.name)
     if values.size == 1
       assoc_link(values.first)
     elsif values.present?
-      simple_list(values) { |val| assoc_link(val) }
+      simple_list(values, class: "assoc_#{assoc.name}" ) { |val| assoc_link(val) }
     else
       ta(:no_entry, assoc)
     end

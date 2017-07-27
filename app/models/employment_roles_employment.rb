@@ -16,14 +16,13 @@
 #
 
 class EmploymentRolesEmployment < ActiveRecord::Base
+
   belongs_to :employment
   belongs_to :employment_role
   belongs_to :employment_role_level, optional: true
 
   validates :percent, inclusion: 0..200
   validate :valid_level
-
-  scope :list, -> { order('percent DESC') }
 
   def to_s
     level = if employment_role_level_id
@@ -46,4 +45,5 @@ class EmploymentRolesEmployment < ActiveRecord::Base
                  "Die Funktion '#{employment_role.name}' hat keine Stufen.")
     end
   end
+
 end

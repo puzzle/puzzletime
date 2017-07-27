@@ -67,9 +67,11 @@ de-CH:
     edit:
       title: "%{model} bearbeiten"
     create:
+      title: "%{model} erstellen"
       flash:
         success: "%{model} wurde erfolgreich erstellt."
     update:
+      title: "%{model} bearbeiten"
       flash:
         success: "%{model} wurde erfolgreich aktualisiert."
     destroy:

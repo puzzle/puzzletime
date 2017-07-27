@@ -192,7 +192,7 @@ class FormatHelperTest < ActionView::TestCase
 
   test 'format has_many column with content' do
     m = crud_test_models(:CCCCC)
-    assert_equal '<ul><li>AAAAA</li><li>BBBBB</li></ul>',
+    assert_equal '<ul class="assoc_others"><li>AAAAA</li><li>BBBBB</li></ul>',
                  format_attr(m, :others)
   end
 
