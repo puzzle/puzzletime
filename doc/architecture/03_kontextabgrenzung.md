@@ -38,3 +38,7 @@ Es werden keine Daten auf dem Dateisystem abgelegt.
  Falls SmallInvoice nicht konfiguriert ist, können zwar Rechnungsinstanzen erstellt 
  werden, es besteht aber keine weitere Funktionalität zum Drucken, Verwalten von Zahlungseingängen usw.
  Theoretisch kann auch ein Interface zu einem anderen Invoicing Service implementiert werden.
+ 
+**Airbrake**: Externer Service, welcher in einem Fehlerfall mit allen wichtigen Informationen 
+ benachrichtigt wird. Ist im Diagram nicht dargestellt. In der Regel eine 
+ [Errbit](http://errbit.github.io/errbit/) Instanz.
