@@ -60,21 +60,21 @@ class ExtendedCapacityReportTest < ActiveSupport::TestCase
     assert_equal 'Kunden-Projekte Total - Detail (h)', header[15]
     assert_equal '3.0', webauftritt[15]
     assert_equal '10.0', shop[15]
-    assert_equal '0', ptime[15]
+    assert_equal '', ptime[15]
 
     assert_equal 'Kunden-Projekte Total verrechenbar - Detail (h)', header[17]
     assert_equal '2.0', webauftritt[17]
     assert_equal '4.0', shop[17]
-    assert_equal '0', ptime[17]
+    assert_equal '', ptime[17]
 
     assert_equal 'Kunden-Projekte Total nicht verrechenbar - Detail (h)', header[19]
     assert_equal '1.0', webauftritt[19]
     assert_equal '6.0', shop[19]
-    assert_equal '0', ptime[19]
+    assert_equal '', ptime[19]
 
     assert_equal 'Interne Projekte Total - Detail (h)', header[21]
-    assert_equal '0', webauftritt[21]
-    assert_equal '0', shop[21]
+    assert_equal '', webauftritt[21]
+    assert_equal '', shop[21]
     assert_equal '8.0', ptime[21]
   end
 

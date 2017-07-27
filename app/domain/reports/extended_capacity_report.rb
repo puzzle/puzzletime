@@ -82,16 +82,16 @@ class ExtendedCapacityReport
      '',
      '',
      '',
-     rows.map { |r| r[12] }.sum, # Projekte Total (h)
+     rows.map { |r| r[12].to_f }.sum, # Projekte Total (h)
      '',
      '',
-     rows.map { |r| r[15] }.sum, # Kunden-Projekte Total (h)
+     rows.map { |r| r[15].to_f }.sum, # Kunden-Projekte Total (h)
      '',
-     rows.map { |r| r[17] }.sum, # Kunden-Projekte Total verrechenbar (h)
+     rows.map { |r| r[17].to_f }.sum, # Kunden-Projekte Total verrechenbar (h)
      '',
-     rows.map { |r| r[19] }.sum, # Kunden-Projekte Total nicht verrechenbar (h)
+     rows.map { |r| r[19].to_f }.sum, # Kunden-Projekte Total nicht verrechenbar (h)
      '',
-     rows.map { |r| r[21] }.sum, # Interne Projekte Total (h)
+     rows.map { |r| r[21].to_f }.sum, # Interne Projekte Total (h)
      '']
   end
 
@@ -142,16 +142,16 @@ class ExtendedCapacityReport
      work_item_label(parent),
      subwork_item_label(parent, child),
      '',
-     data.fetch(:billable_hours, 0) + data.fetch(:non_billable_hours, 0) + data.fetch(:internal_hours, 0),
+     employee_overall_total(data),
      offered_rate(work_item),
      '',
-     data.fetch(:billable_hours, 0) + data.fetch(:non_billable_hours, 0),
+     employee_customer_total(data),
      '',
-     data.fetch(:billable_hours, 0),
+     data.fetch(:billable_hours, ''),
      '',
-     data.fetch(:non_billable_hours, 0),
+     data.fetch(:non_billable_hours, ''),
      '',
-     data.fetch(:internal_hours, 0)]
+     data.fetch(:internal_hours, '')]
   end
 
   def find_billable_time(employee, work_item_id, period)
@@ -164,11 +164,11 @@ class ExtendedCapacityReport
   end
 
   def employee_absences(employee, period)
-    employee.worktimes.includes(:absence).
-        in_period(period).
-        where(type: 'Absencetime', absences: { payed: true }).
-        sum(:hours).
-        to_f
+    employee.worktimes.includes(:absence)
+            .in_period(period)
+            .where(type: 'Absencetime', absences: { payed: true })
+            .sum(:hours)
+            .to_f
   end
 
   def extract_billable_hours(result, billable)
@@ -206,6 +206,18 @@ class ExtendedCapacityReport
 
   def subwork_item_label(work_item, subwork_item)
     subwork_item == work_item ? '' : subwork_item.label
+  end
+
+  def employee_overall_total(data)
+    data.fetch(:billable_hours, 0) + data.fetch(:non_billable_hours, 0) + data.fetch(:internal_hours, 0)
+  end
+
+  def employee_customer_total(data)
+    if data[:billable_hours].present? || data[:non_billable_hourse].present?
+      data.fetch(:billable_hours, 0) + data.fetch(:non_billable_hours, 0)
+    else
+      ''
+    end
   end
 
   def format_date(date)
