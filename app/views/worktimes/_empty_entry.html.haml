@@ -10,7 +10,6 @@
       %i.icon-add.worktimes-day-add-link-icon
       %span Neuer Eintrag
     = link_to('', new_ordertime_path(work_date: localize_date(day)),
-                                     data: { no_turbolink: true },
                                      class: 'entry-link')
   - else
     .worktimes-day-no-entries Keine Einträge

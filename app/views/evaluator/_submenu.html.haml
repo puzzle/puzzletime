@@ -48,7 +48,7 @@
 - if can?(:export_extended_capacity_csv, Evaluation)
   = nav 'Detaillierte Auslastung CSV',
         export_extended_capacity_csv_path,
-        data: { no_turbolink: true }
+        data: { turbolinks: false }
 
 - if can?(:revenue_reports, Department)
   = nav 'Umsatz', reports_revenue_path
@@ -66,5 +66,4 @@
 
 -if can?(:export_role_distribution, Evaluation)
   = nav 'Funktionsanteile',
-        export_role_distribution_path,
-        data: { no_turbolink: true }
+        export_role_distribution_path

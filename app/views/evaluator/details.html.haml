@@ -20,7 +20,7 @@
   = action_link action_icon('export', 'CSV Export'),
                 evaluation_detail_params.merge!(action: 'export_csv',
                                                 evaluation: params[:evaluation]),
-                data: { no_turbolink: true }
+                data: { turbolinks: false }
 
   - if @evaluation.report?
     = action_link action_icon('time', 'Zeitrapport erstellen'),
