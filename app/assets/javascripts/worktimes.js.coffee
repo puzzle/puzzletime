@@ -46,7 +46,7 @@ app.worktimes = new class
 
     $('#new_other_ordertime_link').click (e) ->
       e.preventDefault()
-      window.location.href = "#{$(this).attr('href')}?work_date=#{$('#week_date').val()}"
+      window.location.href = "#{$(this).attr('href')}&work_date=#{$('#week_date').val()}"
 
     if @container().length
       $('#week_date').on 'change', (event) ->
