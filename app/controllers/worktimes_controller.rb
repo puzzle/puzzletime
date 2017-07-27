@@ -102,9 +102,7 @@ class WorktimesController < CrudController
   end
 
   def check_employment
-    employment = @worktime.employee.employments.during(
-      Period.day_for(@worktime.work_date)
-    ).first
+    employment = @worktime.employee.employment_at(@worktime.work_date)
 
     unless employment
       flash[:warning] = "#{@worktime}: Es besteht keine Anstellung am #{l(@worktime.work_date)}".html_safe
