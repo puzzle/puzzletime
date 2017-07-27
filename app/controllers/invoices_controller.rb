@@ -19,6 +19,7 @@ class InvoicesController < CrudController
 
   prepend_before_action :entry, only: [:show, :new, :create, :edit, :update, :destroy, :sync]
 
+  before_render_index :load_totals_paid
   before_render_form :load_associations
 
   def show
@@ -141,6 +142,12 @@ class InvoicesController < CrudController
     parent
   end
 
+  def load_totals_paid
+    paid = order.invoices.where(status: 'paid')
+    @total_amount_paid = paid.sum(:total_amount)
+    @total_hours_paid = paid.sum(:total_hours)
+  end
+
   def load_associations
     @employees = employees_for_period(entry.period_from, entry.period_to)
     @work_items = work_items_for_period(entry.period_from, entry.period_to)
@@ -206,10 +213,6 @@ class InvoicesController < CrudController
 
   def autoselect_all?
     @autoselect_workitems_and_employees == true
-  end
-
-  def list_entries
-    super.per(70)
   end
 
   def attempt_destroy_record

@@ -34,17 +34,4 @@ module InvoiceHelper
     Invoice.human_attribute_name(:"statuses.#{invoice.status}") if invoice.status?
   end
 
-  def format_total_billing_amount(entries)
-    f(entries
-      .select(&:paid?)
-      .map(&:total_amount)
-      .reduce(0.0, :+))
-  end
-
-  def format_total_billing_hours(entries)
-    f(entries
-      .select(&:paid?)
-      .map(&:total_hours)
-      .reduce(0.0, :+))
-  end
 end

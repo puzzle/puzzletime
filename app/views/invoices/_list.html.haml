@@ -38,14 +38,13 @@
                               sync_order_invoice_path(order_id: e.order_id, id: e.id),
                               title: 'Daten aus Invoicing übernehmen',
                               data: { method: :put })
-  - if t.entries.total_pages == 1
-    - t.foot do |entries|
-      %tr.times_total_sum
-        %td.text-right
-          Total bezahlte
-        %td.text-right
-          = format_total_billing_amount(entries)
-        %td.text-right
-          = format_total_billing_hours(entries)
-        %td{colspan: 5}
-          -# Append one more %td than needed because of last-child padding
+  - t.foot do |_|
+    %tr.times_total_sum
+      %td.text-right
+        Total bezahlte
+      %td.text-right
+        = f(@total_amount_paid)
+      %td.text-right
+        = f(@total_hours_paid)
+      %td{colspan: 5}
+        -# Append one more %td than needed because of last-child padding
