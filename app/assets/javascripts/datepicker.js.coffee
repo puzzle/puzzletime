@@ -20,7 +20,7 @@ app.datepicker = new class
       date = $.datepicker.parseDate(i18n().dateFormat, dateString)
       instance.input
         .val(formatWeek(date))
-        .trigger('change')
+    instance.input.trigger('change')
 
   options = $.extend({ onSelect, showWeek: true }, i18n())
 
