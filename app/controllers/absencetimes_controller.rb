@@ -33,8 +33,8 @@ class AbsencetimesController < WorktimesController
     @multiabsence.employee = Employee.find_by(id: employee_id)
     @multiabsence.attributes = params[:absencetime]
     if @multiabsence.valid?
-      count = @multiabsence.save
-      flash[:notice] = "#{count} Absenzen wurden erfasst"
+      absences = @multiabsence.save
+      flash[:notice] = "#{absences.length} Absenzen wurden erfasst"
       redirect_to action: 'index', week_date: @multiabsence.work_date
     else
       set_employees
