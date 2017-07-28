@@ -24,7 +24,7 @@ class PeriodTest < ActiveSupport::TestCase
     travel_back
   end
 
-  def test_parse_quarter
+  def test_parse_current_quarter
     travel_to Date.new(2000, 1, 1)
 
     period = Period.parse('1Q')
@@ -55,6 +55,67 @@ class PeriodTest < ActiveSupport::TestCase
     assert_raises ArgumentError do
       Period.parse('5Q')
     end
+
+    travel_back
+  end
+
+  def test_parse_quarter
+    travel_to Date.new(2000, 1, 1)
+
+    period = Period.parse('0q')
+    assert_equal '0q', period.shortcut
+    assert_equal Date.new(2000, 1, 1), period.start_date
+    assert_equal Date.new(2000, 1, 1) + 3.months - 1.day, period.end_date
+
+    period = Period.parse('-1q')
+    assert_equal '-1q', period.shortcut
+    assert_equal Date.new(1999, 10, 1), period.start_date
+    assert_equal Date.new(1999, 10, 1) + 3.months - 1.day, period.end_date
+
+    period = Period.parse('-2q')
+    assert_equal '-2q', period.shortcut
+    assert_equal Date.new(1999, 7, 1), period.start_date
+    assert_equal Date.new(1999, 7, 1) + 3.months - 1.day, period.end_date
+
+    period = Period.parse('-3q')
+    assert_equal '-3q', period.shortcut
+    assert_equal Date.new(1999, 4, 1), period.start_date
+    assert_equal Date.new(1999, 4, 1) + 3.months - 1.day, period.end_date
+
+    period = Period.parse('-4q')
+    assert_equal '-4q', period.shortcut
+    assert_equal Date.new(1999, 1, 1), period.start_date
+    assert_equal Date.new(1999, 1, 1) + 3.months - 1.day, period.end_date
+
+    period = Period.parse('-5q')
+    assert_equal '-5q', period.shortcut
+    assert_equal Date.new(1998, 10, 1), period.start_date
+    assert_equal Date.new(1998, 10, 1) + 3.months - 1.day, period.end_date
+
+    period = Period.parse('1q')
+    assert_equal '1q', period.shortcut
+    assert_equal Date.new(2000, 4, 1), period.start_date
+    assert_equal Date.new(2000, 4, 1) + 3.months - 1.day, period.end_date
+
+    period = Period.parse('2q')
+    assert_equal '2q', period.shortcut
+    assert_equal Date.new(2000, 7, 1), period.start_date
+    assert_equal Date.new(2000, 7, 1) + 3.months - 1.day, period.end_date
+
+    period = Period.parse('3q')
+    assert_equal '3q', period.shortcut
+    assert_equal Date.new(2000, 10, 1), period.start_date
+    assert_equal Date.new(2000, 10, 1) + 3.months - 1.day, period.end_date
+
+    period = Period.parse('4q')
+    assert_equal '4q', period.shortcut
+    assert_equal Date.new(2001, 1, 1), period.start_date
+    assert_equal Date.new(2001, 1, 1) + 3.months - 1.day, period.end_date
+
+    period = Period.parse('5q')
+    assert_equal '5q', period.shortcut
+    assert_equal Date.new(2001, 4, 1), period.start_date
+    assert_equal Date.new(2001, 4, 1) + 3.months - 1.day, period.end_date
 
     travel_back
   end

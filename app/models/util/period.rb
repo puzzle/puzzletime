@@ -28,6 +28,7 @@ class Period
     end
 
     def day_for(date, options = {})
+      date = date.to_date if date.is_a? Time
       options[:label] ||= day_label(date)
       new(date, date, options[:label], options[:shortcut])
     end
@@ -35,28 +36,32 @@ class Period
     def week_for(date, options = {})
       date = date.to_date if date.is_a? Time
       options[:label] ||= week_label(date)
-      date -= (date.wday - 1) % 7
-      new(date, date + 6, options[:label], options[:shortcut])
+      new(date.beginning_of_week, date.end_of_week,
+          options[:label],
+          options[:shortcut])
     end
 
     def month_for(date, options = {})
       date = date.to_date if date.is_a? Time
       options[:label] ||= month_label(date)
-      date -= date.day - 1
-      new(date, date + Time.days_in_month(date.month, date.year) - 1, options[:label],
+      new(date.beginning_of_month, date.end_of_month,
+          options[:label],
           options[:shortcut])
     end
 
     def quarter_for(date, options = {})
+      date = date.to_date if date.is_a? Time
       options[:label] ||= quarter_label(date)
-      new(Date.civil(date.year, date.month - 2, 1),
-          date + Time.days_in_month(date.month, date.year) - 1,
-          options[:label], options[:shortcut])
+      new(date.beginning_of_quarter, date.end_of_quarter,
+          options[:label],
+          options[:shortcut])
     end
 
     def year_for(date, options = {})
+      date = date.to_date if date.is_a? Time
       options[:label] ||= year_label(date)
-      new(Date.civil(date.year, 1, 1), Date.civil(date.year, 12, 31), options[:label],
+      new(date.beginning_of_year, date.end_of_year,
+          options[:label],
           options[:shortcut])
     end
 
@@ -91,21 +96,22 @@ class Period
       range, shift = parse_shortcut(shortcut)
       now = Time.zone.now
       case range
-      when 'd' then day_for(now.advance(days: shift).to_date, shortcut: shortcut)
-      when 'w' then week_for(now.advance(days: shift * 7).to_date, shortcut: shortcut)
-      when 'm' then month_for(now.advance(months: shift).to_date, shortcut: shortcut)
+      when 'd' then day_for(now.advance(days: shift), shortcut: shortcut)
+      when 'w' then week_for(now.advance(days: shift * 7), shortcut: shortcut)
+      when 'm' then month_for(now.advance(months: shift), shortcut: shortcut)
       when 'M' then next_n_months(shift, now)
-      when 'Q' then parse_quarter(now, shift, shortcut)
-      when 'y' then year_for(now.advance(years: shift).to_date, shortcut: shortcut)
+      when 'q' then quarter_for(now.advance(months: shift * 3), shortcut: shortcut)
+      when 'Q' then parse_year_quarter(now.year, shift, shortcut)
+      when 'y' then year_for(now.advance(years: shift), shortcut: shortcut)
       when 'b' then business_year_for(now.to_date)
       end
     end
 
-    def parse_quarter(now, shift, shortcut)
+    def parse_year_quarter(year, shift, shortcut)
       if [1, 2, 3, 4].exclude?(shift)
         raise ArgumentError, 'Unsupported shift for quarter shortcut'
       end
-      quarter_for(Date.civil(now.year, shift * 3, 1), shortcut: shortcut)
+      quarter_for(Date.civil(year, shift * 3, 1), shortcut: shortcut)
     end
 
     # Build a period, even with illegal arguments
