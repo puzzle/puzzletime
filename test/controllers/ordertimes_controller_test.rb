@@ -195,7 +195,7 @@ class OrdertimesControllerTest < ActionController::TestCase
     assert_redirected_to action: 'index', week_date: work_date
     assert flash[:alert].blank?
     assert_match(/Zeit.*erfolgreich erstellt/, flash[:notice])
-    assert_match(/0% Anstellung/, flash[:warning])
+    assert_match(/unbezahlter Urlaub/, flash[:warning])
   end
 
   def test_create_other

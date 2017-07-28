@@ -105,12 +105,12 @@ class WorktimesController < CrudController
     employment = @worktime.employee.employment_at(@worktime.work_date)
 
     unless employment
-      flash[:warning] = "#{@worktime}: Es besteht keine Anstellung am #{l(@worktime.work_date)}".html_safe
+      flash[:warning] = "Es besteht keine Anstellung am #{l(@worktime.work_date)}".html_safe
       return
     end
 
     if employment.percent.zero?
-      flash[:warning] = "#{@worktime}: Es besteht eine 0% Anstellung am #{l(@worktime.work_date)}".html_safe
+      flash[:warning] = "Vorsicht, am #{l(@worktime.work_date)} wurde bereits unbezahlter Urlaub eingetragen".html_safe
       return
     end
   end
