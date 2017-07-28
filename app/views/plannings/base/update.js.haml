@@ -5,6 +5,7 @@
 
 
 App.plannings.selectable.clear();
+App.plannings.selectable.destroy();
 $('#weeks_header_#{dom_id(@board.subject)}').html('#{j(render 'calendar_weeks')}');
 $('#planned_#{dom_id(@board.subject)}').html('#{j(render('header_planned'))}');
 - @board.rows.each do |(employee_id, work_item_id), items|
@@ -15,3 +16,4 @@ $('#planned_#{dom_id(@board.subject)}').html('#{j(render('header_planned'))}');
   $('##{planning_row_id(employee_id, work_item_id)}').html('#{row}');
 
 App.plannings.initWaypoints();
+App.plannings.selectable.init();
