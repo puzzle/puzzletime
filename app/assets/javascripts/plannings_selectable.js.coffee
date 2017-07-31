@@ -16,21 +16,18 @@ app.plannings.selectable = new class
     return if @selectable().length == 0
 
     @bindListeners()
-    @selectable().selectable({
-      filter: selectee,
+    @selectable().selectable
+      filter: selectee
       cancel: [
         'a'
         '.actions'
         '.legend'
       ].join(',')
-      classes: {
+      classes:
         'ui-selected': '-selected'
-      },
-      start: @start,
-      stop: @stop,
-      selecting: @selecting,
-      unselecting: @unselecting
-    })
+        'ui-selecting': '-selected'
+      start: @start
+      stop: @stop
 
   destroy: ->
     @bindListeners(true)
@@ -120,12 +117,6 @@ app.plannings.selectable = new class
 
     if selectedElements.length > 0
       app.plannings.panel.show(selectedElements)
-
-  selecting: (event, ui) ->
-    $(ui.selecting).addClass('-selected')
-
-  unselecting: (event, ui) ->
-    $(ui.unselecting).removeClass('-selected')
 
   selectable: (selector) ->
     if selector
