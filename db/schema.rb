@@ -32,8 +32,8 @@ ActiveRecord::Schema.define(version: 20170725144313) do
     t.boolean "billable", default: true, null: false
     t.boolean "description_required", default: false, null: false
     t.boolean "ticket_required", default: false, null: false
-    t.boolean "from_to_times_required", default: false, null: false
     t.boolean "closed", default: false, null: false
+    t.boolean "from_to_times_required", default: false, null: false
     t.integer "service_id"
     t.index ["portfolio_item_id"], name: "index_accounting_posts_on_portfolio_item_id"
     t.index ["service_id"], name: "index_accounting_posts_on_service_id"
@@ -50,10 +50,10 @@ ActiveRecord::Schema.define(version: 20170725144313) do
   create_table "billing_addresses", id: :serial, force: :cascade do |t|
     t.integer "client_id", null: false
     t.integer "contact_id"
-    t.string "supplement"
-    t.string "street"
-    t.string "zip_code"
-    t.string "town"
+    t.string "supplement", limit: 255
+    t.string "street", limit: 255
+    t.string "zip_code", limit: 255
+    t.string "town", limit: 255
     t.string "country", limit: 2
     t.string "invoicing_key"
     t.index ["client_id"], name: "index_billing_addresses_on_client_id"
@@ -62,7 +62,7 @@ ActiveRecord::Schema.define(version: 20170725144313) do
 
   create_table "clients", id: :serial, force: :cascade do |t|
     t.integer "work_item_id", null: false
-    t.string "crm_key"
+    t.string "crm_key", limit: 255
     t.boolean "allow_local", default: false, null: false
     t.integer "last_invoice_number", default: 0
     t.string "invoicing_key"
@@ -74,13 +74,13 @@ ActiveRecord::Schema.define(version: 20170725144313) do
 
   create_table "contacts", id: :serial, force: :cascade do |t|
     t.integer "client_id", null: false
-    t.string "lastname"
-    t.string "firstname"
-    t.string "function"
-    t.string "email"
-    t.string "phone"
-    t.string "mobile"
-    t.string "crm_key"
+    t.string "lastname", limit: 255
+    t.string "firstname", limit: 255
+    t.string "function", limit: 255
+    t.string "email", limit: 255
+    t.string "phone", limit: 255
+    t.string "mobile", limit: 255
+    t.string "crm_key", limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string "invoicing_key"
@@ -88,7 +88,7 @@ ActiveRecord::Schema.define(version: 20170725144313) do
   end
 
   create_table "contracts", id: :serial, force: :cascade do |t|
-    t.string "number", null: false
+    t.string "number", limit: 255, null: false
     t.date "start_date", null: false
     t.date "end_date", null: false
     t.integer "payment_period", null: false
@@ -112,9 +112,9 @@ ActiveRecord::Schema.define(version: 20170725144313) do
     t.datetime "run_at"
     t.datetime "locked_at"
     t.datetime "failed_at"
-    t.string "locked_by"
-    t.string "queue"
-    t.string "cron"
+    t.string "locked_by", limit: 255
+    t.string "queue", limit: 255
+    t.string "cron", limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
@@ -136,7 +136,7 @@ ActiveRecord::Schema.define(version: 20170725144313) do
     t.boolean "management", default: false
     t.float "initial_vacation_days"
     t.string "ldapname", limit: 255
-    t.string "eval_periods", limit: 3, array: true
+    t.string "eval_periods", array: true
     t.integer "department_id"
     t.date "committed_worktimes_at"
     t.date "probation_period_end_date"
@@ -185,8 +185,8 @@ ActiveRecord::Schema.define(version: 20170725144313) do
   create_table "employment_roles_employments", id: :serial, force: :cascade do |t|
     t.integer "employment_id", null: false
     t.integer "employment_role_id", null: false
-    t.decimal "percent", precision: 5, scale: 2, null: false
     t.integer "employment_role_level_id"
+    t.decimal "percent", precision: 5, scale: 2, null: false
     t.index ["employment_id", "employment_role_id"], name: "index_unique_employment_employment_role", unique: true
   end
 
@@ -245,19 +245,19 @@ ActiveRecord::Schema.define(version: 20170725144313) do
   create_table "order_contacts", primary_key: "false", id: :serial, force: :cascade do |t|
     t.integer "contact_id", null: false
     t.integer "order_id", null: false
-    t.string "comment"
+    t.string "comment", limit: 255
     t.index ["contact_id"], name: "index_order_contacts_on_contact_id"
     t.index ["order_id"], name: "index_order_contacts_on_order_id"
   end
 
   create_table "order_kinds", id: :serial, force: :cascade do |t|
-    t.string "name", null: false
+    t.string "name", limit: 255, null: false
     t.index ["name"], name: "index_order_kinds_on_name", unique: true
   end
 
   create_table "order_statuses", id: :serial, force: :cascade do |t|
-    t.string "name", null: false
-    t.string "style"
+    t.string "name", limit: 255, null: false
+    t.string "style", limit: 255
     t.boolean "closed", default: false, null: false
     t.integer "position", null: false
     t.boolean "default", default: false, null: false
@@ -268,7 +268,7 @@ ActiveRecord::Schema.define(version: 20170725144313) do
   create_table "order_targets", id: :serial, force: :cascade do |t|
     t.integer "order_id", null: false
     t.integer "target_scope_id", null: false
-    t.string "rating", default: "green", null: false
+    t.string "rating", limit: 255, default: "green", null: false
     t.text "comment"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -279,7 +279,7 @@ ActiveRecord::Schema.define(version: 20170725144313) do
   create_table "order_team_members", primary_key: "false", id: :serial, force: :cascade do |t|
     t.integer "employee_id", null: false
     t.integer "order_id", null: false
-    t.string "comment"
+    t.string "comment", limit: 255
     t.index ["employee_id"], name: "index_order_team_members_on_employee_id"
     t.index ["order_id"], name: "index_order_team_members_on_order_id"
   end
@@ -304,7 +304,7 @@ ActiveRecord::Schema.define(version: 20170725144313) do
     t.integer "department_id"
     t.integer "contract_id"
     t.integer "billing_address_id"
-    t.string "crm_key"
+    t.string "crm_key", limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.date "completed_at"
@@ -340,7 +340,7 @@ ActiveRecord::Schema.define(version: 20170725144313) do
   end
 
   create_table "portfolio_items", id: :serial, force: :cascade do |t|
-    t.string "name", null: false
+    t.string "name", limit: 255, null: false
     t.boolean "active", default: true, null: false
     t.index ["name"], name: "index_portfolio_items_on_name", unique: true
   end
@@ -356,8 +356,8 @@ ActiveRecord::Schema.define(version: 20170725144313) do
   end
 
   create_table "target_scopes", id: :serial, force: :cascade do |t|
-    t.string "name", null: false
-    t.string "icon"
+    t.string "name", limit: 255, null: false
+    t.string "icon", limit: 255
     t.integer "position", null: false
     t.string "rating_green_description"
     t.string "rating_orange_description"
@@ -386,11 +386,11 @@ ActiveRecord::Schema.define(version: 20170725144313) do
 
   create_table "work_items", id: :serial, force: :cascade do |t|
     t.integer "parent_id"
-    t.string "name", null: false
+    t.string "name", limit: 255, null: false
     t.string "shortname", limit: 5, null: false
     t.text "description"
     t.integer "path_ids", array: true
-    t.string "path_shortnames"
+    t.string "path_shortnames", limit: 255
     t.string "path_names", limit: 2047
     t.boolean "leaf", default: true, null: false
     t.boolean "closed", default: false, null: false
@@ -424,8 +424,6 @@ ActiveRecord::Schema.define(version: 20170725144313) do
     t.index ["work_item_id", "employee_id", "work_date"], name: "worktimes_work_items"
   end
 
-  add_foreign_key "employment_roles", "employment_role_categories"
-  add_foreign_key "employment_roles_employments", "employment_role_levels"
   add_foreign_key "employments", "employees", name: "fk_employments_employees", on_delete: :cascade
   add_foreign_key "order_uncertainties", "orders"
   add_foreign_key "worktimes", "absences", name: "fk_times_absences", on_delete: :cascade
