@@ -10,6 +10,7 @@ module Invoicing
       include Singleton
 
       ENDPOINTS = %w(invoice invoice/pdf client).freeze
+      HTTP_TIMEOUT = 300 # seconds
 
       def list(endpoint)
         response = get_json(endpoint, :list)
@@ -65,7 +66,7 @@ module Invoicing
       def http(url)
         Net::HTTP.new(url.host, url.port).tap do |http|
           http.use_ssl = url.scheme == 'https'
-          http.read_timeout = 300 # seconds
+          http.read_timeout = HTTP_TIMEOUT
         end
       end
 
