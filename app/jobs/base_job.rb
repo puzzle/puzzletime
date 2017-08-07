@@ -26,7 +26,7 @@ class BaseJob
       payload[:code] = exception.code if exception.respond_to?(:code)
       payload[:data] = exception.data if exception.respond_to?(:data)
     end
-    Airbrake.notify(exception, cgi_data: ENV.to_hash, parameters: payload)
+    Airbrake.notify(exception, payload)
   end
 
   def delayed_jobs

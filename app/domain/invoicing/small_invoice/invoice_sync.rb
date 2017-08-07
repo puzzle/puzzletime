@@ -46,7 +46,7 @@ module Invoicing
           parameters = record_to_params(invoice)
           parameters[:code] = error.code if error.respond_to?(:code)
           parameters[:data] = error.data if error.respond_to?(:data)
-          Airbrake.notify(error, cgi_data: ENV.to_hash, parameters: parameters)
+          Airbrake.notify(error, parameters)
         end
 
         def record_to_params(record, prefix = 'invoice')

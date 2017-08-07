@@ -177,7 +177,7 @@ module Crm
       parameters = record_to_params(synced_entity, 'synced_entity').tap do |params|
         params.merge!(record_to_params(invalid_record, 'invalid_record')) if invalid_record.present?
       end
-      Airbrake.notify(error, cgi_data: ENV.to_hash, parameters: parameters)
+      Airbrake.notify(error, parameters)
     end
 
     def record_to_params(record, prefix = 'record')
