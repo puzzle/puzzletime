@@ -12,7 +12,7 @@
 ### Bug Fixes
 
 * **Volltextsuche:** Volltextsuche der Buchungspositionen geflickt
-* **Auslastung:** Auswertung Detailierte Auslasung CSV berücksichtigt nun die korrekten internen Positionen
+* **Auslastung:** Auswertung Detailierte Auslastung CSV berücksichtigt nun die korrekten internen Positionen
 * **MWST:** PuzzleTime kann nun mit mehreren MWST-Sätzen korrekt rechnen
 * **Absenzen:** Die Sichtbarkeit der Absenzen bereinigen
 
