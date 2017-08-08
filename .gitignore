@@ -37,3 +37,6 @@ config/settings/*.local.yml
 config/environments/*.local.yml
 
 C:\\*
+
+# Postgres files for dockerized development
+postgres_files

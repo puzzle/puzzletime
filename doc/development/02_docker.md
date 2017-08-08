@@ -7,16 +7,8 @@ There is a dockerized development environment, a work in progress.
     sudo apt install bindfs
 
     # Mount targets with correct permissions
-    chmod g+w tmp
     sudo apt install bindfs
-    sudo mkdir /mnt/puzzletime_rails_root
-    sudo mkdir /mnt/puzzletime_postgres_files
-
-    mkdir postgres_files
-
-    primary_group=$(groups | cut -f 1 -d ' ')
-    sudo bindfs -u 1001 -g $primary_group --create-for-user=1001 --create-for-group=$primary_group . /mnt/puzzletime_rails_root
-    sudo bindfs -u 999 -g $primary_group --create-for-user=1001 --create-for-group=$primary_group ./postgres_files /mnt/puzzletime_postgres_files
+    bin/prepare_dev_env.sh
 
 ### Start dev environment
 
