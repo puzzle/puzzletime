@@ -13,6 +13,8 @@ require 'rails/all'
 Bundler.require(*Rails.groups)
 require 'csv'
 
+require_relative 'version'
+
 module Puzzletime
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
@@ -56,11 +58,20 @@ module Puzzletime
   end
 
   def self.version
-    @@ptime_version ||=
-      if File.exists?("#{Rails.root}/VERSION")
-        File.open("#{Rails.root}/VERSION").first.chomp
+    @@ptime_version ||= build_version
+  end
+
+  private
+  def self.build_version
+    major_and_minor = Puzzletime::VERSION
+
+    patch_and_build_info =
+      if File.exists?("#{Rails.root}/BUILD_INFO")
+        File.open("#{Rails.root}/BUILD_INFO").first.chomp
       else
         ''
       end
+
+    "#{major_and_minor}#{patch_and_build_info}"
   end
 end
