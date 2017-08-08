@@ -61,17 +61,30 @@ module Invoicing
 
       def sync
         if key
-          update_remote
+          update_remote_with_timeouts
         else
           create_remote
+          set_association_keys_from_remote
         end
-
-        remote = fetch_remote(client.invoicing_key)
-        set_association_keys(remote) if remote
-        nil
       end
 
       private
+
+      def update_remote_with_timeouts
+        begin
+          update_remote
+          set_association_keys_from_remote
+        rescue Invoicing::Error => e
+          if e.code.to_s == '504'
+            # request is supposed to terminate eventually in the case of a gateway timeout,
+            # so schedule #set_association_keys for later
+            delay(run_at: 30.minutes.from_now).set_association_keys_from_remote
+            nil
+          else
+            raise
+          end
+        end
+      end
 
       def update_remote
         if client.invoicing_key != key
@@ -95,6 +108,12 @@ module Invoicing
 
       def data
         Invoicing::SmallInvoice::Entity::Client.new(client).to_hash
+      end
+
+      def set_association_keys_from_remote
+        remote = fetch_remote(client.invoicing_key)
+        set_association_keys(remote) if remote
+        nil
       end
 
       def fetch_remote(key)

@@ -86,6 +86,8 @@ module Invoicing
         else
           json
         end
+      rescue JSON::ParserError
+        fail Invoicing::Error.new(response.body, response.code, data)
       end
     end
   end
