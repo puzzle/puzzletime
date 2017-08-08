@@ -5,9 +5,6 @@ There is a dockerized development environment, a work in progress.
 ### Prerequisites
 
     sudo apt install bindfs
-
-    # Mount targets with correct permissions
-    sudo apt install bindfs
     bin/prepare_dev_env.sh
 
 ### Start dev environment
