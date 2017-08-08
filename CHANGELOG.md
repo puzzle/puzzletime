@@ -21,5 +21,6 @@
 
 * **Ruby/Rails:** Auf Ruby 2.2.2 und Rails 5.1.2 aktualisiert
 * **Performance:** Chrome Memory Leak in Plannings behoben
+* **Usability:** Menüstruktur reorganisiert
 
 
