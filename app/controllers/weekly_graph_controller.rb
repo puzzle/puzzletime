@@ -10,17 +10,17 @@ class WeeklyGraphController < ApplicationController
   before_action :set_period
 
   def show
-    @graph = WorktimeGraph.new(@period || Period.past_month, worktime_graph_user)
+    @graph = WorktimeGraph.new(@period || Period.past_month, employee)
   end
 
   private
 
-  def worktime_graph_user
-    @worktime_graph_user ||= Employee.find(params[:employee_id])
+  def employee
+    @employee ||= Employee.find(params[:employee_id])
   end
 
   def authorize
-    authorize!(:show_worktime_graph, worktime_graph_user)
+    authorize!(:show_worktime_graph, employee)
   end
 
 end
