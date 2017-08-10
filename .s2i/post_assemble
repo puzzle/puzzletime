@@ -1,0 +1,5 @@
+#!/bin/bash
+
+pushd /opt/app-root/src
+
+echo $BUILD_INFO > BUILD_INFO
