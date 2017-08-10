@@ -29,8 +29,8 @@ services:
       - RAILS_TEST_DB_NAME=puzzletime_test
       - RAILS_TEST_DB_USERNAME=puzzletime
       - RAILS_TEST_DB_PASSWORD=puzzletime
-      - MEMCACHED_HOST=cache
-      - MEMCACHED_PORT=11211
+      - RAILS_MEMCACHED_HOST=cache
+      - RAILS_MEMCACHED_PORT=11211
     depends_on:
       - database
       - test_database
