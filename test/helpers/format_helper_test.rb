@@ -157,7 +157,7 @@ class FormatHelperTest < ActionView::TestCase
 
   test 'format time column' do
     m = crud_test_models(:AAAAA)
-    assert_equal '01:01', format_type(m, :gets_up_at)
+    assert_equal '00:01', format_type(m, :gets_up_at)
   end
 
   test 'format text column' do
