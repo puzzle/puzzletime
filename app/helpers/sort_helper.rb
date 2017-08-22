@@ -6,7 +6,7 @@
 
 module SortHelper
   def sort_link(attr, label = nil, options = {})
-    label ||= entry.class.human_attribute_name(attr)
+    label ||= model_class.human_attribute_name(attr)
     link_to(label, sort_params(attr, options)) + current_mark(attr, options)
   end
 
