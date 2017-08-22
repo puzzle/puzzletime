@@ -5,7 +5,7 @@
 
 
 - employee = @evaluation.category
-- date = @period.present? ? @period.end_date : Time.zone.today
+- date = @period && @period.end_date || Time.zone.today
 
 %section
   %table.table.table-inline.table-striped.table-condensed
