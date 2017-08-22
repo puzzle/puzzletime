@@ -134,3 +134,4 @@ muss Delayed Job gestartet werden:
 | `rake license:update` | Aktualisiert die Lizenz in allen Dateien oder fügt sie neu ein. |
 | `rake rubocop:changed` | Führt die Rubocop Standard Checks (`.rubocop.yml`) auf den geänderten files aus. |
 | `rake rubocop:report` | Führt die Rubocop Standard Checks (`.rubocop.yml`) aus und generiert einen Report für Jenkins. |
+| `rails g error_page [404 500 503]` | Generiert die Fehlerseiten im PuzzleTime Layout. |
