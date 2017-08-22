@@ -13,6 +13,7 @@ Airbrake.configure do |config|
   config.project_id     = 1 # required, but any positive integer works
   config.project_key    = ENV['RAILS_AIRBRAKE_API_KEY']
   config.host           = ENV['RAILS_AIRBRAKE_HOST']
+  config.blacklist_keys << 'pwd'
   config.blacklist_keys << 'RAILS_DB_PASSWORD'
   config.blacklist_keys << 'RAILS_AIRBRAKE_API_KEY'
   config.blacklist_keys << 'RAILS_SECRET_TOKEN'
