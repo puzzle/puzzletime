@@ -24,6 +24,7 @@ end
 
 ignored_exceptions = %w(ActionController::MethodNotAllowed
                         ActionController::RoutingError
+                        ActionController::InvalidAuthenticityToken
                         ActionController::UnknownHttpMethod)
 
 Airbrake.add_filter do |notice|
