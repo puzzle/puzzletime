@@ -200,7 +200,8 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
       check 'repetition'
       page.assert_selector('#repeat_until', visible: true)
 
-      fill_in 'repeat_until', with: (Time.zone.today + 2.weeks).at_beginning_of_week.strftime('%Y %U')
+      fill_in 'repeat_until',
+        with: (Time.zone.today + 2.weeks + 1.day).at_beginning_of_week.strftime('%Y %U')
       #find('#percent').click # required to close calendar popover
       click_button 'OK'
     end
