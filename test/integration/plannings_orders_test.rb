@@ -190,6 +190,10 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
   end
 
   test 'create repetition' do
+    today = Time.zone.today
+    today += 1.day if today.saturday?
+    today += 1.day if today.sunday?
+
     page.driver.browser.manage.window.resize_to(1024, 756)
     drag(row_mark.all('.day')[0], row_mark.all('.day')[4])
     page.assert_selector('.-selected', count: 5)
@@ -201,7 +205,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
       page.assert_selector('#repeat_until', visible: true)
 
       fill_in 'repeat_until',
-        with: (Time.zone.today + 2.weeks + 1.day).at_beginning_of_week.strftime('%Y %U')
+        with: (today + 2.weeks).at_beginning_of_week.strftime('%Y %U')
       #find('#percent').click # required to close calendar popover
       click_button 'OK'
     end
@@ -226,7 +230,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
       check 'repetition'
       page.assert_selector('#repeat_until', visible: true)
 
-      fill_in 'repeat_until', with: (Time.zone.today + 1.weeks).strftime('%Y %U')
+      fill_in 'repeat_until', with: (today + 1.weeks).strftime('%Y %U')
       #find('#percent').click # required to close calendar popover
       click_button 'OK'
     end
