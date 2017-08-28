@@ -32,11 +32,13 @@ class WorktimesController < CrudController
   def new
     super
     if params[:template]
-      template = Worktime.find(params[:template])
-      @worktime.account_id = template.account_id
-      @worktime.ticket = template.ticket
-      @worktime.description = template.description
-      @worktime.billable = template.billable
+      template = Worktime.find_by(id: params[:template])
+      if template
+        @worktime.account_id = template.account_id
+        @worktime.ticket = template.ticket
+        @worktime.description = template.description
+        @worktime.billable = template.billable
+      end
     end
   end
 
