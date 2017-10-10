@@ -31,7 +31,6 @@ module Plannings
           @plannings = @plannings.concat(create)
           @plannings = @plannings.concat(update)
         end
-        repeat if repeat_until_week
         @plannings = @plannings.concat(repeat) if repeat_until_week
         @plannings.uniq!
 
@@ -175,7 +174,7 @@ module Plannings
       repetitions = (end_date - interval.start_date).to_i / interval.length.to_i
       Array.new(repetitions) do |i|
         offset = ((i + 1) * interval.length).days
-        repeat_plannings(offset, end_date)
+        repeat_plannings(offset, end_date).compact
       end.flatten
     end
 

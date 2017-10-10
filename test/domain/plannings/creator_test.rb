@@ -277,7 +277,8 @@ class CreatorTest < ActiveSupport::TestCase
       assert c.create_or_update
     end
 
-    assert_equal 6, c.plannings.length
+    assert_equal %w(2016-10-11 2016-10-12 2016-10-17 2016-10-25 2016-10-26),
+                 c.plannings.map { |p| p.date.to_s }
     assert_empty c.errors
 
     assert_equal 20, p4.reload.percent
