@@ -124,6 +124,28 @@ class WorktimeTest < ActiveSupport::TestCase
     assert !@worktime.valid?
   end
 
+  def test_report_type_guessing_with_start_time
+    @worktime.employee = employees(:pascal)
+    @worktime.work_date = Time.zone.today
+    @worktime.from_start_time = '08:00'
+    @worktime.hours = 5
+    assert !@worktime.valid?
+    assert_equal [:to_end_time], @worktime.errors.keys
+    assert @worktime.start_stop?
+    assert_equal 0.0, @worktime.hours
+  end
+
+  def test_report_type_guessing_with_start_and_end_time
+    @worktime.employee = employees(:pascal)
+    @worktime.work_date = Time.zone.today
+    @worktime.from_start_time = '08:00'
+    @worktime.to_end_time = '10:40'
+    @worktime.hours = 5
+    assert @worktime.valid?
+    assert @worktime.start_stop?
+    assert_in_delta 2.66667, @worktime.hours
+  end
+
   def test_template
     newWorktime = Worktime.find(1).template
     assert_not_nil newWorktime

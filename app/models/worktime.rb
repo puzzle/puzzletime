@@ -169,7 +169,6 @@ class Worktime < ActiveRecord::Base
 
   def guess_report_type
     if from_start_time || to_end_time
-      self.hours = nil
       self.report_type = StartStopType::INSTANCE
     else
       self.from_start_time = nil
@@ -180,9 +179,13 @@ class Worktime < ActiveRecord::Base
 
   # Store hour information from start/stop times.
   def store_hours
-    if start_stop? && from_start_time && to_end_time
-      value = (to_end_time.seconds_since_midnight - from_start_time.seconds_since_midnight) / 3600.0
-      self.hours = value if (hours.to_f - value).abs > 0.0001 # don't cause a change for every minor diff
+    if start_stop?
+      if from_start_time && to_end_time
+        value = (to_end_time.seconds_since_midnight - from_start_time.seconds_since_midnight) / 3600.0
+        self.hours = value if (hours.to_f - value).abs > 0.0001 # don't cause a change for every minor diff
+      else
+        self.hours = nil
+      end
     end
     self.work_date = Time.zone.today if report_type.is_a? AutoStartType
   end
