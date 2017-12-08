@@ -29,4 +29,4 @@ Some things that will increase the chance that your pull request is accepted:
 * Follow [The Ruby Style Guide](https://github.com/bbatsov/ruby-style-guide) and [The Rails Style Guide](https://github.com/bbatsov/rails-style-guide).
 * Write a good commit message.
 
-A more detailed development documentation in German can be found in [doc/development](doc/development.md).
+A more detailed development documentation in German can be found in [doc/development](doc/development).
