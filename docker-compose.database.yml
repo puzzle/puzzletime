@@ -9,7 +9,7 @@ version: '2'
 services:
 
   ptimedb:
-    image: postgres
+    image: postgres:9.3
     ports:
       - '5432:5432'
     environment:
