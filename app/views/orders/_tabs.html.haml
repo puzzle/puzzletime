@@ -17,6 +17,9 @@
           order_accounting_posts_path(@order),
           order_accounting_posts_path(@order)
 
+  - if can?(:controlling, @order)
+    = nav 'Controlling', order_order_controlling_path(@order)
+
   - if can?(:edit_contract, @order)
     = nav 'Vertrag', edit_order_contract_path(@order)
   - elsif can?(:show_contract, @order)
