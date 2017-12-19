@@ -93,18 +93,26 @@ module EvaluatorHelper
     tooltip.html_safe
   end
 
-  def worktime_commits(employee)
+  def worktime_commits_readonly(employee)
+    worktime_commits(employee, false)
+  end
+
+  def worktime_reviews_readonly(employee)
+    worktime_reviews(employee, false)
+  end
+
+  def worktime_commits(employee, editable = can?(:update_committed_worktimes, employee))
     completable_cell("committed_worktimes_at_#{employee.id}",
                      employee.committed_worktimes_at,
-                     can?(:update_committed_worktimes, employee),
+                     editable,
                      edit_employee_worktimes_commit_path(employee),
                      'Freigabe bearbeiten')
   end
 
-  def worktime_reviews(employee)
+  def worktime_reviews(employee, editable = can?(:update_reviewed_worktimes, employee))
     completable_cell("reviewed_worktimes_at_#{employee.id}",
                      employee.reviewed_worktimes_at,
-                     can?(:update_reviewed_worktimes, employee),
+                     editable,
                      edit_employee_worktimes_review_path(employee),
                      'Kontrolle bearbeiten')
   end

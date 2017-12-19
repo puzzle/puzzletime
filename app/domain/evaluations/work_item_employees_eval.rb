@@ -38,4 +38,11 @@ class WorkItemEmployeesEval < Evaluation
     return if division_id.nil?
     @division = Employee.find(division_id.to_i)
   end
+
+  def division_supplement(_user)
+    [
+      [:worktime_commits_readonly, 'Freigabe', 'left'],
+      [:worktime_reviews_readonly, 'Kontrolle', 'left']
+    ]
+  end
 end
