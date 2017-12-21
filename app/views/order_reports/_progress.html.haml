@@ -1,0 +1,45 @@
+:ruby
+  progress = order_progress(order)
+  #billable_percent = 0
+  #unbillable_percent = 0
+  #billable_percent_title = 0
+  #unbillable_percent_title = 0
+  #over_budget_percent = 0
+
+  #if order.offered_amount > 0
+  #  billable_percent = 100 /
+  #    order.offered_amount.to_f *
+  #    order.billable_amount.to_f
+  #  unbillable_percent = 100 /
+  #    order.offered_amount.to_f *
+  #    (order.supplied_amount.to_f - order.billable_amount.to_f)
+  #  billable_percent_title = billable_percent
+  #  unbillable_percent_title = unbillable_percent
+
+  #  if order.supplied_amount.to_f > order.offered_amount.to_f
+  #    ratio = order.offered_amount.to_f / order.supplied_amount.to_f
+  #    over_budget_percent = 100 - ratio * 100;
+  #    billable_percent *= ratio
+  #    billable_percent -= over_budget_percent / 2
+  #    unbillable_percent *= ratio
+  #    unbillable_percent -= over_budget_percent / 2
+
+  #    billable_percent_title = 100 /
+  #      (billable_percent_title + unbillable_percent_title) *
+  #      billable_percent_title
+  #    unbillable_percent_title = 100 /
+  #      (billable_percent_title + unbillable_percent_title) *
+  #      unbillable_percent_title
+  #  end
+  #end
+
+.progress
+  - if progress[:billable_percent] > 0
+    .progress-bar.progress-bar-success{ title: "Verrechenbar: #{f(progress[:billable_percent_title])}%",
+                                        style: "width:#{f(progress[:billable_percent])}%" }
+  - if progress[:unbillable_percent] > 0
+    .progress-bar.progress-bar-info{ title: "Unverrechenbar: #{f(progress[:unbillable_percent_title])}%",
+                                     style: "width:#{f(progress[:unbillable_percent])}%" }
+  - if progress[:over_budget_percent] > 0
+    .progress-bar.progress-bar-danger{ title: "Über Budget: #{f(progress[:over_budget_percent])}%",
+                                       style: "width:#{f(progress[:over_budget_percent])}%" }
