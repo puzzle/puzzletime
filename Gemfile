@@ -40,6 +40,7 @@ gem 'therubyracer', platforms: :ruby
 gem 'uglifier'
 
 gem 'bootstrap-sass'
+gem 'chartjs-ror'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'selectize-rails'

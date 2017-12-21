@@ -13,54 +13,49 @@ class Order::Controlling
     @date = date
   end
 
-  def offered_hours
-    order.accounting_posts.sum(:offered_hours)
+  def offered_total
+    order.accounting_posts.sum(:offered_total)
   end
 
-  def hours_per_week
+  def efforts_per_week
     {}.tap do |result|
       grouped_worktimes.each { |e| add_worktime(result, e) }
       grouped_plannings.each { |e| add_planning(result, e) }
-      planning_percents_to_hours(result)
     end
+  end
+
+  def efforts_per_week_cumulated
+    efforts = efforts_per_week
+    if efforts.length > 1
+      efforts.keys[1..efforts.keys.length].each_with_index do |week, previous_index|
+        previous_week = efforts.keys[previous_index]
+        efforts[week] = sum_entries(efforts[week], efforts[previous_week])
+      end
+    end
+    efforts
   end
 
   private
 
-  def planning_percents_to_hours(result)
-    weeks = result.keys.sort
-    return if weeks.blank?
-
-    result_period = Period.with(weeks.first, weeks.last.end_of_week)
-    WorkingCondition.each_period_of(:must_hours_per_day, result_period) do |period, must_hours|
-      result
-        .keys
-        .select { |week| period.include?(week) }
-        .each do |week|
-          [:planned_definitive, :planned_provisional].each do |key|
-            result[week][key] = result[week][key] / 100.0 * must_hours.to_f
-          end
-        end
-    end
-  end
-
   def grouped_worktimes
     load_worktimes
-      .group('week, billable')
+      .group('week, worktimes.billable')
       .order('week')
-      .pluck('DATE_TRUNC(\'week\', work_date) week, billable, SUM(hours)')
+      .pluck('DATE_TRUNC(\'week\', work_date) week, worktimes.billable, SUM(hours * offered_rate)')
   end
 
   def grouped_plannings
     load_plannings
       .in_period(Period.with(date, nil))
-      .group('week, definitive')
+      .group('week, offered_rate, definitive')
       .order('week')
-      .pluck('DATE_TRUNC(\'week\', date) week, definitive, SUM(percent)')
+      .pluck('DATE_TRUNC(\'week\', date) week, offered_rate, definitive, SUM(percent)')
   end
 
   def load_worktimes
-    order.worktimes
+    order
+      .worktimes
+      .joins('INNER JOIN accounting_posts ON accounting_posts.work_item_id = work_items.id')
   end
 
   def load_plannings
@@ -76,20 +71,34 @@ class Order::Controlling
   end
 
   def add_planning(result, entry)
-    week, definitive, percent = entry
-    add_value(result, week, definitive ? :planned_definitive : :planned_provisional, percent)
+    week, offered_rate, definitive, percent = entry
+    must_hours = WorkingCondition.value_at(week, :must_hours_per_day).to_f
+    effort = percent / 100.0 * must_hours * offered_rate.to_f
+    add_value(result, week, definitive ? :planned_definitive : :planned_provisional, effort)
   end
 
   def add_value(result, week, key, value)
     unless result[week]
-      result[week] = {
-        billable: 0.0,
-        unbillable: 0.0,
-        planned_definitive: 0.0,
-        planned_provisional: 0.0
-      }
+      result[week] = empty_entry
     end
-    result[week][key] = value
+    new_entry = empty_entry.tap { |e| e[key] = value }
+    result[week] = sum_entries(result[week], new_entry)
+  end
+
+  def sum_entries(a, b)
+    result = empty_entry
+    entry_keys.each do |key|
+      result[key] = a[key] + b[key]
+    end
+    result
+  end
+
+  def empty_entry
+    {}.tap { |e| entry_keys.each { |k| e[k] = 0.0 } }
+  end
+
+  def entry_keys
+    [:billable, :unbillable, :planned_definitive, :planned_provisional]
   end
 
 

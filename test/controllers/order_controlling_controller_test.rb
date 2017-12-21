@@ -22,10 +22,11 @@ class OrderControllingControllerTest < ActionController::TestCase
     end
   end
 
-  test 'GET show assigns controlling domain model' do
+  test 'GET show assigns controlling data' do
     get :show, params: { order_id: order.id }
     assert_response :success
-    assert assigns(:controlling).is_a?(Order::Controlling)
+    assert assigns(:efforts_per_week_cumulated).is_a?(Hash)
+    assert assigns(:offered_total).is_a?(BigDecimal)
   end
 
   private

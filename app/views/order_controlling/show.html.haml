@@ -6,22 +6,12 @@
 
 = render 'orders/header'
 
-%p Budget: #{@controlling.offered_hours}
+%canvas#order_controlling_chart{ width: '1000', height: '500' }
 
-Stunden:
-%ul
-  - @controlling.hours_per_week.each do |week, values|
-    %li
-      KW #{week.strftime('%W')} #{week.strftime('%Y')}
-      %br
-      Verrechenbar:
-      = values[:billable]
-      %br
-      Nicht verrechenbar:
-      = values[:unbillable]
-      %br
-      Definitiv geplant:
-      = values[:planned_definitive]
-      %br
-      Provisorisch geplant:
-      = values[:planned_provisional]
+:javascript
+  App.initOrderControllingChart(
+    #{controlling_chart_labels},
+    #{controlling_chart_datasets},
+    #{@offered_total.round(2)},
+    #{Settings.defaults.currency.to_json.html_safe}
+  );

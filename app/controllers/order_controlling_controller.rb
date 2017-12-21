@@ -8,7 +8,10 @@ class OrderControllingController < ApplicationController
 
   def show
     authorize!(:controlling, order)
-    @controlling = Order::Controlling.new(order)
+
+    controlling = Order::Controlling.new(order)
+    @efforts_per_week_cumulated = controlling.efforts_per_week_cumulated
+    @offered_total = controlling.offered_total
   end
 
   private
