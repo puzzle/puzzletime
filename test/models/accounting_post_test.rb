@@ -128,6 +128,45 @@ class AccountingPostTest < ActiveSupport::TestCase
     assert_equal 1000, post.offered_total
   end
 
+  test 'moves work times and plannings on work item change' do
+    employee = Fabricate(:employee)
+    order = Fabricate(:order)
+    accounting_post = Fabricate(:accounting_post, work_item: order.work_item)
+    5.times do |i|
+      Fabricate(:planning, work_item: order.work_item, employee: employee) do
+        date { Date.new(2017, 12, 18) + i }
+      end
+    end
+    Fabricate.times(10, :ordertime, work_item: order.work_item,
+                                    employee: employee)
+
+    assert_equal order.work_item, accounting_post.work_item
+
+    assert_equal 5, accounting_post.plannings.count
+    assert_equal 10, accounting_post.worktimes.count
+
+    new_work_item = Fabricate(:work_item, parent_id: order.work_item.id)
+    Fabricate(:accounting_post, work_item: new_work_item)
+
+    order.reload
+    accounting_post.reload
+
+    assert_not_equal order.work_item, accounting_post.work_item
+
+    plannings = order.work_item.plannings.select do |p|
+      p.work_item_id == order.work_item.id
+    end
+    assert_equal 0, plannings.size
+
+    worktimes = order.work_item.worktimes.select do |t|
+      t.work_item_id == order.work_item.id
+    end
+    assert_equal 0, worktimes.size
+
+    assert_equal 5, accounting_post.plannings.count
+    assert_equal 10, accounting_post.worktimes.count
+  end
+
   private
 
   def post

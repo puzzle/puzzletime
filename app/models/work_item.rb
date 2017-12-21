@@ -144,6 +144,10 @@ class WorkItem < ActiveRecord::Base
     worktimes.update_all(work_item_id: target.is_a?(Integer) ? target : target.id)
   end
 
+  def move_plannings!(target)
+    plannings.update_all(work_item_id: target.is_a?(Integer) ? target : target.id)
+  end
+
   def update_path_names!
     store_path_names
     save!

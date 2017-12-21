@@ -130,6 +130,7 @@ class AccountingPost < ActiveRecord::Base
 
     old_item = WorkItem.find(@old_work_item_id)
     old_item.move_times!(work_item_id)
+    old_item.move_plannings!(work_item_id)
     old_item.destroy! if old_item.id != order.work_item_id
   end
 
@@ -150,6 +151,7 @@ class AccountingPost < ActiveRecord::Base
         throw(:abort)
       end
       order.work_item.move_times!(post.work_item)
+      order.work_item.move_plannings!(post.work_item)
     end
   end
 

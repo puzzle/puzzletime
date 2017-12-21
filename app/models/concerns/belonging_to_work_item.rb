@@ -14,6 +14,7 @@ module BelongingToWorkItem
     belongs_to :work_item, validate: true, autosave: true
 
     has_descendants_through_work_item :worktimes
+    has_descendants_through_work_item :plannings
 
     after_destroy :destroy_exclusive_work_item
 
