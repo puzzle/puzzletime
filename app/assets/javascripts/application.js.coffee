@@ -22,6 +22,8 @@
 #= require waypoints/shortcuts/sticky
 #= require waypoints/shortcuts/inview
 #= require modernizr-custom
+#= require Chart.bundle.min
+#= require chartjs-plugin-annotation.min
 #= require_self
 #= require_tree ./modules
 # after self to disable links
@@ -35,6 +37,7 @@
 #= require plannings_service
 #= require orders
 #= require order_contacts
+#= require order_controlling
 #= require order_services
 #= require accounting_posts
 #= require reports_orders

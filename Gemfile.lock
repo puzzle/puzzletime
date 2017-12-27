@@ -81,6 +81,8 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
+    chartjs-ror (3.3.1)
+      rails (>= 3.1)
     childprocess (0.7.1)
       ffi (~> 1.0, >= 1.0.11)
     choice (0.2.0)
@@ -379,6 +381,7 @@ DEPENDENCIES
   bullet
   cancancan
   capybara
+  chartjs-ror
   codez-tarantula
   coffee-rails
   config
@@ -437,4 +440,4 @@ DEPENDENCIES
   validates_timeliness
 
 BUNDLED WITH
-   1.15.1
+   1.16.0
