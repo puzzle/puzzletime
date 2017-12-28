@@ -16,8 +16,6 @@
               Auftrag
             %th.nowrap
               Status
-            %th{ style: 'width: 15%' }
-              Fortschritt
             %th.right.nowrap{title: 'Summe aus allen Buchungspositionen'}
               = sort_link(:offered_amount, 'Budget')
             %th.right.nowrap{title: 'Produkt aus allen geleisteten Stunden und offeriertem Stundensatz'}
@@ -28,6 +26,8 @@
               = sort_link(:billed_amount, 'Verrechnet')
             %th.right{title: 'Verhältnis von verrechenbaren Stunden zu geleisteten Stunden'}
               = sort_link(:billability, 'Verrechen&shy;barkeit'.html_safe)
+            %th{ style: 'width: 15%' }
+              Fortschritt
             %th.right{title: 'Durchschnitt der offerierten Stundensätze aller Buchungspositionen'}
               = sort_link(:offered_rate, 'Offerierter Stundensatz')
             %th.right{title: 'Verhältnis von verrechneten Beträgen zu verrechenbaren Stunden'}
@@ -62,8 +62,6 @@
                     %span.unit
                       = I18n.l(order.closed_at, format: '%d.%m.%Y')
               %td
-                = render(partial: 'progress', locals: { order: order })
-              %td
                 .data-item
                   %span.figure= f(order.offered_amount.to_f)
                   %span.unit CHF
@@ -84,6 +82,8 @@
                   - if order.billability
                     %span.figure= format_order_billability(order.billability)
                     %span.unit %
+              %td
+                = render(partial: 'progress', locals: { order: order })
               %td
                 .data-item
                   - if order.offered_rate
