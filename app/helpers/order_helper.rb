@@ -133,7 +133,7 @@ module OrderHelper
     return progress unless order.offered_amount > 0
     calculate_order_progress(order, progress)
     if order.supplied_amount.to_f > order.offered_amount.to_f
-      calculate_over_budget_order_progress(order, progress)
+      calculate_over_budget_order_progress(progress)
     end
     progress
   end
@@ -142,43 +142,21 @@ module OrderHelper
 
   def order_progress_hash
     {
-      billable_percent: 0,
-      unbillable_percent: 0,
-      billable_percent_title: 0,
-      unbillable_percent_title: 0,
+      percent: 0,
       over_budget_percent: 0
     }
   end
 
   def calculate_order_progress(order, progress)
-    progress[:billable_percent] = 100 /
+    progress[:percent] = 100 /
       order.offered_amount.to_f *
-      order.billable_amount.to_f
-    progress[:unbillable_percent] = 100 /
-      order.offered_amount.to_f *
-      (order.supplied_amount.to_f - order.billable_amount.to_f)
-    progress[:billable_percent_title] = progress[:billable_percent]
-    progress[:unbillable_percent_title] = progress[:unbillable_percent]
+      order.supplied_amount.to_f
+    progress[:percent_title] = progress[:percent]
   end
 
-  def calculate_over_budget_order_progress(order, progress)
-    ratio = order.offered_amount.to_f / order.supplied_amount.to_f
-    progress[:over_budget_percent] = 100 - ratio * 100
-    scale_order_progress(progress, ratio)
-
-    progress[:billable_percent_title] = 100 /
-      (progress[:billable_percent_title] + progress[:unbillable_percent_title]) *
-      progress[:billable_percent_title]
-    progress[:unbillable_percent_title] = 100 /
-      (progress[:billable_percent_title] + progress[:unbillable_percent_title]) *
-      progress[:unbillable_percent_title]
-  end
-
-  def scale_order_progress(progress, ratio)
-    progress[:billable_percent] *= ratio
-    progress[:billable_percent] -= progress[:over_budget_percent] / 2
-    progress[:unbillable_percent] *= ratio
-    progress[:unbillable_percent] -= progress[:over_budget_percent] / 2
+  def calculate_over_budget_order_progress(progress)
+    progress[:over_budget_percent] = progress[:percent] - 100
+    progress[:percent] -= progress[:over_budget_percent] * 2
   end
 
   def order_report_billability_class(value)

@@ -1,13 +1,8 @@
 :ruby
   progress = order_progress(order)
 
-.progress
-  - if progress[:billable_percent] > 0
-    .progress-bar.progress-bar-success{ title: "Verrechenbar: #{f(progress[:billable_percent_title])}%",
-                                        style: "width:#{f(progress[:billable_percent])}%" }
-  - if progress[:unbillable_percent] > 0
-    .progress-bar.progress-bar-info{ title: "Unverrechenbar: #{f(progress[:unbillable_percent_title])}%",
-                                     style: "width:#{f(progress[:unbillable_percent])}%" }
+.progress{ title: "Fortschritt: #{f(progress[:percent_title])}%" }
+  - if progress[:percent] > 0
+    .progress-bar.progress-bar-success{ style: "width:#{f(progress[:percent])}%" }
   - if progress[:over_budget_percent] > 0
-    .progress-bar.progress-bar-danger{ title: "Über Budget: #{f(progress[:over_budget_percent])}%",
-                                       style: "width:#{f(progress[:over_budget_percent])}%" }
+    .progress-bar.progress-bar-danger{ style: "width:#{f(progress[:over_budget_percent])}%" }
