@@ -67,6 +67,7 @@ class Order::Controlling
 
   def add_worktime(result, entry)
     week, billable, hours = entry
+    hours = 0.0 if hours.nil?
     add_value(result, week, billable ? :billable : :unbillable, hours)
   end
 
