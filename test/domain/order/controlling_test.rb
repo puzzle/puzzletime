@@ -42,7 +42,7 @@ class Order::ControllingTest < ActiveSupport::TestCase
     create_planning(post2, Date.new(2000, 1, 3) + 3.weeks, 10, true) # different rate
     create_planning(post1, Date.new(2000, 1, 4) + 3.weeks, 20, true)
     create_planning(post1, Date.new(2000, 1, 5) + 3.weeks, 40, false)
-    create_planning(post1, Date.new(2000, 1, 3) + 4.weeks, 60, true)
+    create_planning(post1, Date.new(2000, 1, 3) + 5.weeks, 60, true)
 
     expected = {}
     expected[Time.utc(2000, 1, 3)] = {
@@ -69,7 +69,13 @@ class Order::ControllingTest < ActiveSupport::TestCase
       planned_definitive: 240 + 120,
       planned_provisional: 320
     }
-    expected[Time.utc(2000, 1, 3) + 4.weeks] = {
+    expected[Time.utc(2000, 1, 3) + 4.weeks] = { # gap is filled with empty entry
+      billable: 0.0,
+      unbillable: 0.0,
+      planned_definitive: 0.0,
+      planned_provisional: 0.0
+    }
+    expected[Time.utc(2000, 1, 3) + 5.weeks] = {
       billable: 0.0,
       unbillable: 0.0,
       planned_definitive: 480,

@@ -7,13 +7,18 @@
 app = window.App ||= {}
 
 
-app.initOrderControllingChart = (labels, datasets, budget, currency) ->
+app.initOrderControllingChart = (labels, datasets, budget, currency, currentLabel) ->
   canvas = document.getElementById('order_controlling_chart')
   ctx = canvas.getContext('2d')
 
   Chart.defaults.global.defaultFontFamily = 'Roboto, Helvetica, Arial, sans-serif'
   Chart.defaults.global.defaultFontColor = '#444444'
   Chart.defaults.global.defaultFontSize = 14
+
+  budgetColor = '#B44B5B'
+  gridColor = 'rgba(0,0,0,0.1)'
+  gridLightColor = 'rgba(0,0,0,0.02)'
+  gridCurrentColor = '#444444'
 
   formatCurrency = (value) -> Number(value).toLocaleString() + ' ' + currency
 
@@ -29,7 +34,7 @@ app.initOrderControllingChart = (labels, datasets, budget, currency) ->
         xAxes: [{
           stacked: true,
           gridLines: {
-            color: '#ddd'
+            color: labels.map((l) -> (if l == currentLabel then gridCurrentColor else gridColor))
           }
         }],
         yAxes: [{
@@ -39,8 +44,8 @@ app.initOrderControllingChart = (labels, datasets, budget, currency) ->
             callback: formatCurrency
           },
           gridLines: {
-            color: '#f3f3f3',
-            zeroLineColor: '#ddd'
+            color: gridLightColor,
+            zeroLineColor: gridColor
           },
         }],
       },
@@ -61,7 +66,7 @@ app.initOrderControllingChart = (labels, datasets, budget, currency) ->
           mode: 'horizontal',
           scaleID: 'y-axis-0',
           value: budget,
-          borderColor: '#B44B5B',
+          borderColor: budgetColor,
           borderWidth: 2,
           label: {
             enabled: true,
@@ -72,7 +77,7 @@ app.initOrderControllingChart = (labels, datasets, budget, currency) ->
             fontFamily: Chart.defaults.global.defaultFontFamily,
             fontSize: Chart.defaults.global.defaultFontSize,
             fontStyle: 'normal',
-            fontColor: '#B44B5B'
+            fontColor: budgetColor
           }
         }]
       }

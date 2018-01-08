@@ -9,6 +9,7 @@ module OrderControllingHelper
   def controlling_chart_labels
     @efforts_per_week_cumulated
       .keys
+      .sort
       .map { |week| "KW #{week.strftime('%W')} #{week.strftime('%Y')}" }
       .to_json
       .html_safe

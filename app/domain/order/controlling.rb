@@ -21,6 +21,7 @@ class Order::Controlling
     {}.tap do |result|
       grouped_worktimes.each { |e| add_worktime(result, e) }
       grouped_plannings.each { |e| add_planning(result, e) }
+      fill_week_gaps!(result)
     end
   end
 
@@ -82,7 +83,7 @@ class Order::Controlling
     unless result[week]
       result[week] = empty_entry
     end
-    new_entry = empty_entry.tap { |e| e[key] = value }
+    new_entry = empty_entry.tap { |e| e[key] = value ? value : 0.0 }
     result[week] = sum_entries(result[week], new_entry)
   end
 
@@ -102,5 +103,22 @@ class Order::Controlling
     [:billable, :unbillable, :planned_definitive, :planned_provisional]
   end
 
+  def fill_week_gaps!(efforts)
+    dates = efforts.keys.sort
+    return if dates.size < 2
+
+    for_each_week(dates.first, dates.last) do |week|
+      unless dates.include?(week)
+        efforts[week] = empty_entry
+      end
+    end
+    efforts
+  end
+
+  def for_each_week(from, to)
+    (from.beginning_of_week.to_date..to.beginning_of_week.to_date)
+      .group_by { |d| "#{d.year}#{d.cweek}" }
+      .each { |_, a| yield a.first.to_time(:utc) }
+  end
 
 end
