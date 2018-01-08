@@ -36,6 +36,20 @@
 
       %tr
         %td
+          %label
+            - if @period
+              Sollarbeitszeit
+            - else
+              Monatliche Sollarbeitszeit
+        %td.text-right
+          .employee-info-primary-value
+            - if @period
+              = format_hour(@period.musttime)
+            - else
+              = format_hour(Period.current_month.musttime)
+
+      %tr
+        %td
           %label Überstundensaldo per #{l(date)}
           .muted per Gestern
         %td.text-right
