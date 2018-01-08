@@ -9,6 +9,7 @@ app = window.App ||= {}
 class app.Autocomplete
   bind: (input) ->
     $(input).selectize(
+      plugins: ['required-fix']
       valueField: 'id',
       searchField: @searchFields(),
       selectOnTab: true,

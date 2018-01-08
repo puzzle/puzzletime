@@ -71,6 +71,21 @@ if typeof Object.assign != 'function'
       index++
     output
 
+# Fixes https://github.com/selectize/selectize.js/pull/1320
+Selectize.define 'required-fix', (options) ->
+  @refreshValidityState = =>
+    return false if !@isRequired
+
+    invalid = !@items.length
+    @isInvalid = invalid
+
+    if invalid
+      @$control_input.attr('required', '')
+      @$input.removeAttr('required')
+    else
+      @$control_input.removeAttr('required')
+      @$input.attr('required')
+
 ################################################################
 # because of turbolinks.jquery, do bind ALL document events here
 
