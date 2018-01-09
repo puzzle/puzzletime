@@ -13,7 +13,11 @@ app.datepicker = new class
     $.datepicker.regional[$('html').attr('lang')]
 
   formatWeek = (date) ->
-    $.datepicker.formatDate('yy', date) + ' ' + $.datepicker.iso8601Week(date)
+    week = $.datepicker.iso8601Week(date)
+    if date.getMonth() + 1 == 12 && Number(week) == 1
+      "#{date.getFullYear() + 1} #{week}"
+    else
+      "#{date.getFullYear()} #{week}"
 
   onSelect = (dateString, instance) =>
     if instance.input.data('format') == 'week'
