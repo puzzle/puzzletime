@@ -4,13 +4,16 @@
 -#  https://github.com/puzzle/puzzletime.
 
 
-%p
+%p.period-link
   - if @period
     - entities_name ||= 'Zeiten'
     #{entities_name} während #{@period} &nbsp;
-    = link_to 'Aktuelle Zeitspanne',
-              periods_path(back_url: request.original_fullpath),
-              data: { method: :delete }
-    |
-  = link_to 'Andere Zeitspanne',
-            periods_path(back_url: request.original_fullpath)
+
+  %span.period-link-links
+    - if @period
+      = link_to 'Aktuelle Zeitspanne',
+                periods_path(back_url: request.original_fullpath),
+                data: { method: :delete }
+      |
+    = link_to 'Andere Zeitspanne',
+              periods_path(back_url: request.original_fullpath)

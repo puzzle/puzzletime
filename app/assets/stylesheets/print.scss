@@ -50,3 +50,11 @@ th {
     text-align:     right;
     font-size:      13px;
 }
+
+a[href]:after {
+  content: "";
+}
+
+abbr[title]:after {
+  content: "";
+}

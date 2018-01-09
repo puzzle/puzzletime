@@ -13,7 +13,43 @@
   }
 }
 
+.employee-positions {
+  margin-right: 200px;
+  float: left;
+}
+
+.employee-info {
+  float: left;
+}
+
 .employee-info-primary-value {
   display: inline-block;
   margin-bottom: $padding-small-vertical;
+}
+
+.employee-absences {
+  clear: left;
+}
+
+@media print {
+  .employee-positions,
+  .employee-info,
+  .employee-absences {
+    td {
+      font-size: 70%;
+    }
+  }
+
+  .employee-positions {
+    margin-right: 50px;
+  }
+
+  .employee-info {
+    float: right;
+  }
+
+  .employee-absences {
+    float: left;
+    clear: none;
+  }
 }
