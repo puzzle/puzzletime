@@ -27,7 +27,7 @@
             %th.right{title: 'Verhältnis von verrechenbaren Stunden zu geleisteten Stunden'}
               = sort_link(:billability, 'Verrechen&shy;barkeit'.html_safe)
             %th{ style: 'width: 15%' }
-              Fortschritt
+              Budget-Controlling
             %th.right{title: 'Durchschnitt der offerierten Stundensätze aller Buchungspositionen'}
               = sort_link(:offered_rate, 'Offerierter Stundensatz')
             %th.right{title: 'Verhältnis von verrechneten Beträgen zu verrechenbaren Stunden'}
@@ -83,7 +83,8 @@
                     %span.figure= format_order_billability(order.billability)
                     %span.unit %
               %td
-                = render(partial: 'progress', locals: { order: order })
+                - unless order.is_a? Order::Report::Total
+                  = order_progress_bar(order)
               %td
                 .data-item
                   - if order.offered_rate

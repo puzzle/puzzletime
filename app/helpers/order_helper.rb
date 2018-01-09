@@ -128,17 +128,52 @@ module OrderHelper
     end
   end
 
+  def order_progress_bar(order)
+    progress = order_progress(order)
+
+    order_progress_bar_link(order.order, progress) do
+      ''.html_safe.tap do |content|
+        if progress[:percent] > 0
+          content << content_tag(
+            :div,
+            nil,
+            class: 'progress-bar progress-bar-success',
+            style: "width:#{f(progress[:percent])}%"
+          )
+        end
+
+        if progress[:over_budget_percent] > 0
+          content << content_tag(
+            :div,
+            nil,
+            class: 'progress-bar progress-bar-danger',
+            style: "width:#{f(progress[:over_budget_percent])}%"
+          )
+        end
+      end
+    end
+  end
+
+  private
+
+  def order_progress_bar_link(order, progress, &block)
+    title = "#{f(progress[:percent_title])}% geleistet"
+
+    if can?(:show, order)
+      link_to(order_order_controlling_url(order.id),
+              { class: 'progress', title: title },
+              &block)
+    else
+      content_tag(:div, yield, class: 'progress', title: title)
+    end
+  end
+
   def order_progress(order)
     progress = order_progress_hash
     return progress unless order.offered_amount > 0
     calculate_order_progress(order, progress)
-    if order.supplied_amount.to_f > order.offered_amount.to_f
-      calculate_over_budget_order_progress(progress)
-    end
     progress
   end
-
-  private
 
   def order_progress_hash
     {
@@ -152,11 +187,14 @@ module OrderHelper
       order.offered_amount.to_f *
       order.supplied_amount.to_f
     progress[:percent_title] = progress[:percent]
-  end
 
-  def calculate_over_budget_order_progress(progress)
-    progress[:over_budget_percent] = progress[:percent] - 100
-    progress[:percent] -= progress[:over_budget_percent] * 2
+    if order.supplied_amount.to_f > order.offered_amount.to_f
+      progress[:over_budget_percent] =
+        (order.supplied_amount.to_f - order.offered_amount.to_f) /
+        order.supplied_amount.to_f *
+        100
+      progress[:percent] = 100 - progress[:over_budget_percent]
+    end
   end
 
   def order_report_billability_class(value)
