@@ -75,15 +75,15 @@ app.plannings.panel = new class
     @hideErrors()
     data = $(event.target).serializeArray()
       .reduce(((prev, curr) -> prev[curr.name] = curr.value; prev), {})
-    app.plannings.service.updateSelected(@getFormAction(), data)
+    @disableButtons(app.plannings.service.updateSelected(@getFormAction(), data))
 
   deleteSelected: (event) =>
     if confirm('Bist du sicher, dass du die selektierte Planung löschen willst?')
       event.preventDefault()
-      app.plannings.service.delete(
+      @disableButtons(app.plannings.service.delete(
         @getFormAction(),
         app.plannings.selectable.getSelectedPlanningIds()
-      )
+      ))
 
   getFormAction: ->
     @panel('form').prop('action')
@@ -168,6 +168,11 @@ app.plannings.panel = new class
             @panel('#percent').blur()
       )
     positioning = true
+
+  disableButtons: (promise) ->
+    buttons = @panel('.panel-footer .btn')
+    buttons.prop('disabled', true)
+    promise.always(-> buttons.prop('disabled', false))
 
   panel: (selector) ->
     if selector
