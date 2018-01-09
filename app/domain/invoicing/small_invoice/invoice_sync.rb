@@ -71,6 +71,8 @@ module Invoicing
       rescue Invoicing::Error => e
         if e.code == 15_016 # no rights / not found
           delete_invoice(true)
+        elsif e.code == 99_410 # object does not exist
+          delete_invoice
         else
           raise
         end
