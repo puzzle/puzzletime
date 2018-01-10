@@ -64,6 +64,10 @@ module Puzzletime
     @@ptime_version ||= build_version
   end
 
+  def self.changelog_url
+    @@ptime_changelog_url ||= 'https://github.com/puzzle/puzzletime/blob/master/CHANGELOG.md'
+  end
+
   private
   def self.build_version
     major_and_minor = Puzzletime::VERSION

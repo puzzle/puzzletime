@@ -10,8 +10,7 @@
       .navbar-brand
         = image_tag 'logo.svg', size: '41x40'
         PuzzleTime
-        %span.version
-          = Puzzletime.version
+        = link_to Puzzletime.version, Puzzletime.changelog_url, class: 'version'
     %ul.nav.navbar-nav.navbar-right
       - if @user
         %li.navbar-user
