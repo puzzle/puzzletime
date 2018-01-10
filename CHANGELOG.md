@@ -1,4 +1,12 @@
-<a name="2.0.?"></a>
+# Master
+
+### Features
+* **Zeitkontrolle:** Wird unter "Aufträge - Meine Aufträge" ein Auftrag ausgewählt, sieht der Auftragsverantwortliche neu ob die Zeiten seines Teams freigegeben und kontrolliert wurden.
+
+### Bug Fixes
+* **Zeiterfassung:** Fehler in Zeiterfassung mit Microsoft Edge [\#3](https://github.com/puzzle/puzzletime/issues/3)
+* **Planung:** Planungseinträge gehen nicht mehr verloren, wenn in einem Auftrag ohne Buchungspositionen nachträglich Buchungspositionen erstellt werden
+
 # 2.1
 
 ### Features
