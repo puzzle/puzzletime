@@ -23,7 +23,10 @@ module OrderControllingHelper
       .map do |set|
         {
           label: set[:label],
-          data: @efforts_per_week_cumulated.map { |_week, values| values[set[:type]].to_i },
+          data: @efforts_per_week_cumulated
+            .keys
+            .sort
+            .map { |week| @efforts_per_week_cumulated[week][set[:type]].to_i },
           backgroundColor: set[:color]
         }
       end.to_json.html_safe

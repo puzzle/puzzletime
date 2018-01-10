@@ -27,11 +27,8 @@ class Order::Controlling
 
   def efforts_per_week_cumulated
     efforts = efforts_per_week
-    if efforts.length > 1
-      efforts.keys[1..efforts.keys.length].each_with_index do |week, previous_index|
-        previous_week = efforts.keys[previous_index]
-        efforts[week] = sum_entries(efforts[week], efforts[previous_week])
-      end
+    efforts.keys.sort.each_cons(2) do |previous_week, week|
+      efforts[week] = sum_entries(efforts[previous_week], efforts[week])
     end
     efforts
   end
