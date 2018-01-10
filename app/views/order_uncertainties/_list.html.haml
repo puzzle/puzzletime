@@ -8,7 +8,7 @@
 
 = plain_table_or_message(entries, class: 'order-uncertainty-table') do |t|
   - t.attrs(:name, :probability, :impact)
-  - t.attr(:risk, nil, class: 'order-certainty-table-risk')
+  - t.attr(:risk, model == OrderChance ? 'Chance' : 'Risiko', class: 'order-certainty-table-risk')
   - t.attr(:measure, nil, class: 'pre-line')
   - standard_table_actions(t)
 
