@@ -44,9 +44,9 @@
         %td.text-right
           .employee-info-primary-value
             - if @period
-              = format_hour(@period.musttime)
+              = format_hour(employee.statistics.musttime(@period))
             - else
-              = format_hour(Period.current_month.musttime)
+              = format_hour(employee.statistics.musttime(Period.current_month))
 
       %tr
         %td
