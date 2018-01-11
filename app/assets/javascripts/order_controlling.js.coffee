@@ -16,9 +16,9 @@ app.initOrderControllingChart = (labels, datasets, budget, currency, currentLabe
   Chart.defaults.global.defaultFontSize = 14
 
   budgetColor = '#B44B5B'
+  todayColor = '#f0ad4e'
   gridColor = 'rgba(0,0,0,0.1)'
   gridLightColor = 'rgba(0,0,0,0.02)'
-  gridCurrentColor = '#444444'
 
   formatCurrency = (value) -> Number(value).toLocaleString() + ' ' + currency
 
@@ -34,7 +34,7 @@ app.initOrderControllingChart = (labels, datasets, budget, currency, currentLabe
         xAxes: [{
           stacked: true,
           gridLines: {
-            color: labels.map((l) -> (if l == currentLabel then gridCurrentColor else gridColor))
+            color: gridColor
           }
         }],
         yAxes: [{
@@ -62,6 +62,26 @@ app.initOrderControllingChart = (labels, datasets, budget, currency, currentLabe
       }
       annotation: {
         annotations: [{
+          type: 'line',
+          mode: 'vertical',
+          scaleID: 'x-axis-0',
+          value: currentLabel,
+          borderColor: todayColor,
+          borderWidth: 2,
+          label: {
+            enabled: true,
+            content: 'heute',
+            position: 'top'
+            yAdjust: 10,
+            xPadding: 2,
+            yPadding: 3,
+            backgroundColor: '#ffffff'
+            fontFamily: Chart.defaults.global.defaultFontFamily,
+            fontSize: Chart.defaults.global.defaultFontSize,
+            fontStyle: 'normal',
+            fontColor: todayColor
+          }
+        }, {
           type: 'line',
           mode: 'horizontal',
           scaleID: 'y-axis-0',
