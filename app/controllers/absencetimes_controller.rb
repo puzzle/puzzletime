@@ -9,6 +9,7 @@ class AbsencetimesController < WorktimesController
                           :from_start_time, :to_end_time, :description]
 
   before_render_form :set_accounts
+  after_destroy :send_email_notification
 
   def create
     if params[:absencetime].present? && params[:absencetime][:create_multi].present?
@@ -61,4 +62,11 @@ class AbsencetimesController < WorktimesController
   def check_has_accounting_post
     true
   end
+
+  def send_email_notification
+    if @worktime.employee != @user
+      ::EmployeeMailer.worktime_deleted_mail(@worktime, @user).deliver_now
+    end
+  end
+
 end

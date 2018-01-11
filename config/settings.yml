@@ -120,3 +120,7 @@ reports:
     worktime_balance:
       lower_limit: 0
 
+mailer:
+  employee:
+    worktime_deleted:
+      from: <%= ENV['RAILS_PTIME_MAILER_EMPLOYEE_WORKTIME_DELETED_FROM'] || 'time@puzzle.ch' %>
