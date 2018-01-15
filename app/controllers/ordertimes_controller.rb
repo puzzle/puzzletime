@@ -96,6 +96,8 @@ class OrdertimesController < WorktimesController
   def send_email_notification
     if worktime_employee?
       ::EmployeeMailer.worktime_deleted_mail(@worktime, @user).deliver_now
+      flash[:warning] =
+        "#{@worktime.employee} wurde per E-Mail darüber informiert, dass du diesen Eintrag gelöscht hast."
     end
   end
 
