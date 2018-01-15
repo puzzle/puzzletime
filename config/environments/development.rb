@@ -26,6 +26,22 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
+  # Mail sender
+  config.action_mailer.delivery_method = (ENV['RAILS_MAIL_DELIVERY_METHOD'].presence || :smtp).to_sym
+
+  if ENV['RAILS_MAIL_DELIVERY_CONFIG'].present?
+    case config.action_mailer.delivery_method.to_s
+    when 'smtp'
+      config.action_mailer.smtp_settings =
+        YAML.load("{ #{ENV['RAILS_MAIL_DELIVERY_CONFIG']} }").symbolize_keys
+    when 'sendmail'
+      config.action_mailer.sendmail_settings =
+        YAML.load("{ #{ENV['RAILS_MAIL_DELIVERY_CONFIG']} }").symbolize_keys
+    end
+  else
+    config.action_mailer.smtp_settings = { :address => '127.0.0.1', :port => 1025 }
+  end
+
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 

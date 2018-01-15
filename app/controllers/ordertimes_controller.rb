@@ -9,6 +9,8 @@ class OrdertimesController < WorktimesController
   self.permitted_attrs = [:account_id, :report_type, :work_date, :hours,
                           :from_start_time, :to_end_time, :description, :billable, :ticket]
 
+  after_destroy :send_email_notification
+
   def update
     if entry.employee_id != @user.id
       build_splitable
@@ -89,6 +91,14 @@ class OrdertimesController < WorktimesController
   def build_worktime
     @worktime ||= splitable.build_worktime
     @worktime.employee ||= splitable.original.employee
+  end
+
+  def send_email_notification
+    if worktime_employee?
+      ::EmployeeMailer.worktime_deleted_mail(@worktime, @user).deliver_now
+      flash[:warning] =
+        "#{@worktime.employee} wurde per E-Mail darüber informiert, dass du diesen Eintrag gelöscht hast."
+    end
   end
 
 end

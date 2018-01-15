@@ -21,3 +21,9 @@ services:
     image: memcached
     ports:
       - '11211:11211'
+
+  ptimemailcatcher:
+    image: schickling/mailcatcher
+    ports:
+      - '1025:1025'
+      - '1080:1080'
