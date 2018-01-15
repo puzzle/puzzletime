@@ -385,8 +385,15 @@ class OrdertimesControllerTest < ActionController::TestCase
     assert_nil Ordertime.find_by_id(worktime.id)
   end
 
+  def test_destroy_as_management
+    worktime = worktimes(:wt_pz_puzzletime)
+    delete :destroy, params: { id: worktime.id }
+    assert_nil Ordertime.find_by_id(worktime.id)
+  end
+
   def test_destroy_without_permission
     worktime = worktimes(:wt_pz_puzzletime)
+    login_as(:various_pedro)
     assert_no_difference('Worktime.count') do
       assert_raises(CanCan::AccessDenied) do
         delete :destroy, params: { id: worktime.id }
