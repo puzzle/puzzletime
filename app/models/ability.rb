@@ -140,7 +140,7 @@ class Ability
     can :read, Ordertime do |t|
       t.order.responsible_id == user.id
     end
-    can [:create, :update], Ordertime do |t|
+    can [:create, :update, :destroy], Ordertime do |t|
       t.order.responsible_id == user.id && !t.work_item_closed? && !t.invoice_sent_or_paid?
     end
     can :managed, Evaluation
