@@ -62,7 +62,9 @@ class WorktimesControllerTest < ActionController::TestCase
     commit_times(:mark)
 
     get :index, params: { week_date: months_first_day.to_s }
-    assert_no_modify_buttons
+    assert_select('a i.icon-duplicate', count: 2)
+    assert_select('a i.icon-delete', count: 1)
+    assert_select('a i.icon-add', count: 0)
   end
 
   test 'destroy button/edit link for invoice with status \'draft\'' do
