@@ -61,7 +61,7 @@
             - if @employee.emergency_contact_phone.present?
               = labeled(captionize(:emergency_contact_phone, @employee.class)) do
                 %i.icon-help
-                = link_to @employee.emergency_contact_phone, "tel:#{@employeeemergency_contact_phone}"
+                = link_to @employee.emergency_contact_phone, "tel:#{@employee.emergency_contact_phone}"
 
       .col-md-6
         %h4 Anstellung
