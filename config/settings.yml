@@ -66,7 +66,7 @@ defaults:
   report_type: absolute_day
   start_hour: 8
   country: CH
-  vat: 8 # percent
+  vat: 7.7 # percent
   currency: CHF
   # Month number the business year starts (e.g. 1 for 1.1.YYYY, 7 for 1.7.YYYY)
   business_year_start_month: 7
