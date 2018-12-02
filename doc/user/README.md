@@ -6,3 +6,4 @@ Diese Dokumente beschreiben PuzzleTime aus der Benutzersicht.
 
 * [Modell](model/README.md)
 * [Funktionen](02_features.md)
+* [UseCases](use cases/README.md)
