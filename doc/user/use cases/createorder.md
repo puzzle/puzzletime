@@ -4,7 +4,7 @@
 1. Wähle Tab Aufträge
 1. Wähle "+ erstellen"
 1. Fülle die Felder der Eingabe Maske wie folgt aus
-   1. Kopiere Highrise ID in erstes Feld (Highrise ID ist letzte Zahl in CRM Deal URL)
+   1. Kopiere CRM ID in erstes Feld (CRM ID ist letzte Zahl in CRM Deal URL)
    1. Erfasse Kategorie 
    1. Übertrage das vierstellige Auftragskürzel wie es im Highrise erfasst wurde 
    1. Erfasse kurze Auftragsbeschreibung
