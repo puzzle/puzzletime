@@ -1,5 +1,5 @@
 ## Auftrag erstellen
-1. Erfasse Auftrag in Highrise
+1. Erfasse Auftrag in CRM
 1. Wechsle auf Puzzle Time
 1. Wähle Tab Aufträge
 1. Wähle "+ erstellen"
