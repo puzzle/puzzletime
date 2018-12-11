@@ -7,3 +7,4 @@ Nachfolgend werden alle Use Cases die mit dem puzzletime abgewickelt werden kön
 * [Auftrag erstellen](createorder.md)
 * [Position erfassen](creatposition.md)
 * [Rechnung erstellen](createinvoice.md)
+* [Vertrag erfassen](capturecontract.md)
