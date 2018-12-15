@@ -1,5 +1,6 @@
 ## Positionen erfassen
-1. Öffne das Puzzle Time
+Nachfolgend wird beschrieben wie eine neue Position in einem Auftrag erfasst wird
+
 1. Wähle Tab Aufträge
 1. Klicke in den gewünschten Auftrag
 1. Wechsle auf Tab Positionen
