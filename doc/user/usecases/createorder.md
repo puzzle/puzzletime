@@ -1,4 +1,9 @@
 ## Auftrag erstellen
+Aufträge können nur von Benutzern mit der Rolle Auftragsverantwortlicher oder Management erfasst werden.
+
+Ist ein CRM System angebunden, so werden Kunden und Kontakte sowie Aufträge (Nummer und Name) vom CRM verwaltet (Master) und automatisiert von diesem sychronisiert. Die Verbindung zwischen Puzzle Time und CRM erfolgt manuell über die Kunden- und Auftragsnummer des CRM. 
+
+## Erfassung
 1. Erfasse Auftrag in CRM
 1. Wechsle auf Puzzle Time
 1. Wähle Tab Aufträge
