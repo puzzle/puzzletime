@@ -5,6 +5,6 @@ Nachfolgend werden die wichtigsten Anwendungsfälle die mit dem Puzzle Time abge
 ## Auftragswesen
 
 * [Auftrag erstellen](createorder.md)
-* [Position erfassen](creatposition.md)
+* [Position erfassen](createposition.md)
 * [Rechnung erstellen](createinvoice.md)
 * [Vertrag erfassen](capturecontract.md)
