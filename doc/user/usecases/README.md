@@ -1,6 +1,6 @@
 
-# Use Case Beschreibung
-Nachfolgend werden die wichtigsten Use Cases die mit dem Puzzle Time abgewickelt werden können beschrieben. 
+# Anwendungsfälle
+Nachfolgend werden die wichtigsten Anwendungsfälle die mit dem Puzzle Time abgewickelt werden können beschrieben. 
 
 ## Auftragswesen
 
