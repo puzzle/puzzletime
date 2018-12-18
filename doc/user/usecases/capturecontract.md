@@ -1,5 +1,8 @@
-## Vertrag erfassen
-Nachfolgend wird beschrieben wie die Vertragsdetails erfasst werden. 
+## Vertrag 
+Zu jedem Auftrag werden im Subtab "Vertrag" die Vertragsdetails erfasst. Diese Angaben sind die Grundlage für die spätere Rechnungsstellung. 
+
+## Erfassung
+Die nachfolgende Aufzählung beschreibt Schritt für Schritt die Erfassung eines Vertrages
 
 1. Wähle Tab Aufträge
 1. Wähle Untertab Vertrag
