@@ -4,4 +4,5 @@ Weiter werden per Default-Filer jeweils alle Aufträge des im Puzzle Time angeme
 
 In der Übersicht werden pro Auftrag die Attribute Kunde, Auftragsart (intern, extern), Organisationseinheit (Org.E an die der Auftrag geknüpft ist)
 Auftrags - Verantwortlicher, Team, Ansprechsperson Kunde, Status (Abschluss, Abgeschlossen, Garantie, Offeriert, Bestellt, Bearbeitung) angezeigt. Hinzu kommt noch der entprechende Ampelstatus für Kosten, Qualität, Termin,
-Changen und Risiko. 
+Changen und Risiko.
+
