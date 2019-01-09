@@ -11,7 +11,8 @@
                            :email,
                            :ldapname,
                            :department_id,
-                           :probation_period_end_date
+                           :probation_period_end_date,
+                           :graduation
 
   - if Crm.instance
     = f.labeled_input_field :crm_key,
@@ -36,5 +37,13 @@
                            :emergency_contact_name,
                            :emergency_contact_phone,
                            :marital_status,
-                           :social_insurance,
-                           :additional_information
+                           :social_insurance
+
+  = f.labeled(:nationalities) do
+    = country_select(:employee,
+                     :nationalities,
+                     { priority_countries: %w(CH LI DE AT FR IT), selected: entry.nationalities, locale: :de, format: :with_alpha2 },
+                     { required: true, multiple: true, class: 'form-control searchable' })
+
+  = f.labeled_input_fields :additional_information
+

@@ -8,4 +8,11 @@ module EmployeeMasterDataHelper
   def format_year_of_service(employment_date)
     ((Date.current - employment_date) / 365).floor
   end
+
+  def format_nationalities(employee)
+    employee.nationalities.map do |country_code|
+      country = ISO3166::Country[country_code]
+      country.translations[I18n.locale.to_s] || country.name
+    end.join(', ')
+  end
 end

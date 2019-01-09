@@ -74,6 +74,10 @@ class Employee < ActiveRecord::Base
           -> { where(report_type: AutoStartType::INSTANCE.key) },
           class_name: 'Ordertime'
 
+  before_validation do
+    self.nationalities.try(:reject!, &:blank?)
+  end
+
   # Validation helpers.
   validates_by_schema except: :eval_periods
   validates :shortname, uniqueness: { case_sensitive: false }
