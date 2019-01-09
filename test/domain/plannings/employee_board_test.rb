@@ -12,26 +12,30 @@ module Plannings
     setup { Holiday.clear_cache }
 
     test '#week_planning_state is nil if no plannings' do
-      employee.employments.create!(start_date: date - 1.year, percent: 80)
+      employee.employments.create!(start_date: date - 1.year, percent: 80,
+                                   employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
       board = Plannings::EmployeeBoard.new(employee, period)
       assert_nil board.week_planning_state(date)
     end
 
     test '#week_planning_state is fully planned if no plannings and unpaid absence' do
-      employee.employments.create!(start_date: date - 1.year, percent: 0)
+      employee.employments.create!(start_date: date - 1.year, percent: 0,
+                                   employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
       board = Plannings::EmployeeBoard.new(employee, period)
       assert_equal :fully_planned, board.week_planning_state(date)
     end
 
     test '#week_planning_state is fully planned if no plannings and all-week holiday' do
-      employee.employments.create!(start_date: date - 1.year, percent: 100)
+      employee.employments.create!(start_date: date - 1.year, percent: 100,
+                                   employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
       5.times { |i| Holiday.create!(holiday_date: date + i.days, musthours_day: 0) }
       board = Plannings::EmployeeBoard.new(employee, period)
       assert_equal :fully_planned, board.week_planning_state(date)
     end
 
     test '#week_planning_state is fully planned if absencetimes match employment' do
-      employee.employments.create!(start_date: date - 1.year, percent: 100)
+      employee.employments.create!(start_date: date - 1.year, percent: 100,
+                                   employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
       Absencetime.create!(work_date: date, hours: 40, employee: employee, absence: absences(:vacation))
       Absencetime.create!(work_date: date + 7, hours: 8, employee: employee, absence: absences(:vacation))
       board = Plannings::EmployeeBoard.new(employee, period)
@@ -40,36 +44,42 @@ module Plannings
 
     test '#week_planning_state is fully planned if plannings match employment' do
       create_plannings
-      employee.employments.create!(start_date: date - 1.year, percent: 80)
+      employee.employments.create!(start_date: date - 1.year, percent: 80,
+                                   employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
       board = Plannings::EmployeeBoard.new(employee, period)
       assert_equal :fully_planned, board.week_planning_state(date)
     end
 
     test '#week_planning_state is over planned if plannings are greater than employment' do
       create_plannings
-      employee.employments.create!(start_date: date - 1.year, percent: 60)
+      employee.employments.create!(start_date: date - 1.year, percent: 60,
+                                   employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
       board = Plannings::EmployeeBoard.new(employee, period)
       assert_equal :over_planned, board.week_planning_state(date)
     end
 
     test '#week_planning_state is fully planned if plannings match multiple employments' do
       create_plannings
-      employee.employments.create!(start_date: date - 1.year, end_date: date, percent: 40)
-      employee.employments.create!(start_date: date + 1.day, percent: 90)
+      employee.employments.create!(start_date: date - 1.year, end_date: date, percent: 40,
+                                   employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
+      employee.employments.create!(start_date: date + 1.day, percent: 90,
+                                   employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
       board = Plannings::EmployeeBoard.new(employee, period)
       assert_equal :fully_planned, board.week_planning_state(date)
     end
 
     test '#week_planning_state is fully planned if plannings match last employment' do
       create_plannings
-      employee.employments.create!(start_date: date - 1.year, end_date: date + 3.days, percent: 100)
+      employee.employments.create!(start_date: date - 1.year, end_date: date + 3.days, percent: 100,
+                                   employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
       board = Plannings::EmployeeBoard.new(employee, period)
       assert_equal :fully_planned, board.week_planning_state(date)
     end
 
     test '#week_planning_state is fully planned if plannings match first employment' do
       create_plannings
-      employee.employments.create!(start_date: date + 1.day, percent: 100)
+      employee.employments.create!(start_date: date + 1.day, percent: 100,
+                                   employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
       board = Plannings::EmployeeBoard.new(employee, period)
       assert_equal :fully_planned, board.week_planning_state(date)
     end
@@ -86,13 +96,15 @@ module Plannings
 
     test '#weekly_planned_percent includes regular holidays' do
       @date = Date.new(2014, 12, 22)
-      employee.employments.create!(start_date: date - 1.year, percent: 80)
+      employee.employments.create!(start_date: date - 1.year, percent: 80,
+                                   employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
       board = Plannings::EmployeeBoard.new(employee, period)
       assert_equal 32, board.weekly_planned_percent(date)
     end
 
     test '#weekly_planned_percent includes irregular holidays' do
-      employee.employments.create!(start_date: date - 1.year, percent: 100)
+      employee.employments.create!(start_date: date - 1.year, percent: 100,
+                                   employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
       Holiday.create!(holiday_date: date + 1.day, musthours_day: 6)
       Holiday.create!(holiday_date: date + 2.days, musthours_day: 0)
       board = Plannings::EmployeeBoard.new(employee, period)
@@ -100,38 +112,46 @@ module Plannings
     end
 
     test '#weekly_planned_percent includes holidays on employment changes' do
-      employee.employments.create!(start_date: date - 1.year, percent: 100)
-      employee.employments.create!(start_date: date + 3.days, percent: 60)
+      employee.employments.create!(start_date: date - 1.year, percent: 100,
+                                   employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
+      employee.employments.create!(start_date: date + 3.days, percent: 60,
+                                   employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
       Holiday.create!(holiday_date: date + 2.days, musthours_day: 0)
       board = Plannings::EmployeeBoard.new(employee, period)
       assert_equal 20, board.weekly_planned_percent(date)
     end
 
     test '#weekly_planned_percent excludes holidays before first employment' do
-      employee.employments.create!(start_date: date + 2.days, percent: 80)
+      employee.employments.create!(start_date: date + 2.days, percent: 80,
+                                   employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
       Holiday.create!(holiday_date: date, musthours_day: 0)
       board = Plannings::EmployeeBoard.new(employee, period)
       assert_equal 0, board.weekly_planned_percent(date)
     end
 
     test '#weekly_planned_percent includes holidays after first employment' do
-      employee.employments.create!(start_date: date + 2.days, percent: 80)
+      employee.employments.create!(start_date: date + 2.days, percent: 80,
+                                   employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
       Holiday.create!(holiday_date: date + 4.days, musthours_day: 0)
       board = Plannings::EmployeeBoard.new(employee, period)
       assert_equal 16, board.weekly_planned_percent(date)
     end
 
     test '#weekly_planned_percent excludes holidays after final employment' do
-      employee.employments.create!(start_date: date - 1.year, end_date: date + 1.day, percent: 80)
-      employee.employments.create!(start_date: date + 1.year, percent: 80)
+      employee.employments.create!(start_date: date - 1.year, end_date: date + 1.day, percent: 80,
+                                   employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
+      employee.employments.create!(start_date: date + 1.year, percent: 80,
+                                   employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
       Holiday.create!(holiday_date: date + 4.days, musthours_day: 0)
       board = Plannings::EmployeeBoard.new(employee, period)
       assert_equal 0, board.weekly_planned_percent(date)
     end
 
     test '#weekly_employment_percent respects unpaid holidays' do
-      employee.employments.create!(start_date: date - 1.year, percent: 100)
-      employee.employments.create!(start_date: date + 2.days, percent: 0)
+      employee.employments.create!(start_date: date - 1.year, percent: 100,
+                                   employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
+      employee.employments.create!(start_date: date + 2.days, percent: 0,
+                                   employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
       board = Plannings::EmployeeBoard.new(employee, period)
       assert_equal 40, board.weekly_employment_percent(date)
     end
@@ -168,7 +188,8 @@ module Plannings
     end
 
     test '#total_plannable_hours includes employement minus holidays' do
-      employee.employments.create!(start_date: date - 1.year, percent: 80)
+      employee.employments.create!(start_date: date - 1.year, percent: 80,
+                                   employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
       Holiday.create!(holiday_date: date + 2.days, musthours_day: 6)
       Holiday.create!(holiday_date: date + 3.days, musthours_day: 0)
       board = Plannings::EmployeeBoard.new(employee, period)

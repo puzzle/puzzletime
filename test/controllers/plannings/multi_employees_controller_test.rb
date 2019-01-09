@@ -12,8 +12,10 @@ module Plannings
     setup :login
 
     test 'GET#show renders board' do
-      employees(:pascal).employments.create!(percent: 80, start_date: 1.year.ago)
-      employees(:lucien).employments.create!(percent: 100, start_date: 5.years.ago)
+      employees(:pascal).employments.create!(percent: 80, start_date: 1.year.ago,
+                                             employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
+      employees(:lucien).employments.create!(percent: 100, start_date: 5.years.ago,
+                                             employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
       employees(:half_year_maria).update!(department: departments(:devtwo))
       date = Date.today.at_beginning_of_week + 1.week
       Planning.create!(work_item_id: work_items(:webauftritt).id,

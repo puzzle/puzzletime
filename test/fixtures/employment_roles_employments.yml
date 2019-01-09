@@ -9,7 +9,7 @@
 # Table name: employment_roles_employments
 #
 #  id                       :integer          not null, primary key
-#  employment_id            :integer          not null
+#  employment            :integer          not null
 #  employment_role_id       :integer          not null
 #  employment_role_level_id :integer
 #  percent                  :decimal(5, 2)    not null
@@ -17,8 +17,38 @@
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
+for_half_year_role:
+  employment_id: 1 #for_half_year
+  employment_role: software_developer
+  employment_role_level: junior
+  percent: 100
+various_40_role:
+  employment_id: 2 #various_40
+  employment_role: software_developer
+  employment_role_level: junior
+  percent: 40
+various_20_role:
+  employment_id: 3 #various_20
+  employment_role: software_developer
+  employment_role_level: junior
+  percent: 20
+various_100_role:
+  employment_id: 4 #various_100
+  employment_role: software_developer
+  employment_role_level: junior
+  percent: 100
+next_year_role:
+  employment_id: 5 #next_year
+  employment_role: software_developer
+  employment_role_level: junior
+  percent: 100
 left_this_year_role:
-  employment_id: left_this_year
+  employment_id: 6 #left_this_year
   employment_role: software_developer
   employment_role_level: junior
   percent: 80
+long_time_role:
+  employment_id: 7 #long_time
+  employment_role: software_developer
+  employment_role_level: junior
+  percent: 90

@@ -57,37 +57,45 @@ class EmploymentTest < ActiveSupport::TestCase
 
   def test_periods_must_not_overlap
     employee = Employee.find(6)
-    one = Employment.create!(employee: employee, start_date: '1.1.2015', end_date: '31.5.2015', percent: 80)
-    two = Employment.create!(employee: employee, start_date: '1.6.2015', percent: 100)
+    _one = Fabricate(:employment, employee: employee, start_date: '1.1.2015', end_date: '31.5.2015', percent: 80)
+    _two = Fabricate(:employment, employee: employee, start_date: '1.6.2015', percent: 100)
 
-    open_end = Employment.new(employee: employee, start_date: '1.3.2015', percent: 50)
+    open_end = Employment.new(employee: employee, start_date: '1.3.2015', percent: 50,
+                              employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
     assert_not_valid open_end, :base
 
-    closed = Employment.new(employee: employee, start_date: '1.3.2015', end_date: '31.3.2015', percent: 50)
+    closed = Employment.new(employee: employee, start_date: '1.3.2015', end_date: '31.3.2015', percent: 50,
+                            employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
     assert_not_valid closed, :base
 
-    before = Employment.new(employee: employee, start_date: '1.1.2014', end_date: '31.12.2014', percent: 50)
+    before = Employment.new(employee: employee, start_date: '1.1.2014', end_date: '31.12.2014', percent: 50,
+                            employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
     assert_valid before
 
-    after = Employment.new(employee: employee, start_date: '1.9.2015', percent: 50)
+    after = Employment.new(employee: employee, start_date: '1.9.2015', percent: 50,
+                            employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
     assert_valid after
   end
 
-  def test_updates_previous_end_date
+  def test_before_create_updates_previous_end_date
     employee = Employee.find(6)
-    one = Employment.create!(employee: employee, start_date: '1.1.2015', end_date: '31.5.2015', percent: 80)
-    two = Employment.create!(employee: employee, start_date: '1.6.2015', percent: 100)
+    _one = Fabricate(:employment, employee: employee, start_date: '1.1.2015', end_date: '31.5.2015', percent: 80)
+    two = Fabricate(:employment, employee: employee, start_date: '1.6.2015', percent: 100)
 
-    after = Employment.create(employee: employee, start_date: '1.9.2015', end_date: '31.12.2015', percent: 50)
+    after = Employment.create!(employee: employee, start_date: '1.9.2015', end_date: '31.12.2015', percent: 50,
+                              employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
     assert_equal Date.parse('31.8.2015'), two.reload.end_date
 
-    after2 = Employment.create(employee: employee, start_date: '1.3.2016', percent: 50)
+    after2 = Employment.create!(employee: employee, start_date: '1.3.2016', percent: 50,
+                               employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
     assert_equal Date.parse('31.12.2015'), after.reload.end_date
 
-    before = Employment.create!(employee: employee, start_date: '1.1.2014', percent: 50)
+    before = Employment.create!(employee: employee, start_date: '1.1.2014', percent: 50,
+                                employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
     assert_equal Date.parse('31.12.2014'), before.end_date
 
-    before2 = Employment.create!(employee: employee, start_date: '1.1.2013', end_date: '1.6.2013', percent: 50)
+    before2 = Employment.create!(employee: employee, start_date: '1.1.2013', end_date: '1.6.2013', percent: 50,
+                                 employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
     assert_equal Date.parse('1.6.2013'), before2.end_date
   end
 end

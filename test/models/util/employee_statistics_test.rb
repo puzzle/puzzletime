@@ -39,16 +39,20 @@ class EmployeeStatisticsTest < ActiveSupport::TestCase
   def create_employments
     employee.employments.create!(start_date: Date.new(2000, 1, 2),
                                  end_date: Date.new(2000, 1, 4),
-                                 percent: 10)
+                                 percent: 10,
+                                 employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
     employee.employments.create!(start_date: Date.new(2000, 2, 1),
                                  end_date: Date.new(2000, 2, 4),
-                                 percent: 20)
+                                 percent: 20,
+                                 employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
     employee.employments.create!(start_date: Date.new(1999, 12, 1),
                                  end_date: Date.new(1999, 12, 4),
-                                 percent: 30)
+                                 percent: 30,
+                                 employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
     employee.employments.create!(start_date: Date.new(2000, 3, 1),
                                  end_date: nil,
-                                 percent: 40)
+                                 percent: 40,
+                                 employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
   end
 
   def employee
