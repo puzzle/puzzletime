@@ -53,13 +53,13 @@ class Employment < ActiveRecord::Base
       conditions = ['']
 
       if period.start_date
-        conditions.first << '(end_date is NULL OR end_date >= ?)'
+        conditions.first << '("employments"."end_date" is NULL OR "employments"."end_date" >= ?)'
         conditions << period.start_date
       end
 
       if period.end_date
         conditions.first << ' AND ' if conditions.first.present?
-        conditions.first << 'start_date <= ?'
+        conditions.first << '"employments"."start_date" <= ?'
         conditions << period.end_date
       end
 

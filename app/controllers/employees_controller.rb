@@ -5,8 +5,10 @@
 
 
 class EmployeesController < ManageController
+  include Scopable
+  include DryCrudJsonapi
 
-  self.permitted_attrs = [:firstname, :lastname, :shortname, :email, :ldapname,
+  self.permitted_attrs += [:firstname, :lastname, :shortname, :email, :ldapname,
                           :department_id, :crm_key, :probation_period_end_date,
                           :graduation, :management, :phone_office, :phone_private,
                           :street, :postal_code, :city, :birthday, :emergency_contact_name,
@@ -70,6 +72,6 @@ class EmployeesController < ManageController
   private
 
   def list_entries
-    super.includes(:department).references(:department)
+    scope_entries_by(super.includes(:department, :current_employment).references(:department), :current)
   end
 end

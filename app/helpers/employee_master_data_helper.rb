@@ -10,6 +10,8 @@ module EmployeeMasterDataHelper
   end
 
   def format_nationalities(employee)
+    return unless employee.nationalities.present?
+
     employee.nationalities.map do |country_code|
       country = ISO3166::Country[country_code]
       country.translations[I18n.locale.to_s] || country.name

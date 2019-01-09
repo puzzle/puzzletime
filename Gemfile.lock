@@ -203,6 +203,17 @@ GEM
     jquery-ui-rails (6.0.1)
       railties (>= 3.2.16)
     json (2.1.0)
+    jsonapi-deserializable (0.2.0)
+    jsonapi-parser (0.1.1)
+    jsonapi-rails (0.3.1)
+      jsonapi-parser (~> 0.1.0)
+      jsonapi-rb (~> 0.5.0)
+    jsonapi-rb (0.5.0)
+      jsonapi-deserializable (~> 0.2.0)
+      jsonapi-serializable (~> 0.3.0)
+    jsonapi-renderer (0.2.0)
+    jsonapi-serializable (0.3.0)
+      jsonapi-renderer (~> 0.2.0)
     kaminari (1.1.1)
       activesupport (>= 4.1.0)
       kaminari-actionview (= 1.1.1)
@@ -333,6 +344,9 @@ GEM
       rack (>= 1.4)
     rqrcode (0.10.1)
       chunky_png (~> 1.0)
+    rswag-ui (2.0.5)
+      actionpack (>= 3.1, < 6.0)
+      railties (>= 3.1, < 6.0)
     rubocop (0.63.1)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
@@ -384,6 +398,7 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
+    swagger-blocks (2.0.2)
     tdigest (0.1.1)
       rbtree (~> 0.4.2)
     temple (0.8.0)
@@ -452,6 +467,7 @@ DEPENDENCIES
   jbuilder
   jquery-rails
   jquery-ui-rails
+  jsonapi-rails
   kaminari
   kaminari-bootstrap
   m
@@ -477,6 +493,7 @@ DEPENDENCIES
   request_profiler
   request_store
   rqrcode
+  rswag-ui
   rubocop
   rubocop-checkstyle_formatter
   sass-rails
@@ -486,6 +503,7 @@ DEPENDENCIES
   selenium-webdriver
   simplecov-rcov!
   spring
+  swagger-blocks
   turbolinks
   uglifier
   validates_by_schema

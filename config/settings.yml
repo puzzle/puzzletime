@@ -26,6 +26,10 @@ regular_holidays:
     - 26
     - 12
 
+api_client:
+  user: <%= ENV['RAILS_API_USER'] || SecureRandom.hex %>
+  password: <%= ENV['RAILS_API_PASSWORD'] || SecureRandom.hex %>
+
 # LDAP configuration
 ldap:
   connection:

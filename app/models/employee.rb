@@ -61,6 +61,7 @@ class Employee < ActiveRecord::Base
 
   has_many :employments, dependent: :destroy
   has_one :current_employment, -> { during(Period.current_day) }, class_name: 'Employment'
+
   has_many :worktimes
   has_many :absences,
            -> { order('name').distinct },
@@ -87,6 +88,7 @@ class Employee < ActiveRecord::Base
   protect_if :worktimes, 'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Arbeitszeiten zugeordnet sind'
 
   scope :list, -> { order('lastname', 'firstname') }
+  scope :current, -> { joins(:employments).merge(Employment.during(Period.current_day)) }
 
   class << self
     # Tries to login a user with the passed data.
