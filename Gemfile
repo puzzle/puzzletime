@@ -57,7 +57,7 @@ end
 group :development do
   gem 'puma'
   gem 'spring'
-  # gem 'better_errors'
+  gem 'web-console'
   gem 'bullet'
 end
 
@@ -76,7 +76,6 @@ end
 group :console do
   gem 'pry-byebug', require: ENV['RM_INFO'].to_s.empty?
   gem 'pry-doc'
-  gem 'pry-nav'
 end
 
 group :metrics do
