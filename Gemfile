@@ -6,6 +6,7 @@ gem 'pg'
 
 gem 'acts_as_tree'
 gem 'airbrake'
+gem 'bleib', '0.0.8'
 gem 'cancancan'
 gem 'config'
 gem 'country_select'
