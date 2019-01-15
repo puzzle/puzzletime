@@ -197,7 +197,8 @@ Rails.application.routes.draw do
     post :logout
   end
 
-  get 'status', to: 'status#index'
+  get 'status/health', to: 'status#health'
+  get 'status/readiness', to: 'status#readiness'
 
   get '/404', to: 'errors#404'
   get '/500', to: 'errors#500'
