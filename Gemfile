@@ -89,3 +89,7 @@ group :metrics do
   gem 'sdoc'
   gem 'simplecov-rcov'
 end
+
+group :production do
+  gem 'puma'
+end
