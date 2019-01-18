@@ -18,11 +18,13 @@ class ChooseOrderTest < ActionDispatch::IntegrationTest
   end
 
   test 'changes path when hitting TAB key in order chooser' do
-    timeout_safe do      control = find('#choosable_order_id + .selectize-control')
+    timeout_safe do
+      control = find('#choosable_order_id + .selectize-control')
       control.find('.selectize-input').click # open dropdown
       open_selectize('choosable_order_id', term: 'swiss', clear: true)
       find('#choosable_order_id + .selectize-control').find('.selectize-input input').native.send_keys(:tab)
 
+      assert page.has_selector?('dd.value', text: 'Webauftritt') # dummy query to wait for page load
       assert_equal order_path(orders(:webauftritt)), current_path
     end
   end
