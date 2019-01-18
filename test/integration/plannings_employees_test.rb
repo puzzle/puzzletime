@@ -21,7 +21,7 @@ class PlanningsEmployeesTest < ActionDispatch::IntegrationTest
     page.assert_no_selector(row_selector)
     find('.add').click
 
-    selectize('add_work_item_select_id', 'PITC-PT: PuzzleTime')
+    selectize('add_work_item_select_id', 'PITC-PT: PuzzleTime', no_click: true)
     page.assert_selector(row_selector, text: 'PITC-PT: PuzzleTime')
 
     row.all('.day')[0].assert_text('')
