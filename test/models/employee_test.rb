@@ -129,6 +129,11 @@ class EmployeeTest < ActiveSupport::TestCase
     assert_includes empls, employees(:lucien)
   end
 
+  test '#current scope' do
+    refute_equal Employee.count, Employee.current.count
+    assert_arrays_match employees(:long_time_john, :various_pedro, :next_year_pablo), Employee.current
+  end
+
   private
 
   def year_period(employee)

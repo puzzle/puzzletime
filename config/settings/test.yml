@@ -3,6 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
+api_client:
+  user: api_user
+  password: api_pw
 
 clients:
   company_id: 1
