@@ -7,9 +7,19 @@
 require 'test_helper'
 
 class StatusControllerTest < ActionController::TestCase
-  def test_index
-    get :index
-    assert_response :success
-    assert response.body.include? 'OK'
+  def test_health
+    endpoint_test :health
+  end
+
+def test_readiness
+    endpoint_test :readiness
+  end
+
+  private
+
+  def endpoint_test(endpoint, status = :success, matcher = /ok/)
+    get endpoint
+    assert_response status
+    assert_match matcher, response.body.to_s
   end
 end
