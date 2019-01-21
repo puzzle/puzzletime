@@ -7,6 +7,7 @@ gem 'pg'
 gem 'acts_as_tree'
 gem 'airbrake'
 gem 'bleib', '0.0.8'
+gem 'bootsnap'
 gem 'cancancan'
 gem 'config'
 gem 'country_select'
@@ -38,7 +39,7 @@ gem 'paper_trail'
 gem 'autoprefixer-rails'
 gem 'coffee-rails'
 gem 'sass-rails'
-gem 'therubyracer', platforms: :ruby
+gem 'mini_racer'
 gem 'uglifier'
 
 gem 'bootstrap-sass'
@@ -56,11 +57,14 @@ group :development, :test do
   gem 'request_profiler'
 end
 
-group :development do
+group :development, :production do
   gem 'puma'
+end
+
+group :development do
+  gem 'bullet'
   gem 'spring'
   gem 'web-console'
-  gem 'bullet'
 end
 
 group :test do
@@ -89,8 +93,4 @@ group :metrics do
   gem 'rubocop-checkstyle_formatter', require: false
   gem 'sdoc'
   gem 'simplecov-rcov'
-end
-
-group :production do
-  gem 'puma'
 end
