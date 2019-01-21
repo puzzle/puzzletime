@@ -30,7 +30,7 @@ module IntegrationHelper
 
   def open_selectize(id, options = {})
     element = find("##{id} + .selectize-control")
-    element.find('.selectize-input').click
+    element.find('.selectize-input').click unless options[:no_click]
     element.find('.selectize-input input').native.send_keys(:backspace) if options[:clear]
     element.find('.selectize-input input').set(options[:term]) if options[:term].present?
     if options[:assert_empty]
