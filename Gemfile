@@ -24,6 +24,7 @@ gem 'nested_form_fields'
 gem 'net-ldap'
 gem 'nokogiri'
 gem 'protective'
+gem 'puma'
 gem 'rails-i18n'
 gem 'rails_autolink'
 gem 'request_store'
@@ -37,8 +38,8 @@ gem 'paper_trail'
 ## assets
 gem 'autoprefixer-rails'
 gem 'coffee-rails'
-gem 'sass-rails'
 gem 'mini_racer'
+gem 'sass-rails'
 gem 'uglifier'
 
 gem 'bootstrap-sass'
@@ -54,10 +55,6 @@ group :development, :test do
   gem 'faker'
   gem 'pry-rails'
   gem 'request_profiler'
-end
-
-group :development, :production do
-  gem 'puma'
 end
 
 group :development do
