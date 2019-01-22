@@ -59,6 +59,7 @@ class WorkItem < ActiveRecord::Base
   before_validation :upcase_shortname
   before_save :remember_name_changes
   before_update :generate_path_ids
+  after_create :generate_path_ids!
   after_create :reset_parent_leaf
   after_save :update_child_path_names, if: -> { @names_changed }
   after_destroy :reset_parent_leaf
@@ -157,32 +158,6 @@ class WorkItem < ActiveRecord::Base
   def propagate_closed!(closed)
     self_and_descendants.update_all(closed: closed)
     self.closed = closed
-  end
-
-  def save(*args, &block)
-    if new_record?
-      # Block is run immediately after insert statement.
-      # After create callback is too late since Rails 5.1
-      super do |item|
-        generate_path_ids!
-        yield item if block_given?
-      end
-    else
-      super
-    end
-  end
-
-  def save!(*args, &block)
-    if new_record?
-      # Block is run immediately after insert statement.
-      # After create callback is too late since Rails 5.1
-      super do |item|
-        generate_path_ids!
-        yield item if block_given?
-      end
-    else
-      super
-    end
   end
 
   private
