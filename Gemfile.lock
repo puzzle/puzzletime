@@ -215,6 +215,7 @@ GEM
       ast (~> 2.2)
     pg (0.21.0)
     powerpack (0.1.1)
+    prometheus_exporter (0.4.2)
     protective (0.2.0)
       activerecord
     pry (0.10.4)
@@ -416,6 +417,7 @@ DEPENDENCIES
   nokogiri
   paper_trail
   pg
+  prometheus_exporter
   protective
   pry-byebug
   pry-doc
