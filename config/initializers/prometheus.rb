@@ -10,8 +10,10 @@ if !Rails.env.test? && ENV['PROMETHEUS_EXPORTER_HOST']
   Rails.application.middleware.unshift PrometheusExporter::Middleware
 
   # This reports basic process stats like RSS and GC info
-  PrometheusExporter::Instrumentation::Process.start(type: 'master')
+  proc_type = $ARGV.to_s.match?(/jobs\:work/) ? 'delayed_job' : 'master'
+  PrometheusExporter::Instrumentation::Process.start(type: proc_type)
 
   # This reports delayed job info
   PrometheusExporter::Instrumentation::DelayedJob.register_plugin
+
 end
