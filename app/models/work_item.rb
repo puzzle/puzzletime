@@ -158,6 +158,7 @@ class WorkItem < ActiveRecord::Base
   def propagate_closed!(closed)
     self_and_descendants.update_all(closed: closed)
     self.closed = closed
+    save!
   end
 
   private
