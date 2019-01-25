@@ -23,6 +23,7 @@ class app.SelectizeRefresher
 
   refresh: (data) ->
     selectize = @selectize()
+    selectize.clear()
     selectize.clearOptions()
     data.forEach((e) -> selectize.addOption(value: e.id, text: e.label))
     selectize.refreshOptions(false)
