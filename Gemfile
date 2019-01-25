@@ -39,12 +39,15 @@ gem 'paper_trail'
 ## assets
 gem 'autoprefixer-rails'
 gem 'coffee-rails'
+
+# Using mini_racer instead of nodejs, because of errors on Jenkins.
+# mini_racer can only be built with gcc >= 4.7. Our Jenkins uses 4.4.7
 gem 'mini_racer'
 gem 'sass-rails'
 gem 'uglifier'
 
 # Locked to 3.3.x, because 3.4.0 expects sassc, which can only be built with gcc
-# <= 4.6. Our Jenkins uses 4.4.7
+# >= 4.6. Our Jenkins uses 4.4.7
 gem 'bootstrap-sass', '~> 3.3.0'
 gem 'chartjs-ror'
 gem 'jquery-rails'
