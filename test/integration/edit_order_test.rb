@@ -63,7 +63,7 @@ class EditOrderTest < ActionDispatch::IntegrationTest
   test 'order without worktimes has active destroy link' do
     visit edit_order_path(order_without_worktimes)
     assert has_link?('Löschen', href: order_path(order_without_worktimes))
-    assert refute_selector('a.disabled', text: 'Löschen')
+    assert_no_selector('a.disabled', text: 'Löschen')
   end
 
   private
