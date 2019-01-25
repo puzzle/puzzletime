@@ -75,7 +75,7 @@ class AccountingPost < ActiveRecord::Base
     if book_on_order
       self.work_item = order.work_item
     elsif new_record? || work_item_id == order.work_item_id
-      self.work_item = WorkItem.new(attributes.merge(parent_id: order.work_item_id))
+      self.work_item = WorkItem.create(attributes.merge(parent_id: order.work_item_id))
     else
       self.work_item_attributes = attributes
     end
@@ -139,7 +139,7 @@ class AccountingPost < ActiveRecord::Base
     post = order.accounting_posts.find_by(work_item_id: order.work_item_id)
     if post
       begin
-        post.work_item = WorkItem.new(name: order.work_item.name,
+        post.work_item = WorkItem.create(name: order.work_item.name,
                                       shortname: order.work_item.shortname,
                                       parent_id: order.work_item.id,
                                       closed: post.closed? || order.status.closed?)
