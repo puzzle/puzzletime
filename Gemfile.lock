@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/puzzle/simplecov-rcov
+  revision: 554ec457f4a7bdceae083ce516c281567a341e4a
+  specs:
+    simplecov-rcov (0.2.3.1)
+      simplecov (>= 0.4.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -365,8 +372,6 @@ GEM
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.2)
-    simplecov-rcov (0.2.3)
-      simplecov (>= 0.4.1)
     sixarm_ruby_unaccent (1.2.0)
     sort_alphabetical (1.1.0)
       unicode_utils (>= 1.2.2)
@@ -479,7 +484,7 @@ DEPENDENCIES
   seed-fu
   selectize-rails
   selenium-webdriver
-  simplecov-rcov
+  simplecov-rcov!
   spring
   turbolinks
   uglifier

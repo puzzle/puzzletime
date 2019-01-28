@@ -94,5 +94,5 @@ group :metrics do
   gem 'rubocop'
   gem 'rubocop-checkstyle_formatter', require: false
   gem 'sdoc'
-  gem 'simplecov-rcov'
+  gem 'simplecov-rcov', git: 'https://github.com/puzzle/simplecov-rcov'
 end
