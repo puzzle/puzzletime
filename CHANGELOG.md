@@ -1,3 +1,9 @@
+# 2.3
+
+### Improvements
+
+* **Ruby/Rails:** Auf Ruby 2.5.3 und Rails 5.2.2 aktualisiert
+
 # 2.2
 
 ### Features
