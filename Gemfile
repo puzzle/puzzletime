@@ -1,12 +1,13 @@
 source 'https://rubygems.org'
 
-gem 'rails', '5.1.2'
+gem 'rails', '5.2.2'
 
-gem 'pg'
+gem 'pg', '= 0.21.0'
 
 gem 'acts_as_tree'
 gem 'airbrake'
 gem 'bleib', '0.0.8'
+gem 'bootsnap'
 gem 'cancancan'
 gem 'config'
 gem 'country_select'
@@ -24,6 +25,7 @@ gem 'net-ldap'
 gem 'nokogiri'
 gem 'prometheus_exporter'
 gem 'protective'
+gem 'puma'
 gem 'rails-i18n'
 gem 'rails_autolink'
 gem 'request_store'
@@ -37,11 +39,16 @@ gem 'paper_trail'
 ## assets
 gem 'autoprefixer-rails'
 gem 'coffee-rails'
+
+# Using mini_racer instead of nodejs, because of errors on Jenkins.
+# mini_racer can only be built with gcc >= 4.7. Our Jenkins uses 4.4.7
+gem 'mini_racer'
 gem 'sass-rails'
-gem 'therubyracer', platforms: :ruby
 gem 'uglifier'
 
-gem 'bootstrap-sass'
+# Locked to 3.3.x, because 3.4.0 expects sassc, which can only be built with gcc
+# >= 4.6. Our Jenkins uses 4.4.7
+gem 'bootstrap-sass', '~> 3.3.0'
 gem 'chartjs-ror'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
@@ -57,10 +64,9 @@ group :development, :test do
 end
 
 group :development do
-  gem 'puma'
+  gem 'bullet'
   gem 'spring'
   gem 'web-console'
-  gem 'bullet'
 end
 
 group :test do
@@ -88,9 +94,5 @@ group :metrics do
   gem 'rubocop'
   gem 'rubocop-checkstyle_formatter', require: false
   gem 'sdoc'
-  gem 'simplecov-rcov'
-end
-
-group :production do
-  gem 'puma'
+  gem 'simplecov-rcov', git: 'https://github.com/puzzle/simplecov-rcov'
 end
