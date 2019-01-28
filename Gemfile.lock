@@ -211,7 +211,7 @@ GEM
       kaminari (>= 0.13.0)
       rails
     kaminari-core (1.1.1)
-    libv8 (6.7.288.46.1-x86_64-linux)
+    libv8 (6.7.288.46.1)
     loofah (2.2.3)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -253,7 +253,7 @@ GEM
     parallel (1.13.0)
     parser (2.6.0.0)
       ast (~> 2.4.0)
-    pg (1.1.4)
+    pg (0.21.0)
     powerpack (0.1.2)
     prometheus_exporter (0.4.2)
     protective (0.2.0)
@@ -457,7 +457,7 @@ DEPENDENCIES
   net-ldap
   nokogiri
   paper_trail
-  pg
+  pg (= 0.21.0)
   prometheus_exporter
   protective
   pry-byebug

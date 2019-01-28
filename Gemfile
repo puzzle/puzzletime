@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rails', '5.2.2'
 
-gem 'pg'
+gem 'pg', '= 0.21.0'
 
 gem 'acts_as_tree'
 gem 'airbrake'
