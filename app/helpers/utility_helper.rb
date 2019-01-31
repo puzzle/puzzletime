@@ -26,6 +26,10 @@ module UtilityHelper
     content_tag(:span, '', options)
   end
 
+  def currency
+    Settings.defaults.currency
+  end
+
   # Overridden method that takes a block that is executed for each item in
   # array before appending the results.
   def safe_join(array, sep = $OUTPUT_FIELD_SEPARATOR, &block)

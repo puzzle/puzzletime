@@ -67,7 +67,7 @@ defaults:
   start_hour: 8
   country: CH
   vat: 7.7 # percent
-  currency: CHF
+  currency: <%= ENV['RAILS_PTIME_CURRENCY'] || 'CHF' %>
   # Month number the business year starts (e.g. 1 for 1.1.YYYY, 7 for 1.7.YYYY)
   business_year_start_month: 7
   payment_period: 30 # days

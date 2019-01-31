@@ -22,7 +22,7 @@ class Order::Cockpit
     total.cells[:budget].amount.to_f - billed_amount
   end
 
-  # Ist-R[CHF] / Ist-V[h]
+  # Ist-R[currency] / Ist-V[h]
   def billed_rate
     billable_hours > 0 ? billed_amount / billable_hours : nil
   end
