@@ -9,7 +9,7 @@
 - if @versions.present?
   = plain_table(@versions.group_by(&:created_at).each) do |t|
     - t.col('Datum/Autor') do |created_at, versions|
-      %small.text-muted= f(created_at)
+      %small.text-muted= f(in_my_timezone(created_at))
       - if version_author(versions.first)
         %h4= version_author(versions.first)
     - t.col('Änderungen') do |created_at, versions|
