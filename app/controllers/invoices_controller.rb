@@ -142,8 +142,13 @@ class InvoicesController < CrudController
 
   def load_totals_paid
     paid = order.invoices.where(status: 'paid')
+    @total_amount      = order.invoices.sum(:total_amount)
     @total_amount_paid = paid.sum(:total_amount)
-    @total_hours_paid = paid.sum(:total_hours)
+    @total_amount_open = @total_amount - @total_amount_paid
+
+    @total_hours       = order.invoices.sum(:total_hours)
+    @total_hours_paid  = paid.sum(:total_hours)
+    @total_hours_open  = @total_hours - @total_hours_paid
   end
 
   def load_associations
