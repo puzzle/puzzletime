@@ -75,6 +75,7 @@ defaults:
     - 30
     - 45
     - 60
+  timezone: Bern
 
 work_items:
   path_separator: '-'
