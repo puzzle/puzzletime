@@ -40,6 +40,27 @@ ActiveRecord::Schema.define(version: 2019_02_14_100801) do
     t.index ["work_item_id"], name: "index_accounting_posts_on_work_item_id"
   end
 
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.bigint "byte_size", null: false
+    t.string "checksum", null: false
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
   create_table "additional_crm_orders", force: :cascade do |t|
     t.bigint "order_id", null: false
     t.string "crm_key", null: false
@@ -205,6 +226,23 @@ ActiveRecord::Schema.define(version: 2019_02_14_100801) do
     t.decimal "vacation_days_per_year", precision: 5, scale: 2
     t.string "comment"
     t.index ["employee_id"], name: "index_employments_on_employee_id"
+  end
+
+  create_table "expenses", force: :cascade do |t|
+    t.bigint "employee_id", null: false
+    t.integer "kind", null: false
+    t.integer "status", default: 0, null: false
+    t.decimal "amount", precision: 12, scale: 2, null: false
+    t.date "payment_date", null: false
+    t.text "description"
+    t.bigint "reviewer_id"
+    t.datetime "reviewed_at"
+    t.bigint "order_id"
+    t.date "reimbursement_date"
+    t.index ["employee_id"], name: "index_expenses_on_employee_id"
+    t.index ["order_id"], name: "index_expenses_on_order_id"
+    t.index ["reviewer_id"], name: "index_expenses_on_reviewer_id"
+    t.index ["status"], name: "index_expenses_on_status"
   end
 
   create_table "holidays", force: :cascade do |t|
@@ -431,6 +469,7 @@ ActiveRecord::Schema.define(version: 2019_02_14_100801) do
     t.index ["work_item_id", "employee_id", "work_date"], name: "worktimes_work_items"
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "employments", "employees", name: "fk_employments_employees", on_delete: :cascade
   add_foreign_key "order_uncertainties", "orders"
   add_foreign_key "worktimes", "absences", name: "fk_times_absences", on_delete: :cascade
