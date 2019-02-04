@@ -23,7 +23,7 @@ end
 require File.expand_path('../../config/environment', __FILE__)
 Rails.env = 'test'
 require 'rails/test_help'
-require 'mocha/mini_test'
+require 'mocha/minitest'
 require 'capybara/rails'
 Settings.reload!
 
