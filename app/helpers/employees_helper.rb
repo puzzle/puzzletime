@@ -37,7 +37,23 @@ module EmployeesHelper
   end
 
   def version_changes(version)
+    safe_join(
+      [
+        version_title(version),
+        version_changed(version)
+      ]
+    )
+  end
+
+  def version_title(version)
+    model = version.item_type.parameterize
+    event = version.event
+    content_tag(:h4, t("version.model.#{event}.#{model}", id: version.item_id))
+  end
+
+  def version_changed(version)
     item_class = version.item_type.constantize
+
     safe_join(version.changeset) do |attr, (from, to)|
       unless from.blank? && to.blank?
         content_tag(:div, version_attribute_change(item_class, attr, from, to))
@@ -67,6 +83,7 @@ module EmployeesHelper
     end
 
     { attr: item_class.human_attribute_name(attr),
+      model_ref: t("version.model_reference.#{item_class.name.parameterize}"),
       from: f(from),
       to: f(to) }
   end

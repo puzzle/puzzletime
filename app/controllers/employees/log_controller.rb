@@ -1,4 +1,6 @@
-#  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
+# frozen_string_literal: true
+
+#  Copyright (c) 2006-2019, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
@@ -35,9 +37,14 @@ module Employees
     end
 
     def employment_log
-      PaperTrail::Version.where(
-        item_id: entry.employments.pluck(:id),
-        item_type: Employment.sti_name
+      PaperTrail::Version.where(id:
+        PaperTrail::Version.where(
+          item_type: Employment.sti_name
+        ).map do |employment|
+          if employment.changeset['employee_id'].include?(entry.id)
+            employment.id
+          end
+        end
       )
     end
 
