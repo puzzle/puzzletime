@@ -15,7 +15,7 @@ class Order::Cockpit
   end
 
   def billed_amount
-    @billed_amount ||= order.invoices.sum(:total_amount).to_f
+    @billed_amount ||= order.invoices.where.not(status: 'cancelled').sum(:total_amount).to_f
   end
 
   def budget_open
@@ -29,7 +29,7 @@ class Order::Cockpit
 
   # Ist-R[h] / Ist[h] x 100
   def cost_effectiveness_current
-    result = (order.invoices.sum(:total_hours).to_f / total_hours) * 100.0
+    result = (order.invoices.where.not(status: 'cancelled').sum(:total_hours).to_f / total_hours) * 100.0
     result.finite? ? result.round : EM_DASH
   end
 
