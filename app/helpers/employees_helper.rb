@@ -82,9 +82,24 @@ module EmployeesHelper
       to = item_class.human_attribute_name([attr_s.pluralize, to].join('.'))
     end
 
-    { attr: item_class.human_attribute_name(attr),
+    association = attr.humanize.parameterize
+    if item_class.reflect_on_association(association)
+
+      from = resolve_association(association, from)
+      to   = resolve_association(association, to)
+    end
+
+    {
+      attr: item_class.human_attribute_name(attr),
       model_ref: t("version.model_reference.#{item_class.name.parameterize}"),
       from: f(from),
-      to: f(to) }
+      to: f(to)
+    }
+  end
+
+  def resolve_association(association, id)
+    association.classify.constantize.find(id).to_s if id
+  rescue ActiveRecord::RecordNotFound
+    id
   end
 end
