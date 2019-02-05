@@ -24,11 +24,9 @@ class LogPresenter
       .page(params[:page])
   end
 
-  def present_author(version)
-    if versions.first.version_author.present?
-      employee = Employee.find_by(id: version.version_author)
-      yield employee.to_s if employee.present?
-    end
+  def present_author(versions)
+    employee = Employee.find_by(id: versions.first.version_author)
+    yield employee.to_s if employee
   end
 
   def present_changes(versions)
