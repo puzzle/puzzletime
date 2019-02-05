@@ -21,7 +21,7 @@ module OrderServicesHelper
         e.employee.to_s
       end
       t.attr(:hours)
-      t.attr(:amount, 'CHF', class: 'right')
+      t.attr(:amount, currency, class: 'right')
       t.attr(:work_item_id) do |e|
         e.work_item.to_s
       end
