@@ -13,21 +13,21 @@ class EmployeesControllerTest < ActionController::TestCase
     request.headers['Accept'] = Mime::Type.lookup_by_extension(:jsonapi).to_s
   end
 
-  test 'show' do
+  test 'jsonapi show' do
     get :show, params: { id: test_entry.id }
     assert_response :ok
     assert_match %r[\Aapplication/vnd\.api\+json], response.headers['Content-Type']
     assert_equal test_entry.id.to_s, response_json[:data][:id]
   end
 
-  test 'show with fields parameter' do
+  test 'jsonapi show with fields parameter' do
     get :show, params: { id: test_entry.id, 'fields[employee]' => 'firstname' }
     assert_response :ok
     assert_match %r[\Aapplication/vnd\.api\+json], response.headers['Content-Type']
     assert_arrays_match ['firstname'], response_json[:data][:attributes].keys
   end
 
-  test 'show with includes parameter' do
+  test 'jsonapi show with includes parameter' do
     get :show, params: { id: employees(:long_time_john).id, include: 'current_employment' }
     assert_response :ok
     assert_match %r[\Aapplication/vnd\.api\+json], response.headers['Content-Type']
@@ -35,14 +35,14 @@ class EmployeesControllerTest < ActionController::TestCase
     assert_equal test_entry.current_employment.id.to_s, response_json[:included].first[:id]
   end
 
-  test 'index' do
+  test 'jsonapi index' do
     get :index
     assert_response :ok
     assert_match %r[\Aapplication/vnd\.api\+json], response.headers['Content-Type']
     assert_equal Employee.count, response_json[:data].count
   end
 
-  test 'index with scope parameter' do
+  test 'jsonapi index with scope parameter' do
     get :index, params: { scope: :current }
     assert_response :ok
     assert_match %r[\Aapplication/vnd\.api\+json], response.headers['Content-Type']
@@ -62,6 +62,6 @@ class EmployeesControllerTest < ActionController::TestCase
   end
 
   def response_json
-    ActiveSupport::HashWithIndifferentAccess.new(JSON.parse(response.body)) rescue nil
+    ActiveSupport::HashWithIndifferentAccess.new(JSON.parse(response.body))
   end
 end
