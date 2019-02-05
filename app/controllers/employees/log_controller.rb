@@ -12,14 +12,14 @@ module Employees
     before_action :authorize_action
 
     def index
-      @versions = employee_log
-                  .or(employment_log)
-                  .reorder('created_at DESC, id DESC')
-                  .includes(:item)
-                  .page(params[:page])
+      @versions = log.versions
     end
 
     private
+
+    def log
+      @log ||= LogPresenter.new(entry, params, view_context)
+    end
 
     def entry
       @employee ||= Employee.find(params[:id])
