@@ -22,6 +22,8 @@ gesetzt werden. Werte ohne Default müssen in der Regel definiert werden.
 
 | Umgebungsvariable | Beschreibung | Default |
 | --- | --- | --- |
+| RAILS_API_USER | Benutzername für API HTTP basic auth | |
+| RAILS_API_PASSWORD | Passwort für API HTTP basic auth | |
 | RAILS_DB_NAME | Name der Datenbank | `puzzletime_[environment]` |
 | RAILS_DB_USERNAME | Benutzername, um auf die Datenbank zu verbinden. | - |
 | RAILS_DB_PASSWORD | Passwort, um auf die Datenbank zu verbinden. | - |
