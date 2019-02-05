@@ -19,9 +19,8 @@
 
 class Employment < ActiveRecord::Base
   DAYS_PER_YEAR = 365.25
-  INTERNAL_ATTRS = %w(id employee_id).freeze
 
-  has_paper_trail skip: Employment::INTERNAL_ATTRS
+  has_paper_trail
 
   belongs_to :employee
   has_many :employment_roles_employments,

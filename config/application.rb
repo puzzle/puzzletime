@@ -32,6 +32,7 @@ module Puzzletime
                                 #{config.root}/app/models/util
                                 #{config.root}/app/domain/evaluations
                                 #{config.root}/app/domain/graphs
+                                #{config.root}/app/domain/presenters
                                 #{config.root}/app/domain
                                 #{config.root}/app/jobs)
 
