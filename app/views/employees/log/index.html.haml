@@ -6,22 +6,18 @@
 
 - @title ||= "Log von #{@employee.to_s}"
 
-- if @versions.present?
-  = plain_table(@log.table_items) do |t|
-    - t.col('Datum/Autor') do |created_at, versions|
-      - @log.version = versions.first
-      %small.text-muted= f(created_at)
-      - if @log.author?
-        %h4= @log.author
-    - t.col('Änderungen') do |created_at, versions|
-      - versions.each do |v|
-        - @log.version = v
-        %h4= @log.title
-        = @log.all_changes
+= plain_table_or_message(@presenter.versions.group_by(&:created_at)) do |t|
+  - t.col('Datum/Autor') do |created_at, versions|
+    %small.text-muted= f(created_at)
+    - @presenter.present_author(versions) do |author|
+      %h4= author
 
-- else
-  %p Keine Änderungen
+  - t.col('Änderungen') do |created_at, versions|
+    - @presenter.present_changes(versions) do |title, changes|
+      %h4= title
+      = safe_join(changes, content_tag(:div))
 
-= paginate @versions
+
+= paginate @presenter.versions
 
 = render 'actions_index'

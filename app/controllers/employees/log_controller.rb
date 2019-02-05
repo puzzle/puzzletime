@@ -12,40 +12,17 @@ module Employees
     before_action :authorize_action
 
     def index
-      @versions = log.versions
+      @presenter = LogPresenter.new(employee, params)
     end
 
     private
 
-    def log
-      @log ||= LogPresenter.new(entry, params, view_context)
-    end
-
-    def entry
+    def employee
       @employee ||= Employee.find(params[:id])
     end
 
     def authorize_action
-      authorize!(:log, entry)
-    end
-
-    def employee_log
-      PaperTrail::Version.where(
-        item_id: entry.id,
-        item_type: Employee.sti_name
-      )
-    end
-
-    def employment_log
-      PaperTrail::Version.where(id:
-        PaperTrail::Version.where(
-          item_type: Employment.sti_name
-        ).map do |employment|
-          if employment.changeset['employee_id'].include?(entry.id)
-            employment.id
-          end
-        end
-      )
+      authorize!(:log, employee)
     end
 
   end

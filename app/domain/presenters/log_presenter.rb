@@ -17,57 +17,47 @@ class LogPresenter
 
   def versions
     @versions ||=
-      all_logs
+      employee_log
+      .or(employment_log)
       .reorder('created_at DESC, id DESC')
       .includes(:item)
       .page(params[:page])
   end
 
-  def table_items
-    versions.group_by(&:created_at).each
-  end
-
-  def author?
-    author.present?
-  end
-
-  def author
-    if version.version_author.present?
-      employee = Employee.where(id: version.version_author).first
-      employee.to_s if employee.present?
+  def present_author(version)
+    if versions.first.version_author.present?
+      employee = Employee.find_by(id: version.version_author)
+      yield employee.to_s if employee.present?
     end
   end
 
-  def title
+  def present_changes(versions)
+    versions.each do |version|
+      yield title_for(version), changes_for(version)
+    end
+  end
+
+  def title_for(version)
     model = version.item_type.parameterize
     event = version.event
-    view.t("version.model.#{event}.#{model}", id: version.item_id)
+    I18n.t("version.model.#{event}.#{model}", id: version.item_id)
   end
 
-  def attribute_change(attr, from, to)
-    key = attribute_key(from, to)
-    view.t("version.attribute_change.#{key}", attribute_args(attr, from, to))
-  end
+  def changes_for(version)
+    version.changeset.collect do |attr, changes|
+      next if changes.all?(&:blank?)
 
-  def all_changes
-    view.safe_join(version.changeset) do |attr, (from, to)|
-      unless from.blank? && to.blank?
-        view.content_tag(:div, attribute_change(attr, from, to))
-      end
+      attribute_change(version.item_type, attr, changes)
     end
   end
 
+  def attribute_change(item_type, attr, changes)
+    from, to = changes
+    key = attribute_key(from, to)
+    I18n.t("version.attribute_change.#{key}", attribute_args(item_type, attr, from, to))
+  end
 
   private
-
-  def item_class
-    version.item_type.constantize
-  end
-
-  def all_logs
-    employee_log
-      .or(employment_log)
-  end
 
   def employee_log
     PaperTrail::Version.where(
@@ -99,7 +89,8 @@ class LogPresenter
     end
   end
 
-  def attribute_args(attr, from, to)
+  def attribute_args(item_type, attr, from, to)
+    item_class = item_type.constantize
     attr_s = attr.to_s
     if item_class.defined_enums[attr_s]
       to = item_class.human_attribute_name([attr_s.pluralize, to].join('.'))
@@ -113,7 +104,7 @@ class LogPresenter
 
     {
       attr: item_class.human_attribute_name(attr),
-      model_ref: view.t("version.model_reference.#{item_class.name.parameterize}"),
+      model_ref: I18n.t("version.model_reference.#{item_class.name.parameterize}"),
       from: from,
       to: to
     }
