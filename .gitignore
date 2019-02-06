@@ -43,3 +43,6 @@ postgres_files
 
 .pry_history
 tags
+
+# Symlinked rails engines for development
+/engines/*
