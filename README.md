@@ -13,8 +13,6 @@ directory:
     rake                 # run all the tests
     rails server         # start the rails server
 
-Alternatively you can use the [dockerized development](doc/development/02_docker.md) environment.
-
 A more detailed development documentation in German can be found in [doc/development](doc/development/README.md). This is where you also find some [Deployment](doc/development/03_deployment.md) instructions
 
 
