@@ -17,7 +17,8 @@ task :brakeman do
             --skip-files #{ignores.join(',')}
             -x ModelAttrAccessible
             -q
-            --no-progress).join(' ')
+            --no-progress
+            --no-exit-on-warn).join(' ')
     end
   rescue Timeout::Error
     puts "\nBrakeman took too long. Aborting."
