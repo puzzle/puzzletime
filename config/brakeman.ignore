@@ -1,0 +1,25 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "1ffd6d5fbbef6f0dfdb57053f33c97fdc4dd5d0ab066593675554226127cc86d",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/order_controlling/show.html.haml",
+      "line": 15,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Order::Controlling.new(order).offered_total.round(2)",
+      "render_path": [{"type":"controller","class":"OrderControllingController","method":"show","line":16,"file":"app/controllers/order_controlling_controller.rb","rendered":{"name":"order_controlling/show","file":"/code/ptime/app/views/order_controlling/show.html.haml"}}],
+      "location": {
+        "type": "template",
+        "template": "order_controlling/show"
+      },
+      "user_input": "Order::Controlling.new(order)",
+      "confidence": "Weak",
+      "note": ""
+    }
+  ],
+  "updated": "2019-02-07 17:45:27 +0100",
+  "brakeman_version": "4.4.0"
+}
