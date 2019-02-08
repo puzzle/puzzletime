@@ -15,6 +15,7 @@ namespace :ci do
   desc 'Runs the tasks for a nightly build, set TEST_REPORTS=true'
   task nightly: ['log:clear',
                  'db:migrate',
+                 'ci:prepare',
                  'test',
                  'erd',
                  'rubocop:report',
