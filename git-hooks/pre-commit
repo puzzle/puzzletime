@@ -1,0 +1,7 @@
+#!/bin/bash
+
+SCRIPT=`realpath $0`
+SCRIPTPATH=`dirname $SCRIPT`
+RUBOCOP_RUNSCRIPT=`realpath $SCRIPTPATH/../bin/rubocop-staged`
+
+$RUBOCOP_RUNSCRIPT
