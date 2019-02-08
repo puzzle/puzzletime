@@ -38,3 +38,8 @@
     font-size: 11px;
   }
 }
+
+/* Fix a bug, where the input would be reduced to 4px when empty */
+.selectize-input.not-full > input {
+  width: 100% !important;
+}
