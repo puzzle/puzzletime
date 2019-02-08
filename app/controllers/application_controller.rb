@@ -34,13 +34,18 @@ class ApplicationController < ActionController::Base
 
   # Filter for check if user is logged in or not
   def authenticate
-    unless current_user
-      # allow ad-hoc login
-      if params[:user].present? && params[:pwd].present?
-        return true if login_with(params[:user], params[:pwd])
-        flash[:notice] = 'Ungültige Benutzerdaten'
+    case request.format
+    when Mime[:jsonapi]
+      @user = authenticate_or_request_with_http_basic('Puzzletime') { |u, p| ApiClient.new.authenticate(u, p) }
+    else
+      unless current_user
+        # allow ad-hoc login
+        if params[:user].present? && params[:pwd].present?
+          return true if login_with(params[:user], params[:pwd])
+          flash[:notice] = 'Ungültige Benutzerdaten'
+        end
+        redirect_to login_path(ref: request.url)
       end
-      redirect_to login_path(ref: request.url)
     end
   end
 

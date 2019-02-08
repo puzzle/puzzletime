@@ -1,3 +1,9 @@
+# Unreleased
+
+### Features
+* **API**: Ein neues json:api mit Lesezugriff, vorerst nur für /employees  
+  Unter `/apidocs` ist ein Swagger UI mit der Dokumentation verfügbar.
+
 # 2.3
 
 ### Features

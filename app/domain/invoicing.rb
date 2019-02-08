@@ -9,7 +9,7 @@ module Invoicing
   cattr_accessor :instance
 
   def self.init
-    if Settings.small_invoice.api_token
+    if Settings.small_invoice.api_token && !Rails.env.test?
       Invoicing.instance = Invoicing::SmallInvoice::Interface.new
       InvoicingSyncJob.new.schedule if Delayed::Job.table_exists?
     end

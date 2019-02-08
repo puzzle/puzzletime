@@ -76,7 +76,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def period
-    Period.new(period_from, period_to)
+    ::Period.new(period_from, period_to)
   end
 
   def payment_period

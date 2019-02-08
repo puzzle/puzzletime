@@ -15,6 +15,11 @@ class EmploymentsControllerTest < ActionController::TestCase
                :test_show_json,
                :test_show_with_non_existing_id_raises_record_not_found
 
+  def test_update
+    test_entry.employment_roles_employments.delete_all
+    super
+  end
+
   def test_overlapping
     assert_equal Date.new(2006, 12, 31), employments(:for_half_year).end_date
     post :create, params: { employment: { percent: 80,
@@ -51,13 +56,6 @@ class EmploymentsControllerTest < ActionController::TestCase
   end
 
   def test_prefill_from_newest_employment
-    pedro_employment = employees(:various_pedro).employments.list.first
-    pedro_employment.employment_roles_employments.create!(
-      employment_role: employment_roles(:software_developer),
-      employment_role_level: employment_role_levels(:junior),
-      percent: 100
-    )
-
     get :new, params: { employee_id: employees(:various_pedro) }
     assert_equal 100, assigns(:employment).percent
     assert_equal 1, assigns(:employment).employment_roles_employments.length
@@ -82,7 +80,7 @@ class EmploymentsControllerTest < ActionController::TestCase
   end
 
   def test_employment_role_80
-    { employment_role_id: employment_roles(:software_developer).id,
+    { employment_role_id: employment_roles(:software_engineer).id,
       employment_role_level_id: employment_role_levels(:junior).id,
       percent: 80 }
   end

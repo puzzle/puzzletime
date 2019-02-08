@@ -9,6 +9,8 @@ Rails.application.routes.draw do
 
   root to: 'worktimes#index'
 
+  mount DryCrudJsonapiSwagger::Engine => '/apidocs'
+
   resources :absences, except: [:show]
 
   resources :clients, except: [:show] do

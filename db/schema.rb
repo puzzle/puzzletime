@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170725144313) do
+ActiveRecord::Schema.define(version: 20190109081855) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -154,6 +154,8 @@ ActiveRecord::Schema.define(version: 20170725144313) do
     t.string "crm_key"
     t.text "additional_information"
     t.date "reviewed_worktimes_at"
+    t.string "nationalities", array: true
+    t.string "graduation"
     t.index ["department_id"], name: "index_employees_on_department_id"
     t.index ["shortname"], name: "chk_unique_name", unique: true
   end
