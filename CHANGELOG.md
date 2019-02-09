@@ -1,22 +1,17 @@
-# Unreleased
-
-### Features
-* **API**: Ein neues json:api mit Lesezugriff, vorerst nur für /employees  
-  Unter `/apidocs` ist ein Swagger UI mit der Dokumentation verfügbar.
-
 # 2.3
 
 ### Features
-* **Mitarbeiterlog I:** Unter Verwalten - Mitarbeiter - Log können berechtigte Personen nun nebst den Änderungen am Mitarbeiter auch die Änderungen an den Anstellungen nachverfolgen.
-* **Mitarbeiterlog II:** Sofern möglich werden Namen statt IDs der Änderungen angezeigt.
-* **Konfigurierbarkeit:** ID der betreibenden Firma, MwST, Währung und Land können nun konfiguriert werden.
+* **API**: Ein neues json:api mit Lesezugriff, vorerst nur für /employees. Unter `/apidocs` ist ein Swagger UI mit der Dokumentation verfügbar.
 
 ### Improvements
 * **Ruby/Rails:** Auf Ruby 2.5.3 und Rails 5.2.2 aktualisiert
 * **Rechnungen:** Unter Aufträge - In einem einzelnen Auftrag - Rechnungen wurden die Summen verbessert um einen besseren Überblick über bezahlte und offene Stunden zu erhalten.
+* **Mitarbeiterlog I:** Unter Verwalten - Mitarbeiter - Log können berechtigte Personen nun nebst den Änderungen am Mitarbeiter auch die Änderungen an den Anstellungen nachverfolgen.
+* **Mitarbeiterlog II:** Sofern möglich werden Namen statt IDs der Änderungen angezeigt.
+* **Konfigurierbarkeit:** ID der betreibenden Firma, MwST, Währung und Land können nun konfiguriert werden.
 
 ### Bug Fixes
-* **Kosteneffizienz:** Unter Aufträge - In einem einzelnen Auftrag - Positionen werden im Budget nun keine stornierten Rechnungen mehr berücksichtigt.
+* **Wirtschaftlichkeit:** Unter Aufträge - In einem einzelnen Auftrag - Positionen werden in der Berechnung der Wirtschaftlichkeit die stornierten Rechnungen nicht mehr mit einberechnet.
 
 # 2.2
 
