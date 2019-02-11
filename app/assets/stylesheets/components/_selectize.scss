@@ -40,15 +40,17 @@
 }
 
 /* Fix a bug, where the input would be reduced to 4px when empty */
-.selectize-input.not-full > input {
+.selectize-input.not-full:not(.items) > input {
   width: 100% !important;
 }
 
+/* Fix a bug, where the padding of the dropdown-content is 0*/
 .selectize-dropdown-content {
   padding-left: 12px;
   padding-right: 12px;
 }
 
+/* Fix a bug, where the status badges are blue instead of gray*/
 .selectize-control.multi .selectize-input [data-value] {
   background-color: #efefef;
   background-image: none;
