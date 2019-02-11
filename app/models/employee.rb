@@ -74,6 +74,7 @@ class Employee < ActiveRecord::Base
   has_one :running_time,
           -> { where(report_type: AutoStartType::INSTANCE.key) },
           class_name: 'Ordertime'
+  has_many :expenses, dependent: :destroy
 
   before_validation do
     self.nationalities.try(:reject!, &:blank?)
