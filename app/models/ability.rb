@@ -150,6 +150,8 @@ class Ability
     can :manage, Planning do |planning|
       planning.order.responsible_id == user.id
     end
+
+    can :revenue_reports, Department
   end
 
   def api_client_abilities
