@@ -31,6 +31,26 @@ class ExpenseTest < ActiveSupport::TestCase
     assert can?(:manage, mark, pascal.expenses.build)
   end
 
+  test '.reimbursement_months returns single date for each reimbursement year / month combination' do
+    assert_equal [Date.new(2019, 1, 1)], Expense.reimbursement_months
+
+    expenses(:approved).update!(reimbursement_date: Date.new(2019, 1, 28))
+    assert_equal [Date.new(2019, 1, 1)], Expense.reimbursement_months
+
+    expenses(:pending).update!(reimbursement_date: Date.new(2019, 2, 28))
+    assert_equal [Date.new(2019, 1, 1), Date.new(2019, 2, 1)], Expense.reimbursement_months
+  end
+
+  test '.payment_years returns single date for each payment year combination' do
+    assert_equal [Date.new(2019, 1, 1)], Expense.payment_years(pascal)
+
+    expenses(:approved).update!(payment_date: Date.new(2019, 2, 28))
+    assert_equal [Date.new(2019, 1, 1)], Expense.payment_years(pascal)
+
+    expenses(:pending).update!(payment_date: Date.new(2020, 2, 28))
+    assert_equal [Date.new(2019, 1, 1), Date.new(2020, 1, 1)], Expense.payment_years(pascal)
+  end
+
   def mark
     employees(:mark)
   end

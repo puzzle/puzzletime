@@ -1,0 +1,4 @@
+- if can?(:manage, Expense) && parent.nil?
+  = add_action_link
+- else
+  = add_action_link(new_employee_expense_path(current_user))

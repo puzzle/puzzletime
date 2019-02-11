@@ -1,0 +1,3 @@
+= nav('Meine Spesen', employee_expenses_path(current_user))
+- if current_user.management?
+  = model_nav Expense
