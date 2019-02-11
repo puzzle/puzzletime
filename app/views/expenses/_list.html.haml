@@ -1,0 +1,26 @@
+- if parent
+  - @title = 'Meine Spesen'
+
+  = form_tag(nil, method: :get, class: 'form-inline', role: 'filter') do
+    = hidden_field_tag :page, 1
+    = direct_filter_select(:payment_date, 'Jahr', @years)
+
+  - Expense.by_month(entries, params[:year].presence).each do |month, expenses|
+    = plain_table_or_message(expenses) do |t|
+      - t.col(month) { |e| link_to(format_attr(e, :payment_date), [e.employee, e]) }
+      - t.col { |e| e.kind_value }
+      - t.col { |e| format_attr(e, :amount) }
+      - t.col { |e| format_attr(e, :status_value) }
+      - t.col('Auszahlungsmonat') do |e|
+        = l(e.reimbursement_date, format: '%B') if e.reimbursement_date
+      - standard_table_actions(t)
+
+- else
+  = form_tag(nil, method: :get, class: 'form-inline', role: 'filter') do
+    = hidden_field_tag :page, 1
+    = direct_filter_select(:status, 'Status', @statuses)
+    = direct_filter_select(:employee_id, 'Mitarbeiter', @employees)
+    = direct_filter_select(:reimbursement_date, 'Auszahlungsmonat', @months)
+    = direct_filter_select(:department_id, 'Organisationseinheit', @departments)
+
+  = plain_table_or_message(entries, :payment_date, :employee_id, :kind_value, :description, :amount, :status_value, :reviewer_id, :reimbursement_month)

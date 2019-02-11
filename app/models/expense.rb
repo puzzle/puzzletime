@@ -24,6 +24,29 @@ class Expense < ActiveRecord::Base
     self.class.kind_value(kind)
   end
 
+  def reimbursement_month
+    I18n.l(reimbursement_date, format: '%B, %Y') if reimbursement_date
+  end
+
+  def self.reimbursement_months
+    statement = 'SELECT DISTINCT ' \
+      'EXTRACT(YEAR FROM reimbursement_date)::int AS year, ' \
+      'EXTRACT(MONTH FROM reimbursement_date)::int AS month ' \
+      'FROM expenses ' \
+      'WHERE reimbursement_date IS NOT NULL ' \
+      'ORDER BY year, month'
+    connection.select_rows(statement).collect { |year, month| Date.new(year, month, 1) }
+  end
+
+  def self.payment_years(employee)
+    statement = 'SELECT DISTINCT ' \
+      'EXTRACT(YEAR FROM payment_date)::int AS year ' \
+      'FROM expenses ' \
+      "WHERE employee_id = #{employee.id} " \
+      'ORDER BY year'
+    connection.select_values(statement).collect { |year| Date.new(year, 1, 1) }
+  end
+
   def self.kind_value(value)
     human_attribute_name("kinds.#{value}")
   end
