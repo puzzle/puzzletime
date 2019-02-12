@@ -235,6 +235,7 @@ ActiveRecord::Schema.define(version: 2019_02_14_100801) do
     t.decimal "amount", precision: 12, scale: 2, null: false
     t.date "payment_date", null: false
     t.text "description"
+    t.text "rejection"
     t.bigint "reviewer_id"
     t.datetime "reviewed_at"
     t.bigint "order_id"

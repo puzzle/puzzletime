@@ -275,8 +275,12 @@ GEM
     parallel (1.13.0)
     parser (2.6.0.0)
       ast (~> 2.4.0)
+    pdf-core (0.7.0)
     pg (0.21.0)
     powerpack (0.1.2)
+    prawn (2.2.2)
+      pdf-core (~> 0.7.0)
+      ttfunk (~> 1.5)
     prometheus_exporter (0.4.5)
     protective (0.2.0)
       activerecord
@@ -409,6 +413,7 @@ GEM
     thread_safe (0.3.6)
     tilt (2.0.9)
     timeliness (0.3.8)
+    ttfunk (1.5.1)
     turbolinks (5.2.0)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
@@ -483,6 +488,7 @@ DEPENDENCIES
   nokogiri
   paper_trail
   pg (= 0.21.0)
+  prawn
   prometheus_exporter
   protective
   pry-byebug

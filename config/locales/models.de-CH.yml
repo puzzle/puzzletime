@@ -229,18 +229,21 @@ de-CH:
       employment_roles_employment:
         percent: Pensum
       expense:
+        id: Spesennummer
         amount: Betrag
         description: Beschreibung
         employee_id: Mitarbeiter
         kind: Spesenart
         kind_value: Spesenart
         status_value: Status
+        status: Status
         order_id: Projekt
         payment_date: Kaufdatum
         receipt: Beleg
         reimbursement_month: Auszahlungsmonat
         reviewer_id: Visum
         rejection: Grund
+        reviewed_at: Visiert am
       expense/statuses:
         approved: Freigegeben
         pending: Offen
