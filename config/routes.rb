@@ -60,6 +60,7 @@ Rails.application.routes.draw do
   resources :expenses do
     resource :review, only: [:show, :create], controller: 'expense_reviews'
   end
+  get :expenses_pdf_export, to: 'expenses#export'
 
   resources :employment_roles, except: [:show]
   resources :employment_role_levels, except: [:show]

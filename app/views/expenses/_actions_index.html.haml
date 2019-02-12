@@ -1,4 +1,6 @@
 - if can?(:manage, Expense) && parent.nil?
   = add_action_link
+  = action_link('Auswahl als pdf exportieren', expenses_pdf_export_path(entries: @filtered_expenses.join(',')))
 - else
   = add_action_link(new_employee_expense_path(current_user))
+

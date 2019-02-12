@@ -11,6 +11,13 @@ class ExpensesController < ManageController
   before_render_index :populate_employee_filter_selects, if: :parent
   before_render_form  :populate_orders
 
+
+  def export
+    entries = params['entries'].split(',').map(&:to_i).compact
+    entries.delete(0)
+    send_file Expenses::PdfExport.new(entries).generate, disposition: :inline
+  end
+
   private
 
   def list_entries
@@ -42,6 +49,7 @@ class ExpensesController < ManageController
     @months = Expense.reimbursement_months.collect do |date|
       IdValue.new(I18n.l(date, format: '%Y_%m'), I18n.l(date, format: '%B, %Y'))
     end
+    @filtered_expenses = list_entries.except(:limit, :offset).pluck(:id)
   end
 
   def populate_employee_filter_selects
