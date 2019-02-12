@@ -19,6 +19,7 @@ gem 'dry_crud_jsonapi' # Source: https://gitlab.puzzle.ch/dilli/dry_crud_jsonapi
 gem 'dry_crud_jsonapi_swagger' # Source: https://gitlab.puzzle.ch/dilli/dry_crud_jsonapi_swagger
 gem 'haml'
 gem 'highrise'
+gem 'image_processing', '~> 1.2'
 gem 'jbuilder'
 gem 'kaminari'
 gem 'kaminari-bootstrap'

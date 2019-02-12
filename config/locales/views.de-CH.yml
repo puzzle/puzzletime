@@ -22,3 +22,7 @@ de-CH:
       from_to: "%{attr} %{model_ref} wurde von «%{from}» auf «%{to}» geändert."
       from: "%{attr} %{model_ref} «%{from}» wurde gelöscht."
       to: "%{attr} %{model_ref} wurde auf «%{to}» gesetzt."
+  expenses:
+    attachment:
+      name: "Anhang"
+      show: "Anzeigen"

@@ -1,0 +1,33 @@
+-#  Copyright (c) 2006-2019, Puzzle ITC GmbH. This file is part of
+-#  PuzzleTime and licensed under the Affero General Public License version 3
+-#  or later. See the COPYING file at the top-level directory or at
+-#  https://github.com/puzzle/puzzletime.
+
+- receipt = entry.receipt
+
+%dl.dl-horizontal
+  = labeled_attr(entry, :employee_id)
+  = labeled_attr(entry, :kind_value)
+
+  - if entry.project?
+    = labeled_attr(entry, :order_id)
+
+%dl.dl-horizontal
+  = labeled_attr(entry, :status_value)
+  - if entry.rejected?
+    = labeled_attr(entry, :rejection)
+  - if entry.approved?
+    = labeled_attr(entry, :reviewer_id)
+    = labeled_attr(entry, :reimbursement_month)
+
+%dl.dl-horizontal
+  = labeled_attr(entry, :amount)
+  = labeled_attr(entry, :payment_date)
+  = labeled_attr(entry, :description)
+
+%dl.dl-horizontal
+  - if receipt.attached?
+    %dt= t('expenses.attachment.name')
+    %dd.value
+      = attachment_download_link(receipt)
+      = attachment_show_link(receipt, t('expenses.attachment.show'), class: 'visible-xs')
