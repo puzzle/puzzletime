@@ -26,4 +26,4 @@
   = plain_table_or_message(entries) do |t|
     - t.attrs(:payment_date, :employee_id, :kind_value, :description, :amount, :status_value, :reviewer_id, :reimbursement_month)
     - t.action_col do |e|
-      = t.table_action_link('edit', new_expense_clearing_path(e))
+      = t.table_action_link('edit', expense_review_path(e)) if e.pending? || e.undecided?

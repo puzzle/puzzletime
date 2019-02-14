@@ -56,7 +56,10 @@ Rails.application.routes.draw do
     resource :worktimes_commit, only: [:edit, :update], controller: 'employees/worktimes_commit'
     resource :worktimes_review, only: [:edit, :update], controller: 'employees/worktimes_review'
   end
-  resources :expenses
+
+  resources :expenses do
+    resource :review, only: [:show, :create], controller: 'expense_reviews'
+  end
 
   resources :employment_roles, except: [:show]
   resources :employment_role_levels, except: [:show]

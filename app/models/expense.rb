@@ -10,6 +10,9 @@ class Expense < ActiveRecord::Base
 
   validates_by_schema
 
+  validate :assert_payment_month, if: :approved?
+  validates :reviewer, :reviewed_at, presence: true, if: -> { approved? || rejected? }
+
   scope :list, -> { order(:payment_date) }
 
   def to_s
@@ -26,6 +29,10 @@ class Expense < ActiveRecord::Base
 
   def reimbursement_month
     I18n.l(reimbursement_date, format: :month) if reimbursement_date
+  end
+
+  def assert_payment_month
+    errors.add(:reimbursement_month, :blank) if reimbursement_date.blank?
   end
 
   def self.reimbursement_months

@@ -3,6 +3,7 @@ class ExpensesController < ManageController
   self.optional_nesting = [Employee]
 
   self.permitted_attrs = [:payment_date, :employee_id, :kind, :order_id, :description, :amount, :receipt]
+  self.remember_params += %w(status)
 
   helper_method :filter
 

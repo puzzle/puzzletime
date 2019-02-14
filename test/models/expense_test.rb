@@ -34,7 +34,7 @@ class ExpenseTest < ActiveSupport::TestCase
   test '.reimbursement_months returns single date for each reimbursement year / month combination' do
     assert_equal [Date.new(2019, 1, 1)], Expense.reimbursement_months
 
-    expenses(:approved).update!(reimbursement_date: Date.new(2019, 1, 28))
+    expenses(:approved).update!(review_attrs.merge(reimbursement_date: Date.new(2019, 1, 28)))
     assert_equal [Date.new(2019, 1, 1)], Expense.reimbursement_months
 
     expenses(:pending).update!(reimbursement_date: Date.new(2019, 2, 28))
@@ -44,11 +44,27 @@ class ExpenseTest < ActiveSupport::TestCase
   test '.payment_years returns single date for each payment year combination' do
     assert_equal [Date.new(2019, 1, 1)], Expense.payment_years(pascal)
 
-    expenses(:approved).update!(payment_date: Date.new(2019, 2, 28))
+    expenses(:approved).update!(review_attrs.merge(payment_date: Date.new(2019, 2, 28)))
     assert_equal [Date.new(2019, 1, 1)], Expense.payment_years(pascal)
 
     expenses(:pending).update!(payment_date: Date.new(2020, 2, 28))
     assert_equal [Date.new(2019, 1, 1), Date.new(2020, 1, 1)], Expense.payment_years(pascal)
+  end
+
+  test 'can only approve expense when reimbursement_date and reviewer is set' do
+    obj = expenses(:pending)
+    refute obj.update(status: :approved)
+    assert_equal ['Auszahlungsmonat muss ausgefüllt werden','Reviewer muss ausgefüllt werden',
+                  'Reviewed at muss ausgefüllt werden'], obj.errors.full_messages
+
+    assert obj.update(status: :approved,
+                      reviewer: mark,
+                      reviewed_at: Date.today,
+                      reimbursement_date: Date.today,)
+  end
+
+  def review_attrs
+    { reviewer: mark, reviewed_at: Date.today }
   end
 
   def mark

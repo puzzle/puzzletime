@@ -1,0 +1,37 @@
+- @title ||= 'Spesen freigeben'
+- receipt = entry.receipt
+
+.row.columns
+  .col-12.col-md-6
+    = render_attrs(entry, :payment_date, :employee_id, :amount, :kind_value, :description)
+
+    %hr
+    = form_for(entry, url: expense_review_path(entry), method: :post) do |f|
+      .row.columns
+        .col-md-12
+          = render('shared/error_messages', errors: entry.errors, object: entry)
+
+      .row.columns
+        .col-md-6
+          %h4 Freigabe
+          .form-group
+            = f.label :reimbursement_date, Expense.human_attribute_name(:reimbursement_month)
+            = f.collection_select :reimbursement_date, build_reimbursement_dates, :first, :last, { prompt: true }, { class: 'form-control' }
+
+        .col-md-6
+          %h4 Ablehnung
+          .form-group
+            = f.label :rejection
+            = f.text_area :rejection, rows: 3, class: 'form-control'
+
+      .row.columns
+        .col-md-6
+          = f.button 'Freigeben', name: 'expense[status]', value: 'approved', class: 'btn btn-success', data: { disable_with: 'Freigeben' }
+        .col-md-6
+          = f.button 'Ablehnen', name: 'expense[status]', value: 'rejected', class: 'btn btn-danger', data: { disable_with: 'Ablehnen' }
+          .pull-right
+            = f.button 'Weiter', name: 'expense[status]', value: 'undecided', class: 'btn btn-xs btn-warning', data: { disable_with: 'Weiter' }
+
+  .col-12.col-md-6
+    - if receipt.attached?
+      = attachment_image_tag receipt, class: 'img-responsive'

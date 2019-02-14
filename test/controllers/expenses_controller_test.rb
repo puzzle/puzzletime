@@ -32,7 +32,7 @@ class ExpensesControllerTest < ActionController::TestCase
   test 'GET#index management may filter by reimbursement_date' do
     login_as(:mark)
     get :index, params: { reimbursement_date: '2019_01' }
-    assert_equal 1, assigns(:expenses).count
+    assert_equal 2, assigns(:expenses).count
   end
 
   test 'GET#index employee may not list top level expenses' do
