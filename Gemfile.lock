@@ -280,7 +280,7 @@ GEM
       ast (~> 2.4.0)
     pg (0.21.0)
     powerpack (0.1.2)
-    prometheus_exporter (0.4.2)
+    prometheus_exporter (0.4.5)
     protective (0.2.0)
       activerecord
     pry (0.12.2)

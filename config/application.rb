@@ -58,6 +58,8 @@ module Puzzletime
 
     config.active_record.time_zone_aware_types = [:datetime, :time]
 
+    config.active_job.queue_adapter = :delayed_job
+
     config.to_prepare do |_|
       Crm.init
       Invoicing.init

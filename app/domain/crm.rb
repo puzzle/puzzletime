@@ -11,7 +11,7 @@ module Crm
   def self.init
     if Settings.highrise.api_token
       Crm.instance = Crm::Highrise.new
-      CrmSyncJob.new.schedule if Delayed::Job.table_exists?
+      CrmSyncJob.schedule if Delayed::Job.table_exists?
     end
   end
 end

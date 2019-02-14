@@ -45,6 +45,9 @@ if ENV['PROMETHEUS_EXPORTER_HOST']
     require 'prometheus_exporter/instrumentation'
 
     PrometheusExporter::Instrumentation::Puma.start
-    PrometheusExporter::Instrumentation::Process.start(type: 'web')
+    PrometheusExporter::Instrumentation::Process.start(
+      type: 'web',
+      labels: { hostname: `hostname`.strip }
+    )
   end
 end
