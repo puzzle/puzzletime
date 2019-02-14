@@ -12,7 +12,7 @@
       - t.col { |e| format_attr(e, :amount) }
       - t.col { |e| format_attr(e, :status_value) }
       - t.col('Auszahlungsmonat') do |e|
-        = l(e.reimbursement_date, format: '%B') if e.reimbursement_date
+        = l(e.reimbursement_date, format: :month_only) if e.reimbursement_date
       - standard_table_actions(t)
 
 - else
@@ -23,4 +23,7 @@
     = direct_filter_select(:reimbursement_date, 'Auszahlungsmonat', @months)
     = direct_filter_select(:department_id, 'Organisationseinheit', @departments)
 
-  = plain_table_or_message(entries, :payment_date, :employee_id, :kind_value, :description, :amount, :status_value, :reviewer_id, :reimbursement_month)
+  = plain_table_or_message(entries) do |t|
+    - t.attrs(:payment_date, :employee_id, :kind_value, :description, :amount, :status_value, :reviewer_id, :reimbursement_month)
+    - t.action_col do |e|
+      = t.table_action_link('edit', new_expense_clearing_path(e))
