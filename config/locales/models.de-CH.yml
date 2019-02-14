@@ -240,6 +240,7 @@ de-CH:
         receipt: Beleg
         reimbursement_month: Auszahlungsmonat
         reviewer_id: Visum
+        rejection: Grund
       expense/statuses:
         approved: Freigegeben
         pending: Offen
