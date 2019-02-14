@@ -6,7 +6,7 @@ class Expense < ActiveRecord::Base
   has_one_attached :receipt
 
   enum kind:   %i(project training sales support other)
-  enum status: %i(pending approved rejected)
+  enum status: %i(pending undecided approved rejected)
 
   validates_by_schema
 

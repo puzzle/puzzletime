@@ -1,6 +1,6 @@
 module ExpensesHelper
   def format_expense_status_value(expense)
-    memo = Expense.statuses.keys.zip(%w(info success warning)).to_h
+    memo = Expense.statuses.keys.zip(%w(info warning success danger)).to_h
     content_tag(:span, expense.status_value, class: "label label-#{memo[expense.status]}")
   end
 
