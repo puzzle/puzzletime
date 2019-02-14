@@ -16,7 +16,7 @@ class ExpenseTest < ActiveSupport::TestCase
 
   test '.by_month returns models grouped by month' do
     hash = Expense.by_month(Expense.list, 2019)
-    assert_equal ['Januar, 2019', 'Februar, 2019'], hash.keys
+    assert_equal ['Januar 2019', 'Februar 2019'], hash.keys
   end
 
   test "pascal can manage pascal's invoices" do

@@ -25,7 +25,7 @@ class Expense < ActiveRecord::Base
   end
 
   def reimbursement_month
-    I18n.l(reimbursement_date, format: '%B, %Y') if reimbursement_date
+    I18n.l(reimbursement_date, format: :month) if reimbursement_date
   end
 
   def self.reimbursement_months
@@ -58,7 +58,7 @@ class Expense < ActiveRecord::Base
   def self.by_month(relation, year)
     relation = relation.where(payment_date: Date.new(year.to_i, 1, 1).all_year) if year
     relation.each_with_object({}) do |expense, memo|
-      month_name = I18n.l(expense.payment_date, format: '%B, %Y')
+      month_name = I18n.l(expense.payment_date, format: :month)
       memo[month_name] ||= []
       memo[month_name] << expense
     end
