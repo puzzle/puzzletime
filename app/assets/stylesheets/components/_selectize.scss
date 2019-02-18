@@ -40,7 +40,7 @@
 }
 
 /* Fix a bug, where the input would be reduced to 4px when empty */
-.selectize-input.not-full:not(.items) > input {
+.selectize-input.not-full:not(.has-items) > input {
   width: 100% !important;
 }
 
