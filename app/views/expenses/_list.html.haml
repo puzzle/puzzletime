@@ -24,6 +24,8 @@
     = direct_filter_select(:department_id, 'Organisationseinheit', @departments)
 
   = plain_table_or_message(entries) do |t|
-    - t.attrs(:payment_date, :employee_id, :kind_value, :description, :amount, :status_value, :reviewer_id, :reimbursement_month)
+    - t.attrs(:payment_date, :employee_id, :kind_value)
+    - t.attr(:description) { |e| format_attr(e, :description).truncate_words(20) }
+    - t.attrs(:amount, :status_value, :reviewer_id, :reimbursement_month)
     - t.action_col do |e|
       = t.table_action_link('edit', expense_review_path(e)) if e.pending? || e.undecided?
