@@ -9,8 +9,8 @@ class ExpensesController < ManageController
 
   before_render_index :populate_management_filter_selects, unless: :parent
   before_render_index :populate_employee_filter_selects, if: :parent
+  before_render_index :set_default_year, if: :parent
   before_render_form  :populate_orders
-
 
   def export
     entries = params['entries'].split(',').map(&:to_i).compact
@@ -24,8 +24,16 @@ class ExpensesController < ManageController
     entries = parent ? super : super.joins(:employee).includes(:employee, :reviewer)
     entries = filter_entries_by(entries, :status, :employee_id)
     entries = filter_by_date(entries, :reimbursement_date, :all_month, /(\d{4})_(\d{2})/)
-    entries = filter_by_date(entries, :payment_date, :all_year, /(\d{4})/)
+    entries = filter_by_payment_date(entries)
     filter_by_department(entries)
+  end
+
+  def filter_by_payment_date(scope)
+    key = :payment_date
+    return filter_by_date(scope, key, :all_year, /(\d{4})/) if (params.key?(key) && params[key]) || !parent
+
+    max_year = scope.pluck(:payment_date).max.all_year
+    scope.where(payment_date: max_year)
   end
 
   def filter_by_date(scope, key, date_method, regex)
@@ -53,9 +61,18 @@ class ExpensesController < ManageController
   end
 
   def populate_employee_filter_selects
-    @years = Expense.payment_years(parent).collect do |date|
+    @years = Expense.payment_years(parent).sort.reverse.collect do |date|
       IdValue.new(I18n.l(date, format: '%Y'), I18n.l(date, format: '%Y'))
     end
+  end
+
+  def set_default_year
+    @selected_year =
+      if params[:payment_date]
+        params[:payment_date]
+      elsif !params.key?(:payment_date)
+        parent.expenses.pluck(:payment_date).max.year
+      end
   end
 
   def populate_orders
