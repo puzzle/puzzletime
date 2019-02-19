@@ -16,7 +16,12 @@ module AttachmentHelper
       elsif obj.previewable?
         obj.preview({})
       end
-    image_tag path, options
+
+    if options[:show_link]
+      attachment_show_link(obj, image_tag(path, options), options)
+    else
+      image_tag(path, options)
+    end
   end
 
 end
