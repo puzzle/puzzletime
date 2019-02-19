@@ -107,7 +107,7 @@ class Expenses::PdfExport
   end
 
   def receipt_printable?
-    (receipt.image? || receipt.previewable?)
+    receipt.attached? && (receipt.image? || receipt.previewable?)
   end
 
   def receipt
@@ -115,13 +115,15 @@ class Expenses::PdfExport
   end
 
   def receipt_text
-    return receipt.filename if receipt.attached? && receipt_printable?
+    return receipt.filename if receipt_printable?
     return 'Dieser Beleg kann nicht gedruckt werden.' if receipt.attached?
 
     'Es wurde kein Beleg beigelegt.'
   end
 
   def add_receipt
+    return unless receipt_printable?
+
     @blob = receipt.image? ? receipt.blob : receipt.preview({}).image.blob
     download_blob_to_tempfile do |file|
       pdf.image file.path, position: :center, height: image_height
