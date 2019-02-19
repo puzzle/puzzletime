@@ -26,8 +26,11 @@
   = labeled_attr(entry, :description)
 
 %dl.dl-horizontal
-  - if receipt.attached?
-    %dt= t('expenses.attachment.name')
-    %dd.value
+  %dt= t('expenses.attachment.name')
+  %dd.value
+    - if receipt.attached?
       = attachment_download_link(receipt)
-      = attachment_show_link(receipt, t('expenses.attachment.show'), class: 'visible-xs')
+      - if receipt.image? || receipt.previewable?
+        = attachment_show_link(receipt, t('expenses.attachment.show'), class: 'visible-xs')
+    - else
+      Kein Beleg angehängt
