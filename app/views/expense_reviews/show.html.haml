@@ -16,7 +16,9 @@
           %h4 Freigabe
           .form-group
             = f.label :reimbursement_date, Expense.human_attribute_name(:reimbursement_month)
-            = f.collection_select :reimbursement_date, build_reimbursement_dates, :first, :last, { prompt: true }, { class: 'form-control' }
+            = f.collection_select :reimbursement_date, build_reimbursement_dates, :first, :last, {selected: '2019-02-28'}, { class: 'form-control'}
+          .hidden-md.hidden-lg.hidden-xl.mb-4
+            = f.button 'Freigeben', name: 'expense[status]', value: 'approved', class: 'btn btn-success', data: { disable_with: 'Freigeben' }
 
         .col-md-6
           %h4 Ablehnung
@@ -26,11 +28,11 @@
 
       .row.columns
         .col-md-6
-          = f.button 'Freigeben', name: 'expense[status]', value: 'approved', class: 'btn btn-success', data: { disable_with: 'Freigeben' }
+          = f.button 'Freigeben', name: 'expense[status]', value: 'approved', class: 'btn btn-success hidden-xs hidden-sm', data: { disable_with: 'Freigeben' }
         .col-md-6
           = f.button 'Ablehnen', name: 'expense[status]', value: 'rejected', class: 'btn btn-danger', data: { disable_with: 'Ablehnen' }
           .pull-right
-            = f.button 'Weiter', name: 'expense[status]', value: 'undecided', class: 'btn btn-xs btn-warning', data: { disable_with: 'Weiter' }
+            = f.button 'Überspringen', name: 'expense[status]', value: 'undecided', class: 'btn btn-xs btn-warning', data: { disable_with: 'Überspringen' }
 
   .col-12.col-md-6
     - if receipt.attached?
