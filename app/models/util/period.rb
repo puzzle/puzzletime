@@ -193,6 +193,24 @@ class Period
 
   #########  public methods  #########
 
+  def vacation_factor_sum # rubocop:disable Metrics/AbcSize
+    (start_date.year..end_date.year).sum do |year|
+      if start_date.year == year && end_date.year == year
+        vacation_factor(start_date..end_date)
+      elsif start_date.year == year
+        vacation_factor(start_date..start_date.end_of_year)
+      elsif end_date.year == year
+        vacation_factor(end_date.beginning_of_year..end_date)
+      else
+        1
+      end
+    end
+  end
+
+  def vacation_factor(range)
+    range.count.to_f / range.first.all_year.count
+  end
+
   def &(other)
     return self if self == other
     new_start_date = [start_date, other.start_date].compact.max

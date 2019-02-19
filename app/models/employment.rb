@@ -125,7 +125,7 @@ class Employment < ActiveRecord::Base
   private
 
   def vacations_per_period(period, days_per_year)
-    period.length / DAYS_PER_YEAR * percent_factor * days_per_year
+    period.vacation_factor_sum * percent_factor * days_per_year
   end
 
   # updates the end date of the previous employement

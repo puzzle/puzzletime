@@ -25,14 +25,14 @@ class EmploymentTest < ActiveSupport::TestCase
     assert_equal half_year.period.length, 184
     assert_equal half_year.period.musttime, 127 * 8
     assert_equal half_year.percent_factor, 1
-    assert_in_delta 12.59, half_year.vacations, 0.005
+    assert_in_delta 12.602, half_year.vacations
     assert_equal half_year.musttime, 127 * 8
 
     various = Employment.find(2)
     assert_equal various.period.length, 92
     assert_equal various.period.musttime, 64 * 8
     assert_equal various.percent_factor, 0.4
-    assert_in_delta 2.52, various.vacations, 0.005
+    assert_in_delta 2.52, various.vacations
     assert_equal various.musttime, 64 * 8 * 0.4
 
     open_end = Employment.find(4)
@@ -40,12 +40,12 @@ class EmploymentTest < ActiveSupport::TestCase
     assert_equal open_end.period.length, 107
     assert_equal open_end.period.musttime, 73 * 8
     assert_equal open_end.percent_factor, 1
-    assert_in_delta 7.32, open_end.vacations, 0.005
+    assert_in_delta 7.328, open_end.vacations
     assert_equal open_end.musttime, 73 * 8
 
     with_vacations = Employment.find(3)
     assert_equal with_vacations.period.length, 227
-    assert_in_delta 3.73, with_vacations.vacations, 0.005
+    assert_in_delta 3.731, with_vacations.vacations
   end
 
   def test_musttime_for_period
@@ -97,5 +97,18 @@ class EmploymentTest < ActiveSupport::TestCase
     before2 = Employment.create!(employee: employee, start_date: '1.1.2013', end_date: '1.6.2013', percent: 50,
                                  employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
     assert_equal Date.parse('1.6.2013'), before2.end_date
+  end
+
+  def test_vactions
+    assert_equal 20, new_employment('1.1.2000', '31.12.2000').vacations
+    assert_equal 40, new_employment('1.1.2000', '31.12.2001').vacations
+    assert_equal 20, new_employment('1.1.2000', '31.12.2001', percent: 50).vacations
+
+    assert_in_delta 8.360, new_employment('1.1.2000', '1.6.2000').vacations
+    assert_in_delta 8.328, new_employment('1.1.2001', '1.6.2001').vacations
+  end
+
+  def new_employment(start_date, end_date, percent: 100)
+    Employment.new(start_date: start_date, end_date: end_date, percent: percent, vacation_days_per_year: 20)
   end
 end
