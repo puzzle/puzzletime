@@ -12,6 +12,7 @@
 
   .col-12.col-md-6
     - if receipt.attached? && (receipt.image? || receipt.previewable?)
+      = attachment_show_link(receipt, t('expenses.attachment.show'), class: 'visible-xs')
       = attachment_image_tag receipt, class: 'img-responsive'
     - else
       %h3 Keine Vorschau verfügbar
