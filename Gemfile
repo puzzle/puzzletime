@@ -5,7 +5,7 @@ gem 'rails', '5.2.2'
 gem 'pg', '= 0.21.0'
 
 gem 'acts_as_tree'
-gem 'airbrake'
+gem 'airbrake', '~> 5.0' # Waiting for Puzzle Errbit to be updated to >= 0.7.0
 gem 'bleib', '0.0.8'
 gem 'bootsnap'
 gem 'cancancan'
