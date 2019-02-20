@@ -8,6 +8,18 @@ module ExpensesHelper
     safe_join([f(expense.amount), currency], ' ')
   end
 
+  def expense_duplicate_col(table)
+    table.action_col do |e|
+      link_to(new_employee_expense_path(e.employee, template: e), title: 'Kopieren') do
+        if block_given?
+          yield(e)
+        else
+          tag.i(class: 'icon-duplicate')
+        end
+      end
+    end
+  end
+
   def expense_edit_col(table)
     table.action_col do |e|
       next if e.approved?
