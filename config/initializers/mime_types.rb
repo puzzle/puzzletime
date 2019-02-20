@@ -6,3 +6,4 @@
 # Mime::Type.register "text/richtext", :rtf
 Mime::Type.register 'image/svg+xml', :svg
 Mime::Type.register 'application/vnd.api+json', :jsonapi
+Mime::Type.register 'application/pdf', :pdf

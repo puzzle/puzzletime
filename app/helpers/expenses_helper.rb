@@ -48,4 +48,10 @@ module ExpensesHelper
     end
   end
 
+  def expenses_pdf_export_path
+    filter_params = params.permit(*controller.class.remember_params)
+
+    expenses_path(filter_params.merge(format: :pdf))
+  end
+
 end

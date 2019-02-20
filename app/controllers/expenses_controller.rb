@@ -3,7 +3,7 @@ class ExpensesController < ManageController
   self.optional_nesting = [Employee]
 
   self.permitted_attrs = [:payment_date, :employee_id, :kind, :order_id, :description, :amount, :receipt]
-  self.remember_params += %w(status)
+  self.remember_params += %w(status employee_id reimbursement_date department_id)
 
   before_render_index :populate_management_filter_selects, unless: :parent
   before_render_index :populate_employee_filter_selects, if: :parent
@@ -32,10 +32,11 @@ class ExpensesController < ManageController
     end
   end
 
-  def export
-    entries = params['entries'].split(',').map(&:to_i).compact
-    entries.delete(0)
-    send_file Expenses::PdfExport.new(entries).generate, disposition: :inline
+  def index
+    respond_to do |format|
+      format.any
+      format.pdf { send_file Expenses::PdfExport.new(entries).generate, disposition: :inline }
+    end
   end
 
   private
