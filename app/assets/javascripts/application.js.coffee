@@ -18,6 +18,7 @@
 #= require bootstrap/tooltip
 #= require bootstrap/button
 #= require bootstrap/alert
+#= require bootstrap/collapse
 #= require waypoints/jquery.waypoints
 #= require waypoints/shortcuts/sticky
 #= require waypoints/shortcuts/inview

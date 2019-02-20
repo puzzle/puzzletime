@@ -22,6 +22,11 @@ class ExpenseReviewsController < ApplicationController
     end
   end
 
+  def update
+    entry.update(edit_attributes)
+    render :show
+  end
+
   private
 
   def entry
@@ -43,6 +48,10 @@ class ExpenseReviewsController < ApplicationController
     attrs = params.require(:expense).permit(:status, :reimbursement_date, :rejection)
     attrs = attrs[:status] == 'approved' ? attrs.except(:rejection) : attrs.except(:reimbursement_date)
     attrs.merge(reviewer: current_user, reviewed_at: Time.zone.now)
+  end
+
+  def edit_attributes
+    params.require(:expense).permit(:payment_date, :employee_id, :amount, :kind, :description, :receipt)
   end
 
   def status
