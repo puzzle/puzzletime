@@ -8,9 +8,9 @@
   - Expense.by_month(entries, params[:year].presence).each do |month, expenses|
     = plain_table_or_message(expenses) do |t|
       - t.col(month) { |e| link_to(format_attr(e, :payment_date), [e.employee, e]) }
-      - t.col { |e| e.kind_value }
-      - t.col { |e| format_attr(e, :amount) }
-      - t.col { |e| format_attr(e, :status_value) }
+      - t.col('Spesenart') { |e| e.kind_value }
+      - t.col('Betrag', class: 'text-right') { |e| format_attr(e, :amount) }
+      - t.col('Status') { |e| format_attr(e, :status_value) }
       - t.col('Auszahlungsmonat') do |e|
         = l(e.reimbursement_date, format: :month_only) if e.reimbursement_date
       - expense_duplicate_col(t)
