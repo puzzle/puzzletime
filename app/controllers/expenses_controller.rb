@@ -76,7 +76,7 @@ class ExpensesController < ManageController
     @departments = Department.list.joins(:employees).where(employees: { id: @employees })
     @statuses = Expense.statuses.collect { |key, value| IdValue.new(value, Expense.status_value(key)) }
     @kinds = Expense.kinds.collect { |key, value| IdValue.new(value, Expense.kind_value(key)) }
-    @months = Expense.reimbursement_months.collect do |date|
+    @months = Expense.reimbursement_months.sort.reverse.collect do |date|
       IdValue.new(I18n.l(date, format: '%Y_%m'), I18n.l(date, format: '%B, %Y'))
     end
     @filtered_expenses = list_entries.except(:limit, :offset).pluck(:id)
