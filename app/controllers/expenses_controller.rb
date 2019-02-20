@@ -11,6 +11,14 @@ class ExpensesController < ManageController
   before_render_index :populate_employee_filter_selects, if: :parent
   before_render_index :set_default_year, if: :parent
   before_render_form  :populate_orders
+  before_action :approved_expenses, only: [:edit, :destroy] # rubocop:disable Rails/LexicallyScopedActionFilter
+
+  def update
+    super
+    if entry.employee == current_user && entry.rejected?
+      entry.pending!
+    end
+  end
 
   def export
     entries = params['entries'].split(',').map(&:to_i).compact
