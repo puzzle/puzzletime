@@ -13,6 +13,20 @@ class ExpensesController < ManageController
   before_render_form  :populate_orders
   before_action :approved_expenses, only: [:edit, :destroy] # rubocop:disable Rails/LexicallyScopedActionFilter
 
+  def new
+    super
+    if params[:template]
+      template = Expense.find_by(id: params[:template])
+      if template
+        @expense.kind         = template.kind
+        @expense.amount       = template.amount
+        @expense.payment_date = template.payment_date
+        @expense.description  = template.description
+        @expense.order_id     = template.order_id
+      end
+    end
+  end
+
   def update
     super
     if entry.employee == current_user && entry.rejected?
