@@ -5,12 +5,10 @@ class ExpensesController < ManageController
   self.permitted_attrs = [:payment_date, :employee_id, :kind, :order_id, :description, :amount, :receipt]
   self.remember_params += %w(status)
 
-  helper_method :filter
-
   before_render_index :populate_management_filter_selects, unless: :parent
   before_render_index :populate_employee_filter_selects, if: :parent
-  before_render_index :set_default_year, if: :parent
-  before_render_form  :populate_orders
+  before_render_form :populate_orders
+  before_action :set_payment_date, only: :index, if: :parent
   before_action :approved_expenses, only: [:edit, :destroy] # rubocop:disable Rails/LexicallyScopedActionFilter
 
   def new
@@ -46,16 +44,8 @@ class ExpensesController < ManageController
     entries = parent ? super : super.joins(:employee).includes(:employee, :reviewer)
     entries = filter_entries_by(entries, :status, :employee_id)
     entries = filter_by_date(entries, :reimbursement_date, :all_month, /(\d{4})_(\d{2})/)
-    entries = filter_by_payment_date(entries)
+    entries = filter_by_date(entries, :payment_date, :all_year, /(\d{4})/)
     filter_by_department(entries)
-  end
-
-  def filter_by_payment_date(scope)
-    key = :payment_date
-    return filter_by_date(scope, key, :all_year, /(\d{4})/) if (params.key?(key) && params[key]) || !parent
-
-    max_year = scope.pluck(:payment_date).max.all_year
-    scope.where(payment_date: max_year)
   end
 
   def filter_by_date(scope, key, date_method, regex)
@@ -88,13 +78,8 @@ class ExpensesController < ManageController
     end
   end
 
-  def set_default_year
-    @selected_year =
-      if params[:payment_date]
-        params[:payment_date]
-      elsif !params.key?(:payment_date)
-        parent.expenses.pluck(:payment_date).max.year
-      end
+  def set_payment_date
+    params[:payment_date] ||= list_entries.maximum(:payment_date)&.year.to_s
   end
 
   def populate_orders
