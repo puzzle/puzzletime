@@ -3,7 +3,7 @@
 
   = form_tag(nil, method: :get, class: 'form-inline', role: 'filter') do
     = hidden_field_tag :page, 1
-    = direct_filter_select(:payment_date, 'Jahr', @years, value: @selected_year)
+    = direct_filter_select(:payment_date, 'Jahr', @years)
 
   - Expense.by_month(entries, params[:year].presence).each do |month, expenses|
     = plain_table_or_message(expenses) do |t|
