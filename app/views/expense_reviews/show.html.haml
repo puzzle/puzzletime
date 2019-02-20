@@ -3,11 +3,23 @@
 
 .row.columns
   .col-12.col-md-6
-    = render_attrs(entry, :payment_date, :employee_id, :amount, :kind_value, :description)
+    .pull-right
+      %a{data: {toggle: :collapse, target: '.inlineedit'}}
+        %i.icon-edit.primary.h4.text-primary
+    .inlineedit.collapse.in
+      = render_attrs(entry, :payment_date, :employee_id, :amount, :kind_value, :description)
+    .inlineedit.collapse
+      = standard_form(entry, url: expense_review_path(entry), method: :patch, cancel_url: false) do |f|
+        = f.labeled_input_field :payment_date, span: 5
+        = f.labeled_input_field :employee_id
+        = f.labeled_input_field :amount, span: 5
+        = f.labeled_input_field :kind
+        = f.labeled_input_field :order_id
+        = f.labeled_input_field :description
+        = f.labeled_file_field :receipt
 
-    %hr
     = form_for(entry, url: expense_review_path(entry), method: :post) do |f|
-      .row.columns
+      .row.columns{style: "border-top: solid #d8d8d8 1px"}
         .col-md-12
           = render('shared/error_messages', errors: entry.errors, object: entry)
 
@@ -17,8 +29,8 @@
           .form-group
             = f.label :reimbursement_date, Expense.human_attribute_name(:reimbursement_month)
             = f.collection_select :reimbursement_date, build_reimbursement_dates, :first, :last, {selected: '2019-02-28'}, { class: 'form-control'}
-          .hidden-md.hidden-lg.hidden-xl.mb-4
-            = f.button 'Freigeben', name: 'expense[status]', value: 'approved', class: 'btn btn-success', data: { disable_with: 'Freigeben' }
+          .hidden-md.hidden-lg.hidden-xl{style: 'margin-bottom: 3em;'}
+            = f.button 'Freigeben', name: 'expense[status]', value: 'approved', class: 'btn btn-success mb-4', data: { disable_with: 'Freigeben' }
 
         .col-md-6
           %h4 Ablehnung

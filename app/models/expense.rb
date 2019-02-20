@@ -56,7 +56,7 @@ class Expense < ActiveRecord::Base
   end
 
   def assert_approved_does_not_change
-    if approved? && !status_changes?(to: 'approved')
+    if approved? && !status_changed?(to: 'approved')
       errors.add(:status, :invalid)
     end
   end
