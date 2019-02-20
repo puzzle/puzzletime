@@ -13,7 +13,8 @@
       - t.col { |e| format_attr(e, :status_value) }
       - t.col('Auszahlungsmonat') do |e|
         = l(e.reimbursement_date, format: :month_only) if e.reimbursement_date
-      - standard_table_actions(t)
+      - expense_edit_col(t)
+      - expense_destroy_col(t)
 
 - else
   = form_tag(nil, method: :get, class: 'form-inline', role: 'filter') do

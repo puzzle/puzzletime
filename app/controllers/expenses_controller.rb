@@ -91,4 +91,11 @@ class ExpensesController < ManageController
     authorize!(:new, Expense.new(employee: parent))
   end
 
+  def approved_expenses
+    msg = 'Freigegebene Spesen können nicht bearbeitet oder gelöscht werden.'
+    redirect_to(:back, alert: msg) if entry.approved?
+  rescue RedirectBackError
+    redirect_to(employee_expense_path(employee), alert: msg)
+  end
+
 end
