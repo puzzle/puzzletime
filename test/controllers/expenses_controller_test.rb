@@ -70,4 +70,24 @@ class ExpensesControllerTest < ActionController::TestCase
     assert_equal 'train ticket', assigns(:expense).description
     assert_equal Date.new(2019, 2, 10), assigns(:expense).payment_date
   end
+
+  test 'PATCH#update reverts status to approved if a rejected expense is edited' do
+    login_as(:pascal)
+    expense = expenses(:rejected)
+    patch :update,
+      params: {
+      id: expense.id,
+      expense: { description: 'after test' }
+    }
+    assert 'pending', expense.reload.status
+    assert 'after test', expense.reload.description
+  end
+
+  test 'GET#index.pdf employee may export a pdf' do
+    login_as(:pascal)
+    get :index, params: { employee_id: employees(:pascal).id, format: :pdf}
+    assert_equal 4, assigns(:expenses).count
+    assert_equal 'application/pdf', response.headers['Content-Type']
+    assert_equal 'inline; filename="expenses.pdf"', response.headers['Content-Disposition']
+  end
 end
