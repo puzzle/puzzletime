@@ -10,7 +10,6 @@ class Expense < ActiveRecord::Base
 
   validates_by_schema
 
-  validate :assert_approved_does_not_change
   validate :assert_payment_month, if: :approved?
   validates :reviewer, :reviewed_at, presence: true, if: -> { approved? || rejected? }
 
@@ -53,12 +52,6 @@ class Expense < ActiveRecord::Base
       "WHERE employee_id = #{employee.id} " \
       'ORDER BY year'
     connection.select_values(statement).collect { |year| Date.new(year, 1, 1) }
-  end
-
-  def assert_approved_does_not_change
-    if approved? && !status_changed?(to: 'approved')
-      errors.add(:status, :invalid)
-    end
   end
 
   def self.kind_value(value)
