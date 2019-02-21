@@ -20,7 +20,7 @@ namespace :ci do
                  'erd',
                  'rubocop:report',
                  'brakeman',
-                 'gemsurance']
+                 'bundler:audit']
 
   desc 'Prepare the system for integration tests'
   task prepare: ['vendor/tools/geckodriver/geckodriver'] do |target|
@@ -43,7 +43,6 @@ namespace :ci do
     end
     puts 'Geckodriver prepared'
   end
-
 end
 
 private

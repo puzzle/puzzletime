@@ -5,6 +5,8 @@ require File.expand_path('../config/application', __FILE__)
 
 unless Rails.env.production?
   require 'rails-erd'
+  require 'bundler/audit/task'
+  Bundler::Audit::Task.new
 end
 
 Rails.application.load_tasks

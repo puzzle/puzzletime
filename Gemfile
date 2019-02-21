@@ -72,12 +72,11 @@ group :development do
 end
 
 group :test do
+  gem 'bundler-audit'
   gem 'capybara'
   gem 'database_cleaner'
   gem 'fabrication'
-  gem 'gemsurance'
   gem 'headless'
-  gem 'm'
   gem 'mocha', require: false
   gem 'rails-controller-testing'
   gem 'selenium-webdriver'
@@ -98,4 +97,3 @@ group :metrics do
   gem 'sdoc'
   gem 'simplecov-rcov', git: 'https://github.com/puzzle/simplecov-rcov'
 end
-
