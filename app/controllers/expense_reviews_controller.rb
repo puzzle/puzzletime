@@ -1,6 +1,6 @@
 class ExpenseReviewsController < ApplicationController
   before_action :authorize
-  helper_method :entry, :build_reimbursement_dates
+  helper_method :entry
 
   def show
     entry.reimbursement_date = Time.zone.today.end_of_month
@@ -32,13 +32,6 @@ class ExpenseReviewsController < ApplicationController
 
   def authorize
     authorize!(:manage, Expense.new)
-  end
-
-  def build_reimbursement_dates
-    [2, 1, 0, -1].collect do |months_ago|
-      date = months_ago.months.ago.end_of_month.to_date
-      [date, I18n.l(date, format: :month)]
-    end
   end
 
   def attributes

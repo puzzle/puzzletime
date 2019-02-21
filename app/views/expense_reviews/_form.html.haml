@@ -8,7 +8,7 @@
       %h4 Freigabe
       .form-group
         = f.label :reimbursement_date, Expense.human_attribute_name(:reimbursement_month)
-        = f.collection_select :reimbursement_date, build_reimbursement_dates, :first, :last, {}, { class: 'form-control'}
+        = f.collection_select :reimbursement_date, expenses_reimbursement_dates, :first, :last, {}, { class: 'form-control'}
 
       .hidden-md.hidden-lg.hidden-xl{style: 'margin-bottom: 3em;'}
         = f.button 'Freigeben', name: 'expense[status]', value: 'approved', class: 'btn btn-success mb-4', data: { disable_with: 'Freigeben' }

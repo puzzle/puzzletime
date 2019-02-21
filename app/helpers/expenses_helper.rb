@@ -54,4 +54,11 @@ module ExpensesHelper
     expenses_path(filter_params.merge(format: :pdf))
   end
 
+  def expenses_reimbursement_dates
+    [2, 1, 0, -1].collect do |months_ago|
+      date = months_ago.months.ago.end_of_month.to_date
+      [date, I18n.l(date, format: :month)]
+    end
+  end
+
 end
