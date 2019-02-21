@@ -6,7 +6,7 @@ ADD ./root /
 
 RUN \
   # Install dependencies
-  yum install -y poppler && \
+  yum install -y poppler libpoppler && \
   # Call restore-artifacts script when assembling
   sed '/Installing application source/i $STI_SCRIPTS_PATH/restore-artifacts' \
     -i $STI_SCRIPTS_PATH/assemble && \
