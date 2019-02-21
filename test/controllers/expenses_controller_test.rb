@@ -52,5 +52,22 @@ class ExpensesControllerTest < ActionController::TestCase
     assert_equal 0, assigns(:expenses).count
   end
 
+  test 'GET#new does not assign value if id does not exists' do
+    login_as(:pascal)
+    get :new, params: { employee_id: employees(:pascal).id, template: -1 }
+    assert_nil assigns(:expense).kind
+  end
 
+  test 'GET#new assigns attributes from template' do
+    expense = expenses(:approved)
+    expense.update!(description: 'train ticket')
+
+    login_as(:pascal)
+    get :new, params: { employee_id: expense.employee_id, template: expense.id }
+    assert assigns(:expense).project?
+    assert assigns(:expense).pending?
+    assert_equal 32, assigns(:expense).amount
+    assert_equal 'train ticket', assigns(:expense).description
+    assert_equal Date.new(2019, 2, 10), assigns(:expense).payment_date
+  end
 end

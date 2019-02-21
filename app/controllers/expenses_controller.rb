@@ -12,17 +12,7 @@ class ExpensesController < ManageController
   before_action :approved_expenses, only: [:edit, :destroy] # rubocop:disable Rails/LexicallyScopedActionFilter
 
   def new
-    super
-    if params[:template]
-      template = Expense.find_by(id: params[:template])
-      if template
-        @expense.kind         = template.kind
-        @expense.amount       = template.amount
-        @expense.payment_date = template.payment_date
-        @expense.description  = template.description
-        @expense.order_id     = template.order_id
-      end
-    end
+    entry.attributes = template_attributes
   end
 
   def update
@@ -96,6 +86,11 @@ class ExpensesController < ManageController
     redirect_to(:back, alert: msg) if entry.approved?
   rescue RedirectBackError
     redirect_to(employee_expense_path(employee), alert: msg)
+  end
+
+  def template_attributes
+    attrs = Expense.find_by(id: params[:template])&.attributes || {}
+    attrs.slice('kind', 'amount', 'payment_date', 'description', 'order_id')
   end
 
 end
