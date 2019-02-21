@@ -9,17 +9,9 @@ class ExpensesController < ManageController
   before_render_index :populate_employee_filter_selects, if: :parent
   before_render_form :populate_orders
   before_action :set_payment_date, only: :index, if: :parent
-  before_action :approved_expenses, only: [:edit, :destroy] # rubocop:disable Rails/LexicallyScopedActionFilter
 
   def new
     entry.attributes = template_attributes
-  end
-
-  def update
-    super
-    if entry.employee == current_user && entry.rejected?
-      entry.pending!
-    end
   end
 
   def index
@@ -29,7 +21,24 @@ class ExpensesController < ManageController
     end
   end
 
+  def update
+    with_protected_approved_state do
+      super
+      entry.pending! if entry.rejected? && entry.employee == current_user
+    end
+  end
+
+  def destroy
+    with_protected_approved_state { super }
+  end
+
   private
+
+  def with_protected_approved_state
+    return yield unless entry.approved? && !current_user.management?
+
+    redirect_to employee_expenses_path(current_user), alert: 'Freigegebene Spesen können nicht verändert werden.'
+  end
 
   def list_entries
     entries = parent ? super : super.joins(:employee).includes(:employee, :reviewer)
@@ -81,16 +90,8 @@ class ExpensesController < ManageController
     authorize!(:new, Expense.new(employee: parent))
   end
 
-  def approved_expenses
-    msg = 'Freigegebene Spesen können nicht bearbeitet oder gelöscht werden.'
-    redirect_to(:back, alert: msg) if entry.approved?
-  rescue RedirectBackError
-    redirect_to(employee_expense_path(employee), alert: msg)
-  end
-
   def template_attributes
     attrs = Expense.find_by(id: params[:template])&.attributes || {}
     attrs.slice('kind', 'amount', 'payment_date', 'description', 'order_id')
   end
-
 end
