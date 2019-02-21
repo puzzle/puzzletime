@@ -71,16 +71,62 @@ class ExpensesControllerTest < ActionController::TestCase
     assert_equal Date.new(2019, 2, 10), assigns(:expense).payment_date
   end
 
-  test 'PATCH#update reverts status to approved if a rejected expense is edited' do
+  %w(pending undecided rejected).each do |status|
+    test "PUT#update employee may update #{status} expense" do
+      expense = expenses(status)
+
+      login_as(:pascal)
+      put :update, params: { employee_id: expense.employee_id, id: expense.id, expense: { amount: 1 } }
+      assert_equal 1, expense.reload.amount
+      assert expense.pending? if status == 'rejected'
+    end
+
+    test "DELETE#destroy employee may destroy #{status} expense" do
+      expense = expenses(status)
+
+      login_as(:pascal)
+      assert_difference 'Expense.count', -1 do
+        delete :destroy, params: { employee_id: expense.employee_id, id: expense.id, expense: { amount: 1 } }
+      end
+    end
+  end
+
+  test 'PUT#update employee may not update approved expense' do
+    expense = expenses(:approved)
+
     login_as(:pascal)
-    expense = expenses(:rejected)
-    patch :update,
-      params: {
-      id: expense.id,
-      expense: { description: 'after test' }
-    }
-    assert 'pending', expense.reload.status
-    assert 'after test', expense.reload.description
+    put :update, params: { employee_id: expense.employee_id, id: expense.id, expense: { amount: 1 } }
+    refute_equal 1, expense.reload.amount
+    assert_redirected_to employee_expenses_path(expense.employee)
+    assert_equal 'Freigegebene Spesen können nicht verändert werden.', flash[:alert]
+  end
+
+  test "DELETE#destroy employee may not destroy approved expense" do
+    expense = expenses(:approved)
+
+    login_as(:pascal)
+    assert_no_difference 'Expense.count', -1 do
+      delete :destroy, params: { employee_id: expense.employee_id, id: expense.id, expense: { amount: 1 } }
+      assert_redirected_to employee_expenses_path(expense.employee)
+      assert_equal 'Freigegebene Spesen können nicht verändert werden.', flash[:alert]
+    end
+  end
+
+  test 'PUT#update management may update approved expense' do
+    expense = expenses(:approved)
+
+    login_as(:mark)
+    put :update, params: { employee_id: expense.employee_id, id: expense.id, expense: { amount: 1 } }
+    assert_equal 1, expense.reload.amount
+  end
+
+  test 'DELETE#destroy employee may delete approved expense' do
+    expense = expenses(:approved)
+
+    login_as(:mark)
+      assert_difference 'Expense.count', -1 do
+        delete :destroy, params: { employee_id: expense.employee_id, id: expense.id, expense: { amount: 1 } }
+      end
   end
 
   test 'GET#index.pdf employee may export a pdf' do
