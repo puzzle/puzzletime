@@ -7,7 +7,7 @@
 
   - Expense.by_month(entries, params[:year].presence).each do |month, expenses|
     = plain_table_or_message(expenses, responsive: true) do |t|
-      - t.col(month) { |e| link_to(format_attr(e, :payment_date), [e.employee, e]) }
+      - t.col(month, class: 'text-right') { |e| link_to(format_attr(e, :payment_date), [e.employee, e]) }
       - t.col('Spesenart') { |e| e.kind_value }
       - t.col('Betrag', class: 'text-right') { |e| format_attr(e, :amount) }
       - t.col('Status') { |e| format_attr(e, :status_value) }
@@ -26,7 +26,7 @@
     = direct_filter_select(:department_id, 'Organisationseinheit', @departments)
 
   = plain_table_or_message(entries, responsive: true) do |t|
-    - t.col { |e| link_to(format_attr(e, :payment_date), e) }
+    - t.col('', class: 'text-right') { |e| link_to(format_attr(e, :payment_date), e) }
     - t.attrs(:employee_id, :kind_value)
     - t.attr(:description) { |e| format_attr(e, :description).truncate_words(20) }
     - t.attrs(:amount, :status_value, :reviewer_id, :reimbursement_month)
