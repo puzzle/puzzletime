@@ -112,7 +112,7 @@ module DryCrud::Table
     def html_row(entry)
       attrs = @row_attrs ? @row_attrs.call(entry) : {}
       attrs[:id] ||= dom_id(entry) if entry.respond_to?(:to_key)
-      content_tag_nested(:tr, cols, attrs) { |c| c.html_cell(entry) }
+      content_tag_nested(:tr, cols, attrs) { |c| c.html_cell(entry, options[:responsive]) }
     end
 
     # Determines the class of the table entries.
