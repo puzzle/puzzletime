@@ -26,10 +26,10 @@ rejected:
   reviewer_id: 7
   reviewed_at: 2019-01-20 14:32:00
 
-undecided:
+deferred:
   employee_id: 6
   kind: training
-  status: undecided
+  status: deferred
   amount: 32
   payment_date: 2019-02-10
 
