@@ -15,6 +15,7 @@ class ExpenseReviewsControllerTest < ActionController::TestCase
     login_as(:mark)
     get :show, params: { expense_id: expenses(:pending).id }
     assert_response :success
+    assert_equal Time.zone.today.end_of_month, assigns(:entry).reimbursement_date
   end
 
   test 'GET#show redirects if expense is already processed' do
@@ -45,4 +46,5 @@ class ExpenseReviewsControllerTest < ActionController::TestCase
     get :create, params: { expense_id: expenses(:pending).id, expense: { status: :approved, reimbursement_date: '2019-03-01' } }, session: { 'list_params' => list_params }
     assert_redirected_to expense_review_path(other)
   end
+
 end
