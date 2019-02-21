@@ -128,7 +128,7 @@ muss Delayed Job gestartet werden:
 | `rake db:dump` | Lädt einen Datenbankdump von `FILE`. |
 | `rake db:create_testuser` | Erstellt die Testbenutzer `MB1` und `MB2` mit Passwort `member` |
 | `rake erd` | Erstellt ein Entitiy Relationship Diagram in `doc/models.png` |
-| `rake gemsurance` | Ruby Gems nach Vulnerabilities überprüfen |
+| `rake bundle:audit` | Ruby Gems nach Vulnerabilities überprüfen |
 | `rake license:insert` | Fügt die Lizenz in alle Dateien ein. |
 | `rake license:remove` | Entfernt die Lizenz aus allen Dateien. |
 | `rake license:update` | Aktualisiert die Lizenz in allen Dateien oder fügt sie neu ein. |
