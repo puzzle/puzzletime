@@ -6,7 +6,7 @@
 - receipt = entry.receipt
 
 %dl.dl-horizontal
-  = labeled_attr(entry, :employee_id)
+  = labeled_attr(entry, :employee_id) unless parent
   = labeled_attr(entry, :kind_value)
 
   - if entry.project?
