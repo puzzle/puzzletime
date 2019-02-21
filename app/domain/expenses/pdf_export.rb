@@ -15,7 +15,7 @@ class Expenses::PdfExport
 
   def initialize(entries)
     @pdf     = Prawn::Document.new(page_size: 'A4')
-    @entries = entries.split(',')
+    @entries = entries
   end
 
   def expenses
@@ -29,6 +29,7 @@ class Expenses::PdfExport
 
   def build
     validate
+    setup_fonts
     expenses.each_with_index do |e, i|
       @expense = e
       pdf.start_new_page unless i.zero?
@@ -50,6 +51,19 @@ class Expenses::PdfExport
     raise ArgumentError, 'There are no approved expenses.' if expenses.blank?
 
     true
+  end
+
+  def setup_fonts
+    pdf.font_families.update(
+      'Roboto' => {
+        normal: 'app/assets/fonts/Roboto-Regular.ttf',
+        italic: 'app/assets/fonts/Roboto-Italic.ttf',
+        bold: 'app/assets/fonts/Roboto-Bold.ttf',
+        bold_italic: 'app/assets/fonts/Roboto-BoldItalic.ttf'
+
+      }
+    )
+    pdf.font('Roboto')
   end
 
   def add_header
@@ -91,9 +105,9 @@ class Expenses::PdfExport
     output[:order_id]            = format_order if expense.project?
     output[:status]              = expense.status_value
     output[:reviewer_id]         = format_employee(expense.reviewer) if expense.approved?
-    output[:reviewed_at]         = format_date(expense.reviewed_at) if expense.approved?
-    output[:reimbursement_month] = expense.reimbursement_month if expense.approved?
-    output[:rejection]           = expense.rejection&.truncate(90) if expense.rejected?
+    output[:reviewed_at]         = format_date(expense.reviewed_at)  if expense.approved?
+    output[:reimbursement_month] = expense.reimbursement_month       if expense.approved?
+    output[:rejection]           = expense.rejection&.truncate(90)   if expense.rejected?
     output[:id]                  = expense.id
     output[:amount]              = format_value
     output[:payment_date]        = format_date(expense.payment_date)
