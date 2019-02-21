@@ -80,7 +80,7 @@ class ExpensesControllerTest < ActionController::TestCase
     assert_redirected_to expense_review_path(expense)
   end
 
-  %w(pending undecided rejected).each do |status|
+  %w(pending deferred rejected).each do |status|
     test "PUT#update employee may update #{status} expense" do
       expense = expenses(status)
 

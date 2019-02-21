@@ -5,7 +5,7 @@ class ExpenseReviewsController < ApplicationController
   def show
     entry.reimbursement_date = Time.zone.today.end_of_month
 
-    unless entry.pending? || entry.undecided?
+    unless entry.pending? || entry.deferred?
       redirect_to expenses_path(returning: true), notice: "#{entry} wurde bereits bearbeitet"
     end
   end
@@ -13,12 +13,8 @@ class ExpenseReviewsController < ApplicationController
   def create
     updated = entry.update(attributes)
 
-    if updated && next_expense
-      message = "#{entry} wurde #{entry.status_value.downcase}."
-      redirect_to expense_review_path(expense_id: next_expense.id), notice: message
-    elsif updated
-      message = "Keine weiteren Einträge im status '#{Expense.status_value(status)}'."
-      redirect_to expenses_path(returning: true), notice: message
+    if updated
+      redirect_to redirect_path, notice: message
     else
       render :show
     end
@@ -47,6 +43,15 @@ class ExpenseReviewsController < ApplicationController
 
   def next_expense
     @next_expense ||= Expense.list.send(status).first
+  end
+
+  def redirect_path
+    next_expense ? expense_review_path(next_expense) : expenses_path(returning: true)
+  end
+
+  def message
+    state_change = entry.deferred? ? 'zurückgestellt' : entry.status_value.downcase
+    "#{entry} wurde #{state_change}."
   end
 
 end
