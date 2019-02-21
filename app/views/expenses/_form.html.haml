@@ -1,8 +1,2 @@
 = crud_form do |f|
-  = f.labeled_input_field :payment_date
-  = f.labeled_input_field :employee_id unless parent
-  = f.labeled_input_field :amount
-  = f.labeled_input_field :kind
-  = f.labeled_input_field :order_id
-  = f.labeled_input_field :description
-  = f.labeled_file_field :receipt
+  = render 'fields', f: f
