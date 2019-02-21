@@ -93,11 +93,11 @@ class Expenses::PdfExport
     output[:reviewer_id]         = format_employee(expense.reviewer) if expense.approved?
     output[:reviewed_at]         = format_date(expense.reviewed_at) if expense.approved?
     output[:reimbursement_month] = expense.reimbursement_month if expense.approved?
-    output[:rejection]           = expense.rejection.truncate(90) if expense.rejected?
+    output[:rejection]           = expense.rejection&.truncate(90) if expense.rejected?
     output[:id]                  = expense.id
     output[:amount]              = format_value
     output[:payment_date]        = format_date(expense.payment_date)
-    output[:description]         = expense.description.truncate(90)
+    output[:description]         = expense.description&.truncate(90) if expense.description
     output[:receipt]             = receipt_text
     output
   end
