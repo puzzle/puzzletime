@@ -23,7 +23,8 @@ class ExpensesController < ManageController
 
   def update
     with_protected_approved_state do
-      super
+      options = params[:review] ? { location: expense_review_path(entry) } : {}
+      super(options)
       entry.pending! if entry.rejected? && entry.employee == current_user
     end
   end

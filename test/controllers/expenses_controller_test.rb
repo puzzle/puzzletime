@@ -71,6 +71,15 @@ class ExpensesControllerTest < ActionController::TestCase
     assert_equal Date.new(2019, 2, 10), assigns(:expense).payment_date
   end
 
+  test 'PUT#update redirects to expense_review if review param is set' do
+    expense = expenses(:pending)
+
+    login_as(:mark)
+    put :update, params: { employee_id: expense.employee_id, id: expense.id, review: 1, expense: { amount: 1 } }
+    assert_equal 1, expense.reload.amount
+    assert_redirected_to expense_review_path(expense)
+  end
+
   %w(pending undecided rejected).each do |status|
     test "PUT#update employee may update #{status} expense" do
       expense = expenses(status)
@@ -86,7 +95,7 @@ class ExpensesControllerTest < ActionController::TestCase
 
       login_as(:pascal)
       assert_difference 'Expense.count', -1 do
-        delete :destroy, params: { employee_id: expense.employee_id, id: expense.id, expense: { amount: 1 } }
+        delete :destroy, params: { employee_id: expense.employee_id, id: expense.id }
       end
     end
   end
@@ -106,7 +115,7 @@ class ExpensesControllerTest < ActionController::TestCase
 
     login_as(:pascal)
     assert_no_difference 'Expense.count', -1 do
-      delete :destroy, params: { employee_id: expense.employee_id, id: expense.id, expense: { amount: 1 } }
+      delete :destroy, params: { employee_id: expense.employee_id, id: expense.id }
       assert_redirected_to employee_expenses_path(expense.employee)
       assert_equal 'Freigegebene Spesen können nicht verändert werden.', flash[:alert]
     end
