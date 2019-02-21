@@ -47,5 +47,7 @@
             = f.button 'Überspringen', name: 'expense[status]', value: 'undecided', class: 'btn btn-xs btn-warning', data: { disable_with: 'Überspringen' }
 
   .col-12.col-md-6
-    - if receipt.attached?
-      = attachment_image_tag receipt, class: 'img-responsive'
+    - if attachment_displayable?(receipt)
+      = attachment_image_tag receipt, class: 'img-responsive', show_link: true
+    - else
+      %h3 Keine Vorschau verfügbar

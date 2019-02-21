@@ -9,6 +9,10 @@ module AttachmentHelper
     link_to(label, rails_blob_path(obj), options)
   end
 
+  def attachment_displayable?(receipt)
+    receipt.attached? && (receipt.image? || receipt.previewable?)
+  end
+
   def attachment_image_tag(obj, **options)
     path =
       if obj.image?
