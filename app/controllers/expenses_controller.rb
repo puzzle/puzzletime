@@ -64,7 +64,7 @@ class ExpensesController < ManageController
 
   def populate_management_filter_selects
     @employees = Employee.joins(:expenses).list.uniq
-    @departments = Department.list.joins(:employees).where(employees: { id: @employees })
+    @departments = Department.list.joins(:employees).where(employees: { id: @employees }).uniq
     @statuses = Expense.statuses.collect { |key, value| IdValue.new(value, Expense.status_value(key)) }
     @kinds = Expense.kinds.collect { |key, value| IdValue.new(value, Expense.kind_value(key)) }
     @months = Expense.reimbursement_months.sort.reverse.collect do |date|
