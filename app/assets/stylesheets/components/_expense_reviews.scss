@@ -1,0 +1,16 @@
+.expense_reviews {
+  @media screen and (min-width : 768px) {
+    :not(.row).divider {
+      border-left: solid #d8d8d8 1px;
+    }
+  }
+
+  .row.divider {
+    border-top: solid #d8d8d8 1px;
+  }
+
+  .mb-3 {
+    margin-bottom: 3rem;
+  }
+}
+

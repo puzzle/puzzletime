@@ -17,7 +17,7 @@
     .inlineedit.collapse.in
       = render 'form'
 
-  .col-12.col-md-5
+  .col-12.col-md-5.divider
     - if attachment_displayable?(receipt)
       = attachment_image_tag receipt, class: 'img-responsive', show_link: true
     - else
