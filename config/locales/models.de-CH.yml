@@ -247,7 +247,7 @@ de-CH:
       expense/statuses:
         approved: Freigegeben
         pending: Offen
-        undecided: In Bearbeitung
+        deferred: In Bearbeitung
         rejected: Abgelehnt
       expense/kinds:
         project: Projekt
