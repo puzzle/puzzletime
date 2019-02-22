@@ -1,11 +1,19 @@
 $(document).on 'turbolinks:load', ->
-  $('#expense_kind :selected').each ->
-    if this.value != 'project'
-      $('#expense_order_id').closest('.form-group').hide()
+  toggle_project_display = () ->
+    kind          = $('#expense_kind :selected')
+    order         = $('#expense_order_id')
+    form_group    = order.closest('.form-group')
+    input         = form_group.find('input')
+
+    kind.each ->
+      if this.value == 'project'
+        form_group.show()
+        input[0].required = true
+      else
+        form_group.hide()
+        input[0].required = false
+
+  toggle_project_display()
 
   $('#expense_kind').change (e) ->
-    if $(this).find(':selected')[0].value == 'project'
-      $('#expense_order_id').closest('.form-group').show()
-    else
-      $('#expense_order_id').closest('.form-group').hide()
-
+    toggle_project_display()

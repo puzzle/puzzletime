@@ -39,13 +39,20 @@ class app.Autocomplete
     (query, callback) ->
       if query.length
         $.ajax(
-          url: $(input).data('url') + '?q=' + encodeURIComponent(query),
+          url: Autocomplete.prototype.buildUrl(input, query)
           type: 'GET',
           error: -> callback(),
           success: (res) -> callback(res)
         )
       else
         callback()
+
+  buildUrl: (input, query) ->
+    url        = $(input).data('url')
+    param      = encodeURIComponent(query)
+    param_char = if url.includes('?') then '&' else '?'
+
+    "#{url}#{param_char}q=#{param}"
 
   limitText: (string, max) ->
     if !string
