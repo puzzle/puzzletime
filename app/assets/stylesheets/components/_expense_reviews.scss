@@ -12,5 +12,17 @@
   .mb-3 {
     margin-bottom: 3rem;
   }
+
+  .row.flex {
+    display: flex;
+  }
+
+  .big-gutter-left {
+    padding-left: 30px;
+  }
+
+  .big-gutter-right {
+    padding-right: 30px;
+  }
 }
 
