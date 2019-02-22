@@ -1,5 +1,5 @@
 = form_for(entry, url: expense_review_path(entry), method: :post) do |f|
-  .row.columns{style: "border-top: solid #d8d8d8 1px"}
+  .row.columns.divider
     .col-md-12
       = render('shared/error_messages', errors: entry.errors, object: entry)
 
@@ -10,7 +10,7 @@
         = f.label :reimbursement_date, Expense.human_attribute_name(:reimbursement_month)
         = f.collection_select :reimbursement_date, expenses_reimbursement_dates, :first, :last, {}, { class: 'form-control'}
 
-      .hidden-md.hidden-lg.hidden-xl{style: 'margin-bottom: 3em;'}
+      .hidden-md.hidden-lg.hidden-xl.mb-3
         = f.button 'Freigeben', name: 'expense[status]', value: 'approved', class: 'btn btn-success mb-4', data: { disable_with: 'Freigeben' }
 
     .col-md-6
