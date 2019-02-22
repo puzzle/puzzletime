@@ -5,6 +5,9 @@
     = hidden_field_tag :page, 1
     = direct_filter_select(:payment_date, 'Jahr', @years)
 
+  .top-links
+    = render 'actions_index'
+
   - Expense.by_month(entries, params[:year].presence).each do |month, expenses|
     = plain_table_or_message(expenses, responsive: true) do |t|
       - t.col(month, class: 'text-right') { |e| link_to(format_attr(e, :payment_date), [e.employee, e]) }
@@ -18,12 +21,17 @@
       - expense_destroy_col(t)
 
 - else
+  - @title = 'Alle Spesen'
+
   = form_tag(nil, method: :get, class: 'form-inline', role: 'filter') do
     = hidden_field_tag :page, 1
     = direct_filter_select(:status, 'Status', @statuses)
     = direct_filter_select(:employee_id, 'Mitarbeiter', @employees)
     = direct_filter_select(:reimbursement_date, 'Auszahlungsmonat', @months)
     = direct_filter_select(:department_id, 'Organisationseinheit', @departments)
+
+  .top-links
+    = render 'actions_index'
 
   = plain_table_or_message(entries, responsive: true) do |t|
     - t.col('', class: 'text-right') { |e| link_to(format_attr(e, :payment_date), e) }
