@@ -1,7 +1,6 @@
 - @title ||= 'Spesen freigeben'
 - receipt = entry.receipt
-
-.row.columns
+.row.flex.columns
   .col-12.col-md-7
     .pull-right
       %a{data: {toggle: :collapse, target: '.inlineedit'}}
@@ -17,8 +16,8 @@
     .inlineedit.collapse.in
       = render 'form'
 
-  .col-12.col-md-5.divider
+  .col-12.col-md-5.divider.text-center
     - if attachment_displayable?(receipt)
       = attachment_image_tag receipt, class: 'img-responsive', show_link: true
     - else
-      %h3 Keine Vorschau verfügbar
+      Keine Vorschau verfügbar

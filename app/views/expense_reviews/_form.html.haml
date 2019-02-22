@@ -4,7 +4,7 @@
       = render('shared/error_messages', errors: entry.errors, object: entry)
 
   .row.columns
-    .col-md-6
+    .col-md-6.big-gutter-right
       %h4 Freigabe
       .form-group
         = f.label :reimbursement_date, Expense.human_attribute_name(:reimbursement_month)
@@ -13,16 +13,16 @@
       .hidden-md.hidden-lg.hidden-xl.mb-3
         = f.button 'Freigeben', name: 'expense[status]', value: 'approved', class: 'btn btn-success mb-4', data: { disable_with: 'Freigeben' }
 
-    .col-md-6
+    .col-md-6.big-gutter-left
       %h4 Ablehnung
       .form-group
         = f.label :rejection
         = f.text_area :rejection, rows: 3, class: 'form-control'
 
   .row.columns
-    .col-md-6
+    .col-md-6.big-gutter-right
       = f.button 'Freigeben', name: 'expense[status]', value: 'approved', class: 'btn btn-success hidden-xs hidden-sm', data: { disable_with: 'Freigeben' }
-    .col-md-6
+    .col-md-6.big-gutter-left
       = f.button 'Ablehnen', name: 'expense[status]', value: 'rejected', class: 'btn btn-danger', data: { disable_with: 'Ablehnen' }
       .pull-right
         = f.button 'Überspringen', name: 'expense[status]', value: 'deferred', class: 'btn btn-xs btn-warning', data: { disable_with: 'Überspringen' }
