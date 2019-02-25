@@ -1,78 +1,83 @@
-.expenses .top-links {
-  margin-top: 1rem;
-  margin-bottom: 1.5rem;
-}
+.expenses {
+    .top-links {
+        margin-top: 1rem;
+        margin-bottom: 1.5rem;
+    }
 
-.expenses table {
-  table-layout: fixed;
-}
+    table.table-small-blocks {
+        table-layout: fixed;
 
-.expenses table .action {
-  width: 2em;
-}
+        .action {
+            width: 2em;
+        }
+    }
 
-@media screen and (max-width: 600px) {
-  .expenses main  {
-    margin-left: 6px;
-  }
 
-  .expenses .unindented  {
-    margin-left: 0px;
-    margin-right: 0px;
-  }
+    @media screen and (max-width: 600px) {
+        main  {
+            margin-left: 6px;
+        }
 
-  .expenses table thead {
-    border: none;
-    clip: rect(0 0 0 0);
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    padding: 0;
-    position: absolute;
-    width: 1px;
-  }
+        .unindented  {
+            margin-left: 0px;
+            margin-right: 0px;
 
-  .expenses table tr {
-    border-bottom: 3px solid #ddd;
-    display: block;
-    margin-bottom: .625em;
-  }
+            table.table-small-blocks.table-condensed td:first-child {
+                padding-left: 6px;
+            }
+        }
 
-  .expenses table td {
-    border-bottom: 1px solid #ddd;
-    display: block;
-    font-size: .8em;
-    text-align: right;
-  }
+        table.table-small-blocks {
+            thead {
+                border: none;
+                clip: rect(0 0 0 0);
+                height: 1px;
+                margin: -1px;
+                overflow: hidden;
+                padding: 0;
+                position: absolute;
+                width: 1px;
+            }
 
-  .expenses table td:not(.action).empty-cell {
-    height: 2.2em;
-  }
+            tr {
+                border-bottom: 3px solid #ddd;
+                display: block;
+                margin-bottom: .625em;
+            }
 
-  .expenses table td.action {
-    display: inline-block;
-    padding-right: 2em;
-    border: none;
-  }
+            td {
+                border-bottom: 1px solid #ddd;
+                display: block;
+                font-size: .8em;
+                text-align: right;
+            }
 
-  .expenses table td.action.empty-cell {
-    display: none;
-  }
+            td:not(.action).empty-cell {
+                height: 2.2em;
+            }
 
-  .expenses .unindented table.table-condensed td:first-child {
-    padding-left: 6px;
-  }
+            td.action {
+                display: inline-block;
+                padding-right: 2em;
+                border: none;
+            }
 
-  .expenses table td:not(.action)::before {
-    float: left;
-    display: inline-block;
-    font-weight: bold;
-    text-transform: uppercase;
-    content: attr(data-label);
-  }
+            td.action.empty-cell {
+                display: none;
+            }
 
-  .expenses table td:last-child {
-    border-bottom: 0;
-  }
 
+            td:not(.action)::before {
+                float: left;
+                display: inline-block;
+                font-weight: bold;
+                text-transform: uppercase;
+                content: attr(data-label);
+            }
+
+            td:last-child {
+                border-bottom: 0;
+            }
+        }
+    }
 }

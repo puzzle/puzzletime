@@ -9,7 +9,7 @@
     = render 'actions_index'
 
   - Expense.by_month(entries, params[:year].presence).each do |month, expenses|
-    = plain_table_or_message(expenses, responsive: true) do |t|
+    = plain_table_or_message(expenses, responsive: true, class: 'table-small-blocks') do |t|
       - t.col(month, class: 'text-right') { |e| link_to(format_attr(e, :payment_date), [e.employee, e]) }
       - t.col('Spesenart') { |e| e.kind_value }
       - t.col('Betrag', class: 'text-right') { |e| format_attr(e, :amount) }
