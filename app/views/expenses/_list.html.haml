@@ -8,18 +8,21 @@
   .top-links
     = render 'actions_index'
 
-  - Expense.by_month(entries, params[:year].presence).each do |month, expenses|
-    = plain_table_or_message(expenses, responsive: true, class: 'table-small-blocks') do |t|
-      - t.col(month, class: 'text-right') { |e| link_to(format_attr(e, :payment_date), [e.employee, e]) }
-      - t.col('Spesenart') { |e| e.kind_value }
-      - t.col('Betrag', class: 'text-right') { |e| format_attr(e, :amount) }
-      - t.col('Status') { |e| format_attr(e, :status_value) }
-      - t.col('Auszahlungsmonat') do |e|
-        = l(e.reimbursement_date, format: :month_only) if e.reimbursement_date
-      - expense_duplicate_col(t)
-      - expense_edit_col(t)
-      - expense_destroy_col(t)
-
+  - by_month = Expense.by_month(entries, params[:year].presence)
+  - if by_month.present?
+    - by_month.each do |month, expenses|
+      = plain_table_or_message(expenses, responsive: true, class: 'table-small-blocks') do |t|
+        - t.col(month, class: 'text-right') { |e| link_to(format_attr(e, :payment_date), [e.employee, e]) }
+        - t.col('Spesenart') { |e| e.kind_value }
+        - t.col('Betrag', class: 'text-right') { |e| format_attr(e, :amount) }
+        - t.col('Status') { |e| format_attr(e, :status_value) }
+        - t.col('Auszahlungsmonat') do |e|
+          = l(e.reimbursement_date, format: :month_only) if e.reimbursement_date
+        - expense_duplicate_col(t)
+        - expense_edit_col(t)
+        - expense_destroy_col(t)
+  - else
+    = content_tag(:div, ti(:no_list_entries), class: 'table')
 - else
   - @title = 'Alle Spesen'
 
