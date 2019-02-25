@@ -66,7 +66,11 @@ module FormatHelper
   end
 
   def format_days(number, short = false)
-    "#{number.round(2)} #{short ? 'T' : 'Tage'}"
+    format(
+      '%<amount>0.02f %<days>s',
+      amount: number.round(2),
+      days: short ? 'T' : 'Tage'
+    )
   end
 
   def format_percent(value)
