@@ -50,7 +50,7 @@ gem 'uglifier'
 
 # Locked to 3.3.x, because 3.4.0 expects sassc, which can only be built with gcc
 # >= 4.6. Our Jenkins uses 4.4.7
-gem 'bootstrap-sass', '~> 3.3.0'
+gem 'bootstrap-sass'
 gem 'chartjs-ror'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
