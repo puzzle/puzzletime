@@ -20,7 +20,7 @@ module DryCrud::Table
     end
 
     # Renders a table cell for the given entry.
-    def html_cell(entry, responsive)
+    def html_cell(entry, responsive=false)
       output = content(entry)
 
       if responsive
