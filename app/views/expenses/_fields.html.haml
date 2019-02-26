@@ -10,7 +10,7 @@
                 class: entry.new_record? ? 'initial-focus' : '',
                 required: true,
                 data: {autocomplete: 'work_item',
-                    url: search_orders_path})
+                    url: search_orders_path(only_open: true)})
 
 = f.labeled_input_field :description
 = f.labeled_file_field :receipt
