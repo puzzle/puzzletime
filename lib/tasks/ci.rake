@@ -20,7 +20,7 @@ namespace :ci do
                  'erd',
                  'rubocop:report',
                  'brakeman',
-                 'bundler:audit']
+                 'bundle:audit']
 
   desc 'Prepare the system for integration tests'
   task prepare: ['vendor/tools/geckodriver/geckodriver'] do |target|
