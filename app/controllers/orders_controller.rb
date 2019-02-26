@@ -88,7 +88,7 @@ class OrdersController < CrudController
 
   def search_entries
     orders = Order.list.where(search_conditions)
-    orders = orders.where.not(status: 4) if params[:only_open]
+    orders = orders.open if params[:only_open]
     orders.minimal.limit(20)
   end
 
