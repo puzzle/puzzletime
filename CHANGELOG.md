@@ -1,8 +1,5 @@
 # 2.3
 
-### Features
-* **API**: Ein neues json:api mit Lesezugriff, vorerst nur für /employees. Unter `/apidocs` ist ein Swagger UI mit der Dokumentation verfügbar.
-
 ### Improvements
 * **Ruby/Rails:** Auf Ruby 2.5.3 und Rails 5.2.2 aktualisiert
 * **Mitarbeiter-Stammdaten:** Neu können bei den Mitarbeitern Nationalitäten und der (Hochschul-)Abschluss erfasst werden.
