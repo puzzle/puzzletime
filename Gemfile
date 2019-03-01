@@ -15,8 +15,9 @@ gem 'daemons'
 gem 'dalli'
 gem 'delayed_cron_job'
 gem 'delayed_job_active_record'
-gem 'dry_crud_jsonapi' # Source: https://gitlab.puzzle.ch/dilli/dry_crud_jsonapi
-gem 'dry_crud_jsonapi_swagger' # Source: https://gitlab.puzzle.ch/dilli/dry_crud_jsonapi_swagger
+gem 'fast_jsonapi'
+# gem 'dry_crud_jsonapi', path: './engines/dry_crud_jsonapi' # Source: https://gitlab.puzzle.ch/dilli/dry_crud_jsonapi
+# gem 'dry_crud_jsonapi_swagger', path: './engines/dry_crud_jsonapi_swagger' # Source: https://gitlab.puzzle.ch/dilli/dry_crud_jsonapi_swagger
 gem 'haml'
 gem 'highrise'
 gem 'jbuilder'

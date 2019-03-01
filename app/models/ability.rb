@@ -18,6 +18,8 @@ class Ability
       management_abilities
     elsif user.order_responsible?
       order_responsible_abilities
+    elsif user.is_a?(ApiClient)
+      api_client_abilities
     end
 
     everyone_abilities
@@ -148,6 +150,10 @@ class Ability
     can :manage, Planning do |planning|
       planning.order.responsible_id == user.id
     end
+  end
+
+  def api_client_abilities
+    can :read, :all
   end
 
   def everyone_abilities
