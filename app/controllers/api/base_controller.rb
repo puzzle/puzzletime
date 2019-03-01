@@ -14,15 +14,13 @@ module Api
       render json: serializer.new(entry).serializable_hash
     end
 
-    private
-
     def serializer_class_name
       namespace = self.class.name.deconstantize
       "#{namespace}::#{model_class.name}Serializer"
     end
 
     def serializer
-      serializer_class_name.constantize
+      serializer_class_name.safe_constantize
     end
   end
 end

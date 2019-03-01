@@ -335,6 +335,9 @@ GEM
       rack (>= 1.4)
     rqrcode (0.10.1)
       chunky_png (~> 1.0)
+    rswag-ui (2.0.5)
+      actionpack (>= 3.1, < 6.0)
+      railties (>= 3.1, < 6.0)
     rubocop (0.63.1)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
@@ -480,6 +483,7 @@ DEPENDENCIES
   request_profiler
   request_store
   rqrcode
+  rswag-ui
   rubocop
   rubocop-checkstyle_formatter
   sass-rails
