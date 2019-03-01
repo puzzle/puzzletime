@@ -16,16 +16,9 @@ module Api
 
     private
 
-    def entries
-      super.map {|entry| Api::Employee.new(entry) }
-    end
-
-    # def model_class
-    #   @model_class ||= "Api::#{controller_name.classify}".constantize
-    # end
-
     def serializer_class_name
-      "Api::#{model_class.name}Serializer"
+      namespace = self.class.name.deconstantize
+      "#{namespace}::#{model_class.name}Serializer"
     end
 
     def serializer

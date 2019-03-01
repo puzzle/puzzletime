@@ -15,7 +15,7 @@ module Scopable
 
   private
 
-  def scope_entries_by(entries, *scopes)
+  def scoped(entries, *scopes)
     return entries unless scopes.map(&:to_s).include?(scope_param)
 
     entries.send(scope_param)

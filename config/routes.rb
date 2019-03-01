@@ -12,7 +12,11 @@ Rails.application.routes.draw do
   # mount DryCrudJsonapiSwagger::Engine => '/apidocs'
 
   namespace :api do
-    resources :employees, only: [:index, :show]
+    namespace :v1 do
+      resources :employees, only: [:index, :show]
+    end
+
+    get '*path', to: redirect("/api/v1/%{path}")
   end
 
   resources :absences, except: [:show]
