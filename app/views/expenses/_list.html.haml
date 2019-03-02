@@ -35,9 +35,8 @@
     = render 'actions_index'
 
   = plain_table_or_message(entries, responsive: true) do |t|
-    - t.col('', class: 'text-right') { |e| link_to(format_attr(e, :payment_date), e) }
-    - t.attrs(:employee_id, :kind_value)
+    - t.attrs(:payment_date, :employee_id, :kind_value)
     - t.attr(:description) { |e| format_attr(e, :description).truncate_words(20) }
     - t.attrs(:amount, :status_value, :reviewer_id, :reimbursement_month)
-    - t.action_col do |e|
-      = t.table_action_link('edit', expense_review_path(e)) if e.pending? || e.deferred?
+    - expense_details_col(t)
+    - expense_review_col(t)
