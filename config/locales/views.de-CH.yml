@@ -40,6 +40,7 @@ de-CH:
     attachment:
       name: "Anhang"
       show: "Anzeigen"
+      hint: "Der Beleg muss gut lesbar sein und den Kaufpreis, das Kaufdatum und die MWST-Nummer enthalten."
     global:
       link:
         add: Erfassen

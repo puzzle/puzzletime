@@ -16,3 +16,6 @@
 
 = f.labeled_input_field :description
 = f.labeled_file_field :receipt, required: true
+= f.labeled(' ') do
+  %big
+    %bold= t('expenses.attachment.hint')
