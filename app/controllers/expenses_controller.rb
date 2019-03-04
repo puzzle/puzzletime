@@ -46,7 +46,7 @@ class ExpensesController < ManageController
   end
 
   def list_entries
-    entries = parent ? super : super.joins(:employee).includes(:employee, :reviewer)
+    entries = parent ? super.includes(:reviewer) : super.joins(:employee).includes(:employee, :reviewer)
     entries = filter_entries_by(entries, :status, :employee_id)
     entries = filter_by_date(entries, :reimbursement_date, :all_month, /(\d{4})_(\d{2})/)
     entries = filter_by_date(entries, :payment_date, :all_year, /(\d{4})/)
