@@ -31,7 +31,7 @@ class Expense < ActiveRecord::Base
   validate :assert_payment_month, if: :approved?
   validates :reviewer, :reviewed_at, presence: true, if: -> { approved? || rejected? }
 
-  scope :list, -> { order(:payment_date) }
+  scope :list, -> { order(payment_date: :desc) }
 
   def to_s
     kind_value
