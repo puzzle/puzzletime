@@ -6,7 +6,7 @@
       %a{data: {toggle: :collapse, target: '.inlineedit'}}
         %i.icon-edit.primary.h4.text-primary
     .inlineedit.collapse.in
-      = render_attrs(entry, :payment_date, :employee_id, :amount, :kind_value, :description)
+      = render_attrs(entry, :submission_date, :payment_date, :employee_id, :amount, :kind_value, :description)
 
     .inlineedit.collapse
       = standard_form(entry, cancel_url: expense_review_path(entry)) do |f|

@@ -25,7 +25,11 @@ class ExpensesController < ManageController
     with_protected_approved_state do
       options = params[:review] ? { location: expense_review_path(entry) } : {}
       super(options)
-      entry.pending! if entry.rejected? && entry.employee == current_user
+
+      if entry.rejected? && entry.employee == current_user
+        entry.submission_date = Time.zone.today
+        entry.pending!
+      end
     end
   end
 

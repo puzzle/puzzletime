@@ -81,4 +81,8 @@ module ExpensesHelper
     end
   end
 
+  def expense_submission_date
+    I18n.l(entry.submission_date || Time.zone.today)
+  end
+
 end

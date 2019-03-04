@@ -14,6 +14,7 @@
 #  reviewed_at        :datetime
 #  order_id           :bigint(8)
 #  reimbursement_date :date
+#  submission_date    :date             not null
 #
 
 class Expense < ActiveRecord::Base
