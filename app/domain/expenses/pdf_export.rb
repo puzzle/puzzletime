@@ -25,6 +25,7 @@ class Expenses::PdfExport
       .includes(order: :work_item, receipt_attachment: [{ blob: [{ preview_image_attachment: :blob }] }])
       .where(id: entries)
       .order('employees.lastname')
+      .order(:payment_date)
   end
 
   def build
