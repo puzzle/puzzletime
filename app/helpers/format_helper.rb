@@ -77,6 +77,14 @@ module FormatHelper
     (value == value.to_i ? value.to_i.to_s : value.to_s) + ' %'
   end
 
+  def format_expense_employee_id(value)
+    Employee.find(value.employee_id).to_s if value.employee_id # No link please
+  end
+
+  def format_expense_reviewer_id(value)
+    Employee.find(value.reviewer_id).to_s if value.reviewer_id # No link please
+  end
+
   # Renders a simple unordered list, which will
   # simply render all passed items or yield them
   # to your block.
