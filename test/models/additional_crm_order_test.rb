@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: additional_crm_orders
+#
+#  id       :bigint(8)        not null, primary key
+#  order_id :bigint(8)        not null
+#  crm_key  :string           not null
+#  name     :string
+#
+
 require 'test_helper'
 
 class AdditionalCrmOrderTest < ActiveSupport::TestCase

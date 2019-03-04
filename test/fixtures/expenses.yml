@@ -1,3 +1,21 @@
+# == Schema Information
+#
+# Table name: expenses
+#
+#  id                 :bigint(8)        not null, primary key
+#  employee_id        :bigint(8)        not null
+#  kind               :integer          not null
+#  status             :integer          default("pending"), not null
+#  amount             :decimal(12, 2)   not null
+#  payment_date       :date             not null
+#  description        :text
+#  rejection          :text
+#  reviewer_id        :bigint(8)
+#  reviewed_at        :datetime
+#  order_id           :bigint(8)
+#  reimbursement_date :date
+#
+
 pending:
   employee_id: 6
   kind: training
