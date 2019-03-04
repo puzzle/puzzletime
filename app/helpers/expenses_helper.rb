@@ -10,7 +10,7 @@ module ExpensesHelper
 
   def expense_details_col(table)
     table.col('', class: 'right') do |e|
-      link_to(e, title: 'Details') do
+      link_to(employee_expense_path(e.employee, e), title: 'Details') do
         tag.i(class: 'icon-document') + ' Details'
       end
     end
