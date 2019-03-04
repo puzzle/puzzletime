@@ -1,6 +1,6 @@
-= f.labeled(:submission_date, span: 5) do
+= f.labeled(:submission_date) do
   = f.string_field :submission_date, value: expense_submission_date, disabled: true
-= f.labeled_input_field :payment_date, span: 5
+= f.labeled_input_field :payment_date
 = f.labeled_input_field :employee_id unless parent
 = f.labeled_input_field :amount
 = f.labeled_input_field :kind
