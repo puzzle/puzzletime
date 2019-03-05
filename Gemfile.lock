@@ -169,13 +169,6 @@ GEM
       dry-equalizer (~> 0.2)
       dry-logic (~> 0.4, >= 0.4.0)
       dry-types (~> 0.13.1)
-    dry_crud_jsonapi (0.1.1)
-      jsonapi-rails (~> 0.3.1)
-      rails (~> 5.0)
-    dry_crud_jsonapi_swagger (0.2.0)
-      dry_crud_jsonapi (~> 0.1.0)
-      rswag-ui (~> 2.0.5)
-      swagger-blocks (~> 2.0.2)
     erubi (1.8.0)
     execjs (2.7.0)
     fabrication (2.20.1)
@@ -183,6 +176,8 @@ GEM
       i18n (>= 0.7)
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
+    fast_jsonapi (1.5)
+      activesupport (>= 4.2)
     ffi (1.9.25)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
@@ -208,17 +203,6 @@ GEM
     jquery-ui-rails (6.0.1)
       railties (>= 3.2.16)
     json (2.1.0)
-    jsonapi-deserializable (0.2.0)
-    jsonapi-parser (0.1.1)
-    jsonapi-rails (0.3.1)
-      jsonapi-parser (~> 0.1.0)
-      jsonapi-rb (~> 0.5.0)
-    jsonapi-rb (0.5.0)
-      jsonapi-deserializable (~> 0.2.0)
-      jsonapi-serializable (~> 0.3.0)
-    jsonapi-renderer (0.2.0)
-    jsonapi-serializable (0.3.0)
-      jsonapi-renderer (~> 0.2.0)
     kaminari (1.1.1)
       activesupport (>= 4.1.0)
       kaminari-actionview (= 1.1.1)
@@ -464,10 +448,9 @@ DEPENDENCIES
   database_cleaner
   delayed_cron_job
   delayed_job_active_record
-  dry_crud_jsonapi
-  dry_crud_jsonapi_swagger
   fabrication
   faker
+  fast_jsonapi
   haml
   headless
   highrise
@@ -498,6 +481,7 @@ DEPENDENCIES
   request_profiler
   request_store
   rqrcode
+  rswag-ui
   rubocop
   rubocop-checkstyle_formatter
   sass-rails
@@ -508,6 +492,7 @@ DEPENDENCIES
   sentry-raven
   simplecov-rcov!
   spring
+  swagger-blocks
   turbolinks
   uglifier
   validates_by_schema
@@ -515,4 +500,4 @@ DEPENDENCIES
   web-console
 
 BUNDLED WITH
-   1.17.3
+   2.0.1

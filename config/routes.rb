@@ -9,7 +9,18 @@ Rails.application.routes.draw do
 
   root to: 'worktimes#index'
 
-  mount DryCrudJsonapiSwagger::Engine => '/apidocs'
+  # mount DryCrudJsonapiSwagger::Engine => '/apidocs'
+
+  namespace :api do
+    defaults format: :jsonapi do
+      namespace :v1 do
+        resources :employees, only: [:index, :show]
+      end
+    end
+
+    mount Rswag::Ui::Engine => 'docs'
+    get '/docs/:api_version', to: 'apidocs#show', constraints: { api_version: /v\d+/ }
+  end
 
   resources :absences, except: [:show]
 
