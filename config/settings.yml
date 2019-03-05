@@ -26,6 +26,10 @@ regular_holidays:
     - 26
     - 12
 
+api_client:
+  user: <%= ENV['RAILS_API_USER'] || SecureRandom.hex %>
+  password: <%= ENV['RAILS_API_PASSWORD'] || SecureRandom.hex %>
+
 # LDAP configuration
 ldap:
   connection:
@@ -65,9 +69,9 @@ small_invoice:
 defaults:
   report_type: absolute_day
   start_hour: 8
-  country: CH
-  vat: 7.7 # percent
-  currency: CHF
+  country: <%= ENV['RAILS_PTIME_COUNTRY'] || 'CH' %>
+  vat: <%= ENV['RAILS_PTIME_VAT'] || 7.7 %>
+  currency: <%= ENV['RAILS_PTIME_CURRENCY'] || 'CHF' %>
   # Month number the business year starts (e.g. 1 for 1.1.YYYY, 7 for 1.7.YYYY)
   business_year_start_month: 7
   payment_period: 30 # days
@@ -86,7 +90,7 @@ employees:
 
 clients:
   # The client id of the company using this application
-  company_id: 4
+  company_id: <%= ENV['RAILS_PTIME_COMPANY_ID'] || 4 %>
 
 committed_worktimes:
   notification:

@@ -64,19 +64,19 @@
               %td
                 .data-item
                   %span.figure= f(order.offered_amount.to_f)
-                  %span.unit CHF
+                  %span.unit= currency
               %td
                 .data-item
                   %span.figure= f(order.supplied_amount.to_f)
-                  %span.unit CHF
+                  %span.unit= currency
               %td
                 .data-item
                   %span.figure= f(order.billable_amount.to_f)
-                  %span.unit CHF
+                  %span.unit= currency
               %td.right
                 .data-item
                   %span.figure= f(order.billed_amount.to_f)
-                  %span.unit CHF
+                  %span.unit= currency
               %td.right
                 .data-item
                   - if order.billability
@@ -89,17 +89,17 @@
                 .data-item
                   - if order.offered_rate
                     %span.figure= f(order.offered_rate)
-                    %span.unit CHF/Std.
+                    %span.unit= "#{currency}/Std."
               %td
                 .data-item
                   - if order.billed_rate
                     %span.figure= f(order.billed_rate)
-                    %span.unit CHF/Std.
+                    %span.unit= "#{currency}/Std."
               %td
                 .data-item
                   - if order.average_rate
                     %span.figure= format_order_average_rate(order.average_rate)
-                    %span.unit CHF/Std.
+                    %span.unit= "#{currency}/Std."
               - @target_scopes.each do |scope|
                 %td
                   = order_target_icon(order.target(scope.id))

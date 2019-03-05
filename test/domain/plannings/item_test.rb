@@ -90,10 +90,10 @@ class PlanningItemTest < ActiveSupport::TestCase
   end
 
   test 'with unpaid vacation' do
-    e1 = Employment.create!(employee_id: employees(:pascal).id,
-                            percent: 0,
-                            start_date: '2000-01-03',
-                            end_date: '2000-02-03')
+    e1 = Fabricate(:employment, employee: employees(:pascal),
+                                percent: 0,
+                                start_date: '2000-01-03',
+                                end_date: '2000-02-03')
 
     i = Plannings::Item.new
     i.employment = e1

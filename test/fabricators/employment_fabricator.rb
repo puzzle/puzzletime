@@ -18,6 +18,10 @@
 #
 
 Fabricator(:employment) do
+  employee
   percent    { 80 }
   start_date { 1.year.ago }
+  employment_roles_employments(count: 1) do |attrs|
+    Fabricate.build(:employment_roles_employment, percent: attrs[:percent])
+  end
 end

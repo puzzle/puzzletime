@@ -186,6 +186,7 @@ de-CH:
         committed_worktimes_at: Letzte freigegebene Periode
         reviewed_worktimes_at: Letzte kontrollierte Periode
         probation_period_end_date: Ende Probezeit
+        graduation: Abschluss
         phone_office: Telefon Büro
         phone_private: Telefon Privat
         street: Strasse
@@ -196,6 +197,7 @@ de-CH:
         emergency_contact_phone: Notfallnummer
         marital_status: Zivilstand
         social_insurance: AHV-Nummer
+        nationalities: Nationalitäten
         additional_information: Zusätzliche Informationen
         crm_key: Highrise ID
       employee/marital_statuses:

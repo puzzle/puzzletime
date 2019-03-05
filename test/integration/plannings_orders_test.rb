@@ -251,7 +251,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
     find('.add').click
 
-    selectize('add_employee_select_id', 'Dolores Pedro')
+    selectize('add_employee_select_id', 'Dolores Pedro', no_click: true)
     page.assert_selector('#planning_row_employee_2_work_item_4', text: 'Dolores Pedro')
     page.assert_selector('#planning_row_employee_2_work_item_4 .day',
                          count: workdays_next_n_months(3)
@@ -262,7 +262,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
   test 'Select does not show already present employees' do
     assert find('#planning_row_employee_7_work_item_4 .legend').text.include?('Waber Mark')
     find('.add').click
-    assert_not open_selectize('add_employee_select_id').text.include?('Waber Mark')
+    assert_not open_selectize('add_employee_select_id', no_click: true).text.include?('Waber Mark')
   end
 
   test 'Should not be able to move an empty selection' do
@@ -446,7 +446,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
     find('.add').click
 
-    selectize('add_employee_select_id', 'Dolores Pedro')
+    selectize('add_employee_select_id', 'Dolores Pedro', no_click: true)
     page.assert_selector('#planning_row_employee_2_work_item_4', text: 'Dolores Pedro')
     page.assert_selector('#planning_row_employee_2_work_item_4 .day',
                          count: workdays_next_n_months(6)

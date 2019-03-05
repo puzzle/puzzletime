@@ -438,6 +438,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       assert selecti0.has_selector?('.selectize-input .item', text: 'Hauswart Hans')
       selecti0.find('.selectize-input').click # populate & open dropdown
       assert selecti0.has_selector?('.selectize-dropdown-content .option', count: 3)
+      find('body').send_keys(:escape) # close dropdown
 
       selecti1 = find('#order_order_contacts_attributes_1_contact_id_or_crm + .selectize-control')
       assert selecti1.has_selector?('.selectize-input .item', text: 'Nader Fred')

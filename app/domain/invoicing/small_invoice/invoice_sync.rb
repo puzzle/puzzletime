@@ -100,8 +100,7 @@ module Invoicing
         if invoice.destroyable? || force
           invoice.destroy!
         elsif invoice.status != 'deleted'
-          invoice.status = 'deleted'
-          invoice.save!
+          invoice.update_attribute(:status, 'deleted')
         end
       end
 

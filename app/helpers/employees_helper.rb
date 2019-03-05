@@ -22,6 +22,7 @@ module EmployeesHelper
   def format_current_employment_roles(employee, separator = ', ')
     employment = employee.current_employment
     return if employment.nil?
+
     safe_join(employment.employment_roles_employments.map do |ere|
       [ere.employment_role.name,
        ere.employment_role_level.present? ? ere.employment_role_level.name : nil,
@@ -29,45 +30,4 @@ module EmployeesHelper
     end, separator)
   end
 
-  def version_author(version)
-    if version.version_author.present?
-      employee = Employee.where(id: version.version_author).first
-      employee.to_s if employee.present?
-    end
-  end
-
-  def version_changes(version)
-    item_class = version.item_type.constantize
-    safe_join(version.changeset) do |attr, (from, to)|
-      unless from.blank? && to.blank?
-        content_tag(:div, version_attribute_change(item_class, attr, from, to))
-      end
-    end
-  end
-
-  def version_attribute_change(item_class, attr, from, to)
-    key = version_attribute_change_key(from, to)
-    t("version.attribute_change.#{key}", version_attribute_change_args(item_class, attr, from, to))
-  end
-
-  def version_attribute_change_key(from, to)
-    if from.present? && to.present?
-      'from_to'
-    elsif from.present?
-      'from'
-    elsif to.present?
-      'to'
-    end
-  end
-
-  def version_attribute_change_args(item_class, attr, from, to)
-    attr_s = attr.to_s
-    if item_class.defined_enums[attr_s]
-      to = item_class.human_attribute_name([attr_s.pluralize, to].join('.'))
-    end
-
-    { attr: item_class.human_attribute_name(attr),
-      from: f(from),
-      to: f(to) }
-  end
 end

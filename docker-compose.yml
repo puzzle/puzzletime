@@ -4,57 +4,26 @@
 #  https://github.com/puzzle/puzzletime.
 
 
-version: '3'
+version: '2'
+
 services:
-  rails:
-    image: "puzzle.ch/puzzletime:development"
-    # for prod env:
-    # image: "puzzle.ch/puzzletime"
-    volumes:
-      - /mnt/puzzletime_rails_root:/opt/app-root/local-src
-    ports:
-      - "3000:8080"
-    environment:
-      # for prod env:
-      # - RAILS_ENV=production
-      # - SECRET_KEY_BASE=qwefjqweofjqewfojewfoe
-      - RAILS_ENV=development
-      - RAILS_DB_HOST=database
-      - RAILS_DB_PORT=5432
-      - RAILS_DB_ADAPTER=postgresql
-      - RAILS_DB_NAME=puzzletime_development
-      - RAILS_DB_USERNAME=puzzletime
-      - RAILS_DB_PASSWORD=puzzletime
-      - RAILS_TEST_DB_HOST=test_database
-      - RAILS_TEST_DB_NAME=puzzletime_test
-      - RAILS_TEST_DB_USERNAME=puzzletime
-      - RAILS_TEST_DB_PASSWORD=puzzletime
-      - RAILS_MEMCACHED_HOST=cache
-      - RAILS_MEMCACHED_PORT=11211
-    depends_on:
-      - database
-      - test_database
-      - cache
-  database:
+
+  ptimedb:
     image: postgres:9.3
+    ports:
+      - '5432:5432'
     environment:
       - POSTGRES_DB=puzzletime_development
       - POSTGRES_USER=puzzletime
-      - POSTGRES_PASSWORD=puzzletime
-      - PGDATA=/var/lib/postgresql/data/pgdata
-    volumes:
-      - /mnt/puzzletime_postgres_files/dev/pgdata:/var/lib/postgresql/data/pgdata
-  test_database:
-    image: postgres:9.3
-    environment:
-      - POSTGRES_DB=puzzletime_test
-      - POSTGRES_USER=puzzletime
-      - POSTGRES_PASSWORD=puzzletime
-      - PGDATA=/var/lib/postgresql/data/pgdata
-    volumes:
-      - /mnt/puzzletime_postgres_files/test/pgdata:/var/lib/postgresql/data/pgdata
-  debug:
-    image: busybox
-    command: tail -f /etc/hosts
-  cache:
+      - POSTGRES_PASSWORD=timepuzzle
+
+  ptimecache:
     image: memcached
+    ports:
+      - '11211:11211'
+
+  ptimemailcatcher:
+    image: schickling/mailcatcher
+    ports:
+      - '1025:1025'
+      - '1080:1080'

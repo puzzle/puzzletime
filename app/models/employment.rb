@@ -20,6 +20,8 @@
 class Employment < ActiveRecord::Base
   DAYS_PER_YEAR = 365.25
 
+  has_paper_trail
+
   belongs_to :employee
   has_many :employment_roles_employments,
            -> { order(percent: :desc) },
@@ -37,6 +39,7 @@ class Employment < ActiveRecord::Base
             numericality: { greater_or_equal_than: 0, less_than_or_equal_to: 366, allow_blank: true }
   validates :start_date, :end_date, timeliness: { date: true, allow_blank: true }
   validate :valid_period
+  validates :employment_roles_employments, presence: true
 
   before_create :update_previous_end_date
 
@@ -50,13 +53,13 @@ class Employment < ActiveRecord::Base
       conditions = ['']
 
       if period.start_date
-        conditions.first << '(end_date is NULL OR end_date >= ?)'
+        conditions.first << '("employments"."end_date" is NULL OR "employments"."end_date" >= ?)'
         conditions << period.start_date
       end
 
       if period.end_date
         conditions.first << ' AND ' if conditions.first.present?
-        conditions.first << 'start_date <= ?'
+        conditions.first << '"employments"."start_date" <= ?'
         conditions << period.end_date
       end
 
@@ -122,7 +125,7 @@ class Employment < ActiveRecord::Base
   private
 
   def vacations_per_period(period, days_per_year)
-    period.length / DAYS_PER_YEAR * percent_factor * days_per_year
+    period.vacation_factor_sum * percent_factor * days_per_year
   end
 
   # updates the end date of the previous employement
