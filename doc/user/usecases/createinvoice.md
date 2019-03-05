@@ -1,11 +1,9 @@
 
 ## Rechnung erstellen
-1. Öffne das Puzzle Time
-1. Wähle Tab Aufträge
-1. Klicke in den gewünschten Auftrag
+1. Wähle einen Auftrag aus
 1. Wechsle auf Tab Rechnungen
 1. Wähle "+ erstellen"
-1. Fülle die Felder der Eingabe Maske wie folgt aus:
+1. Fülle die Felder der Eingabemaske wie folgt aus:
    1. Leistungsperiode für den gewünschten Monat oder Zeitraum
    1. gewünschte Mitarbeiter anwählen
    1. gewünschte Buchungsposition anwählen
