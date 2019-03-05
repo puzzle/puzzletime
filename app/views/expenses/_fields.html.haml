@@ -1,21 +1,8 @@
-= f.labeled(:submission_date) do
-  = f.string_field :submission_date, value: expense_submission_date, disabled: true
+= expenses_submission_field(f)
 = f.labeled_input_field :payment_date
 = f.labeled_input_field :employee_id unless parent
 = f.labeled_input_field :amount
 = f.labeled_input_field :kind
-= f.labeled(:order_id, required: true) do
-  = select_tag('expense_order_id',
-                work_item_option(@expense&.order),
-                placeholder: 'Suchen...',
-                autocomplete: 'off',
-                class: entry.new_record? ? 'initial-focus' : '',
-                required: true,
-                data: {autocomplete: 'work_item',
-                    url: search_orders_path(only_open: true)})
-
+= expenses_order_field(f)
 = f.labeled_input_field :description
-= f.labeled_file_field :receipt, required: true
-= f.labeled(' ') do
-  %big
-    %bold= t('expenses.attachment.hint')
+= expenses_file_field(f)

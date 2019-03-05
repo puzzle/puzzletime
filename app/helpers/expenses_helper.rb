@@ -81,8 +81,44 @@ module ExpensesHelper
     end
   end
 
-  def expense_submission_date
-    I18n.l(entry.submission_date || Time.zone.today)
+  def expenses_submission_field(form)
+    date =
+      if entry.new_record? || entry.rejected?
+        Time.zone.today
+      else
+        entry.submission_date
+      end
+
+    form.labeled(:submission_date) do
+      form.string_field(:submission_date, value: I18n.l(date), disabled: true)
+    end
+  end
+
+  def expenses_order_field(form)
+    form.labeled(:order_id, required: true) do
+      select_tag(
+        'expense_order_id',
+        work_item_option(@expense&.order),
+        name: 'expense[order_id]',
+        placeholder: 'Suchen...',
+        autocomplete: 'off',
+        class: entry.new_record? ? 'initial-focus' : '',
+        required: true,
+        data: {
+          autocomplete: 'work_item',
+          url: search_orders_path(only_open: true)
+        }
+      )
+    end
+  end
+
+  def expenses_file_field(form)
+    safe_join(
+      [
+        form.labeled_file_field(:receipt, required: !entry.receipt.attached?),
+        form.labeled(' ') { t('expenses.attachment.hint') }
+      ]
+    )
   end
 
 end
