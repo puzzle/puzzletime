@@ -1,8 +1,7 @@
 ## Positionen erfassen
 Nachfolgend wird beschrieben wie eine neue Position in einem Auftrag erfasst wird
 
-1. Wähle Tab Aufträge
-1. Klicke in den gewünschten Auftrag
+1. Wähle einen Auftrag aus
 1. Wechsle auf Tab Positionen
 1. Wähle "+ Buchungsposition hinzufügen"
 1. Fülle die Felder der Eingabe Maske wie folgt aus:
