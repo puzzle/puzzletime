@@ -5,7 +5,7 @@ Zu jedem Auftrag werden im Tab "Vertrag" die Vertragsdetails erfasst. Diese Anga
 Die nachfolgende Aufzählung beschreibt Schritt für Schritt die Erfassung eines Vertrages:
 
 1. Wähle einen Auftrag aus
-1. Wähle Tab Vertrag
+1. Wechsle auf Tab Vertrag
 1. Fülle die Felder der Eingabe Maske wie folgt aus:
    1. Vertragsnummer erfassen - diese erscheint auf Rechnung
    1. Vertragsdauer erfassen
