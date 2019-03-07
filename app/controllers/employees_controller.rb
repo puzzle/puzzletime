@@ -5,13 +5,24 @@
 
 
 class EmployeesController < ManageController
+  include Scopable
+  include DryCrudJsonapi
+  include DryCrudJsonapiSwagger
 
-  self.permitted_attrs = [:firstname, :lastname, :shortname, :email, :ldapname,
+  swagger_param :index, :scope, type: 'string',
+                enum: ['current'],
+                description: <<~DESC
+                              The query scope:
+                                * current - only employees with a current employment
+                             DESC
+
+  self.permitted_attrs += [:firstname, :lastname, :shortname, :email, :ldapname,
                           :department_id, :crm_key, :probation_period_end_date,
-                          :management, :phone_office, :phone_private, :street,
-                          :postal_code, :city, :birthday, :emergency_contact_name,
+                          :graduation, :management, :phone_office, :phone_private,
+                          :street, :postal_code, :city, :birthday, :emergency_contact_name,
                           :emergency_contact_phone, :marital_status,
-                          :social_insurance, :additional_information]
+                          :social_insurance, :additional_information,
+                          nationalities: []]
 
   if Settings.employees.initial_vacation_days_editable
     self.permitted_attrs += [:initial_vacation_days]
@@ -69,6 +80,6 @@ class EmployeesController < ManageController
   private
 
   def list_entries
-    super.includes(:department).references(:department)
+    scope_entries_by(super.includes(:department, :current_employment).references(:department), :current)
   end
 end

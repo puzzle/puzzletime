@@ -50,7 +50,7 @@ class SectorRevenueReportTest < ActiveSupport::TestCase
     planning(Date.new(2000, 11, 10), :allgemein)
 
     r = report
-    assert_equal [oev, verwaltung], r.entries.to_a
+    assert_equal [oev, verwaltung].sort, r.entries.to_a.sort
     assert_equal Hash[[verwaltung.id, Date.new(2000, 7, 1)] => 6.0,
                       [verwaltung.id, Date.new(2000, 8, 1)] => 3.0,
                       [oev.id, Date.new(2000, 7, 1)] => 170.0], r.ordertime_hours

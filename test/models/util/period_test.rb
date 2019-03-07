@@ -15,6 +15,27 @@ class PeriodTest < ActiveSupport::TestCase
     @holy_day = Period.new(Date.new(2006, 1, 1), Date.new(2006, 1, 1))
   end
 
+  def test_vacation_days_per_year_factors
+    assert_equal 1.0, Period.new(Date.new(2000, 1, 1), Date.new(2000, 12, 31)).vacation_factor_sum
+    assert_equal 1.0, Period.new(Date.new(2001, 1, 1), Date.new(2001, 12, 31)).vacation_factor_sum
+    assert_equal 2.0, Period.new(Date.new(2000, 1, 1), Date.new(2001, 12, 31)).vacation_factor_sum
+    assert_equal 4.0, Period.new(Date.new(2001, 1, 1), Date.new(2004, 12, 31)).vacation_factor_sum
+    assert_equal 5.0, Period.new(Date.new(2000, 1, 1), Date.new(2004, 12, 31)).vacation_factor_sum
+
+    assert_in_delta 0.497, Period.new(Date.new(2000, 1, 1), Date.new(2000, 6, 30)).vacation_factor_sum
+    assert_in_delta 0.495, Period.new(Date.new(2001, 1, 1), Date.new(2001, 6, 30)).vacation_factor_sum
+
+    assert_in_delta 1.495, Period.new(Date.new(2000, 1, 1), Date.new(2001, 6, 30)).vacation_factor_sum
+    assert_in_delta 1.495, Period.new(Date.new(2001, 1, 1), Date.new(2002, 6, 30)).vacation_factor_sum
+    assert_in_delta 0.005, Period.new(Date.new(2000, 12, 1), Date.new(2000, 12, 2)).vacation_factor_sum
+
+    assert_equal 6.0, Period.new(Date.new(2000, 1, 1), Date.new(2005, 12, 31)).vacation_factor_sum
+    assert_equal 4.0, Period.new(Date.new(2000, 1, 1), Date.new(2003, 12, 31)).vacation_factor_sum
+
+    assert_equal 0, Period.new(Date.new(2004, 1, 1), Date.new(2003, 12, 31)).vacation_factor_sum
+    assert_equal 0, Period.new(Date.new(2004, 12, 31), Date.new(2004, 12, 1)).vacation_factor_sum
+  end
+
   def test_parse
     travel_to Date.new(2000, 1, 5)
     period = Period.parse('3M')

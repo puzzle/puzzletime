@@ -278,7 +278,7 @@ class CreatorTest < ActiveSupport::TestCase
     end
 
     assert_equal %w(2016-10-11 2016-10-12 2016-10-17 2016-10-25 2016-10-26),
-                 c.plannings.map { |p| p.date.to_s }
+                 c.plannings.map { |p| p.date.to_s }.sort
     assert_empty c.errors
 
     assert_equal 20, p4.reload.percent

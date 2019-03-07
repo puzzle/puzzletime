@@ -42,6 +42,7 @@ class RoleDistributionReportTest < ActiveSupport::TestCase
   def setup_employments
     pedro = employees(:various_pedro)
     pedro.update!(department: departments(:devone)) # 100%
+    pedro.employments.last.employment_roles_employments.delete_all
     pedro.employments.last.employment_roles_employments.create!(
       employment_role_id: employment_roles(:software_engineer).id,
       employment_role_level_id: employment_role_levels(:senior).id,
@@ -59,6 +60,7 @@ class RoleDistributionReportTest < ActiveSupport::TestCase
 
     pablo = employees(:next_year_pablo)
     pablo.update!(department: departments(:devone)) # 100%
+    pablo.employments.last.employment_roles_employments.delete_all
     pablo.employments.last.employment_roles_employments.create!(
       employment_role_id: employment_roles(:software_developer).id,
       employment_role_level_id: employment_role_levels(:professional).id,
@@ -76,6 +78,7 @@ class RoleDistributionReportTest < ActiveSupport::TestCase
 
     john = employees(:long_time_john)
     john.update!(department: departments(:devtwo)) # 90%
+    john.employments.last.employment_roles_employments.delete_all
     john.employments.last.employment_roles_employments.create!(
       employment_role_id: employment_roles(:ux_consultant).id,
       employment_role_level_id: employment_role_levels(:professional).id,

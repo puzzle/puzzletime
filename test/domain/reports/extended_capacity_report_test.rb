@@ -81,7 +81,8 @@ class ExtendedCapacityReportTest < ActiveSupport::TestCase
   private
 
   def create_worktimes
-    employee.employments.create(start_date: period.start_date, percent: 100)
+    employee.employments.create!(start_date: period.start_date, percent: 100,
+                                employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
 
     # billable project
     create_time(work_items(:webauftritt), 2, true)

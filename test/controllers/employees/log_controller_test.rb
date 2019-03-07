@@ -19,7 +19,7 @@ class Employees::LogControllerTest < ActionController::TestCase
 
   test 'renders empty log' do
     get :index, params: { id: pedro.id }
-    assert_match(/Keine Änderungen/, response.body)
+    assert_match(/Keine Einträge gefunden/, response.body)
   end
 
   test 'renders log in correct order' do
@@ -28,10 +28,12 @@ class Employees::LogControllerTest < ActionController::TestCase
     pedro.update_attributes(committed_worktimes_at: Time.zone.now) # should not appear in log
     get :index, params: { id: pedro.id }
     assert_select('.log tbody tr', count: 2)
-    assert_select('.log tbody tr:nth-child(1) td:nth-child(2)', text: 'Telefon Privat wurde auf «+41791234567» gesetzt.')
-    assert_select('.log tbody tr:nth-child(2) td:nth-child(2)', text: 'Strasse wurde auf «Belpstrasse 37» gesetzt.' \
-                                                                      'PLZ wurde auf «3007» gesetzt.' \
-                                                                      'Ort wurde auf «Bern» gesetzt.')
+    assert_select('.log tbody tr:nth-child(1) td:nth-child(2)', text: "Der Mitarbeiter #2 wurde bearbeitet.\n" \
+                                                                      'Telefon Privat des Mitarbeiters wurde auf «+41791234567» gesetzt.')
+    assert_select('.log tbody tr:nth-child(2) td:nth-child(2)', text: "Der Mitarbeiter #2 wurde bearbeitet.\n" \
+                                                                      'Strasse des Mitarbeiters wurde auf «Belpstrasse 37» gesetzt.' \
+                                                                      'PLZ des Mitarbeiters wurde auf «3007» gesetzt.' \
+                                                                      'Ort des Mitarbeiters wurde auf «Bern» gesetzt.')
   end
 
   private

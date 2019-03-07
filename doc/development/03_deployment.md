@@ -22,6 +22,8 @@ gesetzt werden. Werte ohne Default müssen in der Regel definiert werden.
 
 | Umgebungsvariable | Beschreibung | Default |
 | --- | --- | --- |
+| RAILS_API_USER | Benutzername für API HTTP basic auth | |
+| RAILS_API_PASSWORD | Passwort für API HTTP basic auth | |
 | RAILS_DB_NAME | Name der Datenbank | `puzzletime_[environment]` |
 | RAILS_DB_USERNAME | Benutzername, um auf die Datenbank zu verbinden. | - |
 | RAILS_DB_PASSWORD | Passwort, um auf die Datenbank zu verbinden. | - |
@@ -45,3 +47,49 @@ gesetzt werden. Werte ohne Default müssen in der Regel definiert werden.
 | RAILS_LDAP_ENCRYPTION |  | simple_tls |
 | RAILS_LDAP_EXTERNAL_DN |  | - |
 | RAILS_LDAP_GROUP_DN |  | - |
+
+### OpenShift Deployment Example
+Note: The following steps can be used to get an idea of how to deploy PuzzleTime on OpenShift.
+
+Create a new project
+
+    oc new-project puzzle-time
+
+Create a database service
+
+    oc new-app \
+    -e POSTGRESQL_USER=username \
+    -e POSTGRESQL_PASSWORD=password \
+    -e POSTGRESQL_DATABASE=db_name \
+    registry.access.redhat.com/rhscl/postgresql-95-rhel7  --name=pg-ptime
+
+Note: For production you should add a persistent volume to the service
+
+Create a memcached service
+
+    oc new-app --docker-image=memcached
+
+Create the frontend service
+
+    oc new-app puzzle/ose3-rails~https://github.com/puzzle/puzzletime.git -e RAILS_DB_NAME=db_name -e RAILS_DB_USERNAME=username -e RAILS_DB_PASSWORD=password -e RAILS_DB_HOST=pg-ptime.puzzle-time.svc -e RAILS_MEMCACHED_HOST=memcached.puzzle-time.svc --name=puzzletime
+
+Expose the frontend service
+
+    oc expose svc/puzzletime --hostname=puzzletime.nubiq.ch
+
+Get the pods
+
+    oc get pods
+
+Open a remote shell session to the frontend container
+
+    oc rsh puzzletime-<id>
+
+Populate the database
+
+    bundle exec rake db:migrate
+    bundle exec rake db:seed
+
+Create the testusers
+
+    bundle exec rake db:create_testuser

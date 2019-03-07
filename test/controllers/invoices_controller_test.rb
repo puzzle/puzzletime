@@ -62,7 +62,7 @@ class InvoicesControllerTest < ActionController::TestCase
 
     get :preview_total, xhr: true, params: params.merge(format: :js)
 
-    preview_value = response.body[/html\('(.+) CHF'\)/, 1].to_f
+    preview_value = response.body[/html\('(.+) #{Settings.defaults.currency}'\)/, 1].to_f
     assert_equal(entry.calculated_total_amount, preview_value)
   end
 

@@ -41,10 +41,26 @@
   - t.foot do |_|
     %tr.times_total_sum
       %td.text-right
-        Total bezahlte
+        Total
+      %td.text-right
+        = f(@total_amount)
+      %td.text-right
+        = f(@total_hours)
+      %td{colspan: 5}
+    %tr.times_total_sum
+      %td.text-right
+        Bezahlt
       %td.text-right
         = f(@total_amount_paid)
       %td.text-right
         = f(@total_hours_paid)
+      %td{colspan: 5}
+    %tr.times_total_sum
+      %td.text-right
+        Offen
+      %td.text-right
+        = f(@total_amount_open)
+      %td.text-right
+        = f(@total_hours_open)
       %td{colspan: 5}
         -# Append one more %td than needed because of last-child padding

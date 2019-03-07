@@ -23,7 +23,7 @@ end
 require File.expand_path('../../config/environment', __FILE__)
 Rails.env = 'test'
 require 'rails/test_help'
-require 'mocha/mini_test'
+require 'mocha/minitest'
 require 'capybara/rails'
 Settings.reload!
 
@@ -34,10 +34,11 @@ Capybara.register_driver :selenium do |app|
   require 'selenium/webdriver'
 
   Selenium::WebDriver::Firefox::Binary.path = ENV['FIREFOX_PATH'] if ENV['FIREFOX_PATH']
-  capa = Selenium::WebDriver::Remote::Capabilities.firefox(marionette: false)
+  capa = Selenium::WebDriver::Remote::Capabilities.firefox(marionette: true)
   Capybara::Selenium::Driver.new(app, browser: :firefox, desired_capabilities: capa)
 end
 
+Capybara.server = :puma, { Silent: true }
 Capybara.server_port = ENV['CAPYBARA_SERVER_PORT'].to_i if ENV['CAPYBARA_SERVER_PORT']
 Capybara.default_driver = :selenium
 Capybara.default_max_wait_time = 5

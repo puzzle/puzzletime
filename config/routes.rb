@@ -5,8 +5,11 @@
 
 
 Rails.application.routes.draw do
+  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
   root to: 'worktimes#index'
+
+  mount DryCrudJsonapiSwagger::Engine => '/apidocs'
 
   resources :absences, except: [:show]
 
@@ -197,7 +200,8 @@ Rails.application.routes.draw do
     post :logout
   end
 
-  get 'status', to: 'status#index'
+  get 'status/health', to: 'status#health'
+  get 'status/readiness', to: 'status#readiness'
 
   get '/404', to: 'errors#404'
   get '/500', to: 'errors#500'

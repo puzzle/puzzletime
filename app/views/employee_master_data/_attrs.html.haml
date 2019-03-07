@@ -40,6 +40,8 @@
       .col-md-6
         %h4 Personendaten
         = labeled_attr(@employee, :shortname)
+        - if @employee.graduation.present?
+          = labeled_attr(@employee, :graduation)
         - if @employee.birthday.present?
           = labeled(captionize(:birthday, @employee.class)) do
             = localize_date(@employee.birthday)
@@ -48,6 +50,8 @@
             = @employee.class.human_attribute_name("marital_statuses.#{@employee.marital_status}")
         - if @employee.social_insurance.present?
           = labeled_attr(@employee, :social_insurance)
+        - if @employee.nationalities.present?
+          = labeled_attr(@employee, :nationalities)
         - if Crm.instance && @employee.crm_key.present?
           = labeled(Crm.instance.crm_key_name) do
             = crm_contact_link(@employee, @employee.crm_key)
@@ -61,7 +65,7 @@
             - if @employee.emergency_contact_phone.present?
               = labeled(captionize(:emergency_contact_phone, @employee.class)) do
                 %i.icon-help
-                = link_to @employee.emergency_contact_phone, "tel:#{@employeeemergency_contact_phone}"
+                = link_to @employee.emergency_contact_phone, "tel:#{@employee.emergency_contact_phone}"
 
       .col-md-6
         %h4 Anstellung

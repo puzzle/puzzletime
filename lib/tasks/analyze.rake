@@ -7,17 +7,10 @@
 desc 'Run brakeman'
 task :brakeman do
   FileUtils.rm_f('brakeman-output.tabs')
-  # some files seem to cause brakeman to hang. ignore them
-  ignores = %w(app/views/evaluator/_detailrow.html.haml
-               app/views/evaluator/details.html.haml)
 
   begin
     Timeout.timeout(300) do
-      sh %W(brakeman -o brakeman-output.tabs
-            --skip-files #{ignores.join(',')}
-            -x ModelAttrAccessible
-            -q
-            --no-progress).join(' ')
+      sh 'brakeman'
     end
   rescue Timeout::Error
     puts "\nBrakeman took too long. Aborting."
@@ -34,7 +27,7 @@ namespace :rubocop do
             --format RuboCop::Formatter::CheckstyleFormatter
             --no-color
             --out rubocop-results.xml).join(' ')
-    rescue
+    rescue # rubocop:disable Style/RescueStandardError
       nil
     end
     true

@@ -27,9 +27,10 @@ default: &default
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: 5
   timeout: 5000
+  host: <%= ENV['RAILS_DB_HOST'] || '127.0.0.1' %>
+  port: <%= ENV['RAILS_DB_PORT'] || '5432' %>
   username: <%= ENV['RAILS_DB_USERNAME'] || 'puzzletime' %>
   password: <%= ENV['RAILS_DB_PASSWORD'] || 'timepuzzle' %>
-  host: <%= ENV['RAILS_DB_HOST'] || '127.0.0.1' %>
 
 development:
   <<: *default
@@ -68,6 +69,7 @@ development:
 test:
   <<: *default
   host: <%= ENV['RAILS_TEST_DB_HOST'] || '127.0.0.1' %>
+  port: <%= ENV['RAILS_TEST_DB_PORT'] || '5432' %>
   database: <%= ENV['RAILS_TEST_DB_NAME'] || 'puzzletime_test' %>
   username: <%= ENV['RAILS_TEST_DB_USERNAME'] || 'puzzletime' %>
   password: <%= ENV['RAILS_TEST_DB_PASSWORD'] || 'timepuzzle' %>
