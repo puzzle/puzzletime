@@ -43,7 +43,7 @@
     = country_select(:employee,
                      :nationalities,
                      { priority_countries: %w(CH LI DE AT FR IT), selected: entry.nationalities, locale: :de, format: :with_alpha2 },
-                     { required: true, multiple: true, class: 'form-control searchable' })
+                     { required: false, multiple: true, class: 'form-control searchable' })
 
   = f.labeled_input_fields :additional_information
 
