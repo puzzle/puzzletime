@@ -178,6 +178,7 @@ module Crm
         params.merge!(record_to_params(invalid_record, 'invalid_record')) if invalid_record.present?
       end
       Airbrake.notify(error, parameters)
+      Raven.capture_exception(error, extra: parameters)
     end
 
     def record_to_params(record, prefix = 'record')

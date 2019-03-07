@@ -33,6 +33,7 @@ gem 'rails_autolink'
 gem 'request_store'
 gem 'rqrcode'
 gem 'seed-fu'
+gem 'sentry-raven'
 gem 'validates_by_schema'
 gem 'validates_timeliness'
 # must be at the end

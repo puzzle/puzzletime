@@ -10,7 +10,7 @@ Folgende Umsysteme müssen vorgängig eingerichtet werden:
 * PostgreSQL
 * Memcached
 * SSL Zertifikat (optional)
-* Airbrake/Errbit (optional)
+* Sentry oder Airbrake/Errbit (optional)
 * Highrise CRM (optional)
 * Smallinvoice (optional)
 
@@ -47,6 +47,10 @@ gesetzt werden. Werte ohne Default müssen in der Regel definiert werden.
 | RAILS_LDAP_ENCRYPTION |  | simple_tls |
 | RAILS_LDAP_EXTERNAL_DN |  | - |
 | RAILS_LDAP_GROUP_DN |  | - |
+| PROMETHEUS_EXPORTER_HOST | Hostname wo der prometheus_exporter läuft. Schickt nichts wenn diese Variable nicht gesetzt ist. | - |
+| PROMETHEUS_EXPORTER_PORT | Port wo der prometheus_exporter läuft. | 9394 |
+| SENTRY_DSN | DSN der Sentry Instanz. Falls diese Variable nicht gesetzt ist, werden keine Fehlermeldungen verschickt. | - |
+| SENTRY_CURRENT_ENV | Environment für Sentry. Verwendet das RAILS_ENV, falls nichts angegeben wird. | - |
 
 ### OpenShift Deployment Example
 Note: The following steps can be used to get an idea of how to deploy PuzzleTime on OpenShift.
