@@ -23,6 +23,7 @@ pending:
   status: pending
   amount: 23
   payment_date: 2019-01-11
+  description: test
 
 approved:
   employee_id: 6
@@ -31,6 +32,7 @@ approved:
   order: hitobito_demo
   amount: 32
   payment_date: 2019-02-10
+  description: test
   reimbursement_date: 2019-03-01
   reviewer_id: 7
   reviewed_at: 2019-02-20 14:32:00
@@ -41,6 +43,7 @@ rejected:
   status: rejected
   amount: 32
   payment_date: 2019-02-10
+  description: test
   rejection: Rechnung fehlt
   reviewer_id: 7
   reviewed_at: 2019-01-20 14:32:00
@@ -51,6 +54,7 @@ deferred:
   status: deferred
   amount: 32
   payment_date: 2019-02-10
+  description: test
 
 payed:
   employee_id: 7
@@ -59,6 +63,7 @@ payed:
   order: hitobito_demo
   amount: 13
   payment_date: 2019-01-10
+  description: test
   reimbursement_date: 2019-02-01
   reviewer_id: 7
   reviewed_at: 2019-01-20 14:32:00
