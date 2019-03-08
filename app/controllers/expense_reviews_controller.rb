@@ -1,6 +1,6 @@
 class ExpenseReviewsController < ApplicationController
   before_action :authorize
-  helper_method :entry
+  helper_method :entry, :review_list
 
   def show
     entry.reimbursement_date = Time.zone.today.end_of_month
@@ -41,8 +41,12 @@ class ExpenseReviewsController < ApplicationController
     Expense.statuses.invert[value.to_i] || :pending
   end
 
+  def review_list
+    Expense.list.send(status)
+  end
+
   def next_expense
-    @next_expense ||= Expense.list.send(status).first
+    @next_expense ||= review_list.first
   end
 
   def redirect_path
