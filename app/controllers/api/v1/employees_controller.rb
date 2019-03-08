@@ -22,7 +22,7 @@ module Api
         entries = super.includes(:department,
                                  current_employment: {
                                    employment_roles_employments: :employment_role
-                                 }).references(:department)
+                                 })
         scoped(entries, :current)
       end
     end
