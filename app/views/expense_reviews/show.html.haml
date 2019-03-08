@@ -6,12 +6,14 @@
       %a{data: {toggle: :collapse, target: '.inlineedit'}}
         %i.icon-edit.primary.h4.text-primary
     .inlineedit.collapse.in
+      %h3 Spesen kontrollieren
       = render_attrs(entry, :submission_date, :payment_date, :employee_id, :amount, :kind_value, :description)
 
     .inlineedit.collapse
+      %h3 Spesen bearbeiten
       = standard_form(entry, cancel_url: expense_review_path(entry)) do |f|
         = hidden_field_tag :review, 1
-        = render 'expenses/fields', f: f, parent: false
+        = render 'expenses/fields_small', f: f, parent: false
 
     .inlineedit.collapse.in
       = render 'form'

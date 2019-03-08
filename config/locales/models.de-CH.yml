@@ -239,7 +239,7 @@ de-CH:
         status: Status
         order_id: Projekt
         payment_date: Kaufdatum
-        submission_date: Einreichungsdatum
+        submission_date: Eingereicht am
         receipt: Beleg
         reimbursement_month: Auszahlungsmonat
         reviewer_id: Visum
