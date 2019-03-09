@@ -43,6 +43,7 @@
 #= require accounting_posts
 #= require reports_orders
 #= require expenses
+#= require expense_reviews
 #= require turbolinks
 
 

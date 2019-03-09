@@ -1,7 +1,7 @@
 - @title ||= "Offene Spesen (#{review_list.count})"
 - receipt = entry.receipt
-.row.flex.columns
-  .col-12.col-md-7
+.row.columns
+  .col-md-7
     .pull-right
       %a{data: {toggle: :collapse, target: '.inlineedit'}}
         %i.icon-edit.primary.h4.text-primary
@@ -18,7 +18,7 @@
     .inlineedit.collapse.in
       = render 'form'
 
-  .col-12.col-md-5.divider.text-center
+  .col-md-5.divider.text-center
     - if attachment_displayable?(receipt)
       = attachment_image_tag receipt, class: 'img-responsive', show_link: true
     - else

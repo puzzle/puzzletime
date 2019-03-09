@@ -8,13 +8,13 @@
 #  status             :integer          default("pending"), not null
 #  amount             :decimal(12, 2)   not null
 #  payment_date       :date             not null
-#  description        :text
-#  rejection          :text
+#  description        :text             not null
+#  reason             :text
 #  reviewer_id        :bigint(8)
 #  reviewed_at        :datetime
 #  order_id           :bigint(8)
 #  reimbursement_date :date
-#  submission_date    :date             not null
+#  submission_date    :date
 #
 
 pending:
@@ -44,7 +44,7 @@ rejected:
   amount: 32
   payment_date: 2019-02-10
   description: test
-  rejection: Rechnung fehlt
+  reason: Rechnung fehlt
   reviewer_id: 7
   reviewed_at: 2019-01-20 14:32:00
 

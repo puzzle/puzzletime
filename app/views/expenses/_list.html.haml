@@ -14,7 +14,7 @@
 
     - by_month.each do |month, expenses|
       = plain_table_or_message(expenses, responsive: true, class: 'table-small-blocks') do |t|
-        - t.attrs(:payment_date, :kind_value, :amount, :status_value, :reviewer_id, :rejection, :reimbursement_month)
+        - t.attrs(:payment_date, :kind_value, :amount, :status_value, :reviewer_id, :reason, :reimbursement_month)
         - expense_details_col(t)
         - expense_duplicate_col(t)
         - expense_edit_col(t)

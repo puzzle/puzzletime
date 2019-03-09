@@ -1,29 +1,25 @@
 = form_for(entry, url: expense_review_path(entry), method: :post) do |f|
-  .row.columns.divider
-    .col-md-12
+  .row.columns.divider.mb-3
+    .col-12
       = render('shared/error_messages', errors: entry.errors, object: entry)
 
   .row.columns
-    .col-md-6.big-gutter-right
-      %h4 Freigabe
+    .col-md-6
       .form-group
         = f.label :reimbursement_date, Expense.human_attribute_name(:reimbursement_month)
-        = f.collection_select :reimbursement_date, expenses_reimbursement_dates, :first, :last, {}, { class: 'form-control'}
-
-      .hidden-md.hidden-lg.hidden-xl.mb-3
-        = f.button 'Freigeben', name: 'expense[status]', value: 'approved', class: 'btn btn-success mb-4', data: { disable_with: 'Freigeben' }
-
-    .col-md-6.big-gutter-left
-      %h4 Ablehnung
-      .form-group
-        = f.label :rejection
-        = f.text_area :rejection, rows: 3, class: 'form-control'
+        = f.collection_select :reimbursement_date, expenses_reimbursement_dates, :first, :last, {}, {class: 'form-control'}
 
   .row.columns
-    .col-md-6.big-gutter-right
-      = f.button 'Freigeben', name: 'expense[status]', value: 'approved', class: 'btn btn-success hidden-xs hidden-sm', data: { disable_with: 'Freigeben' }
-    .col-md-6.big-gutter-left
-      = f.button 'Ablehnen', name: 'expense[status]', value: 'rejected', class: 'btn btn-danger', data: { disable_with: 'Ablehnen' }
+    .col-md-6
+      .form-group
+        = f.label :reason
+        = f.text_area :reason, rows: 3, class: 'form-control'
+
+  .row.columns
+    .col-md-3
+      = f.button 'Freigeben', id: :approve_btn, name: 'expense[status]', value: 'approved', class: 'btn btn-success btn-block', disabled: true, data: { disable_with: 'Freigeben' }
+    .col-md-3.button-spacing
+      = f.button 'Ablehnen', id: :reject_btn, name: 'expense[status]', value: 'rejected', class: 'btn btn-danger btn-block', disabled: true, data: { disable_with: 'Ablehnen' }
 
   - unless entry.deferred?
     .row.columns.actions

@@ -17,7 +17,7 @@
   - if entry.rejected? || entry.approved?
     = labeled_attr(entry, :reviewer_id)
     - if entry.rejected?
-      = labeled_attr(entry, :rejection)
+      = labeled_attr(entry, :reason)
     - elsif entry.approved?
       = labeled_attr(entry, :reimbursement_month)
 

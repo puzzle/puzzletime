@@ -3,8 +3,6 @@ class ExpenseReviewsController < ApplicationController
   helper_method :entry, :review_list
 
   def show
-    entry.reimbursement_date = Time.zone.today.end_of_month
-
     unless entry.pending? || entry.deferred?
       redirect_to expenses_path(returning: true), notice: "#{entry} wurde bereits bearbeitet"
     end
@@ -31,8 +29,8 @@ class ExpenseReviewsController < ApplicationController
   end
 
   def attributes
-    attrs = params.require(:expense).permit(:status, :reimbursement_date, :rejection)
-    attrs = attrs[:status] == 'approved' ? attrs.except(:rejection) : attrs.except(:reimbursement_date)
+    attrs = params.require(:expense).permit(:status, :reimbursement_date, :reason)
+    attrs = attrs.except(:reimbursement_date) if attrs[:status] == 'rejected'
     attrs.merge(reviewer: current_user, reviewed_at: Time.zone.now)
   end
 

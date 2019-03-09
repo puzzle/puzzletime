@@ -8,13 +8,13 @@
 #  status             :integer          default("pending"), not null
 #  amount             :decimal(12, 2)   not null
 #  payment_date       :date             not null
-#  description        :text
-#  rejection          :text
+#  description        :text             not null
+#  reason             :text
 #  reviewer_id        :bigint(8)
 #  reviewed_at        :datetime
 #  order_id           :bigint(8)
 #  reimbursement_date :date
-#  submission_date    :date             not null
+#  submission_date    :date
 #
 
 class Expense < ActiveRecord::Base
