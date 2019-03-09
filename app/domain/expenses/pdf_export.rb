@@ -68,19 +68,40 @@ class Expenses::PdfExport
   end
 
   def add_header
-    pdf.column_box([pdf.bounds.left, pdf.bounds.top], columns: 3, width: pdf.bounds.width, height: 100) do
-      add_model_data
+    # pdf.column_box([pdf.bounds.left, pdf.bounds.top], columns: 3, width: pdf.bounds.width, height: 100) do
+    #   add_model_data
+    # end
+    pdf.bounding_box([pdf.bounds.left, pdf.bounds.top], width: pdf.bounds.width, height: 150) do
+      pdf.define_grid(columns: 2, rows: 1)
+
+      column1 = [:employee_id, :kind, :order_id, :status, nil, nil, { name: :amount, size: 15 }]
+      column2 = [:id, :reviewer_id, :reviewed_at, :reason, :reimbursement_month, :payment_date, :description, :receipt]
+
+      pdf.grid(0, 0).bounding_box do
+        add_model_data(column1)
+      end
+
+      pdf.grid(0, 1).bounding_box do
+        add_model_data(column2)
+      end
     end
   end
 
-  def add_model_data
-    model_data.each do |k, v|
-      add_text attribute(k, v)
+  def add_model_data(items)
+    items.each do |item|
+      add_text ' ' unless item
+      add_single_model_data item if item.is_a? Symbol
+      add_single_model_data item[:name], size: item[:size] if item.is_a? Hash
     end
   end
 
-  def add_text(text)
-    pdf.text text, inline_format: true
+  def add_single_model_data(key, **options)
+    add_text attribute(key, model_data[key]), options
+  end
+
+  def add_text(text, **options)
+    options[:inline_format] = true
+    pdf.text text, options
   end
 
   def format_employee(employee)
@@ -88,7 +109,11 @@ class Expenses::PdfExport
   end
 
   def format_value
-    "#{expense.amount} #{Settings.defaults.currency}"
+    format(
+      '%<amount>0.02f %<currency>s',
+      amount: expense.amount,
+      currency: Settings.defaults.currency
+    )
   end
 
   def format_order
@@ -100,21 +125,24 @@ class Expenses::PdfExport
   end
 
   def model_data # rubocop:disable Metrics/AbcSize
-    output = {}
-    output[:employee_id]         = format_employee(expense.employee)
-    output[:kind]                = expense.kind_value
-    output[:order_id]            = format_order if expense.project?
-    output[:status]              = expense.status_value
-    output[:reviewer_id]         = format_employee(expense.reviewer) if expense.approved?
-    output[:reviewed_at]         = format_date(expense.reviewed_at)  if expense.approved?
-    output[:reimbursement_month] = expense.reimbursement_month       if expense.approved?
-    output[:reason]              = expense.reason&.truncate(90)      if expense.rejected?
-    output[:id]                  = expense.id
-    output[:amount]              = format_value
-    output[:payment_date]        = format_date(expense.payment_date)
-    output[:description]         = expense.description&.truncate(90) if expense.description
-    output[:receipt]             = receipt_text
-    output
+    @model_data ||=
+      begin
+        output = {}
+        output[:employee_id]         = format_employee(expense.employee)
+        output[:kind]                = expense.kind_value
+        output[:order_id]            = format_order                      if expense.project?
+        output[:status]              = expense.status_value
+        output[:reviewer_id]         = format_employee(expense.reviewer) if expense.approved?
+        output[:reviewed_at]         = format_date(expense.reviewed_at)  if expense.approved?
+        output[:reimbursement_month] = expense.reimbursement_month       if expense.approved?
+        output[:reason]              = expense.reason&.truncate(90)      if expense.rejected?
+        output[:id]                  = expense.id
+        output[:amount]              = format_value
+        output[:payment_date]        = format_date(expense.payment_date)
+        output[:description]         = expense.description&.truncate(90) if expense.description
+        output[:receipt]             = receipt_text
+        output
+      end
   end
 
   def attribute(title, value)
