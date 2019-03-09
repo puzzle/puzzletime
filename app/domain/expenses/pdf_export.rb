@@ -139,10 +139,19 @@ class Expenses::PdfExport
   def add_receipt
     return unless receipt_printable?
 
-    @blob = receipt.image? ? receipt.blob : receipt.preview({}).image.blob
+    transformations = { auto_orient: true }
+    @blob           = image(transformations)
+
     download_blob_to_tempfile do |file|
       pdf.image file.path, position: :center, height: image_height
     end
+  end
+
+  def image(transformations = {})
+    return receipt.preview(transformations).image.blob unless receipt.image?
+    return receipt.variant(transformations).blob if receipt.variable?
+
+    receipt.blob
   end
 
   def image_height
