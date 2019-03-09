@@ -14,18 +14,22 @@ module AttachmentHelper
   end
 
   def attachment_image_tag(obj, **options)
-    path =
-      if obj.image?
-        rails_blob_url(obj)
-      elsif obj.previewable?
-        obj.preview({})
-      end
+    transformations = { auto_orient: true, resize: '800x1200' }
+    image           = attachment_image(obj, transformations)
+    tag             = image_tag(image, options)
 
-    if options[:show_link]
-      attachment_show_link(obj, image_tag(path, options), options)
-    else
-      image_tag(path, options)
-    end
+    return attachment_show_link(obj, tag, options) if options[:show_link]
+
+    tag
+  end
+
+  private
+
+  def attachment_image(obj, transformations = {})
+    return obj.preview(transformations) unless obj.image?
+    return obj.variant(transformations) if     obj.variable?
+
+    rails_blob_url(obj)
   end
 
 end
