@@ -273,21 +273,23 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
   end
 
   test 'Moving planning over exiting planning overwrites the planning' do
-    drag(row_mark.all('.day')[5], row_pascal.all('.day')[9])
+    timeout_safe do
+      drag(row_mark.all('.day')[5], row_pascal.all('.day')[9])
 
-    within '.planning-panel' do
-      fill_in 'percent', with: '100'
-      click_button 'fix'
-      click_button 'OK'
+      within '.planning-panel' do
+        fill_in 'percent', with: '100'
+        click_button 'fix'
+        click_button 'OK'
+      end
+
+      page.assert_selector('div.-definitive', count: 12)
+
+      drag(row_mark.all('.day')[5], row_pascal.all('.day')[9])
+      page.assert_selector('.day.-selected', count: 10)
+      drag(row_pascal.all('.day.-selected')[2], row_mark.all('.day')[0], row_mark.all('*')[0])
+      row_mark.assert_selector('.day.-selected.-definitive:nth-child(2)')
+      page.assert_selector('.day.-definitive:not(.-selected)', count: 10, text: 100)
     end
-
-    page.assert_selector('div.-definitive', count: 12)
-
-    drag(row_mark.all('.day')[5], row_pascal.all('.day')[9])
-    page.assert_selector('.day.-selected', count: 10)
-    drag(row_pascal.all('.day.-selected')[2], row_mark.all('.day')[0], row_mark.all('*')[0])
-    row_mark.assert_selector('.day.-selected.-definitive:nth-child(2)')
-    page.assert_selector('.day.-definitive:not(.-selected)', count: 10, text: 100)
   end
 
   test 'Moving by one cell to the left' do
