@@ -13,6 +13,7 @@ class app.Autocomplete
       valueField: 'id',
       searchField: @searchFields(),
       selectOnTab: true,
+      openOnFocus: false,
       render: {
         option: @renderOption.bind(this),
         item: @renderItem
