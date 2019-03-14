@@ -1,0 +1,25 @@
+- @title ||= "Offene Spesen (#{review_list.count})"
+- receipt = entry.receipt
+.row.columns
+  .col-md-7
+    .pull-right
+      %a{data: {toggle: :collapse, target: '.inlineedit'}}
+        %i.icon-edit.primary.h4.text-primary
+    .inlineedit.collapse.in
+      %h3 Spesen kontrollieren
+      = render_attrs(entry, :submission_date, :payment_date, :employee_id, :amount, :kind_value, :description)
+
+    .inlineedit.collapse
+      %h3 Spesen bearbeiten
+      = standard_form(entry, cancel_url: expenses_reviews_path(entry)) do |f|
+        = hidden_field_tag :review, 1
+        = render 'expenses/fields_small', f: f, parent: false
+
+    .inlineedit.collapse.in
+      = render 'form'
+
+  .col-md-5.divider.text-center
+    - if attachment_displayable?(receipt)
+      = attachment_image_tag receipt, class: 'img-responsive', show_link: true
+    - else
+      Keine Vorschau verfügbar

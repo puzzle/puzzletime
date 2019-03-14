@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ExpensesHelper
   def format_expense_status_value(expense)
     memo = Expense.statuses.keys.zip(%w(info warning success danger)).to_h
@@ -8,9 +10,10 @@ module ExpensesHelper
     safe_join([f(expense.amount), currency], ' ')
   end
 
-  def expense_details_col(table)
+  def expense_details_col(table, personal: true)
     table.col('', class: 'right') do |e|
-      link_to(employee_expense_path(e.employee, e), title: 'Details') do
+      path = personal ? employee_expense_path(e.employee, e) : expense_path(e)
+      link_to(path, title: 'Details') do
         tag.i(class: 'icon-document') + ' Details'
       end
     end
@@ -60,7 +63,7 @@ module ExpensesHelper
     table.action_col do |e|
       if e.pending? || e.deferred?
 
-        link_to(expense_review_path(e), title: 'Kontrollieren') do
+        link_to(expenses_review_path(e), title: 'Kontrollieren') do
           tag.i(class: 'icon-edit') + ' Kontrollieren'
         end
 

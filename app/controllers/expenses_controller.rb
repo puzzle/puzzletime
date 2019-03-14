@@ -15,15 +15,19 @@ class ExpensesController < ManageController
   end
 
   def index
-    respond_to do |format|
-      format.any
-      format.pdf { send_file Expenses::PdfExport.new(entries).generate, disposition: :inline }
+    if parent
+      respond_to do |format|
+        format.any
+        format.pdf { send_file Expenses::PdfExport.new(entries).generate, disposition: :inline }
+      end
+    else
+      redirect_to('/expenses_reviews')
     end
   end
 
   def update
     with_protected_approved_state do
-      options = params[:review] ? { location: expense_review_path(entry) } : {}
+      options = params[:review] ? { location: expenses_review_path(entry) } : {}
       super(options)
 
       if entry.rejected? && entry.employee == current_user

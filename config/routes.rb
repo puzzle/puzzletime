@@ -57,9 +57,8 @@ Rails.application.routes.draw do
     resource :worktimes_review, only: [:edit, :update], controller: 'employees/worktimes_review'
   end
 
-  resources :expenses do
-    resource :review, only: [:show, :create, :update], controller: 'expense_reviews'
-  end
+  resources :expenses
+  resources :expenses_reviews, only: [:show, :create, :update, :index]
 
   resources :employment_roles, except: [:show]
   resources :employment_role_levels, except: [:show]

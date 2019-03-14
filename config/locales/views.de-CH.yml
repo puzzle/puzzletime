@@ -23,7 +23,7 @@ de-CH:
       from: "%{attr} %{model_ref} «%{from}» wurde gelöscht."
       to: "%{attr} %{model_ref} wurde auf «%{to}» gesetzt."
 
-  expenses:
+  expenses: &expenses
     new:
       title: "%{model} erfassen"
     create:
@@ -44,3 +44,5 @@ de-CH:
     global:
       link:
         add: Erfassen
+
+  expenses_reviews: *expenses
