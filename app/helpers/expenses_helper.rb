@@ -121,12 +121,22 @@ module ExpensesHelper
   end
 
   def expenses_file_field(form, small: false)
+    # Due to inconsistent browser behaviour, we need both file endings
+    # and the 'all images' mimetype
+    file_types = %w(.jpg .jpeg .png).join(',')
     options = {}
     options[:span] = 10 if small
 
     safe_join(
       [
-        form.labeled_file_field(:receipt, options.merge(required: !entry.receipt.attached?)),
+        form.labeled(:receipt) do
+          safe_join(
+            [
+              content_tag(:div, 'Bitte wählen Sie ein Bild aus', id: 'file_warning', class: 'text-danger hidden'),
+              form.file_field(:receipt, options.merge(required: !entry.receipt.attached?, accept: file_types))
+            ]
+          )
+        end,
         form.labeled(' ', options) { t('expenses.attachment.hint') }
       ]
     )
