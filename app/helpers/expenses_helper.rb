@@ -74,7 +74,7 @@ module ExpensesHelper
   def expenses_pdf_export_path
     filter_params = params.permit(*controller.class.remember_params)
 
-    expenses_path(filter_params.merge(format: :pdf))
+    expenses_reviews_path(filter_params.merge(format: :pdf))
   end
 
   def expenses_reimbursement_dates

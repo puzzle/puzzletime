@@ -125,24 +125,21 @@ class Expenses::PdfExport
   end
 
   def model_data # rubocop:disable Metrics/AbcSize
-    @model_data ||=
-      begin
-        output = {}
-        output[:employee_id]         = format_employee(expense.employee)
-        output[:kind]                = expense.kind_value
-        output[:order_id]            = format_order                      if expense.project?
-        output[:status]              = expense.status_value
-        output[:reviewer_id]         = format_employee(expense.reviewer) if expense.approved?
-        output[:reviewed_at]         = format_date(expense.reviewed_at)  if expense.approved?
-        output[:reimbursement_month] = expense.reimbursement_month       if expense.approved?
-        output[:reason]              = expense.reason&.truncate(90)      if expense.rejected?
-        output[:id]                  = expense.id
-        output[:amount]              = format_value
-        output[:payment_date]        = format_date(expense.payment_date)
-        output[:description]         = expense.description&.truncate(90) if expense.description
-        output[:receipt]             = receipt_text
-        output
-      end
+    output = {}
+    output[:employee_id]         = format_employee(expense.employee)
+    output[:status]              = expense.status_value
+    output[:kind]                = expense.kind_value
+    output[:order_id]            = format_order                      if expense.project?
+    output[:reviewer_id]         = format_employee(expense.reviewer) if expense.approved?
+    output[:reviewed_at]         = format_date(expense.reviewed_at)  if expense.approved?
+    output[:reimbursement_month] = expense.reimbursement_month       if expense.approved?
+    output[:reason]              = expense.reason&.truncate(90)      if expense.rejected?
+    output[:id]                  = expense.id
+    output[:amount]              = format_value
+    output[:payment_date]        = format_date(expense.payment_date)
+    output[:description]         = expense.description&.truncate(90) if expense.description
+    output[:receipt]             = receipt_text
+    output
   end
 
   def attribute(title, value)
@@ -171,7 +168,7 @@ class Expenses::PdfExport
     @blob           = image(transformations)
 
     download_blob_to_tempfile do |file|
-      pdf.image file.path, position: :center, height: image_height
+      pdf.image file.path, position: :center, fit: [image_width, image_height]
     end
   end
 
@@ -180,6 +177,10 @@ class Expenses::PdfExport
     return receipt.variant(transformations).blob if receipt.variable?
 
     receipt.blob
+  end
+
+  def image_width
+    pdf.bounds.width
   end
 
   def image_height
