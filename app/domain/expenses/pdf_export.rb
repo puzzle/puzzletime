@@ -147,7 +147,7 @@ class Expenses::PdfExport
   end
 
   def receipt_printable?
-    receipt.attached? && (receipt.image? || receipt.previewable?)
+    receipt.attached? && receipt.image? # Currently, previewables will not be handled
   end
 
   def receipt
@@ -173,7 +173,7 @@ class Expenses::PdfExport
   end
 
   def image(transformations = {})
-    return receipt.preview(transformations).image.blob unless receipt.image?
+    return receipt.preview(transformations) unless receipt.image?
     return receipt.variant(transformations).blob if receipt.variable?
 
     receipt.blob
