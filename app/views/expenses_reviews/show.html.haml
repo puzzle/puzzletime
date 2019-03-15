@@ -11,7 +11,7 @@
 
     .inlineedit.collapse
       %h3 Spesen bearbeiten
-      = standard_form(entry, cancel_url: expenses_reviews_path(entry)) do |f|
+      = standard_form(entry, cancel_url: expenses_review_path(entry)) do |f|
         = hidden_field_tag :review, 1
         = render 'fields', f: f
 
