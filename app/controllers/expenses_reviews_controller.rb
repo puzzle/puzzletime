@@ -22,7 +22,7 @@ class ExpensesReviewsController < ManageController
   def index
     respond_to do |format|
       format.any
-      format.pdf { send_file Expenses::PdfExport.new(entries).generate, disposition: :inline }
+      format.pdf { send_file Expenses::PdfExport.new(pdf_entries).generate, disposition: :inline }
     end
   end
 
@@ -110,6 +110,10 @@ class ExpensesReviewsController < ManageController
   def message
     state_change = entry.deferred? ? 'zurückgestellt' : entry.status_value.downcase
     "#{entry} wurde #{state_change}."
+  end
+
+  def pdf_entries
+    entries.except(:limit, :offset)
   end
 
 end
