@@ -243,7 +243,7 @@ de-CH:
         receipt: Beleg
         reimbursement_month: Auszahlungsmonat
         reviewer_id: Visum
-        reason: Bemerkung
+        reason: Begründung / Bemerkung
         reviewed_at: Visiert am
       expense/statuses:
         approved: Freigegeben
