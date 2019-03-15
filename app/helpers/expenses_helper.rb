@@ -79,7 +79,7 @@ module ExpensesHelper
 
   def expenses_reimbursement_dates
     [['', 'Bitte wählen Sie einen Monat']] +
-      [1, 0, -1, -2].collect do |months_ago|
+      [0, -1, -2].collect do |months_ago|
         date = months_ago.months.ago.end_of_month.to_date
         [date, I18n.l(date, format: :month)]
       end
