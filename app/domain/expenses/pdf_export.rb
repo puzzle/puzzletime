@@ -8,8 +8,10 @@
 class Expenses::PdfExport
   include ActiveStorage::Downloading
 
+  require 'mini_magick'
+
   attr_accessor :pdf
-  attr_reader   :expense, :blob, :entries
+  attr_reader   :expense, :entries
 
   FILENAME = 'tmp/expenses.pdf'
 
@@ -164,18 +166,15 @@ class Expenses::PdfExport
   def add_receipt
     return unless receipt_printable?
 
-    transformations = { auto_orient: true }
-    @blob           = image(transformations)
-
     download_blob_to_tempfile do |file|
+      image = ::MiniMagick::Image.open(file.path)
+      image.auto_orient
+      image.write file.path
       pdf.image file.path, position: :center, fit: [image_width, image_height]
     end
   end
 
-  def image(transformations = {})
-    return receipt.preview(transformations) unless receipt.image?
-    return receipt.variant(transformations).blob if receipt.variable?
-
+  def blob
     receipt.blob
   end
 
