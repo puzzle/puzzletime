@@ -85,7 +85,7 @@ module ExpensesHelper
       end
   end
 
-  def expenses_submission_field(form, small: false)
+  def expenses_submission_field(form, **options)
     date =
       if entry.new_record? || entry.rejected?
         Time.zone.today
@@ -93,53 +93,63 @@ module ExpensesHelper
         entry.submission_date
       end
 
-    options = {}
-    options[:span] = 3 if small
-
     form.labeled(:submission_date, options) do
       form.string_field(:submission_date, value: I18n.l(date), disabled: true)
     end
   end
 
-  def expenses_order_field(form, small: false)
-    options = {
-      name: 'expense[order_id]',
-      placeholder: 'Suchen...',
-      autocomplete: 'off',
-      class: entry.new_record? ? 'initial-focus' : '',
-      required: true,
-      data: {
-        autocomplete: 'work_item',
-        url: search_orders_path(only_open: true)
-      }
-    }
-    options.merge(span: 10) if small
+  def expenses_order_field(form, **options)
+    form.labeled(:order_id, options.merge(required: true)) do
+      options.deep_merge!(
+        {
+          name: 'expense[order_id]',
+          placeholder: 'Suchen...',
+          autocomplete: 'off',
+          class: entry.new_record? ? ['initial-focus'] : [],
+          required: true,
+          data: {
+            autocomplete: 'work_item',
+            url: search_orders_path(only_open: true)
+          }
+        }
+      )
 
-    form.labeled(:order_id, required: true) do
-      select_tag('expense_order_id', work_item_option(@expense&.order), options)
+      select_tag(:expense_order_id, work_item_option(@expense&.order), options)
     end
   end
 
-  def expenses_file_field(form, small: false)
-    # Due to inconsistent browser behaviour, we need both file endings
-    # and the 'all images' mimetype
-    file_types = %w(.jpg .jpeg .png).join(',')
-    options = {}
-    options[:span] = 10 if small
-
+  def expenses_file_field(form, **options)
     safe_join(
       [
-        form.labeled(:receipt, required: true) do
-          safe_join(
-            [
-              content_tag(:div, 'Bitte wählen Sie ein Bild aus', id: 'file_warning', class: 'text-danger hidden'),
-              form.file_field(:receipt, options.merge(required: !entry.receipt.attached?, accept: file_types))
-            ]
-          )
-        end,
+        file_field_with_warning(form, options),
         form.labeled(' ', options) { t('expenses.attachment.hint') }
       ]
     )
+  end
+
+  private
+
+  def file_field_with_warning(form, **options)
+    # Due to inconsistent browser behaviour, we need both file endings
+    # and the 'all images' mimetype
+    options.deep_merge!(
+      accept: %w(.jpg .jpeg .png).join(','),
+      required: !entry.receipt.attached?
+    )
+
+    form.labeled(:receipt, options.except(:accept)) do
+      safe_join(
+        [
+          content_tag(
+            :div,
+            'Bitte wählen Sie ein Bild aus',
+            id: 'file_warning',
+            class: 'text-danger hidden'
+          ),
+          form.file_field(:receipt, options)
+        ]
+      )
+    end
   end
 
 end

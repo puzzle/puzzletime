@@ -1,5 +1,7 @@
 $(document).on 'turbolinks:load', ->
-  return unless $('body.expenses').length > 0 # scope to single controller
+  # scope to single controller
+  return unless $('body.expenses').length or
+                $('body.expenses_reviews').length
 
   toggle_project_display = () ->
     kind          = $('#expense_kind :selected')
@@ -9,6 +11,9 @@ $(document).on 'turbolinks:load', ->
 
     kind.each ->
       if this.value == 'project'
+        if order[0].textContent and not input[0].value
+          input[0].value = ' '
+
         form_group.show()
         input.attr('required', 'required')
       else
