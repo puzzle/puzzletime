@@ -4,6 +4,37 @@ class ExpensesReviewsControllerTest < ActionController::TestCase
 
   setup :login
 
+  test 'GET#index management may list all expenses' do
+    login_as(:mark)
+    get :index
+    assert_equal 5, assigns(:expenses).count
+  end
+
+  test 'GET#index management may filter by status' do
+    login_as(:mark)
+    get :index, params: { status: :pending }
+    assert_equal 1, assigns(:expenses).count
+  end
+
+  test 'GET#index management may filter by employee_id' do
+    login_as(:mark)
+    get :index, params: { employee_id: employees(:pascal).id }
+    assert_equal 4, assigns(:expenses).count
+  end
+
+  test 'GET#index management may filter by department_id' do
+    login_as(:mark)
+    employees(:pascal).update(department: departments(:devone))
+    get :index, params: { department_id: departments(:devone).id }
+    assert_equal 4, assigns(:expenses).count
+  end
+
+  test 'GET#index management may filter by reimbursement_date' do
+    login_as(:mark)
+    get :index, params: { reimbursement_date: '2019_02' }
+    assert_equal 1, assigns(:expenses).count
+  end
+
   test 'GET#show employee may not work with expense reviews' do
     login_as(:pascal)
     assert_raise do
@@ -52,5 +83,6 @@ class ExpensesReviewsControllerTest < ActionController::TestCase
     get :update, params: { id: expenses(:pending).id, expense: { status: :approved, reimbursement_date: '2019-03-01' } }, session: { 'list_params' => list_params }
     assert_redirected_to expenses_review_path(other)
   end
+
 
 end
