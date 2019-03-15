@@ -10,10 +10,10 @@ $(document).on 'turbolinks:load', ->
     kind.each ->
       if this.value == 'project'
         form_group.show()
-        input[0].required = true
+        input.attr('required', 'required')
       else
         form_group.hide()
-        input[0].required = false
+        input.removeAttr('required')
 
   check_file_type = (initial = false) ->
     input = $('#expense_receipt')[0]

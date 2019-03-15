@@ -129,7 +129,7 @@ module ExpensesHelper
 
     safe_join(
       [
-        form.labeled(:receipt) do
+        form.labeled(:receipt, required: true) do
           safe_join(
             [
               content_tag(:div, 'Bitte wählen Sie ein Bild aus', id: 'file_warning', class: 'text-danger hidden'),
