@@ -42,50 +42,60 @@ half_year_maria:
   firstname: Maria
   lastname:  Dolores
   shortname: GGG
-  passwd:    <%= Employee.encode('Yaataw') %>
+  passwd:    <%= Employee.encode('ptime') %>
   email:     bla@bla.ch
   management: true
   eval_periods: ["-1m", "0"]
+
 various_pedro:
   id:        2
   firstname: Pedro
   lastname:  Dolores
   shortname: GIG
-  passwd:    sdf
+  passwd:    <%= Employee.encode('ptime') %>
   email:     bol@bla.ch
   management: false
+
 next_year_pablo:
   id:        3
   firstname: Pablo
   lastname:  Sanchez
   shortname: PS
-  passwd:    sdf
+  passwd:    <%= Employee.encode('ptime') %>
   email:     ps@bla.ch
   management: false
+
 left_this_year_macy:
   id:        4
   firstname: Macy
   lastname:  Grey
   shortname: MG
-  passwd:    sdf
+  passwd:    <%= Employee.encode('ptime') %>
   email:     mg@bla.ch
   management: false
+
 long_time_john:
   id:        5
   firstname: John
   lastname:  Neverends
   shortname: JN
-  passwd:    sdf
+  passwd:    <%= Employee.encode('ptime') %>
   email:     jn@bla.ch
   management: false
   committed_worktimes_at: 2015-07-31
+  marital_status: single
+  nationalities:
+    - CH
+    - UK
+  graduation: Klubschule
+  department: devone
 
 pascal:
   id:        6
   firstname: Pascal
   lastname:  Zumkehr
   shortname: PZ
-  passwd:    pz
+  passwd:    <%= Employee.encode('ptime') %>
   email:     pz@bla.ch
   management: false
   department: devtwo
@@ -95,7 +105,7 @@ mark:
   firstname: Mark
   lastname:  Waber
   shortname: MW
-  passwd:    mw
+  passwd:    <%= Employee.encode('ptime') %>
   email:     mw@bla.ch
   management: true
   eval_periods:
@@ -111,7 +121,7 @@ lucien:
   firstname: Lucien
   lastname:  Weller
   shortname: LW
-  passwd:    lw
+  passwd:    <%= Employee.encode('ptime') %>
   email:     lw@bla.ch
   management: false
   department: devtwo

@@ -1,4 +1,4 @@
-#  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
+#  Copyright (c) 2006-2019, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
@@ -8,9 +8,12 @@
 # Likewise, all the methods added will be available for all controllers.
 
 class ApplicationController < ActionController::Base
+
+  before_action :set_sentry_request_context
   protect_from_forgery with: :exception
 
   before_action :authenticate
+  before_action :set_sentry_user_context
   before_action :set_paper_trail_whodunnit
   check_authorization
 
@@ -34,14 +37,15 @@ class ApplicationController < ActionController::Base
 
   # Filter for check if user is logged in or not
   def authenticate
-    case request.format
-    when Mime[:jsonapi]
+    case request.path
+    when %r{\A/api/v\d+/}
       @user = authenticate_or_request_with_http_basic('Puzzletime') { |u, p| ApiClient.new.authenticate(u, p) }
     else
       unless current_user
         # allow ad-hoc login
         if params[:user].present? && params[:pwd].present?
           return true if login_with(params[:user], params[:pwd])
+          
           flash[:notice] = 'Ungültige Benutzerdaten'
         end
         redirect_to login_path(ref: request.url)
@@ -76,5 +80,13 @@ class ApplicationController < ActionController::Base
 
   def not_found
     fail ActionController::RoutingError, 'Not Found'
+  end
+
+  def set_sentry_request_context
+    Raven.extra_context(params: params.to_unsafe_h, url: request.url)
+  end
+
+  def set_sentry_user_context
+    Raven.user_context(id: current_user.try(:id), name: current_user.try(:shortname))
   end
 end

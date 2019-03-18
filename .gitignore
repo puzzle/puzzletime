@@ -46,3 +46,6 @@ tags
 
 # Symlinked rails engines for development
 /engines/*
+
+# ActiveStorage folder
+/storage

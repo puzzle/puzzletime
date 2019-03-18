@@ -8,49 +8,49 @@ employees = Employee.seed(:shortname,
   { firstname: 'Mark',
     lastname: 'Waber',
     shortname: 'MW',
-    passwd: '86f7e437faa5a7fce15d1ddcb9eaeaea377667b8', # a
+    passwd: Employee.encode('a'),
     email: 'waber@puzzle.ch',
     management: true },
 
   { firstname: 'Andreas',
     lastname: 'Rava',
     shortname: 'AR',
-    passwd: '86f7e437faa5a7fce15d1ddcb9eaeaea377667b8', # a
+    passwd: Employee.encode('a'),
     email: 'rava@puzzle.ch',
     management: true },
 
   { firstname: 'Pascal',
     lastname: 'Zumkehr',
     shortname: 'PZ',
-    passwd: '86f7e437faa5a7fce15d1ddcb9eaeaea377667b8', # a
+    passwd: Employee.encode('a'),
     email: 'zumkehr@puzzle.ch',
     management: false },
 
   { firstname: 'Bruno',
     lastname: 'Santschi',
     shortname: 'BS',
-    passwd: '86f7e437faa5a7fce15d1ddcb9eaeaea377667b8', # a
+    passwd: Employee.encode('a'),
     email: 'santschi@puzzle.ch',
     management: false },
 
   { firstname: 'Daniel',
     lastname: 'Illi',
     shortname: 'DI',
-    passwd: '86f7e437faa5a7fce15d1ddcb9eaeaea377667b8', # a
+    passwd: Employee.encode('a'),
     email: 'illi@puzzle.ch',
     management: true },
 
   { firstname: 'Päscu',
     lastname: 'Simon',
     shortname: 'PSI',
-    passwd: '86f7e437faa5a7fce15d1ddcb9eaeaea377667b8', # a
+    passwd: Employee.encode('a'),
     email: 'simon@puzzle.ch',
     management: false },
 
   { firstname: 'Thomas',
     lastname: 'Burkhalter',
     shortname: 'TBU',
-    passwd: '86f7e437faa5a7fce15d1ddcb9eaeaea377667b8', # a
+    passwd: Employee.encode('a'),
     email: 'burkhalter@puzzle.ch',
     management: false }
 )
