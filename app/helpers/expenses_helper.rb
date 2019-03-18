@@ -133,7 +133,7 @@ module ExpensesHelper
     # Due to inconsistent browser behaviour, we need both file endings
     # and the 'all images' mimetype
     options.deep_merge!(
-      accept: %w(.jpg .jpeg .png).join(','),
+      accept: %w(image/gif image/jpeg image/png .gif .jpg .jpeg .png).join(','),
       required: !entry.receipt.attached?
     )
 
