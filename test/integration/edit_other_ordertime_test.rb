@@ -85,7 +85,7 @@ class EditOtherOrdertimeTest < ActionDispatch::IntegrationTest
   end
 
   def login
-    post '/login/login', params: { user: 'GGG', pwd: 'Yaataw' }
+    post '/login/login', params: { user: 'GGG', pwd: 'ptime' }
     follow_redirect!
     assert_response :success
     assert_equal '/', path
