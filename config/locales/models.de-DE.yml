@@ -1,0 +1,402 @@
+#  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
+#  PuzzleTime and licensed under the Affero General Public License version 3
+#  or later. See the COPYING file at the top-level directory or at
+#  https://github.com/puzzle/puzzletime.
+
+
+de-CH:
+  activerecord:
+    models:
+      absence:
+        one: Abwesenheitsart
+        other: Abwesenheitsarten
+      absencetime:
+        one: Abwesenheit
+        other: Abwesenheiten
+      accounting_post:
+        one: Buchungsposition
+        other: Buchungspositionen
+      billing_address:
+        one: Rechnungsadresse
+        other: Rechnungsadressen
+      client:
+        one: Kunde
+        other: Kunden
+      contact:
+        one: Kontakt
+        other: Kontakte
+      contract:
+        one: Vertrag
+        other: Verträge
+      department:
+        one: Organisationseinheit
+        other: Organisationseinheiten
+      custom_list:
+        one: Liste
+        other: Listen
+      employee:
+        one: Mitarbeiter
+        other: Mitarbeiter
+      employment:
+        one: Anstellung
+        other: Anstellungen
+      employment_role:
+        one: Funktionsbezeichnung
+        other: Funktionsbezeichnungen
+      employment_role_level:
+        one: Funktionsstufe
+        other: Funktionsstufen
+      employment_role_category:
+        one: Funktionskategorie
+        other: Funktionskategorien
+      holiday:
+        one: Feiertag
+        other: Feiertage
+      invoice:
+        one: Rechnung
+        other: Rechnungen
+      order:
+        one: Auftrag
+        other: Aufträge
+      order_chance:
+        one: Chance
+        other: Chancen
+      order_comment:
+        one: Journaleintrag
+        other: Journaleinträge
+      order_kind:
+        one: Auftragsart
+        other: Auftragsarten
+      order_risk:
+        one: Risiko
+        other: Risiken
+      order_status:
+        one: Auftragsstatus
+        other: Auftragsstatus
+      order_target:
+        one: Auftragsziel
+        other: Auftragsziele
+      order_uncertainty:
+        one: Chance/Risiko
+        other: Chancen/Risiken
+      ordertime:
+        one: Zeit
+        other: Zeiten
+      overtime_vacation:
+        one: Überstunden-Ferien Umbuchung
+        other: Überstunden-Ferien Umbuchungen
+      planning:
+        one: Planung
+        other: Planungen
+      portfolio_item:
+        one: Portfolioposition
+        other: Portfoliopositionen
+      sector:
+        one: Branche
+        other: Branchen
+      service:
+        one: Dienstleistung
+        other: Dienstleistungen
+      target_scope:
+        one: Zielwert
+        other: Zielwerte
+      user_notification:
+        one: Nachricht
+        other: Nachrichten
+      work_item:
+        one: Position
+        other: Positionen
+      working_condition:
+        one: Arbeitsbedingung
+        other: Arbeitsbedingungen
+      worktime:
+        one: Arbeitszeit
+        other: Arbeitszeiten
+
+    attributes:
+      absence:
+        name: Bezeichnung
+        payed: Bezahlt
+        private: Nicht öffentlich
+        vacation: Ferien
+      absencetime:
+        duration: Dauer
+      accounting_post:
+        work_item_id: Position
+        portfolio_item_id: Portfolio
+        service_id: Dienstleistung
+        reference: Referenz
+        offered_hours: Angebotene Stunden
+        offered_rate: Angebotener Stundensatz
+        remaining_hours: Restaufwand
+        report_type: Report-Typ
+        billable: Verrechenbar
+        description_required: Beschreibung erforderlich
+        ticket_required: Ticket erforderlich
+        closed: Geschlossen
+      billing_address:
+        client_id: Kunde
+        contact_id: Kontakt
+        supplement: Zusatz
+        street: Straße
+        zip_code: PLZ
+        town: Ort
+        country: Land
+        country_name: Land
+      client:
+        name: Name
+        shortname: Kürzel
+        allow_local: Lokale Aufträge zulassen
+        sector_id: Branche
+        e_bill_account_key: eBillAccountID
+      contact:
+        client_id: Kunde
+        lastname: Nachname
+        firstname: Vorname
+        function: Funktion
+        email: E-Mail
+        phone: Telefon
+        mobile: Mobile
+      contract:
+        number: Vertragsnummer
+        start_date: von
+        end_date: bis
+        payment_period: Zahlungsfrist
+        reference: Referenz
+        notes: Notizen
+        sla: SLA
+      custom_list:
+        name: Name
+        item_type: Typ
+      department:
+        name: Name
+        shortname: Kürzel
+      employee:
+        firstname: Vorname
+        lastname: Nachname
+        shortname: Kürzel
+        passwd: Passwort
+        management: Management
+        department: Organisationseinheit
+        department_id: Organisationseinheit
+        initial_vacation_days: Anfängliche Ferien
+        ldapname: LDAP Name
+        current_percent: Beschäftigungsgrad
+        eval_periods: Zeitspannen Auswertungen
+        committed_worktimes_at: Letzte freigegebene Periode
+        reviewed_worktimes_at: Letzte kontrollierte Periode
+        probation_period_end_date: Ende Probezeit
+        graduation: Abschluss
+        phone_office: Telefon Büro
+        phone_private: Telefon Privat
+        street: Straße
+        postal_code: PLZ
+        city: Ort
+        birthday: Geburtstag
+        emergency_contact_name: Notfallperson
+        emergency_contact_phone: Notfallnummer
+        marital_status: Personenstand
+        social_insurance: Sozialversicherungsnummer
+        nationalities: Nationalitäten
+        additional_information: Zusätzliche Informationen
+        crm_key: Highrise ID
+      employee/marital_statuses:
+        married: Verheiratet
+        single: Ledig
+        widowed: Verwittwet
+        civil_partnership: Eingetragene Partnerschaft
+        divorced: Geschieden
+      employment:
+        employee_id: Mitarbeiter
+        start_date: Startdatum
+        end_date: Enddatum
+        percent: Beschäftigungsgrad
+        vacation_days_per_year: Ferientage pro Jahr
+        employment_roles_employments: Funktionsanteile
+        comment: Kommentar
+      employment_role:
+        name: Name
+        billable: Verrechenbar
+        level: Funktion hat Stufen
+        employment_role_category_id: Funktionskategorie
+      employment_role_level:
+        name: Name
+      employment_role_category:
+        name: Name
+      employment_roles_employment:
+        percent: Pensum
+      holiday:
+        holiday_date: Datum
+        musthours_day: Sollstunden
+      invoice:
+        billing_address: Rechnungsadresse
+        billing_client_id: Rechnungskunde
+        billing_date: Rechnungsdatum
+        calculated_total_amount: Total Leistungen
+        due_date: Fälligkeitsdatum
+        employees: Mitarbeiter
+        grouping: Gruppierung
+        invoice_posts: Rechnungspositionen
+        manual_invoice: Manuelle Rechnung
+        manual?: Manuell
+        order: Auftrag
+        order_id: Auftrag
+        period: Leistungsperiode
+        period_from: von
+        period_to: bis
+        reference: Referenz
+        status: Status
+        total_amount: Rechnungsbetrag
+        total_hours: Total Stunden
+        work_items: Buchungspositionen
+      invoice/statuses:
+        draft: Entwurf
+        sent: Gesendet
+        paid: Bezahlt
+        partially_paid: Teilbezahlt
+        deleted: Gelöscht
+        cancelled: Storniert
+        unknown: Unbekannt
+      order:
+        client: Kunde
+        category: Kategorie
+        order: Auftrag
+        kind: Art
+        kind_id: Art
+        responsible: Verantwortliche(r)
+        responsible_id: Verantwortliche(r)
+        status: Status
+        status_id: Status
+        department: Organisationseinheit
+        department_id: Organisationseinheit
+        contract_id: Vertrag
+        billing_address_id: Rechnungsadresse
+        order_contacts: Ansprechspersonen Kunde
+        order_team_members: Team
+        completed_at: Letzter erledigter Abschluss
+        committed_at: Letzter freigegebener Abschluss
+        created_at: Erstellt
+        updated_at: Aktualisiert
+      order_comment:
+        order_id: Auftrag
+        text: Kommentar
+      order_contact:
+        contact: Ansprechsperson
+        contact_id: Ansprechsperson
+        comment: Funktion
+      order/order_contacts:
+        contact: Ansprechsperson
+      order/team_members:
+        employee: Mitarbeiter
+      order_kind:
+        name: Bezeichnung
+      order_status:
+        name: Bezeichnung
+        style: Darstellung
+        closed: Geschlossen
+        position: Position
+      order_target:
+        target_scope_id: Wert
+        rating: Bewertung
+        comment: Kommentar
+      order_uncertainty:
+        name: Name
+        probability: Eintrittswahrscheinlichkeit
+        impact: Auswirkung
+        measure: Massnahmen
+        risk: Risiko
+      order_uncertainty/probabilities:
+        improbable: unwahrscheinlich (< 5%)
+        low: gering (> 5% - < 20%)
+        medium: mittel (> 20% - < 50%)
+        high: groß (> 50%)
+      order_uncertainty/impacts:
+        none: keine oder sehr geringe (< 5%)
+        low: geringe (> 5% - < 20%)
+        medium: mittlere (> 20% - < 50%)
+        high: große (> 50%)
+      order_uncertainty/risks:
+        low: gering
+        medium: mittel
+        high: groß
+      overtime_vacation:
+        employee_id: Mitarbeiter
+        hours: Stunden
+        transfer_date: Umgebucht am
+      planning:
+        employee_id: Mitarbeiter
+        work_item_id: Position
+        project_id: Projekt
+        start_week: Start
+        start_week_date: Start
+        end_week: Bis KW
+        definitive: Definitiv
+        description: Bemerkungen
+        monday_am: Montag Vormittag
+        monday_pm: Montag Nachmittag
+        tuesday_am: Dienstag Vormittag
+        tuesday_pm: Dienstag Nachmittag
+        wednesday_am: Mittwoch Vormittag
+        wednesday_pm: Mittwoch Nachmittag
+        thursday_am: Donnerstag Vormittag
+        thursday_pm: Donnerstag Nachmittag
+        friday_am: Freitag Vormittag
+        friday_pm: Freitag Nachmittag
+        is_abstract: Abstrakt
+        abstract_amount: Anzahl
+      portfolio_item:
+        name: Bezeichnung
+        active: Aktiv
+      sector:
+        name: Bezeichnung
+        active: Aktiv
+      service:
+        name: Bezeichnung
+        active: Aktiv
+      target_scope:
+        name: Bezeichnung
+        icon: Icon
+        position: Position
+        rating_green_description: Beschreibung Bewertung grün
+        rating_orange_description: Beschreibung Bewertung orange
+        rating_red_description: Beschreibung Bewertung rot
+      user_notification:
+        date_from: Startdatum
+        date_to: Enddatum
+        message: Nachricht
+      work_item:
+        name: Name
+        shortname: Kürzel
+        description: Beschreibung
+      working_condition:
+        valid_from: Gültig ab
+        vacation_days_per_year: Ferientage pro Jahr
+        must_hours_per_day: Arbeitszeit pro Tag
+      worktime:
+        account_id: Buchungsposition
+        absence_id: Absenz
+        work_item: Buchungsposition
+        work_item_id: Buchungsposition
+        absence: Absenz
+        employee_id: Mitarbeiter
+        report_type: Reporttyp
+        work_date: Datum
+        hours: Stunden
+        from_start_time: Von
+        to_end_time: Bis
+        description: Bemerkungen
+        billable: Verrechenbar
+        ticket: Ticket
+        account: Buchungsposition
+        invoice_id: Rechnung
+
+    associations:
+      contact:
+        no_entry: "(keiner)"
+
+    errors:
+      models:
+        client:
+          attributes:
+            e_bill_account_key:
+              number: muss eine 17-stellige Zahl sein und mit 4110 beginnen
