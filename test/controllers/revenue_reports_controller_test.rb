@@ -17,6 +17,16 @@ class RevenueReportsControllerTest < ActionController::TestCase
     travel_back
   end
 
+  test 'only management and order responsible employees have access' do
+    management        = Ability.new(employees(:mark))
+    order_responsible = Ability.new(employees(:lucien))
+    normal_user       = Ability.new(employees(:pascal))
+
+    assert management.can?(:revenue_reports, Department)
+    assert order_responsible.can?(:revenue_reports, Department)
+    assert normal_user.cannot?(:revenue_reports, Department)
+  end
+
   test 'sets default period' do
     session[:period] = nil
     get :index
