@@ -1,8 +1,11 @@
-# Unreleased
+# 2.4
 
 ### Features
-* **API**: Ein neues json:api mit Lesezugriff, vorerst nur für /employees  
-  Unter `/api/docs` ist ein Swagger UI mit der Dokumentation verfügbar.
+* **Spesen:** Neu können in PuzzleTime Spesen hochgeladen und freigegeben resp. abgelehnt werden.
+* **API:** Ein neues json:api mit Lesezugriff, vorerst nur für /employees. Unter `/api/docs` ist ein Swagger UI mit der Dokumentation verfügbar.
+
+### Improvements
+* **Umsatz:** Auftragsverantwortliche haben nun auch Zugriff auf den Umsatz.
 
 # 2.3
 
