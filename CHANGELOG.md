@@ -7,6 +7,9 @@
 ### Improvements
 * **Umsatz:** Auftragsverantwortliche haben nun auch Zugriff auf den Umsatz.
 
+### Bug Fixes
+* **Zeiterfassung:** Beim Zeiterfassen mit Firefox kann mit Tab wieder von der Buchungsposition weitergesprungen werden [\#34](https://github.com/puzzle/puzzletime/issues/34)
+
 # 2.3
 
 ### Improvements
