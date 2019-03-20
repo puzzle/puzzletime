@@ -4,7 +4,7 @@
 #  https://github.com/puzzle/puzzletime.
 
 
-de-CH:
+de-DE:
   activerecord:
     models:
       absence:
