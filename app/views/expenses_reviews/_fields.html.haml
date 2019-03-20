@@ -1,0 +1,12 @@
+- small  = 3
+- middle = 6
+- large  = 10
+
+= expenses_submission_field(f,         span: small)
+= f.labeled_input_field :payment_date, span: small
+= f.labeled_input_field :employee_id,  span: middle
+= f.labeled_input_field :amount,       span: small
+= f.labeled_input_field :kind,         span: middle
+= expenses_order_field(f,              span: large)
+= f.labeled_input_field :description,  span: large
+= expenses_file_field(f,               span: large)

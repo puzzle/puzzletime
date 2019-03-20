@@ -41,7 +41,7 @@
               %br/
               %span.subtitle
                 = link_to_if(can?(:show, order),
-                             "#{order.work_item.path_shortnames}: #{order}",
+                             order.label_with_workitem_path,
                              can?(:update, order) ? edit_order_path(order) : order_path(order))
             %td
               = order.kind

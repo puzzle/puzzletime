@@ -16,6 +16,10 @@
             evaluation_path('userworkitems'),
             evaluation_path('userabsences')
 
+      = nav 'Spesen',
+        employee_expenses_path(current_user),
+        expenses_path
+
       = nav 'Aufträge',
             orders_path,
             orders_path,
@@ -48,11 +52,12 @@
             reports_role_distribution_path,
             vacations_path
 
+
       - if can?(:manage, Client)
         = nav 'Verwalten',
               clients_path,
               clients_path,
-              employees_path,
+              employees_path + '$',
               departments_path,
               configurations_path,
               absences_path,

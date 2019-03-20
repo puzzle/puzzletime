@@ -47,7 +47,7 @@ class FormatHelperTest < ActionView::TestCase
   end
 
   test 'format days' do
-    assert_equal '5.0 Tage', format_days(5.0001)
+    assert_equal '5.00 Tage', format_days(5.0001)
     assert_equal '-1.23 Tage', format_days(-1.23)
   end
 

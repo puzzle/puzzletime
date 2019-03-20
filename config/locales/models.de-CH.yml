@@ -49,6 +49,9 @@ de-CH:
       employment_role_category:
         one: Funktionskategorie
         other: Funktionskategorien
+      expense:
+        one: Spesen
+        other: Spesen
       holiday:
         one: Feiertag
         other: Feiertage
@@ -225,6 +228,34 @@ de-CH:
         name: Name
       employment_roles_employment:
         percent: Pensum
+      expense:
+        id: Spesennummer
+        amount: Betrag
+        description: Beschreibung
+        employee_id: Mitarbeiter
+        kind: Spesenart
+        kind_value: Spesenart
+        status_value: Status
+        status: Status
+        order_id: Projekt
+        payment_date: Kaufdatum
+        submission_date: Eingereicht am
+        receipt: Beleg
+        reimbursement_month: Auszahlungsmonat
+        reviewer_id: Visum
+        reason: Begründung / Bemerkung
+        reviewed_at: Visiert am
+      expense/statuses:
+        approved: Freigegeben
+        pending: Offen
+        deferred: In Bearbeitung
+        rejected: Abgelehnt
+      expense/kinds:
+        project: Projekt
+        sales: Verkauf / Kundenbetreuung
+        support: Teamevent / Mitarbeiterbetreuung
+        training: Aus- / Weiterbildung
+        other: Weitere
       holiday:
         holiday_date: Datum
         musthours_day: Muss Stunden

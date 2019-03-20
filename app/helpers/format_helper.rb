@@ -66,11 +66,23 @@ module FormatHelper
   end
 
   def format_days(number, short = false)
-    "#{number.round(2)} #{short ? 'T' : 'Tage'}"
+    format(
+      '%<amount>0.02f %<days>s',
+      amount: number.round(2),
+      days: short ? 'T' : 'Tage'
+    )
   end
 
   def format_percent(value)
     (value == value.to_i ? value.to_i.to_s : value.to_s) + ' %'
+  end
+
+  def format_expense_employee_id(value)
+    Employee.find(value.employee_id).to_s if value.employee_id # No link please
+  end
+
+  def format_expense_reviewer_id(value)
+    Employee.find(value.reviewer_id).to_s if value.reviewer_id # No link please
   end
 
   # Renders a simple unordered list, which will

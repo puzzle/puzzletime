@@ -4,5 +4,5 @@ json.array! @work_items do |item|
   json.path_shortnames item.path_shortnames
   json.description item.description
   json.path_names item.path_names
-  json.billable item.accounting_post.billable
+  json.billable item.accounting_post&.billable
 end

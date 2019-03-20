@@ -22,3 +22,27 @@ de-CH:
       from_to: "%{attr} %{model_ref} wurde von «%{from}» auf «%{to}» geändert."
       from: "%{attr} %{model_ref} «%{from}» wurde gelöscht."
       to: "%{attr} %{model_ref} wurde auf «%{to}» gesetzt."
+
+  expenses: &expenses
+    new:
+      title: "%{model} erfassen"
+    create:
+      title: "%{model} erfassen"
+      flash:
+        success: "%{model} wurden erfolgreich erfasst."
+    update:
+      flash:
+        success: "%{model} wurden erfolgreich aktualisiert."
+    destroy:
+      flash:
+        success: "%{model} wurden erfolgreich gelöscht."
+        failure: "%{model} konnten nicht gelöscht werden."
+    attachment:
+      name: "Anhang"
+      show: "Anzeigen"
+      hint: "Der Beleg muss ein Bild und gut lesbar sein und den Kaufpreis, das Kaufdatum und die MWST-Nummer enthalten."
+    global:
+      link:
+        add: Erfassen
+
+  expenses_reviews: *expenses

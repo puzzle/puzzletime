@@ -80,13 +80,17 @@ class OrdersController < CrudController
   def search
     params[:q] ||= params[:term]
     respond_to do |format|
-      format.json do
-        @orders = Order.list.where(search_conditions).minimal.limit(20)
-      end
+      format.json { @orders = search_entries }
     end
   end
 
   private
+
+  def search_entries
+    orders = Order.list.where(search_conditions)
+    orders = orders.open if params[:only_open]
+    orders.minimal.limit(20)
+  end
 
   def list_entries
     entries = super.includes(:kind, :department, :status, :responsible,

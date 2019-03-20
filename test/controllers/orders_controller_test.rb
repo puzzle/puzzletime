@@ -495,4 +495,27 @@ class OrdersControllerTest < ActionController::TestCase
 
     assert_template :edit
   end
+
+  test 'GET #search returns list of orders filtered by query' do
+    order = orders(:webauftritt)
+
+    get :search, params: { q: order.path_shortnames }, format: :json
+
+    assert find_in_body(response.body, 'id', order.id)
+  end
+
+  test 'GET #search accepts param to only return open orders' do
+    order = orders(:allgemein)
+
+    get :search, params: { q: order.path_shortnames, only_open: true }, format: :json
+
+    refute find_in_body(response.body, 'id', order.id)
+  end
+
+  private
+
+  def find_in_body(body, field, element)
+    JSON.parse(body).find { |w| w[field] == element }
+  end
+
 end

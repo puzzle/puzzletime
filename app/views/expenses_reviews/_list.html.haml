@@ -1,0 +1,18 @@
+- @title = 'Alle Spesen'
+
+= form_tag(nil, method: :get, class: 'form-inline', role: 'filter') do
+  = hidden_field_tag :page, 1
+  = direct_filter_select(:status,             'Status',               @statuses)
+  = direct_filter_select(:employee_id,        'Mitarbeiter',          @employees)
+  = direct_filter_select(:reimbursement_date, 'Auszahlungsmonat',     @months)
+  = direct_filter_select(:department_id,      'Organisationseinheit', @departments)
+
+.top-links
+  = render 'actions_index'
+
+= plain_table_or_message(entries, responsive: true) do |t|
+  - t.attrs(:payment_date, :employee_id, :kind_value)
+  - t.attr(:description) { |e| format_attr(e, :description).truncate_words(20) }
+  - t.attrs(:amount, :status_value, :reviewer_id, :reimbursement_month)
+  - expense_details_col(t, personal: false)
+  - expense_review_col(t)

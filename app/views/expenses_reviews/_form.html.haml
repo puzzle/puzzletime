@@ -1,0 +1,28 @@
+= form_for(entry, url: expenses_review_path(entry), method: :patch) do |f|
+  .row.columns.divider.mb-3
+    .col-12
+      = render('shared/error_messages', errors: entry.errors, object: entry)
+
+  .row.columns
+    .col-md-6
+      .form-group
+        = f.label :reimbursement_date, Expense.human_attribute_name(:reimbursement_month)
+        = f.collection_select :reimbursement_date, expenses_reimbursement_dates, :first, :last, {}, {class: 'form-control'}
+
+  .row.columns
+    .col-md-6
+      .form-group
+        = f.label :reason
+        = f.text_area :reason, rows: 3, class: 'form-control'
+
+  .row.columns
+    .col-md-3
+      = f.button 'Freigeben', id: :approve_btn, name: 'expense[status]', value: 'approved', class: 'btn btn-success btn-block', disabled: true, data: { disable_with: 'Freigeben' }
+    .col-md-3.button-spacing
+      = f.button 'Ablehnen', id: :reject_btn, name: 'expense[status]', value: 'rejected', class: 'btn btn-danger btn-block', disabled: true, data: { disable_with: 'Ablehnen' }
+
+  - unless entry.deferred?
+    .row.columns.actions
+      .col-12
+        = f.button 'Überspringen', name: 'expense[status]', value: 'deferred', class: 'btn btn-link', data: { disable_with: 'Überspringen' }
+

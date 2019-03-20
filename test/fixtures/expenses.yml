@@ -1,0 +1,70 @@
+# == Schema Information
+#
+# Table name: expenses
+#
+#  id                 :bigint(8)        not null, primary key
+#  employee_id        :bigint(8)        not null
+#  kind               :integer          not null
+#  status             :integer          default("pending"), not null
+#  amount             :decimal(12, 2)   not null
+#  payment_date       :date             not null
+#  description        :text             not null
+#  reason             :text
+#  reviewer_id        :bigint(8)
+#  reviewed_at        :datetime
+#  order_id           :bigint(8)
+#  reimbursement_date :date
+#  submission_date    :date
+#
+
+pending:
+  employee_id: 6
+  kind: training
+  status: pending
+  amount: 23
+  payment_date: 2019-01-11
+  description: test
+
+approved:
+  employee_id: 6
+  kind: project
+  status: approved
+  order: hitobito_demo
+  amount: 32
+  payment_date: 2019-02-10
+  description: test
+  reimbursement_date: 2019-03-01
+  reviewer_id: 7
+  reviewed_at: 2019-02-20 14:32:00
+
+rejected:
+  employee_id: 6
+  kind: training
+  status: rejected
+  amount: 32
+  payment_date: 2019-02-10
+  description: test
+  reason: Rechnung fehlt
+  reviewer_id: 7
+  reviewed_at: 2019-01-20 14:32:00
+
+deferred:
+  employee_id: 6
+  kind: training
+  status: deferred
+  amount: 32
+  payment_date: 2019-02-10
+  description: test
+
+payed:
+  employee_id: 7
+  kind: project
+  status: approved
+  order: hitobito_demo
+  amount: 13
+  payment_date: 2019-01-10
+  description: test
+  reimbursement_date: 2019-02-01
+  reviewer_id: 7
+  reviewed_at: 2019-01-20 14:32:00
+
