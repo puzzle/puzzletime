@@ -253,7 +253,7 @@ de-CH:
       expense/kinds:
         project: Projekt
         sales: Verkauf / Kundenbetreuung
-        support: Teamevent / Mitarbeiterbetreeung
+        support: Teamevent / Mitarbeiterbetreuung
         training: Aus- / Weiterbildung
         other: Weitere
       holiday:
