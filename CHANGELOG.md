@@ -1,8 +1,16 @@
-# Unreleased
+# 2.4
 
 ### Features
-* **API**: Ein neues json:api mit Lesezugriff, vorerst nur für /employees  
-  Unter `/api/docs` ist ein Swagger UI mit der Dokumentation verfügbar.
+* **Spesen:** Neu können in PuzzleTime Spesen hochgeladen und freigegeben resp. abgelehnt werden.
+* **API:** Ein neues json:api mit Lesezugriff, vorerst nur für /employees. Unter `/api/docs` ist ein Swagger UI mit der Dokumentation verfügbar.
+
+### Improvements
+* **Umsatz:** Auftragsverantwortliche haben nun auch Zugriff auf den Umsatz.
+
+### Bug Fixes
+* **Zeiterfassung:** Usability Fehler beim Duplizieren von Zeiteinträgen geflickt [\#28](https://github.com/puzzle/puzzletime/issues/28)
+* **Zeiterfassung:** Beim Zeiterfassen mit Firefox kann mit Tab wieder von der Buchungsposition weitergesprungen werden [\#34](https://github.com/puzzle/puzzletime/issues/34)
+
 
 # 2.3
 
