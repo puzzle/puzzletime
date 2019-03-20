@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '5.2.2'
+gem 'rails', '5.2.2.1'
 
 gem 'pg', '= 0.21.0'
 
@@ -18,12 +18,14 @@ gem 'delayed_job_active_record'
 gem 'fast_jsonapi'
 gem 'haml'
 gem 'highrise'
+gem 'image_processing', '~> 1.2'
 gem 'jbuilder'
 gem 'kaminari'
 gem 'kaminari-bootstrap'
 gem 'nested_form_fields'
 gem 'net-ldap'
 gem 'nokogiri'
+gem 'prawn'
 gem 'prometheus_exporter'
 gem 'protective'
 gem 'puma'

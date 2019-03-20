@@ -1,0 +1,83 @@
+.expenses, .expenses_reviews {
+    .top-links {
+        margin-top: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    table.table-small-blocks {
+        table-layout: fixed;
+
+        .action {
+            width: 2em;
+        }
+    }
+
+
+    @media screen and (max-width: 600px) {
+        main  {
+            margin-left: 6px;
+        }
+
+        .unindented  {
+            margin-left: 0px;
+            margin-right: 0px;
+
+            table.table-small-blocks.table-condensed td:first-child {
+                padding-left: 6px;
+            }
+        }
+
+        table.table-small-blocks {
+            thead {
+                border: none;
+                clip: rect(0 0 0 0);
+                height: 1px;
+                margin: -1px;
+                overflow: hidden;
+                padding: 0;
+                position: absolute;
+                width: 1px;
+            }
+
+            tr {
+                border-bottom: 3px solid #ddd;
+                display: block;
+                margin-bottom: .625em;
+            }
+
+            td {
+                border-bottom: 1px solid #ddd;
+                display: block;
+                font-size: .8em;
+                text-align: right;
+            }
+
+            td:not(.action).empty-cell {
+                height: 2.2em;
+            }
+
+            td.action {
+                display: inline-block;
+                padding-right: 2em;
+                border: none;
+            }
+
+            td.action.empty-cell {
+                display: none;
+            }
+
+
+            td:not(.action)::before {
+                float: left;
+                display: inline-block;
+                font-weight: bold;
+                text-transform: uppercase;
+                content: attr(data-label);
+            }
+
+            td:last-child {
+                border-bottom: 0;
+            }
+        }
+    }
+}

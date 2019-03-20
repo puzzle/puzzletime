@@ -1,0 +1,3 @@
+= nav('Meine Spesen', employee_expenses_path(current_user), employee_expenses_path(current_user) + "*")
+- if current_user.management?
+  = nav 'Alle Spesen', expenses_reviews_path(returning: true), expenses_review_path(id: '*')

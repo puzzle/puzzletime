@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: employees
@@ -34,6 +33,8 @@
 #  crm_key                   :string
 #  additional_information    :text
 #  reviewed_worktimes_at     :date
+#  nationalities             :string           is an Array
+#  graduation                :string
 #
 
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html

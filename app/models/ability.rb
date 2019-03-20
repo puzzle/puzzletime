@@ -36,6 +36,7 @@ class Ability
          Contact,
          Department,
          Employment,
+         Expense,
          Holiday,
          Contract,
          Order,
@@ -224,5 +225,7 @@ class Ability
          :workitememployees,
          :orderworkitems],
         Evaluation
+
+    can :manage, Expense, employee_id: user.id
   end
 end

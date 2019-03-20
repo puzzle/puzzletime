@@ -31,6 +31,7 @@ class OrderStatus < ActiveRecord::Base
 
   scope :list, -> { order(:position) }
   scope :defaults, -> { list.where(default: true) }
+  scope :open, -> { where(closed: false) }
 
 
   def to_s

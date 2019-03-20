@@ -46,7 +46,13 @@ module Puzzletime
 
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
-    config.i18n.default_locale = :'de-CH'
+    locale =
+      if ENV['RAILS_LOCALE']
+        :"#{ENV['RAILS_LOCALE']}"
+      else
+        :'de-CH'
+      end
+    config.i18n.default_locale = locale
 
     config.encoding = 'utf-8'
 

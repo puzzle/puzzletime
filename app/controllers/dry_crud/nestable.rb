@@ -19,6 +19,7 @@ module DryCrud
     # to the including controller.
     def self.prepended(klass)
       klass.class_attribute :nesting
+      klass.class_attribute :optional_nesting
 
       klass.helper_method :parent, :parents
     end
@@ -34,7 +35,32 @@ module DryCrud
     # These are ActiveRecords or namespace symbols, corresponding
     # to the defined nesting attribute.
     def parents
-      @parents ||= Array(nesting).map do |p|
+      @parents ||= load_parents
+    end
+
+    def load_parents
+      if optional_nesting.present?
+        load_optional_parent || load_fixed_parents
+      else
+        load_fixed_parents
+      end
+    end
+
+    def load_optional_parent
+      parent = nil
+      Array(optional_nesting).each do |clazz|
+        key = clazz.name.underscore
+        id = params["#{key}_id"]
+        if id && request.path =~ %r{\/#{key.pluralize}\/#{id}\/}
+          parent = [parent_entry(clazz)]
+          break
+        end
+      end
+      parent
+    end
+
+    def load_fixed_parents
+      Array(nesting).map do |p|
         if p.is_a?(Class) && p < ActiveRecord::Base
           parent_entry(p)
         else

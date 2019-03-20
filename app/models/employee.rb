@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: employees
@@ -34,6 +33,8 @@
 #  crm_key                   :string
 #  additional_information    :text
 #  reviewed_worktimes_at     :date
+#  nationalities             :string           is an Array
+#  graduation                :string
 #
 
 class Employee < ActiveRecord::Base
@@ -74,6 +75,7 @@ class Employee < ActiveRecord::Base
   has_one :running_time,
           -> { where(report_type: AutoStartType::INSTANCE.key) },
           class_name: 'Ordertime'
+  has_many :expenses, dependent: :destroy
 
   before_validation do
     self.nationalities.try(:reject!, &:blank?)

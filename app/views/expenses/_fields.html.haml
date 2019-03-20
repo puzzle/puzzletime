@@ -1,0 +1,8 @@
+= expenses_submission_field(f)
+= f.labeled_input_field :payment_date
+= f.labeled_input_field :employee_id unless parent
+= f.labeled_input_field :amount
+= f.labeled_input_field :kind
+= expenses_order_field(f)
+= f.labeled_input_field :description
+= expenses_file_field(f)

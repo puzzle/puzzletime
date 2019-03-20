@@ -1,0 +1,22 @@
+- @title ||= ti(:title, model: full_entry_label).html_safe
+- receipt = entry.receipt
+
+.row.columns
+  .col-12.col-md-6
+    = render 'attrs'
+
+    %br/
+    .hidden-xs.hidden-sm
+      = render 'backlink'
+      = render 'actions_show'
+
+  .col-12.col-md-6
+    - if attachment_displayable?(receipt)
+      = attachment_show_link(receipt, t('expenses.attachment.show'), class: 'visible-xs')
+      = attachment_image_tag receipt, class: 'img-responsive', show_link: true
+    - else
+      %h3 Keine Vorschau verfügbar
+
+    .hidden-md.hidden-lg.hidden-xl
+      = render 'backlink'
+      = render 'actions_show'
