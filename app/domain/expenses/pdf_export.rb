@@ -38,6 +38,7 @@ class Expenses::PdfExport
       pdf.start_new_page unless i.zero?
       add_header
       add_receipt
+      reset_model_data
     end
     pdf.number_pages('Seite <page>/<total>', at: [pdf.bounds.right - 60, pdf.bounds.bottom + 5])
   end
@@ -127,21 +128,28 @@ class Expenses::PdfExport
   end
 
   def model_data # rubocop:disable Metrics/AbcSize
-    output = {}
-    output[:employee_id]         = format_employee(expense.employee)
-    output[:status]              = expense.status_value
-    output[:kind]                = expense.kind_value
-    output[:order_id]            = format_order                      if expense.project?
-    output[:reviewer_id]         = format_employee(expense.reviewer) if expense.approved?
-    output[:reviewed_at]         = format_date(expense.reviewed_at)  if expense.approved?
-    output[:reimbursement_month] = expense.reimbursement_month       if expense.approved?
-    output[:reason]              = expense.reason&.truncate(90)      if expense.rejected?
-    output[:id]                  = expense.id
-    output[:amount]              = format_value
-    output[:payment_date]        = format_date(expense.payment_date)
-    output[:description]         = expense.description&.truncate(90) if expense.description
-    output[:receipt]             = receipt_text
-    output
+    @model_data ||=
+      begin
+        output = {}
+        output[:employee_id]         = format_employee(expense.employee)
+        output[:status]              = expense.status_value
+        output[:kind]                = expense.kind_value
+        output[:order_id]            = format_order                      if expense.project?
+        output[:reviewer_id]         = format_employee(expense.reviewer) if (expense.approved? || expense.rejected?)
+        output[:reviewed_at]         = format_date(expense.reviewed_at)  if (expense.approved? || expense.rejected?)
+        output[:reimbursement_month] = expense.reimbursement_month       if expense.approved?
+        output[:reason]              = expense.reason&.truncate(90)      if (expense.approved? || expense.rejected?)
+        output[:id]                  = expense.id
+        output[:amount]              = format_value
+        output[:payment_date]        = format_date(expense.payment_date)
+        output[:description]         = expense.description&.truncate(90) if expense.description
+        output[:receipt]             = receipt_text
+        output
+      end
+  end
+
+  def reset_model_data
+    @model_data = nil
   end
 
   def attribute(title, value)
