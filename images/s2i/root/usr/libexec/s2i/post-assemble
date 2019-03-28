@@ -4,4 +4,6 @@ set -e
 
 cd /opt/app-root/src
 
+
 echo $BUILD_INFO > BUILD_INFO
+env | sort >> BUILD_INFO
