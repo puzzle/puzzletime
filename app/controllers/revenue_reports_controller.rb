@@ -18,6 +18,11 @@ class RevenueReportsController < ApplicationController
 
   def index
     @report = report_type.new(@period, params)
+
+    respond_to do |format|
+      format.any {}
+      format.csv { send_file(Reports::Revenue::Csv.new(@report).generate) }
+    end
   end
 
   private
