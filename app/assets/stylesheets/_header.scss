@@ -3,6 +3,13 @@
 //  or later. See the COPYING file at the top-level directory or at
 //  https://github.com/puzzle/puzzletime.
 
+@media (min-width: 768px) {
+  header {
+    position: sticky;
+    z-index: 3; // because some inputs are also z-index 2
+    top: 0;
+  }
+}
 
 .navbar {
   z-index: 2;
