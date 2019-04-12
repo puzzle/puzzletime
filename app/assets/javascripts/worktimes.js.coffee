@@ -10,6 +10,7 @@ app.worktimes = new class
   scrollSpeed = 300
   activationEnabled = true
   worktimesWaypoint = null
+  headerOffset = 0
 
   toggle = (selector, disable) ->
     $(selector).prop('disabled', disable)
@@ -82,6 +83,8 @@ app.worktimes = new class
       worktimesWaypoint.destroy()
       worktimesWaypoint = null
 
+    headerOffset = (if $(window).width() > 768 then $('header').height() else 0) #set offset of header
+
     if @container().length
       @container('.weekcontent .date-label')
         .waypoint(
@@ -91,7 +94,7 @@ app.worktimes = new class
             else if direction == 'up' && $(this.element).prev().length
               app.worktimes.activateNavDayWithDate($(this.element).prev().data('date'))
           ,
-          offset: -> $('.weeknav').height()
+          offset: -> $('.weeknav').height() + headerOffset
         )
 
       @container('.weeknav .day').on('click', (e) =>
@@ -137,7 +140,7 @@ app.worktimes = new class
     if dateLabel.length is 0
       return
 
-    offset = dateLabel.offset().top - @container('.weeknav').height() - 20
+    offset = dateLabel.offset().top - @container('.weeknav').height() - 20 - headerOffset
     @scrollTo(offset, @activateNavDayWithDate, date)
 
   scrollTo: (offset, callback, date) ->
