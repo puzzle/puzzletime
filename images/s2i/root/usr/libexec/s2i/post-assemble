@@ -1,9 +1,7 @@
 #!/bin/bash
 
-set -e
+set -ex
 
 cd /opt/app-root/src
 
-
-echo $BUILD_INFO > BUILD_INFO
-env | sort >> BUILD_INFO
+echo $OPENSHIFT_BUILD_COMMIT > BUILD_INFO
