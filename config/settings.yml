@@ -8,24 +8,6 @@
 # Global settings for puzzleTime #
 # ############################## #
 
-# Array of holidays with a fixed date. [day, month]
-regular_holidays:
-  -
-    - 1
-    - 1
-  -
-    - 2
-    - 1
-  -
-    - 1
-    - 8
-  -
-    - 25
-    - 12
-  -
-    - 26
-    - 12
-
 api_client:
   user: <%= ENV['RAILS_API_USER'] || SecureRandom.hex %>
   password: <%= ENV['RAILS_API_PASSWORD'] || SecureRandom.hex %>
