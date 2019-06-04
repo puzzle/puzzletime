@@ -27,7 +27,7 @@
   = form_tag(nil, method: :get, class: 'form-inline', role: 'filter') do
     = hidden_field_tag :page, 1
     = direct_filter_select(:status, 'Status', @statuses)
-    = direct_filter_select(:employee_id, 'Mitarbeiter', @employees)
+    = direct_filter_select(:employee_id, 'Member', @employees)
     = direct_filter_select(:reimbursement_date, 'Auszahlungsmonat', @months)
     = direct_filter_select(:department_id, 'Organisationseinheit', @departments)
 

@@ -115,7 +115,7 @@ class EvaluatorControllerTest < ActionController::TestCase
   private
 
   def expected_csv_header
-    'Datum,Stunden,Von Zeit,Bis Zeit,Reporttyp,Verrechenbar,Mitarbeiter,Position,Ticket,Bemerkungen'
+    'Datum,Stunden,Von Zeit,Bis Zeit,Reporttyp,Verrechenbar,Member,Position,Ticket,Bemerkungen'
   end
 
   def csv_header

@@ -5,7 +5,7 @@
 
 
 - if can?(:new, CustomList)
-  = action_link(action_icon('add', 'Mitarbeiterliste erstellen'),
+  = action_link(action_icon('add', 'Memberliste erstellen'),
                 new_plannings_custom_list_path(custom_list: { item_type: Employee.sti_name }))
   = action_link(action_icon('add', 'Auftragsliste erstellen'),
                 new_plannings_custom_list_path(custom_list: { item_type: Order.sti_name }))

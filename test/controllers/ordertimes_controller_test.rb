@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -47,7 +48,7 @@ class OrdertimesControllerTest < ActionController::TestCase
   def test_new_other
     get :new, params: { other: 1 }
     assert_template 'new'
-    assert_match(/Mitarbeiter/, @response.body)
+    assert_match(/Member/, @response.body)
     assert_nil assigns(:worktime).employee
   end
 
