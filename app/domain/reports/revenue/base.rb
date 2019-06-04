@@ -141,6 +141,7 @@ module Reports::Revenue
         .joins('LEFT JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)')
         .in_period(period)
         .billable
+        .where.not('? = ANY (work_items.path_ids)', Settings.clients.company_id)
     end
 
     def load_plannings(period)
@@ -150,6 +151,7 @@ module Reports::Revenue
         .in_period(period)
         .definitive
         .where(accounting_posts: { billable: true })
+        .where.not('? = ANY (work_items.path_ids)', Settings.clients.company_id)
     end
 
     def load_ordertime_hours
