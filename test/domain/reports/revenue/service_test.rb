@@ -34,6 +34,8 @@ class ServiceRevenueReportTest < ActiveSupport::TestCase
   end
 
   test 'entries and values' do
+    Settings.clients.stubs(:company_id).returns(0) #TODO: do not use puzzle as example
+
     accounting_posts(:hitobito_demo_app).update_attribute(:service_id, system.id)
     system.update(active: false)
 
@@ -65,6 +67,35 @@ class ServiceRevenueReportTest < ActiveSupport::TestCase
     assert_equal Hash[Date.new(2000, 9, 1) => 6.4 * 170.0,
                       Date.new(2000, 11, 1) => 6.4 * 170.0 * 2 + 6.4 * 140.0], r.total_planning_hours_per_month
   end
+
+  test 'entries and values from configured company are ignored' do
+    accounting_posts(:hitobito_demo_app).update_attribute(:service_id, system.id)
+    system.update(active: false)
+
+    ordertime(Date.new(2000, 7, 10), :puzzletime)
+    ordertime(Date.new(2000, 7, 11), :puzzletime)
+    ordertime(Date.new(2000, 8, 10), :puzzletime)
+    ordertime(Date.new(2000, 7, 10), :hitobito_demo_app) # inactive service
+
+    planning(Date.new(2000, 9, 11), :hitobito_demo_app) # inactive service
+    planning(Date.new(2000, 11, 10), :hitobito_demo_app) # inactive service
+    planning(Date.new(2000, 11, 13), :hitobito_demo_app) # inactive service
+    planning(Date.new(2000, 11, 10), :webauftritt)
+
+    r = report
+    assert_equal [software], r.entries.to_a
+    assert_equal Hash[], r.ordertime_hours
+    assert_equal Hash[], r.total_ordertime_hours_per_month
+    assert_equal 0, r.total_ordertime_hours_per_entry(software)
+    assert_equal 0, r.total_ordertime_hours_per_entry(system)
+    assert_equal 0, r.average_ordertime_hours_per_entry(software)
+    assert_equal 0, r.average_ordertime_hours_per_entry(system)
+    assert_equal 0, r.total_ordertime_hours_overall
+    assert_equal 0, r.average_ordertime_hours_overall
+    assert_equal Hash[[software.id, Date.new(2000, 11, 1)] => 6.4 * 140.0], r.planning_hours
+    assert_equal Hash[Date.new(2000, 11, 1) => 6.4 * 140.0], r.total_planning_hours_per_month
+  end
+
 
   private
 
