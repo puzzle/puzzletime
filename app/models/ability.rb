@@ -64,6 +64,7 @@ class Ability
          :update_reviewed_worktimes,
          :manage_plannings,
          :show_worktime_graph,
+         :social_insurance,
          :log],
         Employee
 
@@ -186,6 +187,7 @@ class Ability
          :update_settings,
          :update_committed_worktimes,
          :show_worktime_graph,
+         :social_insurance,
          :manage_plannings],
         Employee,
         id: user.id
