@@ -48,7 +48,7 @@ class Holiday < ActiveRecord::Base
       end
     end
 
-    def irregular_holiday?(date)
+    def holiday?(date)
       cached.keys.include?(date)
     end
 
@@ -58,8 +58,8 @@ class Holiday < ActiveRecord::Base
       wday.zero? || wday == 6
     end
 
-    def holiday?(date)
-      weekend?(date) || irregular_holiday?(date)
+    def non_working_day?(date)
+      weekend?(date) || holiday?(date)
     end
 
     # returns all holidays for the given period which fall on a weekday
