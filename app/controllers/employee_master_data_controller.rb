@@ -35,6 +35,10 @@ class EmployeeMasterDataController < ApplicationController
                         .find(params[:id])
     authorize!(:read, @employee)
 
+    unless can?(:social_insurance, @employee)
+      @employee.social_insurance = nil
+    end
+
     respond_to do |format|
       format.html
       format.vcf
