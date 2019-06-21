@@ -7,7 +7,7 @@
 class WorkItemEmployeesEval < Evaluation
   self.division_method  = :employees
   self.division_column  = :employee_id
-  self.label            = 'Mitarbeiter'
+  self.label            = 'Members'
   self.category_ref     = 'ANY ( path_ids )'
   self.billable_hours    = true
   self.planned_hours     = true

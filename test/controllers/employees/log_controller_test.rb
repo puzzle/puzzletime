@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -28,12 +29,12 @@ class Employees::LogControllerTest < ActionController::TestCase
     pedro.update_attributes(committed_worktimes_at: Time.zone.now) # should not appear in log
     get :index, params: { id: pedro.id }
     assert_select('.log tbody tr', count: 2)
-    assert_select('.log tbody tr:nth-child(1) td:nth-child(2)', text: "Der Mitarbeiter #2 wurde bearbeitet.\n" \
-                                                                      'Telefon Privat des Mitarbeiters wurde auf «+41791234567» gesetzt.')
-    assert_select('.log tbody tr:nth-child(2) td:nth-child(2)', text: "Der Mitarbeiter #2 wurde bearbeitet.\n" \
-                                                                      'Strasse des Mitarbeiters wurde auf «Belpstrasse 37» gesetzt.' \
-                                                                      'PLZ des Mitarbeiters wurde auf «3007» gesetzt.' \
-                                                                      'Ort des Mitarbeiters wurde auf «Bern» gesetzt.')
+    assert_select('.log tbody tr:nth-child(1) td:nth-child(2)', text: "Der Member #2 wurde bearbeitet.\n" \
+                                                                      'Telefon Privat des Members wurde auf «+41791234567» gesetzt.')
+    assert_select('.log tbody tr:nth-child(2) td:nth-child(2)', text: "Der Member #2 wurde bearbeitet.\n" \
+                                                                      'Strasse des Members wurde auf «Belpstrasse 37» gesetzt.' \
+                                                                      'PLZ des Members wurde auf «3007» gesetzt.' \
+                                                                      'Ort des Members wurde auf «Bern» gesetzt.')
   end
 
   private
