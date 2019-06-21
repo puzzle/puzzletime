@@ -94,14 +94,6 @@ module Plannings
       assert_equal 90, board.weekly_planned_percent(date)
     end
 
-    test '#weekly_planned_percent includes regular holidays' do
-      @date = Date.new(2014, 12, 22)
-      employee.employments.create!(start_date: date - 1.year, percent: 80,
-                                   employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
-      board = Plannings::EmployeeBoard.new(employee, period)
-      assert_equal 32, board.weekly_planned_percent(date)
-    end
-
     test '#weekly_planned_percent includes irregular holidays' do
       employee.employments.create!(start_date: date - 1.year, percent: 100,
                                    employment_roles_employments: [Fabricate.build(:employment_roles_employment)])

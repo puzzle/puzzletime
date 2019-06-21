@@ -98,6 +98,6 @@ module GraphHelper
   end
 
   def day_td(date, &block)
-    content_tag(:td, class: ('holiday' if Holiday.holiday?(date)), &block)
+    content_tag(:td, class: ('holiday' if Holiday.non_working_day?(date)), &block)
   end
 end

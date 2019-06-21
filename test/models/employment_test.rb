@@ -20,6 +20,12 @@
 require 'test_helper'
 
 class EmploymentTest < ActiveSupport::TestCase
+
+  def setup
+    date = 1990..2019
+    setup_regular_holidays(date.to_a)
+  end
+
   def test_musttime
     half_year = Employment.find(1)
     assert_equal half_year.period.length, 184

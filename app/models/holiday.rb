@@ -41,21 +41,14 @@ class Holiday < ActiveRecord::Base
 
     # Collection of functions to check if date is holiday or not
     def musttime(date)
-      if Holiday.weekend?(date) || Holiday.regular_holiday?(date)
+      if Holiday.weekend?(date)
         0
       else
         cached[date] || WorkingCondition.value_at(date, :must_hours_per_day)
       end
     end
 
-    # Checks if date is a regular holiday
-    def regular_holiday?(date)
-      Settings.regular_holidays.any? do |day|
-        date.day == day[0] && date.month == day[1]
-      end
-    end
-
-    def irregular_holiday?(date)
+    def holiday?(date)
       cached.keys.include?(date)
     end
 
@@ -65,34 +58,14 @@ class Holiday < ActiveRecord::Base
       wday.zero? || wday == 6
     end
 
-    def holiday?(date)
-      weekend?(date) ||
-        regular_holiday?(date) ||
-        irregular_holiday?(date)
+    def non_working_day?(date)
+      weekend?(date) || holiday?(date)
     end
 
     # returns all holidays for the given period which fall on a weekday
     def holidays(period)
       irregulars = cached.keys.select { |day| period.include?(day) }
-      holidays = irregulars.collect { |day| new(holiday_date: day, musthours_day: cached[day]) }
-      regular_holidays(period).each do |holiday|
-        holidays.push holiday unless irregulars.include?(holiday.holiday_date)
-      end
-      holidays
-    end
-
-    def regular_holidays(period)
-      holidays = []
-      years = period.start_date.year..period.end_date.year
-      years.each do |year|
-        Settings.regular_holidays.each do |day|
-          regular = Date.civil(year, day[1], day[0])
-          if period.include?(regular) && !weekend?(regular)
-            holidays.push new(holiday_date: regular, musthours_day: 0)
-          end
-        end
-      end
-      holidays
+      irregulars.collect { |day| new(holiday_date: day, musthours_day: cached[day]) }
     end
 
     def cached

@@ -30,7 +30,7 @@ module WorktimeHelper
   def overview_day_class(_worktimes, day)
     if day == Time.zone.today
       'today'
-    elsif Holiday.holiday?(day)
+    elsif Holiday.non_working_day?(day)
       'holiday'
     elsif day < Time.zone.today && sum_hours(day) <= 0
       'missing'
