@@ -98,6 +98,9 @@ class StartStopType < ReportType
        worktime.to_end_time <= worktime.from_start_time
       worktime.errors.add(:to_end_time, 'Die Endzeit muss nach der Startzeit sein')
     end
+    if worktime.from_start_time&.to_date != worktime.to_end_time&.to_date
+      worktime.errors.add(:to_end_time, 'Die Endzeit muss zwischen 00:00-23:59 liegen')
+    end
   end
 end
 
