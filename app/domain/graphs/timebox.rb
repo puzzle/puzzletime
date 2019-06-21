@@ -25,7 +25,9 @@ class Timebox
     end
 
     def height_from_hours(hours)
-      hours * PIXEL_PER_HOUR
+      # Round to fix pixel display issues
+      rounded = (hours * 4).round / 4.0
+      rounded * PIXEL_PER_HOUR
     end
 
     def format_hour(hour)
