@@ -137,8 +137,11 @@ class Ability
       i.order.responsible_id == user.id
     end
     can [:edit, :update, :destroy], Invoice do |i|
-      i.order.responsible_id == user.id &&
-        !%w(deleted paid partially_paid).include?(i.status)
+      is_responsible     = (i.order.responsible_id == user.id)
+      is_open            = !%w(deleted paid partially_paid).include?(i.status)
+      is_manual_and_used = (i.manual? && i.total_amount > 1)
+
+      is_responsible && is_open && !is_manual_and_used
     end
 
     can :read, Ordertime do |t|
