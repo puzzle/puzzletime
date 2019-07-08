@@ -1,3 +1,28 @@
+# 2.5
+
+### Features
+* **Wording:** Mitarbeiter heissen jetzt Member/Members.
+* **Umsatzberechnung:** Gibt es jetzt als CSV Export.
+
+### Improvements
+* **Rechnungen:** Eine manuelle Rechnung, auf der bereits gebucht wurde, kann nicht mehr abgeändert werden. 
+* **Zeitfreigabe:** Die Freigaben werden jetzt im Userjournal angezeigt.
+* **Mitarbeiterblatt:** Anzeige der AHV-Nummer auf Management beschränkt.
+* **Layout:** Navigationsleiste ist nun sticky.
+* **Umsatzberechnung:** Fälschlicherweise produktiv gebuchte Stunden auf Puzzle werden nun nicht mehr mit einbezogen.
+* **Feiertage:** Feste Feiertage wurden nun zugunsten der dynamischen entfernt.
+* **Sicherheit:** Updates diverser rubygems aus Sicherheitsgründen.
+* **Absenzen:** Management kann nun Absenzen von Members löschen.
+
+
+### Bug fixes
+* **Login:** Bei fehlerhaftem Login wird die Meldung nun in der Warnfarbe dargestellt.
+* **Wochenübersicht Stunden:** Sollstundenlinie verschiebt sich nicht mehr.
+* **Zeitbuchung:** Es kann nun nur noch von 00:00-23:59 gebucht werden um Fehlern vorzubeugen.
+* **Budget-Controlling:** Submenü wird nun wieder korrekt dargestellt.
+* **Browsersupport:** Projektsuche funktioniert wieder auf IE11.
+
+
 # 2.4
 
 ### Features
