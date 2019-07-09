@@ -1,12 +1,13 @@
 # 2.5
 
 ### Improvements
-* **Layout:** Die Navigationsleiste ist nun sticky.
+* **Layout:** Die Navigationsleiste ist nun sticky [\#29](https://github.com/puzzle/puzzletime/issues/29)
 * **Wording:** Mitarbeiter heissen neu Members.
 * **Absenzen:** Mit Management-Berechtigung können nun Absenzen der anderen Members gelöscht werden.
 * **Zeitfreigabe:** Die Zeitfreigabe wird neu im Log des Members angezeigt.
 * **Rechnungen:** Manuelle Rechnung, die im Rechnungsstellungtool editiert wurden, können in PuzzleTime nicht mehr versehentlich überschrieben werden.
-* **Mitarbeiterblatt:** Die AHV-Nummer der Members wird nur noch mit Management-Berechtigung angezeigt.
+* **Mitarbeiterblatt:** Die AHV-Nummer der Members wird nur noch mit Management-Berechtigung angezeigt [\#23](https://github.com/puzzle/puzzletime/issues/23)
+
 * **Umsatzberechnung:** Fälschlicherweise verrechenbar gebuchte Stunden auf Puzzle werden nun nicht mehr mit einbezogen.
 * **Umsatz:** Gibt es jetzt als CSV Export.
 * **Feiertage:** Neu können alle Feiertage frei konfiguriert werden.
