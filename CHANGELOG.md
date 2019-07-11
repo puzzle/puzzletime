@@ -20,6 +20,7 @@
 * **Budget-Controlling:** Submenü wird nun wieder korrekt dargestellt.
 * **Browsersupport:** Projektsuche funktioniert wieder auf IE11.
 
+
 # 2.4
 
 ### Features
