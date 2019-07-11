@@ -34,6 +34,8 @@ class SectorRevenueReportTest < ActiveSupport::TestCase
   end
 
   test 'entries and values' do
+    Settings.clients.stubs(:company_id).returns(0) #TODO: Do not use puzzle as example
+
     clients(:puzzle).update_attribute(:sector_id, verwaltung.id)
     clients(:pbs).update_attribute(:sector_id, oev.id)
     work_items(:hitobito).update!(parent_id: work_items(:pbs).id)
@@ -64,6 +66,38 @@ class SectorRevenueReportTest < ActiveSupport::TestCase
     assert_equal Hash[[oev.id, Date.new(2000, 9, 1)] => 6.4 * 170.0,
                       [oev.id, Date.new(2000, 11, 1)] => 6.4 * 170.0 * 2,
                       [verwaltung.id, Date.new(2000, 11, 1)] => 6.4 * 0], r.planning_hours
+    assert_equal Hash[Date.new(2000, 9, 1) => 6.4 * 170.0,
+                      Date.new(2000, 11, 1) => 6.4 * 170.0 * 2 + 6.4 * 0], r.total_planning_hours_per_month
+  end
+
+  test 'entries and values from configured company are ignored' do
+    clients(:puzzle).update_attribute(:sector_id, verwaltung.id)
+    clients(:pbs).update_attribute(:sector_id, oev.id)
+    work_items(:hitobito).update!(parent_id: work_items(:pbs).id)
+    oev.update(active: false)
+
+    ordertime(Date.new(2000, 7, 10), :puzzletime)
+    ordertime(Date.new(2000, 7, 11), :puzzletime)
+    ordertime(Date.new(2000, 8, 10), :puzzletime)
+    ordertime(Date.new(2000, 7, 10), :hitobito_demo_app) # inactive sector
+
+    planning(Date.new(2000, 9, 11), :hitobito_demo_app) # inactive sector
+    planning(Date.new(2000, 11, 10), :hitobito_demo_app) # inactive sector
+    planning(Date.new(2000, 11, 13), :hitobito_demo_app) # inactive sector
+    planning(Date.new(2000, 11, 10), :allgemein)
+
+    r = report
+    assert_equal [oev].sort, r.entries.to_a.sort
+    assert_equal Hash[[oev.id, Date.new(2000, 7, 1)] => 170.0], r.ordertime_hours
+    assert_equal Hash[Date.new(2000, 7, 1) => 170.0], r.total_ordertime_hours_per_month
+    assert_equal 0, r.total_ordertime_hours_per_entry(verwaltung)
+    assert_equal 170.0, r.total_ordertime_hours_per_entry(oev)
+    assert_equal 0, r.average_ordertime_hours_per_entry(verwaltung)
+    assert_equal 170.0, r.average_ordertime_hours_per_entry(oev)
+    assert_equal 170.0, r.total_ordertime_hours_overall
+    assert_equal 170.0, r.average_ordertime_hours_overall
+    assert_equal Hash[[oev.id, Date.new(2000, 9, 1)] => 6.4 * 170.0,
+                      [oev.id, Date.new(2000, 11, 1)] => 6.4 * 170.0 * 2], r.planning_hours
     assert_equal Hash[Date.new(2000, 9, 1) => 6.4 * 170.0,
                       Date.new(2000, 11, 1) => 6.4 * 170.0 * 2 + 6.4 * 0], r.total_planning_hours_per_month
   end

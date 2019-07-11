@@ -387,6 +387,10 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
   z-index: 2;
   padding: $padding-base-vertical 0;
 
+  @media (min-width: 768px) {
+    top: 134px;
+  }
+
   &.stuck {
     position: fixed;
     width: 100%;

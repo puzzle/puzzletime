@@ -49,13 +49,14 @@ half_year_maria:
   eval_periods: ["-1m", "0"]
 
 various_pedro:
-  id:        2
-  firstname: Pedro
-  lastname:  Dolores
-  shortname: GIG
-  passwd:    <%= Employee.encode('ptime') %>
-  email:     bol@bla.ch
-  management: false
+  id:               2
+  firstname:        Pedro
+  lastname:         Dolores
+  shortname:        GIG
+  passwd:           <%= Employee.encode('ptime') %>
+  email:            bol@bla.ch
+  social_insurance: 123.4567.8910.11
+  management:       false
 
 next_year_pablo:
   id:        3

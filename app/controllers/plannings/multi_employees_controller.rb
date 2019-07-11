@@ -21,7 +21,7 @@ module Plannings
       @employees ||= begin
         if params[:department_id]
           d = Department.find(params[:department_id])
-          @title = "Planung der Mitarbeiter von #{d}"
+          @title = "Planung der Members von #{d}"
           d.employees.employed_ones(@period).list
         elsif params[:custom_list_id]
           CustomList.where(item_type: Employee.sti_name).find(params[:custom_list_id]).items.list

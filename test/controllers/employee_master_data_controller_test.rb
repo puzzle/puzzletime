@@ -66,4 +66,22 @@ class EmployeeMasterDataControllerTest < ActionController::TestCase
     assert_match(/Pedro/, response.body)
   end
 
+  test 'GET show hide classified data to non management' do
+    login_as(:next_year_pablo)
+    get :show, params: { id: employees(:various_pedro).id }
+    refute_match(/AHV-Nummer/, response.body)
+  end
+
+  test 'GET show show classified data to management' do
+    login_as(:half_year_maria)
+    get :show, params: { id: employees(:various_pedro).id }
+    assert_match(/AHV-Nummer/, response.body)
+  end
+
+  test 'GET show show classified data to owner' do
+    login_as(:various_pedro)
+    get :show, params: { id: employees(:various_pedro).id }
+    assert_match(/AHV-Nummer/, response.body)
+  end
+
 end

@@ -18,9 +18,40 @@ class RevenueReportsController < ApplicationController
 
   def index
     @report = report_type.new(@period, params)
+
+    respond_to do |format|
+      format.any
+      format.csv do
+        send_data(
+          Reports::Revenue::Csv.new(@report).generate,
+          filename: csv_filename,
+          type: 'text/csv; charset=utf-8; header=present'
+        )
+      end
+    end
   end
 
   private
+
+  def csv_filename
+    name   = 'revenue'
+    period = @report&.period
+
+    if @report&.grouping_name
+      name += "_#{@report.grouping_name.underscore}"
+    end
+
+    if period&.start_date
+      name += "_#{period.start_date.strftime('%Y-%m-%d')}"
+    end
+
+    if period&.end_date &&
+         period&.end_date != period&.start_date
+      name += "_#{period.end_date.strftime('%Y-%m-%d')}"
+    end
+
+    "#{name}.csv"
+  end
 
   def report_type
     grouping = params[:grouping].present? ? params[:grouping] : 'Department'

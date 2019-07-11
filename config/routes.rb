@@ -218,9 +218,9 @@ Rails.application.routes.draw do
   get 'status/health', to: 'status#health'
   get 'status/readiness', to: 'status#readiness'
 
-  get '/404', to: 'errors#404'
-  get '/500', to: 'errors#500'
-  get '/503', to: 'errors#503'
+  match '/404', to: 'errors#not_found', via: :all
+  match '/500', to: 'errors#internal_server_error', via: :all
+  match '/503', to: 'errors#service_unavailable', via: :all
 
   get 'design_guide', to: 'design_guide#index'
 

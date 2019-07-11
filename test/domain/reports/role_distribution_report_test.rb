@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -18,7 +19,7 @@ class RoleDistributionReportTest < ActiveSupport::TestCase
 
     title, header, *lines = CSV.parse(report.to_csv)
     assert_equal 'Funktionsanteile per 23.01.2010, GJ 2009/2010', title.first
-    assert_equal ['Mitarbeiter', 'Anstellung', 'Wertschöpfung', 'Technical Board', 'Unterstützend'], header
+    assert_equal ['Member', 'Anstellung', 'Wertschöpfung', 'Technical Board', 'Unterstützend'], header
 
     lines = lines.select { |l| l.any?(&:present?) } # remove empty lines
 

@@ -5,6 +5,7 @@ USER root
 ADD ./root /
 
 RUN \
+  set -x \
   yum install -y \
     # for minimagck gem
     ImageMagick \

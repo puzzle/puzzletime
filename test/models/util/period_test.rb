@@ -8,6 +8,7 @@ require 'test_helper'
 
 class PeriodTest < ActiveSupport::TestCase
   def setup
+    setup_regular_holidays([2005,2006])
     @half_year = Period.new(Date.new(2006, 1, 1), Date.new(2006, 6, 30))
     @one_month = Period.new(Date.new(2006, 3, 1), Date.new(2006, 3, 31))
     @two_month = Period.new(Date.new(2005, 12, 1), Date.new(2006, 1, 31))

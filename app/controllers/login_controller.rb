@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -18,7 +19,7 @@ class LoginController < ApplicationController
       if login_with(params[:user], params[:pwd])
         redirect_to params[:ref].presence || root_path
       else
-        flash[:notice] = 'Ungültige Benutzerdaten'
+        flash[:alert] = 'Ungültige Benutzerdaten'
       end
     end
   end

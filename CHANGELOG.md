@@ -1,3 +1,26 @@
+# 2.5
+
+### Improvements
+* **Layout:** Die Navigationsleiste ist nun sticky [\#29](https://github.com/puzzle/puzzletime/issues/29)
+* **Wording:** Mitarbeiter heissen neu Members.
+* **Absenzen:** Mit Management-Berechtigung können nun Absenzen der anderen Members gelöscht werden.
+* **Zeitfreigabe:** Die Zeitfreigabe wird neu im Log des Members angezeigt.
+* **Rechnungen:** Manuelle Rechnung, die im Rechnungsstellungtool editiert wurden, können in PuzzleTime nicht mehr versehentlich überschrieben werden.
+* **Mitarbeiterblatt:** Die AHV-Nummer der Members wird nur noch mit Management-Berechtigung angezeigt [\#23](https://github.com/puzzle/puzzletime/issues/23)
+
+* **Umsatzberechnung:** Fälschlicherweise verrechenbar gebuchte Stunden auf Puzzle werden nun nicht mehr mit einbezogen.
+* **Umsatz:** Gibt es jetzt als CSV Export.
+* **Feiertage:** Neu können alle Feiertage frei konfiguriert werden.
+* **Sicherheit:** Updates diverser rubygems aus Sicherheitsgründen.
+
+### Bug fixes
+* **Login:** Bei fehlerhaftem Login wird die Meldung nun in der Warnfarbe dargestellt.
+* **Wochenübersicht Stunden:** Sollstundenlinie verschiebt sich nicht mehr.
+* **Zeitbuchung:** Es kann nun nur noch von 00:00-23:59 gebucht werden um Fehlern vorzubeugen.
+* **Budget-Controlling:** Submenü wird nun wieder korrekt dargestellt.
+* **Browsersupport:** Projektsuche funktioniert wieder auf IE11.
+
+
 # 2.4
 
 ### Features

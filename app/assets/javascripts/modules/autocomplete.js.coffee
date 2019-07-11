@@ -51,7 +51,7 @@ class app.Autocomplete
   buildUrl: (input, query) ->
     url        = $(input).data('url')
     param      = encodeURIComponent(query)
-    param_char = if url.includes('?') then '&' else '?'
+    param_char = if url.indexOf('?') >= 0 then '&' else '?'
 
     "#{url}#{param_char}q=#{param}"
 

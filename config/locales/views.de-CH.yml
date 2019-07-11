@@ -7,16 +7,16 @@ de-CH:
   version:
     model:
       create:
-        employee: "Der Mitarbeiter #%{id} wurde erstellt."
+        employee: "Der Member #%{id} wurde erstellt."
         employment: "Die Anstellung #%{id} wurde erstellt."
       update:
-        employee: "Der Mitarbeiter #%{id} wurde bearbeitet."
+        employee: "Der Member #%{id} wurde bearbeitet."
         employment: "Die Anstellung #%{id} wurde bearbeitet."
       destroy:
-        employee: "Der Mitarbeiter #%{id} wurde gelöscht."
+        employee: "Der Member #%{id} wurde gelöscht."
         employment: "Die Anstellung #%{id} wurde gelöscht."
     model_reference:
-      employee: "des Mitarbeiters"
+      employee: "des Members"
       employment: "der Anstellung"
     attribute_change:
       from_to: "%{attr} %{model_ref} wurde von «%{from}» auf «%{to}» geändert."
