@@ -7,8 +7,6 @@ ADD ./root /
 RUN \
   set -x \
   yum install -y \
-    # for minimagck gem
-    ImageMagick \
     # for active storage gem
     poppler libpoppler && \
   # Call restore-artifacts sscript when assembling
