@@ -5,12 +5,10 @@ USER root
 ADD ./root /
 
 RUN \
-  set -x \
+  set -x && \
   yum install -y \
-    # for minimagck gem
-    ImageMagick \
     # for active storage gem
-    poppler libpoppler && \
+    ImageMagick poppler libpoppler && \
   # Call restore-artifacts sscript when assembling
   sed '/Installing application source/i $STI_SCRIPTS_PATH/restore-artifacts' \
     -i $STI_SCRIPTS_PATH/assemble && \

@@ -40,13 +40,15 @@ environment ENV.fetch("RAILS_ENV") { "development" }
 plugin :tmp_restart
 
 if ENV['PROMETHEUS_EXPORTER_HOST']
-  # With multiple workers, be sure to run a new process instrumenter after fork
   after_worker_boot do
     require 'prometheus_exporter/instrumentation'
-
     PrometheusExporter::Instrumentation::Puma.start
+  end
+
+  on_worker_boot do
+    require 'prometheus_exporter/instrumentation'
     PrometheusExporter::Instrumentation::Process.start(
-      type: 'web',
+      type: 'puma_worker',
       labels: { hostname: `hostname`.strip }
     )
   end
