@@ -23,7 +23,7 @@
     = javascript_include_tag "application", 'data-turbolinks-track' => 'reload'
 
   %body{class: "#{controller.controller_module_name} #{controller.controller_name}"}
-    %header
+    %header#main-header
       = render 'layouts/headerbar'
       - if @user
         %nav
