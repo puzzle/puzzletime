@@ -180,6 +180,13 @@ class Expenses::PdfExport
       image.write file.path
       pdf.image file.path, position: :center, fit: [image_width, image_height]
     end
+  rescue StandardError => e
+    add_text "Error while adding picture for expense #{@expense.id}"
+    add_text "Message: #{e.message}"
+
+    Rails.logger.info "Error while adding picture for expense #{@expense.id}"
+    Rails.logger.info "Message: #{e.message}"
+    Rails.logger.info "Backtrace: #{e.backtrace.inspect}"
   end
 
   def blob
