@@ -82,10 +82,10 @@ module Api
 
     def set_pagination_headers
       response.headers.merge!(
-        'PaginationTotalCount' => list_entries.total_count,
-        'PagionationPerPage' => list_entries.current_per_page,
-        'PaginationCurrentPage' => list_entries.current_page,
-        'PaginationTotalPages' => list_entries.total_pages
+        'Pagination-Total-Count' => list_entries.total_count,
+        'Pagination-Per-Page' => list_entries.current_per_page,
+        'Pagination-Current-Page' => list_entries.current_page,
+        'Pagination-Total-Pages' => list_entries.total_pages
       )
     end
 
