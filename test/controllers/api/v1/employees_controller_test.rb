@@ -58,14 +58,14 @@ class Api::V1::EmployeesControllerTest < ActionController::TestCase
     end
   end
 
-  test "pagination headers are present" do
+  test 'pagination headers are present' do
     get :index, params: { page: 2, per_page: 1 }
     list_entries = Employee.list.page(2).per(1)
 
-    assert_equal list_entries.total_count,      response.headers['PaginationTotalCount']
-    assert_equal list_entries.current_per_page, response.headers['PagionationPerPage']
-    assert_equal list_entries.current_page,     response.headers['PaginationCurrentPage']
-    assert_equal list_entries.total_pages,      response.headers['PaginationTotalPages']
+    assert_equal list_entries.total_count,      response.headers['Pagination-Total-Count']
+    assert_equal list_entries.current_per_page, response.headers['Pagination-Per-Page']
+    assert_equal list_entries.current_page,     response.headers['Pagination-Current-Page']
+    assert_equal list_entries.total_pages,      response.headers['Pagination-Total-Pages']
   end
 
   private
