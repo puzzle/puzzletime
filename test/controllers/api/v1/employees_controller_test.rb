@@ -27,7 +27,7 @@ class Api::V1::EmployeesControllerTest < ActionController::TestCase
     assert_match %r[\Aapplication/vnd\.api\+json], response.headers['Content-Type']
     assert_equal '422', response_json.dig(:errors, 0, :status)
     assert_equal 'error', response_json.dig(:errors, 0, :code)
-    assert_match /current_employment is not specified as a relationship/, response_json.dig(:errors, 0, :title)
+    assert_match(/current_employment is not specified as a relationship/, response_json.dig(:errors, 0, :title))
   end
 
   test 'index' do
