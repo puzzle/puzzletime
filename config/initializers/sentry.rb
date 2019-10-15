@@ -5,5 +5,17 @@
 
 Raven.configure do |config|
   config.sanitize_fields = Rails.application.config.filter_parameters.map(&:to_s)
-  config.release = Puzzletime.version
+  config.tags[:version] = Puzzletime.version
+
+  if (commit = ENV['OPENSHIFT_BUILD_COMMIT'])
+    config.tags[:commit] = commit
+    config.release = "#{Puzzletime.version}_#{commit}"
+  else
+    config.release = Puzzletime.version
+  end
+
+  if (project = ENV['OPENSHIFT_BUILD_NAMESPACE'])
+    config.tags[:project] = project
+    config.tags[:customer] = project.split('-')[0]
+  end
 end
