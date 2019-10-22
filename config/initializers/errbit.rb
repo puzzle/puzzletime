@@ -25,7 +25,7 @@ if ENV['RAILS_AIRBRAKE_HOST'] && ENV['RAILS_AIRBRAKE_API_KEY']
     config.blacklist_keys << 'RAILS_SMALL_INVOICE_TOKEN'
   end
 
-  ignored_exceptions = %w(ActionController::MethodNotAll
+  ignored_exceptions = %w(ActionController::MethodNotAllowed
                           ActionController::RoutingError
                           ActionController::InvalidAuthenticityToken
                           ActionController::UnknownHttpMethod)

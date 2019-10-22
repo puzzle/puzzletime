@@ -53,7 +53,7 @@ gesetzt werden. Werte ohne Default müssen in der Regel definiert werden.
 | SENTRY_CURRENT_ENV | Environment für Sentry. Verwendet das RAILS_ENV, falls nichts angegeben wird. | - |
 
 #### Addendum
-Ob Errbit oder Sentry verwendet wird, entscheidet sich danach, welche Umgebungsvariabeln gesetzt werden.
+Ob Errbit oder Sentry verwendet wird, entscheidet sich danach, welche Umgebungsvariablen gesetzt werden.
 Errbit = RAILS_AIRBRAKE_HOST & RAILS_AIRBRAKE_API_KEY
 Sentry = SENTRY_DSN
 
