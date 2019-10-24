@@ -27,7 +27,7 @@ class Api::V1::EmployeesControllerTest < ActionController::TestCase
     assert_match %r[\Aapplication/vnd\.api\+json], response.headers['Content-Type']
     assert_equal '422', response_json.dig(:errors, 0, :status)
     assert_equal 'error', response_json.dig(:errors, 0, :code)
-    assert_match /current_employment is not specified as a relationship/, response_json.dig(:errors, 0, :title)
+    assert_match(/current_employment is not specified as a relationship/, response_json.dig(:errors, 0, :title))
   end
 
   test 'index' do
@@ -42,6 +42,30 @@ class Api::V1::EmployeesControllerTest < ActionController::TestCase
     assert_response :ok
     assert_match %r[\Aapplication/vnd\.api\+json], response.headers['Content-Type']
     assert_equal Employee.current.count, response_json[:data].count
+  end
+
+  (1..3).each do |i|
+    test "pagination per_page works with #{i}" do
+      get :index, params: { per_page: i }
+      assert_equal i, response_json[:data].count
+    end
+
+    test "pagination page works with #{i}" do
+      get :index, params: { page: i }
+      expected = Employee.list.page(i).pluck(:id)
+      actual   = response_json[:data].map { |d| d[:id].to_i }
+      assert_equal expected, actual
+    end
+  end
+
+  test 'pagination headers are present' do
+    get :index, params: { page: 2, per_page: 1 }
+    list_entries = Employee.list.page(2).per(1)
+
+    assert_equal list_entries.total_count,      response.headers['Pagination-Total-Count']
+    assert_equal list_entries.current_per_page, response.headers['Pagination-Per-Page']
+    assert_equal list_entries.current_page,     response.headers['Pagination-Current-Page']
+    assert_equal list_entries.total_pages,      response.headers['Pagination-Total-Pages']
   end
 
   private

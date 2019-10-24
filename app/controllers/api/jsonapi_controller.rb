@@ -16,6 +16,8 @@ module Api
   class JsonapiController < ManageController
     include Apidocs::Annotations::Controller
 
+    before_action :set_pagination_headers, only: :index
+
     class IncludeError < StandardError
       def self.===(exception)
         exception.class == ArgumentError &&
@@ -78,8 +80,25 @@ module Api
 
     private
 
+    def set_pagination_headers
+      response.headers.merge!(
+        'Pagination-Total-Count' => list_entries.total_count,
+        'Pagination-Per-Page' => list_entries.current_per_page,
+        'Pagination-Current-Page' => list_entries.current_page,
+        'Pagination-Total-Pages' => list_entries.total_pages
+      )
+    end
+
+    def list_entries
+      super.per(page_params[:per_page])
+    end
+
     def include_param
       params.permit(:include)[:include].try(:split, ',')
+    end
+
+    def page_params
+      params.permit(:page, :per_page)
     end
   end
 end

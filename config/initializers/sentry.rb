@@ -1,9 +1,25 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2019, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-Raven.configure do |config|
-  config.sanitize_fields = Rails.application.config.filter_parameters.map(&:to_s)
-  config.release = Puzzletime.version
+if ENV['SENTRY_DSN']
+  Raven.configure do |config|
+    config.sanitize_fields = Rails.application.config.filter_parameters.map(&:to_s)
+    config.tags[:version] = Puzzletime.version
+
+    if (commit = ENV['OPENSHIFT_BUILD_COMMIT'])
+      config.tags[:commit] = commit
+      config.release = "#{Puzzletime.version}_#{commit}"
+    else
+      config.release = Puzzletime.version
+    end
+
+    if (project = ENV['OPENSHIFT_BUILD_NAMESPACE'])
+      config.tags[:project] = project
+      config.tags[:customer] = project.split('-')[0]
+    end
+  end
 end

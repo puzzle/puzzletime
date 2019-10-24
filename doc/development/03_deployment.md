@@ -52,6 +52,11 @@ gesetzt werden. Werte ohne Default müssen in der Regel definiert werden.
 | SENTRY_DSN | DSN der Sentry Instanz. Falls diese Variable nicht gesetzt ist, werden keine Fehlermeldungen verschickt. | - |
 | SENTRY_CURRENT_ENV | Environment für Sentry. Verwendet das RAILS_ENV, falls nichts angegeben wird. | - |
 
+#### Addendum
+Ob Errbit oder Sentry verwendet wird, entscheidet sich danach, welche Umgebungsvariablen gesetzt werden.
+Errbit = RAILS_AIRBRAKE_HOST & RAILS_AIRBRAKE_API_KEY
+Sentry = SENTRY_DSN
+
 ### OpenShift Deployment Example
 Note: The following steps can be used to get an idea of how to deploy PuzzleTime on OpenShift.
 
