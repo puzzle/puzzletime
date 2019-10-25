@@ -83,6 +83,12 @@ class ApplicationController < ActionController::Base
   end
 
   def keycloak_client
+    # Settings.keycloak -> {
+    #   server: URI_TO_KEYCLOAK,
+    #   client_id: KEYCLOAK_PTIME_CLIENT
+    #   client_secret: KEYCLOAK_CLIENT_SECRET
+    #   realm: maybe? ist im path kodiert, wird aber benötigt, um den public-key zum verifizieren der Tokens zu holen
+    # }
     server = URI.parse(Settings.keycloak.server)
 
     @client ||= OpenIDConnect::Client.new(
