@@ -15,12 +15,32 @@ class LoginController < ApplicationController
 
   # Login procedure for user
   def login
-    if request.post?
-      if login_with(params[:user], params[:pwd])
-        redirect_to params[:ref].presence || root_path
-      else
-        flash[:alert] = 'Ungültige Benutzerdaten'
-      end
+    # maybe we store the token in the session? it is valid for 5 minutes by
+    # default. We could also ask keycloak with this method if the token is
+    # still active.
+    if access_token_valid?
+      # Oh, and I almost forgot: this needs to be implemented...
+
+      redirect_to params[:ref].presence || root_path # taken from previous version
+
+    # with a refresh-token (valid for 30 minutes), we can get a new
+    # access-token without prompting the user for a password
+    elsif refresh_token_valid? # yep, also needs to be implemented
+
+      refresh_access_token # you guessed it: this needs to be implemented
+
+    else
+
+      # should just work and do stupidly everything we need.
+      redirect_to keycloak_authorization_uri # actually implemented (surprise)
+
+      # this sends the UA to keycloak. If keycloak still knows the users, it
+      # just redirects back to PTime (login#oauth) with a new code which allows
+      # us to fetch a new access-token and ID-Token. This ID-Token tells us the
+      # identity and allows us to log the user in.
+      #
+      # The only "gotcha": I only tested this in the console, not in actual
+      # controller-code and certainly not with a production keycloak.
     end
   end
 
