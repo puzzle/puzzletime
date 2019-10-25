@@ -97,11 +97,14 @@ class ApplicationController < ActionController::Base
       redirect_uri: url_for(controller: 'login', action: 'oauth'), # planned
       scheme: server.scheme,
       host: server.host,
-      port: server.port,
       authorization_endpoint: server.path + '/auth',
       token_endpoint: server.path + '/token',
       userinfo_endpoint: server.path + '/user_info'
-    )
+    ).tap do |client|
+      if server.port != server.default_port
+        client.port = server.port
+      end
+    end
   end
 
   def keycloak_authorization_uri
