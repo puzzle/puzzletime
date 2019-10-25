@@ -24,6 +24,14 @@ class LoginController < ApplicationController
     end
   end
 
+  def oauth
+    keycloak_client.authorization_code = params['code']
+    token = keycloak_client.access_token!
+    id_token = token.raw_attributes['id_token']
+    decoded_id = JSON::JWT.decode(id_token, :skip_verification)
+    @user = Employe.find(ldapname: decoded_id.fetch('preferred_username'))
+  end
+
   # Logout procedure for user
   def logout
     reset_session

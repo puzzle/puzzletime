@@ -94,7 +94,7 @@ class ApplicationController < ActionController::Base
     @client ||= OpenIDConnect::Client.new(
       identifier: Settings.keycloak.client_id,
       secret: Settings.keycloak.client_secret,
-      redirect_uri: url_for(controller: 'login', action: 'oauth'), # planned
+      redirect_uri: url_for(controller: 'login', action: 'oauth'),
       scheme: server.scheme,
       host: server.host,
       authorization_endpoint: server.path + '/auth',
