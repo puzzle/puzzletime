@@ -32,6 +32,8 @@ class LoginController < ApplicationController
     else
 
       # should just work and do stupidly everything we need.
+      # Essentially, we could replace this whole method with this redirect and
+      # be done. Non-optimized, but done.
       redirect_to keycloak_authorization_uri # actually implemented (surprise)
 
       # this sends the UA to keycloak. If keycloak still knows the users, it
