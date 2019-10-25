@@ -25,11 +25,22 @@ class LoginController < ApplicationController
   end
 
   def oauth
+    fail 'horribly, but with a nice message' if session['oauth_nonce'] != params['state']
+
     keycloak_client.authorization_code = params['code']
     token = keycloak_client.access_token!
     id_token = token.raw_attributes['id_token']
+    # should really be verified, see https://github.com/nov/json-jwt/wiki#decode--verify
+    # public key is from keycloak, see http://<keycloak-server>/auth/realms/<realm-name>
     decoded_id = JSON::JWT.decode(id_token, :skip_verification)
-    @user = Employe.find(ldapname: decoded_id.fetch('preferred_username'))
+    # contains:
+    # "email_verified"     => true,
+    # "name"               => "Tom Tester",
+    # "preferred_username" => "nerd",
+    # "given_name"         => "Tom",
+    # "family_name"        => "Tester",
+    # "email"              => "tom@example.org"
+    @user ||= Employe.find(ldapname: decoded_id.fetch('preferred_username')) # upcase/downcase, maybe
   end
 
   # Logout procedure for user
