@@ -118,11 +118,17 @@ class LdapAuthenticator
   end
 
   def root_cert
-    @root_cert ||= OpenSSL::X509::Certificate.new(Settings.ldap.cert.root)
+    @root_cert ||=
+      OpenSSL::X509::Certificate.new(
+        Pathname.new(Settings.ldap.auth.root_cert).read
+      )
   end
 
   def chain_cert
-    @chain_cert ||= OpenSSL::X509::Certificate.new(Settings.ldap.cert.chain)
+    @chain_cert ||=
+      OpenSSL::X509::Certificate.new(
+        Pathname.new(Settings.ldap.auth.chain_cert).read
+      )
   end
 
   def cert_store
