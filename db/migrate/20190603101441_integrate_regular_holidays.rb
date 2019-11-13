@@ -1,6 +1,7 @@
 class IntegrateRegularHolidays < ActiveRecord::Migration[5.2]
   def up
     return unless Settings.regular_holidays&.any?
+    return unless Holiday.exists?
 
     say 'Found regular holidays in the settings'
 
