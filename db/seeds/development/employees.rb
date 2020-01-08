@@ -52,6 +52,13 @@ employees = Employee.seed(:shortname,
     shortname: 'TBU',
     passwd: Employee.encode('a'),
     email: 'burkhalter@puzzle.ch',
+    management: false },
+
+  { firstname: 'Andreas',
+    lastname: 'Zuber',
+    shortname: 'AZ',
+    passwd: Employee.encode('a'),
+    email: 'zuber@puzzle.ch',
     management: false }
 )
 
@@ -84,4 +91,9 @@ Employment.seed(:employee_id, :start_date,
   { employee_id: employees[6].id,
     percent: 100,
     start_date: Date.new(2018, 5, 1) },
+
+  { employee_id: employees[7].id,
+    percent: 100,
+    start_date: Date.new(2007, 2, 1) },
+
 )
