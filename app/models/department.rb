@@ -18,6 +18,7 @@ class Department < ActiveRecord::Base
 
   has_many :orders
   has_many :employees, dependent: :nullify
+  has_many :employee_worktimes, through: :employees, source: :worktimes
 
   validates_by_schema
 
