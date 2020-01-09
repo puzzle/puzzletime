@@ -38,6 +38,12 @@ class EmployeesEvalTest < ActiveSupport::TestCase
     assert_sum_total_times 3.0, 30.0, 53.0, 54.0
   end
 
+  def test_employees_by_department
+    @evaluation = EmployeesEval.new(departments(:devtwo).id)
+
+    assert_sum_total_times 3.0, 12.0, 35.0, 36.0
+  end
+
   def test_employee_detail_mark
     @evaluation.set_division_id employees(:mark).id
 
@@ -58,6 +64,4 @@ class EmployeesEvalTest < ActiveSupport::TestCase
     assert_sum_times 3, 3, 5, 6
     assert_count_times 1, 1, 2, 3
   end
-
-
 end
