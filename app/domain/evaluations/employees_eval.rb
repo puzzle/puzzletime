@@ -34,6 +34,16 @@ class EmployeesEval < Evaluation
     division.id if division
   end
 
+  def sum_total_times(period = nil)
+    query = if @department_id != 0
+              Department.find(@department_id).employee_worktimes
+            else
+              Worktime.all
+            end
+    query = query.where(type: worktime_type).in_period(period)
+    query_time_sums(query)
+  end
+
   def division_supplement(_user)
     [[:overtime, 'Überstunden', 'right'],
      [:overtime_vacations_tooltip, '', 'left'],
