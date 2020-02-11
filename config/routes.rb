@@ -212,6 +212,7 @@ Rails.application.routes.draw do
 
   scope '/login', controller: 'login' do
     match :login, via: [:get, :post]
+    get :oauth
     post :logout
   end
 

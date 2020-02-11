@@ -82,6 +82,38 @@ class ApplicationController < ActionController::Base
     fail ActionController::RoutingError, 'Not Found'
   end
 
+  def keycloak_client
+    # Settings.keycloak -> {
+    #   server: URI_TO_KEYCLOAK,
+    #   client_id: KEYCLOAK_PTIME_CLIENT
+    #   client_secret: KEYCLOAK_CLIENT_SECRET
+    #   realm: maybe? ist im path kodiert, wird aber benötigt, um den public-key zum verifizieren der Tokens zu holen
+    # }
+    server = URI.parse(Settings.keycloak.server)
+
+    @client ||= OpenIDConnect::Client.new(
+      identifier: Settings.keycloak.client_id,
+      secret: Settings.keycloak.client_secret,
+      redirect_uri: url_for(controller: 'login', action: 'oauth'),
+      scheme: server.scheme,
+      host: server.host,
+      authorization_endpoint: server.path + '/auth',
+      token_endpoint: server.path + '/token',
+      userinfo_endpoint: server.path + '/user_info'
+    ).tap do |client|
+      if server.port != server.default_port
+        client.port = server.port
+      end
+    end
+  end
+
+  def keycloak_authorization_uri
+    keycloak_client.authorization_uri(
+      scope: [:profile, :email, :openid],
+      state: session[:oauth_nonce]
+    )
+  end
+
   def set_sentry_request_context
     Raven.extra_context(params: params.to_unsafe_h, url: request.url)
   end
