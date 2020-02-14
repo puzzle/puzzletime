@@ -24,14 +24,19 @@
         %span
           Geleistete Stunden
           = picon('info')
-      %th{title: 'Differenz zwischen budgetierten Stunden und geleisteten Stunden.'}
-        %span
-          Offene Stunden
-          = picon('info')
       %th{title: 'Durch den Auftragsverantwortlichen im Rahmen der Zeitbereinigung als nicht verrechenbar markierte Leistungen.'}
         %span
           Nicht verrechenbar
           = picon('info')
+      %th{title: 'Budget minus verrechenbare Stunden.'}
+        %span
+          Offenes Budget
+          = picon('info')
+      %th{title: 'Geplantes Budget ab nächstem Tag gemäss Planungseinträgen.'}
+        %span
+          Geplantes Budget
+          = picon('info')
+
 
     - @cockpit.rows.each do |row|
       %tr
