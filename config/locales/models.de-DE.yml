@@ -200,6 +200,8 @@ de-DE:
         nationalities: Nationalitäten
         additional_information: Zusätzliche Informationen
         crm_key: Highrise ID
+        identification_type: Ausweistyp
+        identification_valid_until: Ausweis gültig bis
       employee/marital_statuses:
         married: Verheiratet
         single: Ledig
