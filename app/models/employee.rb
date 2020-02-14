@@ -98,8 +98,11 @@ class Employee < ActiveRecord::Base
     # Tries to login a user with the passed data.
     # Returns the logged-in Employee or nil if the login failed.
     def login(username, pwd)
-      find_by(shortname: username.upcase, passwd: encode(pwd)) ||
+      if Settings.ldap.connection.host.blank?
+        find_by(shortname: username.upcase, passwd: encode(pwd))
+      else
         LdapAuthenticator.new.login(username, pwd)
+      end
     end
 
     def employed_ones(period, sort = true)
