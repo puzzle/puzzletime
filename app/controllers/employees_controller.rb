@@ -6,7 +6,7 @@
 
 class EmployeesController < ManageController
 
-  self.permitted_attrs = [:firstname, :lastname, :shortname, :email, :ldapname,
+  self.permitted_attrs = [:firstname, :lastname, :shortname, :email, :ldapname, :passwd,
                           :department_id, :crm_key, :probation_period_end_date,
                           :graduation, :management, :phone_office, :phone_private,
                           :street, :postal_code, :city, :birthday, :emergency_contact_name,
@@ -55,7 +55,7 @@ class EmployeesController < ManageController
   def update_passwd
     if @user.check_passwd(params[:pwd])
       if params[:change_pwd] == params[:change_pwd_confirmation]
-        @user.update_passwd!(params[:change_pwd])
+        @user.update(passwd: params[:change_pwd])
         flash[:notice] = 'Das Passwort wurde aktualisiert'
         redirect_to controller: 'evaluator'
       else

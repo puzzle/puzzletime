@@ -10,7 +10,7 @@ module IntegrationHelper
 
   def login_as(user, ref_path = nil)
     employee = user.is_a?(Employee) ? user : employees(user)
-    employee.update_passwd!('foobar')
+    employee.update(passwd: 'foobar')
     visit login_path(ref: ref_path)
     fill_in 'user', with: employee.shortname
     fill_in 'pwd', with: 'foobar'

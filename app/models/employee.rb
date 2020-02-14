@@ -83,6 +83,14 @@ class Employee < ActiveRecord::Base
     self.nationalities.try(:reject!, &:blank?)
   end
 
+  before_save do
+    if self.passwd.blank?
+      self.clear_attribute_changes(['passwd'])
+    else
+      self.passwd = Employee.encode(self.passwd)
+    end
+  end
+
   # Validation helpers.
   validates_by_schema except: :eval_periods
   validates :shortname, uniqueness: { case_sensitive: false }
@@ -149,16 +157,8 @@ class Employee < ActiveRecord::Base
     super || []
   end
 
-  def before_create
-    self.passwd = '' # disable password login
-  end
-
   def check_passwd(pwd)
     passwd == Employee.encode(pwd)
-  end
-
-  def update_passwd!(pwd)
-    update_attributes!(passwd: Employee.encode(pwd))
   end
 
   # main work items this employee ever worked on

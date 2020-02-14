@@ -8,9 +8,13 @@
   = f.labeled_input_fields :firstname,
                            :lastname,
                            :shortname,
-                           :email,
-                           :ldapname,
-                           :department_id,
+                           :email
+  - if Settings.ldap.connection.host
+    = f.labeled_input_field :ldapname
+  - else
+    = f.labeled_input_field :passwd, type: 'password', value: nil
+
+  = f.labeled_input_fields :department_id,
                            :probation_period_end_date,
                            :graduation
 
