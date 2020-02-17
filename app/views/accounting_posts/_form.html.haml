@@ -21,10 +21,24 @@
 
   = render 'budget_fields', form: f
 
+  - edit = !@accounting_post.new_record?
+  - blockdesc = blocking_worktimes(:description)
+  - blocktick = blocking_worktimes(:ticket)
+  - blockabso = blocking_worktimes(:absolute)
+  - desc  = edit && blockdesc.any?
+  - tick  = edit && blocktick.any?
+  - abso  = edit && blockabso.any?
+
   = f.labeled_input_field :remaining_hours, addon: 'h'
   = f.labeled_input_field :portfolio_item_id, span: 5
   = f.labeled_input_field :service_id, span: 5
   = f.labeled_input_field :billable, caption: 'Budgetposition ist verrechenbar'
-  = f.labeled_input_field :description_required, caption: 'Beschreibung obligatorisch'
-  = f.labeled_input_field :ticket_required, caption: 'Ticket obligatorisch'
-  = f.labeled_input_field :from_to_times_required, caption: 'Von-Bis Zeiten obligatorisch'
+
+  = f.labeled_input_field :description_required, caption: 'Beschreibung obligatorisch', disabled: desc
+  = f.labeled_input_field :ticket_required, caption: 'Ticket obligatorisch', disabled: tick
+  = f.labeled_input_field :from_to_times_required, caption: 'Von-Bis Zeiten obligatorisch', disabled: abso
+  - if desc || tick || abso
+    .form-group
+      .col-md-2
+      .help-block.col-md-5
+        Die Einstellungen zur Beschreibung, Ticket oder Von-Bis-Zeiten können nicht geändert werden, da bereits Leistungen ohne diese Angaben erfasst wurden.
