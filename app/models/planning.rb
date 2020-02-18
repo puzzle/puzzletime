@@ -36,6 +36,9 @@ class Planning < ActiveRecord::Base
 
   scope :list, -> { order(:date) }
 
+  def hours
+    WorkingCondition.value_at(date, :must_hours_per_day) * percent / 100
+  end
 
   def to_s
     "#{percent}% auf #{work_item} am #{I18n.l(date)} für #{employee}"
