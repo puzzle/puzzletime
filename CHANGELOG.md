@@ -1,3 +1,19 @@
+# 2.6
+
+### Features
+* **Mitarbeiterblatt:** Ausweisinformationen können nun hinzugefügt werden.
+* **Buchungspositionen:** Zusatzinformationen für nachträgliche Limitationen hinzugefügt.
+* **Buchungspositionen:** Cockpit mit neuen Informationen ergänzt.
+
+### Improvements
+* **WebServer:** Mehr Threads für mehr Leistung.
+* **Sicherheit:** Updates diverser rubygems aus Sicherheitsgründen.
+
+### Bug fixes
+* **Stundenübersicht:** Falsches Total berichtigt.
+* **Buchungspositionen:** Berechnung korrigiert.
+
+
 # 2.5
 
 ### Improvements
