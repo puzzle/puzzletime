@@ -36,7 +36,7 @@ $(document).on('turbolinks:load', ->
        source.endsWith('_rate') && activeSource.endsWith('_total'))
 
       newHours = total / rate
-      newDays = hours / $hoursPerDay
+      newDays = newHours / $hoursPerDay
     else if !isNaN(hours) && hours > 0 && (source.endsWith('_hours') ||
             source.endsWith('_rate') && activeSource.endsWith('_hours'))
 
