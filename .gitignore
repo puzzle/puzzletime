@@ -52,3 +52,6 @@ tags
 
 # ActiveStorage folder
 /storage
+
+# bundler tools dir
+/vendor/tools
