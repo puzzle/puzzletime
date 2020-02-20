@@ -4,7 +4,6 @@
 #  https://github.com/puzzle/puzzletime.
 
 
-# rubocop:disable Metrics/MethodLength, Metrics/AbcSize
 class Ability
   include CanCan::Ability
 

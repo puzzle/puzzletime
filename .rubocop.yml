@@ -1,135 +1,15 @@
-AllCops:
-  DisplayCopNames: true
-  Exclude:
-    - Rakefile
-    - bin/**/*
-    - db/**/*
-    - config/**/*
-    - test/**/*
-    - tmp/**/*
-    - vendor/**/*
-    - app/assets/config.rb
+inherit_from: .rubocop_todo.yml
 
-Rails:
+require:
+- rubocop-rails
+- rubocop-minitest
+- rubocop-performance
+
+Style/HashEachMethods:
   Enabled: true
 
-Metrics/AbcSize:
-  Max: 25
-  Severity: error
+Style/HashTransformKeys:
+  Enabled: true
 
-Metrics/ClassLength:
-  Max: 200
-  Severity: error
-
-Metrics/CyclomaticComplexity:
-  Max: 10
-  Severity: error
-
-Metrics/LineLength:
-  Max: 120 # try to reduce to 100
-  Severity: warning
-
-Metrics/MethodLength:
-  Max: 25 # try to reduce to 10
-  Severity: error
-
-Metrics/ModuleLength:
-  Max: 200
-  Severity: error
-
-Metrics/PerceivedComplexity:
-  Max: 10
-
-
-# Keep for now, easier with superclass definitions
-ClassAndModuleChildren:
-  Enabled: false
-
-# The ones we use must exist for the entire class hierarchy.
-ClassVars:
-  Enabled: false
-
-# map instead of collect, reduce instead of inject.
-# Probably later
-CollectionMethods:
-  Enabled: false
-
-# This cop is currently buggy (0.21.0)
-Delegate:
-  Enabled: false
-
-# Well, well, well
-Documentation:
-  Enabled: false
-
-# Probably later
-DotPosition:
-  Enabled: false
-
-# That's no huge stopper
-EmptyLines:
-  Enabled: false
-
-# Missing UTF-8 encoding statements should always be created.
-Encoding:
-  Severity: error
-
-# Keep single line bodys for if and unless
-IfUnlessModifier:
-  Enabled: false
-
-# We thinks that's fine
-HasAndBelongsToMany:
-  Enabled: false
-
-# We do. But some other methods are still called 'attr', do not complain about them
-Style/Attr:
-  Enabled: false
-
-# Generated like this
-Layout/EmptyLineAfterMagicComment:
-  Enabled: false
-
-# We think it's fine to have empty lines inside the class body
-Layout/EmptyLinesAroundClassBody:
-  Enabled: false
-
-# We think it's fine to have empty lines inside the module body
-Layout/EmptyLinesAroundModuleBody:
-  Enabled: false
-
-# Will do at some time
-Rails/ApplicationRecord:
-  Enabled: false
-
-# html_safe is required to correctly render html string literals.
-Rails/OutputSafety:
-  Enabled: false
-
-# Developer should know when to use this
-Rails/SkipsModelValidations:
-  Enabled: false
-
-# We think that's fine most of the time
-Style/GuardClause:
-  Enabled: false
-
-# We think that's fine
-Layout/MultilineOperationIndentation:
-  Enabled: false
-
-# We think that's fine
-Style/EmptyMethod:
-  Enabled: false
-
-# We think that's fine
-Style/PercentLiteralDelimiters:
-  Enabled: false
-
-# We think that's fine
-Style/SignalException:
-  Enabled: false
-
-# We think that's fine
-Style/SymbolArray:
-  Enabled: false
+Style/HashTransformValues:
+  Enabled: true

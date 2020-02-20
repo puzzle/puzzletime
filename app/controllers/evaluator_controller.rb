@@ -85,7 +85,6 @@ class EvaluatorController < ApplicationController
                   end
   end
 
-  # rubocop:disable Metrics/AbcSize
   def set_management_evaluation
     @evaluation = case params[:evaluation].downcase
                   when 'clients' then ClientsEval.new
@@ -100,7 +99,6 @@ class EvaluatorController < ApplicationController
                   when 'employeeabsences' then EmployeeAbsencesEval.new(params[:category_id])
                   end
   end
-  # rubocop:enable Metrics/AbcSize
 
   def overview_template
     if params[:evaluation] =~ /^userworkitems$|^employeeworkitems$/

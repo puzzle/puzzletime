@@ -193,7 +193,7 @@ class Period
 
   #########  public methods  #########
 
-  def vacation_factor_sum # rubocop:disable Metrics/AbcSize
+  def vacation_factor_sum
     (start_date.year..end_date.year).sum do |year|
       if start_date.year == year && end_date.year == year
         vacation_factor(start_date..end_date)
