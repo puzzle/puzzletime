@@ -102,6 +102,7 @@ group :metrics do
   gem 'rubocop-minitest'
   gem 'rubocop-performance'
   gem 'rubocop-checkstyle_formatter', require: false
+  gem 'haml-lint'
   gem 'sdoc'
   gem 'simplecov-rcov', git: 'https://github.com/puzzle/simplecov-rcov'
 end
