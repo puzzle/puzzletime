@@ -199,6 +199,7 @@ class Ability
     can [:read,
          :accounting_posts,
          :controlling,
+         :create_comment,
          :search,
          :services,
          :show_targets,
