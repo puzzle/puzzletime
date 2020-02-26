@@ -99,7 +99,11 @@ group :metrics do
   gem 'minitest-reporters'
   gem 'rails-erd'
   gem 'rubocop'
+  gem 'rubocop-rails'
+  gem 'rubocop-minitest'
+  gem 'rubocop-performance'
   gem 'rubocop-checkstyle_formatter', require: false
+  gem 'haml-lint'
   gem 'sdoc'
   gem 'simplecov-rcov', git: 'https://github.com/puzzle/simplecov-rcov'
 end
