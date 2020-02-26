@@ -15,6 +15,8 @@ RUN \
   # Call post-assemble script when assembling
   echo -e "\n\$STI_SCRIPTS_PATH/post-assemble" >> $STI_SCRIPTS_PATH/assemble
 
+RUN bash -c 'gem install bundler -v "$(grep -A 1 "BUNDLED WITH" Gemfile.lock | tail -n 1)"'
+
 USER 1001
 
 ENV RAILS_ENV=production
