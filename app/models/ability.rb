@@ -156,6 +156,7 @@ class Ability
     end
 
     can :revenue_reports, Department
+    can :social_insurance, Employee
   end
 
   def api_client_abilities
