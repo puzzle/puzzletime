@@ -1,9 +1,9 @@
 # 2.6
 
 ### Features
-* **Mitarbeiterblatt:** Ausweisinformationen können nun hinzugefügt werden.
-* **Buchungspositionen:** Zusatzinformationen für nachträgliche Limitationen hinzugefügt.
-* **Buchungspositionen:** Cockpit mit neuen Informationen ergänzt.
+* **Mitarbeiter-Stammdaten:** Ausweisinformationen können nun hinzugefügt werden.
+* **Buchungspositionen:** Einstellungen zu Ticket, Von-Bis-Zeiten und Bemerkungen können nicht mehr geändert werden, falls bereits Leistungen ohne diese Angaben erfasst wurden.
+* **Buchungspositionen:** Auftrags-Cockpit mit neuen Informationen ergänzt.
 
 ### Improvements
 * **WebServer:** Mehr Threads für mehr Leistung.
@@ -11,7 +11,7 @@
 
 ### Bug fixes
 * **Stundenübersicht:** Falsches Total berichtigt.
-* **Buchungspositionen:** Berechnung korrigiert.
+* **Buchungspositionen:** Automatische Budget-Berechnung beim Eintragen korrigiert.
 
 
 # 2.5
