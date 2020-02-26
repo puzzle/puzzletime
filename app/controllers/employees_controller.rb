@@ -12,6 +12,7 @@ class EmployeesController < ManageController
                           :street, :postal_code, :city, :birthday, :emergency_contact_name,
                           :emergency_contact_phone, :marital_status,
                           :social_insurance, :additional_information,
+                          :identity_card_type, :identity_card_valid_until,
                           nationalities: []]
 
   if Settings.employees.initial_vacation_days_editable

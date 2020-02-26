@@ -37,7 +37,9 @@
                            :emergency_contact_name,
                            :emergency_contact_phone,
                            :marital_status,
-                           :social_insurance
+                           :social_insurance,
+                           :identity_card_type,
+                           :identity_card_valid_until
 
   = f.labeled(:nationalities) do
     = country_select(:employee,

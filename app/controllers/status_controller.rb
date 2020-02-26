@@ -4,8 +4,8 @@
 #  https://github.com/puzzle/puzzletime.
 
 class StatusController < ApplicationController
-  skip_before_action :authenticate
-  skip_authorization_check
+  # skip_before_action :authenticate
+  # skip_authorization_check
 
   # Is the web server OK?
   def health
