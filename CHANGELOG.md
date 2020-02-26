@@ -12,6 +12,7 @@
 ### Bug fixes
 * **Stundenübersicht:** Falsches Total berichtigt.
 * **Buchungspositionen:** Automatische Budget-Berechnung beim Eintragen korrigiert.
+* **Mitarbeiterliste:** Falsche Berechnung des Jubiläum (Dienstjahre) [\#61](https://github.com/puzzle/puzzletime/issues/61)
 
 
 # 2.5
