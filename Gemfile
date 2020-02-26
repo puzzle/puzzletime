@@ -67,6 +67,7 @@ group :development, :test do
   gem 'faker'
   gem 'pry-rails'
   gem 'request_profiler'
+  gem 'better_errors'
 end
 
 group :development do
