@@ -461,7 +461,7 @@ PLATFORMS
 
 DEPENDENCIES
   acts_as_tree
-  airbrake (~> 5.0)
+  airbrake
   annotate
   autoprefixer-rails
   better_errors

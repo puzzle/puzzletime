@@ -7,6 +7,7 @@
 
 
 if ENV['RAILS_AIRBRAKE_HOST'] && ENV['RAILS_AIRBRAKE_API_KEY']
+  require 'airbrake'
   Airbrake.configure do |config|
     config.environment = Rails.env
     config.ignore_environments = [:development, :test]

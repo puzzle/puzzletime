@@ -5,7 +5,6 @@ gem 'rails', '5.2.2.1'
 gem 'pg', '= 0.21.0'
 
 gem 'acts_as_tree'
-gem 'airbrake', '~> 5.0' # Waiting for Puzzle Errbit to be updated to >= 0.7.0
 gem 'bleib', '0.0.8'
 gem 'bootsnap'
 gem 'cancancan'
@@ -35,10 +34,14 @@ gem 'request_store'
 gem 'rqrcode'
 gem 'rswag-ui'
 gem 'seed-fu'
-gem 'sentry-raven'
 gem 'swagger-blocks'
 gem 'validates_by_schema'
 gem 'validates_timeliness'
+
+# Error reporting, they are required in their respective initializers
+gem 'airbrake', require: false
+gem 'sentry-raven', require: false
+
 # must be at the end
 gem 'paper_trail'
 

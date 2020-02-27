@@ -6,6 +6,7 @@
 #  https://github.com/puzzle/puzzletime.
 
 if ENV['SENTRY_DSN']
+  require 'sentry-raven'
   Raven.configure do |config|
     config.sanitize_fields = Rails.application.config.filter_parameters.map(&:to_s)
     config.tags[:version] = Puzzletime.version
