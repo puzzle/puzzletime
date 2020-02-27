@@ -83,10 +83,10 @@ class ApplicationController < ActionController::Base
   end
 
   def set_sentry_request_context
-    Raven.extra_context(params: params.to_unsafe_h, url: request.url)
+    Raven.extra_context(params: params.to_unsafe_h, url: request.url) if ENV['SENTRY_DSN']
   end
 
   def set_sentry_user_context
-    Raven.user_context(id: current_user.try(:id), name: current_user.try(:shortname))
+    Raven.user_context(id: current_user.try(:id), name: current_user.try(:shortname)) if ENV['SENTRY_DSN']
   end
 end
