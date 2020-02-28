@@ -72,6 +72,12 @@ class EmployeeMasterDataControllerTest < ActionController::TestCase
     refute_match(/AHV-Nummer/, response.body)
   end
 
+  test 'GET show show classified data to responsible' do
+    login_as(:lucien)
+    get :show, params: { id: employees(:various_pedro).id }
+    assert_match(/AHV-Nummer/, response.body)
+  end
+
   test 'GET show show classified data to management' do
     login_as(:half_year_maria)
     get :show, params: { id: employees(:various_pedro).id }
