@@ -134,6 +134,7 @@ de-CH:
         remaining_hours: Restaufwand
         report_type: Report Typ
         billable: Verrechenbar
+        meal_compensation: Verpflegungs-Entschädigung
         description_required: Beschreibung erforderlich
         ticket_required: Ticket erforderlich
         closed: Geschlossen
@@ -419,6 +420,7 @@ de-CH:
         to_end_time: Bis
         description: Bemerkungen
         billable: Verrechenbar
+        meal_compensation: Verpflegungs-Entschädigung
         ticket: Ticket
         account: Buchungsposition
         invoice_id: Rechnung

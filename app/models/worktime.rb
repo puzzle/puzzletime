@@ -141,6 +141,7 @@ class Worktime < ActiveRecord::Base
     new_worktime.work_date = work_date
     new_worktime.account_id = account_id
     new_worktime.billable = billable
+    new_worktime.meal_compensation = meal_compensation
     new_worktime.employee_id = employee_id
     new_worktime.work_item_id = work_item_id
     new_worktime
