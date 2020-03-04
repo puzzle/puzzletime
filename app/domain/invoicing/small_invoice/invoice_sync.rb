@@ -46,8 +46,16 @@ module Invoicing
           parameters = record_to_params(invoice)
           parameters[:code] = error.code if error.respond_to?(:code)
           parameters[:data] = error.data if error.respond_to?(:data)
-          Airbrake.notify(error, parameters)
-          Raven.capture_exception(error, extra: parameters)
+          Airbrake.notify(error, parameters) if airbrake?
+          Raven.capture_exception(error, extra: parameters) if sentry?
+        end
+
+        def airbrake?
+          ENV['RAILS_AIRBRAKE_HOST'].present?
+        end
+
+        def sentry?
+          ENV['SENTRY_DSN'].present?
         end
 
         def record_to_params(record, prefix = 'invoice')
