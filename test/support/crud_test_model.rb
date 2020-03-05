@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # A dummy model used for general testing.
 class CrudTestModel < ActiveRecord::Base #:nodoc:
   belongs_to :companion, class_name: 'CrudTestModel'

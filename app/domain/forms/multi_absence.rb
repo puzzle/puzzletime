@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class MultiAbsence
   attr_reader :absence_id, :employee, :work_date, :duration, :description, :worktime
   attr_writer :employee

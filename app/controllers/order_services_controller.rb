@@ -3,9 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class OrderServicesController < ApplicationController
-
   EMPTY = '[leer]'.freeze
   EMPTY_TICKET = EMPTY
   EMPTY_INVOICE = OpenStruct.new(id: EMPTY, reference: EMPTY)
@@ -121,5 +119,4 @@ class OrderServicesController < ApplicationController
   def authorize_class
     authorize!(:services, order)
   end
-
 end

@@ -3,12 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module Reports::Revenue
   class Department < Base
-
     self.grouping_model = ::Department
     self.grouping_fk = :department_id
-
   end
 end

@@ -3,11 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module Reports
   class Workload
     class Reports::Workload::SummaryEntry < BaseEntry
-
       attr_reader :label
 
       def initialize(label, period, employments, worktimes)
@@ -32,7 +30,6 @@ module Reports
       def must_hours_100_procent
         period.musttime
       end
-
     end
   end
 end

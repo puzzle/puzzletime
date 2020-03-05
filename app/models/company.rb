@@ -3,11 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # Helper class to provide information for the organisation represented by PuzzleTime.
 class Company
   class << self
-
     def name
       client.name
     end
@@ -19,6 +17,5 @@ class Company
     def work_item_id
       client.work_item_id
     end
-
   end
 end

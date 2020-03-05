@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module Invoicing
   class Interface
     # Stores a new or an existing invoice with the given positions in the remote system.

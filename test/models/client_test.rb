@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: clients
@@ -21,7 +20,6 @@
 require 'test_helper'
 
 class ClientTest < ActiveSupport::TestCase
-
   test 'client with worktimes may not be destroyed' do
     assert_no_difference('WorkItem.count') do
       assert_no_difference('Client.count') do

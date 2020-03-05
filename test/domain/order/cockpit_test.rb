@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class Order::CockpitTest < ActiveSupport::TestCase
@@ -170,7 +169,6 @@ class Order::CockpitTest < ActiveSupport::TestCase
     assert_equal 0.0, budget.amount.round(2)
   end
 
-
   test 'cost_effectiveness_forecast' do
     define_worktimes
     forecast = (22.0 / 26 * 100).round
@@ -241,7 +239,6 @@ class Order::CockpitTest < ActiveSupport::TestCase
     assert_equal 21.84, cockpit.billed_rate.round(2)
   end
 
-
   def define_offered_fields
     accounting_posts(:hitobito_demo_app).update!(offered_hours: 200.1, offered_rate: 120.1)
     accounting_posts(:hitobito_demo_site).update!(offered_hours: 100.1, offered_rate: 150.1)
@@ -290,8 +287,6 @@ class Order::CockpitTest < ActiveSupport::TestCase
                      percent: 50,
                      definitive: true)
   end
-
-
 
   def create_invoice(attrs = {})
     Invoicing.instance = nil

@@ -3,11 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class RoleDistributionReportControllerTest < ActionController::TestCase
-
   setup :login
 
   test 'GET export_role_distribution denies access for non-managment employee' do
@@ -37,5 +35,4 @@ class RoleDistributionReportControllerTest < ActionController::TestCase
     assert_equal 'text/csv; charset=utf-8; header=present', response.headers['Content-Type']
     assert_equal "attachment; filename=\"#{filename}\"", response.headers['Content-Disposition']
   end
-
 end

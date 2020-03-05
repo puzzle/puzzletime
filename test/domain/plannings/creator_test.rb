@@ -3,11 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class CreatorTest < ActiveSupport::TestCase
-
   test '#create_or_update runs validations and returns false if invalid' do
     c = Plannings::Creator.new({})
     assert_difference 'Planning.count', 0 do

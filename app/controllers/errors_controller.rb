@@ -5,7 +5,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # Used to generate static error pages with the application layout:
 # rails generate error_page {status}
 class ErrorsController < ApplicationController
@@ -30,5 +29,4 @@ class ErrorsController < ApplicationController
   def controller_module_name
     'root'
   end
-
 end

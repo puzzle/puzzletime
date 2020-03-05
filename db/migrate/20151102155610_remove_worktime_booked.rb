@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class RemoveWorktimeBooked < ActiveRecord::Migration[5.1]
   def up
     remove_column :worktimes, :booked

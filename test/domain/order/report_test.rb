@@ -3,11 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class Order::ReportTest < ActiveSupport::TestCase
-
   ### filtering
 
   test 'contains all orders with worktimes without filters' do
@@ -124,7 +122,6 @@ class Order::ReportTest < ActiveSupport::TestCase
     report(sort: 'offered_amount')
     assert_equal orders(:webauftritt, :puzzletime, :allgemein), report.entries.collect(&:order)
   end
-
 
   ### calculating
 
@@ -304,5 +301,4 @@ class Order::ReportTest < ActiveSupport::TestCase
     period = params.delete(:period) || Period.new(nil, nil)
     @report ||= Order::Report.new(period, params)
   end
-
 end

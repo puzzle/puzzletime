@@ -3,9 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class OrderReportsController < ApplicationController
-
   include DryCrud::Rememberable
   include WithPeriod
 
@@ -13,7 +11,6 @@ class OrderReportsController < ApplicationController
                             client_work_item_id category_work_item_id kind_id
                             status_id responsible_id target major_chance_value
                             major_risk_value)
-
 
   before_action :authorize_class
 
@@ -52,5 +49,4 @@ class OrderReportsController < ApplicationController
   def authorize_class
     authorize!(:reports, Order)
   end
-
 end

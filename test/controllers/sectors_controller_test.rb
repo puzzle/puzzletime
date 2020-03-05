@@ -3,11 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class SectorsControllerTest < ActionController::TestCase
-
   include CrudControllerTestHelper
 
   setup :login

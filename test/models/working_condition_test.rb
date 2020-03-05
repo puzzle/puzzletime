@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: working_conditions
@@ -235,5 +234,4 @@ class WorkingConditionTest < ActiveSupport::TestCase
     end
     [ps, vs]
   end
-
 end

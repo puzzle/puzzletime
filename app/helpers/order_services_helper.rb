@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module OrderServicesHelper
   def summed_worktimes_table(entries, options = {})
     options[:footer] = checkable_worktimes_footer(entries)

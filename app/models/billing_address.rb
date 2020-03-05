@@ -19,7 +19,6 @@
 #
 
 class BillingAddress < ActiveRecord::Base
-
   protect_if :invoices,
              'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Rechnungen zugeordnet sind'
 

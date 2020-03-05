@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # This migration creates the `versions` table, the only schema PT requires.
 # All other migrations PT provides are optional.
 class CreateVersions < ActiveRecord::Migration[5.1]

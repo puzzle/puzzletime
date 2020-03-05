@@ -20,7 +20,6 @@
 require 'test_helper'
 
 class ExpenseTest < ActiveSupport::TestCase
-
   test 'status_value returns translated value' do
     assert_equal 'Offen', Expense.new.status_value
   end
@@ -94,5 +93,4 @@ class ExpenseTest < ActiveSupport::TestCase
   def can?(action, employee, expense)
     Ability.new(employee).can?(action, expense)
   end
-
 end

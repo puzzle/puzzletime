@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: order_targets
@@ -18,7 +17,6 @@
 #
 
 class OrderTarget < ActiveRecord::Base
-
   RATINGS = %w(green orange red).freeze
 
   belongs_to :order
@@ -38,5 +36,4 @@ class OrderTarget < ActiveRecord::Base
   def target_critical?
     rating != RATINGS.first
   end
-
 end

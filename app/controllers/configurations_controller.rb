@@ -4,10 +4,8 @@
 #  https://github.com/puzzle/puzzletime.
 
 class ConfigurationsController < ApplicationController
-
   skip_authorization_check
 
   def index
   end
-
 end

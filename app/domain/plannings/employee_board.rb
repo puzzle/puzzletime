@@ -3,12 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module Plannings
   class EmployeeBoard < Board
-
     class << self
-
       def week_planning_state(total, employed)
         if total.zero? && !employed.nil? && employed.zero?
           :fully_planned
@@ -22,7 +19,6 @@ module Plannings
           :under_planned
         end
       end
-
     end
 
     alias employee subject
@@ -155,6 +151,5 @@ module Plannings
         employment.percent * (block_given? ? yield(date) : 1) / 5.0
       end
     end
-
   end
 end

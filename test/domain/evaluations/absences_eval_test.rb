@@ -3,12 +3,10 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 require_relative 'eval_test_helper'
 
 class AbsencesEvalTest < ActiveSupport::TestCase
-
   include EvalTestHelper
 
   def setup
@@ -58,5 +56,4 @@ class AbsencesEvalTest < ActiveSupport::TestCase
     assert_sum_times 0, 4, 17, 17
     assert_count_times 0, 1, 2, 2
   end
-
 end

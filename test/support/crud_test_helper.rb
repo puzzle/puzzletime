@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 #:nodoc:
 REGEXP_ROWS = /<tr.+?<\/tr>/m #:nodoc:
 REGEXP_HEADERS = /<th.+?<\/th>/m #:nodoc:

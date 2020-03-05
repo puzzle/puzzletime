@@ -3,11 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class DepartmentRevenueReportTest < ActiveSupport::TestCase
-
   setup do
     travel_to Date.new(2000, 9, 5)
     Worktime.destroy_all
@@ -258,5 +256,4 @@ class DepartmentRevenueReportTest < ActiveSupport::TestCase
   def sys
     departments(:sys)
   end
-
 end

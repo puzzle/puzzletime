@@ -3,10 +3,8 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module Plannings
   class CustomListsController < CrudController
-
     self.nesting = [:plannings]
     self.permitted_attrs = [:name, :item_type, item_ids: []]
     self.search_columns = [:name]
@@ -48,6 +46,5 @@ module Plannings
         end
       end
     end
-
   end
 end

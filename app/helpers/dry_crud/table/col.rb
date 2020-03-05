@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module DryCrud::Table
   # Helper class to store column information.
   class Col < Struct.new(:header, :html_options, :template, :block) #:nodoc:

@@ -3,10 +3,8 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module Plannings
   class DepartmentsController < ListController
-
     self.search_columns = %w(name shortname)
 
     private
@@ -14,6 +12,5 @@ module Plannings
     def authorize_class
       authorize!(:read, Planning)
     end
-
   end
 end

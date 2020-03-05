@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class CreateCustomLists < ActiveRecord::Migration[5.1]
   def up
     create_table :custom_lists do |t|
@@ -62,5 +61,4 @@ class CreateCustomLists < ActiveRecord::Migration[5.1]
                        item_type: 'Employee',
                        item_ids: ids)
   end
-
 end

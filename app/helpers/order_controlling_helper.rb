@@ -3,9 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module OrderControllingHelper
-
   def controlling_chart_labels
     @efforts_per_week_cumulated
       .keys
@@ -31,5 +29,4 @@ module OrderControllingHelper
         }
       end.to_json.html_safe
   end
-
 end

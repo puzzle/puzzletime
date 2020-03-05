@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module EmployeeMasterDataHelper
   def format_year_of_service(employment_date)
     ((Time.zone.now - employment_date.to_time) / 1.year.seconds).floor

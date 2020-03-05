@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class ManagedOrdersEval < WorkItemsEval
   self.label             = 'Geleitete Aufträge'
   self.division_column   = 'orders.work_item_id'
@@ -46,5 +45,4 @@ class ManagedOrdersEval < WorkItemsEval
       joins('INNER JOIN accounting_posts ON accounting_posts.work_item_id = ANY (work_items.path_ids)').
       where(orders: { responsible_id: category.id })
   end
-
 end

@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # Defines forms to edit models. The helper methods come in different
 # granularities:
 # * #plain_form - A form using Crud::FormBuilder.

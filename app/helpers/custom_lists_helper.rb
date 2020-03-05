@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module CustomListsHelper
   def format_custom_list_item_type(list)
     t("activerecord.models.#{list.item_type.underscore}.other")

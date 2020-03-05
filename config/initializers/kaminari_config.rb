@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 Kaminari.configure do |config|
   config.default_per_page = 20
   # config.max_per_page = nil
@@ -14,7 +13,6 @@ Kaminari.configure do |config|
   # config.page_method_name = :page
   # config.param_name = :page
 end
-
 
 module Kaminari
   module Helpers

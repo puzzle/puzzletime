@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module DryCrud::Form
   # A form builder that automatically selects the corresponding input field
   # for ActiveRecord column types. Convenience methods for each column type

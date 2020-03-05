@@ -3,10 +3,8 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module Plannings
   class OrdersController < BaseController
-
     self.search_columns = %w(work_items.name work_items.shortname
                              work_items.path_names work_items.path_shortnames)
 
@@ -50,6 +48,5 @@ module Plannings
       super.joins(:work_item).
         where('? = ANY (work_items.path_ids)', order.work_item_id)
     end
-
   end
 end

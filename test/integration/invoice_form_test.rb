@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class NewInvoiceTest < ActionDispatch::IntegrationTest
@@ -55,7 +54,6 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
     reload(invoice: {period_from: '09.12.2006', period_to: '11.12.2006'})
     assert_empty all(:name, 'invoice[employee_ids][]')
   end
-
 
   test 'lists only work_items with ordertimes on page load' do
     order = Fabricate(:order)

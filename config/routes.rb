@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
@@ -223,5 +222,4 @@ Rails.application.routes.draw do
   match '/503', to: 'errors#service_unavailable', via: :all
 
   get 'design_guide', to: 'design_guide#index'
-
 end

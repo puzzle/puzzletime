@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class DepartmentOrdersEval < WorkItemsEval
   self.division_join     = nil
   self.division_column   = 'orders.work_item_id'
@@ -26,5 +25,4 @@ class DepartmentOrdersEval < WorkItemsEval
   def include_no_period_zero_totals
     false
   end
-
 end

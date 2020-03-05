@@ -3,11 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class OrderControllingControllerTest < ActionController::TestCase
-
   setup :login
 
   test 'GET show redirects to login if not authenticated' do
@@ -34,5 +32,4 @@ class OrderControllingControllerTest < ActionController::TestCase
   def order
     @order ||= orders(:hitobito_demo)
   end
-
 end

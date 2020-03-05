@@ -3,11 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class OrderReportsControllerTest < ActionController::TestCase
-
   setup :login
 
   test 'GET index without filter has empty report' do
@@ -46,5 +44,4 @@ class OrderReportsControllerTest < ActionController::TestCase
     get :index, params: { responsible_id: employees(:lucien).id }, format: :csv
     assert_match /Kunde,Kategorie,Auftrag/, response.body
   end
-
 end

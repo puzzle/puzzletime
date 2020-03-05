@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module EmploymentsHelper
   def format_employment_percent(employment)
     p = employment.percent

@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 namespace :db do
   namespace :dump do
     desc 'Load a db dump from the given FILE'

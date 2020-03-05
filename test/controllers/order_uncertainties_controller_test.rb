@@ -3,11 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class OrderUncertaintiesControllerTest < ActionController::TestCase
-
   test 'GET index as member' do
     login_as :pascal
     get :index, params: { order_id: order.id }

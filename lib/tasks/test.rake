@@ -5,7 +5,6 @@
 #
 require 'minitest'
 
-
 namespace :test do
   desc 'Run only non-integration tests'
   task unit: 'test:prepare' do

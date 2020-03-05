@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 ValidatesTimeliness.setup do |config|
   # Extend ORM/ODMs for full support (:active_record, :mongoid).
   # config.extend_orms = [ :active_record ]

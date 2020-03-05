@@ -3,12 +3,10 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 require_relative 'eval_test_helper'
 
 class EmployeeWorkItemsEvalTest < ActiveSupport::TestCase
-
   include EvalTestHelper
 
   def test_employee_work_items_pascal
@@ -108,5 +106,4 @@ class EmployeeWorkItemsEvalTest < ActiveSupport::TestCase
     assert_sum_times 0, 0, 11, 11
     assert_count_times 0, 0, 1, 1
   end
-
 end

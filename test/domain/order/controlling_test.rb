@@ -3,11 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class Order::ControllingTest < ActiveSupport::TestCase
-
   attr_reader :order, :post1, :post2
 
   setup do
@@ -162,5 +160,4 @@ class Order::ControllingTest < ActiveSupport::TestCase
               percent: percent,
               definitive: definitive)
   end
-
 end

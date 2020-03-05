@@ -62,94 +62,6 @@ Layout/DefEndAlignment:
 Layout/DotPosition:
   Enabled: false
 
-# Offense count: 39
-# Cop supports --auto-correct.
-Layout/EmptyLineAfterGuardClause:
-  Enabled: false
-
-# Offense count: 12
-# Cop supports --auto-correct.
-Layout/EmptyLineAfterMagicComment:
-  Exclude:
-    - 'app/controllers/login_controller.rb'
-    - 'app/domain/evaluations/absences_eval.rb'
-    - 'app/domain/evaluations/employees_eval.rb'
-    - 'app/domain/reports/extended_capacity_report.rb'
-    - 'app/models/employee.rb'
-    - 'db/seeds/development/absences.rb'
-    - 'test/controllers/employees/log_controller_test.rb'
-    - 'test/controllers/ordertimes_controller_test.rb'
-    - 'test/controllers/revenue_reports_controller_test.rb'
-    - 'test/domain/reports/extended_capacity_report_test.rb'
-    - 'test/domain/reports/role_distribution_report_test.rb'
-    - 'test/integration/plannings_orders_test.rb'
-
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: AllowAdjacentOneLineDefs, NumberOfEmptyLines.
-Layout/EmptyLineBetweenDefs:
-  Exclude:
-    - 'app/controllers/expenses_reviews_controller.rb'
-    - 'test/domain/evaluations/work_item_employees_eval_test.rb'
-    - 'test/domain/order/cockpit_test.rb'
-
-# Offense count: 504
-# Cop supports --auto-correct.
-Layout/EmptyLines:
-  Enabled: false
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: around, only_before
-Layout/EmptyLinesAroundAccessModifier:
-  Exclude:
-    - 'config/application.rb'
-
-# Offense count: 78
-# Cop supports --auto-correct.
-Layout/EmptyLinesAroundArguments:
-  Exclude:
-    - 'db/seeds/development/absences.rb'
-    - 'db/seeds/development/departments.rb'
-    - 'db/seeds/development/employees.rb'
-    - 'db/seeds/development/holidays.rb'
-    - 'db/seeds/development/order_statuses.rb'
-    - 'db/seeds/development/portfolio_items.rb'
-    - 'db/seeds/development/sectors.rb'
-    - 'db/seeds/development/services.rb'
-    - 'db/seeds/development/target_scopes.rb'
-    - 'db/seeds/development/zz_work_item.rb'
-    - 'db/seeds/development/zzz_contacts.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: empty_lines, no_empty_lines
-Layout/EmptyLinesAroundBlockBody:
-  Exclude:
-    - 'config/routes.rb'
-
-# Offense count: 294
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: empty_lines, empty_lines_except_namespace, empty_lines_special, no_empty_lines, beginning_only, ending_only
-Layout/EmptyLinesAroundClassBody:
-  Enabled: false
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Layout/EmptyLinesAroundMethodBody:
-  Exclude:
-    - 'app/models/ability.rb'
-
-# Offense count: 53
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: empty_lines, empty_lines_except_namespace, empty_lines_special, no_empty_lines
-Layout/EmptyLinesAroundModuleBody:
-  Enabled: false
-
 # Offense count: 1
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyleAlignWith, AutoCorrect, Severity.
@@ -379,13 +291,6 @@ Layout/SpaceInsideHashLiteralBraces:
 Layout/SpaceInsideParens:
   Exclude:
     - 'app/helpers/format_helper.rb'
-
-# Offense count: 26
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: final_newline, final_blank_line
-Layout/TrailingEmptyLines:
-  Enabled: false
 
 # Offense count: 2
 # Cop supports --auto-correct.

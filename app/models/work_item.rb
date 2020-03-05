@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: work_items
@@ -114,6 +113,7 @@ class WorkItem < ActiveRecord::Base
 
   def with_ancestors(&block)
     return enum_for(:with_ancestors) unless block_given?
+
     yield self
     parent.with_ancestors(&block) if parent_id?
   end

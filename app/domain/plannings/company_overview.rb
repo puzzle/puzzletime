@@ -3,10 +3,8 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module Plannings
   class CompanyOverview
-
     attr_reader :period, :boards
 
     def initialize(period)
@@ -35,6 +33,5 @@ module Plannings
       employees = Employee.employed_ones(period).list
       employees.map { |e| Plannings::EmployeeBoard.new(e, period) }
     end
-
   end
 end

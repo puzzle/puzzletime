@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module DryCrud::Table
   # Provides headers with sort links. Expects a method :sortable?(attr)
   # in the template/controller to tell if an attribute is sortable or not.

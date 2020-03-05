@@ -3,11 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class WorkloadReportControllerTest < ActionController::TestCase
-
   setup :login
 
   test 'GET index without params sets default period' do
@@ -38,5 +36,4 @@ class WorkloadReportControllerTest < ActionController::TestCase
     assert flash[:alert].present?
     assert_equal Period.new(nil, nil), assigns(:period)
   end
-
 end

@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module Invoicing
   module SmallInvoice
     class Api
@@ -80,6 +79,7 @@ module Invoicing
 
       def handle_json_response(response, data = nil)
         return {} if response.body.blank?
+
         json = JSON.parse(response.body)
         if json['error']
           fail Invoicing::Error.new(json['errormessage'], json['errorcode'], data)

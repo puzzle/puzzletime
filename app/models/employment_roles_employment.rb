@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: employment_roles_employments
@@ -16,7 +15,6 @@
 #
 
 class EmploymentRolesEmployment < ActiveRecord::Base
-
   belongs_to :employment
   belongs_to :employment_role
   belongs_to :employment_role_level, optional: true
@@ -45,5 +43,4 @@ class EmploymentRolesEmployment < ActiveRecord::Base
                  "Die Funktion '#{employment_role.name}' hat keine Stufen.")
     end
   end
-
 end

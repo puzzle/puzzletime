@@ -3,10 +3,8 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module Plannings
   class Creator
-
     attr_reader :params, :errors, :plannings
 
     PERMITTED_ATTRIBUTES = [:id, :employee_id, :work_item_id, :date, :percent, :definitive,
@@ -223,6 +221,7 @@ module Plannings
 
     def new_items_hashes
       return [] if items.blank?
+
       @new_items_hashes ||= items - existing_items_hashes
     end
 
@@ -236,6 +235,7 @@ module Plannings
 
     def existing_items
       return Planning.none if items.blank?
+
       @existing_items ||= Planning.where(existing_items_condition)
     end
 
@@ -256,6 +256,5 @@ module Plannings
       r = params[:planning][:repeat_until]
       @repeat_until_week ||= Week.from_string(r) if r.present?
     end
-
   end
 end

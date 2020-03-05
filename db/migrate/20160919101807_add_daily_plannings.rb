@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class AddDailyPlannings < ActiveRecord::Migration[5.1]
   OLD_TABLE = :plannings
   NEW_TABLE = :plannings_new
@@ -125,4 +124,3 @@ class AddDailyPlannings < ActiveRecord::Migration[5.1]
     @new_table ||= Arel::Table.new(NEW_TABLE)
   end
 end
-

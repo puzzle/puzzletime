@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class Reports::Workload
   include Filterable
 
@@ -20,7 +19,6 @@ class Reports::Workload
     :absence_id,
     :payed
   ].freeze
-
 
   def initialize(period, department, params = {})
     @period = period
@@ -148,5 +146,4 @@ class Reports::Workload
       e.send(params[:sort]).to_f * dir
     end
   end
-
 end

@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module ContractsHelper
   def format_contract_notes(contract)
     auto_link(simple_format(contract.notes))

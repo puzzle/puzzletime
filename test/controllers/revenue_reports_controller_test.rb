@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class RevenueReportsControllerTest < ActionController::TestCase
-
   setup do
     login
     travel_to Date.new(2000, 9, 5)
@@ -70,7 +69,6 @@ class RevenueReportsControllerTest < ActionController::TestCase
                     'November 2001', 'Dezember 2001'
   end
 
-
   test 'GET index csv exports csv file with grouping: Department' do
     get :index, params: { grouping: 'Department' }, format: :csv
     csv_match 'Organisationseinheit', response.body
@@ -109,5 +107,4 @@ class RevenueReportsControllerTest < ActionController::TestCase
     assert_match(/Oktober 2000,November 2000,Dezember 2000/, body) # future months
     assert_match(/Total,0,0,0,0,0,0,0,0/,                    body) # summary footer
   end
-
 end

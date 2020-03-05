@@ -3,11 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class EmployeeStatisticsTest < ActiveSupport::TestCase
-
   setup :create_employments
 
   test '#employments_during with start and end date set' do
@@ -62,5 +60,4 @@ class EmployeeStatisticsTest < ActiveSupport::TestCase
   def statistics
     @statistics ||= employee.statistics
   end
-
 end

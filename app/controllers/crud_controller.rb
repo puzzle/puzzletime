@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # Abstract controller providing basic CRUD actions.
 #
 # Some enhancements were made to ease extensibility.
@@ -14,7 +13,6 @@
 # With the help of additional callbacks, it is possible to hook into the
 # action procedures without overriding the entire method.
 class CrudController < ListController
-
   include ActionView::Helpers::TagHelper
 
   class_attribute :permitted_attrs
@@ -32,7 +30,6 @@ class CrudController < ListController
 
   prepend_before_action :entry, only: [:show, :new, :create, :edit, :update, :destroy]
   prepend_before_action :authenticate
-
 
   ##############  ACTIONS  ############################################
 
@@ -125,7 +122,6 @@ class CrudController < ListController
       end
     end
   end
-
 
   private
 

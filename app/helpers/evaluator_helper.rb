@@ -3,9 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module EvaluatorHelper
-
   def evaluation_detail_params
     params.permit(:evaluation, :category_id, :division_id, :start_date, :end_date, :page)
   end
@@ -188,5 +186,4 @@ module EvaluatorHelper
       .pluck(*Reports::Workload::WORKTIME_FIELDS)
       .map { |w| Reports::Workload::WorktimeEntry.new(*w) }
   end
-
 end

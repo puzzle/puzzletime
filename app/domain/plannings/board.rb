@@ -3,10 +3,8 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module Plannings
   class Board
-
     attr_reader :subject, :period, :employees
 
     def initialize(subject, period)
@@ -158,6 +156,7 @@ module Plannings
 
     def item_index(date)
       return if [0, 6, 7].include?(date.wday)
+
       diff = (date - period.start_date).to_i
       diff - (diff / 7 * 2).to_i
     end
@@ -218,6 +217,5 @@ module Plannings
     def included_key_ids(name, position)
       @included_rows ? @included_rows.map(&position) : @plannings.map(&name)
     end
-
   end
 end

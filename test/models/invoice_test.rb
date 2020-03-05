@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: invoices
@@ -290,7 +289,6 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_no_difference('Invoice.count') { assert !invoice.destroy }
     assert_equal ['Fehler im Invoicing Service: some invoicing error'], invoice.errors[:base]
   end
-
 
   private
 

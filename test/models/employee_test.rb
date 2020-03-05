@@ -41,7 +41,6 @@
 require 'test_helper'
 
 class EmployeeTest < ActiveSupport::TestCase
-
   def setup
     years = 1990..2006
     setup_regular_holidays(years.to_a)

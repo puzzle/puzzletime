@@ -3,9 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class IdValue
-
   attr_reader :id, :label
 
   def initialize(id, label)
@@ -16,5 +14,4 @@ class IdValue
   def to_s
     label
   end
-
 end

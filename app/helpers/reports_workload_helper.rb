@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module ReportsWorkloadHelper
   def format_workload_hours(value)
     content_tag(:span, format_number(value, 0), title: value)

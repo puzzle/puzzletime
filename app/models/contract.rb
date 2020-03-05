@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: contracts
@@ -24,7 +23,6 @@ class Contract < ActiveRecord::Base
   validates_by_schema
   validates_date :start_date, :end_date
   validates :payment_period, inclusion: Settings.defaults.payment_periods
-
 
   after_initialize :set_default_payment_period
 

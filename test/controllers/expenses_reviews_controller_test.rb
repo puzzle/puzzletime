@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class ExpensesReviewsControllerTest < ActionController::TestCase
-
   setup :login
 
   test 'GET#index management may list all expenses' do
@@ -83,6 +82,4 @@ class ExpensesReviewsControllerTest < ActionController::TestCase
     get :update, params: { id: expenses(:pending).id, expense: { status: :approved, reimbursement_date: '2019-03-01' } }, session: { 'list_params' => list_params }
     assert_redirected_to expenses_review_path(other)
   end
-
-
 end

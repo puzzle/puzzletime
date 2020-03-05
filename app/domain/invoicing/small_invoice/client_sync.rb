@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module Invoicing
   module SmallInvoice
     # One-way sync from PuzzleTime to Small Invoice for clients, contacts and billing addresses.

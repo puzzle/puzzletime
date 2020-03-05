@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: employment_roles
@@ -16,7 +15,6 @@
 #
 
 class EmploymentRole < ActiveRecord::Base
-
   belongs_to :employment_role_category, optional: true
   has_many :employment_roles_employments, dependent: :restrict_with_exception
 
@@ -26,5 +24,4 @@ class EmploymentRole < ActiveRecord::Base
   def to_s
     name
   end
-
 end

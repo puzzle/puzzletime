@@ -4,12 +4,11 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # coding: utf-8
+
 require 'test_helper'
 
 class RoleDistributionReportTest < ActiveSupport::TestCase
-
   test '#filename' do
     assert_equal 'puzzletime_funktionsanteile_20100123.csv', report.filename
   end
@@ -86,5 +85,4 @@ class RoleDistributionReportTest < ActiveSupport::TestCase
       percent: 90
     )
   end
-
 end

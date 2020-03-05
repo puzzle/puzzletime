@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: holidays
@@ -14,7 +13,6 @@
 #
 
 class Holiday < ActiveRecord::Base
-
   include ActionView::Helpers::NumberHelper
   include Comparable
 
@@ -97,7 +95,6 @@ class Holiday < ActiveRecord::Base
       end
       hours
     end
-
   end
 
   def clear_cache
@@ -110,6 +107,7 @@ class Holiday < ActiveRecord::Base
 
   def <=>(other)
     return unless other.is_a?(Holiday)
+
     holiday_date <=> other.holiday_date
   end
 end

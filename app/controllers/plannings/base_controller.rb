@@ -3,10 +3,8 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module Plannings
   class BaseController < ListController
-
     include WithPeriod
 
     self.allow_unlimited_period = false
@@ -100,6 +98,5 @@ module Plannings
       else authorize!(:manage_plannings, subject)
       end
     end
-
   end
 end

@@ -5,7 +5,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 if ENV['RAILS_AIRBRAKE_HOST'] && ENV['RAILS_AIRBRAKE_API_KEY']
   require 'airbrake'
   Airbrake.configure do |config|

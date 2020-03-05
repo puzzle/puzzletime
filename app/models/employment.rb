@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: employments
@@ -46,7 +45,6 @@ class Employment < ActiveRecord::Base
   scope :list, -> { order('start_date DESC') }
 
   class << self
-
     def during(period)
       return all unless period
 
@@ -76,7 +74,6 @@ class Employment < ActiveRecord::Base
         end
       end
     end
-
   end
 
   def previous_employment
