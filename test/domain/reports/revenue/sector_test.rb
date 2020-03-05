@@ -32,7 +32,7 @@ class SectorRevenueReportTest < ActiveSupport::TestCase
   end
 
   test 'entries and values' do
-    Settings.clients.stubs(:company_id).returns(0) #TODO: Do not use puzzle as example
+    Settings.clients.stubs(:company_id).returns(0) # TODO: Do not use puzzle as example
 
     clients(:puzzle).update_attribute(:sector_id, verwaltung.id)
     clients(:pbs).update_attribute(:sector_id, oev.id)

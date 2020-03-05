@@ -140,7 +140,7 @@ class InvoicesController < CrudController
 
   def load_totals_paid
     paid = order.invoices.where(status: 'paid')
-    @total_amount      = order.invoices.sum(:total_amount)
+    @total_amount = order.invoices.sum(:total_amount)
     @total_amount_paid = paid.sum(:total_amount)
     @total_amount_open = @total_amount - @total_amount_paid
 

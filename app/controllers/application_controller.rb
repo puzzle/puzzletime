@@ -43,7 +43,7 @@ class ApplicationController < ActionController::Base
         # allow ad-hoc login
         if params[:user].present? && params[:pwd].present?
           return true if login_with(params[:user], params[:pwd])
-          
+
           flash[:notice] = 'Ungültige Benutzerdaten'
         end
         redirect_to login_path(ref: request.url)

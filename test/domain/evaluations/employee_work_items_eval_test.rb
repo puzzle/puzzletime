@@ -11,7 +11,7 @@ class EmployeeWorkItemsEvalTest < ActiveSupport::TestCase
 
   def test_employee_work_items_pascal
     @evaluation = EmployeeWorkItemsEval.new(employees(:pascal).id)
-    assert ! @evaluation.absences?
+    assert !@evaluation.absences?
     assert @evaluation.for?(employees(:pascal))
     assert @evaluation.total_details
 
@@ -47,7 +47,7 @@ class EmployeeWorkItemsEvalTest < ActiveSupport::TestCase
 
   def test_employee_work_items_mark
     @evaluation = EmployeeWorkItemsEval.new(employees(:mark).id)
-    assert ! @evaluation.absences?
+    assert !@evaluation.absences?
     assert @evaluation.for?(employees(:mark))
     assert @evaluation.total_details
 
@@ -78,7 +78,7 @@ class EmployeeWorkItemsEvalTest < ActiveSupport::TestCase
 
   def test_employee_work_items_lucien
     @evaluation = EmployeeWorkItemsEval.new(employees(:lucien).id)
-    assert ! @evaluation.absences?
+    assert !@evaluation.absences?
     assert @evaluation.for?(employees(:lucien))
     assert @evaluation.total_details
 

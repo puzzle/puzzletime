@@ -11,8 +11,8 @@ class EmployeeWorkItemsEvalTest < ActiveSupport::TestCase
 
   def test_project_employees_allgemein
     @evaluation = WorkItemEmployeesEval.new(work_items(:allgemein).id)
-    assert ! @evaluation.absences?
-    assert ! @evaluation.for?(employees(:pascal))
+    assert !@evaluation.absences?
+    assert !@evaluation.for?(employees(:pascal))
     assert @evaluation.total_details
 
     divisions = @evaluation.divisions.list.to_a
@@ -54,8 +54,8 @@ class EmployeeWorkItemsEvalTest < ActiveSupport::TestCase
 
   def test_project_employees_puzzletime
     @evaluation = WorkItemEmployeesEval.new(work_items(:puzzletime).id)
-    assert ! @evaluation.absences?
-    assert ! @evaluation.for?(employees(:pascal))
+    assert !@evaluation.absences?
+    assert !@evaluation.for?(employees(:pascal))
     assert @evaluation.total_details
 
     divisions = @evaluation.divisions.list.to_a
@@ -93,8 +93,8 @@ class EmployeeWorkItemsEvalTest < ActiveSupport::TestCase
 
   def test_project_employees_webauftritt
     @evaluation = WorkItemEmployeesEval.new(work_items(:webauftritt).id)
-    assert ! @evaluation.absences?
-    assert ! @evaluation.for?(employees(:lucien))
+    assert !@evaluation.absences?
+    assert !@evaluation.for?(employees(:lucien))
     assert @evaluation.total_details
 
     Fabricate(:planning, work_item: work_items(:webauftritt), employee: employees(:long_time_john))

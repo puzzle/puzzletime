@@ -32,7 +32,7 @@ class PortfolioItemRevenueReportTest < ActiveSupport::TestCase
   end
 
   test 'entries and values' do
-    Settings.clients.stubs(:company_id).returns(0) #TODO: do not use puzzle as example
+    Settings.clients.stubs(:company_id).returns(0) # TODO: do not use puzzle as example
 
     accounting_posts(:hitobito_demo_app).update_attribute(:portfolio_item_id, mobile.id)
     mobile.update(active: false)

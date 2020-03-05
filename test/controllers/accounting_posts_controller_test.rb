@@ -184,7 +184,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
       }
     }
 
-    assert_difference 'AccountingPost.count',+1 do
+    assert_difference 'AccountingPost.count', +1 do
       post :create, params: attributes
     end
     accounting_post = assigns(:accounting_post)
@@ -263,7 +263,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
 
   test 'PATCH update with new work_item sets parent_id to order.work_item_id and moves worktimes' do
     assert_no_difference 'AccountingPost.count' do
-      assert_difference 'WorkItem.count',+1 do
+      assert_difference 'WorkItem.count', +1 do
         assert_no_difference 'Worktime.count' do
           patch :update,
                 params: {

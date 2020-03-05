@@ -33,7 +33,7 @@ class OrderCommentsControllerTest < ActionController::TestCase
   end
 
   test 'POST index with text persists comment with correct attributes' do
-    assert_difference 'OrderComment.count',+1 do
+    assert_difference 'OrderComment.count', +1 do
       post :create, params: { order_id: order.id, order_comment: { text: 'hello world' } }
     end
     assert_match(/wurde erfolgreich erstellt/, flash[:notice])

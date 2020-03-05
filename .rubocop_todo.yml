@@ -13,17 +13,6 @@
 Layout/DotPosition:
   Enabled: false
 
-# Offense count: 7
-# Cop supports --auto-correct.
-# Configuration parameters: AllowForAlignment, AllowBeforeTrailingComments, ForceEqualSignAlignment.
-Layout/ExtraSpacing:
-  Exclude:
-    - 'config/environments/development.rb'
-    - 'db/migrate/20150930143851_create_tables.rb'
-    - 'db/seeds/development/zz_work_item.rb'
-    - 'test/controllers/expenses_reviews_controller_test.rb'
-    - 'test/fabricators/employment_roles_employment_fabricator.rb'
-
 # Offense count: 97
 # Cop supports --auto-correct.
 # Configuration parameters: AllowMultipleStyles, EnforcedHashRocketStyle, EnforcedColonStyle, EnforcedLastArgumentHashStyle.
@@ -32,113 +21,6 @@ Layout/ExtraSpacing:
 # SupportedLastArgumentHashStyles: always_inspect, always_ignore, ignore_implicit, ignore_explicit
 Layout/HashAlignment:
   Enabled: false
-
-# Offense count: 9
-# Cop supports --auto-correct.
-# Configuration parameters: AllowDoxygenCommentStyle, AllowGemfileRubyComment.
-Layout/LeadingCommentSpace:
-  Exclude:
-    - 'config/environment.rb'
-    - 'test/controllers/absencetimes_controller_test.rb'
-    - 'test/domain/reports/revenue/department_test.rb'
-    - 'test/domain/reports/revenue/portfolio_item_test.rb'
-    - 'test/domain/reports/revenue/sector_test.rb'
-    - 'test/domain/reports/revenue/service_test.rb'
-    - 'test/integration/plannings_orders_test.rb'
-
-# Offense count: 14
-# Cop supports --auto-correct.
-Layout/SpaceAfterComma:
-  Exclude:
-    - 'test/controllers/accounting_posts_controller_test.rb'
-    - 'test/controllers/order_comments_controller_test.rb'
-    - 'test/models/expense_test.rb'
-    - 'test/models/util/period_test.rb'
-    - 'test/test_helper.rb'
-
-# Offense count: 20
-# Cop supports --auto-correct.
-Layout/SpaceAfterNot:
-  Exclude:
-    - 'test/domain/evaluations/client_work_items_eval_test.rb'
-    - 'test/domain/evaluations/clients_eval_test.rb'
-    - 'test/domain/evaluations/employee_work_items_eval_test.rb'
-    - 'test/domain/evaluations/employees_eval_test.rb'
-    - 'test/domain/evaluations/managed_orders_eval_test.rb'
-    - 'test/domain/evaluations/work_item_employees_eval_test.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: space, no_space
-Layout/SpaceAroundEqualsInParameterDefault:
-  Exclude:
-    - 'app/helpers/dry_crud/table/col.rb'
-
-# Offense count: 6
-# Cop supports --auto-correct.
-# Configuration parameters: AllowForAlignment, EnforcedStyleForExponentOperator.
-# SupportedStylesForExponentOperator: space, no_space
-Layout/SpaceAroundOperators:
-  Exclude:
-    - 'app/controllers/invoices_controller.rb'
-    - 'config/environments/development.rb'
-    - 'test/domain/order/report_test.rb'
-
-# Offense count: 8
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBrackets.
-# SupportedStyles: space, no_space, compact
-# SupportedStylesForEmptyBrackets: space, no_space
-Layout/SpaceInsideArrayLiteralBrackets:
-  Exclude:
-    - 'config/environments/production.rb'
-    - 'db/migrate/20190204150027_create_active_storage_tables.active_storage.rb'
-    - 'test/models/order_status_test.rb'
-
-# Offense count: 12
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBraces, SpaceBeforeBlockParameters.
-# SupportedStyles: space, no_space
-# SupportedStylesForEmptyBraces: space, no_space
-Layout/SpaceInsideBlockBraces:
-  Exclude:
-    - 'config/initializers/better_errors.rb'
-    - 'db/seeds/development/zz_work_item.rb'
-    - 'test/controllers/orders_controller_test.rb'
-    - 'test/integration/invoice_form_test.rb'
-    - 'test/models/util/period_test.rb'
-    - 'test/models/work_item_test.rb'
-    - 'test/support/custom_assertions.rb'
-
-# Offense count: 21
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBraces.
-# SupportedStyles: space, no_space, compact
-# SupportedStylesForEmptyBraces: space, no_space
-Layout/SpaceInsideHashLiteralBraces:
-  Exclude:
-    - 'db/seeds/development/zz_work_item.rb'
-    - 'test/controllers/employees_controller_test.rb'
-    - 'test/controllers/expenses_controller_test.rb'
-    - 'test/domain/evaluations/department_orders_eval_test.rb'
-    - 'test/integration/invoice_form_test.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: space, no_space
-Layout/SpaceInsideParens:
-  Exclude:
-    - 'app/helpers/format_helper.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: AllowInHeredoc.
-Layout/TrailingWhitespace:
-  Exclude:
-    - 'app/controllers/application_controller.rb'
-    - 'test/domain/evaluations/eval_test_helper.rb'
 
 # Offense count: 7
 Lint/AmbiguousBlockAssociation:

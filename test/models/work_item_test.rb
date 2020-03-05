@@ -143,7 +143,7 @@ class WorkItemTest < ActiveSupport::TestCase
   test '.with_worktimes_in_period includes only those work_items with billable worktimes in given period' do
     order = Fabricate(:order)
     work_items = Fabricate.times(4, :work_item, parent: order.work_item)
-    work_items.each {|w| Fabricate(:accounting_post, work_item: w) }
+    work_items.each { |w| Fabricate(:accounting_post, work_item: w) }
 
     from, to = Date.parse('09.12.2006'), Date.parse('12.12.2006')
 

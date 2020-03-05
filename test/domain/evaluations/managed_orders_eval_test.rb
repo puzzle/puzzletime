@@ -101,8 +101,8 @@ class ManagedOrdersEvalTest < ActiveSupport::TestCase
   end
 
   def assert_managed(user)
-    assert ! @evaluation.absences?
-    assert ! @evaluation.for?(user)
-    assert ! @evaluation.total_details
+    assert !@evaluation.absences?
+    assert !@evaluation.for?(user)
+    assert !@evaluation.total_details
   end
 end
