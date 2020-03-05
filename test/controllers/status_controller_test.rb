@@ -10,7 +10,7 @@ class StatusControllerTest < ActionController::TestCase
     endpoint_test :health
   end
 
-def test_readiness
+  def test_readiness
     endpoint_test :readiness
   end
 

@@ -66,8 +66,7 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
       Fabricate(:ordertime,
                 work_date: date,
                 work_item: work_items[index],
-                employee: employees(:pascal)
-      )
+                employee: employees(:pascal))
     end
 
     reload(order: order)

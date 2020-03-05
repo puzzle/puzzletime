@@ -207,8 +207,8 @@ class Worktime < ActiveRecord::Base
     committed_at = employee.committed_worktimes_at
 
     committed_at &&
-    ((work_date && committed_at >= work_date) ||
-     (work_date_was && committed_at >= work_date_was))
+      ((work_date && committed_at >= work_date) ||
+       (work_date_was && committed_at >= work_date_was))
   end
 
   private

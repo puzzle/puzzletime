@@ -5,7 +5,8 @@
 
 # coding: utf-8
 
-Absence.seed(:name,
+Absence.seed(
+  :name,
   { name: 'Ferien',
     payed: true,
     vacation: true },

@@ -30,7 +30,7 @@ module Reports::Revenue
 
     def hours_without_entry?
       ordertime_hours.any? { |(entry_id, _time), _sum_hours| entry_id.nil? } ||
-      planning_hours.any? { |(entry_id, _date), _sum_hours| entry_id.nil? }
+        planning_hours.any? { |(entry_id, _date), _sum_hours| entry_id.nil? }
     end
 
     def ordertime_hours

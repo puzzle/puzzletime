@@ -3,7 +3,8 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-employees = Employee.seed(:shortname,
+employees = Employee.seed(
+  :shortname,
   { firstname: 'Mark',
     lastname: 'Waber',
     shortname: 'MW',
@@ -54,7 +55,9 @@ employees = Employee.seed(:shortname,
     management: false }
 )
 
-Employment.seed(:employee_id, :start_date,
+Employment.seed(
+  :employee_id,
+  :start_date,
   { employee_id: employees[0].id,
     percent: 100,
     start_date: Date.new(2000, 1, 1) },

@@ -37,7 +37,8 @@ class AccountingPostTest < ActiveSupport::TestCase
         work_item: WorkItem.new(name: 'Foo', shortname: 'FOO', parent: post.work_item),
         portfolio_item: PortfolioItem.first,
         service: Service.first,
-        offered_rate: 150)
+        offered_rate: 150
+      )
     end
     post.reload
     fresh.reload
@@ -60,7 +61,8 @@ class AccountingPostTest < ActiveSupport::TestCase
         work_item: WorkItem.new(name: 'Foo', shortname: 'FOO', parent: post.work_item),
         portfolio_item: PortfolioItem.first,
         service: Service.first,
-        offered_rate: 150)
+        offered_rate: 150
+      )
 
       post.reload
       assert_equal post.work_item_id, order.work_item_id

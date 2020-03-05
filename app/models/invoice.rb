@@ -95,8 +95,8 @@ class Invoice < ActiveRecord::Base
 
   def billing_client
     billing_address.try(:client) ||
-    order.billing_address.try(:client) ||
-    order.client
+      order.billing_address.try(:client) ||
+      order.client
   end
 
   def billing_client_id

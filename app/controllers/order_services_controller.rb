@@ -81,7 +81,7 @@ class OrderServicesController < ApplicationController
 
   def set_period_with_invoice
     if params[:invoice_id].present? && params[:invoice_id] != EMPTY &&
-      params[:start_date].blank? && params[:end_date].blank?
+       params[:start_date].blank? && params[:end_date].blank?
       invoice = Invoice.find(params[:invoice_id])
       @period = Period.new(invoice.period_from, invoice.period_to)
       # return an open period to get all worktimes for the given invoice_id,
@@ -100,11 +100,11 @@ class OrderServicesController < ApplicationController
 
   def set_filter_tickets
     @tickets = [EMPTY_TICKET] +
-        order.worktimes.in_period(@period)
-             .order(:ticket)
-               .distinct
-               .pluck(:ticket)
-             .select(&:present?)
+               order.worktimes.in_period(@period)
+                    .order(:ticket)
+                    .distinct
+                    .pluck(:ticket)
+                    .select(&:present?)
   end
 
   def set_filter_accounting_posts

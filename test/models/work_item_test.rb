@@ -151,8 +151,7 @@ class WorkItemTest < ActiveSupport::TestCase
       Fabricate(:ordertime,
                 work_date: date,
                 work_item: work_items[index],
-                employee: employees(:pascal)
-      )
+                employee: employees(:pascal))
     end
 
     result = WorkItem.with_worktimes_in_period(order, from, to)

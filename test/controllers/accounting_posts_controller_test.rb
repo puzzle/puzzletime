@@ -56,7 +56,8 @@ class AccountingPostsControllerTest < ActionController::TestCase
              accounting_post: {
                portfolio_item_id: portfolio_items(:web).id,
                service_id: services(:software).id,
-               offered_rate: 120 }
+               offered_rate: 120
+             }
            }
       assert_response :unprocessable_entity
       assert_template :new
@@ -78,7 +79,8 @@ class AccountingPostsControllerTest < ActionController::TestCase
                  portfolio_item_id: portfolio_items(:web).id,
                  service_id: services(:software).id,
                  closed: true,
-                 offered_rate: 155 }
+                 offered_rate: 155
+               }
              }
       end
     end
@@ -99,7 +101,8 @@ class AccountingPostsControllerTest < ActionController::TestCase
                  portfolio_item_id: portfolio_items(:web).id,
                  service_id: services(:software).id,
                  offered_rate: 120,
-                 closed: true }
+                 closed: true
+               }
              }
       end
     end
@@ -122,7 +125,8 @@ class AccountingPostsControllerTest < ActionController::TestCase
                  work_item_attributes: { name: 'TEST', shortname: 'TST' },
                  portfolio_item_id: portfolio_items(:web).id,
                  service_id: services(:software).id,
-                 offered_rate: 150 }
+                 offered_rate: 150
+               }
              }
       end
     end
@@ -149,7 +153,8 @@ class AccountingPostsControllerTest < ActionController::TestCase
                  work_item_attributes: { name: 'TEST', shortname: 'TST' },
                  portfolio_item_id: portfolio_items(:web).id,
                  service_id: services(:software).id,
-                 offered_rate: 150 }
+                 offered_rate: 150
+               }
              }
       end
     end

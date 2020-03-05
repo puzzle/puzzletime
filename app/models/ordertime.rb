@@ -51,8 +51,8 @@ class Ordertime < Worktime
 
   def work_item_closed?
     (work_item && work_item.closed?) ||
-    (work_item_id_was && work_item_id_was != work_item_id &&
-      WorkItem.where(id: work_item_id_was, closed: true).exists?)
+      (work_item_id_was && work_item_id_was != work_item_id &&
+        WorkItem.where(id: work_item_id_was, closed: true).exists?)
   end
 
   def invoice_sent_or_paid?

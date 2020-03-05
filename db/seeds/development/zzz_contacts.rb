@@ -3,7 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-Contact.seed(:client_id, :lastname,
+Contact.seed(
+  :client_id,
+  :lastname,
   { client_id: WorkItem.where(parent_id: nil, name: 'Swisscom AG').first!.id,
     lastname: 'von Gunten',
     firstname: 'Thomas',
