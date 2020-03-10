@@ -60,11 +60,13 @@ class EvaluatorController < ApplicationController
   end
 
   def set_evaluation
-    params[:evaluation] ||= 'userworkitems'
+    set_default_params
+
     set_default_evaluation
     if @user.management && @evaluation.nil?
       set_management_evaluation
     end
+
     if @evaluation.nil?
       @evaluation = EmployeeWorkItemsEval.new(@user.id)
       params[:evaluation] = 'userworkitems'
@@ -83,6 +85,15 @@ class EvaluatorController < ApplicationController
                   when 'subworkitems' then SubWorkItemsEval.new(params[:category_id])
                   when 'workitememployees' then WorkItemEmployeesEval.new(params[:category_id])
                   end
+  end
+
+  def set_default_params
+    params[:evaluation] ||= 'userworkitems'
+
+    case params[:evaluation].downcase
+    when 'employees' then
+      params[:department_id] = current_user.department_id unless params.key?(:department_id)
+    end
   end
 
   def set_management_evaluation
