@@ -57,7 +57,7 @@ Rails.application.configure do
   ssl = %w[true yes 1].include?(ENV['RAILS_HOST_SSL'])
   config.force_ssl = ssl
   config.ssl_options = {
-    redirect: { exclude: ->(request) { request.path =~ /health|readiness/ }}
+    redirect: { exclude: ->(request) { request.path =~ /health|readiness/ } }
   }
 
   # Set to :debug to see everything in the log.
