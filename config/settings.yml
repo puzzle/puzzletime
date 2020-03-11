@@ -35,8 +35,10 @@ ldap:
   connection:
     host: <%= ENV['RAILS_LDAP_HOST'] %>
     port: <%= ENV['RAILS_LDAP_PORT'] || 636 %>
+    <% if ENV['RAILS_LDAP_ENCRYPTION'] %>
     encryption:
-      method: <%= ENV['RAILS_LDAP_ENCRYPTION'] || 'simple_tls' %>
+      method: <%= ENV['RAILS_LDAP_ENCRYPTION'] %>
+    <% end %>
   auth:
     binduser: <%= ENV['RAILS_LDAP_BINDUSER'] %>
     bindpassword: <%= ENV['RAILS_LDAP_BINDPASSWORD'] %>
