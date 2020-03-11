@@ -83,6 +83,14 @@ class Employee < ActiveRecord::Base
     self.nationalities.try(:reject!, &:blank?)
   end
 
+  before_save do
+    if self.passwd.blank?
+      self.clear_attribute_changes(['passwd'])
+    else
+      self.passwd = Employee.encode(self.passwd)
+    end
+  end
+
   # Validation helpers.
   validates_by_schema except: :eval_periods
   validates :shortname, uniqueness: { case_sensitive: false }
@@ -98,8 +106,11 @@ class Employee < ActiveRecord::Base
     # Tries to login a user with the passed data.
     # Returns the logged-in Employee or nil if the login failed.
     def login(username, pwd)
-      find_by(shortname: username.upcase, passwd: encode(pwd)) ||
+      if Settings.ldap.connection.host.blank?
+        find_by(shortname: username.upcase, passwd: encode(pwd))
+      else
         LdapAuthenticator.new.login(username, pwd)
+      end
     end
 
     def employed_ones(period, sort = true)
@@ -146,16 +157,8 @@ class Employee < ActiveRecord::Base
     super || []
   end
 
-  def before_create
-    self.passwd = '' # disable password login
-  end
-
   def check_passwd(pwd)
     passwd == Employee.encode(pwd)
-  end
-
-  def update_passwd!(pwd)
-    update_attributes!(passwd: Employee.encode(pwd))
   end
 
   # main work items this employee ever worked on
