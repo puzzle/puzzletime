@@ -3,11 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class EmployeeMasterDataControllerTest < ActionController::TestCase
-
   setup :login
 
   test 'GET index' do
@@ -89,5 +87,4 @@ class EmployeeMasterDataControllerTest < ActionController::TestCase
     get :show, params: { id: employees(:various_pedro).id }
     assert_match(/AHV-Nummer/, response.body)
   end
-
 end

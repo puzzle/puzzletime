@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module InvoiceHelper
   def render_address(address)
     simple_format [
@@ -31,5 +30,4 @@ module InvoiceHelper
   def format_invoice_status(invoice)
     Invoice.human_attribute_name(:"statuses.#{invoice.status}") if invoice.status?
   end
-
 end

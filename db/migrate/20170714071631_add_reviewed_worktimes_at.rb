@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class AddReviewedWorktimesAt < ActiveRecord::Migration[5.1]
   def change
     add_column :employees, :reviewed_worktimes_at, :date, { after: :committed_worktimes_at }

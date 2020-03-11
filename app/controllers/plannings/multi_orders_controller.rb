@@ -3,10 +3,8 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module Plannings
   class MultiOrdersController < Plannings::OrdersController
-
     skip_load_and_authorize_resource
     skip_before_action :authorize_subject_planning, only: :show
 
@@ -53,6 +51,5 @@ module Plannings
                   'orders.work_item_id = ANY (work_items.path_ids)').
         find_by('work_items.id = ?', work_item_id)
     end
-
   end
 end

@@ -204,5 +204,4 @@ class Expenses::PdfExport
   def t(label, **kwargs)
     I18n.t("activerecord.attributes.expense.#{label}", kwargs)
   end
-
 end

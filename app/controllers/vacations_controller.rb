@@ -3,9 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class VacationsController < ApplicationController
-
   before_action :authorize_action
   before_action :set_period
 
@@ -18,5 +16,4 @@ class VacationsController < ApplicationController
   def authorize_action
     authorize!(:show_vacations, Absencetime)
   end
-
 end

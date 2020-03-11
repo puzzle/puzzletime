@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # Provides uniform formatting of basic data types, based on Ruby class (#f)
 # or database column type (#format_attr). If other helpers define methods
 # with names like 'format_{class}_{attr}', these methods are used for

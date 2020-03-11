@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module Plannings
   class Item
     attr_accessor :planning,
@@ -79,6 +78,5 @@ module Plannings
         0
       end
     end
-
   end
 end

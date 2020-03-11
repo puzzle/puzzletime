@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class PortfolioItemsController < ManageController
   self.permitted_attrs = [:name, :active]
 end

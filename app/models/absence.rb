@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: absences
@@ -32,5 +31,4 @@ class Absence < ActiveRecord::Base
   def to_s
     name
   end
-
 end

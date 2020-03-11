@@ -3,18 +3,15 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # -*- coding: utf-8 -*-
 
 TargetScope.seed(:name,
   { name: 'Kosten',
     icon: 'usd',
     position: 10 },
-
   { name: 'Termin',
     icon: 'time',
     position: 20 },
-
   { name: 'Qualität',
     icon: 'heart-empty',
     position: 30 }

@@ -14,7 +14,6 @@
 #
 
 class AdditionalCrmOrder < ActiveRecord::Base
-
   belongs_to :order
 
   validates_by_schema
@@ -34,5 +33,4 @@ class AdditionalCrmOrder < ActiveRecord::Base
       Crm.instance.delay.sync_additional_order(self)
     end
   end
-
 end

@@ -3,10 +3,8 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module Plannings
   class OrderBoard < Board
-
     alias order subject
 
     def row_legend(employee_id, _work_item_id)
@@ -96,6 +94,5 @@ module Plannings
     def percent_to_hours(percent, hours_per_day)
       percent / 100.0 * hours_per_day
     end
-
   end
 end

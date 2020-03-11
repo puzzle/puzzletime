@@ -3,10 +3,8 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module Crm
   class Highrise < Base
-
     def crm_key_name
       'Highrise ID'
     end

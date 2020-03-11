@@ -3,10 +3,8 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module Employees
   class WorktimesReviewController < CrudController
-
     include Completable
 
     self.permitted_attrs = [:reviewed_worktimes_at]
@@ -27,6 +25,5 @@ module Employees
     def authorize
       authorize!(:update_reviewed_worktimes, entry)
     end
-
   end
 end

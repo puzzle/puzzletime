@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class Order::Cockpit
   class Row < Struct.new(:label)
     attr_reader :cells

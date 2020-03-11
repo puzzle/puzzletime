@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class Ability
   include CanCan::Ability
 
@@ -160,7 +159,6 @@ class Ability
   end
 
   def api_client_abilities
-
   end
 
   def everyone_abilities

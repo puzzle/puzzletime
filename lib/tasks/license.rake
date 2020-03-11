@@ -38,7 +38,6 @@ class Licenser
   ENCODING_PATTERN    = /#\s*encoding: utf-8/i
   ENSURE_ENCODING     = false
 
-
   def initialize(project_name, copyright_holder, copyright_source)
     @project_name = project_name
     @copyright_holder = copyright_holder
@@ -149,10 +148,8 @@ class Licenser
     def comment
       @comment ||= prefix.strip
     end
-
   end
 end
-
 
 namespace :license do
   task :config do

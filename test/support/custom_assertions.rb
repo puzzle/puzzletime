@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # A handful of convenient assertions. The aim of custom assertions is to
 # provide more specific error messages and to perform complex checks.
 #

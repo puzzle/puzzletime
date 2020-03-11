@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # Abstract controller providing a basic list action.
 # The loaded model entries are available in the view as an instance variable
 # named after the +model_class+ or by the helper method +entries+.
@@ -13,7 +12,6 @@
 # Furthermore, it remembers the last search and sort parameters after the
 # user returns from a displayed or edited entry.
 class ListController < ApplicationController
-
   include DryCrud::GenericModel
   prepend DryCrud::Nestable
   include DryCrud::Rememberable

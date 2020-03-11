@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class AddOrderStatusDefault < ActiveRecord::Migration[5.1]
   class OrderStatus < ActiveRecord::Base
     scope :list, -> { order(:position) }

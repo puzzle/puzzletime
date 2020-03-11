@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: order_uncertainties
@@ -20,7 +19,6 @@
 #
 
 class OrderUncertainty < ActiveRecord::Base
-
   MEDIUM_THRESHOLD = 3
   HIGH_THRESHOLD = 8
 
@@ -48,7 +46,6 @@ class OrderUncertainty < ActiveRecord::Base
   scope :list, -> { order('probability * impact DESC') }
 
   class << self
-
     def risk(value)
       return if value.blank?
 
@@ -87,5 +84,4 @@ class OrderUncertainty < ActiveRecord::Base
   def update_major_order_value
     raise # implement in child class
   end
-
 end

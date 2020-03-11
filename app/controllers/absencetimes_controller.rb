@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class AbsencetimesController < WorktimesController
   self.permitted_attrs = [:absence_id, :report_type, :work_date, :hours,
                           :from_start_time, :to_end_time, :description]
@@ -68,5 +67,4 @@ class AbsencetimesController < WorktimesController
       ::EmployeeMailer.worktime_deleted_mail(@worktime, @user).deliver_now
     end
   end
-
 end

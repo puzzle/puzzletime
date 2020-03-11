@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module BelongingToWorkItem
   extend ActiveSupport::Concern
 
@@ -49,7 +48,6 @@ module BelongingToWorkItem
   def exclusive_work_item?
     true
   end
-
 
   module ClassMethods
     def has_ancestor_through_work_item(name)

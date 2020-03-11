@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module MultiWorktimesHelper
   def toggleable_field(attr, span = 2, &block)
     content_tag(:div, class: 'form-group') do

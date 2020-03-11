@@ -65,12 +65,12 @@ gem 'selectize-rails'
 gem 'turbolinks'
 
 group :development, :test do
+  gem 'better_errors'
   gem 'binding_of_caller'
   gem 'codez-tarantula', require: 'tarantula-rails3'
   gem 'faker'
   gem 'pry-rails'
   gem 'request_profiler'
-  gem 'better_errors'
 end
 
 group :development do
@@ -99,14 +99,14 @@ end
 group :metrics do
   gem 'annotate'
   gem 'brakeman'
+  gem 'haml-lint'
   gem 'minitest-reporters'
   gem 'rails-erd'
   gem 'rubocop'
-  gem 'rubocop-rails'
+  gem 'rubocop-checkstyle_formatter', require: false
   gem 'rubocop-minitest'
   gem 'rubocop-performance'
-  gem 'rubocop-checkstyle_formatter', require: false
-  gem 'haml-lint'
+  gem 'rubocop-rails'
   gem 'sdoc'
   gem 'simplecov-rcov', git: 'https://github.com/puzzle/simplecov-rcov'
 end

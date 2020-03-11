@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # An Evaluation gives an overview of the worktimes reported to the system.
 # It provides the sum of all Worktimes for a category, split up into several divisions.
 # The detailed Worktimes may be inspected for the whole category or a certain division only.
@@ -57,10 +56,8 @@ class Evaluation
                             ticket: 'Ticket',
                             description: 'Bemerkungen' }
 
-
   attr_reader :category,             # category
               :division              # selected division for detail Evaluations, nil otherwise
-
 
   ############### Time Evaluation Functions ###############
 
@@ -190,6 +187,7 @@ class Evaluation
   # Default is nil, the worktimes of all divisions are provided.
   def set_division_id(division_id = nil)
     return if division_id.nil?
+
     container = class_category? ? category : divisions
     @division = container.find(division_id.to_i)
   end
@@ -301,6 +299,7 @@ class Evaluation
 
   def detail_label(item)
     return '' if item.nil? || item.is_a?(Class)
+
     item.class.model_name.human + ': ' + item.label
   end
 

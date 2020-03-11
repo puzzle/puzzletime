@@ -3,11 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class EvaluatorControllerTest < ActionController::TestCase
-
   setup :login
 
   %w(userworkitems userabsences).each do |evaluation|
@@ -136,5 +134,4 @@ class EvaluatorControllerTest < ActionController::TestCase
   def division_id(evaluation)
     evaluation.singularize.classify.constantize.first.id
   end
-
 end

@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: sectors
@@ -14,7 +13,6 @@
 #
 
 class Sector < ActiveRecord::Base
-
   has_many :clients, dependent: :nullify
 
   scope :list, -> { order(:name) }
@@ -25,5 +23,4 @@ class Sector < ActiveRecord::Base
   def to_s
     name
   end
-
 end

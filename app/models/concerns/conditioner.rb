@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module Conditioner
   def append_conditions(existing, appends, cat = 'AND')
     if existing.nil?
@@ -19,6 +18,7 @@ module Conditioner
 
   def clone_conditions(conditions)
     return conditions.clone if conditions
+
     []
   end
 

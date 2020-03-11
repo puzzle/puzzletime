@@ -3,11 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class WorkloadReportTest < ActionDispatch::IntegrationTest
-
   setup :login
 
   test 'member detail links are set-up on first page load' do
@@ -32,5 +30,4 @@ class WorkloadReportTest < ActionDispatch::IntegrationTest
                                    end_date: '31.12.2006',
                                    department_id: departments(:devtwo).id))
   end
-
 end

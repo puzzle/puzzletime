@@ -1,5 +1,4 @@
 module AccountingPostsHelper
-
   def blocking_worktimes(type)
     worktimes = @accounting_post.worktimes.includes(:employee)
 

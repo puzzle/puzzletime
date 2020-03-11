@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: working_conditions
@@ -14,9 +13,7 @@
 #  must_hours_per_day     :decimal(4, 2)    not null
 #
 
-
 class WorkingCondition < ActiveRecord::Base
-
   validates_by_schema
   validates :valid_from, uniqueness: true
   validates :must_hours_per_day,
@@ -24,7 +21,6 @@ class WorkingCondition < ActiveRecord::Base
   validates :vacation_days_per_year,
             numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 365 }
   validate :exactly_one_without_valid_from
-
 
   before_destroy :protect_blank_valid_from
   after_save :clear_cache

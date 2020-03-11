@@ -1,5 +1,4 @@
 class PeriodsController < ApplicationController
-
   skip_authorization_check
 
   before_action :set_period
@@ -11,6 +10,7 @@ class PeriodsController < ApplicationController
   def update
     @period = period_from_params
     fail ArgumentError, 'Start Datum nach End Datum' if @period.negative?
+
     session[:period] = [@period.start_date.to_s, @period.end_date.to_s, @period.label]
     # redirect_to_overview
     redirect_to sanitized_back_url
@@ -36,5 +36,4 @@ class PeriodsController < ApplicationController
                  params[:period][:label])
     end
   end
-
 end

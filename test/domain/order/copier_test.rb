@@ -3,11 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class Order::CopierTest < ActiveSupport::TestCase
-
   test 'copy does not save anything' do
     assert_no_difference('WorkItem.count') do
       assert_no_difference('Order.count') do
@@ -208,5 +206,4 @@ class Order::CopierTest < ActiveSupport::TestCase
   def order
     orders(:hitobito_demo)
   end
-
 end

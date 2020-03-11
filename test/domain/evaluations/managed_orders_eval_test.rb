@@ -3,12 +3,10 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 require_relative 'eval_test_helper'
 
 class ManagedOrdersEvalTest < ActiveSupport::TestCase
-
   include EvalTestHelper
 
   def test_managed_work_items_pascal
@@ -107,5 +105,4 @@ class ManagedOrdersEvalTest < ActiveSupport::TestCase
     assert ! @evaluation.for?(user)
     assert ! @evaluation.total_details
   end
-
 end

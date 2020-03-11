@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module GraphHelper
   def weekday_header
     names = I18n.t(:'date.day_names')[1..6] + [I18n.t(:'date.day_names')[0]]

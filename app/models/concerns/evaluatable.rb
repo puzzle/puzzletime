@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # A Module that provides the funcionality for a model object to be evaluated.
 #
 # A class mixin Evaluatable has to provide a has_many relation for worktimes.
@@ -30,6 +29,7 @@ module Evaluatable
   def <=>(other)
     return unless other.is_a?(Evaluatable)
     return super(other) if is_a? Class
+
     label_verbose <=> other.label_verbose
   end
 end

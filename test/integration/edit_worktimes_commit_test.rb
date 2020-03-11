@@ -3,11 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class EditWorktimesCommitTest < ActionDispatch::IntegrationTest
-
   test 'change worktimes commit date updates label' do
     Fabricate(:ordertime, employee: employees(:long_time_john), work_item: work_items(:allgemein))
     login
@@ -24,9 +22,7 @@ class EditWorktimesCommitTest < ActionDispatch::IntegrationTest
     assert label.has_selector?('.icon-disk.green')
   end
 
-
   def login
     login_as(:mark, '/evaluator/employees')
   end
-
 end

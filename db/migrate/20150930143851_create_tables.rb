@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class CreateTables < ActiveRecord::Migration[5.1]
   def change
     create_table 'absences' do |t|

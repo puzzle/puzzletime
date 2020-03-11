@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: order_uncertainties
@@ -20,7 +19,6 @@
 #
 
 class OrderChance < OrderUncertainty
-
   private
 
   def update_major_order_value
@@ -33,5 +31,4 @@ class OrderChance < OrderUncertainty
          .pluck('MAX(probability * impact)')
          .first
   end
-
 end

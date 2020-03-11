@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: accounting_posts
@@ -48,7 +47,6 @@ class AccountingPost < ActiveRecord::Base
   validates :work_item_id, uniqueness: true
   validates :offered_rate, :portfolio_item, :service, presence: true
   validate :check_booked_on_order
-
 
   ### INSTANCE METHODS
 
@@ -136,6 +134,7 @@ class AccountingPost < ActiveRecord::Base
 
   def move_order_accounting_post_work_item
     return if work_item_id == order.work_item_id
+
     post = order.accounting_posts.find_by(work_item_id: order.work_item_id)
     if post
       begin

@@ -3,11 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class OrderReportsTest < ActionDispatch::IntegrationTest
-
   test 'live reloads when period filter change' do
     timeout_safe do
       list_orders
@@ -57,5 +55,4 @@ class OrderReportsTest < ActionDispatch::IntegrationTest
     login_as :mark
     visit reports_orders_path
   end
-
 end

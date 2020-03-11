@@ -3,9 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class WeeklyGraphController < ApplicationController
-
   before_action :authorize
   before_action :set_period
 
@@ -22,5 +20,4 @@ class WeeklyGraphController < ApplicationController
   def authorize
     authorize!(:show_worktime_graph, employee)
   end
-
 end

@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # View helpers for basic functions used in various other helpers.
 module UtilityHelper
   EMPTY_STRING = '&nbsp;'.html_safe # non-breaking space asserts better css.

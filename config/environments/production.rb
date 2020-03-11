@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 

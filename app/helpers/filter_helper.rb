@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module FilterHelper
   def predefined_past_period_options
     [IdValue.new('0m', 'Dieser Monat'),

@@ -3,9 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class ApplicationJob < ActiveJob::Base
-
   rescue_from(Exception) do |e|
     payload = { cgi_data: ENV.to_hash }
     payload[:code] = e.code if e.respond_to?(:code)

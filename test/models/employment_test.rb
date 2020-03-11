@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: employments
@@ -20,7 +19,6 @@
 require 'test_helper'
 
 class EmploymentTest < ActiveSupport::TestCase
-
   def setup
     date = 1990..2019
     setup_regular_holidays(date.to_a)

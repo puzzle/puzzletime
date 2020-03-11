@@ -3,9 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class EmployeesController < ManageController
-
   self.permitted_attrs = [:firstname, :lastname, :shortname, :email, :ldapname,
                           :department_id, :crm_key, :probation_period_end_date,
                           :graduation, :management, :phone_office, :phone_private,

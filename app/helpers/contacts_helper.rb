@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module ContactsHelper
   def format_contact_crm_key(contact)
     crm_contact_link(contact, contact.crm_key)

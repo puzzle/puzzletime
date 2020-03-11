@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class WorkItemsControllerTest < ActionController::TestCase
@@ -21,5 +20,4 @@ class WorkItemsControllerTest < ActionController::TestCase
   def find_in_body(body, field, element)
     JSON.parse(body).find { |w| w[field] == element }
   end
-
 end

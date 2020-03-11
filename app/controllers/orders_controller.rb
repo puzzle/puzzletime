@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class OrdersController < CrudController
   include Filterable
 
@@ -14,7 +13,6 @@ class OrdersController < CrudController
     order_contacts_attributes: [:id, :contact_id_or_crm, :comment, :_destroy],
     additional_crm_orders_attributes: [:id, :crm_key, :_destroy]
   ]
-
 
   self.remember_params += %w(department_id kind_id status_id responsible_id)
 
@@ -37,7 +35,6 @@ class OrdersController < CrudController
   after_create :copy_associations
 
   before_render_form :set_option_values
-
 
   ### ACTIONS
 
@@ -233,5 +230,4 @@ class OrdersController < CrudController
   def search_support?
     false
   end
-
 end

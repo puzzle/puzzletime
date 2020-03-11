@@ -3,12 +3,10 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 require_relative 'eval_test_helper'
 
 class EmployeesEvalTest < ActiveSupport::TestCase
-
   include EvalTestHelper
 
   def setup

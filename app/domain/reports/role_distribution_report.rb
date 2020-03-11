@@ -3,9 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class RoleDistributionReport
-
   def initialize(date)
     @date = date
     @filename_prefix = 'puzzletime_funktionsanteile'
@@ -169,5 +167,4 @@ class RoleDistributionReport
   def format_fte(value)
     (value.to_f / 100).round(2)
   end
-
 end

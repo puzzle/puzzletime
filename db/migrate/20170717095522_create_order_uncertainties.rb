@@ -3,9 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class CreateOrderUncertainties < ActiveRecord::Migration[5.0]
-
   def change
     create_table :order_uncertainties do |t|
       t.references :order, foreign_key: true, null: false
@@ -23,5 +21,4 @@ class CreateOrderUncertainties < ActiveRecord::Migration[5.0]
       t.integer :major_chance_value
     end
   end
-
 end

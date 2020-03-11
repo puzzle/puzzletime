@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # coding: utf-8
 
 require 'test_helper'
@@ -169,7 +168,6 @@ class OrdersControllerTest < ActionController::TestCase
                    'responsible_id' => employees(:mark).id.to_s },
                  session[:list_params]['/orders'])
   end
-
 
   test 'GET show' do
     get :show, params: { id: orders(:hitobito_demo).id }
@@ -517,5 +515,4 @@ class OrdersControllerTest < ActionController::TestCase
   def find_in_body(body, field, element)
     JSON.parse(body).find { |w| w[field] == element }
   end
-
 end

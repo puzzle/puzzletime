@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # Defines tables to display a list of entries. The helper methods come in
 # different granularities:
 # * #plain_table - A basic table for the given entries and attributes using

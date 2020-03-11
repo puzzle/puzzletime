@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class OrderUncertaintiesController < CrudController
   self.nesting = Order
   self.permitted_attrs = [:name, :probability, :impact, :measure]
@@ -53,5 +52,4 @@ class OrderUncertaintiesController < CrudController
 
     model_class.model_name.human(opts)
   end
-
 end

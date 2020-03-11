@@ -3,12 +3,10 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 # For full revenue report test see DepartmentRevenueReportTest
 class SectorRevenueReportTest < ActiveSupport::TestCase
-
   setup do
     travel_to Date.new(2000, 9, 5)
     Worktime.destroy_all
@@ -137,5 +135,4 @@ class SectorRevenueReportTest < ActiveSupport::TestCase
   def oev
     sectors(:oev)
   end
-
 end

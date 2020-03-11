@@ -3,12 +3,10 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 module Plannings
   class EmployeeBoardTest < ActiveSupport::TestCase
-
     setup { Holiday.clear_cache }
 
     test '#week_planning_state is nil if no plannings' do
@@ -225,7 +223,5 @@ module Plannings
                             percent: 50)
       [p1, p2, p3, p4, p5]
     end
-
-
   end
 end

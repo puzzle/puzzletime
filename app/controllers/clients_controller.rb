@@ -3,9 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class ClientsController < ManageController
-
   self.search_columns = ['work_items.name', 'work_items.shortname']
 
   self.permitted_attrs = [:crm_key, :allow_local, :sector_id, :e_bill_account_key,

@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class UserNotificationsController < ManageController
   self.permitted_attrs = [:date_from, :date_to, :message]
 end

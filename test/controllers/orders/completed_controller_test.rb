@@ -3,11 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class Orders::CompletedControllerTest < ActionController::TestCase
-
   setup :login
 
   def test_edit_as_manager
@@ -64,5 +62,4 @@ class Orders::CompletedControllerTest < ActionController::TestCase
     assert_template '_form'
     assert_match /nicht erlaubt/, assigns(:order).errors.full_messages.join
   end
-
 end

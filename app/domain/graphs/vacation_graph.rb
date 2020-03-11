@@ -3,14 +3,11 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class VacationGraph
-
   attr_reader :period, :day
 
   UNPAID_ABSENCE = Absence.new name: 'Unbezahlter Urlaub'
   UNPAID_ABSENCE.id = 0
-
 
   def initialize(period = nil)
     period ||= Period.current_year
@@ -76,6 +73,7 @@ class VacationGraph
     tooltip += add_unpaid_absences times
 
     return nil if times.blank?
+
     max_absence = get_max_absence(times)
 
     hours = times.values.sum / WorkingCondition.value_at(@current.start_date, :must_hours_per_day)
@@ -165,6 +163,7 @@ class VacationGraph
 
   def monthly_absences_during(period)
     return @monthly_list if @month == period
+
     @monthly_list = iterated_absences(period, @monthly_absencetimes, @monthly_index)
     @month = period
     @monthly_index += @monthly_list.size
@@ -173,6 +172,7 @@ class VacationGraph
 
   def iterated_absences(period, collection, index)
     return [] if index >= collection.size || collection[index].work_date > period.end_date
+
     list = []
     while index < collection.size && collection[index].work_date <= period.end_date
       list.push collection[index]
@@ -225,5 +225,4 @@ class VacationGraph
   def cache
     @cache ||= {}
   end
-
 end

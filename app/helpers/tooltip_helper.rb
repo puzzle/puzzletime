@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module TooltipHelper
   def with_tooltip(tooltip_text, options = {})
     tag = options.delete(:tag) || :span

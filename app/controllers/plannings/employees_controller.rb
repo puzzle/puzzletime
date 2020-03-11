@@ -3,10 +3,8 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module Plannings
   class EmployeesController < BaseController
-
     self.search_columns = [:firstname, :lastname, :shortname]
 
     skip_authorize_resource
@@ -46,6 +44,5 @@ module Plannings
     def plannings_to_destroy
       super.where(employee_id: employee.id)
     end
-
   end
 end

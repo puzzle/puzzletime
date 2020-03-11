@@ -3,10 +3,8 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module Plannings
   class CompaniesController < ApplicationController
-
     include WithPeriod
 
     self.allow_unlimited_period = false
@@ -38,6 +36,5 @@ module Plannings
     def authorize_action
       authorize!(:read, Planning)
     end
-
   end
 end

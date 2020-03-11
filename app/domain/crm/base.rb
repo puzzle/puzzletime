@@ -3,10 +3,8 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module Crm
   class Base
-
     # String with the name of the crm key.
     def crm_key_name
       'CRM Key'

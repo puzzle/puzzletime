@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class AddEmploymentsVacationDaysPerYear < ActiveRecord::Migration[5.1]
   def change
     add_column :employments, :vacation_days_per_year, :decimal, precision: 5, scale: 2

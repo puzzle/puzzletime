@@ -3,9 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module IntegrationHelper
-
   private
 
   def login_as(user, ref_path = nil)
@@ -68,5 +66,4 @@ module IntegrationHelper
   Capybara.add_selector(:name) do
     xpath { |name| XPath.descendant[XPath.attr(:name).contains(name)] }
   end
-
 end

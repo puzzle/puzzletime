@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
@@ -85,6 +84,7 @@ module Puzzletime
   end
 
   private
+
   def self.build_version
     Puzzletime::VERSION
   end

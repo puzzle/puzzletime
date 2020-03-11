@@ -2,7 +2,6 @@
 
 module Apidocs
   module Helper
-
     def setup_swagger_path(path, helper = self, &block)
       return unless path
 

@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module SortHelper
   def sort_link(attr, label = nil, options = {})
     label ||= model_class.human_attribute_name(attr)

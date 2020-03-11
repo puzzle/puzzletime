@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class CreateOrdertimeTest < ActionDispatch::IntegrationTest
@@ -43,7 +42,6 @@ class CreateOrdertimeTest < ActionDispatch::IntegrationTest
     selectize('ordertime_account_id', 'Webauftritt', term: 'web')
     assert find('#ordertime_billable').checked?
   end
-
 
   test 'create ordertime select accounting_post with billable=false unchecks billable checkbox' do
     assert find('#ordertime_billable').checked?

@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class ExpensesControllerTest < ActionController::TestCase
-
   setup :login
 
   test 'GET#index employee may not list top level expenses' do

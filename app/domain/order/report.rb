@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class Order::Report
   include Filterable
 
@@ -229,5 +228,4 @@ class Order::Report
       dir * OrderTarget::RATINGS.index(e.target(target_scope_id).try(:rating)).to_i
     end
   end
-
 end

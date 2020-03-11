@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # A module to include into your functional tests for your crud controller
 # subclasses. Simply implement the two methods #test_entry and
 # #test_entry_attrs to test the basic crud functionality. Override the test
@@ -247,7 +246,6 @@ module CrudControllerTestHelper
     end
     params
   end
-
 
   module ClassMethods
     def not_existing(*tests)

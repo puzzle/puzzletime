@@ -5,9 +5,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class RoleDistributionReportController < ApplicationController
-
   include CsvExportable
 
   before_action :authorize_class
@@ -32,5 +30,4 @@ class RoleDistributionReportController < ApplicationController
   def authorize_class
     authorize!(:role_distribution_report, Evaluation)
   end
-
 end

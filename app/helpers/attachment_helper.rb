@@ -35,5 +35,4 @@ module AttachmentHelper
 
     obj
   end
-
 end

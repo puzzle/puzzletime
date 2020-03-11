@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class WorktimeGraph
   WORKTIME_ORDER = 'work_date, from_start_time, work_item_id, absence_id'.freeze
   WORKTIME_CONDITIONS = ['(worktimes.report_type = ? OR worktimes.report_type = ?)',
@@ -97,6 +96,7 @@ class WorktimeGraph
     # stretch by employment musttime if employment > 100%
     hours = period.musttime.to_f * must_hours_factor
     return [] if hours.zero?
+
     work_items.collect { |w| Timebox.new(w, color_for(w), Timebox.height_from_hours(w.hours / hours)) }
   end
 

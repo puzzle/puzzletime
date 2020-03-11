@@ -3,11 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class PlanningsEmployeesTest < ActionDispatch::IntegrationTest
-
   setup :list_plannings
 
   test 'create and update planning entries' do
@@ -81,5 +79,4 @@ class PlanningsEmployeesTest < ActionDispatch::IntegrationTest
     login_as :mark
     visit plannings_employee_path(employees(:mark))
   end
-
 end

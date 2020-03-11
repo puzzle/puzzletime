@@ -5,10 +5,8 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module Employees
   class LogController < ApplicationController
-
     before_action :authorize_action
 
     def index
@@ -24,6 +22,5 @@ module Employees
     def authorize_action
       authorize!(:log, employee)
     end
-
   end
 end

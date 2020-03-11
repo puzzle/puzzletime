@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class WorkItemsController < ManageController
   self.permitted_attrs = :name, :shortname, :description, :parent_id
   self.search_columns = [:path_shortnames, :path_names, :description]

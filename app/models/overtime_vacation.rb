@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: overtime_vacations
@@ -13,7 +12,6 @@
 #  employee_id   :integer          not null
 #  transfer_date :date             not null
 #
-
 
 class OvertimeVacation < ActiveRecord::Base
   belongs_to :employee

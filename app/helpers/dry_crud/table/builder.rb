@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module DryCrud::Table
   # A simple helper to easily define tables listing several rows of the same
   # data type.

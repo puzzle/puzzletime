@@ -3,14 +3,12 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class EmployeeStatistics
   attr_reader :employee
 
   def initialize(employee)
     @employee = employee
   end
-
 
   #########  vacation information ############
 
@@ -56,7 +54,6 @@ class EmployeeStatistics
 
     worktimes.sum(:hours).to_f
   end
-
 
   ###########  overtime information  ###################
 
@@ -115,16 +112,14 @@ class EmployeeStatistics
       to_f
   end
 
-
   ######### employment helpers ######################
-
 
   # Returns the Period from the first employement date until the given period.
   # Returns nil if no employments exist until this date.
   def employment_period_to(date)
     first_employment = @employee.employments.reorder('start_date ASC').first
     return nil if first_employment.nil? || first_employment.start_date > date
+
     Period.new(first_employment.start_date, date)
   end
-
 end

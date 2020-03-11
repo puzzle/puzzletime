@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class EmployeeAdditionalInfo < ActiveRecord::Migration[5.1]
   def change
     change_table :employees do |t|

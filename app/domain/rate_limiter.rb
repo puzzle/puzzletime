@@ -3,9 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class RateLimiter
-
   attr_reader :rate_per_second
 
   def initialize(rate_per_second)
@@ -32,5 +30,4 @@ class RateLimiter
   def next_run_at
     last_run_at + interval
   end
-
 end
