@@ -1,0 +1,19 @@
+-#  Copyright (c) 2006-2020, Puzzle ITC GmbH. This file is part of
+-#  PuzzleTime and licensed under the Affero General Public License version 3
+-#  or later. See the COPYING file at the top-level directory or at
+-#  https://github.com/puzzle/puzzletime.
+
+`Auswertung vom #{@period.start_date} bis #{@period.end_date}`
+%p
+  %table.table.table-striped.table-condensed.table-hover.table-inline#evaluation
+    %thead
+      %tr
+        %th Member
+        %th Anzahl Tage
+        %th Zeit Freigabe
+        %th Zeit Kontrolle
+    - employee_meal_compensations(@worktimes, @period).each do |values|
+      %tr
+        - values.each do |value|
+          %td
+            = value

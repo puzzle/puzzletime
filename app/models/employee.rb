@@ -184,6 +184,18 @@ class Employee < ActiveRecord::Base
     committed_worktimes_at && date <= committed_worktimes_at
   end
 
+  def committed_period?(period)
+    committed_date?(period.end_date)
+  end
+
+  def reviewed_date?(date)
+    reviewed_worktimes_at && date <= reviewed_worktimes_at
+  end
+
+  def reviewed_period?(period)
+    reviewed_date?(period.end_date)
+  end
+
   ######### employment information ######################
 
   # Returns the current employement percent value.
