@@ -53,7 +53,7 @@ class OrderServicesController < ApplicationController
               order(:work_date).
               in_period(period)
     entries = filter_entries_allow_empty_by(entries, EMPTY, :ticket, :invoice_id)
-    filter_entries_by(entries, :employee_id, :work_item_id, :billable)
+    filter_entries_by(entries, :employee_id, :work_item_id, :billable, :meal_compensation)
   end
 
   def worktimes_csv_filename

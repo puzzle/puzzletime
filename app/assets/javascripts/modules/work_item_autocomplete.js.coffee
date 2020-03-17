@@ -10,7 +10,9 @@ class app.WorkItemAutocomplete extends app.Autocomplete
 
   onItemAdd: (value, item) ->
     billable = item.attr('data-billable') == 'true'
+    meal_compensation = item.attr('data-meal_compensation') == 'true'
     $('#ordertime_billable').prop('checked', billable);
+    $('#ordertime_meal_compensation').prop('checked', meal_compensation);
 
   renderOption: (item, escape) ->
     "<div class='selectize-option'>" +
@@ -20,8 +22,8 @@ class app.WorkItemAutocomplete extends app.Autocomplete
       "</div>"
 
   renderItem: (item, escape) ->
-    "<div data-billable=#{ item.billable }>#{ escape(item.path_shortnames) }: #{ escape(item.name) }</div>"
-
+    "<div data-billable=#{ item.billable } data-meal_compensation=#{ item.meal_compensation }>" +
+    "#{ escape(item.path_shortnames) }: #{ escape(item.name) }</div>"
 
 $(document).on('turbolinks:load', ->
   $('[data-autocomplete=work_item]').each((i, element) -> new app.WorkItemAutocomplete().bind(element))

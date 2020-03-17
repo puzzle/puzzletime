@@ -43,6 +43,7 @@
       = f.text_field(:to_end_time, value: format_time(@worktime.to_end_time))
 
   = f.labeled_boolean_field(:billable)
+  = f.labeled_boolean_field(:meal_compensation)
 
   .form-group
     .col-md-offset-2.col-md-8

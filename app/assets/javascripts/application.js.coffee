@@ -44,6 +44,7 @@
 #= require reports_orders
 #= require expenses
 #= require expense_reviews
+#= require meal_compensations
 #= require turbolinks
 
 
