@@ -205,8 +205,10 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
       check 'repetition'
       page.assert_selector('#repeat_until', visible: true)
 
-      fill_in 'repeat_until',
+      fill_in(
+        'repeat_until',
         with: (today + 2.weeks).at_beginning_of_week.strftime('%Y %U')
+      )
       #find('#percent').click # required to close calendar popover
       click_button 'OK'
     end
@@ -254,8 +256,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     selectize('add_employee_select_id', 'Dolores Pedro', no_click: true)
     page.assert_selector('#planning_row_employee_2_work_item_4', text: 'Dolores Pedro')
     page.assert_selector('#planning_row_employee_2_work_item_4 .day',
-                         count: workdays_next_n_months(3)
-                        )
+                         count: workdays_next_n_months(3))
     page.assert_no_selector('#add_employee_id')
   end
 
@@ -451,8 +452,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     selectize('add_employee_select_id', 'Dolores Pedro', no_click: true)
     page.assert_selector('#planning_row_employee_2_work_item_4', text: 'Dolores Pedro')
     page.assert_selector('#planning_row_employee_2_work_item_4 .day',
-                         count: workdays_next_n_months(6)
-                        )
+                         count: workdays_next_n_months(6))
     page.assert_no_selector('#add_employee_id')
   end
 

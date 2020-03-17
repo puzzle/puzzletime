@@ -70,15 +70,15 @@ module OrderServicesHelper
 
   def summed_worktimes_cells(entries)
     content_tag(:td) +
-        content_tag(:td, 'Total') +
-        content_tag(:td) +
-        content_tag(:td, f(entries.to_a.sum(&:hours)), class: 'right') +
-        content_tag(:td, f(entries.to_a.sum(&:amount)), class: 'right') +
-        content_tag(:td) +
-        content_tag(:td) +
-        content_tag(:td) +
-        content_tag(:td) +
-        content_tag(:td)
+      content_tag(:td, 'Total') +
+      content_tag(:td) +
+      content_tag(:td, f(entries.to_a.sum(&:hours)), class: 'right') +
+      content_tag(:td, f(entries.to_a.sum(&:amount)), class: 'right') +
+      content_tag(:td) +
+      content_tag(:td) +
+      content_tag(:td) +
+      content_tag(:td) +
+      content_tag(:td)
   end
 
   def too_many_entries_row

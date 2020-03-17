@@ -3,7 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-clients = WorkItem.seed(:shortname, :parent_id,
+clients = WorkItem.seed(
+  :shortname,
+  :parent_id,
   { shortname: 'PITC',
     name: 'Puzzle ITC' },
   { shortname: 'SWIS',
@@ -12,7 +14,8 @@ clients = WorkItem.seed(:shortname, :parent_id,
     name: 'BLS AG' }
 )
 
-Client.seed(:work_item_id,
+Client.seed(
+  :work_item_id,
   { work_item_id: clients[0].id },
   { work_item_id: clients[1].id,
     sector_id: Sector.find_by_name('Verwaltung').id },
@@ -20,7 +23,9 @@ Client.seed(:work_item_id,
     sector_id: Sector.find_by_name('Öffentlicher Verkehr').id },
 )
 
-categories = WorkItem.seed(:shortname, :parent_id,
+categories = WorkItem.seed(
+  :shortname,
+  :parent_id,
   { shortname: 'IPR',
     name: 'Interne Projekte',
     parent_id: clients[0].id },
@@ -32,7 +37,9 @@ categories = WorkItem.seed(:shortname, :parent_id,
     parent_id: clients[2].id }
 )
 
-orders = WorkItem.seed(:shortname, :parent_id,
+orders = WorkItem.seed(
+  :shortname,
+  :parent_id,
   { shortname: 'PTI',
     name: 'PuzzleTime',
     parent_id: categories[0].id },
@@ -56,7 +63,8 @@ orders = WorkItem.seed(:shortname, :parent_id,
     parent_id: clients[2].id },
 )
 
-Order.seed(:work_item_id,
+Order.seed(
+  :work_item_id,
   # Puzzletime
   { work_item_id: orders[0].id,
     kind_id: OrderKind.find_by_name('Projekt').id,
@@ -105,7 +113,9 @@ Order.seed(:work_item_id,
     order_team_members: [OrderTeamMember.new(employee: Employee.find_by_shortname('DI'))] },
 )
 
-accounting_posts = WorkItem.seed(:shortname, :parent_id,
+accounting_posts = WorkItem.seed(
+  :shortname,
+  :parent_id,
   { shortname: 'OPF',
     name: 'Version 1.5',
     parent_id: orders[0].id },
@@ -132,7 +142,8 @@ accounting_posts = WorkItem.seed(:shortname, :parent_id,
     parent_id: orders[5].id }
 )
 
-AccountingPost.seed(:work_item_id,
+AccountingPost.seed(
+  :work_item_id,
   # Puzzletime 1.5
   { work_item_id: accounting_posts[0].id,
     portfolio_item_id: PortfolioItem.find_by_name('Ruby on Rails').id,

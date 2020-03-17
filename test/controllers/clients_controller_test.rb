@@ -49,7 +49,6 @@ class ClientsControllerTest < ActionController::TestCase
         { name: 'Initech',
           shortname: 'INIT' },
       e_bill_account_key: '41105678901234567',
-      sector_id: sectors(:verwaltung).id
-    }
+      sector_id: sectors(:verwaltung).id }
   end
 end

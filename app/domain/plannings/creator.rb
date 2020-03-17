@@ -82,10 +82,10 @@ module Plannings
 
     def validate_present(p)
       if p.blank? ||
-          (p[:percent].blank? &&
-           p[:definitive].blank? && p[:definitive] != false &&
-           p[:repeat_until].blank? &&
-           p[:translate_by].blank?)
+         (p[:percent].blank? &&
+          p[:definitive].blank? && p[:definitive] != false &&
+          p[:repeat_until].blank? &&
+          p[:translate_by].blank?)
         @errors << 'Bitte füllen Sie das Formular aus'
       end
     end

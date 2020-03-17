@@ -146,7 +146,7 @@ class OrdersController < CrudController
     if entry.new_record?
       entry.work_item.parent_id ||= (params[:category_active] &&
                                    params[:category_work_item_id].presence) ||
-                                  params[:client_work_item_id].presence
+                                    params[:client_work_item_id].presence
     end
   end
 

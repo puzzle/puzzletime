@@ -187,8 +187,8 @@ module OrderHelper
 
   def calculate_order_progress(order, progress)
     progress[:percent] = 100 /
-      order.offered_amount.to_f *
-      order.supplied_amount.to_f
+                         order.offered_amount.to_f *
+                         order.supplied_amount.to_f
     progress[:percent_title] = progress[:percent]
 
     if order.supplied_amount.to_f > order.offered_amount.to_f

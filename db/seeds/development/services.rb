@@ -3,7 +3,8 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-Service.seed(:name,
+Service.seed(
+  :name,
   { name: 'Requirements Engineering' },
   { name: 'Software-Entwicklung' },
   { name: 'System-Entwicklung' },

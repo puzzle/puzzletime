@@ -11,7 +11,7 @@ module WorktimesReport
   def render_report(times)
     @worktimes = times.includes(:employee)
     @ticket_view = params[:combine_on] &&
-      (params[:combine] == 'ticket' || params[:combine] == 'ticket_employee')
+                   (params[:combine] == 'ticket' || params[:combine] == 'ticket_employee')
     combine_times if params[:combine_on] && params[:combine] == 'time'
     combine_tickets if @ticket_view
     render template: 'worktimes_report/report', layout: 'print'

@@ -3,7 +3,8 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-Department.seed(:shortname,
+Department.seed(
+  :shortname,
   { name: '/dev/one',
     shortname: 'D1' },
   { name: '/dev/two',

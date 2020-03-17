@@ -3,7 +3,8 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-Sector.seed(:name,
+Sector.seed(
+  :name,
   { name: 'Öffentlicher Verkehr' },
   { name: 'Verwaltung' },
   { name: 'Versicherungen' },

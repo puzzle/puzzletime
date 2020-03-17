@@ -112,7 +112,7 @@ class EvaluatorController < ApplicationController
 
   def overview_template
     if params[:evaluation] =~ /^userworkitems$|^employeeworkitems$/
-     'overview_employee'
+      'overview_employee'
     elsif params[:evaluation] == 'employees'
       'employees'
     else

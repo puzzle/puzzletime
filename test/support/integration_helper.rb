@@ -19,10 +19,10 @@ module IntegrationHelper
   def timeout_safe
     yield
   rescue Errno::ECONNREFUSED,
-    Timeout::Error,
-    Capybara::FrozenInTime,
-    Capybara::ElementNotFound,
-    Selenium::WebDriver::Error::StaleElementReferenceError => e
+         Timeout::Error,
+         Capybara::FrozenInTime,
+         Capybara::ElementNotFound,
+         Selenium::WebDriver::Error::StaleElementReferenceError => e
     skip e.message || e.class.name
   end
 

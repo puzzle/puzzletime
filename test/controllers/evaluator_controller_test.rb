@@ -58,10 +58,10 @@ class EvaluatorControllerTest < ActionController::TestCase
 
   test 'GET report contains all hours' do
     get :report, params: {
-                   evaluation: 'workitememployees',
-                   category_id: work_items(:allgemein),
-                   division_id: employees(:pascal)
-                 }
+      evaluation: 'workitememployees',
+      category_id: work_items(:allgemein),
+      division_id: employees(:pascal)
+    }
 
     assert_template 'report'
     total = assigns(:worktimes).sum(:hours)
@@ -79,12 +79,12 @@ class EvaluatorControllerTest < ActionController::TestCase
               hours: 5)
 
     get :report, params: {
-                   evaluation: 'workitememployees',
-                   category_id: work_items(:allgemein),
-                   division_id: employees(:pascal),
-                   combine_on: true,
-                   combine: 'ticket'
-                 }
+      evaluation: 'workitememployees',
+      category_id: work_items(:allgemein),
+      division_id: employees(:pascal),
+      combine_on: true,
+      combine: 'ticket'
+    }
 
     assert_template 'report'
     total = assigns(:worktimes).sum(:hours)
@@ -99,11 +99,11 @@ class EvaluatorControllerTest < ActionController::TestCase
               work_item: work_items(:allgemein),
               ticket: ticket_label)
     get :report, params: {
-                   evaluation: 'workitememployees',
-                   category_id: work_items(:allgemein),
-                   division_id: employees(:pascal),
-                   show_ticket: '1'
-                 }
+      evaluation: 'workitememployees',
+      category_id: work_items(:allgemein),
+      division_id: employees(:pascal),
+      show_ticket: '1'
+    }
 
     assert_template 'report'
     assert_match %r{<th class='right'>Ticket</th>}, response.body

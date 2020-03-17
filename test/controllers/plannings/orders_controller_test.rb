@@ -164,9 +164,9 @@ module Plannings
         delete :destroy,
                xhr: true,
                params: {
-                   format: :js,
-                   id: orders(:puzzletime).id,
-                   planning_ids: [p.id]
+                 format: :js,
+                 id: orders(:puzzletime).id,
+                 planning_ids: [p.id]
                }
       end
     end

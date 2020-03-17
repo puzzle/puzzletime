@@ -300,12 +300,11 @@ class InvoiceTest < ActiveSupport::TestCase
     @invoice_with_category ||= begin
       order = orders(:hitobito_demo)
       Fabricate(:contract, order: order) unless order.contract
-      Fabricate(:invoice, {
-        order: order,
-        work_items: [work_items(:hitobito_demo_app)],
-        employees: [employees(:pascal)],
-        period_to: Time.zone.today.at_end_of_month
-      })
+      Fabricate(:invoice,
+                order: order,
+                work_items: [work_items(:hitobito_demo_app)],
+                employees: [employees(:pascal)],
+                period_to: Time.zone.today.at_end_of_month)
     end
   end
 end

@@ -5,7 +5,8 @@
 
 # -*- coding: utf-8 -*-
 
-TargetScope.seed(:name,
+TargetScope.seed(
+  :name,
   { name: 'Kosten',
     icon: 'usd',
     position: 10 },

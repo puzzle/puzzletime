@@ -152,7 +152,8 @@ module CrudTestHelper
                     "1#{index}:2#{index}",
       human: index.even?,
       remarks: "#{c} #{str(index + 1)} #{str(index + 2)}\n" *
-                  (index % 3 + 1))
+                  (index % 3 + 1)
+    )
     m.companion = companion
     m.save!
     m

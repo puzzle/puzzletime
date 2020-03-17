@@ -110,8 +110,8 @@ class PlanningItemTest < ActiveSupport::TestCase
     i = Plannings::Item.new
 
     expected = {
-        class: '-absence-unpaid',
-        title: 'Nicht angestellt'
+      class: '-absence-unpaid',
+      title: 'Nicht angestellt'
     }
 
     assert i.day_attrs == expected

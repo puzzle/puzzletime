@@ -101,9 +101,9 @@ class ExpensesControllerTest < ActionController::TestCase
     expense = expenses(:approved)
 
     login_as(:mark)
-      assert_difference 'Expense.count', -1 do
-        delete :destroy, params: { employee_id: expense.employee_id, id: expense.id, expense: { amount: 1 } }
-      end
+    assert_difference 'Expense.count', -1 do
+      delete :destroy, params: { employee_id: expense.employee_id, id: expense.id, expense: { amount: 1 } }
+    end
   end
 
   test 'GET#index.pdf employee may export a pdf' do

@@ -53,8 +53,8 @@ class CrudTestModelsController < CrudController #:nodoc:
     entries = super
     if params[:filter]
       entries = entries.where(['rating < ?', 3])
-                .except(:order)
-                .order('children DESC')
+                       .except(:order)
+                       .order('children DESC')
     end
     entries
   end
