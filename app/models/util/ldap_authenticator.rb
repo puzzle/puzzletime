@@ -84,7 +84,7 @@ class LdapAuthenticator
       begin
         cfg = Settings.ldap.connection.to_hash
         cfg[:encryption][:method] = cfg[:encryption][:method].to_sym if cfg.dig(:encryption, :method)
-        cfg[:encryption][:tls_options] = tls_options
+        cfg[:encryption][:tls_options] = tls_options if root_cert_file && chain_cert_file
         cfg
       end
   end
@@ -116,18 +116,20 @@ class LdapAuthenticator
     @bindpassword ||= Settings.ldap.auth.bindpassword
   end
 
+  def root_cert_file
+    @root_cert_file ||= Settings.ldap.auth.root_cert.presence
+  end
+
+  def chain_cert_file
+    @chain_cert_file ||= Settings.ldap.auth.chain_cert.presence
+  end
+
   def root_cert
-    @root_cert ||=
-      OpenSSL::X509::Certificate.new(
-        Pathname.new(Settings.ldap.auth.root_cert).read
-      )
+    @root_cert ||= OpenSSL::X509::Certificate.new(Pathname.new(root_cert_file).read)
   end
 
   def chain_cert
-    @chain_cert ||=
-      OpenSSL::X509::Certificate.new(
-        Pathname.new(Settings.ldap.auth.chain_cert).read
-      )
+    @chain_cert ||= OpenSSL::X509::Certificate.new(Pathname.new(chain_cert_file).read)
   end
 
   def cert_store
