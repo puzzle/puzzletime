@@ -37,6 +37,7 @@ class WorktimesController < CrudController
         @worktime.ticket = template.ticket
         @worktime.description = template.description
         @worktime.billable = template.billable
+        @worktime.meal_compensation = template.meal_compensation
       end
     end
   end
