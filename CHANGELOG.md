@@ -6,6 +6,7 @@
 * **Buchungspositionen:** Auftrags-Cockpit mit neuen Informationen ergänzt.
 
 ### Improvements
+* **Usability:** "Members" - "Zeiten" werden standardmässig nach Members der eigenen Organisationseinheit gefiltert, was die Bedienung und Ladegeschwindigkeit massiv steigert.
 * **WebServer:** Mehr Threads für mehr Leistung.
 * **Sicherheit:** Updates diverser rubygems aus Sicherheitsgründen.
 
