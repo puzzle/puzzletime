@@ -43,7 +43,8 @@
       = f.text_field(:to_end_time, value: format_time(@worktime.to_end_time))
 
   = f.labeled_boolean_field(:billable, detail: 'Leistung ist verrechenbar.')
-  = f.labeled_boolean_field(:meal_compensation, detail: "Ich war vor Ort beim Kunden und habe Anrecht auf die #{link_to('Verpflegungsentschädigung', Settings.meal_compensation.url)}.".html_safe)
+  - if Settings.meal_compensation.present?
+    = f.labeled_boolean_field(:meal_compensation, detail: "Ich war vor Ort beim Kunden und habe Anrecht auf die #{link_to('Verpflegungsentschädigung', Settings.meal_compensation.url)}.".html_safe)
 
   .form-group
     .col-md-offset-2.col-md-8
