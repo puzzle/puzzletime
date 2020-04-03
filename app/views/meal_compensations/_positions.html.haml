@@ -3,7 +3,8 @@
 -#  or later. See the COPYING file at the top-level directory or at
 -#  https://github.com/puzzle/puzzletime.
 
-Positionen mit Verpflegungs-Entschädigungen für #{@employee.to_s} während #{l @period.start_date} - #{l @period.end_date}
+Positionen mit Verpflegungs-Entschädigungen für #{tag.strong @employee.to_s}
+während #{l @period.start_date} - #{l @period.end_date}
 
 %p
   %table.table.table-striped.table-condensed.table-hover.table-inline#evaluation
@@ -17,3 +18,6 @@ Positionen mit Verpflegungs-Entschädigungen für #{@employee.to_s} während #{l
           = account.label_verbose
         %td.text-right
           = hours
+          - options = { start_date: @period.start_date, end_date: @period.end_date, work_item: account.id }
+          = link_to image_tag('lupe.gif', size: '19x11', alt: 'Details'),
+                    details_meal_compensation_path(@employee, options)
