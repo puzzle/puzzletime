@@ -3,7 +3,7 @@
 -#  or later. See the COPYING file at the top-level directory or at
 -#  https://github.com/puzzle/puzzletime.
 
-`Auswertung vom #{@period.start_date} bis #{@period.end_date}`
+Verpflegungs-Entschädigungen während #{l @period.start_date} - #{l @period.end_date}
 %p
   %table.table.table-striped.table-condensed.table-hover.table-inline#evaluation
     %thead
@@ -18,6 +18,8 @@
           = employee.to_s
         %td.text-right
           = numb_of_days
+          = link_to image_tag('lupe.gif', size: '19x11', alt: 'Details'),
+                    meal_compensation_path(employee, { start_date: @period.start_date, end_date: @period.end_date })
         %td.text-right
           = commited_state_cell(employee, @period)
         %td.text-right

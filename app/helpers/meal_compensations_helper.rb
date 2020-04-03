@@ -4,6 +4,13 @@
 #  https://github.com/puzzle/puzzletime.
 
 module MealCompensationsHelper
+  def meal_compensation_positions(worktimes)
+    worktimes.each_with_object({}) do |worktime, positions|
+      positions[worktime.account] ||= 0
+      positions[worktime.account] += worktime.hours
+    end
+  end
+
   def employee_meal_compensations(worktimes)
     compacted_worktime(worktimes).map do |employee, workdates|
       numb_of_days = workdates.values.sum(0) { |h| h >= 4 ? 1 : 0 }

@@ -15,6 +15,14 @@ class MealCompensationsController < ApplicationController
                          .where(meal_compensation: true)
   end
 
+  def show
+    @employee = Employee.find(params[:id])
+    @worktimes = @employee.worktimes
+                          .includes(:work_item)
+                          .in_period(@period)
+                          .where(meal_compensation: true)
+  end
+
   private
 
   def authorize_class
