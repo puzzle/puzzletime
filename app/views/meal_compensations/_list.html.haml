@@ -12,8 +12,13 @@
         %th Anzahl Tage
         %th Zeit Freigabe
         %th Zeit Kontrolle
-    - employee_meal_compensations(@worktimes, @period).each do |values|
+    - employee_meal_compensations(@worktimes) do |employee, numb_of_days|
       %tr
-        - values.each do |value|
-          %td.text-right
-            = value
+        %td.text-right
+          = employee.to_s
+        %td.text-right
+          = numb_of_days
+        %td.text-right
+          = commited_state_cell(employee, @period)
+        %td.text-right
+          = reviewed_state_cell(employee, @period)

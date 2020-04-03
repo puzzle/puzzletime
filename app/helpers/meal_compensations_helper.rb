@@ -4,28 +4,21 @@
 #  https://github.com/puzzle/puzzletime.
 
 module MealCompensationsHelper
-  def employee_meal_compensations(worktimes, period)
+  def employee_meal_compensations(worktimes)
     compacted_worktime(worktimes).map do |employee, workdates|
       numb_of_days = workdates.values.sum(0) { |h| h >= 4 ? 1 : 0 }
       next if numb_of_days == 0
 
-      [
-        employee.to_s,
-        numb_of_days,
-        commited_state_cell(employee, period),
-        reviewed_state_cell(employee, period)
-      ]
-    end.compact
+      yield(employee, numb_of_days)
+    end
   end
-
-  private
 
   def commited_state_cell(employee, period)
     icon = completion_state_icon(employee.committed_period?(period))
     date = format_month(employee.committed_worktimes_at)
     id = "committed_worktimes_at_#{employee.id}"
 
-    content_tag(:span, "#{icon} #{date}".html_safe, id: id)
+    content_tag(:span, icon << ' ' << date, id: id)
   end
 
   def reviewed_state_cell(employee, period)
@@ -33,7 +26,7 @@ module MealCompensationsHelper
     date = format_month(employee.reviewed_worktimes_at)
     id = "reviewed_worktimes_at_#{employee.id}"
 
-    content_tag(:span, "#{icon} #{date}".html_safe, id: id)
+    content_tag(:span, icon << ' ' << date, id: id)
   end
 
   def completion_state_icon(state)
@@ -43,6 +36,8 @@ module MealCompensationsHelper
       picon('square', class: 'red')
     end
   end
+
+  private
 
   def compacted_worktime(worktimes)
     worktimes.each_with_object({}) do |worktime, employees|
