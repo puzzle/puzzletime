@@ -12,10 +12,28 @@ module MealCompensationsHelper
       [
         employee.to_s,
         numb_of_days,
-        completion_state_icon(employee.committed_period?(period)),
-        completion_state_icon(employee.reviewed_period?(period))
+        commited_state_cell(employee, period),
+        reviewed_state_cell(employee, period)
       ]
     end.compact
+  end
+
+  private
+
+  def commited_state_cell(employee, period)
+    icon = completion_state_icon(employee.committed_period?(period))
+    date = format_month(employee.committed_worktimes_at)
+    id = "committed_worktimes_at_#{employee.id}"
+
+    content_tag(:span, "#{icon} #{date}".html_safe, id: id)
+  end
+
+  def reviewed_state_cell(employee, period)
+    icon = completion_state_icon(employee.reviewed_period?(period))
+    date = format_month(employee.reviewed_worktimes_at)
+    id = "reviewed_worktimes_at_#{employee.id}"
+
+    content_tag(:span, "#{icon} #{date}".html_safe, id: id)
   end
 
   def completion_state_icon(state)
@@ -25,8 +43,6 @@ module MealCompensationsHelper
       picon('square', class: 'red')
     end
   end
-
-  private
 
   def compacted_worktime(worktimes)
     worktimes.each_with_object({}) do |worktime, employees|
