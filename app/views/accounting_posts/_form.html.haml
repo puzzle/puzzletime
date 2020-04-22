@@ -33,7 +33,8 @@
   = f.labeled_input_field :portfolio_item_id, span: 5
   = f.labeled_input_field :service_id, span: 5
   = f.labeled_input_field :billable, caption: 'Budgetposition ist verrechenbar'
-  = f.labeled_input_field :meal_compensation, caption: 'Member hat Anrecht auf Verpflegungsentschädigung'
+  - if Settings.meal_compensation.present?
+    = f.labeled_input_field :meal_compensation, caption: 'Member hat Anrecht auf Verpflegungsentschädigung'
 
   = f.labeled_input_field :description_required, caption: 'Beschreibung obligatorisch', disabled: desc
   = f.labeled_input_field :ticket_required, caption: 'Ticket obligatorisch', disabled: tick

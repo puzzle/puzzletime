@@ -51,7 +51,7 @@
             reports_workload_path,
             reports_role_distribution_path,
             vacations_path,
-            meal_compensations_path
+            Settings.meal_compensation.present? ? meal_compensations_path : nil
 
 
       - if can?(:manage, Client)
