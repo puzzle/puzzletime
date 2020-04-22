@@ -457,8 +457,8 @@ class OrdersControllerTest < ActionController::TestCase
 
     empls = JSON.parse(response.body)
     assert_equal 2, empls.size
-    assert empls.any? {|e| e['id'] == lucien.id }
-    assert empls.any? {|e| e['id'] == mark.id }
+    assert empls.any? { |e| e['id'] == lucien.id }
+    assert empls.any? { |e| e['id'] == mark.id }
   end
 
   test 'ajax GET #employees empty if no worktimes for given period' do

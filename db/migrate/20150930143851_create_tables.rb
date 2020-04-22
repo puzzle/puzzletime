@@ -32,7 +32,7 @@ class CreateTables < ActiveRecord::Migration[5.1]
     add_index 'accounting_posts', ['work_item_id'], name: 'index_accounting_posts_on_work_item_id'
 
     create_table 'billing_addresses' do |t|
-      t.integer 'client_id',                 null: false
+      t.integer 'client_id', null: false
       t.integer 'contact_id'
       t.string 'supplement',    limit: 255
       t.string 'street',        limit: 255

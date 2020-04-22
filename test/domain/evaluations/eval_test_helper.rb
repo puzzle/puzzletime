@@ -39,5 +39,4 @@ module EvalTestHelper
     assert_equal month, @evaluation.times(@period_month).size
     assert_equal all, @evaluation.times(nil).size
   end
-  
 end

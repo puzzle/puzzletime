@@ -69,7 +69,7 @@ class ExpenseTest < ActiveSupport::TestCase
   test 'can only approve expense when reimbursement_date and reviewer is set' do
     obj = expenses(:pending)
     refute obj.update(status: :approved)
-    assert_equal ['Auszahlungsmonat muss ausgefüllt werden','Reviewer muss ausgefüllt werden',
+    assert_equal ['Auszahlungsmonat muss ausgefüllt werden', 'Reviewer muss ausgefüllt werden',
                   'Visiert am muss ausgefüllt werden'], obj.errors.full_messages
 
     assert obj.update(status: :approved,

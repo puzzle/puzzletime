@@ -70,7 +70,7 @@ class ExpensesReviewsControllerTest < ActionController::TestCase
 
   test 'PATCH#update approves expenses and redirects to next open expense if any' do
     login_as(:mark)
-    other = Expense.create!(employee: employees(:pascal), payment_date: '2019-02-02', kind: :training, description: 'test',  amount: 1)
+    other = Expense.create!(employee: employees(:pascal), payment_date: '2019-02-02', kind: :training, description: 'test', amount: 1)
     get :update, params: { id: expenses(:pending).id, expense: { status: :approved, reimbursement_date: '2019-03-01' } }
     assert_redirected_to expenses_review_path(other)
   end

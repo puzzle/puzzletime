@@ -45,20 +45,20 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
     all(:name, 'invoice[employee_ids][]').map(&:value)
     assert_arrays_match employees(:mark, :lucien).map(&:id).map(&:to_s), all(:name, 'invoice[employee_ids][]').map(&:value)
 
-    reload(invoice: {period_to: '8.12.2006'})
+    reload(invoice: { period_to: '8.12.2006' })
     assert_arrays_match [employees(:mark).id.to_s], all(:name, 'invoice[employee_ids][]').map(&:value)
 
-    reload(invoice: {period_from: '12.12.2006'})
+    reload(invoice: { period_from: '12.12.2006' })
     assert_arrays_match [employees(:lucien).id.to_s], all(:name, 'invoice[employee_ids][]').map(&:value)
 
-    reload(invoice: {period_from: '09.12.2006', period_to: '11.12.2006'})
+    reload(invoice: { period_from: '09.12.2006', period_to: '11.12.2006' })
     assert_empty all(:name, 'invoice[employee_ids][]')
   end
 
   test 'lists only work_items with ordertimes on page load' do
     order = Fabricate(:order)
     work_items = Fabricate.times(2, :work_item, parent: order.work_item)
-    work_items.each {|w| Fabricate(:accounting_post, work_item: w) }
+    work_items.each { |w| Fabricate(:accounting_post, work_item: w) }
 
     from, to = Date.parse('09.12.2006'), Date.parse('10.12.2006')
 
@@ -70,22 +70,22 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
     end
 
     reload(order: order)
-    assert_arrays_match work_items.map {|w| w.id.to_s }, all(:name, 'invoice[work_item_ids][]').map(&:value)
+    assert_arrays_match work_items.map { |w| w.id.to_s }, all(:name, 'invoice[work_item_ids][]').map(&:value)
 
-    reload(order: order, invoice: {period_from: '11.12.2006'})
+    reload(order: order, invoice: { period_from: '11.12.2006' })
     assert_empty all(:name, 'invoice[work_item_ids][]').map(&:value)
 
-    reload(order: order, invoice: {period_to: '08.12.2006'})
+    reload(order: order, invoice: { period_to: '08.12.2006' })
     assert_empty all(:name, 'invoice[work_item_ids][]').map(&:value)
 
-    reload(order: order, invoice: {period_from: '10.12.2006'})
+    reload(order: order, invoice: { period_from: '10.12.2006' })
     assert_arrays_match [work_items.last.id.to_s], all(:name, 'invoice[work_item_ids][]').map(&:value)
 
-    reload(order: order, invoice: {period_to: '09.12.2006'})
+    reload(order: order, invoice: { period_to: '09.12.2006' })
     assert_arrays_match [work_items.first.id.to_s], all(:name, 'invoice[work_item_ids][]').map(&:value)
 
-    reload(order: order, invoice: {period_from: '09.12.2006', period_to: '10.12.2006'})
-    assert_arrays_match work_items.map {|w| w.id.to_s }, all(:name, 'invoice[work_item_ids][]').map(&:value)
+    reload(order: order, invoice: { period_from: '09.12.2006', period_to: '10.12.2006' })
+    assert_arrays_match work_items.map { |w| w.id.to_s }, all(:name, 'invoice[work_item_ids][]').map(&:value)
   end
 
   test 'check employee checkbox updates calculated total' do

@@ -7,7 +7,7 @@ require 'test_helper'
 
 class PeriodTest < ActiveSupport::TestCase
   def setup
-    setup_regular_holidays([2005,2006])
+    setup_regular_holidays([2005, 2006])
     @half_year = Period.new(Date.new(2006, 1, 1), Date.new(2006, 6, 30))
     @one_month = Period.new(Date.new(2006, 3, 1), Date.new(2006, 3, 31))
     @two_month = Period.new(Date.new(2005, 12, 1), Date.new(2006, 1, 31))
@@ -253,7 +253,7 @@ class PeriodTest < ActiveSupport::TestCase
     assert_equal count, 1
     count = 0
     two_months_middle = Period.new(Date.new(2005, 12, 15), Date.new(2006, 1, 15))
-    two_months_middle.step_months { |_d| count += 1}
+    two_months_middle.step_months { |_d| count += 1 }
     assert_equal count, 2
   end
 

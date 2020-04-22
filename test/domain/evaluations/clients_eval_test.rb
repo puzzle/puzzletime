@@ -15,9 +15,9 @@ class ClientsEvalTest < ActiveSupport::TestCase
   end
 
   def test_clients
-    assert ! @evaluation.absences?
-    assert ! @evaluation.for?(employees(:pascal))
-    assert ! @evaluation.total_details
+    assert !@evaluation.absences?
+    assert !@evaluation.for?(employees(:pascal))
+    assert !@evaluation.total_details
 
     divisions = @evaluation.divisions.list
     assert_equal 3, divisions.size

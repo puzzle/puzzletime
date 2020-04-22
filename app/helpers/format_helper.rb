@@ -193,7 +193,7 @@ module FormatHelper
     if values.size == 1
       assoc_link(values.first)
     elsif values.present?
-      simple_list(values, class: "assoc_#{assoc.name}" ) { |val| assoc_link(val) }
+      simple_list(values, class: "assoc_#{assoc.name}") { |val| assoc_link(val) }
     else
       ta(:no_entry, assoc)
     end

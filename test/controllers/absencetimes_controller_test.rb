@@ -248,7 +248,7 @@ class AbsencetimesControllerTest < ActionController::TestCase
     end
   end
 
-  #test 'committed absencetimes may not change work date backward by user' do
+  # test 'committed absencetimes may not change work date backward by user' do
   test '2' do
     e = employees(:pascal)
     t = Absencetime.create!(

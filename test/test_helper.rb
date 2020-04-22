@@ -74,7 +74,7 @@ class ActiveSupport::TestCase
   # Since we've removed the hardcoded regular holidays, insert them manually
   def setup_regular_holidays(years)
     years = [years].flatten.compact
-    dates = [[1,1],[2,1],[1,8],[25,12],[26,12]]
+    dates = [[1, 1], [2, 1], [1, 8], [25, 12], [26, 12]]
     dates.each do |day, month|
       years.each do |year|
         Holiday.create!(holiday_date: Date.new(year, month, day), musthours_day: 0)
