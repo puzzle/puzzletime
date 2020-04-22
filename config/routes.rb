@@ -198,7 +198,11 @@ Rails.application.routes.draw do
     resource :company, only: :show
   end
 
-  resources :meal_compensations, only: [:index, :show]
+  resources :meal_compensations, only: [:index, :show] do
+    member do
+      get :details
+    end
+  end
 
   get :vacations, to: 'vacations#show'
   get 'weekly_graph/:employee_id', to: 'weekly_graph#show', as: :weekly_graph
