@@ -29,13 +29,13 @@ namespace :db do
                                                             lastname: 'Member',
                                                             passwd: Employee.encode('member'),
                                                             email: 'mb1@puzzle.ch', management: false)
-    Employment.where(employee_id: mb1.id).first_or_create!(percent: 100, start_date: Date.new(2010, 1, 1))
+    Employment.where(employee_id: mb1.id).first_or_create!(percent: 100, start_date: Date.new(2010, 1, 1), employment_roles_employments: [EmploymentRolesEmployment.first])
 
     mb2 = Employee.where(shortname: 'MB2').first_or_create!(firstname: 'Second',
                                                             lastname: 'Member',
                                                             passwd: Employee.encode('member'),
                                                             email: 'mb2@puzzle.ch',
                                                             management: false)
-    Employment.where(employee_id: mb2.id).first_or_create!(percent: 80, start_date: Date.new(2014, 9, 1))
+    Employment.where(employee_id: mb2.id).first_or_create!(percent: 80, start_date: Date.new(2014, 9, 1), employment_roles_employments: [EmploymentRolesEmployment.first])
   end
 end
