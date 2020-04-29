@@ -41,6 +41,16 @@
 #
 
 class Employee < ActiveRecord::Base
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  devise :database_authenticatable,
+         :rememberable,
+         :omniauthable
+  # :validatable,
+  # :confirmable,
+  # :registerable,
+  # :recoverable,
+
   INTERNAL_ATTRS = %w(id passwd eval_periods created_at updated_at).freeze
 
   include Evaluatable
