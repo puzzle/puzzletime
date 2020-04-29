@@ -31,6 +31,3 @@ während #{l @period.start_date} - #{l @period.end_date}
         %td
           = link_to picon('edit'),
                     edit_ordertime_path(worktime, { back_url: request.original_fullpath })
-          = link_to picon('delete'),
-                    ordertime_path(worktime, { back_url: request.original_fullpath } ),
-                    { data: { method: :delete, confirm: ti(:confirm_delete) } }
