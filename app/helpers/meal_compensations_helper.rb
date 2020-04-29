@@ -20,6 +20,16 @@ module MealCompensationsHelper
     end
   end
 
+  def employee_meal_compensation_days(employee, period)
+    worktimes = employee.worktimes.in_period(period).where(meal_compensation: true)
+    workdates = worktimes.each_with_object({}) do |worktime, dates|
+      dates[worktime.work_date] ||= 0.0
+      dates[worktime.work_date] += worktime.hours
+      dates
+    end
+    workdates.values.sum(0) { |h| h >= 4 ? 1 : 0 }
+  end
+
   def commited_state_cell(employee, period)
     icon = completion_state_icon(employee.committed_period?(period))
     date = format_month(employee.committed_worktimes_at)
