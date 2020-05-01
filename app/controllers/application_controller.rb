@@ -10,10 +10,11 @@ class ApplicationController < ActionController::Base
   before_action :set_sentry_request_context
   protect_from_forgery with: :exception
 
-  before_action :authenticate
+  # before_action :authenticate
+  before_action :authenticate_employee!
   before_action :set_sentry_user_context
   before_action :set_paper_trail_whodunnit
-  check_authorization
+  check_authorization unless: :devise_controller?
 
   helper_method :sanitized_back_url, :current_user
 
@@ -46,13 +47,13 @@ class ApplicationController < ActionController::Base
 
           flash[:notice] = 'Ungültige Benutzerdaten'
         end
-        redirect_to login_path(ref: request.url)
+        redirect_to new_employee_session_path
       end
     end
   end
 
   def current_user
-    @user ||= session[:user_id] && Employee.find(session[:user_id])
+    @user ||= current_employee
   end
 
   def login_with(user, pwd)

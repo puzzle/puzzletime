@@ -88,6 +88,7 @@ class Employee < ActiveRecord::Base
           -> { where(report_type: AutoStartType::INSTANCE.key) },
           class_name: 'Ordertime'
   has_many :expenses, dependent: :destroy
+  has_many :authentications, dependent: :destroy
 
   before_validation do
     self.nationalities.try(:reject!, &:blank?)
@@ -103,6 +104,34 @@ class Employee < ActiveRecord::Base
 
   scope :list, -> { order('lastname', 'firstname') }
   scope :current, -> { joins(:employments).merge(Employment.during(Period.current_day)) }
+
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  devise :database_authenticatable,
+         :rememberable,
+         :omniauthable,
+         omniauth_providers: %i[keycloakopenid]
+  # :validatable,
+  # :confirmable,
+  # :registerable,
+  # :recoverable,
+
+  def apply_omniauth(omni)
+    authentications.build(
+      provider: omni['provider'],
+      uid: omni['uid'],
+      token: omni['credentials'].token,
+      token_secret: omni['credentials'].token_secret
+    )
+  end
+
+  def password_required?
+    authentications.empty? && super
+  end
+
+  def providers
+    authentications.pluck(:provider)
+  end
 
   class << self
     # Tries to login a user with the passed data.

@@ -69,6 +69,17 @@ ActiveRecord::Schema.define(version: 2020_02_28_100244) do
     t.index ["order_id"], name: "index_additional_crm_orders_on_order_id"
   end
 
+  create_table "authentications", force: :cascade do |t|
+    t.string "provider"
+    t.string "uid"
+    t.string "token"
+    t.string "token_secret"
+    t.bigint "employee_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["employee_id"], name: "index_authentications_on_employee_id"
+  end
+
   create_table "billing_addresses", id: :serial, force: :cascade do |t|
     t.integer "client_id", null: false
     t.integer "contact_id"
@@ -154,7 +165,7 @@ ActiveRecord::Schema.define(version: 2020_02_28_100244) do
     t.string "lastname", limit: 255, null: false
     t.string "shortname", limit: 3, null: false
     t.string "passwd", limit: 255
-    t.string "email", limit: 255, null: false
+    t.string "email", limit: 255, default: "", null: false
     t.boolean "management", default: false
     t.float "initial_vacation_days", default: -> { "(0)::double precision" }
     t.string "ldapname", limit: 255
@@ -179,7 +190,12 @@ ActiveRecord::Schema.define(version: 2020_02_28_100244) do
     t.string "graduation"
     t.string "identity_card_type"
     t.date "identity_card_valid_until"
+    t.string "encrypted_password", default: "", null: false
+    t.datetime "remember_created_at"
+    t.datetime "created_at", default: "2020-05-01 23:00:53", null: false
+    t.datetime "updated_at", default: "2020-05-01 23:00:53", null: false
     t.index ["department_id"], name: "index_employees_on_department_id"
+    t.index ["email"], name: "index_employees_on_email", unique: true
     t.index ["shortname"], name: "chk_unique_name", unique: true
   end
 
