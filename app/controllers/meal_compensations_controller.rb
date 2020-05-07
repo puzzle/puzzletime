@@ -13,6 +13,7 @@ class MealCompensationsController < ApplicationController
     @worktimes = Worktime.includes(:employee)
                          .in_period(@period)
                          .where(meal_compensation: true)
+                         .order('employees.firstname', 'employees.lastname')
   end
 
   def show
