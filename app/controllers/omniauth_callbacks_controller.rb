@@ -1,5 +1,5 @@
 class OmniauthCallbacksController < Devise::OmniauthCallbacksController
-  include OmniAuthCallbacksHelper
+  include OmniauthCallbacksHelper
 
   def default
     omni = request.env['omniauth.auth']
