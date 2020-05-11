@@ -4,7 +4,11 @@
 #  https://github.com/puzzle/puzzletime.
 
 Rails.application.routes.draw do
-  devise_for :employees, controllers: { omniauth_callbacks: 'omniauth_callbacks' }
+  devise_for :employees, controllers: { omniauth_callbacks: 'omniauth_callbacks' }, skip: [:registrations]
+  as :employee do
+    get 'employees/edit' => 'devise/registrations#edit', :as => 'edit_employee_registration'
+    patch 'employees' => 'devise/registrations#update', :as => 'employee_registration'
+  end
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 

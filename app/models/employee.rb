@@ -110,10 +110,10 @@ class Employee < ActiveRecord::Base
   devise :database_authenticatable,
          :rememberable,
          :omniauthable,
+         :registerable,
          omniauth_providers: %i[keycloakopenid]
   # :validatable,
   # :confirmable,
-  # :registerable,
   # :recoverable,
 
   def apply_omniauth(omni)
