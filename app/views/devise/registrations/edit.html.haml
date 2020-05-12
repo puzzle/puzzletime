@@ -1,0 +1,29 @@
+- @title = 'Passwort ändern'
+
+= form_tag(registration_path(resource_name), name: resource_name, method: :patch) do
+  = render "devise/shared/error_messages", resource: resource
+
+  %table.table-condensed
+    %tr
+      %td
+        %label.control-label{for: :current_password} Altes Passwort:
+      %td= password_field_tag 'current_password', nil, size: 30, class: 'form-control initial-focus'
+    %tr
+      %td
+        %label.control-label{for: :password} Neues Passwort
+      %td= password_field_tag 'password', nil, size: 30, class: 'form-control'
+    - if @minimum_password_length
+      %tr
+        %td
+        %td
+          %em #{@minimum_password_length} characters minimum
+    %tr
+      %td
+        %label.control-label{for: :password_confirmation} Bestätigung:
+      %td= password_field_tag 'password_confirmation', nil, size: 30, class: 'form-control'
+
+    %tr
+      %td
+      %td
+        %input{type: "submit", value: "Speichern", class: 'btn btn-primary'}
+        = link_to('Abbrechen', settings_employees_path, class: 'cancel')
