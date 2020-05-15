@@ -51,7 +51,7 @@ class Employee < ActiveRecord::Base
   # :registerable,
   # :recoverable,
 
-  INTERNAL_ATTRS = %w(id passwd eval_periods created_at updated_at).freeze
+  INTERNAL_ATTRS = %w(id passwd eval_periods encrypted_password updated_at created_at).freeze
 
   include Evaluatable
   include ReportType::Accessors
@@ -126,7 +126,8 @@ class Employee < ActiveRecord::Base
   end
 
   def password_required?
-    authentications.empty? && super
+    # authentications.empty? && super
+    false
   end
 
   def providers

@@ -11,6 +11,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   # before_action :authenticate
+  before_action :store_employee_location!, if: :storable_location?
   before_action :authenticate_employee!
   before_action :set_sentry_user_context
   before_action :set_paper_trail_whodunnit
@@ -54,6 +55,18 @@ class ApplicationController < ActionController::Base
 
   def current_user
     @user ||= current_employee
+  end
+
+  def storable_location?
+    request.get? && is_navigational_format? && !devise_controller? && !request.xhr?
+  end
+
+  def store_employee_location!
+    store_location_for(:employee, request.fullpath)
+  end
+
+  def after_sign_in_path_for(resource_or_scope)
+    stored_location_for(resource_or_scope) || super
   end
 
   def login_with(user, pwd)

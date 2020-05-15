@@ -13,7 +13,7 @@ module Api
   # See `Apidocs::Annotations::Serializer::ClassMethods#annotate_attribute`
   #
   class ApidocsController < ApplicationController
-    skip_before_action :authenticate, only: [:show]
+    # skip_before_action :authenticate, only: [:show]
     skip_authorization_check
 
     layout false
