@@ -7,7 +7,7 @@
 .entry{'data-date' => day}
   - unless worktime.billable
     %i.billable-icon.icon-dollar-stroke
-  - if Settings.meal_compensation.present?
+  - if Settings.meal_compensation&.active&.presence
     - if worktime.meal_compensation
       %i.meal-compensation-icon.icon-restaurant
   .title-description

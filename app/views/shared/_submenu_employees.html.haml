@@ -31,6 +31,6 @@
   = nav 'Funktionsanteile',
         reports_role_distribution_path
 
-- if Settings.meal_compensation.present?
+- if Settings.meal_compensation&.active&.presence
   - if can?(:meal_compensation, Evaluation)
     = nav 'Verpflegungs-Entschädigungen', meal_compensations_path
