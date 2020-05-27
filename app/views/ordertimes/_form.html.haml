@@ -44,7 +44,7 @@
 
   = f.labeled_boolean_field(:billable, detail: 'Leistung ist verrechenbar.')
   - if Settings.meal_compensation.present?
-    = f.labeled_boolean_field(:meal_compensation, detail: "Ich war beim Kunde vor Ort und möchte die #{link_to('Verpflegungs-Entschädigung', Settings.meal_compensation.url)} erhalten.".html_safe)
+    = f.labeled_boolean_field(:meal_compensation, detail: "Ich war beim Kunden vor Ort und möchte die #{link_to('Verpflegungsentschädigung', Settings.meal_compensation.url)} erhalten.".html_safe)
 
   .form-group
     .col-md-offset-2.col-md-8
