@@ -109,7 +109,8 @@ help:
   url: https://twiki.puzzle.ch/bin/view/PITC_PuzzleTime/Besonderheiten
 
 meal_compensation:
-  url: https://wiki.puzzle.ch/Puzzle/Verpflegungsentsch%c3%a4digung
+  active: <%= ENV['RAILS_PTIME_MEALTIME_COMPENSATION_ACTIVE'] %>
+  url: <%= ENV['RAILS_PTIME_MEALTIME_COMPENSATION_URL'] %>
 
 reports:
   # The minimum values for a given color in order reports.
