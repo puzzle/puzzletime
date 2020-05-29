@@ -109,7 +109,7 @@ help:
   url: https://twiki.puzzle.ch/bin/view/PITC_PuzzleTime/Besonderheiten
 
 meal_compensation:
-  active: <%= ENV['RAILS_PTIME_MEALTIME_COMPENSATION_ACTIVE'] %>
+  active: <%= ENV['RAILS_PTIME_MEALTIME_COMPENSATION_ACTIVE'].try(:downcase) == 'true' %>
   url: <%= ENV['RAILS_PTIME_MEALTIME_COMPENSATION_URL'] %>
 
 reports:
