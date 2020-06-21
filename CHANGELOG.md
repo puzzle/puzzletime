@@ -8,6 +8,8 @@
 
 ### Improvements
 * **Usability:** Unter "Members" - "Zeiten" wird die Tabelle standardmässig nach Members der eigenen Organisationseinheit gefiltert, was die Bedienung und Ladegeschwindigkeit massiv erhöht.
+* **Usability:** Im Zeiterfassungs-Formular können nun auch alte Zeiteinträge dupliziert werden.
+* **Usability:** Auftragsverantwortliche dürfen die AHV-Nummern aller Members einsehen.
 * **WebServer:** Mehr Threads für mehr Leistung.
 * **Sicherheit:** Updates diverser rubygems aus Sicherheitsgründen.
 
