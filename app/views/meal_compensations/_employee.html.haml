@@ -17,4 +17,4 @@
             - employee = Employee.find(@user.id)
             = employee_meal_compensation_days(employee, @period)
             = link_to image_tag('lupe.gif', size: '19x11', alt: 'Details'),
-                      meal_compensation_path(employee, { start_date: @period.start_date, end_date: @period.end_date })
+                      meal_compensation_path(employee, { start_date: @period&.start_date, end_date: @period&.end_date })
