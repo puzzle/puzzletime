@@ -41,7 +41,7 @@
 #
 
 class Employee < ActiveRecord::Base
-  INTERNAL_ATTRS = %w(id passwd eval_periods).freeze
+  INTERNAL_ATTRS = %w(id passwd eval_periods created_at updated_at).freeze
 
   include Evaluatable
   include ReportType::Accessors
