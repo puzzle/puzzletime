@@ -20,7 +20,9 @@
 
 - if devise_mapping.omniauthable?
   - resource_class.omniauth_providers.each do |provider|
-    = link_to "Sign in with #{OmniAuth::Utils.camelize(provider)}",
-      public_send("#{resource_name}_#{provider}_omniauth_authorize_path"),
-      class: 'btn btn-primary'
-    %br
+    - if Settings.auth[provider]&.active
+      = link_to "Sign in with #{OmniAuth::Utils.camelize(provider)}",
+        public_send("#{resource_name}_#{provider}_omniauth_authorize_path"),
+        class: 'btn btn-primary'
+      %br
+      %br

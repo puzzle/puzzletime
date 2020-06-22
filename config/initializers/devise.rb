@@ -260,15 +260,8 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
-  config.omniauth :keycloak_openid,
-                  'thomas-test',
-                  'dda9ccc8-d78c-4d46-8ea7-3304048f933a',
-                  client_options: {
-                    site: 'https://sso-test.puzzle.ch',
-                    realm: 'pitc'
-                  },
-                  strategy_class: OmniAuth::Strategies::KeycloakOpenId
-  if (keycloak = Settings&.auth&.keycloak&.presence)
+  if Settings.auth&.keycloak&.active
+    keycloak = Settings.auth.keycloak
     config.omniauth :keycloak_openid,
                     keycloak.client,
                     keycloak.secret,
@@ -279,7 +272,8 @@ Devise.setup do |config|
                     strategy_class: OmniAuth::Strategies::KeycloakOpenId
   end
 
-  if (saml = Settings&.auth&.saml&.presence)
+  if Settings.auth&.saml&.active
+    saml = Settings.auth.saml
     config.omniauth :saml,
                     idp_cert_fingerprint: saml.cert_fingerprint,
                     idp_sso_target_url: saml.sso_target_url

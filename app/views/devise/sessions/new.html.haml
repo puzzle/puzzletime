@@ -1,6 +1,6 @@
 - @title = 'Login'
 
-- if Settings&.auth&.keys&.any?
+- if Settings.auth&.any? { |_k, v| v.active }
   = render "devise/shared/links"
 - else
   = form_tag(session_path(resource_name), name: resource_name) do

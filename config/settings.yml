@@ -51,6 +51,7 @@ ldap:
 # OmniAuth configuration
 auth:
   keycloakopenid:
+    active: <%= ENV['AUTH_KEYCLOAK_ACTIVE'] == 'true' %>
     host: <%= ENV['AUTH_KEYCLOAK_HOST'] %>
     realm: <%= ENV['AUTH_KEYCLOAK_REALM'] %>
     client: <%= ENV['AUTH_KEYCLOAK_CLIENT'] %>
@@ -59,6 +60,7 @@ auth:
       ldapname: ['extra', 'raw_info', 'preferred_username']
       email: ['info', 'email']
   saml:
+    active: <%= ENV['AUTH_SAML_ACTIVE'] == 'true' %>
     cert_fingerprint: <%= ENV['AUTH_SAML_CERT_FINGERPRINT'] %>
     sso_target_url: <%= ENV['AUTH_SAML_SSO_TARGET_URL'] %>
 
