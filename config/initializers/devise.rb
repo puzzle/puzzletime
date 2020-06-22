@@ -268,16 +268,22 @@ Devise.setup do |config|
                     realm: 'pitc'
                   },
                   strategy_class: OmniAuth::Strategies::KeycloakOpenId
-  # if (keycloak = Settings.auth.keycloak.presence)
-  #   config.omniauth :keycloak_openid,
-  #                   keycloak.client,
-  #                   keycloak.secret,
-  #                   client_options: {
-  #                     site: keycloak.host,
-  #                     realm: keycloak.realm
-  #                   },
-  #                   strategy_class: OmniAuth::Strategies::KeycloakOpenId
-  # end
+  if (keycloak = Settings&.auth&.keycloak&.presence)
+    config.omniauth :keycloak_openid,
+                    keycloak.client,
+                    keycloak.secret,
+                    client_options: {
+                      site: keycloak.host,
+                      realm: keycloak.realm
+                    },
+                    strategy_class: OmniAuth::Strategies::KeycloakOpenId
+  end
+
+  if (saml = Settings&.auth&.saml&.presence)
+    config.omniauth :saml,
+                    idp_cert_fingerprint: saml.cert_fingerprint,
+                    idp_sso_target_url: saml.sso_target_url
+  end
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or

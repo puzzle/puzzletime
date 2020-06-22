@@ -89,8 +89,8 @@ end
 
 class ActionDispatch::IntegrationTest
   include Capybara::DSL
-  include IntegrationHelper
   include Devise::Test::IntegrationHelpers
+  include IntegrationHelper
 
   DatabaseCleaner.strategy = :truncation
 

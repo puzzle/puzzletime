@@ -11,9 +11,10 @@ module IntegrationHelper
     employee = user.is_a?(Employee) ? user : employees(user)
     employee.update_passwd!('foobar')
     visit new_employee_session_path
-    fill_in 'shortname', with: employee.shortname
-    fill_in 'password', with: 'foobar'
-    click_button 'Login'
+    super(employee)
+    # fill_in 'shortname', with: employee.shortname
+    # fill_in 'password', with: 'foobar'
+    # click_button 'Login'
   end
 
   # catch some errors occuring now and then in capybara tests

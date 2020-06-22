@@ -111,7 +111,7 @@ class Employee < ActiveRecord::Base
          :rememberable,
          :omniauthable,
          :registerable,
-         omniauth_providers: %i[keycloakopenid]
+         omniauth_providers: %i[keycloakopenid saml]
   # :validatable,
   # :confirmable,
   # :recoverable,

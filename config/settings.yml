@@ -48,16 +48,19 @@ ldap:
   external_dn: <%= ENV['RAILS_LDAP_EXTERNAL_DN'] %>
   group: <%= ENV['RAILS_LDAP_GROUP_DN'] %>
 
-# Keycloak configuration
+# OmniAuth configuration
 auth:
   keycloakopenid:
-    host: ENV['AUTH_KEYCLOAK_HOST']
-    realm: ENV['AUTH_KEYCLOAK_REALM']
-    client: ENV['AUTH_KEYCLOAK_CLIENT']
-    secret: ENV['AUTH_KEYCLOAK_SECRET']
+    host: <%= ENV['AUTH_KEYCLOAK_HOST'] %>
+    realm: <%= ENV['AUTH_KEYCLOAK_REALM'] %>
+    client: <%= ENV['AUTH_KEYCLOAK_CLIENT'] %>
+    secret: <%= ENV['AUTH_KEYCLOAK_SECRET'] %>
     fields:
       ldapname: ['extra', 'raw_info', 'preferred_username']
       email: ['info', 'email']
+  saml:
+    cert_fingerprint: <%= ENV['AUTH_SAML_CERT_FINGERPRINT'] %>
+    sso_target_url: <%= ENV['AUTH_SAML_SSO_TARGET_URL'] %>
 
 # Highrise configuration
 highrise:
