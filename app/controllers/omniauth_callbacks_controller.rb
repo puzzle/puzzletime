@@ -15,4 +15,5 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   # TODO: Username wegspeichern
   alias keycloakopenid default
+  alias saml default
 end
