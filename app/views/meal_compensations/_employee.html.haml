@@ -4,17 +4,17 @@
 -#  https://github.com/puzzle/puzzletime.
 
 
-%section.employee-meal-compensation
-  %h4 Verpflegungsentschädigung
-  %p
-    %table.table.table-striped.table-condensed.table-hover.table-inline#evaluation
-      %thead
-        %tr
-          %th Anzahl Tage
-      %tbody
-        %tr
-          %td.text-right
-            - employee = Employee.find(@user.id)
-            = employee_meal_compensation_days(employee, @period)
-            = link_to image_tag('lupe.gif', size: '19x11', alt: 'Details'),
-                      meal_compensation_path(employee, { start_date: @period&.start_date, end_date: @period&.end_date })
+-# %section.employee-meal-compensation
+-#   %h4 Verpflegungsentschädigung
+-#   %p
+-#     %table.table.table-striped.table-condensed.table-hover.table-inline#evaluation
+-#       %thead
+-#         %tr
+-#           %th Anzahl Tage
+-#       %tbody
+-#         %tr
+-#           %td.text-right
+-#             - employee = Employee.find(@user.id)
+-#             = employee_meal_compensation_days(employee, @period)
+-#             = link_to image_tag('lupe.gif', size: '19x11', alt: 'Details'),
+-#                       meal_compensation_path(employee, { start_date: @period.start_date, end_date: @period.end_date })

@@ -66,6 +66,17 @@
           .muted= format_days(employee.statistics.total_vacations(Period.year_for(date)), true)
           .muted= format_days(employee.statistics.remaining_vacations((date - 1.year).end_of_year), true)
 
+
+      %tr
+        %td
+          %label Verpflegungsentschädigung
+          .muted Diesen Monat
+          .muted Diese Woche
+        %td.text-right
+          .employee-info-primary-value= "#{employee_meal_compensation_days(employee, @period)} T" if @period
+          .muted= "#{employee_meal_compensation_days(employee, Period.current_month)} T"
+          .muted= "#{employee_meal_compensation_days(employee, Period.current_week)} T"
+
       - employment = employee.employments.during(Period.day_for(date)).first
       - if employment
         - infos = employment_role_infos(employment)
