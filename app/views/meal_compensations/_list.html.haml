@@ -21,6 +21,6 @@ Verpflegungsentschädigungen während #{l @period.start_date} - #{l @period.end_
           = link_to image_tag('lupe.gif', size: '19x11', alt: 'Details'),
                     meal_compensation_path(employee, { start_date: @period.start_date, end_date: @period.end_date })
         %td.text-left
-          = commited_state_cell(employee, @period)
+          = commited_state_cell(employee, Period.parse('-1m'))
         %td.text-left
-          = reviewed_state_cell(employee, @period)
+          = reviewed_state_cell(employee, Period.parse('-1m'))
