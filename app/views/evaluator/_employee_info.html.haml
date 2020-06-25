@@ -69,13 +69,31 @@
 
       %tr
         %td
-          %label Verpflegungsentschädigung
-          .muted Diesen Monat
-          .muted Diese Woche
+          %label
+            Verpflegungsentschädigung
+          - if @period
+            .muted #{@period}
+          - else
+            .muted Diesen Monat
+            .muted Letzter Monat
         %td.text-right
-          .employee-info-primary-value= "#{employee_meal_compensation_days(employee, @period)} T" if @period
-          .muted= "#{employee_meal_compensation_days(employee, Period.current_month)} T"
-          .muted= "#{employee_meal_compensation_days(employee, Period.current_week)} T"
+          .employee-info-primary-value
+          - if p = @period
+            .muted
+              = "#{employee_meal_compensation_days(employee, p)} T"
+              = link_to image_tag('lupe.gif', size: '19x11', alt: 'Details'),
+                meal_compensation_path(employee, { start_date: p.start_date, end_date: p.end_date })
+          - else
+            - p = Period.current_month
+            - p2 = Period.past_month
+            .muted
+              = "#{employee_meal_compensation_days(employee, p)} T"
+              = link_to image_tag('lupe.gif', size: '19x11', alt: 'Details'),
+                meal_compensation_path(employee, { start_date: p.start_date, end_date: p.end_date })
+            .muted
+              = "#{employee_meal_compensation_days(employee, p2)} T"
+              = link_to image_tag('lupe.gif', size: '19x11', alt: 'Details'),
+                meal_compensation_path(employee, { start_date: p2.start_date, end_date: p2.end_date })
 
       - employment = employee.employments.during(Period.day_for(date)).first
       - if employment
