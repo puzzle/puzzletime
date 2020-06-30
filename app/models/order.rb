@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: orders
@@ -27,7 +26,6 @@
 #
 
 class Order < ActiveRecord::Base
-
   include BelongingToWorkItem
   include Closable
   include Evaluatable
@@ -149,6 +147,7 @@ class Order < ActiveRecord::Base
 
   def set_self_in_nested
     return unless OrderTeamMember.table_exists? # required until all instances are migrated
+
     # don't try to set self in frozen nested attributes (-> marked for destroy)
     [order_team_members, order_contacts].each do |c|
       c.each do |e|

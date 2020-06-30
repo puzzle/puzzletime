@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module ClientsHelper
   def format_client_crm_key(client)
     crm_client_link(client, client.crm_key)

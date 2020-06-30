@@ -3,11 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class AccountingPostsControllerTest < ActionController::TestCase
-
   setup :login
 
   test 'GET index' do
@@ -58,7 +56,8 @@ class AccountingPostsControllerTest < ActionController::TestCase
              accounting_post: {
                portfolio_item_id: portfolio_items(:web).id,
                service_id: services(:software).id,
-               offered_rate: 120 }
+               offered_rate: 120
+             }
            }
       assert_response :unprocessable_entity
       assert_template :new
@@ -80,7 +79,8 @@ class AccountingPostsControllerTest < ActionController::TestCase
                  portfolio_item_id: portfolio_items(:web).id,
                  service_id: services(:software).id,
                  closed: true,
-                 offered_rate: 155 }
+                 offered_rate: 155
+               }
              }
       end
     end
@@ -101,7 +101,8 @@ class AccountingPostsControllerTest < ActionController::TestCase
                  portfolio_item_id: portfolio_items(:web).id,
                  service_id: services(:software).id,
                  offered_rate: 120,
-                 closed: true }
+                 closed: true
+               }
              }
       end
     end
@@ -124,7 +125,8 @@ class AccountingPostsControllerTest < ActionController::TestCase
                  work_item_attributes: { name: 'TEST', shortname: 'TST' },
                  portfolio_item_id: portfolio_items(:web).id,
                  service_id: services(:software).id,
-                 offered_rate: 150 }
+                 offered_rate: 150
+               }
              }
       end
     end
@@ -151,7 +153,8 @@ class AccountingPostsControllerTest < ActionController::TestCase
                  work_item_attributes: { name: 'TEST', shortname: 'TST' },
                  portfolio_item_id: portfolio_items(:web).id,
                  service_id: services(:software).id,
-                 offered_rate: 150 }
+                 offered_rate: 150
+               }
              }
       end
     end
@@ -181,7 +184,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
       }
     }
 
-    assert_difference 'AccountingPost.count',+1 do
+    assert_difference 'AccountingPost.count', +1 do
       post :create, params: attributes
     end
     accounting_post = assigns(:accounting_post)
@@ -260,7 +263,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
 
   test 'PATCH update with new work_item sets parent_id to order.work_item_id and moves worktimes' do
     assert_no_difference 'AccountingPost.count' do
-      assert_difference 'WorkItem.count',+1 do
+      assert_difference 'WorkItem.count', +1 do
         assert_no_difference 'Worktime.count' do
           patch :update,
                 params: {

@@ -4,7 +4,6 @@
 #  https://github.com/puzzle/puzzletime.
 
 module CsvExportable
-
   def send_csv(csv_data, filename)
     csv_file_export_header(filename)
     send_data(csv_data, filename: filename, type: 'text/csv; charset=utf-8; header=present')
@@ -23,5 +22,4 @@ module CsvExportable
     end
     headers['Last-Modified'] = Time.zone.now.httpdate
   end
-
 end

@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: order_statuses
@@ -34,6 +33,6 @@ class OrderStatusTest < ActiveSupport::TestCase
   end
 
   test 'defaults scope lists only default statuses' do
-    assert_equal OrderStatus.defaults, [ order_statuses(:bearbeitung) ]
+    assert_equal OrderStatus.defaults, [order_statuses(:bearbeitung)]
   end
 end

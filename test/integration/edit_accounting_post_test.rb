@@ -3,13 +3,11 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class EditAccountingPostTest < ActionDispatch::IntegrationTest
   fixtures :all
   setup :login
-
 
   test 'calculate correct budget values' do
     WorkingCondition.clear_cache

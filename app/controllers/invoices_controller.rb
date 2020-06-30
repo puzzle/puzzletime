@@ -3,9 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class InvoicesController < CrudController
-
   self.nesting = [Order]
 
   self.permitted_attrs = [:billing_date, :due_date, :period_from, :period_to,
@@ -142,7 +140,7 @@ class InvoicesController < CrudController
 
   def load_totals_paid
     paid = order.invoices.where(status: 'paid')
-    @total_amount      = order.invoices.sum(:total_amount)
+    @total_amount = order.invoices.sum(:total_amount)
     @total_amount_paid = paid.sum(:total_amount)
     @total_amount_open = @total_amount - @total_amount_paid
 
@@ -234,5 +232,4 @@ class InvoicesController < CrudController
       end
     end
   end
-
 end

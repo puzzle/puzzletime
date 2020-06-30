@@ -131,6 +131,7 @@ de-DE:
         remaining_hours: Restaufwand
         report_type: Report-Typ
         billable: Verrechenbar
+        meal_compensation: Verpflegungsentschädigung
         description_required: Beschreibung erforderlich
         ticket_required: Ticket erforderlich
         closed: Geschlossen
@@ -200,6 +201,8 @@ de-DE:
         nationalities: Nationalitäten
         additional_information: Zusätzliche Informationen
         crm_key: Highrise ID
+        identity_card_type: Ausweistyp
+        identity_card_valid_until: Ausweis gültig bis
       employee/marital_statuses:
         married: Verheiratet
         single: Ledig
@@ -386,6 +389,7 @@ de-DE:
         to_end_time: Bis
         description: Bemerkungen
         billable: Verrechenbar
+        meal_compensation: Verpflegungsentschädigung
         ticket: Ticket
         account: Buchungsposition
         invoice_id: Rechnung

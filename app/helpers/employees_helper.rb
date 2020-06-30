@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module EmployeesHelper
   def format_employee_current_percent(employee)
     value = employee.current_percent
@@ -29,5 +28,4 @@ module EmployeesHelper
        format_percent(ere.percent)].compact.join(' ')
     end, separator)
   end
-
 end

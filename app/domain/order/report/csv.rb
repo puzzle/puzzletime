@@ -3,9 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class Order::Report::Csv
-
   attr_reader :report
 
   def initialize(report)
@@ -43,5 +41,4 @@ class Order::Report::Csv
   def target_scopes
     @target_scopes ||= TargetScope.list.to_a
   end
-
 end

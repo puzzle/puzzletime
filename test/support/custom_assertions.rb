@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # A handful of convenient assertions. The aim of custom assertions is to
 # provide more specific error messages and to perform complex checks.
 #
@@ -31,7 +30,7 @@ module CustomAssertions
     msg = message(msg) do
       "Expected #{mu_pp(record)} to be valid, " \
       "but has the following errors:\n" +
-      mu_pp(record.errors.full_messages.join("\n"))
+        mu_pp(record.errors.full_messages.join("\n"))
     end
     assert record.valid?, msg
   end
@@ -56,7 +55,7 @@ module CustomAssertions
     msg = message do
       "Expected #{mu_pp(record)} to have error message on attribute #{attr}."
     end
-    assert record.errors.messages[attr.to_sym].any? {|m| message =~ m }, msg
+    assert record.errors.messages[attr.to_sym].any? { |m| message =~ m }, msg
   end
 
   def assert_change(expression, message = nil, &block)
@@ -78,7 +77,7 @@ module CustomAssertions
 
   def assert_arrays_match(expected, actual)
     transform = ->(array) do
-      block_given? ? array.map {|element| yield(element) }.sort : array.sort
+      block_given? ? array.map { |element| yield(element) }.sort : array.sort
     end
 
     assert_equal(transform[expected], transform[actual])

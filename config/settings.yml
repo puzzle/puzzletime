@@ -35,8 +35,10 @@ ldap:
   connection:
     host: <%= ENV['RAILS_LDAP_HOST'] %>
     port: <%= ENV['RAILS_LDAP_PORT'] || 636 %>
+    <% if ENV['RAILS_LDAP_ENCRYPTION'] %>
     encryption:
-      method: <%= ENV['RAILS_LDAP_ENCRYPTION'] || 'simple_tls' %>
+      method: <%= ENV['RAILS_LDAP_ENCRYPTION'] %>
+    <% end %>
   auth:
     binduser: <%= ENV['RAILS_LDAP_BINDUSER'] %>
     bindpassword: <%= ENV['RAILS_LDAP_BINDPASSWORD'] %>
@@ -105,6 +107,10 @@ committed_worktimes:
 
 help:
   url: https://twiki.puzzle.ch/bin/view/PITC_PuzzleTime/Besonderheiten
+
+meal_compensation:
+  active: <%= ENV['RAILS_PTIME_MEALTIME_COMPENSATION_ACTIVE'].try(:downcase) == 'true' %>
+  url: <%= ENV['RAILS_PTIME_MEALTIME_COMPENSATION_URL'] %>
 
 reports:
   # The minimum values for a given color in order reports.

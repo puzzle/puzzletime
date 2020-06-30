@@ -2,7 +2,6 @@
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
-
 # == Schema Information
 #
 # Table name: employees
@@ -35,6 +34,8 @@
 #  reviewed_worktimes_at     :date
 #  nationalities             :string           is an Array
 #  graduation                :string
+#  identity_card_type        :string
+#  identity_card_valid_until :date
 #
 
 Fabricator(:employee) do

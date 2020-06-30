@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: order_statuses
@@ -32,7 +31,6 @@ class OrderStatus < ActiveRecord::Base
   scope :list, -> { order(:position) }
   scope :defaults, -> { list.where(default: true) }
   scope :open, -> { where(closed: false) }
-
 
   def to_s
     name

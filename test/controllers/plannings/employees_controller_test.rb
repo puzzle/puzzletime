@@ -3,12 +3,10 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 module Plannings
   class EmployeesControllerTest < ActionController::TestCase
-
     setup :login
 
     test 'GET #new renders row for given work item' do

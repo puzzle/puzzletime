@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module CompletableHelper
   def completed_icon(date)
     if recently_completed(date)

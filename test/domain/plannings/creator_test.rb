@@ -3,11 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class CreatorTest < ActiveSupport::TestCase
-
   test '#create_or_update runs validations and returns false if invalid' do
     c = Plannings::Creator.new({})
     assert_difference 'Planning.count', 0 do
@@ -38,8 +36,7 @@ class CreatorTest < ActiveSupport::TestCase
                  { employee_id: employees(:mark).id.to_s,
                    work_item_id: work_items(:puzzletime).id.to_s,
                    date: '2000-01-04' }
-               ]
-    }
+               ] }
     c = Plannings::Creator.new(ActionController::Parameters.new(params))
     assert_difference 'Planning.count', 3 do
       assert c.create_or_update
@@ -86,8 +83,7 @@ class CreatorTest < ActiveSupport::TestCase
                  { employee_id: employees(:mark).id.to_s,
                    work_item_id: work_items(:puzzletime).id.to_s,
                    date: '2000-01-04' }
-               ]
-    }
+               ] }
     c = Plannings::Creator.new(ActionController::Parameters.new(params))
     assert_difference 'Planning.count', 0 do
       assert c.create_or_update
@@ -119,8 +115,7 @@ class CreatorTest < ActiveSupport::TestCase
                  { employee_id: employees(:pascal).id.to_s,
                    work_item_id: work_items(:puzzletime).id.to_s,
                    date: '2000-01-04' }
-               ]
-    }
+               ] }
     c = Plannings::Creator.new(ActionController::Parameters.new(params))
     assert_difference 'Planning.count', 0 do
       assert c.create_or_update
@@ -149,8 +144,7 @@ class CreatorTest < ActiveSupport::TestCase
                  { employee_id: employees(:mark).id.to_s,
                    work_item_id: work_items(:puzzletime).id.to_s,
                    date: '2000-01-04' }
-               ]
-    }
+               ] }
     c = Plannings::Creator.new(ActionController::Parameters.new(params))
     assert_difference 'Planning.count', 0 do
       assert c.create_or_update
@@ -266,10 +260,10 @@ class CreatorTest < ActiveSupport::TestCase
                           percent: 20,
                           definitive: false)
     items = [
-        { employee_id: employees(:pascal).id.to_s, work_item_id: work_items(:hitobito_demo_app).id.to_s, date: '2016-09-27' },
-        { employee_id: employees(:pascal).id.to_s, work_item_id: work_items(:hitobito_demo_app).id.to_s, date: '2016-09-28' },
-        { employee_id: employees(:pascal).id.to_s, work_item_id: work_items(:hitobito_demo_app).id.to_s, date: '2016-09-29' },
-        { employee_id: employees(:pascal).id.to_s, work_item_id: work_items(:hitobito_demo_app).id.to_s, date: '2016-10-03' },
+      { employee_id: employees(:pascal).id.to_s, work_item_id: work_items(:hitobito_demo_app).id.to_s, date: '2016-09-27' },
+      { employee_id: employees(:pascal).id.to_s, work_item_id: work_items(:hitobito_demo_app).id.to_s, date: '2016-09-28' },
+      { employee_id: employees(:pascal).id.to_s, work_item_id: work_items(:hitobito_demo_app).id.to_s, date: '2016-09-29' },
+      { employee_id: employees(:pascal).id.to_s, work_item_id: work_items(:hitobito_demo_app).id.to_s, date: '2016-10-03' },
     ]
     c = Plannings::Creator.new(planning: { percent: '', definitive: '', repeat_until: '201643' }, items: items)
 
@@ -309,8 +303,7 @@ class CreatorTest < ActiveSupport::TestCase
                  { employee_id: employees(:pascal).id.to_s,
                    work_item_id: work_items(:puzzletime).id.to_s,
                    date: '2000-01-04' }
-               ]
-    }
+               ] }
     c = Plannings::Creator.new(ActionController::Parameters.new(params))
     assert_difference 'Planning.count', -1 do
       assert c.create_or_update
@@ -335,8 +328,7 @@ class CreatorTest < ActiveSupport::TestCase
                  { employee_id: employees(:pascal).id.to_s,
                    work_item_id: work_items(:puzzletime).id.to_s,
                    date: '2000-01-12' }
-               ]
-    }
+               ] }
     c = Plannings::Creator.new(ActionController::Parameters.new(params))
     assert_difference 'Planning.count', 0 do
       assert c.create_or_update
@@ -401,8 +393,7 @@ class CreatorTest < ActiveSupport::TestCase
                  { employee_id: employees(:pascal).id.to_s,
                    work_item_id: work_items(:puzzletime).id.to_s,
                    date: '2000-01-04' }
-               ]
-    }
+               ] }
     c = Plannings::Creator.new(params)
     refute c.form_valid?
     assert c.errors.include?('Nur Positionen mit Buchungsposition sind möglich')
@@ -420,9 +411,9 @@ class CreatorTest < ActiveSupport::TestCase
   test '#form_valid? with percent <= 0 returns false and sets errors' do
     ['0', '-1'].each do |percent|
       c = Plannings::Creator.new({ planning: { percent: percent } })
-        refute c.form_valid?, "Expected to be invalid for #{percent}"
-        assert c.errors.include?('Prozent müssen grösser als 0 sein'),
-               "Expected to contain error for #{p}"
+      refute c.form_valid?, "Expected to be invalid for #{percent}"
+      assert c.errors.include?('Prozent müssen grösser als 0 sein'),
+             "Expected to contain error for #{p}"
     end
   end
 

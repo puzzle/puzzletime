@@ -3,8 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
-# rubocop:disable Metrics/MethodLength, Metrics/AbcSize
 class Ability
   include CanCan::Ability
 
@@ -107,7 +105,8 @@ class Ability
          :absences,
          :employeeabsences,
          :capacity_report,
-         :role_distribution_report],
+         :role_distribution_report,
+         :meal_compensation],
         Evaluation
   end
 
@@ -157,10 +156,10 @@ class Ability
     end
 
     can :revenue_reports, Department
+    can :social_insurance, Employee
   end
 
   def api_client_abilities
-
   end
 
   def everyone_abilities
@@ -200,6 +199,7 @@ class Ability
     can [:read,
          :accounting_posts,
          :controlling,
+         :create_comment,
          :search,
          :services,
          :show_targets,

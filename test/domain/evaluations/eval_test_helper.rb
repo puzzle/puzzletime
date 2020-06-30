@@ -3,9 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module EvalTestHelper
-
   def setup
     @period_week = Period.new('4.12.2006', '10.12.2006')
     @period_month = Period.new('1.12.2006', '31.12.2006')
@@ -41,6 +39,4 @@ module EvalTestHelper
     assert_equal month, @evaluation.times(@period_month).size
     assert_equal all, @evaluation.times(nil).size
   end
-  
-
 end

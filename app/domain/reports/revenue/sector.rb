@@ -3,10 +3,8 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module Reports::Revenue
   class Sector < Base
-
     self.grouping_model = ::Sector
     self.grouping_fk = :sector_id
 
@@ -21,6 +19,5 @@ module Reports::Revenue
         .joins('LEFT JOIN clients ON clients.work_item_id = ANY (work_items.path_ids)')
         .joins('LEFT JOIN sectors ON sectors.id = clients.sector_id')
     end
-
   end
 end

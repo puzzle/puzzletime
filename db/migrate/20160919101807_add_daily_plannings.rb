@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class AddDailyPlannings < ActiveRecord::Migration[5.1]
   OLD_TABLE = :plannings
   NEW_TABLE = :plannings_new
@@ -34,8 +33,8 @@ class AddDailyPlannings < ActiveRecord::Migration[5.1]
 
   def migrate_order_closed
     WorkItem.joins(order: :status).
-             where(order_statuses: { closed: true }, work_items: { closed: false }).
-             update_all(closed: true)
+      where(order_statuses: { closed: true }, work_items: { closed: false }).
+      update_all(closed: true)
   end
 
   def migrate_plannings
@@ -44,11 +43,11 @@ class AddDailyPlannings < ActiveRecord::Migration[5.1]
 
     while has_rows
       query = old_table
-        .project(Arel.sql('*'))
-        .where(old_table[:end_week].gteq(IGNORE_BEFORE.cwyear * 100 + IGNORE_BEFORE.cweek)
+              .project(Arel.sql('*'))
+              .where(old_table[:end_week].gteq(IGNORE_BEFORE.cwyear * 100 + IGNORE_BEFORE.cweek)
                  .or(old_table[:end_week].eq(nil)))
-        .take(BATCH_SIZE)
-        .skip(offset)
+              .take(BATCH_SIZE)
+              .skip(offset)
       has_rows = select_all(query.to_sql).each { |row| migrate_row(row) }.length > 0
       offset += BATCH_SIZE
     end
@@ -101,11 +100,11 @@ class AddDailyPlannings < ActiveRecord::Migration[5.1]
 
   def planning_exists?(entry)
     condition = [:employee_id, :work_item_id, :date]
-      .map { |k| new_table[k].eq(entry[k]) }
-      .reduce(:and)
+                .map { |k| new_table[k].eq(entry[k]) }
+                .reduce(:and)
     query = new_table
-      .project(new_table[:id].count.as('count'))
-      .where(condition)
+            .project(new_table[:id].count.as('count'))
+            .where(condition)
     select_one(query.to_sql)['count'] != '0'
   end
 
@@ -125,4 +124,3 @@ class AddDailyPlannings < ActiveRecord::Migration[5.1]
     @new_table ||= Arel::Table.new(NEW_TABLE)
   end
 end
-

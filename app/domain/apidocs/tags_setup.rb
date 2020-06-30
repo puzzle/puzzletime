@@ -2,7 +2,6 @@
 
 module Apidocs
   class TagsSetup
-
     def initialize(swagger_doc = nil)
       @swagger_doc = swagger_doc
     end
@@ -26,7 +25,6 @@ module Apidocs
     end
 
     private
-
 
     def setup_tags
       tags.each do |tag|

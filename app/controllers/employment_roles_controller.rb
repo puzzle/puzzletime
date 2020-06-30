@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class EmploymentRolesController < ManageController
   self.permitted_attrs = [:name, :billable, :level, :employment_role_category_id]
 

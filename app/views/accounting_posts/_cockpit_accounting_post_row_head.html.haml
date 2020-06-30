@@ -13,7 +13,10 @@
       - if row.accounting_post.closed?
         %span.small geschlossen
       - unless row.accounting_post.billable
-        %i.billable-icon.icon-dollar-stroke
+        %i.options-icon.icon-dollar-stroke
+      - if Settings.meal_compensation.active
+        - if row.accounting_post.meal_compensation
+          %i.options-icon.icon-restaurant
     .subtitle{title: row.name}= row.name
     .data-item
       %span.figure= f(row.offered_rate)

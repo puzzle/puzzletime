@@ -3,12 +3,10 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 # For full revenue report test see DepartmentRevenueReportTest
 class SectorRevenueReportTest < ActiveSupport::TestCase
-
   setup do
     travel_to Date.new(2000, 9, 5)
     Worktime.destroy_all
@@ -34,7 +32,7 @@ class SectorRevenueReportTest < ActiveSupport::TestCase
   end
 
   test 'entries and values' do
-    Settings.clients.stubs(:company_id).returns(0) #TODO: Do not use puzzle as example
+    Settings.clients.stubs(:company_id).returns(0) # TODO: Do not use puzzle as example
 
     clients(:puzzle).update_attribute(:sector_id, verwaltung.id)
     clients(:pbs).update_attribute(:sector_id, oev.id)
@@ -137,5 +135,4 @@ class SectorRevenueReportTest < ActiveSupport::TestCase
   def oev
     sectors(:oev)
   end
-
 end

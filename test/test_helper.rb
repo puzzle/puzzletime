@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 ENV['RAILS_ENV'] = 'test'
 
 if ENV['TEST_REPORTS']
@@ -29,7 +28,6 @@ Settings.reload!
 
 Dir[Rails.root.join('test/support/**/*.rb')].sort.each { |f| require f }
 
-
 Capybara.register_driver :selenium do |app|
   require 'selenium/webdriver'
 
@@ -50,9 +48,7 @@ unless ENV['HEADLESS'] == 'false'
   headless.start
 end
 
-
 class ActiveSupport::TestCase
-
   include CustomAssertions
 
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
@@ -78,19 +74,16 @@ class ActiveSupport::TestCase
   # Since we've removed the hardcoded regular holidays, insert them manually
   def setup_regular_holidays(years)
     years = [years].flatten.compact
-    dates = [[1,1],[2,1],[1,8],[25,12],[26,12]]
+    dates = [[1, 1], [2, 1], [1, 8], [25, 12], [26, 12]]
     dates.each do |day, month|
       years.each do |year|
         Holiday.create!(holiday_date: Date.new(year, month, day), musthours_day: 0)
       end
     end
   end
-
 end
 
-
 class ActionDispatch::IntegrationTest
-
   include Capybara::DSL
   include IntegrationHelper
 
@@ -105,5 +98,4 @@ class ActionDispatch::IntegrationTest
   teardown do
     DatabaseCleaner.clean
   end
-
 end

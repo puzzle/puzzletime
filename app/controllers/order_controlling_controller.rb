@@ -3,9 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class OrderControllingController < ApplicationController
-
   def show
     authorize!(:controlling, order)
 
@@ -19,5 +17,4 @@ class OrderControllingController < ApplicationController
   def order
     @order ||= Order.find(params[:order_id])
   end
-
 end

@@ -3,11 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class DepartmentRevenueReportTest < ActiveSupport::TestCase
-
   setup do
     travel_to Date.new(2000, 9, 5)
     Worktime.destroy_all
@@ -107,7 +105,7 @@ class DepartmentRevenueReportTest < ActiveSupport::TestCase
   end
 
   test 'entries and values' do
-    Settings.clients.stubs(:company_id).returns(0) #TODO: do not use puzzle as example
+    Settings.clients.stubs(:company_id).returns(0) # TODO: do not use puzzle as example
 
     ordertime(Date.new(2000, 1, 10), :puzzletime) # before period (ignored)
     ordertime(Date.new(2000, 7, 10), :puzzletime)
@@ -152,7 +150,7 @@ class DepartmentRevenueReportTest < ActiveSupport::TestCase
   end
 
   test 'entries and values with sort by past month' do
-    Settings.clients.stubs(:company_id).returns(0) #TODO: do not use puzzle as example
+    Settings.clients.stubs(:company_id).returns(0) # TODO: do not use puzzle as example
 
     # same as above
     ordertime(Date.new(2000, 1, 10), :puzzletime) # before period (ignored)
@@ -258,5 +256,4 @@ class DepartmentRevenueReportTest < ActiveSupport::TestCase
   def sys
     departments(:sys)
   end
-
 end

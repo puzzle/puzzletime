@@ -3,9 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class OrderPlanningsController < Plannings::OrdersController
-
   skip_load_and_authorize_resource
 
   private
@@ -14,5 +12,4 @@ class OrderPlanningsController < Plannings::OrdersController
     @order ||= Order.find(params[:order_id])
   end
   alias subject order
-
 end

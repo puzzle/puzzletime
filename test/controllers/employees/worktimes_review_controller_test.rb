@@ -3,11 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class Employees::WorktimesReviewControllerTest < ActionController::TestCase
-
   def test_edit_as_manager
     login_as(:mark)
     employee = employees(:various_pedro)

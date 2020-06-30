@@ -30,3 +30,7 @@
 -if can?(:role_distribution_report, Evaluation)
   = nav 'Funktionsanteile',
         reports_role_distribution_path
+
+- if Settings.meal_compensation.active
+  - if can?(:meal_compensation, Evaluation)
+    = nav 'Verpflegungsentschädigungen', meal_compensations_path

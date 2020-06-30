@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module OrderServicesHelper
   def summed_worktimes_table(entries, options = {})
     options[:footer] = checkable_worktimes_footer(entries)
@@ -29,7 +28,7 @@ module OrderServicesHelper
       t.attr(:description, nil, class: 'truncated', style: 'max-width: 250px;') do |w|
         content_tag(:span, w.description.to_s, title: w.description)
       end
-      t.attrs(:billable, :invoice_id)
+      t.attrs(:billable, :meal_compensation, :invoice_id)
       t.foot { options[:footer] } if options[:footer]
     end
   end
@@ -71,15 +70,15 @@ module OrderServicesHelper
 
   def summed_worktimes_cells(entries)
     content_tag(:td) +
-        content_tag(:td, 'Total') +
-        content_tag(:td) +
-        content_tag(:td, f(entries.to_a.sum(&:hours)), class: 'right') +
-        content_tag(:td, f(entries.to_a.sum(&:amount)), class: 'right') +
-        content_tag(:td) +
-        content_tag(:td) +
-        content_tag(:td) +
-        content_tag(:td) +
-        content_tag(:td)
+      content_tag(:td, 'Total') +
+      content_tag(:td) +
+      content_tag(:td, f(entries.to_a.sum(&:hours)), class: 'right') +
+      content_tag(:td, f(entries.to_a.sum(&:amount)), class: 'right') +
+      content_tag(:td) +
+      content_tag(:td) +
+      content_tag(:td) +
+      content_tag(:td) +
+      content_tag(:td)
   end
 
   def too_many_entries_row

@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 require 'support/crud_test_helper'
 require 'support/crud_test_model'
@@ -256,9 +255,9 @@ class CrudTestModelsControllerTest < ActionController::TestCase
 
   def test_update_with_failure_json
     put :update, params: {
-                   id: test_entry.id,
-                   crud_test_model: { rating: 20 }
-                 },
+      id: test_entry.id,
+      crud_test_model: { rating: 20 }
+    },
                  format: 'json'
     assert_response :unprocessable_entity
     assert entry.changed?

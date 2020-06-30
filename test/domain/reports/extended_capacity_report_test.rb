@@ -3,8 +3,8 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # coding: utf-8
+
 require 'test_helper'
 
 class ExtendedCapacityReportTest < ActiveSupport::TestCase

@@ -3,16 +3,14 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
-OrderStatus.seed(:name,
+OrderStatus.seed(
+  :name,
   { name: 'Bearbeitung',
     style: 'success',
     position: 10 },
-
   { name: 'Abschluss',
     style: 'info',
     position: 20 },
-
   { name: 'Abgeschlossen',
     style: 'danger',
     position: 30,

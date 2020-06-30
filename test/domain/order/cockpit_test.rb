@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class Order::CockpitTest < ActiveSupport::TestCase
@@ -106,10 +105,10 @@ class Order::CockpitTest < ActiveSupport::TestCase
     define_worktimes
 
     total = cockpit.rows.first
-    budget = total.cells[:open_services]
-    assert_equal -26, budget.hours
-    assert_equal -3.25, budget.days
-    assert_equal -4420, budget.amount
+    budget = total.cells[:open_budget]
+    assert_equal -22, budget.hours
+    assert_equal -2.75, budget.days
+    assert_equal -3740, budget.amount
   end
 
   test 'open budget current values are calculated if worktimes exist' do
@@ -117,16 +116,57 @@ class Order::CockpitTest < ActiveSupport::TestCase
     define_worktimes
 
     total = cockpit.rows.first
-    budget = total.cells[:open_services]
-    assert_equal 274.2, budget.hours.to_f
-    assert_equal 274.2 / 8, budget.days.to_f
-    assert_equal 35_634.42, budget.amount.round(2)
+    budget = total.cells[:open_budget]
+    assert_equal 278.2, budget.hours.to_f
+    assert_equal 278.2 / 8, budget.days.to_f
+    assert_equal 36_114.82, budget.amount.round(2)
 
     a1 = cockpit.rows.second
-    budget = a1.cells[:open_services]
-    assert_equal 184.1, budget.hours
-    assert_equal 184.1 / 8, budget.days
-    assert_equal 22_110.41, budget.amount.round(2)
+    budget = a1.cells[:open_budget]
+    assert_equal 188.1, budget.hours
+    assert_equal 188.1 / 8, budget.days
+    assert_equal 22_590.81, budget.amount.round(2)
+  end
+
+  test 'planned budget is zero if nothing is planned' do
+    define_offered_fields
+    define_worktimes
+
+    total = cockpit.rows.first
+    budget = total.cells[:planned_budget]
+    assert_equal 0.0, budget.hours.to_f
+    assert_equal 0.0, budget.days.to_f
+    assert_equal 0.0, budget.amount.round(2)
+
+    a1 = cockpit.rows.second
+    budget = a1.cells[:planned_budget]
+    assert_equal 0.0, budget.hours
+    assert_equal 0.0, budget.days
+    assert_equal 0.0, budget.amount.round(2)
+  end
+
+  test 'planned budget current values are calculated if pannings exist' do
+    define_offered_fields
+    define_worktimes
+    define_planning
+
+    total = cockpit.rows.first
+    budget = total.cells[:planned_budget]
+    assert_equal 16.0, budget.hours.to_f
+    assert_equal 2.0, budget.days.to_f
+    assert_equal 1921.60, budget.amount.round(2)
+
+    a1 = cockpit.rows.second
+    budget = a1.cells[:planned_budget]
+    assert_equal 16.0, budget.hours
+    assert_equal 2.0, budget.days
+    assert_equal 1921.60, budget.amount.round(2)
+
+    a2 = cockpit.rows.third
+    budget = a2.cells[:planned_budget]
+    assert_equal 0.0, budget.hours
+    assert_equal 0.0, budget.days
+    assert_equal 0.0, budget.amount.round(2)
   end
 
   test 'cost_effectiveness_forecast' do
@@ -199,7 +239,6 @@ class Order::CockpitTest < ActiveSupport::TestCase
     assert_equal 21.84, cockpit.billed_rate.round(2)
   end
 
-
   def define_offered_fields
     accounting_posts(:hitobito_demo_app).update!(offered_hours: 200.1, offered_rate: 120.1)
     accounting_posts(:hitobito_demo_site).update!(offered_hours: 100.1, offered_rate: 150.1)
@@ -227,6 +266,26 @@ class Order::CockpitTest < ActiveSupport::TestCase
                       work_date: Time.zone.today - 2,
                       report_type: HoursDayType::INSTANCE,
                       hours: 10)
+  end
+
+  def define_planning
+    4.times do |n|
+      Planning.create!(work_item: work_items(:hitobito_demo_app),
+                       employee: employees(:pascal),
+                       date: Date.today.next_occurring(:monday) + n,
+                       percent: 50,
+                       definitive: true)
+      Planning.create!(work_item: work_items(:hitobito_demo_app),
+                       employee: employees(:pascal),
+                       date: Date.today.next_occurring(:monday) + 7 + n,
+                       percent: 50,
+                       definitive: false)
+    end
+    Planning.create!(work_item: work_items(:hitobito_demo_app),
+                     employee: employees(:pascal),
+                     date: Date.today.prev_occurring(:monday),
+                     percent: 50,
+                     definitive: true)
   end
 
   def create_invoice(attrs = {})

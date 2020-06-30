@@ -3,9 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module IntegrationHelper
-
   private
 
   def login_as(user, ref_path = nil)
@@ -21,10 +19,10 @@ module IntegrationHelper
   def timeout_safe
     yield
   rescue Errno::ECONNREFUSED,
-    Timeout::Error,
-    Capybara::FrozenInTime,
-    Capybara::ElementNotFound,
-    Selenium::WebDriver::Error::StaleElementReferenceError => e
+         Timeout::Error,
+         Capybara::FrozenInTime,
+         Capybara::ElementNotFound,
+         Selenium::WebDriver::Error::StaleElementReferenceError => e
     skip e.message || e.class.name
   end
 
@@ -68,5 +66,4 @@ module IntegrationHelper
   Capybara.add_selector(:name) do
     xpath { |name| XPath.descendant[XPath.attr(:name).contains(name)] }
   end
-
 end

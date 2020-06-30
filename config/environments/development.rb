@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -16,7 +15,7 @@ Rails.application.configure do
   config.eager_load = false
 
   # Show full error reports and disable caching.
-  config.consider_all_requests_local       = true
+  config.consider_all_requests_local = true
 
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.

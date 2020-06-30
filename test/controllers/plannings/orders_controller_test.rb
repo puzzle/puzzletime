@@ -3,12 +3,10 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 module Plannings
   class OrdersControllerTest < ActionController::TestCase
-
     setup :login
 
     test 'GET #new renders row for given employee' do
@@ -166,9 +164,9 @@ module Plannings
         delete :destroy,
                xhr: true,
                params: {
-                   format: :js,
-                   id: orders(:puzzletime).id,
-                   planning_ids: [p.id]
+                 format: :js,
+                 id: orders(:puzzletime).id,
+                 planning_ids: [p.id]
                }
       end
     end
@@ -189,6 +187,5 @@ module Plannings
                }
       end
     end
-
   end
 end

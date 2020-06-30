@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class HolidaysController < ManageController
   self.permitted_attrs = [:holiday_date, :musthours_day]
 end

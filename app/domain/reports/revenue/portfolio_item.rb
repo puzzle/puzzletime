@@ -3,12 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module Reports::Revenue
   class PortfolioItem < Base
-
     self.grouping_model = ::PortfolioItem
     self.grouping_fk = :portfolio_item_id
-
   end
 end

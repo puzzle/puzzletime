@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
-
 # == Schema Information
 #
 # Table name: employees
@@ -36,11 +36,12 @@
 #  reviewed_worktimes_at     :date
 #  nationalities             :string           is an Array
 #  graduation                :string
+#  identity_card_type        :string
+#  identity_card_valid_until :date
 #
 
 class Employee < ActiveRecord::Base
-
-  INTERNAL_ATTRS = %w(id passwd eval_periods).freeze
+  INTERNAL_ATTRS = %w(id passwd eval_periods created_at updated_at).freeze
 
   include Evaluatable
   include ReportType::Accessors
@@ -181,6 +182,18 @@ class Employee < ActiveRecord::Base
 
   def committed_date?(date)
     committed_worktimes_at && date <= committed_worktimes_at
+  end
+
+  def committed_period?(period)
+    committed_date?(period.end_date)
+  end
+
+  def reviewed_date?(date)
+    reviewed_worktimes_at && date <= reviewed_worktimes_at
+  end
+
+  def reviewed_period?(period)
+    reviewed_date?(period.end_date)
   end
 
   ######### employment information ######################

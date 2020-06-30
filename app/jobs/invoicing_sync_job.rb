@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class InvoicingSyncJob < CronJob
   self.cron_expression = '34 5 * * *'
 

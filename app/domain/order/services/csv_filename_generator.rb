@@ -3,10 +3,8 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module Order::Services
   class CsvFilenameGenerator
-
     attr_reader :order, :params
 
     def initialize(order, params = {})
@@ -50,6 +48,5 @@ module Order::Services
     def ticket
       "ticket_#{params[:ticket]}" if params[:ticket].present?
     end
-
   end
 end

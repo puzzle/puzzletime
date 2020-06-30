@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class WorkingConditionsController < ManageController
   self.permitted_attrs = [:valid_from, :vacation_days_per_year, :must_hours_per_day]
 end

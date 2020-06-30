@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: departments
@@ -13,11 +12,11 @@
 #  shortname :string(3)        not null
 #
 class Department < ActiveRecord::Base
-
   include Evaluatable
 
   has_many :orders
   has_many :employees, dependent: :nullify
+  has_many :employee_worktimes, through: :employees, source: :worktimes
 
   validates_by_schema
 
@@ -26,7 +25,6 @@ class Department < ActiveRecord::Base
 
   scope :list, -> { order('name') }
   scope :having_employees, -> { where('EXISTS (SELECT 1 FROM employees WHERE department_id = departments.id)') }
-
 
   def to_s
     name
@@ -55,5 +53,4 @@ class Department < ActiveRecord::Base
   def self.plannings
     Planning.all
   end
-
 end

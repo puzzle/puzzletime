@@ -3,11 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class ShowOrderServices < ActionDispatch::IntegrationTest
-
   attr_reader :ordertime
 
   test 'click on worktime row as employee does not open edit view' do

@@ -3,11 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class Order::ReportTest < ActiveSupport::TestCase
-
   ### filtering
 
   test 'contains all orders with worktimes without filters' do
@@ -124,7 +122,6 @@ class Order::ReportTest < ActiveSupport::TestCase
     report(sort: 'offered_amount')
     assert_equal orders(:webauftritt, :puzzletime, :allgemein), report.entries.collect(&:order)
   end
-
 
   ### calculating
 
@@ -279,15 +276,15 @@ class Order::ReportTest < ActiveSupport::TestCase
     Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal), hours: 20, work_date: 2.years.ago)
     i1 = Fabricate(:invoice, order: order, work_items: work_items(:hitobito_demo_app, :hitobito_demo_site), employees: [employees(:pascal)])
     i2 = Fabricate(:invoice, order: order, work_items: [work_items(:hitobito_demo_app)], employees: [employees(:pascal)], billing_date: 2.years.ago, period_from: 2.years.ago.at_beginning_of_month, period_to: 2.years.ago.at_end_of_month)
-    assert_equal 12*170, i1.total_amount
-    assert_equal 20*170, i2.total_amount
+    assert_equal 12 * 170, i1.total_amount
+    assert_equal 20 * 170, i2.total_amount
     entry = report(period: Period.new(1.year.ago, nil)).entries.find { |e| e.order == order }
 
-    assert_equal 12*170, entry.billed_amount.to_i
+    assert_equal 12 * 170, entry.billed_amount.to_i
     assert_equal 12, entry.billed_hours
     assert_equal 170, entry.billed_rate
 
-    assert_equal 12*170, report.total.billed_amount
+    assert_equal 12 * 170, report.total.billed_amount
     assert_equal 12, report.total.billed_hours
     assert_equal 170, report.total.billed_rate
   end
@@ -304,5 +301,4 @@ class Order::ReportTest < ActiveSupport::TestCase
     period = params.delete(:period) || Period.new(nil, nil)
     @report ||= Order::Report.new(period, params)
   end
-
 end

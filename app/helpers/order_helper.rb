@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module OrderHelper
   def order_team_enumeration(order)
     list = order.team_members.to_a
@@ -34,6 +33,7 @@ module OrderHelper
 
   def order_target_icon(target)
     return unless target
+
     order_target_rating_icon(
       target.rating,
       title: target.comment? ? simple_format(target.comment).gsub(/"/, '&quot;') : nil,
@@ -71,6 +71,7 @@ module OrderHelper
 
   def format_major_chance(order)
     return if order.nil?
+
     content_tag(:span, safe_join(risk_icons(order.major_chance, OrderChance.sti_name)),
                 style: 'font-size: 20px;',
                 title: uncertainties_tooltip(order, OrderChance.sti_name),
@@ -79,6 +80,7 @@ module OrderHelper
 
   def format_major_risk(order)
     return if order.nil?
+
     content_tag(:span, safe_join(risk_icons(order.major_risk, OrderRisk.sti_name)),
                 style: 'font-size: 20px;',
                 title: uncertainties_tooltip(order, OrderRisk.sti_name),
@@ -171,6 +173,7 @@ module OrderHelper
   def order_progress(order)
     progress = order_progress_hash
     return progress unless order.offered_amount > 0
+
     calculate_order_progress(order, progress)
     progress
   end
@@ -184,8 +187,8 @@ module OrderHelper
 
   def calculate_order_progress(order, progress)
     progress[:percent] = 100 /
-      order.offered_amount.to_f *
-      order.supplied_amount.to_f
+                         order.offered_amount.to_f *
+                         order.supplied_amount.to_f
     progress[:percent_title] = progress[:percent]
 
     if order.supplied_amount.to_f > order.offered_amount.to_f

@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: order_uncertainties
@@ -22,7 +21,6 @@
 require 'test_helper'
 
 class OrderRiskTest < ActiveSupport::TestCase
-
   test '#risk_value is probability times impact' do
     r1 = OrderRisk.new(name: 'Earthquake', probability: :low, impact: :medium)
     assert_equal 6, r1.risk_value
@@ -81,7 +79,6 @@ class OrderRiskTest < ActiveSupport::TestCase
     assert_equal 6, order.major_risk_value
     assert_nil order.major_chance_value
 
-
     r = order.order_chances.create!(name: 'World domination',
                                     probability: :low,
                                     impact: :high)
@@ -108,5 +105,4 @@ class OrderRiskTest < ActiveSupport::TestCase
   def order
     orders(:allgemein)
   end
-
 end

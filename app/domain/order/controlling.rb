@@ -3,9 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class Order::Controlling
-
   attr_reader :order, :date
 
   def initialize(order, date = Time.zone.now)
@@ -117,5 +115,4 @@ class Order::Controlling
       .group_by { |d| "#{d.year}#{d.cweek}" }
       .each { |_, a| yield a.first.to_time(:utc) }
   end
-
 end

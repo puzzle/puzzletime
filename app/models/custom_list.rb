@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: custom_lists
@@ -16,7 +15,6 @@
 #
 
 class CustomList < ActiveRecord::Base
-
   belongs_to :employee, optional: true
 
   validates_by_schema except: :item_ids
@@ -32,5 +30,4 @@ class CustomList < ActiveRecord::Base
   def items
     item_type.constantize.where(id: item_ids)
   end
-
 end

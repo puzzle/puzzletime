@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class WorktimesController < CrudController
   authorize_resource :worktime, except: :index, parent: false
 
@@ -38,6 +37,7 @@ class WorktimesController < CrudController
         @worktime.ticket = template.ticket
         @worktime.description = template.description
         @worktime.billable = template.billable
+        @worktime.meal_compensation = template.meal_compensation
       end
     end
   end
@@ -244,7 +244,7 @@ class WorktimesController < CrudController
 
   def check_worktimes_committed
     if entry.try(:order).try(:responsible_id) != @user.id &&
-        entry.employee_id == @user.id && entry.worktimes_committed?
+       entry.employee_id == @user.id && entry.worktimes_committed?
       date = I18n.l(@user.committed_worktimes_at, format: :month)
       entry.errors.add(:work_date, "Die Zeiten bis und mit #{date} wurden freigegeben " \
                                    'und können nicht mehr bearbeitet werden.')

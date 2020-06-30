@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class BillingAddressesControllerTest < ActionController::TestCase
@@ -14,7 +13,6 @@ class BillingAddressesControllerTest < ActionController::TestCase
   not_existing :test_show,
                :test_show_json,
                :test_show_with_non_existing_id_raises_record_not_found
-
 
   private
 

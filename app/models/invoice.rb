@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: invoices
@@ -26,7 +25,6 @@
 #
 
 class Invoice < ActiveRecord::Base
-
   STATUSES = %w(draft sent paid partially_paid cancelled deleted unknown).freeze
 
   enum grouping: %w(accounting_posts employees manual)
@@ -97,8 +95,8 @@ class Invoice < ActiveRecord::Base
 
   def billing_client
     billing_address.try(:client) ||
-    order.billing_address.try(:client) ||
-    order.client
+      order.billing_address.try(:client) ||
+      order.client
   end
 
   def billing_client_id

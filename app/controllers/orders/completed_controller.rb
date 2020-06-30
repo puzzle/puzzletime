@@ -3,10 +3,8 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module Orders
   class CompletedController < CrudController
-
     include Completable
 
     self.permitted_attrs = [:completed_at]
@@ -27,6 +25,5 @@ module Orders
     def authorize
       authorize!(:update_completed, entry)
     end
-
   end
 end

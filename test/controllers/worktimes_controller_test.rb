@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class WorktimesControllerTest < ActionController::TestCase
@@ -54,7 +53,6 @@ class WorktimesControllerTest < ActionController::TestCase
     get :index, params: { week_date: months_first_day.to_s }
     assert_modify_buttons
   end
-
 
   # test 'no modify buttons for manager\s committed time period' do
   test 'also show modify buttons for manager\s committed time period' do
@@ -149,6 +147,4 @@ class WorktimesControllerTest < ActionController::TestCase
   def months_first_day
     Date.today.at_beginning_of_month
   end
-
-
 end

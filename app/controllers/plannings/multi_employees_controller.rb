@@ -3,10 +3,8 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module Plannings
   class MultiEmployeesController < Plannings::EmployeesController
-
     skip_load_and_authorize_resource
     skip_before_action :authorize_subject_planning, only: :show
 
@@ -47,6 +45,5 @@ module Plannings
         raise ActiveRecord::RecordNotFound
       end
     end
-
   end
 end

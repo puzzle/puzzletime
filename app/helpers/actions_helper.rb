@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # Helpers to create action links. This default implementation supports
 # regular links with an icon and a label. To change the general style
 # of action links, change the method #action_link, e.g. to generate a button.
@@ -27,6 +26,7 @@ module ActionsHelper
   # Uses the current +entry+ if no path is given.
   def show_action_link(path = nil)
     return unless can?(:show, entry)
+
     path ||= path_args(entry)
     action_link(ti('link.show'), path)
   end
@@ -35,6 +35,7 @@ module ActionsHelper
   # Uses the current +entry+ if no path is given.
   def edit_action_link(path = nil)
     return unless can?(:edit, entry)
+
     path ||= path_args(entry)
     path = path.is_a?(String) ? path : edit_polymorphic_path(path)
     action_link(action_icon('edit', ti('link.edit')), path)
@@ -44,6 +45,7 @@ module ActionsHelper
   # Uses the current +entry+ if no path is given.
   def destroy_action_link(path = nil, disabled = false, disabled_tooltip = nil)
     return unless can?(:delete, entry)
+
     path ||= path_args(entry)
     disabled ? destroy_action_link_disabled(disabled_tooltip) : destroy_action_link_enabled(path)
   end
@@ -52,6 +54,7 @@ module ActionsHelper
   # Uses the current +model_class+ if no path is given.
   def index_action_link(path = nil, url_options = { returning: true })
     return unless can?(:index, model_class)
+
     path ||= path_args(model_class)
     path = path.is_a?(String) ? path : polymorphic_path(path, url_options)
     action_link(ti('link.list', model: models_label(true)), path)
@@ -61,6 +64,7 @@ module ActionsHelper
   # Uses the current +model_class+ if no path is given.
   def add_action_link(path = nil, url_options = {})
     return unless can?(:new, model_class)
+
     path ||= path_args(model_class)
     path = path.is_a?(String) ? path : new_polymorphic_path(path, url_options)
     action_link(action_icon('add', ti('link.add')), path)

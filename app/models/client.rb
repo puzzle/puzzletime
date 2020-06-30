@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: clients
@@ -19,7 +18,6 @@
 #
 
 class Client < ActiveRecord::Base
-
   include BelongingToWorkItem
   include Evaluatable
 
@@ -37,7 +35,6 @@ class Client < ActiveRecord::Base
   validates :invoicing_key, uniqueness: true, allow_blank: true
   validates :e_bill_account_key, format: { with: /\A4110\d{13}\z/, allow_blank: true, message: :number }
 
-
   ##### interface methods for Evaluatable #####
 
   def self.worktimes
@@ -47,5 +44,4 @@ class Client < ActiveRecord::Base
   def self.plannings
     Planning.all
   end
-
 end

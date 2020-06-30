@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class ExpensesControllerTest < ActionController::TestCase
-
   setup :login
 
   test 'GET#index employee may not list top level expenses' do
@@ -102,14 +101,14 @@ class ExpensesControllerTest < ActionController::TestCase
     expense = expenses(:approved)
 
     login_as(:mark)
-      assert_difference 'Expense.count', -1 do
-        delete :destroy, params: { employee_id: expense.employee_id, id: expense.id, expense: { amount: 1 } }
-      end
+    assert_difference 'Expense.count', -1 do
+      delete :destroy, params: { employee_id: expense.employee_id, id: expense.id, expense: { amount: 1 } }
+    end
   end
 
   test 'GET#index.pdf employee may export a pdf' do
     login_as(:pascal)
-    get :index, params: { employee_id: employees(:pascal).id, format: :pdf}
+    get :index, params: { employee_id: employees(:pascal).id, format: :pdf }
     assert_equal 4, assigns(:expenses).count
     assert_equal 'application/pdf', response.headers['Content-Type']
     assert_equal 'inline; filename="expenses.pdf"', response.headers['Content-Disposition']

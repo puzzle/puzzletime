@@ -3,12 +3,10 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 require_relative 'eval_test_helper'
 
 class EmployeesEvalTest < ActiveSupport::TestCase
-
   include EvalTestHelper
 
   def setup
@@ -17,9 +15,9 @@ class EmployeesEvalTest < ActiveSupport::TestCase
   end
 
   def test_employees
-    assert ! @evaluation.absences?
-    assert ! @evaluation.for?(employees(:pascal))
-    assert ! @evaluation.total_details
+    assert !@evaluation.absences?
+    assert !@evaluation.for?(employees(:pascal))
+    assert !@evaluation.total_details
 
     divisions = @evaluation.divisions
     assert_equal 3, divisions.size
@@ -36,6 +34,12 @@ class EmployeesEvalTest < ActiveSupport::TestCase
                  @evaluation.sum_times_grouped(@period_month))
 
     assert_sum_total_times 3.0, 30.0, 53.0, 54.0
+  end
+
+  def test_employees_by_department
+    @evaluation = EmployeesEval.new(departments(:devtwo).id)
+
+    assert_sum_total_times 3.0, 12.0, 35.0, 36.0
   end
 
   def test_employee_detail_mark
@@ -58,6 +62,4 @@ class EmployeesEvalTest < ActiveSupport::TestCase
     assert_sum_times 3, 3, 5, 6
     assert_count_times 1, 1, 2, 3
   end
-
-
 end

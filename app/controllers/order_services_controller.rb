@@ -3,9 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class OrderServicesController < ApplicationController
-
   EMPTY = '[leer]'.freeze
   EMPTY_TICKET = EMPTY
   EMPTY_INVOICE = OpenStruct.new(id: EMPTY, reference: EMPTY)
@@ -55,7 +53,7 @@ class OrderServicesController < ApplicationController
               order(:work_date).
               in_period(period)
     entries = filter_entries_allow_empty_by(entries, EMPTY, :ticket, :invoice_id)
-    filter_entries_by(entries, :employee_id, :work_item_id, :billable)
+    filter_entries_by(entries, :employee_id, :work_item_id, :billable, :meal_compensation)
   end
 
   def worktimes_csv_filename
@@ -83,7 +81,7 @@ class OrderServicesController < ApplicationController
 
   def set_period_with_invoice
     if params[:invoice_id].present? && params[:invoice_id] != EMPTY &&
-      params[:start_date].blank? && params[:end_date].blank?
+       params[:start_date].blank? && params[:end_date].blank?
       invoice = Invoice.find(params[:invoice_id])
       @period = Period.new(invoice.period_from, invoice.period_to)
       # return an open period to get all worktimes for the given invoice_id,
@@ -102,11 +100,11 @@ class OrderServicesController < ApplicationController
 
   def set_filter_tickets
     @tickets = [EMPTY_TICKET] +
-        order.worktimes.in_period(@period)
-             .order(:ticket)
-               .distinct
-               .pluck(:ticket)
-             .select(&:present?)
+               order.worktimes.in_period(@period)
+                    .order(:ticket)
+                    .distinct
+                    .pluck(:ticket)
+                    .select(&:present?)
   end
 
   def set_filter_accounting_posts
@@ -121,5 +119,4 @@ class OrderServicesController < ApplicationController
   def authorize_class
     authorize!(:services, order)
   end
-
 end

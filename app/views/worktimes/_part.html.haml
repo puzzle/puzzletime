@@ -9,6 +9,10 @@
   %td= h(part.account.label_verbose)
   %td= part.ticket
   %td.truncated{title: part.description}= part.description
+  %td.text-center
+    = link_to(new_polymorphic_url(part, template: part, work_date: params[:work_date]),
+              {title: 'Kopieren'}) do
+      %i.icon-duplicate
   - if part.new_record?
     %td
       = link_to 'Löschen',

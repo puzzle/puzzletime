@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class OrderTargetsControllerTest < ActionController::TestCase
@@ -33,7 +32,8 @@ class OrderTargetsControllerTest < ActionController::TestCase
               "target_#{order_targets(:puzzletime_cost).id}" =>
                 { rating: 'green', comment: 'bla bla' },
               "target_#{order_targets(:puzzletime_quality).id}" =>
-                { rating: 'red', comment: 'bla bla' } }
+                { rating: 'red', comment: 'bla bla' }
+            }
           }
 
     assert_template :show
@@ -55,7 +55,8 @@ class OrderTargetsControllerTest < ActionController::TestCase
               "target_#{order_targets(:puzzletime_cost).id}" =>
                 { rating: 'green', comment: '' },
               "target_#{order_targets(:puzzletime_quality).id}" =>
-                { rating: 'red', comment: 'bla bla' } }
+                { rating: 'red', comment: 'bla bla' }
+            }
           }
 
     assert_template :show

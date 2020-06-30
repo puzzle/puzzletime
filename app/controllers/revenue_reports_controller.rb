@@ -3,9 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class RevenueReportsController < ApplicationController
-
   before_action :authorize_class
   before_action :set_period
 
@@ -46,7 +44,7 @@ class RevenueReportsController < ApplicationController
     end
 
     if period&.end_date &&
-         period&.end_date != period&.start_date
+       period&.end_date != period&.start_date
       name += "_#{period.end_date.strftime('%Y-%m-%d')}"
     end
 
@@ -72,5 +70,4 @@ class RevenueReportsController < ApplicationController
   def authorize_class
     authorize!(:revenue_reports, Department)
   end
-
 end

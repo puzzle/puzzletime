@@ -11,7 +11,6 @@
 #  employment_role_category_id :integer
 #
 
-
 Fabricator(:employment_role) do
   name     { sequence(:employment_role) { |i| "employment-role-#{i}" } }
   billable { false }

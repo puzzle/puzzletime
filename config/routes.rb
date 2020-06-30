@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
@@ -199,6 +198,12 @@ Rails.application.routes.draw do
     resource :company, only: :show
   end
 
+  resources :meal_compensations, only: [:index, :show] do
+    member do
+      get :details
+    end
+  end
+
   get :vacations, to: 'vacations#show'
   get 'weekly_graph/:employee_id', to: 'weekly_graph#show', as: :weekly_graph
 
@@ -223,5 +228,4 @@ Rails.application.routes.draw do
   match '/503', to: 'errors#service_unavailable', via: :all
 
   get 'design_guide', to: 'design_guide#index'
-
 end

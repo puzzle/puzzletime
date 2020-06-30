@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: invoices
@@ -291,7 +290,6 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal ['Fehler im Invoicing Service: some invoicing error'], invoice.errors[:base]
   end
 
-
   private
 
   def invoice
@@ -302,12 +300,11 @@ class InvoiceTest < ActiveSupport::TestCase
     @invoice_with_category ||= begin
       order = orders(:hitobito_demo)
       Fabricate(:contract, order: order) unless order.contract
-      Fabricate(:invoice, {
-        order: order,
-        work_items: [work_items(:hitobito_demo_app)],
-        employees: [employees(:pascal)],
-        period_to: Time.zone.today.at_end_of_month
-      })
+      Fabricate(:invoice,
+                order: order,
+                work_items: [work_items(:hitobito_demo_app)],
+                employees: [employees(:pascal)],
+                period_to: Time.zone.today.at_end_of_month)
     end
   end
 end

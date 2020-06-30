@@ -3,12 +3,10 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 module Plannings
   class OrderBoardTest < ActiveSupport::TestCase
-
     test 'build rows for given plannings' do
       p1, p2, p3 = create_plannings
       board = Plannings::OrderBoard.new(order, period)
@@ -166,6 +164,5 @@ module Plannings
                             percent: 50)
       [p1, p2, p3]
     end
-
   end
 end

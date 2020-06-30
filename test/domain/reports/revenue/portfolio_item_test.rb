@@ -3,12 +3,10 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 # For full revenue report test see DepartmentRevenueReportTest
 class PortfolioItemRevenueReportTest < ActiveSupport::TestCase
-
   setup do
     travel_to Date.new(2000, 9, 5)
     Worktime.destroy_all
@@ -34,7 +32,7 @@ class PortfolioItemRevenueReportTest < ActiveSupport::TestCase
   end
 
   test 'entries and values' do
-    Settings.clients.stubs(:company_id).returns(0) #TODO: do not use puzzle as example
+    Settings.clients.stubs(:company_id).returns(0) # TODO: do not use puzzle as example
 
     accounting_posts(:hitobito_demo_app).update_attribute(:portfolio_item_id, mobile.id)
     mobile.update(active: false)
@@ -131,5 +129,4 @@ class PortfolioItemRevenueReportTest < ActiveSupport::TestCase
   def mobile
     portfolio_items(:mobile)
   end
-
 end

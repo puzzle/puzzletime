@@ -3,13 +3,10 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class CronJob < ApplicationJob
-
   class_attribute :cron_expression
 
   class << self
-
     def schedule
       set(cron: cron_expression).perform_later unless scheduled?
     end
@@ -27,7 +24,5 @@ class CronJob < ApplicationJob
         .where('handler LIKE ?', "%job_class: #{name}%")
         .first
     end
-
   end
-
 end

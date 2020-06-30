@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class StatusControllerTest < ActionController::TestCase
@@ -11,7 +10,7 @@ class StatusControllerTest < ActionController::TestCase
     endpoint_test :health
   end
 
-def test_readiness
+  def test_readiness
     endpoint_test :readiness
   end
 

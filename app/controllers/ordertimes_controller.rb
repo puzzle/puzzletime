@@ -3,10 +3,8 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class OrdertimesController < WorktimesController
-
-  self.permitted_attrs = [:account_id, :report_type, :work_date, :hours,
+  self.permitted_attrs = [:account_id, :report_type, :work_date, :hours, :meal_compensation,
                           :from_start_time, :to_end_time, :description, :billable, :ticket]
 
   after_destroy :send_email_notification
@@ -33,6 +31,7 @@ class OrdertimesController < WorktimesController
   def create_part
     set_employees
     return create if splitable.nil?
+
     build_worktime
     params[:other] = '1'
     assign_attributes
@@ -100,5 +99,4 @@ class OrdertimesController < WorktimesController
         "#{@worktime.employee} wurde per E-Mail darüber informiert, dass du diesen Eintrag gelöscht hast."
     end
   end
-
 end

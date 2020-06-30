@@ -1,3 +1,24 @@
+# 2.6
+
+### Features
+* **Verpflegungsentschädigung:** Bei der Arbeitszeiterfassung kann zusätzlich angegeben werden, ob die Arbeit beim Kunden vor Ort erfolgte und dazu eine Verpflegungsentschädigung gewünscht wird.
+* **Mitarbeiter-Stammdaten:** Ausweisinformationen können nun hinzugefügt werden.
+* **Buchungspositionen:** Einstellungen zu Ticket, Von-Bis-Zeiten und Bemerkungen können nicht mehr geändert werden, falls bereits Leistungen ohne diese Angaben erfasst wurden.
+* **Buchungspositionen:** Auftrags-Cockpit mit neuen Informationen ergänzt.
+
+### Improvements
+* **Usability:** Unter "Members" - "Zeiten" wird die Tabelle standardmässig nach Members der eigenen Organisationseinheit gefiltert, was die Bedienung und Ladegeschwindigkeit massiv erhöht.
+* **Usability:** Im Zeiterfassungs-Formular können nun auch alte Zeiteinträge dupliziert werden.
+* **Usability:** Auftragsverantwortliche dürfen die AHV-Nummern aller Members einsehen.
+* **WebServer:** Mehr Threads für mehr Leistung.
+* **Sicherheit:** Updates diverser rubygems aus Sicherheitsgründen.
+
+### Bug fixes
+* **Stundenübersicht:** Falsches Total berichtigt.
+* **Buchungspositionen:** Automatische Budget-Berechnung beim Eintragen korrigiert.
+* **Mitarbeiterliste:** Falsche Berechnung des Jubiläum (Dienstjahre) [\#61](https://github.com/puzzle/puzzletime/issues/61)
+
+
 # 2.5
 
 ### Improvements

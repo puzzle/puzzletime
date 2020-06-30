@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # abstract class for evaluation with work item divisions
 class WorkItemsEval < Evaluation
   self.division_method   = :work_items

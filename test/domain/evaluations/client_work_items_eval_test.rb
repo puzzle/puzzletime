@@ -3,18 +3,16 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 require_relative 'eval_test_helper'
 
 class ClientWorkItemsEvalTest < ActiveSupport::TestCase
-
   include EvalTestHelper
 
   def test_client_work_items
     @evaluation = ClientWorkItemsEval.new(clients(:puzzle).id)
-    assert ! @evaluation.absences?
-    assert ! @evaluation.for?(employees(:mark))
+    assert !@evaluation.absences?
+    assert !@evaluation.for?(employees(:mark))
     assert @evaluation.total_details
 
     divisions = @evaluation.divisions.list
@@ -55,5 +53,4 @@ class ClientWorkItemsEvalTest < ActiveSupport::TestCase
     assert_sum_times 0, 6, 18, 18
     assert_count_times 0, 1, 3, 3
   end
-
 end

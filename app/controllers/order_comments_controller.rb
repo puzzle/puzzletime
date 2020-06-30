@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class OrderCommentsController < CrudController
   self.nesting = Order
   self.permitted_attrs = :text

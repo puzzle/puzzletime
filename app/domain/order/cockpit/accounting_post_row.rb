@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class Order::Cockpit
   class AccountingPostRow < Row
     attr_reader :cells, :accounting_post
@@ -26,6 +25,10 @@ class Order::Cockpit
       accounting_post_hours.values.sum
     end
 
+    def billable_hours
+      accounting_post_hours[true] || 0
+    end
+
     def not_billable_hours
       accounting_post_hours[false] || 0
     end
@@ -38,13 +41,22 @@ class Order::Cockpit
       accounting_post.work_item.name
     end
 
+    def future_plannings
+      accounting_post.work_item.plannings.definitive.where('date > ?', Date.today)
+    end
+
+    def future_planned_hours
+      future_plannings.sum(0) { |planning| planning.hours }
+    end
+
     private
 
     def build_cells
       { budget:              build_budget_cell,
         supplied_services:   build_supplied_services_cell,
-        open_services:       build_open_services_cell,
-        not_billable:        build_not_billable_cell }
+        not_billable:        build_not_billable_cell,
+        open_budget:         build_open_budget_cell,
+        planned_budget:      build_planned_budget_cell }
     end
 
     def build_budget_cell
@@ -59,9 +71,13 @@ class Order::Cockpit
       Cell.new(not_billable_hours, calculate_amount(not_billable_hours))
     end
 
-    def build_open_services_cell
-      hours = (accounting_post.offered_hours || 0) - supplied_services_hours
+    def build_open_budget_cell
+      hours = (accounting_post.offered_hours || 0) - billable_hours
       build_cell_with_amount(hours)
+    end
+
+    def build_planned_budget_cell
+      build_cell_with_amount(future_planned_hours)
     end
 
     def build_cell_with_amount(hours)

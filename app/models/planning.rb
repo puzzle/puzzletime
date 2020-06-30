@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: plannings
@@ -17,7 +16,6 @@
 #
 
 class Planning < ActiveRecord::Base
-
   validates_by_schema
   validate :date_must_be_weekday
 
@@ -36,6 +34,9 @@ class Planning < ActiveRecord::Base
 
   scope :list, -> { order(:date) }
 
+  def hours
+    WorkingCondition.value_at(date, :must_hours_per_day) * percent / 100
+  end
 
   def to_s
     "#{percent}% auf #{work_item} am #{I18n.l(date)} für #{employee}"
@@ -55,5 +56,4 @@ class Planning < ActiveRecord::Base
       errors.add(:weekday, 'muss ein Werktag sein')
     end
   end
-
 end

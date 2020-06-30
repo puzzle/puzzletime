@@ -11,7 +11,6 @@
 require 'test_helper'
 
 class AdditionalCrmOrderTest < ActiveSupport::TestCase
-
   setup :setup_crm
   teardown :reset_crm
 
@@ -37,5 +36,4 @@ class AdditionalCrmOrderTest < ActiveSupport::TestCase
   def reset_crm
     Crm.instance = nil
   end
-
 end

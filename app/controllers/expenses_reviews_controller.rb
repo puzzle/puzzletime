@@ -9,6 +9,7 @@ class ExpensesReviewsController < ManageController
   helper_method :model_class, :controller_class, :review_list
 
   def self.model_class;      Expense; end
+
   def self.controller_class; Expense; end
 
   self.permitted_attrs = [:payment_date, :employee_id, :kind, :order_id, :description, :amount, :receipt]
@@ -115,5 +116,4 @@ class ExpensesReviewsController < ManageController
   def pdf_entries
     entries.except(:limit, :offset)
   end
-
 end

@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class PlanningsOrdersTest < ActionDispatch::IntegrationTest
-
   setup :list_plannings
 
   test 'close panel on cancel' do
@@ -206,9 +205,11 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
       check 'repetition'
       page.assert_selector('#repeat_until', visible: true)
 
-      fill_in 'repeat_until',
+      fill_in(
+        'repeat_until',
         with: (today + 2.weeks).at_beginning_of_week.strftime('%Y %U')
-      #find('#percent').click # required to close calendar popover
+      )
+      # find('#percent').click # required to close calendar popover
       click_button 'OK'
     end
 
@@ -233,7 +234,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
       page.assert_selector('#repeat_until', visible: true)
 
       fill_in 'repeat_until', with: (today + 1.weeks).strftime('%Y %U')
-      #find('#percent').click # required to close calendar popover
+      # find('#percent').click # required to close calendar popover
       click_button 'OK'
     end
 
@@ -255,8 +256,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     selectize('add_employee_select_id', 'Dolores Pedro', no_click: true)
     page.assert_selector('#planning_row_employee_2_work_item_4', text: 'Dolores Pedro')
     page.assert_selector('#planning_row_employee_2_work_item_4 .day',
-                         count: workdays_next_n_months(3)
-                        )
+                         count: workdays_next_n_months(3))
     page.assert_no_selector('#add_employee_id')
   end
 
@@ -452,8 +452,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     selectize('add_employee_select_id', 'Dolores Pedro', no_click: true)
     page.assert_selector('#planning_row_employee_2_work_item_4', text: 'Dolores Pedro')
     page.assert_selector('#planning_row_employee_2_work_item_4 .day',
-                         count: workdays_next_n_months(6)
-                        )
+                         count: workdays_next_n_months(6))
     page.assert_no_selector('#add_employee_id')
   end
 
@@ -531,5 +530,4 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     login_as :mark
     visit plannings_order_path(orders(:puzzletime))
   end
-
 end

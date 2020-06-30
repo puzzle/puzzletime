@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: plannings
@@ -19,7 +18,6 @@
 require 'test_helper'
 
 class PlanningTest < ActiveSupport::TestCase
-
   test 'is invalid for weekends' do
     (Date.new(2000, 1, 1)..Date.new(2000, 1, 2)).each do |date|
       assert Planning.new(employee_id: employee_id,
@@ -49,5 +47,4 @@ class PlanningTest < ActiveSupport::TestCase
   def work_item_id
     work_items(:puzzletime).id
   end
-
 end

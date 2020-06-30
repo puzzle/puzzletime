@@ -3,11 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class Plannings::CompaniesControllerTest < ActionController::TestCase
-
   setup :login
 
   test 'GET #show renders values of all employed employees' do
@@ -15,5 +13,4 @@ class Plannings::CompaniesControllerTest < ActionController::TestCase
     assert_equal employees(:various_pedro, :next_year_pablo, :long_time_john),
                  assigns(:overview).boards.map(&:employee)
   end
-
 end

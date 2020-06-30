@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # Controller for the dummy model.
 class CrudTestModelsController < CrudController #:nodoc:
   HANDLE_PREFIX = 'handle_'
@@ -54,8 +53,8 @@ class CrudTestModelsController < CrudController #:nodoc:
     entries = super
     if params[:filter]
       entries = entries.where(['rating < ?', 3])
-                .except(:order)
-                .order('children DESC')
+                       .except(:order)
+                       .order('children DESC')
     end
     entries
   end

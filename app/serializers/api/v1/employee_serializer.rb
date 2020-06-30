@@ -5,11 +5,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module Api
   module V1
     class EmployeeSerializer < ApiSerializer
-
       attributes :shortname, :firstname, :lastname, :email, :marital_status, :nationalities, :graduation
 
       attribute :department_shortname do |employee|

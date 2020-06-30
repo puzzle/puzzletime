@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: worktimes
@@ -25,7 +24,6 @@
 #
 
 class Ordertime < Worktime
-
   self.account_label = 'Position'
 
   alias_attribute :account, :work_item
@@ -38,7 +36,6 @@ class Ordertime < Worktime
   validate :validate_work_item_open
 
   before_destroy :protect_work_item_closed
-
 
   def account_id=(value)
     self.work_item_id = value
@@ -54,8 +51,8 @@ class Ordertime < Worktime
 
   def work_item_closed?
     (work_item && work_item.closed?) ||
-    (work_item_id_was && work_item_id_was != work_item_id &&
-      WorkItem.where(id: work_item_id_was, closed: true).exists?)
+      (work_item_id_was && work_item_id_was != work_item_id &&
+        WorkItem.where(id: work_item_id_was, closed: true).exists?)
   end
 
   def invoice_sent_or_paid?

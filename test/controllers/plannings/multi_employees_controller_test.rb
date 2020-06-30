@@ -3,12 +3,10 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 module Plannings
   class MultiEmployeesControllerTest < ActionController::TestCase
-
     setup :login
 
     test 'GET#show renders board' do
@@ -138,6 +136,5 @@ module Plannings
             }
       assert_equal 200, response.status
     end
-
   end
 end

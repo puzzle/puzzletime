@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: user_notifications
@@ -17,7 +16,6 @@
 require 'test_helper'
 
 class UserNotificationTest < ActiveSupport::TestCase
-
   test 'list during for current period' do
     monday = Time.zone.today.at_beginning_of_week
     UserNotification.create!(date_from: monday - 2.days, date_to: monday, message: 'bar')
@@ -76,5 +74,4 @@ class UserNotificationTest < ActiveSupport::TestCase
     e.update!(committed_worktimes_at: '2015-10-31')
     assert !UserNotification.show_worktimes_commit_notification?(e)
   end
-
 end

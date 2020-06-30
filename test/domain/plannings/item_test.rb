@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class PlanningItemTest < ActiveSupport::TestCase
@@ -111,8 +110,8 @@ class PlanningItemTest < ActiveSupport::TestCase
     i = Plannings::Item.new
 
     expected = {
-        class: '-absence-unpaid',
-        title: 'Nicht angestellt'
+      class: '-absence-unpaid',
+      title: 'Nicht angestellt'
     }
 
     assert i.day_attrs == expected

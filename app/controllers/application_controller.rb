@@ -3,12 +3,10 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # Filters added to this controller will be run for all controllers in the application.
 # Likewise, all the methods added will be available for all controllers.
 
 class ApplicationController < ActionController::Base
-
   before_action :set_sentry_request_context
   protect_from_forgery with: :exception
 
@@ -45,7 +43,7 @@ class ApplicationController < ActionController::Base
         # allow ad-hoc login
         if params[:user].present? && params[:pwd].present?
           return true if login_with(params[:user], params[:pwd])
-          
+
           flash[:notice] = 'Ungültige Benutzerdaten'
         end
         redirect_to login_path(ref: request.url)
@@ -83,10 +81,10 @@ class ApplicationController < ActionController::Base
   end
 
   def set_sentry_request_context
-    Raven.extra_context(params: params.to_unsafe_h, url: request.url)
+    Raven.extra_context(params: params.to_unsafe_h, url: request.url) if ENV['SENTRY_DSN']
   end
 
   def set_sentry_user_context
-    Raven.user_context(id: current_user.try(:id), name: current_user.try(:shortname))
+    Raven.user_context(id: current_user.try(:id), name: current_user.try(:shortname)) if ENV['SENTRY_DSN']
   end
 end

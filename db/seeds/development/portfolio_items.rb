@@ -3,14 +3,11 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
-PortfolioItem.seed(:name,
+PortfolioItem.seed(
+  :name,
   { name: 'Java EE' },
-
   { name: 'Ruby on Rails' },
-
   { name: 'Middleware' },
-
   { name: 'Eclipse RCP',
     active: false }
 )

@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class WorkItemEmployeesEval < Evaluation
   self.division_method  = :employees
   self.division_column  = :employee_id
@@ -36,6 +35,7 @@ class WorkItemEmployeesEval < Evaluation
 
   def set_division_id(division_id = nil)
     return if division_id.nil?
+
     @division = Employee.find(division_id.to_i)
   end
 

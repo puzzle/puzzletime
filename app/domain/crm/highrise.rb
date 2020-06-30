@@ -3,10 +3,8 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module Crm
   class Highrise < Base
-
     def crm_key_name
       'Highrise ID'
     end
@@ -177,8 +175,16 @@ module Crm
       parameters = record_to_params(synced_entity, 'synced_entity').tap do |params|
         params.merge!(record_to_params(invalid_record, 'invalid_record')) if invalid_record.present?
       end
-      Airbrake.notify(error, parameters)
-      Raven.capture_exception(error, extra: parameters)
+      Airbrake.notify(error, parameters) if airbrake?
+      Raven.capture_exception(error, extra: parameters) if sentry?
+    end
+
+    def airbrake?
+      ENV['RAILS_AIRBRAKE_HOST'].present?
+    end
+
+    def sentry?
+      ENV['SENTRY_DSN'].present?
     end
 
     def record_to_params(record, prefix = 'record')

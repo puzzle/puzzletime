@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: worktimes
@@ -52,7 +51,6 @@ class Worktime < ActiveRecord::Base
       all
     end
   end)
-
 
   scope :billable, -> { where(billable: true) }
 
@@ -143,6 +141,7 @@ class Worktime < ActiveRecord::Base
     new_worktime.work_date = work_date
     new_worktime.account_id = account_id
     new_worktime.billable = billable
+    new_worktime.meal_compensation = meal_compensation
     new_worktime.employee_id = employee_id
     new_worktime.work_item_id = work_item_id
     new_worktime
@@ -199,7 +198,6 @@ class Worktime < ActiveRecord::Base
     "#{time_string} #{self.class.model_name.human} #{'für ' + account.label_verbose if account}"
   end
 
-
   #######################  CLASS METHODS FOR EVALUATABLE  ####################
 
   def self.worktimes
@@ -210,8 +208,8 @@ class Worktime < ActiveRecord::Base
     committed_at = employee.committed_worktimes_at
 
     committed_at &&
-    ((work_date && committed_at >= work_date) ||
-     (work_date_was && committed_at >= work_date_was))
+      ((work_date && committed_at >= work_date) ||
+       (work_date_was && committed_at >= work_date_was))
   end
 
   private
@@ -234,5 +232,4 @@ class Worktime < ActiveRecord::Base
     end
     self[attribute] = value
   end
-
 end

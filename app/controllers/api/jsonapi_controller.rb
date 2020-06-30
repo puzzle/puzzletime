@@ -5,7 +5,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module Api
   # Subclass the `JsonapiController` to implement a new endpoint for the json api.
   #

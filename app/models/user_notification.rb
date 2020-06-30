@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # == Schema Information
 #
 # Table name: user_notifications
@@ -24,9 +23,7 @@ class UserNotification < ActiveRecord::Base
 
   scope :list, -> { order('date_from DESC, date_to DESC') }
 
-
   class << self
-
     def list_during(period = nil, current_user = nil)
       # only show notifications for the current week
       return if period
@@ -78,11 +75,11 @@ class UserNotification < ActiveRecord::Base
         ' ist ein Feiertag (' + format('%01.2f', holiday.musthours_day).to_s +
         ' Stunden Sollarbeitszeit)'
     end
-
   end
 
   def <=>(other)
     return unless other.is_a?(UserNotification)
+
     date_from <=> other.date_from
   end
 
@@ -97,5 +94,4 @@ class UserNotification < ActiveRecord::Base
       errors.add(:date_to, 'Enddatum muss nach Startdatum sein.')
     end
   end
-
 end

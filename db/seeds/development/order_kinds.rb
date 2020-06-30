@@ -3,8 +3,8 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
-OrderKind.seed(:name,
+OrderKind.seed(
+  :name,
   { name: 'Mandat' },
   { name: 'Projekt' },
   { name: 'Consulting' }

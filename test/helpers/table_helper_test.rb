@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 # Test TableHelper
@@ -55,7 +54,8 @@ class TableHelperTest < ActionView::TestCase
   test 'table with attrs' do
     expected = DryCrud::Table::Builder.table(
       %w(foo bar), self,
-      class: 'table table-striped table-hover table-condensed') do |t|
+      class: 'table table-striped table-hover table-condensed'
+    ) do |t|
       t.attrs :size, :upcase
     end
     actual = plain_table(%w(foo bar), :size, :upcase)

@@ -117,5 +117,4 @@ class LogPresenter
   def resolve_association(association, id)
     association.classify.constantize.find_by(id: id) || id
   end
-
 end

@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class MoveProbationPeriodEndDateToEmployee < ActiveRecord::Migration[5.1]
   def change
     add_column :employees, :probation_period_end_date, :date

@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class InvoicesControllerTest < ActionController::TestCase
@@ -70,8 +69,8 @@ class InvoicesControllerTest < ActionController::TestCase
     get :billing_addresses,
         xhr: true,
         params: {
-            order_id: test_entry.order_id,
-            invoice: { billing_client_id: clients(:swisstopo).id }
+          order_id: test_entry.order_id,
+          invoice: { billing_client_id: clients(:swisstopo).id }
         }
 
     assert_equal clients(:swisstopo), assigns(:billing_client)

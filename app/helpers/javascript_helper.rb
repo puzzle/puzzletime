@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module JavascriptHelper
   def modal_create_link(path, element, title, options = {})
     options[:id] ||= "#{element}_create_link"

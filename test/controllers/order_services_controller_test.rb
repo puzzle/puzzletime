@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class OrderServicesControllerTest < ActionController::TestCase
@@ -96,11 +95,11 @@ class OrderServicesControllerTest < ActionController::TestCase
 
     test "GET #{action} filtered by employee, accounting post and billable" do
       get action, params: {
-                    order_id: order.id,
-                    employee_id: employees(:pascal),
-                    work_item_id: work_items(:puzzletime).id,
-                    billable: 'true'
-                  }
+        order_id: order.id,
+        employee_id: employees(:pascal),
+        work_item_id: work_items(:puzzletime).id,
+        billable: 'true'
+      }
       assert_equal [worktimes(:wt_pz_puzzletime)], assigns(:worktimes)
     end
 
@@ -205,11 +204,11 @@ class OrderServicesControllerTest < ActionController::TestCase
               hours: 5)
 
     get :report, params: {
-                   order_id: orders(:puzzletime).id,
-                   employee_id: employees(:pascal),
-                   combine_on: true,
-                   combine: 'ticket'
-                 }
+      order_id: orders(:puzzletime).id,
+      employee_id: employees(:pascal),
+      combine_on: true,
+      combine: 'ticket'
+    }
 
     assert_template 'report'
     total = assigns(:worktimes).sum(:hours)
@@ -224,9 +223,9 @@ class OrderServicesControllerTest < ActionController::TestCase
               work_item: work_items(:puzzletime),
               ticket: ticket_label)
     get :report, params: {
-                   order_id: orders(:puzzletime).id,
-                   show_ticket: '1'
-                 }
+      order_id: orders(:puzzletime).id,
+      show_ticket: '1'
+    }
 
     assert_template 'report'
     assert_match %r{<th class='right'>Ticket</th>}, response.body

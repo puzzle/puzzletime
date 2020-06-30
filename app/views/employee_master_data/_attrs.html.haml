@@ -55,6 +55,11 @@
         - if Crm.instance && @employee.crm_key.present?
           = labeled(Crm.instance.crm_key_name) do
             = crm_contact_link(@employee, @employee.crm_key)
+        - if @employee.identity_card_type.present?
+          = labeled_attr(@employee, :identity_card_type)
+        - if @employee.identity_card_valid_until.present?
+          = labeled(captionize(:identity_card_valid_until, @employee.class)) do
+            = localize_date(@employee.identity_card_valid_until)
 
         - if @employee.emergency_contact_name.present? || @employee.emergency_contact_phone.present?
           %br

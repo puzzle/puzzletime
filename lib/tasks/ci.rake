@@ -4,7 +4,6 @@
 #  https://github.com/puzzle/puzzletime.
 GECKO_DOWNLOAD_URL = 'https://github.com/mozilla/geckodriver/releases/download/v0.23.0/geckodriver-v0.23.0-linux64.tar.gz'.freeze
 
-
 desc 'Runs the tasks for a commit build'
 task ci: ['log:clear',
           'db:migrate',
@@ -66,4 +65,3 @@ end
 def modify_path(target)
   ENV['PATH'] = "#{target.dirname}:#{ENV['PATH']}"
 end
-

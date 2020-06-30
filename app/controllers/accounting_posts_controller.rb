@@ -3,13 +3,13 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class AccountingPostsController < CrudController
   self.nesting = [Order]
 
   self.permitted_attrs = [:closed, :offered_hours, :offered_rate, :offered_total,
                           :remaining_hours, :portfolio_item_id, :service_id, :billable,
                           :description_required, :ticket_required, :from_to_times_required,
+                          :meal_compensation,
                           work_item_attributes: [:name, :shortname, :description]]
 
   helper_method :order

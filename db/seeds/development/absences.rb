@@ -3,25 +3,21 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # coding: utf-8
-Absence.seed(:name,
+
+Absence.seed(
+  :name,
   { name: 'Ferien',
     payed: true,
     vacation: true },
-
   { name: 'Krankheit',
     payed: true },
-
   { name: 'Militär',
     payed: true },
-
   { name: 'Heirat',
     payed: true },
-
   { name: 'Umzug',
     payed: true },
-
   { name: 'Überstundenkompensation',
     payed: false },
 )

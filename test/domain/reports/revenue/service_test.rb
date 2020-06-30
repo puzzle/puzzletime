@@ -3,12 +3,10 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 # For full revenue report test see DepartmentRevenueReportTest
 class ServiceRevenueReportTest < ActiveSupport::TestCase
-
   setup do
     travel_to Date.new(2000, 9, 5)
     Worktime.destroy_all
@@ -34,7 +32,7 @@ class ServiceRevenueReportTest < ActiveSupport::TestCase
   end
 
   test 'entries and values' do
-    Settings.clients.stubs(:company_id).returns(0) #TODO: do not use puzzle as example
+    Settings.clients.stubs(:company_id).returns(0) # TODO: do not use puzzle as example
 
     accounting_posts(:hitobito_demo_app).update_attribute(:service_id, system.id)
     system.update(active: false)
@@ -96,7 +94,6 @@ class ServiceRevenueReportTest < ActiveSupport::TestCase
     assert_equal Hash[Date.new(2000, 11, 1) => 6.4 * 140.0], r.total_planning_hours_per_month
   end
 
-
   private
 
   def report(report_period = period, report_params = {})
@@ -132,5 +129,4 @@ class ServiceRevenueReportTest < ActiveSupport::TestCase
   def system
     services(:system)
   end
-
 end

@@ -3,11 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class EvaluatorControllerTest < ActionController::TestCase
-
   setup :login
 
   %w(userworkitems userabsences).each do |evaluation|
@@ -60,10 +58,10 @@ class EvaluatorControllerTest < ActionController::TestCase
 
   test 'GET report contains all hours' do
     get :report, params: {
-                   evaluation: 'workitememployees',
-                   category_id: work_items(:allgemein),
-                   division_id: employees(:pascal)
-                 }
+      evaluation: 'workitememployees',
+      category_id: work_items(:allgemein),
+      division_id: employees(:pascal)
+    }
 
     assert_template 'report'
     total = assigns(:worktimes).sum(:hours)
@@ -81,12 +79,12 @@ class EvaluatorControllerTest < ActionController::TestCase
               hours: 5)
 
     get :report, params: {
-                   evaluation: 'workitememployees',
-                   category_id: work_items(:allgemein),
-                   division_id: employees(:pascal),
-                   combine_on: true,
-                   combine: 'ticket'
-                 }
+      evaluation: 'workitememployees',
+      category_id: work_items(:allgemein),
+      division_id: employees(:pascal),
+      combine_on: true,
+      combine: 'ticket'
+    }
 
     assert_template 'report'
     total = assigns(:worktimes).sum(:hours)
@@ -101,11 +99,11 @@ class EvaluatorControllerTest < ActionController::TestCase
               work_item: work_items(:allgemein),
               ticket: ticket_label)
     get :report, params: {
-                   evaluation: 'workitememployees',
-                   category_id: work_items(:allgemein),
-                   division_id: employees(:pascal),
-                   show_ticket: '1'
-                 }
+      evaluation: 'workitememployees',
+      category_id: work_items(:allgemein),
+      division_id: employees(:pascal),
+      show_ticket: '1'
+    }
 
     assert_template 'report'
     assert_match %r{<th class='right'>Ticket</th>}, response.body
@@ -136,5 +134,4 @@ class EvaluatorControllerTest < ActionController::TestCase
   def division_id(evaluation)
     evaluation.singularize.classify.constantize.first.id
   end
-
 end

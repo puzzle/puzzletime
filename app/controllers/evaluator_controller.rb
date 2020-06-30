@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class EvaluatorController < ApplicationController
   include WorktimesReport
   include WorktimesCsv
@@ -60,11 +59,13 @@ class EvaluatorController < ApplicationController
   end
 
   def set_evaluation
-    params[:evaluation] ||= 'userworkitems'
+    set_default_params
+
     set_default_evaluation
     if @user.management && @evaluation.nil?
       set_management_evaluation
     end
+
     if @evaluation.nil?
       @evaluation = EmployeeWorkItemsEval.new(@user.id)
       params[:evaluation] = 'userworkitems'
@@ -85,7 +86,15 @@ class EvaluatorController < ApplicationController
                   end
   end
 
-  # rubocop:disable Metrics/AbcSize
+  def set_default_params
+    params[:evaluation] ||= 'userworkitems'
+
+    case params[:evaluation].downcase
+    when 'employees' then
+      params[:department_id] = current_user.department_id unless params.key?(:department_id)
+    end
+  end
+
   def set_management_evaluation
     @evaluation = case params[:evaluation].downcase
                   when 'clients' then ClientsEval.new
@@ -100,11 +109,10 @@ class EvaluatorController < ApplicationController
                   when 'employeeabsences' then EmployeeAbsencesEval.new(params[:category_id])
                   end
   end
-  # rubocop:enable Metrics/AbcSize
 
   def overview_template
     if params[:evaluation] =~ /^userworkitems$|^employeeworkitems$/
-     'overview_employee'
+      'overview_employee'
     elsif params[:evaluation] == 'employees'
       'employees'
     else

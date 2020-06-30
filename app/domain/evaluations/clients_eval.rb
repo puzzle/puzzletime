@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class ClientsEval < Evaluation
   self.division_column   = 'work_items.path_ids[1]'
   self.division_join     = :work_item
@@ -23,6 +22,7 @@ class ClientsEval < Evaluation
 
   def set_division_id(division_id = nil)
     return if division_id.nil?
+
     @division = WorkItem.find(division_id.to_i)
   end
 end

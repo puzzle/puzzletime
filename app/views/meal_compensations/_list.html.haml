@@ -1,0 +1,26 @@
+-#  Copyright (c) 2006-2020, Puzzle ITC GmbH. This file is part of
+-#  PuzzleTime and licensed under the Affero General Public License version 3
+-#  or later. See the COPYING file at the top-level directory or at
+-#  https://github.com/puzzle/puzzletime.
+
+Verpflegungsentschädigungen während #{l @period.start_date} - #{l @period.end_date}
+%p
+  %table.table.table-striped.table-condensed.table-hover.table-inline#evaluation
+    %thead
+      %tr
+        %th Member
+        %th Anzahl Tage
+        %th Zeit Freigabe
+        %th Zeit Kontrolle
+    - employee_meal_compensations(@worktimes) do |employee, numb_of_days|
+      %tr
+        %td.text-left
+          #{employee.firstname} #{employee.lastname}
+        %td.text-right
+          = numb_of_days
+          = link_to image_tag('lupe.gif', size: '19x11', alt: 'Details'),
+                    meal_compensation_path(employee, { start_date: @period.start_date, end_date: @period.end_date })
+        %td.text-left
+          = commited_state_cell(employee, Period.parse('-1m'))
+        %td.text-left
+          = reviewed_state_cell(employee, Period.parse('-1m'))

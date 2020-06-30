@@ -3,7 +3,6 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -54,13 +53,17 @@ Rails.application.configure do
   # config.action_cable.allowed_request_origins = [ 'http://example.com', /http:\/\/example.*/ ]
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  # config.force_ssl = true
+  ssl = %w[true yes 1].include?(ENV['RAILS_HOST_SSL'])
+  config.force_ssl = ssl
+  config.ssl_options = {
+    redirect: { exclude: ->(request) { request.path =~ /health|readiness/ } }
+  }
 
   # Set to :debug to see everything in the log.
   config.log_level = :info
 
   # Prepend all log lines with the following tags.
-  config.log_tags = [ :request_id ]
+  config.log_tags = [:request_id]
 
   # Use a different logger for distributed setups.
   # config.logger = ActiveSupport::TaggedLogging.new(SyslogLogger.new)

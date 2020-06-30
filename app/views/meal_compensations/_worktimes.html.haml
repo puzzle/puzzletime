@@ -1,0 +1,33 @@
+-#  Copyright (c) 2006-2020, Puzzle ITC GmbH. This file is part of
+-#  PuzzleTime and licensed under the Affero General Public License version 3
+-#  or later. See the COPYING file at the top-level directory or at
+-#  https://github.com/puzzle/puzzletime.
+
+Arbeitszeiten mit Verpflegungsentschädigungen für #{tag.strong @employee.to_s}
+auf Position #{tag.strong @work_item.label_verbose}
+während #{l @period.start_date} - #{l @period.end_date}
+
+%p
+  %table.table.table-striped.table-condensed.table-hover.table-inline#evaluation
+    %thead
+      %tr
+        %th Datum
+        %th Zeiten
+        %td $
+        %td Ticket
+        %td Bemerkung
+    - @worktimes.each do |worktime|
+      %tr
+        %td.text-right
+          = worktime.date_string
+        %td.text-right
+          = worktime.time_string
+        %td.text-right
+          = worktime.billable? ? '$' : ''
+        %td.text-right
+          = worktime.ticket
+        %td.text-right
+          = worktime.description
+        %td
+          = link_to picon('edit'),
+                    edit_ordertime_path(worktime, { back_url: request.original_fullpath })

@@ -3,9 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 module NavigationHelper
-
   # Create a list item for navigations.
   # If active_for are given, and they appear in the request url,
   # the corresponding item is active.

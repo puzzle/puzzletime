@@ -3,15 +3,14 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 class EmployeesController < ManageController
-
   self.permitted_attrs = [:firstname, :lastname, :shortname, :email, :ldapname,
                           :department_id, :crm_key, :probation_period_end_date,
                           :graduation, :management, :phone_office, :phone_private,
                           :street, :postal_code, :city, :birthday, :emergency_contact_name,
                           :emergency_contact_phone, :marital_status,
                           :social_insurance, :additional_information,
+                          :identity_card_type, :identity_card_valid_until,
                           nationalities: []]
 
   if Settings.employees.initial_vacation_days_editable

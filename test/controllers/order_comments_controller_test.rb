@@ -3,16 +3,15 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class OrderCommentsControllerTest < ActionController::TestCase
   setup :login
 
-  test 'GET index as member renders without form and comments with links' do
+  test 'GET index as member renders with form and comments with links' do
     login_as :pascal
     get_and_assert_comments_with_links
-    assert_template partial: '_form', count: 0
+    assert_template partial: '_form'
   end
 
   test 'GET index as responsible renders form and comments with links' do
@@ -34,7 +33,7 @@ class OrderCommentsControllerTest < ActionController::TestCase
   end
 
   test 'POST index with text persists comment with correct attributes' do
-    assert_difference 'OrderComment.count',+1 do
+    assert_difference 'OrderComment.count', +1 do
       post :create, params: { order_id: order.id, order_comment: { text: 'hello world' } }
     end
     assert_match(/wurde erfolgreich erstellt/, flash[:notice])

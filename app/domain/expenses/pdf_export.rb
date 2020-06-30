@@ -127,7 +127,7 @@ class Expenses::PdfExport
     I18n.l(date, format: '%d.%m.%Y') if date
   end
 
-  def model_data # rubocop:disable Metrics/AbcSize
+  def model_data
     @model_data ||=
       begin
         output = {}
@@ -204,5 +204,4 @@ class Expenses::PdfExport
   def t(label, **kwargs)
     I18n.t("activerecord.attributes.expense.#{label}", kwargs)
   end
-
 end

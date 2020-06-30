@@ -3,11 +3,9 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 require 'test_helper'
 
 class EmployeeMasterDataControllerTest < ActionController::TestCase
-
   setup :login
 
   test 'GET index' do
@@ -34,12 +32,11 @@ class EmployeeMasterDataControllerTest < ActionController::TestCase
       e.end_date = Date.new(2007, 12, 31)
       e.save!
     end
-    Fabricate(:employment, {
-      employee: employees(:next_year_pablo),
-      percent: 100,
-      start_date: Date.new(2017, 7, 24),
-      end_date: nil
-    })
+    Fabricate(:employment,
+              employee: employees(:next_year_pablo),
+              percent: 100,
+              start_date: Date.new(2017, 7, 24),
+              end_date: nil)
     get :index, params: { sort: 'latest_employment', sort_dir: 'desc' }
     assert_equal %w(John Pedro Pablo), assigns(:employees).map(&:firstname)
     expected = [Date.new(1990, 1, 1), Date.new(2005, 11, 1), Date.new(2017, 7, 24)]
@@ -72,6 +69,12 @@ class EmployeeMasterDataControllerTest < ActionController::TestCase
     refute_match(/AHV-Nummer/, response.body)
   end
 
+  test 'GET show show classified data to responsible' do
+    login_as(:lucien)
+    get :show, params: { id: employees(:various_pedro).id }
+    assert_match(/AHV-Nummer/, response.body)
+  end
+
   test 'GET show show classified data to management' do
     login_as(:half_year_maria)
     get :show, params: { id: employees(:various_pedro).id }
@@ -83,5 +86,4 @@ class EmployeeMasterDataControllerTest < ActionController::TestCase
     get :show, params: { id: employees(:various_pedro).id }
     assert_match(/AHV-Nummer/, response.body)
   end
-
 end
