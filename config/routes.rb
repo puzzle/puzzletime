@@ -212,7 +212,7 @@ Rails.application.routes.draw do
     get :workload, to: 'workload_report#index', as: :reports_workload
     get :revenue, to: 'revenue_reports#index', as: :reports_revenue
     get :capacity, to: 'capacity_report#index', as: :reports_capacity
-    get :role_distribution, to: 'role_distribution_report#index', as: :reports_role_distribution
+    get :export, to: 'export_report#index', as: :reports_export
   end
 
   scope '/login', controller: 'login' do

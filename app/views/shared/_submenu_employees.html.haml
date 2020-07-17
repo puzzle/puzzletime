@@ -27,9 +27,9 @@
 
 = nav 'Ferienplan', vacations_path
 
--if can?(:role_distribution_report, Evaluation)
-  = nav 'Funktionsanteile',
-        reports_role_distribution_path
+-if can?(:export_report, Evaluation)
+  = nav 'Exporte',
+        reports_export_path
 
 - if Settings.meal_compensation.active
   - if can?(:meal_compensation, Evaluation)
