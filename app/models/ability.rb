@@ -105,7 +105,7 @@ class Ability
          :absences,
          :employeeabsences,
          :capacity_report,
-         :role_distribution_report,
+         :export_report,
          :meal_compensation],
         Evaluation
   end

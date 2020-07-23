@@ -4,9 +4,9 @@
 -#  https://github.com/puzzle/puzzletime.
 
 
-- @title = "Funktionsanteile"
+- @title = "Exporte"
 
-= form_tag(reports_role_distribution_path(format: :csv), method: :get, class: 'form-horizontal', role: 'form') do
+= form_tag(reports_export_path(format: :csv), method: :get, class: 'form-horizontal', role: 'form') do
   .form-group
     %label.col-md-2.control-label.required
       Stichdatum
@@ -17,4 +17,5 @@
 
   .form-group
     .col-md-offset-2.col-md-8
-      %button.btn.btn-primary{type: :submit} CSV herunterladen
+      %button.btn.btn-primary{type: :submit, name: :report, value: :role_distribution} Funktionsanteile
+      %button.btn.btn-primary{type: :submit, name: :report, value: :overtime_vacations} Überzeit/Ferien
