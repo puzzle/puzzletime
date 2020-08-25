@@ -28,8 +28,8 @@ class OvertimeVacationsReport
   def add_header(csv)
     header = [
       Employee.model_name.human,
-      'Überzeit',
-      'Ferienguthaben',
+      'Überzeit bis Stichdatum',
+      'Ferienguthaben bis Stichdatum',
       'Pensum'
     ]
     csv << ["Überzeit/Ferien per #{format_date_long(@date)}, #{format_business_year(@date)}"] + Array.new(header.length - 1, '')
@@ -77,7 +77,7 @@ class OvertimeVacationsReport
   def add_overall_totals(csv)
     add_empty(csv)
     csv << ["Überzeit/Ferien per #{format_date_long(@date)}, #{format_business_year(@date)}"] + Array.new(3, '')
-    csv << ['', 'Überzeit', 'Ferienguthaben', 'Pensum']
+    csv << ['', 'Überzeit bis Stichdatum', 'Ferienguthaben bis Stichdatum', 'Pensum']
     csv << [
       'Total',
       overall_total(:current_overtime),
