@@ -221,10 +221,8 @@ Rails.application.routes.draw do
     get :export, to: 'export_report#index', as: :reports_export
   end
 
-  scope '/login', controller: 'login' do
-    match :login, via: [:get, :post]
-    post :logout
-  end
+  get '/login', to: redirect('/employees/sign_in')
+  get '/login/login', to: redirect('/employees/sign_in')
 
   get 'status/health', to: 'status#health'
   get 'status/readiness', to: 'status#readiness'
