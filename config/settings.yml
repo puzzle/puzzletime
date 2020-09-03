@@ -61,8 +61,14 @@ auth:
       email: ['info', 'email']
   saml:
     active: <%= ENV['AUTH_SAML_ACTIVE'] == 'true' %>
-    cert_fingerprint: <%= ENV['AUTH_SAML_CERT_FINGERPRINT'] %>
-    sso_target_url: <%= ENV['AUTH_SAML_SSO_TARGET_URL'] %>
+    assertion_consumer_service_url: <%= ENV['AUTH_SAML_ASSERTION_CONSUMER_SERVICE_URL'] %>
+    issuer: <%= ENV['AUTH_SAML_ISSUER'] %>
+    idp_sso_target_url: <%= ENV['AUTH_SAML_IDP_SSO_TARGET_URL'] %>
+    idp_sso_target_url_runtime_params:  <%= ENV['AUTH_SAML_IDP_SSO_TARGET_URL_RUNTIME_PARAMS'] %> # HASH
+    idp_cert: <%= ENV['AUTH_SAML_IDP_CERT'] %>
+    idp_cert_multi: <%= ENV['AUTH_SAML_IDP_CERT_MULTI'] %> # HASH
+    idp_cert_fingerprint: <%= ENV['AUTH_SAML_IDP_CERT_FINGERPRINT'] %>
+    name_identifier_format: <%= ENV['AUTH_SAML_NAME_IDENTIFIER_FORMAT'] %>
 
 # Highrise configuration
 highrise:

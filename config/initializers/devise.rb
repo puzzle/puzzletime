@@ -260,8 +260,8 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
-  if Settings.auth&.keycloak&.active
-    keycloak = Settings.auth.keycloak
+  if Settings.auth&.keycloakopenid&.active
+    keycloak = Settings.auth.keycloakopenid
     config.omniauth :keycloak_openid,
                     keycloak.client,
                     keycloak.secret,
@@ -274,9 +274,18 @@ Devise.setup do |config|
 
   if Settings.auth&.saml&.active
     saml = Settings.auth.saml
+    runtime_params = saml.idp_sso_target_url_runtime_params&.split(/, ?/)&.split(/:/)&.to_h
+
     config.omniauth :saml,
-                    idp_cert_fingerprint: saml.cert_fingerprint,
-                    idp_sso_target_url: saml.sso_target_url
+                    assertion_consumer_service_url: saml.assertion_consumer_service_url,
+                    issuer: saml.issuer,
+                    idp_sso_target_url: saml.idp_sso_target_url,
+                    idp_sso_target_url_runtime_params: runtime_params,
+                    idp_cert: saml.idp_cert,
+                    idp_cert_multi: saml.idp_cert_multi,
+                    idp_cert_fingerprint: saml.idp_cert_fingerprint,
+                    idp_cert_fingerprint_validator: nil,
+                    name_identifier_format: saml.name_identifier_format
   end
 
   # ==> Warden configuration

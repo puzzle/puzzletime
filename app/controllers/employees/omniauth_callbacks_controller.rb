@@ -1,4 +1,4 @@
-class OmniauthCallbacksController < Devise::OmniauthCallbacksController
+class Employees::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   include OmniauthCallbacksHelper
 
   def default
