@@ -45,7 +45,7 @@ module OrderServicesHelper
     if entries.present?
       footer = summed_worktimes_row(entries)
       if entries.size == OrderServicesController::MAX_ENTRIES
-        too_many_entries_row + footer
+        too_many_entries_row
       else
         footer
       end
