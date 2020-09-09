@@ -32,6 +32,31 @@ class EmployeeStatisticsTest < ActiveSupport::TestCase
     assert_equal 10, employments.second.percent
   end
 
+  test 'overtime works' do
+    e = employees(:pascal)
+    period = Period.new('01.12.2006', '11.12.2006')
+
+    assert_difference('e.statistics.overtime(period).to_f', 1) do
+      create_worktime
+    end
+  end
+
+  test 'remaining worktime is affected by' do
+    period = Period.new('01.12.2006', '11.12.2006')
+    method = 'statistics.pending_worktime(period).to_f'
+
+    # Working decreases the hours
+    assert_difference(method, -1) { create_worktime }
+    # Compensations decrease the hours
+    assert_difference(method, -1) { create_absence }
+    # Vacations decrease the hours
+    assert_difference(method, -1) { create_absence(absence_id: 1) }
+    # Vacation and Compensation only decreases by 1 not 2
+    assert_difference(method, -1) { create_absence(absence_id: 5) }
+    # Going to the doctor does not affect the remaining hours
+    assert_difference(method,  0) { create_absence(absence_id: 3) }
+  end
+
   private
 
   def create_employments
@@ -51,6 +76,28 @@ class EmployeeStatisticsTest < ActiveSupport::TestCase
                                  end_date: nil,
                                  percent: 40,
                                  employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
+  end
+
+  def create_worktime(**kwargs)
+    args = {
+      work_item_id: accounting_posts(:hitobito_demo_app).work_item_id,
+      employee_id: employees(:pascal).id,
+      work_date: Time.new(2006,12,01,12),
+      hours: 1,
+      report_type: 'absolute_day'
+    }.merge(kwargs)
+    Worktime.create!(args)
+  end
+
+  def create_absence(**kwargs)
+    args = {
+      absence_id: absences(:compensation).id,
+      employee_id: employees(:pascal).id,
+      work_date: Time.new(2006,12,01,12),
+      hours: 1,
+      report_type: 'absolute_day'
+  }.merge(kwargs)
+    Absencetime.create!(args)
   end
 
   def employee

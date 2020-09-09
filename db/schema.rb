@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_26_080215) do
+ActiveRecord::Schema.define(version: 2020_09_09_141055) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 2020_02_26_080215) do
     t.string "name", limit: 255, null: false
     t.boolean "payed", default: false
     t.boolean "vacation", default: false, null: false
+    t.boolean "compensation", default: false, null: false
     t.index ["name"], name: "index_absences_on_name", unique: true
   end
 
@@ -35,6 +36,7 @@ ActiveRecord::Schema.define(version: 2020_02_26_080215) do
     t.boolean "from_to_times_required", default: false, null: false
     t.boolean "closed", default: false, null: false
     t.integer "service_id"
+    t.boolean "meal_compensation", default: false, null: false
     t.index ["portfolio_item_id"], name: "index_accounting_posts_on_portfolio_item_id"
     t.index ["service_id"], name: "index_accounting_posts_on_service_id"
     t.index ["work_item_id"], name: "index_accounting_posts_on_work_item_id"
@@ -462,6 +464,7 @@ ActiveRecord::Schema.define(version: 2020_02_26_080215) do
     t.string "ticket", limit: 255
     t.integer "work_item_id"
     t.integer "invoice_id"
+    t.boolean "meal_compensation", default: false, null: false
     t.index ["absence_id", "employee_id", "work_date"], name: "worktimes_absences"
     t.index ["employee_id", "work_date"], name: "worktimes_employees"
     t.index ["invoice_id"], name: "index_worktimes_on_invoice_id"

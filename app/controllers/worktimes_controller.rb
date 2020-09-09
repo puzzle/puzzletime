@@ -170,7 +170,7 @@ class WorktimesController < CrudController
   def set_statistics
     @current_overtime = @user.statistics.current_overtime
     @monthly_worktime = @user.statistics.musttime(Period.current_month)
-    @pending_worktime = 0 - @user.statistics.overtime(Period.current_month).to_f
+    @pending_worktime = @user.statistics.pending_worktime(Period.current_month).to_f
     @remaining_vacations = @user.statistics.current_remaining_vacations
   end
 

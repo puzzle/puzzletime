@@ -122,6 +122,7 @@ de-CH:
         payed: Bezahlt
         private: Nicht öffentlich
         vacation: Ferien
+        compensation: Kompensation
       absencetime:
         duration: Dauer
       accounting_post:

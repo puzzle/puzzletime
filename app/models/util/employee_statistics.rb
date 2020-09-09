@@ -82,6 +82,14 @@ class EmployeeStatistics
     Employment.normalize_boundaries(employments, period)
   end
 
+  ######### worktime information ####################
+
+  def pending_worktime(period)
+    musttime(period) -
+      payed_worktime(period) -
+      compensated_overtime(period)
+  end
+
   private
 
   # Returns the hours this employee worked plus the payed absences for the given period.
@@ -92,6 +100,16 @@ class EmployeeStatistics
       where('((work_item_id IS NOT NULL AND absence_id IS NULL) OR absences.payed)').
       sum(:hours).
       to_f
+  end
+
+  # Returns the hours this employee compensated overtime.
+  def compensated_overtime(period)
+    @employee.worktimes
+      .joins('LEFT JOIN absences ON absences.id = absence_id')
+      .in_period(period)
+      .where('(absences.compensation) AND NOT (absences.payed)')
+      .sum(:hours)
+      .to_f
   end
 
   # Return the overtime days that were transformed into vacations up to the given date.
