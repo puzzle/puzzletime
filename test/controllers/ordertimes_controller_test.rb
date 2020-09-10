@@ -38,6 +38,14 @@ class OrdertimesControllerTest < ActionController::TestCase
     assert assigns(:worktime).billable?
   end
 
+  def test_new_with_template_and_workdate
+    template = worktimes(:wt_mw_puzzletime)
+    
+    time = Time.zone.today
+    get :new, params: { template: template.id, work_date: time}
+    assert_equal time, assigns(:worktime).work_date
+  end
+
   def test_new_without_billable_template
     template = worktimes(:wt_mw_puzzletime)
     template.update_attributes(billable: false)

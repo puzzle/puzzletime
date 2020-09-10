@@ -17,8 +17,10 @@
     = time_range(worktime)
   .time-value= format_hour(worktime.hours)
   .controls
-    = link_to(new_polymorphic_url(worktime, template: worktime),
-              {title: 'Kopieren'}) do
+    = link_to(new_polymorphic_url(worktime,
+                                  work_date: localize_date(Time.zone.today),
+                                  template: worktime),
+        {title: 'Kopieren'}) do
       %i.icon-duplicate
     - if can?(:destroy, worktime)
       = link_to(polymorphic_url(worktime),
