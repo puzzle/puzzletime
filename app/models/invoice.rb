@@ -90,7 +90,8 @@ class Invoice < ActiveRecord::Base
   end
 
   def calculated_total_amount
-    positions.collect(&:total_amount).sum
+    total = positions.collect(&:total_amount).sum
+    round_to_5_cents(total)
   end
 
   def billing_client
@@ -176,10 +177,10 @@ class Invoice < ActiveRecord::Base
   def update_totals
     if manual_invoice?
       self.total_hours = 0
-      self.total_amount = positions.collect(&:total_amount).sum if grouping_changed?
+      self.total_amount = calculated_total_amount if grouping_changed?
     else
       self.total_hours = positions.collect(&:total_hours).sum
-      self.total_amount = positions.collect(&:total_amount).sum
+      self.total_amount = calculated_total_amount
     end
   end
 
@@ -241,5 +242,9 @@ class Invoice < ActiveRecord::Base
 
   def assign_worktimes
     self.ordertimes = manual_invoice? ? [] : worktimes
+  end
+
+  def round_to_5_cents(amount)
+    (amount * 20).round / 20.0
   end
 end

@@ -101,6 +101,14 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 3920, invoice.total_amount.to_f
   end
 
+  test 'rounds total_amount to nearest 5 cents' do
+    accounting_posts(:webauftritt).update_attribute(:offered_rate,  1.01)
+    invoice.valid?
+
+    assert_equal 28.28, invoice.send(:positions).collect(&:total_amount).sum.to_f
+    assert_equal 28.30, invoice.total_amount.to_f
+  end
+
   test 'manual_invoice? is true only when grouping == "manual"' do
     invoice.grouping = 'manual'
     assert invoice.manual_invoice?
