@@ -280,11 +280,13 @@ Devise.setup do |config|
                     assertion_consumer_service_url: saml.assertion_consumer_service_url,
                     issuer: saml.issuer,
                     idp_sso_target_url: saml.idp_sso_target_url,
+                    idp_slo_target_url: saml.idp_slo_target_url,
+                    idp_slo_session_destroy: saml.idp_slo_session_destroy,
+                    slo_default_relay_state: saml.slo_default_relay_state,
                     idp_sso_target_url_runtime_params: runtime_params,
                     idp_cert: saml.idp_cert,
                     idp_cert_multi: saml.idp_cert_multi,
                     idp_cert_fingerprint: saml.idp_cert_fingerprint,
-                    idp_cert_fingerprint_validator: nil,
                     name_identifier_format: saml.name_identifier_format
   end
 
