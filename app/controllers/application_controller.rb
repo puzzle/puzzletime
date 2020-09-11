@@ -9,6 +9,7 @@
 class ApplicationController < ActionController::Base
   before_action :set_sentry_request_context
   protect_from_forgery with: :exception
+  skip_forgery_protection if: :saml_callback_path? # HACK: https://github.com/heartcombo/devise/issues/5210
 
   # before_action :authenticate
   before_action :store_employee_location!, if: :storable_location?
@@ -100,5 +101,9 @@ class ApplicationController < ActionController::Base
 
   def set_sentry_user_context
     Raven.user_context(id: current_user.try(:id), name: current_user.try(:shortname)) if ENV['SENTRY_DSN']
+  end
+
+  def saml_callback_path?
+    request.fullpath == '/employees/auth/saml/callback'
   end
 end
