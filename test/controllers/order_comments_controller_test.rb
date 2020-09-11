@@ -43,13 +43,6 @@ class OrderCommentsControllerTest < ActionController::TestCase
     assert_equal employees(:mark), comment.updater
   end
 
-  test 'POST index as member with correct attributes' do
-    login_as :pascal
-    assert_raises(CanCan::AccessDenied) do
-      post :create, params: { order_id: order.id, order_comment: { text: 'hello world' } }
-    end
-  end
-
   test 'GET show has no configured route' do
     assert_raises ActionController::UrlGenerationError do
       get :show, params: { order_id: order.id }

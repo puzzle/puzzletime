@@ -213,7 +213,7 @@ class Ability
 
     can :show_plannings, AccountingPost
 
-    can :read, [AccountingPost, Invoice, OrderUncertainty, OrderComment]
+    can :read, [AccountingPost, Invoice, OrderUncertainty]
 
     can :read, Planning
     can :manage, Planning, employee_id: user.id
@@ -232,5 +232,7 @@ class Ability
         Evaluation
 
     can :manage, Expense, employee_id: user.id
+
+    can [:create, :read], OrderComment
   end
 end
