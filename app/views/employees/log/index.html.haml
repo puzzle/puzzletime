@@ -8,7 +8,7 @@
 
 = plain_table_or_message(@presenter.versions.group_by(&:created_at)) do |t|
   - t.col('Datum/Autor') do |created_at, versions|
-    %small.text-muted= f(created_at)
+    %small.text-muted= f(created_at.in_time_zone('Bern'))
     - @presenter.present_author(versions) do |author|
       %h4= author
 

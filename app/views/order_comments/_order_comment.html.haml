@@ -11,7 +11,7 @@
     .row.creator_name
       = order_comment.creator.to_s
     .row.updated_at
-      = f(order_comment.updated_at)
+      = f(order_comment.updated_at.in_time_zone('Bern'))
     - if can?(:edit, order_comment)
       .row.edit.text-right
         = link_to(picon('edit'),
