@@ -7,6 +7,8 @@
 
 class LoginController < ApplicationController
   skip_before_action :authenticate, except: [:logout]
+  # it's safe to ignore CSRF token for login
+  skip_before_action :verify_authenticity_token, only: :login
   skip_authorization_check
 
   def index
