@@ -24,6 +24,17 @@ Rails.env = 'test'
 require 'rails/test_help'
 require 'mocha/minitest'
 require 'capybara/rails'
+
+require 'webmock/minitest'
+WebMock.disable_net_connect!(
+  allow_localhost: true, # required for selenium
+  allow: [
+    'github.com', # required for webdrivers/geckodriver
+    %r{github-production-release-asset-\w+.s3.amazonaws.com}, # required for webdrivers/geckodriver
+    'chromedriver.storage.googleapis.com' # required for webdrivers/chromedriver
+  ]
+)
+
 Settings.reload!
 
 Dir[Rails.root.join('test/support/**/*.rb')].sort.each { |f| require f }
