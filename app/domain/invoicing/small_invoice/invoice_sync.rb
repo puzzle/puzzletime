@@ -7,16 +7,23 @@ module Invoicing
   module SmallInvoice
     # One-way sync of invoices from Small Invoice to PuzzleTime
     class InvoiceSync
-      STATUS = {  1 => 'sent',  # sent / open
-                  2 => 'paid',  # paid
-                  3 => 'sent',  # 1st reminder
-                  4 => 'sent',  # 2nd reminder
-                  5 => 'sent',  # 3rd reminder
-                  6 => 'cancelled', # cancelled
-                  7 => 'draft', # draft
-                  11 => 'partially_paid', # partially paid
-                  12 => 'sent', # reminder
-                  99 => 'deleted' }.freeze # deleted
+
+      # status (string): status of invoice, possible values:
+      # DR - draft, S - sent, P - paid, PP - partially paid, R1 - 1st reminder, R2 - 2nd reminder, R3 - 3rd reminder,
+      # R - reminder, DC - debt collection, C - cancelled, D - deleted (but still visible) ,
+      STATUS = {
+        'DR' => 'draft',
+        'S' => 'sent',
+        'P' => 'paid',
+        'PP' => 'partially_paid',
+        'R1' => 'sent',
+        'R2' => 'sent',
+        'R3' => 'sent',
+        'R' => 'sent',
+        'DC' => 'dept_collection',
+        'C' => 'cancelled',
+        'D' => 'deleted'
+      }.freeze
 
       attr_reader :invoice
       class_attribute :rate_limiter
@@ -74,7 +81,9 @@ module Invoicing
 
       # Fetch an invoice from remote and update the local values
       def sync
-        item = rate_limiter.run { api.get(:invoice, invoice.invoicing_key) }
+        return unless invoice.invoicing_key
+
+        item = rate_limiter.run { api.get(Entity::Invoice.path(invoicing_key: invoice.invoicing_key)) }
         sync_remote(item)
       rescue Invoicing::Error => e
         if e.code == 15_016 # no rights / not found

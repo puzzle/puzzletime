@@ -22,7 +22,8 @@ module Invoicing
         end
 
         def fetch_remote_keys
-          SmallInvoice::Api.instance.list(:client).each_with_object({}) do |client, hash|
+          path = Invoicing::SmallInvoice::Entity::Contact.path
+          Invoicing::SmallInvoice::Api.instance.list(path).each_with_object({}) do |client, hash|
             hash[client['number']] = client['id']
           end
         end
@@ -68,31 +69,13 @@ module Invoicing
       end
 
       def sync
-        if key
-          update_remote_with_timeouts
-        else
-          create_remote
-          set_association_keys_from_remote
-        end
+        key ? update_remote : create_remote
+
+        ContactSync.new(client).sync
+        AddressSync.new(client).sync
       end
 
       private
-
-      def update_remote_with_timeouts
-        begin
-          update_remote
-          set_association_keys_from_remote
-        rescue Invoicing::Error => e
-          if e.code.to_s == '504'
-            # request is supposed to terminate eventually in the case of a gateway timeout,
-            # so schedule #set_association_keys for later
-            delay(run_at: 30.minutes.from_now).set_association_keys_from_remote
-            nil
-          else
-            raise
-          end
-        end
-      end
 
       def update_remote
         if client.invoicing_key != key
@@ -101,7 +84,7 @@ module Invoicing
           # otherwise sync will abort because of conflicts.
           reset_invoicing_keys(key)
         end
-        rate_limiter.run { api.edit(:client, key, data) }
+        rate_limiter.run { api.edit(Entity::Contact.new(client).path, data) }
       end
 
       def create_remote
@@ -110,58 +93,23 @@ module Invoicing
         # executing the add action to avoid 15016 "no rights / not found" errors.
         reset_invoicing_keys
 
-        key = rate_limiter.run { api.add(:client, data) }
-        client.update_column(:invoicing_key, key)
+        response = rate_limiter.run { api.add(Entity::Contact.path, data) }
+        client.update_column(:invoicing_key, response.fetch('id'))
+        client.billing_addresses.first.update_column(:invoicing_key, response.fetch('main_address_id'))
       end
 
       def data
-        Invoicing::SmallInvoice::Entity::Client.new(client).to_hash
-      end
-
-      def set_association_keys_from_remote
-        remote = fetch_remote(client.invoicing_key)
-        set_association_keys(remote) if remote
-        nil
+        Entity::Contact.new(client).to_hash
       end
 
       def fetch_remote(key)
-        rate_limiter.run { api.get(:client, key) }
+        rate_limiter.run { api.get(Entity::Contact.path(invoicing_key: key)) }
       rescue Invoicing::Error => e
         if e.message == 'No Objects or too many found'
           reset_invoicing_keys
           nil
         else
           raise
-        end
-      end
-
-      def set_association_keys(remote)
-        set_association_key(Invoicing::SmallInvoice::Entity::Address,
-                            client.billing_addresses,
-                            remote.fetch('addresses', []))
-        set_association_key(Invoicing::SmallInvoice::Entity::Contact,
-                            client.contacts,
-                            remote.fetch('contacts', []))
-      end
-
-      def set_association_key(entity, list, remote_list)
-        list.each do |item|
-          local_item = entity.new(item)
-          remote_keys = remote_list.select { |h| local_item == h }.map { |h| h['id'].to_s.presence }.compact
-          next if remote_keys.blank? || remote_keys.include?(item.invoicing_key)
-
-          local_keys = list.model.where(invoicing_key: remote_keys).pluck(:invoicing_key)
-          new_remote_keys = remote_keys - local_keys
-          if new_remote_keys.blank?
-            notify_sync_error(Invoicing::Error.new('Unable to sync from remote, ' \
-                                                   'record with invoicing_key already exists',
-                                                   nil,
-                                                   local_item: item.id,
-                                                   invoicing_keys: remote_keys,
-                                                   type: entity.name))
-          else
-            item.update_column(:invoicing_key, new_remote_keys.first)
-          end
         end
       end
 

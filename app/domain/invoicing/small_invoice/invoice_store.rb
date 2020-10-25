@@ -17,12 +17,12 @@ module Invoicing
       def save(positions)
         assert_remote_client_exists
 
-        data = Invoicing::SmallInvoice::Entity::Invoice.new(invoice, positions).to_hash
+        entity = Entity::Invoice.new(invoice, positions)
         if invoice.invoicing_key?
-          api.edit(:invoice, invoice.invoicing_key, data)
+          api.edit(entity.path, entity.to_hash)
           invoice.invoicing_key
         else
-          api.add(:invoice, data)
+          api.add(entity.class.path, entity.to_hash)
         end
       end
 
@@ -32,8 +32,8 @@ module Invoicing
         address = invoice.billing_address
         client = address.client
         if client.invoicing_key.blank? ||
-           address.invoicing_key.blank? ||
-           (address.contact && address.contact.invoicing_key.blank?)
+          address.invoicing_key.blank? ||
+          (address.contact && address.contact.invoicing_key.blank?)
           ClientSync.new(client).sync
           address.reload # required to get the newly set invoicing_key in this instance
         end
