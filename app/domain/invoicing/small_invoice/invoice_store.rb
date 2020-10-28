@@ -32,8 +32,8 @@ module Invoicing
         address = invoice.billing_address
         client = address.client
         if client.invoicing_key.blank? ||
-          address.invoicing_key.blank? ||
-          (address.contact && address.contact.invoicing_key.blank?)
+           address.invoicing_key.blank? ||
+           (address.contact && address.contact.invoicing_key.blank?)
           ClientSync.new(client).sync
           address.reload # required to get the newly set invoicing_key in this instance
         end

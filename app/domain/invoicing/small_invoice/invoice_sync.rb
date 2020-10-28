@@ -7,7 +7,6 @@ module Invoicing
   module SmallInvoice
     # One-way sync of invoices from Small Invoice to PuzzleTime
     class InvoiceSync
-
       # status (string): status of invoice, possible values:
       # DR - draft, S - sent, P - paid, PP - partially paid, R1 - 1st reminder, R2 - 2nd reminder, R3 - 3rd reminder,
       # R - reminder, DC - debt collection, C - cancelled, D - deleted (but still visible) ,
@@ -83,7 +82,7 @@ module Invoicing
       def sync
         return unless invoice.invoicing_key
 
-        item = rate_limiter.run { api.get(Entity::Invoice.path(invoicing_key: invoice.invoicing_key)) }
+        item = rate_limiter.run { api.get(Entity::Invoice.path(invoicing_key: invoice.invoicing_key), with: 'positions') }
         sync_remote(item)
       rescue Invoicing::Error => e
         if e.code == 15_016 # no rights / not found
@@ -123,8 +122,8 @@ module Invoicing
 
       def total_hours(item)
         item['positions'].select do |p|
-          p['type'] == Settings.small_invoice.constants.position_type_id &&
-            p['unit'] == Settings.small_invoice.constants.unit_id
+          p['catalog_type'] == Settings.small_invoice.constants.position_type &&
+            p['unit_id'] == Settings.small_invoice.constants.unit_id
         end.collect do |p|
           p['amount']
         end.sum
@@ -133,11 +132,10 @@ module Invoicing
       # item['totalamount'] always includes vat
       # item['vat_included'] tells whether position totals already include vat or not.
       def total_amount_without_vat(item)
-        vat_included = !item['vat_included'].zero?
-        item['positions'].select { |p| p['cost'] }.map do |p|
-          total = p['cost'] * p['amount']
+        item['positions'].select { |p| p['price'] }.map do |p|
+          total = p['price'] * p['amount']
           total -= position_discount(p, total)
-          total -= position_included_vat(p, total) if vat_included
+          total -= position_included_vat(p, total) if item['vat_included']
           total
         end.sum
       end

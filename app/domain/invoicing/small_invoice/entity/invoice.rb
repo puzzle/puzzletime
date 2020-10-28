@@ -7,7 +7,7 @@ module Invoicing
   module SmallInvoice
     module Entity
       class Invoice < Base
-        ENDPOINT = ['receivables', 'invoices']
+        ENDPOINT = ['receivables', 'invoices'].freeze
 
         attr_reader :positions
 
@@ -32,7 +32,7 @@ module Invoicing
           {
             number:            entry.reference,
             contact_id:        Integer(entry.billing_address.client.invoicing_key),
-            contact_address_id:Integer(entry.billing_address.invoicing_key),
+            contact_address_id: Integer(entry.billing_address.invoicing_key),
             contact_person_id: Integer(entry.billing_address.contact.invoicing_key),
             date:              entry.billing_date,
             due:               entry.due_date,
@@ -50,9 +50,9 @@ module Invoicing
                 status:            'D', # TODO: do we need other states?
                 title:             entry.title,
                 conditions:        conditions,
-                introduction:      introduction,
+                introduction:      introduction
               }
-            ],
+            ]
 
             # totalamount:       entry.total_amount.round(2),
           }

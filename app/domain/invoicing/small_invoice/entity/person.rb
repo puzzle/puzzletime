@@ -7,10 +7,10 @@ module Invoicing
   module SmallInvoice
     module Entity
       class Person < Base
-        ENDPOINT = 'people'
+        ENDPOINT = 'people'.freeze
 
         def self.path(client, invoicing_key: nil)
-          [*Contact.new(client).path, ENDPOINT, invoicing_key].compact if client.persisted?
+          [*Entity::Contact.new(client).path, ENDPOINT, invoicing_key].compact if client.persisted?
         end
 
         def path

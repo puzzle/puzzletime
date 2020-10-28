@@ -50,13 +50,11 @@ module Invoicing
 
       def sync
         ::BillingAddress.includes(:client).where(client_id: client.id).find_each do |billing_address|
-          begin
-            key(billing_address) ? update_remote(billing_address) : create_remote(billing_address)
-          rescue => error
-            puts error.message
-            puts error.backtrace
-            notify_sync_error(error, billing_address)
-          end
+          key(billing_address) ? update_remote(billing_address) : create_remote(billing_address)
+        rescue StandardError => e
+          Rails.logger.error e.message
+          Rails.logger.error e.backtrace
+          notify_sync_error(e, billing_address)
         end
       end
 

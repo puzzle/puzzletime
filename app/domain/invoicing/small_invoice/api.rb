@@ -15,15 +15,15 @@ module Invoicing
       def list(path, **params)
         # The v2 api returns max 200 entries per query, so we loop through all pages and collect the result.
         (0..LIST_PAGES_LIMIT).each_with_object([]) do |index, result|
-          response = get_json(path, **params.reverse_merge(limit: LIST_ENTRIES, offset: LIST_ENTRIES*index))
+          response = get_json(path, **params.reverse_merge(limit: LIST_ENTRIES, offset: LIST_ENTRIES * index))
           result.append(*response['items'])
 
           return result unless response.dig('pagination', 'next')
         end
       end
 
-      def get(path)
-        response = get_json(path)
+      def get(path, **params)
+        response = get_json(path, **params)
         response.fetch('item')
       end
 
@@ -42,6 +42,10 @@ module Invoicing
         nil
       end
 
+      def get_raw(path, auth: true, **params)
+        get_request(path, auth: auth, **params).body
+      end
+
       private
 
       def access_token
@@ -58,7 +62,7 @@ module Invoicing
         response = post_json(
           'auth/access-tokens',
           auth: false,
-          grant_type: "client_credentials",
+          grant_type: 'client_credentials',
           client_id: settings.client_id,
           client_secret: settings.client_secret,
           scope: 'invoice contact'
@@ -72,10 +76,6 @@ module Invoicing
       def get_json(path, auth: true, **params)
         response = get_request(path, auth: auth, **params)
         handle_json_response(response)
-      end
-
-      def get_raw(path, auth: true, **params)
-        get_request(path, auth: auth, **params).body
       end
 
       def get_request(path, auth: true, **params)
@@ -119,7 +119,7 @@ module Invoicing
       def delete_request(path, auth: true)
         url = build_url(path)
         request = Net::HTTP::Delete.new(url,
-                                     'Content-Type' => 'application/json')
+                                        'Content-Type' => 'application/json')
         request['Authorization'] = "Bearer #{access_token}" if auth
 
         http(url).request(request)

@@ -7,7 +7,7 @@ module Invoicing
   module SmallInvoice
     module Entity
       class Contact < Base
-        ENDPOINT = 'contacts'
+        ENDPOINT = 'contacts'.freeze
 
         def self.path(invoicing_key: nil)
           [ENDPOINT, invoicing_key].compact
@@ -26,7 +26,7 @@ module Invoicing
             communication_language: constant(:language),
             ebill_account_id: entry.e_bill_account_key,
 
-            main_address: Entity::Address.new(entry.billing_addresses.first).to_hash,
+            main_address: Entity::Address.new(entry.billing_addresses.first).to_hash
           }
         end
       end

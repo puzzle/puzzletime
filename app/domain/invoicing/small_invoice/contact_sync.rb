@@ -50,11 +50,9 @@ module Invoicing
 
       def sync
         ::Contact.includes(:client).where(client_id: client.id).find_each do |contact|
-          begin
-            key(contact) ? update_remote(contact) : create_remote(contact)
-          rescue => error
-            notify_sync_error(error, contact)
-          end
+          key(contact) ? update_remote(contact) : create_remote(contact)
+        rescue StandardError => e
+          notify_sync_error(e, contact)
         end
       end
 
