@@ -4,5 +4,5 @@
 #  https://github.com/puzzle/puzzletime.
 
 class AbsencesController < ManageController
-  self.permitted_attrs = [:name, :payed, :vacation, :compensation]
+  self.permitted_attrs = [:name, :payed, :vacation]
 end

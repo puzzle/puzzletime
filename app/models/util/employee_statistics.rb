@@ -87,7 +87,7 @@ class EmployeeStatistics
   def pending_worktime(period)
     musttime(period) -
       payed_worktime(period) -
-      compensated_overtime(period)
+      unpaid_absences(period)
   end
 
   private
@@ -102,14 +102,13 @@ class EmployeeStatistics
       to_f
   end
 
-  # Returns the hours this employee compensated overtime.
-  def compensated_overtime(period)
-    @employee.worktimes
-      .joins('LEFT JOIN absences ON absences.id = absence_id')
-      .in_period(period)
-      .where('(absences.compensation) AND NOT (absences.payed)')
-      .sum(:hours)
-      .to_f
+  def unpaid_absences(period)
+    @employee.worktimes.
+      joins('LEFT JOIN absences ON absences.id = absence_id').
+      in_period(period).
+      where('NOT (absences.payed)').
+      sum(:hours).
+      to_f
   end
 
   # Return the overtime days that were transformed into vacations up to the given date.

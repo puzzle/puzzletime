@@ -36,10 +36,3 @@ compensation:
   id:    4
   name:  Überstundenkompensation
   payed: false
-  compensation: true
-
-payed_and_compensation:
-  id:    5
-  name:  WerMachtSowas?
-  payed: true
-  compensation: true
