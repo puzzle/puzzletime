@@ -92,7 +92,7 @@ module Invoicing
       end
 
       def api
-        Api.instance
+        Invoicing::SmallInvoice::Api.instance
       end
     end
   end
