@@ -165,7 +165,7 @@ ActiveRecord::Schema.define(version: 2020_02_28_100244) do
     t.string "lastname", limit: 255, null: false
     t.string "shortname", limit: 3, null: false
     t.string "passwd", limit: 255
-    t.string "email", limit: 255, default: "", null: false
+    t.string "email", limit: 255, null: false
     t.boolean "management", default: false
     t.float "initial_vacation_days", default: -> { "(0)::double precision" }
     t.string "ldapname", limit: 255
@@ -190,12 +190,11 @@ ActiveRecord::Schema.define(version: 2020_02_28_100244) do
     t.string "graduation"
     t.string "identity_card_type"
     t.date "identity_card_valid_until"
-    t.string "encrypted_password", default: "", null: false
+    t.string "encrypted_password", default: ""
     t.datetime "remember_created_at"
-    t.datetime "created_at", default: "2020-05-01 23:00:53", null: false
-    t.datetime "updated_at", default: "2020-05-01 23:00:53", null: false
+    t.datetime "created_at", default: "2020-12-01 12:25:49", null: false
+    t.datetime "updated_at", default: "2020-12-01 12:25:49", null: false
     t.index ["department_id"], name: "index_employees_on_department_id"
-    t.index ["email"], name: "index_employees_on_email", unique: true
     t.index ["shortname"], name: "chk_unique_name", unique: true
   end
 

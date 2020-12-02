@@ -12,3 +12,6 @@ de-CH:
           Der Auftrag muss im Highrise einer Firma zugeordnet sein.
           Aktuell ist er einem Objekt von Typ "%{party_type}" zugeordnet.
           Bitte im Highrise korrigieren.
+    login:
+      ldapname_not_found:
+        'Der Member mit dem LDAP Name: "%{ldapname}" konnte nicht gefunden werden.'

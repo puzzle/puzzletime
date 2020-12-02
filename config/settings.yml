@@ -57,7 +57,7 @@ auth:
     client: <%= ENV['AUTH_KEYCLOAK_CLIENT'] %>
     secret: <%= ENV['AUTH_KEYCLOAK_SECRET'] %>
     fields:
-      ldapname: ['extra', 'raw_info', 'preferred_username']
+      ldapname: ['extra', 'raw_info', 'pitc', 'uid']
       email: ['info', 'email']
   saml:
     active: <%= ENV['AUTH_SAML_ACTIVE'] == 'true' %>

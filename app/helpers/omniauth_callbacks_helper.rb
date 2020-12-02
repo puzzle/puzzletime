@@ -20,6 +20,8 @@ module OmniauthCallbacksHelper
     if employee
       sign_in_and_redirect employee
     else
+      ldapname = login_fields(omni)[:ldapname]
+      flash[:alert] = t('error.login.ldapname_not_found', ldapname: ldapname)
       redirect_to new_employee_session_path
     end
   end
@@ -27,15 +29,19 @@ module OmniauthCallbacksHelper
   private
 
   def find_employee(omni)
+    fields = login_fields(omni)
+    Employee.find_by(fields)
+  end
+
+  def login_fields(omni)
     provider = omni['provider']
     fields = {}
     Settings.dig(:auth, provider, :fields).each_pair do |key, path|
       value = omni.dig(*path)
       fields[key] = value if value
     end
-    Employee.find_by(fields)
+    fields
   end
-
   # def after_sign_in_path_for(employee)
   #   employee_path(employee)
   # end
