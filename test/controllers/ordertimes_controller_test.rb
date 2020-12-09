@@ -40,7 +40,7 @@ class OrdertimesControllerTest < ActionController::TestCase
 
   def test_new_with_template_and_workdate
     template = worktimes(:wt_mw_puzzletime)
-    
+
     time = Time.zone.today
     get :new, params: { template: template.id, work_date: time}
     assert_equal time, assigns(:worktime).work_date
@@ -407,7 +407,8 @@ class OrdertimesControllerTest < ActionController::TestCase
           }
         }
     assert_template 'split'
-    assert_match(/muss ausgefüllt werden/, assigns(:worktime).errors[:work_date].first)
+
+    assert assigns(:worktime).errors[:work_date].any? { |e| e.match? /muss ausgefüllt werden/ }
   end
 
   def test_destroy
