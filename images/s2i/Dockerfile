@@ -4,6 +4,8 @@ USER root
 
 ADD ./root /
 
+ENV PATH=/opt/rh/rh-ruby25/root/usr/bin:$PATH
+
 RUN \
   set -x && \
   yum install -y \
