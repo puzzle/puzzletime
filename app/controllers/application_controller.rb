@@ -36,24 +36,6 @@ class ApplicationController < ActionController::Base
 
   private
 
-  # Filter for check if user is logged in or not
-  def authenticate
-    case request.path
-    when %r{\A/api/v\d+/}
-      @user = authenticate_or_request_with_http_basic('Puzzletime') { |u, p| ApiClient.new.authenticate(u, p) }
-    else
-      unless current_user
-        # allow ad-hoc login
-        if params[:user].present? && params[:pwd].present?
-          return true if login_with(params[:user], params[:pwd])
-
-          flash[:notice] = 'Ungültige Benutzerdaten'
-        end
-        redirect_to new_employee_session_path
-      end
-    end
-  end
-
   def current_user
     @user ||= current_employee
   end
@@ -68,14 +50,6 @@ class ApplicationController < ActionController::Base
 
   def after_sign_in_path_for(resource_or_scope)
     stored_location_for(resource_or_scope) || super
-  end
-
-  def login_with(user, pwd)
-    @user = Employee.login(user, pwd)
-    if @user
-      reset_session
-      session[:user_id] = @user.id
-    end
   end
 
   def set_period
