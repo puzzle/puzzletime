@@ -36,7 +36,7 @@ module OmniauthCallbacksHelper
   def login_fields(omni)
     provider = omni['provider']
     fields = {}
-    Settings.dig(:auth, provider, :fields).each_pair do |key, path|
+    Settings.dig(:auth, :omniauth, provider, :fields).each_pair do |key, path|
       value = omni.dig(*path)
       fields[key] = value if value
     end
