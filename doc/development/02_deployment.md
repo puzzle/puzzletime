@@ -51,7 +51,21 @@ gesetzt werden. Werte ohne Default müssen in der Regel definiert werden.
 | PROMETHEUS_EXPORTER_PORT | Port wo der prometheus_exporter läuft. | 9394 |
 | SENTRY_DSN | DSN der Sentry Instanz. Falls diese Variable nicht gesetzt ist, werden keine Fehlermeldungen verschickt. | - |
 | SENTRY_CURRENT_ENV | Environment für Sentry. Verwendet das RAILS_ENV, falls nichts angegeben wird. | - |
-
+| AUTH_DB_ACTIVE | DB Login aktivieren / deaktivieren. | false |
+| AUTH_KEYCLOAK_ACTIVE | Keycloak login aktivieren / deaktivieren. | false |
+| AUTH_KEYCLOAK_HOST | Keycloak Host | - |
+| AUTH_KEYCLOAK_REALM | Keycloak Realm | - |
+| AUTH_KEYCLOAK_CLIENT | Keycloak Client | - |
+| AUTH_KEYCLOAK_SECRET | Keycloak Secret | - |
+| AUTH_SAML_ACTIVE | SAML login aktivieren / deaktivieren. | false |
+| AUTH_SAML_ISSUER | | - |
+| AUTH_SAML_IDP_SSO_TARGET_URL | | - |
+| AUTH_SAML_IDP_SSO_TARGET_URL_RUNTIME_PARAMS | | - |
+| AUTH_SAML_IDP_CERT_FINGERPRINT | | - |
+| AUTH_SAML_ASSERTION_CONSUMER_SERVICE_URL | | - |
+| AUTH_SAML_IDP_CERT | | - |
+| AUTH_SAML_IDP_CERT_MULTI | | - |
+| AUTH_SAML_NAME_IDENTIFIER_FORMAT | | - |
 #### Addendum
 Ob Errbit oder Sentry verwendet wird, entscheidet sich danach, welche Umgebungsvariablen gesetzt werden.
 Errbit = RAILS_AIRBRAKE_HOST & RAILS_AIRBRAKE_API_KEY
