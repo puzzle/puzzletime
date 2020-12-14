@@ -290,6 +290,10 @@ html.turbolinks-progress-bar::before {
   z-index: $zindex-modal + 1 !important;
 }
 
+.db-login-panel {
+  border-right: solid #d7d7d7 1px;
+}
+
 @import "layout";
 
 @import "components/*";

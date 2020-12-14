@@ -1,0 +1,32 @@
+- @title = 'Login'
+
+.container
+  .row
+    - if Settings.auth.db.active
+      .col-sm-6.db-login-panel
+        = form_tag(session_path(resource_name), name: resource_name) do
+          %table.table-condensed
+            %tr
+              %td
+                %label.control-label{for: :shortname} Login
+              %td= text_field_tag('shortname', nil, size: 20, class: 'form-control initial-focus', autofocus: true, autocomplete: 'shortname', name: 'employee[shortname]')
+
+            %tr
+              %td
+                %label.control-label{for: :password} Passwort
+              %td= password_field_tag('password', nil, size: 20, class: 'form-control', autocomplete: 'current-password', name: 'employee[password]')
+
+            - if devise_mapping.rememberable?
+              %tr
+                %td
+                %td
+                  = check_box_tag :remember_me, true, false
+                  %label.control-label{for: :remember_me} Login merken
+            %tr
+              %td
+              %td
+                %input{type: "submit", value: "Login", class: 'btn btn-primary'}
+
+    - if Settings.auth&.omniauth&.map(&:second).map(&:active).any?
+      .col-sm-6
+        = render "devise/shared/links"

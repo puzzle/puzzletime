@@ -6,13 +6,15 @@
 module IntegrationHelper
   private
 
-  def login_as(user, ref_path = nil)
+  def login_as(user, _ref_path = nil)
+    # FIXME: ensure ref_path is not needed
     employee = user.is_a?(Employee) ? user : employees(user)
     employee.update_passwd!('foobar')
-    visit login_path(ref: ref_path)
-    fill_in 'user', with: employee.shortname
-    fill_in 'pwd', with: 'foobar'
-    click_button 'Login'
+    visit new_employee_session_path
+    super(employee)
+    # fill_in 'shortname', with: employee.shortname
+    # fill_in 'password', with: 'foobar'
+    # click_button 'Login'
   end
 
   # catch some errors occuring now and then in capybara tests

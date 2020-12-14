@@ -9,11 +9,14 @@
 class ApplicationController < ActionController::Base
   before_action :set_sentry_request_context
   protect_from_forgery with: :exception
+  skip_forgery_protection if: :saml_callback_path? # HACK: https://github.com/heartcombo/devise/issues/5210
 
-  before_action :authenticate
+  # before_action :authenticate
+  before_action :store_employee_location!, if: :storable_location?
+  before_action :authenticate_employee!
   before_action :set_sentry_user_context
   before_action :set_paper_trail_whodunnit
-  check_authorization
+  check_authorization unless: :devise_controller?
 
   helper_method :sanitized_back_url, :current_user
 
@@ -33,34 +36,20 @@ class ApplicationController < ActionController::Base
 
   private
 
-  # Filter for check if user is logged in or not
-  def authenticate
-    case request.path
-    when %r{\A/api/v\d+/}
-      @user = authenticate_or_request_with_http_basic('Puzzletime') { |u, p| ApiClient.new.authenticate(u, p) }
-    else
-      unless current_user
-        # allow ad-hoc login
-        if params[:user].present? && params[:pwd].present?
-          return true if login_with(params[:user], params[:pwd])
-
-          flash[:notice] = 'Ungültige Benutzerdaten'
-        end
-        redirect_to login_path(ref: request.url)
-      end
-    end
-  end
-
   def current_user
-    @user ||= session[:user_id] && Employee.find(session[:user_id])
+    @user ||= current_employee
   end
 
-  def login_with(user, pwd)
-    @user = Employee.login(user, pwd)
-    if @user
-      reset_session
-      session[:user_id] = @user.id
-    end
+  def storable_location?
+    request.get? && is_navigational_format? && !devise_controller? && !request.xhr?
+  end
+
+  def store_employee_location!
+    store_location_for(:employee, request.fullpath)
+  end
+
+  def after_sign_in_path_for(resource_or_scope)
+    stored_location_for(resource_or_scope) || super
   end
 
   def set_period
@@ -86,5 +75,9 @@ class ApplicationController < ActionController::Base
 
   def set_sentry_user_context
     Raven.user_context(id: current_user.try(:id), name: current_user.try(:shortname)) if ENV['SENTRY_DSN']
+  end
+
+  def saml_callback_path?
+    request.fullpath == '/employees/auth/saml/callback'
   end
 end

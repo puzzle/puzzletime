@@ -29,7 +29,8 @@ class CrudController < ListController
   helper_method :entry, :full_entry_label
 
   prepend_before_action :entry, only: [:show, :new, :create, :edit, :update, :destroy]
-  prepend_before_action :authenticate
+  # prepend_before_action :authenticate
+  prepend_before_action :current_user
 
   ##############  ACTIONS  ############################################
 

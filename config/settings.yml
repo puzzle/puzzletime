@@ -48,6 +48,34 @@ ldap:
   external_dn: <%= ENV['RAILS_LDAP_EXTERNAL_DN'] %>
   group: <%= ENV['RAILS_LDAP_GROUP_DN'] %>
 
+# OmniAuth configuration
+auth:
+  db:
+    active: <%= ENV['AUTH_DB_ACTIVE'] == 'true' %>
+  omniauth:
+    keycloakopenid:
+      active: <%= ENV['AUTH_KEYCLOAK_ACTIVE'] == 'true' %>
+      host: <%= ENV['AUTH_KEYCLOAK_HOST'] %>
+      realm: <%= ENV['AUTH_KEYCLOAK_REALM'] %>
+      client: <%= ENV['AUTH_KEYCLOAK_CLIENT'] %>
+      secret: <%= ENV['AUTH_KEYCLOAK_SECRET'] %>
+      fields:
+        ldapname: ['extra', 'raw_info', 'pitc', 'uid']
+        email: ['info', 'email']
+    saml:
+      active: <%= ENV['AUTH_SAML_ACTIVE'] == 'true' %>
+      assertion_consumer_service_url: <%= ENV['AUTH_SAML_ASSERTION_CONSUMER_SERVICE_URL'] %>
+      issuer: <%= ENV['AUTH_SAML_ISSUER'] %>
+      idp_sso_target_url: <%= ENV['AUTH_SAML_IDP_SSO_TARGET_URL'] %>
+      idp_slo_target_url: <%= ENV['AUTH_SAML_IDP_SLO_TARGET_URL'] %>
+      idp_slo_session_destroy: <%= ENV['AUTH_SAML_IDP_SLO_SESSION_DESTROY'] %>
+      slo_default_relay_state: <%= ENV['AUTH_SAML_SLO_DEFAULT_RELAY_STATE'] %>
+      idp_sso_target_url_runtime_params:  <%= ENV['AUTH_SAML_IDP_SSO_TARGET_URL_RUNTIME_PARAMS'] %> # HASH
+      idp_cert: <%= ENV['AUTH_SAML_IDP_CERT'] %>
+      idp_cert_multi: <%= ENV['AUTH_SAML_IDP_CERT_MULTI'] %> # HASH
+      idp_cert_fingerprint: <%= ENV['AUTH_SAML_IDP_CERT_FINGERPRINT'] %>
+      name_identifier_format: <%= ENV['AUTH_SAML_NAME_IDENTIFIER_FORMAT'] %>
+
 # Highrise configuration
 highrise:
   url: <%= ENV['RAILS_HIGHRISE_URL'] || 'https://highrisehq.com' %>

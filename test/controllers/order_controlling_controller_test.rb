@@ -11,7 +11,7 @@ class OrderControllingControllerTest < ActionController::TestCase
   test 'GET show redirects to login if not authenticated' do
     logout
     get :show, params: { order_id: order.id }
-    assert_redirected_to(/login/)
+    assert_redirected_to(%r/employees\/sign_in/)
   end
 
   test 'GET show returns not found for non-existing order' do
