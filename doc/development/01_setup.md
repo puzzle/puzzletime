@@ -102,6 +102,13 @@ Es ist möglich eine bestimmte Firefox Version zu verwenden:
 
     FIREFOX_PATH=/path/to/firefox rake test test/integration
 
+### Github actions
+
+Die Github actions build pipeline kann zum Debugging auch lokal ausgeführt werden.
+Dafür wird https://github.com/nektos/act und Docker verwendet.
+
+    act -b -P ubuntu-latest=nektos/act-environments-ubuntu:18.04
+
 
 ### Request Profiling
 
