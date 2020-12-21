@@ -157,7 +157,8 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
   end
 
   def login(params = {})
-    login_as(:mark, new_order_invoice_path(order, params))
+    login_as(:mark)
+    visit new_order_invoice_path(order, params)
   end
 
   def reload(params = {})

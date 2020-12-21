@@ -73,7 +73,8 @@ class EditOrderTest < ActionDispatch::IntegrationTest
   end
 
   def login
-    login_as(:mark, edit_order_path(order))
+    login_as(:mark)
+    visit(edit_order_path(order))
   end
 
   def order

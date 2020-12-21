@@ -25,9 +25,9 @@ class WorkloadReportTest < ActionDispatch::IntegrationTest
   private
 
   def login
-    login_as(:mark,
-             reports_workload_path(start_date: '1.1.2006',
+    login_as(:mark)
+    visit reports_workload_path(start_date: '1.1.2006',
                                    end_date: '31.12.2006',
-                                   department_id: departments(:devtwo).id))
+                                   department_id: departments(:devtwo).id)
   end
 end

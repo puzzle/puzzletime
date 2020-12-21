@@ -47,6 +47,7 @@ class ChooseOrderTest < ActionDispatch::IntegrationTest
   end
 
   def login
-    login_as(:mark, order_path(order))
+    login_as(:mark)
+    visit(order_path(order))
   end
 end

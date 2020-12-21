@@ -50,6 +50,7 @@ class CreateOrdertimeTest < ActionDispatch::IntegrationTest
   end
 
   def login
-    login_as(:pascal, new_ordertime_path)
+    login_as(:pascal)
+    visit(new_ordertime_path)
   end
 end

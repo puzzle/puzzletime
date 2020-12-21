@@ -554,6 +554,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
   end
 
   def login
-    login_as(:mark, new_order_path)
+    login_as(:mark)
+    visit(new_order_path)
   end
 end

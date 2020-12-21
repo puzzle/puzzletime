@@ -23,6 +23,7 @@ class EditContractTest < ActionDispatch::IntegrationTest
   end
 
   def login
-    login_as(:mark, edit_order_contract_path(order_id: order))
+    login_as(:mark)
+    visit(edit_order_contract_path(order_id: order))
   end
 end

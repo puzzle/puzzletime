@@ -65,7 +65,7 @@ class EditOtherOrdertimeTest < ActionDispatch::IntegrationTest
   private
 
   def create_ordertime
-    employee = employees(:mark)
+    employee = employees(:lucien)
     post '/ordertimes',
          params: {
            ordertime: {
@@ -84,10 +84,6 @@ class EditOtherOrdertimeTest < ActionDispatch::IntegrationTest
   end
 
   def login
-    post '/login/login', params: { user: 'GGG', pwd: 'ptime' }
-    follow_redirect!
-    assert_response :success
-    assert_equal '/', path
-    assert assigns(:week_days)
+    login_as(:mark)
   end
 end
