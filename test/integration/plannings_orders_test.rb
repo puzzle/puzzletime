@@ -529,5 +529,6 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     create_plannings(work_item_id)
     login_as :mark
     visit plannings_order_path(orders(:puzzletime))
+    select 'Nächste 3 Monate', from: 'period_shortcut'
   end
 end
