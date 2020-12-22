@@ -4,12 +4,12 @@
 #  https://github.com/puzzle/puzzletime.
 
 class ApplicationJob < ActiveJob::Base
-  rescue_from(Exception) do |e|
+  rescue_from(Exception) do |error|
     payload = { cgi_data: ENV.to_hash }
-    payload[:code] = e.code if e.respond_to?(:code)
-    payload[:data] = e.data if e.respond_to?(:data)
-    Airbrake.notify(e, payload) if airbrake?
-    Raven.capture_exception(error, extra: parameters) if sentry?
+    payload[:code] = error.code if error.respond_to?(:code)
+    payload[:data] = error.data if error.respond_to?(:data)
+    Airbrake.notify(error, payload) if airbrake?
+    Raven.capture_exception(error, extra: payload) if sentry?
   end
 
   def airbrake?
