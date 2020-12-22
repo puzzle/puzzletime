@@ -258,7 +258,6 @@ GEM
       kaminari (>= 0.13.0)
       rails
     kaminari-core (1.2.1)
-    libv8 (8.4.255.0)
     loofah (2.8.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -272,8 +271,6 @@ GEM
     mini_magick (4.11.0)
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
-    mini_racer (0.3.1)
-      libv8 (~> 8.4.255)
     minitest (5.14.2)
     minitest-reporters (1.3.6)
       ansi
@@ -539,6 +536,7 @@ DEPENDENCIES
   delayed_cron_job
   delayed_job_active_record
   devise
+  execjs
   fabrication
   faker
   fast_jsonapi
@@ -552,8 +550,6 @@ DEPENDENCIES
   jquery-ui-rails
   kaminari
   kaminari-bootstrap
-  libv8
-  mini_racer
   minitest-reporters
   mocha
   nested_form_fields

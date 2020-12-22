@@ -7,6 +7,12 @@
 version: '2'
 
 services:
+  ptime:
+    image: puzzletime-s2i
+    ports:
+      - '3000:3000'
+    environment:
+      - RAILS_ENV=development
 
   ptimedb:
     image: postgres:9.3
@@ -17,10 +23,10 @@ services:
       - POSTGRES_USER=puzzletime
       - POSTGRES_PASSWORD=timepuzzle
 
-  ptimecache:
-    image: memcached
-    ports:
-      - '11211:11211'
+#  ptimecache:
+#    image: memcached
+#    ports:
+#      - '11211:11211'
 
   ptimemailcatcher:
     image: schickling/mailcatcher
