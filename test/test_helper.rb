@@ -97,6 +97,7 @@ class ActionDispatch::IntegrationTest
   self.use_transactional_tests = false
 
   setup do
+    clear_cookies
     DatabaseCleaner.start
   end
 
