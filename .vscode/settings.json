@@ -1,0 +1,39 @@
+{
+    "rubyTestExplorer.logpanel": true,
+    "rubyTestExplorer.testFramework": "minitest",
+    "saveEditorLayout.list": [
+        {
+            "name": "ptime: api tests",
+            "documents": [
+                {
+                    "fsPath": "/code/pz/puzzletime/test/small_invoice_test_helper.rb",
+                    "column": 1
+                },
+                {
+                    "fsPath": "/code/pz/puzzletime/app/domain/invoicing/small_invoice/contact_sync.rb",
+                    "column": 1
+                },
+                {
+                    "fsPath": "/code/pz/puzzletime/test/domain/invoicing/small_invoice/contact_sync_test.rb",
+                    "column": 1
+                },
+                {
+                    "fsPath": "/code/pz/puzzletime/test/domain/invoicing/small_invoice/api_test.rb",
+                    "column": 2
+                },
+                {
+                    "fsPath": "/code/pz/puzzletime/test/domain/invoicing/small_invoice/address_sync_test.rb",
+                    "column": 2
+                },
+                {
+                    "fsPath": "/code/pz/puzzletime/test/domain/invoicing/small_invoice/interface_test.rb",
+                    "column": 2
+                },
+                {
+                    "fsPath": "/code/pz/puzzletime/test/domain/invoicing/small_invoice/invoice_store_test.rb",
+                    "column": 2
+                }
+            ]
+        }
+    ]
+}

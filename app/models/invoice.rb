@@ -25,7 +25,7 @@
 #
 
 class Invoice < ActiveRecord::Base
-  STATUSES = %w(draft sent paid partially_paid cancelled deleted unknown).freeze
+  STATUSES = %w(draft sent paid partially_paid dept_collection cancelled deleted unknown).freeze
 
   enum grouping: %w(accounting_posts employees manual)
 
@@ -225,7 +225,7 @@ class Invoice < ActiveRecord::Base
     self.invoicing_key = Invoicing.instance.save_invoice(self, positions)
   rescue Invoicing::Error => e
     errors.add(:base, "Fehler im Invoicing Service: #{e.message}")
-    Rails.logger.error(e.class.name + ': ' + e.message + "\n" + e.backtrace.join("\n"))
+    Rails.logger.error(e.class.name + ': ' + e.message + "\n" + e.data.inspect + "\n" + e.backtrace.join("\n"))
     throw :abort
   end
 

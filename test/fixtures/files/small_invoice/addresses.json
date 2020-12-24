@@ -1,0 +1,10 @@
+{
+  "items": [{"id": 1}],
+  "pagination": {
+    "page": 1,
+    "pages": 1,
+    "total": 200,
+    "first": "https://api.smallinvoice.com/v2/addresses?limit=200&offset=0",
+    "last": "https://api.smallinvoice.com/v2/addresses?limit=200&offset=0"
+  }
+}

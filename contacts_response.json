@@ -1,0 +1,42 @@
+{
+  "items": [
+    {
+      "id": 861723869,
+      "number": "ZHKB",
+      "relation": [
+        "CL"
+      ],
+      "type": "C",
+      "gender": null,
+      "gender_salutation_active": false,
+      "name": "Zürcher Kantonalbank [ZKB]",
+      "name_addition": null,
+      "salutation": null,
+      "phone": null,
+      "fax": null,
+      "email": null,
+      "website": null,
+      "notes": null,
+      "communication_language": "de",
+      "communication_channel": "U",
+      "communication_newsletter": "A",
+      "currency": null,
+      "ebill_account_id": "",
+      "vat_identification": null,
+      "vat_rate": null,
+      "discount_rate": 0.0,
+      "discount_type": "P",
+      "payment_grace": null,
+      "hourly_rate": null,
+      "created": "2017-07-25 19:25:19",
+      "main_address_id": 233802086
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "pages": 1,
+    "total": 200,
+    "first": "https://api.smallinvoice.com/v2/contacts?limit=200&offset=0",
+    "last": "https://api.smallinvoice.com/v2/contacts?limit=200&offset=0"
+  }
+}

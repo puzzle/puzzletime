@@ -1,0 +1,33 @@
+{
+  "item": {
+    "id": 199493817,
+    "number": "CHOP",
+    "relation": [
+      "CL"
+    ],
+    "type": "C",
+    "gender": null,
+    "gender_salutation_active": false,
+    "name": "/ch/open",
+    "name_addition": null,
+    "salutation": null,
+    "phone": null,
+    "fax": null,
+    "email": null,
+    "website": null,
+    "notes": null,
+    "communication_language": "de",
+    "communication_channel": "U",
+    "communication_newsletter": "A",
+    "currency": null,
+    "ebill_account_id": "41105678901234567",
+    "vat_identification": null,
+    "vat_rate": null,
+    "discount_rate": 0.0,
+    "discount_type": "P",
+    "payment_grace": null,
+    "hourly_rate": null,
+    "created": "2015-06-08 14:34:16",
+    "main_address_id": 583510867
+  }
+}
