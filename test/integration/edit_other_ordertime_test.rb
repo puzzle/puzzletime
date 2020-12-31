@@ -16,9 +16,9 @@ class EditOtherOrdertimeTest < ActionDispatch::IntegrationTest
   test 'update ordertime with same hours' do
     ordertime = create_ordertime
     put ordertime_path(ordertime), params: { ordertime: { hours: '8:30' } }
-    assert_redirected_to %r(/evaluator/details)
     follow_redirect!
     assert_response :success
+    assert_equal '/evaluator/details', path
     assert_equal 'Alle Arbeitszeiten wurden erfasst', flash[:notice]
     assert_equal 8.5, ordertime.hours
   end
@@ -27,6 +27,7 @@ class EditOtherOrdertimeTest < ActionDispatch::IntegrationTest
     ordertime = create_ordertime
     put ordertime_path(ordertime), params: { ordertime: { hours: '9:30' } }
     assert_response :success
+    assert_equal ordertime_path(ordertime), path
     assert_match(/Die gesamte Anzahl Stunden kann nicht vergrössert werden/, response.body)
     ordertime.reload
     assert_equal 8.5, ordertime.hours
@@ -35,9 +36,9 @@ class EditOtherOrdertimeTest < ActionDispatch::IntegrationTest
   test 'update ordertime with less hours' do
     ordertime = create_ordertime
     put ordertime_path(ordertime), params: { ordertime: { hours: '7:30' } }
-    assert_redirected_to split_ordertimes_path
     follow_redirect!
     assert_response :success
+    assert_equal split_ordertimes_path, path
     assert_match(/Die Zeiten wurden noch nicht gespeichert/, response.body)
     assert_match(/Bitte schliessen sie dazu den Aufteilungsprozess ab/, response.body)
     ordertime.reload
@@ -53,9 +54,9 @@ class EditOtherOrdertimeTest < ActionDispatch::IntegrationTest
              hours: '1:00'
            }
          }
-    assert_redirected_to %r(/evaluator/details)
     follow_redirect!
     assert_response :success
+    assert_equal '/evaluator/details', path
     assert_match(/Alle Arbeitszeiten wurden erfasst/, response.body)
     assert_equal 7.5, Ordertime.order(id: :desc).limit(2).second.hours
     assert_equal 1.0, Ordertime.order(id: :desc).limit(2).first.hours
@@ -74,9 +75,9 @@ class EditOtherOrdertimeTest < ActionDispatch::IntegrationTest
              hours: '8:30'
            }
          }
-    assert_redirected_to %r(/evaluator/details)
     follow_redirect!
     assert_response :success
+    assert_equal '/evaluator/details', path
     ordertime = Ordertime.last
     assert_equal 8.5, ordertime.hours
     ordertime
