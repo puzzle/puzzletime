@@ -4,9 +4,10 @@
 #  https://github.com/puzzle/puzzletime.
 
 require 'test_helper'
-require 'small_invoice_test_helper'
 
 class Invoicing::SmallInvoice::InterfaceTest < ActiveSupport::TestCase
+  include SmallInvoiceTestHelper
+
   test '#save_invoice creates' do
     Invoicing::SmallInvoice::InvoiceStore.any_instance.stubs(:save).returns(true)
     assert subject.save_invoice(invoice, [])

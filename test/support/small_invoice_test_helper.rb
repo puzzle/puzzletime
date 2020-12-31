@@ -3,7 +3,13 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-class ActiveSupport::TestCase
+module SmallInvoiceTestHelper
+  extend ActiveSupport::Concern
+
+  included do
+    setup :stub_auth
+  end
+
   BASE_URL = 'https://api.smallinvoice.com/v2'.freeze
 
   def entity(name)

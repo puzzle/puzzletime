@@ -4,10 +4,9 @@
 #  https://github.com/puzzle/puzzletime.
 
 require 'test_helper'
-require 'small_invoice_test_helper'
 
 class Invoicing::SmallInvoice::ClientSyncTest < ActiveSupport::TestCase
-  setup :stub_auth
+  include SmallInvoiceTestHelper
 
   test '#sync' do
     # updates contacts

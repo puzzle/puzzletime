@@ -4,9 +4,8 @@
 #  https://github.com/puzzle/puzzletime.
 
 require 'test_helper'
-require 'small_invoice_test_helper'
 class Invoicing::SmallInvoice::AddressSyncTest < ActiveSupport::TestCase
-  setup :stub_auth
+  include SmallInvoiceTestHelper
 
   test '#sync without existing client creates address' do
     add_address = stub_add_entity(:addresses, body: address_json, response: address_json_response)

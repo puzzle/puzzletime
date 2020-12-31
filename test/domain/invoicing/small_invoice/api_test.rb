@@ -4,10 +4,9 @@
 #  https://github.com/puzzle/puzzletime.
 
 require 'test_helper'
-require 'small_invoice_test_helper'
 
 class Invoicing::SmallInvoice::ApiTest < ActiveSupport::TestCase
-  setup :stub_auth
+  include SmallInvoiceTestHelper
 
   test '#list' do
     id   = id(:contacts)
