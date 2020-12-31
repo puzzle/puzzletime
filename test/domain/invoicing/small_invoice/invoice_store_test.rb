@@ -18,9 +18,10 @@ class Invoicing::SmallInvoice::InvoiceStoreTest < ActiveSupport::TestCase
   test '#save creates new invoices' do
     add_invoice = stub_add_entity(:invoices, body: invoice_json)
 
-    subject.save([manual_position])
+    invoicing_key = subject.save([manual_position])
 
     assert_requested(add_invoice)
+    assert invoicing_key.present?
   end
 
   test '#save edits existing invoices' do
@@ -28,9 +29,10 @@ class Invoicing::SmallInvoice::InvoiceStoreTest < ActiveSupport::TestCase
 
     edit_invoice = stub_edit_entity(:invoices, key: 1, body: invoice_json)
 
-    subject.save([manual_position])
+    invoicing_key = subject.save([manual_position])
 
     assert_requested(edit_invoice)
+    assert_equal(invoice.invoicing_key, invoicing_key)
   end
 
   private

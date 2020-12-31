@@ -22,7 +22,8 @@ module Invoicing
           api.edit(entity.path, entity.to_hash)
           invoice.invoicing_key
         else
-          api.add(entity.class.path, entity.to_hash)
+          result = api.add(entity.class.path, entity.to_hash)
+          result['id']
         end
       end
 
