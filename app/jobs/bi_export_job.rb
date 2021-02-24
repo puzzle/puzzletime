@@ -3,5 +3,10 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-influxdb:
-  export: true
+class BIExportJob < CronJob
+  self.cron_expression = '0 1 * * *'
+
+  def perform
+    BI::Export.new.run
+  end
+end

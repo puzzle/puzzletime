@@ -71,6 +71,7 @@ module Puzzletime
     config.to_prepare do |_|
       Crm.init
       Invoicing.init
+      BI.init
     end
   end
 
