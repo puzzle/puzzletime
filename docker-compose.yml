@@ -4,20 +4,18 @@
 #  https://github.com/puzzle/puzzletime.
 
 
-version: '2'
+version: '3'
+
+volumes:
+  db-data:
 
 services:
-  ptime:
-    image: puzzletime-s2i
-    ports:
-      - '3000:3000'
-    environment:
-      - RAILS_ENV=development
-
   ptimedb:
-    image: postgres:9.3
+    image: postgres:9.5
     ports:
       - '5432:5432'
+    volumes:
+      - db-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=puzzletime_development
       - POSTGRES_USER=puzzletime
