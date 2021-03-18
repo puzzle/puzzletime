@@ -140,3 +140,11 @@ mailer:
   employee:
     worktime_deleted:
       from: <%= ENV['RAILS_PTIME_MAILER_EMPLOYEE_WORKTIME_DELETED_FROM'] || 'time@puzzle.ch' %>
+
+influxdb:
+  export: <%= ENV['RAILS_INFLUXDB_EXPORT'] == '1' %>
+  host: <%= ENV['RAILS_INFLUXDB_HOST'] || 'localhost' %>
+  port: <%= ENV['RAILS_INFLUXDB_PORT']&.to_i || 8086 %>
+  token: <%= ENV['RAILS_INFLUXDB_TOKEN'] || 'ptimetoken' %>
+  org: <%= ENV['RAILS_INFLUXDB_ORG'] || 'ptime' %>
+  use_ssl: false
