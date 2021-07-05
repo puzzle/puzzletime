@@ -33,7 +33,7 @@ module Invoicing
             number:            entry.reference,
             contact_id:        Integer(entry.billing_address.client.invoicing_key),
             contact_address_id: Integer(entry.billing_address.invoicing_key),
-            contact_person_id: Integer(entry.billing_address.contact.invoicing_key),
+            contact_person_id: entry.billing_address.contact.try(:invoicing_key)&.to_i,
             date:              entry.billing_date,
             due:               entry.due_date,
             period:            entry.period.to_s,
