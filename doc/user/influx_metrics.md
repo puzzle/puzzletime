@@ -15,8 +15,9 @@ Metriken / Felder
 
 Tags
 
-* `time_delta` M, z.B "-2 months" für vorletzter Monat
-* `department` Bereich
+* `time_delta` - Zeitraum der Auswertung, z.B "-2 months" für vorletzter Monat
+* `month` - Monat, den die Auswertung betrifft, z.B. "2021-01"
+* `department` - Bereich
 
 ## Auslastung
 
@@ -55,6 +56,9 @@ Metriken
   * `offered_rate [CHF/h]` - Offerierter Stundensatz
   * `billed_rate [CHF/h]` - Verrechneter Stundensatz
   * `average_rate [CHF/h]` - Durchschnittlicher Stundensatz
+  * `target_budget ["green"|"orange"|"red"]` - Projekt-Ampel "Kosten"
+  * `target_schedule ["green"|"orange"|"red"]` - Projekt-Ampel "Termin"
+  * `target_quality ["green"|"orange"|"red"]` - Projekt-Ampel "Qualität"
 
 Tags
 
