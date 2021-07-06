@@ -42,15 +42,21 @@ module Reports::Revenue
       volume = find_volume(report, entry, date, source)
       return nil if volume.nil?
 
-      delta = distance_in_months(now, date)
-      sign = delta < 0 ? '-' : '+'
-      delta_tag = "#{sign} #{delta.abs} months"
-
       {
         name: "revenue_#{source}",
         fields: { volume: volume },
-        tags: { time_delta: delta_tag, department: entry.to_s }
+        tags: tags(entry, date, now)
       }
+    end
+
+    def tags(entry, date, now)
+      delta = distance_in_months(now, date)
+      sign = delta < 0 ? '-' : '+'
+
+      delta_tag = "#{sign} #{delta.abs} months"
+      month_tag = date.strftime('%Y-%m')
+
+      { time_delta: delta_tag, month: month_tag, department: entry.to_s }
     end
 
     def distance_in_months(from, to)
