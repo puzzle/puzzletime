@@ -25,7 +25,7 @@ Tags
 
 Metriken
 
-* `workload_last_week` - Auswertungen der letzten Woche
+* `workload`
   * `employment_fte [Vollzeitäkquivalente]` - Kumulierter Anstellungsgrad (1 = 100%)
   * `must_hours [h]` - Soll-Zeit
   * `must_hours [h]` - Ist-Zeit
@@ -40,6 +40,9 @@ Metriken
 Tags
 
 * `department` (Bereich)
+* Ausgewerteter Zeitraum
+  * a) `week` - Kalenderwoche, z.B. "CW 3". Es wird jeweils die vergangene Woche ausgewertet. Diese Metriken sind darum ungenau, weil noch nicht alle Zeitein eingetragen sind.
+  * b) `month` - Monat, z.B. "2021-01". Es wird jeweils der vergangene Monat ausgewertet.
 
 ## Aufträge
 
