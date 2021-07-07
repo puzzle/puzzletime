@@ -73,12 +73,16 @@ Tags
 
 Metriken
 
-* `highrise_deals_yesterday` - Deals
-  * `count` - Anzahl der Deals, welche erstellt wurden oder in einen neuen Status gewechselt haben
-* `highrise_volume_yesterday` - Deal-Volumen
-  * `value [CHF/EUR]` - Gesamtvolumen der Deals (Fixpreise + Stundensätze * Angebotene Stunden), welche erstellt wurden oder in einen neuen Status gewechselt haben
+* `highrise_deals` - Deals
+  * `count` - Anzahl der Deals
+* `highrise_volume` - Deal-Volumen
+  * `value [CHF/EUR]` - Gesamtvolumen der Deals (Fixpreise + Stundensätze * Angebotene Stunden)
 
 Tags
 
 * `status` - Bearbeitungsstatus
 * `category` - Deal-Kategorie
+* Wenn `status` den Wert `"lost"` oder `"won"` hat:
+  * `month` - Monat, z.B. "2021-01"
+* Wenn `status` den Wert `"pending"` hat:
+  * `stale [boolean]` - ob die letzte Änderung des Deals mehr als 3 Monate her ist
