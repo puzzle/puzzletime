@@ -18,7 +18,10 @@ class Order::Report::BITest < ActiveSupport::TestCase
         category: '',
         name: 'PuzzleTime',
         status: 'In Bearbeitung',
-        department: 'devone'
+        department: 'devone',
+        target_schedule: 'green',
+        target_budget: 'orange',
+        target_quality: 'green'
       },
       ptime[:tags]
     )

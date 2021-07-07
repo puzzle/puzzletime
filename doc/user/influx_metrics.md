@@ -15,8 +15,9 @@ Metriken / Felder
 
 Tags
 
-* `time_delta` M, z.B "-2 months" für vorletzter Monat
-* `department` Bereich
+* `time_delta` - Zeitraum der Auswertung, z.B "-2 months" für vorletzter Monat
+* `month` - Monat, den die Auswertung betrifft, z.B. "2021-01"
+* `department` - Bereich
 
 ## Auslastung
 
@@ -24,7 +25,7 @@ Tags
 
 Metriken
 
-* `workload_last_week` - Auswertungen der letzten Woche
+* `workload`
   * `employment_fte [Vollzeitäkquivalente]` - Kumulierter Anstellungsgrad (1 = 100%)
   * `must_hours [h]` - Soll-Zeit
   * `must_hours [h]` - Ist-Zeit
@@ -39,6 +40,9 @@ Metriken
 Tags
 
 * `department` (Bereich)
+* Ausgewerteter Zeitraum
+  * a) `week` - Kalenderwoche, z.B. "CW 3". Es wird jeweils die vergangene Woche ausgewertet. Diese Metriken sind darum ungenau, weil noch nicht alle Zeitein eingetragen sind.
+  * b) `month` - Monat, z.B. "2021-01". Es wird jeweils der vergangene Monat ausgewertet.
 
 ## Aufträge
 
@@ -55,6 +59,9 @@ Metriken
   * `offered_rate [CHF/h]` - Offerierter Stundensatz
   * `billed_rate [CHF/h]` - Verrechneter Stundensatz
   * `average_rate [CHF/h]` - Durchschnittlicher Stundensatz
+  * `target_budget ["green"|"orange"|"red"]` - Projekt-Ampel "Kosten"
+  * `target_schedule ["green"|"orange"|"red"]` - Projekt-Ampel "Termin"
+  * `target_quality ["green"|"orange"|"red"]` - Projekt-Ampel "Qualität"
 
 Tags
 
@@ -69,12 +76,16 @@ Tags
 
 Metriken
 
-* `highrise_deals_yesterday` - Deals
-  * `count` - Anzahl der Deals, welche erstellt wurden oder in einen neuen Status gewechselt haben
-* `highrise_volume_yesterday` - Deal-Volumen
-  * `value [CHF/EUR]` - Gesamtvolumen der Deals (Fixpreise + Stundensätze * Angebotene Stunden), welche erstellt wurden oder in einen neuen Status gewechselt haben
+* `highrise_deals` - Deals
+  * `count` - Anzahl der Deals
+* `highrise_volume` - Deal-Volumen
+  * `value [CHF/EUR]` - Gesamtvolumen der Deals (Fixpreise + Stundensätze * Angebotene Stunden)
 
 Tags
 
 * `status` - Bearbeitungsstatus
 * `category` - Deal-Kategorie
+* Wenn `status` den Wert `"lost"` oder `"won"` hat:
+  * `month` - Monat, z.B. "2021-01"
+* Wenn `status` den Wert `"pending"` hat:
+  * `stale [boolean]` - ob die letzte Änderung des Deals mehr als 3 Monate her ist

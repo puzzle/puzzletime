@@ -17,24 +17,32 @@ class BIWorkloadTest < ActiveSupport::TestCase
       hours: 2,
       work_item: work_items(:webauftritt),
       employee: employees(:lucien),
-      work_date: period.start_date
+      work_date: worked_at
     )
     Fabricate(
       :ordertime,
       hours: 3,
       work_item: work_items(:hitobito_demo_app),
       employee: employees(:lucien),
-      work_date: period.end_date
+      work_date: worked_at
+    )
+
+    Fabricate(
+      :ordertime,
+      hours: 3,
+      work_item: work_items(:hitobito_demo_app),
+      employee: employees(:lucien),
+      work_date: worked_at - 1.week
     )
 
     stats = report.stats
 
-    assert_equal 2, stats.length
+    assert_equal 4, stats.length
 
     assert_includes(
       stats,
       {
-        name: 'workload_last_week',
+        name: 'workload',
         fields: {
           employment_fte: 0.0,
           must_hours: 0,
@@ -47,20 +55,40 @@ class BIWorkloadTest < ActiveSupport::TestCase
           billability: 100.0,
           absolute_billability: 40.0
         },
-        tags: { department: 'devtwo' }
+        tags: { department: 'devtwo', week: 'CW 26' }
+      }
+    )
+
+    assert_includes(
+      stats,
+      {
+        name: 'workload',
+        fields: {
+          employment_fte: 0.0,
+          must_hours: 0,
+          ordertime_hours: 8.0,
+          paid_absence_hours: 0,
+          worktime_balance: 8.0,
+          external_client_hours: 2.0,
+          billable_hours: 2.0,
+          workload: 25.0,
+          billability: 100.0,
+          absolute_billability: 25.0
+        },
+        tags: { department: 'devtwo', month: '2021-06' }
       }
     )
   end
 
   private
 
-  def report(params = {})
-    report_period = params.delete(:period) || period
-    @report = Reports::BIWorkload.new(report_period)
+  def report
+    # The work items are the last week of June (CW 26), the report runs in the first week of July (CW 27)
+    @report = Reports::BIWorkload.new(worked_at + 1.week)
   end
 
-  def period
-    @period ||= Period.new('1.9.1900', '30.9.1900')
+  def worked_at
+    @worked_at ||= Date.new(2_021, 6, 28) # A monday
   end
 
   def create_employments

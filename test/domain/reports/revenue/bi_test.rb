@@ -50,8 +50,10 @@ class BIRevenueReportTest < ActiveSupport::TestCase
       r.stats,
       {
         name: 'revenue_planning',
-        fields: {volume: 2176.0 },
-        tags: { time_delta: '+ 2 months', department: 'devtwo' }
+        fields: { volume: 2176.0 },
+        tags: {
+          time_delta: '+ 2 months', department: 'devtwo', month: '2000-11'
+        }
       }
     )
     assert_includes(
@@ -59,7 +61,9 @@ class BIRevenueReportTest < ActiveSupport::TestCase
       {
         name: 'revenue_ordertime',
         fields: { volume: 6.0 },
-        tags: { time_delta: '- 2 months', department: 'devone' }
+        tags: {
+          time_delta: '- 2 months', department: 'devone', month: '2000-07'
+        }
       }
     )
   end

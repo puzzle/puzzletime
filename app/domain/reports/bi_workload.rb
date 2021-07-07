@@ -17,28 +17,43 @@ class Reports::BIWorkload
     absolute_billability
   ]
 
-  def initialize(period = make_period)
-    @period = period
+  def initialize(today = DateTime.now)
+    @today = today
   end
 
   def stats
-    departments.map do |department|
-      department_stats(department, @period)
-    end.flatten(1)
+    periods.flat_map do |period, period_tags|
+      departments.flat_map do |department|
+        department_stats(department, period, period_tags)
+      end
+    end
   end
 
   private
+
+  def periods
+    last_week = @today - 1.week
+    last_month = @today - 1.month
+
+    [
+      [
+        Period.new(last_week.beginning_of_week, last_week.end_of_week),
+        { week: last_week.strftime('CW %-V') }
+      ],
+      [
+        Period.new(last_month.beginning_of_month, last_month.end_of_month),
+        { month: last_month.strftime('%Y-%m') }
+      ]
+    ]
+  end
 
   def departments
     Department.having_employees
   end
 
-  def make_period
-    last_week = Time.now.beginning_of_week - 1.day
-    Period.new(last_week.beginning_of_week, last_week)
-  end
+  def make_period; end
 
-  def department_stats(department, period)
+  def department_stats(department, period, tags)
     _company, department = Reports::Workload.new(period, department).summary
 
     fields =
@@ -47,9 +62,9 @@ class Reports::BIWorkload
       end
 
     {
-      name: 'workload_last_week',
+      name: 'workload',
       fields: fields,
-      tags: { department: department.label.to_s }
+      tags: { department: department.label.to_s }.merge(tags)
     }
   end
 end

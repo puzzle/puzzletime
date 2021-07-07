@@ -7,6 +7,12 @@ class Order::Report::BI
   attr_reader :report
 
   TAGS = %i[client category name status]
+  TARGET_TAGS = {
+    'Kosten' => :target_budget,
+    'Termin' => :target_schedule,
+    'Qualität' => :target_quality
+  }.freeze
+
   METRICS = %i[
     offered_amount
     supplied_amount
@@ -41,20 +47,44 @@ class Order::Report::BI
         department_id: department.id, status_id: status_ids
       )
 
+    targets = target_scopes
+
     report.entries
-    report.entries.flat_map { |e| entry_stats(e, department) }
+    report.entries.flat_map { |e| entry_stats(e, department, targets) }
   end
 
-  def entry_stats(entry, department)
-    tags =
-      TAGS.each_with_object({}) { |tag, memo| memo[tag] = entry.send(tag).to_s }
-    tags[:department] = department.to_s
-
+  def entry_stats(entry, department, targets)
     fields =
       METRICS.each_with_object({}) do |metric, memo|
         memo[metric] = entry.send(metric)
       end
 
-    { name: 'order_report', fields: fields, tags: tags }
+    {
+      name: 'order_report',
+      fields: fields,
+      tags: tags(entry, department, targets)
+    }
+  end
+
+  def tags(entry, department, targets)
+    { department: department.to_s }.merge(basic_tags(entry)).merge(
+      rating_tags(entry, targets)
+    )
+  end
+
+  def basic_tags(entry)
+    TAGS.each_with_object({}) { |tag, memo| memo[tag] = entry.send(tag).to_s }
+  end
+
+  def rating_tags(entry, targets)
+    targets.each_with_object({}) do |target, memo|
+      rating = entry.target(target.id).try(:rating) || 'none'
+      tag = TARGET_TAGS.fetch(target.name)
+      memo[tag] = rating
+    end
+  end
+
+  def target_scopes
+    TargetScope.list.to_a
   end
 end
