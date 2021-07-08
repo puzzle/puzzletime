@@ -50,7 +50,7 @@ module Invoicing
 
       def access_token
         # fetch a new token if we have none yet or if the existing one is expired
-        @access_token, @expires_at = get_access_token unless @expires_at &. > Time.zone.now
+        @access_token, @expires_at = get_access_token unless @expires_at&.>(Time.zone.now)
         @access_token
       end
 

@@ -25,18 +25,22 @@ module Invoicing
       }.freeze
 
       attr_reader :invoice
+
       class_attribute :rate_limiter
       self.rate_limiter = RateLimiter.new(Settings.small_invoice.request_rate)
 
       class << self
         def sync_unpaid
+          failed = []
           unpaid_invoices.find_each do |invoice|
             begin
               new(invoice).sync
             rescue => error
+              failed << invoice.id
               notify_sync_error(error, invoice)
             end
           end
+          Rails.logger.error "Failed Invoice Syncs: #{failed.inspect}" if failed.any?
         end
 
         private

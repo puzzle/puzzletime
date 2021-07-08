@@ -40,6 +40,7 @@ module Invoicing
 
       delegate :notify_sync_error, to: 'self.class'
       attr_reader :client, :remote_keys
+
       class_attribute :rate_limiter
       self.rate_limiter = RateLimiter.new(Settings.small_invoice.request_rate)
 
@@ -49,13 +50,16 @@ module Invoicing
       end
 
       def sync
+        failed = []
         ::BillingAddress.includes(:client).where(client_id: client.id).find_each do |billing_address|
           key(billing_address) ? update_remote(billing_address) : create_remote(billing_address)
         rescue StandardError => e
+          failed << billing_address.id
           Rails.logger.error e.message
           Rails.logger.error e.backtrace
           notify_sync_error(e, billing_address)
         end
+        Rails.logger.error "Failed Address Syncs: #{failed.inspect}" if failed.any?
       end
 
       private

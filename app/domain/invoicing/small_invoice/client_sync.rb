@@ -10,15 +10,18 @@ module Invoicing
       class << self
         def perform
           remote_keys = fetch_remote_keys
+          failed = []
           ::Client.includes(:work_item, :contacts, :billing_addresses).find_each do |client|
             if client.billing_addresses.present? # required by small invoice
               begin
                 new(client, remote_keys).sync
               rescue => error
+                failed << client.id
                 notify_sync_error(error, client)
               end
             end
           end
+          Rails.logger.error "Failed Client Syncs: #{failed.inspect}" if failed.any?
         end
 
         def fetch_remote_keys
@@ -60,6 +63,7 @@ module Invoicing
 
       delegate :notify_sync_error, to: 'self.class'
       attr_reader :client, :remote_keys
+
       class_attribute :rate_limiter
       self.rate_limiter = RateLimiter.new(Settings.small_invoice.request_rate)
 

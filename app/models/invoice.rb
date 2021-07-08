@@ -49,12 +49,12 @@ class Invoice < ActiveRecord::Base
   before_validation :generate_reference, on: :create
   before_validation :generate_due_date
   before_validation :update_totals
-  before_create :lock_client_invoice_number
-  after_create :update_client_invoice_number
-  after_save :update_order_billing_address
   before_save :save_remote_invoice, if: -> { Invoicing.instance.present? }
   before_save :assign_worktimes
+  before_create :lock_client_invoice_number
+  after_create :update_client_invoice_number
   after_destroy :delete_remote_invoice, if: -> { Invoicing.instance.present? }
+  after_save :update_order_billing_address
 
   protect_if :paid?, 'Bezahlte Rechnungen können nicht gelöscht werden.'
   protect_if :order_closed?, 'Rechnungen von geschlossenen Aufträgen können nicht gelöscht werden.'
@@ -225,7 +225,11 @@ class Invoice < ActiveRecord::Base
     self.invoicing_key = Invoicing.instance.save_invoice(self, positions)
   rescue Invoicing::Error => e
     errors.add(:base, "Fehler im Invoicing Service: #{e.message}")
-    Rails.logger.error(e.class.name + ': ' + e.message + "\n" + e.data.inspect + "\n" + e.backtrace.join("\n"))
+    Rails.logger.error <<~ERROR
+      #{e.class.name}: #{e.message}
+      #{e.data.inspect}
+      #{e.backtrace.join("\n")}
+    ERROR
     throw :abort
   end
 
