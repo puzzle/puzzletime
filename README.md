@@ -3,6 +3,7 @@
 PuzzleTime is an open source time tracking and resource planning web application for SMEs.
 
 ![Rails Unit Tests](https://github.com/puzzle/puzzletime/workflows/Rails%20Unit%20Tests/badge.svg)
+[![GitHub](https://img.shields.io/github/license/puzzle/puzzletime)](https://github.com/puzzle/puzzletime/blob/master/LICENSE)
 
 ## Development
 
@@ -62,5 +63,5 @@ Then login using (username: mw, password: a) as credentials
 ## License
 
 PuzzleTime is released under the GNU Affero General Public License.
-Copyright 2006-2017 by [Puzzle ITC GmbH](http://puzzle.ch).
-See COPYING for more details.
+Copyright 2006-2020 by [Puzzle ITC GmbH](http://puzzle.ch).
+See LICENSE for more details.
