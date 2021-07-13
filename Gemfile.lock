@@ -337,7 +337,7 @@ GEM
     parser (3.0.2.0)
       ast (~> 2.4.1)
     pdf-core (0.9.0)
-    pg (0.21.0)
+    pg (1.2.3)
     prawn (2.4.0)
       pdf-core (~> 0.9.0)
       ttfunk (~> 1.7)
@@ -596,7 +596,7 @@ DEPENDENCIES
   omniauth-keycloak
   omniauth-saml
   paper_trail
-  pg (= 0.21.0)
+  pg
   prawn
   prometheus_exporter
   protective

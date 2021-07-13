@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rails', '~> 5.2.x'
 
-gem 'pg', '= 0.21.0'
+gem 'pg'
 
 gem 'acts_as_tree'
 gem 'bleib'
@@ -34,8 +34,8 @@ gem 'prawn'
 gem 'prometheus_exporter'
 gem 'protective'
 gem 'puma'
-gem 'rails-i18n'
 gem 'rails_autolink'
+gem 'rails-i18n'
 gem 'request_store'
 gem 'rqrcode'
 gem 'rswag-ui'
