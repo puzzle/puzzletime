@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rails', '~> 5.2.x'
 
-gem 'pg', '= 0.21.0'
+gem 'pg'
 
 gem 'acts_as_tree'
 gem 'bleib'
@@ -19,8 +19,8 @@ gem 'fast_jsonapi'
 gem 'haml'
 gem 'highrise'
 gem 'image_processing'
-gem 'influxdb-client', '~> 1.12.1'
-gem 'influxdb-client-apis', '~> 1.12.1'
+gem 'influxdb-client'
+gem 'influxdb-client-apis'
 gem 'jbuilder'
 gem 'kaminari'
 gem 'kaminari-bootstrap'
@@ -34,8 +34,8 @@ gem 'prawn'
 gem 'prometheus_exporter'
 gem 'protective'
 gem 'puma'
-gem 'rails-i18n'
 gem 'rails_autolink'
+gem 'rails-i18n'
 gem 'request_store'
 gem 'rqrcode'
 gem 'rswag-ui'
@@ -48,24 +48,21 @@ gem 'validates_timeliness'
 gem 'airbrake', require: false
 gem 'sentry-raven', require: false
 
-# must be at the end
-gem 'paper_trail'
-
 ## assets
 gem 'autoprefixer-rails'
-gem 'coffee-rails'
-gem 'execjs'
-gem 'sass-rails'
-gem 'uglifier'
-
-# Locked to 3.3.x, because 3.4.0 expects sassc, which can only be built with gcc
-# >= 4.6. Our Jenkins uses 4.4.7
 gem 'bootstrap-sass'
 gem 'chartjs-ror'
+gem 'coffee-rails'
+gem 'execjs'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
+gem 'sass-rails'
 gem 'selectize-rails'
 gem 'turbolinks'
+gem 'uglifier'
+
+# must be at the end
+gem 'paper_trail'
 
 group :development, :test do
   gem 'better_errors'
