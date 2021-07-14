@@ -1,20 +1,19 @@
 # 2.7
 
 ### Features
-* **Login:** Neu wird Omniauth mit Keycloak und/oder SAML unterstützt
-* **Integration:** Umstellung auf SmallInvoice APIv2
+* **Login:** Unterstützt nun Omniauth mit Keycloak und/oder SAML
+* **Rechnungsstellung:** Umstellung auf SmallInvoice APIv2 (vorher v1)
 * **Business Intelligence:** Wir können jetzt Verbindung zu einer InfluxDB herstellen, die wichtige Kennzahlen als Timeseries speichert
 ### Improvements
 * **Update:** Update auf Ruby 2.7
-* **Exporte:** Die verschiedenen CSV Exporte werden jetzt alle in einem gemeinsamen Controller gemanaged
+* **Exporte:** Die verschiedenen CSV Exporte in einen Controller refactored
 * **Journaleinträge:** Jeder kann jetzt Journaleinträge erstellen
 * **Rechnungen:** Werden jetzt auf 5 Rappen gerundet
 * **Support** X-Sendfile-Header kann jetzt per Umgebungsvariable gesetzt werden
 * **Dokumentation:** Das Herokusetup ist jetzt dokumentiert
 ### Bug fixes
-**Überzeitexport:** Header sind jetzt aussagekräftiger
-**Zeitanzeige:** Kompensierte Stunden werden jetzt nicht mehr einberechnet
-**Stundenbuchung:** Beim kopieren wird jetzt der heutige Tag als Standard eingesetzt
+* **Überzeitexport:** Header sind jetzt aussagekräftiger
+* **Verbleibende Arbeitszeit:** Berechnung korrigiert wenn Überstundenkompensationen in der Zukunft liegen
 
 # 2.6
 ### Features
