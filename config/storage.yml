@@ -6,6 +6,12 @@ local:
   service: Disk
   root: <%= Rails.root.join("storage") %>
 
+appuio:
+  service: S3
+  access_key_id: <%= ENV['APPUIO_S3_ACCESS_KEY_ID'] %>
+  secret_access_key: <%= ENV['APPUIO_S3_SECRET_ACCESS_KEY'] %>
+  bucket: <%= ENV['APPUIO_S3_BUCKET'] %>
+
 # Use rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
 # amazon:
 #   service: S3
