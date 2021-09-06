@@ -5,6 +5,7 @@ gem 'rails', '~> 5.2.x'
 gem 'pg'
 
 gem 'acts_as_tree'
+gem 'aws-sdk-s3', require: false
 gem 'bleib'
 gem 'bootsnap'
 gem 'cancancan'
