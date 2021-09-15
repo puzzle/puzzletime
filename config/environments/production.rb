@@ -46,7 +46,7 @@ Rails.application.configure do
   config.action_dispatch.x_sendfile_header = ENV['RAILS_X_SENDFILE_HEADER'] || 'X-Sendfile'
 
   # Store uploaded files on the local file system (see config/storage.yml for options)
-  config.active_storage.service = :appuio
+  config.active_storage.service = ENV['STORAGE_SERVICE']&.to_sym || :appuio
 
   # Mount Action Cable outside main process or domain
   # config.action_cable.mount_path = nil
