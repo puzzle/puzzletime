@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/puzzle/nochmal.git
-  revision: 6639f12a65f3e6b6f4623ab2e664cb5b7943ac0c
+  revision: d66a5e9a99e550084d29763d1395e1529fa17c2a
   specs:
     nochmal (0.1.0)
 
