@@ -33,7 +33,7 @@ Rails.application.configure do
   # end
 
   # Store uploaded files on the local file system (see config/storage.yml for options)
-  config.active_storage.service = ENV.fetch('RAILS_STORAGE_SERVICE', 'appuio').to_sym
+  config.active_storage.service = ENV.fetch('RAILS_STORAGE_SERVICE', 'local').to_sym
 
   # Perform caching as the session is stored there
   config.action_controller.perform_caching = true
