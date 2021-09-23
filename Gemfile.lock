@@ -1,4 +1,10 @@
 GIT
+  remote: https://github.com/puzzle/nochmal.git
+  revision: 6639f12a65f3e6b6f4623ab2e664cb5b7943ac0c
+  specs:
+    nochmal (0.1.0)
+
+GIT
   remote: https://github.com/puzzle/simplecov-rcov
   revision: 554ec457f4a7bdceae083ce516c281567a341e4a
   specs:
@@ -609,6 +615,7 @@ DEPENDENCIES
   mocha
   nested_form_fields
   net-ldap
+  nochmal!
   nokogiri
   omniauth
   omniauth-keycloak

@@ -17,4 +17,8 @@ Style/HashTransformKeys:
 
 Style/HashTransformValues:
   Enabled: true
+
+Naming/InclusiveLanguage:
+  Exclude:
+    - config/environments/development.rb # Bullet uses whitelist :(
 ...
