@@ -30,7 +30,8 @@ WebMock.disable_net_connect!(
   allow_localhost: true, # required for selenium
   allow: [
     'github.com', # required for webdrivers/geckodriver
-    %r{github-production-release-asset-\w+.s3.amazonaws.com}, # required for webdrivers/geckodriver
+    /github-production-release-asset-\w+.s3.amazonaws.com/, # required for webdrivers/geckodriver
+    /github-releases.githubusercontent.com/, # required for webdrivers/geckodriver
     'chromedriver.storage.googleapis.com' # required for webdrivers/chromedriver
   ]
 )
