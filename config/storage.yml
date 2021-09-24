@@ -6,6 +6,14 @@ local:
   service: Disk
   root: <%= Rails.root.join("storage") %>
 
+ocp4_s3:
+  service: S3
+  endpoint: <%= ENV['OCP4_S3_ENDPOINT'] %>
+  access_key_id: <%= ENV['OCP4_S3_ACCESS_KEY_ID'] %>
+  secret_access_key: <%= ENV['OCP4_S3_SECRET_ACCESS_KEY'] %>
+  region: none
+  bucket: <%= ENV['OCP4_S3_BUCKET'] %>
+
 # Use rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
 # amazon:
 #   service: S3

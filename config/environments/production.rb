@@ -46,7 +46,7 @@ Rails.application.configure do
   config.action_dispatch.x_sendfile_header = ENV['RAILS_X_SENDFILE_HEADER'] || 'X-Sendfile'
 
   # Store uploaded files on the local file system (see config/storage.yml for options)
-  config.active_storage.service = :local
+  config.active_storage.service = ENV.fetch('RAILS_STORAGE_SERVICE', 'ocp4_s3').to_sym
 
   # Mount Action Cable outside main process or domain
   # config.action_cable.mount_path = nil
@@ -117,7 +117,7 @@ Rails.application.configure do
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
 
   if ENV['RAILS_LOG_TO_STDOUT'].present?
-    logger           = ActiveSupport::Logger.new(STDOUT)
+    logger           = ActiveSupport::Logger.new($stdout)
     logger.formatter = config.log_formatter
     config.logger    = ActiveSupport::TaggedLogging.new(logger)
   end
