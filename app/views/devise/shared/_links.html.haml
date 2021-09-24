@@ -23,6 +23,7 @@
     - if Settings.auth&.omniauth[provider]&.active
       = link_to "Sign in with #{OmniAuth::Utils.camelize(provider)}",
         public_send("#{resource_name}_#{provider}_omniauth_authorize_path"),
+        method: :post,
         class: 'btn btn-primary'
       %br
       %br

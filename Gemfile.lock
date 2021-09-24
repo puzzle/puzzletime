@@ -349,6 +349,9 @@ GEM
     omniauth-oauth2 (1.7.1)
       oauth2 (~> 1.4)
       omniauth (>= 1.9, < 3)
+    omniauth-rails_csrf_protection (1.0.0)
+      actionpack (>= 4.2)
+      omniauth (~> 2.0)
     omniauth-saml (2.0.0)
       omniauth (~> 2.0)
       ruby-saml (~> 1.9)
@@ -619,6 +622,7 @@ DEPENDENCIES
   nokogiri
   omniauth
   omniauth-keycloak
+  omniauth-rails_csrf_protection
   omniauth-saml
   paper_trail
   pg
