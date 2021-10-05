@@ -12,7 +12,10 @@ RUN \
   yum install -y http://opensource.wandisco.com/centos/7/git/x86_64/wandisco-git-release-7-2.noarch.rpm && \
   yum install -y \
     # for active storage gem
-    ImageMagick poppler libpoppler && \
+    ImageMagick poppler libpoppler \
+    # Update certificates
+    cacerts ca-certificates && \
+  update-ca-trust && \
   # Call restore-artifacts sscript when assembling
   sed '/Installing application source/i $STI_SCRIPTS_PATH/restore-artifacts' \
     -i $STI_SCRIPTS_PATH/assemble && \
