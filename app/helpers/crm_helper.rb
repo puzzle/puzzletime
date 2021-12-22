@@ -4,7 +4,7 @@
 #  https://github.com/puzzle/puzzletime.
 
 module CrmHelper
-  def crm_order_link(order, label = nil)
+  def crm_order_link(order, label = order.try(:crm_key))
     crm_link(Crm.instance.order_url(order), label)
   end
 

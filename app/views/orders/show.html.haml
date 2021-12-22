@@ -15,7 +15,8 @@
     = labeled_attr entry.work_item, :shortname
     = labeled_attr entry.work_item, :description
     - if Crm.instance
-      = labeled(Crm.instance.crm_key_name, crm_order_link(entry, entry.crm_key))
+      = labeled(Crm.instance.crm_key_name, format_attr(entry, :crm_key))
+      = labeled("Weitere #{Crm.instance.crm_key_name_plural}", format_attr(entry, :additional_crm_orders))
 
   = render_attrs entry, :order_contacts
 
