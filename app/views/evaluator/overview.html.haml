@@ -6,6 +6,9 @@
 
 - @title = @evaluation.title
 
+- if @order
+  = "#{@order.model_name.human}: #{link_to(@order.label_with_workitem_path, @order)}".html_safe
+
 = render 'period_link'
 
 - if @evaluation.category.respond_to?(:tooltip) && @evaluation.category.tooltip.present?

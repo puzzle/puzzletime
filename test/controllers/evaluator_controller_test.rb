@@ -38,7 +38,15 @@ class EvaluatorControllerTest < ActionController::TestCase
     test "GET index #{evaluation}" do
       get :index, params: { evaluation: evaluation }
       assert_template 'overview'
+      assert_nil assigns(:order)
     end
+  end
+
+  test "GET index workitememployees" do
+    get :index, params: { evaluation: "workitememployees", category_id: work_items(:allgemein) }
+    assert_template 'overview'
+    assert_equal work_items(:allgemein).order, assigns(:order)
+    assert_select "a", /#{work_items(:allgemein).order.label_with_workitem_path}/
   end
 
   %w(clients employees departments).each do |evaluation|

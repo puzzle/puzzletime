@@ -22,6 +22,7 @@ class EvaluatorController < ApplicationController
     if @evaluation.planned_hours
       @plannings = @periods.collect { |p| @evaluation.sum_plannings_grouped(p) }
     end
+    @order = @evaluation.category.is_a?(WorkItem).presence && @evaluation.category.order
 
     render(overview_template)
   end
