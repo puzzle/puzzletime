@@ -135,6 +135,11 @@ committed_worktimes:
     days_at_end_of_month: 7
     days_at_beginning_of_month: 3
 
+expenses:
+  receipt:
+    max_pixel: 1800
+    quality: 75
+
 help:
   url: https://twiki.puzzle.ch/bin/view/PITC_PuzzleTime/Besonderheiten
 

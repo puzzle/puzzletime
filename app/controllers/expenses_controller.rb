@@ -10,6 +10,8 @@ class ExpensesController < ManageController
   before_render_form :populate_orders
   before_action :set_payment_date, only: :index, if: :parent
 
+  before_save :attach_resized_receipt
+
   def new
     entry.attributes = template_attributes
   end
@@ -102,5 +104,29 @@ class ExpensesController < ManageController
   def template_attributes
     attrs = Expense.find_by(id: params[:template])&.attributes || {}
     attrs.slice('kind', 'amount', 'payment_date', 'description', 'order_id')
+  end
+
+  def model_params
+    # remove receipt param to prevent processing of original image (will get attached in #attach_resized_receipt)
+    params.require(model_identifier).permit(permitted_attrs).except('receipt')
+  end
+
+  def receipt_param
+    params.dig(model_identifier, :receipt)
+  end
+
+  def attach_resized_receipt
+    return unless receipt_param
+
+    resized = ImageProcessing::MiniMagick
+              .source(receipt_param.tempfile)
+              .resize_to_limit(Settings.expenses.receipt.max_pixel, Settings.expenses.receipt.max_pixel)
+              .saver(quality: Settings.expenses.receipt.quality)
+              .convert('jpg')
+              .call
+
+    target_filename = "#{File.basename(receipt_param.original_filename.to_s, '.*')}.jpg"
+
+    entry.receipt.attach(io: File.open(resized), filename: target_filename, content_type: 'image/jpg')
   end
 end
