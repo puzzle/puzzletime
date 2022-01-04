@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_29_160335) do
+ActiveRecord::Schema.define(version: 2021_12_31_163202) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -446,6 +446,8 @@ ActiveRecord::Schema.define(version: 2020_04_29_160335) do
     t.text "object"
     t.datetime "created_at"
     t.text "object_changes"
+    t.bigint "employee_id"
+    t.index ["employee_id"], name: "index_versions_on_employee_id"
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 

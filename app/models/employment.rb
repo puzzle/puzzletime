@@ -19,7 +19,7 @@
 class Employment < ActiveRecord::Base
   DAYS_PER_YEAR = 365.25
 
-  has_paper_trail
+  has_paper_trail(meta: { employee_id: proc(&:employee_id) })
 
   belongs_to :employee
   has_many :employment_roles_employments,

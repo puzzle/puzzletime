@@ -57,7 +57,7 @@ class Employee < ActiveRecord::Base
   include ReportType::Accessors
   extend Conditioner
 
-  has_paper_trail skip: Employee::INTERNAL_ATTRS
+  has_paper_trail(meta: { employee_id: proc(&:id) }, skip: Employee::INTERNAL_ATTRS)
 
   enum marital_status: %w(
     single
