@@ -57,10 +57,10 @@ class EmploymentsController < ManageController
     role_percent = employment_roles_employments
                    .values
                    .reject { |v| v[:_destroy] }
-                   .collect { |v| v[:percent].to_i }
+                   .collect { |v| v[:percent].to_f }
                    .sum
 
-    if entry.percent.to_i != role_percent
+    if entry.percent != role_percent
       entry.errors.add(:percent, 'Funktionsanteile und Beschäftigungsgrad stimmen nicht überein.')
       throw :abort
     end
