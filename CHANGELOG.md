@@ -1,3 +1,12 @@
+# master branch unreleased
+### Improvements
+* **Spesen:** Rechnungsbilder werden nun beim Hochladen herunterskaliert
+* **Kundenauswertung:** Auftrag verlinkt
+* **Mitarbeiter-Stammdaten:** Attribut "Telefon privat" umbenannt in "Mobiltelefon"
+* **Mitarbeiter-Stammdaten:** Anstellungsprozente und Funktionsanteile können nun in 2.5% Schritten konfiguriert werden
+* **Mitarbeiterliste:** Sortierbar gemacht nach Vorname, Nachname
+* **Zeiterfassung:** Leerschläge vor und nach der Ticketnummer werden entfernt
+
 # 2.7
 
 ### Features
