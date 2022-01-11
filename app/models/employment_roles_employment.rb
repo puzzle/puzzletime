@@ -29,7 +29,7 @@ class EmploymentRolesEmployment < ActiveRecord::Base
               ''
             end
 
-    "#{employment_role}#{level} #{percent}%"
+    "#{employment_role}#{level} #{sprintf('%g',percent)}%"
   end
 
   private
