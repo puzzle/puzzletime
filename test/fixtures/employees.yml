@@ -44,7 +44,7 @@ half_year_maria:
   firstname: Maria
   lastname:  Dolores
   shortname: GGG
-  encrypted_password:    <%= Employee.encode('ptime') %>
+  passwd:    <%= Employee.encode('ptime') %>
   email:     bla@bla.ch
   management: true
   eval_periods: ["-1m", "0"]
@@ -54,7 +54,7 @@ various_pedro:
   firstname:        Pedro
   lastname:         Dolores
   shortname:        GIG
-  encrypted_password:           <%= Employee.encode('ptime') %>
+  passwd:           <%= Employee.encode('ptime') %>
   email:            bol@bla.ch
   social_insurance: 123.4567.8910.11
   management:       false
@@ -64,7 +64,7 @@ next_year_pablo:
   firstname: Pablo
   lastname:  Sanchez
   shortname: PS
-  encrypted_password:    <%= Employee.encode('ptime') %>
+  passwd:    <%= Employee.encode('ptime') %>
   email:     ps@bla.ch
   management: false
 
@@ -73,7 +73,7 @@ left_this_year_macy:
   firstname: Macy
   lastname:  Grey
   shortname: MG
-  encrypted_password:    <%= Employee.encode('ptime') %>
+  passwd:    <%= Employee.encode('ptime') %>
   email:     mg@bla.ch
   management: false
 
@@ -82,7 +82,7 @@ long_time_john:
   firstname: John
   lastname:  Neverends
   shortname: JN
-  encrypted_password:    <%= Employee.encode('ptime') %>
+  passwd:    <%= Employee.encode('ptime') %>
   email:     jn@bla.ch
   management: false
   committed_worktimes_at: 2015-07-31
@@ -98,7 +98,7 @@ pascal:
   firstname: Pascal
   lastname:  Zumkehr
   shortname: PZ
-  encrypted_password:    <%= Employee.encode('ptime') %>
+  passwd:    <%= Employee.encode('ptime') %>
   email:     pz@bla.ch
   management: false
   department: devtwo
@@ -108,7 +108,7 @@ mark:
   firstname: Mark
   lastname:  Waber
   shortname: MW
-  encrypted_password:    <%= Employee.encode('ptime') %>
+  passwd:    <%= Employee.encode('ptime') %>
   email:     mw@bla.ch
   management: true
   eval_periods:
@@ -124,7 +124,7 @@ lucien:
   firstname: Lucien
   lastname:  Weller
   shortname: LW
-  encrypted_password:    <%= Employee.encode('ptime') %>
+  passwd:    <%= Employee.encode('ptime') %>
   email:     lw@bla.ch
   management: false
   department: devtwo

@@ -23,4 +23,4 @@
             %i.icon-help
       - if @user
         %li
-          = link_to 'Logout', destroy_employee_session_path, method: :delete
+          = link_to 'Logout', logout_path, method: :post

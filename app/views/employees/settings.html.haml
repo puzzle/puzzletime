@@ -7,50 +7,41 @@
 - @title = "Benutzereinstellungen"
 
 = standard_form(@user, url: settings_employees_path, cancel_url: root_path) do |f|
-  - unless Settings.auth&.omniauth&.keys&.any?
+  - if Settings.ldap.connection.host.blank?
     = f.labeled('Passwort') do
       %p.form-control-static
-        = link_to 'Ändern', edit_employee_registration_path
+        = link_to 'Ändern', passwd_employees_path
 
   = f.labeled('Zeitspannen') do
     %table.table-condensed
       %tr{:valign => "top"}
         %td
-          %label
-            = multiple_check_box 'user', 'eval_periods', '0d'
-            Heute
+          = multiple_check_box 'user', 'eval_periods', '0d'
+          Heute
           %br/
-          %label
-            = multiple_check_box 'user', 'eval_periods', '-1d'
-            Gestern
+          = multiple_check_box 'user', 'eval_periods', '-1d'
+          Gestern
         %td
-          %label
-            = multiple_check_box 'user', 'eval_periods', '0w'
-            Aktuelle Woche
+          = multiple_check_box 'user', 'eval_periods', '0w'
+          Aktuelle Woche
           %br/
-          %label
-            = multiple_check_box 'user', 'eval_periods', '-1w'
-            Vorige Woche
+          = multiple_check_box 'user', 'eval_periods', '-1w'
+          Vorige Woche
         %td
-          %label
-            = multiple_check_box 'user', 'eval_periods', '0m'
-            Aktueller Monat
+          = multiple_check_box 'user', 'eval_periods', '0m'
+          Aktueller Monat
           %br/
-          %label
-            = multiple_check_box 'user', 'eval_periods', '-1m'
-            Voriger Monat
+          = multiple_check_box 'user', 'eval_periods', '-1m'
+          Voriger Monat
         %td
-          %label
-            = multiple_check_box 'user', 'eval_periods', '0y'
-            Aktuelles Jahr
+          = multiple_check_box 'user', 'eval_periods', '0y'
+          Aktuelles Jahr
           %br/
-          %label
-            = multiple_check_box 'user', 'eval_periods', '-1y'
-            Voriges Jahr
+          = multiple_check_box 'user', 'eval_periods', '-1y'
+          Voriges Jahr
         %td
-          %label
-            = multiple_check_box 'user', 'eval_periods', '0'
-            Total
+          = multiple_check_box 'user', 'eval_periods', '0'
+          Total
 
 - unless @user.overtime_vacations.empty?
   .row

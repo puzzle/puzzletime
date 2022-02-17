@@ -69,18 +69,7 @@ ActiveRecord::Schema.define(version: 2021_12_31_163202) do
     t.index ["order_id"], name: "index_additional_crm_orders_on_order_id"
   end
 
-  create_table "authentications", force: :cascade do |t|
-    t.string "provider"
-    t.string "uid"
-    t.string "token"
-    t.string "token_secret"
-    t.bigint "employee_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["employee_id"], name: "index_authentications_on_employee_id"
-  end
-
-  create_table "billing_addresses", force: :cascade do |t|
+  create_table "billing_addresses", id: :serial, force: :cascade do |t|
     t.integer "client_id", null: false
     t.integer "contact_id"
     t.string "supplement", limit: 255
@@ -191,10 +180,6 @@ ActiveRecord::Schema.define(version: 2021_12_31_163202) do
     t.string "graduation"
     t.string "identity_card_type"
     t.date "identity_card_valid_until"
-    t.string "encrypted_password", default: ""
-    t.datetime "remember_created_at"
-    t.datetime "created_at", default: "2021-07-13 19:37:08", null: false
-    t.datetime "updated_at", default: "2021-07-13 19:37:08", null: false
     t.index ["department_id"], name: "index_employees_on_department_id"
     t.index ["shortname"], name: "chk_unique_name", unique: true
   end
