@@ -575,7 +575,7 @@ DEPENDENCIES
   better_errors
   binding_of_caller
   bleib
-  bootsnap
+  bootsnap (>= 1.4.6)
   bootstrap-sass
   brakeman
   bullet
@@ -585,7 +585,7 @@ DEPENDENCIES
   chartjs-ror
   codez-tarantula
   coffee-rails
-  config
+  config (>= 2.2.1)
   country_select
   daemons
   dalli
@@ -619,7 +619,7 @@ DEPENDENCIES
   omniauth-rails_csrf_protection
   omniauth-saml
   paper_trail
-  pg (~> 0.21.0)
+  pg (= 0.21.0)
   prawn
   prometheus_exporter
   protective
