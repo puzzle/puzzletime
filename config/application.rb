@@ -60,7 +60,7 @@ module Puzzletime
 
     memcached_host = ENV['RAILS_MEMCACHED_HOST'] || 'localhost'
     memcached_port = ENV['RAILS_MEMCACHED_PORT'] || '11211'
-    config.cache_store = :dalli_store, "#{memcached_host}:#{memcached_port}"
+    config.cache_store = :mem_cache_store, "#{memcached_host}:#{memcached_port}"
 
     config.middleware.insert_before Rack::ETag, Rack::Deflater
 
