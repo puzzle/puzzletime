@@ -4,12 +4,6 @@
 #  https://github.com/puzzle/puzzletime.
 
 Rails.application.routes.draw do
-  devise_for :employees, controllers: { omniauth_callbacks: 'employees/omniauth_callbacks' }, skip: [:registrations]
-  as :employee do
-    get 'employees/edit' => 'devise/registrations#edit', :as => 'edit_employee_registration'
-    patch 'employees' => 'devise/registrations#update', :as => 'employee_registration'
-  end
-
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
   root to: 'worktimes#index'
@@ -221,8 +215,10 @@ Rails.application.routes.draw do
     get :export, to: 'export_report#index', as: :reports_export
   end
 
-  get '/login', to: redirect('/employees/sign_in')
-  get '/login/login', to: redirect('/employees/sign_in')
+  scope '/login', controller: 'login' do
+    match :login, via: [:get, :post]
+    post :logout
+  end
 
   get 'status/health', to: 'status#health'
   get 'status/readiness', to: 'status#readiness'

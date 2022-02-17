@@ -23,7 +23,6 @@ class EditWorktimesCommitTest < ActionDispatch::IntegrationTest
   end
 
   def login
-    login_as(:mark)
-    visit('/evaluator/employees')
+    login_as(:mark, '/evaluator/employees')
   end
 end

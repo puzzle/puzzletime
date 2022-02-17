@@ -77,15 +77,11 @@ class ActiveSupport::TestCase
   end
 
   def login_as(user)
-    employee = employees(user)
-    sign_in employee
-    @request.session[:user_id] = user ? employee.id : nil
-    @request.session[:employee_id] = user ? employee.id : nil
+    @request.session[:user_id] = user ? employees(user).id : nil
   end
 
   def logout
-    sign_out Employee
-    @request.session[:user_id] = @request.session[:employee_id] = nil
+    @request.session[:user_id] = nil
   end
 
   # Since we've removed the hardcoded regular holidays, insert them manually
@@ -102,7 +98,6 @@ end
 
 class ActionDispatch::IntegrationTest
   include Capybara::DSL
-  include Devise::Test::IntegrationHelpers
   include IntegrationHelper
 
   DatabaseCleaner.strategy = :truncation
@@ -117,8 +112,4 @@ class ActionDispatch::IntegrationTest
   teardown do
     DatabaseCleaner.clean
   end
-end
-
-class ActionController::TestCase
-  include Devise::Test::ControllerHelpers
 end
