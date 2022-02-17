@@ -17,13 +17,12 @@ module Invoicing
       def save(positions)
         assert_remote_client_exists
 
-        entity = Entity::Invoice.new(invoice, positions)
+        data = Invoicing::SmallInvoice::Entity::Invoice.new(invoice, positions).to_hash
         if invoice.invoicing_key?
-          api.edit(entity.path, entity.to_hash)
+          api.edit(:invoice, invoice.invoicing_key, data)
           invoice.invoicing_key
         else
-          result = api.add(entity.class.path, entity.to_hash)
-          result['id']
+          api.add(:invoice, data)
         end
       end
 
@@ -41,7 +40,7 @@ module Invoicing
       end
 
       def api
-        Invoicing::SmallInvoice::Api.instance
+        Api.instance
       end
     end
   end
