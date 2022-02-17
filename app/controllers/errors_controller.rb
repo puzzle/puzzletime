@@ -8,6 +8,7 @@
 # Used to generate static error pages with the application layout:
 # rails generate error_page {status}
 class ErrorsController < ApplicationController
+  skip_before_action :authenticate
   skip_authorization_check
 
   layout 'application'
