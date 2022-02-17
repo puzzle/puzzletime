@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rails', '~> 5.2.x'
 
-gem 'pg', '~> 0.21.0'
+gem 'pg', '= 0.21.0'
 gem 'activerecord-nulldb-adapter'
 
 gem 'nochmal', github: 'puzzle/nochmal'
@@ -10,9 +10,9 @@ gem 'nochmal', github: 'puzzle/nochmal'
 gem 'acts_as_tree'
 gem 'aws-sdk-s3', require: false
 gem 'bleib'
-gem 'bootsnap'
+gem 'bootsnap', '>= 1.4.6'
 gem 'cancancan'
-gem 'config'
+gem 'config', '>= 2.2.1'
 gem 'country_select'
 gem 'daemons'
 gem 'dalli'
