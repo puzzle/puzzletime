@@ -54,9 +54,8 @@ highrise:
   api_token: <%= ENV['RAILS_HIGHRISE_TOKEN'] %>
 
 small_invoice:
-  client_id: <%= ENV['RAILS_SMALL_INVOICE_CLIENT_ID'] %>
-  client_secret: <%= ENV['RAILS_SMALL_INVOICE_CLIENT_SECRET'] %>
-  url: https://api.smallinvoice.com/v2
+  url: https://api.smallinvoice.com
+  api_token: <%= ENV['RAILS_SMALL_INVOICE_TOKEN'] %>
   request_rate: <%= ENV['RAILS_SMALL_INVOICE_REQUEST_RATE'] || 1 %>
   constants:
     account_id: 0 # none
@@ -70,7 +69,6 @@ small_invoice:
     vat_included: false
     client_type: 1 # company
     position_type_id: 1 # service
-    position_type: 'S' # service
     unit_id: 1 # hours
     gender_id: 2 # female
 
