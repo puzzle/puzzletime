@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_31_163202) do
+ActiveRecord::Schema.define(version: 2022_03_22_152042) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -195,8 +195,10 @@ ActiveRecord::Schema.define(version: 2021_12_31_163202) do
     t.datetime "remember_created_at"
     t.datetime "created_at", default: "2021-07-13 19:37:08", null: false
     t.datetime "updated_at", default: "2021-07-13 19:37:08", null: false
+    t.bigint "workplace_id"
     t.index ["department_id"], name: "index_employees_on_department_id"
     t.index ["shortname"], name: "chk_unique_name", unique: true
+    t.index ["workplace_id"], name: "index_employees_on_workplace_id"
   end
 
   create_table "employees_invoices", id: false, force: :cascade do |t|
@@ -469,6 +471,10 @@ ActiveRecord::Schema.define(version: 2021_12_31_163202) do
     t.date "valid_from"
     t.decimal "vacation_days_per_year", precision: 5, scale: 2, null: false
     t.decimal "must_hours_per_day", precision: 4, scale: 2, null: false
+  end
+
+  create_table "workplaces", force: :cascade do |t|
+    t.string "name"
   end
 
   create_table "worktimes", force: :cascade do |t|

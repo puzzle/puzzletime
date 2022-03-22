@@ -102,6 +102,7 @@ pascal:
   email:     pz@bla.ch
   management: false
   department: devtwo
+  workplace: bern
 
 mark:
   id:        7
@@ -118,6 +119,7 @@ mark:
     - '-1m'
     - '0y'
     - '-1y'
+  workplace: jona
 
 lucien:
   id:        8

@@ -69,6 +69,7 @@ class Employee < ActiveRecord::Base
 
   # All dependencies between the models are listed below.
   belongs_to :department, optional: true
+  belongs_to :workplace, optional: true
 
   has_and_belongs_to_many :invoices
 
