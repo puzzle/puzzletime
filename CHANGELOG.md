@@ -2,8 +2,10 @@
 ### Improvements
 * **Spesen:** Spesenbelege werden nun beim Hochladen herunterskaliert
 * **Kundenauswertung:** Auftrag verlinkt, um schneller hin und her navigieren zu können
-* **Mitarbeiter-Stammdaten:** Attribut "Telefon privat" umbenannt in "Mobiltelefon"
-* **Mitarbeiter-Stammdaten:** Anstellungsprozente und Funktionsanteile können nun in 2.5% Schritten konfiguriert werden
+* **Mitarbeiter-Stammdaten:**
+  + Attribut "Telefon privat" umbenannt in "Mobiltelefon"
+  + Anstellungsprozente und Funktionsanteile können nun in 2.5% Schritten konfiguriert werden
+  + Neues Attribut "Arbeitsort", verfügbare Werte konfigurierbar unter "Verwalten"
 * **Mitarbeiterliste:** Sortierbar gemacht nach Vorname, Nachname
 * **Zeiterfassung:** Leerschläge vor und nach der Ticketnummer werden entfernt
 
