@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_22_152042) do
+ActiveRecord::Schema.define(version: 2022_03_24_100350) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -193,8 +193,8 @@ ActiveRecord::Schema.define(version: 2022_03_22_152042) do
     t.date "identity_card_valid_until"
     t.string "encrypted_password", default: ""
     t.datetime "remember_created_at"
-    t.datetime "created_at", default: "2021-07-13 19:37:08", null: false
-    t.datetime "updated_at", default: "2021-07-13 19:37:08", null: false
+    t.datetime "created_at", default: -> { "now()" }, null: false
+    t.datetime "updated_at", default: -> { "now()" }, null: false
     t.bigint "workplace_id"
     t.index ["department_id"], name: "index_employees_on_department_id"
     t.index ["shortname"], name: "chk_unique_name", unique: true
