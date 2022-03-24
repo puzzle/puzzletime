@@ -106,6 +106,9 @@ class Employee < ActiveRecord::Base
   scope :list, -> { order('lastname', 'firstname') }
   scope :current, -> { joins(:employments).merge(Employment.during(Period.current_day)) }
 
+  # logic should match CompletableHelper#recently_completed
+  scope :pending_worktimes_commit, -> { where("committed_worktimes_at < date_trunc('month', now()) - '1 day'::interval").or(where(committed_worktimes_at: nil)) }
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable,

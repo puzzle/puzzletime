@@ -141,6 +141,17 @@ class EmployeeTest < ActiveSupport::TestCase
     assert_arrays_match employees(:long_time_john, :various_pedro, :next_year_pablo), Employee.current
   end
 
+  test '#pending_worktimes_commit scope' do
+    Employee.update_all(committed_worktimes_at: nil)
+    assert Employee.pending_worktimes_commit.present?
+
+    Employee.update_all(committed_worktimes_at: Date.today.beginning_of_month - 1.day)
+    assert Employee.pending_worktimes_commit.blank?
+
+    Employee.update_all(committed_worktimes_at: Date.today.beginning_of_month - 2.day)
+    assert Employee.pending_worktimes_commit.present?
+  end
+
   private
 
   def year_period(employee)

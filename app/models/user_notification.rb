@@ -34,7 +34,6 @@ class UserNotification < ActiveRecord::Base
                           period.start_date, period.end_date).
                reorder('date_from')
       list = custom.to_a.concat(holiday_notifications(period))
-      list.push(worktimes_commit_notification) if show_worktimes_commit_notification?(current_user)
       list.sort!
     end
 
@@ -44,25 +43,7 @@ class UserNotification < ActiveRecord::Base
       regular.collect! { |holiday| new_holiday_notification(holiday) }
     end
 
-    def show_worktimes_commit_notification?(employee)
-      today = Time.zone.today
-
-      committed = employee && employee.committed_worktimes_at
-      config = Settings.committed_worktimes.notification
-
-      show_range = today.at_end_of_month - today < config.days_at_end_of_month ||
-                   today - today.at_beginning_of_month < config.days_at_beginning_of_month
-
-      !(committed && today - committed <= config.days_at_beginning_of_month) && show_range
-    end
-
     private
-
-    def worktimes_commit_notification
-      new(date_from: Time.zone.today,
-          date_to: Time.zone.today,
-          message: 'Bitte Zeiten bis spätestens am ersten Arbeitstag des Monats freigeben.')
-    end
 
     def new_holiday_notification(holiday)
       new(date_from: holiday.holiday_date,

@@ -210,6 +210,7 @@ de-CH:
         identity_card_type: Ausweistyp
         identity_card_valid_until: Ausweis gültig bis
         workplace_id: Arbeitsort
+        worktimes_commit_reminder: Freigabeerinnerung senden
       employee/marital_statuses:
         married: Verheiratet
         single: Ledig

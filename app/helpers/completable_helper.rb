@@ -13,6 +13,7 @@ module CompletableHelper
   end
 
   def recently_completed(date)
+    # logic should match Employee::pending_worktimes_commit
     date && date >= Time.zone.today.end_of_month - 1.month
   end
 
