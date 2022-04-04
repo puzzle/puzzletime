@@ -38,8 +38,17 @@ class LogPresenter
 
   def title_for(version)
     model = version.item_type.parameterize
+    return send("title_for_#{model}", version) if respond_to?("title_for_#{model}")
+
     event = version.event
     I18n.t("version.model.#{event}.#{model}", id: version.item_id)
+  end
+
+  def title_for_employmentrolesemployment(version)
+    entry_class = version.item_type.constantize
+    entry = entry_class.find_by(id: version.item_id) || version.object && entry_class.new(version.object_deserialized)
+    role = entry&.employment_role || '(deleted)'
+    I18n.t("version.model.#{version.event}.employmentrolesemployment", role: role, employment_id: entry&.employment_id)
   end
 
   def changes_for(version)

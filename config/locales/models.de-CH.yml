@@ -236,6 +236,7 @@ de-CH:
         name: Name
       employment_roles_employment:
         percent: Pensum
+        employment_role: Funktion
       expense:
         id: Spesennummer
         amount: Betrag

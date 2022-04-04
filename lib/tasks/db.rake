@@ -83,5 +83,32 @@ namespace :db do
         percent: 80
       }
     )
+
+    CreateTestuser.run(
+      shortname: 'MGT',
+      employee: {
+        firstname: 'Manager',
+        lastname: 'Management',
+        passwd: Employee.encode('member'),
+        password: 'member',
+        email: 'mgt@puzzle.ch',
+        management: true
+      },
+      role: {
+        name: 'T2 System Engineer',
+        billable: true,
+        level: true
+      },
+      level: {
+        name: 'S4'
+      },
+      employment: {
+        percent: 80,
+        start_date: Date.new(2014, 9, 1)
+      },
+      role_employment: {
+        percent: 80
+      }
+    )
   end
 end
