@@ -6,7 +6,10 @@
 require 'test_helper'
 
 class ShowOrder < ActionDispatch::IntegrationTest
+  setup :crm_start
   setup :login
+  teardown :crm_stop
+
 
   ADDITIONAL_CRM_LABEL_TEXT = 'Weitere Highrise IDs'
 
@@ -28,6 +31,16 @@ class ShowOrder < ActionDispatch::IntegrationTest
   end
 
   private
+
+  def crm_start
+    Settings.highrise.api_token = 'test'
+    Crm.init
+  end
+
+  def crm_stop
+    Settings.highrise.api_token = nil
+    Crm.init
+  end
 
   def login
     login_as(:mark)
