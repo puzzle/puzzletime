@@ -365,7 +365,7 @@ GEM
     parser (3.0.2.0)
       ast (~> 2.4.1)
     pdf-core (0.9.0)
-    pg (1.2.3)
+    pg (0.21.0)
     prawn (2.4.0)
       pdf-core (~> 0.9.0)
       ttfunk (~> 1.7)
@@ -633,7 +633,7 @@ DEPENDENCIES
   omniauth-rails_csrf_protection
   omniauth-saml
   paper_trail
-  pg
+  pg (~> 0.21.0)
   prawn
   prometheus_exporter
   protective
@@ -674,4 +674,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   2.2.27
+   2.3.9

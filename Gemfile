@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rails', '~> 5.2.x'
 
-gem 'pg'
+gem 'pg', '~> 0.21.0'
 
 gem 'nochmal', github: 'puzzle/nochmal'
 
