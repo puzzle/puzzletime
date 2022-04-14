@@ -76,6 +76,7 @@
         %h4 Anstellung
         = labeled_attr(@employee, :department_id)
         = labeled_attr(@employee, :current_percent)
+        = labeled_attr(@employee, :workplace_id)
         = labeled('Rollen', format_current_employment_roles(@employee, tag(:br)))
 
         - if @employee.additional_information.present?
