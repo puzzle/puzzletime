@@ -1,4 +1,4 @@
-if !Rails.env.test? && ENV['PROMETHEUS_EXPORTER_HOST']
+unless Rails.env.test? || ENV['PROMETHEUS_EXPORTER_HOST'].blank?
   require 'prometheus_exporter/middleware'
   require 'prometheus_exporter/instrumentation'
 
