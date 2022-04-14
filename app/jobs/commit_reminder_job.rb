@@ -3,11 +3,11 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-class CrmSyncJob < CronJob
+class CommitReminderJob < CronJob
   self.cron_expression = '0 5 2 * *'
 
   def perform
-    Employee.current.pending_worktimes_commit.where(worktimes_commit_reminder: true).each do |employee|
+    Employee.active_employed_last_month.pending_worktimes_commit.where(worktimes_commit_reminder: true).each do |employee|
       EmployeeMailer.worktime_commit_reminder_mail(employee).deliver_now
     end
   end

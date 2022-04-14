@@ -43,6 +43,7 @@ class Employment < ActiveRecord::Base
   before_create :update_previous_end_date
 
   scope :list, -> { order('start_date DESC') }
+  scope :active, -> { where('"employments"."percent" > 0') }
 
   class << self
     def during(period)

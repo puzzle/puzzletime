@@ -108,6 +108,7 @@ class Employee < ActiveRecord::Base
 
   # logic should match CompletableHelper#recently_completed
   scope :pending_worktimes_commit, -> { where("committed_worktimes_at < date_trunc('month', now()) - '1 day'::interval").or(where(committed_worktimes_at: nil)) }
+  scope :active_employed_last_month, -> { joins(:employments).merge(Employment.active.during(Period.previous_month)) }
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable

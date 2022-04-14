@@ -68,6 +68,11 @@ module Puzzletime
 
     config.active_job.queue_adapter = :delayed_job
 
+    config.action_mailer.default_url_options = {
+      protocol: 'https',
+      host: ENV['RAILS_MAIL_URL_HOST'].presence || 'example.com'
+    }
+
     config.to_prepare do |_|
       Crm.init
       Invoicing.init

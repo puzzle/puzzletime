@@ -68,6 +68,11 @@ class Period
       new(date - 28, date + 7, options[:label], options[:shortcut])
     end
 
+    def previous_month(date = Time.zone.today)
+      date = date.to_date if date.is_a?(Time)
+      new(date.beginning_of_month - 1.month, date.beginning_of_month - 1.day)
+    end
+
     def coming_month(date = Time.zone.today, options = {})
       date = date.to_date if date.is_a?(Time)
       date -= (date.wday - 1) % 7

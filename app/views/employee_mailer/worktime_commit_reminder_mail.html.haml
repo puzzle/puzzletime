@@ -4,9 +4,15 @@
 %div{:style => "box-sizing: border-box;"}
   .lead
     Es hat wieder ein neuer Monat begonnen.
-    Bitte gib noch deine Zeiten frei, Danke!
+    %br
+    Bitte gib im
+    = link_to 'PuzzleTime', root_url
+    noch deine Zeiten frei, Danke!
   %br
-  .text-center
+    Falls du keine Erinnerungsmails wünschst, kannst du sie
+    = link_to 'hier', settings_employees_url
+    abschalten.
+  %br
     Liebe Grüsse
     %br
     Dein PuzzleTime
