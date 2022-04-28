@@ -54,6 +54,7 @@ auth:
     active: <%= ENV['AUTH_DB_ACTIVE'] == 'true' %>
   omniauth:
     keycloakopenid:
+      label: 'Puzzle SSO'
       active: <%= ENV['AUTH_KEYCLOAK_ACTIVE'] == 'true' %>
       host: <%= ENV['AUTH_KEYCLOAK_HOST'] %>
       realm: <%= ENV['AUTH_KEYCLOAK_REALM'] %>
