@@ -14,7 +14,7 @@ de-CH:
       last_attempt: "Du hast noch einen weiteren Versuch, bevor dein Account gesperrt wird."
       not_found_in_database: "Ungültige %{authentication_keys} oder ungültiges Passwort."
       timeout: "Deine Session ist abgelaufen. Bitte melde dich erneut an."
-      unauthenticated: "Du musst dich anmelden oder registrieren bevor du fortfahren kannst."
+      unauthenticated: "Du musst dich anmelden bevor du fortfahren kannst."
       unconfirmed: "Du musst deine Email Adresse bestätigen, bevor du fortfahren kannst."
     mailer:
       confirmation_instructions:
