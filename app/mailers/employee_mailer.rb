@@ -3,8 +3,7 @@ class EmployeeMailer < ApplicationMailer
     @worktime = worktime
     @deleted_by = deleted_by
 
-    mail(from: Settings.mailer.employee.worktime_deleted.from,
-         to: worktime.employee.email,
+    mail(to: worktime.employee.email,
          subject: 'PuzzleTime-Eintrag wurde gelöscht')
   end
 

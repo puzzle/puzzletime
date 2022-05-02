@@ -77,6 +77,7 @@ module Puzzletime
       Crm.init
       Invoicing.init
       BI.init
+      CommitReminderJob.schedule
     end
   end
 

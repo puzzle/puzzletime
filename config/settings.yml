@@ -173,10 +173,7 @@ reports:
       lower_limit: 0
 
 mailer:
-  from: <%= ENV['RAILS_PTIME_MAILER_FROM'] || 'time@puzzle.ch' %>
-  employee:
-    worktime_deleted:
-      from: <%= ENV['RAILS_PTIME_MAILER_EMPLOYEE_WORKTIME_DELETED_FROM'] || 'time@puzzle.ch' %>
+  from: <%= ENV['RAILS_PTIME_MAILER_FROM'] || 'no-reply@puzzle.ch' %>
 
 influxdb:
   export: <%= ENV['RAILS_INFLUXDB_EXPORT'] == '1' %>
