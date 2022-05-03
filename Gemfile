@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '~> 5.2.x'
 
 gem 'pg', '~> 0.21.0'
+gem 'activerecord-nulldb-adapter'
 
 gem 'nochmal', github: 'puzzle/nochmal'
 

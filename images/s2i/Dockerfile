@@ -27,3 +27,4 @@ RUN bash -c 'gem install bundler:2.2.5 --no-document'
 USER 1001
 
 ENV RAILS_ENV=production
+ENV RAILS_DB_ADAPTER=nulldb

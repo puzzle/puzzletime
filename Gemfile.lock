@@ -50,6 +50,8 @@ GEM
       activemodel (= 5.2.7)
       activesupport (= 5.2.7)
       arel (>= 9.0)
+    activerecord-nulldb-adapter (0.8.0)
+      activerecord (>= 5.2.0, < 7.1)
     activeresource (5.1.1)
       activemodel (>= 5.0, < 7)
       activemodel-serializers-xml (~> 1.0)
@@ -579,6 +581,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activerecord-nulldb-adapter
   acts_as_tree
   airbrake
   annotate
