@@ -221,8 +221,6 @@ GEM
     email_address (0.2.2)
       simpleidn
     erubi (1.10.0)
-    ethon (0.14.0)
-      ffi (>= 1.15.0)
     execjs (2.8.1)
     fabrication (2.22.0)
     faker (2.18.0)
@@ -273,10 +271,6 @@ GEM
     image_processing (1.12.2)
       mini_magick (>= 4.9.5, < 5)
       ruby-vips (>= 2.0.17, < 3)
-    influxdb-client (2.1.0)
-    influxdb-client-apis (2.1.0)
-      influxdb-client (= 2.1.0)
-      typhoeus (~> 1.0, >= 1.0.1)
     jbuilder (2.11.2)
       activesupport (>= 5.0.0)
     jmespath (1.4.0)
@@ -538,8 +532,6 @@ GEM
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
-    typhoeus (1.4.0)
-      ethon (>= 0.9.0)
     tzinfo (1.2.9)
       thread_safe (~> 0.1)
     uglifier (4.2.0)
@@ -618,8 +610,6 @@ DEPENDENCIES
   headless
   highrise
   image_processing
-  influxdb-client
-  influxdb-client-apis
   jbuilder
   jquery-rails
   jquery-ui-rails

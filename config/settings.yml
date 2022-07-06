@@ -174,11 +174,3 @@ reports:
 
 mailer:
   from: <%= ENV['RAILS_PTIME_MAILER_FROM'] || 'no-reply@puzzle.ch' %>
-
-influxdb:
-  export: <%= ENV['RAILS_INFLUXDB_EXPORT'] == '1' %>
-  host: <%= ENV['RAILS_INFLUXDB_HOST'] || 'localhost' %>
-  port: <%= ENV['RAILS_INFLUXDB_PORT']&.to_i || 8086 %>
-  token: <%= ENV['RAILS_INFLUXDB_TOKEN'] || 'ptimetoken' %>
-  org: <%= ENV['RAILS_INFLUXDB_ORG'] || 'ptime' %>
-  use_ssl: false

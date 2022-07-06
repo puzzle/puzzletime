@@ -8,7 +8,6 @@ version: '3'
 
 volumes:
   db-data:
-  influxdb-data:
 
 services:
   ptimedb:
@@ -32,17 +31,3 @@ services:
     ports:
       - '1025:1025'
       - '1080:1080'
-
-  ptimeinfluxdb:
-    image: influxdb:2.0.4
-    ports:
-      - '8086:8086'
-    volumes:
-      - influxdb-data:/var/lib/influxdb2
-    environment:
-      - DOCKER_INFLUXDB_INIT_MODE=setup
-      - DOCKER_INFLUXDB_INIT_USERNAME=influxuser
-      - DOCKER_INFLUXDB_INIT_PASSWORD=influxpassword
-      - DOCKER_INFLUXDB_INIT_ORG=ptime
-      - DOCKER_INFLUXDB_INIT_BUCKET=PtimeDefault
-      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=ptimetoken
