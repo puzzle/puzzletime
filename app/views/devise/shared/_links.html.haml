@@ -25,6 +25,12 @@
       = link_to "Mit #{provider_label} anmelden",
         public_send("#{resource_name}_#{provider}_omniauth_authorize_path"),
         method: :post,
-        class: 'btn btn-primary'
+        class: try(:auto_redirect?) ? 'btn btn-primary auto-login' : 'btn btn-primary'
       %br
       %br
+
+- if try(:auto_redirect?)
+  :coffeescript
+    $(document).on('turbolinks:load', ->
+      $('.auto-login').click();
+    )

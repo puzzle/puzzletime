@@ -16,4 +16,8 @@ class Employees::OmniauthCallbacksController < Devise::OmniauthCallbacksControll
   # TODO: Username wegspeichern
   alias keycloakopenid default
   alias saml default
+
+  def after_omniauth_failure_path_for(scope)
+    new_session_path(scope, prevent_auto_login: true)
+  end
 end

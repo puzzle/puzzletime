@@ -140,13 +140,6 @@ class Employee < ActiveRecord::Base
   end
 
   class << self
-    # Tries to login a user with the passed data.
-    # Returns the logged-in Employee or nil if the login failed.
-    def login(username, pwd)
-      find_by(shortname: username.upcase, passwd: encode(pwd)) ||
-        LdapAuthenticator.new.login(username, pwd)
-    end
-
     def employed_ones(period, sort = true)
       result = joins('left join employments em on em.employee_id = employees.id').
                where('(em.end_date IS null or em.end_date >= ?) AND em.start_date <= ?',
