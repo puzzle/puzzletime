@@ -13,8 +13,8 @@ class AbsencesEval < Evaluation
   self.detail_columns   = detail_columns.reject { |i| i == :billable }
   self.detail_labels    = detail_labels.merge(account: 'Absenz')
 
-  def initialize
-    super(Employee)
+  def initialize(**search_conditions)
+    super(Employee, **search_conditions)
   end
 
   def divisions(period = nil)

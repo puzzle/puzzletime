@@ -11,6 +11,8 @@ class EvaluatorController < ApplicationController
 
   before_action :set_period
 
+  helper_method :search_conditions, :evaluation_type
+
   def index
     overview
   end
@@ -74,6 +76,10 @@ class EvaluatorController < ApplicationController
     @evaluation
   end
 
+  def evaluation_type
+    params[:evaluation]
+  end
+
   def set_default_evaluation
     @evaluation = case params[:evaluation].downcase
                   when 'managed' then ManagedOrdersEval.new(@user)
@@ -81,7 +87,7 @@ class EvaluatorController < ApplicationController
                   when "employeesubworkitems#{@user.id}", 'usersubworkitems' then
                     params[:evaluation] = 'usersubworkitems'
                     EmployeeSubWorkItemsEval.new(params[:category_id], @user.id)
-                  when 'userabsences' then EmployeeAbsencesEval.new(@user.id)
+                  when 'userabsences' then EmployeeAbsencesEval.new(@user.id, **search_conditions)
                   when 'subworkitems' then SubWorkItemsEval.new(params[:category_id])
                   when 'workitememployees' then WorkItemEmployeesEval.new(params[:category_id])
                   end
@@ -106,8 +112,8 @@ class EvaluatorController < ApplicationController
                   when /employeesubworkitems(\d+)/ then
                     EmployeeSubWorkItemsEval.new(params[:category_id], Regexp.last_match[1])
                   when 'departmentorders' then DepartmentOrdersEval.new(params[:category_id])
-                  when 'absences' then AbsencesEval.new
-                  when 'employeeabsences' then EmployeeAbsencesEval.new(params[:category_id])
+                  when 'absences' then AbsencesEval.new(**search_conditions)
+                  when 'employeeabsences' then EmployeeAbsencesEval.new(params[:category_id], **search_conditions)
                   end
   end
 
@@ -188,6 +194,12 @@ class EvaluatorController < ApplicationController
            p.try(:start_date) || Time.zone.today]
         end
     end
+  end
+
+  def search_conditions
+    return {} unless params[:absence_id].present?
+
+    {absence_id: params[:absence_id]}
   end
 
   def authorize_action
