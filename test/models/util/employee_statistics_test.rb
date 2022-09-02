@@ -42,6 +42,23 @@ class EmployeeStatisticsTest < ActiveSupport::TestCase
     end
   end
 
+  test 'musttime calculates correctly' do
+    period = Period.new('01.11.2006', '30.11.2006')
+
+    employee = Fabricate(:employee)
+    employment = Fabricate(:employment, employee: employee, percent: 100, start_date: '01.01.2006', end_date: '31.12.2006')
+    assert_equal 176.0, employee.statistics.musttime(period)
+
+    employment.update(end_date: '15.11.2006')
+    assert_equal 88.0, employee.statistics.musttime(period)
+
+    employment2 = Fabricate(:employment, employee: employee, percent: 100, start_date: '16.11.2006', end_date: '31.12.2006')
+    assert_equal 176.0, employee.statistics.musttime(period)
+
+    employment2.update(percent: 50)
+    assert_equal 132.0, employee.statistics.musttime(period)
+  end
+
   test 'remaining worktime is affected by' do
     period = Period.new('01.12.2006', '11.12.2006')
     method = 'statistics.pending_worktime(period).to_f'
