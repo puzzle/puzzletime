@@ -74,9 +74,14 @@ module Puzzletime
     }
 
     config.to_prepare do |_|
-      Crm.init
-      Invoicing.init
-      CommitReminderJob.schedule
+      begin
+        Crm.init
+        Invoicing.init
+        CommitReminderJob.schedule
+      rescue ActiveRecord::StatementInvalid => e
+        # the db might not exist yet, lets ignore the error in this case
+        raise e unless e.message =~ /PG::UndefinedTable/ || e.message =~ /does not exist/
+      end
     end
   end
 
