@@ -23,17 +23,11 @@ class WorkloadReportControllerTest < ActionController::TestCase
   end
 
   test 'GET index with department and period filter params sets correct report attributes' do
-    get :index, params: { start_date: '1.1.2006', end_date: '31.12.2006', department_id: departments(:devtwo).id }
+    set_period start_date: '1.1.2006', end_date: '31.12.2006'
+    get :index, params: { department_id: departments(:devtwo).id }
     assert_equal true, assigns(:report).filters_defined?
     assert_equal Date.parse('1.1.2006'), assigns(:report).period.start_date
     assert_equal Date.parse('31.12.2006'), assigns(:report).period.end_date
     assert_equal departments(:devtwo), assigns(:report).department
-  end
-
-  test 'GET index with invalid period filter shows error' do
-    get :index, params: { start_date: '31.12.2006', end_date: '1.12.2006' }
-    assert_nil assigns(:report).filters_defined?
-    assert flash[:alert].present?
-    assert_equal Period.new(nil, nil), assigns(:period)
   end
 end

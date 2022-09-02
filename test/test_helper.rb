@@ -48,7 +48,7 @@ Capybara.register_driver :selenium do |app|
 
   Selenium::WebDriver::Firefox::Binary.path = ENV['FIREFOX_PATH'] if ENV['FIREFOX_PATH']
   capa = Selenium::WebDriver::Remote::Capabilities.firefox(marionette: true)
-  Capybara::Selenium::Driver.new(app, browser: :firefox, desired_capabilities: capa)
+  Capybara::Selenium::Driver.new(app, browser: :chrome, desired_capabilities: capa)
 end
 
 Capybara.server = :puma, { Silent: true }
@@ -99,6 +99,10 @@ class ActiveSupport::TestCase
         Holiday.create!(holiday_date: Date.new(year, month, day), musthours_day: 0)
       end
     end
+  end
+
+  def set_period(start_date: '1.1.2006', end_date: '31.12.2006')
+    @controller.session[:period] = [start_date, end_date]
   end
 end
 

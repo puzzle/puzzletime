@@ -12,6 +12,13 @@ module IntegrationHelper
     super(employee)
   end
 
+  def set_period(start_date: '1.1.2006', end_date: '31.12.2006', back_url: current_url)
+    visit periods_path(back_url: back_url)
+    fill_in 'period_start_date', with: start_date, fill_options: { clear: :backspace }
+    fill_in 'period_end_date', with: end_date, fill_options: { clear: :backspace }
+    find('input[name=commit]').click
+  end
+
   # catch some errors occuring now and then in capybara tests
   def timeout_safe
     yield

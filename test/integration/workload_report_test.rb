@@ -14,8 +14,7 @@ class WorkloadReportTest < ActionDispatch::IntegrationTest
   end
 
   test 'member detail links are set-up after changing filter' do
-    find('input#start_date').click
-    all('td[data-handler=selectDay]').last.click
+    set_period
 
     assert_no_selector 'tbody#employee-6-ordertimes'
     find('a[data-toggle="employee-6-ordertimes"]').click
@@ -26,8 +25,7 @@ class WorkloadReportTest < ActionDispatch::IntegrationTest
 
   def login
     login_as(:mark)
-    visit reports_workload_path(start_date: '1.1.2006',
-                                   end_date: '31.12.2006',
-                                   department_id: departments(:devtwo).id)
+    set_period(start_date: '1.1.2006', end_date: '31.12.2006', back_url: '/')
+    visit reports_workload_path(department_id: departments(:devtwo).id)
   end
 end
