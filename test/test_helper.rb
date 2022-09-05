@@ -44,6 +44,8 @@ Dir[Rails.root.join('test/support/**/*.rb')].sort.each { |f| require f }
 Capybara.register_driver :selenium do |app|
   require 'selenium/webdriver'
 
+  next Capybara::Selenium::Driver.new(app, browser: ENV['SELENIUM_DRIVER'].to_sym) if ENV['SELENIUM_DRIVER']
+
   Selenium::WebDriver::Firefox::Binary.path = ENV['FIREFOX_PATH'] if ENV['FIREFOX_PATH']
   capa = Selenium::WebDriver::Remote::Capabilities.firefox(marionette: true)
   Capybara::Selenium::Driver.new(app, browser: :firefox, desired_capabilities: capa)
