@@ -37,6 +37,7 @@ class ExtendedCapacityReport
             'Subprojektname',
             'Projekte Total (h)',
             'Projekte Total - Detail (h)',
+            'Ist bereinigt ver. Rollenanteile (h)',
             'Stundensatz',
             'Kunden-Projekte Total (h)',
             'Kunden-Projekte Total - Detail (h)',
@@ -71,6 +72,11 @@ class ExtendedCapacityReport
   end
 
   def employee_summary_row(employee, rows)
+    total_percents_at_start = employee.statistics.percents_at(@period.start_date)
+    billable_percents_at_start = employee.statistics.billable_percents_at(@period.start_date)
+    projekte_total_h = rows.map { |r| r[12].to_f }.sum
+    projekte_total_h_bereinigt = projekte_total_h * billable_percents_at_start / total_percents_at_start
+
     [employee.shortname,
      '',
      employee.statistics.average_percents(@period),
@@ -82,16 +88,17 @@ class ExtendedCapacityReport
      '',
      '',
      '',
-     rows.map { |r| r[12].to_f }.sum, # Projekte Total (h)
+     projekte_total_h, # Projekte Total (h)
      '',
+     projekte_total_h_bereinigt, # Ist bereinigt ver. Rollenanteile (h)
      '',
-     rows.map { |r| r[15].to_f }.sum, # Kunden-Projekte Total (h)
+     rows.map { |r| r[16].to_f }.sum, # Kunden-Projekte Total (h)
      '',
-     rows.map { |r| r[17].to_f }.sum, # Kunden-Projekte Total verrechenbar (h)
+     rows.map { |r| r[18].to_f }.sum, # Kunden-Projekte Total verrechenbar (h)
      '',
-     rows.map { |r| r[19].to_f }.sum, # Kunden-Projekte Total nicht verrechenbar (h)
+     rows.map { |r| r[20].to_f }.sum, # Kunden-Projekte Total nicht verrechenbar (h)
      '',
-     rows.map { |r| r[21].to_f }.sum, # Interne Projekte Total (h)
+     rows.map { |r| r[22].to_f }.sum, # Interne Projekte Total (h)
      '']
   end
 
@@ -145,6 +152,7 @@ class ExtendedCapacityReport
      subwork_item_label(parent, child),
      '',
      employee_overall_total(data),
+     '',
      offered_rate(work_item),
      '',
      employee_customer_total(data),

@@ -10,6 +10,16 @@ class EmployeeStatistics
     @employee = employee
   end
 
+  #########  employment percent information ############
+
+  def percents_at(date)
+    employee.employment_at(date)&.percent || 0
+  end
+
+  def billable_percents_at(date)
+    employee.employment_at(date)&.employment_roles_employments&.select {|e| e.employment_role.billable }&.map(&:percent)&.sum || 0
+  end
+
   def average_percents(period)
     employments_during(period).map do |employment|
       employment.period.length.to_f / period.length * employment.percent
