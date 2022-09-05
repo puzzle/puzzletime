@@ -73,7 +73,7 @@ class ExtendedCapacityReport
   def employee_summary_row(employee, rows)
     [employee.shortname,
      '',
-     employee_average_percents(employee),
+     employee.statistics.average_percents(@period),
      employee.statistics.musttime(@period),
      employee.statistics.overtime(@period),
      employee.statistics.current_overtime(@period.end_date),
@@ -180,10 +180,6 @@ class ExtendedCapacityReport
 
   def internal?(work_item)
     Array.wrap(work_item.path_ids).include?(Company.work_item_id)
-  end
-
-  def employee_average_percents(employee)
-    employee.statistics.employments_during(@period).sum(&:percent)
   end
 
   def employee_remaining_vacations(employee)

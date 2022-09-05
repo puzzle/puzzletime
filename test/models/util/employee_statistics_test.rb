@@ -72,6 +72,26 @@ class EmployeeStatisticsTest < ActiveSupport::TestCase
   end
   # rubocop:enable  Lint/UselessAssignment
 
+  test 'average_percents calculates correctly' do
+    period = Period.new('01.11.2006', '30.11.2006')
+
+    employee = Fabricate(:employee)
+    employment = Fabricate(:employment, employee: employee, percent: 100, start_date: '01.01.2006', end_date: '31.12.2006')
+    assert_equal 100.0, employee.statistics.average_percents(period)
+
+    employment.update(end_date: '15.11.2006')
+    assert_equal 50.0, employee.statistics.average_percents(period)
+
+    employment2 = Fabricate(:employment, employee: employee, percent: 100, start_date: '16.11.2006', end_date: '31.12.2006')
+    assert_equal 100.0, employee.statistics.average_percents(period)
+
+    employment2.update(percent: 50)
+    assert_equal 75.0, employee.statistics.average_percents(period)
+
+    employment2.update(percent: 100, start_date: '23.11.2006', end_date: '31.11.2006')
+    assert_equal 75.0, employee.statistics.average_percents(period)
+  end
+
   private
 
   def create_employments

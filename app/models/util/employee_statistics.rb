@@ -10,6 +10,12 @@ class EmployeeStatistics
     @employee = employee
   end
 
+  def average_percents(period)
+    employments_during(period).map do |employment|
+      employment.period.length.to_f / period.length * employment.percent
+    end.sum
+  end
+
   #########  vacation information ############
 
   # Returns the unused days of vacation remaining until the end of the current year.
