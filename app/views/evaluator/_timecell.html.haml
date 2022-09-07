@@ -37,7 +37,8 @@
                      action: action,
                      evaluation: evaluation_name,
                      category_id: evaluation.category_id,
-                     division_id: division_id.presence)
+                     division_id: division_id.presence,
+                     absence_id: params[:absence_id])
     - link += '&amp;' + ( p ? p.url_query_s : 'start_date=0' )
     -# use html link instead of link_to for performance reasons
     %a{ href: link.html_safe }= image_tag('lupe.gif', size: '19x11', alt: 'Details')

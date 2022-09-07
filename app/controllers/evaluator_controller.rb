@@ -30,6 +30,7 @@ class EvaluatorController < ApplicationController
   end
 
   def details
+    @absence = Absence.find_by(id: params[:absence_id]) if params[:absence_id]
     set_navigation_levels
     set_evaluation_details
     paginate_times

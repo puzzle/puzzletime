@@ -9,6 +9,11 @@
 %h3= @evaluation.category_label
 %h3= @evaluation.division_label
 
+- if @absence
+  %h3
+    Absenztyp:
+    = @absence
+
 = render 'detail_times'
 
 %p
