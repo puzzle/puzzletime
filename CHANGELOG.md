@@ -2,6 +2,16 @@
 ### Improvements
 * **Rechnungsstellung:** Umstellung auf SmallInvoice APIv2 (vorher v1)
 
+# 2.9
+### Improvements
+* **Log:** Änderungen an den Funktionsanteilen der Anstellungen werden neu im Members-Log protokolliert
+* **Absenzen:** In der Auswertung kann nach Absenztyp gefiltert werden
+* **Auslastung:** Verwendet nun die Standard Zeitbereich Auswahl.
+* **CSV Detaillierte Auslastung:** 
+    + Berücksichtigt nun den eingestellten Zeitbereich
+    + Berechnung des durchschnittlichen Arbeitspensums korrigiert
+    + Spalte hinzugefügt für "bereinigte Projektzeit"
+
 # 2.8
 ### Features
 * **Login:** Login wird auf SSO (Keycloak, Devise) umgestellt
