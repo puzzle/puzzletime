@@ -151,6 +151,8 @@ Rails.application.routes.draw do
 
   resources :worktimes, only: [:index]
 
+  resources :workplaces
+
   resources :ordertimes do
     collection do
       get :existing

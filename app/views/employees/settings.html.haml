@@ -12,44 +12,46 @@
       %p.form-control-static
         = link_to 'Ändern', edit_employee_registration_path
 
-  = f.labeled('Zeitspannen') do
+  = f.labeled_input_field :worktimes_commit_reminder
+
+  = f.labeled(:eval_periods) do
     %table.table-condensed
       %tr{:valign => "top"}
         %td
           %label
-            = multiple_check_box 'user', 'eval_periods', '0d'
+            = multiple_check_box 'employee', 'eval_periods', '0d'
             Heute
           %br/
           %label
-            = multiple_check_box 'user', 'eval_periods', '-1d'
+            = multiple_check_box 'employee', 'eval_periods', '-1d'
             Gestern
         %td
           %label
-            = multiple_check_box 'user', 'eval_periods', '0w'
+            = multiple_check_box 'employee', 'eval_periods', '0w'
             Aktuelle Woche
           %br/
           %label
-            = multiple_check_box 'user', 'eval_periods', '-1w'
+            = multiple_check_box 'employee', 'eval_periods', '-1w'
             Vorige Woche
         %td
           %label
-            = multiple_check_box 'user', 'eval_periods', '0m'
+            = multiple_check_box 'employee', 'eval_periods', '0m'
             Aktueller Monat
           %br/
           %label
-            = multiple_check_box 'user', 'eval_periods', '-1m'
+            = multiple_check_box 'employee', 'eval_periods', '-1m'
             Voriger Monat
         %td
           %label
-            = multiple_check_box 'user', 'eval_periods', '0y'
+            = multiple_check_box 'employee', 'eval_periods', '0y'
             Aktuelles Jahr
           %br/
           %label
-            = multiple_check_box 'user', 'eval_periods', '-1y'
+            = multiple_check_box 'employee', 'eval_periods', '-1y'
             Voriges Jahr
         %td
           %label
-            = multiple_check_box 'user', 'eval_periods', '0'
+            = multiple_check_box 'employee', 'eval_periods', '0'
             Total
 
 - unless @user.overtime_vacations.empty?

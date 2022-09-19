@@ -1,3 +1,3 @@
 module Puzzletime
-  VERSION = '2.6'
+  VERSION = '2.9'
 end

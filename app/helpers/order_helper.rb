@@ -69,6 +69,10 @@ module OrderHelper
     content_tag(:span, f(value), class: order_report_average_rate_class(value))
   end
 
+  def format_order_additional_crm_orders(order)
+    simple_list (order.additional_crm_orders.map(&method(:crm_order_link)))
+  end
+
   def format_major_chance(order)
     return if order.nil?
 

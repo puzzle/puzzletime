@@ -1,9 +1,13 @@
+---
 inherit_from: .rubocop_todo.yml
 
 require:
-- rubocop-rails
-- rubocop-minitest
-- rubocop-performance
+  - rubocop-rails
+  - rubocop-minitest
+  - rubocop-performance
+
+AllCops:
+  NewCops: enable
 
 Style/HashEachMethods:
   Enabled: true
@@ -13,3 +17,8 @@ Style/HashTransformKeys:
 
 Style/HashTransformValues:
   Enabled: true
+
+Naming/InclusiveLanguage:
+  Exclude:
+    - config/environments/development.rb # Bullet uses whitelist :(
+...

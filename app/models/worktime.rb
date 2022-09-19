@@ -43,6 +43,7 @@ class Worktime < ActiveRecord::Base
 
   before_validation :guess_report_type
   before_validation :store_hours
+  before_validation :strip_ticket
 
   scope :in_period, (lambda do |period|
     if period
@@ -187,6 +188,10 @@ class Worktime < ActiveRecord::Base
       end
     end
     self.work_date = Time.zone.today if report_type.is_a? AutoStartType
+  end
+
+  def strip_ticket
+    self.ticket = ticket.strip if ticket.present?
   end
 
   # Name of the corresponding controller

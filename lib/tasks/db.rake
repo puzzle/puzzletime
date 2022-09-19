@@ -3,12 +3,14 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
+require './lib/create_testuser'
+
 namespace :db do
   namespace :dump do
     desc 'Load a db dump from the given FILE'
     task load: ['db:drop', 'db:create'] do
       if ENV['FILE'].blank?
-        STDERR.puts 'Usage: FILE=/path/to/dump.sql rake db:dump:load'
+        $stderr.puts 'Usage: FILE=/path/to/dump.sql rake db:dump:load'
         exit 1
       end
 
@@ -24,18 +26,89 @@ namespace :db do
   end
 
   desc 'Create testusers unless exist'
-  task create_testuser: :environment do
-    mb1 = Employee.where(shortname: 'MB1').first_or_create!(firstname: 'First',
-                                                            lastname: 'Member',
-                                                            passwd: Employee.encode('member'),
-                                                            email: 'mb1@puzzle.ch', management: false)
-    Employment.where(employee_id: mb1.id).first_or_create!(percent: 100, start_date: Date.new(2010, 1, 1), employment_roles_employments: [EmploymentRolesEmployment.first])
+  task create_testusers: :environment do
+    CreateTestuser.run(
+      shortname: 'MB1',
+      employee: {
+        firstname: 'First',
+        lastname: 'Member',
+        passwd: Employee.encode('member'),
+        password: 'member',
+        email: 'mb1@puzzle.ch',
+        management: false
+      },
+      role: {
+        name: 'T1 Software Engineer',
+        billable: true,
+        level: true
+      },
+      level: {
+        name: 'S3'
+      },
+      employment: {
+        percent: 100,
+        start_date: Date.new(2010, 1, 1)
+      },
+      role_employment: {
+        employment: @employment,
+        employment_role: @role,
+        employment_role_level: @level,
+        percent: 100
+      }
+    )
 
-    mb2 = Employee.where(shortname: 'MB2').first_or_create!(firstname: 'Second',
-                                                            lastname: 'Member',
-                                                            passwd: Employee.encode('member'),
-                                                            email: 'mb2@puzzle.ch',
-                                                            management: false)
-    Employment.where(employee_id: mb2.id).first_or_create!(percent: 80, start_date: Date.new(2014, 9, 1), employment_roles_employments: [EmploymentRolesEmployment.first])
+    CreateTestuser.run(
+      shortname: 'MB2',
+      employee: {
+        firstname: 'Second',
+        lastname: 'Member',
+        passwd: Employee.encode('member'),
+        password: 'member',
+        email: 'mb2@puzzle.ch',
+        management: false
+      },
+      role: {
+        name: 'T2 System Engineer',
+        billable: true,
+        level: true
+      },
+      level: {
+        name: 'S4'
+      },
+      employment: {
+        percent: 80,
+        start_date: Date.new(2014, 9, 1)
+      },
+      role_employment: {
+        percent: 80
+      }
+    )
+
+    CreateTestuser.run(
+      shortname: 'MGT',
+      employee: {
+        firstname: 'Manager',
+        lastname: 'Management',
+        passwd: Employee.encode('member'),
+        password: 'member',
+        email: 'mgt@puzzle.ch',
+        management: true
+      },
+      role: {
+        name: 'T2 System Engineer',
+        billable: true,
+        level: true
+      },
+      level: {
+        name: 'S4'
+      },
+      employment: {
+        percent: 80,
+        start_date: Date.new(2014, 9, 1)
+      },
+      role_employment: {
+        percent: 80
+      }
+    )
   end
 end

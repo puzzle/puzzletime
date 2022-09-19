@@ -39,6 +39,36 @@ class ExpensesControllerTest < ActionController::TestCase
     assert_equal Date.new(2019, 2, 10), assigns(:expense).payment_date
   end
 
+  test 'POST#create resizes the receipt image' do
+    login_as(:pascal)
+    Expense.delete_all
+    Settings.expenses.receipt.max_pixel = 100
+
+    receipt_file_upload = fixture_file_upload("#{Rails.root}/test/fixtures/files/lorem-ipsum.png", 'image/png')
+
+    post :create, params: {
+      employee_id: employees(:pascal).id,
+      expense: {
+        employee_id: employees(:pascal).id,
+        payment_date: Date.today.to_json,
+        amount: 42,
+        kind: 'other',
+        description: 'blabliblu',
+        receipt: receipt_file_upload
+      }
+    }
+
+    assert_equal 1, Expense.count
+
+    blob = Expense.last.receipt.blob
+    assert_equal 'lorem-ipsum.jpg', blob.filename.to_s
+    assert_equal 'image/jpeg', blob.content_type
+
+    blob.analyze
+    assert_equal 100, blob.metadata[:width]
+    assert_operator 100, :>, blob.metadata[:height]
+  end
+
   test 'PUT#update redirects to expense_review if review param is set' do
     expense = expenses(:pending)
 

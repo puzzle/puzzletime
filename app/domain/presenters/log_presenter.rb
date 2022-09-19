@@ -17,8 +17,9 @@ class LogPresenter
 
   def versions
     @versions ||=
-      employee_log
-      .or(employment_log)
+      PaperTrail::Version.where(employee_id: employee.id)
+      .or(legacy_employee_log)
+      .or(legacy_employment_log)
       .reorder('created_at DESC, id DESC')
       .includes(:item)
       .page(params[:page])
@@ -37,8 +38,17 @@ class LogPresenter
 
   def title_for(version)
     model = version.item_type.parameterize
+    return send("title_for_#{model}", version) if respond_to?("title_for_#{model}")
+
     event = version.event
     I18n.t("version.model.#{event}.#{model}", id: version.item_id)
+  end
+
+  def title_for_employmentrolesemployment(version)
+    entry_class = version.item_type.constantize
+    entry = entry_class.find_by(id: version.item_id) || version.object && entry_class.new(version.object_deserialized)
+    role = entry&.employment_role || '(deleted)'
+    I18n.t("version.model.#{version.event}.employmentrolesemployment", role: role, employment_id: entry&.employment_id)
   end
 
   def changes_for(version)
@@ -63,18 +73,19 @@ class LogPresenter
 
   private
 
-  def employee_log
+  def legacy_employee_log
     PaperTrail::Version.where(
       item_id: employee.id,
-      item_type: Employee.sti_name
+      item_type: Employee.sti_name,
+      employee_id: nil
     )
   end
 
-  def employment_log
-    PaperTrail::Version.where(employment_query)
+  def legacy_employment_log
+    PaperTrail::Version.where(employee_id: nil).where(legacy_employment_query)
   end
 
-  def employment_query
+  def legacy_employment_query
     id = employee.id
 
     # find created, updated and destroyed models
@@ -100,10 +111,10 @@ class LogPresenter
       to = item_class.human_attribute_name([attr_s.pluralize, to].join('.'))
     end
 
-    association = attr.humanize.parameterize
-    if item_class.reflect_on_association(association)
-      from = resolve_association(association, from)
-      to   = resolve_association(association, to)
+    association = attr.gsub(/_id\z/, '')
+    if reflection = item_class.reflect_on_association(association)
+      from = resolve_association(reflection, from)
+      to   = resolve_association(reflection, to)
     end
 
     {
@@ -114,7 +125,7 @@ class LogPresenter
     }
   end
 
-  def resolve_association(association, id)
-    association.classify.constantize.find_by(id: id) || id
+  def resolve_association(reflection, id)
+    reflection.class_name.constantize.find_by(id: id) || id
   end
 end

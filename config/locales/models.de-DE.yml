@@ -189,7 +189,7 @@ de-DE:
         probation_period_end_date: Ende Probezeit
         graduation: Abschluss
         phone_office: Telefon Büro
-        phone_private: Telefon Privat
+        phone_private: Mobiltelefon
         street: Straße
         postal_code: PLZ
         city: Ort
@@ -257,6 +257,7 @@ de-DE:
         sent: Gesendet
         paid: Bezahlt
         partially_paid: Teilbezahlt
+        dept_collection: Betreibung
         deleted: Gelöscht
         cancelled: Storniert
         unknown: Unbekannt

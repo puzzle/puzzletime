@@ -54,6 +54,7 @@ auth:
     active: <%= ENV['AUTH_DB_ACTIVE'] == 'true' %>
   omniauth:
     keycloakopenid:
+      label: 'Puzzle SSO'
       active: <%= ENV['AUTH_KEYCLOAK_ACTIVE'] == 'true' %>
       host: <%= ENV['AUTH_KEYCLOAK_HOST'] %>
       realm: <%= ENV['AUTH_KEYCLOAK_REALM'] %>
@@ -82,8 +83,9 @@ highrise:
   api_token: <%= ENV['RAILS_HIGHRISE_TOKEN'] %>
 
 small_invoice:
-  url: https://api.smallinvoice.com
-  api_token: <%= ENV['RAILS_SMALL_INVOICE_TOKEN'] %>
+  client_id: <%= ENV['RAILS_SMALL_INVOICE_CLIENT_ID'] %>
+  client_secret: <%= ENV['RAILS_SMALL_INVOICE_CLIENT_SECRET'] %>
+  url: https://api.smallinvoice.com/v2
   request_rate: <%= ENV['RAILS_SMALL_INVOICE_REQUEST_RATE'] || 1 %>
   constants:
     account_id: 0 # none
@@ -97,6 +99,7 @@ small_invoice:
     vat_included: false
     client_type: 1 # company
     position_type_id: 1 # service
+    position_type: 'S' # service
     unit_id: 1 # hours
     gender_id: 2 # female
 
@@ -133,6 +136,11 @@ committed_worktimes:
     days_at_end_of_month: 7
     days_at_beginning_of_month: 3
 
+expenses:
+  receipt:
+    max_pixel: 1800
+    quality: 75
+
 help:
   url: https://twiki.puzzle.ch/bin/view/PITC_PuzzleTime/Besonderheiten
 
@@ -165,6 +173,4 @@ reports:
       lower_limit: 0
 
 mailer:
-  employee:
-    worktime_deleted:
-      from: <%= ENV['RAILS_PTIME_MAILER_EMPLOYEE_WORKTIME_DELETED_FROM'] || 'time@puzzle.ch' %>
+  from: <%= ENV['RAILS_PTIME_MAILER_FROM'] || 'no-reply@puzzle.ch' %>

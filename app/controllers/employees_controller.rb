@@ -5,7 +5,7 @@
 
 class EmployeesController < ManageController
   self.permitted_attrs = [:firstname, :lastname, :shortname, :email, :ldapname,
-                          :department_id, :crm_key, :probation_period_end_date,
+                          :department_id, :workplace_id, :crm_key, :probation_period_end_date,
                           :graduation, :management, :phone_office, :phone_private,
                           :street, :postal_code, :city, :birthday, :emergency_contact_name,
                           :emergency_contact_phone, :marital_status,
@@ -33,12 +33,14 @@ class EmployeesController < ManageController
   end
 
   def settings
+    @employee = @user
   end
 
   def update_settings
-    attrs = (params[:user] && params.require(:user).permit(eval_periods: [])) || {}
+    @employee = @user
+    attrs = params.require(:employee).permit(:worktimes_commit_reminder, eval_periods: [])
     attrs[:eval_periods] = [] if attrs[:eval_periods].blank?
-    if @user.update_attributes(attrs)
+    if @employee.update_attributes(attrs)
       flash[:notice] = 'Die Benutzereinstellungen wurden aktualisiert'
       redirect_to root_path
     else

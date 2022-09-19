@@ -2,9 +2,13 @@ source 'https://rubygems.org'
 
 gem 'rails', '~> 5.2.x'
 
-gem 'pg', '= 0.21.0'
+gem 'pg', '~> 0.21.0'
+gem 'activerecord-nulldb-adapter'
+
+gem 'nochmal', github: 'puzzle/nochmal'
 
 gem 'acts_as_tree'
+gem 'aws-sdk-s3', require: false
 gem 'bleib'
 gem 'bootsnap'
 gem 'cancancan'
@@ -15,6 +19,7 @@ gem 'dalli'
 gem 'delayed_cron_job'
 gem 'delayed_job_active_record'
 gem 'devise'
+gem 'email_address'
 gem 'fast_jsonapi'
 gem 'haml'
 gem 'highrise'
@@ -27,13 +32,14 @@ gem 'net-ldap'
 gem 'nokogiri'
 gem 'omniauth'
 gem 'omniauth-keycloak'
+gem 'omniauth-rails_csrf_protection'
 gem 'omniauth-saml'
 gem 'prawn'
 gem 'prometheus_exporter'
 gem 'protective'
 gem 'puma'
-gem 'rails-i18n'
 gem 'rails_autolink'
+gem 'rails-i18n'
 gem 'request_store'
 gem 'rqrcode'
 gem 'rswag-ui'
@@ -46,24 +52,21 @@ gem 'validates_timeliness'
 gem 'airbrake', require: false
 gem 'sentry-raven', require: false
 
-# must be at the end
-gem 'paper_trail'
-
 ## assets
 gem 'autoprefixer-rails'
-gem 'coffee-rails'
-gem 'execjs'
-gem 'sass-rails'
-gem 'uglifier'
-
-# Locked to 3.3.x, because 3.4.0 expects sassc, which can only be built with gcc
-# >= 4.6. Our Jenkins uses 4.4.7
 gem 'bootstrap-sass'
 gem 'chartjs-ror'
+gem 'coffee-rails'
+gem 'execjs'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
+gem 'sass-rails'
 gem 'selectize-rails'
 gem 'turbolinks'
+gem 'uglifier'
+
+# must be at the end
+gem 'paper_trail'
 
 group :development, :test do
   gem 'better_errors'
@@ -71,6 +74,7 @@ group :development, :test do
   gem 'codez-tarantula', require: 'tarantula-rails3'
   gem 'faker'
   gem 'pry-rails'
+  gem 'rb-readline'
   gem 'request_profiler'
 end
 
@@ -90,6 +94,7 @@ group :test do
   gem 'rails-controller-testing'
   gem 'selenium-webdriver'
   gem 'webdrivers'
+  gem 'webmock'
 end
 
 group :console do

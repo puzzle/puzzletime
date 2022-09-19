@@ -5,8 +5,10 @@
 
 
 = plain_table(@employees) do |t|
-  - t.sortable_attr(:fullname, 'Name') do |e|
-    = link_to e.to_s, employee_master_datum_path(e.id)
+  - t.sortable_attr(:firstname) do |e|
+    = link_to e.firstname, employee_master_datum_path(e.id)
+  - t.sortable_attr(:lastname) do |e|
+    = link_to e.lastname, employee_master_datum_path(e.id)
   - t.sortable_attr(:shortname)
   - t.sortable_attr(:email) do |e|
     = link_to_if e.email.present?, e.email, "mailto:#{e.email}"

@@ -1,0 +1,16 @@
+{
+  "item": {
+    "id": 575533819,
+    "default": false,
+    "name": "Müller",
+    "surname": "Hans",
+    "gender": "F",
+    "email": null,
+    "phone": null,
+    "department": null,
+    "salutation": null,
+    "show_title": false,
+    "show_department": true,
+    "wants_newsletter": true
+  }
+}

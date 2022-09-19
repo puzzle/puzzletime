@@ -1,4 +1,4 @@
-#  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
+#  Copyright (c) 2106-2117, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
@@ -26,17 +26,20 @@ class ExtendedCapacityReportTest < ActiveSupport::TestCase
     assert_equal 'Projekte Total (h)', header[11]
     assert_equal '21.0', summary[11]
 
-    assert_equal 'Kunden-Projekte Total (h)', header[14]
-    assert_equal '13.0', summary[14]
+    assert_equal 'Ist bereinigt ver. Rollenanteile (h)', header[13]
+    assert_equal '21.0', summary[11]
 
-    assert_equal 'Kunden-Projekte Total verrechenbar (h)', header[16]
-    assert_equal '6.0', summary[16]
+    assert_equal 'Kunden-Projekte Total (h)', header[15]
+    assert_equal '13.0', summary[15]
 
-    assert_equal 'Kunden-Projekte Total nicht verrechenbar (h)', header[18]
-    assert_equal '7.0', summary[18]
+    assert_equal 'Kunden-Projekte Total verrechenbar (h)', header[17]
+    assert_equal '6.0', summary[17]
 
-    assert_equal 'Interne Projekte Total (h)', header[20]
-    assert_equal '8.0', summary[20]
+    assert_equal 'Kunden-Projekte Total nicht verrechenbar (h)', header[19]
+    assert_equal '7.0', summary[19]
+
+    assert_equal 'Interne Projekte Total (h)', header[21]
+    assert_equal '8.0', summary[21]
 
     webauftritt = rows.second
     shop = rows.third
@@ -57,25 +60,25 @@ class ExtendedCapacityReportTest < ActiveSupport::TestCase
     assert_equal '10.0', shop[12]
     assert_equal '8.0', ptime[12]
 
-    assert_equal 'Kunden-Projekte Total - Detail (h)', header[15]
-    assert_equal '3.0', webauftritt[15]
-    assert_equal '10.0', shop[15]
-    assert_equal '', ptime[15]
+    assert_equal 'Kunden-Projekte Total - Detail (h)', header[16]
+    assert_equal '3.0', webauftritt[16]
+    assert_equal '10.0', shop[16]
+    assert_equal '', ptime[16]
 
-    assert_equal 'Kunden-Projekte Total verrechenbar - Detail (h)', header[17]
-    assert_equal '2.0', webauftritt[17]
-    assert_equal '4.0', shop[17]
-    assert_equal '', ptime[17]
+    assert_equal 'Kunden-Projekte Total verrechenbar - Detail (h)', header[18]
+    assert_equal '2.0', webauftritt[18]
+    assert_equal '4.0', shop[18]
+    assert_equal '', ptime[18]
 
-    assert_equal 'Kunden-Projekte Total nicht verrechenbar - Detail (h)', header[19]
-    assert_equal '1.0', webauftritt[19]
-    assert_equal '6.0', shop[19]
-    assert_equal '', ptime[19]
+    assert_equal 'Kunden-Projekte Total nicht verrechenbar - Detail (h)', header[20]
+    assert_equal '1.0', webauftritt[20]
+    assert_equal '6.0', shop[20]
+    assert_equal '', ptime[20]
 
-    assert_equal 'Interne Projekte Total - Detail (h)', header[21]
-    assert_equal '', webauftritt[21]
-    assert_equal '', shop[21]
-    assert_equal '8.0', ptime[21]
+    assert_equal 'Interne Projekte Total - Detail (h)', header[22]
+    assert_equal '', webauftritt[22]
+    assert_equal '', shop[22]
+    assert_equal '8.0', ptime[22]
   end
 
   private

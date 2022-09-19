@@ -1,0 +1,52 @@
+{
+  "items": [
+    {
+      "id": 699144547,
+      "number": "BLSB-DIS-WEI-D2-0023",
+      "contact_id": 117463039,
+      "contact_address_id": 512553413,
+      "contact_prepage_address_id": null,
+      "contact_person_id": 556068567,
+      "date": "2015-11-26",
+      "due": "2015-12-26",
+      "period_from": null,
+      "period_to": null,
+      "period_text": "01.12.2014 - 31.12.2014",
+      "currency": "CHF",
+      "total": 12006.2,
+      "vat_included": false,
+      "discount_rate": 0.0,
+      "discount_type": "P",
+      "cash_discount_rate": null,
+      "cash_discount_date": null,
+      "total_paid": 0.0,
+      "paid_date": null,
+      "bank_account_id": null,
+      "isr_id": 112463152,
+      "isr_position": "A",
+      "isr_reference_number": "921736000000000000000001546",
+      "payment_link_paypal": false,
+      "payment_link_paypal_url": null,
+      "payment_link_postfinance": false,
+      "payment_link_postfinance_url": null,
+      "payment_link_payrexx": false,
+      "payment_link_payrexx_url": null,
+      "payment_link_smartcommerce": false,
+      "payment_link_smartcommerce_url": null,
+      "language": "de",
+      "signature_id": null,
+      "layout_id": 297477064,
+      "page_amount": 2,
+      "notes": null,
+      "status": "S",
+      "created": "2015-11-26 09:18:15"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "pages": 1,
+    "total": 77,
+    "first": "https://api.smallinvoice.com/v2/receivables/invoices?limit=200&offset=0",
+    "last": "https://api.smallinvoice.com/v2/receivables/invoices?limit=200&offset=0"
+  }
+}

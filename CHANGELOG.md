@@ -1,5 +1,49 @@
-# 2.6
+# master branch unreleased
+### Improvements
+* **Rechnungsstellung:** Umstellung auf SmallInvoice APIv2 (vorher v1)
 
+# 2.9
+### Improvements
+* **Log:** Änderungen an den Funktionsanteilen der Anstellungen werden neu im Members-Log protokolliert
+* **Absenzen:** In der Auswertung kann nach Absenztyp gefiltert werden
+* **Auslastung:** Verwendet nun die Standard Zeitbereich Auswahl.
+* **CSV Detaillierte Auslastung:** 
+    + Berücksichtigt nun den eingestellten Zeitbereich
+    + Berechnung des durchschnittlichen Arbeitspensums korrigiert
+    + Spalte hinzugefügt für "bereinigte Projektzeit"
+
+# 2.8
+### Features
+* **Login:** Login wird auf SSO (Keycloak, Devise) umgestellt
+* **Zeitfreigabe:** Neu wird eine Erinnerung per E-Mail versendet, wenn die Zeiten noch nicht freigegeben wurden.
+### Improvements
+* **Stammdaten:** In den Stammdaten der Members wird neu der vertragliche Arbeitsort geführt
+* **Log:** Die Änderungen der Anstellungen (Pensen, Funktionen) wird neu im Members-Log protokolliert
+
+# 2.7
+### Features
+* **Login:** Unterstützt nun Omniauth mit Keycloak und/oder SAML
+* **Business Intelligence:** Wir können jetzt Verbindung zu einer InfluxDB herstellen, die wichtige Kennzahlen als Timeseries speichert
+### Improvements
+* **Update:** Update auf Ruby 2.7
+* **Exporte:** Die verschiedenen CSV Exporte in einen Controller refactored
+* **Journaleinträge:** Jeder kann jetzt Journaleinträge erstellen
+* **Rechnungen:** Werden jetzt auf 5 Rappen gerundet
+* **Support** X-Sendfile-Header kann jetzt per Umgebungsvariable gesetzt werden
+* **Dokumentation:** Das Herokusetup ist jetzt dokumentiert
+* **Spesen:** Spesenbelege werden nun beim Hochladen herunterskaliert
+* **Kundenauswertung:** Auftrag verlinkt, um schneller hin und her navigieren zu können
+* **Mitarbeiter-Stammdaten:**
+  + Attribut "Telefon privat" umbenannt in "Mobiltelefon"
+  + Anstellungsprozente und Funktionsanteile können nun in 2.5% Schritten konfiguriert werden
+  + Neues Attribut "Arbeitsort", verfügbare Werte konfigurierbar unter "Verwalten"
+* **Mitarbeiterliste:** Sortierbar gemacht nach Vorname, Nachname
+* **Zeiterfassung:** Leerschläge vor und nach der Ticketnummer werden entfernt
+### Bug fixes
+* **Überzeitexport:** Header sind jetzt aussagekräftiger
+* **Verbleibende Arbeitszeit:** Berechnung korrigiert wenn Überstundenkompensationen in der Zukunft liegen
+
+# 2.6
 ### Features
 * **Verpflegungsentschädigung:** Bei der Arbeitszeiterfassung kann zusätzlich angegeben werden, ob die Arbeit beim Kunden vor Ort erfolgte und dazu eine Verpflegungsentschädigung gewünscht wird.
 * **Mitarbeiter-Stammdaten:** Ausweisinformationen können nun hinzugefügt werden.

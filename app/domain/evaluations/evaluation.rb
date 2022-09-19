@@ -57,7 +57,8 @@ class Evaluation
                             description: 'Bemerkungen' }
 
   attr_reader :category,             # category
-              :division              # selected division for detail Evaluations, nil otherwise
+              :division,             # selected division for detail Evaluations, nil otherwise
+              :search_conditions
 
   ############### Time Evaluation Functions ###############
 
@@ -107,6 +108,7 @@ class Evaluation
   def worktime_query(receiver, period = nil, division = nil)
     query = receiver.worktimes.where(type: worktime_type).in_period(period)
     query = query.where("? = #{category_ref}", category_id) if division && category_ref
+    query = query.where(search_conditions) if search_conditions.present?
     query
   end
 
@@ -229,8 +231,9 @@ class Evaluation
   private
 
   # Initializes a new Evaluation with the given category.
-  def initialize(category)
+  def initialize(category, **search_conditions)
     @category = category
+    @search_conditions = search_conditions
   end
 
   def query_time_sums(query, group_by_column = nil)

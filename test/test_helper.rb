@@ -24,6 +24,19 @@ Rails.env = 'test'
 require 'rails/test_help'
 require 'mocha/minitest'
 require 'capybara/rails'
+
+require 'webmock/minitest'
+WebMock.disable_net_connect!(
+  allow_localhost: true, # required for selenium
+  allow: [
+    'github.com', # required for webdrivers/geckodriver
+    /github-production-release-asset-\w+.s3.amazonaws.com/, # required for webdrivers/geckodriver
+    /github-releases.githubusercontent.com/, # required for webdrivers/geckodriver
+    /objects.githubusercontent.com/, # required for webdrivers/geckodriver
+    'chromedriver.storage.googleapis.com' # required for webdrivers/chromedriver
+  ]
+)
+
 Settings.reload!
 
 Dir[Rails.root.join('test/support/**/*.rb')].sort.each { |f| require f }
@@ -31,9 +44,11 @@ Dir[Rails.root.join('test/support/**/*.rb')].sort.each { |f| require f }
 Capybara.register_driver :selenium do |app|
   require 'selenium/webdriver'
 
+  next Capybara::Selenium::Driver.new(app, browser: ENV['SELENIUM_DRIVER'].to_sym) if ENV['SELENIUM_DRIVER']
+
   Selenium::WebDriver::Firefox::Binary.path = ENV['FIREFOX_PATH'] if ENV['FIREFOX_PATH']
   capa = Selenium::WebDriver::Remote::Capabilities.firefox(marionette: true)
-  Capybara::Selenium::Driver.new(app, browser: :firefox, desired_capabilities: capa)
+  Capybara::Selenium::Driver.new(app, browser: :chrome, desired_capabilities: capa)
 end
 
 Capybara.server = :puma, { Silent: true }
@@ -85,6 +100,10 @@ class ActiveSupport::TestCase
       end
     end
   end
+
+  def set_period(start_date: '1.1.2006', end_date: '31.12.2006')
+    @controller.session[:period] = [start_date, end_date]
+  end
 end
 
 class ActionDispatch::IntegrationTest
@@ -97,6 +116,7 @@ class ActionDispatch::IntegrationTest
   self.use_transactional_tests = false
 
   setup do
+    clear_cookies
     DatabaseCleaner.start
   end
 

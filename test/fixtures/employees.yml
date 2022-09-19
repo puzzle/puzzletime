@@ -48,6 +48,7 @@ half_year_maria:
   email:     bla@bla.ch
   management: true
   eval_periods: ["-1m", "0"]
+  worktimes_commit_reminder: true
 
 various_pedro:
   id:               2
@@ -58,6 +59,7 @@ various_pedro:
   email:            bol@bla.ch
   social_insurance: 123.4567.8910.11
   management:       false
+  worktimes_commit_reminder: true
 
 next_year_pablo:
   id:        3
@@ -67,6 +69,7 @@ next_year_pablo:
   encrypted_password:    <%= Employee.encode('ptime') %>
   email:     ps@bla.ch
   management: false
+  worktimes_commit_reminder: true
 
 left_this_year_macy:
   id:        4
@@ -76,6 +79,7 @@ left_this_year_macy:
   encrypted_password:    <%= Employee.encode('ptime') %>
   email:     mg@bla.ch
   management: false
+  worktimes_commit_reminder: true
 
 long_time_john:
   id:        5
@@ -92,6 +96,7 @@ long_time_john:
     - UK
   graduation: Klubschule
   department: devone
+  worktimes_commit_reminder: true
 
 pascal:
   id:        6
@@ -102,6 +107,8 @@ pascal:
   email:     pz@bla.ch
   management: false
   department: devtwo
+  workplace: bern
+  worktimes_commit_reminder: true
 
 mark:
   id:        7
@@ -118,6 +125,8 @@ mark:
     - '-1m'
     - '0y'
     - '-1y'
+  workplace: jona
+  worktimes_commit_reminder: true
 
 lucien:
   id:        8
@@ -128,3 +137,4 @@ lucien:
   email:     lw@bla.ch
   management: false
   department: devtwo
+  worktimes_commit_reminder: true

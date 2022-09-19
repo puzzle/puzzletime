@@ -42,6 +42,23 @@ class EmployeeStatisticsTest < ActiveSupport::TestCase
     end
   end
 
+  test 'musttime calculates correctly' do
+    period = Period.new('01.11.2006', '30.11.2006')
+
+    employee = Fabricate(:employee)
+    employment = Fabricate(:employment, employee: employee, percent: 100, start_date: '01.01.2006', end_date: '31.12.2006')
+    assert_equal 176.0, employee.statistics.musttime(period)
+
+    employment.update(end_date: '15.11.2006')
+    assert_equal 88.0, employee.statistics.musttime(period)
+
+    employment2 = Fabricate(:employment, employee: employee, percent: 100, start_date: '16.11.2006', end_date: '31.12.2006')
+    assert_equal 176.0, employee.statistics.musttime(period)
+
+    employment2.update(percent: 50)
+    assert_equal 132.0, employee.statistics.musttime(period)
+  end
+
   test 'remaining worktime is affected by' do
     period = Period.new('01.12.2006', '11.12.2006')
     method = 'statistics.pending_worktime(period).to_f'
@@ -54,6 +71,63 @@ class EmployeeStatisticsTest < ActiveSupport::TestCase
     assert_difference(method, -1) { create_absence(absence_id: 4) }
   end
   # rubocop:enable  Lint/UselessAssignment
+
+  test '#average_percents calculates correctly' do
+    period = Period.new('01.11.2006', '30.11.2006')
+
+    employee = Fabricate(:employee)
+    employment = Fabricate(:employment, employee: employee, percent: 100, start_date: '01.01.2006', end_date: '31.12.2006')
+    assert_equal 100.0, employee.statistics.average_percents(period)
+
+    employment.update(end_date: '15.11.2006')
+    assert_equal 50.0, employee.statistics.average_percents(period)
+
+    employment2 = Fabricate(:employment, employee: employee, percent: 100, start_date: '16.11.2006', end_date: '31.12.2006')
+    assert_equal 100.0, employee.statistics.average_percents(period)
+
+    employment2.update(percent: 50)
+    assert_equal 75.0, employee.statistics.average_percents(period)
+
+    employment2.update(percent: 100, start_date: '23.11.2006', end_date: '31.11.2006')
+    assert_equal 75.0, employee.statistics.average_percents(period)
+  end
+
+  test '#percents_at' do
+    employee = Fabricate(:employee)
+    assert_equal 0, employee.statistics.percents_at('16.11.2006')
+
+    employment = Fabricate(:employment, employee: employee, percent: 80, start_date: '01.01.2006', end_date: '31.12.2006')
+    assert_equal 80, employee.statistics.percents_at('16.11.2006')
+
+    employment.update(percent: 65, start_date: '16.11.2006', end_date: '16.11.2006')
+    assert_equal 65, employee.statistics.percents_at('16.11.2006')
+  end
+
+  test '#billable_percents_at' do
+    employee = Fabricate(:employee)
+    assert_equal 0, employee.statistics.billable_percents_at('16.11.2006')
+
+    employment = Fabricate(:employment, employee: employee, percent: 80, start_date: '01.01.2006', end_date: '31.12.2006')
+    assert_equal 0, employee.statistics.billable_percents_at('16.11.2006')
+
+    billable = employment.employment_roles_employments.create!(
+      percent: 80,
+      employment_role_level: employment_role_levels(:junior),
+      employment_role: employment_roles(:system_technician)
+    )
+    assert_equal 80, employee.statistics.billable_percents_at('16.11.2006')
+
+    billable.update(percent: 55)
+    non_billable = employment.employment_roles_employments.create!(
+      percent: 25,
+      employment_role: employment_roles(:technical_board)
+    )
+    assert_equal 55, employee.statistics.billable_percents_at('16.11.2006')
+
+    billable.destroy
+    non_billable.update!(percent: 80)
+    assert_equal 0, employee.statistics.billable_percents_at('16.11.2006')
+  end
 
   private
 

@@ -153,6 +153,12 @@ class WorktimeTest < ActiveSupport::TestCase
     assert_equal employees(:pascal), newWorktime.employee
   end
 
+  def test_strip_ticket
+    assert_equal 'hello', Worktime.new(ticket: 'hello ').tap(&:valid?).ticket
+    assert_equal 'hello', Worktime.new(ticket: ' hello').tap(&:valid?).ticket
+    assert_equal 'hello', Worktime.new(ticket: ' hello ').tap(&:valid?).ticket
+  end
+
   private
 
   def get_field(field)

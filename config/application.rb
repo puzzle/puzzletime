@@ -68,9 +68,20 @@ module Puzzletime
 
     config.active_job.queue_adapter = :delayed_job
 
+    config.action_mailer.default_url_options = {
+      protocol: 'https',
+      host: ENV['RAILS_MAIL_URL_HOST'].presence || 'example.com'
+    }
+
     config.to_prepare do |_|
-      Crm.init
-      Invoicing.init
+      begin
+        Crm.init
+        Invoicing.init
+        CommitReminderJob.schedule
+      rescue ActiveRecord::StatementInvalid => e
+        # the db might not exist yet, lets ignore the error in this case
+        raise e unless e.message =~ /PG::UndefinedTable/ || e.message =~ /does not exist/
+      end
     end
   end
 

@@ -19,7 +19,7 @@ module Invoicing
       def delete_invoice(invoice)
         return unless invoice.invoicing_key?
 
-        Api.instance.delete(:invoice, invoice.invoicing_key)
+        Invoicing::SmallInvoice::Api.instance.delete(Entity::Invoice.path(invoicing_key: invoice.invoicing_key))
       end
 
       def sync_all
@@ -28,7 +28,7 @@ module Invoicing
       end
 
       def get_pdf(invoice)
-        Api.instance.get_raw('invoice', :pdf, invoice.invoicing_key)
+        Invoicing::SmallInvoice::Api.instance.get_raw(Entity::Invoice.new(invoice, nil).pdf_path)
       end
     end
   end

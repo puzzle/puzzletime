@@ -5,9 +5,7 @@
 
 class WorkloadReportController < ApplicationController
   include DryCrud::Rememberable
-  include WithPeriod
-
-  self.remember_params = %w(start_date end_date department_id)
+  self.remember_params = %w(department_id)
 
   before_action :authorize_class
 
@@ -32,6 +30,11 @@ class WorkloadReportController < ApplicationController
 
   def set_department
     @department = Department.where(id: params[:department_id]).first
+  end
+
+  def set_period
+    super
+    @period ||= default_period
   end
 
   def default_period

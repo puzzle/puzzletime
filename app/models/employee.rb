@@ -57,7 +57,7 @@ class Employee < ActiveRecord::Base
   include ReportType::Accessors
   extend Conditioner
 
-  has_paper_trail skip: Employee::INTERNAL_ATTRS
+  has_paper_trail(meta: { employee_id: proc(&:id) }, skip: Employee::INTERNAL_ATTRS)
 
   enum marital_status: %w(
     single
@@ -69,6 +69,7 @@ class Employee < ActiveRecord::Base
 
   # All dependencies between the models are listed below.
   belongs_to :department, optional: true
+  belongs_to :workplace, optional: true
 
   has_and_belongs_to_many :invoices
 
@@ -104,6 +105,10 @@ class Employee < ActiveRecord::Base
 
   scope :list, -> { order('lastname', 'firstname') }
   scope :current, -> { joins(:employments).merge(Employment.during(Period.current_day)) }
+
+  # logic should match CompletableHelper#recently_completed
+  scope :pending_worktimes_commit, -> { where("committed_worktimes_at < date_trunc('month', now()) - '1 day'::interval").or(where(committed_worktimes_at: nil)) }
+  scope :active_employed_last_month, -> { joins(:employments).merge(Employment.active.during(Period.previous_month)) }
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable

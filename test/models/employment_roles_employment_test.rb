@@ -28,6 +28,17 @@ class EmploymentRolesEmploymentTest < ActiveSupport::TestCase
     assert_equal 'Software Engineer Senior 90%', e.to_s
   end
 
+  test 'string representation does not round percent' do
+    e = EmploymentRolesEmployment.create!(
+      employment: employments(:long_time),
+      employment_role: employment_roles(:software_engineer),
+      employment_role_level: employment_role_levels(:senior),
+      percent: 90.25
+    )
+
+    assert_equal 'Software Engineer Senior 90.25%', e.to_s
+  end
+
   test 'role with required level validation' do
     err = assert_raises ActiveRecord::RecordInvalid do
       EmploymentRolesEmployment.create!(employment: employments(:long_time),

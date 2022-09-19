@@ -15,3 +15,5 @@ de-CH:
     login:
       ldapname_not_found:
         'Der Member mit dem LDAP Name: "%{ldapname}" konnte nicht gefunden werden.'
+    message:
+      invalid_email: 'ist keine gültige Email Adresse'

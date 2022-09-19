@@ -1,0 +1,19 @@
+%h1.h3{:style => "box-sizing: border-box; margin: 0.67em 0; font-family: inherit; font-weight: 400; line-height: 1.1; color: inherit; margin-top: 20px; font-size: 24px; margin-bottom: 20px;"}
+  Hallo
+  = @employee.firstname
+%div{:style => "box-sizing: border-box;"}
+  .lead
+    Es hat wieder ein neuer Monat begonnen.
+    %br
+    Bitte gib im
+    = link_to 'PuzzleTime', root_url
+    noch deine Zeiten frei, Danke!
+  %br
+  .lead
+    Liebe Grüsse
+    %br
+    Dein PuzzleTime
+  %br
+    Falls du keine Erinnerungsmails wünschst, kannst du sie
+    = link_to 'hier', settings_employees_url
+    abschalten.

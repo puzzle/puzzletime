@@ -115,6 +115,9 @@ de-CH:
       worktime:
         one: Arbeitszeit
         other: Arbeitszeiten
+      workplace:
+        one: Arbeitsort
+        other: Arbeitsorte
 
     attributes:
       absence:
@@ -192,7 +195,7 @@ de-CH:
         probation_period_end_date: Ende Probezeit
         graduation: Abschluss
         phone_office: Telefon Büro
-        phone_private: Telefon Privat
+        phone_private: Mobiltelefon
         street: Strasse
         postal_code: PLZ
         city: Ort
@@ -206,6 +209,8 @@ de-CH:
         crm_key: Highrise ID
         identity_card_type: Ausweistyp
         identity_card_valid_until: Ausweis gültig bis
+        workplace_id: Arbeitsort
+        worktimes_commit_reminder: Freigabeerinnerung senden
       employee/marital_statuses:
         married: Verheiratet
         single: Ledig
@@ -231,6 +236,7 @@ de-CH:
         name: Name
       employment_roles_employment:
         percent: Pensum
+        employment_role: Funktion
       expense:
         id: Spesennummer
         amount: Betrag
@@ -288,6 +294,7 @@ de-CH:
         sent: Gesendet
         paid: Bezahlt
         partially_paid: Teilbezahlt
+        dept_collection: Betreibung
         deleted: Gelöscht
         cancelled: Storniert
         unknown: Unbekannt

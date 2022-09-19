@@ -6,6 +6,16 @@
 
 - @title = @evaluation.title
 
+- if @order
+  = "#{@order.model_name.human}: #{link_to(@order.label_with_workitem_path, @order)}".html_safe
+
+- if evaluation_type =~ /absence/
+  = form_tag(nil, { method: :get, class: 'form-inline', role: 'search' }) do
+    = hidden_field_tag :returning, true
+    = hidden_field_tag :page, 1
+    = hidden_field_tag :category_id, params[:category_id]
+    = direct_filter_select(:absence_id, 'Absenztyp',  Absence.all)
+
 = render 'period_link'
 
 - if @evaluation.category.respond_to?(:tooltip) && @evaluation.category.tooltip.present?

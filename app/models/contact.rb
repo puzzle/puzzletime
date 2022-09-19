@@ -32,6 +32,7 @@ class Contact < ActiveRecord::Base
 
   validates_by_schema
   validates :firstname, :lastname, :client_id, presence: true
+  validates :email, email: true, allow_blank: true
   validates :invoicing_key, uniqueness: true, allow_blank: true
 
   scope :list, -> { order(:lastname, :firstname) }

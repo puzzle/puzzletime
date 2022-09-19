@@ -7,7 +7,8 @@
 - @title = ti(:title, model: "#{models_label(false)} von #{h(parent)}")
 
 = crud_form do |f|
-  = f.labeled_input_fields :start_date, :end_date, :percent
+  = f.labeled_input_fields :start_date, :end_date
+  = f.labeled_input_field :percent, min: 0, max: 200, step: 2.5
   = f.labeled_input_field :vacation_days_per_year, help: 'Feld leer lassen, um den Wert aus den allgemeinen Anstellungsbedingungen zu verwenden.'
   = f.labeled :employment_roles_employments do
     = f.nested_fields_for :employment_roles_employments,
@@ -33,7 +34,7 @@
                                      class: 'form-control',
                                      placeholder: 'Stufe'
         .col-md-2
-          = fields.number_field :percent, min: 0, max: 200, step: 5
+          = fields.number_field :percent, min: 0, max: 200, step: 2.5
         .col-md-1.form-action
           = fields.remove_nested_fields_link(picon('delete',
                                                    title: 'Funktion entfernen',
