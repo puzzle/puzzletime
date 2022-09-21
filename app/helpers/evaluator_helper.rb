@@ -5,7 +5,7 @@
 
 module EvaluatorHelper
   def evaluation_detail_params
-    params.permit(:evaluation, :category_id, :division_id, :start_date, :end_date, :page)
+    params.permit(:evaluation, :category_id, :division_id, :absence_id, :start_date, :end_date, :page)
   end
 
   def evaluation_path(evaluation, options = {})
