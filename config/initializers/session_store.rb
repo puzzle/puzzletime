@@ -14,7 +14,12 @@ def memcache_configured?
   end
 end
 
-Rails.application.config.session_store ActionDispatch::Session::CacheStore, expire_after: 12.hours
+secure_cookies = !(Rails.env.development? || Rails.env.test?)
+
+Rails.application.config.session_store ActionDispatch::Session::CacheStore,
+                                       expire_after: 12.hours,
+                                       same_site: :lax,
+                                       secure: secure_cookies
 
 # We expect memcache to work in production. Prevents an error with the rails console on OpenShift
 if memcache_configured? && !Rails.env.production? && !dalli_reachable?
