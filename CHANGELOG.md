@@ -2,6 +2,12 @@
 ### Improvements
 * **Rechnungsstellung:** Umstellung auf SmallInvoice APIv2 (vorher v1)
 
+# 2.10
+### Improvements
+* Auto-redirect zum SSO login sofern genau 1 SSO Provider konfiguriert ist und localauth deaktiviert ist
+* Secure flag auf session cookie gesetzt
+* Absenztyp Filter wird nun auch für Absenzen Export respektiert
+
 # 2.9
 ### Improvements
 * **Log:** Änderungen an den Funktionsanteilen der Anstellungen werden neu im Members-Log protokolliert
