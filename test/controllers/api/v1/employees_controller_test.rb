@@ -61,10 +61,10 @@ class Api::V1::EmployeesControllerTest < ActionController::TestCase
     get :index, params: { page: 2, per_page: 1 }
     list_entries = Employee.list.page(2).per(1)
 
-    assert_equal list_entries.total_count,      response.headers['Pagination-Total-Count']
-    assert_equal list_entries.current_per_page, response.headers['Pagination-Per-Page']
-    assert_equal list_entries.current_page,     response.headers['Pagination-Current-Page']
-    assert_equal list_entries.total_pages,      response.headers['Pagination-Total-Pages']
+    assert_equal list_entries.total_count,  response.headers['Pagination-Total-Count']
+    assert_equal list_entries.limit_value,  response.headers['Pagination-Per-Page']
+    assert_equal list_entries.current_page, response.headers['Pagination-Current-Page']
+    assert_equal list_entries.total_pages,  response.headers['Pagination-Total-Pages']
   end
 
   private

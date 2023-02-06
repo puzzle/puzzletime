@@ -24,6 +24,7 @@ Rails.env = 'test'
 require 'rails/test_help'
 require 'mocha/minitest'
 require 'capybara/rails'
+require 'headless'
 
 require 'webmock/minitest'
 WebMock.disable_net_connect!(
@@ -41,27 +42,38 @@ Settings.reload!
 
 Dir[Rails.root.join('test/support/**/*.rb')].sort.each { |f| require f }
 
-Capybara.register_driver :selenium do |app|
-  require 'selenium/webdriver'
+Capybara.register_driver :chrome do |app|
+  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+    'goog:chromeOptions': {
+      args: %w[no-sandbox headless disable-gpu disable-dev-shm-usage window-size=1920,1080]
+    }
+  )
 
-  next Capybara::Selenium::Driver.new(app, browser: ENV['SELENIUM_DRIVER'].to_sym) if ENV['SELENIUM_DRIVER']
-
-  Selenium::WebDriver::Firefox::Binary.path = ENV['FIREFOX_PATH'] if ENV['FIREFOX_PATH']
-  capa = Selenium::WebDriver::Remote::Capabilities.firefox(marionette: true)
-  Capybara::Selenium::Driver.new(app, browser: :chrome, desired_capabilities: capa)
+  Capybara::Selenium::Driver.new(app, browser: :chrome, capabilities: capabilities)
 end
 
-Capybara.server = :puma, { Silent: true }
+Capybara.register_driver :firefox do |app|
+  options = Selenium::WebDriver::Firefox::Options.new
+  binary = ENV.fetch('RAILS_FIREFOX_BINARY', nil)
+  options.binary = binary if binary
+  Capybara::Selenium::Driver.new(app, browser: :firefox, capabilities: [options])
+end
+
+Capybara.register_driver :firefox_headless do |app|
+  options = Selenium::WebDriver::Firefox::Options.new
+  binary = ENV.fetch('RAILS_FIREFOX_BINARY', nil)
+  options.binary = binary if binary
+  options.add_argument('-headless')
+  Capybara::Selenium::Driver.new(app, options: options)
+end
+
+driver = ENV['HEADLESS'] == 'false' ? :firefox : :firefox_headless
+driver = ENV.fetch('SELENIUM_DRIVER', driver).to_sym
+Capybara.default_driver = driver
+Capybara.javascript_driver = driver
 Capybara.server_port = ENV['CAPYBARA_SERVER_PORT'].to_i if ENV['CAPYBARA_SERVER_PORT']
-Capybara.default_driver = :selenium
+Capybara.server = :puma, { Silent: true } # Silence that nasty log output
 Capybara.default_max_wait_time = 5
-
-unless ENV['HEADLESS'] == 'false'
-  require 'headless'
-
-  headless = Headless.new(destroy_at_exit: false)
-  headless.start
-end
 
 class ActiveSupport::TestCase
   include CustomAssertions

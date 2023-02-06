@@ -28,6 +28,6 @@ class SubWorkItemsEval < WorkItemsEval
   end
 
   def division_column
-    "work_items.path_ids[#{category.path_ids.size + 1}]"
+    Arel.sql("work_items.path_ids[#{category.path_ids.size + 1}]")
   end
 end

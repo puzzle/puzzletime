@@ -132,8 +132,8 @@ class Reports::Revenue::Csv
     out
   end
 
-  def l(*args)
-    I18n.l(*args)
+  def l(...)
+    I18n.l(...)
   end
 
   def format_number(number, precision = nil)

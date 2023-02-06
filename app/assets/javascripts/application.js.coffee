@@ -7,27 +7,9 @@
 # Place your application-specific JavaScript functions and classes here
 # This file is automatically included by javascript_include_tag :defaults
 #
-#= require jquery3
-#= require jquery_ujs
-#= require jquery-ui/widgets/datepicker
-#= require jquery-ui-datepicker-i18n
-#= require jquery-ui/widgets/autocomplete
-#= require jquery-ui/widgets/selectable
-#= require selectize
-#= require bootstrap/modal
-#= require bootstrap/tooltip
-#= require bootstrap/button
-#= require bootstrap/alert
-#= require bootstrap/collapse
-#= require waypoints/jquery.waypoints
-#= require waypoints/shortcuts/sticky
-#= require waypoints/shortcuts/inview
-#= require modernizr-custom
-#= require Chart.min
-#= require chartjs-plugin-annotation.min
 #= require_self
 #= require_tree ./modules
-# after self to disable links
+#after self to disable links
 #= require nested_form_fields
 #= require modal_create
 #= require datepicker
@@ -45,9 +27,8 @@
 #= require expenses
 #= require expense_reviews
 #= require meal_compensations
-#= require turbolinks
 
-
+debugger
 app = window.App ||= {}
 
 if typeof String.prototype.endsWith isnt 'function'

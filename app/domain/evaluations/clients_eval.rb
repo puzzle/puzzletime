@@ -4,7 +4,7 @@
 #  https://github.com/puzzle/puzzletime.
 
 class ClientsEval < Evaluation
-  self.division_column   = 'work_items.path_ids[1]'
+  self.division_column   = Arel.sql('work_items.path_ids[1]')
   self.division_join     = :work_item
   self.sub_evaluation   = 'clientworkitems'
   self.label            = 'Kunden'

@@ -105,7 +105,7 @@ class WorkItemTest < ActiveSupport::TestCase
                    shortname: 'BAZ')
 
     p.reload
-    p.update_attributes!(shortname: 'FUU', description: 'bla')
+    p.update!(shortname: 'FUU', description: 'bla')
     c1.reload
     c2.reload
 
@@ -131,7 +131,7 @@ class WorkItemTest < ActiveSupport::TestCase
     p.reload
 
     WorkItem.any_instance.expects(:store_path_names).never
-    p.update_attributes!(description: 'foo')
+    p.update!(description: 'foo')
   end
 
   test 'destroys dependent plannings when destroyed' do

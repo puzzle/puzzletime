@@ -193,7 +193,7 @@ class Employee < ActiveRecord::Base
   end
 
   def update_passwd!(pwd)
-    update_attributes!(passwd: Employee.encode(pwd))
+    update!(passwd: Employee.encode(pwd))
   end
 
   # main work items this employee ever worked on

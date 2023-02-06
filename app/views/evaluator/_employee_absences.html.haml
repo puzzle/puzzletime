@@ -7,7 +7,7 @@
 %section.employee-absences
   %h4 Absenzen
 
-  - evaluation = EmployeeAbsencesEval.new(params[:category_id] || @user.id, search_conditions)
+  - evaluation = EmployeeAbsencesEval.new(params[:category_id] || @user.id, **search_conditions)
   = render('category',
            evaluation: evaluation,
            times: @periods.collect { |p| evaluation.sum_times_grouped(p) },

@@ -28,7 +28,7 @@ class WorkingCondition < ActiveRecord::Base
 
   delegate :clear_cache, to: :class
 
-  scope :list, -> { order('(CASE WHEN valid_from IS NULL THEN 0 ELSE 1 END) DESC, valid_from DESC') }
+  scope :list, -> { order(Arel.sql('(CASE WHEN valid_from IS NULL THEN 0 ELSE 1 END) DESC, valid_from DESC')) }
 
   class << self
     def todays_value(attr)
@@ -78,7 +78,7 @@ class WorkingCondition < ActiveRecord::Base
       # double cache for best performance
       RequestStore.store[model_name.route_key] ||=
         Rails.cache.fetch(model_name.route_key) do
-          order('(CASE WHEN valid_from IS NULL THEN 0 ELSE 1 END), valid_from').collect(&:attributes)
+          order(Arel.sql('(CASE WHEN valid_from IS NULL THEN 0 ELSE 1 END), valid_from')).collect(&:attributes)
         end
     end
 

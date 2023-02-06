@@ -29,7 +29,7 @@ class OrdertimesControllerTest < ActionController::TestCase
 
   def test_new_with_template
     template = worktimes(:wt_mw_puzzletime)
-    template.update_attributes!(ticket: '123', description: 'desc')
+    template.update!(ticket: '123', description: 'desc')
 
     get :new, params: { template: template.id }
     assert_equal template.work_item, assigns(:worktime).work_item
@@ -48,7 +48,7 @@ class OrdertimesControllerTest < ActionController::TestCase
 
   def test_new_without_billable_template
     template = worktimes(:wt_mw_puzzletime)
-    template.update_attributes(billable: false)
+    template.update(billable: false)
     get :new, params: { template: template.id }
     assert !assigns(:worktime).billable?
   end

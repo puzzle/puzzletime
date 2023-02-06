@@ -19,7 +19,7 @@ class AbsencetimesControllerTest < ActionController::TestCase
 
   def test_new_with_template
     template = worktimes(:wt_pz_vacation)
-    template.update_attributes(description: 'desc')
+    template.update(description: 'desc')
 
     get :new, params: { template: template.id }
     assert_equal template.absence, assigns(:worktime).absence

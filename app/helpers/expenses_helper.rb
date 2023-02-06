@@ -121,7 +121,7 @@ module ExpensesHelper
   def expenses_file_field(form, **options)
     safe_join(
       [
-        file_field_with_warning(form, options),
+        file_field_with_warning(form, **options),
         form.labeled(' ', options) { t('expenses.attachment.hint') }
       ]
     )

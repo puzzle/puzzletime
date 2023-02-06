@@ -68,7 +68,7 @@ class LogPresenter
       to   = I18n.l(to,   format: :month) if to
     end
 
-    I18n.t("version.attribute_change.#{key}", attribute_args(item_type, attr, from, to))
+    I18n.t("version.attribute_change.#{key}", **attribute_args(item_type, attr, from, to))
   end
 
   private

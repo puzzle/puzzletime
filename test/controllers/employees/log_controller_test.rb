@@ -11,7 +11,7 @@ class Employees::LogControllerTest < ActionController::TestCase
   setup :login
 
   test 'denies access for non-management users' do
-    employees(:mark).update_attributes(management: false)
+    employees(:mark).update(management: false)
     assert_raise CanCan::AccessDenied do
       get :index, params: { id: pedro.id }
     end
@@ -23,10 +23,10 @@ class Employees::LogControllerTest < ActionController::TestCase
   end
 
   test 'renders log in correct order' do
-    pedro.update_attributes(street: 'Belpstrasse 37', postal_code: '3007', city: 'Bern')
-    pedro.update_attributes(phone_private: '+41791234567')
-    pedro.update_attributes(committed_worktimes_at: Date.new(2000, 01, 31))
-    pedro.update_attributes(eval_periods: ['5w']) # should not appear in log
+    pedro.update(street: 'Belpstrasse 37', postal_code: '3007', city: 'Bern')
+    pedro.update(phone_private: '+41791234567')
+    pedro.update(committed_worktimes_at: Date.new(2000, 01, 31))
+    pedro.update(eval_periods: ['5w']) # should not appear in log
     get :index, params: { id: pedro.id }
     assert_select('.log tbody tr', count: 3)
     assert_select('.log tbody tr:nth-child(1) td:nth-child(2)', text: "Der Member #2 wurde bearbeitet.\n" \

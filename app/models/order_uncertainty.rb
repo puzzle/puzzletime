@@ -43,7 +43,7 @@ class OrderUncertainty < ActiveRecord::Base
   after_save :update_major_order_value
   after_destroy :update_major_order_value
 
-  scope :list, -> { order('probability * impact DESC') }
+  scope :list, -> { order(Arel.sql('probability * impact DESC')) }
 
   class << self
     def risk(value)

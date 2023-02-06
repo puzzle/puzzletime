@@ -27,7 +27,7 @@ class OrderRisk < OrderUncertainty
 
   def major_order_value
     order.order_risks
-         .pluck('MAX(probability * impact)')
+         .pluck(Arel.sql('MAX(probability * impact)'))
          .first
   end
 end

@@ -130,7 +130,7 @@ class Evaluation
   def planning_query(receiver, division = nil)
     query = receiver.plannings.
             joins(:work_item).
-            joins('INNER JOIN accounting_posts ON accounting_posts.work_item_id = ANY (work_items.path_ids)').
+            joins(Arel.sql('INNER JOIN accounting_posts ON accounting_posts.work_item_id = ANY (work_items.path_ids)')).
             definitive
     query = query.where("? = #{category_ref}", category_id) if division && category_ref
     query
@@ -258,11 +258,11 @@ class Evaluation
   end
 
   def hours_and_billable_hours_columns
-    ['SUM(worktimes.hours) AS sum_hours',
-     'SUM(CASE WHEN worktimes.billable = TRUE ' \
+    [Arel.sql('SUM(worktimes.hours) AS sum_hours'),
+     Arel.sql('SUM(CASE WHEN worktimes.billable = TRUE ' \
          'THEN worktimes.hours ' \
          'ELSE 0 END) ' \
-         'AS sum_billable_hours']
+         'AS sum_billable_hours')]
   end
 
   def query_planning_sums(query, period)
@@ -289,11 +289,11 @@ class Evaluation
   end
 
   def plannings_and_billable_plannings_columns(must_hours)
-    ["SUM(plannings.percent / 100.0 * #{must_hours.to_f}) AS sum_hours",
-     'SUM(CASE WHEN accounting_posts.billable = TRUE ' \
+    [Arel.sql("SUM(plannings.percent / 100.0 * #{must_hours.to_f}) AS sum_hours"),
+     Arel.sql('SUM(CASE WHEN accounting_posts.billable = TRUE ' \
          "THEN plannings.percent / 100.0 * #{must_hours.to_f} " \
          'ELSE 0 END) ' \
-         'AS sum_billable_hours']
+         'AS sum_billable_hours')]
   end
 
   def worktime_type

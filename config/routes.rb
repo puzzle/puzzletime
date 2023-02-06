@@ -1,16 +1,16 @@
-#  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
+#  Copyright (c) 2006-2023, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
 Rails.application.routes.draw do
+  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+
   devise_for :employees, controllers: { sessions: 'employees/sessions', omniauth_callbacks: 'employees/omniauth_callbacks' }, skip: [:registrations]
   as :employee do
     get 'employees/edit' => 'devise/registrations#edit', :as => 'edit_employee_registration'
     patch 'employees' => 'devise/registrations#update', :as => 'employee_registration'
   end
-
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
   root to: 'worktimes#index'
 

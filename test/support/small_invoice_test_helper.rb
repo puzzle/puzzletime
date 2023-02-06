@@ -38,7 +38,7 @@ module SmallInvoiceTestHelper
       }
     )
 
-    stub_api_request(:post, name, args)
+    stub_api_request(:post, name, **args)
   end
 
   def stub_edit_entity(name, **kwargs)
@@ -46,7 +46,7 @@ module SmallInvoiceTestHelper
       body: JSON.generate(new_contact)
     }.merge(kwargs)
 
-    stub_api_request(:put, name, args)
+    stub_api_request(:put, name, **args)
   end
 
   def stub_delete_entity(name, **kwargs)

@@ -1,0 +1,111 @@
+/* line 7, app/assets/stylesheets/phone.scss */
+body {
+  background: #fff;
+  font-size: 16pt;
+  font-family: "trebuchet ms", helvetica, sans-serif;
+  color: #333;
+  padding: 0px;
+  margin: 0px;
+}
+
+/* line 16, app/assets/stylesheets/phone.scss */
+p {
+  margin-bottom: 20px;
+}
+
+/* line 20, app/assets/stylesheets/phone.scss */
+a {
+  color: #0087e3;
+  text-decoration: underline;
+}
+
+/* line 25, app/assets/stylesheets/phone.scss */
+a:hover {
+  text-decoration: none;
+}
+
+/* line 29, app/assets/stylesheets/phone.scss */
+a.symbol {
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* line 35, app/assets/stylesheets/phone.scss */
+a img {
+  border: 0;
+}
+
+/* line 39, app/assets/stylesheets/phone.scss */
+h1 {
+  font-size: 20pt;
+  font-weight: normal;
+  margin-bottom: 10px;
+  padding-left: 5px;
+}
+
+/* line 46, app/assets/stylesheets/phone.scss */
+h2 {
+  font-size: 18pt;
+  font-weight: bold;
+  padding-left: 5px;
+}
+
+/* line 52, app/assets/stylesheets/phone.scss */
+h3 {
+  font-size: 16pt;
+  font-weight: bold;
+  color: #4a4a4a;
+  padding-left: 5px;
+}
+
+/* line 59, app/assets/stylesheets/phone.scss */
+table {
+  font-size: 16pt;
+}
+
+/* line 63, app/assets/stylesheets/phone.scss */
+td {
+  padding: 5px;
+  padding-top: 8pt;
+  padding-bottom: 8pt;
+  vertical-align: top;
+}
+
+/* line 70, app/assets/stylesheets/phone.scss */
+textarea, input, select {
+  font-size: 14px;
+  font-family: sans-serif;
+  line-height: 16px;
+}
+
+/* line 76, app/assets/stylesheets/phone.scss */
+th.periodHead {
+  text-align: right;
+}
+
+/* line 80, app/assets/stylesheets/phone.scss */
+.uneven {
+  background-color: #C9D8FF;
+  white-space: nowrap;
+}
+
+/* line 85, app/assets/stylesheets/phone.scss */
+#notice {
+  font-weight: bold;
+  margin: 10px;
+  margin-top: 10px;
+  margin-bottom: 0px;
+  color: #e47400;
+}
+
+/* line 93, app/assets/stylesheets/phone.scss */
+.notification {
+  border: 2px solid #C9D8FF;
+  background-color: #f0f0f0;
+  margin: 0;
+  margin-top: -16px;
+  margin-bottom: 10px;
+  padding: 2px;
+  list-style-type: none;
+}

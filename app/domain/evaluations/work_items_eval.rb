@@ -6,7 +6,7 @@
 # abstract class for evaluation with work item divisions
 class WorkItemsEval < Evaluation
   self.division_method   = :work_items
-  self.division_column   = 'work_items.path_ids[1]'
+  self.division_column   = Arel.sql('work_items.path_ids[1]')
   self.division_join     = :work_item
   self.label             = 'Positionen'
   self.sub_evaluation    = 'workitememployees'

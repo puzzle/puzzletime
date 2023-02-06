@@ -140,7 +140,7 @@ class RoleDistributionReport
               .joins('INNER JOIN employment_roles er ON er.id = ere.employment_role_id')
               .joins('INNER JOIN employment_role_categories erc ON erc.id = er.employment_role_category_id')
               .group('employees.id', 'erc.id')
-              .pluck('employees.id, erc.id, SUM(COALESCE(ere.percent, 0)) AS percent')
+              .pluck(Arel.sql('employees.id, erc.id, SUM(COALESCE(ere.percent, 0)) AS percent'))
               .each_with_object({}) do |(employee_id, category_id, percent), o|
                 o[employee_id] ||= {}
                 o[employee_id][category_id] = percent

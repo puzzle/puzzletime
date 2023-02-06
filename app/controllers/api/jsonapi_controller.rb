@@ -82,7 +82,7 @@ module Api
     def set_pagination_headers
       response.headers.merge!(
         'Pagination-Total-Count' => list_entries.total_count,
-        'Pagination-Per-Page' => list_entries.current_per_page,
+        'Pagination-Per-Page' => list_entries.limit_value,
         'Pagination-Current-Page' => list_entries.current_page,
         'Pagination-Total-Pages' => list_entries.total_pages
       )

@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 git_source(:github) { |name| "https://github.com/#{name}.git" }
 
-  gem 'rails', '~> 6.0.6.1'
+gem 'rails', '~> 6.0.6.1'
 
 gem 'pg' #, '~> 0.21.0'
 gem 'activerecord-nulldb-adapter'
@@ -79,6 +79,7 @@ group :development, :test do
   gem 'pry-rails'
   gem 'rb-readline'
   gem 'request_profiler'
+  gem 'pry-byebug'
 end
 
 group :development do
