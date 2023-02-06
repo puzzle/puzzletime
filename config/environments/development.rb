@@ -97,25 +97,25 @@ Rails.application.configure do
     Bullet.add_footer = false
     Bullet.stacktrace_includes = []
 
-    Bullet.add_whitelist type: :unused_eager_loading, class_name: "Ordertime", association: :employee
-    Bullet.add_whitelist type: :unused_eager_loading, class_name: "Ordertime", association: :absence
-    Bullet.add_whitelist type: :unused_eager_loading, class_name: "Absencetime", association: :work_item
-    Bullet.add_whitelist type: :unused_eager_loading, class_name: "Planning", association: :work_item
-    Bullet.add_whitelist type: :unused_eager_loading, class_name: "Planning", association: :employee
-    Bullet.add_whitelist type: :unused_eager_loading, class_name: "Order", association: :contacts
-    Bullet.add_whitelist type: :unused_eager_loading, class_name: "Order", association: :work_item
-    Bullet.add_whitelist type: :unused_eager_loading, class_name: "Order", association: :kind
-    Bullet.add_whitelist type: :unused_eager_loading, class_name: "Order", association: :department
-    Bullet.add_whitelist type: :unused_eager_loading, class_name: "Order", association: :status
-    Bullet.add_whitelist type: :unused_eager_loading, class_name: "Order", association: :responsible
-    Bullet.add_whitelist type: :unused_eager_loading, class_name: "Order", association: :targets
-    Bullet.add_whitelist type: :unused_eager_loading, class_name: "Order", association: :order_uncertainties
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "Ordertime", association: :employee
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "Ordertime", association: :absence
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "Absencetime", association: :work_item
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "Planning", association: :work_item
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "Planning", association: :employee
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "Order", association: :contacts
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "Order", association: :work_item
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "Order", association: :kind
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "Order", association: :department
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "Order", association: :status
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "Order", association: :responsible
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "Order", association: :targets
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "Order", association: :order_uncertainties
 
-    Bullet.add_whitelist type: :n_plus_one_query, class_name: "Order", association: :order_team_members
-    Bullet.add_whitelist type: :n_plus_one_query, class_name: "Order", association: :team_members
-    Bullet.add_whitelist type: :n_plus_one_query, class_name: "Order", association: :order_contacts
-    Bullet.add_whitelist type: :n_plus_one_query, class_name: "WorkItem", association: :parent
-    Bullet.add_whitelist type: :n_plus_one_query, class_name: "BillingAddress", association: :client
-    Bullet.add_whitelist type: :n_plus_one_query, class_name: "BillingAddress", association: :contact
+    Bullet.add_safelist type: :n_plus_one_query, class_name: "Order", association: :order_team_members
+    Bullet.add_safelist type: :n_plus_one_query, class_name: "Order", association: :team_members
+    Bullet.add_safelist type: :n_plus_one_query, class_name: "Order", association: :order_contacts
+    Bullet.add_safelist type: :n_plus_one_query, class_name: "WorkItem", association: :parent
+    Bullet.add_safelist type: :n_plus_one_query, class_name: "BillingAddress", association: :client
+    Bullet.add_safelist type: :n_plus_one_query, class_name: "BillingAddress", association: :contact
   end
 end

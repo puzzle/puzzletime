@@ -1,8 +1,10 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 5.2.x'
+git_source(:github) { |name| "https://github.com/#{name}.git" }
 
-gem 'pg', '~> 0.21.0'
+  gem 'rails', '~> 6.0.6.1'
+
+gem 'pg' #, '~> 0.21.0'
 gem 'activerecord-nulldb-adapter'
 
 gem 'nochmal', github: 'puzzle/nochmal'
@@ -37,6 +39,7 @@ gem 'omniauth-saml'
 gem 'prawn'
 gem 'prometheus_exporter'
 gem 'protective'
+gem 'psych', '~> 3.0'
 gem 'puma'
 gem 'rails_autolink'
 gem 'rails-i18n'
@@ -116,3 +119,5 @@ group :metrics do
   gem 'sdoc'
   gem 'simplecov-rcov', git: 'https://github.com/puzzle/simplecov-rcov'
 end
+
+gem "listen", "~> 3.8"
