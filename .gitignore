@@ -55,3 +55,5 @@ tags
 
 # bundler tools dir
 /vendor/tools
+
+TAGS

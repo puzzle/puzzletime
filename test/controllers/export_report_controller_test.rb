@@ -55,7 +55,10 @@ class ExportReportControllerTest < ActionController::TestCase
 
   def assert_csv_http_headers(filename)
     assert_includes response.headers, 'Content-Type', 'Content-Disposition'
-    assert_equal 'text/csv; charset=utf-8; header=present', response.headers['Content-Type']
-    assert_equal "attachment; filename=\"#{filename}\"", response.headers['Content-Disposition']
+    assert_equal 'text/csv; charset=utf-8', response.headers['Content-Type']
+
+    filename_slug = I18n.transliterate(filename)
+    filename_utf8 = CGI.escape(filename)
+    assert_equal "attachment; filename=\"#{filename_slug}\"; filename*=UTF-8''#{filename_utf8}", response.headers['Content-Disposition']
   end
 end

@@ -58,7 +58,7 @@ gem 'sentry-raven', require: false
 ## assets
 gem 'autoprefixer-rails'
 gem 'bootstrap-sass'
-gem 'chartjs-ror'
+gem 'chartjs-ror', "= 3.6.4"
 gem 'coffee-rails'
 gem 'execjs'
 gem 'jquery-rails'

@@ -46,7 +46,7 @@ class Order::Cockpit
     end
 
     def future_planned_hours
-      future_plannings.sum(0) { |planning| planning.hours }
+      future_plannings.sum(&:hours)
     end
 
     private

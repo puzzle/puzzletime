@@ -6,8 +6,6 @@
 #  https://github.com/puzzle/puzzletime.
 
 class Expenses::PdfExport
-  include ActiveStorage::Downloading
-
   require 'mini_magick'
 
   attr_accessor :pdf
@@ -99,7 +97,7 @@ class Expenses::PdfExport
   end
 
   def add_single_model_data(key, **options)
-    add_text attribute(key, model_data[key]), options
+    add_text attribute(key, model_data[key]), **options
   end
 
   def add_text(text, **options)
@@ -174,7 +172,7 @@ class Expenses::PdfExport
   def add_receipt
     return unless receipt_printable?
 
-    download_blob_to_tempfile do |file|
+    blob.open do |file|
       image = ::MiniMagick::Image.open(file.path)
       image.auto_orient
       image.write file.path
@@ -202,6 +200,6 @@ class Expenses::PdfExport
   end
 
   def t(label, **kwargs)
-    I18n.t("activerecord.attributes.expense.#{label}", kwargs)
+    I18n.t("activerecord.attributes.expense.#{label}", **kwargs)
   end
 end

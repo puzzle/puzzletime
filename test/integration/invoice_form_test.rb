@@ -29,10 +29,8 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
       "input[name='invoice[work_item_ids][]']",
       "input[name='invoice[grouping]']"
     ]
-    binding.pry
     assert affected_selectors.all? { |selector| all(selector).present? }
     manual_checkbox.click
-    binding.pry
     assert affected_selectors.none? { |selector| all(selector).present? }
     manual_checkbox.click
     assert affected_selectors.all? { |selector| all(selector).present? }

@@ -60,7 +60,7 @@ class ShowOrderServices < ActionDispatch::IntegrationTest
   private
 
   def employee_without_responsibilities
-    Employee.where.not(management: true, id: responsible_ids).first.tap do |employee|
+    Employee.where.not(management: true).where.not(id: responsible_ids).first.tap do |employee|
       refute employee.management
       refute employee.order_responsible?
     end

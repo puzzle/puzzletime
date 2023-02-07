@@ -147,7 +147,7 @@ GEM
       rack-test (>= 0.6.3)
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
-    chartjs-ror (3.7.0)
+    chartjs-ror (3.6.4)
       rails (>= 3.1)
     choice (0.2.0)
     chunky_png (1.4.0)
@@ -630,7 +630,7 @@ DEPENDENCIES
   bundler-audit
   cancancan
   capybara
-  chartjs-ror
+  chartjs-ror (= 3.6.4)
   codez-tarantula
   coffee-rails
   config

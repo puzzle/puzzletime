@@ -141,6 +141,6 @@ class ExpensesControllerTest < ActionController::TestCase
     get :index, params: { employee_id: employees(:pascal).id, format: :pdf }
     assert_equal 4, assigns(:expenses).count
     assert_equal 'application/pdf', response.headers['Content-Type']
-    assert_equal 'inline; filename="expenses.pdf"', response.headers['Content-Disposition']
+    assert_equal 'inline; filename="expenses.pdf"; filename*=UTF-8\'\'expenses.pdf', response.headers['Content-Disposition']
   end
 end

@@ -83,6 +83,8 @@ module Puzzletime
         raise e unless e.message =~ /PG::UndefinedTable/ || e.message =~ /does not exist/
       end
     end
+
+    config.active_record.yaml_column_permitted_classes = [Date, BigDecimal]
   end
 
   def self.version
