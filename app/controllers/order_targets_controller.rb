@@ -23,7 +23,7 @@ class OrderTargetsController < ApplicationController
     @errors = OrderTarget.new.errors
     @order_targets.each do |target|
       unless target.update(target_params(target))
-        target.errors.each { |attr, msg| @errors.add(attr, msg) }
+        target.errors.each { |error| @errors.add(error.attribute, error.message) }
       end
     end
   end

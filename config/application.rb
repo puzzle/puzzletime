@@ -20,7 +20,7 @@ module Puzzletime
     config.load_defaults 5.2
 
     # FIXME: remove this if it works flawlesly
-    config.active_record.belongs_to_required_by_default = true
+    config.active_record.belongs_to_required_by_default = false
 
     # Configuration for the application, engines, and railties goes here.
     #

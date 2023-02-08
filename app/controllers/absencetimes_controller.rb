@@ -39,7 +39,9 @@ class AbsencetimesController < WorktimesController
     else
       set_employees
       @create_multi = true
-      @multiabsence.worktime.errors.each do |attr, msg|
+      @multiabsence.worktime.errors.each do |error|
+        attr = error.attribute
+        msg  = error.message
         entry.errors.add(attr, msg)
       end
       render 'new'

@@ -6,13 +6,6 @@ GIT
       pastel
       rails (>= 6.0)
 
-GIT
-  remote: https://github.com/puzzle/simplecov-rcov
-  revision: 554ec457f4a7bdceae083ce516c281567a341e4a
-  specs:
-    simplecov-rcov (0.2.3.1)
-      simplecov (>= 0.4.1)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -201,7 +194,6 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
-    docile (1.4.0)
     dry-configurable (1.0.1)
       dry-core (~> 1.0, < 2)
       zeitwerk (~> 2.6)
@@ -540,12 +532,6 @@ GEM
       websocket (~> 1.0)
     sentry-raven (3.1.2)
       faraday (>= 1.0)
-    simplecov (0.22.0)
-      docile (~> 1.1)
-      simplecov-html (~> 0.11)
-      simplecov_json_formatter (~> 0.1)
-    simplecov-html (0.12.3)
-    simplecov_json_formatter (0.1.4)
     simpleidn (0.2.1)
       unf (~> 0.1.4)
     snaky_hash (2.0.1)
@@ -701,7 +687,6 @@ DEPENDENCIES
   selectize-rails
   selenium-webdriver
   sentry-raven
-  simplecov-rcov!
   spring
   swagger-blocks
   turbolinks

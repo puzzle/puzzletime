@@ -84,7 +84,7 @@ class WorkingCondition < ActiveRecord::Base
 
     def clear_cache
       RequestStore.store[model_name.route_key] = nil
-      Rails.cache.clear(model_name.route_key)
+      Rails.cache.delete(model_name.route_key)
       @todays_values = {}
       true
     end

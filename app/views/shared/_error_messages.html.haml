@@ -8,6 +8,8 @@
 - if errors.any?
   #error_explanation.alert.alert-danger
     %ul
-      - errors.each do |attr, msg|
+      - errors.each do |error|
+        - attr = error.attribute
+        - msg = error.message
         %li
           = /^[[:upper:]]/.match(msg) ? msg : errors.full_message(attr, msg)

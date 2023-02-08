@@ -17,7 +17,7 @@ module AttachmentHelper
     transformations =
       {
         auto_orient: true,
-        resize: '800x1200>'
+        resize_to_limit: '800x1200'
       }
     image = attachment_image(obj, transformations)
     tag   = image_tag(image, options)

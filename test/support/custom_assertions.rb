@@ -105,12 +105,14 @@ module CustomAssertions
   end
 
   def assert_other_attrs_have_no_errors(record, *invalid_attrs)
-    record.errors.each do |a, error|
+    record.errors.each do |error|
+      error_attr = error.attribute
+      error_msg  = error.message
       msg = message do
-        "Attribute #{mu_pp(a)} not declared as invalid attribute, " \
-        "but has the following error(s):\n#{mu_pp(error)}"
+        "Attribute #{mu_pp(error_attr)} not declared as invalid attribute, " \
+        "but has the following error(s):\n#{mu_pp(error_msg)}"
       end
-      assert invalid_attrs.include?(a), msg
+      assert invalid_attrs.include?(error_attr), msg
     end
   end
 end

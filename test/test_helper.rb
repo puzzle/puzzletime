@@ -5,19 +5,19 @@
 
 ENV['RAILS_ENV'] = 'test'
 
-if ENV['TEST_REPORTS']
-  require 'simplecov'
-  require 'simplecov-rcov'
-  SimpleCov.coverage_dir 'test/coverage'
-  # use this formatter for jenkins compatibility
-  SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
-  SimpleCov.command_name 'Unit Tests'
-  SimpleCov.start 'rails'
+# if ENV['TEST_REPORTS']
+#   require 'simplecov'
+#   require 'simplecov-rcov'
+#   SimpleCov.coverage_dir 'test/coverage'
+#   # use this formatter for jenkins compatibility
+#   SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
+#   SimpleCov.command_name 'Unit Tests'
+#   SimpleCov.start 'rails'
 
-  require 'minitest/reporters'
-  MiniTest::Reporters.use! [MiniTest::Reporters::DefaultReporter.new,
-                            MiniTest::Reporters::JUnitReporter.new]
-end
+#   require 'minitest/reporters'
+#   MiniTest::Reporters.use! [MiniTest::Reporters::DefaultReporter.new,
+#                             MiniTest::Reporters::JUnitReporter.new]
+# end
 
 require File.expand_path('../../config/environment', __FILE__)
 Rails.env = 'test'
@@ -49,14 +49,14 @@ Capybara.register_driver :chrome do |app|
     }
   )
 
-  Capybara::Selenium::Driver.new(app, browser: :chrome, capabilities: capabilities)
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: capabilities)
 end
 
 Capybara.register_driver :firefox do |app|
   options = Selenium::WebDriver::Firefox::Options.new
   binary = ENV.fetch('RAILS_FIREFOX_BINARY', nil)
   options.binary = binary if binary
-  Capybara::Selenium::Driver.new(app, browser: :firefox, capabilities: [options])
+  Capybara::Selenium::Driver.new(app, browser: :firefox, options: options)
 end
 
 Capybara.register_driver :firefox_headless do |app|
@@ -64,7 +64,7 @@ Capybara.register_driver :firefox_headless do |app|
   binary = ENV.fetch('RAILS_FIREFOX_BINARY', nil)
   options.binary = binary if binary
   options.add_argument('-headless')
-  Capybara::Selenium::Driver.new(app, options: options)
+  Capybara::Selenium::Driver.new(app, browser: :firefox, options: options)
 end
 
 driver = ENV['HEADLESS'] == 'false' ? :firefox : :firefox_headless

@@ -129,7 +129,7 @@ class WorktimeTest < ActiveSupport::TestCase
     @worktime.from_start_time = '08:00'
     @worktime.hours = 5
     assert !@worktime.valid?
-    assert_equal [:to_end_time], @worktime.errors.keys
+    assert_equal [:to_end_time], @worktime.errors.attribute_names
     assert @worktime.start_stop?
     assert_equal 0.0, @worktime.hours
   end
