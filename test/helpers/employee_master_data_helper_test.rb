@@ -9,7 +9,7 @@ class EmployeeMasterDataHelperTest < ActionView::TestCase
   include EmployeeMasterDataHelper
 
   test '#format_year_of_service' do
-    employment_date = Date.tomorrow - 4.years
+    employment_date = 4.years.ago.tomorrow
     assert_equal format_year_of_service(employment_date), 3
   end
 end

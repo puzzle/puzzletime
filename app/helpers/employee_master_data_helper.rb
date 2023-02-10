@@ -5,7 +5,11 @@
 
 module EmployeeMasterDataHelper
   def format_year_of_service(employment_date)
-    ((Time.zone.now - employment_date.to_time) / 1.year.seconds).floor
+    start = employment_date.to_time.to_i
+    now = DateTime.now.to_i
+    duration = ActiveSupport::Duration.build(now - start)
+
+    duration.parts[:years]
   end
 
   def format_nationalities(employee)
