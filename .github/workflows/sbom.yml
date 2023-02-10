@@ -1,0 +1,42 @@
+name: 'Generate and upload SBOM'
+on:
+  push:
+    branches:
+    - master
+    paths-ignore:
+    - 'doc/**'
+    - '**.md'
+
+jobs:
+  build:
+    runs-on: 'ubuntu-latest'
+
+    strategy:
+      matrix:
+        ruby: [ '2.6', '2.7' ]
+
+    steps:
+    
+    - name: 'Checkout'
+      uses: actions/checkout@v2
+
+    - name: 'Set up Ruby ${{ matrix.ruby }}'
+      uses: ruby/setup-ruby@v1.137.0
+      with:
+        ruby-version: ${{ matrix.ruby }}
+        bundler-cache: true
+      env:
+        ImageOS: ubuntu18
+
+    - name: 'Build and upload SBOM'
+      run: |
+        gem install cyclonedx-ruby 
+        gem install bundler --version '~> 2'
+        cyclonedx-ruby -p .
+        curl -X "POST" -i "${{ secrets.DEPTRACK_URL }}/api/v1/bom" \
+        -H 'Content-Type: multipart/form-data' \
+        -H 'X-Api-Key: '"${{ secrets.DEPTRACK_API_KEY }}"'' \
+        -F "autoCreate=true" \
+        -F "projectName=PuzzleTime" \
+        -F "projectVersion=1.0" \
+        -F "bom=@bom.xml"
