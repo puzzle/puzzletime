@@ -29,7 +29,7 @@ class AbsencetimesController < WorktimesController
   protected
 
   def create_multi_absence
-    @multiabsence = MultiAbsence.new
+    @multiabsence = Forms::MultiAbsence.new
     @multiabsence.employee = Employee.find_by(id: employee_id)
     @multiabsence.attributes = params[:absencetime]
     if @multiabsence.valid?

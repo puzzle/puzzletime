@@ -6,7 +6,7 @@ class EmployeeMailerPreview < ActionMailer::Preview
       account: WorkItem.new(name: 'Lieblingsprojekt', path_shortnames: 'TOP-FAV'),
       work_date: Date.today,
       hours: 4.33,
-      report_type: HoursDayType::INSTANCE
+      report_type: ReportType::HoursDayType::INSTANCE
     )
     management_user = Employee.new(firstname: 'Mad', lastname: 'Manager')
     EmployeeMailer.worktime_deleted_mail(worktime, management_user)

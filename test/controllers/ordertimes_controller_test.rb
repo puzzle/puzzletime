@@ -81,7 +81,7 @@ class OrdertimesControllerTest < ActionController::TestCase
     assert flash[:alert].blank?
     assert_match(/Zeit.*erfolgreich erstellt/, flash[:notice])
     assert_equal work_items(:puzzletime), Ordertime.last.work_item
-    assert_equal HoursDayType::INSTANCE, Ordertime.last.report_type
+    assert_equal ReportType::HoursDayType::INSTANCE, Ordertime.last.report_type
     assert_equal '#1', Ordertime.last.ticket
     assert_equal 0.75, Ordertime.last.hours
     assert_equal work_date, Ordertime.last.work_date
@@ -103,7 +103,7 @@ class OrdertimesControllerTest < ActionController::TestCase
     assert_redirected_to action: 'index', week_date: work_date
     assert flash[:alert].blank?
     assert_match(/Zeit.*erfolgreich erstellt/, flash[:notice])
-    assert_equal StartStopType::INSTANCE, Ordertime.last.report_type
+    assert_equal ReportType::StartStopType::INSTANCE, Ordertime.last.report_type
     assert_equal '08:00', Ordertime.last.from_start_time.strftime('%H:%M')
     assert_equal '10:15', Ordertime.last.to_end_time.strftime('%H:%M')
     assert_equal 2.25, Ordertime.last.hours
@@ -291,7 +291,7 @@ class OrdertimesControllerTest < ActionController::TestCase
     assert_redirected_to action: 'index', week_date: worktime.work_date
     assert flash[:alert].blank?
     assert_match(/Zeit.*aktualisiert/, flash[:notice])
-    assert_equal HoursDayType::INSTANCE, worktime.report_type
+    assert_equal ReportType::HoursDayType::INSTANCE, worktime.report_type
     assert_nil worktime.from_start_time
     assert_nil worktime.to_end_time
     assert_equal 1.5, worktime.hours
@@ -328,7 +328,7 @@ class OrdertimesControllerTest < ActionController::TestCase
 
   def test_split
     worktime = worktimes(:wt_pz_allgemein)
-    session[:split] = WorktimeEdit.new(worktime)
+    session[:split] = Forms::WorktimeEdit.new(worktime)
     get :split
     assert_template 'split'
   end
@@ -351,7 +351,7 @@ class OrdertimesControllerTest < ActionController::TestCase
 
   def test_create_completing_part
     worktime = worktimes(:wt_pz_allgemein)
-    split = WorktimeEdit.new(worktime)
+    split = Forms::WorktimeEdit.new(worktime)
     worktime.hours = 0.5
     split.add_worktime(worktime)
     session[:split] = split
@@ -371,7 +371,7 @@ class OrdertimesControllerTest < ActionController::TestCase
 
   def test_create_incomplete_part
     worktime = worktimes(:wt_pz_allgemein)
-    split = WorktimeEdit.new(worktime)
+    split = Forms::WorktimeEdit.new(worktime)
     worktime.hours = 0.5
     split.add_worktime(worktime)
     session[:split] = split
@@ -392,7 +392,7 @@ class OrdertimesControllerTest < ActionController::TestCase
 
   def test_create_invalid_part
     worktime = worktimes(:wt_pz_allgemein)
-    split = WorktimeEdit.new(worktime)
+    split = Forms::WorktimeEdit.new(worktime)
     worktime.hours = 0.5
     split.add_worktime(worktime)
     session[:split] = split

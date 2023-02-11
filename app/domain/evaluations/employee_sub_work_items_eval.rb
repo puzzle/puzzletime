@@ -3,7 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-class EmployeeSubWorkItemsEval < SubWorkItemsEval
+class Evaluations::EmployeeSubWorkItemsEval < Evaluations::SubWorkItemsEval
   include Conditioner
 
   self.sub_work_items_eval = 'employeesubworkitems'

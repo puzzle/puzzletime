@@ -8,7 +8,7 @@ class VacationsController < ApplicationController
   before_action :set_period
 
   def show
-    @graph = VacationGraph.new(@period)
+    @graph = Graphs::VacationGraph.new(@period)
   end
 
   private

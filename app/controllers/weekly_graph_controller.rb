@@ -8,7 +8,7 @@ class WeeklyGraphController < ApplicationController
   before_action :set_period
 
   def show
-    @graph = WorktimeGraph.new(@period || Period.past_month, employee)
+    @graph = Graphs::WorktimeGraph.new(@period || Period.past_month, employee)
   end
 
   private

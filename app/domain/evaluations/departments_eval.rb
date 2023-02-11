@@ -3,7 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-class DepartmentsEval < Evaluation
+class Evaluations::DepartmentsEval < Evaluations::Evaluation
   self.division_column   = 'orders.department_id'
   self.division_join     = 'INNER JOIN work_items ON work_items.id = worktimes.work_item_id ' \
                            'INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)'

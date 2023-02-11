@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_02_07_231358) do
-
+ActiveRecord::Schema[7.0].define(version: 2023_02_07_231358) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -46,7 +45,7 @@ ActiveRecord::Schema.define(version: 2023_02_07_231358) do
     t.string "record_type", null: false
     t.bigint "record_id", null: false
     t.bigint "blob_id", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
@@ -58,7 +57,7 @@ ActiveRecord::Schema.define(version: 2023_02_07_231358) do
     t.text "metadata"
     t.bigint "byte_size", null: false
     t.string "checksum", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.string "service_name", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
@@ -82,8 +81,8 @@ ActiveRecord::Schema.define(version: 2023_02_07_231358) do
     t.string "token"
     t.string "token_secret"
     t.bigint "employee_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["employee_id"], name: "index_authentications_on_employee_id"
   end
 
@@ -121,8 +120,8 @@ ActiveRecord::Schema.define(version: 2023_02_07_231358) do
     t.string "phone", limit: 255
     t.string "mobile", limit: 255
     t.string "crm_key", limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.string "invoicing_key"
     t.index ["client_id"], name: "index_contacts_on_client_id"
   end
@@ -150,14 +149,14 @@ ActiveRecord::Schema.define(version: 2023_02_07_231358) do
     t.integer "attempts", default: 0, null: false
     t.text "handler", null: false
     t.text "last_error"
-    t.datetime "run_at"
-    t.datetime "locked_at"
-    t.datetime "failed_at"
+    t.datetime "run_at", precision: nil
+    t.datetime "locked_at", precision: nil
+    t.datetime "failed_at", precision: nil
     t.string "locked_by", limit: 255
     t.string "queue", limit: 255
     t.string "cron", limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
@@ -199,9 +198,9 @@ ActiveRecord::Schema.define(version: 2023_02_07_231358) do
     t.string "identity_card_type"
     t.date "identity_card_valid_until"
     t.string "encrypted_password", default: ""
-    t.datetime "remember_created_at"
-    t.datetime "created_at", default: -> { "now()" }, null: false
-    t.datetime "updated_at", default: -> { "now()" }, null: false
+    t.datetime "remember_created_at", precision: nil
+    t.datetime "created_at", precision: nil, default: -> { "now()" }, null: false
+    t.datetime "updated_at", precision: nil, default: -> { "now()" }, null: false
     t.bigint "workplace_id"
     t.boolean "worktimes_commit_reminder", default: true, null: false
     t.index ["department_id"], name: "index_employees_on_department_id"
@@ -265,7 +264,7 @@ ActiveRecord::Schema.define(version: 2023_02_07_231358) do
     t.text "description", null: false
     t.text "reason"
     t.bigint "reviewer_id"
-    t.datetime "reviewed_at"
+    t.datetime "reviewed_at", precision: nil
     t.bigint "order_id"
     t.date "reimbursement_date"
     t.date "submission_date", default: -> { "now()" }
@@ -293,8 +292,8 @@ ActiveRecord::Schema.define(version: 2023_02_07_231358) do
     t.string "status", null: false
     t.integer "billing_address_id", null: false
     t.string "invoicing_key"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.integer "grouping", default: 0, null: false
     t.index ["billing_address_id"], name: "index_invoices_on_billing_address_id"
     t.index ["order_id"], name: "index_invoices_on_order_id"
@@ -312,8 +311,8 @@ ActiveRecord::Schema.define(version: 2023_02_07_231358) do
     t.text "text", null: false
     t.integer "creator_id"
     t.integer "updater_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["order_id"], name: "index_order_comments_on_order_id"
   end
 
@@ -345,8 +344,8 @@ ActiveRecord::Schema.define(version: 2023_02_07_231358) do
     t.integer "target_scope_id", null: false
     t.string "rating", limit: 255, default: "green", null: false
     t.text "comment"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["order_id"], name: "index_order_targets_on_order_id"
     t.index ["target_scope_id"], name: "index_order_targets_on_target_scope_id"
   end
@@ -366,8 +365,8 @@ ActiveRecord::Schema.define(version: 2023_02_07_231358) do
     t.integer "probability", default: 1, null: false
     t.integer "impact", default: 1, null: false
     t.text "measure"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["order_id"], name: "index_order_uncertainties_on_order_id"
   end
 
@@ -380,8 +379,8 @@ ActiveRecord::Schema.define(version: 2023_02_07_231358) do
     t.integer "contract_id"
     t.integer "billing_address_id"
     t.string "crm_key", limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.date "completed_at"
     t.date "committed_at"
     t.date "closed_at"
@@ -441,6 +440,10 @@ ActiveRecord::Schema.define(version: 2023_02_07_231358) do
     t.index ["position"], name: "index_target_scopes_on_position"
   end
 
+  create_table "test", id: false, force: :cascade do |t|
+    t.integer "id", null: false
+  end
+
   create_table "user_notifications", force: :cascade do |t|
     t.date "date_from", null: false
     t.date "date_to"
@@ -454,7 +457,7 @@ ActiveRecord::Schema.define(version: 2023_02_07_231358) do
     t.string "event", null: false
     t.string "whodunnit"
     t.text "object"
-    t.datetime "created_at"
+    t.datetime "created_at", precision: nil
     t.text "object_changes"
     t.bigint "employee_id"
     t.index ["employee_id"], name: "index_versions_on_employee_id"

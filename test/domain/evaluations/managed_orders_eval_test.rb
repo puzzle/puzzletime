@@ -6,11 +6,11 @@
 require 'test_helper'
 require_relative 'eval_test_helper'
 
-class ManagedOrdersEvalTest < ActiveSupport::TestCase
+class Evaluations::ManagedOrdersEvalTest < ActiveSupport::TestCase
   include EvalTestHelper
 
   def test_managed_work_items_pascal
-    @evaluation = ManagedOrdersEval.new(employees(:pascal))
+    @evaluation = Evaluations::ManagedOrdersEval.new(employees(:pascal))
     assert_managed employees(:pascal)
 
     divisions = @evaluation.divisions.list
@@ -18,7 +18,7 @@ class ManagedOrdersEvalTest < ActiveSupport::TestCase
   end
 
   def test_managed_work_items_mark
-    @evaluation = ManagedOrdersEval.new(employees(:mark))
+    @evaluation = Evaluations::ManagedOrdersEval.new(employees(:mark))
     assert_managed employees(:mark)
 
     divisions = @evaluation.divisions.list
@@ -41,7 +41,7 @@ class ManagedOrdersEvalTest < ActiveSupport::TestCase
   end
 
   def test_managed_work_item_plannings_mark
-    @evaluation = ManagedOrdersEval.new(employees(:mark))
+    @evaluation = Evaluations::ManagedOrdersEval.new(employees(:mark))
 
     Fabricate(:planning, work_item: work_items(:allgemein), date: '2006-12-05', percent: 100)
     Fabricate(:planning, work_item: work_items(:allgemein), date: '2006-12-06', percent: 100)
@@ -62,7 +62,7 @@ class ManagedOrdersEvalTest < ActiveSupport::TestCase
   end
 
   def test_managed_work_items_mark_details
-    @evaluation = ManagedOrdersEval.new(employees(:mark))
+    @evaluation = Evaluations::ManagedOrdersEval.new(employees(:mark))
     @evaluation.set_division_id work_items(:allgemein).id
 
     assert_sum_times 0, 14, 14, 15
@@ -70,7 +70,7 @@ class ManagedOrdersEvalTest < ActiveSupport::TestCase
   end
 
   def test_managed_work_items_lucien
-    @evaluation = ManagedOrdersEval.new(employees(:lucien))
+    @evaluation = Evaluations::ManagedOrdersEval.new(employees(:lucien))
     assert_managed employees(:lucien)
     divisions = @evaluation.divisions
     assert_equal 2, divisions.size
@@ -93,7 +93,7 @@ class ManagedOrdersEvalTest < ActiveSupport::TestCase
   end
 
   def test_managed_work_items_lucien_details
-    @evaluation = ManagedOrdersEval.new(employees(:lucien))
+    @evaluation = Evaluations::ManagedOrdersEval.new(employees(:lucien))
     @evaluation.set_division_id work_items(:puzzletime).id
 
     assert_sum_times 0, 6, 18, 18

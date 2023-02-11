@@ -53,7 +53,7 @@ class AbsencetimesControllerTest < ActionController::TestCase
     assert flash[:alert].blank?
     assert_match(/Absenz.*erfolgreich erstellt/, flash[:notice])
     assert_equal absences(:doctor), Absencetime.last.absence
-    assert_equal HoursDayType::INSTANCE, Absencetime.last.report_type
+    assert_equal ReportType::HoursDayType::INSTANCE, Absencetime.last.report_type
     assert_equal 'desc', Absencetime.last.description
     assert_equal 2.75, Absencetime.last.hours
     assert_equal work_date, Absencetime.last.work_date
@@ -74,7 +74,7 @@ class AbsencetimesControllerTest < ActionController::TestCase
     assert flash[:alert].blank?
     assert_match(/Absenz.*erfolgreich erstellt/, flash[:notice])
     assert_equal absences(:vacation), Absencetime.last.absence
-    assert_equal StartStopType::INSTANCE, Absencetime.last.report_type
+    assert_equal ReportType::StartStopType::INSTANCE, Absencetime.last.report_type
     assert_equal '07:30', Absencetime.last.from_start_time.strftime('%H:%M')
     assert_equal '12:00', Absencetime.last.to_end_time.strftime('%H:%M')
     assert_equal 4.5, Absencetime.last.hours
@@ -129,14 +129,14 @@ class AbsencetimesControllerTest < ActionController::TestCase
 
   def test_update
     worktime = worktimes(:wt_mw_service)
-    assert_equal HoursDayType::INSTANCE, worktime.report_type
+    assert_equal ReportType::HoursDayType::INSTANCE, worktime.report_type
     put :update, params: { id: worktime, absencetime: { from_start_time: '8:15', to_end_time: '10:00' } }
 
     worktime.reload
     assert_redirected_to action: 'index', week_date: worktime.work_date
     assert flash[:alert].blank?
     assert_match(/Absenz.*aktualisiert/, flash[:notice])
-    assert_equal StartStopType::INSTANCE, worktime.report_type
+    assert_equal ReportType::StartStopType::INSTANCE, worktime.report_type
     assert_equal '08:15', worktime.from_start_time.strftime('%H:%M')
     assert_equal '10:00', worktime.to_end_time.strftime('%H:%M')
     assert_equal 1.75, worktime.hours

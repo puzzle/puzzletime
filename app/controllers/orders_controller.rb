@@ -174,7 +174,7 @@ class OrdersController < CrudController
       .joins(:managed_orders)
       .employed_ones(Period.current_year)
       .select('employees.*, ' \
-              "CASE WHEN employees.id = #{current_user.id.to_s(:db)} THEN 1 " \
+              "CASE WHEN employees.id = #{current_user.id.to_fs(:db)} THEN 1 " \
               'ELSE 2 END AS employee_order') # current user should be on top
       .reorder('employee_order, lastname, firstname')
   end

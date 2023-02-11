@@ -6,12 +6,12 @@
 require 'test_helper'
 require_relative 'eval_test_helper'
 
-class DepartmentOrdersEvalTest < ActiveSupport::TestCase
+class Evaluations::DepartmentOrdersEvalTest < ActiveSupport::TestCase
   include EvalTestHelper
 
   def setup
     super
-    @evaluation = DepartmentOrdersEval.new(department.id)
+    @evaluation = Evaluations::DepartmentOrdersEval.new(department.id)
   end
 
   test 'plannings' do

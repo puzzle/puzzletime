@@ -5,7 +5,7 @@
 
 require 'test_helper'
 
-class WorktimeEditTest < ActiveSupport::TestCase
+class Forms::WorktimeEditTest < ActiveSupport::TestCase
   test 'may add original' do
     assert edit.add_worktime(worktime)
     assert_equal [worktime], edit.worktimes
@@ -47,7 +47,7 @@ class WorktimeEditTest < ActiveSupport::TestCase
   end
 
   def edit
-    @edit ||= WorktimeEdit.new(worktime)
+    @edit ||= Forms::WorktimeEdit.new(worktime)
   end
 
   def worktime

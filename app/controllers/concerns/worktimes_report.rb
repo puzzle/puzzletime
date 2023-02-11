@@ -21,7 +21,7 @@ module WorktimesReport
     combined_map = {}
     combined_times = []
     @worktimes.each do |time|
-      if time.report_type.is_a?(StartStopType) && params[:start_stop]
+      if time.report_type.is_a?(ReportType::StartStopType) && params[:start_stop]
         combined_times.push time
       else
         combine_time(combined_map, combined_times, time)

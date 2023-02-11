@@ -3,7 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-class RoleDistributionReport
+class Reports::RoleDistributionReport
   def initialize(date)
     @date = date
     @filename_prefix = 'puzzletime_funktionsanteile'

@@ -248,23 +248,23 @@ class Order::CockpitTest < ActiveSupport::TestCase
     Ordertime.create!(work_item: work_items(:hitobito_demo_app),
                       employee: employees(:pascal),
                       work_date: Time.zone.today,
-                      report_type: HoursDayType::INSTANCE,
+                      report_type: ReportType::HoursDayType::INSTANCE,
                       hours: 8)
     Ordertime.create!(work_item: work_items(:hitobito_demo_app),
                       employee: employees(:pascal),
                       work_date: Time.zone.today - 1,
-                      report_type: HoursDayType::INSTANCE,
+                      report_type: ReportType::HoursDayType::INSTANCE,
                       hours: 4)
     Ordertime.create!(work_item: work_items(:hitobito_demo_app),
                       employee: employees(:pascal),
                       work_date: Time.zone.today - 1,
-                      report_type: HoursDayType::INSTANCE,
+                      report_type: ReportType::HoursDayType::INSTANCE,
                       billable: false,
                       hours: 4)
     Ordertime.create!(work_item: work_items(:hitobito_demo_site),
                       employee: employees(:pascal),
                       work_date: Time.zone.today - 2,
-                      report_type: HoursDayType::INSTANCE,
+                      report_type: ReportType::HoursDayType::INSTANCE,
                       hours: 10)
   end
 

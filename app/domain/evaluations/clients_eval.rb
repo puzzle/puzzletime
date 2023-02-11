@@ -3,7 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-class ClientsEval < Evaluation
+class Evaluations::ClientsEval < Evaluations::Evaluation
   self.division_column   = Arel.sql('work_items.path_ids[1]')
   self.division_join     = :work_item
   self.sub_evaluation   = 'clientworkitems'

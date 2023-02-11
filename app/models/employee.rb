@@ -86,7 +86,7 @@ class Employee < ActiveRecord::Base
   has_many :custom_lists, dependent: :destroy
   has_many :plannings, dependent: :destroy
   has_one :running_time,
-          -> { where(report_type: AutoStartType::INSTANCE.key) },
+          -> { where(report_type: ReportType::AutoStartType::INSTANCE.key) },
           class_name: 'Ordertime'
   has_many :expenses, dependent: :destroy
   has_many :authentications, dependent: :destroy

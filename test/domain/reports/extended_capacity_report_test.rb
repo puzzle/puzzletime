@@ -7,11 +7,11 @@
 
 require 'test_helper'
 
-class ExtendedCapacityReportTest < ActiveSupport::TestCase
+class Reports::ExtendedCapacityReportTest < ActiveSupport::TestCase
   setup :create_worktimes
 
   test 'renders employee capacity data as CSV' do
-    csv = ExtendedCapacityReport.new(period).to_csv
+    csv = Reports::ExtendedCapacityReport.new(period).to_csv
     data = CSV.parse(csv)
     header = data.first
     rows = data.select { |row| row.first == 'PZ' }

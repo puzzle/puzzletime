@@ -5,7 +5,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-class EmployeesEval < Evaluation
+class Evaluations::EmployeesEval < Evaluations::Evaluation
   self.division_column = 'employee_id'
   self.sub_evaluation   = 'employeeworkitems'
   self.label            = 'Member Zeit'

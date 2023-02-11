@@ -84,7 +84,7 @@ class WorktimesController < CrudController
   end
 
   def check_overlapping
-    if @worktime.report_type.is_a? StartStopType
+    if @worktime.report_type.is_a? ReportType::StartStopType
       conditions = ['NOT (work_item_id IS NULL AND absence_id IS NULL) AND ' \
                     'employee_id = :employee_id AND work_date = :work_date AND id <> :id AND (' \
                     '(from_start_time <= :start_time AND to_end_time >= :end_time) OR ' \

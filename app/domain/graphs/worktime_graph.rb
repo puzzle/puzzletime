@@ -3,11 +3,13 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-class WorktimeGraph
+class Graphs::WorktimeGraph
   WORKTIME_ORDER = 'work_date, from_start_time, work_item_id, absence_id'.freeze
-  WORKTIME_CONDITIONS = ['(worktimes.report_type = ? OR worktimes.report_type = ?)',
-                         StartStopType::INSTANCE.key,
-                         HoursDayType::INSTANCE.key].freeze
+  WORKTIME_CONDITIONS = [
+    '(worktimes.report_type = ? OR worktimes.report_type = ?)',
+    ReportType::StartStopType::INSTANCE.key,
+    ReportType::HoursDayType::INSTANCE.key
+  ].freeze
 
   attr_reader :period, :employee
 
@@ -15,16 +17,16 @@ class WorktimeGraph
     @period = period.extend_to_weeks
     @employee = employee
 
-    @work_items_eval = EmployeeWorkItemsEval.new(@employee.id)
-    @absences_eval = EmployeeAbsencesEval.new(@employee.id)
+    @work_items_eval = Evaluations::EmployeeWorkItemsEval.new(@employee.id)
+    @absences_eval = Evaluations::EmployeeAbsencesEval.new(@employee.id)
 
-    @color_map = AccountColorMapper.new
+    @color_map = Graphs::AccountColorMapper.new
     @weekly_boxes = {}
     @monthly_boxes = {}
   end
 
   def each_day
-    set_period_boxes(@monthly_boxes, Period.month_for(@period.start_date), HoursMonthType::INSTANCE)
+    set_period_boxes(@monthly_boxes, Period.month_for(@period.start_date), ReportType::HoursMonthType::INSTANCE)
     @period.step do |day|
       @current = Period.day_for(day)
       compute_period_times day
@@ -77,10 +79,10 @@ class WorktimeGraph
 
   def compute_period_times(day)
     if day.wday == 1
-      set_period_boxes(@weekly_boxes, Period.week_for(day), HoursWeekType::INSTANCE)
+      set_period_boxes(@weekly_boxes, Period.week_for(day), ReportType::HoursWeekType::INSTANCE)
     end
     if day.mday == 1
-      set_period_boxes(@monthly_boxes, Period.month_for(day), HoursMonthType::INSTANCE)
+      set_period_boxes(@monthly_boxes, Period.month_for(day), ReportType::HoursMonthType::INSTANCE)
     end
   end
 
@@ -97,7 +99,7 @@ class WorktimeGraph
     hours = period.musttime.to_f * must_hours_factor
     return [] if hours.zero?
 
-    work_items.collect { |w| Timebox.new(w, color_for(w), Timebox.height_from_hours(w.hours / hours)) }
+    work_items.collect { |w| Graphs::Timebox.new(w, color_for(w), Graphs::Timebox.height_from_hours(w.hours / hours)) }
   end
 
   def concat_period_boxes
@@ -113,23 +115,23 @@ class WorktimeGraph
       box = b.clone
       box.stretch(must_hours)
       @boxes.push box
-      @total_hours += box.height / Timebox::PIXEL_PER_HOUR
+      @total_hours += box.height / Graphs::Timebox::PIXEL_PER_HOUR
     end
   end
 
   def append_account_boxes(worktimes)
     worktimes.each do |w|
-      @boxes.push Timebox.new(w, color_for(w))
+      @boxes.push Graphs::Timebox.new(w, color_for(w))
       @total_hours += w.hours
     end
   end
 
   def insert_musthours_line(must_hours)
     if @total_hours < must_hours
-      @boxes.push Timebox.blank(must_hours - @total_hours)
-      @boxes.push Timebox.must_hours(must_hours)
+      @boxes.push Graphs::Timebox.blank(must_hours - @total_hours)
+      @boxes.push Graphs::Timebox.must_hours(must_hours)
     elsif @total_hours == must_hours
-      @boxes.push Timebox.must_hours(must_hours)
+      @boxes.push Graphs::Timebox.must_hours(must_hours)
     else
       sum = 0
       limit = Timebox.height_from_hours(must_hours)
@@ -138,11 +140,11 @@ class WorktimeGraph
         diff = sum - limit
         if diff > 0
           @boxes[i].height = @boxes[i].height - diff
-          @boxes.insert(i + 1, Timebox.must_hours(must_hours))
-          @boxes.insert(i + 2, Timebox.new(@boxes[i].worktime, @boxes[i].color, diff, @boxes[i].tooltip))
+          @boxes.insert(i + 1, Graphs::Timebox.must_hours(must_hours))
+          @boxes.insert(i + 2, Graphs::Timebox.new(@boxes[i].worktime, @boxes[i].color, diff, @boxes[i].tooltip))
           break
         elsif diff.zero?
-          @boxes.insert(i + 1, Timebox.must_hours(must_hours))
+          @boxes.insert(i + 1, Graphs::Timebox.must_hours(must_hours))
           break
         end
       end

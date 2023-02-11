@@ -3,7 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-class EmployeeWorkItemsEval < WorkItemsEval
+class Evaluations::EmployeeWorkItemsEval < Evaluations::WorkItemsEval
   self.category_ref      = :employee_id
   self.sub_evaluation    = nil
   self.division_method   = :alltime_main_work_items

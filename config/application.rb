@@ -30,14 +30,7 @@ module Puzzletime
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
 
-    config.autoload_paths += %W(#{config.root}/app/domain/forms
-                                #{config.root}/app/domain/reports
-                                #{config.root}/app/models/util
-                                #{config.root}/app/domain/evaluations
-                                #{config.root}/app/domain/graphs
-                                #{config.root}/app/domain/presenters
-                                #{config.root}/app/domain
-                                #{config.root}/app/jobs)
+    config.autoload_paths += %W(#{config.root}/app/models/util)
 
     # Use custom error controller
     config.exceptions_app = self.routes
@@ -107,7 +100,7 @@ module Puzzletime
   end
 
   def self.commit_hash(short: false)
-    if File.exists?("#{Rails.root}/BUILD_INFO")
+    if File.exist?("#{Rails.root}/BUILD_INFO")
       commit = File.open("#{Rails.root}/BUILD_INFO").first.chomp
       return commit.first(7) if short
 

@@ -9,7 +9,7 @@
 # The worktime information may be constrained to certain periods of time.
 #
 # This class is abstract, subclasses generally override the class constants for customization.
-class Evaluation
+class Evaluations::Evaluation
   class_attribute :division_method, :division_column, :division_join, :division_planning_join,
                   :sub_evaluation, :sub_work_items_eval, :label, :absences,
                   :total_details, :billable_hours, :planned_hours, :category_ref, :detail_columns,

@@ -133,7 +133,7 @@ class Worktime < ActiveRecord::Base
   def template(new_worktime = nil)
     new_worktime ||= self.class.new
     new_worktime.from_start_time =
-      if report_type.is_a?(StartStopType)
+      if report_type.is_a?(ReportType::StartStopType)
         to_end_time
       else
         Time.zone.now.change(hour: Settings.defaults.start_hour)
@@ -169,11 +169,11 @@ class Worktime < ActiveRecord::Base
 
   def guess_report_type
     if from_start_time || to_end_time
-      self.report_type = StartStopType::INSTANCE
+      self.report_type = ReportType::StartStopType::INSTANCE
     else
       self.from_start_time = nil
       self.to_end_time = nil
-      self.report_type = HoursDayType::INSTANCE
+      self.report_type = ReportType::HoursDayType::INSTANCE
     end
   end
 
@@ -187,7 +187,7 @@ class Worktime < ActiveRecord::Base
         self.hours = nil
       end
     end
-    self.work_date = Time.zone.today if report_type.is_a? AutoStartType
+    self.work_date = Time.zone.today if report_type.is_a? ReportType::AutoStartType
   end
 
   def strip_ticket

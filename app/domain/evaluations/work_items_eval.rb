@@ -4,7 +4,7 @@
 #  https://github.com/puzzle/puzzletime.
 
 # abstract class for evaluation with work item divisions
-class WorkItemsEval < Evaluation
+class Evaluations::WorkItemsEval < Evaluations::Evaluation
   self.division_method   = :work_items
   self.division_column   = Arel.sql('work_items.path_ids[1]')
   self.division_join     = :work_item

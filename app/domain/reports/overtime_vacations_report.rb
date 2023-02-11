@@ -1,4 +1,4 @@
-class OvertimeVacationsReport
+class Reports::OvertimeVacationsReport
   def initialize(date)
     @date = date
     @filename_prefix = 'puzzletime_überzeit_ferien'

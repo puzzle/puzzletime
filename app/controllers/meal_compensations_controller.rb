@@ -36,7 +36,7 @@ class MealCompensationsController < ApplicationController
   private
 
   def authorize_class
-    authorize!(:meal_compensation, Evaluation)
+    authorize!(:meal_compensation, Evaluations::Evaluation)
   end
 
   def default_period

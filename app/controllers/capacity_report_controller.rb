@@ -13,7 +13,7 @@ class CapacityReportController < ApplicationController
 
   def index
     if @period
-      report = ExtendedCapacityReport.new(@period)
+      report = Reports::ExtendedCapacityReport.new(@period)
       send_csv(report.to_csv, report.filename)
     else
       flash[:alert] = 'Bitte wählen Sie eine Zeitspanne für die Auslastung.'
@@ -24,6 +24,6 @@ class CapacityReportController < ApplicationController
   private
 
   def authorize_class
-    authorize!(:capacity_report, Evaluation)
+    authorize!(:capacity_report, Evaluations::Evaluation)
   end
 end

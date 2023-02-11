@@ -6,11 +6,11 @@
 require 'test_helper'
 require_relative 'eval_test_helper'
 
-class EmployeeWorkItemsEvalTest < ActiveSupport::TestCase
+class Evaluations::EmployeeWorkItemsEvalTest < ActiveSupport::TestCase
   include EvalTestHelper
 
   def test_employee_work_items_pascal
-    @evaluation = EmployeeWorkItemsEval.new(employees(:pascal).id)
+    @evaluation = Evaluations::EmployeeWorkItemsEval.new(employees(:pascal).id)
     assert !@evaluation.absences?
     assert @evaluation.for?(employees(:pascal))
     assert @evaluation.total_details
@@ -34,7 +34,7 @@ class EmployeeWorkItemsEvalTest < ActiveSupport::TestCase
   end
 
   def test_employee_work_items_pascal_detail
-    @evaluation = EmployeeSubWorkItemsEval.new(work_items(:puzzle).id, employees(:pascal).id)
+    @evaluation = Evaluations::EmployeeSubWorkItemsEval.new(work_items(:puzzle).id, employees(:pascal).id)
 
     @evaluation.set_division_id(work_items(:allgemein).id)
     assert_sum_times 0, 0, 0, 1
@@ -46,7 +46,7 @@ class EmployeeWorkItemsEvalTest < ActiveSupport::TestCase
   end
 
   def test_employee_work_items_mark
-    @evaluation = EmployeeWorkItemsEval.new(employees(:mark).id)
+    @evaluation = Evaluations::EmployeeWorkItemsEval.new(employees(:mark).id)
     assert !@evaluation.absences?
     assert @evaluation.for?(employees(:mark))
     assert @evaluation.total_details
@@ -70,14 +70,14 @@ class EmployeeWorkItemsEvalTest < ActiveSupport::TestCase
   end
 
   def test_employee_work_items_mark_detail
-    @evaluation = EmployeeSubWorkItemsEval.new(work_items(:puzzle).id, employees(:mark).id)
+    @evaluation = Evaluations::EmployeeSubWorkItemsEval.new(work_items(:puzzle).id, employees(:mark).id)
     @evaluation.set_division_id(work_items(:allgemein).id)
     assert_sum_times 0, 5, 5, 5
     assert_count_times 0, 1, 1, 1
   end
 
   def test_employee_work_items_lucien
-    @evaluation = EmployeeWorkItemsEval.new(employees(:lucien).id)
+    @evaluation = Evaluations::EmployeeWorkItemsEval.new(employees(:lucien).id)
     assert !@evaluation.absences?
     assert @evaluation.for?(employees(:lucien))
     assert @evaluation.total_details
@@ -101,7 +101,7 @@ class EmployeeWorkItemsEvalTest < ActiveSupport::TestCase
   end
 
   def test_employee_work_items_lucien_detail
-    @evaluation = EmployeeSubWorkItemsEval.new(work_items(:swisstopo).id, employees(:lucien).id)
+    @evaluation = Evaluations::EmployeeSubWorkItemsEval.new(work_items(:swisstopo).id, employees(:lucien).id)
     @evaluation.set_division_id(work_items(:webauftritt).id)
     assert_sum_times 0, 0, 11, 11
     assert_count_times 0, 0, 1, 1

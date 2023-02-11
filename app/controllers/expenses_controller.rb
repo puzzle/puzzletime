@@ -127,6 +127,6 @@ class ExpensesController < ManageController
 
     target_filename = "#{File.basename(receipt_param.original_filename.to_s, '.*')}.jpg"
 
-    entry.receipt.attach(io: File.open(resized), filename: target_filename, content_type: 'image/jpg')
+    entry.receipt.attach(io: File.open(resized), filename: target_filename, content_type: 'image/jpeg')
   end
 end

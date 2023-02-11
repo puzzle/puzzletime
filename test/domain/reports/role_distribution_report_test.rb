@@ -8,7 +8,7 @@
 
 require 'test_helper'
 
-class RoleDistributionReportTest < ActiveSupport::TestCase
+class Reports::RoleDistributionReportTest < ActiveSupport::TestCase
   test '#filename' do
     assert_equal 'puzzletime_funktionsanteile_20100123.csv', report.filename
   end
@@ -36,7 +36,7 @@ class RoleDistributionReportTest < ActiveSupport::TestCase
   private
 
   def report(date = Date.new(2010, 1, 23))
-    @report ||= RoleDistributionReport.new(date)
+    @report ||= Reports::RoleDistributionReport.new(date)
   end
 
   def setup_employments

@@ -3,7 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-class Splitable
+class Forms::Splitable
   class_attribute :incomplete_finish
   self.incomplete_finish = true
 

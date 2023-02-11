@@ -3,7 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-class DepartmentOrdersEval < WorkItemsEval
+class Evaluations::DepartmentOrdersEval < Evaluations::WorkItemsEval
   self.division_join     = nil
   self.division_column   = 'orders.work_item_id'
   self.billable_hours    = true

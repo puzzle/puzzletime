@@ -3,7 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-class ManagedOrdersEval < WorkItemsEval
+class Evaluations::ManagedOrdersEval < Evaluations::WorkItemsEval
   self.label             = 'Geleitete Aufträge'
   self.division_column   = 'orders.work_item_id'
   self.total_details     = false

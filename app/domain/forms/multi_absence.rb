@@ -3,7 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-class MultiAbsence
+class Forms::MultiAbsence
   attr_reader :absence_id, :employee, :work_date, :duration, :description, :worktime
   attr_writer :employee
 
@@ -81,7 +81,7 @@ class MultiAbsence
 
   def worktime_template(date, hours)
     worktime = Absencetime.new
-    worktime.report_type = HoursDayType::INSTANCE
+    worktime.report_type = ReportType::HoursDayType::INSTANCE
     worktime.work_date = date
     worktime.absence_id = @absence_id
     worktime.description = @description

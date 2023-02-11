@@ -84,7 +84,7 @@ class OrdertimesController < WorktimesController
   end
 
   def build_splitable
-    @split = session[:split] = WorktimeEdit.new(entry)
+    @split = session[:split] = Forms::WorktimeEdit.new(entry)
   end
 
   def build_worktime

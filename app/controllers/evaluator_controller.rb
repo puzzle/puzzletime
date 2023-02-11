@@ -71,7 +71,7 @@ class EvaluatorController < ApplicationController
     end
 
     if @evaluation.nil?
-      @evaluation = EmployeeWorkItemsEval.new(@user.id)
+      @evaluation = Evaluations::EmployeeWorkItemsEval.new(@user.id)
       params[:evaluation] = 'userworkitems'
     end
     @evaluation
@@ -83,14 +83,14 @@ class EvaluatorController < ApplicationController
 
   def set_default_evaluation
     @evaluation = case params[:evaluation].downcase
-                  when 'managed' then ManagedOrdersEval.new(@user)
-                  when 'userworkitems' then EmployeeWorkItemsEval.new(@user.id)
+                  when 'managed'                                             then Evaluations::ManagedOrdersEval.new(@user)
+                  when 'userworkitems'                                       then Evaluations::EmployeeWorkItemsEval.new(@user.id)
                   when "employeesubworkitems#{@user.id}", 'usersubworkitems' then
                     params[:evaluation] = 'usersubworkitems'
-                    EmployeeSubWorkItemsEval.new(params[:category_id], @user.id)
-                  when 'userabsences' then EmployeeAbsencesEval.new(@user.id, **search_conditions)
-                  when 'subworkitems' then SubWorkItemsEval.new(params[:category_id])
-                  when 'workitememployees' then WorkItemEmployeesEval.new(params[:category_id])
+                    Evaluations::EmployeeSubWorkItemsEval.new(params[:category_id], @user.id)
+                  when 'userabsences'                                        then Evaluations::EmployeeAbsencesEval.new(@user.id, **search_conditions)
+                  when 'subworkitems'                                        then Evaluations::SubWorkItemsEval.new(params[:category_id])
+                  when 'workitememployees'                                   then Evaluations::WorkItemEmployeesEval.new(params[:category_id])
                   end
   end
 
@@ -104,18 +104,19 @@ class EvaluatorController < ApplicationController
   end
 
   def set_management_evaluation
-    @evaluation = case params[:evaluation].downcase
-                  when 'clients' then ClientsEval.new
-                  when 'employees' then EmployeesEval.new(params[:department_id])
-                  when 'departments' then DepartmentsEval.new
-                  when 'clientworkitems' then ClientWorkItemsEval.new(params[:category_id])
-                  when 'employeeworkitems' then EmployeeWorkItemsEval.new(params[:category_id])
-                  when /employeesubworkitems(\d+)/ then
-                    EmployeeSubWorkItemsEval.new(params[:category_id], Regexp.last_match[1])
-                  when 'departmentorders' then DepartmentOrdersEval.new(params[:category_id])
-                  when 'absences' then AbsencesEval.new(**search_conditions)
-                  when 'employeeabsences' then EmployeeAbsencesEval.new(params[:category_id], **search_conditions)
-                  end
+    @evaluation = begin
+      suffix = case params[:evaluation].downcase
+      when 'clients'                   then Evaluations::ClientsEval.new
+      when 'employees'                 then Evaluations::EmployeesEval.new(params[:department_id])
+      when 'departments'               then Evaluations::DepartmentsEval.new
+      when 'clientworkitems'           then Evaluations::ClientWorkItemsEval.new(params[:category_id])
+      when 'employeeworkitems'         then Evaluations::EmployeeWorkItemsEval.new(params[:category_id])
+      when /employeesubworkitems(\d+)/ then Evaluations::EmployeeSubWorkItemsEval.new(params[:category_id], Regexp.last_match[1])
+      when 'departmentorders'          then Evaluations::DepartmentOrdersEval.new(params[:category_id])
+      when 'absences'                  then Evaluations::AbsencesEval.new(**search_conditions)
+      when 'employeeabsences'          then Evaluations::EmployeeAbsencesEval.new(params[:category_id], **search_conditions)
+      end
+    end
   end
 
   def overview_template
@@ -207,6 +208,6 @@ class EvaluatorController < ApplicationController
     params[:evaluation] ||= params[:action].to_s
     evaluation
     action = params[:evaluation].gsub(/\d+$/, '').to_sym
-    authorize!(action, Evaluation)
+    authorize!(action, Evaluations::Evaluation)
   end
 end

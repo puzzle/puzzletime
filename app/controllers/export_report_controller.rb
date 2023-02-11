@@ -26,13 +26,13 @@ class ExportReportController < ApplicationController
   private
 
   def authorize_class
-    authorize!(:export_report, Evaluation)
+    authorize!(:export_report, Evaluations::Evaluation)
   end
 
   def report
     case params[:report]
-    when 'role_distribution'  then RoleDistributionReport
-    when 'overtime_vacations' then OvertimeVacationsReport
+    when 'role_distribution'  then Reports::RoleDistributionReport
+    when 'overtime_vacations' then Reports::OvertimeVacationsReport
     end
   end
 end

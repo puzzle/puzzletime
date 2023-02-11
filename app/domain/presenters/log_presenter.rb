@@ -5,7 +5,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-class LogPresenter
+class Presenters::LogPresenter
   attr_accessor :version
   attr_reader :employee, :params, :view
 

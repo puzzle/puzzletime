@@ -6,12 +6,12 @@
 require 'test_helper'
 require_relative 'eval_test_helper'
 
-class AbsencesEvalTest < ActiveSupport::TestCase
+class Evaluations::AbsencesEvalTest < ActiveSupport::TestCase
   include EvalTestHelper
 
   def setup
     super
-    @evaluation = AbsencesEval.new
+    @evaluation = Evaluations::AbsencesEval.new
   end
 
   def test_absences

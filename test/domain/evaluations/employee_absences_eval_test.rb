@@ -6,11 +6,11 @@
 require 'test_helper'
 require_relative 'eval_test_helper'
 
-class EmployeeAbsencesEvalTest < ActiveSupport::TestCase
+class Evaluations::EmployeeAbsencesEvalTest < ActiveSupport::TestCase
   include EvalTestHelper
 
   def test_employee_absences_pascal
-    @evaluation = EmployeeAbsencesEval.new(employees(:pascal).id)
+    @evaluation = Evaluations::EmployeeAbsencesEval.new(employees(:pascal).id)
     assert @evaluation.absences?
     assert @evaluation.for?(employees(:pascal))
     assert @evaluation.total_details
@@ -35,7 +35,7 @@ class EmployeeAbsencesEvalTest < ActiveSupport::TestCase
   end
 
   def test_employee_absences_pascal_detail
-    @evaluation = EmployeeAbsencesEval.new(employees(:pascal).id)
+    @evaluation = Evaluations::EmployeeAbsencesEval.new(employees(:pascal).id)
 
     @evaluation.set_division_id(absences(:vacation).id)
     assert_sum_times 0, 4, 4, 4
@@ -47,7 +47,7 @@ class EmployeeAbsencesEvalTest < ActiveSupport::TestCase
   end
 
   def test_employee_absences_mark
-    @evaluation = EmployeeAbsencesEval.new(employees(:mark).id)
+    @evaluation = Evaluations::EmployeeAbsencesEval.new(employees(:mark).id)
     assert @evaluation.absences?
     assert @evaluation.for?(employees(:mark))
     assert @evaluation.total_details
@@ -70,7 +70,7 @@ class EmployeeAbsencesEvalTest < ActiveSupport::TestCase
   end
 
   def test_employee_absences_mark_detail
-    @evaluation = EmployeeAbsencesEval.new(employees(:mark).id)
+    @evaluation = Evaluations::EmployeeAbsencesEval.new(employees(:mark).id)
 
     @evaluation.set_division_id(absences(:civil_service).id)
     assert_sum_times 0, 8, 8, 8
@@ -78,7 +78,7 @@ class EmployeeAbsencesEvalTest < ActiveSupport::TestCase
   end
 
   def test_employee_absences_lucien
-    @evaluation = EmployeeAbsencesEval.new(employees(:lucien).id)
+    @evaluation = Evaluations::EmployeeAbsencesEval.new(employees(:lucien).id)
     assert @evaluation.absences?
     assert @evaluation.for?(employees(:lucien))
     assert @evaluation.total_details
@@ -101,7 +101,7 @@ class EmployeeAbsencesEvalTest < ActiveSupport::TestCase
   end
 
   def test_employee_absences_lucien_detail
-    @evaluation = EmployeeAbsencesEval.new(employees(:lucien).id)
+    @evaluation = Evaluations::EmployeeAbsencesEval.new(employees(:lucien).id)
 
     @evaluation.set_division_id(absences(:doctor).id)
     assert_sum_times 0, 0, 12, 12
@@ -110,9 +110,9 @@ class EmployeeAbsencesEvalTest < ActiveSupport::TestCase
 
   def test_sum_times_search_conditions
     period = Period.new(Date.parse('2006-01-01'), Date.parse('2006-12-31'))
-    assert_equal(worktimes(:wt_pz_vacation, :wt_pz_doctor), EmployeeAbsencesEval.new(employees(:pascal).id).times(period))
-    assert_equal([worktimes(:wt_pz_vacation)], EmployeeAbsencesEval.new(employees(:pascal).id, absence_id: absences(:vacation).id).times(period))
-    assert_equal([worktimes(:wt_pz_doctor)], EmployeeAbsencesEval.new(employees(:pascal).id, absence_id: absences(:doctor).id).times(period))
-    assert_equal([], EmployeeAbsencesEval.new(employees(:pascal).id, absence_id: absences(:civil_service).id).times(period))
+    assert_equal(worktimes(:wt_pz_vacation, :wt_pz_doctor), Evaluations::EmployeeAbsencesEval.new(employees(:pascal).id).times(period))
+    assert_equal([worktimes(:wt_pz_vacation)], Evaluations::EmployeeAbsencesEval.new(employees(:pascal).id, absence_id: absences(:vacation).id).times(period))
+    assert_equal([worktimes(:wt_pz_doctor)], Evaluations::EmployeeAbsencesEval.new(employees(:pascal).id, absence_id: absences(:doctor).id).times(period))
+    assert_equal([], Evaluations::EmployeeAbsencesEval.new(employees(:pascal).id, absence_id: absences(:civil_service).id).times(period))
   end
 end

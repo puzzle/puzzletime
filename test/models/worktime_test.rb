@@ -110,7 +110,7 @@ class WorktimeTest < ActiveSupport::TestCase
   end
 
   def test_start_stop_validation
-    @worktime.report_type = StartStopType::INSTANCE
+    @worktime.report_type = ReportType::StartStopType::INSTANCE
     @worktime.employee = employees(:various_pedro)
     @worktime.work_date = Time.zone.today
     assert !@worktime.valid?

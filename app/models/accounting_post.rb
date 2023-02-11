@@ -51,7 +51,7 @@ class AccountingPost < ActiveRecord::Base
   ### INSTANCE METHODS
 
   def validate_worktime(worktime)
-    return if worktime.report_type == AutoStartType::INSTANCE
+    return if worktime.report_type == ReportType::AutoStartType::INSTANCE
 
     if description_required? && worktime.description.blank?
       worktime.errors.add(:description, 'Es muss eine Bemerkung angegeben werden')

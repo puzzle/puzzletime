@@ -6,11 +6,11 @@
 require 'test_helper'
 require_relative 'eval_test_helper'
 
-class ClientWorkItemsEvalTest < ActiveSupport::TestCase
+class Evaluations::ClientWorkItemsEvalTest < ActiveSupport::TestCase
   include EvalTestHelper
 
   def test_client_work_items
-    @evaluation = ClientWorkItemsEval.new(clients(:puzzle).id)
+    @evaluation = Evaluations::ClientWorkItemsEval.new(clients(:puzzle).id)
     assert !@evaluation.absences?
     assert !@evaluation.for?(employees(:mark))
     assert @evaluation.total_details
@@ -43,7 +43,7 @@ class ClientWorkItemsEvalTest < ActiveSupport::TestCase
   end
 
   def test_client_work_items_detail
-    @evaluation = ClientWorkItemsEval.new(clients(:puzzle).id)
+    @evaluation = Evaluations::ClientWorkItemsEval.new(clients(:puzzle).id)
 
     @evaluation.set_division_id(work_items(:allgemein).id)
     assert_sum_times 0, 14, 14, 15

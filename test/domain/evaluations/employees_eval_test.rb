@@ -6,12 +6,12 @@
 require 'test_helper'
 require_relative 'eval_test_helper'
 
-class EmployeesEvalTest < ActiveSupport::TestCase
+class Evaluations::EmployeesEvalTest < ActiveSupport::TestCase
   include EvalTestHelper
 
   def setup
     super
-    @evaluation = EmployeesEval.new
+    @evaluation = Evaluations::EmployeesEval.new
   end
 
   def test_employees
@@ -37,7 +37,7 @@ class EmployeesEvalTest < ActiveSupport::TestCase
   end
 
   def test_employees_by_department
-    @evaluation = EmployeesEval.new(departments(:devtwo).id)
+    @evaluation = Evaluations::EmployeesEval.new(departments(:devtwo).id)
 
     assert_sum_total_times 3.0, 12.0, 35.0, 36.0
   end

@@ -3,7 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-class Timebox
+class Graphs::Timebox
   PIXEL_PER_HOUR = 8.0
 
   MUST_HOURS_COLOR = '#FF0000'.freeze
@@ -52,6 +52,6 @@ class Timebox
   private
 
   def tooltip_for(worktime)
-    Timebox.format_hour(worktime.hours) << ': ' << worktime.account.label_verbose
+    Graphs::Timebox.format_hour(worktime.hours) << ': ' << worktime.account.label_verbose
   end
 end

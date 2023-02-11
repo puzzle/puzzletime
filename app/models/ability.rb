@@ -109,7 +109,7 @@ class Ability
          :capacity_report,
          :export_report,
          :meal_compensation],
-        Evaluation
+        Evaluations::Evaluation
   end
 
   def order_responsible_abilities
@@ -151,7 +151,7 @@ class Ability
     can [:create, :update, :destroy], Ordertime do |t|
       t.order.responsible_id == user.id && !t.work_item_closed? && !t.invoice_sent_or_paid?
     end
-    can :managed, Evaluation
+    can :managed, Evaluations::Evaluation
 
     can :manage, Planning do |planning|
       planning.order.responsible_id == user.id
@@ -231,7 +231,7 @@ class Ability
          :subworkitems,
          :workitememployees,
          :orderworkitems],
-        Evaluation
+        Evaluations::Evaluation
 
     can :manage, Expense, employee_id: user.id
 

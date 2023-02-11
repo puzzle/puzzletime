@@ -3,7 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-class VacationGraph
+class Graphs::VacationGraph
   attr_reader :period, :day
 
   UNPAID_ABSENCE = Absence.new name: 'Unbezahlter Urlaub'
@@ -15,9 +15,9 @@ class VacationGraph
     @period = period.extend_to_weeks
     @todays_week = Period.week_for(Time.zone.today).to_s
 
-    @absences_eval = AbsencesEval.new
+    @absences_eval = Evaluations::AbsencesEval.new
 
-    @color_map = AccountColorMapper.new
+    @color_map = Graphs::AccountColorMapper.new
   end
 
   def each_employee
@@ -29,15 +29,15 @@ class VacationGraph
                       includes(:absence).
                       references(:absence).
                       where('report_type = ? OR report_type = ? OR report_type = ?',
-                            StartStopType::INSTANCE.key,
-                            HoursDayType::INSTANCE.key,
-                            HoursWeekType::INSTANCE.key)
+                            ReportType::StartStopType::INSTANCE.key,
+                            ReportType::HoursDayType::INSTANCE.key,
+                            ReportType::HoursWeekType::INSTANCE.key)
       @monthly_absencetimes = @absences_eval.times(period).
                               reorder('work_date, from_start_time, employee_id, absence_id').
                               includes(:absence).
                               references(:absence).
                               where('report_type = ?',
-                                    HoursMonthType::INSTANCE.key)
+                                    ReportType::HoursMonthType::INSTANCE.key)
       @unpaid_absences = empl.statistics.employments_during(period).select { |e| e.percent.zero? }
       @unpaid_absences.collect! { |e| Period.new(e.start_date, e.end_date ? e.end_date : period.end_date) }
       @index = 0
@@ -78,7 +78,7 @@ class VacationGraph
 
     hours = times.values.sum / WorkingCondition.value_at(@current.start_date, :must_hours_per_day)
     color = color_for(max_absence)
-    Timebox.new nil, color, hours, tooltip
+    Graphs::Timebox.new nil, color, hours, tooltip
   end
 
   def employee

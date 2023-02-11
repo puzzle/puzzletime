@@ -5,7 +5,7 @@
 
 require 'test_helper'
 
-class LogPresenterTest < ActiveSupport::TestCase
+class Presenters::LogPresenterTest < ActiveSupport::TestCase
   test 'title_for_version' do
     employment = Employment.first
     version = PaperTrail::Version.new(
@@ -14,7 +14,7 @@ class LogPresenterTest < ActiveSupport::TestCase
      event: "destroy"
     )
 
-    assert_equal I18n.t("version.model.destroy.employment", id: employment.id), LogPresenter.new(Employee.new).title_for(version)
+    assert_equal I18n.t("version.model.destroy.employment", id: employment.id), Presenters::LogPresenter.new(Employee.new).title_for(version)
   end
 
   test 'title_for_employmentrolesemployment_version if object record exists' do
@@ -26,7 +26,7 @@ class LogPresenterTest < ActiveSupport::TestCase
       event: "destroy"
     )
 
-    assert_equal I18n.t("version.model.destroy.employmentrolesemployment", role: role, employment_id: entry.employment_id), LogPresenter.new(Employee.new).title_for(version)
+    assert_equal I18n.t("version.model.destroy.employmentrolesemployment", role: role, employment_id: entry.employment_id), Presenters::LogPresenter.new(Employee.new).title_for(version)
   end
 
   test 'title_for_employmentrolesemployment_version if object record does not exist' do
@@ -37,7 +37,7 @@ class LogPresenterTest < ActiveSupport::TestCase
       event: "destroy"
       )
 
-    assert_equal I18n.t("version.model.destroy.employmentrolesemployment", role: '(deleted)', employment_id: 999), LogPresenter.new(Employee.new).title_for(version)
+    assert_equal I18n.t("version.model.destroy.employmentrolesemployment", role: '(deleted)', employment_id: 999), Presenters::LogPresenter.new(Employee.new).title_for(version)
   end
 
 end

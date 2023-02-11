@@ -6,12 +6,12 @@
 require 'test_helper'
 require_relative 'eval_test_helper'
 
-class ClientsEvalTest < ActiveSupport::TestCase
+class Evaluations::ClientsEvalTest < ActiveSupport::TestCase
   include EvalTestHelper
 
   def setup
     super
-    @evaluation = ClientsEval.new
+    @evaluation = Evaluations::ClientsEval.new
   end
 
   def test_clients

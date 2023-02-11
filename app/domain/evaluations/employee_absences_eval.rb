@@ -3,7 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-class EmployeeAbsencesEval < Evaluation
+class Evaluations::EmployeeAbsencesEval < Evaluations::Evaluation
   self.division_method  = :absences
   self.division_column  = :absence_id
   self.label            = 'Absenzen'

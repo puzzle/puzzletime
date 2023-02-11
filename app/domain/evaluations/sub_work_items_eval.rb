@@ -3,7 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-class SubWorkItemsEval < WorkItemsEval
+class Evaluations::SubWorkItemsEval < Evaluations::WorkItemsEval
   self.division_method   = :children
   self.label             = 'Subpositionen'
   self.billable_hours    = true
