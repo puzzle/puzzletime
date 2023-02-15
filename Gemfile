@@ -4,8 +4,8 @@ git_source(:github) { |name| "https://github.com/#{name}.git" }
 
 gem 'rails', '~> 7.0.x'
 
-gem 'pg' #, '~> 0.21.0'
 gem 'activerecord-nulldb-adapter'
+gem 'pg'
 
 gem 'nochmal', github: 'puzzle/nochmal'
 
@@ -32,7 +32,8 @@ gem 'image_processing'
 gem 'jbuilder'
 gem 'kaminari'
 gem 'kaminari-bootstrap'
-gem 'listen' #, '~> 3.8'
+gem 'listen'
+gem 'matrix'
 gem 'minitest-reporters'
 gem 'nested_form_fields'
 gem 'net-ldap'
@@ -44,11 +45,11 @@ gem 'omniauth-saml'
 gem 'prawn'
 gem 'prometheus_exporter'
 gem 'protective'
-gem 'psych' #, '~> 3.0'
+gem 'psych'
 gem 'puma'
+gem 'rails_autolink'
 gem 'rails-erd'
 gem 'rails-i18n'
-gem 'rails_autolink'
 gem 'request_store'
 gem 'rqrcode'
 gem 'rswag-ui'
@@ -59,10 +60,9 @@ gem 'rubocop-performance'
 gem 'rubocop-rails'
 gem 'sdoc'
 gem 'seed-fu'
-# gem 'simplecov-rcov', git: 'https://github.com/puzzle/simplecov-rcov'
 gem 'swagger-blocks'
 gem 'validates_by_schema'
-gem 'validates_timeliness' #, '~> 7.0.0.beta1' # We need a newer version to escape deprecation warnings
+gem 'validates_timeliness'
 
 # Error reporting, they are required in their respective initializers
 gem 'airbrake', require: false
@@ -71,15 +71,15 @@ gem 'sentry-raven', require: false
 ## assets
 gem 'autoprefixer-rails'
 gem 'bootstrap-sass'
-gem 'chartjs-ror' #, "= 3.6.4"
+gem 'chartjs-ror'
 gem 'coffee-rails'
 gem 'execjs'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'sass-rails'
 gem 'selectize-rails'
+gem 'terser'
 gem 'turbolinks'
-gem 'uglifier'
 
 # debugging
 gem 'pry-byebug', require: ENV['RM_INFO'].to_s.empty?

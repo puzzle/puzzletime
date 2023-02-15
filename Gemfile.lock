@@ -353,6 +353,8 @@ GEM
     nokogiri (1.14.1)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
+    nokogiri (1.14.1-x86_64-linux)
+      racc (~> 1.4)
     oauth2 (2.0.9)
       faraday (>= 0.17.3, < 3.0)
       jwt (>= 1.0, < 3.0)
@@ -557,6 +559,8 @@ GEM
     swagger-blocks (3.0.0)
     sysexits (1.2.0)
     temple (0.10.0)
+    terser (1.1.13)
+      execjs (>= 0.3.0, < 3)
     thor (1.2.1)
     tilt (2.0.11)
     timeliness (0.4.5)
@@ -568,8 +572,6 @@ GEM
     turbolinks-source (5.2.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    uglifier (4.2.0)
-      execjs (>= 0.3.0, < 3)
     unaccent (0.4.0)
     unf (0.1.4)
       unf_ext
@@ -610,6 +612,7 @@ GEM
 
 PLATFORMS
   ruby
+  x86_64-linux
 
 DEPENDENCIES
   activerecord-nulldb-adapter
@@ -655,6 +658,7 @@ DEPENDENCIES
   kaminari
   kaminari-bootstrap
   listen
+  matrix
   minitest-reporters
   mocha
   nested_form_fields
@@ -698,8 +702,8 @@ DEPENDENCIES
   sentry-raven
   spring
   swagger-blocks
+  terser
   turbolinks
-  uglifier
   validates_by_schema
   validates_timeliness
   web-console
