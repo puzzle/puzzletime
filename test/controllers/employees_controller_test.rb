@@ -16,7 +16,7 @@ class EmployeesControllerTest < ActionController::TestCase
     get :settings, params: test_params(id: test_entry.id)
     assert_response :success
     assert_template 'employees/settings'
-    assert_attrs_equal test_entry.attributes.slice(:worktimes_commit_reminder, :eval_periods)
+    assert_attrs_equal test_entry.attributes.slice(:worktimes_commit_reminder, :worktime_reminder, :eval_periods)
   end
 
   def test_update_settings
@@ -89,6 +89,7 @@ class EmployeesControllerTest < ActionController::TestCase
   def test_settings_attrs
     {
       worktimes_commit_reminder: false,
+      worktimes_reminder: false,
       eval_periods: ["-1m", "0"]
     }
   end

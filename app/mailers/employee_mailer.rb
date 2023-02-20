@@ -15,4 +15,13 @@ class EmployeeMailer < ApplicationMailer
       subject: 'PuzzleTime Zeiten freigeben'
     )
   end
+
+  def worktime_reminder_mail(employee)
+    @employee = employee
+
+    mail(
+      to: "#{employee.firstname} #{employee.lastname} <#{employee.email}>",
+      subject: 'PuzzleTime Zeiten eintragen'
+    )
+  end
 end

@@ -197,6 +197,7 @@ ActiveRecord::Schema.define(version: 2022_03_24_143608) do
     t.datetime "updated_at", default: -> { "now()" }, null: false
     t.bigint "workplace_id"
     t.boolean "worktimes_commit_reminder", default: true, null: false
+    t.boolean "worktimes_reminder", default: false, null: false
     t.index ["department_id"], name: "index_employees_on_department_id"
     t.index ["shortname"], name: "chk_unique_name", unique: true
     t.index ["workplace_id"], name: "index_employees_on_workplace_id"
