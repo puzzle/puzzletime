@@ -4,7 +4,7 @@
 #  https://github.com/puzzle/puzzletime.
 
 class CommitReminderJob < CronJob
-  self.cron_expression = '45 16 * * *'
+  self.cron_expression = '45 16 * * 1-5'
 
   def perform
     Employee.active_employed_last_month.where(worktimes_reminder: true).each do |employee|
