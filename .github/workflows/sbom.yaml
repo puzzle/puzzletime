@@ -1,0 +1,38 @@
+name: SBOM Generator
+
+on:
+  push:
+    branches:
+      - '**'
+
+  workflow_dispatch:
+
+permissions: read-all
+
+jobs:
+  generate-and-push-sbom:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Install cdxgen
+        run: |
+          npm install -g @cyclonedx/cdxgen
+
+      - name: 'Generate SBOM for ruby dependencies'
+        run: |
+          cdxgen -o ./sbom-ruby.xml -t ruby .
+
+      - name: 'Push SBOM to dependency track'
+        env:
+          PROJECT_NAME: puzzletime
+        run: |
+          curl --verbose -s --location --request POST ${{ secrets.DEPTRACK_URL }} \
+          --header "X-Api-Key: ${{ secrets.DEPTRACK_API_KEY }}" \
+          --header "Content-Type: multipart/form-data" \
+          --form "autoCreate=true" \
+          --form "projectName=${PROJECT_NAME:-$GITHUB_REPOSITORY}" \
+          --form "projectVersion=latest" \
+          --form "bom=@sbom-ruby.xml"
