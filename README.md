@@ -63,5 +63,5 @@ Then login using (username: mw, password: a) as credentials
 ## License
 
 PuzzleTime is released under the GNU Affero General Public License.
-Copyright 2006-2022 by [Puzzle ITC GmbH](http://puzzle.ch).
+Copyright 2006-2023 by [Puzzle ITC GmbH](http://puzzle.ch).
 See LICENSE for more details.
