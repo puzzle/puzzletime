@@ -42,14 +42,20 @@ Settings.reload!
 
 Dir[Rails.root.join('test/support/**/*.rb')].sort.each { |f| require f }
 
-Capybara.register_driver :chrome do |app|
-  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    'goog:chromeOptions': {
-      args: %w[no-sandbox headless disable-gpu disable-dev-shm-usage window-size=1920,1080]
-    }
-  )
+chrome_options = Selenium::WebDriver::Chrome::Options.new.tap do |opts|
+  opts.add_argument('--window-size=1920,1080')
+  opts.add_argument('--no-sandbox')
+  opts.add_argument('--disable-gpu')
+  opts.add_argument('--disable-dev-shm-usage')
+end
 
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options: capabilities)
+Capybara.register_driver :chrome do |app|
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: chrome_options)
+end
+
+Capybara.register_driver :chrome_headless do |app|
+  chrome_options.add_argument('--headless')
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: chrome_options)
 end
 
 Capybara.register_driver :firefox do |app|
