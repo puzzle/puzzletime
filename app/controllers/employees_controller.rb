@@ -48,26 +48,6 @@ class EmployeesController < ManageController
     end
   end
 
-  def passwd
-  end
-
-  # Update userpwd
-  def update_passwd
-    if @user.check_passwd(params[:pwd])
-      if params[:change_pwd] == params[:change_pwd_confirmation]
-        @user.update_passwd!(params[:change_pwd])
-        flash[:notice] = 'Das Passwort wurde aktualisiert'
-        redirect_to controller: 'evaluator'
-      else
-        flash.now[:notice] = 'Die Passwort Bestätigung stimmt nicht mit dem Passwort überein'
-        render 'passwd'
-      end
-    else
-      flash.now[:notice] = 'Das alte Passwort ist falsch'
-      render 'passwd'
-    end
-  end
-
   private
 
   def list_entries

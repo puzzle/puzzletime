@@ -185,9 +185,7 @@ class Ability
     can :search, WorkItem
 
     can [:read, :show_plannings], Employee
-    can [:passwd,
-         :update_passwd,
-         :settings,
+    can [:settings,
          :update_settings,
          :update_committed_worktimes,
          :show_worktime_graph,

@@ -32,7 +32,6 @@ namespace :db do
       employee: {
         firstname: 'First',
         lastname: 'Member',
-        passwd: Employee.encode('member'),
         password: 'member',
         email: 'mb1@puzzle.ch',
         management: false
@@ -62,7 +61,6 @@ namespace :db do
       employee: {
         firstname: 'Second',
         lastname: 'Member',
-        passwd: Employee.encode('member'),
         password: 'member',
         email: 'mb2@puzzle.ch',
         management: false
@@ -89,7 +87,6 @@ namespace :db do
       employee: {
         firstname: 'Manager',
         lastname: 'Management',
-        passwd: Employee.encode('member'),
         password: 'member',
         email: 'mgt@puzzle.ch',
         management: true

@@ -51,7 +51,7 @@ class Employee < ActiveRecord::Base
   # :registerable,
   # :recoverable,
 
-  INTERNAL_ATTRS = %w(id passwd eval_periods encrypted_password updated_at created_at).freeze
+  INTERNAL_ATTRS = %w(id eval_periods encrypted_password updated_at created_at).freeze
 
   include Evaluatable
   include ReportType::Accessors
@@ -182,18 +182,6 @@ class Employee < ActiveRecord::Base
 
   def eval_periods
     super || []
-  end
-
-  def before_create
-    self.passwd = '' # disable password login
-  end
-
-  def check_passwd(pwd)
-    passwd == Employee.encode(pwd)
-  end
-
-  def update_passwd!(pwd)
-    update!(passwd: Employee.encode(pwd))
   end
 
   # main work items this employee ever worked on

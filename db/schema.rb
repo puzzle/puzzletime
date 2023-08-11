@@ -170,7 +170,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_10_131400) do
     t.string "firstname", limit: 255, null: false
     t.string "lastname", limit: 255, null: false
     t.string "shortname", limit: 3, null: false
-    t.string "passwd", limit: 255
     t.string "email", limit: 255, null: false
     t.boolean "management", default: false
     t.float "initial_vacation_days", default: -> { "(0)::double precision" }

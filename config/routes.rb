@@ -47,8 +47,6 @@ Rails.application.routes.draw do
     collection do
       get :settings
       patch :settings, to: 'employees#update_settings'
-      get :passwd
-      post :passwd, to: 'employees#update_passwd'
     end
 
     member do
