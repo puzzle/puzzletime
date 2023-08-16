@@ -75,8 +75,13 @@ module IntegrationHelper
   end
 
   def clear_cookies
-    browser = Capybara.current_session.driver.browser
-    if browser.respond_to?(:clear_cookies)
+    driver = Capybara.current_session.driver
+    browser = driver.browser
+
+    if driver.respond_to?(:clear_cookies)
+      # Capybara::Cuprite::Browser
+      driver.clear_cookies
+    elsif browser.respond_to?(:clear_cookies)
       # Rack::MockSession
       browser.clear_cookies
     elsif browser.respond_to?(:manage) && browser.manage.respond_to?(:delete_all_cookies)

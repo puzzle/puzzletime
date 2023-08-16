@@ -106,10 +106,9 @@ end
 
 group :test do
   gem 'bundler-audit'
-  gem 'capybara'
+  gem "cuprite"
   gem 'database_cleaner'
   gem 'fabrication'
-  gem 'headless'
   gem 'mocha', require: false
   gem 'rails-controller-testing'
   gem 'selenium-webdriver'

@@ -24,7 +24,6 @@ Rails.env = 'test'
 require 'rails/test_help'
 require 'mocha/minitest'
 require 'capybara/rails'
-require 'headless'
 
 require 'webmock/minitest'
 WebMock.disable_net_connect!(
@@ -42,42 +41,28 @@ Settings.reload!
 
 Dir[Rails.root.join('test/support/**/*.rb')].sort.each { |f| require f }
 
-chrome_options = Selenium::WebDriver::Chrome::Options.new.tap do |opts|
-  opts.add_argument('--window-size=1920,1080')
-  opts.add_argument('--no-sandbox')
-  opts.add_argument('--disable-gpu')
-  opts.add_argument('--disable-dev-shm-usage')
-end
+# load Cuprite Capybara integration
+require "capybara/cuprite"
 
 Capybara.register_driver :chrome do |app|
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options: chrome_options)
+  Capybara::Cuprite::Driver.new(
+    app,
+    **{
+      window_size: [1920, 1080],
+      # See additional options for Dockerized environment in the respective section of this article
+      browser_options: {},
+      # Increase Chrome startup wait time (required for stable CI builds)
+      process_timeout: 10,
+      # Enable debugging capabilities
+      inspector: true,
+      # Allow running Chrome in a headful mode by setting HEADLESS env
+      # var to a falsey value
+      headless: !ENV["HEADLESS"].in?(%w[n 0 no false])
+    }
+  )
 end
 
-Capybara.register_driver :chrome_headless do |app|
-  chrome_options.add_argument('--headless')
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options: chrome_options)
-end
-
-Capybara.register_driver :firefox do |app|
-  options = Selenium::WebDriver::Firefox::Options.new
-  binary = ENV.fetch('RAILS_FIREFOX_BINARY', nil)
-  options.binary = binary if binary
-  Capybara::Selenium::Driver.new(app, browser: :firefox, options: options)
-end
-
-Capybara.register_driver :firefox_headless do |app|
-  options = Selenium::WebDriver::Firefox::Options.new
-  binary = ENV.fetch('RAILS_FIREFOX_BINARY', nil)
-  options.binary = binary if binary
-  options.add_argument('-headless')
-  Capybara::Selenium::Driver.new(app, browser: :firefox, options: options)
-end
-
-driver = ENV['HEADLESS'] == 'false' ? :firefox : :firefox_headless
-driver = ENV.fetch('SELENIUM_DRIVER', driver).to_sym
-Capybara.default_driver = driver
-Capybara.javascript_driver = driver
-Capybara.server_port = ENV['CAPYBARA_SERVER_PORT'].to_i if ENV['CAPYBARA_SERVER_PORT']
+Capybara.default_driver = Capybara.javascript_driver = :chrome
 Capybara.server = :puma, { Silent: true } # Silence that nasty log output
 Capybara.default_max_wait_time = 5
 
