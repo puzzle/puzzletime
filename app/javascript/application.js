@@ -1,1 +1,41 @@
 // Entry point for the build script in your package.json
+
+//= require jquery3
+//= require jquery_ujs
+//= require jquery-ui/widgets/datepicker
+//= require jquery-ui-datepicker-i18n
+//= require jquery-ui/widgets/autocomplete
+//= require jquery-ui/widgets/selectable
+//= require selectize
+//= require bootstrap/modal
+//= require bootstrap/tooltip
+//= require bootstrap/button
+//= require bootstrap/alert
+//= require bootstrap/collapse
+//= require waypoints/jquery.waypoints
+//= require waypoints/shortcuts/sticky
+//= require waypoints/shortcuts/inview
+//= require modernizr-custom
+//= require Chart.min
+//= require chartjs-plugin-annotation.min
+//= require_self
+//= require_tree ./modules
+// after self to disable links
+//= require nested_form_fields
+//= require modal_create
+//= require datepicker
+//= require worktimes
+//= require plannings
+//= require plannings_panel
+//= require plannings_selectable
+//= require plannings_service
+//= require orders
+//= require order_contacts
+//= require order_controlling
+//= require order_services
+//= require accounting_posts
+//= require reports_orders
+//= require expenses
+//= require expense_reviews
+//= require meal_compensations
+//= require turbolinks
