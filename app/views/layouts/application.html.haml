@@ -20,7 +20,8 @@
 
     = stylesheet_link_tag 'https://fonts.googleapis.com/css?family=Roboto:300,400,500', :media => 'all', 'data-turbolinks-track' => 'reload'
     = stylesheet_link_tag 'application', :media => 'all', 'data-turbolinks-track' => 'reload'
-    = javascript_include_tag "application", 'data-turbolinks-track' => 'reload'
+    -# = javascript_include_tag "application", 'data-turbolinks-track' => 'reload'
+    = javascript_include_tag "application", "data-turbo-track": "reload", defer: true
 
   %body{class: "#{controller.controller_module_name} #{controller.controller_name}"}
     %header#main-header

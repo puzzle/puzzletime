@@ -68,18 +68,25 @@ gem 'validates_timeliness'
 gem 'airbrake', require: false
 gem 'sentry-raven', require: false
 
-## assets
-gem 'autoprefixer-rails'
-gem 'bootstrap-sass'
-gem 'chartjs-ror'
-gem 'coffee-rails'
-gem 'execjs'
-gem 'jquery-rails'
-gem 'jquery-ui-rails'
-gem 'sass-rails'
-gem 'selectize-rails'
-gem 'terser'
+# asset gems
+gem "cssbundling-rails"
+gem "haml-rails"
+gem "jsbundling-rails"
+gem "sprockets-rails"
+# gem "stimulus-rails"
+# gem "turbo-rails"
 gem 'turbolinks'
+
+# gem 'autoprefixer-rails'
+# gem 'bootstrap-sass'
+# gem 'chartjs-ror'
+# gem 'coffee-rails'
+# gem 'execjs'
+# gem 'jquery-rails'
+# gem 'jquery-ui-rails'
+# gem 'sass-rails'
+# gem 'selectize-rails'
+# gem 'terser'
 
 # debugging
 gem 'pry-byebug', require: ENV['RM_INFO'].to_s.empty?
