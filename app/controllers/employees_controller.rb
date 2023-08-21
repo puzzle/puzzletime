@@ -25,7 +25,7 @@ class EmployeesController < ManageController
     if Crm.instance.present?
       person = Crm.instance.find_people_by_email(entry.email).first
       if person
-        redirect_to Crm.instance.contact_url(person.id)
+        redirect_to Crm.instance.contact_url(person.id), allow_other_host: true
       else
         flash[:alert] = "Person mit Email '#{entry.email}' nicht gefunden in CRM."
       end

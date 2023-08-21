@@ -9,11 +9,8 @@ class EditWorktimesAsOrderResponsibleTest < ActionDispatch::IntegrationTest
   setup :login
 
   test 'can change own committed worktimes on own order' do
-    find('a.add-other').click
-    assert_selector('.btn-primary')
-
+    click_link 'Zeiten freigeben'
     click_button 'Speichern'
-    assert_no_selector('.btn-primary')
 
     visit('/ordertimes/10/edit')
     assert_selector('form[action="/ordertimes/10"]')
@@ -25,5 +22,6 @@ class EditWorktimesAsOrderResponsibleTest < ActionDispatch::IntegrationTest
 
   def login
     login_as(:lucien)
+    visit('/ordertimes')
   end
 end

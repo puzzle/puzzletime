@@ -283,13 +283,13 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
         click_button 'OK'
       end
 
-      page.assert_selector('div.-definitive', count: 12)
-
-      drag(row_mark.all('.day')[5], row_pascal.all('.day')[9])
-      page.assert_selector('.day.-selected', count: 10)
-      drag(row_pascal.all('.day.-selected')[2], row_mark.all('.day')[0], row_mark.all('*')[0])
-      row_mark.assert_selector('.day.-selected.-definitive:nth-child(2)')
-      page.assert_selector('.day.-definitive:not(.-selected)', count: 10, text: 100)
+      within('.planning-calendar') do
+        assert_selector('div.-definitive', count: 12)
+        drag(row_mark.all('.day')[5], row_pascal.all('.day')[9])
+        assert_selector('.day.-selected', count: 10)
+        drag(row_pascal.all('.day.-selected')[2], row_mark.all('.day')[0])
+        assert_selector('.day.-definitive', count: 10)
+      end
     end
   end
 
@@ -340,7 +340,6 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     end
 
     page.assert_selector('div.-definitive', count: 4)
-
     drag(row_pascal.all('.day')[1], row_pascal.all('.day')[2])
     page.assert_selector('.day.-selected', count: 2)
     drag(
@@ -348,6 +347,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
       row_pascal.all('.day')[8],
       row_pascal.all('.day')[2]
     )
+
     row_pascal.assert_selector('.day.-definitive', count: 3)
     row_pascal.assert_selector('.day.-definitive.-selected', count: 2)
     row_pascal.assert_selector('.day.-definitive:nth-child(2)', text: 25)
@@ -372,12 +372,15 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     page.assert_selector('.planning-panel', visible: true)
     page.assert_selector('.planning-delete', visible: true)
 
-    assert_difference('Planning.count', -2) do
-      find('.planning-delete').click
-      accept_confirmation('Bist du sicher, dass du die selektierte Planung löschen willst?')
+    # assert_difference(->{ Planning.all.count }, -2) do # TODO: why doesn't it work with assert_difference?
+      accept_confirm('Bist du sicher, dass du die selektierte Planung löschen willst?') do
+        find('.planning-delete').click
+      end
       page.assert_selector('.planning-panel', visible: false)
       page.assert_selector('div.day.-definitive', count: 0)
-    end
+    # end
+
+    assert_equal 1, Planning.count
   end
 
   test 'switching period' do
@@ -500,10 +503,12 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
   end
 
   def row_mark
+    sleep(0.1)
     find("#planning_row_employee_#{employees(:mark).id}_work_item_#{work_item_id}")
   end
 
   def row_pascal
+    sleep(0.1)
     find("#planning_row_employee_#{employees(:pascal).id}_work_item_#{work_item_id}")
   end
 

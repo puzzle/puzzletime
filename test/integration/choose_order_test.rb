@@ -31,10 +31,11 @@ class ChooseOrderTest < ActionDispatch::IntegrationTest
   test 'keeps current tab when changing orders' do
     timeout_safe do
       click_link 'Positionen'
-      assert page.has_selector?('a', text: 'Buchungsposition hinzufügen') # dummy query to wait for page load
+      assert page.has_link?(href: new_order_accounting_post_path(order_id: order.id)) # query forces to wait for page load
       assert_equal order_accounting_posts_path(order), current_path
 
       selectize('choosable_order_id', 'Demo', term: 'demo', clear: true)
+      assert page.has_link?(href: new_order_accounting_post_path(order_id: orders(:hitobito_demo).id)) # query forces to wait for page load
       assert_equal order_accounting_posts_path(orders(:hitobito_demo)), current_path
       assert page.has_selector?('li.active', text: 'Positionen')
     end
