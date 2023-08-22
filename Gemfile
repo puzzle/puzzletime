@@ -106,7 +106,7 @@ end
 
 group :test do
   gem 'bundler-audit'
-  gem "cuprite"
+  gem 'cuprite'
   gem 'database_cleaner'
   gem 'fabrication'
   gem 'mocha', require: false

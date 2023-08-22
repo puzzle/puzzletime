@@ -12,50 +12,58 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
   test 'close panel on cancel' do
     row_mark.all('.day')[0].click
+
     page.assert_selector('.planning-panel', visible: true)
     within '.planning-panel' do
       click_button 'Abbrechen'
     end
+
     page.assert_selector('.planning-panel', visible: false)
   end
 
   test 'close panel on click outside' do
     row_mark.all('.day')[0].click
+
     page.assert_selector('.planning-panel', visible: true)
     find('.navbar-brand').click
+
     page.assert_selector('.planning-panel', visible: false)
   end
 
   test 'close panel on escape' do
     row_mark.all('.day')[0].click
+
     page.assert_selector('.planning-panel', visible: true)
     find('body').send_keys :escape
     find('body').click
+
     page.assert_selector('.planning-panel', visible: false)
   end
 
   test 'form values' do
     date = Time.zone.today.beginning_of_week
     Planning.create!({ employee_id: employees(:pascal).id,
-                       work_item_id: work_item_id,
+                       work_item_id:,
                        date: (date + 1.days).strftime('%Y-%m-%d'),
                        percent: 25,
                        definitive: true })
     Planning.create!({ employee_id: employees(:pascal).id,
-                       work_item_id: work_item_id,
+                       work_item_id:,
                        date: (date + 2.days).strftime('%Y-%m-%d'),
                        percent: 25,
                        definitive: false })
     Planning.create!({ employee_id: employees(:pascal).id,
-                       work_item_id: work_item_id,
+                       work_item_id:,
                        date: (date + 3.days).strftime('%Y-%m-%d'),
                        percent: 40,
                        definitive: false })
     visit plannings_order_path(orders(:puzzletime))
+
     page.assert_selector('div.-definitive', count: 3)
     page.assert_selector('div.-provisional', count: 2)
 
     drag(row_pascal.all('.day')[0], row_pascal.all('.day')[1])
+
     page.assert_selector('#percent:focus')
     assert_equal '25', find('#percent').value
     assert_equal '', find('#percent')['placeholder']
@@ -65,6 +73,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     find('.planning-cancel').click
 
     drag(row_pascal.all('.day')[0], row_pascal.all('.day')[2])
+
     page.assert_selector('#percent:focus')
     assert_equal '25', find('#percent').value
     assert_equal '', find('#percent')['placeholder']
@@ -74,6 +83,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     find('.planning-cancel').click
 
     drag(row_pascal.all('.day')[2], row_pascal.all('.day')[3])
+
     page.assert_selector('#percent:not(:focus)')
     assert_equal '', find('#percent').value
     assert_equal '?', find('#percent')['placeholder']
@@ -83,6 +93,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     find('.planning-cancel').click
 
     drag(row_pascal.all('.day')[0], row_pascal.all('.day')[4])
+
     page.assert_selector('#percent:not(:focus)')
     assert_equal '', find('#percent').value
     assert_equal '?', find('#percent')['placeholder']
@@ -104,6 +115,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     page.assert_selector("#planned_order_#{orders(:puzzletime).id}",
                          text: '6 von 100 Stunden verplant')
     drag(row_pascal.all('.day')[2], row_pascal.all('.day')[4])
+
     page.assert_selector('.-selected', count: 3)
     page.assert_selector('.planning-panel', visible: true)
 
@@ -137,6 +149,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
     row = find("#planning_row_employee_#{employees(:pascal).id}_work_item_#{work_items(:hitobito_demo_app).id}")
     drag(row.all('.day')[2], row.all('.day')[4])
+
     page.assert_selector('.planning-panel', visible: true)
 
     within '.planning-panel' do
@@ -154,6 +167,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
   test 'update planning entries' do
     drag(row_mark.all('.day')[0], row_pascal.all('.day')[0])
+
     page.assert_selector('.-selected', count: 2)
     page.assert_selector('.planning-panel', visible: true)
 
@@ -172,6 +186,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
   test 'create & update planning entries' do
     drag(row_mark.all('.day')[0], row_pascal.all('.day')[1])
+
     page.assert_selector('.-selected', count: 4)
     page.assert_selector('.planning-panel', visible: true)
 
@@ -197,12 +212,14 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
     page.driver.browser.manage.window.resize_to(1024, 756)
     drag(row_mark.all('.day')[0], row_mark.all('.day')[4])
+
     page.assert_selector('.-selected', count: 5)
     page.assert_selector('.planning-panel', visible: true)
 
     within '.planning-panel' do
       page.assert_no_selector('#repeat_until', visible: true)
       check 'repetition'
+
       page.assert_selector('#repeat_until', visible: true)
 
       fill_in(
@@ -219,9 +236,11 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     page.assert_selector('.planning-panel', visible: false)
 
     percents = ['50', '', '', '', '', '50', '', '', '', '', '50', '', '', '', '', '']
+
     assert_percents percents, row_mark
 
     drag(row_mark.all('.day')[0], row_mark.all('.day')[3])
+
     page.assert_selector('.-selected', count: 4)
     page.assert_selector('.planning-panel', visible: true)
 
@@ -231,6 +250,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
       page.assert_no_selector('#repeat_until', visible: true)
       check 'repetition'
+
       page.assert_selector('#repeat_until', visible: true)
 
       fill_in 'repeat_until', with: (today + 1.weeks).strftime('%Y %U')
@@ -244,6 +264,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     page.assert_selector('.planning-panel', visible: false)
 
     percents = ['30', '30', '30', '30', '', '30', '30', '30', '30', '', '50', '', '', '', '', '']
+
     assert_percents percents, row_mark
   end
 
@@ -254,6 +275,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     find('.add').click
 
     selectize('add_employee_select_id', 'Dolores Pedro', no_click: true)
+
     page.assert_selector('#planning_row_employee_2_work_item_4', text: 'Dolores Pedro')
     page.assert_selector('#planning_row_employee_2_work_item_4 .day',
                          count: workdays_next_n_months(3))
@@ -263,13 +285,16 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
   test 'Select does not show already present employees' do
     assert find('#planning_row_employee_7_work_item_4 .legend').text.include?('Waber Mark')
     find('.add').click
+
     assert_not open_selectize('add_employee_select_id', no_click: true).text.include?('Waber Mark')
   end
 
   test 'Should not be able to move an empty selection' do
     drag(row_mark.all('.day')[5], row_pascal.all('.day')[9])
+
     page.assert_selector('.day.-selected', count: 10)
     drag(row_pascal.all('.day')[5], row_pascal.all('.day')[3])
+
     page.assert_selector('.day.-selected', count: 3)
   end
 
@@ -286,8 +311,10 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
       within('.planning-calendar') do
         assert_selector('div.-definitive', count: 12)
         drag(row_mark.all('.day')[5], row_pascal.all('.day')[9])
+
         assert_selector('.day.-selected', count: 10)
         drag(row_pascal.all('.day.-selected')[2], row_mark.all('.day')[0])
+
         assert_selector('.day.-definitive', count: 10)
       end
     end
@@ -305,8 +332,10 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     page.assert_selector('div.-definitive', count: 4)
 
     drag(row_pascal.all('.day')[1], row_pascal.all('.day')[2])
+
     page.assert_selector('.day.-selected', count: 2)
     drag(row_pascal.all('.day.-selected')[1], row_pascal.all('.day')[0])
+
     row_pascal.assert_selector('.day.-definitive:not(.-selected)', count: 2)
     row_pascal.assert_selector('.day.-definitive:not(.-selected)', count: 2, text: 100)
   end
@@ -323,8 +352,10 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     page.assert_selector('div.-definitive', count: 4)
 
     drag(row_pascal.all('.day')[1], row_pascal.all('.day')[2])
+
     page.assert_selector('.day.-selected', count: 2)
     drag(row_pascal.all('.day.-selected')[1], row_pascal.all('.day')[3])
+
     row_pascal.assert_selector('.day.-definitive:not(.-selected)', count: 3)
     row_pascal.assert_selector('.day.-definitive:not(.-selected)', count: 1, text: 25)
     row_pascal.assert_selector('.day.-definitive:not(.-selected)', count: 2, text: 100)
@@ -341,6 +372,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
     page.assert_selector('div.-definitive', count: 4)
     drag(row_pascal.all('.day')[1], row_pascal.all('.day')[2])
+
     page.assert_selector('.day.-selected', count: 2)
     drag(
       row_pascal.all('.day')[2],
@@ -357,27 +389,33 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
   test 'delete plannings' do
     row_mark.all('.day')[1].click
+
     page.assert_selector('.planning-panel', visible: true)
     page.assert_no_selector('.planning-delete', visible: true)
     find('.planning-cancel').click
+
     page.assert_selector('.planning-panel', visible: false)
 
     drag(row_mark.all('.day')[0], row_pascal.all('.day')[0])
+
     page.assert_selector('.planning-panel', visible: true)
     page.assert_selector('.planning-delete', visible: true)
     find('.planning-cancel').click
+
     page.assert_selector('.planning-panel', visible: false)
 
     drag(row_mark.all('.day')[0], row_pascal.all('.day')[1])
+
     page.assert_selector('.planning-panel', visible: true)
     page.assert_selector('.planning-delete', visible: true)
 
     # assert_difference(->{ Planning.all.count }, -2) do # TODO: why doesn't it work with assert_difference?
-      accept_confirm('Bist du sicher, dass du die selektierte Planung löschen willst?') do
-        find('.planning-delete').click
-      end
-      page.assert_selector('.planning-panel', visible: false)
-      page.assert_selector('div.day.-definitive', count: 0)
+    accept_confirm('Bist du sicher, dass du die selektierte Planung löschen willst?') do
+      find('.planning-delete').click
+    end
+
+    page.assert_selector('.planning-panel', visible: false)
+    page.assert_selector('div.day.-definitive', count: 0)
     # end
 
     assert_equal 1, Planning.count
@@ -390,6 +428,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
     select 'Nächste 6 Monate', from: 'period_shortcut'
     find('.navbar-brand').click # blur select
+
     page.assert_selector('.planning-calendar-weeks',
                          text: "KW #{(Time.zone.today + 6.months - 1.weeks).cweek}")
     page.assert_selector('#start_date', visible: false)
@@ -397,15 +436,18 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     assert_equal '6M', find('#period_shortcut').value
 
     drag(row_mark.all('.day')[0], row_pascal.all('.day')[1])
+
     page.assert_selector('.-selected', count: 4)
 
     select 'benutzerdefiniert', from: 'period_shortcut'
     find('.navbar-brand').click # blur select
+
     page.assert_selector('#start_date', visible: true)
     page.assert_selector('#end_date', visible: true)
     assert_equal '', find('#period_shortcut').value
 
     drag(row_mark.all('.day')[0], row_pascal.all('.day')[2])
+
     page.assert_selector('.-selected', count: 6)
   end
 
@@ -413,6 +455,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     page.assert_selector('.planning-board-header', text: 'PITC-PT: PuzzleTime')
     select 'Nächste 6 Monate', from: 'period_shortcut'
     find('.navbar-brand').click # blur select
+
     page.assert_selector('.planning-calendar-weeks',
                          text: "KW #{(Time.zone.today + 6.months - 1.weeks).cweek}")
     page.assert_selector('#start_date', visible: false)
@@ -420,6 +463,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     assert_equal '6M', find('#period_shortcut').value
 
     visit plannings_employee_path(employees(:mark))
+
     page.assert_selector('.planning-board-header', text: 'Waber Mark')
     page.assert_selector('.planning-calendar-weeks',
                          text: "KW #{(Time.zone.today + 6.months - 1.weeks).cweek}")
@@ -428,6 +472,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     assert_equal '6M', find('#period_shortcut').value
 
     visit plannings_company_path
+
     page.assert_selector('h1', text: 'Planung aller Members')
     page.assert_selector('#plannings thead',
                          text: (Time.zone.today + 6.months - 1.weeks).cweek)
@@ -438,11 +483,13 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
   test 'add row still works after switching period' do
     find('.add').click
+
     page.assert_selector('.selectize-dropdown')
 
     select 'Nächste 6 Monate', from: 'period_shortcut'
     find('.navbar-brand').click # blur select
     select 'Nächste 6 Monate', from: 'period_shortcut' # seems to only update value when selecting 2-times
+
     page.assert_selector('.planning-calendar-weeks',
                          text: "KW #{(Time.zone.today + 6.months - 1.weeks).cweek}")
     page.assert_selector('#start_date,#end_date', visible: false)
@@ -453,6 +500,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     find('.add').click
 
     selectize('add_employee_select_id', 'Dolores Pedro', no_click: true)
+
     page.assert_selector('#planning_row_employee_2_work_item_4', text: 'Dolores Pedro')
     page.assert_selector('#planning_row_employee_2_work_item_4 .day',
                          count: workdays_next_n_months(6))
@@ -519,13 +567,13 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
   def create_plannings(work_item_id)
     date = Time.zone.today.beginning_of_week.strftime('%Y-%m-%d')
     Planning.create!({ employee_id: employees(:pascal).id,
-                       work_item_id: work_item_id,
-                       date: date,
+                       work_item_id:,
+                       date:,
                        percent: 25,
                        definitive: true })
     Planning.create!({ employee_id: employees(:mark).id,
-                       work_item_id: work_item_id,
-                       date: date,
+                       work_item_id:,
+                       date:,
                        percent: 50,
                        definitive: true })
   end

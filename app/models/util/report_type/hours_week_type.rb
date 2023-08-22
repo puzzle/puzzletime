@@ -2,7 +2,7 @@ class ReportType::HoursWeekType < ReportType
   INSTANCE = new 'week', 'Stunden/Woche', 4
 
   def time_string(worktime)
-    rounded_hours(worktime) + ' h in dieser Woche'
+    "#{rounded_hours(worktime)} h in dieser Woche"
   end
 
   def date_string(date)

@@ -5,9 +5,7 @@ class ReportType::StartStopType < ReportType
   def time_string(worktime)
     if worktime.from_start_time.is_a?(Time) &&
        worktime.to_end_time.is_a?(Time)
-      I18n.l(worktime.from_start_time, format: :time) + ' - ' +
-        I18n.l(worktime.to_end_time, format: :time) +
-        ' (' + rounded_hours(worktime) + ' h)'
+      "#{I18n.l(worktime.from_start_time, format: :time)} - #{I18n.l(worktime.to_end_time, format: :time)} (#{rounded_hours(worktime)} h)"
     end
   end
 

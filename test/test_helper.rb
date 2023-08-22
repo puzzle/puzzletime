@@ -42,13 +42,12 @@ Settings.reload!
 Dir[Rails.root.join('test/support/**/*.rb')].sort.each { |f| require f }
 
 # load Cuprite Capybara integration
-require "capybara/cuprite"
+require 'capybara/cuprite'
 
 Capybara.register_driver :chrome do |app|
   Capybara::Cuprite::Driver.new(
     app,
-    **{
-      window_size: [1920, 1080],
+    window_size: [1920, 1080],
       # See additional options for Dockerized environment in the respective section of this article
       browser_options: {},
       # Increase Chrome startup wait time (required for stable CI builds)
@@ -57,8 +56,7 @@ Capybara.register_driver :chrome do |app|
       inspector: true,
       # Allow running Chrome in a headful mode by setting HEADLESS env
       # var to a falsey value
-      headless: !ENV["HEADLESS"].in?(%w[n 0 no false])
-    }
+      headless: !ENV['HEADLESS'].in?(%w[n 0 no false])
   )
 end
 
