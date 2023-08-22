@@ -47,10 +47,12 @@ jobs:
         RAILS_TEST_DB_PASSWORD: 'postgres'
         RAILS_ENV: 'test'
         CI: 'true'
+        PGDATESTYLE: German
       run: |
         sudo apt-get -yqq install libpq-dev libvips-dev
         gem install bundler --version '~> 2'
         bundle install --jobs 4 --retry 3
         bundle exec rails db:create
         bundle exec rails db:migrate
+        bundle exec rails assets:precompile
         bundle exec rails test
