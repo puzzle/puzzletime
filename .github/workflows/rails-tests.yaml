@@ -46,6 +46,7 @@ jobs:
         RAILS_TEST_DB_USERNAME: 'postgres'
         RAILS_TEST_DB_PASSWORD: 'postgres'
         RAILS_ENV: 'test'
+        CI: 'true'
       run: |
         sudo apt-get -yqq install libpq-dev
         gem install bundler --version '~> 2'

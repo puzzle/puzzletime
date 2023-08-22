@@ -8,7 +8,6 @@ module IntegrationHelper
 
   def login_as(user)
     employee = user.is_a?(Employee) ? user : employees(user)
-    # employee.update_passwd!('foobar')
     super(employee)
   end
 
@@ -27,7 +26,11 @@ module IntegrationHelper
          Capybara::FrozenInTime,
          Capybara::ElementNotFound,
          Selenium::WebDriver::Error::StaleElementReferenceError => e
-    skip e.message || e.class.name
+    if ENV['CI'] == true
+      skip e.message || e.class.name
+    else
+      raise
+    end
   end
 
   def open_selectize(id, options = {})
