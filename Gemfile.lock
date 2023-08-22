@@ -492,7 +492,8 @@ GEM
     responders (3.1.0)
       actionpack (>= 5.2)
       railties (>= 5.2)
-    rexml (3.2.5)
+    rexml (3.2.6)
+    rmagick (2.16.0)
     rqrcode (2.1.2)
       chunky_png (~> 1.0)
       rqrcode_core (~> 1.0)
@@ -623,6 +624,9 @@ GEM
     yard (0.9.28)
       webrick (~> 1.7.0)
     zeitwerk (2.6.11)
+    zxing_cpp_no_cmake (0.1.2)
+      ffi (~> 1.1)
+      rmagick (~> 2.13)
 
 PLATFORMS
   ruby
@@ -721,6 +725,7 @@ DEPENDENCIES
   validates_timeliness
   web-console
   webmock
+  zxing_cpp_no_cmake
 
 BUNDLED WITH
    2.4.6
