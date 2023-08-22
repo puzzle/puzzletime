@@ -39,8 +39,9 @@ class EmployeeMasterDataController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.vcf
-      format.svg { render plain: qr_code.as_svg }
+      format.vcf { render plain: vcard }
+      format.svg { render plain: qr_code.as_svg(fill: 'fff') }
+      format.png { render plain: qr_code.as_png(fill: 'fff') }
     end
   end
 
@@ -102,8 +103,13 @@ class EmployeeMasterDataController < ApplicationController
     end
   end
 
+  def vcard(include: nil)
+    Employees::Vcard.new(@employee, include: include).render
+  end
+
   def qr_code
-    RQRCode::QRCode.new(employee_master_datum_url(id: params[:id], format: :vcf))
+    vcf = vcard(include: %i[firstname lastname fullname phone_office phone_private email])
+    RQRCode::QRCode.new(vcf)
   end
 
   # Must be included after the #list_entries method is defined.

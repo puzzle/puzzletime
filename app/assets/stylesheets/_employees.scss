@@ -7,6 +7,7 @@
 .master-data-vcard-qrcode {
   display: block;
   width: 100px;
+  padding-bottom: 1em;
 
   @media (min-width: $screen-md-min) {
     padding-top: 20px;

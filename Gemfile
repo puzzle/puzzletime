@@ -92,6 +92,7 @@ group :test do
   gem 'mocha', require: false
   gem 'rails-controller-testing'
   gem 'webmock'
+  gem 'zxing_cpp_no_cmake'
 end
 
 group :console do
