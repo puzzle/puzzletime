@@ -112,7 +112,5 @@ group :test do
   gem 'fabrication'
   gem 'mocha', require: false
   gem 'rails-controller-testing'
-  gem 'selenium-webdriver'
-  gem 'webdrivers'
   gem 'webmock'
 end

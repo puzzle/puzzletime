@@ -24,8 +24,7 @@ module IntegrationHelper
   rescue Errno::ECONNREFUSED,
          Timeout::Error,
          Capybara::FrozenInTime,
-         Capybara::ElementNotFound,
-         Selenium::WebDriver::Error::StaleElementReferenceError => e
+         Capybara::ElementNotFound => e
     if ENV['CI'] == true
       skip e.message || e.class.name
     else
@@ -35,7 +34,7 @@ module IntegrationHelper
 
   def open_selectize(id, options = {})
     element = find("##{id} + .selectize-control")
-    element.find('.selectize-input').click unless options[:no_click]
+    element.find('.selectize-input').trigger('click') unless options[:no_click]
     element.find('.selectize-input input').native.send_keys(:backspace) if options[:clear]
     element.find('.selectize-input input').native.send_keys(options[:term].chars) if options[:term].present?
     if options[:assert_empty]
@@ -47,7 +46,7 @@ module IntegrationHelper
   end
 
   def selectize(id, value, options = {})
-    open_selectize(id, options).find('.selectize-option,.option', text: value).click
+    open_selectize(id, options).find('.selectize-option,.option', text: value).trigger('click')
   end
 
   def mouse
@@ -74,20 +73,6 @@ module IntegrationHelper
   end
 
   def clear_cookies
-    driver = Capybara.current_session.driver
-    browser = driver.browser
-
-    if driver.respond_to?(:clear_cookies)
-      # Capybara::Cuprite::Browser
-      driver.clear_cookies
-    elsif browser.respond_to?(:clear_cookies)
-      # Rack::MockSession
-      browser.clear_cookies
-    elsif browser.respond_to?(:manage) && browser.manage.respond_to?(:delete_all_cookies)
-      # Selenium::WebDriver
-      browser.manage.delete_all_cookies
-    else
-      raise "Don't know how to clear cookies. Weird driver?"
-    end
+    Capybara.current_session.driver.clear_cookies
   end
 end

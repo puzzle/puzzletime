@@ -409,9 +409,12 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     page.assert_selector('.planning-panel', visible: true)
     page.assert_selector('.planning-delete', visible: true)
 
-    # assert_difference(->{ Planning.all.count }, -2) do # TODO: why doesn't it work with assert_difference?
-    accept_confirm('Bist du sicher, dass du die selektierte Planung löschen willst?') do
-      find('.planning-delete').click
+    assert_difference('Planning.count', -2) do
+      accept_confirm('Bist du sicher, dass du die selektierte Planung löschen willst?') do
+        find('.planning-delete').click
+      end
+      page.assert_selector('.planning-panel', visible: false)
+      page.assert_selector('div.day.-definitive', count: 0)
     end
 
     page.assert_selector('.planning-panel', visible: false)
@@ -551,13 +554,13 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
   end
 
   def row_mark
-    sleep(0.1)
-    find("#planning_row_employee_#{employees(:mark).id}_work_item_#{work_item_id}")
+    # TODO: without `sleep` I get "Node is either not visible or not an HTMLElement". Why??
+    @row_mark ||= find("#planning_row_employee_#{employees(:mark).id}_work_item_#{work_item_id}").tap { sleep 0.1 }
   end
 
   def row_pascal
-    sleep(0.1)
-    find("#planning_row_employee_#{employees(:pascal).id}_work_item_#{work_item_id}")
+    # TODO: without `sleep` I get "Node is either not visible or not an HTMLElement". Why??
+    @row_pascal ||= find("#planning_row_employee_#{employees(:pascal).id}_work_item_#{work_item_id}").tap { sleep 0.1 }
   end
 
   def work_item_id

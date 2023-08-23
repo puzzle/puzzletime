@@ -569,7 +569,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
   end
 
   def click_add_contact
-    find("a.add_nested_fields_link[data-object-class='order_contact']").trigger('click')
+    find("a.add_nested_fields_link[data-object-class='order_contact']").trigger("click")
   end
 
   def fill_mandatory_fields(with_name = true)

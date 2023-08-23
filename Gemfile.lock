@@ -154,6 +154,7 @@ GEM
       rails (>= 3.1)
     choice (0.2.0)
     chunky_png (1.4.0)
+    cliver (0.3.2)
     coderay (1.1.3)
     codez-tarantula (0.5.5)
       hpricot (~> 0.8.4)
@@ -711,7 +712,6 @@ DEPENDENCIES
   sdoc
   seed-fu
   selectize-rails
-  selenium-webdriver
   sentry-raven
   spring
   swagger-blocks
@@ -720,7 +720,6 @@ DEPENDENCIES
   validates_by_schema
   validates_timeliness
   web-console
-  webdrivers
   webmock
 
 BUNDLED WITH
