@@ -41,27 +41,31 @@ Settings.reload!
 
 Dir[Rails.root.join('test/support/**/*.rb')].sort.each { |f| require f }
 
-Capybara.register_driver :selenium do |app|
-  require 'selenium/webdriver'
+# load Cuprite Capybara integration
+require 'capybara/cuprite'
 
-  next Capybara::Selenium::Driver.new(app, browser: ENV['SELENIUM_DRIVER'].to_sym) if ENV['SELENIUM_DRIVER']
-
-  Selenium::WebDriver::Firefox::Binary.path = ENV['FIREFOX_PATH'] if ENV['FIREFOX_PATH']
-  capa = Selenium::WebDriver::Remote::Capabilities.firefox(marionette: true)
-  Capybara::Selenium::Driver.new(app, browser: :chrome, desired_capabilities: capa)
+Capybara.register_driver :chrome do |app|
+  Capybara::Cuprite::Driver.new(
+    app,
+    window_size: [1920, 1080],
+      # See additional options for Dockerized environment in the respective section of this article
+      browser_options: {
+        # Required for ARM chips on which CI might run
+        'disable-smooth-scrolling' => true,
+      },
+      # Increase Chrome startup wait time (required for stable CI builds)
+      process_timeout: 10,
+      # Enable debugging capabilities
+      inspector: true,
+      # Allow running Chrome in a headful mode by setting HEADLESS env
+      # var to a falsey value
+      headless: !ENV['HEADLESS'].in?(%w[n 0 no false])  
+  )
 end
 
-Capybara.server = :puma, { Silent: true }
-Capybara.server_port = ENV['CAPYBARA_SERVER_PORT'].to_i if ENV['CAPYBARA_SERVER_PORT']
-Capybara.default_driver = :selenium
+Capybara.default_driver = Capybara.javascript_driver = :chrome
+Capybara.server = :puma, { Silent: true } # Silence that nasty log output
 Capybara.default_max_wait_time = 5
-
-unless ENV['HEADLESS'] == 'false'
-  require 'headless'
-
-  headless = Headless.new(destroy_at_exit: false)
-  headless.start
-end
 
 class ActiveSupport::TestCase
   include CustomAssertions

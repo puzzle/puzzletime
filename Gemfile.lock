@@ -133,9 +133,9 @@ GEM
       xpath (~> 3.2)
     chartjs-ror (3.6.4)
       rails (>= 3.1)
-    childprocess (3.0.0)
     choice (0.2.0)
     chunky_png (1.4.0)
+    cliver (0.3.2)
     coderay (1.1.3)
     codez-tarantula (0.5.5)
       hpricot (~> 0.8.4)
@@ -160,6 +160,9 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
+    cuprite (0.13)
+      capybara (>= 2.1, < 4)
+      ferrum (~> 0.11.0)
     daemons (1.4.0)
     dalli (2.7.11)
     database_cleaner (2.0.1)
@@ -244,6 +247,11 @@ GEM
     faraday-patron (1.0.0)
     fast_jsonapi (1.5)
       activesupport (>= 4.2)
+    ferrum (0.11)
+      addressable (~> 2.5)
+      cliver (~> 0.3)
+      concurrent-ruby (~> 1.1)
+      websocket-driver (>= 0.6, < 0.8)
     ffi (1.15.5)
     globalid (1.0.0)
       activesupport (>= 5.0)
@@ -260,7 +268,6 @@ GEM
       sysexits (~> 1.1)
     hashdiff (1.0.1)
     hashie (4.1.0)
-    headless (2.3.1)
     highrise (3.2.3)
       activeresource (>= 3.2.13)
     hpricot (0.8.6)
@@ -480,7 +487,6 @@ GEM
     ruby-vips (2.1.4)
       ffi (~> 1.12)
     ruby2_keywords (0.0.4)
-    rubyzip (2.3.2)
     sass-rails (6.0.0)
       sassc-rails (~> 2.1, >= 2.1.1)
     sassc (2.4.0)
@@ -497,9 +503,6 @@ GEM
       activerecord (>= 3.1)
       activesupport (>= 3.1)
     selectize-rails (0.12.6)
-    selenium-webdriver (3.142.7)
-      childprocess (>= 0.5, < 4.0)
-      rubyzip (>= 1.2.2)
     sentry-raven (3.1.2)
       faraday (>= 1.0)
     simplecov (0.21.2)
@@ -553,10 +556,6 @@ GEM
       activemodel (>= 5.0)
       bindex (>= 0.4.0)
       railties (>= 5.0)
-    webdrivers (4.6.0)
-      nokogiri (~> 1.6)
-      rubyzip (>= 1.3.0)
-      selenium-webdriver (>= 3.0, < 4.0)
     webmock (3.13.0)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
@@ -588,12 +587,12 @@ DEPENDENCIES
   bullet
   bundler-audit
   cancancan
-  capybara
   chartjs-ror
   codez-tarantula
   coffee-rails
   config
   country_select
+  cuprite
   daemons
   dalli
   database_cleaner
@@ -607,7 +606,6 @@ DEPENDENCIES
   fast_jsonapi
   haml
   haml-lint
-  headless
   highrise
   image_processing
   jbuilder
@@ -653,7 +651,6 @@ DEPENDENCIES
   sdoc
   seed-fu
   selectize-rails
-  selenium-webdriver
   sentry-raven
   simplecov-rcov!
   spring
@@ -663,8 +660,7 @@ DEPENDENCIES
   validates_by_schema
   validates_timeliness
   web-console
-  webdrivers
   webmock
 
 BUNDLED WITH
-   2.3.9
+   2.3.12
