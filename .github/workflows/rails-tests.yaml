@@ -18,6 +18,8 @@ jobs:
   build:
     runs-on: 'ubuntu-latest'
 
+    timeout-minutes: 15
+
     strategy:
       matrix:
         ruby: [ '2.6', '2.7' ]
