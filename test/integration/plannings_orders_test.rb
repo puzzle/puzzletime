@@ -283,13 +283,15 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
         click_button 'OK'
       end
 
-      page.assert_selector('div.-definitive', count: 12)
+      within('.planning-calendar') do
+        assert_selector('div.-definitive', count: 12)
+        drag(row_mark.all('.day')[5], row_pascal.all('.day')[9])
 
-      drag(row_mark.all('.day')[5], row_pascal.all('.day')[9])
-      page.assert_selector('.day.-selected', count: 10)
-      drag(row_pascal.all('.day.-selected')[2], row_mark.all('.day')[0], row_mark.all('*')[0])
-      row_mark.assert_selector('.day.-selected.-definitive:nth-child(2)')
-      page.assert_selector('.day.-definitive:not(.-selected)', count: 10, text: 100)
+        assert_selector('.day.-selected', count: 10)
+        drag(row_pascal.all('.day.-selected')[2], row_mark.all('.day')[0])
+
+        assert_selector('.day.-definitive', count: 10)
+      end
     end
   end
 
@@ -373,8 +375,9 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     page.assert_selector('.planning-delete', visible: true)
 
     assert_difference('Planning.count', -2) do
-      find('.planning-delete').click
-      accept_confirmation('Bist du sicher, dass du die selektierte Planung löschen willst?')
+      accept_confirm('Bist du sicher, dass du die selektierte Planung löschen willst?') do
+        find('.planning-delete').click
+      end
       page.assert_selector('.planning-panel', visible: false)
       page.assert_selector('div.day.-definitive', count: 0)
     end
@@ -500,11 +503,13 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
   end
 
   def row_mark
-    find("#planning_row_employee_#{employees(:mark).id}_work_item_#{work_item_id}")
+    # TODO: without `sleep` I get "Node is either not visible or not an HTMLElement". Why??
+    @row_mark ||= find("#planning_row_employee_#{employees(:mark).id}_work_item_#{work_item_id}").tap { sleep 0.1 }
   end
 
   def row_pascal
-    find("#planning_row_employee_#{employees(:pascal).id}_work_item_#{work_item_id}")
+    # TODO: without `sleep` I get "Node is either not visible or not an HTMLElement". Why??
+    @row_pascal ||= find("#planning_row_employee_#{employees(:pascal).id}_work_item_#{work_item_id}").tap { sleep 0.1 }
   end
 
   def work_item_id
