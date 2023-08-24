@@ -67,6 +67,16 @@ Capybara.default_max_wait_time = 5
 class ActiveSupport::TestCase
   include CustomAssertions
 
+  extend RetryOnFlakyTests[
+    # randomly happening on CI
+    Ferrum::PendingConnectionsError,
+    # race condition when trying to move mouse to element, can happen e.g. after fade-in/out of modal dialog
+    Ferrum::CoordinatesNotFoundError,
+    # race condition when trying to click element, can happen e.g. after fade-in/out of modal dialog
+    Capybara::Cuprite::MouseEventFailed,
+    max_tries: 3
+  ]
+
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   #
   # Note: You'll currently still have to declare fixtures explicitly in integration tests
