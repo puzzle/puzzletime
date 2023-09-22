@@ -48,8 +48,6 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
-        env:
-          ImageOS: ubuntu18
 
       - name: "Build and test with Rake"
         env:
