@@ -38,7 +38,7 @@ class EmployeesController < ManageController
 
   def update_settings
     @employee = @user
-    attrs = params.require(:employee).permit(:worktimes_commit_reminder, eval_periods: [])
+    attrs = params.require(:employee).permit(:worktimes_commit_reminder, :worktimes_reminder, eval_periods: [])
     attrs[:eval_periods] = [] if attrs[:eval_periods].blank?
     if @employee.update_attributes(attrs)
       flash[:notice] = 'Die Benutzereinstellungen wurden aktualisiert'
