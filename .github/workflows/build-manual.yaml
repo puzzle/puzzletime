@@ -1,0 +1,24 @@
+name: 'Manual build without tests'
+
+on:
+  workflow_dispatch:
+    inputs:
+      project_name:
+        description: 'Project to build for'
+        required: true
+        default: 'pitc-ptime-int'
+        type: choice
+        options:
+        - pitc-ptime-int
+        - pitc-ptime-prod
+        - pude-ptime-prod
+
+jobs:
+  build:
+    uses: ./.github/workflows/reusable-build.yaml
+    with:
+      project: ${{ inputs.project_name }}
+    secrets:
+      PUZZLE_REGISTRY: ${{ secrets.PUZZLE_REGISTRY }}
+      PUZZLE_REGISTRY_USERNAME: ${{ secrets.PUZZLE_REGISTRY_USERNAME }}
+      PUZZLE_REGISTRY_TOKEN: ${{ secrets.PUZZLE_REGISTRY_TOKEN }}

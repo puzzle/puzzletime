@@ -1,0 +1,32 @@
+name: 'Lint, test and image build on push'
+
+on:
+  push:
+    branches:
+      - master
+      - feature/rails-upgrade
+    paths-ignore:
+      - 'doc/**'
+      - '**.md'
+
+jobs:
+  lint:
+    uses: ./.github/workflows/reusable-lint.yaml
+  test:
+    uses: ./.github/workflows/reusable-test.yaml
+  build-int:
+    needs: [lint, test]
+    uses: ./.github/workflows/reusable-build.yaml
+    with:
+      project: pitc-ptime-int
+    secrets:
+      PUZZLE_REGISTRY: ${{ secrets.PUZZLE_REGISTRY }}
+      PUZZLE_REGISTRY_USERNAME: ${{ secrets.PUZZLE_REGISTRY_USERNAME }}
+      PUZZLE_REGISTRY_TOKEN: ${{ secrets.PUZZLE_REGISTRY_TOKEN }}
+  # sbom:
+  #   uses: ./.github/workflows/reusable-sbom.yaml
+  #   with:
+  #     project_name: pitc-ptime-int
+  #     dependency_track_url: ${{ secrets.DEPENDENCY_TRACK_API_KEY}}
+  #   secrets:
+  #     dependency_track_api_key: ${{ secrets.DEPENDENCY_TRACK_API_KEY }}
