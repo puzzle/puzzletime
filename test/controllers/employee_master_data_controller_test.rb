@@ -4,9 +4,21 @@
 #  https://github.com/puzzle/puzzletime.
 
 require 'test_helper'
+require 'zxing'
 
 class EmployeeMasterDataControllerTest < ActionController::TestCase
-  setup :login
+  def setup
+    login
+
+    employees(:various_pedro).update(
+      birthday: Date.parse('4.2.1942'),
+      street: 'Belpstrasse 7',
+      postal_code: 3007,
+      city: 'Bern',
+      phone_office: '0310000000',
+      phone_private: '0780000000'
+    )
+  end
 
   test 'GET index' do
     get :index
@@ -59,8 +71,64 @@ class EmployeeMasterDataControllerTest < ActionController::TestCase
   test 'GET show vcard' do
     get :show, params: { id: employees(:various_pedro).id }, format: :vcf
     assert_equal employees(:various_pedro), assigns(:employee)
-    assert_match(/^BEGIN:VCARD/, response.body)
-    assert_match(/Pedro/, response.body)
+
+    expected = <<~VCF
+      BEGIN:VCARD
+      VERSION:3.0
+      N:Dolores;Pedro;;;
+      FN:Pedro Dolores
+      ADR;TYPE=HOME,PREF:;;Belpstrasse 7;Bern;;3007;
+      TEL;TYPE=WORK,VOICE:0310000000
+      TEL;TYPE=CELL,PREF,VOICE:0780000000
+      EMAIL;TYPE=WORK,PREF:bol@bla.ch
+      BDAY:19420204
+      END:VCARD
+    VCF
+    assert_equal expected, response.body
+  end
+
+  test 'GET show png' do
+    get :show, params: { id: employees(:various_pedro).id }, format: :png
+
+    expected = <<~VCF
+      BEGIN:VCARD
+      VERSION:3.0
+      N:Dolores;Pedro;;;
+      FN:Pedro Dolores
+      TEL;TYPE=WORK,VOICE:0310000000
+      TEL;TYPE=CELL,PREF,VOICE:0780000000
+      EMAIL;TYPE=WORK,PREF:bol@bla.ch
+      END:VCARD
+    VCF
+
+    require 'zxing'
+    assert_equal expected, ZXing.decode!(response.body)
+  end
+
+  test 'GET show svg' do
+    get :show, params: { id: employees(:various_pedro).id }, format: :svg
+
+    svg = response.body
+    assert_match /<svg version="1.1"/, svg
+
+    # zxing gem can not read svg from string, so we need to write it to a file
+    Tempfile.open('svg') do |f|
+      f.write(svg)
+      f.rewind
+
+      expected = <<~VCF
+        BEGIN:VCARD
+        VERSION:3.0
+        N:Dolores;Pedro;;;
+        FN:Pedro Dolores
+        TEL;TYPE=WORK,VOICE:0310000000
+        TEL;TYPE=CELL,PREF,VOICE:0780000000
+        EMAIL;TYPE=WORK,PREF:bol@bla.ch
+        END:VCARD
+      VCF
+
+      assert_equal expected, ZXing.decode!(f)
+    end
   end
 
   test 'GET show hide classified data to non management' do

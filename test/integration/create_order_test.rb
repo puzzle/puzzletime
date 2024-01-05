@@ -148,12 +148,16 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       selectize('client_work_item_id', 'Puzzle')
       check('category_active')
       click_link('category_work_item_id_create_link')
-      click_link('Abbrechen')
+      within('.modal-dialog') do
+        click_link('Abbrechen')
+      end
       selectize('client_work_item_id', 'Swisstopo')
       click_link('category_work_item_id_create_link')
-      fill_in('work_item_name', with: 'New Category')
-      fill_in('work_item_shortname', with: 'NECA')
-      click_button 'Speichern'
+      within('.modal-dialog') do
+        fill_in('work_item_name', with: 'New Category')
+        fill_in('work_item_shortname', with: 'NECA')
+        click_button 'Speichern'
+      end
 
       assert find('#category_work_item_id + .selectize-control').
         has_selector?('.selectize-input .item', text: 'New Category')
@@ -242,9 +246,11 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       fill_in('order_crm_key', with: '123')
       click_link('Übernehmen')
 
-      assert_equal 'New Client', find('#client_work_item_attributes_name')['value']
-      fill_in('client_work_item_attributes_shortname', with: 'NECL')
-      click_button 'Speichern'
+      within('.modal-dialog') do
+        assert_equal 'New Client', find('#client_work_item_attributes_name')['value']
+        fill_in('client_work_item_attributes_shortname', with: 'NECL')
+        click_button 'Speichern'
+      end
 
       assert_equal 'New Order', find('#order_work_item_attributes_name')['value']
 
@@ -280,8 +286,10 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       click_link('Übernehmen')
 
       assert_equal 'New Client', find('#client_work_item_attributes_name')['value']
-      fill_in('client_work_item_attributes_shortname', with: 'NECL')
-      click_button 'Speichern'
+      within('.modal-dialog') do
+        fill_in('client_work_item_attributes_shortname', with: 'NECL')
+        click_button 'Speichern'
+      end
 
       assert_equal 'New Order', find('#order_work_item_attributes_name')['value']
 
@@ -520,20 +528,24 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
 
   def create_client
     click_link('client_work_item_id_create_link')
-    fill_in('client_work_item_attributes_name', with: 'New Client')
-    fill_in('client_work_item_attributes_shortname', with: 'NECL')
-    click_button 'Speichern'
+    within('.modal-dialog') do
+      fill_in('client_work_item_attributes_name', with: 'New Client')
+      fill_in('client_work_item_attributes_shortname', with: 'NECL')
+      click_button 'Speichern'
+    end
   end
 
   def create_category
     click_link('category_work_item_id_create_link')
-    fill_in('work_item_name', with: 'New Category')
-    fill_in('work_item_shortname', with: 'NECA')
-    click_button 'Speichern'
+    within('.modal-dialog') do
+      fill_in('work_item_name', with: 'New Category')
+      fill_in('work_item_shortname', with: 'NECA')
+      click_button 'Speichern'
+    end
   end
 
   def click_add_contact
-    find("a.add_nested_fields_link[data-object-class='order_contact']").click
+    find("a.add_nested_fields_link[data-object-class='order_contact']").trigger("click")
   end
 
   def fill_mandatory_fields(with_name = true)

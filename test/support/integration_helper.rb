@@ -25,16 +25,19 @@ module IntegrationHelper
   rescue Errno::ECONNREFUSED,
          Timeout::Error,
          Capybara::FrozenInTime,
-         Capybara::ElementNotFound,
-         Selenium::WebDriver::Error::StaleElementReferenceError => e
-    skip e.message || e.class.name
+         Capybara::ElementNotFound => e
+    if ENV['CI'] == true
+      skip e.message || e.class.name
+    else
+      raise
+    end
   end
 
   def open_selectize(id, options = {})
     element = find("##{id} + .selectize-control")
-    element.find('.selectize-input').click unless options[:no_click]
+    element.find('.selectize-input').trigger('click') unless options[:no_click]
     element.find('.selectize-input input').native.send_keys(:backspace) if options[:clear]
-    element.find('.selectize-input input').set(options[:term]) if options[:term].present?
+    element.find('.selectize-input input').native.send_keys(options[:term].chars) if options[:term].present?
     if options[:assert_empty]
       page.assert_no_selector('.selectize-dropdown-content')
     else
@@ -44,27 +47,26 @@ module IntegrationHelper
   end
 
   def selectize(id, value, options = {})
-    open_selectize(id, options).find('.selectize-option,.option', text: value).click
+    open_selectize(id, options).find('.selectize-option,.option', text: value).trigger('click')
   end
 
-  def drag(from_node, *to_node)
-    action = page.driver.browser.action.click_and_hold(from_node.native)
-    to_node.each { |node| action = action.move_to(node.native) }
-    action.release.perform
+  def mouse
+    page.driver.browser.mouse
   end
 
-  def accept_confirmation(expected_message = nil)
-    if expected_message.present?
-      assert_equal expected_message, page.driver.browser.switch_to.alert.text
+  def move_mouse_to(element)
+    x, y = element.native.node.find_position
+    mouse.move(x: x, y: y)
+  end
+
+  def drag(from_element, *to_elements)
+    move_mouse_to(from_element)
+    mouse.down
+
+    to_elements.each do |to_element|
+      move_mouse_to(to_element)
     end
-    page.driver.browser.switch_to.alert.accept
-  end
-
-  def dismiss_confirmation(expected_message = nil)
-    if expected_message.present?
-      assert_equal expected_message, page.driver.browser.switch_to.alert.text
-    end
-    page.driver.browser.switch_to.alert.dismiss
+    mouse.up
   end
 
   Capybara.add_selector(:name) do
@@ -72,15 +74,6 @@ module IntegrationHelper
   end
 
   def clear_cookies
-    browser = Capybara.current_session.driver.browser
-    if browser.respond_to?(:clear_cookies)
-      # Rack::MockSession
-      browser.clear_cookies
-    elsif browser.respond_to?(:manage) && browser.manage.respond_to?(:delete_all_cookies)
-      # Selenium::WebDriver
-      browser.manage.delete_all_cookies
-    else
-      raise "Don't know how to clear cookies. Weird driver?"
-    end
+    Capybara.current_session.driver.clear_cookies
   end
 end
