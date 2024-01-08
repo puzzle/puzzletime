@@ -6,18 +6,24 @@ on:
       project_name:
         description: 'Project to build for'
         required: true
-        default: 'pitc-ptime-int'
         type: choice
         options:
         - pitc-ptime-int
         - pitc-ptime-prod
         - pude-ptime-prod
+        default: 'pitc-ptime-int'
+      push:
+        description: 'Should we push the image to the registry?'
+        required: true
+        type: boolean
+        default: true
 
 jobs:
   build:
     uses: ./.github/workflows/reusable-build.yaml
     with:
       project: ${{ inputs.project_name }}
+      push: ${{ inputs.push }}
     secrets:
       PUZZLE_REGISTRY: ${{ secrets.PUZZLE_REGISTRY }}
       PUZZLE_REGISTRY_USERNAME: ${{ secrets.PUZZLE_REGISTRY_USERNAME }}
