@@ -1,9 +1,6 @@
 name: 'Manual build without tests'
 
 on:
-  push:
-    branches:
-      'feature/rails-upgrade'
   workflow_dispatch:
     inputs:
       project_name:
@@ -24,7 +21,6 @@ on:
 jobs:
   build-dispatch:
     uses: ./.github/workflows/reusable-build.yaml
-    if: ${{ inputs.project_name != '' && inputs.push != '' }}
     with:
       project: ${{ inputs.project_name  }}
       push: ${{ inputs.push }}
@@ -32,14 +28,3 @@ jobs:
       PUZZLE_REGISTRY: ${{ secrets.PUZZLE_REGISTRY }}
       PUZZLE_REGISTRY_USERNAME: ${{ secrets.PUZZLE_REGISTRY_USERNAME }}
       PUZZLE_REGISTRY_TOKEN: ${{ secrets.PUZZLE_REGISTRY_TOKEN }}
-  build-push:
-    uses: ./.github/workflows/reusable-build.yaml
-    if: ${{ inputs.project_name == '' || inputs.push == '' }}
-    with:
-      project: 'pitc-ptime-int'
-      push: false
-    secrets:
-      PUZZLE_REGISTRY: ${{ secrets.PUZZLE_REGISTRY }}
-      PUZZLE_REGISTRY_USERNAME: ${{ secrets.PUZZLE_REGISTRY_USERNAME }}
-      PUZZLE_REGISTRY_TOKEN: ${{ secrets.PUZZLE_REGISTRY_TOKEN }}
-

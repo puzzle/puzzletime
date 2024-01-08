@@ -19,6 +19,7 @@ jobs:
     uses: ./.github/workflows/reusable-build.yaml
     with:
       project: pitc-ptime-int
+      push: true
     secrets:
       PUZZLE_REGISTRY: ${{ secrets.PUZZLE_REGISTRY }}
       PUZZLE_REGISTRY_USERNAME: ${{ secrets.PUZZLE_REGISTRY_USERNAME }}
