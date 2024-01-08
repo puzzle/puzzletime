@@ -14,7 +14,18 @@ ARG BUILD_PACKAGES="nodejs bash"
 ARG RUN_PACKAGES="bash"
 
 # Scripts
-ARG PRE_INSTALL_SCRIPT="curl -sL https://deb.nodesource.com/setup_${NODEJS_VERSION}.x -o /tmp/nodesource_setup.sh && bash /tmp/nodesource_setup.sh"
+ARG PRE_INSTALL_SCRIPT="\
+  set -uex; \
+  apt-get update; \
+  apt-get install -y ca-certificates curl gnupg; \
+  mkdir -p /etc/apt/keyrings; \
+  curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key \
+       | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg; \
+  echo \"deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_${NODEJS_VERSION}.x nodistro main\" \
+       | tee /etc/apt/sources.list.d/nodesource.list; \
+  apt-get -qy update; \
+  apt-get -qy install nodejs; \
+"
 ARG INSTALL_SCRIPT="node -v && npm -v && npm install -g yarn && yarn set version ${YARN_VERSION}"
 ARG PRE_BUILD_SCRIPT
 ARG BUILD_SCRIPT="yarn install && bundle exec rake assets:precompile"
