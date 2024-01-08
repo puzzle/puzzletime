@@ -12,22 +12,72 @@ on:
 jobs:
   lint:
     uses: ./.github/workflows/reusable-lint.yaml
+
   test:
     uses: ./.github/workflows/reusable-test.yaml
+
   build-int:
     needs: [lint, test]
     uses: ./.github/workflows/reusable-build.yaml
     with:
-      project: pitc-ptime-int
+      environment: pitc-ptime-int
+      project_name: pitc-ptime-int
       push: true
     secrets:
       PUZZLE_REGISTRY: ${{ secrets.PUZZLE_REGISTRY }}
       PUZZLE_REGISTRY_USERNAME: ${{ secrets.PUZZLE_REGISTRY_USERNAME }}
       PUZZLE_REGISTRY_TOKEN: ${{ secrets.PUZZLE_REGISTRY_TOKEN }}
-  # sbom:
+
+  sbom-int:
+    needs: build-int
+    uses: ./.github/workflows/reusable-sbom.yaml
+    with:
+      environment: pitc-ptime-int
+      project_name: pitc-ptime-int
+    secrets:
+      dependency_track_url: ${{ secrets.DEPTRACK_URL }}
+      dependency_track_api_key: ${{ secrets.DEPTRACK_API_KEY }}
+
+  build-prod:
+    needs: [lint, test, build-int]
+    uses: ./.github/workflows/reusable-build.yaml
+    with:
+      environment: pitc-ptime-prod
+      project_name: pitc-ptime-prod
+      push: true
+    secrets:
+      PUZZLE_REGISTRY: ${{ secrets.PUZZLE_REGISTRY }}
+      PUZZLE_REGISTRY_USERNAME: ${{ secrets.PUZZLE_REGISTRY_USERNAME }}
+      PUZZLE_REGISTRY_TOKEN: ${{ secrets.PUZZLE_REGISTRY_TOKEN }}
+
+  # sbom-prod:
+  #   needs: build-prod
   #   uses: ./.github/workflows/reusable-sbom.yaml
   #   with:
-  #     project_name: pitc-ptime-int
-  #     dependency_track_url: ${{ secrets.DEPENDENCY_TRACK_API_KEY}}
+  #     environment: pitc-ptime-prod
+  #     project_name: pitc-ptime-prod
   #   secrets:
-  #     dependency_track_api_key: ${{ secrets.DEPENDENCY_TRACK_API_KEY }}
+  #     dependency_track_url: ${{ secrets.DEPTRACK_URL }}
+  #     dependency_track_api_key: ${{ secrets.DEPTRACK_API_KEY }}
+
+  # build-pude:
+  #   needs: [lint, test, build-int]
+  #   uses: ./.github/workflows/reusable-build.yaml
+  #   with:
+  #     environment: pude-ptime-prod
+  #     project_name: pude-ptime-prod
+  #     push: true
+  #   secrets:
+  #     PUZZLE_REGISTRY: ${{ secrets.PUZZLE_REGISTRY }}
+  #     PUZZLE_REGISTRY_USERNAME: ${{ secrets.PUZZLE_REGISTRY_USERNAME }}
+  #     PUZZLE_REGISTRY_TOKEN: ${{ secrets.PUZZLE_REGISTRY_TOKEN }}
+
+  # sbom-pude:
+  #   needs: build-pude
+  #   uses: ./.github/workflows/reusable-sbom.yaml
+  #   with:
+  #     environment: pude-ptime-prod
+  #     project_name: pude-ptime-prod
+  #   secrets:
+  #     dependency_track_url: ${{ secrets.DEPTRACK_URL }}
+  #     dependency_track_api_key: ${{ secrets.DEPTRACK_API_KEY }}

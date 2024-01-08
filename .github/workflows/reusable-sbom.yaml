@@ -3,22 +3,27 @@ name: Generate and push an SBOM dependency list
 on:
   workflow_call:
     inputs:
+      environment:
+        type: string
+        description: "Environment to build in"
+        required: true
       project_name:
         type: string
         description: "Project name to report to dependency track"
         required: true
+      
+    secrets:
       dependency_track_url:
-        type: string
         description: "Base URL of the dependency track instance"
         required: true
-    secrets:
       dependency_track_api_key:
         description: "API key to use for sending data to dependency track"
         required: true
 
 jobs:
   generate-and-push-sbom:
-    runs-on: 'ubuntu-20.04'
+    runs-on: 'ubuntu-latest'
+    environment: ${{ inputs.environment }}
     env:
       HEADLESS: true
       RAILS_TEST_DB_NAME: 'postgres'
@@ -108,7 +113,7 @@ jobs:
 
       - name: 'Push merged SBOM to dependency track'
         run: |
-          curl --verbose -s --location --request POST ${{ inputs.dependency_track_url }}/api/v1/bom \
+          curl --verbose -s --location --request POST ${{ secrets.dependency_track_url }}/api/v1/bom \
           --header "X-Api-Key: ${{ secrets.dependency_track_api_key }}" \
           --header "Content-Type: multipart/form-data" \
           --form "autoCreate=true" \

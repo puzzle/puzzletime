@@ -3,8 +3,12 @@ name: 'Reusable: Build and push image'
 on:
   workflow_call:
     inputs:
-      project:
-        description: "Name of the project, e.g. pitc-ptime-int"
+      environment:
+        description: "Environment to run in"
+        type: string
+        required: true
+      project_name:
+        description: "Project name, e.g. pitc-ptime-int"
         type: string
         required: true
       push:
@@ -25,7 +29,7 @@ on:
 
 jobs:
   build:
-    environment: deploy
+    environment: ${{ inputs.environment }}
     runs-on: 'ubuntu-latest'
     steps:
       - uses: docker/setup-buildx-action@v3
@@ -44,6 +48,6 @@ jobs:
             BUILD_COMMIT=$GITHUB_SHA
           target: app
           tags: |
-            ${{ secrets.PUZZLE_REGISTRY }}/ptime/${{ inputs.project }}/rails:latest
-            ${{ secrets.PUZZLE_REGISTRY }}/ptime/${{ inputs.project }}/rails:${{ github.sha }}
+            ${{ secrets.PUZZLE_REGISTRY }}/ptime/${{ inputs.project_name }}/rails:latest
+            ${{ secrets.PUZZLE_REGISTRY }}/ptime/${{ inputs.project_name }}/rails:${{ github.sha }}
           push: ${{ inputs.push }}

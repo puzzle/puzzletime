@@ -3,14 +3,23 @@ name: 'Manual build without tests'
 on:
   workflow_dispatch:
     inputs:
+      environment:
+        description: 'Environment to build in'
+        required: true
+        type: choice
+        options:
+          - pitc-ptime-int
+          - pitc-ptime-prod
+          - pude-ptime-prod
+        default: 'pitc-ptime-int'
       project_name:
         description: 'Project to build for'
         required: true
         type: choice
         options:
-        - pitc-ptime-int
-        - pitc-ptime-prod
-        - pude-ptime-prod
+          - pitc-ptime-int
+          - pitc-ptime-prod
+          - pude-ptime-prod
         default: 'pitc-ptime-int'
       push:
         description: 'Should we push the image to the registry?'
@@ -22,7 +31,8 @@ jobs:
   build-dispatch:
     uses: ./.github/workflows/reusable-build.yaml
     with:
-      project: ${{ inputs.project_name  }}
+      environment: ${{ inputs.environment }}
+      project_name: ${{ inputs.project_name  }}
       push: ${{ inputs.push }}
     secrets:
       PUZZLE_REGISTRY: ${{ secrets.PUZZLE_REGISTRY }}
