@@ -49,59 +49,53 @@ jobs:
         ports: [ '11211:11211' ]
 
     steps:
-      - name: 'Set up Ruby'
-        env:
-          ImageOS: ubuntu20
-        uses: ruby/setup-ruby@v1
+      # - uses: ruby/setup-ruby@v1
+      #   env:
+      #     ImageOS: ubuntu20
+      #
+      # - uses: actions/setup-node@v4
+      #   with:
+      #     node-version: '20'
+      #
+      # - run: sudo apt-get -qq update
+      # - run: cp Gemfile.lock Gemfile.lock.backup
+      #
+      # - uses: actions/cache@v3
+      #   with:
+      #     path: vendor/bundle
+      #     key: ${{ runner.os }}-ruby-bundle-${{ hashFiles('**/Gemfile.lock.backup') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-ruby-bundle-
+      #
+      # - name: 'Bundle install core'
+      #   run: bundle install --jobs 4 --retry 3 --path vendor/bundle
+      #
+      # - name: 'Make changes to Gemfile.lock transparent'
+      #   run: git diff Gemfile.lock || true
+      #
+      # - uses: actions/cache@v3
+      #   with:
+      #     path: node_modules
+      #     key: ${{ runner.os }}-node_modules-${{ hashFiles('**/yarn.lock') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-node_modules-
+      #
+      # - name: 'Yarn install'
+      #   run: |
+      #     yarn install --frozen-lockfile
+      #
+      # - name: 'Remove installed dependency code, because lockfiles in there would yield false positives with cdxgen. We are only interested in our own lockfiles.'
+      #   run: |
+      #     rm -rf vendor
+      #     rm -rf node_modules
 
-      - name: 'Set up Node'
-        uses: actions/setup-node@v2
-        with:
-          node-version: '20'
-
-      - name: 'Setup OS'
-        run: sudo apt-get -qq update
-
-      - name: 'Create cache key'
-        run: cp Gemfile.lock Gemfile.lock.backup
-
-      - uses: actions/cache@v3
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-ruby-bundle-${{ hashFiles('**/Gemfile.lock.backup') }}
-          restore-keys: |
-            ${{ runner.os }}-ruby-bundle-
-
-      - name: 'Bundle install core'
-        run: bundle install --jobs 4 --retry 3 --path vendor/bundle
-
-      - name: 'Make changes to Gemfile.lock transparent'
-        working-directory: hitobito
-        run: git diff Gemfile.lock || true
-
-      - uses: actions/cache@v3
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node_modules-
-
-      - name: 'Yarn install'
-        run: |
-          yarn install --frozen-lockfile
-
-      - name: 'Remove installed dependency code, because lockfiles in there would yield false positives with cdxgen. We are only interested in our own lockfiles.'
-        run: |
-          rm -rf vendor
-          rm -rf node_modules
-
+      - uses: actions/checkout@v4
       - name: 'Generate SBOM for ruby dependencies'
         env:
           SCAN_DEBUG_MODE: debug
         run: |
           npm install -g @cyclonedx/cdxgen
           cdxgen -o ./sbom-ruby.xml -t ruby --spec-version 1.4 .
-
       - name: 'Generate SBOM for npm dependencies'
         run: |
           npm install -g @cyclonedx/cdxgen
@@ -109,19 +103,28 @@ jobs:
 
       - name: 'Merge frontend and backend SBOMs'
         run: |
-          docker run --rm -v $(pwd):/data cyclonedx/cyclonedx-cli merge --input-files data/sbom-ruby.xml data/sbom-npm.xml --output-file data/sbom.xml
-
+          docker run \
+                 --rm \
+                 -v $(pwd):/data \
+                 cyclonedx/cyclonedx-cli \
+                 merge \
+                 --input-files data/sbom-ruby.xml data/sbom-npm.xml \
+                 --output-file data/sbom.xml
+      
       - name: 'Push merged SBOM to dependency track'
         run: |
-          curl --verbose -s --location --request POST ${{ secrets.dependency_track_url }}/api/v1/bom \
-          --header "X-Api-Key: ${{ secrets.dependency_track_api_key }}" \
-          --header "Content-Type: multipart/form-data" \
-          --form "autoCreate=true" \
-          --form "projectName=${{ inputs.project_name }}" \
-          --form "projectVersion=latest" \
-          --form "bom=@sbom.xml"
-
-      - uses: actions/upload-artifact@v2
+          curl --verbose \
+               -s \
+               --location \
+               --request POST ${{ secrets.dependency_track_url }}/api/v1/bom \
+               --header "X-Api-Key: ${{ secrets.dependency_track_api_key }}" \
+               --header "Content-Type: multipart/form-data" \
+               --form "autoCreate=true" \
+               --form "projectName=${{ inputs.project_name }}" \
+               --form "projectVersion=latest" \
+               --form "bom=@sbom.xml"
+      
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: sboms
