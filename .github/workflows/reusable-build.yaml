@@ -52,3 +52,5 @@ jobs:
             ${{ inputs.registry }}/ptime/${{ inputs.project_name }}/rails:latest
             ${{ inputs.registry }}/ptime/${{ inputs.project_name }}/rails:${{ github.sha }}
           push: ${{ inputs.push }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
