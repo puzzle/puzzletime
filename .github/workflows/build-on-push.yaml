@@ -39,7 +39,7 @@ jobs:
       dependency_track_api_key: ${{ secrets.DEPTRACK_API_KEY }}
 
   build-prod:
-    needs: [lint, test, build-int]
+    needs: [lint, test]
     uses: ./.github/workflows/reusable-build.yaml
     with:
       environment: pitc-ptime-prod
@@ -61,7 +61,7 @@ jobs:
       dependency_track_api_key: ${{ secrets.DEPTRACK_API_KEY }}
 
   build-pude:
-    needs: [lint, test, build-int]
+    needs: [lint, test]
     uses: ./.github/workflows/reusable-build.yaml
     with:
       environment: pude-ptime-prod
