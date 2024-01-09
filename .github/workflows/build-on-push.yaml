@@ -23,8 +23,8 @@ jobs:
       environment: pitc-ptime-int
       project_name: pitc-ptime-int
       push: true
+      registry: registry.puzzle.ch
     secrets:
-      PUZZLE_REGISTRY: ${{ secrets.PUZZLE_REGISTRY }}
       PUZZLE_REGISTRY_USERNAME: ${{ secrets.PUZZLE_REGISTRY_USERNAME }}
       PUZZLE_REGISTRY_TOKEN: ${{ secrets.PUZZLE_REGISTRY_TOKEN }}
 
@@ -45,8 +45,8 @@ jobs:
       environment: pitc-ptime-prod
       project_name: pitc-ptime-prod
       push: true
+      registry: registry.puzzle.ch
     secrets:
-      PUZZLE_REGISTRY: ${{ secrets.PUZZLE_REGISTRY }}
       PUZZLE_REGISTRY_USERNAME: ${{ secrets.PUZZLE_REGISTRY_USERNAME }}
       PUZZLE_REGISTRY_TOKEN: ${{ secrets.PUZZLE_REGISTRY_TOKEN }}
 
@@ -67,8 +67,8 @@ jobs:
   #     environment: pude-ptime-prod
   #     project_name: pude-ptime-prod
   #     push: true
+  #     registry: registry.puzzle.ch
   #   secrets:
-  #     PUZZLE_REGISTRY: ${{ secrets.PUZZLE_REGISTRY }}
   #     PUZZLE_REGISTRY_USERNAME: ${{ secrets.PUZZLE_REGISTRY_USERNAME }}
   #     PUZZLE_REGISTRY_TOKEN: ${{ secrets.PUZZLE_REGISTRY_TOKEN }}
 

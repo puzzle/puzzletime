@@ -34,7 +34,7 @@ jobs:
       environment: ${{ inputs.environment }}
       project_name: ${{ inputs.project_name  }}
       push: ${{ inputs.push }}
+      registry: registry.puzzle.ch
     secrets:
-      PUZZLE_REGISTRY: ${{ secrets.PUZZLE_REGISTRY }}
       PUZZLE_REGISTRY_USERNAME: ${{ secrets.PUZZLE_REGISTRY_USERNAME }}
       PUZZLE_REGISTRY_TOKEN: ${{ secrets.PUZZLE_REGISTRY_TOKEN }}
