@@ -49,56 +49,11 @@ jobs:
         ports: [ '11211:11211' ]
 
     steps:
-      # - uses: ruby/setup-ruby@v1
-      #   env:
-      #     ImageOS: ubuntu20
-      #
-      # - uses: actions/setup-node@v4
-      #   with:
-      #     node-version: '20'
-      #
-      # - run: sudo apt-get -qq update
-      # - run: cp Gemfile.lock Gemfile.lock.backup
-      #
-      # - uses: actions/cache@v3
-      #   with:
-      #     path: vendor/bundle
-      #     key: ${{ runner.os }}-ruby-bundle-${{ hashFiles('**/Gemfile.lock.backup') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-ruby-bundle-
-      #
-      # - name: 'Bundle install core'
-      #   run: bundle install --jobs 4 --retry 3 --path vendor/bundle
-      #
-      # - name: 'Make changes to Gemfile.lock transparent'
-      #   run: git diff Gemfile.lock || true
-      #
-      # - uses: actions/cache@v3
-      #   with:
-      #     path: node_modules
-      #     key: ${{ runner.os }}-node_modules-${{ hashFiles('**/yarn.lock') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-node_modules-
-      #
-      # - name: 'Yarn install'
-      #   run: |
-      #     yarn install --frozen-lockfile
-      #
-      # - name: 'Remove installed dependency code, because lockfiles in there would yield false positives with cdxgen. We are only interested in our own lockfiles.'
-      #   run: |
-      #     rm -rf vendor
-      #     rm -rf node_modules
-
       - uses: actions/checkout@v4
-      - name: 'Generate SBOM for ruby dependencies'
-        env:
-          SCAN_DEBUG_MODE: debug
+      - name: 'Generate SBOM for ruby and npm dependencies'
         run: |
           npm install -g @cyclonedx/cdxgen
           cdxgen -o ./sbom-ruby.xml -t ruby --spec-version 1.4 .
-      - name: 'Generate SBOM for npm dependencies'
-        run: |
-          npm install -g @cyclonedx/cdxgen
           cdxgen -o ./sbom-npm.xml -t npm --spec-version 1.4 .
 
       - name: 'Merge frontend and backend SBOMs'
