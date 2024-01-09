@@ -32,8 +32,8 @@ jobs:
     needs: build-int
     uses: ./.github/workflows/reusable-sbom.yaml
     with:
-      environment: pitc-ptime-int
       project_name: pitc-ptime-int
+      artifact-prefix: int-
     secrets:
       dependency_track_url: ${{ secrets.DEPTRACK_URL }}
       dependency_track_api_key: ${{ secrets.DEPTRACK_API_KEY }}
@@ -54,8 +54,8 @@ jobs:
     needs: build-prod
     uses: ./.github/workflows/reusable-sbom.yaml
     with:
-      environment: pitc-ptime-prod
       project_name: pitc-ptime-prod
+      artifact-prefix: prod-
     secrets:
       dependency_track_url: ${{ secrets.DEPTRACK_URL }}
       dependency_track_api_key: ${{ secrets.DEPTRACK_API_KEY }}
@@ -76,8 +76,8 @@ jobs:
     needs: build-pude
     uses: ./.github/workflows/reusable-sbom.yaml
     with:
-      environment: pude-ptime-prod
       project_name: pude-ptime-prod
+      artifact-prefix: pude-
     secrets:
       dependency_track_url: ${{ secrets.DEPTRACK_URL }}
       dependency_track_api_key: ${{ secrets.DEPTRACK_API_KEY }}

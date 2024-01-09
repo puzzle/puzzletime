@@ -3,14 +3,14 @@ name: Generate and push an SBOM dependency list
 on:
   workflow_call:
     inputs:
-      environment:
-        type: string
-        description: "Environment to build in"
-        required: true
       project_name:
         type: string
         description: "Project name to report to dependency track"
         required: true
+      artifact-prefix:
+        type: string
+        description: "what to prefix the artifacts with e.g. int-"
+        default: ""
       
     secrets:
       dependency_track_url:
@@ -23,7 +23,6 @@ on:
 jobs:
   generate-and-push-sbom:
     runs-on: 'ubuntu-latest'
-    environment: ${{ inputs.environment }}
     env:
       HEADLESS: true
       RAILS_TEST_DB_NAME: 'postgres'
@@ -82,7 +81,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: sboms
+          name: ${{ inputs.artifact-prefix }}sboms
           path: |
             ./sbom-npm.xml
             ./sbom-ruby.xml
