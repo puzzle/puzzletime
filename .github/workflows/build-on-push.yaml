@@ -50,34 +50,34 @@ jobs:
       PUZZLE_REGISTRY_USERNAME: ${{ secrets.PUZZLE_REGISTRY_USERNAME }}
       PUZZLE_REGISTRY_TOKEN: ${{ secrets.PUZZLE_REGISTRY_TOKEN }}
 
-  # sbom-prod:
-  #   needs: build-prod
-  #   uses: ./.github/workflows/reusable-sbom.yaml
-  #   with:
-  #     environment: pitc-ptime-prod
-  #     project_name: pitc-ptime-prod
-  #   secrets:
-  #     dependency_track_url: ${{ secrets.DEPTRACK_URL }}
-  #     dependency_track_api_key: ${{ secrets.DEPTRACK_API_KEY }}
+  sbom-prod:
+    needs: build-prod
+    uses: ./.github/workflows/reusable-sbom.yaml
+    with:
+      environment: pitc-ptime-prod
+      project_name: pitc-ptime-prod
+    secrets:
+      dependency_track_url: ${{ secrets.DEPTRACK_URL }}
+      dependency_track_api_key: ${{ secrets.DEPTRACK_API_KEY }}
 
-  # build-pude:
-  #   needs: [lint, test, build-int]
-  #   uses: ./.github/workflows/reusable-build.yaml
-  #   with:
-  #     environment: pude-ptime-prod
-  #     project_name: pude-ptime-prod
-  #     push: true
-  #     registry: registry.puzzle.ch
-  #   secrets:
-  #     PUZZLE_REGISTRY_USERNAME: ${{ secrets.PUZZLE_REGISTRY_USERNAME }}
-  #     PUZZLE_REGISTRY_TOKEN: ${{ secrets.PUZZLE_REGISTRY_TOKEN }}
+  build-pude:
+    needs: [lint, test, build-int]
+    uses: ./.github/workflows/reusable-build.yaml
+    with:
+      environment: pude-ptime-prod
+      project_name: pude-ptime-prod
+      push: true
+      registry: registry.puzzle.ch
+    secrets:
+      PUZZLE_REGISTRY_USERNAME: ${{ secrets.PUZZLE_REGISTRY_USERNAME }}
+      PUZZLE_REGISTRY_TOKEN: ${{ secrets.PUZZLE_REGISTRY_TOKEN }}
 
-  # sbom-pude:
-  #   needs: build-pude
-  #   uses: ./.github/workflows/reusable-sbom.yaml
-  #   with:
-  #     environment: pude-ptime-prod
-  #     project_name: pude-ptime-prod
-  #   secrets:
-  #     dependency_track_url: ${{ secrets.DEPTRACK_URL }}
-  #     dependency_track_api_key: ${{ secrets.DEPTRACK_API_KEY }}
+  sbom-pude:
+    needs: build-pude
+    uses: ./.github/workflows/reusable-sbom.yaml
+    with:
+      environment: pude-ptime-prod
+      project_name: pude-ptime-prod
+    secrets:
+      dependency_track_url: ${{ secrets.DEPTRACK_URL }}
+      dependency_track_api_key: ${{ secrets.DEPTRACK_API_KEY }}
