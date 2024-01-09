@@ -39,7 +39,6 @@ jobs:
           registry: ${{ inputs.registry }}
           username: ${{ secrets.PUZZLE_REGISTRY_USERNAME }}
           password: ${{ secrets.PUZZLE_REGISTRY_TOKEN }}
-
       - uses: docker/build-push-action@v4
         with:
           file: Dockerfile
