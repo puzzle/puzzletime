@@ -21,6 +21,7 @@
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
+!/tmp/pids
 
 test/coverage
 test/reports
