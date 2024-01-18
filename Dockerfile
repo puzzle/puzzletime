@@ -11,7 +11,7 @@ ARG YARN_VERSION="1.22.10"
 # Packages
 # ARG BUILD_PACKAGES="nodejs build-essential libc6"
 ARG BUILD_PACKAGES="nodejs bash"
-ARG RUN_PACKAGES="bash"
+ARG RUN_PACKAGES="bash libpq5"
 
 # Scripts
 ARG PRE_INSTALL_SCRIPT="\
