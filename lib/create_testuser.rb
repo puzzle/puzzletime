@@ -4,7 +4,7 @@ class CreateTestuser
     new(data).run
   end
 
-  def initialize(**data)
+  def initialize(data)
     @data = {}
     @data[:shortname]       = data[:shortname]
     @data[:employee]        = data[:employee]
