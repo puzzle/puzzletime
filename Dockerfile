@@ -5,30 +5,17 @@
 # Versioning
 ARG RUBY_VERSION="3.2.1"
 ARG BUNDLER_VERSION="2.4.6"
-ARG NODEJS_VERSION="16"
-ARG YARN_VERSION="1.22.10"
 
 # Packages
 # ARG BUILD_PACKAGES="nodejs build-essential libc6"
-ARG BUILD_PACKAGES="nodejs bash"
+ARG BUILD_PACKAGES
 ARG RUN_PACKAGES="bash libpq5"
 
 # Scripts
-ARG PRE_INSTALL_SCRIPT="\
-  set -uex; \
-  apt-get update; \
-  apt-get install -y ca-certificates curl gnupg; \
-  mkdir -p /etc/apt/keyrings; \
-  curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key \
-       | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg; \
-  echo \"deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_${NODEJS_VERSION}.x nodistro main\" \
-       | tee /etc/apt/sources.list.d/nodesource.list; \
-  apt-get -qy update; \
-  apt-get -qy install nodejs; \
-"
-ARG INSTALL_SCRIPT="node -v && npm -v && npm install -g yarn && yarn set version ${YARN_VERSION}"
+ARG PRE_INSTALL_SCRIPT
+ARG INSTALL_SCRIPT
 ARG PRE_BUILD_SCRIPT
-ARG BUILD_SCRIPT="yarn install && bundle exec rake assets:precompile"
+ARG BUILD_SCRIPT="bundle exec rake assets:precompile"
 ARG POST_BUILD_SCRIPT="echo \"(built at: $(date '+%Y-%m-%d %H:%M:%S'))\" > /app-src/BUILD_INFO"
 
 # Bundler specific
@@ -37,7 +24,6 @@ ARG BUNDLE_WITHOUT="development:metrics:test"
 # App specific
 ARG RAILS_ENV="production"
 ARG RACK_ENV="production"
-ARG NODE_ENV="production"
 ARG RAILS_HOST_NAME="unused.example.net"
 ARG SECRET_KEY_BASE="needs-to-be-set"
 ARG RAILS_DB_ADAPTER="nulldb"
@@ -89,7 +75,6 @@ ARG BUILD_SCRIPT
 ARG POST_BUILD_SCRIPT
 
 # arguments potentially used by steps
-ARG NODE_ENV
 ARG RACK_ENV
 ARG RAILS_ENV
 ARG RAILS_HOST_NAME
@@ -162,7 +147,6 @@ ARG BUNDLER_VERSION
 ARG BUNDLE_WITHOUT
 
 # arguments potentially used by steps
-ARG NODE_ENV
 ARG RACK_ENV
 ARG RAILS_ENV
 
@@ -178,7 +162,6 @@ ENV PS1="${PS1}" \
   BUILD_REPO="${BUILD_REPO}" \
   BUILD_REF="${BUILD_REF}" \
   BUILD_COMMIT="${BUILD_COMMIT}" \
-  NODE_ENV="${NODE_ENV}" \
   RAILS_ENV="${RAILS_ENV}" \
   RACK_ENV="${RACK_ENV}"
 
