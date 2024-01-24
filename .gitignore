@@ -57,4 +57,7 @@ tags
 # bundler tools dir
 /vendor/tools
 
+# Ignore public assets
+/public/assets
+
 TAGS
