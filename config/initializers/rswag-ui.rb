@@ -11,6 +11,11 @@ Rswag::Ui.configure do |c|
                  children.map { |p| p.to_s[%r{/(v\d+)\z}, 1] }.compact
 
   api_versions.each do |version|
-    c.swagger_endpoint version, "API #{version} Docs"
+    if c.respond_to?(:openapi_endpoint)
+      c.openapi_endpoint version, "API #{version} Docs"
+    else
+      # Remove after RSwag has reached v3.0
+      c.swagger_endpoint version, "API #{version} Docs"
+    end
   end
 end
