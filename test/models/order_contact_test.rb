@@ -22,7 +22,11 @@ class OrderContactTest < ActiveSupport::TestCase
     order = Fabricate(:order)
     m = OrderContact.create!(order: order, contact: Fabricate(:contact, lastname: 'Miller', client: order.client))
     a = OrderContact.create!(order: order, contact: Fabricate(:contact, lastname: 'Aber', client: order.client))
-    assert_equal [a, m], order.order_contacts.list
+
+    expected = [a, m].map(&:attributes)
+    received = order.order_contacts.list.map(&:attributes)
+
+    assert_equal expected, received
   end
 
   test 'crm ids are replaced' do
