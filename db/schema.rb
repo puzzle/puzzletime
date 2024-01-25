@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_11_133610) do
+ActiveRecord::Schema[7.1].define(version: 2024_01_25_133148) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -310,7 +310,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_11_133610) do
     t.index ["order_id"], name: "index_order_comments_on_order_id"
   end
 
-  create_table "order_contacts", primary_key: "false", id: :serial, force: :cascade do |t|
+  create_table "order_contacts", id: false, force: :cascade do |t|
     t.integer "contact_id", null: false
     t.integer "order_id", null: false
     t.string "comment"
@@ -344,7 +344,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_11_133610) do
     t.index ["target_scope_id"], name: "index_order_targets_on_target_scope_id"
   end
 
-  create_table "order_team_members", primary_key: "false", id: :serial, force: :cascade do |t|
+  create_table "order_team_members", id: false, force: :cascade do |t|
     t.integer "employee_id", null: false
     t.integer "order_id", null: false
     t.string "comment"
@@ -432,6 +432,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_11_133610) do
     t.string "rating_red_description"
     t.index ["name"], name: "index_target_scopes_on_name", unique: true
     t.index ["position"], name: "index_target_scopes_on_position"
+  end
+
+  create_table "test", id: false, force: :cascade do |t|
+    t.integer "id", null: false
   end
 
   create_table "user_notifications", id: :serial, force: :cascade do |t|
