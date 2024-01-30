@@ -321,7 +321,7 @@ class InvoiceTransactionTest < ActiveSupport::TestCase
   self.use_transactional_tests = false
 
   test 'generates different parallel invoice numbers' do
-    ActiveRecord::Base.clear_active_connections!
+    ActiveRecord::Base.connection_handler.clear_active_connections!
     10.times.collect do
       Thread.new do
         ActiveRecord::Base.connection_pool.with_connection do

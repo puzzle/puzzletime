@@ -15,6 +15,18 @@ Rails.application.configure do
 
   config.cache_classes = true
 
+  # config.session_store(
+  #   ActionDispatch::Session::CacheStore,
+  #   expire_after: 12.hours,
+  #   same_site: :lax,
+  #   secure: false
+  # )
+
+  config.cache_store = :memory_store
+  config.session_store(:mem_cache_store)
+
+  # config.action_dispatch.cookies_serializer = :marshal
+
   # Do not eager load code on boot. This avoids loading your whole application
   # just for the purpose of running a single test. If you are using a tool that
   # preloads Rails for running tests, you may have to set it to true.

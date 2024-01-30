@@ -8,7 +8,11 @@ module RetryOnFlakyTests
   def self.[](*error_classes, max_tries: 3)
     Module.new do
       define_method :max_tries do
-        max_tries
+        tries = ENV.fetch('RAILS_FLAKY_TRIES', max_tries).to_i
+
+        return 1 if max_tries < 1
+
+        tries
       end
 
       define_method :error_classes do

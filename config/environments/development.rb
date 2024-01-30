@@ -29,7 +29,6 @@ Rails.application.configure do
     ENV["RAILS_HOSTS"]
   ]
 
-
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
   # if Rails.root.join('tmp', 'caching-dev.txt').exist?
@@ -45,6 +44,14 @@ Rails.application.configure do
   #
   #   config.cache_store = :null_store
   # end
+
+  # config.session_store(:cookie_store, key: '_app_session_dev')
+  config.session_store(
+    ActionDispatch::Session::CacheStore,
+    expire_after: 12.hours,
+    same_site: :lax,
+    secure: false
+  )
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = ENV.fetch('RAILS_STORAGE_SERVICE', 'local').to_sym

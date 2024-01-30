@@ -119,7 +119,7 @@ class Period
     end
 
     # Build a period, even with illegal arguments
-    def with(start_date = Time.zone.today, end_date = Time.zone_today, label = nil)
+    def with(start_date = Time.zone.today, end_date = Time.zone.today, label = nil)
       # rubocop:disable Style/RescueModifier
       start_date = parse_date(start_date) rescue nil
       end_date = parse_date(end_date) rescue nil
