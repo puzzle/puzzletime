@@ -109,7 +109,7 @@ module FormatHelper
   # Renders an arbitrary content with the given label. Used for uniform
   # presentation.
   def labeled(label, content = nil, &)
-    content = capture(&) if block
+    content = capture(&) if block_given?
     render('shared/labeled', label:, content:)
   end
 

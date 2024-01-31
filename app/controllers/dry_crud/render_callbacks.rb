@@ -23,7 +23,7 @@ module DryCrud
 
         run_callbacks(callback) if respond_to?(:"_#{callback}_callbacks", true)
 
-        super(*args, &) unless performed?
+        super unless performed?
       end
 
       private

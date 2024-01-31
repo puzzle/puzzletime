@@ -32,7 +32,7 @@ module UtilityHelper
   # Overridden method that takes a block that is executed for each item in
   # array before appending the results.
   def safe_join(array, sep = $OUTPUT_FIELD_SEPARATOR, &)
-    super(block ? array.map(&).compact : array, sep)
+    super(block_given? ? array.map(&).compact : array, sep)
   end
 
   # Returns the css class for the given flash level.

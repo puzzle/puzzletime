@@ -41,11 +41,11 @@ module TableHelper
   end
 
   # Same as plain_table_or_message, but wraps table in .unindented
-  def unindented_plain_table_or_message(entries, *attrs, &block)
+  def unindented_plain_table_or_message(entries, *attrs, &)
     entries.to_a # force evaluation of relations
     if entries.present?
       content_tag(:div, class: 'unindented') do
-        plain_table_or_message(entries, *attrs, &block)
+        plain_table_or_message(entries, *attrs, &)
       end
     else
       plain_table_or_message(entries, *attrs, &)
