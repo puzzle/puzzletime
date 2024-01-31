@@ -22,7 +22,7 @@ module AttachmentHelper
     image = attachment_image(obj, transformations)
     tag   = image_tag(image, options)
 
-    return attachment_show_link(obj, tag, options) if options[:show_link]
+    return attachment_show_link(obj, tag, **options) if options[:show_link]
 
     tag
   end
