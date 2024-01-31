@@ -9,8 +9,8 @@ module OmniauthCallbacksHelper
     current_user.authentications.create!(
       provider: omni['provider'],
       uid: omni['uid'],
-      token: token,
-      token_secret: token_secret
+      token:,
+      token_secret:
     )
     sign_in_and_redirect current_user
   end
@@ -21,7 +21,7 @@ module OmniauthCallbacksHelper
       sign_in_and_redirect employee
     else
       ldapname = login_fields(omni)[:ldapname]
-      flash[:alert] = t('error.login.ldapname_not_found', ldapname: ldapname)
+      flash[:alert] = t('error.login.ldapname_not_found', ldapname:)
       redirect_to new_employee_session_path
     end
   end

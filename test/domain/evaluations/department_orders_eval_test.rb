@@ -49,6 +49,7 @@ class Evaluations::DepartmentOrdersEvalTest < ActiveSupport::TestCase
 
   test 'adds completed supplement' do
     supplement = @evaluation.division_supplement(employees(:mark))
+
     assert_equal 2, supplement.length
     assert_equal :order_completed, supplement.first.first
   end

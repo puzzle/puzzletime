@@ -32,8 +32,8 @@ class Reports::RoleDistributionReport
       'Anstellung',
       'Wertschöpfung'
     ] + categories.map(&:second)
-    csv << ["Funktionsanteile per #{format_date_long(@date)}, #{format_business_year(@date)}"] +
-           Array.new(header.length - 1, '')
+    csv << (["Funktionsanteile per #{format_date_long(@date)}, #{format_business_year(@date)}"] +
+           Array.new(header.length - 1, ''))
     csv << header
   end
 
@@ -51,33 +51,33 @@ class Reports::RoleDistributionReport
 
   def add_department(csv, name)
     add_empty(csv)
-    csv << ["#{Department.model_name.human} #{name}"] + Array.new(categories.length + 2, '')
+    csv << (["#{Department.model_name.human} #{name}"] + Array.new(categories.length + 2, ''))
   end
 
   def add_employee(csv, employee)
-    csv << [
+    csv << ([
       employee.to_s,
       format_percent(employee.current_percent_value),
       format_percent(employee.added_value_percent)
-    ] + categories.map { |category_id, _category_name| format_percent(category_percent_for(employee, category_id)) }
+    ] + categories.map { |category_id, _category_name| format_percent(category_percent_for(employee, category_id)) })
     sum_up_employee(employee)
   end
 
   def add_department_totals(csv, id, name)
     totals = @totals[id]
     add_empty(csv)
-    csv << ["Total #{name}", format_percent(totals[:current_percent_value]),
-            format_percent(totals[:added_value_percent])] +
-           categories.map { |category_id, _category_name| format_percent(totals["category_#{category_id}".to_sym]) }
+    csv << (["Total #{name}", format_percent(totals[:current_percent_value]),
+             format_percent(totals[:added_value_percent])] +
+           categories.map { |category_id, _category_name| format_percent(totals[:"category_#{category_id}"]) })
   end
 
   def add_overall_totals(csv)
     add_empty(csv)
-    csv << ['', 'Anstellung', 'Wertschöpfung'] +
-           categories.map { |_category_id, category_name| category_name }
-    csv << ['Total FTE', format_fte(overall_total(:current_percent_value)),
-            format_fte(overall_total(:added_value_percent))] +
-           categories.map { |category_id, _category_name| format_fte(overall_total("category_#{category_id}".to_sym)) }
+    csv << (['', 'Anstellung', 'Wertschöpfung'] +
+           categories.map { |_category_id, category_name| category_name })
+    csv << (['Total FTE', format_fte(overall_total(:current_percent_value)),
+             format_fte(overall_total(:added_value_percent))] +
+           categories.map { |category_id, _category_name| format_fte(overall_total(:"category_#{category_id}")) })
   end
 
   def add_empty(csv)
@@ -94,7 +94,7 @@ class Reports::RoleDistributionReport
       totals[attr] = totals[attr].to_f + employee.send(attr).to_f
     end
     categories.each do |category_id, _category_name|
-      attr = "category_#{category_id}".to_sym
+      attr = :"category_#{category_id}"
       totals[attr] = totals[attr].to_f + category_percent_for(employee, category_id)
     end
   end

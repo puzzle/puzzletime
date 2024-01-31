@@ -15,6 +15,6 @@ require 'test_helper'
 
 class WorkplaceTest < ActiveSupport::TestCase
   test 'string representation matches name' do
-    assert_equal workplaces(:zurich).to_s, 'Zürich'
+    assert_equal 'Zürich', workplaces(:zurich).to_s
   end
 end

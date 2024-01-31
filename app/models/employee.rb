@@ -190,7 +190,7 @@ class Employee < ActiveRecord::Base
       joins('RIGHT JOIN work_items leaves ON leaves.path_ids[1] = work_items.id').
       joins('RIGHT JOIN worktimes ON worktimes.work_item_id = leaves.id').
       where(worktimes: { employee_id: id }).
-      where('work_items.id IS NOT NULL').
+      where.not(work_items: { id: nil }).
       list
   end
 
@@ -198,7 +198,7 @@ class Employee < ActiveRecord::Base
     WorkItem.select('DISTINCT work_items.*').
       joins('RIGHT JOIN worktimes ON worktimes.work_item_id = work_items.id').
       where(worktimes: { employee_id: id }).
-      where('work_items.id IS NOT NULL').
+      where.not(work_items: { id: nil }).
       list
   end
 
@@ -257,7 +257,7 @@ class Employee < ActiveRecord::Base
 
   def validate_periods_format(attr, periods)
     periods.each do |p|
-      unless p =~ /^\-?\d[dwmqy]?$/
+      unless p =~ /^-?\d[dwmqy]?$/
         errors.add(attr, 'ist nicht gültig')
       end
     end

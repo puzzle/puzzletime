@@ -34,6 +34,7 @@ class WorktimeHelperTest < ActionView::TestCase
 
   test 'worktime account' do
     worktime = Absencetime.new(account_id: absences(:vacation).id)
+
     assert_equal 'Ferien', worktime_account(worktime)
   end
 
@@ -43,11 +44,13 @@ class WorktimeHelperTest < ActionView::TestCase
 
   test 'worktime description with ticket' do
     worktime = Worktime.new(description: 'desc', ticket: '123')
+
     assert_equal '123 - desc', worktime_description(worktime)
   end
 
   test 'worktime description without ticket' do
     worktime = Worktime.new(description: 'desc')
+
     assert_equal 'desc', worktime_description(worktime)
   end
 
@@ -65,16 +68,19 @@ class WorktimeHelperTest < ActionView::TestCase
 
   test 'time range without' do
     worktime = Worktime.new(from_start_time: '8:00', to_end_time: '11:59')
+
     assert_equal '08:00 - 11:59', time_range(worktime)
   end
 
   test 'time range without any times' do
     worktime = Worktime.new
+
     assert_equal '&nbsp;', time_range(worktime)
   end
 
   test 'time range without end time' do
     worktime = Worktime.new(from_start_time: '8:00')
+
     assert_equal '08:00 - ', time_range(worktime)
   end
 end

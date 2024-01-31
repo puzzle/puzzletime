@@ -756,7 +756,6 @@ DEPENDENCIES
   validates_timeliness
   web-console
   webmock
-  zxing_cpp_no_cmake
 
 BUNDLED WITH
    2.4.6

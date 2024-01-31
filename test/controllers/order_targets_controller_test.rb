@@ -10,6 +10,7 @@ class OrderTargetsControllerTest < ActionController::TestCase
 
   test 'GET show renders targets' do
     get :show, params: { order_id: order.id }
+
     assert_template :show
     assert_equal order_targets(:puzzletime_time, :puzzletime_cost, :puzzletime_quality),
                  assigns(:order_targets)
@@ -18,6 +19,7 @@ class OrderTargetsControllerTest < ActionController::TestCase
   test 'GET show as normal user renders targets' do
     login_as(:long_time_john)
     get :show, params: { order_id: order.id }
+
     assert_template :show
     assert_equal 3, assigns(:order_targets).size
   end
@@ -42,7 +44,7 @@ class OrderTargetsControllerTest < ActionController::TestCase
     assert_equal 'green', order_targets(:puzzletime_cost).reload.rating
     assert_equal 'red', order_targets(:puzzletime_quality).reload.rating
     assert flash[:notice]
-    assert assigns(:errors).blank?
+    assert_predicate assigns(:errors), :blank?
   end
 
   test 'PATCH update with errors fails' do
@@ -60,7 +62,7 @@ class OrderTargetsControllerTest < ActionController::TestCase
           }
 
     assert_template :show
-    assert assigns(:errors).present?
+    assert_predicate assigns(:errors), :present?
   end
 
   test 'PATCH update as normal user fails' do

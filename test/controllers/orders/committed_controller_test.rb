@@ -12,9 +12,11 @@ class Orders::CommittedControllerTest < ActionController::TestCase
     order = orders(:puzzletime)
     order.update!(committed_at: Date.new(2015, 8, 31))
     get :edit, params: { order_id: order.id }
+
     assert_template '_form'
 
     selection = assigns(:dates)
+
     assert_equal 13, selection.size
     assert_equal Time.zone.today.end_of_month, selection.first.first
   end
@@ -44,6 +46,7 @@ class Orders::CommittedControllerTest < ActionController::TestCase
             order_id: order.id,
             order: { committed_at: eom }
           }
+
     assert_equal eom, order.reload.committed_at
   end
 
@@ -55,6 +58,7 @@ class Orders::CommittedControllerTest < ActionController::TestCase
             order_id: order.id,
             order: { committed_at: Date.new(2015, 10, 15) }
           }
+
     assert_equal Date.new(2015, 8, 31), order.reload.committed_at
     assert_template '_form'
     assert_match /nicht erlaubt/, assigns(:order).errors.full_messages.join

@@ -20,7 +20,7 @@ class Invoicing::SmallInvoice::InvoiceStoreTest < ActiveSupport::TestCase
     invoicing_key = subject.save([manual_position])
 
     assert_requested(add_invoice)
-    assert invoicing_key.present?
+    assert_predicate invoicing_key, :present?
   end
 
   test '#save edits existing invoices' do

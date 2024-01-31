@@ -132,7 +132,7 @@ module Apidocs
       swagger_doc.schema do
         key :type, :array
         items do
-          key :'$ref', ref
+          key :$ref, ref
         end
       end
     end

@@ -45,7 +45,7 @@ class Licenser
   end
 
   def preamble_text
-    @preamble_text ||= <<-END.strip_heredoc
+    @preamble_text ||= <<~END
       Copyright (c) 2006-#{Date.today.year}, #{@copyright_holder}. This file is part of
       #{@project_name} and licensed under the Affero General Public License version 3
       or later. See the COPYING file at the top-level directory or at
@@ -102,8 +102,8 @@ class Licenser
   end
 
   def remove_encoding(content, format)
-    if format.file_with_encoding? && content.strip =~ /\A#{ENCODING_PATTERN}/i
-      content.gsub!(/\A#{ENCODING_PATTERN}\s*/mi, '')
+    if format.file_with_encoding? && content.strip =~ /\A#{ENCODING_PATTERN}/io
+      content.gsub!(/\A#{ENCODING_PATTERN}\s*/mio, '')
     end
   end
 

@@ -26,7 +26,7 @@ Rails.application.configure do
     "127.0.0.1",
     "localhost",
     ".local",
-    ENV["RAILS_HOSTS"]
+    ENV.fetch("RAILS_HOSTS", nil)
   ]
 
   # Enable/disable caching. By default caching is disabled.

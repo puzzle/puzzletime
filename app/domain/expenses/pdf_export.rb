@@ -96,8 +96,8 @@ class Expenses::PdfExport
     end
   end
 
-  def add_single_model_data(key, **options)
-    add_text attribute(key, model_data[key]), **options
+  def add_single_model_data(key, **)
+    add_text(attribute(key, model_data[key]), **)
   end
 
   def add_text(text, **options)
@@ -133,10 +133,10 @@ class Expenses::PdfExport
         output[:status]              = expense.status_value
         output[:kind]                = expense.kind_value
         output[:order_id]            = format_order                      if expense.project?
-        output[:reviewer_id]         = format_employee(expense.reviewer) if (expense.approved? || expense.rejected?)
-        output[:reviewed_at]         = format_date(expense.reviewed_at)  if (expense.approved? || expense.rejected?)
+        output[:reviewer_id]         = format_employee(expense.reviewer) if expense.approved? || expense.rejected?
+        output[:reviewed_at]         = format_date(expense.reviewed_at)  if expense.approved? || expense.rejected?
         output[:reimbursement_month] = expense.reimbursement_month       if expense.approved?
-        output[:reason]              = expense.reason&.truncate(90)      if (expense.approved? || expense.rejected?)
+        output[:reason]              = expense.reason&.truncate(90)      if expense.approved? || expense.rejected?
         output[:id]                  = expense.id
         output[:amount]              = format_value
         output[:payment_date]        = format_date(expense.payment_date)
@@ -199,7 +199,7 @@ class Expenses::PdfExport
     pdf.bounds.height - (pdf.bounds.height - pdf.cursor)
   end
 
-  def t(label, **kwargs)
-    I18n.t("activerecord.attributes.expense.#{label}", **kwargs)
+  def t(label, **)
+    I18n.t("activerecord.attributes.expense.#{label}", **)
   end
 end

@@ -13,9 +13,9 @@ class Order::Report
     @params = params
   end
 
-  def page(&block)
+  def page(&)
     section = entries[((current_page - 1) * limit_value)...(current_page * limit_value)]
-    ([total] + section).each(&block) if section.present?
+    ([total] + section).each(&) if section.present?
   end
 
   def entries
@@ -73,7 +73,7 @@ class Order::Report
       joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)').
       where(orders: { id: orders.collect(&:id) }).
       pluck('orders.id, accounting_posts.id, accounting_posts.offered_total, ' \
-                         'accounting_posts.offered_rate, accounting_posts.offered_hours')
+            'accounting_posts.offered_rate, accounting_posts.offered_hours')
   end
 
   def accounting_posts_to_hash(result)
@@ -89,7 +89,7 @@ class Order::Report
       Worktime
       .joins(:work_item)
       .joins('INNER JOIN accounting_posts ON ' \
-                   'accounting_posts.work_item_id = ANY (work_items.path_ids)')
+             'accounting_posts.work_item_id = ANY (work_items.path_ids)')
       .where(accounting_posts: { id: accounting_posts.collect(&:keys).flatten })
 
     if params[:closed].blank?

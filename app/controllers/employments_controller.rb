@@ -9,13 +9,13 @@ class EmploymentsController < ManageController
   self.permitted_attrs = [
     :percent, :start_date, :end_date,
     :vacation_days_per_year, :comment,
-    employment_roles_employments_attributes: [
+    { employment_roles_employments_attributes: [
       :id,
       :employment_role_id,
       :percent,
       :employment_role_level_id,
       :_destroy
-    ]
+    ] }
   ]
 
   before_render_form :load_employment_roles

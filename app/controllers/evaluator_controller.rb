@@ -104,19 +104,17 @@ class EvaluatorController < ApplicationController
   end
 
   def set_management_evaluation
-    @evaluation = begin
-      suffix = case params[:evaluation].downcase
-      when 'clients'                   then Evaluations::ClientsEval.new
-      when 'employees'                 then Evaluations::EmployeesEval.new(params[:department_id])
-      when 'departments'               then Evaluations::DepartmentsEval.new
-      when 'clientworkitems'           then Evaluations::ClientWorkItemsEval.new(params[:category_id])
-      when 'employeeworkitems'         then Evaluations::EmployeeWorkItemsEval.new(params[:category_id])
-      when /employeesubworkitems(\d+)/ then Evaluations::EmployeeSubWorkItemsEval.new(params[:category_id], Regexp.last_match[1])
-      when 'departmentorders'          then Evaluations::DepartmentOrdersEval.new(params[:category_id])
-      when 'absences'                  then Evaluations::AbsencesEval.new(**search_conditions)
-      when 'employeeabsences'          then Evaluations::EmployeeAbsencesEval.new(params[:category_id], **search_conditions)
-      end
-    end
+    @evaluation = suffix = case params[:evaluation].downcase
+                           when 'clients'                   then Evaluations::ClientsEval.new
+                           when 'employees'                 then Evaluations::EmployeesEval.new(params[:department_id])
+                           when 'departments'               then Evaluations::DepartmentsEval.new
+                           when 'clientworkitems'           then Evaluations::ClientWorkItemsEval.new(params[:category_id])
+                           when 'employeeworkitems'         then Evaluations::EmployeeWorkItemsEval.new(params[:category_id])
+                           when /employeesubworkitems(\d+)/ then Evaluations::EmployeeSubWorkItemsEval.new(params[:category_id], Regexp.last_match[1])
+                           when 'departmentorders'          then Evaluations::DepartmentOrdersEval.new(params[:category_id])
+                           when 'absences'                  then Evaluations::AbsencesEval.new(**search_conditions)
+                           when 'employeeabsences'          then Evaluations::EmployeeAbsencesEval.new(params[:category_id], **search_conditions)
+                           end
   end
 
   def overview_template
@@ -201,7 +199,7 @@ class EvaluatorController < ApplicationController
   def search_conditions
     return {} unless params[:absence_id].present?
 
-    {absence_id: params[:absence_id]}
+    { absence_id: params[:absence_id] }
   end
 
   def authorize_action

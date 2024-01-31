@@ -19,8 +19,8 @@ module Invoicing
 
         def to_hash
           street, street2 = entry.supplement? ? [entry.supplement, entry.street] : [entry.street, nil]
-          with_id(street: street,
-                  street2: street2,
+          with_id(street:,
+                  street2:,
                   postcode: entry.zip_code,
                   city: entry.town,
                   country: entry.country)

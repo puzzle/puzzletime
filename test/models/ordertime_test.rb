@@ -35,6 +35,7 @@ class OrdertimeTest < ActiveSupport::TestCase
     work_items(:webauftritt).update!(closed: true)
     t.reload
     t.work_date = '2015-08-31'
+
     assert_not_valid t, :base
   end
 
@@ -47,6 +48,7 @@ class OrdertimeTest < ActiveSupport::TestCase
     work_items(:webauftritt).update!(closed: true)
     t.reload
     t.work_item = work_items(:hitobito_demo_app)
+
     assert_not_valid t, :base
   end
 
@@ -58,22 +60,24 @@ class OrdertimeTest < ActiveSupport::TestCase
                           report_type: 'absolute_day')
     work_items(:hitobito_demo_app).update!(closed: true)
     t.work_item = work_items(:hitobito_demo_app)
+
     assert_not_valid t, :base
   end
 
   test 'worktime times must be 00:00-23:59' do
     t = Ordertime.create(employee: employees(:pascal),
-      work_date:       '2015-10-10',
-      from_start_time: '00:00',
-      to_end_time:     '24:00',
-      work_item:       work_items(:webauftritt),
-      report_type:     'start_stop_day')
+                         work_date:       '2015-10-10',
+                         from_start_time: '00:00',
+                         to_end_time:     '24:00',
+                         work_item:       work_items(:webauftritt),
+                         report_type:     'start_stop_day')
 
-    refute t.valid?, t.errors.details[:to_end_time].join(', ')
+    refute_predicate t, :valid?, t.errors.details[:to_end_time].join(', ')
   end
 
   test '#invoice_sent_or_paid?' do
     t = Ordertime.new
+
     assert !t.invoice_sent_or_paid?
 
     [['draft', false],
@@ -81,7 +85,8 @@ class OrdertimeTest < ActiveSupport::TestCase
      ['paid', true],
      ['partially_paid', true],
      ['deleted', false]].each do |status, result|
-      t.invoice = Invoice.new(status: status)
+      t.invoice = Invoice.new(status:)
+
       assert_equal result, t.invoice_sent_or_paid?, "Status '#{status}', result should be #{result}"
     end
   end

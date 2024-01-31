@@ -99,13 +99,13 @@ class Period
       range, shift = parse_shortcut(shortcut)
       now = Time.zone.now
       case range
-      when 'd' then day_for(now.advance(days: shift), shortcut: shortcut)
-      when 'w' then week_for(now.advance(days: shift * 7), shortcut: shortcut)
-      when 'm' then month_for(now.advance(months: shift), shortcut: shortcut)
+      when 'd' then day_for(now.advance(days: shift), shortcut:)
+      when 'w' then week_for(now.advance(days: shift * 7), shortcut:)
+      when 'm' then month_for(now.advance(months: shift), shortcut:)
       when 'M' then next_n_months(shift, now)
-      when 'q' then quarter_for(now.advance(months: shift * 3), shortcut: shortcut)
+      when 'q' then quarter_for(now.advance(months: shift * 3), shortcut:)
       when 'Q' then parse_year_quarter(now.year, shift, shortcut)
-      when 'y' then year_for(now.advance(years: shift), shortcut: shortcut)
+      when 'y' then year_for(now.advance(years: shift), shortcut:)
       when 'b' then business_year_for(now.to_date)
       end
     end
@@ -115,7 +115,7 @@ class Period
         raise ArgumentError, 'Unsupported shift for quarter shortcut'
       end
 
-      quarter_for(Date.civil(year, shift * 3, 1), shortcut: shortcut)
+      quarter_for(Date.civil(year, shift * 3, 1), shortcut:)
     end
 
     # Build a period, even with illegal arguments
@@ -163,7 +163,7 @@ class Period
     end
 
     def quarter_label(date)
-      "#{date.month / 4 + 1}. Quartal"
+      "#{(date.month / 4) + 1}. Quartal"
     end
 
     def year_label(date)
@@ -221,12 +221,10 @@ class Period
     Period.new(new_start_date, new_end_date)
   end
 
-  def step(size = 1)
-    return @start_date.step(@end_date, size) unless block_given?
+  def step(size = 1, &)
+    return @start_date.step(@end_date, size) unless block
 
-    @start_date.step(@end_date, size) do |date|
-      yield date
-    end
+    @start_date.step(@end_date, size, &)
   end
 
   def step_months
@@ -275,7 +273,7 @@ class Period
   end
 
   def hash
-    37 * start_date.hash ^ 43 * end_date.hash
+    (37 * start_date.hash) ^ (43 * end_date.hash)
   end
 
   def to_s

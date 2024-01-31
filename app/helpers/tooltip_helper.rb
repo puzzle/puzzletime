@@ -4,11 +4,9 @@
 #  https://github.com/puzzle/puzzletime.
 
 module TooltipHelper
-  def with_tooltip(tooltip_text, options = {})
+  def with_tooltip(tooltip_text, options = {}, &)
     tag = options.delete(:tag) || :span
     options = options.merge(title: tooltip_text, data: { toggle: :tooltip })
-    content_tag(tag, options) do
-      yield
-    end
+    content_tag(tag, options, &)
   end
 end

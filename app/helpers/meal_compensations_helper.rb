@@ -35,7 +35,7 @@ module MealCompensationsHelper
     date = format_month(employee.committed_worktimes_at)
     id = "committed_worktimes_at_#{employee.id}"
 
-    content_tag(:span, icon << ' ' << date, id: id)
+    content_tag(:span, icon << ' ' << date, id:)
   end
 
   def reviewed_state_cell(employee, period)
@@ -43,7 +43,7 @@ module MealCompensationsHelper
     date = format_month(employee.reviewed_worktimes_at)
     id = "reviewed_worktimes_at_#{employee.id}"
 
-    content_tag(:span, icon << ' ' << date, id: id)
+    content_tag(:span, icon << ' ' << date, id:)
   end
 
   def completion_state_icon(state)

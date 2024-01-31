@@ -18,6 +18,7 @@ module Plannings
             employee_id: employees(:lucien).id,
             work_item_id: work_items(:hitobito_demo_app).id
           }
+
       assert_equal 200, response.status
       refute_empty assigns(:items)
       assert_equal accounting_posts(:hitobito_demo_app), assigns(:legend)
@@ -28,17 +29,18 @@ module Plannings
       date = Date.today.at_beginning_of_week + 1.week
       Planning.create!(work_item_id: work_items(:hitobito_demo_app).id,
                        employee_id: employees(:pascal).id,
-                       date: date,
+                       date:,
                        percent: 80)
       Planning.create!(work_item_id: work_items(:hitobito_demo_app).id,
                        employee_id: employees(:lucien).id,
-                       date: date,
+                       date:,
                        percent: 60)
       Planning.create!(work_item_id: work_items(:hitobito_demo_site).id,
                        employee_id: employees(:lucien).id,
                        date: date + 1.weeks,
                        percent: 20)
       get :show, params: { id: employees(:lucien).id }
+
       assert_equal accounting_posts(:hitobito_demo_app, :hitobito_demo_site),
                    assigns(:board).accounting_posts
       assert_equal [employees(:lucien)],
@@ -48,6 +50,7 @@ module Plannings
     test 'GET#show as regular user is allowed' do
       login_as(:pascal)
       get :show, params: { id: employees(:lucien).id }
+
       assert_equal 200, response.status
     end
 
@@ -79,6 +82,7 @@ module Plannings
                                 work_item_id: work_items(:puzzletime).id.to_s,
                                 date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
             }
+
       assert_equal 200, response.status
     end
 

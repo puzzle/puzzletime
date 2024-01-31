@@ -12,7 +12,7 @@
 #   attributes or default.
 module FormHelper
   # Renders a form using Crud::FormBuilder.
-  def plain_form(object, options = {}, &block)
+  def plain_form(object, options = {}, &)
     options[:html] ||= {}
     add_css_class(options[:html], 'form-horizontal')
     options[:html][:role] ||= 'form'
@@ -23,7 +23,7 @@ module FormHelper
       options[:data][:remote] = true
     end
 
-    form_for(object, options, &block)
+    form_for(object, options, &)
   end
 
   # Renders a standard form for the given entry and attributes.
@@ -35,7 +35,7 @@ module FormHelper
     plain_form(object, attrs.extract_options!) do |form|
       content = form.error_messages
 
-      content << if block_given?
+      content << if block
                    capture(form, &block)
                  else
                    form.labeled_input_fields(*attrs)
@@ -49,11 +49,11 @@ module FormHelper
   # Renders a crud form for the current entry with default_crud_attrs or the
   # given attribute array. An options hash may be given as the last argument.
   # If a block is given, a custom form may be rendered and attrs is ignored.
-  def crud_form(*attrs, &block)
+  def crud_form(*attrs, &)
     options = attrs.extract_options!
     attrs = default_crud_attrs - [:created_at, :updated_at] if attrs.blank?
     attrs << options
-    standard_form(path_args(entry), *attrs, &block)
+    standard_form(path_args(entry), *attrs, &)
   end
 
   def spinner

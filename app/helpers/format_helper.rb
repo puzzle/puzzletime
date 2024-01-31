@@ -41,7 +41,7 @@ module FormatHelper
   end
 
   def format_number(number, precision = 2)
-    number_with_precision(number, precision: precision, delimiter: '\'')
+    number_with_precision(number, precision:, delimiter: '\'')
   end
 
   def format_hour(hour, precision = 2)
@@ -56,7 +56,7 @@ module FormatHelper
   def format_day(date, full_weekday_name = false)
     if date
       format = full_weekday_name ? '%A, %e.%-m.' : '%a %e.%-m.'
-      I18n.l(date, format: format)
+      I18n.l(date, format:)
     end
   end
 
@@ -87,9 +87,9 @@ module FormatHelper
   # Renders a simple unordered list, which will
   # simply render all passed items or yield them
   # to your block.
-  def simple_list(items, ul_options = {}, &_block)
+  def simple_list(items, ul_options = {}, &)
     content_tag_nested(:ul, items, ul_options) do |item|
-      content_tag(:li, block_given? ? yield(item) : f(item))
+      content_tag(:li, _block ? yield(item) : f(item))
     end
   end
 
@@ -108,9 +108,9 @@ module FormatHelper
 
   # Renders an arbitrary content with the given label. Used for uniform
   # presentation.
-  def labeled(label, content = nil, &block)
-    content = capture(&block) if block_given?
-    render('shared/labeled', label: label, content: content)
+  def labeled(label, content = nil, &)
+    content = capture(&) if block
+    render('shared/labeled', label:, content:)
   end
 
   # Transform the given text into a form as used by labels or table headers.

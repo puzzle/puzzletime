@@ -13,9 +13,11 @@ class EditWorktimesAsOrderResponsibleTest < ActionDispatch::IntegrationTest
     click_button 'Speichern'
 
     visit('/ordertimes/10/edit')
+
     assert_selector('form[action="/ordertimes/10"]')
 
     click_button 'Speichern'
+
     assert_no_selector('.alert.alert-danger')
     assert_selector('.alert.alert-success')
   end

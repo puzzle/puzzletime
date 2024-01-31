@@ -55,7 +55,7 @@ module Crm
     end
 
     def find_people_by_email(email)
-      ::Highrise::Person.search(email: email)
+      ::Highrise::Person.search(email:)
     end
 
     def sync_all
@@ -147,7 +147,7 @@ module Crm
     end
 
     def sync_crm_entities(entities)
-      entities.where('crm_key IS NOT NULL').find_each do |entity|
+      entities.where.not(crm_key: nil).find_each do |entity|
         begin
           yield entity
         rescue ActiveResource::ResourceNotFound

@@ -7,7 +7,7 @@ class MoveProbationPeriodEndDateToEmployee < ActiveRecord::Migration[5.1]
   def change
     add_column :employees, :probation_period_end_date, :date
 
-    Employment.where('probation_period_end_date IS NOT NULL').includes(:employee).find_each do |e|
+    Employment.where.not(probation_period_end_date: nil).includes(:employee).find_each do |e|
       e.employee.update_column(:probation_period_end_date, e.probation_period_end_date)
     end
 

@@ -12,6 +12,7 @@ class WorkloadReportControllerTest < ActionController::TestCase
     travel_to Time.now.at_noon do
       get :index
       period = assigns(:report).period
+
       assert_equal(Date.today.prev_month.beginning_of_month, period.start_date)
       assert_equal(Date.today.prev_month.end_of_month, period.end_date)
     end
@@ -19,12 +20,14 @@ class WorkloadReportControllerTest < ActionController::TestCase
 
   test 'GET index without department has empty report' do
     get :index
+
     assert_equal false, assigns(:report).filters_defined?
   end
 
   test 'GET index with department and period filter params sets correct report attributes' do
     set_period start_date: '1.1.2006', end_date: '31.12.2006'
     get :index, params: { department_id: departments(:devtwo).id }
+
     assert_equal true, assigns(:report).filters_defined?
     assert_equal Date.parse('1.1.2006'), assigns(:report).period.start_date
     assert_equal Date.parse('31.12.2006'), assigns(:report).period.end_date

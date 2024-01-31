@@ -16,6 +16,7 @@ class CreateOrdertimeTest < ActionDispatch::IntegrationTest
 
       assert_equal '/ordertimes', current_path
       time = Worktime.order(:id).last
+
       assert_equal work_items(:hitobito_demo_site), time.account
     end
   end
@@ -30,22 +31,27 @@ class CreateOrdertimeTest < ActionDispatch::IntegrationTest
 
       assert page.has_selector?('#error_explanation')
       item = work_items(:hitobito_demo_site)
+
       assert_equal item.id.to_s, find('#ordertime_account_id', visible: false).value
       element = find('#ordertime_account_id + .selectize-control')
+
       assert_equal item.label_verbose, element.find('.selectize-input div').text
     end
   end
 
   test 'create ordertime select accounting_post with billable=true checks billable checkbox' do
     find('#ordertime_billable').set(false)
+
     assert_not find('#ordertime_billable').checked?
     selectize('ordertime_account_id', 'Webauftritt', term: 'web')
-    assert find('#ordertime_billable').checked?
+
+    assert_predicate find('#ordertime_billable'), :checked?
   end
 
   test 'create ordertime select accounting_post with billable=false unchecks billable checkbox' do
-    assert find('#ordertime_billable').checked?
+    assert_predicate find('#ordertime_billable'), :checked?
     selectize('ordertime_account_id', 'PuzzleTime', term: 'time')
+
     assert_not find('#ordertime_billable').checked?
   end
 

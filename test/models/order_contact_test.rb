@@ -20,8 +20,8 @@ class OrderContactTest < ActiveSupport::TestCase
 
   test 'list scope is ordered by contact' do
     order = Fabricate(:order)
-    m = OrderContact.create!(order: order, contact: Fabricate(:contact, lastname: 'Miller', client: order.client))
-    a = OrderContact.create!(order: order, contact: Fabricate(:contact, lastname: 'Aber', client: order.client))
+    m = OrderContact.create!(order:, contact: Fabricate(:contact, lastname: 'Miller', client: order.client))
+    a = OrderContact.create!(order:, contact: Fabricate(:contact, lastname: 'Aber', client: order.client))
 
     expected = [a, m].map(&:attributes)
     received = order.order_contacts.list.map(&:attributes)

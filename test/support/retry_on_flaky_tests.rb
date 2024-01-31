@@ -35,7 +35,7 @@ module RetryOnFlakyTests
         result.failures.map do |failure|
           failure.error.to_s
         end.any? do |failure_msg|
-          error_classes.first {|error_class| failure_msg =~ error_class.name }
+          error_classes.first { |error_class| failure_msg =~ error_class.name }
         end
       end
     end

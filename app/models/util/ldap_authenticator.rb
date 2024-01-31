@@ -28,7 +28,7 @@ class LdapAuthenticator
     connection.bind_as(
       base: base_dn,
       filter: "uid=#{username}",
-      password: password
+      password:
     )
   end
 
@@ -92,7 +92,7 @@ class LdapAuthenticator
   def tls_options
     {
       verify_mode: OpenSSL::SSL::VERIFY_PEER,
-      cert_store: cert_store
+      cert_store:
     }
   end
 

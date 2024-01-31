@@ -26,7 +26,7 @@
 class Ordertime < Worktime
   self.account_label = 'Position'
 
-  alias_method :account, :work_item
+  alias account work_item
   alias_attribute :account_id, :work_item_id
 
   validates_by_schema

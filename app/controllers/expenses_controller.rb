@@ -12,10 +12,6 @@ class ExpensesController < ManageController
 
   before_save :attach_resized_receipt
 
-  def new
-    entry.attributes = template_attributes
-  end
-
   def index
     if parent
       respond_to do |format|
@@ -25,6 +21,10 @@ class ExpensesController < ManageController
     else
       redirect_to('/expenses_reviews')
     end
+  end
+
+  def new
+    entry.attributes = template_attributes
   end
 
   def update

@@ -3,11 +3,11 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-#:nodoc:
-REGEXP_ROWS = /<tr.+?<\/tr>/m #:nodoc:
-REGEXP_HEADERS = /<th.+?<\/th>/m #:nodoc:
-REGEXP_SORT_HEADERS = /<th.*?><a .*?sort_dir=asc.*?>.*?<\/a><\/th>/m #:nodoc:
-REGEXP_ACTION_CELL = /<td class=\"action\"><a .*?href.+?<\/a><\/td>/m #:nodoc:
+# :nodoc:
+REGEXP_ROWS = /<tr.+?<\/tr>/m # :nodoc:
+REGEXP_HEADERS = /<th.+?<\/th>/m # :nodoc:
+REGEXP_SORT_HEADERS = /<th.*?><a .*?sort_dir=asc.*?>.*?<\/a><\/th>/m # :nodoc:
+REGEXP_ACTION_CELL = /<td class="action"><a .*?href.+?<\/a><\/td>/m # :nodoc:
 
 # A simple test helper to prepare the test database with a CrudTestModel model.
 # This helper is used to test the CrudController and various helpers
@@ -144,15 +144,15 @@ module CrudTestHelper
       name: c,
       children: 10 - index,
       rating: "#{index}.#{index}".to_f,
-      income: 10_000_000 * index + 0.1111 * index,
-      birthdate: "#{1900 + 10 * index}-#{index}-#{index}",
+      income: (10_000_000 * index) + (0.1111 * index),
+      birthdate: "#{1900 + (10 * index)}-#{index}-#{index}",
       # store entire date to avoid time zone issues
       gets_up_at: Time.utc(2000, 1, 1, index, index),
-      last_seen: "#{2000 + 10 * index}-#{index}-#{index} " \
-                    "1#{index}:2#{index}",
+      last_seen: "#{2000 + (10 * index)}-#{index}-#{index} " \
+                 "1#{index}:2#{index}",
       human: index.even?,
       remarks: "#{c} #{str(index + 1)} #{str(index + 2)}\n" *
-                  (index % 3 + 1)
+                  ((index % 3) + 1)
     )
     m.companion = companion
     m.save!

@@ -6,7 +6,7 @@
 module Plannings
   class CustomListsController < CrudController
     self.nesting = [:plannings]
-    self.permitted_attrs = [:name, :item_type, item_ids: []]
+    self.permitted_attrs = [:name, :item_type, { item_ids: [] }]
     self.search_columns = [:name]
 
     before_render_show :set_items

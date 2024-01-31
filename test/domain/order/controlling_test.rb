@@ -84,7 +84,7 @@ class Order::ControllingTest < ActiveSupport::TestCase
   end
 
   test '#efforts_per_week returns empty hash if no efforts are available' do
-    assert_equal({}, controlling.efforts_per_week)
+    assert_empty(controlling.efforts_per_week)
   end
 
   test '#efforts_per_week_cumulated returns cumulated efforts' do
@@ -134,7 +134,7 @@ class Order::ControllingTest < ActiveSupport::TestCase
   end
 
   test '#efforts_per_week_cumulated returns empty hash if no efforts are available' do
-    assert_equal({}, controlling.efforts_per_week_cumulated)
+    assert_empty(controlling.efforts_per_week_cumulated)
   end
 
   private
@@ -148,16 +148,16 @@ class Order::ControllingTest < ActiveSupport::TestCase
               work_item: accounting_post.work_item,
               employee: Employee.find(Employee.pluck(:id).sample),
               work_date: date,
-              hours: hours,
-              billable: billable)
+              hours:,
+              billable:)
   end
 
   def create_planning(accounting_post, date, percent, definitive)
     Fabricate(:planning,
               work_item: accounting_post.work_item,
               employee: employees(:various_pedro),
-              date: date,
-              percent: percent,
-              definitive: definitive)
+              date:,
+              percent:,
+              definitive:)
   end
 end

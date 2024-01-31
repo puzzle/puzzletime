@@ -18,6 +18,7 @@ class StatusControllerTest < ActionController::TestCase
 
   def endpoint_test(endpoint, status = :success, matcher = /ok/)
     get endpoint
+
     assert_response status
     assert_match matcher, response.body.to_s
   end

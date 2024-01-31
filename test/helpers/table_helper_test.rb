@@ -39,16 +39,18 @@ class TableHelperTest < ActionView::TestCase
 
   test 'empty table should render message' do
     result = plain_table_or_message([]) {}
-    assert result.html_safe?
-    assert_match /\<div class=["']table["']\>.*\<\/div\>/, result
+
+    assert_predicate result, :html_safe?
+    assert_match /<div class=["']table["']>.*<\/div>/, result
   end
 
   test 'non empty table should render table' do
     result = plain_table_or_message(%w(foo bar)) do |t|
       t.attrs :size, :upcase
     end
-    assert result.html_safe?
-    assert_match(/^\<div class="unindented"><table.*\<\/table\><\/div>$/, result)
+
+    assert_predicate result, :html_safe?
+    assert_match(/^<div class="unindented"><table.*<\/table><\/div>$/, result)
   end
 
   test 'table with attrs' do
@@ -59,7 +61,8 @@ class TableHelperTest < ActionView::TestCase
       t.attrs :size, :upcase
     end
     actual = plain_table(%w(foo bar), :size, :upcase)
-    assert actual.html_safe?
+
+    assert_predicate actual, :html_safe?
     assert_equal expected, actual
   end
 
@@ -128,6 +131,7 @@ class TableHelperTest < ActionView::TestCase
     end
 
     sort_header_desc = %r{<th><a .*?sort_dir=desc.*?>Children</a> &darr;</th>}
+
     assert_count 7, REGEXP_ROWS, table
     assert_count 13, REGEXP_SORT_HEADERS, table
     assert_count 1, sort_header_desc, table
@@ -145,6 +149,7 @@ class TableHelperTest < ActionView::TestCase
     end
 
     sort_header_asc = %r{<th><a .*?sort_dir=asc.*?>Children</a> &uarr;</th>}
+
     assert_count 7, REGEXP_ROWS, table
     assert_count 13, REGEXP_SORT_HEADERS, table
     assert_count 1, sort_header_asc, table
@@ -162,6 +167,7 @@ class TableHelperTest < ActionView::TestCase
     end
 
     sort_header_desc = %r{<th><a .*?sort_dir=desc.*?>Chatty</a> &darr;</th>}
+
     assert_count 7, REGEXP_ROWS, table
     assert_count 2, REGEXP_SORT_HEADERS, table
     assert_count 1, sort_header_desc, table

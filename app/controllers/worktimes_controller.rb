@@ -45,7 +45,7 @@ class WorktimesController < CrudController
   def create(options = {})
     if params[:redirect_to_self]
       work_date = params[:ordertime][:work_date]
-      options[:location] = new_ordertime_path(work_date: work_date)
+      options[:location] = new_ordertime_path(work_date:)
     end
 
     super(options)

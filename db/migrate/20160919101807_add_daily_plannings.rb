@@ -44,7 +44,7 @@ class AddDailyPlannings < ActiveRecord::Migration[5.1]
     while has_rows
       query = old_table
               .project(Arel.sql('*'))
-              .where(old_table[:end_week].gteq(IGNORE_BEFORE.cwyear * 100 + IGNORE_BEFORE.cweek)
+              .where(old_table[:end_week].gteq((IGNORE_BEFORE.cwyear * 100) + IGNORE_BEFORE.cweek)
                  .or(old_table[:end_week].eq(nil)))
               .take(BATCH_SIZE)
               .skip(offset)
@@ -63,8 +63,8 @@ class AddDailyPlannings < ActiveRecord::Migration[5.1]
         if percent > 0.0
           create_planning(employee_id: row['employee_id'],
                           work_item_id: row['work_item_id'],
-                          date: date,
-                          percent: percent,
+                          date:,
+                          percent:,
                           definitive: row['definitive'] == 't')
         end
       end

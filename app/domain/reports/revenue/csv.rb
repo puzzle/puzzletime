@@ -137,6 +137,6 @@ class Reports::Revenue::Csv
   end
 
   def format_number(number, precision = nil)
-    ActionController::Base.helpers.number_with_precision(number, precision: precision, delimiter: nil, separator: '.')
+    ActionController::Base.helpers.number_with_precision(number, precision:, delimiter: nil, separator: '.')
   end
 end

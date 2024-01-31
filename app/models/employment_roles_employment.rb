@@ -15,7 +15,7 @@
 #
 
 class EmploymentRolesEmployment < ActiveRecord::Base
-  has_paper_trail(meta: { employee_id: ->(e){ e.employment.employee_id } }, skip: [:id])
+  has_paper_trail(meta: { employee_id: ->(e) { e.employment.employee_id } }, skip: [:id])
 
   belongs_to :employment
   belongs_to :employment_role
@@ -31,7 +31,7 @@ class EmploymentRolesEmployment < ActiveRecord::Base
               ''
             end
 
-    "#{employment_role}#{level} #{sprintf('%g',percent)}%"
+    "#{employment_role}#{level} #{format('%g', percent)}%"
   end
 
   private

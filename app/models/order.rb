@@ -72,10 +72,10 @@ class Order < ActiveRecord::Base
 
   ### CALLBACKS
 
-  before_update :set_closed_at
-  before_validation :set_self_in_nested
   after_initialize :set_default_status_id
+  before_validation :set_self_in_nested
   after_create :create_order_targets
+  before_update :set_closed_at
 
   scope :minimal, lambda {
     select('orders.id, orders.status_id, orders.work_item_id, work_items.name, work_items.path_names, work_items.path_shortnames')
@@ -86,7 +86,7 @@ class Order < ActiveRecord::Base
   class << self
     def order_by_target_scope(target_scope_id, desc = false)
       joins('LEFT JOIN order_targets sort_target ' \
-              'ON sort_target.order_id = orders.id ').
+            'ON sort_target.order_id = orders.id ').
         where('sort_target.target_scope_id = ? OR sort_target.id IS NULL', target_scope_id).
         reorder("sort_target.rating #{desc ? 'asc' : 'desc'}")
     end

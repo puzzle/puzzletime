@@ -37,8 +37,8 @@ class AccountingPost < ActiveRecord::Base
   ### CALLBACKS
 
   before_validation :derive_offered_fields
-  before_update :remember_old_work_item_id
   after_create :move_order_accounting_post_work_item
+  before_update :remember_old_work_item_id
   after_update :handle_changed_work_item
 
   ### VALIDATIONS
@@ -139,9 +139,9 @@ class AccountingPost < ActiveRecord::Base
     if post
       begin
         post.work_item = WorkItem.create(name: order.work_item.name,
-                                      shortname: order.work_item.shortname,
-                                      parent_id: order.work_item.id,
-                                      closed: post.closed? || order.status.closed?)
+                                         shortname: order.work_item.shortname,
+                                         parent_id: order.work_item.id,
+                                         closed: post.closed? || order.status.closed?)
         post.save!
       rescue ActiveRecord::RecordInvalid => error
         validation_messages = post.errors.full_messages.join(', ')

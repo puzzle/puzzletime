@@ -22,11 +22,11 @@ module DryCrud::Table
     end
 
     # Renders a sort link header, otherwise similar to :attr.
-    def sortable_attr(a, header = nil, html_options = {}, &block)
+    def sortable_attr(a, header = nil, html_options = {}, &)
       if template.sortable?(a)
-        attr(a, sort_header(a, header), html_options, &block)
+        attr_reader(a, sort_header(a, header), html_options, &)
       else
-        attr(a, header, html_options, &block)
+        attr_reader(a, header, html_options, &)
       end
     end
   end

@@ -154,9 +154,9 @@ class Employment < ActiveRecord::Base
     end
     if end_date
       conditions[0] += ' AND (' \
-        '(start_date <= ? AND (end_date >= ?' + (new_record? ? '' : ' OR end_date IS NULL') + ') ) OR ' \
-        '(start_date <= ? AND (end_date >= ?' + (new_record? ? '' : ' OR end_date IS NULL') + ') ) OR ' \
-        '(start_date >= ? AND end_date <= ? ))'
+                       '(start_date <= ? AND (end_date >= ?' + (new_record? ? '' : ' OR end_date IS NULL') + ') ) OR ' \
+                                                                                                             '(start_date <= ? AND (end_date >= ?' + (new_record? ? '' : ' OR end_date IS NULL') + ') ) OR ' \
+                                                                                                                                                                                                   '(start_date >= ? AND end_date <= ? ))'
       conditions.push(start_date, start_date, end_date, end_date, start_date, end_date)
     else
       conditions[0] += ' AND (start_date = ? OR (start_date <= ? AND end_date >= ?))'

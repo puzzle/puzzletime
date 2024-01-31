@@ -19,6 +19,7 @@ class Employees::LogControllerTest < ActionController::TestCase
 
   test 'renders empty log' do
     get :index, params: { id: pedro.id }
+
     assert_match(/Keine Einträge gefunden/, response.body)
   end
 
@@ -28,6 +29,7 @@ class Employees::LogControllerTest < ActionController::TestCase
     pedro.update(committed_worktimes_at: Date.new(2000, 01, 31))
     pedro.update(eval_periods: ['5w']) # should not appear in log
     get :index, params: { id: pedro.id }
+
     assert_select('.log tbody tr', count: 3)
     assert_select('.log tbody tr:nth-child(1) td:nth-child(2)', text: "Der Member #2 wurde bearbeitet.\n" \
                                                                       'Letzte freigegebene Periode des Members wurde auf «Januar 2000» gesetzt.')

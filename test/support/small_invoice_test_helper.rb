@@ -49,8 +49,8 @@ module SmallInvoiceTestHelper
     stub_api_request(:put, name, **args)
   end
 
-  def stub_delete_entity(name, **kwargs)
-    stub_api_request(:delete, name, **kwargs)
+  def stub_delete_entity(name, **)
+    stub_api_request(:delete, name, **)
   end
 
   def path(name, **kwargs)
@@ -68,8 +68,8 @@ module SmallInvoiceTestHelper
     end
   end
 
-  def path_url(name, **kwargs)
-    path(name, **kwargs).join('/')
+  def path_url(name, **)
+    path(name, **).join('/')
   end
 
   private
@@ -84,7 +84,7 @@ module SmallInvoiceTestHelper
     response ||= key ? single_response(name) : response(name)
 
     stub = stub_request(method, url)
-    stub = stub.with(body: body) if body
+    stub = stub.with(body:) if body
     stub = stub.to_return(status: 200, body: response) if response
     stub
   end

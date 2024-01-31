@@ -8,7 +8,7 @@ module JavascriptHelper
     options[:id] ||= "#{element}_create_link"
     options[:data] ||= {}
     options[:data].merge!(modal: '#modal',
-                          title: title,
+                          title:,
                           element: "##{element}",
                           remote: true,
                           type: :html,

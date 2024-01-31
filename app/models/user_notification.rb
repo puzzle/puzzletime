@@ -24,7 +24,7 @@ class UserNotification < ActiveRecord::Base
   scope :list, -> { order('date_from DESC, date_to DESC') }
 
   class << self
-    def list_during(period = nil, current_user = nil)
+    def list_during(period = nil, _current_user = nil)
       # only show notifications for the current week
       return if period
 

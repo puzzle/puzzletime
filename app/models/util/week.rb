@@ -35,7 +35,7 @@ class Week
   end
 
   def to_integer
-    @year * 100 + @week
+    (@year * 100) + @week
   end
 
   def valid?

@@ -10,7 +10,6 @@ class ShowOrder < ActionDispatch::IntegrationTest
   setup :login
   teardown :crm_stop
 
-
   ADDITIONAL_CRM_LABEL_TEXT = 'Weitere Highrise IDs'
 
   test 'show additional crm orders' do
@@ -56,6 +55,6 @@ class ShowOrder < ActionDispatch::IntegrationTest
   end
 
   def additional_crm_links
-    additional_crm_links_label.find(:xpath, "following-sibling::dd//ul", visible: false)
+    additional_crm_links_label.find(:xpath, 'following-sibling::dd//ul', visible: false)
   end
 end

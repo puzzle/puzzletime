@@ -15,19 +15,19 @@ class Evaluations::AbsencesEvalTest < ActiveSupport::TestCase
   end
 
   def test_absences
-    assert @evaluation.absences?
+    assert_predicate @evaluation, :absences?
     assert !@evaluation.for?(employees(:pascal))
     assert @evaluation.total_details
 
     divisions = @evaluation.divisions
+
     assert_equal 3, divisions.size
 
     assert_sum_times 0, 8, 8, 8, employees(:mark)
     assert_sum_times 0, 0, 12, 12, employees(:lucien)
     assert_sum_times 0, 4, 17, 17, employees(:pascal)
 
-    assert_equal({},
-                 @evaluation.sum_times_grouped(@period_day))
+    assert_empty(@evaluation.sum_times_grouped(@period_day))
     assert_equal({ employees(:mark).id => 8.0, employees(:pascal).id => 4.0 },
                  @evaluation.sum_times_grouped(@period_week))
     assert_equal({ employees(:mark).id => 8.0, employees(:lucien).id => 12.0, employees(:pascal).id => 17.0 },

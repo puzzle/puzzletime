@@ -24,6 +24,7 @@ class Employees::NewSessionTest < ActionDispatch::IntegrationTest
     Settings.auth.omniauth.saml.active = false
 
     visit new_employee_session_path
+
     assert_selector 'a.auto-login', text: 'Mit Puzzle SSO anmelden'
   end
 
@@ -33,6 +34,7 @@ class Employees::NewSessionTest < ActionDispatch::IntegrationTest
     Settings.auth.omniauth.saml.active = false
 
     visit new_employee_session_path
+
     assert_selector 'a', text: 'Mit Puzzle SSO anmelden'
     assert_no_selector 'a.auto-login', text: 'Mit Puzzle SSO anmelden'
   end
@@ -43,7 +45,8 @@ class Employees::NewSessionTest < ActionDispatch::IntegrationTest
     Settings.auth.omniauth.saml.active = false
 
     visit new_employee_session_path
-    assert page.text(:all).include? "$('.auto-login').click()"
+
+    assert_includes page.text(:all), "$('.auto-login').click()"
   end
 
   test 'page excludes auto-login javascript if uneligible' do
@@ -52,6 +55,7 @@ class Employees::NewSessionTest < ActionDispatch::IntegrationTest
     Settings.auth.omniauth.saml.active = false
 
     visit new_employee_session_path
+
     assert page.text(:all).exclude? "$('.auto-login').click()"
   end
 end

@@ -18,6 +18,7 @@ module Plannings
 
       assert_equal 20, board.work_days
       items = board.items(employees(:lucien).id, work_items(:hitobito_demo_app).id)
+
       assert_equal 20, items.size
       assert items.one? { |i| i.planning }
       assert_equal p2, items[5].planning
@@ -26,6 +27,7 @@ module Plannings
     test 'sets included row' do
       board = Plannings::OrderBoard.new(order, period)
       board.for_rows([[employees(:lucien).id, work_items(:hitobito_demo_app).id]])
+
       assert_equal [[employees(:lucien).id, work_items(:hitobito_demo_app).id]].to_set,
                    board.rows.keys.to_set
     end
@@ -47,6 +49,7 @@ module Plannings
 
       items = board.items(employees(:lucien).id, work_items(:hitobito_demo_app).id)
       items.one? { |i| !i.nil? }
+
       assert_equal [a2], items[6].absencetimes
     end
 
@@ -68,13 +71,16 @@ module Plannings
                                report_type: 'absolute_day')
 
       board = Plannings::OrderBoard.new(order, period)
-      assert board.items(employees(:lucien).id, work_items(:hitobito_demo_app).id).nil?
+
+      assert_nil board.items(employees(:lucien).id, work_items(:hitobito_demo_app).id)
 
       board = Plannings::OrderBoard.new(order, period)
       board.for_rows([[employees(:lucien).id, work_items(:hitobito_demo_app).id]])
+
       assert_equal [[employees(:lucien).id, work_items(:hitobito_demo_app).id]].to_set,
                    board.rows.keys.to_set
       items = board.items(employees(:lucien).id, work_items(:hitobito_demo_app).id)
+
       assert_equal [a1], items[5].absencetimes
       assert_equal [a2, a3].to_set, items[6].absencetimes.to_set
     end
@@ -84,7 +90,8 @@ module Plannings
 
       board = Plannings::OrderBoard.new(order, period)
       board.for_rows([])
-      assert_equal({}, board.rows)
+
+      assert_empty(board.rows)
     end
 
     test '#weekly_planned_percents are calculated for entire view, even if included rows are limited' do
@@ -93,7 +100,7 @@ module Plannings
       board = Plannings::OrderBoard.new(order, period)
       board.for_rows([[employees(:lucien).id, work_items(:hitobito_demo_app).id]])
 
-      assert_equal 40.0, board.weekly_planned_percent(date)
+      assert_in_delta(40.0, board.weekly_planned_percent(date))
     end
 
     test '#total_row_planned_hours includes plannings from all times' do
@@ -123,7 +130,7 @@ module Plannings
       board = Plannings::OrderBoard.new(order, period)
       board.for_rows([[employees(:lucien).id, work_items(:hitobito_demo_app).id]])
 
-      assert_equal 290.0, board.total_plannable_hours
+      assert_in_delta(290.0, board.total_plannable_hours)
     end
 
     test '#total_planned_hours are calculated for entire timespan, even if included rows are limited' do
@@ -152,11 +159,11 @@ module Plannings
     def create_plannings
       p1 = Planning.create!(work_item_id: work_items(:hitobito_demo_app).id,
                             employee_id: employees(:pascal).id,
-                            date: date,
+                            date:,
                             percent: 100)
       p2 = Planning.create!(work_item_id: work_items(:hitobito_demo_app).id,
                             employee_id: employees(:lucien).id,
-                            date: date,
+                            date:,
                             percent: 100)
       p3 = Planning.create!(work_item_id: work_items(:hitobito_demo_site).id,
                             employee_id: employees(:lucien).id,

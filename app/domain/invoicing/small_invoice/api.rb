@@ -43,7 +43,7 @@ module Invoicing
       end
 
       def get_raw(path, auth: true, **params)
-        get_request(path, auth: auth, **params).body
+        get_request(path, auth:, **params).body
       end
 
       private
@@ -68,13 +68,13 @@ module Invoicing
           scope: 'invoice contact'
         )
 
-        response.fetch_values('access_token', 'expires_in').yield_self do |token, expires_in|
+        response.fetch_values('access_token', 'expires_in').then do |token, expires_in|
           [token, timestamp + expires_in]
         end
       end
 
       def get_json(path, auth: true, **params)
-        response = get_request(path, auth: auth, **params)
+        response = get_request(path, auth:, **params)
         handle_json_response(response)
       end
 
@@ -87,7 +87,7 @@ module Invoicing
       end
 
       def post_json(path, auth: true, **payload)
-        response = post_request(path, payload.to_json, auth: auth)
+        response = post_request(path, payload.to_json, auth:)
         handle_json_response(response)
       end
 
@@ -102,7 +102,7 @@ module Invoicing
       end
 
       def put_json(path, auth: true, **payload)
-        response = put_request(path, payload.to_json, auth: auth)
+        response = put_request(path, payload.to_json, auth:)
         handle_json_response(response)
       end
 

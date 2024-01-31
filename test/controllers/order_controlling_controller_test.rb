@@ -11,6 +11,7 @@ class OrderControllingControllerTest < ActionController::TestCase
   test 'GET show redirects to login if not authenticated' do
     logout
     get :show, params: { order_id: order.id }
+
     assert_redirected_to(%r/employees\/sign_in/)
   end
 
@@ -22,9 +23,10 @@ class OrderControllingControllerTest < ActionController::TestCase
 
   test 'GET show assigns controlling data' do
     get :show, params: { order_id: order.id }
+
     assert_response :success
-    assert assigns(:efforts_per_week_cumulated).is_a?(Hash)
-    assert assigns(:offered_total).is_a?(BigDecimal)
+    assert_kind_of Hash, assigns(:efforts_per_week_cumulated)
+    assert_kind_of BigDecimal, assigns(:offered_total)
   end
 
   private

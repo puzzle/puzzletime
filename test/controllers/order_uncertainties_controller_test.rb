@@ -9,6 +9,7 @@ class OrderUncertaintiesControllerTest < ActionController::TestCase
   test 'GET index as member' do
     login_as :pascal
     get :index, params: { order_id: order.id }
+
     assert_template :index
     assert_equal 1, assigns(:risks).count
     assert_equal 1, assigns(:chances).count
@@ -17,6 +18,7 @@ class OrderUncertaintiesControllerTest < ActionController::TestCase
   test 'GET index as responsible' do
     login_as :lucien
     get :index, params: { order_id: order.id }
+
     assert_template :index
     assert_equal 1, assigns(:risks).count
     assert_equal 1, assigns(:chances).count
@@ -25,6 +27,7 @@ class OrderUncertaintiesControllerTest < ActionController::TestCase
   test 'GET index as management' do
     login_as :mark
     get :index, params: { order_id: order.id }
+
     assert_template :index
     assert_equal 1, assigns(:risks).count
     assert_equal 1, assigns(:chances).count
@@ -43,6 +46,7 @@ class OrderUncertaintiesControllerTest < ActionController::TestCase
     assert_difference 'order.order_risks.count' do
       post :create, params: { order_id: order.id, type: 'OrderRisk',
                               order_risk: test_entry_attrs }
+
       assert 201, response.status
     end
     assert_equal 'Nuclear worst case', OrderRisk.last.name
@@ -53,6 +57,7 @@ class OrderUncertaintiesControllerTest < ActionController::TestCase
     assert_difference 'order.order_risks.count' do
       post :create, params: { order_id: order.id, type: 'OrderRisk',
                               order_risk: test_entry_attrs }
+
       assert 201, response.status
     end
     assert_equal 'Nuclear worst case', OrderRisk.last.name

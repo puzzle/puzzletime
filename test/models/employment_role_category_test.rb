@@ -15,6 +15,6 @@ require 'test_helper'
 
 class EmploymentRoleCategoryTest < ActiveSupport::TestCase
   test 'string representation matches name' do
-    assert_equal employment_role_categories(:management).to_s, 'Management'
+    assert_equal 'Management', employment_role_categories(:management).to_s
   end
 end

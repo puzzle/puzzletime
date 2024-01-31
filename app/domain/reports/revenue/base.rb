@@ -100,7 +100,7 @@ module Reports::Revenue
         entries.sort_by { |e| total_ordertime_hours_per_entry(e) }
       when 'average'
         entries.sort_by { |e| average_ordertime_hours_per_entry(e) }
-      when /^\d{4}\-\d{2}\-\d{2}$/
+      when /^\d{4}-\d{2}-\d{2}$/
         sorted_month(entries)
       else
         entries

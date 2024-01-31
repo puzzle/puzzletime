@@ -4,7 +4,7 @@
 #  https://github.com/puzzle/puzzletime.
 
 # Controller for the dummy model.
-class CrudTestModelsController < CrudController #:nodoc:
+class CrudTestModelsController < CrudController # :nodoc:
   HANDLE_PREFIX = 'handle_'
 
   self.search_columns = [:name, :whatever, :remarks]

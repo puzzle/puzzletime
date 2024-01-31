@@ -32,7 +32,7 @@ class Reports::OvertimeVacationsReport
       'Ferienguthaben bis Stichdatum',
       'Pensum'
     ]
-    csv << ["Überzeit/Ferien per #{format_date_long(@date)}, #{format_business_year(@date)}"] + Array.new(header.length - 1, '')
+    csv << (["Überzeit/Ferien per #{format_date_long(@date)}, #{format_business_year(@date)}"] + Array.new(header.length - 1, ''))
     csv << header
   end
 
@@ -50,7 +50,7 @@ class Reports::OvertimeVacationsReport
 
   def add_department(csv, name)
     add_empty(csv)
-    csv << ["#{Department.model_name.human} #{name}"] + Array.new(3, '')
+    csv << (["#{Department.model_name.human} #{name}"] + Array.new(3, ''))
   end
 
   def add_employee(csv, employee)
@@ -76,7 +76,7 @@ class Reports::OvertimeVacationsReport
 
   def add_overall_totals(csv)
     add_empty(csv)
-    csv << ["Überzeit/Ferien per #{format_date_long(@date)}, #{format_business_year(@date)}"] + Array.new(3, '')
+    csv << (["Überzeit/Ferien per #{format_date_long(@date)}, #{format_business_year(@date)}"] + Array.new(3, ''))
     csv << ['', 'Überzeit bis Stichdatum', 'Ferienguthaben bis Stichdatum', 'Pensum']
     csv << [
       'Total',

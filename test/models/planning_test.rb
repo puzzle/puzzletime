@@ -20,21 +20,21 @@ require 'test_helper'
 class PlanningTest < ActiveSupport::TestCase
   test 'is invalid for weekends' do
     (Date.new(2000, 1, 1)..Date.new(2000, 1, 2)).each do |date|
-      assert Planning.new(employee_id: employee_id,
-                          work_item_id: work_item_id,
-                          date: date,
-                          percent: 50,
-                          definitive: true).invalid?
+      assert_predicate Planning.new(employee_id:,
+                                    work_item_id:,
+                                    date:,
+                                    percent: 50,
+                                    definitive: true), :invalid?
     end
   end
 
   test 'is valid for weekdays' do
     (Date.new(2000, 1, 3)..Date.new(2000, 1, 7)).each do |date|
-      assert Planning.new(employee_id: employee_id,
-                          work_item_id: work_item_id,
-                          date: date,
-                          percent: 50,
-                          definitive: true).valid?
+      assert_predicate Planning.new(employee_id:,
+                                    work_item_id:,
+                                    date:,
+                                    percent: 50,
+                                    definitive: true), :valid?
     end
   end
 

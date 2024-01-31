@@ -119,7 +119,7 @@ module DryCrud::Form
         raw
       else
         val = @object.send(attr)
-        val.is_a?(Date) ? template.l(val, format: format) : val
+        val.is_a?(Date) ? template.l(val, format:) : val
       end
     end
 
@@ -242,7 +242,7 @@ module DryCrud::Form
       if options[:multiple]
         {}
       elsif prompt
-        { prompt: prompt }
+        { prompt: }
       elsif blank
         { include_blank: blank }
       else
@@ -285,10 +285,10 @@ module DryCrud::Form
     # The following options may be passed:
     # * <tt>:span</tt> - Number of columns the content should span.
     # * <tt>:caption</tt> - Different caption for the label.
-    def labeled(attr, content = {}, options = {}, &block)
-      if block_given?
+    def labeled(attr, content = {}, options = {}, &)
+      if block
         options = content
-        content = capture(&block)
+        content = capture(&)
       end
       control = control_class.new(self, attr, options)
       control.render_labeled(content)
@@ -299,10 +299,10 @@ module DryCrud::Form
     # E.g. labeled_boolean_field(:checked, class: 'bold')
     # To add an additional help text, use the help option.
     # E.g. labeled_boolean_field(:checked, help: 'Some Help')
-    def method_missing(name, *args)
+    def method_missing(name, *)
       field_method = labeled_field_method?(name)
       if field_method
-        build_labeled_field(field_method, *args)
+        build_labeled_field(field_method, *)
       else
         super(name, *args)
       end

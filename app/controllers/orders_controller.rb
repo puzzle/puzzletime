@@ -8,10 +8,10 @@ class OrdersController < CrudController
 
   self.permitted_attrs = [
     :crm_key, :kind_id, :responsible_id, :department_id, :status_id,
-    work_item_attributes: [:name, :shortname, :description, :parent_id],
+    { work_item_attributes: [:name, :shortname, :description, :parent_id],
     order_team_members_attributes: [:id, :employee_id, :comment, :_destroy],
     order_contacts_attributes: [:id, :contact_id_or_crm, :comment, :_destroy],
-    additional_crm_orders_attributes: [:id, :crm_key, :_destroy]
+    additional_crm_orders_attributes: [:id, :crm_key, :_destroy] }
   ]
 
   self.remember_params += %w(department_id kind_id status_id responsible_id)

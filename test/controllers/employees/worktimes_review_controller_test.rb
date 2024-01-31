@@ -11,10 +11,12 @@ class Employees::WorktimesReviewControllerTest < ActionController::TestCase
     employee = employees(:various_pedro)
     employee.update!(reviewed_worktimes_at: Date.new(2015, 8, 31))
     get :edit, params: { employee_id: employee.id }
+
     assert_template '_form'
 
     selection = assigns(:dates)
-    assert_equal selection.size, 13
+
+    assert_equal 13, selection.size
     assert_equal selection.first.first, Time.zone.today.end_of_month
     assert_equal assigns(:selected_month), Date.new(2015, 9, 30)
   end

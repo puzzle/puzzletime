@@ -87,33 +87,32 @@ employments = Employment.seed(
 
 categories = EmploymentRoleCategory.seed(
   :id,
-  {name: "Management"},
-  {name: "Unterstützend"},
-  {name: "Techboard"},
-  {name: "Berufsbildner"},
-  {name: "Lernende"},
-  {name: "Andere"}
+  { name: 'Management' },
+  { name: 'Unterstützend' },
+  { name: 'Techboard' },
+  { name: 'Berufsbildner' },
+  { name: 'Lernende' },
+  { name: 'Andere' }
 )
 
 roles = EmploymentRole.seed(
   :id,
-  {name: "Software Engineer", billable: true, level: true, employment_role_category_id: nil},
-  {name: "Berufsbildner", billable: false, level: false, employment_role_category_id: categories[3].id},
-  {name: "Mitglied Technical Board", billable: false, level: false, employment_role_category_id: categories[2].id},
-  {name: "Praktikant", billable: false, level: false, employment_role_category_id: categories[4].id},
-  {name: "Qualitätsleiter", billable: false, level: false, employment_role_category_id: categories[5].id},
-  {name: "Lernende", billable: false, level: false, employment_role_category_id: categories[4].id},
+  { name: 'Software Engineer', billable: true, level: true, employment_role_category_id: nil },
+  { name: 'Berufsbildner', billable: false, level: false, employment_role_category_id: categories[3].id },
+  { name: 'Mitglied Technical Board', billable: false, level: false, employment_role_category_id: categories[2].id },
+  { name: 'Praktikant', billable: false, level: false, employment_role_category_id: categories[4].id },
+  { name: 'Qualitätsleiter', billable: false, level: false, employment_role_category_id: categories[5].id },
+  { name: 'Lernende', billable: false, level: false, employment_role_category_id: categories[4].id },
 )
 
 EmploymentRolesEmployment.seed(
   :employment_id,
-  {employment_id: employments[0].id, employment_role_id: roles[0].id, employment_role_level_id: 5, percent: 100},
-  {employment_id: employments[1].id, employment_role_id: roles[1].id, employment_role_level_id: 4, percent: 90},
-  {employment_id: employments[2].id, employment_role_id: roles[2].id, employment_role_level_id: 3, percent: 80},
-  {employment_id: employments[3].id, employment_role_id: roles[3].id, employment_role_level_id: 2, percent: 70},
-  {employment_id: employments[4].id, employment_role_id: roles[4].id, employment_role_level_id: 1, percent: 60},
-  {employment_id: employments[5].id, employment_role_id: roles[5].id, employment_role_level_id: 5, percent: 50},
-  {employment_id: employments[6].id, employment_role_id: roles[0].id, employment_role_level_id: 4, percent: 40},
-  {employment_id: employments[7].id, employment_role_id: roles[1].id, employment_role_level_id: 3, percent: 30},
+  { employment_id: employments[0].id, employment_role_id: roles[0].id, employment_role_level_id: 5, percent: 100 },
+  { employment_id: employments[1].id, employment_role_id: roles[1].id, employment_role_level_id: 4, percent: 90 },
+  { employment_id: employments[2].id, employment_role_id: roles[2].id, employment_role_level_id: 3, percent: 80 },
+  { employment_id: employments[3].id, employment_role_id: roles[3].id, employment_role_level_id: 2, percent: 70 },
+  { employment_id: employments[4].id, employment_role_id: roles[4].id, employment_role_level_id: 1, percent: 60 },
+  { employment_id: employments[5].id, employment_role_id: roles[5].id, employment_role_level_id: 5, percent: 50 },
+  { employment_id: employments[6].id, employment_role_id: roles[0].id, employment_role_level_id: 4, percent: 40 },
+  { employment_id: employments[7].id, employment_role_id: roles[1].id, employment_role_level_id: 3, percent: 30 },
 )
-

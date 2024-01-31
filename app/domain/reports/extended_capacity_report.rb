@@ -113,8 +113,8 @@ class Reports::ExtendedCapacityReport
       next unless (billable_hours + non_billable_hours).abs > 0.001
 
       rows << build_employee_row(employee, work_item,
-                                 billable_hours: billable_hours,
-                                 non_billable_hours: non_billable_hours)
+                                 billable_hours:,
+                                 non_billable_hours:)
     end
     rows
   end
@@ -130,7 +130,7 @@ class Reports::ExtendedCapacityReport
       next unless internal_hours.abs > 0.001
 
       rows << build_employee_row(employee, work_item,
-                                 internal_hours: internal_hours)
+                                 internal_hours:)
     end
     rows
   end

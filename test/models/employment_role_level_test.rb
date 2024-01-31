@@ -15,6 +15,6 @@ require 'test_helper'
 
 class EmploymentRoleLevelTest < ActiveSupport::TestCase
   test 'string representation matches name' do
-    assert_equal employment_role_levels(:senior).to_s, 'Senior'
+    assert_equal 'Senior', employment_role_levels(:senior).to_s
   end
 end

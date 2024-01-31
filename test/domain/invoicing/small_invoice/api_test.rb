@@ -19,6 +19,7 @@ class Invoicing::SmallInvoice::ApiTest < ActiveSupport::TestCase
     assert_instance_of Array, list
 
     contact = list.first
+
     assert_equal id, contact['id']
   end
 
@@ -28,6 +29,7 @@ class Invoicing::SmallInvoice::ApiTest < ActiveSupport::TestCase
     get_contact = stub_get_entity(:contacts, key: id)
 
     contact = subject.get(path)
+
     assert_requested(get_contact)
     assert_equal id, contact['id']
   end

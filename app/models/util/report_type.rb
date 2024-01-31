@@ -20,11 +20,11 @@ class ReportType
   end
 
   def self.all_instances
-    self.instances + [ReportType::AutoStartType::INSTANCE].freeze
+    instances + [ReportType::AutoStartType::INSTANCE].freeze
   end
 
   def self.[](key)
-    self.all_instances.find { |type| type.key == key.to_s }
+    all_instances.find { |type| type.key == key.to_s }
   end
 
   def to_s

@@ -104,7 +104,7 @@ class EmployeeMasterDataController < ApplicationController
   end
 
   def vcard(include: nil)
-    Employees::Vcard.new(@employee, include: include).render
+    Employees::Vcard.new(@employee, include:).render
   end
 
   def qr_code

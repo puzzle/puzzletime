@@ -20,6 +20,7 @@ class Evaluations::EmployeesEvalTest < ActiveSupport::TestCase
     assert !@evaluation.total_details
 
     divisions = @evaluation.divisions
+
     assert_equal 3, divisions.size
 
     assert_sum_times 0, 18, 18, 18, employees(:mark)

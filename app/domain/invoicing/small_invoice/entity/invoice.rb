@@ -49,8 +49,8 @@ module Invoicing
               {
                 status:            'D', # TODO: do we need other states?
                 title:             entry.title,
-                conditions:        conditions,
-                introduction:      introduction
+                conditions:,
+                introduction:
               }
             ]
 

@@ -410,15 +410,16 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     page.assert_selector('.planning-delete', visible: true)
 
     # assert_difference('Planning.all.to_a.count', -2) do
-      accept_confirm('Bist du sicher, dass du die selektierte Planung löschen willst?') do
-        find('.planning-delete').click
-      end
-      page.assert_selector('.planning-panel', visible: false)
-      page.assert_selector('div.day.-definitive', count: 0)
+    accept_confirm('Bist du sicher, dass du die selektierte Planung löschen willst?') do
+      find('.planning-delete').click
+    end
+
+    page.assert_selector('.planning-panel', visible: false)
+    page.assert_selector('div.day.-definitive', count: 0)
     # end
 
     # FIXME: Why the hell does this work, but Planning.count difference does not?
-    assert_equal 1, Planning.all.to_a.count
+    assert_equal 1, Planning.all.to_a.size
   end
 
   test 'switching period' do

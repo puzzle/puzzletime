@@ -9,7 +9,7 @@ module EvaluatorHelper
   end
 
   def evaluation_path(evaluation, options = {})
-    url_for(options.merge(controller: '/evaluator', action: 'overview', evaluation: evaluation))
+    url_for(options.merge(controller: '/evaluator', action: 'overview', evaluation:))
   end
 
   def detail_th_align(field)

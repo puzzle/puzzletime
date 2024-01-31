@@ -11,24 +11,27 @@ class Evaluations::ManagedOrdersEvalTest < ActiveSupport::TestCase
 
   def test_managed_work_items_pascal
     @evaluation = Evaluations::ManagedOrdersEval.new(employees(:pascal))
+
     assert_managed employees(:pascal)
 
     divisions = @evaluation.divisions.list
+
     assert_equal 0, divisions.size
   end
 
   def test_managed_work_items_mark
     @evaluation = Evaluations::ManagedOrdersEval.new(employees(:mark))
+
     assert_managed employees(:mark)
 
     divisions = @evaluation.divisions.list
+
     assert_equal 1, divisions.size
     assert_equal work_items(:allgemein).id, divisions.first.id
 
     assert_sum_times 0, 14, 14, 15, work_items(:allgemein)
 
-    assert_equal({},
-                 @evaluation.sum_times_grouped(@period_day))
+    assert_empty(@evaluation.sum_times_grouped(@period_day))
     assert_equal({ work_items(:allgemein).id => { hours: 14.0, billable_hours: 14.0 } },
                  @evaluation.sum_times_grouped(@period_week))
     assert_equal({ work_items(:allgemein).id => { hours: 14.0, billable_hours: 14.0 } },
@@ -48,8 +51,7 @@ class Evaluations::ManagedOrdersEvalTest < ActiveSupport::TestCase
     Fabricate(:planning, work_item: work_items(:allgemein), date: '2006-12-14', percent: 50)
     Fabricate(:planning, work_item: work_items(:puzzletime), date: '2006-12-04', percent: 100)
 
-    assert_equal({},
-                 @evaluation.sum_plannings_grouped(@period_day))
+    assert_empty(@evaluation.sum_plannings_grouped(@period_day))
     assert_equal({ work_items(:allgemein).id => { hours: 16.0, billable_hours: 16.0 } },
                  @evaluation.sum_plannings_grouped(@period_week))
     assert_equal({ work_items(:allgemein).id => { hours: 20.0, billable_hours: 20.0 } },
@@ -71,16 +73,17 @@ class Evaluations::ManagedOrdersEvalTest < ActiveSupport::TestCase
 
   def test_managed_work_items_lucien
     @evaluation = Evaluations::ManagedOrdersEval.new(employees(:lucien))
+
     assert_managed employees(:lucien)
     divisions = @evaluation.divisions
+
     assert_equal 2, divisions.size
     assert_equal work_items(:hitobito_demo).id, divisions[0].id
     assert_equal work_items(:puzzletime).id, divisions[1].id
 
     assert_sum_times 0, 6, 18, 18, work_items(:puzzletime)
 
-    assert_equal({},
-                 @evaluation.sum_times_grouped(@period_day))
+    assert_empty(@evaluation.sum_times_grouped(@period_day))
     assert_equal({ work_items(:puzzletime).id => { hours: 6.0, billable_hours: 6.0 } },
                  @evaluation.sum_times_grouped(@period_week))
     assert_equal({ work_items(:puzzletime).id => { hours: 18.0, billable_hours: 8.0 } },

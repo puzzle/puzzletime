@@ -150,7 +150,7 @@ module Plannings
         Planning.where(
           employee_id: item.employee_id,
           work_item_id: item.work_item_id,
-          date: date
+          date:
         ).delete_all
         item.save!
         item
@@ -183,7 +183,7 @@ module Plannings
 
         p = Planning.where(employee_id: planning.employee_id,
                            work_item_id: planning.work_item_id,
-                           date: date).first_or_initialize
+                           date:).first_or_initialize
         p.percent = planning.percent
         p.definitive = planning.definitive
         p.save!
@@ -214,7 +214,7 @@ module Plannings
       save_errors = plannings.map { |p| p.errors.full_messages }.flatten.compact
       if save_errors.present?
         # should not happen after form validations
-        @errors << 'Eintrag konnte nicht erstellt werden: ' + save_errors.uniq.join(', ')
+        @errors << ('Eintrag konnte nicht erstellt werden: ' + save_errors.uniq.join(', '))
         fail ActiveRecord::Rollback
       end
     end

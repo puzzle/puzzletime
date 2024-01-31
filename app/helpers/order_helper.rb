@@ -36,7 +36,7 @@ module OrderHelper
 
     order_target_rating_icon(
       target.rating,
-      title: target.comment? ? simple_format(target.comment).gsub(/"/, '&quot;') : nil,
+      title: target.comment? ? simple_format(target.comment).gsub('"', '&quot;') : nil,
       data: { toggle: :tooltip }
     )
   end
@@ -70,7 +70,7 @@ module OrderHelper
   end
 
   def format_order_additional_crm_orders(order)
-    simple_list (order.additional_crm_orders.map(&method(:crm_order_link)))
+    simple_list(order.additional_crm_orders.map(&method(:crm_order_link)))
   end
 
   def format_major_chance(order)
@@ -129,7 +129,7 @@ module OrderHelper
       content_tag(:option,
                   order.label_verbose,
                   value: order.id,
-                  selected: selected,
+                  selected:,
                   data: { data: json.to_json })
     end
   end
@@ -162,15 +162,15 @@ module OrderHelper
 
   private
 
-  def order_progress_bar_link(order, progress, &block)
+  def order_progress_bar_link(order, progress, &)
     title = "#{f(progress[:percent_title])}% geleistet"
 
     if can?(:show, order)
       link_to(order_order_controlling_url(order.id),
-              { class: 'progress', title: title },
-              &block)
+              { class: 'progress', title: },
+              &)
     else
-      content_tag(:div, yield, class: 'progress', title: title)
+      content_tag(:div, yield, class: 'progress', title:)
     end
   end
 

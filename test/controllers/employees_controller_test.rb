@@ -14,6 +14,7 @@ class EmployeesControllerTest < ActionController::TestCase
 
   def test_settings
     get :settings, params: test_params(id: test_entry.id)
+
     assert_response :success
     assert_template 'employees/settings'
     assert_attrs_equal test_entry.attributes.slice(:worktimes_commit_reminder, :eval_periods)
@@ -22,8 +23,9 @@ class EmployeesControllerTest < ActionController::TestCase
   def test_update_settings
     assert_no_difference("#{model_class.name}.count") do
       put :update_settings, params: test_params(id: test_entry.id,
-                                       model_identifier => test_settings_attrs)
-      assert_equal [], entry.errors.full_messages
+                                                model_identifier => test_settings_attrs)
+
+      assert_empty entry.errors.full_messages
     end
     assert_attrs_equal(test_settings_attrs)
     assert_redirected_to root_path
@@ -35,6 +37,7 @@ class EmployeesControllerTest < ActionController::TestCase
     Crm.instance.expects(:contact_url).with(123).returns('http://example.com/profile-123')
 
     get :show, params: test_params(id: test_entry.id)
+
     assert_redirected_to('http://example.com/profile-123')
   end
 
@@ -43,6 +46,7 @@ class EmployeesControllerTest < ActionController::TestCase
     Crm.instance.expects(:find_people_by_email).with(test_entry.email).returns([])
 
     get :show, params: test_params(id: test_entry.id)
+
     assert_response :success
     assert_template 'show'
     assert_equal test_entry, entry
@@ -89,7 +93,7 @@ class EmployeesControllerTest < ActionController::TestCase
   def test_settings_attrs
     {
       worktimes_commit_reminder: false,
-      eval_periods: ["-1m", "0"]
+      eval_periods: ['-1m', '0']
     }
   end
 end

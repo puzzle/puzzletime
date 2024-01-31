@@ -122,26 +122,26 @@ module Plannings
       nil
     end
 
-    def percent_for_employment(date, employment, i, &block)
+    def percent_for_employment(date, employment, i, &)
       period = employment.period
       if period.include?(date) && period.include?(date + 4)
         # employment covers entire week
-        employment_percent_during(employment, date, date + 4, &block)
+        employment_percent_during(employment, date, date + 4, &)
       elsif period.include?(date)
         # employment changes in the middle of the week
         # we assume max one employment change per week
-        percent_for_multiple_employments(employment, date, i, &block)
+        percent_for_multiple_employments(employment, date, i, &)
       elsif period.start_date > date && period.include?(date + 4)
         # first employment starts in the middle of the week
-        employment_percent_during(employment, employment.start_date, date + 4, &block)
+        employment_percent_during(employment, employment.start_date, date + 4, &)
       end
     end
 
-    def percent_for_multiple_employments(employment, date, i, &block)
-      percent = employment_percent_during(employment, date, employment.period.end_date, &block)
+    def percent_for_multiple_employments(employment, date, i, &)
+      percent = employment_percent_during(employment, date, employment.period.end_date, &)
       next_employment = @employments[i + 1]
       if next_employment && next_employment.start_date <= date + 4
-        percent += employment_percent_during(next_employment, next_employment.start_date, date + 4, &block)
+        percent += employment_percent_during(next_employment, next_employment.start_date, date + 4, &)
       end
       percent
     end

@@ -65,15 +65,15 @@ module Api
           {
             id: request.uuid,
             status: status.to_s,
-            code: code,
-            title: title,
-            detail: detail
+            code:,
+            title:,
+            detail:
           }.merge(opts)
         ]
 
       }
       render json: error_payload,
-             status: status,
+             status:,
              content_type: Mime::Type.lookup_by_extension(:jsonapi)
     end
 

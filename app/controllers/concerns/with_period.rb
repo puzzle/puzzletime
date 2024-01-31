@@ -43,7 +43,7 @@ module WithPeriod
   end
 
   def build_start_end_period?
-    allow_unlimited_period && (params[:start_date].present? || params[:end_date].present?) ||
-      !allow_unlimited_period && params[:start_date].present? && params[:end_date].present?
+    (allow_unlimited_period && (params[:start_date].present? || params[:end_date].present?)) ||
+      (!allow_unlimited_period && params[:start_date].present? && params[:end_date].present?)
   end
 end

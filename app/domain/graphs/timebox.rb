@@ -9,8 +9,8 @@ class Graphs::Timebox
   MUST_HOURS_COLOR = '#FF0000'.freeze
   BLANK_COLOR = 'transparent'.freeze
 
-  attr_reader :height, :color, :tooltip, :worktime
-  attr_writer :height, :worktime
+  attr_accessor :height, :worktime
+  attr_reader :color, :tooltip
 
   include ActionView::Helpers::OutputSafetyHelper
 

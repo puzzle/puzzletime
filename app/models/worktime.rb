@@ -88,7 +88,7 @@ class Worktime < ActiveRecord::Base
   # h:mm or h.dd (8:45 <-> 8.75)
   def hours=(value)
     if md = H_M.match(value.to_s)
-      value = md[1].to_i + md[2].to_i / 60.0
+      value = md[1].to_i + (md[2].to_i / 60.0)
     end
     self['hours'] = value.to_f
   end
@@ -227,7 +227,7 @@ class Worktime < ActiveRecord::Base
         # military time: 1400
         if value.size > 2 && !value.include?('.')
           hour = value.to_i / 100
-          value = hour.to_s + ':' + (value.to_i - hour * 100).to_s
+          value = hour.to_s + ':' + (value.to_i - (hour * 100)).to_s
         else
           value = value.to_i.to_s + ':' + ((value.to_f - value.to_i) * 60).to_i.to_s
         end

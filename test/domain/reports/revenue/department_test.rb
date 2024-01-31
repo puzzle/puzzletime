@@ -17,28 +17,34 @@ class DepartmentRevenueReportTest < ActiveSupport::TestCase
 
   test '#past_months? and #future_months?' do
     r = report(period)
-    assert r.past_months?
-    assert r.future_months?
+
+    assert_predicate r, :past_months?
+    assert_predicate r, :future_months?
 
     r = report(period(Date.new(1999, 1, 1), Date.new(1999, 2, 1)))
-    assert r.past_months?
+
+    assert_predicate r, :past_months?
     assert !r.future_months?
 
     r = report(period(Date.new(1999, 12, 31), Date.new(2000, 5, 1)))
-    assert r.past_months?
+
+    assert_predicate r, :past_months?
     assert !r.future_months?
 
     r = report(period(Date.new(2000, 9, 15), Date.new(2000, 9, 20)))
+
     assert !r.past_months?
-    assert r.future_months?
+    assert_predicate r, :future_months?
 
     r = report(period(Date.new(2000, 12, 1), Date.new(2001, 1, 1)))
+
     assert !r.past_months?
-    assert r.future_months?
+    assert_predicate r, :future_months?
 
     r = report(period(Date.new(2010, 1, 1), Date.new(2010, 2, 1)))
+
     assert !r.past_months?
-    assert r.future_months?
+    assert_predicate r, :future_months?
   end
 
   test '#step_past_months' do
@@ -47,6 +53,7 @@ class DepartmentRevenueReportTest < ActiveSupport::TestCase
     r.step_past_months do |_date|
       count += 1
     end
+
     assert_equal 2, count
 
     count = 0
@@ -54,6 +61,7 @@ class DepartmentRevenueReportTest < ActiveSupport::TestCase
     r.step_past_months do |_date|
       count += 1
     end
+
     assert_equal 6, count
 
     count = 0
@@ -61,6 +69,7 @@ class DepartmentRevenueReportTest < ActiveSupport::TestCase
     r.step_past_months do |_date|
       count += 1
     end
+
     assert_equal 0, count
   end
 
@@ -70,6 +79,7 @@ class DepartmentRevenueReportTest < ActiveSupport::TestCase
     r.step_future_months do |_date|
       count += 1
     end
+
     assert_equal 3, count
 
     count = 0
@@ -77,6 +87,7 @@ class DepartmentRevenueReportTest < ActiveSupport::TestCase
     r.step_future_months do |_date|
       count += 1
     end
+
     assert_equal 0, count
 
     count = 0
@@ -84,12 +95,14 @@ class DepartmentRevenueReportTest < ActiveSupport::TestCase
     r.step_future_months do |_date|
       count += 1
     end
+
     assert_equal 5, count
   end
 
   test 'entries and values without any ordertimes and plannings' do
     r = report
-    assert_equal [], r.entries
+
+    assert_empty r.entries
     assert_equal Hash[], r.ordertime_hours
     assert_equal Hash[], r.total_ordertime_hours_per_month
     assert_equal 0, r.total_ordertime_hours_per_entry(devone)
@@ -127,26 +140,27 @@ class DepartmentRevenueReportTest < ActiveSupport::TestCase
     planning(Date.new(2000, 12, 1), :hitobito_demo_app) # after period (ignored)
 
     r = report
+
     assert_equal [devone, devtwo, sys], r.entries
     assert_equal Hash[[devone.id, Date.new(2000, 7, 1)] => 6.0,
                       [devone.id, Date.new(2000, 8, 1)] => 3.0,
                       [devtwo.id, Date.new(2000, 7, 1)] => 170.0,
                       [sys.id, Date.new(2000, 7, 1)] => 0.0], r.ordertime_hours
     assert_equal Hash[Date.new(2000, 7, 1) => 176.0, Date.new(2000, 8, 1) => 3.0], r.total_ordertime_hours_per_month
-    assert_equal 9.0, r.total_ordertime_hours_per_entry(devone)
-    assert_equal 170.0, r.total_ordertime_hours_per_entry(devtwo)
-    assert_equal 0.0, r.total_ordertime_hours_per_entry(sys)
-    assert_equal 4.5, r.average_ordertime_hours_per_entry(devone)
-    assert_equal 170.0, r.average_ordertime_hours_per_entry(devtwo)
-    assert_equal 0.0, r.average_ordertime_hours_per_entry(sys)
-    assert_equal 179.0, r.total_ordertime_hours_overall
-    assert_equal 89.5, r.average_ordertime_hours_overall
+    assert_in_delta(9.0, r.total_ordertime_hours_per_entry(devone))
+    assert_in_delta(170.0, r.total_ordertime_hours_per_entry(devtwo))
+    assert_in_delta(0.0, r.total_ordertime_hours_per_entry(sys))
+    assert_in_delta(4.5, r.average_ordertime_hours_per_entry(devone))
+    assert_in_delta(170.0, r.average_ordertime_hours_per_entry(devtwo))
+    assert_in_delta(0.0, r.average_ordertime_hours_per_entry(sys))
+    assert_in_delta(179.0, r.total_ordertime_hours_overall)
+    assert_in_delta(89.5, r.average_ordertime_hours_overall)
     assert_equal Hash[[devtwo.id, Date.new(2000, 9, 1)] => 6.4 * 170.0,
                       [devtwo.id, Date.new(2000, 11, 1)] => 6.4 * 170.0 * 2,
                       [devone.id, Date.new(2000, 11, 1)] => 6.4 * 140.0,
                       [sys.id, Date.new(2000, 11, 1)] => 0.0], r.planning_hours
     assert_equal Hash[Date.new(2000, 9, 1) => 6.4 * 170.0,
-                      Date.new(2000, 11, 1) => 6.4 * 170.0 * 2 + 6.4 * 140.0], r.total_planning_hours_per_month
+                      Date.new(2000, 11, 1) => (6.4 * 170.0 * 2) + (6.4 * 140.0)], r.total_planning_hours_per_month
   end
 
   test 'entries and values with sort by past month' do
@@ -173,6 +187,7 @@ class DepartmentRevenueReportTest < ActiveSupport::TestCase
     planning(Date.new(2000, 12, 1), :hitobito_demo_app) # after period (ignored)
 
     r = report(period, sort: '2000-07-01', sort_dir: 'desc')
+
     assert_equal [devtwo, devone, sys], r.entries
     assert_equal Hash[[devone.id, Date.new(2000, 7, 1)] => 6.0,
                       [devone.id, Date.new(2000, 8, 1)] => 3.0,
@@ -202,6 +217,7 @@ class DepartmentRevenueReportTest < ActiveSupport::TestCase
     planning(Date.new(2000, 12, 1), :hitobito_demo_app) # after period (ignored)
 
     r = report
+
     assert_equal [devone], r.entries
     assert_equal Hash[], r.ordertime_hours
     assert_equal Hash[], r.total_ordertime_hours_per_month
@@ -233,16 +249,16 @@ class DepartmentRevenueReportTest < ActiveSupport::TestCase
               work_item: work_items(work_item_uuid),
               employee: employees(:pascal),
               hours: 1,
-              billable: billable)
+              billable:)
   end
 
   def planning(date, work_item_uuid, definitive = true)
     Fabricate(:planning,
-              date: date,
+              date:,
               work_item: work_items(work_item_uuid),
               employee: employees(:pascal),
               percent: 80,
-              definitive: definitive)
+              definitive:)
   end
 
   def devone

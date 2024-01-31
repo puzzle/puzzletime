@@ -17,7 +17,7 @@ class ReportType::AutoStartType < ReportType::StartStopType
       worktime.errors.add(:from_start_time, 'Die Anfangszeit ist ungültig')
     end
     if worktime.employee
-      existing = worktime.employee.send("running_#{worktime.class.name[0..-5].downcase}".to_sym)
+      existing = worktime.employee.send(:"running_#{worktime.class.name[0..-5].downcase}")
       if existing && existing != worktime
         worktime.errors.add(:employee_id, "Es wurde bereits eine offene #{worktime.class.model_name.human} erfasst")
       end

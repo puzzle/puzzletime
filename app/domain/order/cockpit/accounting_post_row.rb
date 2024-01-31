@@ -85,7 +85,7 @@ class Order::Cockpit
     end
 
     def calculate_amount(hours)
-      offered_rate && offered_rate * hours.to_d
+      offered_rate && (offered_rate * hours.to_d)
     end
 
     def accounting_post_hours

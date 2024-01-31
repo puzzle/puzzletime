@@ -47,6 +47,11 @@ class CrudController < ListController
     assign_attributes if params[model_identifier]
   end
 
+  # Display a form to edit an exisiting entry of this model.
+  #   GET /entries/1/edit
+  def edit
+  end
+
   # Create a new entry of this model from the passed params.
   # There are before and after create callbacks to hook into the action.
   # To customize the response, you may overwrite this action and call
@@ -70,11 +75,6 @@ class CrudController < ListController
         format.js   { render partial: 'form', status: :unprocessable_entity }
       end
     end
-  end
-
-  # Display a form to edit an exisiting entry of this model.
-  #   GET /entries/1/edit
-  def edit
   end
 
   # Update an existing entry of this model from the passed params.
@@ -198,7 +198,7 @@ class CrudController < ListController
 
   # Html safe error messages of the current entry.
   def error_messages
-    safe_join(entry.errors.full_messages, tag(:br))
+    safe_join(entry.errors.full_messages, tag.br)
   end
 
   # json hash representation of an entry used for javascript responses

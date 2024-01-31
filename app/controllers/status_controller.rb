@@ -17,7 +17,7 @@ class StatusController < ApplicationController
     ready, status, message = assess_readiness
     http_code = ready ? :ok : :internal_server_error
 
-    render json: { status: status, message: message }, status: http_code
+    render json: { status:, message: }, status: http_code
   end
 
   private

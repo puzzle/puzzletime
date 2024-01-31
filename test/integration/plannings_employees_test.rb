@@ -20,6 +20,7 @@ class PlanningsEmployeesTest < ActionDispatch::IntegrationTest
     find('.add').click
 
     selectize('add_work_item_select_id', 'PITC-PT: PuzzleTime', no_click: true)
+
     page.assert_selector(row_selector, text: 'PITC-PT: PuzzleTime')
 
     row.all('.day')[0].assert_text('')
@@ -43,6 +44,7 @@ class PlanningsEmployeesTest < ActionDispatch::IntegrationTest
     assert_percents ['50', '50', '50', '50', '50', '', '', ''], row
 
     drag(row.all('.day')[3], row.all('.day')[6])
+
     page.assert_selector('.planning-calendar .-selected', count: 4)
     page.assert_selector('.planning-panel', visible: true)
 

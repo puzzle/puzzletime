@@ -15,6 +15,7 @@ class Api::V1::EmployeesControllerTest < ActionController::TestCase
 
   test 'show' do
     get :show, params: { id: test_entry.id }
+
     assert_response :ok
     assert_match %r[\Aapplication/vnd\.api\+json], response.headers['Content-Type']
     assert_equal test_entry.id.to_s, response_json[:data][:id]
@@ -22,6 +23,7 @@ class Api::V1::EmployeesControllerTest < ActionController::TestCase
 
   test 'show with unknown includes parameter' do
     get :show, params: { id: employees(:long_time_john).id, include: 'current_employment' }
+
     assert_response :unprocessable_entity
     assert_match %r[\Aapplication/vnd\.api\+json], response.headers['Content-Type']
     assert_equal '422', response_json.dig(:errors, 0, :status)
@@ -31,6 +33,7 @@ class Api::V1::EmployeesControllerTest < ActionController::TestCase
 
   test 'index' do
     get :index
+
     assert_response :ok
     assert_match %r[\Aapplication/vnd\.api\+json], response.headers['Content-Type']
     assert_equal Employee.count, response_json[:data].count
@@ -38,6 +41,7 @@ class Api::V1::EmployeesControllerTest < ActionController::TestCase
 
   test 'index with scope parameter' do
     get :index, params: { scope: :current }
+
     assert_response :ok
     assert_match %r[\Aapplication/vnd\.api\+json], response.headers['Content-Type']
     assert_equal Employee.current.count, response_json[:data].count
@@ -46,6 +50,7 @@ class Api::V1::EmployeesControllerTest < ActionController::TestCase
   (1..3).each do |i|
     test "pagination per_page works with #{i}" do
       get :index, params: { per_page: i }
+
       assert_equal i, response_json[:data].count
     end
 
@@ -53,6 +58,7 @@ class Api::V1::EmployeesControllerTest < ActionController::TestCase
       get :index, params: { page: i }
       expected = Employee.list.page(i).pluck(:id)
       actual   = response_json[:data].map { |d| d[:id].to_i }
+
       assert_equal expected, actual
     end
   end

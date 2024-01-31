@@ -17,33 +17,38 @@ class EditOtherOrdertimeTest < ActionDispatch::IntegrationTest
     ordertime = create_ordertime
     put ordertime_path(ordertime), params: { ordertime: { hours: '8:30' } }
     follow_redirect!
+
     assert_response :success
     assert_equal '/evaluator/details', path
     assert_equal 'Alle Arbeitszeiten wurden erfasst', flash[:notice]
-    assert_equal 8.5, ordertime.hours
+    assert_in_delta(8.5, ordertime.hours)
   end
 
   test 'update ordertime with more hours' do
     ordertime = create_ordertime
     put ordertime_path(ordertime), params: { ordertime: { hours: '9:30' } }
+
     assert_response :success
     assert_equal ordertime_path(ordertime), path
     assert_match(/Die gesamte Anzahl Stunden kann nicht vergrössert werden/, response.body)
     ordertime.reload
-    assert_equal 8.5, ordertime.hours
+
+    assert_in_delta(8.5, ordertime.hours)
   end
 
   test 'update ordertime with less hours' do
     ordertime = create_ordertime
     put ordertime_path(ordertime), params: { ordertime: { hours: '7:30' } }
     follow_redirect!
+
     assert_response :success
     assert_equal split_ordertimes_path, path
     assert_match(/Die Zeiten wurden noch nicht gespeichert/, response.body)
     assert_match(/Bitte schliessen sie dazu den Aufteilungsprozess ab/, response.body)
     ordertime.reload
+
     assert_equal ordertime, Ordertime.last # splitted times will be persisted later as new records
-    assert_equal 8.5, ordertime.hours
+    assert_in_delta(8.5, ordertime.hours)
 
     post create_part_ordertimes_path,
          params: {
@@ -55,11 +60,12 @@ class EditOtherOrdertimeTest < ActionDispatch::IntegrationTest
            }
          }
     follow_redirect!
+
     assert_response :success
     assert_equal '/evaluator/details', path
     assert_match(/Alle Arbeitszeiten wurden erfasst/, response.body)
-    assert_equal 7.5, Ordertime.order(id: :desc).limit(2).second.hours
-    assert_equal 1.0, Ordertime.order(id: :desc).limit(2).first.hours
+    assert_in_delta(7.5, Ordertime.order(id: :desc).limit(2).second.hours)
+    assert_in_delta(1.0, Ordertime.order(id: :desc).limit(2).first.hours)
   end
 
   private
@@ -76,10 +82,12 @@ class EditOtherOrdertimeTest < ActionDispatch::IntegrationTest
            }
          }
     follow_redirect!
+
     assert_response :success
     assert_equal '/evaluator/details', path
     ordertime = Ordertime.last
-    assert_equal 8.5, ordertime.hours
+
+    assert_in_delta(8.5, ordertime.hours)
     ordertime
   end
 

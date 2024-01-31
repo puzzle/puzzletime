@@ -16,8 +16,8 @@ class Holiday < ActiveRecord::Base
   include ActionView::Helpers::NumberHelper
   include Comparable
 
-  after_save :clear_cache
   after_destroy :clear_cache
+  after_save :clear_cache
 
   validates_by_schema
   validates :holiday_date,
@@ -88,7 +88,7 @@ class Holiday < ActiveRecord::Base
       weeks = length / 7
       hours = weeks * 5 * must_hours_per_day
       if length % 7 > 0
-        last_period = Period.new(period.start_date + weeks * 7, period.end_date)
+        last_period = Period.new(period.start_date + (weeks * 7), period.end_date)
         last_period.step do |day|
           hours += must_hours_per_day unless weekend?(day)
         end

@@ -20,6 +20,7 @@ class Evaluations::ClientsEvalTest < ActiveSupport::TestCase
     assert !@evaluation.total_details
 
     divisions = @evaluation.divisions.list
+
     assert_equal 3, divisions.size
     assert_equal work_items(:pbs), divisions[0]
     assert_equal work_items(:puzzle), divisions[1]
@@ -45,6 +46,7 @@ class Evaluations::ClientsEvalTest < ActiveSupport::TestCase
 
   def test_clients_detail_puzzle
     @evaluation.set_division_id work_items(:puzzle).id
+
     assert_sum_times 0, 20, 32, 33
     assert_count_times 0, 3, 5, 6
   end

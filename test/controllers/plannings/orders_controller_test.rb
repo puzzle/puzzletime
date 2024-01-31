@@ -18,6 +18,7 @@ module Plannings
             employee_id: employees(:long_time_john).id,
             work_item_id: work_items(:hitobito_demo_app).id
           }
+
       assert_equal 200, response.status
       refute_empty assigns(:items)
       assert_equal employees(:long_time_john), assigns(:legend)
@@ -28,17 +29,18 @@ module Plannings
       date = Date.today.at_beginning_of_week + 1.week
       Planning.create!(work_item_id: work_items(:hitobito_demo_app).id,
                        employee_id: employees(:pascal).id,
-                       date: date,
+                       date:,
                        percent: 80)
       Planning.create!(work_item_id: work_items(:hitobito_demo_app).id,
                        employee_id: employees(:lucien).id,
-                       date: date,
+                       date:,
                        percent: 60)
       Planning.create!(work_item_id: work_items(:hitobito_demo_site).id,
                        employee_id: employees(:lucien).id,
                        date: date + 1.weeks,
                        percent: 20)
       get :show, params: { id: orders(:hitobito_demo).id }
+
       assert_equal accounting_posts(:hitobito_demo_app, :hitobito_demo_site),
                    assigns(:board).accounting_posts
       assert_equal employees(:lucien, :pascal),
@@ -53,6 +55,7 @@ module Plannings
             start_date: date + 4.weeks,
             end_date: date + 8.weeks - 1.day
           }
+
       assert_equal Period.new(date + 4.weeks, date + 8.weeks - 1.day), assigns(:period)
     end
 
@@ -62,13 +65,15 @@ module Plannings
             id: orders(:hitobito_demo).id,
             period_shortcut: '6M'
           }
-      assert assigns(:period).length > 180
+
+      assert_operator assigns(:period).length, :>, 180
     end
 
     test 'GET#show as regular user is allowed' do
       login_as(:pascal)
 
       get :show, params: { id: orders(:hitobito_demo).id }
+
       assert_equal 200, response.status
     end
 
@@ -83,6 +88,7 @@ module Plannings
                                 work_item_id: work_items(:puzzletime).id.to_s,
                                 date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
             }
+
       assert_equal 200, response.status
       assert response.body.include?('Zumkehr Pascal')
       assert response.body.include?('50')
@@ -99,6 +105,7 @@ module Plannings
                                 work_item_id: work_items(:puzzletime).id.to_s,
                                 date: '2000-01-03' } }
             }
+
       assert_equal 200, response.status
       assert response.body.include?('Bitte füllen Sie das Formular aus')
     end

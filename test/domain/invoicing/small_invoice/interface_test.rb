@@ -10,12 +10,14 @@ class Invoicing::SmallInvoice::InterfaceTest < ActiveSupport::TestCase
 
   test '#save_invoice creates' do
     Invoicing::SmallInvoice::InvoiceStore.any_instance.stubs(:save).returns(true)
+
     assert subject.save_invoice(invoice, [])
   end
 
   test '#save_invoice updates' do
     invoice.update_column(:invoicing_key, 1)
     Invoicing::SmallInvoice::InvoiceStore.any_instance.stubs(:save).returns(true)
+
     assert subject.save_invoice(invoice, [1])
   end
 
@@ -37,6 +39,7 @@ class Invoicing::SmallInvoice::InterfaceTest < ActiveSupport::TestCase
     stub_auth
     delete_invoice = stub_delete_entity(:invoices, key: 1)
     subject.delete_invoice(invoice)
+
     assert_requested(delete_invoice)
   end
 
@@ -57,6 +60,7 @@ class Invoicing::SmallInvoice::InterfaceTest < ActiveSupport::TestCase
     get_pdf = stub_request(:get, "#{BASE_URL}/receivables/invoices/1/pdf")
 
     subject.get_pdf(invoice)
+
     assert_requested(get_pdf)
   end
 

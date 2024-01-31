@@ -17,13 +17,13 @@ module TableHelper
   # appended to the attribute columns.
   # If entries is empty, an appropriate message is rendered.
   # An options hash may be given as the last argument.
-  def plain_table(entries, *attrs, &_block)
+  def plain_table(entries, *attrs, &)
     options = attrs.extract_options!
     add_css_class(options, 'table table-striped table-hover table-condensed')
     builder = options.delete(:builder) || DryCrud::Table::Builder
     builder.table(entries, self, options) do |t|
       t.attrs(*attrs)
-      yield t if block_given?
+      yield t if _block
     end
   end
 
@@ -48,18 +48,18 @@ module TableHelper
         plain_table_or_message(entries, *attrs, &block)
       end
     else
-      plain_table_or_message(entries, *attrs, &block)
+      plain_table_or_message(entries, *attrs, &)
     end
   end
 
   # Create a table of the +entries+ with the default or
   # the passed attributes in its columns. An options hash may be given
   # as the last argument.
-  def list_table(*attrs, &block)
-    attrs, options = explode_attrs_with_options(attrs, &block)
+  def list_table(*attrs, &)
+    attrs, options = explode_attrs_with_options(attrs, &)
     plain_table_or_message(entries, options) do |t|
       t.sortable_attrs(*attrs)
-      yield t if block_given?
+      yield t if block
     end
   end
 
@@ -70,13 +70,13 @@ module TableHelper
   # If a block is given, the column defined there will be inserted
   # between the given attributes and the actions.
   # An options hash for the table builder may be given as the last argument.
-  def crud_table(*attrs, &block)
-    attrs, options = explode_attrs_with_options(attrs, &block)
+  def crud_table(*attrs, &)
+    attrs, options = explode_attrs_with_options(attrs, &)
     first = attrs.shift
     plain_table_or_message(entries, options) do |t|
       t.attr_with_show_link(first) if first
       t.sortable_attrs(*attrs)
-      yield t if block_given?
+      yield t if block
       standard_table_actions(t)
     end
   end
@@ -89,9 +89,9 @@ module TableHelper
 
   private
 
-  def explode_attrs_with_options(attrs, &_block)
+  def explode_attrs_with_options(attrs, &)
     options = attrs.extract_options!
-    if !block_given? && attrs.blank?
+    if !_block && attrs.blank?
       attrs = default_crud_attrs
     end
     [attrs, options]

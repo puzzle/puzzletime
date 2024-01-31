@@ -32,6 +32,7 @@ class WorktimeTest < ActiveSupport::TestCase
 
   def test_fixture
     wt = Worktime.find(1)
+
     assert_kind_of Worktime, wt
     assert_equal worktimes(:wt_pz_allgemein).work_item_id, wt.work_item_id
     assert_equal work_items(:allgemein).id, wt.account.id
@@ -48,18 +49,24 @@ class WorktimeTest < ActiveSupport::TestCase
   def time_facade(field)
     now = Time.zone.now
     set_field(field, now)
+
     assert_equal_time_field now, field
     # set_field(field, now.to_s)
     # assert_equal_time_field now, field
     set_field(field, '3')
+
     assert_equal_time_field Time.parse('3:00'), field
     set_field(field, '4:14')
+
     assert_equal_time_field Time.parse('4:14'), field
     set_field(field, '23:14')
+
     assert_equal_time_field Time.parse('23:14'), field
     set_field(field, '4.25')
+
     assert_equal_time_field Time.parse('4:15'), field
     set_field(field, '4.0')
+
     assert_equal_time_field Time.parse('4:00'), field
   end
 
@@ -70,56 +77,77 @@ class WorktimeTest < ActiveSupport::TestCase
 
   def time_facade_invalid(field)
     set_field(field, '')
+
     assert_nil get_field(field)
     set_field(field, 'adfasf')
+
     assert_nil get_field(field)
     set_field(field, 'ss:22')
+
     assert_nil get_field(field)
     set_field(field, '1:ss')
+
     assert_nil get_field(field)
     set_field(field, '1:88')
+
     assert_nil get_field(field)
     set_field(field, '28')
+
     assert_nil get_field(field)
     set_field(field, '28:22')
+
     assert_nil get_field(field)
     set_field(field, '-8')
+
     assert_nil get_field(field)
   end
 
   def test_hours
     time = Time.zone.now
     @worktime.hours = 8
-    assert_equal @worktime.hours, 8
+
+    assert_equal 8, @worktime.hours
     @worktime.hours = 8.5
-    assert_equal @worktime.hours, 8.5
+
+    assert_in_delta(@worktime.hours, 8.5)
     @worktime.hours = '8'
-    assert_equal @worktime.hours, 8
+
+    assert_equal 8, @worktime.hours
     @worktime.hours = '8.5'
-    assert_equal @worktime.hours, 8.5
+
+    assert_in_delta(@worktime.hours, 8.5)
     @worktime.hours = '.5'
-    assert_equal @worktime.hours, 0.5
+
+    assert_in_delta(@worktime.hours, 0.5)
     @worktime.hours = '8:'
-    assert_equal @worktime.hours, 8
+
+    assert_equal 8, @worktime.hours
     @worktime.hours = '8:30'
-    assert_equal @worktime.hours, 8.5
+
+    assert_in_delta(@worktime.hours, 8.5)
     @worktime.hours = ':30'
-    assert_equal @worktime.hours, 0.5
+
+    assert_in_delta(@worktime.hours, 0.5)
     @worktime.hours = 'afsdf'
-    assert_equal @worktime.hours, 0
+
+    assert_equal 0, @worktime.hours
   end
 
   def test_start_stop_validation
     @worktime.report_type = ReportType::StartStopType::INSTANCE
     @worktime.employee = employees(:various_pedro)
     @worktime.work_date = Time.zone.today
+
     assert !@worktime.valid?
     @worktime.from_start_time = '8:00'
     @worktime.to_end_time = '9:00'
-    assert @worktime.valid?, @worktime.errors.full_messages.join(', ')
+
+    assert_predicate @worktime, :valid?, @worktime.errors.full_messages.join(', ')
     @worktime.to_end_time = '7:00'
+
     assert !@worktime.valid?
     @worktime.to_end_time = '-3'
+
     assert !@worktime.valid?
   end
 
@@ -128,10 +156,11 @@ class WorktimeTest < ActiveSupport::TestCase
     @worktime.work_date = Time.zone.today
     @worktime.from_start_time = '08:00'
     @worktime.hours = 5
+
     assert !@worktime.valid?
     assert_equal [:to_end_time], @worktime.errors.attribute_names
-    assert @worktime.start_stop?
-    assert_equal 0.0, @worktime.hours
+    assert_predicate @worktime, :start_stop?
+    assert_in_delta(0.0, @worktime.hours)
   end
 
   def test_report_type_guessing_with_start_and_end_time
@@ -140,13 +169,15 @@ class WorktimeTest < ActiveSupport::TestCase
     @worktime.from_start_time = '08:00'
     @worktime.to_end_time = '10:40'
     @worktime.hours = 5
-    assert @worktime.valid?
-    assert @worktime.start_stop?
+
+    assert_predicate @worktime, :valid?
+    assert_predicate @worktime, :start_stop?
     assert_in_delta 2.66667, @worktime.hours
   end
 
   def test_template
     newWorktime = Worktime.find(1).template
+
     assert_not_nil newWorktime
     assert_equal worktimes(:wt_pz_allgemein).work_item_id, newWorktime.work_item_id
     assert_equal work_items(:allgemein).id, newWorktime.account.id

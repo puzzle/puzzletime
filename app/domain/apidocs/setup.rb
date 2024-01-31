@@ -110,7 +110,7 @@ module Apidocs
         each do |related_serializer|
           next if collected_serializers.include?(related_serializer)
 
-          collect_serializers(related_serializer, collected_serializers: collected_serializers)
+          collect_serializers(related_serializer, collected_serializers:)
         end
 
       collected_serializers

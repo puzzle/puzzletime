@@ -7,7 +7,7 @@ class InvoicesController < CrudController
   self.nesting = [Order]
 
   self.permitted_attrs = [:billing_date, :due_date, :period_from, :period_to,
-                          :billing_address_id, :grouping, employee_ids: [], work_item_ids: []]
+                          :billing_address_id, :grouping, { employee_ids: [], work_item_ids: [] }]
 
   self.sort_mappings = { period: :period_from, manual?: :grouping }
 
@@ -205,7 +205,7 @@ class InvoicesController < CrudController
   end
 
   def due_date
-    entry.due_date || billing_date + payment_period.days if payment_period.present?
+    entry.due_date || (billing_date + payment_period.days) if payment_period.present?
   end
 
   def last_grouping

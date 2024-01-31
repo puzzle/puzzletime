@@ -13,11 +13,11 @@ module Plannings
       date = Date.today.at_beginning_of_week + 1.week
       Planning.create!(work_item_id: work_items(:webauftritt).id,
                        employee_id: employees(:pascal).id,
-                       date: date,
+                       date:,
                        percent: 80)
       Planning.create!(work_item_id: work_items(:webauftritt).id,
                        employee_id: employees(:lucien).id,
-                       date: date,
+                       date:,
                        percent: 60)
       Planning.create!(work_item_id: work_items(:puzzletime).id,
                        employee_id: employees(:lucien).id,
@@ -58,6 +58,7 @@ module Plannings
                                 work_item_id: work_items(:puzzletime).id.to_s,
                                 date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
             }
+
       assert_equal 200, response.status
 
       assert_equal orders(:puzzletime), assigns(:board).subject
@@ -93,27 +94,28 @@ module Plannings
                                 work_item_id: work_items(:hitobito_demo).id.to_s,
                                 date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
             }
+
       assert_equal 200, response.status
     end
 
     test 'DELETE destroy' do
       date = Date.today.at_beginning_of_week + 1.week
       p1 = Planning.create!(work_item_id: work_items(:webauftritt).id,
-                       employee_id: employees(:pascal).id,
-                       date: date,
-                       percent: 80)
+                            employee_id: employees(:pascal).id,
+                            date:,
+                            percent: 80)
       p2 = Planning.create!(work_item_id: work_items(:webauftritt).id,
-                       employee_id: employees(:lucien).id,
-                       date: date,
-                       percent: 60)
+                            employee_id: employees(:lucien).id,
+                            date:,
+                            percent: 60)
       p3 = Planning.create!(work_item_id: work_items(:puzzletime).id,
-                       employee_id: employees(:lucien).id,
-                       date: date + 1.weeks,
-                       percent: 20)
+                            employee_id: employees(:lucien).id,
+                            date: date + 1.weeks,
+                            percent: 20)
       p4 = Planning.create!(work_item_id: work_items(:puzzletime).id,
-                       employee_id: employees(:lucien).id,
-                       date: date + 1.weeks + 1.day,
-                       percent: 20)
+                            employee_id: employees(:lucien).id,
+                            date: date + 1.weeks + 1.day,
+                            percent: 20)
 
       assert_difference('Planning.count', -2) do
         delete :destroy,

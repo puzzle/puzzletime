@@ -37,7 +37,7 @@ module ActionsHelper
     return unless can?(:edit, entry)
 
     path ||= path_args(entry)
-    path = path.is_a?(String) ? path : edit_polymorphic_path(path)
+    path = edit_polymorphic_path(path) unless path.is_a?(String)
     action_link(action_icon('edit', ti('link.edit')), path)
   end
 
@@ -56,7 +56,7 @@ module ActionsHelper
     return unless can?(:index, model_class)
 
     path ||= path_args(model_class)
-    path = path.is_a?(String) ? path : polymorphic_path(path, url_options)
+    path = polymorphic_path(path, url_options) unless path.is_a?(String)
     action_link(ti('link.list', model: models_label(true)), path)
   end
 
@@ -66,7 +66,7 @@ module ActionsHelper
     return unless can?(:new, model_class)
 
     path ||= path_args(model_class)
-    path = path.is_a?(String) ? path : new_polymorphic_path(path, url_options)
+    path = new_polymorphic_path(path, url_options) unless path.is_a?(String)
     action_link(action_icon('add', ti('link.add')), path)
   end
 

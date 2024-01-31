@@ -23,10 +23,10 @@ class Evaluations::EmployeesEval < Evaluations::Evaluation
                   Employee.employed_ones(Period.current_year)
                 end
 
-    if @department_id != 0
-      employees.where(department_id: @department_id)
-    else
+    if @department_id == 0
       employees
+    else
+      employees.where(department_id: @department_id)
     end
   end
 
@@ -35,10 +35,10 @@ class Evaluations::EmployeesEval < Evaluations::Evaluation
   end
 
   def sum_total_times(period = nil)
-    query = if @department_id != 0
-              Department.find(@department_id).employee_worktimes
-            else
+    query = if @department_id == 0
               Worktime.all
+            else
+              Department.find(@department_id).employee_worktimes
             end
     query = query.where(type: worktime_type).in_period(period)
     query_time_sums(query)

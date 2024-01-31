@@ -18,9 +18,10 @@ module CustomAssertions
     actual = string.scan(regexp).size
     msg = message(msg) do
       "Expected #{mu_pp(regexp)} to occur #{expected} time(s), " \
-      "but occured #{actual} time(s) in \n#{mu_pp(string)}"
+        "but occured #{actual} time(s) in \n#{mu_pp(string)}"
     end
-    assert expected == actual, msg
+
+    assert_operator expected, :==, actual, msg
   end
 
   # Asserts that the given active model record is valid.
@@ -32,7 +33,8 @@ module CustomAssertions
       "but has the following errors:\n" +
         mu_pp(record.errors.full_messages.join("\n"))
     end
-    assert record.valid?, msg
+
+    assert_predicate record, :valid?, msg
   end
 
   # Asserts that the given active model record is not valid.
@@ -43,6 +45,7 @@ module CustomAssertions
     msg = message do
       "Expected #{mu_pp(record)} to be invalid, but is valid."
     end
+
     assert !record.valid?, msg
 
     if invalid_attrs.present?
@@ -55,6 +58,7 @@ module CustomAssertions
     msg = message do
       "Expected #{mu_pp(record)} to have error message on attribute #{attr}."
     end
+
     assert record.errors.messages[attr.to_sym].any? { |m| message =~ m }, msg
   end
 
@@ -71,13 +75,14 @@ module CustomAssertions
     expressions.zip(exps).each_with_index do |(code, e), _i|
       error  = "#{code.inspect} didn't change"
       error  = "#{message}.\n#{error}" if message
+
       refute_equal(before, e.call, error)
     end
   end
 
-  def assert_arrays_match(expected, actual)
+  def assert_arrays_match(expected, actual, &block)
     transform = ->(array) do
-      block_given? ? array.map { |element| yield(element) }.sort : array.sort
+      block ? array.map(&block).sort : array.sort
     end
 
     assert_equal(transform[expected], transform[actual])
@@ -86,7 +91,7 @@ module CustomAssertions
   # The method used to by Test::Unit to format arguments.
   # Prints ActiveRecord objects in a simpler format.
   def mu_pp(obj)
-    if obj.is_a?(ActiveRecord::Base) #:nodoc:
+    if obj.is_a?(ActiveRecord::Base) # :nodoc:
       obj.to_s
     else
       super
@@ -100,7 +105,8 @@ module CustomAssertions
       msg = message do
         "Expected attribute #{mu_pp(a)} to be invalid, but is valid."
       end
-      assert record.errors[a].present?, msg
+
+      assert_predicate record.errors[a], :present?, msg
     end
   end
 
@@ -110,8 +116,9 @@ module CustomAssertions
       error_msg  = error.message
       msg = message do
         "Attribute #{mu_pp(error_attr)} not declared as invalid attribute, " \
-        "but has the following error(s):\n#{mu_pp(error_msg)}"
+          "but has the following error(s):\n#{mu_pp(error_msg)}"
       end
+
       assert invalid_attrs.include?(error_attr), msg
     end
   end

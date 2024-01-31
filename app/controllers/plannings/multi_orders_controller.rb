@@ -16,17 +16,15 @@ module Plannings
     private
 
     def orders
-      @orders ||= begin
-        if params[:department_id]
-          d = Department.find(params[:department_id])
-          @title = "Planung der Aufträge von #{d}"
-          d.orders.where('work_items.closed = ?', false).list
-        elsif params[:custom_list_id]
-          CustomList.where(item_type: Order.sti_name).find(params[:custom_list_id]).items.list
-        else
-          raise ActiveRecord::RecordNotFound
-        end
-      end
+      @orders ||= if params[:department_id]
+                    d = Department.find(params[:department_id])
+                    @title = "Planung der Aufträge von #{d}"
+                    d.orders.where('work_items.closed = ?', false).list
+                  elsif params[:custom_list_id]
+                    CustomList.where(item_type: Order.sti_name).find(params[:custom_list_id]).items.list
+                  else
+                    raise ActiveRecord::RecordNotFound
+                  end
     end
 
     def order

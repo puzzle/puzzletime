@@ -23,9 +23,11 @@ require 'test_helper'
 class OrderRiskTest < ActiveSupport::TestCase
   test '#risk_value is probability times impact' do
     r1 = OrderRisk.new(name: 'Earthquake', probability: :low, impact: :medium)
+
     assert_equal 6, r1.risk_value
 
     r2 = OrderRisk.new(name: 'Atomic desaster', probability: :improbable, impact: :high)
+
     assert_equal 4, r2.risk_value
   end
 
@@ -60,6 +62,7 @@ class OrderRiskTest < ActiveSupport::TestCase
                               impact: :high)
 
     order.reload
+
     assert_equal 4, order.major_risk_value
     assert_nil order.major_chance_value
 
@@ -68,6 +71,7 @@ class OrderRiskTest < ActiveSupport::TestCase
                               impact: :medium)
 
     order.reload
+
     assert_equal 6, order.major_risk_value
     assert_nil order.major_chance_value
 
@@ -76,6 +80,7 @@ class OrderRiskTest < ActiveSupport::TestCase
                               impact: :none)
 
     order.reload
+
     assert_equal 6, order.major_risk_value
     assert_nil order.major_chance_value
 
@@ -84,18 +89,21 @@ class OrderRiskTest < ActiveSupport::TestCase
                                     impact: :high)
 
     order.reload
+
     assert_equal 6, order.major_risk_value
     assert_equal 8, order.major_chance_value
 
     r.update!(probability: :medium)
 
     order.reload
+
     assert_equal 6, order.major_risk_value
     assert_equal 12, order.major_chance_value
 
     order.order_risks.destroy_all
 
     order.reload
+
     assert_nil order.major_risk_value
     assert_equal 12, order.major_chance_value
   end

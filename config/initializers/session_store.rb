@@ -2,7 +2,6 @@
 
 # The session_store setup is handled in the environment configs
 
-
 def cache_readable?
   Rails.cache.stats.values.any?
 end
@@ -17,7 +16,7 @@ end
 
 def warn_about_missing_memcache
   return if skip_memcache?
-  return if !memcache_used?
+  return unless memcache_used?
   return if cache_readable?
 
   raise 'As CSRF tokens are read from cache, we require a memcache instance to start'

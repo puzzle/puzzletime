@@ -17,7 +17,7 @@ class RemoveSuperfluousPrimaryKeysOnJoinTables < ActiveRecord::Migration[7.1]
 
   def down
     # Can we safely ignore the rollback? The ids should have never been used anyways
- 
+
     # execute <<~SQL
     #   -- Create the primary key sequences
     #   CREATE SEQUENCE order_contacts_false_seq;

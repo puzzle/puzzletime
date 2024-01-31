@@ -17,13 +17,13 @@ module DryCrud
     module Prepends
       # Helper method to run +before_render+ callbacks and render the action.
       # If a callback renders or redirects, the action is not rendered.
-      def render(*args, &block)
-        options = _normalize_render(*args, &block)
+      def render(*, &)
+        options = _normalize_render(*, &)
         callback = "render_#{options[:template]}"
 
         run_callbacks(callback) if respond_to?(:"_#{callback}_callbacks", true)
 
-        super(*args, &block) unless performed?
+        super(*args, &) unless performed?
       end
 
       private

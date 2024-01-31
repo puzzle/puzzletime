@@ -56,7 +56,7 @@ class CreateCustomLists < ActiveRecord::Migration[5.1]
   end
 
   def insert_custom_list(employee_id, name, ids)
-    CustomList.create!(employee_id: employee_id,
+    CustomList.create!(employee_id:,
                        name: name.presence || 'Meine Liste',
                        item_type: 'Employee',
                        item_ids: ids)

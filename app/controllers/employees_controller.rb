@@ -11,7 +11,7 @@ class EmployeesController < ManageController
                           :emergency_contact_phone, :marital_status,
                           :social_insurance, :additional_information,
                           :identity_card_type, :identity_card_valid_until,
-                          nationalities: []]
+                          { nationalities: [] }]
 
   if Settings.employees.initial_vacation_days_editable
     self.permitted_attrs += [:initial_vacation_days]

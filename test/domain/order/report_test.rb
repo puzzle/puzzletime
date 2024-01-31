@@ -14,41 +14,49 @@ class Order::ReportTest < ActiveSupport::TestCase
 
   test 'filter by status' do
     report(status_id: order_statuses(:abgeschlossen))
+
     assert_equal [orders(:allgemein)], report.entries.collect(&:order)
   end
 
   test 'filter by responsible' do
     report(responsible_id: employees(:long_time_john).id)
+
     assert_equal [orders(:webauftritt)], report.entries.collect(&:order)
   end
 
   test 'filter by department' do
     report(department_id: departments(:devtwo).id)
-    assert_equal [], report.entries
+
+    assert_empty report.entries
   end
 
   test 'filter by kind' do
     report(kind_id: order_kinds(:projekt).id)
+
     assert_equal [orders(:webauftritt)], report.entries.collect(&:order)
   end
 
   test 'filter by low risk value' do
     report(major_risk_value: 'low')
-    assert_equal [], report.entries.collect(&:order)
+
+    assert_empty report.entries.collect(&:order)
   end
 
   test 'filter by risk value' do
     report(major_risk_value: 'medium')
+
     assert_equal [orders(:puzzletime)], report.entries.collect(&:order)
   end
 
   test 'filter by chance value' do
     report(major_chance_value: 'high')
+
     assert_equal [orders(:puzzletime)], report.entries.collect(&:order)
   end
 
   test 'filter by responsible and department' do
     report(responsible_id: employees(:lucien).id, department_id: departments(:devone).id)
+
     assert_equal [orders(:puzzletime)], report.entries.collect(&:order)
   end
 
@@ -56,11 +64,13 @@ class Order::ReportTest < ActiveSupport::TestCase
     report(kind_id: order_kinds(:mandat).id,
            department_id: departments(:sys).id,
            status_id: order_statuses(:bearbeitung).id)
-    assert_equal [], report.entries
+
+    assert_empty report.entries
   end
 
   test 'filter by client' do
     report(client_work_item_id: work_items(:puzzle).id)
+
     assert_equal orders(:allgemein, :puzzletime), report.entries.collect(&:order)
   end
 
@@ -68,36 +78,43 @@ class Order::ReportTest < ActiveSupport::TestCase
     Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal))
     report(client_work_item_id: work_items(:puzzle).id,
            category_work_item_id: work_items(:hitobito).id)
+
     assert_equal [orders(:hitobito_demo)], report.entries.collect(&:order)
   end
 
   test 'filter by start date' do
     report(period: Period.new(Date.new(2006, 12, 11), nil))
+
     assert_equal orders(:puzzletime, :webauftritt), report.entries.collect(&:order)
   end
 
   test 'filter by end date' do
     report(period: Period.new(nil, Date.new(2006, 12, 1)))
+
     assert_equal [orders(:allgemein)], report.entries.collect(&:order)
   end
 
   test 'filter by period' do
     report(period: Period.new(Date.new(2006, 12, 4), Date.new(2006, 12, 6)))
+
     assert_equal orders(:allgemein, :webauftritt), report.entries.collect(&:order)
   end
 
   test 'filter by target red' do
     report(target: 'red')
+
     assert_equal [orders(:allgemein)], report.entries.collect(&:order)
   end
 
   test 'filter by target red and orange' do
     report(target: 'red_orange')
+
     assert_equal orders(:allgemein, :puzzletime), report.entries.collect(&:order)
   end
 
   test 'filter by closed' do
     report(closed: true)
+
     assert_equal [orders(:allgemein)], report.entries.collect(&:order)
   end
 
@@ -105,32 +122,36 @@ class Order::ReportTest < ActiveSupport::TestCase
 
   test 'sort by client' do
     report(sort: 'client', sort_dir: 'desc')
+
     assert_equal orders(:webauftritt, :puzzletime, :allgemein), report.entries.collect(&:order)
   end
 
   test 'sort by target time' do
     report(sort: "target_scope_#{target_scopes(:time).id}")
+
     assert_equal orders(:allgemein, :puzzletime, :webauftritt), report.entries.collect(&:order)
   end
 
   test 'sort by target cost' do
     report(sort: "target_scope_#{target_scopes(:cost).id}", sort_dir: 'desc')
+
     assert_equal orders(:allgemein, :webauftritt, :puzzletime), report.entries.collect(&:order)
   end
 
   test 'sort by offered_amount' do
     report(sort: 'offered_amount')
+
     assert_equal orders(:webauftritt, :puzzletime, :allgemein), report.entries.collect(&:order)
   end
 
   ### calculating
 
   test 'it counts orders' do
-    assert_equal report().total.to_s, 'Total (3)'
+    assert_equal 'Total (3)', report().total.to_s
   end
 
   test 'it counts filtered orders' do
-    assert_equal report(closed: true).total.to_s, 'Total (1)'
+    assert_equal 'Total (1)', report(closed: true).total.to_s
   end
 
   test '#offered_amount is sum of all accounting posts' do
@@ -269,13 +290,14 @@ class Order::ReportTest < ActiveSupport::TestCase
 
   test 'billed values with invoices' do
     order = orders(:hitobito_demo)
-    Fabricate(:contract, order: order)
+    Fabricate(:contract, order:)
     Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal), hours: 10, work_date: 1.month.ago)
     Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal), hours: 2, work_date: 1.month.ago)
     Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal), hours: 2, work_date: 1.month.ago, billable: false)
     Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal), hours: 20, work_date: 2.years.ago)
-    i1 = Fabricate(:invoice, order: order, work_items: work_items(:hitobito_demo_app, :hitobito_demo_site), employees: [employees(:pascal)])
-    i2 = Fabricate(:invoice, order: order, work_items: [work_items(:hitobito_demo_app)], employees: [employees(:pascal)], billing_date: 2.years.ago, period_from: 2.years.ago.at_beginning_of_month, period_to: 2.years.ago.at_end_of_month)
+    i1 = Fabricate(:invoice, order:, work_items: work_items(:hitobito_demo_app, :hitobito_demo_site), employees: [employees(:pascal)])
+    i2 = Fabricate(:invoice, order:, work_items: [work_items(:hitobito_demo_app)], employees: [employees(:pascal)], billing_date: 2.years.ago, period_from: 2.years.ago.at_beginning_of_month, period_to: 2.years.ago.at_end_of_month)
+
     assert_equal 12 * 170, i1.total_amount
     assert_equal 20 * 170, i2.total_amount
     entry = report(period: Period.new(1.year.ago, nil)).entries.find { |e| e.order == order }
@@ -291,6 +313,7 @@ class Order::ReportTest < ActiveSupport::TestCase
 
   test 'csv includes target scopes' do
     csv = Order::Report::Csv.new(report).generate.lines.to_a
+
     assert_match /Termin,Kosten,Qualität$/, csv.first
     assert_match /red,green,green$/, csv.second
   end

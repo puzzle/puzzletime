@@ -56,20 +56,20 @@ class Expense < ActiveRecord::Base
 
   def self.reimbursement_months
     statement = 'SELECT DISTINCT ' \
-      'EXTRACT(YEAR FROM reimbursement_date)::int AS year, ' \
-      'EXTRACT(MONTH FROM reimbursement_date)::int AS month ' \
-      'FROM expenses ' \
-      'WHERE reimbursement_date IS NOT NULL ' \
-      'ORDER BY year, month'
+                'EXTRACT(YEAR FROM reimbursement_date)::int AS year, ' \
+                'EXTRACT(MONTH FROM reimbursement_date)::int AS month ' \
+                'FROM expenses ' \
+                'WHERE reimbursement_date IS NOT NULL ' \
+                'ORDER BY year, month'
     connection.select_rows(statement).collect { |year, month| Date.new(year, month, 1) }
   end
 
   def self.payment_years(employee)
     statement = 'SELECT DISTINCT ' \
-      'EXTRACT(YEAR FROM payment_date)::int AS year ' \
-      'FROM expenses ' \
-      "WHERE employee_id = #{employee.id} " \
-      'ORDER BY year'
+                'EXTRACT(YEAR FROM payment_date)::int AS year ' \
+                'FROM expenses ' \
+                "WHERE employee_id = #{employee.id} " \
+                'ORDER BY year'
     connection.select_values(statement).collect { |year| Date.new(year, 1, 1) }
   end
 

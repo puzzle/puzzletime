@@ -19,6 +19,6 @@ class WorkplacesControllerTest < ActionController::TestCase
 
   # Attribute hash used in several tests.
   def test_entry_attrs
-    { name: "Ouagadougou" }
+    { name: 'Ouagadougou' }
   end
 end

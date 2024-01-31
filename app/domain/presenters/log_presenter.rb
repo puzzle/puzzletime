@@ -18,11 +18,11 @@ class Presenters::LogPresenter
   def versions
     @versions ||=
       PaperTrail::Version.where(employee_id: employee.id)
-      .or(legacy_employee_log)
-      .or(legacy_employment_log)
-      .reorder('created_at DESC, id DESC')
-      .includes(:item)
-      .page(params[:page])
+                         .or(legacy_employee_log)
+                         .or(legacy_employment_log)
+                         .reorder('created_at DESC, id DESC')
+                         .includes(:item)
+                         .page(params[:page])
   end
 
   def present_author(versions)
@@ -38,7 +38,7 @@ class Presenters::LogPresenter
 
   def title_for(version)
     model = version.item_type.parameterize
-    return send("title_for_#{model}", version) if respond_to?("title_for_#{model}")
+    return send(:"title_for_#{model}", version) if respond_to?(:"title_for_#{model}")
 
     event = version.event
     I18n.t("version.model.#{event}.#{model}", id: version.item_id)
@@ -46,9 +46,9 @@ class Presenters::LogPresenter
 
   def title_for_employmentrolesemployment(version)
     entry_class = version.item_type.constantize
-    entry = entry_class.find_by(id: version.item_id) || version.object && entry_class.new(version.object_deserialized)
+    entry = entry_class.find_by(id: version.item_id) || (version.object && entry_class.new(version.object_deserialized))
     role = entry&.employment_role || '(deleted)'
-    I18n.t("version.model.#{version.event}.employmentrolesemployment", role: role, employment_id: entry&.employment_id)
+    I18n.t("version.model.#{version.event}.employmentrolesemployment", role:, employment_id: entry&.employment_id)
   end
 
   def changes_for(version)
@@ -120,12 +120,12 @@ class Presenters::LogPresenter
     {
       attr: item_class.human_attribute_name(attr),
       model_ref: I18n.t("version.model_reference.#{item_class.name.parameterize}"),
-      from: from,
-      to: to
+      from:,
+      to:
     }
   end
 
   def resolve_association(reflection, id)
-    reflection.class_name.constantize.find_by(id: id) || id
+    reflection.class_name.constantize.find_by(id:) || id
   end
 end

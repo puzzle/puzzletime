@@ -13,15 +13,17 @@ module Plannings
 
     def test_new
       get :new, params: { custom_list: { item_type: 'Employee' } }
+
       assert_response :success
       assert_template 'new'
-      assert entry.new_record?
+      assert_predicate entry, :new_record?
       assert_equal 'Employee', entry.item_type
       assert_equal Employee, assigns(:available_items).klass
     end
 
     def test_create
       super
+
       assert_equal employees(:mark), entry.employee
     end
 

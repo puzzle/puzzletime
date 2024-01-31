@@ -11,6 +11,7 @@ class EmployeeStatisticsTest < ActiveSupport::TestCase
   test '#employments_during with start and end date set' do
     period = Period.new(Date.new(2000, 1, 1), Date.new(2000, 1, 23))
     employments = statistics.employments_during(period)
+
     assert_equal 1, employments.count
     assert_equal 10, employments.first.percent
   end
@@ -18,6 +19,7 @@ class EmployeeStatisticsTest < ActiveSupport::TestCase
   test '#employments_during with only start date set' do
     period = Period.new(Date.new(2000, 1, 1), nil)
     employments = statistics.employments_during(period)
+
     assert_equal 3, employments.count
     assert_equal 10, employments.first.percent
     assert_equal 20, employments.second.percent
@@ -27,6 +29,7 @@ class EmployeeStatisticsTest < ActiveSupport::TestCase
   test '#employments_during with only end date set' do
     period = Period.new(nil, Date.new(2000, 1, 23))
     employments = statistics.employments_during(period)
+
     assert_equal 2, employments.count
     assert_equal 30, employments.first.percent
     assert_equal 10, employments.second.percent
@@ -46,17 +49,21 @@ class EmployeeStatisticsTest < ActiveSupport::TestCase
     period = Period.new('01.11.2006', '30.11.2006')
 
     employee = Fabricate(:employee)
-    employment = Fabricate(:employment, employee: employee, percent: 100, start_date: '01.01.2006', end_date: '31.12.2006')
-    assert_equal 176.0, employee.statistics.musttime(period)
+    employment = Fabricate(:employment, employee:, percent: 100, start_date: '01.01.2006', end_date: '31.12.2006')
+
+    assert_in_delta(176.0, employee.statistics.musttime(period))
 
     employment.update(end_date: '15.11.2006')
-    assert_equal 88.0, employee.statistics.musttime(period)
 
-    employment2 = Fabricate(:employment, employee: employee, percent: 100, start_date: '16.11.2006', end_date: '31.12.2006')
-    assert_equal 176.0, employee.statistics.musttime(period)
+    assert_in_delta(88.0, employee.statistics.musttime(period))
+
+    employment2 = Fabricate(:employment, employee:, percent: 100, start_date: '16.11.2006', end_date: '31.12.2006')
+
+    assert_in_delta(176.0, employee.statistics.musttime(period))
 
     employment2.update(percent: 50)
-    assert_equal 132.0, employee.statistics.musttime(period)
+
+    assert_in_delta(132.0, employee.statistics.musttime(period))
   end
 
   test 'remaining worktime is affected by' do
@@ -76,38 +83,48 @@ class EmployeeStatisticsTest < ActiveSupport::TestCase
     period = Period.new('01.11.2006', '30.11.2006')
 
     employee = Fabricate(:employee)
-    employment = Fabricate(:employment, employee: employee, percent: 100, start_date: '01.01.2006', end_date: '31.12.2006')
-    assert_equal 100.0, employee.statistics.average_percents(period)
+    employment = Fabricate(:employment, employee:, percent: 100, start_date: '01.01.2006', end_date: '31.12.2006')
+
+    assert_in_delta(100.0, employee.statistics.average_percents(period))
 
     employment.update(end_date: '15.11.2006')
-    assert_equal 50.0, employee.statistics.average_percents(period)
 
-    employment2 = Fabricate(:employment, employee: employee, percent: 100, start_date: '16.11.2006', end_date: '31.12.2006')
-    assert_equal 100.0, employee.statistics.average_percents(period)
+    assert_in_delta(50.0, employee.statistics.average_percents(period))
+
+    employment2 = Fabricate(:employment, employee:, percent: 100, start_date: '16.11.2006', end_date: '31.12.2006')
+
+    assert_in_delta(100.0, employee.statistics.average_percents(period))
 
     employment2.update(percent: 50)
-    assert_equal 75.0, employee.statistics.average_percents(period)
+
+    assert_in_delta(75.0, employee.statistics.average_percents(period))
 
     employment2.update(percent: 100, start_date: '23.11.2006', end_date: '31.11.2006')
-    assert_equal 75.0, employee.statistics.average_percents(period)
+
+    assert_in_delta(75.0, employee.statistics.average_percents(period))
   end
 
   test '#percents_at' do
     employee = Fabricate(:employee)
+
     assert_equal 0, employee.statistics.percents_at('16.11.2006')
 
-    employment = Fabricate(:employment, employee: employee, percent: 80, start_date: '01.01.2006', end_date: '31.12.2006')
+    employment = Fabricate(:employment, employee:, percent: 80, start_date: '01.01.2006', end_date: '31.12.2006')
+
     assert_equal 80, employee.statistics.percents_at('16.11.2006')
 
     employment.update(percent: 65, start_date: '16.11.2006', end_date: '16.11.2006')
+
     assert_equal 65, employee.statistics.percents_at('16.11.2006')
   end
 
   test '#billable_percents_at' do
     employee = Fabricate(:employee)
+
     assert_equal 0, employee.statistics.billable_percents_at('16.11.2006')
 
-    employment = Fabricate(:employment, employee: employee, percent: 80, start_date: '01.01.2006', end_date: '31.12.2006')
+    employment = Fabricate(:employment, employee:, percent: 80, start_date: '01.01.2006', end_date: '31.12.2006')
+
     assert_equal 0, employee.statistics.billable_percents_at('16.11.2006')
 
     billable = employment.employment_roles_employments.create!(
@@ -115,6 +132,7 @@ class EmployeeStatisticsTest < ActiveSupport::TestCase
       employment_role_level: employment_role_levels(:junior),
       employment_role: employment_roles(:system_technician)
     )
+
     assert_equal 80, employee.statistics.billable_percents_at('16.11.2006')
 
     billable.update(percent: 55)
@@ -122,10 +140,12 @@ class EmployeeStatisticsTest < ActiveSupport::TestCase
       percent: 25,
       employment_role: employment_roles(:technical_board)
     )
+
     assert_equal 55, employee.statistics.billable_percents_at('16.11.2006')
 
     billable.destroy
     non_billable.update!(percent: 80)
+
     assert_equal 0, employee.statistics.billable_percents_at('16.11.2006')
   end
 

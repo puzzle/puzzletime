@@ -84,13 +84,13 @@ class Order::Report::Entry < SimpleDelegator
 
   private
 
-  def sum_accounting_posts(&block)
-    accounting_posts.keys.sum(&block)
+  def sum_accounting_posts(&)
+    accounting_posts.keys.sum(&)
   end
 
   def post_hours(id, billable = nil)
     h = hours[id]
-    return 0.to_d unless h
+    return BigDecimal('0') unless h
 
     if billable.nil?
       h.values.sum.to_d

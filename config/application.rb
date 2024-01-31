@@ -71,14 +71,12 @@ module Puzzletime
     }
 
     config.to_prepare do |_|
-      begin
-        Crm.init
-        Invoicing.init
-        CommitReminderJob.schedule
-      rescue ActiveRecord::StatementInvalid => e
-        # the db might not exist yet, lets ignore the error in this case
-        raise e unless e.message =~ /PG::UndefinedTable/ || e.message =~ /does not exist/
-      end
+      Crm.init
+      Invoicing.init
+      CommitReminderJob.schedule
+    rescue ActiveRecord::StatementInvalid => e
+      # the db might not exist yet, lets ignore the error in this case
+      raise e unless e.message =~ /PG::UndefinedTable/ || e.message =~ /does not exist/
     end
 
     config.active_record.yaml_column_permitted_classes = [Date, BigDecimal]

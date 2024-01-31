@@ -24,7 +24,7 @@ class Evaluations::EmployeeSubWorkItemsEval < Evaluations::SubWorkItemsEval
   end
 
   def worktime_query(receiver, period = nil, division = nil)
-    super(receiver, period, division).where(employee_id: employee_id)
+    super(receiver, period, division).where(employee_id:)
   end
 
   def sub_work_items_evaluation(division = nil)

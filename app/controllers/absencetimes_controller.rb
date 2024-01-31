@@ -19,10 +19,10 @@ class AbsencetimesController < WorktimesController
   end
 
   def update
-    if entry.employee_id != @user.id
-      redirect_to index_path
-    else
+    if entry.employee_id == @user.id
       super
+    else
+      redirect_to index_path
     end
   end
 

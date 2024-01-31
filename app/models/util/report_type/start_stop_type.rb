@@ -10,7 +10,7 @@ class ReportType::StartStopType < ReportType
   end
 
   def copy_times(source, target)
-    super source, target
+    super(source, target)
     target.from_start_time = source.from_start_time
     target.to_end_time = source.to_end_time
   end

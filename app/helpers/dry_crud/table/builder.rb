@@ -96,8 +96,8 @@ module DryCrud::Table
     end
 
     # Create a table footer with arbitrary html
-    def foot(&block)
-      @footer = template.capture(entries, &block)
+    def foot(&)
+      @footer = template.capture(entries, &)
     end
 
     private

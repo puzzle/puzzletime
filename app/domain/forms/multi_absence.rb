@@ -4,8 +4,8 @@
 #  https://github.com/puzzle/puzzletime.
 
 class Forms::MultiAbsence
-  attr_reader :absence_id, :employee, :work_date, :duration, :description, :worktime
-  attr_writer :employee
+  attr_accessor :employee
+  attr_reader :absence_id, :work_date, :duration, :description, :worktime
 
   def initialize
     @duration = 1
@@ -22,11 +22,9 @@ class Forms::MultiAbsence
     @worktime = worktime_template(@work_date,
                                   WorkingCondition.value_at(work_date, :must_hours_per_day))
     valid = @worktime.valid?
-    if valid
-      if duration <= 0
-        valid = false
-        @worktime.errors.add(:work_date, 'Die Dauer muss grösser als 0 sein.')
-      end
+    if valid && (duration <= 0)
+      valid = false
+      @worktime.errors.add(:work_date, 'Die Dauer muss grösser als 0 sein.')
     end
     valid
   end
@@ -36,7 +34,7 @@ class Forms::MultiAbsence
   end
 
   def end_date
-    work_date + duration * 7 - 1
+    work_date + (duration * 7) - 1
   end
 
   def duration

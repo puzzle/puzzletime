@@ -18,7 +18,7 @@ namespace :db do
       sh({ 'PGPASSWORD' => c[:password] },
          %W(psql
             -U #{c[:username]}
-            -f #{ENV['FILE']}
+            -f #{ENV.fetch('FILE', nil)}
             -h #{c[:host]}
             #{c[:database]}).join(' '))
       Rake::Task['db:migrate'].invoke

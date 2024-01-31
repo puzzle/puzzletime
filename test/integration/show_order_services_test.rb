@@ -12,6 +12,7 @@ class ShowOrderServices < ActionDispatch::IntegrationTest
     timeout_safe do
       create_ordertime_show_order_services_as employee_without_responsibilities
       click_worktime_row
+
       assert has_no_text?('Zeit bearbeiten')
       assert_equal order_order_services_path(order_id: order), current_path
     end
@@ -21,6 +22,7 @@ class ShowOrderServices < ActionDispatch::IntegrationTest
     timeout_safe do
       create_ordertime_show_order_services_as employee_responsible_for_order
       click_worktime_row
+
       assert has_text?('Zeit bearbeiten')
       assert_equal edit_ordertime_path(id: ordertime.id), current_path
     end
@@ -30,6 +32,7 @@ class ShowOrderServices < ActionDispatch::IntegrationTest
     timeout_safe do
       create_ordertime_show_order_services_as employee_responsible_for_different_order
       click_worktime_row
+
       assert has_no_text?('Zeit bearbeiten')
       assert_equal order_order_services_path(order_id: order), current_path
     end
@@ -39,6 +42,7 @@ class ShowOrderServices < ActionDispatch::IntegrationTest
     timeout_safe do
       create_ordertime_show_order_services_as manager_not_responsible_for_any_order
       click_worktime_row
+
       assert has_text?('Zeit bearbeiten')
       assert_equal edit_ordertime_path(id: ordertime.id), current_path
     end
@@ -52,6 +56,7 @@ class ShowOrderServices < ActionDispatch::IntegrationTest
       login_as user
       visit order_order_services_path(order_id: order)
       click_worktime_row
+
       assert has_no_text?('Zeit bearbeiten')
       assert_equal order_order_services_path(order_id: order), current_path
     end
@@ -62,14 +67,14 @@ class ShowOrderServices < ActionDispatch::IntegrationTest
   def employee_without_responsibilities
     Employee.where.not(management: true).where.not(id: responsible_ids).first.tap do |employee|
       refute employee.management
-      refute employee.order_responsible?
+      refute_predicate employee, :order_responsible?
     end
   end
 
   def employee_responsible_for_order
     order.responsible.tap do |employee|
       refute employee.management
-      assert employee.order_responsible?
+      assert_predicate employee, :order_responsible?
       assert_equal employee, order.responsible
     end
   end
@@ -77,7 +82,7 @@ class ShowOrderServices < ActionDispatch::IntegrationTest
   def employee_responsible_for_different_order
     Employee.where(management: false, id: responsible_ids).where.not(id: order.responsible_id).first.tap do |employee|
       refute employee.management
-      assert employee.order_responsible?
+      assert_predicate employee, :order_responsible?
       refute_equal employee, order.responsible
     end
   end
@@ -95,7 +100,7 @@ class ShowOrderServices < ActionDispatch::IntegrationTest
 
   def create_ordertime(employee)
     @ordertime = Ordertime.create!(
-      employee: employee,
+      employee:,
       work_date: Time.zone.today,
       report_type: :absolute_day,
       hours: 0.5,

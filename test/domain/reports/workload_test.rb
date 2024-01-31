@@ -13,33 +13,40 @@ class WorkloadTest < ActiveSupport::TestCase
   test 'has entries for employees of department with worktime without employment' do
     # one entry for each employee of the department during the period
     report = report(period: Period.new('1.1.2006', '31.12.2006'))
+
     assert_equal employees(:lucien, :pascal), report.entries.map(&:employee)
   end
 
   test 'has entries for employees of department with employment during period' do
     employees(:half_year_maria).update(department: departments(:devtwo))
     report = report(period: Period.new('1.1.2006', '31.12.2006'))
+
     assert_includes(report.entries.map(&:employee), employees(:half_year_maria))
   end
 
   test 'employee must_hours' do
     employment1 = Fabricate(:employment, employee: employees(:lucien),
                                          start_date: '1.9.1900', end_date: '15.9.1900')
+
     assert_equal 1, report.entries.count
 
     employment1.update(percent: 100)
+
     assert_equal employment1.musttime(period), report.entries.first.must_hours
 
     employment1.update(percent: 70)
+
     assert_equal employment1.musttime(period), report.entries.first.must_hours
 
     employment1.update(start_date: '1.1.1800')
+
     assert_equal employment1.musttime(period), report.entries.first.must_hours
 
     employment2 = Fabricate(:employment, employee: employees(:lucien), percent: 50,
                                          start_date: '16.9.1900', end_date: '30.9.1900')
 
     expected = employment1.musttime(period) + employment2.musttime(period)
+
     assert_equal expected, report.entries.first.must_hours
   end
 
@@ -67,24 +74,29 @@ class WorkloadTest < ActiveSupport::TestCase
 
     Fabricate(:ordertime, hours: 2.5, work_item: work_items(:webauftritt),
                           employee: employees(:lucien), work_date: period.start_date)
-    assert_equal(-77.5, report.entries.first.worktime_balance)
+
+    assert_in_delta(-77.5, report.entries.first.worktime_balance)
 
     Fabricate(:absencetime, hours: 10.5, employee: employees(:lucien), work_date: period.end_date)
+
     assert_equal(-67, report.entries.first.worktime_balance)
 
     Fabricate(:ordertime, hours: 68, work_item: work_items(:webauftritt),
                           employee: employees(:lucien), work_date: period.start_date)
+
     assert_equal 1, report.entries.first.worktime_balance
   end
 
   test 'employee billable_hours' do
     Fabricate(:ordertime, billable: false, hours: 2.5, work_item: work_items(:webauftritt),
                           employee: employees(:lucien), work_date: period.start_date)
+
     assert_equal 0, report.entries.first.billable_hours
 
     Fabricate(:ordertime, billable: true, hours: 2.5, work_item: work_items(:webauftritt),
                           employee: employees(:lucien), work_date: period.start_date)
-    assert_equal 2.5, report.entries.first.billable_hours
+
+    assert_in_delta(2.5, report.entries.first.billable_hours)
   end
 
   test 'employee workload' do
@@ -147,8 +159,8 @@ class WorkloadTest < ActiveSupport::TestCase
 
     puzzle_summary, department_summary = report.summary
 
-    assert_equal 1.4, puzzle_summary.employment_fte
-    assert_equal 0.8, department_summary.employment_fte
+    assert_in_delta(1.4, puzzle_summary.employment_fte)
+    assert_in_delta(0.8, department_summary.employment_fte)
   end
 
   test 'summary must_hour' do
@@ -276,28 +288,33 @@ class WorkloadTest < ActiveSupport::TestCase
   test 'contains entries for all employees with employments' do
     Worktime.delete_all
     create_employments
+
     assert_equal employees(:lucien, :pascal),
                  report(period: Period.new('1.1.2006', '31.12.2006')).entries.map(&:employee)
   end
 
   test 'filter too restrictive' do
     r = report(period: Period.new('1.1.1000', '1.1.1900'))
-    assert_equal [], r.entries
+
+    assert_empty r.entries
   end
 
   test 'filter by start date' do
     worktimes(:wt_pz_doctor).delete
     r = report(period: Period.new(Date.new(2006, 12, 11), nil))
+
     assert_equal [employees(:lucien)], r.entries.map(&:employee)
   end
 
   test 'filter by end date' do
     r = report(period: Period.new(nil, Date.new(2006, 12, 4)))
+
     assert_equal [employees(:pascal)], r.entries.map(&:employee)
   end
 
   test 'filter by period' do
     r = report(period: Period.new(Date.new(2006, 12, 1), Date.new(2006, 12, 4)))
+
     assert_equal [employees(:pascal)], r.entries.map(&:employee)
   end
 
@@ -305,63 +322,75 @@ class WorkloadTest < ActiveSupport::TestCase
 
   test 'sort by employee' do
     r = report(sort: 'employee', period: Period.new('1.1.2006', '31.12.2006'))
+
     assert_equal employees(:lucien, :pascal), r.entries.map(&:employee)
   end
 
   test 'sort by employee desc' do
     r = report(sort: 'employee', sort_dir: 'desc', period: Period.new('1.1.2006', '31.12.2006'))
+
     assert_equal employees(:pascal, :lucien), r.entries.map(&:employee)
   end
 
   test 'sort by must_hours' do
     create_employments
     r = report(sort: 'must_hours', period: Period.new('1.1.2006', '31.12.2006'))
+
     assert_equal employees(:lucien, :pascal), r.entries.map(&:employee)
   end
 
   test 'sort by must_hours desc' do
     create_employments
     r = report(sort: 'must_hours', sort_dir: 'desc', period: Period.new('1.1.2006', '31.12.2006'))
+
     assert_equal employees(:pascal, :lucien), r.entries.map(&:employee)
   end
 
   test 'sort by worktime_balance' do
     r = report(sort: 'worktime_balance', period: Period.new('1.1.2006', '31.12.2006'))
+
     assert_equal employees(:lucien, :pascal), r.entries.map(&:employee)
   end
 
   test 'sort by worktime_balance desc' do
     r = report(sort: 'worktime_balance', sort_dir: 'desc', period: Period.new('1.1.2006', '31.12.2006'))
+
     assert_equal employees(:pascal, :lucien), r.entries.map(&:employee)
   end
 
   test 'sort by ordertime_hours' do
     r = report(sort: 'ordertime_hours', period: Period.new('1.1.2006', '31.12.2006'))
+
     assert_equal employees(:lucien, :pascal), r.entries.map(&:employee)
   end
 
   test 'sort by ordertime_hours desc' do
     r = report(sort: 'ordertime_hours', sort_dir: 'desc', period: Period.new('1.1.2006', '31.12.2006'))
+
     assert_equal employees(:pascal, :lucien), r.entries.map(&:employee)
   end
 
   test 'sort by workload' do
     r = report(sort: 'workload', period: Period.new('1.1.2006', '31.12.2006'))
+
     assert_equal employees(:pascal, :lucien), r.entries.map(&:employee)
   end
 
   test 'sort by workload desc' do
     r = report(sort: 'workload', sort_dir: 'desc', period: Period.new('1.1.2006', '31.12.2006'))
+
     assert_equal employees(:lucien, :pascal), r.entries.map(&:employee)
   end
 
   test 'sort by billability' do
     r = report(sort: 'billability', period: Period.new('1.1.2006', '31.12.2006'))
+
     assert_equal employees(:lucien, :pascal), r.entries.map(&:employee)
   end
 
   test 'sort by billability desc' do
     r = report(sort: 'billability', sort_dir: 'desc', period: Period.new('1.1.2006', '31.12.2006'))
+
     assert_equal employees(:pascal, :lucien), r.entries.map(&:employee)
   end
 

@@ -63,5 +63,5 @@ def download_geckodriver(target)
 end
 
 def modify_path(target)
-  ENV['PATH'] = "#{target.dirname}:#{ENV['PATH']}"
+  ENV['PATH'] = "#{target.dirname}:#{ENV.fetch('PATH', nil)}"
 end

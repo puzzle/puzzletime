@@ -73,8 +73,8 @@ module DryCrud
 
       def number_null_order?
         type = model_class.columns_hash[params[:sort]].try(:type)
-        !sort_mappings_with_indifferent_access.key?(params[:sort]) &&
-          type == :integer || type == :float
+        (!sort_mappings_with_indifferent_access.key?(params[:sort]) &&
+          type == :integer) || type == :float
       end
     end
   end

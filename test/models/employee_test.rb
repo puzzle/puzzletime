@@ -49,47 +49,51 @@ class EmployeeTest < ActiveSupport::TestCase
   def test_half_year_employment
     employee = Employee.find(1)
     period = year_period(employee)
-    assert_equal employee.statistics.employments_during(period).size, 1
+
+    assert_equal 1, employee.statistics.employments_during(period).size
     assert_in_delta 12.60, employee.statistics.remaining_vacations(period.end_date), 0.005
-    assert_equal employee.statistics.used_vacations(period), 0
+    assert_equal 0, employee.statistics.used_vacations(period)
     assert_in_delta 12.60, employee.statistics.total_vacations(period), 0.005
-    assert_equal employee.statistics.overtime(period), - 127 * 8
+    assert_equal - 127 * 8, employee.statistics.overtime(period)
   end
 
   def test_various_employment
     employee = Employee.find(2)
     period = year_period(employee)
     employments = employee.statistics.employments_during(period)
+
     assert_equal 3, employments.size
     assert_equal employments[0].start_date, Date.new(2005, 11, 1)
     assert_equal employments[0].end_date, Date.new(2006, 1, 31)
-    assert_equal employments[0].period.length, 92
+    assert_equal 92, employments[0].period.length
     assert_in_delta 2.52, employments[0].vacations, 0.005
     assert_in_delta 3.73, employments[1].vacations, 0.005
     assert_in_delta 7.33, employments[2].vacations, 0.005
     assert_in_delta 13.58, employee.statistics.remaining_vacations(period.end_date), 0.01
-    assert_equal employee.statistics.used_vacations(period), 0
+    assert_equal 0, employee.statistics.used_vacations(period)
     assert_in_delta 13.58, employee.statistics.total_vacations(period), 0.01
     assert_in_delta 11.90, employee.statistics.total_vacations(Period.year_for(Date.new(2006))), 0.01
-    assert_equal employee.statistics.overtime(period), - (64 * 0.4 * 8 + 162 * 0.2 * 8 + 73 * 8)
+    assert_equal employee.statistics.overtime(period), - ((64 * 0.4 * 8) + (162 * 0.2 * 8) + (73 * 8))
   end
 
   def test_next_year_employment
     employee = Employee.find(3)
     period = year_period(employee)
-    assert_equal employee.statistics.employments_during(period).size, 0
-    assert_equal employee.statistics.remaining_vacations(Date.new(2006, 12, 31)), 0
-    assert_equal employee.statistics.used_vacations(period), 0
-    assert_equal employee.statistics.total_vacations(period), 0
-    assert_equal employee.statistics.overtime(period), 0
+
+    assert_equal 0, employee.statistics.employments_during(period).size
+    assert_equal 0, employee.statistics.remaining_vacations(Date.new(2006, 12, 31))
+    assert_equal 0, employee.statistics.used_vacations(period)
+    assert_equal 0, employee.statistics.total_vacations(period)
+    assert_equal 0, employee.statistics.overtime(period)
   end
 
   def test_left_this_year_employment
     employee = Employee.find(4)
     period = year_period(employee)
-    assert_equal employee.statistics.employments_during(period).size, 1
+
+    assert_equal 1, employee.statistics.employments_during(period).size
     assert_in_delta 29.92, employee.statistics.remaining_vacations(period.end_date), 0.005
-    assert_equal employee.statistics.used_vacations(period), 0
+    assert_equal 0, employee.statistics.used_vacations(period)
     assert_in_delta 29.92, employee.statistics.total_vacations(period), 0.005
     assert_in_delta((- 387 * 8 * 0.8), employee.statistics.overtime(period), 0.005)
   end
@@ -97,20 +101,23 @@ class EmployeeTest < ActiveSupport::TestCase
   def test_long_time_employment
     employee = Employee.find(5)
     period = year_period(employee)
-    assert_equal employee.statistics.employments_during(period).size, 1
+
+    assert_equal 1, employee.statistics.employments_during(period).size
     assert_in_delta 382.5, employee.statistics.remaining_vacations(period.end_date), 0.005
-    assert_equal employee.statistics.used_vacations(period), 0
+    assert_equal 0, employee.statistics.used_vacations(period)
     assert_in_delta 382.5, employee.statistics.total_vacations(period), 0.005
-    assert_equal employee.statistics.overtime(period), - 31_500
+    assert_equal - 31_500, employee.statistics.overtime(period)
   end
 
   def test_alltime_leaf_work_items
     e = employees(:pascal)
+
     assert_equal work_items(:allgemein, :puzzletime, :webauftritt), e.alltime_leaf_work_items
   end
 
   def test_alltime_main_work_items
     e = employees(:pascal)
+
     assert_equal work_items(:puzzle, :swisstopo), e.alltime_main_work_items
   end
 
@@ -120,6 +127,7 @@ class EmployeeTest < ActiveSupport::TestCase
     to = '11.12.2006'
 
     empls = Employee.with_worktimes_in_period(order, from, to)
+
     assert 1, empls.size
     assert_includes empls, employees(:mark)
   end
@@ -143,13 +151,16 @@ class EmployeeTest < ActiveSupport::TestCase
 
   test '#pending_worktimes_commit scope' do
     Employee.update_all(committed_worktimes_at: nil)
-    assert Employee.pending_worktimes_commit.present?
+
+    assert_predicate Employee.pending_worktimes_commit, :present?
 
     Employee.update_all(committed_worktimes_at: Date.today.beginning_of_month - 1.day)
-    assert Employee.pending_worktimes_commit.blank?
 
-    Employee.update_all(committed_worktimes_at: Date.today.beginning_of_month - 2.day)
-    assert Employee.pending_worktimes_commit.present?
+    assert_predicate Employee.pending_worktimes_commit, :blank?
+
+    Employee.update_all(committed_worktimes_at: Date.today.beginning_of_month - 2.days)
+
+    assert_predicate Employee.pending_worktimes_commit, :present?
   end
 
   private

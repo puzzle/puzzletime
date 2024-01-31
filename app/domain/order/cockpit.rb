@@ -34,7 +34,7 @@ class Order::Cockpit
 
   # (Ist[h]-Ist-NV[h]) / Ist[h] x 100
   def cost_effectiveness_forecast
-    result = (1 - not_billable_hours / total_hours) * 100.0
+    result = (1 - (not_billable_hours / total_hours)) * 100.0
     result.finite? ? result.round : EM_DASH
   end
 

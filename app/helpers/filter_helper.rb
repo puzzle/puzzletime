@@ -33,10 +33,10 @@ module FilterHelper
      IdValue.new(:high, 'gross')]
   end
 
-  def direct_filter(name, label, &block)
+  def direct_filter(name, label, &)
     html = ''.html_safe
     html += label_tag(name, label, class: 'control-label') + ' &nbsp; '.html_safe if label
-    html += capture(&block)
+    html += capture(&)
     content_tag(:div, html, class: 'form-group')
   end
 

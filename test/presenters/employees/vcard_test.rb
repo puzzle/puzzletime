@@ -6,23 +6,22 @@
 require 'test_helper'
 
 class Employees::VcardTest < ActiveSupport::TestCase
-
   def vcard(employee, include: nil)
-    Employees::Vcard.new(employee, include: include).render
+    Employees::Vcard.new(employee, include:).render
   end
 
   def employee(**attrs)
     Employee.new(attrs.reverse_merge(
-      firstname: 'Erika',
-      lastname: 'Musterfrau',
-      email: 'emuster@example.com',
-      street: 'Belpstrasse 7',
-      postal_code: 3007,
-      city: 'Bern',
-      phone_office: '0310000000',
-      phone_private: '0780000000',
-      birthday: Date.parse('1.1.1942')
-    ))
+                   firstname: 'Erika',
+                   lastname: 'Musterfrau',
+                   email: 'emuster@example.com',
+                   street: 'Belpstrasse 7',
+                   postal_code: 3007,
+                   city: 'Bern',
+                   phone_office: '0310000000',
+                   phone_private: '0780000000',
+                   birthday: Date.parse('1.1.1942')
+                 ))
   end
 
   test 'renders vcard for employee' do
@@ -68,8 +67,7 @@ class Employees::VcardTest < ActiveSupport::TestCase
     VCF
 
     assert_equal expected, vcard(employee, include: [
-      :firstname, :phone_private, :birthday
-    ])
+                                   :firstname, :phone_private, :birthday
+                                 ])
   end
-
 end

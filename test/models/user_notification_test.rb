@@ -24,6 +24,7 @@ class UserNotificationTest < ActiveSupport::TestCase
     Holiday.create!(holiday_date: monday + 4.days, musthours_day: 0)
 
     messages = UserNotification.list_during.collect(&:message)
+
     assert_includes messages, 'bar'
     assert_not_includes messages, 'foo'
     assert_includes messages, 'baz'

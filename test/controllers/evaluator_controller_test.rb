@@ -10,13 +10,15 @@ class EvaluatorControllerTest < ActionController::TestCase
 
   %w(userworkitems userabsences).each do |evaluation|
     test "GET index #{evaluation}" do
-      get :index, params: { evaluation: evaluation }
+      get :index, params: { evaluation: }
+
       assert_template evaluation == 'userworkitems' ? 'overview_employee' : 'overview'
       assert_equal %w(-2m -1m 0m -1y 0y 0).map { |p| Period.parse(p) }, assigns(:periods)
     end
 
     test "GET export csv #{evaluation}" do
-      get :export_csv, params: { evaluation: evaluation }
+      get :export_csv, params: { evaluation: }
+
       assert_csv_http_headers('puzzletime-waber_mark.csv')
       assert_match expected_csv_header, csv_header
     end
@@ -24,6 +26,7 @@ class EvaluatorControllerTest < ActionController::TestCase
 
   test 'GET export_csv userworkitems csv format' do
     get :export_csv, params: { evaluation: 'userworkitems' }
+
     assert_match expected_csv_header, csv_header
     assert_equal 3, csv_data_lines.size
     assert_match '06.12.2006,5.0,"","",absolute_day,true,Waber Mark,PITC-AL: Allgemein,,', csv_data_lines.first
@@ -31,12 +34,14 @@ class EvaluatorControllerTest < ActionController::TestCase
 
   test "GET index employees" do
     get :index, params: { evaluation: 'employees' }
+
     assert_template 'employees'
   end
 
   %w(clients departments).each do |evaluation|
     test "GET index #{evaluation}" do
-      get :index, params: { evaluation: evaluation }
+      get :index, params: { evaluation: }
+
       assert_template 'overview'
       assert_nil assigns(:order)
     end
@@ -44,6 +49,7 @@ class EvaluatorControllerTest < ActionController::TestCase
 
   test "GET index workitememployees" do
     get :index, params: { evaluation: "workitememployees", category_id: work_items(:allgemein) }
+
     assert_template 'overview'
     assert_equal work_items(:allgemein).order, assigns(:order)
     assert_select "a", /#{work_items(:allgemein).order.label_with_workitem_path}/
@@ -51,12 +57,14 @@ class EvaluatorControllerTest < ActionController::TestCase
 
   %w(clients employees departments).each do |evaluation|
     test "GET details #{evaluation}" do
-      get :details, params: { evaluation: evaluation, category_id: division_id(evaluation) }
+      get :details, params: { evaluation:, category_id: division_id(evaluation) }
+
       assert_template 'details'
     end
 
     test "GET export csv #{evaluation}" do
-      get :export_csv, params: { evaluation: evaluation }
+      get :export_csv, params: { evaluation: }
+
       assert_csv_http_headers('puzzletime.csv')
       assert_match expected_csv_header, csv_header
       assert_equal 9, csv_data_lines.size
@@ -73,6 +81,7 @@ class EvaluatorControllerTest < ActionController::TestCase
 
     assert_template 'report'
     total = assigns(:worktimes).sum(:hours)
+
     assert_match /Total Stunden.*#{total}/m, response.body
   end
 
@@ -96,6 +105,7 @@ class EvaluatorControllerTest < ActionController::TestCase
 
     assert_template 'report'
     total = assigns(:worktimes).sum(:hours)
+
     assert_equal 8, total
     assert_match /Total Stunden.*#{total}/m, response.body
   end

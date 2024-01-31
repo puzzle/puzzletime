@@ -137,6 +137,7 @@ class WorkItemTest < ActiveSupport::TestCase
   test 'destroys dependent plannings when destroyed' do
     planning = plannings(:hitobito_demo_app_planning1)
     planning.work_item.destroy
+
     refute Planning.exists?(planning.id)
   end
 
@@ -155,6 +156,7 @@ class WorkItemTest < ActiveSupport::TestCase
     end
 
     result = WorkItem.with_worktimes_in_period(order, from, to)
+
     assert 2, result.size
     assert_includes result, work_items.second
     assert_includes result, work_items.third

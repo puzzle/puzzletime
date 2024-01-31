@@ -23,18 +23,21 @@ class WorkingConditionTest < ActiveSupport::TestCase
     c = WorkingCondition.new(valid_from: Date.new(2012, 1, 1),
                              vacation_days_per_year: 20,
                              must_hours_per_day: 8.4)
+
     assert_valid c
   end
 
   test 'only one without valid_from may exist' do
     c = WorkingCondition.new(vacation_days_per_year: 20,
                              must_hours_per_day: 8.4)
+
     assert_not_valid c, :valid_from
   end
 
   test 'assigning valid_from to default is not possible' do
     c = working_conditions(:default)
     c.valid_from = Time.zone.today
+
     assert_not_valid c, :valid_from
   end
 
@@ -43,6 +46,7 @@ class WorkingConditionTest < ActiveSupport::TestCase
                                  vacation_days_per_year: 20,
                                  must_hours_per_day: 8.4)
     c.valid_from = ''
+
     assert_not_valid c, :valid_from
   end
 
@@ -59,13 +63,15 @@ class WorkingConditionTest < ActiveSupport::TestCase
                                  vacation_days_per_year: 20,
                                  must_hours_per_day: 8.4)
     c.destroy
-    assert c.destroyed?
+
+    assert_predicate c, :destroyed?
   end
 
   test 'each_period_of iterates over single condition' do
     period = Period.new(Date.new(2012, 1, 1), Date.new(2014, 12, 31))
 
     ps, vs = each_period_of(period)
+
     assert_equal 1, ps.size
     assert_equal Date.new(2012, 1, 1), ps.first.start_date
     assert_equal Date.new(2014, 12, 31), ps.first.end_date
@@ -86,6 +92,7 @@ class WorkingConditionTest < ActiveSupport::TestCase
     period = Period.new(Date.new(2012, 1, 1), Date.new(2013, 12, 31))
 
     ps, vs = each_period_of(period)
+
     assert_equal 2, ps.size
     assert_equal Date.new(2012, 1, 1), ps.first.start_date
     assert_equal Date.new(2012, 12, 31), ps.first.end_date
@@ -115,6 +122,7 @@ class WorkingConditionTest < ActiveSupport::TestCase
     period = Period.new(Date.new(2011, 1, 1), Date.new(2014, 12, 31))
 
     ps, vs = each_period_of(period)
+
     assert_equal 2, ps.size
     assert_equal Date.new(2011, 1, 1), ps.first.start_date
     assert_equal Date.new(2012, 12, 31), ps.first.end_date
@@ -144,6 +152,7 @@ class WorkingConditionTest < ActiveSupport::TestCase
     period = Period.new(Date.new(2010, 12, 31), Date.new(2015, 1, 1))
 
     ps, vs = each_period_of(period)
+
     assert_equal 4, ps.size
     assert_equal Date.new(2010, 12, 31), ps.first.start_date
     assert_equal Date.new(2010, 12, 31), ps.first.end_date
@@ -159,6 +168,7 @@ class WorkingConditionTest < ActiveSupport::TestCase
     period = Period.new(nil, Date.new(2014, 1, 1))
 
     ps, vs = each_period_of(period)
+
     assert_equal 1, ps.size
     assert_nil ps.first.start_date
     assert_equal Date.new(2014, 1, 1), ps.first.end_date
@@ -175,6 +185,7 @@ class WorkingConditionTest < ActiveSupport::TestCase
     period = Period.new(nil, Date.new(2014, 1, 1))
 
     ps, vs = each_period_of(period)
+
     assert_equal 2, ps.size
     assert_nil ps.first.start_date
     assert_equal Date.new(2009, 12, 31), ps.first.end_date
@@ -190,6 +201,7 @@ class WorkingConditionTest < ActiveSupport::TestCase
     period = Period.new(Date.new(2014, 1, 1), nil)
 
     ps, vs = each_period_of(period)
+
     assert_equal 2, ps.size
     assert_equal Date.new(2014, 1, 1), ps.first.start_date
     assert_equal Date.new(2014, 12, 31), ps.first.end_date
@@ -202,6 +214,7 @@ class WorkingConditionTest < ActiveSupport::TestCase
     period = Period.new(nil, nil)
 
     ps, vs = each_period_of(period)
+
     assert_equal 1, ps.size
     assert_nil ps.first.start_date
     assert_nil ps.first.end_date
@@ -215,6 +228,7 @@ class WorkingConditionTest < ActiveSupport::TestCase
     period = Period.new(nil, nil)
 
     ps, vs = each_period_of(period)
+
     assert_equal 2, ps.size
     assert_nil ps.first.start_date
     assert_equal Date.new(2014, 12, 31), ps.first.end_date

@@ -55,8 +55,7 @@ class Ability
          EmploymentRoleCategory,
          Reports::Workload,
          WorkItem,
-         Workplace
-        ]
+         Workplace]
 
     # :crud instead of :manage because cannot change settings of other employees
     can [:crud,
@@ -140,7 +139,7 @@ class Ability
     can [:edit, :update, :destroy], Invoice do |i|
       is_responsible     = (i.order.responsible_id == user.id)
       is_open            = !%w(deleted paid partially_paid).include?(i.status)
-      is_manual_and_used = (i.manual? && i.total_amount > 1)
+      is_manual_and_used = i.manual? && i.total_amount > 1
 
       is_responsible && is_open && !is_manual_and_used
     end

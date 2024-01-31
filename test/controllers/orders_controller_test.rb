@@ -12,44 +12,52 @@ class OrdersControllerTest < ActionController::TestCase
 
   test 'GET index sorted by order' do
     get :index, params: { sort: 'order', status_id: '' }
+
     assert_equal orders(:allgemein, :hitobito_demo, :puzzletime, :webauftritt), assigns(:orders)
   end
 
   test 'GET index sorted by kind' do
     get :index, params: { sort: 'kind', status_id: '' }
+
     assert_equal orders(:allgemein, :puzzletime, :hitobito_demo, :webauftritt), assigns(:orders)
   end
 
   test 'GET index sorted by department' do
     get :index, params: { sort: 'department', status_id: '' }
+
     assert_equal orders(:puzzletime, :webauftritt, :hitobito_demo, :allgemein), assigns(:orders)
   end
 
   test 'GET index sorted by responsible' do
     get :index, params: { sort: 'responsible', status_id: '' }
+
     assert_equal orders(:webauftritt, :allgemein, :hitobito_demo, :puzzletime), assigns(:orders)
   end
 
   test 'GET index sorted by status' do
     get :index, params: { sort: 'status', status_id: '' }
+
     assert_equal orders(:hitobito_demo, :puzzletime, :webauftritt, :allgemein), assigns(:orders)
   end
 
   test 'GET index sorted by major_chance_value' do
     orders(:allgemein).order_chances.create!(name: 'Aare is above 18°', probability: :medium, impact: :low)
     get :index, params: { sort: 'major_chance_value', status_id: '' }
+
     assert_equal orders(:hitobito_demo, :webauftritt, :allgemein, :puzzletime), assigns(:orders)
   end
 
   test 'GET index sorted by major_risk_value' do
     orders(:allgemein).order_risks.create!(name: 'Aare is below 18°', probability: :medium, impact: :low)
     get :index, params: { sort: 'major_risk_value', status_id: '', sort_dir: 'desc' }
+
     assert_equal orders(:allgemein, :puzzletime, :hitobito_demo, :webauftritt), assigns(:orders)
   end
 
   test 'GET index with default filter for manager' do
     login_as(:mark)
     get :index
+
     assert_equal orders(:hitobito_demo, :puzzletime, :webauftritt), assigns(:orders)
     assert_equal({ 'status_id' => [order_statuses(:bearbeitung).id] },
                  session[:list_params]['/orders'])
@@ -58,6 +66,7 @@ class OrdersControllerTest < ActionController::TestCase
   test 'GET index with default filter for user' do
     login_as(:pascal)
     get :index
+
     assert_equal [orders(:hitobito_demo)], assigns(:orders)
     assert_equal({ 'status_id' => [order_statuses(:bearbeitung).id],
                    'department_id' => departments(:devtwo).id },
@@ -67,6 +76,7 @@ class OrdersControllerTest < ActionController::TestCase
   test 'GET index with default filter for responsible' do
     login_as(:lucien)
     get :index
+
     assert_equal orders(:hitobito_demo, :puzzletime), assigns(:orders)
     assert_equal({ 'status_id' => [order_statuses(:bearbeitung).id],
                    'responsible_id' => employees(:lucien).id },
@@ -75,6 +85,7 @@ class OrdersControllerTest < ActionController::TestCase
 
   test 'GET index filtered by department' do
     get :index, params: { department_id: departments(:devone).id }
+
     assert_equal orders(:puzzletime, :webauftritt), assigns(:orders)
     assert_equal({ 'department_id' => departments(:devone).id.to_s },
                  session[:list_params]['/orders'])
@@ -82,6 +93,7 @@ class OrdersControllerTest < ActionController::TestCase
 
   test 'GET index filtered by responsible' do
     get :index, params: { responsible_id: employees(:lucien).id }
+
     assert_equal orders(:hitobito_demo, :puzzletime), assigns(:orders)
     assert_equal({ 'responsible_id' => employees(:lucien).id.to_s },
                  session[:list_params]['/orders'])
@@ -89,6 +101,7 @@ class OrdersControllerTest < ActionController::TestCase
 
   test 'GET index filtered by status' do
     get :index, params: { status_id: order_statuses(:bearbeitung).id }
+
     assert_equal orders(:hitobito_demo, :puzzletime, :webauftritt), assigns(:orders)
     assert_equal({ 'status_id' => order_statuses(:bearbeitung).id.to_s },
                  session[:list_params]['/orders'])
@@ -100,6 +113,7 @@ class OrdersControllerTest < ActionController::TestCase
     offeriert.save!
 
     get :index
+
     assert_equal(
       {
         'status_id' => [
@@ -113,6 +127,7 @@ class OrdersControllerTest < ActionController::TestCase
 
   test 'GET index filtered by kind' do
     get :index, params: { kind_id: order_kinds(:projekt).id }
+
     assert_equal orders(:hitobito_demo, :webauftritt), assigns(:orders)
     assert_equal({ 'kind_id' => order_kinds(:projekt).id.to_s },
                  session[:list_params]['/orders'])
@@ -120,6 +135,7 @@ class OrdersControllerTest < ActionController::TestCase
 
   test 'GET index filtered by status and kind' do
     get :index, params: { status_id: order_statuses(:bearbeitung).id, kind_id: order_kinds(:mandat).id }
+
     assert_equal [orders(:puzzletime)], assigns(:orders)
     assert_equal({ 'status_id' => order_statuses(:bearbeitung).id.to_s,
                    'kind_id' => order_kinds(:mandat).id.to_s },
@@ -133,7 +149,8 @@ class OrdersControllerTest < ActionController::TestCase
       status_id: order_statuses(:bearbeitung).id,
       kind_id: order_kinds(:mandat).id
     }
-    assert_equal [], assigns(:orders)
+
+    assert_empty assigns(:orders)
     assert_equal({ 'department_id' => departments(:devtwo).id.to_s,
                    'responsible_id' => employees(:lucien).id.to_s,
                    'status_id' => order_statuses(:bearbeitung).id.to_s,
@@ -149,6 +166,7 @@ class OrdersControllerTest < ActionController::TestCase
       }
     }
     get :index
+
     assert_equal [orders(:puzzletime)], assigns(:orders)
     assert_equal({ 'status_id' => order_statuses(:bearbeitung).id.to_s,
                    'kind_id' => order_kinds(:mandat).id.to_s },
@@ -163,6 +181,7 @@ class OrdersControllerTest < ActionController::TestCase
       }
     }
     get :index, params: { status_id: order_statuses(:abgeschlossen).id, responsible_id: employees(:mark).id }
+
     assert_equal [orders(:allgemein)], assigns(:orders)
     assert_equal({ 'status_id' => order_statuses(:abgeschlossen).id.to_s,
                    'responsible_id' => employees(:mark).id.to_s },
@@ -171,6 +190,7 @@ class OrdersControllerTest < ActionController::TestCase
 
   test 'GET show' do
     get :show, params: { id: orders(:hitobito_demo).id }
+
     assert_template 'show'
   end
 
@@ -178,6 +198,7 @@ class OrdersControllerTest < ActionController::TestCase
     get :new
     user = employees(:mark)
     order = assigns(:order)
+
     assert_nil order.department_id
     assert_equal user, order.responsible
   end
@@ -211,6 +232,7 @@ class OrdersControllerTest < ActionController::TestCase
 
     item = WorkItem.where(name: 'New Order').first
     order = item.order
+
     assert_equal 'NEO', item.shortname
     assert_equal clients(:swisstopo).id, item.parent_id
     assert_equal departments(:devtwo).id, order.department_id
@@ -219,9 +241,11 @@ class OrdersControllerTest < ActionController::TestCase
     assert_equal order_kinds(:projekt).id, order.kind_id
 
     order_contacts = order.order_contacts.map { |oc| [oc.contact_id, oc.comment] }.sort
+
     assert_equal [[contacts(:swisstopo_1).id, 'funktion 1'], [contacts(:swisstopo_2).id, 'funktion 2']].sort, order_contacts
 
     order_team_members = order.order_team_members.map { |otm| [otm.employee.id, otm.comment] }.sort
+
     assert_equal [[employees(:half_year_maria).id, 'rolle maria'], [employees(:next_year_pablo).id, 'rolle pablo']].sort, order_team_members
   end
 
@@ -255,18 +279,21 @@ class OrdersControllerTest < ActionController::TestCase
       }
     }
 
-    assert_equal [], assigns(:order).errors.full_messages
+    assert_empty assigns(:order).errors.full_messages
     assert_redirected_to edit_order_path(assigns(:order))
 
     item = WorkItem.where(name: 'New Order').first
     order = item.order
+
     assert_equal order_statuses(:bearbeitung).id, order.status_id
     assert_equal order_kinds(:projekt).id, order.kind_id
 
     order_contacts = order.order_contacts.map { |oc| [oc.contact_id, oc.comment] }.sort
+
     assert_equal [[contacts(:puzzle_rava).id, 'funktion 1']], order_contacts
 
     order_team_members = order.order_team_members.map { |otm| [otm.employee.id, otm.comment] }.sort
+
     assert_equal [[employees(:half_year_maria).id, 'rolle maria'], [employees(:next_year_pablo).id, 'rolle pablo']].sort, order_team_members
 
     assert_equal 'hito1234', order.contract.number
@@ -298,16 +325,17 @@ class OrdersControllerTest < ActionController::TestCase
       }
     }
 
-    assert_equal [], assigns(:order).errors.full_messages
+    assert_empty assigns(:order).errors.full_messages
     assert_redirected_to edit_order_path(assigns(:order))
 
     item = WorkItem.where(name: 'New Order').first
     order = item.order
+
     assert_equal order_statuses(:bearbeitung).id, order.status_id
     assert_equal order_kinds(:projekt).id, order.kind_id
 
-    assert_equal [], order.order_contacts
-    assert_equal [], order.order_team_members
+    assert_empty order.order_contacts
+    assert_empty order.order_team_members
 
     assert_not_equal source.contract_id, order.contract_id
 
@@ -315,6 +343,7 @@ class OrdersControllerTest < ActionController::TestCase
 
     assert_equal 1, order.accounting_posts.count
     post = order.accounting_posts.first
+
     assert_not_equal work_items(:webauftritt), post.work_item
     assert_equal order.work_item, post.work_item
     assert_equal 140, post.offered_rate
@@ -340,16 +369,17 @@ class OrdersControllerTest < ActionController::TestCase
       }
     }
 
-    assert_equal [], assigns(:order).errors.full_messages
+    assert_empty assigns(:order).errors.full_messages
     assert_redirected_to edit_order_path(assigns(:order))
 
     item = WorkItem.where(name: 'New Order').first
     order = item.order
+
     assert_equal order_statuses(:bearbeitung).id, order.status_id
     assert_equal order_kinds(:projekt).id, order.kind_id
 
-    assert_equal [], order.order_contacts
-    assert_equal [], order.order_team_members
+    assert_empty order.order_contacts
+    assert_empty order.order_team_members
 
     assert_nil order.contract_id
 
@@ -357,6 +387,7 @@ class OrdersControllerTest < ActionController::TestCase
 
     assert_equal 1, order.accounting_posts.count
     post = order.accounting_posts.first
+
     assert_not_equal source.work_item, post.work_item
     assert_equal order.work_item, post.work_item
   end
@@ -390,6 +421,7 @@ class OrdersControllerTest < ActionController::TestCase
 
     order.reload
     item = order.work_item
+
     assert_equal 'New Order', item.name
     assert_equal 'NEO', item.shortname
     assert_equal clients(:puzzle).id, item.parent_id
@@ -400,9 +432,11 @@ class OrdersControllerTest < ActionController::TestCase
     assert_equal 'puzzletime-crm-key', order.crm_key
 
     order_contacts = order.order_contacts.map { |oc| [oc.contact_id, oc.comment] }.sort
+
     assert_equal [[contacts(:puzzle_rava).id, 'funktion 1'], [contacts(:puzzle_hauswart).id, 'funktion 2']].sort, order_contacts
 
     order_team_members = order.order_team_members.map { |otm| [otm.employee.id, otm.comment] }.sort
+
     assert_equal [[employees(:half_year_maria).id, 'rolle maria'], [employees(:next_year_pablo).id, 'rolle pablo']].sort, order_team_members
   end
 
@@ -441,8 +475,10 @@ class OrdersControllerTest < ActionController::TestCase
         params: { id: order.id, period_from: '11.12.2006', period_to: '01.03.2007' }
 
     empls = JSON.parse(response.body)
+
     assert_equal 1, empls.size
     empl = empls.first
+
     assert_equal lucien.id, empl['id']
     assert_equal lucien.lastname, empl['lastname']
     assert_equal lucien.firstname, empl['firstname']
@@ -456,6 +492,7 @@ class OrdersControllerTest < ActionController::TestCase
     get :employees, xhr: true, params: { id: order.id }
 
     empls = JSON.parse(response.body)
+
     assert_equal 2, empls.size
     assert empls.any? { |e| e['id'] == lucien.id }
     assert empls.any? { |e| e['id'] == mark.id }
@@ -469,6 +506,7 @@ class OrdersControllerTest < ActionController::TestCase
         params: { id: order.id, period_from: '11.12.2007', period_to: '01.03.2008' }
 
     empls = JSON.parse(response.body)
+
     assert_equal 0, empls.size
   end
 

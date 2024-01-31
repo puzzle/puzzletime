@@ -23,8 +23,8 @@ class WorkingCondition < ActiveRecord::Base
   validate :exactly_one_without_valid_from
 
   before_destroy :protect_blank_valid_from
-  after_save :clear_cache
   after_destroy :clear_cache
+  after_save :clear_cache
 
   delegate :clear_cache, to: :class
 

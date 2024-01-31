@@ -44,7 +44,7 @@ class WorkItem < ActiveRecord::Base
              joins(:work_item).
                unscope(where: :work_item_id).
                where('worktimes.work_item_id = work_items.id AND ' \
-                   '? = ANY (work_items.path_ids)', work_item.id)
+                     '? = ANY (work_items.path_ids)', work_item.id)
            }
 
   ### VALIDATIONS
@@ -57,11 +57,11 @@ class WorkItem < ActiveRecord::Base
 
   before_validation :upcase_shortname
   before_save :remember_name_changes
-  before_update :generate_path_ids
   after_create :generate_path_ids!
   after_create :reset_parent_leaf
-  after_save :update_child_path_names, if: -> { @names_changed }
+  before_update :generate_path_ids
   after_destroy :reset_parent_leaf
+  after_save :update_child_path_names, if: -> { @names_changed }
 
   ### SCOPES
 
@@ -111,11 +111,11 @@ class WorkItem < ActiveRecord::Base
     !closed
   end
 
-  def with_ancestors(&block)
-    return enum_for(:with_ancestors) unless block_given?
+  def with_ancestors(&)
+    return enum_for(:with_ancestors) unless block
 
     yield self
-    parent.with_ancestors(&block) if parent_id?
+    parent.with_ancestors(&) if parent_id?
   end
 
   def self_and_descendants
@@ -156,7 +156,7 @@ class WorkItem < ActiveRecord::Base
   end
 
   def propagate_closed!(closed)
-    self_and_descendants.update_all(closed: closed)
+    self_and_descendants.update_all(closed:)
     self.closed = closed
     save!
   end

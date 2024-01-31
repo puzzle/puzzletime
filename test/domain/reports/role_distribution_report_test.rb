@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
-
-# coding: utf-8
 
 require 'test_helper'
 
@@ -17,6 +16,7 @@ class Reports::RoleDistributionReportTest < ActiveSupport::TestCase
     setup_employments
 
     title, header, *lines = CSV.parse(report.to_csv)
+
     assert_equal 'Funktionsanteile per 23.01.2010, GJ 2009/2010', title.first
     assert_equal ['Member', 'Anstellung', 'Wertschöpfung', 'Technical Board', 'Unterstützend'], header
 

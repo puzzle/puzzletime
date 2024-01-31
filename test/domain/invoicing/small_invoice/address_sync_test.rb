@@ -17,7 +17,7 @@ class Invoicing::SmallInvoice::AddressSyncTest < ActiveSupport::TestCase
 
   test '#sync with existing client but new address creates it' do
     client.update_column(:invoicing_key, 1234)
-    edit_address = stub_add_entity(:addresses, client: client, body: address_json, response: address_json_response)
+    edit_address = stub_add_entity(:addresses, client:, body: address_json, response: address_json_response)
 
     subject.sync
 
@@ -27,7 +27,7 @@ class Invoicing::SmallInvoice::AddressSyncTest < ActiveSupport::TestCase
   test '#sync with existing client and address edits it' do
     client.update_column(:invoicing_key, 1234)
     billing_address.update_column(:invoicing_key, 1)
-    edit_address = stub_edit_entity(:addresses, client: client, key: 1, body: address_id_json, response: address_json_response)
+    edit_address = stub_edit_entity(:addresses, client:, key: 1, body: address_id_json, response: address_json_response)
 
     subject_with_address.sync
 

@@ -275,7 +275,7 @@ Devise.setup do |config|
 
   if Settings.auth&.omniauth&.saml&.active
     saml = Settings.auth.omniauth.saml
-    runtime_params = saml.idp_sso_target_url_runtime_params&.split(/, ?/)&.split(/:/)&.to_h
+    runtime_params = saml.idp_sso_target_url_runtime_params&.split(/, ?/)&.split(':')&.to_h
 
     config.omniauth :saml,
                     assertion_consumer_service_url: saml.assertion_consumer_service_url,

@@ -27,6 +27,7 @@ class EmploymentsControllerTest < ActionController::TestCase
                                 },
                                 start_date: Date.new(2006, 10, 1),
                                 end_date: Date.new(2007, 5, 31) }, employee_id: 1 }
+
     assert_response :unprocessable_entity
     assert response.body.include? 'Für diese Zeitspanne ist bereits eine andere Anstellung definiert'
   end
@@ -38,6 +39,7 @@ class EmploymentsControllerTest < ActionController::TestCase
                                 },
                                 start_date: Date.new(2008, 10, 1),
                                 end_date: Date.new(2009, 5, 31) }, employee_id: 1 }
+
     assert_response :unprocessable_entity
     assert response.body.include? 'Funktionsanteile und Beschäftigungsgrad stimmen nicht überein.'
   end
@@ -50,12 +52,14 @@ class EmploymentsControllerTest < ActionController::TestCase
                                 },
                                 start_date: Date.new(2008, 10, 1),
                                 end_date: Date.new(2009, 5, 31) }, employee_id: 1 }
+
     assert_response :unprocessable_entity
     assert response.body.include? 'Funktionen können nicht doppelt erfasst werden.'
   end
 
   def test_prefill_from_newest_employment
     get :new, params: { employee_id: employees(:various_pedro) }
+
     assert_equal 100, assigns(:employment).percent
     assert_equal 1, assigns(:employment).employment_roles_employments.length
   end

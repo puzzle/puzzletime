@@ -63,14 +63,15 @@ class FormHelperTest < ActionView::TestCase
                         .*?name="crud_test_model\[children\]"/x, f
     assert_match /input .*?type="checkbox"
                         .*?name="crud_test_model\[human\]"/x, f
-    assert_match /button\ .*?type="submit".*\>
+    assert_match /button\ .*?type="submit".*>
                   #{t('global.button.save')}
-                  \<\/button\>/x, f
+                  <\/button>/x, f
   end
 
   test 'standard form with errors' do
     e = crud_test_models('AAAAA')
     e.name = nil
+
     assert !e.valid?
 
     f = with_test_routing do
@@ -87,8 +88,8 @@ class FormHelperTest < ActionView::TestCase
                         .*?name="_method"
                         .*?value="(patch|put)"/x, f
     assert_match /div[^>]* id='error_explanation'/, f
-    assert_match /div\ class="field_with_errors"\>.*?
-                  \<input .*?type="text"
+    assert_match /div\ class="field_with_errors">.*?
+                  <input .*?type="text"
                           .*?name="crud_test_model\[name\]"/x, f
     assert_match /input .*?value="01.01.1910"
                         .*?type="text"

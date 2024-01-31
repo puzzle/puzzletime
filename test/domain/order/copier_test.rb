@@ -80,8 +80,8 @@ class Order::CopierTest < ActiveSupport::TestCase
     assert_equal order.responsible_id, copy.responsible_id
     assert_equal order.department_id, copy.department_id
     assert_nil copy.billing_address_id
-    assert_equal [], copy.order_team_members
-    assert_equal [], copy.order_contacts
+    assert_empty copy.order_team_members
+    assert_empty copy.order_contacts
     assert_nil copy.contract
 
     assert_equal OrderStatus.defaults.pluck(:id).first, copy.status_id
@@ -122,6 +122,7 @@ class Order::CopierTest < ActiveSupport::TestCase
 
     assert_equal 2, copy.work_item.children.size
     item = copy.work_item.children.first
+
     assert_nil item.id
     assert_equal 'App', item.name
     assert_equal 'APP', item.shortname
@@ -134,6 +135,7 @@ class Order::CopierTest < ActiveSupport::TestCase
 
     source = accounting_posts(:hitobito_demo_app)
     post = item.accounting_post
+
     assert_nil post.id
     assert_equal source.portfolio_item_id, post.portfolio_item_id
     assert_equal source.offered_rate, post.offered_rate
@@ -145,7 +147,8 @@ class Order::CopierTest < ActiveSupport::TestCase
   test 'copies associations of copies order with direct accounting post' do
     order = orders(:webauftritt)
     times = order.worktimes.count
-    assert times > 0
+
+    assert_operator times, :>, 0
 
     copier = Order::Copier.new(order)
     copy = copier.copy
@@ -158,6 +161,7 @@ class Order::CopierTest < ActiveSupport::TestCase
 
     source = accounting_posts(:webauftritt)
     post = copy.work_item.accounting_post
+
     assert_not_equal post.id, source.id
     assert_equal source.portfolio_item_id, post.portfolio_item_id
     assert_equal source.offered_rate, post.offered_rate
@@ -166,12 +170,14 @@ class Order::CopierTest < ActiveSupport::TestCase
     assert_equal false, post.closed
 
     copy = Order.find(copy.id)
+
     assert_equal 0, copy.worktimes.count
     assert_equal times, order.worktimes.count
   end
 
   test 'copy of closed order will be open' do
     order.update!(status: order_statuses(:abgeschlossen))
+
     assert_equal true, order.work_item.children.first.closed
 
     copier = Order::Copier.new(order)
@@ -187,6 +193,7 @@ class Order::CopierTest < ActiveSupport::TestCase
 
   test 'copy of closed accounting post will be open' do
     accounting_posts(:hitobito_demo_app).update!(closed: true)
+
     assert_equal true, order.work_item.children.first.closed
 
     copier = Order::Copier.new(order)

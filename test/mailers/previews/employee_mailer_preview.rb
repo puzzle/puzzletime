@@ -17,4 +17,3 @@ class EmployeeMailerPreview < ActionMailer::Preview
     EmployeeMailer.worktime_commit_reminder_mail(employee)
   end
 end
-

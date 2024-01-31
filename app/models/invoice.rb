@@ -113,7 +113,7 @@ class Invoice < ActiveRecord::Base
   end
 
   STATUSES.each do |s|
-    define_method("#{s}?") do
+    define_method(:"#{s}?") do
       status == s
     end
   end
@@ -138,7 +138,7 @@ class Invoice < ActiveRecord::Base
 
   def accounting_post_positions
     worktimes.group(:work_item_id).sum(:hours).collect do |work_item_id, hours|
-      post = AccountingPost.find_by!(work_item_id: work_item_id)
+      post = AccountingPost.find_by!(work_item_id:)
       Invoicing::Position.new(post, hours)
     end.sort_by(&:name)
   end

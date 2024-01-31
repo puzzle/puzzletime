@@ -18,6 +18,6 @@ require 'test_helper'
 
 class EmploymentRoleTest < ActiveSupport::TestCase
   test 'string representation matches name' do
-    assert_equal employment_roles(:software_engineer).to_s, 'Software Engineer'
+    assert_equal 'Software Engineer', employment_roles(:software_engineer).to_s
   end
 end

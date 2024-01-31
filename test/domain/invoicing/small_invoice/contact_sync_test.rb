@@ -10,8 +10,8 @@ class Invoicing::SmallInvoice::ContactSyncTest < ActiveSupport::TestCase
 
   test '#sync new client' do
     # updates people
-    add_hans    = stub_add_entity(:people, client: client, body: hans_json)
-    add_andreas = stub_add_entity(:people, client: client, body: andreas_json)
+    add_hans    = stub_add_entity(:people, client:, body: hans_json)
+    add_andreas = stub_add_entity(:people, client:, body: andreas_json)
 
     subject.sync
 
@@ -24,8 +24,8 @@ class Invoicing::SmallInvoice::ContactSyncTest < ActiveSupport::TestCase
     andreas.update_column(:invoicing_key, 2)
 
     # updates people
-    add_hans     = stub_add_entity(:people,  client: client, body: hans_json)
-    edit_andreas = stub_edit_entity(:people, client: client, key: 2, body: edit_andreas_json)
+    add_hans     = stub_add_entity(:people,  client:, body: hans_json)
+    edit_andreas = stub_edit_entity(:people, client:, key: 2, body: edit_andreas_json)
 
     subject_with_existing.sync
 

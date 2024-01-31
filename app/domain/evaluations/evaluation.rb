@@ -260,9 +260,9 @@ class Evaluations::Evaluation
   def hours_and_billable_hours_columns
     [Arel.sql('SUM(worktimes.hours) AS sum_hours'),
      Arel.sql('SUM(CASE WHEN worktimes.billable = TRUE ' \
-         'THEN worktimes.hours ' \
-         'ELSE 0 END) ' \
-         'AS sum_billable_hours')]
+              'THEN worktimes.hours ' \
+              'ELSE 0 END) ' \
+              'AS sum_billable_hours')]
   end
 
   def query_planning_sums(query, period)
@@ -291,9 +291,9 @@ class Evaluations::Evaluation
   def plannings_and_billable_plannings_columns(must_hours)
     [Arel.sql("SUM(plannings.percent / 100.0 * #{must_hours.to_f}) AS sum_hours"),
      Arel.sql('SUM(CASE WHEN accounting_posts.billable = TRUE ' \
-         "THEN plannings.percent / 100.0 * #{must_hours.to_f} " \
-         'ELSE 0 END) ' \
-         'AS sum_billable_hours')]
+              "THEN plannings.percent / 100.0 * #{must_hours.to_f} " \
+              'ELSE 0 END) ' \
+              'AS sum_billable_hours')]
   end
 
   def worktime_type

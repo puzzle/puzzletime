@@ -17,7 +17,7 @@ class EmployeeStatistics
   end
 
   def billable_percents_at(date)
-    employee.employment_at(date)&.employment_roles_employments&.select {|e| e.employment_role.billable }&.map(&:percent)&.sum || 0
+    employee.employment_at(date)&.employment_roles_employments&.select { |e| e.employment_role.billable }&.map(&:percent)&.sum || 0
   end
 
   def average_percents(period)
@@ -66,7 +66,7 @@ class EmployeeStatistics
   def absences(period, payed = nil)
     worktimes = @employee.worktimes.joins(:absence).in_period(period)
 
-    worktimes = worktimes.where(absences: { payed: payed }) if payed.in? [true, false]
+    worktimes = worktimes.where(absences: { payed: }) if payed.in? [true, false]
 
     worktimes.sum(:hours).to_f
   end

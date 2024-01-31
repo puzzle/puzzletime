@@ -70,7 +70,7 @@ module WorktimesReport
     combined_tickets[:sum] += worktime.hours
     combine_ticket_employees(combined_tickets, employees, worktime)
     combine_ticket_date_range(combined_tickets[:date], worktime)
-    combined_tickets[:descriptions] << '"' + worktime.description + '"' if worktime.description?
+    combined_tickets[:descriptions] << ('"' + worktime.description + '"') if worktime.description?
   end
 
   def combine_ticket_employees(combined_tickets, employees, worktime)

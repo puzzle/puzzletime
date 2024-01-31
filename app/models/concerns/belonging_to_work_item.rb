@@ -74,8 +74,8 @@ module BelongingToWorkItem
     def memoized_method(name, &block)
       model = name.to_s.classify.constantize
       define_method(name) do
-        instance_variable_get("@#{name}") ||
-          instance_variable_set("@#{name}", instance_exec(model, &block))
+        instance_variable_get(:"@#{name}") ||
+          instance_variable_set(:"@#{name}", instance_exec(model, &block))
       end
     end
   end

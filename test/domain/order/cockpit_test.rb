@@ -18,12 +18,14 @@ class Order::CockpitTest < ActiveSupport::TestCase
   test 'budget values are nil if nothing is offered' do
     total = cockpit.rows.first
     budget = total.cells[:budget]
+
     assert_nil budget.hours
     assert_nil budget.days
     assert_nil budget.amount
 
     a1 = cockpit.rows.second
     budget = a1.cells[:budget]
+
     assert_nil budget.hours
     assert_nil budget.days
     assert_nil budget.amount
@@ -34,15 +36,17 @@ class Order::CockpitTest < ActiveSupport::TestCase
 
     total = cockpit.rows.first
     budget = total.cells[:budget]
-    assert_equal 300.2, budget.hours
+
+    assert_in_delta(300.2, budget.hours)
     assert_equal 300.2 / 8, budget.days
-    assert_equal 39_057.02, budget.amount
+    assert_in_delta(39_057.02, budget.amount)
 
     a1 = cockpit.rows.second
     budget = a1.cells[:budget]
-    assert_equal 200.1, budget.hours
+
+    assert_in_delta(200.1, budget.hours)
     assert_equal 200.1 / 8, budget.days
-    assert_equal 24_032.01, budget.amount
+    assert_in_delta(24_032.01, budget.amount)
   end
 
   test 'supplied_services values are zero if no worktimes exist' do
@@ -50,12 +54,14 @@ class Order::CockpitTest < ActiveSupport::TestCase
 
     total = cockpit.rows.first
     supplied = total.cells[:supplied_services]
+
     assert_equal 0, supplied.hours
     assert_equal 0, supplied.days
     assert_equal 0, supplied.amount
 
     a1 = cockpit.rows.second
     supplied = a1.cells[:supplied_services]
+
     assert_equal 0, supplied.hours
     assert_equal 0, supplied.days
     assert_equal 0, supplied.amount
@@ -67,15 +73,17 @@ class Order::CockpitTest < ActiveSupport::TestCase
 
     total = cockpit.rows.first
     supplied = total.cells[:supplied_services]
+
     assert_equal 26, supplied.hours
-    assert_equal 3.25, supplied.days
-    assert_equal 3422.6, supplied.amount
+    assert_in_delta(3.25, supplied.days)
+    assert_in_delta(3422.6, supplied.amount)
 
     a1 = cockpit.rows.second
     supplied = a1.cells[:supplied_services]
+
     assert_equal 16, supplied.hours
-    assert_equal 2.0, supplied.days
-    assert_equal 1921.6, supplied.amount
+    assert_in_delta(2.0, supplied.days)
+    assert_in_delta(1921.6, supplied.amount)
   end
 
   test 'not billable values are calculated if worktimes exist' do
@@ -84,18 +92,21 @@ class Order::CockpitTest < ActiveSupport::TestCase
 
     total = cockpit.rows.first
     not_billable = total.cells[:not_billable]
+
     assert_equal 4, not_billable.hours
-    assert_equal 0.5, not_billable.days
-    assert_equal 480.4, not_billable.amount
+    assert_in_delta(0.5, not_billable.days)
+    assert_in_delta(480.4, not_billable.amount)
 
     a1 = cockpit.rows.second
     not_billable = a1.cells[:not_billable]
+
     assert_equal 4, not_billable.hours
-    assert_equal 0.5, not_billable.days
-    assert_equal 480.4, not_billable.amount
+    assert_in_delta(0.5, not_billable.days)
+    assert_in_delta(480.4, not_billable.amount)
 
     a2 = cockpit.rows.third
     not_billable = a2.cells[:not_billable]
+
     assert_equal 0, not_billable.hours
     assert_equal 0, not_billable.days
     assert_equal 0, not_billable.amount
@@ -106,8 +117,9 @@ class Order::CockpitTest < ActiveSupport::TestCase
 
     total = cockpit.rows.first
     budget = total.cells[:open_budget]
+
     assert_equal -22, budget.hours
-    assert_equal -2.75, budget.days
+    assert_in_delta(-2.75, budget.days)
     assert_equal -3740, budget.amount
   end
 
@@ -117,15 +129,17 @@ class Order::CockpitTest < ActiveSupport::TestCase
 
     total = cockpit.rows.first
     budget = total.cells[:open_budget]
-    assert_equal 278.2, budget.hours.to_f
+
+    assert_in_delta(278.2, budget.hours.to_f)
     assert_equal 278.2 / 8, budget.days.to_f
-    assert_equal 36_114.82, budget.amount.round(2)
+    assert_in_delta(36_114.82, budget.amount.round(2))
 
     a1 = cockpit.rows.second
     budget = a1.cells[:open_budget]
-    assert_equal 188.1, budget.hours
+
+    assert_in_delta(188.1, budget.hours)
     assert_equal 188.1 / 8, budget.days
-    assert_equal 22_590.81, budget.amount.round(2)
+    assert_in_delta(22_590.81, budget.amount.round(2))
   end
 
   test 'planned budget is zero if nothing is planned' do
@@ -134,15 +148,17 @@ class Order::CockpitTest < ActiveSupport::TestCase
 
     total = cockpit.rows.first
     budget = total.cells[:planned_budget]
-    assert_equal 0.0, budget.hours.to_f
-    assert_equal 0.0, budget.days.to_f
-    assert_equal 0.0, budget.amount.round(2)
+
+    assert_in_delta(0.0, budget.hours.to_f)
+    assert_in_delta(0.0, budget.days.to_f)
+    assert_in_delta(0.0, budget.amount.round(2))
 
     a1 = cockpit.rows.second
     budget = a1.cells[:planned_budget]
-    assert_equal 0.0, budget.hours
-    assert_equal 0.0, budget.days
-    assert_equal 0.0, budget.amount.round(2)
+
+    assert_in_delta(0.0, budget.hours)
+    assert_in_delta(0.0, budget.days)
+    assert_in_delta(0.0, budget.amount.round(2))
   end
 
   test 'planned budget current values are calculated if pannings exist' do
@@ -152,26 +168,30 @@ class Order::CockpitTest < ActiveSupport::TestCase
 
     total = cockpit.rows.first
     budget = total.cells[:planned_budget]
-    assert_equal 16.0, budget.hours.to_f
-    assert_equal 2.0, budget.days.to_f
-    assert_equal 1921.60, budget.amount.round(2)
+
+    assert_in_delta(16.0, budget.hours.to_f)
+    assert_in_delta(2.0, budget.days.to_f)
+    assert_in_delta(1921.60, budget.amount.round(2))
 
     a1 = cockpit.rows.second
     budget = a1.cells[:planned_budget]
-    assert_equal 16.0, budget.hours
-    assert_equal 2.0, budget.days
-    assert_equal 1921.60, budget.amount.round(2)
+
+    assert_in_delta(16.0, budget.hours)
+    assert_in_delta(2.0, budget.days)
+    assert_in_delta(1921.60, budget.amount.round(2))
 
     a2 = cockpit.rows.third
     budget = a2.cells[:planned_budget]
-    assert_equal 0.0, budget.hours
-    assert_equal 0.0, budget.days
-    assert_equal 0.0, budget.amount.round(2)
+
+    assert_in_delta(0.0, budget.hours)
+    assert_in_delta(0.0, budget.days)
+    assert_in_delta(0.0, budget.amount.round(2))
   end
 
   test 'cost_effectiveness_forecast' do
     define_worktimes
     forecast = (22.0 / 26 * 100).round
+
     assert_equal forecast, cockpit.cost_effectiveness_forecast
   end
 
@@ -184,6 +204,7 @@ class Order::CockpitTest < ActiveSupport::TestCase
     create_invoice
 
     forecast = (12.0 / 26 * 100).round
+
     assert_equal forecast, cockpit.cost_effectiveness_current
   end
 
@@ -192,31 +213,31 @@ class Order::CockpitTest < ActiveSupport::TestCase
   end
 
   test 'billed_amount without invoices is zero' do
-    assert_equal 0.0, cockpit.billed_amount
+    assert_in_delta(0.0, cockpit.billed_amount)
   end
 
   test 'billed_amount is total from invoices' do
     define_worktimes
     create_invoice
 
-    assert_equal 2_040.0, cockpit.billed_amount
+    assert_in_delta(2_040.0, cockpit.billed_amount)
   end
 
   test 'budget open without invoices without offering is zero' do
-    assert_equal 0.0, cockpit.budget_open
+    assert_in_delta(0.0, cockpit.budget_open)
   end
 
   test 'budget open without invoices without offering is budget' do
     define_offered_fields
 
-    assert_equal 39_057.02, cockpit.budget_open
+    assert_in_delta(39_057.02, cockpit.budget_open)
   end
 
   test 'budget open with invoices without offered fields is negative' do
     define_worktimes
     create_invoice
 
-    assert_equal -2_040.0, cockpit.budget_open
+    assert_in_delta(-2_040.0, cockpit.budget_open)
   end
 
   test 'budget open with invoices is difference to offered fields' do
@@ -236,7 +257,7 @@ class Order::CockpitTest < ActiveSupport::TestCase
     define_worktimes
     create_invoice(period_to: Time.zone.today - 1)
 
-    assert_equal 21.84, cockpit.billed_rate.round(2)
+    assert_in_delta(21.84, cockpit.billed_rate.round(2))
   end
 
   def define_offered_fields
@@ -290,9 +311,9 @@ class Order::CockpitTest < ActiveSupport::TestCase
 
   def create_invoice(attrs = {})
     Invoicing.instance = nil
-    Fabricate(:contract, order: order) unless order.contract
+    Fabricate(:contract, order:) unless order.contract
     Fabricate(:invoice, {
-      order: order,
+      order:,
       work_items: [work_items(:hitobito_demo_app)],
       employees: [employees(:pascal)],
       period_to: Time.zone.today.at_end_of_month
