@@ -123,6 +123,7 @@ class ExpensesController < ManageController
               .resize_to_limit(Settings.expenses.receipt.max_pixel, Settings.expenses.receipt.max_pixel)
               .saver(quality: Settings.expenses.receipt.quality)
               .convert('jpg')
+              .loader(page: 0)
               .call
 
     target_filename = "#{File.basename(receipt_param.original_filename.to_s, '.*')}.jpg"
