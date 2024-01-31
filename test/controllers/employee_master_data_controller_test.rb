@@ -4,6 +4,7 @@
 #  https://github.com/puzzle/puzzletime.
 
 require 'test_helper'
+require 'zxing'
 
 class EmployeeMasterDataControllerTest < ActionController::TestCase
   def setup
