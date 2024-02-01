@@ -17,7 +17,7 @@ class Api::V1::EmployeesControllerTest < ActionController::TestCase
     get :show, params: { id: test_entry.id }
 
     assert_response :ok
-    assert_match %r[\Aapplication/vnd\.api\+json], response.headers['Content-Type']
+    assert_match %r{\Aapplication/vnd\.api\+json}, response.headers['Content-Type']
     assert_equal test_entry.id.to_s, response_json[:data][:id]
   end
 
@@ -25,7 +25,7 @@ class Api::V1::EmployeesControllerTest < ActionController::TestCase
     get :show, params: { id: employees(:long_time_john).id, include: 'current_employment' }
 
     assert_response :unprocessable_entity
-    assert_match %r[\Aapplication/vnd\.api\+json], response.headers['Content-Type']
+    assert_match %r{\Aapplication/vnd\.api\+json}, response.headers['Content-Type']
     assert_equal '422', response_json.dig(:errors, 0, :status)
     assert_equal 'error', response_json.dig(:errors, 0, :code)
     assert_match(/current_employment is not specified as a relationship/, response_json.dig(:errors, 0, :title))
@@ -35,7 +35,7 @@ class Api::V1::EmployeesControllerTest < ActionController::TestCase
     get :index
 
     assert_response :ok
-    assert_match %r[\Aapplication/vnd\.api\+json], response.headers['Content-Type']
+    assert_match %r{\Aapplication/vnd\.api\+json}, response.headers['Content-Type']
     assert_equal Employee.count, response_json[:data].count
   end
 
@@ -43,7 +43,7 @@ class Api::V1::EmployeesControllerTest < ActionController::TestCase
     get :index, params: { scope: :current }
 
     assert_response :ok
-    assert_match %r[\Aapplication/vnd\.api\+json], response.headers['Content-Type']
+    assert_match %r{\Aapplication/vnd\.api\+json}, response.headers['Content-Type']
     assert_equal Employee.current.count, response_json[:data].count
   end
 

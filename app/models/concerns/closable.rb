@@ -23,15 +23,13 @@ module Closable
   private
 
   def remember_closed_change
-    if closed_changed?
-      @closed_changed = true
-    end
+    return unless closed_changed?
+
+    @closed_changed = true
   end
 
   def propagate_closed_change
-    if @closed_changed
-      propagate_closed!
-    end
+    propagate_closed! if @closed_changed
     @closed_changed = nil
   end
 end

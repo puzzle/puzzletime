@@ -16,12 +16,14 @@ class EditOrderTest < ActionDispatch::IntegrationTest
 
     click_add_contact
 
-    assert find_field('order_order_contacts_attributes_0_contact_id_or_crm', visible: false)[:class].include?('selectized')
+    assert_includes find_field('order_order_contacts_attributes_0_contact_id_or_crm',
+                               visible: false)[:class], 'selectized'
     assert_selector("a[data-object-class='order_contact'].remove_nested_fields_link", count: 1)
 
     click_add_contact
 
-    assert find_field('order_order_contacts_attributes_1_contact_id_or_crm', visible: false)[:class].include?('selectized')
+    assert_includes find_field('order_order_contacts_attributes_1_contact_id_or_crm',
+                               visible: false)[:class], 'selectized'
     assert_selector("a[data-object-class='order_contact'].remove_nested_fields_link", count: 2)
   end
 

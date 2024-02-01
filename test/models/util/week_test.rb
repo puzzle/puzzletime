@@ -57,6 +57,6 @@ class WeekTest < ActiveSupport::TestCase
 
   def test_valid_week
     assert Week.valid?(201_001)
-    assert !Week.valid?(201_053)
+    assert_not Week.valid?(201_053)
   end
 end

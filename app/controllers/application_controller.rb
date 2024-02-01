@@ -55,9 +55,9 @@ class ApplicationController < ActionController::Base
   def set_period
     @period = nil
     p = session[:period]
-    if p.is_a? Array
-      @period = Period.new(*p)
-    end
+    return unless p.is_a? Array
+
+    @period = Period.new(*p)
   end
 
   def sanitized_back_url
@@ -66,7 +66,7 @@ class ApplicationController < ActionController::Base
   end
 
   def not_found
-    fail ActionController::RoutingError, 'Not Found'
+    raise ActionController::RoutingError, 'Not Found'
   end
 
   def set_sentry_request_context

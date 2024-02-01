@@ -56,17 +56,11 @@ module Plannings
         class_names << "-percent-#{planning.percent.round(-1)}"
       end
 
-      if absencetimes.present?
-        class_names << '-absence'
-      end
+      class_names << '-absence' if absencetimes.present?
 
-      if employment.nil? || employment.percent.zero?
-        class_names << '-absence-unpaid'
-      end
+      class_names << '-absence-unpaid' if employment.nil? || employment.percent.zero?
 
-      if holiday
-        class_names << '-holiday'
-      end
+      class_names << '-holiday' if holiday
 
       class_names.join(' ')
     end

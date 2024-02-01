@@ -2,7 +2,7 @@
 
 module ExpensesHelper
   def format_expense_status_value(expense)
-    memo = Expense.statuses.keys.zip(%w(info warning success danger)).to_h
+    memo = Expense.statuses.keys.zip(%w[info warning success danger]).to_h
     content_tag(:span, expense.status_value, class: "label label-#{memo[expense.status]}")
   end
 
@@ -133,7 +133,7 @@ module ExpensesHelper
     # Due to inconsistent browser behaviour, we need both file endings
     # and the 'all images' mimetype
     options.deep_merge!(
-      accept: %w(image/gif image/jpeg image/png .gif .jpg .jpeg .png).join(','),
+      accept: %w[image/gif image/jpeg image/png .gif .jpg .jpeg .png].join(','),
       required: !entry.receipt.attached?
     )
 

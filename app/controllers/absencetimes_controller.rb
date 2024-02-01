@@ -4,8 +4,8 @@
 #  https://github.com/puzzle/puzzletime.
 
 class AbsencetimesController < WorktimesController
-  self.permitted_attrs = [:absence_id, :report_type, :work_date, :hours,
-                          :from_start_time, :to_end_time, :description]
+  self.permitted_attrs = %i[absence_id report_type work_date hours
+                            from_start_time to_end_time description]
 
   before_render_form :set_accounts
   after_destroy :send_email_notification
@@ -52,7 +52,7 @@ class AbsencetimesController < WorktimesController
     @worktime.absence_id ||= params[:account_id]
   end
 
-  def set_accounts(_all = false)
+  def set_accounts
     @accounts = Absence.list
   end
 
@@ -65,8 +65,8 @@ class AbsencetimesController < WorktimesController
   end
 
   def send_email_notification
-    if @worktime.employee != @user
-      ::EmployeeMailer.worktime_deleted_mail(@worktime, @user).deliver_now
-    end
+    return unless @worktime.employee != @user
+
+    ::EmployeeMailer.worktime_deleted_mail(@worktime, @user).deliver_now
   end
 end

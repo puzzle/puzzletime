@@ -89,10 +89,10 @@ module Plannings
     end
 
     def load_employments
-      list = Employment.
-             during(@period).
-             where(employee_id: @employees.map(&:id)).
-             reorder('start_date')
+      list = Employment
+             .during(@period)
+             .where(employee_id: @employees.map(&:id))
+             .reorder('start_date')
       Employment.normalize_boundaries(list.to_a, @period)
     end
 

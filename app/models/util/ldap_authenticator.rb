@@ -36,7 +36,7 @@ class LdapAuthenticator
   def all_users
     connection.search(
       base: internal_dn,
-      attributes: %w(uid sn givenname mail)
+      attributes: %w[uid sn givenname mail]
     )
   end
 

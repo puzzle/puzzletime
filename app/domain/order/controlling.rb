@@ -75,10 +75,8 @@ class Order::Controlling
   end
 
   def add_value(result, week, key, value)
-    unless result[week]
-      result[week] = empty_entry
-    end
-    new_entry = empty_entry.tap { |e| e[key] = value ? value : 0.0 }
+    result[week] = empty_entry unless result[week]
+    new_entry = empty_entry.tap { |e| e[key] = value || 0.0 }
     result[week] = sum_entries(result[week], new_entry)
   end
 
@@ -95,7 +93,7 @@ class Order::Controlling
   end
 
   def entry_keys
-    [:billable, :unbillable, :planned_definitive, :planned_provisional]
+    %i[billable unbillable planned_definitive planned_provisional]
   end
 
   def fill_week_gaps!(efforts)
@@ -103,9 +101,7 @@ class Order::Controlling
     return if dates.size < 2
 
     for_each_week(dates.first, dates.last) do |week|
-      unless dates.include?(week)
-        efforts[week] = empty_entry
-      end
+      efforts[week] = empty_entry unless dates.include?(week)
     end
     efforts
   end

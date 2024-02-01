@@ -38,10 +38,10 @@ class Forms::WorktimeEditTest < ActiveSupport::TestCase
   test 'is complete if sum hours equal original hours' do
     edit.add_worktime(Ordertime.new(hours: 0.5, work_date: worktime.work_date))
 
-    assert !edit.complete?
+    assert_not edit.complete?
     edit.add_worktime(Ordertime.new(hours: '0:20', work_date: worktime.work_date))
 
-    assert !edit.complete?
+    assert_not edit.complete?
     edit.add_worktime(Ordertime.new(hours: '0:10', work_date: worktime.work_date))
 
     assert_predicate edit, :complete?

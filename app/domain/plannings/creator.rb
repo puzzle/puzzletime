@@ -7,9 +7,9 @@ module Plannings
   class Creator
     attr_reader :params, :errors, :plannings
 
-    PERMITTED_ATTRIBUTES = [:id, :employee_id, :work_item_id, :date, :percent, :definitive,
-                            :translate_by].freeze
-    ITEM_FIELDS = [:employee_id, :work_item_id, :date].freeze
+    PERMITTED_ATTRIBUTES = %i[id employee_id work_item_id date percent definitive
+                              translate_by].freeze
+    ITEM_FIELDS = %i[employee_id work_item_id date].freeze
 
     # params:
     # { planning: { percent: 50, definitive: true, repeat_until: '2016 42', translate_by: -3 },
@@ -58,26 +58,24 @@ module Plannings
     private
 
     def validate_create(p)
-      if create? && !repeat_only?
-        if p[:percent].blank?
-          @errors << 'Prozent müssen angegeben werden, um neue Planungen zu erstellen'
-        end
-        if p[:definitive].blank? && p[:definitive] != false
-          @errors << 'Status muss angegeben werden, um neue Planungen zu erstellen'
-        end
-      end
+      return unless create? && !repeat_only?
+
+      @errors << 'Prozent müssen angegeben werden, um neue Planungen zu erstellen' if p[:percent].blank?
+      return unless p[:definitive].blank? && p[:definitive] != false
+
+      @errors << 'Status muss angegeben werden, um neue Planungen zu erstellen'
     end
 
     def validate_percent(p)
-      if p[:percent].present? && p[:percent].to_i <= 0
-        @errors << 'Prozent müssen grösser als 0 sein'
-      end
+      return unless p[:percent].present? && p[:percent].to_i <= 0
+
+      @errors << 'Prozent müssen grösser als 0 sein'
     end
 
     def validate_repeat(_p)
-      if repeat_until_week && !repeat_until_week.valid?
-        @errors << 'Wiederholungsdatum ist ungültig'
-      end
+      return unless repeat_until_week && !repeat_until_week.valid?
+
+      @errors << 'Wiederholungsdatum ist ungültig'
     end
 
     def validate_present(p)
@@ -91,15 +89,15 @@ module Plannings
     end
 
     def validate_work_items(_p)
-      if create?
-        work_item_ids = new_items_hashes.map { |item| item['work_item_id'] }.compact.uniq
-        return if work_item_ids.blank?
+      return unless create?
 
-        items = WorkItem.joins(:accounting_post).where(id: work_item_ids)
-        unless work_item_ids.length == items.count
-          @errors << 'Nur Positionen mit Buchungsposition sind möglich'
-        end
-      end
+      work_item_ids = new_items_hashes.map { |item| item['work_item_id'] }.compact.uniq
+      return if work_item_ids.blank?
+
+      items = WorkItem.joins(:accounting_post).where(id: work_item_ids)
+      return if work_item_ids.length == items.count
+
+      @errors << 'Nur Positionen mit Buchungsposition sind möglich'
     end
 
     def create?
@@ -212,11 +210,11 @@ module Plannings
 
     def handle_save_errors(plannings)
       save_errors = plannings.map { |p| p.errors.full_messages }.flatten.compact
-      if save_errors.present?
-        # should not happen after form validations
-        @errors << ('Eintrag konnte nicht erstellt werden: ' + save_errors.uniq.join(', '))
-        fail ActiveRecord::Rollback
-      end
+      return unless save_errors.present?
+
+      # should not happen after form validations
+      @errors << ('Eintrag konnte nicht erstellt werden: ' + save_errors.uniq.join(', '))
+      raise ActiveRecord::Rollback
     end
 
     def new_items_hashes
@@ -227,9 +225,9 @@ module Plannings
 
     def existing_items_hashes
       @existing_items_hashes ||= existing_items.pluck(*ITEM_FIELDS).map do |values|
-        { 'employee_id'  => values.first.to_s,
+        { 'employee_id' => values.first.to_s,
           'work_item_id' => values.second.to_s,
-          'date'         => values.third.strftime('%Y-%m-%d') }
+          'date' => values.third.strftime('%Y-%m-%d') }
       end
     end
 

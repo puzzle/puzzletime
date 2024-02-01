@@ -17,7 +17,7 @@ module I18nHelper
   #  - ...
   #  - global.{key}
   def translate_inheritable(key, variables = {})
-    partial = defined?(@virtual_path) ? @virtual_path.gsub(%r(.*/_?), '') : nil
+    partial = defined?(@virtual_path) ? @virtual_path.gsub(%r{.*/_?}, '') : nil
     defaults = inheritable_translation_defaults(key, partial)
     variables[:default] ||= defaults
     t(defaults.shift, **variables)
@@ -70,9 +70,7 @@ module I18nHelper
     current = controller.class
     while current < ActionController::Base
       folder = current.controller_path
-      if folder.present?
-        append_controller_translation_keys(defaults, folder, partial, key)
-      end
+      append_controller_translation_keys(defaults, folder, partial, key) if folder.present?
       current = current.superclass
     end
     defaults << :"global.#{key}"

@@ -26,11 +26,11 @@ module Plannings
                        percent: 60)
       Planning.create!(work_item_id: work_items(:puzzletime).id,
                        employee_id: employees(:lucien).id,
-                       date: date + 1.weeks,
+                       date: date + 1.week,
                        percent: 20)
       Planning.create!(work_item_id: work_items(:puzzletime).id,
                        employee_id: employees(:lucien).id,
-                       date: date + 1.weeks + 1.day,
+                       date: date + 1.week + 1.day,
                        percent: 20)
 
       get :show, params: { department_id: departments(:devtwo).id }
@@ -50,7 +50,7 @@ module Plannings
           }
 
       assert_equal 200, response.status
-      assert response.body.include?('PuzzleTime'), response.body
+      assert_includes response.body, 'PuzzleTime', response.body
     end
 
     test 'PATCH update' do
@@ -68,8 +68,8 @@ module Plannings
       assert_equal 200, response.status
 
       assert_equal employees(:pascal), assigns(:board).employee
-      assert response.body.include?('PuzzleTime'), response.body
-      assert response.body.include?('50')
+      assert_includes response.body, 'PuzzleTime', response.body
+      assert_includes response.body, '50'
     end
 
     test 'DELETE destroy' do
@@ -84,11 +84,11 @@ module Plannings
                             percent: 60)
       p3 = Planning.create!(work_item_id: work_items(:puzzletime).id,
                             employee_id: employees(:lucien).id,
-                            date: date + 1.weeks,
+                            date: date + 1.week,
                             percent: 20)
       p4 = Planning.create!(work_item_id: work_items(:puzzletime).id,
                             employee_id: employees(:lucien).id,
-                            date: date + 1.weeks + 1.day,
+                            date: date + 1.week + 1.day,
                             percent: 20)
 
       assert_difference('Planning.count', -2) do

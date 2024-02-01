@@ -4,10 +4,10 @@
 #  https://github.com/puzzle/puzzletime.
 
 # :nodoc:
-REGEXP_ROWS = /<tr.+?<\/tr>/m # :nodoc:
-REGEXP_HEADERS = /<th.+?<\/th>/m # :nodoc:
-REGEXP_SORT_HEADERS = /<th.*?><a .*?sort_dir=asc.*?>.*?<\/a><\/th>/m # :nodoc:
-REGEXP_ACTION_CELL = /<td class="action"><a .*?href.+?<\/a><\/td>/m # :nodoc:
+REGEXP_ROWS = %r{<tr.+?</tr>}m # :nodoc:
+REGEXP_HEADERS = %r{<th.+?</th>}m # :nodoc:
+REGEXP_SORT_HEADERS = %r{<th.*?><a .*?sort_dir=asc.*?>.*?</a></th>}m # :nodoc:
+REGEXP_ACTION_CELL = %r{<td class="action"><a .*?href.+?</a></td>}m # :nodoc:
 
 # A simple test helper to prepare the test database with a CrudTestModel model.
 # This helper is used to test the CrudController and various helpers
@@ -97,9 +97,9 @@ module CrudTestHelper
   # Removes the crud_test_models table from the database.
   def reset_db
     c = ActiveRecord::Base.connection
-    [:crud_test_models,
-     :other_crud_test_models,
-     :crud_test_models_other_crud_test_models].each do |table|
+    %i[crud_test_models
+       other_crud_test_models
+       crud_test_models_other_crud_test_models].each do |table|
       c.drop_table(table) if c.data_source_exists?(table)
     end
   end

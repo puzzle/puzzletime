@@ -138,7 +138,7 @@ class WorkItemTest < ActiveSupport::TestCase
     planning = plannings(:hitobito_demo_app_planning1)
     planning.work_item.destroy
 
-    refute Planning.exists?(planning.id)
+    assert_not Planning.exists?(planning.id)
   end
 
   test '.with_worktimes_in_period includes only those work_items with billable worktimes in given period' do
@@ -146,7 +146,8 @@ class WorkItemTest < ActiveSupport::TestCase
     work_items = Fabricate.times(4, :work_item, parent: order.work_item)
     work_items.each { |w| Fabricate(:accounting_post, work_item: w) }
 
-    from, to = Date.parse('09.12.2006'), Date.parse('12.12.2006')
+    from = Date.parse('09.12.2006')
+    to = Date.parse('12.12.2006')
 
     (from..to).each_with_index do |date, index|
       Fabricate(:ordertime,

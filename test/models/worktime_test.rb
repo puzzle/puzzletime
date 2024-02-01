@@ -37,7 +37,7 @@ class WorktimeTest < ActiveSupport::TestCase
     assert_equal worktimes(:wt_pz_allgemein).work_item_id, wt.work_item_id
     assert_equal work_items(:allgemein).id, wt.account.id
     assert_equal employees(:pascal), wt.employee
-    assert !wt.start_stop?
+    assert_not wt.start_stop?
     assert_nil wt.absence
   end
 
@@ -138,17 +138,17 @@ class WorktimeTest < ActiveSupport::TestCase
     @worktime.employee = employees(:various_pedro)
     @worktime.work_date = Time.zone.today
 
-    assert !@worktime.valid?
+    assert_not @worktime.valid?
     @worktime.from_start_time = '8:00'
     @worktime.to_end_time = '9:00'
 
     assert_predicate @worktime, :valid?, @worktime.errors.full_messages.join(', ')
     @worktime.to_end_time = '7:00'
 
-    assert !@worktime.valid?
+    assert_not @worktime.valid?
     @worktime.to_end_time = '-3'
 
-    assert !@worktime.valid?
+    assert_not @worktime.valid?
   end
 
   def test_report_type_guessing_with_start_time
@@ -157,7 +157,7 @@ class WorktimeTest < ActiveSupport::TestCase
     @worktime.from_start_time = '08:00'
     @worktime.hours = 5
 
-    assert !@worktime.valid?
+    assert_not @worktime.valid?
     assert_equal [:to_end_time], @worktime.errors.attribute_names
     assert_predicate @worktime, :start_stop?
     assert_in_delta(0.0, @worktime.hours)

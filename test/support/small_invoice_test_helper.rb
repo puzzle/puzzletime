@@ -128,7 +128,7 @@ module SmallInvoiceTestHelper
     JSON.generate(
       {
         access_token: '1234',
-        expires_in: 43200,
+        expires_in: 43_200,
         token_type: 'Bearer'
       }
     )

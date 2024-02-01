@@ -58,7 +58,7 @@ module UtilityHelper
   # 'id' or 'position'.
   def default_crud_attrs
     attrs = model_class.column_names.map(&:to_sym)
-    attrs - [:id, :position, :password]
+    attrs - %i[id position password]
   end
 
   # Returns the ActiveRecord column type or nil.
@@ -68,9 +68,9 @@ module UtilityHelper
 
   # Returns an ActiveRecord column property for the passed attr or nil
   def column_property(obj, attr, property)
-    if obj.respond_to?(:column_for_attribute) && obj.has_attribute?(attr)
-      obj.column_for_attribute(attr).send(property)
-    end
+    return unless obj.respond_to?(:column_for_attribute) && obj.has_attribute?(attr)
+
+    obj.column_for_attribute(attr).send(property)
   end
 
   # Returns the association proxy for the given attribute. The attr parameter
@@ -79,11 +79,11 @@ module UtilityHelper
   # any association is returned. Returns nil if no association (or not of the
   # given macro) was found.
   def association(obj, attr, *macros)
-    if obj.class.respond_to?(:reflect_on_association)
-      name = assoc_and_id_attr(attr).first.to_sym
-      assoc = obj.class.reflect_on_association(name)
-      assoc if assoc && (macros.blank? || macros.include?(assoc.macro))
-    end
+    return unless obj.class.respond_to?(:reflect_on_association)
+
+    name = assoc_and_id_attr(attr).first.to_sym
+    assoc = obj.class.reflect_on_association(name)
+    assoc if assoc && (macros.blank? || macros.include?(assoc.macro))
   end
 
   # Returns the name of the attr and it's corresponding field

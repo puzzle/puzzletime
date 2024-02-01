@@ -64,21 +64,21 @@ class Ordertime < Worktime
   ########### validation helpers ###########
 
   def validate_by_work_item
-    if work_item && work_item.accounting_post
-      work_item.accounting_post.validate_worktime(self)
-    end
+    return unless work_item && work_item.accounting_post
+
+    work_item.accounting_post.validate_worktime(self)
   end
 
   def validate_accounting_post
-    if work_item && !work_item.accounting_post
-      errors.add(:work_item_id, 'Der Auftrag hat keine Buchungsposition.')
-    end
+    return unless work_item && !work_item.accounting_post
+
+    errors.add(:work_item_id, 'Der Auftrag hat keine Buchungsposition.')
   end
 
   def validate_work_item_open
-    if changed != %w(invoice_id) && work_item_closed?
-      errors.add(:base, 'Auf geschlossene Aufträge und/oder Positionen kann nicht gebucht werden.')
-    end
+    return unless changed != %w[invoice_id] && work_item_closed?
+
+    errors.add(:base, 'Auf geschlossene Aufträge und/oder Positionen kann nicht gebucht werden.')
   end
 
   def protect_work_item_closed

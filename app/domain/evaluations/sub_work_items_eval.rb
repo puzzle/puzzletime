@@ -24,7 +24,7 @@ class Evaluations::SubWorkItemsEval < Evaluations::WorkItemsEval
 
   # Label for the represented division, if any.
   def division_label
-    'Position: ' + (division ? division : category).label_ancestry
+    'Position: ' + (division || category).label_ancestry
   end
 
   def division_column

@@ -17,9 +17,7 @@ class Order::Cockpit
       accounting_post.portfolio_item.to_s
     end
 
-    def offered_rate
-      accounting_post.offered_rate
-    end
+    delegate :offered_rate, to: :accounting_post
 
     def supplied_services_hours
       accounting_post_hours.values.sum
@@ -52,11 +50,11 @@ class Order::Cockpit
     private
 
     def build_cells
-      { budget:              build_budget_cell,
-        supplied_services:   build_supplied_services_cell,
-        not_billable:        build_not_billable_cell,
-        open_budget:         build_open_budget_cell,
-        planned_budget:      build_planned_budget_cell }
+      { budget: build_budget_cell,
+        supplied_services: build_supplied_services_cell,
+        not_billable: build_not_billable_cell,
+        open_budget: build_open_budget_cell,
+        planned_budget: build_planned_budget_cell }
     end
 
     def build_budget_cell

@@ -16,7 +16,7 @@ class Evaluations::AbsencesEvalTest < ActiveSupport::TestCase
 
   def test_absences
     assert_predicate @evaluation, :absences?
-    assert !@evaluation.for?(employees(:pascal))
+    assert_not @evaluation.for?(employees(:pascal))
     assert @evaluation.total_details
 
     divisions = @evaluation.divisions

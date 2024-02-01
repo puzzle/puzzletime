@@ -166,13 +166,13 @@ class WorkloadTest < ActiveSupport::TestCase
   test 'summary must_hour' do
     # Employments for selected department
     e1 = Fabricate(:employment, percent: 50, employee: employees(:pascal),
-                                start_date: "1.1.1900", end_date: "31.12.1900")
+                                start_date: '1.1.1900', end_date: '31.12.1900')
     e2 = Fabricate(:employment, percent: 30, employee: employees(:lucien),
-                                start_date: "1.1.1900", end_date: "31.12.1900")
+                                start_date: '1.1.1900', end_date: '31.12.1900')
 
     # Employment for other department
     e3 = Fabricate(:employment, percent: 60, employee: employees(:mark),
-                                start_date: "1.1.1900", end_date: "31.12.1900")
+                                start_date: '1.1.1900', end_date: '31.12.1900')
 
     puzzle_summary, department_summary = report.summary
 

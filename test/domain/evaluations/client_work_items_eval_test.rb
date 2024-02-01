@@ -12,8 +12,8 @@ class Evaluations::ClientWorkItemsEvalTest < ActiveSupport::TestCase
   def test_client_work_items
     @evaluation = Evaluations::ClientWorkItemsEval.new(clients(:puzzle).id)
 
-    assert !@evaluation.absences?
-    assert !@evaluation.for?(employees(:mark))
+    assert_not @evaluation.absences?
+    assert_not @evaluation.for?(employees(:mark))
     assert @evaluation.total_details
 
     divisions = @evaluation.divisions.list

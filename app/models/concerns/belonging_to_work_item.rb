@@ -26,9 +26,9 @@ module BelongingToWorkItem
              allow_nil: true
 
     scope :list, lambda {
-      includes(:work_item).
-        references(:work_item).
-        order('work_items.path_names')
+      includes(:work_item)
+        .references(:work_item)
+        .order('work_items.path_names')
     }
   end
 
@@ -39,10 +39,10 @@ module BelongingToWorkItem
   private
 
   def destroy_exclusive_work_item
-    if !@item_destroying && exclusive_work_item?
-      @item_destroying = true
-      work_item.destroy
-    end
+    return unless !@item_destroying && exclusive_work_item?
+
+    @item_destroying = true
+    work_item.destroy
   end
 
   def exclusive_work_item?
@@ -56,16 +56,16 @@ module BelongingToWorkItem
           work_item.with_ancestors.detect { |a| a.send(name) }.try(name)
         else
           model.joins('LEFT JOIN work_items ON ' \
-                      "#{model.table_name}.work_item_id = ANY (work_items.path_ids)").
-            find_by('work_items.id = ?', work_item_id)
+                      "#{model.table_name}.work_item_id = ANY (work_items.path_ids)")
+               .find_by('work_items.id = ?', work_item_id)
         end
       end
     end
 
     def has_descendants_through_work_item(name)
       memoized_method(name) do |model|
-        model.joins(:work_item).
-          where('? = ANY (work_items.path_ids)', work_item_id)
+        model.joins(:work_item)
+             .where('? = ANY (work_items.path_ids)', work_item_id)
       end
     end
 

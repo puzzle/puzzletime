@@ -28,7 +28,11 @@ require 'test_helper'
 
 class InvoiceTest < ActiveSupport::TestCase
   setup do
-    @worktime_lw2 = worktimes(:wt_lw_webauftritt).dup.tap { |w| w.work_date += 1.day; w.hours = 10; w.save! }
+    @worktime_lw2 = worktimes(:wt_lw_webauftritt).dup.tap do |w|
+      w.work_date += 1.day
+      w.hours = 10
+      w.save!
+    end
     Invoicing.instance = nil
     invoice.employees = [employees(:pascal), employees(:mark), employees(:lucien)]
     invoice.work_items << work_items(:webauftritt)
@@ -60,20 +64,20 @@ class InvoiceTest < ActiveSupport::TestCase
   test 'validates period_from and period to' do
     invoice.period_from = invoice.period_to = nil
 
-    refute_predicate invoice, :valid?
+    assert_not_predicate invoice, :valid?
     assert_includes invoice.errors.messages[:period_from], 'muss ausgefüllt werden'
     assert_includes invoice.errors.messages[:period_to], 'muss ausgefüllt werden'
 
     invoice.period_from = invoice.period_to = '01.20.2000'
 
-    refute_predicate invoice, :valid?
+    assert_not_predicate invoice, :valid?
     assert_includes invoice.errors.messages[:period_from], 'muss ausgefüllt werden'
     assert_includes invoice.errors.messages[:period_to], 'muss ausgefüllt werden'
 
     invoice.period_from = '02.12.2000'
     invoice.period_to = '01.12.2000'
 
-    refute_predicate invoice, :valid?
+    assert_not_predicate invoice, :valid?
     assert_includes invoice.errors.messages[:period_to], 'muss nach von sein.'
 
     invoice.period_to = invoice.period_from
@@ -84,25 +88,31 @@ class InvoiceTest < ActiveSupport::TestCase
   test 'validates order ist not closed' do
     orders(:webauftritt).update!(status: order_statuses(:abgeschlossen))
 
-    refute_predicate invoice, :valid?
+    assert_not_predicate invoice, :valid?
   end
 
   test 'invoices with closed order cannot be destroyed' do
     orders(:webauftritt).update!(status: order_statuses(:abgeschlossen))
 
-    refute invoice.destroy
+    assert_not invoice.destroy
   end
 
   test 'generates invoice number' do
-    second_invoice = invoice.dup.tap { |i| i.reference = nil; i.save! }
+    second_invoice = invoice.dup.tap do |i|
+      i.reference = nil
+      i.save!
+    end
 
-    assert_equal %w(STOP WEB D1 0002).join, second_invoice.reference
+    assert_equal %w[STOP WEB D1 0002].join, second_invoice.reference
   end
 
   test 'includes category shortname in invoice number' do
-    second_invoice = invoice_with_category.dup.tap { |i| i.reference = nil; i.save! }
+    second_invoice = invoice_with_category.dup.tap do |i|
+      i.reference = nil
+      i.save!
+    end
 
-    assert_equal %w(PITC HIT DEM D2 0002).join, second_invoice.reference
+    assert_equal %w[PITC HIT DEM D2 0002].join, second_invoice.reference
   end
 
   test 'updates totals when validating' do
@@ -129,12 +139,12 @@ class InvoiceTest < ActiveSupport::TestCase
     (Invoice.groupings.keys - ['manual']).each do |grouping|
       invoice.grouping = grouping
 
-      refute_predicate invoice, :manual_invoice?
+      assert_not_predicate invoice, :manual_invoice?
     end
   end
 
   test 'grouping= accepts only valid values' do
-    %w(accounting_posts employees manual).each do |grouping|
+    %w[accounting_posts employees manual].each do |grouping|
       invoice.grouping = grouping
 
       assert_equal grouping, invoice.grouping
@@ -151,7 +161,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_in_delta(1.0, invoice.calculated_total_amount.to_f)
   end
 
-  %w(employees accounting_posts).each do |grouping|
+  %w[employees accounting_posts].each do |grouping|
     test "calculated_total_amount when grouping = #{grouping}" do
       invoice.grouping = grouping
 
@@ -274,15 +284,15 @@ class InvoiceTest < ActiveSupport::TestCase
     Invoicing.instance.stubs(:save_invoice).raises(Invoicing::Error.new('some invoicing error'))
     invoice.save
 
-    refute_equal invoice, worktimes(:wt_mw_webauftritt).reload.invoice
-    refute_equal invoice, worktimes(:wt_lw_webauftritt).reload.invoice
-    refute_equal invoice, @worktime_lw2.reload.invoice
+    assert_not_equal invoice, worktimes(:wt_mw_webauftritt).reload.invoice
+    assert_not_equal invoice, worktimes(:wt_lw_webauftritt).reload.invoice
+    assert_not_equal invoice, @worktime_lw2.reload.invoice
   end
 
   test 'save clears worktimes when setting grouping to manual' do
     invoice.save
 
-    refute_empty Worktime.where(invoice_id: invoice.id)
+    assert_not_empty Worktime.where(invoice_id: invoice.id)
     invoice.grouping = 'manual'
     invoice.save
 
@@ -292,7 +302,7 @@ class InvoiceTest < ActiveSupport::TestCase
   test 'save removes worktimes of employees not assigned to invoice' do
     invoice.save
     # assert precondition
-    refute_empty Worktime.where(employee: employees(:mark), invoice:)
+    assert_not_empty Worktime.where(employee: employees(:mark), invoice:)
 
     # remove employee, assert worktimes unassigned
     invoice.employees -= [employees(:mark)]
@@ -329,7 +339,7 @@ class InvoiceTest < ActiveSupport::TestCase
   test 'delete adds error message if invoicing error' do
     Invoicing.instance = mock
     Invoicing.instance.expects(:delete_invoice).raises(Invoicing::Error.new('some invoicing error'))
-    assert_no_difference('Invoice.count') { assert !invoice.destroy }
+    assert_no_difference('Invoice.count') { assert_not invoice.destroy }
     assert_equal ['Fehler im Invoicing Service: some invoicing error'], invoice.errors[:base]
   end
 

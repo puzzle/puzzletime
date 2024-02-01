@@ -20,9 +20,9 @@ module Plannings
           }
 
       assert_equal 200, response.status
-      refute_empty assigns(:items)
+      assert_not_empty assigns(:items)
       assert_equal accounting_posts(:hitobito_demo_app), assigns(:legend)
-      assert response.body.include?('PITC-HIT-DEM-APP: App')
+      assert_includes response.body, 'PITC-HIT-DEM-APP: App'
     end
 
     test 'GET#show renders board' do
@@ -37,7 +37,7 @@ module Plannings
                        percent: 60)
       Planning.create!(work_item_id: work_items(:hitobito_demo_site).id,
                        employee_id: employees(:lucien).id,
-                       date: date + 1.weeks,
+                       date: date + 1.week,
                        percent: 20)
       get :show, params: { id: employees(:lucien).id }
 

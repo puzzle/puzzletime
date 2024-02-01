@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -26,7 +24,7 @@ class Employees::LogControllerTest < ActionController::TestCase
   test 'renders log in correct order' do
     pedro.update(street: 'Belpstrasse 37', postal_code: '3007', city: 'Bern')
     pedro.update(phone_private: '+41791234567')
-    pedro.update(committed_worktimes_at: Date.new(2000, 01, 31))
+    pedro.update(committed_worktimes_at: Date.new(2000, 0o1, 31))
     pedro.update(eval_periods: ['5w']) # should not appear in log
     get :index, params: { id: pedro.id }
 

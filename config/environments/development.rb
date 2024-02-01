@@ -3,7 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-require "active_support/core_ext/integer/time"
+require 'active_support/core_ext/integer/time'
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -23,10 +23,10 @@ Rails.application.configure do
   config.server_timing = true
 
   config.hosts = [
-    "127.0.0.1",
-    "localhost",
-    ".local",
-    ENV.fetch("RAILS_HOSTS", nil)
+    '127.0.0.1',
+    'localhost',
+    '.local',
+    ENV.fetch('RAILS_HOSTS', nil)
   ]
 
   # Enable/disable caching. By default caching is disabled.
@@ -115,7 +115,7 @@ Rails.application.configure do
         YAML.load("{ #{ENV['RAILS_MAIL_DELIVERY_CONFIG']} }").symbolize_keys
     end
   else
-    config.action_mailer.smtp_settings = { :address => '127.0.0.1', :port => 1025 }
+    config.action_mailer.smtp_settings = { address: '127.0.0.1', port: 1025 }
   end
 
   # Raises error for missing translations
@@ -130,25 +130,25 @@ Rails.application.configure do
     Bullet.add_footer = false
     Bullet.stacktrace_includes = []
 
-    Bullet.add_safelist type: :unused_eager_loading, class_name: "Ordertime",      association: :employee
-    Bullet.add_safelist type: :unused_eager_loading, class_name: "Ordertime",      association: :absence
-    Bullet.add_safelist type: :unused_eager_loading, class_name: "Absencetime",    association: :work_item
-    Bullet.add_safelist type: :unused_eager_loading, class_name: "Planning",       association: :work_item
-    Bullet.add_safelist type: :unused_eager_loading, class_name: "Planning",       association: :employee
-    Bullet.add_safelist type: :unused_eager_loading, class_name: "Order",          association: :contacts
-    Bullet.add_safelist type: :unused_eager_loading, class_name: "Order",          association: :work_item
-    Bullet.add_safelist type: :unused_eager_loading, class_name: "Order",          association: :kind
-    Bullet.add_safelist type: :unused_eager_loading, class_name: "Order",          association: :department
-    Bullet.add_safelist type: :unused_eager_loading, class_name: "Order",          association: :status
-    Bullet.add_safelist type: :unused_eager_loading, class_name: "Order",          association: :responsible
-    Bullet.add_safelist type: :unused_eager_loading, class_name: "Order",          association: :targets
-    Bullet.add_safelist type: :unused_eager_loading, class_name: "Order",          association: :order_uncertainties
-    Bullet.add_safelist type: :unused_eager_loading, class_name: "Expense",        association: :reviewer
-    Bullet.add_safelist type: :n_plus_one_query,     class_name: "Order",          association: :order_team_members
-    Bullet.add_safelist type: :n_plus_one_query,     class_name: "Order",          association: :team_members
-    Bullet.add_safelist type: :n_plus_one_query,     class_name: "Order",          association: :order_contacts
-    Bullet.add_safelist type: :n_plus_one_query,     class_name: "WorkItem",       association: :parent
-    Bullet.add_safelist type: :n_plus_one_query,     class_name: "BillingAddress", association: :client
-    Bullet.add_safelist type: :n_plus_one_query,     class_name: "BillingAddress", association: :contact
+    Bullet.add_safelist type: :unused_eager_loading, class_name: 'Ordertime',      association: :employee
+    Bullet.add_safelist type: :unused_eager_loading, class_name: 'Ordertime',      association: :absence
+    Bullet.add_safelist type: :unused_eager_loading, class_name: 'Absencetime',    association: :work_item
+    Bullet.add_safelist type: :unused_eager_loading, class_name: 'Planning',       association: :work_item
+    Bullet.add_safelist type: :unused_eager_loading, class_name: 'Planning',       association: :employee
+    Bullet.add_safelist type: :unused_eager_loading, class_name: 'Order',          association: :contacts
+    Bullet.add_safelist type: :unused_eager_loading, class_name: 'Order',          association: :work_item
+    Bullet.add_safelist type: :unused_eager_loading, class_name: 'Order',          association: :kind
+    Bullet.add_safelist type: :unused_eager_loading, class_name: 'Order',          association: :department
+    Bullet.add_safelist type: :unused_eager_loading, class_name: 'Order',          association: :status
+    Bullet.add_safelist type: :unused_eager_loading, class_name: 'Order',          association: :responsible
+    Bullet.add_safelist type: :unused_eager_loading, class_name: 'Order',          association: :targets
+    Bullet.add_safelist type: :unused_eager_loading, class_name: 'Order',          association: :order_uncertainties
+    Bullet.add_safelist type: :unused_eager_loading, class_name: 'Expense',        association: :reviewer
+    Bullet.add_safelist type: :n_plus_one_query,     class_name: 'Order',          association: :order_team_members
+    Bullet.add_safelist type: :n_plus_one_query,     class_name: 'Order',          association: :team_members
+    Bullet.add_safelist type: :n_plus_one_query,     class_name: 'Order',          association: :order_contacts
+    Bullet.add_safelist type: :n_plus_one_query,     class_name: 'WorkItem',       association: :parent
+    Bullet.add_safelist type: :n_plus_one_query,     class_name: 'BillingAddress', association: :client
+    Bullet.add_safelist type: :n_plus_one_query,     class_name: 'BillingAddress', association: :contact
   end
 end

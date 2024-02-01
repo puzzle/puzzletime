@@ -43,8 +43,8 @@ class Evaluations::Evaluation
   self.category_ref     = nil
 
   # Columns to display in the detail view
-  self.detail_columns   = [:work_date, :hours, :employee, :account, :billable,
-                           :ticket, :description]
+  self.detail_columns   = %i[work_date hours employee account billable
+                             ticket description]
 
   # Table captions for detail columns
   self.detail_labels    = { work_date: 'Datum',
@@ -74,9 +74,9 @@ class Evaluations::Evaluation
   end
 
   def sum_times_grouped(period)
-    query = worktime_query(category, period).
-            joins(division_join).
-            group(division_column)
+    query = worktime_query(category, period)
+            .joins(division_join)
+            .group(division_column)
     query_time_sums(query, division_column)
   end
 
@@ -100,9 +100,9 @@ class Evaluations::Evaluation
   # Returns a list of all Worktime entries for this Evaluation in the given period
   # of time.
   def times(period)
-    worktime_query(division || category, period, division).
-      order('worktimes.work_date ASC, worktimes.from_start_time, ' \
-            'worktimes.work_item_id, worktimes.employee_id')
+    worktime_query(division || category, period, division)
+      .order('worktimes.work_date ASC, worktimes.from_start_time, ' \
+             'worktimes.work_item_id, worktimes.employee_id')
   end
 
   def worktime_query(receiver, period = nil, division = nil)
@@ -128,10 +128,10 @@ class Evaluations::Evaluation
   end
 
   def planning_query(receiver, division = nil)
-    query = receiver.plannings.
-            joins(:work_item).
-            joins(Arel.sql('INNER JOIN accounting_posts ON accounting_posts.work_item_id = ANY (work_items.path_ids)')).
-            definitive
+    query = receiver.plannings
+                    .joins(:work_item)
+                    .joins(Arel.sql('INNER JOIN accounting_posts ON accounting_posts.work_item_id = ANY (work_items.path_ids)'))
+                    .definitive
     query = query.where("? = #{category_ref}", category_id) if division && category_ref
     query
   end

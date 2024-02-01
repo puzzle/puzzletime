@@ -10,8 +10,7 @@ class Order::Report::Total
     @report = report
   end
 
-  def parent_names
-  end
+  def parent_names; end
 
   def to_s
     "Total (#{entries.count})"
@@ -93,6 +92,5 @@ class Order::Report::Total
     @average_rate ||= supplied_hours > 0 ? billable_amount / supplied_hours : nil
   end
 
-  def target(_id)
-  end
+  def target(_id); end
 end

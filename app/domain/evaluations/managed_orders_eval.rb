@@ -27,22 +27,22 @@ class Evaluations::ManagedOrdersEval < Evaluations::WorkItemsEval
 
   def worktime_query(receiver, period = nil, division = nil)
     if receiver == category
-      Worktime.
-        joins(:work_item).
-        joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)').
-        where(type: 'Ordertime').
-        where(orders: { responsible_id: category.id }).
-        in_period(period)
+      Worktime
+        .joins(:work_item)
+        .joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)')
+        .where(type: 'Ordertime')
+        .where(orders: { responsible_id: category.id })
+        .in_period(period)
     else
       super(receiver, period, division)
     end
   end
 
   def planning_query(_receiver, _division = nil)
-    Planning.
-      joins(:work_item).
-      joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)').
-      joins('INNER JOIN accounting_posts ON accounting_posts.work_item_id = ANY (work_items.path_ids)').
-      where(orders: { responsible_id: category.id })
+    Planning
+      .joins(:work_item)
+      .joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)')
+      .joins('INNER JOIN accounting_posts ON accounting_posts.work_item_id = ANY (work_items.path_ids)')
+      .where(orders: { responsible_id: category.id })
   end
 end

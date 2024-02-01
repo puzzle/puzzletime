@@ -19,5 +19,5 @@ Absence.seed(
   { name: 'Umzug',
     payed: true },
   { name: 'Überstundenkompensation',
-    payed: false },
+    payed: false }
 )

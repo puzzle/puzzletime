@@ -17,25 +17,23 @@ class EmployeeMasterDataController < ApplicationController
   def index
     authorize!(:read, Employee)
     @employees = list_entries.to_a
-    if can?(:manage, Employment)
-      fetch_latest_employment_dates(@employees)
-      sort_by_latest_employment(@employees)
-    end
+    return unless can?(:manage, Employment)
+
+    fetch_latest_employment_dates(@employees)
+    sort_by_latest_employment(@employees)
   end
 
   def show
     @employee = Employee.includes(current_employment: {
-                                    employment_roles_employments: [
-                                      :employment_role,
-                                      :employment_role_level
+                                    employment_roles_employments: %i[
+                                      employment_role
+                                      employment_role_level
                                     ]
                                   })
                         .find(params[:id])
     authorize!(:read, @employee)
 
-    unless can?(:social_insurance, @employee)
-      @employee.social_insurance = nil
-    end
+    @employee.social_insurance = nil unless can?(:social_insurance, @employee)
 
     respond_to do |format|
       format.html
@@ -61,16 +59,16 @@ class EmployeeMasterDataController < ApplicationController
   def list_entries_includes(list)
     if can?(:manage, Employment)
       list.includes(:department, :employments, current_employment: {
-                      employment_roles_employments: [
-                        :employment_role,
-                        :employment_role_level
+                      employment_roles_employments: %i[
+                        employment_role
+                        employment_role_level
                       ]
                     })
     else
       list.includes(:department, current_employment: {
-                      employment_roles_employments: [
-                        :employment_role,
-                        :employment_role_level
+                      employment_roles_employments: %i[
+                        employment_role
+                        employment_role_level
                       ]
                     })
     end
@@ -95,12 +93,12 @@ class EmployeeMasterDataController < ApplicationController
   end
 
   def sort_by_latest_employment(list)
-    if params[:sort] == 'latest_employment'
-      list.sort! { |a, b| @employee_employment[a] <=> @employee_employment[b] }
-      if params[:sort_dir] == 'asc'
-        list.reverse!
-      end
-    end
+    return unless params[:sort] == 'latest_employment'
+
+    list.sort! { |a, b| @employee_employment[a] <=> @employee_employment[b] }
+    return unless params[:sort_dir] == 'asc'
+
+    list.reverse!
   end
 
   def vcard(include: nil)

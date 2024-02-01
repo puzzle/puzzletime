@@ -65,6 +65,7 @@ class ExportReportControllerTest < ActionController::TestCase
     filename_slug = I18n.transliterate(filename)
     filename_utf8 = CGI.escape(filename)
 
-    assert_equal "attachment; filename=\"#{filename_slug}\"; filename*=UTF-8''#{filename_utf8}", response.headers['Content-Disposition']
+    assert_equal "attachment; filename=\"#{filename_slug}\"; filename*=UTF-8''#{filename_utf8}",
+                 response.headers['Content-Disposition']
   end
 end

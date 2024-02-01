@@ -111,9 +111,7 @@ class Period
     end
 
     def parse_year_quarter(year, shift, shortcut)
-      if [1, 2, 3, 4].exclude?(shift)
-        raise ArgumentError, 'Unsupported shift for quarter shortcut'
-      end
+      raise ArgumentError, 'Unsupported shift for quarter shortcut' if [1, 2, 3, 4].exclude?(shift)
 
       quarter_for(Date.civil(year, shift * 3, 1), shortcut:)
     end
@@ -133,7 +131,7 @@ class Period
       if date.is_a? String
         begin
           date = Date.strptime(date, I18n.t('date.formats.default'))
-        rescue
+        rescue StandardError
           date = Date.parse(date)
         end
       end

@@ -4,6 +4,6 @@
 #  https://github.com/puzzle/puzzletime.
 
 class TargetScopesController < ManageController
-  self.permitted_attrs = [:name, :icon, :position,
-                          :rating_green_description, :rating_orange_description, :rating_red_description]
+  self.permitted_attrs = %i[name icon position
+                            rating_green_description rating_orange_description rating_red_description]
 end

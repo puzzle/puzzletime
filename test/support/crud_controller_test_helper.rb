@@ -37,7 +37,7 @@ module CrudControllerTestHelper
 
     assert_response :success
     assert_predicate entries, :present?
-    assert entries.include?(test_entry)
+    assert_includes entries, test_entry
   end
 
   def test_index_sort_asc # :nodoc:
@@ -48,7 +48,7 @@ module CrudControllerTestHelper
 
     assert_response :success
     assert_predicate entries, :present?
-    sorted = entries.sort_by(&(col.to_sym))
+    sorted = entries.sort_by(&col.to_sym)
 
     assert_equal sorted, entries.to_a
   end
@@ -61,7 +61,7 @@ module CrudControllerTestHelper
 
     assert_response :success
     assert_predicate entries, :present?
-    sorted = entries.to_a.sort_by(&(col.to_sym))
+    sorted = entries.to_a.sort_by(&col.to_sym)
 
     assert_equal sorted.reverse, entries.to_a
   end
@@ -103,7 +103,7 @@ module CrudControllerTestHelper
       assert_empty entry.errors.full_messages
     end
     assert_redirected_to_index
-    assert !entry.new_record?
+    assert_not entry.new_record?
     assert_attrs_equal(new_entry_attrs)
   end
 
@@ -229,12 +229,12 @@ module CrudControllerTestHelper
 
   # Test object used in several tests.
   def test_entry
-    fail 'Implement this method in your test class'
+    raise 'Implement this method in your test class'
   end
 
   # Attribute hash used in several tests.
   def test_entry_attrs
-    fail 'Implement this method in your test class'
+    raise 'Implement this method in your test class'
   end
 
   # Attribute hash used in edit/update tests.

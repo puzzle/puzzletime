@@ -4,5 +4,5 @@
 #  https://github.com/puzzle/puzzletime.
 
 class HolidaysController < ManageController
-  self.permitted_attrs = [:holiday_date, :musthours_day]
+  self.permitted_attrs = %i[holiday_date musthours_day]
 end

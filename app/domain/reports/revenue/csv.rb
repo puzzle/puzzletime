@@ -81,12 +81,12 @@ class Reports::Revenue::Csv
   end
 
   def row_past_months_summary
-    if report.past_months?
-      [
-        format_number(report.total_ordertime_hours_per_entry(entry), 0),
-        format_number(report.average_ordertime_hours_per_entry(entry), 0)
-      ]
-    end
+    return unless report.past_months?
+
+    [
+      format_number(report.total_ordertime_hours_per_entry(entry), 0),
+      format_number(report.average_ordertime_hours_per_entry(entry), 0)
+    ]
   end
 
   def row_future_months
@@ -116,12 +116,12 @@ class Reports::Revenue::Csv
   end
 
   def footer_past_months_summary
-    if report.past_months?
-      [
-        format_number(report.total_ordertime_hours_overall, 0),
-        format_number(report.average_ordertime_hours_overall, 0)
-      ]
-    end
+    return unless report.past_months?
+
+    [
+      format_number(report.total_ordertime_hours_overall, 0),
+      format_number(report.average_ordertime_hours_overall, 0)
+    ]
   end
 
   def footer_future_months

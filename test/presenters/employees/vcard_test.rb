@@ -66,8 +66,8 @@ class Employees::VcardTest < ActiveSupport::TestCase
       END:VCARD
     VCF
 
-    assert_equal expected, vcard(employee, include: [
-                                   :firstname, :phone_private, :birthday
+    assert_equal expected, vcard(employee, include: %i[
+                                   firstname phone_private birthday
                                  ])
   end
 end

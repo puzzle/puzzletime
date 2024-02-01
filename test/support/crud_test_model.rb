@@ -28,10 +28,10 @@ class CrudTestModel < ActiveRecord::Base # :nodoc:
   private
 
   def protect_if_companion
-    if companion.present?
-      errors.add(:base, 'Cannot destroy model with companion')
-      throw :abort
-    end
+    return unless companion.present?
+
+    errors.add(:base, 'Cannot destroy model with companion')
+    throw :abort
   end
 end
 

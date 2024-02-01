@@ -85,7 +85,7 @@ class ExpensesControllerTest < ActionController::TestCase
     assert_redirected_to expenses_review_path(expense)
   end
 
-  %w(pending deferred rejected).each do |status|
+  %w[pending deferred rejected].each do |status|
     test "PUT#update employee may update #{status} expense" do
       expense = expenses(status)
 
@@ -112,12 +112,12 @@ class ExpensesControllerTest < ActionController::TestCase
     login_as(:pascal)
     put :update, params: { employee_id: expense.employee_id, id: expense.id, expense: { amount: 1 } }
 
-    refute_equal 1, expense.reload.amount
+    assert_not_equal 1, expense.reload.amount
     assert_redirected_to employee_expenses_path(expense.employee)
     assert_equal 'Freigegebene Spesen können nicht verändert werden.', flash[:alert]
   end
 
-  test "DELETE#destroy employee may not destroy approved expense" do
+  test 'DELETE#destroy employee may not destroy approved expense' do
     expense = expenses(:approved)
 
     login_as(:pascal)
@@ -153,6 +153,7 @@ class ExpensesControllerTest < ActionController::TestCase
 
     assert_equal 4, assigns(:expenses).count
     assert_equal 'application/pdf', response.headers['Content-Type']
-    assert_equal 'inline; filename="expenses.pdf"; filename*=UTF-8\'\'expenses.pdf', response.headers['Content-Disposition']
+    assert_equal 'inline; filename="expenses.pdf"; filename*=UTF-8\'\'expenses.pdf',
+                 response.headers['Content-Disposition']
   end
 end

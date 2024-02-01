@@ -5,11 +5,11 @@
 
 module Plannings
   class EmployeesController < BaseController
-    self.search_columns = [:firstname, :lastname, :shortname]
+    self.search_columns = %i[firstname lastname shortname]
 
     skip_authorize_resource
 
-    before_action :load_possible_work_items, only: [:new, :show]
+    before_action :load_possible_work_items, only: %i[new show]
 
     private
 

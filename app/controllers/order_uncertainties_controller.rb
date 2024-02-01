@@ -5,7 +5,7 @@
 
 class OrderUncertaintiesController < CrudController
   self.nesting = Order
-  self.permitted_attrs = [:name, :probability, :impact, :measure]
+  self.permitted_attrs = %i[name probability impact measure]
 
   helper_method :index_path
 

@@ -242,11 +242,13 @@ class OrdersControllerTest < ActionController::TestCase
 
     order_contacts = order.order_contacts.map { |oc| [oc.contact_id, oc.comment] }.sort
 
-    assert_equal [[contacts(:swisstopo_1).id, 'funktion 1'], [contacts(:swisstopo_2).id, 'funktion 2']].sort, order_contacts
+    assert_equal [[contacts(:swisstopo_1).id, 'funktion 1'], [contacts(:swisstopo_2).id, 'funktion 2']].sort,
+                 order_contacts
 
     order_team_members = order.order_team_members.map { |otm| [otm.employee.id, otm.comment] }.sort
 
-    assert_equal [[employees(:half_year_maria).id, 'rolle maria'], [employees(:next_year_pablo).id, 'rolle pablo']].sort, order_team_members
+    assert_equal [[employees(:half_year_maria).id, 'rolle maria'], [employees(:next_year_pablo).id, 'rolle pablo']].sort,
+                 order_team_members
   end
 
   test 'POST create copies sub accounting posts and everything' do
@@ -294,7 +296,8 @@ class OrdersControllerTest < ActionController::TestCase
 
     order_team_members = order.order_team_members.map { |otm| [otm.employee.id, otm.comment] }.sort
 
-    assert_equal [[employees(:half_year_maria).id, 'rolle maria'], [employees(:next_year_pablo).id, 'rolle pablo']].sort, order_team_members
+    assert_equal [[employees(:half_year_maria).id, 'rolle maria'], [employees(:next_year_pablo).id, 'rolle pablo']].sort,
+                 order_team_members
 
     assert_equal 'hito1234', order.contract.number
     assert_not_equal source.contract_id, order.contract_id
@@ -350,7 +353,8 @@ class OrdersControllerTest < ActionController::TestCase
   end
 
   test 'POST create copies same level accounting post with category' do
-    source = Fabricate(:order, work_item: Fabricate(:work_item, parent: work_items(:intern), name: 'test', shortname: 'tst'))
+    source = Fabricate(:order,
+                       work_item: Fabricate(:work_item, parent: work_items(:intern), name: 'test', shortname: 'tst'))
     Fabricate(:accounting_post, work_item: source.work_item)
 
     post :create, params: {
@@ -433,11 +437,13 @@ class OrdersControllerTest < ActionController::TestCase
 
     order_contacts = order.order_contacts.map { |oc| [oc.contact_id, oc.comment] }.sort
 
-    assert_equal [[contacts(:puzzle_rava).id, 'funktion 1'], [contacts(:puzzle_hauswart).id, 'funktion 2']].sort, order_contacts
+    assert_equal [[contacts(:puzzle_rava).id, 'funktion 1'], [contacts(:puzzle_hauswart).id, 'funktion 2']].sort,
+                 order_contacts
 
     order_team_members = order.order_team_members.map { |otm| [otm.employee.id, otm.comment] }.sort
 
-    assert_equal [[employees(:half_year_maria).id, 'rolle maria'], [employees(:next_year_pablo).id, 'rolle pablo']].sort, order_team_members
+    assert_equal [[employees(:half_year_maria).id, 'rolle maria'], [employees(:next_year_pablo).id, 'rolle pablo']].sort,
+                 order_team_members
   end
 
   test 'DELETE destroys order and work item' do
@@ -494,8 +500,8 @@ class OrdersControllerTest < ActionController::TestCase
     empls = JSON.parse(response.body)
 
     assert_equal 2, empls.size
-    assert empls.any? { |e| e['id'] == lucien.id }
-    assert empls.any? { |e| e['id'] == mark.id }
+    assert(empls.any? { |e| e['id'] == lucien.id })
+    assert(empls.any? { |e| e['id'] == mark.id })
   end
 
   test 'ajax GET #employees empty if no worktimes for given period' do
@@ -541,7 +547,7 @@ class OrdersControllerTest < ActionController::TestCase
 
     get :search, params: { q: order.path_shortnames, only_open: true }, format: :json
 
-    refute find_in_body(response.body, 'id', order.id)
+    assert_not find_in_body(response.body, 'id', order.id)
   end
 
   private

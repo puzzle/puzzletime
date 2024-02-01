@@ -17,7 +17,7 @@
 #
 
 class OrderTarget < ActiveRecord::Base
-  RATINGS = %w(green orange red).freeze
+  RATINGS = %w[green orange red].freeze
 
   belongs_to :order
   belongs_to :target_scope
@@ -28,9 +28,9 @@ class OrderTarget < ActiveRecord::Base
   validates :target_scope_id, uniqueness: { scope: :order_id }
 
   scope :list, lambda {
-    includes(:target_scope).
-      references(:target_scope).
-      order('target_scopes.position')
+    includes(:target_scope)
+      .references(:target_scope)
+      .order('target_scopes.position')
   }
 
   def target_critical?

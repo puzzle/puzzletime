@@ -43,17 +43,17 @@ class Graphs::WorktimeGraph
 
     # fill ordertimes
     append_period_boxes period_boxes[:work_items], must_hours
-    append_account_boxes @work_items_eval.times(@current).
-      where(WORKTIME_CONDITIONS).
-      reorder(WORKTIME_ORDER).
-      includes(:work_item, :invoice)
+    append_account_boxes @work_items_eval.times(@current)
+                                         .where(WORKTIME_CONDITIONS)
+                                         .reorder(WORKTIME_ORDER)
+                                         .includes(:work_item, :invoice)
 
     # add absencetimes, payed ones first
     append_period_boxes period_boxes[:absences], must_hours
-    append_account_boxes(@absences_eval.times(@current).
-                                        joins('LEFT JOIN absences ON absences.id = absence_id').
-                                        reorder('absences.payed DESC, work_date, from_start_time, absence_id').
-                                        where(WORKTIME_CONDITIONS))
+    append_account_boxes(@absences_eval.times(@current)
+                                        .joins('LEFT JOIN absences ON absences.id = absence_id')
+                                        .reorder('absences.payed DESC, work_date, from_start_time, absence_id')
+                                        .where(WORKTIME_CONDITIONS))
 
     # add must_hours limit
     insert_musthours_line must_hours
@@ -78,12 +78,10 @@ class Graphs::WorktimeGraph
   private
 
   def compute_period_times(day)
-    if day.wday == 1
-      set_period_boxes(@weekly_boxes, Period.week_for(day), ReportType::HoursWeekType::INSTANCE)
-    end
-    if day.mday == 1
-      set_period_boxes(@monthly_boxes, Period.month_for(day), ReportType::HoursMonthType::INSTANCE)
-    end
+    set_period_boxes(@weekly_boxes, Period.week_for(day), ReportType::HoursWeekType::INSTANCE) if day.wday == 1
+    return unless day.mday == 1
+
+    set_period_boxes(@monthly_boxes, Period.month_for(day), ReportType::HoursMonthType::INSTANCE)
   end
 
   def set_period_boxes(hash, period, report_type)
@@ -92,9 +90,9 @@ class Graphs::WorktimeGraph
   end
 
   def get_period_boxes(evaluation, period, report_type)
-    work_items = evaluation.times(period).
-                 where(report_type: report_type.key).
-                 reorder(WORKTIME_ORDER)
+    work_items = evaluation.times(period)
+                           .where(report_type: report_type.key)
+                           .reorder(WORKTIME_ORDER)
     # stretch by employment musttime if employment > 100%
     hours = period.musttime.to_f * must_hours_factor
     return [] if hours.zero?

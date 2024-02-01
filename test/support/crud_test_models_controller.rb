@@ -7,12 +7,12 @@
 class CrudTestModelsController < CrudController # :nodoc:
   HANDLE_PREFIX = 'handle_'
 
-  self.search_columns = [:name, :whatever, :remarks]
+  self.search_columns = %i[name whatever remarks]
   self.sort_mappings = { chatty: 'length(remarks)' }
   self.default_sort = 'name'
-  self.permitted_attrs = [:name, :email, :password, :whatever, :children,
-                          :companion_id, :rating, :income, :birthdate,
-                          :gets_up_at, :last_seen, :human, :remarks]
+  self.permitted_attrs = %i[name email password whatever children
+                            companion_id rating income birthdate
+                            gets_up_at last_seen human remarks]
 
   skip_authorize_resource
   skip_authorization_check
@@ -59,22 +59,18 @@ class CrudTestModelsController < CrudController # :nodoc:
     entries
   end
 
-  private
-
   def build_entry
     entry = super
-    if params[model_identifier]
-      entry.companion_id = model_params.delete(:companion_id)
-    end
+    entry.companion_id = model_params.delete(:companion_id) if params[model_identifier]
     entry
   end
 
   # custom callback
   def handle_name
-    if entry.name == 'illegal'
-      flash[:alert] = 'illegal name'
-      throw :abort
-    end
+    return unless entry.name == 'illegal'
+
+    flash[:alert] = 'illegal name'
+    throw :abort
   end
 
   # callback to redirect if @should_redirect is set
@@ -88,7 +84,7 @@ class CrudTestModelsController < CrudController # :nodoc:
   end
 
   # create callback methods that record the before/after callbacks
-  [:create, :update, :save, :destroy].each do |a|
+  %i[create update save destroy].each do |a|
     callback = "before_#{a}"
     send(callback.to_sym, :"#{HANDLE_PREFIX}#{callback}")
     callback = "after_#{a}"
@@ -96,16 +92,16 @@ class CrudTestModelsController < CrudController # :nodoc:
   end
 
   # create callback methods that record the before_render callbacks
-  [:index, :show, :new, :edit, :form].each do |a|
+  %i[index show new edit form].each do |a|
     callback = "before_render_#{a}"
     send(callback.to_sym, :"#{HANDLE_PREFIX}#{callback}")
   end
 
   # handle the called callbacks
   def method_missing(sym, *_args)
-    if sym.to_s.starts_with?(HANDLE_PREFIX)
-      called_callback(sym.to_s[HANDLE_PREFIX.size..-1].to_sym)
-    end
+    return unless sym.to_s.starts_with?(HANDLE_PREFIX)
+
+    called_callback(sym.to_s[HANDLE_PREFIX.size..-1].to_sym)
   end
 
   # records a callback

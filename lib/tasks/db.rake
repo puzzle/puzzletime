@@ -10,17 +10,17 @@ namespace :db do
     desc 'Load a db dump from the given FILE'
     task load: ['db:drop', 'db:create'] do
       if ENV['FILE'].blank?
-        $stderr.puts 'Usage: FILE=/path/to/dump.sql rake db:dump:load'
+        warn 'Usage: FILE=/path/to/dump.sql rake db:dump:load'
         exit 1
       end
 
       c = ActiveRecord::Base.connection_config
       sh({ 'PGPASSWORD' => c[:password] },
-         %W(psql
+         %W[psql
             -U #{c[:username]}
             -f #{ENV.fetch('FILE', nil)}
             -h #{c[:host]}
-            #{c[:database]}).join(' '))
+            #{c[:database]}].join(' '))
       Rake::Task['db:migrate'].invoke
     end
   end

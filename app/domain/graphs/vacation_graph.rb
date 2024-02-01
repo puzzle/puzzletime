@@ -24,22 +24,22 @@ class Graphs::VacationGraph
     Employee.employed_ones(@actual_period).each do |empl|
       @absences_eval.set_division_id empl.id
       # trade some memory for speed
-      @absencetimes = @absences_eval.times(period).
-                      reorder('work_date, from_start_time, employee_id, absence_id').
-                      includes(:absence).
-                      references(:absence).
-                      where('report_type = ? OR report_type = ? OR report_type = ?',
-                            ReportType::StartStopType::INSTANCE.key,
-                            ReportType::HoursDayType::INSTANCE.key,
-                            ReportType::HoursWeekType::INSTANCE.key)
-      @monthly_absencetimes = @absences_eval.times(period).
-                              reorder('work_date, from_start_time, employee_id, absence_id').
-                              includes(:absence).
-                              references(:absence).
-                              where('report_type = ?',
-                                    ReportType::HoursMonthType::INSTANCE.key)
+      @absencetimes = @absences_eval.times(period)
+                                    .reorder('work_date, from_start_time, employee_id, absence_id')
+                                    .includes(:absence)
+                                    .references(:absence)
+                                    .where('report_type = ? OR report_type = ? OR report_type = ?',
+                                           ReportType::StartStopType::INSTANCE.key,
+                                           ReportType::HoursDayType::INSTANCE.key,
+                                           ReportType::HoursWeekType::INSTANCE.key)
+      @monthly_absencetimes = @absences_eval.times(period)
+                                            .reorder('work_date, from_start_time, employee_id, absence_id')
+                                            .includes(:absence)
+                                            .references(:absence)
+                                            .where('report_type = ?',
+                                                   ReportType::HoursMonthType::INSTANCE.key)
       @unpaid_absences = empl.statistics.employments_during(period).select { |e| e.percent.zero? }
-      @unpaid_absences.collect! { |e| Period.new(e.start_date, e.end_date ? e.end_date : period.end_date) }
+      @unpaid_absences.collect! { |e| Period.new(e.start_date, e.end_date || period.end_date) }
       @index = 0
       @monthly_index = 0
       @unpaid_index = 0

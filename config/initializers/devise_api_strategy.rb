@@ -15,11 +15,9 @@ module Devise
       def authenticate!
         user = user_from_basic_auth
 
-        if user.is_a? ApiClient
-          success!(user)
-        else
-          fail('Could not login with API Credentials') # rubocop:disable Style/SignalException
-        end
+        raise('Could not login with API Credentials') unless user.is_a? ApiClient
+
+        success!(user)
       end
 
       private

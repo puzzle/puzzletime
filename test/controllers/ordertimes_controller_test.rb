@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -12,9 +10,9 @@ class OrdertimesControllerTest < ActionController::TestCase
 
   def roles_users
     {
-      employee:    :pascal,
+      employee: :pascal,
       responsible: :lucien,
-      manager:     :mark
+      manager: :mark
     }
   end
 
@@ -54,7 +52,7 @@ class OrdertimesControllerTest < ActionController::TestCase
     template.update(billable: false)
     get :new, params: { template: template.id }
 
-    assert !assigns(:worktime).billable?
+    assert_not assigns(:worktime).billable?
   end
 
   def test_new_other
@@ -264,7 +262,7 @@ class OrdertimesControllerTest < ActionController::TestCase
     end
   end
 
-  [:employee, :responsible, :manager].each do |role|
+  %i[employee responsible manager].each do |role|
     test "create_as_#{role}_on_closed_order" do
       login_as(roles_users[role])
       work_items(:puzzletime).update(closed: true)
@@ -280,7 +278,8 @@ class OrdertimesControllerTest < ActionController::TestCase
           }
         }
       end
-      assert_includes assigns(:worktime).errors.messages[:base], 'Auf geschlossene Aufträge und/oder Positionen kann nicht gebucht werden.'
+      assert_includes assigns(:worktime).errors.messages[:base],
+                      'Auf geschlossene Aufträge und/oder Positionen kann nicht gebucht werden.'
     end
   end
 
@@ -331,7 +330,7 @@ class OrdertimesControllerTest < ActionController::TestCase
     end
   end
 
-  [:employee, :responsible, :manager].each do |role|
+  %i[employee responsible manager].each do |role|
     test "update_as_#{role}_on_closed_order" do
       user = roles_users[role]
       login_as(user)
@@ -461,7 +460,7 @@ class OrdertimesControllerTest < ActionController::TestCase
     end
   end
 
-  [:employee, :responsible, :manager].each do |role|
+  %i[employee responsible manager].each do |role|
     test "destroy_as_#{role}_on_closed_order" do
       user = roles_users[role]
       login_as(user)

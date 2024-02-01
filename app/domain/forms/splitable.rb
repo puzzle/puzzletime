@@ -49,9 +49,7 @@ class Forms::Splitable
     'Aufteilen'
   end
 
-  def empty?
-    worktimes.empty?
-  end
+  delegate :empty?, to: :worktimes
 
   protected
 

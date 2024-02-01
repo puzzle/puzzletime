@@ -8,12 +8,12 @@ require 'test_helper'
 class EvaluatorControllerTest < ActionController::TestCase
   setup :login
 
-  %w(userworkitems userabsences).each do |evaluation|
+  %w[userworkitems userabsences].each do |evaluation|
     test "GET index #{evaluation}" do
       get :index, params: { evaluation: }
 
       assert_template evaluation == 'userworkitems' ? 'overview_employee' : 'overview'
-      assert_equal %w(-2m -1m 0m -1y 0y 0).map { |p| Period.parse(p) }, assigns(:periods)
+      assert_equal %w[-2m -1m 0m -1y 0y 0].map { |p| Period.parse(p) }, assigns(:periods)
     end
 
     test "GET export csv #{evaluation}" do
@@ -32,13 +32,13 @@ class EvaluatorControllerTest < ActionController::TestCase
     assert_match '06.12.2006,5.0,"","",absolute_day,true,Waber Mark,PITC-AL: Allgemein,,', csv_data_lines.first
   end
 
-  test "GET index employees" do
+  test 'GET index employees' do
     get :index, params: { evaluation: 'employees' }
 
     assert_template 'employees'
   end
 
-  %w(clients departments).each do |evaluation|
+  %w[clients departments].each do |evaluation|
     test "GET index #{evaluation}" do
       get :index, params: { evaluation: }
 
@@ -47,15 +47,15 @@ class EvaluatorControllerTest < ActionController::TestCase
     end
   end
 
-  test "GET index workitememployees" do
-    get :index, params: { evaluation: "workitememployees", category_id: work_items(:allgemein) }
+  test 'GET index workitememployees' do
+    get :index, params: { evaluation: 'workitememployees', category_id: work_items(:allgemein) }
 
     assert_template 'overview'
     assert_equal work_items(:allgemein).order, assigns(:order)
-    assert_select "a", /#{work_items(:allgemein).order.label_with_workitem_path}/
+    assert_select 'a', /#{work_items(:allgemein).order.label_with_workitem_path}/
   end
 
-  %w(clients employees departments).each do |evaluation|
+  %w[clients employees departments].each do |evaluation|
     test "GET details #{evaluation}" do
       get :details, params: { evaluation:, category_id: division_id(evaluation) }
 
@@ -82,7 +82,7 @@ class EvaluatorControllerTest < ActionController::TestCase
     assert_template 'report'
     total = assigns(:worktimes).sum(:hours)
 
-    assert_match /Total Stunden.*#{total}/m, response.body
+    assert_match(/Total Stunden.*#{total}/m, response.body)
   end
 
   test 'GET report contains all hours with combined tickets' do
@@ -107,7 +107,7 @@ class EvaluatorControllerTest < ActionController::TestCase
     total = assigns(:worktimes).sum(:hours)
 
     assert_equal 8, total
-    assert_match /Total Stunden.*#{total}/m, response.body
+    assert_match(/Total Stunden.*#{total}/m, response.body)
   end
 
   test 'GET report with param show_ticket=1 shows tickets' do
@@ -146,7 +146,8 @@ class EvaluatorControllerTest < ActionController::TestCase
   def assert_csv_http_headers(filename)
     assert_includes response.headers, 'Content-Type', 'Content-Disposition'
     assert_equal 'text/csv; charset=utf-8', response.headers['Content-Type']
-    assert_equal "attachment; filename=\"#{filename}\"; filename*=UTF-8''#{filename}", response.headers['Content-Disposition']
+    assert_equal "attachment; filename=\"#{filename}\"; filename*=UTF-8''#{filename}",
+                 response.headers['Content-Disposition']
   end
 
   def division_id(evaluation)

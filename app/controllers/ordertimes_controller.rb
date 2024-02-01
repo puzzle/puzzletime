@@ -4,8 +4,8 @@
 #  https://github.com/puzzle/puzzletime.
 
 class OrdertimesController < WorktimesController
-  self.permitted_attrs = [:account_id, :report_type, :work_date, :hours, :meal_compensation,
-                          :from_start_time, :to_end_time, :description, :billable, :ticket]
+  self.permitted_attrs = %i[account_id report_type work_date hours meal_compensation
+                            from_start_time to_end_time description billable ticket]
 
   after_destroy :send_email_notification
 
@@ -93,10 +93,10 @@ class OrdertimesController < WorktimesController
   end
 
   def send_email_notification
-    if worktime_employee?
-      ::EmployeeMailer.worktime_deleted_mail(@worktime, @user).deliver_now
-      flash[:warning] =
-        "#{@worktime.employee} wurde per E-Mail darüber informiert, dass du diesen Eintrag gelöscht hast."
-    end
+    return unless worktime_employee?
+
+    ::EmployeeMailer.worktime_deleted_mail(@worktime, @user).deliver_now
+    flash[:warning] =
+      "#{@worktime.employee} wurde per E-Mail darüber informiert, dass du diesen Eintrag gelöscht hast."
   end
 end

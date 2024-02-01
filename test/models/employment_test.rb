@@ -57,7 +57,7 @@ class EmploymentTest < ActiveSupport::TestCase
   end
 
   def test_musttime_for_period
-    period = Period.new("1.9.2007", "30.9.2007")
+    period = Period.new('1.9.2007', '30.9.2007')
 
     assert_equal period.musttime, employments(:various_100).musttime(period)
     assert_equal period.musttime * 0.9, employments(:long_time).musttime(period)

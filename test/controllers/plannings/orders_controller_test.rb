@@ -20,9 +20,9 @@ module Plannings
           }
 
       assert_equal 200, response.status
-      refute_empty assigns(:items)
+      assert_not_empty assigns(:items)
       assert_equal employees(:long_time_john), assigns(:legend)
-      assert response.body.include?('Neverends John')
+      assert_includes response.body, 'Neverends John'
     end
 
     test 'GET#show renders board' do
@@ -37,7 +37,7 @@ module Plannings
                        percent: 60)
       Planning.create!(work_item_id: work_items(:hitobito_demo_site).id,
                        employee_id: employees(:lucien).id,
-                       date: date + 1.weeks,
+                       date: date + 1.week,
                        percent: 20)
       get :show, params: { id: orders(:hitobito_demo).id }
 
@@ -90,8 +90,8 @@ module Plannings
             }
 
       assert_equal 200, response.status
-      assert response.body.include?('Zumkehr Pascal')
-      assert response.body.include?('50')
+      assert_includes response.body, 'Zumkehr Pascal'
+      assert_includes response.body, '50'
     end
 
     test 'PATCH update with invalid params' do
@@ -107,7 +107,7 @@ module Plannings
             }
 
       assert_equal 200, response.status
-      assert response.body.include?('Bitte füllen Sie das Formular aus')
+      assert_includes response.body, 'Bitte füllen Sie das Formular aus'
     end
 
     test 'PATCH#update as regular user fails' do

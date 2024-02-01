@@ -42,17 +42,17 @@ class OrderContact < ActiveRecord::Base
   private
 
   def create_crm_contact
-    if Crm.instance && contact_id_or_crm.to_s.start_with?(Contact::CRM_ID_PREFIX)
-      crm_key = contact_id_or_crm.sub(Contact::CRM_ID_PREFIX, '')
-      person = Crm.instance.find_person(crm_key)
-      self.contact_id = nil
-      build_contact(person.merge(client_id: order.client.id)) if person
-    end
+    return unless Crm.instance && contact_id_or_crm.to_s.start_with?(Contact::CRM_ID_PREFIX)
+
+    crm_key = contact_id_or_crm.sub(Contact::CRM_ID_PREFIX, '')
+    person = Crm.instance.find_person(crm_key)
+    self.contact_id = nil
+    build_contact(person.merge(client_id: order.client.id)) if person
   end
 
   def assert_contact_from_same_client
-    if contact && order && contact.client_id != order.client.id
-      errors.add(:contact_id, 'muss zum selben Kunden wie der Auftrag gehören.')
-    end
+    return unless contact && order && contact.client_id != order.client.id
+
+    errors.add(:contact_id, 'muss zum selben Kunden wie der Auftrag gehören.')
   end
 end

@@ -49,26 +49,26 @@ module Plannings
     private
 
     def load_plannings(p = period)
-      super(p).
-        joins(:work_item).
-        where('? = ANY (work_items.path_ids)', order.work_item_id)
+      super(p)
+        .joins(:work_item)
+        .where('? = ANY (work_items.path_ids)', order.work_item_id)
     end
 
     def load_accounting_posts
-      order.accounting_posts.
-        where(closed: false).
-        includes(:work_item).
-        list
+      order.accounting_posts
+           .where(closed: false)
+           .includes(:work_item)
+           .list
     end
 
     def load_total_included_rows_planned_hours
       hours = {}
       WorkingCondition.each_period_of(:must_hours_per_day, Period.new(nil, nil)) do |period, val|
-        load_plannings(period).
-          where(included_plannings_condition).
-          group(:employee_id, :work_item_id).
-          sum(:percent).
-          each do |(e, w), p|
+        load_plannings(period)
+          .where(included_plannings_condition)
+          .group(:employee_id, :work_item_id)
+          .sum(:percent)
+          .each do |(e, w), p|
           hours[key(e, w)] ||= 0
           hours[key(e, w)] += percent_to_hours(p, val)
         end
@@ -79,11 +79,11 @@ module Plannings
     def load_total_posts_planned_hours
       hours = {}
       WorkingCondition.each_period_of(:must_hours_per_day, Period.new(nil, nil)) do |period, val|
-        load_plannings(period).
-          where(work_item_id: included_work_item_ids).
-          group(:work_item_id).
-          sum(:percent).
-          each do |w, p|
+        load_plannings(period)
+          .where(work_item_id: included_work_item_ids)
+          .group(:work_item_id)
+          .sum(:percent)
+          .each do |w, p|
           hours[w] ||= 0
           hours[w] += percent_to_hours(p, val)
         end

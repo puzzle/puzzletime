@@ -19,7 +19,7 @@ ENV['RAILS_ENV'] = 'test'
 #                             MiniTest::Reporters::JUnitReporter.new]
 # end
 
-require File.expand_path('../../config/environment', __FILE__)
+require File.expand_path('../config/environment', __dir__)
 Rails.env = 'test'
 require 'rails/test_help'
 require 'mocha/minitest'
@@ -48,18 +48,18 @@ Capybara.register_driver :chrome do |app|
   Capybara::Cuprite::Driver.new(
     app,
     window_size: [1920, 1080],
-      # See additional options for Dockerized environment in the respective section of this article
-      browser_options: {
-        # Required for ARM chips on which CI might run
-        'disable-smooth-scrolling' => true
-      },
-      # Increase Chrome startup wait time (required for stable CI builds)
-      process_timeout: 10,
-      # Enable debugging capabilities
-      inspector: true,
-      # Allow running Chrome in a headful mode by setting HEADLESS env
-      # var to a falsey value
-      headless: !ENV['HEADLESS'].in?(%w[n 0 no false])
+    # See additional options for Dockerized environment in the respective section of this article
+    browser_options: {
+      # Required for ARM chips on which CI might run
+      'disable-smooth-scrolling' => true
+    },
+    # Increase Chrome startup wait time (required for stable CI builds)
+    process_timeout: 10,
+    # Enable debugging capabilities
+    inspector: true,
+    # Allow running Chrome in a headful mode by setting HEADLESS env
+    # var to a falsey value
+    headless: !ENV['HEADLESS'].in?(%w[n 0 no false])
   )
 end
 

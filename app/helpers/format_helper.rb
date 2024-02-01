@@ -14,10 +14,10 @@ module FormatHelper
   # Formats a basic value based on its Ruby class.
   def f(value)
     case value
-    when Float, BigDecimal then
+    when Float, BigDecimal
       number_with_precision(value, precision: t('number.format.precision'),
                                    delimiter: t('number.format.delimiter'))
-    when Integer then
+    when Integer
       number_with_delimiter(value, delimiter: t('number.format.delimiter'))
     when Date   then l(value, format: :long)
     when Time   then "#{l(value.to_date)} #{l(value, format: :time)}"
@@ -54,10 +54,10 @@ module FormatHelper
   end
 
   def format_day(date, full_weekday_name = false)
-    if date
-      format = full_weekday_name ? '%A, %e.%-m.' : '%a %e.%-m.'
-      I18n.l(date, format:)
-    end
+    return unless date
+
+    format = full_weekday_name ? '%A, %e.%-m.' : '%a %e.%-m.'
+    I18n.l(date, format:)
   end
 
   def localize_date(date)
@@ -167,8 +167,8 @@ module FormatHelper
     when :time    then l(val, format: :time)
     when :date    then f(val.to_date)
     when :datetime, :timestamp then f(val.time)
-    when :text    then simple_format(h(val))
-    when :decimal then
+    when :text then simple_format(h(val))
+    when :decimal
       number_with_precision(val.to_s.to_f,
                             precision: column_property(obj, attr, :scale),
                             delimiter: t('number.format.delimiter'))
@@ -214,7 +214,7 @@ module FormatHelper
   def show_path_exists?(path_method, val)
     Rails.application.routes.recognize_path(send(path_method, val), method: :get)
     true
-  rescue
+  rescue StandardError
     false
   end
 end

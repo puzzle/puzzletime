@@ -41,7 +41,7 @@ class MultiWorktimesController < ApplicationController
     @worktimes ||=
       Worktime
       .where(id: params[:worktime_ids])
-      .includes([:employee, :work_item, :invoice])
+      .includes(%i[employee work_item invoice])
   end
 
   def load_field_presets
@@ -57,7 +57,7 @@ class MultiWorktimesController < ApplicationController
   end
 
   def changed_attrs
-    @changed_attrs ||= %w(work_item_id ticket billable).select do |attr|
+    @changed_attrs ||= %w[work_item_id ticket billable].select do |attr|
       ActiveRecord::Type::Boolean.new.deserialize(params["change_#{attr}"])
     end
   end

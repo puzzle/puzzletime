@@ -14,5 +14,5 @@ OrderStatus.seed(
   { name: 'Abgeschlossen',
     style: 'danger',
     position: 30,
-    closed: true },
+    closed: true }
 )

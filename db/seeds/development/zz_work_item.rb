@@ -20,7 +20,7 @@ Client.seed(
   { work_item_id: clients[1].id,
     sector_id: Sector.find_by_name('Verwaltung').id },
   { work_item_id: clients[2].id,
-    sector_id: Sector.find_by_name('Öffentlicher Verkehr').id },
+    sector_id: Sector.find_by_name('Öffentlicher Verkehr').id }
 )
 
 categories = WorkItem.seed(
@@ -60,7 +60,7 @@ orders = WorkItem.seed(
     parent_id: categories[2].id },
   { shortname: 'DIS',
     name: 'Driver Info',
-    parent_id: clients[2].id },
+    parent_id: clients[2].id }
 )
 
 Order.seed(
@@ -71,7 +71,7 @@ Order.seed(
     responsible_id: Employee.find_by_shortname('AR').id,
     status_id: OrderStatus.find_by_name('Bearbeitung').id,
     department_id: Department.find_by_name('/dev/two').id,
-    order_team_members: %w(BS PZ DI).map { |short| OrderTeamMember.new(employee: Employee.find_by_shortname(short)) } },
+    order_team_members: %w[BS PZ DI].map { |short| OrderTeamMember.new(employee: Employee.find_by_shortname(short)) } },
   # Tech Talk
   { work_item_id: orders[1].id,
     kind_id: OrderKind.find_by_name('Consulting').id,
@@ -90,7 +90,7 @@ Order.seed(
     responsible_id: Employee.find_by_shortname('AR').id,
     status_id: OrderStatus.find_by_name('Bearbeitung').id,
     department_id: Department.find_by_name('/dev/two').id,
-    order_team_members: %w(PZ BS).map { |short| OrderTeamMember.new(employee: Employee.find_by_shortname(short)) } },
+    order_team_members: %w[PZ BS].map { |short| OrderTeamMember.new(employee: Employee.find_by_shortname(short)) } },
   # FIS Grundpacket
   { work_item_id: orders[4].id,
     kind_id: OrderKind.find_by_name('Mandat').id,
@@ -110,7 +110,7 @@ Order.seed(
     responsible_id: Employee.find_by_shortname('BS').id,
     status_id: OrderStatus.find_by_name('Bearbeitung').id,
     department_id: Department.find_by_name('/dev/two').id,
-    order_team_members: [OrderTeamMember.new(employee: Employee.find_by_shortname('DI'))] },
+    order_team_members: [OrderTeamMember.new(employee: Employee.find_by_shortname('DI'))] }
 )
 
 accounting_posts = WorkItem.seed(
@@ -216,5 +216,5 @@ AccountingPost.seed(
     service_id: Service.find_by_name('Software-Entwicklung').id,
     offered_hours: 5000,
     offered_rate: 145,
-    billable: true },
+    billable: true }
 )

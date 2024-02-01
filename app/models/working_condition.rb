@@ -98,15 +98,15 @@ class WorkingCondition < ActiveRecord::Base
 
   def exactly_one_without_valid_from
     first_id = WorkingCondition.where(valid_from: nil).pluck(:id).first
-    if id == first_id && valid_from?
-      errors.add(:valid_from, 'darf für den ersten Eintrag nicht gesetzt werden.')
-    end
+    return unless id == first_id && valid_from?
+
+    errors.add(:valid_from, 'darf für den ersten Eintrag nicht gesetzt werden.')
   end
 
   def protect_blank_valid_from
-    if valid_from.blank?
-      errors.add(:base, 'Der erste Eintrag darf nicht gelöscht werden.')
-      throw :abort
-    end
+    return if valid_from.present?
+
+    errors.add(:base, 'Der erste Eintrag darf nicht gelöscht werden.')
+    throw :abort
   end
 end

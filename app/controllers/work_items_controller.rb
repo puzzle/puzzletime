@@ -5,18 +5,18 @@
 
 class WorkItemsController < ManageController
   self.permitted_attrs = :name, :shortname, :description, :parent_id
-  self.search_columns = [:path_shortnames, :path_names, :description]
+  self.search_columns = %i[path_shortnames path_names description]
 
   def search
     params[:q] ||= params[:term]
     respond_to do |format|
       format.json do
-        @work_items = WorkItem.recordable.
-                      list.
-                      where(search_conditions).
-                      joins(:accounting_post).
-                      includes(:accounting_post).
-                      limit(20)
+        @work_items = WorkItem.recordable
+                              .list
+                              .where(search_conditions)
+                              .joins(:accounting_post)
+                              .includes(:accounting_post)
+                              .limit(20)
       end
     end
   end

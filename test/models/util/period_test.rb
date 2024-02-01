@@ -245,7 +245,8 @@ class PeriodTest < ActiveSupport::TestCase
     assert_equal Period.new('1.1.1000', '1.1.2000'), Period.new('1.1.1000', nil) & Period.new(nil, '1.1.2000')
     assert_equal Period.new('1.1.1000', '1.1.2000'), Period.new(nil, '1.1.2000') & Period.new('1.1.1000', nil)
 
-    assert_equal Period.new('1.1.2000', '1.1.3000'), Period.new('1.1.1000', '1.1.3000') & Period.new('1.1.2000', '1.1.4000')
+    assert_equal Period.new('1.1.2000', '1.1.3000'),
+                 Period.new('1.1.1000', '1.1.3000') & Period.new('1.1.2000', '1.1.4000')
   end
 
   def test_step
@@ -307,9 +308,9 @@ class PeriodTest < ActiveSupport::TestCase
   end
 
   def test_limited
-    assert !Period.new(nil, nil).limited?
-    assert !Period.new('1.1.1000', nil).limited?
-    assert !Period.new(nil, '1.1.2000').limited?
+    assert_not Period.new(nil, nil).limited?
+    assert_not Period.new('1.1.1000', nil).limited?
+    assert_not Period.new(nil, '1.1.2000').limited?
     assert_predicate Period.new('1.1.1000', '1.1.2000'), :limited?
   end
 
@@ -317,6 +318,6 @@ class PeriodTest < ActiveSupport::TestCase
     assert_predicate Period.new(nil, nil), :unlimited?
     assert_predicate Period.new('1.1.1000', nil), :unlimited?
     assert_predicate Period.new(nil, '1.1.2000'), :unlimited?
-    assert !Period.new('1.1.1000', '1.1.2000').unlimited?
+    assert_not Period.new('1.1.1000', '1.1.2000').unlimited?
   end
 end

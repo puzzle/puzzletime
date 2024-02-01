@@ -149,13 +149,13 @@ module Invoicing
 
       def handle_error(response)
         payload = parse_json_response(response)
-        fail Invoicing::Error.new(response.message, response.code, payload)
+        raise Invoicing::Error.new(response.message, response.code, payload)
       end
 
       def parse_json_response(response)
         JSON.parse(response.body)
       rescue JSON::ParserError
-        fail Invoicing::Error.new('JSON::ParserError', response.code, response.body)
+        raise Invoicing::Error.new('JSON::ParserError', response.code, response.body)
       end
 
       def settings

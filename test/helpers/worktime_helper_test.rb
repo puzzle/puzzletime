@@ -55,7 +55,7 @@ class WorktimeHelperTest < ActionView::TestCase
   end
 
   test 'holiday time class' do
-    assert_equal 'holiday', overview_day_class(@worktimes, Date.new(2014, 06, 9)) # pfingstmontag
+    assert_equal 'holiday', overview_day_class(@worktimes, Date.new(2014, 0o6, 9)) # pfingstmontag
   end
 
   test 'missing time class' do

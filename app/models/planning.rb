@@ -45,15 +45,15 @@ class Planning < ActiveRecord::Base
   def order
     @order ||=
       Order.joins('LEFT JOIN work_items ON ' \
-                  'orders.work_item_id = ANY (work_items.path_ids)').
-      find_by('work_items.id = ?', work_item_id)
+                  'orders.work_item_id = ANY (work_items.path_ids)')
+           .find_by('work_items.id = ?', work_item_id)
   end
 
   private
 
   def date_must_be_weekday
-    if date.saturday? || date.sunday?
-      errors.add(:weekday, 'muss ein Werktag sein')
-    end
+    return unless date.saturday? || date.sunday?
+
+    errors.add(:weekday, 'muss ein Werktag sein')
   end
 end

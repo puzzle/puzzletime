@@ -56,7 +56,7 @@ class AccountingPostTest < ActiveSupport::TestCase
     post = accounting_posts(:webauftritt)
     post.update_column(:offered_rate, nil)
 
-    refute_predicate post.reload, :valid?
+    assert_not_predicate post.reload, :valid?
     order = post.order
 
     assert_equal post.work_item_id, order.work_item_id

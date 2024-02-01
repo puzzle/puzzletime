@@ -69,9 +69,9 @@ class Holiday < ActiveRecord::Base
     def cached
       RequestStore.store[model_name.route_key] ||=
         Rails.cache.fetch(model_name.route_key) do
-          Hash[Holiday.order('holiday_date').
-               reject { |h| weekend?(h.holiday_date) }.
-               collect { |h| [h.holiday_date, h.musthours_day] }]
+          Hash[Holiday.order('holiday_date')
+                      .reject { |h| weekend?(h.holiday_date) }
+                      .collect { |h| [h.holiday_date, h.musthours_day] }]
         end
     end
 

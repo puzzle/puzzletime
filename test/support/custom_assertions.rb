@@ -21,7 +21,7 @@ module CustomAssertions
         "but occured #{actual} time(s) in \n#{mu_pp(string)}"
     end
 
-    assert_operator expected, :==, actual, msg
+    assert_equal expected, actual, msg
   end
 
   # Asserts that the given active model record is valid.
@@ -46,12 +46,12 @@ module CustomAssertions
       "Expected #{mu_pp(record)} to be invalid, but is valid."
     end
 
-    assert !record.valid?, msg
+    assert_not record.valid?, msg
 
-    if invalid_attrs.present?
-      assert_invalid_attrs_have_errors(record, *invalid_attrs)
-      assert_other_attrs_have_no_errors(record, *invalid_attrs)
-    end
+    return unless invalid_attrs.present?
+
+    assert_invalid_attrs_have_errors(record, *invalid_attrs)
+    assert_other_attrs_have_no_errors(record, *invalid_attrs)
   end
 
   def assert_error_message(record, attr, message)
@@ -76,12 +76,12 @@ module CustomAssertions
       error  = "#{code.inspect} didn't change"
       error  = "#{message}.\n#{error}" if message
 
-      refute_equal(before, e.call, error)
+      assert_not_equal(before, e.call, error)
     end
   end
 
   def assert_arrays_match(expected, actual, &block)
-    transform = ->(array) do
+    transform = lambda do |array|
       block ? array.map(&block).sort : array.sort
     end
 
@@ -119,7 +119,7 @@ module CustomAssertions
           "but has the following error(s):\n#{mu_pp(error_msg)}"
       end
 
-      assert invalid_attrs.include?(error_attr), msg
+      assert_includes invalid_attrs, error_attr, msg
     end
   end
 end

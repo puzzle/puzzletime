@@ -8,9 +8,9 @@ module Crm
   cattr_accessor :instance
 
   def self.init
-    if Settings.highrise.api_token
-      Crm.instance = Crm::Highrise.new
-      CrmSyncJob.schedule if Delayed::Job.table_exists?
-    end
+    return unless Settings.highrise.api_token
+
+    Crm.instance = Crm::Highrise.new
+    CrmSyncJob.schedule if Delayed::Job.table_exists?
   end
 end

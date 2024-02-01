@@ -4,5 +4,5 @@
 #  https://github.com/puzzle/puzzletime.
 
 class OrderStatusesController < ManageController
-  self.permitted_attrs = [:name, :style, :closed, :position, :default]
+  self.permitted_attrs = %i[name style closed position default]
 end

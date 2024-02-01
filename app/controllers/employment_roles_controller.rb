@@ -4,7 +4,7 @@
 #  https://github.com/puzzle/puzzletime.
 
 class EmploymentRolesController < ManageController
-  self.permitted_attrs = [:name, :billable, :level, :employment_role_category_id]
+  self.permitted_attrs = %i[name billable level employment_role_category_id]
 
   def list_entries
     super.includes(:employment_role_category)

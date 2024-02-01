@@ -75,10 +75,10 @@ module EvaluatorHelper
   end
 
   def overtime_vacations_tooltip(employee)
-    transfers = employee.overtime_vacations.
-                where(@period ? ['transfer_date <= ?', @period.end_date] : nil).
-                order('transfer_date').
-                to_a
+    transfers = employee.overtime_vacations
+                        .where(@period ? ['transfer_date <= ?', @period.end_date] : nil)
+                        .order('transfer_date')
+                        .to_a
     tooltip = ''
     unless transfers.empty?
       tooltip = '<a href="#" class="has-tooltip">&lt;-&gt;<span>Überstunden-Ferien Umbuchungen:<br/>'

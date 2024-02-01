@@ -32,7 +32,9 @@ class Reports::OvertimeVacationsReport
       'Ferienguthaben bis Stichdatum',
       'Pensum'
     ]
-    csv << (["Überzeit/Ferien per #{format_date_long(@date)}, #{format_business_year(@date)}"] + Array.new(header.length - 1, ''))
+    csv << (["Überzeit/Ferien per #{format_date_long(@date)}, #{format_business_year(@date)}"] + Array.new(
+      header.length - 1, ''
+    ))
     csv << header
   end
 
@@ -93,7 +95,8 @@ class Reports::OvertimeVacationsReport
   def sum_up_employee(employee)
     totals = @totals[employee.department_id] ||= {}
     totals[:current_overtime] = totals[:current_overtime].to_f + employee.statistics.current_overtime(@date).to_f
-    totals[:remaining_vacations] = totals[:remaining_vacations].to_f + employee.statistics.remaining_vacations(@date).to_f
+    totals[:remaining_vacations] =
+      totals[:remaining_vacations].to_f + employee.statistics.remaining_vacations(@date).to_f
     totals[:current_percent_value] = totals[:current_percent_value].to_f + employee.current_percent_value.to_f
   end
 

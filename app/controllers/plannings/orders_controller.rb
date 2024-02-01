@@ -5,12 +5,12 @@
 
 module Plannings
   class OrdersController < BaseController
-    self.search_columns = %w(work_items.name work_items.shortname
-                             work_items.path_names work_items.path_shortnames)
+    self.search_columns = %w[work_items.name work_items.shortname
+                             work_items.path_names work_items.path_shortnames]
 
     skip_authorize_resource
 
-    before_action :load_possible_employees, only: [:new, :show]
+    before_action :load_possible_employees, only: %i[new show]
 
     private
 
@@ -45,8 +45,8 @@ module Plannings
     end
 
     def plannings_to_destroy
-      super.joins(:work_item).
-        where('? = ANY (work_items.path_ids)', order.work_item_id)
+      super.joins(:work_item)
+           .where('? = ANY (work_items.path_ids)', order.work_item_id)
     end
   end
 end

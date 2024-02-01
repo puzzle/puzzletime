@@ -55,7 +55,7 @@ class WorkingConditionTest < ActiveSupport::TestCase
     assert_no_difference('WorkingCondition.count') do
       c.destroy
     end
-    assert !c.destroyed?
+    assert_not c.destroyed?
   end
 
   test 'removing second is possible' do

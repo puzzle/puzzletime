@@ -32,7 +32,7 @@ class OrderTest < ActiveSupport::TestCase
     order = Fabricate(:order)
     item = order.build_work_item(name: 'New Order', shortname: 'NEOR')
 
-    assert !order.valid?
+    assert_not order.valid?
   end
 
   test 'order with client is valid' do
@@ -117,9 +117,9 @@ class OrderTest < ActiveSupport::TestCase
     order.status = order_statuses(:bearbeitung)
     order.save!
 
-    assert !work_items(:hitobito_demo).closed
+    assert_not work_items(:hitobito_demo).closed
     assert work_items(:hitobito_demo_site).closed
-    assert !work_items(:hitobito_demo_app).closed
+    assert_not work_items(:hitobito_demo_app).closed
   end
 
   test 'default_billing_address_id is nil when last_billing_address is blank' do

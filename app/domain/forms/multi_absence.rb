@@ -55,9 +55,7 @@ class Forms::MultiAbsence
       employment = @employee.employment_at(date)
       if employment
         must = Holiday.musttime(date) * employment.percent_factor
-        if must > 0
-          absences << worktime_template(date, must)
-        end
+        absences << worktime_template(date, must) if must > 0
       end
     end
     absences.each(&:save)
@@ -70,7 +68,7 @@ class Forms::MultiAbsence
     unless value.is_a? Date
       begin
         value = Date.parse(value)
-      rescue
+      rescue StandardError
         value = nil
       end
     end

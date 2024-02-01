@@ -29,8 +29,8 @@ class AdditionalCrmOrder < ActiveRecord::Base
   private
 
   def sync_name
-    if Crm.instance
-      Crm.instance.delay.sync_additional_order(self)
-    end
+    return unless Crm.instance
+
+    Crm.instance.delay.sync_additional_order(self)
   end
 end

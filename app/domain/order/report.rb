@@ -38,9 +38,7 @@ class Order::Report
     20
   end
 
-  def present?
-    entries.present?
-  end
+  delegate :present?, to: :entries
 
   def filters_defined?
     filters = params.except(:action, :controller, :format, :utf8, :page,
@@ -69,11 +67,11 @@ class Order::Report
   end
 
   def load_accounting_posts(orders)
-    AccountingPost.joins(:work_item).
-      joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)').
-      where(orders: { id: orders.collect(&:id) }).
-      pluck('orders.id, accounting_posts.id, accounting_posts.offered_total, ' \
-            'accounting_posts.offered_rate, accounting_posts.offered_hours')
+    AccountingPost.joins(:work_item)
+                  .joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)')
+                  .where(orders: { id: orders.collect(&:id) })
+                  .pluck('orders.id, accounting_posts.id, accounting_posts.offered_total, ' \
+                         'accounting_posts.offered_rate, accounting_posts.offered_hours')
   end
 
   def accounting_posts_to_hash(result)
@@ -92,13 +90,11 @@ class Order::Report
              'accounting_posts.work_item_id = ANY (work_items.path_ids)')
       .where(accounting_posts: { id: accounting_posts.collect(&:keys).flatten })
 
-    if params[:closed].blank?
-      accounting_post_hours = accounting_post_hours.in_period(period)
-    end
+    accounting_post_hours = accounting_post_hours.in_period(period) if params[:closed].blank?
 
-    accounting_post_hours.
-      group('accounting_posts.id, worktimes.billable').
-      pluck('accounting_posts.id, worktimes.billable, SUM(worktimes.hours)')
+    accounting_post_hours
+      .group('accounting_posts.id, worktimes.billable')
+      .pluck('accounting_posts.id, worktimes.billable, SUM(worktimes.hours)')
   end
 
   def hours_to_hash(result)
@@ -110,9 +106,7 @@ class Order::Report
   def load_invoices(orders)
     invoices = Invoice.where(order_id: orders.collect(&:id))
 
-    if params[:closed].blank?
-      invoices = invoices.where(period.where_condition('billing_date'))
-    end
+    invoices = invoices.where(period.where_condition('billing_date')) if params[:closed].blank?
 
     invoices
       .group('order_id')
@@ -129,9 +123,9 @@ class Order::Report
   def build_entry(order, accounting_posts, hours, invoices)
     posts = accounting_posts[order.id]
     post_hours = hours.slice(*posts.keys)
-    if post_hours.values.any? { |h| h.values.sum > 0.0001 }
-      Order::Report::Entry.new(order, posts, post_hours, invoices[order.id])
-    end
+    return unless post_hours.values.any? { |h| h.values.sum > 0.0001 }
+
+    Order::Report::Entry.new(order, posts, post_hours, invoices[order.id])
   end
 
   def filter_by_parent(orders)
@@ -147,8 +141,8 @@ class Order::Report
   def filter_by_target(orders)
     if params[:target].present?
       ratings = params[:target].split('_')
-      orders.joins('LEFT JOIN order_targets filter_targets ON filter_targets.order_id = orders.id').
-        where(filter_targets: { rating: ratings })
+      orders.joins('LEFT JOIN order_targets filter_targets ON filter_targets.order_id = orders.id')
+            .where(filter_targets: { rating: ratings })
     else
       orders
     end
@@ -196,7 +190,7 @@ class Order::Report
   end
 
   def sort_by_string?
-    %w(client).include?(params[:sort])
+    %w[client].include?(params[:sort])
   end
 
   def sort_by_number?

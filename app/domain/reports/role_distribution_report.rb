@@ -90,7 +90,7 @@ class Reports::RoleDistributionReport
 
   def sum_up_employee(employee)
     totals = @totals[employee.department_id] ||= {}
-    [:current_percent_value, :added_value_percent].each do |attr|
+    %i[current_percent_value added_value_percent].each do |attr|
       totals[attr] = totals[attr].to_f + employee.send(attr).to_f
     end
     categories.each do |category_id, _category_name|

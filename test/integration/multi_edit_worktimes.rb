@@ -14,6 +14,6 @@ class MultiEditWorktimes < ActionDispatch::IntegrationTest
     click_link('Auswahl bearbeiten')
 
     assert page.has_text?('2 Zeiten bearbeiten')
-    assert_equal %w(2 10), all('#worktime_ids_', visible: false).map(&:value)
+    assert_equal %w[2 10], all('#worktime_ids_', visible: false).map(&:value)
   end
 end

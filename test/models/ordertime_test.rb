@@ -66,19 +66,19 @@ class OrdertimeTest < ActiveSupport::TestCase
 
   test 'worktime times must be 00:00-23:59' do
     t = Ordertime.create(employee: employees(:pascal),
-                         work_date:       '2015-10-10',
+                         work_date: '2015-10-10',
                          from_start_time: '00:00',
-                         to_end_time:     '24:00',
-                         work_item:       work_items(:webauftritt),
-                         report_type:     'start_stop_day')
+                         to_end_time: '24:00',
+                         work_item: work_items(:webauftritt),
+                         report_type: 'start_stop_day')
 
-    refute_predicate t, :valid?, t.errors.details[:to_end_time].join(', ')
+    assert_not_predicate t, :valid?, t.errors.details[:to_end_time].join(', ')
   end
 
   test '#invoice_sent_or_paid?' do
     t = Ordertime.new
 
-    assert !t.invoice_sent_or_paid?
+    assert_not t.invoice_sent_or_paid?
 
     [['draft', false],
      ['sent', true],

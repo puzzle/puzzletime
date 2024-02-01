@@ -239,7 +239,7 @@ module Plannings
                             percent: 100)
       p5 = Planning.create!(work_item_id: work_items(:hitobito_demo_site).id,
                             employee_id: employee.id,
-                            date: date + 1.weeks,
+                            date: date + 1.week,
                             percent: 50)
       [p1, p2, p3, p4, p5]
     end

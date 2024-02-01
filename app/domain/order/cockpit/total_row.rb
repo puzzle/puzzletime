@@ -28,9 +28,9 @@ class Order::Cockpit
 
     def sum_non_nil_values(cells, key, field, converter)
       values = cells.collect { |c| c[key].send(field) }
-      unless values.all?(&:nil?)
-        values.sum(&converter)
-      end
+      return if values.all?(&:nil?)
+
+      values.sum(&converter)
     end
   end
 end

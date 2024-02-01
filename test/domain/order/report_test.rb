@@ -147,7 +147,7 @@ class Order::ReportTest < ActiveSupport::TestCase
   ### calculating
 
   test 'it counts orders' do
-    assert_equal 'Total (3)', report().total.to_s
+    assert_equal 'Total (3)', report.total.to_s
   end
 
   test 'it counts filtered orders' do
@@ -156,7 +156,7 @@ class Order::ReportTest < ActiveSupport::TestCase
 
   test '#offered_amount is sum of all accounting posts' do
     order = orders(:hitobito_demo)
-    accounting_posts(:hitobito_demo_app).update!(offered_total: 10000)
+    accounting_posts(:hitobito_demo_app).update!(offered_total: 10_000)
     post = AccountingPost.create!(work_item_attributes:
                                     { name: 'Maintenance',
                                       shortname: 'MNT',
@@ -174,8 +174,8 @@ class Order::ReportTest < ActiveSupport::TestCase
 
   test '#offered_rate is based on hours' do
     order = orders(:hitobito_demo)
-    accounting_posts(:hitobito_demo_app).update!(offered_total: 10000, offered_hours: 100, offered_rate: 100)
-    accounting_posts(:hitobito_demo_site).update!(offered_total: 10000, offered_hours: 50, offered_rate: 200)
+    accounting_posts(:hitobito_demo_app).update!(offered_total: 10_000, offered_hours: 100, offered_rate: 100)
+    accounting_posts(:hitobito_demo_site).update!(offered_total: 10_000, offered_hours: 50, offered_rate: 200)
     Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal))
     entry = report.entries.find { |e| e.order == order }
 
@@ -198,7 +198,7 @@ class Order::ReportTest < ActiveSupport::TestCase
 
   test '#offered_rate is based on rate if only total given' do
     order = orders(:hitobito_demo)
-    accounting_posts(:hitobito_demo_app).update!(offered_total: 10000, offered_rate: 100)
+    accounting_posts(:hitobito_demo_app).update!(offered_total: 10_000, offered_rate: 100)
     accounting_posts(:hitobito_demo_site).update!(offered_total: 5000, offered_rate: 200)
     Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal))
     entry = report.entries.find { |e| e.order == order }
@@ -219,7 +219,7 @@ class Order::ReportTest < ActiveSupport::TestCase
   test '#offered_rate is based on hours even if only total is given' do
     order = orders(:hitobito_demo)
     accounting_posts(:hitobito_demo_app).update!(offered_hours: 100, offered_rate: 100)
-    accounting_posts(:hitobito_demo_site).update!(offered_total: 10000, offered_rate: 200)
+    accounting_posts(:hitobito_demo_site).update!(offered_total: 10_000, offered_rate: 200)
     Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal))
     entry = report.entries.find { |e| e.order == order }
 
@@ -249,8 +249,10 @@ class Order::ReportTest < ActiveSupport::TestCase
     accounting_posts(:hitobito_demo_app).update!(offered_rate: 200)
     Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal), hours: 2)
     Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal), hours: 8)
-    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_site), employee: employees(:pascal), hours: 5, billable: false)
-    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_site), employee: employees(:pascal), hours: 5, billable: false, work_date: 2.years.ago)
+    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_site), employee: employees(:pascal), hours: 5,
+                          billable: false)
+    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_site), employee: employees(:pascal), hours: 5,
+                          billable: false, work_date: 2.years.ago)
     entry = report(period: Period.new(1.year.ago, nil)).entries.find { |e| e.order == order }
 
     assert_equal 2850, entry.supplied_amount
@@ -266,8 +268,10 @@ class Order::ReportTest < ActiveSupport::TestCase
     accounting_posts(:hitobito_demo_app).update!(offered_rate: 200)
     Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal), hours: 2)
     Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal), hours: 8)
-    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_site), employee: employees(:pascal), hours: 5, billable: false)
-    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_site), employee: employees(:pascal), hours: 5, billable: false, work_date: 2.years.ago)
+    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_site), employee: employees(:pascal), hours: 5,
+                          billable: false)
+    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_site), employee: employees(:pascal), hours: 5,
+                          billable: false, work_date: 2.years.ago)
     total = report(period: Period.new(1.year.ago, nil)).total
 
     assert_equal 2850, total.supplied_amount
@@ -291,12 +295,18 @@ class Order::ReportTest < ActiveSupport::TestCase
   test 'billed values with invoices' do
     order = orders(:hitobito_demo)
     Fabricate(:contract, order:)
-    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal), hours: 10, work_date: 1.month.ago)
-    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal), hours: 2, work_date: 1.month.ago)
-    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal), hours: 2, work_date: 1.month.ago, billable: false)
-    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal), hours: 20, work_date: 2.years.ago)
-    i1 = Fabricate(:invoice, order:, work_items: work_items(:hitobito_demo_app, :hitobito_demo_site), employees: [employees(:pascal)])
-    i2 = Fabricate(:invoice, order:, work_items: [work_items(:hitobito_demo_app)], employees: [employees(:pascal)], billing_date: 2.years.ago, period_from: 2.years.ago.at_beginning_of_month, period_to: 2.years.ago.at_end_of_month)
+    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal), hours: 10,
+                          work_date: 1.month.ago)
+    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal), hours: 2,
+                          work_date: 1.month.ago)
+    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal), hours: 2,
+                          work_date: 1.month.ago, billable: false)
+    Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal), hours: 20,
+                          work_date: 2.years.ago)
+    i1 = Fabricate(:invoice, order:, work_items: work_items(:hitobito_demo_app, :hitobito_demo_site),
+                             employees: [employees(:pascal)])
+    i2 = Fabricate(:invoice, order:, work_items: [work_items(:hitobito_demo_app)], employees: [employees(:pascal)],
+                             billing_date: 2.years.ago, period_from: 2.years.ago.at_beginning_of_month, period_to: 2.years.ago.at_end_of_month)
 
     assert_equal 12 * 170, i1.total_amount
     assert_equal 20 * 170, i2.total_amount
@@ -314,8 +324,8 @@ class Order::ReportTest < ActiveSupport::TestCase
   test 'csv includes target scopes' do
     csv = Order::Report::Csv.new(report).generate.lines.to_a
 
-    assert_match /Termin,Kosten,Qualität$/, csv.first
-    assert_match /red,green,green$/, csv.second
+    assert_match(/Termin,Kosten,Qualität$/, csv.first)
+    assert_match(/red,green,green$/, csv.second)
   end
 
   private

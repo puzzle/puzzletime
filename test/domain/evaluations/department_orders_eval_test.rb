@@ -16,21 +16,21 @@ class Evaluations::DepartmentOrdersEvalTest < ActiveSupport::TestCase
 
   test 'plannings' do
     Fabricate(:planning, work_item: work_items(:webauftritt), date: '2006-12-05',
-              percent: 100, definitive: true)
+                         percent: 100, definitive: true)
     Fabricate(:planning, work_item: work_items(:webauftritt), date: '2006-12-06',
-              percent: 100, definitive: true)
+                         percent: 100, definitive: true)
     Fabricate(:planning, work_item: work_items(:webauftritt), date: '2006-12-14',
-              percent: 50, definitive: true)
+                         percent: 50, definitive: true)
     Fabricate(:planning, work_item: work_items(:puzzletime), date: '2006-12-04',
-              percent: 100, definitive: true)
+                         percent: 100, definitive: true)
     Fabricate(:planning, work_item: work_items(:puzzletime), date: '2006-12-05',
-              percent: 75, definitive: true)
+                         percent: 75, definitive: true)
     Fabricate(:planning, work_item: work_items(:puzzletime), date: '2006-11-01',
-              percent: 100, definitive: true)
+                         percent: 100, definitive: true)
     Fabricate(:planning, work_item: work_items(:allgemein), date: '2006-12-04',
-              percent: 100, definitive: true)
+                         percent: 100, definitive: true)
     Fabricate(:planning, work_item: work_items(:puzzletime), date: '2006-11-02',
-              percent: 80, definitive: false) # provisional (ignored)
+                         percent: 80, definitive: false) # provisional (ignored)
 
     assert_equal({ work_items(:puzzletime).id => { hours: 8.0, billable_hours: 0.0 } },
                  @evaluation.sum_plannings_grouped(@period_day))

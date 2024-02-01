@@ -9,10 +9,10 @@ class CreatorTest < ActiveSupport::TestCase
   test '#create_or_update runs validations and returns false if invalid' do
     c = Plannings::Creator.new({})
     assert_difference 'Planning.count', 0 do
-      assert !c.create_or_update
+      assert_not c.create_or_update
     end
     assert_nil c.plannings
-    refute_empty c.errors
+    assert_not_empty c.errors
   end
 
   test '#create_or_update with no new/existing items does nothing' do
@@ -55,7 +55,7 @@ class CreatorTest < ActiveSupport::TestCase
     assert_equal Date.new(2000, 1, 4), c.plannings.third.date
     assert_equal employees(:mark).id, c.plannings.third.employee_id
 
-    assert c.plannings.all? { |p| p.percent == 50 && p.definitive }
+    assert(c.plannings.all? { |p| p.percent == 50 && p.definitive })
   end
 
   test '#create_or_update updates existing plannings and changes only present values' do
@@ -95,7 +95,7 @@ class CreatorTest < ActiveSupport::TestCase
     assert_equal Date.new(2000, 1, 3), p1.reload.date
     assert_equal employees(:pascal).id, p1.employee_id
     assert_equal 25, p1.percent
-    refute p1.definitive
+    assert_not p1.definitive
 
     assert_equal Date.new(2000, 1, 4), p2.reload.date
     assert_equal employees(:pascal).id, p2.employee_id
@@ -105,7 +105,7 @@ class CreatorTest < ActiveSupport::TestCase
     assert_equal Date.new(2000, 1, 4), p3.reload.date
     assert_equal employees(:mark).id, p3.employee_id
     assert_equal 25, p3.percent
-    refute p3.definitive
+    assert_not p3.definitive
 
     params = { planning: { percent: 30, definitive: '' },
                items: [
@@ -127,7 +127,7 @@ class CreatorTest < ActiveSupport::TestCase
     assert_equal Date.new(2000, 1, 3), p1.reload.date
     assert_equal employees(:pascal).id, p1.employee_id
     assert_equal 30, p1.percent
-    refute p1.definitive
+    assert_not p1.definitive
 
     assert_equal Date.new(2000, 1, 4), p2.reload.date
     assert_equal employees(:pascal).id, p2.employee_id
@@ -137,7 +137,7 @@ class CreatorTest < ActiveSupport::TestCase
     assert_equal Date.new(2000, 1, 4), p3.reload.date
     assert_equal employees(:mark).id, p3.employee_id
     assert_equal 25, p3.percent
-    refute p3.definitive
+    assert_not p3.definitive
 
     params = { planning: { definitive: true },
                items: [
@@ -156,7 +156,7 @@ class CreatorTest < ActiveSupport::TestCase
     assert_equal Date.new(2000, 1, 3), p1.reload.date
     assert_equal employees(:pascal).id, p1.employee_id
     assert_equal 30, p1.percent
-    refute p1.definitive
+    assert_not p1.definitive
 
     assert_equal Date.new(2000, 1, 4), p2.reload.date
     assert_equal employees(:pascal).id, p2.employee_id
@@ -220,9 +220,12 @@ class CreatorTest < ActiveSupport::TestCase
                           percent: 30,
                           definitive: false)
     items = [
-      { employee_id: employees(:pascal).id.to_s, work_item_id: work_items(:hitobito_demo_app).id.to_s, date: '2016-09-27' },
-      { employee_id: employees(:pascal).id.to_s, work_item_id: work_items(:hitobito_demo_app).id.to_s, date: '2016-09-28' },
-      { employee_id: employees(:pascal).id.to_s, work_item_id: work_items(:hitobito_demo_app).id.to_s, date: '2016-09-29' },
+      { employee_id: employees(:pascal).id.to_s, work_item_id: work_items(:hitobito_demo_app).id.to_s,
+        date: '2016-09-27' },
+      { employee_id: employees(:pascal).id.to_s, work_item_id: work_items(:hitobito_demo_app).id.to_s,
+        date: '2016-09-28' },
+      { employee_id: employees(:pascal).id.to_s, work_item_id: work_items(:hitobito_demo_app).id.to_s,
+        date: '2016-09-29' }
     ]
     c = Plannings::Creator.new(planning: { percent: 50, definitive: false, repeat_until: '201642' }, items:)
 
@@ -260,10 +263,14 @@ class CreatorTest < ActiveSupport::TestCase
                           percent: 20,
                           definitive: false)
     items = [
-      { employee_id: employees(:pascal).id.to_s, work_item_id: work_items(:hitobito_demo_app).id.to_s, date: '2016-09-27' },
-      { employee_id: employees(:pascal).id.to_s, work_item_id: work_items(:hitobito_demo_app).id.to_s, date: '2016-09-28' },
-      { employee_id: employees(:pascal).id.to_s, work_item_id: work_items(:hitobito_demo_app).id.to_s, date: '2016-09-29' },
-      { employee_id: employees(:pascal).id.to_s, work_item_id: work_items(:hitobito_demo_app).id.to_s, date: '2016-10-03' },
+      { employee_id: employees(:pascal).id.to_s, work_item_id: work_items(:hitobito_demo_app).id.to_s,
+        date: '2016-09-27' },
+      { employee_id: employees(:pascal).id.to_s, work_item_id: work_items(:hitobito_demo_app).id.to_s,
+        date: '2016-09-28' },
+      { employee_id: employees(:pascal).id.to_s, work_item_id: work_items(:hitobito_demo_app).id.to_s,
+        date: '2016-09-29' },
+      { employee_id: employees(:pascal).id.to_s, work_item_id: work_items(:hitobito_demo_app).id.to_s,
+        date: '2016-10-03' }
     ]
     c = Plannings::Creator.new(planning: { percent: '', definitive: '', repeat_until: '201643' }, items:)
 
@@ -271,7 +278,7 @@ class CreatorTest < ActiveSupport::TestCase
       assert c.create_or_update
     end
 
-    assert_equal %w(2016-10-11 2016-10-12 2016-10-17 2016-10-25 2016-10-26),
+    assert_equal %w[2016-10-11 2016-10-12 2016-10-17 2016-10-25 2016-10-26],
                  c.plannings.map { |p| p.date.to_s }.sort
     assert_empty c.errors
 
@@ -348,9 +355,9 @@ class CreatorTest < ActiveSupport::TestCase
     [{}, { plannings: nil }, { plannings: {} }].each do |p|
       c = Plannings::Creator.new(p)
 
-      refute_predicate c, :form_valid?, "Expected to be invalid for #{p}"
-      assert c.errors.include?('Bitte füllen Sie das Formular aus'),
-             "Expected to contain error for #{p}"
+      assert_not_predicate c, :form_valid?, "Expected to be invalid for #{p}"
+      assert_includes c.errors, 'Bitte füllen Sie das Formular aus',
+                      "Expected to contain error for #{p}"
     end
   end
 
@@ -359,18 +366,18 @@ class CreatorTest < ActiveSupport::TestCase
      { definitive: true, repeat_until: '2016 42' }].each do |p|
       c = Plannings::Creator.new({ planning: p, items: items_to_create })
 
-      refute_predicate c, :form_valid?, "Expected to be invalid for #{p}"
-      assert c.errors.include?('Prozent müssen angegeben werden, um neue Planungen zu erstellen'),
-             "Expected to contain error for #{p}"
+      assert_not_predicate c, :form_valid?, "Expected to be invalid for #{p}"
+      assert_includes c.errors, 'Prozent müssen angegeben werden, um neue Planungen zu erstellen',
+                      "Expected to contain error for #{p}"
     end
 
     [{ percent: '50', definitive: '', repeat_until: '2016 42' },
      { percent: '50', repeat_until: '2016 42' }].each do |p|
       c = Plannings::Creator.new({ planning: p, items: items_to_create })
 
-      refute_predicate c, :form_valid?, "Expected to be invalid for #{p}"
-      assert c.errors.include?('Status muss angegeben werden, um neue Planungen zu erstellen'),
-             "Expected to contain error for #{p}"
+      assert_not_predicate c, :form_valid?, "Expected to be invalid for #{p}"
+      assert_includes c.errors, 'Status muss angegeben werden, um neue Planungen zu erstellen',
+                      "Expected to contain error for #{p}"
     end
   end
 
@@ -381,10 +388,10 @@ class CreatorTest < ActiveSupport::TestCase
       c = Plannings::Creator.new({ planning: p, items: items_to_create })
 
       assert_predicate c, :form_valid?, "Expected to be valid for #{p}"
-      refute c.errors.include?('Prozent müssen angegeben werden, um neue Planungen zu erstellen'),
-             "Expected to not contain error for #{p}"
-      refute c.errors.include?('Status muss angegeben werden, um neue Planungen zu erstellen'),
-             "Expected to not contain error for #{p}"
+      assert_not c.errors.include?('Prozent müssen angegeben werden, um neue Planungen zu erstellen'),
+                 "Expected to not contain error for #{p}"
+      assert_not c.errors.include?('Status muss angegeben werden, um neue Planungen zu erstellen'),
+                 "Expected to not contain error for #{p}"
     end
   end
 
@@ -400,17 +407,17 @@ class CreatorTest < ActiveSupport::TestCase
                ] }
     c = Plannings::Creator.new(params)
 
-    refute_predicate c, :form_valid?
-    assert c.errors.include?('Nur Positionen mit Buchungsposition sind möglich')
+    assert_not_predicate c, :form_valid?
+    assert_includes c.errors, 'Nur Positionen mit Buchungsposition sind möglich'
   end
 
   test '#form_valid? with percent > 0 returns true' do
-    ['1', '100'].each do |percent|
+    %w[1 100].each do |percent|
       c = Plannings::Creator.new({ planning: { percent: } })
 
       assert_predicate c, :form_valid?, "Expected to be valid for #{percent}"
-      refute c.errors.include?('Prozent müssen grösser als 0 sein'),
-             "Expected to not contain error for #{p}"
+      assert_not c.errors.include?('Prozent müssen grösser als 0 sein'),
+                 "Expected to not contain error for #{p}"
     end
   end
 
@@ -418,9 +425,9 @@ class CreatorTest < ActiveSupport::TestCase
     ['0', '-1'].each do |percent|
       c = Plannings::Creator.new({ planning: { percent: } })
 
-      refute_predicate c, :form_valid?, "Expected to be invalid for #{percent}"
-      assert c.errors.include?('Prozent müssen grösser als 0 sein'),
-             "Expected to contain error for #{p}"
+      assert_not_predicate c, :form_valid?, "Expected to be invalid for #{percent}"
+      assert_includes c.errors, 'Prozent müssen grösser als 0 sein',
+                      "Expected to contain error for #{p}"
     end
   end
 
@@ -429,18 +436,18 @@ class CreatorTest < ActiveSupport::TestCase
       c = Plannings::Creator.new({ planning: { repeat_until: } })
 
       assert_predicate c, :form_valid?, "Expected to be valid for #{repeat_until}"
-      refute c.errors.include?('Wiederholungsdatum ist ungültig'),
-             "Expected to not contain error for #{p}"
+      assert_not c.errors.include?('Wiederholungsdatum ist ungültig'),
+                 "Expected to not contain error for #{p}"
     end
   end
 
   test '#form_valid? with invalid repeat_until returns false and sets errors' do
-    ['foo', '200099'].each do |repeat_until|
+    %w[foo 200099].each do |repeat_until|
       c = Plannings::Creator.new({ planning: { repeat_until: } })
 
-      refute_predicate c, :form_valid?, "Expected to be invalid for #{repeat_until}"
-      assert c.errors.include?('Wiederholungsdatum ist ungültig'),
-             "Expected to contain error for #{p}"
+      assert_not_predicate c, :form_valid?, "Expected to be invalid for #{repeat_until}"
+      assert_includes c.errors, 'Wiederholungsdatum ist ungültig',
+                      "Expected to contain error for #{p}"
     end
   end
 
@@ -462,7 +469,7 @@ class CreatorTest < ActiveSupport::TestCase
      { percent: 50, definitive: '', repeat_until: '2016 42' }].each do |p|
       c = Plannings::Creator.new({ planning: p })
 
-      refute_predicate c, :repeat_only?, "Expected to be false for #{p}"
+      assert_not_predicate c, :repeat_only?, "Expected to be false for #{p}"
     end
   end
 

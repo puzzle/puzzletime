@@ -76,7 +76,7 @@ class Expenses::PdfExport
       pdf.define_grid(columns: 2, rows: 1)
 
       column1 = [:employee_id, :kind, :order_id, :status, nil, nil, { name: :amount, size: 15 }]
-      column2 = [:id, :reviewer_id, :reviewed_at, :reason, :reimbursement_month, :payment_date, :description, :receipt]
+      column2 = %i[id reviewer_id reviewed_at reason reimbursement_month payment_date description receipt]
 
       pdf.grid(0, 0).bounding_box do
         add_model_data(column1)

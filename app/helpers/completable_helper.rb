@@ -18,8 +18,8 @@ module CompletableHelper
   end
 
   def format_month(date)
-    if date
-      I18n.l(date, format: :month)
-    end
+    return unless date
+
+    I18n.l(date, format: :month)
   end
 end

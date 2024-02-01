@@ -49,9 +49,7 @@ module DryCrud::Table
       html_options = html_options.merge(title: 'Bearbeiten')
       action_col do |e|
         path = path_args(e)
-        if can?(:edit, e)
-          table_action_link('edit', edit_polymorphic_path(path), html_options)
-        end
+        table_action_link('edit', edit_polymorphic_path(path), html_options) if can?(:edit, e)
       end
     end
 

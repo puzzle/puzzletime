@@ -6,6 +6,5 @@
 class ConfigurationsController < ApplicationController
   skip_authorization_check
 
-  def index
-  end
+  def index; end
 end

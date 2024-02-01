@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -51,7 +49,7 @@ class Employee < ActiveRecord::Base
   # :registerable,
   # :recoverable,
 
-  INTERNAL_ATTRS = %w(id eval_periods encrypted_password updated_at created_at).freeze
+  INTERNAL_ATTRS = %w[id eval_periods encrypted_password updated_at created_at].freeze
 
   include Evaluatable
   include ReportType::Accessors
@@ -59,13 +57,13 @@ class Employee < ActiveRecord::Base
 
   has_paper_trail(meta: { employee_id: proc(&:id) }, skip: Employee::INTERNAL_ATTRS)
 
-  enum marital_status: %w(
+  enum marital_status: %w[
     single
     married
     widowed
     civil_partnership
     divorced
-  ).freeze
+  ].freeze
 
   # All dependencies between the models are listed below.
   belongs_to :department, optional: true
@@ -92,7 +90,7 @@ class Employee < ActiveRecord::Base
   has_many :authentications, dependent: :destroy
 
   before_validation do
-    self.nationalities.try(:reject!, &:blank?)
+    nationalities.try(:reject!, &:blank?)
   end
 
   # Validation helpers.
@@ -107,7 +105,9 @@ class Employee < ActiveRecord::Base
   scope :current, -> { joins(:employments).merge(Employment.during(Period.current_day)) }
 
   # logic should match CompletableHelper#recently_completed
-  scope :pending_worktimes_commit, -> { where("committed_worktimes_at < date_trunc('month', now()) - '1 day'::interval").or(where(committed_worktimes_at: nil)) }
+  scope :pending_worktimes_commit, lambda {
+                                     where("committed_worktimes_at < date_trunc('month', now()) - '1 day'::interval").or(where(committed_worktimes_at: nil))
+                                   }
   scope :active_employed_last_month, -> { joins(:employments).merge(Employment.active.during(Period.previous_month)) }
 
   # Include default devise modules. Others available are:
@@ -141,10 +141,10 @@ class Employee < ActiveRecord::Base
 
   class << self
     def employed_ones(period, sort = true)
-      result = joins('left join employments em on em.employee_id = employees.id').
-               where('(em.end_date IS null or em.end_date >= ?) AND em.start_date <= ?',
-                     period.start_date, period.end_date).
-               distinct
+      result = joins('left join employments em on em.employee_id = employees.id')
+               .where('(em.end_date IS null or em.end_date >= ?) AND em.start_date <= ?',
+                      period.start_date, period.end_date)
+               .distinct
       sort ? result.list : result
     end
 
@@ -157,10 +157,10 @@ class Employee < ActiveRecord::Base
     end
 
     def with_worktimes_in_period(order, from, to)
-      e_ids = order.worktimes.
-              in_period(Period.new(from, to)).
-              billable.
-              select(:employee_id)
+      e_ids = order.worktimes
+                   .in_period(Period.new(from, to))
+                   .billable
+                   .select(:employee_id)
       Employee.where(id: e_ids)
     end
   end
@@ -186,20 +186,20 @@ class Employee < ActiveRecord::Base
 
   # main work items this employee ever worked on
   def alltime_main_work_items
-    WorkItem.select('DISTINCT work_items.*').
-      joins('RIGHT JOIN work_items leaves ON leaves.path_ids[1] = work_items.id').
-      joins('RIGHT JOIN worktimes ON worktimes.work_item_id = leaves.id').
-      where(worktimes: { employee_id: id }).
-      where.not(work_items: { id: nil }).
-      list
+    WorkItem.select('DISTINCT work_items.*')
+            .joins('RIGHT JOIN work_items leaves ON leaves.path_ids[1] = work_items.id')
+            .joins('RIGHT JOIN worktimes ON worktimes.work_item_id = leaves.id')
+            .where(worktimes: { employee_id: id })
+            .where.not(work_items: { id: nil })
+            .list
   end
 
   def alltime_leaf_work_items
-    WorkItem.select('DISTINCT work_items.*').
-      joins('RIGHT JOIN worktimes ON worktimes.work_item_id = work_items.id').
-      where(worktimes: { employee_id: id }).
-      where.not(work_items: { id: nil }).
-      list
+    WorkItem.select('DISTINCT work_items.*')
+            .joins('RIGHT JOIN worktimes ON worktimes.work_item_id = work_items.id')
+            .where(worktimes: { employee_id: id })
+            .where.not(work_items: { id: nil })
+            .list
   end
 
   def statistics
@@ -257,9 +257,7 @@ class Employee < ActiveRecord::Base
 
   def validate_periods_format(attr, periods)
     periods.each do |p|
-      unless p =~ /^-?\d[dwmqy]?$/
-        errors.add(attr, 'ist nicht gültig')
-      end
+      errors.add(attr, 'ist nicht gültig') unless /^-?\d[dwmqy]?$/.match?(p)
     end
   end
 end

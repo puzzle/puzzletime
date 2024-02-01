@@ -28,12 +28,12 @@ module Invoicing
 
         def record_to_params(record, prefix = 'billing_address')
           {
-            "#{prefix}_id"            => record.id,
+            "#{prefix}_id" => record.id,
             "#{prefix}_invoicing_key" => record.invoicing_key,
-            "#{prefix}_shortname"     => record.try(:shortname),
-            "#{prefix}_label"         => record.try(:label) || record.to_s,
-            "#{prefix}_errors"        => record.errors.messages,
-            "#{prefix}_changes"       => record.changes
+            "#{prefix}_shortname" => record.try(:shortname),
+            "#{prefix}_label" => record.try(:label) || record.to_s,
+            "#{prefix}_errors" => record.errors.messages,
+            "#{prefix}_changes" => record.changes
           }
         end
       end

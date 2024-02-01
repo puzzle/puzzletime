@@ -107,9 +107,7 @@ class Presenters::LogPresenter
   def attribute_args(item_type, attr, from, to)
     item_class = item_type.constantize
     attr_s = attr.to_s
-    if item_class.defined_enums[attr_s]
-      to = item_class.human_attribute_name([attr_s.pluralize, to].join('.'))
-    end
+    to = item_class.human_attribute_name([attr_s.pluralize, to].join('.')) if item_class.defined_enums[attr_s]
 
     association = attr.gsub(/_id\z/, '')
     if reflection = item_class.reflect_on_association(association)

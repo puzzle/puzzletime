@@ -78,9 +78,7 @@ module DryCrud::Form
         label_class = "col-md-2 control-label #{'required' if required}"
         html = builder.label(attr, caption, class: label_class)
         html << content_tag(:div, content, class: "col-md-#{span}")
-        if help.present?
-          html << builder.help_block(help)
-        end
+        html << builder.help_block(help) if help.present?
         html
       end
     end

@@ -15,9 +15,9 @@ module Invoicing
             if client.billing_addresses.present? # required by small invoice
               begin
                 new(client, remote_keys).sync
-              rescue => error
+              rescue StandardError => e
                 failed << client.id
-                notify_sync_error(error, client)
+                notify_sync_error(e, client)
               end
             end
           end
@@ -51,12 +51,12 @@ module Invoicing
 
         def record_to_params(record, prefix = 'client')
           {
-            "#{prefix}_id"            => record.id,
+            "#{prefix}_id" => record.id,
             "#{prefix}_invoicing_key" => record.invoicing_key,
-            "#{prefix}_shortname"     => record.try(:shortname),
-            "#{prefix}_label"         => record.try(:label) || record.to_s,
-            "#{prefix}_errors"        => record.errors.messages,
-            "#{prefix}_changes"       => record.changes
+            "#{prefix}_shortname" => record.try(:shortname),
+            "#{prefix}_label" => record.try(:label) || record.to_s,
+            "#{prefix}_errors" => record.errors.messages,
+            "#{prefix}_changes" => record.changes
           }
         end
       end
@@ -109,12 +109,10 @@ module Invoicing
       def fetch_remote(key)
         rate_limiter.run { api.get(Entity::Contact.path(invoicing_key: key)) }
       rescue Invoicing::Error => e
-        if e.message == 'No Objects or too many found'
-          reset_invoicing_keys
-          nil
-        else
-          raise
-        end
+        raise unless e.message == 'No Objects or too many found'
+
+        reset_invoicing_keys
+        nil
       end
 
       def reset_invoicing_keys(client_invoicing_key = nil)

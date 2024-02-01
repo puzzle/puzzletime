@@ -22,12 +22,12 @@ class DryCrud::Form::BuilderTest < ActionView::TestCase
 
   def create_form
     @entry = CrudTestModel.first
-    if Rails.version < '4.0'
-      @form = DryCrud::Form::Builder.new(:entry, @entry, self, {},
+    @form = if Rails.version < '4.0'
+              DryCrud::Form::Builder.new(:entry, @entry, self, {},
                                          ->(form) { form })
-    else
-      @form = DryCrud::Form::Builder.new(:entry, @entry, self, {})
-    end
+            else
+              DryCrud::Form::Builder.new(:entry, @entry, self, {})
+            end
   end
 
   test 'input_field dispatches string attr to string_field' do
@@ -94,26 +94,30 @@ class DryCrud::Form::BuilderTest < ActionView::TestCase
     result = form.labeled_input_fields(:name, :remarks, :children)
 
     assert_predicate result, :html_safe?
-    assert result.include?(form.input_field(:name, required: 'required'))
-    assert result.include?(form.input_field(:remarks))
-    assert result.include?(form.input_field(:children))
+    assert_includes result, form.input_field(:name, required: 'required')
+    assert_includes result, form.input_field(:remarks)
+    assert_includes result, form.input_field(:children)
   end
 
-  test 'labeld_input_field adds required mark' do
-    result = form.labeled_input_field(:name)
+  if false
+    test 'labeld_input_field adds required mark' do
+      result = form.labeled_input_field(:name)
 
-    assert result.include?('input-group-addon')
-    result = form.labeled_input_field(:remarks)
+      assert_includes result, 'input-group-addon'
+      result = form.labeled_input_field(:remarks)
 
-    assert !result.include?('input-group-addon')
-  end if false
+      assert_not result.include?('input-group-addon')
+    end
+  end
 
-  test 'labeld_input_field adds help text' do
-    result = form.labeled_input_field(:name, help: 'Some Help')
+  if false
+    test 'labeld_input_field adds help text' do
+      result = form.labeled_input_field(:name, help: 'Some Help')
 
-    assert result.include?(form.help_block('Some Help'))
-    assert result.include?('input-group-addon')
-  end if false
+      assert_includes result, form.help_block('Some Help')
+      assert_includes result, 'input-group-addon'
+    end
+  end
 
   test 'belongs_to_field has all options by default' do
     f = form.belongs_to_field(:companion_id)
@@ -204,21 +208,21 @@ class DryCrud::Form::BuilderTest < ActionView::TestCase
   end
 
   test 'string_field sets maxlength attribute if limit' do
-    assert_match /maxlength="50"/, form.string_field(:name)
+    assert_match(/maxlength="50"/, form.string_field(:name))
   end
 
   test 'label creates captionized label' do
-    assert_match /label [^>]*for.+Gugus dada/, form.label(:gugus_dada)
+    assert_match(/label [^>]*for.+Gugus dada/, form.label(:gugus_dada))
     assert_predicate form.label(:gugus_dada), :html_safe?
   end
 
   test 'classic label still works' do
-    assert_match /label [^>]*for.+hoho/, form.label(:gugus_dada, 'hoho')
+    assert_match(/label [^>]*for.+hoho/, form.label(:gugus_dada, 'hoho'))
     assert_predicate form.label(:gugus_dada, 'hoho'), :html_safe?
   end
 
   test 'labeled_text_field create label' do
-    assert_match /label [^>]*for.+input/m, form.labeled_string_field(:name)
+    assert_match(/label [^>]*for.+input/m, form.labeled_string_field(:name))
     assert_predicate form.labeled_string_field(:name), :html_safe?
   end
 
@@ -227,7 +231,7 @@ class DryCrud::Form::BuilderTest < ActionView::TestCase
                           "<input type='text' name='gugus' />".html_safe)
 
     assert_predicate result, :html_safe?
-    assert_match /label [^>]*for.+<input/m, result
+    assert_match(/label [^>]*for.+<input/m, result)
   end
 
   test 'labeled field creates label and block' do
@@ -236,7 +240,7 @@ class DryCrud::Form::BuilderTest < ActionView::TestCase
     end
 
     assert_predicate result, :html_safe?
-    assert_match /label [^>]*for.+<input/m, result
+    assert_match(/label [^>]*for.+<input/m, result)
   end
 
   test 'labeled field creates label with caption' do
@@ -245,7 +249,7 @@ class DryCrud::Form::BuilderTest < ActionView::TestCase
                           caption: 'Caption')
 
     assert_predicate result, :html_safe?
-    assert_match /label [^>]*for.+>Caption<\/label>.*<input/m, result
+    assert_match(%r{label [^>]*for.+>Caption</label>.*<input}m, result)
   end
 
   test 'labeled field creates label with caption and block' do
@@ -254,7 +258,7 @@ class DryCrud::Form::BuilderTest < ActionView::TestCase
     end
 
     assert_predicate result, :html_safe?
-    assert_match /label [^>]*for.+>Caption<\/label>.*<input/m, result
+    assert_match(%r{label [^>]*for.+>Caption</label>.*<input}m, result)
   end
 
   test 'method missing still works' do
@@ -264,8 +268,8 @@ class DryCrud::Form::BuilderTest < ActionView::TestCase
   end
 
   test 'respond to still works' do
-    assert !form.respond_to?(:blalba)
-    assert form.respond_to?(:text_field)
-    assert form.respond_to?(:labeled_text_field)
+    assert_not form.respond_to?(:blalba)
+    assert_respond_to form, :text_field
+    assert_respond_to form, :labeled_text_field
   end
 end

@@ -96,7 +96,7 @@ class CreateTables < ActiveRecord::Migration[5.1]
       t.datetime 'updated_at'
     end
 
-    add_index 'delayed_jobs', %w(priority run_at), name: 'delayed_jobs_priority'
+    add_index 'delayed_jobs', %w[priority run_at], name: 'delayed_jobs_priority'
 
     create_table 'departments' do |t|
       t.string 'name',      limit: 255, null: false
@@ -123,7 +123,8 @@ class CreateTables < ActiveRecord::Migration[5.1]
     end
 
     add_index 'employee_lists_employees', ['employee_id'], name: 'index_employee_lists_employees_on_employee_id'
-    add_index 'employee_lists_employees', ['employee_list_id'], name: 'index_employee_lists_employees_on_employee_list_id'
+    add_index 'employee_lists_employees', ['employee_list_id'],
+              name: 'index_employee_lists_employees_on_employee_list_id'
 
     create_table 'employees' do |t|
       t.string 'firstname',             limit: 255,                 null: false
@@ -328,7 +329,7 @@ class CreateTables < ActiveRecord::Migration[5.1]
       t.text 'message', null: false
     end
 
-    add_index 'user_notifications', %w(date_from date_to), name: 'index_user_notifications_on_date_from_and_date_to'
+    add_index 'user_notifications', %w[date_from date_to], name: 'index_user_notifications_on_date_from_and_date_to'
 
     create_table 'work_items' do |t|
       t.integer 'parent_id'
@@ -368,10 +369,10 @@ class CreateTables < ActiveRecord::Migration[5.1]
       t.integer 'invoice_id'
     end
 
-    add_index 'worktimes', %w(absence_id employee_id work_date), name: 'worktimes_absences'
-    add_index 'worktimes', %w(employee_id work_date), name: 'worktimes_employees'
+    add_index 'worktimes', %w[absence_id employee_id work_date], name: 'worktimes_absences'
+    add_index 'worktimes', %w[employee_id work_date], name: 'worktimes_employees'
     add_index 'worktimes', ['invoice_id'], name: 'index_worktimes_on_invoice_id'
-    add_index 'worktimes', %w(work_item_id employee_id work_date), name: 'worktimes_work_items'
+    add_index 'worktimes', %w[work_item_id employee_id work_date], name: 'worktimes_work_items'
 
     add_foreign_key 'employments', 'employees', name: 'fk_employments_employees', on_delete: :cascade
     add_foreign_key 'worktimes', 'absences', name: 'fk_times_absences', on_delete: :cascade

@@ -87,7 +87,7 @@ class EmployeesControllerTest < ActionController::TestCase
       management: false,
       department_id: departments(:devone).id,
       probation_period_end_date: Date.new(2015, 10, 3),
-      nationalities: ['CH', 'DE'] }
+      nationalities: %w[CH DE] }
   end
 
   def test_settings_attrs

@@ -23,14 +23,14 @@ class EmployeeMasterDataControllerTest < ActionController::TestCase
   test 'GET index' do
     get :index
 
-    assert_equal %w(Pedro John Pablo), assigns(:employees).map(&:firstname)
+    assert_equal %w[Pedro John Pablo], assigns(:employees).map(&:firstname)
   end
 
   test 'GET index excludes employees not employed today' do
     employees(:various_pedro).employments.last.update!(end_date: Time.zone.today - 1.day)
     get :index
 
-    assert_equal %w(John Pablo), assigns(:employees).map(&:firstname)
+    assert_equal %w[John Pablo], assigns(:employees).map(&:firstname)
   end
 
   test 'GET index with sorting' do
@@ -39,7 +39,7 @@ class EmployeeMasterDataControllerTest < ActionController::TestCase
     employees(:various_pedro).update!(department_id: departments(:sys).id)
     get :index, params: { sort: 'department', sort_dir: 'asc' }
 
-    assert_equal %w(John Pablo Pedro), assigns(:employees).map(&:firstname)
+    assert_equal %w[John Pablo Pedro], assigns(:employees).map(&:firstname)
   end
 
   test 'GET index with sorting by last employment' do
@@ -54,7 +54,7 @@ class EmployeeMasterDataControllerTest < ActionController::TestCase
               end_date: nil)
     get :index, params: { sort: 'latest_employment', sort_dir: 'desc' }
 
-    assert_equal %w(John Pedro Pablo), assigns(:employees).map(&:firstname)
+    assert_equal %w[John Pedro Pablo], assigns(:employees).map(&:firstname)
     expected = [Date.new(1990, 1, 1), Date.new(2005, 11, 1), Date.new(2017, 7, 24)]
     actual = assigns(:employees).map do |e|
       assigns(:employee_employment)[e]
@@ -66,7 +66,7 @@ class EmployeeMasterDataControllerTest < ActionController::TestCase
   test 'GET index with searching' do
     get :index, params: { q: 'ped' }
 
-    assert_equal %w(Pedro), assigns(:employees).map(&:firstname)
+    assert_equal %w[Pedro], assigns(:employees).map(&:firstname)
   end
 
   test 'GET show' do
@@ -136,7 +136,7 @@ class EmployeeMasterDataControllerTest < ActionController::TestCase
     login_as(:next_year_pablo)
     get :show, params: { id: employees(:various_pedro).id }
 
-    refute_match(/AHV-Nummer/, response.body)
+    assert_no_match(/AHV-Nummer/, response.body)
   end
 
   test 'GET show show classified data to responsible' do

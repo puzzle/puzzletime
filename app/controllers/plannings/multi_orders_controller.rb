@@ -46,8 +46,8 @@ module Plannings
 
     def order_for_work_item_id(work_item_id)
       Order.joins('LEFT JOIN work_items ON ' \
-                  'orders.work_item_id = ANY (work_items.path_ids)').
-        find_by('work_items.id = ?', work_item_id)
+                  'orders.work_item_id = ANY (work_items.path_ids)')
+           .find_by('work_items.id = ?', work_item_id)
     end
   end
 end

@@ -15,8 +15,8 @@ class OrderServicesController < ApplicationController
   include WorktimesReport
   include WorktimesCsv
 
-  self.remember_params = %w(start_date end_date period_shortcut employee_id work_item_id ticket
-                            billable invoice_id)
+  self.remember_params = %w[start_date end_date period_shortcut employee_id work_item_id ticket
+                            billable invoice_id]
 
   before_action :order
   before_action :authorize_class
@@ -48,10 +48,10 @@ class OrderServicesController < ApplicationController
   private
 
   def list_worktimes(period)
-    entries = order.worktimes.
-              includes(:employee, :work_item).
-              order(:work_date).
-              in_period(period)
+    entries = order.worktimes
+                   .includes(:employee, :work_item)
+                   .order(:work_date)
+                   .in_period(period)
     entries = filter_entries_allow_empty_by(entries, EMPTY, :ticket, :invoice_id)
     filter_entries_by(entries, :employee_id, :work_item_id, :billable, :meal_compensation)
   end
@@ -73,7 +73,7 @@ class OrderServicesController < ApplicationController
   end
 
   def prepare_report_header
-    work_item_id = params[:work_item_id].present? ? params[:work_item_id] : order.work_item_id
+    work_item_id = params[:work_item_id].presence || order.work_item_id
     @work_item = WorkItem.find(work_item_id)
     @employee = Employee.find(params[:employee_id]) if params[:employee_id].present?
     set_period_with_invoice

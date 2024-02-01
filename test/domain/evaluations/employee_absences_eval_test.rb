@@ -117,9 +117,15 @@ class Evaluations::EmployeeAbsencesEvalTest < ActiveSupport::TestCase
   def test_sum_times_search_conditions
     period = Period.new(Date.parse('2006-01-01'), Date.parse('2006-12-31'))
 
-    assert_equal(worktimes(:wt_pz_vacation, :wt_pz_doctor), Evaluations::EmployeeAbsencesEval.new(employees(:pascal).id).times(period))
-    assert_equal([worktimes(:wt_pz_vacation)], Evaluations::EmployeeAbsencesEval.new(employees(:pascal).id, absence_id: absences(:vacation).id).times(period))
-    assert_equal([worktimes(:wt_pz_doctor)], Evaluations::EmployeeAbsencesEval.new(employees(:pascal).id, absence_id: absences(:doctor).id).times(period))
-    assert_empty(Evaluations::EmployeeAbsencesEval.new(employees(:pascal).id, absence_id: absences(:civil_service).id).times(period))
+    assert_equal(worktimes(:wt_pz_vacation, :wt_pz_doctor),
+                 Evaluations::EmployeeAbsencesEval.new(employees(:pascal).id).times(period))
+    assert_equal([worktimes(:wt_pz_vacation)],
+                 Evaluations::EmployeeAbsencesEval.new(employees(:pascal).id,
+                                                       absence_id: absences(:vacation).id).times(period))
+    assert_equal([worktimes(:wt_pz_doctor)],
+                 Evaluations::EmployeeAbsencesEval.new(employees(:pascal).id,
+                                                       absence_id: absences(:doctor).id).times(period))
+    assert_empty(Evaluations::EmployeeAbsencesEval.new(employees(:pascal).id,
+                                                       absence_id: absences(:civil_service).id).times(period))
   end
 end

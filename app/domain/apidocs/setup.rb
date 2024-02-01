@@ -102,12 +102,12 @@ module Apidocs
     def collect_serializers(*serializers, collected_serializers: [])
       collected_serializers += serializers
 
-      serializers.
-        map(&:relationships_to_serialize).
-        compact.
-        flat_map(&:values).
-        map { |relationship| relationship.serializer.to_s.constantize }.
-        each do |related_serializer|
+      serializers
+        .map(&:relationships_to_serialize)
+        .compact
+        .flat_map(&:values)
+        .map { |relationship| relationship.serializer.to_s.constantize }
+        .each do |related_serializer|
           next if collected_serializers.include?(related_serializer)
 
           collect_serializers(related_serializer, collected_serializers:)

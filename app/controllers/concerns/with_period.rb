@@ -22,12 +22,12 @@ module WithPeriod
       Period.parse(params[:period_shortcut])
     elsif build_start_end_period?
       Period.new(params[:start_date].presence, params[:end_date].presence).tap do |period|
-        fail ArgumentError, 'Start Datum nach End Datum' if period.negative?
+        raise ArgumentError, 'Start Datum nach End Datum' if period.negative?
       end
     end
-  rescue ArgumentError => ex
+  rescue ArgumentError => e
     # from Period.new or if period.negative?
-    flash.now[:alert] = "Ungültige Zeitspanne: #{ex}"
+    flash.now[:alert] = "Ungültige Zeitspanne: #{e}"
     params.delete(:start_date)
     params.delete(:end_date)
     params.delete(:period_shortcut)

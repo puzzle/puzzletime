@@ -76,13 +76,11 @@ class Worktime < ActiveRecord::Base
   end
 
   # account id, default nil
-  def account_id
-  end
+  def account_id; end
 
   # sets the account id.
   # overwrite in subclass
-  def account_id=(_value)
-  end
+  def account_id=(_value); end
 
   # set the hours, either as number or as a string with the format
   # h:mm or h.dd (8:45 <-> 8.75)

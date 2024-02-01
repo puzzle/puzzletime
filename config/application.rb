@@ -30,10 +30,10 @@ module Puzzletime
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
 
-    config.autoload_paths += %W(#{config.root}/app/models/util)
+    config.autoload_paths += %W[#{config.root}/app/models/util]
 
     # Use custom error controller
-    config.exceptions_app = self.routes
+    config.exceptions_app = routes
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
@@ -61,7 +61,7 @@ module Puzzletime
 
     config.middleware.insert_before Rack::ETag, Rack::Deflater
 
-    config.active_record.time_zone_aware_types = [:datetime, :time]
+    config.active_record.time_zone_aware_types = %i[datetime time]
 
     config.active_job.queue_adapter = :delayed_job
 
@@ -91,18 +91,16 @@ module Puzzletime
     @@ptime_changelog_url ||= "https://github.com/puzzle/puzzletime/blob/#{commit_hash || 'master'}/CHANGELOG.md"
   end
 
-  private
-
   def self.build_version
     Puzzletime::VERSION
   end
 
   def self.commit_hash(short: false)
-    if File.exist?("#{Rails.root}/BUILD_INFO")
-      commit = File.open("#{Rails.root}/BUILD_INFO").first.chomp
-      return commit.first(7) if short
+    return unless File.exist?("#{Rails.root.join('BUILD_INFO')}")
 
-      commit
-    end
+    commit = File.open("#{Rails.root.join('BUILD_INFO')}").first.chomp
+    return commit.first(7) if short
+
+    commit
   end
 end

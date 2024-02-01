@@ -25,11 +25,9 @@ module IntegrationHelper
          Timeout::Error,
          Capybara::FrozenInTime,
          Capybara::ElementNotFound => e
-    if ENV['CI'] == true
-      skip e.message || e.class.name
-    else
-      raise
-    end
+    raise unless ENV['CI'] == true
+
+    skip e.message || e.class.name
   end
 
   def open_selectize(id, options = {})

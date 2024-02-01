@@ -21,11 +21,11 @@ namespace :rubocop do
   task :report do
     # do not fail if we find issues
     begin
-      sh %w(rubocop
+      sh %w[rubocop
             --require rubocop/formatter/checkstyle_formatter
             --format RuboCop::Formatter::CheckstyleFormatter
             --no-color
-            --out rubocop-results.xml).join(' ')
+            --out rubocop-results.xml].join(' ')
     rescue # rubocop:disable Style/RescueStandardError
       nil
     end

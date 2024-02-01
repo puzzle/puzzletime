@@ -2,9 +2,9 @@ class ReportType::AutoStartType < ReportType::StartStopType
   INSTANCE = new 'auto_start', 'Von/Bis offen', 12
 
   def time_string(worktime)
-    if worktime.from_start_time.is_a?(Time)
-      'Start um ' + I18n.l(worktime.from_start_time, format: :time)
-    end
+    return unless worktime.from_start_time.is_a?(Time)
+
+    'Start um ' + I18n.l(worktime.from_start_time, format: :time)
   end
 
   def validate_worktime(worktime)
@@ -13,14 +13,12 @@ class ReportType::AutoStartType < ReportType::StartStopType
     worktime.hours = 0
     worktime.to_end_time = nil
     # validate
-    unless worktime.from_start_time.is_a?(Time)
-      worktime.errors.add(:from_start_time, 'Die Anfangszeit ist ungültig')
-    end
-    if worktime.employee
-      existing = worktime.employee.send(:"running_#{worktime.class.name[0..-5].downcase}")
-      if existing && existing != worktime
-        worktime.errors.add(:employee_id, "Es wurde bereits eine offene #{worktime.class.model_name.human} erfasst")
-      end
-    end
+    worktime.errors.add(:from_start_time, 'Die Anfangszeit ist ungültig') unless worktime.from_start_time.is_a?(Time)
+    return unless worktime.employee
+
+    existing = worktime.employee.send(:"running_#{worktime.class.name[0..-5].downcase}")
+    return unless existing && existing != worktime
+
+    worktime.errors.add(:employee_id, "Es wurde bereits eine offene #{worktime.class.model_name.human} erfasst")
   end
 end

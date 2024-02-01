@@ -30,16 +30,16 @@ class WorktimesController < CrudController
 
   def new
     super
-    if params[:template]
-      template = Worktime.find_by(id: params[:template])
-      if template
-        @worktime.account_id = template.account_id
-        @worktime.ticket = template.ticket
-        @worktime.description = template.description
-        @worktime.billable = template.billable
-        @worktime.meal_compensation = template.meal_compensation
-      end
-    end
+    return unless params[:template]
+
+    template = Worktime.find_by(id: params[:template])
+    return unless template
+
+    @worktime.account_id = template.account_id
+    @worktime.ticket = template.ticket
+    @worktime.description = template.description
+    @worktime.billable = template.billable
+    @worktime.meal_compensation = template.meal_compensation
   end
 
   def create(options = {})
@@ -72,35 +72,35 @@ class WorktimesController < CrudController
   end
 
   def set_work_date
-    unless @worktime.work_date
-      @worktime.work_date = if params[:work_date]
-                              params[:work_date]
-                            elsif @period && @period.length == 1
-                              @period.start_date
-                            else
-                              Time.zone.today
-                            end
-    end
+    return if @worktime.work_date
+
+    @worktime.work_date = if params[:work_date]
+                            params[:work_date]
+                          elsif @period && @period.length == 1
+                            @period.start_date
+                          else
+                            Time.zone.today
+                          end
   end
 
   def check_overlapping
-    if @worktime.report_type.is_a? ReportType::StartStopType
-      conditions = ['NOT (work_item_id IS NULL AND absence_id IS NULL) AND ' \
-                    'employee_id = :employee_id AND work_date = :work_date AND id <> :id AND (' \
-                    '(from_start_time <= :start_time AND to_end_time >= :end_time) OR ' \
-                    '(from_start_time >= :start_time AND from_start_time < :end_time) OR ' \
-                    '(to_end_time > :start_time AND to_end_time <= :end_time))',
-                    { employee_id: @worktime.employee_id,
-                      work_date: @worktime.work_date,
-                      id: @worktime.id,
-                      start_time: @worktime.from_start_time,
-                      end_time: @worktime.to_end_time }]
-      overlaps = Worktime.where(conditions).includes(:work_item).to_a
-      if overlaps.present?
-        flash[:warning] = "#{@worktime}: Es besteht eine Überlappung mit mindestens einem anderen Eintrag:\n".html_safe
-        flash[:warning] += overlaps.collect { |o| ERB::Util.h(o) }.join("\n").html_safe
-      end
-    end
+    return unless @worktime.report_type.is_a? ReportType::StartStopType
+
+    conditions = ['NOT (work_item_id IS NULL AND absence_id IS NULL) AND ' \
+                  'employee_id = :employee_id AND work_date = :work_date AND id <> :id AND (' \
+                  '(from_start_time <= :start_time AND to_end_time >= :end_time) OR ' \
+                  '(from_start_time >= :start_time AND from_start_time < :end_time) OR ' \
+                  '(to_end_time > :start_time AND to_end_time <= :end_time))',
+                  { employee_id: @worktime.employee_id,
+                    work_date: @worktime.work_date,
+                    id: @worktime.id,
+                    start_time: @worktime.from_start_time,
+                    end_time: @worktime.to_end_time }]
+    overlaps = Worktime.where(conditions).includes(:work_item).to_a
+    return unless overlaps.present?
+
+    flash[:warning] = "#{@worktime}: Es besteht eine Überlappung mit mindestens einem anderen Eintrag:\n".html_safe
+    flash[:warning] += overlaps.collect { |o| ERB::Util.h(o) }.join("\n").html_safe
   end
 
   def check_employment
@@ -111,17 +111,17 @@ class WorktimesController < CrudController
       return
     end
 
-    if employment.percent.zero?
-      flash[:warning] = "Vorsicht, am #{l(@worktime.work_date)} wurde bereits unbezahlter Urlaub eingetragen".html_safe
-      return
-    end
+    return unless employment.percent.zero?
+
+    flash[:warning] = "Vorsicht, am #{l(@worktime.work_date)} wurde bereits unbezahlter Urlaub eingetragen".html_safe
+    nil
   end
 
   def set_existing
     @work_date = @worktime.work_date
-    @existing = Worktime.where('employee_id = ? AND work_date = ?', @worktime.employee_id, @work_date).
-                order('type DESC, from_start_time, work_item_id').
-                includes(:work_item, :absence)
+    @existing = Worktime.where('employee_id = ? AND work_date = ?', @worktime.employee_id, @work_date)
+                        .order('type DESC, from_start_time, work_item_id')
+                        .includes(:work_item, :absence)
   end
 
   def set_week_days
@@ -184,11 +184,10 @@ class WorktimesController < CrudController
   end
 
   # overwrite in subclass
-  def set_worktime_defaults
-  end
+  def set_worktime_defaults; end
 
   def record_other?
-    @user.management && (%w(1 true).include?(params[:other]) || other_employee_param?)
+    @user.management && (%w[1 true].include?(params[:other]) || other_employee_param?)
   end
 
   def other_employee_param?
@@ -214,17 +213,17 @@ class WorktimesController < CrudController
   end
 
   def assign_attributes
-    if params.key?(model_identifier)
-      # Set start/end time to nil, this way we correctly unset
-      # the time on "hours" change with entry.attributes = model_params
-      # Otherwise the start/end time recalculate the hours property.
-      params[model_identifier][:from_start_time] ||= nil
-      params[model_identifier][:to_end_time] ||= nil
+    return unless params.key?(model_identifier)
 
-      params[:other] = '1' if model_params[:employee_id] && @user.management
-      super
-      entry.employee = @user unless record_other?
-    end
+    # Set start/end time to nil, this way we correctly unset
+    # the time on "hours" change with entry.attributes = model_params
+    # Otherwise the start/end time recalculate the hours property.
+    params[model_identifier][:from_start_time] ||= nil
+    params[model_identifier][:to_end_time] ||= nil
+
+    params[:other] = '1' if model_params[:employee_id] && @user.management
+    super
+    entry.employee = @user unless record_other?
   end
 
   def generic_evaluation
@@ -236,10 +235,10 @@ class WorktimesController < CrudController
   end
 
   def check_has_accounting_post
-    unless entry.work_item.respond_to?(:accounting_post)
-      entry.errors.add(:work_item, 'Bitte wähle eine Buchungsposition aus')
-      throw :abort
-    end
+    return if entry.work_item.respond_to?(:accounting_post)
+
+    entry.errors.add(:work_item, 'Bitte wähle eine Buchungsposition aus')
+    throw :abort
   end
 
   def check_worktimes_committed

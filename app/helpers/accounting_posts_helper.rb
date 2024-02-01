@@ -30,6 +30,6 @@ module AccountingPostsHelper
     worktime_counts(worktimes).collect do |k, v|
       employee = Employee.find(k)
       "#{employee.firstname} #{employee.lastname}: #{v} Buchungen"
-    end.join(", ")
+    end.join(', ')
   end
 end

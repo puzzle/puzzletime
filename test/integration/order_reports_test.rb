@@ -45,7 +45,7 @@ class OrderReportsTest < ActionDispatch::IntegrationTest
     timeout_safe do
       list_orders
 
-      element = find("#category_work_item_id + .selectize-control")
+      element = find('#category_work_item_id + .selectize-control')
 
       element.assert_no_selector('.selectize-dropdown-content .option', visible: false)
 

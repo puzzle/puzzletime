@@ -8,16 +8,16 @@ class Reports::Workload
 
   attr_reader :period, :params, :department
 
-  WORKTIME_FIELDS = [
-    :type,
-    :employee_id,
-    :department_id,
-    :hours,
-    :work_item_id,
-    :path_ids,
-    :billable,
-    :absence_id,
-    :payed
+  WORKTIME_FIELDS = %i[
+    type
+    employee_id
+    department_id
+    hours
+    work_item_id
+    path_ids
+    billable
+    absence_id
+    payed
   ].freeze
 
   def initialize(period, department, params = {})
@@ -30,9 +30,7 @@ class Reports::Workload
     period.limited? && department.present?
   end
 
-  def present?
-    department_worktimes.present?
-  end
+  delegate :present?, to: :department_worktimes
 
   def all_employees
     @all_employees ||= Employee.all.to_a
@@ -88,11 +86,11 @@ class Reports::Workload
   end
 
   def worktimes_query
-    Worktime.
-      in_period(period).
-      joins('LEFT OUTER JOIN work_items ON work_items.id = worktimes.work_item_id').
-      joins('LEFT OUTER JOIN absences ON absences.id = worktimes.absence_id').
-      joins(:employee)
+    Worktime
+      .in_period(period)
+      .joins('LEFT OUTER JOIN work_items ON work_items.id = worktimes.work_item_id')
+      .joins('LEFT OUTER JOIN absences ON absences.id = worktimes.absence_id')
+      .joins(:employee)
   end
 
   def build_entries
@@ -110,10 +108,10 @@ class Reports::Workload
   end
 
   def load_employments
-    Employment.
-      where('(end_date IS NULL OR end_date >= ?) AND start_date <= ?',
-            period.start_date, period.end_date).
-      reorder('start_date').to_a
+    Employment
+      .where('(end_date IS NULL OR end_date >= ?) AND start_date <= ?',
+             period.start_date, period.end_date)
+      .reorder('start_date').to_a
   end
 
   def sort_entries(entries)
@@ -132,7 +130,7 @@ class Reports::Workload
   end
 
   def sort_by_number?
-    %w(must_hours worktime_balance ordertime_hours absencetime_hours workload billability).include?(params[:sort])
+    %w[must_hours worktime_balance ordertime_hours absencetime_hours workload billability].include?(params[:sort])
   end
 
   def sort_by_employee(entries, dir)

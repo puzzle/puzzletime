@@ -66,14 +66,14 @@ class ShowOrderServices < ActionDispatch::IntegrationTest
 
   def employee_without_responsibilities
     Employee.where.not(management: true).where.not(id: responsible_ids).first.tap do |employee|
-      refute employee.management
-      refute_predicate employee, :order_responsible?
+      assert_not employee.management
+      assert_not_predicate employee, :order_responsible?
     end
   end
 
   def employee_responsible_for_order
     order.responsible.tap do |employee|
-      refute employee.management
+      assert_not employee.management
       assert_predicate employee, :order_responsible?
       assert_equal employee, order.responsible
     end
@@ -81,15 +81,15 @@ class ShowOrderServices < ActionDispatch::IntegrationTest
 
   def employee_responsible_for_different_order
     Employee.where(management: false, id: responsible_ids).where.not(id: order.responsible_id).first.tap do |employee|
-      refute employee.management
+      assert_not employee.management
       assert_predicate employee, :order_responsible?
-      refute_equal employee, order.responsible
+      assert_not_equal employee, order.responsible
     end
   end
 
   def manager_not_responsible_for_any_order
     Employee.where(management: true).where.not(id: order.responsible_id).first.tap do |employee|
-      refute_equal employee, order.responsible
+      assert_not_equal employee, order.responsible
       assert employee.management
     end
   end

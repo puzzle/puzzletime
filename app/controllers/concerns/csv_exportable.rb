@@ -10,7 +10,7 @@ module CsvExportable
   end
 
   def csv_file_export_header(filename)
-    if request.env['HTTP_USER_AGENT'] =~ /msie/i
+    if /msie/i.match?(request.env['HTTP_USER_AGENT'])
       headers['Pragma'] = 'public'
       headers['Content-type'] = 'text/plain'
       headers['Cache-Control'] = 'no-cache, must-revalidate, post-check=0, pre-check=0'

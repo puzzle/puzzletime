@@ -67,12 +67,8 @@ class Employment < ActiveRecord::Base
 
     def normalize_boundaries(employments, period)
       employments.each do |e|
-        if period.start_date && e.start_date < period.start_date
-          e.start_date = period.start_date
-        end
-        if period.end_date && (e.end_date.nil? || e.end_date > period.end_date)
-          e.end_date = period.end_date
-        end
+        e.start_date = period.start_date if period.start_date && e.start_date < period.start_date
+        e.end_date = period.end_date if period.end_date && (e.end_date.nil? || e.end_date > period.end_date)
       end
     end
   end
@@ -85,13 +81,13 @@ class Employment < ActiveRecord::Base
 
   def following_employment
     @following_employment ||=
-      Employment.where('employee_id = ? AND start_date > ?', employee_id, start_date).
-      order('start_date').
-      first
+      Employment.where('employee_id = ? AND start_date > ?', employee_id, start_date)
+                .order('start_date')
+                .first
   end
 
   def period
-    Period.new(start_date, end_date ? end_date : Time.zone.today) if start_date
+    Period.new(start_date, end_date || Time.zone.today) if start_date
   end
 
   def percent_factor
@@ -132,9 +128,7 @@ class Employment < ActiveRecord::Base
       previous_employment.end_date = start_date - 1
       previous_employment.save!
     end
-    if following_employment
-      self.end_date ||= following_employment.start_date - 1
-    end
+    self.end_date ||= following_employment.start_date - 1 if following_employment
     true
   end
 

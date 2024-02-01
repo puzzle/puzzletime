@@ -91,9 +91,7 @@ module TableHelper
 
   def explode_attrs_with_options(attrs, &)
     options = attrs.extract_options!
-    if !block_given? && attrs.blank?
-      attrs = default_crud_attrs
-    end
+    attrs = default_crud_attrs if !block_given? && attrs.blank?
     [attrs, options]
   end
 end

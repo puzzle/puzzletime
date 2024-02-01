@@ -13,17 +13,17 @@ module WorktimeHelper
   end
 
   def work_item_option(item)
-    if item
-      json = { id: item.id,
-               name: item.name,
-               path_shortnames: item.path_shortnames,
-               description: item.description }
-      content_tag(:option,
-                  item.label_verbose,
-                  value: item.id,
-                  selected: true,
-                  data: { data: json.to_json })
-    end
+    return unless item
+
+    json = { id: item.id,
+             name: item.name,
+             path_shortnames: item.path_shortnames,
+             description: item.description }
+    content_tag(:option,
+                item.label_verbose,
+                value: item.id,
+                selected: true,
+                data: { data: json.to_json })
   end
 
   def overview_day_class(_worktimes, day)
@@ -40,9 +40,7 @@ module WorktimeHelper
     result = '&nbsp;'
     if worktime.from_start_time.present?
       result = "#{format_time(worktime.from_start_time)} - "
-      if worktime.to_end_time.present?
-        result += format_time(worktime.to_end_time)
-      end
+      result += format_time(worktime.to_end_time) if worktime.to_end_time.present?
     end
     result.html_safe
   end

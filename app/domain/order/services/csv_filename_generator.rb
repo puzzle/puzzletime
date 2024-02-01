@@ -30,15 +30,15 @@ module Order::Services
     end
 
     def accounting_post_shortnames
-      if params[:work_item_id].present?
-        WorkItem.find(params[:work_item_id]).path_shortnames
-      end
+      return unless params[:work_item_id].present?
+
+      WorkItem.find(params[:work_item_id]).path_shortnames
     end
 
     def employee_shortname
-      if params[:employee_id].present?
-        Employee.find(params[:employee_id]).shortname
-      end
+      return unless params[:employee_id].present?
+
+      Employee.find(params[:employee_id]).shortname
     end
 
     def billable

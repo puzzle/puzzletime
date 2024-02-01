@@ -13,22 +13,20 @@ class EmployeesController < ManageController
                           :identity_card_type, :identity_card_valid_until,
                           { nationalities: [] }]
 
-  if Settings.employees.initial_vacation_days_editable
-    self.permitted_attrs += [:initial_vacation_days]
-  end
+  self.permitted_attrs += [:initial_vacation_days] if Settings.employees.initial_vacation_days_editable
 
-  self.search_columns = [:firstname, :lastname, :shortname]
+  self.search_columns = %i[firstname lastname shortname]
 
   self.sort_mappings = { department_id: 'departments.name' }
 
   def show
-    if Crm.instance.present?
-      person = Crm.instance.find_people_by_email(entry.email).first
-      if person
-        redirect_to Crm.instance.contact_url(person.id), allow_other_host: true
-      else
-        flash[:alert] = "Person mit Email '#{entry.email}' nicht gefunden in CRM."
-      end
+    return unless Crm.instance.present?
+
+    person = Crm.instance.find_people_by_email(entry.email).first
+    if person
+      redirect_to Crm.instance.contact_url(person.id), allow_other_host: true
+    else
+      flash[:alert] = "Person mit Email '#{entry.email}' nicht gefunden in CRM."
     end
   end
 

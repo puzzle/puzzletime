@@ -4,9 +4,7 @@
 #  https://github.com/puzzle/puzzletime.
 
 class Reports::Workload::OrdertimeEntry < Struct.new(:work_item, :hours, :billability)
-  def id
-    work_item.id
-  end
+  delegate :id, to: :work_item
 
   def label
     work_item.path_shortnames

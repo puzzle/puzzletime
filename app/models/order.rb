@@ -86,9 +86,9 @@ class Order < ActiveRecord::Base
   class << self
     def order_by_target_scope(target_scope_id, desc = false)
       joins('LEFT JOIN order_targets sort_target ' \
-            'ON sort_target.order_id = orders.id ').
-        where('sort_target.target_scope_id = ? OR sort_target.id IS NULL', target_scope_id).
-        reorder("sort_target.rating #{desc ? 'asc' : 'desc'}")
+            'ON sort_target.order_id = orders.id ')
+        .where('sort_target.target_scope_id = ? OR sort_target.id IS NULL', target_scope_id)
+        .reorder("sort_target.rating #{desc ? 'asc' : 'desc'}")
     end
   end
 
@@ -140,9 +140,9 @@ class Order < ActiveRecord::Base
   private
 
   def work_item_parent_presence
-    if work_item && work_item.parent_id.nil?
-      errors.add(:base, 'Kunde darf nicht leer sein')
-    end
+    return unless work_item && work_item.parent_id.nil?
+
+    errors.add(:base, 'Kunde darf nicht leer sein')
   end
 
   def set_self_in_nested
@@ -151,9 +151,7 @@ class Order < ActiveRecord::Base
     # don't try to set self in frozen nested attributes (-> marked for destroy)
     [order_team_members, order_contacts].each do |c|
       c.each do |e|
-        unless e.frozen?
-          e.order = self
-        end
+        e.order = self unless e.frozen?
       end
     end
   end

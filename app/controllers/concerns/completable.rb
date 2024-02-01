@@ -26,20 +26,20 @@ module Completable
   private
 
   def validate_date
-    unless completion_dates.include?(entry_date)
-      entry.errors.add(completable_attr, 'ist nicht erlaubt')
-      throw(:abort)
-    end
+    return if completion_dates.include?(entry_date)
+
+    entry.errors.add(completable_attr, 'ist nicht erlaubt')
+    throw(:abort)
   end
 
   def set_selected_month
     # Selecting a month in the future is fine, as an invalid selection
     # or even no selection ends up selecting the first (and most recent)
     # month.
-    if entry_date.present?
-      @selected_month = entry_date + 1.month
-      @selected_month = @selected_month.end_of_month
-    end
+    return unless entry_date.present?
+
+    @selected_month = entry_date + 1.month
+    @selected_month = @selected_month.end_of_month
   end
 
   def set_dates

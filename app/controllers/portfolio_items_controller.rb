@@ -4,5 +4,5 @@
 #  https://github.com/puzzle/puzzletime.
 
 class PortfolioItemsController < ManageController
-  self.permitted_attrs = [:name, :active]
+  self.permitted_attrs = %i[name active]
 end

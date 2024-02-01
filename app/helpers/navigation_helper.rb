@@ -15,17 +15,17 @@ module NavigationHelper
   end
 
   def model_nav(model)
-    if can?(:read, model)
-      path = polymorphic_path(model)
-      nav(model.model_name.human(count: 2), path, path)
-    end
+    return unless can?(:read, model)
+
+    path = polymorphic_path(model)
+    nav(model.model_name.human(count: 2), path, path)
   end
 
   private
 
   def nav_active_class(url, active_for)
     if current_page?(url) ||
-       active_for.any? { |p| request.path =~ %r{^#{p}} }
+       active_for.any? { |p| request.path =~ /^#{p}/ }
       'active'
     end
   end

@@ -18,7 +18,7 @@ class AddDailyPlannings < ActiveRecord::Migration[5.1]
       t.integer :percent, null: false
       t.boolean :definitive, default: false, null: false
     end
-    add_index NEW_TABLE, [:employee_id, :work_item_id, :date], unique: true
+    add_index NEW_TABLE, %i[employee_id work_item_id date], unique: true
 
     reversible do |dir|
       dir.up do
@@ -32,9 +32,9 @@ class AddDailyPlannings < ActiveRecord::Migration[5.1]
   end
 
   def migrate_order_closed
-    WorkItem.joins(order: :status).
-      where(order_statuses: { closed: true }, work_items: { closed: false }).
-      update_all(closed: true)
+    WorkItem.joins(order: :status)
+            .where(order_statuses: { closed: true }, work_items: { closed: false })
+            .update_all(closed: true)
   end
 
   def migrate_plannings
@@ -60,13 +60,13 @@ class AddDailyPlannings < ActiveRecord::Migration[5.1]
       .reject { |date| date.saturday? || date.sunday? }
       .each do |date|
         percent = percent_for_day(row, date)
-        if percent > 0.0
-          create_planning(employee_id: row['employee_id'],
-                          work_item_id: row['work_item_id'],
-                          date:,
-                          percent:,
-                          definitive: row['definitive'] == 't')
-        end
+        next unless percent > 0.0
+
+        create_planning(employee_id: row['employee_id'],
+                        work_item_id: row['work_item_id'],
+                        date:,
+                        percent:,
+                        definitive: row['definitive'] == 't')
       end
   end
 
@@ -99,7 +99,7 @@ class AddDailyPlannings < ActiveRecord::Migration[5.1]
   end
 
   def planning_exists?(entry)
-    condition = [:employee_id, :work_item_id, :date]
+    condition = %i[employee_id work_item_id date]
                 .map { |k| new_table[k].eq(entry[k]) }
                 .reduce(:and)
     query = new_table

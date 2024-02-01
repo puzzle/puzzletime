@@ -192,10 +192,10 @@ class InvoicesControllerTest < ActionController::TestCase
     }
     delete(:destroy, params:)
 
-    assert_operator Invoice.find(test_entry.id).status, :==, 'cancelled'
+    assert_equal 'cancelled', Invoice.find(test_entry.id).status
   end
 
-  %w(cancelled unknown).each do |status|
+  %w[cancelled unknown].each do |status|
     test "DELETE #{status} marks record as deleted" do
       login_as :mark
 
@@ -207,11 +207,11 @@ class InvoicesControllerTest < ActionController::TestCase
       }
       delete(:destroy, params:)
 
-      assert_operator Invoice.find(test_entry.id).status, :==, 'deleted'
+      assert_equal 'deleted', Invoice.find(test_entry.id).status
     end
   end
 
-  %w(deleted paid partially_paid).each do |status|
+  %w[deleted paid partially_paid].each do |status|
     test "DELETE #{status} is not permitted" do
       login_as :mark
 

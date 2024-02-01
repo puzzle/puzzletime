@@ -20,7 +20,7 @@ module Plannings
       items = board.items(employees(:lucien).id, work_items(:hitobito_demo_app).id)
 
       assert_equal 20, items.size
-      assert items.one? { |i| i.planning }
+      assert(items.one? { |i| i.planning })
       assert_equal p2, items[5].planning
     end
 
@@ -167,7 +167,7 @@ module Plannings
                             percent: 100)
       p3 = Planning.create!(work_item_id: work_items(:hitobito_demo_site).id,
                             employee_id: employees(:lucien).id,
-                            date: date + 1.weeks,
+                            date: date + 1.week,
                             percent: 50)
       [p1, p2, p3]
     end

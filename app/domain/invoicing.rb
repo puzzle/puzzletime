@@ -8,9 +8,9 @@ module Invoicing
   cattr_accessor :instance
 
   def self.init
-    if Settings.small_invoice.client_id && Settings.small_invoice.client_secret && !Rails.env.test?
-      Invoicing.instance = Invoicing::SmallInvoice::Interface.new
-      InvoicingSyncJob.schedule if Delayed::Job.table_exists?
-    end
+    return unless Settings.small_invoice.client_id && Settings.small_invoice.client_secret && !Rails.env.test?
+
+    Invoicing.instance = Invoicing::SmallInvoice::Interface.new
+    InvoicingSyncJob.schedule if Delayed::Job.table_exists?
   end
 end

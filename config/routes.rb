@@ -6,7 +6,8 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 
-  devise_for :employees, controllers: { sessions: 'employees/sessions', omniauth_callbacks: 'employees/omniauth_callbacks' }, skip: [:registrations]
+  devise_for :employees,
+             controllers: { sessions: 'employees/sessions', omniauth_callbacks: 'employees/omniauth_callbacks' }, skip: [:registrations]
   as :employee do
     get 'employees/edit' => 'devise/registrations#edit', :as => 'edit_employee_registration'
     patch 'employees' => 'devise/registrations#update', :as => 'employee_registration'
@@ -19,7 +20,7 @@ Rails.application.routes.draw do
   namespace :api do
     defaults format: :jsonapi do
       namespace :v1 do
-        resources :employees, only: [:index, :show]
+        resources :employees, only: %i[index show]
       end
     end
 
@@ -56,12 +57,12 @@ Rails.application.routes.draw do
     resources :expenses
     resources :employments, except: [:show]
     resources :overtime_vacations, except: [:show]
-    resource :worktimes_commit, only: [:edit, :update], controller: 'employees/worktimes_commit'
-    resource :worktimes_review, only: [:edit, :update], controller: 'employees/worktimes_review'
+    resource :worktimes_commit, only: %i[edit update], controller: 'employees/worktimes_commit'
+    resource :worktimes_review, only: %i[edit update], controller: 'employees/worktimes_review'
   end
 
   resources :expenses
-  resources :expenses_reviews, only: [:show, :create, :update, :index]
+  resources :expenses_reviews, only: %i[show create update index]
 
   resources :employment_roles, except: [:show]
   resources :employment_role_levels, except: [:show]
@@ -83,24 +84,24 @@ Rails.application.routes.draw do
 
     resource :order_controlling, only: [:show], controller: 'order_controlling'
 
-    resource :contract, only: [:show, :edit, :update]
+    resource :contract, only: %i[show edit update]
 
     resource :multi_worktimes, only: [:update] do
       post :edit
       get :edit, to: redirect('/orders/%{order_id}/order_services')
     end
 
-    resources :order_comments, only: [:index, :create, :edit, :update]
-    resource :order_targets, only: [:show, :update]
+    resources :order_comments, only: %i[index create edit update]
+    resource :order_targets, only: %i[show update]
     resources :order_uncertainties, only: [:index]
-    resources :order_risks, except: [:index, :show],
+    resources :order_risks, except: %i[index show],
                             defaults: { type: 'OrderRisk' },
                             controller: 'order_uncertainties'
-    resources :order_chances, except: [:index, :show],
+    resources :order_chances, except: %i[index show],
                               defaults: { type: 'OrderChance' },
                               controller: 'order_uncertainties'
 
-    resource :order_services, only: [:show, :edit, :update] do
+    resource :order_services, only: %i[show edit update] do
       get :export_worktimes_csv
       get :compose_report
       get :report
@@ -117,12 +118,12 @@ Rails.application.routes.draw do
       end
     end
 
-    resource :order_plannings, only: [:index, :show, :update, :destroy] do
+    resource :order_plannings, only: %i[index show update destroy] do
       get 'new', on: :member, as: 'new'
     end
 
-    resource :completed, only: [:edit, :update], controller: 'orders/completed'
-    resource :committed, only: [:edit, :update], controller: 'orders/committed'
+    resource :completed, only: %i[edit update], controller: 'orders/completed'
+    resource :committed, only: %i[edit update], controller: 'orders/committed'
   end
 
   resources :order_statuses, except: [:show]
@@ -139,7 +140,7 @@ Rails.application.routes.draw do
 
   resources :user_notifications, except: [:show]
 
-  resources :work_items, only: [:new, :create] do
+  resources :work_items, only: %i[new create] do
     collection do
       get :search
     end
@@ -155,8 +156,8 @@ Rails.application.routes.draw do
     collection do
       get :existing
       get :split
-      match :create_part, via: [:post, :patch]
-      match :delete_part, via: [:post, :delete]
+      match :create_part, via: %i[post patch]
+      match :delete_part, via: %i[post delete]
     end
   end
 
@@ -166,7 +167,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :employee_master_data, only: [:index, :show]
+  resources :employee_master_data, only: %i[index show]
 
   scope '/evaluator', controller: 'evaluator' do
     get :index
@@ -180,31 +181,31 @@ Rails.application.routes.draw do
     get ':evaluation', to: 'evaluator#overview'
   end
 
-  resource :periods, only: [:show, :update, :destroy]
+  resource :periods, only: %i[show update destroy]
 
   namespace :plannings do
-    resources :orders, only: [:index, :show, :update, :destroy] do
+    resources :orders, only: %i[index show update destroy] do
       get 'new', on: :member, as: 'new'
     end
 
-    resources :employees, only: [:index, :show, :update, :destroy] do
+    resources :employees, only: %i[index show update destroy] do
       get 'new', on: :member, as: 'new'
     end
 
     resources :departments, only: [:index] do
-      resource :multi_orders, only: [:show, :new, :update, :destroy]
-      resource :multi_employees, only: [:show, :new, :update, :destroy]
+      resource :multi_orders, only: %i[show new update destroy]
+      resource :multi_employees, only: %i[show new update destroy]
     end
 
     resources :custom_lists do
-      resource :multi_orders, only: [:show, :new, :update, :destroy]
-      resource :multi_employees, only: [:show, :new, :update, :destroy]
+      resource :multi_orders, only: %i[show new update destroy]
+      resource :multi_employees, only: %i[show new update destroy]
     end
 
     resource :company, only: :show
   end
 
-  resources :meal_compensations, only: [:index, :show] do
+  resources :meal_compensations, only: %i[index show] do
     member do
       get :details
     end

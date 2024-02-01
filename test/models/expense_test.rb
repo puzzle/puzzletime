@@ -43,7 +43,7 @@ class ExpenseTest < ActiveSupport::TestCase
   end
 
   test "pascal can not manage mark's invoices" do
-    refute can?(:manage, pascal, mark.expenses.build)
+    assert_not can?(:manage, pascal, mark.expenses.build)
   end
 
   test "mark can manage pascal's invoices" do
@@ -73,14 +73,14 @@ class ExpenseTest < ActiveSupport::TestCase
   test 'can only approve expense when reimbursement_date and reviewer is set' do
     obj = expenses(:pending)
 
-    refute obj.update(status: :approved)
+    assert_not obj.update(status: :approved)
     assert_equal ['Auszahlungsmonat muss ausgefüllt werden', 'Reviewer muss ausgefüllt werden',
                   'Visiert am muss ausgefüllt werden'], obj.errors.full_messages
 
     assert obj.update(status: :approved,
                       reviewer: mark,
                       reviewed_at: Date.today,
-                      reimbursement_date: Date.today,)
+                      reimbursement_date: Date.today)
   end
 
   def review_attrs

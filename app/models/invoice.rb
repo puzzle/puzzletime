@@ -25,9 +25,9 @@
 #
 
 class Invoice < ActiveRecord::Base
-  STATUSES = %w(draft sent paid partially_paid dept_collection cancelled deleted unknown).freeze
+  STATUSES = %w[draft sent paid partially_paid dept_collection cancelled deleted unknown].freeze
 
-  enum grouping: %w(accounting_posts employees manual)
+  enum grouping: { 'accounting_posts' => 0, 'employees' => 1, 'manual' => 2 }
 
   belongs_to :order
   belongs_to :billing_address
@@ -63,9 +63,7 @@ class Invoice < ActiveRecord::Base
 
   def title
     title = order.name
-    if order.contract && order.contract.number?
-      title += " gemäss Vertrag #{order.contract.number}"
-    end
+    title += " gemäss Vertrag #{order.contract.number}" if order.contract && order.contract.number?
     title
   end
 
@@ -152,11 +150,11 @@ class Invoice < ActiveRecord::Base
   end
 
   def worktimes
-    Ordertime.in_period(period).
-      where(billable: true).
-      where(work_item_id: work_item_ids).
-      where(employee_id: employee_ids).
-      where(invoice_id: [id, nil])
+    Ordertime.in_period(period)
+             .where(billable: true)
+             .where(work_item_id: work_item_ids)
+             .where(employee_id: employee_ids)
+             .where(invoice_id: [id, nil])
   end
 
   def lock_client_invoice_number
@@ -169,9 +167,9 @@ class Invoice < ActiveRecord::Base
   end
 
   def update_order_billing_address
-    if order.billing_address_id != billing_address_id
-      order.update_column(:billing_address_id, billing_address_id)
-    end
+    return unless order.billing_address_id != billing_address_id
+
+    order.update_column(:billing_address_id, billing_address_id)
   end
 
   def update_totals
@@ -204,21 +202,21 @@ class Invoice < ActiveRecord::Base
   end
 
   def assert_positive_period
-    if period_to && period_from && period_to < period_from
-      errors.add(:period_to, 'muss nach von sein.')
-    end
+    return unless period_to && period_from && period_to < period_from
+
+    errors.add(:period_to, 'muss nach von sein.')
   end
 
   def assert_order_has_contract
-    unless order.contract
-      errors.add(:order_id, 'muss einen definierten Vertrag haben.')
-    end
+    return if order.contract
+
+    errors.add(:order_id, 'muss einen definierten Vertrag haben.')
   end
 
   def assert_order_not_closed
-    if order_closed?
-      errors.add(:order, 'darf nicht geschlossen sein.')
-    end
+    return unless order_closed?
+
+    errors.add(:order, 'darf nicht geschlossen sein.')
   end
 
   def save_remote_invoice

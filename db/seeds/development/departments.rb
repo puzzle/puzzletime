@@ -12,5 +12,5 @@ Department.seed(
   { name: '/sys',
     shortname: 'SY' },
   { name: '/ux',
-    shortname: 'UX' },
+    shortname: 'UX' }
 )

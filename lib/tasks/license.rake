@@ -5,15 +5,15 @@
 
 class Licenser
   FORMATS = {
-    rb:   '#  ',
+    rb: '#  ',
     rake: '#  ',
-    yml:  '#  ',
+    yml: '#  ',
     haml: '-#  ',
     coffee: '#  ',
     scss: '//  '
   }.freeze
 
-  EXCLUDES = %w(
+  EXCLUDES = %w[
     db/schema.rb
     config/boot.rb
     config/environment.rb
@@ -31,9 +31,9 @@ class Licenser
     config/initializers/wrap_parameters.rb
     vendor/
     tmp/
-  ).freeze
+  ].freeze
 
-  ENCODING_EXTENSIONS = [:rb, :rake].freeze
+  ENCODING_EXTENSIONS = %i[rb rake].freeze
   ENCODING_STRING     = '# encoding: utf-8'.freeze
   ENCODING_PATTERN    = /#\s*encoding: utf-8/i
   ENSURE_ENCODING     = false
@@ -55,29 +55,21 @@ class Licenser
 
   def insert
     each_file do |content, format|
-      unless format.preamble?(content)
-        insert_preamble(content, format)
-      end
+      insert_preamble(content, format) unless format.preamble?(content)
     end
   end
 
   def update
     each_file do |content, format|
-      unless ENSURE_ENCODING
-        remove_encoding(content, format)
-      end
-      if format.preamble?(content)
-        content = remove_preamble(content, format)
-      end
+      remove_encoding(content, format) unless ENSURE_ENCODING
+      content = remove_preamble(content, format) if format.preamble?(content)
       insert_preamble(content, format)
     end
   end
 
   def remove
     each_file do |content, format|
-      if format.preamble?(content)
-        remove_preamble(content, format)
-      end
+      remove_preamble(content, format) if format.preamble?(content)
     end
   end
 
@@ -90,21 +82,17 @@ class Licenser
 
   def remove_preamble(content, format)
     content.gsub!(/\A#{format.copyright_pattern}.*$/, '')
-    while content.start_with?("\n#{format.comment}")
-      content.gsub!(/\A\n#{format.comment}\s+.*$/, '')
-    end
+    content.gsub!(/\A\n#{format.comment}\s+.*$/, '') while content.start_with?("\n#{format.comment}")
     content.gsub!(/\A\s*\n/, '')
     content.gsub!(/\A\s*\n/, '')
-    if format.file_with_encoding? && ENSURE_ENCODING
-      content = ENCODING_STRING + "\n\n" + content
-    end
+    content = ENCODING_STRING + "\n\n" + content if format.file_with_encoding? && ENSURE_ENCODING
     content
   end
 
   def remove_encoding(content, format)
-    if format.file_with_encoding? && content.strip =~ /\A#{ENCODING_PATTERN}/io
-      content.gsub!(/\A#{ENCODING_PATTERN}\s*/mio, '')
-    end
+    return unless format.file_with_encoding? && content.strip =~ /\A#{ENCODING_PATTERN}/io
+
+    content.gsub!(/\A#{ENCODING_PATTERN}\s*/mio, '')
   end
 
   def each_file
@@ -131,10 +119,10 @@ class Licenser
       @prefix = prefix
       @preamble = preamble_text.each_line.collect { |l| prefix + l }.join + "\n\n"
       @copyright_pattern = /#{prefix.strip}\s+Copyright/
-      if file_with_encoding?
-        @preamble = "#{ENCODING_STRING}\n\n" + @preamble if ENSURE_ENCODING
-        @copyright_pattern = /(#{ENCODING_PATTERN}\n+)?#{@copyright_pattern}/
-      end
+      return unless file_with_encoding?
+
+      @preamble = "#{ENCODING_STRING}\n\n" + @preamble if ENSURE_ENCODING
+      @copyright_pattern = /(#{ENCODING_PATTERN}\n+)?#{@copyright_pattern}/
     end
 
     def file_with_encoding?

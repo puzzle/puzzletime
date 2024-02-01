@@ -112,9 +112,7 @@ module DryCrud::Form
 
     def date_value(attr, format)
       raw = nil
-      if @object.respond_to?(:_timeliness_raw_value_for)
-        raw = @object._timeliness_raw_value_for(attr.to_s)
-      end
+      raw = @object._timeliness_raw_value_for(attr.to_s) if @object.respond_to?(:_timeliness_raw_value_for)
       if raw.is_a?(String)
         raw
       else
@@ -274,7 +272,6 @@ module DryCrud::Form
       # errors aint a Hash
       @object.errors.key?(attr_plain.to_sym) ||
         @object.errors.key?(attr_id.to_sym)
-      # rubocop:enable HashMethods
     end
 
     # Render a label for the given attribute with the passed content.
@@ -319,10 +316,10 @@ module DryCrud::Form
     # 'labeled_' prefix.
     def labeled_field_method?(name)
       prefix = 'labeled_'
-      if name.to_s.start_with?(prefix)
-        field_method = name.to_s[prefix.size..-1]
-        field_method if respond_to?(field_method)
-      end
+      return unless name.to_s.start_with?(prefix)
+
+      field_method = name.to_s[prefix.size..-1]
+      field_method if respond_to?(field_method)
     end
 
     # Renders the corresponding field together with a label, required mark and

@@ -30,10 +30,10 @@ module DryCrud
 
       # Concat the word clauses with AND.
       def search_conditions
-        if params[:q].present?
-          search_word_conditions.reduce do |query, condition|
-            query.and(condition)
-          end
+        return unless params[:q].present?
+
+        search_word_conditions.reduce do |query, condition|
+          query.and(condition)
         end
       end
 

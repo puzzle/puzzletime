@@ -15,7 +15,7 @@ class DryCrud::Table::BuilderTest < ActionView::TestCase
   attr_reader :table, :entries
 
   def setup
-    @entries = %w(foo bahr)
+    @entries = %w[foo bahr]
     @table = DryCrud::Table::Builder.new(entries, self)
   end
 

@@ -13,7 +13,7 @@ class InvoicesController < CrudController
 
   helper_method :checked_work_item_ids, :checked_employee_ids, :order
 
-  prepend_before_action :entry, only: [:show, :new, :create, :edit, :update, :destroy, :sync]
+  prepend_before_action :entry, only: %i[show new create edit update destroy sync]
 
   before_render_index :load_totals_paid
   before_render_form :load_associations
@@ -23,15 +23,13 @@ class InvoicesController < CrudController
       format.html
       format.json
       format.pdf do
-        if Invoicing.instance
-          pdf = Invoicing.instance.get_pdf(entry)
-          send_data(pdf,
-                    filename: "#{entry.reference}.pdf",
-                    type: 'application/pdf',
-                    disposition: :inline)
-        else
-          fail ActionController::UnknownFormat
-        end
+        raise ActionController::UnknownFormat unless Invoicing.instance
+
+        pdf = Invoicing.instance.get_pdf(entry)
+        send_data(pdf,
+                  filename: "#{entry.reference}.pdf",
+                  type: 'application/pdf',
+                  disposition: :inline)
       end
     end
   end
@@ -111,12 +109,10 @@ class InvoicesController < CrudController
     attrs[:period_from] ||= params[:start_date]
     attrs[:period_to] ||= params[:end_date]
     attrs[:grouping] = 'manual' if params[:manual_invoice]
-    if params[:employee_id].present?
-      attrs[:employee_ids] = Array(attrs[:employee_ids]) << params[:employee_id]
-    end
-    if params[:work_item_id].present?
-      attrs[:work_item_ids] = Array(attrs[:work_item_ids]) << params[:work_item_id]
-    end
+    attrs[:employee_ids] = Array(attrs[:employee_ids]) << params[:employee_id] if params[:employee_id].present?
+    return unless params[:work_item_id].present?
+
+    attrs[:work_item_ids] = Array(attrs[:work_item_ids]) << params[:work_item_id]
   end
 
   def init_default_attrs(attrs)
@@ -128,10 +124,10 @@ class InvoicesController < CrudController
       attrs[:employee_ids] = employees_for_period(attrs[:period_from],
                                                   attrs[:period_to]).map(&:id)
     end
-    if attrs[:work_item_ids].blank?
-      attrs[:work_item_ids] = work_items_for_period(attrs[:period_from],
-                                                    attrs[:period_to]).map(&:id)
-    end
+    return if attrs[:work_item_ids].present?
+
+    attrs[:work_item_ids] = work_items_for_period(attrs[:period_from],
+                                                  attrs[:period_to]).map(&:id)
   end
 
   def order

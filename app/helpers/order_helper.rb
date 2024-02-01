@@ -92,7 +92,7 @@ module OrderHelper
   end
 
   def glyphicons
-    %w(asterisk plus euro minus cloud envelope pencil glass music search heart star star-empty
+    %w[asterisk plus euro minus cloud envelope pencil glass music search heart star star-empty
        user film th-large th th-list ok remove zoom-in zoom-out off signal cog trash home file
        time road download-alt download upload inbox play-circle repeat refresh list-alt lock flag
        headphones volume-off volume-down volume-up qrcode barcode tag tags book bookmark print
@@ -113,7 +113,7 @@ module OrderHelper
        floppy-remove floppy-save floppy-open credit-card transfer cutlery header compressed
        earphone phone-alt tower stats sd-video hd-video subtitles sound-stereo sound-dolby
        sound-5-1 sound-6-1 sound-7-1 copyright-mark registration-mark cloud-download cloud-upload
-       tree-conifer tree-deciduous)
+       tree-conifer tree-deciduous]
   end
 
   def choosable_order_options
@@ -122,16 +122,16 @@ module OrderHelper
   end
 
   def order_option(order, selected = false)
-    if order
-      json = { id: order.id,
-               name: order.name,
-               path_shortnames: order.path_shortnames }
-      content_tag(:option,
-                  order.label_verbose,
-                  value: order.id,
-                  selected:,
-                  data: { data: json.to_json })
-    end
+    return unless order
+
+    json = { id: order.id,
+             name: order.name,
+             path_shortnames: order.path_shortnames }
+    content_tag(:option,
+                order.label_verbose,
+                value: order.id,
+                selected:,
+                data: { data: json.to_json })
   end
 
   def order_progress_bar(order)
@@ -195,13 +195,13 @@ module OrderHelper
                          order.supplied_amount.to_f
     progress[:percent_title] = progress[:percent]
 
-    if order.supplied_amount.to_f > order.offered_amount.to_f
-      progress[:over_budget_percent] =
-        (order.supplied_amount.to_f - order.offered_amount.to_f) /
-        order.supplied_amount.to_f *
-        100
-      progress[:percent] = 100 - progress[:over_budget_percent]
-    end
+    return unless order.supplied_amount.to_f > order.offered_amount.to_f
+
+    progress[:over_budget_percent] =
+      (order.supplied_amount.to_f - order.offered_amount.to_f) /
+      order.supplied_amount.to_f *
+      100
+    progress[:percent] = 100 - progress[:over_budget_percent]
   end
 
   def order_report_billability_class(value)
@@ -230,7 +230,7 @@ module OrderHelper
 
   def uncertainties_tooltip(order, uncertainty_type)
     uncertainties = uncertainties_grouped_by_risk(order, uncertainty_type)
-    [:high, :medium, :low]
+    %i[high medium low]
       .select { |risk| uncertainties.keys.include?(risk) }
       .reduce('') do |result, risk|
         title = t("activerecord.attributes.order_uncertainty/risks.#{risk}")

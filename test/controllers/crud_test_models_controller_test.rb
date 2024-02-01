@@ -133,7 +133,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_template 'index'
     assert_predicate entries, :present?
     assert_equal 3, entries.size
-    assert_equal %w(CCCCC DDDDD BBBBB), entries.map(&:name)
+    assert_equal %w[CCCCC DDDDD BBBBB], entries.map(&:name)
     assert_equal({ sort: 'chatty', sort_dir: 'asc', q: 'DDD' }.with_indifferent_access,
                  session[:list_params]['/crud_test_models'])
   end
@@ -151,7 +151,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_template 'index'
     assert_predicate entries, :present?
     assert_equal 3, entries.size
-    assert_equal %w(BBBBB DDDDD CCCCC), entries.map(&:name)
+    assert_equal %w[BBBBB DDDDD CCCCC], entries.map(&:name)
     assert_equal 'DDD', @controller.params[:q]
     assert_equal 'chatty', @controller.params[:sort]
     assert_equal 'desc', @controller.params[:sort_dir]
@@ -164,7 +164,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
 
     assert assigns(:companions)
     assert_equal @controller.send(:entry), assigns(:crud_test_model)
-    assert_equal [:before_render_new, :before_render_form],
+    assert_equal %i[before_render_new before_render_form],
                  @controller.called_callbacks
   end
 
@@ -184,9 +184,9 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   def test_create
     super
 
-    assert_match /model got created/, flash[:notice]
+    assert_match(/model got created/, flash[:notice])
     assert_predicate flash[:alert], :blank?
-    assert_equal [:before_create, :before_save, :after_save, :after_create],
+    assert_equal %i[before_create before_save after_save after_create],
                  @controller.called_callbacks
   end
 
@@ -196,7 +196,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     super
 
     assert_equal @controller.send(:entry), assigns(:crud_test_model)
-    assert_equal [:before_render_edit, :before_render_form],
+    assert_equal %i[before_render_edit before_render_form],
                  @controller.called_callbacks
   end
 
@@ -208,14 +208,14 @@ class CrudTestModelsControllerTest < ActionController::TestCase
                  flash[:notice]
     assert_predicate flash[:alert], :blank?
     assert_equal @controller.send(:entry), assigns(:crud_test_model)
-    assert_equal [:before_update, :before_save, :after_save, :after_update],
+    assert_equal %i[before_update before_save after_save after_update],
                  @controller.called_callbacks
   end
 
   def test_destroy
     super
 
-    assert_equal [:before_destroy, :after_destroy],
+    assert_equal %i[before_destroy after_destroy],
                  @controller.called_callbacks
     assert_equal I18n.t('crud.destroy.flash.success',
                         model: 'Crud Test Model <i>AAAAA</i>'),
@@ -234,7 +234,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_predicate assigns(:companions), :present?
     assert_predicate flash[:alert], :present?
     assert_equal 'illegal', entry.name
-    assert_equal [:before_render_new, :before_render_form],
+    assert_equal %i[before_render_new before_render_form],
                  @controller.called_callbacks
   end
 
@@ -268,8 +268,8 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_predicate flash[:notice], :blank?, flash[:notice].to_s
     assert_predicate flash[:alert], :blank?, flash[:alert].to_s
     assert_predicate entry.name, :blank?
-    assert_equal [:before_create, :before_save,
-                  :before_render_new, :before_render_form],
+    assert_equal %i[before_create before_save
+                    before_render_new before_render_form],
                  @controller.called_callbacks
   end
 
@@ -279,7 +279,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     end
     assert_response :unprocessable_entity
     assert_predicate entry, :new_record?
-    assert_equal [:before_create, :before_save], @controller.called_callbacks
+    assert_equal %i[before_create before_save], @controller.called_callbacks
   end
 
   def test_update_with_failure
@@ -293,15 +293,15 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_predicate flash[:notice], :blank?
     assert_predicate flash[:alert], :blank?
     assert_equal 20, entry.rating
-    assert_equal [:before_update, :before_save,
-                  :before_render_edit, :before_render_form],
+    assert_equal %i[before_update before_save
+                    before_render_edit before_render_form],
                  @controller.called_callbacks
   end
 
   def test_update_with_failure_json
     put :update, params: {
                    id: test_entry.id,
-      crud_test_model: { rating: 20 }
+                   crud_test_model: { rating: 20 }
                  },
                  format: 'json'
 
@@ -309,7 +309,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_predicate entry, :changed?
     assert_predicate flash[:notice], :blank?
     assert_equal 20, entry.rating
-    assert_equal [:before_update, :before_save], @controller.called_callbacks
+    assert_equal %i[before_update before_save], @controller.called_callbacks
   end
 
   def test_destroy_failure
@@ -319,7 +319,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
       delete :destroy, params: test_params(id: crud_test_models(:BBBBB).id)
     end
     assert_redirected_to_show(entry)
-    assert_match /companion/, flash[:alert]
+    assert_match(/companion/, flash[:alert])
     assert_predicate flash[:notice], :blank?
   end
 
@@ -330,7 +330,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
       delete :destroy, params: test_params(id: e.id)
     end
     assert_redirected_to_index
-    assert_match /illegal name/, flash[:alert]
+    assert_match(/illegal name/, flash[:alert])
     assert_predicate flash[:notice], :blank?
   end
 

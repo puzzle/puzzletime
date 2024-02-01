@@ -66,7 +66,7 @@ class ExpensesReviewsControllerTest < ActionController::TestCase
     get :update, params: { id: expenses(:pending).id, expense: { status: :approved, reimbursement_date: '2019-03-01' } }
 
     assert_redirected_to expenses_reviews_path(returning: true)
-    assert_equal "Aus- / Weiterbildung wurde freigegeben.", flash[:notice]
+    assert_equal 'Aus- / Weiterbildung wurde freigegeben.', flash[:notice]
   end
 
   test 'PATCH#update defers expenses and redirects to list' do
@@ -74,12 +74,13 @@ class ExpensesReviewsControllerTest < ActionController::TestCase
     get :update, params: { id: expenses(:pending).id, expense: { status: :deferred } }
 
     assert_redirected_to expenses_reviews_path(returning: true)
-    assert_equal "Aus- / Weiterbildung wurde zurückgestellt.", flash[:notice]
+    assert_equal 'Aus- / Weiterbildung wurde zurückgestellt.', flash[:notice]
   end
 
   test 'PATCH#update approves expenses and redirects to next open expense if any' do
     login_as(:mark)
-    other = Expense.create!(employee: employees(:pascal), payment_date: '2019-02-02', kind: :training, description: 'test', amount: 1)
+    other = Expense.create!(employee: employees(:pascal), payment_date: '2019-02-02', kind: :training,
+                            description: 'test', amount: 1)
     get :update, params: { id: expenses(:pending).id, expense: { status: :approved, reimbursement_date: '2019-03-01' } }
 
     assert_redirected_to expenses_review_path(other)
@@ -88,8 +89,10 @@ class ExpensesReviewsControllerTest < ActionController::TestCase
   test 'PATCH#create approves expenses and redirects to next open expense if any of status set on list view' do
     login_as(:mark)
     list_params = { '/expenses' => { 'status' => Expense.statuses['deferred'] } }
-    other = Expense.create!(employee: employees(:pascal), status: :deferred, payment_date: '2019-02-11', kind: :training, description: 'test', amount: 1)
-    get :update, params: { id: expenses(:pending).id, expense: { status: :approved, reimbursement_date: '2019-03-01' } }, session: { 'list_params' => list_params }
+    other = Expense.create!(employee: employees(:pascal), status: :deferred, payment_date: '2019-02-11',
+                            kind: :training, description: 'test', amount: 1)
+    get :update,
+        params: { id: expenses(:pending).id, expense: { status: :approved, reimbursement_date: '2019-03-01' } }, session: { 'list_params' => list_params }
 
     assert_redirected_to expenses_review_path(other)
   end

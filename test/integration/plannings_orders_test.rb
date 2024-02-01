@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -44,7 +42,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     date = Time.zone.today.beginning_of_week
     Planning.create!({ employee_id: employees(:pascal).id,
                        work_item_id:,
-                       date: (date + 1.days).strftime('%Y-%m-%d'),
+                       date: (date + 1.day).strftime('%Y-%m-%d'),
                        percent: 25,
                        definitive: true })
     Planning.create!({ employee_id: employees(:pascal).id,
@@ -253,7 +251,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
       page.assert_selector('#repeat_until', visible: true)
 
-      fill_in 'repeat_until', with: (today + 1.weeks).strftime('%Y %U')
+      fill_in 'repeat_until', with: (today + 1.week).strftime('%Y %U')
       # find('#percent').click # required to close calendar popover
       click_button 'OK'
     end
@@ -283,7 +281,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
   end
 
   test 'Select does not show already present employees' do
-    assert find('#planning_row_employee_7_work_item_4 .legend').text.include?('Waber Mark')
+    assert_includes find('#planning_row_employee_7_work_item_4 .legend').text, 'Waber Mark'
     find('.add').click
 
     assert_not open_selectize('add_employee_select_id', no_click: true).text.include?('Waber Mark')
@@ -431,7 +429,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     find('.navbar-brand').click # blur select
 
     page.assert_selector('.planning-calendar-weeks',
-                         text: "KW #{(Time.zone.today + 6.months - 1.weeks).cweek}")
+                         text: "KW #{(Time.zone.today + 6.months - 1.week).cweek}")
     page.assert_selector('#start_date', visible: false)
     page.assert_selector('#end_date', visible: false)
     assert_equal '6M', find('#period_shortcut').value
@@ -458,7 +456,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     find('.navbar-brand').click # blur select
 
     page.assert_selector('.planning-calendar-weeks',
-                         text: "KW #{(Time.zone.today + 6.months - 1.weeks).cweek}")
+                         text: "KW #{(Time.zone.today + 6.months - 1.week).cweek}")
     page.assert_selector('#start_date', visible: false)
     page.assert_selector('#end_date', visible: false)
     assert_equal '6M', find('#period_shortcut').value
@@ -467,7 +465,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
     page.assert_selector('.planning-board-header', text: 'Waber Mark')
     page.assert_selector('.planning-calendar-weeks',
-                         text: "KW #{(Time.zone.today + 6.months - 1.weeks).cweek}")
+                         text: "KW #{(Time.zone.today + 6.months - 1.week).cweek}")
     page.assert_selector('#start_date', visible: false)
     page.assert_selector('#end_date', visible: false)
     assert_equal '6M', find('#period_shortcut').value
@@ -476,7 +474,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
     page.assert_selector('h1', text: 'Planung aller Members')
     page.assert_selector('#plannings thead',
-                         text: (Time.zone.today + 6.months - 1.weeks).cweek)
+                         text: (Time.zone.today + 6.months - 1.week).cweek)
     page.assert_selector('#start_date', visible: false)
     page.assert_selector('#end_date', visible: false)
     assert_equal '6M', find('#period_shortcut').value
@@ -492,7 +490,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     select 'Nächste 6 Monate', from: 'period_shortcut' # seems to only update value when selecting 2-times
 
     page.assert_selector('.planning-calendar-weeks',
-                         text: "KW #{(Time.zone.today + 6.months - 1.weeks).cweek}")
+                         text: "KW #{(Time.zone.today + 6.months - 1.week).cweek}")
     page.assert_selector('#start_date,#end_date', visible: false)
 
     page.assert_no_selector('#add_employee_id')

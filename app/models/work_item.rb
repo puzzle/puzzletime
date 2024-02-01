@@ -32,19 +32,19 @@ class WorkItem < ActiveRecord::Base
 
   has_many :plannings,
            lambda { |work_item|
-             joins(:work_item).
-               unscope(where: :work_item_id).
-               where('plannings.work_item_id = work_items.id AND ' \
-                     '? = ANY (work_items.path_ids)', work_item.id)
+             joins(:work_item)
+               .unscope(where: :work_item_id)
+               .where('plannings.work_item_id = work_items.id AND ' \
+                      '? = ANY (work_items.path_ids)', work_item.id)
            },
            dependent: :destroy
 
   has_many :worktimes,
            lambda { |work_item|
-             joins(:work_item).
-               unscope(where: :work_item_id).
-               where('worktimes.work_item_id = work_items.id AND ' \
-                     '? = ANY (work_items.path_ids)', work_item.id)
+             joins(:work_item)
+               .unscope(where: :work_item_id)
+               .where('worktimes.work_item_id = work_items.id AND ' \
+                      '? = ANY (work_items.path_ids)', work_item.id)
            }
 
   ### VALIDATIONS
@@ -124,21 +124,21 @@ class WorkItem < ActiveRecord::Base
 
   # children that are not assigned to a special entity like client or order
   def categories
-    children.
-      joins('LEFT JOIN clients ON clients.work_item_id = work_items.id').
-      joins('LEFT JOIN orders ON orders.work_item_id = work_items.id').
-      joins('LEFT JOIN accounting_posts ON accounting_posts.work_item_id = work_items.id').
-      where(clients: { id: nil },
-            orders: { id: nil },
-            accounting_posts: { id: nil })
+    children
+      .joins('LEFT JOIN clients ON clients.work_item_id = work_items.id')
+      .joins('LEFT JOIN orders ON orders.work_item_id = work_items.id')
+      .joins('LEFT JOIN accounting_posts ON accounting_posts.work_item_id = work_items.id')
+      .where(clients: { id: nil },
+             orders: { id: nil },
+             accounting_posts: { id: nil })
   end
 
   def employees
-    Employee.
-      where('id IN (?) OR id IN (?)',
-            plannings.select(:employee_id),
-            worktimes.select(:employee_id)).
-      list
+    Employee
+      .where('id IN (?) OR id IN (?)',
+             plannings.select(:employee_id),
+             worktimes.select(:employee_id))
+      .list
   end
 
   def move_times!(target)
@@ -179,9 +179,9 @@ class WorkItem < ActiveRecord::Base
   end
 
   def reset_parent_leaf
-    if parent
-      parent.update_column(:leaf, !parent.children.exists?)
-    end
+    return unless parent
+
+    parent.update_column(:leaf, !parent.children.exists?)
   end
 
   def update_child_path_names

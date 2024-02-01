@@ -65,6 +65,6 @@ class Invoicing::SmallInvoice::AddressSyncTest < ActiveSupport::TestCase
   end
 
   def address_json_response
-    %[{"item":#{address_id_json}}]
+    %({"item":#{address_id_json}})
   end
 end

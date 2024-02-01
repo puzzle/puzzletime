@@ -31,8 +31,8 @@ class UserNotification < ActiveRecord::Base
       period = Period.current_week
       custom = list.where('date_from BETWEEN ? AND ? OR date_to BETWEEN ? AND ?',
                           period.start_date, period.end_date,
-                          period.start_date, period.end_date).
-               reorder('date_from')
+                          period.start_date, period.end_date)
+                   .reorder('date_from')
       list = custom.to_a.concat(holiday_notifications(period))
       list.sort!
     end
@@ -71,8 +71,8 @@ class UserNotification < ActiveRecord::Base
   private
 
   def validate_period
-    if date_from && date_to && date_from > date_to
-      errors.add(:date_to, 'Enddatum muss nach Startdatum sein.')
-    end
+    return unless date_from && date_to && date_from > date_to
+
+    errors.add(:date_to, 'Enddatum muss nach Startdatum sein.')
   end
 end

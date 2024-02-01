@@ -68,6 +68,6 @@ class OrderCommentsControllerTest < ActionController::TestCase
 
     assert_template :index
     assert_equal order_comments(:puzzletime_first, :puzzletime_second), assigns(:order_comments)
-    assert response.body.include?('<a href="http://example.com/dummy">')
+    assert_includes response.body, '<a href="http://example.com/dummy">'
   end
 end

@@ -21,9 +21,7 @@ class EvaluatorController < ApplicationController
     set_navigation_levels
     @periods = init_periods
     @times = @periods.collect { |p| @evaluation.sum_times_grouped(p) }
-    if @evaluation.planned_hours
-      @plannings = @periods.collect { |p| @evaluation.sum_plannings_grouped(p) }
-    end
+    @plannings = @periods.collect { |p| @evaluation.sum_plannings_grouped(p) } if @evaluation.planned_hours
     @order = @evaluation.category.is_a?(WorkItem).presence && @evaluation.category.order
 
     render(overview_template)
@@ -66,9 +64,7 @@ class EvaluatorController < ApplicationController
     set_default_params
 
     set_default_evaluation
-    if @user.management && @evaluation.nil?
-      set_management_evaluation
-    end
+    set_management_evaluation if @user.management && @evaluation.nil?
 
     if @evaluation.nil?
       @evaluation = Evaluations::EmployeeWorkItemsEval.new(@user.id)
@@ -85,10 +81,12 @@ class EvaluatorController < ApplicationController
     @evaluation = case params[:evaluation].downcase
                   when 'managed'                                             then Evaluations::ManagedOrdersEval.new(@user)
                   when 'userworkitems'                                       then Evaluations::EmployeeWorkItemsEval.new(@user.id)
-                  when "employeesubworkitems#{@user.id}", 'usersubworkitems' then
+                  when "employeesubworkitems#{@user.id}", 'usersubworkitems'
                     params[:evaluation] = 'usersubworkitems'
                     Evaluations::EmployeeSubWorkItemsEval.new(params[:category_id], @user.id)
-                  when 'userabsences'                                        then Evaluations::EmployeeAbsencesEval.new(@user.id, **search_conditions)
+                  when 'userabsences' then Evaluations::EmployeeAbsencesEval.new(
+                    @user.id, **search_conditions
+                  )
                   when 'subworkitems'                                        then Evaluations::SubWorkItemsEval.new(params[:category_id])
                   when 'workitememployees'                                   then Evaluations::WorkItemEmployeesEval.new(params[:category_id])
                   end
@@ -98,7 +96,7 @@ class EvaluatorController < ApplicationController
     params[:evaluation] ||= 'userworkitems'
 
     case params[:evaluation].downcase
-    when 'employees' then
+    when 'employees'
       params[:department_id] = current_user.department_id unless params.key?(:department_id)
     end
   end
@@ -110,15 +108,19 @@ class EvaluatorController < ApplicationController
                            when 'departments'               then Evaluations::DepartmentsEval.new
                            when 'clientworkitems'           then Evaluations::ClientWorkItemsEval.new(params[:category_id])
                            when 'employeeworkitems'         then Evaluations::EmployeeWorkItemsEval.new(params[:category_id])
-                           when /employeesubworkitems(\d+)/ then Evaluations::EmployeeSubWorkItemsEval.new(params[:category_id], Regexp.last_match[1])
+                           when /employeesubworkitems(\d+)/ then Evaluations::EmployeeSubWorkItemsEval.new(
+                             params[:category_id], Regexp.last_match[1]
+                           )
                            when 'departmentorders'          then Evaluations::DepartmentOrdersEval.new(params[:category_id])
                            when 'absences'                  then Evaluations::AbsencesEval.new(**search_conditions)
-                           when 'employeeabsences'          then Evaluations::EmployeeAbsencesEval.new(params[:category_id], **search_conditions)
+                           when 'employeeabsences'          then Evaluations::EmployeeAbsencesEval.new(
+                             params[:category_id], **search_conditions
+                           )
                            end
   end
 
   def overview_template
-    if params[:evaluation] =~ /^userworkitems$|^employeeworkitems$/
+    if /^userworkitems$|^employeeworkitems$/.match?(params[:evaluation])
       'overview_employee'
     elsif params[:evaluation] == 'employees'
       'employees'
@@ -135,9 +137,9 @@ class EvaluatorController < ApplicationController
 
   def set_evaluation_details
     evaluation.set_division_id(params[:division_id])
-    if params[:start_date].present? && params[:start_date] != '0'
-      @period = Period.new(params[:start_date], params[:end_date])
-    end
+    return unless params[:start_date].present? && params[:start_date] != '0'
+
+    @period = Period.new(params[:start_date], params[:end_date])
   end
 
   def set_navigation_levels
@@ -151,9 +153,7 @@ class EvaluatorController < ApplicationController
 
   def pop_level?(level, current)
     pop = level[0] == current[0]
-    if level[0] =~ /(employee|user)?subworkitems(\d*)/
-      pop &&= level[1] == current[1]
-    end
+    pop &&= level[1] == current[1] if /(employee|user)?subworkitems(\d*)/.match?(level[0])
     pop
   end
 
@@ -162,11 +162,11 @@ class EvaluatorController < ApplicationController
              .times(@period)
              .includes(:employee, :work_item)
              .page(params[:page])
-    if @evaluation.absences
-      @times = @times.includes(:absence)
-    else
-      @times = @times.includes(:invoice)
-    end
+    @times = if @evaluation.absences
+               @times.includes(:absence)
+             else
+               @times.includes(:invoice)
+             end
     @times
   end
 
@@ -187,12 +187,12 @@ class EvaluatorController < ApplicationController
     if @period
       [@period]
     else
-      @user.eval_periods.
-        collect { |p| Period.parse(p) }.
-        sort_by do |p|
-          [p.nil? || p.unlimited? ? 999_999 : p.length.round(-1),
-           p.try(:start_date) || Time.zone.today]
-        end
+      @user.eval_periods
+           .collect { |p| Period.parse(p) }
+           .sort_by do |p|
+        [p.nil? || p.unlimited? ? 999_999 : p.length.round(-1),
+         p.try(:start_date) || Time.zone.today]
+      end
     end
   end
 

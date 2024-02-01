@@ -74,7 +74,7 @@ class OrderServicesControllerTest < ActionController::TestCase
                  session[:list_params])
   end
 
-  [:show, :export_worktimes_csv, :report].each do |action|
+  %i[show export_worktimes_csv report].each do |action|
     test "GET #{action} filtered by employee" do
       get action, params: { order_id: order.id, employee_id: employees(:pascal).id }
 
@@ -174,7 +174,7 @@ class OrderServicesControllerTest < ActionController::TestCase
       get action, params: { order_id: order.id, start_date: 'abc' }
 
       assert_equal worktimes(:wt_pz_puzzletime, :wt_mw_puzzletime, :wt_lw_puzzletime), assigns(:worktimes)
-      assert_match /ungültig/i, flash[:alert]
+      assert_match(/ungültig/i, flash[:alert])
       assert_equal Period.new(nil, nil), assigns(:period)
     end
 
@@ -182,7 +182,7 @@ class OrderServicesControllerTest < ActionController::TestCase
       get action, params: { order_id: order.id, start_date: '1.12.2006', end_date: '1.1.2006' }
 
       assert_equal worktimes(:wt_pz_puzzletime, :wt_mw_puzzletime, :wt_lw_puzzletime), assigns(:worktimes)
-      assert_match /ungültig/i, flash[:alert]
+      assert_match(/ungültig/i, flash[:alert])
       assert_equal Period.new(nil, nil), assigns(:period)
     end
   end
@@ -193,7 +193,7 @@ class OrderServicesControllerTest < ActionController::TestCase
     assert_template 'report'
     total = assigns(:worktimes).sum(:hours)
 
-    assert_match /Total Stunden.*#{total}/m, response.body
+    assert_match(/Total Stunden.*#{total}/m, response.body)
   end
 
   test 'GET report with invoice_id gets all hours and sets period' do
@@ -238,7 +238,7 @@ class OrderServicesControllerTest < ActionController::TestCase
     total = assigns(:worktimes).sum(:hours)
 
     assert_equal 7, total
-    assert_match /Total Stunden.*#{total}/m, response.body
+    assert_match(/Total Stunden.*#{total}/m, response.body)
   end
 
   test 'GET report with param show_ticket=1 shows tickets' do

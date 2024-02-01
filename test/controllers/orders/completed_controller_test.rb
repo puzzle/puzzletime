@@ -65,6 +65,6 @@ class Orders::CompletedControllerTest < ActionController::TestCase
 
     assert_equal Date.new(2015, 8, 31), order.reload.completed_at
     assert_template '_form'
-    assert_match /nicht erlaubt/, assigns(:order).errors.full_messages.join
+    assert_match(/nicht erlaubt/, assigns(:order).errors.full_messages.join)
   end
 end

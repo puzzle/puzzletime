@@ -83,6 +83,6 @@ class Employees::WorktimesCommitControllerTest < ActionController::TestCase
 
     assert_equal Date.new(2015, 8, 31), employee.reload.committed_worktimes_at
     assert_template '_form'
-    assert_match /nicht erlaubt/, assigns(:employee).errors.full_messages.join
+    assert_match(/nicht erlaubt/, assigns(:employee).errors.full_messages.join)
   end
 end

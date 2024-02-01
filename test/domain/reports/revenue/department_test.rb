@@ -24,26 +24,26 @@ class DepartmentRevenueReportTest < ActiveSupport::TestCase
     r = report(period(Date.new(1999, 1, 1), Date.new(1999, 2, 1)))
 
     assert_predicate r, :past_months?
-    assert !r.future_months?
+    assert_not r.future_months?
 
     r = report(period(Date.new(1999, 12, 31), Date.new(2000, 5, 1)))
 
     assert_predicate r, :past_months?
-    assert !r.future_months?
+    assert_not r.future_months?
 
     r = report(period(Date.new(2000, 9, 15), Date.new(2000, 9, 20)))
 
-    assert !r.past_months?
+    assert_not r.past_months?
     assert_predicate r, :future_months?
 
     r = report(period(Date.new(2000, 12, 1), Date.new(2001, 1, 1)))
 
-    assert !r.past_months?
+    assert_not r.past_months?
     assert_predicate r, :future_months?
 
     r = report(period(Date.new(2010, 1, 1), Date.new(2010, 2, 1)))
 
-    assert !r.past_months?
+    assert_not r.past_months?
     assert_predicate r, :future_months?
   end
 

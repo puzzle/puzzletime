@@ -48,6 +48,6 @@ class OrderReportsControllerTest < ActionController::TestCase
   test 'GET index csv exports csv file' do
     get :index, params: { responsible_id: employees(:lucien).id }, format: :csv
 
-    assert_match /Kunde,Kategorie,Auftrag/, response.body
+    assert_match(/Kunde,Kategorie,Auftrag/, response.body)
   end
 end

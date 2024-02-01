@@ -40,11 +40,11 @@ module Apidocs
     end
 
     def available_includes(controller = controller_class)
-      controller.
-        serializer&.
-        relationships_to_serialize&.
-        keys&.
-        sort
+      controller
+        .serializer
+        &.relationships_to_serialize
+        &.keys
+        &.sort
     end
 
     def include_description(controller = controller_class)
@@ -80,14 +80,14 @@ module Apidocs
     end
 
     def parameters(swagger_doc, helper, type)
-      parameter_id(swagger_doc, helper) if [:show, :nested].include?(type.to_sym)
+      parameter_id(swagger_doc, helper) if %i[show nested].include?(type.to_sym)
       parameter_custom(swagger_doc, type)
 
       clazz = type.to_sym == :nested ? helper.nested_class : controller_class
-      if available_includes(clazz).present?
-        desc = include_description(clazz)
-        parameter_include(swagger_doc, desc)
-      end
+      return unless available_includes(clazz).present?
+
+      desc = include_description(clazz)
+      parameter_include(swagger_doc, desc)
     end
 
     def parameter_id(swagger_doc, helper)

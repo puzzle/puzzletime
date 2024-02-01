@@ -82,7 +82,7 @@ employments = Employment.seed(
     start_date: Date.new(2018, 5, 1) },
   { employee_id: employees[7].id,
     percent: 100,
-    start_date: Date.new(2007, 2, 1) },
+    start_date: Date.new(2007, 2, 1) }
 )
 
 categories = EmploymentRoleCategory.seed(
@@ -102,7 +102,7 @@ roles = EmploymentRole.seed(
   { name: 'Mitglied Technical Board', billable: false, level: false, employment_role_category_id: categories[2].id },
   { name: 'Praktikant', billable: false, level: false, employment_role_category_id: categories[4].id },
   { name: 'Qualitätsleiter', billable: false, level: false, employment_role_category_id: categories[5].id },
-  { name: 'Lernende', billable: false, level: false, employment_role_category_id: categories[4].id },
+  { name: 'Lernende', billable: false, level: false, employment_role_category_id: categories[4].id }
 )
 
 EmploymentRolesEmployment.seed(
@@ -114,5 +114,5 @@ EmploymentRolesEmployment.seed(
   { employment_id: employments[4].id, employment_role_id: roles[4].id, employment_role_level_id: 1, percent: 60 },
   { employment_id: employments[5].id, employment_role_id: roles[5].id, employment_role_level_id: 5, percent: 50 },
   { employment_id: employments[6].id, employment_role_id: roles[0].id, employment_role_level_id: 4, percent: 40 },
-  { employment_id: employments[7].id, employment_role_id: roles[1].id, employment_role_level_id: 3, percent: 30 },
+  { employment_id: employments[7].id, employment_role_id: roles[1].id, employment_role_level_id: 3, percent: 30 }
 )

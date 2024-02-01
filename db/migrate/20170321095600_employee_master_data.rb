@@ -40,7 +40,7 @@ class EmployeeMasterData < ActiveRecord::Migration[5.1]
     end
 
     add_index :employment_roles_employments,
-              [:employment_id, :employment_role_id],
+              %i[employment_id employment_role_id],
               name: 'index_unique_employment_employment_role',
               unique: true
   end

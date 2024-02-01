@@ -31,7 +31,7 @@ class OrderStatusTest < ActiveSupport::TestCase
     status = order_statuses(:abgeschlossen)
     status.update!(closed: false)
 
-    assert !work_items(:allgemein).closed
+    assert_not work_items(:allgemein).closed
   end
 
   test 'defaults scope lists only default statuses' do

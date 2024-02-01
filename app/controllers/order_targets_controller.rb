@@ -8,8 +8,7 @@ class OrderTargetsController < ApplicationController
   before_action :authorize_class
   before_action :set_order_targets
 
-  def show
-  end
+  def show; end
 
   def update
     update_targets

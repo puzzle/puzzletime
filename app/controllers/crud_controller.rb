@@ -28,7 +28,7 @@ class CrudController < ListController
 
   helper_method :entry, :full_entry_label
 
-  prepend_before_action :entry, only: [:show, :new, :create, :edit, :update, :destroy]
+  prepend_before_action :entry, only: %i[show new create edit update destroy]
   # prepend_before_action :authenticate
   prepend_before_action :current_user
 
@@ -37,8 +37,7 @@ class CrudController < ListController
   # Show one entry of this model.
   #   GET /entries/1
   #   GET /entries/1.json
-  def show
-  end
+  def show; end
 
   # Display a form to create a new entry of this model.
   #   GET /entries/new
@@ -49,8 +48,7 @@ class CrudController < ListController
 
   # Display a form to edit an exisiting entry of this model.
   #   GET /entries/1/edit
-  def edit
-  end
+  def edit; end
 
   # Create a new entry of this model from the passed params.
   # There are before and after create callbacks to hook into the action.

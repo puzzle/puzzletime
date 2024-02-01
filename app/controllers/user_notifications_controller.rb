@@ -4,5 +4,5 @@
 #  https://github.com/puzzle/puzzletime.
 
 class UserNotificationsController < ManageController
-  self.permitted_attrs = [:date_from, :date_to, :message]
+  self.permitted_attrs = %i[date_from date_to message]
 end

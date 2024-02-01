@@ -118,9 +118,9 @@ class Order::CockpitTest < ActiveSupport::TestCase
     total = cockpit.rows.first
     budget = total.cells[:open_budget]
 
-    assert_equal -22, budget.hours
+    assert_equal(-22, budget.hours)
     assert_in_delta(-2.75, budget.days)
-    assert_equal -3740, budget.amount
+    assert_equal(-3740, budget.amount)
   end
 
   test 'open budget current values are calculated if worktimes exist' do

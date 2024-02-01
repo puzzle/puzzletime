@@ -5,7 +5,8 @@ class ReportType::StartStopType < ReportType
   def time_string(worktime)
     if worktime.from_start_time.is_a?(Time) &&
        worktime.to_end_time.is_a?(Time)
-      "#{I18n.l(worktime.from_start_time, format: :time)} - #{I18n.l(worktime.to_end_time, format: :time)} (#{rounded_hours(worktime)} h)"
+      "#{I18n.l(worktime.from_start_time,
+                format: :time)} - #{I18n.l(worktime.to_end_time, format: :time)} (#{rounded_hours(worktime)} h)"
     end
   end
 
@@ -16,18 +17,14 @@ class ReportType::StartStopType < ReportType
   end
 
   def validate_worktime(worktime)
-    unless worktime.from_start_time.is_a?(Time)
-      worktime.errors.add(:from_start_time, 'Die Anfangszeit ist ungültig')
-    end
-    unless worktime.to_end_time.is_a?(Time)
-      worktime.errors.add(:to_end_time, 'Die Endzeit ist ungültig')
-    end
+    worktime.errors.add(:from_start_time, 'Die Anfangszeit ist ungültig') unless worktime.from_start_time.is_a?(Time)
+    worktime.errors.add(:to_end_time, 'Die Endzeit ist ungültig') unless worktime.to_end_time.is_a?(Time)
     if worktime.from_start_time.is_a?(Time) && worktime.to_end_time.is_a?(Time) &&
        worktime.to_end_time <= worktime.from_start_time
       worktime.errors.add(:to_end_time, 'Die Endzeit muss nach der Startzeit sein')
     end
-    if worktime.from_start_time&.to_date != worktime.to_end_time&.to_date
-      worktime.errors.add(:to_end_time, 'Die Endzeit muss zwischen 00:00-23:59 liegen')
-    end
+    return unless worktime.from_start_time&.to_date != worktime.to_end_time&.to_date
+
+    worktime.errors.add(:to_end_time, 'Die Endzeit muss zwischen 00:00-23:59 liegen')
   end
 end

@@ -33,12 +33,10 @@ module Invoicing
         def sync_unpaid
           failed = []
           unpaid_invoices.find_each do |invoice|
-            begin
-              new(invoice).sync
-            rescue => error
-              failed << invoice.id
-              notify_sync_error(error, invoice)
-            end
+            new(invoice).sync
+          rescue StandardError => e
+            failed << invoice.id
+            notify_sync_error(e, invoice)
           end
           Rails.logger.error "Failed Invoice Syncs: #{failed.inspect}" if failed.any?
         end
@@ -69,11 +67,11 @@ module Invoicing
 
         def record_to_params(record, prefix = 'invoice')
           {
-            "#{prefix}_id"            => record.id,
+            "#{prefix}_id" => record.id,
             "#{prefix}_invoicing_key" => record.invoicing_key,
-            "#{prefix}_label"         => record.try(:label) || record.to_s,
-            "#{prefix}_errors"        => record.errors.messages,
-            "#{prefix}_changes"       => record.changes
+            "#{prefix}_label" => record.try(:label) || record.to_s,
+            "#{prefix}_errors" => record.errors.messages,
+            "#{prefix}_changes" => record.changes
           }
         end
       end
@@ -86,7 +84,9 @@ module Invoicing
       def sync
         return unless invoice.invoicing_key
 
-        item = rate_limiter.run { api.get(Entity::Invoice.path(invoicing_key: invoice.invoicing_key), with: 'positions') }
+        item = rate_limiter.run do
+          api.get(Entity::Invoice.path(invoicing_key: invoice.invoicing_key), with: 'positions')
+        end
         sync_remote(item)
       rescue Invoicing::Error => e
         if e.code == 15_016 # no rights / not found

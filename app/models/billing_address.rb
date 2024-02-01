@@ -54,9 +54,9 @@ class BillingAddress < ActiveRecord::Base
   private
 
   def assert_contact_belongs_to_client
-    if contact_id && client_id && contact.client_id != client_id
-      errors.add(:contact_id, 'muss zum gleichen Kunden gehören.')
-    end
+    return unless contact_id && client_id && contact.client_id != client_id
+
+    errors.add(:contact_id, 'muss zum gleichen Kunden gehören.')
   end
 
   def set_default_country

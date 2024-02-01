@@ -21,24 +21,19 @@ module Crm
     end
 
     # CRM icon to display for links
-    def icon
-    end
+    def icon; end
 
     # CRM Url for the given client
-    def client_url(_client)
-    end
+    def client_url(_client); end
 
     # CRM Url for the given contact
-    def contact_url(_contact)
-    end
+    def contact_url(_contact); end
 
     # CRM Url for the given order
-    def order_url(_order)
-    end
+    def order_url(_order); end
 
     # Find an order with the given key in the crm
-    def find_order(_key)
-    end
+    def find_order(_key); end
 
     # Find all contacts for a given client in the crm
     def find_client_contacts(_client)
@@ -46,20 +41,16 @@ module Crm
     end
 
     # Find a contact with the given key in the crm
-    def find_person(_key)
-    end
+    def find_person(_key); end
 
     # Find people with the given email
-    def find_people_by_email(_email)
-    end
+    def find_people_by_email(_email); end
 
     # Sync all entities from the crm, discarding local changes.
-    def sync_all
-    end
+    def sync_all; end
 
     # Sync a single AdditionalCrmOrder
-    def sync_additional_order(additional)
-    end
+    def sync_additional_order(additional); end
 
     # Whether only orders from the CRM are allowed or also local ones.
     def restrict_local?

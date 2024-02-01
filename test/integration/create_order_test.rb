@@ -150,7 +150,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       assert options.has_selector?('div', count: 2)
       selectize('client_work_item_id', 'Swisstopo')
 
-      assert !options.has_selector?('div')
+      assert_not options.has_selector?('div')
     end
   end
 
@@ -170,8 +170,8 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
         click_button 'Speichern'
       end
 
-      assert find('#category_work_item_id + .selectize-control').
-        has_selector?('.selectize-input .item', text: 'New Category')
+      assert find('#category_work_item_id + .selectize-control')
+        .has_selector?('.selectize-input .item', text: 'New Category')
       # sleep 0.2
       id = find('#category_work_item_id', visible: false)['value']
 
@@ -511,7 +511,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       fill_in('order_crm_key', with: '123')
       click_link('Übernehmen')
 
-      assert_match /bereits erfasst/, find('#crm_key').text
+      assert_match(/bereits erfasst/, find('#crm_key').text)
     end
   end
 
@@ -526,7 +526,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       fill_in('order_crm_key', with: '123')
       click_link('Übernehmen')
 
-      assert_match /crm error occurred/, find('#crm_key .help-block').text
+      assert_match(/crm error occurred/, find('#crm_key .help-block').text)
       assert_equal '', find('#client_work_item_id', visible: false)['value']
     end
   end
@@ -539,12 +539,14 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
 
     find("a[data-object-class='order_team_member'].add_nested_fields_link").click
 
-    assert find_field('order_order_team_members_attributes_0_employee_id', visible: false)[:class].include?('selectized')
+    assert_includes find_field('order_order_team_members_attributes_0_employee_id',
+                               visible: false)[:class], 'selectized'
     assert_selector("a[data-object-class='order_team_member'].remove_nested_fields_link", count: 1)
 
     find("a[data-object-class='order_team_member'].add_nested_fields_link").click
 
-    assert find_field('order_order_team_members_attributes_1_employee_id', visible: false)[:class].include?('selectized')
+    assert_includes find_field('order_order_team_members_attributes_1_employee_id',
+                               visible: false)[:class], 'selectized'
     assert_selector("a[data-object-class='order_team_member'].remove_nested_fields_link", count: 2)
   end
 
