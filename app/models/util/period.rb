@@ -222,7 +222,7 @@ class Period
   end
 
   def step(size = 1, &)
-    return @start_date.step(@end_date, size) unless block
+    return @start_date.step(@end_date, size) unless block_given?
 
     @start_date.step(@end_date, size, &)
   end

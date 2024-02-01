@@ -112,7 +112,7 @@ class WorkItem < ActiveRecord::Base
   end
 
   def with_ancestors(&)
-    return enum_for(:with_ancestors) unless block
+    return enum_for(:with_ancestors) unless block_given?
 
     yield self
     parent.with_ancestors(&) if parent_id?

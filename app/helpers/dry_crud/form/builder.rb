@@ -286,7 +286,7 @@ module DryCrud::Form
     # * <tt>:span</tt> - Number of columns the content should span.
     # * <tt>:caption</tt> - Different caption for the label.
     def labeled(attr, content = {}, options = {}, &)
-      if block
+      if block_given?
         options = content
         content = capture(&)
       end
@@ -304,7 +304,7 @@ module DryCrud::Form
       if field_method
         build_labeled_field(field_method, *)
       else
-        super(name, *args)
+        super(name, *)
       end
     end
 

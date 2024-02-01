@@ -24,9 +24,9 @@ module DryCrud::Table
     # Renders a sort link header, otherwise similar to :attr.
     def sortable_attr(a, header = nil, html_options = {}, &)
       if template.sortable?(a)
-        attr_reader(a, sort_header(a, header), html_options, &)
+        attr(a, sort_header(a, header), html_options, &)
       else
-        attr_reader(a, header, html_options, &)
+        attr(a, header, html_options, &)
       end
     end
   end
