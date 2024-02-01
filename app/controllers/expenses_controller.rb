@@ -118,7 +118,7 @@ class ExpensesController < ManageController
   def attach_resized_receipt
     return unless receipt_param
 
-    resized = ImageProcessing::MiniMagick
+    resized = ImageProcessing::Vips
               .source(receipt_param.tempfile)
               .resize_to_limit(Settings.expenses.receipt.max_pixel, Settings.expenses.receipt.max_pixel)
               .saver(quality: Settings.expenses.receipt.quality)

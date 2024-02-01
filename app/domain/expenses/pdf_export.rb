@@ -173,9 +173,10 @@ class Expenses::PdfExport
     return unless receipt_printable?
 
     blob.open do |file|
-      image = ::MiniMagick::Image.open(file.path)
-      image.auto_orient
-      image.write file.path
+      # Vips auto rotates by default
+      image = ::Vips::Image.new_from_file(file.path)
+      rotated = ImageProcessing::Vips.source(image)
+      rotated.write_to_file(file.path)
       pdf.image file.path, position: :center, fit: [image_width, image_height]
     end
   rescue StandardError => e
