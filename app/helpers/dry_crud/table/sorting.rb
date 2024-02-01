@@ -21,6 +21,8 @@ module DryCrud::Table
       attrs.each { |a| sortable_attr(a) }
     end
 
+    # Disable the attr detection from rubocop, because this calls our attr function.
+    # rubocop:disable Style/Attr
     # Renders a sort link header, otherwise similar to :attr.
     def sortable_attr(a, header = nil, html_options = {}, &)
       if template.sortable?(a)
@@ -29,5 +31,6 @@ module DryCrud::Table
         attr(a, header, html_options, &)
       end
     end
+    # rubocop:enable Style/Attr
   end
 end
