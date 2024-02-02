@@ -32,7 +32,7 @@ module Apidocs
     end
 
     def nested_controller_id
-      controller_class.model_class.model_name.route_key.singularize + '_id'
+      "#{controller_class.model_class.model_name.route_key.singularize}_id"
     end
 
     def nested_model_name
@@ -66,7 +66,7 @@ module Apidocs
         helper.setup_tags(self)
         helper.parameters(self, helper, type)
         response 200 do
-          key :description, summary + ' Response'
+          key :description, "#{summary} Response"
           helper.response_schema(self, helper, type)
         end
       end
@@ -84,7 +84,7 @@ module Apidocs
       parameter_custom(swagger_doc, type)
 
       clazz = type.to_sym == :nested ? helper.nested_class : controller_class
-      return unless available_includes(clazz).present?
+      return if available_includes(clazz).blank?
 
       desc = include_description(clazz)
       parameter_include(swagger_doc, desc)

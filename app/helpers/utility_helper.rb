@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -47,7 +49,7 @@ module UtilityHelper
   # Adds a class to the given options, even if there are already classes.
   def add_css_class(options, classes)
     if options[:class]
-      options[:class] += ' ' + classes if classes
+      options[:class] += " #{classes}" if classes
     else
       options[:class] = classes
     end

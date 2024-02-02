@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -139,7 +141,7 @@ module OrderHelper
 
     order_progress_bar_link(order.order, progress) do
       ''.html_safe.tap do |content|
-        if progress[:percent] > 0
+        if (progress[:percent]).positive?
           content << content_tag(
             :div,
             nil,
@@ -148,7 +150,7 @@ module OrderHelper
           )
         end
 
-        if progress[:over_budget_percent] > 0
+        if (progress[:over_budget_percent]).positive?
           content << content_tag(
             :div,
             nil,
@@ -176,7 +178,7 @@ module OrderHelper
 
   def order_progress(order)
     progress = order_progress_hash
-    return progress unless order.offered_amount > 0
+    return progress unless order.offered_amount.positive?
 
     calculate_order_progress(order, progress)
     progress
@@ -231,7 +233,7 @@ module OrderHelper
   def uncertainties_tooltip(order, uncertainty_type)
     uncertainties = uncertainties_grouped_by_risk(order, uncertainty_type)
     %i[high medium low]
-      .select { |risk| uncertainties.keys.include?(risk) }
+      .select { |risk| uncertainties.key?(risk) }
       .reduce('') do |result, risk|
         title = t("activerecord.attributes.order_uncertainty/risks.#{risk}")
         names = uncertainties[risk].map { |u| "<li>#{h(u.name)}</li>" }.join

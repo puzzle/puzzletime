@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -128,20 +130,18 @@ module Invoicing
         item['positions'].select do |p|
           p['catalog_type'] == Settings.small_invoice.constants.position_type &&
             p['unit_id'] == Settings.small_invoice.constants.unit_id
-        end.collect do |p|
-          p['amount']
-        end.sum
+        end.pluck('amount').sum
       end
 
       # item['totalamount'] always includes vat
       # item['vat_included'] tells whether position totals already include vat or not.
       def total_amount_without_vat(item)
-        item['positions'].select { |p| p['price'] }.map do |p|
+        item['positions'].select { |p| p['price'] }.sum do |p|
           total = p['price'] * p['amount']
           total -= position_discount(p, total)
           total -= position_included_vat(p, total) if item['vat_included']
           total
-        end.sum
+        end
       end
 
       def position_discount(p, total)

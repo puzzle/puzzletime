@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -163,7 +165,7 @@ module EvaluatorHelper
       .order('percent DESC')
       .map do |ere|
         role = ere.employment_role.name
-        role += ' ' + ere.employment_role_level.name if ere.employment_role_level.present?
+        role += " #{ere.employment_role_level.name}" if ere.employment_role_level.present?
         [role, ere.percent]
       end
   end

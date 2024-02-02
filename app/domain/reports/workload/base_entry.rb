@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -43,11 +45,11 @@ module Reports
       end
 
       def workload
-        ordertime_hours > 0 ? 100 * external_client_hours / ordertime_hours : 0
+        ordertime_hours.positive? ? 100 * external_client_hours / ordertime_hours : 0
       end
 
       def billability
-        external_client_hours > 0 ? 100 * billable_hours / external_client_hours : 0
+        external_client_hours.positive? ? 100 * billable_hours / external_client_hours : 0
       end
 
       private

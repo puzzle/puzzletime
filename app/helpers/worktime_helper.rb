@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -5,7 +7,7 @@
 
 module WorktimeHelper
   def worktime_account(worktime)
-    worktime.account.label_verbose if worktime.account
+    worktime.account&.label_verbose
   end
 
   def worktime_description(worktime)
@@ -61,9 +63,9 @@ module WorktimeHelper
   # sum worktime hours for a given date. if no date is given, sum all worktime hours
   def sum_hours(day = nil)
     if day
-      @daily_worktimes[day] ? @daily_worktimes[day].map(&:hours).sum : 0
+      @daily_worktimes[day] ? @daily_worktimes[day].sum(&:hours) : 0
     else
-      @worktimes.map(&:hours).sum
+      @worktimes.sum(&:hours)
     end
   end
 end

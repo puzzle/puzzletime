@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Employees
   class Vcard
     TEMPLATE_FILE = File.expand_path('vcard.vcf.haml', __dir__)

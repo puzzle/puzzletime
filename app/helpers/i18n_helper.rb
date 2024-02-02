@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -48,21 +50,15 @@ module I18nHelper
 
   # General translation key based on the klass of the association.
   def association_klass_key(assoc, key)
-    k = 'activerecord.associations.'
-    k << assoc.klass.model_name.singular
-    k << '.'
-    k << key.to_s
+    model_name = assoc.klass.model_name.singular
+    "activerecord.associations.#{model_name}.#{key}"
   end
 
   # Specific translation key based on the owner model and the name
   # of the association.
   def association_owner_key(assoc, key)
-    k = 'activerecord.associations.models.'
-    k << assoc.active_record.model_name.singular
-    k << '.'
-    k << assoc.name.to_s
-    k << '.'
-    k << key.to_s
+    model_name = assoc.active_record.model_name.singular
+    "activerecord.associations.models.#{model_name}.#{assoc.name}.#{key}"
   end
 
   def inheritable_translation_defaults(key, partial)

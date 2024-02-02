@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -63,9 +65,7 @@ module Invoicing
       private
 
       def fetch_remote_keys
-        api.list(Entity::Person.path(client)).map do |person|
-          person['id']
-        end
+        api.list(Entity::Person.path(client)).pluck('id')
       end
 
       def update_remote(contact)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -35,7 +37,7 @@ module Plannings
       if absencetimes.present?
         absencetimes.map { |a| "Abwesenheit: #{a.hours} h" }.join("\n")
       elsif holiday
-        if holiday[1] > 0
+        if holiday[1].positive?
           "Feiertag: #{holiday[1]} Muss Stunden"
         else
           'Feiertag: Keine muss Stunden'

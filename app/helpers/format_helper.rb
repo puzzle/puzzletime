@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -73,7 +75,7 @@ module FormatHelper
   end
 
   def format_percent(value)
-    (value == value.to_i ? value.to_i.to_s : value.to_s) + ' %'
+    "#{value == value.to_i ? value.to_i.to_s : value.to_s} %"
   end
 
   def format_expense_employee_id(value)

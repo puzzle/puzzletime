@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module OmniauthCallbacksHelper
   def sign_in_user(authentication)
     sign_in_and_redirect Employee.find(authentication.employee_id)

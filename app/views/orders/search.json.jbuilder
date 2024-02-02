@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 json.array! @orders do |order|
   json.id order.id
   json.name order.name

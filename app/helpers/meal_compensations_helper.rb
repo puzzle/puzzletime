@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -13,8 +15,8 @@ module MealCompensationsHelper
 
   def employee_meal_compensations(worktimes)
     compacted_worktime(worktimes).map do |employee, workdates|
-      numb_of_days = workdates.values.sum(0) { |h| h >= 4 ? 1 : 0 }
-      next if numb_of_days == 0
+      numb_of_days = workdates.values.sum { |h| h >= 4 ? 1 : 0 }
+      next if numb_of_days.zero?
 
       yield(employee, numb_of_days)
     end
@@ -27,7 +29,7 @@ module MealCompensationsHelper
       dates[worktime.work_date] += worktime.hours
       dates
     end
-    workdates.values.sum(0) { |h| h >= 4 ? 1 : 0 }
+    workdates.values.sum { |h| h >= 4 ? 1 : 0 }
   end
 
   def commited_state_cell(employee, period)

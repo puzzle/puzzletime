@@ -73,9 +73,9 @@ module Apidocs
 
     def setup_model(serializer_class)
       swagger_spec.instance_exec(self) do |helper|
-        model_name = serializer_class.name.demodulize.gsub(/Serializer\z/, '').to_sym
+        model_name = serializer_class.name.demodulize.delete_suffix('Serializer').to_sym
         swagger_schema model_name do
-          serializer_class.attributes_to_serialize.keys.each do |attr|
+          serializer_class.attributes_to_serialize.each_key do |attr|
             annotation = serializer_class.attribute_annotations[attr]
             property attr do
               instance_exec(annotation, self, &helper.method(:setup_property))
@@ -103,8 +103,7 @@ module Apidocs
       collected_serializers += serializers
 
       serializers
-        .map(&:relationships_to_serialize)
-        .compact
+        .filter_map(&:relationships_to_serialize)
         .flat_map(&:values)
         .map { |relationship| relationship.serializer.to_s.constantize }
         .each do |related_serializer|

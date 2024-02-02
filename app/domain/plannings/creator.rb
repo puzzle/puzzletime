@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -26,10 +28,10 @@ module Plannings
 
         @plannings = []
         unless repeat_only?
-          @plannings = @plannings.concat(create)
-          @plannings = @plannings.concat(update)
+          @plannings.concat(create)
+          @plannings.concat(update)
         end
-        @plannings = @plannings.concat(repeat) if repeat_until_week
+        @plannings.concat(repeat) if repeat_until_week
         @plannings.uniq!
 
         @errors.blank?
@@ -91,7 +93,7 @@ module Plannings
     def validate_work_items(_p)
       return unless create?
 
-      work_item_ids = new_items_hashes.map { |item| item['work_item_id'] }.compact.uniq
+      work_item_ids = new_items_hashes.pluck('work_item_id').compact.uniq
       return if work_item_ids.blank?
 
       items = WorkItem.joins(:accounting_post).where(id: work_item_ids)
@@ -157,7 +159,7 @@ module Plannings
 
     def translate_date(date, translate_by)
       translate_by = translate_by.to_i
-      direction = translate_by < 0 ? -1 : 1
+      direction = translate_by.negative? ? -1 : 1
       translate_by.abs.times do
         date += direction.day
         date += direction.day if date.saturday? || date.sunday?
@@ -210,10 +212,10 @@ module Plannings
 
     def handle_save_errors(plannings)
       save_errors = plannings.map { |p| p.errors.full_messages }.flatten.compact
-      return unless save_errors.present?
+      return if save_errors.blank?
 
       # should not happen after form validations
-      @errors << ('Eintrag konnte nicht erstellt werden: ' + save_errors.uniq.join(', '))
+      @errors << ("Eintrag konnte nicht erstellt werden: #{save_errors.uniq.join(', ')}")
       raise ActiveRecord::Rollback
     end
 

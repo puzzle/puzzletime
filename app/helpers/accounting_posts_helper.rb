@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module AccountingPostsHelper
   def blocking_worktimes(type)
     worktimes = @accounting_post.worktimes.includes(:employee)
