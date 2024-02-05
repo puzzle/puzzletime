@@ -14,7 +14,7 @@ module ExpensesHelper
     table.col('', class: 'right') do |e|
       path = personal ? employee_expense_path(e.employee, e) : expense_path(e)
       link_to(path, title: 'Details') do
-        "#{tag.i(class: 'icon-document')} Details"
+        "#{tag.i(class: 'icon-document')} Details".html_safe
       end
     end
   end
@@ -64,7 +64,7 @@ module ExpensesHelper
       if e.pending? || e.deferred?
 
         link_to(expenses_review_path(e), title: 'Kontrollieren') do
-          "#{tag.i(class: 'icon-edit')} Kontrollieren"
+          "#{tag.i(class: 'icon-edit')} Kontrollieren".html_safe
         end
 
       end
