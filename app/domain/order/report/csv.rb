@@ -6,7 +6,7 @@
 #  https://github.com/puzzle/puzzletime.
 
 class Order
-  module Report
+  class Report
     class Csv
       attr_reader :report
 

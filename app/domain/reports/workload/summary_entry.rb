@@ -7,34 +7,30 @@
 
 module Reports
   class Workload
-    module Reports
-      module Workload
-        class SummaryEntry < BaseEntry
-          attr_reader :label
+    class SummaryEntry < BaseEntry
+      attr_reader :label
 
-          def initialize(label, period, employments, worktimes)
-            @label = label
-            super(period, employments, worktimes)
-          end
+      def initialize(label, period, employments, worktimes)
+        @label = label
+        super(period, employments, worktimes)
+      end
 
-          def to_s
-            label
-          end
+      def to_s
+        label
+      end
 
-          def employment_fte
-            must_hours / must_hours_100_procent
-          end
+      def employment_fte
+        must_hours / must_hours_100_procent
+      end
 
-          def absolute_billability
-            ordertime_hours.positive? ? 100 * billable_hours / ordertime_hours : 0
-          end
+      def absolute_billability
+        ordertime_hours.positive? ? 100 * billable_hours / ordertime_hours : 0
+      end
 
-          private
+      private
 
-          def must_hours_100_procent
-            period.musttime
-          end
-        end
+      def must_hours_100_procent
+        period.musttime
       end
     end
   end

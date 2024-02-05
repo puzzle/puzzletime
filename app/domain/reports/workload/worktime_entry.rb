@@ -6,7 +6,7 @@
 #  https://github.com/puzzle/puzzletime.
 
 module Reports
-  module Workload
+  class Workload
     WorktimeEntry = Struct.new(*Reports::Workload::WORKTIME_FIELDS, :order_work_item) do
       def absencetime?
         type == Absencetime.name

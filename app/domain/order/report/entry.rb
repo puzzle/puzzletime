@@ -6,7 +6,7 @@
 #  https://github.com/puzzle/puzzletime.
 
 class Order
-  module Report
+  class Report
     class Entry < SimpleDelegator
       attr_reader :order, :accounting_posts, :hours, :invoices
 

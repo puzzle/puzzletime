@@ -6,7 +6,7 @@
 #  https://github.com/puzzle/puzzletime.
 
 module Reports
-  module Workload
+  class Workload
     OrdertimeEntry = Struct.new(:work_item, :hours, :billability) do
       delegate :id, to: :work_item
 
