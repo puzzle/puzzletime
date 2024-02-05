@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2023, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -76,7 +78,7 @@ module Puzzletime
       CommitReminderJob.schedule
     rescue ActiveRecord::StatementInvalid => e
       # the db might not exist yet, lets ignore the error in this case
-      raise e unless e.message =~ /PG::UndefinedTable/ || e.message =~ /does not exist/
+      raise e unless e.message.include?('PG::UndefinedTable') || e.message.include?('does not exist')
     end
 
     config.active_record.yaml_column_permitted_classes = [Date, BigDecimal]
@@ -96,9 +98,9 @@ module Puzzletime
   end
 
   def self.commit_hash(short: false)
-    return unless File.exist?("#{Rails.root.join('BUILD_INFO')}")
+    return unless File.exist?(Rails.root.join('BUILD_INFO').to_s)
 
-    commit = File.open("#{Rails.root.join('BUILD_INFO')}").first.chomp
+    commit = File.open(Rails.root.join('BUILD_INFO').to_s).first.chomp
     return commit.first(7) if short
 
     commit

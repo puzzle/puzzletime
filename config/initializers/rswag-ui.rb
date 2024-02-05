@@ -8,7 +8,7 @@ Rswag::Ui.configure do |c|
   # then the list below should correspond to the relative paths for those endpoints
 
   api_versions = Rails.root.join('app/controllers/api')
-                      .children.map { |p| p.to_s[%r{/(v\d+)\z}, 1] }.compact
+                      .children.filter_map { |p| p.to_s[%r{/(v\d+)\z}, 1] }
 
   api_versions.each do |version|
     if c.respond_to?(:openapi_endpoint)

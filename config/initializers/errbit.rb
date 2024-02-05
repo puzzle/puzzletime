@@ -31,6 +31,6 @@ if ENV['RAILS_AIRBRAKE_HOST'] && ENV['RAILS_AIRBRAKE_API_KEY']
                           ActionController::UnknownHttpMethod]
 
   Airbrake.add_filter do |notice|
-    notice.ignore! if (notice[:errors].map { |e| e[:type] } & ignored_exceptions).present?
+    notice.ignore! if notice[:errors].pluck(:type).intersect?(ignored_exceptions)
   end
 end

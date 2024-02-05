@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # New default is `OpenSSL::Digest::SHA256`, we still use the old value for now
 Rails.application.config.active_support.key_generator_hash_digest_class = OpenSSL::Digest::SHA1
 

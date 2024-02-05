@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Devise
   module Strategies
     # The API Strategy is responsible for authenticating calls to the /api/vx/ endpoint.
