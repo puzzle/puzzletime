@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -27,10 +29,12 @@ module Plannings
     end
 
     def load_possible_work_items
-      @possible_work_items ||= WorkItem
-                               .joins(:accounting_post)
-                               .where(closed: false)
-                               .list
+      @possible_work_items =
+        @load_possible_work_items ||=
+        WorkItem
+        .joins(:accounting_post)
+        .where(closed: false)
+        .list
     end
 
     def params_with_restricted_items

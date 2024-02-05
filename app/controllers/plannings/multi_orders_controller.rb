@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -19,7 +21,7 @@ module Plannings
       @orders ||= if params[:department_id]
                     d = Department.find(params[:department_id])
                     @title = "Planung der Aufträge von #{d}"
-                    d.orders.where('work_items.closed = ?', false).list
+                    d.orders.where(work_items: { closed: false }).list
                   elsif params[:custom_list_id]
                     CustomList.where(item_type: Order.sti_name).find(params[:custom_list_id]).items.list
                   else

@@ -5,30 +5,32 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-class Employees::SessionsController < Devise::SessionsController
-  helper_method :auto_redirect?
+module Employees
+  class SessionsController < Devise::SessionsController
+    helper_method :auto_redirect?
 
-  private
+    private
 
-  def no_local_auth?
-    !Settings.auth.db.active
-  end
+    def no_local_auth?
+      !Settings.auth.db.active
+    end
 
-  def omniauth_providers_active
-    Settings.auth&.omniauth&.map(&:second)&.map(&:active)
-  end
+    def omniauth_providers_active
+      Settings.auth&.omniauth&.map(&:second)&.map(&:active)
+    end
 
-  def single_omniauth_provider?
-    omniauth_providers_active&.one?
-  end
+    def single_omniauth_provider?
+      omniauth_providers_active&.one?
+    end
 
-  def auto_login_allowed?
-    return true unless prevent = params[:prevent_auto_login]
+    def auto_login_allowed?
+      return true unless (prevent = params[:prevent_auto_login])
 
-    !ActiveRecord::Type::Boolean.new.deserialize(prevent)
-  end
+      !ActiveRecord::Type::Boolean.new.deserialize(prevent)
+    end
 
-  def auto_redirect?
-    auto_login_allowed? && no_local_auth? && single_omniauth_provider?
+    def auto_redirect?
+      auto_login_allowed? && no_local_auth? && single_omniauth_provider?
+    end
   end
 end

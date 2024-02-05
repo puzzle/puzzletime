@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -32,7 +34,8 @@ module Plannings
     end
 
     def load_possible_employees
-      @possible_employees ||= Employee.employed_ones(@period)
+      @possible_employees =
+        @load_possible_employees ||= Employee.employed_ones(@period)
     end
 
     def params_with_restricted_items

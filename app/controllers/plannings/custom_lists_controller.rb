@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -41,9 +43,10 @@ module Plannings
 
     def model_params
       super.tap do |p|
-        if p[:item_type] && ![Employee, Order].map(&:sti_name).include?(p[:item_type])
-          raise ActionController::BadRequest
-        end
+        return if p[:item_type].blank?
+        return if [Employee, Order].map(&:sti_name).include?(p[:item_type])
+
+        raise ActionController::BadRequest
       end
     end
   end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -30,7 +32,7 @@ module DryCrud
 
       # Concat the word clauses with AND.
       def search_conditions
-        return unless params[:q].present?
+        return if params[:q].blank?
 
         search_word_conditions.reduce do |query, condition|
           query.and(condition)
