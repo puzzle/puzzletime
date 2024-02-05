@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -19,7 +21,7 @@
 #  closed          :boolean          default(FALSE), not null
 #
 
-class WorkItem < ActiveRecord::Base
+class WorkItem < ApplicationRecord
   include Evaluatable
 
   ### ASSOCIATIONS
@@ -92,7 +94,9 @@ class WorkItem < ActiveRecord::Base
   end
 
   def label_ancestry
-    path_names.split("\n")[1..-1].join(" #{Settings.work_items.path_separator} ")
+    path_names
+      .split("\n")[1..]
+      .join(" #{Settings.work_items.path_separator} ")
   end
 
   def top_item
@@ -196,6 +200,6 @@ class WorkItem < ActiveRecord::Base
   end
 
   def upcase_shortname
-    shortname.upcase! if shortname
+    shortname&.upcase!
   end
 end

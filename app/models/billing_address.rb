@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -18,7 +20,7 @@
 #  invoicing_key :string
 #
 
-class BillingAddress < ActiveRecord::Base
+class BillingAddress < ApplicationRecord
   protect_if :invoices,
              'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Rechnungen zugeordnet sind'
 
@@ -29,7 +31,7 @@ class BillingAddress < ActiveRecord::Base
   has_many :invoices
 
   validates_by_schema
-  validates :client_id, :street, :zip_code, :town, :country, presence: true
+  validates :street, :zip_code, :town, :country, presence: true
   validates :invoicing_key, uniqueness: true, allow_blank: true
   validates :country, inclusion: ISO3166::Data.codes
   validate :assert_contact_belongs_to_client

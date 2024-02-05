@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -21,8 +23,8 @@
 #  invoicing_key :string
 #
 
-class Contact < ActiveRecord::Base
-  CRM_ID_PREFIX = 'crm_'.freeze
+class Contact < ApplicationRecord
+  CRM_ID_PREFIX = 'crm_'
 
   belongs_to :client
 
@@ -31,7 +33,7 @@ class Contact < ActiveRecord::Base
   has_many :billing_addresses, dependent: :nullify
 
   validates_by_schema
-  validates :firstname, :lastname, :client_id, presence: true
+  validates :firstname, :lastname, presence: true
   validates :email, email: true, allow_blank: true
   validates :invoicing_key, uniqueness: true, allow_blank: true
 

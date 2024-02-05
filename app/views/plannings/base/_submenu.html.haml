@@ -8,7 +8,7 @@
 - if current_user.order_responsible?
   = nav 'Meine Aufträge', plannings_orders_path(mine: true)
 - if can?(:read, Planning)
-  = nav 'Members', plannings_employees_path, plannings_employees_path
+  = nav 'Members', plannings_employees_path, plannings_employees_path, except: plannings_employee_path(current_user)
   = nav 'Aufträge', plannings_orders_path, plannings_orders_path
   = nav 'Organisationseinheiten', plannings_departments_path, plannings_departments_path
   = nav 'Unternehmen', plannings_company_path

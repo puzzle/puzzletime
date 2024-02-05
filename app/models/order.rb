@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -25,7 +27,7 @@
 #  major_chance_value :integer
 #
 
-class Order < ActiveRecord::Base
+class Order < ApplicationRecord
   include BelongingToWorkItem
   include Closable
   include Evaluatable
@@ -118,11 +120,11 @@ class Order < ActiveRecord::Base
   end
 
   def default_billing_address_id
-    billing_address_id || client.billing_addresses.list.pluck(:id).first
+    billing_address_id || client.billing_addresses.list.pick(:id)
   end
 
   def set_default_status_id
-    self.status_id ||= OrderStatus.defaults.pluck(:id).first
+    self.status_id ||= OrderStatus.defaults.pick(:id)
   end
 
   def major_risk

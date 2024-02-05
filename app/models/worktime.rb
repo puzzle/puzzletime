@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -23,7 +25,7 @@
 #  invoice_id      :integer
 #
 
-class Worktime < ActiveRecord::Base
+class Worktime < ApplicationRecord
   H_M = /^(\d*):([0-5]\d)/
 
   include ReportType::Accessors
@@ -37,7 +39,6 @@ class Worktime < ActiveRecord::Base
   belongs_to :invoice, optional: true
 
   validates_by_schema
-  validates :employee_id, presence: true
   validates :work_date, timeliness: { date: true }
   validate :validate_by_report_type
 
@@ -85,7 +86,7 @@ class Worktime < ActiveRecord::Base
   # set the hours, either as number or as a string with the format
   # h:mm or h.dd (8:45 <-> 8.75)
   def hours=(value)
-    if md = H_M.match(value.to_s)
+    if (md = H_M.match(value.to_s))
       value = md[1].to_i + (md[2].to_i / 60.0)
     end
     self['hours'] = value.to_f
@@ -105,7 +106,7 @@ class Worktime < ActiveRecord::Base
 
   # Returns a human readable String of the time information contained in this Worktime.
   def time_string
-    report_type.time_string(self) if report_type
+    report_type&.time_string(self)
   end
 
   # Returns the date formatted according to the report type
@@ -122,7 +123,7 @@ class Worktime < ActiveRecord::Base
 
   # Whether the report typ of this Worktime contains start and stop times
   def start_stop?
-    report_type.start_stop? if report_type
+    report_type&.start_stop?
   end
 
   ##################  HELPERS  ####################
@@ -162,7 +163,7 @@ class Worktime < ActiveRecord::Base
 
   # Validate callback before saving
   def validate_by_report_type
-    report_type.validate_worktime(self) if report_type
+    report_type&.validate_worktime(self)
   end
 
   def guess_report_type
@@ -198,7 +199,8 @@ class Worktime < ActiveRecord::Base
   end
 
   def to_s
-    "#{time_string} #{self.class.model_name.human} #{'für ' + account.label_verbose if account}"
+    account_part = "für #{account.label_verbose}" if account
+    "#{time_string} #{self.class.model_name.human} #{account_part}"
   end
 
   #######################  CLASS METHODS FOR EVALUATABLE  ####################
@@ -223,11 +225,11 @@ class Worktime < ActiveRecord::Base
     if value.is_a?(String) && value !~ H_M
       if !value.empty? && value =~ /^\d*\.?\d*$/
         # military time: 1400
-        if value.size > 2 && !value.include?('.')
+        if value.size > 2 && value.exclude?('.')
           hour = value.to_i / 100
-          value = hour.to_s + ':' + (value.to_i - (hour * 100)).to_s
+          value = "#{hour}:#{value.to_i - (hour * 100)}"
         else
-          value = value.to_i.to_s + ':' + ((value.to_f - value.to_i) * 60).to_i.to_s
+          value = "#{value.to_i}:#{((value.to_f - value.to_i) * 60).to_i}"
         end
       else
         value = nil

@@ -43,8 +43,8 @@ class LdapAuthenticator
   private
 
   def valid_user?
-    return if username.strip.empty?
-    return unless internal_user? || external_user?
+    return false if username.strip.empty?
+    return false unless internal_user? || external_user?
 
     true
   end

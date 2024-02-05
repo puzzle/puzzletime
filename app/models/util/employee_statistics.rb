@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -19,13 +21,13 @@ class EmployeeStatistics
   def billable_percents_at(date)
     employee.employment_at(date)&.employment_roles_employments&.select do |e|
       e.employment_role.billable
-    end&.map(&:percent)&.sum || 0
+    end&.sum(&:percent) || 0
   end
 
   def average_percents(period)
-    employments_during(period).map do |employment|
+    employments_during(period).sum do |employment|
       employment.period.length.to_f / period.length * employment.percent
-    end.sum
+    end
   end
 
   #########  vacation information ############

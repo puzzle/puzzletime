@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -38,7 +40,7 @@
 #  identity_card_valid_until :date
 #
 
-class Employee < ActiveRecord::Base
+class Employee < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable,
@@ -233,7 +235,7 @@ class Employee < ActiveRecord::Base
   # Returns the employment percent value for a given employment date
   def percent(date)
     empl = employment_at(date)
-    empl.percent if empl
+    empl&.percent
   end
 
   # Returns the employement at the given date, nil if none is present.

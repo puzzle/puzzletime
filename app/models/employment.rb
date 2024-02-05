@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -16,7 +18,7 @@
 #  comment                :string
 #
 
-class Employment < ActiveRecord::Base
+class Employment < ApplicationRecord
   DAYS_PER_YEAR = 365.25
 
   has_paper_trail(meta: { employee_id: proc(&:employee_id) })
@@ -33,7 +35,6 @@ class Employment < ActiveRecord::Base
   # All dependencies between the models are listed below.
   validates_by_schema
   validates :percent, inclusion: 0..200
-  validates :employee_id, presence: true
   validates :vacation_days_per_year,
             numericality: { greater_or_equal_than: 0, less_than_or_equal_to: 366, allow_blank: true }
   validates :start_date, :end_date, timeliness: { date: true, allow_blank: true }
@@ -49,18 +50,11 @@ class Employment < ActiveRecord::Base
     def during(period)
       return all unless period
 
-      conditions = ['']
-
-      if period.start_date
-        conditions.first << '("employments"."end_date" is NULL OR "employments"."end_date" >= ?)'
-        conditions << period.start_date
-      end
-
-      if period.end_date
-        conditions.first << ' AND ' if conditions.first.present?
-        conditions.first << '"employments"."start_date" <= ?'
-        conditions << period.end_date
-      end
+      conditions = [
+        condition_query(period),
+        period.start_date,
+        period.end_date
+      ].compact
 
       where(*conditions)
     end
@@ -70,6 +64,26 @@ class Employment < ActiveRecord::Base
         e.start_date = period.start_date if period.start_date && e.start_date < period.start_date
         e.end_date = period.end_date if period.end_date && (e.end_date.nil? || e.end_date > period.end_date)
       end
+    end
+
+    private 
+
+    def condition_query(period)
+      [ start_condition(period), end_condition(period)]
+        .compact
+        .join(' AND ')
+    end
+
+    def start_condition(period)
+      return unless period.start_date
+
+      '("employments"."end_date" is NULL OR "employments"."end_date" >= ?)'
+    end
+
+    def end_condition(period)
+      return unless period.end_date
+
+      '"employments"."start_date" <= ?'
     end
   end
 
@@ -156,6 +170,6 @@ class Employment < ActiveRecord::Base
       conditions[0] += ' AND (start_date = ? OR (start_date <= ? AND end_date >= ?))'
       conditions.push(start_date, start_date, start_date)
     end
-    Employment.where(conditions).count > 0
+    Employment.where(conditions).count.positive?
   end
 end

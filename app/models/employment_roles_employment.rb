@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -14,7 +16,7 @@
 #  percent                  :decimal(5, 2)    not null
 #
 
-class EmploymentRolesEmployment < ActiveRecord::Base
+class EmploymentRolesEmployment < ApplicationRecord
   has_paper_trail(meta: { employee_id: ->(e) { e.employment.employee_id } }, skip: [:id])
 
   belongs_to :employment

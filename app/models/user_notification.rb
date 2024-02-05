@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -13,7 +15,7 @@
 #  message   :text             not null
 #
 
-class UserNotification < ActiveRecord::Base
+class UserNotification < ApplicationRecord
   include Comparable
 
   # Validation helpers
@@ -52,9 +54,10 @@ class UserNotification < ActiveRecord::Base
     end
 
     def holiday_message(holiday)
-      I18n.l(holiday.holiday_date, format: :long) +
-        ' ist ein Feiertag (' + format('%01.2f', holiday.musthours_day).to_s +
-        ' Stunden Sollarbeitszeit)'
+      date = I18n.l(holiday.holiday_date, format: :long)
+      expected_hours = format('%01.2f', holiday.musthours_day)
+      
+      "#{date} ist ein Feiertag (#{expected_hours} Stunden Sollarbeitszeit)"
     end
   end
 

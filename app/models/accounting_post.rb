@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -22,7 +24,7 @@
 #  service_id             :integer
 #
 
-class AccountingPost < ActiveRecord::Base
+class AccountingPost < ApplicationRecord
   include BelongingToWorkItem
   include Closable
 
@@ -142,7 +144,7 @@ class AccountingPost < ActiveRecord::Base
                                        parent_id: order.work_item.id,
                                        closed: post.closed? || order.status.closed?)
       post.save!
-    rescue ActiveRecord::RecordInvalid => e
+    rescue ActiveRecord::RecordInvalid
       validation_messages = post.errors.full_messages.join(', ')
       msg = "Bestehende Buchungsposition ist ungültig und muss zuerst korrigiert werden: #{validation_messages}"
       errors.add(:base, msg)

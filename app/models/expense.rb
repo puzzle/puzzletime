@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: expenses
@@ -17,7 +19,7 @@
 #  submission_date    :date
 #
 
-class Expense < ActiveRecord::Base
+class Expense < ApplicationRecord
   belongs_to :order
   belongs_to :employee
   belongs_to :reviewer, class_name: 'Employee'

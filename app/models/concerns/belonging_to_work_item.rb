@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -17,8 +19,6 @@ module BelongingToWorkItem
 
     after_destroy :destroy_exclusive_work_item
 
-    validates :work_item, presence: true
-
     accepts_nested_attributes_for :work_item, update_only: true
 
     delegate :name, :shortname, :description, :path_names, :path_shortnames, :label_verbose,
@@ -33,7 +33,7 @@ module BelongingToWorkItem
   end
 
   def to_s
-    work_item.to_s if work_item
+    work_item&.to_s
   end
 
   private

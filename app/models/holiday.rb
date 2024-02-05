@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -12,7 +14,7 @@
 #  musthours_day :float            not null
 #
 
-class Holiday < ActiveRecord::Base
+class Holiday < ApplicationRecord
   include ActionView::Helpers::NumberHelper
   include Comparable
 
@@ -47,7 +49,7 @@ class Holiday < ActiveRecord::Base
     end
 
     def holiday?(date)
-      cached.keys.include?(date)
+      cached.key?(date)
     end
 
     # 0 is Sunday, 6 is Saturday
@@ -69,9 +71,9 @@ class Holiday < ActiveRecord::Base
     def cached
       RequestStore.store[model_name.route_key] ||=
         Rails.cache.fetch(model_name.route_key) do
-          Hash[Holiday.order('holiday_date')
-                      .reject { |h| weekend?(h.holiday_date) }
-                      .collect { |h| [h.holiday_date, h.musthours_day] }]
+          Holiday.order('holiday_date')
+                 .reject { |h| weekend?(h.holiday_date) }
+                 .to_h { |h| [h.holiday_date, h.musthours_day] }
         end
     end
 
@@ -87,7 +89,7 @@ class Holiday < ActiveRecord::Base
       length = period.length
       weeks = length / 7
       hours = weeks * 5 * must_hours_per_day
-      if length % 7 > 0
+      if (length % 7).positive?
         last_period = Period.new(period.start_date + (weeks * 7), period.end_date)
         last_period.step do |day|
           hours += must_hours_per_day unless weekend?(day)

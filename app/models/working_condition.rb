@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -13,7 +15,7 @@
 #  must_hours_per_day     :decimal(4, 2)    not null
 #
 
-class WorkingCondition < ActiveRecord::Base
+class WorkingCondition < ApplicationRecord
   validates_by_schema
   validates :valid_from, uniqueness: true
   validates :must_hours_per_day,
@@ -97,7 +99,7 @@ class WorkingCondition < ActiveRecord::Base
   private
 
   def exactly_one_without_valid_from
-    first_id = WorkingCondition.where(valid_from: nil).pluck(:id).first
+    first_id = WorkingCondition.where(valid_from: nil).pick(:id)
     return unless id == first_id && valid_from?
 
     errors.add(:valid_from, 'darf für den ersten Eintrag nicht gesetzt werden.')

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -24,7 +26,7 @@
 #  grouping           :integer          default("accounting_posts"), not null
 #
 
-class Invoice < ActiveRecord::Base
+class Invoice < ApplicationRecord
   STATUSES = %w[draft sent paid partially_paid dept_collection cancelled deleted unknown].freeze
 
   enum grouping: { 'accounting_posts' => 0, 'employees' => 1, 'manual' => 2 }
@@ -63,7 +65,7 @@ class Invoice < ActiveRecord::Base
 
   def title
     title = order.name
-    title += " gemäss Vertrag #{order.contract.number}" if order.contract && order.contract.number?
+    title += " gemäss Vertrag #{order.contract.number}" if order.contract&.number?
     title
   end
 
@@ -88,7 +90,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def calculated_total_amount
-    total = positions.collect(&:total_amount).sum
+    total = positions.sum(&:total_amount)
     round_to_5_cents(total)
   end
 
@@ -177,7 +179,7 @@ class Invoice < ActiveRecord::Base
       self.total_hours = 0
       self.total_amount = calculated_total_amount if grouping_changed?
     else
-      self.total_hours = positions.collect(&:total_hours).sum
+      self.total_hours = positions.sum(&:total_hours)
       self.total_amount = calculated_total_amount
     end
   end
@@ -237,7 +239,7 @@ class Invoice < ActiveRecord::Base
     # Ignore "no rights / not found" errors, the invoice does not exist remotly in this case.
     unless e.code == 15_016
       errors.add(:base, "Fehler im Invoicing Service: #{e.message}")
-      Rails.logger.error(e.class.name + ': ' + e.message + "\n" + e.backtrace.join("\n"))
+      Rails.logger.error("#{e.class.name}: #{e.message}\n#{e.backtrace.join("\n")}")
       raise ActiveRecord::Rollback
     end
   end

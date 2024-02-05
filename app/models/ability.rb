@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -85,7 +87,7 @@ class Ability
            filter_fields],
         Invoice
     can [:edit, :update, :destroy], Invoice do |i|
-      !%w[deleted paid partially_paid].include?(i.status)
+      %w[deleted paid partially_paid].exclude?(i.status)
     end
 
     can [:read], Worktime
@@ -138,7 +140,7 @@ class Ability
     end
     can [:edit, :update, :destroy], Invoice do |i|
       is_responsible     = (i.order.responsible_id == user.id)
-      is_open            = !%w[deleted paid partially_paid].include?(i.status)
+      is_open            = %w[deleted paid partially_paid].exclude?(i.status)
       is_manual_and_used = i.manual? && i.total_amount > 1
 
       is_responsible && is_open && !is_manual_and_used

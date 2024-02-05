@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -173,7 +175,7 @@ class Period
     end
 
     def parse_shortcut(shortcut)
-      range = shortcut[-1..-1]
+      range = shortcut[-1..]
       shift = shortcut[0..-2].to_i if range != '0'
       [range, shift]
     end
@@ -255,7 +257,7 @@ class Period
   end
 
   def url_query_s
-    @url_query ||= 'start_date=' + start_date.to_s + '&amp;end_date=' + end_date.to_s
+    @url_query_s ||= "start_date=#{start_date}&amp;end_date=#{end_date}"
   end
 
   def limited?
@@ -279,12 +281,12 @@ class Period
       if @start_date == @end_date
         I18n.l(@start_date)
       else
-        I18n.l(@start_date) + ' - ' + I18n.l(@end_date)
+        "#{I18n.l(@start_date)} - #{I18n.l(@end_date)}"
       end
     elsif @start_date
-      I18n.l(@start_date) + ' - egal'
+      "#{I18n.l(@start_date)} - egal"
     elsif @end_date
-      'egal - ' + I18n.l(@end_date)
+      "egal - #{I18n.l(@end_date)}"
     else
       'egal - egal'
     end
