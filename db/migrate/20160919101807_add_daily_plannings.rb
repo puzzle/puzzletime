@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -6,7 +8,7 @@
 class AddDailyPlannings < ActiveRecord::Migration[5.1]
   OLD_TABLE = :plannings
   NEW_TABLE = :plannings_new
-  IGNORE_BEFORE = Date.today.beginning_of_year - 6.months
+  IGNORE_BEFORE = Time.zone.today.beginning_of_year - 6.months
   UNLIMITED_REPEAT_DURATION = 6.months
   BATCH_SIZE = 1000
 
@@ -48,7 +50,7 @@ class AddDailyPlannings < ActiveRecord::Migration[5.1]
                  .or(old_table[:end_week].eq(nil)))
               .take(BATCH_SIZE)
               .skip(offset)
-      has_rows = select_all(query.to_sql).each { |row| migrate_row(row) }.length > 0
+      has_rows = select_all(query.to_sql).each { |row| migrate_row(row) }.length.positive?
       offset += BATCH_SIZE
     end
   end
@@ -80,7 +82,7 @@ class AddDailyPlannings < ActiveRecord::Migration[5.1]
       Date.commercial(row['end_week'].to_s[0, 4].to_i,
                       row['end_week'].to_s[4, 5].to_i, 7)
     else
-      Date.today.beginning_of_week + UNLIMITED_REPEAT_DURATION
+      Time.zone.today.beginning_of_week + UNLIMITED_REPEAT_DURATION
     end
   end
 

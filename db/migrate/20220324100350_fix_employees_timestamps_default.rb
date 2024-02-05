@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FixEmployeesTimestampsDefault < ActiveRecord::Migration[5.2]
   def up
     change_column_default :employees, :created_at, -> { 'now()' }
