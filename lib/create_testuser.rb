@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Creates new Testusers with all needed associations
 class CreateTestuser
   def self.run(data)

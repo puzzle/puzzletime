@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2019, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
-GECKO_DOWNLOAD_URL = 'https://github.com/mozilla/geckodriver/releases/download/v0.23.0/geckodriver-v0.23.0-linux64.tar.gz'.freeze
+GECKO_DOWNLOAD_URL = 'https://github.com/mozilla/geckodriver/releases/download/v0.23.0/geckodriver-v0.23.0-linux64.tar.gz'
 
 desc 'Runs the tasks for a commit build'
 task ci: ['log:clear',

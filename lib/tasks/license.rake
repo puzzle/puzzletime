@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2012-2013, Jungwacht Blauring Schweiz. This file is part of
 #  hitobito and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -34,7 +36,7 @@ class Licenser
   ].freeze
 
   ENCODING_EXTENSIONS = %i[rb rake].freeze
-  ENCODING_STRING     = '# encoding: utf-8'.freeze
+  ENCODING_STRING     = '# encoding: utf-8'
   ENCODING_PATTERN    = /#\s*encoding: utf-8/i
   ENSURE_ENCODING     = false
 
@@ -46,7 +48,7 @@ class Licenser
 
   def preamble_text
     @preamble_text ||= <<~END
-      Copyright (c) 2006-#{Date.today.year}, #{@copyright_holder}. This file is part of
+      Copyright (c) 2006-#{Time.zone.today.year}, #{@copyright_holder}. This file is part of
       #{@project_name} and licensed under the Affero General Public License version 3
       or later. See the COPYING file at the top-level directory or at
       #{@copyright_source}.
@@ -85,7 +87,7 @@ class Licenser
     content.gsub!(/\A\n#{format.comment}\s+.*$/, '') while content.start_with?("\n#{format.comment}")
     content.gsub!(/\A\s*\n/, '')
     content.gsub!(/\A\s*\n/, '')
-    content = ENCODING_STRING + "\n\n" + content if format.file_with_encoding? && ENSURE_ENCODING
+    content = "#{ENCODING_STRING}\n\n#{content}" if format.file_with_encoding? && ENSURE_ENCODING
     content
   end
 
@@ -140,7 +142,7 @@ class Licenser
 end
 
 namespace :license do
-  task :config do
+  task config: :environment do
     @licenser = Licenser.new('PuzzleTime',
                              'Puzzle ITC GmbH',
                              'https://github.com/puzzle/puzzletime')
