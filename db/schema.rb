@@ -202,8 +202,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_25_133148) do
     t.bigint "workplace_id"
     t.boolean "worktimes_commit_reminder", default: true, null: false
     t.index ["department_id"], name: "index_employees_on_department_id"
-    t.index ["shortname"], name: "chk_unique_name", unique: true
     t.index ["workplace_id"], name: "index_employees_on_workplace_id"
+    t.unique_constraint ["shortname"], name: "chk_unique_name"
   end
 
   create_table "employees_invoices", id: false, force: :cascade do |t|
@@ -432,10 +432,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_25_133148) do
     t.string "rating_red_description"
     t.index ["name"], name: "index_target_scopes_on_name", unique: true
     t.index ["position"], name: "index_target_scopes_on_position"
-  end
-
-  create_table "test", id: false, force: :cascade do |t|
-    t.integer "id", null: false
   end
 
   create_table "user_notifications", id: :serial, force: :cascade do |t|
