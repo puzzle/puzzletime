@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -64,7 +66,7 @@ class MultiWorktimesController < ApplicationController
 
   def update_worktimes
     Worktime.transaction do
-      worktimes.includes(work_item: :accounting_post).each do |t|
+      worktimes.includes(work_item: :accounting_post).find_each do |t|
         # update each individually to run validations
         t.update!(params.permit(*changed_attrs))
       end

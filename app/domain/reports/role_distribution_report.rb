@@ -96,7 +96,7 @@ module Reports
       %i[current_percent_value added_value_percent].each do |attr|
         totals[attr] = totals[attr].to_f + employee.send(attr).to_f
       end
-      categories.each_key do |category_id|
+      categories.each do |(category_id, _)|
         attr = :"category_#{category_id}"
         totals[attr] = totals[attr].to_f + category_percent_for(employee, category_id)
       end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -110,7 +112,7 @@ class InvoicesController < CrudController
     attrs[:period_to] ||= params[:end_date]
     attrs[:grouping] = 'manual' if params[:manual_invoice]
     attrs[:employee_ids] = Array(attrs[:employee_ids]) << params[:employee_id] if params[:employee_id].present?
-    return unless params[:work_item_id].present?
+    return if params[:work_item_id].blank?
 
     attrs[:work_item_ids] = Array(attrs[:work_item_ids]) << params[:work_item_id]
   end

@@ -19,8 +19,8 @@ module Api
 
     class IncludeError < StandardError
       def self.===(exception)
-        exception.class == ArgumentError &&
-          exception.message.match(/is not specified as a relationship on/)
+        exception.instance_of?(ArgumentError) &&
+          exception.message.include?('is not specified as a relationship on')
       end
     end
 

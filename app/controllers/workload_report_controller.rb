@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -34,7 +36,7 @@ class WorkloadReportController < ApplicationController
 
   def set_period
     super
-    @period ||= default_period
+    @set_period ||= default_period
   end
 
   def default_period

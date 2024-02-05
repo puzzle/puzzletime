@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -78,18 +80,19 @@ class EvaluatorController < ApplicationController
   end
 
   def set_default_evaluation
-    @evaluation = case params[:evaluation].downcase
-                  when 'managed'                                             then Evaluations::ManagedOrdersEval.new(@user)
-                  when 'userworkitems'                                       then Evaluations::EmployeeWorkItemsEval.new(@user.id)
-                  when "employeesubworkitems#{@user.id}", 'usersubworkitems'
-                    params[:evaluation] = 'usersubworkitems'
-                    Evaluations::EmployeeSubWorkItemsEval.new(params[:category_id], @user.id)
-                  when 'userabsences' then Evaluations::EmployeeAbsencesEval.new(
-                    @user.id, **search_conditions
-                  )
-                  when 'subworkitems'                                        then Evaluations::SubWorkItemsEval.new(params[:category_id])
-                  when 'workitememployees'                                   then Evaluations::WorkItemEmployeesEval.new(params[:category_id])
-                  end
+    @evaluation =
+      case params[:evaluation].downcase
+      when 'managed'                                             then Evaluations::ManagedOrdersEval.new(@user)
+      when 'userworkitems'                                       then Evaluations::EmployeeWorkItemsEval.new(@user.id)
+      when "employeesubworkitems#{@user.id}", 'usersubworkitems'
+        params[:evaluation] = 'usersubworkitems'
+        Evaluations::EmployeeSubWorkItemsEval.new(params[:category_id], @user.id)
+      when 'userabsences' then Evaluations::EmployeeAbsencesEval.new(
+        @user.id, **search_conditions
+      )
+      when 'subworkitems'                                        then Evaluations::SubWorkItemsEval.new(params[:category_id])
+      when 'workitememployees'                                   then Evaluations::WorkItemEmployeesEval.new(params[:category_id])
+      end
   end
 
   def set_default_params
@@ -102,21 +105,22 @@ class EvaluatorController < ApplicationController
   end
 
   def set_management_evaluation
-    @evaluation = suffix = case params[:evaluation].downcase
-                           when 'clients'                   then Evaluations::ClientsEval.new
-                           when 'employees'                 then Evaluations::EmployeesEval.new(params[:department_id])
-                           when 'departments'               then Evaluations::DepartmentsEval.new
-                           when 'clientworkitems'           then Evaluations::ClientWorkItemsEval.new(params[:category_id])
-                           when 'employeeworkitems'         then Evaluations::EmployeeWorkItemsEval.new(params[:category_id])
-                           when /employeesubworkitems(\d+)/ then Evaluations::EmployeeSubWorkItemsEval.new(
-                             params[:category_id], Regexp.last_match[1]
-                           )
-                           when 'departmentorders'          then Evaluations::DepartmentOrdersEval.new(params[:category_id])
-                           when 'absences'                  then Evaluations::AbsencesEval.new(**search_conditions)
-                           when 'employeeabsences'          then Evaluations::EmployeeAbsencesEval.new(
-                             params[:category_id], **search_conditions
-                           )
-                           end
+    @evaluation =
+      case params[:evaluation].downcase
+      when 'clients'                   then Evaluations::ClientsEval.new
+      when 'employees'                 then Evaluations::EmployeesEval.new(params[:department_id])
+      when 'departments'               then Evaluations::DepartmentsEval.new
+      when 'clientworkitems'           then Evaluations::ClientWorkItemsEval.new(params[:category_id])
+      when 'employeeworkitems'         then Evaluations::EmployeeWorkItemsEval.new(params[:category_id])
+      when /employeesubworkitems(\d+)/ then Evaluations::EmployeeSubWorkItemsEval.new(
+        params[:category_id], Regexp.last_match[1]
+      )
+      when 'departmentorders'          then Evaluations::DepartmentOrdersEval.new(params[:category_id])
+      when 'absences'                  then Evaluations::AbsencesEval.new(**search_conditions)
+      when 'employeeabsences'          then Evaluations::EmployeeAbsencesEval.new(
+        params[:category_id], **search_conditions
+      )
+      end
   end
 
   def overview_template
@@ -197,7 +201,7 @@ class EvaluatorController < ApplicationController
   end
 
   def search_conditions
-    return {} unless params[:absence_id].present?
+    return {} if params[:absence_id].blank?
 
     { absence_id: params[:absence_id] }
   end

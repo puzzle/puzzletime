@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PeriodsController < ApplicationController
   skip_authorization_check
 

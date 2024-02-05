@@ -30,7 +30,7 @@ module Reports
     end
 
     def filters_defined?
-      period.limited? && department.present?
+      period&.limited? && department.present?
     end
 
     delegate :present?, to: :department_worktimes

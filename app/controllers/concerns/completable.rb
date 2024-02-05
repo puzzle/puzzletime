@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -36,7 +38,7 @@ module Completable
     # Selecting a month in the future is fine, as an invalid selection
     # or even no selection ends up selecting the first (and most recent)
     # month.
-    return unless entry_date.present?
+    return if entry_date.blank?
 
     @selected_month = entry_date + 1.month
     @selected_month = @selected_month.end_of_month

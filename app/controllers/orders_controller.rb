@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -110,7 +112,7 @@ class OrdersController < CrudController
   end
 
   def filter_params_present?
-    (params.keys & %w[department_id kind_id status_id responsible_id]).present?
+    params.keys.intersect?(%w[department_id kind_id status_id responsible_id])
   end
 
   def set_default_filter_params
@@ -189,7 +191,7 @@ class OrdersController < CrudController
 
   def load_client_options
     clients = Client.list
-    if Crm.instance && Crm.instance.restrict_local?
+    if Crm.instance&.restrict_local?
       clients = clients.where(allow_local: true).to_a
       if params[:client_work_item_id].present?
         client = Client.find_by(work_item_id: params[:client_work_item_id])

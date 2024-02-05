@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -16,7 +18,7 @@ class WorktimesController < CrudController
   before_render_form :set_existing
   before_render_form :set_employees
 
-  FINISH = 'Abschliessen'.freeze
+  FINISH = 'Abschliessen'
 
   def index
     set_week_days
@@ -97,7 +99,7 @@ class WorktimesController < CrudController
                     start_time: @worktime.from_start_time,
                     end_time: @worktime.to_end_time }]
     overlaps = Worktime.where(conditions).includes(:work_item).to_a
-    return unless overlaps.present?
+    return if overlaps.blank?
 
     flash[:warning] = "#{@worktime}: Es besteht eine Überlappung mit mindestens einem anderen Eintrag:\n".html_safe
     flash[:warning] += overlaps.collect { |o| ERB::Util.h(o) }.join("\n").html_safe

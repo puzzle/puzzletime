@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ExpensesController < ManageController
   include Filterable
   self.optional_nesting = [Employee]

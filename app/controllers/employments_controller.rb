@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -44,7 +46,7 @@ class EmploymentsController < ManageController
     return if entry.persisted? || params[:employment].present?
 
     newest = parent.employments.list.first
-    return unless newest.present?
+    return if newest.blank?
 
     entry.percent = newest.percent
     entry.employment_roles_employments = newest.employment_roles_employments.map(&:dup)
@@ -57,8 +59,7 @@ class EmploymentsController < ManageController
     role_percent = employment_roles_employments
                    .values
                    .reject { |v| v[:_destroy] }
-                   .collect { |v| v[:percent].to_f }
-                   .sum
+                   .sum { |v| v[:percent].to_f }
 
     return unless entry.percent != role_percent
 
