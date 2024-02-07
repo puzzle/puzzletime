@@ -9,16 +9,16 @@ require:
 AllCops:
   NewCops: enable
 
-Style/HashEachMethods:
-  Enabled: true
-
-Style/HashTransformKeys:
-  Enabled: true
-
-Style/HashTransformValues:
-  Enabled: true
-
 Naming/InclusiveLanguage:
   Exclude:
     - config/environments/development.rb # Bullet uses whitelist :(
+
+# Not gonna rewrite all our tests...
+Minitest/MultipleAssertions:
+  Enabled: false
+
+Rails/ActionControllerTestCase:
+  Enabled: false
+
+
 ...
