@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 class EmployeeMailerPreview < ActionMailer::Preview
   def worktime_deleted_mail
     worktime_user = Employee.new(email: 'user@example.com', firstname: 'Peter', lastname: 'Puzzler')
     worktime = Ordertime.new(
       employee: worktime_user,
       account: WorkItem.new(name: 'Lieblingsprojekt', path_shortnames: 'TOP-FAV'),
-      work_date: Date.today,
+      work_date: Time.zone.today,
       hours: 4.33,
       report_type: ReportType::HoursDayType::INSTANCE
     )
