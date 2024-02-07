@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -39,7 +41,7 @@ class WorktimeHelperTest < ActionView::TestCase
   end
 
   def worktime_account(worktime)
-    worktime.account.label_verbose if worktime.account
+    worktime.account&.label_verbose
   end
 
   test 'worktime description with ticket' do

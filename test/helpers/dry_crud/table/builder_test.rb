@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -6,65 +8,67 @@
 require 'test_helper'
 
 # Test DryCrud::Table::Builder
-class DryCrud::Table::BuilderTest < ActionView::TestCase
-  # set dummy helper class for ActionView::TestCase
-  self.helper_class = UtilityHelper
+module DryCrud
+  module Table
+    class BuilderTest < ActionView::TestCase
+      # set dummy helper class for ActionView::TestCase
+      self.helper_class = UtilityHelper
 
-  include FormatHelper
+      include FormatHelper
 
-  attr_reader :table, :entries
+      attr_reader :table, :entries
 
-  def setup
-    @entries = %w[foo bahr]
-    @table = DryCrud::Table::Builder.new(entries, self)
-  end
+      def setup
+        @entries = %w[foo bahr]
+        @table = DryCrud::Table::Builder.new(entries, self)
+      end
 
-  def format_size(obj)
-    "#{obj.size} chars"
-  end
+      def format_size(obj)
+        "#{obj.size} chars"
+      end
 
-  test 'html header' do
-    table.attrs :upcase, :size
+      test 'html header' do
+        table.attrs :upcase, :size
 
-    dom = '<tr><th>Upcase</th><th>Size</th></tr>'
+        dom = '<tr><th>Upcase</th><th>Size</th></tr>'
 
-    assert_dom_equal dom, table.send(:html_header)
-  end
+        assert_dom_equal dom, table.send(:html_header)
+      end
 
-  test 'single attr row' do
-    table.attrs :upcase, :size
+      test 'single attr row' do
+        table.attrs :upcase, :size
 
-    dom = '<tr><td>FOO</td><td>3 chars</td></tr>'
+        dom = '<tr><td>FOO</td><td>3 chars</td></tr>'
 
-    assert_dom_equal dom, table.send(:html_row, entries.first)
-  end
+        assert_dom_equal dom, table.send(:html_row, entries.first)
+      end
 
-  test 'custom row' do
-    table.col('Header', class: 'hula') { |e| "Weights #{e.size} kg" }
+      test 'custom row' do
+        table.col('Header', class: 'hula') { |e| "Weights #{e.size} kg" }
 
-    dom = '<tr><td class="hula">Weights 3 kg</td></tr>'
+        dom = '<tr><td class="hula">Weights 3 kg</td></tr>'
 
-    assert_dom_equal dom, table.send(:html_row, entries.first)
-  end
+        assert_dom_equal dom, table.send(:html_row, entries.first)
+      end
 
-  test 'attr col output' do
-    table.attrs :upcase
-    col = table.cols.first
+      test 'attr col output' do
+        table.attrs :upcase
+        col = table.cols.first
 
-    assert_equal '<th>Upcase</th>', col.html_header
-    assert_equal 'FOO', col.content('foo')
-    assert_equal '<td>FOO</td>', col.html_cell('foo')
-  end
+        assert_equal '<th>Upcase</th>', col.html_header
+        assert_equal 'FOO', col.content('foo')
+        assert_equal '<td>FOO</td>', col.html_cell('foo')
+      end
 
-  test 'attr col content with custom format_size method' do
-    table.attrs :size
-    col = table.cols.first
+      test 'attr col content with custom format_size method' do
+        table.attrs :size
+        col = table.cols.first
 
-    assert_equal '4 chars', col.content('abcd')
-  end
+        assert_equal '4 chars', col.content('abcd')
+      end
 
-  test 'two x two table' do
-    dom = <<-FIN
+      test 'two x two table' do
+        dom = <<-FIN
       <table>
       <thead>
       <tr><th>Upcase</th><th>Size</th></tr>
@@ -74,16 +78,16 @@ class DryCrud::Table::BuilderTest < ActionView::TestCase
       <tr><td>BAHR</td><td>4 chars</td></tr>
       </tbody>
       </table>
-    FIN
-    dom.gsub!(/[\n\t]/, '').gsub!(/\s{2,}/, '')
+        FIN
+        dom.gsub!(/[\n\t]/, '').gsub!(/\s{2,}/, '')
 
-    table.attrs :upcase, :size
+        table.attrs :upcase, :size
 
-    assert_dom_equal dom, table.to_html
-  end
+        assert_dom_equal dom, table.to_html
+      end
 
-  test 'table with before and after cells' do
-    dom = <<-FIN
+      test 'table with before and after cells' do
+        dom = <<-FIN
       <table>
       <thead>
       <tr><th class='left'>head</th><th>Upcase</th><th>Size</th><th></th></tr>
@@ -103,18 +107,18 @@ class DryCrud::Table::BuilderTest < ActionView::TestCase
       </tr>
       </tbody>
       </table>
-    FIN
-    dom.gsub!(/[\n\t]/, '').gsub!(/\s{2,}/, '')
+        FIN
+        dom.gsub!(/[\n\t]/, '').gsub!(/\s{2,}/, '')
 
-    table.col('head', class: 'left') { |e| link_to e, '/' }
-    table.attrs :upcase, :size
-    table.col { |e| "Never #{e}" }
+        table.col('head', class: 'left') { |e| link_to e, '/' }
+        table.attrs :upcase, :size
+        table.col { |e| "Never #{e}" }
 
-    assert_dom_equal dom, table.to_html
-  end
+        assert_dom_equal dom, table.to_html
+      end
 
-  test 'empty entries collection renders empty table' do
-    dom = <<-FIN
+      test 'empty entries collection renders empty table' do
+        dom = <<-FIN
       <table>
       <thead>
       <tr><th class='left'>head</th><th>Upcase</th><th>Size</th><th></th></tr>
@@ -122,14 +126,16 @@ class DryCrud::Table::BuilderTest < ActionView::TestCase
       <tbody>
       </tbody>
       </table>
-    FIN
-    dom.gsub!(/[\n\t]/, '').gsub!(/\s{2,}/, '')
+        FIN
+        dom.gsub!(/[\n\t]/, '').gsub!(/\s{2,}/, '')
 
-    table = DryCrud::Table::Builder.new([], self)
-    table.col('head', class: 'left') { |e| link_to e, '/' }
-    table.attrs :upcase, :size
-    table.col { |e| "Never #{e}" }
+        table = DryCrud::Table::Builder.new([], self)
+        table.col('head', class: 'left') { |e| link_to e, '/' }
+        table.attrs :upcase, :size
+        table.col { |e| "Never #{e}" }
 
-    assert_dom_equal dom, table.to_html
+        assert_dom_equal dom, table.to_html
+      end
+    end
   end
 end
