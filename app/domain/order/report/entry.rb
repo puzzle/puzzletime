@@ -29,7 +29,7 @@ class Order
       end
 
       def offered_amount
-        @offered_amount ||= sum_accounting_posts { |id| post_value(id, :offered_total) }
+        @offered ||= sum_accounting_posts { |id| post_value(id, :offered_total) }
       end
 
       def offered_rate
@@ -47,7 +47,7 @@ class Order
       end
 
       def supplied_amount
-        @supplied_amount ||= sum_accounting_posts { |id| post_value(id, :offered_rate) * post_hours(id) }
+        @supplied ||= sum_accounting_posts { |id| post_value(id, :offered_rate) * post_hours(id) }
       end
 
       def supplied_hours
@@ -55,7 +55,7 @@ class Order
       end
 
       def billable_amount
-        @billable_amount ||= sum_accounting_posts { |id| post_value(id, :offered_rate) * post_hours(id, true) }
+        @billable ||= sum_accounting_posts { |id| post_value(id, :offered_rate) * post_hours(id, true) }
       end
 
       def billable_hours

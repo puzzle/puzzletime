@@ -21,7 +21,7 @@ module Employees
     private
 
     def entry
-      @employee = @entry ||= model_scope.find(params[:employee_id])
+      @employee ||= model_scope.find(params[:employee_id])
     end
 
     def authorize

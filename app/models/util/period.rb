@@ -257,7 +257,7 @@ class Period
   end
 
   def url_query_s
-    @url_query_s ||= "start_date=#{start_date}&amp;end_date=#{end_date}"
+    @url_query ||= "start_date=#{start_date}&amp;end_date=#{end_date}"
   end
 
   def limited?

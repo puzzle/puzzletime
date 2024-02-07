@@ -29,8 +29,7 @@ module Plannings
     end
 
     def load_possible_work_items
-      @possible_work_items =
-        @load_possible_work_items ||=
+      @possible_work_items ||=
         WorkItem
         .joins(:accounting_post)
         .where(closed: false)

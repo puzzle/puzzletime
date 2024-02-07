@@ -39,7 +39,7 @@ class ApplicationController < ActionController::Base
   private
 
   def current_user
-    @user = @current_user ||= current_employee
+    @user ||= current_employee
   end
 
   def storable_location?

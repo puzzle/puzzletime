@@ -82,7 +82,7 @@ class OrdertimesController < WorktimesController
   end
 
   def splitable
-    @split = @splitable ||= session[:split]
+    @split ||= session[:split]
   end
 
   def build_splitable

@@ -24,7 +24,7 @@ class ContractsController < CrudController
   end
 
   def entry
-    @contract = @entry ||= order.try(:contract) || build_entry
+    @contract ||= order.try(:contract) || build_entry
   end
 
   def build_entry

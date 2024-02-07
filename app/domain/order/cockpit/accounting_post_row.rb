@@ -90,7 +90,7 @@ class Order
       end
 
       def accounting_post_hours
-        @accounting_post_hours ||= accounting_post.worktimes.group(:billable).sum(:hours)
+        @hours ||= accounting_post.worktimes.group(:billable).sum(:hours)
       end
     end
   end

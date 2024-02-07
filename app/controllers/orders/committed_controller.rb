@@ -21,7 +21,7 @@ module Orders
     private
 
     def entry
-      @order = @entry ||= model_scope.find(params[:order_id])
+      @order ||= model_scope.find(params[:order_id])
     end
 
     def authorize
