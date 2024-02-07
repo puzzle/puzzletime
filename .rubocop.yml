@@ -20,5 +20,16 @@ Minitest/MultipleAssertions:
 Rails/ActionControllerTestCase:
   Enabled: false
 
-
+# Ignore for existing migrations
+Rails/CreateTableWithTimestamps:
+  Exclude:
+    - 'db/migrate/20150930143851_create_tables.rb'
+    - 'db/migrate/20151105101420_create_sectors_and_services.rb'
+    - 'db/migrate/20160919101807_add_daily_plannings.rb'
+    - 'db/migrate/20160929150008_create_custom_lists.rb'
+    - 'db/migrate/20170321095600_employee_master_data.rb'
+    - 'db/migrate/20170724095653_create_additional_crm_orders.rb'
+    - 'db/migrate/20190204150125_add_expenses.rb'
+    - 'db/migrate/20220322152042_create_workplaces.rb'
+    - 'db/migrate/20230207231358_create_active_storage_variant_records.active_storage.rb'
 ...
