@@ -442,14 +442,18 @@ class OrdertimesControllerTest < ActionController::TestCase
     delete :destroy, params: { id: worktime }
 
     assert_redirected_to action: 'index', week_date: work_date
-    assert_nil Ordertime.find(worktime.id)
+    assert_raise ActiveRecord::RecordNotFound do
+      Ordertime.find(worktime.id)
+    end
   end
 
   def test_destroy_as_management
     worktime = worktimes(:wt_pz_puzzletime)
     delete :destroy, params: { id: worktime.id }
 
-    assert_nil Ordertime.find(worktime.id)
+    assert_raise ActiveRecord::RecordNotFound do
+      Ordertime.find(worktime.id)
+    end
   end
 
   def test_destroy_without_permission

@@ -7,7 +7,7 @@
 
 require 'test_helper'
 
-module Order
+class Order
   class ReportTest < ActiveSupport::TestCase
     ### filtering
 

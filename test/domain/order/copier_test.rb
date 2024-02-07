@@ -7,7 +7,7 @@
 
 require 'test_helper'
 
-module Order
+class Order
   class CopierTest < ActiveSupport::TestCase
     test 'copy does not save anything' do
       assert_no_difference('WorkItem.count') do

@@ -7,7 +7,7 @@
 
 require 'test_helper'
 
-module Order
+class Order
   class CockpitTest < ActiveSupport::TestCase
     setup { WorkingCondition.clear_cache }
 

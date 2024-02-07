@@ -161,7 +161,9 @@ class AbsencetimesControllerTest < ActionController::TestCase
     delete :destroy, params: { id: worktime }
 
     assert_redirected_to action: 'index', week_date: work_date
-    assert_nil Absencetime.find(worktime.id)
+    assert_raise ActiveRecord::RecordNotFound do
+      Absencetime.find(worktime.id)
+    end
   end
 
   test 'committed absencetimes may not be created by user' do

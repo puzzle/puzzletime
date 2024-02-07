@@ -7,7 +7,7 @@
 
 require 'test_helper'
 
-module Order
+class Order
   class ControllingTest < ActiveSupport::TestCase
     attr_reader :order, :post1, :post2
 

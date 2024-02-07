@@ -79,7 +79,7 @@ module DryCrud
       </tbody>
       </table>
         FIN
-        dom.gsub!(/[\n\t]/, '').gsub!(/\s{2,}/, '')
+        dom = dom.gsub(/[\n\t]/, '').gsub(/\s{2,}/, '')
 
         table.attrs :upcase, :size
 
@@ -108,7 +108,7 @@ module DryCrud
       </tbody>
       </table>
         FIN
-        dom.gsub!(/[\n\t]/, '').gsub!(/\s{2,}/, '')
+        dom = dom.gsub(/[\n\t]/, '').gsub(/\s{2,}/, '')
 
         table.col('head', class: 'left') { |e| link_to e, '/' }
         table.attrs :upcase, :size
@@ -127,7 +127,7 @@ module DryCrud
       </tbody>
       </table>
         FIN
-        dom.gsub!(/[\n\t]/, '').gsub!(/\s{2,}/, '')
+        dom = dom.gsub(/[\n\t]/, '').gsub(/\s{2,}/, '')
 
         table = DryCrud::Table::Builder.new([], self)
         table.col('head', class: 'left') { |e| link_to e, '/' }
