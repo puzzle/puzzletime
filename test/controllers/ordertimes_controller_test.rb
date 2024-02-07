@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -440,14 +442,14 @@ class OrdertimesControllerTest < ActionController::TestCase
     delete :destroy, params: { id: worktime }
 
     assert_redirected_to action: 'index', week_date: work_date
-    assert_nil Ordertime.find_by_id(worktime.id)
+    assert_nil Ordertime.find(worktime.id)
   end
 
   def test_destroy_as_management
     worktime = worktimes(:wt_pz_puzzletime)
     delete :destroy, params: { id: worktime.id }
 
-    assert_nil Ordertime.find_by_id(worktime.id)
+    assert_nil Ordertime.find(worktime.id)
   end
 
   def test_destroy_without_permission

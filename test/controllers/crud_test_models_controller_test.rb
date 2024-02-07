@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -83,7 +85,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_template 'index'
     assert_predicate entries, :present?
     assert_equal 1, entries.size
-    assert_equal [CrudTestModel.find_by_name('BBBBB')], entries
+    assert_equal [CrudTestModel.find_by(name: 'BBBBB')], entries
     assert_equal({ q: 'DDD' }.with_indifferent_access, session[:list_params]['/crud_test_models'])
   end
 

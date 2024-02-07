@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class ExpensesControllerTest < ActionController::TestCase
@@ -48,13 +50,13 @@ class ExpensesControllerTest < ActionController::TestCase
     Expense.delete_all
     Settings.expenses.receipt.max_pixel = 100
 
-    receipt_file_upload = fixture_file_upload("#{Rails.root.join('test/fixtures/files/lorem-ipsum.png')}", 'image/png')
+    receipt_file_upload = fixture_file_upload(Rails.root.join('test/fixtures/files/lorem-ipsum.png').to_s, 'image/png')
 
     post :create, params: {
       employee_id: employees(:pascal).id,
       expense: {
         employee_id: employees(:pascal).id,
-        payment_date: Date.today.to_json,
+        payment_date: Time.zone.today.to_json,
         amount: 42,
         kind: 'other',
         description: 'blabliblu',

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -95,7 +97,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
     assert_redirected_to order_accounting_posts_path(order)
     assert_match(/erfolgreich erstellt/, flash[:notice])
     assert AccountingPost.last.work_item_id = order.work_item_id
-    assert_equal true, order.work_item.reload.closed
+    assert order.work_item.reload.closed
   end
 
   test 'CREATE with new work_item with order.work_item as parent' do

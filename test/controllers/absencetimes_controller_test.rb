@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -159,7 +161,7 @@ class AbsencetimesControllerTest < ActionController::TestCase
     delete :destroy, params: { id: worktime }
 
     assert_redirected_to action: 'index', week_date: work_date
-    assert_nil Absencetime.find_by_id(worktime.id)
+    assert_nil Absencetime.find(worktime.id)
   end
 
   test 'committed absencetimes may not be created by user' do
@@ -179,7 +181,7 @@ class AbsencetimesControllerTest < ActionController::TestCase
   end
 
   test 'uncommitted absencetimes may be created by user' do
-    e = employees(:pascal)
+    employees(:pascal)
     login_as(:pascal)
     post :create, params: {
       absencetime: {

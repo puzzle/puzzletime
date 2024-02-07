@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -66,7 +68,7 @@ class MultiWorktimesControllerTest < ActionController::TestCase
         }
 
     assert_equal work_items(:puzzletime), assigns(:work_item)
-    assert_equal true, assigns(:billable)
+    assert assigns(:billable)
     assert_nil assigns(:ticket)
   end
 
@@ -101,10 +103,10 @@ class MultiWorktimesControllerTest < ActionController::TestCase
     t2 = worktimes(:wt_pz_puzzletime).reload
 
     assert_equal 'rc2', t1.ticket
-    assert_equal false, t1.billable
+    assert_not t1.billable
     assert_equal work_items(:puzzletime).id, t1.work_item_id
     assert_equal 'rc2', t2.ticket
-    assert_equal false, t2.billable
+    assert_not t2.billable
     assert_equal work_items(:puzzletime).id, t2.work_item_id
   end
 
@@ -126,7 +128,7 @@ class MultiWorktimesControllerTest < ActionController::TestCase
     t1 = worktimes(:wt_mw_puzzletime).reload
 
     assert_nil t1.ticket
-    assert_equal true, t1.billable
+    assert t1.billable
     assert_equal work_items(:puzzletime).id, t1.work_item_id
   end
 
@@ -148,7 +150,7 @@ class MultiWorktimesControllerTest < ActionController::TestCase
     t1 = worktimes(:wt_pz_puzzletime).reload
 
     assert_equal 'rc1', t1.ticket
-    assert_equal true, t1.billable
+    assert t1.billable
   end
 
   test 'PATCH update with foreign worktime is now allowed' do

@@ -3,7 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-# coding: utf-8
+# frozen_string_literal: true
 
 require 'test_helper'
 
@@ -480,7 +480,7 @@ class OrdersControllerTest < ActionController::TestCase
         xhr: true,
         params: { id: order.id, period_from: '11.12.2006', period_to: '01.03.2007' }
 
-    empls = JSON.parse(response.body)
+    empls = response.parsed_body
 
     assert_equal 1, empls.size
     empl = empls.first
@@ -497,7 +497,7 @@ class OrdersControllerTest < ActionController::TestCase
 
     get :employees, xhr: true, params: { id: order.id }
 
-    empls = JSON.parse(response.body)
+    empls = response.parsed_body
 
     assert_equal 2, empls.size
     assert(empls.any? { |e| e['id'] == lucien.id })
@@ -511,7 +511,7 @@ class OrdersControllerTest < ActionController::TestCase
         xhr: true,
         params: { id: order.id, period_from: '11.12.2007', period_to: '01.03.2008' }
 
-    empls = JSON.parse(response.body)
+    empls = response.parsed_body
 
     assert_equal 0, empls.size
   end
