@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -48,7 +50,7 @@ module CustomAssertions
 
     assert_not record.valid?, msg
 
-    return unless invalid_attrs.present?
+    return if invalid_attrs.blank?
 
     assert_invalid_attrs_have_errors(record, *invalid_attrs)
     assert_other_attrs_have_no_errors(record, *invalid_attrs)

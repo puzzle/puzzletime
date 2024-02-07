@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -101,7 +103,7 @@ class CrudTestModelsController < CrudController # :nodoc:
   def method_missing(sym, *_args)
     return unless sym.to_s.starts_with?(HANDLE_PREFIX)
 
-    called_callback(sym.to_s[HANDLE_PREFIX.size..-1].to_sym)
+    called_callback(sym.to_s[HANDLE_PREFIX.size..].to_sym)
   end
 
   # records a callback

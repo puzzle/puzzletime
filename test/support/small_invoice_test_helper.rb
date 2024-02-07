@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2020, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -10,7 +12,7 @@ module SmallInvoiceTestHelper
     setup :stub_auth
   end
 
-  BASE_URL = 'https://api.smallinvoice.com/v2'.freeze
+  BASE_URL = 'https://api.smallinvoice.com/v2'
 
   def entity(name)
     "Invoicing::SmallInvoice::Entity::#{name.to_s.singularize.classify}".constantize

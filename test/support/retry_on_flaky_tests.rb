@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Include in `test_helper.rb` like this:
 #
 # class ActiveSupport::TestCase
