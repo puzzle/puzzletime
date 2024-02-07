@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -59,7 +61,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       fill_mandatory_fields
 
       assert_creatable
-      client = clients(:puzzle)
+      clients(:puzzle)
       category = work_items(:intern)
       order = WorkItem.where(name: 'New Order').first
 
@@ -277,7 +279,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       order = WorkItem.where(name: 'New Order').first
 
       assert_equal client.id, order.parent_id
-      contact = Contact.find_by_lastname('Nader')
+      contact = Contact.find_by(lastname: 'Nader')
 
       assert_equal '456', contact.crm_key
       assert_equal client.client, contact.client
@@ -356,7 +358,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       order = WorkItem.where(name: 'New Order').first
 
       assert_equal clients(:swisstopo).work_item_id, order.parent_id
-      assert_equal [Contact.find_by_lastname('Nader')], order.order.contacts
+      assert_equal [Contact.find_by(lastname: 'Nader')], order.order.contacts
     end
   end
 
