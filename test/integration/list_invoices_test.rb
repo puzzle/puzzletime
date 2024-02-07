@@ -5,7 +5,7 @@
 
 require 'test_helper'
 
-class ListOrdersTest < ActionDispatch::IntegrationTest
+class ListInvoicesTest < ActionDispatch::IntegrationTest
   test 'list invoices as employee has no create/edit/destroy links' do
     timeout_safe do
       list_invoices_as :pascal

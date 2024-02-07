@@ -91,7 +91,7 @@ module FormatHelper
   # to your block.
   def simple_list(items, ul_options = {}, &)
     content_tag_nested(:ul, items, ul_options) do |item|
-      content_tag(:li, _block ? yield(item) : f(item))
+      content_tag(:li, block_given? ? yield(item) : f(item))
     end
   end
 

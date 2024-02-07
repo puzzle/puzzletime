@@ -7,7 +7,7 @@
 
 require 'test_helper'
 
-class EmployeeMasterDataControllerTest < ActionDispatch::IntegrationTest
+class EmployeeMasterDataControllerTest < ActionController::TestCase
   def setup
     login
 

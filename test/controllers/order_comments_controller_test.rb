@@ -10,20 +10,20 @@ class OrderCommentsControllerTest < ActionController::TestCase
 
   test 'GET index as member renders with form and comments with links' do
     login_as :pascal
-    get_and_assert_comments_with_links
+    test_get_and_assert_comments_with_links
 
     assert_template partial: '_form'
   end
 
   test 'GET index as responsible renders form and comments with links' do
     login_as :lucien
-    get_and_assert_comments_with_links
+    test_get_and_assert_comments_with_links
 
     assert_template partial: '_form'
   end
 
   test 'GET index as management renders form and comments with links' do
-    get_and_assert_comments_with_links
+    test_get_and_assert_comments_with_links
 
     assert_template partial: '_form'
   end

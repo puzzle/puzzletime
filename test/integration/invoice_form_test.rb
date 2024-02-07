@@ -43,13 +43,19 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
   test 'sets calculated total on page load' do
     expected_total = '%.2f' % (billable_hours * rate).round(2)
 
-    assert_match expected_total, find('#invoice_total_amount').text.delete("'")
+    text_on_page =
+      find('#invoice_total_amount')
+      .text
+      .delete("'")
+      .delete('&#39;')
+
+    assert_match expected_total, text_on_page
   end
 
   test 'lists only employees with ordertimes on page load' do
     all(:name, 'invoice[employee_ids][]').map(&:value)
 
-    assert_arrays_match employees(:mark, :lucien).map(&:id).map(&:to_s),
+    assert_arrays_match employees(:mark, :lucien).map { |e| e.id.to_s },
                         all(:name, 'invoice[employee_ids][]').map(&:value)
 
     reload(invoice: { period_to: '8.12.2006' })

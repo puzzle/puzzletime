@@ -43,8 +43,8 @@ module Plannings
 
     def model_params
       super.tap do |p|
-        return if p[:item_type].blank?
-        return if [Employee, Order].map(&:sti_name).include?(p[:item_type])
+        return p if p[:item_type].blank?
+        return p if [Employee, Order].map(&:sti_name).include?(p[:item_type])
 
         raise ActionController::BadRequest
       end
