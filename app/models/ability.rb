@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -55,61 +57,60 @@ class Ability
          EmploymentRoleCategory,
          Reports::Workload,
          WorkItem,
-         Workplace
-        ]
+         Workplace]
 
     # :crud instead of :manage because cannot change settings of other employees
-    can [:crud,
-         :update_committed_worktimes,
-         :update_reviewed_worktimes,
-         :manage_plannings,
-         :show_worktime_graph,
-         :social_insurance,
-         :log],
+    can %i[crud
+           update_committed_worktimes
+           update_reviewed_worktimes
+           manage_plannings
+           show_worktime_graph
+           social_insurance
+           log],
         Employee
 
     can :update, OrderComment do |c|
       c.creator_id == user.id
     end
-    can [:create, :read], OrderComment
+    can %i[create read], OrderComment
 
     # cannot change settings of other employees
     can [:crud, :update_committed_worktimes], Employee do |_|
       true
     end
 
-    can [:create,
-         :read,
-         :sync,
-         :preview_total,
-         :billing_addresses,
-         :filter_fields],
+    can %i[create
+           read
+           sync
+           preview_total
+           billing_addresses
+           filter_fields],
         Invoice
     can [:edit, :update, :destroy], Invoice do |i|
-      !%w(deleted paid partially_paid).include?(i.status)
+      %w[deleted paid partially_paid].exclude?(i.status)
     end
 
     can [:read], Worktime
-    can [:create, :destroy], Absencetime
+    can %i[create destroy], Absencetime
     can [:create, :update, :destroy], Ordertime do |t|
       !t.work_item_closed? && !t.invoice_sent_or_paid?
     end
 
-    can [:clients,
-         :employees,
-         :overtime,
-         :clientworkitems,
-         :departments,
-         :departmentorders,
-         :managed,
-         :employeeworkitems,
-         :employeesubworkitems,
-         :absences,
-         :employeeabsences,
-         :capacity_report,
-         :export_report,
-         :meal_compensation],
-        Evaluation
+    can %i[clients
+           employees
+           overtime
+           clientworkitems
+           departments
+           departmentorders
+           managed
+           employeeworkitems
+           employeesubworkitems
+           absences
+           employeeabsences
+           capacity_report
+           export_report
+           meal_compensation],
+        Evaluations::Evaluation
   end
 
   def order_responsible_abilities
@@ -122,7 +123,7 @@ class Ability
     can :update, OrderComment do |c|
       c.creator_id == user.id
     end
-    can [:create, :read], OrderComment
+    can %i[create read], OrderComment
 
     can :manage, [AccountingPost, Contract, OrderUncertainty] do |instance|
       instance.order.responsible_id == user.id
@@ -139,8 +140,8 @@ class Ability
     end
     can [:edit, :update, :destroy], Invoice do |i|
       is_responsible     = (i.order.responsible_id == user.id)
-      is_open            = !%w(deleted paid partially_paid).include?(i.status)
-      is_manual_and_used = (i.manual? && i.total_amount > 1)
+      is_open            = %w[deleted paid partially_paid].exclude?(i.status)
+      is_manual_and_used = i.manual? && i.total_amount > 1
 
       is_responsible && is_open && !is_manual_and_used
     end
@@ -151,7 +152,7 @@ class Ability
     can [:create, :update, :destroy], Ordertime do |t|
       t.order.responsible_id == user.id && !t.work_item_closed? && !t.invoice_sent_or_paid?
     end
-    can :managed, Evaluation
+    can :managed, Evaluations::Evaluation
 
     can :manage, Planning do |planning|
       planning.order.responsible_id == user.id
@@ -161,15 +162,14 @@ class Ability
     can :social_insurance, Employee
   end
 
-  def api_client_abilities
-  end
+  def api_client_abilities; end
 
   def everyone_abilities
-    can [:read,
-         :existing,
-         :split,
-         :create_part,
-         :delete_part],
+    can %i[read
+           existing
+           split
+           create_part
+           delete_part],
         Worktime,
         employee_id: user.id
 
@@ -184,33 +184,31 @@ class Ability
 
     can :search, WorkItem
 
-    can [:read, :show_plannings], Employee
-    can [:passwd,
-         :update_passwd,
-         :settings,
-         :update_settings,
-         :update_committed_worktimes,
-         :show_worktime_graph,
-         :social_insurance,
-         :manage_plannings],
+    can %i[read show_plannings], Employee
+    can %i[settings
+           update_settings
+           update_committed_worktimes
+           show_worktime_graph
+           social_insurance
+           manage_plannings],
         Employee,
         id: user.id
 
     can :index, Employment, employee_id: user.id
 
-    can [:read,
-         :accounting_posts,
-         :controlling,
-         :create_comment,
-         :search,
-         :services,
-         :show_targets,
-         :show_uncertainties,
-         :show_contract,
-         :show_comments,
-         :show_invoices,
-         :reports,
-         :show_plannings],
+    can %i[read
+           accounting_posts
+           controlling
+           create_comment
+           search
+           services
+           show_targets
+           show_uncertainties
+           show_contract
+           show_comments
+           show_invoices
+           reports
+           show_plannings],
         Order
 
     can :show_plannings, AccountingPost
@@ -222,19 +220,19 @@ class Ability
 
     can :manage, CustomList, employee_id: user.id
 
-    can [:compose_report,
-         :report,
-         :export_csv,
-         :userworkitems,
-         :userabsences,
-         :usersubworkitems,
-         :subworkitems,
-         :workitememployees,
-         :orderworkitems],
-        Evaluation
+    can %i[compose_report
+           report
+           export_csv
+           userworkitems
+           userabsences
+           usersubworkitems
+           subworkitems
+           workitememployees
+           orderworkitems],
+        Evaluations::Evaluation
 
     can :manage, Expense, employee_id: user.id
 
-    can [:create, :read], OrderComment
+    can %i[create read], OrderComment
   end
 end

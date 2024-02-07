@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -14,10 +16,10 @@ module FormatHelper
   # Formats a basic value based on its Ruby class.
   def f(value)
     case value
-    when Float, BigDecimal then
+    when Float, BigDecimal
       number_with_precision(value, precision: t('number.format.precision'),
                                    delimiter: t('number.format.delimiter'))
-    when Integer then
+    when Integer
       number_with_delimiter(value, delimiter: t('number.format.delimiter'))
     when Date   then l(value, format: :long)
     when Time   then "#{l(value.to_date)} #{l(value, format: :time)}"
@@ -41,7 +43,7 @@ module FormatHelper
   end
 
   def format_number(number, precision = 2)
-    number_with_precision(number, precision: precision, delimiter: '\'')
+    number_with_precision(number, precision:, delimiter: '\'')
   end
 
   def format_hour(hour, precision = 2)
@@ -54,10 +56,10 @@ module FormatHelper
   end
 
   def format_day(date, full_weekday_name = false)
-    if date
-      format = full_weekday_name ? '%A, %e.%-m.' : '%a %e.%-m.'
-      I18n.l(date, format: format)
-    end
+    return unless date
+
+    format = full_weekday_name ? '%A, %e.%-m.' : '%a %e.%-m.'
+    I18n.l(date, format:)
   end
 
   def localize_date(date)
@@ -73,7 +75,7 @@ module FormatHelper
   end
 
   def format_percent(value)
-    (value == value.to_i ? value.to_i.to_s : value.to_s) + ' %'
+    "#{value == value.to_i ? value.to_i.to_s : value.to_s} %"
   end
 
   def format_expense_employee_id(value)
@@ -87,7 +89,7 @@ module FormatHelper
   # Renders a simple unordered list, which will
   # simply render all passed items or yield them
   # to your block.
-  def simple_list(items, ul_options = {}, &_block)
+  def simple_list(items, ul_options = {}, &)
     content_tag_nested(:ul, items, ul_options) do |item|
       content_tag(:li, block_given? ? yield(item) : f(item))
     end
@@ -108,9 +110,9 @@ module FormatHelper
 
   # Renders an arbitrary content with the given label. Used for uniform
   # presentation.
-  def labeled(label, content = nil, &block)
-    content = capture(&block) if block_given?
-    render('shared/labeled', label: label, content: content)
+  def labeled(label, content = nil, &)
+    content = capture(&) if block_given?
+    render('shared/labeled', label:, content:)
   end
 
   # Transform the given text into a form as used by labels or table headers.
@@ -167,8 +169,8 @@ module FormatHelper
     when :time    then l(val, format: :time)
     when :date    then f(val.to_date)
     when :datetime, :timestamp then f(val.time)
-    when :text    then simple_format(h(val))
-    when :decimal then
+    when :text then simple_format(h(val))
+    when :decimal
       number_with_precision(val.to_s.to_f,
                             precision: column_property(obj, attr, :scale),
                             delimiter: t('number.format.delimiter'))
@@ -214,7 +216,7 @@ module FormatHelper
   def show_path_exists?(path_method, val)
     Rails.application.routes.recognize_path(send(path_method, val), method: :get)
     true
-  rescue
+  rescue StandardError
     false
   end
 end

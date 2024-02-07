@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2019, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -55,9 +57,9 @@ class ApplicationController < ActionController::Base
   def set_period
     @period = nil
     p = session[:period]
-    if p.is_a? Array
-      @period = Period.new(*p)
-    end
+    return unless p.is_a? Array
+
+    @period = Period.new(*p)
   end
 
   def sanitized_back_url
@@ -66,7 +68,7 @@ class ApplicationController < ActionController::Base
   end
 
   def not_found
-    fail ActionController::RoutingError, 'Not Found'
+    raise ActionController::RoutingError, 'Not Found'
   end
 
   def set_sentry_request_context

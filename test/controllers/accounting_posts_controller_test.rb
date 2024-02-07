@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -10,16 +12,19 @@ class AccountingPostsControllerTest < ActionController::TestCase
 
   test 'GET index' do
     get :index, params: { order_id: orders(:hitobito_demo).id }
+
     assert_template 'index'
   end
 
   test 'GET edit' do
     get :edit, params: { order_id: orders(:puzzletime).id, id: accounting_posts(:puzzletime).id }
+
     assert_template 'edit'
   end
 
   test 'GET new presets some values' do
     get :new, params: { order_id: accounting_posts(:puzzletime).order.id }
+
     assert_equal accounting_posts(:puzzletime).order, assigns(:order)
   end
 
@@ -27,23 +32,27 @@ class AccountingPostsControllerTest < ActionController::TestCase
     order = orders(:hitobito_demo)
     order.accounting_posts.delete_all
     get :new, params: { order_id: order.id }
+
     assert_match(/"book_on_order"/, @response.body)
   end
 
   test 'GET new form not includes book_on_order fields when accounting_post exists for order' do
     order = orders(:hitobito_demo)
     get :new, params: { order_id: order.id }
+
     assert_no_match(/"book_on_order"/, @response.body)
   end
 
   test 'GET edit form includes book_on_order fields when no accounting_post exists for order' do
     accounting_posts(:hitobito_demo_site).delete
     get :edit, params: { order_id: orders(:hitobito_demo).id, id: accounting_posts(:hitobito_demo_app) }
+
     assert_match(/"book_on_order"/, @response.body)
   end
 
   test 'GET edit form not includes book_on_order fields when accounting_post exists for order' do
     get :edit, params: { order_id: orders(:hitobito_demo).id, id: accounting_posts(:hitobito_demo_app) }
+
     assert_no_match(/"book_on_order"/, @response.body)
   end
 
@@ -59,6 +68,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
                offered_rate: 120
              }
            }
+
       assert_response :unprocessable_entity
       assert_template :new
       assert_match(/es existieren bereits/, assigns(:accounting_post).errors.full_messages.join)
@@ -87,7 +97,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
     assert_redirected_to order_accounting_posts_path(order)
     assert_match(/erfolgreich erstellt/, flash[:notice])
     assert AccountingPost.last.work_item_id = order.work_item_id
-    assert_equal true, order.work_item.reload.closed
+    assert order.work_item.reload.closed
   end
 
   test 'CREATE with new work_item with order.work_item as parent' do
@@ -109,9 +119,10 @@ class AccountingPostsControllerTest < ActionController::TestCase
     assert_redirected_to order_accounting_posts_path(orders(:hitobito_demo))
     assert_match(/erfolgreich erstellt/, flash[:notice])
     new_work_item = AccountingPost.last.work_item
+
     assert new_work_item.parent_id = orders(:hitobito_demo).work_item_id
-    assert_equal new_work_item.attributes.slice('name', 'shortname', 'closed'),
-                 'name' => 'TEST', 'shortname' => 'TST', 'closed' => true
+    assert_equal({ 'name' => 'TEST', 'shortname' => 'TST', 'closed' => true },
+                 new_work_item.attributes.slice('name', 'shortname', 'closed'))
   end
 
   test 'CREATE second accounting post moves existing post from order to own work item' do
@@ -133,6 +144,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
     assert_redirected_to order_accounting_posts_path(order)
     assert_match(/erfolgreich erstellt/, flash[:notice])
     order.reload
+
     assert_nil order.work_item.accounting_post
     assert_equal 2, order.accounting_posts.size
     assert_equal accounting_posts(:puzzletime), order.accounting_posts.list.first
@@ -161,6 +173,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
     assert_redirected_to order_accounting_posts_path(order)
     assert_match(/erfolgreich erstellt/, flash[:notice])
     order.reload
+
     assert_nil order.work_item.accounting_post
     assert_equal 3, order.accounting_posts.size
     assert_equal accounting_posts(:hitobito_demo_app), order.accounting_posts.list.first
@@ -188,6 +201,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
       post :create, params: attributes
     end
     accounting_post = assigns(:accounting_post)
+
     attributes[:accounting_post].except(:work_item_attributes).each do |k, v|
       assert_equal v.to_s, accounting_post.send(k).to_s, "accounting_post.#{k} should eq #{v}"
     end
@@ -216,8 +230,9 @@ class AccountingPostsControllerTest < ActionController::TestCase
       }
     }
 
-    patch :update, params: params
+    patch(:update, params:)
     accounting_post.reload
+
     params[:accounting_post].except(:work_item_attributes).each do |k, v|
       assert_equal v.to_s, accounting_post.send(k).to_s, "accounting_post.#{k} should eq #{v}"
     end
@@ -232,6 +247,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
               book_on_order: 'true',
               accounting_post: { description: 'asdf' }
             }
+
       assert_response :unprocessable_entity
       assert_template :edit
       assert_match(/es existieren bereits/, assigns(:accounting_post).errors.full_messages.join)
@@ -252,6 +268,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
                   book_on_order: 'true',
                   accounting_post: { reference: 'asdf' }
                 }
+
           assert_redirected_to order_accounting_posts_path(orders(:hitobito_demo))
           assert_match(/erfolgreich aktualisiert/, flash[:notice])
         end
@@ -272,6 +289,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
                   book_on_order: 'false',
                   accounting_post: { work_item_attributes: { name: 'Refactoring', shortname: 'RFT' } }
                 }
+
           assert_redirected_to order_accounting_posts_path(orders(:puzzletime))
           assert_match(/erfolgreich aktualisiert/, flash[:notice])
         end
@@ -305,7 +323,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
       end
     end
     assert_redirected_to order_accounting_posts_path(orders(:puzzletime))
-    assert flash[:alert].blank?
+    assert_predicate flash[:alert], :blank?
   end
 
   test 'DESTROY removes record and work item when no worktimes on workitem' do
@@ -320,6 +338,6 @@ class AccountingPostsControllerTest < ActionController::TestCase
       end
     end
     assert_redirected_to order_accounting_posts_path(orders(:hitobito_demo))
-    assert flash[:alert].blank?
+    assert_predicate flash[:alert], :blank?
   end
 end

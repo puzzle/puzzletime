@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -17,8 +19,6 @@ module BelongingToWorkItem
 
     after_destroy :destroy_exclusive_work_item
 
-    validates :work_item, presence: true
-
     accepts_nested_attributes_for :work_item, update_only: true
 
     delegate :name, :shortname, :description, :path_names, :path_shortnames, :label_verbose,
@@ -26,23 +26,23 @@ module BelongingToWorkItem
              allow_nil: true
 
     scope :list, lambda {
-      includes(:work_item).
-        references(:work_item).
-        order('work_items.path_names')
+      includes(:work_item)
+        .references(:work_item)
+        .order('work_items.path_names')
     }
   end
 
   def to_s
-    work_item.to_s if work_item
+    work_item&.to_s
   end
 
   private
 
   def destroy_exclusive_work_item
-    if !@item_destroying && exclusive_work_item?
-      @item_destroying = true
-      work_item.destroy
-    end
+    return unless !@item_destroying && exclusive_work_item?
+
+    @item_destroying = true
+    work_item.destroy
   end
 
   def exclusive_work_item?
@@ -56,16 +56,16 @@ module BelongingToWorkItem
           work_item.with_ancestors.detect { |a| a.send(name) }.try(name)
         else
           model.joins('LEFT JOIN work_items ON ' \
-                      "#{model.table_name}.work_item_id = ANY (work_items.path_ids)").
-            find_by('work_items.id = ?', work_item_id)
+                      "#{model.table_name}.work_item_id = ANY (work_items.path_ids)")
+               .find_by('work_items.id = ?', work_item_id)
         end
       end
     end
 
     def has_descendants_through_work_item(name)
       memoized_method(name) do |model|
-        model.joins(:work_item).
-          where('? = ANY (work_items.path_ids)', work_item_id)
+        model.joins(:work_item)
+             .where('? = ANY (work_items.path_ids)', work_item_id)
       end
     end
 
@@ -74,8 +74,8 @@ module BelongingToWorkItem
     def memoized_method(name, &block)
       model = name.to_s.classify.constantize
       define_method(name) do
-        instance_variable_get("@#{name}") ||
-          instance_variable_set("@#{name}", instance_exec(model, &block))
+        instance_variable_get(:"@#{name}") ||
+          instance_variable_set(:"@#{name}", instance_exec(model, &block))
       end
     end
   end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -14,6 +16,7 @@ class InvoicesControllerTest < ActionController::TestCase
   def test_show_with_non_existing_id_raises_record_not_found
     # we redirect to allow order changes with dropdown
     get :show, params: { id: 42, order_id: test_entry.order_id }
+
     assert_redirected_to order_invoices_path(test_entry.order_id)
   end
 
@@ -28,6 +31,7 @@ class InvoicesControllerTest < ActionController::TestCase
           start_date: start_date = '01.12.2006',
           end_date: end_date = '31.12.2006'
         }
+
     assert_response :success
     assert_template 'invoices/_form'
     assert_equal([employees(:pascal)], entry.employees)
@@ -41,6 +45,7 @@ class InvoicesControllerTest < ActionController::TestCase
     test_entry.update!(grouping: 'manual')
     worktimes(:wt_pz_webauftritt).update!(billable: true)
     get :new, params: { order_id: test_entry.order_id }
+
     assert_response :success
     assert_equal(Time.zone.today, entry.billing_date)
     assert_equal(Time.zone.today + contracts(:webauftritt).payment_period.days, entry.due_date)
@@ -62,6 +67,7 @@ class InvoicesControllerTest < ActionController::TestCase
     get :preview_total, xhr: true, params: params.merge(format: :js)
 
     preview_value = response.body[/html\('(.+) #{Settings.defaults.currency}'\)/, 1].to_f
+
     assert_equal(entry.calculated_total_amount, preview_value)
   end
 
@@ -83,7 +89,8 @@ class InvoicesControllerTest < ActionController::TestCase
       order_id: test_entry.order_id,
       id: test_entry.id
     }
-    put :sync, params: params
+    put(:sync, params:)
+
     assert_response :redirect
   end
 
@@ -93,7 +100,8 @@ class InvoicesControllerTest < ActionController::TestCase
       order_id: test_entry.order_id,
       id: test_entry.id
     }
-    put :sync, params: params
+    put(:sync, params:)
+
     assert_response :redirect
   end
 
@@ -104,7 +112,7 @@ class InvoicesControllerTest < ActionController::TestCase
       id: test_entry.id
     }
     assert_raise CanCan::AccessDenied do
-      put :sync, params: params
+      put :sync, params:
     end
   end
 
@@ -115,7 +123,7 @@ class InvoicesControllerTest < ActionController::TestCase
       id: test_entry.id
     }
     assert_raise CanCan::AccessDenied do
-      put :sync, params: params
+      put :sync, params:
     end
   end
 
@@ -125,7 +133,8 @@ class InvoicesControllerTest < ActionController::TestCase
       order_id: test_entry.order_id,
       id: test_entry.id
     }
-    delete :destroy, params: params
+    delete(:destroy, params:)
+
     assert_response :redirect
   end
 
@@ -135,7 +144,8 @@ class InvoicesControllerTest < ActionController::TestCase
       order_id: test_entry.order_id,
       id: test_entry.id
     }
-    delete :destroy, params: params
+    delete(:destroy, params:)
+
     assert_response :redirect
   end
 
@@ -146,7 +156,7 @@ class InvoicesControllerTest < ActionController::TestCase
       id: test_entry.id
     }
     assert_raise CanCan::AccessDenied do
-      delete :destroy, params: params
+      delete :destroy, params:
     end
   end
 
@@ -157,7 +167,7 @@ class InvoicesControllerTest < ActionController::TestCase
       id: test_entry.id
     }
     assert_raise CanCan::AccessDenied do
-      delete :destroy, params: params
+      delete :destroy, params:
     end
   end
 
@@ -167,7 +177,7 @@ class InvoicesControllerTest < ActionController::TestCase
       order_id: test_entry.order_id,
       id: test_entry.id
     }
-    delete :destroy, params: params
+    delete(:destroy, params:)
 
     assert_raise ActiveRecord::RecordNotFound do
       Invoice.find(test_entry.id)
@@ -182,12 +192,12 @@ class InvoicesControllerTest < ActionController::TestCase
       order_id: test_entry.order_id,
       id: test_entry.id
     }
-    delete :destroy, params: params
+    delete(:destroy, params:)
 
-    assert Invoice.find(test_entry.id).status == 'cancelled'
+    assert_equal 'cancelled', Invoice.find(test_entry.id).status
   end
 
-  %w(cancelled unknown).each do |status|
+  %w[cancelled unknown].each do |status|
     test "DELETE #{status} marks record as deleted" do
       login_as :mark
 
@@ -197,13 +207,13 @@ class InvoicesControllerTest < ActionController::TestCase
         order_id: test_entry.order_id,
         id: test_entry.id
       }
-      delete :destroy, params: params
+      delete(:destroy, params:)
 
-      assert Invoice.find(test_entry.id).status == 'deleted'
+      assert_equal 'deleted', Invoice.find(test_entry.id).status
     end
   end
 
-  %w(deleted paid partially_paid).each do |status|
+  %w[deleted paid partially_paid].each do |status|
     test "DELETE #{status} is not permitted" do
       login_as :mark
 
@@ -214,7 +224,7 @@ class InvoicesControllerTest < ActionController::TestCase
         id: test_entry.id
       }
       assert_raise CanCan::AccessDenied do
-        delete :destroy, params: params
+        delete :destroy, params:
       end
     end
   end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -32,7 +34,7 @@ class WorkItemTest < ActiveSupport::TestCase
     assert_equal 'PITC-FOO', p.path_shortnames
     assert_equal "Puzzle\nFoo", p.path_names
     assert_equal 'bla bla', p.description
-    assert_equal true, p.leaf
+    assert p.leaf
   end
 
   test 'new sub work_item get path names set' do
@@ -59,12 +61,12 @@ class WorkItemTest < ActiveSupport::TestCase
                   parent_id: 1,
                   parent: p)
 
-    assert_equal true, c.leaf
-    assert_equal false, p.leaf
+    assert c.leaf
+    assert_not p.leaf
 
     c.destroy
 
-    assert_equal true, p.leaf
+    assert p.leaf
   end
 
   test 'sub work_item get path names set when parent name is changed' do
@@ -105,7 +107,7 @@ class WorkItemTest < ActiveSupport::TestCase
                    shortname: 'BAZ')
 
     p.reload
-    p.update_attributes!(shortname: 'FUU', description: 'bla')
+    p.update!(shortname: 'FUU', description: 'bla')
     c1.reload
     c2.reload
 
@@ -122,22 +124,23 @@ class WorkItemTest < ActiveSupport::TestCase
                   parent_id: 1,
                   name: 'Foo',
                   shortname: 'FOO')
-    c = Fabricate(:work_item,
-                  parent_id: 1,
-                  parent: p,
-                  name: 'Bar',
-                  shortname: 'BAR')
+    Fabricate(:work_item,
+              parent_id: 1,
+              parent: p,
+              name: 'Bar',
+              shortname: 'BAR')
 
     p.reload
 
     WorkItem.any_instance.expects(:store_path_names).never
-    p.update_attributes!(description: 'foo')
+    p.update!(description: 'foo')
   end
 
   test 'destroys dependent plannings when destroyed' do
     planning = plannings(:hitobito_demo_app_planning1)
     planning.work_item.destroy
-    refute Planning.exists?(planning.id)
+
+    assert_not Planning.exists?(planning.id)
   end
 
   test '.with_worktimes_in_period includes only those work_items with billable worktimes in given period' do
@@ -145,7 +148,8 @@ class WorkItemTest < ActiveSupport::TestCase
     work_items = Fabricate.times(4, :work_item, parent: order.work_item)
     work_items.each { |w| Fabricate(:accounting_post, work_item: w) }
 
-    from, to = Date.parse('09.12.2006'), Date.parse('12.12.2006')
+    from = Date.parse('09.12.2006')
+    to = Date.parse('12.12.2006')
 
     (from..to).each_with_index do |date, index|
       Fabricate(:ordertime,
@@ -155,6 +159,7 @@ class WorkItemTest < ActiveSupport::TestCase
     end
 
     result = WorkItem.with_worktimes_in_period(order, from, to)
+
     assert 2, result.size
     assert_includes result, work_items.second
     assert_includes result, work_items.third

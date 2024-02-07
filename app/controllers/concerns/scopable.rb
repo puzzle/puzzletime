@@ -9,9 +9,7 @@ module Scopable
   extend ActiveSupport::Concern
 
   included do
-    if respond_to?(:permitted_attrs=)
-      self.permitted_attrs = Array.wrap(permitted_attrs) + [:scope]
-    end
+    self.permitted_attrs = Array.wrap(permitted_attrs) + [:scope] if respond_to?(:permitted_attrs=)
   end
 
   private

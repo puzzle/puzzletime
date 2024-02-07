@@ -1,20 +1,22 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
 class OrdertimesController < WorktimesController
-  self.permitted_attrs = [:account_id, :report_type, :work_date, :hours, :meal_compensation,
-                          :from_start_time, :to_end_time, :description, :billable, :ticket]
+  self.permitted_attrs = %i[account_id report_type work_date hours meal_compensation
+                            from_start_time to_end_time description billable ticket]
 
   after_destroy :send_email_notification
 
   def update
-    if entry.employee_id != @user.id
+    if entry.employee_id == @user.id
+      super
+    else
       build_splitable
       create_part
-    else
-      super
     end
   end
 
@@ -84,7 +86,7 @@ class OrdertimesController < WorktimesController
   end
 
   def build_splitable
-    @split = session[:split] = WorktimeEdit.new(entry)
+    @split = session[:split] = Forms::WorktimeEdit.new(entry)
   end
 
   def build_worktime
@@ -93,10 +95,10 @@ class OrdertimesController < WorktimesController
   end
 
   def send_email_notification
-    if worktime_employee?
-      ::EmployeeMailer.worktime_deleted_mail(@worktime, @user).deliver_now
-      flash[:warning] =
-        "#{@worktime.employee} wurde per E-Mail darüber informiert, dass du diesen Eintrag gelöscht hast."
-    end
+    return unless worktime_employee?
+
+    ::EmployeeMailer.worktime_deleted_mail(@worktime, @user).deliver_now
+    flash[:warning] =
+      "#{@worktime.employee} wurde per E-Mail darüber informiert, dass du diesen Eintrag gelöscht hast."
   end
 end

@@ -10,7 +10,7 @@ module Employees
     before_action :authorize_action
 
     def index
-      @presenter = LogPresenter.new(employee, params)
+      @presenter = Presenters::LogPresenter.new(employee, params)
     end
 
     private

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Employees
   class Vcard
     TEMPLATE_FILE = File.expand_path('vcard.vcf.haml', __dir__)
@@ -10,11 +12,12 @@ module Employees
     end
 
     def render
-      Haml::Template.new(TEMPLATE_FILE).render(nil, :employee => self)
+      Haml::Template.new(TEMPLATE_FILE).render(nil, employee: self)
     end
 
-    def method_missing(method_name, *args)
-      return employee.send(method_name, *args) if include.blank? || include.include?(method_name)
+    def method_missing(method_name, *)
+      return employee.send(method_name, *) if include.blank? || include.include?(method_name)
+
       nil
     end
 

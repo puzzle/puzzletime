@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -41,7 +43,7 @@ class MultiWorktimesController < ApplicationController
     @worktimes ||=
       Worktime
       .where(id: params[:worktime_ids])
-      .includes([:employee, :work_item, :invoice])
+      .includes(%i[employee work_item invoice])
   end
 
   def load_field_presets
@@ -57,14 +59,14 @@ class MultiWorktimesController < ApplicationController
   end
 
   def changed_attrs
-    @changed_attrs ||= %w(work_item_id ticket billable).select do |attr|
+    @changed_attrs ||= %w[work_item_id ticket billable].select do |attr|
       ActiveRecord::Type::Boolean.new.deserialize(params["change_#{attr}"])
     end
   end
 
   def update_worktimes
     Worktime.transaction do
-      worktimes.includes(work_item: :accounting_post).each do |t|
+      worktimes.includes(work_item: :accounting_post).find_each do |t|
         # update each individually to run validations
         t.update!(params.permit(*changed_attrs))
       end

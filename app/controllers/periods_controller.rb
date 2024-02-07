@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PeriodsController < ApplicationController
   skip_authorization_check
 
@@ -9,13 +11,13 @@ class PeriodsController < ApplicationController
 
   def update
     @period = period_from_params
-    fail ArgumentError, 'Start Datum nach End Datum' if @period.negative?
+    raise ArgumentError, 'Start Datum nach End Datum' if @period.negative?
 
     session[:period] = [@period.start_date.to_s, @period.end_date.to_s, @period.label]
     # redirect_to_overview
     redirect_to sanitized_back_url
-  rescue ArgumentError => ex # ArgumentError from Period.new or if period.negative?
-    flash[:alert] = "Ungültige Zeitspanne: #{ex}"
+  rescue ArgumentError => e # ArgumentError from Period.new or if period.negative?
+    flash[:alert] = "Ungültige Zeitspanne: #{e}"
     render action: 'show'
   end
 

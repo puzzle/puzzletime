@@ -23,7 +23,7 @@
 #= require waypoints/shortcuts/sticky
 #= require waypoints/shortcuts/inview
 #= require modernizr-custom
-#= require Chart.bundle.min
+#= require Chart.min
 #= require chartjs-plugin-annotation.min
 #= require_self
 #= require_tree ./modules
@@ -46,7 +46,6 @@
 #= require expense_reviews
 #= require meal_compensations
 #= require turbolinks
-
 
 app = window.App ||= {}
 

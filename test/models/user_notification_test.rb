@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -24,6 +26,7 @@ class UserNotificationTest < ActiveSupport::TestCase
     Holiday.create!(holiday_date: monday + 4.days, musthours_day: 0)
 
     messages = UserNotification.list_during.collect(&:message)
+
     assert_includes messages, 'bar'
     assert_not_includes messages, 'foo'
     assert_includes messages, 'baz'

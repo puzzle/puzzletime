@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: expenses
@@ -17,15 +19,15 @@
 #  submission_date    :date
 #
 
-class Expense < ActiveRecord::Base
+class Expense < ApplicationRecord
   belongs_to :order
   belongs_to :employee
   belongs_to :reviewer, class_name: 'Employee'
 
   has_one_attached :receipt
 
-  enum kind:   %i(project training sales support other)
-  enum status: %i(pending deferred approved rejected)
+  enum kind:   { project: 0, training: 1, sales: 2, support: 3, other: 4 }
+  enum status: { pending: 0, deferred: 1, approved: 2, rejected: 3 }
 
   validates_by_schema
 
@@ -56,20 +58,20 @@ class Expense < ActiveRecord::Base
 
   def self.reimbursement_months
     statement = 'SELECT DISTINCT ' \
-      'EXTRACT(YEAR FROM reimbursement_date)::int AS year, ' \
-      'EXTRACT(MONTH FROM reimbursement_date)::int AS month ' \
-      'FROM expenses ' \
-      'WHERE reimbursement_date IS NOT NULL ' \
-      'ORDER BY year, month'
+                'EXTRACT(YEAR FROM reimbursement_date)::int AS year, ' \
+                'EXTRACT(MONTH FROM reimbursement_date)::int AS month ' \
+                'FROM expenses ' \
+                'WHERE reimbursement_date IS NOT NULL ' \
+                'ORDER BY year, month'
     connection.select_rows(statement).collect { |year, month| Date.new(year, month, 1) }
   end
 
   def self.payment_years(employee)
     statement = 'SELECT DISTINCT ' \
-      'EXTRACT(YEAR FROM payment_date)::int AS year ' \
-      'FROM expenses ' \
-      "WHERE employee_id = #{employee.id} " \
-      'ORDER BY year'
+                'EXTRACT(YEAR FROM payment_date)::int AS year ' \
+                'FROM expenses ' \
+                "WHERE employee_id = #{employee.id} " \
+                'ORDER BY year'
     connection.select_values(statement).collect { |year| Date.new(year, 1, 1) }
   end
 

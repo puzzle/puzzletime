@@ -8,7 +8,7 @@
         employee_master_data_path,
         employee_master_data_path
 
-- if can?(:employees, Evaluation)
+- if can?(:employees, Evaluations::Evaluation)
   = nav 'Zeiten',
         evaluation_path('employees', clear: 1),
         evaluation_path('employees'),
@@ -16,7 +16,7 @@
         evaluation_path('employeesubworkitems'),
         '/weekly_graph'
 
-- if can?(:absences, Evaluation)
+- if can?(:absences, Evaluations::Evaluation)
   = nav 'Absenzen',
         evaluation_path('absences', clear: 1),
         evaluation_path('absences'),
@@ -27,10 +27,10 @@
 
 = nav 'Ferienplan', vacations_path
 
--if can?(:export_report, Evaluation)
+-if can?(:export_report, Evaluations::Evaluation)
   = nav 'Exporte',
         reports_export_path
 
 - if Settings.meal_compensation.active
-  - if can?(:meal_compensation, Evaluation)
+  - if can?(:meal_compensation, Evaluations::Evaluation)
     = nav 'Verpflegungsentschädigungen', meal_compensations_path

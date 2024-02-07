@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2018, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -37,10 +39,10 @@ class OrderControllingHelperTest < ActionView::TestCase
 
   test '#controlling_chart_datasets' do
     assert_equal [
-      { 'label': 'Verrechenbar', 'data': [10, 10, 20], 'backgroundColor': '#69B978' },
-      { 'label': 'Nicht verrechenbar', 'data': [5, 5, 8], 'backgroundColor': '#f0e54e' },
-      { 'label': 'Definitiv geplant', 'data': [0, 0, 2], 'backgroundColor': '#4286e7' },
-      { 'label': 'Provisorisch geplant', 'data': [0, 0, 0], 'backgroundColor': '#9bcbd4' }
+      { label: 'Verrechenbar', data: [10, 10, 20], backgroundColor: '#69B978' },
+      { label: 'Nicht verrechenbar', data: [5, 5, 8], backgroundColor: '#f0e54e' },
+      { label: 'Definitiv geplant', data: [0, 0, 2], backgroundColor: '#4286e7' },
+      { label: 'Provisorisch geplant', data: [0, 0, 0], backgroundColor: '#9bcbd4' }
     ].to_json, controlling_chart_datasets
   end
 end

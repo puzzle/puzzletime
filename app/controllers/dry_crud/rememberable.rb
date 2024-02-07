@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -19,7 +21,7 @@ module DryCrud
 
     included do
       class_attribute :remember_params
-      self.remember_params = %w(q sort sort_dir page)
+      self.remember_params = %w[q sort sort_dir page]
 
       before_action :handle_remember_params, only: [:index]
     end

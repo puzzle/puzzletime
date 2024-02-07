@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -5,7 +7,7 @@
 
 module WorktimeHelper
   def worktime_account(worktime)
-    worktime.account.label_verbose if worktime.account
+    worktime.account&.label_verbose
   end
 
   def worktime_description(worktime)
@@ -13,17 +15,17 @@ module WorktimeHelper
   end
 
   def work_item_option(item)
-    if item
-      json = { id: item.id,
-               name: item.name,
-               path_shortnames: item.path_shortnames,
-               description: item.description }
-      content_tag(:option,
-                  item.label_verbose,
-                  value: item.id,
-                  selected: true,
-                  data: { data: json.to_json })
-    end
+    return unless item
+
+    json = { id: item.id,
+             name: item.name,
+             path_shortnames: item.path_shortnames,
+             description: item.description }
+    content_tag(:option,
+                item.label_verbose,
+                value: item.id,
+                selected: true,
+                data: { data: json.to_json })
   end
 
   def overview_day_class(_worktimes, day)
@@ -40,9 +42,7 @@ module WorktimeHelper
     result = '&nbsp;'
     if worktime.from_start_time.present?
       result = "#{format_time(worktime.from_start_time)} - "
-      if worktime.to_end_time.present?
-        result += format_time(worktime.to_end_time)
-      end
+      result += format_time(worktime.to_end_time) if worktime.to_end_time.present?
     end
     result.html_safe
   end
@@ -63,9 +63,9 @@ module WorktimeHelper
   # sum worktime hours for a given date. if no date is given, sum all worktime hours
   def sum_hours(day = nil)
     if day
-      @daily_worktimes[day] ? @daily_worktimes[day].map(&:hours).sum : 0
+      @daily_worktimes[day] ? @daily_worktimes[day].sum(&:hours) : 0
     else
-      @worktimes.map(&:hours).sum
+      @worktimes.sum(&:hours)
     end
   end
 end

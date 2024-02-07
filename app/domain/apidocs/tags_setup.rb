@@ -19,7 +19,7 @@ module Apidocs
         next if tag['include'].blank?
 
         tag['include'].each do |inc|
-          return tag['name'] if path =~ /#{inc}/i
+          return tag['name'] if /#{inc}/i.match?(path)
         end
       end
     end
@@ -38,7 +38,7 @@ module Apidocs
 
     def load_tags
       require 'yaml'
-      YAML.load_file(Rails.root.join('config', 'swagger-tags.yml')) # TODO: what is this for? fill yml with sensible values
+      YAML.load_file(Rails.root.join('config/swagger-tags.yml')) # TODO: what is this for? fill yml with sensible values
     end
   end
 end

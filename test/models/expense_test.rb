@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: expenses
@@ -34,6 +36,7 @@ class ExpenseTest < ActiveSupport::TestCase
 
   test '.by_month returns models grouped by month' do
     hash = Expense.by_month(Expense.list, 2019)
+
     assert_equal ['Februar 2019', 'Januar 2019'], hash.keys
   end
 
@@ -42,7 +45,7 @@ class ExpenseTest < ActiveSupport::TestCase
   end
 
   test "pascal can not manage mark's invoices" do
-    refute can?(:manage, pascal, mark.expenses.build)
+    assert_not can?(:manage, pascal, mark.expenses.build)
   end
 
   test "mark can manage pascal's invoices" do
@@ -53,6 +56,7 @@ class ExpenseTest < ActiveSupport::TestCase
     assert_equal [Date.new(2019, 2, 1), Date.new(2019, 3, 1)], Expense.reimbursement_months
 
     expenses(:approved).update!(reimbursement_date: Date.new(2019, 2, 1))
+
     assert_equal [Date.new(2019, 2, 1)], Expense.reimbursement_months
   end
 
@@ -60,26 +64,29 @@ class ExpenseTest < ActiveSupport::TestCase
     assert_equal [Date.new(2019, 1, 1)], Expense.payment_years(pascal)
 
     expenses(:approved).update!(review_attrs.merge(payment_date: Date.new(2019, 2, 28)))
+
     assert_equal [Date.new(2019, 1, 1)], Expense.payment_years(pascal)
 
     expenses(:pending).update!(payment_date: Date.new(2020, 2, 28))
+
     assert_equal [Date.new(2019, 1, 1), Date.new(2020, 1, 1)], Expense.payment_years(pascal)
   end
 
   test 'can only approve expense when reimbursement_date and reviewer is set' do
     obj = expenses(:pending)
-    refute obj.update(status: :approved)
+
+    assert_not obj.update(status: :approved)
     assert_equal ['Auszahlungsmonat muss ausgefüllt werden', 'Reviewer muss ausgefüllt werden',
                   'Visiert am muss ausgefüllt werden'], obj.errors.full_messages
 
     assert obj.update(status: :approved,
                       reviewer: mark,
-                      reviewed_at: Date.today,
-                      reimbursement_date: Date.today,)
+                      reviewed_at: Time.zone.today,
+                      reimbursement_date: Time.zone.today)
   end
 
   def review_attrs
-    { reviewer: mark, reviewed_at: Date.today }
+    { reviewer: mark, reviewed_at: Time.zone.today }
   end
 
   def mark

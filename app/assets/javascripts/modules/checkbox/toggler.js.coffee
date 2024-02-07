@@ -24,6 +24,3 @@ class app.checkbox.Toggler
     selector = '[data-' + @data + ']'
     $(document).on('click', selector, (event) -> self.toggleChecked(this))
     $(document).on('turbolinks:load', -> $(selector).each((i, e) -> self.toggleChecked(e)))
-
-
-

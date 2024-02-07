@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -17,13 +19,15 @@ class EmployeeStatistics
   end
 
   def billable_percents_at(date)
-    employee.employment_at(date)&.employment_roles_employments&.select {|e| e.employment_role.billable }&.map(&:percent)&.sum || 0
+    employee.employment_at(date)&.employment_roles_employments&.select do |e|
+      e.employment_role.billable
+    end&.sum(&:percent) || 0
   end
 
   def average_percents(period)
-    employments_during(period).map do |employment|
+    employments_during(period).sum do |employment|
       employment.period.length.to_f / period.length * employment.percent
-    end.sum
+    end
   end
 
   #########  vacation information ############
@@ -54,10 +58,10 @@ class EmployeeStatistics
     return 0 if period.nil?
 
     WorkingCondition.sum_with(:must_hours_per_day, period) do |p, hours|
-      @employee.worktimes.in_period(p).
-        joins(:absence).
-        where(absences: { vacation: true }).
-        sum(:hours).to_f / hours
+      @employee.worktimes.in_period(p)
+               .joins(:absence)
+               .where(absences: { vacation: true })
+               .sum(:hours).to_f / hours
     end
   end
 
@@ -66,7 +70,7 @@ class EmployeeStatistics
   def absences(period, payed = nil)
     worktimes = @employee.worktimes.joins(:absence).in_period(period)
 
-    worktimes = worktimes.where(absences: { payed: payed }) if payed.in? [true, false]
+    worktimes = worktimes.where(absences: { payed: }) if payed.in? [true, false]
 
     worktimes.sum(:hours).to_f
   end
@@ -110,39 +114,39 @@ class EmployeeStatistics
 
   # Returns the hours this employee worked plus the payed absences for the given period.
   def payed_worktime(period)
-    @employee.worktimes.
-      joins('LEFT JOIN absences ON absences.id = absence_id').
-      in_period(period).
-      where('((work_item_id IS NOT NULL AND absence_id IS NULL) OR absences.payed)').
-      sum(:hours).
-      to_f
+    @employee.worktimes
+             .joins('LEFT JOIN absences ON absences.id = absence_id')
+             .in_period(period)
+             .where('((work_item_id IS NOT NULL AND absence_id IS NULL) OR absences.payed)')
+             .sum(:hours)
+             .to_f
   end
 
   def unpaid_absences(period)
-    @employee.worktimes.
-      joins('LEFT JOIN absences ON absences.id = absence_id').
-      in_period(period).
-      where('NOT (absences.payed)').
-      sum(:hours).
-      to_f
+    @employee.worktimes
+             .joins('LEFT JOIN absences ON absences.id = absence_id')
+             .in_period(period)
+             .where('NOT (absences.payed)')
+             .sum(:hours)
+             .to_f
   end
 
   # Return the overtime days that were transformed into vacations up to the given date.
   def overtime_vacation_days(period)
     WorkingCondition.sum_with(:must_hours_per_day, period) do |p, hours|
-      @employee.overtime_vacations.
-        where('transfer_date BETWEEN ? AND ?', p.start_date, p.end_date).
-        sum(:hours).
-        to_f / hours
+      @employee.overtime_vacations
+               .where('transfer_date BETWEEN ? AND ?', p.start_date, p.end_date)
+               .sum(:hours)
+               .to_f / hours
     end
   end
 
   # Return the overtime hours that were transformed into vacations up to the given date.
   def overtime_vacation_hours(date = nil)
-    @employee.overtime_vacations.
-      where(date ? ['transfer_date <= ?', date] : nil).
-      sum(:hours).
-      to_f
+    @employee.overtime_vacations
+             .where(date ? ['transfer_date <= ?', date] : nil)
+             .sum(:hours)
+             .to_f
   end
 
   ######### employment helpers ######################

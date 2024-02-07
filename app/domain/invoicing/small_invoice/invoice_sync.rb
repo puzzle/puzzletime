@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -33,12 +35,10 @@ module Invoicing
         def sync_unpaid
           failed = []
           unpaid_invoices.find_each do |invoice|
-            begin
-              new(invoice).sync
-            rescue => error
-              failed << invoice.id
-              notify_sync_error(error, invoice)
-            end
+            new(invoice).sync
+          rescue StandardError => e
+            failed << invoice.id
+            notify_sync_error(e, invoice)
           end
           Rails.logger.error "Failed Invoice Syncs: #{failed.inspect}" if failed.any?
         end
@@ -69,11 +69,11 @@ module Invoicing
 
         def record_to_params(record, prefix = 'invoice')
           {
-            "#{prefix}_id"            => record.id,
+            "#{prefix}_id" => record.id,
             "#{prefix}_invoicing_key" => record.invoicing_key,
-            "#{prefix}_label"         => record.try(:label) || record.to_s,
-            "#{prefix}_errors"        => record.errors.messages,
-            "#{prefix}_changes"       => record.changes
+            "#{prefix}_label" => record.try(:label) || record.to_s,
+            "#{prefix}_errors" => record.errors.messages,
+            "#{prefix}_changes" => record.changes
           }
         end
       end
@@ -86,7 +86,9 @@ module Invoicing
       def sync
         return unless invoice.invoicing_key
 
-        item = rate_limiter.run { api.get(Entity::Invoice.path(invoicing_key: invoice.invoicing_key), with: 'positions') }
+        item = rate_limiter.run do
+          api.get(Entity::Invoice.path(invoicing_key: invoice.invoicing_key), with: 'positions')
+        end
         sync_remote(item)
       rescue Invoicing::Error => e
         if e.code == 15_016 # no rights / not found
@@ -128,20 +130,18 @@ module Invoicing
         item['positions'].select do |p|
           p['catalog_type'] == Settings.small_invoice.constants.position_type &&
             p['unit_id'] == Settings.small_invoice.constants.unit_id
-        end.collect do |p|
-          p['amount']
-        end.sum
+        end.pluck('amount').sum
       end
 
       # item['totalamount'] always includes vat
       # item['vat_included'] tells whether position totals already include vat or not.
       def total_amount_without_vat(item)
-        item['positions'].select { |p| p['price'] }.map do |p|
+        item['positions'].select { |p| p['price'] }.sum do |p|
           total = p['price'] * p['amount']
           total -= position_discount(p, total)
           total -= position_included_vat(p, total) if item['vat_included']
           total
-        end.sum
+        end
       end
 
       def position_discount(p, total)

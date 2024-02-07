@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module AccountingPostsHelper
   def blocking_worktimes(type)
     worktimes = @accounting_post.worktimes.includes(:employee)
@@ -30,6 +32,6 @@ module AccountingPostsHelper
     worktime_counts(worktimes).collect do |k, v|
       employee = Employee.find(k)
       "#{employee.firstname} #{employee.lastname}: #{v} Buchungen"
-    end.join(", ")
+    end.join(', ')
   end
 end

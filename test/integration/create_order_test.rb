@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -13,9 +15,11 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
   test 'create order with existing client, without category' do
     timeout_safe do
       click_add_contact # disabled
+
       assert page.has_no_selector?('#order_order_contacts_attributes_0_contact_id_or_crm')
 
       click_link('category_work_item_id_create_link') # disabled
+
       assert page.has_no_selector?('#work_item_name')
 
       selectize('client_work_item_id', 'Swisstopo')
@@ -28,6 +32,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
 
       assert_creatable
       order = WorkItem.where(name: 'New Order').first
+
       assert_equal clients(:swisstopo).work_item_id, order.parent_id
       assert_equal [contacts(:swisstopo_2)], order.order.contacts
     end
@@ -42,6 +47,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       assert_creatable
       client = WorkItem.where(name: 'New Client').first
       order = WorkItem.where(name: 'New Order').first
+
       assert_equal client.id, order.parent_id
     end
   end
@@ -55,9 +61,10 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       fill_mandatory_fields
 
       assert_creatable
-      client = clients(:puzzle)
+      clients(:puzzle)
       category = work_items(:intern)
       order = WorkItem.where(name: 'New Order').first
+
       assert_equal category.id, order.parent_id
     end
   end
@@ -74,6 +81,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       assert_creatable
       client = clients(:puzzle)
       order = WorkItem.where(name: 'New Order').first
+
       assert_equal client.work_item_id, order.parent_id
     end
   end
@@ -90,6 +98,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       client = clients(:puzzle)
       category = WorkItem.where(name: 'New Category').first
       order = WorkItem.where(name: 'New Order').first
+
       assert_equal client.id, category.parent_id
       assert_equal category.id, order.parent_id
     end
@@ -107,6 +116,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       client = WorkItem.where(name: 'New Client').first
       category = WorkItem.where(name: 'New Category').first
       order = WorkItem.where(name: 'New Order').first
+
       assert_equal client.id, category.parent_id
       assert_equal category.id, order.parent_id
     end
@@ -125,6 +135,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       client = WorkItem.where(name: 'New Client').first
       category = WorkItem.where(name: 'New Category').first
       order = WorkItem.where(name: 'New Order').first
+
       assert_equal client.id, category.parent_id
       assert_equal client.id, order.parent_id
     end
@@ -137,9 +148,11 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       element = find('#category_work_item_id + .selectize-control')
       element.find('.selectize-input').click # open dropdown
       options = element.find('.selectize-dropdown-content')
+
       assert options.has_selector?('div', count: 2)
       selectize('client_work_item_id', 'Swisstopo')
-      assert !options.has_selector?('div')
+
+      assert_not options.has_selector?('div')
     end
   end
 
@@ -159,12 +172,13 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
         click_button 'Speichern'
       end
 
-      assert find('#category_work_item_id + .selectize-control').
-        has_selector?('.selectize-input .item', text: 'New Category')
+      assert find('#category_work_item_id + .selectize-control')
+        .has_selector?('.selectize-input .item', text: 'New Category')
       # sleep 0.2
       id = find('#category_work_item_id', visible: false)['value']
 
       category = WorkItem.find(id)
+
       assert_equal 'New Category', category.name
       assert_equal work_items(:swisstopo).id, category.parent_id
     end
@@ -181,6 +195,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
 
       assert_creatable
       order = WorkItem.where(name: 'New Order').first
+
       assert_equal work_items(:swisstopo).id, order.parent_id
     end
   end
@@ -262,8 +277,10 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       assert_creatable
       client = WorkItem.where(name: 'New Client').first
       order = WorkItem.where(name: 'New Order').first
+
       assert_equal client.id, order.parent_id
-      contact = Contact.find_by_lastname('Nader')
+      contact = Contact.find_by(lastname: 'Nader')
+
       assert_equal '456', contact.crm_key
       assert_equal client.client, contact.client
       assert_equal [contact], order.order.contacts
@@ -301,6 +318,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       client = WorkItem.where(name: 'New Client').first
       category = WorkItem.where(name: 'New Category').first
       order = WorkItem.where(name: 'New Order').first
+
       assert_equal client.id, category.parent_id
       assert_equal category.id, order.parent_id
     end
@@ -338,8 +356,9 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
 
       assert_creatable
       order = WorkItem.where(name: 'New Order').first
+
       assert_equal clients(:swisstopo).work_item_id, order.parent_id
-      assert_equal [Contact.find_by_lastname('Nader')], order.order.contacts
+      assert_equal [Contact.find_by(lastname: 'Nader')], order.order.contacts
     end
   end
 
@@ -367,6 +386,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       assert_creatable
       order = WorkItem.where(name: 'New Order').first
       category = WorkItem.where(name: 'New Category').first
+
       assert_equal client.work_item_id, category.parent_id
       assert_equal category.id, order.parent_id
     end
@@ -396,6 +416,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       assert_creatable
       order = WorkItem.where(name: 'New Order').first
       category = work_items(:intern)
+
       assert_equal category.id, order.parent_id
     end
   end
@@ -445,12 +466,15 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       assert has_unchecked_field?('category_active')
 
       selecti0 = find('#order_order_contacts_attributes_0_contact_id_or_crm + .selectize-control')
+
       assert selecti0.has_selector?('.selectize-input .item', text: 'Hauswart Hans')
       selecti0.find('.selectize-input').click # populate & open dropdown
+
       assert selecti0.has_selector?('.selectize-dropdown-content .option', count: 3)
       find('body').send_keys(:escape) # close dropdown
 
       selecti1 = find('#order_order_contacts_attributes_1_contact_id_or_crm + .selectize-control')
+
       assert selecti1.has_selector?('.selectize-input .item', text: 'Nader Fred')
 
       click_add_contact
@@ -489,7 +513,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       fill_in('order_crm_key', with: '123')
       click_link('Übernehmen')
 
-      assert_match /bereits erfasst/, find('#crm_key').text
+      assert_match(/bereits erfasst/, find('#crm_key').text)
     end
   end
 
@@ -504,7 +528,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       fill_in('order_crm_key', with: '123')
       click_link('Übernehmen')
 
-      assert_match /crm error occurred/, find('#crm_key .help-block').text
+      assert_match(/crm error occurred/, find('#crm_key .help-block').text)
       assert_equal '', find('#client_work_item_id', visible: false)['value']
     end
   end
@@ -516,11 +540,15 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
     assert_no_selector("a[data-object-class='order-team-member'].remove_nested_fields_link")
 
     find("a[data-object-class='order_team_member'].add_nested_fields_link").click
-    assert find_field('order_order_team_members_attributes_0_employee_id', visible: false)[:class].include?('selectized')
+
+    assert_includes find_field('order_order_team_members_attributes_0_employee_id',
+                               visible: false)[:class], 'selectized'
     assert_selector("a[data-object-class='order_team_member'].remove_nested_fields_link", count: 1)
 
     find("a[data-object-class='order_team_member'].add_nested_fields_link").click
-    assert find_field('order_order_team_members_attributes_1_employee_id', visible: false)[:class].include?('selectized')
+
+    assert_includes find_field('order_order_team_members_attributes_1_employee_id',
+                               visible: false)[:class], 'selectized'
     assert_selector("a[data-object-class='order_team_member'].remove_nested_fields_link", count: 2)
   end
 
@@ -545,7 +573,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
   end
 
   def click_add_contact
-    find("a.add_nested_fields_link[data-object-class='order_contact']").trigger("click")
+    find("a.add_nested_fields_link[data-object-class='order_contact']").trigger('click')
   end
 
   def fill_mandatory_fields(with_name = true)
@@ -558,6 +586,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
 
   def assert_creatable
     click_button 'Speichern'
+
     assert has_content?('New Order wurde erfolgreich erstellt')
   end
 

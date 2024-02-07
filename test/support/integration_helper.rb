@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -8,12 +10,11 @@ module IntegrationHelper
 
   def login_as(user)
     employee = user.is_a?(Employee) ? user : employees(user)
-    # employee.update_passwd!('foobar')
     super(employee)
   end
 
   def set_period(start_date: '1.1.2006', end_date: '31.12.2006', back_url: current_url)
-    visit periods_path(back_url: back_url)
+    visit periods_path(back_url:)
     fill_in 'period_start_date', with: start_date, fill_options: { clear: :backspace }
     fill_in 'period_end_date', with: end_date, fill_options: { clear: :backspace }
     find('input[name=commit]').click
@@ -26,11 +27,9 @@ module IntegrationHelper
          Timeout::Error,
          Capybara::FrozenInTime,
          Capybara::ElementNotFound => e
-    if ENV['CI'] == true
-      skip e.message || e.class.name
-    else
-      raise
-    end
+    raise unless ENV['CI'] == true
+
+    skip e.message || e.class.name
   end
 
   def open_selectize(id, options = {})
@@ -56,15 +55,15 @@ module IntegrationHelper
 
   def move_mouse_to(element)
     x, y = element.native.node.find_position
-    mouse.move(x: x, y: y)
+    mouse.move(x:, y:)
   end
 
-  def drag(from_element, *to_elements)
-    move_mouse_to(from_element)
+  def drag(from_node, *to_nodes)
+    move_mouse_to(from_node)
     mouse.down
 
-    to_elements.each do |to_element|
-      move_mouse_to(to_element)
+    to_nodes.each do |to_node|
+      move_mouse_to(to_node)
     end
     mouse.up
   end

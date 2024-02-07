@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -17,10 +19,10 @@ module I18nHelper
   #  - ...
   #  - global.{key}
   def translate_inheritable(key, variables = {})
-    partial = defined?(@virtual_path) ? @virtual_path.gsub(%r(.*\/_?), '') : nil
+    partial = defined?(@virtual_path) ? @virtual_path.gsub(%r{.*/_?}, '') : nil
     defaults = inheritable_translation_defaults(key, partial)
     variables[:default] ||= defaults
-    t(defaults.shift, variables)
+    t(defaults.shift, **variables)
   end
 
   alias ti translate_inheritable
@@ -36,9 +38,9 @@ module I18nHelper
     if assoc && assoc.options[:polymorphic].nil?
       variables[:default] ||= [association_klass_key(assoc, key).to_sym,
                                :"global.associations.#{key}"]
-      t(association_owner_key(assoc, key), variables)
+      t(association_owner_key(assoc, key), **variables)
     else
-      t("global.associations.#{key}", variables)
+      t("global.associations.#{key}", **variables)
     end
   end
 
@@ -48,21 +50,15 @@ module I18nHelper
 
   # General translation key based on the klass of the association.
   def association_klass_key(assoc, key)
-    k = 'activerecord.associations.'
-    k << assoc.klass.model_name.singular
-    k << '.'
-    k << key.to_s
+    model_name = assoc.klass.model_name.singular
+    "activerecord.associations.#{model_name}.#{key}"
   end
 
   # Specific translation key based on the owner model and the name
   # of the association.
   def association_owner_key(assoc, key)
-    k = 'activerecord.associations.models.'
-    k << assoc.active_record.model_name.singular
-    k << '.'
-    k << assoc.name.to_s
-    k << '.'
-    k << key.to_s
+    model_name = assoc.active_record.model_name.singular
+    "activerecord.associations.models.#{model_name}.#{assoc.name}.#{key}"
   end
 
   def inheritable_translation_defaults(key, partial)
@@ -70,9 +66,7 @@ module I18nHelper
     current = controller.class
     while current < ActionController::Base
       folder = current.controller_path
-      if folder.present?
-        append_controller_translation_keys(defaults, folder, partial, key)
-      end
+      append_controller_translation_keys(defaults, folder, partial, key) if folder.present?
       current = current.superclass
     end
     defaults << :"global.#{key}"

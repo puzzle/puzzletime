@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 # Creates new Testusers with all needed associations
 class CreateTestuser
   def self.run(data)
     new(data).run
   end
 
-  def initialize(**data)
+  def initialize(data)
     @data = {}
     @data[:shortname]       = data[:shortname]
     @data[:employee]        = data[:employee]

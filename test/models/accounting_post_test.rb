@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -29,8 +31,9 @@ class AccountingPostTest < ActiveSupport::TestCase
     post = accounting_posts(:webauftritt)
     order = post.order
     order.update!(status: order_statuses(:abgeschlossen))
+
     assert_equal post.work_item_id, order.work_item_id
-    assert_equal true, post.work_item.closed
+    assert post.work_item.closed
     fresh = nil
     assert_difference('WorkItem.count', 2) do
       fresh = AccountingPost.create!(
@@ -42,19 +45,22 @@ class AccountingPostTest < ActiveSupport::TestCase
     end
     post.reload
     fresh.reload
+
     assert_not_equal post.work_item_id, order.work_item_id
     assert_equal post.work_item_id, worktimes(:wt_pz_webauftritt).work_item_id
-    assert_equal true, fresh.work_item.leaf
-    assert_equal true, post.work_item.leaf
-    assert_equal true, fresh.work_item.closed
-    assert_equal true, post.work_item.closed
+    assert fresh.work_item.leaf
+    assert post.work_item.leaf
+    assert fresh.work_item.closed
+    assert post.work_item.closed
   end
 
   test 'creating new accounting post when order workitem is invalid sets flash message' do
     post = accounting_posts(:webauftritt)
     post.update_column(:offered_rate, nil)
-    refute post.reload.valid?
+
+    assert_not_predicate post.reload, :valid?
     order = post.order
+
     assert_equal post.work_item_id, order.work_item_id
     assert_no_difference('WorkItem.count') do
       fresh = AccountingPost.create(
@@ -65,6 +71,7 @@ class AccountingPostTest < ActiveSupport::TestCase
       )
 
       post.reload
+
       assert_equal post.work_item_id, order.work_item_id
       assert_error_message fresh, :base, /Bestehende Buchungsposition ist ungültig/
     end
@@ -73,15 +80,18 @@ class AccountingPostTest < ActiveSupport::TestCase
   test 'opening post with closed order does not open work items' do
     closed = OrderStatus.where(closed: true).first
     post.order.update!(status: closed)
-    assert_equal true, post.work_item.reload.closed
+
+    assert post.work_item.reload.closed
 
     post.update!(closed: true)
     post.update!(closed: false)
-    assert_equal true, post.work_item.reload.closed
+
+    assert post.work_item.reload.closed
 
     opened = OrderStatus.where(closed: false).first
     post.order.update!(status: opened)
-    assert_equal false, post.work_item.reload.closed
+
+    assert_not post.work_item.reload.closed
   end
 
   test 'opening order with closed post does not open work items' do
@@ -91,13 +101,16 @@ class AccountingPostTest < ActiveSupport::TestCase
 
     opened = OrderStatus.where(closed: false).first
     post.order.update!(status: opened)
-    assert_equal true, post.work_item.reload.closed
+
+    assert post.work_item.reload.closed
 
     post.update!(closed: false)
-    assert_equal false, post.work_item.reload.closed
+
+    assert_not post.work_item.reload.closed
 
     post.order.update!(status: closed)
-    assert_equal true, post.work_item.reload.closed
+
+    assert post.work_item.reload.closed
   end
 
   test 'destroying accounting post destroys work item' do
@@ -134,12 +147,12 @@ class AccountingPostTest < ActiveSupport::TestCase
     order = Fabricate(:order)
     accounting_post = Fabricate(:accounting_post, work_item: order.work_item)
     5.times do |i|
-      Fabricate(:planning, work_item: order.work_item, employee: employee) do
+      Fabricate(:planning, work_item: order.work_item, employee:) do
         date { Date.new(2017, 12, 18) + i }
       end
     end
     Fabricate.times(10, :ordertime, work_item: order.work_item,
-                                    employee: employee)
+                                    employee:)
 
     assert_equal order.work_item, accounting_post.work_item
 
@@ -157,11 +170,13 @@ class AccountingPostTest < ActiveSupport::TestCase
     plannings = order.work_item.plannings.select do |p|
       p.work_item_id == order.work_item.id
     end
+
     assert_equal 0, plannings.size
 
     worktimes = order.work_item.worktimes.select do |t|
       t.work_item_id == order.work_item.id
     end
+
     assert_equal 0, worktimes.size
 
     assert_equal 5, accounting_post.plannings.count

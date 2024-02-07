@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -26,7 +28,7 @@
 class Ordertime < Worktime
   self.account_label = 'Position'
 
-  alias_attribute :account, :work_item
+  alias account work_item
   alias_attribute :account_id, :work_item_id
 
   validates_by_schema
@@ -42,7 +44,7 @@ class Ordertime < Worktime
   end
 
   def order
-    work_item.accounting_post && work_item.accounting_post.order
+    work_item.accounting_post&.order
   end
 
   def amount
@@ -50,9 +52,9 @@ class Ordertime < Worktime
   end
 
   def work_item_closed?
-    (work_item && work_item.closed?) ||
+    work_item&.closed? ||
       (work_item_id_was && work_item_id_was != work_item_id &&
-        WorkItem.where(id: work_item_id_was, closed: true).exists?)
+        WorkItem.exists?(id: work_item_id_was, closed: true))
   end
 
   def invoice_sent_or_paid?
@@ -64,21 +66,21 @@ class Ordertime < Worktime
   ########### validation helpers ###########
 
   def validate_by_work_item
-    if work_item && work_item.accounting_post
-      work_item.accounting_post.validate_worktime(self)
-    end
+    return unless work_item&.accounting_post
+
+    work_item.accounting_post.validate_worktime(self)
   end
 
   def validate_accounting_post
-    if work_item && !work_item.accounting_post
-      errors.add(:work_item_id, 'Der Auftrag hat keine Buchungsposition.')
-    end
+    return unless work_item && !work_item.accounting_post
+
+    errors.add(:work_item_id, 'Der Auftrag hat keine Buchungsposition.')
   end
 
   def validate_work_item_open
-    if changed != %w(invoice_id) && work_item_closed?
-      errors.add(:base, 'Auf geschlossene Aufträge und/oder Positionen kann nicht gebucht werden.')
-    end
+    return unless changed != %w[invoice_id] && work_item_closed?
+
+    errors.add(:base, 'Auf geschlossene Aufträge und/oder Positionen kann nicht gebucht werden.')
   end
 
   def protect_work_item_closed

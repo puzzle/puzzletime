@@ -1,13 +1,15 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-#:nodoc:
-REGEXP_ROWS = /<tr.+?<\/tr>/m #:nodoc:
-REGEXP_HEADERS = /<th.+?<\/th>/m #:nodoc:
-REGEXP_SORT_HEADERS = /<th.*?><a .*?sort_dir=asc.*?>.*?<\/a><\/th>/m #:nodoc:
-REGEXP_ACTION_CELL = /<td class=\"action\"><a .*?href.+?<\/a><\/td>/m #:nodoc:
+# :nodoc:
+REGEXP_ROWS = %r{<tr.+?</tr>}m # :nodoc:
+REGEXP_HEADERS = %r{<th.+?</th>}m # :nodoc:
+REGEXP_SORT_HEADERS = %r{<th.*?><a .*?sort_dir=asc.*?>.*?</a></th>}m # :nodoc:
+REGEXP_ACTION_CELL = %r{<td class="action"><a .*?href.+?</a></td>}m # :nodoc:
 
 # A simple test helper to prepare the test database with a CrudTestModel model.
 # This helper is used to test the CrudController and various helpers
@@ -97,9 +99,9 @@ module CrudTestHelper
   # Removes the crud_test_models table from the database.
   def reset_db
     c = ActiveRecord::Base.connection
-    [:crud_test_models,
-     :other_crud_test_models,
-     :crud_test_models_other_crud_test_models].each do |table|
+    %i[crud_test_models
+       other_crud_test_models
+       crud_test_models_other_crud_test_models].each do |table|
       c.drop_table(table) if c.data_source_exists?(table)
     end
   end
@@ -112,7 +114,7 @@ module CrudTestHelper
 
   # Fixture-style accessor method to get CrudTestModel instances by name
   def crud_test_models(name)
-    CrudTestModel.find_by_name(name.to_s)
+    CrudTestModel.find_by(name: name.to_s)
   end
 
   def with_test_routing
@@ -144,15 +146,15 @@ module CrudTestHelper
       name: c,
       children: 10 - index,
       rating: "#{index}.#{index}".to_f,
-      income: 10_000_000 * index + 0.1111 * index,
-      birthdate: "#{1900 + 10 * index}-#{index}-#{index}",
+      income: (10_000_000 * index) + (0.1111 * index),
+      birthdate: "#{1900 + (10 * index)}-#{index}-#{index}",
       # store entire date to avoid time zone issues
       gets_up_at: Time.utc(2000, 1, 1, index, index),
-      last_seen: "#{2000 + 10 * index}-#{index}-#{index} " \
-                    "1#{index}:2#{index}",
+      last_seen: "#{2000 + (10 * index)}-#{index}-#{index} " \
+                 "1#{index}:2#{index}",
       human: index.even?,
       remarks: "#{c} #{str(index + 1)} #{str(index + 2)}\n" *
-                  (index % 3 + 1)
+                  ((index % 3) + 1)
     )
     m.companion = companion
     m.save!
@@ -175,7 +177,7 @@ module CrudTestHelper
   def without_transaction
     c = ActiveRecord::Base.connection
     start_transaction = false
-    if c.adapter_name.downcase.include?('mysql') && c.open_transactions > 0
+    if c.adapter_name.downcase.include?('mysql') && c.open_transactions.positive?
       # in transactional tests, we may simply rollback
       c.execute('ROLLBACK')
       start_transaction = true

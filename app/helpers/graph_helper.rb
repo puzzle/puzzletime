@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -81,7 +83,7 @@ module GraphHelper
     end
   end
 
-  def worktime_link(worktime, &block)
+  def worktime_link(worktime, &)
     url = if worktime && !worktime.new_record?
             if can?(:edit, worktime)
               url_for(controller: worktime.controller,
@@ -93,10 +95,10 @@ module GraphHelper
                       week_date: worktime.work_date)
             end
           end
-    content_tag(:a, class: 'has-tooltip', href: url, &block)
+    content_tag(:a, class: 'has-tooltip', href: url, &)
   end
 
-  def day_td(date, &block)
-    content_tag(:td, class: ('holiday' if Holiday.non_working_day?(date)), &block)
+  def day_td(date, &)
+    content_tag(:td, class: ('holiday' if Holiday.non_working_day?(date)), &)
   end
 end

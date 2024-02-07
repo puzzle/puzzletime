@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
 # A dummy model used for general testing.
-class CrudTestModel < ActiveRecord::Base #:nodoc:
+class CrudTestModel < ApplicationRecord # :nodoc:
   belongs_to :companion, class_name: 'CrudTestModel'
   has_and_belongs_to_many :others, class_name: 'OtherCrudTestModel'
   has_many :mores, class_name: 'OtherCrudTestModel',
@@ -28,17 +30,17 @@ class CrudTestModel < ActiveRecord::Base #:nodoc:
   private
 
   def protect_if_companion
-    if companion.present?
-      errors.add(:base, 'Cannot destroy model with companion')
-      throw :abort
-    end
+    return if companion.blank?
+
+    errors.add(:base, 'Cannot destroy model with companion')
+    throw :abort
   end
 end
 
 # Second dummy model to test associations.
-class OtherCrudTestModel < ActiveRecord::Base #:nodoc:
+class OtherCrudTestModel < ApplicationRecord # :nodoc:
   has_and_belongs_to_many :others, class_name: 'CrudTestModel'
-  belongs_to :more, foreign_key: :more_id, class_name: 'CrudTestModel'
+  belongs_to :more, class_name: 'CrudTestModel'
 
   scope :list, -> { order(:name) }
 

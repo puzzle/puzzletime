@@ -11,7 +11,7 @@
 
 .results= render 'results'
 
-- if can?(:capacity_report, Evaluation)
+- if can?(:capacity_report, Evaluations::Evaluation)
   = action_link(action_icon('export', 'CSV Detaillierte Auslastung'),
                 reports_capacity_path,
                 data: { turbolinks: false })

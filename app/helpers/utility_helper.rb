@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -9,8 +11,8 @@ module UtilityHelper
 
   # Render a content tag with the collected contents rendered
   # by &block for each item in collection.
-  def content_tag_nested(tag, collection, options = {}, &block)
-    content_tag(tag, safe_join(collection, &block), options)
+  def content_tag_nested(tag, collection, options = {}, &)
+    content_tag(tag, safe_join(collection, &), options)
   end
 
   def icon(icon, options = {})
@@ -31,8 +33,8 @@ module UtilityHelper
 
   # Overridden method that takes a block that is executed for each item in
   # array before appending the results.
-  def safe_join(array, sep = $OUTPUT_FIELD_SEPARATOR, &block)
-    super(block_given? ? array.map(&block).compact : array, sep)
+  def safe_join(array, sep = $OUTPUT_FIELD_SEPARATOR, &)
+    super(block_given? ? array.map(&).compact : array, sep)
   end
 
   # Returns the css class for the given flash level.
@@ -47,7 +49,7 @@ module UtilityHelper
   # Adds a class to the given options, even if there are already classes.
   def add_css_class(options, classes)
     if options[:class]
-      options[:class] += ' ' + classes if classes
+      options[:class] += " #{classes}" if classes
     else
       options[:class] = classes
     end
@@ -58,7 +60,7 @@ module UtilityHelper
   # 'id' or 'position'.
   def default_crud_attrs
     attrs = model_class.column_names.map(&:to_sym)
-    attrs - [:id, :position, :password]
+    attrs - %i[id position password]
   end
 
   # Returns the ActiveRecord column type or nil.
@@ -68,9 +70,9 @@ module UtilityHelper
 
   # Returns an ActiveRecord column property for the passed attr or nil
   def column_property(obj, attr, property)
-    if obj.respond_to?(:column_for_attribute) && obj.has_attribute?(attr)
-      obj.column_for_attribute(attr).send(property)
-    end
+    return unless obj.respond_to?(:column_for_attribute) && obj.has_attribute?(attr)
+
+    obj.column_for_attribute(attr).send(property)
   end
 
   # Returns the association proxy for the given attribute. The attr parameter
@@ -79,11 +81,11 @@ module UtilityHelper
   # any association is returned. Returns nil if no association (or not of the
   # given macro) was found.
   def association(obj, attr, *macros)
-    if obj.class.respond_to?(:reflect_on_association)
-      name = assoc_and_id_attr(attr).first.to_sym
-      assoc = obj.class.reflect_on_association(name)
-      assoc if assoc && (macros.blank? || macros.include?(assoc.macro))
-    end
+    return unless obj.class.respond_to?(:reflect_on_association)
+
+    name = assoc_and_id_attr(attr).first.to_sym
+    assoc = obj.class.reflect_on_association(name)
+    assoc if assoc && (macros.blank? || macros.include?(assoc.macro))
   end
 
   # Returns the name of the attr and it's corresponding field

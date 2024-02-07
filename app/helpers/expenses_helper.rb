@@ -2,7 +2,7 @@
 
 module ExpensesHelper
   def format_expense_status_value(expense)
-    memo = Expense.statuses.keys.zip(%w(info warning success danger)).to_h
+    memo = Expense.statuses.keys.zip(%w[info warning success danger]).to_h
     content_tag(:span, expense.status_value, class: "label label-#{memo[expense.status]}")
   end
 
@@ -14,7 +14,7 @@ module ExpensesHelper
     table.col('', class: 'right') do |e|
       path = personal ? employee_expense_path(e.employee, e) : expense_path(e)
       link_to(path, title: 'Details') do
-        tag.i(class: 'icon-document') + ' Details'
+        "#{tag.i(class: 'icon-document')} Details".html_safe
       end
     end
   end
@@ -64,7 +64,7 @@ module ExpensesHelper
       if e.pending? || e.deferred?
 
         link_to(expenses_review_path(e), title: 'Kontrollieren') do
-          tag.i(class: 'icon-edit') + ' Kontrollieren'
+          "#{tag.i(class: 'icon-edit')} Kontrollieren".html_safe
         end
 
       end
@@ -121,7 +121,7 @@ module ExpensesHelper
   def expenses_file_field(form, **options)
     safe_join(
       [
-        file_field_with_warning(form, options),
+        file_field_with_warning(form, **options),
         form.labeled(' ', options) { t('expenses.attachment.hint') }
       ]
     )
@@ -133,7 +133,7 @@ module ExpensesHelper
     # Due to inconsistent browser behaviour, we need both file endings
     # and the 'all images' mimetype
     options.deep_merge!(
-      accept: %w(image/gif image/jpeg image/png .gif .jpg .jpeg .png).join(','),
+      accept: %w[image/gif image/jpeg image/png .gif .jpg .jpeg .png].join(','),
       required: !entry.receipt.attached?
     )
 

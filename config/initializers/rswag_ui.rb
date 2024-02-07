@@ -7,10 +7,15 @@ Rswag::Ui.configure do |c|
   # NOTE: If you're using rspec-api to expose Swagger files (under swagger_root) as JSON endpoints,
   # then the list below should correspond to the relative paths for those endpoints
 
-  api_versions = Rails.root.join('app', 'controllers', 'api').
-                 children.map { |p| p.to_s[%r{/(v\d+)\z}, 1] }.compact
+  api_versions = Rails.root.join('app/controllers/api')
+                      .children.filter_map { |p| p.to_s[%r{/(v\d+)\z}, 1] }
 
   api_versions.each do |version|
-    c.swagger_endpoint version, "API #{version} Docs"
+    if c.respond_to?(:openapi_endpoint)
+      c.openapi_endpoint version, "API #{version} Docs"
+    else
+      # Remove after RSwag has reached v3.0
+      c.swagger_endpoint version, "API #{version} Docs"
+    end
   end
 end

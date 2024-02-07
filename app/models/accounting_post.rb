@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -22,7 +24,7 @@
 #  service_id             :integer
 #
 
-class AccountingPost < ActiveRecord::Base
+class AccountingPost < ApplicationRecord
   include BelongingToWorkItem
   include Closable
 
@@ -37,8 +39,8 @@ class AccountingPost < ActiveRecord::Base
   ### CALLBACKS
 
   before_validation :derive_offered_fields
-  before_update :remember_old_work_item_id
   after_create :move_order_accounting_post_work_item
+  before_update :remember_old_work_item_id
   after_update :handle_changed_work_item
 
   ### VALIDATIONS
@@ -51,20 +53,18 @@ class AccountingPost < ActiveRecord::Base
   ### INSTANCE METHODS
 
   def validate_worktime(worktime)
-    return if worktime.report_type == AutoStartType::INSTANCE
+    return if worktime.report_type == ReportType::AutoStartType::INSTANCE
 
     if description_required? && worktime.description.blank?
       worktime.errors.add(:description, 'Es muss eine Bemerkung angegeben werden')
     end
 
-    if ticket_required? && worktime.ticket.blank?
-      worktime.errors.add(:ticket, 'Es muss ein Ticket angegeben werden')
-    end
+    worktime.errors.add(:ticket, 'Es muss ein Ticket angegeben werden') if ticket_required? && worktime.ticket.blank?
 
-    if from_to_times_required?
-      worktime.errors.add(:from_start_time, 'muss angegeben werden') if worktime.from_start_time.blank?
-      worktime.errors.add(:to_end_time, 'muss angegeben werden') if worktime.to_end_time.blank?
-    end
+    return unless from_to_times_required?
+
+    worktime.errors.add(:from_start_time, 'muss angegeben werden') if worktime.from_start_time.blank?
+    worktime.errors.add(:to_end_time, 'muss angegeben werden') if worktime.to_end_time.blank?
   end
 
   def attach_work_item(order, attributes, book_on_order = false)
@@ -113,10 +113,10 @@ class AccountingPost < ActiveRecord::Base
   end
 
   def check_booked_on_order
-    if booked_on_order? && !book_on_order_allowed?
-      errors.add(:base, "'Direkt auf Auftrag buchen' gewählt, aber es existieren bereits andere Buchungspositionen")
-      false
-    end
+    return unless booked_on_order? && !book_on_order_allowed?
+
+    errors.add(:base, "'Direkt auf Auftrag buchen' gewählt, aber es existieren bereits andere Buchungspositionen")
+    false
   end
 
   def remember_old_work_item_id
@@ -136,22 +136,22 @@ class AccountingPost < ActiveRecord::Base
     return if work_item_id == order.work_item_id
 
     post = order.accounting_posts.find_by(work_item_id: order.work_item_id)
-    if post
-      begin
-        post.work_item = WorkItem.create(name: order.work_item.name,
-                                      shortname: order.work_item.shortname,
-                                      parent_id: order.work_item.id,
-                                      closed: post.closed? || order.status.closed?)
-        post.save!
-      rescue ActiveRecord::RecordInvalid => error
-        validation_messages = post.errors.full_messages.join(', ')
-        msg = "Bestehende Buchungsposition ist ungültig und muss zuerst korrigiert werden: #{validation_messages}"
-        errors.add(:base, msg)
-        throw(:abort)
-      end
-      order.work_item.move_times!(post.work_item)
-      order.work_item.move_plannings!(post.work_item)
+    return unless post
+
+    begin
+      post.work_item = WorkItem.create(name: order.work_item.name,
+                                       shortname: order.work_item.shortname,
+                                       parent_id: order.work_item.id,
+                                       closed: post.closed? || order.status.closed?)
+      post.save!
+    rescue ActiveRecord::RecordInvalid
+      validation_messages = post.errors.full_messages.join(', ')
+      msg = "Bestehende Buchungsposition ist ungültig und muss zuerst korrigiert werden: #{validation_messages}"
+      errors.add(:base, msg)
+      throw(:abort)
     end
+    order.work_item.move_times!(post.work_item)
+    order.work_item.move_plannings!(post.work_item)
   end
 
   def exclusive_work_item?

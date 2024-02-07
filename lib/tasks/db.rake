@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -10,17 +12,17 @@ namespace :db do
     desc 'Load a db dump from the given FILE'
     task load: ['db:drop', 'db:create'] do
       if ENV['FILE'].blank?
-        $stderr.puts 'Usage: FILE=/path/to/dump.sql rake db:dump:load'
+        warn 'Usage: FILE=/path/to/dump.sql rake db:dump:load'
         exit 1
       end
 
       c = ActiveRecord::Base.connection_config
       sh({ 'PGPASSWORD' => c[:password] },
-         %W(psql
+         %W[psql
             -U #{c[:username]}
-            -f #{ENV['FILE']}
+            -f #{ENV.fetch('FILE', nil)}
             -h #{c[:host]}
-            #{c[:database]}).join(' '))
+            #{c[:database]}].join(' '))
       Rake::Task['db:migrate'].invoke
     end
   end
@@ -32,7 +34,6 @@ namespace :db do
       employee: {
         firstname: 'First',
         lastname: 'Member',
-        passwd: Employee.encode('member'),
         password: 'member',
         email: 'mb1@puzzle.ch',
         management: false
@@ -62,7 +63,6 @@ namespace :db do
       employee: {
         firstname: 'Second',
         lastname: 'Member',
-        passwd: Employee.encode('member'),
         password: 'member',
         email: 'mb2@puzzle.ch',
         management: false
@@ -89,7 +89,6 @@ namespace :db do
       employee: {
         firstname: 'Manager',
         lastname: 'Management',
-        passwd: Employee.encode('member'),
         password: 'member',
         email: 'mgt@puzzle.ch',
         management: true

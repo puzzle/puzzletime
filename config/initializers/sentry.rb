@@ -11,14 +11,14 @@ if ENV['SENTRY_DSN']
     config.sanitize_fields = Rails.application.config.filter_parameters.map(&:to_s)
     config.tags[:version] = Puzzletime.version
 
-    if (commit = ENV['OPENSHIFT_BUILD_COMMIT'])
+    if (commit = ENV.fetch('OPENSHIFT_BUILD_COMMIT', nil))
       config.tags[:commit] = commit
       config.release = "#{Puzzletime.version}_#{commit}"
     else
       config.release = Puzzletime.version
     end
 
-    if (project = ENV['OPENSHIFT_BUILD_NAMESPACE'])
+    if (project = ENV.fetch('OPENSHIFT_BUILD_NAMESPACE', nil))
       config.tags[:project] = project
       config.tags[:customer] = project.split('-')[0]
     end

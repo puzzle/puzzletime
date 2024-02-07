@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -26,13 +28,13 @@ class OrderAddClosedAt < ActiveRecord::Migration[5.1]
     return unless order_status_closed
 
     status_to_migrate.each do |(name, closed_at)|
-      order_status = OrderStatus.find_by(name: name)
+      order_status = OrderStatus.find_by(name:)
 
       next unless order_status
 
       Order.where(status_id: order_status.id)
            .update_all(status_id: order_status_closed.id,
-                       closed_at: closed_at)
+                       closed_at:)
       order_status.destroy!
     end
   end

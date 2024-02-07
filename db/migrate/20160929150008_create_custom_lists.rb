@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -49,14 +51,14 @@ class CreateCustomLists < ActiveRecord::Migration[5.1]
     table = Arel::Table.new(:employee_lists_employees)
     query = table.project(Arel.sql('*'))
     select_all(query.to_sql).to_a.group_by { |row| row['employee_list_id'].to_i }.tap do |groups|
-      groups.values.each do |list|
+      groups.each_value do |list|
         list.collect! { |row| row['employee_id'].to_i }
       end
     end
   end
 
   def insert_custom_list(employee_id, name, ids)
-    CustomList.create!(employee_id: employee_id,
+    CustomList.create!(employee_id:,
                        name: name.presence || 'Meine Liste',
                        item_type: 'Employee',
                        item_ids: ids)

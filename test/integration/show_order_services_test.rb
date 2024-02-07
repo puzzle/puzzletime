@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -12,6 +14,7 @@ class ShowOrderServices < ActionDispatch::IntegrationTest
     timeout_safe do
       create_ordertime_show_order_services_as employee_without_responsibilities
       click_worktime_row
+
       assert has_no_text?('Zeit bearbeiten')
       assert_equal order_order_services_path(order_id: order), current_path
     end
@@ -21,6 +24,7 @@ class ShowOrderServices < ActionDispatch::IntegrationTest
     timeout_safe do
       create_ordertime_show_order_services_as employee_responsible_for_order
       click_worktime_row
+
       assert has_text?('Zeit bearbeiten')
       assert_equal edit_ordertime_path(id: ordertime.id), current_path
     end
@@ -30,6 +34,7 @@ class ShowOrderServices < ActionDispatch::IntegrationTest
     timeout_safe do
       create_ordertime_show_order_services_as employee_responsible_for_different_order
       click_worktime_row
+
       assert has_no_text?('Zeit bearbeiten')
       assert_equal order_order_services_path(order_id: order), current_path
     end
@@ -39,6 +44,7 @@ class ShowOrderServices < ActionDispatch::IntegrationTest
     timeout_safe do
       create_ordertime_show_order_services_as manager_not_responsible_for_any_order
       click_worktime_row
+
       assert has_text?('Zeit bearbeiten')
       assert_equal edit_ordertime_path(id: ordertime.id), current_path
     end
@@ -52,6 +58,7 @@ class ShowOrderServices < ActionDispatch::IntegrationTest
       login_as user
       visit order_order_services_path(order_id: order)
       click_worktime_row
+
       assert has_no_text?('Zeit bearbeiten')
       assert_equal order_order_services_path(order_id: order), current_path
     end
@@ -60,31 +67,31 @@ class ShowOrderServices < ActionDispatch::IntegrationTest
   private
 
   def employee_without_responsibilities
-    Employee.where.not(management: true, id: responsible_ids).first.tap do |employee|
-      refute employee.management
-      refute employee.order_responsible?
+    Employee.where.not(management: true).where.not(id: responsible_ids).first.tap do |employee|
+      assert_not employee.management
+      assert_not_predicate employee, :order_responsible?
     end
   end
 
   def employee_responsible_for_order
     order.responsible.tap do |employee|
-      refute employee.management
-      assert employee.order_responsible?
+      assert_not employee.management
+      assert_predicate employee, :order_responsible?
       assert_equal employee, order.responsible
     end
   end
 
   def employee_responsible_for_different_order
     Employee.where(management: false, id: responsible_ids).where.not(id: order.responsible_id).first.tap do |employee|
-      refute employee.management
-      assert employee.order_responsible?
-      refute_equal employee, order.responsible
+      assert_not employee.management
+      assert_predicate employee, :order_responsible?
+      assert_not_equal employee, order.responsible
     end
   end
 
   def manager_not_responsible_for_any_order
     Employee.where(management: true).where.not(id: order.responsible_id).first.tap do |employee|
-      refute_equal employee, order.responsible
+      assert_not_equal employee, order.responsible
       assert employee.management
     end
   end
@@ -95,7 +102,7 @@ class ShowOrderServices < ActionDispatch::IntegrationTest
 
   def create_ordertime(employee)
     @ordertime = Ordertime.create!(
-      employee: employee,
+      employee:,
       work_date: Time.zone.today,
       report_type: :absolute_day,
       hours: 0.5,

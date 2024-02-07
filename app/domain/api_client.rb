@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class ApiClient
   def authenticate(user, password)
-    return self if Settings.api_client.user == user && Settings.api_client.password == password
+    self if Settings.api_client.user == user && Settings.api_client.password == password
   end
 
   def id

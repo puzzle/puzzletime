@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -8,13 +10,13 @@ class OrdersController < CrudController
 
   self.permitted_attrs = [
     :crm_key, :kind_id, :responsible_id, :department_id, :status_id,
-    work_item_attributes: [:name, :shortname, :description, :parent_id],
-    order_team_members_attributes: [:id, :employee_id, :comment, :_destroy],
-    order_contacts_attributes: [:id, :contact_id_or_crm, :comment, :_destroy],
-    additional_crm_orders_attributes: [:id, :crm_key, :_destroy]
+    { work_item_attributes: %i[name shortname description parent_id],
+      order_team_members_attributes: %i[id employee_id comment _destroy],
+      order_contacts_attributes: %i[id contact_id_or_crm comment _destroy],
+      additional_crm_orders_attributes: %i[id crm_key _destroy] }
   ]
 
-  self.remember_params += %w(department_id kind_id status_id responsible_id)
+  self.remember_params += %w[department_id kind_id status_id responsible_id]
 
   self.sort_mappings = {
     client: 'work_items.path_names',
@@ -25,7 +27,7 @@ class OrdersController < CrudController
     status: 'order_statuses.position'
   }
 
-  self.search_columns = %w(work_items.path_shortnames work_items.path_names)
+  self.search_columns = %w[work_items.path_shortnames work_items.path_names]
 
   before_action :set_filter_values, only: :index
 
@@ -60,9 +62,7 @@ class OrdersController < CrudController
     @crm = Crm.instance
     @order = Order.find_by(crm_key: key)
     @crm_order = @crm.find_order(key)
-    if @crm_order
-      @client = Client.where(crm_key: @crm_order[:client][:key].to_s).first
-    end
+    @client = Client.where(crm_key: @crm_order[:client][:key].to_s).first if @crm_order
   rescue Crm::Error => e
     @crm_error = e.message
   end
@@ -112,7 +112,7 @@ class OrdersController < CrudController
   end
 
   def filter_params_present?
-    (params.keys & %w(department_id kind_id status_id responsible_id)).present?
+    params.keys.intersect?(%w[department_id kind_id status_id responsible_id])
   end
 
   def set_default_filter_params
@@ -143,11 +143,11 @@ class OrdersController < CrudController
 
   def assign_attributes
     super
-    if entry.new_record?
-      entry.work_item.parent_id ||= (params[:category_active] &&
-                                   params[:category_work_item_id].presence) ||
-                                    params[:client_work_item_id].presence
-    end
+    return unless entry.new_record?
+
+    entry.work_item.parent_id ||= (params[:category_active] &&
+                                 params[:category_work_item_id].presence) ||
+                                  params[:client_work_item_id].presence
   end
 
   def copy_associations
@@ -174,7 +174,7 @@ class OrdersController < CrudController
       .joins(:managed_orders)
       .employed_ones(Period.current_year)
       .select('employees.*, ' \
-              "CASE WHEN employees.id = #{current_user.id.to_s(:db)} THEN 1 " \
+              "CASE WHEN employees.id = #{current_user.id.to_fs(:db)} THEN 1 " \
               'ELSE 2 END AS employee_order') # current user should be on top
       .reorder('employee_order, lastname, firstname')
   end
@@ -191,7 +191,7 @@ class OrdersController < CrudController
 
   def load_client_options
     clients = Client.list
-    if Crm.instance && Crm.instance.restrict_local?
+    if Crm.instance&.restrict_local?
       clients = clients.where(allow_local: true).to_a
       if params[:client_work_item_id].present?
         client = Client.find_by(work_item_id: params[:client_work_item_id])
@@ -215,9 +215,7 @@ class OrdersController < CrudController
 
   def append_crm_contacts(contacts)
     entry.order_contacts.each do |oc|
-      if oc.contact && oc.contact.id.nil?
-        contacts << oc.contact
-      end
+      contacts << oc.contact if oc.contact && oc.contact.id.nil?
     end
     contacts
   end

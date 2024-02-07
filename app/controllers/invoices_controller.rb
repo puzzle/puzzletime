@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -7,13 +9,13 @@ class InvoicesController < CrudController
   self.nesting = [Order]
 
   self.permitted_attrs = [:billing_date, :due_date, :period_from, :period_to,
-                          :billing_address_id, :grouping, employee_ids: [], work_item_ids: []]
+                          :billing_address_id, :grouping, { employee_ids: [], work_item_ids: [] }]
 
   self.sort_mappings = { period: :period_from, manual?: :grouping }
 
   helper_method :checked_work_item_ids, :checked_employee_ids, :order
 
-  prepend_before_action :entry, only: [:show, :new, :create, :edit, :update, :destroy, :sync]
+  prepend_before_action :entry, only: %i[show new create edit update destroy sync]
 
   before_render_index :load_totals_paid
   before_render_form :load_associations
@@ -23,15 +25,13 @@ class InvoicesController < CrudController
       format.html
       format.json
       format.pdf do
-        if Invoicing.instance
-          pdf = Invoicing.instance.get_pdf(entry)
-          send_data(pdf,
-                    filename: "#{entry.reference}.pdf",
-                    type: 'application/pdf',
-                    disposition: :inline)
-        else
-          fail ActionController::UnknownFormat
-        end
+        raise ActionController::UnknownFormat unless Invoicing.instance
+
+        pdf = Invoicing.instance.get_pdf(entry)
+        send_data(pdf,
+                  filename: "#{entry.reference}.pdf",
+                  type: 'application/pdf',
+                  disposition: :inline)
       end
     end
   end
@@ -111,12 +111,10 @@ class InvoicesController < CrudController
     attrs[:period_from] ||= params[:start_date]
     attrs[:period_to] ||= params[:end_date]
     attrs[:grouping] = 'manual' if params[:manual_invoice]
-    if params[:employee_id].present?
-      attrs[:employee_ids] = Array(attrs[:employee_ids]) << params[:employee_id]
-    end
-    if params[:work_item_id].present?
-      attrs[:work_item_ids] = Array(attrs[:work_item_ids]) << params[:work_item_id]
-    end
+    attrs[:employee_ids] = Array(attrs[:employee_ids]) << params[:employee_id] if params[:employee_id].present?
+    return if params[:work_item_id].blank?
+
+    attrs[:work_item_ids] = Array(attrs[:work_item_ids]) << params[:work_item_id]
   end
 
   def init_default_attrs(attrs)
@@ -128,10 +126,10 @@ class InvoicesController < CrudController
       attrs[:employee_ids] = employees_for_period(attrs[:period_from],
                                                   attrs[:period_to]).map(&:id)
     end
-    if attrs[:work_item_ids].blank?
-      attrs[:work_item_ids] = work_items_for_period(attrs[:period_from],
-                                                    attrs[:period_to]).map(&:id)
-    end
+    return if attrs[:work_item_ids].present?
+
+    attrs[:work_item_ids] = work_items_for_period(attrs[:period_from],
+                                                  attrs[:period_to]).map(&:id)
   end
 
   def order
@@ -205,7 +203,7 @@ class InvoicesController < CrudController
   end
 
   def due_date
-    entry.due_date || billing_date + payment_period.days if payment_period.present?
+    entry.due_date || (billing_date + payment_period.days) if payment_period.present?
   end
 
   def last_grouping

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2020, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -5,40 +7,42 @@
 
 require 'test_helper'
 
-class Invoicing::SmallInvoice::InvoiceSyncTest < ActiveSupport::TestCase
-  include SmallInvoiceTestHelper
+module Invoicing
+  module SmallInvoice
+    class InvoiceSyncTest < ActiveSupport::TestCase
+      include SmallInvoiceTestHelper
 
-  test '#sync' do
-    get_invoice = stub_get_entity(
-      :invoices,
-      params: '?with=positions',
-      key: 1,
-      response: invoice_json
-    )
+      test '#sync' do
+        get_invoice = stub_get_entity(
+          :invoices,
+          params: '?with=positions',
+          key: 1,
+          response: invoice_json
+        )
 
-    subject.sync
+        subject.sync
 
-    assert_requested(get_invoice)
-  end
+        assert_requested(get_invoice)
+      end
 
-  private
+      private
 
-  def described_class
-    Invoicing::SmallInvoice::InvoiceSync
-  end
+      def described_class
+        Invoicing::SmallInvoice::InvoiceSync
+      end
 
-  def subject
-    described_class.new(invoice)
-  end
+      def subject
+        described_class.new(invoice)
+      end
 
-  def invoice
-    invoice = invoices(:webauftritt_may)
-    invoice.update_column(:invoicing_key, 1)
-    invoice
-  end
+      def invoice
+        invoice = invoices(:webauftritt_may)
+        invoice.update_column(:invoicing_key, 1)
+        invoice
+      end
 
-  def invoice_json
-    '{
+      def invoice_json
+        '{
       "item": {
         "bank_account_id": null,
         "cash_discount_date": null,
@@ -98,5 +102,7 @@ class Invoicing::SmallInvoice::InvoiceSyncTest < ActiveSupport::TestCase
         "vat_included": false
       }
     }'
+      end
+    end
   end
 end

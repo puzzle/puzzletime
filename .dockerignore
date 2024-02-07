@@ -1,0 +1,46 @@
+# Ignore bundler config.
+/.bundle
+
+# Ignore the default SQLite database.
+/db/*.sqlite3
+/db/*.sqlite3-journal
+
+# Ignore all logfiles and tempfiles.
+/log/*
+/tmp/*
+!/tmp/.keep
+!/log/.keep
+
+# Puma is unhappy without this
+!/tmp/pids
+/tmp/pids/*
+!/tmp/pids/.keep
+
+# Ignore uploaded files in development
+/storage/*
+!/storage/.keep
+
+/node_modules
+/yarn-error.log
+
+/public/assets
+.byebug_history
+
+# Ignore master key for decrypting credentials and more.
+/config/master.key
+
+# Ignore public uploads
+public/uploads
+
+# Ignore changed bundle binstub
+bin/bundle
+
+# Ignore local environment variables file
+.env.local
+.envrc
+
+# Ignore local gems
+vendor/bundle/**/
+
+.git/
+.github/

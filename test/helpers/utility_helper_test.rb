@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -10,36 +12,42 @@ class UtilityHelperTest < ActionView::TestCase
   include CrudTestHelper
 
   test 'content_tag_nested escapes safe correctly' do
-    html = content_tag_nested(:div, %w(a b)) { |e| content_tag(:span, e) }
+    html = content_tag_nested(:div, %w[a b]) { |e| content_tag(:span, e) }
+
     assert_equal '<div><span>a</span><span>b</span></div>', html
   end
 
   test 'content_tag_nested escapes unsafe correctly' do
-    html = content_tag_nested(:div, %w(a b)) { |e| "<#{e}>" }
+    html = content_tag_nested(:div, %w[a b]) { |e| "<#{e}>" }
+
     assert_equal '<div>&lt;a&gt;&lt;b&gt;</div>', html
   end
 
   test 'content_tag_nested without block' do
-    html = content_tag_nested(:div, %w(a b))
+    html = content_tag_nested(:div, %w[a b])
+
     assert_equal '<div>ab</div>', html
   end
 
   test 'safe_join without block' do
     html = safe_join(['<a>', '<b>'.html_safe])
+
     assert_equal '&lt;a&gt;<b>', html
   end
 
   test 'safe_join with block' do
-    html = safe_join(%w(a b)) { |e| content_tag(:span, e) }
+    html = safe_join(%w[a b]) { |e| content_tag(:span, e) }
+
     assert_equal '<span>a</span><span>b</span>', html
   end
 
   test 'default attributes do not include id and password' do
     reset_db
     setup_db
-    assert_equal [:name, :email, :whatever, :children, :companion_id, :rating,
-                  :income, :birthdate, :gets_up_at, :last_seen, :human,
-                  :remarks, :created_at, :updated_at],
+
+    assert_equal %i[name email whatever children companion_id rating
+                    income birthdate gets_up_at last_seen human
+                    remarks created_at updated_at],
                  default_crud_attrs
     reset_db
   end
@@ -50,6 +58,7 @@ class UtilityHelperTest < ActionView::TestCase
     create_test_data
 
     m = crud_test_models(:AAAAA)
+
     assert_equal :string, column_type(m, :name)
     assert_equal :integer, column_type(m, :children)
     assert_equal :integer, column_type(m, :companion_id)

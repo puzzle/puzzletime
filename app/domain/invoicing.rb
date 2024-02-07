@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -8,9 +10,9 @@ module Invoicing
   cattr_accessor :instance
 
   def self.init
-    if Settings.small_invoice.client_id && Settings.small_invoice.client_secret && !Rails.env.test?
-      Invoicing.instance = Invoicing::SmallInvoice::Interface.new
-      InvoicingSyncJob.schedule if Delayed::Job.table_exists?
-    end
+    return unless Settings.small_invoice.client_id && Settings.small_invoice.client_secret && !Rails.env.test?
+
+    Invoicing.instance = Invoicing::SmallInvoice::Interface.new
+    InvoicingSyncJob.schedule if Delayed::Job.table_exists?
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -10,6 +12,7 @@ class WorktimesControllerTest < ActionController::TestCase
 
   def test_index
     get :index
+
     assert_equal 7, assigns(:week_days).count
     assert_equal Time.zone.today.at_beginning_of_week, assigns(:week_days).first
     assert_equal Time.zone.today.at_end_of_week, assigns(:week_days).last
@@ -17,6 +20,7 @@ class WorktimesControllerTest < ActionController::TestCase
 
   def test_week_switcher
     get :index, params: { week_date: '2013-12-31' }
+
     assert_equal 7, assigns(:week_days).count
     assert_equal Date.new(2013, 12, 30), assigns(:week_days).first
     assert_equal Date.new(2014, 1, 5), assigns(:week_days).last
@@ -24,6 +28,7 @@ class WorktimesControllerTest < ActionController::TestCase
 
   def test_date_picker_week_switcher
     get :index, params: { week_date: '31.12.2013' } # datepicker uses german locale
+
     assert_equal 7, assigns(:week_days).count
     assert_equal Date.new(2013, 12, 30), assigns(:week_days).first
     assert_equal Date.new(2014, 1, 5), assigns(:week_days).last
@@ -31,6 +36,7 @@ class WorktimesControllerTest < ActionController::TestCase
 
   def test_worktimes
     get :index, params: { week_date: '2006-12-8' }
+
     assert_equal 4, assigns(:worktimes).count
     assert_equal Date.new(2006, 12, 6), assigns(:worktimes).first.work_date
     assert_equal Date.new(2006, 12, 9), assigns(:worktimes).last.work_date
@@ -43,6 +49,7 @@ class WorktimesControllerTest < ActionController::TestCase
     commit_times(:pascal)
 
     get :index, params: { week_date: months_first_day.to_s }
+
     assert_no_modify_buttons
   end
 
@@ -51,6 +58,7 @@ class WorktimesControllerTest < ActionController::TestCase
     login_as(:pascal)
 
     get :index, params: { week_date: months_first_day.to_s }
+
     assert_modify_buttons
   end
 
@@ -62,6 +70,7 @@ class WorktimesControllerTest < ActionController::TestCase
     commit_times(:mark)
 
     get :index, params: { week_date: months_first_day.to_s }
+
     assert_select('a i.icon-duplicate', count: 2)
     assert_select('a i.icon-delete', count: 2)
     assert_select('a i.icon-add', count: 0)
@@ -73,6 +82,7 @@ class WorktimesControllerTest < ActionController::TestCase
     login_as(:pascal)
 
     get :index, params: { week_date: months_first_day.to_s }
+
     assert_modify_buttons
     assert_select('.entry:not(.is-empty) a.entry-link', count: 2)
   end
@@ -83,6 +93,7 @@ class WorktimesControllerTest < ActionController::TestCase
     login_as(:pascal)
 
     get :index, params: { week_date: months_first_day.to_s }
+
     assert_select('a i.icon-duplicate', count: 2)
     assert_select('a i.icon-delete', count: 1)
     assert_select('a i.icon-add', count: 7 * 2)
@@ -95,6 +106,7 @@ class WorktimesControllerTest < ActionController::TestCase
     login_as(:pascal)
 
     get :index, params: { week_date: months_first_day.to_s }
+
     assert_select('a i.icon-duplicate', count: 2)
     assert_select('a i.icon-delete', count: 1)
     assert_select('a i.icon-add', count: 7 * 2)
@@ -107,6 +119,7 @@ class WorktimesControllerTest < ActionController::TestCase
     login_as(:pascal)
 
     get :index, params: { week_date: months_first_day.to_s }
+
     assert_select('a i.icon-duplicate', count: 2)
     assert_select('a i.icon-delete', count: 1)
     assert_select('a i.icon-add', count: 7 * 2)
@@ -136,15 +149,15 @@ class WorktimesControllerTest < ActionController::TestCase
   end
 
   def create_invoice(status)
-    Fabricate(:invoice, order: orders(:puzzletime), status: status, due_date: Date.new(2000, 1, 23))
+    Fabricate(:invoice, order: orders(:puzzletime), status:, due_date: Date.new(2000, 1, 23))
   end
 
   def commit_times(name)
     employees(name).update!(committed_worktimes_at:
-                            Date.today.at_end_of_month)
+                            Time.zone.today.at_end_of_month)
   end
 
   def months_first_day
-    Date.today.at_beginning_of_month
+    Time.zone.today.at_beginning_of_month
   end
 end

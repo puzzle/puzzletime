@@ -19,8 +19,8 @@ module Api
 
     class IncludeError < StandardError
       def self.===(exception)
-        exception.class == ArgumentError &&
-          exception.message.match(/is not specified as a relationship on/)
+        exception.instance_of?(ArgumentError) &&
+          exception.message.include?('is not specified as a relationship on')
       end
     end
 
@@ -65,15 +65,15 @@ module Api
           {
             id: request.uuid,
             status: status.to_s,
-            code: code,
-            title: title,
-            detail: detail
+            code:,
+            title:,
+            detail:
           }.merge(opts)
         ]
 
       }
       render json: error_payload,
-             status: status,
+             status:,
              content_type: Mime::Type.lookup_by_extension(:jsonapi)
     end
 
@@ -82,7 +82,7 @@ module Api
     def set_pagination_headers
       response.headers.merge!(
         'Pagination-Total-Count' => list_entries.total_count,
-        'Pagination-Per-Page' => list_entries.current_per_page,
+        'Pagination-Per-Page' => list_entries.limit_value,
         'Pagination-Current-Page' => list_entries.current_page,
         'Pagination-Total-Pages' => list_entries.total_pages
       )

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2020, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -10,7 +12,7 @@ module SmallInvoiceTestHelper
     setup :stub_auth
   end
 
-  BASE_URL = 'https://api.smallinvoice.com/v2'.freeze
+  BASE_URL = 'https://api.smallinvoice.com/v2'
 
   def entity(name)
     "Invoicing::SmallInvoice::Entity::#{name.to_s.singularize.classify}".constantize
@@ -38,7 +40,7 @@ module SmallInvoiceTestHelper
       }
     )
 
-    stub_api_request(:post, name, args)
+    stub_api_request(:post, name, **args)
   end
 
   def stub_edit_entity(name, **kwargs)
@@ -46,11 +48,11 @@ module SmallInvoiceTestHelper
       body: JSON.generate(new_contact)
     }.merge(kwargs)
 
-    stub_api_request(:put, name, args)
+    stub_api_request(:put, name, **args)
   end
 
-  def stub_delete_entity(name, **kwargs)
-    stub_api_request(:delete, name, **kwargs)
+  def stub_delete_entity(name, **)
+    stub_api_request(:delete, name, **)
   end
 
   def path(name, **kwargs)
@@ -68,8 +70,8 @@ module SmallInvoiceTestHelper
     end
   end
 
-  def path_url(name, **kwargs)
-    path(name, **kwargs).join('/')
+  def path_url(name, **)
+    path(name, **).join('/')
   end
 
   private
@@ -84,7 +86,7 @@ module SmallInvoiceTestHelper
     response ||= key ? single_response(name) : response(name)
 
     stub = stub_request(method, url)
-    stub = stub.with(body: body) if body
+    stub = stub.with(body:) if body
     stub = stub.to_return(status: 200, body: response) if response
     stub
   end
@@ -128,7 +130,7 @@ module SmallInvoiceTestHelper
     JSON.generate(
       {
         access_token: '1234',
-        expires_in: 43200,
+        expires_in: 43_200,
         token_type: 'Bearer'
       }
     )

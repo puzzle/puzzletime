@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -13,7 +15,7 @@ module Conditioner
       existing[0] = "( #{existing[0]} ) #{cat} "
     end
     existing[0] += appends[0]
-    existing.concat appends[1..-1]
+    existing.concat appends[1..]
   end
 
   def clone_conditions(conditions)

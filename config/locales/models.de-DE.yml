@@ -176,7 +176,6 @@ de-DE:
         firstname: Vorname
         lastname: Nachname
         shortname: Kürzel
-        passwd: Passwort
         management: Management
         department: Organisationseinheit
         department_id: Organisationseinheit

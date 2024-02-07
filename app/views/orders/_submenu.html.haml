@@ -12,10 +12,10 @@
         reports_orders_path(clear: 1),
         reports_orders_path
 
-- if can?(:managed, Evaluation)
+- if can?(:managed, Evaluations::Evaluation)
   = nav 'Meine Aufträge', evaluation_path('managed', clear: 1)
 
-- if can?(:clients, Evaluation)
+- if can?(:clients, Evaluations::Evaluation)
   = nav 'Kunden',
         evaluation_path('clients', clear: 1),
         evaluation_path('clients'),
@@ -23,7 +23,7 @@
         evaluation_path('workitememployees'),
         evaluation_path('subworkitems')
 
-- if can?(:departments, Evaluation)
+- if can?(:departments, Evaluations::Evaluation)
   = nav 'Organisationseinheiten',
         evaluation_path('departments', clear: 1),
         evaluation_path('departments'),

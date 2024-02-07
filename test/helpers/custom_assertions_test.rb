@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -27,7 +29,7 @@ class CustomAssertionsTest < ActiveSupport::TestCase
   end
 
   test 'assert count fails if count does not match' do
-    assert_raise(MiniTest::Assertion) do
+    assert_raise(Minitest::Assertion) do
       assert_count 2, 'ba', 'barbabapa'
     end
   end
@@ -39,7 +41,7 @@ class CustomAssertionsTest < ActiveSupport::TestCase
   end
 
   test 'assert valid record fails for invalid' do
-    assert_raise(MiniTest::Assertion) do
+    assert_raise(Minitest::Assertion) do
       assert_valid invalid_record
     end
   end
@@ -57,19 +59,19 @@ class CustomAssertionsTest < ActiveSupport::TestCase
   end
 
   test 'assert not valid fails if record valid' do
-    assert_raise(MiniTest::Assertion) do
+    assert_raise(Minitest::Assertion) do
       assert_not_valid crud_test_models('AAAAA')
     end
   end
 
   test 'assert not valid fails if record invalid and valid attrs given' do
-    assert_raise(MiniTest::Assertion) do
+    assert_raise(Minitest::Assertion) do
       assert_not_valid invalid_record, :name, :rating, :children
     end
   end
 
   test 'assert not valid fails if not all invalid attrs given' do
-    assert_raise(MiniTest::Assertion) do
+    assert_raise(Minitest::Assertion) do
       assert_not_valid invalid_record, :name
     end
   end

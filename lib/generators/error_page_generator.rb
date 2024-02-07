@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -7,7 +9,7 @@ class ErrorPageGenerator < Rails::Generators::NamedBase
   desc 'Generate a static error page based on the layout.'
 
   def generate_page
-    error = if file_name =~ /^\d{3}$/
+    error = if /^\d{3}$/.match?(file_name)
               file_name
             else
               Rack::Utils::SYMBOL_TO_STATUS_CODE[file_name.to_sym]

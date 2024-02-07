@@ -49,7 +49,7 @@ module Apidocs
 
       nested = []
       # nested << controller.optional_nesting || []
-      nested << controller.nesting || []
+      (nested << controller.nesting) || []
 
       nested.flatten.include? controller_class.model_class
     end

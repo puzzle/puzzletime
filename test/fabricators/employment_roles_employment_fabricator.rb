@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: employment_roles_employments
@@ -11,5 +13,5 @@
 
 Fabricator(:employment_roles_employment) do
   employment_role
-  percent { 1 + rand(99) }
+  percent { rand(1..99) }
 end

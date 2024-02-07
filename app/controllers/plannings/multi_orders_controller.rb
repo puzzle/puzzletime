@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -16,17 +18,15 @@ module Plannings
     private
 
     def orders
-      @orders ||= begin
-        if params[:department_id]
-          d = Department.find(params[:department_id])
-          @title = "Planung der Aufträge von #{d}"
-          d.orders.where('work_items.closed = ?', false).list
-        elsif params[:custom_list_id]
-          CustomList.where(item_type: Order.sti_name).find(params[:custom_list_id]).items.list
-        else
-          raise ActiveRecord::RecordNotFound
-        end
-      end
+      @orders ||= if params[:department_id]
+                    d = Department.find(params[:department_id])
+                    @title = "Planung der Aufträge von #{d}"
+                    d.orders.where(work_items: { closed: false }).list
+                  elsif params[:custom_list_id]
+                    CustomList.where(item_type: Order.sti_name).find(params[:custom_list_id]).items.list
+                  else
+                    raise ActiveRecord::RecordNotFound
+                  end
     end
 
     def order
@@ -48,8 +48,8 @@ module Plannings
 
     def order_for_work_item_id(work_item_id)
       Order.joins('LEFT JOIN work_items ON ' \
-                  'orders.work_item_id = ANY (work_items.path_ids)').
-        find_by('work_items.id = ?', work_item_id)
+                  'orders.work_item_id = ANY (work_items.path_ids)')
+           .find_by('work_items.id = ?', work_item_id)
     end
   end
 end

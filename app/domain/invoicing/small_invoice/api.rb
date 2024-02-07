@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -43,7 +45,7 @@ module Invoicing
       end
 
       def get_raw(path, auth: true, **params)
-        get_request(path, auth: auth, **params).body
+        get_request(path, auth:, **params).body
       end
 
       private
@@ -68,13 +70,13 @@ module Invoicing
           scope: 'invoice contact'
         )
 
-        response.fetch_values('access_token', 'expires_in').yield_self do |token, expires_in|
+        response.fetch_values('access_token', 'expires_in').then do |token, expires_in|
           [token, timestamp + expires_in]
         end
       end
 
       def get_json(path, auth: true, **params)
-        response = get_request(path, auth: auth, **params)
+        response = get_request(path, auth:, **params)
         handle_json_response(response)
       end
 
@@ -87,7 +89,7 @@ module Invoicing
       end
 
       def post_json(path, auth: true, **payload)
-        response = post_request(path, payload.to_json, auth: auth)
+        response = post_request(path, payload.to_json, auth:)
         handle_json_response(response)
       end
 
@@ -102,7 +104,7 @@ module Invoicing
       end
 
       def put_json(path, auth: true, **payload)
-        response = put_request(path, payload.to_json, auth: auth)
+        response = put_request(path, payload.to_json, auth:)
         handle_json_response(response)
       end
 
@@ -149,13 +151,13 @@ module Invoicing
 
       def handle_error(response)
         payload = parse_json_response(response)
-        fail Invoicing::Error.new(response.message, response.code, payload)
+        raise Invoicing::Error.new(response.message, response.code, payload)
       end
 
       def parse_json_response(response)
         JSON.parse(response.body)
       rescue JSON::ParserError
-        fail Invoicing::Error.new('JSON::ParserError', response.code, response.body)
+        raise Invoicing::Error.new('JSON::ParserError', response.code, response.body)
       end
 
       def settings

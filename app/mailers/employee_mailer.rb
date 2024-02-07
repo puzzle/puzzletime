@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EmployeeMailer < ApplicationMailer
   def worktime_deleted_mail(worktime, deleted_by)
     @worktime = worktime
