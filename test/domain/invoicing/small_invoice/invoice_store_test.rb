@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2020, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -5,67 +7,69 @@
 
 require 'test_helper'
 
-class Invoicing::SmallInvoice::InvoiceStoreTest < ActiveSupport::TestCase
-  include SmallInvoiceTestHelper
+module Invoicing
+  module SmallInvoice
+    class InvoiceStoreTest < ActiveSupport::TestCase
+      include SmallInvoiceTestHelper
 
-  setup do
-    billing_address.update_column(:invoicing_key, 2)
-    contact.update_column(:invoicing_key, 1)
-    client.update_column(:invoicing_key, 1)
-  end
+      setup do
+        billing_address.update_column(:invoicing_key, 2)
+        contact.update_column(:invoicing_key, 1)
+        client.update_column(:invoicing_key, 1)
+      end
 
-  test '#save creates new invoices' do
-    add_invoice = stub_add_entity(:invoices, body: invoice_json)
+      test '#save creates new invoices' do
+        add_invoice = stub_add_entity(:invoices, body: invoice_json)
 
-    invoicing_key = subject.save([manual_position])
+        invoicing_key = subject.save([manual_position])
 
-    assert_requested(add_invoice)
-    assert_predicate invoicing_key, :present?
-  end
+        assert_requested(add_invoice)
+        assert_predicate invoicing_key, :present?
+      end
 
-  test '#save edits existing invoices' do
-    invoice.update_column(:invoicing_key, 1)
+      test '#save edits existing invoices' do
+        invoice.update_column(:invoicing_key, 1)
 
-    edit_invoice = stub_edit_entity(:invoices, key: 1, body: invoice_json)
+        edit_invoice = stub_edit_entity(:invoices, key: 1, body: invoice_json)
 
-    invoicing_key = subject.save([manual_position])
+        invoicing_key = subject.save([manual_position])
 
-    assert_requested(edit_invoice)
-    assert_equal(invoice.invoicing_key, invoicing_key)
-  end
+        assert_requested(edit_invoice)
+        assert_equal(invoice.invoicing_key, invoicing_key)
+      end
 
-  private
+      private
 
-  def described_class
-    Invoicing::SmallInvoice::InvoiceStore
-  end
+      def described_class
+        Invoicing::SmallInvoice::InvoiceStore
+      end
 
-  def subject
-    described_class.new(invoice)
-  end
+      def subject
+        described_class.new(invoice)
+      end
 
-  def invoice
-    invoices(:webauftritt_may)
-  end
+      def invoice
+        invoices(:webauftritt_may)
+      end
 
-  def billing_address
-    invoice.billing_address
-  end
+      def billing_address
+        invoice.billing_address
+      end
 
-  def contact
-    billing_address.contact
-  end
+      def contact
+        billing_address.contact
+      end
 
-  def client
-    billing_address.client
-  end
+      def client
+        billing_address.client
+      end
 
-  def manual_position
-    Invoicing::Position.new(AccountingPost.new(offered_rate: 1), 1, 'Manuell')
-  end
+      def manual_position
+        Invoicing::Position.new(AccountingPost.new(offered_rate: 1), 1, 'Manuell')
+      end
 
-  def invoice_json
-    JSON.parse('{
+      def invoice_json
+        JSON.parse('{
       "number":"STOPWEBD10001",
       "contact_id":1,
       "contact_address_id":2,
@@ -98,5 +102,7 @@ class Invoicing::SmallInvoice::InvoiceStoreTest < ActiveSupport::TestCase
         }
       ]
     }').to_json
+      end
+    end
   end
 end

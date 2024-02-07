@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -8,7 +10,7 @@ require 'test_helper'
 module Plannings
   class OrderBoardTest < ActiveSupport::TestCase
     test 'build rows for given plannings' do
-      p1, p2, p3 = create_plannings
+      _, p2, = create_plannings
       board = Plannings::OrderBoard.new(order, period)
 
       assert_equal [[employees(:lucien).id, work_items(:hitobito_demo_site).id],
@@ -20,7 +22,7 @@ module Plannings
       items = board.items(employees(:lucien).id, work_items(:hitobito_demo_app).id)
 
       assert_equal 20, items.size
-      assert(items.one? { |i| i.planning })
+      assert(items.one?(&:planning))
       assert_equal p2, items[5].planning
     end
 
@@ -34,11 +36,11 @@ module Plannings
 
     test 'absencetimes can coexist with plannings' do
       create_plannings
-      a1 = Absencetime.create!(absence_id: absences(:vacation).id,
-                               employee_id: employees(:lucien).id,
-                               work_date: date - 1.day,
-                               hours: 8,
-                               report_type: 'absolute_day')
+      Absencetime.create!(absence_id: absences(:vacation).id,
+                          employee_id: employees(:lucien).id,
+                          work_date: date - 1.day,
+                          hours: 8,
+                          report_type: 'absolute_day')
       a2 = Absencetime.create!(absence_id: absences(:vacation).id,
                                employee_id: employees(:lucien).id,
                                work_date: date + 1.day,

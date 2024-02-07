@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -242,21 +244,21 @@ class CreatorTest < ActiveSupport::TestCase
   end
 
   test '#create_or_update builds repetitions without changing attributes' do
-    p1 = Planning.create!(employee_id: employees(:pascal).id,
-                          work_item_id: work_items(:hitobito_demo_app).id,
-                          date: '2016-09-27',
-                          percent: 30,
-                          definitive: false)
-    p1 = Planning.create!(employee_id: employees(:pascal).id,
-                          work_item_id: work_items(:hitobito_demo_app).id,
-                          date: '2016-09-28',
-                          percent: 30,
-                          definitive: false)
-    p3 = Planning.create!(employee_id: employees(:pascal).id,
-                          work_item_id: work_items(:hitobito_demo_app).id,
-                          date: '2016-10-03',
-                          percent: 50,
-                          definitive: true)
+    Planning.create!(employee_id: employees(:pascal).id,
+                     work_item_id: work_items(:hitobito_demo_app).id,
+                     date: '2016-09-27',
+                     percent: 30,
+                     definitive: false)
+    Planning.create!(employee_id: employees(:pascal).id,
+                     work_item_id: work_items(:hitobito_demo_app).id,
+                     date: '2016-09-28',
+                     percent: 30,
+                     definitive: false)
+    Planning.create!(employee_id: employees(:pascal).id,
+                     work_item_id: work_items(:hitobito_demo_app).id,
+                     date: '2016-10-03',
+                     percent: 50,
+                     definitive: true)
     p4 = Planning.create!(employee_id: employees(:pascal).id,
                           work_item_id: work_items(:hitobito_demo_app).id,
                           date: '2016-10-04',

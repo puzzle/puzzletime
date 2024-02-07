@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -143,7 +145,7 @@ class WorkloadTest < ActiveSupport::TestCase
                           employee: employees(:lucien), work_date: period.start_date, billable: false)
 
     assert_equal work_items(:webauftritt, :hitobito_demo).to_set,
-                 report.entries.first.order_entries.map(&:work_item).to_set
+                 report.entries.first.order_entries.to_set(&:work_item)
   end
 
   test 'summary fte' do
@@ -202,7 +204,7 @@ class WorkloadTest < ActiveSupport::TestCase
 
     puzzle_summary, department_summary = report.summary
 
-    expected_for_department = [t1, t2, t3].map(&:hours).sum
+    expected_for_department = [t1, t2, t3].sum(&:hours)
     expected_for_puzzle = expected_for_department + o.hours
 
     assert_equal expected_for_department, department_summary.ordertime_hours
