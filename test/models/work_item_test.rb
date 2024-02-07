@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -32,7 +34,7 @@ class WorkItemTest < ActiveSupport::TestCase
     assert_equal 'PITC-FOO', p.path_shortnames
     assert_equal "Puzzle\nFoo", p.path_names
     assert_equal 'bla bla', p.description
-    assert_equal true, p.leaf
+    assert p.leaf
   end
 
   test 'new sub work_item get path names set' do
@@ -59,12 +61,12 @@ class WorkItemTest < ActiveSupport::TestCase
                   parent_id: 1,
                   parent: p)
 
-    assert_equal true, c.leaf
-    assert_equal false, p.leaf
+    assert c.leaf
+    assert_not p.leaf
 
     c.destroy
 
-    assert_equal true, p.leaf
+    assert p.leaf
   end
 
   test 'sub work_item get path names set when parent name is changed' do
@@ -122,11 +124,11 @@ class WorkItemTest < ActiveSupport::TestCase
                   parent_id: 1,
                   name: 'Foo',
                   shortname: 'FOO')
-    c = Fabricate(:work_item,
-                  parent_id: 1,
-                  parent: p,
-                  name: 'Bar',
-                  shortname: 'BAR')
+    Fabricate(:work_item,
+              parent_id: 1,
+              parent: p,
+              name: 'Bar',
+              shortname: 'BAR')
 
     p.reload
 

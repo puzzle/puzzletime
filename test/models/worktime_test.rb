@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -55,19 +57,19 @@ class WorktimeTest < ActiveSupport::TestCase
     # assert_equal_time_field now, field
     set_field(field, '3')
 
-    assert_equal_time_field Time.parse('3:00'), field
+    assert_equal_time_field Time.zone.parse('3:00'), field
     set_field(field, '4:14')
 
-    assert_equal_time_field Time.parse('4:14'), field
+    assert_equal_time_field Time.zone.parse('4:14'), field
     set_field(field, '23:14')
 
-    assert_equal_time_field Time.parse('23:14'), field
+    assert_equal_time_field Time.zone.parse('23:14'), field
     set_field(field, '4.25')
 
-    assert_equal_time_field Time.parse('4:15'), field
+    assert_equal_time_field Time.zone.parse('4:15'), field
     set_field(field, '4.0')
 
-    assert_equal_time_field Time.parse('4:00'), field
+    assert_equal_time_field Time.zone.parse('4:00'), field
   end
 
   def test_time_facade_invalid
@@ -103,7 +105,7 @@ class WorktimeTest < ActiveSupport::TestCase
   end
 
   def test_hours
-    time = Time.zone.now
+    Time.zone.now
     @worktime.hours = 8
 
     assert_equal 8, @worktime.hours
@@ -197,7 +199,7 @@ class WorktimeTest < ActiveSupport::TestCase
   end
 
   def set_field(field, value)
-    @worktime.send(field + '=', value)
+    @worktime.send(:"#{field}=", value)
   end
 
   def assert_equal_time_field(time, field)

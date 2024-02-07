@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -127,7 +129,7 @@ class InvoiceTest < ActiveSupport::TestCase
     accounting_posts(:webauftritt).update_attribute(:offered_rate, 1.01)
     invoice.valid?
 
-    assert_in_delta(28.28, invoice.send(:positions).collect(&:total_amount).sum.to_f)
+    assert_in_delta(28.28, invoice.send(:positions).sum(&:total_amount).to_f)
     assert_in_delta(28.30, invoice.total_amount.to_f)
   end
 
@@ -367,7 +369,7 @@ class InvoiceTransactionTest < ActiveSupport::TestCase
 
   test 'generates different parallel invoice numbers' do
     ActiveRecord::Base.connection_handler.clear_active_connections!
-    10.times.collect do
+    Array.new(10) do
       Thread.new do
         ActiveRecord::Base.connection_pool.with_connection do
           invoices(:webauftritt_may).dup.save!

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -30,7 +32,7 @@ require 'test_helper'
 class OrderTest < ActiveSupport::TestCase
   test 'order without client is not valid' do
     order = Fabricate(:order)
-    item = order.build_work_item(name: 'New Order', shortname: 'NEOR')
+    order.build_work_item(name: 'New Order', shortname: 'NEOR')
 
     assert_not order.valid?
   end
@@ -71,7 +73,7 @@ class OrderTest < ActiveSupport::TestCase
     scopes = TargetScope.all
 
     assert_operator scopes.size, :>, 0
-    assert_equal scopes.to_set, order.targets.collect(&:target_scope).to_set
+    assert_equal scopes.to_set, order.targets.to_set(&:target_scope)
   end
 
   test 'accounting posts on lower level are accessible through work items' do

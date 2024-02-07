@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -99,8 +101,8 @@ class EmploymentTest < ActiveSupport::TestCase
 
     assert_equal Date.parse('31.8.2015'), two.reload.end_date
 
-    after2 = Employment.create!(employee:, start_date: '1.3.2016', percent: 50,
-                                employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
+    Employment.create!(employee:, start_date: '1.3.2016', percent: 50,
+                       employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
 
     assert_equal Date.parse('31.12.2015'), after.reload.end_date
 

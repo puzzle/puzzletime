@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: expenses
@@ -79,12 +81,12 @@ class ExpenseTest < ActiveSupport::TestCase
 
     assert obj.update(status: :approved,
                       reviewer: mark,
-                      reviewed_at: Date.today,
-                      reimbursement_date: Date.today)
+                      reviewed_at: Time.zone.today,
+                      reimbursement_date: Time.zone.today)
   end
 
   def review_attrs
-    { reviewer: mark, reviewed_at: Date.today }
+    { reviewer: mark, reviewed_at: Time.zone.today }
   end
 
   def mark

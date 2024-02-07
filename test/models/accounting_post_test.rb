@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -31,7 +33,7 @@ class AccountingPostTest < ActiveSupport::TestCase
     order.update!(status: order_statuses(:abgeschlossen))
 
     assert_equal post.work_item_id, order.work_item_id
-    assert_equal true, post.work_item.closed
+    assert post.work_item.closed
     fresh = nil
     assert_difference('WorkItem.count', 2) do
       fresh = AccountingPost.create!(
@@ -46,10 +48,10 @@ class AccountingPostTest < ActiveSupport::TestCase
 
     assert_not_equal post.work_item_id, order.work_item_id
     assert_equal post.work_item_id, worktimes(:wt_pz_webauftritt).work_item_id
-    assert_equal true, fresh.work_item.leaf
-    assert_equal true, post.work_item.leaf
-    assert_equal true, fresh.work_item.closed
-    assert_equal true, post.work_item.closed
+    assert fresh.work_item.leaf
+    assert post.work_item.leaf
+    assert fresh.work_item.closed
+    assert post.work_item.closed
   end
 
   test 'creating new accounting post when order workitem is invalid sets flash message' do
@@ -79,17 +81,17 @@ class AccountingPostTest < ActiveSupport::TestCase
     closed = OrderStatus.where(closed: true).first
     post.order.update!(status: closed)
 
-    assert_equal true, post.work_item.reload.closed
+    assert post.work_item.reload.closed
 
     post.update!(closed: true)
     post.update!(closed: false)
 
-    assert_equal true, post.work_item.reload.closed
+    assert post.work_item.reload.closed
 
     opened = OrderStatus.where(closed: false).first
     post.order.update!(status: opened)
 
-    assert_equal false, post.work_item.reload.closed
+    assert_not post.work_item.reload.closed
   end
 
   test 'opening order with closed post does not open work items' do
@@ -100,15 +102,15 @@ class AccountingPostTest < ActiveSupport::TestCase
     opened = OrderStatus.where(closed: false).first
     post.order.update!(status: opened)
 
-    assert_equal true, post.work_item.reload.closed
+    assert post.work_item.reload.closed
 
     post.update!(closed: false)
 
-    assert_equal false, post.work_item.reload.closed
+    assert_not post.work_item.reload.closed
 
     post.order.update!(status: closed)
 
-    assert_equal true, post.work_item.reload.closed
+    assert post.work_item.reload.closed
   end
 
   test 'destroying accounting post destroys work item' do
