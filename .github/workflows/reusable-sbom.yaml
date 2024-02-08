@@ -52,8 +52,8 @@ jobs:
       - name: 'Generate SBOM for ruby and npm dependencies'
         run: |
           npm install -g @cyclonedx/cdxgen
-          cdxgen -o ./sbom-ruby.xml -t ruby --spec-version 1.4 .
-          cdxgen -o ./sbom-npm.xml -t npm --spec-version 1.4 .
+          cdxgen -o ./sbom-ruby.json -t ruby --spec-version 1.4 .
+          cdxgen -o ./sbom-npm.json -t npm --spec-version 1.4 .
 
       - name: 'Merge frontend and backend SBOMs'
         run: |
@@ -62,7 +62,7 @@ jobs:
                  -v $(pwd):/data \
                  cyclonedx/cyclonedx-cli \
                  merge \
-                 --input-files data/sbom-ruby.xml data/sbom-npm.xml \
+                 --input-files data/sbom-ruby.json data/sbom-npm.json \
                  --output-file data/sbom.xml
       
       - name: 'Push merged SBOM to dependency track'
@@ -83,6 +83,6 @@ jobs:
         with:
           name: ${{ inputs.artifact-prefix }}sboms
           path: |
-            ./sbom-npm.xml
-            ./sbom-ruby.xml
+            ./sbom-npm.json
+            ./sbom-ruby.json
             ./sbom.xml
