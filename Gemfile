@@ -6,7 +6,7 @@ git_source(:github) { |name| "https://github.com/#{name}.git" }
 
 gem 'rails', '~> 7.0.x'
 
-gem 'activerecord-nulldb-adapter'
+gem 'activerecord-nulldb-adapter', github: 'puzzle/nulldb'
 gem 'pg'
 
 gem 'nochmal', github: 'puzzle/nochmal'
