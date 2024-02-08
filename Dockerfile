@@ -57,6 +57,8 @@ ARG SENTRY_CURRENT_ENV
 ARG PS1="$SENTRY_CURRENT_ENV > "
 ARG TZ="Europe/Zurich"
 
+# Custom ARGs for Puzzletime
+ARG SKIP_MEMCACHE_CHECK=true
 
 #################################
 #          Build Stage          #
@@ -80,6 +82,9 @@ ARG RAILS_ENV
 ARG RAILS_HOST_NAME
 ARG SECRET_KEY_BASE
 ARG TZ
+
+# Custom ARGs
+ARG SKIP_MEMCACHE_CHECK
 
 # Set build shell
 SHELL ["/bin/bash", "-c"]
@@ -156,6 +161,9 @@ ARG TZ
 ARG BUILD_COMMIT
 ARG BUILD_REPO
 ARG BUILD_REF
+
+# Custom ARGs
+ARG SKIP_MEMCACHE_CHECK
 
 ENV PS1="${PS1}" \
   TZ="${TZ}" \
