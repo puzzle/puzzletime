@@ -9,7 +9,7 @@ ARG BUNDLER_VERSION="2.4.6"
 # Packages
 # ARG BUILD_PACKAGES="nodejs build-essential libc6"
 ARG BUILD_PACKAGES
-ARG RUN_PACKAGES="bash libpq5"
+ARG RUN_PACKAGES="bash libpq5 libvips42 libvips-dev"
 
 # Scripts
 ARG PRE_INSTALL_SCRIPT
