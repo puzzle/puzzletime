@@ -41,10 +41,6 @@ module Invoicing
             memo[key.to_s] = value.to_s.strip
           end
         end
-
-        def persisted?
-          entry.invoicing_key.present?
-        end
       end
     end
   end

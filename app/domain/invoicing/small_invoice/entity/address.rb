@@ -9,16 +9,6 @@ module Invoicing
   module SmallInvoice
     module Entity
       class Address < Base
-        ENDPOINT = 'addresses'
-
-        def self.path(client, invoicing_key: nil)
-          [*Entity::Contact.new(client).path, ENDPOINT, invoicing_key].compact if client.persisted?
-        end
-
-        def path
-          self.class.path(entry.client, invoicing_key: entry.invoicing_key) if persisted?
-        end
-
         def to_hash
           street, street2 = entry.supplement? ? [entry.supplement, entry.street] : [entry.street, nil]
           with_id(street:,

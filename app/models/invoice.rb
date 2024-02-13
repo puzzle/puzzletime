@@ -26,8 +26,8 @@
 #  grouping           :integer          default("accounting_posts"), not null
 #
 
-class Invoice < ApplicationRecord
-  STATUSES = %w[draft sent paid partially_paid dept_collection cancelled deleted unknown].freeze
+class Invoice < ActiveRecord::Base
+  STATUSES = %w(draft sent paid partially_paid cancelled deleted unknown).freeze
 
   enum grouping: { 'accounting_posts' => 0, 'employees' => 1, 'manual' => 2 }
 
@@ -51,12 +51,12 @@ class Invoice < ApplicationRecord
   before_validation :generate_reference, on: :create
   before_validation :generate_due_date
   before_validation :update_totals
-  before_save :save_remote_invoice, if: -> { Invoicing.instance.present? }
-  before_save :assign_worktimes
   before_create :lock_client_invoice_number
   after_create :update_client_invoice_number
-  after_destroy :delete_remote_invoice, if: -> { Invoicing.instance.present? }
   after_save :update_order_billing_address
+  before_save :save_remote_invoice, if: -> { Invoicing.instance.present? }
+  before_save :assign_worktimes
+  after_destroy :delete_remote_invoice, if: -> { Invoicing.instance.present? }
 
   protect_if :paid?, 'Bezahlte Rechnungen können nicht gelöscht werden.'
   protect_if :order_closed?, 'Rechnungen von geschlossenen Aufträgen können nicht gelöscht werden.'
@@ -225,11 +225,7 @@ class Invoice < ApplicationRecord
     self.invoicing_key = Invoicing.instance.save_invoice(self, positions)
   rescue Invoicing::Error => e
     errors.add(:base, "Fehler im Invoicing Service: #{e.message}")
-    Rails.logger.error <<~ERROR
-      #{e.class.name}: #{e.message}
-      #{e.data.inspect}
-      #{e.backtrace.join("\n")}
-    ERROR
+    Rails.logger.error(e.class.name + ': ' + e.message + "\n" + e.backtrace.join("\n"))
     throw :abort
   end
 

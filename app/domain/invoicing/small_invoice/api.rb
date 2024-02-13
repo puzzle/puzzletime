@@ -10,121 +10,58 @@ module Invoicing
     class Api
       include Singleton
 
+      ENDPOINTS = %w(invoice invoice/pdf client).freeze
       HTTP_TIMEOUT = 300 # seconds
-      LIST_PAGES_LIMIT = 100
-      LIST_ENTRIES = 200 # the v2 api allows max 200 entries per page
 
-      def list(path, **params)
-        # The v2 api returns max 200 entries per query, so we loop through all pages and collect the result.
-        (0..LIST_PAGES_LIMIT).each_with_object([]) do |index, result|
-          response = get_json(path, **params.reverse_merge(limit: LIST_ENTRIES, offset: LIST_ENTRIES * index))
-          result.append(*response['items'])
-
-          return result unless response.dig('pagination', 'next')
-        end
+      def list(endpoint)
+        response = get_json(endpoint, :list)
+        response['items']
       end
 
-      def get(path, **params)
-        response = get_json(path, **params)
-        response.fetch('item')
+      def get(endpoint, id)
+        response = get_json(endpoint, :get, id: id)
+        response['item']
       end
 
-      def add(path, data)
-        response = post_json(path, **data)
-        response.fetch('item')
+      def add(endpoint, data)
+        response = post_request(endpoint, :add, data)
+        response['id']
       end
 
-      def edit(path, data)
-        put_json(path, **data)
+      def edit(endpoint, id, data)
+        post_request(endpoint, :edit, data, id: id)
         nil
       end
 
-      def delete(path)
-        delete_request(path)
+      def delete(endpoint, id)
+        post_request(endpoint, :delete, nil, id: id)
         nil
       end
 
-      def get_raw(path, auth: true, **params)
-        get_request(path, auth:, **params).body
+      def get_raw(endpoint, action, id)
+        get_request(endpoint, action, id: id).body
       end
 
       private
 
-      def access_token
-        # fetch a new token if we have none yet or if the existing one is expired
-        @access_token, @expires_at = get_access_token unless @expires_at&.>(Time.zone.now)
-        @access_token
-      end
-
-      # Get a new access token from the smallinvoice api.
-      # Returns an array with the access_token and the expiration time of this token.
-      def get_access_token
-        timestamp = Time.zone.now
-
-        response = post_json(
-          'auth/access-tokens',
-          auth: false,
-          grant_type: 'client_credentials',
-          client_id: settings.client_id,
-          client_secret: settings.client_secret,
-          scope: 'invoice contact'
-        )
-
-        response.fetch_values('access_token', 'expires_in').then do |token, expires_in|
-          [token, timestamp + expires_in]
-        end
-      end
-
-      def get_json(path, auth: true, **params)
-        response = get_request(path, auth:, **params)
+      def get_json(endpoint, action, **params)
+        response = get_request(endpoint, action, **params)
         handle_json_response(response)
       end
 
-      def get_request(path, auth: true, **params)
-        url = build_url(path, **params)
-        request = Net::HTTP::Get.new(url.request_uri)
-        request['Authorization'] = "Bearer #{access_token}" if auth
-
+      def get_request(endpoint, action, **params)
+        url = uri(endpoint, action, **params)
+        request = Net::HTTP::Get.new(url.path)
         http(url).request(request)
       end
 
-      def post_json(path, auth: true, **payload)
-        response = post_request(path, payload.to_json, auth:)
-        handle_json_response(response)
-      end
+      def post_request(endpoint, action, data, **params)
+        url = uri(endpoint, action, **params)
+        request = Net::HTTP::Post.new(url.path)
+        request.set_form_data(data ? { data: data.to_json } : {})
 
-      def post_request(path, data, auth: true)
-        url = build_url(path)
-        request = Net::HTTP::Post.new(url,
-                                      'Content-Type' => 'application/json')
-        request['Authorization'] = "Bearer #{access_token}" if auth
-        request.body = data
-
-        http(url).request(request)
-      end
-
-      def put_json(path, auth: true, **payload)
-        response = put_request(path, payload.to_json, auth:)
-        handle_json_response(response)
-      end
-
-      def put_request(path, data, auth: true)
-        url = build_url(path)
-        request = Net::HTTP::Put.new(url,
-                                     'Content-Type' => 'application/json')
-        request['Authorization'] = "Bearer #{access_token}" if auth
-        request.body = data
-
-        http(url).request(request)
-      end
-
-      def delete_request(path, auth: true)
-        url = build_url(path)
-        request = Net::HTTP::Delete.new(url,
-                                        'Content-Type' => 'application/json')
-        request['Authorization'] = "Bearer #{access_token}" if auth
-
-        http(url).request(request)
+        response = http(url).request(request)
+        handle_json_response(response, data)
       end
 
       def http(url)
@@ -134,34 +71,25 @@ module Invoicing
         end
       end
 
-      def build_url(path, **params)
-        url = [settings.url, path].join('/')
-        URI.parse(url).tap do |url|
-          url.query = URI.encode_www_form(params) if params.present?
-        end
+      def uri(endpoint, action, **params)
+        fail(ArgumentError, "Unknown endpoint #{endpoint}") unless ENDPOINTS.include?(endpoint.to_s)
+
+        params[:token] = Settings.small_invoice.api_token
+        args = params.collect { |k, v| "#{k}/#{v}" }.join('/')
+        URI("#{Settings.small_invoice.url}/#{endpoint}/#{action}/#{args}")
       end
 
-      def handle_json_response(response)
-        handle_error(response) unless response.is_a? Net::HTTPSuccess
-
+      def handle_json_response(response, data = nil)
         return {} if response.body.blank?
 
-        parse_json_response(response)
-      end
-
-      def handle_error(response)
-        payload = parse_json_response(response)
-        raise Invoicing::Error.new(response.message, response.code, payload)
-      end
-
-      def parse_json_response(response)
-        JSON.parse(response.body)
+        json = JSON.parse(response.body)
+        if json['error']
+          fail Invoicing::Error.new(json['errormessage'], json['errorcode'], data)
+        else
+          json
+        end
       rescue JSON::ParserError
-        raise Invoicing::Error.new('JSON::ParserError', response.code, response.body)
-      end
-
-      def settings
-        Settings.small_invoice
+        fail Invoicing::Error.new(response.body, response.code, data)
       end
     end
   end

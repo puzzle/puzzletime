@@ -115,4 +115,6 @@ group :test do
   gem 'mocha', require: false
   gem 'rails-controller-testing'
   gem 'webmock'
+  gem 'selenium-webdriver'
+  gem 'webdrivers'
 end
