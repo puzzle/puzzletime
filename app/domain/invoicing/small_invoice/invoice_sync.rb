@@ -38,7 +38,9 @@ module Invoicing
         def unpaid_invoices
           Invoice
             .joins(order: :status)
-            .where.not(status: 'paid', invoicing_key: nil, order_statuses: { closed: true })
+            .where.not(status: :paid)
+            .where.not(invoicing_key: nil)
+            .where.not(order_statuses: { closed: true })
         end
 
         def notify_sync_error(error, invoice)
