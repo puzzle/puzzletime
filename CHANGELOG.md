@@ -1,5 +1,8 @@
 # 2.11
 
+### Features
+* **QR Code:** QR Code mit Kontaktdaten statt URL [\#176](https://github.com/puzzle/puzzletime/issues/176)
+
 ### Improvements
 
 * **Update:** Ruby auf Version 3.2.1 aktualisiert
@@ -34,7 +37,7 @@
 * **Login:** Login wird auf SSO (Keycloak, Devise) umgestellt
 * **Zeitfreigabe:** Neu wird eine Erinnerung per E-Mail versendet, wenn die Zeiten noch nicht freigegeben wurden.
   
-  ### Improvements
+### Improvements
 * **Stammdaten:** In den Stammdaten der Members wird neu der vertragliche Arbeitsort geführt
 * **Log:** Die Änderungen der Anstellungen (Pensen, Funktionen) wird neu im Members-Log protokolliert
 
@@ -45,7 +48,7 @@
 * **Login:** Unterstützt nun Omniauth mit Keycloak und/oder SAML
 * **Business Intelligence:** Wir können jetzt Verbindung zu einer InfluxDB herstellen, die wichtige Kennzahlen als Timeseries speichert
   
-  ### Improvements
+### Improvements
 * **Update:** Update auf Ruby 2.7
 * **Exporte:** Die verschiedenen CSV Exporte in einen Controller refactored
 * **Journaleinträge:** Jeder kann jetzt Journaleinträge erstellen
@@ -61,7 +64,7 @@
 * **Mitarbeiterliste:** Sortierbar gemacht nach Vorname, Nachname
 * **Zeiterfassung:** Leerschläge vor und nach der Ticketnummer werden entfernt
   
-  ### Bug fixes
+### Bug fixes
 * **Überzeitexport:** Header sind jetzt aussagekräftiger
 * **Verbleibende Arbeitszeit:** Berechnung korrigiert wenn Überstundenkompensationen in der Zukunft liegen
 
