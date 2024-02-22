@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -17,13 +19,13 @@ module DryCrud
     module Prepends
       # Helper method to run +before_render+ callbacks and render the action.
       # If a callback renders or redirects, the action is not rendered.
-      def render(*args, &block)
-        options = _normalize_render(*args, &block)
+      def render(*, &)
+        options = _normalize_render(*, &)
         callback = "render_#{options[:template]}"
 
         run_callbacks(callback) if respond_to?(:"_#{callback}_callbacks", true)
 
-        super(*args, &block) unless performed?
+        super unless performed?
       end
 
       private

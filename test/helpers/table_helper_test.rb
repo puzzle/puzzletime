@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -39,27 +41,30 @@ class TableHelperTest < ActionView::TestCase
 
   test 'empty table should render message' do
     result = plain_table_or_message([]) {}
-    assert result.html_safe?
-    assert_match /\<div class=["']table["']\>.*\<\/div\>/, result
+
+    assert_predicate result, :html_safe?
+    assert_match(%r{<div class=["']table["']>.*</div>}, result)
   end
 
   test 'non empty table should render table' do
-    result = plain_table_or_message(%w(foo bar)) do |t|
+    result = plain_table_or_message(%w[foo bar]) do |t|
       t.attrs :size, :upcase
     end
-    assert result.html_safe?
-    assert_match(/^\<div class="unindented"><table.*\<\/table\><\/div>$/, result)
+
+    assert_predicate result, :html_safe?
+    assert_match(%r{^<div class="unindented"><table.*</table></div>$}, result)
   end
 
   test 'table with attrs' do
     expected = DryCrud::Table::Builder.table(
-      %w(foo bar), self,
+      %w[foo bar], self,
       class: 'table table-striped table-hover table-condensed'
     ) do |t|
       t.attrs :size, :upcase
     end
-    actual = plain_table(%w(foo bar), :size, :upcase)
-    assert actual.html_safe?
+    actual = plain_table(%w[foo bar], :size, :upcase)
+
+    assert_predicate actual, :html_safe?
     assert_equal expected, actual
   end
 
@@ -98,7 +103,7 @@ class TableHelperTest < ActionView::TestCase
     assert_count 7, REGEXP_ROWS, table
     assert_count 4, REGEXP_HEADERS, table
     assert_count 0, REGEXP_SORT_HEADERS, table
-    assert_count 6, /<span>.+?<\/span>/, table
+    assert_count 6, %r{<span>.+?</span>}, table
   end
 
   test 'custom list table with attributes and block' do
@@ -113,7 +118,7 @@ class TableHelperTest < ActionView::TestCase
     assert_count 7, REGEXP_ROWS, table
     assert_count 3, REGEXP_SORT_HEADERS, table
     assert_count 4, REGEXP_HEADERS, table
-    assert_count 6, /<span>.+?<\/span>/, table
+    assert_count 6, %r{<span>.+?</span>}, table
   end
 
   test 'standard list table with ascending sort params' do
@@ -128,6 +133,7 @@ class TableHelperTest < ActionView::TestCase
     end
 
     sort_header_desc = %r{<th><a .*?sort_dir=desc.*?>Children</a> &darr;</th>}
+
     assert_count 7, REGEXP_ROWS, table
     assert_count 13, REGEXP_SORT_HEADERS, table
     assert_count 1, sort_header_desc, table
@@ -145,6 +151,7 @@ class TableHelperTest < ActionView::TestCase
     end
 
     sort_header_asc = %r{<th><a .*?sort_dir=asc.*?>Children</a> &uarr;</th>}
+
     assert_count 7, REGEXP_ROWS, table
     assert_count 13, REGEXP_SORT_HEADERS, table
     assert_count 1, sort_header_asc, table
@@ -162,6 +169,7 @@ class TableHelperTest < ActionView::TestCase
     end
 
     sort_header_desc = %r{<th><a .*?sort_dir=desc.*?>Chatty</a> &darr;</th>}
+
     assert_count 7, REGEXP_ROWS, table
     assert_count 2, REGEXP_SORT_HEADERS, table
     assert_count 1, sort_header_desc, table
@@ -203,7 +211,7 @@ class TableHelperTest < ActionView::TestCase
 
     assert_count 7, REGEXP_ROWS, table
     assert_count 6, REGEXP_HEADERS, table
-    assert_count 6, /<span>.+?<\/span>/m, table
+    assert_count 6, %r{<span>.+?</span>}m, table
     assert_count 12, REGEXP_ACTION_CELL, table      # edit, delete links
   end
 
@@ -219,7 +227,7 @@ class TableHelperTest < ActionView::TestCase
     assert_count 7, REGEXP_ROWS, table
     assert_count 3, REGEXP_SORT_HEADERS, table
     assert_count 6, REGEXP_HEADERS, table
-    assert_count 6, /<span>.+?<\/span>/m, table
+    assert_count 6, %r{<span>.+?</span>}m, table
     assert_count 12, REGEXP_ACTION_CELL, table      # edit, delete links
   end
 

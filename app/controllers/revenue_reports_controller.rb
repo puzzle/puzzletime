@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -35,13 +37,9 @@ class RevenueReportsController < ApplicationController
     name   = 'revenue'
     period = @report&.period
 
-    if @report&.grouping_name
-      name += "_#{@report.grouping_name.underscore}"
-    end
+    name += "_#{@report.grouping_name.underscore}" if @report&.grouping_name
 
-    if period&.start_date
-      name += "_#{period.start_date.strftime('%Y-%m-%d')}"
-    end
+    name += "_#{period.start_date.strftime('%Y-%m-%d')}" if period&.start_date
 
     if period&.end_date &&
        period&.end_date != period&.start_date
@@ -52,15 +50,15 @@ class RevenueReportsController < ApplicationController
   end
 
   def report_type
-    grouping = params[:grouping].present? ? params[:grouping] : 'Department'
+    grouping = params[:grouping].presence || 'Department'
     REPORT_TYPES.find { |r| r.grouping_name == grouping }
   end
 
   def set_period
     super
-    if @period.nil? || @period.start_date.nil? || @period.end_date.nil?
-      @period = default_period
-    end
+    return unless @period.nil? || @period.start_date.nil? || @period.end_date.nil?
+
+    @period = default_period
   end
 
   def default_period

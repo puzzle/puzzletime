@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -89,10 +91,10 @@ module Plannings
     end
 
     def load_employments
-      list = Employment.
-             during(@period).
-             where(employee_id: @employees.map(&:id)).
-             reorder('start_date')
+      list = Employment
+             .during(@period)
+             .where(employee_id: @employees.map(&:id))
+             .reorder('start_date')
       Employment.normalize_boundaries(list.to_a, @period)
     end
 
@@ -145,7 +147,7 @@ module Plannings
 
     def add_holidays_to_rows(rows)
       @holidays.each do |holiday|
-        rows.each do |_key, items|
+        rows.each_value do |items|
           index = item_index(holiday[0])
           next unless index
 

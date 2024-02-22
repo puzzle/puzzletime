@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -9,7 +11,7 @@ module EvaluatorHelper
   end
 
   def evaluation_path(evaluation, options = {})
-    url_for(options.merge(controller: '/evaluator', action: 'overview', evaluation: evaluation))
+    url_for(options.merge(controller: '/evaluator', action: 'overview', evaluation:))
   end
 
   def detail_th_align(field)
@@ -75,10 +77,10 @@ module EvaluatorHelper
   end
 
   def overtime_vacations_tooltip(employee)
-    transfers = employee.overtime_vacations.
-                where(@period ? ['transfer_date <= ?', @period.end_date] : nil).
-                order('transfer_date').
-                to_a
+    transfers = employee.overtime_vacations
+                        .where(@period ? ['transfer_date <= ?', @period.end_date] : nil)
+                        .order('transfer_date')
+                        .to_a
     tooltip = ''
     unless transfers.empty?
       tooltip = '<a href="#" class="has-tooltip">&lt;-&gt;<span>Überstunden-Ferien Umbuchungen:<br/>'
@@ -163,7 +165,7 @@ module EvaluatorHelper
       .order('percent DESC')
       .map do |ere|
         role = ere.employment_role.name
-        role += ' ' + ere.employment_role_level.name if ere.employment_role_level.present?
+        role += " #{ere.employment_role_level.name}" if ere.employment_role_level.present?
         [role, ere.percent]
       end
   end

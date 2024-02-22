@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -6,7 +8,7 @@
 class AddDailyPlannings < ActiveRecord::Migration[5.1]
   OLD_TABLE = :plannings
   NEW_TABLE = :plannings_new
-  IGNORE_BEFORE = Date.today.beginning_of_year - 6.months
+  IGNORE_BEFORE = Time.zone.today.beginning_of_year - 6.months
   UNLIMITED_REPEAT_DURATION = 6.months
   BATCH_SIZE = 1000
 
@@ -18,7 +20,7 @@ class AddDailyPlannings < ActiveRecord::Migration[5.1]
       t.integer :percent, null: false
       t.boolean :definitive, default: false, null: false
     end
-    add_index NEW_TABLE, [:employee_id, :work_item_id, :date], unique: true
+    add_index NEW_TABLE, %i[employee_id work_item_id date], unique: true
 
     reversible do |dir|
       dir.up do
@@ -32,9 +34,9 @@ class AddDailyPlannings < ActiveRecord::Migration[5.1]
   end
 
   def migrate_order_closed
-    WorkItem.joins(order: :status).
-      where(order_statuses: { closed: true }, work_items: { closed: false }).
-      update_all(closed: true)
+    WorkItem.joins(order: :status)
+            .where(order_statuses: { closed: true }, work_items: { closed: false })
+            .update_all(closed: true)
   end
 
   def migrate_plannings
@@ -44,11 +46,11 @@ class AddDailyPlannings < ActiveRecord::Migration[5.1]
     while has_rows
       query = old_table
               .project(Arel.sql('*'))
-              .where(old_table[:end_week].gteq(IGNORE_BEFORE.cwyear * 100 + IGNORE_BEFORE.cweek)
+              .where(old_table[:end_week].gteq((IGNORE_BEFORE.cwyear * 100) + IGNORE_BEFORE.cweek)
                  .or(old_table[:end_week].eq(nil)))
               .take(BATCH_SIZE)
               .skip(offset)
-      has_rows = select_all(query.to_sql).each { |row| migrate_row(row) }.length > 0
+      has_rows = select_all(query.to_sql).each { |row| migrate_row(row) }.length.positive?
       offset += BATCH_SIZE
     end
   end
@@ -60,13 +62,13 @@ class AddDailyPlannings < ActiveRecord::Migration[5.1]
       .reject { |date| date.saturday? || date.sunday? }
       .each do |date|
         percent = percent_for_day(row, date)
-        if percent > 0.0
-          create_planning(employee_id: row['employee_id'],
-                          work_item_id: row['work_item_id'],
-                          date: date,
-                          percent: percent,
-                          definitive: row['definitive'] == 't')
-        end
+        next unless percent > 0.0
+
+        create_planning(employee_id: row['employee_id'],
+                        work_item_id: row['work_item_id'],
+                        date:,
+                        percent:,
+                        definitive: row['definitive'] == 't')
       end
   end
 
@@ -80,7 +82,7 @@ class AddDailyPlannings < ActiveRecord::Migration[5.1]
       Date.commercial(row['end_week'].to_s[0, 4].to_i,
                       row['end_week'].to_s[4, 5].to_i, 7)
     else
-      Date.today.beginning_of_week + UNLIMITED_REPEAT_DURATION
+      Time.zone.today.beginning_of_week + UNLIMITED_REPEAT_DURATION
     end
   end
 
@@ -99,7 +101,7 @@ class AddDailyPlannings < ActiveRecord::Migration[5.1]
   end
 
   def planning_exists?(entry)
-    condition = [:employee_id, :work_item_id, :date]
+    condition = %i[employee_id work_item_id date]
                 .map { |k| new_table[k].eq(entry[k]) }
                 .reduce(:and)
     query = new_table

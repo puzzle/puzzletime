@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -99,27 +101,25 @@ class Period
       range, shift = parse_shortcut(shortcut)
       now = Time.zone.now
       case range
-      when 'd' then day_for(now.advance(days: shift), shortcut: shortcut)
-      when 'w' then week_for(now.advance(days: shift * 7), shortcut: shortcut)
-      when 'm' then month_for(now.advance(months: shift), shortcut: shortcut)
+      when 'd' then day_for(now.advance(days: shift), shortcut:)
+      when 'w' then week_for(now.advance(days: shift * 7), shortcut:)
+      when 'm' then month_for(now.advance(months: shift), shortcut:)
       when 'M' then next_n_months(shift, now)
-      when 'q' then quarter_for(now.advance(months: shift * 3), shortcut: shortcut)
+      when 'q' then quarter_for(now.advance(months: shift * 3), shortcut:)
       when 'Q' then parse_year_quarter(now.year, shift, shortcut)
-      when 'y' then year_for(now.advance(years: shift), shortcut: shortcut)
+      when 'y' then year_for(now.advance(years: shift), shortcut:)
       when 'b' then business_year_for(now.to_date)
       end
     end
 
     def parse_year_quarter(year, shift, shortcut)
-      if [1, 2, 3, 4].exclude?(shift)
-        raise ArgumentError, 'Unsupported shift for quarter shortcut'
-      end
+      raise ArgumentError, 'Unsupported shift for quarter shortcut' if [1, 2, 3, 4].exclude?(shift)
 
-      quarter_for(Date.civil(year, shift * 3, 1), shortcut: shortcut)
+      quarter_for(Date.civil(year, shift * 3, 1), shortcut:)
     end
 
     # Build a period, even with illegal arguments
-    def with(start_date = Time.zone.today, end_date = Time.zone_today, label = nil)
+    def with(start_date = Time.zone.today, end_date = Time.zone.today, label = nil)
       # rubocop:disable Style/RescueModifier
       start_date = parse_date(start_date) rescue nil
       end_date = parse_date(end_date) rescue nil
@@ -133,7 +133,7 @@ class Period
       if date.is_a? String
         begin
           date = Date.strptime(date, I18n.t('date.formats.default'))
-        rescue
+        rescue StandardError
           date = Date.parse(date)
         end
       end
@@ -163,7 +163,7 @@ class Period
     end
 
     def quarter_label(date)
-      "#{date.month / 4 + 1}. Quartal"
+      "#{(date.month / 4) + 1}. Quartal"
     end
 
     def year_label(date)
@@ -175,7 +175,7 @@ class Period
     end
 
     def parse_shortcut(shortcut)
-      range = shortcut[-1..-1]
+      range = shortcut[-1..]
       shift = shortcut[0..-2].to_i if range != '0'
       [range, shift]
     end
@@ -221,12 +221,10 @@ class Period
     Period.new(new_start_date, new_end_date)
   end
 
-  def step(size = 1)
+  def step(size = 1, &)
     return @start_date.step(@end_date, size) unless block_given?
 
-    @start_date.step(@end_date, size) do |date|
-      yield date
-    end
+    @start_date.step(@end_date, size, &)
   end
 
   def step_months
@@ -259,7 +257,7 @@ class Period
   end
 
   def url_query_s
-    @url_query ||= 'start_date=' + start_date.to_s + '&amp;end_date=' + end_date.to_s
+    @url_query ||= "start_date=#{start_date}&amp;end_date=#{end_date}"
   end
 
   def limited?
@@ -275,7 +273,7 @@ class Period
   end
 
   def hash
-    37 * start_date.hash ^ 43 * end_date.hash
+    (37 * start_date.hash) ^ (43 * end_date.hash)
   end
 
   def to_s
@@ -283,12 +281,12 @@ class Period
       if @start_date == @end_date
         I18n.l(@start_date)
       else
-        I18n.l(@start_date) + ' - ' + I18n.l(@end_date)
+        "#{I18n.l(@start_date)} - #{I18n.l(@end_date)}"
       end
     elsif @start_date
-      I18n.l(@start_date) + ' - egal'
+      "#{I18n.l(@start_date)} - egal"
     elsif @end_date
-      'egal - ' + I18n.l(@end_date)
+      "egal - #{I18n.l(@end_date)}"
     else
       'egal - egal'
     end

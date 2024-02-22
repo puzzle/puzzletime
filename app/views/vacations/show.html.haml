@@ -53,10 +53,10 @@
     %th{colspan: 2}
       %b= Absence.model_name.human(count: 2)
   %tr
-    %td= timebox_div Timebox.new(nil, '#cc2767', 10, '')
+    %td= timebox_div Graphs::Timebox.new(nil, '#cc2767', 10, '')
     %td Abwesenheit
   %tr
-    %td= timebox_div Timebox.new(nil, '#cc9557', 10, '')
+    %td= timebox_div Graphs::Timebox.new(nil, '#cc9557', 10, '')
     %td Unbezahlter Urlaub
 
 - if @user.management

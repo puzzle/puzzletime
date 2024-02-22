@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -38,10 +40,6 @@ module Invoicing
           hash.each_with_object({}) do |(key, value), memo|
             memo[key.to_s] = value.to_s.strip
           end
-        end
-
-        def persisted?
-          entry.invoicing_key.present?
         end
       end
     end

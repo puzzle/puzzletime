@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -15,22 +17,22 @@ module Plannings
       employees(:lucien).employments.create!(percent: 100, start_date: 5.years.ago,
                                              employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
       employees(:half_year_maria).update!(department: departments(:devtwo))
-      date = Date.today.at_beginning_of_week + 1.week
+      date = Time.zone.today.at_beginning_of_week + 1.week
       Planning.create!(work_item_id: work_items(:webauftritt).id,
                        employee_id: employees(:pascal).id,
-                       date: date,
+                       date:,
                        percent: 80)
       Planning.create!(work_item_id: work_items(:webauftritt).id,
                        employee_id: employees(:lucien).id,
-                       date: date,
+                       date:,
                        percent: 60)
       Planning.create!(work_item_id: work_items(:puzzletime).id,
                        employee_id: employees(:lucien).id,
-                       date: date + 1.weeks,
+                       date: date + 1.week,
                        percent: 20)
       Planning.create!(work_item_id: work_items(:puzzletime).id,
                        employee_id: employees(:lucien).id,
-                       date: date + 1.weeks + 1.day,
+                       date: date + 1.week + 1.day,
                        percent: 20)
 
       get :show, params: { department_id: departments(:devtwo).id }
@@ -50,7 +52,7 @@ module Plannings
           }
 
       assert_equal 200, response.status
-      assert response.body.include?('PuzzleTime'), response.body
+      assert_includes response.body, 'PuzzleTime', response.body
     end
 
     test 'PATCH update' do
@@ -62,33 +64,34 @@ module Plannings
               planning: { percent: '50', definitive: 'true' },
               items: { '1' => { employee_id: employees(:pascal).id.to_s,
                                 work_item_id: work_items(:puzzletime).id.to_s,
-                                date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
+                                date: Time.zone.today.beginning_of_week.strftime('%Y-%m-%d') } }
             }
+
       assert_equal 200, response.status
 
       assert_equal employees(:pascal), assigns(:board).employee
-      assert response.body.include?('PuzzleTime'), response.body
-      assert response.body.include?('50')
+      assert_includes response.body, 'PuzzleTime', response.body
+      assert_includes response.body, '50'
     end
 
     test 'DELETE destroy' do
-      date = Date.today.at_beginning_of_week + 1.week
-      p1 = Planning.create!(work_item_id: work_items(:webauftritt).id,
+      date = Time.zone.today.at_beginning_of_week + 1.week
+      Planning.create!(work_item_id: work_items(:webauftritt).id,
                        employee_id: employees(:pascal).id,
-                       date: date,
+                       date:,
                        percent: 80)
       p2 = Planning.create!(work_item_id: work_items(:webauftritt).id,
+                            employee_id: employees(:lucien).id,
+                            date:,
+                            percent: 60)
+      Planning.create!(work_item_id: work_items(:puzzletime).id,
                        employee_id: employees(:lucien).id,
-                       date: date,
-                       percent: 60)
-      p3 = Planning.create!(work_item_id: work_items(:puzzletime).id,
-                       employee_id: employees(:lucien).id,
-                       date: date + 1.weeks,
+                       date: date + 1.week,
                        percent: 20)
       p4 = Planning.create!(work_item_id: work_items(:puzzletime).id,
-                       employee_id: employees(:lucien).id,
-                       date: date + 1.weeks + 1.day,
-                       percent: 20)
+                            employee_id: employees(:lucien).id,
+                            date: date + 1.week + 1.day,
+                            percent: 20)
 
       assert_difference('Planning.count', -2) do
         delete :destroy,
@@ -107,7 +110,7 @@ module Plannings
     test 'DELETE destroy as regular user fails' do
       p = Planning.create!(employee: employees(:pascal),
                            work_item: work_items(:hitobito_demo),
-                           date: Date.today.beginning_of_week,
+                           date: Time.zone.today.beginning_of_week,
                            percent: 80)
       login_as(:lucien)
       assert_raises(CanCan::AccessDenied) do
@@ -124,7 +127,7 @@ module Plannings
     test 'DELETE destroy for own plannings succeeds' do
       p = Planning.create!(employee: employees(:pascal),
                            work_item: work_items(:hitobito_demo),
-                           date: Date.today.beginning_of_week,
+                           date: Time.zone.today.beginning_of_week,
                            percent: 80)
       login_as(:pascal)
       patch :update,
@@ -134,6 +137,7 @@ module Plannings
               department_id: departments(:devone).id,
               planning_ids: [p.id]
             }
+
       assert_equal 200, response.status
     end
   end

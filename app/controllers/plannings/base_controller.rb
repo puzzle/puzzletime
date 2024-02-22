@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -66,7 +68,7 @@ module Plannings
     def params_with_restricted_items
       items = params[:items] || []
       items = items.values if items.is_a?(Hash) || items.is_a?(ActionController::Parameters)
-      { items: items,
+      { items:,
         planning: params[:planning] || {} }
     end
 

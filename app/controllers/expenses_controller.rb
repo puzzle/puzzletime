@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 class ExpensesController < ManageController
   include Filterable
   self.optional_nesting = [Employee]
 
-  self.permitted_attrs = [:payment_date, :employee_id, :kind, :order_id, :description, :amount, :receipt]
-  self.remember_params += %w(status employee_id reimbursement_date department_id)
+  self.permitted_attrs = %i[payment_date employee_id kind order_id description amount receipt]
+  self.remember_params += %w[status employee_id reimbursement_date department_id]
 
   before_render_index :populate_management_filter_selects, unless: :parent
   before_render_index :populate_employee_filter_selects, if: :parent
@@ -11,10 +13,6 @@ class ExpensesController < ManageController
   before_action :set_payment_date, only: :index, if: :parent
 
   before_save :attach_resized_receipt
-
-  def new
-    entry.attributes = template_attributes
-  end
 
   def index
     if parent
@@ -25,6 +23,10 @@ class ExpensesController < ManageController
     else
       redirect_to('/expenses_reviews')
     end
+  end
+
+  def new
+    entry.attributes = template_attributes
   end
 
   def update
@@ -118,15 +120,16 @@ class ExpensesController < ManageController
   def attach_resized_receipt
     return unless receipt_param
 
-    resized = ImageProcessing::MiniMagick
+    resized = ImageProcessing::Vips
               .source(receipt_param.tempfile)
               .resize_to_limit(Settings.expenses.receipt.max_pixel, Settings.expenses.receipt.max_pixel)
               .saver(quality: Settings.expenses.receipt.quality)
               .convert('jpg')
+              .loader(page: 0)
               .call
 
     target_filename = "#{File.basename(receipt_param.original_filename.to_s, '.*')}.jpg"
 
-    entry.receipt.attach(io: File.open(resized), filename: target_filename, content_type: 'image/jpg')
+    entry.receipt.attach(io: File.open(resized), filename: target_filename, content_type: 'image/jpeg')
   end
 end

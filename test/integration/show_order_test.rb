@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2021, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -9,7 +11,6 @@ class ShowOrder < ActionDispatch::IntegrationTest
   setup :crm_start
   setup :login
   teardown :crm_stop
-
 
   ADDITIONAL_CRM_LABEL_TEXT = 'Weitere Highrise IDs'
 
@@ -56,6 +57,6 @@ class ShowOrder < ActionDispatch::IntegrationTest
   end
 
   def additional_crm_links
-    additional_crm_links_label.find(:xpath, "following-sibling::dd//ul", visible: false)
+    additional_crm_links_label.find(:xpath, 'following-sibling::dd//ul', visible: false)
   end
 end

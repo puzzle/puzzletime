@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -22,12 +24,12 @@ module WithPeriod
       Period.parse(params[:period_shortcut])
     elsif build_start_end_period?
       Period.new(params[:start_date].presence, params[:end_date].presence).tap do |period|
-        fail ArgumentError, 'Start Datum nach End Datum' if period.negative?
+        raise ArgumentError, 'Start Datum nach End Datum' if period.negative?
       end
     end
-  rescue ArgumentError => ex
+  rescue ArgumentError => e
     # from Period.new or if period.negative?
-    flash.now[:alert] = "Ungültige Zeitspanne: #{ex}"
+    flash.now[:alert] = "Ungültige Zeitspanne: #{e}"
     params.delete(:start_date)
     params.delete(:end_date)
     params.delete(:period_shortcut)
@@ -43,7 +45,7 @@ module WithPeriod
   end
 
   def build_start_end_period?
-    allow_unlimited_period && (params[:start_date].present? || params[:end_date].present?) ||
-      !allow_unlimited_period && params[:start_date].present? && params[:end_date].present?
+    (allow_unlimited_period && (params[:start_date].present? || params[:end_date].present?)) ||
+      (!allow_unlimited_period && params[:start_date].present? && params[:end_date].present?)
   end
 end

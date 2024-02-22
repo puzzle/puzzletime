@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -11,47 +13,63 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
   test 'without params has defaults' do
     assert_equal '', find_field('invoice_period_from').value
     assert_equal '', find_field('invoice_period_to').value
-    refute find_field('manual_invoice').checked?
+    assert_not_predicate find_field('manual_invoice'), :checked?
 
     assert_checkboxes(all("input[name='invoice[employee_ids][]']"), order_employees)
     assert_checkboxes(all("input[name='invoice[work_item_ids][]']"), order_work_items)
 
     assert_equal I18n.l(Time.zone.today + order.contract.payment_period.days), find_field('invoice_due_date').value
-    assert find_field("invoice_billing_address_id_#{order.default_billing_address_id}").checked?
+    assert_predicate find_field("invoice_billing_address_id_#{order.default_billing_address_id}"), :checked?
   end
 
   test 'click on manual toggles invoice filters visibility' do
     manual_checkbox = find_field('manual_invoice')
-    refute manual_checkbox.checked?
+
+    assert_not_predicate manual_checkbox, :checked?
 
     affected_selectors = [
       "input[name='invoice[employee_ids][]']",
       "input[name='invoice[work_item_ids][]']",
       "input[name='invoice[grouping]']"
     ]
-    assert affected_selectors.all? { |selector| all(selector).present? }
+
+    assert(affected_selectors.all? { |selector| all(selector).present? })
     manual_checkbox.click
-    assert affected_selectors.none? { |selector| all(selector).present? }
+
+    assert(affected_selectors.none? { |selector| all(selector).present? })
     manual_checkbox.click
-    assert affected_selectors.all? { |selector| all(selector).present? }
+
+    assert(affected_selectors.all? { |selector| all(selector).present? })
   end
 
   test 'sets calculated total on page load' do
     expected_total = '%.2f' % (billable_hours * rate).round(2)
-    assert_match expected_total, find('#invoice_total_amount').text.delete("'")
+
+    text_on_page =
+      find('#invoice_total_amount')
+      .text
+      .delete("'")
+      .delete('&#39;')
+
+    assert_match expected_total, text_on_page
   end
 
   test 'lists only employees with ordertimes on page load' do
     all(:name, 'invoice[employee_ids][]').map(&:value)
-    assert_arrays_match employees(:mark, :lucien).map(&:id).map(&:to_s), all(:name, 'invoice[employee_ids][]').map(&:value)
+
+    assert_arrays_match employees(:mark, :lucien).map { |e| e.id.to_s },
+                        all(:name, 'invoice[employee_ids][]').map(&:value)
 
     reload(invoice: { period_to: '8.12.2006' })
+
     assert_arrays_match [employees(:mark).id.to_s], all(:name, 'invoice[employee_ids][]').map(&:value)
 
     reload(invoice: { period_from: '12.12.2006' })
+
     assert_arrays_match [employees(:lucien).id.to_s], all(:name, 'invoice[employee_ids][]').map(&:value)
 
     reload(invoice: { period_from: '09.12.2006', period_to: '11.12.2006' })
+
     assert_empty all(:name, 'invoice[employee_ids][]')
   end
 
@@ -60,7 +78,8 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
     work_items = Fabricate.times(2, :work_item, parent: order.work_item)
     work_items.each { |w| Fabricate(:accounting_post, work_item: w) }
 
-    from, to = Date.parse('09.12.2006'), Date.parse('10.12.2006')
+    from = Date.parse('09.12.2006')
+    to = Date.parse('10.12.2006')
 
     (from..to).each_with_index do |date, index|
       Fabricate(:ordertime,
@@ -69,22 +88,28 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
                 employee: employees(:pascal))
     end
 
-    reload(order: order)
+    reload(order:)
+
     assert_arrays_match work_items.map { |w| w.id.to_s }, all(:name, 'invoice[work_item_ids][]').map(&:value)
 
-    reload(order: order, invoice: { period_from: '11.12.2006' })
+    reload(order:, invoice: { period_from: '11.12.2006' })
+
     assert_empty all(:name, 'invoice[work_item_ids][]').map(&:value)
 
-    reload(order: order, invoice: { period_to: '08.12.2006' })
+    reload(order:, invoice: { period_to: '08.12.2006' })
+
     assert_empty all(:name, 'invoice[work_item_ids][]').map(&:value)
 
-    reload(order: order, invoice: { period_from: '10.12.2006' })
+    reload(order:, invoice: { period_from: '10.12.2006' })
+
     assert_arrays_match [work_items.last.id.to_s], all(:name, 'invoice[work_item_ids][]').map(&:value)
 
-    reload(order: order, invoice: { period_to: '09.12.2006' })
+    reload(order:, invoice: { period_to: '09.12.2006' })
+
     assert_arrays_match [work_items.first.id.to_s], all(:name, 'invoice[work_item_ids][]').map(&:value)
 
-    reload(order: order, invoice: { period_from: '09.12.2006', period_to: '10.12.2006' })
+    reload(order:, invoice: { period_from: '09.12.2006', period_to: '10.12.2006' })
+
     assert_arrays_match work_items.map { |w| w.id.to_s }, all(:name, 'invoice[work_item_ids][]').map(&:value)
   end
 
@@ -97,42 +122,49 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
 
   test 'set from date updates employee checkboxes' do
     # check precondition
-    assert has_css?("#employee_checkboxes", text: "Waber Mark")
+    assert has_css?('#employee_checkboxes', text: 'Waber Mark')
 
     # set date, assert
     change_date('invoice_period_from', '09.12.2006')
-    refute has_css?("#employee_checkboxes", text: "Waber Mark")
+
+    assert_not has_css?('#employee_checkboxes', text: 'Waber Mark')
 
     change_date('invoice_period_from', '08.12.2006')
-    assert has_css?("#employee_checkboxes", text: "Waber Mark")
+
+    assert has_css?('#employee_checkboxes', text: 'Waber Mark')
   end
 
   test 'set to date updates employee checkboxes' do
     # check precondition
-    assert has_css?("#employee_checkboxes", text: "Waber Mark")
+    assert has_css?('#employee_checkboxes', text: 'Waber Mark')
 
     # set date, assert
     change_date('invoice_period_to', '07.12.2006')
-    refute has_css?("#employee_checkboxes", text: "Waber Mark")
+
+    assert_not has_css?('#employee_checkboxes', text: 'Waber Mark')
 
     change_date('invoice_period_to', '08.12.2006')
-    assert has_css?("#employee_checkboxes", text: "Waber Mark")
+
+    assert has_css?('#employee_checkboxes', text: 'Waber Mark')
   end
 
   test 'set to date updates work_items checkboxes' do
     # check precondition
-    assert has_css?("#work_item_checkboxes", text: "STOP-WEB: Webauftritt")
+    assert has_css?('#work_item_checkboxes', text: 'STOP-WEB: Webauftritt')
 
     # set date, assert
     change_date('invoice_period_to', '07.12.2006')
-    refute has_css?("#work_item_checkboxes", text: "STOP-WEB: Webauftritt")
+
+    assert_not has_css?('#work_item_checkboxes', text: 'STOP-WEB: Webauftritt')
 
     change_date('invoice_period_to', '08.12.2006')
-    assert has_css?("#work_item_checkboxes", text: "STOP-WEB: Webauftritt")
+
+    assert has_css?('#work_item_checkboxes', text: 'STOP-WEB: Webauftritt')
   end
 
   test 'change of billing client changes billing addresses' do
     selectize('invoice_billing_client_id', 'Puzzle')
+
     assert find('#billing_addresses').has_content?('Eigerplatz')
   end
 
@@ -169,7 +201,7 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
   def change_date(label, date_string)
     page.find("##{label}").click
     fill_in(label, with: date_string)
-    page.find("#ui-datepicker-div .ui-datepicker-current-day a").click
+    page.find('#ui-datepicker-div .ui-datepicker-current-day a').click
     sleep(0.5) # give the xhr request some time to complete
   end
 

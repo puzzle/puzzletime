@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -40,7 +42,7 @@ class EmployeeMasterData < ActiveRecord::Migration[5.1]
     end
 
     add_index :employment_roles_employments,
-              [:employment_id, :employment_role_id],
+              %i[employment_id employment_role_id],
               name: 'index_unique_employment_employment_role',
               unique: true
   end

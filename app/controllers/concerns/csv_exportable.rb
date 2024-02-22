@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -6,11 +8,11 @@
 module CsvExportable
   def send_csv(csv_data, filename)
     csv_file_export_header(filename)
-    send_data(csv_data, filename: filename, type: 'text/csv; charset=utf-8; header=present')
+    send_data(csv_data, filename:, type: 'text/csv; charset=utf-8; header=present')
   end
 
   def csv_file_export_header(filename)
-    if request.env['HTTP_USER_AGENT'] =~ /msie/i
+    if /msie/i.match?(request.env['HTTP_USER_AGENT'])
       headers['Pragma'] = 'public'
       headers['Content-type'] = 'text/plain'
       headers['Cache-Control'] = 'no-cache, must-revalidate, post-check=0, pre-check=0'

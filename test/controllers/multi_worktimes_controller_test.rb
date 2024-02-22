@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -10,8 +12,9 @@ class MultiWorktimesControllerTest < ActionController::TestCase
 
   test 'GET edit without worktimes fails' do
     get :edit, params: { order_id: order.id }
+
     assert_redirected_to order_order_services_path(order, returning: true)
-    assert flash[:alert].present?
+    assert_predicate flash[:alert], :present?
   end
 
   test 'GET edit loads worktimes' do
@@ -20,6 +23,7 @@ class MultiWorktimesControllerTest < ActionController::TestCase
           order_id: order.id,
           worktime_ids: worktimes(:wt_mw_puzzletime, :wt_pz_puzzletime).collect(&:id)
         }
+
     assert_template 'edit'
     assert_equal 2, assigns(:worktimes).size
   end
@@ -31,6 +35,7 @@ class MultiWorktimesControllerTest < ActionController::TestCase
           order_id: order.id,
           worktime_ids: [worktimes(:wt_pz_puzzletime).id]
         }
+
     assert_template 'edit'
     assert_equal 1, assigns(:worktimes).size
   end
@@ -61,8 +66,9 @@ class MultiWorktimesControllerTest < ActionController::TestCase
           order_id: order.id,
           worktime_ids: worktimes(:wt_mw_puzzletime, :wt_pz_puzzletime).collect(&:id)
         }
+
     assert_equal work_items(:puzzletime), assigns(:work_item)
-    assert_equal true, assigns(:billable)
+    assert assigns(:billable)
     assert_nil assigns(:ticket)
   end
 
@@ -72,6 +78,7 @@ class MultiWorktimesControllerTest < ActionController::TestCase
           order_id: order.id,
           worktime_ids: worktimes(:wt_pz_webauftritt, :wt_pz_puzzletime).collect(&:id)
         }
+
     assert_nil assigns(:work_item)
     assert_nil assigns(:billable)
     assert_equal 'rc1', assigns(:ticket)
@@ -88,16 +95,18 @@ class MultiWorktimesControllerTest < ActionController::TestCase
             billable: false,
             work_item_id: 123
           }
+
     assert_redirected_to(order_order_services_path(order, returning: true))
     assert_match(/2 Zeiten/, flash[:notice])
 
     t1 = worktimes(:wt_mw_puzzletime).reload
     t2 = worktimes(:wt_pz_puzzletime).reload
+
     assert_equal 'rc2', t1.ticket
-    assert_equal false, t1.billable
+    assert_not t1.billable
     assert_equal work_items(:puzzletime).id, t1.work_item_id
     assert_equal 'rc2', t2.ticket
-    assert_equal false, t2.billable
+    assert_not t2.billable
     assert_equal work_items(:puzzletime).id, t2.work_item_id
   end
 
@@ -112,12 +121,14 @@ class MultiWorktimesControllerTest < ActionController::TestCase
             billable: false,
             work_item_id: 123
           }
+
     assert_redirected_to(order_order_services_path(order, returning: true))
     assert_match(/keine Änderungen/, flash[:notice])
 
     t1 = worktimes(:wt_mw_puzzletime).reload
+
     assert_nil t1.ticket
-    assert_equal true, t1.billable
+    assert t1.billable
     assert_equal work_items(:puzzletime).id, t1.work_item_id
   end
 
@@ -134,11 +145,12 @@ class MultiWorktimesControllerTest < ActionController::TestCase
           }
 
     assert_template 'edit'
-    assert assigns(:errors).present?
+    assert_predicate assigns(:errors), :present?
 
     t1 = worktimes(:wt_pz_puzzletime).reload
+
     assert_equal 'rc1', t1.ticket
-    assert_equal true, t1.billable
+    assert t1.billable
   end
 
   test 'PATCH update with foreign worktime is now allowed' do

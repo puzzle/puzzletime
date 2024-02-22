@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -18,6 +20,6 @@ require 'test_helper'
 
 class EmploymentRoleTest < ActiveSupport::TestCase
   test 'string representation matches name' do
-    assert_equal employment_roles(:software_engineer).to_s, 'Software Engineer'
+    assert_equal 'Software Engineer', employment_roles(:software_engineer).to_s
   end
 end

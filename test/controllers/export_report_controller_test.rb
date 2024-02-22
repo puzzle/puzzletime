@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -17,12 +19,14 @@ class ExportReportControllerTest < ActionController::TestCase
 
   test 'GET export renders page to select date' do
     get :index
+
     assert_template 'index'
     assert_match(/Stichdatum/, response.body)
   end
 
   test 'GET export has a button to download role_distribution csv' do
     get :index
+
     assert_match(/Funktionsanteile/, response.body)
   end
 
@@ -32,12 +36,14 @@ class ExportReportControllerTest < ActionController::TestCase
       report: :role_distribution,
       format: :csv
     }
+
     assert_csv_http_headers('puzzletime_funktionsanteile_20000123.csv')
     assert_match(/Funktionsanteile per 23.01.2000/, response.body)
   end
 
   test 'GET export has a button to download overtime_vacations csv' do
     get :index
+
     assert_match('Überzeit/Ferien', response.body)
   end
 
@@ -47,6 +53,7 @@ class ExportReportControllerTest < ActionController::TestCase
       report: :overtime_vacations,
       format: :csv
     }
+
     assert_csv_http_headers('puzzletime_überzeit_ferien_20000123.csv')
     assert_match('Überzeit/Ferien per 23.01.2000', response.body)
   end
@@ -55,7 +62,12 @@ class ExportReportControllerTest < ActionController::TestCase
 
   def assert_csv_http_headers(filename)
     assert_includes response.headers, 'Content-Type', 'Content-Disposition'
-    assert_equal 'text/csv; charset=utf-8; header=present', response.headers['Content-Type']
-    assert_equal "attachment; filename=\"#{filename}\"", response.headers['Content-Disposition']
+    assert_equal 'text/csv; charset=utf-8', response.headers['Content-Type']
+
+    filename_slug = I18n.transliterate(filename)
+    filename_utf8 = CGI.escape(filename)
+
+    assert_equal "attachment; filename=\"#{filename_slug}\"; filename*=UTF-8''#{filename_utf8}",
+                 response.headers['Content-Disposition']
   end
 end

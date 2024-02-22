@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -20,9 +22,13 @@ class OrderContactTest < ActiveSupport::TestCase
 
   test 'list scope is ordered by contact' do
     order = Fabricate(:order)
-    m = OrderContact.create!(order: order, contact: Fabricate(:contact, lastname: 'Miller', client: order.client))
-    a = OrderContact.create!(order: order, contact: Fabricate(:contact, lastname: 'Aber', client: order.client))
-    assert_equal [a, m], order.order_contacts.list
+    m = OrderContact.create!(order:, contact: Fabricate(:contact, lastname: 'Miller', client: order.client))
+    a = OrderContact.create!(order:, contact: Fabricate(:contact, lastname: 'Aber', client: order.client))
+
+    expected = [a, m].map(&:attributes)
+    received = order.order_contacts.list.map(&:attributes)
+
+    assert_equal expected, received
   end
 
   test 'crm ids are replaced' do

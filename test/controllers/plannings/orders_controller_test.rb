@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -18,27 +20,29 @@ module Plannings
             employee_id: employees(:long_time_john).id,
             work_item_id: work_items(:hitobito_demo_app).id
           }
+
       assert_equal 200, response.status
-      refute_empty assigns(:items)
+      assert_not_empty assigns(:items)
       assert_equal employees(:long_time_john), assigns(:legend)
-      assert response.body.include?('Neverends John')
+      assert_includes response.body, 'Neverends John'
     end
 
     test 'GET#show renders board' do
-      date = Date.today.at_beginning_of_week + 1.week
+      date = Time.zone.today.at_beginning_of_week + 1.week
       Planning.create!(work_item_id: work_items(:hitobito_demo_app).id,
                        employee_id: employees(:pascal).id,
-                       date: date,
+                       date:,
                        percent: 80)
       Planning.create!(work_item_id: work_items(:hitobito_demo_app).id,
                        employee_id: employees(:lucien).id,
-                       date: date,
+                       date:,
                        percent: 60)
       Planning.create!(work_item_id: work_items(:hitobito_demo_site).id,
                        employee_id: employees(:lucien).id,
-                       date: date + 1.weeks,
+                       date: date + 1.week,
                        percent: 20)
       get :show, params: { id: orders(:hitobito_demo).id }
+
       assert_equal accounting_posts(:hitobito_demo_app, :hitobito_demo_site),
                    assigns(:board).accounting_posts
       assert_equal employees(:lucien, :pascal),
@@ -46,13 +50,14 @@ module Plannings
     end
 
     test 'GET#show with start and end date changes period' do
-      date = Date.today.at_beginning_of_week
+      date = Time.zone.today.at_beginning_of_week
       get :show,
           params: {
             id: orders(:hitobito_demo).id,
             start_date: date + 4.weeks,
             end_date: date + 8.weeks - 1.day
           }
+
       assert_equal Period.new(date + 4.weeks, date + 8.weeks - 1.day), assigns(:period)
     end
 
@@ -62,13 +67,15 @@ module Plannings
             id: orders(:hitobito_demo).id,
             period_shortcut: '6M'
           }
-      assert assigns(:period).length > 180
+
+      assert_operator assigns(:period).length, :>, 180
     end
 
     test 'GET#show as regular user is allowed' do
       login_as(:pascal)
 
       get :show, params: { id: orders(:hitobito_demo).id }
+
       assert_equal 200, response.status
     end
 
@@ -81,11 +88,12 @@ module Plannings
               planning: { percent: '50', definitive: 'true' },
               items: { '1' => { employee_id: employees(:pascal).id.to_s,
                                 work_item_id: work_items(:puzzletime).id.to_s,
-                                date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
+                                date: Time.zone.today.beginning_of_week.strftime('%Y-%m-%d') } }
             }
+
       assert_equal 200, response.status
-      assert response.body.include?('Zumkehr Pascal')
-      assert response.body.include?('50')
+      assert_includes response.body, 'Zumkehr Pascal'
+      assert_includes response.body, '50'
     end
 
     test 'PATCH update with invalid params' do
@@ -99,8 +107,9 @@ module Plannings
                                 work_item_id: work_items(:puzzletime).id.to_s,
                                 date: '2000-01-03' } }
             }
+
       assert_equal 200, response.status
-      assert response.body.include?('Bitte füllen Sie das Formular aus')
+      assert_includes response.body, 'Bitte füllen Sie das Formular aus'
     end
 
     test 'PATCH#update as regular user fails' do
@@ -114,7 +123,7 @@ module Plannings
                 planning: { percent: '50', definitive: 'true' },
                 items: { '1' => { employee_id: employees(:pascal).id.to_s,
                                   work_item_id: work_items(:puzzletime).id.to_s,
-                                  date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
+                                  date: Time.zone.today.beginning_of_week.strftime('%Y-%m-%d') } }
               }
       end
     end
@@ -131,7 +140,7 @@ module Plannings
               planning: { percent: '50', definitive: 'true' },
               items: { '1' => { employee_id: employees(:pascal).id.to_s,
                                 work_item_id: work_items(:puzzletime).id.to_s,
-                                date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
+                                date: Time.zone.today.beginning_of_week.strftime('%Y-%m-%d') } }
             }
 
       assert_equal 200, response.status
@@ -150,7 +159,7 @@ module Plannings
                 planning: { percent: '50', definitive: 'true' },
                 items: { '1' => { employee_id: employees(:pascal).id.to_s,
                                   work_item_id: work_items(:webauftritt).id.to_s,
-                                  date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
+                                  date: Time.zone.today.beginning_of_week.strftime('%Y-%m-%d') } }
               }
       end
     end
@@ -158,7 +167,7 @@ module Plannings
     test 'DELETE#destroy deletes given plannings' do
       p = Planning.create!(employee: employees(:mark),
                            work_item: work_items(:puzzletime),
-                           date: Date.today.beginning_of_week,
+                           date: Time.zone.today.beginning_of_week,
                            percent: 80)
       assert_difference('Planning.count', -1) do
         delete :destroy,
@@ -174,7 +183,7 @@ module Plannings
     test 'DELETE#destroy on responsible board but for different order does not work' do
       p = Planning.create!(employee: employees(:pascal),
                            work_item: work_items(:webauftritt),
-                           date: Date.today.beginning_of_week,
+                           date: Time.zone.today.beginning_of_week,
                            percent: 80)
       login_as(:lucien)
       assert_no_difference('Planning.count') do

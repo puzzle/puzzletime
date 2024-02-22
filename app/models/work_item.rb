@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -19,7 +21,7 @@
 #  closed          :boolean          default(FALSE), not null
 #
 
-class WorkItem < ActiveRecord::Base
+class WorkItem < ApplicationRecord
   include Evaluatable
 
   ### ASSOCIATIONS
@@ -32,19 +34,19 @@ class WorkItem < ActiveRecord::Base
 
   has_many :plannings,
            lambda { |work_item|
-             joins(:work_item).
-               unscope(where: :work_item_id).
-               where('plannings.work_item_id = work_items.id AND ' \
-                     '? = ANY (work_items.path_ids)', work_item.id)
+             joins(:work_item)
+               .unscope(where: :work_item_id)
+               .where('plannings.work_item_id = work_items.id AND ' \
+                      '? = ANY (work_items.path_ids)', work_item.id)
            },
            dependent: :destroy
 
   has_many :worktimes,
            lambda { |work_item|
-             joins(:work_item).
-               unscope(where: :work_item_id).
-               where('worktimes.work_item_id = work_items.id AND ' \
-                   '? = ANY (work_items.path_ids)', work_item.id)
+             joins(:work_item)
+               .unscope(where: :work_item_id)
+               .where('worktimes.work_item_id = work_items.id AND ' \
+                      '? = ANY (work_items.path_ids)', work_item.id)
            }
 
   ### VALIDATIONS
@@ -57,11 +59,11 @@ class WorkItem < ActiveRecord::Base
 
   before_validation :upcase_shortname
   before_save :remember_name_changes
-  before_update :generate_path_ids
   after_create :generate_path_ids!
   after_create :reset_parent_leaf
-  after_save :update_child_path_names, if: -> { @names_changed }
+  before_update :generate_path_ids
   after_destroy :reset_parent_leaf
+  after_save :update_child_path_names, if: -> { @names_changed }
 
   ### SCOPES
 
@@ -92,7 +94,9 @@ class WorkItem < ActiveRecord::Base
   end
 
   def label_ancestry
-    path_names.split("\n")[1..-1].join(" #{Settings.work_items.path_separator} ")
+    path_names
+      .split("\n")[1..]
+      .join(" #{Settings.work_items.path_separator} ")
   end
 
   def top_item
@@ -111,11 +115,11 @@ class WorkItem < ActiveRecord::Base
     !closed
   end
 
-  def with_ancestors(&block)
+  def with_ancestors(&)
     return enum_for(:with_ancestors) unless block_given?
 
     yield self
-    parent.with_ancestors(&block) if parent_id?
+    parent.with_ancestors(&) if parent_id?
   end
 
   def self_and_descendants
@@ -124,21 +128,21 @@ class WorkItem < ActiveRecord::Base
 
   # children that are not assigned to a special entity like client or order
   def categories
-    children.
-      joins('LEFT JOIN clients ON clients.work_item_id = work_items.id').
-      joins('LEFT JOIN orders ON orders.work_item_id = work_items.id').
-      joins('LEFT JOIN accounting_posts ON accounting_posts.work_item_id = work_items.id').
-      where(clients: { id: nil },
-            orders: { id: nil },
-            accounting_posts: { id: nil })
+    children
+      .joins('LEFT JOIN clients ON clients.work_item_id = work_items.id')
+      .joins('LEFT JOIN orders ON orders.work_item_id = work_items.id')
+      .joins('LEFT JOIN accounting_posts ON accounting_posts.work_item_id = work_items.id')
+      .where(clients: { id: nil },
+             orders: { id: nil },
+             accounting_posts: { id: nil })
   end
 
   def employees
-    Employee.
-      where('id IN (?) OR id IN (?)',
-            plannings.select(:employee_id),
-            worktimes.select(:employee_id)).
-      list
+    Employee
+      .where('id IN (?) OR id IN (?)',
+             plannings.select(:employee_id),
+             worktimes.select(:employee_id))
+      .list
   end
 
   def move_times!(target)
@@ -156,7 +160,7 @@ class WorkItem < ActiveRecord::Base
   end
 
   def propagate_closed!(closed)
-    self_and_descendants.update_all(closed: closed)
+    self_and_descendants.update_all(closed:)
     self.closed = closed
     save!
   end
@@ -179,9 +183,9 @@ class WorkItem < ActiveRecord::Base
   end
 
   def reset_parent_leaf
-    if parent
-      parent.update_column(:leaf, !parent.children.exists?)
-    end
+    return unless parent
+
+    parent.update_column(:leaf, !parent.children.exists?)
   end
 
   def update_child_path_names
@@ -196,6 +200,6 @@ class WorkItem < ActiveRecord::Base
   end
 
   def upcase_shortname
-    shortname.upcase! if shortname
+    shortname&.upcase!
   end
 end

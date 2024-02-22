@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -36,7 +38,7 @@ module OrderHelper
 
     order_target_rating_icon(
       target.rating,
-      title: target.comment? ? simple_format(target.comment).gsub(/"/, '&quot;') : nil,
+      title: target.comment? ? simple_format(target.comment).gsub('"', '&quot;') : nil,
       data: { toggle: :tooltip }
     )
   end
@@ -70,7 +72,7 @@ module OrderHelper
   end
 
   def format_order_additional_crm_orders(order)
-    simple_list (order.additional_crm_orders.map(&method(:crm_order_link)))
+    simple_list(order.additional_crm_orders.map(&method(:crm_order_link)))
   end
 
   def format_major_chance(order)
@@ -92,7 +94,7 @@ module OrderHelper
   end
 
   def glyphicons
-    %w(asterisk plus euro minus cloud envelope pencil glass music search heart star star-empty
+    %w[asterisk plus euro minus cloud envelope pencil glass music search heart star star-empty
        user film th-large th th-list ok remove zoom-in zoom-out off signal cog trash home file
        time road download-alt download upload inbox play-circle repeat refresh list-alt lock flag
        headphones volume-off volume-down volume-up qrcode barcode tag tags book bookmark print
@@ -113,7 +115,7 @@ module OrderHelper
        floppy-remove floppy-save floppy-open credit-card transfer cutlery header compressed
        earphone phone-alt tower stats sd-video hd-video subtitles sound-stereo sound-dolby
        sound-5-1 sound-6-1 sound-7-1 copyright-mark registration-mark cloud-download cloud-upload
-       tree-conifer tree-deciduous)
+       tree-conifer tree-deciduous]
   end
 
   def choosable_order_options
@@ -122,16 +124,16 @@ module OrderHelper
   end
 
   def order_option(order, selected = false)
-    if order
-      json = { id: order.id,
-               name: order.name,
-               path_shortnames: order.path_shortnames }
-      content_tag(:option,
-                  order.label_verbose,
-                  value: order.id,
-                  selected: selected,
-                  data: { data: json.to_json })
-    end
+    return unless order
+
+    json = { id: order.id,
+             name: order.name,
+             path_shortnames: order.path_shortnames }
+    content_tag(:option,
+                order.label_verbose,
+                value: order.id,
+                selected:,
+                data: { data: json.to_json })
   end
 
   def order_progress_bar(order)
@@ -139,7 +141,7 @@ module OrderHelper
 
     order_progress_bar_link(order.order, progress) do
       ''.html_safe.tap do |content|
-        if progress[:percent] > 0
+        if (progress[:percent]).positive?
           content << content_tag(
             :div,
             nil,
@@ -148,7 +150,7 @@ module OrderHelper
           )
         end
 
-        if progress[:over_budget_percent] > 0
+        if (progress[:over_budget_percent]).positive?
           content << content_tag(
             :div,
             nil,
@@ -162,21 +164,21 @@ module OrderHelper
 
   private
 
-  def order_progress_bar_link(order, progress, &block)
+  def order_progress_bar_link(order, progress, &)
     title = "#{f(progress[:percent_title])}% geleistet"
 
     if can?(:show, order)
       link_to(order_order_controlling_url(order.id),
-              { class: 'progress', title: title },
-              &block)
+              { class: 'progress', title: },
+              &)
     else
-      content_tag(:div, yield, class: 'progress', title: title)
+      content_tag(:div, yield, class: 'progress', title:)
     end
   end
 
   def order_progress(order)
     progress = order_progress_hash
-    return progress unless order.offered_amount > 0
+    return progress unless order.offered_amount.positive?
 
     calculate_order_progress(order, progress)
     progress
@@ -195,13 +197,13 @@ module OrderHelper
                          order.supplied_amount.to_f
     progress[:percent_title] = progress[:percent]
 
-    if order.supplied_amount.to_f > order.offered_amount.to_f
-      progress[:over_budget_percent] =
-        (order.supplied_amount.to_f - order.offered_amount.to_f) /
-        order.supplied_amount.to_f *
-        100
-      progress[:percent] = 100 - progress[:over_budget_percent]
-    end
+    return unless order.supplied_amount.to_f > order.offered_amount.to_f
+
+    progress[:over_budget_percent] =
+      (order.supplied_amount.to_f - order.offered_amount.to_f) /
+      order.supplied_amount.to_f *
+      100
+    progress[:percent] = 100 - progress[:over_budget_percent]
   end
 
   def order_report_billability_class(value)
@@ -230,8 +232,8 @@ module OrderHelper
 
   def uncertainties_tooltip(order, uncertainty_type)
     uncertainties = uncertainties_grouped_by_risk(order, uncertainty_type)
-    [:high, :medium, :low]
-      .select { |risk| uncertainties.keys.include?(risk) }
+    %i[high medium low]
+      .select { |risk| uncertainties.key?(risk) }
       .reduce('') do |result, risk|
         title = t("activerecord.attributes.order_uncertainty/risks.#{risk}")
         names = uncertainties[risk].map { |u| "<li>#{h(u.name)}</li>" }.join

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -13,7 +15,7 @@
 #  name     :string
 #
 
-class AdditionalCrmOrder < ActiveRecord::Base
+class AdditionalCrmOrder < ApplicationRecord
   belongs_to :order
 
   validates_by_schema
@@ -29,8 +31,8 @@ class AdditionalCrmOrder < ActiveRecord::Base
   private
 
   def sync_name
-    if Crm.instance
-      Crm.instance.delay.sync_additional_order(self)
-    end
+    return unless Crm.instance
+
+    Crm.instance.delay.sync_additional_order(self)
   end
 end

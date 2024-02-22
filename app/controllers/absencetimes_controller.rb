@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
 class AbsencetimesController < WorktimesController
-  self.permitted_attrs = [:absence_id, :report_type, :work_date, :hours,
-                          :from_start_time, :to_end_time, :description]
+  self.permitted_attrs = %i[absence_id report_type work_date hours
+                            from_start_time to_end_time description]
 
   before_render_form :set_accounts
   after_destroy :send_email_notification
@@ -19,17 +21,17 @@ class AbsencetimesController < WorktimesController
   end
 
   def update
-    if entry.employee_id != @user.id
-      redirect_to index_path
-    else
+    if entry.employee_id == @user.id
       super
+    else
+      redirect_to index_path
     end
   end
 
   protected
 
   def create_multi_absence
-    @multiabsence = MultiAbsence.new
+    @multiabsence = Forms::MultiAbsence.new
     @multiabsence.employee = Employee.find_by(id: employee_id)
     @multiabsence.attributes = params[:absencetime]
     if @multiabsence.valid?
@@ -39,7 +41,9 @@ class AbsencetimesController < WorktimesController
     else
       set_employees
       @create_multi = true
-      @multiabsence.worktime.errors.each do |attr, msg|
+      @multiabsence.worktime.errors.each do |error|
+        attr = error.attribute
+        msg  = error.message
         entry.errors.add(attr, msg)
       end
       render 'new'
@@ -50,7 +54,7 @@ class AbsencetimesController < WorktimesController
     @worktime.absence_id ||= params[:account_id]
   end
 
-  def set_accounts(_all = false)
+  def set_accounts
     @accounts = Absence.list
   end
 
@@ -63,8 +67,8 @@ class AbsencetimesController < WorktimesController
   end
 
   def send_email_notification
-    if @worktime.employee != @user
-      ::EmployeeMailer.worktime_deleted_mail(@worktime, @user).deliver_now
-    end
+    return unless @worktime.employee != @user
+
+    ::EmployeeMailer.worktime_deleted_mail(@worktime, @user).deliver_now
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -17,7 +19,7 @@ class StatusController < ApplicationController
     ready, status, message = assess_readiness
     http_code = ready ? :ok : :internal_server_error
 
-    render json: { status: status, message: message }, status: http_code
+    render json: { status:, message: }, status: http_code
   end
 
   private

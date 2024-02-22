@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -8,8 +10,7 @@ class OrderTargetsController < ApplicationController
   before_action :authorize_class
   before_action :set_order_targets
 
-  def show
-  end
+  def show; end
 
   def update
     update_targets
@@ -23,7 +24,7 @@ class OrderTargetsController < ApplicationController
     @errors = OrderTarget.new.errors
     @order_targets.each do |target|
       unless target.update(target_params(target))
-        target.errors.each { |attr, msg| @errors.add(attr, msg) }
+        target.errors.each { |error| @errors.add(error.attribute, error.message) }
       end
     end
   end

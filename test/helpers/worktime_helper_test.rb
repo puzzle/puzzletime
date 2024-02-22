@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -34,25 +36,28 @@ class WorktimeHelperTest < ActionView::TestCase
 
   test 'worktime account' do
     worktime = Absencetime.new(account_id: absences(:vacation).id)
+
     assert_equal 'Ferien', worktime_account(worktime)
   end
 
   def worktime_account(worktime)
-    worktime.account.label_verbose if worktime.account
+    worktime.account&.label_verbose
   end
 
   test 'worktime description with ticket' do
     worktime = Worktime.new(description: 'desc', ticket: '123')
+
     assert_equal '123 - desc', worktime_description(worktime)
   end
 
   test 'worktime description without ticket' do
     worktime = Worktime.new(description: 'desc')
+
     assert_equal 'desc', worktime_description(worktime)
   end
 
   test 'holiday time class' do
-    assert_equal 'holiday', overview_day_class(@worktimes, Date.new(2014, 06, 9)) # pfingstmontag
+    assert_equal 'holiday', overview_day_class(@worktimes, Date.new(2014, 0o6, 9)) # pfingstmontag
   end
 
   test 'missing time class' do
@@ -65,16 +70,19 @@ class WorktimeHelperTest < ActionView::TestCase
 
   test 'time range without' do
     worktime = Worktime.new(from_start_time: '8:00', to_end_time: '11:59')
+
     assert_equal '08:00 - 11:59', time_range(worktime)
   end
 
   test 'time range without any times' do
     worktime = Worktime.new
+
     assert_equal '&nbsp;', time_range(worktime)
   end
 
   test 'time range without end time' do
     worktime = Worktime.new(from_start_time: '8:00')
+
     assert_equal '08:00 - ', time_range(worktime)
   end
 end

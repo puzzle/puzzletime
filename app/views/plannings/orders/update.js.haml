@@ -4,7 +4,7 @@
 -#  https://github.com/puzzle/puzzletime.
 
 
-= render file: 'plannings/base/update'
+= render template: 'plannings/base/update'
 
 - @board.included_accounting_posts.each do |post|
   $('#group_header_times_#{dom_id(post)}').html('#{j(render('accounting_post_total', post: post))}');

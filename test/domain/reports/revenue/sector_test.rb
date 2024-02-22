@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -18,17 +20,18 @@ class SectorRevenueReportTest < ActiveSupport::TestCase
 
   test 'entries and values without any ordertimes and plannings' do
     r = report
-    assert_equal [], r.entries
-    assert_equal Hash[], r.ordertime_hours
-    assert_equal Hash[], r.total_ordertime_hours_per_month
+
+    assert_empty r.entries
+    assert_empty(r.ordertime_hours)
+    assert_empty(r.total_ordertime_hours_per_month)
     assert_equal 0, r.total_ordertime_hours_per_entry(verwaltung)
     assert_equal 0, r.total_ordertime_hours_per_entry(oev)
     assert_equal 0, r.average_ordertime_hours_per_entry(verwaltung)
     assert_equal 0, r.average_ordertime_hours_per_entry(oev)
     assert_equal 0, r.total_ordertime_hours_overall
     assert_equal 0, r.average_ordertime_hours_overall
-    assert_equal Hash[], r.planning_hours
-    assert_equal Hash[], r.total_planning_hours_per_month
+    assert_empty(r.planning_hours)
+    assert_empty(r.total_planning_hours_per_month)
   end
 
   test 'entries and values' do
@@ -50,22 +53,23 @@ class SectorRevenueReportTest < ActiveSupport::TestCase
     planning(Date.new(2000, 11, 10), :allgemein)
 
     r = report
+
     assert_equal [oev, verwaltung].sort, r.entries.to_a.sort
-    assert_equal Hash[[verwaltung.id, Date.new(2000, 7, 1)] => 6.0,
-                      [verwaltung.id, Date.new(2000, 8, 1)] => 3.0,
-                      [oev.id, Date.new(2000, 7, 1)] => 170.0], r.ordertime_hours
-    assert_equal Hash[Date.new(2000, 7, 1) => 176.0, Date.new(2000, 8, 1) => 3.0], r.total_ordertime_hours_per_month
-    assert_equal 9.0, r.total_ordertime_hours_per_entry(verwaltung)
-    assert_equal 170.0, r.total_ordertime_hours_per_entry(oev)
-    assert_equal 4.5, r.average_ordertime_hours_per_entry(verwaltung)
-    assert_equal 170.0, r.average_ordertime_hours_per_entry(oev)
-    assert_equal 179.0, r.total_ordertime_hours_overall
-    assert_equal 89.5, r.average_ordertime_hours_overall
-    assert_equal Hash[[oev.id, Date.new(2000, 9, 1)] => 6.4 * 170.0,
-                      [oev.id, Date.new(2000, 11, 1)] => 6.4 * 170.0 * 2,
-                      [verwaltung.id, Date.new(2000, 11, 1)] => 6.4 * 0], r.planning_hours
-    assert_equal Hash[Date.new(2000, 9, 1) => 6.4 * 170.0,
-                      Date.new(2000, 11, 1) => 6.4 * 170.0 * 2 + 6.4 * 0], r.total_planning_hours_per_month
+    assert_equal({ [verwaltung.id, Date.new(2000, 7, 1)] => 6.0,
+                   [verwaltung.id, Date.new(2000, 8, 1)] => 3.0,
+                   [oev.id, Date.new(2000, 7, 1)] => 170.0 }, r.ordertime_hours)
+    assert_equal({ Date.new(2000, 7, 1) => 176.0, Date.new(2000, 8, 1) => 3.0 }, r.total_ordertime_hours_per_month)
+    assert_in_delta(9.0, r.total_ordertime_hours_per_entry(verwaltung))
+    assert_in_delta(170.0, r.total_ordertime_hours_per_entry(oev))
+    assert_in_delta(4.5, r.average_ordertime_hours_per_entry(verwaltung))
+    assert_in_delta(170.0, r.average_ordertime_hours_per_entry(oev))
+    assert_in_delta(179.0, r.total_ordertime_hours_overall)
+    assert_in_delta(89.5, r.average_ordertime_hours_overall)
+    assert_equal({ [oev.id, Date.new(2000, 9, 1)] => 6.4 * 170.0,
+                   [oev.id, Date.new(2000, 11, 1)] => 6.4 * 170.0 * 2,
+                   [verwaltung.id, Date.new(2000, 11, 1)] => 6.4 * 0 }, r.planning_hours)
+    assert_equal({ Date.new(2000, 9, 1) => 6.4 * 170.0,
+                   Date.new(2000, 11, 1) => (6.4 * 170.0 * 2) + (6.4 * 0) }, r.total_planning_hours_per_month)
   end
 
   test 'entries and values from configured company are ignored' do
@@ -85,19 +89,20 @@ class SectorRevenueReportTest < ActiveSupport::TestCase
     planning(Date.new(2000, 11, 10), :allgemein)
 
     r = report
+
     assert_equal [oev].sort, r.entries.to_a.sort
-    assert_equal Hash[[oev.id, Date.new(2000, 7, 1)] => 170.0], r.ordertime_hours
-    assert_equal Hash[Date.new(2000, 7, 1) => 170.0], r.total_ordertime_hours_per_month
+    assert_equal({ [oev.id, Date.new(2000, 7, 1)] => 170.0 }, r.ordertime_hours)
+    assert_equal({ Date.new(2000, 7, 1) => 170.0 }, r.total_ordertime_hours_per_month)
     assert_equal 0, r.total_ordertime_hours_per_entry(verwaltung)
-    assert_equal 170.0, r.total_ordertime_hours_per_entry(oev)
+    assert_in_delta(170.0, r.total_ordertime_hours_per_entry(oev))
     assert_equal 0, r.average_ordertime_hours_per_entry(verwaltung)
-    assert_equal 170.0, r.average_ordertime_hours_per_entry(oev)
-    assert_equal 170.0, r.total_ordertime_hours_overall
-    assert_equal 170.0, r.average_ordertime_hours_overall
-    assert_equal Hash[[oev.id, Date.new(2000, 9, 1)] => 6.4 * 170.0,
-                      [oev.id, Date.new(2000, 11, 1)] => 6.4 * 170.0 * 2], r.planning_hours
-    assert_equal Hash[Date.new(2000, 9, 1) => 6.4 * 170.0,
-                      Date.new(2000, 11, 1) => 6.4 * 170.0 * 2 + 6.4 * 0], r.total_planning_hours_per_month
+    assert_in_delta(170.0, r.average_ordertime_hours_per_entry(oev))
+    assert_in_delta(170.0, r.total_ordertime_hours_overall)
+    assert_in_delta(170.0, r.average_ordertime_hours_overall)
+    assert_equal({ [oev.id, Date.new(2000, 9, 1)] => 6.4 * 170.0,
+                   [oev.id, Date.new(2000, 11, 1)] => 6.4 * 170.0 * 2 }, r.planning_hours)
+    assert_equal({ Date.new(2000, 9, 1) => 6.4 * 170.0,
+                   Date.new(2000, 11, 1) => (6.4 * 170.0 * 2) + (6.4 * 0) }, r.total_planning_hours_per_month)
   end
 
   private
@@ -116,16 +121,16 @@ class SectorRevenueReportTest < ActiveSupport::TestCase
               work_item: work_items(work_item_uuid),
               employee: employees(:pascal),
               hours: 1,
-              billable: billable)
+              billable:)
   end
 
   def planning(date, work_item_uuid, definitive = true)
     Fabricate(:planning,
-              date: date,
+              date:,
               work_item: work_items(work_item_uuid),
               employee: employees(:pascal),
               percent: 80,
-              definitive: definitive)
+              definitive:)
   end
 
   def verwaltung

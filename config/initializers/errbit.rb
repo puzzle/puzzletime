@@ -9,7 +9,7 @@ if ENV['RAILS_AIRBRAKE_HOST'] && ENV['RAILS_AIRBRAKE_API_KEY']
   require 'airbrake'
   Airbrake.configure do |config|
     config.environment = Rails.env
-    config.ignore_environments = [:development, :test]
+    config.ignore_environments = %i[development test]
     # if no host is given, ignore all environments
     config.ignore_environments << :production if ENV['RAILS_AIRBRAKE_HOST'].blank?
 
@@ -25,14 +25,12 @@ if ENV['RAILS_AIRBRAKE_HOST'] && ENV['RAILS_AIRBRAKE_API_KEY']
     config.blacklist_keys << 'RAILS_SMALL_INVOICE_TOKEN'
   end
 
-  ignored_exceptions = %w(ActionController::MethodNotAllowed
+  ignored_exceptions = %w[ActionController::MethodNotAllowed
                           ActionController::RoutingError
                           ActionController::InvalidAuthenticityToken
-                          ActionController::UnknownHttpMethod)
+                          ActionController::UnknownHttpMethod]
 
   Airbrake.add_filter do |notice|
-    if (notice[:errors].map { |e| e[:type] } & ignored_exceptions).present?
-      notice.ignore!
-    end
+    notice.ignore! if notice[:errors].pluck(:type).intersect?(ignored_exceptions)
   end
 end

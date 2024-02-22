@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -28,7 +30,7 @@ class CrudController < ListController
 
   helper_method :entry, :full_entry_label
 
-  prepend_before_action :entry, only: [:show, :new, :create, :edit, :update, :destroy]
+  prepend_before_action :entry, only: %i[show new create edit update destroy]
   # prepend_before_action :authenticate
   prepend_before_action :current_user
 
@@ -37,8 +39,7 @@ class CrudController < ListController
   # Show one entry of this model.
   #   GET /entries/1
   #   GET /entries/1.json
-  def show
-  end
+  def show; end
 
   # Display a form to create a new entry of this model.
   #   GET /entries/new
@@ -46,6 +47,10 @@ class CrudController < ListController
   def new
     assign_attributes if params[model_identifier]
   end
+
+  # Display a form to edit an exisiting entry of this model.
+  #   GET /entries/1/edit
+  def edit; end
 
   # Create a new entry of this model from the passed params.
   # There are before and after create callbacks to hook into the action.
@@ -70,11 +75,6 @@ class CrudController < ListController
         format.js   { render partial: 'form', status: :unprocessable_entity }
       end
     end
-  end
-
-  # Display a form to edit an exisiting entry of this model.
-  #   GET /entries/1/edit
-  def edit
   end
 
   # Update an existing entry of this model from the passed params.
@@ -198,7 +198,7 @@ class CrudController < ListController
 
   # Html safe error messages of the current entry.
   def error_messages
-    safe_join(entry.errors.full_messages, tag(:br))
+    safe_join(entry.errors.full_messages, tag.br)
   end
 
   # json hash representation of an entry used for javascript responses

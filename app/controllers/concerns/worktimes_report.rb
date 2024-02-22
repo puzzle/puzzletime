@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -21,7 +23,7 @@ module WorktimesReport
     combined_map = {}
     combined_times = []
     @worktimes.each do |time|
-      if time.report_type.is_a?(StartStopType) && params[:start_stop]
+      if time.report_type.is_a?(ReportType::StartStopType) && params[:start_stop]
         combined_times.push time
       else
         combine_time(combined_map, combined_times, time)
@@ -53,8 +55,8 @@ module WorktimesReport
     if combined_map.include?(key)
       combined_map[key].hours += time.hours
       if time.description.present?
-        if combined_map[key].description
-          combined_map[key].description += "\n" + time.description
+        if (description = combined_map[key].description)
+          combined_map[key].description = "#{description}\n#{time.description}"
         else
           combined_map[key].description = time.description
         end
@@ -70,7 +72,7 @@ module WorktimesReport
     combined_tickets[:sum] += worktime.hours
     combine_ticket_employees(combined_tickets, employees, worktime)
     combine_ticket_date_range(combined_tickets[:date], worktime)
-    combined_tickets[:descriptions] << '"' + worktime.description + '"' if worktime.description?
+    combined_tickets[:descriptions] << %Q("#{worktime.description}") if worktime.description?
   end
 
   def combine_ticket_employees(combined_tickets, employees, worktime)

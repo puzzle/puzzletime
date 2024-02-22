@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -18,9 +20,9 @@ Client.seed(
   :work_item_id,
   { work_item_id: clients[0].id },
   { work_item_id: clients[1].id,
-    sector_id: Sector.find_by_name('Verwaltung').id },
+    sector_id: Sector.find_by(name: 'Verwaltung').id },
   { work_item_id: clients[2].id,
-    sector_id: Sector.find_by_name('Öffentlicher Verkehr').id },
+    sector_id: Sector.find_by(name: 'Öffentlicher Verkehr').id }
 )
 
 categories = WorkItem.seed(
@@ -60,57 +62,59 @@ orders = WorkItem.seed(
     parent_id: categories[2].id },
   { shortname: 'DIS',
     name: 'Driver Info',
-    parent_id: clients[2].id },
+    parent_id: clients[2].id }
 )
 
 Order.seed(
   :work_item_id,
   # Puzzletime
   { work_item_id: orders[0].id,
-    kind_id: OrderKind.find_by_name('Projekt').id,
-    responsible_id: Employee.find_by_shortname('AR').id,
-    status_id: OrderStatus.find_by_name('Bearbeitung').id,
-    department_id: Department.find_by_name('/dev/two').id,
-    order_team_members: %w(BS PZ DI).map { |short| OrderTeamMember.new(employee: Employee.find_by_shortname(short)) } },
+    kind_id: OrderKind.find_by(name: 'Projekt').id,
+    responsible_id: Employee.find_by(shortname: 'AR').id,
+    status_id: OrderStatus.find_by(name: 'Bearbeitung').id,
+    department_id: Department.find_by(name: '/dev/two').id,
+    order_team_members: %w[BS PZ DI].map do |short|
+                          OrderTeamMember.new(employee: Employee.find_by(shortname: short))
+                        end },
   # Tech Talk
   { work_item_id: orders[1].id,
-    kind_id: OrderKind.find_by_name('Consulting').id,
-    responsible_id: Employee.find_by_shortname('MW').id,
-    status_id: OrderStatus.find_by_name('Bearbeitung').id,
-    department_id: Department.find_by_name('/dev/one').id },
+    kind_id: OrderKind.find_by(name: 'Consulting').id,
+    responsible_id: Employee.find_by(shortname: 'MW').id,
+    status_id: OrderStatus.find_by(name: 'Bearbeitung').id,
+    department_id: Department.find_by(name: '/dev/one').id },
   # Workshops
   { work_item_id: orders[2].id,
-    kind_id: OrderKind.find_by_name('Consulting').id,
-    responsible_id: Employee.find_by_shortname('BS').id,
-    status_id: OrderStatus.find_by_name('Bearbeitung').id,
-    department_id: Department.find_by_name('/dev/two').id },
+    kind_id: OrderKind.find_by(name: 'Consulting').id,
+    responsible_id: Employee.find_by(shortname: 'BS').id,
+    status_id: OrderStatus.find_by(name: 'Bearbeitung').id,
+    department_id: Department.find_by(name: '/dev/two').id },
   # Enclouder
   { work_item_id: orders[3].id,
-    kind_id: OrderKind.find_by_name('Mandat').id,
-    responsible_id: Employee.find_by_shortname('AR').id,
-    status_id: OrderStatus.find_by_name('Bearbeitung').id,
-    department_id: Department.find_by_name('/dev/two').id,
-    order_team_members: %w(PZ BS).map { |short| OrderTeamMember.new(employee: Employee.find_by_shortname(short)) } },
+    kind_id: OrderKind.find_by(name: 'Mandat').id,
+    responsible_id: Employee.find_by(shortname: 'AR').id,
+    status_id: OrderStatus.find_by(name: 'Bearbeitung').id,
+    department_id: Department.find_by(name: '/dev/two').id,
+    order_team_members: %w[PZ BS].map { |short| OrderTeamMember.new(employee: Employee.find_by(shortname: short)) } },
   # FIS Grundpacket
   { work_item_id: orders[4].id,
-    kind_id: OrderKind.find_by_name('Mandat').id,
-    responsible_id: Employee.find_by_shortname('AR').id,
-    status_id: OrderStatus.find_by_name('Abgeschlossen').id,
-    department_id: Department.find_by_name('/dev/two').id },
+    kind_id: OrderKind.find_by(name: 'Mandat').id,
+    responsible_id: Employee.find_by(shortname: 'AR').id,
+    status_id: OrderStatus.find_by(name: 'Abgeschlossen').id,
+    department_id: Department.find_by(name: '/dev/two').id },
   # FIS Erweiterungen
   { work_item_id: orders[5].id,
-    kind_id: OrderKind.find_by_name('Mandat').id,
-    responsible_id: Employee.find_by_shortname('AR').id,
-    status_id: OrderStatus.find_by_name('Abschluss').id,
-    department_id: Department.find_by_name('/dev/two').id,
-    order_team_members: [OrderTeamMember.new(employee: Employee.find_by_shortname('DI'))] },
+    kind_id: OrderKind.find_by(name: 'Mandat').id,
+    responsible_id: Employee.find_by(shortname: 'AR').id,
+    status_id: OrderStatus.find_by(name: 'Abschluss').id,
+    department_id: Department.find_by(name: '/dev/two').id,
+    order_team_members: [OrderTeamMember.new(employee: Employee.find_by(shortname: 'DI'))] },
   # DIS
   { work_item_id: orders[6].id,
-    kind_id: OrderKind.find_by_name('Mandat').id,
-    responsible_id: Employee.find_by_shortname('BS').id,
-    status_id: OrderStatus.find_by_name('Bearbeitung').id,
-    department_id: Department.find_by_name('/dev/two').id,
-    order_team_members: [OrderTeamMember.new(employee: Employee.find_by_shortname('DI'))] },
+    kind_id: OrderKind.find_by(name: 'Mandat').id,
+    responsible_id: Employee.find_by(shortname: 'BS').id,
+    status_id: OrderStatus.find_by(name: 'Bearbeitung').id,
+    department_id: Department.find_by(name: '/dev/two').id,
+    order_team_members: [OrderTeamMember.new(employee: Employee.find_by(shortname: 'DI'))] }
 )
 
 accounting_posts = WorkItem.seed(
@@ -146,75 +150,75 @@ AccountingPost.seed(
   :work_item_id,
   # Puzzletime 1.5
   { work_item_id: accounting_posts[0].id,
-    portfolio_item_id: PortfolioItem.find_by_name('Ruby on Rails').id,
-    service_id: Service.find_by_name('Software-Entwicklung').id,
+    portfolio_item_id: PortfolioItem.find_by(name: 'Ruby on Rails').id,
+    service_id: Service.find_by(name: 'Software-Entwicklung').id,
     offered_hours: 500,
     billable: false },
   # Puzzletime ERP
   { work_item_id: accounting_posts[1].id,
-    portfolio_item_id: PortfolioItem.find_by_name('Ruby on Rails').id,
-    service_id: Service.find_by_name('Software-Entwicklung').id,
+    portfolio_item_id: PortfolioItem.find_by(name: 'Ruby on Rails').id,
+    service_id: Service.find_by(name: 'Software-Entwicklung').id,
     offered_hours: 500,
     billable: false },
   # Enclouder 2013
   { work_item_id: accounting_posts[2].id,
-    portfolio_item_id: PortfolioItem.find_by_name('Ruby on Rails').id,
-    service_id: Service.find_by_name('Software-Entwicklung').id,
+    portfolio_item_id: PortfolioItem.find_by(name: 'Ruby on Rails').id,
+    service_id: Service.find_by(name: 'Software-Entwicklung').id,
     offered_hours: 800,
     offered_rate: 150,
     billable: true,
     closed: true },
   # Enclouder 2014
   { work_item_id: accounting_posts[3].id,
-    portfolio_item_id: PortfolioItem.find_by_name('Ruby on Rails').id,
-    service_id: Service.find_by_name('Software-Entwicklung').id,
+    portfolio_item_id: PortfolioItem.find_by(name: 'Ruby on Rails').id,
+    service_id: Service.find_by(name: 'Software-Entwicklung').id,
     offered_hours: 600,
     offered_rate: 160,
     billable: true },
   # FIS Grundpacket 0
   { work_item_id: accounting_posts[4].id,
-    portfolio_item_id: PortfolioItem.find_by_name('Java EE').id,
-    service_id: Service.find_by_name('Software-Entwicklung').id,
+    portfolio_item_id: PortfolioItem.find_by(name: 'Java EE').id,
+    service_id: Service.find_by(name: 'Software-Entwicklung').id,
     offered_hours: 200,
     offered_rate: 140,
     billable: true,
     closed: true },
   # FIS Backend
   { work_item_id: accounting_posts[5].id,
-    portfolio_item_id: PortfolioItem.find_by_name('Java EE').id,
-    service_id: Service.find_by_name('Software-Entwicklung').id,
+    portfolio_item_id: PortfolioItem.find_by(name: 'Java EE').id,
+    service_id: Service.find_by(name: 'Software-Entwicklung').id,
     offered_hours: 2000,
     offered_rate: 140,
     billable: true },
   # FIS Frontend
   { work_item_id: accounting_posts[6].id,
-    portfolio_item_id: PortfolioItem.find_by_name('Java EE').id,
-    service_id: Service.find_by_name('Software-Entwicklung').id,
+    portfolio_item_id: PortfolioItem.find_by(name: 'Java EE').id,
+    service_id: Service.find_by(name: 'Software-Entwicklung').id,
     offered_hours: 1200,
     offered_rate: 140,
     billable: true },
   # FIS Middleware
   { work_item_id: accounting_posts[7].id,
-    portfolio_item_id: PortfolioItem.find_by_name('Java EE').id,
-    service_id: Service.find_by_name('Software-Entwicklung').id,
+    portfolio_item_id: PortfolioItem.find_by(name: 'Java EE').id,
+    service_id: Service.find_by(name: 'Software-Entwicklung').id,
     offered_hours: 200,
     offered_rate: 150,
     billable: true },
   # TechTalk
   { work_item_id: orders[1].id,
-    portfolio_item_id: PortfolioItem.find_by_name('Java EE').id,
-    service_id: Service.find_by_name('Beratung').id,
+    portfolio_item_id: PortfolioItem.find_by(name: 'Java EE').id,
+    service_id: Service.find_by(name: 'Beratung').id,
     billable: false },
   # Workshops
   { work_item_id: orders[2].id,
-    portfolio_item_id: PortfolioItem.find_by_name('Java EE').id,
-    service_id: Service.find_by_name('Beratung').id,
+    portfolio_item_id: PortfolioItem.find_by(name: 'Java EE').id,
+    service_id: Service.find_by(name: 'Beratung').id,
     billable: false },
   # DIS
   { work_item_id: orders[6].id,
-    portfolio_item_id: PortfolioItem.find_by_name('Java EE').id,
-    service_id: Service.find_by_name('Software-Entwicklung').id,
+    portfolio_item_id: PortfolioItem.find_by(name: 'Java EE').id,
+    service_id: Service.find_by(name: 'Software-Entwicklung').id,
     offered_hours: 5000,
     offered_rate: 145,
-    billable: true },
+    billable: true }
 )

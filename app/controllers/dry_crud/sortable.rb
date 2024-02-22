@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -42,7 +44,7 @@ module DryCrud
         sortable = sortable?(params[:sort])
         if sortable || default_sort
           clause = [sortable ? sort_expression : nil, default_sort]
-          super.reorder(clause.compact.join(', '))
+          super.reorder(Arel.sql(clause.compact.join(', ')))
         else
           super
         end
@@ -73,8 +75,8 @@ module DryCrud
 
       def number_null_order?
         type = model_class.columns_hash[params[:sort]].try(:type)
-        !sort_mappings_with_indifferent_access.key?(params[:sort]) &&
-          type == :integer || type == :float
+        (!sort_mappings_with_indifferent_access.key?(params[:sort]) &&
+          type == :integer) || type == :float
       end
     end
   end

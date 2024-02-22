@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -11,7 +13,7 @@
 #  name      :string(255)      not null
 #  shortname :string(3)        not null
 #
-class Department < ActiveRecord::Base
+class Department < ApplicationRecord
   include Evaluatable
 
   has_many :orders
@@ -31,17 +33,17 @@ class Department < ActiveRecord::Base
   end
 
   def worktimes
-    Worktime.
-      joins(:work_item).
-      joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)').
-      where(orders: { department_id: id })
+    Worktime
+      .joins(:work_item)
+      .joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)')
+      .where(orders: { department_id: id })
   end
 
   def plannings
-    Planning.
-      joins(:work_item).
-      joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)').
-      where(orders: { department_id: id })
+    Planning
+      .joins(:work_item)
+      .joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)')
+      .where(orders: { department_id: id })
   end
 
   ##### interface methods for Evaluatable #####

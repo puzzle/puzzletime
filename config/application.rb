@@ -1,9 +1,11 @@
-#  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
+# frozen_string_literal: true
+
+#  Copyright (c) 2006-2023, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-require File.expand_path('../boot', __FILE__)
+require_relative 'boot'
 
 require 'rails/all'
 
@@ -17,26 +19,23 @@ require_relative 'version'
 module Puzzletime
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 5.2
+    config.load_defaults 7.0
 
+    # FIXME: remove this if it works flawlesly
     config.active_record.belongs_to_required_by_default = false
 
-    # Settings in config/environments/* take precedence over those specified here.
-    # Application configuration can go into files in config/initializers
-    # -- all .rb files in that directory are automatically loaded after loading
-    # the framework and any gems in your application.
+    # Configuration for the application, engines, and railties goes here.
+    #
+    # These settings can be overridden in specific environments using the files
+    # in config/environments, which are processed later.
+    #
+    # config.time_zone = "Central Time (US & Canada)"
+    # config.eager_load_paths << Rails.root.join("extras")
 
-    config.autoload_paths += %W(#{config.root}/app/domain/forms
-                                #{config.root}/app/domain/reports
-                                #{config.root}/app/models/util
-                                #{config.root}/app/domain/evaluations
-                                #{config.root}/app/domain/graphs
-                                #{config.root}/app/domain/presenters
-                                #{config.root}/app/domain
-                                #{config.root}/app/jobs)
+    config.autoload_paths += %W[#{config.root}/app/models/util]
 
     # Use custom error controller
-    config.exceptions_app = self.routes
+    config.exceptions_app = routes
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
@@ -60,11 +59,11 @@ module Puzzletime
 
     memcached_host = ENV['RAILS_MEMCACHED_HOST'] || 'localhost'
     memcached_port = ENV['RAILS_MEMCACHED_PORT'] || '11211'
-    config.cache_store = :dalli_store, "#{memcached_host}:#{memcached_port}"
+    config.cache_store = :mem_cache_store, "#{memcached_host}:#{memcached_port}"
 
     config.middleware.insert_before Rack::ETag, Rack::Deflater
 
-    config.active_record.time_zone_aware_types = [:datetime, :time]
+    config.active_record.time_zone_aware_types = %i[datetime time]
 
     config.active_job.queue_adapter = :delayed_job
 
@@ -74,15 +73,15 @@ module Puzzletime
     }
 
     config.to_prepare do |_|
-      begin
-        Crm.init
-        Invoicing.init
-        CommitReminderJob.schedule
-      rescue ActiveRecord::StatementInvalid => e
-        # the db might not exist yet, lets ignore the error in this case
-        raise e unless e.message =~ /PG::UndefinedTable/ || e.message =~ /does not exist/
-      end
+      Crm.init
+      Invoicing.init
+      CommitReminderJob.schedule
+    rescue ActiveRecord::StatementInvalid => e
+      # the db might not exist yet, lets ignore the error in this case
+      raise e unless e.message.include?('PG::UndefinedTable') || e.message.include?('does not exist')
     end
+
+    config.active_record.yaml_column_permitted_classes = [Date, BigDecimal]
   end
 
   def self.version
@@ -94,18 +93,16 @@ module Puzzletime
     @@ptime_changelog_url ||= "https://github.com/puzzle/puzzletime/blob/#{commit_hash || 'master'}/CHANGELOG.md"
   end
 
-  private
-
   def self.build_version
     Puzzletime::VERSION
   end
 
   def self.commit_hash(short: false)
-    if File.exists?("#{Rails.root}/BUILD_INFO")
-      commit = File.open("#{Rails.root}/BUILD_INFO").first.chomp
-      return commit.first(7) if short
+    return unless File.exist?(Rails.root.join('BUILD_INFO').to_s)
 
-      commit
-    end
+    commit = File.open(Rails.root.join('BUILD_INFO').to_s).first.chomp
+    return commit.first(7) if short
+
+    commit
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -9,6 +11,7 @@ class ContractsControllerTest < ActionController::TestCase
   test 'GET show as member' do
     login_as :pascal
     get :show, params: { order_id: test_entry.order }
+
     assert_response :success
     assert_template 'show'
   end
@@ -23,6 +26,7 @@ class ContractsControllerTest < ActionController::TestCase
   test 'GET edit as responsible' do
     login_as :lucien
     get :edit, params: { order_id: test_entry.order }
+
     assert_response :success
     assert_template 'edit'
     assert_equal test_entry, entry
@@ -31,6 +35,7 @@ class ContractsControllerTest < ActionController::TestCase
   test 'GET edit as management' do
     login_as :mark
     get :edit, params: { order_id: test_entry.order }
+
     assert_response :success
     assert_template 'edit'
     assert_equal test_entry, entry
@@ -39,8 +44,9 @@ class ContractsControllerTest < ActionController::TestCase
   test 'PATCH update' do
     login
     patch :update, params: { order_id: test_entry.order, contract: test_entry_attrs }
+
     assert_redirected_to edit_order_contract_path(order_id: test_entry.order)
-    assert entry.persisted?
+    assert_predicate entry, :persisted?
     test_entry_attrs_except_dates.each do |attr_name, attr_value|
       assert_equal attr_value, entry.send(attr_name)
     end

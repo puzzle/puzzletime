@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -35,20 +37,18 @@ module OrderServicesHelper
 
   def checkable_worktimes_data
     data = {}
-    if can?(:update, @order)
-      data[:row_link] = edit_ordertime_path(':id', back_url: url_for(returning: true))
-    end
+    data[:row_link] = edit_ordertime_path(':id', back_url: url_for(returning: true)) if can?(:update, @order)
     data
   end
 
   def checkable_worktimes_footer(entries)
-    if entries.present?
-      footer = summed_worktimes_row(entries)
-      if entries.size == OrderServicesController::MAX_ENTRIES
-        too_many_entries_row
-      else
-        footer
-      end
+    return if entries.blank?
+
+    footer = summed_worktimes_row(entries)
+    if entries.size == OrderServicesController::MAX_ENTRIES
+      too_many_entries_row
+    else
+      footer
     end
   end
 
@@ -56,9 +56,7 @@ module OrderServicesHelper
     check_all = check_box_tag(:all_worktimes, true, false, data: { check: 'worktime_ids[]' })
     t.col(check_all, class: 'no-link') do |e|
       required_perm = options[:checkbox_requires_permission]
-      if required_perm.nil? || can?(required_perm, e)
-        check_box_tag('worktime_ids[]', e.id)
-      end
+      check_box_tag('worktime_ids[]', e.id) if required_perm.nil? || can?(required_perm, e)
     end
   end
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -14,7 +16,7 @@ module EmployeesHelper
   end
 
   def multiple_check_box(object_name, field, value)
-    object = instance_variable_get("@#{object_name}")
+    object = instance_variable_get(:"@#{object_name}")
     check_box_tag "#{object_name}[#{field}][]", value, object.send(field).include?(value)
   end
 

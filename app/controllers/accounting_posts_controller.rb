@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -10,7 +12,7 @@ class AccountingPostsController < CrudController
                           :remaining_hours, :portfolio_item_id, :service_id, :billable,
                           :description_required, :ticket_required, :from_to_times_required,
                           :meal_compensation,
-                          work_item_attributes: [:name, :shortname, :description]]
+                          { work_item_attributes: %i[name shortname description] }]
 
   helper_method :order
 

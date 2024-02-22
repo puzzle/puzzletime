@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -38,10 +40,10 @@ module Crm
     end
 
     def verify_deal_party_type(deal)
-      unless deal.party.type.casecmp('company').zero?
-        fail Crm::Error, I18n.t('error.crm.highrise.order_not_on_company',
-                                party_type: deal.party.type)
-      end
+      return if deal.party.type.casecmp('company').zero?
+
+      raise Crm::Error, I18n.t('error.crm.highrise.order_not_on_company',
+                               party_type: deal.party.type)
     end
 
     def find_client_contacts(client)
@@ -55,7 +57,7 @@ module Crm
     end
 
     def find_people_by_email(email)
-      ::Highrise::Person.search(email: email)
+      ::Highrise::Person.search(email:)
     end
 
     def sync_all
@@ -147,23 +149,19 @@ module Crm
     end
 
     def sync_crm_entities(entities)
-      entities.where('crm_key IS NOT NULL').find_each do |entity|
-        begin
-          yield entity
-        rescue ActiveResource::ResourceNotFound
-          entity.update_attribute(:crm_key, nil)
-        rescue ActiveRecord::RecordInvalid => error
-          notify_sync_error(error, entity, error.record)
-        rescue => error
-          notify_sync_error(error, entity)
-        end
+      entities.where.not(crm_key: nil).find_each do |entity|
+        yield entity
+      rescue ActiveResource::ResourceNotFound
+        entity.update_attribute(:crm_key, nil)
+      rescue ActiveRecord::RecordInvalid => e
+        notify_sync_error(e, entity, e.record)
+      rescue StandardError => e
+        notify_sync_error(e, entity)
       end
     end
 
     def crm_entity_url(model, entity)
-      if entity.respond_to?(:crm_key)
-        entity = entity.crm_key
-      end
+      entity = entity.crm_key if entity.respond_to?(:crm_key)
       "#{base_url}/#{model}/#{entity}" if entity.present?
     end
 
@@ -189,10 +187,10 @@ module Crm
 
     def record_to_params(record, prefix = 'record')
       {
-        "#{prefix}_type"    => record.class.name,
-        "#{prefix}_id"      => record.id,
-        "#{prefix}_label"   => record.try(:label) || record.to_s,
-        "#{prefix}_errors"  => record.errors.messages,
+        "#{prefix}_type" => record.class.name,
+        "#{prefix}_id" => record.id,
+        "#{prefix}_label" => record.try(:label) || record.to_s,
+        "#{prefix}_errors" => record.errors.messages,
         "#{prefix}_changes" => record.changes
       }
     end

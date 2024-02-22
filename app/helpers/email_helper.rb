@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 module EmailHelper
-  def email_image_tag(image, **options)
-    attachments.inline[image] = File.read(Rails.root.join("app/assets/images/#{image}"))
-    image_tag attachments[image].url, **options
+  def email_image_tag(image, **)
+    attachments.inline[image] = Rails.root.join("app/assets/images/#{image}").read
+    image_tag(attachments[image].url, **)
   end
 end

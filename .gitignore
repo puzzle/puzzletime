@@ -13,6 +13,7 @@
 .idea/
 *.iml
 /.byebug_history
+.vscode/
 
 # Ignore the default SQLite database.
 /db/*.sqlite3
@@ -21,6 +22,7 @@
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
+!/tmp/pids
 
 test/coverage
 test/reports
@@ -55,3 +57,8 @@ tags
 
 # bundler tools dir
 /vendor/tools
+
+# Ignore public assets
+/public/assets
+
+TAGS

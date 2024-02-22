@@ -7,23 +7,27 @@
 
 require 'test_helper'
 
-class Api::V1::EmployeeSerializerTest < ActiveSupport::TestCase
-  test '#serializable_hash' do
-    employee = employees(:long_time_john)
-    serialized = Api::V1::EmployeeSerializer.new(employee).serializable_hash
+module Api
+  module V1
+    class EmployeeSerializerTest < ActiveSupport::TestCase
+      test '#serializable_hash' do
+        employee = employees(:long_time_john)
+        serialized = Api::V1::EmployeeSerializer.new(employee).serializable_hash
 
-    expected = { data: { id: '5',
-                         type: :employee,
-                         attributes: { shortname: 'JN',
-                                       firstname: 'John',
-                                       lastname: 'Neverends',
-                                       email: 'jn@bla.ch',
-                                       marital_status: 'single',
-                                       nationalities: %w[CH UK],
-                                       graduation: 'Klubschule',
-                                       department_shortname: 'D1',
-                                       employment_roles: [{ name: 'Software Developer', percent: 90.0 }] } } }
+        expected = { data: { id: '5',
+                             type: :employee,
+                             attributes: { shortname: 'JN',
+                                           firstname: 'John',
+                                           lastname: 'Neverends',
+                                           email: 'jn@bla.ch',
+                                           marital_status: 'single',
+                                           nationalities: %w[CH UK],
+                                           graduation: 'Klubschule',
+                                           department_shortname: 'D1',
+                                           employment_roles: [{ name: 'Software Developer', percent: 90.0 }] } } }
 
-    assert_equal expected, serialized
+        assert_equal expected, serialized
+      end
+    end
   end
 end

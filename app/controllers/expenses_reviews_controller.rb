@@ -8,12 +8,12 @@ class ExpensesReviewsController < ManageController
 
   helper_method :model_class, :controller_class, :review_list
 
-  def self.model_class;      Expense; end
+  def self.model_class = Expense
 
-  def self.controller_class; Expense; end
+  def self.controller_class = Expense
 
-  self.permitted_attrs = [:payment_date, :employee_id, :kind, :order_id, :description, :amount, :receipt]
-  self.remember_params += %w(status employee_id reimbursement_date department_id)
+  self.permitted_attrs = %i[payment_date employee_id kind order_id description amount receipt]
+  self.remember_params += %w[status employee_id reimbursement_date department_id]
 
   skip_authorize_resource
   before_action :authorize
@@ -28,9 +28,9 @@ class ExpensesReviewsController < ManageController
   end
 
   def show
-    unless entry.pending? || entry.deferred?
-      redirect_to expenses_path(returning: true), notice: "#{entry} wurde bereits bearbeitet"
-    end
+    return if entry.pending? || entry.deferred?
+
+    redirect_to expenses_path(returning: true), notice: "#{entry} wurde bereits bearbeitet"
   end
 
   def update

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -25,7 +27,7 @@
 #  major_chance_value :integer
 #
 
-class Order < ActiveRecord::Base
+class Order < ApplicationRecord
   include BelongingToWorkItem
   include Closable
   include Evaluatable
@@ -72,13 +74,13 @@ class Order < ActiveRecord::Base
 
   ### CALLBACKS
 
-  before_update :set_closed_at
-  before_validation :set_self_in_nested
   after_initialize :set_default_status_id
+  before_validation :set_self_in_nested
   after_create :create_order_targets
+  before_update :set_closed_at
 
   scope :minimal, lambda {
-    select('orders.id, work_items.name, work_items.path_names, work_items.path_shortnames')
+    select('orders.id, orders.status_id, orders.work_item_id, work_items.name, work_items.path_names, work_items.path_shortnames')
   }
 
   scope :open, -> { where(status: OrderStatus.open) }
@@ -86,9 +88,9 @@ class Order < ActiveRecord::Base
   class << self
     def order_by_target_scope(target_scope_id, desc = false)
       joins('LEFT JOIN order_targets sort_target ' \
-              'ON sort_target.order_id = orders.id ').
-        where('sort_target.target_scope_id = ? OR sort_target.id IS NULL', target_scope_id).
-        reorder("sort_target.rating #{desc ? 'asc' : 'desc'}")
+            'ON sort_target.order_id = orders.id ')
+        .where('sort_target.target_scope_id = ? OR sort_target.id IS NULL', target_scope_id)
+        .reorder("sort_target.rating #{desc ? 'asc' : 'desc'}")
     end
   end
 
@@ -118,11 +120,11 @@ class Order < ActiveRecord::Base
   end
 
   def default_billing_address_id
-    billing_address_id || client.billing_addresses.list.pluck(:id).first
+    billing_address_id || client.billing_addresses.list.pick(:id)
   end
 
   def set_default_status_id
-    self.status_id ||= OrderStatus.defaults.pluck(:id).first
+    self.status_id ||= OrderStatus.defaults.pick(:id)
   end
 
   def major_risk
@@ -140,9 +142,9 @@ class Order < ActiveRecord::Base
   private
 
   def work_item_parent_presence
-    if work_item && work_item.parent_id.nil?
-      errors.add(:base, 'Kunde darf nicht leer sein')
-    end
+    return unless work_item && work_item.parent_id.nil?
+
+    errors.add(:base, 'Kunde darf nicht leer sein')
   end
 
   def set_self_in_nested
@@ -151,9 +153,7 @@ class Order < ActiveRecord::Base
     # don't try to set self in frozen nested attributes (-> marked for destroy)
     [order_team_members, order_contacts].each do |c|
       c.each do |e|
-        unless e.frozen?
-          e.order = self
-        end
+        e.order = self unless e.frozen?
       end
     end
   end

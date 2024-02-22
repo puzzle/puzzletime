@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -7,8 +9,6 @@ module Invoicing
   module SmallInvoice
     module Entity
       class Invoice < Base
-        ENDPOINT = ['receivables', 'invoices'].freeze
-
         attr_reader :positions
 
         def initialize(invoice, positions)
@@ -16,45 +16,32 @@ module Invoicing
           @positions = positions
         end
 
-        def self.path(invoicing_key: nil)
-          [*ENDPOINT, invoicing_key].compact
-        end
-
-        def path
-          self.class.path(invoicing_key: entry.invoicing_key)
-        end
-
-        def pdf_path
-          [*path, 'pdf']
-        end
-
         def to_hash
           {
             number:            entry.reference,
-            contact_id:        Integer(entry.billing_address.client.invoicing_key),
-            contact_address_id: Integer(entry.billing_address.invoicing_key),
-            contact_person_id: entry.billing_address.contact.try(:invoicing_key)&.to_i,
+            client_id:         entry.billing_address.client.invoicing_key,
+            client_address_id: entry.billing_address.invoicing_key,
+            client_contact_id: entry.billing_address.contact.try(:invoicing_key),
+            currency:          Settings.defaults.currency,
+            title:             entry.title,
+            period:            entry.period.to_s,
             date:              entry.billing_date,
             due:               entry.due_date,
-            period:            entry.period.to_s,
-            currency:          Settings.defaults.currency,
-            vat_included:      constant(:vat_included),
+            account_id:        constant(:account_id),
+            esr:               bool_constant(:esr),
+            esr_singlepage:    bool_constant(:esr_singlepage),
+            lsvplus:           bool_constant(:lsvplus),
+            dd:                bool_constant(:debit_direct),
+            conditions:        conditions,
+            introduction:      introduction,
             language:          constant(:language),
-
-            positions: positions.collect do |p|
-              Entity::Position.new(p).to_hash
-            end,
-
-            texts: [
-              {
-                status:            'D', # TODO: do we need other states?
-                title:             entry.title,
-                conditions:        conditions,
-                introduction:      introduction
-              }
-            ]
-
-            # totalamount:       entry.total_amount.round(2),
+            paypal:            bool_constant(:paypal),
+            paypal_url:        constant(:paypay_url),
+            vat_included:      constant(:vat_included),
+            totalamount:       entry.total_amount.round(2),
+            positions:         positions.collect do |p|
+                                 Invoicing::SmallInvoice::Entity::Position.new(p).to_hash
+                               end
           }
         end
 
@@ -66,9 +53,7 @@ module Invoicing
 
         def introduction
           string = 'Besten Dank für Ihren Auftrag'
-          if entry.contract_reference.present?
-            string += "\n\nIhre Referenzinformationen:\n#{entry.contract_reference}"
-          end
+          string += "\n\nIhre Referenzinformationen:\n#{entry.contract_reference}" if entry.contract_reference.present?
           string
         end
       end

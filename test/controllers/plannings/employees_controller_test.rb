@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -18,27 +20,29 @@ module Plannings
             employee_id: employees(:lucien).id,
             work_item_id: work_items(:hitobito_demo_app).id
           }
+
       assert_equal 200, response.status
-      refute_empty assigns(:items)
+      assert_not_empty assigns(:items)
       assert_equal accounting_posts(:hitobito_demo_app), assigns(:legend)
-      assert response.body.include?('PITC-HIT-DEM-APP: App')
+      assert_includes response.body, 'PITC-HIT-DEM-APP: App'
     end
 
     test 'GET#show renders board' do
-      date = Date.today.at_beginning_of_week + 1.week
+      date = Time.zone.today.at_beginning_of_week + 1.week
       Planning.create!(work_item_id: work_items(:hitobito_demo_app).id,
                        employee_id: employees(:pascal).id,
-                       date: date,
+                       date:,
                        percent: 80)
       Planning.create!(work_item_id: work_items(:hitobito_demo_app).id,
                        employee_id: employees(:lucien).id,
-                       date: date,
+                       date:,
                        percent: 60)
       Planning.create!(work_item_id: work_items(:hitobito_demo_site).id,
                        employee_id: employees(:lucien).id,
-                       date: date + 1.weeks,
+                       date: date + 1.week,
                        percent: 20)
       get :show, params: { id: employees(:lucien).id }
+
       assert_equal accounting_posts(:hitobito_demo_app, :hitobito_demo_site),
                    assigns(:board).accounting_posts
       assert_equal [employees(:lucien)],
@@ -48,6 +52,7 @@ module Plannings
     test 'GET#show as regular user is allowed' do
       login_as(:pascal)
       get :show, params: { id: employees(:lucien).id }
+
       assert_equal 200, response.status
     end
 
@@ -62,7 +67,7 @@ module Plannings
                 planning: { percent: '50', definitive: 'true' },
                 items: { '1' => { employee_id: employees(:lucien).id.to_s,
                                   work_item_id: work_items(:puzzletime).id.to_s,
-                                  date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
+                                  date: Time.zone.today.beginning_of_week.strftime('%Y-%m-%d') } }
               }
       end
     end
@@ -77,8 +82,9 @@ module Plannings
               planning: { percent: '50', definitive: 'true' },
               items: { '1' => { employee_id: employees(:pascal).id.to_s,
                                 work_item_id: work_items(:puzzletime).id.to_s,
-                                date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
+                                date: Time.zone.today.beginning_of_week.strftime('%Y-%m-%d') } }
             }
+
       assert_equal 200, response.status
     end
 
@@ -93,7 +99,7 @@ module Plannings
                 planning: { percent: '50', definitive: 'true' },
                 items: { '1' => { employee_id: employees(:lucien).id.to_s,
                                   work_item_id: work_items(:puzzletime).id.to_s,
-                                  date: Date.today.beginning_of_week.strftime('%Y-%m-%d') } }
+                                  date: Time.zone.today.beginning_of_week.strftime('%Y-%m-%d') } }
               }
       end
     end
@@ -101,7 +107,7 @@ module Plannings
     test 'DELETE#destroy deletes given plannings' do
       p = Planning.create!(employee: employees(:mark),
                            work_item: work_items(:puzzletime),
-                           date: Date.today.beginning_of_week,
+                           date: Time.zone.today.beginning_of_week,
                            percent: 80)
       assert_difference('Planning.count', -1) do
         delete :destroy,
@@ -117,7 +123,7 @@ module Plannings
     test 'DELETE#destroy on own board but for different user does not work' do
       p = Planning.create!(employee: employees(:pascal),
                            work_item: work_items(:hitobito_demo),
-                           date: Date.today.beginning_of_week,
+                           date: Time.zone.today.beginning_of_week,
                            percent: 80)
       login_as(:lucien)
       assert_no_difference('Planning.count') do

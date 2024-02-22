@@ -1,0 +1,15 @@
+name: 'Lint and test on pull request'
+
+on:
+  pull_request_target:
+    branches:
+      - 'master'
+    paths-ignore:
+      - 'doc/**'
+      - '**.md'
+
+jobs:
+  lint:
+    uses: ./.github/workflows/reusable-lint.yaml
+  test:
+    uses: ./.github/workflows/reusable-test.yaml

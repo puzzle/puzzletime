@@ -14,15 +14,13 @@ module AttachmentHelper
   end
 
   def attachment_image_tag(obj, **options)
-    transformations =
-      {
-        auto_orient: true,
-        resize: '800x1200>'
-      }
+    transformations = {
+      resize_to_limit: [800, 1200]
+    }
     image = attachment_image(obj, transformations)
     tag   = image_tag(image, options)
 
-    return attachment_show_link(obj, tag, options) if options[:show_link]
+    return attachment_show_link(obj, tag, **options) if options[:show_link]
 
     tag
   end

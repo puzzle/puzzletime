@@ -176,7 +176,6 @@ de-DE:
         firstname: Vorname
         lastname: Nachname
         shortname: Kürzel
-        passwd: Passwort
         management: Management
         department: Organisationseinheit
         department_id: Organisationseinheit
@@ -257,7 +256,6 @@ de-DE:
         sent: Gesendet
         paid: Bezahlt
         partially_paid: Teilbezahlt
-        dept_collection: Betreibung
         deleted: Gelöscht
         cancelled: Storniert
         unknown: Unbekannt

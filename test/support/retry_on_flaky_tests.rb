@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Include in `test_helper.rb` like this:
 #
 # class ActiveSupport::TestCase
@@ -8,7 +10,11 @@ module RetryOnFlakyTests
   def self.[](*error_classes, max_tries: 3)
     Module.new do
       define_method :max_tries do
-        max_tries
+        tries = ENV.fetch('RAILS_FLAKY_TRIES', max_tries).to_i
+
+        return 1 if max_tries < 1
+
+        tries
       end
 
       define_method :error_classes do
@@ -31,7 +37,7 @@ module RetryOnFlakyTests
         result.failures.map do |failure|
           failure.error.to_s
         end.any? do |failure_msg|
-          error_classes.first {|error_class| failure_msg =~ error_class.name }
+          error_classes.first { |error_class| failure_msg =~ error_class.name }
         end
       end
     end

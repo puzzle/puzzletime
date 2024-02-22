@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -20,11 +22,11 @@ class PlanningItemTest < ActiveSupport::TestCase
     expected = {
       class: '-definitive -percent-50',
       title: nil,
-      :"data-id" => p1.id
+      'data-id': p1.id
     }
 
-    assert i.day_attrs == expected
-    assert i.to_s == '50'
+    assert_equal i.day_attrs, expected
+    assert_equal '50', i.to_s
   end
 
   test 'with provisional planning' do
@@ -41,11 +43,11 @@ class PlanningItemTest < ActiveSupport::TestCase
     expected = {
       class: '-provisional -percent-70',
       title: nil,
-      :"data-id" => p1.id
+      'data-id': p1.id
     }
 
-    assert i.day_attrs == expected
-    assert i.to_s == '70'
+    assert_equal i.day_attrs, expected
+    assert_equal '70', i.to_s
   end
 
   test 'with rounded percentage planning' do
@@ -62,11 +64,11 @@ class PlanningItemTest < ActiveSupport::TestCase
     expected = {
       class: '-provisional -percent-80',
       title: nil,
-      :"data-id" => p1.id
+      'data-id': p1.id
     }
 
-    assert i.day_attrs == expected
-    assert i.to_s == '75'
+    assert_equal i.day_attrs, expected
+    assert_equal '75', i.to_s
   end
 
   test 'with absence' do
@@ -84,8 +86,8 @@ class PlanningItemTest < ActiveSupport::TestCase
       title: 'Abwesenheit: 40.0 h'
     }
 
-    assert i.day_attrs == expected
-    assert i.to_s == ''
+    assert_equal i.day_attrs, expected
+    assert_equal '', i.to_s
   end
 
   test 'with unpaid vacation' do
@@ -102,8 +104,8 @@ class PlanningItemTest < ActiveSupport::TestCase
       title: 'Unbezahlte Abwesenheit'
     }
 
-    assert i.day_attrs == expected
-    assert i.to_s == ''
+    assert_equal i.day_attrs, expected
+    assert_equal '', i.to_s
   end
 
   test 'without employment' do
@@ -114,8 +116,8 @@ class PlanningItemTest < ActiveSupport::TestCase
       title: 'Nicht angestellt'
     }
 
-    assert i.day_attrs == expected
-    assert i.to_s == ''
+    assert_equal i.day_attrs, expected
+    assert_equal '', i.to_s
   end
 
   test 'with planning and absence' do
@@ -138,11 +140,11 @@ class PlanningItemTest < ActiveSupport::TestCase
     expected = {
       class: '-provisional -percent-70 -absence',
       title: 'Abwesenheit: 40.0 h',
-      :"data-id" => p1.id
+      'data-id': p1.id
     }
 
-    assert i.day_attrs == expected
-    assert i.to_s == '70'
+    assert_equal i.day_attrs, expected
+    assert_equal '70', i.to_s
   end
 
   test 'with holiday without must hours' do
@@ -157,8 +159,8 @@ class PlanningItemTest < ActiveSupport::TestCase
       title: 'Feiertag: Keine muss Stunden'
     }
 
-    assert i.day_attrs == expected
-    assert i.to_s == ''
+    assert_equal i.day_attrs, expected
+    assert_equal '', i.to_s
   end
 
   test 'with holiday with must hours' do
@@ -173,7 +175,7 @@ class PlanningItemTest < ActiveSupport::TestCase
       title: 'Feiertag: 6.0 Muss Stunden'
     }
 
-    assert i.day_attrs == expected
-    assert i.to_s == ''
+    assert_equal i.day_attrs, expected
+    assert_equal '', i.to_s
   end
 end

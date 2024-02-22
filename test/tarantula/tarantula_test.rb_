@@ -120,7 +120,7 @@ class TarantulaTest < ActionDispatch::IntegrationTest
   end
 
   def set_credentials(manager)
-    user.update_attributes!(
+    user.update!(
       shortname: CREDENTIALS.first,
       passwd: Employee.encode(CREDENTIALS.last),
       management: manager)

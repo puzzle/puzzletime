@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
@@ -9,15 +11,14 @@ module Invoicing
       class Position < Base
         def to_hash
           {
-            type: 'N',
-            catalog_type: constant(:position_type),
+            type: constant(:position_type_id),
             number: nil,
             name: entry.name,
             description: nil,
-            price: post.offered_rate.round(2).to_f,
-            vat: Settings.defaults.vat,
-            amount: entry.total_hours.round(2).to_f,
-            unit_id: constant(:unit_id)
+            cost: post.offered_rate.try(:round, 2),
+            unit: constant(:unit_id),
+            amount: entry.total_hours.round(2),
+            vat: Settings.defaults.vat
           }
         end
 

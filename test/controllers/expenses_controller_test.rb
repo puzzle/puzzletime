@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class ExpensesControllerTest < ActionController::TestCase
@@ -11,18 +13,21 @@ class ExpensesControllerTest < ActionController::TestCase
   test 'GET#index employee may list his expenses' do
     login_as(:pascal)
     get :index, params: { employee_id: employees(:pascal).id }
+
     assert_equal 4, assigns(:expenses).count
   end
 
   test 'GET#index employee may filter by payment_date' do
     login_as(:pascal)
     get :index, params: { employee_id: employees(:pascal).id, payment_date: 2018 }
+
     assert_equal 0, assigns(:expenses).count
   end
 
   test 'GET#new does not assign value if id does not exists' do
     login_as(:pascal)
     get :new, params: { employee_id: employees(:pascal).id, template: -1 }
+
     assert_nil assigns(:expense).kind
   end
 
@@ -32,8 +37,9 @@ class ExpensesControllerTest < ActionController::TestCase
 
     login_as(:pascal)
     get :new, params: { employee_id: expense.employee_id, template: expense.id }
-    assert assigns(:expense).project?
-    assert assigns(:expense).pending?
+
+    assert_predicate assigns(:expense), :project?
+    assert_predicate assigns(:expense), :pending?
     assert_equal 32, assigns(:expense).amount
     assert_equal 'train ticket', assigns(:expense).description
     assert_equal Date.new(2019, 2, 10), assigns(:expense).payment_date
@@ -44,13 +50,13 @@ class ExpensesControllerTest < ActionController::TestCase
     Expense.delete_all
     Settings.expenses.receipt.max_pixel = 100
 
-    receipt_file_upload = fixture_file_upload("#{Rails.root}/test/fixtures/files/lorem-ipsum.png", 'image/png')
+    receipt_file_upload = fixture_file_upload(Rails.root.join('test/fixtures/files/lorem-ipsum.png').to_s, 'image/png')
 
     post :create, params: {
       employee_id: employees(:pascal).id,
       expense: {
         employee_id: employees(:pascal).id,
-        payment_date: Date.today.to_json,
+        payment_date: Time.zone.today.to_json,
         amount: 42,
         kind: 'other',
         description: 'blabliblu',
@@ -61,10 +67,12 @@ class ExpensesControllerTest < ActionController::TestCase
     assert_equal 1, Expense.count
 
     blob = Expense.last.receipt.blob
+
     assert_equal 'lorem-ipsum.jpg', blob.filename.to_s
     assert_equal 'image/jpeg', blob.content_type
 
     blob.analyze
+
     assert_equal 100, blob.metadata[:width]
     assert_operator 100, :>, blob.metadata[:height]
   end
@@ -74,18 +82,20 @@ class ExpensesControllerTest < ActionController::TestCase
 
     login_as(:mark)
     put :update, params: { employee_id: expense.employee_id, id: expense.id, review: 1, expense: { amount: 1 } }
+
     assert_equal 1, expense.reload.amount
     assert_redirected_to expenses_review_path(expense)
   end
 
-  %w(pending deferred rejected).each do |status|
+  %w[pending deferred rejected].each do |status|
     test "PUT#update employee may update #{status} expense" do
       expense = expenses(status)
 
       login_as(:pascal)
       put :update, params: { employee_id: expense.employee_id, id: expense.id, expense: { amount: 1 } }
+
       assert_equal 1, expense.reload.amount
-      assert expense.pending? if status == 'rejected'
+      assert_predicate expense, :pending? if status == 'rejected'
     end
 
     test "DELETE#destroy employee may destroy #{status} expense" do
@@ -103,17 +113,19 @@ class ExpensesControllerTest < ActionController::TestCase
 
     login_as(:pascal)
     put :update, params: { employee_id: expense.employee_id, id: expense.id, expense: { amount: 1 } }
-    refute_equal 1, expense.reload.amount
+
+    assert_not_equal 1, expense.reload.amount
     assert_redirected_to employee_expenses_path(expense.employee)
     assert_equal 'Freigegebene Spesen können nicht verändert werden.', flash[:alert]
   end
 
-  test "DELETE#destroy employee may not destroy approved expense" do
+  test 'DELETE#destroy employee may not destroy approved expense' do
     expense = expenses(:approved)
 
     login_as(:pascal)
     assert_no_difference 'Expense.count', -1 do
       delete :destroy, params: { employee_id: expense.employee_id, id: expense.id }
+
       assert_redirected_to employee_expenses_path(expense.employee)
       assert_equal 'Freigegebene Spesen können nicht verändert werden.', flash[:alert]
     end
@@ -124,6 +136,7 @@ class ExpensesControllerTest < ActionController::TestCase
 
     login_as(:mark)
     put :update, params: { employee_id: expense.employee_id, id: expense.id, expense: { amount: 1 } }
+
     assert_equal 1, expense.reload.amount
   end
 
@@ -139,8 +152,10 @@ class ExpensesControllerTest < ActionController::TestCase
   test 'GET#index.pdf employee may export a pdf' do
     login_as(:pascal)
     get :index, params: { employee_id: employees(:pascal).id, format: :pdf }
+
     assert_equal 4, assigns(:expenses).count
     assert_equal 'application/pdf', response.headers['Content-Type']
-    assert_equal 'inline; filename="expenses.pdf"', response.headers['Content-Disposition']
+    assert_equal 'inline; filename="expenses.pdf"; filename*=UTF-8\'\'expenses.pdf',
+                 response.headers['Content-Disposition']
   end
 end

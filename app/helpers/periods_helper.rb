@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PeriodsHelper
   def period_link(label, shortcut, options = {})
     link_to(label,
