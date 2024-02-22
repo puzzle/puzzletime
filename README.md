@@ -18,50 +18,8 @@ directory:
 
 A more detailed development documentation in German can be found in [doc/development](doc/development/README.md). This is where you also find some [Deployment](doc/development/03_deployment.md) instructions
 
-## Heroku
-
-The current master branch needs to be modified slightly for heroku. To achieve this we create a new branch
-
-    git checkout -b heroku_setup
-
-Then we make the require changes for Memcache and Sendfile to [production.rb](config/environments/production.rb)
-
-    config.action_dispatch.x_sendfile_header = nil
-
-    config.cache_store = :mem_cache_store,
-      (ENV["MEMCACHIER_SERVERS"] || "").split(","),
-      {:username => ENV["MEMCACHIER_USERNAME"],
-      :password => ENV["MEMCACHIER_PASSWORD"],
-      :failover => true,
-      :socket_timeout => 1.5,
-      :socket_failure_delay => 0.2,
-      :down_retry_delay => 60
-      }
-
-Then we commit these changes to our branch
-
-    git commit -am 'Changes for heroku'
-
-Now we can deploy with these modifications to heroku 
-
-    heroku create
-    git push heroku heroku_setup:master
-
-    heroku config:set RAILS_SERVE_STATIC_FILES=true 
-    heroku run rails assets:precompile
-
-    heroku addons:create memcachier:dev
-
-    heroku run rails db:migrate 
-    heroku run 'ln -s /app/db/seeds/development /app/db/seeds/production && rails db:seed'
-    heroku restart
-    heroku open
-
-Then login using (username: mw, password: a) as credentials
-
-
 ## License
 
 PuzzleTime is released under the GNU Affero General Public License.
-Copyright 2006-2023 by [Puzzle ITC GmbH](http://puzzle.ch).
-See LICENSE for more details.
+Copyright 2006-2024 by [Puzzle ITC GmbH](http://puzzle.ch).
+See [LICENSE](LICENSE) for more details.
