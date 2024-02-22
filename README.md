@@ -16,7 +16,7 @@ directory:
     rails db:setup       # prepare database
     rails server         # start the rails server
 
-A more detailed development documentation in German can be found in [doc/development](doc/development/README.md). This is where you also find some [Deployment](doc/development/03_deployment.md) instructions
+A more detailed development documentation in German can be found in [doc/development](doc/development/README.md). This is where you also find some [Deployment](doc/development/02_deployment.md) instructions
 
 ## License
 
