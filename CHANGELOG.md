@@ -46,8 +46,6 @@
 ### Features
 
 * **Login:** Unterstützt nun Omniauth mit Keycloak und/oder SAML
-||||||| parent of 336463f7 (Update CHANGELOG.md)
-* **Login:** Unterstützt nun Omniauth mit Keycloak und/oder SAML
 * **Rechnungsstellung:** Umstellung auf SmallInvoice APIv2 (vorher v1)
 * **Business Intelligence:** Wir können jetzt Verbindung zu einer InfluxDB herstellen, die wichtige Kennzahlen als Timeseries speichert
 
