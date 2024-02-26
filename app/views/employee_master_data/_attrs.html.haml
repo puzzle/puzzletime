@@ -33,7 +33,7 @@
               = link_to @employee.email, "mailto:#{@employee.email}"
       .col-md-6
         = link_to({format: :png}, target: :_blank) do
-          = image_tag('qr-code-scan-icon.svg', class: 'qr-code master-data-vcard-qrcode')
+          %img.qr-code.master-data-vcard-qrcode{src: employee_master_datum_url(id: @employee.id, format: :svg) }
         = link_to format: :vcf do
           vCard herunterladen
 

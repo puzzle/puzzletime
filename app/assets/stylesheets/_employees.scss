@@ -6,12 +6,8 @@
 
 .master-data-vcard-qrcode {
   display: block;
-  width: 100px;
+  width: 200px;
   padding-bottom: 1em;
-
-  @media (min-width: $screen-md-min) {
-    padding-top: 20px;
-  }
 }
 
 .employee-positions {
