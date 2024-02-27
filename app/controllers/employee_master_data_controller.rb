@@ -39,7 +39,7 @@ class EmployeeMasterDataController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.vcf { render plain: vcard }
+      format.vcf { send_data vcard, filename: vcard_filename }
       format.svg { render plain: qr_code.as_svg(fill: 'fff') }
       format.png { render plain: qr_code.as_png(fill: 'fff') }
     end
@@ -105,6 +105,10 @@ class EmployeeMasterDataController < ApplicationController
 
   def vcard(include: nil)
     Employees::Vcard.new(@employee, include:).render
+  end
+
+  def vcard_filename
+    ActiveStorage::Filename.new("#{@employee.to_s}.vcf").sanitized
   end
 
   def qr_code
