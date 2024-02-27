@@ -11,9 +11,9 @@ app.initOrderControllingChart = (labels, datasets, budget, currency, currentLabe
   canvas = document.getElementById('order_controlling_chart')
   ctx = canvas.getContext('2d')
 
-  Chart.defaults.global.defaultFontFamily = 'Roboto, Helvetica, Arial, sans-serif'
-  Chart.defaults.global.defaultFontColor = '#444444'
-  Chart.defaults.global.defaultFontSize = 14
+  Chart.defaults.font.family = 'Roboto, Helvetica, Arial, sans-serif'
+  Chart.defaults.color = '#444444'
+  Chart.defaults.font.size = 14
 
   budgetColor = '#B44B5B'
   todayColor = '#f0ad4e'
@@ -31,13 +31,13 @@ app.initOrderControllingChart = (labels, datasets, budget, currency, currentLabe
     options: {
       responsive: false,
       scales: {
-        xAxes: [{
+        x: {
           stacked: true,
           gridLines: {
             color: gridColor
           }
-        }],
-        yAxes: [{
+        },
+        y: {
           stacked: true,
           ticks: {
             beginAtZero: true,
@@ -47,11 +47,11 @@ app.initOrderControllingChart = (labels, datasets, budget, currency, currentLabe
             color: gridLightColor,
             zeroLineColor: gridColor
           },
-        }],
+        },
       },
       legend: {
         labels: {
-          boxWidth: Chart.defaults.global.defaultFontSize
+          boxWidth: Chart.defaults.font.size
         }
       },
       tooltips: {
@@ -76,8 +76,8 @@ app.initOrderControllingChart = (labels, datasets, budget, currency, currentLabe
             xPadding: 2,
             yPadding: 3,
             backgroundColor: '#ffffff'
-            fontFamily: Chart.defaults.global.defaultFontFamily,
-            fontSize: Chart.defaults.global.defaultFontSize,
+            fontFamily: Chart.defaults.font.family,
+            fontSize: Chart.defaults.font.size,
             fontStyle: 'normal',
             fontColor: todayColor
           }
@@ -94,8 +94,8 @@ app.initOrderControllingChart = (labels, datasets, budget, currency, currentLabe
             position: 'left',
             yAdjust: 11,
             backgroundColor: 'transparent',
-            fontFamily: Chart.defaults.global.defaultFontFamily,
-            fontSize: Chart.defaults.global.defaultFontSize,
+            fontFamily: Chart.defaults.font.family,
+            fontSize: Chart.defaults.font.size,
             fontStyle: 'normal',
             fontColor: budgetColor
           }
