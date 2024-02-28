@@ -39,6 +39,7 @@ jobs:
         CI: 'true'
         PGDATESTYLE: German
       run: |
+        sudo apt-get -yqq update
         sudo apt-get -yqq install libpq-dev libvips-dev
         gem install bundler --version '~> 2'
         bundle install --jobs 4 --retry 3
