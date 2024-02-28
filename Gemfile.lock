@@ -354,6 +354,9 @@ GEM
     loofah (2.22.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
+    m (1.6.2)
+      method_source (>= 0.6.7)
+      rake (>= 0.9.2.2)
     mail (2.8.1)
       mini_mime (>= 0.1.1)
       net-imap
@@ -720,6 +723,7 @@ DEPENDENCIES
   kaminari
   kaminari-bootstrap
   listen
+  m
   matrix
   mini_racer
   minitest-reporters
