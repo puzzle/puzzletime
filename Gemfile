@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 
 git_source(:github) { |name| "https://github.com/#{name}.git" }
 
-gem 'rails', '~> 7.0.x'
+gem 'rails', '~> 7.1'
 
 gem 'activerecord-nulldb-adapter', github: 'puzzle/nulldb'
 gem 'pg'
