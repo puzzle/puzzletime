@@ -29,7 +29,7 @@ class FormatHelperTest < ActionView::TestCase
     assert_equal '0.00', format_number(0.0001)
     assert_equal '0.50', format_number(0.5)
     assert_equal '8.33', format_number(8.33333)
-    assert_equal '1&#39;234.56', format_number(1234.56)
+    assert_equal "1'234.56", format_number(1234.56)
   end
 
   test 'format hour' do
@@ -37,7 +37,7 @@ class FormatHelperTest < ActionView::TestCase
     assert_equal '0.00 h', format_hour(0.0001)
     assert_equal '0.50 h', format_hour(0.5)
     assert_equal '8.33 h', format_hour(8.33333)
-    assert_equal '1&#39;234.56 h', format_hour(1234.56)
+    assert_equal "1'234.56 h", format_hour(1234.56)
   end
 
   test 'format day' do
@@ -131,7 +131,7 @@ class FormatHelperTest < ActionView::TestCase
 
     m.children = 10_000
 
-    assert_equal '10&#39;000', format_type(m, :children)
+    assert_equal "10'000", format_type(m, :children)
   end
 
   unless ENV['NON_LOCALIZED'] # localization dependent tests
@@ -148,7 +148,7 @@ class FormatHelperTest < ActionView::TestCase
     test 'format decimal column' do
       m = crud_test_models(:AAAAA)
 
-      assert_equal '10&#39;000&#39;000.1111', format_type(m, :income)
+      assert_equal "10'000'000.1111", format_type(m, :income)
     end
 
     test 'format date column' do
