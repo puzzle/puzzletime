@@ -98,10 +98,10 @@ module Puzzletime
   end
 
   def self.commit_hash(short: false)
-    return unless File.exist?(Rails.root.join('BUILD_INFO').to_s)
+    return unless ENV['BUILD_COMMIT']
 
-    commit = File.open(Rails.root.join('BUILD_INFO').to_s).first.chomp
-    return commit.first(7) if short
+    commit = ENV['BUILD_COMMIT'].chomp
+    return commit.first(8) if short
 
     commit
   end

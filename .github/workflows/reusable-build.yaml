@@ -43,9 +43,10 @@ jobs:
         with:
           file: Dockerfile
           build-args: |
-            BUILD_REPO=$GITHUB_REPOSITORY
-            BUILD_REF=$GITHUB_REF_NAME
-            BUILD_COMMIT=$GITHUB_SHA
+            GITHUB_REF_NAME=${{ github.ref_name }}
+            GITHUB_REPOSITORY=${{ github.repository }}
+            GITHUB_REPOSITORY_URL=${{ github.repositoryUrl }}
+            GITHUB_SHA=${{ github.sha }}
           target: app
           tags: |
             ${{ inputs.registry }}/ptime/${{ inputs.project_name }}:latest
