@@ -43,13 +43,8 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
   end
 
   test 'sets calculated total on page load' do
-    expected_total = '%.2f' % (billable_hours * rate).round(2)
-
-    text_on_page =
-      find('#invoice_total_amount')
-      .text
-      .delete("'")
-      .delete('&#39;')
+    expected_total = delimited_number(billable_hours * rate)  
+    text_on_page = find('#invoice_total_amount').text
 
     assert_match expected_total, text_on_page
   end
@@ -212,5 +207,13 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
       assertion = checked.include?(model) ? :assert : :refute
       send assertion, checkboxes.find { |checkbox| checkbox.value == model.id.to_s }.checked?
     end
+  end
+
+  def delimited_number(number)
+    ActiveSupport::NumberHelper.number_to_rounded(
+      number,
+      precision: 2,
+      delimiter: "'"
+    )
   end
 end

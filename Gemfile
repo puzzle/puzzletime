@@ -112,9 +112,10 @@ group :test do
   gem 'cuprite'
   gem 'database_cleaner'
   gem 'fabrication'
+  gem 'm'
   gem 'mocha', require: false
   gem 'rails-controller-testing'
-  gem 'webmock'
   gem 'selenium-webdriver'
   gem 'webdrivers'
+  gem 'webmock'
 end

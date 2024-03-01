@@ -18,9 +18,9 @@ module FormatHelper
     case value
     when Float, BigDecimal
       number_with_precision(value, precision: t('number.format.precision'),
-                                   delimiter: t('number.format.delimiter'))
+                                   delimiter: t('number.format.delimiter').html_safe)
     when Integer
-      number_with_delimiter(value, delimiter: t('number.format.delimiter'))
+      number_with_delimiter(value, delimiter: t('number.format.delimiter').html_safe)
     when Date   then l(value, format: :long)
     when Time   then "#{l(value.to_date)} #{l(value, format: :time)}"
     when true   then t('global.yes')
@@ -43,7 +43,8 @@ module FormatHelper
   end
 
   def format_number(number, precision = 2)
-    number_with_precision(number, precision:, delimiter: '\'')
+    delimiter = t('number.format.delimiter').html_safe
+    number_with_precision(number, precision:, delimiter:)
   end
 
   def format_hour(hour, precision = 2)
@@ -173,7 +174,7 @@ module FormatHelper
     when :decimal
       number_with_precision(val.to_s.to_f,
                             precision: column_property(obj, attr, :scale),
-                            delimiter: t('number.format.delimiter'))
+                            delimiter: t('number.format.delimiter').html_safe)
     else f(val)
     end
   end
