@@ -23,37 +23,37 @@ on:
 jobs:
   generate-and-push-sbom:
     runs-on: 'ubuntu-latest'
-    env:
-      HEADLESS: true
-      RAILS_TEST_DB_NAME: 'postgres'
-      RAILS_TEST_DB_USERNAME: 'postgres'
-      RAILS_TEST_DB_PASSWORD: 'postgres'
-      RAILS_ENV: 'test'
-      CI: 'true'
-      PGDATESTYLE: German
-
-    services:
-      postgres:
-        image: 'postgres:11'
-        env:
-          POSTGRES_PASSWORD: 'postgres'
-        ports: [ '5432:5432' ]
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 10s
-          --health-retries 10
-      memcached:
-        image: 'memcached'
-        ports: [ '11211:11211' ]
+    # env:
+    #   HEADLESS: true
+    #   RAILS_TEST_DB_NAME: 'postgres'
+    #   RAILS_TEST_DB_USERNAME: 'postgres'
+    #   RAILS_TEST_DB_PASSWORD: 'postgres'
+    #   RAILS_ENV: 'test'
+    #   CI: 'true'
+    #   PGDATESTYLE: German
+    #
+    # services:
+    #   postgres:
+    #     image: 'postgres:11'
+    #     env:
+    #       POSTGRES_PASSWORD: 'postgres'
+    #     ports: [ '5432:5432' ]
+    #     options: >-
+    #       --health-cmd pg_isready
+    #       --health-interval 10s
+    #       --health-timeout 10s
+    #       --health-retries 10
+    #   memcached:
+    #     image: 'memcached'
+    #     ports: [ '11211:11211' ]
 
     steps:
       - uses: actions/checkout@v4
       - name: 'Generate SBOM for ruby and npm dependencies'
         run: |
           npm install -g @cyclonedx/cdxgen
-          cdxgen -o ./sbom-ruby.json -t ruby --spec-version 1.4 .
-          cdxgen -o ./sbom-npm.json -t npm --spec-version 1.4 .
+          cdxgen -o ./sbom-ruby.json -t ruby .
+          cdxgen -o ./sbom-npm.json -t npm .
 
       - name: 'Merge frontend and backend SBOMs'
         run: |
