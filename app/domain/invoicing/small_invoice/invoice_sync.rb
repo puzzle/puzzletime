@@ -132,7 +132,7 @@ module Invoicing
           total -= position_discount(p, total)
           total -= position_included_vat(p, total) if vat_included
           total
-        end
+        end.sum
       end
 
       def position_discount(p, total)
