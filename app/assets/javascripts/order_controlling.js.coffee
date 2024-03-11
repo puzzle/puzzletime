@@ -59,47 +59,50 @@ app.initOrderControllingChart = (labels, datasets, budget, currency, currentLabe
           label: (item, data) ->
             data.datasets[item.datasetIndex].label + ': ' + formatCurrency(item.yLabel)
         }
-      }
-      annotation: {
-        annotations: [{
-          type: 'line',
-          mode: 'vertical',
-          scaleID: 'x-axis-0',
-          value: currentLabel,
-          borderColor: todayColor,
-          borderWidth: 2,
-          label: {
-            enabled: true,
-            content: 'heute',
-            position: 'top'
-            yAdjust: 10,
-            xPadding: 2,
-            yPadding: 3,
-            backgroundColor: '#ffffff'
-            fontFamily: Chart.defaults.font.family,
-            fontSize: Chart.defaults.font.size,
-            fontStyle: 'normal',
-            fontColor: todayColor
-          }
-        }, {
-          type: 'line',
-          mode: 'horizontal',
-          scaleID: 'y-axis-0',
-          value: budget,
-          borderColor: budgetColor,
-          borderWidth: 2,
-          label: {
-            enabled: true,
-            content: 'Budget ' + formatCurrency(budget),
-            position: 'left',
-            yAdjust: 11,
-            backgroundColor: 'transparent',
-            fontFamily: Chart.defaults.font.family,
-            fontSize: Chart.defaults.font.size,
-            fontStyle: 'normal',
-            fontColor: budgetColor
-          }
-        }]
+      },
+      plugins: {
+        annotation: {
+          annotations: [{
+            type: 'line',
+            scaleID: 'x',
+            value: currentLabel,
+            borderColor: todayColor,
+            borderWidth: 2,
+            label: {
+              display: true,
+              content: 'heute',
+              position: 'start',
+              yAdjust: 10,
+              padding: {x: 2, y: 3},
+              backgroundColor: '#ffffff',
+              color: todayColor,
+              font: {
+                family: Chart.defaults.font.family,
+                size: Chart.defaults.font.size,
+                style: 'normal',
+              }
+            }
+          }, {
+            type: 'line',
+            scaleID: 'y',
+            value: budget,
+            borderColor: budgetColor,
+            borderWidth: 2,
+            label: {
+              display: true,
+              content: 'Budget ' + formatCurrency(budget),
+              position: 'start',
+              yAdjust: 11,
+              backgroundColor: 'transparent',
+              color: budgetColor,
+              font: {
+                family: Chart.defaults.font.family,
+                size: Chart.defaults.font.size,
+                style: 'normal',
+              }
+            }
+          }]
+        }
       }
     },
   })
