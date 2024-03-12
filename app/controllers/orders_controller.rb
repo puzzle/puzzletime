@@ -143,7 +143,6 @@ class OrdersController < CrudController
 
   def assign_attributes
     super
-
     return unless entry.new_record?
 
     entry.work_item.parent_id ||= (params[:category_active] &&
