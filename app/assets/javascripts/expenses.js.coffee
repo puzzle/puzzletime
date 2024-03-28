@@ -1,42 +1,40 @@
-$(document).on 'turbolinks:load', ->
+$(document).on 'ready, turbolinks:load', ->
   # scope to single controller
   return unless $('body.expenses').length or
                 $('body.expenses_reviews').length
 
+  expense_kind_input     = $('#expense_kind')
+  order_input            = $('#expense_order_id')
+  order_selectized_input = $('#expense_order_id-selectized')
+  order_form_group       = order_input.closest('.form-group')
+  receipt_input          = $('#expense_receipt')
+  warning_popup          = $('#file_warning')
+
   toggle_project_display = () ->
-    kind          = $('#expense_kind :selected')
-    order         = $('#expense_order_id')
-    form_group    = order.closest('.form-group')
-    input         = form_group.find('input')
 
-    kind.each ->
-      if this.value == 'project'
-        if order[0].textContent and not input[0].value
-          input[0].value = ' '
+    if expense_kind_input.val() == 'project'
+      # if order_input.value and not order_selectized_input.value
+      #   input[0].value = ' '
 
-        form_group.show()
-        input.attr('required', 'required')
-      else
-        form_group.hide()
-        input.removeAttr('required')
+      order_form_group.show()
+      order_selectized_input.attr('disabled', false)
+    else
+      order_form_group.hide()
+      order_selectized_input.attr('disabled', true)
 
   check_file_type = (initial = false) ->
-    input = $('#expense_receipt')[0]
-    files = input.files
-    warning = $('#file_warning')
+    warning_popup.addClass('hidden')
 
-    warning.addClass('hidden')
-    return unless files.length > 0
-    return if     /^image/.test(files[0].type)
+    return unless receipt_input[0].files.length > 0
+    return if     /^image/.test(receipt_input[0].files[0].type)
 
-    warning.removeClass('hidden') unless initial
-    input.value = ''
+    warning_popup.removeClass('hidden')
 
   check_file_type(true)
   toggle_project_display()
 
-  $('#expense_kind').change (e) ->
+  expense_kind_input.change (e) ->
     toggle_project_display()
 
-  $('#expense_receipt').change (e) ->
+  receipt_input.change (e) ->
     check_file_type()
