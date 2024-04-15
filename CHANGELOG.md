@@ -1,3 +1,12 @@
+# 2.12
+
+### Bug fixes
+* **Charts**: Limits und Beschriftungen in Charts gefixt.
+* **Lupe**: Lupen in Zeitbreakdown gefixt
+* **Dropdown**: Dropdown gefixt.
+* **Join Tables**: Join Tables mit ids versehen um Form input zu erleichtern.
+* **Spesen**: Spesen duplizieren gefixt.
+
 # 2.11
 
 ### Features
