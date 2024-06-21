@@ -8,7 +8,7 @@ Es bietet Lesezugriff auf einige ausgewählte Resourcen.
 Alle implementierten Endpunkte sind mit [HTTP Basic Authentication][basic_auth] geschützt.
 
 Die Credentials sind in der aktuellen Implementierung global definiert und werden von allen API clients geteilt.
-Sie müssen auf dem Server über Umgebungsvariablen konfiguriert werden (siehe [/doc/development/03_deployment.md])
+Sie müssen auf dem Server über Umgebungsvariablen konfiguriert werden (siehe [/doc/development/02_deployment.md])
 
 ## Pagination
 
