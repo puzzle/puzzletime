@@ -40,6 +40,6 @@ Die Swagger Spezifikation liegt unter [/api/docs/v1], diese kann in [Postman] un
 [json:api]: https://jsonapi.org/
 [basic_auth]: https://tools.ietf.org/html/rfc2617
 [Postman]: https://www.getpostman.com/
-[/doc/development/03_deployment.md]: /doc/development/03_deployment.md
+[/doc/development/02_deployment.md]: /doc/development/02_deployment.md
 [/api/docs]: /api/docs
 [/api/docs/v1]: /api/docs/v1
