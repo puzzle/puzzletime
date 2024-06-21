@@ -32,7 +32,7 @@ Zusätzlich gibt es folgende Header um sich zu orientieren:
 
 ## API Dokumentation
 
-Die Dokumentation wird automatisch generiert.e Dokumentation ist unter [/api/docs] erreichbar.
+Die Dokumentation wird automatisch generiert uns ist unter [/api/docs] erreichbar.
 Auf dem Puzzletime Server ist sie im Swagger Webinterface unter [/api/docs] einsehbar.
 
 Die Swagger Spezifikation liegt unter [/api/docs/v1], diese kann in [Postman] und ähnliche tools importiert werden.
