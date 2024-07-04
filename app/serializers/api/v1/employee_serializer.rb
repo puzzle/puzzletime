@@ -19,13 +19,12 @@ module Api
                   :birthday,
                   :nationalities
 
-
       attribute :full_name do |employee|
         employee.to_s
       end
 
-      attribute :is_employed do |employee|
-        !!employee.current_employment
+      attribute :is_employed do |_employee|
+        !e.current_employment.nil?
       end
 
       attribute :department_shortname do |employee|
