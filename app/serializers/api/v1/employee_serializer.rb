@@ -8,7 +8,24 @@
 module Api
   module V1
     class EmployeeSerializer < ApiSerializer
-      attributes :shortname, :firstname, :lastname, :email, :marital_status, :nationalities, :graduation
+      attributes  :shortname,
+                  :firstname,
+                  :lastname,
+                  :email,
+                  :marital_status,
+                  :nationalities,
+                  :graduation,
+                  :city,
+                  :birthday,
+                  :nationalities
+
+      attribute :full_name do |employee|
+        employee.to_s
+      end
+
+      attribute :is_employed do |_employee|
+        !e.current_employment.nil?
+      end
 
       attribute :department_shortname do |employee|
         employee.department&.shortname
