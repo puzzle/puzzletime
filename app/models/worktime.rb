@@ -33,7 +33,7 @@ class Worktime < ApplicationRecord
 
   class_attribute :account_label
 
-  belongs_to :employee
+  belongs_to :employee, optional: false
   belongs_to :absence, optional: true
   belongs_to :work_item, optional: true
   belongs_to :invoice, optional: true
