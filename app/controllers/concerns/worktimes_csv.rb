@@ -26,7 +26,7 @@ module WorktimesCsv
                 time.hours,
                 (time.start_stop? ? I18n.l(time.from_start_time, format: :time) : ''),
                 (time.start_stop? && time.to_end_time? ? I18n.l(time.to_end_time, format: :time) : ''),
-                currency(time.amount),
+                amount(time),
                 time.report_type,
                 time.billable,
                 time.employee.label,
@@ -37,10 +37,9 @@ module WorktimesCsv
     end
   end
 
-  def currency(value)
-    format(
-      '%<amount>0.02f',
-      amount: value,
-    )
+  def amount(time)
+    return '-' unless time.respond_to?(:amount)
+
+    format('%<amount>0.02f', amount: time.amount)
   end
 end
