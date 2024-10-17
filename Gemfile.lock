@@ -351,6 +351,7 @@ GEM
     listen (3.8.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
+    logger (1.6.1)
     loofah (2.22.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -443,6 +444,7 @@ GEM
     prawn (2.4.0)
       pdf-core (~> 0.9.0)
       ttfunk (~> 1.7)
+    prism (1.2.0)
     prometheus_exporter (2.1.0)
       webrick
     protective (0.2.0)
@@ -527,6 +529,8 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     rb-readline (0.5.5)
+    rbs (3.6.1)
+      logger
     rbtree3 (0.7.1)
     rdoc (6.6.2)
       psych (>= 4.0.0)
@@ -577,6 +581,11 @@ GEM
       rubocop-ast (>= 1.30.0, < 2.0)
     ruby-graphviz (1.2.5)
       rexml
+    ruby-lsp (0.20.1)
+      language_server-protocol (~> 3.17.0)
+      prism (>= 1.2, < 2.0)
+      rbs (>= 3, < 4)
+      sorbet-runtime (>= 0.5.10782)
     ruby-prof (1.7.0)
     ruby-progressbar (1.13.0)
     ruby-saml (1.16.0)
@@ -613,6 +622,7 @@ GEM
     snaky_hash (2.0.1)
       hashie
       version_gem (~> 1.1, >= 1.1.1)
+    sorbet-runtime (0.5.11604)
     spring (4.1.3)
     sprockets (4.2.1)
       concurrent-ruby (~> 1.0)
@@ -761,6 +771,7 @@ DEPENDENCIES
   rubocop-minitest
   rubocop-performance
   rubocop-rails
+  ruby-lsp
   sass-rails
   sdoc
   seed-fu

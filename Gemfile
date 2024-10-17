@@ -103,6 +103,7 @@ end
 
 group :development do
   gem 'bullet'
+  gem 'ruby-lsp'
   gem 'spring'
   gem 'web-console'
 end
