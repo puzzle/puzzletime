@@ -7,9 +7,17 @@
 
 module Reports
   module Revenue
-    class Department < Base
+    class DepartmentOrder < Base
       self.grouping_model = ::Department
       self.grouping_fk = :department_id
+
+      def self.grouping_name
+        "#{grouping_model.sti_name}_Order"
+      end
+
+      def self.grouping_name_human
+        "#{grouping_model.model_name.human} - Aufträge"
+      end
     end
   end
 end

@@ -10,7 +10,8 @@ class RevenueReportsController < ApplicationController
   before_action :set_period
 
   REPORT_TYPES = [
-    Reports::Revenue::Department,
+    Reports::Revenue::DepartmentOrder,
+    Reports::Revenue::DepartmentMember,
     Reports::Revenue::PortfolioItem,
     Reports::Revenue::Service,
     Reports::Revenue::Sector
