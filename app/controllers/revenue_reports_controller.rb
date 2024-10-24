@@ -51,8 +51,8 @@ class RevenueReportsController < ApplicationController
   end
 
   def report_type
-    grouping = params[:grouping].presence || 'Department'
-    REPORT_TYPES.find { |r| r.grouping_name == grouping }
+    grouping = params[:grouping].presence 
+    REPORT_TYPES.find { |r| r.grouping_name == grouping } || REPORT_TYPES.first
   end
 
   def set_period
