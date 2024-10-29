@@ -5,6 +5,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
+# {{{
 # == Schema Information
 #
 # Table name: holidays
@@ -13,6 +14,11 @@
 #  holiday_date  :date             not null
 #  musthours_day :float            not null
 #
+# Indexes
+#
+#  index_holidays_on_holiday_date  (holiday_date) UNIQUE
+#
+# }}}
 
 class Holiday < ApplicationRecord
   include ActionView::Helpers::NumberHelper

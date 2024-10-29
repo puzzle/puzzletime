@@ -4,6 +4,7 @@
 #  https://github.com/puzzle/puzzletime.
 
 
+# {{{
 # == Schema Information
 #
 # Table name: departments
@@ -12,6 +13,12 @@
 #  name      :string(255)      not null
 #  shortname :string(3)        not null
 #
+# Indexes
+#
+#  index_departments_on_name       (name) UNIQUE
+#  index_departments_on_shortname  (shortname) UNIQUE
+#
+# }}}
 
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
