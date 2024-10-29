@@ -45,7 +45,7 @@ class Order
 
     def filters_defined?
       filters = params.except(:action, :controller, :format, :utf8, :page,
-                              :clear, :closed)
+                              :clear, :closed, :without_hours)
       filters.present? && filters.values.any?(&:present?)
     end
 
@@ -126,9 +126,18 @@ class Order
     def build_entry(order, accounting_posts, hours, invoices)
       posts = accounting_posts[order.id]
       post_hours = hours.slice(*posts.keys)
-      return unless post_hours.values.any? { |h| h.values.sum > 0.0001 }
+
+      return unless show_without_hours? || booked_hours?(post_hours)
 
       Order::Report::Entry.new(order, posts, post_hours, invoices[order.id])
+    end
+
+    def show_without_hours?
+      params[:without_hours].presence || false
+    end
+
+    def booked_hours?(post_hours)
+      post_hours.values.any? { |h| h.values.sum > 0.0001 }
     end
 
     def filter_by_parent(orders)
