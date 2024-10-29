@@ -4,14 +4,20 @@
 #  https://github.com/puzzle/puzzletime.
 
 
+# {{{
 # == Schema Information
 #
 # Table name: portfolio_items
 #
 #  id     :integer          not null, primary key
-#  name   :string           not null
 #  active :boolean          default(TRUE), not null
+#  name   :string           not null
 #
+# Indexes
+#
+#  index_portfolio_items_on_name  (name) UNIQUE
+#
+# }}}
 
 ---
 web:

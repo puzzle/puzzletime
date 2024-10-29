@@ -1,23 +1,32 @@
 # frozen_string_literal: true
 
+# {{{
 # == Schema Information
 #
 # Table name: expenses
 #
-#  id                 :bigint(8)        not null, primary key
-#  employee_id        :bigint(8)        not null
-#  kind               :integer          not null
-#  status             :integer          default("pending"), not null
+#  id                 :bigint           not null, primary key
 #  amount             :decimal(12, 2)   not null
-#  payment_date       :date             not null
 #  description        :text             not null
+#  kind               :integer          not null
+#  payment_date       :date             not null
 #  reason             :text
-#  reviewer_id        :bigint(8)
-#  reviewed_at        :datetime
-#  order_id           :bigint(8)
 #  reimbursement_date :date
+#  reviewed_at        :datetime
+#  status             :integer          default("pending"), not null
 #  submission_date    :date
+#  employee_id        :bigint           not null
+#  order_id           :bigint
+#  reviewer_id        :bigint
 #
+# Indexes
+#
+#  index_expenses_on_employee_id  (employee_id)
+#  index_expenses_on_order_id     (order_id)
+#  index_expenses_on_reviewer_id  (reviewer_id)
+#  index_expenses_on_status       (status)
+#
+# }}}
 
 class Expense < ApplicationRecord
   belongs_to :order

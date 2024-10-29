@@ -5,6 +5,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
+# {{{
 # == Schema Information
 #
 # Table name: departments
@@ -13,6 +14,12 @@
 #  name      :string(255)      not null
 #  shortname :string(3)        not null
 #
+# Indexes
+#
+#  index_departments_on_name       (name) UNIQUE
+#  index_departments_on_shortname  (shortname) UNIQUE
+#
+# }}}
 class Department < ApplicationRecord
   include Evaluatable
 

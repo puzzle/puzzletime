@@ -4,6 +4,7 @@
 #  https://github.com/puzzle/puzzletime.
 
 
+# {{{
 # == Schema Information
 #
 # Table name: employment_role_levels
@@ -11,6 +12,11 @@
 #  id   :integer          not null, primary key
 #  name :string           not null
 #
+# Indexes
+#
+#  index_employment_role_levels_on_name  (name) UNIQUE
+#
+# }}}
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 

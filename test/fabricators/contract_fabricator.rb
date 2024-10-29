@@ -5,19 +5,21 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
+# {{{
 # == Schema Information
 #
 # Table name: contracts
 #
 #  id             :integer          not null, primary key
-#  number         :string           not null
-#  start_date     :date             not null
 #  end_date       :date             not null
+#  notes          :text
+#  number         :string           not null
 #  payment_period :integer          not null
 #  reference      :text
 #  sla            :text
-#  notes          :text
+#  start_date     :date             not null
 #
+# }}}
 
 Fabricator(:contract) do
   order

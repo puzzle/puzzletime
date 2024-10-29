@@ -5,6 +5,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
+# {{{
 # == Schema Information
 #
 # Table name: user_notifications
@@ -14,6 +15,11 @@
 #  date_to   :date
 #  message   :text             not null
 #
+# Indexes
+#
+#  index_user_notifications_on_date_from_and_date_to  (date_from,date_to)
+#
+# }}}
 
 require 'test_helper'
 

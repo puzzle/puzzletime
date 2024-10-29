@@ -5,14 +5,20 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
+# {{{
 # == Schema Information
 #
 # Table name: portfolio_items
 #
 #  id     :integer          not null, primary key
-#  name   :string           not null
 #  active :boolean          default(TRUE), not null
+#  name   :string           not null
 #
+# Indexes
+#
+#  index_portfolio_items_on_name  (name) UNIQUE
+#
+# }}}
 
 class PortfolioItem < ApplicationRecord
   has_many :accounting_posts

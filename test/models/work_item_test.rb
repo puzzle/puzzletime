@@ -5,21 +5,28 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
+# {{{
 # == Schema Information
 #
 # Table name: work_items
 #
 #  id              :integer          not null, primary key
-#  parent_id       :integer
-#  name            :string           not null
-#  shortname       :string(5)        not null
-#  description     :text
-#  path_ids        :integer          is an Array
-#  path_shortnames :string
-#  path_names      :string(2047)
-#  leaf            :boolean          default(TRUE), not null
 #  closed          :boolean          default(FALSE), not null
+#  description     :text
+#  leaf            :boolean          default(TRUE), not null
+#  name            :string           not null
+#  path_ids        :integer          is an Array
+#  path_names      :string(2047)
+#  path_shortnames :string
+#  shortname       :string(5)        not null
+#  parent_id       :integer
 #
+# Indexes
+#
+#  index_work_items_on_parent_id  (parent_id)
+#  index_work_items_on_path_ids   (path_ids)
+#
+# }}}
 
 require 'test_helper'
 

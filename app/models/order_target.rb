@@ -5,18 +5,25 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
+# {{{
 # == Schema Information
 #
 # Table name: order_targets
 #
 #  id              :integer          not null, primary key
-#  order_id        :integer          not null
-#  target_scope_id :integer          not null
-#  rating          :string           default("green"), not null
 #  comment         :text
+#  rating          :string           default("green"), not null
 #  created_at      :datetime
 #  updated_at      :datetime
+#  order_id        :integer          not null
+#  target_scope_id :integer          not null
 #
+# Indexes
+#
+#  index_order_targets_on_order_id         (order_id)
+#  index_order_targets_on_target_scope_id  (target_scope_id)
+#
+# }}}
 
 class OrderTarget < ApplicationRecord
   RATINGS = %w[green orange red].freeze

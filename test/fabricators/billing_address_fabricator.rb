@@ -5,20 +5,27 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
+# {{{
 # == Schema Information
 #
 # Table name: billing_addresses
 #
 #  id            :integer          not null, primary key
-#  client_id     :integer          not null
-#  contact_id    :integer
-#  supplement    :string
-#  street        :string
-#  zip_code      :string
-#  town          :string
 #  country       :string(2)
 #  invoicing_key :string
+#  street        :string
+#  supplement    :string
+#  town          :string
+#  zip_code      :string
+#  client_id     :integer          not null
+#  contact_id    :integer
 #
+# Indexes
+#
+#  index_billing_addresses_on_client_id   (client_id)
+#  index_billing_addresses_on_contact_id  (contact_id)
+#
+# }}}
 
 Fabricator(:billing_address) do
   client
