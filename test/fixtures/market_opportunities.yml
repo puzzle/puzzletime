@@ -1,0 +1,32 @@
+# {{{
+# == Schema Information
+#
+# Table name: market_opportunities
+#
+#  id         :bigint           not null, primary key
+#  active     :boolean          default(TRUE), not null
+#  name       :string           not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+# Indexes
+#
+#  index_market_opportunities_on_name  (name) UNIQUE
+#
+# }}}
+
+one:
+  name: MarketOpportunity1
+  active: true
+
+two:
+  name: MarketOpportunity2
+  active: true
+
+three:
+  name: MarketOpportunity3
+  active: true
+
+inactive:
+  name: InactiveMarketOpportunity
+  active: false

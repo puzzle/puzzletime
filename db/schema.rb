@@ -35,6 +35,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_19_080518) do
     t.boolean "closed", default: false, null: false
     t.integer "service_id"
     t.boolean "meal_compensation", default: false, null: false
+    t.integer "market_opportunity_id"
+    t.index ["market_opportunity_id"], name: "index_accounting_posts_on_market_opportunity_id"
     t.index ["portfolio_item_id"], name: "index_accounting_posts_on_portfolio_item_id"
     t.index ["service_id"], name: "index_accounting_posts_on_service_id"
     t.index ["work_item_id"], name: "index_accounting_posts_on_work_item_id"

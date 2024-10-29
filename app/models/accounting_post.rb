@@ -42,6 +42,7 @@ class AccountingPost < ApplicationRecord
   ### ASSOCIATIONS
 
   belongs_to :portfolio_item, optional: true
+  belongs_to :market_opportunity, optional: true
   belongs_to :service, optional: true
 
   has_ancestor_through_work_item :order
