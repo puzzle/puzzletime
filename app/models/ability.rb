@@ -49,6 +49,7 @@ class Ability
          PortfolioItem,
          Sector,
          Service,
+         MarketOpportunity,
          TargetScope,
          UserNotification,
          WorkingCondition,
