@@ -23,12 +23,12 @@ type Ci struct{}
 
 // Returns a Container with installed gems from the gemfile in the provided Directory
 func (m *Ci) Build(ctx context.Context, directory *dagger.Directory) *dagger.Container {
-	return dag.Container().
-		From("ruby:latest").
-		WithMountedDirectory("/mnt", directory).
-		WithWorkdir("/mnt").
-		WithExec([]string{"gem", "install", "rails"}).
-        WithExec([]string{"bundle", "config", "bundle", "install"})
+	return dag.Container().Build(directory)
+// 		From("ruby:latest").
+// 		WithMountedDirectory("/mnt", directory).
+// 		WithWorkdir("/mnt").
+// 		WithExec([]string{"gem", "install", "rails"}).
+//         WithExec([]string{"bundle", "config", "bundle", "install"})
 }
 
 func (m *Ci) Lint(ctx context.Context, directory *dagger.Directory) *dagger.Container {
