@@ -7,9 +7,9 @@ jobs:
   lint:
     runs-on: 'ubuntu-latest'
     steps:
+      - uses: actions/checkout@v4
       - name: 'lint'
         uses: dagger/dagger-for-github@v6
-        working-directory: './'
         with:
           verb: call
           module: ci
