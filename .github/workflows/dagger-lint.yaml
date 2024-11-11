@@ -1,0 +1,14 @@
+name: 'Code Style Review'
+on:
+  workflow_call:
+jobs:
+  lint:
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: 'lint'
+        uses: dagger/dagger-for-github@v6
+        with:
+          verb: call
+          args: lint --directory=./
+          # TODO: add the token as github secret
+          #cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
