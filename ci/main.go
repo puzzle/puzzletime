@@ -21,19 +21,18 @@ import (
 
 type Ci struct{}
 
-// Returns a Container with installed gems from the gemfile in the provided Directory
+// Returns a Container built from the Dockerfile in the provided Directory
 func (m *Ci) Build(ctx context.Context, directory *dagger.Directory) *dagger.Container {
 	return dag.Container().Build(directory)
-// 		From("ruby:latest").
-// 		WithMountedDirectory("/mnt", directory).
-// 		WithWorkdir("/mnt").
-// 		WithExec([]string{"gem", "install", "rails"}).
-//         WithExec([]string{"bundle", "config", "bundle", "install"})
 }
 
-func (m *Ci) Lint(ctx context.Context, directory *dagger.Directory) *dagger.Container {
-    return m.Build(ctx, directory).
-		WithExec([]string{"gem", "install", "haml-lint"}).
-		WithExec([]string{"haml-lint"})
-		//WithExec([]string{"haml-lint", "|", "reviewdog", "-efm=\"%f:%l %m\"", "-name=\"HAML-Lint\"", "-reporter=github-pr-review", "-level=error", "-diff=\"git diff\""})
+// Returns the result of haml-lint run against the sources in the provided Directory
+func (m *Ci) Lint(ctx context.Context, directory *dagger.Directory) (string, error) {
+    return dag.Container().
+        From("ruby:latest").
+        WithMountedDirectory("/mnt", directory).
+        WithWorkdir("/mnt").
+        WithExec([]string{"gem", "install", "haml-lint"}).
+        WithExec([]string{"haml-lint", "--reporter", "json", "."}).
+        Stdout(ctx)
 }
