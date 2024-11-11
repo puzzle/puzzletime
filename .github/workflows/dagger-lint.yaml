@@ -12,5 +12,6 @@ jobs:
         with:
           verb: call
           args: lint --directory=./
+          version: '0.14.0'
           # TODO: add the token as github secret
           #cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
