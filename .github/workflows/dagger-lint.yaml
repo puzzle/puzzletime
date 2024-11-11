@@ -11,6 +11,7 @@ jobs:
         uses: dagger/dagger-for-github@v6
         with:
           verb: call
+          module: ci
           args: lint --directory=./
           version: '0.14.0'
           # TODO: add the token as github secret
