@@ -38,6 +38,17 @@ func (m *Ci) Lint(ctx context.Context, dir *dagger.Directory) (string, error) {
 		Stdout(ctx)
 }
 
+// Returns the Sast report as a file
+func (m *Ci) Sast(ctx context.Context, directory *dagger.Directory) *dagger.File {
+    return dag.Container().
+			From("presidentbeef/brakeman:latest").
+			WithMountedDirectory("/app", directory).
+			WithWorkdir("/app").
+			WithExec([]string{"/usr/src/app/bin/brakeman", }).
+			File("/app/brakeman-output.tabs")
+}
+
+
 // Creates a PostgreSQL service for local testing based on the official image with the provided version. If no version is provided, 'latest' will be used.
 func (m *Ci) Postgres(
 	_ context.Context,
