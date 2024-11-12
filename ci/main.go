@@ -70,9 +70,8 @@ func (m *Ci) Memcached(
 	version string) *dagger.Service {
 
 	return dag.Container().
-		From(fmt.Sprintf("postgres:%s", version)).
-		WithEnvVariable("POSTGRES_PASSWORD", "postgres").
-		WithExposedPort(5432).
+		From(fmt.Sprintf("memcached:%s", version)).
+		WithExposedPort(11211).
 		AsService()
 }
 
