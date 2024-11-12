@@ -111,12 +111,7 @@ func (m *Ci) Test(ctx context.Context, dir *dagger.Directory) *dagger.Container 
 
 // Creates an SBOM for the container
 func (m *Ci) Sbom(container *dagger.Container) *dagger.File {
-	trivy_container := dag.Container().From("aquasec/trivy").WithEnvVariable("TRIVY_JAVA_DB_REPOSITORY", "public.ecr.aws/aquasecurity/trivy-java-db")
-
-	trivy := dag.Trivy(dagger.TrivyOpts{
-		Container:          trivy_container,
-		DatabaseRepository: "public.ecr.aws/aquasecurity/trivy-db",
-	})
+	trivy := m.Trivy()
 
 	sbom := trivy.Container(container).
 		Report("cyclonedx").
@@ -134,14 +129,21 @@ func (m *Ci) SbomBuild(ctx context.Context, dir *dagger.Directory) *dagger.File 
 
 // Scans the SBOM for vulnerabilities
 func (m *Ci) Vulnscan(sbom *dagger.File) *dagger.File {
-	trivy_container := dag.Container().From("aquasec/trivy").WithEnvVariable("TRIVY_JAVA_DB_REPOSITORY", "public.ecr.aws/aquasecurity/trivy-java-db")
+	trivy := m.Trivy()
 
-	trivy := dag.Trivy(dagger.TrivyOpts{
+	return trivy.Sbom(sbom).Report("json")
+}
+
+// Creates and returns a custom trivy instance
+func (m *Ci) Trivy() *dagger.Trivy {
+	trivy_container := dag.Container().
+		From("aquasec/trivy").
+		WithEnvVariable("TRIVY_JAVA_DB_REPOSITORY", "public.ecr.aws/aquasecurity/trivy-java-db")
+
+	return dag.Trivy(dagger.TrivyOpts{
 		Container:          trivy_container,
 		DatabaseRepository: "public.ecr.aws/aquasecurity/trivy-db",
 	})
-
-	return trivy.Sbom(sbom).Report("json")
 }
 
 // Executes all the steps and returns a Results object
