@@ -22,6 +22,13 @@ import (
 
 type Ci struct{}
 
+type Results struct {
+	LintOutput        string
+	SecurityScan      *dagger.File
+	VulnerabilityScan *dagger.File
+	Image             *dagger.Container
+}
+
 // Returns a Container built from the Dockerfile in the provided Directory
 func (m *Ci) Build(_ context.Context, dir *dagger.Directory) *dagger.Container {
 	return dag.Container().Build(dir)
@@ -34,7 +41,7 @@ func (m *Ci) Lint(ctx context.Context, dir *dagger.Directory) (string, error) {
 		WithMountedDirectory("/mnt", dir).
 		WithWorkdir("/mnt").
 		WithExec([]string{"gem", "install", "haml-lint"}).
-		WithExec([]string{"haml-lint", "--reporter", "json", "."}).
+		WithExec([]string{"haml-lint", "-r", "json", "."}).
 		Stdout(ctx)
 }
 
@@ -127,4 +134,18 @@ func (m *Ci) Vulnscan(ctx context.Context, sbom *dagger.File) *dagger.File {
 	})
 
 	return trivy.Sbom(sbom).Report("json")
+}
+
+// Executes all the steps and returns a Results object
+func (m *Ci) Ci(ctx context.Context, dir *dagger.Directory) *Results {
+	lintOutput, _ := m.Lint(ctx, dir)
+	securityScan := m.Sast(ctx, dir)
+	vulnerabilityScan := m.Vulnscan(ctx, m.SbomBuild(ctx, dir))
+	image := m.Build(ctx, dir)
+	return &Results{
+		LintOutput:        lintOutput,
+		SecurityScan:      securityScan,
+		VulnerabilityScan: vulnerabilityScan,
+		Image:             image,
+	}
 }
