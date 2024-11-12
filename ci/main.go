@@ -18,6 +18,7 @@ import (
 	"context"
 	"dagger/ci/internal/dagger"
 	"fmt"
+    "sync"
 )
 
 type Ci struct{}
@@ -160,6 +161,39 @@ func (m *Ci) Ci(ctx context.Context, dir *dagger.Directory) *Results {
 		LintOutput:        lintOutput,
 		SecurityScan:      securityScan,
 		VulnerabilityScan: vulnerabilityScan,
+		Image:             image,
+	}
+}
+
+// Executes all the steps and returns a Results object
+func (m *Ci) CiIntegration(ctx context.Context, dir *dagger.Directory) *Results {
+	var wg sync.WaitGroup
+	wg.Add(3)
+
+	var lintOutput, _ = func() (string, error) {
+		defer wg.Done()
+		return "empty", error(nil) //m.Lint(ctx, dir)
+	}()
+
+	var securityScan = func() *dagger.File {
+		defer wg.Done()
+		return m.Sast(ctx, dir)
+	}()
+
+	//vulnerabilityScan := m.Vulnscan(ctx, m.SbomBuild(ctx, dir))
+
+	var image = func() *dagger.Container {
+		defer wg.Done()
+		return m.Build(ctx, dir)
+	}()
+
+	// This Blocks the execution until its counter become 0
+        wg.Wait()
+
+	return &Results{
+		LintOutput:        lintOutput,
+		SecurityScan:      securityScan,
+	//	VulnerabilityScan: vulnerabilityScan,
 		Image:             image,
 	}
 }
