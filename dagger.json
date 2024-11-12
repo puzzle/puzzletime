@@ -2,5 +2,12 @@
   "name": "ci",
   "engineVersion": "v0.14.0",
   "sdk": "go",
+  "dependencies": [
+    {
+      "name": "trivy",
+      "source": "github.com/sagikazarmark/daggerverse/trivy@trivy/v0.5.0",
+      "pin": "5b826062b6bc1bfbd619aa5d0fba117190c85aba"
+    }
+  ],
   "source": "ci"
 }

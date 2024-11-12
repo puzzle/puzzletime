@@ -40,14 +40,13 @@ func (m *Ci) Lint(ctx context.Context, dir *dagger.Directory) (string, error) {
 
 // Returns the Sast report as a file
 func (m *Ci) Sast(ctx context.Context, directory *dagger.Directory) *dagger.File {
-    return dag.Container().
-			From("presidentbeef/brakeman:latest").
-			WithMountedDirectory("/app", directory).
-			WithWorkdir("/app").
-			WithExec([]string{"/usr/src/app/bin/brakeman", }).
-			File("/app/brakeman-output.tabs")
+	return dag.Container().
+		From("presidentbeef/brakeman:latest").
+		WithMountedDirectory("/app", directory).
+		WithWorkdir("/app").
+		WithExec([]string{"/usr/src/app/bin/brakeman"}).
+		File("/app/brakeman-output.tabs")
 }
-
 
 // Creates a PostgreSQL service for local testing based on the official image with the provided version. If no version is provided, 'latest' will be used.
 func (m *Ci) Postgres(
@@ -79,19 +78,41 @@ func (m *Ci) Memcached(
 
 // Executes the test suite for the Rails application in the provided Directory
 func (m *Ci) Test(ctx context.Context, dir *dagger.Directory) *dagger.Container {
-	return m.Build(ctx, dir).From("ruby:latest").
+	return dag.Container().From("ruby:latest").
+		WithMountedDirectory("/app", dir).
+		WithWorkdir("/app").
 		WithEnvVariable("RAILS_TEST_DB_NAME", "postgres").
 		WithEnvVariable("RAILS_TEST_DB_USERNAME", "postgres").
 		WithEnvVariable("RAILS_TEST_DB_PASSWORD", "postgres").
 		WithEnvVariable("RAILS_ENV", "test").
 		WithEnvVariable("CI", "true").
 		WithEnvVariable("PGDATESTYLE", "German").
-		WithExec([]string{"sudo", "apt-get", "-yqq", "update"}).
-		WithExec([]string{"sudo", "apt-get", "-yqq", "install", "libpq-dev", "libvips-dev"}).
-		WithExec([]string{"gem", "install", "bundler", "--version", "'~> 2'"}).
+		WithExec([]string{"apt-get", "-yqq", "update"}).
+		WithExec([]string{"apt-get", "-yqq", "install", "libpq-dev", "libvips-dev"}).
+		WithExec([]string{"gem", "install", "bundler"}).
 		WithExec([]string{"bundle", "install", "--jobs", "4", "--retry", "3"}).
 		WithExec([]string{"bundle", "exec", "rails", "db:create"}).
 		WithExec([]string{"bundle", "exec", "rails", "db:migrate"}).
 		WithExec([]string{"bundle", "exec", "rails", "assets:precompile"}).
 		WithExec([]string{"bundle", "exec", "rails", "test"})
+}
+
+func (m *Ci) Sbom(ctx context.Context, container *dagger.Container) *dagger.File {
+	trivy := dag.Trivy(dagger.TrivyOpts{
+		DatabaseRepository: "public.ecr.aws/aquasecurity/trivy-db",
+	})
+
+	sbom := trivy.Container(container).
+		Report("spdx-json").
+		WithName("spdx.json")
+
+	return sbom
+}
+
+func (m *Ci) Vulnscan(ctx context.Context, sbom *dagger.File) *dagger.File {
+	trivy := dag.Trivy(dagger.TrivyOpts{
+		DatabaseRepository: "public.ecr.aws/aquasecurity/trivy-db",
+	})
+
+	return trivy.Sbom(sbom).Report("json")
 }
