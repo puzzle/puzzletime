@@ -1,0 +1,29 @@
+name: 'Full Dagger Pipeline'
+on:
+  push:
+    branches:
+      - dagger-ci
+jobs:
+  lint:
+    runs-on: 'ubuntu-latest'
+    steps:
+      - uses: actions/checkout@v4
+      - name: 'pipeline'
+        uses: dagger/dagger-for-github@v7.0.1
+        with:
+          # Dagger Version
+          version: 0.14.0
+          # Dagger CLI Flags
+          #dagger-flags: # optional, default is --progress plain
+          # CLI verb (call, run, download, up, functions, shell, query)
+          verb: call
+          # The working directory in which to run the Dagger CLI
+          workdir: .
+          # Dagger Cloud Token
+          cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
+          # Dagger module to call. Local or Git
+          module: .
+          # Arguments to pass to CLI
+          args: ci-integration --dir=./
+      - name: Test Reporter
+        uses: dorny/test-reporter@v1.9.1
