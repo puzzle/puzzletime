@@ -102,18 +102,25 @@ func (m *Ci) Test(ctx context.Context, dir *dagger.Directory) *dagger.Container 
 		WithExec([]string{"bundle", "exec", "rails", "test"})
 }
 
+// Creates an SBOM for the container
 func (m *Ci) Sbom(ctx context.Context, container *dagger.Container) *dagger.File {
-	trivy := dag.Trivy(dagger.TrivyOpts{
-		DatabaseRepository: "public.ecr.aws/aquasecurity/trivy-db",
-	})
+	trivy := dag.Trivy()
 
 	sbom := trivy.Container(container).
-		Report("spdx-json").
-		WithName("spdx.json")
+		Report("cyclonedx").
+		WithName("cyclonedx.json")
 
 	return sbom
 }
 
+// Builds the container and creates an SBOM for it
+func (m *Ci) SbomBuild(ctx context.Context, dir *dagger.Directory) *dagger.File {
+	container := m.Build(ctx, dir)
+
+	return m.Sbom(ctx, container)
+}
+
+// Scans the SBOM for vulnerabilities
 func (m *Ci) Vulnscan(ctx context.Context, sbom *dagger.File) *dagger.File {
 	trivy := dag.Trivy(dagger.TrivyOpts{
 		DatabaseRepository: "public.ecr.aws/aquasecurity/trivy-db",
