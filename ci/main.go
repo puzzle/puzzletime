@@ -39,10 +39,10 @@ func (m *Ci) Lint(ctx context.Context, dir *dagger.Directory) (string, error) {
 }
 
 // Returns the Sast report as a file
-func (m *Ci) Sast(ctx context.Context, directory *dagger.Directory) *dagger.File {
+func (m *Ci) Sast(ctx context.Context, dir *dagger.Directory) *dagger.File {
 	return dag.Container().
 		From("presidentbeef/brakeman:latest").
-		WithMountedDirectory("/app", directory).
+		WithMountedDirectory("/app", dir).
 		WithWorkdir("/app").
 		WithExec([]string{"/usr/src/app/bin/brakeman"}).
 		File("/app/brakeman-output.tabs")
@@ -77,18 +77,24 @@ func (m *Ci) Memcached(
 
 // Executes the test suite for the Rails application in the provided Directory
 func (m *Ci) Test(ctx context.Context, dir *dagger.Directory) *dagger.Container {
-	return dag.Container().From("ruby:latest").
-		WithMountedDirectory("/app", dir).
-		WithWorkdir("/app").
+
+	return dag.Container().
+		From("ruby:latest").
+		WithServiceBinding("postgresql", m.Postgres(ctx, "11")).
+		WithServiceBinding("memcached", m.Memcached(ctx, "latest")).
+		WithMountedDirectory("/mnt", dir).
+		WithWorkdir("/mnt").
+		WithEnvVariable("RAILS_DB_HOST", "postgresql"). // This is the service name of the postgres container called by rails
+		WithEnvVariable("RAILS_TEST_DB_HOST", "postgresql").
 		WithEnvVariable("RAILS_TEST_DB_NAME", "postgres").
 		WithEnvVariable("RAILS_TEST_DB_USERNAME", "postgres").
 		WithEnvVariable("RAILS_TEST_DB_PASSWORD", "postgres").
 		WithEnvVariable("RAILS_ENV", "test").
 		WithEnvVariable("CI", "true").
 		WithEnvVariable("PGDATESTYLE", "German").
-		WithExec([]string{"apt-get", "-yqq", "update"}).
+		WithExec([]string{"apt-get", "update"}).
 		WithExec([]string{"apt-get", "-yqq", "install", "libpq-dev", "libvips-dev"}).
-		WithExec([]string{"gem", "install", "bundler"}).
+		WithExec([]string{"gem", "install", "bundler", "--version", "~> 2"}).
 		WithExec([]string{"bundle", "install", "--jobs", "4", "--retry", "3"}).
 		WithExec([]string{"bundle", "exec", "rails", "db:create"}).
 		WithExec([]string{"bundle", "exec", "rails", "db:migrate"}).
