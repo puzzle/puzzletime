@@ -42,13 +42,24 @@ func (m *Ci) Build(_ context.Context, dir *dagger.Directory) *dagger.Container {
 }
 
 // Returns the result of haml-lint run against the sources in the provided Directory
-func (m *Ci) Lint(dir *dagger.Directory) *dagger.File {
-	return dag.Container().
+func (m *Ci) Lint(
+	dir *dagger.Directory,
+	// ignore linter failures
+	// +optional
+	// +default=false
+	pass bool) *dagger.File {
+	container := dag.Container().
 		From("ruby:latest").
 		WithMountedDirectory("/mnt", dir).
 		WithWorkdir("/mnt").
-		WithExec([]string{"gem", "install", "haml-lint"}).
-		WithExec([]string{"sh", "-c", "haml-lint -r json . > lint.json || true"}).
+		WithExec([]string{"gem", "install", "haml-lint"})
+	if pass {
+		return container.
+			WithExec([]string{"sh", "-c", "haml-lint -r json . > lint.json || true"}).
+			File("lint.json")
+	}
+	return container.
+		WithExec([]string{"sh", "-c", "haml-lint -r json . > lint.json"}).
 		File("lint.json")
 }
 
@@ -167,8 +178,14 @@ func (m *Ci) BaseTestContainer(_ context.Context, dir *dagger.Directory) *dagger
 }
 
 // Executes all the steps and returns a Results object
-func (m *Ci) Ci(ctx context.Context, dir *dagger.Directory) *Results {
-	lintOutput := m.Lint(dir)
+func (m *Ci) Ci(
+	ctx context.Context,
+	dir *dagger.Directory,
+	// ignore linter failures
+	// +optional
+	// +default=false
+	pass bool) *Results {
+	lintOutput := m.Lint(dir, pass)
 	securityScan := m.Sast(dir)
 	image := m.Build(ctx, dir)
 	sbom := m.Sbom(image)
@@ -185,13 +202,19 @@ func (m *Ci) Ci(ctx context.Context, dir *dagger.Directory) *Results {
 }
 
 // Executes all the steps and returns a Results object
-func (m *Ci) CiIntegration(ctx context.Context, dir *dagger.Directory) *Results {
+func (m *Ci) CiIntegration(
+	ctx context.Context,
+	dir *dagger.Directory,
+	// ignore linter failures
+	// +optional
+	// +default=false
+	pass bool) *Results {
 	var wg sync.WaitGroup
 	wg.Add(5)
 
 	var lintOutput = func() *dagger.File {
 		defer wg.Done()
-		return m.Lint(dir)
+		return m.Lint(dir, pass)
 	}()
 
 	var securityScan = func() *dagger.File {
