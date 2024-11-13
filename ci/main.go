@@ -40,7 +40,7 @@ func (m *Ci) Build(_ context.Context, dir *dagger.Directory) *dagger.Container {
 }
 
 // Returns the result of haml-lint run against the sources in the provided Directory
-func (m *Ci) Lint(ctx context.Context, dir *dagger.Directory) *dagger.File {
+func (m *Ci) Lint(dir *dagger.Directory) *dagger.File {
 	return dag.Container().
 		From("ruby:latest").
 		WithMountedDirectory("/mnt", dir).
@@ -51,7 +51,7 @@ func (m *Ci) Lint(ctx context.Context, dir *dagger.Directory) *dagger.File {
 }
 
 // Returns the Sast report as a file
-func (m *Ci) Sast(ctx context.Context, dir *dagger.Directory) *dagger.File {
+func (m *Ci) Sast(dir *dagger.Directory) *dagger.File {
 	return dag.Container().
 		From("presidentbeef/brakeman:latest").
 		WithMountedDirectory("/app", dir).
@@ -155,8 +155,8 @@ func (m *Ci) Vulnscan(sbom *dagger.File) *dagger.File {
 
 // Executes all the steps and returns a Results object
 func (m *Ci) Ci(ctx context.Context, dir *dagger.Directory) *Results {
-	lintOutput := m.Lint(ctx, dir)
-	securityScan := m.Sast(ctx, dir)
+	lintOutput := m.Lint(dir)
+	securityScan := m.Sast(dir)
 	image := m.Build(ctx, dir)
 	sbom := m.Sbom(image)
 	vulnerabilityScan := m.Vulnscan(sbom)
@@ -172,19 +172,22 @@ func (m *Ci) Ci(ctx context.Context, dir *dagger.Directory) *Results {
 // Executes all the steps and returns a Results object
 func (m *Ci) CiIntegration(ctx context.Context, dir *dagger.Directory) *Results {
 	var wg sync.WaitGroup
-	wg.Add(3)
+	wg.Add(4)
 
 	var lintOutput = func() *dagger.File {
 		defer wg.Done()
-		return m.Lint(ctx, dir)
+		return m.Lint(dir)
 	}()
 
 	var securityScan = func() *dagger.File {
 		defer wg.Done()
-		return m.Sast(ctx, dir)
+		return m.Sast(dir)
 	}()
 
-	//vulnerabilityScan := m.Vulnscan(ctx, m.SbomBuild(ctx, dir))
+	var vulnerabilityScan = func() *dagger.File {
+		defer wg.Done()
+		return m.Vulnscan(m.Sbom(m.Build(ctx, dir)))
+	}()
 
 	var image = func() *dagger.Container {
 		defer wg.Done()
@@ -195,9 +198,9 @@ func (m *Ci) CiIntegration(ctx context.Context, dir *dagger.Directory) *Results 
 	wg.Wait()
 
 	return &Results{
-		LintOutput:   lintOutput,
-		SecurityScan: securityScan,
-		//	VulnerabilityScan: vulnerabilityScan,
-		Image: image,
+		LintOutput:        lintOutput,
+		SecurityScan:      securityScan,
+		VulnerabilityScan: vulnerabilityScan,
+		Image:             image,
 	}
 }
