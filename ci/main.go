@@ -201,7 +201,7 @@ func (m *Ci) Ci(
 	}
 }
 
-// Executes all the steps and returns a Results object
+// Executes all the steps and returns a directory with the results
 func (m *Ci) CiIntegration(
 	ctx context.Context,
 	dir *dagger.Directory,
@@ -209,7 +209,7 @@ func (m *Ci) CiIntegration(
 	// +optional
 	// +default=false
 	pass bool,
-) string {
+) *dagger.Directory {
 	var wg sync.WaitGroup
 	wg.Add(5)
 
@@ -228,12 +228,10 @@ func (m *Ci) CiIntegration(
 		return m.Vulnscan(m.Sbom(m.Build(ctx, dir)))
 	}()
 
-	/*
 	var image = func() *dagger.Container {
 		defer wg.Done()
 		return m.Build(ctx, dir)
 	}()
-	*/
 
 	var testReports = func() *dagger.Directory {
 		defer wg.Done()
@@ -257,14 +255,10 @@ func (m *Ci) CiIntegration(
 
 
 	result_container := dag.Container().
-							From("alpine:latest").
 							WithWorkdir("/tmp/out").
-							//WithExec([]string{"cat", securityScan, "rails", "assets:precompile"}).
-							//WithExec([]string{"sh", "-c", `cat lintOutput > /tmp/out/lint/lint.json`}).
-							WithExec([]string{"/bin/sh", "-c", `echo foo > /tmp/out/foo`}).
-							WithExec([]string{"/bin/sh", "-c", fmt.Sprintf("echo %s > /tmp/out/foo.log", lintOutput)}).
-							WithFile("/tmp/out/scan/", securityScan)
-	//return result_container.Directory(".")
-	result_container.Directory(".")
-	return lintOutput
+							WithFile("/tmp/out/lint/", lintOutput).
+							WithFile("/tmp/out/scan/", securityScan).
+							WithFile("/tmp/out/vuln/", vulnerabilityScan)
+
+	return result_container.Directory(".")
 }
