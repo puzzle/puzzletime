@@ -116,7 +116,6 @@ func (m *Ci) Test(ctx context.Context, dir *dagger.Directory) *dagger.Container 
 		WithExec([]string{"bundle", "exec", "rails", "db:create"}).
 		WithExec([]string{"bundle", "exec", "rails", "db:migrate"}).
 		WithExec([]string{"bundle", "exec", "rails", "assets:precompile"}).
-		Terminal().
 		WithExec([]string{"bundle", "exec", "rails", "test", "test/controllers", "test/domain", "test/fabricators", "test/fixtures", "test/helpers", "test/mailers", "test/models", "test/presenters", "test/support", "test/tarantula"})
 }
 
