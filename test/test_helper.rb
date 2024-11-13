@@ -7,19 +7,19 @@
 
 ENV['RAILS_ENV'] = 'test'
 
-# if ENV['TEST_REPORTS']
-#   require 'simplecov'
-#   require 'simplecov-rcov'
-#   SimpleCov.coverage_dir 'test/coverage'
-#   # use this formatter for jenkins compatibility
-#   SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
-#   SimpleCov.command_name 'Unit Tests'
-#   SimpleCov.start 'rails'
+if ENV['TEST_REPORTS']
+  require 'simplecov'
+  require 'simplecov-rcov'
+  SimpleCov.coverage_dir 'test/coverage'
+  # use this formatter for jenkins compatibility
+  SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
+  SimpleCov.command_name 'Unit Tests'
+  SimpleCov.start 'rails'
 
-#   require 'minitest/reporters'
-#   MiniTest::Reporters.use! [MiniTest::Reporters::DefaultReporter.new,
-#                             MiniTest::Reporters::JUnitReporter.new]
-# end
+  require 'minitest/reporters'
+  Minitest::Reporters.use! [Minitest::Reporters::DefaultReporter.new,
+                            Minitest::Reporters::JUnitReporter.new]
+end
 
 require File.expand_path('../config/environment', __dir__)
 Rails.env = 'test'
