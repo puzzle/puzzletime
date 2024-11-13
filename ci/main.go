@@ -208,7 +208,8 @@ func (m *Ci) CiIntegration(
 	// ignore linter failures
 	// +optional
 	// +default=false
-	pass bool) *Results {
+	pass bool,
+) string {
 	var wg sync.WaitGroup
 	wg.Add(5)
 
@@ -227,10 +228,12 @@ func (m *Ci) CiIntegration(
 		return m.Vulnscan(m.Sbom(m.Build(ctx, dir)))
 	}()
 
+	/*
 	var image = func() *dagger.Container {
 		defer wg.Done()
 		return m.Build(ctx, dir)
 	}()
+	*/
 
 	var testReports = func() *dagger.Directory {
 		defer wg.Done()
@@ -240,6 +243,7 @@ func (m *Ci) CiIntegration(
 	// This Blocks the execution until its counter become 0
 	wg.Wait()
 
+	/*
 	return &Results{
 		TestReports:       testReports,
 		LintOutput:        lintOutput,
@@ -247,4 +251,20 @@ func (m *Ci) CiIntegration(
 		VulnerabilityScan: vulnerabilityScan,
 		Image:             image,
 	}
+	*/
+
+	// TODO: fail on errors of the functions!
+
+
+	result_container := dag.Container().
+							From("alpine:latest").
+							WithWorkdir("/tmp/out").
+							//WithExec([]string{"cat", securityScan, "rails", "assets:precompile"}).
+							//WithExec([]string{"sh", "-c", `cat lintOutput > /tmp/out/lint/lint.json`}).
+							WithExec([]string{"/bin/sh", "-c", `echo foo > /tmp/out/foo`}).
+							WithExec([]string{"/bin/sh", "-c", fmt.Sprintf("echo %s > /tmp/out/foo.log", lintOutput)}).
+							WithFile("/tmp/out/scan/", securityScan)
+	//return result_container.Directory(".")
+	result_container.Directory(".")
+	return lintOutput
 }
