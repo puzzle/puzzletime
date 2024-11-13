@@ -91,10 +91,11 @@ func (m *Ci) Memcached(
 func (m *Ci) Test(ctx context.Context, dir *dagger.Directory) *dagger.Container {
 
 	return dag.Container().
-		From("ruby:latest").
+		From("registry.puzzle.ch/docker.io/ruby:3.2").
+		WithExec([]string{"useradd", "-m", "-u", "1001", "ruby"}).
 		WithServiceBinding("postgresql", m.Postgres(ctx, "11")).
 		WithServiceBinding("memcached", m.Memcached(ctx, "latest")).
-		WithMountedDirectory("/mnt", dir).
+		WithMountedDirectory("/mnt", dir, dagger.ContainerWithMountedDirectoryOpts{Owner: "ruby"}).
 		WithWorkdir("/mnt").
 		WithEnvVariable("RAILS_DB_HOST", "postgresql"). // This is the service name of the postgres container called by rails
 		WithEnvVariable("RAILS_TEST_DB_HOST", "postgresql").
@@ -104,14 +105,18 @@ func (m *Ci) Test(ctx context.Context, dir *dagger.Directory) *dagger.Container 
 		WithEnvVariable("RAILS_ENV", "test").
 		WithEnvVariable("CI", "true").
 		WithEnvVariable("PGDATESTYLE", "German").
+		WithEnvVariable("TZ", "Europe/Zurich").
+		WithEnvVariable("DEBIAN_FRONTEND", "noninteractive").
 		WithExec([]string{"apt-get", "update"}).
-		WithExec([]string{"apt-get", "-yqq", "install", "libpq-dev", "libvips-dev"}).
-		WithExec([]string{"gem", "install", "bundler", "--version", "~> 2"}).
+		WithExec([]string{"apt-get", "-yqq", "install", "libpq-dev", "libvips-dev", "chromium", "graphviz", "imagemagick"}).
+		WithUser("ruby").
+		WithExec([]string{"gem", "update", "--system"}). // update bundler version
+		WithExec([]string{"gem", "install", "bundler", "--version", `~>2`}).
 		WithExec([]string{"bundle", "install", "--jobs", "4", "--retry", "3"}).
 		WithExec([]string{"bundle", "exec", "rails", "db:create"}).
 		WithExec([]string{"bundle", "exec", "rails", "db:migrate"}).
 		WithExec([]string{"bundle", "exec", "rails", "assets:precompile"}).
-		WithExec([]string{"bundle", "exec", "rails", "test"})
+		WithExec([]string{"bundle", "exec", "rails", "test", "test/controllers", "test/domain", "test/fabricators", "test/fixtures", "test/helpers", "test/mailers", "test/models", "test/presenters", "test/support", "test/tarantula"})
 }
 
 // Creates an SBOM for the container
