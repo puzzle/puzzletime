@@ -24,6 +24,7 @@
 /log/*.log
 /tmp
 !/tmp/pids
+out/
 
 test/coverage
 test/reports
