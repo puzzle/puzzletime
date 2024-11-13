@@ -18,16 +18,20 @@ import (
 	"context"
 	"dagger/ci/internal/dagger"
 	"fmt"
-    "sync"
+	"sync"
 )
 
 type Ci struct{}
 
 type Results struct {
-	LintOutput        string
-	SecurityScan      *dagger.File
+	// haml-lint output as json
+	LintOutput *dagger.File
+	// brakeman output as plain text
+	SecurityScan *dagger.File
+	// trivy results as json
 	VulnerabilityScan *dagger.File
-	Image             *dagger.Container
+	// the built image
+	Image *dagger.Container
 }
 
 // Returns a Container built from the Dockerfile in the provided Directory
@@ -36,14 +40,14 @@ func (m *Ci) Build(_ context.Context, dir *dagger.Directory) *dagger.Container {
 }
 
 // Returns the result of haml-lint run against the sources in the provided Directory
-func (m *Ci) Lint(ctx context.Context, dir *dagger.Directory) (string, error) {
+func (m *Ci) Lint(ctx context.Context, dir *dagger.Directory) *dagger.File {
 	return dag.Container().
 		From("ruby:latest").
 		WithMountedDirectory("/mnt", dir).
 		WithWorkdir("/mnt").
 		WithExec([]string{"gem", "install", "haml-lint"}).
-		WithExec([]string{"haml-lint", "-r", "json", "."}).
-		Stdout(ctx)
+		WithExec([]string{"sh", "-c", "haml-lint -r json . > lint.json || true"}).
+		File("lint.json")
 }
 
 // Returns the Sast report as a file
@@ -151,7 +155,7 @@ func (m *Ci) Vulnscan(sbom *dagger.File) *dagger.File {
 
 // Executes all the steps and returns a Results object
 func (m *Ci) Ci(ctx context.Context, dir *dagger.Directory) *Results {
-	lintOutput, _ := m.Lint(ctx, dir)
+	lintOutput := m.Lint(ctx, dir)
 	securityScan := m.Sast(ctx, dir)
 	image := m.Build(ctx, dir)
 	sbom := m.Sbom(image)
@@ -170,9 +174,9 @@ func (m *Ci) CiIntegration(ctx context.Context, dir *dagger.Directory) *Results 
 	var wg sync.WaitGroup
 	wg.Add(3)
 
-	var lintOutput, _ = func() (string, error) {
+	var lintOutput = func() *dagger.File {
 		defer wg.Done()
-		return "empty", error(nil) //m.Lint(ctx, dir)
+		return m.Lint(ctx, dir)
 	}()
 
 	var securityScan = func() *dagger.File {
@@ -188,12 +192,12 @@ func (m *Ci) CiIntegration(ctx context.Context, dir *dagger.Directory) *Results 
 	}()
 
 	// This Blocks the execution until its counter become 0
-        wg.Wait()
+	wg.Wait()
 
 	return &Results{
-		LintOutput:        lintOutput,
-		SecurityScan:      securityScan,
-	//	VulnerabilityScan: vulnerabilityScan,
-		Image:             image,
+		LintOutput:   lintOutput,
+		SecurityScan: securityScan,
+		//	VulnerabilityScan: vulnerabilityScan,
+		Image: image,
 	}
 }
