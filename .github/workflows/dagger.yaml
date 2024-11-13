@@ -24,4 +24,4 @@ jobs:
           # Dagger module to call. Local or Git
           module: .
           # Arguments to pass to CLI
-          args: ci-integration --pass=true --dir=./ export --path ./out/
+          args: ci-integration --pass=true --dir=./ export --path=./out/
