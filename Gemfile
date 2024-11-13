@@ -119,4 +119,7 @@ group :test do
   gem 'selenium-webdriver'
   gem 'webdrivers'
   gem 'webmock'
+  gem 'simplecov'
+  gem 'simplecov-rcov'
+  gem 'minitest'
 end

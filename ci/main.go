@@ -32,6 +32,8 @@ type Results struct {
 	VulnerabilityScan *dagger.File
 	// the built image
 	Image *dagger.Container
+	// the test reports
+	TestReports *dagger.Directory
 }
 
 // Returns a Container built from the Dockerfile in the provided Directory
@@ -87,38 +89,6 @@ func (m *Ci) Memcached(
 		AsService()
 }
 
-// Executes the test suite for the Rails application in the provided Directory
-func (m *Ci) Test(ctx context.Context, dir *dagger.Directory) *dagger.Container {
-
-	return dag.Container().
-		From("registry.puzzle.ch/docker.io/ruby:3.2").
-		WithExec([]string{"useradd", "-m", "-u", "1001", "ruby"}).
-		WithServiceBinding("postgresql", m.Postgres(ctx, "11")).
-		WithServiceBinding("memcached", m.Memcached(ctx, "latest")).
-		WithMountedDirectory("/mnt", dir, dagger.ContainerWithMountedDirectoryOpts{Owner: "ruby"}).
-		WithWorkdir("/mnt").
-		WithEnvVariable("RAILS_DB_HOST", "postgresql"). // This is the service name of the postgres container called by rails
-		WithEnvVariable("RAILS_TEST_DB_HOST", "postgresql").
-		WithEnvVariable("RAILS_TEST_DB_NAME", "postgres").
-		WithEnvVariable("RAILS_TEST_DB_USERNAME", "postgres").
-		WithEnvVariable("RAILS_TEST_DB_PASSWORD", "postgres").
-		WithEnvVariable("RAILS_ENV", "test").
-		WithEnvVariable("CI", "true").
-		WithEnvVariable("PGDATESTYLE", "German").
-		WithEnvVariable("TZ", "Europe/Zurich").
-		WithEnvVariable("DEBIAN_FRONTEND", "noninteractive").
-		WithExec([]string{"apt-get", "update"}).
-		WithExec([]string{"apt-get", "-yqq", "install", "libpq-dev", "libvips-dev", "chromium", "graphviz", "imagemagick"}).
-		WithUser("ruby").
-		WithExec([]string{"gem", "update", "--system"}). // update bundler version
-		WithExec([]string{"gem", "install", "bundler", "--version", `~>2`}).
-		WithExec([]string{"bundle", "install", "--jobs", "4", "--retry", "3"}).
-		WithExec([]string{"bundle", "exec", "rails", "db:create"}).
-		WithExec([]string{"bundle", "exec", "rails", "db:migrate"}).
-		WithExec([]string{"bundle", "exec", "rails", "assets:precompile"}).
-		WithExec([]string{"bundle", "exec", "rails", "test", "test/controllers", "test/domain", "test/fabricators", "test/fixtures", "test/helpers", "test/mailers", "test/models", "test/presenters", "test/support", "test/tarantula"})
-}
-
 // Creates an SBOM for the container
 func (m *Ci) Sbom(container *dagger.Container) *dagger.File {
 	trivy_container := dag.Container().
@@ -135,6 +105,18 @@ func (m *Ci) Sbom(container *dagger.Container) *dagger.File {
 		WithName("cyclonedx.json")
 
 	return sbom
+}
+
+// Executes the test suite for the Rails application in the provided Directory
+func (m *Ci) Test(ctx context.Context, dir *dagger.Directory) *dagger.Directory {
+	return m.BaseTestContainer(ctx, dir).
+		WithServiceBinding("postgresql", m.Postgres(ctx, "11")).
+		WithServiceBinding("memcached", m.Memcached(ctx, "latest")).
+		WithExec([]string{"bundle", "exec", "rails", "db:create"}).
+		WithExec([]string{"bundle", "exec", "rails", "db:migrate"}).
+		WithExec([]string{"bundle", "exec", "rails", "assets:precompile"}).
+		WithExec([]string{"sh", "-c", "bundle exec rails test -v test/controllers test/domain test/fabricators test/fixtures test/helpers test/mailers test/models test/presenters test/support test/tarantula"}).
+		Directory("/mnt/test/reports")
 }
 
 // Builds the container and creates an SBOM for it
@@ -158,6 +140,32 @@ func (m *Ci) Vulnscan(sbom *dagger.File) *dagger.File {
 	return trivy.Sbom(sbom).Report("json")
 }
 
+// Returns a Container with the base setup for running the rails test suite
+func (m *Ci) BaseTestContainer(_ context.Context, dir *dagger.Directory) *dagger.Container {
+	return dag.Container().
+		From("registry.puzzle.ch/docker.io/ruby:3.2").
+		WithExec([]string{"useradd", "-m", "-u", "1001", "ruby"}).
+		WithMountedDirectory("/mnt", dir, dagger.ContainerWithMountedDirectoryOpts{Owner: "ruby"}).
+		WithWorkdir("/mnt").
+		WithEnvVariable("RAILS_DB_HOST", "postgresql"). // This is the service name of the postgres container called by rails
+		WithEnvVariable("RAILS_TEST_DB_HOST", "postgresql").
+		WithEnvVariable("RAILS_TEST_DB_NAME", "postgres").
+		WithEnvVariable("RAILS_TEST_DB_USERNAME", "postgres").
+		WithEnvVariable("RAILS_TEST_DB_PASSWORD", "postgres").
+		WithEnvVariable("RAILS_ENV", "test").
+		WithEnvVariable("CI", "true").
+		WithEnvVariable("PGDATESTYLE", "German").
+		WithEnvVariable("TZ", "Europe/Zurich").
+		WithEnvVariable("DEBIAN_FRONTEND", "noninteractive").
+		WithEnvVariable("TEST_REPORTS", "true").
+		WithExec([]string{"apt-get", "update"}).
+		WithExec([]string{"apt-get", "-yqq", "install", "libpq-dev", "libvips-dev", "chromium", "graphviz", "imagemagick"}).
+		WithUser("ruby").
+		//WithExec([]string{"gem", "update", "--system"}).
+		WithExec([]string{"gem", "install", "bundler", "--version", `~>2`}).
+		WithExec([]string{"bundle", "install", "--jobs", "4", "--retry", "3"})
+}
+
 // Executes all the steps and returns a Results object
 func (m *Ci) Ci(ctx context.Context, dir *dagger.Directory) *Results {
 	lintOutput := m.Lint(dir)
@@ -165,8 +173,10 @@ func (m *Ci) Ci(ctx context.Context, dir *dagger.Directory) *Results {
 	image := m.Build(ctx, dir)
 	sbom := m.Sbom(image)
 	vulnerabilityScan := m.Vulnscan(sbom)
+	testReports := m.Test(ctx, dir)
 
 	return &Results{
+		TestReports:       testReports,
 		LintOutput:        lintOutput,
 		SecurityScan:      securityScan,
 		VulnerabilityScan: vulnerabilityScan,
@@ -199,15 +209,16 @@ func (m *Ci) CiIntegration(ctx context.Context, dir *dagger.Directory) *Results 
 		return m.Build(ctx, dir)
 	}()
 
-	go func() {
+	var testReports = func() *dagger.Directory {
 		defer wg.Done()
-		m.Test(ctx, dir)
+		return m.Test(ctx, dir)
 	}()
 
 	// This Blocks the execution until its counter become 0
 	wg.Wait()
 
 	return &Results{
+		TestReports:       testReports,
 		LintOutput:        lintOutput,
 		SecurityScan:      securityScan,
 		VulnerabilityScan: vulnerabilityScan,
