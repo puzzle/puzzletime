@@ -25,9 +25,3 @@ jobs:
           module: .
           # Arguments to pass to CLI
           args: ci-integration --dir=./
-      - name: Test Reporter
-        uses: dorny/test-reporter@v1.9.1
-        with:
-          name: Minitests
-          path: test/reports/*.xml
-          reporter: java-junit
