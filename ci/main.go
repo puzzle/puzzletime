@@ -47,7 +47,8 @@ func (m *Ci) Lint(
 	// ignore linter failures
 	// +optional
 	// +default=false
-	pass bool) *dagger.File {
+	pass bool,
+) *dagger.File {
 	container := dag.Container().
 		From("ruby:latest").
 		WithMountedDirectory("/mnt", dir).
@@ -184,7 +185,8 @@ func (m *Ci) Ci(
 	// ignore linter failures
 	// +optional
 	// +default=false
-	pass bool) *Results {
+	pass bool,
+) *Results {
 	lintOutput := m.Lint(dir, pass)
 	securityScan := m.Sast(dir)
 	image := m.Build(ctx, dir)
@@ -211,7 +213,7 @@ func (m *Ci) CiIntegration(
 	pass bool,
 ) *dagger.Directory {
 	var wg sync.WaitGroup
-	wg.Add(5)
+	wg.Add(4)
 
 	var lintOutput = func() *dagger.File {
 		defer wg.Done()
@@ -228,10 +230,12 @@ func (m *Ci) CiIntegration(
 		return m.Vulnscan(m.Sbom(m.Build(ctx, dir)))
 	}()
 
+	/*
 	var image = func() *dagger.Container {
 		defer wg.Done()
 		return m.Build(ctx, dir)
 	}()
+	*/
 
 	var testReports = func() *dagger.Directory {
 		defer wg.Done()
@@ -241,24 +245,18 @@ func (m *Ci) CiIntegration(
 	// This Blocks the execution until its counter become 0
 	wg.Wait()
 
-	/*
-	return &Results{
-		TestReports:       testReports,
-		LintOutput:        lintOutput,
-		SecurityScan:      securityScan,
-		VulnerabilityScan: vulnerabilityScan,
-		Image:             image,
-	}
-	*/
-
 	// TODO: fail on errors of the functions!
 
-
+	lintOutputName, _ := lintOutput.Name(ctx)
+	securityScanName, _ := securityScan.Name(ctx)
+	//vulnerabilityScanName, _ := vulnerabilityScan.Name(ctx)
 	result_container := dag.Container().
 							WithWorkdir("/tmp/out").
-							WithFile("/tmp/out/lint/", lintOutput).
-							WithFile("/tmp/out/scan/", securityScan).
-							WithFile("/tmp/out/vuln/", vulnerabilityScan)
+							WithFile(fmt.Sprintf("/tmp/out/lint/%s", lintOutputName), lintOutput).
+							WithFile(fmt.Sprintf("/tmp/out/scan/%s", securityScanName), securityScan).
+							//WithFile("/tmp/out/vuln/", vulnerabilityScan)
+							WithDirectory("/tmp/out/tests/", testReports)
 
+	vulnerabilityScan.Name(ctx)
 	return result_container.Directory(".")
 }
