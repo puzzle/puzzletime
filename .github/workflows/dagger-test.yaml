@@ -8,7 +8,7 @@ jobs:
     runs-on: 'ubuntu-latest'
     steps:
       - uses: actions/checkout@v4
-      - name: 'test'
+      - name: Test
         uses: dagger/dagger-for-github@v7.0.1
         with:
           verb: call
@@ -16,3 +16,11 @@ jobs:
           args: test --dir=./
           version: '0.14.0'
           cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
+      - name: Report
+        uses: dorny/test-reporter@v1.9.1
+        with:
+          name: Minitests
+          path: test/reports/*.xml
+          reporter: java-junit
+          fail-on-empty: 'false'
+          fail-on-error: 'true'
