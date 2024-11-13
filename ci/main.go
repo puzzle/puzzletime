@@ -116,6 +116,7 @@ func (m *Ci) Test(ctx context.Context, dir *dagger.Directory) *dagger.Container 
 		WithExec([]string{"bundle", "exec", "rails", "db:create"}).
 		WithExec([]string{"bundle", "exec", "rails", "db:migrate"}).
 		WithExec([]string{"bundle", "exec", "rails", "assets:precompile"}).
+		Terminal().
 		WithExec([]string{"bundle", "exec", "rails", "test", "test/controllers", "test/domain", "test/fabricators", "test/fixtures", "test/helpers", "test/mailers", "test/models", "test/presenters", "test/support", "test/tarantula"})
 }
 
@@ -177,7 +178,7 @@ func (m *Ci) Ci(ctx context.Context, dir *dagger.Directory) *Results {
 // Executes all the steps and returns a Results object
 func (m *Ci) CiIntegration(ctx context.Context, dir *dagger.Directory) *Results {
 	var wg sync.WaitGroup
-	wg.Add(4)
+	wg.Add(5)
 
 	var lintOutput = func() *dagger.File {
 		defer wg.Done()
@@ -197,6 +198,11 @@ func (m *Ci) CiIntegration(ctx context.Context, dir *dagger.Directory) *Results 
 	var image = func() *dagger.Container {
 		defer wg.Done()
 		return m.Build(ctx, dir)
+	}()
+
+	go func() {
+		defer wg.Done()
+		m.Test(ctx, dir)
 	}()
 
 	// This Blocks the execution until its counter become 0
