@@ -28,8 +28,13 @@ jobs:
       - name: Unittest Report
         uses: dorny/test-reporter@v1.9.1
         with:
-          name: Minitests
+          name: unit-tests
           path: reports/unit-tests/*.xml
           reporter: java-junit
           fail-on-empty: 'false'
           fail-on-error: 'true'
+      - name: archive pipeline artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipeline-artifacts
+          path: reports
