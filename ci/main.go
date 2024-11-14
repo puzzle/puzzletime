@@ -38,7 +38,11 @@ type Results struct {
 
 // Returns a Container built from the Dockerfile in the provided Directory
 func (m *Ci) Build(_ context.Context, dir *dagger.Directory) *dagger.Container {
-	return dag.Container().Build(dir)
+	return dag.Container().
+		WithDirectory("/src", dir).
+		WithWorkdir("/src").
+		Directory("/src").
+		DockerBuild()
 }
 
 // Returns the result of haml-lint run against the sources in the provided Directory
@@ -178,6 +182,11 @@ func (m *Ci) BaseTestContainer(_ context.Context, dir *dagger.Directory) *dagger
 		WithExec([]string{"bundle", "install", "--jobs", "4", "--retry", "3"})
 }
 
+// Publish the Container built from the Dockerfile in the provided registry
+func (m *Ci) Publish(ctx context.Context, dir *dagger.Directory, destImage string) (string, error) {
+	return m.Build(ctx, dir).Publish(ctx, destImage)
+}
+
 // Executes all the steps and returns a Results object
 func (m *Ci) Ci(
 	ctx context.Context,
@@ -226,14 +235,14 @@ func (m *Ci) CiIntegration(
 	}()
 
 	/*
-	var vulnerabilityScan = func() *dagger.File {
-		defer wg.Done()
-		return m.Vulnscan(m.Sbom(m.Build(ctx, dir)))
-	}()
-	var image = func() *dagger.Container {
-		defer wg.Done()
-		return m.Build(ctx, dir)
-	}()
+		var vulnerabilityScan = func() *dagger.File {
+			defer wg.Done()
+			return m.Vulnscan(m.Sbom(m.Build(ctx, dir)))
+		}()
+		var image = func() *dagger.Container {
+			defer wg.Done()
+			return m.Build(ctx, dir)
+		}()
 	*/
 
 	var testReports = func() *dagger.Directory {
@@ -250,11 +259,11 @@ func (m *Ci) CiIntegration(
 	securityScanName, _ := securityScan.Name(ctx)
 	//vulnerabilityScanName, _ := vulnerabilityScan.Name(ctx)
 	result_container := dag.Container().
-							WithWorkdir("/tmp/out").
-							WithFile(fmt.Sprintf("/tmp/out/lint/%s", lintOutputName), lintOutput).
-							WithFile(fmt.Sprintf("/tmp/out/scan/%s", securityScanName), securityScan).
-							WithDirectory("/tmp/out/unit-tests/", testReports)
-							//WithFile(fmt.Sprintf("/tmp/out/vuln/%s", vulnerabilityScanName), vulnerabilityScan)
+		WithWorkdir("/tmp/out").
+		WithFile(fmt.Sprintf("/tmp/out/lint/%s", lintOutputName), lintOutput).
+		WithFile(fmt.Sprintf("/tmp/out/scan/%s", securityScanName), securityScan).
+		WithDirectory("/tmp/out/unit-tests/", testReports)
+	//WithFile(fmt.Sprintf("/tmp/out/vuln/%s", vulnerabilityScanName), vulnerabilityScan)
 	return result_container.
-			Directory(".")
+		Directory(".")
 }
