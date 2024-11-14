@@ -225,12 +225,11 @@ func (m *Ci) CiIntegration(
 		return m.Sast(dir)
 	}()
 
+	/*
 	var vulnerabilityScan = func() *dagger.File {
 		defer wg.Done()
 		return m.Vulnscan(m.Sbom(m.Build(ctx, dir)))
 	}()
-
-	/*
 	var image = func() *dagger.Container {
 		defer wg.Done()
 		return m.Build(ctx, dir)
@@ -254,9 +253,8 @@ func (m *Ci) CiIntegration(
 							WithWorkdir("/tmp/out").
 							WithFile(fmt.Sprintf("/tmp/out/lint/%s", lintOutputName), lintOutput).
 							WithFile(fmt.Sprintf("/tmp/out/scan/%s", securityScanName), securityScan).
-							//WithFile("/tmp/out/vuln/", vulnerabilityScan)
 							WithDirectory("/tmp/out/tests/", testReports)
-
-	vulnerabilityScan.Name(ctx)
-	return result_container.Directory(".")
+							//WithFile(fmt.Sprintf("/tmp/out/vuln/%s", vulnerabilityScanName), vulnerabilityScan)
+	return result_container.
+			Directory(".")
 }
