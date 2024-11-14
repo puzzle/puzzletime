@@ -24,4 +24,12 @@ jobs:
           # Dagger module to call. Local or Git
           module: .
           # Arguments to pass to CLI
-          args: ci-integration --pass=true --dir=./ export --path=./out/
+          args: ci-integration --pass=true --dir=./ export --path=./reports/
+      - name: Unittest Report
+        uses: dorny/test-reporter@v1.9.1
+        with:
+          name: Minitests
+          path: reports/unit-tests/*.xml
+          reporter: java-junit
+          fail-on-empty: 'false'
+          fail-on-error: 'true'

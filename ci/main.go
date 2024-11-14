@@ -213,7 +213,7 @@ func (m *Ci) CiIntegration(
 	pass bool,
 ) *dagger.Directory {
 	var wg sync.WaitGroup
-	wg.Add(4)
+	wg.Add(3)
 
 	var lintOutput = func() *dagger.File {
 		defer wg.Done()
@@ -253,7 +253,7 @@ func (m *Ci) CiIntegration(
 							WithWorkdir("/tmp/out").
 							WithFile(fmt.Sprintf("/tmp/out/lint/%s", lintOutputName), lintOutput).
 							WithFile(fmt.Sprintf("/tmp/out/scan/%s", securityScanName), securityScan).
-							WithDirectory("/tmp/out/tests/", testReports)
+							WithDirectory("/tmp/out/unit-tests/", testReports)
 							//WithFile(fmt.Sprintf("/tmp/out/vuln/%s", vulnerabilityScanName), vulnerabilityScan)
 	return result_container.
 			Directory(".")
