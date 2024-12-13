@@ -12,7 +12,7 @@ class OrdertimesController < WorktimesController
   after_destroy :send_email_notification
 
   def update
-    if entry.employee_id == @user.id
+    if entry.employee_id == @user.id && !entry.worktimes_committed?
       super
     else
       build_splitable
