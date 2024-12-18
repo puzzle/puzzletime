@@ -221,6 +221,7 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
+    docile (1.4.1)
     drb (2.2.0)
       ruby2_keywords
     dry-configurable (1.1.0)
@@ -617,6 +618,14 @@ GEM
       websocket (~> 1.0)
     sentry-raven (3.1.2)
       faraday (>= 1.0)
+    simplecov (0.22.0)
+      docile (~> 1.1)
+      simplecov-html (~> 0.11)
+      simplecov_json_formatter (~> 0.1)
+    simplecov-html (0.13.1)
+    simplecov-rcov (0.3.7)
+      simplecov (>= 0.4.1)
+    simplecov_json_formatter (0.1.4)
     simpleidn (0.2.1)
       unf (~> 0.1.4)
     snaky_hash (2.0.1)
@@ -736,6 +745,7 @@ DEPENDENCIES
   m
   matrix
   mini_racer
+  minitest
   minitest-reporters
   mocha
   nested_form_fields
@@ -778,6 +788,8 @@ DEPENDENCIES
   selectize-rails
   selenium-webdriver
   sentry-raven
+  simplecov
+  simplecov-rcov
   spring
   swagger-blocks
   terser
