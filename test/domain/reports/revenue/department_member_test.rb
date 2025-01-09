@@ -7,7 +7,7 @@
 
 require 'test_helper'
 
-class DepartmentRevenueReportTest < ActiveSupport::TestCase
+class DepartmentMemberRevenueReportTest < ActiveSupport::TestCase
   setup do
     travel_to Date.new(2000, 9, 5)
     Worktime.destroy_all
@@ -143,24 +143,18 @@ class DepartmentRevenueReportTest < ActiveSupport::TestCase
 
     r = report
 
-    assert_equal [devone, devtwo, sys], r.entries
-    assert_equal({ [devone.id, Date.new(2000, 7, 1)] => 6.0,
-                   [devone.id, Date.new(2000, 8, 1)] => 3.0,
-                   [devtwo.id, Date.new(2000, 7, 1)] => 170.0,
-                   [sys.id, Date.new(2000, 7, 1)] => 0.0 }, r.ordertime_hours)
+    assert_equal [devtwo], r.entries
+    assert_equal({ [devtwo.id, Date.new(2000, 7, 1)] => 176.0,
+                   [devtwo.id, Date.new(2000, 8, 1)] => 3.0,
+                 }, r.ordertime_hours)
     assert_equal({ Date.new(2000, 7, 1) => 176.0, Date.new(2000, 8, 1) => 3.0 }, r.total_ordertime_hours_per_month)
-    assert_in_delta(9.0, r.total_ordertime_hours_per_entry(devone))
-    assert_in_delta(170.0, r.total_ordertime_hours_per_entry(devtwo))
-    assert_in_delta(0.0, r.total_ordertime_hours_per_entry(sys))
-    assert_in_delta(4.5, r.average_ordertime_hours_per_entry(devone))
-    assert_in_delta(170.0, r.average_ordertime_hours_per_entry(devtwo))
-    assert_in_delta(0.0, r.average_ordertime_hours_per_entry(sys))
+    assert_in_delta(179.0, r.total_ordertime_hours_per_entry(devtwo))
+    assert_in_delta(89.5, r.average_ordertime_hours_per_entry(devtwo))
     assert_in_delta(179.0, r.total_ordertime_hours_overall)
     assert_in_delta(89.5, r.average_ordertime_hours_overall)
     assert_equal({ [devtwo.id, Date.new(2000, 9, 1)] => 6.4 * 170.0,
-                   [devtwo.id, Date.new(2000, 11, 1)] => 6.4 * 170.0 * 2,
-                   [devone.id, Date.new(2000, 11, 1)] => 6.4 * 140.0,
-                   [sys.id, Date.new(2000, 11, 1)] => 0.0 }, r.planning_hours)
+                   [devtwo.id, Date.new(2000, 11, 1)] => 6.4 * 240.0 * 2,
+                 }, r.planning_hours)
     assert_equal({ Date.new(2000, 9, 1) => 6.4 * 170.0,
                    Date.new(2000, 11, 1) => (6.4 * 170.0 * 2) + (6.4 * 140.0) }, r.total_planning_hours_per_month)
   end
@@ -190,11 +184,10 @@ class DepartmentRevenueReportTest < ActiveSupport::TestCase
 
     r = report(period, sort: '2000-07-01', sort_dir: 'desc')
 
-    assert_equal [devtwo, devone, sys], r.entries
-    assert_equal({ [devone.id, Date.new(2000, 7, 1)] => 6.0,
-                   [devone.id, Date.new(2000, 8, 1)] => 3.0,
-                   [devtwo.id, Date.new(2000, 7, 1)] => 170.0,
-                   [sys.id, Date.new(2000, 7, 1)] => 0.0 }, r.ordertime_hours)
+    assert_equal [devtwo], r.entries
+    assert_equal({ [devtwo.id, Date.new(2000, 7, 1)] => 176.0,
+                   [devtwo.id, Date.new(2000, 8, 1)] => 3.0,
+                 }, r.ordertime_hours)
     assert_equal({ Date.new(2000, 7, 1) => 176.0, Date.new(2000, 8, 1) => 3.0 }, r.total_ordertime_hours_per_month)
   end
 
@@ -220,7 +213,7 @@ class DepartmentRevenueReportTest < ActiveSupport::TestCase
 
     r = report
 
-    assert_equal [devone], r.entries
+    assert_equal [devtwo], r.entries
     assert_empty(r.ordertime_hours)
     assert_empty(r.total_ordertime_hours_per_month)
     assert_equal 0, r.total_ordertime_hours_per_entry(devone)
@@ -231,14 +224,14 @@ class DepartmentRevenueReportTest < ActiveSupport::TestCase
     assert_equal 0, r.average_ordertime_hours_per_entry(sys)
     assert_equal 0, r.total_ordertime_hours_overall
     assert_equal 0, r.average_ordertime_hours_overall
-    assert_equal({ [devone.id, Date.new(2000, 11, 1)] => 6.4 * 140.0 }, r.planning_hours)
+    assert_equal({ [devtwo.id, Date.new(2000, 11, 1)] => 6.4 * 140.0 }, r.planning_hours)
     assert_equal({ Date.new(2000, 11, 1) => 6.4 * 140.0 }, r.total_planning_hours_per_month)
   end
 
   private
 
   def report(report_period = period, report_params = {})
-    Reports::Revenue::Department.new(report_period, report_params)
+    Reports::Revenue::DepartmentMember.new(report_period, report_params)
   end
 
   def period(start_date = Date.new(2000, 7, 1), end_date = Date.new(2000, 11, 30))
