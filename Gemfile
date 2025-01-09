@@ -95,7 +95,7 @@ gem 'paper_trail'
 group :development, :test do
   gem 'better_errors'
   gem 'binding_of_caller'
-  gem 'codez-tarantula', require: 'tarantula-rails3'
+  # gem 'codez-tarantula', require: 'tarantula-rails3'
   gem 'faker'
   gem 'rb-readline'
   gem 'request_profiler'
