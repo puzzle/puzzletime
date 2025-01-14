@@ -1,3 +1,9 @@
+# 2.13
+
+### Features
+* **Umsatztabelle**: Umsatztabelle neu nach OE des Members gruppierbar (62592)
+* **Auftragsmanagement**: Splittansicht bei abgeschlossenen Stunden  (63627)
+
 # 2.12
 
 ### Bug fixes
