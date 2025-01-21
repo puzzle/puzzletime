@@ -3,7 +3,7 @@
 ### Features
 * **Umsatztabelle**: Umsatztabelle neu nach OE des Members gruppierbar (62592)
 * **Auftragsmanagement**: Splittansicht bei abgeschlossenen Stunden  (63627)
-* **Auftrags-Controlling**: fehlen "abgeschlossene" Aufträge ohne Zeiten
+* **Auftrags-Controlling**: abgeschlossene Aufträge ohne Zeiten werden neu auch angezeigt (62593)
 
 # 2.12
 
