@@ -141,7 +141,7 @@ module OrderHelper
 
     order_progress_bar_link(order.order, progress) do
       ''.html_safe.tap do |content|
-        if (progress[:percent]).positive?
+        if progress[:percent].positive?
           content << content_tag(
             :div,
             nil,
@@ -150,7 +150,7 @@ module OrderHelper
           )
         end
 
-        if (progress[:over_budget_percent]).positive?
+        if progress[:over_budget_percent].positive?
           content << content_tag(
             :div,
             nil,

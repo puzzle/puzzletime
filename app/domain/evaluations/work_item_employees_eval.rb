@@ -33,7 +33,7 @@ module Evaluations
     end
 
     def worktime_query(receiver, period = nil, division = nil)
-      super(receiver, period, division).joins(:work_item)
+      super.joins(:work_item)
     end
 
     def set_division_id(division_id = nil)

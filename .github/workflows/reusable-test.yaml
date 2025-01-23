@@ -1,6 +1,7 @@
+---
 name: "Rails Unit Tests"
 
-on:
+"on":
   workflow_call:
     inputs:
       ref:
@@ -58,3 +59,4 @@ jobs:
           bundle exec rails db:migrate
           bundle exec rails assets:precompile
           bundle exec rails test
+...

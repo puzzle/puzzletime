@@ -26,19 +26,19 @@ class OrderUncertainty < ApplicationRecord
 
   belongs_to :order
 
-  enum probability: {
+  enum :probability, {
     improbable: 1,
     low: 2,
     medium: 3,
     high: 4
-  }, _suffix: true
+  }, suffix: true
 
-  enum impact: {
+  enum :impact, {
     none: 1,
     low: 2,
     medium: 3,
     high: 4
-  }, _suffix: true
+  }, suffix: true
 
   validates_by_schema
 

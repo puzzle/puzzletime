@@ -42,9 +42,11 @@ module Apidocs
     def available_includes(controller = controller_class)
       controller
         .serializer
-        &.relationships_to_serialize
-        &.keys
-        &.sort
+        .relationships_to_serialize
+        .keys
+        .sort
+    rescue NoMethodError
+      nil
     end
 
     def include_description(controller = controller_class)

@@ -99,9 +99,7 @@ class Holiday < ApplicationRecord
     end
   end
 
-  def clear_cache
-    Holiday.clear_cache
-  end
+  delegate :clear_cache, to: :Holiday
 
   def to_s
     holiday_date? ? "am #{I18n.l(holiday_date, format: :long)}" : ''

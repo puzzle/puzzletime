@@ -41,9 +41,7 @@ module CrudTestHelper
     true
   end
 
-  def h(text)
-    ERB::Util.h(text)
-  end
+  delegate :h, to: :'ERB::Util'
 
   private
 

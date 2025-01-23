@@ -23,6 +23,7 @@
 #  service_id             :integer
 #
 
+---
 allgemein:
   work_item_id: 3
   portfolio_item: web
@@ -57,3 +58,4 @@ webauftritt:
   offered_hours: 1000
   offered_rate: 140
   offered_total: 140000
+...

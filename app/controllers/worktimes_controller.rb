@@ -50,7 +50,7 @@ class WorktimesController < CrudController
       options[:location] = new_ordertime_path(work_date:)
     end
 
-    super(options)
+    super
   end
 
   # ajax action
@@ -233,7 +233,7 @@ class WorktimesController < CrudController
   end
 
   def ivar_name(klass)
-    klass < Worktime ? Worktime.model_name.param_key : super(klass)
+    klass < Worktime ? Worktime.model_name.param_key : super
   end
 
   def check_has_accounting_post

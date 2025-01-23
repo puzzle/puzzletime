@@ -1,6 +1,7 @@
+---
 name: 'Lint and test on pull request'
 
-on:
+"on":
   pull_request:
     branches:
       - 'master'
@@ -20,3 +21,4 @@ jobs:
     uses: ./.github/workflows/reusable-test.yaml
     with:
       ref: ${{ github.head_ref }}
+...

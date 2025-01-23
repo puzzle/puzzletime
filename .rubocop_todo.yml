@@ -6,6 +6,9 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
+---
+# FIXME: Fix these, piece by piece
+
 # Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBrackets.
@@ -543,3 +546,4 @@ Style/StringConcatenation:
 # URISchemes: http, https
 Layout/LineLength:
   Max: 234
+...

@@ -167,19 +167,11 @@ class InvoicesController < CrudController
   end
 
   def checked_work_item_ids
-    if autoselect_all?
-      work_items_for_period(entry.period_from, entry.period_to).pluck(:id)
-    else
-      entry.work_item_ids.presence
-    end
+    entry.work_item_ids.presence
   end
 
   def checked_employee_ids
-    if autoselect_all?
-      employees_for_period(entry.period_from, entry.period_to).pluck(:id)
-    else
-      entry.employee_ids.presence
-    end
+    entry.employee_ids.presence
   end
 
   def billing_clients

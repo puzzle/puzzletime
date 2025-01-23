@@ -106,7 +106,7 @@ class OrderServicesController < ApplicationController
                     .order(:ticket)
                     .distinct
                     .pluck(:ticket)
-                    .select(&:present?)
+                    .compact_blank
   end
 
   def set_filter_accounting_posts

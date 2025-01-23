@@ -16,7 +16,7 @@ module Employees
     end
 
     def omniauth_providers_active
-      Settings.auth&.omniauth&.map(&:second)&.map(&:active)
+      Settings.dig(:auth, :omniauth)&.map(&:second)&.map(&:active)
     end
 
     def single_omniauth_provider?
