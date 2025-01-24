@@ -54,6 +54,7 @@ gem 'rails_autolink'
 gem 'rails-erd'
 gem 'rails-i18n'
 gem 'request_store'
+gem 'rexml'
 gem 'rqrcode'
 gem 'rswag-ui'
 gem 'rubocop'
@@ -66,6 +67,7 @@ gem 'seed-fu'
 gem 'swagger-blocks'
 gem 'validates_by_schema'
 gem 'validates_timeliness'
+gem 'xmlrpc'
 
 # Error reporting, they are required in their respective initializers
 gem 'airbrake', require: false
