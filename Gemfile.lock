@@ -676,6 +676,8 @@ GEM
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
+    xmlrpc (0.3.3)
+      webrick
     xpath (3.2.0)
       nokogiri (~> 1.8)
     yard (0.9.34)
@@ -758,6 +760,7 @@ DEPENDENCIES
   rb-readline
   request_profiler
   request_store
+  rexml
   rqrcode
   rswag-ui
   rubocop
@@ -781,6 +784,7 @@ DEPENDENCIES
   web-console
   webdrivers
   webmock
+  xmlrpc
 
 BUNDLED WITH
    2.4.6
