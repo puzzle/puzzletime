@@ -46,6 +46,8 @@ PuzzleTime aus dem Git Repository klonen, dazu muss Git installiert sein:
 
 ### Setup
 
+
+
 Ruby Gem Dependencies installieren (alle folgenden Befehle im PuzzleTime Verzeichnis ausführen):
 
     bundle
@@ -62,6 +64,9 @@ Starten des Entwicklungsservers:
 
     rails server
 
+***Wichtig*** Um die Standard-DB zu verwenden, muss beim Starten des Servers die folgende ENV-Variable gesetzt werden: `AUTH_DB_ACTIVE=true`
+
+
 oder gleich aller wichtigen Prozesse:
 
     gem install foreman
@@ -74,10 +79,10 @@ oder gleich aller wichtigen Prozesse:
 
 | Name | Benutzername | Rolle | Passwort |
 | --- | --- | --- | --- |
-| Mark Waber | mw | manager | a |
-| Andreas Rava | ar | manager | a |
-| Pascal Zumkehr | pz | user | a |
-| Daniel Illi | di | user | a |
+| Mark Waber | MW | manager | a |
+| Andreas Rava | AR | manager | a |
+| Pascal Zumkehr | PW | user | a |
+| Daniel Illi | DI | user | a |
 
 Weitere Employees können in `db/seeds/development/employees.rb` hinzugefügt werden.
 
