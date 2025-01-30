@@ -1,4 +1,7 @@
+# frozen_string_literal: true
+
 namespace :crm_migration do
+  desc 'convenience task which creates a MOCK mapping between all the crm_keys found in the models Client Employee Contact AdditionalCrmOrder Order. Creates a .csv containing this mapping (default name: ids_map.csv)'
   task create_mock_data_mapping: :environment do
     models = %w[Client Employee Contact AdditionalCrmOrder Order]
 
@@ -9,13 +12,14 @@ namespace :crm_migration do
 
       ids = model.where.not(crm_key: nil).pluck(:crm_key).uniq
 
-      # Map each unique user_id to an index, starting from 1
+      # Map each unique user_id to an index, starting from 0
       ids.each do |old_key|
         ids_map << [old_key, index]
         index += 1
       end
     end
 
+    # writes the generated mapping of (old_crm_key, new_crm_key) as a new line into the csv
     CSV.open('ids_map.csv', 'w') do |csv|
       ids_map.each do |user_id, idx|
         csv << [user_id, idx] # Write each tuple as a row
@@ -51,6 +55,9 @@ namespace :crm_migration do
     puts 'All database update complete.'
   end
 
+  # Helper method which prompts for the file path of the .csv which contains the mappings of (old_crm_key, new_crm_key)
+  # arguments: -
+  # returns: the file path that was provided by the user
   def prompt_for_file_path
     puts 'Enter the path to the CSV file (reading will NOT expect header line!):'
     file_path = $stdin.gets.chomp
@@ -63,6 +70,9 @@ namespace :crm_migration do
     file_path
   end
 
+  # Helper method which builds a hash table containing the mapping of (old_crm_key, new_crm_key) according to the specified .csv
+  # arguments: [file_path] the file path to the .csv containing the mapping of (old_crm_key, new_crm_key)
+  # returns: the hash table
   def build_mapping(file_path)
     mapping = {}
     CSV.foreach(file_path, headers: false) do |row|
@@ -80,7 +90,13 @@ namespace :crm_migration do
     mapping
   end
 
-  # Helper: Perform a dry run and return missing IDs
+  # Helper method: Perform a dry run of the replacements of all crm_keys in a given model. If for one record none of the following apply
+  #   - the crm_key in this record is NOT specified in the provided mapping
+  #   - the old_crm_key in the provided mapping is nil or the empty string ''
+  # then the crm_key of the current record is saved and the dry_run exits after iterating over all records in the current model
+  # arguments: [model] the model object, for which the dry run should be executed
+  #            [mapping] the hash table containing the mappings (old_crm_key, new_crm_key)
+  # returns: -
   def perform_dry_run(model, mapping)
     missing_ids = []
     model.find_each do |client|
@@ -89,13 +105,18 @@ namespace :crm_migration do
     end
 
     if missing_ids.any?
-      warn "[#{model}] Dry-run detected the following missing crm_keys:" + missing_ids.join(', ')
+      warn "[#{model}] Dry-run detected the following missing crm_keys in the provided mapping (.csv):" + missing_ids.join(', ')
       exit 1
     else
       puts "[#{model}] Dry-run successful. All necessary mappings are present."
     end
   end
 
+  # Helper method to perform the actual database update on a model according to a provided mapping. If a crm_key is '' or nil, this record is skipped and no changes are made to the crm_key.
+  # Aborts with exit status 1 if it encounters a crm_key, which the mapping contains mapping for.
+  # arguments: [model] the model object, for which the dry run should be executed
+  #            [mapping] the hash table containing the mappings (old_crm_key, new_crm_key)
+  # returns: -
   def perform_db_update(model, mapping)
     model.find_each do |client|
       old_key = client.crm_key.to_s
