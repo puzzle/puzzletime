@@ -17,6 +17,7 @@
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
+---
 system_technician:
   name: System Technician
   billable: true
@@ -69,3 +70,4 @@ management_assistant:
   billable: false
   level: true
   employment_role_category: assistant
+...

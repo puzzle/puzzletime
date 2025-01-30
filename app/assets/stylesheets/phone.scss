@@ -3,99 +3,105 @@
 //  or later. See the COPYING file at the top-level directory or at
 //  https://github.com/puzzle/puzzletime.
 
+:root {
+  --bg-color: #fff;
+  --txt-color: #333;
+  --link-color: #0087e3;
+  --subtitle-color: #4a4a4a;
+}
 
 body {
-    background:     #fff;
-    font-size:      16pt;
-    font-family:    "trebuchet ms", helvetica, sans-serif;
-    color:          #333;
-    padding:        0px;
-    margin:         0px;
+  background: var(--bg-color);
+  color: var(--txt-color);
+  font-family: "trebuchet ms", helvetica, sans-serif;
+  font-size: 16pt;
+  margin: 0;
+  padding: 0;
 }
 
 p {
-    margin-bottom:  20px;
+  margin-bottom: 20px;
 }
 
 a {
-    color:          #0087e3 ;
-    text-decoration: underline;
+  color: var(--link-color);
+  text-decoration: underline;
 }
 
 a:hover {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 a.symbol {
-	text-decoration: none;
-	font-weight: 	 bold;
-	font-size: 		 16px;
+  font-size: 16px;
+  font-weight: bold;
+  text-decoration: none;
 }
 
 a img {
-	border:			0;
+  border: 0;
 }
 
 h1 {
-    font-size:      20pt;
-    font-weight:    normal;
-    margin-bottom:  10px;
-	padding-left:	5px;
+  font-size: 20pt;
+  font-weight: normal;
+  margin-bottom: 10px;
+  padding-left: 5px;
 }
 
 h2 {
-    font-size:      18pt;
-    font-weight:    bold;
-	padding-left:	5px;
+  font-size: 18pt;
+  font-weight: bold;
+  padding-left: 5px;
 }
 
 h3 {
-    font-size:      16pt;
-    font-weight:    bold;
-    color:          #4a4a4a;
-	padding-left:	5px;
+  color: var(--subtitle-color);
+  font-size: 16pt;
+  font-weight: bold;
+  padding-left: 5px;
 }
 
 table {
-    font-size:      16pt;
+  font-size: 16pt;
 }
 
 td {
-    padding:   		5px;
-	padding-top:	8pt;
-	padding-bottom: 8pt;
-	vertical-align: top;
+  padding: 5px;
+  padding-top: 8pt;
+  padding-bottom: 8pt;
+  vertical-align: top;
 }
 
 textarea, input, select {
-    font-size:      14px;
-    font-family:    sans-serif;
-    line-height:    16px;
+  font-size: 14px;
+  font-family: sans-serif;
+  line-height: 16px;
 }
 
 th.periodHead {
-    text-align:     right;
+  text-align: right;
 }
 
 .uneven {
-    background-color: #C9D8FF;
-	white-space: nowrap;
+  background-color: #C9D8FF;
+  white-space: nowrap;
 }
 
 #notice {
-    font-weight:    bold;
-    margin:         10px;
-    margin-top:     10px;
-    margin-bottom:  0px;
-    color:          #e47400;
+  font-weight: bold;
+  margin: 10px;
+  margin-top: 10px;
+  margin-bottom: 0;
+  color: #e47400;
 }
 
 .notification {
-    border: 2px solid #C9D8FF;
-    background-color: #f0f0f0;
-    margin: 0;
-    margin-top: -16px;
-	margin-bottom: 10px;
-	padding: 2px;
-    list-style-type: none;
+  border: 2px solid #C9D8FF;
+  background-color: #f0f0f0;
+  margin: 0;
+  margin-top: -16px;
+  margin-bottom: 10px;
+  padding: 2px;
+  list-style-type: none;
 }

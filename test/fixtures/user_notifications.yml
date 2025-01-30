@@ -14,7 +14,9 @@
 #  message   :text             not null
 #
 
+---
 hello:
   date_from: 2014-03-05
   date_to: 2014-02-05
   message: Hello World
+...

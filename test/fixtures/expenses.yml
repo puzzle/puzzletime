@@ -17,6 +17,7 @@
 #  submission_date    :date
 #
 
+---
 pending:
   employee_id: 6
   kind: training
@@ -67,4 +68,4 @@ payed:
   reimbursement_date: 2019-02-01
   reviewer_id: 7
   reviewed_at: 2019-01-20 14:32:00
-
+...

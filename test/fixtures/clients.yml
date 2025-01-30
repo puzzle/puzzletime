@@ -20,13 +20,14 @@
 
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
+---
 puzzle:
-  id:      1
+  id: 1
   work_item_id: 1
   allow_local: true
 
 swisstopo:
-  id:      2
+  id: 2
   work_item_id: 2
   last_invoice_number: 1
   allow_local: true
@@ -35,3 +36,4 @@ pbs:
   id: 3
   work_item_id: 11
   allow_local: true
+...

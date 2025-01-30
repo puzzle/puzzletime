@@ -13,6 +13,7 @@
 #  active :boolean          default(TRUE), not null
 #
 
+---
 web:
   name: Webapplikationen
   active: true
@@ -24,3 +25,4 @@ mobile:
 iaas:
   name: IaaS
   active: false
+...

@@ -3,7 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
+---
 de-CH:
 
   errors:
@@ -23,3 +23,4 @@ de-CH:
       date: "%d.%m.%Y"
       time: '%H:%M'
       datetime: "%d.%m.%Y %H:%M"
+...

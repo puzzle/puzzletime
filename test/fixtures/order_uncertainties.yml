@@ -21,6 +21,7 @@
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
+---
 atomic_desaster:
   order: puzzletime
   type: OrderRisk
@@ -36,3 +37,4 @@ world_domination:
   probability: 2
   impact: 4
   measure: Declare world peace
+...
