@@ -3,7 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
+---
 de-CH:
   activerecord:
     models:
@@ -442,3 +442,4 @@ de-CH:
           attributes:
             e_bill_account_key:
               number: muss eine 17-stellige Zahl sein und mit 4110 beginnen
+...

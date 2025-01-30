@@ -6,7 +6,7 @@
 
 # Translations of all crud strings.
 # See also I18nHelper#translate_inheritable and #translate_association.
-
+---
 de-CH:
   # global scope
   global:
@@ -79,3 +79,4 @@ de-CH:
       flash:
         success: "%{model} wurde erfolgreich gelöscht."
         failure: "%{model} konnte nicht gelöscht werden."
+...

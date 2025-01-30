@@ -56,7 +56,7 @@ class UserNotification < ApplicationRecord
     def holiday_message(holiday)
       date = I18n.l(holiday.holiday_date, format: :long)
       expected_hours = format('%01.2f', holiday.musthours_day)
-      
+
       "#{date} ist ein Feiertag (#{expected_hours} Stunden Sollarbeitszeit)"
     end
   end

@@ -25,6 +25,7 @@
 #  grouping           :integer          default("accounting_posts"), not null
 #
 
+---
 webauftritt_may:
   order: webauftritt
   billing_date: 2015-06-15
@@ -36,3 +37,4 @@ webauftritt_may:
   period_to: 2006-12-31
   status: draft
   billing_address: swisstopo
+...

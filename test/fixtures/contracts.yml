@@ -18,6 +18,7 @@
 #  notes          :text
 #
 
+---
 puzzletime:
   number: "asdf1234"
   start_date: 2014-01-01
@@ -33,3 +34,4 @@ webauftritt:
   payment_period: 45
   reference: "order webauftritt 1234"
   sla: "Reaktionszeit: 1ms"
+...

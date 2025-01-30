@@ -3,6 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
+---
 de-CH:
   version:
     model:
@@ -50,3 +51,4 @@ de-CH:
         add: Erfassen
 
   expenses_reviews: *expenses
+...

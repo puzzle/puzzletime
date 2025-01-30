@@ -13,6 +13,7 @@
 #  active :boolean          default(TRUE), not null
 #
 
+---
 software:
   name: Software Entwicklung
   active: true
@@ -28,3 +29,4 @@ beratung:
 kanalarbeiten:
   name: Kanalarbeiten
   active: false
+...
