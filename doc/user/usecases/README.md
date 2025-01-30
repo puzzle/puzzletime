@@ -1,6 +1,6 @@
 
 # Anwendungsfälle
-Nachfolgend werden die wichtigsten Anwendungsfälle, die mit PuzzleTime abgewickelt werden können, beschrieben. 
+Nachfolgend werden die wichtigsten Anwendungsfälle, die mit PuzzleTime abgewickelt werden können, beschrieben.
 
 ## Auftragswesen
 

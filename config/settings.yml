@@ -82,6 +82,13 @@ highrise:
   url: <%= ENV['RAILS_HIGHRISE_URL'] || 'https://highrisehq.com' %>
   api_token: <%= ENV['RAILS_HIGHRISE_TOKEN'] %>
 
+odoo:
+  api_url: <%= ENV['RAILS_ODOO_API_URL'] %>
+  database: <%= ENV['RAILS_ODOO_DATABASE'] %>
+  user: <%= ENV['RAILS_ODOO_USER'] %>
+  api_token: <%= ENV['RAILS_ODOO_PASSWORD'] %>
+  url: <%= ENV['RAILS_ODOO_BASE_URL'] %>
+
 small_invoice:
   url: https://api.smallinvoice.com
   api_token: <%= ENV['RAILS_SMALL_INVOICE_TOKEN'] %>

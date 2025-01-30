@@ -1,6 +1,7 @@
+---
 name: 'Reusable: Build and push image'
 
-on:
+"on":
   workflow_call:
     inputs:
       environment:
@@ -54,3 +55,4 @@ jobs:
           push: ${{ inputs.push }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+...

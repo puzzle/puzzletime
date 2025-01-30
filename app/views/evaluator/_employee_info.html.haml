@@ -72,7 +72,7 @@
           %label
             Verpflegungsentschädigung
           - if @period
-            .muted #{@period}
+            .muted = @period
           - else
             .muted Diesen Monat
             .muted Letzter Monat
@@ -80,20 +80,21 @@
           .employee-info-primary-value
           - if p = @period
             .muted
-              = "#{employee_meal_compensation_days(employee, p)} T"
+              #{employee_meal_compensation_days(employee, p)} T
               - if current_user.management?
                 = link_to image_tag('lupe.gif', size: '19x11', alt: 'Details'),
                   meal_compensation_path(employee, { start_date: p.start_date, end_date: p.end_date })
           - else
-            - p = Period.current_month
-            - p2 = Period.parse('-1m')
+            :ruby
+              p = Period.current_month
+              p2 = Period.parse('-1m')
             .muted
-              = "#{employee_meal_compensation_days(employee, p)} T"
+              #{employee_meal_compensation_days(employee, p)} T
               - if current_user.management?
                 = link_to image_tag('lupe.gif', size: '19x11', alt: 'Details'),
                   meal_compensation_path(employee, { start_date: p.start_date, end_date: p.end_date })
             .muted
-              = "#{employee_meal_compensation_days(employee, p2)} T"
+              #{employee_meal_compensation_days(employee, p2)} T
               - if current_user.management?
                 = link_to image_tag('lupe.gif', size: '19x11', alt: 'Details'),
                   meal_compensation_path(employee, { start_date: p2.start_date, end_date: p2.end_date })

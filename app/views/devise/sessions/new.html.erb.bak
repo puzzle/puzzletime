@@ -2,12 +2,12 @@
 
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
   <div class="field">
-    <%= f.label :shortname %><br />
+    <%= f.label :shortname %><br>
     <%= f.text_field :shortname, autofocus: true, autocomplete: "shortname" %>
   </div>
 
   <div class="field">
-    <%= f.label :password %><br />
+    <%= f.label :password %><br>
     <%= f.password_field :password, autocomplete: "current-password" %>
   </div>
 

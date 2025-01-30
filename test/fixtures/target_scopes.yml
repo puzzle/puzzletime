@@ -17,6 +17,7 @@
 #  rating_red_description    :string
 #
 
+---
 time:
   name: Termin
   icon: time
@@ -31,3 +32,4 @@ quality:
   name: Qualität
   icon: star-empty
   position: 30
+...

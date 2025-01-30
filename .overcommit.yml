@@ -1,0 +1,243 @@
+---
+CommitMsg:
+  CapitalizedSubject:
+    enabled: true
+  EmptyMessage:
+    enabled: true
+  HardTabs:
+    enabled: true
+  MessageFormat:
+    enabled: true
+  RussianNovel:
+    enabled: true
+  SingleLineSubject:
+    enabled: true
+  SpellCheck:
+    enabled: true
+  TextWidth:
+    enabled: true
+  TrailingPeriod:
+    enabled: true
+
+PostCheckout:
+  BundleInstall:
+    enabled: true
+  IndexTags:
+    enabled: true
+  NpmInstall:
+    enabled: true
+  SubmoduleStatus:
+    enabled: true
+  YarnInstall:
+    enabled: true
+
+PostCommit:
+  BundleInstall:
+    enabled: true
+  Commitplease:
+    enabled: false
+  GitGuilt:
+    enabled: true
+  IndexTags:
+    enabled: true
+  NpmInstall:
+    enabled: true
+  SubmoduleStatus:
+    enabled: true
+  YarnInstall:
+    enabled: true
+
+PostMerge:
+  BundleInstall:
+    enabled: true
+  IndexTags:
+    enabled: true
+  NpmInstall:
+    enabled: true
+  SubmoduleStatus:
+    enabled: true
+  YarnInstall:
+    enabled: true
+
+PostRewrite:
+  BundleInstall:
+    enabled: true
+  IndexTags:
+    enabled: true
+  NpmInstall:
+    enabled: true
+  SubmoduleStatus:
+    enabled: true
+  YarnInstall:
+    enabled: true
+
+PreCommit:
+  AuthorEmail:
+    enabled: true
+  AuthorName:
+    enabled: true
+  BrokenSymlinks:
+    enabled: true
+  BundleAudit:
+    enabled: true
+  BundleCheck:
+    enabled: true
+  BundleOutdated:
+    enabled: true
+  CaseConflicts:
+    enabled: true
+  ChamberSecurity:
+    enabled: true
+  CssLint:
+    enabled: true
+    exclude:
+      - vendor/assets/stylesheets/jquery*
+  ErbLint:
+    enabled: true
+  ExecutePermissions:
+    enabled: true
+    exclude:
+      - bin/**/*
+      - git-hooks/**/*
+  Fasterer:
+    enabled: true
+  FileSize:
+    enabled: true
+  FixMe:
+    enabled: true
+  ForbiddenBranches:
+    enabled: true
+  LicenseFinder:
+    # FIXME: Enable in the end
+    enabled: false
+  HamlLint:
+    enabled: true
+    exclude:
+      - app/views/employee_mailer/worktime_commit_reminder_mail.html.haml
+      - app/views/employee_mailer/worktime_deleted_mail.html.haml
+      - app/views/layouts/mailer.html.haml
+
+  HardTabs:
+    enabled: true
+  HtmlHint:
+    enabled: true
+  HtmlTidy:
+    enabled: true
+  ImageOptim:
+    enabled: true
+    pngout: false  # Windows
+  JsHint:
+    enabled: true
+    exclude:
+      - vendor/assets/javascripts/chartjs-plugin-annotation.min.js
+      - vendor/assets/javascripts/jquery-ui-datepicker-i18n.js
+      - vendor/assets/javascripts/modernizr-custom.js
+      - vendor/assets/javascripts/waypoints/**/*
+  JsLint:
+    enabled: true
+    exclude:
+      - vendor/**/*
+  JsonSyntax:
+    enabled: true
+  LineEndings:
+    enabled: true
+    exclude:
+      # FIXME: Remove in the end
+      - config/initializers/highrise.rb
+      - "**/*.ttf"
+      - "**/*.eot"
+      - "**/*.woff"
+      - "**/*.gif"
+      - "**/*.png"
+      - "**/*.ico"
+  LocalPathsInGemfile:
+    enabled: true
+  MergeConflicts:
+    enabled: true
+  RailsBestPractices:
+    enabled: true
+  RailsSchemaUpToDate:
+    enabled: true
+  Reek:
+    enabled: true
+    exclude:
+      # FIXME: Remove in the end
+      - config/initializers/highrise.rb
+  RuboCop:
+    enabled: true
+    exclude:
+      # FIXME: Remove in the end
+      - config/initializers/highrise.rb
+  RubyLint:  # Does not play well with Rails
+    enabled: false
+  RubySyntax:
+    enabled: true
+    exclude:
+      # FIXME: Remove in the end
+      - config/initializers/highrise.rb
+  ScssLint:
+    enabled: true
+    exclude:
+      # FIXME: Fix these, piece by piece
+      - app/assets/stylesheets/_absence.scss
+      - app/assets/stylesheets/_employees.scss
+      - app/assets/stylesheets/_evaluator.scss
+      - app/assets/stylesheets/_graph.scss
+      - app/assets/stylesheets/_header.scss
+      - app/assets/stylesheets/_icons.scss
+      - app/assets/stylesheets/_mixins.scss
+      - app/assets/stylesheets/_order_comments.scss
+      - app/assets/stylesheets/_order_uncertainty.scss
+      - app/assets/stylesheets/_orders.scss
+      - app/assets/stylesheets/_reports_revenue.scss
+      - app/assets/stylesheets/_reports_workload.scss
+      - app/assets/stylesheets/_worktimes.scss
+      - app/assets/stylesheets/components/_expense_reviews.scss
+      - app/assets/stylesheets/components/_expenses.scss
+      - app/assets/stylesheets/components/_form.scss
+      - app/assets/stylesheets/components/_invoices.scss
+      - app/assets/stylesheets/components/_nav_tabs.scss
+      - app/assets/stylesheets/components/_plannings.scss
+      - app/assets/stylesheets/components/_selectize.scss
+      - app/assets/stylesheets/components/_table.scss
+      - app/assets/stylesheets/phone.scss
+      - app/assets/stylesheets/print.scss
+      - app/assets/stylesheets/puzzletime.scss
+
+      # Vendor
+      - vendor/assets/stylesheets/jquery-ui-1.10.0.custom.scss
+      - app/assets/stylesheets/_bootstrap_variables.scss
+  ShellCheck:
+    enabled: true
+  Sqlint:
+    enabled: true
+  Standard:
+    enabled: true
+    exclude:
+      - vendor/assets/javascripts/chartjs-plugin-annotation.min.js
+      - vendor/assets/javascripts/jquery-ui-datepicker-i18n.js
+      - vendor/assets/javascripts/modernizr-custom.js
+      - vendor/assets/javascripts/waypoints/**/*
+  Stylelint:  # errors
+    enabled: false
+  TrailingWhitespace:
+    enabled: true
+  YamlLint:
+    enabled: true
+  YamlSyntax:  # Problems with newer psych
+    enabled: false
+  YarnCheck:
+    enabled: true
+
+PrePush:
+  Brakeman:
+    enabled: true
+  Minitest:
+    enabled: true
+  ProtectedBranches:
+    enabled: true
+
+PreRebase:
+  MergedCommits:
+    enabled: true
+...

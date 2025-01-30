@@ -16,23 +16,25 @@
 
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
+---
 vacation:
-  id:    1
-  name:  Ferien
+  id: 1
+  name: Ferien
   payed: true
   vacation: true
 
 civil_service:
-  id:    2
-  name:  Zivildienst
+  id: 2
+  name: Zivildienst
   payed: true
 
 doctor:
-  id:    3
-  name:  Arztbesuch
+  id: 3
+  name: Arztbesuch
   payed: false
 
 compensation:
-  id:    4
-  name:  Überstundenkompensation
+  id: 4
+  name: Überstundenkompensation
   payed: false
+...

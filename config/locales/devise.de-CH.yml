@@ -1,5 +1,5 @@
 # Additional translations at https://github.com/plataformatec/devise/wiki/I18n
-
+---
 de-CH:
   devise:
     confirmations:
@@ -63,3 +63,4 @@ de-CH:
       not_saved:
         one: "1 Fehler verhinderte das speichern von %{resource}:"
         other: "%{count} Fehler verhinderte das speichern von %{resource}:"
+...

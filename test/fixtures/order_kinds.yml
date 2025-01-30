@@ -12,6 +12,7 @@
 #  name :string           not null
 #
 
+---
 projekt:
   name: Projekt
 
@@ -20,3 +21,4 @@ mandat:
 
 schulung:
   name: Schulung
+...

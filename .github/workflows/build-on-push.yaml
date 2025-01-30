@@ -1,6 +1,7 @@
+---
 name: 'Lint, test and image build on push'
 
-on:
+"on":
   push:
     branches:
       - master
@@ -80,3 +81,4 @@ jobs:
     secrets:
       dependency_track_url: ${{ secrets.DEPTRACK_URL }}
       dependency_track_api_key: ${{ secrets.DEPTRACK_API_KEY }}
+...
