@@ -7,7 +7,7 @@ CommitMsg:
   HardTabs:
     enabled: true
   MessageFormat:
-    enabled: true
+    enabled: false
   RussianNovel:
     enabled: true
   SingleLineSubject:
