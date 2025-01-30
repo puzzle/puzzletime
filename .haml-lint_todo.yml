@@ -6,6 +6,8 @@
 # Note that changes in the inspected code, or installation of new
 # versions of Haml-Lint, may require this file to be generated again.
 
+---
+# FIXME: Fix these, piece by piece
 linters:
 
   # Offense count: 281
@@ -91,6 +93,7 @@ linters:
     exclude:
       - "app/views/design_guide/index.html.haml"
       - "app/views/order_reports/_list.html.haml"
+      - "app/views/evaluator/_employee_info.html.haml"
 
   # Offense count: 3
   ClassAttributeWithStaticValue:
@@ -127,3 +130,4 @@ linters:
       - "app/views/workload_report/_list.html.haml"
       - "app/views/workload_report/_summary.html.haml"
       - "app/views/worktimes_report/_report_header.html.haml"
+...

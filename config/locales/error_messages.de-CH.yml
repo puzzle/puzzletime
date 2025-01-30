@@ -3,7 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
+---
 de-CH:
   error:
     crm:
@@ -17,3 +17,4 @@ de-CH:
         'Der Member mit dem LDAP Name: "%{ldapname}" konnte nicht gefunden werden.'
     message:
       invalid_email: 'ist keine gültige Email Adresse'
+...

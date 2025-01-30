@@ -1,6 +1,7 @@
+---
 name: 'Code Style Review'
 
-on:
+"on":
   workflow_call:
 
 jobs:
@@ -36,3 +37,4 @@ jobs:
           -reporter=github-pr-review \
           -level=error \
           -diff="git diff $DIFF_BRANCH"
+...

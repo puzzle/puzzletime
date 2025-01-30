@@ -66,7 +66,7 @@ class Employment < ApplicationRecord
       end
     end
 
-    private 
+    private
 
     def condition_query(period)
       [ start_condition(period), end_condition(period)]

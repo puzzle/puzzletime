@@ -16,6 +16,7 @@
 #  default  :boolean          default(FALSE), not null
 #
 
+---
 offeriert:
   name: Offeriert
   style: info
@@ -32,3 +33,4 @@ abgeschlossen:
   style: danger
   position: 20
   closed: true
+...

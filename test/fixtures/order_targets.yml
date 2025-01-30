@@ -17,6 +17,7 @@
 #  updated_at      :datetime
 #
 
+---
 puzzletime_time:
   order: puzzletime
   target_scope: time
@@ -61,3 +62,4 @@ hitobito_demo_quality:
   order: hitobito_demo
   target_scope: quality
   rating: green
+...
