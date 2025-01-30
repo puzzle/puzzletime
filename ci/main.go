@@ -30,6 +30,8 @@ type Results struct {
 	SecurityScan *dagger.File
 	// trivy results as json
 	VulnerabilityScan *dagger.File
+	// the SBOM
+	Sbom *dagger.File
 	// the built image
 	Image *dagger.Container
 	// the test reports
@@ -156,6 +158,31 @@ func (m *Ci) Vulnscan(sbom *dagger.File) *dagger.File {
 	return trivy.Sbom(sbom).Report("json")
 }
 
+// Sign the published image using cosign
+func (m *Ci) Sign(
+	ctx context.Context,
+	registryUsername string,
+	registryPassword *dagger.Secret,
+	// Container image digest to sign
+	digest string,
+) (string, error) {
+	return dag.Cosign().SignKeyless(ctx, digest, dagger.CosignSignKeylessOpts{RegistryUsername: registryUsername, RegistryPassword: registryPassword})
+}
+
+// Attests the SBOM using cosign
+func (m *Ci) Attest(
+	ctx context.Context,
+	registryUsername string,
+	registryPassword *dagger.Secret,
+	// Container image digest to attest
+	digest string,
+	// SBOM file
+	predicate *dagger.File,
+) (string, error) {
+	return dag.Cosign().AttestKeyless(ctx, digest, predicate, dagger.CosignAttestKeylessOpts{RegistryUsername: registryUsername, RegistryPassword: registryPassword})
+
+}
+
 // Returns a Container with the base setup for running the rails test suite
 func (m *Ci) BaseTestContainer(_ context.Context, dir *dagger.Directory) *dagger.Container {
 	return dag.Container().
@@ -191,6 +218,9 @@ func (m *Ci) Publish(ctx context.Context, dir *dagger.Directory, destImage strin
 func (m *Ci) Ci(
 	ctx context.Context,
 	dir *dagger.Directory,
+	registryUsername string,
+	registryPassword *dagger.Secret,
+	registryAddress string,
 	// ignore linter failures
 	// +optional
 	// +default=false
@@ -203,11 +233,18 @@ func (m *Ci) Ci(
 	vulnerabilityScan := m.Vulnscan(sbom)
 	testReports := m.Test(ctx, dir)
 
+	digest, err := image.Publish(ctx, registryAddress)
+	if err == nil {
+		m.Sign(ctx, registryUsername, registryPassword, digest)
+		m.Attest(ctx, registryUsername, registryPassword, digest, sbom)
+	}
+
 	return &Results{
 		TestReports:       testReports,
 		LintOutput:        lintOutput,
 		SecurityScan:      securityScan,
 		VulnerabilityScan: vulnerabilityScan,
+		Sbom:              sbom,
 		Image:             image,
 	}
 }
