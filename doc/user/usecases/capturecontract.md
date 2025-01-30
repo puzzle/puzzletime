@@ -1,5 +1,5 @@
-## Vertrag 
-Zu jedem Auftrag werden im Tab "Vertrag" die Vertragsdetails erfasst. Diese Angaben sind die Grundlage für die spätere Rechnungsstellung. 
+## Vertrag
+Zu jedem Auftrag werden im Tab "Vertrag" die Vertragsdetails erfasst. Diese Angaben sind die Grundlage für die spätere Rechnungsstellung.
 
 ## Erfassung
 Die nachfolgende Aufzählung beschreibt Schritt für Schritt die Erfassung eines Vertrages:

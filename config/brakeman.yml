@@ -1,11 +1,11 @@
 ---
 :output_files:
-- brakeman-output.tabs
+  - brakeman-output.tabs
 :skip_files:
-- app/views/evaluator/_detailrow.html.haml  # Causes brakeman to hang
-- app/views/evaluator/details.html.haml     # Causes brakeman to hang
+  - app/views/evaluator/_detailrow.html.haml  # Causes brakeman to hang
+  - app/views/evaluator/details.html.haml     # Causes brakeman to hang
 :skip_checks:
-- CheckModelAttrAccessible
+  - CheckModelAttrAccessible
 :quiet: true
 :report_progress: false
 :exit_on_warn: false

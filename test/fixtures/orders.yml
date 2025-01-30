@@ -26,6 +26,7 @@
 #  major_chance_value :integer
 #
 
+---
 puzzletime:
   work_item_id: 4
   responsible_id: 8
@@ -58,3 +59,4 @@ webauftritt:
   kind: projekt
   department: devone
   contract: webauftritt
+...

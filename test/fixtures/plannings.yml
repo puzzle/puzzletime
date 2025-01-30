@@ -16,9 +16,11 @@
 #  definitive   :boolean          default(FALSE), not null
 #
 
+---
 hitobito_demo_app_planning1:
-  employee_id: 6 # pascal
+  employee_id: 6  # pascal
   work_item_id: 9
   date: 2015-03-30
   percent: 50
   definitive: true
+...

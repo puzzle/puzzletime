@@ -1,6 +1,7 @@
+---
 name: Generate and push an SBOM dependency list
 
-on:
+"on":
   workflow_call:
     inputs:
       project_name:
@@ -11,7 +12,7 @@ on:
         type: string
         description: "what to prefix the artifacts with e.g. int-"
         default: ""
-      
+
     secrets:
       dependency_track_url:
         description: "Base URL of the dependency track instance"
@@ -64,7 +65,7 @@ jobs:
                  merge \
                  --input-files data/sbom-ruby.json data/sbom-npm.json \
                  --output-file data/sbom.xml
-      
+
       - name: 'Push merged SBOM to dependency track'
         run: |
           curl --verbose \
@@ -77,7 +78,7 @@ jobs:
                --form "projectName=${{ inputs.project_name }}" \
                --form "projectVersion=latest" \
                --form "bom=@sbom.xml"
-      
+
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -86,3 +87,4 @@ jobs:
             ./sbom-npm.json
             ./sbom-ruby.json
             ./sbom.xml
+...

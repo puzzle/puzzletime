@@ -11,7 +11,7 @@ AllCops:
 
 Naming/InclusiveLanguage:
   Exclude:
-    - config/environments/development.rb # Bullet uses whitelist :(
+    - config/environments/development.rb  # Bullet uses whitelist :(
 
 # Not gonna rewrite all our tests...
 Minitest/MultipleAssertions:

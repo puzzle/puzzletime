@@ -49,7 +49,7 @@
 * **Log:** Änderungen an den Funktionsanteilen der Anstellungen werden neu im Members-Log protokolliert
 * **Absenzen:** In der Auswertung kann nach Absenztyp gefiltert werden
 * **Auslastung:** Verwendet nun die Standard Zeitbereich Auswahl.
-* **CSV Detaillierte Auslastung:** 
+* **CSV Detaillierte Auslastung:**
    + Berücksichtigt nun den eingestellten Zeitbereich
    + Berechnung des durchschnittlichen Arbeitspensums korrigiert
    + Spalte hinzugefügt für "bereinigte Projektzeit"
@@ -60,7 +60,7 @@
 
 * **Login:** Login wird auf SSO (Keycloak, Devise) umgestellt
 * **Zeitfreigabe:** Neu wird eine Erinnerung per E-Mail versendet, wenn die Zeiten noch nicht freigegeben wurden.
-  
+
 ### Improvements
 * **Stammdaten:** In den Stammdaten der Members wird neu der vertragliche Arbeitsort geführt
 * **Log:** Die Änderungen der Anstellungen (Pensen, Funktionen) wird neu im Members-Log protokolliert
@@ -88,7 +88,7 @@
    + Neues Attribut "Arbeitsort", verfügbare Werte konfigurierbar unter "Verwalten"
 * **Mitarbeiterliste:** Sortierbar gemacht nach Vorname, Nachname
 * **Zeiterfassung:** Leerschläge vor und nach der Ticketnummer werden entfernt
-  
+
 ### Bug fixes
 * **Überzeitexport:** Header sind jetzt aussagekräftiger
 * **Verbleibende Arbeitszeit:** Berechnung korrigiert wenn Überstundenkompensationen in der Zukunft liegen

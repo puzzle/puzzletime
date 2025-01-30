@@ -17,6 +17,7 @@
 #  updated_at :datetime
 #
 
+---
 puzzletime_first:
   order: puzzletime
   text: Dies ist der erste Journaleintrag
@@ -28,3 +29,4 @@ puzzletime_second:
   text: Text mit Link http://example.com/dummy
   creator: lucien
   updater: lucien
+...

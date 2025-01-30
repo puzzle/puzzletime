@@ -25,6 +25,8 @@
 #
 
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+---
 wt_pz_allgemein:
   id: 1
   work_item_id: 3
@@ -147,3 +149,4 @@ wt_pz_doctor:
   work_date: 2006-12-14
   hours: 13
   type: Absencetime
+...

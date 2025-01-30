@@ -15,8 +15,10 @@
 #  item_ids    :integer          not null, is an Array
 #
 
+---
 list_a:
   employee_id: 7
   name: Foo
   item_type: Employee
   item_ids: [1, 2, 3]
+...

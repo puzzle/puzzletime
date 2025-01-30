@@ -1,6 +1,7 @@
+---
 name: 'Manual build without tests'
 
-on:
+"on":
   workflow_dispatch:
     inputs:
       environment:
@@ -38,3 +39,4 @@ jobs:
     secrets:
       PUZZLE_REGISTRY_USERNAME: ${{ secrets.PUZZLE_REGISTRY_USERNAME }}
       PUZZLE_REGISTRY_TOKEN: ${{ secrets.PUZZLE_REGISTRY_TOKEN }}
+...

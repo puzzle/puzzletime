@@ -3,7 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
+---
 de-CH:
   views:
     pagination:
@@ -21,3 +21,4 @@ de-CH:
           other: "Zeige <b>alle %{count}</b> %{entry_name} an"
       more_pages:
         display_entries: "Zeige %{entry_name} <b>%{first}&nbsp;-&nbsp;%{last}</b> von insgesamt an <b>%{total}</b>"
+...

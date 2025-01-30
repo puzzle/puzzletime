@@ -13,6 +13,7 @@
 #  active :boolean          default(TRUE), not null
 #
 
+---
 verwaltung:
   name: Verwaltung
   active: true
@@ -24,3 +25,4 @@ oev:
 banken:
   name: Banken
   active: false
+...

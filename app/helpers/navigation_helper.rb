@@ -36,7 +36,7 @@ module NavigationHelper
   def nav_active_class(url, active_for, except)
     return 'active' if current_page?(url)
     return if current_page?(except)
-    return unless active_for.any? { |p| request.path =~ /^#{p}/ } 
+    return unless active_for.any? { |p| request.path =~ /^#{p}/ }
 
     'active'
   end

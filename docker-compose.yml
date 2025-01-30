@@ -3,7 +3,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
+---
 version: '3'
 
 volumes:
@@ -21,13 +21,14 @@ services:
       - POSTGRES_USER=puzzletime
       - POSTGRES_PASSWORD=timepuzzle
 
-#  ptimecache:
-#    image: memcached
-#    ports:
-#      - '11211:11211'
+  # ptimecache:
+  #   image: memcached
+  #   ports:
+  #     - '11211:11211'
 
   ptimemailcatcher:
     image: schickling/mailcatcher
     ports:
       - '1025:1025'
       - '1080:1080'
+...
