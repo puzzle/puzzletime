@@ -178,8 +178,8 @@ func (m *Ci) Attest(
 	digest string,
 	// SBOM file
 	predicate *dagger.File,
-    // SBOM type
-    sbomType string,
+	// SBOM type
+	sbomType string,
 ) (string, error) {
 	return dag.Cosign().AttestKeyless(ctx, digest, predicate, dagger.CosignAttestKeylessOpts{RegistryUsername: registryUsername, RegistryPassword: registryPassword, SbomType: sbomType})
 
@@ -218,7 +218,7 @@ func (m *Ci) BuildAndPublish(ctx context.Context, dir *dagger.Directory, registr
 
 // Publish the provided Container to the provided registry
 func (m *Ci) Publish(ctx context.Context, container *dagger.Container, registryAddress string) (string, error) {
-    return container.Publish(ctx, registryAddress)
+	return container.Publish(ctx, registryAddress)
 }
 
 // Executes all the steps and returns a Results object
@@ -263,7 +263,7 @@ func (m *Ci) Ci(
 // Executes all the steps and returns a directory with the results
 func (m *Ci) CiIntegration(
 	ctx context.Context,
-    // source directory
+	// source directory
 	dir *dagger.Directory,
 	// registry username for publishing the contaner image
 	registryUsername string,
@@ -275,7 +275,7 @@ func (m *Ci) CiIntegration(
 	// +optional
 	// +default=false
 	pass bool,
-) *dagger.Directory {
+) (*dagger.Directory, error) {
 	var wg sync.WaitGroup
 	wg.Add(5)
 
@@ -289,15 +289,15 @@ func (m *Ci) CiIntegration(
 		return m.Sast(dir)
 	}()
 
-    var vulnerabilityScan = func() *dagger.File {
-        defer wg.Done()
-        return m.Vulnscan(m.Sbom(m.Build(ctx, dir)))
-    }()
+	var vulnerabilityScan = func() *dagger.File {
+		defer wg.Done()
+		return m.Vulnscan(m.Sbom(m.Build(ctx, dir)))
+	}()
 
-    var image = func() *dagger.Container {
-        defer wg.Done()
-        return m.Build(ctx, dir)
-    }()
+	var image = func() *dagger.Container {
+		defer wg.Done()
+		return m.Build(ctx, dir)
+	}()
 
 	var testReports = func() *dagger.Directory {
 		defer wg.Done()
@@ -307,43 +307,52 @@ func (m *Ci) CiIntegration(
 	// This Blocks the execution until its counter become 0
 	wg.Wait()
 
-	// TODO: fail on errors of the functions!
+	// Get the names of the files to fail on errors of the functions
+	lintOutputName, err := lintOutput.Name(ctx)
+	if err != nil {
+		return nil, err
+	}
+	securityScanName, err := securityScan.Name(ctx)
+	if err != nil {
+		return nil, err
+	}
+	vulnerabilityScanName, err := vulnerabilityScan.Name(ctx)
+	if err != nil {
+		return nil, err
+	}
 
 	// After linting, scanning and testing is done, we can create the sbom and publish the image
+	wg.Add(2)
 
-    wg.Add(2)
+	var sbom = func() *dagger.File {
+		defer wg.Done()
+		return m.Sbom(image)
+	}()
 
-    var sbom = func() *dagger.File {
-        defer wg.Done()
-        return m.Sbom(image)
-    }()
+	digest, err := func() (string, error) {
+		defer wg.Done()
+		return m.Publish(ctx, image, registryAddress)
+	}()
 
-    digest, err := func() (string, error) {
-        defer wg.Done()
-        return m.Publish(ctx, image, registryAddress)
-    }()
+	// This Blocks the execution until its counter become 0
+	wg.Wait()
 
-    // This Blocks the execution until its counter become 0
-    wg.Wait()
+	// After publishing the image, we can sign and attest
+	if err != nil {
+	    return nil, err
+	}
 
-    // After publishing the image, we can sign and attest
+    m.Sign(ctx, registryUsername, registryPassword, digest)
+    m.Attest(ctx, registryUsername, registryPassword, digest, sbom, "cyclonedx")
 
-    if err == nil {
-        m.Sign(ctx, registryUsername, registryPassword, digest)
-        m.Attest(ctx, registryUsername, registryPassword, digest, sbom, "cyclonedx")
-    }
-
-	lintOutputName, _ := lintOutput.Name(ctx)
-	securityScanName, _ := securityScan.Name(ctx)
-	vulnerabilityScanName, _ := vulnerabilityScan.Name(ctx)
 	sbomName, _ := sbom.Name(ctx)
 	result_container := dag.Container().
 		WithWorkdir("/tmp/out").
 		WithFile(fmt.Sprintf("/tmp/out/lint/%s", lintOutputName), lintOutput).
 		WithFile(fmt.Sprintf("/tmp/out/scan/%s", securityScanName), securityScan).
 		WithDirectory("/tmp/out/unit-tests/", testReports).
-	    WithFile(fmt.Sprintf("/tmp/out/vuln/%s", vulnerabilityScanName), vulnerabilityScan).
-        WithFile(fmt.Sprintf("/tmp/out/sbom/%s", sbomName), sbom)
+		WithFile(fmt.Sprintf("/tmp/out/vuln/%s", vulnerabilityScanName), vulnerabilityScan).
+		WithFile(fmt.Sprintf("/tmp/out/sbom/%s", sbomName), sbom)
 	return result_container.
-		Directory(".")
+		Directory("."), err
 }
