@@ -178,8 +178,10 @@ func (m *Ci) Attest(
 	digest string,
 	// SBOM file
 	predicate *dagger.File,
+    // SBOM type
+    sbomType string,
 ) (string, error) {
-	return dag.Cosign().AttestKeyless(ctx, digest, predicate, dagger.CosignAttestKeylessOpts{RegistryUsername: registryUsername, RegistryPassword: registryPassword})
+	return dag.Cosign().AttestKeyless(ctx, digest, predicate, dagger.CosignAttestKeylessOpts{RegistryUsername: registryUsername, RegistryPassword: registryPassword, SbomType: sbomType})
 
 }
 
@@ -209,17 +211,26 @@ func (m *Ci) BaseTestContainer(_ context.Context, dir *dagger.Directory) *dagger
 		WithExec([]string{"bundle", "install", "--jobs", "4", "--retry", "3"})
 }
 
-// Publish the Container built from the Dockerfile in the provided registry
-func (m *Ci) Publish(ctx context.Context, dir *dagger.Directory, destImage string) (string, error) {
-	return m.Build(ctx, dir).Publish(ctx, destImage)
+// Build and Publish the Container from the Dockerfile in the provided registry
+func (m *Ci) BuildAndPublish(ctx context.Context, dir *dagger.Directory, registryAddress string) (string, error) {
+	return m.Build(ctx, dir).Publish(ctx, registryAddress)
+}
+
+// Publish the provided Container to the provided registry
+func (m *Ci) Publish(ctx context.Context, container *dagger.Container, registryAddress string) (string, error) {
+    return container.Publish(ctx, registryAddress)
 }
 
 // Executes all the steps and returns a Results object
 func (m *Ci) Ci(
 	ctx context.Context,
+	// source directory
 	dir *dagger.Directory,
+	// registry username for publishing the contaner image
 	registryUsername string,
+	// registry password for publishing the container image
 	registryPassword *dagger.Secret,
+	// registry address registry/repository/image:tag
 	registryAddress string,
 	// ignore linter failures
 	// +optional
@@ -232,11 +243,11 @@ func (m *Ci) Ci(
 	sbom := m.Sbom(image)
 	vulnerabilityScan := m.Vulnscan(sbom)
 	testReports := m.Test(ctx, dir)
+	digest, err := m.Publish(ctx, image, registryAddress)
 
-	digest, err := image.Publish(ctx, registryAddress)
 	if err == nil {
 		m.Sign(ctx, registryUsername, registryPassword, digest)
-		m.Attest(ctx, registryUsername, registryPassword, digest, sbom)
+		m.Attest(ctx, registryUsername, registryPassword, digest, sbom, "cyclonedx")
 	}
 
 	return &Results{
@@ -252,14 +263,21 @@ func (m *Ci) Ci(
 // Executes all the steps and returns a directory with the results
 func (m *Ci) CiIntegration(
 	ctx context.Context,
+    // source directory
 	dir *dagger.Directory,
+	// registry username for publishing the contaner image
+	registryUsername string,
+	// registry password for publishing the container image
+	registryPassword *dagger.Secret,
+	// registry address registry/repository/image:tag
+	registryAddress string,
 	// ignore linter failures
 	// +optional
 	// +default=false
 	pass bool,
 ) *dagger.Directory {
 	var wg sync.WaitGroup
-	wg.Add(3)
+	wg.Add(5)
 
 	var lintOutput = func() *dagger.File {
 		defer wg.Done()
@@ -271,16 +289,15 @@ func (m *Ci) CiIntegration(
 		return m.Sast(dir)
 	}()
 
-	/*
-		var vulnerabilityScan = func() *dagger.File {
-			defer wg.Done()
-			return m.Vulnscan(m.Sbom(m.Build(ctx, dir)))
-		}()
-		var image = func() *dagger.Container {
-			defer wg.Done()
-			return m.Build(ctx, dir)
-		}()
-	*/
+    var vulnerabilityScan = func() *dagger.File {
+        defer wg.Done()
+        return m.Vulnscan(m.Sbom(m.Build(ctx, dir)))
+    }()
+
+    var image = func() *dagger.Container {
+        defer wg.Done()
+        return m.Build(ctx, dir)
+    }()
 
 	var testReports = func() *dagger.Directory {
 		defer wg.Done()
@@ -292,15 +309,39 @@ func (m *Ci) CiIntegration(
 
 	// TODO: fail on errors of the functions!
 
+	// After linting, scanning and testing is done, we can create the sbom and publish the image
+
+    wg.Add(2)
+
+    var sbom = func() *dagger.File {
+        defer wg.Done()
+        return m.Sbom(image)
+    }()
+
+    digest, err := func() (string, error) {
+        defer wg.Done()
+        return m.Publish(ctx, image, registryAddress)
+    }()
+
+    // This Blocks the execution until its counter become 0
+    wg.Wait()
+
+    // After publishing the image, we can sign and attest
+
+    if err == nil {
+        m.Sign(ctx, registryUsername, registryPassword, digest)
+        m.Attest(ctx, registryUsername, registryPassword, digest, sbom, "cyclonedx")
+    }
+
 	lintOutputName, _ := lintOutput.Name(ctx)
 	securityScanName, _ := securityScan.Name(ctx)
-	//vulnerabilityScanName, _ := vulnerabilityScan.Name(ctx)
+	vulnerabilityScanName, _ := vulnerabilityScan.Name(ctx)
 	result_container := dag.Container().
 		WithWorkdir("/tmp/out").
 		WithFile(fmt.Sprintf("/tmp/out/lint/%s", lintOutputName), lintOutput).
 		WithFile(fmt.Sprintf("/tmp/out/scan/%s", securityScanName), securityScan).
-		WithDirectory("/tmp/out/unit-tests/", testReports)
-	//WithFile(fmt.Sprintf("/tmp/out/vuln/%s", vulnerabilityScanName), vulnerabilityScan)
+		WithDirectory("/tmp/out/unit-tests/", testReports).
+	    WithFile(fmt.Sprintf("/tmp/out/vuln/%s", vulnerabilityScanName), vulnerabilityScan)
 	return result_container.
 		Directory(".")
 }
