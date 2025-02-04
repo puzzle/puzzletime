@@ -336,12 +336,14 @@ func (m *Ci) CiIntegration(
 	lintOutputName, _ := lintOutput.Name(ctx)
 	securityScanName, _ := securityScan.Name(ctx)
 	vulnerabilityScanName, _ := vulnerabilityScan.Name(ctx)
+	sbomName, _ := sbom.Name(ctx)
 	result_container := dag.Container().
 		WithWorkdir("/tmp/out").
 		WithFile(fmt.Sprintf("/tmp/out/lint/%s", lintOutputName), lintOutput).
 		WithFile(fmt.Sprintf("/tmp/out/scan/%s", securityScanName), securityScan).
 		WithDirectory("/tmp/out/unit-tests/", testReports).
-	    WithFile(fmt.Sprintf("/tmp/out/vuln/%s", vulnerabilityScanName), vulnerabilityScan)
+	    WithFile(fmt.Sprintf("/tmp/out/vuln/%s", vulnerabilityScanName), vulnerabilityScan).
+        WithFile(fmt.Sprintf("/tmp/out/sbom/%s", sbomName), sbom)
 	return result_container.
 		Directory(".")
 }
