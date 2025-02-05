@@ -21,6 +21,10 @@ module InvoiceHelper
     "#{f(entry.calculated_total_amount)} #{Settings.defaults.currency}"
   end
 
+  def format_invoice_calculated_total_hours(entry)
+    "#{f(entry.calculated_total_hours)} h"
+  end
+
   def format_billing_date(entry)
     l(entry.billing_date)
   end

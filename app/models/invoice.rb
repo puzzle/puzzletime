@@ -94,6 +94,10 @@ class Invoice < ActiveRecord::Base
     round_to_5_cents(total)
   end
 
+  def calculated_total_hours
+    positions.sum(&:total_hours)
+  end
+
   def billing_client
     billing_address.try(:client) ||
       order.billing_address.try(:client) ||
