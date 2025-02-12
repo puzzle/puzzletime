@@ -158,6 +158,25 @@ func (m *Ci) Vulnscan(sbom *dagger.File) *dagger.File {
 	return trivy.Sbom(sbom).Report("json")
 }
 
+// Publish cyclonedx SBOM to Deptrack
+func (m *Ci) PublishToDeptrack(
+	ctx context.Context,
+	// SBOM file
+	sbom *dagger.File,
+	// deptrack address for publishing the SBOM https://deptrack.example.com/api/v1/bom
+	address string,
+	// deptrack API key
+	apiKey *dagger.Secret,
+	// deptrack project UUID
+    projectUUID string,
+) (string, error) {
+	return dag.Container().
+		From("curlimages/curl").
+		WithFile("sbom.json", sbom).
+		WithExec([]string{"curl", "-X", "POST", "-H", "'Content-Type: multipart/form-data'", "-H", fmt.Sprintf("'X-API-Key: %s'", apiKey), "-F", fmt.Sprintf("'project=%s'", projectUUID), "-F", "bom=@sbom.json", address}).
+		Stdout(ctx)
+}
+
 // Sign the published image using cosign
 func (m *Ci) Sign(
 	ctx context.Context,
@@ -232,6 +251,12 @@ func (m *Ci) Ci(
 	registryPassword *dagger.Secret,
 	// registry address registry/repository/image:tag
 	registryAddress string,
+	// deptrack address for publishing the SBOM https://deptrack.example.com/api/v1/bom
+	dtAddress string,
+	// deptrack project UUID
+    dtProjectUUID string,
+    // deptrack API key
+    dtApiKey *dagger.Secret,
 	// ignore linter failures
 	// +optional
 	// +default=false
@@ -246,6 +271,7 @@ func (m *Ci) Ci(
 	digest, err := m.Publish(ctx, image, registryAddress)
 
 	if err == nil {
+		m.PublishToDeptrack(ctx, sbom, dtAddress, dtApiKey, dtProjectUUID)
 		m.Sign(ctx, registryUsername, registryPassword, digest)
 		m.Attest(ctx, registryUsername, registryPassword, digest, sbom, "cyclonedx")
 	}
@@ -271,6 +297,12 @@ func (m *Ci) CiIntegration(
 	registryPassword *dagger.Secret,
 	// registry address registry/repository/image:tag
 	registryAddress string,
+	// deptrack address for publishing the SBOM https://deptrack.example.com/api/v1/bom
+	dtAddress string,
+	// deptrack project UUID
+    dtProjectUUID string,
+    // deptrack API key
+    dtApiKey *dagger.Secret,
 	// ignore linter failures
 	// +optional
 	// +default=false
@@ -339,11 +371,12 @@ func (m *Ci) CiIntegration(
 
 	// After publishing the image, we can sign and attest
 	if err != nil {
-	    return nil, err
+		return nil, err
 	}
 
-    m.Sign(ctx, registryUsername, registryPassword, digest)
-    m.Attest(ctx, registryUsername, registryPassword, digest, sbom, "cyclonedx")
+	m.PublishToDeptrack(ctx, sbom, dtAddress, dtApiKey, dtProjectUUID)
+	m.Sign(ctx, registryUsername, registryPassword, digest)
+	m.Attest(ctx, registryUsername, registryPassword, digest, sbom, "cyclonedx")
 
 	sbomName, _ := sbom.Name(ctx)
 	result_container := dag.Container().
