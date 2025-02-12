@@ -13,10 +13,12 @@ jobs:
         env:
           REGISTRY_ADDRESS: "ttl.sh/ptime/test:latest"
           REGISTRY_USERNAME: "joe"
-          REGISTRY_PASSWORD: ${{ secrets.REGISTRY_TOKEN }} // TODO
+          # TODO
+          REGISTRY_PASSWORD: ${{ secrets.REGISTRY_TOKEN }}
           DT_ADDRESS: "https://deptrack-test.ocp.cloudscale.puzzle.ch/api/v1/bom"
           DT_PROJECT_UUID: "93394d20-7c48-4ecf-8caa-7fe63ae1a275"
-          DT_API_KEY: ${{ secrets.DT_API_KEY }} // TODO
+          # TODO
+          DT_API_KEY: ${{ secrets.DT_API_KEY }}
         with:
           # Dagger Version
           version: 0.15.3
