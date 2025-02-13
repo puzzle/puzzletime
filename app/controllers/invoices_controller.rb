@@ -8,7 +8,7 @@
 class InvoicesController < CrudController
   self.nesting = [Order]
 
-  self.permitted_attrs = [:billing_date, :due_date, :period_from, :period_to,
+  self.permitted_attrs = [:billing_date, :due_date, :period_from, :period_to, :period_shortcut,
                           :billing_address_id, :grouping, { employee_ids: [], work_item_ids: [] }]
 
   self.sort_mappings = { period: :period_from, manual?: :grouping }
@@ -19,6 +19,8 @@ class InvoicesController < CrudController
 
   before_render_index :load_totals_paid
   before_render_form :load_associations
+
+  include WithPeriod
 
   def show
     respond_to do |format|
@@ -38,7 +40,7 @@ class InvoicesController < CrudController
 
   def new
     assign_attributes
-    @autoselect_workitems_and_employees = true
+    @autoselect_workitems_and_employees = false
   end
 
   def sync
@@ -108,8 +110,15 @@ class InvoicesController < CrudController
   end
 
   def copy_attrs_from_params(attrs)
-    attrs[:period_from] ||= params[:start_date]
-    attrs[:period_to] ||= params[:end_date]
+    if params[:period_shortcut].present?
+      period = build_period
+      attrs[:period_from] ||= period.start_date
+      attrs[:period_to] ||= period.end_date
+    else
+      attrs[:period_from] ||= params[:start_date]
+      attrs[:period_to] ||= params[:end_date]
+    end
+    set_period
     attrs[:grouping] = 'manual' if params[:manual_invoice]
     attrs[:employee_ids] = Array(attrs[:employee_ids]) << params[:employee_id] if params[:employee_id].present?
     return if params[:work_item_id].blank?
@@ -166,14 +175,17 @@ class InvoicesController < CrudController
     WorkItem.with_worktimes_in_period(order, p.start_date, p.end_date)
   end
 
+  # determine the checked work_items in the form
   def checked_work_item_ids
     if autoselect_all?
       work_items_for_period(entry.period_from, entry.period_to).pluck(:id)
     else
+      Rails.logger.info("entry_work_item_ids: #{entry.work_item_ids}")
       entry.work_item_ids.presence
     end
   end
 
+  # determine the checked employee_ids in the form
   def checked_employee_ids
     if autoselect_all?
       employees_for_period(entry.period_from, entry.period_to).pluck(:id)
@@ -211,7 +223,7 @@ class InvoicesController < CrudController
   end
 
   def autoselect_all?
-    @autoselect_workitems_and_employees == true
+    @autoselect_workitems_and_employees
   end
 
   def attempt_destroy_record
