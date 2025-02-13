@@ -10,15 +10,15 @@
               data: { submit_form: '#worktimes' })
 
 = action_link(action_icon('export', 'CSV Export'),
-              params.to_unsafe_h.merge(action: :export_worktimes_csv, only_path: true))
+              params.to_unsafe_h.merge(action: :export_worktimes_csv, only_path: true), :data => {turbolinks: "false" })
 
 = action_link(action_icon('time', 'Zeitrapport erstellen'),
-              params.to_unsafe_h.merge(action: :compose_report, only_path: true))
+              params.to_unsafe_h.merge(action: :compose_report, only_path: true), :data => {turbolinks: "false" })
 
 - if !@order.status.closed && can?(:create_invoices, @order)
   = action_link(action_icon('document', 'Rechnung erstellen'),
-                new_order_invoice_path(@order, params.permit(:start_date, :end_date, :employee_id, :work_item_id, :ticket)))
+                new_order_invoice_path(@order, params.permit(:start_date, :end_date, :employee_id, :work_item_id, :ticket)), :data => {turbolinks: "false" })
 
 - if @user.management
   = action_link(action_icon('add', 'Fremderfassung'),
-                new_ordertime_path(other: 1, back_url: url_for(returning: true)))
+                new_ordertime_path(other: 1, back_url: url_for(returning: true)), :data => {turbolinks: "false" })
