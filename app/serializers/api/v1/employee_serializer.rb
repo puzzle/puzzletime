@@ -8,7 +8,23 @@
 module Api
   module V1
     class EmployeeSerializer < ApiSerializer
-      attributes :shortname, :firstname, :lastname, :email, :marital_status, :nationalities, :graduation
+      attributes  :shortname,
+                  :firstname,
+                  :lastname,
+                  :email,
+                  :marital_status,
+                  :nationalities,
+                  :graduation,
+                  :city,
+                  :birthday
+
+      attribute :full_name do |employee|
+        employee.to_s
+      end
+
+      attribute :is_employed do |_employee|
+        !e.current_employment.nil?
+      end
 
       attribute :department_shortname do |employee|
         employee.department&.shortname
@@ -25,7 +41,7 @@ module Api
 
       # attribute annotations for the generated api docs
 
-      annotate_attributes :shortname, :firstname, :lastname, :email, :graduation, :department_shortname,
+      annotate_attributes :shortname, :firstname, :lastname, :email, :graduation, :department_shortname, :city,
                           type: :string
 
       annotate_attribute :marital_status,
@@ -51,6 +67,11 @@ module Api
                              format: :float
                            }
                          }
+
+      annotate_attribute :birthday,
+                         type: :string,
+                         format: :date,
+                         description: 'The employee’s birth date in YYYY-MM-DD format'
     end
   end
 end
