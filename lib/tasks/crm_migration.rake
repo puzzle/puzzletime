@@ -31,23 +31,21 @@ namespace :crm_migration do
   task substitute_crm_tokens: :environment do
     require 'csv'
 
-    file_path = prompt_for_file_path
-
-    # Step 1: Build the mapping from the CSV
-    mapping = build_mapping(file_path)
-
-    # Step 2: For every model, make dry run
-    # (Verify that for every old crm_key there is a new crm_key, else abort)
     models = %w[Client Employee Contact AdditionalCrmOrder Order]
     models.each do |model_name|
+      file_path = prompt_for_file_path(model_name)
+
+      # Step 1: Build the mapping from the CSV
+      mapping = build_mapping(file_path)
+
+      # Step 2: For every model, make dry run
+      # (Verify that for every old crm_key there is a new crm_key, else abort)
       model = model_name.constantize
       perform_dry_run(model, mapping)
-    end
-    puts 'Completed all dry runs. Everything OK. Commencing database update...'
+      puts "Completed dry run for Model #{model}. Everything OK. Commencing database update..."
 
-    # Step 3: For every model, execute database updates
-    # (Update entries based on the mapping)
-    models.each do |model_name|
+      # Step 3: For every model, execute database updates
+      # (Update entries based on the mapping)
       model = model_name.constantize
       perform_db_update(model, mapping)
       puts "Completed database updates for model #{model}"
@@ -58,13 +56,13 @@ namespace :crm_migration do
   # Helper method which prompts for the file path of the .csv which contains the mappings of (old_crm_key, new_crm_key)
   # arguments: -
   # returns: the file path that was provided by the user
-  def prompt_for_file_path
-    puts 'Enter the path to the CSV file (reading will NOT expect header line!):'
+  def prompt_for_file_path(model_name)
+    puts "Enter the path to the CSV file corresponding to Model #{model_name}(reading will NOT expect header line!):"
     file_path = $stdin.gets.chomp
 
-    unless File.exist?(file_path)
-      puts "File not found: #{file_path}"
-      exit 1
+    until File.exist?(file_path)
+      puts "File not found: #{file_path}. Please enter a valid file path."
+      file_path = $stdin.gets.chomp
     end
 
     file_path
