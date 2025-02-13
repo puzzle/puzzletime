@@ -17,7 +17,7 @@
 
 - if !@order.status.closed && can?(:create_invoices, @order)
   = action_link(action_icon('document', 'Rechnung erstellen'),
-                new_order_invoice_path(@order, params.permit(:start_date, :end_date, :employee_id, :work_item_id, :ticket)), :data => {turbolinks: "false" })
+                new_order_invoice_path(@order, params.permit(:start_date, :end_date, :employee_id, :work_item_id, :ticket, :period_shortcut)), :data => {turbolinks: "false" })
 
 - if @user.management
   = action_link(action_icon('add', 'Fremderfassung'),
