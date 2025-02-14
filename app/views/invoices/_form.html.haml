@@ -12,6 +12,9 @@
   = hidden_field_tag(:order_id, order.id)
   = f.labeled_input_field :period_from, caption: 'Leistungsperiode von'
   = f.labeled_input_field :period_to
+  = f.labeled :period_shortcut_selection, span: 1 do
+    = select_tag(:period_shortcut, options_from_collection_for_select(predefined_past_period_options, :id, :to_s, @period&.shortcut || ''), {prompt: 'benutzerdefiniert', data: {}, :class=>"form-control"})
+    
   = f.labeled :manual_invoice do
     .checkbox
       %label
@@ -36,5 +39,5 @@
       = render 'billing_addresses_fields'
 
 - content_for(:javascript) do
-  new window.App.FormUpdater("#{preview_total_order_invoices_path(id: entry.id, format: :js)}", 'change', 'form.invoice', 'form.invoice');
-  new window.App.FormUpdater("#{filter_fields_order_invoices_path(id: entry.id, format: :js)}", 'change', 'form.invoice', 'input#invoice_period_from', 'input#invoice_period_to');
+  new window.App.FormUpdater("#{preview_total_order_invoices_path(id: entry.id, format: :js)}", 'change', 'form.invoice', 'form.invoice', 'select#period_shortcut');
+  new window.App.FormUpdater("#{filter_fields_order_invoices_path(id: entry.id, format: :js)}", 'change', 'form.invoice', 'input#invoice_period_from', 'input#invoice_period_to', 'select#period_shortcut');
