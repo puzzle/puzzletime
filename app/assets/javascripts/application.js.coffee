@@ -45,6 +45,7 @@
 #= require expenses
 #= require expense_reviews
 #= require meal_compensations
+#= require invoices
 #= require turbolinks
 
 app = window.App ||= {}
