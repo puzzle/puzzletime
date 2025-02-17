@@ -72,7 +72,7 @@ namespace :crm_migration do
       CrmMigrationHelper.perform_db_update(model, mapping)
       puts "Completed database updates for model #{model}"
     end
-    puts 'All database update complete.'
+    puts 'All database updates complete.'
   end
 end
 
