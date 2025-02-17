@@ -22,21 +22,12 @@ namespace :crm_migration do
     models = %w[Client Employee Contact AdditionalCrmOrder Order]
 
     models.each do |model_name|
-      ids_map = []
-      index = 0
       model = model_name.constantize
-
       ids = model.where.not(crm_key: nil).pluck(:crm_key).uniq
-
-      # Map each unique old crm key to a made up new index / key, starting from 0
-      ids.each do |old_key|
-        ids_map << [old_key, index]
-        index += 1
-      end
 
       # writes the generated mapping of (old_crm_key, new_crm_key) as a new line into the csv
       CSV.open(File.join(mappings_folder, "#{model_name.underscore}.csv"), 'w') do |csv|
-        ids_map.each do |old_id, new_id|
+        ids.each_with_index do |old_id, new_id|
           csv << [old_id, new_id] # Write each tuple as a row
         end
       end
