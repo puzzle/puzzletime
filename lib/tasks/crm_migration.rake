@@ -57,19 +57,18 @@ namespace :crm_migration do
     models = %w[Client Employee Contact AdditionalCrmOrder Order]
     models.each do |model_name|
       file_path = File.join(mappings_folder, "#{model_name.underscore}.csv")
+      model = model_name.constantize
 
       # Step 1: Build the mapping from the CSV
       mapping = CrmMigrationHelper.build_mapping(file_path)
 
       # Step 2: For every model, make dry run
       # (Verify that for every old crm_key there is a new crm_key, else abort)
-      model = model_name.constantize
       CrmMigrationHelper.perform_dry_run(model, mapping)
       puts "Completed dry run for Model #{model}. Everything OK. Commencing database update..."
 
       # Step 3: For every model, execute database updates
       # (Update entries based on the mapping)
-      model = model_name.constantize
       CrmMigrationHelper.perform_db_update(model, mapping)
       puts "Completed database updates for model #{model}"
     end
