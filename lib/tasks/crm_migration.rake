@@ -1,7 +1,16 @@
 # frozen_string_literal: true
 
 namespace :crm_migration do
-  desc 'convenience task which creates a MOCK mapping between all the crm_keys found in the models Client Employee Contact AdditionalCrmOrder Order. Creates a .csv containing this mapping (default name: ids_map.csv). Run with rake crm_migration:create_mock_data_mapping MAPPINGS_FOLDER=path/to/target_folder'
+  desc <<~DESC
+    create a mock mapping between crm_keys
+
+    convenience task which creates a MOCK mapping between all the crm_keys
+    found in the models Client Employee Contact AdditionalCrmOrder Order.
+
+    Creates a .csv containing this mapping (default name: ids_map.csv).
+
+    Needs an ENV-Var MAPPINGS_FOLDER to store the csv in.
+  DESC
   task create_mock_data_mapping: :environment do
     # Folder, where all the mapping .csv reside
     mappings_folder = ENV.fetch('MAPPINGS_FOLDER', nil)
@@ -36,7 +45,14 @@ namespace :crm_migration do
     end
   end
 
-  desc 'given some .csv files mapping old crm_keys to new ones, apply this mapping to all crm_keys in the db. Run with rake crm_migration:substitute_crm_tokens MAPPINGS_FOLDER=path/to/target_folder'
+  desc <<~DESC
+    apply mappings to CRM-keys in DB
+
+    given some .csv files mapping old crm_keys to new ones, apply this mapping
+    to all crm_keys in the db.
+
+    Needs an ENV-Var MAPPINGS_FOLDER to read the mapping from.
+  DESC
   task substitute_crm_tokens: :environment do
     require 'csv'
 
