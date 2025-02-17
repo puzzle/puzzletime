@@ -16,9 +16,8 @@ namespace :crm_migration do
   task create_mock_data_mapping: :environment do
     # Folder, where all the mapping .csv reside
     mappings_folder = ENV.fetch('MAPPINGS_FOLDER', nil)
-    if mappings_folder.nil?
-      abort 'Error: ENV Var MAPPINGS_FOLDER cannot be empty'
-    end
+    abort 'Error: ENV Var MAPPINGS_FOLDER cannot be empty' if mappings_folder.nil?
+
     mkdir_p(mappings_folder)
 
     models = %w[Client Employee Contact AdditionalCrmOrder Order]
@@ -48,9 +47,7 @@ namespace :crm_migration do
   task substitute_crm_tokens: :environment do
     # Folder, where all the mapping .csv reside
     mappings_folder = ENV.fetch('MAPPINGS_FOLDER', nil)
-    if mappings_folder.nil?
-      abort 'Error: ENV Var MAPPINGS_FOLDER cannot be empty'
-    end
+    abort 'Error: ENV Var MAPPINGS_FOLDER cannot be empty' if mappings_folder.nil?
 
     mkdir_p(mappings_folder)
 
