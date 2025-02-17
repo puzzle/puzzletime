@@ -70,22 +70,26 @@ namespace :crm_migration do
       file_path = File.join(mappings_folder, "#{model_name.underscore}.csv")
 
       # Step 1: Build the mapping from the CSV
-      mapping = build_mapping(file_path)
+      mapping = CrmMigrationHelper.build_mapping(file_path)
 
       # Step 2: For every model, make dry run
       # (Verify that for every old crm_key there is a new crm_key, else abort)
       model = model_name.constantize
-      perform_dry_run(model, mapping)
+      CrmMigrationHelper.perform_dry_run(model, mapping)
       puts "Completed dry run for Model #{model}. Everything OK. Commencing database update..."
 
       # Step 3: For every model, execute database updates
       # (Update entries based on the mapping)
       model = model_name.constantize
-      perform_db_update(model, mapping)
+      CrmMigrationHelper.perform_db_update(model, mapping)
       puts "Completed database updates for model #{model}"
     end
     puts 'All database update complete.'
   end
+end
+
+module CrmMigrationHelper
+  module_function
 
   # Helper method which builds a hash table containing the mapping of (old_crm_key, new_crm_key) according to the specified .csv
   # arguments: [file_path] the file path to the .csv containing the mapping of (old_crm_key, new_crm_key)
