@@ -18,7 +18,7 @@ namespace :crm_migration do
       puts 'Error: ENV Var MAPPINGS_FOLDER cannot be empty'
       exit 1
     end
-    FileUtils.mkdir_p(mappings_folder)
+    mkdir_p(mappings_folder)
 
     models = %w[Client Employee Contact AdditionalCrmOrder Order]
 
@@ -62,7 +62,8 @@ namespace :crm_migration do
       puts 'Error: ENV Var MAPPINGS_FOLDER cannot be empty'
       exit 1
     end
-    FileUtils.mkdir_p(mappings_folder)
+
+    mkdir_p(mappings_folder)
 
     models = %w[Client Employee Contact AdditionalCrmOrder Order]
     models.each do |model_name|
