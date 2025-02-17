@@ -15,8 +15,7 @@ namespace :crm_migration do
     # Folder, where all the mapping .csv reside
     mappings_folder = ENV.fetch('MAPPINGS_FOLDER', nil)
     if mappings_folder.nil?
-      puts 'Error: ENV Var MAPPINGS_FOLDER cannot be empty'
-      exit 1
+      abort 'Error: ENV Var MAPPINGS_FOLDER cannot be empty'
     end
     mkdir_p(mappings_folder)
 
@@ -59,8 +58,7 @@ namespace :crm_migration do
     # Folder, where all the mapping .csv reside
     mappings_folder = ENV.fetch('MAPPINGS_FOLDER', nil)
     if mappings_folder.nil?
-      puts 'Error: ENV Var MAPPINGS_FOLDER cannot be empty'
-      exit 1
+      abort 'Error: ENV Var MAPPINGS_FOLDER cannot be empty'
     end
 
     mkdir_p(mappings_folder)
@@ -126,8 +124,7 @@ module CrmMigrationHelper
     end
 
     if missing_ids.any?
-      warn "[#{model}] Dry-run detected the following missing crm_keys in the provided mapping (.csv):" + missing_ids.join(', ')
-      exit 1
+      abort "[#{model}] Dry-run detected the following missing crm_keys in the provided mapping (.csv):" + missing_ids.join(', ')
     else
       puts "[#{model}] Dry-run successful. All necessary mappings are present."
     end
@@ -151,8 +148,7 @@ module CrmMigrationHelper
         client.update!(crm_key: new_id)
         puts "[#{model}] Updated CRM KEY #{old_key} to #{new_id}"
       else
-        warn "[#{model}] ERROR: #{old_key} not found in the mapping provided in the .csv! Aborting..."
-        exit 1
+        abort "[#{model}] ERROR: #{old_key} not found in the mapping provided in the .csv! Aborting..."
       end
     end
   end
