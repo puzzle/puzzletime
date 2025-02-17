@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'csv'
+
 namespace :crm_migration do
   desc <<~DESC
     create a mock mapping between crm_keys
@@ -44,8 +46,6 @@ namespace :crm_migration do
     Needs an ENV-Var MAPPINGS_FOLDER to read the mapping from.
   DESC
   task substitute_crm_tokens: :environment do
-    require 'csv'
-
     # Folder, where all the mapping .csv reside
     mappings_folder = ENV.fetch('MAPPINGS_FOLDER', nil)
     if mappings_folder.nil?
