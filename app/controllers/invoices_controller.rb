@@ -40,7 +40,7 @@ class InvoicesController < CrudController
 
   def new
     assign_attributes
-    @autoselect_workitems_and_employees = false
+    @autoselect_workitems_and_employees = true
   end
 
   def sync
@@ -88,6 +88,9 @@ class InvoicesController < CrudController
     to = model_params[:period_to]
     @employees = employees_for_period(from, to)
     @work_items = work_items_for_period(from, to)
+    # replace employees_ids in entry with the list of actually selectable employees 
+    entry.employee_ids = @employees.pluck(:id) 
+    entry.work_item_ids = @work_items.pluck(:id)
   end
 
   private
@@ -118,7 +121,7 @@ class InvoicesController < CrudController
       attrs[:period_from] ||= params[:start_date]
       attrs[:period_to] ||= params[:end_date]
     end
-    set_period
+    set_period # sets @period based on start_date and end_date params
     attrs[:grouping] = 'manual' if params[:manual_invoice]
     attrs[:employee_ids] = Array(attrs[:employee_ids]) << params[:employee_id] if params[:employee_id].present?
     return if params[:work_item_id].blank?
@@ -177,21 +180,12 @@ class InvoicesController < CrudController
 
   # determine the checked work_items in the form
   def checked_work_item_ids
-    if autoselect_all?
-      work_items_for_period(entry.period_from, entry.period_to).pluck(:id)
-    else
-      Rails.logger.info("entry_work_item_ids: #{entry.work_item_ids}")
       entry.work_item_ids.presence
-    end
   end
 
   # determine the checked employee_ids in the form
   def checked_employee_ids
-    if autoselect_all?
-      employees_for_period(entry.period_from, entry.period_to).pluck(:id)
-    else
-      entry.employee_ids.presence
-    end
+    entry.employee_ids.presence
   end
 
   def billing_clients
