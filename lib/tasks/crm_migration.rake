@@ -1,34 +1,34 @@
 # frozen_string_literal: true
 
+require 'csv'
+
 namespace :crm_migration do
-  desc 'convenience task which creates a MOCK mapping between all the crm_keys found in the models Client Employee Contact AdditionalCrmOrder Order. Creates a .csv containing this mapping (default name: ids_map.csv). Run with rake crm_migration:create_mock_data_mapping MAPPINGS_FOLDER=path/to/target_folder'
+  desc <<~DESC
+    create a mock mapping between crm_keys
+
+    convenience task which creates a MOCK mapping between all the crm_keys
+    found in the models Client Employee Contact AdditionalCrmOrder Order.
+
+    Creates a .csv containing this mapping (default name: ids_map.csv).
+
+    Needs an ENV-Var MAPPINGS_FOLDER to store the csv in.
+  DESC
   task create_mock_data_mapping: :environment do
     # Folder, where all the mapping .csv reside
     mappings_folder = ENV.fetch('MAPPINGS_FOLDER', nil)
-    if mappings_folder.nil?
-      puts 'Error: ENV Var MAPPINGS_FOLDER cannot be empty'
-      exit 1
-    end
-    FileUtils.mkdir_p(mappings_folder)
+    abort 'Error: ENV Var MAPPINGS_FOLDER cannot be empty' if mappings_folder.nil?
+
+    mkdir_p(mappings_folder)
 
     models = %w[Client Employee Contact AdditionalCrmOrder Order]
 
     models.each do |model_name|
-      ids_map = []
-      index = 0
       model = model_name.constantize
-
       ids = model.where.not(crm_key: nil).pluck(:crm_key).uniq
-
-      # Map each unique old crm key to a made up new index / key, starting from 0
-      ids.each do |old_key|
-        ids_map << [old_key, index]
-        index += 1
-      end
 
       # writes the generated mapping of (old_crm_key, new_crm_key) as a new line into the csv
       CSV.open(File.join(mappings_folder, "#{model_name.underscore}.csv"), 'w') do |csv|
-        ids_map.each do |old_id, new_id|
+        ids.each_with_index do |old_id, new_id|
           csv << [old_id, new_id] # Write each tuple as a row
         end
       end
@@ -36,39 +36,45 @@ namespace :crm_migration do
     end
   end
 
-  desc 'given some .csv files mapping old crm_keys to new ones, apply this mapping to all crm_keys in the db. Run with rake crm_migration:substitute_crm_tokens MAPPINGS_FOLDER=path/to/target_folder'
-  task substitute_crm_tokens: :environment do
-    require 'csv'
+  desc <<~DESC
+    apply mappings to CRM-keys in DB
 
+    given some .csv files mapping old crm_keys to new ones, apply this mapping
+    to all crm_keys in the db.
+
+    Needs an ENV-Var MAPPINGS_FOLDER to read the mapping from.
+  DESC
+  task substitute_crm_tokens: :environment do
     # Folder, where all the mapping .csv reside
     mappings_folder = ENV.fetch('MAPPINGS_FOLDER', nil)
-    if mappings_folder.nil?
-      puts 'Error: ENV Var MAPPINGS_FOLDER cannot be empty'
-      exit 1
-    end
-    FileUtils.mkdir_p(mappings_folder)
+    abort 'Error: ENV Var MAPPINGS_FOLDER cannot be empty' if mappings_folder.nil?
+
+    mkdir_p(mappings_folder)
 
     models = %w[Client Employee Contact AdditionalCrmOrder Order]
     models.each do |model_name|
       file_path = File.join(mappings_folder, "#{model_name.underscore}.csv")
+      model = model_name.constantize
 
       # Step 1: Build the mapping from the CSV
-      mapping = build_mapping(file_path)
+      mapping = CrmMigrationHelper.build_mapping(file_path)
 
       # Step 2: For every model, make dry run
       # (Verify that for every old crm_key there is a new crm_key, else abort)
-      model = model_name.constantize
-      perform_dry_run(model, mapping)
+      CrmMigrationHelper.perform_dry_run(model, mapping)
       puts "Completed dry run for Model #{model}. Everything OK. Commencing database update..."
 
       # Step 3: For every model, execute database updates
       # (Update entries based on the mapping)
-      model = model_name.constantize
-      perform_db_update(model, mapping)
+      CrmMigrationHelper.perform_db_update(model, mapping)
       puts "Completed database updates for model #{model}"
     end
-    puts 'All database update complete.'
+    puts 'All database updates complete.'
   end
+end
+
+module CrmMigrationHelper
+  module_function
 
   # Helper method which builds a hash table containing the mapping of (old_crm_key, new_crm_key) according to the specified .csv
   # arguments: [file_path] the file path to the .csv containing the mapping of (old_crm_key, new_crm_key)
@@ -105,8 +111,7 @@ namespace :crm_migration do
     end
 
     if missing_ids.any?
-      warn "[#{model}] Dry-run detected the following missing crm_keys in the provided mapping (.csv):" + missing_ids.join(', ')
-      exit 1
+      abort "[#{model}] Dry-run detected the following missing crm_keys in the provided mapping (.csv):" + missing_ids.join(', ')
     else
       puts "[#{model}] Dry-run successful. All necessary mappings are present."
     end
@@ -130,8 +135,7 @@ namespace :crm_migration do
         client.update!(crm_key: new_id)
         puts "[#{model}] Updated CRM KEY #{old_key} to #{new_id}"
       else
-        warn "[#{model}] ERROR: #{old_key} not found in the mapping provided in the .csv! Aborting..."
-        exit 1
+        abort "[#{model}] ERROR: #{old_key} not found in the mapping provided in the .csv! Aborting..."
       end
     end
   end
