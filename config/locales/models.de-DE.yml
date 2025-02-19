@@ -305,7 +305,7 @@ de-DE:
         name: Name
         probability: Eintrittswahrscheinlichkeit
         impact: Auswirkung
-        measure: Massnahmen
+        measure: Maßnahmen
         risk: Risiko
       order_uncertainty/probabilities:
         improbable: unwahrscheinlich (< 5%)
