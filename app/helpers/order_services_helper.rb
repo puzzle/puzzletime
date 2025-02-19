@@ -30,6 +30,9 @@ module OrderServicesHelper
       t.attr(:description, nil, class: 'truncated', style: 'max-width: 250px;') do |w|
         content_tag(:span, w.description.to_s, title: w.description)
       end
+      t.attr(:internal_description, nil, class: 'truncated', style: 'max-width: 150px;') do |w|
+        content_tag(:span, w.internal_description.to_s, title: w.internal_description)
+      end
       t.attrs(:billable, :meal_compensation, :invoice_id)
       t.foot { options[:footer] } if options[:footer]
     end

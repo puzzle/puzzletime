@@ -389,6 +389,7 @@ de-DE:
         from_start_time: Von
         to_end_time: Bis
         description: Bemerkungen
+        internal_description: Interne Bemerkungen
         billable: Verrechenbar
         meal_compensation: Verpflegungsentschädigung
         ticket: Ticket
