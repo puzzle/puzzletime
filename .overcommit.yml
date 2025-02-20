@@ -125,7 +125,6 @@ PreCommit:
     enabled: true
   ImageOptim:
     enabled: true
-    pngout: false  # Windows
   JsHint:
     enabled: true
     exclude:
