@@ -75,8 +75,9 @@ class OrderServicesController < ApplicationController
   end
 
   def prepare_report_header
-    work_item_id = params[:work_item_id].presence || order.work_item_id
-    @work_item = WorkItem.find(work_item_id)
+    params[:work_item_id] ||= order.worktimes.select(:work_item_id).distinct.pluck(:work_item_id)
+    work_item_id = params[:work_item_id]
+    @work_items = WorkItem.find(work_item_id)
     @employee = Employee.find(params[:employee_id]) if params[:employee_id].present?
     set_period_with_invoice
   end

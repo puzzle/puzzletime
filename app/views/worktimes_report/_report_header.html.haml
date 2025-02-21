@@ -8,11 +8,18 @@
   %tr
     %td Kunde
     %td
-      %b= @work_item.top_item.client.label
+      %b= @work_items[0].top_item.client.label
   %tr
     %td Auftrag
     %td
-      %b= @work_item.label_ancestry
+      %b= @order.label
+  -if params[:show_work_item] || params[:action] == 'compose_report'
+    %tr
+      %td Buchungspositionen
+      %td
+        - @work_items.each do |item|
+          %b= item.name
+          %br
   - if @employee
     %tr
       %td Member
