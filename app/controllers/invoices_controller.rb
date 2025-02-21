@@ -122,7 +122,7 @@ class InvoicesController < CrudController
     attrs[:employee_ids] = Array(attrs[:employee_ids]) << params[:employee_id] if params[:employee_id].present?
     return if params[:work_item_id].blank?
 
-    attrs[:work_item_ids] = Array(attrs[:work_item_ids]) << params[:work_item_id]
+    attrs[:work_item_ids] = Array(attrs[:work_item_ids]) + params[:work_item_id]
   end
 
   def init_default_attrs(attrs)
