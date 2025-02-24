@@ -10,6 +10,19 @@
       = link_to('Auftrag', order_accounting_posts_path(@board.subject))
 
     = render 'board_header'
+    .groupheader
+      .legend
+        %small
+          Member
+        .rowtotals
+          .col-sum 
+            %small
+              In Zeitbereich
+          .col-sum 
+            %small
+              Total
+      - @board.work_days.times do
+        .day
 
     - @board.accounting_posts.each do |post|
       - if post.work_item_id != @board.order.work_item_id
@@ -34,6 +47,7 @@
                      legend: employee,
                      items: items,
                      row_total: @board.total_row_planned_hours(employee.id, post.work_item_id),
+                     row_total_period: @board.total_row_planned_hours(employee.id, post.work_item_id, only_for_active_period=true),
                      row_total_overall: true
 
       - if can?(:manage_plannings, @board.subject)
