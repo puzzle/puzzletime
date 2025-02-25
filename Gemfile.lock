@@ -736,6 +736,7 @@ DEPENDENCIES
   omniauth-keycloak
   omniauth-rails_csrf_protection
   omniauth-saml
+  ostruct
   paper_trail
   pg
   prawn
