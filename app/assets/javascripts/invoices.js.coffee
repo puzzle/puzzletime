@@ -13,9 +13,6 @@ app.invoices = new class
     $('#invoice_period_from,#invoice_period_to')
       .datepicker('option', 'disabled', $('#period_shortcut').val())
 
-    # $('#period_shortcut').closest('.form-group')
-    #   .css('visibility', if !$('#invoice_period_to').val() && !$('#invoice_period_from').val() then 'visible' else 'hidden')
-
 $(document).on('change', '#invoice_period_from,#invoice_period_to,#period_shortcut', ->
   app.invoices.init()
 )
