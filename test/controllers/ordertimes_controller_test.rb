@@ -30,13 +30,14 @@ class OrdertimesControllerTest < ActionController::TestCase
 
   def test_new_with_template
     template = worktimes(:wt_mw_puzzletime)
-    template.update!(ticket: '123', description: 'desc')
+    template.update!(ticket: '123', description: 'desc', internal_description: 'internal_desc')
 
     get :new, params: { template: template.id }
 
     assert_equal template.work_item, assigns(:worktime).work_item
     assert_equal '123', assigns(:worktime).ticket
     assert_equal 'desc', assigns(:worktime).description
+    assert_equal 'internal_desc', assigns(:worktime).internal_description
     assert_predicate assigns(:worktime), :billable?
   end
 
