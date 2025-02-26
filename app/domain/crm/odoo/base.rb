@@ -1,28 +1,71 @@
 # frozen_string_literal: true
 
 module Crm
-  module Odoo
+  class Odoo
     class Base
       class_attribute :model
       class_attribute :parameters
-      class_attribute :fields
+      class_attribute :options
 
       self.parameters = [].freeze
+      self.options = {}.freeze
 
+      attr_reader :attributes
       delegate_missing_to :@attributes
 
       def initialize(attributes)
         @attributes = OpenStruct.new(attributes) # rubocop:disable Style/OpenStructUse
       end
 
-      def self.resource(parameters: [])
-        parameters = [[*self.parameters, *parameters]]
-        search_read(model, parameters: parameters)
-          .map { new(_1) }
-      end
+      class << self
 
-      def self.find(id)
-        new(read(model, id))
+
+        def resources(parameters: [], options: {})
+          parameters = [*self.parameters, *parameters]
+          options = {**self.options, **options}
+
+          api.search_read(
+            model,
+            parameters: parameters,
+            options: options
+          )
+            .map { split_ids _1 }
+        end
+
+        def resource(id, parameters: [], options: {})
+          parameters = [*self.parameters, *parameters]
+          options = {**self.options, **options}
+
+          api
+            .read(model, id, options:)
+            .first
+            .then { split_ids _1 }
+        end
+
+        def all(...) = resources(...).map { new _1 }
+        def find(...) = resource(...).then { _1 && new(_1) }
+
+        private
+
+        def api = Crm.instance.api
+
+        def split_ids(resource)
+          return resource unless resource
+
+          attrs = {}
+          resource.each do |k,v|
+            next unless k =~ /_id$/
+            attr_name = k.split("_")[..-2].join("_")
+
+            if v.is_a? Array
+              attrs["#{attr_name}_id"] = v.first
+              attrs["#{attr_name}_name"] = v.second
+            else
+              attrs["#{attr_name}_name"] = v
+            end
+          end
+          resource.merge(attrs)
+        end
       end
     end
   end
