@@ -22,8 +22,8 @@ module Api
         employee.to_s
       end
 
-      attribute :is_employed do |_employee|
-        !e.current_employment.nil?
+      attribute :is_employed do |employee|
+        !employee.current_employment.nil?
       end
 
       attribute :department_shortname do |employee|
