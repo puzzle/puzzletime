@@ -12,6 +12,7 @@ module Crm
   def self.init
     Crm.instance = crm.new
     CrmSyncJob.schedule if Delayed::Job.table_exists?
+    Crm.instance
   end
 
   def self.crm
