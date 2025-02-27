@@ -49,6 +49,13 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
     assert_match expected_total, text_on_page
   end
 
+  test 'sets calculated total hours on page load' do
+    expected_total = "#{delimited_number(billable_hours)} h"
+    text_on_page = find('#invoice_total_hours').text
+
+    assert_match expected_total, text_on_page
+  end
+
   test 'lists only employees with ordertimes on page load' do
     all(:name, 'invoice[employee_ids][]').map(&:value)
 
@@ -110,6 +117,13 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
 
   test 'check employee checkbox updates calculated total' do
     assert_change -> { find('#invoice_total_amount').text } do
+      find_field("invoice_employee_ids_#{employees(:mark).id}").click
+      sleep(0.5) # give the xhr request some time to complete
+    end
+  end
+
+  test 'check employee checkbox updates calculated hours' do
+    assert_change -> { find('#invoice_total_hours').text } do
       find_field("invoice_employee_ids_#{employees(:mark).id}").click
       sleep(0.5) # give the xhr request some time to complete
     end
