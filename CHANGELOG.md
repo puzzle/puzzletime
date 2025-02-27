@@ -6,7 +6,6 @@
 ### Improvements
 * **Übersetzungen**: Deutsche Übersetzungen verbessert
 
-
 # 2.13
 
 ### Features
