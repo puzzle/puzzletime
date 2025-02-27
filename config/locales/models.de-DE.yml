@@ -246,6 +246,7 @@ de-DE:
         period: Leistungsperiode
         period_from: von
         period_to: bis
+        period_shortcut_selection: Vergangenen Monat wählen
         reference: Referenz
         status: Status
         total_amount: Rechnungsbetrag
