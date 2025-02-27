@@ -1,8 +1,17 @@
+# 2.14
+
+### Features
+* **Member API**: Zwei neue Felder (city & birthday) hinzugefügt
+
+### Improvements
+* **Übersetzungen**: Deutsche Übersetzungen verbessert
+
+
 # 2.13
 
 ### Features
 * **Umsatztabelle**: Umsatztabelle neu nach OE des Members gruppierbar (62592)
-* **Auftragsmanagement**: Splittansicht bei abgeschlossenen Stunden  (63627)
+* **EmpAuftragsmanagement**: Splittansicht bei abgeschlossenen Stunden  (63627)
 * **Auftrags-Controlling**: abgeschlossene Aufträge ohne Zeiten werden neu auch angezeigt (62593)
 
 # 2.12
