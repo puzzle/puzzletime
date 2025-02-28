@@ -37,7 +37,7 @@ class OrderReportsController < ApplicationController
   private
 
   def show_without_hours
-    params[:without_hours] = true if params[:closed].presence
+    params[:without_hours] = true if params[:status_preselection].presence
   end
 
   def set_filter_values
