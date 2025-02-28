@@ -16,7 +16,8 @@ module OrderCostsHelper
         f(e.amount)
       end
       t.attr(:status_value, nil, width: '10%')
-      t.attr(:description)
+      t.attr(:description,  nil, width: '40%')
+      expense_details_col(t, personal: false)
       t.foot { summed_expenses_row(entries) }
     end
   end
@@ -26,6 +27,7 @@ module OrderCostsHelper
       content_tag(:td) +
         content_tag(:td, 'Total', class: 'right') +
         content_tag(:td, f(entries.to_a.sum(&:amount)), class: 'right') +
+        content_tag(:td) +
         content_tag(:td) +
         content_tag(:td)
     end
