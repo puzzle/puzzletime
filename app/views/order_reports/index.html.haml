@@ -5,10 +5,12 @@
 
 
 %ul.nav.nav-tabs{ role: 'tablist' }
-  %li{ class: ('active' unless params[:closed] == 'true') }
-    = link_to('Laufende', reports_orders_path)
-  %li{ class: ('active' if params[:closed] == 'true') }
-    = link_to('Abgeschlossene', reports_orders_path(closed: true))
+  %li{ class: ('active' if params[:status_preselection].blank?) }
+    = link_to('Alle', reports_orders_path)
+  %li{ class: ('active' if params[:status_preselection] == 'in_progress') }
+    = link_to('Laufende', reports_orders_path(status_preselection: 'in_progress'))
+  %li{ class: ('active' if params[:status_preselection] == 'closed') }
+    = link_to('Abgeschlossene', reports_orders_path(status_preselection: 'closed'))
 
 - @title ||= 'Auftrags-Controlling'
 
