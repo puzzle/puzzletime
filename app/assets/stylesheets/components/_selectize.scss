@@ -37,6 +37,13 @@
   .description {
     font-size: 11px;
   }
+
+  .icon-disk {
+    display: inline-block;
+    content: "\62";
+    margin-right: 5px;
+    font-size: smaller;
+  }
 }
 
 /* Fix a bug, where the input would be reduced to 4px when empty */
