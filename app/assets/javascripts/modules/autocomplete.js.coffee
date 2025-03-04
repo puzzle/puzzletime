@@ -20,12 +20,15 @@ class app.Autocomplete
       },
       load: @loadOptions(input),
       onItemAdd: @onItemAdd
+      onItemRemove: @onItemRemove
     )
 
   searchFields: ->
     ['name', 'path_shortnames', 'path_names']
 
   onItemAdd: ->
+
+  onItemRemove: ->
 
   renderOption: (item, escape) ->
     "<div class='selectize-option'>" +
