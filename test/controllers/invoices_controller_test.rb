@@ -67,8 +67,10 @@ class InvoicesControllerTest < ActionController::TestCase
     get :preview_total, xhr: true, params: params.merge(format: :js)
 
     preview_value = response.body[/html\('(.+) #{Settings.defaults.currency}'\)/, 1].to_f
+    preview_value_hours = response.body[/html\('(.+) h'\)/, 1].to_f
 
     assert_equal(entry.calculated_total_amount, preview_value)
+    assert_equal(entry.calculated_total_hours, preview_value_hours)
   end
 
   test 'GET billing_addresses' do
