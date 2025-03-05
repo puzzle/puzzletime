@@ -11,30 +11,33 @@ class app.WorkItemAutocomplete extends app.Autocomplete
     if offered_hrs == null
       return 'green'
     if done_hrs / offered_hrs >= 1
-        return 'red'
+      return 'red'
     if done_hrs / offered_hrs >= 0.8
-        return 'orange'
+      return 'orange'
     'green'
 
   onItemAdd: (value, item) ->
-    console.log(item)
     billable = item.attr('data-billable') == 'true'
     meal_compensation = item.attr('data-meal_compensation') == 'true'
     $('#ordertime_billable').prop('checked', billable);
     $('#ordertime_meal_compensation').prop('checked', meal_compensation);
 
+    # renderes a progress bar depending on how much of the budget is already used
     offered_hours = item.attr('data-offered_hours')
-    done_hours = item.attr('data-done_hours')
-    percentage = done_hours * 100 / offered_hours
-      
-    console.log(done_hours + "/" + offered_hours)
+    done_hours = parseFloat(item.attr('data-done_hours')).toFixed(2)
+    if offered_hours? and offered_hours != 'null'  
+      offered_hours = parseFloat(offered_hours).toFixed(2)  
+      percentage = parseFloat(done_hours * 100 / offered_hours).toFixed(2)  
+    else
+      offered_hours = '∞'
+      percentage = 0
+    
     $('.live_budget_bar').show();
     $('#live_bar_success').width(Math.min(percentage,100) + '%');
-    $('.live_budget_bar').attr('data-original-title', "#{ parseFloat(done_hours).toFixed(1) } h / #{ parseFloat(offered_hours).toFixed(1) } h (#{ percentage.toFixed(2) }%)");
+    $('.live_budget_bar').attr('data-original-title', "#{ done_hours } h / #{ offered_hours } h (#{ percentage }%)");
       
-    
-
   onItemRemove: (value, item) ->
+    # Removes the progress bar if no position is set
     $('#live_bar_success').width(0 + '%');
     $('.live_budget_bar').hide();
 
@@ -46,13 +49,12 @@ class app.WorkItemAutocomplete extends app.Autocomplete
       "<div class='description'>#{ escape(@limitText(item.description || '', 120)) }</div>" +
       "</div>"
     
-  # TODO: update progress bar on update
-
   renderItem: (item, escape) ->
     "<div data-billable=#{ item.billable } data-meal_compensation=#{ item.meal_compensation } data-offered_hours=#{ item.offered_hours } data-done_hours=#{ item.done_hours }>" +
     "#{ escape(item.path_shortnames) }: #{ escape(item.name) }</div>"
 
 $(document).on('turbolinks:load', ->
   $('[data-autocomplete=work_item]').each((i, element) -> new app.WorkItemAutocomplete().bind(element))
+  # hide the progress bar depicting the usage of the budget upon initialization of the site
   $('.live_budget_bar').hide();
 )
