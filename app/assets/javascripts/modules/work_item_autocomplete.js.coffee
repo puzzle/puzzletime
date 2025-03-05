@@ -16,7 +16,7 @@ class app.WorkItemAutocomplete extends app.Autocomplete
       return 'orange'
     'green'
 
-  onItemAdd: (value, item) ->
+  onItemAdd: (value, item)  =>
     billable = item.attr('data-billable') == 'true'
     meal_compensation = item.attr('data-meal_compensation') == 'true'
     $('#ordertime_billable').prop('checked', billable);
@@ -25,6 +25,8 @@ class app.WorkItemAutocomplete extends app.Autocomplete
     # renderes a progress bar depending on how much of the budget is already used
     offered_hours = item.attr('data-offered_hours')
     done_hours = parseFloat(item.attr('data-done_hours')).toFixed(2)
+    $('#live_bar_success').removeClass( "bg-green bg-orange bg-red" ).addClass("bg-" + @picked_color(offered_hours, done_hours));
+
     if offered_hours? and offered_hours != 'null'  
       offered_hours = parseFloat(offered_hours).toFixed(2)  
       percentage = parseFloat(done_hours * 100 / offered_hours).toFixed(2)  
@@ -32,14 +34,14 @@ class app.WorkItemAutocomplete extends app.Autocomplete
       offered_hours = '∞'
       percentage = 0
     
-    $('.live_budget_bar').show();
-    $('#live_bar_success').width(Math.min(percentage,100) + '%');
     $('.live_budget_bar').attr('data-original-title', "#{ done_hours } h / #{ offered_hours } h (#{ percentage }%)");
+    $('.live_budget_bar').css("visibility", "visible");
+    $('#live_bar_success').width(Math.min(percentage,100) + '%');
       
   onItemRemove: (value, item) ->
     # Removes the progress bar if no position is set
     $('#live_bar_success').width(0 + '%');
-    $('.live_budget_bar').hide();
+    $('.live_budget_bar').css("visibility", "hidden");
 
   renderOption: (item, escape) ->
     "<div class='selectize-option'>" +
@@ -56,5 +58,5 @@ class app.WorkItemAutocomplete extends app.Autocomplete
 $(document).on('turbolinks:load', ->
   $('[data-autocomplete=work_item]').each((i, element) -> new app.WorkItemAutocomplete().bind(element))
   # hide the progress bar depicting the usage of the budget upon initialization of the site
-  $('.live_budget_bar').hide();
+  $('.live_budget_bar').css("visibility", "hidden");
 )
