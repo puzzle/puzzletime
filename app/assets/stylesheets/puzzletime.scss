@@ -197,16 +197,32 @@ a[data-toggle] {
   color: $brand-danger;
 }
 
+.bg-red {
+  background-color: $brand-danger;
+}
+
 .green {
   color: $brand-success;
+}
+
+.bg-green {
+  background-color: $brand-success;
 }
 
 .orange {
   color: $brand-warning;
 }
 
+.bg-orange {
+  background-color: $brand-warning;
+}
+
 .yellow {
   color: $brand-info;
+}
+
+.bg-yellow {
+  background-color: $brand-info;
 }
 
 .tooltip p {
