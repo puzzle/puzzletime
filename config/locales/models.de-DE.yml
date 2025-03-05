@@ -83,8 +83,8 @@ de-DE:
         one: Zeit
         other: Zeiten
       overtime_vacation:
-        one: Überstunden-Ferien Umbuchung
-        other: Überstunden-Ferien Umbuchungen
+        one: Überstunden-Urlaub Umbuchung
+        other: Überstunden-Urlaub Umbuchungen
       planning:
         one: Planung
         other: Planungen
@@ -118,7 +118,7 @@ de-DE:
         name: Bezeichnung
         payed: Bezahlt
         private: Nicht öffentlich
-        vacation: Ferien
+        vacation: Urlaub
       absencetime:
         duration: Dauer
       accounting_post:
@@ -179,7 +179,7 @@ de-DE:
         management: Management
         department: Organisationseinheit
         department_id: Organisationseinheit
-        initial_vacation_days: Anfängliche Ferien
+        initial_vacation_days: Anfänglicher Urlaub
         ldapname: LDAP Name
         current_percent: Beschäftigungsgrad
         eval_periods: Zeitspannen Auswertungen
@@ -213,7 +213,7 @@ de-DE:
         start_date: Startdatum
         end_date: Enddatum
         percent: Beschäftigungsgrad
-        vacation_days_per_year: Ferientage pro Jahr
+        vacation_days_per_year: Urlaubstage pro Jahr
         employment_roles_employments: Funktionsanteile
         comment: Kommentar
       employment_role:
@@ -306,7 +306,7 @@ de-DE:
         name: Name
         probability: Eintrittswahrscheinlichkeit
         impact: Auswirkung
-        measure: Massnahmen
+        measure: Maßnahmen
         risk: Risiko
       order_uncertainty/probabilities:
         improbable: unwahrscheinlich (< 5%)
@@ -373,7 +373,7 @@ de-DE:
         description: Beschreibung
       working_condition:
         valid_from: Gültig ab
-        vacation_days_per_year: Ferientage pro Jahr
+        vacation_days_per_year: Urlaubstage pro Jahr
         must_hours_per_day: Arbeitszeit pro Tag
       worktime:
         account_id: Buchungsposition

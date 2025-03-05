@@ -78,7 +78,9 @@ module Puzzletime
       CommitReminderJob.schedule
     rescue ActiveRecord::StatementInvalid => e
       # the db might not exist yet, lets ignore the error in this case
-      raise e unless e.message.include?('PG::UndefinedTable') || e.message.include?('does not exist')
+      raise e unless e.message.include?('PG::UndefinedTable') ||
+                     e.message.include?('does not exist') ||
+                     e.is_a?(ActiveRecord::NoDatabaseError)
     end
 
     config.active_record.yaml_column_permitted_classes = [Date, BigDecimal]
