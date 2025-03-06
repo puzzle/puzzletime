@@ -15,7 +15,6 @@ class OrderReportsController < ApplicationController
                             major_risk_value]
 
   before_action :authorize_class
-  before_action :show_without_hours
 
   def index
     set_period
@@ -35,10 +34,6 @@ class OrderReportsController < ApplicationController
   end
 
   private
-
-  def show_without_hours
-    params[:without_hours] = true if params[:status_preselection].presence
-  end
 
   def set_filter_values
     @departments = Department.list
