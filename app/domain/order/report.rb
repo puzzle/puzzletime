@@ -133,7 +133,7 @@ class Order
     end
 
     def show_without_hours?
-      params[:without_hours].presence || false
+      params[:without_hours] == 'true'
     end
 
     def booked_hours?(post_hours)
