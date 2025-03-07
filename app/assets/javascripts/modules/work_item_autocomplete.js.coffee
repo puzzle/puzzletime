@@ -20,7 +20,7 @@ class app.WorkItemAutocomplete extends app.Autocomplete
     # renderes a progress bar depending on how much of the budget is already used
     offered_hours = item.attr('data-offered_hours')
     done_hours = parseFloat(item.attr('data-done_hours')).toFixed(2)
-    $('#live_bar_success').removeClass( "bg-green bg-orange bg-red" ).addClass("bg-" + @picked_color(offered_hours, done_hours));
+    $('#live-bar-success').removeClass( "bg-green bg-orange bg-red" ).addClass("bg-" + @picked_color(offered_hours, done_hours));
 
     # handle the case where the budget is not set (offered_hours == 'null')
     # CAREFUL: if not set in the db, due to the json serializer, offered_hours will be 'null' (string). 
@@ -33,25 +33,24 @@ class app.WorkItemAutocomplete extends app.Autocomplete
       percentage = 0
 
     # set tooltip
-    $('.live_budget_bar').attr('data-original-title', "#{ done_hours } h / #{ offered_hours } h (#{ percentage }%)");
+    $('.live-budget-bar').attr('data-original-title', "#{ done_hours } h / #{ offered_hours } h (#{ percentage }%)");
     # show progress bar
-    $('.live_budget_bar').css("visibility", "visible");
+    $('.live-budget-bar').css("visibility", "visible");
     # set length of filled part of progress bar
-    $('#live_bar_success').width(Math.min(percentage,100) + '%');
+    $('#live-bar-success').width(Math.min(percentage,100) + '%');
 
   onItemAdd: (value, item)  =>
     billable = item.attr('data-billable') == 'true'
     meal_compensation = item.attr('data-meal_compensation') == 'true'
     $('#ordertime_billable').prop('checked', billable);
     $('#ordertime_meal_compensation').prop('checked', meal_compensation);
-    # sets
     @set_progress_bar(item)
     
       
   onItemRemove: (value, item) ->
     # Removes the progress bar if no position is selected
-    $('#live_bar_success').width(0 + '%');
-    $('.live_budget_bar').css("visibility", "hidden");
+    $('#live-bar-success').width(0 + '%');
+    $('.live-budget-bar').css("visibility", "hidden");
 
   renderOption: (item, escape) ->
     "<div class='selectize-option'>" +
@@ -68,5 +67,5 @@ class app.WorkItemAutocomplete extends app.Autocomplete
 $(document).on('turbolinks:load', ->
   $('[data-autocomplete=work_item]').each((i, element) -> new app.WorkItemAutocomplete().bind(element))
   # hide the progress bar depicting the usage of the budget upon initialization of the site
-  $('.live_budget_bar').css("visibility", "hidden");
+  $('.live-budget-bar').css("visibility", "hidden");
 )
