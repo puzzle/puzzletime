@@ -136,6 +136,11 @@ module OrderHelper
                 data: { data: json.to_json })
   end
 
+  # returns the percentage of the budget that is already used, defaulting to 0 for orders with no budget
+  def get_order_budget_used_percentage(order)
+    order_progress(order)[:percent_title] || 0
+  end
+
   def order_progress_bar(order)
     progress = order_progress(order)
 
@@ -165,7 +170,7 @@ module OrderHelper
   private
 
   def order_progress_bar_link(order, progress, &)
-    title = "#{f(progress[:percent_title])}% geleistet"
+    title = "#{f((progress[:percent_title]) || 0)}% geleistet"
 
     if can?(:show, order)
       link_to(order_order_controlling_url(order.id),
@@ -203,7 +208,7 @@ module OrderHelper
       (order.supplied_amount.to_f - order.offered_amount.to_f) /
       order.supplied_amount.to_f *
       100
-    progress[:percent] = 100 - progress[:over_budget_percent]
+    progress[:percent] = (100 - progress[:over_budget_percent])
   end
 
   def order_report_billability_class(value)
