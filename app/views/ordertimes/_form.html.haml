@@ -26,9 +26,9 @@
                   required: true,
                   data: { autocomplete: 'work_item',
                           url: search_work_items_path })
-      %span{ title: "", data: { toggle: "tooltip", original_title: "Budgetnutzung" }, class: "live_budget_bar"}
+      %span{ title: "", data: { toggle: "tooltip", original_title: "Budgetnutzung" }, class: "live-budget-bar"}
         %a.progress
-          %div#live_bar_success.progress-bar
+          %div#live-bar-success.progress-bar
 
   = f.labeled_input_field(:ticket, span: 2)
   = f.labeled_text_area(:description)
