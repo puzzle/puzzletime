@@ -8,6 +8,7 @@
 class Order
   class Report
     include Filterable
+    include OrderHelper
 
     attr_reader :period, :params
 
@@ -196,6 +197,8 @@ class Order
       match = sort_by_target?
       if match
         sort_by_target(entries, match[1], dir)
+      elsif sort_by_budget?
+        sort_by_budget(entries, dir)
       elsif sort_by_string?
         sort_by_string(entries, dir)
       elsif sort_by_number?
@@ -219,6 +222,10 @@ class Order
       params[:sort].to_s.match(/\Atarget_scope_(\d+)\z/)
     end
 
+    def sort_by_budget?
+      params[:sort].to_s == 'budget_controlling'
+    end
+
     def sort_by_string(entries, dir)
       sorted = entries.sort_by do |e|
         e.send(params[:sort])
@@ -236,6 +243,12 @@ class Order
     def sort_by_target(entries, target_scope_id, dir)
       entries.sort_by do |e|
         dir * OrderTarget::RATINGS.index(e.target(target_scope_id).try(:rating)).to_i
+      end
+    end
+
+    def sort_by_budget(entries, dir)
+      entries.sort_by do |e|
+        dir * get_order_budget_used_percentage(e)
       end
     end
   end
