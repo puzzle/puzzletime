@@ -28,21 +28,6 @@ class app.Autocomplete
     ['name', 'path_shortnames', 'path_names']
 
   onInitialize: (input) ->
-    ->
-      selectize = @
-      if selectize.items.length == 1
-        value = selectize.getValue()
-        selectize.removeOption(value)
-        
-        $.ajax(
-            url: Autocomplete.prototype.buildUrl(input, "id", value),
-            type: 'GET',
-            success: (res) ->
-              option = res[0]
-              selectize.addOption(option);
-              selectize.setValue(option.id, true)
-              selectize.trigger('item_add', option.id, selectize.getItem(option.id)) # Manually trigger event
-          )
       
   onItemAdd: ->
 

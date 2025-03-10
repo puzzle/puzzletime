@@ -37,6 +37,23 @@ class app.WorkItemAutocomplete extends app.Autocomplete
     # set length of filled part of progress bar
     $('#live-bar-success').width(Math.min(percentage,100) + '%');
 
+  onInitialize: (input) ->
+    ->
+      selectize = $(input).data('selectize')
+      if selectize.items.length == 1
+        value = selectize.getValue()
+        selectize.removeOption(value)
+        
+        $.ajax(
+            url: app.Autocomplete.prototype.buildUrl(input, "id", value),
+            type: 'GET',
+            success: (res) ->
+              option = res[0]
+              selectize.addOption(option);
+              selectize.setValue(option.id, true)
+              selectize.trigger('item_add', option.id, selectize.getItem(option.id)) # Manually trigger event
+          )
+
   onItemAdd: (value, item)  =>
     billable = item.attr('data-billable') == 'true'
     meal_compensation = item.attr('data-meal_compensation') == 'true'
