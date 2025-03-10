@@ -34,8 +34,6 @@ class app.WorkItemAutocomplete extends app.Autocomplete
 
     # set tooltip
     $('.live-budget-bar').attr('data-original-title', "#{ done_hours } h / #{ offered_hours } h (#{ percentage }%)");
-    # show progress bar
-    $('.live-budget-bar').css("visibility", "visible");
     # set length of filled part of progress bar
     $('#live-bar-success').width(Math.min(percentage,100) + '%');
 
@@ -47,11 +45,11 @@ class app.WorkItemAutocomplete extends app.Autocomplete
     @set_progress_bar(item)
     
       
-  onItemRemove: (value, item) ->
+  onItemRemove: (value) ->
     # Removes the progress bar if no position is selected
     $('#live-bar-success').width(0 + '%');
-    $('.live-budget-bar').css("visibility", "hidden");
-
+    $('.live-budget-bar').attr('data-original-title', "Wähle eine Buchungsposition aus");
+  
   renderOption: (item, escape) ->
     "<div class='selectize-option'>" +
       "<div class='#{@picked_color(item.offered_hours, item.done_hours)} icon-disk'></div>" +
@@ -66,6 +64,4 @@ class app.WorkItemAutocomplete extends app.Autocomplete
 
 $(document).on('turbolinks:load', ->
   $('[data-autocomplete=work_item]').each((i, element) -> new app.WorkItemAutocomplete().bind(element))
-  # hide the progress bar depicting the usage of the budget upon initialization of the site
-  $('.live-budget-bar').css("visibility", "hidden");
 )

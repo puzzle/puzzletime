@@ -9,7 +9,7 @@ app = window.App ||= {}
 class app.Autocomplete
   bind: (input) ->
     $(input).selectize(
-      plugins: ['required-fix']
+      plugins: ['required-fix'],
       valueField: 'id',
       searchField: @searchFields(),
       selectOnTab: true,
@@ -19,13 +19,31 @@ class app.Autocomplete
         item: @renderItem
       },
       load: @loadOptions(input),
-      onItemAdd: @onItemAdd
-      onItemRemove: @onItemRemove
+      onItemAdd: @onItemAdd,
+      onItemRemove: @onItemRemove,
+      onInitialize: @onInitialize(input)
     )
 
   searchFields: ->
     ['name', 'path_shortnames', 'path_names']
 
+  onInitialize: (input) ->
+    ->
+      selectize = @
+      if selectize.items.length == 1
+        value = selectize.getValue()
+        selectize.removeOption(value)
+        
+        $.ajax(
+            url: Autocomplete.prototype.buildUrl(input, "id", value),
+            type: 'GET',
+            success: (res) ->
+              option = res[0]
+              selectize.addOption(option);
+              selectize.setValue(option.id, true)
+              selectize.trigger('item_add', option.id, selectize.getItem(option.id)) # Manually trigger event
+          )
+      
   onItemAdd: ->
 
   onItemRemove: ->
@@ -43,7 +61,7 @@ class app.Autocomplete
     (query, callback) ->
       if query.length
         $.ajax(
-          url: Autocomplete.prototype.buildUrl(input, query)
+          url: Autocomplete.prototype.buildUrl(input, "q", query)
           type: 'GET',
           error: -> callback(),
           success: (res) -> callback(res)
@@ -51,12 +69,11 @@ class app.Autocomplete
       else
         callback()
 
-  buildUrl: (input, query) ->
+  buildUrl: (input, param_key, param_val) ->
     url        = $(input).data('url')
-    param      = encodeURIComponent(query)
+    param      = encodeURIComponent(param_val)
     param_char = if url.indexOf('?') >= 0 then '&' else '?'
-
-    "#{url}#{param_char}q=#{param}"
+    "#{url}#{param_char}#{param_key}=#{param}"
 
   limitText: (string, max) ->
     if !string
