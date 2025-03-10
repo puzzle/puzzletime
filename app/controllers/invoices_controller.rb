@@ -113,15 +113,11 @@ class InvoicesController < CrudController
   end
 
   def copy_attrs_from_params(attrs)
-    if params[:period_shortcut].present?
-      period = build_period
-      attrs[:period_from] ||= period.start_date
-      attrs[:period_to] ||= period.end_date
-    else
-      attrs[:period_from] ||= params[:start_date]
-      attrs[:period_to] ||= params[:end_date]
-    end
-    set_period # sets @period based on params[:period_shortcut] if set, else based on params[:start_date] and params[:end_date]
+    set_period
+    
+    attrs[:period_from] ||= @period.start_date
+    attrs[:period_to] ||= @period.end_date
+
     attrs[:grouping] = 'manual' if params[:manual_invoice]
     attrs[:employee_ids] = Array(attrs[:employee_ids]) << params[:employee_id] if params[:employee_id].present?
     return if params[:work_item_id].blank?
