@@ -10,10 +10,12 @@ app.invoices = new class
     @dateChanged()
 
   dateChanged: ->
-    $('#invoice_period_from,#invoice_period_to')
-      .datepicker('option', 'disabled', $('#period_shortcut').val())
+    $('#invoice_period_from,#invoice_period_to').each ->
+      val = $(this).val()
+      $(this).datepicker('option', 'disabled', $('#period_shortcut').val())
+      $(this).val(val)
 
-$(document).on('change', '#invoice_period_from,#invoice_period_to,#period_shortcut', ->
+$(document).on('change', '#period_shortcut', ->
   app.invoices.init()
 )
 
