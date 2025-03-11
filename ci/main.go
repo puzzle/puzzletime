@@ -168,7 +168,7 @@ func (m *Ci) PublishToDeptrack(
 	// deptrack API key
 	apiKey *dagger.Secret,
 	// deptrack project UUID
-    projectUUID string,
+	projectUUID string,
 ) (string, error) {
 	return dag.Container().
 		From("curlimages/curl").
@@ -254,9 +254,9 @@ func (m *Ci) Ci(
 	// deptrack address for publishing the SBOM https://deptrack.example.com/api/v1/bom
 	dtAddress string,
 	// deptrack project UUID
-    dtProjectUUID string,
-    // deptrack API key
-    dtApiKey *dagger.Secret,
+	dtProjectUUID string,
+	// deptrack API key
+	dtApiKey *dagger.Secret,
 	// ignore linter failures
 	// +optional
 	// +default=false
@@ -277,7 +277,7 @@ func (m *Ci) Ci(
 	}
 
 	return &Results{
-		TestReports:       testReports,
+		TestReports:	   testReports,
 		LintOutput:        lintOutput,
 		SecurityScan:      securityScan,
 		VulnerabilityScan: vulnerabilityScan,
@@ -300,9 +300,9 @@ func (m *Ci) CiIntegration(
 	// deptrack address for publishing the SBOM https://deptrack.example.com/api/v1/bom
 	dtAddress string,
 	// deptrack project UUID
-    dtProjectUUID string,
-    // deptrack API key
-    dtApiKey *dagger.Secret,
+	dtProjectUUID string,
+	// deptrack API key
+	dtApiKey *dagger.Secret,
 	// ignore linter failures
 	// +optional
 	// +default=false
