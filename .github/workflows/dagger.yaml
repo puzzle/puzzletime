@@ -31,7 +31,7 @@ jobs:
           # Dagger module to call. Local or Git
           module: .
           # Arguments to pass to CLI
-          args: ci-integration --pass=true --dir=./  --registry-address=${{ env.REGISTRY_ADDRESS }} --registry-username=${{ env.REGISTRY_USERNAME }} --registry-password=env:${{ env.REGISTRY_PASSWORD }} --dt-address=${{ env.DT_ADDRESS }} --dt-project-uuid=${{ env.DT_PROJECT_UUID }} --dt-api-key=env:DT_API_KEY  export --path=./reports/
+          args: ci-integration --pass=true --dir=./  --registry-address=${{ env.REGISTRY_ADDRESS }} --registry-username=${{ env.REGISTRY_USERNAME }} --registry-password=env:REGISTRY_PASSWORD --dt-address=${{ env.DT_ADDRESS }} --dt-project-uuid=${{ env.DT_PROJECT_UUID }} --dt-api-key=env:DT_API_KEY  export --path=./reports/
       - name: Unittest Report
         uses: dorny/test-reporter@v1.9.1
         with:
