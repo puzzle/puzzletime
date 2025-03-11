@@ -163,6 +163,55 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
     assert find('#billing_addresses').has_content?('Eigerplatz')
   end
 
+  test 'passing start / end date params or a period shortcut sets date fields' do
+    reload({ start_date: '01.11.2006', end_date: '08.12.2006' })
+
+    assert_equal '01.11.2006', find('#invoice_period_from')['value']
+    assert_equal '08.12.2006', find('#invoice_period_to')['value']
+
+    reload({ period_shortcut: '-1m' })
+    period = Period.parse('-1m')
+
+    assert_equal Period.parse_date(period.start_date), Period.parse_date(find('#invoice_period_from')['value'])
+    assert_equal Period.parse_date(period.end_date), Period.parse_date(find('#invoice_period_to')['value'])
+  end
+
+  test 'setting the period shortcut disables the date fields, unsetting it enables the date fields' do
+    put_period_shortcut('-1m')
+
+    assert find('#invoice_period_from')['disabled']
+    assert find('#invoice_period_to')['disabled']
+
+    clear_period_shortcut
+
+    assert_not find('#invoice_period_from')['disabled']
+    assert_not find('#invoice_period_to')['disabled']
+  end
+
+  test 'set to period_shortcut updates employee checkboxes' do
+    assert has_css?('#employee_checkboxes', text: 'Waber Mark')
+
+    put_period_shortcut('-1m')
+
+    assert_not has_css?('#employee_checkboxes', text: 'Waber Mark')
+
+    clear_period_shortcut
+
+    assert has_css?('#employee_checkboxes', text: 'Waber Mark')
+  end
+
+  test 'set to period_shortcut updates work_items checkboxes' do
+    assert has_css?('#work_item_checkboxes', text: 'STOP-WEB: Webauftritt')
+
+    put_period_shortcut('-1m')
+
+    assert_not has_css?('#work_item_checkboxes', text: 'STOP-WEB: Webauftritt')
+
+    clear_period_shortcut
+
+    assert has_css?('#work_item_checkboxes', text: 'STOP-WEB: Webauftritt')
+  end
+
   def order
     orders(:webauftritt)
   end
@@ -198,6 +247,18 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
     fill_in(label, with: date_string)
     page.find('#ui-datepicker-div .ui-datepicker-current-day a').click
     sleep(0.5) # give the xhr request some time to complete
+  end
+
+  def put_period_shortcut(period_shortcut)
+    find('#period_shortcut').click
+    find("option[value=\"#{period_shortcut}\"]").select_option
+    sleep(0.5)
+  end
+
+  def clear_period_shortcut
+    find('#period_shortcut').click
+    find("option[value='']").select_option
+    sleep(0.5)
   end
 
   # asserts that the checkboxes match the models by value/id and the checked state
