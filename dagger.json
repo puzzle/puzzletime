@@ -1,17 +1,13 @@
 {
   "name": "ci",
-  "engineVersion": "v0.15.3",
-  "sdk": "go",
+  "engineVersion": "v0.16.1",
+  "sdk": {
+    "source": "go"
+  },
   "dependencies": [
     {
-      "name": "cosign",
-      "source": "github.com/puzzle/dagger-module-cosign/cosign@v0.1.1",
-      "pin": "ed23741b9d2aa1fd68e705261814d607ed935b15"
-    },
-    {
-      "name": "trivy",
-      "source": "github.com/sagikazarmark/daggerverse/trivy@trivy/v0.5.0",
-      "pin": "5b826062b6bc1bfbd619aa5d0fba117190c85aba"
+      "name": "generic-pipeline",
+      "source": "github.com/puzzle/dagger-module-generic-pipeline/generic-pipeline"
     }
   ],
   "source": "ci"
