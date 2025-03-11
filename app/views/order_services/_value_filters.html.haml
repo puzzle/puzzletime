@@ -5,7 +5,7 @@
 
 
 = direct_filter_select(:employee_id, 'Members', @employees)
-= direct_filter_select(:work_item_id, 'Buchungsposition', @accounting_posts, class: 'searchable', multiple: true)
+= direct_filter_select(:work_item_ids, 'Buchungsposition', @accounting_posts, class: 'searchable', multiple: true)
 = direct_filter_select(:ticket, 'Ticket', @tickets, value_method: :to_s)
 = direct_filter_select(:billable, 'Verrechenbar', yes_no_options)
 - if Settings.meal_compensation.active
