@@ -115,6 +115,30 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
     assert_arrays_match work_items.map { |w| w.id.to_s }, all(:name, 'invoice[work_item_ids][]').map(&:value)
   end
 
+  test 'passing work_item_ids via params sets them correctly in the invoice' do
+    order = Fabricate(:order)
+    work_items = Fabricate.times(3, :work_item, parent: order.work_item)
+    work_items.each { |w| Fabricate(:accounting_post, work_item: w) }
+
+    from = Date.parse('09.12.2006')
+    to = Date.parse('11.12.2006')
+
+    (from..to).each_with_index do |date, index|
+      Fabricate(:ordertime,
+                work_date: date,
+                work_item: work_items[index],
+                employee: employees(:pascal))
+    end
+
+    work_item_subset = work_items[1..]
+
+    reload(order:, work_item_ids: work_item_subset.pluck(:id))
+
+    checked_work_item_ids = all(:css, 'input[name="invoice[work_item_ids][]"]:checked').map { |x| x.value.to_i }
+
+    assert_arrays_match work_item_subset.pluck(:id), checked_work_item_ids
+  end
+
   test 'check employee checkbox updates calculated total' do
     assert_change -> { find('#invoice_total_amount').text } do
       find_field("invoice_employee_ids_#{employees(:mark).id}").click
