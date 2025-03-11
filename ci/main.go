@@ -38,15 +38,6 @@ type Results struct {
 	TestReports *dagger.Directory
 }
 
-// Returns a Container built from the Dockerfile in the provided Directory
-func (m *Ci) Build(_ context.Context, dir *dagger.Directory) *dagger.Container {
-	return dag.Container().
-		WithDirectory("/src", dir).
-		WithWorkdir("/src").
-		Directory("/src").
-		DockerBuild()
-}
-
 // Returns the result of haml-lint run against the sources in the provided Directory
 func (m *Ci) Lint(
 	dir *dagger.Directory,
@@ -107,23 +98,6 @@ func (m *Ci) Memcached(
 		AsService()
 }
 
-// Creates an SBOM for the container
-func (m *Ci) Sbom(container *dagger.Container) *dagger.File {
-	trivy_container := dag.Container().
-		From("aquasec/trivy").
-		WithEnvVariable("TRIVY_JAVA_DB_REPOSITORY", "public.ecr.aws/aquasecurity/trivy-java-db")
-
-	trivy := dag.Trivy(dagger.TrivyOpts{
-		Container:          trivy_container,
-		DatabaseRepository: "public.ecr.aws/aquasecurity/trivy-db",
-	})
-
-	sbom := trivy.Container(container).
-		Report("cyclonedx").
-		WithName("cyclonedx.json")
-
-	return sbom
-}
 
 // Executes the test suite for the Rails application in the provided Directory
 func (m *Ci) Test(ctx context.Context, dir *dagger.Directory) *dagger.Directory {
@@ -135,73 +109,6 @@ func (m *Ci) Test(ctx context.Context, dir *dagger.Directory) *dagger.Directory 
 		WithExec([]string{"bundle", "exec", "rails", "assets:precompile"}).
 		WithExec([]string{"sh", "-c", "bundle exec rails test -v test/controllers test/domain test/fabricators test/fixtures test/helpers test/mailers test/models test/presenters test/support test/tarantula"}).
 		Directory("/mnt/test/reports")
-}
-
-// Builds the container and creates an SBOM for it
-func (m *Ci) SbomBuild(ctx context.Context, dir *dagger.Directory) *dagger.File {
-	container := m.Build(ctx, dir)
-
-	return m.Sbom(container)
-}
-
-// Scans the SBOM for vulnerabilities
-func (m *Ci) Vulnscan(sbom *dagger.File) *dagger.File {
-	trivy_container := dag.Container().
-		From("aquasec/trivy").
-		WithEnvVariable("TRIVY_JAVA_DB_REPOSITORY", "public.ecr.aws/aquasecurity/trivy-java-db")
-
-	trivy := dag.Trivy(dagger.TrivyOpts{
-		Container:          trivy_container,
-		DatabaseRepository: "public.ecr.aws/aquasecurity/trivy-db",
-	})
-
-	return trivy.Sbom(sbom).Report("json")
-}
-
-// Publish cyclonedx SBOM to Deptrack
-func (m *Ci) PublishToDeptrack(
-	ctx context.Context,
-	// SBOM file
-	sbom *dagger.File,
-	// deptrack address for publishing the SBOM https://deptrack.example.com/api/v1/bom
-	address string,
-	// deptrack API key
-	apiKey *dagger.Secret,
-	// deptrack project UUID
-	projectUUID string,
-) (string, error) {
-	return dag.Container().
-		From("curlimages/curl").
-		WithFile("sbom.json", sbom).
-		WithExec([]string{"curl", "-X", "POST", "-H", "'Content-Type: multipart/form-data'", "-H", fmt.Sprintf("'X-API-Key: %s'", apiKey), "-F", fmt.Sprintf("'project=%s'", projectUUID), "-F", "bom=@sbom.json", address}).
-		Stdout(ctx)
-}
-
-// Sign the published image using cosign
-func (m *Ci) Sign(
-	ctx context.Context,
-	registryUsername string,
-	registryPassword *dagger.Secret,
-	// Container image digest to sign
-	digest string,
-) (string, error) {
-	return dag.Cosign().SignKeyless(ctx, digest, dagger.CosignSignKeylessOpts{RegistryUsername: registryUsername, RegistryPassword: registryPassword})
-}
-
-// Attests the SBOM using cosign
-func (m *Ci) Attest(
-	ctx context.Context,
-	registryUsername string,
-	registryPassword *dagger.Secret,
-	// Container image digest to attest
-	digest string,
-	// SBOM file
-	predicate *dagger.File,
-	// SBOM type
-	sbomType string,
-) (string, error) {
-	return dag.Cosign().AttestKeyless(ctx, digest, predicate, dagger.CosignAttestKeylessOpts{RegistryUsername: registryUsername, RegistryPassword: registryPassword, SbomType: sbomType})
-
 }
 
 // Returns a Container with the base setup for running the rails test suite
@@ -230,16 +137,6 @@ func (m *Ci) BaseTestContainer(_ context.Context, dir *dagger.Directory) *dagger
 		WithExec([]string{"bundle", "install", "--jobs", "4", "--retry", "3"})
 }
 
-// Build and Publish the Container from the Dockerfile in the provided registry
-func (m *Ci) BuildAndPublish(ctx context.Context, dir *dagger.Directory, registryAddress string) (string, error) {
-	return m.Build(ctx, dir).Publish(ctx, registryAddress)
-}
-
-// Publish the provided Container to the provided registry
-func (m *Ci) Publish(ctx context.Context, container *dagger.Container, registryAddress string) (string, error) {
-	return container.Publish(ctx, registryAddress)
-}
-
 // Executes all the steps and returns a Results object
 func (m *Ci) Ci(
 	ctx context.Context,
@@ -264,20 +161,20 @@ func (m *Ci) Ci(
 ) *Results {
 	lintOutput := m.Lint(dir, pass)
 	securityScan := m.Sast(dir)
-	image := m.Build(ctx, dir)
-	sbom := m.Sbom(image)
-	vulnerabilityScan := m.Vulnscan(sbom)
+	image := dag.GenericPipeline().Build(dir)
+	sbom := dag.GenericPipeline().Sbom(image)
+	vulnerabilityScan := dag.GenericPipeline().Vulnscan(sbom)
 	testReports := m.Test(ctx, dir)
-	digest, err := m.Publish(ctx, image, registryAddress)
+	digest, err := dag.GenericPipeline().Publish(ctx, image, registryAddress)
 
 	if err == nil {
-		m.PublishToDeptrack(ctx, sbom, dtAddress, dtApiKey, dtProjectUUID)
-		m.Sign(ctx, registryUsername, registryPassword, digest)
-		m.Attest(ctx, registryUsername, registryPassword, digest, sbom, "cyclonedx")
+		dag.GenericPipeline().PublishToDeptrack(ctx, sbom, dtAddress, dtApiKey, dtProjectUUID)
+		dag.GenericPipeline().Sign(ctx, registryUsername, registryPassword, digest)
+		dag.GenericPipeline().Attest(ctx, registryUsername, registryPassword, digest, sbom, "cyclonedx")
 	}
 
 	return &Results{
-		TestReports:	   testReports,
+		TestReports:       testReports,
 		LintOutput:        lintOutput,
 		SecurityScan:      securityScan,
 		VulnerabilityScan: vulnerabilityScan,
@@ -323,12 +220,12 @@ func (m *Ci) CiIntegration(
 
 	var vulnerabilityScan = func() *dagger.File {
 		defer wg.Done()
-		return m.Vulnscan(m.Sbom(m.Build(ctx, dir)))
+		return dag.GenericPipeline().Vulnscan(dag.GenericPipeline().SbomBuild(dir))
 	}()
 
 	var image = func() *dagger.Container {
 		defer wg.Done()
-		return m.Build(ctx, dir)
+		return dag.GenericPipeline().Build(dir)
 	}()
 
 	var testReports = func() *dagger.Directory {
@@ -358,12 +255,12 @@ func (m *Ci) CiIntegration(
 
 	var sbom = func() *dagger.File {
 		defer wg.Done()
-		return m.Sbom(image)
+		return dag.GenericPipeline().Sbom(image)
 	}()
 
 	digest, err := func() (string, error) {
 		defer wg.Done()
-		return m.Publish(ctx, image, registryAddress)
+		return dag.GenericPipeline().Publish(ctx, image, registryAddress)
 	}()
 
 	// This Blocks the execution until its counter become 0
@@ -374,9 +271,9 @@ func (m *Ci) CiIntegration(
 		return nil, err
 	}
 
-	m.PublishToDeptrack(ctx, sbom, dtAddress, dtApiKey, dtProjectUUID)
-	m.Sign(ctx, registryUsername, registryPassword, digest)
-	m.Attest(ctx, registryUsername, registryPassword, digest, sbom, "cyclonedx")
+	dag.GenericPipeline().PublishToDeptrack(ctx, sbom, dtAddress, dtApiKey, dtProjectUUID)
+	dag.GenericPipeline().Sign(ctx, registryUsername, registryPassword, digest)
+	dag.GenericPipeline().Attest(ctx, registryUsername, registryPassword, digest, sbom, "cyclonedx")
 
 	sbomName, _ := sbom.Name(ctx)
 	result_container := dag.Container().
