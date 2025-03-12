@@ -39,22 +39,12 @@ type Results struct {
 }
 
 // Returns a lint container and the lint command to be executed
-func (m *Ci) PrepareLint(
-	dir *dagger.Directory,
-	// ignore linter failures
-	// +optional
-	// +default=false
-	pass bool,
-) *dagger.Container {
-	container := dag.Container().
+func (m *Ci) BuildLintContainer(dir *dagger.Directory) *dagger.Container {
+	return dag.Container().
 		From("ruby:latest").
 		WithMountedDirectory("/mnt", dir).
 		WithWorkdir("/mnt").
 		WithExec([]string{"gem", "install", "haml-lint"})
-	if pass {
-		return container.WithEntrypoint([]string{"sh", "-c", "haml-lint -r json . > lint.json || true"})
-	}
-	return container.WithEntrypoint([]string{"sh", "-c", "haml-lint -r json . > lint.json"})
 }
 
 // Returns the Sast report as a file
@@ -155,7 +145,11 @@ func (m *Ci) Ci(
 	// +default=false
 	pass bool,
 ) *Results {
-	lintOutput := dag.GenericPipeline().Lint(m.PrepareLint(dir, pass), "lint.json")
+	lintCommand := []string{"sh", "-c", "haml-lint -r json . > lint.json"}
+	if (pass) {
+       lintCommand = []string{"sh", "-c", "haml-lint -r json . > lint.json || true"}
+    }
+	lintOutput := dag.GenericPipeline().Lint(m.BuildLintContainer(dir), lintCommand, "lint.json")
 	securityScan := m.Sast(dir)
 	image := dag.GenericPipeline().Build(dir)
 	sbom := dag.GenericPipeline().Sbom(image)
@@ -201,12 +195,17 @@ func (m *Ci) CiIntegration(
 	// +default=false
 	pass bool,
 ) (*dagger.Directory, error) {
+	lintCommand := []string{"sh", "-c", "haml-lint -r json . > lint.json"}
+	if (pass) {
+       lintCommand = []string{"sh", "-c", "haml-lint -r json . > lint.json || true"}
+    }
+
 	var wg sync.WaitGroup
 	wg.Add(5)
 
 	var lintOutput = func() *dagger.File {
 		defer wg.Done()
-		return dag.GenericPipeline().Lint(m.PrepareLint(dir, pass), "lint.json")
+		return dag.GenericPipeline().Lint(m.BuildLintContainer(dir), lintCommand, "lint.json")
 	}()
 
 	var securityScan = func() *dagger.File {
