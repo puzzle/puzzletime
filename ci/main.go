@@ -56,11 +56,6 @@ func (m *Ci) lintCommand(pass bool) []string {
 	return []string{"sh", "-c", "haml-lint -r json . > lint.json"}
 }
 
-// Returns the test command
-func (m *Ci) testCommand() []string {
-	return []string{"sh", "-c", "bundle exec rails test -v test/controllers test/domain test/fabricators test/fixtures test/helpers test/mailers test/models test/presenters test/support test/tarantula"}
-}
-
 // Returns the Sast report as a file
 func (m *Ci) Sast(dir *dagger.Directory) *dagger.File {
 	return dag.Container().
@@ -106,7 +101,8 @@ func (m *Ci) BuildTestContainer(ctx context.Context, dir *dagger.Directory) *dag
 		WithServiceBinding("memcached", m.Memcached(ctx, "latest")).
 		WithExec([]string{"bundle", "exec", "rails", "db:create"}).
 		WithExec([]string{"bundle", "exec", "rails", "db:migrate"}).
-		WithExec([]string{"bundle", "exec", "rails", "assets:precompile"})
+		WithExec([]string{"bundle", "exec", "rails", "assets:precompile"}).
+		WithExec([]string{"sh", "-c", "bundle exec rails test -v test/controllers test/domain test/fabricators test/fixtures test/helpers test/mailers test/models test/presenters test/support test/tarantula"})
 }
 
 // Returns a Container with the base setup for running the rails test suite
@@ -163,7 +159,7 @@ func (m *Ci) Ci(
 	image := dag.GenericPipeline().Build(dir)
 	sbom := dag.GenericPipeline().Sbom(image)
 	vulnerabilityScan := dag.GenericPipeline().Vulnscan(sbom)
-	testReports := dag.GenericPipeline().Test(m.BuildTestContainer(ctx, dir), m.testCommand(), "/mnt/test/reports")
+	testReports := dag.GenericPipeline().Test(m.BuildTestContainer(ctx, dir), "/mnt/test/reports")
 	digest, err := dag.GenericPipeline().Publish(ctx, image, registryAddress)
 
 	if err == nil {
@@ -229,7 +225,7 @@ func (m *Ci) CiIntegration(
 
 	var testReports = func() *dagger.Directory {
 		defer wg.Done()
-		return dag.GenericPipeline().Test(m.BuildTestContainer(ctx, dir), m.testCommand(), "/mnt/test/reports")
+		return dag.GenericPipeline().Test(m.BuildTestContainer(ctx, dir), "/mnt/test/reports")
 	}()
 
 	// This Blocks the execution until its counter become 0
