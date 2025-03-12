@@ -55,7 +55,7 @@ func (m *Ci) BuildLintContainer(
 
 // Returns the lint command
 func (m *Ci) lintCommand(pass bool) []string {
-	if (pass) {
+	if pass {
 		return []string{"sh", "-c", "haml-lint -r json . > lint.json || true"}
 	}
 	return []string{"sh", "-c", "haml-lint -r json . > lint.json"}
@@ -97,7 +97,6 @@ func (m *Ci) Memcached(
 		WithExposedPort(11211).
 		AsService()
 }
-
 
 // Returns a test container
 func (m *Ci) BuildTestContainer(ctx context.Context, dir *dagger.Directory) *dagger.Container {
@@ -164,7 +163,7 @@ func (m *Ci) Ci(
 	sbom := dag.GenericPipeline().Sbom(image)
 	vulnerabilityScan := dag.GenericPipeline().Vulnscan(sbom)
 	testReports := dag.GenericPipeline().Test(m.BuildTestContainer(ctx, dir), "/mnt/test/reports")
-	digest, err := dag.GenericPipeline().Publish(ctx, image, registryAddress)
+	digest, err := dag.GenericPipeline().Publish(ctx, image, registryAddress, dagger.GenericPipelinePublishOpts{RegistryUsername: registryUsername, RegistryPassword: registryPassword})
 
 	if err == nil {
 		dag.GenericPipeline().PublishToDeptrack(ctx, sbom, dtAddress, dtApiKey, dtProjectUUID)
@@ -259,7 +258,7 @@ func (m *Ci) CiIntegration(
 
 	digest, err := func() (string, error) {
 		defer wg.Done()
-		return dag.GenericPipeline().Publish(ctx, image, registryAddress)
+		return dag.GenericPipeline().Publish(ctx, image, registryAddress, dagger.GenericPipelinePublishOpts{RegistryUsername: registryUsername, RegistryPassword: registryPassword})
 	}()
 
 	// This Blocks the execution until its counter become 0
