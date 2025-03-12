@@ -38,7 +38,7 @@ type Results struct {
 	TestReports *dagger.Directory
 }
 
-// Returns a lint container and the lint command to be executed
+// Returns a lint container
 func (m *Ci) BuildLintContainer(dir *dagger.Directory) *dagger.Container {
 	return dag.Container().
 		From("ruby:latest").
@@ -98,16 +98,14 @@ func (m *Ci) Memcached(
 }
 
 
-// Executes the test suite for the Rails application in the provided Directory
+// Returns a test container
 func (m *Ci) BuildTestContainer(ctx context.Context, dir *dagger.Directory) *dagger.Container {
 	return m.BaseTestContainer(ctx, dir).
 		WithServiceBinding("postgresql", m.Postgres(ctx, "11")).
 		WithServiceBinding("memcached", m.Memcached(ctx, "latest")).
 		WithExec([]string{"bundle", "exec", "rails", "db:create"}).
 		WithExec([]string{"bundle", "exec", "rails", "db:migrate"}).
-		WithExec([]string{"bundle", "exec", "rails", "assets:precompile"}).
-		WithExec([]string{"sh", "-c", "bundle exec rails test -v test/controllers test/domain test/fabricators test/fixtures test/helpers test/mailers test/models test/presenters test/support test/tarantula"})
-		//Directory("/mnt/test/reports")
+		WithExec([]string{"bundle", "exec", "rails", "assets:precompile"})
 }
 
 // Returns a Container with the base setup for running the rails test suite
