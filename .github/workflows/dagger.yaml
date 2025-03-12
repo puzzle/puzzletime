@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - dagger-ci
+      - dagger-generic
 jobs:
   pipeline:
     runs-on: 'ubuntu-latest'
