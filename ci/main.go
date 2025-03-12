@@ -161,7 +161,7 @@ func (m *Ci) Ci(
 	image := dag.GenericPipeline().Build(dir)
 	sbom := dag.GenericPipeline().Sbom(image)
 	vulnerabilityScan := dag.GenericPipeline().Vulnscan(sbom)
-	testReports := dag.GenericPipeline().Test(m.BuildTestContainer(ctx, dir), testCommand, "/mnt/test/reports")
+	testReports := dag.GenericPipeline().Test(m.BuildTestContainer(ctx, dir), m.testCommand(), "/mnt/test/reports")
 	digest, err := dag.GenericPipeline().Publish(ctx, image, registryAddress)
 
 	if err == nil {
@@ -227,7 +227,7 @@ func (m *Ci) CiIntegration(
 
 	var testReports = func() *dagger.Directory {
 		defer wg.Done()
-		return dag.GenericPipeline().Test(m.BuildTestContainer(ctx, dir), testCommand, "/mnt/test/reports")
+		return dag.GenericPipeline().Test(m.BuildTestContainer(ctx, dir), m.testCommand(), "/mnt/test/reports")
 	}()
 
 	// This Blocks the execution until its counter become 0
