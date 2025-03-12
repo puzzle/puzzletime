@@ -47,6 +47,19 @@ func (m *Ci) BuildLintContainer(dir *dagger.Directory) *dagger.Container {
 		WithExec([]string{"gem", "install", "haml-lint"})
 }
 
+// Returns the lint command
+func (m *Ci) lintCommand(pass bool) []string {
+	if (pass) {
+		return []string{"sh", "-c", "haml-lint -r json . > lint.json || true"}
+	}
+	return []string{"sh", "-c", "haml-lint -r json . > lint.json"}
+}
+
+// Returns the test command
+func (m *Ci) testCommand() []string {
+	return []string{"sh", "-c", "bundle exec rails test -v test/controllers test/domain test/fabricators test/fixtures test/helpers test/mailers test/models test/presenters test/support test/tarantula"}
+}
+
 // Returns the Sast report as a file
 func (m *Ci) Sast(dir *dagger.Directory) *dagger.File {
 	return dag.Container().
@@ -86,15 +99,15 @@ func (m *Ci) Memcached(
 
 
 // Executes the test suite for the Rails application in the provided Directory
-func (m *Ci) Test(ctx context.Context, dir *dagger.Directory) *dagger.Directory {
+func (m *Ci) BuildTestContainer(ctx context.Context, dir *dagger.Directory) *dagger.Container {
 	return m.BaseTestContainer(ctx, dir).
 		WithServiceBinding("postgresql", m.Postgres(ctx, "11")).
 		WithServiceBinding("memcached", m.Memcached(ctx, "latest")).
 		WithExec([]string{"bundle", "exec", "rails", "db:create"}).
 		WithExec([]string{"bundle", "exec", "rails", "db:migrate"}).
 		WithExec([]string{"bundle", "exec", "rails", "assets:precompile"}).
-		WithExec([]string{"sh", "-c", "bundle exec rails test -v test/controllers test/domain test/fabricators test/fixtures test/helpers test/mailers test/models test/presenters test/support test/tarantula"}).
-		Directory("/mnt/test/reports")
+		WithExec([]string{"sh", "-c", "bundle exec rails test -v test/controllers test/domain test/fabricators test/fixtures test/helpers test/mailers test/models test/presenters test/support test/tarantula"})
+		//Directory("/mnt/test/reports")
 }
 
 // Returns a Container with the base setup for running the rails test suite
@@ -145,16 +158,12 @@ func (m *Ci) Ci(
 	// +default=false
 	pass bool,
 ) *Results {
-	lintCommand := []string{"sh", "-c", "haml-lint -r json . > lint.json"}
-	if (pass) {
-       lintCommand = []string{"sh", "-c", "haml-lint -r json . > lint.json || true"}
-    }
-	lintOutput := dag.GenericPipeline().Lint(m.BuildLintContainer(dir), lintCommand, "lint.json")
+	lintOutput := dag.GenericPipeline().Lint(m.BuildLintContainer(dir), m.lintCommand(pass), "lint.json")
 	securityScan := m.Sast(dir)
 	image := dag.GenericPipeline().Build(dir)
 	sbom := dag.GenericPipeline().Sbom(image)
 	vulnerabilityScan := dag.GenericPipeline().Vulnscan(sbom)
-	testReports := m.Test(ctx, dir)
+	testReports := dag.GenericPipeline().Test(m.BuildTestContainer(ctx, dir), testCommand, "/mnt/test/reports")
 	digest, err := dag.GenericPipeline().Publish(ctx, image, registryAddress)
 
 	if err == nil {
@@ -195,17 +204,12 @@ func (m *Ci) CiIntegration(
 	// +default=false
 	pass bool,
 ) (*dagger.Directory, error) {
-	lintCommand := []string{"sh", "-c", "haml-lint -r json . > lint.json"}
-	if (pass) {
-       lintCommand = []string{"sh", "-c", "haml-lint -r json . > lint.json || true"}
-    }
-
 	var wg sync.WaitGroup
 	wg.Add(5)
 
 	var lintOutput = func() *dagger.File {
 		defer wg.Done()
-		return dag.GenericPipeline().Lint(m.BuildLintContainer(dir), lintCommand, "lint.json")
+		return dag.GenericPipeline().Lint(m.BuildLintContainer(dir), m.lintCommand(pass), "lint.json")
 	}()
 
 	var securityScan = func() *dagger.File {
@@ -225,7 +229,7 @@ func (m *Ci) CiIntegration(
 
 	var testReports = func() *dagger.Directory {
 		defer wg.Done()
-		return m.Test(ctx, dir)
+		return dag.GenericPipeline().Test(m.BuildTestContainer(ctx, dir), testCommand, "/mnt/test/reports")
 	}()
 
 	// This Blocks the execution until its counter become 0
