@@ -1,13 +1,14 @@
 {
   "name": "ci",
-  "engineVersion": "v0.16.1",
+  "engineVersion": "v0.16.2",
   "sdk": {
     "source": "go"
   },
   "dependencies": [
     {
       "name": "generic-pipeline",
-      "source": "github.com/puzzle/dagger-module-generic-pipeline/generic-pipeline"
+      "source": "github.com/puzzle/dagger-module-generic-pipeline/generic-pipeline",
+      "pin": "6e3eaac2c69e30e208fb4381794bcb602b5bf60b"
     }
   ],
   "source": "ci"
