@@ -39,22 +39,13 @@ type Results struct {
 }
 
 // Returns a lint container
-func (m *Ci) BuildLintContainer(dir *dagger.Directory) *dagger.Container {
-	return dag.Container().
-		From("ruby:latest").
-		WithMountedDirectory("/mnt", dir).
-		WithWorkdir("/mnt").
-		WithExec([]string{"gem", "install", "haml-lint"})
-}
-
-// Returns a lint container
-func (m *Ci) BuildLintContainerWithEntrypoint(dir *dagger.Directory) *dagger.Container {
+func (m *Ci) BuildLintContainer(dir *dagger.Directory, pass bool) *dagger.Container {
 	return dag.Container().
 		From("ruby:latest").
 		WithMountedDirectory("/mnt", dir).
 		WithWorkdir("/mnt").
 		WithExec([]string{"gem", "install", "haml-lint"}).
-		WithEntrypoint(m.lintCommand(true))
+		WithExec(m.lintCommand(pass))
 }
 
 // Returns the lint command
@@ -167,7 +158,7 @@ func (m *Ci) Ci(
 	pass bool,
 ) *Results {
 	//lintOutput := dag.GenericPipeline().Lint(m.BuildLintContainer(dir), m.lintCommand(pass), "lint.json")
-	lintOutput := dag.GenericPipeline().LintWithEntrypoint(m.BuildLintContainerWithEntrypoint(dir), "lint.json")
+	lintOutput := dag.GenericPipeline().Lint(m.BuildLintContainer(dir, pass), "lint.json")
 	securityScan := m.Sast(dir)
 	image := dag.GenericPipeline().Build(dir)
 	sbom := dag.GenericPipeline().Sbom(image)
@@ -218,7 +209,7 @@ func (m *Ci) CiIntegration(
 
 	var lintOutput = func() *dagger.File {
 		defer wg.Done()
-		return dag.GenericPipeline().LintWithEntrypoint(m.BuildLintContainerWithEntrypoint(dir), "lint.json")
+		return dag.GenericPipeline().Lint(m.BuildLintContainer(dir, pass), "lint.json")
 	}()
 
 	var securityScan = func() *dagger.File {

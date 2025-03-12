@@ -8,7 +8,7 @@
     {
       "name": "generic-pipeline",
       "source": "github.com/puzzle/dagger-module-generic-pipeline/generic-pipeline",
-      "pin": "33cf50a79947de35fee25cb178af5bff3749973e"
+      "pin": "291ea27e4ce300ec7f54115fd180221cb6640fbf"
     }
   ],
   "source": "ci"
