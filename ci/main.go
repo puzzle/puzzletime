@@ -39,7 +39,12 @@ type Results struct {
 }
 
 // Returns a lint container
-func (m *Ci) BuildLintContainer(dir *dagger.Directory, pass bool) *dagger.Container {
+func (m *Ci) BuildLintContainer(
+	dir *dagger.Directory,
+	// +optional
+	// +default=false
+	pass bool,
+) *dagger.Container {
 	return dag.Container().
 		From("ruby:latest").
 		WithMountedDirectory("/mnt", dir).
@@ -153,7 +158,6 @@ func (m *Ci) Ci(
 	// +default=false
 	pass bool,
 ) *Results {
-	//lintOutput := dag.GenericPipeline().Lint(m.BuildLintContainer(dir), m.lintCommand(pass), "lint.json")
 	lintOutput := dag.GenericPipeline().Lint(m.BuildLintContainer(dir, pass), "lint.json")
 	securityScan := m.Sast(dir)
 	image := dag.GenericPipeline().Build(dir)
