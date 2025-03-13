@@ -251,6 +251,6 @@ func (m *Ci) CiIntegration(
         // deptrack API key
         dtApiKey,
         // ignore linter failures
-        pass,
+        dagger.GenericPipelineRunOpts{Pass: pass},
     )
 }
