@@ -63,7 +63,7 @@
                          'Aufträge ohne Zeitbuchungen',
                          [IdValue.new('true', 'anzeigen'), IdValue.new('false', 'verbergen')],
                          class: 'searchable',
-                         value: params[:without_hours] ||= true)
+                         value: params[:without_hours] || false)
 
   = direct_filter_select(:responsible_id,
                          'Verantwortlich',
