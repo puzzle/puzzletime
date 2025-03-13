@@ -205,7 +205,7 @@ func (m *Ci) CiIntegration(
 	var wg sync.WaitGroup
 	wg.Add(3)
 
-	var lintContainer= func() *dagger.Container {
+	var lintContainer = func() *dagger.Container {
 		defer wg.Done()
 		return m.BuildLintContainer(dir, pass)
 	}()
@@ -224,7 +224,6 @@ func (m *Ci) CiIntegration(
     wg.Wait()
 
 	return dag.GenericPipeline().Run(
-        ctx,
         // source directory
         dir,
         // lint container
