@@ -61,14 +61,13 @@ func (m *Ci) lintCommand(pass bool) []string {
 	return []string{"sh", "-c", "haml-lint -r json . > lint.json"}
 }
 
-// Returns the Sast report as a file
+// Returns a sast container
 func (m *Ci) BuildSastContainer(dir *dagger.Directory) *dagger.Container {
 	return dag.Container().
 		From("presidentbeef/brakeman:latest").
 		WithMountedDirectory("/app", dir).
 		WithWorkdir("/app").
-		WithExec([]string{"/usr/src/app/bin/brakeman"}).
-		File("/app/brakeman-output.tabs")
+		WithExec([]string{"/usr/src/app/bin/brakeman"})
 }
 
 // Creates a PostgreSQL service for local testing based on the official image with the provided version. If no version is provided, 'latest' will be used.
