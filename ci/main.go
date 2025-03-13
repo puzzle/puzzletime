@@ -201,7 +201,7 @@ func (m *Ci) CiIntegration(
 	// +optional
 	// +default=false
 	pass bool,
-) (*dagger.Directory, error) {
+) *dagger.Directory {
 	var wg sync.WaitGroup
 	wg.Add(3)
 
