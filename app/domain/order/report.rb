@@ -161,14 +161,15 @@ class Order
     end
 
     def filter_by_closed(orders)
-      return orders if params[:status_preselection].blank?
-      if params[:status_preselection] == 'closed'
-        return orders.where(order_statuses: { closed: true })
-                     .where(period.where_condition('closed_at')) 
-      end
-      return unless params[:status_preselection] == 'in_progress'
+      case params[:status_preselection]
+      when nil, ""
+        orders
+      when 'closed'
+        orders.where(order_statuses: { closed: true })
+              .where(period.where_condition('closed_at')) 
+      when 'in_progress'
         orders.where(order_statuses: { closed: false })
-      
+      end
     end
 
     def filter_by_uncertainty(orders, attr)
