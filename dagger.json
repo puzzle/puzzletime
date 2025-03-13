@@ -7,8 +7,8 @@
   "dependencies": [
     {
       "name": "generic-pipeline",
-      "source": "github.com/puzzle/dagger-module-generic-pipeline/generic-pipeline",
-      "pin": "15f22ea019113936d817e392d5a0e69708b9e0ad"
+      "source": "github.com/puzzle/dagger-module-generic-pipeline/generic-pipeline@v0.0.2",
+      "pin": "c40994d5ea027a0060c00f533fd9f44e61c831fa"
     }
   ],
   "source": "ci"
