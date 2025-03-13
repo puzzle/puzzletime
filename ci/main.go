@@ -221,7 +221,7 @@ func (m *Ci) CiIntegration(
 	}()
 
 	// This Blocks the execution until its counter become 0
-    wg.Wait()
+	wg.Wait()
 
 	return dag.GenericPipeline().Run(
         // source directory
@@ -252,5 +252,5 @@ func (m *Ci) CiIntegration(
         dtApiKey,
         // ignore linter failures
         dagger.GenericPipelineRunOpts{Pass: pass},
-    )
+	)
 }
