@@ -6,11 +6,11 @@
 
 %ul.nav.nav-tabs{ role: 'tablist' }
   %li{ class: ('active' if params[:status_preselection].blank?) }
-    = link_to('Alle', reports_orders_path, data: { turbolinks: false })
+    = link_to('Alle', reports_orders_path)
   %li{ class: ('active' if params[:status_preselection] == 'not_closed') }
-    = link_to('Laufende', reports_orders_path(status_preselection: 'not_closed'), data: { turbolinks: false })
+    = link_to('Laufende', reports_orders_path(status_preselection: 'not_closed'))
   %li{ class: ('active' if params[:status_preselection] == 'closed') }
-    = link_to('Abgeschlossene', reports_orders_path(status_preselection: 'closed'), data: { turbolinks: false })
+    = link_to('Abgeschlossene', reports_orders_path(status_preselection: 'closed'))
 
 - @title ||= 'Auftrags-Controlling'
 
