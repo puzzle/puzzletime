@@ -162,12 +162,13 @@ class Order
 
     def filter_by_closed(orders)
       case params[:status_preselection]
-      when nil, ""
+      when nil, ''
         orders
       when 'closed'
+        params[:department_id] = @user.department_id
         orders.where(order_statuses: { closed: true })
-              .where(period.where_condition('closed_at')) 
-      when 'in_progress'
+              .where(period.where_condition('closed_at'))
+      when 'not_closed'
         orders.where(order_statuses: { closed: false })
       end
     end
