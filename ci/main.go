@@ -62,7 +62,7 @@ func (m *Ci) lintCommand(pass bool) []string {
 }
 
 // Returns the Sast report as a file
-func (m *Ci) Sast(dir *dagger.Directory) *dagger.File {
+func (m *Ci) BuildSastContainer(dir *dagger.Directory) *dagger.Container {
 	return dag.Container().
 		From("presidentbeef/brakeman:latest").
 		WithMountedDirectory("/app", dir).
@@ -158,7 +158,7 @@ func (m *Ci) Ci(
 	pass bool,
 ) *Results {
 	lintOutput := dag.GenericPipeline().Lint(m.BuildLintContainer(dir, pass), "lint.json")
-	securityScan := m.Sast(dir)
+	securityScan := dag.GenericPipeline().Sast(m.BuildSastContainer(dir), "/app/brakeman-output.tabs")
 	image := dag.GenericPipeline().Build(dir)
 	sbom := dag.GenericPipeline().Sbom(image)
 	vulnerabilityScan := dag.GenericPipeline().Vulnscan(sbom)
@@ -204,83 +204,55 @@ func (m *Ci) CiIntegration(
 	pass bool,
 ) (*dagger.Directory, error) {
 	var wg sync.WaitGroup
-	wg.Add(5)
+	wg.Add(3)
 
-	var lintOutput = func() *dagger.File {
+	var lintContainer= func() *dagger.Container {
 		defer wg.Done()
-		return dag.GenericPipeline().Lint(m.BuildLintContainer(dir, pass), "lint.json")
+		return m.BuildLintContainer(dir, pass)
 	}()
 
-	var securityScan = func() *dagger.File {
+	var sastContainer = func() *dagger.Container {
 		defer wg.Done()
-		return m.Sast(dir)
+		return m.BuildSastContainer(dir)
 	}()
 
-	var vulnerabilityScan = func() *dagger.File {
+	var testContainer = func() *dagger.Container {
 		defer wg.Done()
-		return dag.GenericPipeline().Vulnscan(dag.GenericPipeline().SbomBuild(dir))
-	}()
-
-	var image = func() *dagger.Container {
-		defer wg.Done()
-		return dag.GenericPipeline().Build(dir)
-	}()
-
-	var testReports = func() *dagger.Directory {
-		defer wg.Done()
-		return dag.GenericPipeline().Test(m.BuildTestContainer(ctx, dir), "/mnt/test/reports")
+		return m.BuildTestContainer(ctx, dir)
 	}()
 
 	// This Blocks the execution until its counter become 0
-	wg.Wait()
+    wg.Wait()
 
-	// Get the names of the files to fail on errors of the functions
-	lintOutputName, err := lintOutput.Name(ctx)
-	if err != nil {
-		return nil, err
-	}
-	securityScanName, err := securityScan.Name(ctx)
-	if err != nil {
-		return nil, err
-	}
-	vulnerabilityScanName, err := vulnerabilityScan.Name(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	// After linting, scanning and testing is done, we can create the sbom and publish the image
-	wg.Add(2)
-
-	var sbom = func() *dagger.File {
-		defer wg.Done()
-		return dag.GenericPipeline().Sbom(image)
-	}()
-
-	digest, err := func() (string, error) {
-		defer wg.Done()
-		return dag.GenericPipeline().Publish(ctx, image, registryAddress, dagger.GenericPipelinePublishOpts{RegistryUsername: registryUsername, RegistryPassword: registryPassword})
-	}()
-
-	// This Blocks the execution until its counter become 0
-	wg.Wait()
-
-	// After publishing the image, we can sign and attest
-	if err != nil {
-		return nil, err
-	}
-
-	dag.GenericPipeline().PublishToDeptrack(ctx, sbom, dtAddress, dtApiKey, dtProjectUUID)
-	dag.GenericPipeline().Sign(ctx, registryUsername, registryPassword, digest)
-	dag.GenericPipeline().Attest(ctx, registryUsername, registryPassword, digest, sbom, "cyclonedx")
-
-	sbomName, _ := sbom.Name(ctx)
-	result_container := dag.Container().
-		WithWorkdir("/tmp/out").
-		WithFile(fmt.Sprintf("/tmp/out/lint/%s", lintOutputName), lintOutput).
-		WithFile(fmt.Sprintf("/tmp/out/scan/%s", securityScanName), securityScan).
-		WithDirectory("/tmp/out/unit-tests/", testReports).
-		WithFile(fmt.Sprintf("/tmp/out/vuln/%s", vulnerabilityScanName), vulnerabilityScan).
-		WithFile(fmt.Sprintf("/tmp/out/sbom/%s", sbomName), sbom)
-	return result_container.
-		Directory("."), err
+	return dag.GenericPipeline().Run(
+        ctx,
+        // source directory
+        dir,
+        // lint container
+        lintContainer,
+        // lint report file name "lint.json"
+        "lint.json",
+        // sast container
+        sastContainer,
+        // security scan report file name "/app/brakeman-output.tabs"
+        "/app/brakeman-output.tabs",
+        // test container
+        testContainer,
+        // test report folder name "/mnt/test/reports"
+        "/mnt/test/reports",
+        // registry username for publishing the contaner image
+        registryUsername,
+        // registry password for publishing the container image
+        registryPassword,
+        // registry address registry/repository/image:tag
+        registryAddress,
+        // deptrack address for publishing the SBOM https://deptrack.example.com/api/v1/bom
+        dtAddress,
+        // deptrack project UUID
+        dtProjectUUID,
+        // deptrack API key
+        dtApiKey,
+        // ignore linter failures
+        pass,
+    )
 }

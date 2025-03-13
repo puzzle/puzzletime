@@ -4,6 +4,7 @@ on:
     branches:
       - dagger-ci
       - dagger-generic
+      - dagger-generic-pipeline
 jobs:
   pipeline:
     runs-on: 'ubuntu-latest'
