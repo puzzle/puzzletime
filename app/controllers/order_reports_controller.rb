@@ -22,6 +22,16 @@ class OrderReportsController < ApplicationController
     respond_to do |format|
       format.html do
         set_filter_values
+        params[:department_id] = @user.department_id
+        case params[:status_preselection]
+        when nil, ''
+          params.merge!(period_shortcut: '0m')
+        when 'closed'
+          params.merge!(period_shortcut: '-1q')
+        when 'not_closed'
+          params.merge!(period_shortcut: '0m',
+                        status_id: @order_status.where(closed: false).where(default: true).pick(:id))
+        end
       end
       format.js do
         set_filter_values
