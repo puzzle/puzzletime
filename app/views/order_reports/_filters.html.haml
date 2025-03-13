@@ -6,7 +6,6 @@
 
 = form_tag(nil, method: :get, class: 'form-inline', role: 'filter', remote: true, data: { spin: true }) do
   = hidden_field_tag :page, 1
-  -# = hidden_field_tag :status_preselection, params[:status_preselection]
   = hidden_field_tag :status_preselection, params[:status_preselection]
 
   - start_label = params[:status_preselection] == 'closed' ? 'Abgeschlossen zwischen' : 'Zeiten von'
@@ -16,8 +15,7 @@
 
   = direct_filter_select(:period_shortcut,
     nil,
-    params[:status_preselection].blank? ? predefined_past_period_options : predefined_past_quarter_period_options,
-    value: @period.shortcut,
+    params[:status_preselection] == 'closed' ? predefined_past_quarter_period_options : predefined_past_period_options,
     prompt: 'benutzerdefiniert')
 
   = direct_filter_select(:department_id,
@@ -46,12 +44,20 @@
                          class: 'searchable',
                          multiple: true)
 
+  
+  - if params[:status_preselection] == 'not_closed'
+    = direct_filter_select(:status_id,
+                            'Status',
+                            @order_status.where(closed: false),
+                            class: 'searchable',
+                            multiple: true)
+
   - if params[:status_preselection].blank?
     = direct_filter_select(:status_id,
-                           'Status',
-                           @order_status,
-                           class: 'searchable',
-                           multiple: true)
+                            'Status',
+                            @order_status,
+                            class: 'searchable',
+                            multiple: true)
 
   = direct_filter_select(:without_hours,
                          'Aufträge ohne Zeitbuchungen',
