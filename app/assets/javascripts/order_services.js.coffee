@@ -15,6 +15,8 @@ app.orderServices = new class
   dateFilterChanged: ->
     $('#order_services_filter_form').find('#start_date,#end_date')
       .datepicker('option', 'disabled', $('#period_shortcut').val())
+    if $('#period_shortcut').val()
+      $('#order_services_filter_form').find('#start_date,#end_date').val("")
 
   initSelection: ->
     $('body.order_services #worktimes')
