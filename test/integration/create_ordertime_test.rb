@@ -86,7 +86,7 @@ class CreateOrdertimeTest < ActionDispatch::IntegrationTest
 
     percentage = clipped_used_budget_percentage(accounting_posts(:puzzletime))
 
-    assert_equal progressbar_color, should_color(percentage)
+    assert_equal progressbar_color, expected_color(percentage)
   end
 
   test 'going over budget sets the colour of the progressbar to red' do
@@ -100,7 +100,7 @@ class CreateOrdertimeTest < ActionDispatch::IntegrationTest
 
     percentage = clipped_used_budget_percentage(accounting_posts(:puzzletime))
 
-    assert_equal progressbar_color, should_color(percentage)
+    assert_equal progressbar_color, expected_color(percentage)
   end
 
   def login
@@ -116,7 +116,7 @@ class CreateOrdertimeTest < ActionDispatch::IntegrationTest
     offered_hours.nil? ? 0 : [(worked_hours * 100) / offered_hours, 100].min
   end
 
-  def should_color(percentage)
+  def expected_color(percentage)
     if percentage < 80
       'green'
     else
