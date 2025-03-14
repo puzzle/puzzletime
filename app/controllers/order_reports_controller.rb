@@ -20,7 +20,7 @@ class OrderReportsController < ApplicationController
     respond_to do |format|
       format.html do
         set_filter_values
-        params[:department_id] = @user.department_id
+        params[:department_id] ||= @user.department_id
         case params[:status_preselection]
         when nil, ''
           params.reverse_merge!(period_shortcut: '0m')
