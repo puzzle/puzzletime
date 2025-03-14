@@ -13,6 +13,8 @@ app.reportsOrders = new class
   dateFilterChanged: ->
     $('.order_reports form[role="filter"]').find('#start_date,#end_date')
       .datepicker('option', 'disabled', $('#period_shortcut').val())
+    if $('#period_shortcut').val()
+      $('.order_reports form[role="filter"]').find('#start_date,#end_date').val("")
 
 $(document).on('ajax:success', '.order_reports form[role="filter"]', ->
   app.reportsOrders.init()
