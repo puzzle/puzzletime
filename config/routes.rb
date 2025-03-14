@@ -84,6 +84,8 @@ Rails.application.routes.draw do
 
     resources :accounting_posts, except: [:show]
 
+    resource :order_costs, only: [:show], controller: 'order_costs'
+
     resource :order_controlling, only: [:show], controller: 'order_controlling'
 
     resource :contract, only: %i[show edit update]
