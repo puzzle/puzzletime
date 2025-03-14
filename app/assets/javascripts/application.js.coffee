@@ -91,6 +91,13 @@ Selectize.define 'required-fix', (options) ->
       @$input.attr('required')
 
 ################################################################
+# before caching, the DOM is restored to original form, preventing selectize to render the same input twice
+$(document).on('turbolinks:before-cache', ->
+  $('.selectized').each ->
+    this.selectize.destroy()
+)
+
+################################################################
 # because of turbolinks.jquery, do bind ALL document events here
 
 # wire up toggle links
