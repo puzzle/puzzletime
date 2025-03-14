@@ -1,0 +1,49 @@
+name: 'Full Dagger Pipeline'
+on:
+  push:
+    branches:
+      - dagger-ci
+      - dagger-generic
+      - dagger-generic-pipeline
+jobs:
+  pipeline:
+    runs-on: 'ubuntu-latest'
+    steps:
+      - uses: actions/checkout@v4
+      - name: 'pipeline'
+        uses: dagger/dagger-for-github@v7.0.1
+        env:
+          REGISTRY_ADDRESS: "ttl.sh/ptime/test:latest"
+          REGISTRY_USERNAME: "joe"
+          REGISTRY_PASSWORD: ${{ secrets.REGISTRY_TOKEN }}
+          DT_ADDRESS: "https://deptrack-test.ocp.cloudscale.puzzle.ch/api/v1/bom"
+          DT_PROJECT_UUID: "93394d20-7c48-4ecf-8caa-7fe63ae1a275"
+          DT_API_KEY: ${{ secrets.DT_API_KEY }}
+        with:
+          # Dagger Version
+          version: 0.16.3
+          # Dagger CLI Flags
+          #dagger-flags: # optional, default is --progress plain
+          # CLI verb (call, run, download, up, functions, shell, query)
+          verb: call
+          # The working directory in which to run the Dagger CLI
+          workdir: .
+          # Dagger Cloud Token
+          cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
+          # Dagger module to call. Local or Git
+          module: .
+          # Arguments to pass to CLI
+          args: ci-integration --pass=true --dir=./  --registry-address=${{ env.REGISTRY_ADDRESS }} --registry-username=${{ env.REGISTRY_USERNAME }} --registry-password=env:REGISTRY_PASSWORD --dt-address=${{ env.DT_ADDRESS }} --dt-project-uuid=${{ env.DT_PROJECT_UUID }} --dt-api-key=env:DT_API_KEY  export --path=./reports/
+      - name: Unittest Report
+        uses: dorny/test-reporter@v1.9.1
+        with:
+          name: unit-tests
+          path: reports/unit-tests/*.xml
+          reporter: java-junit
+          fail-on-empty: 'false'
+          fail-on-error: 'true'
+      - name: archive pipeline artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipeline-artifacts
+          path: reports
