@@ -17,8 +17,6 @@ class OrderReportsController < ApplicationController
   before_action :authorize_class
 
   def index
-    set_period
-    @report = Order::Report.new(@period, params)
     respond_to do |format|
       format.html do
         set_filter_values
@@ -32,11 +30,17 @@ class OrderReportsController < ApplicationController
           params.reverse_merge!(period_shortcut: '0m',
                                 status_id: @order_status.where(closed: false).where(default: true).pick(:id))
         end
+        set_period
+        @report = Order::Report.new(@period, params)
       end
       format.js do
+        set_period
+        @report = Order::Report.new(@period, params)
         set_filter_values
       end
       format.csv do
+        set_period
+        @report = Order::Report.new(@period, params)
         send_data(Order::Report::Csv.new(@report).generate,
                   type: 'text/csv; charset=utf-8; header=present')
       end
