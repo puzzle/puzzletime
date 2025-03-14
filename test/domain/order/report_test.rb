@@ -141,8 +141,14 @@ class Order
       assert_equal orders(:allgemein, :webauftritt, :puzzletime), report.entries.collect(&:order)
     end
 
+    test 'sort by budget use' do
+      report(sort: 'budget_controlling')
+
+      assert_equal orders(:puzzletime, :webauftritt, :allgemein), report.entries.collect(&:order)
+    end
+
     test 'sort by offered_amount' do
-      report(sort: 'offered_amount')
+      report(sort: 'offered_amount', sort_dir: 'asc')
 
       assert_equal orders(:webauftritt, :puzzletime, :allgemein), report.entries.collect(&:order)
     end
