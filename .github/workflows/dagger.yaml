@@ -21,7 +21,7 @@ jobs:
           DT_API_KEY: ${{ secrets.DT_API_KEY }}
         with:
           # Dagger Version
-          version: 0.16.2
+          version: 0.16.3
           # Dagger CLI Flags
           #dagger-flags: # optional, default is --progress plain
           # CLI verb (call, run, download, up, functions, shell, query)
