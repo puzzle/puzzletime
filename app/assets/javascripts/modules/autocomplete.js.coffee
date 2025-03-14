@@ -9,7 +9,7 @@ app = window.App ||= {}
 class app.Autocomplete
   bind: (input) ->
     $(input).selectize(
-      plugins: ['required-fix']
+      plugins: ['required-fix'],
       valueField: 'id',
       searchField: @searchFields(),
       selectOnTab: true,
@@ -19,13 +19,19 @@ class app.Autocomplete
         item: @renderItem
       },
       load: @loadOptions(input),
-      onItemAdd: @onItemAdd
+      onItemAdd: @onItemAdd,
+      onItemRemove: @onItemRemove,
+      onInitialize: @onInitialize(input)
     )
 
   searchFields: ->
     ['name', 'path_shortnames', 'path_names']
 
+  onInitialize: (input) ->
+      
   onItemAdd: ->
+
+  onItemRemove: ->
 
   renderOption: (item, escape) ->
     "<div class='selectize-option'>" +
@@ -40,7 +46,7 @@ class app.Autocomplete
     (query, callback) ->
       if query.length
         $.ajax(
-          url: Autocomplete.prototype.buildUrl(input, query)
+          url: Autocomplete.prototype.buildUrl(input, "q", query)
           type: 'GET',
           error: -> callback(),
           success: (res) -> callback(res)
@@ -48,12 +54,11 @@ class app.Autocomplete
       else
         callback()
 
-  buildUrl: (input, query) ->
+  buildUrl: (input, param_key, param_val) ->
     url        = $(input).data('url')
-    param      = encodeURIComponent(query)
+    param      = encodeURIComponent(param_val)
     param_char = if url.indexOf('?') >= 0 then '&' else '?'
-
-    "#{url}#{param_char}q=#{param}"
+    "#{url}#{param_char}#{param_key}=#{param}"
 
   limitText: (string, max) ->
     if !string

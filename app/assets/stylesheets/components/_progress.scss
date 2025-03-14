@@ -1,3 +1,11 @@
 .progress {
   display: block;
 }
+
+.live-budget-bar {
+  .progress {
+    height: 7px;
+    margin-bottom: 0;
+  }
+}
+

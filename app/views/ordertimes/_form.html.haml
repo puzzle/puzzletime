@@ -17,14 +17,19 @@
                                           url: url_for(action: 'existing'),
                                           dynamic_params: 'ordertime[work_date]' })
   = f.labeled(:account_id) do
-    = select_tag('ordertime[account_id]',
-                 work_item_option(@worktime.account),
-                 placeholder: 'Suchen...',
-                 autocomplete: 'off',
-                 class: entry.new_record? ? 'initial-focus' : '',
-                 required: true,
-                 data: { autocomplete: 'work_item',
-                         url: search_work_items_path })
+    %div
+      = select_tag('ordertime[account_id]',
+                  work_item_option(@worktime.account),
+                  placeholder: 'Suchen...',
+                  autocomplete: 'off',
+                  class: entry.new_record? ? 'initial-focus' : '',
+                  required: true,
+                  data: { autocomplete: 'work_item',
+                          url: search_work_items_path })
+      %span{ title: "", data: { toggle: "tooltip", original_title: "Wähle eine Buchungsposition aus" }, class: "live-budget-bar"}
+        %a.progress
+          %div#live-bar-success.progress-bar
+
   = f.labeled_input_field(:ticket, span: 2)
   = f.labeled_text_area(:description)
   = f.labeled_date_field(:work_date,

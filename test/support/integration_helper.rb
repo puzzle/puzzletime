@@ -49,6 +49,12 @@ module IntegrationHelper
     open_selectize(id, options).find('.selectize-option,.option', text: value).trigger('click')
   end
 
+  def clear_selectize(id, options = {})
+    element = find("##{id} + .selectize-control")
+    element.find('.selectize-input').trigger('click') unless options[:no_click]
+    element.find('.selectize-input input').native.send_keys(:backspace)
+  end
+
   def mouse
     page.driver.browser.mouse
   end
