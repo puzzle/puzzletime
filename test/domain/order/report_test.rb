@@ -116,7 +116,7 @@ class Order
     end
 
     test 'filter by closed' do
-      report(closed: true)
+      report(status_preselection: 'closed')
 
       assert_equal [orders(:allgemein)], report.entries.collect(&:order)
     end
@@ -154,7 +154,11 @@ class Order
     end
 
     test 'it counts filtered orders' do
-      assert_equal 'Total (1)', report(closed: true).total.to_s
+      assert_equal 'Total (1)', report(status_preselection: 'closed').total.to_s
+    end
+
+    test 'it counts filtered not closed orders' do
+      assert_equal 'Total (2)', report(status_preselection: 'not_closed').total.to_s
     end
 
     test '#offered_amount is sum of all accounting posts' do

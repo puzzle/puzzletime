@@ -10,10 +10,18 @@ require 'test_helper'
 class OrderReportsControllerTest < ActionController::TestCase
   setup :login
 
-  test 'GET index without filter has empty report' do
+  test 'GET index without filter has some default params set' do
     get :index
 
-    assert_not assigns(:report).filters_defined?
+    assert_predicate assigns(:report), :filters_defined?
+
+    get :index, params: { status_preselection: 'closed' }
+
+    assert_predicate assigns(:report), :filters_defined?
+
+    get :index, params: { status_preselection: 'not_closed' }
+
+    assert_predicate assigns(:report), :filters_defined?
   end
 
   test 'GET index with department filter contains correct entries' do
@@ -42,9 +50,7 @@ class OrderReportsControllerTest < ActionController::TestCase
   test 'GET index with invalid period filter shows error' do
     get :index, params: { start_date: '31.12.2006', end_date: '1.12.2006' }
 
-    assert_not assigns(:report).filters_defined?
     assert_predicate flash[:alert], :present?
-    assert_equal Period.new(nil, nil), assigns(:period)
   end
 
   test 'GET index csv exports csv file' do
