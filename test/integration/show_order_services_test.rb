@@ -50,6 +50,32 @@ class ShowOrderServices < ActionDispatch::IntegrationTest
     end
   end
 
+  test 'timespan start_date and and_date are cleared and disabled when period shortcut selected' do
+    timeout_safe do
+      create_ordertime_show_order_services_as employee_without_responsibilities
+
+      fill_in('start_date', with: '1.11.2006')
+
+      assert_equal '1.11.2006', page.find('#start_date')[:value]
+
+      select('Dieser Monat', from: 'period_shortcut')
+
+      sleep 0.2 # give time to JS to disable the fields and clear the previous input
+
+      assert page.find('#start_date')[:disabled]
+      assert page.find('#end_date')[:disabled]
+
+      assert_predicate page.find('#start_date')[:value], :blank?
+
+      select('benutzerdefiniert', from: 'period_shortcut')
+
+      sleep 0.2
+
+      assert_not page.find('#start_date')[:disabled]
+      assert_not page.find('#end_date')[:disabled]
+    end
+  end
+
   test 'click on unmodifiable worktime row as management does not open edit view' do
     timeout_safe do
       user = manager_not_responsible_for_any_order
