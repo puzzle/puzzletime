@@ -45,6 +45,7 @@
 #= require expenses
 #= require expense_reviews
 #= require meal_compensations
+#= require invoices
 #= require turbolinks
 
 app = window.App ||= {}
@@ -123,8 +124,8 @@ $(document).on('ajax:error', (event, xhr, status, error) ->
 
 
 ################################################################
-# only bind events for non-document elements on turbolinks:load
-$(document).on('turbolinks:load', ->
+# only bind events for non-document elements on turbolinks:load and ajax:success
+$(document).on('turbolinks:load ajax:success', ->
   # wire up selectize
   $('select.searchable:not([multiple])').selectize(selectOnTab: true)
   $('select[multiple].searchable').selectize(plugins: ['remove_button'], selectOnTab: true)

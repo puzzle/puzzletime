@@ -27,4 +27,16 @@ module Filterable
       end
     end
   end
+
+  def filter_entries_allow_custom_mappings_by(entries, custom_key_mappings, *keys)
+    (custom_key_mappings.keys + keys).inject(entries) do |filtered, key|
+      if custom_key_mappings[key].present? && params[key].present?
+        filtered.where(custom_key_mappings[key] => params[key])
+      elsif params[key].present?
+        filtered.where(key => params[key])
+      else
+        filtered
+      end
+    end
+  end
 end

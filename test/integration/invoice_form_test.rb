@@ -115,6 +115,30 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
     assert_arrays_match work_items.map { |w| w.id.to_s }, all(:name, 'invoice[work_item_ids][]').map(&:value)
   end
 
+  test 'passing work_item_ids via params sets them correctly in the invoice' do
+    order = Fabricate(:order)
+    work_items = Fabricate.times(3, :work_item, parent: order.work_item)
+    work_items.each { |w| Fabricate(:accounting_post, work_item: w) }
+
+    from = Date.parse('09.12.2006')
+    to = Date.parse('11.12.2006')
+
+    (from..to).each_with_index do |date, index|
+      Fabricate(:ordertime,
+                work_date: date,
+                work_item: work_items[index],
+                employee: employees(:pascal))
+    end
+
+    work_item_subset = work_items[1..]
+
+    reload(order:, work_item_ids: work_item_subset.pluck(:id))
+
+    checked_work_item_ids = all(:css, 'input[name="invoice[work_item_ids][]"]:checked').map { |x| x.value.to_i }
+
+    assert_arrays_match work_item_subset.pluck(:id), checked_work_item_ids
+  end
+
   test 'check employee checkbox updates calculated total' do
     assert_change -> { find('#invoice_total_amount').text } do
       find_field("invoice_employee_ids_#{employees(:mark).id}").click
@@ -177,6 +201,55 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
     assert find('#billing_addresses').has_content?('Eigerplatz')
   end
 
+  test 'passing start / end date params or a period shortcut sets date fields' do
+    reload({ start_date: '01.11.2006', end_date: '08.12.2006' })
+
+    assert_equal '01.11.2006', find('#invoice_period_from')['value']
+    assert_equal '08.12.2006', find('#invoice_period_to')['value']
+
+    reload({ period_shortcut: '-1m' })
+    period = Period.parse('-1m')
+
+    assert_equal Period.parse_date(period.start_date), Period.parse_date(find('#invoice_period_from')['value'])
+    assert_equal Period.parse_date(period.end_date), Period.parse_date(find('#invoice_period_to')['value'])
+  end
+
+  test 'setting the period shortcut disables the date fields, unsetting it enables the date fields' do
+    put_period_shortcut('-1m')
+
+    assert find('#invoice_period_from')['disabled']
+    assert find('#invoice_period_to')['disabled']
+
+    clear_period_shortcut
+
+    assert_not find('#invoice_period_from')['disabled']
+    assert_not find('#invoice_period_to')['disabled']
+  end
+
+  test 'set to period_shortcut updates employee checkboxes' do
+    assert has_css?('#employee_checkboxes', text: 'Waber Mark')
+
+    put_period_shortcut('-1m')
+
+    assert_not has_css?('#employee_checkboxes', text: 'Waber Mark')
+
+    clear_period_shortcut
+
+    assert has_css?('#employee_checkboxes', text: 'Waber Mark')
+  end
+
+  test 'set to period_shortcut updates work_items checkboxes' do
+    assert has_css?('#work_item_checkboxes', text: 'STOP-WEB: Webauftritt')
+
+    put_period_shortcut('-1m')
+
+    assert_not has_css?('#work_item_checkboxes', text: 'STOP-WEB: Webauftritt')
+
+    clear_period_shortcut
+
+    assert has_css?('#work_item_checkboxes', text: 'STOP-WEB: Webauftritt')
+  end
+
   def order
     orders(:webauftritt)
   end
@@ -212,6 +285,18 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
     fill_in(label, with: date_string)
     page.find('#ui-datepicker-div .ui-datepicker-current-day a').click
     sleep(0.5) # give the xhr request some time to complete
+  end
+
+  def put_period_shortcut(period_shortcut)
+    find('#period_shortcut').click
+    find("option[value=\"#{period_shortcut}\"]").select_option
+    sleep(0.5)
+  end
+
+  def clear_period_shortcut
+    find('#period_shortcut').click
+    find("option[value='']").select_option
+    sleep(0.5)
   end
 
   # asserts that the checkboxes match the models by value/id and the checked state
