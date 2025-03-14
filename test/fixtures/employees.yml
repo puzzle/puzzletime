@@ -96,6 +96,8 @@ long_time_john:
     - UK
   graduation: Klubschule
   department: devone
+  city: 'New York'
+  birthday: 1995-01-02
   worktimes_commit_reminder: true
 
 pascal:

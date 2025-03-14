@@ -24,7 +24,10 @@ module Api
                                            nationalities: %w[CH UK],
                                            graduation: 'Klubschule',
                                            department_shortname: 'D1',
-                                           employment_roles: [{ name: 'Software Developer', percent: 90.0 }] } } }
+                                           department_name: 'devone',
+                                           city: 'New York',
+                                           birthday: 1995-01-02,
+                                           employment_roles: [{ name: 'Software Developer', percent: 90.0, role_level: 'Junior' }] } } }
 
         assert_equal expected, serialized
       end
