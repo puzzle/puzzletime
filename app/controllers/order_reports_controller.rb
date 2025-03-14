@@ -15,14 +15,27 @@ class OrderReportsController < ApplicationController
                             major_risk_value]
 
   before_action :authorize_class
-  before_action :show_without_hours
 
   def index
-    set_period
-    @report = Order::Report.new(@period, params)
     respond_to do |format|
+      set_period
+      @report = Order::Report.new(@period, params)
       format.html do
         set_filter_values
+        unless @report.filters_defined?
+          params[:department_id] ||= @user.department_id
+          case params[:status_preselection]
+          when nil, ''
+            params.reverse_merge!(period_shortcut: '0m')
+          when 'closed'
+            params.reverse_merge!(period_shortcut: '-1q')
+          when 'not_closed'
+            params.reverse_merge!(period_shortcut: '0m',
+                                  status_id: @order_status.where(closed: false).where(default: true).pick(:id))
+          end
+          set_period
+          @report = Order::Report.new(@period, params)
+        end
       end
       format.js do
         set_filter_values
@@ -35,10 +48,6 @@ class OrderReportsController < ApplicationController
   end
 
   private
-
-  def show_without_hours
-    params[:without_hours] = true if params[:closed].presence
-  end
 
   def set_filter_values
     @departments = Department.list

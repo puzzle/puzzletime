@@ -45,7 +45,7 @@ class Order
 
     def filters_defined?
       filters = params.except(:action, :controller, :format, :utf8, :page,
-                              :clear, :closed, :without_hours)
+                              :clear, :status_preselection, :without_hours)
       filters.present? && filters.values.any?(&:present?)
     end
 
@@ -93,7 +93,7 @@ class Order
                'accounting_posts.work_item_id = ANY (work_items.path_ids)')
         .where(accounting_posts: { id: accounting_posts.collect(&:keys).flatten })
 
-      accounting_post_hours = accounting_post_hours.in_period(period) if params[:closed].blank?
+      accounting_post_hours = accounting_post_hours.in_period(period) if params[:status_preselection].blank? || params[:status_preselection] == 'not_closed'
 
       accounting_post_hours
         .group('accounting_posts.id, worktimes.billable')
@@ -109,7 +109,7 @@ class Order
     def load_invoices(orders)
       invoices = Invoice.where(order_id: orders.collect(&:id))
 
-      invoices = invoices.where(period.where_condition('billing_date')) if params[:closed].blank?
+      invoices = invoices.where(period.where_condition('billing_date')) if params[:status_preselection].blank? || params[:status_preselection] == 'not_closed'
 
       invoices
         .group('order_id')
@@ -133,7 +133,7 @@ class Order
     end
 
     def show_without_hours?
-      params[:without_hours].presence || false
+      params[:without_hours] == 'true'
     end
 
     def booked_hours?(post_hours)
@@ -161,11 +161,15 @@ class Order
     end
 
     def filter_by_closed(orders)
-      return orders if params[:closed].blank?
-
-      orders
-        .where(order_statuses: { closed: true })
-        .where(period.where_condition('closed_at'))
+      case params[:status_preselection]
+      when nil, ''
+        orders
+      when 'closed'
+        orders.where(order_statuses: { closed: true })
+              .where(period.where_condition('closed_at'))
+      when 'not_closed'
+        orders.where(order_statuses: { closed: false })
+      end
     end
 
     def filter_by_uncertainty(orders, attr)
