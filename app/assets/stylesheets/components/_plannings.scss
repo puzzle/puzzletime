@@ -151,6 +151,7 @@ body.order_plannings {
 .planning-calendar-days,
 .planning-calendar-days-header,
 .planning-calendar-inner > .groupheader,
+.planning-calendar-inner > .tableheader,
 .planning-calendar-inner > .actions {
   display: flex;
   width: calc(var(--days, 1) * #{$cell-width} + #{$legend-width});
@@ -170,6 +171,7 @@ body.order_plannings {
   }
 }
 .planning-calendar-inner > .groupheader > .legend,
+.planning-calendar-inner > .tableheader > .legend,
 .planning-calendar-inner > .groupheader > .sticky-wrapper > .legend,
 .planning-calendar-inner > .actions > .buttons,
 .planning-calendar-inner > .actions > .sticky-wrapper > .buttons,
