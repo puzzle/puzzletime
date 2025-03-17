@@ -8,14 +8,15 @@
   = link_to_if(can?(:show_plannings, legend), legend, planning_legend_path(legend))
 
   .rowtotals
+    - total_period_tooltip = 'Total der auf dieser Position geplanten Zeit im dargestellten Zeitbereich'
+    - total_position_tooltip = 'Total der auf dieser Position geplanten Zeit'
     .col-sum 
-      - total_period_tooltip = 'Total der auf dieser Position geplanten Zeit im dargestellten Zeitbereich'
       - if !local_assigns[:row_total_period].nil?
         = with_tooltip(total_period_tooltip) do
           = format_hour(row_total_period, 0)
     .col-sum
       - row_total_overall = true if local_assigns[:row_total_overall].nil?
-      - total_tooltip = row_total_overall ? 'Total der auf dieser Position geplanten Zeit' : 'Total der auf dieser Position geplanten Zeit im dargestellten Zeitbereich'
+      - total_tooltip = row_total_overall ? total_position_tooltip : total_period_tooltip
       = with_tooltip(total_tooltip) do
         = format_hour(row_total, 0)
 
