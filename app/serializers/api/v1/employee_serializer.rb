@@ -18,10 +18,6 @@ module Api
                   :city,
                   :birthday
 
-      attribute :full_name do |employee|
-        employee.to_s
-      end
-
       attribute :is_employed do |employee|
         !employee.current_employment.nil?
       end
@@ -30,18 +26,23 @@ module Api
         employee.department&.shortname
       end
 
+      attribute :department_name do |employee|
+        employee.department&.name
+      end
+
       attribute :employment_roles do |employee|
         Array.wrap(employee.current_employment&.employment_roles_employments).map do |employment_roles_employment|
           {
             name: employment_roles_employment.employment_role.name,
-            percent: employment_roles_employment.percent.to_f
+            percent: employment_roles_employment.percent.to_f,
+            role_level: employment_roles_employment.employment_role_level&.name
           }
         end
       end
 
       # attribute annotations for the generated api docs
 
-      annotate_attributes :shortname, :firstname, :lastname, :email, :graduation, :department_shortname, :city,
+      annotate_attributes :shortname, :firstname, :lastname, :email, :graduation, :department_shortname, :department_name, :city,
                           type: :string
 
       annotate_attribute :marital_status,
@@ -65,7 +66,11 @@ module Api
                            percent: {
                              type: :number,
                              format: :float
-                           }
+                           },
+                           role_level: {
+                              type: string,
+                              description: 'The level of the role'
+                            }
                          }
 
       annotate_attribute :birthday,
