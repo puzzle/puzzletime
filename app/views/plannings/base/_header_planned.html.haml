@@ -4,14 +4,14 @@
 -#  https://github.com/puzzle/puzzletime.
 
 .header-planned-container
-    .header-planned-row
+    .header-planned-row.total-sum
         .header-planned-prefix 
             Total:
         .header-planned-amount
             = format_number(@board.total_planned_hours, 0) + ' / ' + format_number(@board.total_plannable_hours, 0)
         .header-planned-postfix 
             Stunden verplant
-    .header-planned-row
+    .header-planned-row.inperiod-sum
         .header-planned-prefix 
             Ausgewählter Zeitbereich:
         .header-planned-amount
