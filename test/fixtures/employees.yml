@@ -92,6 +92,8 @@ long_time_john:
   email: jn@bla.ch
   management: false
   committed_worktimes_at: 2015-07-31
+  city: 'Eldoria'
+  birthday: 1995-01-02
   marital_status: single
   nationalities:
     - CH

@@ -68,7 +68,7 @@ module Api
                              format: :float
                            },
                            role_level: {
-                              type: string,
+                              type: :string,
                               description: 'The level of the role'
                             }
                          }
