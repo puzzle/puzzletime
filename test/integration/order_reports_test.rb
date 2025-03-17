@@ -26,6 +26,32 @@ class OrderReportsTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test 'clear timespan when period shortcut selected' do
+    timeout_safe do
+      list_orders
+
+      fill_in('start_date', with: '1.11.2006')
+
+      assert_equal '1.11.2006', page.find('#start_date')[:value]
+
+      select('Dieser Monat', from: 'period_shortcut')
+
+      sleep 0.2 # give time to JS to disable the fields and clear the previous input
+
+      assert page.find('#start_date')[:disabled]
+      assert page.find('#end_date')[:disabled]
+
+      assert_predicate page.find('#start_date')[:value], :blank?
+
+      select('benutzerdefiniert', from: 'period_shortcut')
+
+      sleep 0.2
+
+      assert_not page.find('#start_date')[:disabled]
+      assert_not page.find('#end_date')[:disabled]
+    end
+  end
+
   test 'show flash message if period filter is not valid' do
     timeout_safe do
       list_orders
@@ -57,10 +83,37 @@ class OrderReportsTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test 'passing no params will initialize the listing with default params' do
+    timeout_safe do
+      login_as :pascal
+      visit reports_orders_path
+
+      assert has_select?('period_shortcut', selected: 'Dieser Monat')
+      assert_equal find('#department_id', visible: :all).value, [employees(:pascal).department.id.to_s]
+    end
+
+    timeout_safe do
+      login_as :pascal
+      visit reports_orders_path(status_preselection: 'closed')
+
+      assert has_select?('period_shortcut', selected: 'Letztes Quartal')
+      assert_equal find('#department_id', visible: :all).value, [employees(:pascal).department.id.to_s]
+    end
+
+    timeout_safe do
+      login_as :pascal
+      visit reports_orders_path(status_preselection: 'not_closed')
+
+      assert has_select?('period_shortcut', selected: 'Dieser Monat')
+      assert_equal find('#department_id', visible: :all).value, [employees(:pascal).department.id.to_s]
+      assert_equal find('#status_id', visible: :all).value, OrderStatus.where(default: true).pluck(:id).map(&:to_s)
+    end
+  end
+
   private
 
   def list_orders
     login_as :mark
-    visit reports_orders_path
+    visit reports_orders_path(period_shortcut: '')
   end
 end
