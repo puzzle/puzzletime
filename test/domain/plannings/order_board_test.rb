@@ -117,6 +117,18 @@ module Plannings
       assert_equal 16, board.total_row_planned_hours(employees(:lucien).id, work_items(:hitobito_demo_app).id)
     end
 
+    test '#total_row_planned_hours includes plannings from only the active period if the respective flag is set' do
+      create_plannings
+      Planning.create!(work_item_id: work_items(:hitobito_demo_app).id,
+                       employee_id: employees(:lucien).id,
+                       date: date - 28.days,
+                       percent: 100)
+
+      board = Plannings::OrderBoard.new(order, period)
+
+      assert_equal 8, board.total_row_planned_hours(employees(:lucien).id, work_items(:hitobito_demo_app).id, true)
+    end
+
     test '#total_post_planned_hours includes plannings for all employees, even if only some are included' do
       create_plannings
       board = Plannings::OrderBoard.new(order, period)
@@ -142,6 +154,16 @@ module Plannings
       board.for_rows([[employees(:lucien).id, work_items(:hitobito_demo_app).id]])
 
       assert_equal 24, board.total_planned_hours
+    end
+
+    test '#total_planned_hours are calculated for entire timespan or only the active period, depending on the passed flag' do
+      create_plannings
+
+      board = Plannings::OrderBoard.new(order, period)
+      board.for_rows([[employees(:lucien).id, work_items(:hitobito_demo_app).id]])
+
+      assert_equal 24, board.total_planned_hours(false)
+      assert_equal 20, board.total_planned_hours(true)
     end
 
     private
