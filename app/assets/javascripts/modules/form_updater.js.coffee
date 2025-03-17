@@ -6,25 +6,31 @@
 
 app = window.App ||= {}
 
-# Update Form by running AJAX request when event fires on watched elements
-class app.FormUpdater
-  constructor: (url, event, formSelector, watchSelectors...) ->
-    @url = url
+class app.FormUpdaterTrigger
+  constructor: (event, watchSelectors...) ->
     @event = event
-    @form = $(formSelector)
     @watchedElements = watchSelectors.join(', ')
 
-    @_bind()
+class app.FormUpdaterAction
+  constructor: (url, formSelector) ->
+    @url = url
+    @form = $(formSelector)
 
-  updateForm: ->
-    this._getUrl(@url)
-
-  _params: ->
-    @form.serialize()
-
-  _getUrl: ->
-    $.getScript("#{@url}?#{@_params()}")
+# Update Form by running AJAX request when event fires on watched elements
+class app.FormUpdater
+  constructor: (trigger, actions...) ->
+    @trigger = trigger
+    @actions = actions
+    
+    @_bind()    
 
   _bind: ->
-    $(document).on(@event, @watchedElements, (event) => this.updateForm())
-
+    # use a promise chain to sequentially execute actions
+    $(document).on @trigger.event, @trigger.watchedElements, (event) =>
+      @actions.reduce (promise, action) ->
+        promise.then ->
+          new Promise (resolve, reject) ->
+            $.getScript("#{action.url}?#{action.form.serialize()}")
+              .done(resolve)
+              .fail(reject)
+      , Promise.resolve()  # Start with a resolved promise to begin the chain

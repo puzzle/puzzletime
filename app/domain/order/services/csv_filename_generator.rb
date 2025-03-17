@@ -33,9 +33,9 @@ class Order
       end
 
       def accounting_post_shortnames
-        return if params[:work_item_id].blank?
+        return if params[:work_item_ids].blank?
 
-        WorkItem.find(params[:work_item_id]).path_shortnames
+        params[:work_item_ids].map { |id| WorkItem.find(id).path_shortnames }.join('_')
       end
 
       def employee_shortname
