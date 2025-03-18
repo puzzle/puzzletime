@@ -6,7 +6,7 @@
 = render 'orders/header'
 
 - if Settings.meal_compensation.active
-  = form_tag(nil, method: :get, id: :planning_filter_form, class: 'form-inline', role: 'filter') do
+  = form_tag(nil, method: :get, id: :cost_type_filter_form, class: 'form-inline', role: 'filter') do
     = direct_filter_select(:cost_type, 'Kostenart', [IdValue.new('expenses', 'Spesen'), IdValue.new('meal_compensation', 'Verpflegungsentschädigung')], prompt: 'Kostenart wählen')
 
 - if !Settings.meal_compensation.active || params['cost_type'] == 'expenses'
