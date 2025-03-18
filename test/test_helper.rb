@@ -40,10 +40,11 @@ Capybara.register_driver :chrome do |app|
     # See additional options for Dockerized environment in the respective section of this article
     browser_options: {
       # Required for ARM chips on which CI might run
-      'disable-smooth-scrolling' => true
+      'disable-smooth-scrolling' => true,
+      'no-sandbox' => true
     },
     # Increase Chrome startup wait time (required for stable CI builds)
-    process_timeout: 10,
+    process_timeout: 15,
     # Enable debugging capabilities
     inspector: true,
     # Allow running Chrome in a headful mode by setting HEADLESS env
