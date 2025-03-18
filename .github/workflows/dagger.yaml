@@ -5,6 +5,7 @@ on:
       - dagger-ci
       - dagger-generic
       - dagger-generic-pipeline
+      - dagger-generic-pipeline-int
 jobs:
   pipeline:
     runs-on: 'ubuntu-latest'

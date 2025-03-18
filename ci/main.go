@@ -105,7 +105,7 @@ func (m *Ci) BuildTestContainer(ctx context.Context, dir *dagger.Directory) *dag
 		WithExec([]string{"bundle", "exec", "rails", "db:create"}).
 		WithExec([]string{"bundle", "exec", "rails", "db:migrate"}).
 		WithExec([]string{"bundle", "exec", "rails", "assets:precompile"}).
-		WithExec([]string{"sh", "-c", "bundle exec rails test -v test/controllers test/domain test/fabricators test/fixtures test/helpers test/mailers test/models test/presenters test/support test/tarantula"})
+		WithExec([]string{"sh", "-c", "bundle exec rails test -v test/controllers test/domain test/fabricators test/fixtures test/helpers test/mailers test/models test/presenters test/support test/tarantula test/integration"})
 }
 
 // Returns a Container with the base setup for running the rails test suite
@@ -156,18 +156,18 @@ func (m *Ci) Ci(
 	// +default=false
 	pass bool,
 ) *Results {
-	lintOutput := dag.GenericPipeline().Lint(m.BuildLintContainer(dir, pass), "lint.json")
-	securityScan := dag.GenericPipeline().Sast(m.BuildSastContainer(dir), "/app/brakeman-output.tabs")
-	image := dag.GenericPipeline().Build(dir)
-	sbom := dag.GenericPipeline().Sbom(image)
-	vulnerabilityScan := dag.GenericPipeline().Vulnscan(sbom)
-	testReports := dag.GenericPipeline().Test(m.BuildTestContainer(ctx, dir), "/mnt/test/reports")
-	digest, err := dag.GenericPipeline().Publish(ctx, image, registryAddress, dagger.GenericPipelinePublishOpts{RegistryUsername: registryUsername, RegistryPassword: registryPassword})
+	lintOutput := dag.PitcFlow().Lint(m.BuildLintContainer(dir, pass), "lint.json")
+	securityScan := dag.PitcFlow().Sast(m.BuildSastContainer(dir), "/app/brakeman-output.tabs")
+	image := dag.PitcFlow().Build(dir)
+	sbom := dag.PitcFlow().Sbom(image)
+	vulnerabilityScan := dag.PitcFlow().Vulnscan(sbom)
+	testReports := dag.PitcFlow().Test(m.BuildTestContainer(ctx, dir), "/mnt/test/reports")
+	digest, err := dag.PitcFlow().Publish(ctx, image, registryAddress, dagger.PitcFlowPublishOpts{RegistryUsername: registryUsername, RegistryPassword: registryPassword})
 
 	if err == nil {
-		dag.GenericPipeline().PublishToDeptrack(ctx, sbom, dtAddress, dtApiKey, dtProjectUUID)
-		dag.GenericPipeline().Sign(ctx, registryUsername, registryPassword, digest)
-		dag.GenericPipeline().Attest(ctx, registryUsername, registryPassword, digest, sbom, "cyclonedx")
+		dag.PitcFlow().PublishToDeptrack(ctx, sbom, dtAddress, dtApiKey, dtProjectUUID)
+		dag.PitcFlow().Sign(ctx, registryUsername, registryPassword, digest)
+		dag.PitcFlow().Attest(ctx, registryUsername, registryPassword, digest, sbom, "cyclonedx")
 	}
 
 	return &Results{
@@ -223,7 +223,7 @@ func (m *Ci) CiIntegration(
 	// This Blocks the execution until its counter become 0
 	wg.Wait()
 
-	return dag.GenericPipeline().Run(
+	return dag.PitcFlow().Run(
         // source directory
         dir,
         // lint container
@@ -251,6 +251,6 @@ func (m *Ci) CiIntegration(
         // deptrack API key
         dtApiKey,
         // ignore linter failures
-        dagger.GenericPipelineRunOpts{Pass: pass},
+        dagger.PitcFlowRunOpts{Pass: pass},
 	)
 }
