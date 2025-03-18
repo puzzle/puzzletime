@@ -6,7 +6,6 @@
 # https://github.com/puzzle/puzzletime.
 
 class OrderCostsController < ApplicationController
-  include MealCompensationsHelper
   def show
     authorize!(:show_costs, order)
     associated_meal_compensations
@@ -26,10 +25,6 @@ class OrderCostsController < ApplicationController
 
   def related_work_items
     WorkItem.find(order.work_item_id).self_and_descendants
-  end
-
-  def compensatable_days(employee_id, work_date)
-    employee_meal_compensation_days(Employee.find(employee_id), Period.day_for(work_date))
   end
 
   def associated_meal_compensations
