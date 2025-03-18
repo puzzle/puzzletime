@@ -5,15 +5,21 @@
 
 = render 'orders/header'
 
-.orders-cost-tablecontainer
-    %h2= t('activerecord.attributes.order_cost.expense')
-    .orders-cost-table-medium
-        = summed_expenses_table(@associated_expenses)
-
-
 - if Settings.meal_compensation.active
-    .orders-cost-tablecontainer
-        %h2= t('activerecord.attributes.order_cost.meal_compensation')
-        .orders-cost-table-small
-            = summed_meal_compensations_table(@associated_meal_compensations)
+  = form_tag(nil, method: :get, id: :planning_filter_form, class: 'form-inline', role: 'filter') do
+    = hidden_field_tag :page, 1
+    = direct_filter_select(:cost_type, 'Kostenart', [IdValue.new('expenses', 'Spesen'), IdValue.new('meal_compensation', 'Verpflegungsentschädigung')], prompt: 'Kostenart wählen')
+
+- if !Settings.meal_compensation.active || params['cost_type'] == 'expenses'
+  .orders-cost-tablecontainer
+    %h3= t('activerecord.attributes.order_cost.expense')
+    .orders-cost-table-medium
+      = summed_expenses_table(@associated_expenses)
+
+- elsif Settings.meal_compensation.active && params['cost_type'] == 'meal_compensation'
+  .orders-cost-tablecontainer
+    %h3= t('activerecord.attributes.order_cost.meal_compensation')
+    .orders-cost-table-small
+      = summed_meal_compensations_table(@associated_meal_compensations)
+
 
