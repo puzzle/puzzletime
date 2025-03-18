@@ -12,14 +12,7 @@
   %tr
     %td Auftrag
     %td
-      %b= @order.label
-  -if params[:show_work_item] || params[:action] == 'compose_report'
-    %tr
-      %td Buchungspositionen
-      %td
-        - @work_items.each do |item|
-          %b= item.name
-          %br
+      %b= @work_items[0].label_ancestry
   - if @employee
     %tr
       %td Member
