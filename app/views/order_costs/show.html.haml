@@ -19,6 +19,6 @@
   .orders-cost-tablecontainer
     %h3= t('activerecord.attributes.order_cost.meal_compensation')
     #meal_compensations_list.orders-cost-table-small
-      = summed_meal_compensations_table(@associated_meal_compensations)
+      = summed_meal_compensations_table(@associated_meal_compensations, @meal_compensation_members)
 
 
