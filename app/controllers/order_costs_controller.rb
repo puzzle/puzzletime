@@ -9,6 +9,7 @@ class OrderCostsController < ApplicationController
   def show
     authorize!(:show_costs, order)
     associated_meal_compensations
+    meal_compensation_members
     associated_expenses
   end
 
@@ -31,5 +32,9 @@ class OrderCostsController < ApplicationController
     @associated_meal_compensations ||= Worktime.where(meal_compensation: true)
                                                     .where(work_item_id: related_work_items)
                                                     .includes(%i[employee])
+  end
+
+  def meal_compensation_members
+    @meal_compensation_members ||= Employee.where(id: associated_meal_compensations.pluck(:employee_id))
   end
 end

@@ -33,12 +33,10 @@ module OrderCostsHelper
     end
   end
 
-  def summed_meal_compensations_table(entries)
-    members = entries.select(:employee_id).distinct
+  def summed_meal_compensations_table(entries, members)
+    Rails.logger.info("members: #{members.inspect}")
     plain_table_or_message(members) do |t|
-      t.attr(:employee_id) do |e|
-        e.employee.to_s
-      end
+      t.attr(:name, 'Member', &:to_s)
       days_per_member_col(t, entries)
       t.foot { summed_meal_compensations_row(entries) }
     end
@@ -46,7 +44,7 @@ module OrderCostsHelper
 
   def days_per_member_col(table, entries)
     table.col('Tage', class: 'right') do |e|
-      employee_id_meal_compensations_days(entries)[e.employee_id].to_s
+      employee_id_meal_compensations_days(entries)[e.id].to_s
     end
   end
 
