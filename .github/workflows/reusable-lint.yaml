@@ -2,15 +2,23 @@ name: 'Code Style Review'
 
 on:
   workflow_call:
+    inputs:
+      ref:
+        description: "Ref to checkout"
+        type: string
 
 jobs:
   lint:
     runs-on: 'ubuntu-latest'
 
     steps:
-      - uses: actions/checkout@v4
+      - if: inputs.ref != null
+        uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref_name }}
+          ref: ${{ inputs.ref }}
+
+      - if: inputs.ref == null
+        uses: actions/checkout@v4
 
       - uses: ruby/setup-ruby@v1
         with:

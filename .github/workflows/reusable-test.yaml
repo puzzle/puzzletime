@@ -2,6 +2,10 @@ name: "Rails Unit Tests"
 
 on:
   workflow_call:
+    inputs:
+      ref:
+        description: "Ref to checkout"
+        type: string
 
 jobs:
   minitest:
@@ -25,28 +29,32 @@ jobs:
         ports: ["11211:11211"]
 
     steps:
-    - uses: actions/checkout@v4
-      with:
-        ref: ${{ github.ref_name }}
+      - if: inputs.ref != null
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
 
-    - uses: ruby/setup-ruby@v1
-      with:
-        bundler-cache: true
+      - if: inputs.ref == null
+        uses: actions/checkout@v4
 
-    - name: 'Build and test with Rake'
-      env:
-        RAILS_TEST_DB_NAME: 'postgres'
-        RAILS_TEST_DB_USERNAME: 'postgres'
-        RAILS_TEST_DB_PASSWORD: 'postgres'
-        RAILS_ENV: 'test'
-        CI: 'true'
-        PGDATESTYLE: German
-      run: |
-        sudo apt-get -yqq update
-        sudo apt-get -yqq install libpq-dev libvips-dev
-        gem install bundler --version '~> 2'
-        bundle install --jobs 4 --retry 3
-        bundle exec rails db:create
-        bundle exec rails db:migrate
-        bundle exec rails assets:precompile
-        bundle exec rails test
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: 'Build and test with Rake'
+        env:
+          RAILS_TEST_DB_NAME: 'postgres'
+          RAILS_TEST_DB_USERNAME: 'postgres'
+          RAILS_TEST_DB_PASSWORD: 'postgres'
+          RAILS_ENV: 'test'
+          CI: 'true'
+          PGDATESTYLE: German
+        run: |
+          sudo apt-get -yqq update
+          sudo apt-get -yqq install libpq-dev libvips-dev
+          gem install bundler --version '~> 2'
+          bundle install --jobs 4 --retry 3
+          bundle exec rails db:create
+          bundle exec rails db:migrate
+          bundle exec rails assets:precompile
+          bundle exec rails test

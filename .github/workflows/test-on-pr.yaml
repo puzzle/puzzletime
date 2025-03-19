@@ -11,5 +11,11 @@ on:
 jobs:
   lint:
     uses: ./.github/workflows/reusable-lint.yaml
+    with:
+      ref: ${{ github.ref_name }}
+
   test:
     uses: ./.github/workflows/reusable-test.yaml
+    with:
+      ref: ${{ github.ref_name }}
+
