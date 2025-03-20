@@ -327,8 +327,8 @@ class Order
       @order ||= orders(:hitobito_demo)
     end
 
-    def cockpit
-      @cockpit ||= Order::Cockpit.new(order)
+    def cockpit(period = Period.new(nil, nil))
+      @cockpit ||= Order::Cockpit.new(order, period)
     end
   end
 end
