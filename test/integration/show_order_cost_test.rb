@@ -16,18 +16,18 @@ class ShowOrderCost < ActionDispatch::IntegrationTest
       activate_meal_compensations
 
       assert_selector(:css, '#cost_type')
-      assert has_css?('#expenses_list')
-      assert has_css?('#meal_compensations_list')
+      assert has_css?('#expenses-list')
+      assert has_css?('#meal-compensations-list')
 
       select('Spesen', from: 'cost_type')
 
-      assert has_css?('#expenses_list')
-      assert has_no_css?('#meal_compensations_list')
+      assert has_css?('#expenses-list')
+      assert has_no_css?('#meal-compensations-list')
 
       select('Verpflegungsentschädigung', from: 'cost_type')
 
-      assert has_no_css?('#expenses_list')
-      assert has_css?('#meal_compensations_list')
+      assert has_no_css?('#expenses-list')
+      assert has_css?('#meal-compensations-list')
     end
   end
 
@@ -36,8 +36,8 @@ class ShowOrderCost < ActionDispatch::IntegrationTest
       deactivate_meal_compensations
 
       assert_no_selector(:css, '#cost_type')
-      assert has_css?('#expenses_list')
-      assert has_no_css?('#meal_compensations_list')
+      assert has_css?('#expenses-list')
+      assert has_no_css?('#meal-compensations-list')
     end
   end
 
