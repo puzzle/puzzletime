@@ -52,4 +52,7 @@ Naming/AccessorMethodName:
 Style/SymbolProc:
   Exclude:
     - 'app/serializers/api/v1/employee_serializer.rb'
+Metrics/BlockLength:
+  Exclude:
+    - config/routes.rb
 ...
