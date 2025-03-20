@@ -41,7 +41,7 @@ jobs:
           path: reports/unit-tests/*.xml
           reporter: java-junit
           fail-on-empty: 'false'
-          fail-on-error: 'false'
+          fail-on-error: 'true'
       - name: archive pipeline artifacts
         uses: actions/upload-artifact@v4
         with:
