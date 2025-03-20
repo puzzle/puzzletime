@@ -254,3 +254,16 @@ func (m *Ci) CiIntegration(
         dagger.PitcFlowRunOpts{Pass: pass},
 	)
 }
+
+func (m *Ci) Verify(
+    ctx context.Context,
+    file *dagger.File,
+) (string, error) {
+    size, _ := file.Size(ctx)
+    if size > 0 {
+        content, _ := file.Contents(ctx)
+        return content, fmt.Errorf("%w", content)
+    } else {
+        return "", nil
+    }
+}
