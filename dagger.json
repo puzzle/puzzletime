@@ -7,8 +7,8 @@
   "dependencies": [
     {
       "name": "pitc-flow",
-      "source": "github.com/puzzle/dagger-module-pitc-flow/pitc-flow@v0.1.0",
-      "pin": "c010a7e8beb8e97553ee89dd03bd17221485b44d"
+      "source": "github.com/puzzle/dagger-module-pitc-flow/pitc-flow@v0.2.0",
+      "pin": "67568247837a61c793cbe2c3e60ad54346b6bbc7"
     }
   ],
   "source": "ci"
