@@ -16,8 +16,8 @@ class ShowOrderCost < ActionDispatch::IntegrationTest
       activate_meal_compensations
 
       assert_selector(:css, '#cost_type')
-      assert has_no_css?('#expenses_list')
-      assert has_no_css?('#meal_compensations_list')
+      assert has_css?('#expenses_list')
+      assert has_css?('#meal_compensations_list')
 
       select('Spesen', from: 'cost_type')
 
@@ -31,7 +31,7 @@ class ShowOrderCost < ActionDispatch::IntegrationTest
     end
   end
 
-  test 'with meal_compensations deacivated, expenses are shown and no select field' do
+  test 'with meal_compensations deacivated, expenses are shown and no select field is present' do
     timeout_safe do
       deactivate_meal_compensations
 
