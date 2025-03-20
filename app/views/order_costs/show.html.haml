@@ -7,15 +7,15 @@
 
 - if Settings.meal_compensation.active
   = form_tag(nil, method: :get, id: :cost_type_filter_form, class: 'form-inline', role: 'filter') do
-    = direct_filter_select(:cost_type, 'Kostenart', [IdValue.new('expenses', 'Spesen'), IdValue.new('meal_compensation', 'Verpflegungsentschädigung')], prompt: 'Kostenart wählen')
+    = direct_filter_select(:cost_type, 'Kostenart', [IdValue.new('expenses', 'Spesen'), IdValue.new('meal_compensation', 'Verpflegungsentschädigung')], prompt: 'Alle')
 
-- if !Settings.meal_compensation.active || params['cost_type'] == 'expenses'
+- if params['cost_type'].blank? || !Settings.meal_compensation.active || params['cost_type'] == 'expenses'
   .orders-cost-tablecontainer
     %h3= t('activerecord.attributes.order_cost.expense')
     #expenses_list.orders-cost-table-medium
       = summed_expenses_table(@associated_expenses)
 
-- elsif Settings.meal_compensation.active && params['cost_type'] == 'meal_compensation'
+- if Settings.meal_compensation.active && (params['cost_type'].blank? ||  params['cost_type'] == 'meal_compensation')
   .orders-cost-tablecontainer
     %h3= t('activerecord.attributes.order_cost.meal_compensation')
     #meal_compensations_list.orders-cost-table-small
