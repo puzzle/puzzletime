@@ -89,6 +89,89 @@ class Order
       assert_in_delta(1921.6, supplied.amount)
     end
 
+    test 'supplied_services values are calculated correctly based on provided period' do
+      define_offered_fields
+      Ordertime.create!(work_item: work_items(:hitobito_demo_app),
+                        employee: employees(:pascal),
+                        work_date: '1291-09-09',
+                        report_type: ReportType::HoursDayType::INSTANCE,
+                        hours: 4)
+      Ordertime.create!(work_item: work_items(:hitobito_demo_site),
+                        employee: employees(:pascal),
+                        work_date: '1291-08-01',
+                        report_type: ReportType::HoursDayType::INSTANCE,
+                        hours: 3)
+      Ordertime.create!(work_item: work_items(:hitobito_demo_site),
+                        employee: employees(:pascal),
+                        work_date: '1291-09-22',
+                        report_type: ReportType::HoursDayType::INSTANCE,
+                        hours: 2)
+
+      total = cockpit(Period.new('1291-09-01', '1291-10-01')).rows.first
+      supplied = total.cells[:supplied_services]
+
+      assert_equal 6, supplied.hours
+      assert_in_delta(0.75, supplied.days)
+      assert_in_delta(780.6, supplied.amount)
+
+      a1 = cockpit(Period.new('1291-09-01', '1291-10-01')).rows.second
+      supplied = a1.cells[:supplied_services]
+
+      assert_equal 4, supplied.hours
+      assert_in_delta(0.5, supplied.days)
+      assert_in_delta(480.4, supplied.amount)
+
+      a2 = cockpit(Period.new('1291-09-01', '1291-10-01')).rows.third
+      supplied = a2.cells[:supplied_services]
+
+      assert_equal 2, supplied.hours
+      assert_in_delta(0.25, supplied.days)
+      assert_in_delta(300.2, supplied.amount)
+    end
+
+    test 'non_billable values are calculated correctly based on provided period' do
+      define_offered_fields
+      Ordertime.create!(work_item: work_items(:hitobito_demo_app),
+                        employee: employees(:pascal),
+                        work_date: '1291-09-09',
+                        report_type: ReportType::HoursDayType::INSTANCE,
+                        hours: 4,
+                        billable: false)
+      Ordertime.create!(work_item: work_items(:hitobito_demo_site),
+                        employee: employees(:pascal),
+                        work_date: '1291-09-08',
+                        report_type: ReportType::HoursDayType::INSTANCE,
+                        hours: 2)
+
+      total = cockpit(Period.new('1291-09-01', '1291-10-01')).rows.first
+      not_billable = total.cells[:not_billable]
+
+      assert_equal 4, not_billable.hours
+      assert_in_delta(0.5, not_billable.days)
+      assert_in_delta(480.4, not_billable.amount)
+    end
+
+    test 'open budget respects all entries, independent of selected timespan' do
+      define_offered_fields
+      Ordertime.create!(work_item: work_items(:hitobito_demo_app),
+                        employee: employees(:pascal),
+                        work_date: '1291-09-09',
+                        report_type: ReportType::HoursDayType::INSTANCE,
+                        hours: 4)
+      Ordertime.create!(work_item: work_items(:hitobito_demo_app),
+                        employee: employees(:pascal),
+                        work_date: '1291-08-01',
+                        report_type: ReportType::HoursDayType::INSTANCE,
+                        hours: 2)
+
+      total = cockpit(Period.new('1291-09-01', '1291-10-01')).rows.first
+      open_budget = total.cells[:open_budget]
+
+      assert_in_delta(294.2, open_budget.hours)
+      assert_in_delta(36.775, open_budget.days)
+      assert_in_delta(38_336.42, open_budget.amount)
+    end
+
     test 'not billable values are calculated if worktimes exist' do
       define_offered_fields
       define_worktimes
