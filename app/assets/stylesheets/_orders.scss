@@ -53,10 +53,14 @@ h1.top {
 }
 
 .orders-cockpit {
+  
   .cockpit-header {
     @include clearfix;
     margin: 0 auto;
-    max-width: 800px;
+
+    .filter-elements {
+      margin-bottom: 20px;
+    }
   }
 
   .cockpit-header-item {

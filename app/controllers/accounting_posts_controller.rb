@@ -6,6 +6,8 @@
 #  https://github.com/puzzle/puzzletime.
 
 class AccountingPostsController < CrudController
+  include WithPeriod
+
   self.nesting = [Order]
 
   self.permitted_attrs = [:closed, :offered_hours, :offered_rate, :offered_total,
@@ -17,7 +19,8 @@ class AccountingPostsController < CrudController
   helper_method :order
 
   def index
-    @cockpit = Order::Cockpit.new(parent)
+    set_period
+    @cockpit = Order::Cockpit.new(parent, @period)
   end
 
   private

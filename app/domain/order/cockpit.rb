@@ -11,9 +11,9 @@ class Order
 
     EM_DASH = '―'
 
-    def initialize(order)
+    def initialize(order, period)
       @order = order
-      @rows = build_rows
+      @rows = build_rows(period)
     end
 
     def billed_amount
@@ -59,13 +59,13 @@ class Order
       total.cells[:supplied_services].hours.to_f
     end
 
-    def build_rows
+    def build_rows(period)
       if sub_levels?
-        rows = accounting_posts.collect { |p| AccountingPostRow.new(p) }
+        rows = accounting_posts.collect { |p| AccountingPostRow.new(p, period) }
         total = TotalRow.new(rows)
         [total, *rows]
       else
-        [AccountingPostRow.new(accounting_posts.first, order.work_item.path_shortnames)]
+        [AccountingPostRow.new(accounting_posts.first, period, order.work_item.path_shortnames)]
       end
     end
 
