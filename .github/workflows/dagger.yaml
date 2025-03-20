@@ -6,7 +6,7 @@ on:
       - dagger-generic
       - dagger-generic-pipeline
       - dagger-generic-pipeline-int
-      - dagger-generic-pipeline-int-status
+      - dagger-generic-pipeline-status
 jobs:
   pipeline:
     runs-on: 'ubuntu-latest'
