@@ -3,6 +3,11 @@
 -#  or later. See the COPYING file at the top-level directory or at
 -#  https://github.com/puzzle/puzzletime.
 
+.filter-elements
+  = form_tag(nil, method: :get, id: 'cockpit_filter_form', class: 'form-inline', role: 'filter') do
+    = direct_filter_date(:start_date, 'Von', @period.start_date)
+    = direct_filter_date(:end_date, 'Bis', @period.end_date)
+    = direct_filter_select(:period_shortcut, nil, predefined_past_period_options, prompt: 'benutzerdefiniert')
 
 .cockpit-header-item
   Budget

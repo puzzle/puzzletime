@@ -10,8 +10,9 @@ class Order
     class AccountingPostRow < Row
       attr_reader :cells, :accounting_post
 
-      def initialize(accounting_post, label = nil)
+      def initialize(accounting_post, period, label = nil)
         super(label || accounting_post.to_s)
+        @period = period
         @accounting_post = accounting_post
         @cells = build_cells
       end
@@ -28,6 +29,10 @@ class Order
 
       def billable_hours
         accounting_post_hours[true] || 0
+      end
+
+      def overall_billable_hours
+        overall_acoounting_post_hours[true] || 0
       end
 
       def not_billable_hours
@@ -73,7 +78,7 @@ class Order
       end
 
       def build_open_budget_cell
-        hours = (accounting_post.offered_hours || 0) - billable_hours
+        hours = (accounting_post.offered_hours || 0) - overall_billable_hours
         build_cell_with_amount(hours)
       end
 
@@ -90,7 +95,11 @@ class Order
       end
 
       def accounting_post_hours
-        @hours ||= accounting_post.worktimes.group(:billable).sum(:hours)
+        @hours ||= accounting_post.worktimes.in_period(@period).group(:billable).sum(:hours)
+      end
+
+      def overall_acoounting_post_hours
+        @overall_hours ||= accounting_post.worktimes.group(:billable).sum(:hours)
       end
     end
   end
