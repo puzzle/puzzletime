@@ -201,7 +201,7 @@ func (m *Ci) CiIntegration(
 	// +optional
 	// +default=false
 	pass bool,
-) *dagger.Directory {
+) (*dagger.Directory, error) {
 	var wg sync.WaitGroup
 	wg.Add(3)
 
@@ -223,34 +223,43 @@ func (m *Ci) CiIntegration(
 	// This Blocks the execution until its counter become 0
 	wg.Wait()
 
-	return dag.PitcFlow().Run(
-        // source directory
-        dir,
-        // lint container
-        lintContainer,
-        // lint report file name "lint.json"
-        "lint.json",
-        // sast container
-        sastContainer,
-        // security scan report file name "/app/brakeman-output.tabs"
-        "/app/brakeman-output.tabs",
-        // test container
-        testContainer,
-        // test report folder name "/mnt/test/reports"
-        "/mnt/test/reports",
-        // registry username for publishing the contaner image
-        registryUsername,
-        // registry password for publishing the container image
-        registryPassword,
-        // registry address registry/repository/image:tag
-        registryAddress,
-        // deptrack address for publishing the SBOM https://deptrack.example.com/api/v1/bom
-        dtAddress,
-        // deptrack project UUID
-        dtProjectUUID,
-        // deptrack API key
-        dtApiKey,
-        // ignore linter failures
-        dagger.PitcFlowRunOpts{Pass: pass},
+	results := dag.PitcFlow().Run(
+		// source directory
+		dir,
+		// lint container
+		lintContainer,
+		// lint report file name "lint.json"
+		"lint.json",
+		// sast container
+		sastContainer,
+		// security scan report file name "/app/brakeman-output.tabs"
+		"/app/brakeman-output.tabs",
+		// test container
+		testContainer,
+		// test report folder name "/mnt/test/reports"
+		"/mnt/test/reports",
+		// registry username for publishing the contaner image
+		registryUsername,
+		// registry password for publishing the container image
+		registryPassword,
+		// registry address registry/repository/image:tag
+		registryAddress,
+		// deptrack address for publishing the SBOM https://deptrack.example.com/api/v1/bom
+		dtAddress,
+		// deptrack project UUID
+		dtProjectUUID,
+		// deptrack API key
+		dtApiKey,
+		// ignore linter failures
+		dagger.PitcFlowRunOpts{Pass: pass},
 	)
+
+	success, _ := results.Success(ctx)
+	if success {
+		return results.TestReports(), nil
+	}
+
+	error, _ := results.Error(ctx)
+	return results.TestReports(), fmt.Errorf(error)
+
 }
