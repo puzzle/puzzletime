@@ -30,8 +30,8 @@ class OrderCostsController < ApplicationController
 
   def associated_meal_compensations
     @associated_meal_compensations ||= Worktime.where(meal_compensation: true)
-                                                    .where(work_item_id: related_work_items)
-                                                    .includes(%i[employee])
+                                               .where(work_item_id: related_work_items)
+                                               .includes(%i[employee])
   end
 
   def meal_compensation_members
