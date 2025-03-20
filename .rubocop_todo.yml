@@ -101,11 +101,11 @@ Lint/UnreachableLoop:
 Metrics/AbcSize:
   Max: 282
 
-# Offense count: 51
+# Offense count: 52
 # Configuration parameters: CountComments, CountAsOne, AllowedMethods, AllowedPatterns.
 # AllowedMethods: refine
 Metrics/BlockLength:
-  Max: 170
+  Max: 97
 
 # Offense count: 82
 # Configuration parameters: CountComments, CountAsOne.
