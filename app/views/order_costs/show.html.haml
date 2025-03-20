@@ -12,13 +12,11 @@
 - if params['cost_type'].blank? || !Settings.meal_compensation.active || params['cost_type'] == 'expenses'
   .orders-cost-tablecontainer
     %h3= t('activerecord.attributes.order_cost.expense')
-    #expenses_list.orders-cost-table-medium
+    .orders-cost-table-medium#expenses-list
       = summed_expenses_table(@associated_expenses)
 
 - if Settings.meal_compensation.active && (params['cost_type'].blank? ||  params['cost_type'] == 'meal_compensation')
   .orders-cost-tablecontainer
     %h3= t('activerecord.attributes.order_cost.meal_compensation')
-    #meal_compensations_list.orders-cost-table-small
+    .orders-cost-table-small#meal-compensations-list
       = summed_meal_compensations_table(@associated_meal_compensations, @meal_compensation_members)
-
-
