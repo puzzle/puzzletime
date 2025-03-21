@@ -9,6 +9,7 @@ class Order
   class Report
     include Filterable
     include OrderHelper
+    include ProgressBarHelper
 
     attr_reader :period, :params
 
