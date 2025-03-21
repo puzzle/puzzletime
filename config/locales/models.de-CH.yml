@@ -325,6 +325,9 @@ de-CH:
         contact: Ansprechsperson
         contact_id: Ansprechsperson
         comment: Funktion
+      order_cost:
+        meal_compensation: Verpflegungsentschädigung
+        expense: Spesen
       order/order_contacts:
         contact: Ansprechsperson
       order/team_members:
