@@ -17,19 +17,19 @@ module OrderCostsHelper
       end
       t.attr(:status_value)
       t.attr(:description)
-      expense_details_col(t, personal: false)
+      expense_details_col(t, personal: false) if can?(:manage, Expense.new)
       t.foot { summed_expenses_row(entries) }
     end
   end
 
   def summed_expenses_row(entries)
     content_tag(:tr, class: 'orders-cost-total_sum') do
-      content_tag(:td) +
-        content_tag(:td, 'Total', class: 'right') +
-        content_tag(:td, f(entries.to_a.sum(&:amount)), class: 'right') +
-        content_tag(:td) +
-        content_tag(:td) +
-        content_tag(:td)
+      footer_row = content_tag(:td) +
+                   content_tag(:td, 'Total', class: 'right') +
+                   content_tag(:td, f(entries.to_a.sum(&:amount)), class: 'right') +
+                   content_tag(:td) +
+                   content_tag(:td)
+      can?(:manage, Expense.new) ? footer_row + content_tag(:td) : footer_row
     end
   end
 
