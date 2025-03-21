@@ -11,8 +11,9 @@
 = form_tag({ action: 'report' }, method: 'get') do
   - %w(evaluation start_date end_date period_shortcut category_id division_id employee_id ticket invoice_id billable).each do |p|
     = hidden_field_tag p, params[p] if params[p]
-  - params['work_item_ids'].each do |v|
-    = hidden_field_tag 'work_item_ids[]', v
+  - if params['work_item_ids'].present?
+    - params['work_item_ids'].each do |v|
+      = hidden_field_tag 'work_item_ids[]', v
 
   - if billable_option
     .checkbox
