@@ -223,7 +223,7 @@ func (m *Ci) CiIntegration(
 	// This Blocks the execution until its counter become 0
 	wg.Wait()
 
-	return dag.PitcFlow().Run(
+	return dag.PitcFlow().Full(
         // source directory
         dir,
         // lint container
