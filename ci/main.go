@@ -251,7 +251,7 @@ func (m *Ci) CiIntegration(
         // deptrack API key
         dtApiKey,
         // ignore linter failures
-        dagger.PitcFlowRunOpts{Pass: pass},
+        dagger.PitcFlowFullOpts{Pass: pass},
 	)
 }
 
