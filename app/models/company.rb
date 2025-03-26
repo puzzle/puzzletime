@@ -14,6 +14,16 @@ class Company
       RequestStore.store['company_client'] ||= Client.find(Settings.clients.company_id)
     end
 
+    def logo_path
+      file?('company_logo.png') ? 'company_logo.png' : nil
+    end
+
     delegate :work_item_id, to: :client
+
+    private
+
+    def file?(path)
+      Rails.application.assets.find_asset(path) != nil
+    end
   end
 end
