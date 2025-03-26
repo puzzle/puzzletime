@@ -51,7 +51,8 @@ class Order
           ['Kunde', @work_items[0].top_item.client.label],
           ['Auftrag', @work_items[0].label_ancestry], #TODO: Fix this to more robust approach
           ['Periode', @period.to_s],
-          ['Verrechenbar', params[:billable].present? ? t("global.#{params[:billable]}") : 'Alle']
+          ['Verrechenbar', params[:billable].present? ? t("global.#{params[:billable]}") : 'Alle'],
+          ['Rapport Stand', Period.current_day.to_s]
         ]
 
         # Draw customer/order/time info as a table
@@ -128,9 +129,9 @@ class Order
         pdf.number_pages string, options
         # Footer Section
         pdf.repeat(:all) do
-          pdf.draw_text 'Puzzle ITC AG', at: [pdf.bounds.left, pdf.bounds.bottom - 20], size: 8, style: :bold
-          pdf.draw_text 'Belpstrasse 37, CH-3007 Bern', at: [pdf.bounds.left, pdf.bounds.bottom - 29], size: 8
-          pdf.draw_text '+41 31 370 22 00 / www.puzzle.ch', at: [pdf.bounds.left, pdf.bounds.bottom - 38], size: 8
+          pdf.draw_text Company.name, at: [pdf.bounds.left, pdf.bounds.bottom - 38], size: 8
+          # pdf.draw_text 'Addresse', at: [pdf.bounds.left, pdf.bounds.bottom - 29], size: 8
+          # pdf.draw_text 'Kontaktdaten', at: [pdf.bounds.left, pdf.bounds.bottom - 38], size: 8
         end
         pdf
       end
