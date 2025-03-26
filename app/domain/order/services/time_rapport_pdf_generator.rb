@@ -25,7 +25,7 @@ class Order
       private
 
       def compose_pdf_report
-        pdf = Prawn::Document.new(margin: [90, 60, 70, 60])
+        pdf = Prawn::Document.new(margin: [90, 60, 70, 60], page_layout: :landscape)
         pdf.font_size = 8.5
         pdf.font_families.update(
           'Roboto' => {
@@ -55,17 +55,15 @@ class Order
         ]
 
         # Draw customer/order/time info as a table
-        pdf.move_down 20
         pdf.text "Zeitrapport #{Company.name}", size: 18, style: :bold
         pdf.move_down 20 # Space before table
 
         pdf.table(customer_data, header: false, cell_style: { padding: 4, border_width: 0.3 }, width: pdf.bounds.width * 0.6) do
-
           # Adjust alignment for columns
           column(0).align = :left  # Left-aligned labels (Customer, Order Number, etc.)
           column(1).align = :left  # Left-aligned values
-          
-          cells.borders = [:bottom, :top] # Only horizontal lines
+
+          cells.borders = %i[bottom top] # Only horizontal lines
           cells.border_color = 'dddddd'
 
           (0..row_length - 1).each do |index|
@@ -79,12 +77,15 @@ class Order
       # Builds the table rows as string list according to the passed params
       def table_rows
         # Define table headers
-        data = [%w[Datum Member Stunden Buchungsposition]]
+        header = %w[Datum Stunden] << 'Von' << 'Bis' << 'Member' << 'Buchungsposition' << 'Ticket' << 'Bermerkungen'
+        data = [%w[Datum Member Stunden Buchungsposition Bermerkungen]]
 
         # Add table rows
         @worktimes.each do |w|
-          data << [w.date_string, w.employee.to_s, format('%.2f', w.hours), w.work_item.to_s]
+          data << [w.date_string, w.employee.to_s, format('%.2f', w.hours), w.work_item.to_s, w.description]
         end
+
+        data << ['', 'Total:', format('%.2f', @worktimes.sum(&:hours)), '', '']
         data
       end
 
@@ -102,6 +103,13 @@ class Order
 
           cells.borders = [:bottom] # Only horizontal lines
           cells.border_color = 'dddddd' # Light gray borders
+
+          row(-1).font_style = :bold
+          # row(-1).border_top_color = '000000'
+          row(-1).borders = [:top]
+          row(-1).background_color = 'ffffff'
+
+          row(-1).column(1).align = :right
         end
 
         pdf
