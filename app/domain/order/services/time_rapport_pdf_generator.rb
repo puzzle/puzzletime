@@ -49,7 +49,7 @@ class Order
       def build_information_section(pdf)
         customer_data = [
           ['Kunde', @work_items[0].top_item.client.label],
-          ['Auftrag', 'order_number'],
+          ['Auftrag', @work_items[0].label_ancestry], #TODO: Fix this to more robust approach
           ['Periode', @period.to_s],
           ['Verrechenbar', params[:billable].present? ? t("global.#{params[:billable]}") : 'Alle']
         ]
