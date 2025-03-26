@@ -25,8 +25,8 @@ class Order
       private
 
       def compose_pdf_report
-        pdf = Prawn::Document.new(margin: [90, 60, 70, 60], page_layout: :landscape)
-        pdf.font_size = 8.5
+        pdf = Prawn::Document.new(margin: [90, 30, 70, 30], page_layout: :landscape)
+        pdf.font_size = 8
         pdf.font_families.update(
           'Roboto' => {
             normal: Rails.root.join('app/assets/fonts/Roboto-Regular.ttf'),
@@ -59,10 +59,7 @@ class Order
         pdf.text "Zeitrapport #{Company.name}", size: 18, style: :bold
         pdf.move_down 20 # Space before table
 
-        pdf.table(customer_data, header: false, cell_style: { padding: 4, border_width: 0.3 }, width: pdf.bounds.width * 0.6) do
-          # Adjust alignment for columns
-          column(0).align = :left  # Left-aligned labels (Customer, Order Number, etc.)
-          column(1).align = :left  # Left-aligned values
+        pdf.table(customer_data, header: false, cell_style: { padding: 4, border_width: 0.3 }, width: pdf.bounds.width * 0.5) do
 
           cells.borders = %i[bottom top] # Only horizontal lines
           cells.border_color = 'dddddd'
@@ -78,15 +75,35 @@ class Order
       # Builds the table rows as string list according to the passed params
       def table_rows
         # Define table headers
-        header = %w[Datum Stunden] << 'Von' << 'Bis' << 'Member' << 'Buchungsposition' << 'Ticket' << 'Bermerkungen'
-        data = [%w[Datum Member Stunden Buchungsposition Bermerkungen]]
+        data = []
+        header = %w[Datum Stunden]
+        header << 'Von' << 'Bis' if params[:start_stop]
+        header << 'Member'
+        header << 'Buchungsposition' if params[:show_work_item]
+        header << 'Ticket' if params[:show_ticket]
+        header << 'Bermerkungen' if params[:description]
+
+        data << header
 
         # Add table rows
         @worktimes.each do |w|
-          data << [w.date_string, w.employee.to_s, format('%.2f', w.hours), w.work_item.to_s, w.description]
+          row = [w.date_string, format('%.2f', w.hours)]
+          row << 'TODO:' << 'TODO:' if params[:start_stop]
+          row << w.employee.to_s
+          row << w.work_item.to_s if params[:show_work_item]
+          row << w.ticket if params[:show_ticket]
+          row << w.description if params[:description]
+
+          data << row
         end
 
-        data << ['', 'Total:', format('%.2f', @worktimes.sum(&:hours)), '', '']
+        total_row = ['Total:', format('%.2f', @worktimes.sum(&:hours))]
+        total_row << '' << '' if params[:start_stop]
+        total_row << ''
+        total_row << '' if params[:show_work_item]
+        total_row << '' if params[:show_ticket]
+        total_row << '' if params[:description]
+        data << total_row
         data
       end
 
@@ -100,7 +117,7 @@ class Order
             row(index).background_color = index.even? ? 'f0f0f0' : 'ffffff'
           end
 
-          column(2).align = :right # Right-align hours
+          column(1).align = :right # Right-align hours
 
           cells.borders = [:bottom] # Only horizontal lines
           cells.border_color = 'dddddd' # Light gray borders
@@ -110,7 +127,7 @@ class Order
           row(-1).borders = [:top]
           row(-1).background_color = 'ffffff'
 
-          row(-1).column(1).align = :right
+          row(-1).column(0).align = :right
         end
 
         pdf
