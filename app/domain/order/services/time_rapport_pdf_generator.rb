@@ -72,6 +72,10 @@ class Order
         pdf
       end
 
+      def timestamp_to_daytime(time)
+        I18n.l(time, format: :time) if time
+      end
+
       # Builds the table rows as string list according to the passed params
       def table_rows
         # Define table headers
@@ -88,7 +92,7 @@ class Order
         # Add table rows
         @worktimes.each do |w|
           row = [w.date_string, format('%.2f', w.hours)]
-          row << 'TODO:' << 'TODO:' if params[:start_stop]
+          row << (timestamp_to_daytime(w.from_start_time) || '') << (timestamp_to_daytime(w.to_end_time) || '') if params[:start_stop]
           row << w.employee.to_s
           row << w.work_item.to_s if params[:show_work_item]
           row << w.ticket if params[:show_ticket]
@@ -108,26 +112,29 @@ class Order
       end
 
       def build_list(pdf)
-        pdf.table(table_rows, header: true, cell_style: { padding: 4, border_width: 0.3 }, width: pdf.bounds.width) do
-          row(0).font_style = :bold
-          row(0).background_color = 'f0f0f0'  # Light gray
-          row(0).text_color = '333333'        # Dark gray
+        pdf.table(table_rows, header: true, cell_style: { padding: 4, border_width: 0.3 }, width: pdf.bounds.width) do |table|
+          table.row(0).font_style = :bold
+          table.row(0).background_color = 'f0f0f0'  # Light gray
+          table.row(0).text_color = '333333'        # Dark gray
 
-          (1..row_length - 1).each do |index|
-            row(index).background_color = index.even? ? 'f0f0f0' : 'ffffff'
+          (1..table.row_length - 1).each do |index|
+            table.row(index).background_color = index.even? ? 'f0f0f0' : 'ffffff'
           end
 
-          column(1).align = :right # Right-align hours
+          table.column(1).align = :right # Right-align hours
+          if params[:start_stop]
+            table.column(2).align = :center
+            table.column(3).align = :center
+          end
 
-          cells.borders = [:bottom] # Only horizontal lines
-          cells.border_color = 'dddddd' # Light gray borders
+          table.cells.borders = [:bottom] # Only horizontal lines
+          table.cells.border_color = 'dddddd' # Light gray borders
 
-          row(-1).font_style = :bold
-          # row(-1).border_top_color = '000000'
-          row(-1).borders = [:top]
-          row(-1).background_color = 'ffffff'
+          table.row(-1).font_style = :bold
+          table.row(-1).borders = [:top]
+          table.row(-1).background_color = 'ffffff'
 
-          row(-1).column(0).align = :right
+          table.row(-1).column(0).align = :right
         end
 
         pdf
