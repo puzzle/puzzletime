@@ -10,10 +10,13 @@ class Order
     class TimeRapportPdfGenerator
       attr_reader :order, :params
 
-      def initialize(order, worktimes, work_items, period, params = {})
+      def initialize(order, worktimes, tickets, ticket_view, employees, work_items, period, params = {})
         @order = order
         @worktimes = worktimes
+        @tickets = tickets
+        @ticket_view = ticket_view
         @work_items = work_items
+        @employees = employees
         @period = period
         @params = params
       end
@@ -60,7 +63,6 @@ class Order
         pdf.move_down 20 # Space before table
 
         pdf.table(customer_data, header: false, cell_style: { padding: 4, border_width: 0.3 }, width: pdf.bounds.width * 0.5) do
-
           cells.borders = %i[bottom top] # Only horizontal lines
           cells.border_color = 'dddddd'
 
@@ -72,12 +74,16 @@ class Order
         pdf
       end
 
-      def timestamp_to_daytime(time)
+      def f_hour(time)
         I18n.l(time, format: :time) if time
       end
 
+      def f_date(time)
+        I18n.l(time, format: :long) if time
+      end
+
       # Builds the table rows as string list according to the passed params
-      def table_rows
+      def worktimes_table_rows
         # Define table headers
         data = []
         header = %w[Datum Stunden]
@@ -85,14 +91,14 @@ class Order
         header << 'Member'
         header << 'Buchungsposition' if params[:show_work_item]
         header << 'Ticket' if params[:show_ticket]
-        header << 'Bermerkungen' if params[:description]
+        header << 'Bemerkungen' if params[:description]
 
         data << header
 
         # Add table rows
         @worktimes.each do |w|
           row = [w.date_string, format('%.2f', w.hours)]
-          row << (timestamp_to_daytime(w.from_start_time) || '') << (timestamp_to_daytime(w.to_end_time) || '') if params[:start_stop]
+          row << (f_hour(w.from_start_time) || '') << (f_hour(w.to_end_time) || '') if params[:start_stop]
           row << w.employee.to_s
           row << w.work_item.to_s if params[:show_work_item]
           row << w.ticket if params[:show_ticket]
@@ -111,8 +117,47 @@ class Order
         data
       end
 
+      def tickets_table_rows
+        # Define table headers
+        data = []
+        header = %w[Ticket Stunden]
+        header << 'Von' << 'Bis' if params[:start_stop]
+        header << 'Member'
+        header << 'Bemerkungen' if params[:description]
+
+        data << header
+
+        total = 0
+
+        # Add table rows
+        @tickets.each do |tckt_key, tckt_val|
+          row = [tckt_key, format('%.2f', tckt_val[:sum])]
+          row << f_date(tckt_val[:date][0]) << f_date(tckt_val[:date][0]) if params[:start_stop]
+          if params[:combine] == 'ticket'
+            row << tckt_val[:employees].keys.sort.map { |e| @employees[e] }.join(', ')
+          elsif params[:combine] == 'ticket_employee'
+            a = []
+            tckt_val[:employees].each_pair { |k, v| a << "#{@employees[k]} (#{v[0].round(2)}h)" }
+            row << a.sort.join(', ')
+          end
+          row << tckt_val[:descriptions].join(', ') if params[:description]
+
+          total += tckt_val[:sum]
+
+          data << row
+        end
+
+        total_row = ['Total:', format('%.2f', total)]
+        total_row << '' << '' if params[:start_stop]
+        total_row << ''
+        total_row << '' if params[:description]
+        data << total_row
+        data
+      end
+
       def build_list(pdf)
-        pdf.table(table_rows, header: true, cell_style: { padding: 4, border_width: 0.3 }, width: pdf.bounds.width) do |table|
+        data = @ticket_view ? tickets_table_rows : worktimes_table_rows
+        pdf.table(data, header: true, cell_style: { padding: 4, border_width: 0.3 }, width: pdf.bounds.width, column_widths: { 0 => 65, 1 => 38 }) do |table|
           table.row(0).font_style = :bold
           table.row(0).background_color = 'f0f0f0'  # Light gray
           table.row(0).text_color = '333333'        # Dark gray
@@ -133,7 +178,6 @@ class Order
           table.row(-1).font_style = :bold
           table.row(-1).borders = [:top]
           table.row(-1).background_color = 'ffffff'
-
           table.row(-1).column(0).align = :right
         end
 
