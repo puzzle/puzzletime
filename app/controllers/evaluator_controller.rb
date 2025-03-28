@@ -45,7 +45,20 @@ class EvaluatorController < ApplicationController
   def report
     prepare_report_header
     conditions = params[:only_billable] ? { worktimes: { billable: true } } : {}
-    render_report(@evaluation.times(@period).includes(:work_item).where(conditions))
+    respond_to do |format|
+      format.html do
+        render_report(@evaluation.times(@period).includes(:work_item).where(conditions))
+      end
+      format.pdf do
+        prepare_worktimes(@evaluation.times(@period).includes(:work_item).where(conditions))
+        pdf_generator = Order::Services::TimeRapportPdfGenerator.new(@order, @worktimes, @tickets, @ticket_view, @employees, @employee, @work_items, @period, params)
+
+        send_data pdf_generator.generate_pdf.render,
+                  filename: 'report.pdf',
+                  type: 'application/pdf',
+                  disposition: 'inline'
+      end
+    end
   end
 
   def export_csv
