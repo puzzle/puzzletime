@@ -10,13 +10,14 @@ class Order
     class TimeRapportPdfGenerator
       attr_reader :order, :params
 
-      def initialize(order, worktimes, tickets, ticket_view, employees, work_items, period, params = {})
+      def initialize(order, worktimes, tickets, ticket_view, employees, employee, work_items, period, params = {})
         @order = order
         @worktimes = worktimes
         @tickets = tickets
         @ticket_view = ticket_view
         @work_items = work_items
         @employees = employees
+        @employee = employee
         @period = period
         @params = params
       end
@@ -51,12 +52,18 @@ class Order
 
       def build_information_section(pdf)
         customer_data = [
-          ['Kunde', @work_items[0].top_item.client.label],
-          ['Auftrag', @work_items[0].label_ancestry], #TODO: Fix this to more robust approach
-          ['Periode', @period.to_s],
-          ['Verrechenbar', params[:billable].present? ? t("global.#{params[:billable]}") : 'Alle'],
-          ['Rapport Stand', Period.current_day.to_s]
+          ['Kunde', @work_items[0].top_item.client.label]
         ]
+        customer_data << if @order.present?
+                           ['Auftrag', @order.to_s]
+                         else
+                           ['Auftrag', @work_items.map(&:label_ancestry).join("\n")]
+                         end
+
+        customer_data << ['Member', @employee.label] if @employee
+        customer_data << ['Periode', @period.to_s]
+        customer_data << ['Verrechenbar', params[:billable].present? ? t("global.#{params[:billable]}") : 'Alle']
+        customer_data << ['Rapport Stand', Period.current_day.to_s]
 
         # Draw customer/order/time info as a table
         pdf.text "Zeitrapport #{Company.name}", size: 18, style: :bold
