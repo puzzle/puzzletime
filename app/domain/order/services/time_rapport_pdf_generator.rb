@@ -63,11 +63,11 @@ class Order
         customer_data << ['Member', @employee.label] if @employee
         customer_data << ['Periode', @period.to_s]
         customer_data << ['Verrechenbar', params[:billable].present? ? I18n.t("global.#{params[:billable]}") : 'Alle']
-        customer_data << ['Rapport Stand', Period.current_day.to_s]
+        customer_data << ['Rapport Stand', "#{Time.zone.now.strftime('%d.%m.%Y, %H:%M')} Uhr"]
 
         # Draw customer/order/time info as a table
         pdf.text "Zeitrapport #{Company.name}", size: 18, style: :bold
-        pdf.move_down 20 # Space before table
+        pdf.move_down 20
 
         pdf.table(customer_data, header: false, cell_style: { padding: 4, border_width: 0.3 }, width: pdf.bounds.width * 0.5) do
           cells.borders = %i[bottom top] # Only horizontal lines
