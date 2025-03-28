@@ -44,20 +44,13 @@ class OrderServicesController < ApplicationController
 
   def report
     period = prepare_report_header
-    respond_to do |format|
-      format.html do
-        render_report(list_worktimes(period))
-      end
-      format.pdf do
-        prepare_worktimes(list_worktimes(period))
-        pdf_generator = Order::Services::TimeRapportPdfGenerator.new(@order, @worktimes, @tickets, @ticket_view, @employees, @employee, @work_items, @period, params)
+    prepare_worktimes(list_worktimes(period))
+    pdf_generator = Order::Services::TimeRapportPdfGenerator.new(@order, @worktimes, @tickets, @ticket_view, @employees, @employee, @work_items, @period, params)
 
-        send_data pdf_generator.generate_pdf.render,
-                  filename: 'report.pdf',
-                  type: 'application/pdf',
-                  disposition: 'inline'
-      end
-    end
+    send_data pdf_generator.generate_pdf.render,
+              filename: 'report.pdf',
+              type: 'application/pdf',
+              disposition: 'inline'
   end
 
   private
