@@ -57,7 +57,7 @@ class EvaluatorController < ApplicationController
     pdf_generator = Order::Services::TimeRapportPdfGenerator.new(time_rapport_data, params)
 
     send_data pdf_generator.generate_pdf.render,
-              filename: "zeitrapport-#{@work_items[0].top_item.client.shortname}-#{@period.to_s.parameterize}.pdf",
+              filename: "zeitrapport-#{@employee.shortname}-#{@work_items[0].top_item.client.shortname}-#{@period.to_s.parameterize}.pdf",
               type: 'application/pdf',
               disposition: 'inline'
   end
