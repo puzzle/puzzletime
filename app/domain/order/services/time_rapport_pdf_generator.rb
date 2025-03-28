@@ -62,7 +62,7 @@ class Order
 
         customer_data << ['Member', @employee.label] if @employee
         customer_data << ['Periode', @period.to_s]
-        customer_data << ['Verrechenbar', params[:billable].present? ? t("global.#{params[:billable]}") : 'Alle']
+        customer_data << ['Verrechenbar', params[:billable].present? ? I18n.t("global.#{params[:billable]}") : 'Alle']
         customer_data << ['Rapport Stand', Period.current_day.to_s]
 
         # Draw customer/order/time info as a table
