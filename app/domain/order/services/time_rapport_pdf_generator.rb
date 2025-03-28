@@ -10,15 +10,15 @@ class Order
     class TimeRapportPdfGenerator
       attr_reader :order, :params
 
-      def initialize(order, worktimes, tickets, ticket_view, employees, employee, work_items, period, params = {})
-        @order = order
-        @worktimes = worktimes
-        @tickets = tickets
-        @ticket_view = ticket_view
-        @work_items = work_items
-        @employees = employees
-        @employee = employee
-        @period = period
+      def initialize(data, params = {})
+        @order = data[:order]
+        @worktimes = data[:worktimes]
+        @tickets = data[:tickets]
+        @ticket_view = data[:ticket_view]
+        @work_items = data[:work_items]
+        @employees = data[:employees]
+        @employee = data[:employee]
+        @period = data[:period]
         @params = params
       end
 
@@ -90,7 +90,7 @@ class Order
       end
 
       # Builds the table rows as string list according to the passed params
-      def worktimes_table_rows
+      def worktimes_table_rows # rubocop:disable Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
         # Define table headers
         data = []
         header = %w[Datum Stunden]
