@@ -15,7 +15,7 @@ class Company
     end
 
     def logo_path
-      file?('company_logo.png') ? 'company_logo.png' : nil
+      file?(Settings.company_logo) ? Settings.company_logo : nil
     end
 
     delegate :work_item_id, to: :client
