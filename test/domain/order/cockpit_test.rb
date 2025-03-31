@@ -151,7 +151,7 @@ class Order
       assert_in_delta(480.4, not_billable.amount)
     end
 
-    test 'open budget respects all entries, independent of selected timespan' do
+    test 'open budget respects all entries after end_date of the timespan' do
       define_offered_fields
       Ordertime.create!(work_item: work_items(:hitobito_demo_app),
                         employee: employees(:pascal),
@@ -170,6 +170,37 @@ class Order
       assert_in_delta(294.2, open_budget.hours)
       assert_in_delta(36.775, open_budget.days)
       assert_in_delta(38_336.42, open_budget.amount)
+    end
+
+    test 'open budget is independent of period start_date' do
+      define_offered_fields
+      Ordertime.create!(work_item: work_items(:hitobito_demo_app),
+                        employee: employees(:pascal),
+                        work_date: '1291-09-09',
+                        report_type: ReportType::HoursDayType::INSTANCE,
+                        hours: 10)
+      Ordertime.create!(work_item: work_items(:hitobito_demo_app),
+                        employee: employees(:pascal),
+                        work_date: '1848-10-01',
+                        report_type: ReportType::HoursDayType::INSTANCE,
+                        hours: 6)
+
+      total = cockpit(Period.new('1291-09-01', '1848-09-12')).rows.first
+      open_budget_old = total.cells[:open_budget]
+
+      total = cockpit(Period.new('1295-01-01', '1848-09-12')).rows.first
+      open_budget_new = total.cells[:open_budget]
+
+      assert_in_delta(open_budget_new.hours, open_budget_old.hours)
+      assert_in_delta(open_budget_new.days, open_budget_old.days)
+      assert_in_delta(open_budget_new.amount, open_budget_old.amount)
+
+      total = cockpit(Period.new('1295-01-01', '1849-01-01')).rows.first
+      open_budget_new = total.cells[:open_budget]
+
+      assert_in_delta(open_budget_new.hours, open_budget_old.hours - 6)
+      assert_in_delta(open_budget_new.days, open_budget_old.days - 0.75)
+      assert_in_delta(open_budget_new.amount, open_budget_old.amount - (6 * 120.1))
     end
 
     test 'not billable values are calculated if worktimes exist' do
@@ -247,7 +278,7 @@ class Order
       assert_in_delta(0.0, budget.amount.round(2))
     end
 
-    test 'planned budget current values are calculated if pannings exist' do
+    test 'planned budget current values are calculated if plannings exist' do
       define_offered_fields
       define_worktimes
       define_planning
@@ -410,8 +441,8 @@ class Order
       @order ||= orders(:hitobito_demo)
     end
 
-    def cockpit(period = Period.new(nil, nil))
-      @cockpit ||= Order::Cockpit.new(order, period)
+    def cockpit(period = Period.new(nil, Time.zone.today))
+      @cockpit = Order::Cockpit.new(order, period)
     end
   end
 end
