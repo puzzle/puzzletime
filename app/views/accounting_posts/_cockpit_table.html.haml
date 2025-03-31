@@ -6,10 +6,9 @@
 
 %table.static
   %tr
-    %th 
+    %th
       %br
       %br
-      
 
   - @cockpit.rows.each do |row|
     = render "cockpit_#{row.class.name.demodulize.underscore}_head", row: row
@@ -31,7 +30,7 @@
           = picon('info')
         %br
         (
-        =@period
+        = @period
         )
       %th{title: 'Durch den Auftragsverantwortlichen im Rahmen der Zeitbereinigung als nicht verrechenbar markierte Leistungen.'}
         %span
@@ -39,7 +38,7 @@
           = picon('info')
         %br
         (
-        =@period
+        = @period
         )
       %th{title: 'Budget minus verrechenbare Stunden.'}
         %span
