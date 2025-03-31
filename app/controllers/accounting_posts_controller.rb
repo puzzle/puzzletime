@@ -20,6 +20,7 @@ class AccountingPostsController < CrudController
 
   def index
     set_period
+    @period = Period.new(@period.start_date, Time.zone.today) if @period.end_date.blank?
     @cockpit = Order::Cockpit.new(parent, @period)
   end
 

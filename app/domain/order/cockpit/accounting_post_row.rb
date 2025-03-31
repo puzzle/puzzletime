@@ -48,7 +48,7 @@ class Order
       end
 
       def future_plannings
-        accounting_post.work_item.plannings.definitive.where('date > ?', Time.zone.today)
+        accounting_post.work_item.plannings.definitive.where('date > ?', @period.end_date)
       end
 
       def future_planned_hours
@@ -99,7 +99,7 @@ class Order
       end
 
       def overall_acoounting_post_hours
-        @overall_hours ||= accounting_post.worktimes.group(:billable).sum(:hours)
+        @overall_hours ||= accounting_post.worktimes.in_period(Period.new(nil, @period.end_date)).group(:billable).sum(:hours)
       end
     end
   end
