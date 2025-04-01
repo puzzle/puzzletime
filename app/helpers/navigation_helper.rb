@@ -14,7 +14,7 @@ module NavigationHelper
   # Also you can give it an exception url, that let's you ignore
   # a specific url that would otherwise match.
   def nav(label, url, *active_for, except: '')
-    options = active_for.extract_options!.merge(data: { turbolinks: false })
+    options = active_for.extract_options!
     active_class = nav_active_class(url, active_for, except)
 
     content_tag(
