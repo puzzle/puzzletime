@@ -223,35 +223,34 @@ func (m *Ci) CiIntegration(
 	// This Blocks the execution until its counter become 0
 	wg.Wait()
 
-	return dag.PitcFlow().Full(
+	return dag.PitcFlow().Flex(
         // source directory
         dir,
+        dagger.PitcFlowFlexOpts{
         // lint container
-        lintContainer,
+        LintContainer: lintContainer,
         // lint report file name "lint.json"
-        "lint.json",
+        LintReport: "lint.json",
         // sast container
-        sastContainer,
+        SastContainer: sastContainer,
         // security scan report file name "/app/brakeman-output.tabs"
-        "/app/brakeman-output.tabs",
+        SastReport: "/app/brakeman-output.tabs",
         // test container
-        testContainer,
+        TestContainer: testContainer,
         // test report folder name "/mnt/test/reports"
-        "/mnt/test/reports",
-        // registry username for publishing the contaner image
-        registryUsername,
+        TestReportDir: "/mnt/test/reports",
+        // registry username for publishing the container image
+        RegistryUsername: registryUsername,
         // registry password for publishing the container image
-        registryPassword,
+        RegistryPassword: registryPassword,
         // registry address registry/repository/image:tag
-        registryAddress,
+        RegistryAddress: registryAddress,
         // deptrack address for publishing the SBOM https://deptrack.example.com/api/v1/bom
-        dtAddress,
+        DtAddress: dtAddress,
         // deptrack project UUID
-        dtProjectUUID,
+        DtProjectUUID: dtProjectUUID,
         // deptrack API key
-        dtApiKey,
-        // ignore linter failures
-        dagger.PitcFlowFullOpts{Pass: pass},
+        DtAPIKey: dtApiKey},
 	)
 }
 

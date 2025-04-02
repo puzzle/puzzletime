@@ -7,6 +7,7 @@ on:
       - dagger-generic-pipeline
       - dagger-generic-pipeline-int
       - dagger-generic-pipeline-status
+      - dagger-generic-pipeline-flex
 jobs:
   pipeline:
     runs-on: 'ubuntu-latest'
@@ -23,7 +24,7 @@ jobs:
           DT_API_KEY: ${{ secrets.DT_API_KEY }}
         with:
           # Dagger Version
-          version: 0.16.3
+          version: 0.17.1
           # Dagger CLI Flags
           #dagger-flags: # optional, default is --progress plain
           # CLI verb (call, run, download, up, functions, shell, query)
@@ -53,7 +54,7 @@ jobs:
         uses: dagger/dagger-for-github@v7.0.1
         with:
           # Dagger Version
-          version: 0.16.3
+          version: 0.17.1
           # Dagger CLI Flags
           #dagger-flags: # optional, default is --progress plain
           # CLI verb (call, run, download, up, functions, shell, query)

@@ -1,14 +1,14 @@
 {
   "name": "ci",
-  "engineVersion": "v0.16.3",
+  "engineVersion": "v0.17.1",
   "sdk": {
     "source": "go"
   },
   "dependencies": [
     {
       "name": "pitc-flow",
-      "source": "github.com/puzzle/dagger-module-pitc-flow/pitc-flow@4db0272b0afa04f138a972b4616d39417da941af",
-      "pin": "4db0272b0afa04f138a972b4616d39417da941af"
+      "source": "github.com/puzzle/dagger-module-pitc-flow/pitc-flow@91f2c4113aac598a52b007028fbd673c745b7107",
+      "pin": "91f2c4113aac598a52b007028fbd673c745b7107"
     }
   ],
   "source": "ci"
