@@ -31,7 +31,7 @@ class EvaluatorControllerTest < ActionController::TestCase
 
     assert_match expected_csv_header, csv_header
     assert_equal 3, csv_data_lines.size
-    assert_match '06.12.2006,5.0,"","",0.00,absolute_day,true,Waber Mark,PITC-AL: Allgemein,,', csv_data_lines.first
+    assert_match '06.12.2006,5.0,"","",0.00,0.00,absolute_day,true,Waber Mark,PITC-AL: Allgemein,,', csv_data_lines.first
   end
 
   test 'GET index employees' do
@@ -133,7 +133,7 @@ class EvaluatorControllerTest < ActionController::TestCase
   private
 
   def expected_csv_header
-    'Datum,Stunden,Von Zeit,Bis Zeit,Stundenansatz CHF,Reporttyp,Verrechenbar,Member,Position,Ticket,Bemerkungen'
+    'Datum,Stunden,Von Zeit,Bis Zeit,CHF,Stundenansatz CHF,Reporttyp,Verrechenbar,Member,Position,Ticket,Bemerkungen'
   end
 
   def csv_header
