@@ -23,6 +23,7 @@ module OrderServicesHelper
       end
       t.attr(:hours)
       t.attr(:amount, currency, class: 'right')
+      t.attr(:offered_rate, 'Stundenansatz CHF', class: 'right')
       t.attr(:work_item_id) do |e|
         e.work_item.to_s
       end
