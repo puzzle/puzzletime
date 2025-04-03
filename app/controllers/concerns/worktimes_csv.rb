@@ -27,7 +27,7 @@ module WorktimesCsv
                 (time.start_stop? ? I18n.l(time.from_start_time, format: :time) : ''),
                 (time.start_stop? && time.to_end_time? ? I18n.l(time.to_end_time, format: :time) : ''),
                 amount(time),
-                time.offered_rate,
+                offered_rate(time),
                 time.report_type,
                 time.billable,
                 time.employee.label,
@@ -37,6 +37,12 @@ module WorktimesCsv
                 time.internal_description]
       end
     end
+  end
+
+  def offered_rate(time)
+    return '-' unless time.respond_to?(:offered_rate)
+
+    format('%<offered_rate>0.02f', offered_rate: time.offered_rate)
   end
 
   def amount(time)
