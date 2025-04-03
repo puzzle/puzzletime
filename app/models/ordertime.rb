@@ -47,8 +47,12 @@ class Ordertime < Worktime
     work_item.accounting_post&.order
   end
 
+  def offered_rate
+    work_item.accounting_post.offered_rate || 0
+  end
+
   def amount
-    hours * (work_item.accounting_post.offered_rate || 0)
+    hours * offered_rate
   end
 
   def work_item_closed?
