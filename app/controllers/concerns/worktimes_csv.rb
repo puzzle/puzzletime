@@ -19,7 +19,7 @@ module WorktimesCsv
 
   def worktimes_csv(worktimes)
     CSV.generate do |csv|
-      csv << ['Datum', 'Stunden', 'Von Zeit', 'Bis Zeit', 'Stundenansatz CHF', 'Reporttyp',
+      csv << ['Datum', 'Stunden', 'Von Zeit', 'Bis Zeit', 'CHF', 'Stundenansatz CHF', 'Reporttyp',
               'Verrechenbar', 'Member', 'Position', 'Ticket', 'Bemerkungen', 'Interne Bemerkungen']
       worktimes.each do |time|
         csv << [I18n.l(time.work_date),
@@ -27,6 +27,7 @@ module WorktimesCsv
                 (time.start_stop? ? I18n.l(time.from_start_time, format: :time) : ''),
                 (time.start_stop? && time.to_end_time? ? I18n.l(time.to_end_time, format: :time) : ''),
                 amount(time),
+                time.offered_rate,
                 time.report_type,
                 time.billable,
                 time.employee.label,
