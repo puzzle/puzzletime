@@ -57,10 +57,11 @@ h1.top {
   .cockpit-header {
     @include clearfix;
     margin: 0 auto;
+  }
 
-    .filter-elements {
-      margin-bottom: 20px;
-    }
+  .filter-elements {
+    margin-top: 30px;
+    margin-bottom: 10px;
   }
 
   .cockpit-header-item {

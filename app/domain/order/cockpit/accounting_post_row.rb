@@ -8,13 +8,14 @@
 class Order
   class Cockpit
     class AccountingPostRow < Row
-      attr_reader :cells, :accounting_post
+      attr_reader :cells, :accounting_post, :row_info
 
       def initialize(accounting_post, period, label = nil)
         super(label || accounting_post.to_s)
         @period = period
         @accounting_post = accounting_post
         @cells = build_cells
+        @row_info = build_info
       end
 
       def portfolio
@@ -31,12 +32,20 @@ class Order
         accounting_post_hours[true] || 0
       end
 
-      def overall_billable_hours
-        overall_acoounting_post_hours[true] || 0
+      def to_end_billable_hours
+        custom_acoounting_post_hours(Period.new(nil, @period.end_date))[true] || 0
       end
 
       def not_billable_hours
         accounting_post_hours[false] || 0
+      end
+
+      def overall_supplied_services_hours
+        custom_acoounting_post_hours(Period.new(nil, nil)).values.sum
+      end
+
+      def overall_not_billable_hours
+        custom_acoounting_post_hours(Period.new(nil, nil))[false] || 0
       end
 
       def shortnames
@@ -78,7 +87,7 @@ class Order
       end
 
       def build_open_budget_cell
-        hours = (accounting_post.offered_hours || 0) - overall_billable_hours
+        hours = (accounting_post.offered_hours || 0) - to_end_billable_hours
         build_cell_with_amount(hours)
       end
 
@@ -95,11 +104,15 @@ class Order
       end
 
       def accounting_post_hours
-        @hours ||= accounting_post.worktimes.in_period(@period).group(:billable).sum(:hours)
+        @hours = accounting_post.worktimes.in_period(@period).group(:billable).sum(:hours)
       end
 
-      def overall_acoounting_post_hours
-        @overall_hours ||= accounting_post.worktimes.in_period(Period.new(nil, @period.end_date)).group(:billable).sum(:hours)
+      def custom_acoounting_post_hours(period)
+        @overall_hours = accounting_post.worktimes.in_period(period).group(:billable).sum(:hours)
+      end
+
+      def build_info
+        { overall_not_billable_hours:, overall_supplied_services_hours: }
       end
     end
   end
