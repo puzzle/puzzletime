@@ -8,9 +8,12 @@
 class Order
   class Cockpit
     class TotalRow < Row
+      attr_reader :order_info
+
       def initialize(rows)
         super('Total')
         @cells = build_total_cells(rows)
+        @order_info = build_order_info(rows)
       end
 
       private
@@ -25,6 +28,14 @@ class Order
                      sum_non_nil_values(cells, key, :amount, :to_d))
         end
         hash
+      end
+
+      # collect the row_info hash of every row and sum the individual values up (per key)
+      def build_order_info(rows)
+        row_infos = rows.collect(&:row_info)
+        row_infos.each_with_object(Hash.new(0)) do |row, acc|
+          row.each { |key, value| acc[key] += value }
+        end
       end
 
       def sum_non_nil_values(cells, key, field, converter)

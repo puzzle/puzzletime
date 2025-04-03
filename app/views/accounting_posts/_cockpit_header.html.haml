@@ -3,14 +3,11 @@
 -#  or later. See the COPYING file at the top-level directory or at
 -#  https://github.com/puzzle/puzzletime.
 
-.filter-elements
-  = form_tag(nil, method: :get, id: 'cockpit_filter_form', class: 'form-inline', role: 'filter') do
-    = direct_filter_date(:start_date, 'Von', @period.start_date)
-    = direct_filter_date(:end_date, 'Bis', @period.end_date)
-    = direct_filter_select(:period_shortcut, nil, predefined_past_period_options, prompt: 'benutzerdefiniert')
 
 .cockpit-header-item
   Budget
+  %br
+  ( Gesamte Vertragslaufzeit )
   .data-item{title: "Ist-R[#{currency}]"}
     %span.figure-label verrechnet
     %span.figure
@@ -26,9 +23,7 @@
   .cockpit-header-item
     Wirtschaftlichkeit
     %br
-    (
-    = @period
-    )
+    ( Gesamte Vertragslaufzeit )
     - if @cockpit.cost_effectiveness_current
       .data-item{title: 'Ist-R[h] / Ist[h] x 100'}
         %span.figure-label Aktuell
@@ -46,9 +41,7 @@
   .cockpit-header-item{title: "Ist-R[#{currency}] / Ist-V[h]"}
     Verrechneter Stundenansatz
     %br
-    (
-    = @period
-    )
+    ( Gesamte Vertragslaufzeit )
     .data-item
       %span.figure
         = f(@cockpit.billed_rate)
