@@ -70,7 +70,7 @@ class EvaluatorControllerTest < ActionController::TestCase
       assert_csv_http_headers('puzzletime.csv')
       assert_match expected_csv_header, csv_header
       assert_equal 9, csv_data_lines.size
-      assert_match '29.11.2006,1.0,"","",0.00,absolute_day,true,Zumkehr Pascal,PITC-AL: Allgemein,,', csv_data_lines.first
+      assert_match '29.11.2006,1.0,"","",0.00,0.00,absolute_day,true,Zumkehr Pascal,PITC-AL: Allgemein,,', csv_data_lines.first
     end
   end
 
