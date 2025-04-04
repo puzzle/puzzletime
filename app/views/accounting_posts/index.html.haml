@@ -26,3 +26,5 @@
       = link_to(new_order_accounting_post_path(@order)) do
         = picon('add')
         Buchungsposition hinzufügen
+    = action_link(action_icon('export', 'CSV Export'),
+        params.to_unsafe_h.merge(action: :export_csv, only_path: true))
