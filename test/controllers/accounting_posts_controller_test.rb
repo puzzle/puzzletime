@@ -340,4 +340,40 @@ class AccountingPostsControllerTest < ActionController::TestCase
     assert_redirected_to order_accounting_posts_path(orders(:hitobito_demo))
     assert_predicate flash[:alert], :blank?
   end
+
+  test 'GET export csv simple' do
+    get :export_csv, params: { order_id: orders(:puzzletime).id }
+
+    # assert_csv_http_headers('puzzletime.csv')
+    assert_match expected_csv_header, csv_header
+    puts csv_data_lines
+
+    assert_equal 1, csv_data_lines.size
+    assert_match 'PITC-PT,100.0,18.0,10.0,92.0,0', csv_data_lines.first
+  end
+
+  test 'GET export csv with timespan' do
+    get :export_csv, params: { order_id: orders(:puzzletime).id, start_date: '2006-12-04', end_date: '2006-12-10' }
+
+    assert_match expected_csv_header, csv_header
+    puts csv_data_lines
+
+    assert_equal 1, csv_data_lines.size
+    assert_match 'PITC-PT,100.0,6.0,0,92.0,0', csv_data_lines.first
+  end
+
+  private
+
+  def expected_csv_header
+    'Position,Budget,Geleistete Stunden,Nicht verrechenbar,Offenes Budget,Geplantes Budget'
+  end
+
+  def csv_header
+    response.body.lines.first
+  end
+
+  def csv_data_lines
+    _, *lines = response.body.lines.to_a
+    lines
+  end
 end
