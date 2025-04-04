@@ -362,6 +362,16 @@ class AccountingPostsControllerTest < ActionController::TestCase
     assert_match 'PITC-PT,100.0,6.0,0,92.0,0', csv_data_lines.first
   end
 
+  test 'GET export csv with timespan including non-billable' do
+    get :export_csv, params: { order_id: orders(:puzzletime).id, start_date: '2006-12-04' }
+
+    assert_match expected_csv_header, csv_header
+    puts csv_data_lines
+
+    assert_equal 1, csv_data_lines.size
+    assert_match 'PITC-PT,100.0,16.0,10.0,92.0,0', csv_data_lines.first
+  end
+
   private
 
   def expected_csv_header
