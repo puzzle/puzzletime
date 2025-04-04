@@ -60,7 +60,7 @@ class Order
     end
 
     def overall_not_billable_hours
-      total.order_info[:overall_not_billable_hours].to_f
+      total.info[:overall_not_billable_hours].to_f
     end
 
     def overall_billable_hours
@@ -68,7 +68,7 @@ class Order
     end
 
     def overall_total_hours
-      total.order_info[:overall_supplied_services_hours].to_f
+      total.info[:overall_supplied_services_hours].to_f
     end
 
     def build_rows(period)

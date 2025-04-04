@@ -8,14 +8,14 @@
 class Order
   class Cockpit
     class AccountingPostRow < Row
-      attr_reader :cells, :accounting_post, :row_info
+      attr_reader :cells, :accounting_post, :info
 
       def initialize(accounting_post, period, label = nil)
         super(label || accounting_post.to_s)
         @period = period
         @accounting_post = accounting_post
         @cells = build_cells
-        @row_info = build_info
+        @info = build_info
       end
 
       def portfolio
