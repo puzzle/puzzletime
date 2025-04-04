@@ -82,7 +82,11 @@ Rails.application.routes.draw do
       get :employees
     end
 
-    resources :accounting_posts, except: [:show]
+    resources :accounting_posts, except: [:show] do
+      collection do
+        get :export_csv
+      end
+    end
 
     resource :order_cost, only: [:show]
 
