@@ -8,12 +8,12 @@
 class Order
   class Cockpit
     class TotalRow < Row
-      attr_reader :order_info
+      attr_reader :info
 
       def initialize(rows)
         super('Total')
         @cells = build_total_cells(rows)
-        @order_info = build_order_info(rows)
+        @info = build_info(rows)
       end
 
       private
@@ -30,10 +30,10 @@ class Order
         hash
       end
 
-      # collect the row_info hash of every row and sum the individual values up (per key)
-      def build_order_info(rows)
-        row_infos = rows.collect(&:row_info)
-        row_infos.each_with_object(Hash.new(0)) do |row, acc|
+      # collect the info hash of every row and sum the individual values up (per key)
+      def build_info(rows)
+        infos = rows.collect(&:info)
+        infos.each_with_object(Hash.new(0)) do |row, acc|
           row.each { |key, value| acc[key] += value }
         end
       end
