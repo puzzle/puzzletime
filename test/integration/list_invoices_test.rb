@@ -18,6 +18,16 @@ class ListInvoicesTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test 'list invoices as employee which is order responsible for another order has no create/edit/destroy links' do
+    timeout_safe do
+      list_invoices_as :lucien
+
+      assert has_no_link?('Erstellen')
+      assert has_no_link?('Bearbeiten')
+      assert has_no_link?('Löschen')
+    end
+  end
+
   test 'list invoices as order responsible member has create/edit/destroy links' do
     timeout_safe do
       list_invoices_as :long_time_john
