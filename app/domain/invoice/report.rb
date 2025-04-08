@@ -85,10 +85,7 @@ class Invoice
 
     def sort_entries(entries)
       dir = params[:sort_dir].to_s.casecmp('desc').zero? ? 1 : -1
-      match = sort_by_target?
-      if match
-        sort_by_target(entries, match[1], dir)
-      elsif sort_by_string?
+      if sort_by_string?
         sort_by_string(entries, dir)
       elsif sort_by_number?
         sort_by_number(entries, dir)
@@ -98,36 +95,24 @@ class Invoice
     end
 
     def sort_by_string?
-      %w[client].include?(params[:sort])
+      %w[client reference responsible status billing_date due_date].include?(params[:sort])
     end
 
     def sort_by_number?
-      Order::Report::Entry.public_instance_methods(false)
-                          .collect(&:to_s)
-                          .include?(params[:sort])
-    end
-
-    def sort_by_target?
-      params[:sort].to_s.match(/\Atarget_scope_(\d+)\z/)
+      %w[total_amount total_hours].include?(params[:sort])
     end
 
     def sort_by_string(entries, dir)
       sorted = entries.sort_by do |e|
         e.send(params[:sort])
       end
-      sorted.reverse! if dir.positive?
+      sorted.reverse! if dir.negative?
       sorted
     end
 
     def sort_by_number(entries, dir)
       entries.sort_by do |e|
         e.send(params[:sort]).to_f * dir
-      end
-    end
-
-    def sort_by_target(entries, target_scope_id, dir)
-      entries.sort_by do |e|
-        dir * OrderTarget::RATINGS.index(e.target(target_scope_id).try(:rating)).to_i
       end
     end
   end
