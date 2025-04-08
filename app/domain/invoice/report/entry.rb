@@ -17,15 +17,13 @@ class Invoice
         @invoice = invoice
       end
 
-      def manual_invoice?
+      def manual_invoice
         @invoice.manual_invoice?
       end
 
       def order
         @invoice.order
       end
-
-      private
     end
   end
 end
