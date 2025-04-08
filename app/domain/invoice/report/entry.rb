@@ -24,6 +24,14 @@ class Invoice
       def order
         @invoice.order
       end
+
+      def client
+        @invoice.order.parent_names
+      end
+
+      def responsible
+        @invoice.order.responsible
+      end
     end
   end
 end
