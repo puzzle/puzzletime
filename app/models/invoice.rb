@@ -63,6 +63,14 @@ class Invoice < ApplicationRecord
 
   scope :list, -> { order(billing_date: :desc) }
 
+  scope :in_period, (lambda do |period|
+    if period
+      where(period.where_condition('billing_date'))
+    else
+      all
+    end
+  end)
+
   def title
     title = order.name
     title += " gemäss Vertrag #{order.contract.number}" if order.contract&.number?
