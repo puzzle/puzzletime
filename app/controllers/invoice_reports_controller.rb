@@ -9,7 +9,6 @@ class InvoiceReportsController < ApplicationController
   def index
     set_period
     @report = Invoice::Report.new(@period, params)
-    @entries = @report.entries
     set_filter_values
   end
 

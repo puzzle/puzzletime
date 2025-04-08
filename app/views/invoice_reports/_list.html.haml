@@ -20,7 +20,7 @@
               = sort_link(:client, 'Kunde') 
               \/ Auftrag
             %th
-              = sort_link(:responsible_id, 'Verantwortlich')
+              = sort_link(:responsible, 'Verantwortlich')
             %th.center
               = sort_link(:manual_invoice, 'Manuell')
             %th.right.nowrap
@@ -65,7 +65,7 @@
                     %span.figure= f(invc.total_hours.to_f)
                 %td
                   - if invc.order
-                    = invc.order.parent_names
+                    = invc.client
                     %br/
                     %span.subtitle
                       = link_to_if(can?(:show, invc.order),
@@ -74,7 +74,7 @@
                   - else
                     %span.subtitle= order
                 %td
-                  = f(invc.order.responsible)
+                  = f(invc.responsible)
                 %td.center
                   = f(invc.manual_invoice)
                 %td
