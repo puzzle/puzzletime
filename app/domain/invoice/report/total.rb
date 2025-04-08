@@ -14,98 +14,17 @@ class Invoice
         @report = report
       end
 
-      #TODO: all to be done
-
-      delegate :reference, :total_amount, :total_hours, :period_from, :period_to, :billing_date, :due_date, :status, to: :invoice
-
-
-      def manual_invoice?
-        @invoice.manual_invoice?
-      end
-
-      def order
-        nil
-      end
-
-      def parent_names; end
-
       def to_s
         "Total (#{entries.count})"
       end
 
-      def status
-        nil
+      def total_amount
+        @total_amount ||= entries.sum(&:total_amount)
       end
 
-      def closed_at
-        nil
+      def total_hours
+        @total_hours ||= entries.sum(&:total_hours)
       end
-
-      def targets
-        []
-      end
-
-      def major_chance
-        nil
-      end
-
-      def major_risk
-        nil
-      end
-
-      def offered_amount
-        @offered_amount ||= entries.sum(&:offered_amount)
-      end
-
-      def offered_hours
-        @offered_hours ||= entries.sum(&:offered_hours)
-      end
-
-      def supplied_amount
-        entries.sum(&:supplied_amount)
-      end
-
-      def supplied_hours
-        @supplied_hours ||= entries.sum(&:supplied_hours)
-      end
-
-      def billable_amount
-        entries.sum(&:billable_amount)
-      end
-
-      def billable_hours
-        entries.sum(&:billable_hours)
-      end
-
-      def billed_amount
-        @billed_amount ||= entries.sum(&:billed_amount)
-      end
-
-      def billed_hours
-        @billed_hours ||= entries.sum(&:billed_hours)
-      end
-
-      def offered_rate
-        if offered_hours.positive?
-          (offered_amount / offered_hours).to_d
-        elsif !entries.empty?
-          entries.filter_map(&:offered_rate).sum / entries.size
-        end
-      end
-
-      def billability
-        @billability ||= supplied_hours.positive? ? (billable_hours / supplied_hours * 100).round : nil
-      end
-
-      def billed_rate
-        @billed_rate ||= billable_hours.positive? ? billed_amount / billable_hours : nil
-      end
-
-      def average_rate
-        @average_rate ||= supplied_hours.positive? ? billable_amount / supplied_hours : nil
-      end
-
-      def target(_id); end
     end
   end
 end
