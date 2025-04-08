@@ -18,9 +18,7 @@ class Invoice
 
     def page(&)
       section = entries[((current_page - 1) * limit_value)...(current_page * limit_value)]
-      section.each(&) if section.present?
-      # TODO: fix total and replace previous line with following line:
-      # ([total] + section).each(&) if section.present?
+      ([total] + section).each(&) if section.present?
     end
 
     def entries
