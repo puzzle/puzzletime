@@ -1,0 +1,77 @@
+-#  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
+-#  PuzzleTime and licensed under the Affero General Public License version 3
+-#  or later. See the COPYING file at the top-level directory or at
+-#  https://github.com/puzzle/puzzletime.
+
+
+- if @report.filters_defined?
+  - if @report.present?
+    .unindented
+      %table.orders-report.table.table-hover
+        %thead
+          %tr
+            %th
+              = sort_link(:reference, 'Referenz')  
+            %th.right.nowrap{title: 'In Rechnung gestellter Betrag'}
+              = sort_link(:total_amount, 'Rechnungsbetrag')
+            %th.right.nowrap
+              = sort_link(:total_hours, 'Total Stunden')
+            %th{style: 'width: 24%;'}
+              = sort_link(:client, 'Kunde') 
+              \/ Auftrag
+            %th.center
+              = sort_link(:manual_invoice?, 'Manuell')
+            %th.right.nowrap
+              = sort_link(:period, 'Leistungsperiode')
+            %th.right.nowrap
+              = sort_link(:billing_date, 'Rechnungsdatum')
+            %th.right.nowrap
+              = sort_link(:due_date, 'Fälligkeitsdatum')
+            %th.right.nowrap
+              = sort_link(:status, 'Status')
+            
+
+        %tbody
+          - @report.page do |invc|
+            %tr
+              %td
+                = link_to(f(invc.reference), order_invoice_path(order_id: invc.order.id, id: invc.id))
+              %td
+                .data-item
+                  %span.figure= f(invc.total_amount.to_f)
+                  %span.unit= currency
+              %td
+                .data-item
+                  %span.figure= f(invc.total_hours.to_f)
+              %td
+                - if invc.order
+                  = invc.order.parent_names
+                  %br/
+                  %span.subtitle
+                    = link_to_if(can?(:show, invc.order),
+                                 "#{invc.order.work_item.path_shortnames}: #{invc.order}",
+                                 can?(:update, invc.order) ? edit_order_path(invc.order) : order_path(invc.order))
+                - else
+                  %span.subtitle= order
+              %td.center
+                = f(invc.manual_invoice?)
+              %td
+                .data-item
+                  %span.figure= f(invc.period)
+              %td
+                .data-item
+                  %span.figure= f(invc.billing_date)
+              %td
+                .data-item
+                  %span.figure= f(invc.due_date)
+              %td
+                .data-item
+                  %span.figure= f(I18n.t("activerecord.attributes.invoice/statuses.#{invc.status}"))
+
+    %p= paginate @report
+
+  - else
+    .table= ti(:no_list_entries)
+
+- else
+  .table Bitte wählen Sie mindestes einen Filter aus.

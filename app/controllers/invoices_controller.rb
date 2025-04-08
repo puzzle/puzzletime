@@ -176,7 +176,7 @@ class InvoicesController < CrudController
 
   # determine the checked work_items in the form
   def checked_work_item_ids
-      entry.work_item_ids.presence
+    entry.work_item_ids.presence
   end
 
   # determine the checked employee_ids in the form
