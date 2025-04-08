@@ -211,6 +211,8 @@ class Ability
            show_plannings],
         Order
 
+    can :reports, Invoice
+
     can :show_plannings, AccountingPost
 
     can :read, [AccountingPost, Invoice, OrderUncertainty]
