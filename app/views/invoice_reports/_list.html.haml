@@ -16,7 +16,7 @@
               = sort_link(:client, 'Kunde') 
               \/ Auftrag
             %th.right.nowrap
-              = sort_link(:period, 'Leistungsperiode')
+              Leistungsperiode
             %th.right.nowrap
               = sort_link(:billing_date, 'Rechnungsdatum')
             %th.right.nowrap
@@ -32,7 +32,7 @@
             %th
               = sort_link(:responsible, 'Verantwortlich')
             %th.center
-              = sort_link(:manual_invoice, 'Manuell')
+              Manuell
             %th.center
               - if Invoicing.instance
                 %th.center
