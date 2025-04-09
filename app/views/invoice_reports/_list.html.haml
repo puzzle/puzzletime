@@ -21,6 +21,8 @@
               \/ Auftrag
             %th
               = sort_link(:responsible, 'Verantwortlich')
+            %th
+              = sort_link(:department, 'OE')
             %th.center
               = sort_link(:manual_invoice, 'Manuell')
             %th.right.nowrap
@@ -75,6 +77,8 @@
                     %span.subtitle= order
                 %td
                   = f(invc.responsible)
+                %td
+                  = f(invc.department)
                 %td.center
                   = f(invc.manual_invoice)
                 %td
@@ -82,10 +86,10 @@
                     %span.figure= f(invc.period)
                 %td
                   .data-item
-                    %span.figure= f(invc.billing_date)
+                    %span.figure= I18n.l(invc.billing_date, format: '%d.%m.%Y')
                 %td
                   .data-item
-                    %span.figure= f(invc.due_date)
+                    %span.figure= I18n.l(invc.due_date, format: '%d.%m.%Y')
                 %td
                   .data-item
                     %span.figure= f(I18n.t("activerecord.attributes.invoice/statuses.#{invc.status}"))
