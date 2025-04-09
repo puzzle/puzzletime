@@ -23,21 +23,6 @@ import (
 
 type Ci struct{}
 
-type Results struct {
-	// haml-lint output as json
-	LintOutput *dagger.File
-	// brakeman output as plain text
-	SecurityScan *dagger.File
-	// trivy results as json
-	VulnerabilityScan *dagger.File
-	// the SBOM
-	Sbom *dagger.File
-	// the built image
-	Image *dagger.Container
-	// the test reports
-	TestReports *dagger.Directory
-}
-
 // Returns a lint container
 func (m *Ci) BuildLintContainer(
 	dir *dagger.Directory,
@@ -136,51 +121,6 @@ func (m *Ci) BaseTestContainer(_ context.Context, dir *dagger.Directory) *dagger
 		WithExec([]string{"bundle", "install", "--jobs", "4", "--retry", "3"})
 }
 
-// Executes all the steps and returns a Results object
-func (m *Ci) Ci(
-	ctx context.Context,
-	// source directory
-	dir *dagger.Directory,
-	// registry username for publishing the contaner image
-	registryUsername string,
-	// registry password for publishing the container image
-	registryPassword *dagger.Secret,
-	// registry address registry/repository/image:tag
-	registryAddress string,
-	// deptrack address for publishing the SBOM https://deptrack.example.com/api/v1/bom
-	dtAddress string,
-	// deptrack project UUID
-	dtProjectUUID string,
-	// deptrack API key
-	dtApiKey *dagger.Secret,
-	// ignore linter failures
-	// +optional
-	// +default=false
-	pass bool,
-) *Results {
-	lintOutput := dag.PitcFlow().Lint(m.BuildLintContainer(dir, pass), "lint")
-	securityScan := dag.PitcFlow().Sast(m.BuildSastContainer(dir), "/app/sast")
-	image := dag.PitcFlow().Build(dir)
-	sbom := dag.PitcFlow().Sbom(image)
-	vulnerabilityScan := dag.PitcFlow().Vulnscan(sbom)
-	testReports := dag.PitcFlow().Test(m.BuildTestContainer(ctx, dir), "/mnt/test/reports")
-	digest, err := dag.PitcFlow().Publish(ctx, image, registryAddress, dagger.PitcFlowPublishOpts{RegistryUsername: registryUsername, RegistryPassword: registryPassword})
-
-	if err == nil {
-		dag.PitcFlow().PublishToDeptrack(ctx, sbom, dtAddress, dtApiKey, dtProjectUUID)
-		dag.PitcFlow().Sign(ctx, registryUsername, registryPassword, digest)
-		dag.PitcFlow().Attest(ctx, registryUsername, registryPassword, digest, sbom, "cyclonedx")
-	}
-
-	return &Results{
-		TestReports:       testReports,
-		LintOutput:        lintOutput,
-		SecurityScan:      securityScan,
-		VulnerabilityScan: vulnerabilityScan,
-		Sbom:              sbom,
-		Image:             image,
-	}
-}
 
 // Executes all the steps and returns a directory with the results
 func (m *Ci) CiIntegration(
