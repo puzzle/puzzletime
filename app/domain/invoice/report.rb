@@ -84,7 +84,7 @@ class Invoice
     end
 
     def sort_entries(entries)
-      dir = params[:sort_dir].to_s.casecmp('desc').zero? ? 1 : -1
+      dir = params[:sort_dir].to_s.casecmp('desc').zero? ? -1 : 1
       if sort_by_string?
         sort_by_string(entries, dir)
       elsif sort_by_number?
