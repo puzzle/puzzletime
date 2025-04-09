@@ -194,7 +194,7 @@ class Order
     end
 
     def sort_entries(entries)
-      dir = params[:sort_dir].to_s.casecmp('desc').zero? ? 1 : -1
+      dir = params[:sort_dir].to_s.casecmp('desc').zero? ? -1 : 1
       match = sort_by_target?
       if match
         sort_by_target(entries, match[1], dir)
