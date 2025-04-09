@@ -172,7 +172,7 @@ func (m *Ci) CiIntegration(
         // lint container
         LintContainer: lintContainer,
         // lint report directory name "lint/lint.json"
-        LintReportDir: "/lint",
+        LintReportDir: "/mnt/lint",
         // sast container
         SastContainer: sastContainer,
         // security scan report directory name "/app/sast/brakeman-output.tabs"
