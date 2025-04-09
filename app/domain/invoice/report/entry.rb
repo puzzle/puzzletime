@@ -12,6 +12,8 @@ class Invoice
 
       delegate :reference, :total_amount, :total_hours, :period_from, :period_to, :billing_date, :due_date, :status, to: :invoice
 
+      delegate :responsible, :department, to: :order
+
       def initialize(invoice)
         super(invoice)
         @invoice = invoice
@@ -22,19 +24,11 @@ class Invoice
       end
 
       def order
-        @invoice.order
+        @order ||= @invoice.order
       end
 
       def client
-        @invoice.order.parent_names
-      end
-
-      def responsible
-        @invoice.order.responsible
-      end
-
-      def department
-        @invoice.order.department
+        order.parent_names
       end
     end
   end
