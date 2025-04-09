@@ -95,7 +95,7 @@ class Invoice
     end
 
     def sort_by_string?
-      %w[client reference responsible status billing_date due_date].include?(params[:sort])
+      %w[client reference responsible status billing_date due_date department].include?(params[:sort])
     end
 
     def sort_by_number?

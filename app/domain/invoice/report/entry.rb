@@ -32,6 +32,10 @@ class Invoice
       def responsible
         @invoice.order.responsible
       end
+
+      def department
+        @invoice.order.department
+      end
     end
   end
 end
