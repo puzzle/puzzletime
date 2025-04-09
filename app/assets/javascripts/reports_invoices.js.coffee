@@ -11,10 +11,10 @@ app.reportsInvoices = new class
     @dateFilterChanged()
 
   dateFilterChanged: ->
-    $('.invoice_reports form[role="filter"]').find('#start_date,#end_date').each ->
-      val = $(this).val()
-      $(this).datepicker('option', 'disabled', $('#period_shortcut').val())
-      $(this).val(val)
+    $('.invoice_reports form[role="filter"]').find('#start_date,#end_date')
+      .datepicker('option', 'disabled', $('#period_shortcut').val())
+    if $('#period_shortcut').val()
+      $('.invoice_reports form[role="filter"]').find('#start_date,#end_date').val("")
 
 $(document).on('ajax:success', '.invoice_reports form[role="filter"]', ->
   app.reportsInvoices.init()
