@@ -57,7 +57,7 @@ class Invoice
     end
 
     def load_invoices
-      entries = Invoice.list
+      entries = Invoice.list.includes([order: %i[work_item responsible department]])
       entries = filter_by_parent(entries).distinct
       entries = filter_by_order_property(entries, :kind_id, :responsible_id, :department_id).distinct
       entries = entries.in_period(@period)
