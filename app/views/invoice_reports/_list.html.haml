@@ -12,8 +12,8 @@
           %tr
             %th
               = sort_link(:reference, 'Referenz')
-            %th{style: 'width: 24%;'}
-              = sort_link(:client, 'Kunde') 
+            %th
+              = sort_link(:client, 'Kunde')
               \/ Auftrag
             %th.right.nowrap
               Leistungsperiode
@@ -22,7 +22,7 @@
             %th.right.nowrap
               = sort_link(:due_date, 'Fälligkeitsdatum')
             %th.right.nowrap
-              = sort_link(:status, 'Status')  
+              = sort_link(:status, 'Status')
             %th.right.nowrap{title: 'In Rechnung gestellter Betrag'}
               = sort_link(:total_amount, 'Rechnungsbetrag')
             %th.right.nowrap
@@ -38,7 +38,6 @@
                 %th.center
                 - if can?(:sync, e)
                   %th.center
-            
 
         %tbody
           - @report.page do |invc|
