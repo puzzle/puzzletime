@@ -42,6 +42,7 @@
 #= require order_services
 #= require accounting_posts
 #= require reports_orders
+#= require reports_invoices
 #= require expenses
 #= require expense_reviews
 #= require meal_compensations
