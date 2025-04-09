@@ -4,7 +4,7 @@
 -#  https://github.com/puzzle/puzzletime.
 
 
-= form_tag(nil, method: :get, class: 'form-inline', role: 'filter', remote: false, data: { spin: true }) do
+= form_tag(nil, method: :get, class: 'form-inline', role: 'filter', remote: true, data: { spin: true }) do
   = hidden_field_tag :page, 1
 
   = direct_filter_date(:start_date, 'Rechnungen ausgestellt vom', @period.start_date)
@@ -12,7 +12,7 @@
 
   = direct_filter_select(:period_shortcut,
     nil,
-    predefined_past_quarter_period_options,
+    predefined_past_and_current_quarter_period_options,
     prompt: 'benutzerdefiniert')
 
   = direct_filter_select(:department_id,
