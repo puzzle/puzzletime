@@ -16,7 +16,7 @@
   = nav 'Meine Aufträge', evaluation_path('managed', clear: 1)
 
 - if can?(:reports, Invoice)
-  = nav 'Rechnungs-Controlling', 
+  = nav 'Rechnungs-Controlling',
         reports_invoices_path(clear: 1),
         reports_invoices_path
 
