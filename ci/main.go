@@ -50,15 +50,16 @@ func (m *Ci) BuildLintContainer(
 		WithMountedDirectory("/mnt", dir).
 		WithWorkdir("/mnt").
 		WithExec([]string{"gem", "install", "haml-lint"}).
+        WithExec([]string{"sh", "-c", "mkdir -p /mnt/lint"}).
 		WithExec(m.lintCommand(pass))
 }
 
 // Returns the lint command
 func (m *Ci) lintCommand(pass bool) []string {
 	if pass {
-		return []string{"sh", "-c", "haml-lint -r json . > lint.json || true"}
+		return []string{"sh", "-c", "haml-lint -r json . > lint/lint.json || true"}
 	}
-	return []string{"sh", "-c", "haml-lint -r json . > lint.json"}
+	return []string{"sh", "-c", "haml-lint -r json . > lint/lint.json"}
 }
 
 // Returns a sast container
@@ -67,7 +68,8 @@ func (m *Ci) BuildSastContainer(dir *dagger.Directory) *dagger.Container {
 		From("presidentbeef/brakeman:latest").
 		WithMountedDirectory("/app", dir).
 		WithWorkdir("/app").
-		WithExec([]string{"/usr/src/app/bin/brakeman"})
+        WithExec([]string{"sh", "-c", "mkdir -p /app/sast"}).
+		WithExec([]string{"/usr/src/app/bin/brakeman -o sast/brakeman-output.tabs"})
 }
 
 // Creates a PostgreSQL service for local testing based on the official image with the provided version. If no version is provided, 'latest' will be used.
@@ -156,8 +158,8 @@ func (m *Ci) Ci(
 	// +default=false
 	pass bool,
 ) *Results {
-	lintOutput := dag.PitcFlow().Lint(m.BuildLintContainer(dir, pass), "lint.json")
-	securityScan := dag.PitcFlow().Sast(m.BuildSastContainer(dir), "/app/brakeman-output.tabs")
+	lintOutput := dag.PitcFlow().Lint(m.BuildLintContainer(dir, pass), "lint")
+	securityScan := dag.PitcFlow().Sast(m.BuildSastContainer(dir), "/app/sast")
 	image := dag.PitcFlow().Build(dir)
 	sbom := dag.PitcFlow().Sbom(image)
 	vulnerabilityScan := dag.PitcFlow().Vulnscan(sbom)
@@ -229,12 +231,12 @@ func (m *Ci) CiIntegration(
         dagger.PitcFlowFlexOpts{
         // lint container
         LintContainer: lintContainer,
-        // lint report file name "lint.json"
-        LintReport: "lint.json",
+        // lint report directory name "lint/lint.json"
+        LintReportDir: "/lint",
         // sast container
         SastContainer: sastContainer,
-        // security scan report file name "/app/brakeman-output.tabs"
-        SastReport: "/app/brakeman-output.tabs",
+        // security scan report directory name "/app/sast/brakeman-output.tabs"
+        SastReportDir: "/app/sast",
         // test container
         TestContainer: testContainer,
         // test report folder name "/mnt/test/reports"
