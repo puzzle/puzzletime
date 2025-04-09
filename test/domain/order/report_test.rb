@@ -124,19 +124,19 @@ class Order
     ### sorting
 
     test 'sort by client' do
-      report(sort: 'client', sort_dir: 'desc')
+      report(sort: 'client', sort_dir: 'asc')
 
       assert_equal orders(:webauftritt, :puzzletime, :allgemein), report.entries.collect(&:order)
     end
 
     test 'sort by target time' do
-      report(sort: "target_scope_#{target_scopes(:time).id}")
+      report(sort: "target_scope_#{target_scopes(:time).id}", sort_dir: 'desc')
 
       assert_equal orders(:allgemein, :puzzletime, :webauftritt), report.entries.collect(&:order)
     end
 
     test 'sort by target cost' do
-      report(sort: "target_scope_#{target_scopes(:cost).id}", sort_dir: 'desc')
+      report(sort: "target_scope_#{target_scopes(:cost).id}", sort_dir: 'asc')
 
       assert_equal orders(:allgemein, :webauftritt, :puzzletime), report.entries.collect(&:order)
     end
