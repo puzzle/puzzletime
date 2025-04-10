@@ -251,6 +251,7 @@ de-CH:
         receipt: Beleg
         reimbursement_month: Auszahlungsmonat
         reviewer_id: Visum
+        department_id: OE
         reason: Begründung / Bemerkung
         reviewed_at: Visiert am
       expense/statuses:
