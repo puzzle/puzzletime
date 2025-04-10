@@ -227,6 +227,8 @@ de-DE:
         name: Name
       employment_roles_employment:
         percent: Pensum
+      expense:
+        department_id: OE
       holiday:
         holiday_date: Datum
         musthours_day: Sollstunden
