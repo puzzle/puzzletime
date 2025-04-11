@@ -34,11 +34,13 @@ class ShowOrder < ActionDispatch::IntegrationTest
   private
 
   def crm_start
+    Settings.odoo.api_url = nil
     Settings.highrise.api_token = 'test'
     Crm.init
   end
 
   def crm_stop
+    Settings.odoo.api_url = nil
     Settings.highrise.api_token = nil
     Crm.init
   end
