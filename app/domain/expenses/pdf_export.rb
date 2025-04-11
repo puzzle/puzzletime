@@ -74,7 +74,7 @@ module Expenses
       #   add_model_data
       # end
       pdf.bounding_box([pdf.bounds.left, pdf.bounds.top], width: pdf.bounds.width, height: 150) do
-        pdf.define_grid(columns: 2, rows: 1)
+        pdf.define_grid(columns: 2, rows: 1, gutter: 0)
 
         column1 = [:employee_id, :kind, :order_id, :status, nil, nil, { name: :amount, size: 15 }]
         column2 = %i[id reviewer_id reviewed_at reason reimbursement_month payment_date description receipt]
