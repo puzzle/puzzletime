@@ -78,7 +78,7 @@ module Crm
       crm_entity_url('companies', client)
     end
 
-    def contact_url(contact)glob
+    def contact_url(contact)
       crm_entity_url('people', contact)
     end
 
