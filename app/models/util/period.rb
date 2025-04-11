@@ -151,11 +151,7 @@ class Period
         begin
           date = Date.strptime(date, I18n.t('date.formats.default'))
         rescue ArgumentError
-          begin
-            date = Date.parse(date)
-          rescue StandardError
-            date = nil
-          end
+          date = Date.parse(date)
         end
       end
 
