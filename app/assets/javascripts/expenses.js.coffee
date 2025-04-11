@@ -26,9 +26,11 @@ $(document).on 'ready, turbolinks:load', ->
     warning_popup.addClass('hidden')
 
     return unless (typeof receipt_input != "undefined" && receipt_input != null) && receipt_input[0].files.length > 0
-    return if     /^image/.test(receipt_input[0].files[0].type)
 
-    warning_popup.removeClass('hidden')
+    file_type = receipt_input[0].files[0].type
+
+    unless /^image/.test(file_type) or file_type == 'application/pdf'
+      warning_popup.removeClass('hidden')
 
   check_file_type(true)
   toggle_project_display()

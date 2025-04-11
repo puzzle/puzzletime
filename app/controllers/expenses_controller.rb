@@ -117,19 +117,69 @@ class ExpensesController < ManageController
     params.dig(model_identifier, :receipt)
   end
 
+  def pdf_pages_amount(filepath_pdf)
+    first_page = Vips::Image.new_from_file(filepath_pdf, page: 0, n: 1)
+    first_page.get('n-pages')
+  end
+
+  def get_pdf_pages_as_images(filepath_pdf)
+    images = []
+    total_pages = pdf_pages_amount(filepath_pdf)
+    (0...total_pages).each do |page_num|
+      image = Vips::Image.new_from_file(filepath_pdf, page: page_num)
+      image = image.thumbnail_image(Settings.expenses.receipt.max_pixel)
+      images << image
+    end
+    images
+  end
+
+  def combine_images(images, rows, columns)
+    rows_of_images = []
+    (0...rows).each do |row_num|
+      start_index = row_num * columns
+      row_images = images[start_index, columns] || []
+      # Ensure all rows are the same length by padding with blank images (if necessary)
+      row_images += [Vips::Image.black(images.first.width, images.first.height)] * (columns - row_images.size)
+
+      row_image = row_images.reduce { |a, b| a.join(b, :horizontal) }
+      rows_of_images << row_image
+    end
+
+    rows_of_images.reduce { |a, b| a.join(b, :vertical) }
+  end
+
   def attach_resized_receipt
     return unless receipt_param
 
-    resized = ImageProcessing::Vips
-              .source(receipt_param.tempfile)
-              .resize_to_limit(Settings.expenses.receipt.max_pixel, Settings.expenses.receipt.max_pixel)
-              .saver(quality: Settings.expenses.receipt.quality)
-              .convert('jpg')
-              .loader(page: 0)
-              .call
+    if receipt_param.content_type == 'application/pdf'
+      pdf_path = receipt_param.tempfile.path
+      images = get_pdf_pages_as_images(pdf_path)
+      basename = File.basename(receipt_param.original_filename.to_s, '.*')
 
-    target_filename = "#{File.basename(receipt_param.original_filename.to_s, '.*')}.jpg"
+      # Calculate the number of rows and columns to fit all images in a square grid
+      total_pages = pdf_pages_amount(pdf_path)
+      grid_size = Math.sqrt(total_pages).ceil
+      rows = grid_size
+      columns = (total_pages.to_f / grid_size).ceil
 
-    entry.receipt.attach(io: File.open(resized), filename: target_filename, content_type: 'image/jpeg')
+      combined_image = combine_images(images, rows, columns)
+
+      output_path = Rails.root.join('tmp', "#{basename}.jpg")
+      combined_image.write_to_file(output_path.to_s, Q: Settings.expenses.receipt.quality)
+
+      entry.receipt.attach(io: File.open(output_path), filename: "#{basename}.jpg", content_type: 'image/jpeg')
+    else
+      resized = ImageProcessing::Vips
+                .source(receipt_param.tempfile)
+                .resize_to_limit(Settings.expenses.receipt.max_pixel, Settings.expenses.receipt.max_pixel)
+                .saver(quality: Settings.expenses.receipt.quality)
+                .convert('jpg')
+                .loader(page: 0)
+                .call
+
+      target_filename = "#{File.basename(receipt_param.original_filename.to_s, '.*')}.jpg"
+
+      entry.receipt.attach(io: File.open(resized), filename: target_filename, content_type: 'image/jpeg')
+    end
   end
 end

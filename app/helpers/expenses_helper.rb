@@ -133,7 +133,7 @@ module ExpensesHelper
     # Due to inconsistent browser behaviour, we need both file endings
     # and the 'all images' mimetype
     options.deep_merge!(
-      accept: %w[image/gif image/jpeg image/png .gif .jpg .jpeg .png].join(','),
+      accept: %w[image/gif image/jpeg image/png application/pdf .gif .jpg .jpeg .png .pdf].join(','),
       required: !entry.receipt.attached?
     )
 
@@ -142,7 +142,7 @@ module ExpensesHelper
         [
           content_tag(
             :div,
-            'Bitte wählen Sie ein Bild aus',
+            'Bitte wählen Sie ein Bild / PDF aus',
             id: 'file_warning',
             class: 'text-danger hidden'
           ),
