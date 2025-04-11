@@ -25,7 +25,8 @@ class Order
         master&.each_key do |key|
           hash[key] =
             Cell.new(sum_non_nil_values(cells, key, :hours, :to_d),
-                     sum_non_nil_values(cells, key, :amount, :to_d))
+                     sum_non_nil_values(cells, key, :amount, :to_d),
+                     nil)
         end
         hash
       end

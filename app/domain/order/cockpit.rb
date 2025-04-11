@@ -77,7 +77,7 @@ class Order
         total = TotalRow.new(rows)
         [total, *rows]
       else
-        [AccountingPostRow.new(accounting_posts.first, period, order.work_item.path_shortnames)]
+        [AccountingPostRow.new(accounting_posts.first, order, period, order.work_item.path_shortnames)]
       end
     end
 
