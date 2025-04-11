@@ -10,6 +10,8 @@ module Crm
   cattr_accessor :instance
 
   def self.init
+    return unless crm
+
     Crm.instance = crm.new
     CrmSyncJob.schedule if Delayed::Job.table_exists?
     Crm.instance
