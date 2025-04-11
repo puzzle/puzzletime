@@ -130,14 +130,36 @@ class Period
     def parse_date(date)
       return nil if date.blank?
 
-      if date.is_a? String
+      if date.is_a?(String)
+        if date.match?(/\A\d{1,2}\.\d{1,2}\.\d{2}\z/)
+          day, month, short_year = date.split('.').map(&:to_i)
+
+          # Get current full year and its century
+          current_year = Time.zone.today.year
+          cutoff = (current_year + 5) % 100
+          current_century = (current_year / 100) * 100
+
+          full_year = if short_year <= cutoff
+                        current_century + short_year
+                      else
+                        (current_century - 100) + short_year
+                      end
+
+          return Date.new(full_year, month, day)
+        end
+
         begin
           date = Date.strptime(date, I18n.t('date.formats.default'))
-        rescue StandardError
-          date = Date.parse(date)
+        rescue ArgumentError
+          begin
+            date = Date.parse(date)
+          rescue StandardError
+            date = nil
+          end
         end
       end
-      date = date.to_date if date.is_a? Time
+
+      date = date.to_date if date.is_a?(Time)
       date
     end
 
