@@ -4,6 +4,8 @@ require 'xmlrpc/client'
 module Crm
   class Odoo
     class Api
+      attr_reader :base_url
+
       def initialize(**opts)
         @api_url = opts[:api_url] || Settings.odoo.api_url
         @base_url = opts[:base_url] || Settings.odoo.base_url
