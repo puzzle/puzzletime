@@ -147,7 +147,7 @@ class Employment < ApplicationRecord
   end
 
   def valid_period
-    if end_date && period && period.negative?
+    if end_date && period&.negative?
       errors.add(:base, 'Die Zeitspanne ist ungültig')
     elsif parallel_employments?
       errors.add(:base, 'Für diese Zeitspanne ist bereits eine andere Anstellung definiert')

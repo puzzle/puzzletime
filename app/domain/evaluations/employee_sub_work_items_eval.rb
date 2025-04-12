@@ -27,7 +27,7 @@ module Evaluations
     end
 
     def worktime_query(receiver, period = nil, division = nil)
-      super(receiver, period, division).where(employee_id:)
+      super.where(employee_id:)
     end
 
     def sub_work_items_evaluation(division = nil)

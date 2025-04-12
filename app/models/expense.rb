@@ -26,8 +26,8 @@ class Expense < ApplicationRecord
 
   has_one_attached :receipt
 
-  enum kind:   { project: 0, training: 1, sales: 2, support: 3, other: 4 }
-  enum status: { pending: 0, deferred: 1, approved: 2, rejected: 3 }
+  enum :kind, { project: 0, training: 1, sales: 2, support: 3, other: 4 }
+  enum :status, { pending: 0, deferred: 1, approved: 2, rejected: 3 }
 
   validates_by_schema
 

@@ -3,41 +3,51 @@
 module Crm
   class Odoo
     class Base
+      class_attribute :attributes
       class_attribute :model
-      class_attribute :parameters
       class_attribute :options
+      class_attribute :parameters
 
+      self.attributes = [].freeze
       self.parameters = [].freeze
-      self.options = {}.freeze
+      self.options = { fields: attributes }.freeze
 
-      attr_reader :attributes
-      delegate_missing_to :@attributes
+      attr_reader(*attributes)
 
-      def initialize(attributes)
-        @attributes = OpenStruct.new(attributes)
+      def initialize(values = {})
+        values = values.with_indifferent_access
+
+        attributes.each do |attr|
+          instance_variable_set(:"@#{attr}", values[attr])
+        end
       end
 
       class << self
-
         def resources(parameters: [], options: {})
           parameters = [*self.parameters, *parameters]
-          options = {**self.options, **options}
+          options = { **self.options, **options }
 
           api.search_read(
             model,
             parameters: parameters,
             options: options
           )
-            .map { split_ids _1 }
+             .map { split_ids _1 }
         end
 
-        def resource(id, parameters: [], options: {})
-          parameters = [*self.parameters, *parameters]
-          options = {**self.options, **options}
+        def resource(id, options: {})
+          options = { **self.options, **options }
+
+          safe_to_i = proc do |val|
+            val.to_i
+          rescue StandardError
+            -1
+          end
 
           ids =
-            Array.wrap(id)
-            .map { _1.to_i rescue -1 }
+            Array
+            .wrap(id)
+            .map { safe_to_i.call(_1) }
             .select(&:positive?)
 
           api
@@ -47,6 +57,7 @@ module Crm
         end
 
         def all(...) = resources(...).map { new _1 }
+
         def find(...)
           res = resource(...)
           raise ResourceNotFound unless res
@@ -62,9 +73,10 @@ module Crm
           return resource unless resource
 
           attrs = {}
-          resource.each do |k,v|
+          resource.each do |k, v|
             next unless /_id$/.match?(k)
-            attr_name = k.split("_")[..-2].join("_")
+
+            attr_name = k.split('_')[..-2].join('_')
 
             if v.is_a? Array
               attrs["#{attr_name}_id"] = v.first

@@ -64,13 +64,9 @@ module Graphs
       @boxes
     end
 
-    def accounts?(type)
-      @color_map.accounts? type
-    end
+    delegate :accounts?, to: :@color_map
 
-    def accounts_legend(type)
-      @color_map.accounts_legend type
-    end
+    delegate :accounts_legend, to: :@color_map
 
     def must_hours_factor
       p = @current || @period

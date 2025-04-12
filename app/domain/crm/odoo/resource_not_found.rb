@@ -1,3 +1,7 @@
 # frozen_string_literal: true
 
-class Crm::Odoo::ResourceNotFound < StandardError; end
+module Crm
+  class Odoo
+    class ResourceNotFound < StandardError; end
+  end
+end

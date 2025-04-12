@@ -108,7 +108,7 @@ class EmployeeMasterDataController < ApplicationController
   end
 
   def vcard_filename
-    ActiveStorage::Filename.new("#{@employee.to_s}.vcf").sanitized
+    ActiveStorage::Filename.new("#{@employee}.vcf").sanitized
   end
 
   def qr_code

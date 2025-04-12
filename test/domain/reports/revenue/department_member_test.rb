@@ -144,19 +144,26 @@ class DepartmentMemberRevenueReportTest < ActiveSupport::TestCase
     r = report
 
     assert_equal [devtwo], r.entries
-    assert_equal({ [devtwo.id, Date.new(2000, 7, 1)] => 176.0,
-                   [devtwo.id, Date.new(2000, 8, 1)] => 3.0,
-                 }, r.ordertime_hours)
-    assert_equal({ Date.new(2000, 7, 1) => 176.0, Date.new(2000, 8, 1) => 3.0 }, r.total_ordertime_hours_per_month)
+    assert_equal({
+      [devtwo.id, Date.new(2000, 7, 1)] => 176.0,
+      [devtwo.id, Date.new(2000, 8, 1)] => 3.0
+    }, r.ordertime_hours)
+    assert_equal({
+      Date.new(2000, 7, 1) => 176.0,
+      Date.new(2000, 8, 1) => 3.0
+    }, r.total_ordertime_hours_per_month)
     assert_in_delta(179.0, r.total_ordertime_hours_per_entry(devtwo))
     assert_in_delta(89.5, r.average_ordertime_hours_per_entry(devtwo))
     assert_in_delta(179.0, r.total_ordertime_hours_overall)
     assert_in_delta(89.5, r.average_ordertime_hours_overall)
-    assert_equal({ [devtwo.id, Date.new(2000, 9, 1)] => 6.4 * 170.0,
-                   [devtwo.id, Date.new(2000, 11, 1)] => 6.4 * 240.0 * 2,
-                 }, r.planning_hours)
-    assert_equal({ Date.new(2000, 9, 1) => 6.4 * 170.0,
-                   Date.new(2000, 11, 1) => (6.4 * 170.0 * 2) + (6.4 * 140.0) }, r.total_planning_hours_per_month)
+    assert_equal({
+      [devtwo.id, Date.new(2000, 9, 1)] => 6.4 * 170.0,
+      [devtwo.id, Date.new(2000, 11, 1)] => 6.4 * 240.0 * 2
+    }, r.planning_hours)
+    assert_equal({
+      Date.new(2000, 9, 1) => 6.4 * 170.0,
+      Date.new(2000, 11, 1) => (6.4 * 170.0 * 2) + (6.4 * 140.0)
+    }, r.total_planning_hours_per_month)
   end
 
   test 'entries and values with sort by past month' do
@@ -185,10 +192,14 @@ class DepartmentMemberRevenueReportTest < ActiveSupport::TestCase
     r = report(period, sort: '2000-07-01', sort_dir: 'desc')
 
     assert_equal [devtwo], r.entries
-    assert_equal({ [devtwo.id, Date.new(2000, 7, 1)] => 176.0,
-                   [devtwo.id, Date.new(2000, 8, 1)] => 3.0,
-                 }, r.ordertime_hours)
-    assert_equal({ Date.new(2000, 7, 1) => 176.0, Date.new(2000, 8, 1) => 3.0 }, r.total_ordertime_hours_per_month)
+    assert_equal({
+      [devtwo.id, Date.new(2000, 7, 1)] => 176.0,
+      [devtwo.id, Date.new(2000, 8, 1)] => 3.0
+    }, r.ordertime_hours)
+    assert_equal({
+      Date.new(2000, 7, 1) => 176.0,
+      Date.new(2000, 8, 1) => 3.0
+    }, r.total_ordertime_hours_per_month)
   end
 
   test 'entries and values from configured company are ignored' do

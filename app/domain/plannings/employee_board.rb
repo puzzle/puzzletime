@@ -83,7 +83,7 @@ module Plannings
     private
 
     def load_plannings(p = period)
-      super(p).where(employee_id: employee.id)
+      super.where(employee_id: employee.id)
     end
 
     def load_employees

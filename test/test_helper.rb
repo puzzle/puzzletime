@@ -28,7 +28,7 @@ require 'mocha/minitest'
 require 'capybara/rails'
 Settings.reload!
 
-Dir[Rails.root.join('test/support/**/*.rb')].each { |f| require f }
+Rails.root.glob('test/support/**/*.rb').each { |f| require f }
 
 # load Cuprite Capybara integration
 require 'capybara/cuprite'
