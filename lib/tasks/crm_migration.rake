@@ -51,7 +51,14 @@ namespace :crm_migration do
 
     mkdir_p(mappings_folder)
 
-    models = %w[Client Employee Contact AdditionalCrmOrder Order]
+    all_models = %w[Client Employee Contact AdditionalCrmOrder Order]
+    skip_models = ENV.fetch('SKIP_MODELS', '').split(',').map { _1.strip.classify }
+    models = all_models - skip_models
+
+    puts "All Models: #{all_models.join(', ')}"
+    puts "Models to skip: #{skip_models.join(', ')}"
+    puts "Models to migrate: #{models.join(', ')}"
+
     models.each do |model_name|
       file_path = File.join(mappings_folder, "#{model_name.underscore}.csv")
       model = model_name.constantize
