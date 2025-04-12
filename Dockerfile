@@ -4,7 +4,7 @@
 
 # Versioning
 ARG RUBY_VERSION="3.2.1"
-ARG BUNDLER_VERSION="2.4.6"
+ARG BUNDLER_VERSION="2.6.7"
 
 # Packages
 # ARG BUILD_PACKAGES="nodejs build-essential libc6"
