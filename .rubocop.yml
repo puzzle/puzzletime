@@ -44,4 +44,8 @@ Style/SafeNavigationChainLength:
 Naming/AccessorMethodName:
   Exclude:
     - 'app/domain/invoicing/small_invoice/client_sync.rb'
+
+Style/SymbolProc:
+  Exclude:
+    - 'app/serializers/api/v1/employee_serializer.rb'
 ...
