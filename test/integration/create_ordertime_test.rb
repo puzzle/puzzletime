@@ -71,10 +71,10 @@ class CreateOrdertimeTest < ActionDispatch::IntegrationTest
 
   test 'going over the budget is displayed as 100% width progress bar' do
     Ordertime.create!(employee: employees(:mark),
-                          work_date: '2015-08-31',
-                          hours: accounting_posts(:puzzletime).offered_hours * 1.5,
-                          work_item: work_items(:puzzletime),
-                          report_type: 'absolute_day')
+                      work_date: '2015-08-31',
+                      hours: accounting_posts(:puzzletime).offered_hours * 1.5,
+                      work_item: work_items(:puzzletime),
+                      report_type: 'absolute_day')
 
     selectize('ordertime_account_id', 'PuzzleTime', term: 'time')
 
@@ -91,10 +91,10 @@ class CreateOrdertimeTest < ActionDispatch::IntegrationTest
 
   test 'going over budget sets the colour of the progressbar to red' do
     Ordertime.create!(employee: employees(:mark),
-                          work_date: '2015-08-31',
-                          hours: accounting_posts(:puzzletime).offered_hours,
-                          work_item: work_items(:puzzletime),
-                          report_type: 'absolute_day')
+                      work_date: '2015-08-31',
+                      hours: accounting_posts(:puzzletime).offered_hours,
+                      work_item: work_items(:puzzletime),
+                      report_type: 'absolute_day')
 
     selectize('ordertime_account_id', 'PuzzleTime', term: 'time')
 
@@ -108,7 +108,7 @@ class CreateOrdertimeTest < ActionDispatch::IntegrationTest
     visit(new_ordertime_path)
   end
 
-  #returns the actually used percentage of budget as a float (clipped to 100, if above)
+  # returns the actually used percentage of budget as a float (clipped to 100, if above)
   def clipped_used_budget_percentage(accounting_post)
     offered_hours = accounting_post.offered_hours
     worked_hours = Worktime.where(work_item_id: accounting_post.work_item_id).sum(:hours)

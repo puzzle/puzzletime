@@ -1,7 +1,7 @@
 ---
 inherit_from: .rubocop_todo.yml
 
-require:
+plugins:
   - rubocop-rails
   - rubocop-minitest
   - rubocop-performance
@@ -32,4 +32,16 @@ Rails/CreateTableWithTimestamps:
     - 'db/migrate/20190204150125_add_expenses.rb'
     - 'db/migrate/20220322152042_create_workplaces.rb'
     - 'db/migrate/20230207231358_create_active_storage_variant_records.active_storage.rb'
+
+Rails/DangerousColumnNames:
+  Exclude:
+    - 'db/migrate/20240311175613_add_id_to_order_team_members.rb' # Added id to many_to_many join table
+
+Style/SafeNavigationChainLength:
+  Exclude:
+    - 'app/views/work_items/search.json.jbuilder' # Okish for jbuilder 
+
+Naming/AccessorMethodName:
+  Exclude:
+    - 'app/domain/invoicing/small_invoice/client_sync.rb'
 ...

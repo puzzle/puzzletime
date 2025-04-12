@@ -14,7 +14,7 @@ module Forms
         worktime.errors.add(:hours, 'Die gesamte Anzahl Stunden kann nicht vergrössert werden')
       end
       worktime.employee = original.employee
-      super(worktime) if worktime.errors.empty?
+      super if worktime.errors.empty?
       worktime.errors.empty?
     end
 

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'xmlrpc/client'
 
 module Crm
@@ -43,10 +44,10 @@ module Crm
       end
 
       def models(select: nil)
-        models = search_read('ir.model', options: {fields: [:name, :model, :state]})
-          .sort_by { _1["id"] }
+        models = search_read('ir.model', options: { fields: %i[name model state] })
+                 .sort_by { _1['id'] }
 
-        models = models.select { _1["name"] =~ /#{select}/ } if select
+        models = models.select { _1['name'] =~ /#{select}/ } if select
 
         models
       end
@@ -54,11 +55,11 @@ module Crm
       private
 
       def common_endpoint
-        @common ||= XMLRPC::Client.new2("#{@api_url}/xmlrpc/2/common")
+        @common_endpoint ||= XMLRPC::Client.new2("#{@api_url}/xmlrpc/2/common")
       end
 
       def models_endpoint
-        @models ||= XMLRPC::Client.new2("#{@api_url}/xmlrpc/2/object").proxy
+        @models_endpoint ||= XMLRPC::Client.new2("#{@api_url}/xmlrpc/2/object").proxy
       end
 
       def model_cmd(model, cmd, parameters, options)
@@ -66,7 +67,7 @@ module Crm
 
         models_endpoint.execute_kw(@database, @uid, @password, model, cmd, parameters, options)
       rescue XMLRPC::FaultException => e
-        @uid=nil
+        @uid = nil
 
         Rails.logger.error(<<~ERROR)
           Error:

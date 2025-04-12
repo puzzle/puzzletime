@@ -21,6 +21,7 @@ module Invoicing
                   99 => 'deleted' }.freeze # deleted
 
       attr_reader :invoice
+
       class_attribute :rate_limiter
       self.rate_limiter = RateLimiter.new(Settings.small_invoice.request_rate)
 
@@ -118,21 +119,19 @@ module Invoicing
         item['positions'].select do |p|
           p['type'] == Settings.small_invoice.constants.position_type_id &&
             p['unit'] == Settings.small_invoice.constants.unit_id
-        end.collect do |p|
-          p['amount']
-        end.sum
+        end.pluck('amount').sum
       end
 
       # item['totalamount'] always includes vat
       # item['vat_included'] tells whether position totals already include vat or not.
       def total_amount_without_vat(item)
         vat_included = !item['vat_included'].zero?
-        item['positions'].select { |p| p['cost'] }.map do |p|
+        item['positions'].select { |p| p['cost'] }.sum do |p|
           total = p['cost'] * p['amount']
           total -= position_discount(p, total)
           total -= position_included_vat(p, total) if vat_included
           total
-        end.sum
+        end
       end
 
       def position_discount(p, total)

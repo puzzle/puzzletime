@@ -9,18 +9,19 @@ module Crm
   class Odoo < Base
     attr_reader :api
 
-    def initialize # ✔
+    def initialize
+      super
       @api = Api.new
       @prefetched = {}
     end
-    
-    def crm_key_name = 'Odoo ID' # ✔
-    def crm_key_name_plural = 'Odoo IDs' # ✔
-    def name = 'Odoo' # ✔
-    def icon = 'odoo.webp' # ✔
-    # def icon = 'odoo.png' # ✔
 
-    def find_order(key) # ✔
+    def crm_key_name = 'Odoo ID'
+    def crm_key_name_plural = 'Odoo IDs'
+    def name = 'Odoo'
+    def icon = 'odoo.webp'
+    # def icon = 'odoo.png'
+
+    def find_order(key)
       lead = Lead.find(key.to_i)
       verify_lead_partner_type(lead)
       lead_attributes(lead)
@@ -28,9 +29,9 @@ module Crm
       nil
     end
 
-    def verify_lead_partner_type(lead) # ✔
+    def verify_lead_partner_type(lead)
       return if Company.find(lead.partner_id)
-      
+
       partner_type =
         if lead.partner_id && Partner.find(lead.partner_id)
           :partner
@@ -41,22 +42,22 @@ module Crm
       raise Crm::Error, I18n.t('error.crm.odoo.order_not_on_company', partner_type:)
     end
 
-    def find_client_contacts(client) # ✔
+    def find_client_contacts(client)
       Company
         .partners_for(client.crm_key)
         .map { |p| contact_attributes(p) }
     end
 
-    def find_person(key) # ✔
+    def find_person(key)
       partner = Partner.find(key)
       contact_attributes(partner) if partner
     end
 
-    def find_people_by_email(email) # ✔
+    def find_people_by_email(email)
       Partner.all(parameters: [['email', 'ilike', email]])
     end
 
-    def sync_all # ✔
+    def sync_all
       prefetch_resources
       sync_clients
       sync_orders
@@ -65,7 +66,7 @@ module Crm
       clear_resources
     end
 
-    def sync_additional_order(additional) # ✔
+    def sync_additional_order(additional)
       lead = Lead.find(additional.crm_key)
       return if additional.name == lead.name
 
@@ -74,19 +75,19 @@ module Crm
       additional.destroy!
     end
 
-    def client_url(client) = crm_entity_url('contacts', client) # ✔
-    def contact_url(contact) = crm_entity_url('contacts', contact) # ✔
-    def order_url(order) = crm_entity_url('crm', order) # ✔
-    def restrict_local? = true # ✔
+    def client_url(client) = crm_entity_url('contacts', client)
+    def contact_url(contact) = crm_entity_url('contacts', contact)
+    def order_url(order) = crm_entity_url('crm', order)
+    def restrict_local? = true
 
     private
 
     def prefetch_resources(type = :all)
       @prefetched ||= {}
 
-      @prefetched[:clients] ||= Client.all if type.in? [:client, :all]
-      @prefetched[:partners] ||= Partner.all if type.in? [:partner, :all]
-      @prefetched[:leads] ||= Lead.all if type.in? [:lead, :all]
+      @prefetched[:clients] ||= Client.all if type.in? %i[client all]
+      @prefetched[:partners] ||= Partner.all if type.in? %i[partner all]
+      @prefetched[:leads] ||= Lead.all if type.in? %i[lead all]
     end
 
     def find_prefetched(group, keys)
@@ -97,16 +98,18 @@ module Crm
       end
     end
 
-    def with_prefetch(group, keys, &block)
+    def with_prefetch(group, keys)
       response = find_prefetched(group, keys)
       response ||= yield(keys) if block_given?
+
+      response
     end
 
     def clear_resources
       @prefetched = {}
     end
 
-    def sync_clients(ids=nil) # ✔
+    def sync_clients(ids = nil)
       context = Client.includes(:work_item)
       context = context.where(id: ids) if ids.present?
 
@@ -119,7 +122,7 @@ module Crm
       end
     end
 
-    def sync_orders(ids=nil) # ✔
+    def sync_orders(ids = nil)
       context = Order.includes(:work_item, :additional_crm_orders)
       context = context.where(id: ids) if ids.present?
 
@@ -138,7 +141,7 @@ module Crm
     end
 
     # Syncs existing contacts
-    def sync_contacts(ids=nil) # ✔
+    def sync_contacts(ids = nil)
       context = Contact
       context = context.where(id: ids) if ids.present?
 
@@ -151,12 +154,12 @@ module Crm
     end
 
     # Imports missing contacts for existing clients
-    def import_client_contacts(ids=nil) # ✔
+    def import_client_contacts(ids = nil)
       context = Client
       context = context.where(id: ids) if ids.present?
 
       sync_crm_entities(context) do |client|
-        partners = with_prefetch(:client_partners, client.crm_key) { Company.partners_for() }
+        partners = with_prefetch(:client_partners, client.crm_key) { Company.partners_for }
         existing = existing_contact_crm_keys(client, partners.map(&:id))
 
         partners
@@ -165,14 +168,14 @@ module Crm
       end
     end
 
-    def existing_contact_crm_keys(client, keys) # ✔
+    def existing_contact_crm_keys(client, keys)
       client.contacts
             .where(crm_key: keys)
             .pluck(:crm_key)
             .map(&:to_i)
     end
 
-    def lead_attributes(lead) # ✔
+    def lead_attributes(lead)
       {
         key: lead.id,
         name: lead.name,
@@ -184,10 +187,10 @@ module Crm
       }.then { false_to_nil(_1) }
     end
 
-    def contact_attributes(person) # ✔
+    def contact_attributes(person)
       names = person.name&.split
       {
-        lastname: names[1..].join(" "),
+        lastname: names[1..].join(' '),
         firstname: names.first,
         function: person.function,
         email: person.email_normalized,
@@ -197,7 +200,7 @@ module Crm
       }.then { false_to_nil(_1) }
     end
 
-    def sync_crm_entities(entities) # ✔
+    def sync_crm_entities(entities)
       entities.where.not(crm_key: nil).find_each do |entity|
         yield entity
       rescue Crm::Odoo::ResourceNotFound
@@ -209,13 +212,13 @@ module Crm
       end
     end
 
-    def crm_entity_url(model, entity) # ✔
-      return unless key = entity.respond_to?(:crm_key) && entity.crm_key.presence
+    def crm_entity_url(model, entity)
+      return unless (key = entity.respond_to?(:crm_key) && entity.crm_key.presence)
 
       "#{api.base_url}/#{model}/#{key}"
     end
 
-    def notify_sync_error(error, synced_entity, invalid_record = nil) # ✔
+    def notify_sync_error(error, synced_entity, invalid_record = nil)
       parameters = record_to_params(synced_entity, 'synced_entity').tap do |params|
         params.merge!(record_to_params(invalid_record, 'invalid_record')) if invalid_record.present?
       end
@@ -224,13 +227,13 @@ module Crm
     end
 
     def false_to_nil(hash)
-      hash.map { |k,v| [k, v || nil] }.to_h
+      hash.transform_values { |v| v || nil }
     end
 
-    def airbrake? = ENV['RAILS_AIRBRAKE_HOST'].present? # ✔
-    def sentry? = ENV['SENTRY_DSN'].present? # ✔
+    def airbrake? = ENV['RAILS_AIRBRAKE_HOST'].present?
+    def sentry? = ENV['SENTRY_DSN'].present?
 
-    def record_to_params(record, prefix = 'record') # ✔
+    def record_to_params(record, prefix = 'record')
       {
         "#{prefix}_type" => record.class.name,
         "#{prefix}_id" => record.id,

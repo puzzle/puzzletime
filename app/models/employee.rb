@@ -59,7 +59,7 @@ class Employee < ApplicationRecord
 
   has_paper_trail(meta: { employee_id: proc(&:id) }, skip: Employee::INTERNAL_ATTRS)
 
-  enum marital_status: %w[
+  enum :marital_status, %w[
     single
     married
     widowed

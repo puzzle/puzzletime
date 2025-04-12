@@ -20,11 +20,11 @@ module Reports
       end
 
       def load_ordertimes(*, **)
-        super(*, **).joins(:employee)
+        super.joins(:employee)
       end
 
       def load_plannings(*, **)
-        super(*, **).joins(:employee)
+        super.joins(:employee)
       end
     end
   end

@@ -61,6 +61,7 @@ module Invoicing
 
       delegate :notify_sync_error, to: 'self.class'
       attr_reader :client, :remote_keys
+
       class_attribute :rate_limiter
       self.rate_limiter = RateLimiter.new(Settings.small_invoice.request_rate)
 
@@ -81,19 +82,15 @@ module Invoicing
       private
 
       def update_remote_with_timeouts
-        begin
-          update_remote
-          set_association_keys_from_remote
-        rescue Invoicing::Error => e
-          if e.code.to_s == '504'
-            # request is supposed to terminate eventually in the case of a gateway timeout,
-            # so schedule #set_association_keys for later
-            delay(run_at: 30.minutes.from_now).set_association_keys_from_remote
-            nil
-          else
-            raise
-          end
-        end
+        update_remote
+        set_association_keys_from_remote
+      rescue Invoicing::Error => e
+        raise unless e.code.to_s == '504'
+
+        # request is supposed to terminate eventually in the case of a gateway timeout,
+        # so schedule #set_association_keys for later
+        delay(run_at: 30.minutes.from_now).set_association_keys_from_remote
+        nil
       end
 
       def update_remote
@@ -147,7 +144,7 @@ module Invoicing
       def set_association_key(entity, list, remote_list)
         list.each do |item|
           local_item = entity.new(item)
-          remote_keys = remote_list.select { |h| local_item == h }.map { |h| h['id'].to_s.presence }.compact
+          remote_keys = remote_list.select { |h| local_item == h }.filter_map { |h| h['id'].to_s.presence }
           next if remote_keys.blank? || remote_keys.include?(item.invoicing_key)
 
           local_keys = list.model.where(invoicing_key: remote_keys).pluck(:invoicing_key)

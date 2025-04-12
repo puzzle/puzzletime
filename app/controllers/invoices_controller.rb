@@ -88,8 +88,8 @@ class InvoicesController < CrudController
     to = model_params[:period_to]
     @employees = employees_for_period(from, to)
     @work_items = work_items_for_period(from, to)
-    # replace employees_ids in entry with the list of actually selectable employees 
-    entry.employee_ids = @employees.pluck(:id) 
+    # replace employees_ids in entry with the list of actually selectable employees
+    entry.employee_ids = @employees.pluck(:id)
     entry.work_item_ids = @work_items.pluck(:id)
   end
 
@@ -114,7 +114,7 @@ class InvoicesController < CrudController
 
   def copy_attrs_from_params(attrs)
     set_period
-    
+
     attrs[:period_from] ||= @period.start_date
     attrs[:period_to] ||= @period.end_date
 
@@ -176,7 +176,7 @@ class InvoicesController < CrudController
 
   # determine the checked work_items in the form
   def checked_work_item_ids
-      entry.work_item_ids.presence
+    entry.work_item_ids.presence
   end
 
   # determine the checked employee_ids in the form
