@@ -2,7 +2,7 @@
 
 PuzzleTime is an open source time tracking and resource planning web application for SMEs.
 
-[![Rails Test](https://github.com/puzzle/puzzletime/workflows/reusable-test.yaml/badge.svg)](https://github.com/puzzle/puzzletime/workflows/reusable-test.yaml)
+[![Rails Test](https://github.com/puzzle/puzzletime/actions/workflows/test-on-pr.yaml/badge.svg)](https://github.com/puzzle/puzzletime/actions/workflows/test-on-pr.yaml )
 [![GitHub](https://img.shields.io/github/license/puzzle/puzzletime)](https://github.com/puzzle/puzzletime/blob/master/LICENSE)
 
 ## Development
