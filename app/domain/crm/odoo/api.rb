@@ -20,14 +20,17 @@ module Crm
       end
 
       def name_search(model, parameters: [], options: {})
+        parameters = ['|', ['active', '=', true], ['active', '=', false], *parameters]
         model_cmd(model, 'name_search', [parameters], options)
       end
 
       def search(model, parameters: [], options: {})
+        parameters = ['|', ['active', '=', true], ['active', '=', false], *parameters]
         model_cmd(model, 'search', [parameters], options)
       end
 
       def count(model, parameters: [], options: {})
+        parameters = ['|', ['active', '=', true], ['active', '=', false], *parameters]
         model_cmd(model, 'search_count', [parameters], options)
       end
 
@@ -40,6 +43,7 @@ module Crm
       end
 
       def search_read(model, parameters: [], options: {})
+        parameters = ['|', ['active', '=', true], ['active', '=', false], *parameters]
         model_cmd(model, 'search_read', [parameters], options)
       end
 
