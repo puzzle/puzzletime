@@ -54,7 +54,7 @@ func (m *Ci) BuildSastContainer(dir *dagger.Directory) *dagger.Container {
 		WithMountedDirectory("/app", dir).
 		WithWorkdir("/app").
         WithExec([]string{"sh", "-c", "mkdir -p /app/sast"}).
-		WithExec([]string{"/usr/src/app/bin/brakeman -o /app/sast/brakeman-output.tabs"})
+		WithExec([]string{"sh", "-c", "/usr/src/app/bin/brakeman -o /app/sast/brakeman-output.tabs"})
 }
 
 // Creates a PostgreSQL service for local testing based on the official image with the provided version. If no version is provided, 'latest' will be used.
