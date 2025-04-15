@@ -20,7 +20,7 @@
         = fields.input_field(:comment, placeholder: 'Funktion')
       - if Crm.instance
         .col-md-2.help-block
-          = crm_contact_link(fields.object.contact)
+          = crm_contact_link(fields.object.contact, fields.object.contact.to_s)
       .col-md-1.form-action
         = fields.remove_nested_fields_link(picon('delete', title: 'Ansprechsperson entfernen'), class: 'remove-order-contact')
   .row

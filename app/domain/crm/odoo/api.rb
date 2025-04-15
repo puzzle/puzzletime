@@ -32,7 +32,7 @@ module Crm
       end
 
       def read(model, ids, options: {})
-        model_cmd(model, 'read', [ids].flatten, options)
+        model_cmd(model, 'read', [[ids].flatten], options)
       end
 
       def fields_get(model, options: {})
@@ -55,11 +55,21 @@ module Crm
       private
 
       def common_endpoint
-        @common_endpoint ||= XMLRPC::Client.new2("#{@api_url}/xmlrpc/2/common")
+        @common_endpoint ||= begin
+          server = XMLRPC::Client.new2("#{@api_url}/xmlrpc/2/common")
+          server.timeout = 10_000
+
+          server
+        end
       end
 
       def models_endpoint
-        @models_endpoint ||= XMLRPC::Client.new2("#{@api_url}/xmlrpc/2/object").proxy
+        @models_endpoint ||= begin
+          server = XMLRPC::Client.new2("#{@api_url}/xmlrpc/2/object")
+          server.timeout = 10_000
+
+          server
+        end.proxy
       end
 
       def model_cmd(model, cmd, parameters, options)
