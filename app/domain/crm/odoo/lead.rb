@@ -5,7 +5,7 @@ module Crm
     class Lead < Base
       self.model = 'crm.lead'
       self.local_models = %w[Order AdditionalCrmOrder]
-      self.attributes = %i[id name partner_id active]
+      self.attributes = %i[id name partner_id partner_name active]
 
       class_setup
     end
