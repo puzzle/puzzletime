@@ -4,15 +4,14 @@ module Crm
   class Odoo
     class Base
       class_attribute :attributes
+      class_attribute :local_models
       class_attribute :model
       class_attribute :options
       class_attribute :parameters
 
       self.attributes = [].freeze
       self.parameters = [].freeze
-      self.options = { fields: attributes }.freeze
-
-      attr_reader(*attributes)
+      self.options = {}.freeze
 
       def initialize(values = {})
         values = values.with_indifferent_access
@@ -23,6 +22,11 @@ module Crm
       end
 
       class << self
+        def class_setup
+          attr_reader(*attributes) if attributes.present?
+          self.options = { fields: attributes }.freeze if options.blank?
+        end
+
         def resources(parameters: [], options: {})
           parameters = [*self.parameters, *parameters]
           options = { **self.options, **options }
@@ -32,31 +36,25 @@ module Crm
             parameters: parameters,
             options: options
           )
-             .map { split_ids _1 }
+             .map { split_ids(_1) }
         end
 
         def resource(id, options: {})
           options = { **self.options, **options }
 
-          safe_to_i = proc do |val|
-            val.to_i
-          rescue StandardError
-            -1
-          end
-
           ids =
             Array
             .wrap(id)
-            .map { safe_to_i.call(_1) }
+            .map { safe_to_i(_1) }
             .select(&:positive?)
 
           api
             .read(model, ids, options:)
             .first
-            .then { split_ids _1 }
+            .then { split_ids(_1) }
         end
 
-        def all(...) = resources(...).map { new _1 }
+        def all(...) = resources(...).map { new(_1) }
 
         def find(...)
           res = resource(...)
@@ -65,9 +63,31 @@ module Crm
           new(res)
         end
 
+        def fetch_existing(options: {})
+          options = { **self.options, **options }
+
+          ids = local_models.flat_map do |local_model|
+            local_model
+              .classify
+              .constantize
+              .where.not(crm_key: nil)
+              .pluck(:crm_key)
+              .map { safe_to_i(_1) }
+          end
+
+          api.read(model, ids, options:)
+             .map { new(_1) }
+        end
+
         private
 
         def api = Crm.instance.api
+
+        def safe_to_i(val)
+          val.to_i
+        rescue StandardError
+          -1
+        end
 
         def split_ids(resource)
           return resource unless resource

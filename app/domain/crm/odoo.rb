@@ -22,7 +22,7 @@ module Crm
     # def icon = 'odoo.png'
 
     def find_order(key)
-      lead = Lead.find(key.to_i)
+      lead = ::Crm::Odoo::Lead.find(key.to_i)
       verify_lead_partner_type(lead)
       lead_attributes(lead)
     rescue Crm::Odoo::ResourceNotFound
@@ -30,10 +30,10 @@ module Crm
     end
 
     def verify_lead_partner_type(lead)
-      return if Company.find(lead.partner_id)
+      return if ::Crm::Odoo::Company.find(lead.partner_id)
 
       partner_type =
-        if lead.partner_id && Partner.find(lead.partner_id)
+        if lead.partner_id && ::Crm::Odoo::Partner.find(lead.partner_id)
           :partner
         else
           :none
@@ -43,18 +43,18 @@ module Crm
     end
 
     def find_client_contacts(client)
-      Company
-        .partners_for(client.crm_key)
+      ::Crm::Odoo::Company
+        .partners_for(client.crm_key.to_i)
         .map { |p| contact_attributes(p) }
     end
 
     def find_person(key)
-      partner = Partner.find(key)
+      partner = ::Crm::Odoo::Partner.find(key)
       contact_attributes(partner) if partner
     end
 
     def find_people_by_email(email)
-      Partner.all(parameters: [['email', 'ilike', email]])
+      ::Crm::Odoo::Partner.all(parameters: [['email', 'ilike', email]])
     end
 
     def sync_all
@@ -66,55 +66,12 @@ module Crm
       clear_resources
     end
 
-    def sync_additional_order(additional)
-      lead = Lead.find(additional.crm_key)
-      return if additional.name == lead.name
-
-      additional.update!(name: lead.name)
-    rescue Crm::Odoo::ResourceNotFound
-      additional.destroy!
-    end
-
-    def client_url(client) = crm_entity_url('contacts', client)
-    def contact_url(contact) = crm_entity_url('contacts', contact)
-    def order_url(order) = crm_entity_url('crm', order)
-    def restrict_local? = true
-
-    private
-
-    def prefetch_resources(type = :all)
-      @prefetched ||= {}
-
-      @prefetched[:clients] ||= Client.all if type.in? %i[client all]
-      @prefetched[:partners] ||= Partner.all if type.in? %i[partner all]
-      @prefetched[:leads] ||= Lead.all if type.in? %i[lead all]
-    end
-
-    def find_prefetched(group, keys)
-      if group == :client_partners
-        @prefetched[:partners]&.find_all { _1.parent_id.in? Array.wrap.keys }
-      else
-        @prefetched[group]&.find_all { _1.id.in? Array.wrap(keys) }
-      end
-    end
-
-    def with_prefetch(group, keys)
-      response = find_prefetched(group, keys)
-      response ||= yield(keys) if block_given?
-
-      response
-    end
-
-    def clear_resources
-      @prefetched = {}
-    end
-
     def sync_clients(ids = nil)
       context = Client.includes(:work_item)
       context = context.where(id: ids) if ids.present?
 
       sync_crm_entities(context) do |client|
-        company = with_prefetch(:clients, client.crm_key) { Company.find(_1) }
+        company = with_prefetch(:companies, client.crm_key.to_i) { ::Crm::Odoo::Company.find(_1) }
         item = client.work_item
         return if item.name == company.name
 
@@ -127,7 +84,7 @@ module Crm
       context = context.where(id: ids) if ids.present?
 
       sync_crm_entities(context) do |order|
-        lead = with_prefetch(:leads, client.crm_key) { Lead.find(_1) }
+        lead = with_prefetch(:leads, order.crm_key.to_i) { ::Crm::Odoo::Lead.find(_1) }
         item = order.work_item
 
         order.additional_crm_orders.each do |additional|
@@ -140,13 +97,22 @@ module Crm
       end
     end
 
+    def sync_additional_order(additional)
+      lead = ::Crm::Odoo::Lead.find(additional.crm_key)
+      return if additional.name == lead.name
+
+      additional.update!(name: lead.name)
+    rescue Crm::Odoo::ResourceNotFound
+      additional.destroy!
+    end
+
     # Syncs existing contacts
     def sync_contacts(ids = nil)
       context = Contact
       context = context.where(id: ids) if ids.present?
 
       sync_crm_entities(context) do |contact|
-        partner = with_prefetch(:partners, contact.crm_key) { Partner.find(_1) }
+        partner = with_prefetch(:partners, contact.crm_key.to_i) { ::Crm::Odoo::Partner.find(_1) }
         attributes = contact_attributes(partner)
 
         contact.update!(attributes)
@@ -159,13 +125,47 @@ module Crm
       context = context.where(id: ids) if ids.present?
 
       sync_crm_entities(context) do |client|
-        partners = with_prefetch(:client_partners, client.crm_key) { Company.partners_for }
+        partners = with_prefetch(:company_partners, client.crm_key.to_i) { ::Crm::Odoo::Company.partners_for }
         existing = existing_contact_crm_keys(client, partners.map(&:id))
 
         partners
           .reject { |p| existing.include?(p.id) }
           .each { |p| client.contacts.create(contact_attributes(p)) }
       end
+    end
+
+    def client_url(client) = crm_entity_url('contacts', client)
+    def contact_url(contact) = crm_entity_url('contacts', contact)
+    def order_url(order) = crm_entity_url('crm', order)
+    def restrict_local? = true
+
+    private
+
+    def prefetch_resources(type = :all)
+      @prefetched ||= {}
+
+      @prefetched[:companies] = ::Crm::Odoo::Company.fetch_existing if type.in? %i[company all]
+      @prefetched[:partners] = ::Crm::Odoo::Partner.fetch_existing if type.in? %i[partner all]
+      @prefetched[:leads] = ::Crm::Odoo::Lead.fetch_existing if type.in? %i[lead all]
+    end
+
+    def find_prefetched(group, keys)
+      if group == :company_partners
+        @prefetched[:partners]&.find_all { _1.parent_id.in? Array.wrap(keys) }
+      else
+        @prefetched[group]&.find { _1.id.in? Array.wrap(keys) }
+      end
+    end
+
+    def with_prefetch(group, keys)
+      response = find_prefetched(group, keys)
+      response ||= yield(keys) if block_given?
+
+      response
+    end
+
+    def clear_resources
+      @prefetched = {}
     end
 
     def existing_contact_crm_keys(client, keys)
