@@ -17,7 +17,8 @@ module Crm
     def crm_key_name = 'Odoo ID' # ✔
     def crm_key_name_plural = 'Odoo IDs' # ✔
     def name = 'Odoo' # ✔
-    def icon = 'odoo.png' # ✔
+    def icon = 'odoo.webp' # ✔
+    # def icon = 'odoo.png' # ✔
 
     def find_order(key) # ✔
       lead = Lead.find(key.to_i)
@@ -80,16 +81,25 @@ module Crm
 
     private
 
-    def prefetch_resources
-      @prefetched = {
-        clients: Client.all,
-        partners: Partner.all,
-        leads: Lead.all
-      }
+    def prefetch_resources(type = :all)
+      @prefetched ||= {}
+
+      @prefetched[:clients] ||= Client.all if type.in? [:client, :all]
+      @prefetched[:partners] ||= Partner.all if type.in? [:partner, :all]
+      @prefetched[:leads] ||= Lead.all if type.in? [:lead, :all]
     end
 
     def find_prefetched(group, keys)
-      @prefetched[group]&.find_all { _1.id.in? Array.wrap(keys) }
+      if group == :client_partners
+        @prefetched[:partners]&.find_all { _1.parent_id.in? Array.wrap.keys }
+      else
+        @prefetched[group]&.find_all { _1.id.in? Array.wrap(keys) }
+      end
+    end
+
+    def with_prefetch(group, keys, &block)
+      response = find_prefetched(group, keys)
+      response ||= yield(keys) if block_given?
     end
 
     def clear_resources
@@ -101,8 +111,7 @@ module Crm
       context = context.where(id: ids) if ids.present?
 
       sync_crm_entities(context) do |client|
-        company = find_prefetched(:clients, client.crm_key)
-        company ||= Company.find(client.crm_key)
+        company = with_prefetch(:clients, client.crm_key) { Company.find(_1) }
         item = client.work_item
         return if item.name == company.name
 
@@ -115,8 +124,7 @@ module Crm
       context = context.where(id: ids) if ids.present?
 
       sync_crm_entities(context) do |order|
-        lead = find_prefetched(:leads, order.crm_key)
-        lead ||= Lead.find(order.crm_key)
+        lead = with_prefetch(:leads, client.crm_key) { Lead.find(_1) }
         item = order.work_item
 
         order.additional_crm_orders.each do |additional|
@@ -135,8 +143,7 @@ module Crm
       context = context.where(id: ids) if ids.present?
 
       sync_crm_entities(context) do |contact|
-        partner = find_prefetched(:partners, contact.crm_key)
-        partner ||= Partner.find(contact.crm_key)
+        partner = with_prefetch(:partners, contact.crm_key) { Partner.find(_1) }
         attributes = contact_attributes(partner)
 
         contact.update!(attributes)
@@ -149,7 +156,7 @@ module Crm
       context = context.where(id: ids) if ids.present?
 
       sync_crm_entities(context) do |client|
-        partners = Company.partners_for(client.crm_key)
+        partners = with_prefetch(:client_partners, client.crm_key) { Company.partners_for() }
         existing = existing_contact_crm_keys(client, partners.map(&:id))
 
         partners
@@ -203,8 +210,7 @@ module Crm
     end
 
     def crm_entity_url(model, entity) # ✔
-      return unless key = entity.respond_to?(:crm_key)
-      return if key.blank?
+      return unless key = entity.respond_to?(:crm_key) && entity.crm_key.presence
 
       "#{api.base_url}/#{model}/#{key}"
     end
