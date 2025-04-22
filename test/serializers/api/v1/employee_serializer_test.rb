@@ -12,8 +12,6 @@ module Api
     class EmployeeSerializerTest < ActiveSupport::TestCase
       test '#serializable_hash' do
         employee = employees(:long_time_john)
-        employee.city = 'Eldoria'
-        employee.birthday = Date.new(1111, 2, 3)
 
         serialized = Api::V1::EmployeeSerializer.new(employee).serializable_hash
 
@@ -27,11 +25,11 @@ module Api
                                            nationalities: %w[CH UK],
                                            graduation: 'Klubschule',
                                            city: 'Eldoria',
-                                           birthday: employee.birthday,
-                                           full_name: 'Neverends John',
+                                           birthday: Date.new(1995, 1, 2),
                                            is_employed: true,
                                            department_shortname: 'D1',
-                                           employment_roles: [{ name: 'Software Developer', percent: 90.0 }] } } }
+                                           department_name: 'devone',
+                                           employment_roles: [{ name: 'Software Developer', percent: 90.0, role_level: 'Junior' }] } } }
 
         assert_equal expected, serialized
       end
