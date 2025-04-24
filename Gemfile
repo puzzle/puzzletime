@@ -58,7 +58,7 @@ gem 'request_store'
 gem 'rexml'
 gem 'rqrcode'
 gem 'rswag-ui'
-gem 'rubocop'
+gem 'rubocop', require: false
 gem 'rubocop-checkstyle_formatter', require: false
 gem 'rubocop-minitest'
 gem 'rubocop-performance'
