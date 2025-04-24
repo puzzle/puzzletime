@@ -9,6 +9,10 @@ plugins:
 AllCops:
   NewCops: enable
 
+Metrics:
+  Exclude:
+    - 'test/**/*'
+
 Naming/InclusiveLanguage:
   Exclude:
     - config/environments/development.rb  # Bullet uses whitelist :(
