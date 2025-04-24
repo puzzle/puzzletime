@@ -13,22 +13,22 @@ class OrderControllingHelperTest < ActionView::TestCase
   def setup
     @efforts_per_week_cumulated = {}
     @efforts_per_week_cumulated[Time.utc(2000, 1, 3)] = {
-      billable: 10.0,
-      unbillable: 5.0,
-      planned_definitive: 0.0,
-      planned_provisional: 0.0
+      billable: { amount: 10.0, hours: 1.0 },
+      unbillable: { amount: 5.0, hours: 0.5 },
+      planned_definitive: { amount: 0.0, hours: 0.0 },
+      planned_provisional: { amount: 0.0, hours: 0.0 }
     }
     @efforts_per_week_cumulated[Time.utc(2000, 1, 3) + 1.week] = {
-      billable: 10.0,
-      unbillable: 5.0,
-      planned_definitive: 0.0,
-      planned_provisional: 0.0
+      billable: { amount: 10.0, hours: 1.0 },
+      unbillable: { amount: 5.0, hours: 0.5 },
+      planned_definitive: { amount: 0.0, hours: 0.0 },
+      planned_provisional: { amount: 0.0, hours: 0.0 }
     }
     @efforts_per_week_cumulated[Time.utc(2000, 1, 3) + 2.weeks] = {
-      billable: 20.0,
-      unbillable: 8.0,
-      planned_definitive: 2.0,
-      planned_provisional: 0.0
+      billable: { amount: 20.0, hours: 2.0 },
+      unbillable: { amount: 8.0, hours: 0.8 },
+      planned_definitive: { amount: 2.0, hours: 0.02 },
+      planned_provisional: { amount: 0.0, hours: 0.0 }
     }
   end
 
@@ -39,10 +39,10 @@ class OrderControllingHelperTest < ActionView::TestCase
 
   test '#controlling_chart_datasets' do
     assert_equal [
-      { label: 'Verrechenbar', data: [10, 10, 20], backgroundColor: '#69B978' },
-      { label: 'Nicht verrechenbar', data: [5, 5, 8], backgroundColor: '#f0e54e' },
-      { label: 'Definitiv geplant', data: [0, 0, 2], backgroundColor: '#4286e7' },
-      { label: 'Provisorisch geplant', data: [0, 0, 0], backgroundColor: '#9bcbd4' }
+      { label: 'Verrechenbar', data: [10.0, 10.0, 20.0], tooltipData: [1.0, 1.0, 2.0], backgroundColor: '#69B978' },
+      { label: 'Nicht verrechenbar', data: [5.0, 5.0, 8.0], tooltipData: [0.5, 0.5, 0.8], backgroundColor: '#f0e54e' },
+      { label: 'Definitiv geplant', data: [0.0, 0.0, 2.0], tooltipData: [0.0, 0.0, 0.02], backgroundColor: '#4286e7' },
+      { label: 'Provisorisch geplant', data: [0.0, 0.0, 0.0], tooltipData: [0.0, 0.0, 0.0], backgroundColor: '#9bcbd4' }
     ].to_json, controlling_chart_datasets
   end
 end
