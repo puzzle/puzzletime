@@ -134,7 +134,7 @@ employees:
 
 clients:
   # The client id of the company using this application
-  company_id: <%= ENV['RAILS_PTIME_COMPANY_ID'] || 4 %>
+  company_id: <%= ENV['RAILS_PTIME_COMPANY_ID'] || 1 %>
 
 committed_worktimes:
   notification:
