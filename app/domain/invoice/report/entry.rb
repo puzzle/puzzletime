@@ -15,7 +15,7 @@ class Invoice
       delegate :responsible, :department, to: :order
 
       def initialize(invoice)
-        super(invoice)
+        super
         @invoice = invoice
       end
 
