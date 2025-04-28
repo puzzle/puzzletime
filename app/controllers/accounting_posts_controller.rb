@@ -35,8 +35,15 @@ class AccountingPostsController < CrudController
   private
 
   def cockpit_csv_filename
-    basename = Order::Services::CsvFilenameGenerator.new(order, params).filename
-    "#{@period.start_date}_#{@period.end_date}_".parameterize + basename
+    name   = 'cockpit'
+    name += "_#{@period.start_date.strftime('%Y-%m-%d')}" if @period&.start_date
+
+    if @period&.end_date &&
+      @period&.end_date != @period&.start_date
+      name += "_#{@period.end_date.strftime('%Y-%m-%d')}"
+    end
+
+    "#{name}.csv"
   end
 
   def find_entry
