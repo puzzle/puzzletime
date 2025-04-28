@@ -346,7 +346,6 @@ class AccountingPostsControllerTest < ActionController::TestCase
 
     # assert_csv_http_headers('puzzletime.csv')
     assert_match expected_csv_header, csv_header
-    puts csv_data_lines
 
     assert_equal 1, csv_data_lines.size
     assert_match 'PITC-PT,100.0,18.0,10.0,92.0,0', csv_data_lines.first
@@ -356,7 +355,6 @@ class AccountingPostsControllerTest < ActionController::TestCase
     get :export_csv, params: { order_id: orders(:puzzletime).id, start_date: '2006-12-04', end_date: '2006-12-10' }
 
     assert_match expected_csv_header, csv_header
-    puts csv_data_lines
 
     assert_equal 1, csv_data_lines.size
     assert_match 'PITC-PT,100.0,6.0,0,92.0,0', csv_data_lines.first
@@ -366,7 +364,6 @@ class AccountingPostsControllerTest < ActionController::TestCase
     get :export_csv, params: { order_id: orders(:puzzletime).id, start_date: '2006-12-04' }
 
     assert_match expected_csv_header, csv_header
-    puts csv_data_lines
 
     assert_equal 1, csv_data_lines.size
     assert_match 'PITC-PT,100.0,16.0,10.0,92.0,0', csv_data_lines.first
