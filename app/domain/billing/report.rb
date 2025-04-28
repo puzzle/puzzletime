@@ -56,7 +56,8 @@ module Billing
       accounting_posts = accounting_posts_to_hash(load_accounting_posts(orders))
       hours = hours_to_hash(load_accounting_post_hours(accounting_posts.values))
       invoices = invoices_to_hash(load_invoices(orders))
-      orders.filter_map { |o| build_entry(o, accounting_posts, hours, invoices) }
+      entries = orders.filter_map { |o| build_entry(o, accounting_posts, hours, invoices) }
+      entries.filter { |e| e.not_billed_amount.positive? }
     end
 
     def load_orders
