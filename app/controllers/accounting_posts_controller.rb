@@ -35,11 +35,10 @@ class AccountingPostsController < CrudController
   private
 
   def cockpit_csv_filename
-    name   = 'accounting_posts'
+    name = 'accounting_posts'
     name += "_#{@period.start_date.strftime('%Y-%m-%d')}" if @period&.start_date
 
-    if @period&.end_date &&
-      @period&.end_date != @period&.start_date
+    if @period&.end_date && @period&.end_date != @period&.start_date
       name += "_#{@period.end_date.strftime('%Y-%m-%d')}"
     end
 
