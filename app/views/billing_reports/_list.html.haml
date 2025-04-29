@@ -24,29 +24,14 @@
               = sort_link(:billed_amount, 'Verrechnet')
             %th.right.nowrap{title: 'Kostensumme aller verrechenbaren Leistungen, die im gewählten Zeitraum erbracht wurden und noch keiner Rechnung zugeteilt sind'}
               = sort_link(:not_billed_amount, 'Verrechnung offen')
+            %th.center
 
         %tbody
           - @report.page do |order|
-            %tr
+            - if order.instance_of? Billing::Report::Total
               %td
-                - if order.order
-                  = order.parent_names
-                  %br/
-                  %span.subtitle
-                    = link_to_if(can?(:show, order.order),
-                                 "#{order.work_item.path_shortnames}: #{order}",
-                                 can?(:update, order.order) ? edit_order_path(order) : order_path(order))
-                - else
-                  %span.subtitle= order
+                = order
               %td
-                - if order.status
-                  %span{class: "label label-#{order.status.style}"}
-                    = order.status.name
-                  %br/
-                - if order.closed_at
-                  %span.data-item
-                    %span.unit
-                      = I18n.l(order.closed_at, format: '%d.%m.%Y')
               %td
                 .data-item
                   %span.figure= f(order.supplied_amount.to_f)
@@ -63,6 +48,46 @@
                 .data-item
                   %span.figure= f(order.not_billed_amount.to_f)
                   %span.unit= currency
+              %td.center
+            - else
+              %tr
+                %td
+                  - if order.order
+                    = order.parent_names
+                    %br/
+                    %span.subtitle
+                      = link_to_if(can?(:show, order.order),
+                                  "#{order.work_item.path_shortnames}: #{order}",
+                                  can?(:update, order.order) ? edit_order_path(order) : order_path(order))
+                  - else
+                    %span.subtitle= order
+                %td
+                  - if order.status
+                    %span{class: "label label-#{order.status.style}"}
+                      = order.status.name
+                    %br/
+                  - if order.closed_at
+                    %span.data-item
+                      %span.unit
+                        = I18n.l(order.closed_at, format: '%d.%m.%Y')
+                %td
+                  .data-item
+                    %span.figure= f(order.supplied_amount.to_f)
+                    %span.unit= currency
+                %td
+                  .data-item
+                    %span.figure= f(order.billable_amount.to_f)
+                    %span.unit= currency
+                %td.right
+                  .data-item
+                    %span.figure= f(order.billed_amount.to_f)
+                    %span.unit= currency
+                %td.right
+                  .data-item
+                    %span.figure= f(order.not_billed_amount.to_f)
+                    %span.unit= currency
+                %td.center
+                  = link_to(picon('time'), order_order_services_path(order_id: order.order, invoice_id: '[leer]', billable: true, start_date: @period.start_date, end_date: @period.end_date), title: 'noch nicht verrechnete Leistungen anzeigen')
 
     %p= paginate @report
 

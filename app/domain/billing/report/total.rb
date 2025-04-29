@@ -20,44 +20,12 @@ module Billing
         "Total (#{entries.count})"
       end
 
-      def order
-        nil
-      end
-
-      def status
-        nil
-      end
-
-      def closed_at
-        nil
-      end
-
-      def targets
-        []
-      end
-
-      def offered_amount
-        @offered_amount ||= entries.sum(&:offered_amount)
-      end
-
-      def offered_hours
-        @offered_hours ||= entries.sum(&:offered_hours)
-      end
-
       def supplied_amount
         entries.sum(&:supplied_amount)
       end
 
-      def supplied_hours
-        @supplied_hours ||= entries.sum(&:supplied_hours)
-      end
-
       def billable_amount
         entries.sum(&:billable_amount)
-      end
-
-      def billable_hours
-        entries.sum(&:billable_hours)
       end
 
       def billed_amount
