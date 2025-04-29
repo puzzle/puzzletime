@@ -13,10 +13,10 @@
   = f.labeled_input_field :period_from, caption: 'Leistungsperiode von'
   = f.labeled_input_field :period_to
   = f.labeled :period_shortcut_selection, span: 1 do
-    = select_tag  :period_shortcut, 
-                  options_from_collection_for_select(predefined_past_period_options, :id, :to_s, @period&.shortcut || ''), 
+    = select_tag  :period_shortcut,
+                  options_from_collection_for_select(predefined_past_period_options, :id, :to_s, @period&.shortcut || ''),
                   {prompt: 'benutzerdefiniert', data: {}, :class=>"form-control"}
-    
+
   = f.labeled :manual_invoice do
     .checkbox
       %label
