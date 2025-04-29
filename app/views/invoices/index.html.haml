@@ -18,5 +18,5 @@
 
 %br/
 
-- unless @order.status.closed? || !can?(:create_invoices, @order)
+- unless @order.status.closed? || cannot?(:create_invoices, @order)
   %p= render 'actions_index'
