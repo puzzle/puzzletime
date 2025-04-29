@@ -38,9 +38,7 @@ class AccountingPostsController < CrudController
     name = 'accounting_posts'
     name += "_#{@period.start_date.strftime('%Y-%m-%d')}" if @period&.start_date
 
-    if @period&.end_date && @period&.end_date != @period&.start_date
-      name += "_#{@period.end_date.strftime('%Y-%m-%d')}"
-    end
+    name += "_#{@period.end_date.strftime('%Y-%m-%d')}" if @period&.end_date && @period&.end_date != @period&.start_date
 
     "#{name}.csv"
   end
