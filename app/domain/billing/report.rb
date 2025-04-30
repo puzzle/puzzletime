@@ -63,7 +63,6 @@ module Billing
     def load_orders
       entries = Order.list.includes(:status, :targets, :order_uncertainties)
       entries = filter_by_parent(entries)
-      entries = filter_by_target(entries)
       filter_entries_by(entries, :kind_id, :responsible_id, :status_id, :department_id)
     end
 
@@ -125,17 +124,7 @@ module Billing
       posts = accounting_posts[order.id]
       post_hours = hours.slice(*posts.keys)
 
-      return unless show_without_hours? || booked_hours?(post_hours)
-
       Billing::Report::Entry.new(order, @period, posts, post_hours, invoices[order.id])
-    end
-
-    def show_without_hours?
-      params[:without_hours] == 'true'
-    end
-
-    def booked_hours?(post_hours)
-      post_hours.values.any? { |h| h.values.sum > 0.0001 }
     end
 
     def filter_by_parent(orders)
@@ -148,22 +137,9 @@ module Billing
       end
     end
 
-    def filter_by_target(orders)
-      if params[:target].present?
-        ratings = params[:target].split('_')
-        orders.joins('LEFT JOIN order_targets filter_targets ON filter_targets.order_id = orders.id')
-              .where(filter_targets: { rating: ratings })
-      else
-        orders
-      end
-    end
-
     def sort_entries(entries)
       dir = params[:sort_dir].to_s.casecmp('desc').zero? ? 1 : -1
-      match = sort_by_target?
-      if match
-        sort_by_target(entries, match[1], dir)
-      elsif sort_by_string?
+      if sort_by_string?
         sort_by_string(entries, dir)
       elsif sort_by_number?
         sort_by_number(entries, dir)
