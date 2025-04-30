@@ -58,13 +58,17 @@ module Billing
       end
 
       def billed_amount
-        entry = @worktimes[0][@order.id]
-        entry.present? ? entry['amount'] : 0
+        return 0 unless @worktimes.present? && @worktimes[true].present?
+
+        entry = @worktimes[true][@order.id]
+        entry.present? ? entry['amount'] || 0 : 0
       end
 
       def not_billed_amount
-        entry = @worktimes[1][@order.id]
-        entry.present? ? entry['amount'] : 0
+        return 0 unless @worktimes.present? && @worktimes[false].present?
+
+        entry = @worktimes[false][@order.id]
+        entry.present? ? entry['amount'] || 0 : 0
       end
 
       def billed_hours

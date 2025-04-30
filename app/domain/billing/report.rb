@@ -70,8 +70,8 @@ module Billing
               .where(billable: true)
               .select('orders.id AS order_id, (worktimes.invoice_id IS NOT NULL) AS has_invoice,  SUM(worktimes.hours * accounting_posts.offered_rate) AS amount')
               .group('order_id, has_invoice')
-              .partition { |time| time['has_invoice'].present? }
-              .map { |partition| partition.index_by(&:order_id) }
+              .group_by { |time| time['has_invoice'].present? }
+              .transform_values { |partition| partition.index_by(&:order_id) }
     end
 
     def load_orders
