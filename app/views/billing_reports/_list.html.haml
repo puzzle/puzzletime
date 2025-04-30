@@ -3,9 +3,9 @@
 -#  or later. See the COPYING file at the top-level directory or at
 -#  https://github.com/puzzle/puzzletime.
 
-
 - if @report.filters_defined?
   - if @report.present?
+    .table Hinweis: Es werden nur Aufträge mit noch nicht verrechneten Leistungen angezeigt.
     .unindented
       %table.orders-report.table.table-hover
         %thead
@@ -21,7 +21,7 @@
             %th.right.nowrap{title: 'Produkt aus allen verrechenbaren Stunden und offeriertem Stundensatz'}
               = sort_link(:billable_amount, 'Verrechenbar')
             %th.right.nowrap{title: 'Kostensumme der verrechenbaren Leistungen, die im gewählten Zeitraum erbracht wurden und auf einer Rechnung sind'}
-              = sort_link(:billed_amount, 'Verrechnet')
+              = sort_link(:billed_amount, 'Verrechnete Leistungen')
             %th.right.nowrap{title: 'Kostensumme aller verrechenbaren Leistungen, die im gewählten Zeitraum erbracht wurden und noch keiner Rechnung zugeteilt sind'}
               = sort_link(:not_billed_amount, 'Verrechnung offen')
             %th.center
