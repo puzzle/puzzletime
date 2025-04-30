@@ -60,25 +60,20 @@ module Billing
       def amounts
         work_items = AccountingPost.where(id: accounting_posts.keys)
                                    .pluck(:work_item_id)
-        times = Worktime.includes(work_item: :accounting_post)
-                        .in_period(@period)
-                        .where(work_item_id: work_items)
-                        .where(billable: true)
-                        .partition { |time| time['invoice_id'].present? }
-                        .map { |e| e.inject(0) { |sum, time| sum + (time.work_item.accounting_post['offered_rate'] * time['hours']) }.to_d }
-
-        {
-          true => times[0],
-          false => times[1]
-        }
+        Worktime.includes(work_item: :accounting_post)
+                .in_period(@period)
+                .where(work_item_id: work_items)
+                .where(billable: true)
+                .partition { |time| time['invoice_id'].present? }
+                .map { |e| e.inject(0) { |sum, time| sum + (time.work_item.accounting_post['offered_rate'] * time['hours']) }.to_d }
       end
 
       def billed_amount
-        amounts[true]
+        amounts[0]
       end
 
       def not_billed_amount
-        amounts[false]
+        amounts[1]
       end
 
       def billed_hours
