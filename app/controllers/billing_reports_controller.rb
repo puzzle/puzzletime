@@ -23,6 +23,7 @@ class BillingReportsController < ApplicationController
         set_filter_values
         unless @report.filters_defined?
           params[:department_id] ||= @user.department_id
+          params[:responsible_id] ||= @user.id
           params.reverse_merge!(period_shortcut: '0m')
           set_period
           @report = Billing::Report.new(@period, params)
