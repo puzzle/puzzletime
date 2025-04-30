@@ -10,10 +10,10 @@ module Billing
     class Entry < SimpleDelegator
       attr_reader :order, :accounting_posts, :hours, :invoices
 
-      def initialize(order, period, accounting_posts, hours, invoices)
+      def initialize(order, worktimes, accounting_posts, hours, invoices)
         super(order)
         @order = order
-        @period = period
+        @worktimes = worktimes
         @accounting_posts = accounting_posts
         @hours = hours
         @invoices = invoices
@@ -57,23 +57,14 @@ module Billing
         @billable_hours ||= sum_accounting_posts { |id| post_hours(id, true) }
       end
 
-      def amounts
-        work_items = AccountingPost.where(id: accounting_posts.keys)
-                                   .pluck(:work_item_id)
-        Worktime.includes(work_item: :accounting_post)
-                .in_period(@period)
-                .where(work_item_id: work_items)
-                .where(billable: true)
-                .partition { |time| time['invoice_id'].present? }
-                .map { |e| e.inject(0) { |sum, time| sum + (time.work_item.accounting_post['offered_rate'] * time['hours']) }.to_d }
-      end
-
       def billed_amount
-        amounts[0]
+        entry = @worktimes[0][@order.id]
+        entry.present? ? entry['amount'] : 0
       end
 
       def not_billed_amount
-        amounts[1]
+        entry = @worktimes[1][@order.id]
+        entry.present? ? entry['amount'] : 0
       end
 
       def billed_hours
