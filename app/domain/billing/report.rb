@@ -53,11 +53,25 @@ module Billing
 
     def load_entries
       orders = load_orders.to_a
+      worktimes = load_worktimes(orders)
       accounting_posts = accounting_posts_to_hash(load_accounting_posts(orders))
       hours = hours_to_hash(load_accounting_post_hours(accounting_posts.values))
       invoices = invoices_to_hash(load_invoices(orders))
-      entries = orders.filter_map { |o| build_entry(o, accounting_posts, hours, invoices) }
+      entries = orders.filter_map { |o| build_entry(o, worktimes, accounting_posts, hours, invoices) }
       entries.filter { |e| e.not_billed_amount.positive? }
+    end
+
+    def load_worktimes(orders)
+      Worktime.in_period(@period)
+              .joins(:work_item)
+              .joins('INNER JOIN accounting_posts ON accounting_posts.work_item_id = work_items.id')
+              .joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)')
+              .where(orders: { id: orders.collect(&:id) })
+              .where(billable: true)
+              .select('orders.id AS order_id, (worktimes.invoice_id IS NOT NULL) AS has_invoice,  SUM(worktimes.hours * accounting_posts.offered_rate) AS amount')
+              .group('order_id, has_invoice')
+              .partition { |time| time['has_invoice'].present? }
+              .map { |partition| partition.index_by(&:order_id) }
     end
 
     def load_orders
@@ -120,11 +134,11 @@ module Billing
       end
     end
 
-    def build_entry(order, accounting_posts, hours, invoices)
+    def build_entry(order, worktimes, accounting_posts, hours, invoices)
       posts = accounting_posts[order.id]
       post_hours = hours.slice(*posts.keys)
 
-      Billing::Report::Entry.new(order, @period, posts, post_hours, invoices[order.id])
+      Billing::Report::Entry.new(order, worktimes, posts, post_hours, invoices[order.id])
     end
 
     def filter_by_parent(orders)
