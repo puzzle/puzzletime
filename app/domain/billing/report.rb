@@ -58,9 +58,10 @@ module Billing
       hours = hours_to_hash(load_accounting_post_hours(accounting_posts.values))
       invoices = invoices_to_hash(load_invoices(orders))
       entries = orders.filter_map { |o| build_entry(o, worktimes, accounting_posts, hours, invoices) }
-      entries.filter { |e| e.not_billed_amount.positive? }
+      entries.filter { |e| e.not_billed_hours.positive? } # Only show if there are unbilled HOURS
     end
 
+    # prepare worktimes, as some columns take data directly from worktimes
     def load_worktimes(orders)
       Worktime.in_period(@period)
               .joins(:work_item)
@@ -68,7 +69,7 @@ module Billing
               .joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)')
               .where(orders: { id: orders.collect(&:id) })
               .where(billable: true)
-              .select('orders.id AS order_id, (worktimes.invoice_id IS NOT NULL) AS has_invoice,  SUM(worktimes.hours * accounting_posts.offered_rate) AS amount')
+              .select('orders.id AS order_id, SUM(worktimes.hours) AS hours, (worktimes.invoice_id IS NOT NULL) AS has_invoice,  SUM(worktimes.hours * accounting_posts.offered_rate) AS amount')
               .group('order_id, has_invoice')
               .group_by { |time| time['has_invoice'].present? }
               .transform_values { |partition| partition.index_by(&:order_id) }
@@ -152,7 +153,7 @@ module Billing
     end
 
     def sort_entries(entries)
-      dir = params[:sort_dir].to_s.casecmp('desc').zero? ? 1 : -1
+      dir = params[:sort_dir].to_s.casecmp('desc').zero? ? -1 : 1
       if sort_by_string?
         sort_by_string(entries, dir)
       elsif sort_by_number?
