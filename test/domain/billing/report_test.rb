@@ -15,7 +15,6 @@ module Billing
       assert_equal 3, report.entries.size
     end
 
-    # TODO:
     test 'filter by status' do
       report(status_id: order_statuses(:abgeschlossen))
 
@@ -59,8 +58,6 @@ module Billing
 
       assert_equal orders(:allgemein, :puzzletime), report.entries.collect(&:order)
     end
-
-    # TODO:
 
     test 'filter by start date' do
       report(period: Period.new(Date.new(2006, 12, 11), nil))

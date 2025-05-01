@@ -28,7 +28,7 @@ module Billing
       end
 
       def offered_amount
-        @offered ||= sum_accounting_posts { |id| post_value(id, :offered_total) }
+        @offered_amount ||= sum_accounting_posts { |id| post_value(id, :offered_total) }
       end
 
       def offered_rate
@@ -42,7 +42,7 @@ module Billing
       end
 
       def supplied_amount
-        @supplied ||= sum_accounting_posts { |id| post_value(id, :offered_rate) * post_hours(id) }
+        @supplied_amount ||= sum_accounting_posts { |id| post_value(id, :offered_rate) * post_hours(id) }
       end
 
       def supplied_hours
@@ -50,7 +50,7 @@ module Billing
       end
 
       def billable_amount
-        @billable ||= sum_accounting_posts { |id| post_value(id, :offered_rate) * post_hours(id, true) }
+        @billable_amount ||= sum_accounting_posts { |id| post_value(id, :offered_rate) * post_hours(id, true) }
       end
 
       def billable_hours
