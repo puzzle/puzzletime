@@ -64,6 +64,13 @@ module Billing
         entry.present? ? entry['amount'] || 0 : 0
       end
 
+      def not_billed_hours
+        return 0 unless @worktimes.present? && @worktimes[false].present?
+
+        entry = @worktimes[false][@order.id]
+        entry.present? ? entry['hours'] || 0 : 0
+      end
+
       def not_billed_amount
         return 0 unless @worktimes.present? && @worktimes[false].present?
 
