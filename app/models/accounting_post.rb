@@ -102,6 +102,14 @@ class AccountingPost < ApplicationRecord
     work_item.propagate_closed!(order.status.closed? || closed?)
   end
 
+  def unbilled_billable_times_exist_in_past_month?
+    work_item.worktimes
+             .in_period(Period.parse('-1m'))
+             .where(billable: true)
+             .where(invoice_id: nil)
+             .present?
+  end
+
   private
 
   def derive_offered_fields
