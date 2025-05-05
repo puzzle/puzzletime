@@ -77,12 +77,12 @@ module DryCrud
 
       def text_field(attr, html_options = {})
         add_css_class(html_options, 'form-control')
-        super(attr, html_options)
+        super
       end
 
       def email_field(attr, html_options = {})
         add_css_class(html_options, 'form-control')
-        super(attr, html_options)
+        super
       end
 
       # Render a boolean field.
@@ -304,13 +304,13 @@ module DryCrud
         if field_method
           build_labeled_field(field_method, *)
         else
-          super(name, *)
+          super
         end
       end
 
       # Overriden to fullfill contract with method_missing 'labeled_' methods.
       def respond_to?(name, include_all = false)
-        labeled_field_method?(name).present? || super(name, include_all)
+        labeled_field_method?(name).present? || super
       end
 
       private

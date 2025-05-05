@@ -76,6 +76,7 @@ module Puzzletime
       Crm.init
       Invoicing.init
       CommitReminderJob.schedule
+    rescue ActiveRecord::NoDatabaseError
     rescue ActiveRecord::StatementInvalid => e
       # the db might not exist yet, lets ignore the error in this case
       raise e unless e.message.include?('PG::UndefinedTable') ||

@@ -94,7 +94,7 @@ class Order
 
       def post_hours(id, billable = nil)
         h = hours[id]
-        return BigDecimal('0') unless h
+        return BigDecimal(0) unless h
 
         if billable.nil?
           h.values.sum.to_d

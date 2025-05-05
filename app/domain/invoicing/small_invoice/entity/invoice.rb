@@ -18,30 +18,30 @@ module Invoicing
 
         def to_hash
           {
-            number:            entry.reference,
-            client_id:         entry.billing_address.client.invoicing_key,
+            number: entry.reference,
+            client_id: entry.billing_address.client.invoicing_key,
             client_address_id: entry.billing_address.invoicing_key,
             client_contact_id: entry.billing_address.contact.try(:invoicing_key),
-            currency:          Settings.defaults.currency,
-            title:             entry.title,
-            period:            entry.period.to_s,
-            date:              entry.billing_date,
-            due:               entry.due_date,
-            account_id:        constant(:account_id),
-            esr:               bool_constant(:esr),
-            esr_singlepage:    bool_constant(:esr_singlepage),
-            lsvplus:           bool_constant(:lsvplus),
-            dd:                bool_constant(:debit_direct),
-            conditions:        conditions,
-            introduction:      introduction,
-            language:          constant(:language),
-            paypal:            bool_constant(:paypal),
-            paypal_url:        constant(:paypay_url),
-            vat_included:      constant(:vat_included),
-            totalamount:       entry.total_amount.round(2),
-            positions:         positions.collect do |p|
-                                 Invoicing::SmallInvoice::Entity::Position.new(p).to_hash
-                               end
+            currency: Settings.defaults.currency,
+            title: entry.title,
+            period: entry.period.to_s,
+            date: entry.billing_date,
+            due: entry.due_date,
+            account_id: constant(:account_id),
+            esr: bool_constant(:esr),
+            esr_singlepage: bool_constant(:esr_singlepage),
+            lsvplus: bool_constant(:lsvplus),
+            dd: bool_constant(:debit_direct),
+            conditions: conditions,
+            introduction: introduction,
+            language: constant(:language),
+            paypal: bool_constant(:paypal),
+            paypal_url: constant(:paypay_url),
+            vat_included: constant(:vat_included),
+            totalamount: entry.total_amount.round(2),
+            positions: positions.collect do |p|
+              Invoicing::SmallInvoice::Entity::Position.new(p).to_hash
+            end
           }
         end
 

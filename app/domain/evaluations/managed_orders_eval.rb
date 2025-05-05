@@ -37,7 +37,7 @@ module Evaluations
           .where(orders: { responsible_id: category.id })
           .in_period(period)
       else
-        super(receiver, period, division)
+        super
       end
     end
 

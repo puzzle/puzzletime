@@ -14,7 +14,7 @@ module InvoiceHelper
       address.street,
       "#{address.zip_code} #{address.town}",
       address.country
-    ].select(&:present?).compact.join("\n")
+    ].compact_blank.compact.join("\n")
   end
 
   def format_invoice_calculated_total_amount(entry)

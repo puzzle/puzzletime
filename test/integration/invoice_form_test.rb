@@ -43,7 +43,7 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
   end
 
   test 'sets calculated total on page load' do
-    expected_total = delimited_number(billable_hours * rate)  
+    expected_total = delimited_number(billable_hours * rate)
     text_on_page = find('#invoice_total_amount').text
 
     assert_match expected_total, text_on_page

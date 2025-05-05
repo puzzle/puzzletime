@@ -6,7 +6,9 @@
 
 %table.static
   %tr
-    %th &nbsp;
+    %th
+      %br
+      %br
 
   - @cockpit.rows.each do |row|
     = render "cockpit_#{row.class.name.demodulize.underscore}_head", row: row
@@ -20,22 +22,40 @@
         %span
           Budget
           = picon('info')
+        %br
+        ( Gesamte Vertragslaufzeit )
       %th{title: 'Die effektive Leistung entspricht der erfassten Arbeitszeit und ist unabhängig von der Verrechenbarkeit. '}
         %span
           Geleistete Stunden
           = picon('info')
+        %br
+        (
+        = @period
+        )
       %th{title: 'Durch den Auftragsverantwortlichen im Rahmen der Zeitbereinigung als nicht verrechenbar markierte Leistungen.'}
         %span
           Nicht verrechenbar
           = picon('info')
+        %br
+        (
+        = @period
+        )
       %th{title: 'Budget minus verrechenbare Stunden.'}
         %span
           Offenes Budget
           = picon('info')
+        %br
+        ( ab
+        = @period.end_date.blank? ? I18n.l(Time.zone.today) : I18n.l(@period.end_date + 1.day)
+        )
       %th{title: 'Geplantes Budget ab nächstem Tag gemäss Planungseinträgen.'}
         %span
           Geplantes Budget
           = picon('info')
+        %br
+        ( ab
+        = @period.end_date.blank? ? I18n.l(Time.zone.today) : I18n.l(@period.end_date + 1.day)
+        )
 
 
     - @cockpit.rows.each do |row|

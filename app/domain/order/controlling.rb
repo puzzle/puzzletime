@@ -18,6 +18,10 @@ class Order
       order.accounting_posts.sum(:offered_total)
     end
 
+    def offered_hours
+      order.accounting_posts.sum(:offered_hours)
+    end
+
     def efforts_per_week
       {}.tap do |result|
         grouped_worktimes.each { |e| add_worktime(result, e) }
@@ -40,7 +44,7 @@ class Order
       load_worktimes
         .group('week, worktimes.billable')
         .order('week')
-        .pluck(Arel.sql('DATE_TRUNC(\'week\', work_date) week, worktimes.billable, SUM(hours * offered_rate)'))
+        .pluck(Arel.sql('DATE_TRUNC(\'week\', work_date) week, worktimes.billable, SUM(hours * offered_rate), SUM(hours)'))
     end
 
     def grouped_plannings
@@ -65,34 +69,35 @@ class Order
     end
 
     def add_worktime(result, entry)
-      week, billable, hours = entry
-      hours = 0.0 if hours.nil?
-      add_value(result, week, billable ? :billable : :unbillable, hours)
+      week, billable, total, hours = entry
+      total = 0.0 if total.nil?
+      add_value(result, week, billable ? :billable : :unbillable, total, hours)
     end
 
     def add_planning(result, entry)
       week, offered_rate, definitive, percent = entry
       must_hours = WorkingCondition.value_at(week, :must_hours_per_day).to_f
       effort = percent / 100.0 * must_hours * offered_rate.to_f
-      add_value(result, week, definitive ? :planned_definitive : :planned_provisional, effort)
+      planned_hours = percent / 100.0 * must_hours
+      add_value(result, week, definitive ? :planned_definitive : :planned_provisional, effort, planned_hours)
     end
 
-    def add_value(result, week, key, value)
+    def add_value(result, week, key, value, hours)
       result[week] = empty_entry unless result[week]
-      new_entry = empty_entry.tap { |e| e[key] = value || 0.0 }
+      new_entry = empty_entry.tap { |e| e[key] = { amount: value || 0.0, hours: hours || 0.0 } }
       result[week] = sum_entries(result[week], new_entry)
     end
 
     def sum_entries(a, b)
       result = empty_entry
       entry_keys.each do |key|
-        result[key] = a[key] + b[key]
+        result[key] = { amount: a[key][:amount] + b[key][:amount], hours: a[key][:hours] + b[key][:hours] }
       end
       result
     end
 
     def empty_entry
-      {}.tap { |e| entry_keys.each { |k| e[k] = 0.0 } }
+      {}.tap { |e| entry_keys.each { |k| e[k] = { amount: 0.0, hours: 0.0 } } }
     end
 
     def entry_keys

@@ -9,8 +9,8 @@ Vor jedem Commit soll Rubocop auf die geänderten Dateien losgelassen werden. Di
 Violations sind unmittelbar zu korrigieren.
 
     rubocop [files]
-    
-Alternativ kann auch automatisch beim Commit überprüft werden, ob die rubocop rules 
+
+Alternativ kann auch automatisch beim Commit überprüft werden, ob die rubocop rules
 eingehalten werden. Dazu muss ein git precommit hook installiert werden:
 
     cp git-hooks/pre-commit .git/hooks/

@@ -51,7 +51,7 @@ module Plannings
     private
 
     def load_plannings(p = period)
-      super(p)
+      super
         .joins(:work_item)
         .where('? = ANY (work_items.path_ids)', order.work_item_id)
     end

@@ -4,12 +4,12 @@
 
 # Versioning
 ARG RUBY_VERSION="3.2.1"
-ARG BUNDLER_VERSION="2.4.6"
+ARG BUNDLER_VERSION="2.6.7"
 
 # Packages
 # ARG BUILD_PACKAGES="nodejs build-essential libc6"
 ARG BUILD_PACKAGES
-ARG RUN_PACKAGES="bash libpq5 libvips42 libvips-dev"
+ARG RUN_PACKAGES="bash libpq5 libvips42 libvips-dev neovim postgresql-client"
 
 # Scripts
 ARG PRE_INSTALL_SCRIPT

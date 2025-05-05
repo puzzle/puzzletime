@@ -1,3 +1,4 @@
+---
 test:
   service: Disk
   root: <%= Rails.root.join("tmp/storage") %>
@@ -40,3 +41,4 @@ ocp4_s3:
 #   service: Mirror
 #   primary: local
 #   mirrors: [ amazon, google, microsoft ]
+...

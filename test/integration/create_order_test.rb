@@ -164,6 +164,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       within('.modal-dialog') do
         click_link('Abbrechen')
       end
+      sleep 0.5
       selectize('client_work_item_id', 'Swisstopo')
       click_link('category_work_item_id_create_link')
       within('.modal-dialog') do
@@ -174,7 +175,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
 
       assert find('#category_work_item_id + .selectize-control')
         .has_selector?('.selectize-input .item', text: 'New Category')
-      # sleep 0.2
+
       id = find('#category_work_item_id', visible: false)['value']
 
       category = WorkItem.find(id)

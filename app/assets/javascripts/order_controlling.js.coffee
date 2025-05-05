@@ -7,7 +7,7 @@
 app = window.App ||= {}
 
 
-app.initOrderControllingChart = (labels, datasets, budget, currency, currentLabel) ->
+app.initOrderControllingChart = (labels, datasets, budget, budget_hours, currency, currentLabel) ->
   canvas = document.getElementById('order_controlling_chart')
   ctx = canvas.getContext('2d')
 
@@ -20,7 +20,10 @@ app.initOrderControllingChart = (labels, datasets, budget, currency, currentLabe
   gridColor = 'rgba(0,0,0,0.1)'
   gridLightColor = 'rgba(0,0,0,0.02)'
 
-  formatCurrency = (value) -> Number(value).toLocaleString() + ' ' + currency
+  formatCurrency = (value) ->
+    new Intl.NumberFormat('de-CH', {
+      style: 'decimal'
+    }).format(value) + ' ' + currency
 
   chart = new Chart(ctx, {
     type: 'bar',
@@ -54,13 +57,19 @@ app.initOrderControllingChart = (labels, datasets, budget, currency, currentLabe
           boxWidth: Chart.defaults.font.size
         }
       },
-      tooltips: {
-        callbacks: {
-          label: (item, data) ->
-            data.datasets[item.datasetIndex].label + ': ' + formatCurrency(item.yLabel)
-        }
-      },
       plugins: {
+        tooltip: {
+          callbacks: {
+            label: (tooltipItem) ->
+              hours = tooltipItem.dataset.tooltipData[tooltipItem.dataIndex];
+              datasetLabel = tooltipItem.dataset.label
+              value = formatCurrency(tooltipItem.raw)
+              [
+                "#{datasetLabel}:"
+                "#{value} (#{hours}h)"
+              ]
+            }
+        },
         annotation: {
           annotations: [{
             type: 'line',
@@ -90,7 +99,7 @@ app.initOrderControllingChart = (labels, datasets, budget, currency, currentLabe
             borderWidth: 2,
             label: {
               display: true,
-              content: 'Budget ' + formatCurrency(budget),
+              content: 'Budget ' + formatCurrency(budget) + " (#{budget_hours}h)",
               position: 'start',
               yAdjust: 11,
               backgroundColor: 'transparent',

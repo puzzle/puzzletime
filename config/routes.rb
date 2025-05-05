@@ -84,6 +84,8 @@ Rails.application.routes.draw do
 
     resources :accounting_posts, except: [:show]
 
+    resource :order_cost, only: [:show]
+
     resource :order_controlling, only: [:show], controller: 'order_controlling'
 
     resource :contract, only: %i[show edit update]
@@ -218,6 +220,7 @@ Rails.application.routes.draw do
 
   scope '/reports' do
     get :orders, to: 'order_reports#index', as: :reports_orders
+    get :invoices, to: 'invoice_reports#index', as: :reports_invoices
     get :workload, to: 'workload_report#index', as: :reports_workload
     get :revenue, to: 'revenue_reports#index', as: :reports_revenue
     get :capacity, to: 'capacity_report#index', as: :reports_capacity

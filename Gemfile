@@ -45,6 +45,7 @@ gem 'omniauth'
 gem 'omniauth-keycloak'
 gem 'omniauth-rails_csrf_protection'
 gem 'omniauth-saml'
+gem 'ostruct'
 gem 'prawn'
 gem 'prawn-table'
 gem 'prometheus_exporter'
@@ -55,9 +56,10 @@ gem 'rails_autolink'
 gem 'rails-erd'
 gem 'rails-i18n'
 gem 'request_store'
+gem 'rexml'
 gem 'rqrcode'
 gem 'rswag-ui'
-gem 'rubocop'
+gem 'rubocop', require: false
 gem 'rubocop-checkstyle_formatter', require: false
 gem 'rubocop-minitest'
 gem 'rubocop-performance'
@@ -67,6 +69,7 @@ gem 'seed-fu'
 gem 'swagger-blocks'
 gem 'validates_by_schema'
 gem 'validates_timeliness'
+gem 'xmlrpc'
 
 # Error reporting, they are required in their respective initializers
 gem 'airbrake', require: false

@@ -23,12 +23,16 @@ module OrderServicesHelper
       end
       t.attr(:hours)
       t.attr(:amount, currency, class: 'right')
+      t.attr(:offered_rate, 'Stundenansatz CHF', class: 'right')
       t.attr(:work_item_id) do |e|
         e.work_item.to_s
       end
       t.attr(:ticket)
       t.attr(:description, nil, class: 'truncated', style: 'max-width: 250px;') do |w|
         content_tag(:span, w.description.to_s, title: w.description)
+      end
+      t.attr(:internal_description, nil, class: 'truncated', style: 'max-width: 150px;') do |w|
+        content_tag(:span, w.internal_description.to_s, title: w.internal_description)
       end
       t.attrs(:billable, :meal_compensation, :invoice_id)
       t.foot { options[:footer] } if options[:footer]

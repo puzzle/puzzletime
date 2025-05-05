@@ -1,4 +1,11 @@
+---
 inherits_from: .haml-lint_todo.yml
 
 exclude:
-- 'vendor/**/*'
+  - 'vendor/**/*'
+
+linters:
+  InlineStyles:
+    exclude:
+      - 'app/views/layouts/mailer.html.haml'
+...

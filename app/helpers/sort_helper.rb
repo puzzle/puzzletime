@@ -22,7 +22,7 @@ module SortHelper
   # The sort mark, if any, for the given attribute.
   def current_mark(attr, options = {})
     if current_sort?(attr, options)
-      (sort_dir(attr, options) == 'asc' ? ' &uarr;' : ' &darr;').html_safe
+      (sort_dir(attr, options) == 'asc' ? ' &darr;' : ' &uarr;').html_safe
     else
       ''
     end

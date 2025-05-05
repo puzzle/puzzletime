@@ -10,7 +10,7 @@ module Invoicing
     class Api
       include Singleton
 
-      ENDPOINTS = %w(invoice invoice/pdf client).freeze
+      ENDPOINTS = %w[invoice invoice/pdf client].freeze
       HTTP_TIMEOUT = 300 # seconds
 
       def list(endpoint)
@@ -72,7 +72,7 @@ module Invoicing
       end
 
       def uri(endpoint, action, **params)
-        fail(ArgumentError, "Unknown endpoint #{endpoint}") unless ENDPOINTS.include?(endpoint.to_s)
+        raise(ArgumentError, "Unknown endpoint #{endpoint}") unless ENDPOINTS.include?(endpoint.to_s)
 
         params[:token] = Settings.small_invoice.api_token
         args = params.collect { |k, v| "#{k}/#{v}" }.join('/')
@@ -83,13 +83,11 @@ module Invoicing
         return {} if response.body.blank?
 
         json = JSON.parse(response.body)
-        if json['error']
-          fail Invoicing::Error.new(json['errormessage'], json['errorcode'], data)
-        else
-          json
-        end
+        raise Invoicing::Error.new(json['errormessage'], json['errorcode'], data) if json['error']
+
+        json
       rescue JSON::ParserError
-        fail Invoicing::Error.new(response.body, response.code, data)
+        raise Invoicing::Error.new(response.body, response.code, data)
       end
     end
   end
