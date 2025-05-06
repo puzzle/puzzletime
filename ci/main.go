@@ -200,31 +200,12 @@ func (m *Ci) CiInterface(
 	ctx context.Context,
 	// source directory
 	dir *dagger.Directory,
-	// registry username for publishing the contaner image
-	registryUsername string,
-	// registry password for publishing the container image
-	registryPassword *dagger.Secret,
-	// registry address registry/repository/image:tag
-	registryAddress string,
-	// deptrack address for publishing the SBOM https://deptrack.example.com/api/v1/bom
-	dtAddress string,
-	// deptrack project UUID
-	dtProjectUUID string,
-	// deptrack API key
-	dtApiKey *dagger.Secret,
-	// ignore linter failures
-	// +optional
-	// +default=false
-	pass bool,
 ) *dagger.Directory {
 
 	return dag.PitcFlow().Cii(
 		// source directory
 		dir,
-		dag.PitcFlow().Face{
-			Lint: dag.PitcFlow().Lint(dir, dag.Implementation().AsPitcFlowFace()),
-			Test: dag.PitcFlow().Test(dir, dag.Implementation().AsPitcFlowFace()),
-		},
+		dag.Implementation().AsPitcFlowFace(),
 	)
 }
 
