@@ -35,7 +35,7 @@ func (m *Ci) BuildLintContainer(
 		WithMountedDirectory("/mnt", dir).
 		WithWorkdir("/mnt").
 		WithExec([]string{"gem", "install", "haml-lint"}).
-        WithExec([]string{"sh", "-c", "mkdir -p /mnt/lint"}).
+		WithExec([]string{"sh", "-c", "mkdir -p /mnt/lint"}).
 		WithExec(m.lintCommand(pass))
 }
 
@@ -53,7 +53,7 @@ func (m *Ci) BuildSastContainer(dir *dagger.Directory) *dagger.Container {
 		From("presidentbeef/brakeman:latest").
 		WithMountedDirectory("/app", dir).
 		WithWorkdir("/app").
-        WithExec([]string{"sh", "-c", "mkdir -p /app/sast"}).
+		WithExec([]string{"sh", "-c", "mkdir -p /app/sast"}).
 		WithExec([]string{"sh", "-c", "/usr/src/app/bin/brakeman -o /app/sast/brakeman-output.tabs"})
 }
 
@@ -121,7 +121,6 @@ func (m *Ci) BaseTestContainer(_ context.Context, dir *dagger.Directory) *dagger
 		WithExec([]string{"bundle", "install", "--jobs", "4", "--retry", "3"})
 }
 
-
 // Executes all the steps and returns a directory with the results
 func (m *Ci) CiIntegration(
 	ctx context.Context,
@@ -166,33 +165,33 @@ func (m *Ci) CiIntegration(
 	wg.Wait()
 
 	return dag.PitcFlow().Flex(
-        // source directory
-        dir,
-        dagger.PitcFlowFlexOpts{
-        // lint container
-        LintContainer: lintContainer,
-        // lint report directory name "lint/lint.json"
-        LintReportDir: "/mnt/lint",
-        // sast container
-        SastContainer: sastContainer,
-        // security scan report directory name "/app/sast/brakeman-output.tabs"
-        SastReportDir: "/app/sast",
-        // test container
-        TestContainer: testContainer,
-        // test report folder name "/mnt/test/reports"
-        TestReportDir: "/mnt/test/reports",
-        // registry username for publishing the container image
-        RegistryUsername: registryUsername,
-        // registry password for publishing the container image
-        RegistryPassword: registryPassword,
-        // registry address registry/repository/image:tag
-        RegistryAddress: registryAddress,
-        // deptrack address for publishing the SBOM https://deptrack.example.com/api/v1/bom
-        DtAddress: dtAddress,
-        // deptrack project UUID
-        DtProjectUUID: dtProjectUUID,
-        // deptrack API key
-        DtAPIKey: dtApiKey},
+		// source directory
+		dir,
+		dagger.PitcFlowFlexOpts{
+			// lint container
+			LintContainer: lintContainer,
+			// lint report directory name "lint/lint.json"
+			LintReportDir: "/mnt/lint",
+			// sast container
+			SastContainer: sastContainer,
+			// security scan report directory name "/app/sast/brakeman-output.tabs"
+			SastReportDir: "/app/sast",
+			// test container
+			TestContainer: testContainer,
+			// test report folder name "/mnt/test/reports"
+			TestReportDir: "/mnt/test/reports",
+			// registry username for publishing the container image
+			RegistryUsername: registryUsername,
+			// registry password for publishing the container image
+			RegistryPassword: registryPassword,
+			// registry address registry/repository/image:tag
+			RegistryAddress: registryAddress,
+			// deptrack address for publishing the SBOM https://deptrack.example.com/api/v1/bom
+			DtAddress: dtAddress,
+			// deptrack project UUID
+			DtProjectUUID: dtProjectUUID,
+			// deptrack API key
+			DtAPIKey: dtApiKey},
 	)
 }
 
@@ -220,16 +219,18 @@ func (m *Ci) CiInterface(
 ) *dagger.Directory {
 
 	return dag.PitcFlow().Cii(
-        // source directory
-        dir,
-        dag.PitcFlow().Lint(dir, dag.Implementation().AsPitcFlowLinting()),
-        dag.PitcFlow().Test(dir, dag.Implementation().AsPitcFlowTesting()),
+		// source directory
+		dir,
+		dag.PitcFlow().Face{
+			Lint: dag.PitcFlow().Lint(dir, dag.Implementation().AsPitcFlowFace()),
+			Test: dag.PitcFlow().Test(dir, dag.Implementation().AsPitcFlowFace()),
+		},
 	)
 }
 
 func (m *Ci) Verify(
-    ctx context.Context,
-    file *dagger.File,
+	ctx context.Context,
+	file *dagger.File,
 ) (string, error) {
-    return dag.PitcFlow().Verify(ctx, file)
+	return dag.PitcFlow().Verify(ctx, file)
 }
