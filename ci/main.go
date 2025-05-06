@@ -17,12 +17,11 @@ package main
 import (
 	"context"
 	"dagger/ci/internal/dagger"
-	"fmt"
-	"sync"
 )
 
 type Ci struct{}
 
+/*
 // Returns a lint container
 func (m *Ci) BuildLintContainer(
 	dir *dagger.Directory,
@@ -195,6 +194,7 @@ func (m *Ci) CiIntegration(
         DtAPIKey: dtApiKey},
 	)
 }
+*/
 
 // Executes all the steps and returns a directory with the results
 func (m *Ci) CiInterface(
@@ -219,11 +219,26 @@ func (m *Ci) CiInterface(
 	pass bool,
 ) *dagger.Directory {
 
-	return dag.PitcFlow().Cii(
+	return dag.PitcFlow().Flexi(
         // source directory
         dir,
-        dag.PitcFlow().Lint(dir, dag.Implementation().AsPitcFlowLinting()),
-        dag.PitcFlow().Test(dir, dag.Implementation().AsPitcFlowTesting()),
+        dagger.PitcFlowFlexiOpts{
+        LintReports: dag.PitcFlow().Lint(dir, true, dag.Implementation().AsPitcFlowLinting()),
+        SecurityReports: dag.PitcFlow().SecurityScan(dir, dag.Implementation().AsPitcFlowSecurityScanning()),
+        TestReports: dag.PitcFlow().Test(dir, dag.Implementation().AsPitcFlowTesting()),
+        IntegrationTestReports: dag.PitcFlow().IntegrationTest(dir, dag.Implementation().AsPitcFlowIntegrationTesting()),
+        // registry username for publishing the container image
+        RegistryUsername: registryUsername,
+        // registry password for publishing the container image
+        RegistryPassword: registryPassword,
+        // registry address registry/repository/image:tag
+        RegistryAddress: registryAddress,
+        // deptrack address for publishing the SBOM https://deptrack.example.com/api/v1/bom
+        DtAddress: dtAddress,
+        // deptrack project UUID
+        DtProjectUUID: dtProjectUUID,
+        // deptrack API key
+        DtAPIKey: dtApiKey},
 	)
 }
 
