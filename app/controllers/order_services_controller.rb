@@ -44,7 +44,21 @@ class OrderServicesController < ApplicationController
 
   def report
     period = prepare_report_header
-    render_report(list_worktimes(period))
+    prepare_worktimes(list_worktimes(period))
+    time_rapport_data = Order::Services::TimeRapportData.new(order: @order,
+                                                             worktimes: @worktimes,
+                                                             tickets: @tickets,
+                                                             ticket_view: @ticket_view,
+                                                             employees: @employees,
+                                                             employee: @employee,
+                                                             work_items: @work_items,
+                                                             period: @period)
+    pdf_generator = Order::Services::TimeRapportPdfGenerator.new(time_rapport_data, params)
+
+    send_data pdf_generator.generate_pdf.render,
+              filename: "zeitrapport-#{@work_items[0].top_item.client.shortname}-#{@order.shortname}-#{@period.to_s.parameterize}.pdf",
+              type: 'application/pdf',
+              disposition: 'inline'
   end
 
   private

@@ -44,6 +44,9 @@ module Puzzletime
     # We leave the Time zone on UTC as recommended by
     # https://robots.thoughtbot.com/its-about-time-zones
     # config.time_zone = 'Bern'
+    if (time_zone = ENV.fetch('RAILS_TIME_ZONE', nil))
+      config.time_zone = time_zone
+    end
 
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]

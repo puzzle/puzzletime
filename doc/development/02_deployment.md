@@ -47,6 +47,7 @@ gesetzt werden. Werte ohne Default müssen in der Regel definiert werden.
 | RAILS_LDAP_ENCRYPTION |  | simple_tls |
 | RAILS_LDAP_EXTERNAL_DN |  | - |
 | RAILS_LDAP_GROUP_DN |  | - |
+| RAILS_PTIME_COMPANY_LOGO | Der Filename / Pfad zum Logo der Organisation, welche Puzzletime verwendet. Der Filename / Pfad ist relativ von `app/assets/images` anzugeben. | 'company_logo.png'
 | PROMETHEUS_EXPORTER_HOST | Hostname wo der prometheus_exporter läuft. Schickt nichts wenn diese Variable nicht gesetzt ist. | - |
 | PROMETHEUS_EXPORTER_PORT | Port wo der prometheus_exporter läuft. | 9394 |
 | SENTRY_DSN | DSN der Sentry Instanz. Falls diese Variable nicht gesetzt ist, werden keine Fehlermeldungen verschickt. | - |
