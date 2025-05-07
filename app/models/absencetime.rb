@@ -10,21 +10,22 @@
 #
 # Table name: worktimes
 #
-#  id                :integer          not null, primary key
-#  billable          :boolean          default(TRUE)
-#  description       :text
-#  from_start_time   :time
-#  hours             :float
-#  meal_compensation :boolean          default(FALSE), not null
-#  report_type       :string(255)      not null
-#  ticket            :string(255)
-#  to_end_time       :time
-#  type              :string(255)
-#  work_date         :date             not null
-#  absence_id        :integer
-#  employee_id       :integer
-#  invoice_id        :integer
-#  work_item_id      :integer
+#  id                   :integer          not null, primary key
+#  billable             :boolean          default(TRUE)
+#  description          :text
+#  from_start_time      :time
+#  hours                :float
+#  internal_description :text
+#  meal_compensation    :boolean          default(FALSE), not null
+#  report_type          :string(255)      not null
+#  ticket               :string(255)
+#  to_end_time          :time
+#  type                 :string(255)
+#  work_date            :date             not null
+#  absence_id           :integer
+#  employee_id          :integer
+#  invoice_id           :integer
+#  work_item_id         :integer
 #
 # Indexes
 #

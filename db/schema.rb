@@ -302,6 +302,14 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_19_080518) do
     t.index ["work_item_id"], name: "index_invoices_work_items_on_work_item_id"
   end
 
+  create_table "market_opportunities", force: :cascade do |t|
+    t.string "name", null: false
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_market_opportunities_on_name", unique: true
+  end
+
   create_table "order_comments", id: :serial, force: :cascade do |t|
     t.integer "order_id", null: false
     t.text "text", null: false
