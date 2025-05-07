@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # {{{
 # == Schema Information
 #
@@ -14,7 +16,7 @@
 #  index_market_opportunities_on_name  (name) UNIQUE
 #
 # }}}
-require "test_helper"
+require 'test_helper'
 
 class MarketOpportunityTest < ActiveSupport::TestCase
   # test "the truth" do
