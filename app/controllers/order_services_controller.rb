@@ -75,7 +75,8 @@ class OrderServicesController < ApplicationController
   end
 
   def prepare_report_header
-    params[:work_item_ids] ||= [params[:work_item_id].presence || order.work_item_id]
+    params[:work_item_ids] ||= params[:work_item_id].present? ? [params[:work_item_id]] : order.accounting_posts.collect(&:work_item_id)
+    Rails.logger.info("#AAA: #{params[:work_item_ids].inspect}")
     @work_items = WorkItem.find(params[:work_item_ids])
     @employee = Employee.find(params[:employee_id]) if params[:employee_id].present?
     set_period_with_invoice
