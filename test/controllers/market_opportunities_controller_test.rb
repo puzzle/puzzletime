@@ -25,6 +25,6 @@ class MarketOpportunitiesControllerTest < ActionDispatch::IntegrationTest
 
   # Attribute hash used in several tests.
   def test_entry_attrs
-    { name: 'Markt Opportunität', active: true }
+    { name: 'Marktopportunität', active: true }
   end
 end

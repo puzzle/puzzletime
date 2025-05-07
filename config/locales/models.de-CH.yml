@@ -59,8 +59,8 @@ de-CH:
         one: Rechnung
         other: Rechnungen
       market_opportunity:
-        one: Markt Opportunität
-        other: Markt Opportunitäten
+        one: Marktopportunität
+        other: Marktopportunitäten
       order:
         one: Auftrag
         other: Aufträge
@@ -134,7 +134,7 @@ de-CH:
         billable: Verrechenbar
         closed: Geschlossen
         description_required: Beschreibung erforderlich
-        market_opportunity_id: Markt Opportunität
+        market_opportunity_id: Marktopportunität
         meal_compensation: Verpflegungsentschädigung
         offered_hours: Offerierte Stunden
         offered_rate: Offerierter Stundensatz
