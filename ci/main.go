@@ -206,6 +206,13 @@ func (m *Ci) CiInterface(
 		// source directory
 		dir,
 		dag.Implementation().AsPitcFlowFace(),
+		&dagger.PitcFlowConfig{
+			doLint:            true,
+			doSecurityScan:    true,
+			doTest:            true,
+			doIntegrationTest: false,
+			ignoreLintFailure: true,
+		},
 	)
 }
 
