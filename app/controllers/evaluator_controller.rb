@@ -137,7 +137,6 @@ class EvaluatorController < ApplicationController
     set_evaluation_details
     @employee = Employee.find(@evaluation.employee_id) if @evaluation.employee_id
     @work_items = [WorkItem.find(@evaluation.account_id)]
-    params[:work_item_ids] ||= @work_items
   end
 
   def set_evaluation_details
