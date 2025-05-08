@@ -117,7 +117,6 @@ func (m *Implementation) Postgres(
 	// +default="latest"
 	version string,
 ) *dagger.Service {
-
 	return dag.Container().
 		From(fmt.Sprintf("postgres:%s", version)).
 		WithEnvVariable("POSTGRES_PASSWORD", "postgres").
@@ -131,7 +130,6 @@ func (m *Implementation) Memcached(
 	// +default="latest"
 	version string,
 ) *dagger.Service {
-
 	return dag.Container().
 		From(fmt.Sprintf("memcached:%s", version)).
 		WithExposedPort(11211).
