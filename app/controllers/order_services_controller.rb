@@ -80,6 +80,7 @@ class OrderServicesController < ApplicationController
     work_item_ids ||= order.accounting_posts.collect(&:work_item_id)
     work_item_ids = Array.wrap(work_item_ids)
     @work_items = WorkItem.find(work_item_ids)
+    @order = order
     @employee = Employee.find(params[:employee_id]) if params[:employee_id].present?
     set_period_with_invoice
   end
