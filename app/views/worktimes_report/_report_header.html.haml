@@ -12,9 +12,16 @@
   %tr
     %td Auftrag
     %td
-      - @work_items.map do |w|
-        %b= w.label_ancestry
+      - if @order.present? # in the case of order_services
+        %b= @order
         %br
+        - @work_items.map do |w|
+          = w.name
+          %br
+      - else  # in the case of evaluator
+        - @work_items.map do |w|
+          = w.label_ancestry
+          %br
   - if @employee
     %tr
       %td Member
