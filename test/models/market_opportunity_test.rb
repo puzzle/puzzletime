@@ -19,7 +19,11 @@
 require 'test_helper'
 
 class MarketOpportunityTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+  test 'Being used prevents deletion of a market opportunity' do
+    MarketOpportunity.create!(name: 'Testopportunity', active: true)
+
+    duplicate = MarketOpportunity.create(name: 'Testopportunity', active: false)
+
+    assert_not duplicate.valid?
+  end
 end
