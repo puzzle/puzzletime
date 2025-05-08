@@ -5,17 +5,24 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
+# {{{
 # == Schema Information
 #
 # Table name: order_statuses
 #
 #  id       :integer          not null, primary key
-#  name     :string           not null
-#  style    :string
 #  closed   :boolean          default(FALSE), not null
-#  position :integer          not null
 #  default  :boolean          default(FALSE), not null
+#  name     :string           not null
+#  position :integer          not null
+#  style    :string
 #
+# Indexes
+#
+#  index_order_statuses_on_name      (name) UNIQUE
+#  index_order_statuses_on_position  (position)
+#
+# }}}
 
 Fabricator(:order_status) do
   name { Faker::Hacker.ingverb }

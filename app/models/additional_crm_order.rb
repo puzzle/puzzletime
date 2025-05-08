@@ -5,15 +5,21 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
+# {{{
 # == Schema Information
 #
 # Table name: additional_crm_orders
 #
-#  id       :bigint(8)        not null, primary key
-#  order_id :bigint(8)        not null
+#  id       :bigint           not null, primary key
 #  crm_key  :string           not null
 #  name     :string
+#  order_id :bigint           not null
 #
+# Indexes
+#
+#  index_additional_crm_orders_on_order_id  (order_id)
+#
+# }}}
 
 class AdditionalCrmOrder < ApplicationRecord
   belongs_to :order
