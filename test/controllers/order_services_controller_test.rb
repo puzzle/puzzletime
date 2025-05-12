@@ -189,11 +189,45 @@ class OrderServicesControllerTest < ActionController::TestCase
     end
   end
 
-  test 'GET report contains all hours' do
-    get :report, params: { order_id: order.id }
+  test 'GET report contains hours of the selected accounting post' do
+    Fabricate(:ordertime,
+              work_date: '2024-01-01',
+              employee: employees(:pascal),
+              work_item: work_items(:hitobito_demo_site),
+              ticket: 123,
+              hours: 10,
+              billable: true)
+    Fabricate(:ordertime,
+              work_date: '2024-01-01',
+              employee: employees(:pascal),
+              work_item: work_items(:hitobito_demo_app),
+              ticket: 123,
+              hours: 3,
+              billable: true)
 
-    assert_template 'report'
-    total = assigns(:worktimes).sum(:hours)
+    get :report, params: { order_id: orders(:hitobito_demo).id, work_item_ids: [work_items(:hitobito_demo_app).id] }
+    total = accounting_posts(:hitobito_demo_app).worktimes.sum(&:hours)
+
+    assert_match(/Total Stunden.*#{total}/m, response.body)
+  end
+  test 'GET report contains hours of all accounting posts, even if no specific accounting_post is specified' do
+    Fabricate(:ordertime,
+              work_date: '2024-01-01',
+              employee: employees(:pascal),
+              work_item: work_items(:hitobito_demo_site),
+              ticket: 123,
+              hours: 10,
+              billable: true)
+    Fabricate(:ordertime,
+              work_date: '2024-01-01',
+              employee: employees(:pascal),
+              work_item: work_items(:hitobito_demo_app),
+              ticket: 123,
+              hours: 3,
+              billable: true)
+
+    get :report, params: { order_id: orders(:hitobito_demo).id }
+    total = orders(:hitobito_demo).accounting_posts.flat_map(&:worktimes).sum(&:hours)
 
     assert_match(/Total Stunden.*#{total}/m, response.body)
   end
