@@ -231,7 +231,7 @@ class Order
       sorted = entries.sort_by do |e|
         e.send(params[:sort])
       end
-      sorted.reverse! if dir.positive?
+      sorted.reverse! if dir.negative?
       sorted
     end
 
