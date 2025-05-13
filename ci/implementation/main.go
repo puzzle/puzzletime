@@ -26,14 +26,14 @@ func (m *Implementation) Lint(
 	dir *dagger.Directory,
 	// +optional
 	// +default=false
-    pass bool,
+	pass bool,
 ) *dagger.Directory {
 	return dag.Container().
 		From("ruby:latest").
 		WithMountedDirectory("/mnt", dir).
 		WithWorkdir("/mnt").
 		WithExec([]string{"gem", "install", "haml-lint"}).
-        WithExec([]string{"sh", "-c", "mkdir -p /mnt/lint"}).
+		WithExec([]string{"sh", "-c", "mkdir -p /mnt/lint"}).
 		WithExec(m.lintCommand(pass)).
 		Directory("/mnt/lint")
 }
@@ -47,7 +47,7 @@ func (m *Implementation) lintCommand(pass bool) []string {
 }
 
 func (m *Implementation) Test(
-    dir *dagger.Directory,
+	dir *dagger.Directory,
 ) *dagger.Directory {
 	return m.BaseTestContainer(dir).
 		WithServiceBinding("postgresql", m.Postgres("11")).
@@ -56,11 +56,11 @@ func (m *Implementation) Test(
 		WithExec([]string{"bundle", "exec", "rails", "db:migrate"}).
 		WithExec([]string{"bundle", "exec", "rails", "assets:precompile"}).
 		WithExec([]string{"sh", "-c", "bundle exec rails test test/controllers test/domain test/fabricators test/fixtures test/helpers test/mailers test/models test/presenters test/support test/tarantula"}).
-        Directory("/mnt/test/reports")
+		Directory("/mnt/test/reports")
 }
 
 func (m *Implementation) IntegrationTest(
-    dir *dagger.Directory,
+	dir *dagger.Directory,
 ) *dagger.Directory {
 	return m.BaseTestContainer(dir).
 		WithServiceBinding("postgresql", m.Postgres("11")).
@@ -69,12 +69,12 @@ func (m *Implementation) IntegrationTest(
 		WithExec([]string{"bundle", "exec", "rails", "db:migrate"}).
 		WithExec([]string{"bundle", "exec", "rails", "assets:precompile"}).
 		WithExec([]string{"sh", "-c", "bundle exec rails test test/integration"}).
-        Directory("/mnt/test/reports")
+		Directory("/mnt/test/reports")
 }
 
 // Returns a Container with the base setup for running the rails test suite
 func (m *Implementation) BaseTestContainer(
-    dir *dagger.Directory,
+	dir *dagger.Directory,
 ) *dagger.Container {
 	return dag.Container().
 		From("registry.puzzle.ch/docker.io/ruby:3.2").
@@ -106,7 +106,7 @@ func (m *Implementation) SecurityScan(dir *dagger.Directory) *dagger.Directory {
 		From("presidentbeef/brakeman:latest").
 		WithMountedDirectory("/app", dir).
 		WithWorkdir("/app").
-        WithExec([]string{"sh", "-c", "mkdir -p /app/sast"}).
+		WithExec([]string{"sh", "-c", "mkdir -p /app/sast"}).
 		WithExec([]string{"sh", "-c", "/usr/src/app/bin/brakeman -o /app/sast/brakeman-output.tabs"}).
 		Directory("/app/sast")
 }

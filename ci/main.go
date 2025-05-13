@@ -44,31 +44,31 @@ func (m *Ci) CiIntegration(
 	pass bool,
 ) *dagger.Directory {
 	return dag.PitcFlow().Iflex(
-        // source directory
-        dir,
-        dagger.PitcFlowIflexOpts{
-        LintReports: dag.PitcFlow().Lint(dir, pass, dag.Implementation().AsPitcFlowLinting()),
-        SecurityReports: dag.PitcFlow().SecurityScan(dir, dag.Implementation().AsPitcFlowSecurityScanning()),
-        TestReports: dag.PitcFlow().Test(dir, dag.Implementation().AsPitcFlowTesting()),
-        //IntegrationTestReports: dag.PitcFlow().IntegrationTest(dir, dag.Implementation().AsPitcFlowIntegrationTesting()),
-        // registry username for publishing the container image
-        RegistryUsername: registryUsername,
-        // registry password for publishing the container image
-        RegistryPassword: registryPassword,
-        // registry address registry/repository/image:tag
-        RegistryAddress: registryAddress,
-        // deptrack address for publishing the SBOM https://deptrack.example.com/api/v1/bom
-        DtAddress: dtAddress,
-        // deptrack project UUID
-        DtProjectUUID: dtProjectUUID,
-        // deptrack API key
-        DtAPIKey: dtApiKey},
+		// source directory
+		dir,
+		dagger.PitcFlowIflexOpts{
+			LintReports:     dag.PitcFlow().Lint(dir, pass, dag.Implementation().AsPitcFlowLinting()),
+			SecurityReports: dag.PitcFlow().SecurityScan(dir, dag.Implementation().AsPitcFlowSecurityScanning()),
+			TestReports:     dag.PitcFlow().Test(dir, dag.Implementation().AsPitcFlowTesting()),
+			//IntegrationTestReports: dag.PitcFlow().IntegrationTest(dir, dag.Implementation().AsPitcFlowIntegrationTesting()),
+			// registry username for publishing the container image
+			RegistryUsername: registryUsername,
+			// registry password for publishing the container image
+			RegistryPassword: registryPassword,
+			// registry address registry/repository/image:tag
+			RegistryAddress: registryAddress,
+			// deptrack address for publishing the SBOM https://deptrack.example.com/api/v1/bom
+			DtAddress: dtAddress,
+			// deptrack project UUID
+			DtProjectUUID: dtProjectUUID,
+			// deptrack API key
+			DtAPIKey: dtApiKey},
 	)
 }
 
 func (m *Ci) Verify(
-    ctx context.Context,
-    file *dagger.File,
+	ctx context.Context,
+	file *dagger.File,
 ) (string, error) {
-    return dag.PitcFlow().Verify(ctx, file)
+	return dag.PitcFlow().Verify(ctx, file)
 }
