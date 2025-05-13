@@ -83,7 +83,7 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
   .weeknav-calendar-row,
   .weeknav-add-row {
     padding: 0 $grid-gutter-width / 2;
-    line-height: 30px;
+    line-height: 40px;
     vertical-align: middle;
     border-width: 0 0 1px 0;
     border-style: solid;
@@ -95,8 +95,16 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
     flex-wrap: wrap;
     border-left-width: 1px;
     border-right-width: 1px;
+    padding-left: 0;
+
+    .today-link {
+      border-radius: 0;
+      width: 140px;
+      font-size: medium;
+    }
 
     > form {
+      align-items: center;
       .input-group-addon {
         display: inline-block;
         padding: 0;
@@ -114,9 +122,9 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
         vertical-align: middle;
       }
       input {
-        width: 100px;
-        height: 30px;
-        padding: 0;
+        width: 120px;
+        height: 40px;
+        padding: 20px;
         border: 0;
         line-height: 30px;
         box-shadow: none;
