@@ -24,8 +24,8 @@
 
       .weeknav-content
         .weeknav-calendar-row
+          = link_to 'Heute', worktimes_url, class: 'btn btn-primary today-link'
           = plain_form(Worktime.new, method: :get) do |f|
-
             .nowrap
               = f.date_field(:work_date,
                              id: 'week_date',
