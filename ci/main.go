@@ -47,10 +47,10 @@ func (m *Ci) CiIntegration(
 		// source directory
 		dir,
 		dagger.PitcFlowIflexOpts{
-			LintReports:     dag.PitcFlow().Lint(dir, pass, dag.Implementation().AsPitcFlowLinting()),
-			SecurityReports: dag.PitcFlow().SecurityScan(dir, dag.Implementation().AsPitcFlowSecurityScanning()),
-			TestReports:     dag.PitcFlow().Test(dir, dag.Implementation().AsPitcFlowTesting()),
-			//IntegrationTestReports: dag.PitcFlow().IntegrationTest(dir, dag.Implementation().AsPitcFlowIntegrationTesting()),
+			LintReports:     dag.PitcFlow().Lint(dir, pass, dag.Implementation().AsPitcFlowLinter()),
+			SecurityReports: dag.PitcFlow().SecurityScan(dir, dag.Implementation().AsPitcFlowSecurityScanner()),
+			TestReports:     dag.PitcFlow().Test(dir, dag.Implementation().AsPitcFlowTester()),
+			//IntegrationTestReports: dag.PitcFlow().IntegrationTest(dir, dag.Implementation().AsPitcFlowIntegrationTester()),
 			// registry username for publishing the container image
 			RegistryUsername: registryUsername,
 			// registry password for publishing the container image
