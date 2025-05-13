@@ -30,7 +30,7 @@ module OrderControllingHelper
           tooltipData: @efforts_per_week_cumulated
             .keys
             .sort
-            .map { |week| @efforts_per_week_cumulated[week][set[:type]][:hours] },
+            .map { |week| @efforts_per_week_cumulated[week][set[:type]][:hours].round(2) },
           backgroundColor: set[:color]
         }
       end.to_json.html_safe
