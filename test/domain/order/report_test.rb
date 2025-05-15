@@ -126,7 +126,7 @@ class Order
     test 'sort by client' do
       report(sort: 'client', sort_dir: 'asc')
 
-      assert_equal orders(:webauftritt, :puzzletime, :allgemein), report.entries.collect(&:order)
+      assert_equal orders(:allgemein, :puzzletime, :webauftritt), report.entries.collect(&:order)
     end
 
     test 'sort by target time' do
