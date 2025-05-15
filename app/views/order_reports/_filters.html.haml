@@ -8,7 +8,7 @@
   = hidden_field_tag :page, 1
   = hidden_field_tag :status_preselection, params[:status_preselection]
 
-  - start_label = params[:status_preselection] == 'closed' ? 'Abgeschlossen zwischen' : 'Zeiten von'
+  - start_label = params[:status_preselection] == 'closed' ? 'Abgeschlossen zwischen' : 'Zeitbuchungen von'
   - end_label = params[:status_preselection] == 'closed' ? 'und' : 'bis'
   = direct_filter_date(:start_date, start_label, @period.start_date)
   = direct_filter_date(:end_date, end_label, @period.end_date)
