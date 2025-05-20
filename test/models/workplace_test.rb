@@ -5,13 +5,15 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
+# {{{
 # == Schema Information
 #
-# Table name: workplace
+# Table name: workplaces
 #
-#  id   :integer          not null, primary key
-#  name :string           not null
+#  id   :bigint           not null, primary key
+#  name :string
 #
+# }}}
 
 require 'test_helper'
 
