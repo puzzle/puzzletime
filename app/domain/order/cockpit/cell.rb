@@ -7,7 +7,7 @@
 
 class Order
   class Cockpit
-    Cell = Struct.new(:hours, :amount) do
+    Cell = Struct.new(:hours, :amount, :link) do
       def days
         hours / must_hours_per_day if hours
       end
