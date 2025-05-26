@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  description: MyText
+  amount: 9.99
+  periodicity: MyString
+  accounting_post: one
+
+two:
+  name: MyString
+  description: MyText
+  amount: 9.99
+  periodicity: MyString
+  accounting_post: two

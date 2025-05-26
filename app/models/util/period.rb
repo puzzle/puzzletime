@@ -235,6 +235,12 @@ class Period
     end
   end
 
+  def months_as_int_in_period
+    return (1..12).to_a if @start_date.blank? || @end_date.blank?
+
+    (@start_date..@end_date).map(&:month).uniq
+  end
+
   def length
     ((@end_date - @start_date) + 1).to_i
   end

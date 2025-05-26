@@ -1,0 +1,38 @@
+-#  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
+-#  PuzzleTime and licensed under the Affero General Public License version 3
+-#  or later. See the COPYING file at the top-level directory or at
+-#  https://github.com/puzzle/puzzletime.
+
+
+#flatrate_entries
+  = form.labeled(:flatrates) do
+    = form.nested_fields_for :flatrates, entry.flatrates, wrapper_tag: :div do |fields|
+      = fields.hidden_field :_destroy
+      .row
+        = fields.label :name, "Name *", class: 'col-md-2 control-label'
+        .col-md-4
+          = fields.input_field(:name, required: true)
+        = fields.label :active, "Aktiv", class: 'col-md-1 control-label'
+        .col-md-1.checkbox
+          = fields.check_box :active
+        = fields.label :amount, "#{currency} *", class: 'col-md-1 control-label'
+        .col-md-2
+          = fields.input_field(:amount, required: true)
+        .col-md-1.form-action
+          = fields.remove_nested_fields_link(picon('delete', title: 'Pauschale entfernen'))
+      .row
+        = fields.label :periodicity, "Periodizität *", class: 'col-md-2 control-label'
+        .col-md-10
+          = fields.collection_check_boxes :periodicity, 1..12, :to_s, ->(m) { I18n.t("date.month_names")[m] } do |b|
+            %span{ style: "margin-right: 0.8em" }
+              = b.check_box
+              = b.label
+      %br
+      .row 
+        = fields.label :amount, "Beschreibung", class: 'col-md-2 control-label'
+        .col-md-9
+          = fields.input_field(:description, rows: 1)
+      %hr
+    .row
+      .col-md-1.form-action
+        = form.add_nested_fields_link :flatrates, picon(:add, title: 'Pauschale hinzufügen')

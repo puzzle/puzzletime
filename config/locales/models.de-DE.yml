@@ -5,6 +5,8 @@
 
 ---
 de-DE:
+  date:
+    month_names: [~, Jan, Feb, Mär, Apr, Mai, Jun, Jul, Aug, Sep, Okt, Nov, Dez]
   activerecord:
     models:
       absence:
@@ -122,6 +124,7 @@ de-DE:
       absencetime:
         duration: Dauer
       accounting_post:
+        flatrates: Pauschalen
         work_item_id: Position
         portfolio_item_id: Portfolio
         service_id: Dienstleistung

@@ -15,7 +15,16 @@ class AccountingPostsController < CrudController
                           :remaining_hours, :portfolio_item_id, :service_id, :billable,
                           :description_required, :ticket_required, :from_to_times_required,
                           :meal_compensation,
-                          { work_item_attributes: %i[name shortname description] }]
+                          { work_item_attributes: %i[name shortname description] },
+                          { flatrates_attributes: [
+                            :id,
+                            :active,
+                            :name,
+                            :amount,
+                            :description,
+                            { periodicity: [] },
+                            :_destroy
+                          ] }]
 
   helper_method :order
 
