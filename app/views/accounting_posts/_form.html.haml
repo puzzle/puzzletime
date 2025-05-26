@@ -21,6 +21,8 @@
 
   = render 'budget_fields', form: f
 
+  = render 'flatrate_fields', form: f
+
   - edit = !@accounting_post.new_record?
   - blockdesc = blocking_worktimes(:description)
   - blocktick = blocking_worktimes(:ticket)
