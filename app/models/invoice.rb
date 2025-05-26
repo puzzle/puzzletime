@@ -35,6 +35,7 @@ class Invoice < ApplicationRecord
   belongs_to :billing_address
 
   has_many :ordertimes, dependent: :nullify
+  has_many :flatrates, dependent: :nullify
 
   has_and_belongs_to_many :work_items
   has_and_belongs_to_many :employees
@@ -98,7 +99,8 @@ class Invoice < ApplicationRecord
   end
 
   def calculated_total_amount
-    total = positions.sum(&:total_amount)
+    flatrates_total = Flatrate.where(id: flatrate_ids).sum(:amount)
+    total = positions.sum(&:total_amount) + flatrates_total
     round_to_5_cents(total)
   end
 

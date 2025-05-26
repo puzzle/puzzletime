@@ -1,0 +1,5 @@
+= collection_check_boxes(:invoice, :flatrate_ids, @flatrates, :id, :label_verbose, checked: checked_flatrate_ids) do |b|
+  .flatrates_radio.checkbox
+    = b.label do
+      = b.check_box
+      = b.text
