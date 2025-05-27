@@ -17,6 +17,18 @@ module Invoicing
           @flatrates = flatrates
         end
 
+        def merged_positions
+          smallinvoice_positions = positions.collect do |p|
+            Invoicing::SmallInvoice::Entity::Position.new(p).to_hash
+          end
+
+          smallinvoice_flatrate_positions = flatrates.collect do |f|
+            Invoicing::SmallInvoice::Entity::FlatratePosition.new(f).to_hash
+          end
+
+          (smallinvoice_positions + smallinvoice_flatrate_positions).sort_by { |pos| pos[:name] }
+        end
+
         def to_hash
           {
             number: entry.reference,
@@ -40,11 +52,7 @@ module Invoicing
             paypal_url: constant(:paypay_url),
             vat_included: constant(:vat_included),
             totalamount: entry.total_amount.round(2),
-            positions: positions.collect do |p|
-              Invoicing::SmallInvoice::Entity::Position.new(p).to_hash
-            end + flatrates.collect do |f|
-              Invoicing::SmallInvoice::Entity::FlatratePosition.new(f).to_hash
-            end
+            positions: merged_positions
           }
         end
 
