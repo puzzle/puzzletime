@@ -280,6 +280,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_15_110845) do
     t.index ["accounting_post_id"], name: "index_flatrates_on_accounting_post_id"
   end
 
+  create_table "flatrates_invoices", id: false, force: :cascade do |t|
+    t.bigint "flatrate_id", null: false
+    t.bigint "invoice_id", null: false
+  end
+
   create_table "holidays", id: :serial, force: :cascade do |t|
     t.date "holiday_date", null: false
     t.float "musthours_day", null: false
