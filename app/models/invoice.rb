@@ -35,10 +35,10 @@ class Invoice < ApplicationRecord
   belongs_to :billing_address
 
   has_many :ordertimes, dependent: :nullify
-  has_many :flatrates, dependent: :nullify
 
   has_and_belongs_to_many :work_items
   has_and_belongs_to_many :employees
+  has_and_belongs_to_many :flatrates
 
   validates_by_schema
   validates_date :billing_date, :due_date, :period_from, :period_to
@@ -54,6 +54,7 @@ class Invoice < ApplicationRecord
   before_validation :update_totals
   before_save :save_remote_invoice, if: -> { Invoicing.instance.present? }
   before_save :assign_worktimes
+  before_save :assign_flatrates
   before_create :lock_client_invoice_number
   after_create :update_client_invoice_number
   after_destroy :delete_remote_invoice, if: -> { Invoicing.instance.present? }
@@ -173,6 +174,10 @@ class Invoice < ApplicationRecord
              .where(invoice_id: [id, nil])
   end
 
+  def flatrates
+    Flatrate.where(id: flatrate_ids)
+  end
+
   def lock_client_invoice_number
     order.client.lock!
     generate_reference
@@ -256,6 +261,10 @@ class Invoice < ApplicationRecord
 
   def assign_worktimes
     self.ordertimes = manual_invoice? ? [] : worktimes
+  end
+
+  def assign_flatrates
+    self.flatrates = manual_invoice? ? [] : flatrates
   end
 
   def round_to_5_cents(amount)
