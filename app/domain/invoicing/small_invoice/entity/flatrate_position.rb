@@ -13,13 +13,19 @@ module Invoicing
           {
             type: constant(:position_type_id),
             number: nil,
-            name: entry.name,
+            name: "#{post.name} - #{entry.name}",
             description: nil,
             cost: entry.amount.try(:round, 2),
             unit: constant(:flatrate_unit_id),
             amount: 1,
             vat: Settings.defaults.vat
           }
+        end
+
+        private
+
+        def post
+          entry.accounting_post
         end
       end
     end
