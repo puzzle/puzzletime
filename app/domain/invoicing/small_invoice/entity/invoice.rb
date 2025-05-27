@@ -9,11 +9,12 @@ module Invoicing
   module SmallInvoice
     module Entity
       class Invoice < Base
-        attr_reader :positions
+        attr_reader :positions, :flatrates
 
-        def initialize(invoice, positions)
+        def initialize(invoice, positions, flatrates)
           super(invoice)
           @positions = positions
+          @flatrates = flatrates
         end
 
         def to_hash
@@ -41,6 +42,8 @@ module Invoicing
             totalamount: entry.total_amount.round(2),
             positions: positions.collect do |p|
               Invoicing::SmallInvoice::Entity::Position.new(p).to_hash
+            end + flatrates.collect do |f|
+              Invoicing::SmallInvoice::Entity::FlatratePosition.new(f).to_hash
             end
           }
         end
