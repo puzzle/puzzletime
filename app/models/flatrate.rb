@@ -4,7 +4,7 @@ class Flatrate < ApplicationRecord
   belongs_to :accounting_post
 
   def label_verbose
-    "#{name} (#{amount} #{Settings.defaults.currency}) - #{accounting_post}"
+    "#{name} (#{accounting_post.name})"
   end
 
   def periodicity
