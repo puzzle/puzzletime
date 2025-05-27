@@ -12,5 +12,7 @@ class CreateFlatrates < ActiveRecord::Migration[7.1]
 
       t.timestamps
     end
+
+    create_join_table :flatrates, :invoices
   end
 end
