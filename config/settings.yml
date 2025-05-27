@@ -106,7 +106,10 @@ small_invoice:
     client_type: 1 # company
     position_type_id: 1 # service
     unit_id: 1 # hours
+    flatrate_unit_id: 13 # flatrate
     gender_id: 2 # female
+    
+
 
 
 # Default values

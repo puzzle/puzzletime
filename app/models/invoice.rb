@@ -241,7 +241,7 @@ class Invoice < ApplicationRecord
   end
 
   def save_remote_invoice
-    self.invoicing_key = Invoicing.instance.save_invoice(self, positions)
+    self.invoicing_key = Invoicing.instance.save_invoice(self, positions, flatrates)
   rescue Invoicing::Error => e
     errors.add(:base, "Fehler im Invoicing Service: #{e.message}")
     Rails.logger.error("#{e.class.name}: #{e.message}\n#{e.backtrace.join("\n")}")
