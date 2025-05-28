@@ -77,3 +77,6 @@ app.datepicker = new class
 $(document).on 'turbolinks:load', ->
   app.datepicker.destroy()
   app.datepicker.init()
+
+$(document).on 'turbolinks:before-cache', ->
+  app.datepicker.destroy()
