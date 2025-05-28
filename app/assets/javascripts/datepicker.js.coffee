@@ -1,8 +1,5 @@
-#  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
-#  PuzzleTime and licensed under the Affero General Public License version 3
-#  or later. See the COPYING file at the top-level directory or at
-#  https://github.com/puzzle/puzzletime.
-
+#  Copyright (c) 2006-2017, Puzzle ITC GmbH.
+#  This file is part of PuzzleTime and licensed under the AGPL v3 or later.
 
 app = window.App ||= {}
 
@@ -22,37 +19,61 @@ app.datepicker = new class
   onSelect = (dateString, instance) =>
     if instance.input.data('format') == 'week'
       date = $.datepicker.parseDate(i18n().dateFormat, dateString)
-      instance.input
-        .val(formatWeek(date))
+      instance.input.val(@formatWeek(date))
     instance.input.trigger('change')
 
-  options = $.extend({ onSelect, showWeek: true }, i18n())
+  options = $.extend({ onSelect: @onSelect, showWeek: true }, i18n())
 
   init: ->
-    $('input.date').each((_i, elem) ->
-      $(elem).datepicker($.extend({}, options, {
-        changeYear: $(elem).data('changeyear')
-      })))
+    $('input.date:not(.datepicker-initialized)').each (_i, elem) =>
+      $elem = $(elem)
+      $elem.datepicker($.extend({}, @options, {
+        changeYear: $elem.data('changeyear')
+      }))
+      $elem.addClass('datepicker-initialized')
+
     @bindListeners()
+    @observe()
 
   formatWeek: formatWeek
 
   destroy: ->
-    $('input.date').datepicker('destroy')
+    $('input.date.datepicker-initialized').each (_i, elem) =>
+      $(elem).datepicker('destroy').removeClass('datepicker-initialized')
+
     @bindListeners(true)
 
-  bindListeners: (unbind) ->
-    func = if unbind then 'off' else 'on'
+    if @observer?
+      @observer.disconnect()
+      @observer = null
 
+  bindListeners: (unbind = false) ->
+    func = if unbind then 'off' else 'on'
     $(document)[func]('click', 'input.date + .input-group-addon', @show)
 
   show: (event) ->
     field = $(event.target)
-    if !field.is('input.date')
+    unless field.is('input.date')
       field = field.closest('.input-group').find('.date')
     field.datepicker('show')
 
-$(document).on('turbolinks:load', ->
+  observe: ->
+    return if @observer?
+
+    @observer = new MutationObserver (mutations) =>
+      mutations.forEach (mutation) =>
+        mutation.addedNodes.forEach (node) =>
+          return unless node.nodeType is 1  # ELEMENT_NODE
+          $node = $(node)
+
+          if $node.is('input.date') || $node.find('input.date').length > 0
+            @init()  # Will only init uninitialized ones
+
+    @observer.observe(document.body,
+      childList: true,
+      subtree: true
+    )
+
+$(document).on 'turbolinks:load', ->
   app.datepicker.destroy()
   app.datepicker.init()
-)
