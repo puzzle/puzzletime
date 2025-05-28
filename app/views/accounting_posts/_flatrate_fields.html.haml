@@ -23,14 +23,15 @@
       .row
         = fields.label :periodicity, "Periodizität *", class: 'col-md-2 control-label'
         .col-md-10
-          = fields.collection_check_boxes :periodicity, 1..12, :to_s, ->(m) { I18n.t("date.month_names")[m] } do |b|
-            %span{ style: "margin-right: 0.8em" }
-              = b.check_box
-              = b.label
+          - 0.upto(11) do |i|
+            .field.col-md-3{style: "margin-bottom: 0.5em"}
+              = fields.label :"periodicity_#{i}", I18n.t("date.month_names")[i + 1]
+              = fields.number_field :"periodicity_#{i}"
+
       %br
       .row 
         = fields.label :amount, "Beschreibung", class: 'col-md-2 control-label'
-        .col-md-9
+        .col-md-10
           = fields.input_field(:description, rows: 1)
       %hr
     .row
