@@ -273,7 +273,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_15_110845) do
     t.boolean "active", default: true, null: false
     t.text "description"
     t.decimal "amount"
-    t.integer "periodicity", default: [], array: true
+    t.integer "periodicity", default: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], array: true
     t.bigint "accounting_post_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
