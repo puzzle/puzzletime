@@ -73,11 +73,11 @@ class Order
 
     def build_rows(period)
       if sub_levels?
-        rows = accounting_posts.collect { |p| AccountingPostRow.new(p, period) }
+        rows = accounting_posts.collect { |p| AccountingPostRow.new(p, order, period) }
         total = TotalRow.new(rows)
         [total, *rows]
       else
-        [AccountingPostRow.new(accounting_posts.first, period, order.work_item.path_shortnames)]
+        [AccountingPostRow.new(accounting_posts.first, order, period, order.work_item.path_shortnames)]
       end
     end
 
