@@ -18,7 +18,8 @@ class AccountingPostsController < CrudController
                           { work_item_attributes: %i[name shortname description] },
                           { flatrates_attributes: [
                             :id,
-                            :active,
+                            :active_from,
+                            :active_to,
                             :name,
                             :amount,
                             :description,

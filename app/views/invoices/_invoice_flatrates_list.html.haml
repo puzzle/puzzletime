@@ -1,0 +1,15 @@
+#invoice-flatrates
+  - @invoice.invoice_flatrates.each_with_index do |invoice_flatrate, i|
+    - flatrate = invoice_flatrate.flatrate
+    -# - max_quantity = flatrate.
+    - default_quantity = invoice_flatrate.quantity || 10
+    - quantity_options = (0..default_quantity).to_a
+
+    .invoice-flatrate
+      %p= flatrate.name
+      %p= number_to_currency(flatrate.amount)
+
+      = hidden_field_tag "invoice[invoice_flatrates_attributes][#{i}][flatrate_id]", flatrate.id
+      = hidden_field_tag "invoice[invoice_flatrates_attributes][#{i}][accounting_post_id]", flatrate.accounting_post_id
+      = label_tag "invoice[invoice_flatrates_attributes][#{i}][quantity]", 'Quantity'
+      = select_tag "invoice[invoice_flatrates_attributes][#{i}][quantity]", options_for_select(quantity_options, selected: default_quantity)
