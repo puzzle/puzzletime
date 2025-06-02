@@ -8,10 +8,13 @@
 class Order
   class Cockpit
     class AccountingPostRow < Row
+      include Rails.application.routes.url_helpers
+
       attr_reader :cells, :accounting_post, :info
 
-      def initialize(accounting_post, period, label = nil)
+      def initialize(accounting_post, order, period, label = nil)
         super(label || accounting_post.to_s)
+        @order = order
         @period = period
         @accounting_post = accounting_post
         @cells = build_cells
@@ -79,11 +82,26 @@ class Order
       end
 
       def build_supplied_services_cell
-        build_cell_with_amount(supplied_services_hours)
+        build_cell_with_amount(
+          supplied_services_hours,
+          order_order_services_path(
+            @order.id,
+            work_item_ids: accounting_post.work_item.id,
+            start_date: @period.start_date,
+            end_date: @period.end_date
+          )
+        )
       end
 
       def build_not_billable_cell
-        Cell.new(not_billable_hours, calculate_amount(not_billable_hours))
+        link_path = order_order_services_path(
+          @order.id,
+          work_item_ids: accounting_post.work_item.id,
+          billable: false,
+          start_date: @period.start_date,
+          end_date: @period.end_date
+        )
+        Cell.new(not_billable_hours, calculate_amount(not_billable_hours), link_path)
       end
 
       def build_open_budget_cell
@@ -95,8 +113,8 @@ class Order
         build_cell_with_amount(future_planned_hours)
       end
 
-      def build_cell_with_amount(hours)
-        Cell.new(hours, calculate_amount(hours))
+      def build_cell_with_amount(hours, link = nil)
+        Cell.new(hours, calculate_amount(hours), link)
       end
 
       def calculate_amount(hours)
