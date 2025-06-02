@@ -12,9 +12,9 @@
   #work_item_checkboxes
     = render 'period_work_items'
 
-= f.labeled :flatrate_ids do
-  #flatrate_checkboxes 
-    = render 'period_flatrates'
+= f.labeled :invoice_flatrates do
+  #invoice_flatrates
+    = render 'invoice_flatrates_list'
 
 = f.labeled :invoice_posts do
   %p.form-control-static='Gruppieren nach:'

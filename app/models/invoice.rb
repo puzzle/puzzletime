@@ -35,10 +35,11 @@ class Invoice < ApplicationRecord
   belongs_to :billing_address
 
   has_many :ordertimes, dependent: :nullify
+  has_many :invoice_flatrates, dependent: :destroy
+  has_many :flatrates, through: :invoice_flatrates
 
   has_and_belongs_to_many :work_items
   has_and_belongs_to_many :employees
-  has_and_belongs_to_many :flatrates
 
   validates_by_schema
   validates_date :billing_date, :due_date, :period_from, :period_to
@@ -47,6 +48,8 @@ class Invoice < ApplicationRecord
   validate :assert_positive_period
   validate :assert_order_has_contract
   validate :assert_order_not_closed
+
+  accepts_nested_attributes_for :invoice_flatrates, reject_if: ->(attrs) { attrs['quantity'].blank? || attrs['quantity'].to_i <= 0 }
 
   before_validation :set_default_status
   before_validation :generate_reference, on: :create
@@ -100,8 +103,9 @@ class Invoice < ApplicationRecord
   end
 
   def calculated_total_amount
-    flatrates_total = Flatrate.where(id: flatrate_ids).sum(:amount)
-    total = positions.sum(&:total_amount) + flatrates_total
+    Rails.logger.info("testest: #{invoice_flatrates.inspect}")
+    invoice_flatrates_total = flatrates.sum { |flt| flt[:amount] }# * invoice_flatrates }
+    total = positions.sum(&:total_amount) + invoice_flatrates_total
     round_to_5_cents(total)
   end
 
@@ -175,7 +179,7 @@ class Invoice < ApplicationRecord
   end
 
   def flatrates
-    Flatrate.where(id: flatrate_ids)
+    Flatrate.where(id: flatrate_ids).filter { |flatrate| flatrate.not_billed_flatrates_quantity(period.end_date).positive? }
   end
 
   def lock_client_invoice_number

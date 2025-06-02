@@ -9,7 +9,8 @@ class InvoicesController < CrudController
   self.nesting = [Order]
 
   self.permitted_attrs = [:billing_date, :due_date, :period_from, :period_to, :period_shortcut,
-                          :billing_address_id, :grouping, { employee_ids: [], work_item_ids: [], flatrate_ids: [] }]
+                          :billing_address_id, :grouping, { employee_ids: [], work_item_ids: [], flatrate_ids: [] },
+                          { invoice_flatrates_attributes: %i[id flatrate_id invoice_id quantity _destroy] }]
 
   self.sort_mappings = { period: :period_from, manual?: :grouping }
 
@@ -75,13 +76,12 @@ class InvoicesController < CrudController
   end
 
   # AJAX
-  def flatrates_for_period(from, to)
-    selected_period_months_as_int = Period.with(from, to).months_as_int_in_period
-    active_flatrates = order.accounting_posts.collect(&:active_flatrates).flatten
-    active_flatrates.select do |fr|
-      flatrate_int_months = fr.periodicity.map(&:to_i) || []
-      selected_period_months_as_int.intersect?(flatrate_int_months)
-    end
+  # TODO: this must return invoice_flatrates (including quantity),
+  # Also, rename function accordingly
+  def flatrates_for_date(to)
+    p = Period.with(nil, to)
+    Rails.logger.info("flatrates_for_date call: #{p.end_date.inspect}")
+    order.accounting_posts.flat_map(&:flatrates).select { |flatrate| flatrate.not_billed_flatrates_quantity(p.end_date).positive? }
   end
 
   # AJAX
@@ -96,9 +96,15 @@ class InvoicesController < CrudController
   def filter_fields
     from = model_params[:period_from]
     to = model_params[:period_to]
+    @period = Period.with(from, to)
+
+    Rails.logger.info("from: #{from.inspect}")
+    Rails.logger.info("to: #{to.inspect}")
+    Rails.logger.info("@period: #{@period.inspect}")
+
     @employees = employees_for_period(from, to)
     @work_items = work_items_for_period(from, to)
-    @flatrates = flatrates_for_period(from, to)
+    @flatrates = flatrates_for_date(to)
     # replace employees_ids in entry with the list of actually selectable employees
     entry.employee_ids = @employees.pluck(:id)
     entry.work_item_ids = @work_items.pluck(:id)
@@ -144,8 +150,7 @@ class InvoicesController < CrudController
     attrs[:grouping] ||= last_grouping
 
     if attrs[:flatrate_ids].blank?
-      attrs[:flatrate_ids] = flatrates_for_period(attrs[:period_from],
-                                                  attrs[:period_to]).map(&:id)
+      attrs[:flatrate_ids] = flatrates_for_date(attrs[:period_to]).map(&:id)
     end
     if attrs[:employee_ids].blank?
       attrs[:employee_ids] = employees_for_period(attrs[:period_from],
@@ -175,7 +180,7 @@ class InvoicesController < CrudController
   def load_associations
     @employees = employees_for_period(entry.period_from, entry.period_to)
     @work_items = work_items_for_period(entry.period_from, entry.period_to)
-    @flatrates = flatrates_for_period(entry.period_from, entry.period_to)
+    @flatrates = flatrates_for_date(entry.period_to)
     @billing_clients = Client.list
     @billing_client = entry.billing_client
     @billing_addresses = load_billing_addresses(@billing_client)

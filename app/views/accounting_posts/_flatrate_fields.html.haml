@@ -10,16 +10,20 @@
       = fields.hidden_field :_destroy
       .row
         = fields.label :name, "Name *", class: 'col-md-2 control-label'
-        .col-md-4
+        .col-md-6
           = fields.input_field(:name, required: true)
-        = fields.label :active, "Aktiv", class: 'col-md-1 control-label'
-        .col-md-1.checkbox
-          = fields.check_box :active
         = fields.label :amount, "#{currency} *", class: 'col-md-1 control-label'
         .col-md-2
           = fields.input_field(:amount, required: true)
         .col-md-1.form-action
           = fields.remove_nested_fields_link(picon('delete', title: 'Pauschale entfernen'))
+      .row{style: "margin-bottom: 1em"}
+        = fields.label :active_from, 'Aktiv von *', class: 'col-md-2 control-label'
+        .col-md-3
+          = fields.input_field :active_from, required: true
+        = fields.label :active_to, 'Aktiv bis', class: 'col-md-2 control-label'
+        .col-md-3 
+          = fields.input_field :active_to
       .row
         = fields.label :periodicity, "Periodizität *", class: 'col-md-2 control-label'
         .col-md-10
