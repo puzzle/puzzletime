@@ -3,17 +3,11 @@
 -#  or later. See the COPYING file at the top-level directory or at
 -#  https://github.com/puzzle/puzzletime.
 
+- @title ||= 'Rechnungs-Controlling'
 
-- @title = "Zeitrapport #{Company.name}"
+%p= render 'filters'
 
-.container-fluid
-  .date
-    = f Time.zone.today
+.list
+  = render 'list'
 
-  %h1.h3= @title
-  = render 'worktimes_report/report_header'
-
-  - if @ticket_view
-    = render 'worktimes_report/tickets'
-  - else
-    = render 'worktimes_report/times'
+  = render 'actions'

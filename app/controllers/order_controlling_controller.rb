@@ -12,6 +12,7 @@ class OrderControllingController < ApplicationController
     controlling = Order::Controlling.new(order)
     @efforts_per_week_cumulated = controlling.efforts_per_week_cumulated
     @offered_total = controlling.offered_total
+    @offered_hours = controlling.offered_hours
   end
 
   private

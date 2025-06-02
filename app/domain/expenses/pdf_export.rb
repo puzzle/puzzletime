@@ -76,7 +76,7 @@ module Expenses
       pdf.bounding_box([pdf.bounds.left, pdf.bounds.top], width: pdf.bounds.width, height: 150) do
         pdf.define_grid(columns: 2, rows: 1, gutter: 0)
 
-        column1 = [:employee_id, :kind, :order_id, :status, nil, nil, { name: :amount, size: 15 }]
+        column1 = [:employee_id, :department_id, :kind, :order_id, :status, nil, nil, { name: :amount, size: 15 }]
         column2 = %i[id reviewer_id reviewed_at reason reimbursement_month payment_date description receipt]
 
         pdf.grid(0, 0).bounding_box do
@@ -131,6 +131,7 @@ module Expenses
         begin
           output = {}
           output[:employee_id]         = format_employee(expense.employee)
+          output[:department_id]       = expense.employee.department.to_s
           output[:status]              = expense.status_value
           output[:kind]                = expense.kind_value
           output[:order_id]            = format_order                      if expense.project?
