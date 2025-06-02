@@ -7,6 +7,7 @@
 
 class AccountingPostsController < CrudController
   include WithPeriod
+  include CockpitCsv
 
   self.nesting = [Order]
 
@@ -24,7 +25,22 @@ class AccountingPostsController < CrudController
     @cockpit = Order::Cockpit.new(parent, @period)
   end
 
+  def export_csv
+    set_period
+    @period = Period.new(@period.start_date, Time.zone.today) if @period.end_date.blank?
+    @cockpit = Order::Cockpit.new(parent, @period)
+    send_cockpit_csv(@cockpit, cockpit_csv_filename)
+  end
+
   private
+
+  def cockpit_csv_filename
+    name = 'accounting_posts'
+    name += @period&.start_date ? "_#{@period.start_date.strftime('%Y-%m-%d')}" : '_egal'
+    name += @period.end_date ? "_#{@period.end_date.strftime('%Y-%m-%d')}" : '_egal'
+
+    "#{name}.csv"
+  end
 
   def find_entry
     super

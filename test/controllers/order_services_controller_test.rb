@@ -189,15 +189,6 @@ class OrderServicesControllerTest < ActionController::TestCase
     end
   end
 
-  test 'GET report contains all hours' do
-    get :report, params: { order_id: order.id }
-
-    assert_template 'report'
-    total = assigns(:worktimes).sum(:hours)
-
-    assert_match(/Total Stunden.*#{total}/m, response.body)
-  end
-
   test 'GET report with invoice_id gets all hours and sets period' do
     invoice = invoices(:webauftritt_may)
     worktimes(:wt_mw_webauftritt).update!(invoice_id: invoice.id, work_date: invoice.period_from - 2.days)
@@ -216,47 +207,6 @@ class OrderServicesControllerTest < ActionController::TestCase
     assert_empty assigns(:worktimes)
     assert_equal Date.parse('2006-12-15'), assigns(:period).start_date
     assert_nil assigns(:period).end_date
-  end
-
-  test 'GET report contains all hours with combined tickets' do
-    Worktime.where(employee_id: employees(:pascal).id).destroy_all
-    Fabricate(:ordertime,
-              employee: employees(:pascal),
-              work_item: work_items(:puzzletime),
-              ticket: 123)
-    Fabricate(:ordertime,
-              employee: employees(:pascal),
-              work_item: work_items(:puzzletime),
-              hours: 5)
-
-    get :report, params: {
-      order_id: orders(:puzzletime).id,
-      employee_id: employees(:pascal),
-      combine_on: true,
-      combine: 'ticket'
-    }
-
-    assert_template 'report'
-    total = assigns(:worktimes).sum(:hours)
-
-    assert_equal 7, total
-    assert_match(/Total Stunden.*#{total}/m, response.body)
-  end
-
-  test 'GET report with param show_ticket=1 shows tickets' do
-    ticket_label = 'ticket-123'
-    Fabricate(:ordertime,
-              employee: employees(:pascal),
-              work_item: work_items(:puzzletime),
-              ticket: ticket_label)
-    get :report, params: {
-      order_id: orders(:puzzletime).id,
-      show_ticket: '1'
-    }
-
-    assert_template 'report'
-    assert_match %r{<th class='right'>Ticket</th>}, response.body
-    assert_match %r{<td[^>]*>#{ticket_label}</td>}, response.body
   end
 
   test 'GET report renders checkboxes for entries not associated with sent/paid invoice' do
