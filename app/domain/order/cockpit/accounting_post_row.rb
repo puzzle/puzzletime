@@ -78,7 +78,7 @@ class Order
       end
 
       def build_budget_cell
-        Cell.new(accounting_post.offered_hours, accounting_post.offered_total, nil)
+        Cell.new(accounting_post.offered_hours, accounting_post.offered_total)
       end
 
       def build_supplied_services_cell
