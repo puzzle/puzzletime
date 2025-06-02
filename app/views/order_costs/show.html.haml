@@ -1,0 +1,22 @@
+-#  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
+-#  PuzzleTime and licensed under the Affero General Public License version 3
+-#  or later. See the COPYING file at the top-level directory or at
+-#  https://github.com/puzzle/puzzletime.
+
+= render 'orders/header'
+
+- if Settings.meal_compensation.active
+  = form_tag(nil, method: :get, id: :cost_type_filter_form, class: 'form-inline', role: 'filter') do
+    = direct_filter_select(:cost_type, 'Kostenart', [IdValue.new('expenses', 'Spesen'), IdValue.new('meal_compensation', 'Verpflegungsentschädigung')], prompt: 'Alle')
+
+- if params['cost_type'].blank? || !Settings.meal_compensation.active || params['cost_type'] == 'expenses'
+  .orders-cost-tablecontainer
+    %h3= t('activerecord.attributes.order_cost.expense')
+    .orders-cost-table-medium#expenses-list
+      = summed_expenses_table(@associated_expenses)
+
+- if Settings.meal_compensation.active && (params['cost_type'].blank? ||  params['cost_type'] == 'meal_compensation')
+  .orders-cost-tablecontainer
+    %h3= t('activerecord.attributes.order_cost.meal_compensation')
+    .orders-cost-table-small#meal-compensations-list
+      = summed_meal_compensations_table(@associated_meal_compensations, @meal_compensation_members)

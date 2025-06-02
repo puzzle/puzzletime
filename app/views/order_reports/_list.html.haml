@@ -27,7 +27,7 @@
             %th.right{title: 'Verhältnis von verrechenbaren Stunden zu geleisteten Stunden'}
               = sort_link(:billability, 'Verrechen&shy;barkeit'.html_safe)
             %th{ style: 'width: 15%' }
-              Budget-Controlling
+              = sort_link('budget_controlling', 'Budget-Controlling')
             %th.right{title: 'Durchschnitt der offerierten Stundensätze aller Buchungspositionen'}
               = sort_link(:offered_rate, 'Offerierter Stundensatz')
             %th.right{title: 'Verhältnis von verrechneten Beträgen zu verrechenbaren Stunden'}

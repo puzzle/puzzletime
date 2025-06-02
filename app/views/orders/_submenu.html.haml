@@ -8,12 +8,17 @@
   = nav('Auftragsliste', path, path)
 
 - if can?(:reports, Order)
-  = nav 'Controlling',
+  = nav 'Auftrags-Controlling',
         reports_orders_path(clear: 1),
         reports_orders_path
 
 - if can?(:managed, Evaluations::Evaluation)
   = nav 'Meine Aufträge', evaluation_path('managed', clear: 1)
+
+- if can?(:reports, Invoice)
+  = nav 'Rechnungs-Controlling',
+        reports_invoices_path(clear: 1),
+        reports_invoices_path
 
 - if can?(:clients, Evaluations::Evaluation)
   = nav 'Kunden',

@@ -17,6 +17,12 @@ module FilterHelper
      IdValue.new('-2q', 'Vorletztes Quartal')]
   end
 
+  def predefined_past_and_current_quarter_period_options
+    [IdValue.new('0q',  'Dieses Quartal'),
+     IdValue.new('-1q', 'Letztes Quartal'),
+     IdValue.new('-2q', 'Vorletztes Quartal')]
+  end
+
   def predefined_future_period_options
     [IdValue.new('3M', 'Nächste 3 Monate'),
      IdValue.new('6M', 'Nächste 6 Monate'),

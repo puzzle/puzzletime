@@ -132,16 +132,16 @@ class TableHelperTest < ActionView::TestCase
       list_table
     end
 
-    sort_header_desc = %r{<th><a .*?sort_dir=desc.*?>Children</a> &darr;</th>}
+    sort_header_asc = %r{<th><a .*?sort_dir=asc.*?>Children</a> &uarr;</th>}
 
     assert_count 7, REGEXP_ROWS, table
     assert_count 13, REGEXP_SORT_HEADERS, table
-    assert_count 1, sort_header_desc, table
+    assert_count 1, sort_header_asc, table
   end
 
   test 'standard list table with descending sort params' do
     def params
-      { sort: 'children', sort_dir: 'desc' }
+      { sort: 'children', sort_dir: 'asc' }
     end
 
     @entries = CrudTestModel.all
@@ -168,7 +168,7 @@ class TableHelperTest < ActionView::TestCase
       list_table :name, :children, :chatty
     end
 
-    sort_header_desc = %r{<th><a .*?sort_dir=desc.*?>Chatty</a> &darr;</th>}
+    sort_header_desc = %r{<th><a .*?sort_dir=asc.*?>Chatty</a> &uarr;</th>}
 
     assert_count 7, REGEXP_ROWS, table
     assert_count 2, REGEXP_SORT_HEADERS, table

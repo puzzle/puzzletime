@@ -1,0 +1,119 @@
+-#  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
+-#  PuzzleTime and licensed under the Affero General Public License version 3
+-#  or later. See the COPYING file at the top-level directory or at
+-#  https://github.com/puzzle/puzzletime.
+
+
+- if @report.filters_defined?
+  - if @report.present?
+    .unindented
+      %table.orders-report.table.table-hover
+        %thead
+          %tr
+            %th
+              = sort_link(:reference, 'Referenz')
+            %th
+              = sort_link(:client, 'Kunde')
+              \/ Auftrag
+            %th.right.nowrap
+              Leistungsperiode
+            %th.right.nowrap
+              = sort_link(:billing_date, 'Rechnungsdatum')
+            %th.right.nowrap
+              = sort_link(:due_date, 'Fälligkeitsdatum')
+            %th.right.nowrap
+              = sort_link(:status, 'Status')
+            %th.right.nowrap{title: 'In Rechnung gestellter Betrag'}
+              = sort_link(:total_amount, 'Rechnungsbetrag')
+            %th.right.nowrap
+              = sort_link(:total_hours, 'Total Stunden')
+            %th
+              = sort_link(:department, 'OE')
+            %th
+              = sort_link(:responsible, 'Verantwortlich')
+            %th.center
+              Manuell
+            %th.center
+              - if Invoicing.instance
+                %th.center
+                %th.center
+
+        %tbody
+          - @report.page do |invc|
+            - if invc.instance_of? Invoice::Report::Total
+              %td
+                = invc
+              %td
+              %td
+              %td
+              %td
+              %td
+              %td
+                .data-item
+                  %span.figure= f(invc.total_amount.to_f)
+                  %span.unit= currency
+              %td
+                .data-item
+                  %span.figure= f(invc.total_hours.to_f)
+              %td
+              %td
+              %td
+              %td
+              - if Invoicing.instance
+                %td
+                %td
+            - else
+              %tr
+                %td
+                  = link_to(f(invc.reference), order_invoice_path(order_id: invc.order.id, id: invc.id))
+                %td
+                  - if invc.order
+                    = invc.client
+                    %br/
+                    %span.subtitle
+                      = link_to_if(can?(:show, invc.order),
+                                  "#{invc.order.work_item.path_shortnames}: #{invc.order}",
+                                  can?(:update, invc.order) ? edit_order_path(invc.order) : order_path(invc.order))
+                  - else
+                    %span.subtitle= order
+                %td
+                  .data-item
+                    %span.figure= f(invc.period)
+                %td
+                  .data-item
+                    %span.figure= I18n.l(invc.billing_date, format: '%d.%m.%Y')
+                %td
+                  .data-item
+                    %span.figure= I18n.l(invc.due_date, format: '%d.%m.%Y')
+                %td
+                  .data-item
+                    %span.figure= f(I18n.t("activerecord.attributes.invoice/statuses.#{invc.status}"))
+                %td
+                  .data-item
+                    %span.figure= f(invc.total_amount.to_f)
+                    %span.unit= currency
+                %td
+                  .data-item
+                    %span.figure= f(invc.total_hours.to_f)
+                %td
+                  = f(invc.department)
+                %td
+                  = f(invc.responsible)
+                %td.center
+                  = f(invc.manual_invoice)
+                %td.center
+                  = link_to(picon('time'), order_order_services_path(order_id: invc.order.id, invoice_id: invc.id), title: 'Leistungen anzeigen')
+                - if Invoicing.instance
+                  %td.center
+                    = link_to(picon('document'), order_invoice_path(order_id: invc.order.id, id: invc.id, format: :pdf), target: :blank, title: 'PDF anzeigen')
+                  %td.center
+                    - if can?(:sync, invc.invoice)
+                      = link_to(picon('chevron-left'), sync_order_invoice_path(order_id: invc.order.id, id: invc.id), title: 'Daten aus Invoicing übernehmen', data: { method: :put })
+
+    %p= paginate @report
+
+  - else
+    .table= ti(:no_list_entries)
+
+- else
+  .table Bitte wählen Sie mindestes einen Filter aus.

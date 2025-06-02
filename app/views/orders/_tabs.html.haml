@@ -32,6 +32,9 @@
           edit_order_multi_worktimes_path(@order),
           compose_report_order_order_services_path(@order)
 
+  - if can?(:show_costs, @order)
+    = nav 'Kosten', order_order_cost_path(@order)
+
   - if can?(:show_invoices, @order)
     = nav 'Rechnungen',
           order_invoices_path(@order),

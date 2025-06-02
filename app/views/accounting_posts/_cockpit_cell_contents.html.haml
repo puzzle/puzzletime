@@ -1,0 +1,12 @@
+.data-item
+  - if cell.hours
+    %span.figure= f(cell.hours.to_f)
+    %span.unit Std.
+.data-item
+  - if cell.days
+    %span.figure= f(cell.days)
+    %span.unit Tage
+.data-item
+  - if cell.amount
+    %span.figure.small= f(cell.amount.to_f)
+    %span.unit= currency

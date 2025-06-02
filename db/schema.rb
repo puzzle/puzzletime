@@ -10,18 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_11_175613) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_19_080518) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "absences", force: :cascade do |t|
+  create_table "absences", id: :serial, force: :cascade do |t|
     t.string "name", limit: 255, null: false
     t.boolean "payed", default: false
     t.boolean "vacation", default: false, null: false
     t.index ["name"], name: "index_absences_on_name", unique: true
   end
 
-  create_table "accounting_posts", force: :cascade do |t|
+  create_table "accounting_posts", id: :serial, force: :cascade do |t|
     t.integer "work_item_id", null: false
     t.integer "portfolio_item_id"
     t.float "offered_hours"
@@ -31,8 +31,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_11_175613) do
     t.boolean "billable", default: true, null: false
     t.boolean "description_required", default: false, null: false
     t.boolean "ticket_required", default: false, null: false
-    t.boolean "closed", default: false, null: false
     t.boolean "from_to_times_required", default: false, null: false
+    t.boolean "closed", default: false, null: false
     t.integer "service_id"
     t.boolean "meal_compensation", default: false, null: false
     t.index ["portfolio_item_id"], name: "index_accounting_posts_on_portfolio_item_id"
@@ -86,22 +86,22 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_11_175613) do
     t.index ["employee_id"], name: "index_authentications_on_employee_id"
   end
 
-  create_table "billing_addresses", force: :cascade do |t|
+  create_table "billing_addresses", id: :serial, force: :cascade do |t|
     t.integer "client_id", null: false
     t.integer "contact_id"
-    t.string "supplement", limit: 255
-    t.string "street", limit: 255
-    t.string "zip_code", limit: 255
-    t.string "town", limit: 255
+    t.string "supplement"
+    t.string "street"
+    t.string "zip_code"
+    t.string "town"
     t.string "country", limit: 2
     t.string "invoicing_key"
     t.index ["client_id"], name: "index_billing_addresses_on_client_id"
     t.index ["contact_id"], name: "index_billing_addresses_on_contact_id"
   end
 
-  create_table "clients", force: :cascade do |t|
+  create_table "clients", id: :serial, force: :cascade do |t|
     t.integer "work_item_id", null: false
-    t.string "crm_key", limit: 255
+    t.string "crm_key"
     t.boolean "allow_local", default: false, null: false
     t.integer "last_invoice_number", default: 0
     t.string "invoicing_key"
@@ -111,23 +111,23 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_11_175613) do
     t.index ["work_item_id"], name: "index_clients_on_work_item_id"
   end
 
-  create_table "contacts", force: :cascade do |t|
+  create_table "contacts", id: :serial, force: :cascade do |t|
     t.integer "client_id", null: false
-    t.string "lastname", limit: 255
-    t.string "firstname", limit: 255
-    t.string "function", limit: 255
-    t.string "email", limit: 255
-    t.string "phone", limit: 255
-    t.string "mobile", limit: 255
-    t.string "crm_key", limit: 255
+    t.string "lastname"
+    t.string "firstname"
+    t.string "function"
+    t.string "email"
+    t.string "phone"
+    t.string "mobile"
+    t.string "crm_key"
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
     t.string "invoicing_key"
     t.index ["client_id"], name: "index_contacts_on_client_id"
   end
 
-  create_table "contracts", force: :cascade do |t|
-    t.string "number", limit: 255, null: false
+  create_table "contracts", id: :serial, force: :cascade do |t|
+    t.string "number", null: false
     t.date "start_date", null: false
     t.date "end_date", null: false
     t.integer "payment_period", null: false
@@ -136,15 +136,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_11_175613) do
     t.text "notes"
   end
 
-  create_table "custom_lists", force: :cascade do |t|
+  create_table "custom_lists", id: :serial, force: :cascade do |t|
     t.string "name", null: false
-    t.bigint "employee_id"
+    t.integer "employee_id"
     t.string "item_type", null: false
     t.integer "item_ids", null: false, array: true
-    t.index ["employee_id"], name: "index_custom_lists_on_employee_id"
   end
 
-  create_table "delayed_jobs", force: :cascade do |t|
+  create_table "delayed_jobs", id: :serial, force: :cascade do |t|
     t.integer "priority", default: 0, null: false
     t.integer "attempts", default: 0, null: false
     t.text "handler", null: false
@@ -152,30 +151,30 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_11_175613) do
     t.datetime "run_at", precision: nil
     t.datetime "locked_at", precision: nil
     t.datetime "failed_at", precision: nil
-    t.string "locked_by", limit: 255
-    t.string "queue", limit: 255
-    t.string "cron", limit: 255
+    t.string "locked_by"
+    t.string "queue"
+    t.string "cron"
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
-  create_table "departments", force: :cascade do |t|
+  create_table "departments", id: :serial, force: :cascade do |t|
     t.string "name", limit: 255, null: false
     t.string "shortname", limit: 3, null: false
     t.index ["name"], name: "index_departments_on_name", unique: true
     t.index ["shortname"], name: "index_departments_on_shortname", unique: true
   end
 
-  create_table "employees", force: :cascade do |t|
+  create_table "employees", id: :serial, force: :cascade do |t|
     t.string "firstname", limit: 255, null: false
     t.string "lastname", limit: 255, null: false
     t.string "shortname", limit: 3, null: false
     t.string "email", limit: 255, null: false
     t.boolean "management", default: false
-    t.float "initial_vacation_days"
+    t.float "initial_vacation_days", default: -> { "(0)::double precision" }
     t.string "ldapname", limit: 255
-    t.string "eval_periods", array: true
+    t.string "eval_periods", limit: 3, array: true
     t.integer "department_id"
     t.date "committed_worktimes_at"
     t.date "probation_period_end_date"
@@ -203,8 +202,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_11_175613) do
     t.bigint "workplace_id"
     t.boolean "worktimes_commit_reminder", default: true, null: false
     t.index ["department_id"], name: "index_employees_on_department_id"
-    t.index ["shortname"], name: "chk_unique_name", unique: true
     t.index ["workplace_id"], name: "index_employees_on_workplace_id"
+    t.unique_constraint ["shortname"], name: "chk_unique_name"
   end
 
   create_table "employees_invoices", id: false, force: :cascade do |t|
@@ -214,37 +213,33 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_11_175613) do
     t.index ["invoice_id"], name: "index_employees_invoices_on_invoice_id"
   end
 
-  create_table "employment_role_categories", force: :cascade do |t|
+  create_table "employment_role_categories", id: :serial, force: :cascade do |t|
     t.string "name", null: false
     t.index ["name"], name: "index_employment_role_categories_on_name", unique: true
   end
 
-  create_table "employment_role_levels", force: :cascade do |t|
+  create_table "employment_role_levels", id: :serial, force: :cascade do |t|
     t.string "name", null: false
     t.index ["name"], name: "index_employment_role_levels_on_name", unique: true
   end
 
-  create_table "employment_roles", force: :cascade do |t|
+  create_table "employment_roles", id: :serial, force: :cascade do |t|
     t.string "name", null: false
     t.boolean "billable", null: false
     t.boolean "level", null: false
-    t.bigint "employment_role_category_id"
-    t.index ["employment_role_category_id"], name: "index_employment_roles_on_employment_role_category_id"
+    t.integer "employment_role_category_id"
     t.index ["name"], name: "index_employment_roles_on_name", unique: true
   end
 
-  create_table "employment_roles_employments", force: :cascade do |t|
-    t.bigint "employment_id", null: false
-    t.bigint "employment_role_id", null: false
-    t.bigint "employment_role_level_id"
+  create_table "employment_roles_employments", id: :serial, force: :cascade do |t|
+    t.integer "employment_id", null: false
+    t.integer "employment_role_id", null: false
+    t.integer "employment_role_level_id"
     t.decimal "percent", precision: 5, scale: 2, null: false
     t.index ["employment_id", "employment_role_id"], name: "index_unique_employment_employment_role", unique: true
-    t.index ["employment_id"], name: "index_employment_roles_employments_on_employment_id"
-    t.index ["employment_role_id"], name: "index_employment_roles_employments_on_employment_role_id"
-    t.index ["employment_role_level_id"], name: "index_employment_roles_employments_on_employment_role_level_id"
   end
 
-  create_table "employments", force: :cascade do |t|
+  create_table "employments", id: :serial, force: :cascade do |t|
     t.integer "employee_id"
     t.decimal "percent", precision: 5, scale: 2, null: false
     t.date "start_date", null: false
@@ -273,13 +268,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_11_175613) do
     t.index ["status"], name: "index_expenses_on_status"
   end
 
-  create_table "holidays", force: :cascade do |t|
+  create_table "holidays", id: :serial, force: :cascade do |t|
     t.date "holiday_date", null: false
     t.float "musthours_day", null: false
     t.index ["holiday_date"], name: "index_holidays_on_holiday_date", unique: true
   end
 
-  create_table "invoices", force: :cascade do |t|
+  create_table "invoices", id: :serial, force: :cascade do |t|
     t.integer "order_id", null: false
     t.date "billing_date", null: false
     t.date "due_date", null: false
@@ -305,7 +300,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_11_175613) do
     t.index ["work_item_id"], name: "index_invoices_work_items_on_work_item_id"
   end
 
-  create_table "order_comments", force: :cascade do |t|
+  create_table "order_comments", id: :serial, force: :cascade do |t|
     t.integer "order_id", null: false
     t.text "text", null: false
     t.integer "creator_id"
@@ -318,19 +313,19 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_11_175613) do
   create_table "order_contacts", id: false, force: :cascade do |t|
     t.integer "contact_id", null: false
     t.integer "order_id", null: false
-    t.string "comment", limit: 255
+    t.string "comment"
     t.index ["contact_id"], name: "index_order_contacts_on_contact_id"
     t.index ["order_id"], name: "index_order_contacts_on_order_id"
   end
 
-  create_table "order_kinds", force: :cascade do |t|
-    t.string "name", limit: 255, null: false
+  create_table "order_kinds", id: :serial, force: :cascade do |t|
+    t.string "name", null: false
     t.index ["name"], name: "index_order_kinds_on_name", unique: true
   end
 
-  create_table "order_statuses", force: :cascade do |t|
-    t.string "name", limit: 255, null: false
-    t.string "style", limit: 255
+  create_table "order_statuses", id: :serial, force: :cascade do |t|
+    t.string "name", null: false
+    t.string "style"
     t.boolean "closed", default: false, null: false
     t.integer "position", null: false
     t.boolean "default", default: false, null: false
@@ -338,10 +333,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_11_175613) do
     t.index ["position"], name: "index_order_statuses_on_position"
   end
 
-  create_table "order_targets", force: :cascade do |t|
+  create_table "order_targets", id: :serial, force: :cascade do |t|
     t.integer "order_id", null: false
     t.integer "target_scope_id", null: false
-    t.string "rating", limit: 255, default: "green", null: false
+    t.string "rating", default: "green", null: false
     t.text "comment"
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
@@ -352,7 +347,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_11_175613) do
   create_table "order_team_members", force: :cascade do |t|
     t.integer "employee_id", null: false
     t.integer "order_id", null: false
-    t.string "comment", limit: 255
+    t.string "comment"
     t.index ["employee_id", "order_id"], name: "index_order_team_members_on_employee_id_and_order_id", unique: true
   end
 
@@ -368,7 +363,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_11_175613) do
     t.index ["order_id"], name: "index_order_uncertainties_on_order_id"
   end
 
-  create_table "orders", force: :cascade do |t|
+  create_table "orders", id: :serial, force: :cascade do |t|
     t.integer "work_item_id", null: false
     t.integer "kind_id"
     t.integer "responsible_id"
@@ -376,7 +371,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_11_175613) do
     t.integer "department_id"
     t.integer "contract_id"
     t.integer "billing_address_id"
-    t.string "crm_key", limit: 255
+    t.string "crm_key"
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
     t.date "completed_at"
@@ -393,14 +388,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_11_175613) do
     t.index ["work_item_id"], name: "index_orders_on_work_item_id"
   end
 
-  create_table "overtime_vacations", force: :cascade do |t|
+  create_table "overtime_vacations", id: :serial, force: :cascade do |t|
     t.float "hours", null: false
     t.integer "employee_id", null: false
     t.date "transfer_date", null: false
     t.index ["employee_id"], name: "index_overtime_vacations_on_employee_id"
   end
 
-  create_table "plannings", force: :cascade do |t|
+  create_table "plannings", id: :serial, force: :cascade do |t|
     t.integer "employee_id", null: false
     t.integer "work_item_id", null: false
     t.date "date", null: false
@@ -411,25 +406,25 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_11_175613) do
     t.index ["work_item_id"], name: "index_plannings_on_work_item_id"
   end
 
-  create_table "portfolio_items", force: :cascade do |t|
-    t.string "name", limit: 255, null: false
+  create_table "portfolio_items", id: :serial, force: :cascade do |t|
+    t.string "name", null: false
     t.boolean "active", default: true, null: false
     t.index ["name"], name: "index_portfolio_items_on_name", unique: true
   end
 
-  create_table "sectors", force: :cascade do |t|
+  create_table "sectors", id: :serial, force: :cascade do |t|
     t.string "name", null: false
     t.boolean "active", default: true, null: false
   end
 
-  create_table "services", force: :cascade do |t|
+  create_table "services", id: :serial, force: :cascade do |t|
     t.string "name", null: false
     t.boolean "active", default: true, null: false
   end
 
-  create_table "target_scopes", force: :cascade do |t|
-    t.string "name", limit: 255, null: false
-    t.string "icon", limit: 255
+  create_table "target_scopes", id: :serial, force: :cascade do |t|
+    t.string "name", null: false
+    t.string "icon"
     t.integer "position", null: false
     t.string "rating_green_description"
     t.string "rating_orange_description"
@@ -438,18 +433,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_11_175613) do
     t.index ["position"], name: "index_target_scopes_on_position"
   end
 
-  create_table "test", id: false, force: :cascade do |t|
-    t.integer "id", null: false
-  end
-
-  create_table "user_notifications", force: :cascade do |t|
+  create_table "user_notifications", id: :serial, force: :cascade do |t|
     t.date "date_from", null: false
     t.date "date_to"
     t.text "message", null: false
     t.index ["date_from", "date_to"], name: "index_user_notifications_on_date_from_and_date_to"
   end
 
-  create_table "versions", force: :cascade do |t|
+  create_table "versions", id: :serial, force: :cascade do |t|
     t.string "item_type", null: false
     t.integer "item_id", null: false
     t.string "event", null: false
@@ -462,13 +453,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_11_175613) do
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
-  create_table "work_items", force: :cascade do |t|
+  create_table "work_items", id: :serial, force: :cascade do |t|
     t.integer "parent_id"
-    t.string "name", limit: 255, null: false
+    t.string "name", null: false
     t.string "shortname", limit: 5, null: false
     t.text "description"
     t.integer "path_ids", array: true
-    t.string "path_shortnames", limit: 255
+    t.string "path_shortnames"
     t.string "path_names", limit: 2047
     t.boolean "leaf", default: true, null: false
     t.boolean "closed", default: false, null: false
@@ -476,7 +467,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_11_175613) do
     t.index ["path_ids"], name: "index_work_items_on_path_ids"
   end
 
-  create_table "working_conditions", force: :cascade do |t|
+  create_table "working_conditions", id: :serial, force: :cascade do |t|
     t.date "valid_from"
     t.decimal "vacation_days_per_year", precision: 5, scale: 2, null: false
     t.decimal "must_hours_per_day", precision: 4, scale: 2, null: false
@@ -486,7 +477,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_11_175613) do
     t.string "name"
   end
 
-  create_table "worktimes", force: :cascade do |t|
+  create_table "worktimes", id: :serial, force: :cascade do |t|
     t.integer "absence_id"
     t.integer "employee_id"
     t.string "report_type", limit: 255, null: false
@@ -501,10 +492,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_11_175613) do
     t.integer "work_item_id"
     t.integer "invoice_id"
     t.boolean "meal_compensation", default: false, null: false
+    t.text "internal_description"
     t.index ["absence_id", "employee_id", "work_date"], name: "worktimes_absences"
     t.index ["employee_id", "work_date"], name: "worktimes_employees"
     t.index ["invoice_id"], name: "index_worktimes_on_invoice_id"
     t.index ["work_item_id", "employee_id", "work_date"], name: "worktimes_work_items"
+    t.check_constraint "report_type::text = 'start_stop_day'::text OR report_type::text = 'absolute_day'::text OR report_type::text = 'week'::text OR report_type::text = 'month'::text OR report_type::text = 'auto_start'::text", name: "chkname"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
