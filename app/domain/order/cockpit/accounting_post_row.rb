@@ -82,12 +82,25 @@ class Order
       end
 
       def build_supplied_services_cell
-        build_cell_with_amount(supplied_services_hours,
-                               order_order_services_path(@order.id, work_item_ids: accounting_post.work_item.id, start_date: @period.start_date, end_date: @period.end_date))
+        build_cell_with_amount(
+          supplied_services_hours,
+          order_order_services_path(
+            @order.id,
+            work_item_ids: accounting_post.work_item.id,
+            start_date: @period.start_date,
+            end_date: @period.end_date
+          )
+        )
       end
 
       def build_not_billable_cell
-        link_path = order_order_services_path(@order.id, work_item_ids: accounting_post.work_item.id, billable: false, start_date: @period.start_date, end_date: @period.end_date)
+        link_path = order_order_services_path(
+          @order.id,
+          work_item_ids: accounting_post.work_item.id,
+          billable: false,
+          start_date: @period.start_date,
+          end_date: @period.end_date
+        )
         Cell.new(not_billable_hours, calculate_amount(not_billable_hours), link_path)
       end
 
