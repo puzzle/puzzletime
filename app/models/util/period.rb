@@ -235,6 +235,7 @@ class Period
     end
   end
 
+  # TODO: make this deprecated when we use a new approach for flatrates
   def months_as_int_in_period
     return (1..12).to_a if @start_date.blank? || @end_date.blank?
 
