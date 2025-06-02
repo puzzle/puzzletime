@@ -11,7 +11,7 @@ volumes:
 
 services:
   ptimedb:
-    image: postgres:9.5
+    image: postgres:16.6
     ports:
       - '5432:5432'
     volumes:

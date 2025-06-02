@@ -6,6 +6,8 @@
 
 .cockpit-header-item
   Budget
+  %br
+  ( Gesamte Vertragslaufzeit )
   .data-item{title: "Ist-R[#{currency}]"}
     %span.figure-label verrechnet
     %span.figure
@@ -20,6 +22,8 @@
 - if @cockpit.cost_effectiveness_current || @cockpit.cost_effectiveness_forecast
   .cockpit-header-item
     Wirtschaftlichkeit
+    %br
+    ( Gesamte Vertragslaufzeit )
     - if @cockpit.cost_effectiveness_current
       .data-item{title: 'Ist-R[h] / Ist[h] x 100'}
         %span.figure-label Aktuell
@@ -36,6 +40,8 @@
 - if @cockpit.billed_rate
   .cockpit-header-item{title: "Ist-R[#{currency}] / Ist-V[h]"}
     Verrechneter Stundenansatz
+    %br
+    ( Gesamte Vertragslaufzeit )
     .data-item
       %span.figure
         = f(@cockpit.billed_rate)

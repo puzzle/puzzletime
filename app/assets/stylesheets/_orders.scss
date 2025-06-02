@@ -7,7 +7,7 @@
 .orders-header {
   padding: 15px $grid-gutter-width 0 $grid-gutter-width;
   background-color: $gray-lighter;
-  z-index: 2;
+  z-index: 0;
 
   .back {
     padding-top: 7px;
@@ -53,10 +53,15 @@ h1.top {
 }
 
 .orders-cockpit {
+  
   .cockpit-header {
     @include clearfix;
     margin: 0 auto;
-    max-width: 800px;
+  }
+
+  .filter-elements {
+    margin-top: 30px;
+    margin-bottom: 10px;
   }
 
   .cockpit-header-item {
@@ -164,7 +169,7 @@ h1.top {
 
   table.static {
     position: relative;
-    z-index: 20;
+    z-index: 5;
     width: $static-width;
     @include box-shadow(10px 0 5px -2px rgba(208, 208, 208, 0.4));
 
@@ -186,7 +191,7 @@ h1.top {
     top: 0;
     left: $static-width;
     right: 0;
-    z-index: 10;
+    z-index: 0;
     overflow-x: auto;
 
     table {

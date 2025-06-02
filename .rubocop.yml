@@ -9,6 +9,10 @@ plugins:
 AllCops:
   NewCops: enable
 
+Metrics:
+  Exclude:
+    - 'test/**/*'
+
 Naming/InclusiveLanguage:
   Exclude:
     - config/environments/development.rb  # Bullet uses whitelist :(
@@ -48,4 +52,8 @@ Naming/AccessorMethodName:
 Style/SymbolProc:
   Exclude:
     - 'app/serializers/api/v1/employee_serializer.rb'
+
+Metrics/BlockLength:
+  Exclude:
+    - config/routes.rb
 ...

@@ -227,6 +227,8 @@ de-DE:
         name: Name
       employment_roles_employment:
         percent: Pensum
+      expense:
+        department_id: OE
       holiday:
         holiday_date: Datum
         musthours_day: Sollstunden
@@ -288,6 +290,9 @@ de-DE:
         contact: Ansprechsperson
         contact_id: Ansprechsperson
         comment: Funktion
+      order_cost:
+        meal_compensation: Verpflegungsentschädigung
+        expense: Spesen
       order/order_contacts:
         contact: Ansprechsperson
       order/team_members:
@@ -389,6 +394,7 @@ de-DE:
         from_start_time: Von
         to_end_time: Bis
         description: Bemerkungen
+        internal_description: Interne Bemerkungen
         billable: Verrechenbar
         meal_compensation: Verpflegungsentschädigung
         ticket: Ticket

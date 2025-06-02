@@ -12,6 +12,11 @@
     .cockpit-header
       = render 'cockpit_header'
 
+    .filter-elements
+      = form_tag(nil, method: :get, id: 'cockpit_filter_form', class: 'form-inline', role: 'filter') do
+        = direct_filter_date(:start_date, 'Von', @period.start_date)
+        = direct_filter_date(:end_date, 'Bis', @period.end_date)
+        = direct_filter_select(:period_shortcut, nil, predefined_past_period_options, prompt: 'benutzerdefiniert')
     .unindented
       .cockpit-table
         = render 'cockpit_table'
@@ -21,3 +26,5 @@
       = link_to(new_order_accounting_post_path(@order)) do
         = picon('add')
         Buchungsposition hinzufügen
+    = action_link(action_icon('export', 'CSV Export'),
+        params.to_unsafe_h.merge(action: :export_csv, only_path: true))

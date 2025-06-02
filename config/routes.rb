@@ -82,7 +82,13 @@ Rails.application.routes.draw do
       get :employees
     end
 
-    resources :accounting_posts, except: [:show]
+    resources :accounting_posts, except: [:show] do
+      collection do
+        get :export_csv
+      end
+    end
+
+    resource :order_cost, only: [:show]
 
     resource :order_controlling, only: [:show], controller: 'order_controlling'
 
@@ -218,6 +224,7 @@ Rails.application.routes.draw do
 
   scope '/reports' do
     get :orders, to: 'order_reports#index', as: :reports_orders
+    get :invoices, to: 'invoice_reports#index', as: :reports_invoices
     get :workload, to: 'workload_report#index', as: :reports_workload
     get :revenue, to: 'revenue_reports#index', as: :reports_revenue
     get :capacity, to: 'capacity_report#index', as: :reports_capacity
