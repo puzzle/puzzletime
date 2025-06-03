@@ -12,7 +12,9 @@ $('#planned_#{dom_id(@board.subject)}').html('#{j(render('header_planned'))}');
   - row = j(render('row',
                    items: items,
                    legend: @board.row_legend(employee_id, work_item_id),
-                   row_total: @board.total_row_planned_hours(employee_id, work_item_id)))
+                   row_total: @board.total_row_planned_hours(employee_id, work_item_id),
+                   row_total_period: @board.instance_of?(Plannings::OrderBoard) ? @board.total_row_planned_hours(employee_id, work_item_id, only_for_active_period=true) : nil,
+                   row_total_overall: @board.instance_of?(Plannings::OrderBoard)))
   $('##{planning_row_id(employee_id, work_item_id)}').html('#{row}');
 
 App.plannings.initWaypoints();
