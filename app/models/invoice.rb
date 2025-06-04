@@ -104,7 +104,7 @@ class Invoice < ApplicationRecord
 
   def calculated_total_amount
     Rails.logger.info("testest: #{invoice_flatrates.inspect}")
-    invoice_flatrates_total = flatrates.sum { |flt| flt[:amount] }# * invoice_flatrates }
+    invoice_flatrates_total = invoice_flatrates.sum { |iflt| iflt.flatrate[:amount] * (iflt.quantity || 0) }
     total = positions.sum(&:total_amount) + invoice_flatrates_total
     round_to_5_cents(total)
   end
@@ -179,7 +179,7 @@ class Invoice < ApplicationRecord
   end
 
   def flatrates
-    Flatrate.where(id: flatrate_ids).filter { |flatrate| flatrate.not_billed_flatrates_quantity(period.end_date).positive? }
+    Flatrate.where(id: flatrate_ids).filter { |flatrate| flatrate.not_billed_flatrates_quantity(period.end_date, id).positive? }
   end
 
   def lock_client_invoice_number
