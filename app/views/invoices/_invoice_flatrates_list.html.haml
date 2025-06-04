@@ -5,9 +5,11 @@
     - cur_quantity = invoice_flatrate.quantity || max_quantity
     - quantity_options = (0..max_quantity).to_a
 
-    - next if (max_quantity == 0)
+    - display = 'inherit'
+    - if (max_quantity == 0)
+      - display = 'none'
 
-    .invoice-flatrate
+    .invoice-flatrate{ style: "display: #{display};" }
       .row
         = label_tag :flatrate_name, 'Name', class: 'col-md-2 control-label'
         .col-md-4.form-control-static
@@ -28,6 +30,6 @@
         = label_tag "invoice[invoice_flatrates_attributes][#{i}][quantity]", 'Anzahl', class: 'col-md-2 control-label'
         .col-md-4
           = select_tag "invoice[invoice_flatrates_attributes][#{i}][quantity]", options_for_select(quantity_options, selected: cur_quantity), {:class=>"form-control"}
-    .row
-      .col-md-7
-        %hr
+      .row
+        .col-md-7
+          %hr
