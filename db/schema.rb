@@ -300,6 +300,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_15_110845) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["flatrate_id"], name: "index_invoice_flatrates_on_flatrate_id"
+    t.index ["invoice_id", "flatrate_id"], name: "index_invoice_flatrates_on_invoice_id_and_flatrate_id", unique: true
     t.index ["invoice_id"], name: "index_invoice_flatrates_on_invoice_id"
   end
 

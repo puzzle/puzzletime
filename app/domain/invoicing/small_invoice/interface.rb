@@ -8,8 +8,8 @@
 module Invoicing
   module SmallInvoice
     class Interface < Invoicing::Interface
-      def save_invoice(invoice, positions, flatrates = [])
-        InvoiceStore.new(invoice).save(positions, flatrates)
+      def save_invoice(invoice, positions, invoice_flatrates = [])
+        InvoiceStore.new(invoice).save(positions, invoice_flatrates)
       end
 
       def sync_invoice(invoice)
