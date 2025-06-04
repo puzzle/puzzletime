@@ -9,12 +9,12 @@ module Invoicing
   module SmallInvoice
     module Entity
       class Invoice < Base
-        attr_reader :positions, :flatrates
+        attr_reader :positions, :invoice_flatrates
 
-        def initialize(invoice, positions, flatrates)
+        def initialize(invoice, positions, invoice_flatrates)
           super(invoice)
           @positions = positions
-          @flatrates = flatrates
+          @invoice_flatrates = invoice_flatrates
         end
 
         def merged_positions
@@ -22,7 +22,7 @@ module Invoicing
             Invoicing::SmallInvoice::Entity::Position.new(p).to_hash
           end
 
-          smallinvoice_flatrate_positions = flatrates.collect do |f|
+          smallinvoice_flatrate_positions = invoice_flatrates.collect do |f|
             Invoicing::SmallInvoice::Entity::FlatratePosition.new(f).to_hash
           end
 

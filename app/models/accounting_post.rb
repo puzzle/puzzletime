@@ -82,10 +82,6 @@ class AccountingPost < ApplicationRecord
     end
   end
 
-  def active_flatrates
-    flatrates.where(active: true)
-  end
-
   def booked_on_order?
     order.present? && work_item_id == order.work_item_id
   end

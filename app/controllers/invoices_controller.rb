@@ -43,6 +43,20 @@ class InvoicesController < CrudController
     assign_attributes
     @autoselect_workitems_and_employees = true
     @period = Period.with(nil, nil)
+
+    Rails.logger.info("NEW, before: #{@invoice.invoice_flatrates.inspect}")
+
+    order.accounting_posts.flat_map(&:flatrates).each do |flatrate|
+      next if @invoice.invoice_flatrates.pluck(:flatrate_id).include?(flatrate.id)
+
+      Rails.logger.info("flatrate #{flatrate.name} doesn't exist yet. Creating a new invoice_flatrate")
+      @invoice.invoice_flatrates.build(
+        flatrate: flatrate,
+        invoice: @invoice,
+        quantity: flatrate.not_billed_flatrates_quantity(@period.end_date, @invoice.id)
+      )
+    end
+    Rails.logger.info("NEW, after: #{@invoice.invoice_flatrates.inspect}")
   end
 
   def edit
@@ -81,15 +95,6 @@ class InvoicesController < CrudController
   end
 
   # AJAX
-  # TODO: this must return invoice_flatrates (including quantity),
-  # Also, rename function accordingly
-  def flatrates_for_date(to)
-    p = Period.with(nil, to)
-    Rails.logger.info("flatrates_for_date call: #{p.end_date.inspect}")
-    order.accounting_posts.flat_map(&:flatrates).select { |flatrate| flatrate.not_billed_flatrates_quantity(p.end_date, @invoice.id).positive? }
-  end
-
-  # AJAX
   def billing_addresses
     client_id = params[model_identifier][:billing_client_id].presence
     @billing_client = client_id && Client.find(client_id)
@@ -103,18 +108,31 @@ class InvoicesController < CrudController
     to = model_params[:period_to]
     @period = Period.with(from, to)
 
+    Rails.logger.info("FILTER, before: #{@invoice.invoice_flatrates.inspect}")
+
+    order.accounting_posts.flat_map(&:flatrates).each do |flatrate|
+      next if @invoice.invoice_flatrates.pluck(:flatrate_id).include?(flatrate.id)
+
+      Rails.logger.info("flatrate #{flatrate.name} doesn't exist yet. Creating a new invoice_flatrate")
+      @invoice.invoice_flatrates.build(
+        flatrate: flatrate,
+        invoice: @invoice,
+        quantity: flatrate.not_billed_flatrates_quantity(@period.end_date, @invoice.id)
+      )
+    end
+
+    Rails.logger.info("FILTER, after: #{@invoice.invoice_flatrates.inspect}")
+
     Rails.logger.info("from: #{from.inspect}")
     Rails.logger.info("to: #{to.inspect}")
     Rails.logger.info("@period: #{@period.inspect}")
 
     @employees = employees_for_period(from, to)
     @work_items = work_items_for_period(from, to)
-    @flatrates = flatrates_for_date(@period.end_date)
 
     # replace employees_ids in entry with the list of actually selectable employees
     entry.employee_ids = @employees.pluck(:id)
     entry.work_item_ids = @work_items.pluck(:id)
-    entry.flatrate_ids = @flatrates.pluck(:id)
   end
 
   private
@@ -155,9 +173,9 @@ class InvoicesController < CrudController
     attrs[:billing_address_id] ||= default_billing_address_id
     attrs[:grouping] ||= last_grouping
 
-    if attrs[:flatrate_ids].blank?
-      attrs[:flatrate_ids] = flatrates_for_date(attrs[:period_to]).map(&:id)
-    end
+    # if attrs[:flatrate_ids].blank?
+    #   attrs[:flatrate_ids] = flatrates_for_date(attrs[:period_to]).map(&:id)
+    # end
     if attrs[:employee_ids].blank?
       attrs[:employee_ids] = employees_for_period(attrs[:period_from],
                                                   attrs[:period_to]).map(&:id)
@@ -186,7 +204,7 @@ class InvoicesController < CrudController
   def load_associations
     @employees = employees_for_period(entry.period_from, entry.period_to)
     @work_items = work_items_for_period(entry.period_from, entry.period_to)
-    @flatrates = flatrates_for_date(entry.period_to)
+    # @flatrates = flatrates_for_date(entry.period_to)
     @billing_clients = Client.list
     @billing_client = entry.billing_client
     @billing_addresses = load_billing_addresses(@billing_client)
