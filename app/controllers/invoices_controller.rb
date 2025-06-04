@@ -42,6 +42,11 @@ class InvoicesController < CrudController
   def new
     assign_attributes
     @autoselect_workitems_and_employees = true
+    @period = Period.with(nil, nil)
+  end
+
+  def edit
+    @period = Period.with(@invoice.period_from, @invoice.period_to)
   end
 
   def sync
@@ -81,7 +86,7 @@ class InvoicesController < CrudController
   def flatrates_for_date(to)
     p = Period.with(nil, to)
     Rails.logger.info("flatrates_for_date call: #{p.end_date.inspect}")
-    order.accounting_posts.flat_map(&:flatrates).select { |flatrate| flatrate.not_billed_flatrates_quantity(p.end_date).positive? }
+    order.accounting_posts.flat_map(&:flatrates).select { |flatrate| flatrate.not_billed_flatrates_quantity(p.end_date, @invoice.id).positive? }
   end
 
   # AJAX
@@ -104,7 +109,8 @@ class InvoicesController < CrudController
 
     @employees = employees_for_period(from, to)
     @work_items = work_items_for_period(from, to)
-    @flatrates = flatrates_for_date(to)
+    @flatrates = flatrates_for_date(@period.end_date)
+
     # replace employees_ids in entry with the list of actually selectable employees
     entry.employee_ids = @employees.pluck(:id)
     entry.work_item_ids = @work_items.pluck(:id)
@@ -205,11 +211,6 @@ class InvoicesController < CrudController
   # determine the checked employee_ids in the form
   def checked_employee_ids
     entry.employee_ids.presence
-  end
-
-  # determine the checked flatrate_ids in the form
-  def checked_flatrate_ids
-    entry.flatrate_ids.presence
   end
 
   def billing_clients

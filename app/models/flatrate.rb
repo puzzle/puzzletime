@@ -37,8 +37,8 @@ class Flatrate < ApplicationRecord
 
   # takes in a date d and returns the amount of billed flatrates minus the amount of planned flatrates
   # (according to flatrate schedule) since the beginning of the contract until min(d, contract end date)
-  def not_billed_flatrates_quantity(end_date)
-    billed_flatrate_quantity = InvoiceFlatrate.where(flatrate_id: id).sum(:quantity) || 0
+  def not_billed_flatrates_quantity(end_date, invoice_id)
+    billed_flatrate_quantity = InvoiceFlatrate.where(flatrate_id: id).where.not(invoice_id: invoice_id).sum(:quantity) || 0
     Rails.logger.info("end_date: #{end_date}")
     stop_date = active_to.present? ? [end_date, active_to].compact.min : end_date
 
