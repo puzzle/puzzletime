@@ -5,12 +5,29 @@
     - cur_quantity = invoice_flatrate.quantity || max_quantity
     - quantity_options = (0..max_quantity).to_a
 
-    .invoice-flatrate
-      %p= flatrate.name
-      %p= number_to_currency(flatrate.amount)
+    - next if (max_quantity == 0)
 
-      = hidden_field_tag "invoice[invoice_flatrates_attributes][#{i}][id]", invoice_flatrate.id if invoice_flatrate.id.present?
-      = hidden_field_tag "invoice[invoice_flatrates_attributes][#{i}][flatrate_id]", flatrate.id
-      = hidden_field_tag "invoice[invoice_flatrates_attributes][#{i}][accounting_post_id]", flatrate.accounting_post_id
-      = label_tag "invoice[invoice_flatrates_attributes][#{i}][quantity]", 'Quantity'
-      = select_tag "invoice[invoice_flatrates_attributes][#{i}][quantity]", options_for_select(quantity_options, selected: cur_quantity)
+    .invoice-flatrate
+      .row
+        = label_tag :flatrate_name, 'Name', class: 'col-md-2 control-label'
+        .col-md-4.form-control-static
+          = flatrate.name
+      .row
+        = label_tag :flatrate_description, 'Beschreibung', class: 'col-md-2 control-label'
+        .col-md-4.form-control-static
+          = flatrate.description.presence || 'keine'
+      .row
+        = label_tag :flatrate_amount, 'Betrag', class: 'col-md-2 control-label'
+        .col-md-4.form-control-static
+          = number_to_currency(flatrate.amount)
+
+        = hidden_field_tag "invoice[invoice_flatrates_attributes][#{i}][id]", invoice_flatrate.id if invoice_flatrate.id.present?
+        = hidden_field_tag "invoice[invoice_flatrates_attributes][#{i}][flatrate_id]", flatrate.id
+        = hidden_field_tag "invoice[invoice_flatrates_attributes][#{i}][accounting_post_id]", flatrate.accounting_post_id
+      .row
+        = label_tag "invoice[invoice_flatrates_attributes][#{i}][quantity]", 'Anzahl', class: 'col-md-2 control-label'
+        .col-md-4
+          = select_tag "invoice[invoice_flatrates_attributes][#{i}][quantity]", options_for_select(quantity_options, selected: cur_quantity), {:class=>"form-control"}
+    .row
+      .col-md-7
+        %hr
