@@ -22,5 +22,7 @@ class CreateFlatrates < ActiveRecord::Migration[7.1]
 
       t.timestamps
     end
+
+    add_index :invoice_flatrates, %i[invoice_id flatrate_id], unique: true
   end
 end

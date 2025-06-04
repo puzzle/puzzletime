@@ -57,7 +57,6 @@ class Invoice < ApplicationRecord
   before_validation :update_totals
   before_save :save_remote_invoice, if: -> { Invoicing.instance.present? }
   before_save :assign_worktimes
-  before_save :assign_flatrates
   before_create :lock_client_invoice_number
   after_create :update_client_invoice_number
   after_destroy :delete_remote_invoice, if: -> { Invoicing.instance.present? }
@@ -178,10 +177,6 @@ class Invoice < ApplicationRecord
              .where(invoice_id: [id, nil])
   end
 
-  def flatrates
-    Flatrate.where(id: flatrate_ids).filter { |flatrate| flatrate.not_billed_flatrates_quantity(period.end_date, id).positive? }
-  end
-
   def lock_client_invoice_number
     order.client.lock!
     generate_reference
@@ -245,7 +240,7 @@ class Invoice < ApplicationRecord
   end
 
   def save_remote_invoice
-    self.invoicing_key = Invoicing.instance.save_invoice(self, positions, flatrates)
+    self.invoicing_key = Invoicing.instance.save_invoice(self, positions, invoice_flatrates)
   rescue Invoicing::Error => e
     errors.add(:base, "Fehler im Invoicing Service: #{e.message}")
     Rails.logger.error("#{e.class.name}: #{e.message}\n#{e.backtrace.join("\n")}")
@@ -265,10 +260,6 @@ class Invoice < ApplicationRecord
 
   def assign_worktimes
     self.ordertimes = manual_invoice? ? [] : worktimes
-  end
-
-  def assign_flatrates
-    self.flatrates = manual_invoice? ? [] : flatrates
   end
 
   def round_to_5_cents(amount)
