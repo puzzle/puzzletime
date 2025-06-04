@@ -1,9 +1,12 @@
 #invoice-flatrates
-  - @invoice.invoice_flatrates.each_with_index do |invoice_flatrate, i|
+  - shown_flatrates = Set.new
+  - @invoice.invoice_flatrates.reverse.each_with_index do |invoice_flatrate, i|
+    - next unless shown_flatrates.add?(invoice_flatrate.flatrate_id) # skips if already seen
+
     - flatrate = invoice_flatrate.flatrate
-    -# - max_quantity = flatrate.
-    - default_quantity = invoice_flatrate.quantity || 10
-    - quantity_options = (0..default_quantity).to_a
+    - max_quantity = flatrate.not_billed_flatrates_quantity(@period.end_date, @invoice.id)
+    - cur_quantity = invoice_flatrate.quantity || max_quantity
+    - quantity_options = (0..max_quantity).to_a
 
     .invoice-flatrate
       %p= flatrate.name
@@ -12,4 +15,4 @@
       = hidden_field_tag "invoice[invoice_flatrates_attributes][#{i}][flatrate_id]", flatrate.id
       = hidden_field_tag "invoice[invoice_flatrates_attributes][#{i}][accounting_post_id]", flatrate.accounting_post_id
       = label_tag "invoice[invoice_flatrates_attributes][#{i}][quantity]", 'Quantity'
-      = select_tag "invoice[invoice_flatrates_attributes][#{i}][quantity]", options_for_select(quantity_options, selected: default_quantity)
+      = select_tag "invoice[invoice_flatrates_attributes][#{i}][quantity]", options_for_select(quantity_options, selected: cur_quantity)
