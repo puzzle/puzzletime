@@ -49,12 +49,14 @@ class Invoice < ApplicationRecord
   validate :assert_order_has_contract
   validate :assert_order_not_closed
 
-  accepts_nested_attributes_for :invoice_flatrates, reject_if: ->(attrs) { attrs['quantity'].blank? || attrs['quantity'].to_i <= 0 }
+  accepts_nested_attributes_for :invoice_flatrates, allow_destroy: true
 
+  before_validation :reject_zero_quantity_flatrates
   before_validation :set_default_status
   before_validation :generate_reference, on: :create
   before_validation :generate_due_date
   before_validation :update_totals
+
   before_save :save_remote_invoice, if: -> { Invoicing.instance.present? }
   before_save :assign_worktimes
   before_create :lock_client_invoice_number
@@ -190,6 +192,10 @@ class Invoice < ApplicationRecord
     return unless order.billing_address_id != billing_address_id
 
     order.update_column(:billing_address_id, billing_address_id)
+  end
+
+  def reject_zero_quantity_flatrates
+    self.invoice_flatrates = invoice_flatrates.reject { |f| f.quantity.to_i <= 0 }
   end
 
   def update_totals
