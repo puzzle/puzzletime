@@ -61,6 +61,16 @@ class InvoicesController < CrudController
 
   def edit
     @period = Period.with(@invoice.period_from, @invoice.period_to)
+    order.accounting_posts.flat_map(&:flatrates).each do |flatrate|
+      next if @invoice.invoice_flatrates.pluck(:flatrate_id).include?(flatrate.id)
+
+      Rails.logger.info("flatrate #{flatrate.name} doesn't exist yet. Creating a new invoice_flatrate")
+      @invoice.invoice_flatrates.build(
+        flatrate: flatrate,
+        invoice: @invoice,
+        quantity: 0 # if it didn't exist before, we initialize it with 0
+      )
+    end
   end
 
   def sync
