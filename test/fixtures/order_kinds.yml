@@ -4,6 +4,7 @@
 #  https://github.com/puzzle/puzzletime.
 
 
+# {{{
 # == Schema Information
 #
 # Table name: order_kinds
@@ -11,6 +12,11 @@
 #  id   :integer          not null, primary key
 #  name :string           not null
 #
+# Indexes
+#
+#  index_order_kinds_on_name  (name) UNIQUE
+#
+# }}}
 
 ---
 projekt:

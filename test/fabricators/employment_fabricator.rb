@@ -5,18 +5,28 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
+# {{{
 # == Schema Information
 #
 # Table name: employments
 #
 #  id                     :integer          not null, primary key
-#  employee_id            :integer
+#  comment                :string
+#  end_date               :date
 #  percent                :decimal(5, 2)    not null
 #  start_date             :date             not null
-#  end_date               :date
 #  vacation_days_per_year :decimal(5, 2)
-#  comment                :string
+#  employee_id            :integer
 #
+# Indexes
+#
+#  index_employments_on_employee_id  (employee_id)
+#
+# Foreign Keys
+#
+#  fk_employments_employees  (employee_id => employees.id) ON DELETE => cascade
+#
+# }}}
 
 Fabricator(:employment) do
   employee

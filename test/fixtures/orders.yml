@@ -4,27 +4,39 @@
 #  https://github.com/puzzle/puzzletime.
 
 
+# {{{
 # == Schema Information
 #
 # Table name: orders
 #
 #  id                 :integer          not null, primary key
-#  work_item_id       :integer          not null
+#  closed_at          :date
+#  committed_at       :date
+#  completed_at       :date
+#  crm_key            :string
+#  major_chance_value :integer
+#  major_risk_value   :integer
+#  created_at         :datetime
+#  updated_at         :datetime
+#  billing_address_id :integer
+#  contract_id        :integer
+#  department_id      :integer
 #  kind_id            :integer
 #  responsible_id     :integer
 #  status_id          :integer
-#  department_id      :integer
-#  contract_id        :integer
-#  billing_address_id :integer
-#  crm_key            :string
-#  created_at         :datetime
-#  updated_at         :datetime
-#  completed_at       :date
-#  committed_at       :date
-#  closed_at          :date
-#  major_risk_value   :integer
-#  major_chance_value :integer
+#  work_item_id       :integer          not null
 #
+# Indexes
+#
+#  index_orders_on_billing_address_id  (billing_address_id)
+#  index_orders_on_contract_id         (contract_id)
+#  index_orders_on_department_id       (department_id)
+#  index_orders_on_kind_id             (kind_id)
+#  index_orders_on_responsible_id      (responsible_id)
+#  index_orders_on_status_id           (status_id)
+#  index_orders_on_work_item_id        (work_item_id)
+#
+# }}}
 
 ---
 puzzletime:

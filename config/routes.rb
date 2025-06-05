@@ -72,6 +72,8 @@ Rails.application.routes.draw do
 
   resources :holidays, except: [:show]
 
+  resources :market_opportunities, except: [:show]
+
   resources :orders do
     collection do
       get :search
