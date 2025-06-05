@@ -8,14 +8,9 @@ App.plannings.selectable.clear();
 App.plannings.selectable.destroy();
 $('#weeks_header_#{dom_id(@board.subject)}').html('#{j(render 'calendar_weeks')}');
 $('#planned_#{dom_id(@board.subject)}').html('#{j(render('header_planned'))}');
-- @board.rows.each do |(employee_id, work_item_id), items|
-  - row = j(render('row',
-                   items: items,
-                   legend: @board.row_legend(employee_id, work_item_id),
-                   row_total: @board.total_row_planned_hours(employee_id, work_item_id),
-                   row_total_period: @board.instance_of?(Plannings::OrderBoard) ? @board.total_row_planned_hours(employee_id, work_item_id, only_for_active_period=true) : nil,
-                   row_total_overall: @board.instance_of?(Plannings::OrderBoard)))
-  $('##{planning_row_id(employee_id, work_item_id)}').html('#{row}');
+- @board_updates.each do |row_data|
+  - row = j(render('row', **row_data[:locals]))
+  $('##{planning_row_id(*row_data[:ids])}').html('#{row}');
 
 App.plannings.initWaypoints();
 App.plannings.selectable.init();

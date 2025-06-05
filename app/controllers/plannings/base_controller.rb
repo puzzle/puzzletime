@@ -35,7 +35,8 @@ module Plannings
       creator = Plannings::Creator.new(params_with_restricted_items)
       respond_to do |format|
         if creator.create_or_update
-          format.js { @board = build_board_for(creator.plannings) }
+          @board_updates = board_updates(creator)
+          format.js
         else
           format.js { render :errors, locals: { errors: creator.errors } }
         end
@@ -53,6 +54,25 @@ module Plannings
     end
 
     private
+
+    def board_updates(creator)
+      @board = build_board_for(creator.plannings)
+      is_order_board = @board.is_a? Plannings::OrderBoard
+
+      @board.rows.map do |ids, items|
+        period = @board.total_row_planned_hours(*ids, true) if is_order_board
+        {
+          ids: ids,
+          locals: {
+            items: items,
+            legend: @board.row_legend(*ids),
+            row_total: @board.total_row_planned_hours(*ids),
+            row_total_period: period,
+            row_total_overall: is_order_board
+          }
+        }
+      end
+    end
 
     def destroy_plannings
       Planning.transaction do
