@@ -112,8 +112,8 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
   end
 
   test 'create planning entries' do
-    page.assert_selector("#planned_order_#{orders(:puzzletime).id}",
-                         text: '6 von 100 Stunden verplant')
+    page.assert_selector("#planned_order_#{orders(:puzzletime).id} .total-sum .header-planned-amount",
+                         text: '6 / 100')
     drag(row_pascal.all('.day')[2], row_pascal.all('.day')[4])
 
     page.assert_selector('.-selected', count: 3)
@@ -130,8 +130,8 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     page.assert_selector('.planning-panel', visible: false)
     assert_percents ['50', '', '', '', '', ''], row_mark
     assert_percents ['25', '', '100', '100', '100', ''], row_pascal
-    page.assert_selector("#planned_order_#{orders(:puzzletime).id}",
-                         text: '30 von 100 Stunden verplant')
+    page.assert_selector("#planned_order_#{orders(:puzzletime).id} .total-sum .header-planned-amount",
+                         text: '30 / 100')
   end
 
   test 'create planning entries with multiple accounting posts' do
@@ -140,8 +140,8 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
     visit plannings_order_path(orders(:hitobito_demo))
 
-    page.assert_selector("#planned_order_#{orders(:hitobito_demo).id}",
-                         text: '16 von 0 Stunden verplant')
+    page.assert_selector("#planned_order_#{orders(:hitobito_demo).id} .total-sum .header-planned-amount",
+                         text: '16 / 0')
     page.assert_selector("#group_header_times_accounting_post_#{accounting_posts(:hitobito_demo_app).id}",
                          text: '10 / 0 h')
     page.assert_selector("#group_header_times_accounting_post_#{accounting_posts(:hitobito_demo_site).id}",
@@ -157,8 +157,8 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
       click_button 'OK'
     end
 
-    page.assert_selector("#planned_order_#{orders(:hitobito_demo).id}",
-                         text: '40 von 0 Stunden verplant')
+    page.assert_selector("#planned_order_#{orders(:hitobito_demo).id} .total-sum .header-planned-amount",
+                         text: '40 / 0')
     page.assert_selector("#group_header_times_accounting_post_#{accounting_posts(:hitobito_demo_app).id}",
                          text: '34 / 0 h')
     page.assert_selector("#group_header_times_accounting_post_#{accounting_posts(:hitobito_demo_site).id}",
@@ -536,6 +536,60 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     page.assert_selector('.groupheader.collapsed', count: 0)
     page.assert_selector('.planning-calendar-days', count: 2)
     page.assert_selector('.selectize-dropdown-content', count: 1)
+  end
+
+  test 'total time and visible time are shown per row' do
+    date = Time.zone.today.beginning_of_week
+    Planning.create!({ employee_id: employees(:mark).id,
+                       work_item_id:,
+                       date: (date + 1.day).strftime('%Y-%m-%d'),
+                       percent: 50,
+                       definitive: true })
+    Planning.create!({ employee_id: employees(:mark).id,
+                       work_item_id:,
+                       date: (date + 4.months).strftime('%Y-%m-%d'),
+                       percent: 50,
+                       definitive: true })
+
+    visit plannings_order_path(orders(:puzzletime))
+
+    assert_equal '8 h', row_mark.find('.inperiod-sum').text
+    assert_equal '12 h', row_mark.find('.total-sum').text
+
+    select 'Nächste 12 Monate', from: 'period_shortcut'
+    sleep 0.5 # give time to update values
+
+    assert_equal '12 h', row_mark.find('.inperiod-sum').text
+    assert_equal '12 h', row_mark.find('.total-sum').text
+  end
+
+  test 'total overall time for selected period is shown' do
+    date = Time.zone.today.beginning_of_week
+    Planning.create!({ employee_id: employees(:mark).id,
+                       work_item_id:,
+                       date: (date + 1.day).strftime('%Y-%m-%d'),
+                       percent: 50,
+                       definitive: true })
+    Planning.create!({ employee_id: employees(:mark).id,
+                       work_item_id:,
+                       date: (date + 4.months).strftime('%Y-%m-%d'),
+                       percent: 50,
+                       definitive: true })
+
+    visit plannings_order_path(orders(:puzzletime))
+
+    page.assert_selector("#planned_order_#{orders(:puzzletime).id} .total-sum .header-planned-amount",
+                         text: '14 / 100')
+    page.assert_selector("#planned_order_#{orders(:puzzletime).id} .inperiod-sum .header-planned-amount",
+                         text: '10')
+
+    select 'Nächste 12 Monate', from: 'period_shortcut'
+    sleep 0.5 # give time to update values
+
+    page.assert_selector("#planned_order_#{orders(:puzzletime).id} .total-sum .header-planned-amount",
+                         text: '14 / 100')
+    page.assert_selector("#planned_order_#{orders(:puzzletime).id} .inperiod-sum .header-planned-amount",
+                         text: '14')
   end
 
   private
