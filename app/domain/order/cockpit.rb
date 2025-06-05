@@ -11,9 +11,9 @@ class Order
 
     EM_DASH = '―'
 
-    def initialize(order)
+    def initialize(order, period)
       @order = order
-      @rows = build_rows
+      @rows = build_rows(period)
     end
 
     def billed_amount
@@ -26,18 +26,18 @@ class Order
 
     # Ist-R[currency] / Ist-V[h]
     def billed_rate
-      billable_hours.positive? ? billed_amount / billable_hours : nil
+      billable_hours.positive? ? billed_amount / overall_billable_hours : nil
     end
 
     # Ist-R[h] / Ist[h] x 100
     def cost_effectiveness_current
-      result = (order.invoices.where.not(status: 'cancelled').sum(:total_hours).to_f / total_hours) * 100.0
+      result = (order.invoices.where.not(status: 'cancelled').sum(:total_hours).to_f / overall_total_hours) * 100.0
       result.finite? ? result.round : EM_DASH
     end
 
     # (Ist[h]-Ist-NV[h]) / Ist[h] x 100
     def cost_effectiveness_forecast
-      result = (1 - (not_billable_hours / total_hours)) * 100.0
+      result = (1 - (overall_not_billable_hours / overall_total_hours)) * 100.0
       result.finite? ? result.round : EM_DASH
     end
 
@@ -59,13 +59,25 @@ class Order
       total.cells[:supplied_services].hours.to_f
     end
 
-    def build_rows
+    def overall_not_billable_hours
+      total.info[:overall_not_billable_hours].to_f
+    end
+
+    def overall_billable_hours
+      overall_total_hours - overall_not_billable_hours
+    end
+
+    def overall_total_hours
+      total.info[:overall_supplied_services_hours].to_f
+    end
+
+    def build_rows(period)
       if sub_levels?
-        rows = accounting_posts.collect { |p| AccountingPostRow.new(p) }
+        rows = accounting_posts.collect { |p| AccountingPostRow.new(p, order, period) }
         total = TotalRow.new(rows)
         [total, *rows]
       else
-        [AccountingPostRow.new(accounting_posts.first, order.work_item.path_shortnames)]
+        [AccountingPostRow.new(accounting_posts.first, order, period, order.work_item.path_shortnames)]
       end
     end
 

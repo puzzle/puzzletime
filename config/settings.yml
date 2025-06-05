@@ -153,6 +153,8 @@ meal_compensation:
   active: <%= ENV['RAILS_PTIME_MEALTIME_COMPENSATION_ACTIVE'].try(:downcase) == 'true' %>
   url: <%= ENV['RAILS_PTIME_MEALTIME_COMPENSATION_URL'] %>
 
+company_logo: <%= ENV['RAILS_PTIME_COMPANY_LOGO'] || 'company_logo.png' %>
+
 reports:
   # The minimum values for a given color in order reports.
   orders:

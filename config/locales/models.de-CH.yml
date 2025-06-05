@@ -251,6 +251,7 @@ de-CH:
         receipt: Beleg
         reimbursement_month: Auszahlungsmonat
         reviewer_id: Visum
+        department_id: OE
         reason: Begründung / Bemerkung
         reviewed_at: Visiert am
       expense/statuses:
@@ -325,6 +326,9 @@ de-CH:
         contact: Ansprechsperson
         contact_id: Ansprechsperson
         comment: Funktion
+      order_cost:
+        meal_compensation: Verpflegungsentschädigung
+        expense: Spesen
       order/order_contacts:
         contact: Ansprechsperson
       order/team_members:

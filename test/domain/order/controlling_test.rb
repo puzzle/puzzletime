@@ -47,40 +47,40 @@ class Order
 
       expected = {}
       expected[Time.utc(2000, 1, 3)] = {
-        billable: 850.0,
-        unbillable: 300.0,
-        planned_definitive: 0.0,
-        planned_provisional: 0.0
+        billable: { amount: 850.0, hours: 8.0 },
+        unbillable: { amount: 300.0, hours: 3.0 },
+        planned_definitive: { amount: 0.0, hours: 0.0 },
+        planned_provisional: { amount: 0.0, hours: 0.0 }
       }
       expected[Time.utc(2000, 1, 3) + 1.week] = {
-        billable: 1300.0,
-        unbillable: 500.0,
-        planned_definitive: 0.0,
-        planned_provisional: 0.0
+        billable: { amount: 1300.0, hours: 13.0 },
+        unbillable: { amount: 500.0, hours: 5.0 },
+        planned_definitive: { amount: 0.0, hours: 0.0 },
+        planned_provisional: { amount: 0.0, hours: 0.0 }
       }
       expected[Time.utc(2000, 1, 3) + 2.weeks] = {
-        billable: 800.0,
-        unbillable: 0.0,
-        planned_definitive: 0.0,
-        planned_provisional: 0.0
+        billable: { amount: 800.0, hours: 8.0 },
+        unbillable: { amount: 0.0, hours: 0.0 },
+        planned_definitive: { amount: 0.0, hours: 0.0 },
+        planned_provisional: { amount: 0.0, hours: 0.0 }
       }
       expected[Time.utc(2000, 1, 3) + 3.weeks] = {
-        billable: 0.0,
-        unbillable: 0.0,
-        planned_definitive: 240 + 120,
-        planned_provisional: 320
+        billable: { amount: 0.0, hours: 0.0 },
+        unbillable: { amount: 0.0, hours: 0.0 },
+        planned_definitive: { amount: 360.0, hours: 3.2 },
+        planned_provisional: { amount: 320.0, hours: 3.2 }
       }
       expected[Time.utc(2000, 1, 3) + 4.weeks] = { # gap is filled with empty entry
-        billable: 0.0,
-        unbillable: 0.0,
-        planned_definitive: 0.0,
-        planned_provisional: 0.0
+        billable: { amount: 0.0, hours: 0.0 },
+        unbillable: { amount: 0.0, hours: 0.0 },
+        planned_definitive: { amount: 0.0, hours: 0.0 },
+        planned_provisional: { amount: 0.0, hours: 0.0 }
       }
       expected[Time.utc(2000, 1, 3) + 5.weeks] = {
-        billable: 0.0,
-        unbillable: 0.0,
-        planned_definitive: 480,
-        planned_provisional: 0.0
+        billable: { amount: 0.0, hours: 0.0 },
+        unbillable: { amount: 0.0, hours: 0.0 },
+        planned_definitive: { amount: 480.0, hours: 4.8 },
+        planned_provisional: { amount: 0.0, hours: 0.0 }
       }
 
       assert_equal expected, controlling.efforts_per_week
@@ -103,34 +103,34 @@ class Order
 
       expected = {}
       expected[Time.utc(2000, 1, 3)] = {
-        billable: 200.0,
-        unbillable: 100.0,
-        planned_definitive: 0.0,
-        planned_provisional: 0.0
+        billable: { amount: 200.0, hours: 2.0 },
+        unbillable: { amount: 100.0, hours: 1.0 },
+        planned_definitive: { amount: 0.0, hours: 0.0 },
+        planned_provisional: { amount: 0.0, hours: 0.0 }
       }
       expected[Time.utc(2000, 1, 3) + 1.week] = {
-        billable: 600.0,
-        unbillable: 400.0,
-        planned_definitive: 0.0,
-        planned_provisional: 0.0
+        billable: { amount: 600.0, hours: 6.0 },
+        unbillable: { amount: 400.0, hours: 4.0 },
+        planned_definitive: { amount: 0.0, hours: 0.0 },
+        planned_provisional: { amount: 0.0, hours: 0.0 }
       }
       expected[Time.utc(2000, 1, 3) + 2.weeks] = {
-        billable: 1100.0,
-        unbillable: 400.0,
-        planned_definitive: 0.0,
-        planned_provisional: 0.0
+        billable: { amount: 1100.0, hours: 11.0 },
+        unbillable: { amount: 400.0, hours: 4.0 },
+        planned_definitive: { amount: 0.0, hours: 0.0 },
+        planned_provisional: { amount: 0.0, hours: 0.0 }
       }
       expected[Time.utc(2000, 1, 3) + 3.weeks] = {
-        billable: 1100.0,
-        unbillable: 400.0,
-        planned_definitive: 80,
-        planned_provisional: 160
+        billable: { amount: 1100.0, hours: 11.0 },
+        unbillable: { amount: 400.0, hours: 4.0 },
+        planned_definitive: { amount: 80.0, hours: 0.8 },
+        planned_provisional: { amount: 160.0, hours: 1.6 }
       }
       expected[Time.utc(2000, 1, 3) + 4.weeks] = {
-        billable: 1100.0,
-        unbillable: 400.0,
-        planned_definitive: 320,
-        planned_provisional: 160
+        billable: { amount: 1100.0, hours: 11.0 },
+        unbillable: { amount: 400.0, hours: 4.0 },
+        planned_definitive: { amount: 320.0, hours: 3.2 },
+        planned_provisional: { amount: 160.0, hours: 1.6 }
       }
 
       assert_equal expected, controlling.efforts_per_week_cumulated

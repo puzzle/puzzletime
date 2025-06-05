@@ -11,7 +11,9 @@
   = render 'actions_index'
 
 = plain_table_or_message(entries, responsive: true) do |t|
-  - t.attrs(:payment_date, :employee_id, :kind_value)
+  - t.attrs(:payment_date, :employee_id)
+  - t.attr(:department_id) { |e| e.employee.department.to_s }
+  - t.attrs(:kind_value)
   - t.attr(:description) { |e| format_attr(e, :description).truncate_words(20) }
   - t.attrs(:amount, :status_value, :reviewer_id, :reimbursement_month)
   - expense_details_col(t, personal: false)

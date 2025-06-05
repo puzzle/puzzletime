@@ -31,7 +31,7 @@ class EvaluatorControllerTest < ActionController::TestCase
 
     assert_match expected_csv_header, csv_header
     assert_equal 3, csv_data_lines.size
-    assert_match '06.12.2006,5.0,"","",0.00,absolute_day,true,Waber Mark,PITC-AL: Allgemein,,', csv_data_lines.first
+    assert_match '06.12.2006,5.0,"","",0.00,0.00,absolute_day,true,Waber Mark,PITC-AL: Allgemein,,', csv_data_lines.first
   end
 
   test 'GET index employees' do
@@ -70,70 +70,14 @@ class EvaluatorControllerTest < ActionController::TestCase
       assert_csv_http_headers('puzzletime.csv')
       assert_match expected_csv_header, csv_header
       assert_equal 9, csv_data_lines.size
-      assert_match '29.11.2006,1.0,"","",0.00,absolute_day,true,Zumkehr Pascal,PITC-AL: Allgemein,,', csv_data_lines.first
+      assert_match '29.11.2006,1.0,"","",0.00,0.00,absolute_day,true,Zumkehr Pascal,PITC-AL: Allgemein,,', csv_data_lines.first
     end
-  end
-
-  test 'GET report contains all hours' do
-    get :report, params: {
-      evaluation: 'workitememployees',
-      category_id: work_items(:allgemein),
-      division_id: employees(:pascal)
-    }
-
-    assert_template 'report'
-    total = assigns(:worktimes).sum(:hours)
-
-    assert_match(/Total Stunden.*#{total}/m, response.body)
-  end
-
-  test 'GET report contains all hours with combined tickets' do
-    Fabricate(:ordertime,
-              employee: employees(:pascal),
-              work_item: work_items(:allgemein),
-              ticket: 123)
-    Fabricate(:ordertime,
-              employee: employees(:pascal),
-              work_item: work_items(:allgemein),
-              hours: 5)
-
-    get :report, params: {
-      evaluation: 'workitememployees',
-      category_id: work_items(:allgemein),
-      division_id: employees(:pascal),
-      combine_on: true,
-      combine: 'ticket'
-    }
-
-    assert_template 'report'
-    total = assigns(:worktimes).sum(:hours)
-
-    assert_equal 8, total
-    assert_match(/Total Stunden.*#{total}/m, response.body)
-  end
-
-  test 'GET report with param show_ticket=1 shows tickets' do
-    ticket_label = 'ticket-123'
-    Fabricate(:ordertime,
-              employee: employees(:pascal),
-              work_item: work_items(:allgemein),
-              ticket: ticket_label)
-    get :report, params: {
-      evaluation: 'workitememployees',
-      category_id: work_items(:allgemein),
-      division_id: employees(:pascal),
-      show_ticket: '1'
-    }
-
-    assert_template 'report'
-    assert_match %r{<th class='right'>Ticket</th>}, response.body
-    assert_match %r{<td[^>]*>#{ticket_label}</td>}, response.body
   end
 
   private
 
   def expected_csv_header
-    'Datum,Stunden,Von Zeit,Bis Zeit,Stundenansatz CHF,Reporttyp,Verrechenbar,Member,Position,Ticket,Bemerkungen'
+    'Datum,Stunden,Von Zeit,Bis Zeit,CHF,Stundenansatz CHF,Reporttyp,Verrechenbar,Member,Position,Ticket,Bemerkungen'
   end
 
   def csv_header

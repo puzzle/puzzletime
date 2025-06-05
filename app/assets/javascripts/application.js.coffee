@@ -42,10 +42,12 @@
 #= require order_services
 #= require accounting_posts
 #= require reports_orders
+#= require reports_invoices
 #= require expenses
 #= require expense_reviews
 #= require meal_compensations
 #= require invoices
+#= require cockpit
 #= require turbolinks
 
 app = window.App ||= {}
@@ -89,6 +91,13 @@ Selectize.define 'required-fix', (options) ->
     else
       @$control_input.removeAttr('required')
       @$input.attr('required')
+
+################################################################
+# before caching, the DOM is restored to original form, preventing selectize to render the same input twice
+$(document).on('turbolinks:before-cache', ->
+  $('.selectized').each ->
+    this.selectize.destroy()
+)
 
 ################################################################
 # because of turbolinks.jquery, do bind ALL document events here

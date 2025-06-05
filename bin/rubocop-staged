@@ -1,14 +1,18 @@
 #!/bin/bash
 
-relevant_files=$(git status --no-renames --porcelain |\
-    grep -E '^A|^M' |\
-    cut -c4- |\
-    grep '.rb')
+relevant_files=$(
+    git status \
+        --no-renames \
+        --porcelain |
+        grep -E '^A|^M' |
+        cut -c4- |
+        grep '.rb'
+)
 
-if [[ ! -z "$relevant_files" ]]; then
-    if (( $# == 0 )); then
-        echo $relevant_files | xargs rubocop -S --display-cop-names --extra-details --p
+if [[ -n "${relevant_files}" ]]; then
+    if (($# == 0)); then
+        echo "${relevant_files}" | xargs rubocop -S --display-cop-names --extra-details --p
     else
-        echo $relevant_files | xargs rubocop -S --display-cop-names --extra-details "$@"
+        echo "${relevant_files}" | xargs rubocop -S --display-cop-names --extra-details "$@"
     fi
 fi
