@@ -34,4 +34,20 @@ module PlanningsHelper
                  '-'
                end
   end
+
+  def row_update_html(ids, items)
+    is_order_board = @board.is_a? Plannings::OrderBoard
+    period_total = is_order_board ? @board.total_row_planned_hours(*ids, true) : nil
+
+    j(
+      render(
+        'row',
+        items: items,
+        legend: @board.row_legend(*ids),
+        row_total: @board.total_row_planned_hours(*ids),
+        row_total_period: period_total,
+        row_total_overall: is_order_board
+      )
+    )
+  end
 end

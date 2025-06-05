@@ -8,9 +8,9 @@ App.plannings.selectable.clear();
 App.plannings.selectable.destroy();
 $('#weeks_header_#{dom_id(@board.subject)}').html('#{j(render 'calendar_weeks')}');
 $('#planned_#{dom_id(@board.subject)}').html('#{j(render('header_planned'))}');
-- @board_updates.each do |row_data|
-  - row = j(render('row', **row_data[:locals]))
-  $('##{planning_row_id(*row_data[:ids])}').html('#{row}');
+- @board.rows.each do |ids, items|
+  - html = row_update_html(ids, items)
+  $('##{planning_row_id(*ids)}').html('#{html}');
 
 App.plannings.initWaypoints();
 App.plannings.selectable.init();
