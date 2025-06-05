@@ -35,8 +35,7 @@ module Plannings
       creator = Plannings::Creator.new(params_with_restricted_items)
       respond_to do |format|
         if creator.create_or_update
-          @board_updates = board_updates(creator)
-          format.js
+          format.js { @board = build_board_for(creator.plannings) }
         else
           format.js { render :errors, locals: { errors: creator.errors } }
         end
