@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_19_080518) do
+ActiveRecord::Schema[7.1].define(version: 2025_05_01_075712) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -35,6 +35,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_19_080518) do
     t.boolean "closed", default: false, null: false
     t.integer "service_id"
     t.boolean "meal_compensation", default: false, null: false
+    t.boolean "billing_reminder_active", default: true, null: false
     t.index ["portfolio_item_id"], name: "index_accounting_posts_on_portfolio_item_id"
     t.index ["service_id"], name: "index_accounting_posts_on_service_id"
     t.index ["work_item_id"], name: "index_accounting_posts_on_work_item_id"
