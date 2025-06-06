@@ -76,9 +76,12 @@ class OrderServicesController < ApplicationController
       period: @period
     )
 
+    Rails.logger.debug 'Check params'
+    Rails.logger.debug "params: #{params.inspect}"
+
     Rails.logger.debug 'Setting pdf_generator'
     pdf_generator = Order::Services::TimeRapportPdfGenerator.new(time_rapport_data, params)
-    Rails.logger.debug "pdf_generator: #{@pdf_generator.inspect}"
+    Rails.logger.debug "pdf_generator: #{pdf_generator.inspect}"
 
     Rails.logger.debug 'Preparing data to send'
     data = pdf_generator.generate_pdf.render

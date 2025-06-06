@@ -14,16 +14,16 @@ class Company
       RequestStore.store['company_client'] ||= Client.find(Settings.clients.company_id)
     end
 
-    def logo_path
-      file?(Settings.company_logo) ? Settings.company_logo : nil
-    end
-
     delegate :work_item_id, to: :client
 
-    private
+    # If this is used in more places, it might be prudent, to give it a logo domain class
+    def logo_path
+      logo =
+        Settings.company_logo
+        .presence
+        &.then { Pathname.new('public/images/' + _1) }
 
-    def file?(path)
-      Rails.application.assets.find_asset(path) != nil
+      logo if logo&.exist?
     end
   end
 end
