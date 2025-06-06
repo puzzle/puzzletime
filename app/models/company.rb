@@ -21,7 +21,7 @@ class Company
       logo =
         Settings.company_logo
         .presence
-        &.then { Pathname.new('public/images/' + _1) }
+        &.then { Rails.root.join('public/images/' + _1) }
 
       logo if logo&.exist?
     end
