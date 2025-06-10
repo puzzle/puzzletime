@@ -44,8 +44,9 @@ class Order
       end
 
       def build_header(pdf)
+        image_path = Rails.root.join('app/assets/images', Company.logo_path).to_s
         pdf.repeat(:all) do
-          pdf.image Rails.root.join('app/assets/images', Company.logo_path).to_s, at: [pdf.bounds.right - 130, pdf.bounds.top + 60], width: 130, position: :right if Company.logo_path.present?
+          pdf.image image_path, at: [pdf.bounds.right - 130, pdf.bounds.top + 60], width: 130, position: :right if File.exist?(image_path)
         end
         pdf
       end

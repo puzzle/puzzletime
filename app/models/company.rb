@@ -15,15 +15,9 @@ class Company
     end
 
     def logo_path
-      file?(Settings.company_logo) ? Settings.company_logo : nil
+      Settings.company_logo
     end
 
     delegate :work_item_id, to: :client
-
-    private
-
-    def file?(path)
-      Rails.application.assets.find_asset(path) != nil
-    end
   end
 end
