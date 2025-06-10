@@ -4,14 +4,16 @@
 #  https://github.com/puzzle/puzzletime.
 
 
+# {{{
 # == Schema Information
 #
 # Table name: sectors
 #
 #  id     :integer          not null, primary key
-#  name   :string           not null
 #  active :boolean          default(TRUE), not null
+#  name   :string           not null
 #
+# }}}
 
 ---
 verwaltung:
