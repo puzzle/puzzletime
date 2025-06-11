@@ -40,7 +40,9 @@ class InvoiceReportsController < ApplicationController
   def set_default_params
     return if @report.filters_defined?
 
-    params.reverse_merge!(department_id: @user.department_id, responsible_id: @user.id, period_shortcut: '0q')
+    responsible_id = @user.id if Employee.joins(:managed_orders).exists?(id: @user.id)
+
+    params.reverse_merge!(department_id: @user.department_id, responsible_id: responsible_id, period_shortcut: '0q')
   end
 
   def authorize_class
