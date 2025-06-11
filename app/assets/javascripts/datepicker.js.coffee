@@ -22,8 +22,7 @@ app.datepicker = new class
   onSelect = (dateString, instance) =>
     if instance.input.data('format') == 'week'
       date = $.datepicker.parseDate(i18n().dateFormat, dateString)
-      instance.input
-        .val(formatWeek(date))
+      instance.input.val(formatWeek(date))
     instance.input.trigger('change')
 
   options = $.extend({ onSelect, showWeek: true }, i18n())
@@ -37,10 +36,6 @@ app.datepicker = new class
 
   formatWeek: formatWeek
 
-  destroy: ->
-    $('input.date').datepicker('destroy')
-    @bindListeners(true)
-
   bindListeners: (unbind) ->
     func = if unbind then 'off' else 'on'
 
@@ -52,7 +47,16 @@ app.datepicker = new class
       field = field.closest('.input-group').find('.date')
     field.datepicker('show')
 
+
+document.addEventListener "turbolinks:before-cache", ->
+  $.datepicker.dpDiv.remove()
+
+  for element in document.querySelectorAll("input.hasDatepicker")
+    $(element).datepicker("destroy")
+
+document.addEventListener "turbolinks:before-render", (event) ->
+  $.datepicker.dpDiv.appendTo(event.data.newBody)
+
 $(document).on('turbolinks:load', ->
-  app.datepicker.destroy()
   app.datepicker.init()
 )
