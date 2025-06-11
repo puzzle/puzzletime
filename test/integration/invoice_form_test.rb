@@ -209,8 +209,8 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
 
     reload({ period_shortcut: '-1m' })
 
-    assert_equal Period.with(nil, nil), Period.parse_date(find('#invoice_period_from')['value'])
-    assert_equal Period.with(nil, nil), Period.parse_date(find('#invoice_period_to')['value'])
+    assert_nil Period.parse_date(find('#invoice_period_from')['value'])
+    assert_nil Period.parse_date(find('#invoice_period_to')['value'])
   end
 
   test 'setting the period shortcut disables the date fields, unsetting it enables the date fields' do
