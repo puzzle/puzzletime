@@ -237,8 +237,7 @@ de-DE:
         billing_client_id: Rechnungskunde
         billing_date: Rechnungsdatum
         calculated_total_amount: Total Leistungen
-        calculated_total_hours: Geleistete Stunden
-        due_date: Fälligkeitsdatum
+        calculated_total_hours: Verrechenbare Leistungen
         employees: Members
         grouping: Gruppierung
         invoice_posts: Rechnungspositionen
