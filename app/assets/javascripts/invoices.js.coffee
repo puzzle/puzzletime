@@ -13,7 +13,10 @@ app.invoices = new class
     $('#invoice_period_from,#invoice_period_to').each ->
       val = $(this).val()
       $(this).datepicker('option', 'disabled', $('#period_shortcut').val())
-      $(this).val(val)
+      if $('#period_shortcut').val()
+        $(this).val('')
+      else
+        $(this).val(val)
 
 $(document).on('change', '#period_shortcut', ->
   app.invoices.init()
