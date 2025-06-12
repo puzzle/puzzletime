@@ -14,7 +14,7 @@ module Plannings
     end
 
     def total_row_planned_hours(employee_id, work_item_id, only_for_active_period = false)
-      period_to_calculate_hours = only_for_active_period ? @period : Period.new(nil, nil)
+      period_to_calculate_hours = only_for_active_period ? @period_exact : Period.new(nil, nil)
       @total_row_planned_hours = load_total_included_rows_planned_hours(period_to_calculate_hours)
       @total_row_planned_hours[key(employee_id, work_item_id)] || 0
     end

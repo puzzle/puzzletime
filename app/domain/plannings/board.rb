@@ -9,9 +9,10 @@ module Plannings
   class Board
     attr_reader :subject, :period, :employees
 
-    def initialize(subject, period)
+    def initialize(subject, period, period_exact = nil)
       @subject = subject
       @period = period
+      @period_exact = period_exact
     end
 
     def caption
