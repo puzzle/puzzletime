@@ -124,7 +124,7 @@ module Plannings
                        date: date - 28.days,
                        percent: 100)
 
-      board = Plannings::OrderBoard.new(order, period)
+      board = Plannings::OrderBoard.new(order, period, period)
 
       assert_equal 8, board.total_row_planned_hours(employees(:lucien).id, work_items(:hitobito_demo_app).id, true)
     end

@@ -104,6 +104,7 @@ module Plannings
       elsif period.unlimited?
         period = default_period
       end
+      @period_exact = period
       period = period.extend_to_weeks
       @period = session[:planning_period] = period
     end

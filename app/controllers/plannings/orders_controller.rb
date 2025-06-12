@@ -30,7 +30,7 @@ module Plannings
     alias subject order
 
     def build_board
-      Plannings::OrderBoard.new(order, @period)
+      Plannings::OrderBoard.new(order, @period, @period_exact)
     end
 
     def load_possible_employees
