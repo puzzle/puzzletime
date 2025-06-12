@@ -276,6 +276,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_15_110845) do
     t.decimal "amount"
     t.integer "periodicity", default: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], array: true
     t.bigint "accounting_post_id"
+    t.integer "unit"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["accounting_post_id"], name: "index_flatrates_on_accounting_post_id"

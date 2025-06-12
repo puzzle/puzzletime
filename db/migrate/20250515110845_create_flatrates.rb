@@ -10,7 +10,7 @@ class CreateFlatrates < ActiveRecord::Migration[7.1]
       t.decimal :amount
       t.integer :periodicity, array: true, default: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       t.references :accounting_post, foreign_key: true
-
+      t.integer :unit
       t.timestamps
     end
 

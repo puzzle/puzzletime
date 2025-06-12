@@ -19,7 +19,7 @@
         .col-md-4.form-control-static
           = flatrate.description.presence || 'keine'
       .row
-        = label_tag :flatrate_amount, 'Betrag', class: 'col-md-2 control-label'
+        = label_tag :flatrate_amount, 'Betrag pro Pauschale', class: 'col-md-2 control-label'
         .col-md-4.form-control-static
           = number_to_currency(flatrate.amount)
 

@@ -23,6 +23,7 @@ class AccountingPostsController < CrudController
                             :name,
                             :amount,
                             :description,
+                            :unit,
                             { periodicity: [] },
                             *(0..11).map { |i| :"periodicity_#{i}" },
                             :_destroy
