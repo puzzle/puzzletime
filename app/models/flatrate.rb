@@ -1,12 +1,15 @@
 # frozen_string_literal: true
 
 class Flatrate < ApplicationRecord
+  include Invoicing
+
   belongs_to :accounting_post
   has_many :invoice_flatrates, dependent: :nullify
   has_many :invoices, through: :invoice_flatrates
 
   validates_date :active_from
   validates_date :active_to, allow_blank: true
+  validates :unit, inclusion: Invoicing::Units::OPTIONS.values
 
   def label_verbose
     "#{name} (#{accounting_post.name})"

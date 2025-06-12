@@ -16,7 +16,7 @@ module Invoicing
             name: "#{post.name} - #{entry.flatrate.name}",
             description: nil,
             cost: entry.flatrate.amount.try(:round, 2),
-            unit: constant(:flatrate_unit_id),
+            unit: entry.flatrate.unit,
             amount: entry.quantity,
             vat: Settings.defaults.vat
           }

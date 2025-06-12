@@ -37,6 +37,11 @@
         = fields.label :amount, "Beschreibung", class: 'col-md-2 control-label'
         .col-md-10
           = fields.input_field(:description, rows: 1)
+      %br
+      .row 
+        = fields.label :unit, "Einheit", class: 'col-md-2 control-label'
+        .col-md-3
+          = fields.select :unit, Invoicing::Units::OPTIONS, {}, multiple: false, class: 'form-control'
       %hr
     .row
       .col-md-1.form-action

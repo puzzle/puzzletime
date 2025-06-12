@@ -27,6 +27,7 @@
 class AccountingPost < ApplicationRecord
   include BelongingToWorkItem
   include Closable
+  include Invoicing
 
   ### ASSOCIATIONS
 
