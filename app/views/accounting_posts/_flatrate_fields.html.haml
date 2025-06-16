@@ -36,7 +36,8 @@
       .row 
         = fields.label :amount, "Beschreibung", class: 'col-md-2 control-label'
         .col-md-10
-          = fields.input_field(:description, rows: 1)
+          = with_tooltip('nur intern sichtbar - wird nicht auf der Rechnung gedruckt') do
+            = fields.input_field(:description, rows: 1)
       %br
       .row 
         = fields.label :unit, "Einheit", class: 'col-md-2 control-label'
