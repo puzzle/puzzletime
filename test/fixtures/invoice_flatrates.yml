@@ -1,13 +1,2 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  flatrate: one
-  invoice: one
-  quantity: 1
-  comment: MyString
-
-two:
-  flatrate: two
-  invoice: two
-  quantity: 1
-  comment: MyString
