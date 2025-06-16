@@ -3,7 +3,7 @@
 class Flatrate < ApplicationRecord
   include Invoicing
 
-  belongs_to :accounting_post
+  belongs_to :accounting_post, inverse_of: :flatrates
   has_many :invoice_flatrates, dependent: :nullify
   has_many :invoices, through: :invoice_flatrates
 
@@ -43,7 +43,7 @@ class Flatrate < ApplicationRecord
   def not_billed_flatrates_quantity(end_date, invoice_id)
     billed_flatrate_quantity = InvoiceFlatrate.where(flatrate_id: id).where.not(invoice_id: invoice_id).sum(:quantity) || 0
     Rails.logger.info("end_date: #{end_date}")
-    stop_date = active_to.present? ? [end_date, active_to].compact.min : end_date
+    stop_date = [end_date, active_to, accounting_post.order.contract.end_date].compact.min
 
     accumulated_flatrate_quantity = 0
     (active_from..stop_date).select { |d| d.day == 1 }.each do |month_date|

@@ -534,7 +534,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_15_110845) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "employments", "employees", name: "fk_employments_employees", on_delete: :cascade
-  add_foreign_key "flatrates", "accounting_posts"
+  add_foreign_key "flatrates", "accounting_posts", on_delete: :cascade
   add_foreign_key "invoice_flatrates", "flatrates"
   add_foreign_key "invoice_flatrates", "invoices"
   add_foreign_key "order_uncertainties", "orders"
