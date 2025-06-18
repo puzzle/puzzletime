@@ -42,9 +42,7 @@ class InvoicesController < CrudController
   def new
     assign_attributes
     @autoselect_workitems_and_employees = true
-    @period = Period.with(nil, nil)
-
-    Rails.logger.info("NEW, before: #{@invoice.invoice_flatrates.inspect}")
+    set_period
 
     order.accounting_posts.flat_map(&:flatrates).each do |flatrate|
       next if @invoice.invoice_flatrates.pluck(:flatrate_id).include?(flatrate.id)
@@ -56,7 +54,6 @@ class InvoicesController < CrudController
         quantity: flatrate.not_billed_flatrates_quantity(@period.end_date, @invoice.id)
       )
     end
-    Rails.logger.info("NEW, after: #{@invoice.invoice_flatrates.inspect}")
   end
 
   def edit
@@ -64,7 +61,7 @@ class InvoicesController < CrudController
     order.accounting_posts.flat_map(&:flatrates).each do |flatrate|
       next if @invoice.invoice_flatrates.pluck(:flatrate_id).include?(flatrate.id)
 
-      Rails.logger.info("flatrate #{flatrate.name} doesn't exist yet. Creating a new invoice_flatrate")
+      Rails.logger.info("flatrate #{flatrate.name} doesn't exist yet. Creating a new invoice_flatrate (with quantity 0)")
       @invoice.invoice_flatrates.build(
         flatrate: flatrate,
         invoice: @invoice,
@@ -184,9 +181,6 @@ class InvoicesController < CrudController
     attrs[:billing_address_id] ||= default_billing_address_id
     attrs[:grouping] ||= last_grouping
 
-    # if attrs[:flatrate_ids].blank?
-    #   attrs[:flatrate_ids] = flatrates_for_date(attrs[:period_to]).map(&:id)
-    # end
     if attrs[:employee_ids].blank?
       attrs[:employee_ids] = employees_for_period(attrs[:period_from],
                                                   attrs[:period_to]).map(&:id)

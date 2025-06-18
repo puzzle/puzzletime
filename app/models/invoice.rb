@@ -104,7 +104,6 @@ class Invoice < ApplicationRecord
   end
 
   def calculated_total_amount
-    Rails.logger.info("testest: #{invoice_flatrates.inspect}")
     invoice_flatrates_total = invoice_flatrates.sum { |iflt| iflt.flatrate[:amount] * (iflt.quantity || 0) }
     total = positions.sum(&:total_amount) + invoice_flatrates_total
     round_to_5_cents(total)

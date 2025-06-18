@@ -43,7 +43,18 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
   end
 
   test 'sets calculated total on page load' do
-    expected_total = delimited_number(billable_hours * rate)
+    flatrate_amount = billable_invoice_flatrates_amount(nil)
+    expected_total = delimited_number((billable_hours * rate) + flatrate_amount)
+    text_on_page = find('#invoice_total_amount').text
+
+    assert_match expected_total, text_on_page
+  end
+
+  test 'sets calculated total on page load for custom set period' do
+    reload(start_date: '09.12.2015', end_date: '10.10.2017')
+
+    flatrate_amount = billable_invoice_flatrates_amount(Time.zone.parse('10.10.2017'))
+    expected_total = delimited_number(flatrate_amount)
     text_on_page = find('#invoice_total_amount').text
 
     assert_match expected_total, text_on_page
@@ -254,6 +265,12 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
     orders(:webauftritt)
   end
 
+  def billable_invoice_flatrates_amount(end_date)
+    orders(:webauftritt).accounting_posts.map(&:flatrates).flatten.sum do |flt|
+      flt.not_billed_flatrates_quantity(end_date, nil) * flt.amount
+    end
+  end
+
   def order_employees
     Employee.where(id: order.worktimes.billable.select(:employee_id).distinct)
   end
@@ -277,6 +294,7 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
 
   def reload(params = {})
     order = params.delete(:order) || self.order
+    puts new_order_invoice_path(order, params)
     visit(new_order_invoice_path(order, params))
   end
 
