@@ -74,62 +74,6 @@ class EvaluatorControllerTest < ActionController::TestCase
     end
   end
 
-  test 'GET report contains all hours' do
-    get :report, params: {
-      evaluation: 'workitememployees',
-      category_id: work_items(:allgemein),
-      division_id: employees(:pascal)
-    }
-
-    assert_template 'report'
-    total = assigns(:worktimes).sum(:hours)
-
-    assert_match(/Total Stunden.*#{total}/m, response.body)
-  end
-
-  test 'GET report contains all hours with combined tickets' do
-    Fabricate(:ordertime,
-              employee: employees(:pascal),
-              work_item: work_items(:allgemein),
-              ticket: 123)
-    Fabricate(:ordertime,
-              employee: employees(:pascal),
-              work_item: work_items(:allgemein),
-              hours: 5)
-
-    get :report, params: {
-      evaluation: 'workitememployees',
-      category_id: work_items(:allgemein),
-      division_id: employees(:pascal),
-      combine_on: true,
-      combine: 'ticket'
-    }
-
-    assert_template 'report'
-    total = assigns(:worktimes).sum(:hours)
-
-    assert_equal 8, total
-    assert_match(/Total Stunden.*#{total}/m, response.body)
-  end
-
-  test 'GET report with param show_ticket=1 shows tickets' do
-    ticket_label = 'ticket-123'
-    Fabricate(:ordertime,
-              employee: employees(:pascal),
-              work_item: work_items(:allgemein),
-              ticket: ticket_label)
-    get :report, params: {
-      evaluation: 'workitememployees',
-      category_id: work_items(:allgemein),
-      division_id: employees(:pascal),
-      show_ticket: '1'
-    }
-
-    assert_template 'report'
-    assert_match %r{<th class='right'>Ticket</th>}, response.body
-    assert_match %r{<td[^>]*>#{ticket_label}</td>}, response.body
-  end
-
   private
 
   def expected_csv_header

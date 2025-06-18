@@ -43,8 +43,54 @@ class OrderServicesController < ApplicationController
   end
 
   def report
+    Rails.logger.debug '-'*80
+    Rails.logger.debug 'Start Report'
+    Rails.logger.debug '-'*80
+
+    Rails.logger.debug 'Setting period'
     period = prepare_report_header
-    render_report(list_worktimes(period))
+    Rails.logger.debug "period: #{period.inspect}"
+
+    Rails.logger.debug 'Preparing Worktimes'
+    prepare_worktimes(list_worktimes(period))
+
+    Rails.logger.debug 'Check prepared data'
+    Rails.logger.debug "@order:       #{@order.inspect}"
+    Rails.logger.debug "@worktimes:   #{@worktimes.inspect}"
+    Rails.logger.debug "@tickets:     #{@tickets.inspect}"
+    Rails.logger.debug "@ticket_view: #{@ticket_view.inspect}"
+    Rails.logger.debug "@employees:   #{@employees.inspect}"
+    Rails.logger.debug "@employee:    #{@employee.inspect}"
+    Rails.logger.debug "@work_items:  #{@work_items.inspect}"
+    Rails.logger.debug "@period:      #{@period.inspect}"
+
+    Rails.logger.debug 'Setting time_report_data'
+    time_rapport_data = Order::Services::TimeRapportData.new(
+      order: @order,
+      worktimes: @worktimes,
+      tickets: @tickets,
+      ticket_view: @ticket_view,
+      employees: @employees,
+      employee: @employee,
+      work_items: @work_items,
+      period: @period
+    )
+
+    Rails.logger.debug 'Check params'
+    Rails.logger.debug "params: #{params.inspect}"
+
+    Rails.logger.debug 'Setting pdf_generator'
+    pdf_generator = Order::Services::TimeRapportPdfGenerator.new(time_rapport_data, params)
+    Rails.logger.debug "pdf_generator: #{pdf_generator.inspect}"
+
+    Rails.logger.debug 'Preparing data to send'
+    data = pdf_generator.generate_pdf.render
+    filename = "zeitrapport-#{@work_items[0].top_item.client.shortname}-#{@order.shortname}-#{@period.to_s.parameterize}.pdf"
+    Rails.logger.debug "data:     #{data}"
+    Rails.logger.debug "filename: #{filename}"
+
+    Rails.logger.debug 'Sending data'
+    send_data data, filename: filename, type: 'application/pdf', disposition: 'inline'
   end
 
   private
@@ -75,8 +121,12 @@ class OrderServicesController < ApplicationController
   end
 
   def prepare_report_header
-    params[:work_item_ids] ||= [params[:work_item_id].presence || order.work_item_id]
-    @work_items = WorkItem.find(params[:work_item_ids])
+    work_item_ids = params[:work_item_ids].presence
+    work_item_ids ||= params[:work_item_id].presence
+    work_item_ids ||= order.accounting_posts.collect(&:work_item_id)
+    work_item_ids = Array.wrap(work_item_ids)
+    @work_items = WorkItem.find(work_item_ids)
+    @order = order
     @employee = Employee.find(params[:employee_id]) if params[:employee_id].present?
     set_period_with_invoice
   end

@@ -5,6 +5,8 @@
 
 ---
 de-CH:
+  date:
+    month_names: [~, Januar, Februar, März, April, Mai, Juni, Juli, August, September, Oktober, November, Dezember]
   activerecord:
     models:
       absence:
@@ -128,6 +130,7 @@ de-CH:
       absencetime:
         duration: Dauer
       accounting_post:
+        flatrates: Pauschalen
         work_item_id: Position
         portfolio_item_id: Portfolio
         service_id: Dienstleistung
@@ -277,6 +280,7 @@ de-CH:
         due_date: Fälligkeitsdatum
         employees: Members
         grouping: Gruppierung
+        invoice_flatrates: Pauschalen
         invoice_posts: Rechnungspositionen
         manual_invoice: Manuelle Rechnung
         manual?: Manuell

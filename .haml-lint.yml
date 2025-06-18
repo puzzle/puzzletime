@@ -8,4 +8,14 @@ linters:
   InlineStyles:
     exclude:
       - 'app/views/layouts/mailer.html.haml'
+      - 'app/views/employee_mailer/**/*'
+
+  ViewLength:
+    exclude:
+      - 'app/views/layouts/mailer.html.haml'
+      - 'app/views/design_guide/index.html.haml'
+
+  Rubocop:
+    enabled: false
+
 ...

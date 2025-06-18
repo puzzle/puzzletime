@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_19_080518) do
+ActiveRecord::Schema[7.1].define(version: 2025_05_15_110845) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -268,10 +268,41 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_19_080518) do
     t.index ["status"], name: "index_expenses_on_status"
   end
 
+  create_table "flatrates", force: :cascade do |t|
+    t.string "name"
+    t.date "active_from", null: false
+    t.date "active_to"
+    t.text "description"
+    t.decimal "amount"
+    t.integer "periodicity", default: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], array: true
+    t.bigint "accounting_post_id"
+    t.integer "unit"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["accounting_post_id"], name: "index_flatrates_on_accounting_post_id"
+  end
+
+  create_table "flatrates_invoices", id: false, force: :cascade do |t|
+    t.bigint "flatrate_id", null: false
+    t.bigint "invoice_id", null: false
+  end
+
   create_table "holidays", id: :serial, force: :cascade do |t|
     t.date "holiday_date", null: false
     t.float "musthours_day", null: false
     t.index ["holiday_date"], name: "index_holidays_on_holiday_date", unique: true
+  end
+
+  create_table "invoice_flatrates", force: :cascade do |t|
+    t.bigint "flatrate_id"
+    t.bigint "invoice_id"
+    t.integer "quantity"
+    t.string "comment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["flatrate_id"], name: "index_invoice_flatrates_on_flatrate_id"
+    t.index ["invoice_id", "flatrate_id"], name: "index_invoice_flatrates_on_invoice_id_and_flatrate_id", unique: true
+    t.index ["invoice_id"], name: "index_invoice_flatrates_on_invoice_id"
   end
 
   create_table "invoices", id: :serial, force: :cascade do |t|
@@ -503,6 +534,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_19_080518) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "employments", "employees", name: "fk_employments_employees", on_delete: :cascade
+  add_foreign_key "flatrates", "accounting_posts", on_delete: :cascade
+  add_foreign_key "invoice_flatrates", "flatrates"
+  add_foreign_key "invoice_flatrates", "invoices"
   add_foreign_key "order_uncertainties", "orders"
   add_foreign_key "worktimes", "absences", name: "fk_times_absences", on_delete: :cascade
   add_foreign_key "worktimes", "employees", name: "fk_times_employees", on_delete: :cascade

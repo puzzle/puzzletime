@@ -1,0 +1,49 @@
+-#  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
+-#  PuzzleTime and licensed under the Affero General Public License version 3
+-#  or later. See the COPYING file at the top-level directory or at
+-#  https://github.com/puzzle/puzzletime.
+
+
+#flatrate-entries
+  = form.labeled(:flatrates) do
+    = form.nested_fields_for :flatrates, entry.flatrates, wrapper_tag: :div do |fields|
+      = fields.hidden_field :_destroy
+      .row
+        = fields.label :name, "Name *", class: 'col-md-2 control-label'
+        .col-md-6
+          = fields.input_field(:name, required: true)
+        = fields.label :amount, "#{currency} *", class: 'col-md-1 control-label'
+        .col-md-2
+          = fields.input_field(:amount, required: true)
+        .col-md-1.form-action
+          = fields.remove_nested_fields_link(picon('delete', title: 'Pauschale entfernen'))
+      .row{style: "margin-bottom: 1em"}
+        = fields.label :active_from, 'Aktiv von *', class: 'col-md-2 control-label'
+        .col-md-3
+          = fields.input_field :active_from, required: true
+        = fields.label :active_to, 'Aktiv bis', class: 'col-md-2 control-label'
+        .col-md-3
+          = fields.input_field :active_to
+      .row
+        = fields.label :periodicity, "Periodizität *", class: 'col-md-2 control-label'
+        .col-md-10
+          - 0.upto(11) do |i|
+            .field.col-md-3{style: "margin-bottom: 0.5em"}
+              = fields.label :"periodicity_#{i}", I18n.t("date.month_names")[i + 1]
+              = fields.number_field :"periodicity_#{i}"
+
+      %br
+      .row
+        = fields.label :amount, "Beschreibung", class: 'col-md-2 control-label'
+        .col-md-10
+          = with_tooltip('nur intern sichtbar - wird nicht auf der Rechnung gedruckt') do
+            = fields.input_field(:description, rows: 1)
+      %br
+      .row
+        = fields.label :unit, "Einheit", class: 'col-md-2 control-label'
+        .col-md-3
+          = fields.select :unit, Invoicing::Units::OPTIONS, {}, multiple: false, class: 'form-control'
+      %hr
+    .row
+      .col-md-1.form-action
+        = form.add_nested_fields_link :flatrates, picon(:add, title: 'Pauschale hinzufügen')

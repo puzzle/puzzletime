@@ -27,6 +27,7 @@
 class AccountingPost < ApplicationRecord
   include BelongingToWorkItem
   include Closable
+  include Invoicing
 
   ### ASSOCIATIONS
 
@@ -35,6 +36,9 @@ class AccountingPost < ApplicationRecord
 
   has_ancestor_through_work_item :order
   has_ancestor_through_work_item :client
+  has_many :flatrates, inverse_of: :accounting_post, dependent: :destroy
+
+  accepts_nested_attributes_for :flatrates, allow_destroy: true
 
   ### CALLBACKS
 

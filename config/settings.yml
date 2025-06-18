@@ -106,7 +106,10 @@ small_invoice:
     client_type: 1 # company
     position_type_id: 1 # service
     unit_id: 1 # hours
+    flatrate_unit_id: 13 # flatrate
     gender_id: 2 # female
+    
+
 
 
 # Default values
@@ -152,6 +155,8 @@ help:
 meal_compensation:
   active: <%= ENV['RAILS_PTIME_MEALTIME_COMPENSATION_ACTIVE'].try(:downcase) == 'true' %>
   url: <%= ENV['RAILS_PTIME_MEALTIME_COMPENSATION_URL'] %>
+
+company_logo: <%= ENV['RAILS_PTIME_COMPANY_LOGO'] || 'company_logo.png' %>
 
 reports:
   # The minimum values for a given color in order reports.
