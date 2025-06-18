@@ -1,11 +1,12 @@
 #invoice-flatrates
   - @invoice.invoice_flatrates.reverse.each_with_index do |invoice_flatrate, i|
-    - flatrate = invoice_flatrate.flatrate
-    - max_quantity = flatrate.not_billed_flatrates_quantity(@period.end_date, @invoice.id)
-    - cur_quantity = invoice_flatrate.quantity || max_quantity
-    - quantity_options = (0..max_quantity).to_a
+    :ruby
+      flatrate = invoice_flatrate.flatrate
+      max_quantity = flatrate.not_billed_flatrates_quantity(@period.end_date, @invoice.id)
+      cur_quantity = invoice_flatrate.quantity || max_quantity
+      quantity_options = (0..max_quantity).to_a
+      display = 'inherit'
 
-    - display = 'inherit'
     - if (max_quantity == 0)
       - display = 'none'
 

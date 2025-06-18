@@ -4,7 +4,7 @@
 -#  https://github.com/puzzle/puzzletime.
 
 
-#flatrate_entries
+#flatrate-entries
   = form.labeled(:flatrates) do
     = form.nested_fields_for :flatrates, entry.flatrates, wrapper_tag: :div do |fields|
       = fields.hidden_field :_destroy
