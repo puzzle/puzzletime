@@ -27,10 +27,20 @@ app.datepicker = new class
 
   options = $.extend({ onSelect, showWeek: true }, i18n())
 
+  unavailableDates = ($input) ->
+    (date) ->
+      if $input.hasClass('only-mondays')
+        return [date.getDay() == 1, '', 'Only Mondays are selectable']
+      if $input.hasClass('only-fridays')
+        return [date.getDay() == 5, '', 'Only Fridays are selectable']
+      [true, '', '']  # allow all dates by default
+
+
   init: ->
     $('input.date').each((_i, elem) ->
       $(elem).datepicker($.extend({}, options, {
         changeYear: $(elem).data('changeyear')
+        beforeShowDay: unavailableDates($(elem))
       })))
     @bindListeners()
 
