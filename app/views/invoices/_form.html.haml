@@ -42,7 +42,7 @@
 
 - content_for(:javascript) do
   var filter_fields_trigger = new window.App.FormUpdaterTrigger('change', 'input#invoice_period_from', 'input#invoice_period_to', 'select#period_shortcut')
-  var calculate_total_trigger = new window.App.FormUpdaterTrigger('change', '#employee_checkboxes', '#work_item_checkboxes')
+  var calculate_total_trigger = new window.App.FormUpdaterTrigger('change', '#employee_checkboxes', '#work_item_checkboxes', '#manual_invoice')
 
   var filter_fields_action = new window.App.FormUpdaterAction("#{filter_fields_order_invoices_path(id: entry.id, format: :js)}", 'form.invoice')
   var calculate_total_action = new window.App.FormUpdaterAction("#{preview_total_order_invoices_path(id: entry.id, format: :js)}", 'form.invoice')
