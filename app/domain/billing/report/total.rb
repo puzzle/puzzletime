@@ -36,6 +36,10 @@ module Billing
         @not_billed_amount ||= entries.sum(&:not_billed_amount)
       end
 
+      def billed_invoice_flatrates_total
+        entries.sum(&:billed_invoice_flatrates_total)
+      end
+
       def target(_id); end
     end
   end

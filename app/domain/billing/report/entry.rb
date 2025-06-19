@@ -10,6 +10,8 @@ module Billing
     class Entry < SimpleDelegator
       attr_reader :order, :accounting_posts, :hours, :invoices
 
+      delegate :flatrates, to: :order
+
       def initialize(order, worktimes, accounting_posts, hours, invoices)
         super(order)
         @order = order
@@ -92,6 +94,13 @@ module Billing
 
       def target(scope_id)
         targets.find { |t| t.target_scope_id == scope_id.to_i }
+      end
+
+      def billed_invoice_flatrates_total
+        inv_fltr = invoices.flat_map(&:invoice_flatrates)
+        Rails.logger.info("invc_fltr: #{inv_fltr.inspect}")
+        Rails.logger.info("invoices: #{invoices.inspect}")
+        inv_fltr.sum(:quantity)
       end
 
       private

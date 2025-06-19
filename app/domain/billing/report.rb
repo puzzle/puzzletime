@@ -55,6 +55,8 @@ module Billing
       orders = load_orders.to_a
       worktimes = load_worktimes(orders)
       accounting_posts = accounting_posts_to_hash(load_accounting_posts(orders))
+      invoice_flatrates = load_invoice_flatrates(orders)
+      Rails.logger.info("invoice_flatrates: #{invoice_flatrates.inspect}")
       hours = hours_to_hash(load_accounting_post_hours(accounting_posts.values))
       invoices = invoices_to_hash(load_invoices(orders))
       entries = orders.filter_map { |o| build_entry(o, worktimes, accounting_posts, hours, invoices) }
@@ -69,10 +71,22 @@ module Billing
               .joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)')
               .where(orders: { id: orders.collect(&:id) })
               .where(billable: true)
-              .select('orders.id AS order_id, SUM(worktimes.hours) AS hours, (worktimes.invoice_id IS NOT NULL) AS has_invoice,  SUM(worktimes.hours * accounting_posts.offered_rate) AS amount')
+              .select('orders.id AS order_id, SUM(worktimes.hours) AS hours, (worktimes.invoice_id IS NOT NULL) AS has_invoice, SUM(worktimes.hours * accounting_posts.offered_rate) AS amount')
               .group('order_id, has_invoice')
               .group_by { |time| time['has_invoice'].present? }
               .transform_values { |partition| partition.index_by(&:order_id) }
+    end
+
+    def load_invoice_flatrates(orders)
+      month_expanded_period = Period.with(@period.start_date.beginning_of_month, @period.end_date.end_of_month)
+      Flatrate.joins('LEFT JOIN invoice_flatrates ON flatrates.id = invoice_flatrates.flatrate_id')
+              .joins('INNER JOIN invoices ON invoices.id = invoice_flatrates.invoice_id')
+                     .where('invoices.period_from <= ? AND invoices.period_to >= ?', month_expanded_period.end_date, month_expanded_period.start_date)
+                     .joins('INNER JOIN accounting_posts ON accounting_posts.id = flatrates.accounting_post_id')
+                     .joins('INNER JOIN work_items ON accounting_posts.work_item_id = work_items.id')
+                     .joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)')
+                     .where(orders: { id: orders.collect(&:id) })
+                     .select('orders.id AS order_id, flatrates.periodicity AS periodicity, invoice_flatrates.id')
     end
 
     def load_orders

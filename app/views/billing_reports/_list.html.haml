@@ -24,6 +24,8 @@
               = sort_link(:billed_amount, 'Verrechnete Leistungen')
             %th.right.nowrap{title: 'Kostensumme aller verrechenbaren Leistungen, die im gewählten Zeitraum erbracht wurden und noch keiner Rechnung zugeteilt sind'}
               = sort_link(:not_billed_amount, 'Verrechnung offen')
+            %th.right.nowrap{title: 'Kostensumme aller Pauschalen, die in einem Monat erbracht wurde, welcher eine Überschneidung zum gewählten Zeitraum besitzt'}
+              = sort_link(:billed_invoice_flatrates, 'Verrechnete Pauschalen')
             %th.center
 
         %tbody
@@ -48,6 +50,7 @@
                 .data-item
                   %span.figure= f(order.not_billed_amount.to_f)
                   %span.unit= currency
+              %td.right
               %td.center
             - else
               %tr
@@ -85,6 +88,10 @@
                 %td.right
                   .data-item
                     %span.figure= f(order.not_billed_amount.to_f)
+                    %span.unit= currency
+                %td.right
+                  .data-item
+                    %span.figure= f(order.billed_invoice_flatrates_total)
                     %span.unit= currency
                 %td.center
                   = link_to(picon('time'), order_order_services_path(order_id: order.order, invoice_id: '[leer]', billable: true, start_date: @period.start_date, end_date: @period.end_date), title: 'noch nicht verrechnete Leistungen anzeigen')
