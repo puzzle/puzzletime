@@ -52,13 +52,13 @@ class Flatrate < ApplicationRecord
     end_date = [
       end_date,
       (active_to.present? ? active_to.end_of_month : nil),
-      accounting_post.order.contract.end_date.end_of_month
+      accounting_post.order.contract.present? ? accounting_post.order.contract.end_date.end_of_month : nil
     ].compact.min
 
     start_date = [
       start_date,
       active_from.beginning_of_month,
-      accounting_post.order.contract.start_date.beginning_of_month
+      accounting_post.order.contract.present? ? accounting_post.order.contract.start_date.beginning_of_month : nil
     ].compact.max
 
     Rails.logger.info("startdate flatrate calc: #{start_date}")
