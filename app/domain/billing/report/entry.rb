@@ -10,7 +10,7 @@ module Billing
     class Entry < SimpleDelegator
       attr_reader :order, :accounting_posts, :hours, :invoices, :invoice_flatrates, :flatrates
 
-      def initialize(order, worktimes, accounting_posts, hours, invoices, invoice_flatrates, flatrates)
+      def initialize(order, worktimes, accounting_posts, hours, invoices, invoice_flatrates, flatrates) # rubocop:disable Metrics/ParameterLists
         super(order)
         @order = order
         @worktimes = worktimes

@@ -182,7 +182,7 @@ module Billing
       end
     end
 
-    def build_entry(order, worktimes, accounting_posts, hours, invoices, invoice_flatrates, flatrates)
+    def build_entry(order, worktimes, accounting_posts, hours, invoices, invoice_flatrates, flatrates) # rubocop:disable Metrics/ParameterLists
       posts = accounting_posts[order.id]
       post_hours = hours.slice(*posts.keys)
 
