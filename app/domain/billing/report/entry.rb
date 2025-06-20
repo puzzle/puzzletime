@@ -101,7 +101,7 @@ module Billing
       end
 
       def billed_invoice_flatrates_total_quantity
-        invoice_flatrates[:total_quantity].to_d
+        invoice_flatrates[:total_quantity].to_i
       end
 
       def planned_flatrates_total_amount
@@ -109,7 +109,7 @@ module Billing
       end
 
       def planned_flatrates_total_quantity
-        flatrates[:planned_flatrates_total_quantity].to_d
+        flatrates[:planned_flatrates_total_quantity].to_i
       end
 
       private
