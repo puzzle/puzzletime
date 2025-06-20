@@ -61,7 +61,7 @@ module Billing
       hours = hours_to_hash(load_accounting_post_hours(accounting_posts.values))
       invoices = invoices_to_hash(load_invoices(orders))
       entries = orders.filter_map { |o| build_entry(o, worktimes, accounting_posts, hours, invoices, invoice_flatrates, flatrates) }
-      entries.filter { |e| e.not_billed_hours.positive? } # Only show if there are unbilled HOURS
+      entries.filter { |e| e.not_billed_hours.positive? || (e.planned_flatrates_total_quantity - e.billed_invoice_flatrates_total_quantity) != 0 } # Only show if there are unbilled HOURS
     end
 
     # prepare worktimes, as some columns take data directly from worktimes
