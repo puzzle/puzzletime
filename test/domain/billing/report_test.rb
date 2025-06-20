@@ -102,6 +102,24 @@ module Billing
       assert_equal orders(:webauftritt, :puzzletime, :allgemein, :hitobito_demo), report.entries.collect(&:order)
     end
 
+    test 'sort by billed_invoice_flatrates_total_amount' do
+      Fabricate(:contract, order: orders(:hitobito_demo), start_date: '2014-01-01', end_date: '2015-06-30')
+      Fabricate(:invoice_flatrate, flatrate: flatrates(:two))
+
+      report(sort: 'billed_invoice_flatrates_total_amount', sort_dir: 'desc')
+
+      puts report.entries.map(&:billed_invoice_flatrates_total_amount).inspect
+
+      assert_equal orders(:hitobito_demo), report.entries.collect(&:order).first
+    end
+
+    test 'sort by planned_flatrates_total_amount' do
+      report(sort: 'planned_flatrates_total_amount', sort_dir: 'desc')
+
+      assert_equal orders(:webauftritt), report.entries.collect(&:order)[0]
+      assert_equal orders(:hitobito_demo), report.entries.collect(&:order)[1]
+    end
+
     ### calculating
 
     test 'it counts orders' do
