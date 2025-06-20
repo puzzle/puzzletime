@@ -8,17 +8,17 @@
 module Billing
   class Report
     class Entry < SimpleDelegator
-      attr_reader :order, :accounting_posts, :hours, :invoices
+      attr_reader :order, :accounting_posts, :hours, :invoices, :invoice_flatrates, :flatrates
 
-      delegate :flatrates, to: :order
-
-      def initialize(order, worktimes, accounting_posts, hours, invoices)
+      def initialize(order, worktimes, accounting_posts, hours, invoices, invoice_flatrates, flatrates)
         super(order)
         @order = order
         @worktimes = worktimes
         @accounting_posts = accounting_posts
         @hours = hours
         @invoices = invoices
+        @invoice_flatrates = invoice_flatrates
+        @flatrates = flatrates
       end
 
       def client
@@ -96,11 +96,20 @@ module Billing
         targets.find { |t| t.target_scope_id == scope_id.to_i }
       end
 
-      def billed_invoice_flatrates_total
-        inv_fltr = invoices.flat_map(&:invoice_flatrates)
-        Rails.logger.info("invc_fltr: #{inv_fltr.inspect}")
-        Rails.logger.info("invoices: #{invoices.inspect}")
-        inv_fltr.sum(:quantity)
+      def billed_invoice_flatrates_total_amount
+        invoice_flatrates[:total_amount].to_d
+      end
+
+      def billed_invoice_flatrates_total_quantity
+        invoice_flatrates[:total_quantity].to_d
+      end
+
+      def planned_flatrates_total_amount
+        flatrates[:planned_flatrates_total_amount].to_d
+      end
+
+      def planned_flatrates_total_quantity
+        flatrates[:planned_flatrates_total_quantity].to_d
       end
 
       private

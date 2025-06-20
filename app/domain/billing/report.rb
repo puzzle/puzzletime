@@ -55,11 +55,12 @@ module Billing
       orders = load_orders.to_a
       worktimes = load_worktimes(orders)
       accounting_posts = accounting_posts_to_hash(load_accounting_posts(orders))
-      invoice_flatrates = load_invoice_flatrates(orders)
+      flatrates = flatrates_to_hash(load_flatrates(orders))
+      invoice_flatrates = invoice_flatrates_to_hash(load_invoice_flatrates(orders))
       Rails.logger.info("invoice_flatrates: #{invoice_flatrates.inspect}")
       hours = hours_to_hash(load_accounting_post_hours(accounting_posts.values))
       invoices = invoices_to_hash(load_invoices(orders))
-      entries = orders.filter_map { |o| build_entry(o, worktimes, accounting_posts, hours, invoices) }
+      entries = orders.filter_map { |o| build_entry(o, worktimes, accounting_posts, hours, invoices, invoice_flatrates, flatrates) }
       entries.filter { |e| e.not_billed_hours.positive? } # Only show if there are unbilled HOURS
     end
 
@@ -77,16 +78,48 @@ module Billing
               .transform_values { |partition| partition.index_by(&:order_id) }
     end
 
+    def load_flatrates(orders)
+      Flatrate.joins('INNER JOIN accounting_posts ON accounting_posts.id = flatrates.accounting_post_id')
+              .joins('INNER JOIN work_items ON accounting_posts.work_item_id = work_items.id')
+              .joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)')
+              .where(orders: { id: orders.collect(&:id) })
+              .select('flatrates.*, orders.id AS order_id')
+    end
+
+    def flatrates_to_hash(result)
+      Rails.logger.info("My result: #{result.inspect}")
+      result.each_with_object(Hash.new { |h, k| h[k] = Hash.new(0) }) do |flatrate, hash|
+        accumulated_quantity = flatrate.accumulated_flatrate_quantity_at_date(@period.start_date, @period.end_date)
+        order_id = flatrate.order_id
+        Rails.logger.info("Report acc_quant: #{accumulated_quantity.inspect}")
+
+        hash[order_id][:planned_flatrates_total_quantity] += accumulated_quantity
+        hash[order_id][:planned_flatrates_total_amount] += accumulated_quantity * flatrate.amount
+      end
+    end
+
+    # loads all invoice_flatrates which were billed on one of the months in the selected timespan
     def load_invoice_flatrates(orders)
-      month_expanded_period = Period.with(@period.start_date.beginning_of_month, @period.end_date.end_of_month)
-      Flatrate.joins('LEFT JOIN invoice_flatrates ON flatrates.id = invoice_flatrates.flatrate_id')
-              .joins('INNER JOIN invoices ON invoices.id = invoice_flatrates.invoice_id')
-                     .where('invoices.period_from <= ? AND invoices.period_to >= ?', month_expanded_period.end_date, month_expanded_period.start_date)
+      expanded_period_start = @period.start_date.present? ? @period.start_date.beginning_of_month : nil
+      expanded_period_end = @period.end_date.present? ? @period.end_date.beginning_of_month : nil
+
+      InvoiceFlatrate.joins(:invoice)
+                     .joins(:flatrate)
+                     .where(invoices: { period_to: expanded_period_start..expanded_period_end })
                      .joins('INNER JOIN accounting_posts ON accounting_posts.id = flatrates.accounting_post_id')
                      .joins('INNER JOIN work_items ON accounting_posts.work_item_id = work_items.id')
                      .joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)')
                      .where(orders: { id: orders.collect(&:id) })
-                     .select('orders.id AS order_id, flatrates.periodicity AS periodicity, invoice_flatrates.id')
+                     .select('orders.id AS order_id, SUM(invoice_flatrates.quantity) AS total_quantity, SUM(flatrates.amount * invoice_flatrates.quantity) AS total_amount')
+                     .group('orders.id')
+                     .index_by(&:order_id)
+    end
+
+    def invoice_flatrates_to_hash(result)
+      result.each_with_object(Hash.new { |h, k| h[k] = Hash.new(0) }) do |row, hash|
+        hash[row.first][:total_quantity] = row[1].total_quantity
+        hash[row.first][:total_amount] = row[1].total_amount
+      end
     end
 
     def load_orders
@@ -149,11 +182,11 @@ module Billing
       end
     end
 
-    def build_entry(order, worktimes, accounting_posts, hours, invoices)
+    def build_entry(order, worktimes, accounting_posts, hours, invoices, invoice_flatrates, flatrates)
       posts = accounting_posts[order.id]
       post_hours = hours.slice(*posts.keys)
 
-      Billing::Report::Entry.new(order, worktimes, posts, post_hours, invoices[order.id])
+      Billing::Report::Entry.new(order, worktimes, posts, post_hours, invoices[order.id], invoice_flatrates[order.id], flatrates[order.id])
     end
 
     def filter_by_parent(orders)

@@ -41,14 +41,36 @@ class Flatrate < ApplicationRecord
   # takes in a date d and returns the amount of billed flatrates minus the amount of planned flatrates
   # (according to flatrate schedule) since the beginning of the contract until min(d, contract end date)
   def not_billed_flatrates_quantity(end_date, invoice_id)
-    billed_flatrate_quantity = InvoiceFlatrate.where(flatrate_id: id).where.not(invoice_id: invoice_id).sum(:quantity) || 0
-    stop_date = [end_date, active_to, accounting_post.order.contract.end_date].compact.min
+    billed_flatrate_quantity = InvoiceFlatrate.where(flatrate_id: id)
+                                              .where.not(invoice_id: invoice_id)
+                                              .sum(:quantity) || 0
+
+    [accumulated_flatrate_quantity_at_date(active_from, end_date) - billed_flatrate_quantity, 0].max
+  end
+
+  def accumulated_flatrate_quantity_at_date(start_date, end_date)
+    end_date = [
+      end_date,
+      (active_to.present? ? active_to.end_of_month : nil),
+      accounting_post.order.contract.end_date.end_of_month
+    ].compact.min
+
+    start_date = [
+      start_date,
+      active_from.beginning_of_month, 
+      accounting_post.order.contract.start_date.beginning_of_month
+    ].compact.max
+
+    Rails.logger.info("startdate flatrate calc: #{start_date}")
 
     accumulated_flatrate_quantity = 0
-    (active_from..stop_date).select { |d| d.day == 1 }.each do |month_date|
+    (start_date..end_date).select { |d| d.day == 1 }.each do |month_date|
       month_index = month_date.month - 1
       accumulated_flatrate_quantity += periodicity[month_index]
     end
-    [accumulated_flatrate_quantity - billed_flatrate_quantity, 0].max
+    
+    Rails.logger.info("accumulated_flatrate_quantity flatrate calc: #{accumulated_flatrate_quantity}")
+
+    accumulated_flatrate_quantity
   end
 end

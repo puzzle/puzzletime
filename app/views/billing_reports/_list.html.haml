@@ -26,6 +26,8 @@
               = sort_link(:not_billed_amount, 'Verrechnung offen')
             %th.right.nowrap{title: 'Kostensumme aller Pauschalen, die in einem Monat erbracht wurde, welcher eine Überschneidung zum gewählten Zeitraum besitzt'}
               = sort_link(:billed_invoice_flatrates, 'Verrechnete Pauschalen')
+            %th.right.nowrap{title: 'Kostensumme aller Pauschalen, die in einem Monat geplant wurde, welcher eine Überschneidung zum gewählten Zeitraum besitzt'}
+              = sort_link(:planned_flatrates, 'Geplante Pauschalen')
             %th.center
 
         %tbody
@@ -51,6 +53,13 @@
                   %span.figure= f(order.not_billed_amount.to_f)
                   %span.unit= currency
               %td.right
+                .data-item
+                  %span.figure= f(order.billed_invoice_flatrates_total_amount.to_f)
+                  %span.unit= currency
+              %td.right
+                .data-item
+                  %span.figure= f(order.planned_flatrates_total_amount.to_f)
+                  %span.unit= currency
               %td.center
             - else
               %tr
@@ -91,8 +100,18 @@
                     %span.unit= currency
                 %td.right
                   .data-item
-                    %span.figure= f(order.billed_invoice_flatrates_total)
+                    %span.figure= f(order.billed_invoice_flatrates_total_amount)
                     %span.unit= currency
+                  .data-item
+                    %span.figure= f(order.billed_invoice_flatrates_total_quantity)
+                    %span.unit= 'Stk'
+                %td.right
+                  .data-item
+                    %span.figure= f(order.planned_flatrates_total_amount)
+                    %span.unit= currency
+                  .data-item
+                    %span.figure= f(order.planned_flatrates_total_quantity)
+                    %span.unit= 'Stk'
                 %td.center
                   = link_to(picon('time'), order_order_services_path(order_id: order.order, invoice_id: '[leer]', billable: true, start_date: @period.start_date, end_date: @period.end_date), title: 'noch nicht verrechnete Leistungen anzeigen')
 
