@@ -25,9 +25,9 @@
             %th.right.nowrap{title: 'Kostensumme aller verrechenbaren Leistungen, die im gewählten Zeitraum erbracht wurden und noch keiner Rechnung zugeteilt sind'}
               = sort_link(:not_billed_amount, 'Verrechnung offen')
             %th.right.nowrap{title: 'Kostensumme aller Pauschalen, die in einem Monat erbracht wurde, welcher eine Überschneidung zum gewählten Zeitraum besitzt'}
-              = sort_link(:billed_invoice_flatrates, 'Verrechnete Pauschalen')
+              = sort_link(:billed_invoice_flatrates_total_amount, 'Verrechnete Pauschalen')
             %th.right.nowrap{title: 'Kostensumme aller Pauschalen, die in einem Monat geplant wurde, welcher eine Überschneidung zum gewählten Zeitraum besitzt'}
-              = sort_link(:planned_flatrates, 'Geplante Pauschalen')
+              = sort_link(:planned_flatrates_total_amount, 'Geplante Pauschalen')
             %th.center
 
         %tbody
