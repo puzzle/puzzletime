@@ -294,7 +294,6 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
 
   def reload(params = {})
     order = params.delete(:order) || self.order
-    puts new_order_invoice_path(order, params)
     visit(new_order_invoice_path(order, params))
   end
 
