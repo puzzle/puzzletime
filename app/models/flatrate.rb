@@ -57,7 +57,7 @@ class Flatrate < ApplicationRecord
 
     start_date = [
       start_date,
-      active_from.beginning_of_month, 
+      active_from.beginning_of_month,
       accounting_post.order.contract.start_date.beginning_of_month
     ].compact.max
 
@@ -68,7 +68,7 @@ class Flatrate < ApplicationRecord
       month_index = month_date.month - 1
       accumulated_flatrate_quantity += periodicity[month_index]
     end
-    
+
     Rails.logger.info("accumulated_flatrate_quantity flatrate calc: #{accumulated_flatrate_quantity}")
 
     accumulated_flatrate_quantity
