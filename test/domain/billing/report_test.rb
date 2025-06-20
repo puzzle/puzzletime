@@ -11,8 +11,8 @@ module Billing
   class ReportTest < ActiveSupport::TestCase
     ### filtering
 
-    test 'contains all orders that have > 0 hours of unbilled worktimes' do
-      assert_equal 3, report.entries.size
+    test 'contains all orders that have > 0 hours of unbilled worktimes or open flatrates' do
+      assert_equal 4, report.entries.size
     end
 
     test 'filter by status' do
@@ -30,13 +30,13 @@ module Billing
     test 'filter by department' do
       report(department_id: departments(:devtwo).id)
 
-      assert_empty report.entries
+      assert_equal [orders(:hitobito_demo)], report.entries.collect(&:order)
     end
 
     test 'filter by kind' do
       report(kind_id: order_kinds(:projekt).id)
 
-      assert_equal [orders(:webauftritt)], report.entries.collect(&:order)
+      assert_equal orders(:hitobito_demo, :webauftritt), report.entries.collect(&:order)
     end
 
     test 'filter by responsible and department' do
@@ -56,13 +56,15 @@ module Billing
     test 'filter by client' do
       report(client_work_item_id: work_items(:puzzle).id)
 
-      assert_equal orders(:allgemein, :puzzletime), report.entries.collect(&:order)
+      # hitobito_demo appears, since it has open flatrates
+      assert_equal orders(:allgemein, :hitobito_demo, :puzzletime), report.entries.collect(&:order)
     end
 
     test 'filter by start date' do
       report(period: Period.new(Date.new(2006, 12, 11), nil))
 
-      assert_equal [orders(:webauftritt)], report.entries.collect(&:order)
+      # hitobito_demo appears, since it has open flatrates
+      assert_equal orders(:hitobito_demo, :webauftritt), report.entries.collect(&:order)
     end
 
     test 'filter by end date' do
@@ -82,25 +84,28 @@ module Billing
     test 'sort by client' do
       report(sort: 'client', sort_dir: 'desc')
 
-      assert_equal orders(:allgemein, :puzzletime, :webauftritt), report.entries.collect(&:order)
+      # hitobito_demo appears, since it has open flatrates
+      assert_equal orders(:allgemein, :hitobito_demo, :puzzletime, :webauftritt), report.entries.collect(&:order)
     end
 
     test 'sort by target time' do
       report(sort: "target_scope_#{target_scopes(:time).id}", sort_dir: 'desc')
 
-      assert_equal orders(:allgemein, :puzzletime, :webauftritt), report.entries.collect(&:order)
+      # hitobito_demo appears, since it has open flatrates
+      assert_equal orders(:allgemein, :hitobito_demo, :puzzletime, :webauftritt), report.entries.collect(&:order)
     end
 
     test 'sort by not_billed_amount' do
       report(sort: 'not_billed_amount', sort_dir: 'desc')
 
-      assert_equal orders(:webauftritt, :puzzletime, :allgemein), report.entries.collect(&:order)
+      # hitobito_demo is last since unpaid amount (from worktimes) is 0
+      assert_equal orders(:webauftritt, :puzzletime, :allgemein, :hitobito_demo), report.entries.collect(&:order)
     end
 
     ### calculating
 
     test 'it counts orders' do
-      assert_equal 'Total (3)', report.total.to_s
+      assert_equal 'Total (4)', report.total.to_s
     end
 
     test 'billable_amount is always sum of not_billed_amount and billed_amount' do
