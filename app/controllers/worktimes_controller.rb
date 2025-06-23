@@ -180,6 +180,8 @@ class WorktimesController < CrudController
   end
 
   def set_unbilled_worktimes_popup
+    return if Time.zone.today.day < 10 # only show from 10. day of the month onwards to give time to publish / control times
+
     accounting_posts = @user.managed_orders
                             .collect(&:accounting_posts)
                             .flatten
