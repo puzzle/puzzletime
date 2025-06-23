@@ -24,7 +24,10 @@
 
       .weeknav-content
         .weeknav-calendar-row
-          = link_to 'Heute', worktimes_url, class: 'btn btn-primary today-link'
+          - if @selected_date == @today_week_date
+            = link_to 'Heute', worktimes_url, class: 'btn btn-primary today-link-white'
+          - else
+            = link_to 'Heute', worktimes_url, class: 'btn btn-primary today-link-blue'
           = plain_form(Worktime.new, method: :get) do |f|
             .nowrap
               = f.date_field(:work_date,

@@ -96,11 +96,23 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
     border-left-width: 1px;
     border-right-width: 1px;
     padding-left: 0;
+    margin: auto;
 
-    .today-link {
-      border-radius: 0;
-      width: 140px;
+    .today-link-blue {
+      border-radius: 18px;
+      width: 100px;
       font-size: medium;
+      margin: 6px;
+    }
+
+    .today-link-white {
+      border-radius: 18px;
+      width: 100px;
+      font-size: medium;
+      margin: 6px;
+      background-color: white;
+      color: $gray-dark;
+      border-color: $gray-dark;
     }
 
     > form {
@@ -122,9 +134,9 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
         vertical-align: middle;
       }
       input {
-        width: 120px;
+        width: 130px;
         height: 40px;
-        padding: 20px;
+        padding: 25px;
         border: 0;
         line-height: 30px;
         box-shadow: none;
@@ -135,6 +147,7 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
 
     .add-other {
       float: right
+      vertical-a
     }
   }
   .weeknav-add-row {
