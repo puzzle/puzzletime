@@ -5,15 +5,17 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
+# {{{
 # == Schema Information
 #
 # Table name: working_conditions
 #
 #  id                     :integer          not null, primary key
-#  valid_from             :date
-#  vacation_days_per_year :decimal(5, 2)    not null
 #  must_hours_per_day     :decimal(4, 2)    not null
+#  vacation_days_per_year :decimal(5, 2)    not null
+#  valid_from             :date
 #
+# }}}
 
 class WorkingCondition < ApplicationRecord
   validates_by_schema

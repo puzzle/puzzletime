@@ -5,6 +5,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
+# {{{
 # == Schema Information
 #
 # Table name: absences
@@ -14,6 +15,11 @@
 #  payed    :boolean          default(FALSE)
 #  vacation :boolean          default(FALSE), not null
 #
+# Indexes
+#
+#  index_absences_on_name  (name) UNIQUE
+#
+# }}}
 
 class Absence < ApplicationRecord
   include Evaluatable

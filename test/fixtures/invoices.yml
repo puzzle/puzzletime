@@ -4,26 +4,33 @@
 #  https://github.com/puzzle/puzzletime.
 
 
+# {{{
 # == Schema Information
 #
 # Table name: invoices
 #
 #  id                 :integer          not null, primary key
-#  order_id           :integer          not null
 #  billing_date       :date             not null
 #  due_date           :date             not null
-#  total_amount       :decimal(12, 2)   not null
-#  total_hours        :float            not null
-#  reference          :string           not null
+#  grouping           :integer          default("accounting_posts"), not null
+#  invoicing_key      :string
 #  period_from        :date             not null
 #  period_to          :date             not null
+#  reference          :string           not null
 #  status             :string           not null
-#  billing_address_id :integer          not null
-#  invoicing_key      :string
+#  total_amount       :decimal(12, 2)   not null
+#  total_hours        :float            not null
 #  created_at         :datetime
 #  updated_at         :datetime
-#  grouping           :integer          default("accounting_posts"), not null
+#  billing_address_id :integer          not null
+#  order_id           :integer          not null
 #
+# Indexes
+#
+#  index_invoices_on_billing_address_id  (billing_address_id)
+#  index_invoices_on_order_id            (order_id)
+#
+# }}}
 
 ---
 webauftritt_may:

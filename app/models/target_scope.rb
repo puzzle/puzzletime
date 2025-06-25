@@ -5,18 +5,25 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
+# {{{
 # == Schema Information
 #
 # Table name: target_scopes
 #
 #  id                        :integer          not null, primary key
-#  name                      :string           not null
 #  icon                      :string
+#  name                      :string           not null
 #  position                  :integer          not null
 #  rating_green_description  :string
 #  rating_orange_description :string
 #  rating_red_description    :string
 #
+# Indexes
+#
+#  index_target_scopes_on_name      (name) UNIQUE
+#  index_target_scopes_on_position  (position)
+#
+# }}}
 
 class TargetScope < ApplicationRecord
   has_many :order_targets, dependent: :destroy
