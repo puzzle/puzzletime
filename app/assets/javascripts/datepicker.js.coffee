@@ -30,9 +30,9 @@ app.datepicker = new class
   unavailableDates = ($input) ->
     (date) ->
       if $input.hasClass('only-mondays')
-        return [date.getDay() == 1, '', 'Only Mondays are selectable']
+        return [date.getDay() == 1, '', 'Bitte wähle einen Montag aus']
       if $input.hasClass('only-fridays')
-        return [date.getDay() == 5, '', 'Only Fridays are selectable']
+        return [date.getDay() == 5, '', 'Bitte wähle einen Freitag aus']
       [true, '', '']  # allow all dates by default
 
 
