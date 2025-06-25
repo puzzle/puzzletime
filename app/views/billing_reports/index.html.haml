@@ -4,6 +4,10 @@
 -#  https://github.com/puzzle/puzzletime.
 
 
-$('#employee_checkboxes').html("#{j(render 'period_employees')}")
-$('#work_item_checkboxes').html("#{j(render 'period_work_items')}")
-$('#invoice_flatrates').html("#{j(render 'invoice_flatrates_list')}")
+%ul.nav.nav-tabs{ role: 'tablist' }
+- @title ||= 'Verrechnungs-Controlling'
+
+%p= render 'filters'
+
+.list
+  = render 'list'

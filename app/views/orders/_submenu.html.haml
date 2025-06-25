@@ -12,6 +12,11 @@
         reports_orders_path(clear: 1),
         reports_orders_path
 
+- if can?(:reports, Order)
+  = nav 'Verrechnungs-Controlling',
+        reports_billing_path(clear: 1),
+        reports_billing_path
+
 - if can?(:managed, Evaluations::Evaluation)
   = nav 'Meine Aufträge', evaluation_path('managed', clear: 1)
 

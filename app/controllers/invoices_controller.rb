@@ -9,11 +9,12 @@ class InvoicesController < CrudController
   self.nesting = [Order]
 
   self.permitted_attrs = [:billing_date, :due_date, :period_from, :period_to, :period_shortcut,
-                          :billing_address_id, :grouping, { employee_ids: [], work_item_ids: [] }]
+                          :billing_address_id, :grouping, { employee_ids: [], work_item_ids: [], flatrate_ids: [] },
+                          { invoice_flatrates_attributes: %i[id flatrate_id invoice_id quantity _destroy] }]
 
   self.sort_mappings = { period: :period_from, manual?: :grouping }
 
-  helper_method :checked_work_item_ids, :checked_employee_ids, :order
+  helper_method :checked_work_item_ids, :checked_employee_ids, :checked_flatrate_ids, :order
 
   prepend_before_action :entry, only: %i[show new create edit update destroy sync]
 
@@ -41,6 +42,32 @@ class InvoicesController < CrudController
   def new
     assign_attributes
     @autoselect_workitems_and_employees = true
+    set_period
+
+    order.accounting_posts.flat_map(&:flatrates).each do |flatrate|
+      next if @invoice.invoice_flatrates.pluck(:flatrate_id).include?(flatrate.id)
+
+      Rails.logger.info("flatrate #{flatrate.name} doesn't exist yet. Creating a new invoice_flatrate")
+      @invoice.invoice_flatrates.build(
+        flatrate: flatrate,
+        invoice: @invoice,
+        quantity: flatrate.not_billed_flatrates_quantity(@period.end_date, @invoice.id)
+      )
+    end
+  end
+
+  def edit
+    @period = Period.with(@invoice.period_from, @invoice.period_to)
+    order.accounting_posts.flat_map(&:flatrates).each do |flatrate|
+      next if @invoice.invoice_flatrates.pluck(:flatrate_id).include?(flatrate.id)
+
+      Rails.logger.info("flatrate #{flatrate.name} doesn't exist yet. Creating a new invoice_flatrate (with quantity 0)")
+      @invoice.invoice_flatrates.build(
+        flatrate: flatrate,
+        invoice: @invoice,
+        quantity: 0 # if it didn't exist before, we initialize it with 0
+      )
+    end
   end
 
   def sync
@@ -86,8 +113,31 @@ class InvoicesController < CrudController
   def filter_fields
     from = model_params[:period_from]
     to = model_params[:period_to]
+    @period = Period.with(from, to)
+
+    Rails.logger.info("FILTER, before: #{@invoice.invoice_flatrates.inspect}")
+
+    order.accounting_posts.flat_map(&:flatrates).each do |flatrate|
+      next if @invoice.invoice_flatrates.pluck(:flatrate_id).include?(flatrate.id)
+
+      Rails.logger.info("[filter_fields] flatrate #{flatrate.name} doesn't exist yet. Creating a new invoice_flatrate")
+      Rails.logger.info("[filter_fields] @period.end_date #{@period.end_date}")
+      @invoice.invoice_flatrates.build(
+        flatrate: flatrate,
+        invoice: @invoice,
+        quantity: flatrate.not_billed_flatrates_quantity(@period.end_date, @invoice.id)
+      )
+    end
+
+    Rails.logger.info("FILTER, after: #{@invoice.invoice_flatrates.inspect}")
+
+    Rails.logger.info("from: #{from.inspect}")
+    Rails.logger.info("to: #{to.inspect}")
+    Rails.logger.info("@period: #{@period.inspect}")
+
     @employees = employees_for_period(from, to)
     @work_items = work_items_for_period(from, to)
+
     # replace employees_ids in entry with the list of actually selectable employees
     entry.employee_ids = @employees.pluck(:id)
     entry.work_item_ids = @work_items.pluck(:id)
@@ -130,6 +180,7 @@ class InvoicesController < CrudController
     attrs[:due_date] ||= l(due_date) if due_date.present?
     attrs[:billing_address_id] ||= default_billing_address_id
     attrs[:grouping] ||= last_grouping
+
     if attrs[:employee_ids].blank?
       attrs[:employee_ids] = employees_for_period(attrs[:period_from],
                                                   attrs[:period_to]).map(&:id)
@@ -158,6 +209,7 @@ class InvoicesController < CrudController
   def load_associations
     @employees = employees_for_period(entry.period_from, entry.period_to)
     @work_items = work_items_for_period(entry.period_from, entry.period_to)
+    # @flatrates = flatrates_for_date(entry.period_to)
     @billing_clients = Client.list
     @billing_client = entry.billing_client
     @billing_addresses = load_billing_addresses(@billing_client)

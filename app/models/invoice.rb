@@ -35,6 +35,8 @@ class Invoice < ApplicationRecord
   belongs_to :billing_address
 
   has_many :ordertimes, dependent: :nullify
+  has_many :invoice_flatrates, dependent: :destroy
+  has_many :flatrates, through: :invoice_flatrates
 
   has_and_belongs_to_many :work_items
   has_and_belongs_to_many :employees
@@ -47,10 +49,14 @@ class Invoice < ApplicationRecord
   validate :assert_order_has_contract
   validate :assert_order_not_closed
 
+  accepts_nested_attributes_for :invoice_flatrates, allow_destroy: true
+
+  before_validation :reject_zero_quantity_flatrates
   before_validation :set_default_status
   before_validation :generate_reference, on: :create
   before_validation :generate_due_date
   before_validation :update_totals
+
   before_save :save_remote_invoice, if: -> { Invoicing.instance.present? }
   before_save :assign_worktimes
   before_create :lock_client_invoice_number
@@ -98,7 +104,8 @@ class Invoice < ApplicationRecord
   end
 
   def calculated_total_amount
-    total = positions.sum(&:total_amount)
+    invoice_flatrates_total = invoice_flatrates.sum { |iflt| iflt.flatrate[:amount] * (iflt.quantity || 0) }
+    total = positions.sum(&:total_amount) + invoice_flatrates_total
     round_to_5_cents(total)
   end
 
@@ -186,6 +193,10 @@ class Invoice < ApplicationRecord
     order.update_column(:billing_address_id, billing_address_id)
   end
 
+  def reject_zero_quantity_flatrates
+    self.invoice_flatrates = invoice_flatrates.reject { |f| f.quantity.to_i <= 0 }
+  end
+
   def update_totals
     if manual_invoice?
       self.total_hours = 0
@@ -234,7 +245,7 @@ class Invoice < ApplicationRecord
   end
 
   def save_remote_invoice
-    self.invoicing_key = Invoicing.instance.save_invoice(self, positions)
+    self.invoicing_key = Invoicing.instance.save_invoice(self, positions, invoice_flatrates)
   rescue Invoicing::Error => e
     errors.add(:base, "Fehler im Invoicing Service: #{e.message}")
     Rails.logger.error("#{e.class.name}: #{e.message}\n#{e.backtrace.join("\n")}")
