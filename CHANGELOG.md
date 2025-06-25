@@ -23,6 +23,8 @@
         * Die Ansicht der Leistungen und der CSV-Export wurde mit der Spalte 'Stundenansatz' ergänzt (#62594)
    * neuer Tab "Kosten"
         * Im neuen Tab 'Kosten' sind alle Spesen und Verpflegungsentschädigungen, die mit dem Auftrag assoziiert sind. Der Tab ist ersichtlich für der/die Auftragsverantwortliche:n des Auftrags und alle User mit dem Flag 'Management' (#62595)
+   * Tab "Planung"
+        * Neben der Summe der geplanten Stunden zum Auftrag werden auch die geplanten Ressourcen innerhalb des gewählten Zeitraumes angezeigt (oben links bei der Summe sowie in der Tabelle pro Member). Die vorhandenen Titel wurden entsprechend angepasst. Da die verwendete Ansicht der Plan-Daten auf Wochen-Basis funktioniert, können die Werte nur von Mo-Fr angezeigt werden. Um die Konsistenz zu gewährleisten, wurde die Zeitraum-Auswahl auf Mo-Fr eingeschränkt. (#63115)
 * **Zeitrapport**
     * Für mehrere Buchungspositionen möglich (#63116):
         * Im Auftrag > Tab "Leistungen" ist der Filter "Buchungsposition" ein Mehrfachauswahlfeld, wodurch ein Zeitrapport für mehrere Buchungspositionen erstellt werden kann, ohne zuerst eine Rechnung erstellen zu müssen
