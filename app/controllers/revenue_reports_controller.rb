@@ -13,6 +13,7 @@ class RevenueReportsController < ApplicationController
     Reports::Revenue::DepartmentOrder,
     Reports::Revenue::DepartmentMember,
     Reports::Revenue::PortfolioItem,
+    Reports::Revenue::MarketOpportunities,
     Reports::Revenue::Service,
     Reports::Revenue::Sector
   ].freeze
