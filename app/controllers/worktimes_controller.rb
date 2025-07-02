@@ -13,6 +13,8 @@ class WorktimesController < CrudController
   before_save :check_has_accounting_post, :check_worktimes_committed
   after_save :check_overlapping, :check_employment
 
+  before_action :set_unbilled_worktimes_popup
+
   before_render_index :set_statistics
   before_render_new :create_default_worktime
   before_render_form :set_existing
@@ -175,6 +177,20 @@ class WorktimesController < CrudController
     @monthly_worktime = @user.statistics.musttime(Period.current_month)
     @pending_worktime = @user.statistics.pending_worktime(Period.current_month).to_f
     @remaining_vacations = @user.statistics.current_remaining_vacations
+  end
+
+  def set_unbilled_worktimes_popup
+    return if Time.zone.today.day < 10 # only show from 10. day of the month onwards to give time to publish / control times
+
+    accounting_posts = @user.managed_orders
+                            .collect(&:accounting_posts)
+                            .flatten
+                            .filter { |ap| ap.billing_reminder_active == true && ap.unbilled_billable_times_exist_in_past_month? }
+
+    return if accounting_posts.blank?
+
+    reminder_text = 'Vorsicht, in einem oder meheren deiner Aufträge gibt es noch unverrechnete Leistungen vom Vormonat! Überprüfe bitte das Verrechnungs-Controlling.'
+    flash[:warning] = reminder_text
   end
 
   # returns the employee's id from the params or the logged in user
