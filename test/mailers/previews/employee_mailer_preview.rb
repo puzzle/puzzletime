@@ -18,4 +18,9 @@ class EmployeeMailerPreview < ActionMailer::Preview
     employee = Employee.new(email: 'user@example.com', firstname: 'Peter', lastname: 'Puzzler')
     EmployeeMailer.worktime_commit_reminder_mail(employee)
   end
+
+  def not_billed_times_reminder_mail
+    employee = Employee.new(email: 'user@example.com', firstname: 'Peter', lastname: 'Puzzler')
+    EmployeeMailer.not_billed_times_reminder_mail(employee)
+  end
 end
