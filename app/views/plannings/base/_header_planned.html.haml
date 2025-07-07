@@ -13,8 +13,22 @@
       Stunden verplant
   .header-planned-row.inperiod-sum
     .header-planned-prefix
-      Ausgewählter Zeitbereich:
+      Durch Filter angezeigter Zeitbereich:
     .header-planned-amount
       = format_number(@board.total_planned_hours(true), 0)
     .header-planned-postfix
       Stunden verplant
+  .header-planned-row.inperiod-sum
+    .header-planned-prefix
+      Selektierter Zeitbereich:
+    .header-planned-amount
+      = render 'preview_total_selected'
+    .header-planned-postfix
+      Stunden verplant
+
+- content_for(:javascript) do
+  var recalculate_total_selected_amount_trigger = new window.App.PageUpdaterTrigger('classChange', '.day', 'ui-selected')
+
+  var calculate_total_action = new window.App.PageUpdaterAction("#{preview_total_selected_order_order_plannings_path(format: :js)}")
+
+  new window.App.PageUpdater(recalculate_total_selected_amount_trigger, calculate_total_action);
