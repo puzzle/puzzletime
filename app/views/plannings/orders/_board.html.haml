@@ -53,3 +53,11 @@
       - if can?(:manage_plannings, @board.subject)
         .actions{ data: { type: 'employee', work_item_id: post.work_item_id } }
           = render 'add_button'
+
+    = render 'preview_total_selected'
+    - content_for(:javascript) do
+      var recalculate_total_selected_amount_trigger = new window.App.PageUpdaterTrigger('classChange', '.day', 'ui-selected')
+
+      var calculate_total_action = new window.App.PageUpdaterAction("#{preview_total_selected_order_order_plannings_path(format: :js)}")
+
+      new window.App.PageUpdater(recalculate_total_selected_amount_trigger, calculate_total_action);
