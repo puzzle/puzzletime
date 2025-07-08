@@ -29,7 +29,7 @@ class Order
       private
 
       def compose_pdf_report
-        pdf = Prawn::Document.new(margin: [90, 30, 70, 30], page_layout: :landscape)
+        pdf = Prawn::Document.new(margin: [90, 30, 70, 30], page_layout: :landscape, page_size: 'A4')
         pdf.font_size = 8
         pdf.font_families.update(
           'Roboto' => {
