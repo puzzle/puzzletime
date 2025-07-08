@@ -27,8 +27,8 @@
       Stunden verplant
 
 - content_for(:javascript) do
-  var recalculate_total_selected_amount_trigger = new window.App.PageUpdaterTrigger('classChange', '.day', 'ui-selected')
+  var recalculate_total_selected_amount_trigger = new window.App.SelectionWatcherTrigger('classChange', '.day', 'ui-selected')
 
-  var calculate_total_action = new window.App.PageUpdaterAction("#{preview_total_selected_order_order_plannings_path(order_id: @order.id, format: :js)}")
+  var calculate_total_action = new window.App.SelectionWatcherAction("#{preview_total_selected_order_order_plannings_path(order_id: @order.id, format: :js)}")
 
-  new window.App.PageUpdater(recalculate_total_selected_amount_trigger, calculate_total_action);
+  new window.App.SelectionWatcher(recalculate_total_selected_amount_trigger, calculate_total_action);

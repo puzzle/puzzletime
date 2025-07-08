@@ -6,18 +6,18 @@
 
 app = window.App ||= {}
 
-class app.PageUpdaterTrigger
+class app.SelectionWatcherTrigger
   constructor: (event, watchSelectors..., observedClass) ->
     @event = event
     @watchedElements = watchSelectors.join(', ')
     @observedClass = observedClass
 
-class app.PageUpdaterAction
+class app.SelectionWatcherAction
   constructor: (url) ->
     @url = url
 
 # Update Form by running AJAX request when event fires on watched elements
-class app.PageUpdater
+class app.SelectionWatcher
   constructor: (trigger, actions...) ->
     @trigger = trigger
     @actions = actions
