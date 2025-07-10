@@ -138,7 +138,7 @@ class Order
         data
       end
 
-      def tickets_table_rows
+      def tickets_table_rows # rubocop:disable Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
         # Define table headers
         data = []
         @column_map = { ticket: 0, hours: 1 }
