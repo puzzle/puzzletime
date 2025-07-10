@@ -28,8 +28,8 @@ class InvoiceReportsController < ApplicationController
   end
 
   def sync
-    if params.blank?
-      flash[:error] = 'Fehler im Puzzletime beim Sync'
+    if params['invoice_id'].blank?
+      flash[:error] = 'Interner Puzzletime Fehler beim Sync der Rechnung' # rubocop:disable Rails/I18nLocaleTexts
       redirect_to reports_invoices_path(params.to_unsafe_h)
       return
     end
