@@ -27,6 +27,26 @@ class InvoiceReportsController < ApplicationController
     end
   end
 
+  def sync
+    if params.blank?
+      flash[:error] = 'Fehler im Puzzletime beim Sync'
+      redirect_to reports_invoices_path(params.to_unsafe_h)
+      return
+    end
+
+    invoice = Invoice.find(params[:invoice_id])
+
+    if Invoicing.instance
+      begin
+        Invoicing.instance.sync_invoice(invoice)
+        flash[:notice] = "Die Rechnung #{invoice} wurde aktualisiert."
+      rescue Invoicing::Error => e
+        flash[:error] = "Fehler im Invoicing Service: #{e.message}"
+      end
+    end
+    redirect_to reports_invoices_path(params.to_unsafe_h)
+  end
+
   private
 
   def set_filter_values
