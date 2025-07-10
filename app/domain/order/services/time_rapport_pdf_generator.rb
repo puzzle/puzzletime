@@ -28,8 +28,14 @@ class Order
 
       private
 
+      def page_layout
+        return :landscape if params[:landscape]
+
+        :portrait
+      end
+
       def compose_pdf_report
-        pdf = Prawn::Document.new(margin: [90, 30, 70, 30], page_layout: :landscape, page_size: 'A4')
+        pdf = Prawn::Document.new(margin: [90, 30, 70, 30], page_layout: page_layout, page_size: 'A4')
         pdf.font_size = 8
         pdf.font_families.update(
           'Roboto' => {
@@ -93,12 +99,20 @@ class Order
       def worktimes_table_rows # rubocop:disable Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
         # Define table headers
         data = []
+        @column_map = { date: 0, hours: 1 }
         header = %w[Datum Stunden]
-        header << 'Von' << 'Bis' if params[:start_stop]
+        header << 'Von' if params[:start_stop]
+        @column_map[:from] = header.size - 1 if params[:start_stop]
+        header << 'Bis' if params[:start_stop]
+        @column_map[:to] = header.size - 1 if params[:start_stop]
         header << 'Member'
+        @column_map[:member] = header.size - 1
         header << 'Buchungsposition' if params[:show_work_item]
+        @column_map[:accounting_post] = header.size - 1 if params[:show_work_item]
         header << 'Ticket' if params[:show_ticket]
+        @column_map[:ticket] = header.size - 1 if params[:show_ticket]
         header << 'Bemerkungen' if params[:description]
+        @column_map[:remarks] = header.size - 1 if params[:description]
 
         data << header
 
@@ -124,13 +138,19 @@ class Order
         data
       end
 
-      def tickets_table_rows
+      def tickets_table_rows # rubocop:disable Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
         # Define table headers
         data = []
+        @column_map = { ticket: 0, hours: 1 }
         header = %w[Ticket Stunden]
-        header << 'Von' << 'Bis' if params[:start_stop]
+        header << 'Von' if params[:start_stop]
+        @column_map[:from] = header.size - 1 if params[:start_stop]
+        header << 'Bis' if params[:start_stop]
+        @column_map[:to] = header.size - 1 if params[:start_stop]
         header << 'Member'
+        @column_map[:member] = header.size - 1
         header << 'Bemerkungen' if params[:description]
+        @column_map[:remarks] = header.size - 1 if params[:remarks]
 
         data << header
 
@@ -162,9 +182,50 @@ class Order
         data
       end
 
+      def column_widths(pdf)
+        return {} unless @column_map
+
+        headers = %i[date hours member from to accounting_post ticket remarks]
+
+        fixed_widths = {}
+        fixed_widths[@column_map[:date]] = 65 if @column_map[:date]
+        fixed_widths[@column_map[:hours]] = 50 if @column_map[:hours]
+        fixed_widths[@column_map[:member]] = 50 if @column_map[:member]
+        fixed_widths[@column_map[:from]] = 30 if @column_map[:from]
+        fixed_widths[@column_map[:to]] = 30 if @column_map[:to]
+        fixed_widths[@column_map[:accounting_post]] = 75 if @column_map[:accounting_post]
+        fixed_widths[@column_map[:ticket]] = 55 if @column_map[:ticket]
+        fixed_widths[@column_map[:remarks]] = 150 if @column_map[:remarks]
+
+        result = {}
+        remaining = pdf.bounds.width
+
+        # calculate remaining
+        headers.each do |h|
+          if fixed_widths[h]
+            result[h] = fixed_widths[h]
+            remaining -= fixed_widths[h]
+          end
+        end
+
+        total_used_width = fixed_widths.values.sum
+        used_indices = result.keys
+
+        used_indices.each do |index|
+          fraction = fixed_widths[index] / total_used_width
+          result[index] = result[index] + (fraction * remaining)
+        end
+
+        result
+      end
+
       def build_list(pdf)
         data = @ticket_view ? tickets_table_rows : worktimes_table_rows
-        pdf.table(data, header: true, cell_style: { padding: 4, border_width: 0.3 }, width: pdf.bounds.width, column_widths: { 0 => 65, 1 => 38 }) do |table|
+        pdf.table(data,
+                  header: true,
+                  cell_style: { padding: 4, border_width: 0.3 },
+                  width: pdf.bounds.width,
+                  column_widths: column_widths(pdf)) do |table|
           table.row(0).font_style = :bold
           table.row(0).background_color = 'f0f0f0'  # Light gray
           table.row(0).text_color = '333333'        # Dark gray
@@ -173,10 +234,10 @@ class Order
             table.row(index).background_color = index.even? ? 'f0f0f0' : 'ffffff'
           end
 
-          table.column(1).align = :right # Right-align hours
-          if params[:start_stop]
-            table.column(2).align = :center
-            table.column(3).align = :center
+          table.column(@column_map[:hours]).align = :right # Right-align hours
+          if @column_map[:from] && @column_map[:to]
+            table.column(@column_map[:from]).align = :center
+            table.column(@column_map[:to]).align = :center
           end
 
           table.cells.borders = [:bottom] # Only horizontal lines

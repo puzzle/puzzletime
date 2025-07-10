@@ -77,7 +77,7 @@ class Invoice
     # filter by customer
     def filter_by_parent(invoices)
       if params[:client_work_item_id].present?
-        invoices.joins(:order, :work_items).where('? = ANY (work_items.path_ids)', params[:client_work_item_id])
+        invoices.joins(order: :work_item).where('? = ANY (work_items.path_ids)', params[:client_work_item_id])
       else
         invoices
       end
