@@ -132,6 +132,8 @@ class WorktimesController < CrudController
     @week_days = (@selected_date.at_beginning_of_week..@selected_date.at_end_of_week).to_a
     @next_week_date = @week_days.last + 1.day
     @previous_week_date = @week_days.first - 7.days
+
+    @today_week_date = Time.zone.today.at_beginning_of_week
   end
 
   def set_selected_date
