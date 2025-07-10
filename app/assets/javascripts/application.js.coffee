@@ -99,6 +99,12 @@ $(document).on('turbolinks:before-cache', ->
     this.selectize.destroy()
 )
 
+# if the page is loaded from the browser's bfcache (event.persisted == true), reload the page
+# to avoid some weird turbolinks bugs
+window.addEventListener 'pageshow', (event) ->
+  if event.persisted
+    location.reload()
+
 ################################################################
 # because of turbolinks.jquery, do bind ALL document events here
 
