@@ -18,18 +18,4 @@
       = format_number(@board.total_planned_hours(true), 0)
     .header-planned-postfix
       Stunden verplant
-  .header-planned-row.selected-sum
-    .header-planned-prefix
-      Selektierter Zeitbereich:
-    .header-planned-amount
-      = render 'preview_total_selected'
-    .header-planned-postfix
-      Stunden verplant
-
-
-- content_for(:javascript) do
-  var recalculate_total_selected_amount_trigger = new window.App.SelectionWatcherTrigger('classChange', '.day', 'ui-selected')
-
-  var calculate_total_action = new window.App.SelectionWatcherAction("#{preview_total_selected_order_order_plannings_path(order_id: @board.order.id, format: :js)}")
-
-  new window.App.SelectionWatcher(recalculate_total_selected_amount_trigger, calculate_total_action);
+  
