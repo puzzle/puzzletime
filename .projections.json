@@ -1,0 +1,8 @@
+{
+	"app/domain/*.rb": {
+		"type": "domain"
+	},
+	"Gemfile": {
+		"type": "gemfile"
+	}
+}

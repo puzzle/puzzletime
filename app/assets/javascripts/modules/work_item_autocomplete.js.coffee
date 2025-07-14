@@ -55,12 +55,16 @@ class app.WorkItemAutocomplete extends app.Autocomplete
           )
 
   onItemAdd: (value, item)  =>
-    billable = item.attr('data-billable') == 'true'
-    meal_compensation = item.attr('data-meal_compensation') == 'true'
+    if stored_account_id && stored_account_id == item.data().value
+      billable = stored_billable
+      meal_compensation = stored_meal_compensation
+    else
+      billable = item.attr('data-billable') == 'true'
+      meal_compensation = item.attr('data-meal_compensation') == 'true'
+
     $('#ordertime_billable').prop('checked', billable);
     $('#ordertime_meal_compensation').prop('checked', meal_compensation);
     @set_progress_bar(item)
-    
       
   onItemRemove: (value) ->
     # Removes the progress bar if no position is selected
