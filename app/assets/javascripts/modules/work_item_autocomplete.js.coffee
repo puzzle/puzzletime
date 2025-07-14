@@ -55,8 +55,16 @@ class app.WorkItemAutocomplete extends app.Autocomplete
           )
 
   onItemAdd: (value, item)  =>
-    billable = item.attr('data-billable') == 'true'
-    meal_compensation = item.attr('data-meal_compensation') == 'true'
+
+    default_billable = item.attr('data-billable') == 'true'
+    default_meal_compensation = item.attr('data-meal_compensation') == 'true'
+
+    stored_billable = $('#ordertime_billable').attr('data-stored') == 'true'
+    stored_meal_compensation = $('#ordertime_meal_compensation').attr('data-stored') == 'true'
+
+    billable = !!stored_billable ? stored_billable : default_billable
+    meal_compensation = !!stored_meal_compensation ? stored_meal_compensation : default_meal_compensation
+
     $('#ordertime_billable').prop('checked', billable);
     $('#ordertime_meal_compensation').prop('checked', meal_compensation);
     @set_progress_bar(item)
