@@ -5,20 +5,30 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
+# {{{
 # == Schema Information
 #
 # Table name: order_uncertainties
 #
 #  id          :integer          not null, primary key
-#  order_id    :integer          not null
-#  type        :string           not null
-#  name        :string           not null
-#  probability :integer          default("improbable"), not null
 #  impact      :integer          default("none"), not null
 #  measure     :text
+#  name        :string           not null
+#  probability :integer          default("improbable"), not null
+#  type        :string           not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  order_id    :integer          not null
 #
+# Indexes
+#
+#  index_order_uncertainties_on_order_id  (order_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (order_id => orders.id)
+#
+# }}}
 
 class OrderUncertainty < ApplicationRecord
   MEDIUM_THRESHOLD = 3

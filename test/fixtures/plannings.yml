@@ -4,17 +4,25 @@
 #  https://github.com/puzzle/puzzletime.
 
 
+# {{{
 # == Schema Information
 #
 # Table name: plannings
 #
 #  id           :integer          not null, primary key
+#  date         :date             not null
+#  definitive   :boolean          default(FALSE), not null
+#  percent      :integer          not null
 #  employee_id  :integer          not null
 #  work_item_id :integer          not null
-#  date         :date             not null
-#  percent      :integer          not null
-#  definitive   :boolean          default(FALSE), not null
 #
+# Indexes
+#
+#  index_plannings_on_employee_id                            (employee_id)
+#  index_plannings_on_employee_id_and_work_item_id_and_date  (employee_id,work_item_id,date) UNIQUE
+#  index_plannings_on_work_item_id                           (work_item_id)
+#
+# }}}
 
 ---
 hitobito_demo_app_planning1:
