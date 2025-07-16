@@ -20,6 +20,11 @@ name: 'Reusable: Build and push image'
         description: 'FQDN of the registry'
         type: string
         required: true
+      registry_url:
+        description: 'URL to push image to'
+        type: string
+        required: false
+        default: 'harbor.puzzle.ch/pitc-ruby-public/ptime/int/rails'
 
     secrets:
       PUZZLE_REGISTRY_USERNAME:
@@ -50,8 +55,8 @@ jobs:
             GITHUB_SHA=${{ github.sha }}
           target: app
           tags: |
-            ${{ inputs.registry }}/ptime/${{ inputs.project_name }}:latest
-            ${{ inputs.registry }}/ptime/${{ inputs.project_name }}:${{ github.sha }}
+            ${{ inputs.registry_url }}:latest
+            ${{ inputs.registry_url }}:${{ github.sha }}
           push: ${{ inputs.push }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
