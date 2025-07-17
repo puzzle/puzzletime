@@ -190,18 +190,18 @@ class Order
         fixed_widths = {}
         fixed_widths[@column_map[:date]] = 65 if @column_map[:date]
         fixed_widths[@column_map[:hours]] = 50 if @column_map[:hours]
-        fixed_widths[@column_map[:member]] = 50 if @column_map[:member]
+        fixed_widths[@column_map[:member]] = 60 if @column_map[:member]
         fixed_widths[@column_map[:from]] = 30 if @column_map[:from]
         fixed_widths[@column_map[:to]] = 30 if @column_map[:to]
         fixed_widths[@column_map[:accounting_post]] = 75 if @column_map[:accounting_post]
         fixed_widths[@column_map[:ticket]] = 55 if @column_map[:ticket]
-        fixed_widths[@column_map[:remarks]] = 150 if @column_map[:remarks]
+        # fixed_widths[@column_map[:remarks]] = 180.28 if @column_map[:remarks]
 
         result = {}
         remaining = pdf.bounds.width
 
         # calculate remaining
-        headers.each do |h|
+        headers.each_index do |h|
           if fixed_widths[h]
             result[h] = fixed_widths[h]
             remaining -= fixed_widths[h]
