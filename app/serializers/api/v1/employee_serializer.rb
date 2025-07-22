@@ -18,8 +18,14 @@ module Api
                   :city,
                   :birthday
 
-      attribute :is_employed do |employee|
-        !employee.current_employment.nil?
+      attribute :has_relevant_employment do |employee|
+        current = !employee.current_employment.nil?
+
+        upcoming = employee.employments.any? do |employment|
+          employment.start_date.between?(Time.zone.today, 3.months.from_now)
+        end
+
+        current || upcoming
       end
 
       attribute :department_shortname do |employee|
