@@ -85,6 +85,10 @@ module Api
                          type: :string,
                          format: :date,
                          description: 'The employee’s birth date in YYYY-MM-DD format'
+
+      annotate_attribute :has_relevant_employment,
+                         type: boolean,
+                         description: 'Whether the employee has a current employment or a employment that starts in the next three months or not'
     end
   end
 end
