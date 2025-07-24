@@ -18,14 +18,14 @@ module Api
                   :city,
                   :birthday
 
-      attribute :has_relevant_employment do |employee|
-        current = !employee.current_employment.nil?
+      attribute :is_employed do |employee|
+        !employee.current_employment.nil?
+      end
 
-        upcoming = employee.employments.any? do |employment|
+      attribute :employed_within_three_months do |employee|
+        employee.employments.any? do |employment|
           employment.start_date.between?(Time.zone.today, 3.months.from_now)
         end
-
-        current || upcoming
       end
 
       attribute :department_shortname do |employee|
@@ -86,9 +86,9 @@ module Api
                          format: :date,
                          description: 'The employee’s birth date in YYYY-MM-DD format'
 
-      annotate_attribute :has_relevant_employment,
+      annotate_attribute :employed_within_three_months,
                          type: boolean,
-                         description: 'Whether the employee has a current employment or a employment that starts in the next three months or not'
+                         description: 'Whether the employee has a employment that starts in the next three months or not'
     end
   end
 end
