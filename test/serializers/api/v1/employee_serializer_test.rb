@@ -26,6 +26,7 @@ module Api
                                            graduation: 'Klubschule',
                                            city: 'Eldoria',
                                            birthday: Date.new(1995, 1, 2),
+                                           ldapname: 'jneverends',
                                            is_employed: true,
                                            department_shortname: 'D1',
                                            department_name: 'devone',
