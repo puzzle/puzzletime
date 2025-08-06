@@ -1,3 +1,15 @@
+# 2.15.1
+
+### Bug fixes
+* **Zeiterfassung**: Beim erneuten Öffnen eines gespeicherten Zeiterfassungseintrages werden die Flags "Verrechenbar" und "Verpflegungsentschädigung" so in der Maske angezeigt, wie sie gespeichert sind (#64445)
+* **Rechnungs-Controlling**: Es werden nun auch Rechnungen, die manuell erstellt wurden und keine Zeitenbuchungen enthalten, angezeigt (#64418)
+* **Zeitrapport**: der Zeitrapport ist nun auch wieder aus der Ansicht "Meine Aufträge" erstellbar (#64413)
+* **Zeitrapport**: Der im Header angezeigte Generierungszeitpunkt des Zeitrapportes ist jetzt korrekt (#64420)
+* **Zeitrapport**: Das Format wurde auf A4 korrigiert (#64424)
+
+### Improvements
+* **Zeitrapport**: ist standardmässig wieder im Hochformat verfügbar (Querformat neu per Aktivierung Checkbox möglich) (#64421)
+
 # 2.15
 
 ### Features, Improvements und Bugfixes
