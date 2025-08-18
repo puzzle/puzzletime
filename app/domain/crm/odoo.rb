@@ -113,6 +113,8 @@ module Crm
 
       sync_crm_entities(context) do |contact|
         partner = with_prefetch(:partners, contact.crm_key.to_i) { ::Crm::Odoo::Partner.find(_1) }
+        next if partner.blank?
+
         attributes = contact_attributes(partner)
 
         contact.update!(attributes)
