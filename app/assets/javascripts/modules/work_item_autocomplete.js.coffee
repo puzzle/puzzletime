@@ -55,7 +55,7 @@ class app.WorkItemAutocomplete extends app.Autocomplete
           )
 
   onItemAdd: (value, item)  =>
-    if stored_account_id && stored_account_id == item.data().value
+    if (typeof stored_account_id != "undefined" && stored_account_id != null) && stored_account_id == item.data().value
       billable = stored_billable
       meal_compensation = stored_meal_compensation
     else
