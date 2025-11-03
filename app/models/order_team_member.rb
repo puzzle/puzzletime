@@ -5,15 +5,21 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
+# {{{
 # == Schema Information
 #
 # Table name: order_team_members
 #
-#  false       :integer          not null, primary key
+#  id          :bigint           not null, primary key
+#  comment     :string
 #  employee_id :integer          not null
 #  order_id    :integer          not null
-#  comment     :string
 #
+# Indexes
+#
+#  index_order_team_members_on_employee_id_and_order_id  (employee_id,order_id) UNIQUE
+#
+# }}}
 
 class OrderTeamMember < ApplicationRecord
   belongs_to :employee
