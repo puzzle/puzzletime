@@ -215,7 +215,7 @@ module Plannings
       return if save_errors.blank?
 
       # should not happen after form validations
-      @errors << ("Eintrag konnte nicht erstellt werden: #{save_errors.uniq.join(', ')}")
+      @errors << "Eintrag konnte nicht erstellt werden: #{save_errors.uniq.join(', ')}"
       raise ActiveRecord::Rollback
     end
 
