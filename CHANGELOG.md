@@ -1,12 +1,21 @@
-# 2.15.1
+# 2.15.2
+
 ### Bugfixes und Improvements
 
-* **Zeitrapport**: Seitenlayout anpassbar
-* **Zeitrapport**: Logikfehler behoben
-* **Rechnungsfilter**: Logikfehler behoben
-* **Browser**: Fehler beim zurückwechseln im Browser behoben
-* **Zeiterfassung**: Zeiterfassung Checkboxen Anzeigefehler behoben, der diese beim Update resettet hat
-* **Zeitrapport**: Zeitstempel in Zeitrapport repariert
+* **Odoo Sync**: Der nächtliche Sync von Odoo zu Puzzletime wurde repariert
+* **Odoo Sync**: Sonderzeichen werden jetzt korrekt übernommen
+
+# 2.15.1
+
+### Bugfixes
+* **Zeitrapport**: Beim erneuten Öffnen eines gespeicherten Zeiterfassungseintrages werden die Flags "Verrechenbar" und "Verpflegungsentschädigung" so in der Maske angezeigt, wie sie gespeichert sind (#64445)
+* **Rechnungs-Controlling**: Es werden nun auch Rechnungen, die manuell erstellt wurden und keine Zeitenbuchungen enthalten, angezeigt (#64418)
+* **Zeitrapport**: der Zeitrapport ist nun auch wieder aus der Ansicht "Meine Aufträge" erstellbar (#64413)
+* **Zeitrapport**: Der im Header angezeigte Generierungszeitpunkt des Zeitrapportes ist jetzt korrekt (#64420)
+* **Zeitrapport**: Das Format wurde auf A4 korrigiert (#64424)
+
+### Improvements
+* **Zeitrapport**: ist standardmässig wieder im Hochformat verfügbar (Querformat neu per Aktivierung Checkbox möglich) (#64421)
 
 # 2.15
 

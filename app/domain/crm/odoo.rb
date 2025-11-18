@@ -73,7 +73,8 @@ module Crm
       sync_crm_entities(context) do |client|
         company = with_prefetch(:companies, client.crm_key.to_i) { ::Crm::Odoo::Company.find(_1) }
         item = client.work_item
-        return if item.name == company.name
+
+        next if item.name == company.name
 
         item.update!(name: company.name)
       end
@@ -91,7 +92,7 @@ module Crm
           sync_additional_order(additional)
         end
 
-        return if item.name == lead.name
+        next if item.name == lead.name
 
         item.update!(name: lead.name)
       end
