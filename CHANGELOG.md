@@ -1,4 +1,12 @@
+# 2.15.2
+
+## Bugfixes und Improvements
+
+* **Odoo Sync**: Der nächtliche Sync von Odoo zu Puzzletime wurde repariert
+* **Odoo Sync**: Sonderzeichen werden jetzt korrekt übernommen
+
 # 2.15.1
+
 ### Bugfixes und Improvements
 
 * **Zeitrapport**: Seitenlayout anpassbar
