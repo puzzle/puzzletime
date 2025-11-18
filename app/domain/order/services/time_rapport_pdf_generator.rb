@@ -69,7 +69,9 @@ class Order
         customer_data << ['Member', @employee.label] if @employee
         customer_data << ['Periode', @period.to_s]
         customer_data << ['Verrechenbar', params[:billable].present? ? I18n.t("global.#{params[:billable]}") : 'Alle']
-        customer_data << ['Generiert am', "#{Time.now.strftime('%d.%m.%Y, %H:%M')} Uhr"]
+        Time.use_zone('Bern') do
+          customer_data << ['Generiert am', "#{Time.zone.now.strftime('%d.%m.%Y, %H:%M')} Uhr"]
+        end
 
         # Draw customer/order/time info as a table
         pdf.text "Zeitrapport #{Company.name}", size: 18, style: :bold

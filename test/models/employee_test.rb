@@ -95,7 +95,7 @@ class EmployeeTest < ActiveSupport::TestCase
     assert_in_delta 29.92, employee.statistics.remaining_vacations(period.end_date), 0.005
     assert_equal 0, employee.statistics.used_vacations(period)
     assert_in_delta 29.92, employee.statistics.total_vacations(period), 0.005
-    assert_in_delta((- 387 * 8 * 0.8), employee.statistics.overtime(period), 0.005)
+    assert_in_delta(- 387 * 8 * 0.8, employee.statistics.overtime(period), 0.005)
   end
 
   def test_long_time_employment
