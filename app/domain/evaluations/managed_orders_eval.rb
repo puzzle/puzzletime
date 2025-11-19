@@ -17,13 +17,15 @@ module Evaluations
       "Kunde: #{division.order.client.name}"
     end
 
-    def divisions(_period = nil)
+    def divisions(_period = nil, _times = nil)
       WorkItem.joins(:order).includes(:order).where(orders: { responsible_id: category.id }).list
     end
 
     def division_supplement(_user)
-      [[:order_completed, 'Abschluss erledigt', 'left'],
-       [:order_committed, 'Abschluss freigegeben', 'left']]
+      {
+        order_completed: { title: 'Abschluss erledigt' },
+        order_committed: { title: 'Abschluss freigegeben' }
+      }
     end
 
     private

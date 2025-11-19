@@ -43,10 +43,10 @@ module Evaluations
     end
 
     def division_supplement(_user)
-      [
-        [:worktime_commits_readonly, 'Freigabe', 'left'],
-        [:worktime_reviews_readonly, 'Kontrolle', 'left']
-      ]
+      {
+        worktime_commits_readonly: { title: 'Freigabe' },
+        worktime_reviews_readonly: { title: 'Kontrolle' }
+      }
     end
   end
 end
