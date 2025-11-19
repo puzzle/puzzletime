@@ -40,8 +40,10 @@ module EvaluatorHelper
     end
   end
 
-  def times_or_plannings?(evaluation, division, times)
-    @periods.each_with_index.any? do |_p, i|
+  def times_or_plannings?(evaluation, division, times = @times, periods = @periods)
+    periods.each_with_index.any? do |_p, i|
+      next unless times && times[i] && !times[i].empty?
+
       time = times[i][division.id]
       val = (time.is_a?(Hash) ? time[:hours] : time).to_f
       if evaluation.planned_hours
@@ -67,13 +69,13 @@ module EvaluatorHelper
     format_hour(value)
   end
 
-  def remaining_vacations(employee)
+  def remaining_vacations(employee, format: true)
     value = if @period
               employee.statistics.remaining_vacations(@period.end_date)
             else
               employee.statistics.current_remaining_vacations
             end
-    format_days(value)
+    format ? format_days(value) : value
   end
 
   def overtime_vacations_tooltip(employee)

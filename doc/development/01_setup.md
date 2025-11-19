@@ -2,7 +2,6 @@
 
 Die Applikation läuft unter Ruby >= 2.2.2, Rails 5 und PostgreSQL (development, test und production).
 
-
 ### System
 
 Grundsätzlich muss für PuzzleTime eine Ruby Version grösser gleich 2.2.2 sowie Bundler vorhanden sein.
@@ -17,10 +16,9 @@ Folgende Dritt-Packete sind für die verschiedenen Features von PuzzleTime zusä
 
     sudo apt-get install memcached
 
-
 ### Datenbank
 
- PuzzleTime verwendet PostgreSQL. Da auch DB-spezifische Features (Array Columns) verwendet werden, muss für Development und Test immer PostgreSQL eingesetzt werden.
+PuzzleTime verwendet PostgreSQL. Da auch DB-spezifische Features (Array Columns) verwendet werden, muss für Development und Test immer PostgreSQL eingesetzt werden.
 
 Da auf DB-Ebene Foreign Keys verwendet werden, muss die Verbindung auf die Test DB mit einem Superuser erfolgen, damit die referenzielle Integrität beim Laden der Fixtures deaktiviert werden kann:
 
@@ -43,7 +41,6 @@ PuzzleTime aus dem Git Repository klonen, dazu muss Git installiert sein:
 
     git clone https://github.com/puzzle/puzzletime.git
 
-
 ### Setup
 
 Ruby Gem Dependencies installieren (alle folgenden Befehle im PuzzleTime Verzeichnis ausführen):
@@ -62,27 +59,25 @@ Starten des Entwicklungsservers:
 
     rails server
 
-***Wichtig*** Um die Standard-DB zu verwenden, muss beim Starten des Servers die folgende ENV-Variable gesetzt werden: `AUTH_DB_ACTIVE=true`
+**_Wichtig_** Um die Standard-DB zu verwenden, muss beim Starten des Servers die folgende ENV-Variable gesetzt werden: `AUTH_DB_ACTIVE=true`
 
 oder gleich aller wichtigen Prozesse:
 
     gem install foreman
     foreman start
 
-
 ### Seeds
 
 Über die Development-Seeds werden unter anderem folgende Benutzer geladen:
 
-| Name | Benutzername | Rolle | Passwort |
-| --- |--------------| --- | --- |
-| Mark Waber | MW | manager | a |
-| Andreas Rava | AR | manager | a |
-| Pascal Zumkehr | PZ | user | a |
-| Daniel Illi | DI | user | a |
+| Name           | Benutzername | Rolle   | Passwort |
+| -------------- | ------------ | ------- | -------- |
+| Mark Waber     | MW           | manager | a        |
+| Andreas Rava   | AR           | manager | a        |
+| Pascal Zumkehr | PZ           | user    | a        |
+| Daniel Illi    | DI           | user    | a        |
 
 Weitere Employees können in `db/seeds/development/employees.rb` hinzugefügt werden.
-
 
 ### Tests
 
@@ -104,6 +99,14 @@ Es ist möglich eine bestimmte Firefox Version zu verwenden:
 
     FIREFOX_PATH=/path/to/firefox rake test test/integration
 
+Testen eines einzelnen Tests/Files:
+
+    rake test TEST=[Path to File]
+    # oder
+    rake test TEST=[Path to File]:[line number]
+    # Bsp.
+    rake test TEST=test/models/employment_test.rb:30
+
 ### Github actions
 
 Die Github actions build pipeline kann zum Debugging auch lokal ausgeführt werden.
@@ -111,12 +114,10 @@ Dafür wird https://github.com/nektos/act und Docker verwendet.
 
     act -b -P ubuntu-latest=nektos/act-environments-ubuntu:18.04
 
-
 ### Request Profiling
 
 Um einen einzelnen Request zu Profilen, kann der Parameter `?profile_request=true` in der URL
 angehängt werden. Der Output wird nach `tmp/performance` geschrieben.
-
 
 ### Delayed Job
 
@@ -125,22 +126,21 @@ muss Delayed Job gestartet werden:
 
     rake jobs:work
 
-
 ### Spezifische Rake Tasks
 
-| Task | Beschreibung |
-| --- | --- |
-| `rake annotate` | Spalten Informationen als Kommentar zu ActiveRecord Modellen hinzufügen. |
-| `rake brakeman` | Führt `brakeman` aus. |
-| `rake ci` | Führt die Tasks für einen Commit Build aus. |
-| `rake ci:nightly` | Führt die Tasks für einen Nightly Build aus. |
-| `rake db:dump` | Lädt einen Datenbankdump von `FILE`. |
-| `rake db:create_testuser` | Erstellt die Testbenutzer `MB1` und `MB2` mit Passwort `member` |
-| `rake erd` | Erstellt ein Entitiy Relationship Diagram in `doc/models.png` |
-| `rake bundle:audit` | Ruby Gems nach Vulnerabilities überprüfen |
-| `rake license:insert` | Fügt die Lizenz in alle Dateien ein. |
-| `rake license:remove` | Entfernt die Lizenz aus allen Dateien. |
-| `rake license:update` | Aktualisiert die Lizenz in allen Dateien oder fügt sie neu ein. |
-| `rake rubocop:changed` | Führt die Rubocop Standard Checks (`.rubocop.yml`) auf den geänderten files aus. |
-| `rake rubocop:report` | Führt die Rubocop Standard Checks (`.rubocop.yml`) aus und generiert einen Report für Jenkins. |
-| `rails g error_page [404 500 503]` | Generiert die Fehlerseiten im PuzzleTime Layout. |
+| Task                               | Beschreibung                                                                                   |
+| ---------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `rake annotate`                    | Spalten Informationen als Kommentar zu ActiveRecord Modellen hinzufügen.                       |
+| `rake brakeman`                    | Führt `brakeman` aus.                                                                          |
+| `rake ci`                          | Führt die Tasks für einen Commit Build aus.                                                    |
+| `rake ci:nightly`                  | Führt die Tasks für einen Nightly Build aus.                                                   |
+| `rake db:dump`                     | Lädt einen Datenbankdump von `FILE`.                                                           |
+| `rake db:create_testuser`          | Erstellt die Testbenutzer `MB1` und `MB2` mit Passwort `member`                                |
+| `rake erd`                         | Erstellt ein Entitiy Relationship Diagram in `doc/models.png`                                  |
+| `rake bundle:audit`                | Ruby Gems nach Vulnerabilities überprüfen                                                      |
+| `rake license:insert`              | Fügt die Lizenz in alle Dateien ein.                                                           |
+| `rake license:remove`              | Entfernt die Lizenz aus allen Dateien.                                                         |
+| `rake license:update`              | Aktualisiert die Lizenz in allen Dateien oder fügt sie neu ein.                                |
+| `rake rubocop:changed`             | Führt die Rubocop Standard Checks (`.rubocop.yml`) auf den geänderten files aus.               |
+| `rake rubocop:report`              | Führt die Rubocop Standard Checks (`.rubocop.yml`) aus und generiert einen Report für Jenkins. |
+| `rails g error_page [404 500 503]` | Generiert die Fehlerseiten im PuzzleTime Layout.                                               |
