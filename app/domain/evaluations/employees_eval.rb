@@ -17,7 +17,7 @@ module Evaluations
       super(Employee)
     end
 
-    def divisions(period = nil)
+    def divisions(period = nil, _times = nil)
       employees = if period
                     Employee.list
                   else
@@ -46,10 +46,12 @@ module Evaluations
     end
 
     def division_supplement(_user)
-      [[:overtime, 'Überstunden', 'right'],
-       [:overtime_vacations_tooltip, '', 'left'],
-       [:worktime_commits, 'Freigabe', 'left'],
-       [:worktime_reviews, 'Kontrolle', 'left']]
+      {
+        overtime: { title: 'Überstunden', align: 'right' },
+        overtime_vacations_tooltip: {},
+        worktime_commits: { title: 'Freigabe' },
+        worktime_reviews: { title: 'Kontrolle' }
+      }
     end
   end
 end
