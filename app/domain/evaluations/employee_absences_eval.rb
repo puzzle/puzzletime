@@ -15,8 +15,8 @@ module Evaluations
     self.detail_columns   = detail_columns.reject { |i| i == :billable }
     self.detail_labels    = detail_labels.merge(account: 'Absenz')
 
-    def initialize(employee_id, **search_conditions)
-      super(Employee.find(employee_id), **search_conditions)
+    def initialize(employee_id, **worktime_search_conditions)
+      super(Employee.find(employee_id), **worktime_search_conditions)
     end
 
     def for?(user)

@@ -14,12 +14,19 @@ module Evaluations
     self.detail_columns   = detail_columns.reject { |i| i == :billable }
     self.detail_labels    = detail_labels.merge(account: 'Absenz')
 
-    def initialize(**search_conditions)
-      super(Employee, **search_conditions)
+    attr_reader :department_id
+
+    def initialize(department_id = nil, **worktime_search_conditions)
+      super(Employee, **worktime_search_conditions)
+      @department_id = department_id
     end
 
     def divisions(period = nil)
-      Employee.employed_ones(period || Period.current_year)
+      scope = Employee.employed_ones(period || Period.current_year)
+
+      return scope if department_id.blank?
+
+      scope.where(department_id:)
     end
 
     def employee_id
