@@ -13,7 +13,7 @@ class EvaluatorController < ApplicationController
 
   before_action :set_period
 
-  helper_method :search_conditions, :evaluation_type
+  helper_method :worktime_search_conditions, :evaluation_type
 
   def index
     overview
@@ -111,7 +111,7 @@ class EvaluatorController < ApplicationController
         params[:evaluation] = 'usersubworkitems'
         Evaluations::EmployeeSubWorkItemsEval.new(params[:category_id], @user.id)
       when 'userabsences' then Evaluations::EmployeeAbsencesEval.new(
-        @user.id, **search_conditions
+        @user.id, **worktime_search_conditions
       )
       when 'subworkitems'                                        then Evaluations::SubWorkItemsEval.new(params[:category_id])
       when 'workitememployees'                                   then Evaluations::WorkItemEmployeesEval.new(params[:category_id])
@@ -140,9 +140,9 @@ class EvaluatorController < ApplicationController
         params[:category_id], Regexp.last_match[1]
       )
       when 'departmentorders'          then Evaluations::DepartmentOrdersEval.new(params[:category_id])
-      when 'absences'                  then Evaluations::AbsencesEval.new(**search_conditions)
+      when 'absences'                  then Evaluations::AbsencesEval.new(params[:department_id], **worktime_search_conditions)
       when 'employeeabsences'          then Evaluations::EmployeeAbsencesEval.new(
-        params[:category_id], **search_conditions
+        params[:category_id], **worktime_search_conditions
       )
       end
   end
@@ -224,7 +224,7 @@ class EvaluatorController < ApplicationController
     end
   end
 
-  def search_conditions
+  def worktime_search_conditions
     return {} if params[:absence_id].blank?
 
     { absence_id: params[:absence_id] }
