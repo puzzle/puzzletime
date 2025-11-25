@@ -9,6 +9,7 @@ require 'test_helper'
 
 class EditWorktimesCommitTest < ActionDispatch::IntegrationTest
   test 'change worktimes commit date updates label' do
+    employees(:long_time_john).update!(member_coach: employees(:mark))
     Fabricate(:ordertime, employee: employees(:long_time_john), work_item: work_items(:allgemein))
     login
     current_month = I18n.l(Time.zone.today.at_end_of_month, format: :month)

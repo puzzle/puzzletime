@@ -19,6 +19,7 @@
   - t.sortable_attr(:birthday) do |e|
     = localize_date(e.birthday)
   - t.sortable_attr(:department)
+  - t.sortable_attr(:member_coach)
   - t.sortable_attr(:current_percent_value, 'Beschäftigungsgrad') do |e|
     = format_percent(e.current_percent_value) if e.current_percent_value.present?
   - t.attr(:roles, 'Rollen') do |e|

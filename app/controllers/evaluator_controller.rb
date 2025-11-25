@@ -124,6 +124,7 @@ class EvaluatorController < ApplicationController
     case params[:evaluation].downcase
     when 'employees'
       params[:department_id] = current_user.department_id unless params.key?(:department_id)
+      params[:member_coach_id] = current_user.id unless params.key?(:member_coach_id)
     end
   end
 
@@ -131,7 +132,7 @@ class EvaluatorController < ApplicationController
     @evaluation =
       case params[:evaluation].downcase
       when 'clients'                   then Evaluations::ClientsEval.new
-      when 'employees'                 then Evaluations::EmployeesEval.new(params[:department_id])
+      when 'employees'                 then Evaluations::EmployeesEval.new(params.slice(:department_id, :member_coach_id))
       when 'departments'               then Evaluations::DepartmentsEval.new
       when 'clientworkitems'           then Evaluations::ClientWorkItemsEval.new(params[:category_id])
       when 'employeeworkitems'         then Evaluations::EmployeeWorkItemsEval.new(params[:category_id])
