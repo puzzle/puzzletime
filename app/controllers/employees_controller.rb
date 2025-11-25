@@ -6,8 +6,8 @@
 #  https://github.com/puzzle/puzzletime.
 
 class EmployeesController < ManageController
-  self.permitted_attrs = [:firstname, :lastname, :shortname, :email, :ldapname,
-                          :department_id, :workplace_id, :crm_key, :probation_period_end_date,
+  self.permitted_attrs = [:firstname, :lastname, :shortname, :email, :ldapname, :department_id,
+                          :member_coach_id, :workplace_id, :crm_key, :probation_period_end_date,
                           :graduation, :management, :phone_office, :phone_private,
                           :street, :postal_code, :city, :birthday, :emergency_contact_name,
                           :emergency_contact_phone, :marital_status,
