@@ -12,7 +12,6 @@
 #  firstname                 :string(255)      not null
 #  lastname                  :string(255)      not null
 #  shortname                 :string(3)        not null
-#  passwd                    :string(255)
 #  email                     :string(255)      not null
 #  management                :boolean          default(FALSE)
 #  initial_vacation_days     :float
@@ -38,6 +37,13 @@
 #  graduation                :string
 #  identity_card_type        :string
 #  identity_card_valid_until :date
+#  encrypted_password        :string           default("")
+#  remember_created_at       :datetime
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  workplace_id              :bigint
+#  worktimes_commit_reminder :boolean          default(TRUE), not null
+#  member_coach_id           :integer
 #
 
 class Employee < ApplicationRecord
@@ -70,6 +76,7 @@ class Employee < ApplicationRecord
   # All dependencies between the models are listed below.
   belongs_to :department, optional: true
   belongs_to :workplace, optional: true
+  belongs_to :member_coach, optional: true, class_name: 'Employee'
 
   has_and_belongs_to_many :invoices
 
@@ -90,6 +97,8 @@ class Employee < ApplicationRecord
           class_name: 'Ordertime'
   has_many :expenses, dependent: :destroy
   has_many :authentications, dependent: :destroy
+  has_many :members, class_name: 'Employee', foreign_key: :member_coach_id,
+                     dependent: :destroy, inverse_of: :member_coach
 
   before_validation do
     nationalities.try(:reject!, &:blank?)
@@ -105,6 +114,7 @@ class Employee < ApplicationRecord
 
   scope :list, -> { order('lastname', 'firstname') }
   scope :current, -> { joins(:employments).merge(Employment.during(Period.current_day)) }
+  scope :management, -> { where(management: true) }
 
   # logic should match CompletableHelper#recently_completed
   scope :pending_worktimes_commit, lambda {

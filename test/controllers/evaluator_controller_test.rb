@@ -40,6 +40,15 @@ class EvaluatorControllerTest < ActionController::TestCase
     assert_template 'employees'
   end
 
+  test 'GET index filtered by member_coach' do
+    employees(:various_pedro).update(member_coach_id: employees(:mark).id)
+    get :index, params: { evaluation: 'employees', member_coach_id: employees(:mark).id }
+
+    assert_template 'employees'
+
+    assert_equal assigns(:evaluation).divisions.map(&:member_coach_id).uniq, [employees(:mark).id]
+  end
+
   %w[clients departments].each do |evaluation|
     test "GET index #{evaluation}" do
       get :index, params: { evaluation: }

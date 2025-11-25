@@ -13,6 +13,8 @@
 
 = form_tag(nil, method: :get, class: 'form-inline', role: 'filter') do
   = direct_filter_select(:department_id, 'Organisationseinheit', Department.list)
+  %br
+  = direct_filter_select(:member_coach_id, 'Member Coach', Employee.management.list)
 
 = render 'category'
 
