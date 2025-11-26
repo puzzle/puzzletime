@@ -24,6 +24,10 @@ class InvoiceReportsController < ApplicationController
       format.js do
         set_filter_values
       end
+      format.csv do
+        send_data(Invoice::Report::Csv.new(@report).generate,
+                  type: 'text/csv; charset=utf-8; header=present')
+      end
     end
   end
 

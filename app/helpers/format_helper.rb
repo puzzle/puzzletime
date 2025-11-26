@@ -23,8 +23,8 @@ module FormatHelper
       number_with_delimiter(value, delimiter: t('number.format.delimiter').html_safe)
     when Date   then l(value, format: :long)
     when Time   then "#{l(value.to_date)} #{l(value, format: :time)}"
-    when true   then t('global.yes')
-    when false  then t('global.no')
+    when true   then I18n.t('global.yes')
+    when false  then I18n.t('global.no')
     when nil    then UtilityHelper::EMPTY_STRING
     when ActiveRecord::Base then assoc_link(value)
     else value.to_s
