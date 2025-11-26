@@ -8,10 +8,13 @@
 class Order
   class Cockpit
     class TotalRow < Row
-      attr_reader :info
+      include Rails.application.routes.url_helpers
+      attr_reader :info, :order, :period
 
-      def initialize(rows)
+      def initialize(order, period, rows)
         super('Total')
+        @order = order
+        @period = period
         @cells = build_total_cells(rows)
         @info = build_info(rows)
       end
