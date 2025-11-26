@@ -92,6 +92,11 @@ module Crm
           sync_additional_order(additional)
         end
 
+        if lead.name == 'f'
+          Rails.logger.error "Refusing to change name: '#{item.name}' to 'f'"
+          next
+        end
+
         next if item.name == lead.name
 
         item.update!(name: lead.name)
@@ -128,7 +133,7 @@ module Crm
       context = context.where(id: ids) if ids.present?
 
       sync_crm_entities(context) do |client|
-        partners = with_prefetch(:company_partners, client.crm_key.to_i) { ::Crm::Odoo::Company.partners_for }
+        partners = with_prefetch(:company_partners, client.crm_key.to_i) { ::Crm::Odoo::Company.partners_for(_1) }
         existing = existing_contact_crm_keys(client, partners.map(&:id))
 
         partners
@@ -207,8 +212,10 @@ module Crm
       entities.where.not(crm_key: nil).find_each do |entity|
         yield entity
       rescue Crm::Odoo::ResourceNotFound
+        Rails.logger.info "Could not find CRM element in Odoo:\n#{entity.pretty_inspect}"
         entity.update_attribute(:crm_key, nil)
       rescue ActiveRecord::RecordInvalid => e
+        log_taken_error(e)
         notify_sync_error(e, entity, e.record)
       rescue StandardError => e
         notify_sync_error(e, entity)
@@ -225,6 +232,13 @@ module Crm
       parameters = record_to_params(synced_entity, 'synced_entity').tap do |params|
         params.merge!(record_to_params(invalid_record, 'invalid_record')) if invalid_record.present?
       end
+
+      Rails.logger.error <<~ERROR
+        Message: #{error.message}
+        Backtrace:
+          #{error.backtrace.join("\n  ")}
+      ERROR
+
       Airbrake.notify(error, parameters) if airbrake?
       Raven.capture_exception(error, extra: parameters) if sentry?
     end
@@ -244,6 +258,26 @@ module Crm
         "#{prefix}_errors" => record.errors.messages,
         "#{prefix}_changes" => record.changes
       }
+    end
+
+    def log_taken_error(error)
+      record = error.record
+      types = record.errors.details[:name].pluck(:error)
+      return unless types.include? :taken
+
+      old_name = record.name_change[0]
+      new_name = record.name_change[1]
+      parent = record.parent
+      conflict = parent.children.find_by(name: new_name)
+
+      Rails.logger.error <<~ERROR
+        #{record.class.name} rename failed
+        From:     '#{old_name}'
+        To:       '#{new_name}'
+        Record:   [##{record.id}] #{record.path_shortnames}
+        Parent:   [##{parent.id}] #{parent.path_shortnames}
+        Conflict: [##{conflict.id}] - #{conflict.path_shortnames}
+      ERROR
     end
   end
 end
