@@ -7,7 +7,7 @@
   - if @report.present?
     .table Hinweis: Es werden nur Aufträge mit noch nicht verrechneten Leistungen angezeigt.
     .unindented
-      %table.orders-report.table.table-hover
+      %table.billing-report.table.table-hover
         %thead
           %tr
             %th
@@ -21,10 +21,9 @@
             %th.right.nowrap{title: 'Produkt aus allen verrechenbaren Stunden und offeriertem Stundensatz'}
               = sort_link(:billable_amount, 'Verrechenbar')
             %th.right.nowrap{title: 'Kostensumme der verrechenbaren Leistungen, die im gewählten Zeitraum erbracht wurden und auf einer Rechnung sind'}
-              = sort_link(:billed_amount, 'Verrechnete Leistungen')
+              = sort_link(:billed_amount, 'Verrechnet')
             %th.right.nowrap{title: 'Kostensumme aller verrechenbaren Leistungen, die im gewählten Zeitraum erbracht wurden und noch keiner Rechnung zugeteilt sind'}
               = sort_link(:not_billed_amount, 'Verrechnung offen')
-            %th.center
 
         %tbody
           - @report.page do |order|
@@ -48,7 +47,6 @@
                 .data-item
                   %span.figure= f(order.not_billed_amount.to_f)
                   %span.unit= currency
-              %td.center
             - else
               %tr
                 %td
@@ -86,8 +84,6 @@
                   .data-item
                     %span.figure= f(order.not_billed_amount.to_f)
                     %span.unit= currency
-                %td.center
-                  = link_to(picon('time'), order_order_services_path(order_id: order.order, invoice_id: '[leer]', billable: true, start_date: @period.start_date, end_date: @period.end_date), title: 'noch nicht verrechnete Leistungen anzeigen')
 
     %p= paginate @report
 

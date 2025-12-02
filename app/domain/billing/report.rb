@@ -64,12 +64,12 @@ module Billing
     # prepare worktimes, as some columns take data directly from worktimes
     def load_worktimes(orders)
       Worktime.in_period(@period)
+              .billable
               .joins(:work_item)
               .joins('INNER JOIN accounting_posts ON accounting_posts.work_item_id = work_items.id')
               .joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)')
               .where(orders: { id: orders.collect(&:id) })
-              .where(billable: true)
-              .select('orders.id AS order_id, SUM(worktimes.hours) AS hours, (worktimes.invoice_id IS NOT NULL) AS has_invoice,  SUM(worktimes.hours * accounting_posts.offered_rate) AS amount')
+              .select('orders.id AS order_id, SUM(worktimes.hours) AS hours, (worktimes.invoice_id IS NOT NULL) AS has_invoice, SUM(worktimes.hours * accounting_posts.offered_rate) AS amount')
               .group('order_id, has_invoice')
               .group_by { |time| time['has_invoice'].present? }
               .transform_values { |partition| partition.index_by(&:order_id) }
@@ -171,10 +171,6 @@ module Billing
       Billing::Report::Entry.public_instance_methods(false)
                             .collect(&:to_s)
                             .include?(params[:sort])
-    end
-
-    def sort_by_target?
-      params[:sort].to_s.match(/\Atarget_scope_(\d+)\z/)
     end
 
     def sort_by_string(entries, dir)

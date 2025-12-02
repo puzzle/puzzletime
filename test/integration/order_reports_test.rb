@@ -114,6 +114,6 @@ class OrderReportsTest < ActionDispatch::IntegrationTest
 
   def list_orders
     login_as :mark
-    visit reports_orders_path(period_shortcut: '')
+    visit reports_orders_path(period_shortcut: '', responsible_id: '')
   end
 end
