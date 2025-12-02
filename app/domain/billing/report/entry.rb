@@ -8,7 +8,7 @@
 module Billing
   class Report
     class Entry < SimpleDelegator
-      attr_reader :order, :accounting_posts, :hours, :invoices
+      attr_reader :order, :worktimes, :accounting_posts, :hours, :invoices
 
       def initialize(order, worktimes, accounting_posts, hours, invoices)
         super(order)
@@ -58,40 +58,24 @@ module Billing
       end
 
       def billed_amount
-        return 0 unless @worktimes.present? && @worktimes[true].present?
+        return 0 unless worktimes.present? && worktimes[true].present?
 
-        entry = @worktimes[true][@order.id]
+        entry = worktimes[true][@order.id]
         entry.present? ? entry['amount'] || 0 : 0
       end
 
       def not_billed_hours
-        return 0 unless @worktimes.present? && @worktimes[false].present?
+        return 0 unless worktimes.present? && worktimes[false].present?
 
-        entry = @worktimes[false][@order.id]
+        entry = worktimes[false][@order.id]
         entry.present? ? entry['hours'] || 0 : 0
       end
 
       def not_billed_amount
-        return 0 unless @worktimes.present? && @worktimes[false].present?
+        return 0 unless worktimes.present? && worktimes[false].present?
 
-        entry = @worktimes[false][@order.id]
+        entry = worktimes[false][@order.id]
         entry.present? ? entry['amount'] || 0 : 0
-      end
-
-      def billed_hours
-        invoices[:total_hours].to_d
-      end
-
-      def billability
-        @billability ||= supplied_hours.positive? ? (billable_hours / supplied_hours * 100).round : nil
-      end
-
-      def billed_rate
-        @billed_rate ||= billable_hours.positive? ? billed_amount / billable_hours : nil
-      end
-
-      def target(scope_id)
-        targets.find { |t| t.target_scope_id == scope_id.to_i }
       end
 
       private
@@ -113,11 +97,6 @@ module Billing
 
       def post_value(id, key)
         accounting_posts[id][key] || 0
-      end
-
-      # caching these explicitly gives quite a performance benefit if many orders are exported
-      def targets
-        @targets ||= order.targets.to_a
       end
     end
   end

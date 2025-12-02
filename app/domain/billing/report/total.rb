@@ -35,8 +35,6 @@ module Billing
       def not_billed_amount
         @not_billed_amount ||= entries.sum(&:not_billed_amount)
       end
-
-      def target(_id); end
     end
   end
 end

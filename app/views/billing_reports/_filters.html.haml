@@ -29,6 +29,12 @@
                          data: { update: '#category_work_item_id',
                                  url: categories_clients_path })
 
+  = direct_filter_select(:category_work_item_id,
+                         'Kategorie',
+                         @categories,
+                         class: 'searchable',
+                         style: 'width: 240px;')
+
   = direct_filter_select(:kind_id,
                          'Auftragsart',
                          @order_kinds,

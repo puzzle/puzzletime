@@ -40,8 +40,7 @@ class BillingReportsController < ApplicationController
   def set_filter_values
     @departments = Department.list
     @clients = WorkItem.joins(:client).list
-    @categories = []
-    @categories = WorkItem.find(params[:client_work_item_id]).categories.list if params[:client_work_item_id].present?
+    @categories = params[:client_work_item_id].present? ? WorkItem.find(params[:client_work_item_id]).categories.list : []
     @order_kinds = OrderKind.list
     @order_status = OrderStatus.list
     @order_responsibles = Employee.joins(:managed_orders).distinct.list
