@@ -9,11 +9,11 @@
 # Likewise, all the methods added will be available for all controllers.
 
 class ApplicationController < ActionController::Base
-  before_action :set_sentry_request_context
   protect_from_forgery with: :exception
   skip_forgery_protection if: :saml_callback_path? # HACK: https://github.com/heartcombo/devise/issues/5210
 
   # before_action :authenticate
+  before_action :set_sentry_request_context
   before_action :store_employee_location!, if: :storable_location?
   before_action :authenticate_employee!
   before_action :set_sentry_user_context
@@ -72,11 +72,21 @@ class ApplicationController < ActionController::Base
   end
 
   def set_sentry_request_context
-    Raven.extra_context(params: params.to_unsafe_h, url: request.url) if ENV['SENTRY_DSN']
+    commit = ENV.fetch('OPENSHIFT_BUILD_COMMIT', nil)
+    Sentry.set_tags(commit: ENV.fetch('OPENSHIFT_BUILD_COMMIT', nil)) if commit && ENV['GLITCHTIP_DSN']
+
+    if (project = ENV.fetch('OPENSHIFT_BUILD_NAMESPACE', nil))
+      Sentry.set_tags(project: project)
+      Sentry.set_tags(customer: project.split('-')[0])
+    end
   end
 
   def set_sentry_user_context
-    Raven.user_context(id: current_user.try(:id), name: current_user.try(:shortname)) if ENV['SENTRY_DSN']
+    return unless ENV['GLITCHTIP_DSN']
+
+    Sentry.set_user(id: current_user.try(:id),
+                    username: current_user.try(:shortname),
+                    email: current_user.email)
   end
 
   def saml_callback_path?

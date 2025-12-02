@@ -11,7 +11,13 @@ class ApplicationJob < ActiveJob::Base
     payload[:code] = error.code if error.respond_to?(:code)
     payload[:data] = error.data if error.respond_to?(:data)
     Airbrake.notify(error, payload) if airbrake?
-    Raven.capture_exception(error, extra: payload) if sentry?
+    Sentry.capture_exception(error, extra: payload) if sentry?
+  end
+
+  # Called once by active job before perform_now, after delayed job callbacks
+  def deserialize(job_data)
+    super
+    init_sentry_job_context(job_data) if sentry?
   end
 
   def airbrake?
@@ -19,6 +25,10 @@ class ApplicationJob < ActiveJob::Base
   end
 
   def sentry?
-    ENV['SENTRY_DSN'].present?
+    ENV['GLITCHTIP_DSN'].present?
+  end
+
+  def init_sentry_job_context(job_data)
+    Sentry.set_extras(active_job: job_data)
   end
 end

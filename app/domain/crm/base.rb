@@ -58,5 +58,8 @@ module Crm
     def restrict_local?
       false
     end
+
+    def sentry? = ENV['GLITCHTIP_DSN'].present?
+    def airbrake? = ENV['RAILS_AIRBRAKE_HOST'].present?
   end
 end

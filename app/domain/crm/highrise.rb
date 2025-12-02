@@ -174,15 +174,7 @@ module Crm
         params.merge!(record_to_params(invalid_record, 'invalid_record')) if invalid_record.present?
       end
       Airbrake.notify(error, parameters) if airbrake?
-      Raven.capture_exception(error, extra: parameters) if sentry?
-    end
-
-    def airbrake?
-      ENV['RAILS_AIRBRAKE_HOST'].present?
-    end
-
-    def sentry?
-      ENV['SENTRY_DSN'].present?
+      Sentry.capture_exception(error, extra: parameters) if sentry?
     end
 
     def record_to_params(record, prefix = 'record')
