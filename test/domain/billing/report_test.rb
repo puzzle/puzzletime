@@ -59,6 +59,14 @@ module Billing
       assert_equal orders(:allgemein, :puzzletime), report.entries.collect(&:order)
     end
 
+    test 'filter by category' do
+      Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal))
+      report(client_work_item_id: work_items(:puzzle).id,
+             category_work_item_id: work_items(:hitobito).id)
+
+      assert_equal [orders(:hitobito_demo)], report.entries.collect(&:order)
+    end
+
     test 'filter by start date' do
       report(period: Period.new(Date.new(2006, 12, 11), nil))
 
