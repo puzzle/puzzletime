@@ -149,6 +149,7 @@ Naming/MemoizedInstanceVariableName:
 # AllowedNames: as, at, by, cc, db, id, if, in, io, ip, of, on, os, pp, to
 Naming/MethodParameterName:
   Exclude:
+    - 'app/domain/billing/report/csv.rb'
     - 'app/domain/invoicing/small_invoice/invoice_sync.rb'
     - 'app/domain/invoice/report/csv.rb'
     - 'app/domain/order/controlling.rb'
