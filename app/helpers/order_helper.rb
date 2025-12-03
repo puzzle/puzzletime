@@ -30,7 +30,7 @@ module OrderHelper
   def order_target_rating_icon(rating, options = {})
     options[:style] ||= 'font-size: 20px;'
     add_css_class(options, rating)
-    picon(order_target_icon_key(rating), options)
+    picon(order_target_icon_key[rating], options)
   end
 
   def order_target_icon(target)
@@ -43,12 +43,12 @@ module OrderHelper
     )
   end
 
-  def order_target_icon_key(rating)
-    case rating
-    when 'green' then 'disk'
-    when 'orange' then 'triangle'
-    when 'red' then 'square'
-    end
+  def order_target_icon_key
+    @order_target_icon_key ||= {
+      'green' => 'disk',
+      'orange' => 'triangle',
+      'red' => 'square'
+    }
   end
 
   def format_order_status_style(status)
