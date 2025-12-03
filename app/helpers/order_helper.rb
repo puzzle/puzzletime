@@ -120,7 +120,7 @@ module OrderHelper
 
   def choosable_order_options
     managed_orders = current_user.managed_orders.where(work_items: { closed: false }).list.minimal
-    order_option(@order, true) + safe_join(managed_orders) { |o| order_option(o) }
+    safe_join(managed_orders) { |o| order_option(o) } + order_option(@order, true) # @order needs to be last to prevent deselection
   end
 
   def order_option(order, selected = false)
