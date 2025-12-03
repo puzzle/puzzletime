@@ -8,7 +8,7 @@
 module Forms
   class MultiAbsence
     attr_accessor :employee
-    attr_reader :absence_id, :work_date, :duration, :description, :worktime
+    attr_reader :absence_id, :description, :worktime
 
     def initialize
       @duration = 1

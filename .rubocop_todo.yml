@@ -6,36 +6,15 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
----
-# FIXME: Fix these, piece by piece
-
 # Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBrackets.
-# SupportedStyles: space, no_space, compact
-# SupportedStylesForEmptyBrackets: space, no_space
-Layout/SpaceInsideArrayLiteralBrackets:
-  Exclude:
-    - 'app/models/employment.rb'
-
-# Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-Lint/AmbiguousOperator:
-  Exclude:
-    - 'test/models/employee_test.rb'
-
-# Offense count: 3
 # Configuration parameters: IgnoreLiteralBranches, IgnoreConstantBranches, IgnoreDuplicateElseBranch.
 Lint/DuplicateBranch:
   Exclude:
-    - 'app/controllers/concerns/worktimes_report.rb'
     - 'app/domain/plannings/employee_board.rb'
 
-# Offense count: 4
+# Offense count: 1
 Lint/DuplicateMethods:
   Exclude:
-    - 'app/domain/forms/multi_absence.rb'
-    - 'app/domain/order/copier.rb'
     - 'app/helpers/dry_crud/form/control.rb'
 
 # Offense count: 1
@@ -45,6 +24,8 @@ Lint/EmptyBlock:
     - 'test/helpers/table_helper_test.rb'
 
 # Offense count: 2
+# This cop supports safe autocorrection (--autocorrect).
+# Configuration parameters: AutoCorrect.
 Lint/LiteralAsCondition:
   Exclude:
     - 'test/helpers/dry_crud/form/builder_test.rb'
@@ -85,18 +66,18 @@ Lint/UnreachableLoop:
 Metrics/AbcSize:
   Max: 282
 
-# Offense count: 51
+# Offense count: 55
 # Configuration parameters: CountComments, CountAsOne, AllowedMethods, AllowedPatterns.
 # AllowedMethods: refine
 Metrics/BlockLength:
   Max: 97
 
-# Offense count: 36
+# Offense count: 38
 # Configuration parameters: CountComments, CountAsOne.
 Metrics/ClassLength:
   Max: 314
 
-# Offense count: 17
+# Offense count: 18
 # Configuration parameters: AllowedMethods, AllowedPatterns.
 Metrics/CyclomaticComplexity:
   Max: 13
@@ -117,7 +98,7 @@ Metrics/ParameterLists:
   Max: 6
   MaxOptionalParameters: 4
 
-# Offense count: 7
+# Offense count: 8
 # Configuration parameters: AllowedMethods, AllowedPatterns.
 Metrics/PerceivedComplexity:
   Max: 13
@@ -145,7 +126,7 @@ Naming/HeredocDelimiterNaming:
   Exclude:
     - 'lib/tasks/license.rake'
 
-# Offense count: 14
+# Offense count: 13
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: EnforcedStyleForLeadingUnderscores.
 # SupportedStylesForLeadingUnderscores: disallowed, required, optional
@@ -160,7 +141,6 @@ Naming/MemoizedInstanceVariableName:
     - 'app/controllers/ordertimes_controller.rb'
     - 'app/controllers/plannings/employees_controller.rb'
     - 'app/controllers/plannings/orders_controller.rb'
-    - 'app/domain/order/cockpit/accounting_post_row.rb'
     - 'app/domain/order/report/entry.rb'
     - 'app/models/util/period.rb'
 
@@ -188,8 +168,8 @@ Naming/MethodParameterName:
 
 # Offense count: 3
 # Configuration parameters: NamePrefix, ForbiddenPrefixes, AllowedMethods, MethodDefinitionMacros, UseSorbetSigs.
-# NamePrefix: is_, has_, have_
-# ForbiddenPrefixes: is_, has_, have_
+# NamePrefix: is_, has_, have_, does_
+# ForbiddenPrefixes: is_, has_, have_, does_
 # AllowedMethods: is_a?
 # MethodDefinitionMacros: define_method, define_singleton_method
 Naming/PredicateName:
@@ -197,21 +177,14 @@ Naming/PredicateName:
     - 'app/helpers/dry_crud/form/builder.rb'
     - 'app/models/concerns/belonging_to_work_item.rb'
 
-# Offense count: 5
-# Configuration parameters: EnforcedStyle, AllowedIdentifiers, AllowedPatterns.
-# SupportedStyles: snake_case, camelCase
-Naming/VariableName:
-  Exclude:
-    - 'test/models/worktime_test.rb'
-
 # Offense count: 15
 # Configuration parameters: EnforcedStyle, CheckMethodNames, CheckSymbols, AllowedIdentifiers, AllowedPatterns.
 # SupportedStyles: snake_case, normalcase, non_integer
-# AllowedIdentifiers: capture3, iso8601, rfc1123_date, rfc822, rfc2822, rfc3339, x86_64
+# AllowedIdentifiers: TLS1_1, TLS1_2, capture3, iso8601, rfc1123_date, rfc822, rfc2822, rfc3339, x86_64
 Naming/VariableNumber:
   Exclude:
+    - 'test/controllers/clients_controller_test.rb'
     - 'test/controllers/contacts_controller_test.rb'
-    - 'test/controllers/employments_controller_test.rb'
     - 'test/controllers/invoices_controller_test.rb'
     - 'test/controllers/orders_controller_test.rb'
     - 'test/controllers/overtime_vacations_controller_test.rb'
@@ -219,12 +192,6 @@ Naming/VariableNumber:
     - 'test/models/employment_test.rb'
     - 'test/models/invoice_test.rb'
     - 'test/models/order_test.rb'
-
-# Offense count: 1
-# Configuration parameters: MinSize.
-Performance/CollectionLiteralInLoop:
-  Exclude:
-    - 'test/controllers/evaluator_controller_test.rb'
 
 # Offense count: 1
 Performance/FixedSize:
@@ -236,14 +203,6 @@ Performance/MethodObjectAsBlock:
   Exclude:
     - 'app/domain/apidocs/setup.rb'
     - 'app/helpers/order_helper.rb'
-
-# Offense count: 2
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: EnforcedStyle, AllowToTime.
-# SupportedStyles: strict, flexible
-Rails/Date:
-  Exclude:
-    - 'test/models/employee_test.rb'
 
 # Offense count: 3
 # Configuration parameters: Include.
@@ -441,21 +400,11 @@ Style/FrozenStringLiteralComment:
     - 'app/models/application_record.rb'
     - 'test/models/employee_test.rb'
 
-# Offense count: 2
-# Configuration parameters: MinBranchesCount.
-Style/HashLikeCase:
-  Exclude:
-    - 'app/domain/order/report.rb'
-    - 'app/helpers/order_helper.rb'
-
-# Offense count: 4
+# Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
 Style/IfUnlessModifier:
   Exclude:
-    - 'app/controllers/order_targets_controller.rb'
-    - 'app/domain/forms/worktime_edit.rb'
     - 'app/domain/plannings/employee_board.rb'
-    - 'app/models/accounting_post.rb'
 
 # Offense count: 2
 Style/MissingRespondToMissing:
@@ -474,7 +423,7 @@ Style/OpenStructUse:
     - 'app/controllers/order_services_controller.rb'
     - 'test/controllers/employees_controller_test.rb'
 
-# Offense count: 25
+# Offense count: 27
 # Configuration parameters: AllowedMethods.
 # AllowedMethods: respond_to_missing?
 Style/OptionalBooleanParameter:
@@ -486,4 +435,3 @@ Style/OptionalBooleanParameter:
 # URISchemes: http, https
 Layout/LineLength:
   Max: 234
-...

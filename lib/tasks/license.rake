@@ -119,7 +119,7 @@ class Licenser
     def initialize(extension, prefix, preamble_text)
       @extension = extension
       @prefix = prefix
-      @preamble = preamble_text.each_line.collect { |l| prefix + l }.join + "\n\n"
+      @preamble = "#{preamble_text.each_line.collect { |l| prefix + l }.join}\n\n"
       @copyright_pattern = /#{prefix.strip}\s+Copyright/
       return unless file_with_encoding?
 

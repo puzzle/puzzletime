@@ -55,9 +55,7 @@ class AccountingPost < ApplicationRecord
   def validate_worktime(worktime)
     return if worktime.report_type == ReportType::AutoStartType::INSTANCE
 
-    if description_required? && worktime.description.blank?
-      worktime.errors.add(:description, 'Es muss eine Bemerkung angegeben werden')
-    end
+    worktime.errors.add(:description, 'Es muss eine Bemerkung angegeben werden') if description_required? && worktime.description.blank?
 
     worktime.errors.add(:ticket, 'Es muss ein Ticket angegeben werden') if ticket_required? && worktime.ticket.blank?
 
