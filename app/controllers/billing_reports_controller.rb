@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
+#  Copyright (c) 2006-2025, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
@@ -31,6 +31,10 @@ class BillingReportsController < ApplicationController
       end
       format.js do
         set_filter_values
+      end
+      format.csv do
+        send_data(Billing::Report::Csv.new(@report).generate,
+                  type: 'text/csv; charset=utf-8; header=present')
       end
     end
   end
