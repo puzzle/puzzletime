@@ -632,7 +632,7 @@ GEM
     temple (0.10.3)
     terser (1.2.5)
       execjs (>= 0.3.0, < 3)
-    thor (1.3.2)
+    thor (1.4.0)
     tilt (2.6.0)
     timeliness (0.5.2)
     timeout (0.4.3)
