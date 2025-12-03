@@ -4,7 +4,4 @@
 -#  https://github.com/puzzle/puzzletime.
 
 
-= render 'manage/actions_index'
-
-- if can?(:read, Contact)
-  = action_link('Kontakte', client_contacts_path(@client))
+= action_link(action_icon('export', 'CSV Export'), params.to_unsafe_h.merge(format: :csv, only_path: true))
