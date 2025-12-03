@@ -575,7 +575,7 @@ GEM
       sorbet-runtime (>= 0.5.10782)
     ruby-prof (1.7.1)
     ruby-progressbar (1.13.0)
-    ruby-saml (1.17.0)
+    ruby-saml (1.18.1)
       nokogiri (>= 1.13.10)
       rexml
     ruby-vips (2.2.3)
