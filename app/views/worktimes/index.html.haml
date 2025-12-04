@@ -41,7 +41,7 @@
           .weeknav-actions.nowrap
             = link_to('Zeiten freigeben',
                       edit_employee_worktimes_commit_path(current_user),
-                      class: 'add-other',
+                      class: "add-other #{@last_day_of_month ? 'last-day' : ''}",
                       data: { modal: '#modal',
                               title: 'Zeiten freigeben',
                               remote: true,
