@@ -178,12 +178,12 @@ class WorktimeTest < ActiveSupport::TestCase
   end
 
   def test_template
-    newWorktime = Worktime.find(1).template
+    new_worktime = Worktime.find(1).template
 
-    assert_not_nil newWorktime
-    assert_equal worktimes(:wt_pz_allgemein).work_item_id, newWorktime.work_item_id
-    assert_equal work_items(:allgemein).id, newWorktime.account.id
-    assert_equal employees(:pascal), newWorktime.employee
+    assert_not_nil new_worktime
+    assert_equal worktimes(:wt_pz_allgemein).work_item_id, new_worktime.work_item_id
+    assert_equal work_items(:allgemein).id, new_worktime.account.id
+    assert_equal employees(:pascal), new_worktime.employee
   end
 
   def test_strip_ticket

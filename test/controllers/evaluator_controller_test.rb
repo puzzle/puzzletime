@@ -15,7 +15,7 @@ class EvaluatorControllerTest < ActionController::TestCase
       get :index, params: { evaluation: }
 
       assert_template evaluation == 'userworkitems' ? 'overview_employee' : 'overview'
-      assert_equal %w[-2m -1m 0m -1y 0y 0].map { |p| Period.parse(p) }, assigns(:periods)
+      assert_equal all_periods, assigns(:periods)
     end
 
     test "GET export csv #{evaluation}" do
@@ -75,6 +75,10 @@ class EvaluatorControllerTest < ActionController::TestCase
   end
 
   private
+
+  def all_periods
+    @all_periods ||= %w[-2m -1m 0m -1y 0y 0].map { |p| Period.parse(p) }
+  end
 
   def expected_csv_header
     'Datum,Stunden,Von Zeit,Bis Zeit,CHF,Stundenansatz CHF,Reporttyp,Verrechenbar,Member,Position,Ticket,Bemerkungen'

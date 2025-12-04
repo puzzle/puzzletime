@@ -63,7 +63,7 @@ class EvaluatorController < ApplicationController
       @period.to_s.parameterize
     ].compact
 
-    filename = file_parts.compact.join('-') + '.pdf'
+    filename = "#{file_parts.compact.join('-')}.pdf"
 
     send_data pdf_generator.generate_pdf.render,
               filename: filename,
@@ -73,8 +73,8 @@ class EvaluatorController < ApplicationController
 
   def export_csv
     set_evaluation_details
-    filename = ['puzzletime', csv_label(@evaluation.category),
-                csv_label(@evaluation.division)].compact.join('-') + '.csv'
+    filename = "#{['puzzletime', csv_label(@evaluation.category),
+                   csv_label(@evaluation.division)].compact.join('-')}.csv"
     times = @evaluation.times(@period)
     send_worktimes_csv(times, filename)
   end
