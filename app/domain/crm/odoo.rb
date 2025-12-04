@@ -257,8 +257,7 @@ module Crm
           #{error.backtrace.join("\n  ")}
       ERROR
 
-      Airbrake.notify(error, parameters) if airbrake?
-      Sentry.capture_exception(error, extra: parameters) if sentry?
+      ErrorTracker.report_exception(error, parameters)
     end
 
     def false_to_nil(hash)

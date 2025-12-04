@@ -13,10 +13,10 @@ class ApplicationController < ActionController::Base
   skip_forgery_protection if: :saml_callback_path? # HACK: https://github.com/heartcombo/devise/issues/5210
 
   # before_action :authenticate
-  before_action :set_sentry_request_context
+  before_action :set_error_tracker_request_context
   before_action :store_employee_location!, if: :storable_location?
   before_action :authenticate_employee!
-  before_action :set_sentry_user_context
+  before_action :set_error_tracker_user_context
   before_action :set_paper_trail_whodunnit
   check_authorization unless: :devise_controller?
 
@@ -71,22 +71,22 @@ class ApplicationController < ActionController::Base
     raise ActionController::RoutingError, 'Not Found'
   end
 
-  def set_sentry_request_context
-    commit = ENV.fetch('OPENSHIFT_BUILD_COMMIT', nil)
-    Sentry.set_tags(commit: ENV.fetch('OPENSHIFT_BUILD_COMMIT', nil)) if commit && ENV['GLITCHTIP_DSN']
+  def set_error_tracker_request_context
+    commit = Settings.puzzletime.build.commit
+    project = Settings.puzzletime.run.project
+    customer = Settings.puzzletime.run.customer
 
-    if (project = ENV.fetch('OPENSHIFT_BUILD_NAMESPACE', nil))
-      Sentry.set_tags(project: project)
-      Sentry.set_tags(customer: project.split('-')[0])
-    end
+    ErrorTracker.set_tags(commit:) if commit
+    ErrorTracker.set_tags(project:) if project
+    ErrorTracker.set_tags(customer:) if customer
   end
 
-  def set_sentry_user_context
-    return unless ENV['GLITCHTIP_DSN']
-
-    Sentry.set_user(id: current_user.try(:id),
-                    username: current_user.try(:shortname),
-                    email: current_user.email)
+  def set_error_tracker_user_context
+    ErrorTracker.set_user(
+      id: current_user.try(:id),
+      username: current_user.try(:shortname),
+      email: current_user.email
+    )
   end
 
   def saml_callback_path?

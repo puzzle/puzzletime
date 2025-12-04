@@ -173,8 +173,8 @@ module Crm
       parameters = record_to_params(synced_entity, 'synced_entity').tap do |params|
         params.merge!(record_to_params(invalid_record, 'invalid_record')) if invalid_record.present?
       end
-      Airbrake.notify(error, parameters) if airbrake?
-      Sentry.capture_exception(error, extra: parameters) if sentry?
+
+      ErrorTracker.report_exception(error, parameters)
     end
 
     def record_to_params(record, prefix = 'record')
