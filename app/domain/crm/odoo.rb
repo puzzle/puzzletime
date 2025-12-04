@@ -70,6 +70,8 @@ module Crm
       context = Client.includes(:work_item)
       context = context.where(id: ids) if ids.present?
 
+      clean_crm_keys(context)
+
       sync_crm_entities(context) do |client|
         company = with_prefetch(:companies, client.crm_key.to_i) { ::Crm::Odoo::Company.find(_1) }
         item = client.work_item
@@ -84,11 +86,15 @@ module Crm
       context = Order.includes(:work_item, :additional_crm_orders)
       context = context.where(id: ids) if ids.present?
 
+      clean_crm_keys(context)
+
       sync_crm_entities(context) do |order|
         lead = with_prefetch(:leads, order.crm_key.to_i) { ::Crm::Odoo::Lead.find(_1) }
         item = order.work_item
 
         order.additional_crm_orders.each do |additional|
+          next if additional.crm_key.blank?
+
           sync_additional_order(additional)
         end
 
@@ -117,6 +123,8 @@ module Crm
       context = Contact
       context = context.where(id: ids) if ids.present?
 
+      clean_crm_keys(context)
+
       sync_crm_entities(context) do |contact|
         partner = with_prefetch(:partners, contact.crm_key.to_i) { ::Crm::Odoo::Partner.find(_1) }
         next if partner.blank?
@@ -131,6 +139,8 @@ module Crm
     def import_client_contacts(ids = nil)
       context = Client
       context = context.where(id: ids) if ids.present?
+
+      clean_crm_keys(context)
 
       sync_crm_entities(context) do |client|
         partners = with_prefetch(:company_partners, client.crm_key.to_i) { ::Crm::Odoo::Company.partners_for(_1) }
@@ -148,6 +158,14 @@ module Crm
     def restrict_local? = true
 
     private
+
+    def clean_crm_keys(context)
+      return unless context.has_attribute? :crm_key
+
+      Rails.logger.info "Cleaning crm keys for #{context.name}"
+
+      context.where(crm_key: '').update_all(crm_key: nil)
+    end
 
     def prefetch_resources(type = :all)
       @prefetched ||= {}
