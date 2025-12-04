@@ -164,12 +164,13 @@ Naming/MemoizedInstanceVariableName:
     - 'app/domain/order/report/entry.rb'
     - 'app/models/util/period.rb'
 
-# Offense count: 26
+# Offense count: 27
 # Configuration parameters: MinNameLength, AllowNamesEndingInNumbers, AllowedNames, ForbiddenNames.
 # AllowedNames: as, at, by, cc, db, id, if, in, io, ip, of, on, os, pp, to
 Naming/MethodParameterName:
   Exclude:
     - 'app/domain/invoicing/small_invoice/invoice_sync.rb'
+    - 'app/domain/invoice/report/csv.rb'
     - 'app/domain/order/controlling.rb'
     - 'app/domain/order/report/csv.rb'
     - 'app/domain/plannings/board.rb'
@@ -494,4 +495,3 @@ Style/StringConcatenation:
 # URISchemes: http, https
 Layout/LineLength:
   Max: 234
-...
