@@ -5,9 +5,11 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-if ENV['GLITCHTIP_DSN']
+require 'error_tracker'
+
+if ErrorTracker.sentry_like?
   Sentry.init do |config|
-    config.dsn = ENV['GLITCHTIP_DSN']
+    config.dsn = Settings.error_tracker.sentry.dsn
 
     # Additionally exclude the following exceptions:
     # config.excluded_exceptions += []
@@ -25,11 +27,7 @@ if ENV['GLITCHTIP_DSN']
     # defaults to development
     # config.environment = Rails.env
 
-    config.release = if (commit = ENV.fetch('OPENSHIFT_BUILD_COMMIT', nil))
-                       "#{Puzzletime.version}_#{commit}"
-                     else
-                       Puzzletime.version
-                     end
+    config.release = Settings.puzzletime.run.full_versioon
 
     config.before_send = lambda do |event, _hint|
       # filter out parameters filtered by Rails
