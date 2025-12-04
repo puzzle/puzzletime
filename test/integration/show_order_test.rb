@@ -22,9 +22,12 @@ class ShowOrder < ActionDispatch::IntegrationTest
     assert_empty additional_crm_links.all(:link, wait: false)
 
     # create some objects and reload page
-    AdditionalCrmOrder.create!(order_id: order.id, crm_key: 'hello-world')
+    AdditionalCrmOrder.create!(order_id: order.id, crm_key: 'hello-world', name: '123')
     AdditionalCrmOrder.create!(order_id: order.id, crm_key: '42')
     visit current_path
+
+    assert page.has_selector?('.orders-cockpit dd.value ul li a', text: 'hello-world: 123')
+    assert page.has_selector?('.orders-cockpit dd.value ul li a', text: '42')
 
     additional_crm_links.all(:link, count: 2, wait: false)
     additional_crm_links.all(:link, href: /hello-world/, count: 1, wait: false)
