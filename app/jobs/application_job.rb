@@ -10,15 +10,13 @@ class ApplicationJob < ActiveJob::Base
     payload = { cgi_data: ENV.to_hash }
     payload[:code] = error.code if error.respond_to?(:code)
     payload[:data] = error.data if error.respond_to?(:data)
-    Airbrake.notify(error, payload) if airbrake?
-    Raven.capture_exception(error, extra: payload) if sentry?
+
+    ErrorTracker.report_exception(error, payload)
   end
 
-  def airbrake?
-    ENV['RAILS_AIRBRAKE_HOST'].present?
-  end
-
-  def sentry?
-    ENV['SENTRY_DSN'].present?
+  # Called once by active job before perform_now, after delayed job callbacks
+  def deserialize(job_data)
+    super
+    ErrorTracker.set_extras(active_job: job_data)
   end
 end
