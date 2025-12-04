@@ -300,6 +300,8 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       # reload after crm change
       visit(new_order_path)
 
+      assert page.has_selector?('input#category_active[disabled="disabled"]')
+
       fill_in('order_crm_key', with: '123')
       click_link('Übernehmen')
 
@@ -310,6 +312,8 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       end
 
       assert_equal 'New Order', find('#order_work_item_attributes_name')['value']
+
+      assert page.has_no_selector?('input#category_active[disabled="disabled"]') # test to be able to click it afterwards
 
       check('category_active')
       create_category

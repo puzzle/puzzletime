@@ -116,7 +116,7 @@ class ShowOrderServices < ActionDispatch::IntegrationTest
   end
 
   def manager_not_responsible_for_any_order
-    Employee.where(management: true).where.not(id: order.responsible_id).first.tap do |employee|
+    Employee.management.where.not(id: order.responsible_id).first.tap do |employee|
       assert_not_equal employee, order.responsible
       assert employee.management
     end

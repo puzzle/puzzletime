@@ -52,15 +52,17 @@ class EmployeeMasterDataController < ApplicationController
       Employee.select('employees.*, ' \
                       'em.percent AS current_percent_value, ' \
                       'departments.name, ' \
-                      'CONCAT(lastname, \' \', firstname) AS fullname')
+                      'CONCAT(employees.lastname, \' \', employees.firstname) AS fullname, ' \
+                      'member_coaches.firstname AS member_coach')
       .employed_ones(Period.current_day)
       .joins('LEFT JOIN departments ON departments.id = employees.department_id')
+      .joins('LEFT JOIN employees member_coaches ON member_coaches.id = employees.member_coach_id')
     ).list
   end
 
   def list_entries_includes(list)
     if can?(:manage, Employment)
-      list.includes(:department, :employments, current_employment: {
+      list.includes(:member_coach, :department, :employments, current_employment: {
                       employment_roles_employments: %i[
                         employment_role
                         employment_role_level
@@ -124,6 +126,7 @@ class EmployeeMasterDataController < ApplicationController
   self.search_columns = ['lastname', 'firstname', 'shortname', 'departments.name']
   self.sort_mappings_with_indifferent_access = {
     department: 'departments.name',
+    member_coach: 'member_coach',
     fullname: 'fullname',
     current_percent_value: 'current_percent_value'
   }.with_indifferent_access

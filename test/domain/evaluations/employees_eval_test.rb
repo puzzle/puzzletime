@@ -14,6 +14,7 @@ module Evaluations
 
     def setup
       super
+      employees(:pascal).update!(member_coach_id: employees(:mark).id)
       @evaluation = Evaluations::EmployeesEval.new
     end
 
@@ -41,9 +42,15 @@ module Evaluations
     end
 
     def test_employees_by_department
-      @evaluation = Evaluations::EmployeesEval.new(departments(:devtwo).id)
+      @evaluation = Evaluations::EmployeesEval.new(department_id: departments(:devtwo).id)
 
       assert_sum_total_times 3.0, 12.0, 35.0, 36.0
+    end
+
+    def test_employees_by_member_coach
+      @evaluation = Evaluations::EmployeesEval.new(member_coach_id: employees(:mark).id)
+
+      assert_sum_total_times 3.0, 3.0, 5.0, 6.0
     end
 
     def test_employee_detail_mark
