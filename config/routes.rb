@@ -225,6 +225,7 @@ Rails.application.routes.draw do
   scope '/reports' do
     get :orders, to: 'order_reports#index', as: :reports_orders
     get :invoices, to: 'invoice_reports#index', as: :reports_invoices
+    put 'invoices/sync', to: 'invoice_reports#sync', as: :reports_invoices_sync
     get :workload, to: 'workload_report#index', as: :reports_workload
     get :revenue, to: 'revenue_reports#index', as: :reports_revenue
     get :capacity, to: 'capacity_report#index', as: :reports_capacity
