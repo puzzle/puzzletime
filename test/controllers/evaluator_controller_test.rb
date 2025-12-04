@@ -26,6 +26,15 @@ class EvaluatorControllerTest < ActionController::TestCase
     end
   end
 
+  test 'GET index absences filtered by department' do
+    employees(:various_pedro).update(department: departments(:devone))
+    get :index, params: { evaluation: 'absences', department_id: departments(:devone).id }
+
+    assert_template 'overview'
+
+    assert_equal assigns(:evaluation).divisions.map(&:department_id).uniq, [departments(:devone).id]
+  end
+
   test 'GET export_csv userworkitems csv format' do
     get :export_csv, params: { evaluation: 'userworkitems' }
 

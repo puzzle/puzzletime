@@ -9,7 +9,7 @@
     %td
       - if sub = evaluation.sub_evaluation
         = link_to(division.label_verbose,
-                  { action: 'overview', evaluation: sub, category_id: division.id, **search_conditions },
+                  { action: 'overview', evaluation: sub, category_id: division.id, **worktime_search_conditions },
                   title: division.tooltip)
       - else
         = content_tag :span, division.label_verbose, title: division.tooltip
