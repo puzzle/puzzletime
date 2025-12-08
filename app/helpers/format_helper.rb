@@ -203,14 +203,15 @@ module FormatHelper
   end
 
   # Renders a link to the given association entry.
-  def assoc_link(val)
+  def assoc_link(val, link_text = nil)
+    display_text = link_text.presence || val.to_s
     path_method = "#{val.class.model_name.singular_route_key}_path"
     if show_path_exists?(path_method, val) && can?(:show, val)
-      link_to(val.to_s, val)
+      link_to(display_text, val)
     elsif show_path_exists?("edit_#{path_method}", val) && can?(:edit, val)
-      link_to(val.to_s, edit_polymorphic_path(val))
+      link_to(display_text, edit_polymorphic_path(val))
     else
-      val.to_s
+      display_text
     end
   end
 
