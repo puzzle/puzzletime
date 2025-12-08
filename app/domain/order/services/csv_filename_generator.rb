@@ -16,17 +16,20 @@ class Order
       end
 
       def filename
+        "#{filename_prefix}.csv"
+      end
+
+      private
+
+      def filename_prefix
         ['puzzletime',
          accounting_post_shortnames || order_shortnames,
          employee_shortname,
          ticket,
          billable]
           .compact
-          .join('-') +
-          '.csv'
+          .join('-')
       end
-
-      private
 
       def order_shortnames
         order.work_item.path_shortnames
