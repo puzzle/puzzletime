@@ -10,9 +10,7 @@ module Forms
     self.incomplete_finish = false
 
     def add_worktime(worktime)
-      if worktime.hours - remaining_hours > 0.00001 # we are working with floats: use delta
-        worktime.errors.add(:hours, 'Die gesamte Anzahl Stunden kann nicht vergrössert werden')
-      end
+      worktime.errors.add(:hours, 'Die gesamte Anzahl Stunden kann nicht vergrössert werden') if worktime.hours - remaining_hours > 0.00001 # we are working with floats: use delta
       worktime.employee = original.employee
       super if worktime.errors.empty?
       worktime.errors.empty?

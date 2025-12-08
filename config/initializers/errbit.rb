@@ -5,17 +5,20 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-if ENV['RAILS_AIRBRAKE_HOST'] && ENV['RAILS_AIRBRAKE_API_KEY']
+require 'error_tracker'
+
+if ErrorTracker.airbrake_like?
   require 'airbrake'
+
   Airbrake.configure do |config|
     config.environment = Rails.env
     config.ignore_environments = %i[development test]
     # if no host is given, ignore all environments
-    config.ignore_environments << :production if ENV['RAILS_AIRBRAKE_HOST'].blank?
+    config.ignore_environments << :production if Settings.error_tracker.airbrake.host.blank?
 
     config.project_id     = 1 # required, but any positive integer works
-    config.project_key    = ENV['RAILS_AIRBRAKE_API_KEY']
-    config.host           = ENV['RAILS_AIRBRAKE_HOST']
+    config.project_key    = Settings.error_tracker.airbrake.api_key
+    config.host           = Settings.error_tracker.airbrake.host
     config.blacklist_keys << 'pwd'
     config.blacklist_keys << 'RAILS_DB_PASSWORD'
     config.blacklist_keys << 'RAILS_AIRBRAKE_API_KEY'
