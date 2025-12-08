@@ -6,11 +6,23 @@
 
 - @title = "#{@evaluation.worktime_name} Details #{@period.to_s}"
 
-%h3= @evaluation.category_label
-%h3= @evaluation.division_label
+
+%h3 Vorher
+%p= @evaluation.category_label
+%p= @evaluation.division_label
+
+%h3 Danach
+%p= detail_label_helper(@evaluation.category_label_override_item || @evaluation.category)
+%p= detail_label_helper(@evaluation.division_label_override_item ||@evaluation.division)
+
+-# Testing purposes
+-#- if @evaluation.is_a?(Evaluations::ManagedOrdersEval)
+-#  %h3 Spezifisch ManagedOrder
+-#  %p= detail_label_helper(@evaluation.division.order.client)
+-#  %p= detail_label_helper(@evaluation.division.order)
 
 - if @absence
-  %h3
+  %p
     Absenztyp:
     = @absence
 
