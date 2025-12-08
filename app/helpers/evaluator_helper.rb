@@ -19,6 +19,14 @@ module EvaluatorHelper
     when :work_date, :hours, :times then 'right'
     end
   end
+  def detail_label_helper(item, prefix = nil)
+    return '' if item.nil? || item.is_a?(Class)
+
+    prefix ||= item.class.model_name.human
+    link = assoc_link(item)
+
+    safe_join([prefix, ': ', link])
+  end
 
   def detail_td(worktime, field)
     case field

@@ -231,6 +231,14 @@ module Evaluations
       nil
     end
 
+    def category_label_override_item
+      nil
+    end
+
+    def division_label_override_item
+      nil
+    end
+
     private
 
     # Initializes a new Evaluation with the given category.

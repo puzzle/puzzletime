@@ -12,6 +12,13 @@ module Evaluations
     self.total_details     = false
     self.billable_hours    = true
     self.planned_hours     = true
+    def category_label_override_item
+      division.order.client
+    end
+
+    def division_label_override_item
+      division.order
+    end
 
     def category_label
       "Kunde: #{division.order.client.name}"
