@@ -31,11 +31,16 @@ if ENV['GLITCHTIP_DSN']
                        Puzzletime.version
                      end
 
+    filter = ActiveSupport::ParameterFilter.new(Rails.application.config.filter_parameters)
+
     config.before_send = lambda do |event, _hint|
-      # filter out parameters filtered by Rails
-      Rails.application.config.filter_parameters.map(&:to_s).each do |param|
-        event.extra[param] = '[Filtered]' if event&.extra&.key?(param)
-      end
+      event.extra = filter.filter(event.extra) if event.extra
+      event.user = filter.filter(event.user) if event.user
+      event.contexts = filter.filter(event.contexts) if event.contexts
+
+      # Add transaction name because it's not displayed otherwise in glitchtip
+      event.tags[:transaction] ||= event.transaction if event.transaction
+
       event
     end
   end
