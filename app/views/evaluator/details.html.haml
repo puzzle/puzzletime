@@ -11,15 +11,12 @@
 %p= @evaluation.category_label
 %p= @evaluation.division_label
 
-%h3 Danach
-%p= detail_label_helper(@evaluation.category_label_override_item || @evaluation.category)
-%p= detail_label_helper(@evaluation.division_label_override_item ||@evaluation.division)
+%h3 Dynamisch
+- @evaluation.header_info_labels.each do | label |
+  %p= build_detail_label(label[:item], prefix=label[:prefix], link_text=label[:link_text])
 
--# Testing purposes
--#- if @evaluation.is_a?(Evaluations::ManagedOrdersEval)
--#  %h3 Spezifisch ManagedOrder
--#  %p= detail_label_helper(@evaluation.division.order.client)
--#  %p= detail_label_helper(@evaluation.division.order)
+- @evaluation.header_info_labels_custom.each do | custom_label |
+  %p= build_detail_label_custom(custom_label, @period)
 
 - if @absence
   %p

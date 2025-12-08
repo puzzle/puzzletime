@@ -19,13 +19,30 @@ module EvaluatorHelper
     when :work_date, :hours, :times then 'right'
     end
   end
-  def detail_label_helper(item, prefix = nil)
+  def build_detail_label(item, prefix = nil, link_text = nil)
     return '' if item.nil? || item.is_a?(Class)
 
     prefix ||= item.class.model_name.human
-    link = assoc_link(item)
+    link = assoc_link(item, link_text)
 
     safe_join([prefix, ': ', link])
+  end
+
+  def build_detail_label_custom(label, period)
+    if label[:include_period_labels]
+      url_options = {
+        start_date: period.start_date,
+        end_date: period.end_date
+      }
+    end
+
+    target_array = [
+      label[:resource],
+      label[:child_resource],
+      url_options
+    ]
+
+    link_to(label[:label], target_array)
   end
 
   def detail_td(worktime, field)

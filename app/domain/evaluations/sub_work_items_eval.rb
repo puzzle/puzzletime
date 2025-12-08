@@ -20,6 +20,13 @@ module Evaluations
       division ? division.id : category.id
     end
 
+    def header_info_labels
+      [
+        { item: category.top_item.client },
+        { item: category, link_text: (division || category).label_ancestry }
+      ]
+    end
+
     # Label for the represented category.
     def category_label
       "Kunde: #{category.top_item.client.label}"
