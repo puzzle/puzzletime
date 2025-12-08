@@ -28,8 +28,11 @@ module Evaluations
 
     ####### overwritten methods for working with work item hierarchies
 
-    def category_label
-      "Position: #{category.top? ? category.label : category.label_verbose}"
+    def header_info_labels
+      [
+        { item: category, link_text: category.top? ? category.label : category.label_verbose },
+        { item: division }
+      ]
     end
 
     def worktime_query(receiver, period = nil, division = nil)
