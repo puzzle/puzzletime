@@ -85,7 +85,7 @@ class ApplicationController < ActionController::Base
     ErrorTracker.set_user(
       id: current_user.try(:id),
       username: current_user.try(:shortname),
-      email: current_user.email
+      email: current_user.try(:email)
     )
   end
 
