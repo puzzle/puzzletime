@@ -150,6 +150,22 @@ module Evaluations
       absences? ? Absencetime.label : Ordertime.label
     end
 
+    # Infos which should be displayed as labels above evaluation table,
+    # if possible with link to entity (helper functions)
+    # Can be overloaded if different models/links should be displayed instead of
+    # category and division
+    # Additional properties for prefix and link_text are available
+    def header_info_labels
+      [
+        { item: category },
+        { item: division }
+      ]
+    end
+
+    def header_info_labels_custom
+      []
+    end
+
     # The header name of the division column to be displayed.
     # Returns the class name of the division objects.
     def division_header
@@ -232,14 +248,6 @@ module Evaluations
     end
 
     def account_id
-      nil
-    end
-
-    def category_label_override_item
-      nil
-    end
-
-    def division_label_override_item
       nil
     end
 

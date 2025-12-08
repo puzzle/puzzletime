@@ -12,12 +12,24 @@ module Evaluations
     self.total_details     = false
     self.billable_hours    = true
     self.planned_hours     = true
-    def category_label_override_item
-      division.order.client
+
+    # Override default labels for category and division with client and order
+    def header_info_labels
+      [
+        { item: division.order.client },
+        { item: division.order }
+      ]
     end
 
-    def division_label_override_item
-      division.order
+    def header_info_labels_custom
+      [
+        {
+          label: 'Leistungsübersicht im Auftrag',
+          resource: division.order,
+          child_resource: :order_services,
+          include_period_labels: true
+        }
+      ]
     end
 
     def category_label
