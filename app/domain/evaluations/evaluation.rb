@@ -154,7 +154,7 @@ module Evaluations
     # if possible with link to entity (helper functions)
     # Can be overloaded if different models/links should be displayed instead of
     # category and division
-    # Additional properties for prefix and link_text are available
+    # Available properties: item, prefix (optional), link_text (optional)
     def header_info_labels
       [
         { item: category },
@@ -162,6 +162,13 @@ module Evaluations
       ]
     end
 
+    # Additional info labels with links which will be placed above evaluation table
+    # Available properties:
+    # - label (string): Is used as the link text
+    # - resource (object): Resource which link should refer to
+    # - child_resource (symbol): Optional child resource for nested URLs
+    # - include_period_labels (bool): URL params regarding period will be added to link
+    # See ManagedOrdersEval for an example.
     def header_info_labels_custom
       []
     end
@@ -215,16 +222,6 @@ module Evaluations
 
       container = class_category? ? category : divisions
       @division = container.find(division_id.to_i)
-    end
-
-    # Label for the represented category.
-    def category_label
-      detail_label(category)
-    end
-
-    # Label for the represented division, if any.
-    def division_label
-      detail_label(division)
     end
 
     def edit_link?(user)
@@ -321,12 +318,6 @@ module Evaluations
 
     def worktime_type
       absences? ? 'Absencetime' : 'Ordertime'
-    end
-
-    def detail_label(item)
-      return '' if item.nil? || item.is_a?(Class)
-
-      "#{item.class.model_name.human}: #{item.label}"
     end
 
     def class_category?

@@ -32,10 +32,6 @@ module Evaluations
       ]
     end
 
-    def category_label
-      "Kunde: #{division.order.client.name}"
-    end
-
     def divisions(_period = nil, _times = nil)
       WorkItem.joins(:order).includes(:order).where(orders: { responsible_id: category.id }).list
     end

@@ -19,6 +19,9 @@ module EvaluatorHelper
     when :work_date, :hours, :times then 'right'
     end
   end
+
+  # Builds a label and link to the given item
+  # prefix (text before link) and link_text can optionally be overwritten
   def build_detail_label(item, prefix = nil, link_text = nil)
     return '' if item.nil? || item.is_a?(Class)
 
@@ -28,6 +31,8 @@ module EvaluatorHelper
     safe_join([prefix, ': ', link])
   end
 
+  # Builds a custom link, can be used for nested URLs
+  # Period data can optionally be propagated into URL
   def build_detail_label_custom(label, period)
     if label[:include_period_labels]
       url_options = {

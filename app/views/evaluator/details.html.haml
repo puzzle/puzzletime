@@ -6,12 +6,6 @@
 
 - @title = "#{@evaluation.worktime_name} Details #{@period.to_s}"
 
-
-%h3 Vorher
-%p= @evaluation.category_label
-%p= @evaluation.division_label
-
-%h3 Dynamisch
 - @evaluation.header_info_labels.each do | label |
   %p= build_detail_label(label[:item], prefix=label[:prefix], link_text=label[:link_text])
 
