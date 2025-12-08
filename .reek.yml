@@ -1,5 +1,4 @@
 ### Generic smell configuration
-
 ---
 # detectors:
 ## You can disable smells completely
@@ -48,7 +47,6 @@
 #   - lib/legacy
 #   - lib/rake/legacy_tasks
 #   - lib/smelly.rb
-
 
 # FIXME: Fix these, piece by piece
 
@@ -1955,21 +1953,17 @@ detectors:
       - WorkloadReportController#default_period
       - Apidocs::Setup#setup_property
       - Apidocs::Setup#setup_tags
-      - Crm::Highrise#airbrake?
       - Crm::Highrise#base_url
       - Crm::Highrise#contact_attributes
       - Crm::Highrise#existing_contact_crm_keys
       - Crm::Highrise#find_people_by_email
       - Crm::Highrise#record_to_params
-      - Crm::Highrise#sentry?
       - Crm::Highrise#sync_additional_order
-      - Crm::Odoo#airbrake?
       - Crm::Odoo#base_url
       - Crm::Odoo#contact_attributes
       - Crm::Odoo#existing_contact_crm_keys
       - Crm::Odoo#find_people_by_email
       - Crm::Odoo#record_to_params
-      - Crm::Odoo#sentry?
       - Crm::Odoo#sync_additional_order
       - Evaluations::AbsencesEval#divisions
       - Evaluations::ClientsEval#divisions
@@ -2094,8 +2088,6 @@ detectors:
       - WorktimeHelper#week_number
       - WorktimeHelper#worktime_account
       - WorktimeHelper#worktime_description
-      - ApplicationJob#airbrake?
-      - ApplicationJob#sentry?
       - CommitReminderJob#perform
       - CrmSyncJob#perform
       - InvoicingSyncJob#perform
