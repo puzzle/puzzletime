@@ -18,22 +18,22 @@ class ErrorTracker
 
     def set_tags(**kwargs)
       Sentry.set_tags(**kwargs) if sentry_like?
-      Airbrake.merge_context(tags: kwargs) if airbrake?
+      Airbrake.merge_context(tags: kwargs) if airbrake_like?
     end
 
     def set_extras(**kwargs)
       Sentry.set_extras(**kwargs) if sentry_like?
-      Airbrake.merge_context(extra: kwargs) if airbrake?
+      Airbrake.merge_context(extra: kwargs) if airbrake_like?
     end
 
     def set_user(**kwargs)
       Sentry.set_user(**kwargs) if sentry_like?
-      Airbrake.merge_context(user: kwargs) if airbrake?
+      Airbrake.merge_context(user: kwargs) if airbrake_like?
     end
 
     def set_contexts(**)
       Sentry.set_contexts(**) if sentry_like?
-      Airbrake.merge_context(**) if airbrake?
+      Airbrake.merge_context(**) if airbrake_like?
     end
 
     def airbrake_like?
