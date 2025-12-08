@@ -31,12 +31,12 @@ module Crm
           parameters = [*self.parameters, *parameters]
           options = { **self.options, **options }
 
-          api.search_read(
-            model,
-            parameters: parameters,
-            options: options
-          )
-             .map { split_ids(_1) }
+          api.search_read(model, parameters:, options:)
+             .map do |resource|
+               resource
+                 .then { split_ids(_1) }
+                 .tap { log_resource(_1) }
+             end
         end
 
         def resource(id, options: {})
@@ -48,10 +48,13 @@ module Crm
             .map { safe_to_i(_1) }
             .select(&:positive?)
 
+          return if ids.empty?
+
           api
             .read(model, ids, options:)
             .first
             .then { split_ids(_1) }
+            .tap { log_resource(_1) }
         end
 
         def all(...) = resources(...).map { new(_1) }
@@ -66,17 +69,25 @@ module Crm
         def fetch_existing(options: {})
           options = { **self.options, **options }
 
-          ids = local_models.flat_map do |local_model|
-            local_model
-              .classify
-              .constantize
-              .where.not(crm_key: nil)
-              .pluck(:crm_key)
-              .map { safe_to_i(_1) }
-          end
+          ids =
+            local_models.flat_map do |local_model|
+              local_model
+                .classify
+                .constantize
+                .where.not(crm_key: nil)
+                .pluck(:crm_key)
+                .map { safe_to_i(_1) }
+            end
+
+          return if ids.empty?
 
           api.read(model, ids, options:)
-             .map { new(_1) }
+             .map do |resource|
+               resource
+                 .then { split_ids(_1) }
+                 .tap { log_resource(_1) }
+                 .then { new(_1) }
+             end
         end
 
         private
@@ -106,6 +117,14 @@ module Crm
             end
           end
           resource.merge(attrs)
+        end
+
+        def log_resource(resource)
+          if resource['name'] == 'f'
+            Rails.logger.warn "Odoo Resource with name 'f' found: #{resource.pretty_inspect}"
+          elsif Settings.odoo.log_resources
+            Rails.logger.info "Odoo Resource: #{resource.pretty_inspect}"
+          end
         end
       end
     end

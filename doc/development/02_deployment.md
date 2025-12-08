@@ -10,7 +10,7 @@ Folgende Umsysteme müssen vorgängig eingerichtet werden:
 * PostgreSQL
 * Memcached
 * SSL Zertifikat (optional)
-* Sentry oder Airbrake/Errbit (optional)
+* Sentry/Glitchtip oder Airbrake/Errbit (optional)
 * Highrise CRM (optional)
 * Smallinvoice (optional)
 
@@ -50,8 +50,8 @@ gesetzt werden. Werte ohne Default müssen in der Regel definiert werden.
 | RAILS_PTIME_COMPANY_LOGO | Der Filename / Pfad zum Logo der Organisation, welche Puzzletime verwendet. Der Filename / Pfad ist relativ von `app/assets/images` anzugeben. | 'company_logo.png'
 | PROMETHEUS_EXPORTER_HOST | Hostname wo der prometheus_exporter läuft. Schickt nichts wenn diese Variable nicht gesetzt ist. | - |
 | PROMETHEUS_EXPORTER_PORT | Port wo der prometheus_exporter läuft. | 9394 |
-| SENTRY_DSN | DSN der Sentry Instanz. Falls diese Variable nicht gesetzt ist, werden keine Fehlermeldungen verschickt. | - |
-| SENTRY_CURRENT_ENV | Environment für Sentry. Verwendet das RAILS_ENV, falls nichts angegeben wird. | - |
+| GLITCHTIP_DSN | DSN der Glitchtip Instanz. Falls diese Variable nicht gesetzt ist, werden keine Fehlermeldungen verschickt. | - |
+| SENTRY_CURRENT_ENV | Environment für Glitchtip. Verwendet das RAILS_ENV, falls nichts angegeben wird. | - |
 | AUTH_DB_ACTIVE | DB Login aktivieren / deaktivieren. | false |
 | AUTH_KEYCLOAK_ACTIVE | Keycloak login aktivieren / deaktivieren. | false |
 | AUTH_KEYCLOAK_HOST | Keycloak Host | - |
@@ -70,7 +70,7 @@ gesetzt werden. Werte ohne Default müssen in der Regel definiert werden.
 #### Addendum
 Ob Errbit oder Sentry verwendet wird, entscheidet sich danach, welche Umgebungsvariablen gesetzt werden.
 Errbit = RAILS_AIRBRAKE_HOST & RAILS_AIRBRAKE_API_KEY
-Sentry = SENTRY_DSN
+Sentry = GLITCHTIP_DSN
 
 ### OpenShift Deployment Example
 Note: The following steps can be used to get an idea of how to deploy PuzzleTime on OpenShift.
