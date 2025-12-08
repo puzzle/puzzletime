@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class ExpensesController < ManageController
+  require 'ruby-vips'
   include Filterable
+
   self.optional_nesting = [Employee]
 
   self.permitted_attrs = %i[payment_date employee_id kind order_id description amount receipt]
@@ -117,69 +119,39 @@ class ExpensesController < ManageController
     params.dig(model_identifier, :receipt)
   end
 
-  def pdf_pages_amount(filepath_pdf)
-    first_page = Vips::Image.new_from_file(filepath_pdf, page: 0, n: 1)
-    first_page.get('n-pages')
-  end
-
-  def get_pdf_pages_as_images(filepath_pdf)
-    images = []
-    total_pages = pdf_pages_amount(filepath_pdf)
-    (0...total_pages).each do |page_num|
-      image = Vips::Image.new_from_file(filepath_pdf, page: page_num)
-      image = image.thumbnail_image(Settings.expenses.receipt.max_pixel)
-      images << image
-    end
-    images
-  end
-
-  def combine_images(images, rows, columns)
-    rows_of_images = []
-    (0...rows).each do |row_num|
-      start_index = row_num * columns
-      row_images = images[start_index, columns] || []
-      # Ensure all rows are the same length by padding with blank images (if necessary)
-      row_images += [Vips::Image.black(images.first.width, images.first.height)] * (columns - row_images.size)
-
-      row_image = row_images.reduce { |a, b| a.join(b, :horizontal) }
-      rows_of_images << row_image
-    end
-
-    rows_of_images.reduce { |a, b| a.join(b, :vertical) }
-  end
-
   def attach_resized_receipt
     return unless receipt_param
 
-    if receipt_param.content_type == 'application/pdf'
-      pdf_path = receipt_param.tempfile.path
-      images = get_pdf_pages_as_images(pdf_path)
-      basename = File.basename(receipt_param.original_filename.to_s, '.*')
-
-      # Calculate the number of rows and columns to fit all images in a square grid
-      total_pages = pdf_pages_amount(pdf_path)
-      grid_size = Math.sqrt(total_pages).ceil
-      rows = grid_size
-      columns = (total_pages.to_f / grid_size).ceil
-
-      combined_image = combine_images(images, rows, columns)
-
-      output_path = Rails.root.join('tmp', "#{basename}.jpg")
-      combined_image.write_to_file(output_path.to_s, Q: Settings.expenses.receipt.quality)
-
-      entry.receipt.attach(io: File.open(output_path), filename: "#{basename}.jpg", content_type: 'image/jpeg')
-    else
-      resized = ImageProcessing::Vips
-                .source(receipt_param.tempfile)
-                .resize_to_limit(Settings.expenses.receipt.max_pixel, Settings.expenses.receipt.max_pixel)
-                .saver(quality: Settings.expenses.receipt.quality)
-                .convert('jpg')
-                .loader(page: 0)
-                .call
-
-      target_filename = "#{File.basename(receipt_param.original_filename.to_s, '.*')}.jpg"
-
-      entry.receipt.attach(io: File.open(resized), filename: target_filename, content_type: 'image/jpeg')
+    case receipt_param.content_type
+    when 'application/pdf' then attach_pdf
+    when /image/ then attach_image
     end
+  end
+
+  def attach_image
+    resized = ::ImageProcessing::Vips
+              .source(receipt_param.tempfile)
+              .resize_to_limit(Settings.expenses.receipt.max_pixel, Settings.expenses.receipt.max_pixel)
+              .saver(quality: Settings.expenses.receipt.quality)
+              .convert('jpg')
+              .loader(page: 0)
+              .call
+
+    target_filename = "#{File.basename(receipt_param.original_filename.to_s, '.*')}.jpg"
+
+    entry.receipt.attach(io: File.open(resized), filename: target_filename, content_type: 'image/jpeg')
+  end
+
+  def attach_pdf
+    tmp_file = receipt_param.tempfile
+    filename = "#{File.basename(receipt_param.original_filename.to_s, '.*')}.pdf"
+    page_count = pdf_pages_amount(tmp_file.path)
+
+    entry.receipt.attach(io: File.open(tmp_file), filename:, content_type: 'application/pdf', metadata: { page_count: })
+  end
+
+  def pdf_pages_amount(filepath_pdf)
+    first_page = ::Vips::Image.new_from_file(filepath_pdf, page: 0, n: 1)
+    first_page.get('n-pages')
   end
 end
