@@ -649,7 +649,7 @@ GEM
       unicode-emoji (~> 4.0, >= 4.0.4)
     unicode-emoji (4.0.4)
     uniform_notifier (1.16.0)
-    uri (1.0.3)
+    uri (1.0.4)
     validates_by_schema (0.5.2)
       activerecord (>= 6.0.0)
     validates_timeliness (7.1.0)
