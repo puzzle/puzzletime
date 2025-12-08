@@ -27,16 +27,6 @@ module Evaluations
       ]
     end
 
-    # Label for the represented category.
-    def category_label
-      "Kunde: #{category.top_item.client.label}"
-    end
-
-    # Label for the represented division, if any.
-    def division_label
-      "Position: #{(division || category).label_ancestry}"
-    end
-
     def division_column
       Arel.sql("work_items.path_ids[#{category.path_ids.size + 1}]")
     end
