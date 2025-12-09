@@ -19,7 +19,7 @@ class EmployeesController < ManageController
 
   self.search_columns = %i[firstname lastname shortname]
 
-  self.sort_mappings = { department_id: 'departments.name' }
+  self.sort_mappings = { department_id: 'departments.name', member_coach: 'CONCAT(member_coaches_employees.lastname, member_coaches_employees.firstname)' }
 
   def show
     return if Crm.instance.blank?
@@ -51,6 +51,6 @@ class EmployeesController < ManageController
   private
 
   def list_entries
-    super.includes(:department).references(:department)
+    super.includes(:department, :member_coach).references(:department)
   end
 end
