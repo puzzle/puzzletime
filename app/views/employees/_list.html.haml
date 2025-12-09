@@ -3,15 +3,12 @@
 -#  or later. See the COPYING file at the top-level directory or at
 -#  https://github.com/puzzle/puzzletime.
 
+:ruby
+  attrs = %i[lastname firstname shortname current_percent department_id]
+  attrs << :member_coach if can?(:manage, Employment)
+  attrs += %i[management probation_period_end_date]
 
-= crud_table :lastname,
-             :firstname,
-             :shortname,
-             :current_percent,
-             :department_id,
-             :management,
-             :probation_period_end_date do |t|
-
+= crud_table *attrs do |t|
   - t.action_col do |e|
     - link_to('Stammdaten', employee_master_datum_path(e))
   - if can?(:manage, OvertimeVacation)

@@ -24,7 +24,31 @@ class InvoiceReportsController < ApplicationController
       format.js do
         set_filter_values
       end
+      format.csv do
+        send_data(Invoice::Report::Csv.new(@report).generate,
+                  type: 'text/csv; charset=utf-8; header=present')
+      end
     end
+  end
+
+  def sync
+    if params['invoice_id'].blank?
+      flash[:error] = 'Interner Puzzletime Fehler beim Sync der Rechnung' # rubocop:disable Rails/I18nLocaleTexts
+      redirect_to reports_invoices_path(params.to_unsafe_h)
+      return
+    end
+
+    invoice = Invoice.find(params[:invoice_id])
+
+    if Invoicing.instance
+      begin
+        Invoicing.instance.sync_invoice(invoice)
+        flash[:notice] = "Die Rechnung #{invoice} wurde aktualisiert."
+      rescue Invoicing::Error => e
+        flash[:error] = "Fehler im Invoicing Service: #{e.message}"
+      end
+    end
+    redirect_to reports_invoices_path(params.to_unsafe_h)
   end
 
   private
