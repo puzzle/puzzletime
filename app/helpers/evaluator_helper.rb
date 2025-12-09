@@ -93,6 +93,12 @@ module EvaluatorHelper
     tooltip.html_safe
   end
 
+  def vacations(employee)
+    date = @period&.end_date || Time.zone.today
+    value = employee.statistics.remaining_vacations(date.end_of_year)
+    format_days(value, true)
+  end
+
   def worktime_commits_readonly(employee)
     worktime_commits(employee, false)
   end
