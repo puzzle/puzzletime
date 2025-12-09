@@ -48,16 +48,19 @@ class EmployeeMasterDataController < ApplicationController
   private
 
   def list_entries
-    list_entries_includes(
-      Employee.select('employees.*, ' \
-                      'em.percent AS current_percent_value, ' \
-                      'departments.name, ' \
-                      'CONCAT(employees.lastname, \' \', employees.firstname) AS fullname, ' \
-                      'member_coaches.firstname AS member_coach')
+    query =
+      Employee
+      .left_joins(:department, :member_coach)
       .employed_ones(Period.current_day)
-      .joins('LEFT JOIN departments ON departments.id = employees.department_id')
-      .joins('LEFT JOIN employees member_coaches ON member_coaches.id = employees.member_coach_id')
-    ).list
+      .select(
+        employees: ['*'],
+        departments: [:name],
+        em: ['percent AS current_percent_value']
+      )
+      .select("CONCAT(employees.lastname, ' ', employees.firstname) AS fullname")
+      .select("CONCAT(member_coaches_employees.lastname, ' ', member_coaches_employees.firstname) AS member_coach")
+
+    list_entries_includes(query).list
   end
 
   def list_entries_includes(list)
