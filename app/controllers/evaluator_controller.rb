@@ -63,7 +63,7 @@ class EvaluatorController < ApplicationController
       @period.to_s.parameterize
     ].compact
 
-    filename = file_parts.compact.join('-') + '.pdf'
+    filename = "#{file_parts.compact.join('-')}.pdf"
 
     send_data pdf_generator.generate_pdf.render,
               filename: filename,
@@ -73,8 +73,8 @@ class EvaluatorController < ApplicationController
 
   def export_csv
     set_evaluation_details
-    filename = ['puzzletime', csv_label(@evaluation.category),
-                csv_label(@evaluation.division)].compact.join('-') + '.csv'
+    filename = "#{['puzzletime', csv_label(@evaluation.category),
+                   csv_label(@evaluation.division)].compact.join('-')}.csv"
     times = @evaluation.times(@period)
     send_worktimes_csv(times, filename)
   end
@@ -124,6 +124,7 @@ class EvaluatorController < ApplicationController
     case params[:evaluation].downcase
     when 'employees'
       params[:department_id] = current_user.department_id unless params.key?(:department_id)
+      params[:member_coach_id] = current_user.id unless params.key?(:member_coach_id)
     end
   end
 
@@ -131,7 +132,7 @@ class EvaluatorController < ApplicationController
     @evaluation =
       case params[:evaluation].downcase
       when 'clients'                   then Evaluations::ClientsEval.new
-      when 'employees'                 then Evaluations::EmployeesEval.new(params[:department_id])
+      when 'employees'                 then Evaluations::EmployeesEval.new(params.slice(:department_id, :member_coach_id))
       when 'departments'               then Evaluations::DepartmentsEval.new
       when 'clientworkitems'           then Evaluations::ClientWorkItemsEval.new(params[:category_id])
       when 'employeeworkitems'         then Evaluations::EmployeeWorkItemsEval.new(params[:category_id])
