@@ -18,12 +18,12 @@ class EmployeeMailer < ApplicationMailer
     )
   end
 
-  def not_billed_times_reminder_mail(employee)
-    @employee = employee
+  def not_billed_times_reminder_mail(employee_data)
+    @employee_data = employee_data
 
     mail(
-      to: "#{employee.firstname} #{employee.lastname} <#{employee.email}>",
-      subject: 'Erinnerung: Noch nicht verrechnete PuzzleTime Zeiten'
+      to: "#{employee_data.firstname} #{employee_data.lastname} <#{employee_data.email}>",
+      subject: "PTime: #{employee_data.client} - nicht verrechnete Leistungen im letzten Monat gefunden"
     )
   end
 end

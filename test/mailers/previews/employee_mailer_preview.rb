@@ -20,7 +20,7 @@ class EmployeeMailerPreview < ActionMailer::Preview
   end
 
   def not_billed_times_reminder_mail
-    employee = Employee.new(email: 'user@example.com', firstname: 'Peter', lastname: 'Puzzler')
-    EmployeeMailer.not_billed_times_reminder_mail(employee)
+    employee_data = { email: 'user@example.com', firstname: 'Peter', lastname: 'Puzzler', client: 'TOP-FAV', order_id: 1 }
+    EmployeeMailer.not_billed_times_reminder_mail(employee_data)
   end
 end
