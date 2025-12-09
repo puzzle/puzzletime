@@ -28,12 +28,12 @@ de-CH:
       contract:
         one: Vertrag
         other: Verträge
-      department:
-        one: Organisationseinheit
-        other: Organisationseinheiten
       custom_list:
         one: Liste
         other: Listen
+      department:
+        one: Organisationseinheit
+        other: Organisationseinheiten
       employee:
         one: Member
         other: Members
@@ -58,6 +58,9 @@ de-CH:
       invoice:
         one: Rechnung
         other: Rechnungen
+      market_opportunity:
+        one: Marktopportunität
+        other: Marktopportunitäten
       order:
         one: Auftrag
         other: Aufträge
@@ -128,19 +131,20 @@ de-CH:
       absencetime:
         duration: Dauer
       accounting_post:
-        work_item_id: Position
-        portfolio_item_id: Portfolio
-        service_id: Dienstleistung
-        reference: Referenz
+        billable: Verrechenbar
+        closed: Geschlossen
+        description_required: Beschreibung erforderlich
+        market_opportunity_id: Marktopportunität
+        meal_compensation: Verpflegungsentschädigung
         offered_hours: Offerierte Stunden
         offered_rate: Offerierter Stundensatz
+        portfolio_item_id: Portfolio
+        reference: Referenz
         remaining_hours: Restaufwand
         report_type: Report Typ
-        billable: Verrechenbar
-        meal_compensation: Verpflegungsentschädigung
-        description_required: Beschreibung erforderlich
+        service_id: Dienstleistung
         ticket_required: Ticket erforderlich
-        closed: Geschlossen
+        work_item_id: Position
       billing_address:
         client_id: Kunde
         contact_id: Kontakt
@@ -299,6 +303,9 @@ de-CH:
         deleted: Gelöscht
         cancelled: Storniert
         unknown: Unbekannt
+      market_opportunity:
+        name: Bezeichnung
+        active: Aktiv
       order:
         client: Kunde
         category: Kategorie

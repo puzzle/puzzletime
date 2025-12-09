@@ -5,14 +5,16 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
+# {{{
 # == Schema Information
 #
 # Table name: services
 #
 #  id     :integer          not null, primary key
-#  name   :string           not null
 #  active :boolean          default(TRUE), not null
+#  name   :string           not null
 #
+# }}}
 
 class Service < ApplicationRecord
   has_many :accounting_posts

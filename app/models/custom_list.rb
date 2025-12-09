@@ -5,16 +5,18 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
+# {{{
 # == Schema Information
 #
 # Table name: custom_lists
 #
 #  id          :integer          not null, primary key
+#  item_ids    :integer          not null, is an Array
+#  item_type   :string           not null
 #  name        :string           not null
 #  employee_id :integer
-#  item_type   :string           not null
-#  item_ids    :integer          not null, is an Array
 #
+# }}}
 
 class CustomList < ApplicationRecord
   belongs_to :employee, optional: true

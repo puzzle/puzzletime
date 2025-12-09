@@ -4,19 +4,21 @@
 #  https://github.com/puzzle/puzzletime.
 
 
+# {{{
 # == Schema Information
 #
 # Table name: contracts
 #
 #  id             :integer          not null, primary key
-#  number         :string           not null
-#  start_date     :date             not null
 #  end_date       :date             not null
+#  notes          :text
+#  number         :string           not null
 #  payment_period :integer          not null
 #  reference      :text
 #  sla            :text
-#  notes          :text
+#  start_date     :date             not null
 #
+# }}}
 
 ---
 puzzletime:

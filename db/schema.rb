@@ -35,6 +35,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_19_080518) do
     t.boolean "closed", default: false, null: false
     t.integer "service_id"
     t.boolean "meal_compensation", default: false, null: false
+    t.integer "market_opportunity_id"
+    t.index ["market_opportunity_id"], name: "index_accounting_posts_on_market_opportunity_id"
     t.index ["portfolio_item_id"], name: "index_accounting_posts_on_portfolio_item_id"
     t.index ["service_id"], name: "index_accounting_posts_on_service_id"
     t.index ["work_item_id"], name: "index_accounting_posts_on_work_item_id"
@@ -298,6 +300,14 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_19_080518) do
     t.integer "invoice_id"
     t.index ["invoice_id"], name: "index_invoices_work_items_on_invoice_id"
     t.index ["work_item_id"], name: "index_invoices_work_items_on_work_item_id"
+  end
+
+  create_table "market_opportunities", force: :cascade do |t|
+    t.string "name", null: false
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_market_opportunities_on_name", unique: true
   end
 
   create_table "order_comments", id: :serial, force: :cascade do |t|

@@ -5,15 +5,21 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
+# {{{
 # == Schema Information
 #
 # Table name: overtime_vacations
 #
 #  id            :integer          not null, primary key
 #  hours         :float            not null
-#  employee_id   :integer          not null
 #  transfer_date :date             not null
+#  employee_id   :integer          not null
 #
+# Indexes
+#
+#  index_overtime_vacations_on_employee_id  (employee_id)
+#
+# }}}
 
 class OvertimeVacation < ApplicationRecord
   belongs_to :employee

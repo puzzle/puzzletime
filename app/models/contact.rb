@@ -5,23 +5,29 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
+# {{{
 # == Schema Information
 #
 # Table name: contacts
 #
 #  id            :integer          not null, primary key
-#  client_id     :integer          not null
-#  lastname      :string
+#  crm_key       :string
+#  email         :string
 #  firstname     :string
 #  function      :string
-#  email         :string
-#  phone         :string
+#  invoicing_key :string
+#  lastname      :string
 #  mobile        :string
-#  crm_key       :string
+#  phone         :string
 #  created_at    :datetime
 #  updated_at    :datetime
-#  invoicing_key :string
+#  client_id     :integer          not null
 #
+# Indexes
+#
+#  index_contacts_on_client_id  (client_id)
+#
+# }}}
 
 class Contact < ApplicationRecord
   CRM_ID_PREFIX = 'crm_'

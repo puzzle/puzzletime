@@ -5,6 +5,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
+# {{{
 # == Schema Information
 #
 # Table name: employment_role_categories
@@ -12,6 +13,11 @@
 #  id   :integer          not null, primary key
 #  name :string           not null
 #
+# Indexes
+#
+#  index_employment_role_categories_on_name  (name) UNIQUE
+#
+# }}}
 
 class EmploymentRoleCategory < ApplicationRecord
   has_many :employment_roles, dependent: :restrict_with_exception

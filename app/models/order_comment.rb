@@ -5,18 +5,24 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
+# {{{
 # == Schema Information
 #
 # Table name: order_comments
 #
 #  id         :integer          not null, primary key
-#  order_id   :integer          not null
 #  text       :text             not null
-#  creator_id :integer
-#  updater_id :integer
 #  created_at :datetime
 #  updated_at :datetime
+#  creator_id :integer
+#  order_id   :integer          not null
+#  updater_id :integer
 #
+# Indexes
+#
+#  index_order_comments_on_order_id  (order_id)
+#
+# }}}
 
 class OrderComment < ApplicationRecord
   ### ASSOCIATIONS

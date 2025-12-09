@@ -5,16 +5,22 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
+# {{{
 # == Schema Information
 #
 # Table name: employment_roles_employments
 #
 #  id                       :integer          not null, primary key
+#  percent                  :decimal(5, 2)    not null
 #  employment_id            :integer          not null
 #  employment_role_id       :integer          not null
 #  employment_role_level_id :integer
-#  percent                  :decimal(5, 2)    not null
 #
+# Indexes
+#
+#  index_unique_employment_employment_role  (employment_id,employment_role_id) UNIQUE
+#
+# }}}
 
 require 'test_helper'
 
