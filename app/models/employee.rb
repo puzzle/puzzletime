@@ -112,7 +112,7 @@ class Employee < ApplicationRecord
 
   protect_if :worktimes, 'Dieser Eintrag kann nicht gelöscht werden, da ihm noch Arbeitszeiten zugeordnet sind'
 
-  scope :list, -> { order('lastname', 'firstname') }
+  scope :list, -> { order(lastname: :asc, firstname: :asc) }
   scope :current, -> { joins(:employments).merge(Employment.during(Period.current_day)) }
   scope :management, -> { where(management: true) }
 
