@@ -130,36 +130,21 @@ class Period
     def parse_date(date)
       return nil if date.blank?
 
-      if date.is_a?(String)
-        if date.match?(/\A\d{1,2}\.\d{1,2}\.\d{2}\z/)
-          day, month, short_year = date.split('.').map(&:to_i)
-
-          # Get current full year and its century
-          current_year = Time.zone.today.year
-          cutoff = (current_year + 5) % 100
-          current_century = (current_year / 100) * 100
-
-          full_year = if short_year <= cutoff
-                        current_century + short_year
-                      else
-                        (current_century - 100) + short_year
-                      end
-
-          return Date.new(full_year, month, day)
-        end
-
-        begin
-          date = Date.strptime(date, I18n.t('date.formats.default'))
-        rescue ArgumentError
-          date = Date.parse(date)
-        end
+      case date
+      when Time then date.to_date
+      when /\A\d{1,2}\.\d{1,2}\.\d{2}\z/ then parse_date_string(date, :short_year)
+      when String then parse_date_string(date)
+      else date
       end
-
-      date = date.to_date if date.is_a?(Time)
-      date
     end
 
     private
+
+    def parse_date_string(date, type = :default)
+      Date.strptime(date, I18n.t(type, scope: 'date.formats'))
+    rescue ArgumentError
+      Date.parse(date)
+    end
 
     def day_label(date)
       case date
