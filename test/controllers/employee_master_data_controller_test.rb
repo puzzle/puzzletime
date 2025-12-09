@@ -35,25 +35,25 @@ class EmployeeMasterDataControllerTest < ActionController::TestCase
   end
 
   test 'GET index with sorting' do
-    employees(:long_time_john).update!(department_id: departments(:devone).id)
-    employees(:next_year_pablo).update!(department_id: departments(:devtwo).id)
-    employees(:various_pedro).update!(department_id: departments(:sys).id)
+    employees(:long_time_john).update!(department: departments(:devone))
+    employees(:next_year_pablo).update!(department: departments(:devtwo))
+    employees(:various_pedro).update!(department: departments(:sys))
     get :index, params: { sort: 'department', sort_dir: 'asc' }
 
     assert_equal %w[John Pablo Pedro], assigns(:employees).map(&:firstname)
   end
 
   test 'GET index with sorting by member_coach' do
-    employees(:long_time_john).update!(member_coach_id: employees(:pascal).id)
-    employees(:next_year_pablo).update!(member_coach_id: employees(:mark).id)
-    employees(:various_pedro).update!(member_coach_id: employees(:lucien).id)
+    employees(:long_time_john).update!(member_coach: employees(:pascal))
+    employees(:next_year_pablo).update!(member_coach: employees(:mark))
+    employees(:various_pedro).update!(member_coach: employees(:lucien))
     get :index, params: { sort: 'member_coach', sort_dir: 'asc' }
 
-    assert_equal(%w[Lucien Mark Pascal], assigns(:employees).map { |e| e.member_coach.firstname })
+    assert_equal(%w[Mark Lucien Pascal], assigns(:employees).map { |e| e.member_coach.firstname })
 
     get :index, params: { sort: 'member_coach', sort_dir: 'desc' }
 
-    assert_equal(%w[Pascal Mark Lucien], assigns(:employees).map { |e| e.member_coach.firstname })
+    assert_equal(%w[Pascal Lucien Mark], assigns(:employees).map { |e| e.member_coach.firstname })
   end
 
   test 'GET index with sorting by last employment' do
