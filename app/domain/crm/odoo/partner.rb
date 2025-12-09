@@ -14,7 +14,7 @@ module Crm
       def self.resource(...)
         result = super
 
-        result unless result['is_company']
+        result unless result && result['is_company']
       end
     end
   end

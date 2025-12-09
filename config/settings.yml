@@ -10,21 +10,11 @@
 
 # Array of holidays with a fixed date. [day, month]
 regular_holidays:
-  -
-    - 1
-    - 1
-  -
-    - 2
-    - 1
-  -
-    - 1
-    - 8
-  -
-    - 25
-    - 12
-  -
-    - 26
-    - 12
+  - [1,1]   # Neujahr
+  - [2,1]   # Berchtoldstag
+  - [1,8]   # Bundesfeiertag
+  - [25,12] # 1. Weihnachtstag
+  - [26,12] # Stefanstag
 
 api_client:
   user: <%= ENV['RAILS_API_USER'] || SecureRandom.hex %>
@@ -88,6 +78,7 @@ odoo:
   database: <%= ENV['RAILS_ODOO_DATABASE'] %>
   user: <%= ENV['RAILS_ODOO_USER'] %>
   password: <%= ENV['RAILS_ODOO_PASSWORD'] %>
+  log_resources: <%= ENV['RAILS_ODOO_LOG_RESOURCES'] == 'true' %>
 
 small_invoice:
   url: https://api.smallinvoice.com
@@ -108,6 +99,29 @@ small_invoice:
     unit_id: 1 # hours
     gender_id: 2 # female
 
+# Error Tracker
+error_tracker:
+  type: <%= ENV['RAILS_ERROR_TRACKER'] || 'glitchtip' %>
+  airbrake:
+    host: <%= ENV['RAILS_AIRBRAKE_HOST'] %>
+    port: <%= ENV['RAILS_AIRBRAKE_PORT'] %>
+    api_key: <%= ENV['RAILS_AIRBRAKE_API_KEY'] %>
+  sentry:
+    dsn: <%= ENV['GLITCHTIP_DSN'] || ENV['SENTRY_DSN'] %>
+    env: <%= ENV['SENTRY_CURRENT_ENV'] %>
+
+# App build information
+puzzletime:
+  build:
+    repo: <%= ENV['BUILD_REPO'] %>
+    repo_url: <%= ENV['BUILD_REPO_URL'] %>
+    ref: <%= ENV['BUILD_REF'] %>
+    commit: <%= commit = ENV['BUILD_COMMIT'] %>
+  run:
+    customer: <%= ENV['PTIME_CUSTOMER'] %>
+    project: <%= ENV['PTIME_PROJECT'] %>
+    semver: <%= semver = Puzzletime::VERSION %>
+    full_version: <%= commit ? "#{semver}_#{commit}" : semver %>
 
 # Default values
 defaults:

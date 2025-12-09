@@ -10,7 +10,6 @@
 #  firstname                 :string(255)      not null
 #  lastname                  :string(255)      not null
 #  shortname                 :string(3)        not null
-#  passwd                    :string(255)
 #  email                     :string(255)      not null
 #  management                :boolean          default(FALSE)
 #  initial_vacation_days     :float
@@ -36,6 +35,13 @@
 #  graduation                :string
 #  identity_card_type        :string
 #  identity_card_valid_until :date
+#  encrypted_password        :string           default("")
+#  remember_created_at       :datetime
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  workplace_id              :bigint
+#  worktimes_commit_reminder :boolean          default(TRUE), not null
+#  member_coach_id           :integer
 #
 
 require 'test_helper'
@@ -54,7 +60,7 @@ class EmployeeTest < ActiveSupport::TestCase
     assert_in_delta 12.60, employee.statistics.remaining_vacations(period.end_date), 0.005
     assert_equal 0, employee.statistics.used_vacations(period)
     assert_in_delta 12.60, employee.statistics.total_vacations(period), 0.005
-    assert_equal -127 * 8, employee.statistics.overtime(period)
+    assert_equal(-127 * 8, employee.statistics.overtime(period))
   end
 
   def test_various_employment
@@ -95,7 +101,7 @@ class EmployeeTest < ActiveSupport::TestCase
     assert_in_delta 29.92, employee.statistics.remaining_vacations(period.end_date), 0.005
     assert_equal 0, employee.statistics.used_vacations(period)
     assert_in_delta 29.92, employee.statistics.total_vacations(period), 0.005
-    assert_in_delta((- 387 * 8 * 0.8), employee.statistics.overtime(period), 0.005)
+    assert_in_delta(- 387 * 8 * 0.8, employee.statistics.overtime(period), 0.005)
   end
 
   def test_long_time_employment
@@ -106,7 +112,7 @@ class EmployeeTest < ActiveSupport::TestCase
     assert_in_delta 382.5, employee.statistics.remaining_vacations(period.end_date), 0.005
     assert_equal 0, employee.statistics.used_vacations(period)
     assert_in_delta 382.5, employee.statistics.total_vacations(period), 0.005
-    assert_equal -31_500, employee.statistics.overtime(period)
+    assert_equal(-31_500, employee.statistics.overtime(period))
   end
 
   def test_alltime_leaf_work_items
@@ -154,13 +160,19 @@ class EmployeeTest < ActiveSupport::TestCase
 
     assert_predicate Employee.pending_worktimes_commit, :present?
 
-    Employee.update_all(committed_worktimes_at: Date.today.beginning_of_month - 1.day)
+    Employee.update_all(committed_worktimes_at: Time.zone.today.beginning_of_month - 1.day)
 
     assert_predicate Employee.pending_worktimes_commit, :blank?
 
-    Employee.update_all(committed_worktimes_at: Date.today.beginning_of_month - 2.days)
+    Employee.update_all(committed_worktimes_at: Time.zone.today.beginning_of_month - 2.days)
 
     assert_predicate Employee.pending_worktimes_commit, :present?
+  end
+
+  test '#management scope' do
+    management_employees = Employee.management
+
+    assert management_employees.all?(&:management)
   end
 
   private

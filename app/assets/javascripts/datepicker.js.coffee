@@ -40,6 +40,7 @@ app.datepicker = new class
     $('input.date').each((_i, elem) ->
       $(elem).datepicker($.extend({}, options, {
         changeYear: $(elem).data('changeyear')
+        changeMonth: $(elem).data('changemonth')
         beforeShowDay: unavailableDates($(elem))
       })))
     @bindListeners()

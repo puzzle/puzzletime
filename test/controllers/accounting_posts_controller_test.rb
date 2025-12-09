@@ -348,7 +348,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
     assert_match expected_csv_header, csv_header
 
     assert_equal 1, csv_data_lines.size
-    assert_match 'PITC-PT,100.0,18.0,10.0,92.0,0', csv_data_lines.first
+    assert_match 'PITC-PT,PuzzleTime,100.0,18.0,10.0,92.0,0', csv_data_lines.first
   end
 
   test 'GET export csv with timespan' do
@@ -357,7 +357,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
     assert_match expected_csv_header, csv_header
 
     assert_equal 1, csv_data_lines.size
-    assert_match 'PITC-PT,100.0,6.0,0,92.0,0', csv_data_lines.first
+    assert_match 'PITC-PT,PuzzleTime,100.0,6.0,0,92.0,0', csv_data_lines.first
   end
 
   test 'GET export csv with timespan including non-billable' do
@@ -366,13 +366,13 @@ class AccountingPostsControllerTest < ActionController::TestCase
     assert_match expected_csv_header, csv_header
 
     assert_equal 1, csv_data_lines.size
-    assert_match 'PITC-PT,100.0,16.0,10.0,92.0,0', csv_data_lines.first
+    assert_match 'PITC-PT,PuzzleTime,100.0,16.0,10.0,92.0,0', csv_data_lines.first
   end
 
   private
 
   def expected_csv_header
-    'Position,Budget,Geleistete Stunden,Nicht verrechenbar,Offenes Budget,Geplantes Budget'
+    'Position,Name der Position,Budget,Geleistete Stunden,Nicht verrechenbar,Offenes Budget,Geplantes Budget'
   end
 
   def csv_header

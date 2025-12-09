@@ -62,6 +62,7 @@ module Crm
         @common_endpoint ||= begin
           server = XMLRPC::Client.new2("#{@api_url}/xmlrpc/2/common")
           server.timeout = 10_000
+          server.http.verify_mode = OpenSSL::SSL::VERIFY_NONE if Rails.env.development?
 
           server
         end
@@ -71,6 +72,7 @@ module Crm
         @models_endpoint ||= begin
           server = XMLRPC::Client.new2("#{@api_url}/xmlrpc/2/object")
           server.timeout = 10_000
+          server.http.verify_mode = OpenSSL::SSL::VERIFY_NONE if Rails.env.development?
 
           server
         end.proxy

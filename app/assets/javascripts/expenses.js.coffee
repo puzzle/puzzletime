@@ -25,7 +25,7 @@ $(document).on 'ready, turbolinks:load', ->
   check_file_type = (initial = false) ->
     warning_popup.addClass('hidden')
 
-    return unless receipt_input[0].files.length > 0
+    return unless (typeof receipt_input != "undefined" && receipt_input != null) && receipt_input[0].files.length > 0
     return if     /^image/.test(receipt_input[0].files[0].type)
 
     warning_popup.removeClass('hidden')
