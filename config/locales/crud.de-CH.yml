@@ -3,17 +3,16 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-
 # Translations of all crud strings.
 # See also I18nHelper#translate_inheritable and #translate_association.
 ---
 de-CH:
   # global scope
   global:
-    "yes": "ja"
-    "no": "nein"
-    "true": "ja"
-    "false": "nein"
+    'yes': 'ja'
+    'no': 'nein'
+    'true': 'ja'
+    'false': 'nein'
     no_list_entries: Keine Einträge gefunden.
     confirm_delete: Wollen Sie diesen Eintrag wirklich löschen?
 
@@ -40,43 +39,43 @@ de-CH:
 
     errors:
       header:
-        one: "Ein Fehler verhinderte das Speichern dieses Eintrages:"
-        other: "%{count} Fehler verhinderten das Speichern dieses Eintrages:"
+        one: 'Ein Fehler verhinderte das Speichern dieses Eintrages:'
+        other: '%{count} Fehler verhinderten das Speichern dieses Eintrages:'
 
   # formats
   date:
     formats:
-      long: "%a, %d.%m.%Y"
-      week: "%Y %V"
-      month: "%B %Y"
-      month_only: "%B"
+      long: '%a, %d.%m.%Y'
+      week: '%Y %V'
+      month: '%B %Y'
+      month_only: '%B'
+      short_year: '%d.%m.%y'
   time:
     formats:
-      time: "%H:%M"
+      time: '%H:%M'
 
   # list controller
   list:
     index:
-      title: "%{models}"
+      title: '%{models}'
 
   # crud controller
   crud:
     show:
-      title: "%{model}"
+      title: '%{model}'
     new:
-      title: "%{model} erstellen"
+      title: '%{model} erstellen'
     edit:
-      title: "%{model} bearbeiten"
+      title: '%{model} bearbeiten'
     create:
-      title: "%{model} erstellen"
+      title: '%{model} erstellen'
       flash:
-        success: "%{model} wurde erfolgreich erstellt."
+        success: '%{model} wurde erfolgreich erstellt.'
     update:
-      title: "%{model} bearbeiten"
+      title: '%{model} bearbeiten'
       flash:
-        success: "%{model} wurde erfolgreich aktualisiert."
+        success: '%{model} wurde erfolgreich aktualisiert.'
     destroy:
       flash:
-        success: "%{model} wurde erfolgreich gelöscht."
-        failure: "%{model} konnte nicht gelöscht werden."
-...
+        success: '%{model} wurde erfolgreich gelöscht.'
+        failure: '%{model} konnte nicht gelöscht werden.'
