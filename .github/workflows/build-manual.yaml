@@ -1,29 +1,29 @@
 ---
-name: 'Manual build without tests'
+name: "Manual build without tests"
 
 "on":
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment to build in'
+        description: "Environment to build in"
         required: true
         type: choice
         options:
           - pitc-ptime-int
           - pitc-ptime-prod
           - pude-ptime-prod
-        default: 'pitc-ptime-int'
+        default: "pitc-ptime-int"
       project_name:
-        description: 'Project to build for'
+        description: "Project to build for"
         required: true
         type: choice
         options:
           - pitc-ptime-int
           - pitc-ptime-prod
           - pude-ptime-prod
-        default: 'pitc-ptime-int'
+        default: "pitc-ptime-int"
       push:
-        description: 'Should we push the image to the registry?'
+        description: "Should we push the image to the registry?"
         required: true
         type: boolean
         default: true
@@ -35,8 +35,8 @@ jobs:
       environment: ${{ inputs.environment }}
       project_name: ${{ inputs.project_name  }}
       push: ${{ inputs.push }}
-      registry: registry.puzzle.ch
+      registry: harbor.puzzle.ch
+      registry_url: harbor.puzzle.ch/pitc-ruby-public/ptime/int/rails
     secrets:
       PUZZLE_REGISTRY_USERNAME: ${{ secrets.PUZZLE_REGISTRY_USERNAME }}
       PUZZLE_REGISTRY_TOKEN: ${{ secrets.PUZZLE_REGISTRY_TOKEN }}
-...

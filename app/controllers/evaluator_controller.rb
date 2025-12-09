@@ -45,13 +45,36 @@ class EvaluatorController < ApplicationController
   def report
     prepare_report_header
     conditions = params[:only_billable] ? { worktimes: { billable: true } } : {}
-    render_report(@evaluation.times(@period).includes(:work_item).where(conditions))
+    prepare_worktimes(@evaluation.times(@period).includes(:work_item).where(conditions))
+    time_rapport_data = Order::Services::TimeRapportData.new(order: @order,
+                                                             worktimes: @worktimes,
+                                                             tickets: @tickets,
+                                                             ticket_view: @ticket_view,
+                                                             employees: @employees,
+                                                             employee: @employee,
+                                                             work_items: @work_items,
+                                                             period: @period)
+    pdf_generator = Order::Services::TimeRapportPdfGenerator.new(time_rapport_data, params)
+
+    file_parts = [
+      'zeitrapport',
+      @employee&.shortname&.presence,
+      @work_items[0].top_item.client.shortname,
+      @period.to_s.parameterize
+    ].compact
+
+    filename = "#{file_parts.compact.join('-')}.pdf"
+
+    send_data pdf_generator.generate_pdf.render,
+              filename: filename,
+              type: 'application/pdf',
+              disposition: 'inline'
   end
 
   def export_csv
     set_evaluation_details
-    filename = ['puzzletime', csv_label(@evaluation.category),
-                csv_label(@evaluation.division)].compact.join('-') + '.csv'
+    filename = "#{['puzzletime', csv_label(@evaluation.category),
+                   csv_label(@evaluation.division)].compact.join('-')}.csv"
     times = @evaluation.times(@period)
     send_worktimes_csv(times, filename)
   end
@@ -137,7 +160,6 @@ class EvaluatorController < ApplicationController
     set_evaluation_details
     @employee = Employee.find(@evaluation.employee_id) if @evaluation.employee_id
     @work_items = [WorkItem.find(@evaluation.account_id)]
-    params[:work_item_ids] ||= @work_items
   end
 
   def set_evaluation_details

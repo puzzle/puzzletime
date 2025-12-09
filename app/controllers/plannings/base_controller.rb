@@ -54,6 +54,25 @@ module Plannings
 
     private
 
+    def board_updates(creator)
+      @board = build_board_for(creator.plannings)
+      is_order_board = @board.is_a? Plannings::OrderBoard
+
+      @board.rows.map do |ids, items|
+        period = @board.total_row_planned_hours(*ids, true) if is_order_board
+        {
+          ids: ids,
+          locals: {
+            items: items,
+            legend: @board.row_legend(*ids),
+            row_total: @board.total_row_planned_hours(*ids),
+            row_total_period: period,
+            row_total_overall: is_order_board
+          }
+        }
+      end
+    end
+
     def destroy_plannings
       Planning.transaction do
         @plannings = plannings_to_destroy

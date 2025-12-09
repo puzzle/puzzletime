@@ -15,5 +15,16 @@ class Company
     end
 
     delegate :work_item_id, to: :client
+
+    # If this is used in more places, it might be prudent, to give it a logo domain class
+    def logo_path
+      logo =
+        Settings
+        .company_logo
+        .presence
+        &.then { Rails.root.join("public/images/#{_1}") }
+
+      logo if logo&.exist?
+    end
   end
 end

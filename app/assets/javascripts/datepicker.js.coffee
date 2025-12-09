@@ -22,24 +22,30 @@ app.datepicker = new class
   onSelect = (dateString, instance) =>
     if instance.input.data('format') == 'week'
       date = $.datepicker.parseDate(i18n().dateFormat, dateString)
-      instance.input
-        .val(formatWeek(date))
+      instance.input.val(formatWeek(date))
     instance.input.trigger('change')
 
   options = $.extend({ onSelect, showWeek: true }, i18n())
+
+  unavailableDates = ($input) ->
+    (date) ->
+      if $input.hasClass('only-mondays')
+        return [date.getDay() == 1, '', 'Bitte wähle einen Montag aus']
+      if $input.hasClass('only-fridays')
+        return [date.getDay() == 5, '', 'Bitte wähle einen Freitag aus']
+      [true, '', '']  # allow all dates by default
+
 
   init: ->
     $('input.date').each((_i, elem) ->
       $(elem).datepicker($.extend({}, options, {
         changeYear: $(elem).data('changeyear')
+        changeMonth: $(elem).data('changemonth')
+        beforeShowDay: unavailableDates($(elem))
       })))
     @bindListeners()
 
   formatWeek: formatWeek
-
-  destroy: ->
-    $('input.date').datepicker('destroy')
-    @bindListeners(true)
 
   bindListeners: (unbind) ->
     func = if unbind then 'off' else 'on'
@@ -52,7 +58,16 @@ app.datepicker = new class
       field = field.closest('.input-group').find('.date')
     field.datepicker('show')
 
+
+document.addEventListener "turbolinks:before-cache", ->
+  $.datepicker.dpDiv.remove()
+
+  for element in document.querySelectorAll("input.hasDatepicker")
+    $(element).datepicker("destroy")
+
+document.addEventListener "turbolinks:before-render", (event) ->
+  $.datepicker.dpDiv.appendTo(event.data.newBody)
+
 $(document).on('turbolinks:load', ->
-  app.datepicker.destroy()
   app.datepicker.init()
 )
