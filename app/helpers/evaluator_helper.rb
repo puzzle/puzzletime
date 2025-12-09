@@ -33,21 +33,20 @@ module EvaluatorHelper
 
   # Builds a custom link, can be used for nested URLs
   # Period data can optionally be propagated into URL
-  def build_detail_label_custom(label, period)
-    if label[:include_period_labels]
-      url_options = {
-        start_date: period.start_date,
-        end_date: period.end_date
+  def build_detail_label_custom(label, period = nil)
+    link_props = [
+      label[:resource],
+      label[:child_resource]
+    ]
+
+    if label[:include_period_labels] && period
+      link_props << {
+        end_date: period.end_date.to_s,
+        start_date: period.start_date.to_s
       }
     end
 
-    target_array = [
-      label[:resource],
-      label[:child_resource],
-      url_options
-    ]
-
-    link_to(label[:label], target_array)
+    link_to(label[:label], link_props)
   end
 
   def detail_td(worktime, field)
