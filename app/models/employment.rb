@@ -69,9 +69,7 @@ class Employment < ApplicationRecord
     private
 
     def condition_query(period)
-      [ start_condition(period), end_condition(period)]
-        .compact
-        .join(' AND ')
+      [start_condition(period), end_condition(period)].compact.join(' AND ')
     end
 
     def start_condition(period)

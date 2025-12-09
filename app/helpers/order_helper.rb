@@ -30,7 +30,7 @@ module OrderHelper
   def order_target_rating_icon(rating, options = {})
     options[:style] ||= 'font-size: 20px;'
     add_css_class(options, rating)
-    picon(order_target_icon_key(rating), options)
+    picon(order_target_icon_key[rating], options)
   end
 
   def order_target_icon(target)
@@ -43,12 +43,12 @@ module OrderHelper
     )
   end
 
-  def order_target_icon_key(rating)
-    case rating
-    when 'green' then 'disk'
-    when 'orange' then 'triangle'
-    when 'red' then 'square'
-    end
+  def order_target_icon_key
+    @order_target_icon_key ||= {
+      'green' => 'disk',
+      'orange' => 'triangle',
+      'red' => 'square'
+    }
   end
 
   def format_order_status_style(status)
@@ -120,7 +120,7 @@ module OrderHelper
 
   def choosable_order_options
     managed_orders = current_user.managed_orders.where(work_items: { closed: false }).list.minimal
-    order_option(@order, true) + safe_join(managed_orders) { |o| order_option(o) }
+    safe_join(managed_orders) { |o| order_option(o) } + order_option(@order, true) # @order needs to be last to prevent deselection
   end
 
   def order_option(order, selected = false)

@@ -60,7 +60,7 @@ class EmployeeTest < ActiveSupport::TestCase
     assert_in_delta 12.60, employee.statistics.remaining_vacations(period.end_date), 0.005
     assert_equal 0, employee.statistics.used_vacations(period)
     assert_in_delta 12.60, employee.statistics.total_vacations(period), 0.005
-    assert_equal -127 * 8, employee.statistics.overtime(period)
+    assert_equal(-127 * 8, employee.statistics.overtime(period))
   end
 
   def test_various_employment
@@ -112,7 +112,7 @@ class EmployeeTest < ActiveSupport::TestCase
     assert_in_delta 382.5, employee.statistics.remaining_vacations(period.end_date), 0.005
     assert_equal 0, employee.statistics.used_vacations(period)
     assert_in_delta 382.5, employee.statistics.total_vacations(period), 0.005
-    assert_equal -31_500, employee.statistics.overtime(period)
+    assert_equal(-31_500, employee.statistics.overtime(period))
   end
 
   def test_alltime_leaf_work_items
@@ -160,11 +160,11 @@ class EmployeeTest < ActiveSupport::TestCase
 
     assert_predicate Employee.pending_worktimes_commit, :present?
 
-    Employee.update_all(committed_worktimes_at: Date.today.beginning_of_month - 1.day)
+    Employee.update_all(committed_worktimes_at: Time.zone.today.beginning_of_month - 1.day)
 
     assert_predicate Employee.pending_worktimes_commit, :blank?
 
-    Employee.update_all(committed_worktimes_at: Date.today.beginning_of_month - 2.days)
+    Employee.update_all(committed_worktimes_at: Time.zone.today.beginning_of_month - 2.days)
 
     assert_predicate Employee.pending_worktimes_commit, :present?
   end
