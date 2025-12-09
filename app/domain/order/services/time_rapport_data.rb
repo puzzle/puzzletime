@@ -6,15 +6,10 @@
 #  https://github.com/puzzle/puzzletime.
 
 class Order
-  class Cockpit
-    Cell = Struct.new(:hours, :amount, :link) do
-      def days
-        hours / must_hours_per_day if hours
-      end
-
-      def must_hours_per_day
-        WorkingCondition.todays_value(:must_hours_per_day)
-      end
-    end
+  module Services
+    TimeRapportData = Struct.new(
+      :order, :worktimes, :tickets, :ticket_view,
+      :employees, :employee, :work_items, :period, keyword_init: true
+    )
   end
 end

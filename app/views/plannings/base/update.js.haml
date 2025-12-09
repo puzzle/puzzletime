@@ -8,12 +8,9 @@ App.plannings.selectable.clear();
 App.plannings.selectable.destroy();
 $('#weeks_header_#{dom_id(@board.subject)}').html('#{j(render 'calendar_weeks')}');
 $('#planned_#{dom_id(@board.subject)}').html('#{j(render('header_planned'))}');
-- @board.rows.each do |(employee_id, work_item_id), items|
-  - row = j(render('row',
-                   items: items,
-                   legend: @board.row_legend(employee_id, work_item_id),
-                   row_total: @board.total_row_planned_hours(employee_id, work_item_id)))
-  $('##{planning_row_id(employee_id, work_item_id)}').html('#{row}');
+- @board.rows.each do |ids, items|
+  - html = row_update_html(ids, items)
+  $('##{planning_row_id(*ids)}').html('#{html}');
 
 App.plannings.initWaypoints();
 App.plannings.selectable.init();

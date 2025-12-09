@@ -1,3 +1,74 @@
+# 2.15.2
+
+## Bugfixes und Improvements
+
+* **Odoo Sync**: Der nächtliche Sync von Odoo zu Puzzletime wurde repariert
+* **Odoo Sync**: Sonderzeichen werden jetzt korrekt übernommen
+
+# 2.15.1
+
+### Bugfixes und Improvements
+
+* **Zeitrapport**: Seitenlayout anpassbar
+* **Zeitrapport**: Logikfehler behoben
+* **Rechnungsfilter**: Logikfehler behoben
+* **Browser**: Fehler beim zurückwechseln im Browser behoben
+* **Zeiterfassung**: Zeiterfassung Checkboxen Anzeigefehler behoben, der diese beim Update resettet hat
+* **Zeitrapport**: Zeitstempel in Zeitrapport repariert
+
+# 2.15
+
+### Features, Improvements und Bugfixes
+(aufgrund der Menge nach Thema sortiert)
+
+* **Zeiterfassung**:
+   * Budgetstand anzeigen (#51298):
+        * Bei der Auswahl der Buchungsposition zeigt ein farbiger Punkt die Budget-Situation dieser Buchungsposition an (rot = weniger oder gleich 0% offenes Budget, orange = weniger oder gleich 20% offenes Budget, grün = mehr oder gleich 20% offenes Budget). Nach Auswahl der Buchungsposition erfolgt die Anzeige als Balken (Mouse-over auf Balken: Summe geleistete Stunden  (inkl. nicht verrechenbar) / Budget auf Position (Prozent verbraucht ggü. Budget))
+    * Interne Bemerkungen (#63818): im Zeiterfassungsformular gibt es ein neues Feld "interne Bemerkungen" z.B. für interne Bemerkungen/Argumentation zur Verrechenbarkeit.
+       * Der Feldinhalt wird in den CSV-Export integriert, aber nicht in den Zeitrapport. 
+* **Auftrag / Auftragsmanagement**:
+   * Übergreifend:
+     * UI Probleme die bei der Benutzung von 'Page back' im Browser behoben (z.B. wird das Feld 'Auftrag' nach 'Page Back'nicht mehr dupliziert) (#63952, #63820, #63817, #63994)
+   * Tab "Positionen"
+        * die Zahlen können für einen gewünschten Zeitraum angezeigt werden. Die Summen der geleisteten Stunden, nicht verrechenbaren Stunden und das noch offene Budget werden gemäss gewähltem Zeitraum berechnet und angezeigt (Szenario: beim Monatsabschluss kann der Budgetstand per Ende letzten Monats angezeigt werden). Die Spalten 'Offenes Budget' und 'geplantes Budget' zeigen die Menge ab dem Folgetag des gewählten Ende-Datums (#63950)
+        * Die einzelnen Zellen der Buchungspositionen ('geleistete Stunden' und 'Nicht verrechenbar') enthalten einen Link, welcher zu den entsprechenden Leistungen führt (Wechselt ins Tab 'Leistungen') (#64083)
+        * CSV-Export der Buchungspositionen-Ansicht möglich (#64017)
+        * Herunterscrollen überdeckt das Navigationsmenü bei Aufträgen mit vielen Buchungspositionen nicht mehr (#64143)
+   * Tab "Budget-Controlling"
+        * Beim Mouseover werden die Kosten als formattierte Währung angezeigt sowie zusätzlich die Anzahl Stunden, die hinter diesen Kosten stecken (#63923 & #64180)
+   * Tab "Leistungen"
+        * Das Feld 'Buchungspositionen' ist ein Mehrfachauswahlfeld. Es werden alle gewählten Buchungspositionen übernommen bei Klick auf 'Rechnung erstellen' sowie auch beim Generieren des Zeitrapportes oder CSV-Exports. (#63116)
+        * Die Ansicht der Leistungen und der CSV-Export wurde mit der Spalte 'Stundenansatz' ergänzt (#62594)
+   * neuer Tab "Kosten"
+        * Im neuen Tab 'Kosten' sind alle Spesen und Verpflegungsentschädigungen, die mit dem Auftrag assoziiert sind. Der Tab ist ersichtlich für der/die Auftragsverantwortliche:n des Auftrags und alle User mit dem Flag 'Management' (#62595)
+   * Tab "Planung"
+        * Neben der Summe der geplanten Stunden zum Auftrag werden auch die geplanten Ressourcen innerhalb des gewählten Zeitraumes angezeigt (oben links bei der Summe sowie in der Tabelle pro Member). Die vorhandenen Titel wurden entsprechend angepasst. Da die verwendete Ansicht der Plan-Daten auf Wochen-Basis funktioniert, können die Werte nur von Mo-Fr angezeigt werden. Um die Konsistenz zu gewährleisten, wurde die Zeitraum-Auswahl auf Mo-Fr eingeschränkt. (#63115)
+* **Zeitrapport**
+    * Für mehrere Buchungspositionen möglich (#63116):
+        * Im Auftrag > Tab "Leistungen" ist der Filter "Buchungsposition" ein Mehrfachauswahlfeld, wodurch ein Zeitrapport für mehrere Buchungspositionen erstellt werden kann, ohne zuerst eine Rechnung erstellen zu müssen
+    * Nach Generieren des Zeitrapportes ist das Speichern als PDF möglich (kein PDF-Druck mehr notwendig) (#63194)
+    * Ansprechenderes Design umgesetzt und Firmenlogo eingefügt (#63194)
+    * Die Summe der im Zeitrapport enthaltenen Leistungen wird nur noch zu unterst auf der letzten Seite angezeigt. Der Filename enthält nun auch den Auswertungszeitraum (#63194)
+* **Rechnung erstellen**
+    * Zeitraum-Auswahl (Dieser Monat, Letzter Monat, Vorletzter Monat) analog Tab 'Leistungen' möglich (#63118)
+    * Beim Rechnung erstellen wird unterhalb der CHF-Summe die Summe der verrechenbaren Stunden, die diesen Betrag ergeben und damit in Rechnung gestellt werden, angezeigt (#63117)
+    * Werden im Tab 'Leistungen' die Filter Zeitperiode, Member oder Buchungsposition gesetzt, werden diese bei Klick auf'Rechnung erstellen' für die Rechnung übernommen (#63119)
+    * Die Vorschau des Rechnungsbetrages enthält den richtigen Wert gem. der definierten Rechnungsinhalte (#63819)
+    * Der Link 'Rechnung erstellen' im Tab 'Rechnungen' wird nur noch angezeigt, wenn der  Benutzer die Berechtigung dazu hat (#64080)
+* **Liste Rechnungs-Controlling**
+    * Eine neue Übericht über alle erstellten Rechnungen und deren Status. Filterung nach Zeitperiode, OE, Kunde, Auftragsart, Rechnungsstatus, Auftragsverantwortlicher möglich (#63987)
+* **Liste "Controlling"**
+    * Die Liste 'Controlling' heisst neu Auftrags-Controlling (wegen neuem 'Rechnungs-Controlling') (#63114)
+    * Beim Öffnen wird der Filter OE gemäss der beim eingeloggten User hinterlegten OE vorbelegt (#63114)
+    * Neu gibt es drei vordefinierte Suchlisten (#63114)
+        * Alle (alle Auftragsstatus)
+        * Laufende (nur Status 'Bearbeitung')
+        * Abgeschlossene (nur Status 'Abgeschlossen')
+        * Nur Aufträge mit Zeitenbuchungen oder auch Aufträge ohne Zeitenbuchungen anzeigen zu lassen möglich (#63114)
+    * Sortierung nach Spalte 'Budget-Controlling' möglich (#63925)
+* **Spesen**
+    * In der Liste "Alle Spesen" und im PDF Export der Spesen wird die OE des Members angezeigt (#64084)
+
 # 2.14
 
 ### Features

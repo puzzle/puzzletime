@@ -10,13 +10,12 @@ module WorktimesReport
 
   private
 
-  def render_report(times)
+  def prepare_worktimes(times)
     @worktimes = times.includes(:employee)
     @ticket_view = params[:combine_on] &&
                    %w[ticket ticket_employee].include?(params[:combine])
     combine_times if params[:combine_on] && params[:combine] == 'time'
     combine_tickets if @ticket_view
-    render template: 'worktimes_report/report', layout: 'print'
   end
 
   def combine_times
@@ -87,16 +86,10 @@ module WorktimesReport
   end
 
   def combine_ticket_date_range(date_range, worktime)
-    if date_range[0].nil?
-      date_range[0] = worktime.work_date
-    elsif worktime.work_date < date_range[0]
-      date_range[0] = worktime.work_date
-    end
+    date_range[0] = worktime.work_date if date_range[0].nil? || (worktime.work_date < date_range[0])
 
-    if date_range[1].nil?
-      date_range[1] = worktime.work_date
-    elsif worktime.work_date > date_range[1]
-      date_range[1] = worktime.work_date
-    end
+    return unless date_range[1].nil? || (worktime.work_date > date_range[1])
+
+    date_range[1] = worktime.work_date
   end
 end

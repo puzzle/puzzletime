@@ -8,7 +8,7 @@ $cell-width: 36px;
 $cell-height: 4rem;
 $weekdays: 5;
 $week-width: $cell-width * $weekdays;
-$legend-width: 420px;
+$legend-width: 500px;
 $grey: #ddd;
 $grey-light: #f3f3f3;
 
@@ -151,6 +151,7 @@ body.order_plannings {
 .planning-calendar-days,
 .planning-calendar-days-header,
 .planning-calendar-inner > .groupheader,
+.planning-calendar-inner > .tableheader,
 .planning-calendar-inner > .actions {
   display: flex;
   width: calc(var(--days, 1) * #{$cell-width} + #{$legend-width});
@@ -170,6 +171,7 @@ body.order_plannings {
   }
 }
 .planning-calendar-inner > .groupheader > .legend,
+.planning-calendar-inner > .tableheader > .legend,
 .planning-calendar-inner > .groupheader > .sticky-wrapper > .legend,
 .planning-calendar-inner > .actions > .buttons,
 .planning-calendar-inner > .actions > .sticky-wrapper > .buttons,
@@ -196,9 +198,17 @@ body.order_plannings {
     left: $grid-gutter-width;
   }
 
-  .sum {
+  .col-sum {
+    width: 50%;
     margin-left: auto;
-    white-space: nowrap;
+    justify-content: flex-end;
+    display: flex;
+  }
+
+  .rowtotals {
+    margin-left: auto;
+    display: flex;
+    width: 0.35*$legend-width;
   }
 }
 
@@ -477,4 +487,40 @@ table.company-planning {
 .planning-company-totals {
   color: #000;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.header-planned-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: fit-content;
+}
+
+.header-planned-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 4px;
+}
+
+.header-planned-row:last-child {
+  border-bottom: none;
+}
+
+.header-planned-prefix {
+  font-weight: bold;
+  color: #333;
+  flex: 1;
+}
+
+.header-planned-amount {
+  min-width: 100px;
+  text-align: right;
+  font-weight: bold;
+}
+
+.header-planned-postfix {
+  color: #666;
+  margin-left: 8px;
 }

@@ -36,8 +36,7 @@
             %th.center
               - if Invoicing.instance
                 %th.center
-                - if can?(:sync, e)
-                  %th.center
+                %th.center
 
         %tbody
           - @report.page do |invc|
@@ -62,8 +61,7 @@
               %td
               - if Invoicing.instance
                 %td
-                - if can?(:sync, e)
-                  %td
+                %td
             - else
               %tr
                 %td
@@ -107,10 +105,10 @@
                   = link_to(picon('time'), order_order_services_path(order_id: invc.order.id, invoice_id: invc.id), title: 'Leistungen anzeigen')
                 - if Invoicing.instance
                   %td.center
-                  = link_to(picon('document'), order_invoice_path(order_id: invc.order.id, id: invc.id, format: :pdf), target: :blank, title: 'PDF anzeigen')
-                  - if can?(:sync, e)
-                    %td.center
-                    = link_to(picon('chevron-left'), sync_order_invoice_path(order_id: invc.order.id, id: invc.id), title: 'Daten aus Invoicing übernehmen', data: { method: :put })
+                    = link_to(picon('document'), order_invoice_path(order_id: invc.order.id, id: invc.id, format: :pdf), target: :blank, title: 'PDF anzeigen')
+                  %td.center
+                    - if can?(:sync, invc.invoice)
+                      = link_to(picon('chevron-left'), sync_order_invoice_path(order_id: invc.order.id, id: invc.id), title: 'Daten aus Invoicing übernehmen', data: { method: :put })
 
     %p= paginate @report
 

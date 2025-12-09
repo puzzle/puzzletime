@@ -25,6 +25,10 @@ class app.FormUpdater
     @_bind()    
 
   _bind: ->
+    # unbind action before binding, as else we might
+    # run into problems with turbolinks caching
+    $(document).off(@trigger.event, @trigger.watchedElements)
+
     # use a promise chain to sequentially execute actions
     $(document).on @trigger.event, @trigger.watchedElements, (event) =>
       @actions.reduce (promise, action) ->

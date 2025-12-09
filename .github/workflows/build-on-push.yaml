@@ -23,7 +23,8 @@ jobs:
       environment: pitc-ptime-int
       project_name: pitc-ptime-int
       push: true
-      registry: registry.puzzle.ch
+      registry: harbor.puzzle.ch
+      registry_url: harbor.puzzle.ch/pitc-ruby-public/ptime/int/rails
     secrets:
       PUZZLE_REGISTRY_USERNAME: ${{ secrets.PUZZLE_REGISTRY_USERNAME }}
       PUZZLE_REGISTRY_TOKEN: ${{ secrets.PUZZLE_REGISTRY_TOKEN }}
@@ -45,7 +46,8 @@ jobs:
       environment: pitc-ptime-prod
       project_name: pitc-ptime-prod
       push: true
-      registry: registry.puzzle.ch
+      registry: harbor.puzzle.ch
+      registry_url: harbor.puzzle.ch/pitc-ruby-public/ptime/prod/rails
     secrets:
       PUZZLE_REGISTRY_USERNAME: ${{ secrets.PUZZLE_REGISTRY_USERNAME }}
       PUZZLE_REGISTRY_TOKEN: ${{ secrets.PUZZLE_REGISTRY_TOKEN }}
@@ -60,6 +62,29 @@ jobs:
       dependency_track_url: ${{ secrets.DEPTRACK_URL }}
       dependency_track_api_key: ${{ secrets.DEPTRACK_API_KEY }}
 
+  build-pude-int:
+    needs: [lint, test]
+    uses: ./.github/workflows/reusable-build.yaml
+    with:
+      environment: pude-ptime-int
+      project_name: pude-ptime-int
+      push: true
+      registry: harbor.puzzle.ch
+      registry_url: harbor.puzzle.ch/pitc-ruby-public/ptime-de/int/rails
+    secrets:
+      PUZZLE_REGISTRY_USERNAME: ${{ secrets.PUZZLE_REGISTRY_USERNAME }}
+      PUZZLE_REGISTRY_TOKEN: ${{ secrets.PUZZLE_REGISTRY_TOKEN }}
+
+  sbom-pude-int:
+    needs: build-pude-int
+    uses: ./.github/workflows/reusable-sbom.yaml
+    with:
+      project_name: pude-ptime-int
+      artifact-prefix: pude-
+    secrets:
+      dependency_track_url: ${{ secrets.DEPTRACK_URL }}
+      dependency_track_api_key: ${{ secrets.DEPTRACK_API_KEY }}
+
   build-pude:
     needs: [lint, test]
     uses: ./.github/workflows/reusable-build.yaml
@@ -67,7 +92,8 @@ jobs:
       environment: pude-ptime-prod
       project_name: pude-ptime-prod
       push: true
-      registry: registry.puzzle.ch
+      registry: harbor.puzzle.ch
+      registry_url: harbor.puzzle.ch/pitc-ruby-public/ptime-de/prod/rails
     secrets:
       PUZZLE_REGISTRY_USERNAME: ${{ secrets.PUZZLE_REGISTRY_USERNAME }}
       PUZZLE_REGISTRY_TOKEN: ${{ secrets.PUZZLE_REGISTRY_TOKEN }}

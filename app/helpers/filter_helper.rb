@@ -48,14 +48,16 @@ module FilterHelper
     content_tag(:div, html, class: 'form-group')
   end
 
-  def direct_filter_date(name, label, date)
+  def direct_filter_date(name, label, date, input_html = {})
     direct_filter(name, label) do
       content_tag(:div, class: 'input-group') do
+        default_classes = 'form-control date'
+        merged_classes = [default_classes, input_html[:class]].compact.join(' ')
+        data_attr = { submit: true }.merge(input_html[:data] || {})
+
         text_field_tag(name,
                        date && I18n.l(date),
-                       size: 9,
-                       class: 'form-control date',
-                       data: { submit: true }) +
+                       input_html.merge(class: merged_classes, data: data_attr, size: 9)) +
           content_tag(:div, icon(:calendar), class: 'input-group-addon')
       end
     end
