@@ -12,8 +12,9 @@ module Evaluations
     self.label            = 'Member Zeit'
     self.total_details    = false
 
-    def initialize(department_id = 0)
-      @department_id = department_id.to_i
+    def initialize(emp_search_conditions = {})
+      @department_id = emp_search_conditions[:department_id].to_i
+      @member_coach_id = emp_search_conditions[:member_coach_id].to_i
       super(Employee)
     end
 
@@ -23,12 +24,10 @@ module Evaluations
                   else
                     Employee.employed_ones(Period.current_year)
                   end
+      employees = employees.where(member_coach_id: @member_coach_id) unless @member_coach_id.zero?
+      employees = employees.where(department_id: @department_id) unless @department_id.zero?
 
-      if @department_id.zero?
-        employees
-      else
-        employees.where(department_id: @department_id)
-      end
+      employees
     end
 
     def employee_id
@@ -36,10 +35,16 @@ module Evaluations
     end
 
     def sum_total_times(period = nil)
-      query = if @department_id.zero?
+      query = if @department_id.zero? && @member_coach_id.zero?
                 Worktime.all
-              else
+              elsif @member_coach_id.zero?
                 Department.find(@department_id).employee_worktimes
+              elsif @department_id.zero?
+                Worktime.joins(:employee)
+                        .where(employees: { member_coach_id: @member_coach_id })
+              else
+                Worktime.joins(:employee)
+                        .where(employees: { department_id: @department_id, member_coach_id: @member_coach_id })
               end
       query = query.where(type: worktime_type).in_period(period)
       query_time_sums(query)
