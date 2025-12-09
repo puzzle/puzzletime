@@ -1,0 +1,10 @@
+Hallo <%= @employee_data.firstname %>
+
+Beim Auftrag <%= @employee_data.client %> wurden im letzten Monat verrechenbare Leistungen gebucht, welche noch keiner Rechnung zugeteilt wurden.
+
+Bitte <%= link_to 'überprüfe die Leistungen', order_order_services_url(order_id: @employee_data.order_id, invoice_id: '[leer]') %>
+
+Möchtest du zu einer Buchungsposition künftig keine Erinnerungsmail mehr erhalten, deaktiviere in den Einstellungen der Position die Checkbox "Erinnerung bei unverrechneten Leistungen senden".
+
+Liebe Grüsse
+Dein PuzzleTime
