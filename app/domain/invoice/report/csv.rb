@@ -8,8 +8,6 @@
 class Invoice
   class Report
     class Csv
-      include FormatHelper
-
       attr_reader :report
 
       def initialize(report)
@@ -36,7 +34,7 @@ class Invoice
 
       def row(e)
         [e.reference, client(e), e.period, e.billing_date, e.due_date, format_invoice_status(e.status),
-         e.total_amount, e.total_hours, e.order.department, e.order.responsible, f(e.manual_invoice?)]
+         e.total_amount, e.total_hours, e.order.department, e.order.responsible, I18n.t("global.#{e.manual_invoice?}")]
       end
 
       def client(entry)
