@@ -26,6 +26,15 @@ class EvaluatorControllerTest < ActionController::TestCase
     end
   end
 
+  test 'GET index absences filtered by department' do
+    employees(:various_pedro).update(department: departments(:devone))
+    get :index, params: { evaluation: 'absences', department_id: departments(:devone).id }
+
+    assert_template 'overview'
+
+    assert_equal assigns(:evaluation).divisions.map(&:department_id).uniq, [departments(:devone).id]
+  end
+
   test 'GET export_csv userworkitems csv format' do
     get :export_csv, params: { evaluation: 'userworkitems' }
 
@@ -38,6 +47,15 @@ class EvaluatorControllerTest < ActionController::TestCase
     get :index, params: { evaluation: 'employees' }
 
     assert_template 'employees'
+  end
+
+  test 'GET index filtered by member_coach' do
+    employees(:various_pedro).update(member_coach_id: employees(:mark).id)
+    get :index, params: { evaluation: 'employees', member_coach_id: employees(:mark).id }
+
+    assert_template 'employees'
+
+    assert_equal assigns(:evaluation).divisions.map(&:member_coach_id).uniq, [employees(:mark).id]
   end
 
   %w[clients departments].each do |evaluation|
