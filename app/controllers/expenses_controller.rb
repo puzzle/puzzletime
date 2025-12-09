@@ -110,7 +110,7 @@ class ExpensesController < ManageController
 
   def model_params
     # remove receipt param to prevent processing of original image (will get attached in #attach_resized_receipt)
-    params.require(model_identifier).permit(permitted_attrs).except('receipt')
+    super.except('receipt')
   end
 
   def receipt_param

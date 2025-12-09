@@ -26,10 +26,14 @@
         .weeknav-calendar-row
           = plain_form(Worktime.new, method: :get) do |f|
 
+            :javascript
+              function selectToday() { $('#week_date').value = getDate(); }
+
             .nowrap
               = f.date_field(:work_date,
                              id: 'week_date',
-                             data: { changeyear: true })
+                             data: { changeyear: true,
+                                     changemonth: true })
 
               KW
               = week_number(@selected_date)

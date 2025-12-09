@@ -56,16 +56,25 @@ class EvaluatorController < ApplicationController
                                                              period: @period)
     pdf_generator = Order::Services::TimeRapportPdfGenerator.new(time_rapport_data, params)
 
+    file_parts = [
+      'zeitrapport',
+      @employee&.shortname&.presence,
+      @work_items[0].top_item.client.shortname,
+      @period.to_s.parameterize
+    ].compact
+
+    filename = "#{file_parts.compact.join('-')}.pdf"
+
     send_data pdf_generator.generate_pdf.render,
-              filename: "zeitrapport-#{@employee.shortname}-#{@work_items[0].top_item.client.shortname}-#{@period.to_s.parameterize}.pdf",
+              filename: filename,
               type: 'application/pdf',
               disposition: 'inline'
   end
 
   def export_csv
     set_evaluation_details
-    filename = ['puzzletime', csv_label(@evaluation.category),
-                csv_label(@evaluation.division)].compact.join('-') + '.csv'
+    filename = "#{['puzzletime', csv_label(@evaluation.category),
+                   csv_label(@evaluation.division)].compact.join('-')}.csv"
     times = @evaluation.times(@period)
     send_worktimes_csv(times, filename)
   end
