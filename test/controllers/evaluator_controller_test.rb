@@ -8,7 +8,10 @@
 require 'test_helper'
 
 class EvaluatorControllerTest < ActionController::TestCase
-  setup :login
+  setup do
+    login
+    # set_period(start_date: 1.month.ago, end_date: 1.month.from_now)
+  end
 
   %w[userworkitems userabsences].each do |evaluation|
     test "GET index #{evaluation}" do
@@ -27,12 +30,20 @@ class EvaluatorControllerTest < ActionController::TestCase
   end
 
   test 'GET index absences filtered by department' do
+    set_period(start_date: 1.month.ago, end_date: 1.month.from_now)
     employees(:various_pedro).update(department: departments(:devone))
+    Absencetime.create!({
+                          absence_id: absences(:vacation).id,
+                          employee_id: employees(:various_pedro).id,
+                          work_date: Time.zone.today,
+                          hours: 4,
+                          report_type: 'absolute_day'
+                        })
     get :index, params: { evaluation: 'absences', department_id: departments(:devone).id }
 
     assert_template 'overview'
 
-    assert_equal assigns(:evaluation).divisions.map(&:department_id).uniq, [departments(:devone).id]
+    assert_equal assigns(:evaluation).divisions(nil, assigns(:times)).map(&:department_id).uniq, [departments(:devone).id]
   end
 
   test 'GET export_csv userworkitems csv format' do

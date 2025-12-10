@@ -67,7 +67,7 @@ module Evaluations
 
     # Returns a list of all division objects for the represented category.
     # May be parameterized by a period. This is ignored by default.
-    def divisions(_period = nil)
+    def divisions(_period = nil, _times = nil)
       category.send(division_method).list
     end
 
@@ -154,7 +154,11 @@ module Evaluations
     # Returns the class name of the division objects.
     def division_header
       divs = divisions
-      divs.respond_to?(:klass) ? divs.klass.model_name.human : ''
+      if divs.respond_to?(:klass)
+        divs.klass.model_name.human
+      else
+        respond_to?(:division_header) ? division_header : ''
+      end
     end
 
     # Returns a two-dimensional Array with helper methods of the evaluator
@@ -164,7 +168,7 @@ module Evaluations
     # No methods are called by default.
     # See EmployeeWorkItemsEval for an example.
     def division_supplement(_user)
-      []
+      {}
     end
 
     def sub_work_items_evaluation(division)

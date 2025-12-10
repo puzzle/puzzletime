@@ -140,7 +140,7 @@ class EvaluatorController < ApplicationController
         params[:category_id], Regexp.last_match[1]
       )
       when 'departmentorders'          then Evaluations::DepartmentOrdersEval.new(params[:category_id])
-      when 'absences'                  then Evaluations::AbsencesEval.new(params[:department_id], **worktime_search_conditions)
+      when 'absences'                  then Evaluations::AbsencesEval.new(params[:department_id], sort_conditions, **worktime_search_conditions)
       when 'employeeabsences'          then Evaluations::EmployeeAbsencesEval.new(
         params[:category_id], **worktime_search_conditions
       )
@@ -228,6 +228,12 @@ class EvaluatorController < ApplicationController
     return {} if params[:absence_id].blank?
 
     { absence_id: params[:absence_id] }
+  end
+
+  def sort_conditions
+    return {} if params[:sort].blank?
+
+    params.to_enum.to_h.slice('sort_dir', 'sort')
   end
 
   def authorize_action

@@ -22,7 +22,7 @@ module Evaluations
     end
 
     def division_supplement(_user)
-      []
+      {}
     end
 
     def employee_id
