@@ -34,7 +34,7 @@
                   %strong #{post.work_item.path_shortnames}:
                   =post.work_item.name
                   - if post.work_item.closed
-                    %span.small geschlossen
+                    %span.small (geschlossen)
                 %i.glyphicon.glyphicon-chevron-down
               %small.text-muted{ id: "group_header_times_#{dom_id(post)}" }
                 = render 'accounting_post_total', post: post
