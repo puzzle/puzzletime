@@ -1,8 +1,7 @@
-#  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
+#  Copyright (c) 2006-2025, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
-
 
 # == Schema Information
 #
@@ -18,9 +17,10 @@
 #  billable               :boolean          default(TRUE), not null
 #  description_required   :boolean          default(FALSE), not null
 #  ticket_required        :boolean          default(FALSE), not null
-#  closed                 :boolean          default(FALSE), not null
 #  from_to_times_required :boolean          default(FALSE), not null
+#  closed                 :boolean          default(FALSE), not null
 #  service_id             :integer
+#  meal_compensation      :boolean          default(FALSE), not null
 #
 
 ---
@@ -58,4 +58,3 @@ webauftritt:
   offered_hours: 1000
   offered_rate: 140
   offered_total: 140000
-...
