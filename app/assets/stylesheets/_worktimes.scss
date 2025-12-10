@@ -3,7 +3,6 @@
 //  or later. See the COPYING file at the top-level directory or at
 //  https://github.com/puzzle/puzzletime.
 
-
 $worktimes-weeknav-active-bg: #fff;
 $worktimes-weekcontent-hover-bg: $gray-lighter;
 
@@ -75,7 +74,8 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
     align-items: center;
     font-size: 30px;
 
-    &:hover, &:active {
+    &:hover,
+    &:active {
       text-decoration: none;
     }
   }
@@ -126,7 +126,10 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
     }
 
     .add-other {
-      float: right
+      float: right;
+      &.last-day {
+        color: $brand-red;
+      }
     }
   }
   .weeknav-add-row {
@@ -175,7 +178,8 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
       }
 
       &.today {
-        background: $brand-blue image-url('day-marker-active.svg') 100% 100% no-repeat;
+        background: $brand-blue image-url('day-marker-active.svg') 100% 100%
+          no-repeat;
         color: #fff;
 
         &.active {
@@ -194,7 +198,8 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
       &.holiday {
         background: image-url('day-marker-holiday.svg') 100% 100% no-repeat;
 
-        .weeknav-label, .weeknav-time {
+        .weeknav-label,
+        .weeknav-time {
           color: $gray;
         }
       }
@@ -202,7 +207,7 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
       &.active {
         background-color: $worktimes-weeknav-active-bg;
       }
-   }
+    }
   }
 
   .weeknav-total {
@@ -216,7 +221,8 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
     margin-top: 20px;
     margin-bottom: 480px;
 
-    .date-label, .entry {
+    .date-label,
+    .entry {
       background-color: none;
 
       transition: background-color 400ms ease-in;
@@ -273,7 +279,8 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
       border-top: 1px solid $gray-light;
       @include clearfix;
 
-      &:hover, &:active {
+      &:hover,
+      &:active {
         transition: none;
 
         background-color: $worktimes-weekcontent-hover-bg;
@@ -312,7 +319,8 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
         @extend .col-xs-5;
       }
 
-      .title, .description {
+      .title,
+      .description {
         @include ellipsis(true);
       }
 
@@ -324,7 +332,9 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
         clear: both;
       }
 
-      .time-range, .time-value, .controls {
+      .time-range,
+      .time-value,
+      .controls {
         text-align: right;
       }
 
@@ -348,7 +358,8 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
           font-size: 18px;
         }
 
-        a:hover, a:active {
+        a:hover,
+        a:active {
           text-decoration: none;
         }
       }

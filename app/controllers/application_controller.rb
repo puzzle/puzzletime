@@ -9,14 +9,14 @@
 # Likewise, all the methods added will be available for all controllers.
 
 class ApplicationController < ActionController::Base
-  before_action :set_sentry_request_context
   protect_from_forgery with: :exception
   skip_forgery_protection if: :saml_callback_path? # HACK: https://github.com/heartcombo/devise/issues/5210
 
   # before_action :authenticate
+  before_action :set_error_tracker_request_context
   before_action :store_employee_location!, if: :storable_location?
   before_action :authenticate_employee!
-  before_action :set_sentry_user_context
+  before_action :set_error_tracker_user_context
   before_action :set_paper_trail_whodunnit
   check_authorization unless: :devise_controller?
 
@@ -71,12 +71,22 @@ class ApplicationController < ActionController::Base
     raise ActionController::RoutingError, 'Not Found'
   end
 
-  def set_sentry_request_context
-    Raven.extra_context(params: params.to_unsafe_h, url: request.url) if ENV['SENTRY_DSN']
+  def set_error_tracker_request_context
+    commit = Settings.puzzletime.build.commit
+    project = Settings.puzzletime.run.project
+    customer = Settings.puzzletime.run.customer
+
+    ErrorTracker.set_tags(commit:) if commit
+    ErrorTracker.set_tags(project:) if project
+    ErrorTracker.set_tags(customer:) if customer
   end
 
-  def set_sentry_user_context
-    Raven.user_context(id: current_user.try(:id), name: current_user.try(:shortname)) if ENV['SENTRY_DSN']
+  def set_error_tracker_user_context
+    ErrorTracker.set_user(
+      id: current_user.try(:id),
+      username: current_user.try(:shortname),
+      email: current_user.try(:email)
+    )
   end
 
   def saml_callback_path?

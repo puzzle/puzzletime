@@ -257,16 +257,12 @@ module Crm
           #{error.backtrace.join("\n  ")}
       ERROR
 
-      Airbrake.notify(error, parameters) if airbrake?
-      Raven.capture_exception(error, extra: parameters) if sentry?
+      ErrorTracker.report_exception(error, parameters)
     end
 
     def false_to_nil(hash)
       hash.transform_values { |v| v || nil }
     end
-
-    def airbrake? = ENV['RAILS_AIRBRAKE_HOST'].present?
-    def sentry? = ENV['SENTRY_DSN'].present?
 
     def record_to_params(record, prefix = 'record')
       {

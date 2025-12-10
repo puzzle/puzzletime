@@ -15,7 +15,7 @@ class EvaluatorControllerTest < ActionController::TestCase
       get :index, params: { evaluation: }
 
       assert_template evaluation == 'userworkitems' ? 'overview_employee' : 'overview'
-      assert_equal %w[-2m -1m 0m -1y 0y 0].map { |p| Period.parse(p) }, assigns(:periods)
+      assert_equal all_periods, assigns(:periods)
     end
 
     test "GET export csv #{evaluation}" do
@@ -24,6 +24,15 @@ class EvaluatorControllerTest < ActionController::TestCase
       assert_csv_http_headers('puzzletime-waber_mark.csv')
       assert_match expected_csv_header, csv_header
     end
+  end
+
+  test 'GET index absences filtered by department' do
+    employees(:various_pedro).update(department: departments(:devone))
+    get :index, params: { evaluation: 'absences', department_id: departments(:devone).id }
+
+    assert_template 'overview'
+
+    assert_equal assigns(:evaluation).divisions.map(&:department_id).uniq, [departments(:devone).id]
   end
 
   test 'GET export_csv userworkitems csv format' do
@@ -38,6 +47,15 @@ class EvaluatorControllerTest < ActionController::TestCase
     get :index, params: { evaluation: 'employees' }
 
     assert_template 'employees'
+  end
+
+  test 'GET index filtered by member_coach' do
+    employees(:various_pedro).update(member_coach_id: employees(:mark).id)
+    get :index, params: { evaluation: 'employees', member_coach_id: employees(:mark).id }
+
+    assert_template 'employees'
+
+    assert_equal assigns(:evaluation).divisions.map(&:member_coach_id).uniq, [employees(:mark).id]
   end
 
   %w[clients departments].each do |evaluation|
@@ -75,6 +93,10 @@ class EvaluatorControllerTest < ActionController::TestCase
   end
 
   private
+
+  def all_periods
+    @all_periods ||= %w[-2m -1m 0m -1y 0y 0].map { |p| Period.parse(p) }
+  end
 
   def expected_csv_header
     'Datum,Stunden,Von Zeit,Bis Zeit,CHF,Stundenansatz CHF,Reporttyp,Verrechenbar,Member,Position,Ticket,Bemerkungen'
