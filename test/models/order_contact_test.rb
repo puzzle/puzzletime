@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
+#  Copyright (c) 2006-2025, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
@@ -9,7 +9,6 @@
 #
 # Table name: order_contacts
 #
-#  false      :integer          not null, primary key
 #  contact_id :integer          not null
 #  order_id   :integer          not null
 #  comment    :string

@@ -1,18 +1,23 @@
+#  Copyright (c) 2006-2025, Puzzle ITC GmbH. This file is part of
+#  PuzzleTime and licensed under the Affero General Public License version 3
+#  or later. See the COPYING file at the top-level directory or at
+#  https://github.com/puzzle/puzzletime.
+
 # == Schema Information
 #
 # Table name: expenses
 #
-#  id                 :bigint(8)        not null, primary key
-#  employee_id        :bigint(8)        not null
+#  id                 :bigint           not null, primary key
+#  employee_id        :bigint           not null
 #  kind               :integer          not null
 #  status             :integer          default("pending"), not null
 #  amount             :decimal(12, 2)   not null
 #  payment_date       :date             not null
 #  description        :text             not null
 #  reason             :text
-#  reviewer_id        :bigint(8)
+#  reviewer_id        :bigint
 #  reviewed_at        :datetime
-#  order_id           :bigint(8)
+#  order_id           :bigint
 #  reimbursement_date :date
 #  submission_date    :date
 #
@@ -68,4 +73,3 @@ payed:
   reimbursement_date: 2019-02-01
   reviewer_id: 7
   reviewed_at: 2019-01-20 14:32:00
-...
