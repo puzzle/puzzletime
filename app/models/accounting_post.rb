@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
+#  Copyright (c) 2006-2025, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
@@ -19,9 +19,10 @@
 #  billable               :boolean          default(TRUE), not null
 #  description_required   :boolean          default(FALSE), not null
 #  ticket_required        :boolean          default(FALSE), not null
-#  closed                 :boolean          default(FALSE), not null
 #  from_to_times_required :boolean          default(FALSE), not null
+#  closed                 :boolean          default(FALSE), not null
 #  service_id             :integer
+#  meal_compensation      :boolean          default(FALSE), not null
 #
 
 class AccountingPost < ApplicationRecord
