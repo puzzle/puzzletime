@@ -36,7 +36,7 @@ jobs:
       project_name: ${{ inputs.project_name  }}
       push: ${{ inputs.push }}
       registry: harbor.puzzle.ch
-      registry_url: harbor.puzzle.ch/pitc-ruby-public/ptime/int/rails
+      # registry_url: ${{ vars.REGISTRY_URL }}
     secrets:
       PUZZLE_REGISTRY_USERNAME: ${{ secrets.PUZZLE_REGISTRY_USERNAME }}
       PUZZLE_REGISTRY_TOKEN: ${{ secrets.PUZZLE_REGISTRY_TOKEN }}

@@ -1,3 +1,12 @@
+# 2.15.3
+
+### Bugfixes
+* **Odoo Sync**: Handling für leere Rückgabewerte von Odoo repariert
+* **Spesen**: Projektauswahl repariert
+
+### Imrpovements
+* **Odoo Sync**: CRM Keys werden bereinigt vor der Synchronisation bereinigt
+
 # 2.15.2
 
 ### Bugfixes und Improvements
