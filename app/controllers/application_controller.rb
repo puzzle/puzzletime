@@ -59,7 +59,7 @@ class ApplicationController < ActionController::Base
     p = session[:period]
     return unless p.is_a? Array
 
-    @period = Period.new(*p)
+    @period = Period.new(*p) if p.is_a?(Array)
   end
 
   def sanitized_back_url

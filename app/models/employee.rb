@@ -122,6 +122,8 @@ class Employee < ApplicationRecord
                                    }
   scope :active_employed_last_month, -> { joins(:employments).merge(Employment.active.during(Period.previous_month)) }
 
+  attr_accessor :remaining_vacations, :sort_col # used for multiabsence and not persisted
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable,
@@ -250,6 +252,7 @@ class Employee < ApplicationRecord
 
   # Returns the employement at the given date, nil if none is present.
   def employment_at(date)
+    date = Date.parse(date) if date.is_a? String
     employments.find_by('start_date <= ? AND (end_date IS NULL OR end_date >= ?)', date, date)
   end
 
