@@ -9,7 +9,7 @@
 
 - if can?(:reports, Order)
   = nav 'Auftrags-Controlling',
-        reports_orders_path(clear: 1),
+        reports_orders_path(clear: 1, status_preselection: 'not_closed'),
         reports_orders_path
 
 - if can?(:managed, Evaluations::Evaluation)
