@@ -20,6 +20,35 @@ module EvaluatorHelper
     end
   end
 
+  # Builds a label and link to the given item
+  # prefix (text before link) and link_text can optionally be overwritten
+  def build_detail_label(item, prefix = nil, link_text = nil)
+    return '' if item.nil? || item.is_a?(Class)
+
+    prefix ||= item.class.model_name.human
+    link = assoc_link(item, link_text)
+
+    safe_join([prefix, ': ', link])
+  end
+
+  # Builds a custom link, can be used for nested URLs
+  # Period data can optionally be propagated into URL
+  def build_detail_label_custom(label, period = nil)
+    link_props = [
+      label[:resource],
+      label[:child_resource]
+    ]
+
+    if label[:include_period_labels] && period
+      link_props << {
+        end_date: period.end_date.to_s,
+        start_date: period.start_date.to_s
+      }
+    end
+
+    link_to(label[:label], link_props)
+  end
+
   def detail_td(worktime, field)
     case field
     when :work_date then content_tag(:td, f(worktime.work_date), class: 'right nowrap', style: 'width: 160px;')
@@ -40,8 +69,10 @@ module EvaluatorHelper
     end
   end
 
-  def times_or_plannings?(evaluation, division, times)
-    @periods.each_with_index.any? do |_p, i|
+  def times_or_plannings?(evaluation, division, times = @times, periods = @periods)
+    periods.each_with_index.any? do |_p, i|
+      next unless times && times[i] && !times[i].empty?
+
       time = times[i][division.id]
       val = (time.is_a?(Hash) ? time[:hours] : time).to_f
       if evaluation.planned_hours
@@ -67,13 +98,13 @@ module EvaluatorHelper
     format_hour(value)
   end
 
-  def remaining_vacations(employee)
+  def remaining_vacations(employee, format: true)
     value = if @period
               employee.statistics.remaining_vacations(@period.end_date)
             else
               employee.statistics.current_remaining_vacations
             end
-    format_days(value)
+    format ? format_days(value) : value
   end
 
   def overtime_vacations_tooltip(employee)

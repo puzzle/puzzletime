@@ -21,8 +21,9 @@
         %th.periodHead{colspan: evaluation.class.planned_hours ? 3 : nil}
           = p ? p.label : 'Total'
           &nbsp; &nbsp;
-      - evaluation.division_supplement(@user).each do |supp|
-        %th= supp[1]
+      - evaluation.division_supplement(@user).each do |_key, supp|
+        %th
+          = supp[:sortable] ? sort_link(:vacation, supp[:title]) : supp[:title]
     - if evaluation.class.planned_hours
       %tr
         %th.subhead
@@ -35,12 +36,12 @@
             Geplant
           %th.subhead.period-subhead
             Abweichung
-        - evaluation.division_supplement(@user).each do |supp|
+        - evaluation.division_supplement(@user).each do |_key, _supp|
           %th.subhead
 
   %tbody
     = render(partial: 'division',
-             collection: evaluation.divisions(@period),
+             collection: evaluation.divisions(@period, times),
              locals: { evaluation: evaluation,
                        evaluation_name: evaluation_name,
                        times: times })
@@ -54,5 +55,5 @@
                collection: collect_times(evaluation, @periods, :sum_total_times),
                locals: { evaluation: evaluation,
                          evaluation_name: evaluation_name })
-      - evaluation.division_supplement(@user).each do |supp|
+      - evaluation.division_supplement(@user).each do |_key, _supp|
         %th

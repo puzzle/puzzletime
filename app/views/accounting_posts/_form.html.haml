@@ -44,3 +44,4 @@
       .col-md-2
       .help-block.col-md-5
         Die Einstellungen zur Beschreibung, Ticket oder Von-Bis-Zeiten können nicht geändert werden, da bereits Leistungen ohne diese Angaben erfasst wurden.
+  = f.labeled_input_field :billing_reminder_active, html_options = {caption: 'Erinnerung bei unverrechneten Leistungen senden', title: "Am 10. Tag des Monats wird eine Mail an den/die Auftragsverantwortliche:n gesendet, wenn im Vormonat verrechenbare Leistungen auf diese Position gebucht wurden, die keiner Rechnung zugewiesen sind", data: {toggle: :tooltip}}

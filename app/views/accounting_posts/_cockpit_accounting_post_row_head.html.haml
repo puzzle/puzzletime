@@ -11,7 +11,7 @@
                    row.shortnames,
                    edit_order_accounting_post_path(@order, row.accounting_post))
       - if row.accounting_post.closed?
-        %span.small geschlossen
+        %span.subtle-hint geschlossen
       - unless row.accounting_post.billable
         %i.options-icon.icon-dollar-stroke
       - if Settings.meal_compensation.active
