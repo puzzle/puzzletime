@@ -119,6 +119,10 @@ class Order < ApplicationRecord
     name
   end
 
+  def crm_key_with_label
+    [crm_key, name].compact.join(': ')
+  end
+
   def default_billing_address_id
     billing_address_id || client.billing_addresses.list.pick(:id)
   end
