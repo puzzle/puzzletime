@@ -9,20 +9,20 @@
 #
 # Table name: accounting_posts
 #
-#  id                     :integer          not null, primary key
-#  work_item_id           :integer          not null
-#  portfolio_item_id      :integer
-#  offered_hours          :float
-#  offered_rate           :decimal(12, 2)
-#  offered_total          :decimal(12, 2)
-#  remaining_hours        :integer
-#  billable               :boolean          default(TRUE), not null
-#  description_required   :boolean          default(FALSE), not null
-#  ticket_required        :boolean          default(FALSE), not null
-#  from_to_times_required :boolean          default(FALSE), not null
-#  closed                 :boolean          default(FALSE), not null
-#  service_id             :integer
-#  meal_compensation      :boolean          default(FALSE), not null
+#  id                      :integer          not null, primary key
+#  work_item_id            :integer          not null
+#  portfolio_item_id       :integer
+#  offered_hours           :float
+#  offered_rate            :decimal(12, 2)
+#  offered_total           :decimal(12, 2)
+#  remaining_hours         :integer
+#  billable                :boolean          default(TRUE), not null
+#  description_required    :boolean          default(FALSE), not null
+#  ticket_required         :boolean          default(FALSE), not null
+#  from_to_times_required  :boolean          default(FALSE), not null
+#  closed                  :boolean          default(FALSE), not null
+#  service_id              :integer
+#  billing_reminder_active :boolean          default(TRUE), not null
 #
 
 Fabricator(:accounting_post) do
