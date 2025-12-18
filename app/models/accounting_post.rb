@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
+#  Copyright (c) 2006-2025, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
@@ -9,19 +9,21 @@
 #
 # Table name: accounting_posts
 #
-#  id                     :integer          not null, primary key
-#  work_item_id           :integer          not null
-#  portfolio_item_id      :integer
-#  offered_hours          :float
-#  offered_rate           :decimal(12, 2)
-#  offered_total          :decimal(12, 2)
-#  remaining_hours        :integer
-#  billable               :boolean          default(TRUE), not null
-#  description_required   :boolean          default(FALSE), not null
-#  ticket_required        :boolean          default(FALSE), not null
-#  closed                 :boolean          default(FALSE), not null
-#  from_to_times_required :boolean          default(FALSE), not null
-#  service_id             :integer
+#  id                      :integer          not null, primary key
+#  work_item_id            :integer          not null
+#  portfolio_item_id       :integer
+#  offered_hours           :float
+#  offered_rate            :decimal(12, 2)
+#  offered_total           :decimal(12, 2)
+#  remaining_hours         :integer
+#  billable                :boolean          default(TRUE), not null
+#  description_required    :boolean          default(FALSE), not null
+#  ticket_required         :boolean          default(FALSE), not null
+#  closed                  :boolean          default(FALSE), not null
+#  from_to_times_required  :boolean          default(FALSE), not null
+#  service_id              :integer
+#  billing_reminder_active :boolean          default(TRUE), not null
+#  meal_compensation       :boolean          default(FALSE), not null
 #
 
 class AccountingPost < ApplicationRecord

@@ -3,7 +3,6 @@
 //  or later. See the COPYING file at the top-level directory or at
 //  https://github.com/puzzle/puzzletime.
 
-
 .orders-header {
   padding: 15px $grid-gutter-width 0 $grid-gutter-width;
   background-color: $gray-lighter;
@@ -53,7 +52,6 @@ h1.top {
 }
 
 .orders-cockpit {
-  
   .cockpit-header {
     @include clearfix;
     margin: 0 auto;
@@ -87,7 +85,9 @@ h1.top {
     }
   }
 
-  .title, .figure, .unit {
+  .title,
+  .figure,
+  .unit {
     color: $gray-darker;
   }
 
@@ -111,7 +111,8 @@ h1.top {
     }
   }
 
-  .figure-label, .unit {
+  .figure-label,
+  .unit {
     font-size: 12px;
     font-weight: 400;
   }
@@ -138,11 +139,13 @@ h1.top {
         border-bottom: 1px solid $gray-light;
       }
 
-      [class^="icon-"], [class*=" icon-"] {
+      [class^='icon-'],
+      [class*=' icon-'] {
         color: $brand-primary;
       }
     }
-    td, th {
+    td,
+    th {
       width: 170px;
       min-width: 170px;
       padding: $cell-padding;
@@ -150,7 +153,7 @@ h1.top {
     }
 
     td {
-      height: ($row-line-height*3) + ($cell-padding*3);
+      height: ($row-line-height * 3) + ($cell-padding * 3);
       vertical-align: top;
     }
 
@@ -173,7 +176,8 @@ h1.top {
     width: $static-width;
     @include box-shadow(10px 0 5px -2px rgba(208, 208, 208, 0.4));
 
-    .title, .subtitle {
+    .title,
+    .subtitle {
       height: $row-line-height;
     }
 
@@ -191,7 +195,9 @@ h1.top {
 
     table {
       width: 100%;
-      th, td, td .data-item {
+      th,
+      td,
+      td .data-item {
         text-align: right;
       }
 
@@ -213,7 +219,8 @@ h1.top {
   }
 }
 
-.orders-report {
+.orders-report,
+.billing-report {
   > thead {
     position: sticky;
     top: 0;
@@ -239,10 +246,10 @@ h1.top {
       font-weight: 400;
     }
 
-    .figure, .unit {
+    .figure,
+    .unit {
       color: $gray-darker;
     }
-
   }
 }
 
