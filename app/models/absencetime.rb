@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
+#  Copyright (c) 2006-2025, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
@@ -9,20 +9,22 @@
 #
 # Table name: worktimes
 #
-#  id              :integer          not null, primary key
-#  absence_id      :integer
-#  employee_id     :integer
-#  report_type     :string(255)      not null
-#  work_date       :date             not null
-#  hours           :float
-#  from_start_time :time
-#  to_end_time     :time
-#  description     :text
-#  billable        :boolean          default(TRUE)
-#  type            :string(255)
-#  ticket          :string(255)
-#  work_item_id    :integer
-#  invoice_id      :integer
+#  id                   :integer          not null, primary key
+#  absence_id           :integer
+#  employee_id          :integer
+#  report_type          :string(255)      not null
+#  work_date            :date             not null
+#  hours                :float
+#  from_start_time      :time
+#  to_end_time          :time
+#  description          :text
+#  billable             :boolean          default(TRUE)
+#  type                 :string(255)
+#  ticket               :string(255)
+#  work_item_id         :integer
+#  invoice_id           :integer
+#  meal_compensation    :boolean          default(FALSE), not null
+#  internal_description :text
 #
 
 class Absencetime < Worktime

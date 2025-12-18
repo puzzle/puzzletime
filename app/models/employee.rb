@@ -252,6 +252,7 @@ class Employee < ApplicationRecord
 
   # Returns the employement at the given date, nil if none is present.
   def employment_at(date)
+    date = Date.parse(date) if date.is_a? String
     employments.find_by('start_date <= ? AND (end_date IS NULL OR end_date >= ?)', date, date)
   end
 
