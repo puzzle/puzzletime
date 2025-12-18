@@ -23,6 +23,7 @@
 #  from_to_times_required  :boolean          default(FALSE), not null
 #  service_id              :integer
 #  billing_reminder_active :boolean          default(TRUE), not null
+#  meal_compensation       :boolean          default(FALSE), not null
 #
 
 class AccountingPost < ApplicationRecord
