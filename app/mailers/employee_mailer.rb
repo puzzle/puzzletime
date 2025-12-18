@@ -17,4 +17,13 @@ class EmployeeMailer < ApplicationMailer
       subject: 'PuzzleTime Zeiten freigeben'
     )
   end
+
+  def not_billed_times_reminder_mail(employee_data)
+    @employee_data = employee_data
+
+    mail(
+      to: "#{employee_data.firstname} #{employee_data.lastname} <#{employee_data.email}>",
+      subject: "PTime: #{employee_data.client} - nicht verrechnete Leistungen im letzten Monat gefunden"
+    )
+  end
 end
