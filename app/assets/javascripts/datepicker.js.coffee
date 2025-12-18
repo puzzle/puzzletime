@@ -42,6 +42,8 @@ app.datepicker = new class
         changeYear: $(elem).data('changeyear')
         changeMonth: $(elem).data('changemonth')
         beforeShowDay: unavailableDates($(elem))
+        dateFormat: 'dd.mm.yy'
+        setDate: $(elem).val()
       })))
     @bindListeners()
 
