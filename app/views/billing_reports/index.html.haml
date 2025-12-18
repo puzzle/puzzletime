@@ -4,7 +4,12 @@
 -#  https://github.com/puzzle/puzzletime.
 
 
-= render 'manage/actions_index'
+%ul.nav.nav-tabs{ role: 'tablist' }
+- @title ||= 'Verrechnungs-Controlling'
 
-- if can?(:read, Contact)
-  = action_link('Kontakte', client_contacts_path(@client))
+%p= render 'filters'
+
+.list
+  = render 'list'
+
+  = render 'actions'
