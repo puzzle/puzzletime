@@ -27,21 +27,17 @@ module WorktimesCsv
 
   def header(stripped = false)
     header = ['Datum', 'Stunden', 'Von Zeit', 'Bis Zeit', 'CHF', 'Stundenansatz CHF', 'Reporttyp',
-     'Verrechenbar', 'Member', 'Position', 'Ticket', 'Bemerkungen']
-    unless stripped
-      header << 'Interne Bemerkungen'
-    end
+              'Verrechenbar', 'Member', 'Position', 'Ticket', 'Bemerkungen']
+    header << 'Interne Bemerkungen' unless stripped
     header
   end
 
-  def row(e, stripped = false)
-    data = [I18n.l(e.work_date), e.hours, (e.start_stop? ? I18n.l(e.from_start_time, format: :time) : ''),
-     (e.start_stop? && e.to_end_time? ? I18n.l(e.to_end_time, format: :time) : ''),
-     amount(e), offered_rate(e), e.report_type, e.billable, e.employee.label, e.account.label_verbose,
-     e.ticket, e.description]
-    unless stripped
-      data << e.internal_description
-    end
+  def row(time, stripped = false)
+    data = [I18n.l(time.work_date), time.hours, (time.start_stop? ? I18n.l(time.from_start_time, format: :time) : ''),
+            (time.start_stop? && time.to_end_time? ? I18n.l(time.to_end_time, format: :time) : ''),
+            amount(time), offered_rate(time), time.report_type, time.billable, time.employee.label, time.account.label_verbose,
+            time.ticket, time.description]
+    data << time.internal_description unless stripped
     data
   end
 
