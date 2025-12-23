@@ -33,7 +33,7 @@ class OrderServicesController < ApplicationController
   end
 
   def export_worktimes_csv
-    stripped = params[:stripped] == "true"
+    stripped = params[:stripped] == 'true'
     set_period
     @worktimes = list_worktimes(@period).includes(:work_item)
     send_worktimes_csv(@worktimes, worktimes_csv_filename, stripped)
