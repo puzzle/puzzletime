@@ -46,6 +46,7 @@ wt_pz_puzzletime:
   type: Ordertime
   billable: true
   ticket: rc1
+  internal_description: 'Some sensitive data'
 
 wt_pz_webauftritt:
   id: 3
