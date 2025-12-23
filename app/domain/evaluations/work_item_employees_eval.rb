@@ -28,8 +28,11 @@ module Evaluations
 
     ####### overwritten methods for working with work item hierarchies
 
-    def category_label
-      "Position: #{category.top? ? category.label : category.label_verbose}"
+    def header_info_labels
+      [
+        { item: category, link_text: category.top? ? category.label : category.label_verbose },
+        { item: division }
+      ]
     end
 
     def worktime_query(receiver, period = nil, division = nil)
@@ -43,10 +46,10 @@ module Evaluations
     end
 
     def division_supplement(_user)
-      [
-        [:worktime_commits_readonly, 'Freigabe', 'left'],
-        [:worktime_reviews_readonly, 'Kontrolle', 'left']
-      ]
+      {
+        worktime_commits_readonly: { title: 'Freigabe' },
+        worktime_reviews_readonly: { title: 'Kontrolle' }
+      }
     end
   end
 end

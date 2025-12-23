@@ -6,11 +6,14 @@
 
 - @title = "#{@evaluation.worktime_name} Details #{@period.to_s}"
 
-%h3= @evaluation.category_label
-%h3= @evaluation.division_label
+- @evaluation.header_info_labels.each do |label|
+  %p= build_detail_label(label[:item], prefix=label[:prefix], link_text=label[:link_text])
+
+- @evaluation.header_info_labels_custom.each do |custom_label|
+  %p= build_detail_label_custom(custom_label, @period)
 
 - if @absence
-  %h3
+  %p
     Absenztyp:
     = @absence
 
