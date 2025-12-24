@@ -133,7 +133,8 @@ class Employment < ApplicationRecord
   def needs_vacation_days_confirmation?
     latest = Employment.where(employee_id: employee_id)
                        .order(start_date: :desc).first
-    return false unless latest&.end_date && (latest.end_date < Time.zone.today - 1.year)
+    return false unless latest
+    return false if latest.end_date && latest.end_date < 1.year.ago.to_date
 
     latest.vacation_days_per_year.present? && vacation_days_per_year.blank?
   end
