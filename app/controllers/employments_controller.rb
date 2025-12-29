@@ -54,10 +54,10 @@ class EmploymentsController < ManageController
   end
 
   def check_vacation_days_set
-    if entry.needs_vacation_days_confirmation? && !params[:confirmed]
-      @needs_confirmation = true
-      throw :abort
-    end
+    return unless entry.needs_vacation_days_confirmation? && !params[:confirmed]
+
+    @needs_confirmation = true
+    throw :abort
   end
 
   def check_percent
