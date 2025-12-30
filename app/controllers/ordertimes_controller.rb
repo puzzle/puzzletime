@@ -11,6 +11,15 @@ class OrdertimesController < WorktimesController
 
   after_destroy :send_email_notification
 
+  def create
+    repetitions = params[:ordertime][:repetitions].to_i.nonzero? || 1
+    if repetitions > 1
+      create_multi_ordertime
+    else
+      super
+    end
+  end
+
   def update
     if entry.employee_id == @user.id && !entry.worktimes_committed?
       super
@@ -55,6 +64,18 @@ class OrdertimesController < WorktimesController
   end
 
   protected
+
+  def create_multi_ordertime
+    @multi_ordertime = Forms::MultiOrdertime.new(params.require(:ordertime).permit(permitted_attrs + [:repetitions]))
+    @multi_ordertime.employee = Employee.find_by(id: employee_id)
+
+    if(ordertimes = @multi_ordertime.save)
+      flash[:notice] = "#{ordertimes.length} Arbeitszeiten wurden erfasst"
+      redirect_to action: 'index'
+    else
+      render :new, status: :unprocessable_entity
+    end
+  end
 
   def set_worktime_defaults
     @worktime.work_item_id ||= params[:account_id]
