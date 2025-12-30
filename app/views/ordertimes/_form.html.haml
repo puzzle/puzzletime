@@ -40,10 +40,17 @@
   = f.labeled_input_field(:ticket, span: 2)
   = f.labeled_text_area(:description)
   = f.labeled_text_area(:internal_description, html_options = {title: "Wird innerhalb von PuzzleTime und im CSV-Export angezeigt, ist im Zeitrapport jedoch nicht enthalten", data: {toggle: :tooltip}, rows: 2},)
-  = f.labeled_date_field(:work_date,
+  .form-group
+    = f.label(:work_date, class: 'col-md-2 control-label')
+    .col-md-2
+      = f.date_field(:work_date,
                          data: { remote: true,
                                  url: url_for(action: 'existing'),
                                  dynamic_params: 'ordertime[employee_id]' })
+    = f.label(:repetitions, 'Tägliche Wiederholungen', class: 'col-md-2 control-label')
+    .col-md-1
+      -# TODO helper function um max Tage basierend auf wochentag zu berechnen
+      = f.number_field(:repetitions, html_options = {title: "Wiederholung an über aufeinander folgenden Tagen", data: {toggle: :tooltip}, value: 1, min: 1, max: 5})
   .form-group
     = f.label(:hours, class: 'col-md-2 control-label')
     .col-md-1
