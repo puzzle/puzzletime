@@ -36,41 +36,25 @@ module Forms
       Period.new(work_date, end_date)
     end
 
-    def save
-      return false unless valid?
+    def prepare_each
+      return enum_for(:prepare_each) unless block_given?
 
-      ordertimes = []
       period.step do |date|
         employment = employee.employment_at(date)
-        ordertimes << build_ordertime(date) if employment
-      end
+        next unless employment
 
-      Ordertime.transaction { ordertimes.each(&:save!) }
-      ordertimes
-    rescue ActiveRecord::RecordInvalid
-      false
+        yield build_params(date)
+      end
     end
 
     private
 
-    def build_ordertime(date)
-      shared_attrs = attributes.slice('account_id', 'ticket', 'description', 'internal_description', 'billable')
+    def build_params(date)
+      p = attributes.except('repetitions')
+      p['work_date'] = date
 
-      Ordertime.new(shared_attrs).tap do |ot|
-        ot.work_date = date
-        ot.employee  = employee
-
-        if start_stop?
-          ot.report_type     = ReportType::StartStopType::INSTANCE
-          ot.from_start_time = from_start_time
-          ot.to_end_time     = to_end_time
-        else
-          ot.report_type     = ReportType::HoursDayType::INSTANCE
-          ot.hours           = hours
-        end
-      end
+      ActionController::Parameters.new(ordertime: p)
     end
-
   end
 end
 
