@@ -29,11 +29,14 @@ app.worktimes = new class
     $('#multi').hide()
     e.preventDefault() if e
 
+  parseDate = (dateStr) ->
+    [d, m, y] = dateStr.split('.')
+    new Date "#{y}-#{m}-#{d}"
+
   init: ->
     @bind()
     @initWaypoint()
     @initScroll()
-    @recalcMaxRepetitions()
 
   container: (selector) ->
     if selector
@@ -76,9 +79,12 @@ app.worktimes = new class
     else if $('#new_absencetime').length
       showRegularAbsence(null)
 
+    if $('#ordertime_repetitions').val()
+      @recalcMaxRepetitions()
+
     $('#multi_absence_link').click(showMultiAbsence)
     $('#regular_absence_link').click(showRegularAbsence)
-    $('#ordertime_work_date').on('change', => @recalcMaxRepetitions).change()
+    $('#ordertime_work_date').change(@recalcMaxRepetitions)
 
   initWaypoint: ->
     if worktimesWaypoint
@@ -178,10 +184,6 @@ app.worktimes = new class
     repField.attr('max', max)
     # Repetitions must not be higher than new max value
     repField.val(Math.min(currentVal, max))
-
-  parseDate = (dateStr) ->
-    [d, m, y] = dateStr.split('.')
-    new Date "#{y}-#{m}-#{d}"
 
 
 $(document).on 'turbolinks:load', ->
