@@ -281,8 +281,10 @@ module Crm
 
       old_name = record.name_change[0]
       new_name = record.name_change[1]
+
       parent = record.parent
-      conflict = parent.children.find_by(name: new_name)
+      scope = find_search_scope(record)
+      conflict = scope.children.find_by(name: new_name)
 
       Rails.logger.error <<~ERROR
         #{record.class.name} rename failed
@@ -292,6 +294,14 @@ module Crm
         Parent:   [##{parent.id}] #{parent.path_shortnames}
         Conflict: [##{conflict.id}] - #{conflict.path_shortnames}
       ERROR
+    end
+
+    def find_search_scope(record)
+      if record.root?
+        record.class
+      else
+        record.parent.children
+      end
     end
   end
 end
