@@ -103,6 +103,34 @@ class CreateOrdertimeTest < ActionDispatch::IntegrationTest
     assert_equal progressbar_color, expected_color(percentage)
   end
 
+  test 'creating 5 repeated worktimes for a whole week' do
+    timeout_safe do
+      selectize('ordertime_account_id', 'PuzzleTime', term: 'time')
+      fill_in('ordertime_work_date', with: ).set('05.01.2026') # A Monday
+      fill_in('ordertime_repetitions', with: 5)
+      fill_in('ordertime_hours', with: 2)
+      click_button 'Speichern'
+
+      assert_equal '/ordertimes', current_path
+
+      all('.date-label').each do |label|
+        entry = label.find(:xpath, 'following-sibling::*[contains(@class,"entry")][1]')
+
+        assert_not_includes entry[:class], 'is-empty',
+                            "Entry nach #{label.text} ist leer"
+      end
+    end
+  end
+
+  test 'creating repeated worktimes from a Wednesday on only allows 3 repetitions' do
+    timeout_safe do
+      fill_in('ordertime_work_date', with: '07.01.2026') # A Wednesday
+      input = find('input[name*="repetitions"]')
+
+      assert_equal '3', input[:max]
+    end
+  end
+
   def login
     login_as(:pascal)
     visit(new_ordertime_path)

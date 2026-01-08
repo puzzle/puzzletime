@@ -233,6 +233,30 @@ class OrdertimesControllerTest < ActionController::TestCase
     assert_match(/unbezahlter Urlaub/, flash[:warning])
   end
 
+  def test_create_repeated_ordertimes
+    reps = 3
+    work_date = Date.parse('2026-01-05')
+    login_as :long_time_john
+
+    assert_difference 'Ordertime.count', reps, "Es sollten genau #{reps} Einträge erstellt werden" do
+      post :create, params: {
+        ordertime: {
+          account_id: work_items(:allgemein),
+          work_date: work_date,
+          hours: '5:30',
+          employee: employees(:long_time_john),
+          repetitions: reps,
+          description: 'Repeated worktime'
+        }
+      }
+    end
+
+    assert_response :redirect
+    assert_redirected_to ordertimes_path(week_date: work_date + reps - 1)
+    assert_equal "#{reps} Arbeitszeiten wurden erfasst", flash[:notice]
+
+  end
+
   def test_create_other
     work_items(:allgemein).update(closed: false)
     post :create, params: {
