@@ -24,6 +24,16 @@ module Forms
 
     attr_accessor :employee
 
+    validates :work_date, presence: true
+    validates :repetitions,
+              presence: true,
+              numericality: {
+                only_integer: true,
+                greater_than_or_equal_to: 1,
+                less_than_or_equal_to: ->(form) { form.max_allowed_repetitions }
+              },
+              if: :work_date
+
     def start_stop?
       from_start_time.present? && to_end_time.present?
     end
@@ -44,6 +54,17 @@ module Forms
         next unless employment
 
         yield build_params(date)
+      end
+    end
+
+    def max_allowed_repetitions
+      return 1 unless work_date
+
+      case work_date.wday
+      when 0, 6 # Sunday, Saturday
+        1
+      else # Weekdays
+        6 - work_date.wday
       end
     end
 
