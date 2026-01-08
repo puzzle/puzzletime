@@ -34,18 +34,6 @@ module Forms
               },
               if: :work_date
 
-    def start_stop?
-      from_start_time.present? && to_end_time.present?
-    end
-
-    def end_date
-      work_date + repetitions - 1
-    end
-
-    def period
-      Period.new(work_date, end_date)
-    end
-
     def prepare_each
       return enum_for(:prepare_each) unless block_given?
 
@@ -69,6 +57,14 @@ module Forms
     end
 
     private
+
+    def end_date
+      work_date + repetitions - 1
+    end
+
+    def period
+      Period.new(work_date, end_date)
+    end
 
     def build_params(date)
       p = attributes.except('repetitions')
