@@ -19,11 +19,16 @@ class OrdertimesController < WorktimesController
 
       @multi_form.prepare_each.with_index do |ot_params, idx|
         @_params = ot_params
+        # Otherwise only one entity will be created and afterward updated with each cycle
         model_ivar_set(Ordertime.new)
 
         is_last = idx == repetitions - 1
         super do |format|
-          format.html { } unless is_last
+          if is_last
+            flash[:notice] = "#{repetitions} Arbeitszeiten wurden erfasst"
+          else
+            format.html
+          end
         end
       end
     else
@@ -120,13 +125,5 @@ class OrdertimesController < WorktimesController
     ::EmployeeMailer.worktime_deleted_mail(@worktime, @user).deliver_now
     flash[:warning] =
       "#{@worktime.employee} wurde per E-Mail darüber informiert, dass du diesen Eintrag gelöscht hast."
-  end
-
-  def execute_with_params(temp_params)
-    original_params = params
-    @_params = temp_params
-    yield
-  ensure
-    @_params = original_params
   end
 end

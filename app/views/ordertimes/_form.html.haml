@@ -49,8 +49,7 @@
                                  dynamic_params: 'ordertime[employee_id]' })
     = f.label(:repetitions, 'Tägliche Wiederholungen', class: 'col-md-2 control-label')
     .col-md-1
-      -# TODO helper function um max Tage basierend auf wochentag zu berechnen
-      = f.number_field(:repetitions, html_options = {title: "Wiederholung an über aufeinander folgenden Tagen", data: {toggle: :tooltip}, value: 1, min: 1, max: 5})
+      = f.number_field(:repetitions, html_options = {title: "Erstellt Kopien für aufeinanderfolgende Tage ab dem gewähltem Datum", data: {toggle: :tooltip}, value: 1, min: 1, max: 5, step: 1})
   .form-group
     = f.label(:hours, class: 'col-md-2 control-label')
     .col-md-1
