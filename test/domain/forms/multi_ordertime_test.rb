@@ -4,7 +4,6 @@ require 'test_helper'
 
 module Forms
   class MultiOrdertimeTest < ActiveSupport::TestCase
-
     test 'max_allowed_repetitions logic' do
       # 05.01.2025 (Monday) -> 5
       form_mo = Forms::MultiOrdertime.new(work_date: Date.parse('2026-01-05'))
