@@ -6,7 +6,6 @@
 #  https://github.com/puzzle/puzzletime.
 
 module Forms
-
   class MultiOrdertime
     include ActiveModel::Model
     include ActiveModel::Attributes
@@ -74,4 +73,3 @@ module Forms
     end
   end
 end
-
