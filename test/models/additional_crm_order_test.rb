@@ -34,6 +34,12 @@ class AdditionalCrmOrderTest < ActiveSupport::TestCase
     end
   end
 
+  test 'crm key with label' do
+    add = orders(:puzzletime).additional_crm_orders.create!(crm_key: '123', name: 'Foo')
+
+    assert_equal '123: Foo', add.crm_key_with_label
+  end
+
   private
 
   def setup_crm
