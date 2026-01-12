@@ -15,6 +15,8 @@ class ApplicationController < ActionController::Base
   # before_action :authenticate
   before_action :set_error_tracker_request_context
   before_action :store_employee_location!, if: :storable_location?
+  before_action :authenticate_with_personal_access_token
+  skip_forgery_protection if: -> { @current_api_token.present? }
   before_action :authenticate_employee!
   before_action :set_error_tracker_user_context
   before_action :set_paper_trail_whodunnit
@@ -91,5 +93,16 @@ class ApplicationController < ActionController::Base
 
   def saml_callback_path?
     request.fullpath == '/employees/auth/saml/callback'
+  end
+
+  def authenticate_with_personal_access_token
+    authenticate_with_http_token do |token, _options|
+      pat = PersonalAccessToken.search_token(token)
+      if pat
+        sign_in(pat.employee, store: false)
+        pat.touch_last_used!
+        @current_api_token = pat
+      end
+    end
   end
 end

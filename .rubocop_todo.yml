@@ -354,6 +354,7 @@ Rails/UniqueValidationWithoutIndex:
     - "app/models/work_item.rb"
     - "app/models/working_condition.rb"
     - "app/models/workplace.rb"
+    - "app/models/personal_access_token.rb"
 
 # Offense count: 1
 Security/CompoundHash:
