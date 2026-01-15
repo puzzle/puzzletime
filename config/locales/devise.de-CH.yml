@@ -16,6 +16,7 @@ de-CH:
       timeout: "Deine Session ist abgelaufen. Bitte melde dich erneut an."
       unauthenticated: "Du musst dich anmelden bevor du fortfahren kannst."
       unconfirmed: "Du musst deine Email Adresse bestätigen, bevor du fortfahren kannst."
+      invalid_token: "Du hast dich versucht mit einem ungültigen API-Token zu authentifizieren."
     mailer:
       confirmation_instructions:
         subject: "Bestätigungsschritte"

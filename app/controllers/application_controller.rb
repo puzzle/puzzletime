@@ -10,17 +10,17 @@
 
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
-  skip_forgery_protection if: :saml_callback_path? # HACK: https://github.com/heartcombo/devise/issues/5210
+  skip_forgery_protection if: -> { saml_callback_path? || authenticated_via_pat? } # HACK: https://github.com/heartcombo/devise/issues/5210
 
   # before_action :authenticate
   before_action :set_error_tracker_request_context
   before_action :store_employee_location!, if: :storable_location?
-  before_action :authenticate_with_personal_access_token
-  skip_forgery_protection if: -> { @current_api_token.present? }
   before_action :authenticate_employee!
   before_action :set_error_tracker_user_context
   before_action :set_paper_trail_whodunnit
   check_authorization unless: :devise_controller?
+
+  after_action :skip_session_cookie, if: :authenticated_via_pat?
 
   helper_method :sanitized_back_url, :current_user
 
@@ -95,14 +95,12 @@ class ApplicationController < ActionController::Base
     request.fullpath == '/employees/auth/saml/callback'
   end
 
-  def authenticate_with_personal_access_token
-    authenticate_with_http_token do |token, _options|
-      pat = PersonalAccessToken.search_token(token)
-      if pat
-        sign_in(pat.employee, store: false)
-        pat.touch_last_used!
-        @current_api_token = pat
-      end
-    end
+  def skip_session_cookie
+    request.session_options[:skip] = true
+  end
+
+  def authenticated_via_pat?
+    auth_result = request.env['warden'].authenticate(:holiday)
+    auth_result.present?
   end
 end

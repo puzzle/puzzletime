@@ -12,7 +12,7 @@ class CreatePersonalAccessTokens < ActiveRecord::Migration[7.1]
       t.string :name
       t.string :token_digest
       t.datetime :last_used_at
-      t.text :scopes
+      t.text :scopes, default: [].to_json
 
       t.timestamps
     end

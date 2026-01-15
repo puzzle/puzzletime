@@ -12,6 +12,8 @@ class Ability
 
   def initialize(user)
     @user = user
+    @pat = Current.personal_access_token
+
     alias_action :create, :read, :update, :destroy, :delete, to: :crud
 
     if user.management?
@@ -23,6 +25,10 @@ class Ability
     end
 
     everyone_abilities
+
+    return if @pat.blank?
+
+    apply_token_scopes
   end
 
   private
@@ -236,5 +242,13 @@ class Ability
     can :manage, Expense, employee_id: user.id
 
     can %i[create read], OrderComment
+  end
+
+  def apply_token_scopes
+    can_write = @pat.can?(:write, :all)
+    can_read  = @pat.can?(:read, :all) || can_write
+
+    cannot %i[create update destroy delete], :all unless can_write
+    cannot :read, :all unless can_read
   end
 end
