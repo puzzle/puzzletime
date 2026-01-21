@@ -1,28 +1,26 @@
 # 2.16
 
 ## Features und Improvements
-* **Bereich "Auftrag"**
-	**Tab Positionen**:
+* **Auftrag / Auftragsmanagement**
+	* **Tab "Positionen"**:
 		* Der CSV-Export enthält den ausgeschriebenen Namen der Buchungsposition (#64412)
-		* Link zu betroffenen Leistungen auch bei Zeile 'Total' (#64388)
-	**Tab Leistungen**: die Filterung bleibt auch nach Bearbeiten und Speichern von Leistungen bestehen (#64984)
-    * Rechnungs-Controlling: Das Listenergebnis kann exportiert werden (#64444)
-**Member-Management**
+  		* Link zu betroffenen Leistungen auch bei Zeile 'Total' (#64388)
+	* **Tab "Leistungen"**: die Filterung bleibt auch nach Bearbeiten und Speichern von Leistungen bestehen (#64984)
+ 		* Rechnungs-Controlling: Das Listenergebnis kann exportiert werden (#64444)
+* **Member Management**
 	* Member > Absenzen Übersicht:
-		* Sortierung nach Spalte "übrige Ferien" möglich (#64536)
-		* Filterung nach OE möglich (#64537)
+ 		* Sortierung nach Spalte "übrige Ferien" möglich (#64536)
+   		* Filterung nach OE möglich (#64537)
 	* Member > Zeit Übersicht: neue Spalte Feriensaldo per Ende Jahr
 	* Member Coach kann hinterlegt werden (Verwalten > Members > Bearbeiten > Feld "Member Coach")
-		* wird angezeigt in:
-			* Memberliste
-			* Ansicht Members > Zeiten (Filterung möglich)
-**Spesen**: Belege auch als PDF möglich (#64085)
+		* wird angezeigt in Memberliste und unter Members > Zeiten (hier inkl. Filterungsmöglichkeit)
+* **Spesen**: Belege auch als PDF möglich (#64085)
 
 ## Bugfixes
-**Member-Management**: Members > Auslastung: Export für aktuellen Zeitraum behoben (#64619)
+* **Member-Management**: Members > Auslastung: Export für aktuellen Zeitraum behoben (#64619)
 
 ## Operations
-* Wechsel von Sentry auf Glitchtip
+* **Error-Tracking-Tool**: Wechsel von Sentry auf Glitchtip
 
 
 # 2.15.3
