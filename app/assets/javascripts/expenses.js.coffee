@@ -13,24 +13,23 @@ $(document).on 'ready, turbolinks:load', ->
   toggle_project_display = () ->
 
     if expense_kind_input.val() == 'project'
-      # if order_input.value and not order_selectized_input.value
-      #   input[0].value = ' '
-
       order_form_group.show()
       order_selectized_input.attr('disabled', false)
     else
       order_form_group.hide()
       order_selectized_input.attr('disabled', true)
 
-  check_file_type = (initial = false) ->
+  check_file_type = () ->
     warning_popup.addClass('hidden')
 
-    return unless receipt_input[0].files.length > 0
-    return if     /^image/.test(receipt_input[0].files[0].type)
+    return unless (typeof receipt_input != "undefined" && receipt_input != null) && receipt_input[0].files.length > 0
 
-    warning_popup.removeClass('hidden')
+    file_type = receipt_input[0].files[0].type
 
-  check_file_type(true)
+    unless /^image/.test(file_type) or file_type == 'application/pdf'
+      warning_popup.removeClass('hidden')
+
+  check_file_type()
   toggle_project_display()
 
   expense_kind_input.change (e) ->

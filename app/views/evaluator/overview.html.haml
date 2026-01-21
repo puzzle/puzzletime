@@ -15,6 +15,8 @@
     = hidden_field_tag :page, 1
     = hidden_field_tag :category_id, params[:category_id]
     = direct_filter_select(:absence_id, 'Absenztyp',  Absence.all)
+    %br
+    = direct_filter_select(:department_id, 'Organisationseinheit', Department.list)
 
 = render 'period_link'
 

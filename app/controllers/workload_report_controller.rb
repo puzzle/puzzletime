@@ -34,12 +34,11 @@ class WorkloadReportController < ApplicationController
     @department = Department.where(id: params[:department_id]).first
   end
 
-  # rubocop:disable Naming/MemoizedInstanceVariableName
   def set_period
     super
     @period ||= default_period
+    session[:period] = [@period.start_date.to_s, @period.end_date.to_s, @period.label]
   end
-  # rubocop:enable Naming/MemoizedInstanceVariableName
 
   def default_period
     month = Time.zone.today.last_month

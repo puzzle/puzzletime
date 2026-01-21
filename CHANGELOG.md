@@ -1,3 +1,21 @@
+# 2.15.2
+
+## Bugfixes und Improvements
+
+* **Odoo Sync**: Der nächtliche Sync von Odoo zu Puzzletime wurde repariert
+* **Odoo Sync**: Sonderzeichen werden jetzt korrekt übernommen
+
+# 2.15.1
+
+### Bugfixes und Improvements
+
+* **Zeitrapport**: Seitenlayout anpassbar
+* **Zeitrapport**: Logikfehler behoben
+* **Rechnungsfilter**: Logikfehler behoben
+* **Browser**: Fehler beim zurückwechseln im Browser behoben
+* **Zeiterfassung**: Zeiterfassung Checkboxen Anzeigefehler behoben, der diese beim Update resettet hat
+* **Zeitrapport**: Zeitstempel in Zeitrapport repariert
+
 # 2.15
 
 ### Features, Improvements und Bugfixes

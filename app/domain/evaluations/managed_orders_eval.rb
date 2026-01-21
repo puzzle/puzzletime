@@ -13,17 +13,34 @@ module Evaluations
     self.billable_hours    = true
     self.planned_hours     = true
 
-    def category_label
-      "Kunde: #{division.order.client.name}"
+    # Override default labels for category and division with client and order
+    def header_info_labels
+      [
+        { item: division.order.client },
+        { item: division.order }
+      ]
     end
 
-    def divisions(_period = nil)
+    def header_info_labels_custom
+      [
+        {
+          label: 'Leistungsübersicht im Auftrag',
+          resource: division.order,
+          child_resource: :order_services,
+          include_period_labels: true
+        }
+      ]
+    end
+
+    def divisions(_period = nil, _times = nil)
       WorkItem.joins(:order).includes(:order).where(orders: { responsible_id: category.id }).list
     end
 
     def division_supplement(_user)
-      [[:order_completed, 'Abschluss erledigt', 'left'],
-       [:order_committed, 'Abschluss freigegeben', 'left']]
+      {
+        order_completed: { title: 'Abschluss erledigt' },
+        order_committed: { title: 'Abschluss freigegeben' }
+      }
     end
 
     private

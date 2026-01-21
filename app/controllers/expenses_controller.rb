@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class ExpensesController < ManageController
+  require 'ruby-vips'
   include Filterable
+
   self.optional_nesting = [Employee]
 
   self.permitted_attrs = %i[payment_date employee_id kind order_id description amount receipt]
@@ -110,7 +112,7 @@ class ExpensesController < ManageController
 
   def model_params
     # remove receipt param to prevent processing of original image (will get attached in #attach_resized_receipt)
-    params.require(model_identifier).permit(permitted_attrs).except('receipt')
+    super.except('receipt')
   end
 
   def receipt_param
@@ -120,7 +122,14 @@ class ExpensesController < ManageController
   def attach_resized_receipt
     return unless receipt_param
 
-    resized = ImageProcessing::Vips
+    case receipt_param.content_type
+    when 'application/pdf' then attach_pdf
+    when /image/ then attach_image
+    end
+  end
+
+  def attach_image
+    resized = ::ImageProcessing::Vips
               .source(receipt_param.tempfile)
               .resize_to_limit(Settings.expenses.receipt.max_pixel, Settings.expenses.receipt.max_pixel)
               .saver(quality: Settings.expenses.receipt.quality)
@@ -131,5 +140,18 @@ class ExpensesController < ManageController
     target_filename = "#{File.basename(receipt_param.original_filename.to_s, '.*')}.jpg"
 
     entry.receipt.attach(io: File.open(resized), filename: target_filename, content_type: 'image/jpeg')
+  end
+
+  def attach_pdf
+    tmp_file = receipt_param.tempfile
+    filename = "#{File.basename(receipt_param.original_filename.to_s, '.*')}.pdf"
+    page_count = pdf_pages_amount(tmp_file.path)
+
+    entry.receipt.attach(io: File.open(tmp_file), filename:, content_type: 'application/pdf', metadata: { page_count: })
+  end
+
+  def pdf_pages_amount(filepath_pdf)
+    first_page = ::Vips::Image.new_from_file(filepath_pdf, page: 0, n: 1)
+    first_page.get('n-pages')
   end
 end

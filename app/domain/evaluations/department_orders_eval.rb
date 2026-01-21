@@ -16,13 +16,15 @@ module Evaluations
       super(Department.find(department_id))
     end
 
-    def divisions(_period = nil)
+    def divisions(_period = nil, _times = nil)
       WorkItem.joins(:order).includes(:order).where(orders: { department_id: category.id }).list
     end
 
     def division_supplement(_user)
-      [[:order_completed, 'Abschluss erledigt', 'left'],
-       [:order_committed, 'Abschluss freigegeben', 'left']]
+      {
+        order_completed: { title: 'Abschluss erledigt' },
+        order_committed: { title: 'Abschluss freigegeben' }
+      }
     end
 
     def include_no_period_zero_totals

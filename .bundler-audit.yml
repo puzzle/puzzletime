@@ -1,0 +1,4 @@
+---
+# ignore specific CVEs from bundler-audit checks
+ignore:
+  - CVE-2024-6484 # non use bootstrap carousel feature

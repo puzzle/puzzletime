@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
+#  Copyright (c) 2006-2025, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
@@ -9,20 +9,22 @@
 #
 # Table name: worktimes
 #
-#  id              :integer          not null, primary key
-#  absence_id      :integer
-#  employee_id     :integer
-#  report_type     :string(255)      not null
-#  work_date       :date             not null
-#  hours           :float
-#  from_start_time :time
-#  to_end_time     :time
-#  description     :text
-#  billable        :boolean          default(TRUE)
-#  type            :string(255)
-#  ticket          :string(255)
-#  work_item_id    :integer
-#  invoice_id      :integer
+#  id                   :integer          not null, primary key
+#  absence_id           :integer
+#  employee_id          :integer
+#  report_type          :string(255)      not null
+#  work_date            :date             not null
+#  hours                :float
+#  from_start_time      :time
+#  to_end_time          :time
+#  description          :text
+#  billable             :boolean          default(TRUE)
+#  type                 :string(255)
+#  ticket               :string(255)
+#  work_item_id         :integer
+#  invoice_id           :integer
+#  meal_compensation    :boolean          default(FALSE), not null
+#  internal_description :text
 #
 
 require 'test_helper'
@@ -178,12 +180,12 @@ class WorktimeTest < ActiveSupport::TestCase
   end
 
   def test_template
-    newWorktime = Worktime.find(1).template
+    new_worktime = Worktime.find(1).template
 
-    assert_not_nil newWorktime
-    assert_equal worktimes(:wt_pz_allgemein).work_item_id, newWorktime.work_item_id
-    assert_equal work_items(:allgemein).id, newWorktime.account.id
-    assert_equal employees(:pascal), newWorktime.employee
+    assert_not_nil new_worktime
+    assert_equal worktimes(:wt_pz_allgemein).work_item_id, new_worktime.work_item_id
+    assert_equal work_items(:allgemein).id, new_worktime.account.id
+    assert_equal employees(:pascal), new_worktime.employee
   end
 
   def test_strip_ticket

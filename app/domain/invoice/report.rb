@@ -16,6 +16,10 @@ class Invoice
       @params = params
     end
 
+    def to_params_unsafe_h
+      params.except(:action, :controller, :format, :utf8, :clear).to_unsafe_h
+    end
+
     def page(&)
       section = entries[((current_page - 1) * limit_value)...(current_page * limit_value)]
       ([total] + section).each(&) if section.present?
