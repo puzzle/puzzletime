@@ -1,3 +1,35 @@
+# 2.16
+
+## Features und Improvements
+* **Bereich "Auftrag"**
+	**Tab Positionen**:
+		* Der CSV-Export enthält den ausgeschriebenen Namen der Buchungsposition (#64412)
+		* Link zu betroffenen Leistungen auch bei Zeile 'Total' (#64388)
+	**Tab Leistungen**: die Filterung bleibt auch nach Bearbeiten und Speichern von Leistungen bestehen (#64984)
+    * Rechnungs-Controlling: Das Listenergebnis kann exportiert werden (#64444)
+**Member-Management**
+	* Member > Absenzen Übersicht:
+		* Sortierung nach Spalte "übrige Ferien" möglich (#64536)
+		* Filterung nach OE möglich (#64537)
+	* Member > Zeit Übersicht: neue Spalte Feriensaldo per Ende Jahr
+	* Member Coach kann hinterlegt werden (Verwalten > Members > Bearbeiten > Feld "Member Coach")
+		* wird angezeigt in:
+			* Memberliste
+			* Ansicht Members > Zeiten (Filterung möglich)
+**Spesen**: Belege auch als PDF möglich (#64085)
+
+## Bugfixes
+**Member-Management**: Members > Auslastung: Export für aktuellen Zeitraum behoben (#64619)
+
+# 2.15.3
+
+## Bugfixes
+* **Odoo Sync**: Handling für leere Rückgabewerte von Odoo repariert
+* **Spesen**: Projektauswahl repariert
+
+## Improvements
+* **Odoo Sync**: CRM Keys werden vor der Synchronisation bereinigt
+
 # 2.15.2
 
 ## Bugfixes und Improvements
