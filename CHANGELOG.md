@@ -21,6 +21,10 @@
 ## Bugfixes
 **Member-Management**: Members > Auslastung: Export für aktuellen Zeitraum behoben (#64619)
 
+## Operations
+* Wechsel von Sentry auf Glitchtip
+
+
 # 2.15.3
 
 ## Bugfixes
