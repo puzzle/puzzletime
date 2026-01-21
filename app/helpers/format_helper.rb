@@ -36,9 +36,9 @@ module FormatHelper
   # formats the value as follows:
   # If the value is an associated model, renders the label of this object.
   # Otherwise, calls format_type.
-  def format_attr(obj, attr)
+  def format_attr(obj, attr, options = {})
     format_with_helper(obj, attr) ||
-      format_association(obj, attr) ||
+      format_association(obj, attr, options) ||
       format_type(obj, attr)
   end
 
@@ -147,11 +147,11 @@ module FormatHelper
 
   # Checks whether the given attr is an association of obj and formats it
   # accordingly if it is.
-  def format_association(obj, attr)
+  def format_association(obj, attr, options = {})
     belongs_to = association(obj, attr, :belongs_to)
     has_many = association(obj, attr, :has_many, :has_and_belongs_to_many)
     if belongs_to
-      format_belongs_to(obj, belongs_to)
+      format_belongs_to(obj, belongs_to, options)
     elsif has_many
       format_has_many(obj, has_many)
     else
@@ -180,10 +180,14 @@ module FormatHelper
   end
 
   # Formats an ActiveRecord +belongs_to+ association
-  def format_belongs_to(obj, assoc)
+  def format_belongs_to(obj, assoc, options = {})
     val = obj.send(assoc.name)
     if val
-      assoc_link(val)
+      if options.fetch(assoc.name, nil)&.fetch(:no_link, false)
+        val.to_s
+      else
+        assoc_link(val)
+      end
     else
       ta(:no_entry, assoc)
     end
