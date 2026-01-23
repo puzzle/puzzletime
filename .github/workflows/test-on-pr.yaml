@@ -1,9 +1,8 @@
 ---
 name: 'Lint and test on pull request'
 
-on:
-  # Warning: Checks execute on base repo (puzzle/puzzletime), examine external PRs carefully
-  pull_request_target:
+"on":
+  pull_request:
     branches:
       - 'master'
     paths-ignore:
@@ -12,14 +11,12 @@ on:
 
 jobs:
   lint:
-    if: github.head_ref != 'master'
     uses: ./.github/workflows/reusable-lint.yaml
     with:
-      ref: ${{ github.head_ref }}
+      ref: ${{ github.event.pull_request.head.sha }}
 
   test:
-    if: github.head_ref != 'master'
     uses: ./.github/workflows/reusable-test.yaml
     with:
-      ref: ${{ github.head_ref }}
+      ref: ${{ github.event.pull_request.head.sha }}
 ...
