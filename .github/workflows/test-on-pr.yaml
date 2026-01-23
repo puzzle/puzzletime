@@ -1,8 +1,9 @@
 ---
 name: 'Lint and test on pull request'
 
-"on":
-  pull_request:
+on:
+  # Warning: Checks execute on base repo (puzzle/puzzletime), examine external PRs carefully
+  pull_request_target:
     branches:
       - 'master'
     paths-ignore:
