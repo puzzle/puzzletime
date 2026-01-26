@@ -87,7 +87,7 @@ module Api
                          description: 'The employee’s birth date in YYYY-MM-DD format'
 
       annotate_attribute :employed_within_three_months,
-                         type: boolean,
+                         type: :boolean,
                          description: 'Whether the employee has a employment that starts in the next three months or not'
     end
   end
