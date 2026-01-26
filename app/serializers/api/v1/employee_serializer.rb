@@ -22,6 +22,12 @@ module Api
         !employee.current_employment.nil?
       end
 
+      attribute :employed_within_three_months do |employee|
+        employee.employments.any? do |employment|
+          employment.start_date.between?(Time.zone.today, 3.months.from_now)
+        end
+      end
+
       attribute :department_shortname do |employee|
         employee.department&.shortname
       end
@@ -79,6 +85,10 @@ module Api
                          type: :string,
                          format: :date,
                          description: 'The employee’s birth date in YYYY-MM-DD format'
+
+      annotate_attribute :employed_within_three_months,
+                         type: :boolean,
+                         description: 'Whether the employee has a employment that starts in the next three months or not'
     end
   end
 end
