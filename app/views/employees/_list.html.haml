@@ -7,6 +7,7 @@
   attrs = %i[lastname firstname shortname current_percent department_id]
   attrs << :member_coach if can?(:manage, Employment)
   attrs += %i[management probation_period_end_date]
+  attrs += [{member_coach: { no_link: true }}]
 
 = crud_table *attrs do |t|
   - t.action_col do |e|
