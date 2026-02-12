@@ -186,6 +186,7 @@ de-DE:
         committed_worktimes_at: Letzte freigegebene Periode
         reviewed_worktimes_at: Letzte kontrollierte Periode
         probation_period_end_date: Ende Probezeit
+        member_coach_id: Member Coach
         graduation: Abschluss
         phone_office: Telefon Büro
         phone_private: Mobiltelefon
@@ -402,7 +403,7 @@ de-DE:
 
     associations:
       contact:
-        no_entry: "(keiner)"
+        no_entry: '(keiner)'
 
     errors:
       models:
