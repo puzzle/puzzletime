@@ -47,7 +47,7 @@
                          data: { remote: true,
                                  url: url_for(action: 'existing'),
                                  dynamic_params: 'ordertime[employee_id]' })
-    = f.label(:repetitions, 'Tägliche Wiederholungen', class: 'col-md-2 control-label')
+    = f.label(:repetitions, 'Wiederholungen an Folgetagen', class: 'col-md-2 control-label')
     .col-md-1
       = f.number_field(:repetitions, html_options = {title: "Erstellt Kopien für aufeinanderfolgende Tage ab dem gewähltem Datum", data: {toggle: :tooltip}, value: 1, min: 1, max: 5, step: 1})
   .form-group
