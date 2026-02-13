@@ -50,6 +50,7 @@
 #= require invoices
 #= require cockpit
 #= require turbolinks
+#= require employments
 
 app = window.App ||= {}
 

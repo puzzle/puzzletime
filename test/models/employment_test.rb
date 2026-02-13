@@ -117,6 +117,33 @@ class EmploymentTest < ActiveSupport::TestCase
     assert_equal Date.parse('1.6.2013'), before2.end_date
   end
 
+  def test_confirmation_vacation_days_set
+    employee = Fabricate(:employee)
+    # Last employment has custom vacation days set
+    _old = Fabricate(:employment, employee:, start_date: 2.years.ago.to_date, end_date: nil, percent: 80, vacation_days_per_year: 27)
+    new = Employment.new(employee:, start_date: 1.day.ago.to_date, end_date: nil, percent: 80, vacation_days_per_year: nil)
+
+    assert_predicate new, :needs_vacation_days_confirmation?
+  end
+
+  def test_confirmation_vacation_days_not_set
+    employee = Fabricate(:employee)
+    # Last employment has no custom vacation days set
+    _old = Fabricate(:employment, employee:, start_date: 2.years.ago.to_date, end_date: nil, percent: 80, vacation_days_per_year: nil)
+    new = Employment.new(employee:, start_date: 1.day.ago.to_date, end_date: nil, percent: 80, vacation_days_per_year: nil)
+
+    assert_not_predicate new, :needs_vacation_days_confirmation?
+  end
+
+  def test_confirmation_latest_employement_long_ago
+    employee = Fabricate(:employee)
+    # Last employment has ended two years ago
+    _old = Fabricate(:employment, employee:, start_date: 5.years.ago.to_date, end_date: 2.years.ago.to_date, percent: 80, vacation_days_per_year: 27)
+    new = Employment.new(employee:, start_date: 1.day.ago.to_date, end_date: nil, percent: 80, vacation_days_per_year: nil)
+
+    assert_not_predicate new, :needs_vacation_days_confirmation?
+  end
+
   def test_vactions
     assert_equal 20, new_employment('1.1.2000', '31.12.2000').vacations
     assert_equal 40, new_employment('1.1.2000', '31.12.2001').vacations
