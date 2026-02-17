@@ -1,3 +1,36 @@
+# 2.16
+
+## Features und Improvements
+* **Auftrag / Auftragsmanagement**
+	* **Tab "Positionen"**:
+		* Der CSV-Export umfasst auch den ausgeschriebenen Namen der Buchungsposition (#64412)
+  		* Link zu betroffenen Leistungen auch bei Zeile 'Total' (#64388)
+	* **Tab "Leistungen"**:
+ 		* die Filterung bleibt nach Bearbeiten und Speichern von Leistungen bestehen (#64984)
+ 		* Rechnungs-Controlling: Das Listenergebnis kann exportiert werden (#64444)
+	* **Tab "Auftrags-Controlling"**:
+   		* Beim Öffnen ist standardmässig der Tab "Laufende" aktiv (#64109)
+    * **Tab "Verrechnungs-Controlling"**:
+    	* Verrechnungs-Controlling: Übersicht nicht verrechneter Leistungen (#64087)
+
+	* **Overall**:
+ 		* Der Menü-Eintrag "Aufträge" wird dunkelblau markiert, wenn "Rechnungs-Controlling" und "Verrechnungs-Controlling" geöffnet sind
+     * 
+* **Member Management**
+	* Member > Absenzen Übersicht:
+ 		* Sortierung nach Spalte "übrige Ferien" möglich (#64536)
+   		* Filterung nach OE möglich (#64537)
+	* Member > Zeit Übersicht: neue Spalte Feriensaldo per Ende Jahr (#64535)
+	* Member Coach kann hinterlegt werden (Verwalten > Members > Bearbeiten > Feld "Member Coach") (#64907)
+		* wird angezeigt in Memberliste und unter Members > Zeiten (hier inkl. Filterungsmöglichkeit)
+* **Spesen**: Belege auch als (mehrseitige) PDF möglich. Hinweis an F&A: Für den Export werden die PDFs in Bilder konvertiert, jede Seite des PDFs gibt eine Seite im Export. Erste Seite des Spesen-Eintrages enthält den Header, die weiteren dazugehörigen Seiten ohne Header. (#64085)
+
+## Bugfixes
+* **Member-Management**: Members > Auslastung: Export für aktuellen Zeitraum behoben (#64619)
+
+## Operations
+* **Error-Tracking-Tool**: Wechsel von Sentry auf Glitchtip
+
 # 2.15.3
 
 ## Bugfixes und Improvements
