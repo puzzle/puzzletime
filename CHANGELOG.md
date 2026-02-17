@@ -1,3 +1,11 @@
+# 2.15.3
+
+## Bugfixes und Improvements
+
+* **Odoo Sync**: Der nächtliche Sync von Odoo zu Puzzletime wurde repariert (#64796, #64695, #64620)
+* **Spesen**: Beim Speichern von Spesen wird der Auftrag wieder gespeichert (#64539)
+* **Mehrere Leistungen umbuchen**: Mehrere Leistungen umbuchen funktioniert wieder (#64530)
+
 # 2.15.2
 
 ## Bugfixes und Improvements
