@@ -4,28 +4,29 @@
 -#  https://github.com/puzzle/puzzletime.
 
 
-%tr
-  %td
-    - if sub = evaluation.sub_evaluation
-      = link_to(division.label_verbose,
-                { action: 'overview', evaluation: sub, category_id: division.id, **worktime_search_conditions },
-                title: division.tooltip)
-    - else
-      = content_tag :span, division.label_verbose, title: division.tooltip
-
-  - if evaluation.sub_work_items_eval
+- if times_or_plannings?(evaluation, division, times)
+  %tr
     %td
-      - if sub = evaluation.sub_work_items_evaluation(division)
-        = link_to('&crarr;'.html_safe,
-                  { action: 'overview', evaluation: sub, category_id: division.id },
-                  class: 'symbol')
+      - if sub = evaluation.sub_evaluation
+        = link_to(division.label_verbose,
+                  { action: 'overview', evaluation: sub, category_id: division.id, **worktime_search_conditions },
+                  title: division.tooltip)
+      - else
+        = content_tag :span, division.label_verbose, title: division.tooltip
 
-  = render(partial: 'timecell',
-            collection: @periods.each_with_index.collect { |_p, i| times[i][division.id] },
-            locals: { division_id: division.id,
-                      evaluation: evaluation,
-                      evaluation_name: evaluation_name })
+    - if evaluation.sub_work_items_eval
+      %td
+        - if sub = evaluation.sub_work_items_evaluation(division)
+          = link_to('&crarr;'.html_safe,
+                    { action: 'overview', evaluation: sub, category_id: division.id },
+                    class: 'symbol')
 
-  - evaluation.division_supplement(@user).each do |key, supp|
-    %td{align: supp[:align]}
-      = division.respond_to?(key) ? division.send(key) : self.send(key, division)
+    = render(partial: 'timecell',
+              collection: @periods.each_with_index.collect { |_p, i| times[i][division.id] },
+              locals: { division_id: division.id,
+                        evaluation: evaluation,
+                        evaluation_name: evaluation_name })
+
+    - evaluation.division_supplement(@user).each do |key, supp|
+      %td{align: supp[:align]}
+        = division.respond_to?(key) ? division.send(key) : self.send(key, division)
