@@ -120,7 +120,7 @@ module Crm
         end
 
         def log_resource(resource)
-          if resource['name'] == 'f'
+          if resource.present? && resource['name'] == 'f'
             Rails.logger.warn "Odoo Resource with name 'f' found: #{resource.pretty_inspect}"
           elsif Settings.odoo.log_resources
             Rails.logger.info "Odoo Resource: #{resource.pretty_inspect}"
