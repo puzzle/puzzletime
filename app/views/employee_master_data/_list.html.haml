@@ -3,8 +3,7 @@
 -#  or later. See the COPYING file at the top-level directory or at
 -#  https://github.com/puzzle/puzzletime.
 
-
-= plain_table(@employees) do |t|
+= plain_table(@employees, member_coach: {no_link: true}) do |t|
   - t.sortable_attr(:firstname) do |e|
     = link_to e.firstname, employee_master_datum_path(e.id)
   - t.sortable_attr(:lastname) do |e|
