@@ -241,7 +241,15 @@ module Crm
     end
 
     def crm_entity_url(model, entity)
-      return unless (key = entity.respond_to?(:crm_key) && entity.crm_key.presence)
+      key =
+        case entity
+        when Integer, String then entity
+        when Company, Partner, Lead then entity.id
+        else
+          entity.respond_to?(:crm_key) && entity.crm_key.presence
+        end
+
+      return unless key
 
       "#{api.base_url}/#{model}/#{key}"
     end
