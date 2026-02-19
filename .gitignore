@@ -39,6 +39,11 @@ config/settings.local.yml
 config/settings/*.local.yml
 config/environments/*.local.yml
 
+config/environments/development.local.rb
+
+Gemfile.local
+Gemfile.local.lock
+
 C:\\*
 
 # Postgres files for dockerized development
