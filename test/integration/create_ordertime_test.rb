@@ -103,6 +103,15 @@ class CreateOrdertimeTest < ActionDispatch::IntegrationTest
     assert_equal progressbar_color, expected_color(percentage)
   end
 
+  test 'creating repeated worktimes from a Wednesday on only allows 3 repetitions' do
+    timeout_safe do
+      fill_in('ordertime_work_date', with: '07.01.2026') # A Wednesday
+      input = find('input[name*="repetitions"]')
+
+      assert_equal '3', input[:max]
+    end
+  end
+
   def login
     login_as(:pascal)
     visit(new_ordertime_path)
