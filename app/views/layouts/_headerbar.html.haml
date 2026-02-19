@@ -7,7 +7,7 @@
 #headerbar.navbar.navbar-default{role: 'navigation', class: ('lonely' unless @user)}
   .container-fluid
     .navbar-header
-      .navbar-brand
+      .navbar-brand#navbar-app-title
         = image_tag 'logo.svg', size: '41x40'
         PuzzleTime
         = link_to Puzzletime.version, Puzzletime.changelog_url, class: 'version'
