@@ -119,8 +119,18 @@ module OrderHelper
   end
 
   def choosable_order_options
-    managed_orders = current_user.managed_orders.where(work_items: { closed: false }).list.minimal
-    safe_join(managed_orders) { |o| order_option(o) } + order_option(@order, true) # @order needs to be last to prevent deselection
+    managed_orders =
+      current_user
+      .managed_orders
+      .where.not(id: @order.id) # Selectize does not play well with dupes
+      .where(work_items: { closed: false })
+      .list
+      .minimal
+
+    selected_option = order_option(@order, true)
+    managed_options = safe_join(managed_orders) { order_option(_1) }
+
+    managed_options + selected_option
   end
 
   def order_option(order, selected = false)
