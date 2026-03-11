@@ -4,21 +4,22 @@
 * **Auftrag / Auftragsmanagement**
 	* **Tab "Positionen"**:
 		* Der CSV-Export umfasst auch den ausgeschriebenen Namen der Buchungsposition (#64412)
-  		* Link zu betroffenen Leistungen auch bei Zeile 'Total' (#64388)
+  		* Link zu betroffenen Leistungen auch bei Zeile 'Total' verfügbar (#64388)
 	* **Tab "Leistungen"**:
- 		* die Filterung bleibt nach Bearbeiten und Speichern von Leistungen bestehen (#64984)
- 		* Rechnungs-Controlling: Das Listenergebnis kann exportiert werden (#64444)
+ 		* die Filterung bleibt nach dem Bearbeiten von Leistungen bestehen (#64984)
 	* **Tab "Auftrags-Controlling"**:
-   		* Beim Öffnen ist standardmässig der Tab "Laufende" aktiv (#64109)
+   		* Beim Öffnen ist standardmässig der Tab "Laufende" geöffnet (#64109)
     * **Tab "Verrechnungs-Controlling"**:
-    	* Verrechnungs-Controlling: neue Übersicht nicht noch verrechneter Leistungen (Umsetzung einer Benachrichtigung folgt) (#64087)
+    	* Verrechnungs-Controlling: neue Übersicht zur Anzeige nicht noch verrechneter Leistungen (#64087)
+    * * **Tab "Rechnungs-Controlling"**:
+      	* Rechnungs-Controlling: Das Listenergebnis kann exportiert werden (#64444)
 * **Member Management**
 	* Members > Absenzen Übersicht:
  		* Sortierung nach Spalte "übrige Ferien" möglich (#64536)
    		* Filterung nach OE möglich (#64537)
 	* Members > Zeit Übersicht: neue Spalte Feriensaldo per Ende Jahr (#64535)
- 	* Member Coach kann hinterlegt werden (Verwalten > Members > Bearbeiten > Feld "Member Coach") (#64907)
-		* wird angezeigt in Memberliste und unter Members > Zeiten (hier inkl. Filterungsmöglichkeit)
+ 	* beim Member kann der Member Coach hinterlegt werden (Verwalten > Members > Bearbeiten > Feld "Member Coach") (#64907)
+		* hinterlegter Member Coach wird angezeigt unter Members > Memberliste und unter Members > Zeiten (bei letzterem Filterung nach Member Coach möglich)
 * **Spesen**:
 	* Belege neu als (mehrseitige) PDF möglich. Für den Export werden die PDFs in Bilder konvertiert, jede Seite des PDFs gibt eine Seite im Export. Erste Seite des Spesen-Eintrages enthält den Header, die weiteren dazugehörigen Seiten sind ohne Header. (#64085)
 
