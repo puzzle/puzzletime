@@ -42,6 +42,27 @@ module Evaluations
       assert_sum_total_times 0.0, 12.0, 40.0, 40.0
     end
 
+    def test_sum_total_times
+      Absencetime.delete_all
+      create_absences
+
+      employees(:mark).update_column(:department_id, 1)
+      employees(:lucien).update_column(:department_id, 1)
+      employees(:pascal).update_column(:department_id, 2)
+
+      @evaluation.stubs(:department_id).returns(nil)
+
+      assert_in_delta(3.0, @evaluation.sum_total_times(@period_month))
+
+      @evaluation.stubs(:department_id).returns(1)
+
+      assert_in_delta(2.0, @evaluation.sum_total_times(@period_month))
+
+      @evaluation.stubs(:department_id).returns(2)
+
+      assert_in_delta(1.0, @evaluation.sum_total_times(@period_month))
+    end
+
     def test_absences_detail_mark
       @evaluation.set_division_id employees(:mark).id
 
