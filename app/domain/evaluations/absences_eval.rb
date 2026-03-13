@@ -43,6 +43,13 @@ module Evaluations
       end
     end
 
+    # Absences must additionally be filtered by department id (overwrite)
+    def sum_total_times(period = nil)
+      query = worktime_query(category, period)
+      query = query.joins(:employee).where(employees: { department_id: department_id }) if department_id.present?
+      query_time_sums(query)
+    end
+
     def division_header
       'Member'
     end
