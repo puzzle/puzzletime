@@ -12,31 +12,33 @@ module WorktimesCsv
 
   private
 
-  def send_worktimes_csv(worktimes, filename)
-    csv_data = worktimes_csv(worktimes)
+  # @param stripped: include/exclude internal description in csv
+  def send_worktimes_csv(worktimes, filename, stripped = false)
+    csv_data = CSV.generate do |csv|
+      csv << header(stripped)
+
+      worktimes.each do |time|
+        csv << row(time, stripped)
+      end
+    end
+
     send_csv(csv_data, filename)
   end
 
-  def worktimes_csv(worktimes)
-    CSV.generate do |csv|
-      csv << ['Datum', 'Stunden', 'Von Zeit', 'Bis Zeit', 'CHF', 'Stundenansatz CHF', 'Reporttyp',
-              'Verrechenbar', 'Member', 'Position', 'Ticket', 'Bemerkungen', 'Interne Bemerkungen']
-      worktimes.each do |time|
-        csv << [I18n.l(time.work_date),
-                time.hours,
-                (time.start_stop? ? I18n.l(time.from_start_time, format: :time) : ''),
-                (time.start_stop? && time.to_end_time? ? I18n.l(time.to_end_time, format: :time) : ''),
-                amount(time),
-                offered_rate(time),
-                time.report_type,
-                time.billable,
-                time.employee.label,
-                time.account.label_verbose,
-                time.ticket,
-                time.description,
-                time.internal_description]
-      end
-    end
+  def header(stripped = false)
+    header = ['Datum', 'Stunden', 'Von Zeit', 'Bis Zeit', 'CHF', 'Stundenansatz CHF', 'Reporttyp',
+              'Verrechenbar', 'Member', 'Position', 'Ticket', 'Bemerkungen']
+    header << 'Interne Bemerkungen' unless stripped
+    header
+  end
+
+  def row(time, stripped = false)
+    data = [I18n.l(time.work_date), time.hours, (time.start_stop? ? I18n.l(time.from_start_time, format: :time) : ''),
+            (time.start_stop? && time.to_end_time? ? I18n.l(time.to_end_time, format: :time) : ''),
+            amount(time), offered_rate(time), time.report_type, time.billable, time.employee.label, time.account.label_verbose,
+            time.ticket, time.description]
+    data << time.internal_description unless stripped
+    data
   end
 
   def offered_rate(time)

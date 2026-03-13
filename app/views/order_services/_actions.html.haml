@@ -9,8 +9,11 @@
               hidden: true,
               data: { submit_form: '#worktimes' })
 
-= action_link(action_icon('export', 'CSV Export'),
-              params.to_unsafe_h.merge(action: :export_worktimes_csv, only_path: true))
+= action_link(action_icon('export', 'CSV Export ohne internen Bemerkungen'),
+              params.to_unsafe_h.merge(action: :export_worktimes_csv, stripped: true, only_path: true))
+
+= action_link(action_icon('export', 'CSV Export mit internen Bemerkungen'),
+              params.to_unsafe_h.merge(action: :export_worktimes_csv, stripped: false, only_path: true))
 
 = action_link(action_icon('time', 'Zeitrapport erstellen'),
               params.to_unsafe_h.merge(action: :compose_report, only_path: true))
