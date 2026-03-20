@@ -17,7 +17,7 @@
 class Service < ApplicationRecord
   has_many :accounting_posts
 
-  scope :list, -> { order(:name) }
+  scope :list, -> { order(active: :desc, name: :asc) }
 
   protect_if :accounting_posts, 'Der Eintrag kann nicht gelöscht werden, da ihm noch Budgetpositionen zugeordnet sind'
 
@@ -25,6 +25,6 @@ class Service < ApplicationRecord
   validates :name, uniqueness: true
 
   def to_s
-    name
+    [name, ('(inaktiv)' unless active)].compact.join(' ')
   end
 end
