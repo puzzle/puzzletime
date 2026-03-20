@@ -25,6 +25,11 @@ class AccountingPostsController < CrudController
     @cockpit = Order::Cockpit.new(parent, @period)
   end
 
+  def edit
+    @portfolio_items = PortfolioItem.where('active = ? OR id = ?', true, @accounting_post.portfolio_item_id)
+    @services = Service.where('active = ? OR id = ?', true, @accounting_post.service_id)
+  end
+
   def export_csv
     set_period
     @period = Period.new(@period.start_date, Time.zone.today) if @period.end_date.blank?
