@@ -32,14 +32,30 @@ module Expenses
     def build
       validate
       setup_fonts
-      expenses.each_with_index do |e, i|
-        @expense = e
+      pages.each_with_index do |e, i|
+        @expense = e[:expense]
         pdf.start_new_page unless i.zero?
-        add_header
-        add_receipt
+        add_header if e[:header]
+        add_receipt(e[:page])
         reset_model_data
       end
       pdf.number_pages('Seite <page>/<total>', at: [pdf.bounds.right - 60, pdf.bounds.bottom + 5])
+    end
+
+    def pages
+      expenses.flat_map do |exp|
+        if exp.receipt.content_type == 'application/pdf' && page_count(exp) > 1
+          (1..exp.receipt.metadata[:page_count]).to_a.flat_map do |page_num|
+            { header: page_num == 1, expense: exp, page: page_num }
+          end
+        else
+          { header: true, expense: exp, page: 1 }
+        end
+      end
+    end
+
+    def page_count(exp)
+      exp.receipt.metadata[:page_count]
     end
 
     def generate
@@ -157,7 +173,7 @@ module Expenses
     end
 
     def receipt_printable?
-      receipt.attached? && receipt.image? # Currently, previewables will not be handled
+      receipt.attached? && (receipt.image? || receipt.content_type == 'application/pdf') # Currently, previewables will not be handled
     end
 
     def receipt
@@ -171,23 +187,45 @@ module Expenses
       'Es wurde kein Beleg beigelegt.'
     end
 
-    def add_receipt
+    def add_receipt(page)
       return unless receipt_printable?
 
+      case receipt.content_type
+      when 'application/pdf' then add_pdf_receipt(page - 1)
+      when /image/ then add_image_receipt
+      end
+    end
+
+    def add_image_receipt
       blob.open do |file|
         # Vips auto rotates by default
         image = ::Vips::Image.new_from_file(file.path)
-        rotated = ImageProcessing::Vips.source(image)
+        rotated = ::ImageProcessing::Vips.source(image)
         rotated.write_to_file(file.path)
         pdf.image file.path, position: :center, fit: [image_width, image_height]
       end
     rescue StandardError => e
-      add_text "Error while adding picture for expense #{@expense.id}"
-      add_text "Message: #{e.message}"
+      add_receipt_adding_errors(e, 'image')
+    end
 
-      Rails.logger.info "Error while adding picture for expense #{@expense.id}"
-      Rails.logger.info "Message: #{e.message}"
-      Rails.logger.info "Backtrace: #{e.backtrace.inspect}"
+    def add_pdf_receipt(page_num)
+      blob.open do |file|
+        pdf_image = ::Vips::Image.new_from_file(file.path, page: page_num)
+        image = pdf_image.thumbnail_image(Settings.expenses.receipt.max_pixel)
+        source = ::ImageProcessing::Vips.source(image)
+        pdf.image source.call, position: :center, fit: [image_width, image_height]
+      end
+    rescue StandardError => e
+      add_receipt_adding_errors(e, 'pdf')
+    end
+
+    def add_receipt_adding_errors(error, file_type)
+      add_text "Error while adding #{file_type} for expense #{@expense.id}"
+      add_text "Message: #{error.message}"
+
+      Rails.logger.info "Error while adding #{file_type} for expense #{@expense.id}"
+      Rails.logger.info "Message: #{error.message}"
+      Rails.logger.info "Backtrace: #{error.backtrace.inspect}"
     end
 
     def blob
