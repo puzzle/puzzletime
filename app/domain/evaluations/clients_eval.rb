@@ -19,7 +19,7 @@ module Evaluations
       super(Client)
     end
 
-    def divisions(_period = nil)
+    def divisions(_period = nil, _times = nil)
       WorkItem.joins(:client).list
     end
 

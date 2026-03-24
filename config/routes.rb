@@ -178,7 +178,7 @@ Rails.application.routes.draw do
   resources :employee_master_data, only: %i[index show]
 
   scope '/evaluator', controller: 'evaluator' do
-    get :index
+    get :index, as: 'evaluator'
     get :overview
     get :details
 
