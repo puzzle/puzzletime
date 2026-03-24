@@ -63,7 +63,7 @@ module DryCrud
       # contain the formatted attribute value for the current entry.
       def attr(a, header = nil, html_options = {}, &block)
         header ||= attr_header(a)
-        block ||= ->(e) { format_attr(e, a) }
+        block ||= ->(e) { format_attr(e, a, options) }
         add_css_class(html_options, align_class(a))
         col(header, html_options, &block)
       end
