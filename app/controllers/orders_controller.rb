@@ -75,9 +75,16 @@ class OrdersController < CrudController
   end
 
   def search
-    params[:q] ||= params[:term]
     respond_to do |format|
-      format.json { @orders = search_entries }
+      format.json do
+        @orders =
+          if params[:id].present?
+            Order.where(id: params[:id])
+          else
+            params[:q] ||= params[:term]
+            search_entries
+          end
+      end
     end
   end
 

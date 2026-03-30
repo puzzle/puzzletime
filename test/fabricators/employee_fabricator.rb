@@ -12,7 +12,6 @@
 #  firstname                 :string(255)      not null
 #  lastname                  :string(255)      not null
 #  shortname                 :string(3)        not null
-#  passwd                    :string(255)
 #  email                     :string(255)      not null
 #  management                :boolean          default(FALSE)
 #  initial_vacation_days     :float
@@ -38,6 +37,13 @@
 #  graduation                :string
 #  identity_card_type        :string
 #  identity_card_valid_until :date
+#  encrypted_password        :string           default("")
+#  remember_created_at       :datetime
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  workplace_id              :bigint
+#  worktimes_commit_reminder :boolean          default(TRUE), not null
+#  member_coach_id           :integer
 #
 
 Fabricator(:employee) do

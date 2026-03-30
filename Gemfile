@@ -72,9 +72,11 @@ gem 'validates_by_schema'
 gem 'validates_timeliness'
 gem 'xmlrpc'
 
-# Error reporting, they are required in their respective initializers
-gem 'airbrake', require: false
-gem 'sentry-raven', require: false
+# Error reporting
+gem 'airbrake', require: false # required in its respective initializers
+gem 'sentry-delayed_job'
+gem 'sentry-rails'
+gem 'sentry-ruby'
 
 ## assets
 gem 'autoprefixer-rails'

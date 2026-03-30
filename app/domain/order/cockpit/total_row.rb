@@ -8,10 +8,13 @@
 class Order
   class Cockpit
     class TotalRow < Row
-      attr_reader :info
+      include Rails.application.routes.url_helpers
+      attr_reader :info, :order, :period
 
-      def initialize(rows)
+      def initialize(order, period, rows)
         super('Total')
+        @order = order
+        @period = period
         @cells = build_total_cells(rows)
         @info = build_info(rows)
       end
@@ -25,7 +28,8 @@ class Order
         master&.each_key do |key|
           hash[key] =
             Cell.new(sum_non_nil_values(cells, key, :hours, :to_d),
-                     sum_non_nil_values(cells, key, :amount, :to_d))
+                     sum_non_nil_values(cells, key, :amount, :to_d),
+                     link_path(key))
         end
         hash
       end
@@ -43,6 +47,28 @@ class Order
         return if values.all?(&:nil?)
 
         values.sum(&converter)
+      end
+
+      def link_path(key)
+        case key
+        when :supplied_services
+          order_order_services_path(
+            @order.id,
+            link_options
+          )
+        when :not_billable
+          order_order_services_path(
+            @order.id,
+            link_options.merge(billable: false)
+          )
+        end
+      end
+
+      def link_options
+        {
+          start_date: @period.start_date,
+          end_date: @period.end_date
+        }
       end
     end
   end

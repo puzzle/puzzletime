@@ -7,6 +7,9 @@
 
 require 'active_support/core_ext/integer/time'
 
+local_config = Rails.root.join('config/environments/development.local.rb')
+load local_config if local_config.exist?
+
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 

@@ -130,18 +130,21 @@ class Period
     def parse_date(date)
       return nil if date.blank?
 
-      if date.is_a? String
-        begin
-          date = Date.strptime(date, I18n.t('date.formats.default'))
-        rescue StandardError
-          date = Date.parse(date)
-        end
+      case date
+      when Time then date.to_date
+      when /\A\d{1,2}\.\d{1,2}\.\d{2}\z/ then parse_date_string(date, :short_year)
+      when String then parse_date_string(date)
+      else date
       end
-      date = date.to_date if date.is_a? Time
-      date
     end
 
     private
+
+    def parse_date_string(date, type = :default)
+      Date.strptime(date, I18n.t(type, scope: 'date.formats'))
+    rescue ArgumentError
+      Date.parse(date)
+    end
 
     def day_label(date)
       case date

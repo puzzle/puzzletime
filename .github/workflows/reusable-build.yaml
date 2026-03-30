@@ -1,5 +1,5 @@
 ---
-name: 'Reusable: Build and push image'
+name: "Reusable: Build and push image"
 
 "on":
   workflow_call:
@@ -17,32 +17,56 @@ name: 'Reusable: Build and push image'
         type: boolean
         default: false
       registry:
-        description: 'FQDN of the registry'
-        type: string
-        required: true
-      registry_url:
-        description: 'URL to push image to'
+        description: "FQDN of the registry"
         type: string
         required: false
-        default: 'harbor.puzzle.ch/pitc-ruby-public/ptime/int/rails'
+        default: ""
+      registry_url:
+        description: "URL to push image to"
+        type: string
+        required: false
+        default: ""
 
     secrets:
       PUZZLE_REGISTRY_USERNAME:
-        description: 'Needed for the registry login'
+        description: "Needed for the registry login"
         required: true
       PUZZLE_REGISTRY_TOKEN:
-        description: 'Needed for the registry login'
+        description: "Needed for the registry login"
         required: true
 
 jobs:
   build:
     environment: ${{ inputs.environment }}
-    runs-on: 'ubuntu-latest'
+    runs-on: "ubuntu-latest"
+
+    env:
+      BUILD_REGISTRY: ${{ inputs.registry || vars.REGISTRY }}
+      BUILD_REGISTRY_URL: ${{ inputs.registry_url || vars.REGISTRY_URL }}
+
     steps:
+      - name: Input Validation
+        run: |
+          exit_code=0
+
+          if [ -z "${BUILD_REGISTRY}" ]; then
+            echo "::error title=Configuration Error::BUILD_REGISTRY is empty."
+            echo "Please ensure 'registry' input is set or 'REGISTRY' variable is configured in the ${{ inputs.environment }} environment."
+            exit_code=1
+          fi
+
+          if [ -z "${BUILD_REGISTRY_URL}" ]; then
+            echo "::error title=Configuration Error::BUILD_REGISTRY_URL is empty."
+            echo "Please ensure 'registry_url' input is set or 'REGISTRY_URL' variable is configured in the ${{ inputs.environment }} environment."
+            exit_code=1
+          fi
+
+          exit "${exit_code}"
+
       - uses: docker/setup-buildx-action@v3
       - uses: docker/login-action@v3
         with:
-          registry: ${{ inputs.registry }}
+          registry: ${{ env.BUILD_REGISTRY }}
           username: ${{ secrets.PUZZLE_REGISTRY_USERNAME }}
           password: ${{ secrets.PUZZLE_REGISTRY_TOKEN }}
       - uses: docker/build-push-action@v4
@@ -55,9 +79,8 @@ jobs:
             GITHUB_SHA=${{ github.sha }}
           target: app
           tags: |
-            ${{ inputs.registry_url }}:latest
-            ${{ inputs.registry_url }}:${{ github.sha }}
+            ${{ env.BUILD_REGISTRY_URL }}:latest
+            ${{ env.BUILD_REGISTRY_URL }}:git-${{ github.sha }}
           push: ${{ inputs.push }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-...

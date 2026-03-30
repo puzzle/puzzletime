@@ -2,7 +2,7 @@
 
 require 'csv'
 
-namespace :crm_migration do
+namespace :crm_migration do # rubocop:disable Metrics/BlockLength
   desc <<~DESC
     create a mock mapping between crm_keys
 

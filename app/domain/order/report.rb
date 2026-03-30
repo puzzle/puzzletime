@@ -176,21 +176,18 @@ class Order
 
     def filter_by_uncertainty(orders, attr)
       if params[attr].present?
-        orders.where(attr => map_uncertainties_filter(params[attr]))
+        orders.where(attr => uncertainties_filter[params[attr]])
       else
         orders
       end
     end
 
-    def map_uncertainties_filter(value)
-      case value
-      when 'low'
-        0..2
-      when 'medium'
-        3..7
-      when 'high'
-        8..16
-      end
+    def uncertainties_filter
+      @uncertainties_filter ||= {
+        'low' => 0..2,
+        'medium' => 3..7,
+        'high' => 8..16
+      }
     end
 
     def sort_entries(entries)

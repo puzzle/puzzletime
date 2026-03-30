@@ -239,6 +239,11 @@ a.disabled:hover {
   color: $btn-link-disabled-color;
 }
 
+span.subtle-hint {
+  color: $gray;
+  line-height: 21.8px;
+}
+
 .form-action {
   @extend .form-control;
   width: auto;

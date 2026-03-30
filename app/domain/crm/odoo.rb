@@ -70,10 +70,13 @@ module Crm
       context = Client.includes(:work_item)
       context = context.where(id: ids) if ids.present?
 
+      clean_crm_keys(context)
+
       sync_crm_entities(context) do |client|
         company = with_prefetch(:companies, client.crm_key.to_i) { ::Crm::Odoo::Company.find(_1) }
         item = client.work_item
-        return if item.name == company.name
+
+        next if item.name == company.name
 
         item.update!(name: company.name)
       end
@@ -83,15 +86,24 @@ module Crm
       context = Order.includes(:work_item, :additional_crm_orders)
       context = context.where(id: ids) if ids.present?
 
+      clean_crm_keys(context)
+
       sync_crm_entities(context) do |order|
         lead = with_prefetch(:leads, order.crm_key.to_i) { ::Crm::Odoo::Lead.find(_1) }
         item = order.work_item
 
         order.additional_crm_orders.each do |additional|
+          next if additional.crm_key.blank?
+
           sync_additional_order(additional)
         end
 
-        return if item.name == lead.name
+        if lead.name == 'f'
+          Rails.logger.error "Refusing to change name: '#{item.name}' to 'f'"
+          next
+        end
+
+        next if item.name == lead.name
 
         item.update!(name: lead.name)
       end
@@ -111,8 +123,12 @@ module Crm
       context = Contact
       context = context.where(id: ids) if ids.present?
 
+      clean_crm_keys(context)
+
       sync_crm_entities(context) do |contact|
         partner = with_prefetch(:partners, contact.crm_key.to_i) { ::Crm::Odoo::Partner.find(_1) }
+        next if partner.blank?
+
         attributes = contact_attributes(partner)
 
         contact.update!(attributes)
@@ -124,8 +140,10 @@ module Crm
       context = Client
       context = context.where(id: ids) if ids.present?
 
+      clean_crm_keys(context)
+
       sync_crm_entities(context) do |client|
-        partners = with_prefetch(:company_partners, client.crm_key.to_i) { ::Crm::Odoo::Company.partners_for }
+        partners = with_prefetch(:company_partners, client.crm_key.to_i) { ::Crm::Odoo::Company.partners_for(_1) }
         existing = existing_contact_crm_keys(client, partners.map(&:id))
 
         partners
@@ -140,6 +158,14 @@ module Crm
     def restrict_local? = true
 
     private
+
+    def clean_crm_keys(context)
+      return unless context.has_attribute? :crm_key
+
+      Rails.logger.info "Cleaning crm keys for #{context.name}"
+
+      context.where(crm_key: '').update_all(crm_key: nil)
+    end
 
     def prefetch_resources(type = :all)
       @prefetched ||= {}
@@ -204,8 +230,10 @@ module Crm
       entities.where.not(crm_key: nil).find_each do |entity|
         yield entity
       rescue Crm::Odoo::ResourceNotFound
+        Rails.logger.info "Could not find CRM element in Odoo:\n#{entity.pretty_inspect}"
         entity.update_attribute(:crm_key, nil)
       rescue ActiveRecord::RecordInvalid => e
+        log_taken_error(e)
         notify_sync_error(e, entity, e.record)
       rescue StandardError => e
         notify_sync_error(e, entity)
@@ -213,7 +241,15 @@ module Crm
     end
 
     def crm_entity_url(model, entity)
-      return unless (key = entity.respond_to?(:crm_key) && entity.crm_key.presence)
+      key =
+        case entity
+        when Integer, String then entity
+        when Company, Partner, Lead then entity.id
+        else
+          entity.respond_to?(:crm_key) && entity.crm_key.presence
+        end
+
+      return unless key
 
       "#{api.base_url}/#{model}/#{key}"
     end
@@ -222,16 +258,19 @@ module Crm
       parameters = record_to_params(synced_entity, 'synced_entity').tap do |params|
         params.merge!(record_to_params(invalid_record, 'invalid_record')) if invalid_record.present?
       end
-      Airbrake.notify(error, parameters) if airbrake?
-      Raven.capture_exception(error, extra: parameters) if sentry?
+
+      Rails.logger.error <<~ERROR
+        Message: #{error.message}
+        Backtrace:
+          #{error.backtrace.join("\n  ")}
+      ERROR
+
+      ErrorTracker.report_exception(error, parameters)
     end
 
     def false_to_nil(hash)
       hash.transform_values { |v| v || nil }
     end
-
-    def airbrake? = ENV['RAILS_AIRBRAKE_HOST'].present?
-    def sentry? = ENV['SENTRY_DSN'].present?
 
     def record_to_params(record, prefix = 'record')
       {
@@ -241,6 +280,33 @@ module Crm
         "#{prefix}_errors" => record.errors.messages,
         "#{prefix}_changes" => record.changes
       }
+    end
+
+    def log_taken_error(error)
+      record = error.record
+      types = record.errors.details[:name].pluck(:error)
+      return unless types.include? :taken
+
+      old_name = record.name_change[0]
+      new_name = record.name_change[1]
+
+      if record.root?
+        conflict = record.class.where(parent_id: nil).find_by(name: new_name)
+        root_or_parent = "Root:     [#{record.root?}] #{record.path_ids}"
+      else
+        parent = record.parent
+        conflict = parent.children.find_by(name: new_name)
+        root_or_parent = "Parent:   [##{parent.id}] #{parent.path_shortnames}"
+      end
+
+      Rails.logger.error <<~ERROR
+        #{record.class.name} rename failed
+        From:     '#{old_name}'
+        To:       '#{new_name}'
+        Record:   [##{record.id}] #{record.path_shortnames}
+        #{root_or_parent}
+        Conflict: [##{conflict.id}] - #{conflict.path_shortnames}
+      ERROR
     end
   end
 end

@@ -15,28 +15,52 @@ module Evaluations
     def setup
       super
       @evaluation = Evaluations::AbsencesEval.new
+      @times = [@period_month].collect { |p| @evaluation.sum_times_grouped(p) }
     end
 
     def test_absences
+      create_absences
+
       assert_predicate @evaluation, :absences?
       assert_not @evaluation.for?(employees(:pascal))
       assert @evaluation.total_details
 
-      divisions = @evaluation.divisions
+      divisions = @evaluation.divisions(@period_month, @times)
 
       assert_equal 3, divisions.size
 
-      assert_sum_times 0, 8, 8, 8, employees(:mark)
-      assert_sum_times 0, 0, 12, 12, employees(:lucien)
-      assert_sum_times 0, 4, 17, 17, employees(:pascal)
+      assert_sum_times 0, 8, 9, 9, employees(:mark)
+      assert_sum_times 0, 0, 13, 13, employees(:lucien)
+      assert_sum_times 0, 4, 18, 18, employees(:pascal)
 
       assert_empty(@evaluation.sum_times_grouped(@period_day))
       assert_equal({ employees(:mark).id => 8.0, employees(:pascal).id => 4.0 },
                    @evaluation.sum_times_grouped(@period_week))
-      assert_equal({ employees(:mark).id => 8.0, employees(:lucien).id => 12.0, employees(:pascal).id => 17.0 },
+      assert_equal({ employees(:mark).id => 9.0, employees(:lucien).id => 13.0, employees(:pascal).id => 18.0 },
                    @evaluation.sum_times_grouped(@period_month))
 
-      assert_sum_total_times 0.0, 12.0, 37.0, 37.0
+      assert_sum_total_times 0.0, 12.0, 40.0, 40.0
+    end
+
+    def test_sum_total_times
+      Absencetime.delete_all
+      create_absences
+
+      employees(:mark).update_column(:department_id, 1)
+      employees(:lucien).update_column(:department_id, 1)
+      employees(:pascal).update_column(:department_id, 2)
+
+      @evaluation.stubs(:department_id).returns(nil)
+
+      assert_in_delta(3.0, @evaluation.sum_total_times(@period_month))
+
+      @evaluation.stubs(:department_id).returns(1)
+
+      assert_in_delta(2.0, @evaluation.sum_total_times(@period_month))
+
+      @evaluation.stubs(:department_id).returns(2)
+
+      assert_in_delta(1.0, @evaluation.sum_total_times(@period_month))
     end
 
     def test_absences_detail_mark
@@ -58,6 +82,15 @@ module Evaluations
 
       assert_sum_times 0, 4, 17, 17
       assert_count_times 0, 1, 2, 2
+    end
+
+    def create_absences
+      %i[mark lucien pascal].each do |e|
+        employees(e).employments.create!(start_date: @period_month.start_date,
+                                         percent: 60,
+                                         employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
+        Fabricate(:absencetime, employee: employees(e), work_date: @period_month.start_date, hours: 1)
+      end
     end
   end
 end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
+#  Copyright (c) 2006-2025, Puzzle ITC GmbH. This file is part of
 #  PuzzleTime and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
@@ -9,8 +9,8 @@
 #
 # Table name: additional_crm_orders
 #
-#  id       :bigint(8)        not null, primary key
-#  order_id :bigint(8)        not null
+#  id       :bigint           not null, primary key
+#  order_id :bigint           not null
 #  crm_key  :string           not null
 #  name     :string
 #

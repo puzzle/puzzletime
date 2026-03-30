@@ -8,9 +8,8 @@
 require 'test_helper'
 
 class EditWorktimesAsOrderResponsibleTest < ActionDispatch::IntegrationTest
-  setup :login
-
   test 'can change own committed worktimes on own order' do
+    login
     click_link 'Zeiten freigeben'
     click_button 'Speichern'
 
@@ -22,6 +21,13 @@ class EditWorktimesAsOrderResponsibleTest < ActionDispatch::IntegrationTest
 
     assert_no_selector('.alert.alert-danger')
     assert_selector('.alert.alert-success')
+  end
+
+  test 'label worktimes commit button red if last day of month' do
+    travel_to Time.zone.today.at_end_of_month
+    login
+
+    assert_selector('.weeknav-calendar-row a.add-other.last-day', text: 'Zeiten freigeben')
   end
 
   def login

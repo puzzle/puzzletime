@@ -9,8 +9,9 @@
                            :lastname,
                            :shortname,
                            :email,
-                           :ldapname,
-                           :department_id,
+                           :ldapname
+  = f.labeled_input_field :member_coach_id, list: Employee.management.list
+  = f.labeled_input_fields :department_id,
                            :workplace_id,
                            :probation_period_end_date,
                            :graduation

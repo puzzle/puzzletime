@@ -108,7 +108,7 @@
                     = link_to(picon('document'), order_invoice_path(order_id: invc.order.id, id: invc.id, format: :pdf), target: :blank, title: 'PDF anzeigen')
                   %td.center
                     - if can?(:sync, invc.invoice)
-                      = link_to(picon('chevron-left'), sync_order_invoice_path(order_id: invc.order.id, id: invc.id), title: 'Daten aus Invoicing übernehmen', data: { method: :put })
+                      = link_to(picon('chevron-left'), reports_invoices_sync_path(@report.to_params_unsafe_h.merge(invoice_id: invc.id)), title: 'Daten aus Invoicing übernehmen', data: { method: :put })
 
     %p= paginate @report
 

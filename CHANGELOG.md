@@ -1,3 +1,61 @@
+# 2.16
+
+## Features und Improvements
+* **Auftrag / Auftragsmanagement**
+	* **Tab "Positionen"**:
+		* Der CSV-Export umfasst auch den ausgeschriebenen Namen der Buchungsposition (#64412)
+  		* Link zu betroffenen Leistungen auch bei Zeile 'Total' verfügbar (#64388)
+	* **Tab "Leistungen"**:
+ 		* die Filterung bleibt nach dem Bearbeiten von Leistungen bestehen (#64984)
+	* **Tab "Auftrags-Controlling"**:
+   		* Beim Öffnen ist standardmässig der Tab "Laufende" geöffnet (#64109)
+    * **Tab "Verrechnungs-Controlling"**:
+    	* Verrechnungs-Controlling: neue Übersicht zur Anzeige nicht noch verrechneter Leistungen (#64087)
+    * * **Tab "Rechnungs-Controlling"**:
+      	* Rechnungs-Controlling: Das Listenergebnis kann exportiert werden (#64444)
+* **Member Management**
+	* Members > Absenzen Übersicht:
+ 		* Sortierung nach Spalte "übrige Ferien" möglich (#64536)
+   		* Filterung nach OE möglich (#64537)
+	* Members > Zeit Übersicht: neue Spalte Feriensaldo per Ende Jahr (#64535)
+ 	* beim Member kann der Member Coach hinterlegt werden (Verwalten > Members > Bearbeiten > Feld "Member Coach") (#64907)
+		* hinterlegter Member Coach wird angezeigt unter Members > Memberliste und unter Members > Zeiten (bei letzterem Filterung nach Member Coach möglich)
+* **Spesen**:
+	* Belege neu als (mehrseitige) PDF möglich. Für den Export werden die PDFs in Bilder konvertiert, jede Seite des PDFs gibt eine Seite im Export. Erste Seite des Spesen-Eintrages enthält den Header, die weiteren dazugehörigen Seiten sind ohne Header. (#64085)
+
+## Bugfixes
+* **Member-Management**: Members > Auslastung: Export für aktuellen Zeitraum behoben (#64619)
+* **Aufträge**: Der Menü-Eintrag "Aufträge" wird dunkelblau markiert, wenn "Rechnungs-Controlling" und "Verrechnungs-Controlling" geöffnet sind
+
+## Operations
+* **Error-Tracking-Tool**: Wechsel von Sentry auf Glitchtip
+
+# 2.15.3
+
+## Bugfixes und Improvements
+
+* **Odoo Sync**: Der nächtliche Sync von Odoo zu Puzzletime wurde repariert (#64796, #64695, #64620)
+* **Spesen**: Beim Speichern von Spesen wird der Auftrag wieder gespeichert (#64539)
+* **Mehrere Leistungen umbuchen**: Mehrere Leistungen umbuchen funktioniert wieder (#64530)
+
+# 2.15.2
+
+## Bugfixes und Improvements
+
+* **Odoo Sync**: Der nächtliche Sync von Odoo zu Puzzletime wurde repariert
+* **Odoo Sync**: Sonderzeichen werden jetzt korrekt übernommen
+
+# 2.15.1
+
+### Bugfixes und Improvements
+
+* **Zeitrapport**: Seitenlayout anpassbar
+* **Zeitrapport**: Logikfehler behoben
+* **Rechnungsfilter**: Logikfehler behoben
+* **Browser**: Fehler beim zurückwechseln im Browser behoben
+* **Zeiterfassung**: Zeiterfassung Checkboxen Anzeigefehler behoben, der diese beim Update resettet hat
+* **Zeitrapport**: Zeitstempel in Zeitrapport repariert
+
 # 2.15
 
 ### Features, Improvements und Bugfixes

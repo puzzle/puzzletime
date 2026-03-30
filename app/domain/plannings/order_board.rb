@@ -60,7 +60,6 @@ module Plannings
 
     def load_accounting_posts
       order.accounting_posts
-           .where(closed: false)
            .includes(:work_item)
            .list
     end

@@ -19,9 +19,10 @@ module CockpitCsv
 
   def cockpit_csv(cockpit)
     CSV.generate do |csv|
-      csv << ['Position', 'Budget', 'Geleistete Stunden', 'Nicht verrechenbar', 'Offenes Budget', 'Geplantes Budget']
+      csv << ['Position', 'Name der Position', 'Budget', 'Geleistete Stunden', 'Nicht verrechenbar', 'Offenes Budget', 'Geplantes Budget']
       cockpit.rows.each do |row|
         csv << [row.respond_to?(:shortnames) ? row.shortnames : 'Total',
+                row.respond_to?(:name) ? row.name : '',
                 row.cells[:budget].hours,
                 row.cells[:supplied_services].hours,
                 row.cells[:not_billable].hours,

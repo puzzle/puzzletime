@@ -24,6 +24,7 @@ class OrderReportsController < ApplicationController
         set_filter_values
         unless @report.filters_defined?
           params[:department_id] ||= @user.department_id
+          params[:responsible_id] ||= @user.id
           case params[:status_preselection]
           when nil, ''
             params.reverse_merge!(period_shortcut: '0m')

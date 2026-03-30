@@ -23,9 +23,7 @@ class OrderTargetsController < ApplicationController
   def update_targets
     @errors = OrderTarget.new.errors
     @order_targets.each do |target|
-      unless target.update(target_params(target))
-        target.errors.each { |error| @errors.add(error.attribute, error.message) }
-      end
+      target.errors.each { |error| @errors.add(error.attribute, error.message) } unless target.update(target_params(target))
     end
   end
 

@@ -1,0 +1,57 @@
+-#  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
+-#  PuzzleTime and licensed under the Affero General Public License version 3
+-#  or later. See the COPYING file at the top-level directory or at
+-#  https://github.com/puzzle/puzzletime.
+
+
+= form_tag(nil, method: :get, class: 'form-inline', role: 'filter', remote: true, data: { spin: true }) do
+  = hidden_field_tag :page, 1
+
+  = direct_filter_date(:start_date, 'Zeiten von', @period.start_date)
+  = direct_filter_date(:end_date, 'bis', @period.end_date)
+
+  = direct_filter_select(:period_shortcut,
+    nil,
+    params[:status_preselection] == 'closed' ? predefined_past_quarter_period_options : predefined_past_period_options,
+    prompt: 'benutzerdefiniert')
+
+  = direct_filter_select(:department_id,
+                         'OE',
+                         @departments,
+                         class: 'searchable',
+                         multiple: true)
+
+  = direct_filter_select(:client_work_item_id,
+                         'Kunde',
+                         @clients,
+                         class: 'searchable',
+                         style: 'width: 360px;',
+                         data: { update: '#category_work_item_id',
+                                 url: categories_clients_path })
+
+  = direct_filter_select(:category_work_item_id,
+                         'Kategorie',
+                         @categories,
+                         class: 'searchable',
+                         style: 'width: 240px;')
+
+  = direct_filter_select(:kind_id,
+                         'Auftragsart',
+                         @order_kinds,
+                         class: 'searchable',
+                         multiple: true)
+
+  = direct_filter_select(:status_id,
+                         'Status',
+                         @order_status,
+                         class: 'searchable',
+                         multiple: true)
+
+  = direct_filter_select(:responsible_id,
+                         'Verantwortlich',
+                         @order_responsibles,
+                         class: 'searchable',
+                         multiple: true)
+
+  .form-group
+    = spinner

@@ -23,6 +23,7 @@ class WorktimesController < CrudController
   def index
     set_week_days
     @notifications = UserNotification.list_during(@period, current_user)
+    @last_day_of_month = Time.zone.today == Time.zone.today.end_of_month
     super
   end
 

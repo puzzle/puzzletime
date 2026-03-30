@@ -25,7 +25,7 @@ class EmploymentsControllerTest < ActionController::TestCase
     assert_equal Date.new(2006, 12, 31), employments(:for_half_year).end_date
     post :create, params: { employment: { percent: 80,
                                           employment_roles_employments_attributes: {
-                                            '0' => test_employment_role_80
+                                            '0' => test_employment_role80
                                           },
                                           start_date: Date.new(2006, 10, 1),
                                           end_date: Date.new(2007, 5, 31) }, employee_id: 1 }
@@ -37,7 +37,7 @@ class EmploymentsControllerTest < ActionController::TestCase
   def test_employment_percent
     post :create, params: { employment: { percent: 60,
                                           employment_roles_employments_attributes: {
-                                            '0' => test_employment_role_80
+                                            '0' => test_employment_role80
                                           },
                                           start_date: Date.new(2008, 10, 1),
                                           end_date: Date.new(2009, 5, 31) }, employee_id: 1 }
@@ -49,8 +49,8 @@ class EmploymentsControllerTest < ActionController::TestCase
   def test_employment_role_uniqueness
     post :create, params: { employment: { percent: 160,
                                           employment_roles_employments_attributes: {
-                                            '0' => test_employment_role_80,
-                                            '1' => test_employment_role_80
+                                            '0' => test_employment_role80,
+                                            '1' => test_employment_role80
                                           },
                                           start_date: Date.new(2008, 10, 1),
                                           end_date: Date.new(2009, 5, 31) }, employee_id: 1 }
@@ -77,14 +77,14 @@ class EmploymentsControllerTest < ActionController::TestCase
   def test_entry_attrs
     { percent: 80,
       employment_roles_employments_attributes: {
-        '0' => test_employment_role_80
+        '0' => test_employment_role80
       },
       start_date: Time.zone.today - 1.year,
       end_date: Time.zone.today,
       comment: 'bla bla' }
   end
 
-  def test_employment_role_80
+  def test_employment_role80
     { employment_role_id: employment_roles(:software_engineer).id,
       employment_role_level_id: employment_role_levels(:junior).id,
       percent: 80 }

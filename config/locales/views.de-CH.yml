@@ -8,47 +8,46 @@ de-CH:
   version:
     model:
       create:
-        employee: "Der Member #%{id} wurde erstellt."
-        employment: "Die Anstellung #%{id} wurde erstellt."
-        employmentrolesemployment: "Der Funktionsanteil \"%{role}\" der Anstellung #%{employment_id} wurde erstellt."
+        employee: 'Der Member #%{id} wurde erstellt.'
+        employment: 'Die Anstellung #%{id} wurde erstellt.'
+        employmentrolesemployment: 'Der Funktionsanteil "%{role}" der Anstellung #%{employment_id} wurde erstellt.'
       update:
-        employee: "Der Member #%{id} wurde bearbeitet."
-        employment: "Die Anstellung #%{id} wurde bearbeitet."
-        employmentrolesemployment: "Der Funktionsanteil \"%{role}\" der Anstellung #%{employment_id} wurde bearbeitet."
+        employee: 'Der Member #%{id} wurde bearbeitet.'
+        employment: 'Die Anstellung #%{id} wurde bearbeitet.'
+        employmentrolesemployment: 'Der Funktionsanteil "%{role}" der Anstellung #%{employment_id} wurde bearbeitet.'
       destroy:
-        employee: "Der Member #%{id} wurde gelöscht."
-        employment: "Die Anstellung #%{id} wurde gelöscht."
-        employmentrolesemployment: "Der Funktionsanteil \"%{role}\" der Anstellung #%{employment_id} wurde gelöscht."
+        employee: 'Der Member #%{id} wurde gelöscht.'
+        employment: 'Die Anstellung #%{id} wurde gelöscht.'
+        employmentrolesemployment: 'Der Funktionsanteil "%{role}" der Anstellung #%{employment_id} wurde gelöscht.'
     model_reference:
-      employee: "des Members"
-      employment: "der Anstellung"
-      employmentrolesemployment: "des Funktionsanteils"
+      employee: 'des Members'
+      employment: 'der Anstellung'
+      employmentrolesemployment: 'des Funktionsanteils'
     attribute_change:
-      from_to: "%{attr} %{model_ref} wurde von «%{from}» auf «%{to}» geändert."
-      from: "%{attr} %{model_ref} «%{from}» wurde gelöscht."
-      to: "%{attr} %{model_ref} wurde auf «%{to}» gesetzt."
+      from_to: '%{attr} %{model_ref} wurde von «%{from}» auf «%{to}» geändert.'
+      from: '%{attr} %{model_ref} «%{from}» wurde gelöscht.'
+      to: '%{attr} %{model_ref} wurde auf «%{to}» gesetzt.'
 
   expenses: &expenses
     new:
-      title: "%{model} erfassen"
+      title: '%{model} erfassen'
     create:
-      title: "%{model} erfassen"
+      title: '%{model} erfassen'
       flash:
-        success: "%{model} wurden erfolgreich erfasst."
+        success: '%{model} wurden erfolgreich erfasst.'
     update:
       flash:
-        success: "%{model} wurden erfolgreich aktualisiert."
+        success: '%{model} wurden erfolgreich aktualisiert.'
     destroy:
       flash:
-        success: "%{model} wurden erfolgreich gelöscht."
-        failure: "%{model} konnten nicht gelöscht werden."
+        success: '%{model} wurden erfolgreich gelöscht.'
+        failure: '%{model} konnten nicht gelöscht werden.'
     attachment:
-      name: "Anhang"
-      show: "Anzeigen"
-      hint: "Der Beleg muss ein Bild und gut lesbar sein und den Kaufpreis, das Kaufdatum und die MWST-Nummer enthalten."
+      name: 'Anhang'
+      show: 'Anzeigen'
+      hint: 'Der Beleg muss ein gut lesbares Bild oder PDF sein und den Kaufpreis, das Kaufdatum und die MWST-Nummer enthalten.'
     global:
       link:
         add: Erfassen
 
   expenses_reviews: *expenses
-...

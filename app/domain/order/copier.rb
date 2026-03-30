@@ -7,7 +7,7 @@
 
 class Order
   class Copier
-    attr_reader :source, :copy
+    attr_reader :source
 
     def initialize(source)
       @source = source
@@ -15,6 +15,8 @@ class Order
 
     # Copies an order together with everything that is edited in the order form.
     def copy
+      return @copy if defined?(@copy)
+
       @copy = source.dup
       @copy.work_item = source.work_item.dup
       @copy.work_item.parent_id = source.work_item.parent_id

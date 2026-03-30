@@ -3,8 +3,7 @@
 -#  or later. See the COPYING file at the top-level directory or at
 -#  https://github.com/puzzle/puzzletime.
 
-
-= plain_table(@employees) do |t|
+= plain_table(@employees, member_coach: {no_link: true}) do |t|
   - t.sortable_attr(:firstname) do |e|
     = link_to e.firstname, employee_master_datum_path(e.id)
   - t.sortable_attr(:lastname) do |e|
@@ -14,11 +13,10 @@
     = link_to_if e.email.present?, e.email, "mailto:#{e.email}"
   - t.sortable_attr(:phone_private) do |e|
     = link_to_if e.phone_private.present?, e.phone_private, "tel:#{e.phone_private}"
-  - t.sortable_attr(:phone_office) do |e|
-    = link_to_if e.phone_office.present?, e.phone_office, "tel:#{e.phone_office}"
   - t.sortable_attr(:birthday) do |e|
     = localize_date(e.birthday)
   - t.sortable_attr(:department)
+  - t.sortable_attr(:member_coach)
   - t.sortable_attr(:current_percent_value, 'Beschäftigungsgrad') do |e|
     = format_percent(e.current_percent_value) if e.current_percent_value.present?
   - t.attr(:roles, 'Rollen') do |e|

@@ -28,6 +28,7 @@ module Api
                                            birthday: Date.new(1995, 1, 2),
                                            ldapname: 'jneverends',
                                            is_employed: true,
+                                           employed_within_three_months: false,
                                            department_shortname: 'D1',
                                            department_name: 'devone',
                                            employment_roles: [{ name: 'Software Developer', percent: 90.0, role_level: 'Junior' }] } } }
