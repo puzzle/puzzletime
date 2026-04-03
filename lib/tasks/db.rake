@@ -7,7 +7,7 @@
 
 require './lib/create_testuser'
 
-namespace :db do
+namespace :db do # rubocop:disable Metrics/BlockLength
   namespace :dump do
     desc 'Load a db dump from the given FILE'
     task load: ['db:drop', 'db:create'] do
@@ -27,14 +27,23 @@ namespace :db do
     end
   end
 
-  desc 'Create testusers unless exist'
+  desc 'Drops existing testusers'
+  task drop_testusers: :environment do
+    Employee.where(shortname: %w[MB1 MB2 MGT]).delete_all
+  end
+
+  desc 'Create missing testusers, passwords are random unless provided by env
+    MB1=<password>
+    MB2=<password2>
+    MGT=<password3>
+  '
   task create_testusers: :environment do
     CreateTestuser.run(
       shortname: 'MB1',
       employee: {
         firstname: 'First',
         lastname: 'Member',
-        password: 'member',
+        password: ENV['MB1'] || Devise.friendly_token(64),
         email: 'mb1@puzzle.ch',
         management: false
       },
@@ -63,7 +72,7 @@ namespace :db do
       employee: {
         firstname: 'Second',
         lastname: 'Member',
-        password: 'member',
+        password: ENV['MB2'] || Devise.friendly_token(64),
         email: 'mb2@puzzle.ch',
         management: false
       },
@@ -89,7 +98,7 @@ namespace :db do
       employee: {
         firstname: 'Manager',
         lastname: 'Management',
-        password: 'member',
+        password: ENV['MGT'] || Devise.friendly_token(64),
         email: 'mgt@puzzle.ch',
         management: true
       },
