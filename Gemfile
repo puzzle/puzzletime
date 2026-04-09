@@ -11,6 +11,7 @@ gem 'pg'
 
 gem 'nochmal', github: 'puzzle/nochmal'
 
+gem 'lograge'
 gem 'acts_as_tree'
 gem 'annotate'
 gem 'aws-sdk-s3', require: false
@@ -53,9 +54,9 @@ gem 'prometheus_exporter'
 gem 'protective'
 gem 'psych'
 gem 'puma'
-gem 'rails_autolink'
 gem 'rails-erd'
 gem 'rails-i18n'
+gem 'rails_autolink'
 gem 'request_store'
 gem 'rexml'
 gem 'rqrcode'

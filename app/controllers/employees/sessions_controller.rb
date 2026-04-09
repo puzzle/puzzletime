@@ -11,6 +11,11 @@ module Employees
 
     private
 
+    def append_info_to_payload(payload)
+      super
+      payload[:login_shortname] = params.dig(:employee, :shortname) if action_name == 'create'
+    end
+
     def no_local_auth?
       !Settings.auth.db.active
     end
