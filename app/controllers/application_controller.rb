@@ -42,6 +42,11 @@ class ApplicationController < ActionController::Base
     @user ||= current_employee
   end
 
+  def append_info_to_payload(payload)
+    super
+    payload[:user_id] = current_user.try(:id)
+  end
+
   def storable_location?
     request.get? && is_navigational_format? && !devise_controller? && !request.xhr?
   end
