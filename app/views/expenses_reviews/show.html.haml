@@ -9,6 +9,16 @@
       %h3 Spesen kontrollieren
       = render_attrs(entry, :submission_date, :payment_date, :employee_id, :amount, :kind_value, :order_id, :description)
 
+      %dl.dl-horizontal
+        %dt= t('expenses.attachment.name')
+        %dd.value
+          - if receipt.attached?
+            = attachment_download_link(receipt)
+            - if receipt.image? || receipt.previewable?
+              = attachment_show_link(receipt, t('expenses.attachment.show'), class: 'visible-xs')
+          - else
+            Kein Beleg angehängt
+
     .inlineedit.collapse
       %h3 Spesen bearbeiten
       = standard_form(entry, cancel_url: expenses_review_path(entry)) do |f|
