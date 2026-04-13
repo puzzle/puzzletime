@@ -28,6 +28,10 @@ class AdditionalCrmOrder < ApplicationRecord
     name
   end
 
+  def crm_key_with_label
+    [crm_key, name].compact.join(': ')
+  end
+
   private
 
   def sync_name
