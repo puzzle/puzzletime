@@ -76,6 +76,32 @@ class OrderServicesControllerTest < ActionController::TestCase
                  session[:list_params])
   end
 
+  test 'GET export worktimes as csv without stripping internal description' do
+    get :export_worktimes_csv, params: { order_id: order.id, employee_id: employees(:pascal).id, stripped: false }
+
+    assert_response :success
+    assert_equal 'text/csv', @response.media_type
+
+    csv = CSV.parse(@response.body, headers: true)
+
+    assert_includes csv.headers, 'Interne Bemerkungen'
+    expected = worktimes(:wt_pz_puzzletime)
+    row = csv.first
+
+    assert_equal expected.internal_description, row['Interne Bemerkungen']
+  end
+
+  test 'GET export worktimes as csv and strip internal description' do
+    get :export_worktimes_csv, params: { order_id: order.id, employee_id: employees(:pascal).id, stripped: true }
+
+    assert_response :success
+    assert_equal 'text/csv', @response.media_type
+
+    csv = CSV.parse(@response.body, headers: true)
+
+    assert_not_includes csv.headers, 'Interne Bemerkungen'
+  end
+
   %i[show export_worktimes_csv report].each do |action|
     test "GET #{action} filtered by employee" do
       get action, params: { order_id: order.id, employee_id: employees(:pascal).id }
