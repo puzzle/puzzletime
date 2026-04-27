@@ -160,11 +160,11 @@ class EmployeeTest < ActiveSupport::TestCase
 
     assert_predicate Employee.pending_worktimes_commit, :present?
 
-    Employee.update_all(committed_worktimes_at: Time.zone.today.beginning_of_month - 1.day)
+    Employee.update_all(committed_worktimes_at: Time.zone.today.end_of_month)
 
     assert_predicate Employee.pending_worktimes_commit, :blank?
 
-    Employee.update_all(committed_worktimes_at: Time.zone.today.beginning_of_month - 2.days)
+    Employee.update_all(committed_worktimes_at: (Time.zone.today - 1.month).end_of_month)
 
     assert_predicate Employee.pending_worktimes_commit, :present?
   end
