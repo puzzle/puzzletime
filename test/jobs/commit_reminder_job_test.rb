@@ -45,7 +45,7 @@ class CommitReminderJobTest < ActiveJob::TestCase
 
   test 'perform does not send mail if employee already committed this month' do
     travel_to Date.new(2025, 4, 30) do
-      setup_employee(committed_at: 1.day.ago)
+      setup_employee(committed_at: Time.zone.today.end_of_month)
       EmployeeMailer.expects(:worktime_commit_reminder_mail).never
       CommitReminderJob.new.perform
     end
