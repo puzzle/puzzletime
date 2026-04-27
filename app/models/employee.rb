@@ -118,8 +118,7 @@ class Employee < ApplicationRecord
 
   # logic should match CompletableHelper#recently_completed
   scope :pending_worktimes_commit, lambda {
-                                     reference = Date.current.beginning_of_month
-                                     where('committed_worktimes_at < ? OR committed_worktimes_at IS NULL', reference)
+                                     where('committed_worktimes_at < ? OR committed_worktimes_at IS NULL', Time.zone.today.end_of_month)
                                    }
   scope :active_employed_current_month, -> { joins(:employments).merge(Employment.active.during(Period.current_month)) }
 
