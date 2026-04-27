@@ -25,9 +25,14 @@ class AccountingPostsController < CrudController
     @cockpit = Order::Cockpit.new(parent, @period)
   end
 
+  def new
+    @portfolio_items = PortfolioItem.active
+    @services = Service.active
+  end
+
   def edit
-    @portfolio_items = PortfolioItem.where('active = ? OR id = ?', true, @accounting_post.portfolio_item_id)
-    @services = Service.where('active = ? OR id = ?', true, @accounting_post.service_id)
+    @portfolio_items = PortfolioItem.active_or_selected(@accounting_post.portfolio_item_id)
+    @services = Service.active_or_selected(@accounting_post.service_id)
   end
 
   def export_csv
