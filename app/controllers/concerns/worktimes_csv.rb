@@ -26,7 +26,8 @@ module WorktimesCsv
   end
 
   def header(stripped = false)
-    header = ['Datum', 'Stunden', 'Von Zeit', 'Bis Zeit', 'CHF', 'Stundenansatz CHF', 'Reporttyp',
+    header = ['Datum', 'Stunden', 'Von Zeit', 'Bis Zeit',
+              helpers.currency, "Stundenansatz #{helpers.currency}", 'Reporttyp',
               'Verrechenbar', 'Member', 'Position', 'Ticket', 'Bemerkungen']
     header << 'Interne Bemerkungen' unless stripped
     header
