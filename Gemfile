@@ -5,6 +5,7 @@ source 'https://rubygems.org'
 git_source(:github) { |name| "https://github.com/#{name}.git" }
 
 gem 'rails', '~> 7.1.5'
+gem 'connection_pool', '< 3'
 
 gem 'activerecord-nulldb-adapter', github: 'puzzle/nulldb'
 gem 'pg'
