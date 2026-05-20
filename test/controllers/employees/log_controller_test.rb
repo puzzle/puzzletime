@@ -32,11 +32,11 @@ module Employees
       get :index, params: { id: pedro.id }
 
       assert_select('.log tbody tr', count: 3)
-      assert_select('.log tbody tr:nth-child(1) td:nth-child(2)', text: "Der Member #2 wurde bearbeitet.\n" \
+      assert_select('.log tbody tr:nth-child(1) td:nth-child(2)', text: 'Der Member #2 wurde bearbeitet. ' \
                                                                         'Letzte freigegebene Periode des Members wurde auf «Januar 2000» gesetzt.')
-      assert_select('.log tbody tr:nth-child(2) td:nth-child(2)', text: "Der Member #2 wurde bearbeitet.\n" \
+      assert_select('.log tbody tr:nth-child(2) td:nth-child(2)', text: 'Der Member #2 wurde bearbeitet. ' \
                                                                         'Mobiltelefon des Members wurde auf «+41791234567» gesetzt.')
-      assert_select('.log tbody tr:nth-child(3) td:nth-child(2)', text: "Der Member #2 wurde bearbeitet.\n" \
+      assert_select('.log tbody tr:nth-child(3) td:nth-child(2)', text: 'Der Member #2 wurde bearbeitet. ' \
                                                                         'Strasse des Members wurde auf «Belpstrasse 37» gesetzt.' \
                                                                         'PLZ des Members wurde auf «3007» gesetzt.' \
                                                                         'Ort des Members wurde auf «Bern» gesetzt.')
