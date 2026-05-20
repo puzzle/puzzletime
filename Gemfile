@@ -63,6 +63,7 @@ gem 'rqrcode'
 gem 'rswag-ui'
 gem 'rubocop', require: false
 gem 'rubocop-checkstyle_formatter', require: false
+gem 'minitest', '< 6'
 gem 'rubocop-minitest'
 gem 'rubocop-performance'
 gem 'rubocop-rails'
