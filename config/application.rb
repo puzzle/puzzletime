@@ -19,7 +19,7 @@ require_relative 'version'
 module Puzzletime
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.0
+    config.load_defaults 7.1
 
     # FIXME: remove this if it works flawlesly
     config.active_record.belongs_to_required_by_default = false
@@ -33,6 +33,7 @@ module Puzzletime
     # config.eager_load_paths << Rails.root.join("extras")
 
     config.autoload_paths += %W[#{config.root}/app/models/util]
+    config.add_autoload_paths_to_load_path = true
 
     # Use custom error controller
     config.exceptions_app = routes
