@@ -75,11 +75,11 @@ class OrderReportsTest < ActionDispatch::IntegrationTest
 
       element = find('#category_work_item_id + .selectize-control')
 
-      element.assert_no_selector('.selectize-dropdown-content .option', visible: false)
+      within(element) { assert_no_selector('.selectize-dropdown-content .option', visible: false) }
 
       selectize('client_work_item_id', 'Puzzle')
 
-      element.assert_selector('.selectize-dropdown-content .option', count: 2, visible: false)
+      within(element) { assert_selector('.selectize-dropdown-content .option', count: 2, visible: false) }
     end
   end
 

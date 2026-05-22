@@ -33,7 +33,7 @@ module CrudControllerTestHelper
   def test_index_search # :nodoc:
     field = @controller.search_columns.first
     val = field && test_entry[field].to_s
-    return if val.blank? # does not support search or no value in this field
+    return pass if val.blank? # does not support search or no value in this field
 
     get :index, params: test_params(q: val[0..((val.size + 1) / 2)])
 
@@ -164,7 +164,7 @@ module CrudControllerTestHelper
   end
 
   def not_existing
-    # run this method for disabled tests
+    pass
   end
 
   private
