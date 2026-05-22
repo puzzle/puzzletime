@@ -4,10 +4,10 @@ source 'https://rubygems.org'
 
 git_source(:github) { |name| "https://github.com/#{name}.git" }
 
-gem 'rails', '~> 7.1.5'
+gem 'rails', '~> 7.2.0'
 gem 'connection_pool', '< 3'
 
-gem 'activerecord-nulldb-adapter', github: 'puzzle/nulldb'
+gem 'activerecord-nulldb-adapter'
 gem 'pg'
 
 gem 'nochmal', github: 'puzzle/nochmal'
