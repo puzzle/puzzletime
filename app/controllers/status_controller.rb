@@ -31,7 +31,9 @@ class StatusController < ApplicationController
   end
 
   def can_query_database?
-    ActiveRecord::Base.connection.execute('SELECT 1')
+    ActiveRecord::Base.with_connection do |conn|
+      conn.execute('SELECT 1')
+    end
     true
   rescue PG::Error, ActiveRecord::ActiveRecordError
     false
