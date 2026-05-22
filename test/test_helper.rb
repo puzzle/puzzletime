@@ -7,19 +7,18 @@
 
 ENV['RAILS_ENV'] = 'test'
 
-# if ENV['TEST_REPORTS']
-#   require 'simplecov'
-#   require 'simplecov-rcov'
-#   SimpleCov.coverage_dir 'test/coverage'
-#   # use this formatter for jenkins compatibility
-#   SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
-#   SimpleCov.command_name 'Unit Tests'
-#   SimpleCov.start 'rails'
+module Warning
+  class << self
+    prepend(Module.new do
+      def warn(msg, category: nil)
+        super unless msg.include?(':unprocessable_entity is deprecated')
+      end
+    end)
+  end
+end
 
-#   require 'minitest/reporters'
-#   MiniTest::Reporters.use! [MiniTest::Reporters::DefaultReporter.new,
-#                             MiniTest::Reporters::JUnitReporter.new]
-# end
+require 'minitest/reporters'
+Minitest::Reporters.use! Minitest::Reporters::ProgressReporter.new(detailed_skip: false)
 
 require File.expand_path('../config/environment', __dir__)
 Rails.env = 'test'
