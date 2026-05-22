@@ -33,7 +33,6 @@ module Puzzletime
     # config.eager_load_paths << Rails.root.join("extras")
 
     config.autoload_paths += %W[#{config.root}/app/models/util]
-    config.add_autoload_paths_to_load_path = true
 
     # Use custom error controller
     config.exceptions_app = routes
