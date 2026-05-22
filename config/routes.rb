@@ -126,7 +126,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resource :order_plannings, only: %i[index show update destroy] do
+    resources :order_plannings, only: %i[index show update destroy] do
       get 'new', on: :member, as: 'new'
     end
 

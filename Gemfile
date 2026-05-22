@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 
 git_source(:github) { |name| "https://github.com/#{name}.git" }
 
-gem 'rails', '~> 7.2.0'
+gem 'rails', '~> 8.0.0'
 gem 'connection_pool', '< 3'
 
 gem 'activerecord-nulldb-adapter'
@@ -13,7 +13,7 @@ gem 'pg'
 gem 'nochmal', github: 'puzzle/nochmal'
 
 gem 'acts_as_tree'
-gem 'annotate'
+gem 'annotaterb'
 gem 'aws-sdk-s3', require: false
 gem 'bleib'
 gem 'bootsnap'
@@ -82,6 +82,7 @@ gem 'sentry-rails'
 gem 'sentry-ruby'
 
 ## assets
+gem 'sprockets-rails'
 gem 'autoprefixer-rails'
 gem 'bootstrap-sass'
 gem 'chartjs-ror'
