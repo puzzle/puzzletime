@@ -5,7 +5,7 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
-require 'error_tracker'
+require_relative '../../app/domain/error_tracker'
 
 if ErrorTracker.sentry_like?
   Sentry.init do |config|
