@@ -128,6 +128,9 @@ Rails.application.routes.draw do
 
     resource :order_plannings, only: %i[index show update destroy] do
       get 'new', on: :member, as: 'new'
+      collection do
+        get :preview_total_selected
+      end
     end
 
     resource :completed, only: %i[edit update], controller: 'orders/completed'
