@@ -18,6 +18,8 @@ Rails.application.configure do
   # While tests run files are not watched, reloading is not necessary.
   config.enable_reloading = false
 
+  config.secret_key_base = "994fa8ae693d47a35765af4b09f4a85b1879d04af4faefaac31950b11b9a05a89a1a4511a00863a8d92688bce4dde0f3d80f2c16df3cb94ffe65a3d0900c1c8a"
+
   # config.session_store(
   #   ActionDispatch::Session::CacheStore,
   #   expire_after: 12.hours,

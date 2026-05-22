@@ -18,6 +18,8 @@ Rails.application.configure do
   # since you don't have to restart the web server when you make code changes.
   config.enable_reloading = true
 
+  config.secret_key_base = "b6ac4fc2b3e8280398babba54e7fba04f8f0bcd9864079bf1ec1b9ae5be252166d5a802f504ecfd9c67d9a3b44f4866c4eb953b0d4ca6ab308df6eeafb011cf0"
+
   # Do not eager load code on boot.
   config.eager_load = false
 
