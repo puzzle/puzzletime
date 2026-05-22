@@ -11,6 +11,31 @@ class OrdertimesController < WorktimesController
 
   after_destroy :send_email_notification
 
+  def create
+    repetitions = params[:ordertime][:repetitions].to_i.nonzero? || 1
+    if repetitions > 1
+      @multi_form = Forms::MultiOrdertime.new(params.require(:ordertime).permit(permitted_attrs + [:repetitions]))
+      @multi_form.employee = Employee.find_by(id: employee_id)
+
+      @multi_form.prepare_each.with_index do |ot_params, idx|
+        @_params = ot_params
+        # Otherwise only one entity will be created and afterward updated with each cycle
+        model_ivar_set(Ordertime.new)
+
+        is_last = idx == repetitions - 1
+        super do |format|
+          if is_last
+            flash[:notice] = "#{repetitions} Arbeitszeiten wurden erfasst"
+          else
+            format.html
+          end
+        end
+      end
+    else
+      super
+    end
+  end
+
   def update
     if entry.employee_id == @user.id && !entry.worktimes_committed?
       super
