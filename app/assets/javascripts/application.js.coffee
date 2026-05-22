@@ -31,6 +31,7 @@
 #= require nested_form_fields
 #= require modal_create
 #= require datepicker
+#= require header
 #= require worktimes
 #= require plannings
 #= require plannings_panel

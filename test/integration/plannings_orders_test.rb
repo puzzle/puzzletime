@@ -592,6 +592,27 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
                          text: '14')
   end
 
+  test 'dragging over entries correctly sets the worktime in hours of the selected area' do
+    assert_percents ['50', '', '', '', '', ''], row_mark
+    assert_percents ['25', '', '', '', '', ''], row_pascal
+
+    page.assert_selector("#planned_order_#{orders(:puzzletime).id} .selected-sum .header-planned-amount", text: '0.00')
+
+    drag(row_mark.all('.day')[0], row_mark.all('.day')[2])
+
+    page.assert_selector('.-selected', count: 3)
+    page.assert_selector("#planned_order_#{orders(:puzzletime).id} .selected-sum .header-planned-amount", text: '4.00')
+    find('.planning-cancel').click
+
+    drag(row_mark.all('.day')[0], row_pascal.all('.day')[0])
+
+    page.assert_selector('.-selected', count: 2)
+    page.assert_selector("#planned_order_#{orders(:puzzletime).id} .selected-sum .header-planned-amount", text: '6.00')
+    find('.planning-cancel').click
+
+    page.assert_selector("#planned_order_#{orders(:puzzletime).id} .selected-sum .header-planned-amount", text: '0.00')
+  end
+
   private
 
   def workdays_next_n_months(n, date = Time.zone.today)
