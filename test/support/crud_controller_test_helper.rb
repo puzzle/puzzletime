@@ -241,7 +241,7 @@ module CrudControllerTestHelper
 
   # Attribute hash used in edit/update tests.
   def edit_entry_attrs
-    test_entry_attrs
+    test_entry_attrs.reject { |k, _| model_class.readonly_attributes.include?(k.to_s) }
   end
 
   # Attribute hash used in new/create tests.
