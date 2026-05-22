@@ -25,6 +25,7 @@ Rails.env = 'test'
 require 'rails/test_help'
 require 'mocha/minitest'
 require 'capybara/rails'
+require 'capybara/minitest'
 Settings.reload!
 
 Rails.root.glob('test/support/**/*.rb').each { |f| require f }
@@ -113,6 +114,7 @@ end
 module ActionDispatch
   class IntegrationTest
     include Capybara::DSL
+    include Capybara::Minitest::Assertions
     include Devise::Test::IntegrationHelpers
     include IntegrationHelper
 

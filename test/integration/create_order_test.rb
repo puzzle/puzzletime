@@ -214,8 +214,9 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
 
       click_add_contact
 
-      open_selectize('order_order_contacts_attributes_1_contact_id_or_crm')
-        .assert_selector('.option', count: 2)
+      within(open_selectize('order_order_contacts_attributes_1_contact_id_or_crm')) do
+        assert_selector('.option', count: 2)
+      end
     end
   end
 

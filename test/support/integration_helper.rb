@@ -38,9 +38,9 @@ module IntegrationHelper
     element.find('.selectize-input input').native.send_keys(:backspace) if options[:clear]
     element.find('.selectize-input input').native.send_keys(options[:term].chars) if options[:term].present?
     if options[:assert_empty]
-      page.assert_no_selector('.selectize-dropdown-content')
+      assert_no_selector('.selectize-dropdown-content')
     else
-      page.assert_selector('.selectize-dropdown-content')
+      assert_selector('.selectize-dropdown-content')
       find('.selectize-dropdown-content')
     end
   end
