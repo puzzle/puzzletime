@@ -256,7 +256,7 @@ class Employee < ApplicationRecord
     employments.find_by('start_date <= ? AND (end_date IS NULL OR end_date >= ?)', date, date)
   end
 
-  def as_json(_options)
+  def as_json(_options = nil)
     h = {}
     h[:id] = id
     h[:firstname] = firstname
