@@ -12,7 +12,7 @@
     #boards.layout-column
       - @boards.each_with_index do |board, i|
         - @board = board
-        = render 'header', filter: i == 0
+        = render 'header', filter: i == 0, multi: true
 
         .planning-board{ id: "board_#{dom_id(board.subject)}" }
           = render 'board'
