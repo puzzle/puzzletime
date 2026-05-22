@@ -119,7 +119,7 @@ module FormatHelper
   # Transform the given text into a form as used by labels or table headers.
   def captionize(text, clazz = nil)
     text = text.to_s
-    if clazz.respond_to?(:human_attribute_name)
+    if clazz.respond_to?(:human_attribute_name) && text.present?
       text_without_id = text.end_with?('_ids') ? text[0..-5].pluralize : text
       clazz.human_attribute_name(text_without_id)
     else
