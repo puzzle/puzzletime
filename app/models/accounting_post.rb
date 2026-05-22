@@ -148,7 +148,7 @@ class AccountingPost < ApplicationRecord
       validation_messages = post.errors.full_messages.join(', ')
       msg = "Bestehende Buchungsposition ist ungültig und muss zuerst korrigiert werden: #{validation_messages}"
       errors.add(:base, msg)
-      throw(:abort)
+      raise ActiveRecord::Rollback
     end
     order.work_item.move_times!(post.work_item)
     order.work_item.move_plannings!(post.work_item)

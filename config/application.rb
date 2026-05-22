@@ -19,7 +19,7 @@ require_relative 'version'
 module Puzzletime
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.2
+    config.load_defaults 8.0
 
     # FIXME: remove this if it works flawlesly
     config.active_record.belongs_to_required_by_default = false
