@@ -24,6 +24,11 @@
                          class: 'searchable',
                          multiple: true)
 
+  = direct_filter_select(:portfolio_item_id,
+                         'Portfolio',
+                         @portfolio_items,
+                         class: 'searchable')
+
   = direct_filter_select(:client_work_item_id,
                          'Kunde',
                          @clients,
