@@ -132,7 +132,7 @@ class Order
       Fabricate(:ordertime, work_item: work_items(:hitobito_demo_site), employee: employees(:pascal))
       report(portfolio_item_id: portfolio_items(:web).id)
 
-      assert_equal 1, report.entries.count { |e| e.order == orders(:hitobito_demo) }
+      assert_equal(1, report.entries.count { |e| e.order == orders(:hitobito_demo) })
     end
 
     test 'empty portfolio item filter shows all orders' do
