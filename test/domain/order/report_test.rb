@@ -115,6 +115,32 @@ class Order
       assert_equal orders(:allgemein, :puzzletime), report.entries.collect(&:order)
     end
 
+    test 'filter by portfolio item shows matching orders' do
+      report(portfolio_item_id: portfolio_items(:web).id)
+
+      assert_equal orders(:allgemein, :puzzletime, :webauftritt), report.entries.collect(&:order)
+    end
+
+    test 'filter by portfolio item excludes non-matching orders' do
+      report(portfolio_item_id: portfolio_items(:mobile).id)
+
+      assert_empty report.entries
+    end
+
+    test 'filter by portfolio item returns each order once with multiple matching posts' do
+      Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal))
+      Fabricate(:ordertime, work_item: work_items(:hitobito_demo_site), employee: employees(:pascal))
+      report(portfolio_item_id: portfolio_items(:web).id)
+
+      assert_equal 1, report.entries.count { |e| e.order == orders(:hitobito_demo) }
+    end
+
+    test 'empty portfolio item filter shows all orders' do
+      report(portfolio_item_id: '')
+
+      assert_equal 3, report.entries.size
+    end
+
     test 'filter by closed' do
       report(status_preselection: 'closed')
 
