@@ -157,11 +157,11 @@ class Order
       return orders if params[:portfolio_item_id].blank?
 
       orders.where(
-        'EXISTS (SELECT 1 FROM accounting_posts ap ' \
-        'INNER JOIN work_items ap_wi ON ap.work_item_id = ap_wi.id ' \
-        'WHERE orders.work_item_id = ANY(ap_wi.path_ids) ' \
-        'AND ap.portfolio_item_id = ?)',
-        params[:portfolio_item_id]
+        AccountingPost
+          .joins(:work_item)
+          .where(portfolio_item_id: params[:portfolio_item_id])
+          .where('orders.work_item_id = ANY(work_items.path_ids)')
+          .arel.exists
       )
     end
 
