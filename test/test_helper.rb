@@ -129,6 +129,7 @@ module ActionDispatch
 
     teardown do
       DatabaseCleaner.clean
+      ActiveRecord::Base.connection_pool.release_connection
     end
   end
 end
