@@ -65,6 +65,7 @@ class Order
       entries = Order.list.includes(:status, :targets, :order_uncertainties)
       entries = filter_by_closed(entries)
       entries = filter_by_parent(entries)
+      entries = filter_by_portfolio_item(entries)
       entries = filter_by_target(entries)
       entries = filter_by_uncertainty(entries, :major_risk_value)
       entries = filter_by_uncertainty(entries, :major_chance_value)
@@ -150,6 +151,18 @@ class Order
       else
         orders
       end
+    end
+
+    def filter_by_portfolio_item(orders)
+      return orders if params[:portfolio_item_id].blank?
+
+      orders.where(
+        AccountingPost
+          .joins(:work_item)
+          .where(portfolio_item_id: params[:portfolio_item_id])
+          .where('orders.work_item_id = ANY(work_items.path_ids)')
+          .arel.exists
+      )
     end
 
     def filter_by_target(orders)

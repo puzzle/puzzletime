@@ -12,7 +12,7 @@ class OrderReportsController < ApplicationController
   self.remember_params = %w[start_date end_date department_id
                             client_work_item_id category_work_item_id kind_id
                             status_id responsible_id target major_chance_value
-                            major_risk_value]
+                            major_risk_value portfolio_item_id]
 
   before_action :authorize_class
 
@@ -58,6 +58,7 @@ class OrderReportsController < ApplicationController
     @order_kinds = OrderKind.list
     @order_status = OrderStatus.list
     @order_responsibles = Employee.joins(:managed_orders).distinct.list
+    @portfolio_items = PortfolioItem.active_or_selected(params[:portfolio_item_id])
     @target_scopes = TargetScope.list
   end
 
