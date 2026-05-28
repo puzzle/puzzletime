@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 
 git_source(:github) { |name| "https://github.com/#{name}.git" }
 
-gem 'rails', '~> 8.0.0'
+gem 'rails', '~> 8.1.0'
 gem 'connection_pool', '< 3'
 
 gem 'activerecord-nulldb-adapter'
