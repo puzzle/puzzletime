@@ -1,3 +1,13 @@
+# 2.18
+## Features und Improvements
+* **Auftrag / Auftragsmangement**
+	* **Tab "Leistungen"**: zusätzlicher CSV-Export der erfassten Leistungen ohne Spalte 'interne Bemerkungen' (#64960)
+ 	* **Tab "Auftrags-Controlling"**: Auswahlfilter für Solution (= Portfolio auf Buchungsposition) eingefügt. Über den Filter "Portfolio" werden alle Aufträge angezeigt, die mindestens eine Buchungsposition der ausgewählten Solution enthalten. (#65398)
+ 
+ ## Bugfixes
+ * **Auftrag / Auftragsmangement**
+	* **Tab "Leistungen"**: CSV-Exports und Anzeigen in der App enthalten eine Variable für die Währung (CHF für CH und EUR für DE) (#65386)
+
 # 2.17
 ## Features und Improvements
 * **Auftrag / Auftragsmangement**
