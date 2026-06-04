@@ -5,13 +5,10 @@ source 'https://rubygems.org'
 git_source(:github) { |name| "https://github.com/#{name}.git" }
 
 gem 'rails', '~> 8.1.0'
-gem 'connection_pool', '< 3'
-
-gem 'activerecord-nulldb-adapter'
-gem 'pg'
 
 gem 'nochmal', github: 'puzzle/nochmal'
 
+gem 'activerecord-nulldb-adapter'
 gem 'acts_as_tree'
 gem 'annotaterb'
 gem 'aws-sdk-s3', require: false
@@ -19,6 +16,7 @@ gem 'bleib'
 gem 'bootsnap'
 gem 'brakeman'
 gem 'cancancan'
+gem 'connection_pool'
 gem 'config'
 gem 'country_select'
 gem 'csv'
@@ -50,6 +48,7 @@ gem 'omniauth-keycloak'
 gem 'omniauth-rails_csrf_protection'
 gem 'omniauth-saml'
 gem 'ostruct'
+gem 'pg'
 gem 'prawn'
 gem 'prawn-table'
 gem 'prometheus_exporter'
@@ -66,7 +65,6 @@ gem 'rswag-ui'
 gem 'rubocop', require: false
 gem 'rubocop-checkstyle_formatter', require: false
 gem 'ruby-vips', require: false
-gem 'minitest', '< 6'
 gem 'rubocop-minitest'
 gem 'rubocop-performance'
 gem 'rubocop-rails'
@@ -127,6 +125,7 @@ group :test do
   gem 'database_cleaner'
   gem 'fabrication'
   gem 'm'
+  gem 'minitest'
   gem 'mocha', require: false
   gem 'rails-controller-testing'
   gem 'selenium-webdriver'

@@ -14,6 +14,7 @@ class ShowOrderCost < ActionDispatch::IntegrationTest
   test 'selecting cost type shows respective table' do
     timeout_safe do
       activate_meal_compensations
+      visit order_order_cost_path(order_id: order.id)
 
       assert_selector(:css, '#cost_type')
       assert has_css?('#expenses-list')
@@ -34,6 +35,7 @@ class ShowOrderCost < ActionDispatch::IntegrationTest
   test 'with meal_compensations deacivated, expenses are shown and no select field is present' do
     timeout_safe do
       deactivate_meal_compensations
+      visit order_order_cost_path(order_id: order.id)
 
       assert_no_selector(:css, '#cost_type')
       assert has_css?('#expenses-list')
@@ -86,7 +88,6 @@ class ShowOrderCost < ActionDispatch::IntegrationTest
 
   def login
     login_as(:mark)
-    visit order_order_cost_path(order_id: order.id)
   end
 
   def activate_meal_compensations
