@@ -3,7 +3,7 @@
 # Include in `test_helper.rb` like this:
 #
 # class ActiveSupport::TestCase
-#   prepend RetryOnFlakyTests[FlakyError, AnotherFlakyError, max_tries: 3]
+#   require RetryOnFlakyTests[FlakyError, AnotherFlakyError, max_tries: 3]
 # end
 
 module RetryOnFlakyTests
@@ -21,10 +21,10 @@ module RetryOnFlakyTests
         error_classes
       end
 
-      def run_one_method(klass, method_name, reporter)
+      def run(klass, method_name, reporter)
         report_result = nil
         max_tries.times do
-          result = Minitest.run_one_method(klass, method_name)
+          result = klass.new(method_name).run
           report_result ||= result
           (report_result = result) and break if result.passed?
 
