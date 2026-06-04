@@ -39,6 +39,7 @@ gem 'kaminari-bootstrap'
 gem 'listen'
 gem 'lograge'
 gem 'matrix'
+gem 'mini_magick', require: false
 gem 'mini_racer'
 gem 'minitest-reporters'
 gem 'nested_form_fields'
@@ -64,6 +65,7 @@ gem 'rqrcode'
 gem 'rswag-ui'
 gem 'rubocop', require: false
 gem 'rubocop-checkstyle_formatter', require: false
+gem 'ruby-vips', require: false
 gem 'minitest', '< 6'
 gem 'rubocop-minitest'
 gem 'rubocop-performance'
