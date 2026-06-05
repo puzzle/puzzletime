@@ -23,7 +23,7 @@ module DryCrud
       class_attribute :remember_params
       self.remember_params = %w[q sort sort_dir page]
 
-      before_action :handle_remember_params, only: [:index]
+      before_action :handle_remember_params, only: [:index] if respond_to?(:index)
     end
 
     private
