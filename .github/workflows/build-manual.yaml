@@ -11,6 +11,7 @@ name: "Manual build without tests"
         options:
           - pitc-ptime-int
           - pitc-ptime-prod
+          - pude-ptime-int
           - pude-ptime-prod
         default: "pitc-ptime-int"
       project_name:
@@ -20,6 +21,7 @@ name: "Manual build without tests"
         options:
           - pitc-ptime-int
           - pitc-ptime-prod
+          - pude-ptime-int
           - pude-ptime-prod
         default: "pitc-ptime-int"
       push:
