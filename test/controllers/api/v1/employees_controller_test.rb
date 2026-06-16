@@ -49,6 +49,45 @@ module Api
         assert_equal Employee.current.count, response_json[:data].count
       end
 
+      test 'index filtered by email returns only the matching employee' do
+        get :index, params: { filter: { email: test_entry.email } }
+
+        assert_response :ok
+        ids = response_json[:data].map { |d| d[:id].to_i }
+        assert_equal [test_entry.id], ids
+      end
+
+      test 'index filtered by ldapname returns only the matching employee' do
+        get :index, params: { filter: { ldapname: test_entry.ldapname } }
+
+        assert_response :ok
+        ids = response_json[:data].map { |d| d[:id].to_i }
+        assert_equal [test_entry.id], ids
+      end
+
+      test 'index with multiple filters combines them with AND' do
+        get :index, params: { filter: { email: test_entry.email, ldapname: 'does-not-match' } }
+
+        assert_response :ok
+        assert_empty response_json[:data]
+      end
+
+      test 'index with an unknown filter attribute ignores it' do
+        get :index, params: { filter: { firstname: test_entry.firstname } }
+
+        assert_response :ok
+        assert_equal Employee.count, response_json[:data].count
+      end
+
+      test 'index filtered by keycloakopenid uses the custom join filter' do
+        auth = authentications(:one)
+        get :index, params: { filter: { keycloakopenid: auth.uid } }
+
+        assert_response :ok
+        ids = response_json[:data].map { |d| d[:id].to_i }
+        assert_equal [auth.employee_id], ids
+      end
+
       (1..3).each do |i|
         test "pagination per_page works with #{i}" do
           get :index, params: { per_page: i }
