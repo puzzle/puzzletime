@@ -14,6 +14,7 @@ module Api
   #
   class JsonapiController < ManageController
     include Apidocs::Annotations::Controller
+    include JsonapiFilterable
 
     before_action :set_pagination_headers, only: :index
 

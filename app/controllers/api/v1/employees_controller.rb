@@ -10,6 +10,8 @@ module Api
     class EmployeesController < JsonapiController
       include Scopable
 
+      self.filter_attrs = %i[email ldapname keycloakopenid]
+
       annotate_param :index, :scope, type: 'string',
                                      enum: ['current'],
                                      description: <<~DESC
@@ -17,12 +19,29 @@ module Api
                                        * current - only employees with a current employment
                                      DESC
 
+      annotate_param :index, 'filter[email]', type: 'string',
+                                              description: 'Return only the employee with this email address.'
+      annotate_param :index, 'filter[ldapname]', type: 'string',
+                                                 description: 'Return only the employee with this LDAP name.'
+      annotate_param :index, 'filter[keycloakopenid]', type: 'string',
+                                                       description: 'Return only the employee linked to this ' \
+                                                                    'Keycloak OpenID uid.'
+
       def list_entries
         entries = super.includes(:department,
                                  current_employment: {
                                    employment_roles_employments: :employment_role
                                  })
         scoped(entries, :current)
+      end
+
+      private
+
+      # The keycloakopenid uid lives on the associated authentications, not on
+      # the employees table, so it needs a custom join-based filter.
+      def filter_by_param_keycloakopenid(entries, _attribute, value)
+        entries.joins(:authentications)
+               .where(authentications: { provider: :keycloakopenid, uid: value })
       end
     end
   end
