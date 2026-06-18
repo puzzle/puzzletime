@@ -26,6 +26,7 @@ class CreateTestuser
         emp = Employment.find_or_initialize_by(@data[:employment])
         emp.employee = employee
         emp.employment_roles_employments = [role_employment]
+        emp
       end
   end
 
@@ -37,9 +38,9 @@ class CreateTestuser
     @role_employment ||=
       begin
         ere = EmploymentRolesEmployment.find_or_initialize_by(@data[:role_employment])
-        ere.employment = employment
         ere.employment_role = role
         ere.employment_role_level = level
+        ere
       end
   end
 
