@@ -19,10 +19,10 @@ require_relative 'version'
 module Puzzletime
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 8.0
+    config.load_defaults 8.1
 
     # FIXME: remove this if it works flawlesly
-    config.active_record.belongs_to_required_by_default = false
+    # config.active_record.belongs_to_required_by_default = false
 
     # Configuration for the application, engines, and railties goes here.
     #
@@ -66,7 +66,7 @@ module Puzzletime
 
     config.middleware.insert_before Rack::ETag, Rack::Deflater
 
-    config.active_record.time_zone_aware_types = %i[datetime time]
+    # config.active_record.time_zone_aware_types = %i[datetime time]
 
     config.active_job.queue_adapter = :delayed_job
 
