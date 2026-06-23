@@ -12,20 +12,29 @@ module Api
 
       self.filter_attrs = %i[email ldapname keycloakopenid]
 
-      annotate_param :index, :scope, type: 'string',
-                                     enum: ['current'],
-                                     description: <<~DESC
-                                       The query scope:
-                                       * current - only employees with a current employment
-                                     DESC
+      annotate_param :index,
+                     :scope,
+                     type: 'string',
+                     enum: ['current'],
+                     description: <<~DESC
+                       The query scope:
+                       * current - only employees with a current employment
+                     DESC
 
-      annotate_param :index, 'filter[email]', type: 'string',
-                                              description: 'Return only the employee with this email address.'
-      annotate_param :index, 'filter[ldapname]', type: 'string',
-                                                 description: 'Return only the employee with this LDAP name.'
-      annotate_param :index, 'filter[keycloakopenid]', type: 'string',
-                                                       description: 'Return only the employee linked to this ' \
-                                                                    'Keycloak OpenID uid.'
+      annotate_param :index,
+                     'filter[email]',
+                     type: 'string',
+                     description: 'Return only the employee with this email address.'
+
+      annotate_param :index,
+                     'filter[ldapname]',
+                     type: 'string',
+                     description: 'Return only the employee with this LDAP name.'
+
+      annotate_param :index,
+                     'filter[keycloakopenid]',
+                     type: 'string',
+                     description: 'Return only the employee linked to this Keycloak OpenID uid.'
 
       def list_entries
         entries = super.includes(:department,
