@@ -63,6 +63,10 @@ module OrderHelper
     crm_order_link(order)
   end
 
+  def format_order_crm_key_with_name(order)
+    crm_order_link(order, order.crm_key_with_label)
+  end
+
   def format_order_billability(value)
     content_tag(:span, f(value), class: order_report_billability_class(value))
   end
@@ -72,7 +76,10 @@ module OrderHelper
   end
 
   def format_order_additional_crm_orders(order)
-    simple_list(order.additional_crm_orders.map(&method(:crm_order_link)))
+    names = order.additional_crm_orders.map do |crm_order|
+      crm_order_link(crm_order, crm_order.crm_key_with_label)
+    end
+    simple_list(names)
   end
 
   def format_major_chance(order)
