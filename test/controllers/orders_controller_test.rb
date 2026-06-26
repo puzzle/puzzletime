@@ -560,6 +560,7 @@ class OrdersControllerTest < ActionController::TestCase
     positions = orders(*names).map { |order| ids.index(order.id) }
 
     missing = names.zip(positions).select { |_, pos| pos.nil? }.map(&:first)
+
     assert_empty missing, "expected orders missing from list: #{missing.inspect}"
     assert_equal positions, positions.sort,
                  "expected orders #{names.inspect} in this relative order, got ids #{ids.inspect}"
