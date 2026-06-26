@@ -97,7 +97,7 @@ employments = Employment.seed(
 )
 
 categories = EmploymentRoleCategory.seed(
-  :id,
+  :name,
   { name: 'Management' },
   { name: 'Unterstützend' },
   { name: 'Techboard' },
@@ -107,7 +107,7 @@ categories = EmploymentRoleCategory.seed(
 )
 
 roles = EmploymentRole.seed(
-  :id,
+  :name,
   { name: 'Software Engineer', billable: true, level: true, employment_role_category_id: nil },
   { name: 'Berufsbildner', billable: false, level: false, employment_role_category_id: categories[3].id },
   { name: 'Mitglied Technical Board', billable: false, level: false, employment_role_category_id: categories[2].id },
@@ -128,3 +128,12 @@ EmploymentRolesEmployment.seed(
   { employment_id: employments[7].id, employment_role_id: roles[1].id, employment_role_level_id: 3, percent: 30 },
   { employment_id: employments[8].id, employment_role_id: roles[0].id, employment_role_level_id: 4, percent: 60 }
 )
+
+authentications =
+  employees
+  .product(Authentication::PROVIDERS)
+  .map do |employee, provider|
+    { employee_id: employee.id, uid: employee.id, provider: provider, token: SecureRandom.hex(6), token_secret: SecureRandom.hex(6) }
+  end
+
+Authentication.seed(:employee_id, :provider, *authentications)
