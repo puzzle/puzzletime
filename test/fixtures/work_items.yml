@@ -124,4 +124,14 @@ hitobito_demo_site:
   path_shortnames: PITC-HIT-DEM-SIT
   path_names: "Puzzle ITC\nHitobito\nDemo\nSite"
   leaf: true
+
+api_demo:
+  id: 12
+  parent_id: 7    # hitobito
+  name: Api Demo
+  shortname: APID
+  path_ids: [1, 7, 12]
+  path_shortnames: PITC-HIT-APID
+  path_names: "Puzzle ITC\nHitobito\nApi Demo"
+  leaf: true
 ...

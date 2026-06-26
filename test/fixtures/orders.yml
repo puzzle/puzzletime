@@ -59,4 +59,11 @@ webauftritt:
   kind: projekt
   department: devone
   contract: webauftritt
+
+api_demo:
+  work_item_id: 12
+  responsible_id: 7 # mark
+  status: offeriert
+  kind: mandat
+  department: devtwo
 ...

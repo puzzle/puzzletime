@@ -119,7 +119,7 @@ module Api
 
       # Test object used in several tests.
       def test_entry
-        @test_entry ||= orders(:hitobito_demo)
+        @test_entry ||= orders(:api_demo)
       end
 
       def response_json

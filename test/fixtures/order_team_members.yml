@@ -17,8 +17,8 @@
 #
 
 ---
-long_time_hitobito_john:
+long_time_api_demo_john:
   employee_id: 5 # long_time_john
-  order: hitobito_demo
+  order: api_demo
   comment: 'Worker bee'
 
