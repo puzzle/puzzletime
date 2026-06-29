@@ -36,4 +36,11 @@ pbs:
   id: 3
   work_item_id: 11
   allow_local: true
+
+# Dedicated client for the JSON:API filter-test orders (see orders.yml /
+# work_items.yml). Isolated tree so these orders touch no shared client.
+api_client:
+  id: 4
+  work_item_id: 14
+  allow_local: true
 ...

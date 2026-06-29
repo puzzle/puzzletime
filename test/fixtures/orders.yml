@@ -60,10 +60,23 @@ webauftritt:
   department: devone
   contract: webauftritt
 
-api_demo:
+# Isolated orders for the JSON:API filter tests. :api_filter_alice is the filter
+# target: responsible of :api_order_one and a team member (see
+# order_team_members.yml) of :api_order_two. Filtering by alice must therefore
+# return BOTH orders, exercising the responsible-OR-team_member filter.
+# :api_filter_bob is responsible of :api_order_two only (decoy / second party).
+# status :offeriert + kind :mandat keep them out of the chooser and copier tests.
+api_order_one:
   work_item_id: 12
-  responsible_id: 7 # mark
+  responsible_id: 20 # api_filter_alice
   status: offeriert
   kind: mandat
-  department: devtwo
+  department: api_dept
+
+api_order_two:
+  work_item_id: 13
+  responsible_id: 21 # api_filter_bob
+  status: offeriert
+  kind: mandat
+  department: api_dept
 ...

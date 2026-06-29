@@ -32,3 +32,9 @@ one:
 #
 two: {}
 # column: value
+
+# Keycloak identity for the JSON:API order-filter target :api_filter_alice.
+api_alice_keycloak:
+  employee_id: 20 # api_filter_alice
+  provider: keycloakopenid
+  uid: alice-keycloak-uid

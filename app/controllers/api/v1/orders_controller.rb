@@ -27,30 +27,29 @@ module Api
 
       private
 
-      def with_joined(entries)
-        filtered = yield entries.joins(team_members: :authentications)
-
-        # Remove unnecessary joins again
-        entries.where(id: filtered)
+      def list_entries
+        super.includes(%i[kind status department contract billing_address invoices])
       end
 
       def filter_by_param_ldapname(entries, _attribute, value)
-        with_joined(entries) do |joined|
-          joined.where(team_members: { ldapname: value })
-        end
+        relevant_entries(entries, Employee.find_by(ldapname: value))
       end
 
       def filter_by_param_email(entries, _attribute, value)
-        with_joined(entries) do |joined|
-          joined.where(team_members: { email: value })
-        end
+        relevant_entries(entries, Employee.find_by(email: value))
       end
 
-      # The keycloakopenid uid lives on the associated authentications
       def filter_by_param_keycloakopenid(entries, _attribute, value)
-        with_joined(entries) do |joined|
-          joined.where(authentications: { provider: :keycloakopenid, uid: value })
-        end
+        relevant_entries(
+          entries,
+          Authentication.find_by(provider: :keycloakopenid, uid: value).employee
+        )
+      end
+
+      def relevant_entries(entries, employee)
+        team_order_ids = OrderTeamMember.where(employee_id: employee).select(:order_id)
+        entries.where(responsible: employee)
+               .or(entries.where(id: team_order_ids))
       end
     end
   end

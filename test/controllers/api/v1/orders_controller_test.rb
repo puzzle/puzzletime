@@ -41,44 +41,44 @@ module Api
         assert_equal Order.count, response_json[:data].count
       end
 
-      test 'index filtered by email returns only the matching order' do
-        get :index, params: { filter: { email: employees(:long_time_john).email } }
+      test 'index filtered by email returns the orders the employee is responsible for or a team member of' do
+        get :index, params: { filter: { email: employees(:api_filter_alice).email } }
 
         assert_response :ok
         ids = response_json[:data].map { |d| d[:id].to_i }
 
-        assert_equal [test_entry.id], ids
+        assert_equal matched_order_ids, ids.sort
       end
 
-      test 'index filtered by ldapname returns only the matching order' do
-        get :index, params: { filter: { ldapname: employees(:long_time_john).ldapname } }
+      test 'index filtered by ldapname returns the orders the employee is responsible for or a team member of' do
+        get :index, params: { filter: { ldapname: employees(:api_filter_alice).ldapname } }
 
         assert_response :ok
         ids = response_json[:data].map { |d| d[:id].to_i }
 
-        assert_equal [test_entry.id], ids
+        assert_equal matched_order_ids, ids.sort
       end
 
-      test 'index filtered by keycloakopenid returns only the matching order' do
-        auth = authentications(:one)
+      test 'index filtered by keycloakopenid returns the orders the employee is responsible for or a team member of' do
+        auth = authentications(:api_alice_keycloak)
 
         get :index, params: { filter: { keycloakopenid: auth.uid } }
 
         assert_response :ok
         ids = response_json[:data].map { |d| d[:id].to_i }
 
-        assert_equal [test_entry.id], ids
+        assert_equal matched_order_ids, ids.sort
       end
 
       test 'index with multiple filters combines them with AND' do
-        get :index, params: { filter: { email: employees(:long_time_john).email, ldapname: 'does-not-match' } }
+        get :index, params: { filter: { email: employees(:api_filter_alice).email, ldapname: 'does-not-match' } }
 
         assert_response :ok
         assert_empty response_json[:data]
       end
 
       test 'index with an unknown filter attribute ignores it' do
-        get :index, params: { filter: { firstname: employees(:long_time_john).firstname } }
+        get :index, params: { filter: { firstname: employees(:api_filter_alice).firstname } }
 
         assert_response :ok
         assert_equal Order.count, response_json[:data].count
@@ -119,7 +119,13 @@ module Api
 
       # Test object used in several tests.
       def test_entry
-        @test_entry ||= orders(:api_demo)
+        @test_entry ||= orders(:api_order_one)
+      end
+
+      # Orders :api_filter_alice is linked to: responsible of :api_order_one,
+      # team member of :api_order_two. The filter must return both.
+      def matched_order_ids
+        [orders(:api_order_one).id, orders(:api_order_two).id].sort
       end
 
       def response_json

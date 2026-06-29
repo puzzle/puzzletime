@@ -17,8 +17,10 @@
 #
 
 ---
-long_time_api_demo_john:
-  employee_id: 5 # long_time_john
-  order: api_demo
+# :api_filter_alice is a team member (but not responsible) of :api_order_two,
+# so the JSON:API order filter must return it via the team_member branch.
+api_order_two_alice:
+  employee_id: 20 # api_filter_alice
+  order: api_order_two
   comment: 'Worker bee'
 

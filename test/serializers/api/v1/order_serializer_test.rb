@@ -11,7 +11,7 @@ module Api
   module V1
     class OrderSerializerTest < ActiveSupport::TestCase
       test '#serializable_hash' do
-        order = orders(:api_demo)
+        order = orders(:api_order_two)
 
         serialized = Api::V1::OrderSerializer.new(order).serializable_hash
 
@@ -21,32 +21,32 @@ module Api
             type: :order,
             attributes: {
               crm_key: nil,
-              name: 'Api Demo',
-              shortname: 'APID',
+              name: 'Apinexus Two',
+              shortname: 'APIO2',
               description: nil,
               closed: false,
               kind: 'Mandat',
               status: 'Offeriert',
-              department_name: 'devtwo',
-              department_shortname: 'D2',
+              department_name: 'apidept',
+              department_shortname: 'API',
               contract: nil,
               billing_address: nil,
-              client_name: 'Puzzle',
-              client_shortname: 'PITC',
+              client_name: 'Apinexus',
+              client_shortname: 'APINX',
               comments: [],
               order_team_members: [
                 {
-                  employee_id: 5,
-                  employee_name: 'Neverends John',
-                  employee_shortname: 'JN',
+                  employee_id: 20,
+                  employee_name: 'Apitest Alice',
+                  employee_shortname: 'AA',
                   comment: 'Worker bee'
                 }
               ],
               invoices: []
             },
             relationships: {
-              responsible: { data: { id: '7', type: :employee } },
-              team_members: { data: [{ id: '5', type: :employee }] },
+              responsible: { data: { id: '21', type: :employee } },
+              team_members: { data: [{ id: '20', type: :employee }] },
               additional_crm_orders: { data: [] }
             }
           }

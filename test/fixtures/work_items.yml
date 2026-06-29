@@ -125,13 +125,35 @@ hitobito_demo_site:
   path_names: "Puzzle ITC\nHitobito\nDemo\nSite"
   leaf: true
 
-api_demo:
+# Fully isolated work-item tree for the JSON:API filter tests: a dedicated client
+# (api_client, see clients.yml) with two leaf order work items beneath it. Named
+# so they collide with no selectize search term used elsewhere (e.g. 'demo').
+api_client:
+  id: 14
+  name: Apinexus
+  shortname: APINX
+  path_ids: [14]
+  path_shortnames: APINX
+  path_names: Apinexus
+  leaf: false
+
+api_order_one:
   id: 12
-  parent_id: 7    # hitobito
-  name: Api Demo
-  shortname: APID
-  path_ids: [1, 7, 12]
-  path_shortnames: PITC-HIT-APID
-  path_names: "Puzzle ITC\nHitobito\nApi Demo"
+  parent_id: 14   # api_client
+  name: Apinexus One
+  shortname: APIO1
+  path_ids: [14, 12]
+  path_shortnames: APINX-APIO1
+  path_names: "Apinexus\nApinexus One"
+  leaf: true
+
+api_order_two:
+  id: 13
+  parent_id: 14   # api_client
+  name: Apinexus Two
+  shortname: APIO2
+  path_ids: [14, 13]
+  path_shortnames: APINX-APIO2
+  path_names: "Apinexus\nApinexus Two"
   leaf: true
 ...

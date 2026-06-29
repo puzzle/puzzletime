@@ -150,3 +150,27 @@ lucien:
   management: false
   department: devtwo
   worktimes_commit_reminder: true
+
+# Dedicated employees for the JSON:API order-filter tests. No employments/
+# worktimes, so they stay out of employment-scoped lists and reports.
+api_filter_alice:
+  id: 20
+  firstname: Alice
+  lastname: Apitest
+  shortname: AA
+  encrypted_password: <%= Employee.encode('ptime') %>
+  email: alice@api-test.example
+  ldapname: aapitest
+  management: false
+  worktimes_commit_reminder: true
+
+api_filter_bob:
+  id: 21
+  firstname: Bob
+  lastname: Apitest
+  shortname: BB
+  encrypted_password: <%= Employee.encode('ptime') %>
+  email: bob@api-test.example
+  ldapname: bapitest
+  management: false
+  worktimes_commit_reminder: true
