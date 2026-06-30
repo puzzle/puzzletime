@@ -68,43 +68,6 @@ module Api
       belongs_to :responsible, serializer: :employee, record_type: :employee
       has_many :team_members, serializer: :employee, record_type: :employee
       has_many :additional_crm_orders
-
-      # -----v Attempt to solve it propperly v----
-      # attribute :crm_key
-      #
-      # # attribute annotations for the generated api docs
-      # annotate_attributes :crm_key
-      #
-      # belongs_to :work_item
-      #
-      # belongs_to :billing_address
-      # belongs_to :contract
-      # belongs_to :department
-      # belongs_to :kind
-      # belongs_to :status
-      #
-      # belongs_to :responsible, record_type: :employee, serializer: :employee
-      #
-      # # belongs_to :client do |order|
-      # #   order.client
-      # # end
-      #
-      # has_many :additional_crm_orders
-      # has_many :invoices
-      # has_many :order_chances
-      # has_many :order_risks
-      # has_many :order_team_members
-      # has_many :order_uncertainties
-      #
-      # has_many :comments, record_type: :order_comment
-      # has_many :contacts, record_type: :order_contact
-      # has_many :targets, record_type: :order_target
-
-      # has_many :accounting_posts
-
-      # has_many :accounting_posts do |order|
-      #   order.accounting_posts
-      # end
     end
   end
 end
