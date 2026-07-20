@@ -11,7 +11,7 @@ module Api
 
     def self.inherited(subclass)
       subclass.class_eval do
-        include FastJsonapi::ObjectSerializer
+        include JSONAPI::Serializer
       end
     end
   end
