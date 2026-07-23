@@ -13,17 +13,20 @@ module Api
       annotate_param :index,
                      'filter[email]',
                      type: 'string',
-                     description: 'Return only the employee with this email address.'
+                     description: 'Return only orders where the employee with this email address ' \
+                                  'is responsible or a team member.'
 
       annotate_param :index,
                      'filter[ldapname]',
                      type: 'string',
-                     description: 'Return only the employee with this LDAP name.'
+                     description: 'Return only orders where the employee with this LDAP name ' \
+                                  'is responsible or a team member.'
 
       annotate_param :index,
                      'filter[keycloakopenid]',
                      type: 'string',
-                     description: 'Return only the employee linked to this Keycloak OpenID uid.'
+                     description: 'Return only orders where the employee linked to this Keycloak ' \
+                                  'OpenID uid is responsible or a team member.'
 
       private
 

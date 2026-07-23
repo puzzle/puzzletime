@@ -8,6 +8,10 @@
 module Api
   module V1
     class OrderSerializer < ApiSerializer
+      belongs_to :responsible, serializer: :employee, record_type: :employee
+      has_many :team_members, serializer: :employee, record_type: :employee
+      has_many :additional_crm_orders
+
       attributes :crm_key, :name, :shortname, :description
 
       attribute :closed do |order|
@@ -65,9 +69,47 @@ module Api
         order.invoices.map(&:attributes)
       end
 
-      belongs_to :responsible, serializer: :employee, record_type: :employee
-      has_many :team_members, serializer: :employee, record_type: :employee
-      has_many :additional_crm_orders
+      # attribute annotations for the generated api docs
+
+      annotate_attributes :crm_key, :name, :shortname, :description, :kind, :status,
+                          :department_name, :department_shortname, :client_name, :client_shortname,
+                          type: :string
+
+      annotate_attribute :closed,
+                         type: :boolean,
+                         description: 'Whether the order’s work item is closed'
+
+      annotate_attribute :comments,
+                         type: :array,
+                         description: 'The texts of all comments on the order',
+                         items: {
+                           type: :string
+                         }
+
+      annotate_attribute :contract,
+                         description: 'The contract’s attributes, or null if none is set',
+                         **object_schema(Contract)
+
+      annotate_attribute :billing_address,
+                         description: 'The billing address’ attributes, or null if none is set',
+                         **object_schema(BillingAddress)
+
+      annotate_attribute :order_team_members,
+                         type: :array,
+                         items: {
+                           type: :object,
+                           properties: {
+                             employee_id: { type: :integer },
+                             employee_name: { type: :string },
+                             employee_shortname: { type: :string },
+                             comment: { type: :string }
+                           }
+                         }
+
+      annotate_attribute :invoices,
+                         type: :array,
+                         description: 'The attributes of each invoice on the order',
+                         items: object_schema(Invoice)
     end
   end
 end
