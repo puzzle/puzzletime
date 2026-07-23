@@ -10,6 +10,13 @@ module Api
     class EmployeesController < JsonapiController
       include Scopable
 
+      # associations touched by EmployeeSerializer's attribute blocks
+      EAGER_LOAD_ASSOCIATIONS = {
+        department: {},
+        employments: {},
+        current_employment: { employment_roles_employments: %i[employment_role employment_role_level] }
+      }.freeze
+
       self.filter_attrs = %i[email ldapname keycloakopenid]
 
       annotate_param :index,
@@ -37,10 +44,7 @@ module Api
                      description: 'Return only the employee linked to this Keycloak OpenID uid.'
 
       def list_entries
-        entries = super.includes(:department,
-                                 current_employment: {
-                                   employment_roles_employments: :employment_role
-                                 })
+        entries = super.includes(EAGER_LOAD_ASSOCIATIONS)
         scoped(entries, :current)
       end
 

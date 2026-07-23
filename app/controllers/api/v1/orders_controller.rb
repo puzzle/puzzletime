@@ -30,8 +30,18 @@ module Api
 
       private
 
+      # eager loading for relationships only needed when side-loaded via ?include=
+      INCLUDABLE_EAGER_LOADS = {
+        'responsible' => { responsible: Api::V1::EmployeesController::EAGER_LOAD_ASSOCIATIONS },
+        'team_members' => { team_members: Api::V1::EmployeesController::EAGER_LOAD_ASSOCIATIONS },
+        'additional_crm_orders' => :additional_crm_orders
+      }.freeze
+
       def list_entries
-        super.includes(%i[kind status department contract billing_address invoices])
+        entries = super.includes(%i[kind status department contract billing_address invoices])
+                       .includes(order_team_members: :employee, team_members: {})
+        extra_includes = INCLUDABLE_EAGER_LOADS.values_at(*(include_param || [])).compact
+        extra_includes.present? ? entries.includes(*extra_includes) : entries
       end
 
       def filter_by_param_ldapname(entries, _attribute, value)
