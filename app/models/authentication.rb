@@ -19,5 +19,10 @@
 #  updated_at   :datetime         not null
 #
 class Authentication < ApplicationRecord
-  belongs_to :employee
+  PROVIDERS = %i[keycloakopenid].freeze
+
+  belongs_to :employee, optional: false
+
+  validates :provider, inclusion: PROVIDERS, presence: true
+  validates :uid, presence: true
 end

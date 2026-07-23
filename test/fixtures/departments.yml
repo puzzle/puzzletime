@@ -27,4 +27,10 @@ devtwo:
 sys:
   name: sys
   shortname: SYS
+
+# Dedicated department for the JSON:API filter-test orders, so they appear in no
+# existing department-scoped list/report assertion.
+api_dept:
+  name: apidept
+  shortname: API
 ...
