@@ -5,6 +5,7 @@
 # Versioning
 ARG RUBY_VERSION="4.0.5"
 ARG BUNDLER_VERSION="4.0.10"
+ARG NULLDB_VERSION="1.2.2"
 
 # Packages
 # ARG BUILD_PACKAGES="nodejs build-essential libc6"
@@ -15,7 +16,10 @@ ARG RUN_PACKAGES="bash libpq5 libvips42 libvips-dev neovim postgresql-client"
 ARG PRE_INSTALL_SCRIPT
 ARG INSTALL_SCRIPT
 ARG PRE_BUILD_SCRIPT
-ARG BUILD_SCRIPT="bundle exec rake assets:precompile"
+ARG BUILD_SCRIPT=" \
+     SECRET_KEY_BASE=1 bundle exec rails assets:precompile \
+  && rm -rf tmp/cache tmp/sockets tmp/pids \
+"
 ARG POST_BUILD_SCRIPT="echo \"(built at: $(date '+%Y-%m-%d %H:%M:%S'))\" > /app-src/BUILD_INFO"
 
 # Bundler specific
@@ -25,7 +29,6 @@ ARG BUNDLE_WITHOUT="development:metrics:test"
 ARG RAILS_ENV="production"
 ARG RACK_ENV="production"
 ARG RAILS_HOST_NAME="unused.example.net"
-ARG SECRET_KEY_BASE="needs-to-be-set"
 ARG RAILS_DB_ADAPTER="nulldb"
 
 # If you want to directly specify build infos
@@ -39,22 +42,6 @@ ARG GITHUB_SHA
 ARG GITHUB_REPOSITORY
 ARG GITHUB_REPOSITORY_URL
 ARG GITHUB_REF_NAME
-
-# # Gitlab specific
-# ARG CI_COMMIT_SHA
-# ARG CI_REPOSITORY_URL
-# ARG CI_COMMIT_REF_NAME
-# ARG BUILD_COMMIT="$CI_COMMIT_SHA"
-# ARG BUILD_REPO="$CI_REPOSITORY_URL"
-# ARG BUILD_REF="$CI_COMMIT_REF_NAME"
-
-# # Openshift specific
-# ARG OPENSHIFT_BUILD_COMMIT
-# ARG OPENSHIFT_BUILD_SOURCE
-# ARG OPENSHIFT_BUILD_REFERENCE
-# ARG BUILD_COMMIT="$OPENSHIFT_BUILD_COMMIT"
-# ARG BUILD_REPO="$OPENSHIFT_BUILD_SOURCE"
-# ARG BUILD_REF="$OPENSHIFT_BUILD_REFERENCE"
 
 # Runtime ENV vars
 ARG SENTRY_CURRENT_ENV
@@ -75,16 +62,17 @@ ARG PRE_INSTALL_SCRIPT
 ARG BUILD_PACKAGES
 ARG INSTALL_SCRIPT
 ARG BUNDLER_VERSION
+ARG NULLDB_VERSION
 ARG PRE_BUILD_SCRIPT
 ARG BUNDLE_WITHOUT
 ARG BUILD_SCRIPT
 ARG POST_BUILD_SCRIPT
+ARG RAILS_DB_ADAPTER
 
 # arguments potentially used by steps
 ARG RACK_ENV
 ARG RAILS_ENV
 ARG RAILS_HOST_NAME
-ARG SECRET_KEY_BASE
 ARG TZ
 
 # Custom ARGs
@@ -93,48 +81,47 @@ ARG SKIP_MEMCACHE_CHECK
 # Set build shell
 SHELL ["/bin/bash", "-c"]
 
-# Use root user
-USER root
+RUN bash -vxc "${PRE_INSTALL_SCRIPT:-"echo 'no PRE_INSTALL_SCRIPT provided'"}" \
+ && export DEBIAN_FRONTEND=noninteractive \
+ && apt-get update -qq \
+ && apt-get install -y --no-install-recommends ${BUILD_PACKAGES} \
+ && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* \
+ && bash -vxc "${INSTALL_SCRIPT:-"echo 'no INSTALL_SCRIPT provided'"}" \
+ && gem install --no-document \
+        bundler:${BUNDLER_VERSION} \
+        activerecord-nulldb-adapter:${NULLDB_VERSION}
 
-RUN bash -vxc "${PRE_INSTALL_SCRIPT:-"echo 'no PRE_INSTALL_SCRIPT provided'"}"
-
-# Install dependencies
-RUN    export DEBIAN_FRONTEND=noninteractive \
-  && apt-get update \
-  && apt-get upgrade -y \
-  && apt-get install -y --no-install-recommends ${BUILD_PACKAGES}
-
-RUN bash -vxc "${INSTALL_SCRIPT:-"echo 'no INSTALL_SCRIPT provided'"}"
-
-# Install specific versions of dependencies
-RUN gem install bundler:${BUNDLER_VERSION} --no-document
-
-# Install nulldb adapter
-ARG RAILS_DB_ADAPTER
-RUN gem install activerecord-nulldb-adapter --no-document
-
-# TODO: Load artifacts
-
-# set up app-src directory
-COPY . /app-src
 WORKDIR /app-src
 
-RUN bash -vxc "${PRE_BUILD_SCRIPT:-"echo 'no PRE_BUILD_SCRIPT provided'"}"
+COPY Gemfile Gemfile.lock ./
 
-# install gems and build the app
-RUN    bundle config set --local deployment 'true' \
-  && bundle config set --local without ${BUNDLE_WITHOUT} \
-  && bundle package \
-  && bundle install \
-  && bundle clean
+RUN --mount=type=cache,target=/root/.bundle/cache \
+    bash -vxc "${PRE_BUILD_SCRIPT:-"echo 'no PRE_BUILD_SCRIPT provided'"}" \
+ && bundle config set --local deployment 'true' \
+ && bundle config set --local without ${BUNDLE_WITHOUT} \
+ && bundle install \
+ && bundle clean \
+ && rm -rf vendor/bundle/ruby/*/cache/*.gem \
+ && find vendor/bundle/ruby/*/gems/ \
+         -type f \
+         \( -name "*.c" -o -name "*.o" -o -name "*.h" \) \
+         -delete \
+ && find vendor/bundle/ruby/*/gems/*/ \
+         -mindepth 1 \
+         -maxdepth 1 \
+         -type d \
+         \( -name "spec" -o -name "test" -o -name "doc" \) \
+         -exec rm -rf {} +
 
-RUN bash -vxc "${BUILD_SCRIPT:-"echo 'no BUILD_SCRIPT provided'"}"
+COPY . /app-src
 
-RUN bash -vxc "${POST_BUILD_SCRIPT:-"echo 'no POST_BUILD_SCRIPT provided'"}"
-
-# TODO: Save artifacts
-
-RUN rm -rf vendor/cache/ .git spec/ node_modules/
+RUN bash -vxc "${BUILD_SCRIPT:-"echo 'no BUILD_SCRIPT provided'"}" \
+ && bash -vxc "${POST_BUILD_SCRIPT:-"echo 'no POST_BUILD_SCRIPT provided'"}" \
+ && rm -rf vendor/cache/ \
+           vendor/bundle/ruby/*/cache \
+           node_modules \
+ && chgrp -R 0 /app-src \
+ && chmod -R u+w,g=u /app-src
 
 
 #################################
@@ -148,7 +135,7 @@ FROM ruby:${RUBY_VERSION}-slim AS app
 SHELL ["/bin/bash", "-c"]
 
 # Add user
-RUN adduser --disabled-password --uid 1001 --gid 0 --gecos "" app
+RUN useradd --uid 1001 --gid 0 --create-home app
 
 # arguments for steps
 ARG RUN_PACKAGES
@@ -175,42 +162,39 @@ ARG BUILD_REF
 ARG SKIP_MEMCACHE_CHECK
 
 ENV PS1="${PS1}" \
-  TZ="${TZ}" \
-  BUILD_REPO="${BUILD_REPO:-${GITHUB_REPOSITORY}}" \
-  BUILD_REPO_URL="${BUILD_REPO_URL:-${GITHUB_REPOSITORY_URL}}" \
-  BUILD_REF="${BUILD_REF:-${GITHUB_REF_NAME}}" \
-  BUILD_COMMIT="${BUILD_COMMIT:-${GITHUB_SHA}}" \
-  RAILS_ENV="${RAILS_ENV}" \
-  RACK_ENV="${RACK_ENV}"
+    TZ="${TZ}" \
+    BUILD_REPO="${BUILD_REPO:-${GITHUB_REPOSITORY}}" \
+    BUILD_REPO_URL="${BUILD_REPO_URL:-${GITHUB_REPOSITORY_URL}}" \
+    BUILD_REF="${BUILD_REF:-${GITHUB_REF_NAME}}" \
+    BUILD_COMMIT="${BUILD_COMMIT:-${GITHUB_SHA}}" \
+    RAILS_ENV="${RAILS_ENV}" \
+    RACK_ENV="${RACK_ENV}" \
+    HOME="/app-src" \
+    PATH="/app-src/bin:$PATH"
 
 # Install dependencies, remove apt!
-RUN    export DEBIAN_FRONTEND=noninteractive \
-  && apt-get update \
-  && apt-get upgrade -y \
-  && apt-get install -y ${RUN_PACKAGES} vim curl less \
-  && apt-get clean \
-  && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* /tmp/* /var/tmp/* \
-  && truncate -s 0 /var/log/*log
+RUN export DEBIAN_FRONTEND=noninteractive \
+ && apt-get update -qq \
+ && apt-get install -y --no-install-recommends ${RUN_PACKAGES} curl less \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* /tmp/* /var/tmp/* \
+ && truncate -s 0 /var/log/*log
 
-# Copy deployment ready source code from build
+# Copy deployment ready source code from build (permissions already set in build stage)
 COPY --from=build /app-src /app-src
 WORKDIR /app-src
 
-# Set group permissions to app folder
-RUN    chgrp -R 0 /app-src \
-  && chmod -R u+w,g=u /app-src
-
-# support bin-stubs
-ENV HOME=/app-src \
-  PATH=/app-src/bin:$PATH
-
 # Install specific versions of dependencies
-RUN gem install bundler:${BUNDLER_VERSION} --no-document
+RUN --mount=type=cache,target=/root/.bundle/cache \
+    gem install bundler:${BUNDLER_VERSION} --no-document \
+ && bundle config set --local deployment 'true' \
+ && bundle config set --local without ${BUNDLE_WITHOUT} \
+ && bundle install
 
-# Use cached gems
-RUN    bundle config set --local deployment 'true' \
-  && bundle config set --local without ${BUNDLE_WITHOUT} \
-  && bundle install
+EXPOSE 3000
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+        CMD curl -f http://localhost:3000/status/health || exit 1
 
 USER 1001
 
