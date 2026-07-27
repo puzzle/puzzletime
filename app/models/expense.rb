@@ -25,9 +25,9 @@
 #
 
 class Expense < ApplicationRecord
-  belongs_to :order
+  belongs_to :order, optional: true # order_id is nullable
   belongs_to :employee
-  belongs_to :reviewer, class_name: 'Employee'
+  belongs_to :reviewer, class_name: 'Employee', optional: true # reviewer_id is nullable
 
   has_one_attached :receipt
 

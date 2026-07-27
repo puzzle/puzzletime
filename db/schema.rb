@@ -78,7 +78,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_02_090000) do
 
   create_table "authentications", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
-    t.bigint "employee_id"
+    t.bigint "employee_id", null: false
     t.string "provider"
     t.string "token"
     t.string "token_secret"
@@ -243,7 +243,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_02_090000) do
 
   create_table "employments", id: :serial, force: :cascade do |t|
     t.string "comment"
-    t.integer "employee_id"
+    t.integer "employee_id", null: false
     t.date "end_date"
     t.decimal "percent", precision: 5, scale: 2, null: false
     t.date "start_date", null: false
@@ -483,7 +483,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_02_090000) do
     t.integer "absence_id"
     t.boolean "billable", default: true
     t.text "description"
-    t.integer "employee_id"
+    t.integer "employee_id", null: false
     t.time "from_start_time"
     t.float "hours"
     t.text "internal_description"
