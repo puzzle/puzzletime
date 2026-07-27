@@ -21,7 +21,8 @@ module Puzzletime
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 8.1
 
-    # FIXME: remove this if it works flawlesly
+    # Rails >= 5 default (belongs_to required) is active. Associations whose FK
+    # column is nullable are marked `optional: true` explicitly in the models.
     # config.active_record.belongs_to_required_by_default = false
 
     # Configuration for the application, engines, and railties goes here.

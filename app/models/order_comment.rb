@@ -22,8 +22,8 @@ class OrderComment < ApplicationRecord
   ### ASSOCIATIONS
 
   belongs_to :order
-  belongs_to :creator, class_name: 'Employee'
-  belongs_to :updater, class_name: 'Employee'
+  belongs_to :creator, class_name: 'Employee', optional: true # creator_id is nullable
+  belongs_to :updater, class_name: 'Employee', optional: true # updater_id is nullable
 
   ### VALIDATIONS
 

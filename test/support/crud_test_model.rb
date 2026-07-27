@@ -7,7 +7,7 @@
 
 # A dummy model used for general testing.
 class CrudTestModel < ApplicationRecord # :nodoc:
-  belongs_to :companion, class_name: 'CrudTestModel'
+  belongs_to :companion, class_name: 'CrudTestModel', optional: true # companion_id is nullable
   has_and_belongs_to_many :others, class_name: 'OtherCrudTestModel'
   has_many :mores, class_name: 'OtherCrudTestModel',
                    foreign_key: :more_id
@@ -40,7 +40,7 @@ end
 # Second dummy model to test associations.
 class OtherCrudTestModel < ApplicationRecord # :nodoc:
   has_and_belongs_to_many :others, class_name: 'CrudTestModel'
-  belongs_to :more, class_name: 'CrudTestModel'
+  belongs_to :more, class_name: 'CrudTestModel', optional: true # more_id is nullable
 
   scope :list, -> { order(:name) }
 
