@@ -9,6 +9,22 @@
 @import "bootstrap";
 @import "mixins";
 
+// Respect the OS-level "reduce motion" setting (WCAG 2.3.3). Durations are
+// collapsed to ~0 rather than set to `none` so that `transitionend` still
+// fires — Bootstrap's modal/collapse plugins wait for that event.
+// The test suite opts into this via Chrome's --force-prefers-reduced-motion,
+// which keeps elements from moving while Capybara clicks them.
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 body {
   min-height: 100vh;
   display: flex;
