@@ -40,7 +40,12 @@ Capybara.register_driver :chrome do |app|
     # See additional options for Dockerized environment in the respective section of this article
     browser_options: {
       # Required for ARM chips on which CI might run
-      'disable-smooth-scrolling' => true
+      'disable-smooth-scrolling' => true,
+      # Animations move elements after Capybara has computed a click's
+      # coordinates, so clicks land on stale positions. This makes the browser
+      # report the OS "reduce motion" preference, which our stylesheet honours
+      # by collapsing all durations. Asserted by ReducedMotionTest.
+      'force-prefers-reduced-motion' => true
     },
     # Increase Chrome startup wait time (required for stable CI builds)
     process_timeout: 10,
