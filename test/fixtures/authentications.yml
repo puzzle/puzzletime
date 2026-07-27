@@ -19,14 +19,11 @@
 #  updated_at   :datetime         not null
 #
 
-# This model initially had no columns defined. If you add columns to the
-# model remove the '{}' from the fixture names and add the columns immediately
-# below each fixture, per the syntax in the comments below
-#
-
 ---
-one: {}
-# column: value
-#
-two: {}
-# column: value
+# Previously two empty `{}` placeholders left over from the generator. They were
+# referenced by no test and, since fixtures insert straight into the database and
+# skip validations, they violated the NOT NULL constraint on employee_id.
+keycloak_mark:
+  provider: keycloak
+  uid: mark-uid
+  employee: mark

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_20_140302) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_27_130000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -78,7 +78,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_20_140302) do
 
   create_table "authentications", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
-    t.bigint "employee_id"
+    t.bigint "employee_id", null: false
     t.string "provider"
     t.string "token"
     t.string "token_secret"
@@ -243,7 +243,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_20_140302) do
 
   create_table "employments", id: :serial, force: :cascade do |t|
     t.string "comment"
-    t.integer "employee_id"
+    t.integer "employee_id", null: false
     t.date "end_date"
     t.decimal "percent", precision: 5, scale: 2, null: false
     t.date "start_date", null: false
@@ -483,7 +483,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_20_140302) do
     t.integer "absence_id"
     t.boolean "billable", default: true
     t.text "description"
-    t.integer "employee_id"
+    t.integer "employee_id", null: false
     t.time "from_start_time"
     t.float "hours"
     t.text "internal_description"
