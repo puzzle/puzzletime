@@ -1,0 +1,8 @@
+/*
+ * Manifest for the print layout (app/views/layouts/print.html.haml), which
+ * links this file as its only stylesheet.
+ *
+ *= require vendor/bootstrap-3.4.1
+ *= require vendor/glyphicons
+ *= require print_styles
+ */
