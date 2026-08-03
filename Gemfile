@@ -104,10 +104,11 @@ gem 'pry-rails'
 gem 'paper_trail'
 
 group :development, :test do
+  # gem 'codez-tarantula', require: 'tarantula-rails3'
   gem 'better_errors'
   gem 'binding_of_caller'
-  # gem 'codez-tarantula', require: 'tarantula-rails3'
   gem 'faker'
+  gem 'parallel_tests'
   gem 'rb-readline'
   gem 'request_profiler'
 end
