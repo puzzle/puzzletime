@@ -12,22 +12,22 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
   }
 
   .figures {
-    @extend .row;
+    @include bs-row;
     margin-left: 0;
     margin-right: 0;
     padding-bottom: 5px;
     color: $gray;
 
     .balance {
-      @extend .col-xs-offset-1;
-      @extend .col-xs-2;
+      @include bs-offset(1);
+      @include bs-col(2);
     }
     .monthly {
-      @extend .col-xs-6;
+      @include bs-col(6);
       text-align: center;
     }
     .holidays {
-      @extend .col-xs-2;
+      @include bs-col(2);
       text-align: right;
     }
   }
@@ -153,8 +153,8 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
     }
   }
   .weeknav-add-row {
-    @extend .col-xs-offset-9;
-    @extend .col-xs-2;
+    @include bs-offset(9);
+    @include bs-col(2);
     border-right-width: 1px;
     padding-right: 0;
 
@@ -253,7 +253,7 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
     }
 
     .date-label {
-      @extend .row;
+      @include bs-row;
       margin-left: 0;
       margin-right: 0;
       margin-top: 36px;
@@ -266,15 +266,15 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
         padding-bottom: 10px;
       }
       .date-day {
-        @extend .col-xs-offset-1;
-        @extend .col-xs-7;
+        @include bs-offset(1);
+        @include bs-col(7);
       }
       .date-time-value {
         text-align: right;
-        @extend .col-xs-1;
+        @include bs-col(1);
       }
       .date-action {
-        @extend .col-xs-2;
+        @include bs-col(2);
         text-align: right;
         padding-right: 50px;
         a {
@@ -291,7 +291,7 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
     }
 
     .entry {
-      @extend .row;
+      @include bs-row;
       margin-left: 0;
       margin-right: 0;
       position: relative;
@@ -317,7 +317,7 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
       }
 
       .billable-icon {
-        @extend .col-xs-offset-1;
+        @include bs-offset(1);
         display: block;
         position: absolute;
         left: -35px;
@@ -326,7 +326,7 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
       }
 
       .meal-compensation-icon {
-        @extend .col-xs-offset-1;
+        @include bs-offset(1);
         display: block;
         position: absolute;
         left: -70px;
@@ -335,8 +335,8 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
       }
 
       .title-description {
-        @extend .col-xs-offset-1;
-        @extend .col-xs-5;
+        @include bs-offset(1);
+        @include bs-col(5);
       }
 
       .title,
@@ -359,19 +359,19 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
       }
 
       .time-range {
-        @extend .col-xs-2;
+        @include bs-col(2);
         font-size: 18px;
         font-weight: 300;
       }
 
       .time-value {
-        @extend .col-xs-1;
+        @include bs-col(1);
         font-size: 18px;
         font-weight: 500;
       }
 
       .controls {
-        @extend .col-xs-2;
+        @include bs-col(2);
         font-size: 16px;
         padding-right: 50px;
         i {
@@ -392,15 +392,15 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
       }
     }
     .entry.is-empty .controls {
-      @extend .col-xs-12;
+      @include bs-col(12);
     }
   }
 }
 
 .worktimes-day-no-entries,
 .worktimes-day-add-link {
-  @extend .col-xs-offset-1;
-  @extend .col-xs-10;
+  @include bs-offset(1);
+  @include bs-col(10);
 }
 
 .worktimes-day-no-entries {

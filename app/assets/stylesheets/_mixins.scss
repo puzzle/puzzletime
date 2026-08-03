@@ -20,3 +20,89 @@
   -o-text-overflow: ellipsis;
   text-overflow: ellipsis;
 }
+
+@mixin box-shadow($shadow...) {
+  -webkit-box-shadow: $shadow;
+  box-shadow: $shadow;
+}
+
+// Bootstrap's clearfix sets :before as well, which stops the top margin of the
+// first child from collapsing out. Our own `clearfix` above only sets :after.
+@mixin bs-clearfix {
+  &:before,
+  &:after {
+    display: table;
+    content: " ";
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+@mixin bs-row {
+  margin-left: $grid-gutter-width / -2;
+  margin-right: $grid-gutter-width / -2;
+  @include bs-clearfix;
+}
+
+@mixin bs-col($columns) {
+  position: relative;
+  min-height: 1px;
+  float: left;
+  width: percentage($columns / 12);
+  padding-left: $grid-gutter-width / 2;
+  padding-right: $grid-gutter-width / 2;
+}
+
+@mixin bs-offset($columns) {
+  margin-left: percentage($columns / 12);
+}
+
+@mixin bs-container-fluid {
+  padding-right: $grid-gutter-width / 2;
+  padding-left: $grid-gutter-width / 2;
+  margin-right: auto;
+  margin-left: auto;
+  @include bs-clearfix;
+}
+
+@mixin bs-form-control {
+  display: block;
+  width: 100%;
+  height: $input-height-base;
+  padding: $padding-base-vertical $padding-base-horizontal;
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+  color: $input-color;
+  background-color: $input-bg;
+  background-image: none;
+  border: 1px solid $input-border;
+  border-radius: $input-border-radius;
+  @include box-shadow(inset 0 1px 1px rgba(0, 0, 0, .075));
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+
+  &:focus {
+    border-color: $input-border-focus;
+    outline: 0;
+    @include box-shadow(inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6));
+  }
+
+  &::-moz-placeholder {
+    color: $input-color-placeholder;
+    opacity: 1;
+  }
+
+  &:-ms-input-placeholder {
+    color: $input-color-placeholder;
+  }
+
+  &::-webkit-input-placeholder {
+    color: $input-color-placeholder;
+  }
+}
+
+@mixin bs-table-striped {
+  > tbody > tr:nth-of-type(odd) {
+    background-color: $table-bg-accent;
+  }
+}

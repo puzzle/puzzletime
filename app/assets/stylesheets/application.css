@@ -15,6 +15,8 @@
  *= require jquery-ui/autocomplete
  *= require selectize
  *= require selectize.bootstrap3
+ *= require vendor/bootstrap-3.4.1
+ *= require vendor/glyphicons
  *= require puzzletime
  *= require_self
  */

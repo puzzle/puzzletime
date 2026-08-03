@@ -4,9 +4,7 @@
 //  https://github.com/puzzle/puzzletime.
 
 
-@import "bootstrap-sprockets";
 @import "bootstrap_variables";
-@import "bootstrap";
 @import "mixins";
 
 // Respect the OS-level "reduce motion" setting (WCAG 2.3.3). Durations are
@@ -32,7 +30,7 @@ body {
 }
 
 main {
-  @extend .container-fluid;
+  @include bs-container-fluid;
   margin: 0 $grid-gutter-width 40px;
   padding: 0;
   flex: 1;
@@ -261,7 +259,7 @@ span.subtle-hint {
 }
 
 .form-action {
-  @extend .form-control;
+  @include bs-form-control;
   width: auto;
   border: 0;
   box-shadow: none;
