@@ -23,7 +23,8 @@ module DryCrud
       class_attribute :remember_params
       self.remember_params = %w[q sort sort_dir page]
 
-      before_action :handle_remember_params, only: [:index] if respond_to?(:index)
+      # ponytail: request-time check, not only: [:index] — see upgrade.html #p0
+      before_action :handle_remember_params, if: -> { action_name == 'index' }
     end
 
     private
