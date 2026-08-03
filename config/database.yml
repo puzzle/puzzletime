@@ -72,9 +72,12 @@ test:
   max_connections: 15
   host: <%= ENV['RAILS_TEST_DB_HOST'] || '127.0.0.1' %>
   port: <%= ENV['RAILS_TEST_DB_PORT'] || '5432' %>
-  database: <%= ENV['RAILS_TEST_DB_NAME'] || 'puzzletime_test' %>
+  database: <%= ENV['RAILS_TEST_DB_NAME'] || 'puzzletime_test' %><%= ENV['TEST_ENV_NUMBER'] %>
   username: <%= ENV['RAILS_TEST_DB_USERNAME'] || 'puzzletime' %>
   password: <%= ENV['RAILS_TEST_DB_PASSWORD'] || 'timepuzzle' %>
+  variables:
+    # ponytail: DatabaseCleaner's TRUNCATE waits forever otherwise — see upgrade.html #p0
+    lock_timeout: 15000
 
 # As with config/secrets.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is

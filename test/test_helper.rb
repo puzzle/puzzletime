@@ -18,7 +18,11 @@ module Warning
 end
 
 require 'minitest/reporters'
-Minitest::Reporters.use! Minitest::Reporters::ProgressReporter.new(detailed_skip: false)
+# Minitest::Reporters.use!
+Minitest::Reporters.use! Minitest::Reporters::ProgressReporter.new(detailed_skip: false, color: true)
+# Minitest::Reporters.use! Minitest::Reporters::DefaultReporter.new(color: true)
+# Minitest::Reporters.use! Minitest::Reporters::SpecReporter.new(color: true)
+# Minitest::Reporters.use! Minitest::Reporters::HtmlReporter.new(reports_dir: "test/html_reports#{ENV.fetch('TEST_ENV_NUMBER', '')}")
 
 require File.expand_path('../config/environment', __dir__)
 Rails.env = 'test'
