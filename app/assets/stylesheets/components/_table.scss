@@ -91,9 +91,7 @@
 }
 
 .table-stripedbody {
-  // The app defines its own .table-striped above; that one is still SCSS and
-  // stays extendable. Only Bootstrap's rule moved into the frozen CSS, out of
-  // @extend's reach, so it comes in as a mixin.
+  // .table-striped above is still SCSS and extendable; Bootstrap's copy is not.
   @extend .table-striped;
   @include bs-table-striped;
 

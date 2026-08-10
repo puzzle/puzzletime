@@ -8,8 +8,8 @@ ARG BUNDLER_VERSION="4.0.10"
 ARG NULLDB_VERSION="1.2.2"
 
 # Packages
-# ARG BUILD_PACKAGES="nodejs build-essential libc6"
-ARG BUILD_PACKAGES
+# Build-time only: assets:precompile runs javascript:build, which needs esbuild.
+ARG BUILD_PACKAGES="nodejs npm"
 ARG RUN_PACKAGES="bash libpq5 libvips42 libvips-dev neovim postgresql-client"
 
 # Scripts
@@ -17,7 +17,8 @@ ARG PRE_INSTALL_SCRIPT
 ARG INSTALL_SCRIPT
 ARG PRE_BUILD_SCRIPT
 ARG BUILD_SCRIPT=" \
-     SECRET_KEY_BASE=1 bundle exec rails assets:precompile \
+     npm ci \
+  && SECRET_KEY_BASE=1 SKIP_YARN_INSTALL=1 bundle exec rails assets:precompile \
   && rm -rf tmp/cache tmp/sockets tmp/pids \
 "
 ARG POST_BUILD_SCRIPT="echo \"(built at: $(date '+%Y-%m-%d %H:%M:%S'))\" > /app-src/BUILD_INFO"
