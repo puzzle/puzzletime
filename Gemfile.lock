@@ -137,9 +137,6 @@ GEM
     bleib (0.0.16)
     bootsnap (1.24.6)
       msgpack (~> 1.2)
-    bootstrap-sass (3.4.1)
-      autoprefixer-rails (>= 5.2.1)
-      sassc (>= 2.0.0)
     brakeman (8.0.4)
       racc
     builder (3.3.0)
@@ -161,8 +158,6 @@ GEM
       rack-test (>= 0.6.3)
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
-    chartjs-ror (3.7.0)
-      rails (>= 3.1)
     childprocess (4.1.0)
     choice (0.2.0)
     chunky_png (1.4.0)
@@ -293,6 +288,8 @@ GEM
       thor (>= 0.14, < 2.0)
     jquery-ui-rails (8.0.0)
       railties (>= 3.2.16)
+    jsbundling-rails (1.3.1)
+      railties (>= 6.0.0)
     json (2.19.8)
     json-jwt (1.17.1)
       activesupport (>= 4.2)
@@ -682,8 +679,6 @@ GEM
     swagger-blocks (3.0.0)
     sysexits (1.2.0)
     temple (0.10.4)
-    terser (1.2.7)
-      execjs (>= 0.3.0, < 3)
     thor (1.5.0)
     tilt (2.7.0)
     timeliness (0.5.3)
@@ -755,13 +750,10 @@ DEPENDENCIES
   binding_of_caller
   bleib
   bootsnap
-  bootstrap-sass
   brakeman
   bullet
   bundler-audit
   cancancan
-  chartjs-ror
-  coffee-rails
   config
   connection_pool
   country_select
@@ -782,8 +774,8 @@ DEPENDENCIES
   highrise
   image_processing
   jbuilder
-  jquery-rails
   jquery-ui-rails
+  jsbundling-rails
   jsonapi-serializer
   kaminari
   kaminari-bootstrap
@@ -846,7 +838,6 @@ DEPENDENCIES
   spring
   sprockets-rails
   swagger-blocks
-  terser
   turbolinks
   validates_by_schema
   validates_timeliness
@@ -896,7 +887,6 @@ CHECKSUMS
   binding_of_caller (2.0.0) sha256=e53eebf8428a85587aede7b43a83e7419eb85b8b690938a96aa330d03052d517
   bleib (0.0.16) sha256=c9b1dcd9b2708590bc90de387a359a2eabe30a1f5ceed95dcb396694a89364a1
   bootsnap (1.24.6) sha256=c60bab88c70332290f0a2636a288f675299eb4f804a02a3c085b42eca9da164a
-  bootstrap-sass (3.4.1) sha256=ba4673535eb0a8334a39a258ea8d81904832f47607069d0a1735b0937645c7df
   brakeman (8.0.4) sha256=7bf921fa9638544835df9aa7b3e720a9a72c0267f34f92135955edd80d4dcf6f
   builder (3.3.0) sha256=497918d2f9dca528fdca4b88d84e4ef4387256d984b8154e9d5d3fe5a9c8835f
   bullet (8.1.3) sha256=c8163c527324fe1180775be48719875726891622f0a73784658b2992acf3c7cb
@@ -904,7 +894,6 @@ CHECKSUMS
   byebug (13.0.0) sha256=d2263efe751941ca520fa29744b71972d39cbc41839496706f5d9b22e92ae05d
   cancancan (3.6.1) sha256=975c1d5cbf58d5df48a9452a7f61ae3d254608cd87570402f5925a8864c56b62
   capybara (3.40.0) sha256=42dba720578ea1ca65fd7a41d163dd368502c191804558f6e0f71b391054aeef
-  chartjs-ror (3.7.0) sha256=303186e5dd759653a0c282a51e62383c78163547368c137489488618ddca4e9c
   childprocess (4.1.0) sha256=3616ce99ccb242361ce7f2b19bf9ff3e6bc1d98b927c7edc29af8ca617ba6cd3
   choice (0.2.0) sha256=a19617f7dfd4921b38a85d0616446620de685a113ec6d1ecc85bdb67bf38c974
   chunky_png (1.4.0) sha256=89d5b31b55c0cf4da3cf89a2b4ebc3178d8abe8cbaf116a1dba95668502fdcfe
@@ -969,6 +958,7 @@ CHECKSUMS
   jmespath (1.6.2) sha256=238d774a58723d6c090494c8879b5e9918c19485f7e840f2c1c7532cf84ebcb1
   jquery-rails (4.6.1) sha256=619f3496cdcdeaae1fd6dafa52dbac3fc45b745d4e09712da4184a16b3a8d9c0
   jquery-ui-rails (8.0.0) sha256=e198f0ccd84587bc1030e79333db5fdb1100c8d459ed378ff285f57720f6b9c9
+  jsbundling-rails (1.3.1) sha256=0fa03f6d051c694cbf55a022d8be53399879f2c4cf38b2968f86379c62b1c2ca
   json (2.19.8) sha256=6354310fd76ef69b87d5bd1f38b40d730613baf90b6803d2d0a48f618d32dfaa
   json-jwt (1.17.1) sha256=5e1ced0f7b206b4c567efee19e6503c1426a819749132926cda579ec013d1f46
   jsonapi-serializer (2.2.0) sha256=f8141ac6f0c1e17e8513df68f8341afe2d7bffc285841d7090bc07f07efb0029
@@ -1124,7 +1114,6 @@ CHECKSUMS
   swagger-blocks (3.0.0) sha256=130938b62daf6faad3d00f6c60ebae20411619871f478cc14a265f127579cc2f
   sysexits (1.2.0) sha256=598241c4ae57baa403c125182dfdcc0d1ac4c0fb606dd47fbed57e4aaf795662
   temple (0.10.4) sha256=b7a1e94b6f09038ab0b6e4fe0126996055da2c38bec53a8a336f075748fff72c
-  terser (1.2.7) sha256=1b12eb49769dadac44caac3485b38928ff4ab435f1bbbacfe8048cff84c6aa1b
   thor (1.5.0) sha256=e3a9e55fe857e44859ce104a84675ab6e8cd59c650a49106a05f55f136425e73
   tilt (2.7.0) sha256=0d5b9ba69f6a36490c64b0eee9f6e9aad517e20dcc848800a06eb116f08c6ab3
   timeliness (0.5.3) sha256=6175e14a0e072b50d2433d253de3c18ce10c573d909edf55c4b510271ecd5aed

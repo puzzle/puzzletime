@@ -51,6 +51,12 @@ Capybara.register_driver :chrome do |app|
       # by collapsing all durations. Asserted by ReducedMotionTest.
       'force-prefers-reduced-motion' => true
     },
+    # Off by default: with it on, some planning tests hit a segfault in the pg
+    # gem instead of finishing (Capybara.server = :puma runs the app in threads
+    # sharing this process's connection pool; js_errors' extra CDP round-trips
+    # shift request timing enough to reach that race). See upgrade.html #p2.
+    # Opt in per run to diagnose silent JS breakage: JS_ERRORS=1 bin/rails test <file>
+    js_errors: ENV['JS_ERRORS'] == '1',
     # Increase Chrome startup wait time (required for stable CI builds)
     process_timeout: 10,
     # Enable debugging capabilities
