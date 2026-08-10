@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-source 'https://rubygems.org'
+source 'https://rubygems.org', cooldown: 7
 
 git_source(:github) { |name| "https://github.com/#{name}.git" }
 
@@ -83,16 +83,14 @@ gem 'sentry-ruby'
 
 ## assets
 gem 'autoprefixer-rails'
-gem 'bootstrap-sass'
-gem 'chartjs-ror'
-gem 'coffee-rails'
 gem 'execjs'
-gem 'jquery-rails'
+gem 'jsbundling-rails'
+# Only their stylesheets are still used; phase 3 vendors those and drops both.
 gem 'jquery-ui-rails'
 gem 'sass-rails'
 gem 'selectize-rails'
 gem 'sprockets-rails'
-gem 'terser'
+# Kept for Turbolinks::Controller, included by config/initializers/devise.rb.
 gem 'turbolinks'
 
 # debugging

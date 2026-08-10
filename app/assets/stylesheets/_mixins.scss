@@ -26,8 +26,7 @@
   box-shadow: $shadow;
 }
 
-// Bootstrap's clearfix sets :before as well, which stops the top margin of the
-// first child from collapsing out. Our own `clearfix` above only sets :after.
+// Bootstrap's clearfix, which unlike ours above also sets :before.
 @mixin bs-clearfix {
   &:before,
   &:after {

@@ -1,0 +1,23 @@
+{
+  "name": "puzzletime",
+  "private": true,
+  "license": "AGPL-3.0-or-later",
+  "comment": "Versions pinned to what the gems shipped, so phase 2 changes the bundler and nothing else.",
+  "dependencies": {
+    "bootstrap": "3.4.1",
+    "chart.js": "3.7.1",
+    "chartjs-plugin-annotation": "2.2.1",
+    "jquery": "3.7.1",
+    "jquery-ui": "1.14.1",
+    "jquery-ujs": "1.2.3",
+    "selectize": "0.12.6",
+    "turbolinks": "5.2.0",
+    "waypoints": "4.0.1"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25"
+  },
+  "scripts": {
+    "build": "esbuild app/javascript/application.js --bundle --sourcemap --outdir=app/assets/builds --public-path=/assets --minify"
+  }
+}
