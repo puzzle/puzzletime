@@ -1,0 +1,1576 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PuzzleTime — Asset pipeline upgrade path</title>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #24292f; --muted: #57606a; --line: #d0d7de;
+    --accent: #238BCA; --accent-dark: #1E5A96; --ok: #61B44B; --warn: #f0ad4e; --bad: #B44B5B;
+    --code-bg: #f6f8fa; --box: #f6f8fa;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0d1117; --fg:#e6edf3; --muted:#9198a1; --line:#30363d; --code-bg:#161b22; --box:#161b22; }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  .wrap { max-width: 60rem; margin: 0 auto; padding: 2rem 1.25rem 6rem; }
+  h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 .25rem; }
+  h2 { font-size: 1.45rem; margin: 3rem 0 .75rem; padding-bottom: .3rem; border-bottom: 1px solid var(--line); }
+  h3 { font-size: 1.12rem; margin: 2rem 0 .5rem; }
+  h4 { font-size: 1rem; margin: 1.25rem 0 .35rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; font-size: .8rem; }
+  p, li { margin: .5rem 0; }
+  ul, ol { padding-left: 1.4rem; }
+  code, pre { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace; font-size: .875em; }
+  code { background: var(--code-bg); padding: .1em .35em; border-radius: 4px; }
+  pre { background: var(--code-bg); border: 1px solid var(--line); border-radius: 6px; padding: .85rem 1rem; overflow-x: auto; }
+  pre code { background: none; padding: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: .9rem; display: block; overflow-x: auto; }
+  th, td { border: 1px solid var(--line); padding: .45rem .6rem; text-align: left; vertical-align: top; }
+  th { background: var(--box); font-weight: 600; }
+  .lede { color: var(--muted); font-size: 1.05rem; }
+  .box { background: var(--box); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 4px; padding: .8rem 1rem; margin: 1.25rem 0; }
+  .box.warn { border-left-color: var(--warn); }
+  .box.bad { border-left-color: var(--bad); }
+  .box.ok { border-left-color: var(--ok); }
+  .box p:first-child { margin-top: 0; } .box p:last-child, .box ul:last-child { margin-bottom: 0; }
+  .tag { display: inline-block; font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+         padding: .12em .5em; border-radius: 3px; vertical-align: .12em; }
+  .tag.low { background: rgba(97,180,75,.18); color: var(--ok); }
+  .tag.med { background: rgba(240,173,78,.2); color: var(--warn); }
+  .tag.high { background: rgba(180,75,91,.18); color: var(--bad); }
+  .phase { border: 1px solid var(--line); border-radius: 8px; padding: 1rem 1.25rem; margin: 1.5rem 0; }
+  .phase > h3 { margin-top: 0; }
+  .phase .goal { color: var(--muted); font-style: italic; margin-top: -.25rem; }
+  nav.toc { background: var(--box); border: 1px solid var(--line); border-radius: 8px; padding: 1rem 1.25rem; }
+  nav.toc ol { margin: .25rem 0 0; }
+  nav.toc a { color: var(--accent); text-decoration: none; }
+  nav.toc a:hover { text-decoration: underline; }
+  .meta { color: var(--muted); font-size: .875rem; }
+  .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 0 1.5rem; }
+  .check { list-style: none; padding-left: 0; }
+  .check li { padding-left: 1.6rem; position: relative; }
+  .check li::before { content: "☐"; position: absolute; left: 0; color: var(--muted); }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 2.5rem 0; }
+  .small { font-size: .85rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>PuzzleTime — Asset pipeline upgrade path</h1>
+<p class="lede">Sprockets → Propshaft · CoffeeScript/Sprockets JS → jsbundling + esbuild · Bootstrap 3 → Tailwind CSS 4 with a Bootstrap class shim layer.</p>
+<p class="meta">Branch <code>task/65394-ruby-and-rails-upgrade</code> · Rails 8.1 · written 2026-07-27</p>
+
+<nav class="toc">
+  <strong>Contents</strong>
+  <ol>
+    <li><a href="#state">Where the branch stands today</a></li>
+    <li><a href="#inventory">Inventory: what actually depends on what</a></li>
+    <li><a href="#layers">Cascade layers &amp; the Preflight / Bootstrap-reset question</a></li>
+    <li><a href="#plan">The phase plan (0–7)</a></li>
+    <li><a href="#shims">Shim catalogue — the classes we actually use</a></li>
+    <li><a href="#risks">Risks and traps</a></li>
+    <li><a href="#decisions">Decisions</a></li>
+  </ol>
+</nav>
+
+<div class="box ok">
+<h3 style="margin-top: 0">Phase progress</h3>
+<p><strong>Phase 0 — Get back to a green baseline</strong> <span class="tag low">complete</span></p>
+<ul style="margin: 0.5rem 0">
+  <li>✓ Revert Gemfile/SCSS: <code>bootstrap-sass</code>, <code>kaminari-bootstrap</code>, <code>sprockets-rails</code> restored</li>
+  <li>✓ Delete empty asset directories: <code>app/assets/{builds,tailwind}/</code></li>
+  <li>✓ Capture CSS/JS baseline: 225 kB CSS + 579 kB JS → <code>/tmp/baseline/</code>, then clear <code>public/assets</code>
+      — CSS re-captured at <code>HEAD</code> afterwards, the 12:44 copy predated the reduced-motion rule (below)</li>
+  <li>✓ Fix the two suite failures found by the scoped runs — both real Rails-upgrade fallout, neither asset-related:
+    <ul>
+      <li><strong>Required <code>belongs_to</code>.</strong> Commit <code>2ecdfcb0</code> commented out
+          <code>belongs_to_required_by_default = false</code>, making 31 unaudited associations required. Audited all 52
+          against <code>schema.rb</code>, aligning each model with its FK column's nullability:
+        <ul>
+          <li><strong>Marked <code>optional: true</code> (6)</strong> — column is nullable and legitimately so:
+              <code>Expense#order</code>, <code>Expense#reviewer</code>,
+              <code>OrderComment#creator</code>/<code>#updater</code>, <code>CrudTestModel#companion</code>,
+              <code>OtherCrudTestModel#more</code>.</li>
+          <li><strong>Tightened to required (2)</strong> — nullable by accident, no NULLs in production:
+              <code>Authentication#employee</code>, <code>Employment#employee</code>. The two empty <code>{}</code>
+              generator placeholders in <code>test/fixtures/authentications.yml</code> were replaced with one real
+              fixture — fixtures insert straight into the database and skip validations, so they would have violated
+              the constraint.</li>
+          <li><strong>Already required, DB now matches (1)</strong> — <code>Worktime#employee</code> was already
+              deliberately <code>optional: false</code>, so no new worktime can be saved without an employee. Its column
+              is included in the migration too.</li>
+        </ul>
+        <p>Migration <code>20260727130000</code> sets <code>employee_id</code> <code>NOT NULL</code> on
+        <code>worktimes</code>, <code>employments</code> and <code>authentications</code>, and aborts with the offending
+        ids if any row still lacks one.</p>
+        <div class="box warn">
+        <p><strong>The <code>worktimes</code> half of that migration is a deliberate release gate.</strong> When this was
+        written production still held 4 worktimes with a null <code>employee_id</code> — <code>977698</code>,
+        <code>977699</code>, <code>1008347</code>, <code>1008350</code> (reported as 2 from a real incident and 2 test
+        leftovers; not verifiable from a development database). Those are expected to be classified and cleared before
+        the upgrade ships, and the migration is what proves it: <strong>if any remain, the release fails here</strong>
+        rather than shipping a table that contradicts its own model.</p>
+        <p>The correct response to that failure is to classify the rows, <em>not</em> to relax the constraint. Two things
+        to know before touching them: <code>Worktime</code> is STI (<code>Ordertime</code>/<code>Absencetime</code>) and
+        carries <code>protective</code> guards, so deleting through the model may trip <code>protect_if</code> rather
+        than simply working; and while no table has a <code>worktime_id</code> column, <code>worktimes.invoice_id</code>
+        does exist and is indexed — so check whether any of the four is attached to an invoice before deciding between
+        reassignment and deletion. The guard was verified by injecting a null-employee row and confirming
+        <code>db:migrate</code> aborts and names it.</p>
+        </div>
+          <em>Verified on the affected model, helper and controller tests after each step — last run 50 tests,
+          253 assertions, 0 failures.</em></li>
+      <li><strong>Modal click landing on a moving target.</strong> Chrome now runs with
+          <code>--force-prefers-reduced-motion</code> and the stylesheet honours it (WCAG 2.3.3), collapsing durations to
+          ~0 rather than <code>none</code> so <code>transitionend</code> still fires. Guarded by
+          <code>ReducedMotionTest</code>. <em>create_order_test: 22 tests, 168 assertions, 0 failures.</em></li>
+    </ul>
+  </li>
+  <li>✓ <strong>Confirm green on the full suite</strong> — the gate the scoped runs above could not provide. It found
+      15 further failures in three causes, all Rails-upgrade fallout and none asset-related: a callback guard that
+      silently disabled filter-remembering on six controllers, Rails 8.1's schema dumper sorting columns, and the
+      <code>fast_jsonapi</code> → <code>jsonapi-serializer</code> swap breaking <code>include</code> validation twice
+      over. Fixed and re-verified; see §4 Phase 0 for each cause and fix.</li>
+</ul>
+
+<p><strong>Phase 0 complete.</strong> Baseline captured and current, the full suite green, and no test-only conditionals
+in app code. Three findings carried forward: the stale-<code>public/assets</code> trap (below), the missing
+<code>bootstrap/transition</code> import (<a href="#p2">phase 2</a>), and — from the schema-dumper cause — that
+<code>db/schema.rb</code> now lists columns alphabetically while the production database keeps its physical order, so
+<code>db:schema:load</code> environments differ from production in column order. Harmless for the fixed test, but it
+means anything order-dependent behaves differently in test than in production.</p>
+
+<p style="margin-top:1.5rem"><strong>Phase 1 — Freeze Bootstrap 3 into a static CSS file</strong>
+<span class="tag low">complete</span> — commit <code>d00ae213</code></p>
+<ul style="margin: 0.5rem 0">
+  <li>✓ <code>vendor/bootstrap-3.4.1.css</code> (6537 lines) compiled from the gem against our variables;
+      <code>vendor/glyphicons.scss</code> split out verbatim; all 25 <code>@extend</code>s replaced by local mixins;
+      <code>bootstrap-sass</code> no longer imported by any stylesheet.</li>
+  <li>✓ <strong>Verified against the baseline</strong> — <code>application.js</code> and <code>phone.css</code>
+      byte-for-byte identical, <code>print.css</code> an identical rule set, and <code>application.css</code>
+      identical across all 2558 Bootstrap rules. See <a href="#p1">phase 1</a> for the four defects the comparison
+      caught and the three residual deltas it cleared.</li>
+</ul>
+
+<p style="margin-top:1.5rem"><strong>Phase 2 — JavaScript to jsbundling + esbuild</strong>
+<span class="tag low">complete</span></p>
+<ul style="margin: 0.5rem 0">
+  <li>✓ 36 CoffeeScript files converted into <code>app/javascript/</code>, <code>vendor/assets/javascripts/</code> gone,
+      one esbuild bundle (546 kB) served by Sprockets from <code>app/assets/builds/</code>; npm versions pinned to what
+      the gems shipped; <code>modernizr-custom.js</code> replaced by two lines.</li>
+  <li>✓ <strong>CSS byte-identical</strong> to the phase-1 baseline (this phase touches no CSS), and the full suite green
+      — 1515 tests, 6006 assertions.</li>
+  <li>✓ Five defects found, four of them silent, and all four caused by the same thing: <strong>Sprockets semantics that
+      have no esbuild equivalent and fail quietly rather than loudly</strong> — turbolinks not self-starting when bundled,
+      jquery-ui's AMD-only dependency lists, <code>//= require</code> directives surviving as dead comments, and
+      jquery-ujs no-oping without a global jQuery. See <a href="#p2">phase 2</a>.</li>
+  <li>✓ Three gems could not be dropped as listed (<code>turbolinks</code>, <code>jquery-ui-rails</code>,
+      <code>selectize-rails</code>) — the recurring lesson that a gem's asset payload and its Ruby payload retire on
+      different phases.</li>
+  <li>✓ <code>js_errors: true</code> found every silent JS trap above, then turned out to crash the suite via an
+      unrelated, pre-existing test-harness hazard (<code>Capybara.server = :puma</code> shares one connection pool
+      between the test thread and the app's own request threads; <code>pg</code>'s connection object is not
+      thread-safe, so under load that is a real, reproducible segfault). Kept as an opt-in env var, not a default.</li>
+</ul>
+
+<div class="box warn">
+<p><strong>The baseline was missing, and re-deriving it is what made phase 1 verifiable.</strong> Phase 0 recorded that
+it had stashed <code>/tmp/baseline/</code>, but <code>/tmp</code> had since been cleared — so phase 1 opened with
+nothing to diff against, and the first pass was committed on "it compiles" alone. That pass contained a
+<strong>119 kB → 471 byte regression in <code>print.css</code></strong> that no amount of reading the diff would have
+surfaced.</p>
+<p>Recapturing is cheap and should be the first move of every phase, not the last:
+<code>git worktree add ../phase0-baseline &lt;sha&gt;</code>, precompile there, copy the four assets out. Since
+<code>/tmp</code> does not survive a reboot, <strong>treat the baseline as derived, not stored</strong> — the commit
+sha in <code>/tmp/baseline/COMMIT</code> is the part that matters, and it is now
+<code>d00ae213</code> (re-captured at the phase-1 HEAD, as the rule below requires).</p>
+</div>
+</div>
+
+<h2 id="state">1. Where the branch stands today</h2>
+
+<p>An earlier pass already started the migration. It is <strong>not in a working state</strong> and phase 0 is to
+finish or revert it deliberately:</p>
+
+<table>
+  <tr><th>Already done</th><th>Consequence</th></tr>
+  <tr>
+    <td><code>bootstrap-sass</code>, <code>kaminari-bootstrap</code>, <code>sprockets-rails</code> removed from the Gemfile;
+        <code>tailwindcss-rails ~&gt; 4.6</code> added</td>
+    <td><code>sprockets</code> is still pulled in transitively by <code>sassc-rails</code> (via <code>sass-rails</code>),
+        so the app still boots on Sprockets — but the Bootstrap Sass source is gone.</td>
+  </tr>
+  <tr>
+    <td><code>@import "bootstrap"</code> commented out in <code>puzzletime.scss</code> and <code>print.scss</code></td>
+    <td><strong>The stylesheets can no longer compile.</strong> They still reference Bootstrap variables
+        (<code>$grid-gutter-width</code>, <code>$gray</code>, <code>$brand-danger</code>, <code>$zindex-modal</code>,
+        <code>$line-height-computed</code>, <code>$btn-link-disabled-color</code>…), Bootstrap mixins
+        (<code>@include clearfix</code>, <code>@include box-shadow</code>) and 20 <code>@extend</code>s of Bootstrap
+        classes. See <a href="#p1">phase 1</a>.</td>
+  </tr>
+  <tr>
+    <td><code>app/assets/tailwind/application.css</code> with a hand-written partial shim</td>
+    <td>Good starting point, but written against classes the app does not use
+        (<code>.col-md-12</code>, <code>.alert-success</code>) while missing the ones it does
+        (<code>.table-condensed</code>, <code>.control-label</code>, <code>.input-group-addon</code>, the modal set…).
+        It also redefines <code>.text-center</code> / <code>.pull-left</code>, which Tailwind already provides.
+        Replace it with the catalogue in <a href="#shims">§5</a>.</td>
+  </tr>
+  <tr>
+    <td><code>Procfile.dev</code>, <code>bin/dev</code>, <code>app/assets/builds/</code>,
+        <code>//= link_tree ../builds</code>, <code>.gitignore</code> entries</td>
+    <td>Keep. Still correct for the target setup (add the <code>js:</code> and <code>css:</code> watchers in
+        <a href="#p2">phase 2</a> / <a href="#p3">phase 3</a>).</td>
+  </tr>
+  <tr>
+    <td><code>kaminari-bootstrap</code> removed</td>
+    <td>Pagination now renders Kaminari's <em>default</em> theme
+        (<code>nav.pagination &gt; span.page &gt; a</code>), not the Bootstrap
+        <code>ul.pagination &gt; li</code> markup. 7 call sites
+        (<code>list/index</code>, <code>invoices/index</code>, <code>evaluator/_detail_times</code>,
+        <code>employees/log/index</code>, and the three <code>*_reports/_list</code> partials).
+        The shim must target Kaminari's own markup — see <a href="#shims">§5</a>.</td>
+  </tr>
+</table>
+
+<div class="box warn">
+<p><strong>Recommendation for phase 0:</strong> <code>git stash</code> or revert the four
+<code>Gemfile</code>/<code>*.scss</code> hunks so <code>master</code>'s asset build is green again, keep
+<code>Procfile.dev</code>/<code>bin/dev</code>/<code>builds/</code>, and re-apply the changes in the order below.
+Each phase should be independently shippable and revertible; right now the tree is a half-cut in three places at once.</p>
+</div>
+
+<h2 id="inventory">2. Inventory: what actually depends on what</h2>
+
+<h3>2.1 Sprockets-specific things that must be replaced</h3>
+<table>
+  <tr><th>Where</th><th>What</th><th>Replacement</th></tr>
+  <tr><td><code>app/assets/javascripts/application.js.coffee</code></td>
+      <td>22 <code>//= require</code> directives + <code>require_tree ./modules</code></td>
+      <td>ES imports in <code>app/javascript/application.js</code> (esbuild)</td></tr>
+  <tr><td><code>app/assets/stylesheets/application.css</code></td>
+      <td>6 <code>*= require</code> directives</td>
+      <td>Sass <code>@use</code>/<code>@import</code> in <code>application.scss</code> (dartsass)</td></tr>
+  <tr><td><code>_icons.scss</code> (5×), <code>_worktimes.scss</code> (3×),
+          <code>vendor/…/jquery-ui-1.10.0.custom.scss</code> (~30×)</td>
+      <td><code>asset-url()</code> / <code>image-url()</code> — Sprockets-Sass functions</td>
+      <td>plain <code>url("…")</code>; Propshaft's CSS compiler rewrites it to the digested path</td></tr>
+  <tr><td><code>app/assets/config/manifest.js</code></td><td>Sprockets manifest</td><td>delete — Propshaft has no manifest</td></tr>
+  <tr><td><code>config/initializers/assets.rb</code></td>
+      <td><code>assets.version</code>, <code>assets.precompile += …</code></td>
+      <td>keep only <code>config.assets.paths</code> (fonts); Propshaft precompiles every load-path file</td></tr>
+  <tr><td><code>config/environments/*.rb</code></td>
+      <td><code>assets.debug</code>, <code>assets.quiet</code>, <code>assets.js_compressor = :terser</code>,
+          <code>assets.compile = false</code></td>
+      <td>all removed; esbuild minifies, Propshaft has no runtime compilation</td></tr>
+  <tr><td><code>Dockerfile</code></td>
+      <td><code>BUILD_PACKAGES</code> is commented out — <strong>there is no Node in the build image</strong></td>
+      <td>must be re-enabled for esbuild; see <a href="#p2">phase 2</a></td></tr>
+</table>
+
+<p class="small">No <code>.erb</code>-processed assets exist, which removes the single most painful Propshaft blocker.</p>
+
+<h3>2.2 Assets currently supplied by gems (they disappear with the gems)</h3>
+<table>
+  <tr><th>Gem</th><th>Asset used</th><th>Replacement</th></tr>
+  <tr><td><code>jquery-rails</code></td><td><code>jquery3</code>, <code>jquery_ujs</code></td>
+      <td>npm <code>jquery@3</code> + <code>jquery-ujs@1.2.3</code> <strong>(not <code>@rails/ujs</code>)</strong> — the app
+          relies on jQuery-style <code>ajax:success (event, data, status, xhr)</code> handler signatures in
+          <code>modal_create</code>, <code>application</code>, <code>order_contacts</code>.</td></tr>
+  <tr><td><code>jquery-ui-rails</code></td><td>datepicker, autocomplete, selectable widgets + <code>datepicker.css</code>, <code>autocomplete.css</code>, <code>base.css</code></td>
+      <td>npm <code>jquery-ui</code>; CSS vendored into <code>app/assets/stylesheets/vendor/</code></td></tr>
+  <tr><td><code>selectize-rails</code></td><td><code>selectize.js</code>, <code>selectize.bootstrap3.scss</code></td>
+      <td>npm <code>selectize@0.12.6</code>; copy <code>selectize.bootstrap3.scss</code> into <code>vendor/</code>
+          (it consumes our Bootstrap Sass variables, which we keep)</td></tr>
+  <tr><td><code>chartjs-ror</code></td><td><code>Chart.min.js</code> (Chart.js 3.7)</td>
+      <td>npm <code>chart.js@3.7.1</code> — pin to 3.x; <code>order_controlling.js.coffee</code> uses the v3
+          <code>Chart.defaults.font</code> API and the vendored <code>chartjs-plugin-annotation@2.2.1</code> is v3-only</td></tr>
+  <tr><td><code>turbolinks</code></td><td>turbolinks JS only — <strong>no Ruby usage anywhere</strong></td>
+      <td>npm <code>turbolinks@5.2.0</code>; gem can be dropped outright</td></tr>
+  <tr><td><code>nested_form_fields</code></td>
+      <td><code>lib/assets/javascripts/nested_form_fields.js.coffee</code> (the Ruby form helpers are still needed)</td>
+      <td>keep the gem, vendor the compiled JS into <code>app/javascript/vendor/</code></td></tr>
+  <tr><td><code>coffee-rails</code>, <code>terser</code>, <code>execjs</code>, <code>mini_racer</code>, <code>sass-rails</code>,
+          <code>autoprefixer-rails</code></td>
+      <td>compilation only</td>
+      <td>all droppable once esbuild + dartsass are in</td></tr>
+</table>
+
+<h3>2.3 Bootstrap 3 usage, by surface</h3>
+
+<h4>CSS classes</h4>
+<p>Scanned <code>app/views</code> (330 HAML + 14 ERB), <code>app/helpers</code>, <code>app/controllers</code>,
+<code>app/assets/javascripts</code> (36 CoffeeScript), <code>app/assets/stylesheets</code>, <code>lib</code> and
+<code>test</code> against the class list extracted from <code>bootstrap-sass 3.4.1</code>:</p>
+<ul>
+  <li><strong>~125 distinct Bootstrap classes</strong> in real application code (full catalogue in <a href="#shims">§5</a>).</li>
+  <li><code>app/views/design_guide/index.html.haml</code> (538 lines, route <code>/design_guide</code>, unlinked from the
+      menu) is <strong>not</strong> a Bootstrap docs mirror — it is a table-styling gallery
+      (<code>.table</code>, <code>-striped</code>, <code>-stripedbody</code>, <code>-bordered</code>, <code>-hover</code>,
+      <code>-condensed</code>, <code>-inline</code>, <code>.unindented</code>) plus two invoice-page mockups. It uses 27
+      Bootstrap classes, of which <strong>exactly one</strong> (<code>col-md-9</code>) is not used elsewhere in the app.
+      It is already the acceptance page we want — see <a href="#decisions">D1</a>.</li>
+  <li><code>app/views/layouts/mailer.html.haml</code> (1464 lines) embeds an <strong>inlined copy of Bootstrap CSS</strong>
+      inside a HAML <code>:css</code> filter for e-mail clients. It is completely independent of the asset pipeline —
+      <strong>do not touch it</strong> in this migration.</li>
+</ul>
+
+<h4>Classes generated dynamically from Ruby</h4>
+<p>These never appear literally in the source, so <em>Tailwind's source scanner cannot see them</em>. They are fine as
+hand-written shim rules, but must never be expressed as <code>@apply</code>-less Tailwind utilities:</p>
+<pre><code>app/views/orders/_list.html.haml:60   "label label-#{order.status.style}"
+app/helpers/utility_helper.rb:20      "glyphicon glyphicon-#{icon}"
+app/helpers/utility_helper.rb:25      "icon-#{icon}"            # Puzzle icon font
+app/helpers/progress_bar_helper.rb    progress-bar-{success,danger}</code></pre>
+
+<h4>Bootstrap JavaScript plugins</h4>
+<table>
+  <tr><th>Plugin</th><th>Used by</th><th>Verdict</th></tr>
+  <tr><td><code>modal</code></td>
+      <td><code>modal_create.js.coffee</code> (<code>.modal('show'/'hide')</code>),
+          <code>shared/_modal.html.haml</code>, every <code>data-modal</code> link</td>
+      <td>keep (npm <code>bootstrap@3.4.1</code>, JS only)</td></tr>
+  <tr><td><code>tooltip</code></td>
+      <td><code>$(document).tooltip({selector:'[data-toggle=tooltip]'})</code>; ~20 <code>data-toggle="tooltip"</code>
+          sites incl. <code>format_major_risk</code>, worktimes balance</td>
+      <td>keep</td></tr>
+  <tr><td><code>button</code></td>
+      <td><code>$('[data-toggle=buttons]').button()</code> — <code>order_targets/_fields.html.haml</code></td>
+      <td>keep (single use; candidate for deletion later)</td></tr>
+  <tr><td><code>alert</code></td>
+      <td><code>data-dismiss="alert"</code> in <code>layouts/_flash</code> and <code>layouts/_notification</code></td>
+      <td>keep — or replace with 3 lines of JS</td></tr>
+  <tr><td><code>collapse</code></td>
+      <td><code>expense_reviews/show</code> + <code>expenses_reviews/show</code> only
+          (<code>data-toggle=collapse</code>, <code>.inlineedit.collapse.in</code>)</td>
+      <td><strong>Drop it</strong> — the class name <code>.collapse</code> collides with a Tailwind utility.
+          See <a href="#layers">§3.3</a>.</td></tr>
+</table>
+
+<h4>Bootstrap Sass consumed by our own stylesheets</h4>
+<ul>
+  <li><strong>Variables:</strong> ~40 distinct, ~250 references. All of them are already defined in our own local copy
+      <code>app/assets/stylesheets/_bootstrap_variables.scss</code> — so they survive the removal of the gem for free.</li>
+  <li><strong>Mixins:</strong> only <code>clearfix</code> (4×) and <code>box-shadow</code> (2×) come from Bootstrap;
+      <code>ellipsis</code> is ours. Copy those two into <code>_mixins.scss</code> — ~12 lines.</li>
+  <li><strong><code>@extend</code> of Bootstrap classes: 26 sites</strong> —
+      <code>_worktimes.scss</code> (23× <code>.row</code>/<code>.col-xs-*</code>),
+      <code>puzzletime.scss:19</code> (<code>.container-fluid</code>), <code>puzzletime.scss:248</code>
+      (<code>.form-control</code>), <code>components/_table.scss:94</code> (<code>.table-striped</code>).
+      These are the only <em>hard</em> coupling: Sass cannot <code>@extend</code> a class that lives in the Tailwind
+      output. They must become local mixins in phase 1.</li>
+</ul>
+
+<h4>Glyphicons — partly styling, partly data</h4>
+<div class="box warn">
+<p>Two different things wear the same class name:</p>
+<ul>
+  <li><strong>Hard-coded, ~7 icons:</strong> <code>icon(:calendar)</code> (3 sites, incl.
+      <code>dry_crud/form/builder.rb:113</code> and <code>filter_helper.rb:61</code>), <code>icon(:remove)</code> (2),
+      <code>glyphicon-chevron-down</code>/<code>-left</code> (toggled by <code>plannings.js</code>),
+      <code>glyphicon-phone</code>/<code>-phone-alt</code>/<code>-envelope</code>
+      (<code>employee_master_data/_attrs</code>).</li>
+  <li><strong>Data, a handful of rows:</strong> <code>order_helper#glyphicons</code> offers all ~200 names in a
+      <code>collection_select</code> on the <em>Zielsetzung</em> form, and the choice is persisted in
+      <code>target_scopes.icon</code>, rendered by <code>icon(scope.icon)</code> in the order list and order reports.
+      The seeds create three rows (<code>usd</code>, <code>time</code>, <code>heart-empty</code>) — but an admin could
+      have picked any of the 200.</li>
+</ul>
+<p>Note the <em>other</em> icon font is unaffected: <code>picon()</code> / <code>.icon-*</code> is Puzzle's own
+Fontastic font and carries the risk and target-rating icons. Only the Bootstrap glyphicons are in question.
+See <a href="#decisions">D2</a>.</p>
+</div>
+
+<h2 id="layers">3. Cascade layers &amp; the Preflight / Bootstrap-reset question</h2>
+
+<p>This is the part that decides whether a step-by-step migration is pleasant or miserable, so it is worth getting exactly
+right before writing any shim.</p>
+
+<h3>3.1 Unlayered CSS beats layered CSS — always</h3>
+<p>Tailwind 4 puts <em>everything</em> it emits into cascade layers:</p>
+<pre><code>/* what `@import "tailwindcss"` actually expands to */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css"     layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css" layer(utilities);</code></pre>
+<p>Any stylesheet <em>not</em> in a layer outranks every layered rule, regardless of source order or specificity. If we
+ship the frozen Bootstrap CSS as a plain <code>&lt;link&gt;</code>, then <code>.btn</code> from Bootstrap beats every
+Tailwind utility and every shim we write, forever. The migration would stall on step one.</p>
+
+<p><strong>Therefore: give Bootstrap its own named layer, ranked between <code>base</code> and <code>components</code>.</strong></p>
+
+<pre><code>/* app/assets/tailwind/application.css */
+@layer theme, base, bootstrap, components, utilities;
+
+@import "tailwindcss/theme.css"     layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "./bootstrap-frozen.css"    layer(bootstrap);   /* shrinks every phase, then dies */
+@import "tailwindcss/utilities.css" layer(utilities);</code></pre>
+
+<p>That single line buys us the whole step-by-step property we want:</p>
+<ul>
+  <li>Tailwind utilities and our shims (<code>@layer components</code>) <strong>override</strong> leftover Bootstrap
+      without <code>!important</code> — so a page can be migrated before its Bootstrap section is deleted.</li>
+  <li>Bootstrap's own <code>normalize.css</code> outranks Preflight, so the reset question below mostly answers itself.</li>
+  <li>Our compiled application SCSS stays a separate, <em>unlayered</em> <code>&lt;link&gt;</code> and therefore keeps
+      winning over everything — exactly the ordering it has today, where it is concatenated after Bootstrap.</li>
+</ul>
+
+<h3>3.2 Preflight vs. the Bootstrap reset — the actual collision list</h3>
+<p>Because Bootstrap sits in a layer <em>above</em> <code>base</code>, every rule the two resets both touch resolves in
+Bootstrap's favour, and the two agree on most of it anyway (<code>box-sizing</code>, <code>border-collapse</code>,
+<code>font: inherit</code> on form controls, <code>::placeholder</code>, headings, <code>hr</code>, <code>abbr</code>,
+<code>a</code> colour). The residue is only the handful of things <strong>Preflight resets and Bootstrap 3 never
+restores</strong>:</p>
+
+<table>
+  <tr><th>Preflight rule</th><th>What breaks</th><th>Fix</th></tr>
+  <tr>
+    <td><code>ol, ul, menu { list-style: none }</code></td>
+    <td>Bootstrap only sets margins on lists, never <code>list-style-type</code>. Bullets vanish in validation error
+        lists (<code>.help-block ul</code>), <code>layouts/_notification</code>, <code>dd.value ul</code>,
+        <code>configurations/_group</code>.</td>
+    <td><code>@layer base { main ul { list-style: disc } main ol { list-style: decimal } }</code>
+        <span class="tag med">verify</span></td>
+  </tr>
+  <tr>
+    <td><code>img, svg, canvas … { display: block }</code></td>
+    <td>Bootstrap leaves images inline. Affects <code>layouts/_headerbar</code> (<code>logo.svg</code> next to text),
+        expense receipt thumbnails (<code>.img-responsive</code>), inline icons in table cells.</td>
+    <td><code>@layer base { img, svg { display: inline-block; vertical-align: middle } }</code>, then opt into
+        <code>block</code> where wanted <span class="tag med">verify</span></td>
+  </tr>
+  <tr>
+    <td><code>* { border: 0 solid }</code></td>
+    <td>Any <code>&lt;input&gt;</code>/<code>&lt;select&gt;</code>/<code>&lt;textarea&gt;</code> that does <em>not</em>
+        carry <code>.form-control</code> loses its border. <code>dry_crud</code>'s builder adds <code>.form-control</code>
+        to virtually everything, so this should be a short list — but it needs an actual audit, not an assumption.</td>
+    <td>audit step, not a blanket rule <span class="tag high">audit</span></td>
+  </tr>
+  <tr>
+    <td><code>* { margin: 0; padding: 0 }</code></td>
+    <td>Bootstrap restores margins for <code>p</code>, headings, <code>ul/ol</code>, <code>dl</code>, <code>dd</code>,
+        <code>fieldset</code>, <code>legend</code>, <code>blockquote</code>.</td>
+    <td>none needed <span class="tag low">ok</span></td>
+  </tr>
+  <tr>
+    <td><code>a { color: inherit; text-decoration: inherit }</code></td>
+    <td>Bootstrap's <code>a { color: $link-color }</code> wins — <em>until Bootstrap is deleted in phase 6</em>, at which
+        point every link turns black.</td>
+    <td>link colour must be part of the shim from day one, not an afterthought <span class="tag med">plan</span></td>
+  </tr>
+  <tr>
+    <td><code>html { font-family: --default-font-family }</code> (theme layer)</td>
+    <td>Bootstrap's <code>body { font-family: … }</code> outranks it; set Roboto in <code>@theme</code> anyway so the
+        two never disagree.</td>
+    <td><code>--default-font-family: Roboto, …</code> <span class="tag low">ok</span></td>
+  </tr>
+</table>
+
+<div class="box ok">
+<p><strong>Conclusion: keep Preflight enabled from the very first Tailwind commit.</strong> With Bootstrap layered above
+<code>base</code> the collision surface is two rules plus one audit — and every shim we then write is authored in the
+world it will finally live in. The alternative (Preflight off until the end, then flip it) converts a two-rule problem
+into one big-bang regression at the worst possible moment.</p>
+<p class="small">Escape hatch if the audit surprises us: drop the <code>@import "tailwindcss/preflight.css"</code> line —
+the other three imports keep working unchanged.</p>
+</div>
+
+<h3 id="clash">3.3 Bootstrap class names that collide with Tailwind utility names</h3>
+<p>Tailwind 4 is JIT: it emits a utility because it found the token in our source. Some of our Bootstrap class names
+<em>are</em> Tailwind utility names, so Tailwind will generate them into the <code>utilities</code> layer — which outranks
+our shims in <code>components</code>.</p>
+
+<table>
+  <tr><th>Class</th><th>Tailwind means</th><th>Bootstrap means</th><th>Action</th></tr>
+  <tr>
+    <td><code>collapse</code></td>
+    <td><code>visibility: collapse</code></td>
+    <td><code>display: none</code></td>
+    <td class="tag high" style="display:table-cell"><strong>real breakage.</strong> Content would hide but keep its box.
+        Only 2 views use it. Drop the Bootstrap collapse plugin and rewrite those two toggles — or override with
+        <code>@utility collapse { display: none }</code>.</td>
+  </tr>
+  <tr><td><code>container</code></td><td>responsive max-widths</td><td>fixed-width centred wrapper</td>
+      <td>1 use (<code>devise/sessions/new</code>) — rewrite the view, don't shim it</td></tr>
+  <tr><td><code>table</code></td><td><code>display: table</code></td><td>table styling</td>
+      <td>harmless — only ever applied to real <code>&lt;table&gt;</code>s; shim the rest, both rules coexist</td></tr>
+  <tr><td><code>hidden</code></td><td><code>display: none</code></td><td><code>display: none !important</code></td>
+      <td>equivalent in practice; watch the two toggle sites in <code>expenses_helper</code> /
+          <code>expenses.js.coffee</code></td></tr>
+  <tr><td><code>sr-only</code></td><td>identical implementation</td><td>—</td><td>free — no shim needed</td></tr>
+  <tr><td><code>text-left/center/right</code>, <code>text-nowrap</code></td><td>identical</td><td>—</td>
+      <td>free — <strong>delete these from the shim</strong> (the current WIP shim redefines them)</td></tr>
+  <tr><td><code>text-primary</code>, <code>text-danger</code>, <code>text-muted</code></td>
+      <td>colour utility <em>if</em> the token exists in <code>@theme</code></td><td>brand text colours</td>
+      <td>free — define the palette in <code>@theme</code> (below) and they generate themselves</td></tr>
+</table>
+
+<h3>3.4 The theme block</h3>
+<p>Lift the Puzzle palette out of <code>_bootstrap_variables.scss</code> once, so shims, new Tailwind markup and the
+remaining SCSS all agree:</p>
+<pre><code>@theme {
+  --color-brand-blue-darker: #1E5A96;   --color-brand-blue-dark:  #3B7BBE;
+  --color-brand-blue:        #238BCA;   --color-brand-blue-light: #3FA8E0;
+  --color-brand-turquoise-dark: #2C97A6; --color-brand-turquoise: #46BCC0;
+  --color-brand-green:       #61B44B;   --color-brand-green-light: #69B978;
+  --color-brand-red:         #B44B5B;
+
+  --color-primary: var(--color-brand-blue);        /* $brand-primary */
+  --color-success: var(--color-brand-green-light); /* $brand-success */
+  --color-info:    var(--color-brand-blue-light);  /* $brand-info    */
+  --color-warning: #f0ad4e;                        /* $brand-warning */
+  --color-danger:  var(--color-brand-red);         /* $brand-danger  */
+  --color-muted:   #999999;                        /* $gray          */
+
+  --color-gray-darker: #444444; --color-gray-dark: #4A4A4A;
+  --color-gray:        #999999; --color-gray-light: #D8D8D8; --color-gray-lighter: #F5F5F5;
+
+  --default-font-family: Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}</code></pre>
+<p class="small">Long-term this file replaces <code>_bootstrap_variables.scss</code> entirely: the SCSS can read the same
+values as <code>var(--color-…)</code>. Not required for the migration — do it opportunistically.</p>
+
+<h2 id="plan">4. The phase plan</h2>
+<p>Eight phases, each one a mergeable commit with its own verification gate. Phases 1–3 change <em>how</em> CSS/JS is built
+and must leave the rendered output byte-comparable; phases 4–6 change what the CSS <em>is</em>.</p>
+
+<div class="phase">
+<h3 id="p0">Phase 0 — Get back to a green baseline <span class="tag low">½ day</span></h3>
+<p class="goal">Goal: <code>bin/rails assets:precompile</code> succeeds and the test suite is green before anything else moves.</p>
+<h4>Done — the revert (2026-07-27, tree clean at <code>67d6369b</code>)</h4>
+<ul>
+  <li><code>Gemfile</code> / <code>Gemfile.lock</code> restored: <code>bootstrap-sass</code>,
+      <code>kaminari-bootstrap</code>, <code>sprockets-rails</code>, <code>sass-rails</code>, <code>coffee-rails</code>
+      are back; <code>tailwindcss-rails</code> is gone.</li>
+  <li><code>puzzletime.scss</code> / <code>print.scss</code>: the three Bootstrap <code>@import</code>s are live again,
+      so the SCSS compiles.</li>
+  <li><code>app/assets/config/manifest.js</code> and <code>.gitignore</code> back to their <code>master</code> content.</li>
+  <li>The empty <code>app/assets/builds/</code> and <code>app/assets/tailwind/</code> directories left behind by the
+      revert have been deleted.</li>
+  <li><code>Procfile.dev</code>, <code>bin/dev</code> and the WIP <code>app/assets/tailwind/application.css</code> were
+      removed with the rest. <strong>That is fine</strong> — an earlier draft of this plan said to keep them, which was
+      wrong: nothing needs them until there is a watcher to run (phase 2 for <code>js:</code>, phase 3 for
+      <code>css:</code>), and re-creating a three-line Procfile then is cheaper than carrying dead files through two
+      phases. The WIP shim was going to be rewritten in phase 4 regardless (§1).</li>
+</ul>
+
+<h4>Baseline captured (2026-07-27, 12:44)</h4>
+<ul>
+  <li><code>SECRET_KEY_BASE=1 RAILS_ENV=production RAILS_DB_ADAPTER=nulldb SKIP_MEMCACHE_CHECK=1 bin/rails assets:precompile</code> succeeded.</li>
+  <li>Stashed <code>public/assets/application-*.{css,js}</code> to <code>/tmp/baseline/</code> — phases 1–3 will diff against these.</li>
+  <li>225 kB CSS, 579 kB JS (Sprockets digests): baseline set.</li>
+  <li><strong><code>rm -rf public/assets tmp/cache/assets</code> afterwards.</strong> Not housekeeping — a populated
+      <code>public/assets</code> carries a <code>.sprockets-manifest-*.json</code>, and Sprockets then serves those
+      digested files in <em>development and test</em> in preference to recompiling. Stylesheet edits silently do nothing.
+      This bit us immediately: a <code>prefers-reduced-motion</code> rule added to <code>puzzletime.scss</code> never
+      reached the browser, and the guard test failed while the source was correct. Since capturing the baseline is what
+      creates this state, the cleanup belongs in the same step. Expect the next request to be slow (~6000 lines of SCSS
+      compiling on demand) — enough to trip Ferrum's page-load timeout once.</li>
+</ul>
+
+<div class="box warn">
+<p><strong>The CSS half of that baseline was stale within the hour, and re-capturing it is part of phase 0.</strong>
+It was taken at 12:44, <em>before</em> the <code>prefers-reduced-motion</code> rule was added to
+<code>puzzletime.scss</code> — the very fix the trap above describes. So phases 1–3 would have opened against a
+baseline that does not correspond to any commit, and every diff would have carried a 208-byte phantom delta.</p>
+<p>Verified the delta was exactly that one <code>@media</code> block and nothing else (strip the block, and the two
+files are byte-identical), then re-captured at <code>HEAD</code>. The JS was untouched and remains byte-identical, so
+its 12:44 digest still stands. <strong>Whenever a phase changes SCSS or JS, the baseline must be re-captured in the
+same commit</strong>, or the next phase's "byte-comparable" gate is measuring against fiction.</p>
+</div>
+
+<h4>Confirming green — what the scoped runs missed</h4>
+<p>The <code>belongs_to</code> and reduced-motion work was verified with scoped runs (50 tests, then
+<code>create_order_test</code>). Those passed, and the phase was called complete on their strength. A full
+<code>bin/rails test</code> — 1515 tests, 6 minutes serially or 1m29s across 16 workers (below) — then found
+<strong>15 failures in three causes the scoped runs
+never touched</strong>. All three are Rails-upgrade fallout; none is asset-related, so none of it blocks phases 1–3
+technically. It blocks them <em>procedurally</em>: phase 2 has no way to tell its own regressions from these.</p>
+<table>
+  <tr><th>Cause</th><th>Tests</th><th>Fix</th></tr>
+  <tr>
+    <td><strong>A dead callback guard.</strong> The upgrade hit Rails 7.1's
+        <code>raise_on_missing_callback_actions</code>: <code>OrderServicesController</code> includes
+        <code>DryCrud::Rememberable</code> but has no <code>index</code> action, and <code>ActionFilter#match?</code>
+        runs <em>per request</em>, so every request to that controller raised <code>ActionNotFound</code>. It was
+        patched with <code>before_action … only: [:index] if respond_to?(:index)</code>. Inside
+        <code>ActiveSupport::Concern</code>'s <code>included do</code>, <code>self</code> is the including
+        <em>class</em>, so <code>respond_to?(:index)</code> asks for a <em>class</em> method named
+        <code>index</code> — always false. The callback was never registered for any of the six includers, so no list
+        ever remembered its filters and no default filter was applied.</td>
+    <td>12 × <code>OrdersControllerTest</code><br>1 × <code>ListOrdersTest</code></td>
+    <td><code>if: -&gt; { action_name == 'index' }</code>. Checked at request time, so it needs no
+        <code>only:</code> for Rails to validate, works for a controller that has no <code>index</code>, and does not
+        depend on whether <code>index</code> is defined above or below the <code>include</code> —
+        <code>method_defined?(:index)</code> would <em>also</em> have been false, since
+        <code>ListController</code> includes the concern 16 lines before defining the action.</td>
+  </tr>
+  <tr>
+    <td><strong>Rails 8.1 sorts columns in the schema dumper.</strong>
+        <code>activerecord-8.1.3/lib/active_record/schema_dumper.rb:195</code> is
+        <code>columns.sort_by(&amp;:name)</code>. Confirmed end to end: load master's <code>schema.rb</code> into a
+        scratch database (Postgres keeps physical order), re-dump with 8.1, get alphabetical order. So
+        <code>ac6a28df</code> was a legitimate regeneration — 34 of 45 tables reordered, column <em>sets</em>
+        identical.</td>
+    <td>1 × <code>Employees::LogControllerTest</code></td>
+    <td>The test asserted the exact concatenated cell text of one log row. <code>LogPresenter#changes_for</code> walks
+        <code>version.changeset</code>, whose key order follows the model's column order — so the three attributes of
+        one save are listed in whatever order the database has. Now asserted per fragment, order-independent. The row
+        order, which is what the test is named for, is still pinned by <code>nth-child</code>.</td>
+  </tr>
+  <tr>
+    <td><strong>The jsonapi gem swap changed the error, twice over.</strong> <code>4603b448</code> replaced
+        <code>fast_jsonapi</code> with <code>jsonapi-serializer</code> 2.2.0. (1) The old gem raised
+        <code>ArgumentError</code>; the new one raises
+        <code>JSONAPI::Serializer::UnsupportedIncludeError</code>, so the custom matcher — which required
+        <code>instance_of?(ArgumentError)</code> plus a message substring — stopped matching and
+        <code>rescue_from</code> went dead. (2) Worse, <code>validate_includes!</code> indexes
+        <code>relationships_to_serialize</code> unguarded, and the gem only initialises it inside
+        <code>add_relationship</code>. Both serializers here declare zero relationships, so it stays <code>nil</code>
+        and an unknown <code>include</code> raised <code>NoMethodError</code> before the gem could raise its own
+        error.</td>
+    <td>1 × <code>Api::V1::EmployeesControllerTest</code></td>
+    <td>Rescue the real class and delete the matcher shim; set
+        <code>self.relationships_to_serialize ||= {}</code> in <code>ApiSerializer</code>. Fix (1) alone changes
+        nothing while (2) crashes first, and fix (2) alone turns the crash into an unhandled 500 — both are needed.</td>
+  </tr>
+</table>
+<p>A fourth failure surfaced once the other three were fixed, and it is <em>not</em> upgrade fallout — a pre-existing
+race in <code>OrderReportsTest#test_clear_timespan_when_period_shortcut_selected</code>. It typed
+<code>1.11.2006</code> into <code>#start_date</code> and asserted that exact string back, but jQuery UI rewrites the
+value to the datepicker's own <code>dd.mm.yy</code> format (<code>01.11.2006</code>) at a nondeterministic moment, and
+<code>page.find(…)[:value]</code> is a single non-waiting read. Established by A/B: it fails at a comparable rate with
+the <code>Rememberable</code> fix (1 in 2 whole-file runs) and without it (1 in 5), and the assertion is unchanged from
+<code>master</code> — the upgrade only touched a different test in that file. Now asserts the field is non-blank, which
+is all the test needs before the shortcut clears it; that the typed date actually filters is covered by <em>live
+reloads when period filter change</em>. Worth knowing that <code>RetryOnFlakyTests</code> would never have masked it:
+it retries three Ferrum/Cuprite exception classes, not assertion failures.</p>
+
+<p class="box warn"><strong>The lesson for phases 1–6, not just this one:</strong> a scoped run proves the code you
+touched, not the code you broke. Two of these three were caused by a <em>deliberate, plausible-looking</em> fix to a
+real Rails 8.1 error — a guard that reads correctly and is inert, and a gem swap whose exception class changed
+silently. Each phase's gate is the full suite. Note also that
+<code>raise_on_missing_callback_actions</code> was commented out in <code>config/environments/test.rb</code> while enabled
+in <code>development.rb</code>, which is exactly why the first bug was invisible to the suite that should have caught
+it. <strong>It is now enabled in test too</strong>, so the next <code>only:</code>/<code>except:</code> naming a missing
+action fails the gate instead of only annoying whoever is running the dev server.</p>
+
+<h4>Running the gate — 16 workers, 1m29s</h4>
+<p>Every phase's gate is the full suite, so it is worth not waiting 6 minutes for it. <code>parallel_tests</code> is in the
+Gemfile and needs no code changes: <code>config/database.yml</code> appends <code>TEST_ENV_NUMBER</code> to the test
+database name, so each worker gets its own.</p>
+<p class="box warn"><strong>Non-interactive shells get the wrong Ruby.</strong> mise is activated from
+<code>.zshrc</code>, so anything that is not an interactive shell — a script, a CI-style invocation, an agent running
+commands — keeps a stale hard-coded <code>installs/ruby/3.2.1/bin</code> on <code>PATH</code> and every
+<code>bundle</code> call dies with <code>Bundler::GemNotFound</code> listing the entire lockfile. direnv is
+interactive-only too, so <code>BUNDLE_PATH=../.bundle</code> (the gems live one level <em>above</em> each worktree) goes
+missing with it. The <code>.envrc</code> deliberately pins no Ruby, and <code>use mise</code> is deprecated, so the fix
+is to prefix the command: <code>eval "$(mise activate zsh)"; eval "$(direnv export zsh)"</code>. Verify with
+<code>ruby -v</code> → 4.0.5.</p>
+<pre><code># one-time, and again after every migration — otherwise the worker DBs go stale
+$ bin/rake 'parallel:create[16]'
+$ bin/rake 'parallel:load_schema[16]'
+
+# the gate
+$ bin/rake 'parallel:test[16]'      # 1m29s
+$ bin/rails test                    # 6m08s — same 1515 tests / 6006 assertions</code></pre>
+<p><strong>Quote the task name.</strong> <code>bin/rake parallel:test[16]</code> fails with
+<em>no matches found</em> in zsh, which globs the brackets.</p>
+<table>
+  <tr><th>Workers</th><th>Wall clock</th><th>Speedup</th></tr>
+  <tr><td>1 (<code>bin/rails test</code>)</td><td>6m08s</td><td>—</td></tr>
+  <tr><td>8</td><td>2m45s</td><td>2.2×</td></tr>
+  <tr><td>16</td><td><strong>1m29s</strong></td><td><strong>4.1×</strong></td></tr>
+</table>
+<p>16 workers on 16 cores peaks around 350% CPU and leaves memory flat — the workers wait on Chrome and Postgres, not
+the CPU, so there is no reason to be shy with the count. Confirm the totals match the serial run (1515 tests, 6006
+assertions): the per-worker tallies must sum to that, or a worker died and took its tests with it silently.</p>
+<div class="box warn">
+<p><strong>Check the machine is quiet before starting the gate.</strong> Two different leftovers turn a green suite into
+a red one, and both lie about what is wrong:</p>
+<ul>
+  <li><strong>A second suite still running</strong> is the dangerous one. The worker databases are numbered
+      <code>puzzletime_test1…N</code>, so a <code>parallel:test[4]</code> and a <code>parallel:test[16]</code> share
+      four of them and fight over every row. You get
+      <code>ActiveRecord::LockWaitTimeout: PG::LockNotAvailable</code> in a scattering of integration tests — which
+      reads exactly like a real regression in the phase you are verifying, and is not. Beware especially a run that
+      <em>looked</em> like it timed out or was cancelled: it keeps going in the background.</li>
+  <li><strong>A leftover headless Chrome</strong> leaves Ferrum waiting on a browser nobody drives: the run sits at
+      near-zero CPU indefinitely and writes no output. It looks like a slow test and is not one.</li>
+</ul>
+<pre><code># pre-flight — both must print nothing. Bracket-quote one letter so the pattern
+# cannot match the command line running it (see below).
+$ ps -eo pid,etime,args | awk '$3 ~ /chrome$/ &amp;&amp; /--headles[s]/ { print $1, $2 }'
+$ ps -eo pid,args       | awk '/paralle[l]_test|bin.rake paralle[l]/ { print $1 }'
+
+# cleanup — a separate step, never in the same command as the run
+$ kill -9 &lt;the pids printed above&gt;</code></pre>
+<div class="box bad">
+<p><strong><code>pgrep -f</code> matches the shell that is running the <code>pgrep</code>.</strong> Its pattern is
+compared against whole command lines, and your command line <em>contains the pattern</em>. So
+<code>pgrep -f 'chrome.*--headless' | xargs kill -9</code> is a script that kills itself: it exits 1, prints nothing, and
+never reaches the next line — which looks exactly like the test command failing. The same self-match silently inflates
+every count you take this way.</p>
+<p>Filter on a field instead of the whole line, and break the literal so it cannot match itself:</p>
+<pre><code>$ ps -eo pid,etime,args | awk '$3 ~ /chrome$/ &amp;&amp; /--headles[s]/ { print $1, $2 }'
+$ ps -eo pid,args        | awk '/paralle[l]_test/ { print $1 }'</code></pre>
+<p>Better still, <strong>do not put a kill in the same command as the test run</strong>. Check first, kill deliberately
+as its own step, then start the suite.</p>
+</div>
+
+<p><strong>Match <code>--headless</code>, with the dashes.</strong> A leftover Ferrum browser is
+<code>/opt/google/chrome/chrome</code> with the same binary your desktop browser uses, and the looser
+<code>'chrome.*headless'</code> matches your own browsing session's processes too — so a <code>pkill</code> on it can
+take your browser down mid-run. Confirm what you are about to kill with
+<code>ps -eo pid,etime,args</code> first: the test browser is minutes old and carries
+<code>--disable-background-timer-throttling</code>, yours has hours of uptime and a
+<code>--type=gpu-process</code> child. A killed test browser often lingers as
+<code>[chrome] &lt;defunct&gt;</code>, which is a reaped zombie and harmless.</p>
+<p><strong>Then clear the Postgres sessions those processes left behind</strong>, or the next
+<code>parallel:load_schema</code> aborts with <code>PG::ObjectInUse: database "puzzletime_test" is being accessed by
+other users</code>. A killed worker routinely leaves one connection <em>idle in transaction</em>, which is enough to
+block the drop. The <code>LIKE 'puzzletime_test%'</code> is load-bearing — it keeps this off your development database
+and whatever is connected to it:</p>
+<pre><code>$ PGPASSWORD=timepuzzle psql -h 127.0.0.1 -U puzzletime -d postgres -tAc \
+    "SELECT pg_terminate_backend(pid) FROM pg_stat_activity
+     WHERE datname LIKE 'puzzletime_test%' AND pid &lt;&gt; pg_backend_pid();"</code></pre>
+<p>Two smaller traps in the same area: <code>kill -9 $pids</code> does <em>not</em> work in zsh — unquoted parameters
+are not word-split, so the whole list is passed as one argument and the kill silently fails; pipe through
+<code>xargs</code> instead. And do not pipe the run through <code>tail</code>: the pipe buffers everything until the
+command exits, so a hung run and a slow one look identical. Redirect to a log file and watch that.</p>
+</div>
+
+<p><strong>Deferred to phase 4:</strong> the side-by-side servers. They gate phases 4–6; building them now would leave them to rot. Worth a 20-minute smoke test at the end of phase 3.</p>
+
+<h4>The comparison harness</h4>
+<p>Two verification mechanisms, for two different kinds of phase:</p>
+<ul>
+  <li><strong>Phases 1–3 promise byte-comparable output</strong>, so the check is a <em>normalised CSS/JS diff</em> against
+      the phase-0 baseline. Exact, cheap, no judgement calls. Nothing visual is needed or wanted here.</li>
+  <li><strong>Phases 4–6 change what the CSS is</strong>, so the check is human judgement — and for that, run
+      <code>master</code> and the branch side by side rather than comparing against stills.</li>
+</ul>
+<pre><code>$ git worktree add ../puzzletime-master master
+$ createdb puzzletime_baseline &amp;&amp; pg_dump puzzletime_development | psql puzzletime_baseline
+
+# terminal 1 — reference (master has no bin/dev; Sprockets needs no watcher)
+$ cd ../puzzletime-master &amp;&amp; \
+    RAILS_DB_NAME=puzzletime_baseline RAILS_MEMCACHED_PORT=11211 bin/rails s -p 3000
+# terminal 2 — migration branch (bin/dev exists from phase 2 — runs the js:/css: watchers)
+$ PORT=3001 RAILS_DB_NAME=puzzletime_development RAILS_MEMCACHED_PORT=11212 bin/dev</code></pre>
+<p>Everything needed is already ENV-driven — <code>RAILS_DB_NAME</code>/<code>_HOST</code>/<code>_PORT</code> in
+<code>database.yml</code> and <code>RAILS_MEMCACHED_HOST</code>/<code>_PORT</code> in <code>application.rb</code> — so this
+needs no config changes.</p>
+<p><strong>Why this beats a screenshot set:</strong></p>
+<ul>
+  <li><strong>Interactive state is where shims actually break</strong>, and stills cannot capture it: modal open/close
+      transitions (<code>.fade.in</code>), tooltip placement, the datepicker popup, selectize dropdowns, focus rings,
+      <code>table-hover</code> rows, <code>btn-group</code> toggle state, the <code>collapse</code> panels.
+      Phase 6.8 is essentially untestable by screenshot.</li>
+  <li><strong>No stale baseline.</strong> A stills set taken at phase 0 drifts as <code>master</code> moves during a
+      multi-week migration; a worktree is always current.</li>
+  <li>Devtools on both at once — you can diff <em>computed styles</em>, not just pixels, which is what you actually want
+      when a shim is 2px off.</li>
+</ul>
+<div class="box warn">
+<p><strong>Three gotchas:</strong> (1) the session store is memcached-backed
+(<code>config/initializers/session_store.rb</code> refuses to boot without it), and cookies ignore port numbers — so a
+shared memcached means one login covers both servers, which is convenient, but give each instance its own memcached
+<em>port or namespace</em> so fragment caches do not cross-contaminate. (2) Use a <em>cloned</em> database: writes on one
+instance would otherwise confuse the comparison. (3) <code>config.to_prepare</code> runs
+<code>CommitReminderJob.schedule</code> on boot — harmless as long as you do not start a delayed_job worker against the
+baseline database.</p>
+</div>
+<p class="small">Screenshots still have one job — a handful of before/after pairs for the changelog and PR description at
+the end of phase 6. That is documentation, not verification. Do not build a pixel-diff harness; the 21 Cuprite integration
+tests already cover the functional half.</p>
+</div>
+
+<div class="phase">
+<h3 id="p1">Phase 1 — Freeze Bootstrap 3 into a static CSS file <span class="tag med">1–2 days</span></h3>
+<p class="goal">Goal: Bootstrap stops being a Sass dependency and becomes an inert, deletable CSS artifact. Still on
+Sprockets. Rendered output unchanged.</p>
+
+<h4>Done — freezing it (2026-08-03, <code>d00ae213</code>)</h4>
+<p>There is no <code>sass</code> CLI in this environment; the gem's own <code>sassc</code> is what compiles the app, so
+use that and the output matches the pipeline by construction:</p>
+<pre><code>$ bundle exec ruby -e '
+  require "sassc"
+  vars = File.read("app/assets/stylesheets/_bootstrap_variables.scss")
+  css = SassC::Engine.new(%Q{@import "bootstrap-sprockets";\n#{vars}\n@import "bootstrap";},
+    syntax: :scss, style: :expanded,
+    load_paths: ["&lt;bootstrap-sass gem&gt;/assets/stylesheets", "app/assets/stylesheets"]).render
+  File.write("app/assets/stylesheets/vendor/bootstrap-3.4.1.css", css)'</code></pre>
+<ul>
+  <li>Excise the glyphicon block — <code>@font-face</code> through the last <code>.glyphicon-*:before</code>, 1066 lines
+      — <strong>verbatim</strong> into its own file. It is the one part that outlives the migration (D2), so keeping it
+      separate means phase 6 can delete the frozen file without touching the icons. Leave the
+      <code>.carousel-control .glyphicon-chevron-*</code> rules where they are: they <em>reference</em> glyphicon classes
+      but belong to the carousel.</li>
+  <li>Copy <code>glyphicons-halflings-regular.{woff2,woff,ttf,eot,svg}</code> from the gem into
+      <code>app/assets/fonts/<strong>bootstrap/</strong></code> — <em>keeping the <code>bootstrap/</code> segment</em>.
+      Sprockets digests by logical path, so preserving it is what keeps the emitted font URLs identical to the
+      baseline's.</li>
+  <li>Add <code>*= require vendor/bootstrap-3.4.1</code> and <code>*= require vendor/glyphicons</code> to
+      <code>application.css</code> <strong>immediately before <code>puzzletime</code></strong> — not at the top of the
+      manifest. Bootstrap used to enter <em>inside</em> <code>puzzletime.scss</code>, i.e. after jquery-ui and selectize;
+      hoisting it above them reorders the cascade against
+      <code>selectize.bootstrap3</code>.</li>
+</ul>
+
+<div class="box bad">
+<p><strong>The <code>@font-face</code> src cannot become plain <code>url()</code> yet.</strong> Sprockets only rewrites
+asset URLs through the Sass helpers; a plain <code>url("…")</code> sitting in a <code>.css</code> file is passed through
+untouched, and in production only digested filenames exist on disk — so every glyphicon font would 404. That rewrite
+belongs with the other ~35 in <a href="#p3">phase 3</a>, once Propshaft is the thing doing the rewriting.</p>
+<p>So the extracted file is <code>vendor/glyphicons.<strong>scss</strong></code> and keeps the gem's original
+<code>url(font-path("bootstrap/glyphicons-halflings-regular.woff2"))</code> form. <code>font-path</code> is a
+<em>Sprockets</em> helper, not a bootstrap-sass one, so it survives dropping the gem. A <code>.scss</code> file is
+still <code>*= require</code>-able from a CSS manifest — <code>selectize.bootstrap3</code> already is.</p>
+<p>The frozen <code>bootstrap-3.4.1.css</code> has no <code>url()</code> left in it at all once the glyphicons are out,
+which is exactly what phase 4 needs to <code>@import … layer(bootstrap)</code> it as plain CSS.</p>
+</div>
+
+<div class="box bad">
+<p><strong><code>print.css</code> needs its own copy of Bootstrap.</strong> <code>layouts/print.html.haml</code> links
+<code>print</code> as its <em>only</em> stylesheet, and <code>print.scss</code> used to <code>@import "bootstrap"</code>
+itself. Remove that import and nothing replaces it: the file drops from 119 kB to 471 bytes and every printed page
+renders unstyled. Nothing fails — no error, no test — it just silently stops being styled.</p>
+<p>Fix: rename <code>print.scss</code> → <code>print_styles.scss</code> and make <code>print.css</code> a manifest
+alongside <code>application.css</code>:</p>
+<pre><code>/*
+ *= require vendor/bootstrap-3.4.1
+ *= require vendor/glyphicons
+ *= require print_styles
+ */</code></pre>
+</div>
+
+<h4>Done — cutting the Sass coupling</h4>
+<ul>
+  <li>Copy the <code>clearfix</code> and <code>box-shadow</code> mixins from <code>bootstrap/mixins/</code> into
+      <code>_mixins.scss</code> (~12 lines).</li>
+  <li>Replace 25 of the 26 <code>@extend</code>s with local mixins — this is the only genuinely fiddly bit.
+      (The 26th, <code>components/_table.scss:94</code>, <em>stays</em> an <code>@extend</code>: it targets the app's
+      own <code>.table-striped</code>, which is still SCSS. See below.)
+<pre><code>// _mixins.scss
+@mixin bs-row      { margin-left: -$grid-gutter-width / 2;
+                     margin-right: -$grid-gutter-width / 2; @include clearfix; }
+@mixin bs-col($n)  { position: relative; min-height: 1px; float: left;
+                     width: percentage($n / 12);
+                     padding-left: $grid-gutter-width / 2;
+                     padding-right: $grid-gutter-width / 2; }
+@mixin bs-offset($n) { margin-left: percentage($n / 12); }</code></pre>
+      Sites: <code>_worktimes.scss</code> lines 15, 22, 23, 26, 30, 156, 157, 256, 269, 270, 274, 277, 294, 320, 329, 338,
+      339, 362, 368, 374, 395, 402, 403; <code>puzzletime.scss</code> 19 (<code>.container-fluid</code>) and 248
+      (<code>.form-control</code> — inline the ~10 declarations); <code>components/_table.scss</code> 94
+      (<code>.table-striped</code> — <strong>not</strong> the single rule; see below).</li>
+  <li><code>puzzletime.scss</code> / <code>print.scss</code>: replace the three commented-out imports with
+      <code>@import "bootstrap_variables"; @import "mixins";</code></li>
+</ul>
+
+<h4>Three ways the mixins silently differ from the <code>@extend</code>s <span class="tag high">all four found by the diff</span></h4>
+<ol>
+  <li><strong><code>bs-clearfix</code> is not our <code>clearfix</code>.</strong> Bootstrap's sets
+      <code>:before</code> <em>and</em> <code>:after</code>; the app's existing <code>clearfix</code> mixin only sets
+      <code>:after</code>. The <code>:before</code> is what stops the first child's top margin collapsing out, so
+      reusing the app's mixin inside <code>bs-row</code>/<code>bs-container-fluid</code> shifts every row. Write a
+      separate <code>bs-clearfix</code> and leave the app's alone.</li>
+  <li><strong><code>bs-table-striped</code> is a trap.</strong> The app defines <em>its own</em>
+      <code>.table-striped</code> in <code>components/_table.scss:64</code> — the real PuzzleTime column shading
+      (<code>#ffffff</code>/<code>#fcfcfc</code>/<code>#f5f5f5</code>), plus a
+      <code>.table-hover.table-striped</code> hover rule. <code>@extend .table-striped</code> was picking up
+      <em>both</em> that and Bootstrap's one <code>nth-of-type</code> rule. Inlining only Bootstrap's rule strips the
+      striping from <code>.table-stripedbody</code>, which is live on
+      <code>plannings/companies/_list</code> and <code>vacations/show</code>.
+      The app's class is still SCSS and therefore still extendable — only Bootstrap's copy moved out of reach:
+      <pre><code>.table-stripedbody {
+  @extend .table-striped;    // the app's own block — still reachable
+  @include bs-table-striped; // Bootstrap's rule — no longer is
+}</code></pre></li>
+  <li><strong>Copy declarations exactly.</strong> <code>bs-form-control</code> lost
+      <code>background-image: none</code>, and a hand-written <code>.15s</code> serialises differently from the
+      <code>0.15s</code> Sass emits when the same value passes through a mixin argument. Both are one-line diffs that
+      only a mechanical comparison finds.</li>
+</ol>
+
+<h4>Verifying it — and what "byte-comparable" can actually mean here</h4>
+<div class="box warn">
+<p><strong>Phase 1 cannot be byte-identical, and the plan was wrong to imply it.</strong> That is not a defect, it is
+what replacing <code>@extend</code> with mixins <em>is</em>: <code>@extend</code> welds our selector onto every
+Bootstrap rule mentioning the extended class (<code>.form-control, .form-action { … }</code>), a mixin emits a
+standalone block. Same declarations, different selector grouping — so the file differs by construction.</p>
+<p>The workable gate is therefore two-part, and it is worth keeping for phases 2–3:</p>
+<ol>
+  <li><strong>Strip our selectors out of both sides and the rule sets must match exactly.</strong> That proves
+      Bootstrap itself is untouched — 2558 rules, identical.</li>
+  <li><strong>Then diff the declarations each extended element receives</strong>, and audit whatever is left by hand.
+      This is where the four defects above surfaced.</li>
+</ol>
+<p><code>cssdiff.rb</code> (rule-set diff) and <code>reconcile.rb</code> (the two-part gate) sit next to this file.</p>
+</div>
+
+<p><strong>Result:</strong> <code>application.js</code> and <code>phone.css</code> byte-for-byte identical,
+<code>print.css</code> an identical rule set, <code>application.css</code> identical across all 2558 Bootstrap rules.
+96 app-side selectors legitimately lost rules, in three families, each verified unreachable:</p>
+<table>
+  <tr><th>#</th><th>Family</th><th>Why it cannot matter</th></tr>
+  <tr><td>58</td><td><code>.form-action</code> as an input, disabled/readonly, or inside
+      <code>.input-group</code> / <code>.has-*</code> / <code>.form-inline</code> / <code>.form-group-sm|lg</code></td>
+      <td><code>.form-action</code> is a <code>div</code> (<code>.col-md-1.form-action</code>) at 6 nested-form sites,
+          none of them in any of those contexts</td></tr>
+  <tr><td>30</td><td><code>.worktimes-*</code> × <code>.expenses_reviews</code> / <code>.order_comments</code></td>
+      <td><code>@extend</code> cross-products: <code>.figures</code>/<code>.entry</code>/<code>.date-label</code>
+          extended <code>.row</code>, and those two stylesheets style <code>.row</code> too.
+          <code>.worktimes-container</code> exists in exactly one view, disjoint from both — the selectors match no
+          possible DOM</td></tr>
+  <tr><td>8</td><td><code>main</code> × navbar / jumbotron</td>
+      <td>the navbars live in <code>%header#main-header</code>, a <em>sibling</em> of <code>%main</code>; there is no
+          jumbotron in the app at all</td></tr>
+</table>
+<div class="box bad">
+<p><strong><code>bootstrap-sass</code> cannot be dropped in this phase — that instruction moves to
+<a href="#p2">phase 2</a>.</strong> The gem ships Bootstrap's <em>JavaScript</em> as well as its Sass, and
+<code>application.js.coffee:17–21</code> still <code>//= require</code>s <code>bootstrap/modal</code>,
+<code>tooltip</code>, <code>button</code>, <code>alert</code> and <code>collapse</code> from it. Removing it fails the
+build with <code>Sprockets::FileNotFound: couldn't find file 'bootstrap/modal'</code>. It can only go once phase 2
+swaps those five for the npm <code>bootstrap@3.4.1</code> package — which §2.3 already says, so the two halves of this
+plan simply disagreed.</p>
+<p>The <em>Sass</em> side is nonetheless fully decoupled, which is what this phase was for: no stylesheet imports the
+gem any more (<code>selectize.bootstrap3.scss</code> has no <code>@import</code>s at all, and the lone
+<code>twbs-font-path()</code> probe in <code>_bootstrap_variables.scss:10</code> is written to degrade to
+<code>false</code> when the function is absent — now the correct answer). Phase 2 drops the gem for free.</p>
+</div>
+</div>
+
+<div class="phase">
+<h3 id="p2">Phase 2 — JavaScript to jsbundling + esbuild <span class="tag high">3–5 days</span></h3>
+<p class="goal">Goal: one esbuild bundle at <code>app/assets/builds/application.js</code>. Sprockets still serves it
+(<code>link_tree ../builds</code> is already in the manifest), so this phase is independent of Propshaft.</p>
+
+<h4>2a — De-coffee (36 files, 2283 lines)</h4>
+<pre><code># the files are *.js.coffee; decaffeinate wants *.coffee, so stage them first
+$ npx decaffeinate@latest --loose $(find app/javascript -name "*.coffee")
+$ npx decaffeinate@latest --loose &lt;nested_form_fields gem&gt;/lib/assets/javascripts/nested_form_fields.js.coffee</code></pre>
+<p>Strip the generated <code>/* decaffeinate suggestions: DS… */</code> headers once reviewed — they land in all 36 files
+and say nothing a reader needs. But read them first: <strong><code>DS002</code> means the output is invalid</strong>, not
+untidy.</p>
+<table>
+  <tr><th>What decaffeinate did</th><th>Consequence</th></tr>
+  <tr><td><strong><code>DS002</code> in <code>work_item_autocomplete.js</code></strong> — emitted
+      <code>this.x = this.x.bind(this)</code> <em>before</em> <code>super(...args)</code>, which CoffeeScript's function
+      output allowed and an ES6 class forbids</td>
+      <td><code>ReferenceError</code> on construction, i.e. the work-item autocomplete on every ordertime form. Move
+          <code>super()</code> first. It was the only class affected — both subclasses were checked.</td></tr>
+  <tr><td><code>--loose</code> turned a trailing <code>for element in document.querySelectorAll(…)</code> into
+      <code>.map()</code></td>
+      <td>A <code>NodeList</code> has no <code>.map</code>, so <code>datepicker.js</code>'s
+          <code>turbolinks:before-cache</code> handler threw. The comprehension's result was never used, so
+          <code>.forEach()</code> is the faithful fix. <strong>This is the <code>--loose</code> risk in one line</strong>:
+          plausible output, wrong at runtime.</td></tr>
+  <tr><td>Preserved the <code>Object.defineProperty(Object.prototype, 'do', …)</code> monkey-patch</td>
+      <td>The plan said to delete it if unused — it <em>is</em> used, exactly once, in
+          <code>plannings_selectable.js</code>'s <code>translateDays</code>, as a tap that reverses the array when
+          shifting right. Rewriting that one call site as a local <code>const</code> plus
+          <code>if (translateBy &gt; 0) cells.reverse()</code> removes the prototype patch for good.</td></tr>
+  <tr><td>Added explicit <code>return</code>s throughout (<code>DS102</code>, 58×)</td>
+      <td>Faithful, and harmless: CoffeeScript returned those values too. Not worth reviewing line by line.</td></tr>
+</table>
+<div class="box warn">
+<p><strong>This is the largest review burden in the plan</strong> — <code>decaffeinate</code>'s output almost always
+compiles, so the failure mode is silent semantic drift. Review against the named hazards rather than line by line, and
+lean on the 21 integration tests. Note that two of the three real defects above were flagged <em>by decaffeinate itself</em>
+in the header comments; the third was found by the suite.</p>
+</div>
+
+<h4>2b — package.json</h4>
+<p>Pin to what the gems actually shipped, so this phase changes the bundler and nothing else. The versions are
+readable straight off the vendored files and gem contents:</p>
+<pre><code>jquery@3.7.1           jquery-ujs@1.2.3       jquery-ui@1.14.1
+selectize@0.12.6       chart.js@3.7.1         chartjs-plugin-annotation@2.2.1
+waypoints@4.0.1        turbolinks@5.2.0       bootstrap@3.4.1   # JS only — never import its CSS
+esbuild@^0.25 (dev)</code></pre>
+<div class="box warn">
+<p><strong><code>npm audit</code> reports 1 moderate and 4 critical, and none of it is new exposure.</strong> Both
+findings are code the gems already shipped — the audit only makes them visible, because a Gemfile has no equivalent
+report. Worth writing down so nobody treats them as introduced by this phase:</p>
+<ul>
+  <li><strong><code>minimist</code> &lt;=0.2.3, critical, no fix available</strong> — reached through
+      <code>selectize@0.12.6 → sifter → optimist → minimist</code>. It is a command-line argument parser:
+      <code>optimist</code> is only on <code>sifter</code>'s CLI path, and grepping the built bundle for
+      <code>minimist</code> returns <strong>zero</strong> hits, so none of it is served to a browser. Retiring it means
+      replacing selectize (phase 7's Tom Select item), not patching a version.</li>
+  <li><strong><code>bootstrap</code> 3.1.1–3.4.1, moderate</strong> — the known Bootstrap 3 XSS advisories in the
+      <code>data-*</code> attributes consumed by tooltip/popover. We have been on <code>bootstrap-sass 3.4.1</code> all
+      along; 3.4.1 is the last release, so there is no version to move to. It goes away with the plugins in phase 7.</li>
+</ul>
+<p>Do not run <code>npm audit fix --force</code>: for both findings the only "fix" is a major-version jump to a library
+we are deliberately pinning to what the gems shipped, which would defeat the point of this phase.</p>
+</div>
+
+<p class="small">Check <code>selectize</code>'s entry point resolves to <code>dist/js/selectize.js</code> and not the
+<code>standalone</code> build, which bundles its own copy of jQuery. Under npm 11 esbuild's
+<code>postinstall</code> is blocked by default, but its platform binary arrives through the
+<code>@esbuild/&lt;platform&gt;</code> optional dependency anyway, so no <code>approve-scripts</code> step is needed —
+here or in CI.</p>
+<p>Vendored into <code>app/javascript/vendor/</code>: <code>jquery-ui-datepicker-i18n.js</code>,
+<code>nested_form_fields.js</code>. <strong>Deleted:</strong> <code>modernizr-custom.js</code> — its own header records the build as
+<code>?-csspositionsticky-setclasses</code>, one feature test (2 kB, not the 12 kB an earlier draft of this plan
+claimed), and only the positive class is ever consumed. Nothing reads <code>no-csspositionsticky</code>,
+<code>js</code> or <code>no-js</code>, so:</p>
+<pre><code>// app/javascript/modernizr.js — ponytail: 2 lines beat a 12 kB custom build
+window.Modernizr = { csspositionsticky: CSS.supports("position", "sticky") };
+document.documentElement.classList.toggle("csspositionsticky", Modernizr.csspositionsticky);</code></pre>
+<p class="small">Consumers: <code>worktimes.js:115</code>, <code>plannings.js:163,201</code>,
+<code>plannings/base/new.js.haml:12</code>, and <code>components/_plannings.scss</code> (3× <code>.csspositionsticky &amp;</code>).</p>
+
+<h4>2c — The entrypoint <span class="tag high">four interop traps, all silent</span></h4>
+<p>The entrypoint is not the manifest with the directives rewritten. <strong>ES imports are hoisted</strong>: every
+import in a file executes before any statement in it, so the plan's original sketch — interleaving
+<code>window.$ = jQuery</code> and <code>window.Selectize = Selectize</code> between the imports that need them — cannot
+work. Anything that must exist <em>before</em> an import runs has to live in a module imported earlier. Import order is
+execution order, so the ordering of the manifest is reproducible; the assignments are not.</p>
+<pre><code>// app/javascript/application.js — order mirrors the old manifest
+import "./jquery_global";        // window.$ / window.jQuery, and nothing else
+import "jquery-ujs";
+import "jquery-ui/ui/version";   // ... keycode, position, unique-id, widget,
+import "jquery-ui/ui/widget";    //     widgets/mouse, widgets/menu — see below
+import "jquery-ui/ui/widgets/datepicker";
+import "./vendor/jquery-ui-datepicker-i18n";
+import "jquery-ui/ui/widgets/autocomplete";
+import "jquery-ui/ui/widgets/selectable";
+import "selectize";
+import "bootstrap/js/transition"; // + modal, tooltip, button, alert, collapse
+import "waypoints/lib/jquery.waypoints";  // + shortcuts/sticky, shortcuts/inview
+import "./modernizr";
+import "./globals";              // window.Selectize / window.Chart + annotation plugin
+import "./boot";                 // was `//= require_self`
+// ... ./modules/* alphabetically, then the 22 feature files ...
+import Turbolinks from "turbolinks";
+window.Turbolinks = Turbolinks;
+Turbolinks.start();              // REQUIRED — see below</code></pre>
+
+<div class="box bad">
+<p><strong>1. Turbolinks does not start itself when bundled — this is the one that breaks everything.</strong>
+Its last lines are <code>n() &amp;&amp; e.start()</code>, where <code>n()</code> is
+<code>window.Turbolinks === e</code>. Loaded as a plain script it assigns <code>window.Turbolinks</code> on the way past
+and the check passes. Bundled, it takes its CommonJS branch, sets <code>module.exports</code> instead, and the check
+fails — so <strong>it never starts, <code>turbolinks:load</code> never fires, and every handler the app registers lies
+dormant</strong>. Nothing throws. The page renders, and no selectize control, datepicker, planning board or chart ever
+initialises. Call <code>Turbolinks.start()</code> yourself. (The plan previously asserted the package does this — it
+does not.)</p>
+</div>
+
+<div class="box bad">
+<p><strong>2. jquery-ui declares its dependencies only in its AMD branch.</strong> Each
+<code>ui/widgets/*.js</code> is <code>define([ "jquery", "./menu", "../widget", … ], factory)</code> <em>or</em> a bare
+<code>factory( jQuery )</code> fallback. esbuild is not an AMD loader, so every widget takes the fallback and its
+dependencies are never pulled in: <code>$.widget</code> stays undefined, the first widget throws, and the throw takes the
+whole entrypoint with it. <code>jquery-ui-rails</code> resolved this chain through <code>//= require</code>; here it must
+be listed explicitly and in order — <code>version</code>, <code>keycode</code>, <code>position</code>,
+<code>unique-id</code>, <code>widget</code>, <code>widgets/mouse</code>, <code>widgets/menu</code> — before
+datepicker/autocomplete/selectable. Adding a widget later means adding its dependencies too.</p>
+</div>
+
+<div class="box bad">
+<p><strong>3. Three plugins read the <em>global</em> jQuery at execution time</strong> rather than importing it:
+<code>bootstrap/js/*</code> (<code>+function ($) { … }(jQuery)</code>), <code>waypoints</code>
+(<code>var $ = window.jQuery</code>) and <code>jquery-ujs</code>. The last is the dangerous one —
+<code>if (window.jQuery) { init(jQuery) } else { module.exports = init }</code>, so with no global it
+<strong>silently exports a no-op</strong> and every <code>data-method</code>, <code>data-confirm</code> and
+<code>ajax:*</code> handler in the app quietly stops existing. Hence <code>./jquery_global</code> as its own module,
+imported first.</p>
+</div>
+
+<div class="box bad">
+<p><strong>4. Sprockets directives survive inside the migrated files as dead comments.</strong>
+<code>modules/checkbox/{all_checker,element_hider,input_enabler}.js</code> each carried
+<code>//= require ./toggler</code> and each subclasses <code>app.checkbox.Toggler</code> at load time. Under esbuild the
+directive is a comment, so with the modules imported alphabetically <code>all_checker</code> runs first and dies with
+<code>app.checkbox.Toggler is not a constructor</code>. Grep the migrated tree for <code>//= require</code> and turn each
+one into a real <code>import</code>. The same latent assumption exists without a directive:
+<code>order_autocomplete</code> and <code>work_item_autocomplete</code> extend <code>app.Autocomplete</code> and only
+worked because <code>require_tree</code> happens to sort <code>autocomplete</code> first — made explicit too.</p>
+</div>
+
+<div class="box warn">
+<p><strong>Globals are load-bearing.</strong> Confirmed by grepping <code>app/views/**/*.js.haml</code>: those responses
+execute in global scope and use <code>App</code> (11×) and <code>Modernizr</code> (1×), plus <code>$(…)</code> 43× and
+<code>Chart</code> in the inline <code>content_for :javascript</code> blocks. Under Sprockets everything shared one
+scope; under esbuild each file is a module, so <code>$</code>, <code>jQuery</code>, <code>App</code>,
+<code>Selectize</code>, <code>Chart</code> and <code>Modernizr</code> all have to be reattached to <code>window</code>.
+<code>Waypoint</code> looks like a seventh but is only ever a local variable name.</p>
+<p>A quick way to check all of it at once is a throwaway integration test that
+<code>page.evaluate_script</code>s the <code>typeof</code> of each global and the loaded <code>document.scripts</code> —
+that is what located trap 1. Remember to visit a page first: several test classes override <code>login</code> to visit
+one, and the bare helper only signs in, so a probe using it inspects <code>about:blank</code> and reports everything as
+undefined.</p>
+</div>
+
+<div class="box bad">
+<p><strong>Pre-existing defect to carry over: <code>bootstrap/transition</code> is missing today.</strong>
+<code>application.js.coffee</code> requires <code>modal</code>, <code>tooltip</code>, <code>button</code>,
+<code>alert</code> and <code>collapse</code> but never <code>transition</code>. Verified in a running browser:
+<code>jQuery.support.transition</code> is empty and <code>jQuery.fn.emulateTransitionEnd</code> is
+<code>undefined</code>.</p>
+<p>Bootstrap 3 needs that file to sequence animations. Without it, <code>shown.bs.modal</code> /
+<code>hidden.bs.modal</code> fire <em>immediately</em> while the CSS is still animating, so the JS and the CSS disagree
+about when a modal is open — which is what made
+<code>create_order_test</code> fail (Capybara clicked a still-moving <em>Abbrechen</em> link). Added with the bundle;
+re-check the modal flows, since the plugin now waits for <code>transitionend</code>.</p>
+</div>
+
+<h4>2d — Wiring</h4>
+<ul>
+  <li><code>bundle add jsbundling-rails</code>. Its <code>javascript:build</code> hooks into
+      <code>assets:precompile</code> and has <code>javascript:install</code> as a prerequisite, so it runs
+      <code>npm install</code> for you — set <code>SKIP_YARN_INSTALL=1</code> (it gates npm too) where you want a
+      lockfile-exact <code>npm ci</code> instead.</li>
+  <li><code>build</code> script:
+      <code>esbuild app/javascript/application.js --bundle --sourcemap --outdir=app/assets/builds --public-path=/assets --minify</code>.
+      Minifying unconditionally keeps it to one script; the sourcemap is what keeps development debuggable.
+      546 kB out, against 579 kB from Sprockets + terser.</li>
+  <li><code>Procfile.dev</code> (<code>js: npm run build -- --watch</code>) and a <code>bin/dev</code>, both recreated
+      here rather than carried through phase 0 — nothing needed them until now.</li>
+  <li><code>.gitignore</code>: <code>/app/assets/builds/*</code> with a <code>!.keep</code>, and
+      <code>/node_modules</code>.</li>
+  <li><strong>Leave the layout alone.</strong> No <code>defer</code> — see below.</li>
+  <li>Delete <code>app/assets/javascripts/</code> and <code>vendor/assets/javascripts/</code>. No manifest change is
+      needed: <code>//= link application.js</code> resolves to <code>app/assets/builds/application.js</code> once the old
+      tree is gone, since sprockets-rails puts every <code>app/assets/*</code> directory on the load path. (An earlier
+      draft claimed <code>link_tree ../builds</code> was already in the manifest; phase 0's revert removed it, and it
+      turns out not to be needed.)</li>
+  <li><strong>Drop <code>node_modules</code> from <code>config/initializers/assets.rb</code>.</strong> It was a dead
+      entry while no <code>package.json</code> existed; now that the directory is real, leaving it on the Sprockets load
+      path means the <code>precompile</code> globs (<code>*.png *.gif *.jpg *.svg</code>) sweep the whole dependency
+      tree. esbuild resolves <code>node_modules</code> itself and Sprockets has no reason to see it.</li>
+  <li>Remove <code>config.assets.js_compressor = :terser</code> from <code>production.rb</code> — esbuild minifies, and
+      the gem is gone, so leaving it raises on boot.</li>
+  <li><strong><code>Dockerfile</code>:</strong> give <code>BUILD_PACKAGES</code> the default
+      <code>"nodejs npm"</code> — CI passes no <code>--build-arg</code> for it, so an <code>ARG</code> without a default
+      stays empty and the image fails at <code>assets:precompile</code>. Prepend <code>npm ci</code> to
+      <code>BUILD_SCRIPT</code>, which runs after <code>COPY . /app-src</code> and therefore has a
+      <code>package-lock.json</code> to work from; <code>INSTALL_SCRIPT</code> is too early. The run stage needs no Node,
+      and the Dockerfile already deletes <code>node_modules</code> after the build.</li>
+  <li><strong>CI:</strong> <code>reusable-test.yaml</code> runs <code>assets:precompile</code>, so it needs
+      <code>actions/setup-node</code> + <code>npm ci</code>. Don't lean on the runner's ambient Node.</li>
+</ul>
+
+<div class="box bad">
+<p><strong>Do not add <code>defer: true</code> to <code>javascript_include_tag</code>, as an earlier draft of this plan
+suggested.</strong> <code>layouts/application.html.haml</code> emits
+<code>javascript_tag(yield(:javascript))</code> at the end of <code>&lt;body&gt;</code>, and those inline blocks call
+<code>App.initOrderControllingChart(…)</code>, <code>new window.App.SelectionWatcherTrigger(…)</code> and friends from
+five views. Inline scripts run during parsing; a deferred external script runs only after parsing finishes — so the
+bundle would load <em>after</em> its callers and every one of them would throw. The tag stays exactly as it is; only the
+file behind it moves.</p>
+<p class="small">Deferring would also delay Modernizr's <code>csspositionsticky</code> class past first paint. That part
+is nearly harmless on its own — the class only chooses between native <code>position: sticky</code> and a JS
+<code>.stuck</code> fallback, and at scroll offset 0 a sticky element sits exactly where a static one does — but
+reloading an already-scrolled planning board would show the headers unstuck for a frame.</p>
+</div>
+
+<p><strong>Drop:</strong> <code>bootstrap-sass</code> (carried over from phase 1 — its Sass was already unused, only the
+five JS requires still held it), <code>coffee-rails</code>, <code>chartjs-ror</code>, <code>terser</code>,
+<code>jquery-rails</code>. Also <code>execjs</code> + <code>mini_racer</code> + <code>libv8-node</code> once
+<code>autoprefixer-rails</code> follows in phase 3 — nothing in <code>app/</code>, <code>lib/</code> or
+<code>config/</code> uses ExecJS directly, its only consumers are those three gems. That takes a native V8 build out of
+the image.</p>
+<div class="box warn">
+<p><strong>Three gems on that list cannot go yet, and the plan was wrong about all three.</strong></p>
+<ul>
+  <li><strong><code>turbolinks</code> stays permanently</strong> (or until phase 7's Turbo migration). The claim that it
+      has "no Ruby usage anywhere" is false: <code>config/initializers/devise.rb:327</code> does
+      <code>include Turbolinks::Controller</code> inside
+      <code>ActiveSupport.on_load(:devise_failure_app)</code> so Devise's redirects set
+      <code>Turbolinks-Location</code>. Removing the gem fails the boot with
+      <code>NameError: uninitialized constant Turbolinks</code>. Only its <em>JavaScript</em> is replaced by npm.</li>
+  <li><strong><code>jquery-ui-rails</code> and <code>selectize-rails</code> stay until phase 3.</strong> Their JS is
+      replaced here, but <code>application.css</code> still <code>*= require</code>s their stylesheets
+      (<code>jquery-ui/datepicker</code>, <code>jquery-ui/autocomplete</code>, <code>selectize</code>,
+      <code>selectize.bootstrap3</code>). Dropping them now fails the build with
+      <code>Sprockets::FileNotFound … with type 'text/css'</code>. Phase 3 vendors that CSS and drops both gems then.</li>
+</ul>
+<p>The pattern is the same one phase 1 hit with <code>bootstrap-sass</code>: <strong>a gem's asset payload and its Ruby
+payload retire on different phases</strong>, and this plan's per-phase drop lists were written as if they retire
+together. Before dropping any asset gem, grep for Ruby constants it defines and for <code>require</code>s of its
+stylesheets, not just its JavaScript.</p>
+</div>
+
+<p><strong>Verify:</strong> the CSS is untouched by this phase, so <code>application.css</code>, <code>print.css</code>
+and <code>phone.css</code> must come out <strong>byte-identical</strong> to the phase-1 baseline — a free, exact gate,
+worth checking before anything else. The JS cannot be diffed (a different bundler produces entirely different output), so
+its gate is the full suite, and the integration tests are what actually exercise selectize, the datepicker, modals and
+the planning board.</p>
+<div class="box warn">
+<p><strong><code>js_errors: true</code> found every silent trap in 2c, and also a way to crash the suite —
+so it is opt-in (<code>JS_ERRORS=1 bin/rails test &lt;file&gt;</code>), not a permanent default.</strong>
+Cuprite defaults it off, which means a JavaScript exception is invisible: the browser keeps serving the page, Capybara
+waits the full timeout for an element that will never appear, and the suite reports 16 unrelated-looking
+<code>ElementNotFound</code> failures across selectize, datepicker and planning tests — spread over three subsystems, so
+they read as three unrelated regressions rather than one broken bundle. With it on, the same run says
+<code>Ferrum::JavaScriptError: app.checkbox.Toggler is not a constructor</code> on the first try.</p>
+<div class="box bad">
+<p><strong>But turning it on can crash <code>PlanningsOrdersTest</code> with a segfault, and it is not a Ferrum
+bug.</strong> Confirmed live: <code>[BUG] Segmentation fault at 0x0000000000000004</code>, in a Puma worker thread,
+with 45 Ruby threads alive. The C backtrace is unambiguous about the mechanism:</p>
+<pre><code>rb_nogvl                  # pg releases the GVL, so libpq parses rows unsupervised
+ -&gt; gvl_PQisBusy
+  -&gt; PQisBusy -&gt; parseInput -&gt; pqParseInput3 -&gt; getAnotherTuple -&gt; pqRowProcessor  &lt;-- crash</code></pre>
+<p>The cause is <strong>straggler requests outliving their test</strong>, not connection sharing. With
+<code>use_transactional_tests = false</code> each thread checks out its own connection, so the test thread and the Puma
+threads are not fighting over one <code>PGconn</code>. What actually happens is that the drag-select interaction fires a
+flood of <code>preview_total_selected</code>/<code>update</code> AJAX calls, Capybara's assertion is satisfied and the
+test ends while some are <em>still executing</em>, and <code>teardown</code> then runs
+<code>DatabaseCleaner.clean</code> — a <code>TRUNCATE</code> of every table — underneath them. The smoking gun is in
+<code>log/test.log</code>:</p>
+<pre><code>PATCH /plannings/orders/978000142  status:0  duration:359256ms  db:359231ms</code></pre>
+<p>A request that ran for six minutes and never completed, its whole lifetime inside the database call, while the suite
+had long since moved on. A thread in that state is mid-<code>pqRowProcessor</code> with the GVL released; once its
+connection's state is invalidated under it, libpq dereferences a pointer that is no longer valid.</p>
+<p><code>js_errors: true</code> does not cause this. It adds CDP round-trips per JS execution, which changes the pacing
+of that AJAX burst enough to make an already-reachable window land inside a run.
+<strong>It is a pre-existing hazard of the harness, unrelated to which bundler produced the JavaScript</strong> — and
+<code>pg</code> is already at its latest release (1.6.3), so there is no upgrade to take.</p>
+<p class="small">Diagnosed by attaching with <code>kill -QUIT &lt;pid&gt;</code>: CRuby dumps a full backtrace before
+dying. Far more useful than the CDP log, which had stopped growing 30+ seconds <em>before</em> the crash and so
+incriminated Ferrum for something that was never Ferrum's.</p>
+</div>
+<div class="box warn">
+<p><strong>Two attempted fixes, and why neither shipped.</strong> Capping Capybara's embedded server to one thread
+(<code>Threads: '1:1'</code> — its registration defaults to <code>0:4</code> and ignores
+<code>config/puma.rb</code> entirely) looked like the obvious move, but it made things worse: the run timed out and the
+in-page error changed to <code>Unauthorized</code>, i.e. a single-threaded server cannot serve the app's overlapping
+requests. Reverted. Upgrading <code>pg</code> is not available.</p>
+<p>A real fix means making tests wait for in-flight requests before teardown, or moving to transactional tests with a
+deliberately shared connection — both of which change assumptions in every integration test. <strong>That is its own
+piece of work, not part of a bundler migration</strong>, and it cannot be validated here anyway: the crash is not
+reliably reproducible (a repeat attempt hung at 120s rather than crashing), so no fix can be shown to work. Tracked as
+follow-up; the ENV gate keeps it out of the gate's path in the meantime.</p>
+</div>
+</div>
+</div>
+
+<h3 id="p3">Phase 3 — dartsass-rails <em>and</em> Sprockets → Propshaft <span class="tag med">2–3 days</span></h3>
+<p class="goal">Goal: dart-sass compiles the SCSS into <code>app/assets/builds/</code> and Propshaft serves it.
+<strong>One commit</strong> — see <a href="#decisions">D3</a>: the two are coupled by the ~35 <code>url()</code>
+references, and splitting them means doing every rewrite twice.</p>
+
+<div class="box">
+<p><strong>Why they cannot be split cleanly.</strong> <code>asset-url()</code>/<code>image-url()</code> in
+<code>_icons.scss</code> (4 fonts), <code>_worktimes.scss</code> (3 day-marker SVGs) and
+<code>vendor/jquery-ui-1.10.0.custom.scss</code> (~30 PNGs) are <em>Sprockets-Sass</em> functions. dart-sass has no
+equivalent; Propshaft's answer is plain <code>url("foo.png")</code>, rewritten to the digested path by its CSS compiler.
+In between — dart-sass in, Propshaft not yet — nobody rewrites them: Sprockets serves the built CSS from
+<code>builds/</code> as an opaque file and never looks inside it, and in production only digested filenames exist on
+disk. Those references would 404.</p>
+</div>
+
+<h4>3a — Sass build</h4>
+<ul class="check">
+  <li><code>bundle add dartsass-rails</code>; three entrypoints:
+      <code>application.scss</code>, <code>print.scss</code>, <code>phone.scss</code>.</li>
+  <li>Turn the <code>application.css</code> Sprockets manifest into real Sass imports. Vendor the gem-supplied CSS it
+      used to pull in: <code>jquery-ui/{base,datepicker,autocomplete}.css</code> and
+      <code>selectize.scss</code> + <code>selectize.bootstrap3.scss</code> → <code>app/assets/stylesheets/vendor/</code>.
+      (The selectize BS3 theme consumes our Bootstrap variables — that keeps working, we kept the variables file.)</li>
+  <li>Rewrite <code>asset-url()</code>/<code>image-url()</code> → plain <code>url()</code>.</li>
+  <li><code>Procfile.dev</code>: <code>css: bin/rails dartsass:watch</code></li>
+  <li>dart-sass rejects the legacy <code>/</code> division: the <code>$grid-gutter-width / 2</code> forms written in
+      phase 1 must use <code>math.div()</code>. Expect a batch of deprecation warnings across the 6020 lines of SCSS —
+      budget half a day for them.</li>
+</ul>
+<p><strong>Drop:</strong> <code>sass-rails</code>, <code>sassc-rails</code>, <code>autoprefixer-rails</code>
+(dart-sass does not prefix; the frozen Bootstrap CSS is already prefixed and our own SCSS targets evergreen browsers —
+confirm with a quick grep for <code>flex</code>/<code>gradient</code> hacks). With this, the last ExecJS consumer is
+gone: <code>execjs</code>, <code>mini_racer</code> and <code>libv8-node</code> can go too.</p>
+
+<h4>3b — The pipeline swap</h4>
+<p>By now nothing depends on Sprockets' <em>processing</em>, only on its serving and digesting — so this half is a small,
+boring diff.</p>
+<ul class="check">
+  <li><code>gem "propshaft"</code> replaces <code>sprockets-rails</code>.</li>
+  <li>Delete <code>app/assets/config/manifest.js</code>.</li>
+  <li><code>config/initializers/assets.rb</code> → only
+      <code>config.assets.paths &lt;&lt; Rails.root.join("app/assets/fonts")</code>.
+      Drop <code>assets.version</code> and the <code>precompile</code> list — Propshaft precompiles everything on the
+      load path, which is what <code>print.css</code>, <code>phone.css</code> and the images wanted anyway.</li>
+  <li><code>config.assets.excluded_paths = [Rails.root.join("app/assets/stylesheets")]</code> so the raw
+      <code>.scss</code> sources are not published next to the built CSS.</li>
+  <li>Remove <code>assets.debug</code> / <code>assets.quiet</code> / <code>assets.js_compressor</code> /
+      <code>assets.compile</code> from <code>config/environments/</code>.</li>
+  <li>Confirm Propshaft's <code>url()</code> rewriting resolves <code>puzzletime.woff</code>,
+      <code>day-marker-*.svg</code>, the jQuery-UI theme PNGs and <code>glyphicons-halflings-regular.woff2</code>.
+      It matches on logical path, so the file must sit on a load path — that is what the <code>fonts</code> entry above
+      is for.</li>
+</ul>
+<p><strong>Verify:</strong> normalised CSS diff against the phase-0 baseline; then boot in production mode, load every page
+on both servers and watch for 404s in the Propshaft log — the <code>url()</code> rewrites are the one thing in this
+phase that fails silently in development and loudly in production. Check <code>docker build</code> end to end.</p>
+</div>
+
+<div class="phase">
+<h3 id="p4">Phase 4 — Tailwind in, layered, Preflight on <span class="tag med">1 day</span></h3>
+<p class="goal">Goal: Tailwind is present and usable, and <em>nothing looks different</em>. This is the phase that makes
+the rest incremental.</p>
+<ul class="check">
+  <li>Move <code>vendor/bootstrap-3.4.1.css</code> under <code>app/assets/tailwind/</code> as
+      <code>bootstrap-frozen.css</code> and import it into the layer stack from §3.1.</li>
+  <li>Add the <code>@theme</code> block from §3.4 and the two Preflight residue rules from §3.2.</li>
+  <li>Point <code>@source</code> at <code>app/views</code>, <code>app/helpers</code>, <code>app/javascript</code>.</li>
+  <li>Layout: <code>tailwind.css</code> first, then <code>application.css</code>
+      (the unlayered app SCSS must stay last). Remove the Bootstrap <code>require</code> from
+      <code>application.scss</code> — it now enters through the Tailwind entrypoint.</li>
+  <li>Fix the three collisions from §3.3 <em>now</em>, before any shim exists:
+      <ul>
+        <li><code>.collapse</code> — rewrite <code>expense_reviews/show.html.haml</code> and
+            <code>expenses_reviews/show.html.haml</code> to a plain toggle (a <code>&lt;details&gt;</code> element or 4
+            lines of jQuery), drop <code>bootstrap/js/collapse</code>.</li>
+        <li><code>.container</code> — rewrite <code>devise/sessions/new.html.haml</code> with Tailwind utilities.</li>
+        <li>Delete <code>.text-center</code>, <code>.text-left</code>, <code>.pull-left</code>, <code>.sr-only</code>
+            from the WIP shim — Tailwind supplies them.</li>
+      </ul></li>
+  <li>Run the Preflight border audit: every <code>&lt;input&gt;</code>/<code>&lt;select&gt;</code>/<code>&lt;textarea&gt;</code>
+      rendered without <code>.form-control</code>.</li>
+</ul>
+<p><strong>Verify:</strong> side-by-side against <code>master</code> — the two must be indistinguishable, including hover, focus and open-modal states. Any visible difference means the layer order is wrong;
+fix that before proceeding, not later.</p>
+</div>
+
+<div class="phase">
+<h3 id="p5">Phase 5 — Shim the components, one at a time <span class="tag high">the bulk of the work</span></h3>
+<p class="goal">Goal: for each Bootstrap component — write the shim, delete that section from
+<code>bootstrap-frozen.css</code>, verify, commit. The frozen file shrinks monotonically; at no point is the app half-styled.</p>
+
+<p>Per-component loop:</p>
+<ol>
+  <li>Write the rules into <code>@layer components</code>, using <code>@apply</code> against the theme tokens.
+      Only the classes in <a href="#shims">§5</a> — nothing speculative.</li>
+  <li>Delete the corresponding section from <code>bootstrap-frozen.css</code> (the frozen file has the Bootstrap source
+      comments intact, so the boundaries are obvious).</li>
+  <li>Check <code>/design_guide</code> plus the views listed for that component in §5.</li>
+  <li>Commit. One component per commit — that is what makes a regression bisectable.</li>
+</ol>
+
+<p>Order, cheapest and least coupled first:</p>
+<table>
+  <tr><th>#</th><th>Component</th><th>Notes</th></tr>
+  <tr><td>1</td><td>type &amp; utilities</td><td>after removing what Tailwind already gives us, this is ~8 classes</td></tr>
+  <tr><td>2</td><td>grid</td><td>only the ~30 <code>col-*</code> combinations actually used; a flex/grid rewrite is
+      tempting but out of scope — shim first, rewrite views later</td></tr>
+  <tr><td>3</td><td>tables</td><td>5 classes, 37 views, mechanical</td></tr>
+  <tr><td>4</td><td>buttons</td><td>watch <code>.btn.disabled</code> vs <code>.disabled</code> — the app defines its own
+      <code>.disabled</code> in <code>puzzletime.scss</code></td></tr>
+  <tr><td>5</td><td>forms</td><td>largest surface (49× <code>.form-group</code>, 37× <code>.control-label</code>);
+      <code>dry_crud/form/builder.rb</code> emits most of it, so verify there rather than view-by-view</td></tr>
+  <tr><td>6</td><td>navs, navbar, breadcrumb, pagination</td><td>pagination targets <em>Kaminari's default markup</em>,
+      not Bootstrap's — see §1</td></tr>
+  <tr><td>7</td><td>alerts, labels, panels, wells, progress, list-group, close</td>
+      <td><code>label-*</code> and <code>progress-bar-*</code> are built from Ruby string interpolation — all colour
+      variants must be written out, Tailwind's scanner will not find them</td></tr>
+  <tr><td>8</td><td>modal, tooltip, button-toggle, <code>.fade</code>/<code>.in</code></td>
+      <td><strong>Last, and most carefully.</strong> These classes are toggled by Bootstrap's JS, which expects specific
+      CSS semantics: <code>.modal</code> is <code>display:none</code> until JS sets <code>display:block</code> and adds
+      <code>.in</code>; <code>.fade</code> transitions opacity; the plugin reads
+      <code>$.support.transition</code>. Get these wrong and modals silently never open. Test against
+      <code>modal_create.js</code>'s four flows.</td></tr>
+  <tr><td>—</td><td><code>glyphicon*</code></td><td><strong>never shimmed</strong> — stays as vendored
+      <code>glyphicons.css</code> + webfont until the phase-7 follow-up (D2)</td></tr>
+</table>
+</div>
+
+<div class="phase">
+<h3 id="p6">Phase 6 — Delete the frozen file <span class="tag med">1 day</span></h3>
+<p class="goal">Goal: <code>bootstrap-frozen.css</code> is empty and gets deleted, along with the <code>bootstrap</code>
+layer.</p>
+<ul class="check">
+  <li>Bootstrap's <code>normalize.css</code> goes with it — Preflight is now unopposed. Re-run the §3.2 table; the
+      <code>a { color: inherit }</code> row is the one that bites here.</li>
+  <li>Whatever is left in the frozen file at this point is, by definition, unused — but confirm with a Cuprite pass
+      before deleting, not with a grep.</li>
+  <li><code>_bootstrap_variables.scss</code> can now shrink to the ~40 variables the app's own SCSS still uses, or be
+      folded into <code>@theme</code>.</li>
+  <li>Final side-by-side pass against <code>master</code>. Differences at this point are intentional — capture before/after pairs for the changelog and retire the baseline worktree.</li>
+</ul>
+</div>
+
+<div class="phase">
+<h3 id="p7">Phase 7 — Out of scope, but write it down <span class="tag low">later</span></h3>
+<p class="goal">Explicitly <em>not</em> part of this migration. Listed so nobody smuggles them in mid-phase.</p>
+<ul>
+  <li>Bootstrap JS plugins → native <code>&lt;dialog&gt;</code> / Stimulus. Only 4 plugins remain after phase 4.</li>
+  <li>Turbolinks 5 → Turbo. Touches every <code>turbolinks:load</code> handler (~15 sites) and the
+      <code>turbolinks:before-cache</code> selectize teardown.</li>
+  <li>jQuery removal, selectize → Tom Select, Chart.js 3 → 4.</li>
+  <li>Rewriting the <code>col-*</code> grid to flex/grid utilities and deleting the grid shim.</li>
+  <li><strong>Glyphicons → inline SVG</strong> <span class="tag med">tracked, per D2</span> — ~7 hard-coded icons, a
+      curated picker to replace <code>order_helper#glyphicons</code>, and a data migration for
+      <code>target_scopes.icon</code> with a fallback. This is the last piece of Bootstrap left standing after phase 6.</li>
+  <li><code>layouts/mailer.html.haml</code>'s inlined Bootstrap — e-mail needs inline CSS; leave it alone.</li>
+</ul>
+</div>
+
+<h2 id="shims">5. Shim catalogue — the classes we actually use</h2>
+<p>Extracted mechanically from the codebase and cross-checked against the <code>bootstrap-sass 3.4.1</code> class list.
+Counts are occurrences <strong>excluding</strong> <code>design_guide/index.html.haml</code> and
+<code>layouts/mailer.html.haml</code>. Anything not on this list does not get shimmed.</p>
+
+<h3>5.1 Already covered by Tailwind — do not shim</h3>
+<p><code>text-right</code> (28) · <code>text-center</code> (8) · <code>text-left</code> (4) · <code>text-nowrap</code> (1) ·
+<code>sr-only</code> (1) · <code>hidden</code> (3) · and, once the <code>@theme</code> block exists,
+<code>text-muted</code> (2) · <code>text-primary</code> (2) · <code>text-danger</code> (2).</p>
+
+<h3>5.2 Type &amp; utilities</h3>
+<p><code>h3</code> (10) · <code>dl-horizontal</code> (7) · <code>lead</code> (5) · <code>img-responsive</code> (3) ·
+<code>pull-right</code> (2) · <code>h4</code> (2) · <code>visible-xs</code> (3) ·
+<code>hidden-xs</code>/<code>-sm</code>/<code>-md</code>/<code>-lg</code> (1 each) · <code>small</code> (1, verify — may be app-owned)</p>
+
+<h3>5.3 Grid</h3>
+<p><code>row</code> (48) · <code>container-fluid</code> (6) — and only these column combinations:</p>
+<pre><code>col-md-1 col-md-2 col-md-3 col-md-4 col-md-5 col-md-6 col-md-7 col-md-8 col-md-12
+col-md-offset-1 col-md-offset-2 col-md-offset-3
+col-sm-6 col-sm-10
+col-lg-3 col-lg-4 col-lg-6
+col-xs-1 col-xs-2 col-xs-5 col-xs-6 col-xs-7 col-xs-10 col-xs-11 col-xs-12
+col-xs-offset-1 col-xs-offset-9</code></pre>
+<p class="small"><code>container</code> (1) is deliberately excluded — see §3.3. Generating all 4×12 columns is 2 kB and
+tempting; resist it, the point of the shim is that it shrinks.</p>
+
+<h3>5.4 Tables</h3>
+<p><code>table</code> (37) · <code>table-condensed</code> (31) · <code>table-striped</code> (15) ·
+<code>table-hover</code> (15) · <code>table-bordered</code> (2)</p>
+<p class="small">Emitted centrally by <code>app/helpers/table_helper.rb</code> and
+<code>dry_crud/table/builder.rb</code> as <code>"table table-striped table-hover table-condensed"</code>.</p>
+
+<h3>5.5 Buttons</h3>
+<p><code>btn</code> (30) · <code>btn-primary</code> (13) · <code>disabled</code> (9) · <code>btn-default</code> (6) ·
+<code>btn-block</code> (4) · <code>btn-link</code> (3) · <code>btn-group</code> (3) · <code>active</code> (7) ·
+<code>btn-success</code> (2) · <code>btn-danger</code> (2) · <code>btn-group-justified</code> (2) ·
+<code>btn-warning</code> (1) · <code>btn-toolbar</code> (1)</p>
+
+<h3>5.6 Forms</h3>
+<p><code>form-group</code> (49) · <code>control-label</code> (37) · <code>form-control</code> (33) ·
+<code>form-inline</code> (19) · <code>checkbox</code> (13) · <code>input-group</code> (11) · <code>help-block</code> (8) ·
+<code>form-horizontal</code> (8) · <code>input-group-addon</code> (8) · <code>radio</code> (8) ·
+<code>form-control-static</code> (4) · <code>has-error</code> (2) · <code>has-feedback</code> (2) ·
+<code>form-control-feedback</code> (2) · <code>radio-inline</code> (2) · <code>input-group-btn</code> (1)</p>
+
+<h3>5.7 Navigation</h3>
+<p><code>nav-tabs</code> (17) · <code>nav</code> (8) · <code>navbar</code> (5) · <code>navbar-nav</code> (5) ·
+<code>nav-pills</code> (4, stylesheet-only) · <code>nav-justified</code> / <code>nav-tabs-justified</code> ·
+<code>navbar-default</code> (2) · <code>navbar-brand</code> (2) · <code>breadcrumb</code> (2) ·
+<code>navbar-header</code> (1) · <code>navbar-right</code> (1) · <code>navbar-inverse</code> (1)</p>
+<p class="small">Plus <strong>pagination</strong> — against Kaminari's default theme
+(<code>nav.pagination</code>, <code>span.page.current</code>, <code>span.prev/next/first/last/gap</code>), <em>not</em>
+Bootstrap's <code>ul.pagination &gt; li</code>. 7 call sites.</p>
+
+<h3>5.8 Components</h3>
+<p><code>alert</code> (11) + <code>alert-danger</code> (6) / <code>-warning</code> / <code>-info</code> /
+<code>-success</code> · <code>label</code> (7) + all six <code>label-*</code> variants (interpolated from
+<code>order.status.style</code>) · <code>progress</code> (6) · <code>progress-bar</code> (5) +
+<code>progress-bar-success</code> / <code>-danger</code> · <code>panel</code> (4) + <code>panel-default</code> /
+<code>-info</code> / <code>-heading</code> / <code>-title</code> / <code>-body</code> / <code>-footer</code> ·
+<code>close</code> (3) · <code>list-group</code> + <code>list-group-item</code> (1) · <code>well</code> (1)</p>
+
+<h3>5.9 JS-coupled — shim last, test hardest</h3>
+<p><code>modal</code> (3) · <code>modal-body</code> (3) · <code>modal-title</code> (2) · <code>modal-dialog</code> ·
+<code>modal-lg</code> · <code>modal-content</code> · <code>modal-header</code> · <code>modal-backdrop</code> ·
+<code>fade</code> · <code>in</code> · <code>open</code> · <code>tooltip</code> + <code>tooltip-inner</code> +
+<code>tooltip-arrow</code> (positional variants <code>.top</code>/<code>.bottom</code>/<code>.left</code>/<code>.right</code>
+are added by the plugin at runtime)</p>
+
+<h3>5.10 Not shimmed</h3>
+<p><code>glyphicon</code> + ~200 <code>glyphicon-*</code> — vendored as a standalone icon font and left alone for the duration of this project; migration to inline SVG is tracked follow-up work (D2).</p>
+
+<h3>5.11 False positives — these are ours, not Bootstrap's</h3>
+<p class="small">The scan flagged them; inspection shows they are app-defined and must be left alone:
+<code>.right</code>/<code>.left</code>/<code>.center</code> (<code>puzzletime.scss</code>),
+<code>.top</code> (<code>_orders.scss</code>, <code>h1.top</code>),
+<code>.next</code>/<code>.previous</code> (<code>worktimes/index</code> week navigation),
+<code>.divider</code> (<code>components/_expense_reviews.scss</code>).</p>
+
+<h2 id="risks">6. Risks and traps</h2>
+<table>
+  <tr><th>Risk</th><th>Where it bites</th><th>Mitigation</th></tr>
+  <tr><td class="tag high" style="display:table-cell">Bootstrap modal/tooltip JS against hand-written CSS</td>
+      <td>Phase 5.8. The plugins toggle <code>.in</code>/<code>.fade</code> and read computed transition durations; a shim
+          that merely <em>looks</em> right can leave modals permanently invisible.</td>
+      <td>Copy Bootstrap's modal/tooltip/fade rules verbatim into the shim rather than reinterpreting them in
+          <code>@apply</code>. Cover with the existing <code>create_order_test</code> / <code>invoice_form_test</code>.</td></tr>
+  <tr><td class="tag high" style="display:table-cell">Globals lost to module scope</td>
+      <td>Phase 2c. <code>*.js.haml</code> SJR responses, <code>content_for :javascript</code> blocks and inline
+          <code>App.init…</code> calls in views.</td>
+      <td>Grep <code>app/views</code> for <code>App\.</code>, <code>Modernizr</code>, <code>Chart</code>,
+          <code>Selectize</code> and pin each to <code>window</code>.</td></tr>
+  <tr><td class="tag high" style="display:table-cell">No Node in the Docker build image</td>
+      <td>Phase 2d. <code>BUILD_PACKAGES</code> is currently commented out; <code>assets:precompile</code> will fail once
+          jsbundling hooks in.</td>
+      <td>Fix the Dockerfile and CI in the <em>same</em> commit that adds jsbundling.</td></tr>
+  <tr><td class="tag med" style="display:table-cell">jQuery UI 1.10 theme vs. npm 1.14 markup</td>
+      <td>Phase 2. <code>vendor/…/jquery-ui-1.10.0.custom.scss</code> is a 1.10-era theme; 1.12+ changed some widget
+          class names.</td>
+      <td>Datepicker and autocomplete are the only widgets used and their markup is stable — but check the datepicker
+          header and the <code>#ui-datepicker-div</code> z-index rule in <code>puzzletime.scss</code>.</td></tr>
+  <tr><td class="tag med" style="display:table-cell">Unlayered app SCSS outranks Tailwind utilities</td>
+      <td>Phases 4–6. A Tailwind class added to markup that our SCSS also styles will silently lose.</td>
+      <td>Expected and mostly desirable during migration. When it becomes a nuisance, wrap the app SCSS in
+          <code>@layer app</code> ranked after <code>components</code>.</td></tr>
+  <tr><td class="tag med" style="display:table-cell">Dart Sass division deprecation</td>
+      <td>Phase 3, across 6020 lines of SCSS.</td>
+      <td><code>sass --quiet-deps</code> to triage, then a mechanical <code>math.div()</code> pass.</td></tr>
+  <tr><td class="tag med" style="display:table-cell">Loss of autoprefixer</td>
+      <td>Phase 3.</td>
+      <td>Tailwind 4 prefixes its own output; the frozen Bootstrap is pre-prefixed. Audit our SCSS for
+          <code>flex</code>/<code>gradient</code>/<code>sticky</code> hacks.</td></tr>
+  <tr><td class="tag low" style="display:table-cell">Digest/URL churn</td>
+      <td>Phase 3b. Propshaft's digests differ from Sprockets'; long-lived CDN caches and any hard-coded
+          <code>/assets/…</code> paths break.</td>
+      <td>Grep for literal <code>/assets/</code> outside helpers.</td></tr>
+</table>
+
+<h2 id="decisions">7. Decisions <span class="tag low">all resolved 2026-07-27</span></h2>
+
+<h4>D1 — What happens to <code>design_guide/index.html.haml</code>? <span class="tag low">resolved — no action</span></h4>
+<p>Closer inspection dissolved this one. The page is a table-styling gallery plus two invoice mockups, not a Bootstrap
+docs mirror; it uses 27 Bootstrap classes and adds exactly one (<code>col-md-9</code>) that the app does not already use.
+Keep it verbatim and use it as the phase-5 acceptance page. Add <code>col-md-9</code> to the grid shim.</p>
+<p class="small">The "~60 extra classes" in an earlier draft were a scanning artefact: the regex picked up selectors from
+the Bootstrap CSS inlined in <code>layouts/mailer.html.haml</code>'s <code>:css</code> block. The §5 catalogue was
+computed with that file excluded and is unaffected.</p>
+
+<h4>D2 — Glyphicons <span class="tag low">decided: keep now, migrate later</span></h4>
+<p>Vendor <code>glyphicons.css</code> + <code>glyphicons-halflings-regular.woff2</code> in phase 1 and leave them alone for
+the duration of this project — but record the SVG migration as tracked follow-up work rather than declaring the font
+permanent (see phase 7).</p>
+<p>The scope of that follow-up is smaller than it first looks: ~7 hard-coded icons, plus the values in
+<code>target_scopes.icon</code> — an admin-managed table the seeds populate with three rows. The work is a curated picker
+to replace <code>order_helper#glyphicons</code>, inline SVGs, and a data migration with a fallback for whatever an admin
+picked from the 200-name list. Check the production table first; it may well be three rows.</p>
+
+<h4>D3 — Phase 3 and 4 <span class="tag low">decided: merged into one phase</span></h4>
+<p>dartsass-rails and Propshaft land together. Splitting means the ~35 <code>url()</code> references sit in a window where
+nothing rewrites them — Sprockets serves the built CSS as an opaque file and only digested filenames exist on disk in
+production — so every rewrite would be done twice, once as a throwaway. Phases renumbered accordingly: the plan is 0–7.</p>
+
+<h4>D4 — CoffeeScript <span class="tag low">decided: decaffeinate all of it in phase 2</span></h4>
+<p>One conversion pass over all 36 files (2283 lines). It is the single largest review burden in the plan, but it drops
+<code>coffee-rails</code>, <code>coffee-script</code> and <code>terser</code> immediately, and — once
+<code>autoprefixer-rails</code> follows in phase 3 — <code>execjs</code>, <code>mini_racer</code> and
+<code>libv8-node</code> with them, taking a native V8 build out of the Docker image. Review against the three named
+hazards (implicit returns, the <code>Object.prototype</code> monkey-patch, globals) rather than line-by-line, and lean on
+the integration suite.</p>
+
+<hr>
+<p class="small">Generated from a scan of this working tree: 330 HAML views, 36 CoffeeScript files, 6020 lines of SCSS,
+21 integration tests. Class usage was extracted by intersecting the codebase against the class list compiled from
+<code>bootstrap-sass 3.4.1</code>; counts exclude the design guide and the mailer layout.</p>
+
+</div>
+</body>
+</html>
