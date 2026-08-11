@@ -51,12 +51,11 @@ Capybara.register_driver :chrome do |app|
       # by collapsing all durations. Asserted by ReducedMotionTest.
       'force-prefers-reduced-motion' => true
     },
-    # Off by default: with it on, some planning tests hit a segfault in the pg
-    # gem instead of finishing (Capybara.server = :puma runs the app in threads
-    # sharing this process's connection pool; js_errors' extra CDP round-trips
-    # shift request timing enough to reach that race). See upgrade.html #p2.
-    # Opt in per run to diagnose silent JS breakage: JS_ERRORS=1 bin/rails test <file>
-    js_errors: ENV['JS_ERRORS'] == '1',
+    # Fail a test on an uncaught JS exception rather than letting Capybara wait
+    # out its timeout looking for an element the exception prevented. Safe now
+    # that teardown drains in-flight requests; before that it could reach a
+    # heap-corrupting race in pg. See upgrade.html #p2.
+    js_errors: true,
     # Increase Chrome startup wait time (required for stable CI builds)
     process_timeout: 10,
     # Enable debugging capabilities
@@ -143,8 +142,27 @@ module ActionDispatch
     end
 
     teardown do
+      drain_pending_requests
       DatabaseCleaner.clean
       ActiveRecord::Base.connection_pool.release_connection
+    end
+
+    private
+
+    # The planning board fires AJAX that can still be executing once an
+    # assertion is satisfied and the test ends. Truncating underneath a live
+    # request corrupts the pg connection's heap ("corrupted size vs. prev_size",
+    # aborting inside PQisBusy with the GVL released) or hangs the process at
+    # exit. Ferrum knows which connections are outstanding, so wait them out
+    # before DatabaseCleaner runs. See upgrade.html #p2.
+    def drain_pending_requests
+      return unless Capybara.current_driver == :chrome
+      return unless page.driver.respond_to?(:browser)
+
+      page.driver.browser.network.wait_for_idle(timeout: 5)
+    rescue StandardError
+      # A dead or never-started browser has nothing to drain.
+      nil
     end
   end
 end
