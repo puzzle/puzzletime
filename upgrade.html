@@ -173,10 +173,11 @@ means anything order-dependent behaves differently in test than in production.</
   <li>✓ Three gems could not be dropped as listed (<code>turbolinks</code>, <code>jquery-ui-rails</code>,
       <code>selectize-rails</code>) — the recurring lesson that a gem's asset payload and its Ruby payload retire on
       different phases.</li>
-  <li>✓ <code>js_errors: true</code> found every silent JS trap above, then turned out to crash the suite via an
-      unrelated, pre-existing test-harness hazard (<code>Capybara.server = :puma</code> shares one connection pool
-      between the test thread and the app's own request threads; <code>pg</code>'s connection object is not
-      thread-safe, so under load that is a real, reproducible segfault). Kept as an opt-in env var, not a default.</li>
+  <li>✓ <code>js_errors: true</code> found every silent JS trap above, and is now enabled by default. Doing so first
+      exposed a <em>pre-existing</em> harness bug — requests outliving their test while
+      <code>DatabaseCleaner</code> truncated underneath them, corrupting the pg connection's heap. Confirmed
+      pre-existing by reproducing it on the phase-1 tree, fixed by draining in-flight requests in
+      <code>teardown</code>, and verified over repeats rather than one run.</li>
 </ul>
 
 <div class="box warn">
@@ -725,13 +726,13 @@ $ ps -eo pid,args        | awk '/paralle[l]_test/ { print $1 }'</code></pre>
 as its own step, then start the suite.</p>
 </div>
 
-<p><strong>Match <code>--headless</code>, with the dashes.</strong> A leftover Ferrum browser is
-<code>/opt/google/chrome/chrome</code> with the same binary your desktop browser uses, and the looser
-<code>'chrome.*headless'</code> matches your own browsing session's processes too — so a <code>pkill</code> on it can
-take your browser down mid-run. Confirm what you are about to kill with
-<code>ps -eo pid,etime,args</code> first: the test browser is minutes old and carries
-<code>--disable-background-timer-throttling</code>, yours has hours of uptime and a
-<code>--type=gpu-process</code> child. A killed test browser often lingers as
+<p><strong>Your own browser is not at risk here</strong> — an earlier draft of this section claimed the looser
+<code>'chrome.*headless'</code> also matches your browsing session, and that is wrong: checked against a running
+desktop Chrome, not one of its ~44 processes carries <code>headless</code> in its command line. The 8-vs-7 count that
+suggested otherwise was the self-match above plus a process appearing between two <code>pgrep</code> calls. The only
+real hazard is the pattern matching the shell that runs it. Still worth confirming what you are about to kill with
+<code>ps -eo pid,etime,args</code>: a leftover test browser is minutes old and carries
+<code>--disable-background-timer-throttling</code>. A killed one often lingers as
 <code>[chrome] &lt;defunct&gt;</code>, which is a reaped zombie and harmless.</p>
 <p><strong>Then clear the Postgres sessions those processes left behind</strong>, or the next
 <code>parallel:load_schema</code> aborts with <code>PG::ObjectInUse: database "puzzletime_test" is being accessed by
@@ -1209,50 +1210,61 @@ worth checking before anything else. The JS cannot be diffed (a different bundle
 its gate is the full suite, and the integration tests are what actually exercise selectize, the datepicker, modals and
 the planning board.</p>
 <div class="box warn">
-<p><strong><code>js_errors: true</code> found every silent trap in 2c, and also a way to crash the suite —
-so it is opt-in (<code>JS_ERRORS=1 bin/rails test &lt;file&gt;</code>), not a permanent default.</strong>
-Cuprite defaults it off, which means a JavaScript exception is invisible: the browser keeps serving the page, Capybara
-waits the full timeout for an element that will never appear, and the suite reports 16 unrelated-looking
-<code>ElementNotFound</code> failures across selectize, datepicker and planning tests — spread over three subsystems, so
-they read as three unrelated regressions rather than one broken bundle. With it on, the same run says
-<code>Ferrum::JavaScriptError: app.checkbox.Toggler is not a constructor</code> on the first try.</p>
-<div class="box bad">
-<p><strong>But turning it on can crash <code>PlanningsOrdersTest</code> with a segfault, and it is not a Ferrum
-bug.</strong> Confirmed live: <code>[BUG] Segmentation fault at 0x0000000000000004</code>, in a Puma worker thread,
-with 45 Ruby threads alive. The C backtrace is unambiguous about the mechanism:</p>
+<p><strong><code>js_errors: true</code> is set on the Cuprite driver, and it is what found every silent trap in
+2c.</strong> Cuprite defaults it off, which means a JavaScript exception is invisible: the browser keeps serving the
+page, Capybara waits out its full timeout for an element the exception prevented, and the suite reports 16
+unrelated-looking <code>ElementNotFound</code> failures across selectize, datepicker and planning tests — spread over
+three subsystems, so they read as three separate regressions rather than one broken bundle. With it on, the same run
+says <code>Ferrum::JavaScriptError: app.checkbox.Toggler is not a constructor</code> on the first try.</p>
+<p>Enabling it is only safe because of the teardown fix below. Before that, turning it on made
+<code>PlanningsOrdersTest</code> abort with <strong>heap corruption</strong> — glibc's
+<code>corrupted size vs. prev_size</code>, aborting inside <code>PQisBusy</code> with the GVL released:</p>
 <pre><code>rb_nogvl                  # pg releases the GVL, so libpq parses rows unsupervised
  -&gt; gvl_PQisBusy
-  -&gt; PQisBusy -&gt; parseInput -&gt; pqParseInput3 -&gt; getAnotherTuple -&gt; pqRowProcessor  &lt;-- crash</code></pre>
-<p>The cause is <strong>straggler requests outliving their test</strong>, not connection sharing. With
-<code>use_transactional_tests = false</code> each thread checks out its own connection, so the test thread and the Puma
-threads are not fighting over one <code>PGconn</code>. What actually happens is that the drag-select interaction fires a
-flood of <code>preview_total_selected</code>/<code>update</code> AJAX calls, Capybara's assertion is satisfied and the
-test ends while some are <em>still executing</em>, and <code>teardown</code> then runs
-<code>DatabaseCleaner.clean</code> — a <code>TRUNCATE</code> of every table — underneath them. The smoking gun is in
-<code>log/test.log</code>:</p>
+  -&gt; PQisBusy -&gt; parseInput -&gt; pqParseInput3 -&gt; getAnotherTuple -&gt; pqRowProcessor  &lt;-- abort</code></pre>
+
+<div class="box bad">
+<p><strong>Root cause: requests outliving their test, with <code>DatabaseCleaner</code> truncating underneath
+them.</strong> The planning board fires AJAX (<code>preview_total_selected</code> and friends) that can still be
+executing the moment an assertion is satisfied and the test ends. <code>teardown</code> then runs
+<code>DatabaseCleaner.clean</code> — a <code>TRUNCATE</code> of every table — while a Puma thread is mid-query on its
+own connection. That is what corrupts the connection's heap, and what otherwise hangs the process at exit with a
+straggler stuck in the database:</p>
 <pre><code>PATCH /plannings/orders/978000142  status:0  duration:359256ms  db:359231ms</code></pre>
-<p>A request that ran for six minutes and never completed, its whole lifetime inside the database call, while the suite
-had long since moved on. A thread in that state is mid-<code>pqRowProcessor</code> with the GVL released; once its
-connection's state is invalidated under it, libpq dereferences a pointer that is no longer valid.</p>
-<p><code>js_errors: true</code> does not cause this. It adds CDP round-trips per JS execution, which changes the pacing
-of that AJAX burst enough to make an already-reachable window land inside a run.
-<strong>It is a pre-existing hazard of the harness, unrelated to which bundler produced the JavaScript</strong> — and
-<code>pg</code> is already at its latest release (1.6.3), so there is no upgrade to take.</p>
-<p class="small">Diagnosed by attaching with <code>kill -QUIT &lt;pid&gt;</code>: CRuby dumps a full backtrace before
-dying. Far more useful than the CDP log, which had stopped growing 30+ seconds <em>before</em> the crash and so
-incriminated Ferrum for something that was never Ferrum's.</p>
+<p><strong>This is pre-existing, not caused by the bundler migration.</strong> Checked directly against the phase-1
+tree, where the JavaScript is still CoffeeScript on Sprockets: the same test fails there with Ferrum naming the problem
+outright — <code>Ferrum::PendingConnectionsError: … there are still pending connections</code>. Phase 2 changed only the
+<em>consequence</em>. On the old tree Ferrum raised a clean error, which <code>RetryOnFlakyTests</code> then retried and
+hid; on the new tree the request lingers into teardown instead.</p>
+<p><strong>The fix is to drain before truncating.</strong> Ferrum tracks outstanding connections, so
+<code>teardown</code> waits them out first:</p>
+<pre><code>teardown do
+  drain_pending_requests            # page.driver.browser.network.wait_for_idle(timeout: 5)
+  DatabaseCleaner.clean
+  ActiveRecord::Base.connection_pool.release_connection
+end</code></pre>
+<table>
+  <tr><th>Case</th><th>Before</th><th>After</th></tr>
+  <tr><td>single test, <code>JS_ERRORS=1</code></td><td>2 of 4 runs heap-corrupted</td><td><strong>5 of 5 clean</strong></td></tr>
+  <tr><td>single test, default</td><td>2 of 3 runs hung</td><td><strong>4 of 4 clean</strong></td></tr>
+  <tr><td>whole planning file, js_errors on</td><td>never finished in 10 min</td><td><strong>82s, 25 tests, 0 failures</strong></td></tr>
+  <tr><td>full suite, js_errors on</td><td>—</td><td><strong>1515 tests / 6006 assertions, 0 failures, 105s</strong></td></tr>
+</table>
 </div>
+
 <div class="box warn">
-<p><strong>Two attempted fixes, and why neither shipped.</strong> Capping Capybara's embedded server to one thread
-(<code>Threads: '1:1'</code> — its registration defaults to <code>0:4</code> and ignores
-<code>config/puma.rb</code> entirely) looked like the obvious move, but it made things worse: the run timed out and the
-in-page error changed to <code>Unauthorized</code>, i.e. a single-threaded server cannot serve the app's overlapping
-requests. Reverted. Upgrading <code>pg</code> is not available.</p>
-<p>A real fix means making tests wait for in-flight requests before teardown, or moving to transactional tests with a
-deliberately shared connection — both of which change assumptions in every integration test. <strong>That is its own
-piece of work, not part of a bundler migration</strong>, and it cannot be validated here anyway: the crash is not
-reliably reproducible (a repeat attempt hung at 120s rather than crashing), so no fix can be shown to work. Tracked as
-follow-up; the ENV gate keeps it out of the gate's path in the meantime.</p>
+<p><strong>Two wrong turns worth not repeating.</strong> Capping Capybara's embedded server to one thread
+(<code>Threads: '1:1'</code> — its registration defaults to <code>0:4</code> and ignores <code>config/puma.rb</code>
+entirely) looked obvious and made things worse: the run timed out and the in-page error became
+<code>Unauthorized</code>, because a single-threaded server cannot serve the app's overlapping requests. And the first
+explanation — two threads sharing one pooled connection — was wrong: with
+<code>use_transactional_tests = false</code> each thread checks out its own. The collision is truncation against a live
+query, not two threads on one handle.</p>
+<p>Diagnosis notes: the crash is only ~50% reproducible per run, so any fix has to be measured over repeats rather than
+one green run. <code>timeout</code> alone is the right tool for that; do <em>not</em> reach for
+<code>kill -QUIT</code> to inspect a stuck run, which can itself abort a thread parked inside libpq and invent a crash
+that was never there. And glibc's message (<code>corrupted size vs. prev_size</code>) is the line that identifies this
+as memory corruption rather than a deadlock — worth grepping for before theorising.</p>
 </div>
 </div>
 </div>
