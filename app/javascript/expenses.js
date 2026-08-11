@@ -24,7 +24,7 @@ $(document).on('ready, turbolinks:load', function() {
   const check_file_type = function() {
     warning_popup.addClass('hidden');
 
-    if (((typeof receipt_input === "undefined") || (receipt_input === null)) || (receipt_input[0].files.length <= 0)) { return; }
+    if (!receipt_input[0] || (receipt_input[0].files.length <= 0)) { return; }
 
     const file_type = receipt_input[0].files[0].type;
 
