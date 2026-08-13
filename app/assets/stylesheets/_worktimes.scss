@@ -3,6 +3,8 @@
 //  or later. See the COPYING file at the top-level directory or at
 //  https://github.com/puzzle/puzzletime.
 
+@use "sass:math";
+
 $worktimes-weeknav-active-bg: #fff;
 $worktimes-weekcontent-hover-bg: $gray-lighter;
 
@@ -67,7 +69,7 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
   }
 
   .weeknav-link {
-    width: percentage(1 / 12);
+    width: percentage(math.div(1, 12));
     max-width: 64px;
     display: flex;
     justify-content: center;
@@ -82,7 +84,7 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
 
   .weeknav-calendar-row,
   .weeknav-add-row {
-    padding: 0 $grid-gutter-width / 2;
+    padding: 0 math.div($grid-gutter-width, 2);
     line-height: 40px;
     vertical-align: middle;
     border-width: 0 0 1px 0;
@@ -183,7 +185,7 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
 
     .day {
       flex: 1 1 auto;
-      max-width: percentage(1 / 8);
+      max-width: percentage(math.div(1, 8));
       cursor: pointer;
       border-width: 0 1px 0 0;
       border-style: solid;
@@ -198,7 +200,7 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
       }
 
       &.today {
-        background: $brand-blue image-url('day-marker-active.svg') 100% 100%
+        background: $brand-blue url('day-marker-active.svg') 100% 100%
           no-repeat;
         color: #fff;
 
@@ -208,7 +210,7 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
       }
 
       &.missing {
-        background: image-url('day-marker-missing.svg') 100% 100% no-repeat;
+        background: url('day-marker-missing.svg') 100% 100% no-repeat;
 
         .weeknav-time {
           color: $brand-red;
@@ -216,7 +218,7 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
       }
 
       &.holiday {
-        background: image-url('day-marker-holiday.svg') 100% 100% no-repeat;
+        background: url('day-marker-holiday.svg') 100% 100% no-repeat;
 
         .weeknav-label,
         .weeknav-time {
@@ -234,7 +236,7 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
     flex: 2 1 auto;
     border-right: 1px solid $gray-light;
     text-align: right;
-    padding-right: $grid-gutter-width / 2;
+    padding-right: math.div($grid-gutter-width, 2);
   }
 
   .weekcontent {
@@ -321,7 +323,7 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
         display: block;
         position: absolute;
         left: -35px;
-        padding-left: $grid-gutter-width / 2;
+        padding-left: math.div($grid-gutter-width, 2);
         font-size: 22px;
       }
 
@@ -330,7 +332,7 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
         display: block;
         position: absolute;
         left: -70px;
-        padding-left: $grid-gutter-width / 2;
+        padding-left: math.div($grid-gutter-width, 2);
         font-size: 22px;
       }
 

@@ -331,7 +331,18 @@ html.turbolinks-progress-bar::before {
 
 @import "layout";
 
-@import "components/*";
+// dart-sass has no glob-import support, so these are listed explicitly.
+// Keep alphabetical to match the order the glob used to expand them in.
+@import "components/expense_reviews";
+@import "components/expenses";
+@import "components/form";
+@import "components/invoices";
+@import "components/nav_tabs";
+@import "components/order_edit_form";
+@import "components/plannings";
+@import "components/progress";
+@import "components/selectize";
+@import "components/table";
 
 @import "absence";
 @import "employees";

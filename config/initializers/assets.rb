@@ -2,18 +2,12 @@
 
 # Be sure to restart your server when you modify this file.
 
-# Version of your assets, change this if you want to expire all your assets.
-Rails.application.config.assets.version = '1.0'
+# Propshaft precompiles everything on the load path -- no version, precompile
+# list, or manifest is needed. app/assets/fonts is already an implicit load
+# path (Rails registers every app/assets/* subdirectory), so this line is now
+# a no-op kept only for clarity; harmless since Propshaft dedupes paths.
+Rails.application.config.assets.paths << Rails.root.join('app/assets/fonts')
 
-# Add additional assets to the asset load path.
-# Rails.application.config.assets.paths << Emoji.images_path
-# Add Yarn node_modules folder to the asset load path.
-Rails.application.config.assets.paths += [
-  Rails.root.join('app/assets/fonts')
-]
-
-# Precompile additional assets.
-# application.js, application.css, and all non-JS/CSS in the app/assets
-# folder are already added.
-# Rails.application.config.assets.precompile += %w( admin.js admin.css )
-Rails.application.config.assets.precompile += %w[print.css phone.css *.png *.gif *.jpg *.svg]
+# Keep the raw .scss sources out of the published asset set -- only the
+# dartsass-rails build output (app/assets/builds/*.css) should be served.
+Rails.application.config.assets.excluded_paths << Rails.root.join('app/assets/stylesheets')

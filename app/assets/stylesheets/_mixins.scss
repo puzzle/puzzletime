@@ -3,6 +3,7 @@
 //  or later. See the COPYING file at the top-level directory or at
 //  https://github.com/puzzle/puzzletime.
 
+@use "sass:math";
 
 @mixin clearfix {
   &:after {
@@ -39,8 +40,8 @@
 }
 
 @mixin bs-row {
-  margin-left: $grid-gutter-width / -2;
-  margin-right: $grid-gutter-width / -2;
+  margin-left: math.div($grid-gutter-width, -2);
+  margin-right: math.div($grid-gutter-width, -2);
   @include bs-clearfix;
 }
 
@@ -48,18 +49,18 @@
   position: relative;
   min-height: 1px;
   float: left;
-  width: percentage($columns / 12);
-  padding-left: $grid-gutter-width / 2;
-  padding-right: $grid-gutter-width / 2;
+  width: percentage(math.div($columns, 12));
+  padding-left: math.div($grid-gutter-width, 2);
+  padding-right: math.div($grid-gutter-width, 2);
 }
 
 @mixin bs-offset($columns) {
-  margin-left: percentage($columns / 12);
+  margin-left: percentage(math.div($columns, 12));
 }
 
 @mixin bs-container-fluid {
-  padding-right: $grid-gutter-width / 2;
-  padding-left: $grid-gutter-width / 2;
+  padding-right: math.div($grid-gutter-width, 2);
+  padding-left: math.div($grid-gutter-width, 2);
   margin-right: auto;
   margin-left: auto;
   @include bs-clearfix;
