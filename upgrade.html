@@ -107,9 +107,9 @@
   </ol>
 </nav>
 
-<h2 id="timeline">0. Timeline — what we found out, and when</h2>
+<h2 id="timeline">1. Timeline — what we found out, and when</h2>
 <p class="lede" style="font-size: 1rem">One row per finding or decision, in the order it actually happened —
-not the order the phases are numbered. Dates are commit dates; see <a href="#decisions">§7</a> for the
+not the order the phases are numbered. Dates are commit dates; see <a href="#decisions">§8</a> for the
 reasoning behind each decision and the phase sections for full verification detail.</p>
 
 <div class="timeline">
@@ -291,7 +291,7 @@ reasoning behind each decision and the phase sections for full verification deta
       15 further failures in three causes, all Rails-upgrade fallout and none asset-related: a callback guard that
       silently disabled filter-remembering on six controllers, Rails 8.1's schema dumper sorting columns, and the
       <code>fast_jsonapi</code> → <code>jsonapi-serializer</code> swap breaking <code>include</code> validation twice
-      over. Fixed and re-verified; see §4 Phase 0 for each cause and fix.</li>
+      over. Fixed and re-verified; see §5 Phase 0 for each cause and fix.</li>
 </ul>
 
 <p><strong>Phase 0 complete.</strong> Baseline captured and current, the full suite green, and no test-only conditionals
@@ -363,7 +363,7 @@ copied-out assets and the <code>COMMIT</code> file need to survive, and now they
   <li>✓ <strong>New blocker the plan missed:</strong> <code>puzzletime.scss:334</code>'s
       <code>@import "components/*";</code> has no dart-sass equivalent — dart-sass does not support glob imports.
       Expanded into 10 explicit <code>@import</code>s, alphabetical order preserved.</li>
-  <li>✓ <strong>New blocker the plan missed:</strong> §2.1's "no <code>.erb</code>-processed assets exist" claim held
+  <li>✓ <strong>New blocker the plan missed:</strong> §3.1's "no <code>.erb</code>-processed assets exist" claim held
       for the app's own assets but not a gem's. <code>jquery-ui-rails</code>'s <code>datepicker.css</code> and
       <code>autocomplete.css</code> both transitively <code>*= require jquery-ui/theme</code>, which resolves to the
       gem's own <code>theme.css.erb</code> — 6 <code>image_path()</code> calls needing the same conversion, plus the 6
@@ -407,7 +407,7 @@ copied-out assets and the <code>COMMIT</code> file need to survive, and now they
 </ul>
 </div>
 
-<h2 id="state">1. Where the branch stands today</h2>
+<h2 id="state">2. Where the branch stands today</h2>
 
 <p>An earlier pass already started the migration. It is <strong>not in a working state</strong> and phase 0 is to
 finish or revert it deliberately:</p>
@@ -434,7 +434,7 @@ finish or revert it deliberately:</p>
         (<code>.col-md-12</code>, <code>.alert-success</code>) while missing the ones it does
         (<code>.table-condensed</code>, <code>.control-label</code>, <code>.input-group-addon</code>, the modal set…).
         It also redefines <code>.text-center</code> / <code>.pull-left</code>, which Tailwind already provides.
-        Replace it with the catalogue in <a href="#shims">§5</a>.</td>
+        Replace it with the catalogue in <a href="#shims">§6</a>.</td>
   </tr>
   <tr>
     <td><code>Procfile.dev</code>, <code>bin/dev</code>, <code>app/assets/builds/</code>,
@@ -449,7 +449,7 @@ finish or revert it deliberately:</p>
         <code>ul.pagination &gt; li</code> markup. 7 call sites
         (<code>list/index</code>, <code>invoices/index</code>, <code>evaluator/_detail_times</code>,
         <code>employees/log/index</code>, and the three <code>*_reports/_list</code> partials).
-        The shim must target Kaminari's own markup — see <a href="#shims">§5</a>.</td>
+        The shim must target Kaminari's own markup — see <a href="#shims">§6</a>.</td>
   </tr>
 </table>
 
@@ -460,9 +460,9 @@ finish or revert it deliberately:</p>
 Each phase should be independently shippable and revertible; right now the tree is a half-cut in three places at once.</p>
 </div>
 
-<h2 id="inventory">2. Inventory: what actually depends on what</h2>
+<h2 id="inventory">3. Inventory: what actually depends on what</h2>
 
-<h3>2.1 Sprockets-specific things that must be replaced</h3>
+<h3>3.1 Sprockets-specific things that must be replaced</h3>
 <table>
   <tr><th>Where</th><th>What</th><th>Replacement</th></tr>
   <tr><td><code>app/assets/javascripts/application.js.coffee</code></td>
@@ -490,7 +490,7 @@ Each phase should be independently shippable and revertible; right now the tree 
 
 <p class="small">No <code>.erb</code>-processed assets exist, which removes the single most painful Propshaft blocker.</p>
 
-<h3>2.2 Assets currently supplied by gems (they disappear with the gems)</h3>
+<h3>3.2 Assets currently supplied by gems (they disappear with the gems)</h3>
 <table>
   <tr><th>Gem</th><th>Asset used</th><th>Replacement</th></tr>
   <tr><td><code>jquery-rails</code></td><td><code>jquery3</code>, <code>jquery_ujs</code></td>
@@ -516,14 +516,14 @@ Each phase should be independently shippable and revertible; right now the tree 
       <td>all droppable once esbuild + dartsass are in</td></tr>
 </table>
 
-<h3>2.3 Bootstrap 3 usage, by surface</h3>
+<h3>3.3 Bootstrap 3 usage, by surface</h3>
 
 <h4>CSS classes</h4>
 <p>Scanned <code>app/views</code> (330 HAML + 14 ERB), <code>app/helpers</code>, <code>app/controllers</code>,
 <code>app/assets/javascripts</code> (36 CoffeeScript), <code>app/assets/stylesheets</code>, <code>lib</code> and
 <code>test</code> against the class list extracted from <code>bootstrap-sass 3.4.1</code>:</p>
 <ul>
-  <li><strong>~125 distinct Bootstrap classes</strong> in real application code (full catalogue in <a href="#shims">§5</a>).</li>
+  <li><strong>~125 distinct Bootstrap classes</strong> in real application code (full catalogue in <a href="#shims">§6</a>).</li>
   <li><code>app/views/design_guide/index.html.haml</code> (538 lines, route <code>/design_guide</code>, unlinked from the
       menu) is <strong>not</strong> a Bootstrap docs mirror — it is a table-styling gallery
       (<code>.table</code>, <code>-striped</code>, <code>-stripedbody</code>, <code>-bordered</code>, <code>-hover</code>,
@@ -564,7 +564,7 @@ app/helpers/progress_bar_helper.rb    progress-bar-{success,danger}</code></pre>
       <td><code>expense_reviews/show</code> + <code>expenses_reviews/show</code> only
           (<code>data-toggle=collapse</code>, <code>.inlineedit.collapse.in</code>)</td>
       <td><strong>Drop it</strong> — the class name <code>.collapse</code> collides with a Tailwind utility.
-          See <a href="#layers">§3.3</a>.</td></tr>
+          See <a href="#layers">§4.3</a>.</td></tr>
 </table>
 
 <h4>Bootstrap Sass consumed by our own stylesheets</h4>
@@ -601,12 +601,12 @@ Fontastic font and carries the risk and target-rating icons. Only the Bootstrap 
 See <a href="#decisions">D2</a>.</p>
 </div>
 
-<h2 id="layers">3. Cascade layers &amp; the Preflight / Bootstrap-reset question</h2>
+<h2 id="layers">4. Cascade layers &amp; the Preflight / Bootstrap-reset question</h2>
 
 <p>This is the part that decides whether a step-by-step migration is pleasant or miserable, so it is worth getting exactly
 right before writing any shim.</p>
 
-<h3>3.1 Unlayered CSS beats layered CSS — always</h3>
+<h3>4.1 Unlayered CSS beats layered CSS — always</h3>
 <p>Tailwind 4 puts <em>everything</em> it emits into cascade layers:</p>
 <pre><code>/* what `@import "tailwindcss"` actually expands to */
 @layer theme, base, components, utilities;
@@ -636,7 +636,7 @@ Tailwind utility and every shim we write, forever. The migration would stall on 
       winning over everything — exactly the ordering it has today, where it is concatenated after Bootstrap.</li>
 </ul>
 
-<h3>3.2 Preflight vs. the Bootstrap reset — the actual collision list</h3>
+<h3>4.2 Preflight vs. the Bootstrap reset — the actual collision list</h3>
 <p>Because Bootstrap sits in a layer <em>above</em> <code>base</code>, every rule the two resets both touch resolves in
 Bootstrap's favour, and the two agree on most of it anyway (<code>box-sizing</code>, <code>border-collapse</code>,
 <code>font: inherit</code> on form controls, <code>::placeholder</code>, headings, <code>hr</code>, <code>abbr</code>,
@@ -696,7 +696,7 @@ into one big-bang regression at the worst possible moment.</p>
 the other three imports keep working unchanged.</p>
 </div>
 
-<h3 id="clash">3.3 Bootstrap class names that collide with Tailwind utility names</h3>
+<h3 id="clash">4.3 Bootstrap class names that collide with Tailwind utility names</h3>
 <p>Tailwind 4 is JIT: it emits a utility because it found the token in our source. Some of our Bootstrap class names
 <em>are</em> Tailwind utility names, so Tailwind will generate them into the <code>utilities</code> layer — which outranks
 our shims in <code>components</code>.</p>
@@ -726,7 +726,7 @@ our shims in <code>components</code>.</p>
       <td>free — define the palette in <code>@theme</code> (below) and they generate themselves</td></tr>
 </table>
 
-<h3>3.4 The theme block</h3>
+<h3>4.4 The theme block</h3>
 <p>Lift the Puzzle palette out of <code>_bootstrap_variables.scss</code> once, so shims, new Tailwind markup and the
 remaining SCSS all agree:</p>
 <pre><code>@theme {
@@ -751,7 +751,7 @@ remaining SCSS all agree:</p>
 <p class="small">Long-term this file replaces <code>_bootstrap_variables.scss</code> entirely: the SCSS can read the same
 values as <code>var(--color-…)</code>. Not required for the migration — do it opportunistically.</p>
 
-<h2 id="plan">4. The phase plan</h2>
+<h2 id="plan">5. The phase plan</h2>
 <p>Eight phases, each one a mergeable commit with its own verification gate. Phases 1–3 change <em>how</em> CSS/JS is built
 and must leave the rendered output byte-comparable; phases 4–6 change what the CSS <em>is</em>.</p>
 
@@ -772,7 +772,7 @@ and must leave the rendered output byte-comparable; phases 4–6 change what the
       removed with the rest. <strong>That is fine</strong> — an earlier draft of this plan said to keep them, which was
       wrong: nothing needs them until there is a watcher to run (phase 2 for <code>js:</code>, phase 3 for
       <code>css:</code>), and re-creating a three-line Procfile then is cheaper than carrying dead files through two
-      phases. The WIP shim was going to be rewritten in phase 4 regardless (§1).</li>
+      phases. The WIP shim was going to be rewritten in phase 4 regardless (§2).</li>
 </ul>
 
 <h4>Baseline captured (2026-07-27, 12:44)</h4>
@@ -1154,7 +1154,7 @@ standalone block. Same declarations, different selector grouping — so the file
 <code>application.js.coffee:17–21</code> still <code>//= require</code>s <code>bootstrap/modal</code>,
 <code>tooltip</code>, <code>button</code>, <code>alert</code> and <code>collapse</code> from it. Removing it fails the
 build with <code>Sprockets::FileNotFound: couldn't find file 'bootstrap/modal'</code>. It can only go once phase 2
-swaps those five for the npm <code>bootstrap@3.4.1</code> package — which §2.3 already says, so the two halves of this
+swaps those five for the npm <code>bootstrap@3.4.1</code> package — which §3.3 already says, so the two halves of this
 plan simply disagreed.</p>
 <p>The <em>Sass</em> side is nonetheless fully decoupled, which is what this phase was for: no stylesheet imports the
 gem any more (<code>selectize.bootstrap3.scss</code> has no <code>@import</code>s at all, and the lone
@@ -1548,7 +1548,7 @@ directly</em> is gone: <code>mini_racer</code> and <code>libv8-node</code> drop 
 <strong><code>execjs</code> itself does not</strong> — <code>nested_form_fields</code>'s gemspec hard-depends on
 <code>coffee-rails</code> → <code>coffee-script</code> → <code>execjs</code> regardless of our own Gemfile, so only
 the redundant explicit <code>gem 'execjs'</code> line could go; the gem stays resolved in <code>Gemfile.lock</code>.
-Phase 2's <code>jquery-rails</code> "drop" has the identical shape — see the correction in §4 Phase 2.</p>
+Phase 2's <code>jquery-rails</code> "drop" has the identical shape — see the correction in §5 Phase 2.</p>
 <div class="box bad">
 <p><strong>Autoprefixer audit needed correcting.</strong> The earlier finding ("nothing needs a prefix, dropping is a
 real simplification") was scoped to the app's own SCSS and true as far as it went — but
@@ -1609,13 +1609,13 @@ directly — all 200, none 404; <code>docker build</code> end to end (after the 
 the rest incremental.</p>
 <ul class="check">
   <li>Move <code>vendor/bootstrap-3.4.1.css</code> under <code>app/assets/tailwind/</code> as
-      <code>bootstrap-frozen.css</code> and import it into the layer stack from §3.1.</li>
-  <li>Add the <code>@theme</code> block from §3.4 and the two Preflight residue rules from §3.2.</li>
+      <code>bootstrap-frozen.css</code> and import it into the layer stack from §4.1.</li>
+  <li>Add the <code>@theme</code> block from §4.4 and the two Preflight residue rules from §4.2.</li>
   <li>Point <code>@source</code> at <code>app/views</code>, <code>app/helpers</code>, <code>app/javascript</code>.</li>
   <li>Layout: <code>tailwind.css</code> first, then <code>application.css</code>
       (the unlayered app SCSS must stay last). Remove the Bootstrap <code>require</code> from
       <code>application.scss</code> — it now enters through the Tailwind entrypoint.</li>
-  <li>Fix the three collisions from §3.3 <em>now</em>, before any shim exists:
+  <li>Fix the three collisions from §4.3 <em>now</em>, before any shim exists:
       <ul>
         <li><code>.collapse</code> — rewrite <code>expense_reviews/show.html.haml</code> and
             <code>expenses_reviews/show.html.haml</code> to a plain toggle (a <code>&lt;details&gt;</code> element or 4
@@ -1639,10 +1639,10 @@ fix that before proceeding, not later.</p>
 <p>Per-component loop:</p>
 <ol>
   <li>Write the rules into <code>@layer components</code>, using <code>@apply</code> against the theme tokens.
-      Only the classes in <a href="#shims">§5</a> — nothing speculative.</li>
+      Only the classes in <a href="#shims">§6</a> — nothing speculative.</li>
   <li>Delete the corresponding section from <code>bootstrap-frozen.css</code> (the frozen file has the Bootstrap source
       comments intact, so the boundaries are obvious).</li>
-  <li>Check <code>/design_guide</code> plus the views listed for that component in §5.</li>
+  <li>Check <code>/design_guide</code> plus the views listed for that component in §6.</li>
   <li>Commit. One component per commit — that is what makes a regression bisectable.</li>
 </ol>
 
@@ -1658,7 +1658,7 @@ fix that before proceeding, not later.</p>
   <tr><td>5</td><td>forms</td><td>largest surface (49× <code>.form-group</code>, 37× <code>.control-label</code>);
       <code>dry_crud/form/builder.rb</code> emits most of it, so verify there rather than view-by-view</td></tr>
   <tr><td>6</td><td>navs, navbar, breadcrumb, pagination</td><td>pagination targets <em>Kaminari's default markup</em>,
-      not Bootstrap's — see §1</td></tr>
+      not Bootstrap's — see §2</td></tr>
   <tr><td>7</td><td>alerts, labels, panels, wells, progress, list-group, close</td>
       <td><code>label-*</code> and <code>progress-bar-*</code> are built from Ruby string interpolation — all colour
       variants must be written out, Tailwind's scanner will not find them</td></tr>
@@ -1678,7 +1678,7 @@ fix that before proceeding, not later.</p>
 <p class="goal">Goal: <code>bootstrap-frozen.css</code> is empty and gets deleted, along with the <code>bootstrap</code>
 layer.</p>
 <ul class="check">
-  <li>Bootstrap's <code>normalize.css</code> goes with it — Preflight is now unopposed. Re-run the §3.2 table; the
+  <li>Bootstrap's <code>normalize.css</code> goes with it — Preflight is now unopposed. Re-run the §4.2 table; the
       <code>a { color: inherit }</code> row is the one that bites here.</li>
   <li>Whatever is left in the frozen file at this point is, by definition, unused — but confirm with a Cuprite pass
       before deleting, not with a grep.</li>
@@ -1704,22 +1704,22 @@ layer.</p>
 </ul>
 </div>
 
-<h2 id="shims">5. Shim catalogue — the classes we actually use</h2>
+<h2 id="shims">6. Shim catalogue — the classes we actually use</h2>
 <p>Extracted mechanically from the codebase and cross-checked against the <code>bootstrap-sass 3.4.1</code> class list.
 Counts are occurrences <strong>excluding</strong> <code>design_guide/index.html.haml</code> and
 <code>layouts/mailer.html.haml</code>. Anything not on this list does not get shimmed.</p>
 
-<h3>5.1 Already covered by Tailwind — do not shim</h3>
+<h3>6.1 Already covered by Tailwind — do not shim</h3>
 <p><code>text-right</code> (28) · <code>text-center</code> (8) · <code>text-left</code> (4) · <code>text-nowrap</code> (1) ·
 <code>sr-only</code> (1) · <code>hidden</code> (3) · and, once the <code>@theme</code> block exists,
 <code>text-muted</code> (2) · <code>text-primary</code> (2) · <code>text-danger</code> (2).</p>
 
-<h3>5.2 Type &amp; utilities</h3>
+<h3>6.2 Type &amp; utilities</h3>
 <p><code>h3</code> (10) · <code>dl-horizontal</code> (7) · <code>lead</code> (5) · <code>img-responsive</code> (3) ·
 <code>pull-right</code> (2) · <code>h4</code> (2) · <code>visible-xs</code> (3) ·
 <code>hidden-xs</code>/<code>-sm</code>/<code>-md</code>/<code>-lg</code> (1 each) · <code>small</code> (1, verify — may be app-owned)</p>
 
-<h3>5.3 Grid</h3>
+<h3>6.3 Grid</h3>
 <p><code>row</code> (48) · <code>container-fluid</code> (6) — and only these column combinations:</p>
 <pre><code>col-md-1 col-md-2 col-md-3 col-md-4 col-md-5 col-md-6 col-md-7 col-md-8 col-md-12
 col-md-offset-1 col-md-offset-2 col-md-offset-3
@@ -1727,29 +1727,29 @@ col-sm-6 col-sm-10
 col-lg-3 col-lg-4 col-lg-6
 col-xs-1 col-xs-2 col-xs-5 col-xs-6 col-xs-7 col-xs-10 col-xs-11 col-xs-12
 col-xs-offset-1 col-xs-offset-9</code></pre>
-<p class="small"><code>container</code> (1) is deliberately excluded — see §3.3. Generating all 4×12 columns is 2 kB and
+<p class="small"><code>container</code> (1) is deliberately excluded — see §4.3. Generating all 4×12 columns is 2 kB and
 tempting; resist it, the point of the shim is that it shrinks.</p>
 
-<h3>5.4 Tables</h3>
+<h3>6.4 Tables</h3>
 <p><code>table</code> (37) · <code>table-condensed</code> (31) · <code>table-striped</code> (15) ·
 <code>table-hover</code> (15) · <code>table-bordered</code> (2)</p>
 <p class="small">Emitted centrally by <code>app/helpers/table_helper.rb</code> and
 <code>dry_crud/table/builder.rb</code> as <code>"table table-striped table-hover table-condensed"</code>.</p>
 
-<h3>5.5 Buttons</h3>
+<h3>6.5 Buttons</h3>
 <p><code>btn</code> (30) · <code>btn-primary</code> (13) · <code>disabled</code> (9) · <code>btn-default</code> (6) ·
 <code>btn-block</code> (4) · <code>btn-link</code> (3) · <code>btn-group</code> (3) · <code>active</code> (7) ·
 <code>btn-success</code> (2) · <code>btn-danger</code> (2) · <code>btn-group-justified</code> (2) ·
 <code>btn-warning</code> (1) · <code>btn-toolbar</code> (1)</p>
 
-<h3>5.6 Forms</h3>
+<h3>6.6 Forms</h3>
 <p><code>form-group</code> (49) · <code>control-label</code> (37) · <code>form-control</code> (33) ·
 <code>form-inline</code> (19) · <code>checkbox</code> (13) · <code>input-group</code> (11) · <code>help-block</code> (8) ·
 <code>form-horizontal</code> (8) · <code>input-group-addon</code> (8) · <code>radio</code> (8) ·
 <code>form-control-static</code> (4) · <code>has-error</code> (2) · <code>has-feedback</code> (2) ·
 <code>form-control-feedback</code> (2) · <code>radio-inline</code> (2) · <code>input-group-btn</code> (1)</p>
 
-<h3>5.7 Navigation</h3>
+<h3>6.7 Navigation</h3>
 <p><code>nav-tabs</code> (17) · <code>nav</code> (8) · <code>navbar</code> (5) · <code>navbar-nav</code> (5) ·
 <code>nav-pills</code> (4, stylesheet-only) · <code>nav-justified</code> / <code>nav-tabs-justified</code> ·
 <code>navbar-default</code> (2) · <code>navbar-brand</code> (2) · <code>breadcrumb</code> (2) ·
@@ -1758,7 +1758,7 @@ tempting; resist it, the point of the shim is that it shrinks.</p>
 (<code>nav.pagination</code>, <code>span.page.current</code>, <code>span.prev/next/first/last/gap</code>), <em>not</em>
 Bootstrap's <code>ul.pagination &gt; li</code>. 7 call sites.</p>
 
-<h3>5.8 Components</h3>
+<h3>6.8 Components</h3>
 <p><code>alert</code> (11) + <code>alert-danger</code> (6) / <code>-warning</code> / <code>-info</code> /
 <code>-success</code> · <code>label</code> (7) + all six <code>label-*</code> variants (interpolated from
 <code>order.status.style</code>) · <code>progress</code> (6) · <code>progress-bar</code> (5) +
@@ -1766,24 +1766,24 @@ Bootstrap's <code>ul.pagination &gt; li</code>. 7 call sites.</p>
 <code>-info</code> / <code>-heading</code> / <code>-title</code> / <code>-body</code> / <code>-footer</code> ·
 <code>close</code> (3) · <code>list-group</code> + <code>list-group-item</code> (1) · <code>well</code> (1)</p>
 
-<h3>5.9 JS-coupled — shim last, test hardest</h3>
+<h3>6.9 JS-coupled — shim last, test hardest</h3>
 <p><code>modal</code> (3) · <code>modal-body</code> (3) · <code>modal-title</code> (2) · <code>modal-dialog</code> ·
 <code>modal-lg</code> · <code>modal-content</code> · <code>modal-header</code> · <code>modal-backdrop</code> ·
 <code>fade</code> · <code>in</code> · <code>open</code> · <code>tooltip</code> + <code>tooltip-inner</code> +
 <code>tooltip-arrow</code> (positional variants <code>.top</code>/<code>.bottom</code>/<code>.left</code>/<code>.right</code>
 are added by the plugin at runtime)</p>
 
-<h3>5.10 Not shimmed</h3>
+<h3>6.10 Not shimmed</h3>
 <p><code>glyphicon</code> + ~200 <code>glyphicon-*</code> — vendored as a standalone icon font and left alone for the duration of this project; migration to inline SVG is tracked follow-up work (D2).</p>
 
-<h3>5.11 False positives — these are ours, not Bootstrap's</h3>
+<h3>6.11 False positives — these are ours, not Bootstrap's</h3>
 <p class="small">The scan flagged them; inspection shows they are app-defined and must be left alone:
 <code>.right</code>/<code>.left</code>/<code>.center</code> (<code>puzzletime.scss</code>),
 <code>.top</code> (<code>_orders.scss</code>, <code>h1.top</code>),
 <code>.next</code>/<code>.previous</code> (<code>worktimes/index</code> week navigation),
 <code>.divider</code> (<code>components/_expense_reviews.scss</code>).</p>
 
-<h2 id="risks">6. Risks and traps</h2>
+<h2 id="risks">7. Risks and traps</h2>
 <table>
   <tr><th>Risk</th><th>Where it bites</th><th>Mitigation</th></tr>
   <tr><td class="tag high" style="display:table-cell">Bootstrap modal/tooltip JS against hand-written CSS</td>
@@ -1822,14 +1822,14 @@ are added by the plugin at runtime)</p>
       <td>Grep for literal <code>/assets/</code> outside helpers.</td></tr>
 </table>
 
-<h2 id="decisions">7. Decisions <span class="tag low">all resolved 2026-07-27</span></h2>
+<h2 id="decisions">8. Decisions <span class="tag low">all resolved 2026-07-27</span></h2>
 
 <h4>D1 — What happens to <code>design_guide/index.html.haml</code>? <span class="tag low">resolved — no action</span></h4>
 <p>Closer inspection dissolved this one. The page is a table-styling gallery plus two invoice mockups, not a Bootstrap
 docs mirror; it uses 27 Bootstrap classes and adds exactly one (<code>col-md-9</code>) that the app does not already use.
 Keep it verbatim and use it as the phase-5 acceptance page. Add <code>col-md-9</code> to the grid shim.</p>
 <p class="small">The "~60 extra classes" in an earlier draft were a scanning artefact: the regex picked up selectors from
-the Bootstrap CSS inlined in <code>layouts/mailer.html.haml</code>'s <code>:css</code> block. The §5 catalogue was
+the Bootstrap CSS inlined in <code>layouts/mailer.html.haml</code>'s <code>:css</code> block. The §6 catalogue was
 computed with that file excluded and is unaffected.</p>
 
 <h4>D2 — Glyphicons <span class="tag low">decided: keep now, migrate later</span></h4>
