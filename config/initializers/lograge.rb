@@ -7,7 +7,7 @@ Rails.application.configure do
 
   config.lograge.custom_options = lambda do |event|
     {
-      request_id: event.payload[:headers]['action_dispatch.request_id'],
+      request_id: event.payload[:headers] && event.payload[:headers]['action_dispatch.request_id'],
       login_shortname: event.payload[:login_shortname],
       user_id: event.payload[:user_id]
     }.compact
