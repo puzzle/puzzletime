@@ -189,8 +189,13 @@ surfaced.</p>
 <p>Recapturing is cheap and should be the first move of every phase, not the last:
 <code>git worktree add ../phase0-baseline &lt;sha&gt;</code>, precompile there, copy the four assets out. Since
 <code>/tmp</code> does not survive a reboot, <strong>treat the baseline as derived, not stored</strong> — the commit
-sha in <code>/tmp/baseline/COMMIT</code> is the part that matters, and it is now
-<code>d00ae213</code> (re-captured at the phase-1 HEAD, as the rule below requires).</p>
+sha in <code>COMMIT</code> is the part that matters, and it is now <code>d00ae213</code> (re-captured at the phase-1
+HEAD, as the rule below requires).</p>
+<p class="small"><strong>Moved out of <code>/tmp</code> before phase 3</strong>, to
+<code>/home/kagemaru/code/pz/ptime/puzzletime/baseline/</code> (a sibling of the <code>upgrade</code> worktree, inside
+the project tree rather than outside it) — it went missing a third time going into phase 3, for the same reason each
+time. <code>/tmp</code> is still the right place for the throwaway <em>worktree</em> used to derive it; only the four
+copied-out assets and the <code>COMMIT</code> file need to survive, and now they do.</p>
 </div>
 
 <p style="margin-top:1.5rem"><strong>Phase 3 — dartsass-rails and Sprockets to Propshaft</strong>
