@@ -10,10 +10,12 @@ module AttachmentHelper
   end
 
   def attachment_displayable?(receipt)
-    receipt.attached? && (receipt.image? || receipt.previewable?)
+    receipt.attached? && (receipt.image? || pdf?(receipt) || receipt.previewable?)
   end
 
   def attachment_image_tag(obj, **options)
+    return attachment_pdf_tag(obj, options.except(:show_link)) if pdf?(obj)
+
     transformations = {
       resize_to_limit: [800, 1200]
     }
@@ -26,6 +28,15 @@ module AttachmentHelper
   end
 
   private
+
+  def pdf?(obj)
+    obj.content_type == 'application/pdf'
+  end
+
+  def attachment_pdf_tag(obj, options)
+    options[:class] = [options[:class], 'attachment-pdf'].compact.join(' ')
+    tag.iframe(src: "#{rails_blob_path(obj)}#navpanes=0", **options)
+  end
 
   def attachment_image(obj, transformations = {})
     return obj.preview(transformations) unless obj.image?
