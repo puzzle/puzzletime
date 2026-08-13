@@ -1,2 +1,3 @@
 web: bin/rails server -p ${PORT:-3000}
 js: npm run build -- --watch
+css: bin/rails dartsass:watch

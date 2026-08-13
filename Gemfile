@@ -38,7 +38,6 @@ gem 'listen'
 gem 'lograge'
 gem 'matrix'
 gem 'mini_magick', require: false
-gem 'mini_racer'
 gem 'minitest-reporters'
 gem 'nested_form_fields'
 gem 'net-ldap'
@@ -82,14 +81,9 @@ gem 'sentry-rails'
 gem 'sentry-ruby'
 
 ## assets
-gem 'autoprefixer-rails'
-gem 'execjs'
+gem 'dartsass-rails'
 gem 'jsbundling-rails'
-# Only their stylesheets are still used; phase 3 vendors those and drops both.
-gem 'jquery-ui-rails'
-gem 'sass-rails'
-gem 'selectize-rails'
-gem 'sprockets-rails'
+gem 'propshaft'
 # Kept for Turbolinks::Controller, included by config/initializers/devise.rb.
 gem 'turbolinks'
 
