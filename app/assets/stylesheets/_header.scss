@@ -3,6 +3,8 @@
 //  or later. See the COPYING file at the top-level directory or at
 //  https://github.com/puzzle/puzzletime.
 
+@use "sass:math";
+
 @media (min-width: 768px) {
   #main-header {
     position: sticky;
@@ -35,7 +37,7 @@
   .navbar-brand {
     height: 40px;
     padding-top: 3px;
-    padding-bottom: ((40px - $line-height-computed) / 2);
+    padding-bottom: math.div((40px - $line-height-computed), 2);
     font-size: 22px;
     font-weight: 400;
 
@@ -61,8 +63,8 @@
     }
 
     > li > a {
-      padding-top: ((40px - $line-height-computed) / 2);
-      padding-bottom: ((40px - $line-height-computed) / 2);
+      padding-top: math.div((40px - $line-height-computed), 2);
+      padding-bottom: math.div((40px - $line-height-computed), 2);
 
       i {
         margin-right: 4px;
