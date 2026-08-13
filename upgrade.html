@@ -192,6 +192,59 @@ surfaced.</p>
 sha in <code>/tmp/baseline/COMMIT</code> is the part that matters, and it is now
 <code>d00ae213</code> (re-captured at the phase-1 HEAD, as the rule below requires).</p>
 </div>
+
+<p style="margin-top:1.5rem"><strong>Phase 3 — dartsass-rails and Sprockets to Propshaft</strong>
+<span class="tag low">complete</span></p>
+<ul style="margin: 0.5rem 0">
+  <li>✓ The real <code>asset-url()</code>/<code>image-url()</code>/<code>font-path()</code> count was <strong>25</strong>,
+      not this document's original ~35 estimate — the <code>jquery-ui-1.10.0.custom.scss</code> guess of ~30 was 3×
+      too high (actual 11); 5 in <code>_icons.scss</code>, 6 in <code>vendor/glyphicons.scss</code>, 3 in
+      <code>_worktimes.scss</code>. All rewritten to plain <code>url()</code>.</li>
+  <li>✓ <strong>New blocker the plan missed:</strong> <code>puzzletime.scss:334</code>'s
+      <code>@import "components/*";</code> has no dart-sass equivalent — dart-sass does not support glob imports.
+      Expanded into 10 explicit <code>@import</code>s, alphabetical order preserved.</li>
+  <li>✓ <strong>New blocker the plan missed:</strong> §2.1's "no <code>.erb</code>-processed assets exist" claim held
+      for the app's own assets but not a gem's. <code>jquery-ui-rails</code>'s <code>datepicker.css</code> and
+      <code>autocomplete.css</code> both transitively <code>*= require jquery-ui/theme</code>, which resolves to the
+      gem's own <code>theme.css.erb</code> — 6 <code>image_path()</code> calls needing the same conversion, plus the 6
+      PNGs they reference, copied into <code>app/assets/images/jquery-ui/</code> (keeping the
+      <code>jquery-ui/</code> segment) before the gem could be dropped. <code>@import</code> has no dedup the way
+      Sprockets' <code>*= require</code> did, so the theme is imported explicitly once, at the position Sprockets used
+      to inject it.</li>
+  <li>✓ 20 real division sites (not an estimate this time — compiler-confirmed), across 5 files; 8 of them collapse to
+      4 mixins in <code>_mixins.scss</code>.</li>
+  <li>✓ Gem drop-list corrected: <code>sass-rails</code>, <code>sassc-rails</code> (transitive),
+      <code>autoprefixer-rails</code>, <code>mini_racer</code>, <code>libv8-node</code> (transitive),
+      <code>jquery-ui-rails</code> and <code>selectize-rails</code> all drop cleanly. <code>execjs</code> does not:
+      <code>nested_form_fields</code>'s gemspec hard-depends on <code>coffee-rails</code> →
+      <code>coffee-script</code> → <code>execjs</code> regardless of our own Gemfile, so only the redundant explicit
+      <code>gem 'execjs'</code> line could go — the gem stays resolved. <strong>This corrects phase 2 too</strong>:
+      its "Drop: … <code>jquery-rails</code>" line has the identical inaccuracy
+      (<code>nested_form_fields</code> → <code>jquery-rails</code> gemspec dependency also keeps that gem resolved).</li>
+  <li>✓ <strong>Autoprefixer audit needed correcting.</strong> The earlier "clean, nothing needs a prefix" finding was
+      scoped to the app's own SCSS and true as far as it went — but <code>autoprefixer-rails</code> was also quietly
+      stripping obsolete vendor prefixes out of vendored third-party CSS every time it ran over the whole compiled
+      file, not just failing to add new ones. Losing the gem lets 2011-era prefixes
+      (<code>-moz-border-radius-topleft</code>, <code>-khtml-gradient(…)</code>, IE <code>filter:</code> gradients…)
+      reappear in <code>jquery-ui-1.10.0.custom.scss</code>, selectize's CSS and the frozen Bootstrap file. Confirmed
+      harmless with a normalised rule-set diff against the phase-1 baseline: every surviving delta is one of these
+      dead, evergreen-browser-inert declarations or a pure Sass-compiler serialisation difference (color notation,
+      selector grouping) between the old libsass/sassc pipeline and dart-sass — zero missing or altered selectors,
+      colors, or targets.</li>
+  <li>✓ Found and deleted one genuinely dead file while moving its neighbour:
+      <code>vendor/assets/stylesheets/jquery.ui.1.10.0.ie.css</code>, unreferenced by any manifest or layout.</li>
+  <li>✓ Dev builds are unminified (<code>--style=expanded</code>) with source maps; production stays compressed with
+      no source map (the gem's own default) — an ergonomics addition beyond the original plan.</li>
+  <li>✓ <strong>Unrelated bug surfaced by actually running the phase's own gate:</strong> <code>docker build</code> has
+      been broken since phase 2 landed. <code>BUILD_PACKAGES="nodejs npm"</code> dropped the <code>libvips42</code>
+      the build stage needs just to <em>boot</em> — <code>assets:precompile</code> depends on <code>:environment</code>,
+      and <code>config/initializers/vips.rb</code> does <code>require 'vips'</code> unconditionally on every boot, not
+      only when an image is processed. CI passes no override, so this has been failing quietly since Phase 2; fixed
+      and committed separately.</li>
+  <li>✓ <strong>Verify:</strong> normalised CSS diff clean (above); <code>parallel:test[16]</code> — 1515 tests, 6006
+      assertions, 0 failures; production-mode boot with every <code>url()</code>-referenced asset in the compiled CSS
+      resolving 200; <code>docker build</code> end to end.</li>
+</ul>
 </div>
 
 <h2 id="state">1. Where the branch stands today</h2>
@@ -1178,11 +1231,18 @@ reloading an already-scrolled planning board would show the headers unstuck for 
 </div>
 
 <p><strong>Drop:</strong> <code>bootstrap-sass</code> (carried over from phase 1 — its Sass was already unused, only the
-five JS requires still held it), <code>coffee-rails</code>, <code>chartjs-ror</code>, <code>terser</code>,
-<code>jquery-rails</code>. Also <code>execjs</code> + <code>mini_racer</code> + <code>libv8-node</code> once
-<code>autoprefixer-rails</code> follows in phase 3 — nothing in <code>app/</code>, <code>lib/</code> or
-<code>config/</code> uses ExecJS directly, its only consumers are those three gems. That takes a native V8 build out of
-the image.</p>
+five JS requires still held it), <code>coffee-rails</code>, <code>chartjs-ror</code>, <code>terser</code>. Also
+<code>execjs</code> + <code>mini_racer</code> + <code>libv8-node</code> once <code>autoprefixer-rails</code> follows
+in phase 3 — nothing in <code>app/</code>, <code>lib/</code> or <code>config/</code> uses ExecJS directly, its only
+consumers are those three gems. That takes a native V8 build out of the image.</p>
+<div class="box bad">
+<p><strong>Correction found in phase 3: <code>jquery-rails</code> does not actually drop here.</strong>
+<code>nested_form_fields</code>'s gemspec hard-depends on <code>jquery-rails (&gt;= 0)</code> — the same shape as
+<code>execjs</code>'s dependency two paragraphs up, just discovered later. The <em>explicit</em>
+<code>gem 'jquery-rails'</code> line is gone and nothing in the app requires it directly any more, but the gem stays
+resolved in <code>Gemfile.lock</code> regardless. Harmless (it contributes no assets once its Sprockets manifest entry
+is gone), but the drop-list above overstated it.</p>
+</div>
 <div class="box warn">
 <p><strong>Three gems on that list cannot go yet, and the plan was wrong about all three.</strong></p>
 <ul>
@@ -1269,62 +1329,118 @@ as memory corruption rather than a deadlock — worth grepping for before theori
 </div>
 </div>
 
-<h3 id="p3">Phase 3 — dartsass-rails <em>and</em> Sprockets → Propshaft <span class="tag med">2–3 days</span></h3>
+<h3 id="p3">Phase 3 — dartsass-rails <em>and</em> Sprockets → Propshaft <span class="tag low">complete</span></h3>
 <p class="goal">Goal: dart-sass compiles the SCSS into <code>app/assets/builds/</code> and Propshaft serves it.
-<strong>One commit</strong> — see <a href="#decisions">D3</a>: the two are coupled by the ~35 <code>url()</code>
+<strong>One commit</strong> — see <a href="#decisions">D3</a>: the two are coupled by the <code>url()</code>
 references, and splitting them means doing every rewrite twice.</p>
 
 <div class="box">
-<p><strong>Why they cannot be split cleanly.</strong> <code>asset-url()</code>/<code>image-url()</code> in
-<code>_icons.scss</code> (4 fonts), <code>_worktimes.scss</code> (3 day-marker SVGs) and
-<code>vendor/jquery-ui-1.10.0.custom.scss</code> (~30 PNGs) are <em>Sprockets-Sass</em> functions. dart-sass has no
-equivalent; Propshaft's answer is plain <code>url("foo.png")</code>, rewritten to the digested path by its CSS compiler.
-In between — dart-sass in, Propshaft not yet — nobody rewrites them: Sprockets serves the built CSS from
-<code>builds/</code> as an opaque file and never looks inside it, and in production only digested filenames exist on
-disk. Those references would 404.</p>
+<p><strong>Why they cannot be split cleanly.</strong> <code>asset-url()</code>/<code>image-url()</code>/
+<code>font-path()</code> in <code>_icons.scss</code>, <code>vendor/glyphicons.scss</code>,
+<code>_worktimes.scss</code> and <code>vendor/jquery-ui-1.10.0.custom.scss</code> — 25 sites in total, corrected below
+— are <em>Sprockets-Sass</em> functions. dart-sass has no equivalent; Propshaft's answer is plain
+<code>url("foo.png")</code>, rewritten to the digested path by its CSS compiler. In between — dart-sass in, Propshaft
+not yet — nobody rewrites them: Sprockets serves the built CSS from <code>builds/</code> as an opaque file and never
+looks inside it, and in production only digested filenames exist on disk. Those references would 404.</p>
 </div>
 
 <h4>3a — Sass build</h4>
 <ul class="check">
-  <li><code>bundle add dartsass-rails</code>; three entrypoints:
-      <code>application.scss</code>, <code>print.scss</code>, <code>phone.scss</code>.</li>
-  <li>Turn the <code>application.css</code> Sprockets manifest into real Sass imports. Vendor the gem-supplied CSS it
-      used to pull in: <code>jquery-ui/{base,datepicker,autocomplete}.css</code> and
-      <code>selectize.scss</code> + <code>selectize.bootstrap3.scss</code> → <code>app/assets/stylesheets/vendor/</code>.
-      (The selectize BS3 theme consumes our Bootstrap variables — that keeps working, we kept the variables file.)</li>
-  <li>Rewrite <code>asset-url()</code>/<code>image-url()</code> → plain <code>url()</code>.</li>
-  <li><code>Procfile.dev</code>: <code>css: bin/rails dartsass:watch</code></li>
-  <li>dart-sass rejects the legacy <code>/</code> division: the <code>$grid-gutter-width / 2</code> forms written in
-      phase 1 must use <code>math.div()</code>. Expect a batch of deprecation warnings across the 6020 lines of SCSS —
-      budget half a day for them.</li>
+  <li>✓ <code>bundle add dartsass-rails</code>; three entrypoints:
+      <code>application.scss</code>, <code>print.scss</code>, <code>phone.scss</code> (only <code>phone.scss</code>
+      already existed as real Sass — <code>application.css</code> and <code>print.css</code> were Sprockets manifests,
+      replaced by <code>.scss</code> files with real <code>@import</code> chains).</li>
+  <li>✓ Vendored the gem-supplied CSS the manifest used to pull in. <strong>Corrected from the plan:</strong>
+      <code>jquery-ui/base.css</code> was never actually <code>*= require</code>d by the manifest (only
+      <code>datepicker</code> and <code>autocomplete</code> are), so it was not vendored — only those two, plus
+      <code>jquery-ui/theme.css.erb</code> (see the blocker below), plus <code>selectize.scss</code> +
+      <code>selectize.bootstrap3.scss</code> → <code>app/assets/stylesheets/vendor/</code>. The selectize BS3 theme
+      has zero Sass variables of its own — confirmed no <code>!default</code> collision moving into a shared
+      <code>@import</code> cascade.</li>
+  <li>✓ <strong>New blocker, absent from the plan:</strong> <code>jquery-ui-rails</code>'s <code>datepicker.css</code>
+      and <code>autocomplete.css</code> both transitively <code>*= require jquery-ui/theme</code>, which resolves to
+      the gem's own <code>theme.css.erb</code> — 6 <code>image_path()</code> calls, converted to plain
+      <code>url("jquery-ui/…")</code>, plus the 6 PNGs they reference copied into
+      <code>app/assets/images/jquery-ui/</code> (keeping the <code>jquery-ui/</code> segment, so the logical path
+      matches). <code>@import</code> has no dedup the way Sprockets' <code>*= require</code> did — importing the theme
+      from both <code>datepicker.scss</code> and <code>autocomplete.scss</code> would double it, so it is imported
+      exactly once in <code>application.scss</code>, at the position Sprockets used to inject it (before datepicker,
+      the first thing that pulled it in).</li>
+  <li>✓ Rewrote all 25 real <code>asset-url()</code>/<code>image-url()</code>/<code>font-path()</code> sites → plain
+      <code>url()</code> — <strong>not ~35</strong>: 5 in <code>_icons.scss</code>, 6 in
+      <code>vendor/glyphicons.scss</code>, 3 in <code>_worktimes.scss</code>, 11 in
+      <code>jquery-ui-1.10.0.custom.scss</code> (the ~30 estimate there was 3× too high).</li>
+  <li>✓ <code>Procfile.dev</code>: <code>css: bin/rails dartsass:watch</code></li>
+  <li>✓ <strong>New blocker, absent from the plan:</strong> <code>puzzletime.scss:334</code>'s
+      <code>@import "components/*";</code> — dart-sass has no glob-import support. Expanded into 10 explicit
+      <code>@import</code>s, alphabetical order preserved to match what the glob used to expand to.</li>
+  <li>✓ dart-sass rejects the legacy <code>/</code> division: 20 real sites (compiler-confirmed, not an estimate)
+      across <code>_bootstrap_variables.scss</code> (2), <code>_mixins.scss</code> (8, all inside 4 mixins:
+      <code>bs-row</code>, <code>bs-col</code>, <code>bs-offset</code>, <code>bs-container-fluid</code>),
+      <code>_header.scss</code> (3), <code>_worktimes.scss</code> (6) and <code>components/_plannings.scss</code>
+      (1) — all converted to <code>math.div()</code>.</li>
+  <li>✓ Dev builds use <code>--style=expanded</code> with source maps (readable, debuggable); production keeps
+      dartsass-rails' own default, <code>--style=compressed</code> with no source map.</li>
 </ul>
-<p><strong>Drop:</strong> <code>sass-rails</code>, <code>sassc-rails</code>, <code>autoprefixer-rails</code>
-(dart-sass does not prefix; the frozen Bootstrap CSS is already prefixed and our own SCSS targets evergreen browsers —
-confirm with a quick grep for <code>flex</code>/<code>gradient</code> hacks). With this, the last ExecJS consumer is
-gone: <code>execjs</code>, <code>mini_racer</code> and <code>libv8-node</code> can go too.</p>
+<p><strong>Drop:</strong> <code>sass-rails</code>, <code>sassc-rails</code>, <code>autoprefixer-rails</code>,
+<code>jquery-ui-rails</code>, <code>selectize-rails</code>. With this, the last ExecJS consumer <em>we depend on
+directly</em> is gone: <code>mini_racer</code> and <code>libv8-node</code> drop cleanly.
+<strong><code>execjs</code> itself does not</strong> — <code>nested_form_fields</code>'s gemspec hard-depends on
+<code>coffee-rails</code> → <code>coffee-script</code> → <code>execjs</code> regardless of our own Gemfile, so only
+the redundant explicit <code>gem 'execjs'</code> line could go; the gem stays resolved in <code>Gemfile.lock</code>.
+Phase 2's <code>jquery-rails</code> "drop" has the identical shape — see the correction in §4 Phase 2.</p>
+<div class="box bad">
+<p><strong>Autoprefixer audit needed correcting.</strong> The earlier finding ("nothing needs a prefix, dropping is a
+real simplification") was scoped to the app's own SCSS and true as far as it went — but
+<code>autoprefixer-rails</code> ran over the <em>whole</em> compiled file, so it was also quietly stripping obsolete
+vendor prefixes out of vendored third-party CSS, not just failing to add new ones. Losing the gem lets 2011-era
+prefixes (<code>-moz-border-radius-topleft</code>, <code>-khtml-gradient(…)</code>, IE gradient <code>filter:</code>
+fallbacks…) reappear in <code>jquery-ui-1.10.0.custom.scss</code>, selectize's CSS and the frozen Bootstrap file.
+Confirmed harmless with a normalised rule-set diff against the phase-1 baseline (both sides canonicalised through the
+same dart-sass compressor pass first, to separate real content changes from compressor-version noise): every
+surviving delta is one of these dead, evergreen-browser-inert declarations, or a pure Sass-engine serialisation
+difference (percentage vs. hex color notation, <code>@extend</code>-selector grouping) — zero missing or altered
+selectors, colors, or targets. <code>phone.css</code>, untouched by this phase, came back byte-identical modulo
+formatting.</p>
+</div>
 
 <h4>3b — The pipeline swap</h4>
 <p>By now nothing depends on Sprockets' <em>processing</em>, only on its serving and digesting — so this half is a small,
 boring diff.</p>
 <ul class="check">
-  <li><code>gem "propshaft"</code> replaces <code>sprockets-rails</code>.</li>
-  <li>Delete <code>app/assets/config/manifest.js</code>.</li>
-  <li><code>config/initializers/assets.rb</code> → only
-      <code>config.assets.paths &lt;&lt; Rails.root.join("app/assets/fonts")</code>.
-      Drop <code>assets.version</code> and the <code>precompile</code> list — Propshaft precompiles everything on the
-      load path, which is what <code>print.css</code>, <code>phone.css</code> and the images wanted anyway.</li>
-  <li><code>config.assets.excluded_paths = [Rails.root.join("app/assets/stylesheets")]</code> so the raw
+  <li>✓ <code>gem "propshaft"</code> replaces <code>sprockets-rails</code>.</li>
+  <li>✓ Deleted <code>app/assets/config/manifest.js</code>.</li>
+  <li>✓ <code>config/initializers/assets.rb</code> → only
+      <code>config.assets.paths &lt;&lt; Rails.root.join("app/assets/fonts")</code> — <strong>now actually
+      redundant</strong> (Propshaft auto-adds every <code>app/assets/*</code> subdirectory, fonts included), kept for
+      clarity since it costs nothing (Propshaft dedupes load paths). Dropped <code>assets.version</code> and the
+      <code>precompile</code> list — Propshaft precompiles everything on the load path, which is what
+      <code>print.css</code>, <code>phone.css</code> and the images wanted anyway.</li>
+  <li>✓ <code>config.assets.excluded_paths &lt;&lt; Rails.root.join("app/assets/stylesheets")</code> so the raw
       <code>.scss</code> sources are not published next to the built CSS.</li>
-  <li>Remove <code>assets.debug</code> / <code>assets.quiet</code> / <code>assets.js_compressor</code> /
-      <code>assets.compile</code> from <code>config/environments/</code>.</li>
-  <li>Confirm Propshaft's <code>url()</code> rewriting resolves <code>puzzletime.woff</code>,
-      <code>day-marker-*.svg</code>, the jQuery-UI theme PNGs and <code>glyphicons-halflings-regular.woff2</code>.
-      It matches on logical path, so the file must sit on a load path — that is what the <code>fonts</code> entry above
-      is for.</li>
+  <li>✓ Removed <code>assets.debug</code> / <code>assets.quiet</code> from <code>development.rb</code> and
+      <code>assets.compile</code> from <code>production.rb</code> (<code>assets.js_compressor</code> was already gone
+      in phase 2).</li>
+  <li>✓ Confirmed Propshaft's <code>url()</code> rewriting resolves <code>puzzletime.woff</code>,
+      <code>day-marker-*.svg</code>, the jQuery-UI theme PNGs and <code>glyphicons-halflings-regular.woff2</code> —
+      every one returns 200 against a production-mode boot, none 404.</li>
+  <li>✓ Also found and deleted one dead file while clearing the directory of its neighbour:
+      <code>vendor/assets/stylesheets/jquery.ui.1.10.0.ie.css</code>, unreferenced by any manifest or layout.</li>
 </ul>
-<p><strong>Verify:</strong> normalised CSS diff against the phase-0 baseline; then boot in production mode, load every page
-on both servers and watch for 404s in the Propshaft log — the <code>url()</code> rewrites are the one thing in this
-phase that fails silently in development and loudly in production. Check <code>docker build</code> end to end.</p>
+<div class="box bad">
+<p><strong>Unrelated bug, but this phase's own gate is what caught it.</strong> <code>docker build</code> has been
+broken since phase 2 landed: <code>BUILD_PACKAGES="nodejs npm"</code> dropped the <code>libvips42</code> the build
+stage needs just to <em>boot</em>. <code>assets:precompile</code> depends on <code>:environment</code>, and
+<code>config/initializers/vips.rb</code> does <code>require 'vips'</code> unconditionally on every boot, not only
+when an image is actually processed — so the build died with
+<code>LoadError: Could not open library 'vips.so.42'</code> before it ever reached the asset pipeline. CI's
+<code>reusable-build.yaml</code> passes no <code>BUILD_PACKAGES</code> override, so this was failing silently; fixed
+and committed on its own, separate from this phase.</p>
+</div>
+<p><strong>Verify:</strong> normalised CSS diff against the phase-0 baseline (clean, see above); <code>bin/rake
+parallel:test[16]</code> — 1515 tests, 6006 assertions, 0 failures; production-mode boot
+(<code>RAILS_SERVE_STATIC_FILES=1</code>) with every <code>url()</code>-referenced asset in the compiled CSS checked
+directly — all 200, none 404; <code>docker build</code> end to end (after the libvips fix above).</p>
 </div>
 
 <div class="phase">
