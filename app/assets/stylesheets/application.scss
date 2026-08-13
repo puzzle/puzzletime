@@ -1,0 +1,14 @@
+// Replaces the old Sprockets manifest (app/assets/stylesheets/application.css).
+// Order matches what Sprockets actually resolved: jquery-ui/datepicker used to
+// transitively "*= require jquery-ui/theme" (jquery-ui-rails gem), so the theme
+// is imported explicitly here, once, in the position Sprockets injected it —
+// before datepicker, which is the first thing that pulled it in.
+@import "vendor/jquery-ui-1.10.0.custom";
+@import "vendor/jquery-ui-theme";
+@import "vendor/jquery-ui-datepicker";
+@import "vendor/jquery-ui-autocomplete";
+@import "vendor/selectize";
+@import "vendor/selectize.bootstrap3";
+@import "vendor/bootstrap-3.4.1";
+@import "vendor/glyphicons";
+@import "puzzletime";
