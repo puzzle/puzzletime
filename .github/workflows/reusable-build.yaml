@@ -82,5 +82,5 @@ jobs:
             ${{ env.BUILD_REGISTRY_URL }}:latest
             ${{ env.BUILD_REGISTRY_URL }}:git-${{ github.sha }}
           push: ${{ inputs.push }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=registry,ref=ptime/rails:buildcache
+          cache-to: type=registry,ref=ptime/rails:buildcache,mode=max
