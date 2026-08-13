@@ -9,7 +9,10 @@ ARG NULLDB_VERSION="1.2.2"
 
 # Packages
 # Build-time only: assets:precompile runs javascript:build, which needs esbuild.
-ARG BUILD_PACKAGES="nodejs npm"
+# libvips42 is also required here, not just at runtime: assets:precompile boots
+# the full Rails app (via the :environment prerequisite), and
+# config/initializers/vips.rb does `require 'vips'` unconditionally on boot.
+ARG BUILD_PACKAGES="nodejs npm libvips42"
 ARG RUN_PACKAGES="bash libpq5 libvips42 libvips-dev neovim postgresql-client"
 
 # Scripts
