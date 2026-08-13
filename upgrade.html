@@ -57,6 +57,33 @@
   .check li::before { content: "☐"; position: absolute; left: 0; color: var(--muted); }
   hr { border: 0; border-top: 1px solid var(--line); margin: 2.5rem 0; }
   .small { font-size: .85rem; color: var(--muted); }
+
+  .timeline { display: grid; grid-template-columns: 5.5rem 1.5rem 1fr; margin: 1rem 0 1.5rem; }
+  .timeline-entry { display: contents; }
+  .timeline-date {
+    grid-column: 1; text-align: right; padding-right: .75rem; padding-top: .05rem;
+    font-size: .78rem; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums;
+  }
+  .timeline-date.repeat { color: transparent; }
+  .timeline-spine { grid-column: 2; display: flex; flex-direction: column; align-items: center; }
+  .timeline-dot {
+    width: 11px; height: 11px; border-radius: 50%; flex: none; margin-top: .2rem;
+    background: var(--accent); box-shadow: 0 0 0 3px var(--bg);
+  }
+  .timeline-spine.ok .timeline-dot { background: var(--ok); }
+  .timeline-spine.warn .timeline-dot { background: var(--warn); }
+  .timeline-spine.bad .timeline-dot { background: var(--bad); }
+  .timeline-line { flex: 1; width: 2px; min-height: .6rem; background: var(--line); margin: .15rem 0; }
+  .timeline-entry:last-child .timeline-line { display: none; }
+  .timeline-content { grid-column: 3; padding: 0 0 1.1rem .6rem; font-size: .92rem; }
+  .timeline-content strong { font-weight: 600; }
+  .timeline-legend { display: flex; flex-wrap: wrap; gap: .3rem 1.1rem; font-size: .8rem; color: var(--muted); margin: .5rem 0 0; }
+  .timeline-legend span { display: inline-flex; align-items: center; gap: .4rem; }
+  .timeline-legend i { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+  .timeline-legend i.accent { background: var(--accent); }
+  .timeline-legend i.ok { background: var(--ok); }
+  .timeline-legend i.warn { background: var(--warn); }
+  .timeline-legend i.bad { background: var(--bad); }
 </style>
 </head>
 <body>
@@ -69,6 +96,7 @@
 <nav class="toc">
   <strong>Contents</strong>
   <ol>
+    <li><a href="#timeline">Timeline — what we found out, and when</a></li>
     <li><a href="#state">Where the branch stands today</a></li>
     <li><a href="#inventory">Inventory: what actually depends on what</a></li>
     <li><a href="#layers">Cascade layers &amp; the Preflight / Bootstrap-reset question</a></li>
@@ -78,6 +106,133 @@
     <li><a href="#decisions">Decisions</a></li>
   </ol>
 </nav>
+
+<h2 id="timeline">0. Timeline — what we found out, and when</h2>
+<p class="lede" style="font-size: 1rem">One row per finding or decision, in the order it actually happened —
+not the order the phases are numbered. Dates are commit dates; see <a href="#decisions">§7</a> for the
+reasoning behind each decision and the phase sections for full verification detail.</p>
+
+<div class="timeline">
+
+  <div class="timeline-entry ok">
+    <div class="timeline-date">07-27</div>
+    <div class="timeline-spine ok"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+    <div class="timeline-content"><a href="#p0"><strong>Phase 0 complete</strong></a> — baseline captured,
+      scoped runs green.</div>
+  </div>
+
+  <div class="timeline-entry warn">
+    <div class="timeline-date repeat">07-27</div>
+    <div class="timeline-spine warn"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+    <div class="timeline-content">The <em>full</em> suite (not the scoped runs) finds 15 further failures in 3
+      causes — a dead callback guard, the Rails 8.1 schema dumper reordering columns, and the jsonapi-serializer
+      swap changing an exception class. All Rails-upgrade fallout, none asset-related — but this is why every
+      phase's gate is the full suite from here on. See <a href="#p0">Phase 0</a>.</div>
+  </div>
+
+  <div class="timeline-entry ok">
+    <div class="timeline-date">08-03</div>
+    <div class="timeline-spine ok"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+    <div class="timeline-content"><a href="#p1"><strong>Phase 1 complete</strong></a> — Bootstrap 3 frozen into
+      a static CSS file.</div>
+  </div>
+
+  <div class="timeline-entry bad">
+    <div class="timeline-date repeat">08-03</div>
+    <div class="timeline-spine bad"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+    <div class="timeline-content">The phase-0 baseline turns out to be gone (<code>/tmp</code> was cleared).
+      Re-deriving it just in time catches a <strong>119 kB → 471 byte regression in <code>print.css</code></strong>
+      that "it compiles" had already let through. See <a href="#p1">Phase 1</a>.</div>
+  </div>
+
+  <div class="timeline-entry accent">
+    <div class="timeline-date">08-10</div>
+    <div class="timeline-spine"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+    <div class="timeline-content"><strong>This document is added to the repo</strong>, written up against what
+      phases 0–1 had already found — including two corrections to phase 1 itself: its "byte-comparable"
+      claim was wrong (a mixin can't be byte-identical to an <code>@extend</code>), and its
+      <code>@extend</code> count was 20, not the real 26.</div>
+  </div>
+
+  <div class="timeline-entry ok">
+    <div class="timeline-date repeat">08-10</div>
+    <div class="timeline-spine ok"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+    <div class="timeline-content"><a href="#p2"><strong>Phase 2 complete</strong></a> — CoffeeScript to
+      jsbundling + esbuild.</div>
+  </div>
+
+  <div class="timeline-entry bad">
+    <div class="timeline-date repeat">08-10</div>
+    <div class="timeline-spine bad"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+    <div class="timeline-content">Four silent Sprockets → esbuild interop traps found, all real breakages: turbolinks
+      never starting when bundled, jquery-ui's AMD-only dependency lists, dead <code>//= require</code> comments,
+      and jquery-ujs no-oping without a global jQuery. See <a href="#p2">Phase 2</a>.</div>
+  </div>
+
+  <div class="timeline-entry warn">
+    <div class="timeline-date repeat">08-10</div>
+    <div class="timeline-spine warn"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+    <div class="timeline-content">Phase 2's drop-list was wrong: <code>turbolinks</code>,
+      <code>jquery-ui-rails</code> and <code>selectize-rails</code> all had to stay — a gem's asset payload and
+      its Ruby payload can retire on different phases.</div>
+  </div>
+
+  <div class="timeline-entry bad">
+    <div class="timeline-date">08-11</div>
+    <div class="timeline-spine bad"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+    <div class="timeline-content">Pre-existing pg heap corruption found and fixed: planning-board AJAX could
+      still be executing when <code>DatabaseCleaner</code> truncated the tables underneath it.
+      <code>js_errors</code> made default rather than opt-in. See <a href="#p2">Phase 2</a>.</div>
+  </div>
+
+  <div class="timeline-entry warn">
+    <div class="timeline-date repeat">08-11</div>
+    <div class="timeline-spine warn"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+    <div class="timeline-content">Orphaned-headless-Chrome hazard documented — and a wrong claim in this very
+      document's pre-flight section corrected (a loose <code>chrome.*headless</code> pattern does not, in fact,
+      risk matching a developer's own browser).</div>
+  </div>
+
+  <div class="timeline-entry bad">
+    <div class="timeline-date">08-13</div>
+    <div class="timeline-spine bad"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+    <div class="timeline-content"><code>docker build</code> found broken since Phase 2 landed —
+      <code>BUILD_PACKAGES</code> lost <code>libvips42</code>, and <code>assets:precompile</code> boots the full
+      app. Fixed, unrelated to Phase 3 but caught by its verification step. See <a href="#p3">Phase 3</a>.</div>
+  </div>
+
+  <div class="timeline-entry ok">
+    <div class="timeline-date repeat">08-13</div>
+    <div class="timeline-spine ok"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+    <div class="timeline-content"><a href="#p3"><strong>Phase 3 complete</strong></a> — dartsass-rails and
+      Sprockets to Propshaft, merged into one commit per <a href="#decisions">D3</a>.</div>
+  </div>
+
+  <div class="timeline-entry warn">
+    <div class="timeline-date repeat">08-13</div>
+    <div class="timeline-spine warn"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+    <div class="timeline-content">Two blockers the plan missed entirely: the <code>components/*</code> glob
+      import (dart-sass has no glob support) and <code>jquery-ui-rails</code>'s transitively-required
+      <code>.erb</code> theme file. Real <code>url()</code> count is 25, not the ~35 estimated. Gem drop-list
+      corrected again (<code>execjs</code>/<code>jquery-rails</code> stay resolved transitively). See
+      <a href="#p3">Phase 3</a>.</div>
+  </div>
+
+  <div class="timeline-entry accent">
+    <div class="timeline-date repeat">08-13</div>
+    <div class="timeline-spine"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+    <div class="timeline-content">The CSS/JS baseline moves out of <code>/tmp</code> for good, to a persistent
+      path inside the project tree — it had gone missing a third time, same root cause each time.</div>
+  </div>
+
+</div>
+
+<p class="timeline-legend">
+  <span><i class="ok"></i> phase completed &amp; verified</span>
+  <span><i class="warn"></i> plan corrected / blocker found</span>
+  <span><i class="bad"></i> real bug found &amp; fixed</span>
+  <span><i class="accent"></i> doc / process change</span>
+</p>
 
 <div class="box ok">
 <h3 style="margin-top: 0">Phase progress</h3>
