@@ -1,4 +1,9 @@
 $(document).on('turbolinks:load', function() {
+  $('.js-toggle-inlineedit').on('click', function(e) {
+    e.preventDefault();
+    $('.inlineedit').toggleClass('hidden');
+  });
+
   const reimbursement    = $('#expense_reimbursement_date');
   const reason           = $('#expense_reason');
   const approve_button   = $('#approve_btn');

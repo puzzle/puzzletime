@@ -25,10 +25,10 @@
               %thead
                 %tr
                   %td Bemerkungen:
-                  %td= text_field_tag 'description', @user.running_time.description, :size => 25
+                  %td= text_field_tag 'description', @user.running_time.description, size: 25, class: 'form-control'
                 %tr
                   %td Ticket/Task:
-                  %td= text_field_tag 'ticket', @user.running_time.ticket, :size => 15
+                  %td= text_field_tag 'ticket', @user.running_time.ticket, size: 15, class: 'form-control'
 
   %thead
     %tr
