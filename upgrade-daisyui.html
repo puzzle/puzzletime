@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PuzzleTime — daisyUI as a possible next step</title>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #24292f; --muted: #57606a; --line: #d0d7de;
+    --accent: #238BCA; --accent-dark: #1E5A96; --ok: #61B44B; --warn: #f0ad4e; --bad: #B44B5B;
+    --code-bg: #f6f8fa; --box: #f6f8fa;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0d1117; --fg:#e6edf3; --muted:#9198a1; --line:#30363d; --code-bg:#161b22; --box:#161b22; }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  .wrap { max-width: 60rem; margin: 0 auto; padding: 2rem 1.25rem 6rem; }
+  h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 .25rem; }
+  h2 { font-size: 1.45rem; margin: 3rem 0 .75rem; padding-bottom: .3rem; border-bottom: 1px solid var(--line); }
+  h3 { font-size: 1.12rem; margin: 2rem 0 .5rem; }
+  h4 { margin: 1.25rem 0 .35rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; font-size: .8rem; }
+  p, li { margin: .5rem 0; }
+  ul, ol { padding-left: 1.4rem; }
+  code, pre { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace; font-size: .875em; }
+  code { background: var(--code-bg); padding: .1em .35em; border-radius: 4px; }
+  pre { background: var(--code-bg); border: 1px solid var(--line); border-radius: 6px; padding: .85rem 1rem; overflow-x: auto; }
+  pre code { background: none; padding: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: .9rem; display: block; overflow-x: auto; }
+  th, td { border: 1px solid var(--line); padding: .45rem .6rem; text-align: left; vertical-align: top; }
+  th { background: var(--box); font-weight: 600; }
+  .lede { color: var(--muted); font-size: 1.05rem; }
+  .box { background: var(--box); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 4px; padding: .8rem 1rem; margin: 1.25rem 0; }
+  .box.warn { border-left-color: var(--warn); }
+  .box.bad { border-left-color: var(--bad); }
+  .box.ok { border-left-color: var(--ok); }
+  .box p:first-child { margin-top: 0; } .box p:last-child, .box ul:last-child { margin-bottom: 0; }
+  .tag { display: inline-block; font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+         padding: .12em .5em; border-radius: 3px; vertical-align: .12em; }
+  .tag.low { background: rgba(97,180,75,.18); color: var(--ok); }
+  .tag.med { background: rgba(240,173,78,.2); color: var(--warn); }
+  .tag.high { background: rgba(180,75,91,.18); color: var(--bad); }
+  .phase { border: 1px solid var(--line); border-radius: 8px; padding: 1rem 1.25rem; margin: 1.5rem 0; }
+  .phase > h3 { margin-top: 0; }
+  .phase .goal { color: var(--muted); font-style: italic; margin-top: -.25rem; }
+  nav.toc { background: var(--box); border: 1px solid var(--line); border-radius: 8px; padding: 1rem 1.25rem; }
+  nav.toc ol { margin: .25rem 0 0; }
+  nav.toc a { color: var(--accent); text-decoration: none; }
+  nav.toc a:hover { text-decoration: underline; }
+  a { color: var(--accent); }
+  .meta { color: var(--muted); font-size: .875rem; }
+  .check { list-style: none; padding-left: 0; }
+  .check li { padding-left: 1.6rem; position: relative; }
+  .check li::before { content: "☐"; position: absolute; left: 0; color: var(--muted); }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 2.5rem 0; }
+  .small { font-size: .85rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>PuzzleTime — daisyUI as a possible next step</h1>
+<p class="lede">What a migration to daisyUI would look like <em>after</em> <a href="upgrade.html">the asset pipeline
+upgrade</a> is finished — the order of operations, what the existing architecture already buys us, and the three
+decisions that have to be made rather than discovered.</p>
+<p class="meta">Companion to <a href="upgrade.html"><code>upgrade.html</code></a> · branch
+<code>task/65394-ruby-and-rails-upgrade</code> · written 2026-08-14 · <strong>not a committed plan</strong> — an
+evaluation</p>
+
+<div class="box bad">
+<p><strong>daisyUI is a visual redesign, not a compatibility layer.</strong> It will not look like Bootstrap 3, and
+making it look like Bootstrap 3 means re-authoring exactly the hand-written CSS that phases 5–6 exist to delete.
+<strong>Design sign-off is a precondition, not a step.</strong></p>
+<p>That is the constraint the question doesn't state, and everything below assumes it has been answered yes.</p>
+</div>
+
+<div class="box ok">
+<p><strong>The layer architecture already built for Bootstrap → Tailwind is what makes Bootstrap → daisyUI
+incremental.</strong> <code>@layer theme, base, bootstrap, components, utilities</code>
+(<a href="upgrade.html#layers">§4.1</a>) is exactly the right shape: daisyUI emits into <code>components</code> and
+therefore outranks whatever <code>bootstrap-frozen.css</code> still holds — for free, with no
+<code>!important</code> and no re-ordering. The same per-component loop, the same gates, the same bisectability.</p>
+</div>
+
+<nav class="toc">
+  <strong>Contents</strong>
+  <ol>
+    <li><a href="#s1">Step 1 — layer the app SCSS (blocks everything)</a></li>
+    <li><a href="#s2">Step 2 — toolchain spike</a></li>
+    <li><a href="#s3">Step 3 — one theme, from the <code>@theme</code> block we already have</a></li>
+    <li><a href="#s4">Step 4 — build the class map by installing, not from memory</a></li>
+    <li><a href="#s5">Step 5 — the per-component loop</a></li>
+    <li><a href="#decide">Three things to decide, not discover</a></li>
+    <li><a href="#seq">Sequencing note — this is worth deciding before phase 5 continues</a></li>
+  </ol>
+</nav>
+
+<h2 id="s1">1. Step 1 — layer the app SCSS <span class="tag high">blocks everything else</span></h2>
+
+<div class="phase">
+<h3>Wrap the compiled app SCSS in a named layer ranked after <code>components</code></h3>
+<p class="goal">Goal: a daisyUI component class actually reaches the element it is on.</p>
+
+<p><code>puzzletime.scss</code> and friends style <code>.btn</code>, <code>.table</code> and
+<code>.form-control</code> directly, unlayered, across ~6000 lines. <strong>Unlayered CSS beats every layered rule
+regardless of source order or specificity</strong> (<a href="upgrade.html#layers">§4.1</a>) — so today, every daisyUI
+component would be silently fought by an invisible override, and the symptom is a component that looks half-applied
+with nothing in the markup to explain it.</p>
+
+<p><a href="upgrade.html#risks">§7</a>'s risk table already anticipates this and calls it a nuisance to fix
+<em>when it becomes one</em>. Under daisyUI it stops being a nuisance and becomes the thing that defeats the library.
+So it moves to the front:</p>
+
+<pre><code>@layer theme, base, bootstrap, components, app, utilities;
+/*                                          ^^^ compiled application.css goes here */</code></pre>
+
+<p>Two properties worth buying at the same time:</p>
+<ul>
+  <li><strong>Give app-authored component overrides their own layer</strong> rather than relying on source order
+      <em>inside</em> <code>components</code> to sit above <code>@plugin "daisyui"</code>. Then "who wins" is
+      answerable by reading the one <code>@layer</code> statement, instead of hunting import order in a file that
+      grows.</li>
+  <li>The shims written in <a href="upgrade.html#p5">phase 5</a> keep working unchanged either way — they are already
+      in <code>components</code>.</li>
+</ul>
+<p><strong>This is commit one, before any daisyUI class exists.</strong> It is also independently useful: it is the
+same commit whether or not daisyUI ever lands.</p>
+</div>
+
+<h2 id="s2">2. Step 2 — toolchain spike <span class="tag low">10 minutes</span></h2>
+
+<p><code>tailwindcss-rails ~&gt; 4.6</code> runs the standalone <code>tailwindcss-ruby</code> binary. Whether it
+resolves <code>@plugin "daisyui"</code> out of <code>node_modules</code> decides whether step 2 is one line of CSS or
+a small toolchain change. <strong>Find out by trying it, not by reasoning about it</strong> — and do it before writing
+any of the rest down, because it is the only unknown that can change the shape of the plan.</p>
+
+<table>
+  <tr><th>Outcome</th><th>Then</th></tr>
+  <tr><td>The standalone binary loads the plugin</td>
+      <td><code>@plugin "daisyui";</code> in <code>app/assets/tailwind/application.css</code>, plus
+          <code>npm i -D daisyui</code>. Nothing else moves.</td></tr>
+  <tr><td>It does not</td>
+      <td>Drop <code>tailwindcss-rails</code> and drive Tailwind from the npm CLI instead. <strong>Nearly free
+          here:</strong> npm, esbuild and Node-in-the-Docker-build-image all landed in
+          <a href="upgrade.html#p2">phase 2</a>, and <code>Procfile.dev</code> already has a <code>tailwind:</code>
+          line to repoint.</td></tr>
+</table>
+<p class="small">Either way this blocks step 3, not the plan.</p>
+
+<h2 id="s3">3. Step 3 — one theme, from the <code>@theme</code> block we already have</h2>
+
+<p>daisyUI's whole design system is a set of semantic CSS custom properties. The
+<a href="upgrade.html#layers">§4.4</a> <code>@theme</code> block already carries the Puzzle palette in exactly that
+form, so this step is a transcription, not a decision:</p>
+<ul>
+  <li>Map the brand colours onto daisyUI's semantic tokens (primary / success / info / warning / error / the base
+      surface scale) and the radius tokens.</li>
+  <li><strong>One custom theme, marked default; the ~30 built-in themes off.</strong> Shipping them is dead CSS and
+      invites someone to add a theme switcher nobody asked for.</li>
+  <li>Keep the <code>@theme</code> block as the source of values — the remaining SCSS reads the same
+      <code>var(--color-…)</code>, which is the consolidation §4.4 already describes as opportunistic.</li>
+</ul>
+
+<h2 id="s4">4. Step 4 — build the class map by installing, not from memory</h2>
+
+<div class="box warn">
+<p><strong>Do not write the Bootstrap → daisyUI mapping table from recall.</strong> daisyUI renamed and removed
+classes between its v4 and v5, and a wrong mapping table in a planning document does not get questioned — it gets
+executed. Install the package, dump the class list it actually emits, and diff that against the
+<a href="upgrade.html#shims">§6 catalogue</a>. That is a mechanical half-day and it produces a table that is true.</p>
+</div>
+
+<p>What can be asserted without the package installed, because it is structural rather than nominal:</p>
+
+<table>
+  <tr><th>Shape</th><th>Why it matters</th></tr>
+  <tr>
+    <td><strong>Shared names, different meanings</strong></td>
+    <td>The exact mirror of <a href="upgrade.html#clash">§4.3</a>, one level up: while
+        <code>bootstrap-frozen.css</code> and daisyUI coexist, <code>btn</code>, <code>alert</code>,
+        <code>table</code>, <code>label</code>, <code>checkbox</code>, <code>radio</code>, <code>progress</code> and
+        <code>modal</code> are all claimed by both and will double-style. The layer order decides who wins, which is
+        why step 1 comes first — but "wins" is not the same as "looks right", so each of these needs eyes.</td>
+  </tr>
+  <tr>
+    <td><strong><code>label</code> is the sharpest</strong></td>
+    <td>Bootstrap 3's <code>.label</code> is a <em>badge</em>; daisyUI's is a <em>form label</em>. Not a visual
+        difference — an opposite meaning, on a class that appears in both worlds. Rename all 7 <code>label</code> /
+        <code>label-*</code> sites to badge as its own first commit, <strong>including the interpolated
+        <code>"label label-#{order.status.style}"</code> at <code>orders/_list.html.haml:60</code></strong>
+        (<a href="upgrade.html#inventory">§3.3</a> — Tailwind's scanner cannot see it, and neither can a grep for the
+        literal class).</td>
+  </tr>
+  <tr>
+    <td><strong><code>progress</code> is a markup rewrite</strong></td>
+    <td>Bootstrap is a nested <code>div.progress &gt; div.progress-bar</code> with an inline width; daisyUI drives a
+        real <code>&lt;progress&gt;</code> element. Renaming classes cannot get there — the change is in
+        <code>progress_bar_helper.rb</code>.</td>
+  </tr>
+  <tr>
+    <td><strong><code>modal</code> cannot be a shim swap</strong></td>
+    <td>daisyUI is <code>&lt;dialog&gt;</code> + <code>showModal()</code>; the Bootstrap 3 plugin toggles
+        <code>.in</code>/<code>.fade</code> and reads <code>$.support.transition</code>. Both claim
+        <code>.modal</code>. So <strong>the modal component lands together with dropping the plugin</strong> —
+        <a href="upgrade.html#p7">phase 7</a>'s native-<code>&lt;dialog&gt;</code> item pulls forward into this
+        migration rather than following it. Test against <code>modal_create.js</code>'s four flows, as
+        <a href="upgrade.html#p5">phase 5.8</a> already requires.</td>
+  </tr>
+  <tr>
+    <td><strong>tooltip goes the same way, and takes the npm dep with it</strong></td>
+    <td>daisyUI's tooltip is CSS-only, so it retires the plugin and the ~20 <code>data-toggle="tooltip"</code> sites.
+        With modal, tooltip, button and alert gone, the <code>bootstrap</code> npm package can be dropped outright —
+        which closes the moderate <code>npm audit</code> finding recorded in
+        <a href="upgrade.html#p2">phase 2b</a>.</td>
+  </tr>
+  <tr>
+    <td><strong>Forms and tables are emitted centrally</strong></td>
+    <td><strong>The single biggest lever in the plan.</strong> <code>dry_crud/form/builder.rb</code>,
+        <code>table_helper.rb</code> and <code>dry_crud/table/builder.rb</code> generate almost all of it — three
+        files instead of 49 <code>.form-group</code> and 37 <code>.table</code> view sites. Verify at the builder, not
+        view-by-view, exactly as <a href="upgrade.html#p5">phase 5.5</a> says.</td>
+  </tr>
+</table>
+
+<h2 id="s5">5. Step 5 — the per-component loop</h2>
+
+<p>Unchanged from <a href="upgrade.html#p5">phase 5</a>: write the component, delete the corresponding section from
+whatever Bootstrap is left, check <code>/design_guide</code> plus that component's views, commit. One component per
+commit — that is what makes a regression bisectable.</p>
+
+<table>
+  <tr><th>#</th><th>Component</th><th>Notes</th></tr>
+  <tr><td>1</td><td><code>label</code> → badge</td><td>a pure rename, no daisyUI needed yet; do it first so the class
+      name is free before daisyUI claims it</td></tr>
+  <tr><td>2</td><td>tables</td><td>the <a href="#decide">app-owned <code>.table-striped</code></a> decision lands
+      here, and it is the most visible diff in the migration</td></tr>
+  <tr><td>3</td><td>buttons</td><td>watch <code>.btn.disabled</code> vs the app's own <code>.disabled</code> in
+      <code>puzzletime.scss</code> — same trap as phase 5.4</td></tr>
+  <tr><td>4</td><td>alerts, panels, wells, progress, list-group, close</td>
+      <td><code>progress</code> is the markup rewrite above; panel/well have no one-to-one daisyUI equivalent, so this
+          is where the redesign becomes visible</td></tr>
+  <tr><td>5</td><td>forms</td><td>largest surface, but changed at the two <code>dry_crud</code> builders</td></tr>
+  <tr><td>6</td><td>navs, navbar, breadcrumb, pagination</td>
+      <td>pagination still targets <em>Kaminari's default markup</em>, not Bootstrap's
+          (<a href="upgrade.html#state">§2</a>) — and daisyUI's pagination wants classes on the individual links, so a
+          Kaminari view theme is likely the honest answer rather than a selector shim</td></tr>
+  <tr><td>7</td><td>modal + tooltip</td>
+      <td><strong>Last, and together with dropping the Bootstrap JS plugins and the npm package.</strong></td></tr>
+  <tr><td>8</td><td>the leftovers</td>
+      <td>delete the rest of <code>bootstrap-frozen.css</code>, the <code>bootstrap</code> layer, and the phase-5
+          shims that daisyUI has replaced</td></tr>
+  <tr><td>—</td><td>grid</td><td><strong>not daisyUI's job at all</strong> — it has no grid system.
+      <code>row</code>/<code>col-*</code> → Tailwind utilities stays
+      <a href="upgrade.html#p7">phase 7</a> work, independent of this migration</td></tr>
+</table>
+
+<div class="box warn">
+<p><strong>Grep <code>test/</code> for <code>.btn</code> / <code>.modal</code> / <code>.alert</code> /
+<code>.table</code> / <code>.label</code> inside each component's own commit</strong>, not as a cleanup pass
+afterwards. The 21 Cuprite integration tests select on these class names; a test fixed three commits later is a
+commit that was never actually green.</p>
+</div>
+
+<div class="box ok">
+<p><strong>The verification machinery is reused unchanged, and that is most of why this is cheaper than it looks.</strong>
+The full suite as every gate (1515 tests, <strong>1m29s</strong> across 16 workers), <code>js_errors</code> on by
+default, the side-by-side servers against <code>master</code>, and <code>/design_guide</code> as the acceptance page.
+All of it was built in phases 0–4 and none of it needs to change. See
+<a href="upgrade.html#p0">phase 0</a> for the pre-flight checks and the traps around running the gate.</p>
+</div>
+
+<h2 id="decide">6. Three things to decide, not discover</h2>
+
+<div class="box bad">
+<p><strong>The app owns its own <code>.table-striped</code>.</strong> <a href="upgrade.html#p1">Phase 1</a> found it at
+<code>components/_table.scss:64</code>: the real PuzzleTime three-tone column shading
+(<code>#ffffff</code>/<code>#fcfcfc</code>/<code>#f5f5f5</code>) plus a <code>.table-hover.table-striped</code> rule,
+distinct from Bootstrap's single <code>nth-of-type</code> rule. daisyUI's zebra striping therefore collides with
+<em>app</em> CSS, not vendor CSS — so it is a design decision (keep the Puzzle shading, or adopt zebra), not a
+mechanical swap. And <code>/design_guide</code>, the acceptance page, is <em>precisely a table-styling gallery</em>
+(<a href="upgrade.html#decisions">D1</a>). Expect this to be the most looked-at diff of the whole migration.</p>
+</div>
+
+<div class="box warn">
+<p><strong><code>selectize.bootstrap3.scss</code> becomes a visible orphan.</strong> It survives phase 6 as app SCSS
+and consumes our Bootstrap variables. Bootstrap-3-styled dropdowns sitting next to daisyUI inputs read to a user as a
+bug, not as deferred work — so it needs a scheduled slot in this migration (Tom Select, or a restyle against the
+theme), not a phase-7 bullet. Note that retiring selectize also clears the critical-but-unreachable
+<code>minimist</code> audit finding from <a href="upgrade.html#p2">phase 2b</a>.</p>
+</div>
+
+<h4>Explicitly unchanged</h4>
+<ul>
+  <li><strong>Grid</strong> — daisyUI has none; <code>row</code>/<code>col-*</code> → Tailwind utilities remains its
+      own phase-7 item.</li>
+  <li><strong>Glyphicons</strong> — <a href="upgrade.html#decisions">D2</a> stands: vendored font now, inline SVG as
+      tracked follow-up. daisyUI does not ship icons and does not change this.</li>
+  <li><strong><code>layouts/mailer.html.haml</code></strong> — e-mail needs inline CSS. Do not touch it, in this
+      migration or any other.</li>
+</ul>
+
+<h2 id="seq">7. Sequencing note — worth deciding before phase 5 continues</h2>
+
+<div class="box warn">
+<p><a href="upgrade.html#p5">Phase 5</a> is <strong>1 of 8 done</strong>, and 6 of the 7 remaining components (all but
+the grid) are precisely daisyUI's surface. Finishing them by hand means authoring roughly 500 lines of
+Bootstrap-look CSS in order to delete it again.</p>
+<p>So there is a real fork, and it is cheapest to take it now rather than after phase 6:</p>
+<ul>
+  <li><strong>(a) Finish phases 5–6 as planned, daisyUI later.</strong> Clean, fully reversible, no design sign-off
+      needed today — at the cost of writing the shim layer twice.</li>
+  <li><strong>(b) Make daisyUI the shim layer.</strong> Same per-component loop, same gates, same bisectability; the
+      output is a component library instead of a dead end. Requires the design sign-off up front, and pulls the modal
+      and tooltip plugin work forward out of phase 7.</li>
+</ul>
+<p>(b) is the better trade <em>if</em> the design decision is gettable. If it is not — or if the answer is "not this
+quarter" — take (a) without hesitation and treat this document as the plan for afterwards. What must not happen is
+phase 5 finishing while the daisyUI question is still open, because that is the one path that pays for both.</p>
+</div>
+
+<hr>
+<p class="small">Written against the state of the branch at <code>0d824afe</code> (phase 5.1 complete). Class names,
+plugin syntax and theme token names are deliberately <em>not</em> enumerated here — see
+<a href="#s4">step 4</a>: they come from the installed package, not from this document.</p>
+
+</div>
+</body>
+</html>
