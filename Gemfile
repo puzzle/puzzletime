@@ -84,6 +84,7 @@ gem 'sentry-ruby'
 gem 'dartsass-rails'
 gem 'jsbundling-rails'
 gem 'propshaft'
+gem 'tailwindcss-rails', '~> 4.6'
 # Kept for Turbolinks::Controller, included by config/initializers/devise.rb.
 gem 'turbolinks'
 

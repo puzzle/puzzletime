@@ -1,0 +1,44 @@
+@layer theme, base, bootstrap, components, utilities;
+
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "./bootstrap-frozen.css" layer(bootstrap);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+@source "../../views";
+@source "../../helpers";
+@source "../../javascript";
+
+@theme {
+  --color-brand-blue-darker: #1E5A96;
+  --color-brand-blue-dark: #3B7BBE;
+  --color-brand-blue: #238BCA;
+  --color-brand-blue-light: #3FA8E0;
+  --color-brand-turquoise-dark: #2C97A6;
+  --color-brand-turquoise: #46BCC0;
+  --color-brand-green: #61B44B;
+  --color-brand-green-light: #69B978;
+  --color-brand-red: #B44B5B;
+
+  --color-primary: var(--color-brand-blue);
+  --color-success: var(--color-brand-green-light);
+  --color-info: var(--color-brand-blue-light);
+  --color-warning: #f0ad4e;
+  --color-danger: var(--color-brand-red);
+  --color-muted: #999999;
+
+  --color-gray-darker: #444444;
+  --color-gray-dark: #4A4A4A;
+  --color-gray: #999999;
+  --color-gray-light: #D8D8D8;
+  --color-gray-lighter: #F5F5F5;
+
+  --default-font-family: Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+@layer base {
+  main ul { list-style: disc; }
+  main ol { list-style: decimal; }
+
+  img, svg { display: inline-block; vertical-align: middle; }
+}
