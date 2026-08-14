@@ -271,7 +271,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry ok">
     <div class="timeline-date repeat">Fr, 14.08.2026</div>
-    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="a642706b88889d5b6226eb6fa839e0e016bf6d16"></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="de848d2d6d92202df69814f19c19c34f9fe6ba05"></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><strong>Phase 5.1 complete</strong> — type &amp; utilities shimmed
       (<code>h3</code>/<code>h4</code>, <code>lead</code>, <code>dl-horizontal</code>, <code>pull-right</code>,
       <code>visible-xs</code>/<code>hidden-*</code>) and deleted from <code>bootstrap-frozen.css</code>. See
@@ -280,7 +280,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry accent">
     <div class="timeline-date repeat">Fr, 14.08.2026</div>
-    <div class="timeline-spine accent"><button type="button" class="timeline-dot" data-sha="a642706b88889d5b6226eb6fa839e0e016bf6d16"></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine accent"><button type="button" class="timeline-dot" data-sha="de848d2d6d92202df69814f19c19c34f9fe6ba05"></button><div class="timeline-line"></div></div>
     <div class="timeline-content">Phase 5's plan claimed the frozen file's Bootstrap source comments make component
       boundaries obvious — three comments survive in 6536 lines. Boundaries are found by selector grep instead. See
       <a href="#p5">Phase 5</a>.</div>
@@ -288,12 +288,23 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry bad">
     <div class="timeline-date repeat">Fr, 14.08.2026</div>
-    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="0d824afec671055ae4e6801da35492f1235e7ed9"></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="70129fcc19904a21de85489f0cb2bf46982a8f67"></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><code>print.scss</code> imports <code>bootstrap-frozen.css</code> unlayered, so
       every class the shim deletes also vanishes from print output — except <code>layouts/print.html.haml</code>, its
       only caller, has been dead since a pre-branch commit replaced the web report with a PDF download. Deleted the
       layout, its stylesheet, and the <code>dartsass.rb</code> entry rather than shim a dead target eight times over.
       See <a href="#p5">Phase 5</a>.</div>
+  </div>
+
+  <div class="timeline-entry accent">
+    <div class="timeline-date repeat">Fr, 14.08.2026</div>
+    <div class="timeline-spine accent"><button type="button" class="timeline-dot" data-sha="dc843bccd5ccb056cd79e931636605d74725bccb"></button><div class="timeline-line"></div></div>
+    <div class="timeline-content"><strong>daisyUI evaluated as a possible next step</strong> —
+      <a href="upgrade-daisyui.html"><code>upgrade-daisyui.html</code></a>. It is a visual redesign rather than a
+      compatibility layer, so design sign-off gates it; the §4.1 layer stack makes it incremental for free. Has a
+      bearing on <em>this</em> plan's timing, not just what follows it: Phase 5 is 1/8 done and 6 of its 7 remaining
+      components are daisyUI's surface, so finishing them by hand writes the shim layer twice. See
+      <a href="#p7">Phase 7</a>.</div>
   </div>
 
 </div>
