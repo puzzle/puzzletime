@@ -245,6 +245,30 @@ reasoning behind each decision and the phase sections for full verification deta
       path inside the project tree — it had gone missing a third time, same root cause each time.</div>
   </div>
 
+  <div class="timeline-entry bad">
+    <div class="timeline-date">Fr, 14.08.2026</div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="e203db71a6f888e110053747b7b115b4433eee8c"></button><div class="timeline-line"></div></div>
+    <div class="timeline-content">A collision §4.2's table missed entirely: Tailwind's <code>[hidden]</code>
+      <code>!important</code> rule beats jQuery's inline-style <code>.show()</code>, permanently hiding the planning
+      board's add-row selects. Caught by the full suite, not by eyeballing — confirmed a real regression by re-running
+      the identical test clean against the pre-phase-4 baseline. See <a href="#p4">Phase 4</a>.</div>
+  </div>
+
+  <div class="timeline-entry ok">
+    <div class="timeline-date repeat">Fr, 14.08.2026</div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="e203db71a6f888e110053747b7b115b4433eee8c"></button><div class="timeline-line"></div></div>
+    <div class="timeline-content"><a href="#p4"><strong>Phase 4 complete</strong></a> — Tailwind in, layered,
+      Preflight on, the three known Bootstrap/Tailwind class collisions fixed.</div>
+  </div>
+
+  <div class="timeline-entry warn">
+    <div class="timeline-date repeat">Fr, 14.08.2026</div>
+    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="e203db71a6f888e110053747b7b115b4433eee8c"></button><div class="timeline-line"></div></div>
+    <div class="timeline-content">The plan never named an install step for Tailwind itself, and named a dead view
+      (<code>expense_reviews/show.html.haml</code>, no route, deleted instead of fixed) alongside the live one. The
+      Preflight border audit found one real hit outside the two known collisions. See <a href="#p4">Phase 4</a>.</div>
+  </div>
+
 </div>
 
 <p class="timeline-legend">
@@ -687,7 +711,17 @@ restores</strong>:</p>
     <td>Any <code>&lt;input&gt;</code>/<code>&lt;select&gt;</code>/<code>&lt;textarea&gt;</code> that does <em>not</em>
         carry <code>.form-control</code> loses its border. <code>dry_crud</code>'s builder adds <code>.form-control</code>
         to virtually everything, so this should be a short list — but it needs an actual audit, not an assumption.</td>
-    <td>audit step, not a blanket rule <span class="tag high">audit</span></td>
+    <td>audited in phase 4: 1 real hit, 2 sites in <code>ordertimes/running.html.haml</code>, fixed
+        <span class="tag low">done</span></td>
+  </tr>
+  <tr>
+    <td><code>[hidden]:where(…) { display: none !important }</code></td>
+    <td>Missed by this table entirely. An element hidden via the HTML <code>hidden</code> attribute but later shown via
+        jQuery <code>.show()</code> (inline <code>style.display</code>, never touches the attribute) can no longer be
+        un-hidden — the stylesheet's <code>!important</code> beats a non-important inline style regardless of source
+        order. Broke the planning board's add-row selects; caught by the full suite.</td>
+    <td>2 sites fixed in phase 4 (switched to <code>style: 'display: none'</code>); a 3rd already safe
+        (<code>.prop('hidden', …)</code>) <span class="tag low">done</span></td>
   </tr>
   <tr>
     <td><code>* { margin: 0; padding: 0 }</code></td>
@@ -729,12 +763,14 @@ our shims in <code>components</code>.</p>
     <td><code>collapse</code></td>
     <td><code>visibility: collapse</code></td>
     <td><code>display: none</code></td>
-    <td class="tag high" style="display:table-cell"><strong>real breakage.</strong> Content would hide but keep its box.
-        Only 2 views use it. Drop the Bootstrap collapse plugin and rewrite those two toggles — or override with
-        <code>@utility collapse { display: none }</code>.</td>
+    <td class="tag low" style="display:table-cell"><strong>fixed in phase 4.</strong> Only 1 <em>live</em> view used it
+        (<code>expenses_reviews/show.html.haml</code>, rewritten to a 3-line jQuery toggle); the plan's other named
+        site, <code>expense_reviews/show.html.haml</code> (singular), turned out to be dead code with no route —
+        deleted instead. Dropped the Bootstrap collapse plugin outright.</td>
   </tr>
   <tr><td><code>container</code></td><td>responsive max-widths</td><td>fixed-width centred wrapper</td>
-      <td>1 use (<code>devise/sessions/new</code>) — rewrite the view, don't shim it</td></tr>
+      <td>1 use (<code>devise/sessions/new</code>) — rewritten with <code>mx-auto max-w-5xl px-4</code>
+          <span class="tag low">done</span></td></tr>
   <tr><td><code>table</code></td><td><code>display: table</code></td><td>table styling</td>
       <td>harmless — only ever applied to real <code>&lt;table&gt;</code>s; shim the rest, both rules coexist</td></tr>
   <tr><td><code>hidden</code></td><td><code>display: none</code></td><td><code>display: none !important</code></td>
@@ -1626,31 +1662,94 @@ directly — all 200, none 404; <code>docker build</code> end to end (after the 
 </div>
 
 <div class="phase">
-<h3 id="p4">Phase 4 — Tailwind in, layered, Preflight on <span class="tag med">1 day</span></h3>
+<h3 id="p4">Phase 4 — Tailwind in, layered, Preflight on <span class="tag low">complete</span></h3>
 <p class="goal">Goal: Tailwind is present and usable, and <em>nothing looks different</em>. This is the phase that makes
 the rest incremental.</p>
+<div class="box warn">
+<p><strong>The plan never named an install step.</strong> §4.1–4.4 describe the entrypoint's contents but the checklist
+started at "move the frozen CSS into the layer stack," silently assuming Tailwind was already installed — it wasn't
+(no gem, no npm package, no <code>app/assets/tailwind/</code>). Confirmed <code>tailwindcss-rails</code> 4.6.0 depends
+on <code>tailwindcss-ruby ~&gt; 4.0</code> (a real Tailwind v4 CLI, not v3 under a v4-numbered gem) before writing
+anything against the v4-only <code>@theme</code>/layer syntax. Added by hand, not via <code>rails
+tailwindcss:install</code> — that generator overwrites <code>Procfile.dev</code>/<code>bin/dev</code>, both already
+carrying phase 2/3 work; run once by accident (killed early by a piped <code>head</code>, then re-run to completion
+before that was noticed), it did exactly that and had to be partially reverted (<code>bin/dev</code> back out
+entirely; <code>Procfile.dev</code>'s appended <code>css:</code> line, a duplicate key, renamed to <code>tailwind:</code>).</p>
+</div>
 <ul class="check">
-  <li>Move <code>vendor/bootstrap-3.4.1.css</code> under <code>app/assets/tailwind/</code> as
-      <code>bootstrap-frozen.css</code> and import it into the layer stack from §4.1.</li>
-  <li>Add the <code>@theme</code> block from §4.4 and the two Preflight residue rules from §4.2.</li>
-  <li>Point <code>@source</code> at <code>app/views</code>, <code>app/helpers</code>, <code>app/javascript</code>.</li>
-  <li>Layout: <code>tailwind.css</code> first, then <code>application.css</code>
-      (the unlayered app SCSS must stay last). Remove the Bootstrap <code>require</code> from
-      <code>application.scss</code> — it now enters through the Tailwind entrypoint.</li>
-  <li>Fix the three collisions from §4.3 <em>now</em>, before any shim exists:
-      <ul>
-        <li><code>.collapse</code> — rewrite <code>expense_reviews/show.html.haml</code> and
-            <code>expenses_reviews/show.html.haml</code> to a plain toggle (a <code>&lt;details&gt;</code> element or 4
-            lines of jQuery), drop <code>bootstrap/js/collapse</code>.</li>
-        <li><code>.container</code> — rewrite <code>devise/sessions/new.html.haml</code> with Tailwind utilities.</li>
-        <li>Delete <code>.text-center</code>, <code>.text-left</code>, <code>.pull-left</code>, <code>.sr-only</code>
-            from the WIP shim — Tailwind supplies them.</li>
-      </ul></li>
-  <li>Run the Preflight border audit: every <code>&lt;input&gt;</code>/<code>&lt;select&gt;</code>/<code>&lt;textarea&gt;</code>
-      rendered without <code>.form-control</code>.</li>
+  <li>✓ <code>gem 'tailwindcss-rails', '~> 4.6'</code>; <code>tailwind: bin/rails tailwindcss:watch</code> added to
+      <code>Procfile.dev</code> alongside the existing <code>js:</code>/<code>css:</code> watchers.</li>
+  <li>✓ Moved <code>vendor/bootstrap-3.4.1.css</code> to <code>app/assets/tailwind/bootstrap-frozen.css</code>, imported
+      into the layer stack from §4.1 (<code>theme, base, bootstrap, components, utilities</code>). Its leading
+      <code>@charset "UTF-8"</code> was dropped — Lightning CSS warns on a <code>@charset</code> that isn't the very
+      first rule of the final stylesheet, which it no longer is once nested inside a layered <code>@import</code>.</li>
+  <li>✓ <strong>Corrected from the plan:</strong> <code>print.scss</code> — a separate, Tailwind-less stylesheet for
+      <code>layouts/print.html.haml</code> — had its <em>own</em> <code>@import "vendor/bootstrap-3.4.1"</code>, broken
+      outright by the move (<code>dartsass:build</code> failed: <em>Can't find stylesheet to import</em>). Repointed
+      at <code>../tailwind/bootstrap-frozen</code>; deliberately left as its own unlayered copy rather than pulled into
+      the Tailwind entrypoint, since the print layout never loads Tailwind at all — there is no layering conflict to
+      solve there. <code>phone.scss</code> was already checked and never imported Bootstrap in the first place.</li>
+  <li>✓ Removed the now-doubly-served <code>@import "vendor/bootstrap-3.4.1"</code> from <code>application.scss</code>
+      — left in place, the unlayered copy would keep outranking every Tailwind utility, silently defeating §4.1's
+      whole premise while every page still looked correct. <code>@import "vendor/glyphicons"</code> stays put per
+      §6.10 (glyphicons are never shimmed).</li>
+  <li>✓ <code>@theme</code> block from §4.4 and the two Preflight residue rules from §4.2 (<code>list-style</code>,
+      <code>img</code>/<code>svg</code> <code>display</code>).</li>
+  <li>✓ <code>@source</code> pointed at <code>app/views</code>, <code>app/helpers</code>, <code>app/javascript</code>
+      (paths resolve relative to the stylesheet; Tailwind scans as plain text regardless of extension, so
+      <code>.haml</code>/<code>.rb</code> need no special-casing).</li>
+  <li>✓ Layout: <code>stylesheet_link_tag 'tailwind'</code> inserted before <code>'application'</code> in
+      <code>layouts/application.html.haml</code>.</li>
+  <li>✓ <code>.collapse</code> — <code>expenses_reviews/show.html.haml</code> rewritten to a 3-line jQuery toggle
+      (<code>$('.inlineedit').toggleClass('hidden')</code>, which toggles each matched element independently by its
+      own current state — the same per-element behaviour Bootstrap's collapse plugin had), dropped
+      <code>bootstrap/js/collapse</code> from <code>application.js</code> entirely (nothing else used it).
+      <strong>Found along the way:</strong> <code>expense_reviews/show.html.haml</code> (singular — the plan named
+      both) has no controller and no route; its own <code>_form.html.haml</code> calls the nonexistent
+      <code>expense_review_path</code> helper. Confirmed dead via <code>git log</code> (real history, so not a stub)
+      and deleted rather than rewritten — fixing a Bootstrap collision in unreachable code doesn't earn its keep.</li>
+  <li>✓ <code>.container</code> — <code>devise/sessions/new.html.haml</code> rewritten to
+      <code>mx-auto max-w-5xl px-4</code>. Not pixel-matched to Bootstrap's fixed 750/970/1170px breakpoints — the plan
+      itself calls this bucket "rewrite the view, don't shim it," accepting some difference; verified the page still
+      renders correctly (fields, labels, submit) via curl (anonymous, bypassing the logged-in redirect) and
+      side-by-side against <code>master</code>.</li>
+  <li>✓ <s>Delete <code>.text-center</code>/<code>.text-left</code>/<code>.pull-left</code>/<code>.sr-only</code> from
+      the WIP shim</s> — <strong>no-op, doc correction:</strong> phase 0 already reverted that WIP shim (see §2); no
+      <code>app/assets/tailwind/</code> or shim file existed before this phase. Recorded here as a constraint on the
+      phase-5 shim (don't reintroduce those classes) rather than an edit.</li>
+  <li>✓ Preflight border audit — every raw <code>*_field_tag</code>/<code>select_tag</code> in <code>app/views</code>
+      checked individually, not assumed. <code>dry_crud</code>'s <code>Form::Builder</code> (<code>text_field</code>,
+      <code>email_field</code>, <code>text_area</code>, <code>enum_field</code>, <code>belongs_to_field</code>, and
+      everything that delegates to them) already adds <code>.form-control</code> unconditionally. Every raw
+      <code>select_tag</code> without it turned out to be selectize-enhanced (native <code>&lt;select&gt;</code>
+      hidden, replaced by selectize's own styled control), so its border is moot. <strong>Real hit:</strong> two bare
+      <code>text_field_tag</code>s in <code>ordertimes/running.html.haml</code> (the header's "running time" stop
+      form) had no class at all — today's border comes from the browser's own UA stylesheet, which Preflight's
+      <code>* { border: 0 solid }</code> strips regardless of <code>.form-control</code>. Added
+      <code>class: 'form-control'</code>, matching every other standalone <code>text_field_tag</code> in the app.</li>
 </ul>
-<p><strong>Verify:</strong> side-by-side against <code>master</code> — the two must be indistinguishable, including hover, focus and open-modal states. Any visible difference means the layer order is wrong;
-fix that before proceeding, not later.</p>
+<div class="box bad">
+<p><strong>New collision, absent from §4.2's table entirely: <code>[hidden]</code>.</strong> Tailwind v4 Preflight emits
+<code>[hidden]:where(:not([hidden=until-found])) { display: none !important }</code>. Two elements —
+<code>plannings/employees/_add_row.html.haml</code> and <code>plannings/orders/_add_row.html.haml</code>'s wrapper
+divs — start hidden via the HTML <code>hidden</code> attribute in the template, but <code>plannings.js</code> shows
+them later with jQuery's <code>.show()</code>, which only ever sets inline <code>style.display</code> and never
+touches the <code>hidden</code> attribute. Once Preflight's rule is <code>!important</code>, no non-important inline
+style can override it, so the element could never actually become visible again. <strong>Caught by the full suite,
+not by eyeballing</strong> — <code>PlanningsOrdersTest</code> failed four ways
+(<code>Unable to find visible css "#add_employee_select_id + .selectize-control"</code>), confirmed a real regression
+(not flaky) by stashing the whole phase and re-running the identical test clean against the pre-phase-4 baseline.
+A third site, <code>order_services/_actions.html.haml</code>, was already safe — its JS toggles
+<code>.prop('hidden', …)</code>, the actual attribute, not an inline style, so it was never affected. Fix: swapped the
+two templates' initial <code>hidden: true</code> for <code>style: 'display: none'</code>, so the whole show/hide
+lifecycle stays on the one mechanism jQuery actually manipulates, without touching Preflight's rule (or its intent)
+at all.</p>
+</div>
+<p><strong>Verify:</strong> side-by-side against <code>master</code> (fonts, spacing, buttons, the two rewritten
+views) plus live interaction — the planning board's add-employee/add-order selectize flow clicked through end to end
+in a real browser, not just asserted by the test. <code>bin/rake parallel:test[16]</code> — 1515 tests, 6006
+assertions, 0 failures, matching phase 0's baseline count exactly (it did not, on the first run — see the
+<code>[hidden]</code> box above — until the fix landed).</p>
 </div>
 
 <div class="phase">
