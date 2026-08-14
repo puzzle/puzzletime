@@ -42,3 +42,140 @@
 
   img, svg { display: inline-block; vertical-align: middle; }
 }
+
+/* Phase 5.1 — type & utilities, shimmed from bootstrap-frozen.css (see upgrade.html §6.2) */
+@layer components {
+  h3, .h3,
+  h4, .h4 {
+    font-family: inherit;
+    font-weight: 400;
+    line-height: 1.1;
+    color: inherit;
+  }
+
+  h3, .h3 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 24px;
+  }
+
+  h4, .h4 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 18px;
+  }
+
+  h3 small, h3 .small, .h3 small, .h3 .small {
+    font-weight: 400;
+    line-height: 1;
+    color: var(--color-muted);
+    font-size: 65%;
+  }
+
+  h4 small, h4 .small, .h4 small, .h4 .small {
+    font-weight: 400;
+    line-height: 1;
+    color: var(--color-muted);
+    font-size: 75%;
+  }
+
+  small, .small {
+    font-size: 85%;
+  }
+
+  .lead {
+    margin-bottom: 20px;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.4;
+  }
+
+  @media (min-width: 768px) {
+    .lead {
+      font-size: 21px;
+    }
+  }
+
+  .img-responsive {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+
+  .dl-horizontal dt {
+    font-weight: 700;
+  }
+
+  .dl-horizontal dt,
+  .dl-horizontal dd {
+    line-height: 1.428571429;
+  }
+
+  .dl-horizontal dd {
+    margin-left: 0;
+  }
+
+  .dl-horizontal dd::before,
+  .dl-horizontal dd::after {
+    display: table;
+    content: " ";
+  }
+
+  .dl-horizontal dd::after {
+    clear: both;
+  }
+
+  @media (min-width: 768px) {
+    .dl-horizontal dt {
+      float: left;
+      width: 160px;
+      clear: left;
+      text-align: right;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .dl-horizontal dd {
+      margin-left: 180px;
+    }
+  }
+
+  .pull-right {
+    float: right !important;
+  }
+
+  .visible-xs {
+    display: none !important;
+  }
+
+  @media (max-width: 767px) {
+    .visible-xs {
+      display: block !important;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .hidden-xs {
+      display: none !important;
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 991px) {
+    .hidden-sm {
+      display: none !important;
+    }
+  }
+
+  @media (min-width: 992px) and (max-width: 1199px) {
+    .hidden-md {
+      display: none !important;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .hidden-lg {
+      display: none !important;
+    }
+  }
+}
