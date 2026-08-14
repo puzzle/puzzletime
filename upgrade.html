@@ -1909,6 +1909,16 @@ layer.</p>
       <code>target_scopes.icon</code> with a fallback. This is the last piece of Bootstrap left standing after phase 6.</li>
   <li><code>layouts/mailer.html.haml</code>'s inlined Bootstrap — e-mail needs inline CSS; leave it alone.</li>
 </ul>
+<div class="box">
+<p><strong>A possible next step after phase 6: <a href="upgrade-daisyui.html">daisyUI</a>.</strong> Written up
+separately in <a href="upgrade-daisyui.html"><code>upgrade-daisyui.html</code></a> — an evaluation, not a committed
+plan. Short version: the layer stack built in §4.1 makes it incremental for free, but it is a <em>visual redesign</em>
+and needs design sign-off before anything else. It would also pull the modal and tooltip plugin items above out of
+phase 7 and into itself.</p>
+<p class="small">It has a bearing on this phase's timing rather than only on what follows it: phase 5 is 1/8 done, and
+6 of its 7 remaining components are exactly daisyUI's surface — so finishing them by hand means writing the shim layer
+twice. That fork is cheapest to take now; see its §7.</p>
+</div>
 </div>
 
 <h2 id="shims">6. Shim catalogue — the classes we actually use</h2>
