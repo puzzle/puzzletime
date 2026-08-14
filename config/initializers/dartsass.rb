@@ -2,12 +2,11 @@
 
 # Be sure to restart your server when you modify this file.
 
-# Three entrypoints: application (all views), print (layouts/print.html.haml)
-# and phone (layouts/phone.html.haml). Paths are relative to
-# app/assets/stylesheets/ (source) and app/assets/builds/ (output).
+# Two entrypoints: application (all views) and phone (layouts/phone.html.haml).
+# Paths are relative to app/assets/stylesheets/ (source) and
+# app/assets/builds/ (output).
 Rails.application.config.dartsass.builds = {
   'application.scss' => 'application.css',
-  'print.scss' => 'print.css',
   'phone.scss' => 'phone.css'
 }
 

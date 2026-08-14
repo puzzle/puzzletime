@@ -1,5 +1,0 @@
-// Replaces the old Sprockets manifest (app/assets/stylesheets/print.css).
-// Linked by app/views/layouts/print.html.haml as its only stylesheet.
-@import "../tailwind/bootstrap-frozen";
-@import "vendor/glyphicons";
-@import "print_styles";
