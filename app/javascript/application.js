@@ -29,7 +29,6 @@ import "bootstrap/js/modal";
 import "bootstrap/js/tooltip";
 import "bootstrap/js/button";
 import "bootstrap/js/alert";
-import "bootstrap/js/collapse";
 import "waypoints/lib/jquery.waypoints";
 import "waypoints/lib/shortcuts/sticky";
 import "waypoints/lib/shortcuts/inview";
