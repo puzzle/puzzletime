@@ -286,6 +286,16 @@ reasoning behind each decision and the phase sections for full verification deta
       <a href="#p5">Phase 5</a>.</div>
   </div>
 
+  <div class="timeline-entry bad">
+    <div class="timeline-date repeat">Fr, 14.08.2026</div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="0d824afec671055ae4e6801da35492f1235e7ed9"></button><div class="timeline-line"></div></div>
+    <div class="timeline-content"><code>print.scss</code> imports <code>bootstrap-frozen.css</code> unlayered, so
+      every class the shim deletes also vanishes from print output — except <code>layouts/print.html.haml</code>, its
+      only caller, has been dead since a pre-branch commit replaced the web report with a PDF download. Deleted the
+      layout, its stylesheet, and the <code>dartsass.rb</code> entry rather than shim a dead target eight times over.
+      See <a href="#p5">Phase 5</a>.</div>
+  </div>
+
 </div>
 
 <p class="timeline-legend">
@@ -1850,6 +1860,24 @@ which land on different numbers. Live computed-style check against the running a
 those rest on the CSSOM check rather than a live page — lower risk than the float/media-query cases above since
 they're single-declaration, unnested rules. Full suite: 1515 tests, 6006 assertions, 0 failures — unchanged from
 phase 0's baseline count.</p>
+
+<div class="box bad">
+<p><strong>New blocker the plan missed: <code>print.scss</code> imports <code>bootstrap-frozen.css</code> directly and
+unlayered</strong> (see phase 4's note) — so every class deleted from the frozen file in this phase, and the next
+seven, disappears from print output too unless it's re-added there. Checked whether that mattered before shimming any
+further: it doesn't, because <code>layouts/print.html.haml</code> — the only thing that links <code>print.scss</code>
+in — has had no live caller since commit <code>e889c7b2</code>, <em>"remove webbased time report and show pdf report
+directly"</em>, years before this branch existed. Exhaustive grep for <code>layout: 'print'</code> /
+<code>layouts/print</code> / <code>stylesheet_link_tag 'print'</code> across <code>app/</code>, <code>lib/</code>,
+<code>config/</code> found nothing pointing at it; the <code>WorktimesReport</code> concern that used to render
+through it is now pure data-shaping with no <code>render</code>/<code>layout</code> call left at all. Deleted
+<code>layouts/print.html.haml</code>, <code>print.scss</code>, <code>print_styles.scss</code> and their
+<code>dartsass.rb</code> build entry rather than carry a redundant shim for a dead entrypoint through eight more
+components. The <em>general</em> print feature — printing any regular page via the browser's own Ctrl+P — is unrelated
+and untouched: it lives in <code>puzzletime.scss</code>/<code>_employees.scss</code>/<code>_evaluator.scss</code>'s
+own <code>@media print</code> blocks, compiled through the main Tailwind pipeline, not through the file that got
+deleted. Re-verified: full suite green after the deletion, same 1515/6006/0 count.</p>
+</div>
 </div>
 
 <div class="phase">
