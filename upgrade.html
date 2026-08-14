@@ -58,7 +58,7 @@
   hr { border: 0; border-top: 1px solid var(--line); margin: 2.5rem 0; }
   .small { font-size: .85rem; color: var(--muted); }
 
-  .timeline { display: grid; grid-template-columns: 5.5rem 1.5rem 1fr; margin: 1rem 0 1.5rem; }
+  .timeline { display: grid; grid-template-columns: 8rem 1.5rem 1fr; margin: 1rem 0 1.5rem; }
   .timeline-entry { display: contents; }
   .timeline-date {
     grid-column: 1; text-align: right; padding-right: .75rem; padding-top: .05rem;
@@ -135,14 +135,14 @@ reasoning behind each decision and the phase sections for full verification deta
 <div class="timeline">
 
   <div class="timeline-entry ok">
-    <div class="timeline-date">07-27</div>
+    <div class="timeline-date">Mo, 27.07.2026</div>
     <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="d3575ad819329959dbcf6347f102136d9155686d"></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><a href="#p0"><strong>Phase 0 complete</strong></a> — baseline captured,
       scoped runs green.</div>
   </div>
 
   <div class="timeline-entry warn">
-    <div class="timeline-date repeat">07-27</div>
+    <div class="timeline-date repeat">Mo, 27.07.2026</div>
     <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="84ef0bdf649c6211b789d282e0adedc283e28b9c"></button><div class="timeline-line"></div></div>
     <div class="timeline-content">The <em>full</em> suite (not the scoped runs) finds 15 further failures in 3
       causes — a dead callback guard, the Rails 8.1 schema dumper reordering columns, and the jsonapi-serializer
@@ -151,14 +151,14 @@ reasoning behind each decision and the phase sections for full verification deta
   </div>
 
   <div class="timeline-entry ok">
-    <div class="timeline-date">08-03</div>
+    <div class="timeline-date">Mo, 03.08.2026</div>
     <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="643e0fc33eed7edf993f68a98507b555a4afe458"></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><a href="#p1"><strong>Phase 1 complete</strong></a> — Bootstrap 3 frozen into
       a static CSS file.</div>
   </div>
 
   <div class="timeline-entry bad">
-    <div class="timeline-date repeat">08-03</div>
+    <div class="timeline-date repeat">Mo, 03.08.2026</div>
     <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="643e0fc33eed7edf993f68a98507b555a4afe458"></button><div class="timeline-line"></div></div>
     <div class="timeline-content">The phase-0 baseline turns out to be gone (<code>/tmp</code> was cleared).
       Re-deriving it just in time catches a <strong>119 kB → 471 byte regression in <code>print.css</code></strong>
@@ -166,7 +166,7 @@ reasoning behind each decision and the phase sections for full verification deta
   </div>
 
   <div class="timeline-entry accent">
-    <div class="timeline-date">08-10</div>
+    <div class="timeline-date">Mo, 10.08.2026</div>
     <div class="timeline-spine"><button type="button" class="timeline-dot" data-sha="56a02f529e9b1f602bebba400f4d5fb8ac3380b7"></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><strong>This document is added to the repo</strong>, written up against what
       phases 0–1 had already found — including two corrections to phase 1 itself: its "byte-comparable"
@@ -175,14 +175,14 @@ reasoning behind each decision and the phase sections for full verification deta
   </div>
 
   <div class="timeline-entry ok">
-    <div class="timeline-date repeat">08-10</div>
+    <div class="timeline-date repeat">Mo, 10.08.2026</div>
     <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="67c44a65c0221e5c076b85527a1a7929294978f3"></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><a href="#p2"><strong>Phase 2 complete</strong></a> — CoffeeScript to
       jsbundling + esbuild.</div>
   </div>
 
   <div class="timeline-entry bad">
-    <div class="timeline-date repeat">08-10</div>
+    <div class="timeline-date repeat">Mo, 10.08.2026</div>
     <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="67c44a65c0221e5c076b85527a1a7929294978f3"></button><div class="timeline-line"></div></div>
     <div class="timeline-content">Four silent Sprockets → esbuild interop traps found, all real breakages: turbolinks
       never starting when bundled, jquery-ui's AMD-only dependency lists, dead <code>//= require</code> comments,
@@ -190,7 +190,7 @@ reasoning behind each decision and the phase sections for full verification deta
   </div>
 
   <div class="timeline-entry warn">
-    <div class="timeline-date repeat">08-10</div>
+    <div class="timeline-date repeat">Mo, 10.08.2026</div>
     <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="67c44a65c0221e5c076b85527a1a7929294978f3"></button><div class="timeline-line"></div></div>
     <div class="timeline-content">Phase 2's drop-list was wrong: <code>turbolinks</code>,
       <code>jquery-ui-rails</code> and <code>selectize-rails</code> all had to stay — a gem's asset payload and
@@ -198,7 +198,7 @@ reasoning behind each decision and the phase sections for full verification deta
   </div>
 
   <div class="timeline-entry bad">
-    <div class="timeline-date">08-11</div>
+    <div class="timeline-date">Di, 11.08.2026</div>
     <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="963874a3b916e6476f5569c14af6f11abf8c763a"></button><div class="timeline-line"></div></div>
     <div class="timeline-content">Pre-existing pg heap corruption found and fixed: planning-board AJAX could
       still be executing when <code>DatabaseCleaner</code> truncated the tables underneath it.
@@ -206,7 +206,7 @@ reasoning behind each decision and the phase sections for full verification deta
   </div>
 
   <div class="timeline-entry warn">
-    <div class="timeline-date repeat">08-11</div>
+    <div class="timeline-date repeat">Di, 11.08.2026</div>
     <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="3ee4082341eba0845b75aeaa1ac2e415cf5ed60b"></button><div class="timeline-line"></div></div>
     <div class="timeline-content">Orphaned-headless-Chrome hazard documented — and a wrong claim in this very
       document's pre-flight section corrected (a loose <code>chrome.*headless</code> pattern does not, in fact,
@@ -214,7 +214,7 @@ reasoning behind each decision and the phase sections for full verification deta
   </div>
 
   <div class="timeline-entry bad">
-    <div class="timeline-date">08-13</div>
+    <div class="timeline-date">Do, 13.08.2026</div>
     <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="aa6c532c66f649baacc4cea8892694a5b5db54d2"></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><code>docker build</code> found broken since Phase 2 landed —
       <code>BUILD_PACKAGES</code> lost <code>libvips42</code>, and <code>assets:precompile</code> boots the full
@@ -222,14 +222,14 @@ reasoning behind each decision and the phase sections for full verification deta
   </div>
 
   <div class="timeline-entry ok">
-    <div class="timeline-date repeat">08-13</div>
+    <div class="timeline-date repeat">Do, 13.08.2026</div>
     <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="741087b86b4598f83a2c0f9d1c159b7dd869def6"></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><a href="#p3"><strong>Phase 3 complete</strong></a> — dartsass-rails and
       Sprockets to Propshaft, merged into one commit per <a href="#decisions">D3</a>.</div>
   </div>
 
   <div class="timeline-entry warn">
-    <div class="timeline-date repeat">08-13</div>
+    <div class="timeline-date repeat">Do, 13.08.2026</div>
     <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="741087b86b4598f83a2c0f9d1c159b7dd869def6"></button><div class="timeline-line"></div></div>
     <div class="timeline-content">Two blockers the plan missed entirely: the <code>components/*</code> glob
       import (dart-sass has no glob support) and <code>jquery-ui-rails</code>'s transitively-required
@@ -239,7 +239,7 @@ reasoning behind each decision and the phase sections for full verification deta
   </div>
 
   <div class="timeline-entry accent">
-    <div class="timeline-date repeat">08-13</div>
+    <div class="timeline-date repeat">Do, 13.08.2026</div>
     <div class="timeline-spine"><button type="button" class="timeline-dot" data-sha="8d8121bcfbd6474153aeb7d04a6b566705b282f4"></button><div class="timeline-line"></div></div>
     <div class="timeline-content">The CSS/JS baseline moves out of <code>/tmp</code> for good, to a persistent
       path inside the project tree — it had gone missing a third time, same root cause each time.</div>
