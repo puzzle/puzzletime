@@ -307,6 +307,16 @@ reasoning behind each decision and the phase sections for full verification deta
       <a href="#p7">Phase 7</a>.</div>
   </div>
 
+  <div class="timeline-entry accent">
+    <div class="timeline-date">Fr, 21.08.2026</div>
+    <div class="timeline-spine accent"><button type="button" class="timeline-dot" data-sha="6ab1bbb1c2513b1ad9d81b3997eb00a42c5dc0c8"></button><div class="timeline-line"></div></div>
+    <div class="timeline-content"><strong>The daisyUI fork is taken — as (a), finish the shim by hand</strong>
+      (<a href="#decisions">D5</a>). It decides on coupling rather than on line count: (b) would have left a Ruby/Rails
+      upgrade unable to merge until design signed off on eight components. Two knock-on corrections — daisyUI's coverage
+      of the six contested components is only partial, and <code>selectize.bootstrap3.scss</code> reverts from phase-6
+      co-requisite to follow-up work. Phase 5 is unblocked.</div>
+  </div>
+
 </div>
 
 <p class="timeline-legend">
@@ -1926,9 +1936,12 @@ separately in <a href="upgrade-daisyui.html"><code>upgrade-daisyui.html</code></
 plan. Short version: the layer stack built in §4.1 makes it incremental for free, but it is a <em>visual redesign</em>
 and needs design sign-off before anything else. It would also pull the modal and tooltip plugin items above out of
 phase 7 and into itself.</p>
-<p class="small">It has a bearing on this phase's timing rather than only on what follows it: phase 5 is 1/8 done, and
+<p class="small"><s>It has a bearing on this phase's timing rather than only on what follows it: phase 5 is 1/8 done, and
 6 of its 7 remaining components are exactly daisyUI's surface — so finishing them by hand means writing the shim layer
-twice. That fork is cheapest to take now; see its §7.</p>
+twice. That fork is cheapest to take now; see its §7.</s> <strong>Settled 2026-08-21 — see <a href="#decisions">D5</a>:
+the fork was taken as (a), finish the shim by hand.</strong> daisyUI is not part of this migration and does not gate
+phase 5; its own §7 is now a description of a road not taken. The modal and tooltip items above therefore stay in this
+phase, and so does <code>selectize.bootstrap3.scss</code>.</p>
 </div>
 </div>
 
@@ -2050,7 +2063,7 @@ are added by the plugin at runtime)</p>
       <td>Grep for literal <code>/assets/</code> outside helpers.</td></tr>
 </table>
 
-<h2 id="decisions">8. Decisions <span class="tag low">all resolved 2026-07-27</span></h2>
+<h2 id="decisions">8. Decisions <span class="tag low">D1–D4 resolved 2026-07-27 · D5 2026-08-21</span></h2>
 
 <h4>D1 — What happens to <code>design_guide/index.html.haml</code>? <span class="tag low">resolved — no action</span></h4>
 <p>Closer inspection dissolved this one. The page is a table-styling gallery plus two invoice mockups, not a Bootstrap
@@ -2081,6 +2094,39 @@ production — so every rewrite would be done twice, once as a throwaway. Phases
 <code>libv8-node</code> with them, taking a native V8 build out of the Docker image. Review against the three named
 hazards (implicit returns, the <code>Object.prototype</code> monkey-patch, globals) rather than line-by-line, and lean on
 the integration suite.</p>
+
+<h4>D5 — daisyUI, or finish the shim by hand? <span class="tag low">decided 2026-08-21: finish by hand, daisyUI is not
+part of this migration</span></h4>
+<p><a href="upgrade-daisyui.html"><code>upgrade-daisyui.html</code></a> §7 put a fork in front of phase 5 while it was
+1/8 done: <strong>(a)</strong> write the remaining seven components as hand-written Bootstrap-look shims as planned, or
+<strong>(b)</strong> make daisyUI the shim layer, since six of the seven are precisely its surface. The case for (b) is
+that (a) authors roughly 500 lines of CSS in order to delete them again. <strong>Taken as (a)</strong>, for three
+reasons in the order they mattered:</p>
+<ol>
+  <li><strong>It is the coupling, not the line count.</strong> This branch's deliverable is Ruby 4.0 / Rails 8.1, and it
+      already carries a production release gate — the four null-<code>employee_id</code> worktimes in <a href="#p0">phase
+      0</a>. (b) needs design sign-off up front, so it would leave the <em>upgrade</em> unable to merge until someone
+      approves the look of eight components. A visual redesign must not sit on that critical path.</li>
+  <li><strong>The work (a) repeats is the cheapest work in the plan</strong> — copy the rules out of
+      <code>bootstrap-frozen.css</code>, delete the section, verify. <a href="#p5">Phase 5.1</a> is the evidence. (b)
+      does not so much remove that cost as swap it for judgement work: every component becomes a visual change needing
+      an eye, across 37 table views and <code>/design_guide</code> — which the evaluation itself calls the most
+      looked-at diff of the whole migration.</li>
+  <li><strong>"Six of seven" overstates the saving.</strong> daisyUI's coverage of those six is partial: it has no
+      <code>panel</code> and no <code>well</code>; its <code>progress</code> is a real <code>&lt;progress&gt;</code>
+      element, so <code>progress_bar_helper.rb</code> becomes a markup rewrite rather than a reclass; and its pagination
+      wants classes on the individual links, so Kaminari needs a view theme. (b) would touch views and helpers that (a)
+      leaves alone, and those diffs bisect less cleanly than a CSS-only commit.</li>
+</ol>
+<p>The evaluation stays valid and stays on file — it becomes the plan for <em>afterwards</em>, on its own branch, once
+this one merges. Two consequences here and now: the modal and tooltip plugin work stays in <a href="#p7">phase 7</a>
+where it already was, and <code>selectize.bootstrap3.scss</code> goes back to being follow-up work rather than a phase-6
+co-requisite — under (a) it sits next to Bootstrap-look shims and matches them, which was never going to be true next to
+daisyUI inputs.</p>
+<p class="small">Not adopted either: daisyUI's step 1, wrapping the compiled app SCSS in <code>@layer app</code>. It only
+earns its keep once Tailwind utilities are being added to markup that our own SCSS also styles; under (a) the shims live
+in <code>@layer components</code> and the app SCSS keeps winning over them, which <a href="#risks">§7</a> already calls
+expected and mostly desirable during the migration. It stays the fix-it-when-it-bites item §7 describes.</p>
 
 <hr>
 <p class="small">Generated from a scan of this working tree: 330 HAML views, 36 CoffeeScript files, 6020 lines of SCSS,

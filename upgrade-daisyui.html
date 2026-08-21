@@ -94,7 +94,7 @@ therefore outranks whatever <code>bootstrap-frozen.css</code> still holds — fo
     <li><a href="#s4">Step 4 — build the class map by installing, not from memory</a></li>
     <li><a href="#s5">Step 5 — the per-component loop</a></li>
     <li><a href="#decide">Three things to decide, not discover</a></li>
-    <li><a href="#seq">Sequencing note — this is worth deciding before phase 5 continues</a></li>
+    <li><a href="#seq">Sequencing note — decided 2026-08-21: not now</a></li>
   </ol>
 </nav>
 
@@ -302,7 +302,20 @@ theme), not a phase-7 bullet. Note that retiring selectize also clears the criti
       migration or any other.</li>
 </ul>
 
-<h2 id="seq">7. Sequencing note — worth deciding before phase 5 continues</h2>
+<h2 id="seq">7. Sequencing note — <s>worth deciding before phase 5 continues</s> decided</h2>
+
+<div class="box bad">
+<p><strong>Resolved 2026-08-21 as (a) — finish the shim by hand. daisyUI is not part of the asset-pipeline
+migration.</strong> See <a href="upgrade.html#decisions">D5</a> in <code>upgrade.html</code> for the reasoning; the
+short form is that (b) would have put a visual redesign on the critical path of a Ruby 4.0 / Rails 8.1 branch that
+already carries a production release gate, and that daisyUI's coverage of the six contested components is only partial
+anyway (no panel, no well, <code>progress</code> is a markup rewrite, pagination wants a Kaminari view theme).</p>
+<p><strong>This document is not dead — it is the plan for afterwards</strong>, on its own branch, once
+<code>task/65394-ruby-and-rails-upgrade</code> merges. Steps 1–5 and the three decisions in §6 all still hold; what
+changed is only <em>when</em>. Read the fork below as the record of a road not taken rather than as an open question,
+and note that phase 5 will by then have shipped the hand-written shim layer these components would replace.</p>
+</div>
+
 
 <div class="box warn">
 <p><a href="upgrade.html#p5">Phase 5</a> is <strong>1 of 8 done</strong>, and 6 of the 7 remaining components (all but
