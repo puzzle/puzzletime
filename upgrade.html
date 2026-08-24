@@ -344,6 +344,16 @@ reasoning behind each decision and the phase sections for full verification deta
       on real tables (<code>table_helper.rb:41</code> renders a <code>div.table</code>).</div>
   </div>
 
+  <div class="timeline-entry ok">
+    <div class="timeline-date repeat">Mo, 24.08.2026</div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="7ccd0735cfb28b1733445a20ad721e1cd1626f03"></button><div class="timeline-line"></div></div>
+    <div class="timeline-content"><a href="#p5"><strong>Phase 5.4 complete</strong></a> — buttons shimmed, 582 lines out,
+      the largest cut yet. <code>.btn.active</code> drives the planning board's fix/provisorisch toggle and the
+      integration test asserts only that the <em>class</em> is present — so a dropped active state would have shipped
+      green. Also: §6.5's <code>disabled</code> and <code>active</code> counts were each one number covering three
+      unrelated things.</div>
+  </div>
+
 </div>
 
 <p class="timeline-legend">
@@ -1848,7 +1858,7 @@ assertions, 0 failures, matching phase 0's baseline count exactly (it did not, o
 </div>
 
 <div class="phase">
-<h3 id="p5">Phase 5 — Shim the components, one at a time <span class="tag high">in progress — 3 / 8</span></h3>
+<h3 id="p5">Phase 5 — Shim the components, one at a time <span class="tag high">in progress — 4 / 8</span></h3>
 <p class="goal">Goal: for each Bootstrap component — write the shim, delete that section from
 <code>bootstrap-frozen.css</code>, verify, commit. The frozen file shrinks monotonically; at no point is the app half-styled.</p>
 
@@ -1873,8 +1883,9 @@ assertions, 0 failures, matching phase 0's baseline count exactly (it did not, o
       later (<a href="#p7">phase 7</a>)</td></tr>
   <tr><td>3</td><td>tables <span class="tag low">complete</span></td><td><s>5 classes, 37 views, mechanical</s> — 5
       classes plus two bare elements, and not mechanical: the app owns most of the table surface, unlayered. See 5.3</td></tr>
-  <tr><td>4</td><td>buttons</td><td>watch <code>.btn.disabled</code> vs <code>.disabled</code> — the app defines its own
-      <code>.disabled</code> in <code>puzzletime.scss</code></td></tr>
+  <tr><td>4</td><td>buttons <span class="tag low">complete</span></td><td>the <code>.btn.disabled</code> vs
+      <code>.disabled</code> warning was right to exist but milder than it reads — they never collide on a property.
+      See 5.4</td></tr>
   <tr><td>5</td><td>forms</td><td>largest surface (49× <code>.form-group</code>, 37× <code>.control-label</code>);
       <code>dry_crud/form/builder.rb</code> emits most of it, so verify there rather than view-by-view</td></tr>
   <tr><td>6</td><td>navs, navbar, breadcrumb, pagination</td><td>pagination targets <em>Kaminari's default markup</em>,
@@ -2020,6 +2031,46 @@ app, and striping showing Bootstrap's <code>#f5f5f5</code> row underneath the ap
 <code>table#evaluation</code>/<code>table.orders-list</code>/<code>table.orders-report</code>, element and app classes
 rather than Bootstrap ones, so <code>test/</code> needed no changes.</p>
 
+<h4 style="margin-top:1.5rem">5.4 — Buttons <span class="tag low">complete</span></h4>
+<ul class="check">
+  <li>✓ <strong>582 lines out</strong> (5437 → 4855), the largest cut so far, from two contiguous regions:
+      <code>.btn</code> plus its colour variants, and the button-group/toolbar block.</li>
+  <li>✓ <strong>The whole section was deletable wholesale</strong> because <code>badge</code>, <code>caret</code> and
+      every <code>dropdown*</code> class have zero occurrences in the app. Those are what the interleaved
+      <code>.btn-default .badge</code> and <code>.btn .caret</code> rules exist for, so checking three unrelated class
+      names is what turned a surgical edit into a clean cut.</li>
+  <li>✓ <strong><code>.btn.active</code> is load-bearing and the suite cannot see it.</strong>
+      <code>plannings/base/_panel</code> renders <code>.planning-provisional</code>/<code>.planning-definitive</code> as
+      <code>.btn.btn-default</code> and <code>plannings_panel.js</code> toggles <code>.active</code>;
+      <code>plannings_orders_test</code> asserts <code>.planning-definitive.active</code> — but only that the
+      <em>class</em> is present. A shim that dropped the active state would leave the toggle with no visual feedback and
+      the gate would stay green. Confirmed live instead: active renders <code>#dddddd</code> with an inset shadow
+      against <code>#f6f6f6</code> inactive.</li>
+  <li>✓ <a href="#shims">§6.5</a>'s <code>disabled</code> (9) and <code>active</code> (7) each turned out to be one
+      number covering three unrelated things — an HTML attribute, a class on non-buttons, and a class on buttons. Only
+      the third is this component's. Split out in §6.5.</li>
+  <li>✓ <strong>Two deliberate deviations from a byte copy</strong>, enumerated rather than left to be found: dropped
+      <code>-webkit-box-shadow</code> (keeping the unprefixed <code>box-shadow</code>) and
+      <code>filter: alpha(opacity=65)</code> from the six rules carrying them — the inert-prefix class
+      <a href="#p3">phase 3</a> already audited — and dropped <code>:not(.dropdown-toggle)</code> from two
+      <code>.btn-group</code> child selectors, which changes the selector text but not the matched set.</li>
+</ul>
+<p><strong>Verify:</strong> normalised rule-set diff against <code>HEAD</code> — 328 button rule-keys before, 204 after;
+of the keys in both, <strong>the only 8 that changed are the vendor-prefix drops above</strong>, and all 126 removals
+classify as dead variants or as nested-group selectors that cannot match (the one
+<code>[data-toggle="buttons"]</code> group has <code>.btn</code> labels as direct children, so every
+<code>&gt; .btn-group &gt; .btn</code> variant is unreachable). Live computed styles, by injecting a probe element
+rather than hunting for a page carrying every class: <code>.btn-default</code> inline-block/6px 12px/14px/radius 4px,
+<code>.btn-default.active</code> <code>#dddddd</code> + inset shadow, <code>.btn-primary</code> <code>#fff</code> on
+<code>#238BCA</code>, <code>[disabled]</code> <code>0.65</code>/<code>not-allowed</code>, <code>.btn-link</code>
+transparent with radius 0, <code>.btn-block</code> full width, <code>.btn-group-justified</code>
+<code>table-layout: fixed</code> with its labels as <code>table-cell</code>, and the radios clipped to
+<code>rect(0,0,0,0)</code> with <code>pointer-events: none</code>.
+<code>bin/rake 'parallel:test[16]'</code> — 1515 tests, 6006 assertions, 0 failures.</p>
+<p class="small">A page-independent probe is worth keeping as a technique: <code>/design_guide</code> carries no buttons
+at all, and the one <code>.btn</code> on <code>/worktimes</code> is deliberately restyled by the app's unlayered
+<code>.today-link-white</code>, so neither page can show what the shim does.</p>
+
 <div class="phase">
 <h3 id="p6">Phase 6 — Delete the frozen file <span class="tag med">1 day</span></h3>
 <p class="goal">Goal: <code>bootstrap-frozen.css</code> is empty and gets deleted, along with the <code>bootstrap</code>
@@ -2133,11 +2184,37 @@ therefore supplies only what Bootstrap contributes <em>and the app does not over
 <code>width</code>/<code>max-width</code>/<code>margin-bottom</code>, cell borders,
 <code>vertical-align</code> and <code>line-height</code>.</p>
 
-<h3>6.5 Buttons</h3>
-<p><code>btn</code> (30) · <code>btn-primary</code> (13) · <code>disabled</code> (9) · <code>btn-default</code> (6) ·
-<code>btn-block</code> (4) · <code>btn-link</code> (3) · <code>btn-group</code> (3) · <code>active</code> (7) ·
-<code>btn-success</code> (2) · <code>btn-danger</code> (2) · <code>btn-group-justified</code> (2) ·
-<code>btn-warning</code> (1) · <code>btn-toolbar</code> (1)</p>
+<h3>6.5 Buttons <span class="tag low">shimmed in 5.4</span></h3>
+<p>Re-derived in 5.4: <code>btn</code> (33) · <code>btn-primary</code> (14) · <code>btn-default</code> (6) ·
+<code>btn-group</code> (3) · <code>btn-block</code> (2) · <code>btn-link</code> (2) · <code>btn-success</code> (1) ·
+<code>btn-danger</code> (1) · <code>btn-group-justified</code> (1) · <code>btn-toolbar</code> (1) ·
+<s><code>btn-warning</code></s> (listed as 1, actually 0).</p>
+<div class="box warn">
+<p><strong><code>disabled</code> (9) and <code>active</code> (7) were single counts hiding three different things</strong>,
+and only one of the three is this component's business:</p>
+<ul>
+  <li><strong>The HTML attribute</strong> — <code>disabled: true</code> on two buttons in
+      <code>expenses_reviews/_form</code>, plus a dozen form fields and many <code>.prop('disabled', …)</code> calls in
+      the JS. Needs <code>.btn[disabled]</code>, not <code>.btn.disabled</code>.</li>
+  <li><strong>A class on a non-button</strong> — <code>actions_helper.rb:84</code> emits
+      <code>&lt;a class="disabled"&gt;</code>, styled by the app's own unlayered
+      <code>.disabled { color: … }</code> at <code>puzzletime.scss:206</code>, and asserted by
+      <code>edit_order_test.rb:67</code>. Nothing to do with Bootstrap's button. Likewise <code>%li.active</code> in the
+      nav tabs (5.6).</li>
+  <li><strong>A class on a button</strong> — only <code>order_targets/_fields.html.haml:19</code>
+      (<code>%label.btn.btn-default</code> with <code>'active' if …</code>) and, at runtime,
+      <code>modules/spinner.js:14</code>'s <code>button.addClass('disabled')</code>. This is the part the shim
+      serves.</li>
+</ul>
+<p>The app's <code>.disabled</code> and Bootstrap's <code>.btn.disabled</code> never actually collide on a property:
+Bootstrap sets <code>cursor</code>/<code>opacity</code>/<code>box-shadow</code> and no <code>color</code>. The trap the
+phase-5 order table warned about is real but milder than it reads.</p>
+</div>
+<p class="small">Zero occurrences, deleted rather than shimmed: <code>btn-info</code>, <code>btn-warning</code>,
+<code>btn-lg</code>/<code>-sm</code>/<code>-xs</code>, <code>btn-group-vertical</code>,
+<code>btn-group-lg</code>/<code>-sm</code>/<code>-xs</code>. So are <code>badge</code>, <code>caret</code> and every
+<code>dropdown*</code> class — which is why the <code>.btn-default .badge</code> and <code>.btn .caret</code> rules
+interleaved through the button section could go with it instead of forcing surgical edits.</p>
 
 <h3>6.6 Forms</h3>
 <p><code>form-group</code> (49) · <code>control-label</code> (37) · <code>form-control</code> (33) ·
