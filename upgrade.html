@@ -317,6 +317,23 @@ reasoning behind each decision and the phase sections for full verification deta
       co-requisite to follow-up work. Phase 5 is unblocked.</div>
   </div>
 
+  <div class="timeline-entry ok">
+    <div class="timeline-date">Mo, 24.08.2026</div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="894a540e259fece7bd90d019bfa9d8e49e8f8e55"></button><div class="timeline-line"></div></div>
+    <div class="timeline-content"><a href="#p5"><strong>Phase 5.2 complete</strong></a> — grid shimmed, 766 lines out
+      of the frozen file.</div>
+  </div>
+
+  <div class="timeline-entry warn">
+    <div class="timeline-date repeat">Mo, 24.08.2026</div>
+    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="894a540e259fece7bd90d019bfa9d8e49e8f8e55"></button><div class="timeline-line"></div></div>
+    <div class="timeline-content">§6.3's class list was wrong <em>in both directions</em>:
+      <code>col-md-10</code> was missing — zero literal occurrences anywhere, reachable only through
+      <code>col-md-#{span}</code> — and eight <code>col-xs</code> entries were stale, counted from
+      <code>@extend</code>s that <a href="#p1">phase 1</a> had already replaced with mixins. A catalogue entry can rot
+      because an earlier phase removed its evidence. See <a href="#shims">§6.3</a> and <a href="#inventory">§3.3</a>.</div>
+  </div>
+
 </div>
 
 <p class="timeline-legend">
@@ -635,7 +652,21 @@ hand-written shim rules, but must never be expressed as <code>@apply</code>-less
 <pre><code>app/views/orders/_list.html.haml:60   "label label-#{order.status.style}"
 app/helpers/utility_helper.rb:20      "glyphicon glyphicon-#{icon}"
 app/helpers/utility_helper.rb:25      "icon-#{icon}"            # Puzzle icon font
-app/helpers/progress_bar_helper.rb    progress-bar-{success,danger}</code></pre>
+app/helpers/progress_bar_helper.rb    progress-bar-{success,danger}
+
+# the grid, missed by this list until phase 5.2 found it the hard way
+app/helpers/dry_crud/form/control.rb:87        "col-md-#{span}"
+app/helpers/multi_worktimes_helper.rb:21       "col-md-#{span}"
+app/views/orders/_fields_contacts.html.haml:19 "col-md-#{ Crm.instance ? '4' : '6' }"</code></pre>
+<div class="box warn">
+<p><strong>The grid entries were missing from this list, and that is how <code>col-md-10</code> nearly shipped
+unstyled.</strong> The span set is closed and enumerable, which is what makes the shim tractable:
+<code>INPUT_SPANS</code> defaults to <strong>5</strong> and drops to <strong>2</strong> for
+<code>number</code>/<code>integer</code>/<code>float</code>/<code>decimal</code>/<code>date</code>/<code>time</code>
+fields, and callers pass <strong>1, 2, 3, 5, 8, 10</strong> — including the <code>small</code>/<code>middle</code>/
+<code>large</code> = 3/6/10 locals in <code>expenses_reviews/_fields.html.haml</code>. Union:
+<code>col-md-{1,2,3,4,5,6,8,10}</code>. <strong>Enumerate the values, do not grep for the class.</strong></p>
+</div>
 
 <h4>Bootstrap JavaScript plugins</h4>
 <table>
@@ -1802,7 +1833,7 @@ assertions, 0 failures, matching phase 0's baseline count exactly (it did not, o
 </div>
 
 <div class="phase">
-<h3 id="p5">Phase 5 — Shim the components, one at a time <span class="tag high">in progress — 1 / 8</span></h3>
+<h3 id="p5">Phase 5 — Shim the components, one at a time <span class="tag high">in progress — 2 / 8</span></h3>
 <p class="goal">Goal: for each Bootstrap component — write the shim, delete that section from
 <code>bootstrap-frozen.css</code>, verify, commit. The frozen file shrinks monotonically; at no point is the app half-styled.</p>
 
@@ -1822,8 +1853,9 @@ assertions, 0 failures, matching phase 0's baseline count exactly (it did not, o
 <table>
   <tr><th>#</th><th>Component</th><th>Notes</th></tr>
   <tr><td>1</td><td>type &amp; utilities</td><td>after removing what Tailwind already gives us, this is ~8 classes</td></tr>
-  <tr><td>2</td><td>grid</td><td>only the ~30 <code>col-*</code> combinations actually used; a flex/grid rewrite is
-      tempting but out of scope — shim first, rewrite views later</td></tr>
+  <tr><td>2</td><td>grid <span class="tag low">complete</span></td><td>23 classes, not the ~30 estimated — and not the
+      ones §6.3 listed; see 5.2 below. A flex/grid rewrite is tempting but out of scope — shim first, rewrite views
+      later (<a href="#p7">phase 7</a>)</td></tr>
   <tr><td>3</td><td>tables</td><td>5 classes, 37 views, mechanical</td></tr>
   <tr><td>4</td><td>buttons</td><td>watch <code>.btn.disabled</code> vs <code>.disabled</code> — the app defines its own
       <code>.disabled</code> in <code>puzzletime.scss</code></td></tr>
@@ -1901,6 +1933,45 @@ deleted. Re-verified: full suite green after the deletion, same 1515/6006/0 coun
 </div>
 </div>
 
+<h4 style="margin-top:1.5rem">5.2 — Grid <span class="tag low">complete</span></h4>
+<ul class="check">
+  <li>✓ 23 classes into <code>@layer components</code>, <strong>766 lines out of the frozen file</strong>
+      (6434 → 5668). Bootstrap's own structure preserved rather than reinterpreted: one combined block sets
+      <code>position</code>/<code>min-height</code>/<code>padding</code> for every shipped column, only
+      <code>col-xs-*</code> floats unconditionally, and <code>sm</code>/<code>md</code>/<code>lg</code> get their float
+      and width inside their own media query at Bootstrap's 768/992/1200px — not Tailwind's <code>md:</code>/
+      <code>lg:</code>, which land on different numbers.</li>
+  <li>✓ <strong>The catalogue was wrong in both directions</strong> — <code>col-md-10</code> missing,
+      eight <code>col-xs</code> entries stale. Both corrected in <a href="#shims">§6.3</a>, and the interpolation sites
+      added to <a href="#inventory">§3.3</a>. Every estimate in this plan has now been wrong at least once
+      (<code>url()</code> 25 not ~35, <code>@extend</code> 26 not 20, grid 23 not ~30) — the pattern is that the
+      catalogue is a starting point for a re-derivation, never a specification.</li>
+  <li>✓ Deleted as dead rather than merely unshimmed: <code>.container</code> (its one use was rewritten in phase 4,
+      §4.3, and nothing carries the class now), <code>.row-no-gutters</code>, and all 96
+      <code>col-*-push-*</code>/<code>col-*-pull-*</code> rules. The rules that only <em>mention</em> grid classes as
+      ancestors stay with their own components — <code>table col[class*="col-"]</code> (5.3),
+      <code>.input-group[class*="col-"]</code> (5.5), <code>.container-fluid &gt; .navbar-collapse</code> (5.6), and
+      the jumbotron pair (no jumbotron exists in the app).</li>
+  <li>✓ <strong>No <code>MIXED</code> blocks</strong>, unlike 5.1's combined heading selectors: all 223 grid blocks in
+      the frozen file were pure grid, contiguous at lines 802–1566, so this was a wholesale cut rather than surgical
+      selector edits.</li>
+</ul>
+<p><strong>Verify:</strong> a <em>normalised rule-set diff of the compiled CSS against <code>HEAD</code></em> — the
+phase 1–3 method, applied to a phase-5 component for the first time, and worth repeating: build the stylesheet before
+and after, decompose both into (selector, media-context) → declaration-set, and compare. Of <strong>257 grid rule-keys
+at <code>HEAD</code>, the 43 belonging to the 23 kept classes are identical in every declaration</strong> — 0 changed,
+0 missing, 0 added; the other 208 are the deliberately dropped classes. That proves what was kept is untouched, but
+<em>not</em> that everything reachable was kept — so a second, closed-set check enumerated every grid class the app can
+emit, literal plus every reachable interpolation value, and confirmed all 23 are present in the output.
+<code>bin/rake 'parallel:test[16]'</code> — 1515 tests, 6006 assertions, 0 failures, unchanged from phase 0. No test
+selects on a grid class, so nothing in <code>test/</code> needed touching.</p>
+<p class="small">Noticed while reading the compiled output, not a regression and not this phase's job: Tailwind emits
+its <em>own</em> <code>.container</code> utility (six rules, rem-based breakpoints) because its scanner finds the bare
+token <code>container</code> in <code>app/javascript/worktimes.js</code>, where it is a method name. It was there
+before 5.2 and is inert — nothing in the app carries the class — but it is six rules of dead CSS for
+<a href="#p6">phase 6</a>'s sweep to remove.</p>
+</div>
+
 <div class="phase">
 <h3 id="p6">Phase 6 — Delete the frozen file <span class="tag med">1 day</span></h3>
 <p class="goal">Goal: <code>bootstrap-frozen.css</code> is empty and gets deleted, along with the <code>bootstrap</code>
@@ -1961,15 +2032,33 @@ Counts are occurrences <strong>excluding</strong> <code>design_guide/index.html.
 <code>hidden-xs</code>/<code>-sm</code>/<code>-md</code>/<code>-lg</code> (1 each) · <code>small</code> (1, verify — may be app-owned)</p>
 
 <h3>6.3 Grid</h3>
-<p><code>row</code> (48) · <code>container-fluid</code> (6) — and only these column combinations:</p>
-<pre><code>col-md-1 col-md-2 col-md-3 col-md-4 col-md-5 col-md-6 col-md-7 col-md-8 col-md-12
+<p><strong>Corrected in phase 5.2</strong> — the list below is what shipped, re-derived from the tree. The original was
+wrong in both directions; the <s>struck</s> entries were stale and the <strong>bold</strong> one was missing. 23 classes:</p>
+<pre><code>row container-fluid
+col-md-1 col-md-2 col-md-3 col-md-4 col-md-5 col-md-6 col-md-7 col-md-8 col-md-9 <strong>col-md-10</strong> col-md-12
 col-md-offset-1 col-md-offset-2 col-md-offset-3
 col-sm-6 col-sm-10
 col-lg-3 col-lg-4 col-lg-6
-col-xs-1 col-xs-2 col-xs-5 col-xs-6 col-xs-7 col-xs-10 col-xs-11 col-xs-12
-col-xs-offset-1 col-xs-offset-9</code></pre>
-<p class="small"><code>container</code> (1) is deliberately excluded — see §4.3. Generating all 4×12 columns is 2 kB and
-tempting; resist it, the point of the shim is that it shrinks.</p>
+col-xs-11 col-xs-offset-1
+<s>col-xs-1 col-xs-2 col-xs-5 col-xs-6 col-xs-7 col-xs-10 col-xs-12 col-xs-offset-9</s></code></pre>
+<div class="box bad">
+<p><strong><code>col-md-10</code> has zero literal occurrences in the entire source</strong>, so no grep and no
+catalogue built by scanning could ever have found it. It is reachable only through interpolation —
+<code>dry_crud/form/control.rb:87</code> emits <code>col-md-#{span}</code>, and
+<code>expenses_reviews/_fields.html.haml:3</code> sets <code>large = 10</code>, used by that form's description, order
+and file fields. Shipping the original list would have left those three fields unstyled, silently. See the addition to
+<a href="#inventory">§3.3</a>.</p>
+<p><strong>The eight struck <code>col-xs</code> entries were a phase-1 artefact.</strong> They were counted from
+<code>_worktimes.scss</code>'s 23 <code>@extend .col-xs-*</code> sites — which <a href="#p1">phase 1</a> had already
+converted into <code>bs-col()</code> mixin calls. No literal <code>col-xs</code>/<code>-sm</code>/<code>-md</code>/
+<code>-lg</code> survives in any SCSS; the only real <code>col-xs</code> use left is
+<code>orders/_header.html.haml:10</code>. A catalogue entry can go stale because an <em>earlier phase</em> removed its
+evidence, not only because the views changed.</p>
+</div>
+<p class="small"><code>container</code> (1) is deliberately excluded — see §4.3 — and in 5.2 its frozen rules were
+deleted outright, along with <code>row-no-gutters</code> and every <code>col-*-push-*</code>/<code>col-*-pull-*</code>,
+none of which the app uses. <code>col-md-9</code> is kept for the design guide per <a href="#decisions">D1</a>.
+Generating all 4×12 columns is 2 kB and tempting; resist it, the point of the shim is that it shrinks.</p>
 
 <h3>6.4 Tables</h3>
 <p><code>table</code> (37) · <code>table-condensed</code> (31) · <code>table-striped</code> (15) ·
