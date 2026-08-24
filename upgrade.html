@@ -334,6 +334,16 @@ reasoning behind each decision and the phase sections for full verification deta
       because an earlier phase removed its evidence. See <a href="#shims">§6.3</a> and <a href="#inventory">§3.3</a>.</div>
   </div>
 
+  <div class="timeline-entry ok">
+    <div class="timeline-date repeat">Mo, 24.08.2026</div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="c4b23f958559e7fad023eaec76e60360536cc0a7"></button><div class="timeline-line"></div></div>
+    <div class="timeline-content"><a href="#p5"><strong>Phase 5.3 complete</strong></a> — tables shimmed, 231 lines out.
+      <code>th { text-align: left }</code> is Bootstrap's, not the browser's, and Preflight does not restore it: dropping
+      it would have re-centred every table header in the app. A catalogue of <em>classes</em> cannot warn about a rule
+      that is not on a class. Also corrected <a href="#clash">§4.3</a> — <code>.table</code> is <em>not</em> only ever
+      on real tables (<code>table_helper.rb:41</code> renders a <code>div.table</code>).</div>
+  </div>
+
 </div>
 
 <p class="timeline-legend">
@@ -851,7 +861,12 @@ our shims in <code>components</code>.</p>
       <td>1 use (<code>devise/sessions/new</code>) — rewritten with <code>mx-auto max-w-5xl px-4</code>
           <span class="tag low">done</span></td></tr>
   <tr><td><code>table</code></td><td><code>display: table</code></td><td>table styling</td>
-      <td>harmless — only ever applied to real <code>&lt;table&gt;</code>s; shim the rest, both rules coexist</td></tr>
+      <td><s>harmless — only ever applied to real <code>&lt;table&gt;</code>s</s> — <strong>wrong, corrected in
+          5.3.</strong> <code>table_helper.rb:41</code> renders the empty-list message as
+          <code>&lt;div class="table"&gt;</code>, and Tailwind does emit <code>.table { display: table }</code> into
+          <code>utilities</code>, which outranks the shim in <code>components</code>. So that div is a table box today.
+          It survives because the shim keeps <code>width: 100%</code>; it predates 5.3 and is unchanged by it, but the
+          premise "only real tables" is false <span class="tag med">watch</span></td></tr>
   <tr><td><code>hidden</code></td><td><code>display: none</code></td><td><code>display: none !important</code></td>
       <td>equivalent in practice; watch the two toggle sites in <code>expenses_helper</code> /
           <code>expenses.js.coffee</code></td></tr>
@@ -1833,7 +1848,7 @@ assertions, 0 failures, matching phase 0's baseline count exactly (it did not, o
 </div>
 
 <div class="phase">
-<h3 id="p5">Phase 5 — Shim the components, one at a time <span class="tag high">in progress — 2 / 8</span></h3>
+<h3 id="p5">Phase 5 — Shim the components, one at a time <span class="tag high">in progress — 3 / 8</span></h3>
 <p class="goal">Goal: for each Bootstrap component — write the shim, delete that section from
 <code>bootstrap-frozen.css</code>, verify, commit. The frozen file shrinks monotonically; at no point is the app half-styled.</p>
 
@@ -1856,7 +1871,8 @@ assertions, 0 failures, matching phase 0's baseline count exactly (it did not, o
   <tr><td>2</td><td>grid <span class="tag low">complete</span></td><td>23 classes, not the ~30 estimated — and not the
       ones §6.3 listed; see 5.2 below. A flex/grid rewrite is tempting but out of scope — shim first, rewrite views
       later (<a href="#p7">phase 7</a>)</td></tr>
-  <tr><td>3</td><td>tables</td><td>5 classes, 37 views, mechanical</td></tr>
+  <tr><td>3</td><td>tables <span class="tag low">complete</span></td><td><s>5 classes, 37 views, mechanical</s> — 5
+      classes plus two bare elements, and not mechanical: the app owns most of the table surface, unlayered. See 5.3</td></tr>
   <tr><td>4</td><td>buttons</td><td>watch <code>.btn.disabled</code> vs <code>.disabled</code> — the app defines its own
       <code>.disabled</code> in <code>puzzletime.scss</code></td></tr>
   <tr><td>5</td><td>forms</td><td>largest surface (49× <code>.form-group</code>, 37× <code>.control-label</code>);
@@ -1971,6 +1987,39 @@ before 5.2 and is inert — nothing in the app carries the class — but it is s
 <a href="#p6">phase 6</a>'s sweep to remove.</p>
 </div>
 
+<h4 style="margin-top:1.5rem">5.3 — Tables <span class="tag low">complete</span></h4>
+<ul class="check">
+  <li>✓ 231 lines out of the frozen file (5668 → 5437). <strong>A different shape from the grid:</strong>
+      <code>components/_table.scss</code> is unlayered app SCSS and already outranks both the frozen file and the shim,
+      so the shim supplies only Bootstrap's un-overridden contribution. Confirmed live rather than reasoned about —
+      <code>thead th</code> resolves to the app's <code>10px 15px 10px 30px</code> and
+      <code>border-bottom: 0</code>, not Bootstrap's <code>15px</code> and <code>2px</code>.</li>
+  <li>✓ <strong><code>th { text-align: left }</code> nearly went missing</strong> — see the box in
+      <a href="#shims">§6.4</a>. A catalogue of classes cannot warn you about a rule that is not on a class.</li>
+  <li>✓ <code>.table &gt; colgroup + thead &gt; tr:first-child</code> is live (the <code>%colgroup</code> at
+      <code>worktimes/_existing.html.haml:13</code>) while the <code>caption + thead</code> half of the same Bootstrap
+      block is dead — the app has no <code>&lt;caption&gt;</code>. The block reads as one rule and is two.</li>
+  <li>✓ Verified unused before deleting, not assumed: <code>.table-responsive</code> and its whole
+      <code>max-width: 767px</code> block (zero occurrences), and all 112 rule-keys for the contextual
+      <code>.active</code>/<code>.success</code>/<code>.info</code>/<code>.warning</code>/<code>.danger</code> row and
+      cell states. The only <code>active</code> toggles in the JS are on
+      <code>.planning-definitive</code>/<code>.planning-provisional</code> and <code>.weeknav .day</code>, which is an
+      <code>&lt;li&gt;</code>.</li>
+  <li>✓ Two rules kept <em>without</em> proving them live — <code>.table &gt; tbody + tbody</code> and
+      <code>.table .table</code>. Disproving them means reading 37 views for a second <code>tbody</code> or a nested
+      table, which costs more than the three lines each do. Recorded rather than quietly included.</li>
+</ul>
+<p><strong>Verify:</strong> normalised rule-set diff against <code>HEAD</code> — 269 table-ish rule-keys before, 155
+after; of the keys present in both, <strong>0 changed and 0 added</strong>, and all 114 removals accounted for as the
+dead sets above. Live computed styles on <code>/design_guide</code> (itself a table gallery): <code>th</code>
+<code>text-align: left</code>, <code>vertical-align: bottom</code>, <code>td</code> <code>border-top: 1px solid
+#ddd</code>, <code>line-height: 20px</code>, bordered <code>1px #ddd</code>, condensed <code>6px/12px</code> from the
+app, and striping showing Bootstrap's <code>#f5f5f5</code> row underneath the app's
+<code>#ffffff</code>/<code>#fcfcfc</code> cells — the coexistence <a href="#p1">phase 1</a> predicted.
+<code>bin/rake 'parallel:test[16]'</code> — 1515 tests, 6006 assertions, 0 failures. The integration tests select on
+<code>table#evaluation</code>/<code>table.orders-list</code>/<code>table.orders-report</code>, element and app classes
+rather than Bootstrap ones, so <code>test/</code> needed no changes.</p>
+
 <div class="phase">
 <h3 id="p6">Phase 6 — Delete the frozen file <span class="tag med">1 day</span></h3>
 <p class="goal">Goal: <code>bootstrap-frozen.css</code> is empty and gets deleted, along with the <code>bootstrap</code>
@@ -2059,11 +2108,30 @@ deleted outright, along with <code>row-no-gutters</code> and every <code>col-*-p
 none of which the app uses. <code>col-md-9</code> is kept for the design guide per <a href="#decisions">D1</a>.
 Generating all 4×12 columns is 2 kB and tempting; resist it, the point of the shim is that it shrinks.</p>
 
-<h3>6.4 Tables</h3>
-<p><code>table</code> (37) · <code>table-condensed</code> (31) · <code>table-striped</code> (15) ·
-<code>table-hover</code> (15) · <code>table-bordered</code> (2)</p>
-<p class="small">Emitted centrally by <code>app/helpers/table_helper.rb</code> and
+<h3>6.4 Tables <span class="tag low">shimmed in 5.3</span></h3>
+<p><code>table</code> (38) · <code>table-condensed</code> (26) · <code>table-striped</code> (20) ·
+<code>table-hover</code> (18) · <code>table-bordered</code> (4) · <s><code>table-responsive</code></s> (0 — never used,
+deleted rather than shimmed). Plus two bare elements Bootstrap styles and the app does not:
+<code>table</code> (<code>background-color</code>) and <strong><code>th</code>
+(<code>text-align: left</code>)</strong>.</p>
+<p class="small">Emitted centrally by <code>app/helpers/table_helper.rb:24</code> and
 <code>dry_crud/table/builder.rb</code> as <code>"table table-striped table-hover table-condensed"</code>.</p>
+<div class="box bad">
+<p><strong><code>th { text-align: left }</code> is Bootstrap's, not the browser's.</strong> The UA default for
+<code>&lt;th&gt;</code> is <code>center</code>, and Tailwind's Preflight does not restore <code>left</code> — checked
+against the compiled <code>base</code> layer rather than assumed. Drop that one declaration with the rest of the
+component and <em>every table header in the app</em> silently re-centres. It is the kind of rule that is invisible in a
+catalogue of <em>classes</em>, because it is not on a class.</p>
+</div>
+<p class="small">The app owns far more of the table surface than the catalogue suggests, and all of it is
+<em>unlayered</em>, so it outranks both the frozen file and the shim (§4.1):
+<code>components/_table.scss</code> alone styles <code>.table</code>, <code>.table-striped</code>,
+<code>.table-hover</code>, <code>.table-condensed</code>, <code>.table-stripedbody</code>,
+<code>.table-inline</code>, <code>.unindented .table-condensed</code>, <code>th</code> and
+<code>table.table td.action</code>, and seven more stylesheets add report- and expense-specific table rules. The shim
+therefore supplies only what Bootstrap contributes <em>and the app does not override</em> — in practice
+<code>width</code>/<code>max-width</code>/<code>margin-bottom</code>, cell borders,
+<code>vertical-align</code> and <code>line-height</code>.</p>
 
 <h3>6.5 Buttons</h3>
 <p><code>btn</code> (30) · <code>btn-primary</code> (13) · <code>disabled</code> (9) · <code>btn-default</code> (6) ·
