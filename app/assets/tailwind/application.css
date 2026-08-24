@@ -179,3 +179,153 @@
     }
   }
 }
+
+/* Phase 5.2 — grid, shimmed from bootstrap-frozen.css (see upgrade.html §6.3) */
+@layer components {
+  .container-fluid {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .container-fluid::before,
+  .container-fluid::after {
+    display: table;
+    content: " ";
+  }
+
+  .container-fluid::after {
+    clear: both;
+  }
+
+  .row {
+    margin-right: -15px;
+    margin-left: -15px;
+  }
+
+  .row::before,
+  .row::after {
+    display: table;
+    content: " ";
+  }
+
+  .row::after {
+    clear: both;
+  }
+
+  .col-xs-11,
+  .col-sm-6, .col-sm-10,
+  .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6,
+  .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-12,
+  .col-lg-3, .col-lg-4, .col-lg-6 {
+    position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+
+  .col-xs-11 {
+    float: left;
+    width: 91.6666666667%;
+  }
+
+  .col-xs-offset-1 {
+    margin-left: 8.3333333333%;
+  }
+
+  @media (min-width: 768px) {
+    .col-sm-6, .col-sm-10 {
+      float: left;
+    }
+
+    .col-sm-6 {
+      width: 50%;
+    }
+
+    .col-sm-10 {
+      width: 83.3333333333%;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6,
+    .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-12 {
+      float: left;
+    }
+
+    .col-md-1 {
+      width: 8.3333333333%;
+    }
+
+    .col-md-2 {
+      width: 16.6666666667%;
+    }
+
+    .col-md-3 {
+      width: 25%;
+    }
+
+    .col-md-4 {
+      width: 33.3333333333%;
+    }
+
+    .col-md-5 {
+      width: 41.6666666667%;
+    }
+
+    .col-md-6 {
+      width: 50%;
+    }
+
+    .col-md-7 {
+      width: 58.3333333333%;
+    }
+
+    .col-md-8 {
+      width: 66.6666666667%;
+    }
+
+    .col-md-9 {
+      width: 75%;
+    }
+
+    .col-md-10 {
+      width: 83.3333333333%;
+    }
+
+    .col-md-12 {
+      width: 100%;
+    }
+
+    .col-md-offset-1 {
+      margin-left: 8.3333333333%;
+    }
+
+    .col-md-offset-2 {
+      margin-left: 16.6666666667%;
+    }
+
+    .col-md-offset-3 {
+      margin-left: 25%;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .col-lg-3, .col-lg-4, .col-lg-6 {
+      float: left;
+    }
+
+    .col-lg-3 {
+      width: 25%;
+    }
+
+    .col-lg-4 {
+      width: 33.3333333333%;
+    }
+
+    .col-lg-6 {
+      width: 50%;
+    }
+  }
+}
