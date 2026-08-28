@@ -30,9 +30,4 @@
 %dl.dl-horizontal
   %dt= t('expenses.attachment.name')
   %dd.value
-    - if receipt.attached?
-      = attachment_download_link(receipt)
-      - if receipt.image? || receipt.previewable?
-        = attachment_show_link(receipt, t('expenses.attachment.show'), class: 'visible-xs')
-    - else
-      Kein Beleg angehängt
+    = render 'attachment_links', receipt: receipt

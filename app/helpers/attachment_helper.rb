@@ -13,16 +13,22 @@ module AttachmentHelper
     receipt.attached? && (receipt.image? || pdf?(receipt) || receipt.previewable?)
   end
 
-  def attachment_image_tag(obj, **options)
-    return attachment_pdf_tag(obj, options.except(:show_link)) if pdf?(obj)
+  # Renders the full-size display of an attachment: an iframe for pdfs, an
+  # image tag (optionally linked to the unresized original) otherwise. Each
+  # variant applies its own class for styling; pass an additional :class
+  # option to merge in extra classes.
+  def attachment_display_tag(obj, **options)
+    return pdf_iframe_tag(obj, options.except(:show_link)) if pdf?(obj)
 
+    show_link = options.delete(:show_link)
     transformations = {
       resize_to_limit: [800, 1200]
     }
     image = attachment_image(obj, transformations)
-    tag   = image_tag(image, options)
+    options[:class] = class_names(options[:class], 'img-responsive')
+    tag = image_tag(image, options)
 
-    return attachment_show_link(obj, tag, **options) if options[:show_link]
+    return attachment_show_link(obj, tag) if show_link
 
     tag
   end
@@ -33,8 +39,8 @@ module AttachmentHelper
     obj.content_type == 'application/pdf'
   end
 
-  def attachment_pdf_tag(obj, options)
-    options[:class] = [options[:class], 'attachment-pdf'].compact.join(' ')
+  def pdf_iframe_tag(obj, options)
+    options[:class] = class_names(options[:class], 'attachment-frame')
     tag.iframe(src: "#{rails_blob_path(obj)}#navpanes=0", **options)
   end
 

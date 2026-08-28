@@ -31,21 +31,21 @@ class AttachmentHelperTest < ActionView::TestCase
     assert attachment_displayable?(@expense.receipt)
   end
 
-  test 'attachment_image_tag renders an img tag for an image receipt' do
+  test 'attachment_display_tag renders an img tag with the responsive class for an image receipt' do
     attach_image
 
-    html = attachment_image_tag(@expense.receipt, class: 'img-responsive')
+    html = attachment_display_tag(@expense.receipt)
 
-    assert_match(/<img /, html)
+    assert_match(/<img class="img-responsive"/, html)
   end
 
-  test 'attachment_image_tag renders a minimal iframe for a pdf receipt' do
+  test 'attachment_display_tag renders an iframe with the frame class for a pdf receipt' do
     attach_pdf
 
-    html = attachment_image_tag(@expense.receipt, class: 'img-responsive', show_link: true)
+    html = attachment_display_tag(@expense.receipt, show_link: true)
 
     assert_match(/<iframe /, html)
-    assert_match(/class="img-responsive attachment-pdf"/, html)
+    assert_match(/class="attachment-frame"/, html)
     assert_match(/#navpanes=0"/, html)
     assert_no_match(/<a /, html)
   end
