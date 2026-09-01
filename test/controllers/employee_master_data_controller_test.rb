@@ -146,6 +146,136 @@ class EmployeeMasterDataControllerTest < ActionController::TestCase
     assert_equal expected, svg
   end
 
+  test 'GET vcards returns vcard for every employed employee' do
+    get :vcards
+
+    assert_equal 'text/vcard', response.headers['Content-Type']
+    assert_equal 'attachment; filename="Kontakte_Alle.vcf"; filename*=UTF-8\'\'Kontakte_Alle.vcf',
+                 response.headers['Content-Disposition']
+    assert_equal 3, response.body.scan('BEGIN:VCARD').count
+    assert_match(/FN:Pedro Dolores/, response.body)
+    assert_match(/FN:John Neverends/, response.body)
+    assert_match(/FN:Pablo Sanchez/, response.body)
+  end
+
+  test 'GET vcards treats a blank department_id like no filter' do
+    get :vcards, params: { department_id: '' }
+
+    assert_equal 3, response.body.scan('BEGIN:VCARD').count
+    assert_equal 'attachment; filename="Kontakte_Alle.vcf"; filename*=UTF-8\'\'Kontakte_Alle.vcf',
+                 response.headers['Content-Disposition']
+  end
+
+  test 'GET vcards renders employees with missing optional attributes correctly' do
+    get :vcards
+
+    expected_pedro = <<~VCF
+      BEGIN:VCARD
+      VERSION:3.0
+      N:Dolores;Pedro;;;
+      FN:Pedro Dolores
+      ADR;TYPE=HOME,PREF:;;Belpstrasse 7;Bern;;3007;
+      TEL;TYPE=WORK,VOICE:0310000000
+      TEL;TYPE=CELL,PREF,VOICE:0780000000
+      EMAIL;TYPE=WORK,PREF:bol@bla.ch
+      BDAY:19420204
+      END:VCARD
+    VCF
+
+    expected_pablo = <<~VCF
+      BEGIN:VCARD
+      VERSION:3.0
+      N:Sanchez;Pablo;;;
+      FN:Pablo Sanchez
+      EMAIL;TYPE=WORK,PREF:ps@bla.ch
+      END:VCARD
+    VCF
+
+    assert_includes response.body, expected_pedro
+    assert_includes response.body, expected_pablo
+  end
+
+  test 'GET vcards excludes employees not employed today' do
+    employees(:various_pedro).employments.last.update!(end_date: Time.zone.today - 1.day)
+    get :vcards
+
+    assert_equal 2, response.body.scan('BEGIN:VCARD').count
+    assert_no_match(/FN:Pedro Dolores/, response.body)
+  end
+
+  test 'GET vcards filtered by department' do
+    employees(:long_time_john).update!(department: departments(:devone))
+    employees(:next_year_pablo).update!(department: departments(:devtwo))
+    employees(:various_pedro).update!(department: departments(:devtwo))
+
+    get :vcards, params: { department_id: departments(:devtwo).id }
+
+    assert_equal 'attachment; filename="Kontakte_devtwo.vcf"; filename*=UTF-8\'\'Kontakte_devtwo.vcf',
+                 response.headers['Content-Disposition']
+    assert_equal 2, response.body.scan('BEGIN:VCARD').count
+    assert_match(/FN:Pablo Sanchez/, response.body)
+    assert_match(/FN:Pedro Dolores/, response.body)
+    assert_no_match(/FN:John Neverends/, response.body)
+  end
+
+  test 'GET vcards strips slashes from department name in filename' do
+    department = departments(:devone)
+    department.update!(name: '/dev/ruby')
+    employees(:long_time_john).update!(department:)
+
+    get :vcards, params: { department_id: department.id }
+
+    assert_equal 'attachment; filename="Kontakte_devruby.vcf"; filename*=UTF-8\'\'Kontakte_devruby.vcf',
+                 response.headers['Content-Disposition']
+  end
+
+  test 'GET vcards replaces other unsafe characters in department name with a dash' do
+    department = departments(:devone)
+    department.update!(name: 'Dev:Ops')
+    employees(:long_time_john).update!(department:)
+
+    get :vcards, params: { department_id: department.id }
+
+    assert_equal 'attachment; filename="Kontakte_Dev-Ops.vcf"; filename*=UTF-8\'\'Kontakte_Dev-Ops.vcf',
+                 response.headers['Content-Disposition']
+  end
+
+  test 'GET vcards keeps umlauts in department name intact' do
+    department = departments(:devone)
+    department.update!(name: 'Geschäftsleitung')
+    employees(:long_time_john).update!(department:)
+
+    get :vcards, params: { department_id: department.id }
+
+    assert_equal 'attachment; filename="Kontakte_Geschaftsleitung.vcf"; ' \
+                 "filename*=UTF-8''Kontakte_Gesch%C3%A4ftsleitung.vcf",
+                 response.headers['Content-Disposition']
+  end
+
+  test 'GET vcards for a department without employees returns an empty file' do
+    get :vcards, params: { department_id: departments(:devtwo).id }
+
+    assert_equal '', response.body
+    assert_equal 'attachment; filename="Kontakte_devtwo.vcf"; filename*=UTF-8\'\'Kontakte_devtwo.vcf',
+                 response.headers['Content-Disposition']
+  end
+
+  test 'GET vcards raises for an unknown department_id' do
+    assert_raises(ActiveRecord::RecordNotFound) do
+      get :vcards, params: { department_id: 999_999 }
+    end
+  end
+
+  test 'GET index only lists departments that have employees, sorted by name' do
+    # departments(:devtwo) already has employees via fixtures (pascal, lucien)
+    employees(:long_time_john).update!(department: departments(:sys))
+    employees(:various_pedro).update!(department: departments(:devone))
+
+    get :index
+
+    assert_equal %w[devone devtwo sys], assigns(:departments).map(&:name)
+  end
+
   test 'GET show hide classified data to non management' do
     login_as(:next_year_pablo)
     get :show, params: { id: employees(:various_pedro).id }

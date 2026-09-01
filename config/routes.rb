@@ -178,7 +178,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :employee_master_data, only: %i[index show]
+  resources :employee_master_data, only: %i[index show] do
+    collection do
+      get :vcards
+    end
+  end
 
   scope '/evaluator', controller: 'evaluator' do
     get :index, as: 'evaluator'
