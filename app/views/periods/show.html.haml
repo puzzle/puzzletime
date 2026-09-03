@@ -23,6 +23,9 @@
       %td &nbsp;
       %td
         = period_link 'Dieses Jahr', '0y'
+      %td &nbsp;
+      %td
+        = period_link 'Dieses Geschäftsjahr', '0b'
     %tr
       %td
         = period_link 'Gestern', '-1d'
@@ -38,6 +41,9 @@
       %td &nbsp;
       %td
         = period_link 'Letztes Jahr', '-1y'
+      %td &nbsp;
+      %td
+        = period_link 'Letztes Geschäftsjahr', '-1b'
     %tr
       %td
         = period_link 'Vorgestern', '-2d'
@@ -53,6 +59,9 @@
       %td &nbsp;
       %td
         = period_link 'Vorletztes Jahr', '-2y'
+      %td &nbsp;
+      %td
+        = period_link 'Geschäftsjahr/Ausblick', 'b', title: 'Aktuelles Geschäftsjahr bis heute + drei Monate'
     %tr
       %td &nbsp;
       %td &nbsp;
@@ -62,9 +71,6 @@
       %td &nbsp;
       %td
         = period_link '4. Quartal', '4Q'
-      %td &nbsp;
-      %td
-        = period_link 'Geschäftsjahr/Ausblick', 'b', title: 'Aktuelles Geschäftsjahr bis heute + drei Monate'
 
 %h3 Beliebig
 = form_tag(periods_path, method: :patch, class: 'form-horizontal', role: 'form') do
