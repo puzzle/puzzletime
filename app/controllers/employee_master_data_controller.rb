@@ -19,6 +19,7 @@ class EmployeeMasterDataController < ApplicationController
   def index
     authorize!(:read, Employee)
     @employees = list_entries.to_a
+    @departments = Department.list.having_employees
     return unless can?(:manage, Employment)
 
     fetch_latest_employment_dates(@employees)
@@ -43,6 +44,15 @@ class EmployeeMasterDataController < ApplicationController
       format.svg { render plain: qr_code.as_svg(fill: 'fff') }
       format.png { render plain: qr_code.as_png(fill: 'fff') }
     end
+  end
+
+  def vcards
+    authorize!(:read, Employee)
+    employees = Employee.employed_ones(Period.current_day).order(:lastname, :firstname)
+    employees = employees.where(department_id: params[:department_id]) if params[:department_id].present?
+    send_data Employees::VcardBulk.new(employees).render,
+              filename: vcards_filename(params[:department_id]),
+              type: 'text/vcard'
   end
 
   private
@@ -114,6 +124,11 @@ class EmployeeMasterDataController < ApplicationController
 
   def vcard_filename
     ActiveStorage::Filename.new("#{@employee}.vcf").sanitized
+  end
+
+  def vcards_filename(department_id)
+    scope = department_id.present? ? Department.find(department_id).name.delete('/') : 'Alle'
+    ActiveStorage::Filename.new("Kontakte_#{scope}.vcf").sanitized
   end
 
   def qr_code

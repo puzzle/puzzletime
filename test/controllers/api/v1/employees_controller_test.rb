@@ -54,6 +54,7 @@ module Api
 
         assert_response :ok
         ids = response_json[:data].map { |d| d[:id].to_i }
+
         assert_equal [test_entry.id], ids
       end
 
@@ -62,6 +63,7 @@ module Api
 
         assert_response :ok
         ids = response_json[:data].map { |d| d[:id].to_i }
+
         assert_equal [test_entry.id], ids
       end
 
@@ -85,6 +87,7 @@ module Api
 
         assert_response :ok
         ids = response_json[:data].map { |d| d[:id].to_i }
+
         assert_equal [auth.employee_id], ids
       end
 

@@ -1,0 +1,7 @@
+.vcard-export
+  %strong Kontakte exportieren:
+  = form_tag vcards_employee_master_data_path, method: :get do
+    = select_tag :department_id,
+        options_for_select([['Alle', '']] + @departments.map { |d| [d.name, d.id] }),
+        class: 'form-control'
+    = submit_tag 'vCards herunterladen', class: 'btn btn-default', data: { disable_with: false }

@@ -6,6 +6,11 @@
 
 - @title ||= "Memberliste (#{@employees.length})"
 
+- content_for :content_header do
+  .content-header-row
+    %h1.h3= @title
+    = render 'vcard_export'
+
 .list-search
   = render 'list/search'
 
