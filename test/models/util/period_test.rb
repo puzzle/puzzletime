@@ -232,6 +232,73 @@ class PeriodTest < ActiveSupport::TestCase
     travel_back
   end
 
+  def test_parse_current_business_year
+    Settings.defaults.business_year_start_month = 1
+
+    travel_to Date.new(2000, 1, 15)
+    period = Period.parse('0b')
+
+    assert_equal '0b', period.shortcut
+    assert_equal 'Dieses Geschäftsjahr', period.label
+    assert_equal Date.new(2000, 1, 1), period.start_date
+    assert_equal Date.new(2000, 12, 31), period.end_date
+
+    travel_to Date.new(2000, 12, 15)
+    period = Period.parse('0b')
+
+    assert_equal '0b', period.shortcut
+    assert_equal Date.new(2000, 1, 1), period.start_date
+    assert_equal Date.new(2000, 12, 31), period.end_date
+
+    Settings.defaults.business_year_start_month = 7
+
+    travel_to Date.new(2000, 6, 15)
+    period = Period.parse('0b')
+
+    assert_equal '0b', period.shortcut
+    assert_equal Date.new(1999, 7, 1), period.start_date
+    assert_equal Date.new(2000, 6, 30), period.end_date
+
+    travel_to Date.new(2000, 7, 15)
+    period = Period.parse('0b')
+
+    assert_equal '0b', period.shortcut
+    assert_equal Date.new(2000, 7, 1), period.start_date
+    assert_equal Date.new(2001, 6, 30), period.end_date
+
+    travel_back
+  end
+
+  def test_parse_previous_business_year
+    Settings.defaults.business_year_start_month = 1
+
+    travel_to Date.new(2000, 1, 15)
+    period = Period.parse('-1b')
+
+    assert_equal '-1b', period.shortcut
+    assert_equal 'Letztes Geschäftsjahr', period.label
+    assert_equal Date.new(1999, 1, 1), period.start_date
+    assert_equal Date.new(1999, 12, 31), period.end_date
+
+    Settings.defaults.business_year_start_month = 7
+
+    travel_to Date.new(2000, 6, 15)
+    period = Period.parse('-1b')
+
+    assert_equal '-1b', period.shortcut
+    assert_equal Date.new(1998, 7, 1), period.start_date
+    assert_equal Date.new(1999, 6, 30), period.end_date
+
+    travel_to Date.new(2000, 7, 15)
+    period = Period.parse('-1b')
+
+    assert_equal '-1b', period.shortcut
+    assert_equal Date.new(1999, 7, 1), period.start_date
+    assert_equal Date.new(2000, 6, 30), period.end_date
+
+    travel_back
+  end
+
   def test_intersect
     assert_equal Period.new(nil, nil), Period.new(nil, nil) & Period.new(nil, nil)
 

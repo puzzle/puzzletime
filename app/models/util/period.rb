@@ -89,12 +89,17 @@ class Period
       new(date, date + n.months, options[:label], options[:shortcut])
     end
 
-    def business_year_for(date, options = {})
-      options[:label] ||= business_year_label(date)
-      options[:shortcut] = 'b'
-      year = date.month < Settings.defaults.business_year_start_month ? date.year - 1 : date.year
-      business_year_start = Date.civil(year, Settings.defaults.business_year_start_month, 1)
-      new(business_year_start, (date + 3.months).end_of_month, options[:label], options[:shortcut])
+    def business_year_for(date, shift = 0, options = {})
+      # Legacy behavior: only 'b' means current business year + 3 months outlook
+      outlook = options[:shortcut] == 'b'
+      options[:label] ||= business_year_label(shift, outlook:)
+
+      start_year = date.month < Settings.defaults.business_year_start_month ? date.year - 1 : date.year
+      start_year += shift
+      business_year_start = Date.civil(start_year, Settings.defaults.business_year_start_month, 1)
+      end_date = outlook ? (date + 3.months).end_of_month : business_year_start + 1.year - 1.day
+
+      new(business_year_start, end_date, options[:label], options[:shortcut])
     end
 
     def parse(shortcut)
@@ -108,7 +113,7 @@ class Period
       when 'q' then quarter_for(now.advance(months: shift * 3), shortcut:)
       when 'Q' then parse_year_quarter(now.year, shift, shortcut)
       when 'y' then year_for(now.advance(years: shift), shortcut:)
-      when 'b' then business_year_for(now.to_date)
+      when 'b' then business_year_for(now.to_date, shift, shortcut:)
       end
     end
 
@@ -183,8 +188,13 @@ class Period
       [range, shift]
     end
 
-    def business_year_label(_date)
-      'Geschäftsjahr/Ausblick'
+    def business_year_label(shift, outlook: false)
+      return 'Geschäftsjahr/Ausblick' if outlook
+
+      case shift
+      when -1 then 'Letztes Geschäftsjahr'
+      when 0 then 'Dieses Geschäftsjahr'
+      end
     end
   end
 
