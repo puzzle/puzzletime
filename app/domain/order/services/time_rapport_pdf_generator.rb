@@ -8,6 +8,22 @@
 class Order
   module Services
     class TimeRapportPdfGenerator
+      # Predictable content length -> sized to fit exactly, nothing more.
+      FIXED_COLUMN_HEADERS = { date: 'Datum', hours: 'Stunden', from: 'Von', to: 'Bis' }.freeze
+
+      # Variable content length -> share the leftover space by weight, never below header width.
+      VARIABLE_COLUMN_HEADERS = {
+        member: 'Member', accounting_post: 'Buchungsposition', ticket: 'Ticket', remarks: 'Bemerkungen'
+      }.freeze
+      VARIABLE_COLUMN_WEIGHTS = { member: 50, accounting_post: 75, ticket: 55, remarks: 150 }.freeze
+
+      CELL_HORIZONTAL_PADDING = 8 # cell_style padding: 4, both sides
+      DATE_SAMPLE = 'Mo, 31.12.2025' # "Mo" renders widest among the German weekday abbreviations
+
+      # Digits render at equal width in this font, so any value of the right length works here.
+      HOURS_SAMPLE = '9999.99'
+      TIME_SAMPLE = '00:00'
+
       attr_reader :order, :params
 
       def initialize(data, params = {})
@@ -152,7 +168,7 @@ class Order
         header << 'Member'
         @column_map[:member] = header.size - 1
         header << 'Bemerkungen' if params[:description]
-        @column_map[:remarks] = header.size - 1 if params[:remarks]
+        @column_map[:remarks] = header.size - 1 if params[:description]
 
         data << header
 
@@ -184,44 +200,41 @@ class Order
         data
       end
 
+      # Von/Bis show a time in the worktimes report, but a full date in the ticket report.
+      def fixed_column_sample(key)
+        case key
+        when :date then DATE_SAMPLE
+        when :hours then HOURS_SAMPLE
+        when :from, :to then @ticket_view ? DATE_SAMPLE : TIME_SAMPLE
+        end
+      end
+
+      def header_width(pdf, text)
+        pdf.width_of(text, style: :bold) + CELL_HORIZONTAL_PADDING
+      end
+
       def column_widths(pdf)
         return {} unless @column_map
 
-        headers = %i[date hours member from to accounting_post ticket remarks]
+        fixed = FIXED_COLUMN_HEADERS.each_with_object({}) do |(key, text), widths|
+          next unless @column_map[key]
 
-        fixed_widths = {}
-        fixed_widths[@column_map[:date]] = 65 if @column_map[:date]
-        fixed_widths[@column_map[:hours]] = 50 if @column_map[:hours]
-        # fixed_widths[@column_map[:member]] = 60 if @column_map[:member]
-        fixed_widths[@column_map[:member]] = 50 if @column_map[:member]
-        fixed_widths[@column_map[:from]] = 30 if @column_map[:from]
-        fixed_widths[@column_map[:to]] = 30 if @column_map[:to]
-        fixed_widths[@column_map[:accounting_post]] = 75 if @column_map[:accounting_post]
-        fixed_widths[@column_map[:ticket]] = 55 if @column_map[:ticket]
-        # fixed_widths[@column_map[:remarks]] = 180.28 if @column_map[:remarks]
-        fixed_widths[@column_map[:remarks]] = 150 if @column_map[:remarks]
-
-        result = {}
-        remaining = pdf.bounds.width
-
-        # calculate remaining
-        # headers.each_index do |h|
-        headers.each do |h|
-          if fixed_widths[h]
-            result[h] = fixed_widths[h]
-            remaining -= fixed_widths[h]
-          end
+          content_width = pdf.width_of(fixed_column_sample(key))
+          widths[@column_map[key]] = [header_width(pdf, text), content_width + CELL_HORIZONTAL_PADDING].max
         end
 
-        total_used_width = fixed_widths.values.sum
-        used_indices = result.keys
+        variable_keys = VARIABLE_COLUMN_HEADERS.keys.select { |key| @column_map[key] }
+        minimums = variable_keys.index_with { |key| header_width(pdf, VARIABLE_COLUMN_HEADERS[key]) }
 
-        used_indices.each do |index|
-          fraction = fixed_widths[index] / total_used_width
-          result[index] = result[index] + (fraction * remaining)
+        remaining = pdf.bounds.width - fixed.values.sum - minimums.values.sum
+        weight_total = variable_keys.sum { |key| VARIABLE_COLUMN_WEIGHTS[key] }
+
+        variable = variable_keys.each_with_object({}) do |key, widths|
+          extra = remaining.positive? && weight_total.positive? ? (VARIABLE_COLUMN_WEIGHTS[key].to_f / weight_total) * remaining : 0
+          widths[@column_map[key]] = minimums[key] + extra
         end
 
-        result
+        fixed.merge(variable)
       end
 
       def build_list(pdf)

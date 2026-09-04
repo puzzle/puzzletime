@@ -8,7 +8,7 @@
 
 %h4 Einstellungen
 
-= form_tag({ action: 'report' }, method: 'get') do
+= form_tag({ action: 'report' }, method: 'get', target: '_blank') do
   - %w(evaluation start_date end_date period_shortcut category_id division_id employee_id ticket invoice_id billable).each do |p|
     = hidden_field_tag p, params[p] if params[p]
   - @work_items.each do |v|
