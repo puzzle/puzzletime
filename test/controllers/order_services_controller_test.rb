@@ -215,6 +215,12 @@ class OrderServicesControllerTest < ActionController::TestCase
     end
   end
 
+  test 'GET compose_report renders the report form to open in a new tab' do
+    get :compose_report, params: { order_id: order.id }
+
+    assert_select 'form[target=?]', '_blank'
+  end
+
   test 'GET report with invoice_id gets all hours and sets period' do
     invoice = invoices(:webauftritt_may)
     worktimes(:wt_mw_webauftritt).update!(invoice_id: invoice.id, work_date: invoice.period_from - 2.days)
