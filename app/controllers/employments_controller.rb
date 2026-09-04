@@ -24,6 +24,7 @@ class EmploymentsController < ManageController
   before_render_form :load_employment_role_levels
   before_render_form :prefill_from_newest_employment
 
+  before_save :check_vacation_days_set
   before_save :check_percent
   before_save :check_employment_role_uniqueness
 
@@ -50,6 +51,13 @@ class EmploymentsController < ManageController
 
     entry.percent = newest.percent
     entry.employment_roles_employments = newest.employment_roles_employments.map(&:dup)
+  end
+
+  def check_vacation_days_set
+    return unless entry.needs_vacation_days_confirmation? && !params[:confirmed]
+
+    @needs_confirmation = true
+    throw :abort
   end
 
   def check_percent
