@@ -9,6 +9,7 @@ module Evaluations
   class AbsencesEval < Evaluations::Evaluation
     include EvaluatorHelper
     include FormatHelper
+    include Sortable
 
     self.sub_evaluation   = 'employeeabsences'
     self.division_column  = :employee_id
@@ -16,6 +17,8 @@ module Evaluations
     self.absences         = true
     self.detail_columns   = detail_columns.reject { |i| i == :billable }
     self.detail_labels    = detail_labels.merge(account: 'Absenz')
+    self.sortable_division_header = true
+    self.sortable_period_header   = true
 
     attr_reader :department_id, :sort_conditions
 
@@ -26,12 +29,11 @@ module Evaluations
     end
 
     def divisions(period = nil, times = nil)
-      employees_with_absences(period, times).map do |e|
-        unformatted_vacations = remaining_vacations(e, format: false)
-        e.remaining_vacations = format_days(unformatted_vacations)
-        e.sort_col = unformatted_vacations * descending
+      employees = employees_with_absences(period, times).map do |e|
+        e.remaining_vacations = format_days(vacations_value(e))
         e
-      end.sort_by(&:sort_col)
+      end
+      sort_divisions(employees, times)
     end
 
     def employees_with_absences(period, times)
@@ -67,8 +69,25 @@ module Evaluations
 
     private
 
-    def descending
-      sort_conditions && sort_conditions['sort_dir'] == 'desc' ? -1 : 1
+    def sort_divisions(employees, times)
+      case sort_conditions && sort_conditions['sort']
+      when 'name' then sort_by_name(employees)
+      when 'period_hours' then sort_by_value(employees) { |e| period_hours_value(e, times) }
+      else sort_by_value(employees) { |e| vacations_value(e) }
+      end
+    end
+
+    def sort_by_name(employees)
+      sorted = employees.sort_by { |e| [e.lastname, e.firstname] }
+      sort_direction == :desc ? sorted.reverse : sorted
+    end
+
+    def sort_by_value(employees)
+      employees.sort_by { |e| yield(e) * sort_multiplier }
+    end
+
+    def vacations_value(employee)
+      remaining_vacations(employee, format: false)
     end
   end
 end

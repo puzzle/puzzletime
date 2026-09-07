@@ -122,7 +122,7 @@ class Employee < ApplicationRecord
                                    }
   scope :active_employed_current_month, -> { joins(:employments).merge(Employment.active.during(Period.current_month)) }
 
-  attr_accessor :remaining_vacations, :sort_col # used for multiabsence and not persisted
+  attr_accessor :remaining_vacations # used for multiabsence and not persisted
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
