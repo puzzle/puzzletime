@@ -73,5 +73,98 @@ module Evaluations
       assert_sum_times 3, 3, 5, 6
       assert_count_times 1, 1, 2, 3
     end
+
+    def test_employees_sorted_by_worktime_commits
+      stub_employee_relation
+      employees(:pascal).update!(committed_worktimes_at: Date.new(2020, 6, 1))
+      employees(:mark).update!(committed_worktimes_at: Date.new(2021, 6, 1))
+      employees(:lucien).update!(committed_worktimes_at: Date.new(2022, 6, 1))
+
+      ascending = Evaluations::EmployeesEval.new({}, { 'sort' => 'worktime_commits', 'sort_dir' => 'asc' })
+
+      assert_equal [employees(:pascal), employees(:mark), employees(:lucien)], ascending.divisions(@period_month)
+
+      descending = Evaluations::EmployeesEval.new({}, { 'sort' => 'worktime_commits', 'sort_dir' => 'desc' })
+
+      assert_equal [employees(:lucien), employees(:mark), employees(:pascal)], descending.divisions(@period_month)
+    end
+
+    def test_employees_sorted_by_worktime_reviews
+      stub_employee_relation
+      employees(:pascal).update!(reviewed_worktimes_at: Date.new(2020, 6, 1))
+      employees(:mark).update!(reviewed_worktimes_at: Date.new(2021, 6, 1))
+      employees(:lucien).update!(reviewed_worktimes_at: Date.new(2022, 6, 1))
+
+      ascending = Evaluations::EmployeesEval.new({}, { 'sort' => 'worktime_reviews', 'sort_dir' => 'asc' })
+
+      assert_equal [employees(:pascal), employees(:mark), employees(:lucien)], ascending.divisions(@period_month)
+    end
+
+    def test_employees_sorted_by_overtime
+      stub_employee_objects
+      employees(:pascal).stubs(:statistics).returns(stub(overtime: 5.0))
+      employees(:mark).stubs(:statistics).returns(stub(overtime: -2.0))
+      employees(:lucien).stubs(:statistics).returns(stub(overtime: 10.0))
+
+      ascending = Evaluations::EmployeesEval.new({}, { 'sort' => 'overtime', 'sort_dir' => 'asc' })
+
+      assert_equal [employees(:mark), employees(:pascal), employees(:lucien)], ascending.divisions(@period_month)
+
+      descending = Evaluations::EmployeesEval.new({}, { 'sort' => 'overtime', 'sort_dir' => 'desc' })
+
+      assert_equal [employees(:lucien), employees(:pascal), employees(:mark)], descending.divisions(@period_month)
+    end
+
+    def test_employees_sorted_by_vacations
+      stub_employee_objects
+      employees(:pascal).stubs(:statistics).returns(stub(remaining_vacations: 3.0))
+      employees(:mark).stubs(:statistics).returns(stub(remaining_vacations: 12.0))
+      employees(:lucien).stubs(:statistics).returns(stub(remaining_vacations: 7.0))
+
+      ascending = Evaluations::EmployeesEval.new({}, { 'sort' => 'vacations', 'sort_dir' => 'asc' })
+
+      assert_equal [employees(:pascal), employees(:lucien), employees(:mark)], ascending.divisions(@period_month)
+    end
+
+    def test_employees_sorted_by_period_hours
+      stub_employee_relation
+      times = [{ employees(:pascal).id => 3.0, employees(:lucien).id => 9.0, employees(:mark).id => 18.0 }]
+
+      ascending = Evaluations::EmployeesEval.new({}, { 'sort' => 'period_hours', 'sort_dir' => 'asc' })
+
+      assert_equal [employees(:pascal), employees(:lucien), employees(:mark)],
+                   ascending.divisions(@period_month, times)
+
+      descending = Evaluations::EmployeesEval.new({}, { 'sort' => 'period_hours', 'sort_dir' => 'desc' })
+
+      assert_equal [employees(:mark), employees(:lucien), employees(:pascal)],
+                   descending.divisions(@period_month, times)
+    end
+
+    def test_employees_sorted_by_period_hours_defaults_missing_employees_to_zero
+      stub_employee_relation
+      # lucien has no entry, i.e. no worktimes at all in the period
+      times = [{ employees(:pascal).id => 3.0, employees(:mark).id => 1.0 }]
+
+      ascending = Evaluations::EmployeesEval.new({}, { 'sort' => 'period_hours', 'sort_dir' => 'asc' })
+
+      assert_equal [employees(:lucien), employees(:mark), employees(:pascal)],
+                   ascending.divisions(@period_month, times)
+    end
+
+    private
+
+    # Restricts Employee.list to a real relation of exactly the 3 employees these
+    # tests care about, so a real SQL ORDER BY (reorder) can still run on it.
+    def stub_employee_relation
+      ids = [employees(:pascal).id, employees(:mark).id, employees(:lucien).id]
+      Employee.stubs(:list).returns(Employee.where(id: ids))
+    end
+
+    # Restricts Employee.list to the exact fixture instances, so a per-instance
+    # stub (e.g. on #statistics) set on them is still in effect when read back.
+    def stub_employee_objects
+      Employee.stubs(:list).returns([employees(:pascal), employees(:mark), employees(:lucien)])
+    end
   end
 end

@@ -16,7 +16,14 @@ module Evaluations
     class_attribute :division_method, :division_column, :division_join, :division_planning_join,
                     :sub_evaluation, :sub_work_items_eval, :label, :absences,
                     :total_details, :billable_hours, :planned_hours, :category_ref, :detail_columns,
-                    :detail_labels
+                    :detail_labels, :sortable_division_header, :sortable_period_header
+
+    # Whether the division header column can be sorted.
+    self.sortable_division_header = false
+
+    # Whether the period column can be sorted. Only offered for a single selected period,
+    # since with several period columns there'd be no single value to sort by.
+    self.sortable_period_header = false
 
     # The method to send to the category object to retrieve a list of divisions.
     self.division_method   = :list
@@ -176,12 +183,7 @@ module Evaluations
     # The header name of the division column to be displayed.
     # Returns the class name of the division objects.
     def division_header
-      divs = divisions
-      if divs.respond_to?(:klass)
-        divs.klass.model_name.human
-      else
-        respond_to?(:division_header) ? division_header : ''
-      end
+      divisions.klass.model_name.human
     end
 
     # Returns a two-dimensional Array with helper methods of the evaluator

@@ -84,6 +84,35 @@ module Evaluations
       assert_count_times 0, 1, 2, 2
     end
 
+    def test_absences_sorted_by_name
+      create_absences
+
+      ascending = Evaluations::AbsencesEval.new(nil, { 'sort' => 'name', 'sort_dir' => 'asc' })
+
+      assert_equal [employees(:mark), employees(:lucien), employees(:pascal)],
+                   ascending.divisions(@period_month, @times)
+
+      descending = Evaluations::AbsencesEval.new(nil, { 'sort' => 'name', 'sort_dir' => 'desc' })
+
+      assert_equal [employees(:pascal), employees(:lucien), employees(:mark)],
+                   descending.divisions(@period_month, @times)
+    end
+
+    def test_absences_sorted_by_period_hours
+      create_absences
+      times = [{ employees(:pascal).id => 3.0, employees(:lucien).id => 9.0, employees(:mark).id => 18.0 }]
+
+      ascending = Evaluations::AbsencesEval.new(nil, { 'sort' => 'period_hours', 'sort_dir' => 'asc' })
+
+      assert_equal [employees(:pascal), employees(:lucien), employees(:mark)],
+                   ascending.divisions(@period_month, times)
+
+      descending = Evaluations::AbsencesEval.new(nil, { 'sort' => 'period_hours', 'sort_dir' => 'desc' })
+
+      assert_equal [employees(:mark), employees(:lucien), employees(:pascal)],
+                   descending.divisions(@period_month, times)
+    end
+
     def create_absences
       %i[mark lucien pascal].each do |e|
         employees(e).employments.create!(start_date: @period_month.start_date,

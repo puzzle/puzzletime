@@ -14,16 +14,20 @@
 %table#evaluation.table.table-striped.table-condensed.table-hover.table-inline
   %thead
     %tr
-      %th= evaluation.division_header
+      %th
+        = evaluation.class.sortable_division_header ? sort_link(:name, evaluation.division_header) : evaluation.division_header
       -if evaluation.sub_work_items_eval
         %th
       - @periods.each do |p|
         %th.periodHead{colspan: evaluation.class.planned_hours ? 3 : nil}
-          = p ? p.label : 'Total'
+          - if evaluation.class.sortable_period_header && @period
+            = sort_link(:period_hours, p ? p.label : 'Total')
+          - else
+            = p ? p.label : 'Total'
           &nbsp; &nbsp;
-      - evaluation.division_supplement(@user).each do |_key, supp|
+      - evaluation.division_supplement(@user).each do |key, supp|
         %th
-          = supp[:sortable] ? sort_link(:vacation, supp[:title]) : supp[:title]
+          = supp[:sortable] ? sort_link(key, supp[:title]) : supp[:title]
     - if evaluation.class.planned_hours
       %tr
         %th.subhead

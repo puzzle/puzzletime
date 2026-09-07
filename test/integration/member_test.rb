@@ -48,7 +48,7 @@ class MemberTest < ActionDispatch::IntegrationTest
 
   def login
     login_as(:mark)
-    visit(evaluator_path(evaluation: 'absences', sort: 'vacation', sort_dir: 'asc'))
+    visit(evaluator_path(evaluation: 'absences', sort: 'remaining_vacations', sort_dir: 'asc'))
   end
 
   def create_employments

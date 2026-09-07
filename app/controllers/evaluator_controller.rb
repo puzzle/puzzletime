@@ -132,7 +132,9 @@ class EvaluatorController < ApplicationController
     @evaluation =
       case params[:evaluation].downcase
       when 'clients'                   then Evaluations::ClientsEval.new
-      when 'employees'                 then Evaluations::EmployeesEval.new(params.slice(:department_id, :member_coach_id))
+      when 'employees'                 then Evaluations::EmployeesEval.new(
+        params.slice(:department_id, :member_coach_id), sort_conditions
+      )
       when 'departments'               then Evaluations::DepartmentsEval.new
       when 'clientworkitems'           then Evaluations::ClientWorkItemsEval.new(params[:category_id])
       when 'employeeworkitems'         then Evaluations::EmployeeWorkItemsEval.new(params[:category_id])
