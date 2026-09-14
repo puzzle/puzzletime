@@ -27,7 +27,7 @@ module Evaluations
 
     def divisions(period = nil, times = nil)
       employees_with_absences(period, times).map do |e|
-        unformatted_vacations = remaining_vacations(e, format: false)
+        unformatted_vacations = remaining_vacations(e, period:, format: :none)
         e.remaining_vacations = format_days(unformatted_vacations)
         e.sort_col = unformatted_vacations * descending
         e

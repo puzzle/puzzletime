@@ -69,13 +69,17 @@ module EvaluatorHelper
     format_hour(value)
   end
 
-  def remaining_vacations(employee, format: true)
-    value = if @period
-              employee.statistics.remaining_vacations(@period.end_date)
+  def remaining_vacations(employee, period: @period, format: :short)
+    value = if period
+              employee.statistics.remaining_vacations(period.end_date)
             else
               employee.statistics.current_remaining_vacations
             end
-    format ? format_days(value) : value
+    case format
+    when :short then format_days(value, true)
+    when :long  then format_days(value)
+    when :none  then value
+    end
   end
 
   def overtime_vacations_tooltip(employee)
@@ -95,11 +99,7 @@ module EvaluatorHelper
     tooltip.html_safe
   end
 
-  def vacations(employee)
-    date = @period&.end_date || Time.zone.today
-    value = employee.statistics.remaining_vacations(date.end_of_year)
-    format_days(value, true)
-  end
+  alias vacations remaining_vacations
 
   def worktime_commits_readonly(employee)
     worktime_commits(employee, false)

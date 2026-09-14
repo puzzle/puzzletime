@@ -11,6 +11,7 @@ require_relative 'eval_test_helper'
 module Evaluations
   class AbsencesEvalTest < ActiveSupport::TestCase
     include EvalTestHelper
+    include FormatHelper
 
     def setup
       super
@@ -40,6 +41,17 @@ module Evaluations
                    @evaluation.sum_times_grouped(@period_month))
 
       assert_sum_total_times 0.0, 12.0, 40.0, 40.0
+    end
+
+    def test_remaining_vacations_is_bound_to_the_given_period_not_the_current_year
+      create_absences
+
+      mark = employees(:mark)
+      division = @evaluation.divisions(@period_month, @times).find { |e| e.id == mark.id }
+
+      expected = format_days(mark.statistics.remaining_vacations(@period_month.end_date))
+
+      assert_equal expected, division.remaining_vacations
     end
 
     def test_sum_total_times
