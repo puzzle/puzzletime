@@ -8,6 +8,7 @@
 module Evaluations
   class EmployeesEval < Evaluations::Evaluation
     include Sortable
+    include EvaluatorHelper
 
     self.division_column = 'employee_id'
     self.sub_evaluation   = 'employeeworkitems'
@@ -93,8 +94,7 @@ module Evaluations
     end
 
     def vacations_value(employee, period)
-      date = period&.end_date || Time.zone.today
-      employee.statistics.remaining_vacations(date.end_of_year)
+      remaining_vacations(employee, period:, format: :none)
     end
   end
 end

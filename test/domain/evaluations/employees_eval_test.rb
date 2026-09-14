@@ -126,6 +126,26 @@ module Evaluations
       assert_equal [employees(:pascal), employees(:lucien), employees(:mark)], ascending.divisions(@period_month)
     end
 
+    def test_vacations_sort_value_is_bound_to_the_given_period_not_the_current_year
+      employee = Fabricate(:employee, initial_vacation_days: 0, department: Department.first)
+      employee.employments.create!(start_date: Date.new(2020, 1, 1), end_date: nil,
+                                   percent: 100, vacation_days_per_year: 25,
+                                   employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
+
+      stichtag = Date.new(2026, 6, 30)
+      period = Period.new(Date.new(2026, 1, 1), stichtag)
+
+      before = @evaluation.send(:vacations_value, employee, period)
+
+      # Booking a vacation absence AFTER the chosen Stichtag must not change the
+      # sort value used for a report already scoped to that Stichtag.
+      vacation_absence = Absence.where(vacation: true).first
+      Worktime.create!(absence: vacation_absence, employee:, work_date: Date.new(2026, 8, 24),
+                       hours: 8, report_type: 'absolute_day')
+
+      assert_equal before, @evaluation.send(:vacations_value, employee, period)
+    end
+
     def test_employees_sorted_by_period_hours
       stub_employee_relation
       times = [{ employees(:pascal).id => 3.0, employees(:lucien).id => 9.0, employees(:mark).id => 18.0 }]

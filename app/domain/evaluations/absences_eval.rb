@@ -30,10 +30,10 @@ module Evaluations
 
     def divisions(period = nil, times = nil)
       employees = employees_with_absences(period, times).map do |e|
-        e.remaining_vacations = format_days(vacations_value(e))
+        e.remaining_vacations = format_days(vacations_value(e, period))
         e
       end
-      sort_divisions(employees, times)
+      sort_divisions(employees, period, times)
     end
 
     def employees_with_absences(period, times)
@@ -69,11 +69,11 @@ module Evaluations
 
     private
 
-    def sort_divisions(employees, times)
+    def sort_divisions(employees, period, times)
       case sort_conditions && sort_conditions['sort']
       when 'name' then sort_by_name(employees)
       when 'period_hours' then sort_by_value(employees) { |e| period_hours_value(e, times) }
-      else sort_by_value(employees) { |e| vacations_value(e) }
+      else sort_by_value(employees) { |e| vacations_value(e, period) }
       end
     end
 
@@ -86,8 +86,8 @@ module Evaluations
       employees.sort_by { |e| yield(e) * sort_multiplier }
     end
 
-    def vacations_value(employee)
-      remaining_vacations(employee, format: false)
+    def vacations_value(employee, period)
+      remaining_vacations(employee, period:, format: :none)
     end
   end
 end
