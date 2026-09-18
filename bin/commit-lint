@@ -1,0 +1,48 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Lints commit subjects against the Conventional Commits pattern that overcommit
+# enforces locally, so CI catches messages authored without the git hooks.
+#
+# Single source of truth: the regex is read from .overcommit.yml
+# (CommitMsg/MessageFormat/pattern) — keep the rule in one place.
+#
+# Usage:
+#   bin/commit-lint                       # lints origin/master..HEAD
+#   bin/commit-lint <range>               # e.g. main..HEAD
+#   bin/commit-lint <base-sha> <head-sha> # as passed by CI
+
+require 'yaml'
+
+pattern = YAML.load_file(File.expand_path('../.overcommit.yml', __dir__))
+               .dig('CommitMsg', 'MessageFormat', 'pattern')
+abort 'No CommitMsg/MessageFormat/pattern in .overcommit.yml' unless pattern
+regex = Regexp.new(pattern)
+
+range =
+  case ARGV.length
+  when 0 then 'origin/master..HEAD'
+  when 1 then ARGV[0]
+  else "#{ARGV[0]}..#{ARGV[1]}"
+  end
+
+log = `git log --format=%H%x09%s #{range}`
+abort "git log failed for range: #{range}" unless $?.success?
+
+offenders = log.lines.filter_map do |line|
+  sha, subject = line.chomp.split("\t", 2)
+  next if subject.nil? || regex.match?(subject)
+
+  "#{sha[0, 8]}  #{subject}"
+end
+
+if offenders.empty?
+  puts "commit-lint: all commit subjects in #{range} follow Conventional Commits"
+  exit 0
+end
+
+warn "commit-lint: #{offenders.size} commit(s) do not follow Conventional Commits:"
+offenders.each { |o| warn "  #{o}" }
+warn ''
+warn 'Expected e.g. "feat(scope): summary" — see CONTRIBUTING.md#commit-messages'
+exit 1

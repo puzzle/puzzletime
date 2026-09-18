@@ -45,3 +45,5 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/): a
 `./bin/setup` wires a commit template (`.gitmessage`) and installs the
 `overcommit` hooks that enforce this format (`CommitMsg/MessageFormat` in
 `.overcommit.yml`).
+On pull requests, CI re-checks it with `bin/commit-lint` (a separate
+`commit-lint` job), which reads the same pattern from `.overcommit.yml`.
