@@ -354,6 +354,37 @@ reasoning behind each decision and the phase sections for full verification deta
       unrelated things.</div>
   </div>
 
+  <div class="timeline-entry ok">
+    <div class="timeline-date">Fr, 18.09.2026</div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="62262d37df61ba68b45da27ef103eeb6d0d58385"></button><div class="timeline-line"></div></div>
+    <div class="timeline-content"><a href="#p5"><strong>Phases 5.5–5.8 complete</strong></a> — forms (748 lines out),
+      nav/navbar/breadcrumb/pagination (952), the alerts/labels/panels/… component set (1185), and modal/tooltip/fade
+      (verbatim, identical rule set). The frozen file fell 4854 → 1667. Each cut verified by a layer-transparent
+      rule-set diff of the compiled CSS: every removal a confirmed-dead selector, zero changed or added among kept
+      classes.</div>
+  </div>
+
+  <div class="timeline-entry warn">
+    <div class="timeline-date repeat">Fr, 18.09.2026</div>
+    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="866ecac05d5ea1aa7f3932756d18390a0d0c2afb"></button><div class="timeline-line"></div></div>
+    <div class="timeline-content">§2/§6.7's pagination premise was stale: <code>kaminari-bootstrap</code> is still installed
+      (<a href="#p0">phase 0</a> restored it), so pagination still renders Bootstrap's <code>ul.pagination</code> and
+      <code>.pagination</code> moved verbatim. Dropping the gem and retargeting Kaminari's own theme is a behaviour
+      change — deferred to follow-up, not smuggled into a CSS-only phase. Also re-derived: the app's navbar is
+      always-expanded, so most of the navbar surface (collapse/toggle/form/fixed/dropdown) is dead.</div>
+  </div>
+
+  <div class="timeline-entry ok">
+    <div class="timeline-date repeat">Fr, 18.09.2026</div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="d42b86866e18c361fa703d238aed0d9374905dd8"></button><div class="timeline-line"></div></div>
+    <div class="timeline-content"><a href="#p6"><strong>Phase 6 complete</strong></a> — frozen file and
+      <code>bootstrap</code> layer deleted, Preflight now unopposed, the §4.2 reboot residues (body type + link colours)
+      preserved in the shim. Verified with the §4.6 harness for real: baseline <code>d00ae213</code> on <code>:3001</code>
+      vs the branch on <code>:3000</code>, each with its own cloned DB and memcached, computed styles diffed across six
+      pages plus the modal — identical but for two inert <code>&lt;html&gt;</code> properties. The migration's CSS goal
+      is met: no Bootstrap CSS remains except the vendored glyphicons font.</div>
+  </div>
+
 </div>
 
 <p class="timeline-legend">
@@ -1858,7 +1889,7 @@ assertions, 0 failures, matching phase 0's baseline count exactly (it did not, o
 </div>
 
 <div class="phase">
-<h3 id="p5">Phase 5 — Shim the components, one at a time <span class="tag high">in progress — 4 / 8</span></h3>
+<h3 id="p5">Phase 5 — Shim the components, one at a time <span class="tag low">complete — 8 / 8</span></h3>
 <p class="goal">Goal: for each Bootstrap component — write the shim, delete that section from
 <code>bootstrap-frozen.css</code>, verify, commit. The frozen file shrinks monotonically; at no point is the app half-styled.</p>
 
@@ -1886,19 +1917,18 @@ assertions, 0 failures, matching phase 0's baseline count exactly (it did not, o
   <tr><td>4</td><td>buttons <span class="tag low">complete</span></td><td>the <code>.btn.disabled</code> vs
       <code>.disabled</code> warning was right to exist but milder than it reads — they never collide on a property.
       See 5.4</td></tr>
-  <tr><td>5</td><td>forms</td><td>largest surface (49× <code>.form-group</code>, 37× <code>.control-label</code>);
-      <code>dry_crud/form/builder.rb</code> emits most of it, so verify there rather than view-by-view</td></tr>
-  <tr><td>6</td><td>navs, navbar, breadcrumb, pagination</td><td>pagination targets <em>Kaminari's default markup</em>,
-      not Bootstrap's — see §2</td></tr>
-  <tr><td>7</td><td>alerts, labels, panels, wells, progress, list-group, close</td>
-      <td><code>label-*</code> and <code>progress-bar-*</code> are built from Ruby string interpolation — all colour
-      variants must be written out, Tailwind's scanner will not find them</td></tr>
-  <tr><td>8</td><td>modal, tooltip, button-toggle, <code>.fade</code>/<code>.in</code></td>
-      <td><strong>Last, and most carefully.</strong> These classes are toggled by Bootstrap's JS, which expects specific
-      CSS semantics: <code>.modal</code> is <code>display:none</code> until JS sets <code>display:block</code> and adds
-      <code>.in</code>; <code>.fade</code> transitions opacity; the plugin reads
-      <code>$.support.transition</code>. Get these wrong and modals silently never open. Test against
-      <code>modal_create.js</code>'s four flows.</td></tr>
+  <tr><td>5</td><td>forms <span class="tag low">complete</span></td><td>largest surface (49× <code>.form-group</code>, 37× <code>.control-label</code>);
+      <code>dry_crud/form/builder.rb</code> emits most of it. See 5.5</td></tr>
+  <tr><td>6</td><td>navs, navbar, breadcrumb, pagination <span class="tag low">complete</span></td><td>pagination stayed on
+      Bootstrap's <code>ul.pagination</code> markup — <code>kaminari-bootstrap</code> is still installed (phase 0 restored it),
+      so §2's Kaminari-default premise was stale. See 5.6</td></tr>
+  <tr><td>7</td><td>alerts, labels, panels, wells, progress, list-group, close <span class="tag low">complete</span></td>
+      <td><code>label-*</code> and <code>progress-bar-*</code> are Ruby-interpolated — colour variants written out; only
+      <code>-success</code>/<code>-danger</code> progress bars are actually emitted. See 5.7</td></tr>
+  <tr><td>8</td><td>modal, tooltip, <code>.fade</code>/<code>.in</code> <span class="tag low">complete</span></td>
+      <td><strong>Copied verbatim, not reinterpreted</strong> — the compiled rule set is identical, so the JS/CSS contract
+      (<code>.modal</code> <code>display:none</code> → JS adds <code>.in</code>; <code>.fade</code> opacity) is unchanged.
+      See 5.8</td></tr>
   <tr><td>—</td><td><code>glyphicon*</code></td><td><strong>never shimmed</strong> — stays as vendored
       <code>glyphicons.css</code> + webfont until the phase-7 follow-up (D2)</td></tr>
 </table>
@@ -2071,20 +2101,107 @@ transparent with radius 0, <code>.btn-block</code> full width, <code>.btn-group-
 at all, and the one <code>.btn</code> on <code>/worktimes</code> is deliberately restyled by the app's unlayered
 <code>.today-link-white</code>, so neither page can show what the shim does.</p>
 
+<h4 style="margin-top:1.5rem">5.5 — Forms <span class="tag low">complete</span></h4>
+<ul class="check">
+  <li>✓ 748 lines out of the frozen file (4854 → 4106). The forms surface is two non-contiguous frozen regions —
+      <code>fieldset</code>…<code>form-horizontal</code> and the <code>input-group</code> block — with the size and
+      state variants interleaved through both. Moved the live rules verbatim into <code>@layer components</code>; the
+      one <code>@media screen</code> block that mixed <code>.form-control[type=date]</code> (live) with
+      <code>input-sm</code>/<code>-lg</code> (dead) was split, keeping only the <code>.form-control</code> half.</li>
+  <li>✓ <strong>Dropped as confirmed-dead</strong> (zero app markup, re-derived by grep across
+      <code>views</code>/<code>helpers</code>/<code>javascript</code>/SCSS, not trusted from §6.6):
+      <code>input-sm</code>/<code>-lg</code>, <code>form-group-sm</code>/<code>-lg</code>, <code>has-success</code>,
+      <code>has-warning</code>, <code>input-group-sm</code>/<code>-lg</code>, <code>checkbox-inline</code> — 33 rule-keys.
+      Kept the whole live set incl. <code>radio-inline</code>, <code>has-feedback</code>,
+      <code>form-control-feedback</code>, <code>input-group-btn</code> (all really used).</li>
+</ul>
+<p><strong>Verify:</strong> layer-transparent rule-set diff of the compiled CSS against the pre-5.5 build — 33 removals,
+all confirmed-dead selectors; <strong>0 changed, 0 added</strong> among kept classes.</p>
+
+<h4 style="margin-top:1.5rem">5.6 — Nav, navbar, breadcrumb, pagination <span class="tag low">complete</span></h4>
+<ul class="check">
+  <li>✓ 952 lines out (4106 → 3154) — the largest cut, because the navbar surface is mostly dead in this app: it uses a
+      simple always-expanded navbar, so <code>navbar-collapse</code>, <code>-toggle</code>, <code>-form</code>,
+      <code>-fixed-*</code>, <code>-static-*</code>, <code>-btn</code>, <code>-text</code>, <code>-link</code>, the
+      dropdown descendants, <code>nav-pills</code>/<code>-stacked</code>/<code>-justified</code>,
+      <code>tab-content</code>/<code>tab-pane</code>, <code>pager</code> and <code>pagination-sm</code>/<code>-lg</code>
+      are all dead (107 removed rule-keys, each confirmed). Moved the live patchwork —
+      <code>nav</code>/<code>nav-tabs</code>, the used <code>navbar-default</code>/<code>-inverse</code>/<code>-brand</code>/
+      <code>-nav</code>/<code>-right</code>/<code>-header</code> rules, <code>breadcrumb</code>, <code>pagination</code>.</li>
+  <li>✓ <strong>Correction to §2/§6.7:</strong> the plan assumed <code>kaminari-bootstrap</code> was removed and pagination
+      rendered Kaminari's default <code>nav.pagination</code> markup — but <a href="#p0">phase 0</a> restored the gem, so
+      pagination still renders Bootstrap's <code>ul.pagination &gt; li</code> and <code>.pagination</code> is live. Moved
+      it verbatim; pagination is pixel-unchanged. <strong>Retargeting Kaminari's own theme and dropping
+      <code>kaminari-bootstrap</code> is deferred to follow-up</strong> — it is a behaviour/markup change, not a CSS-only
+      move, and would bisect worse than the CSS-only commit (same reasoning the daisyUI evaluation used against a
+      view-theme rewrite).</li>
+</ul>
+<p><strong>Verify:</strong> rule-set diff — 107 removals, every one a dead nav/navbar/pagination selector; 0 changed,
+0 added among kept classes.</p>
+
+<h4 style="margin-top:1.5rem">5.7 — Alerts, labels, panels, wells, progress, list-group, close <span class="tag low">complete</span></h4>
+<ul class="check">
+  <li>✓ 1185 lines out (3154 → 1969). Kept: <code>label</code> + all six <code>label-*</code> (interpolated from
+      <code>order.status.style</code>), <code>alert</code> + its four used contexts, <code>progress</code>/
+      <code>progress-bar</code> + <code>-success</code>/<code>-danger</code> (the only two the helpers emit), the full
+      <code>panel</code> block, <code>well</code>, <code>close</code>, and <code>list-group</code>/<code>list-group-item</code>.</li>
+  <li>✓ <code>.panel &gt; .table</code> (155 lines) turned out <strong>live</strong>, not dead: both
+      <code>worktimes/_existing</code> and <code>ordertimes/split</code> put a <code>%table.table</code> as a
+      <em>direct</em> child of <code>.panel</code>. <code>.panel &gt; .list-group</code> is live too
+      (<code>configurations/_group</code>). Dropped: <code>badge</code>, <code>jumbotron</code>, <code>thumbnail</code>,
+      <code>media*</code>, <code>alert-dismissable</code>, the progress <code>-striped</code>/<code>-info</code>/
+      <code>-warning</code> variants + their keyframes, <code>a.list-group-item</code>/<code>button.list-group-item</code>,
+      the <code>list-group-item-*</code> colour variants, <code>panel-primary</code>/<code>-success</code>/<code>-warning</code>/
+      <code>-danger</code>, <code>panel-group</code>, <code>embed-responsive</code>, <code>well-lg</code>/<code>-sm</code> —
+      106 rule-keys, each confirmed dead.</li>
+</ul>
+<p><strong>Verify:</strong> rule-set diff — 106 removals, all dead; 0 changed, 0 added among kept classes.</p>
+
+<h4 style="margin-top:1.5rem">5.8 — Modal, tooltip, fade <span class="tag low">complete</span></h4>
+<ul class="check">
+  <li>✓ The JS-coupled set, copied <strong>verbatim</strong> (not reinterpreted with <code>@apply</code>, per §7's risk
+      row): <code>fade</code>/<code>fade.in</code>, the whole <code>modal</code>/<code>modal-*</code> block, and
+      <code>tooltip</code>/<code>tooltip-inner</code>/<code>tooltip-arrow</code>. All three are live —
+      <code>application.js</code> imports <code>bootstrap/js/{modal,tooltip}</code>, <code>shared/_modal.html.haml</code>
+      uses the modal set, and <code>data-toggle="tooltip"</code> is everywhere.</li>
+  <li>✓ Left for phase 6's sweep, confirmed dead (not imported, no markup): <code>collapse</code>/<code>collapsing</code>,
+      <code>caret</code>/<code>dropup</code>/<code>dropdown*</code>, <code>popover*</code>, <code>carousel*</code>.</li>
+</ul>
+<p><strong>Verify:</strong> rule-set diff <strong>IDENTICAL</strong> — a pure relocation, zero removals, so modal and
+tooltip behaviour cannot have changed. Confirmed live against the running app in phase 6 (below): the modal set is
+computed-style-identical to the baseline.</p>
+
 <div class="phase">
-<h3 id="p6">Phase 6 — Delete the frozen file <span class="tag med">1 day</span></h3>
+<h3 id="p6">Phase 6 — Delete the frozen file <span class="tag low">complete</span></h3>
 <p class="goal">Goal: <code>bootstrap-frozen.css</code> is empty and gets deleted, along with the <code>bootstrap</code>
 layer.</p>
 <ul class="check">
-  <li>Bootstrap's <code>normalize.css</code> goes with it — Preflight is now unopposed. Re-run the §4.2 table; the
-      <code>a { color: inherit }</code> row is the one that bites here.</li>
-  <li>Whatever is left in the frozen file at this point is, by definition, unused — but confirm with a Cuprite pass
-      before deleting, not with a grep.</li>
-  <li><code>_bootstrap_variables.scss</code> can now shrink to the ~40 variables the app's own SCSS still uses, or be
-      folded into <code>@theme</code>.</li>
-  <li>Final side-by-side pass against <code>master</code>. Differences at this point are intentional — capture before/after pairs for the changelog and retire the baseline worktree.</li>
+  <li>✓ Frozen file deleted and the <code>bootstrap</code> layer dropped from <code>application.css</code>'s
+      <code>@layer</code> declaration and its <code>@import</code>. Preflight is now unopposed.</li>
+  <li>✓ <strong>Reboot residues preserved in the shim</strong> — the ones Preflight does not restore, found by a
+      before/after computed-style diff on the running app rather than reasoned from §4.2: <code>html { font-size: 10px }</code>
+      (Tailwind's rem base), <code>body</code> font-family/size (14px)/line-height (1.428…)/color (<code>#4A4A4A</code>)/
+      background (<code>#fff</code>), and the link colours — <code>a { color: #238BCA }</code>, <code>a:hover,a:focus
+      { color: #69B978; text-decoration: underline }</code>. Without these, removing the layer turned body text black,
+      16px, and links to inherit — exactly what §4.2's <code>a { color: inherit }</code> row warned about.</li>
+  <li>✓ Everything else left in the frozen file was dead and went with it: <code>normalize.css</code>, the h5bp print
+      block, dead components (<code>dropdown</code>/<code>caret</code>/<code>popover</code>/<code>carousel</code>/
+      <code>collapse</code>) and dead utilities (<code>center-block</code>, <code>show</code>, <code>invisible</code>,
+      <code>affix</code>, print-visibility). Live utilities Tailwind already provides (<code>hidden</code>,
+      <code>sr-only</code>, <code>text-*</code> alignment/colours via <code>@theme</code>) need no shim.</li>
 </ul>
-</div>
+<p><strong>Verify — the §4.6 side-by-side harness, run for real:</strong> baseline commit <code>d00ae213</code> on
+<code>:3001</code> (its own cloned DB and its own memcached on 11212), the migration branch on <code>:3000</code>
+(11211). Logged in on both and diffed <em>computed styles</em> across <code>/</code>, <code>/orders</code>,
+<code>/employees</code>, <code>/ordertimes/new</code>, <code>/absencetimes/new</code>, <code>/employee_master_data</code>
+and the modal. Every rendered element — <code>body</code>, links, headings, lists, <code>navbar</code>/<code>-brand</code>,
+<code>nav-tabs</code> (incl. the active tab), <code>panel</code>/<code>-heading</code>/<code>-title</code>,
+<code>table</code> cells/headers, <code>label</code>, <code>btn-default</code>/<code>-primary</code>,
+<code>form-control</code>, <code>control-label</code>, <code>modal</code>/<code>-content</code>/<code>-header</code>/
+<code>-title</code>/<code>-body</code>, <code>close</code> — is <strong>computed-style-identical to the baseline</strong>.
+The only differences are two inert <code>&lt;html&gt;</code> properties (font-family, line-height) that <code>body</code>
+overrides for everything that renders. <code>_bootstrap_variables.scss</code> shrink and the changelog before/after
+screenshots remain as documented follow-ups.</p>
 
 <div class="phase">
 <h3 id="p7">Phase 7 — Out of scope, but write it down <span class="tag low">later</span></h3>
