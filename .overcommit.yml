@@ -1,13 +1,17 @@
 ---
 CommitMsg:
   CapitalizedSubject:
-    enabled: true
+    # Conventional Commits subjects start lowercase (e.g. "feat: ..."), so this is off.
+    enabled: false
   EmptyMessage:
     enabled: true
   HardTabs:
     enabled: true
   MessageFormat:
-    enabled: false
+    enabled: true
+    pattern: '\A(Merge |Revert |fixup! |squash! |(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\([a-z0-9._\-]+\))?!?: )'
+    expected_pattern_message: 'Subject must follow Conventional Commits, e.g. "feat(scope): summary". See CONTRIBUTING.md.'
+    sample_message: 'refactor(assets): shim forms, drop from bootstrap-frozen.css'
   RussianNovel:
     enabled: true
   SingleLineSubject:
@@ -16,6 +20,7 @@ CommitMsg:
     enabled: true
   TextWidth:
     enabled: true
+    max_subject_width: 72
   TrailingPeriod:
     enabled: true
 
