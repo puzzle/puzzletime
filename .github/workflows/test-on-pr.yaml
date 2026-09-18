@@ -15,6 +15,20 @@ jobs:
     with:
       ref: ${{ github.event.pull_request.head.sha }}
 
+  commit-lint:
+    runs-on: 'ubuntu-latest'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - uses: ruby/setup-ruby@v1
+      - name: 'Conventional Commits check'
+        run: >
+          bin/commit-lint
+          "${{ github.event.pull_request.base.sha }}"
+          "${{ github.event.pull_request.head.sha }}"
+
   test:
     uses: ./.github/workflows/reusable-test.yaml
     with:
