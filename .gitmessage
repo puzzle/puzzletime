@@ -1,0 +1,8 @@
+# type(scope): summary   — imperative, lowercase, no trailing period, <= 72 chars
+#
+# Short body; bullets where possible. Put longer rationale in the relevant doc
+# and reference it here instead of inlining prose.
+# -
+#
+# type: feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert  ( ! = breaking )
+# Conventional Commits — see CONTRIBUTING.md#commit-messages
