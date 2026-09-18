@@ -42,5 +42,6 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/): a
 * Keep the body short — bullet points where possible. Put longer rationale in the
   relevant doc and reference it from the body rather than inlining prose.
 
-This is enforced by the `overcommit` `CommitMsg/MessageFormat` hook
-(`.overcommit.yml`); run `overcommit --install` once after cloning.
+`./bin/setup` wires a commit template (`.gitmessage`) and installs the
+`overcommit` hooks that enforce this format (`CommitMsg/MessageFormat` in
+`.overcommit.yml`).

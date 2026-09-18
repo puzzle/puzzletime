@@ -17,6 +17,11 @@ FileUtils.chdir APP_ROOT do
   system! "gem install bundler --conservative"
   system("bundle check") || system!("bundle install")
 
+  puts "\n== Configuring git =="
+  system! "git config commit.template .gitmessage"
+  # Install the overcommit hooks that enforce the Conventional Commit format.
+  system("bundle exec overcommit --install")
+
   # puts "\n== Copying sample files =="
   # unless File.exist?("config/database.yml")
   #   FileUtils.cp "config/database.yml.sample", "config/database.yml"
