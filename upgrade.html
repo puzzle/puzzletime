@@ -594,7 +594,18 @@ copied-out assets and the <code>COMMIT</code> file need to survive, and now they
       <code>20260727130000</code> aborts the release (<a href="#p0">phase 0</a>).</li>
   <li>✓ <code>_bootstrap_variables.scss</code> shrunk 853 → 83 lines: only the 56 variables the SCSS still reads
       (transitively) kept; compiled <code>application.css</code> and <code>phone.css</code> byte-identical before/after.</li>
-  <li>☐ Before/after screenshots for the changelog (<a href="#p6">phase 6</a>).</li>
+  <li>✓ Before/after screenshots in <code>doc/screenshots/upgrade/</code> — <code>master</code> on <code>:3002</code>
+      vs the branch on <code>:3001</code>, six pages. <strong>Taking them found six regressions phase 6's harness
+      missed</strong> (it diffed against <code>d00ae213</code> on six pages; this pass diffed computed styles of every
+      element on fifteen): bare <code>h1</code>/<code>h2</code>/<code>h5</code>/<code>h6</code> unstyled (phase 5.1
+      shimmed only <code>h3</code>/<code>h4</code>; <code>h2</code> is live on devise pages, <code>h5</code> on the
+      planning legend), <code>p</code> lost its 10px bottom margin, Tailwind's <code>table</code> utility turned
+      <code>div.table</code> into <code>display: table</code>, Preflight stripped native chrome off bare
+      <code>button</code>/<code>select</code> (planning board add button, datepicker month/year), Preflight's
+      <code>img { height: auto }</code> overrode <code>height</code> attributes (weekly graph bars 1px → 79px), and
+      <code>.text-danger</code> rendered brand red instead of Bootstrap's <code>#a94442</code>. All fixed in
+      <code>app/assets/tailwind/application.css</code>; the 15-page diff is now clean except sub-pixel line-height
+      rounding, 0-width border styles, and one ~1px label-with-checkbox height on <code>/employees/settings</code>.</li>
 </ul>
 </div>
 
