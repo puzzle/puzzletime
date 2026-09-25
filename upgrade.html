@@ -611,6 +611,11 @@ copied-out assets and the <code>COMMIT</code> file need to survive, and now they
       <code>.label-*</code> backgrounds all failed AA. See <a href="#a11y">§9.1</a>.</li>
   <li>✓ <code>standard</code> clean across <code>app/javascript/</code> (2522 → 0); <code>JsHint</code> and
       <code>JsLint</code> disabled as ES5-only. See <a href="#a11y">§9.2</a>.</li>
+  <li>✓ Dependencies refreshed on 2026-09-25, six weeks after the lockfile was last touched: Ruby 4.0.7, Rails 8.1.4,
+      and the seven majors that were waiting (<code>json</code> 3, <code>bindata</code> 3, <code>rdoc</code> 8,
+      <code>rails-erd</code> 2.2, <code>sentry-*</code> 7.0). <code>selenium-webdriver</code> deleted — Capybara has
+      driven Cuprite/Ferrum since phase 2 and nothing outside <code>Gemfile.lock</code> referenced it. Full suite:
+      1565 tests, 1 failure (<code>MemberTest</code>, pre-existing). <code>bundle audit</code>: no vulnerabilities.</li>
   <li>☐ Design sign-off on the darkened brand colours. They are the same hues, but <code>.btn-primary</code> and the
       status badges are visibly darker than <code>master</code>. The alternative (dark text on the light brand
       backgrounds) changes the look more, not less.</li>
@@ -1865,7 +1870,7 @@ before that was noticed), it did exactly that and had to be partially reverted (
 entirely; <code>Procfile.dev</code>'s appended <code>css:</code> line, a duplicate key, renamed to <code>tailwind:</code>).</p>
 </div>
 <ul class="check">
-  <li>✓ <code>gem 'tailwindcss-rails', '~> 4.6'</code>; <code>tailwind: bin/rails tailwindcss:watch</code> added to
+  <li>✓ <code>gem 'tailwindcss-rails', '~&gt; 4.6'</code>; <code>tailwind: bin/rails tailwindcss:watch</code> added to
       <code>Procfile.dev</code> alongside the existing <code>js:</code>/<code>css:</code> watchers.</li>
   <li>✓ Moved <code>vendor/bootstrap-3.4.1.css</code> to <code>app/assets/tailwind/bootstrap-frozen.css</code>, imported
       into the layer stack from §4.1 (<code>theme, base, bootstrap, components, utilities</code>). Its leading
