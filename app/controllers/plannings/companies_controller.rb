@@ -13,9 +13,11 @@ module Plannings
 
     before_action :authorize_action
     before_action :set_period
+    before_action :set_custom_list_ids
 
     def show
-      @overview = Plannings::CompanyOverview.new(@period)
+      @custom_lists = current_user.custom_lists.where(item_type: Employee.sti_name).list
+      @overview = Plannings::CompanyOverview.new(@period, employee_ids: filtered_employee_ids)
     end
 
     private
@@ -33,6 +35,21 @@ module Plannings
 
     def default_period
       Period.next_n_months(3)
+    end
+
+    def set_custom_list_ids
+      ids = params[:custom_list_ids] || session[:planning_custom_list_ids]
+      @custom_list_ids = Array(ids).compact_blank
+      session[:planning_custom_list_ids] = @custom_list_ids
+    end
+
+    def filtered_employee_ids
+      return nil if @custom_list_ids.blank?
+
+      current_user.custom_lists
+                  .where(id: @custom_list_ids, item_type: Employee.sti_name)
+                  .flat_map(&:item_ids)
+                  .uniq
     end
 
     def authorize_action

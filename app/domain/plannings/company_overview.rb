@@ -9,8 +9,9 @@ module Plannings
   class CompanyOverview
     attr_reader :period, :boards
 
-    def initialize(period)
+    def initialize(period, employee_ids: nil)
       @period = period
+      @employee_ids = employee_ids
       @boards = create_boards.sort_by { |b| -b.overall_free_capacity }
     end
 
@@ -33,6 +34,7 @@ module Plannings
 
     def create_boards
       employees = Employee.employed_ones(period).list
+      employees = employees.where(id: @employee_ids) if @employee_ids
       employees.map { |e| Plannings::EmployeeBoard.new(e, period) }
     end
   end

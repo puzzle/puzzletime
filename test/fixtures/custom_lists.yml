@@ -21,4 +21,9 @@ list_a:
   name: Foo
   item_type: Employee
   item_ids: [1, 2, 3]
+list_b:
+  employee_id: 7
+  name: Bar
+  item_type: Employee
+  item_ids: [5]
 ...

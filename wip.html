@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>WIP — Ticket #7: Filter company planning by custom lists</title>
+<style>
+  body { font-family: Roboto, Helvetica, Arial, sans-serif; max-width: 920px; margin: 32px auto; padding: 0 16px; color: #333; line-height: 1.5; }
+  h1 { color: #238BCA; font-size: 22px; }
+  h2 { font-size: 16px; border-bottom: 1px solid #ddd; padding-bottom: 4px; margin-top: 28px; }
+  code, pre { background: #f4f4f4; border-radius: 3px; font-size: 12.5px; }
+  code { padding: 1px 4px; }
+  pre { padding: 10px; overflow-x: auto; }
+  .status { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 12px; font-weight: 500; vertical-align: middle; }
+  .done { background: #e5f5e5; color: #2e7d32; }
+  .open { background: #fff8e1; color: #b28900; }
+  .todo { background: #eee; color: #555; }
+  .warn { background: #fdecea; color: #c62828; }
+  li { margin: 4px 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { text-align: left; padding: 5px 8px; border-bottom: 1px solid #eee; vertical-align: top; }
+  th { background: #f5f5f5; }
+</style>
+</head>
+<body>
+
+<h1>WIP — Ticket #7: Filter by custom lists on company planning</h1>
+<p>
+  Repo worktree <code>/code/pz/ptime/puzzletime/65357-improve_company_planning</code> ·
+  branch <code>feature/65357-improve_company_planning</code> ·
+  Task board <b>65357</b>, task <b>#7</b> (status on board: <i>pending</i>) · Snapshot 2026-09-25
+</p>
+<p><b>Ticket text:</b> On <code>/plannings/company</code>, add an additional filter that allows filtering by the user's own custom lists (see <code>/plannings/custom_lists</code>).</p>
+
+<h2>Decisions</h2>
+<ul>
+  <li>Design <b>Option 1B</b> chosen from the design canvas <code>tmp/design_canvas_ticket7.html</code> (options: 1A single dropdown, <b>1B multi-select with tag pills</b>, 1C quick-access pills).</li>
+  <li>Multi-select using the existing Selectize wiring (<code>select[multiple].searchable</code> in <code>app/assets/javascripts/application.js.coffee</code>), placed next to the date filter. No JS changes.</li>
+  <li>Several selected lists are combined: the table shows every member of any selected list (a union of their <code>item_ids</code>).</li>
+  <li>Only the logged-in user's own lists with <code>item_type = Employee</code> are offered and honoured (<code>current_user.custom_lists</code>).</li>
+  <li>The selection is <b>remembered in the session</b> as <code>session[:planning_custom_list_ids]</code>, the same way the date period is kept in <code>session[:planning_period]</code>.</li>
+</ul>
+
+<h2>Committed <span class="status done">40a9b639 · not pushed</span></h2>
+<p>Commit <code>40a9b639</code> “WIP: Filter company planning by custom lists”, made on top of <code>b00f30f8</code> with hooks disabled (<code>OVERCOMMIT_DISABLE=1 git commit --no-verify</code>), as you asked.</p>
+<table>
+  <tr><th>File</th><th>Change</th></tr>
+  <tr><td><code>app/controllers/plannings/companies_controller.rb</code></td>
+      <td>New before_action <code>set_custom_list_ids</code>: <code>params[:custom_list_ids] || session[...]</code>, then <code>compact_blank</code>, then the result is stored back in the session. This is your revised version. <code>filtered_employee_ids</code> takes the union of <code>item_ids</code> from the user's own Employee lists and returns <code>nil</code> when nothing is selected. <code>show</code> sets <code>@custom_lists</code> and passes <code>employee_ids:</code> to the overview.</td></tr>
+  <tr><td><code>app/domain/plannings/company_overview.rb</code></td>
+      <td><code>initialize(period, employee_ids: nil)</code>. <code>create_boards</code> adds <code>where(id: @employee_ids)</code> when ids are given.</td></tr>
+  <tr><td><code>app/views/plannings/base/_date_filter.html.haml</code></td>
+      <td>Adds <code>hidden_field_tag 'custom_list_ids[]', '', id: nil</code> plus <code>direct_filter_select(:custom_list_ids, 'Listen', @custom_lists, class: 'searchable', multiple: true, value: @custom_list_ids)</code>. The hidden field makes “all pills removed” arrive as <code>[""]</code> instead of no param, so an explicit clear can be told apart from a fresh page load. This partial is only rendered by <code>plannings/companies/show.html.haml</code>.</td></tr>
+  <tr><td><code>test/fixtures/custom_lists.yml</code></td>
+      <td>New <code>list_b</code> (owner 7 = <code>mark</code>, item_ids [5] = <code>long_time_john</code>). The existing <code>list_a</code> has item_ids [1,2,3]; of those, only pedro (2) and pablo (3) are employed.</td></tr>
+  <tr><td><code>test/controllers/plannings/companies_controller_test.rb</code></td>
+      <td>4 new tests: one list, union of two lists, selection kept in the session, <code>[""]</code> clears it. Last run: <b>5 runs, 0 failures</b>. That run was <i>before</i> your <code>set_custom_list_ids</code> edit, so re-run it.</td></tr>
+  <tr><td><code>.overcommit.yml</code></td>
+      <td>Your change: RailsBestPractices <code>problem_on_unmodified_line: warn</code>.</td></tr>
+</table>
+
+<h2>Open issue: “Listen” dropdown shows no options <span class="status open">in progress</span></h2>
+<p>
+  On <code>/plannings/company</code> the select renders (<code>select#custom_list_ids[name="custom_list_ids[]"]</code>) and Selectize starts up (<code>.selectized</code>, placeholder “Alle”). But the select has <b>no <code>&lt;option&gt;</code>s</b> and Selectize's dropdown is empty.
+  The data is there: logged-in dev user is <b>id 12 / MGT</b>, and
+  <code>Employee.find(12).custom_lists.where(item_type: 'Employee').list.count == 2</code>.
+  Cause not found yet.
+</p>
+<p>Next checks:</p>
+<ol>
+  <li>Fetch the server-rendered HTML (curl with the session cookie, or log in again and read the page source) to see whether the <code>&lt;option&gt;</code>s leave the server at all. That tells us whether the problem is on the server or in Selectize.</li>
+  <li>If the server sends no options, check that <code>@custom_lists</code> is set when the partial renders and that <code>current_user</code> is employee 12 in that request.</li>
+  <li>If the server does send them, check whether passing an array to <code>value:</code> or the default <code>prompt: 'Alle'</code> (a blank <code>&lt;option&gt;</code> in a multi-select) confuses Selectize. Compare with <code>orders/_filters.html.haml</code> (<code>status_id</code>, which works).</li>
+  <li>Make sure the check runs on a fresh full page load, not after an AJAX update (<code>show.js.haml</code> only replaces <code>#plannings</code>).</li>
+</ol>
+
+<h2>Dev data created for testing <span class="status warn">not cleaned up</span></h2>
+<ul>
+  <li><code>CustomList</code> id 1 “Team A”: employees [7, 5, 10] (TBU, DI, MB1), owner 12</li>
+  <li><code>CustomList</code> id 2 “Team B”: employees [9, 2] (AM, AR), owner 12</li>
+</ul>
+<p>I couldn't re-check these because the app server wasn't reachable when this file was written. Delete them or keep them once verification is done.</p>
+
+<h2>Repo incident (for context) <span class="status warn">resolved</span></h2>
+<ul>
+  <li>At 11:34 this worktree's git index was overwritten with 39 entries from the <code>activerecord-nulldb-adapter</code> gem (<code>lib/nulldb/*</code>, …), and some of the data they point to was missing. It happened in the same minute bundler checked out <code>bundler/gems/nulldb-e6b6be7f90a3</code>. <code>Gemfile.lock</code> pins <code>6521df3a61f7</code>.</li>
+  <li>HEAD, the object store and the working tree were intact. I rebuilt the index with <code>git read-tree HEAD</code>. Backup of the broken index: <code>/tmp/65357-index-corrupt-backup</code>.</li>
+  <li>Suspected cause: bundler's git gem checkout ran with environment variables inherited from this session. Worth a look if it happens again.</li>
+</ul>
+
+<h2>Environment gotchas</h2>
+<ul>
+  <li>The agent's shell inherits Bundler variables (<code>RUBYOPT=-r…bundler/setup</code>, <code>GEM_HOME</code>, <code>BUNDLE_GEMFILE=Gemfile.local</code>, …) from the app server. That hides the globally installed <code>overcommit</code> 0.73.0 (it's not in the Gemfile), so Overcommit hooks fail when the agent commits. <code>--no-verify</code> alone isn't enough (<code>prepare-commit-msg</code> still runs); <code>OVERCOMMIT_DISABLE=1</code> is also needed.</li>
+  <li><code>browser_eval</code>: DOM access only works inside <code>browser.eval(() =&gt; …)</code>; top-level code runs outside the page. <code>browser.reload()</code> can't open <code>file://</code> paths.</li>
+  <li>Agent tools can't open the Tidewave design-canvas preview. Open <code>tmp/design_canvas_ticket7.html</code> from the IDE.</li>
+  <li>Untracked files in the worktree root have disappeared once already (the first <code>wip.html</code>, <code>ticket.md</code>). <code>tmp/</code> is gitignored and survived.</li>
+</ul>
+
+<h2>Remaining tasks <span class="status todo">todo</span></h2>
+<ol>
+  <li>Re-run <code>bin/rails test test/controllers/plannings/companies_controller_test.rb</code> after your <code>set_custom_list_ids</code> edit.</li>
+  <li>Find and fix the empty-options issue (see above).</li>
+  <li>Check in the browser (log in as MGT): pick one list and the table narrows; pick two lists and it shows both; remove all pills and everyone is back; reload and the selection is kept; change the date and the list filter stays applied.</li>
+  <li>Clean up: dev CustomLists 1 &amp; 2, <code>tmp/design_canvas_ticket7.html</code>, this <code>wip.html</code>, <code>/tmp/65357-index-corrupt-backup</code>.</li>
+  <li>Final commit(s): squash or amend the WIP commit as you prefer. Push / open a PR only when you ask.</li>
+  <li>Move task board #7 to in_progress, then completed.</li>
+</ol>
+
+<h2>References</h2>
+<ul>
+  <li>Plan file: <code>~/.claude/plans/scalable-drifting-zephyr.md</code></li>
+  <li>Precedent for “planning by custom list”: <code>Plannings::MultiEmployeesController#employees</code></li>
+  <li>List ownership: <code>Ability</code> <code>can :manage, CustomList, employee_id: user.id</code>; <code>Plannings::CustomListsController#model_scope</code></li>
+  <li>Filter helpers: <code>app/helpers/filter_helper.rb</code> (<code>direct_filter_select</code>)</li>
+</ul>
+
+</body>
+</html>

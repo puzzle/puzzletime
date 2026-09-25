@@ -10,3 +10,5 @@
   = direct_filter_date(:start_date, 'Von', @period.start_date, class: 'only-mondays')
   = direct_filter_date(:end_date, 'Bis', @period.end_date, class: 'only-fridays')
   = direct_filter_select(:period_shortcut, nil, predefined_future_period_options, value: @period.shortcut, prompt: 'benutzerdefiniert')
+  = hidden_field_tag 'custom_list_ids[]', '', id: nil
+  = direct_filter_select(:custom_list_ids, 'Listen', @custom_lists, class: 'searchable', multiple: true, value: @custom_list_ids)
