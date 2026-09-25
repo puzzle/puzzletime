@@ -67,8 +67,14 @@
 upgrade</a> is finished — the order of operations, what the existing architecture already buys us, and the three
 decisions that have to be made rather than discovered.</p>
 <p class="meta">Companion to <a href="upgrade.html"><code>upgrade.html</code></a> · branch
-<code>task/65394-ruby-and-rails-upgrade</code> · written 2026-08-14 · <strong>not a committed plan</strong> — an
-evaluation</p>
+<code>task/65394-ruby-and-rails-upgrade</code> · written 2026-08-14 · <strong>rejected</strong> — kept as the record
+of an evaluation, not a plan</p>
+
+<div class="box bad">
+<p><strong>Decided against.</strong> daisyUI is neither part of the asset-pipeline migration nor a follow-up to it
+(<a href="upgrade.html#decisions">D5</a>). Phases 5–6 shipped the hand-written shim layer instead. Nothing below is
+scheduled.</p>
+</div>
 
 <div class="box bad">
 <p><strong>daisyUI is a visual redesign, not a compatibility layer.</strong> It will not look like Bootstrap 3, and
@@ -94,7 +100,7 @@ therefore outranks whatever <code>bootstrap-frozen.css</code> still holds — fo
     <li><a href="#s4">Step 4 — build the class map by installing, not from memory</a></li>
     <li><a href="#s5">Step 5 — the per-component loop</a></li>
     <li><a href="#decide">Three things to decide, not discover</a></li>
-    <li><a href="#seq">Sequencing note — decided 2026-08-21: not now</a></li>
+    <li><a href="#seq">Sequencing note — decided: rejected</a></li>
   </ol>
 </nav>
 
@@ -310,10 +316,8 @@ migration.</strong> See <a href="upgrade.html#decisions">D5</a> in <code>upgrade
 short form is that (b) would have put a visual redesign on the critical path of a Ruby 4.0 / Rails 8.1 branch that
 already carries a production release gate, and that daisyUI's coverage of the six contested components is only partial
 anyway (no panel, no well, <code>progress</code> is a markup rewrite, pagination wants a Kaminari view theme).</p>
-<p><strong>This document is not dead — it is the plan for afterwards</strong>, on its own branch, once
-<code>task/65394-ruby-and-rails-upgrade</code> merges. Steps 1–5 and the three decisions in §6 all still hold; what
-changed is only <em>when</em>. Read the fork below as the record of a road not taken rather than as an open question,
-and note that phase 5 will by then have shipped the hand-written shim layer these components would replace.</p>
+<p><strong>Superseded: daisyUI was later rejected outright</strong> and is not the plan for afterwards either. Phases
+5–6 have since shipped the hand-written shim layer. The fork below is the record of a road not taken.</p>
 </div>
 
 
