@@ -7,6 +7,8 @@
 @source "../../views";
 @source "../../helpers";
 @source "../../javascript";
+/* Bootstrap's .table (and div.table from table_helper.rb) — not Tailwind's display:table utility. */
+@source not inline("table");
 
 @theme {
   --color-brand-blue-darker: #1E5A96;
@@ -23,7 +25,7 @@
   --color-success: var(--color-brand-green-light);
   --color-info: var(--color-brand-blue-light);
   --color-warning: #f0ad4e;
-  --color-danger: var(--color-brand-red);
+  --color-danger: #a94442; /* Bootstrap's $state-danger-text, what .text-danger rendered as */
   --color-muted: #999999;
 
   --color-gray-darker: #444444;
@@ -40,23 +42,34 @@
   main ol { list-style: decimal; }
 
   img, svg { display: inline-block; vertical-align: middle; }
+
+  /* Bootstrap never reset these; Preflight does. Restore browser defaults (component classes still override). */
+  button, select { padding: revert; border: revert; border-radius: revert; background-color: revert; }
+  /* Preflight's height:auto would override width/height attributes (weekly_graph bars, spinners). */
+  img, video { max-width: revert-layer; height: revert-layer; }
 }
 
 /* Phase 5.1 — type & utilities, shimmed from bootstrap-frozen.css (see upgrade.html §6.2) */
 @layer components {
-  h3, .h3,
-  h4, .h4 {
+  h1, h2, h3, .h3,
+  h4, .h4, h5, h6 {
     font-family: inherit;
     font-weight: 400;
     line-height: 1.1;
     color: inherit;
   }
 
-  h3, .h3 {
+  h1, h2, h3, .h3 {
     margin-top: 20px;
     margin-bottom: 10px;
     font-size: 24px;
   }
+
+  h1 { font-size: 36px; }
+  h2 { font-size: 30px; }
+  h5 { font-size: 14px; }
+  h6 { font-size: 12px; }
+  h5, h6 { margin-top: 10px; margin-bottom: 10px; }
 
   h4, .h4 {
     margin-top: 10px;
@@ -2547,6 +2560,10 @@
   a:hover, a:focus {
     color: #69B978;
     text-decoration: underline;
+  }
+
+  p {
+    margin: 0 0 10px;
   }
 
   a:focus {
