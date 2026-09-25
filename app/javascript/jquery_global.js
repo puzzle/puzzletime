@@ -4,6 +4,6 @@
 //  https://github.com/puzzle/puzzletime.
 
 // Must be imported first: bootstrap, waypoints and jquery-ujs read the global.
-import jQuery from "jquery";
+import jQuery from 'jquery'
 
-window.$ = window.jQuery = jQuery;
+window.$ = window.jQuery = jQuery

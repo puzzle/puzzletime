@@ -3,40 +3,39 @@
 //  or later. See the COPYING file at the top-level directory or at
 //  https://github.com/puzzle/puzzletime.
 
+const app = window.App || (window.App = {})
+if (!app.plannings) { app.plannings = {} }
 
-const app = window.App || (window.App = {});
-if (!app.plannings) { app.plannings = {}; }
-
-app.plannings.selectable = new ((function() {
-  let selectable = undefined;
-  let selectee = undefined;
-  let isSelecting = undefined;
-  let copyCell = undefined;
+app.plannings.selectable = new ((function () {
+  let selectable
+  let selectee
+  let isSelecting
+  let copyCell
   const Cls = class {
-    constructor() {
-      this.clear = this.clear.bind(this);
-      this.preventClear = this.preventClear.bind(this);
-      this.clearOnEscape = this.clearOnEscape.bind(this);
-      this.start = this.start.bind(this);
-      this.startTranslate = this.startTranslate.bind(this);
+    constructor () {
+      this.clear = this.clear.bind(this)
+      this.preventClear = this.preventClear.bind(this)
+      this.clearOnEscape = this.clearOnEscape.bind(this)
+      this.start = this.start.bind(this)
+      this.startTranslate = this.startTranslate.bind(this)
     }
 
-    static initClass() {
-      selectable = '.planning-calendar-inner.editable';
-      selectee = '.planning-calendar-days > .day';
-      isSelecting = false;
-  
-      copyCell = function(to, from) {
-        to.innerHTML = from.innerHTML;
-        to.className = from.className;
-        return to;
-      };
+    static initClass () {
+      selectable = '.planning-calendar-inner.editable'
+      selectee = '.planning-calendar-days > .day'
+      isSelecting = false
+
+      copyCell = function (to, from) {
+        to.innerHTML = from.innerHTML
+        to.className = from.className
+        return to
+      }
     }
 
-    init() {
-      if (this.selectable().length === 0) { return; }
+    init () {
+      if (this.selectable().length === 0) { return }
 
-      this.bindListeners();
+      this.bindListeners()
       return this.selectable().selectable({
         filter: selectee,
         cancel: [
@@ -50,220 +49,220 @@ app.plannings.selectable = new ((function() {
         },
         start: this.start,
         stop: this.stop
-      });
+      })
     }
 
-    destroy() {
-      this.bindListeners(true);
-      if (this.selectable().selectable('instance')) { return this.selectable().selectable('destroy'); }
+    destroy () {
+      this.bindListeners(true)
+      if (this.selectable().selectable('instance')) { return this.selectable().selectable('destroy') }
     }
 
-    bindListeners(unbind) {
-      const func = unbind ? 'off' : 'on';
+    bindListeners (unbind) {
+      const func = unbind ? 'off' : 'on'
 
-      $(document)[func]('click', this.clear);
-      $(document)[func]('keyup', this.clearOnEscape);
+      $(document)[func]('click', this.clear)
+      $(document)[func]('keyup', this.clearOnEscape)
 
-      this.selectable()[func]('click', this.stopPropagation);
-      return this.selectable()[func]('mousedown', '.ui-selected', this.startTranslate);
+      this.selectable()[func]('click', this.stopPropagation)
+      return this.selectable()[func]('mousedown', '.ui-selected', this.startTranslate)
     }
 
-    clear(e) {
+    clear (e) {
       if (!this.preventClear(e)) {
-        let selected = this.selectable('.ui-selected');
+        let selected = this.selectable('.ui-selected')
         if ((e != null ? e.type : undefined) === 'selectablestart') {
           // clear selections on other boards
-          selected = this.selectable().not(e.target).find('.ui-selected');
+          selected = this.selectable().not(e.target).find('.ui-selected')
         }
 
-        selected.removeClass('ui-selected -selected');
-        return app.plannings.panel.hide();
+        selected.removeClass('ui-selected -selected')
+        return app.plannings.panel.hide()
       }
     }
 
-    preventClear(e) {
-      const ignoredContainers = '.panel, .ui-datepicker';
+    preventClear (e) {
+      const ignoredContainers = '.panel, .ui-datepicker'
       return e && (($(e.target).closest(ignoredContainers).length || $(e.target).is(':hidden')) // ignore clicks on detached nodes (i.e. datepicker previous/next)
-      );
+      )
     }
 
-    clearOnEscape(event) {
+    clearOnEscape (event) {
       if (event.key === 'Escape') {
-        return this.clear();
+        return this.clear()
       }
     }
 
-    stopPropagation(event) { return event.stopPropagation(); }
+    stopPropagation (event) { return event.stopPropagation() }
 
-    getSelectedDays(elements = this.selectable('.ui-selected')) {
+    getSelectedDays (elements = this.selectable('.ui-selected')) {
       return elements
         .toArray()
         .map(element => {
-          const row = $(element).parent();
-          const [ _match, employee_id, work_item_id ] = Array.from(row.prop('id')
-            .match(/planning_row_employee_(\d+)_work_item_(\d+)/));
+          const row = $(element).parent()
+          const [, employeeId, workItemId] = Array.from(row.prop('id')
+            .match(/planning_row_employee_(\d+)_work_item_(\d+)/))
           const date = this.selectable('.planning-calendar-days-header .dayheader')
-            .eq(row.children('.day').index(element)).data('date');
+            .eq(row.children('.day').index(element)).data('date')
 
-          return { employee_id, work_item_id, date };
-        });
+          return { employee_id: employeeId, work_item_id: workItemId, date }
+        })
     }
 
-    getSelectedPlanningIds() {
+    getSelectedPlanningIds () {
       return this.selectable('.ui-selected')
         .toArray()
         .map(el => el.dataset.id)
-        .filter(id => id);
+        .filter(id => id)
     }
 
-    getSelectedPercentValues() {
+    getSelectedPercentValues () {
       return this.selectable('.ui-selected')
         .toArray()
         .map(element => $(element).text().trim())
-        .filter((value, index, self) => self.indexOf(value) === index);
+        .filter((value, index, self) => self.indexOf(value) === index)
     }
 
-    getSelectedDefinitiveValues() {
+    getSelectedDefinitiveValues () {
       return this.selectable('.ui-selected')
         .toArray()
-        .map(function(element) {
+        .map(function (element) {
           if ($(element).hasClass('-definitive')) {
-            return true;
+            return true
           } else if ($(element).hasClass('-provisional')) {
-            return false;
+            return false
           } else {
-            return null;
+            return null
           }
         })
-        .filter((value, index, self) => self.indexOf(value) === index);
+        .filter((value, index, self) => self.indexOf(value) === index)
     }
 
-    selectionHasExistingPlannings() {
-      return this.selectable('.ui-selected.-definitive,.ui-selected.-provisional').length > 0;
+    selectionHasExistingPlannings () {
+      return this.selectable('.ui-selected.-definitive,.ui-selected.-provisional').length > 0
     }
 
-    start(event, ui) {
-      isSelecting = true;
-      this.clear(event);
-      return setTimeout((() => isSelecting && app.plannings.panel.hide()), 100); // avoid flickering
+    start (event, ui) {
+      isSelecting = true
+      this.clear(event)
+      return setTimeout(() => isSelecting && app.plannings.panel.hide(), 100) // avoid flickering
     }
 
-    stop(event, ui) {
-      isSelecting = false;
-      const selectedElements = $(event.target).find('.ui-selected');
-      selectedElements.addClass('-selected');
+    stop (event, ui) {
+      isSelecting = false
+      const selectedElements = $(event.target).find('.ui-selected')
+      selectedElements.addClass('-selected')
 
       if (selectedElements.length > 0) {
-        return app.plannings.panel.show(selectedElements);
+        return app.plannings.panel.show(selectedElements)
       }
     }
 
-    selectable(selector) {
+    selectable (selector) {
       if (selector) {
-        return $(selector, selectable);
+        return $(selector, selectable)
       } else {
-        return $(selectable);
+        return $(selectable)
       }
     }
 
-    startTranslate(e) {
-      if (!e.target.matches('.-definitive,.-provisional')) { return; }
-      e.stopPropagation();
+    startTranslate (e) {
+      if (!e.target.matches('.-definitive,.-provisional')) { return }
+      e.stopPropagation()
 
-      const currentlySelected = this.selectable('.ui-selected');
+      const currentlySelected = this.selectable('.ui-selected')
       const daysToUpdate = this.getSelectedDays(
         currentlySelected.filter('.-definitive,.-provisional')
-      );
+      )
       const {
         children
-      } = e.target.parentNode;
-      const startNodeIndex = $(children).index(e.target);
-      const selectedIndexes = Array.from(currentlySelected, el => $(el.parentNode.children).index(el));
-      const minTranslateBy = -selectedIndexes.reduce((a, b) => Math.min(a, b));
-      const maxSelectedIndex = selectedIndexes.reduce((a, b) => Math.max(a, b));
-      const maxTranslateBy = children.length - maxSelectedIndex;
-      let translateBy = 0;
-      const getRows = elements => $.unique(elements.map(function() { return this.parentNode; }));
-      const originalRows = getRows(currentlySelected).clone();
+      } = e.target.parentNode
+      const startNodeIndex = $(children).index(e.target)
+      const selectedIndexes = Array.from(currentlySelected, el => $(el.parentNode.children).index(el))
+      const minTranslateBy = -selectedIndexes.reduce((a, b) => Math.min(a, b))
+      const maxSelectedIndex = selectedIndexes.reduce((a, b) => Math.max(a, b))
+      const maxTranslateBy = children.length - maxSelectedIndex
+      let translateBy = 0
+      const getRows = elements => $.unique(elements.map(function () { return this.parentNode }))
+      const originalRows = getRows(currentlySelected).clone()
 
       this.selectable().on('mousemove', e => {
-        e.stopPropagation();
+        e.stopPropagation()
 
         if (e.target.matches('.day')) {
-          app.plannings.panel.hide();
+          app.plannings.panel.hide()
 
-          const currentNodeIndex = $(e.target.parentNode.children).index(e.target);
-          const currentTranslateBy = currentNodeIndex - startNodeIndex;
+          const currentNodeIndex = $(e.target.parentNode.children).index(e.target)
+          const currentTranslateBy = currentNodeIndex - startNodeIndex
 
           translateBy = Math.max(
             minTranslateBy + 1,
             Math.min(maxTranslateBy - 1, currentTranslateBy)
-          );
+          )
 
           this.resetCellsOfRows(
             getRows(this.selectable('.ui-selected')),
             originalRows,
             translateBy
-          );
-          return this.translateDays(currentlySelected, translateBy);
+          )
+          return this.translateDays(currentlySelected, translateBy)
         }
-      });
+      })
 
       return this.selectable().on('mouseup', e => {
-        this.selectable().off('mousemove mouseup');
-        if (translateBy) { return this.updateDayTranslation(daysToUpdate, translateBy); }
-      });
+        this.selectable().off('mousemove mouseup')
+        if (translateBy) { return this.updateDayTranslation(daysToUpdate, translateBy) }
+      })
     }
 
-    resetCellsOfRows(rows, originalRows, unselect) {
-      return Array.from(rows, (row, i) => Array.from(row.children, function(cell, j) {
-        copyCell(cell, originalRows[i].children[j]);
-        if (unselect) { cell.classList.remove('ui-selected', '-selected'); }
-        return cell;
-      }));
+    resetCellsOfRows (rows, originalRows, unselect) {
+      return Array.from(rows, (row, i) => Array.from(row.children, function (cell, j) {
+        copyCell(cell, originalRows[i].children[j])
+        if (unselect) { cell.classList.remove('ui-selected', '-selected') }
+        return cell
+      }))
     }
 
-    translateDays(days, translateBy) {
-      if (!translateBy) { return; }
+    translateDays (days, translateBy) {
+      if (!translateBy) { return }
 
       const cells = Array
         .from(days, el => [
           $(el.parentNode.children).index(el),
           el.parentNode
         ])
-        .map(([ i, parentNode ]) => [
+        .map(([i, parentNode]) => [
           parentNode.children[i],
           parentNode.children[i + translateBy]
-        ]);
+        ])
 
       // Shifting right has to start from the far end, or each cell overwrites
       // the one the next iteration still needs to read.
-      if (translateBy > 0) { cells.reverse(); }
+      if (translateBy > 0) { cells.reverse() }
 
-      return cells.forEach(([ from, to ]) => {
-        copyCell(to, from);
-        to.classList.add('ui-selected', '-selected');
-        from.className = 'day';
-        from.innerHTML = '';
-      });
+      return cells.forEach(([from, to]) => {
+        copyCell(to, from)
+        to.classList.add('ui-selected', '-selected')
+        from.className = 'day'
+        from.innerHTML = ''
+      })
     }
 
-    updateDayTranslation(items, translateBy) {
+    updateDayTranslation (items, translateBy) {
       return app.plannings.service.update(
         `${window.location.origin}${window.location.pathname}`, {
-        items,
-        planning: {
-          translate_by: translateBy
+          items,
+          planning: {
+            translate_by: translateBy
+          }
         }
-      }
-      );
+      )
     }
-  };
-  Cls.initClass();
-  return Cls;
-})());
+  }
+  Cls.initClass()
+  return Cls
+})())()
 
-$(document).on('turbolinks:load', function() {
-  app.plannings.selectable.destroy();
-  return app.plannings.selectable.init();
-});
+$(document).on('turbolinks:load', function () {
+  app.plannings.selectable.destroy()
+  return app.plannings.selectable.init()
+})

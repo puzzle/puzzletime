@@ -3,17 +3,17 @@
 //  or later. See the COPYING file at the top-level directory or at
 //  https://github.com/puzzle/puzzletime.
 
-(function() {
+(function () {
   // are these key codes? :)
-  const kmi_sequence = [38,38,40,40,37,39,37,39,66,65];
-  const kmi_input = [];
+  const kmiSequence = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65]
+  const kmiInput = []
 
-  return document.addEventListener('keydown', function(e) {
-    kmi_input.push(e.keyCode);
-    while (kmi_input.length > kmi_sequence.length) { kmi_input.shift(); }
+  return document.addEventListener('keydown', function (e) {
+    kmiInput.push(e.keyCode)
+    while (kmiInput.length > kmiSequence.length) { kmiInput.shift() }
 
-    if (kmi_input.toString() === kmi_sequence.toString()) {
-      return document.getElementById('navbar-app-title').classList.add('rainbow');
+    if (kmiInput.toString() === kmiSequence.toString()) {
+      return document.getElementById('navbar-app-title').classList.add('rainbow')
     }
-  });
-})();
+  })
+})()

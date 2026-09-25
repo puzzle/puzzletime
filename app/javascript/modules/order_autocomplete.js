@@ -3,19 +3,19 @@
 //  or later. See the COPYING file at the top-level directory or at
 //  https://github.com/puzzle/puzzletime.
 
-
 // Subclasses app.Autocomplete at load time.
-import "./autocomplete";
+import './autocomplete'
 
-const app = window.App || (window.App = {});
+const app = window.App || (window.App = {})
 
 app.OrderAutocomplete = class OrderAutocomplete extends app.Autocomplete {
-
-  onItemAdd(value, item) {
+  onItemAdd (value, item) {
     if (value) {
-      return window.location = window.location.toString().replace(/orders\/\d+/, 'orders/' + value);
+      const url = window.location.toString().replace(/orders\/\d+/, 'orders/' + value)
+      window.location = url
+      return url
     }
   }
-};
+}
 
-$(document).on('turbolinks:load', () => $('[data-autocomplete=order]').each((i, element) => new app.OrderAutocomplete().bind(element)));
+$(document).on('turbolinks:load', () => $('[data-autocomplete=order]').each((i, element) => new app.OrderAutocomplete().bind(element)))

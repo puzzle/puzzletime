@@ -130,17 +130,10 @@ PreCommit:
     enabled: true
   ImageOptim:
     enabled: true
-  JsHint:
-    enabled: true
-    exclude:
-      - vendor/assets/javascripts/chartjs-plugin-annotation.min.js
-      - vendor/assets/javascripts/jquery-ui-datepicker-i18n.js
-      - vendor/assets/javascripts/modernizr-custom.js
-      - vendor/assets/javascripts/waypoints/**/*
-  JsLint:
-    enabled: true
-    exclude:
-      - vendor/**/*
+  JsHint:  # ES5-only, cannot parse the ES6 sources; Standard covers JS
+    enabled: false
+  JsLint:  # ES5-only, stops at the first `const`; Standard covers JS
+    enabled: false
   JsonSyntax:
     enabled: true
   LineEndings:
@@ -218,10 +211,8 @@ PreCommit:
   Standard:
     enabled: true
     exclude:
-      - vendor/assets/javascripts/chartjs-plugin-annotation.min.js
-      - vendor/assets/javascripts/jquery-ui-datepicker-i18n.js
-      - vendor/assets/javascripts/modernizr-custom.js
-      - vendor/assets/javascripts/waypoints/**/*
+      - app/javascript/vendor/**/*
+      - app/javascript/modernizr.js
   Stylelint:  # errors
     enabled: false
   TrailingWhitespace:

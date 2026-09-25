@@ -19,5 +19,30 @@
   },
   "scripts": {
     "build": "esbuild app/javascript/application.js --bundle --sourcemap --outdir=app/assets/builds --public-path=/assets --minify"
+  },
+  "standard": {
+    "globals": [
+      "$",
+      "jQuery",
+      "Chart",
+      "Turbolinks",
+      "Waypoint",
+      "Selectize",
+      "App",
+      "Modernizr",
+      "stored_account_id",
+      "stored_billable",
+      "stored_meal_compensation",
+      "initial_load"
+    ],
+    "ignore": [
+      "app/javascript/vendor/**",
+      "app/javascript/modernizr.js",
+      "app/assets/builds/**",
+      "vendor/**"
+    ],
+    "env": [
+      "browser"
+    ]
   }
 }
