@@ -3,7 +3,7 @@
 #################################
 
 # Versioning
-ARG RUBY_VERSION="4.0.5"
+ARG RUBY_VERSION="4.0.7"
 ARG BUNDLER_VERSION="4.0.10"
 ARG NULLDB_VERSION="1.2.2"
 
