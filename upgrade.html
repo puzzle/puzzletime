@@ -606,6 +606,14 @@ copied-out assets and the <code>COMMIT</code> file need to survive, and now they
       <code>.text-danger</code> rendered brand red instead of Bootstrap's <code>#a94442</code>. All fixed in
       <code>app/assets/tailwind/application.css</code>; the 15-page diff is now clean except sub-pixel line-height
       rounding, 0-width border styles, and one ~1px label-with-checkbox height on <code>/employees/settings</code>.</li>
+  <li>✓ Accessibility: axe-core over ten pages reports zero wcag2a/wcag2aa violations. The palette carried the bulk of
+      it — <code>$gray</code>, <code>$link-color</code>, hover green, <code>.btn-primary</code> and two
+      <code>.label-*</code> backgrounds all failed AA. See <a href="#a11y">§9.1</a>.</li>
+  <li>✓ <code>standard</code> clean across <code>app/javascript/</code> (2522 → 0); <code>JsHint</code> and
+      <code>JsLint</code> disabled as ES5-only. See <a href="#a11y">§9.2</a>.</li>
+  <li>☐ Design sign-off on the darkened brand colours. They are the same hues, but <code>.btn-primary</code> and the
+      status badges are visibly darker than <code>master</code>. The alternative (dark text on the light brand
+      backgrounds) changes the look more, not less.</li>
 </ul>
 </div>
 
@@ -2513,6 +2521,85 @@ follow-up work rather than a phase-6 co-requisite.</p>
 earns its keep once Tailwind utilities are being added to markup that our own SCSS also styles; under (a) the shims live
 in <code>@layer components</code> and the app SCSS keeps winning over them, which <a href="#risks">§7</a> already calls
 expected and mostly desirable during the migration. It stays the fix-it-when-it-bites item §7 describes.</p>
+
+<h2 id="a11y">9. Accessibility and lint cleanup <span class="tag low">2026-09-25</span></h2>
+
+<p>Neither is part of the upgrade proper; both are fallout the upgrade made visible. Recorded here because the
+before/after screenshot pass (§1) ended on "the 15-page diff is clean" and that is not the same statement as
+"the pages are usable".</p>
+
+<h3>9.1 Contrast and names — measured, not eyeballed</h3>
+<p>First pass (commit <code>9e21d875</code>) was eyeballed: <code>$gray</code> → <code>$gray-dark</code> on the
+worktimes week header and date column, <code>$brand-blue-darker</code> on <code>#menu</code>,
+<code>aria-label</code>s on the icon-only links and the two landmarks, an <code>sr-only</code> label for
+<code>#week_date</code>, an <code>h1</code> for <code>/worktimes</code>. It also used
+<code>$brand-blue-darker</code>, which existed only as <code>--color-brand-blue-darker</code> in the Tailwind
+<code>@theme</code> — <strong>the SCSS did not compile</strong>. Caught by running <code>dartsass:build</code>, not by
+reading the diff; the variable is now defined in <code>_bootstrap_variables.scss</code> and the comment there says it
+mirrors the theme token.</p>
+<p>Second pass was axe-core 4.10.2 (<code>wcag2a</code> + <code>wcag2aa</code>) driven over ten pages against the dev
+server. It found that the eyeballed fixes had treated two symptoms of one cause: <strong>the palette itself</strong>.</p>
+<table>
+  <tr><th>Token</th><th>Was</th><th>Now</th><th>Ratio</th><th>Why</th></tr>
+  <tr><td><code>$gray</code> / <code>--color-gray</code> / <code>--color-muted</code></td><td><code>#999999</code></td>
+      <td><code>#6B6B6B</code></td><td>2.84 → 5.72</td>
+      <td>Body text in tables, <code>.muted</code>, form controls, nav tabs, navbar links.</td></tr>
+  <tr><td><code>$link-color</code> and the shim's bare <code>a</code></td><td><code>#238BCA</code></td>
+      <td><code>#1E5A96</code></td><td>3.73 → 7.10</td><td>Every link in the app.</td></tr>
+  <tr><td><code>a:hover</code>, <code>a:focus</code></td><td><code>#69B978</code></td><td><code>#357A28</code></td>
+      <td>2.38 → 5.30</td><td>Hover state was the worst-contrast text on the site.</td></tr>
+  <tr><td><code>.btn-primary</code>, <code>.btn-link</code></td><td><code>#238BCA</code></td><td><code>#1E5A96</code></td>
+      <td>3.73 → 7.10</td><td>White-on-blue buttons; 14px text, so the 3:1 large-text exemption does not apply.</td></tr>
+  <tr><td><code>.label-success</code> / <code>.label-info</code></td><td><code>#69B978</code> / <code>#3FA8E0</code></td>
+      <td><code>#357A28</code> / <code>#2C7CA8</code></td><td>2.38 / 2.66 → 5.30 / 4.61</td>
+      <td>Order status badges, interpolated from <code>order.status.style</code>.</td></tr>
+  <tr><td><code>.help-block</code>, table <code>thead th, a</code></td><td><code>#8a8a8a</code> / <code>$gray</code></td>
+      <td><code>#6B6B6B</code> / <code>$gray-dark</code></td><td>3.45 / 4.47 → 5.72 / 7.85</td>
+      <td>Sort links sit on <code>$gray-lighter</code>, so they need more than the white-background figure.</td></tr>
+</table>
+<p class="small">Hue is preserved throughout — every change is the same colour, darker. The brand blue and green
+survive as backgrounds behind large text and as non-text chrome; they are only unusable as small text or as a
+background for white 14px text.</p>
+<p>Markup, same run: <code>role="filter"</code> (14 views) is not an ARIA role at all and became
+<code>role="search"</code>; <code>role="tablist"</code> on four <code>ul.nav-tabs</code> promised a tab widget that the
+plain <code>li &gt; a</code> children do not implement, and was dropped; <code>list/_search</code>'s
+<code>#q</code> got an <code>sr-only</code> label; 13 icon-only links in the design guide got titles.</p>
+<p><strong>Result:</strong> <code>/</code>, <code>/worktimes</code>, <code>/ordertimes/new</code>,
+<code>/absencetimes/new</code>, <code>/orders</code>, <code>/employees</code>, <code>/employees/settings</code>,
+<code>/evaluator/employees</code>, <code>/plannings</code> and <code>/design_guide</code> report
+<strong>zero</strong> axe wcag2a/wcag2aa violations. The one remaining hit is
+<code>input.clipboard</code> without a label inside <code>#console</code> — that is
+<code>web-console</code>'s own markup, development-only, not ours.</p>
+<p class="small">Not attempted: keyboard-trap and focus-order checks, which axe cannot do; the datepicker and the
+planning board are the obvious candidates for a manual pass.</p>
+
+<h3>9.2 The JS linters were never actually running</h3>
+<p><code>app/assets/javascripts/*.js.coffee</code> meant overcommit's <code>JsHint</code>, <code>JsLint</code> and
+<code>Standard</code> hooks had nothing but vendored files to look at, and those were all in their exclude lists. Phase 2
+produced 26 real <code>.js</code> files and the hooks saw them for the first time: <strong>2522 findings</strong>,
+every one of them decaffeinate output, none of them ever reviewed.</p>
+<ul>
+  <li><code>JsHint</code> and <code>JsLint</code> are <strong>disabled</strong>. Both are ES5-era; JsLint stops at the
+      first <code>const</code> ("Stopping. 7% scanned"). Keeping a linter that cannot parse the language it lints is
+      worse than having none — it produces a wall of noise that trains everyone to pass <code>--no-verify</code>.</li>
+  <li><code>Standard</code> is now the single JS linter and its excludes point at
+      <code>app/javascript/vendor/**</code> instead of the <code>vendor/assets/javascripts</code> paths phase 2
+      emptied. <code>package.json</code> gained a <code>standard</code> block: <code>env: browser</code>, plus
+      <code>globals</code> for jQuery and friends and for the four variables
+      <code>ordertimes/_form.html.haml</code> renders into an inline <code>&lt;script&gt;</code>
+      (<code>stored_account_id</code> and co.).</li>
+  <li>2522 → 0. <code>standard --fix</code> took the 2380 mechanical ones (semicolons, quotes, spacing). The rest were
+      hand-fixed: <code>no-return-assign</code> (the CoffeeScript implicit-return tell, 19 sites — checked one by one
+      for whether the value is actually consumed, e.g. selectize stores a plugin's return value and jQuery treats a
+      <code>false</code> return as cancel), <code>camelcase</code> on locals only (wire keys, <code>data-*</code> names
+      and DOM ids left alone), and three narrow <code>eslint-disable</code>s: the
+      <code>String.prototype.endsWith</code> polyfill, <code>Object.assign</code>'s <code>hasOwnProperty</code>, and the
+      <code>eval</code> in <code>modal_create.js</code> that unwraps the quoted JSON string
+      <code>crud_controller.rb</code> renders.</li>
+</ul>
+<p class="small">This is D4's review burden coming due. The phase-2 note said "review against the three named hazards
+rather than line-by-line, and lean on the integration suite" — which was the right call for correctness and left the
+style debt standing. It is paid now, and it is a separate commit from the behaviour work for exactly that reason.</p>
 
 <hr>
 <p class="small">Generated from a scan of this working tree: 330 HAML views, 36 CoffeeScript files, 6020 lines of SCSS,
