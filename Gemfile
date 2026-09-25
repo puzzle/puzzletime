@@ -122,6 +122,5 @@ group :test do
   gem 'minitest'
   gem 'mocha', require: false
   gem 'rails-controller-testing'
-  gem 'selenium-webdriver'
   gem 'webmock'
 end
