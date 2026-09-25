@@ -7,9 +7,10 @@
 //== Colors
 $gray-darker:            #444444 !default;
 $gray-dark:              #4A4A4A !default;
-$gray:                   #999999 !default;
+$gray:                   #6B6B6B !default; // was #999999: 2.84:1 on white, below WCAG AA
 $gray-light:             #D8D8D8 !default;
 $gray-lighter:           #F5F5F5 !default;
+$brand-blue-darker: #1E5A96; // mirrors --color-brand-blue-darker in tailwind/application.css
 $brand-blue-dark: #3B7BBE;
 $brand-blue: #238BCA;
 $brand-blue-light: #3FA8E0;
@@ -23,7 +24,7 @@ $brand-warning:         #f0ad4e !default;
 $brand-danger:          $brand-red !default;
 
 //== Scaffolding
-$link-color:            $brand-primary !default;
+$link-color:            $brand-blue-darker !default; // $brand-primary is 3.73:1 on white
 $link-hover-color:      $brand-green-light !default;
 
 //== Typography
@@ -50,11 +51,11 @@ $btn-link-disabled-color:        $gray-light !default;
 
 //== Forms
 $input-bg:                       #fff !default;
-$input-color:                    $gray !default;
+$input-color:                    $gray-dark !default;
 $input-border:                   #ccc !default;
 $input-border-radius:            $border-radius-base !default;
 $input-border-focus:             #66afe9 !default;
-$input-color-placeholder:        $gray-light !default;
+$input-color-placeholder:        $gray !default;
 $input-height-base:              ($line-height-computed + ($padding-base-vertical * 2) + 2) !default;
 
 //== Dropdowns

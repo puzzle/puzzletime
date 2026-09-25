@@ -11,7 +11,7 @@
 - if @evaluation.category.respond_to?(:tooltip) && @evaluation.category.tooltip.present?
   %p= h(@evaluation.category.tooltip)
 
-= form_tag(nil, method: :get, class: 'form-inline', role: 'filter') do
+= form_tag(nil, method: :get, class: 'form-inline', role: 'search') do
   = direct_filter_select(:department_id, 'Organisationseinheit', Department.list)
   %br
   = direct_filter_select(:member_coach_id, 'Member Coach', Employee.management.list)

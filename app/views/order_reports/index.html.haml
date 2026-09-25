@@ -4,7 +4,7 @@
 -#  https://github.com/puzzle/puzzletime.
 
 
-%ul.nav.nav-tabs{ role: 'tablist' }
+%ul.nav.nav-tabs
   %li{ class: ('active' if params[:status_preselection].blank?) }
     = link_to('Alle', reports_orders_path)
   %li{ class: ('active' if params[:status_preselection] == 'not_closed') }
