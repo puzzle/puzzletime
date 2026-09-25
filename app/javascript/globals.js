@@ -4,11 +4,11 @@
 //  https://github.com/puzzle/puzzletime.
 
 // Bare-name globals for our own files and the server-rendered .js.haml responses.
-import Selectize from "selectize";
-import Chart from "chart.js/auto";
-import annotationPlugin from "chartjs-plugin-annotation";
+import Selectize from 'selectize'
+import Chart from 'chart.js/auto'
+import annotationPlugin from 'chartjs-plugin-annotation'
 
-window.Selectize = Selectize;
+window.Selectize = Selectize
 
-Chart.register(annotationPlugin);
-window.Chart = Chart;
+Chart.register(annotationPlugin)
+window.Chart = Chart

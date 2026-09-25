@@ -1,42 +1,41 @@
-$(document).on('ready, turbolinks:load', function() {
+$(document).on('ready, turbolinks:load', function () {
   // scope to single controller
   if (!$('body.expenses').length &&
-                !$('body.expenses_reviews').length) { return; }
+                !$('body.expenses_reviews').length) { return }
 
-  const expense_kind_input     = $('#expense_kind');
-  const order_input            = $('#expense_order_id');
-  const order_selectized_input = $('#expense_order_id-selectized');
-  const order_form_group       = order_input.closest('.form-group');
-  const receipt_input          = $('#expense_receipt');
-  const warning_popup          = $('#file_warning');
+  const expenseKindInput = $('#expense_kind')
+  const orderInput = $('#expense_order_id')
+  const orderSelectizedInput = $('#expense_order_id-selectized')
+  const orderFormGroup = orderInput.closest('.form-group')
+  const receiptInput = $('#expense_receipt')
+  const warningPopup = $('#file_warning')
 
-  const toggle_project_display = function() {
-
-    if (expense_kind_input.val() === 'project') {
-      order_form_group.show();
-      return order_selectized_input.attr('disabled', false);
+  const toggleProjectDisplay = function () {
+    if (expenseKindInput.val() === 'project') {
+      orderFormGroup.show()
+      return orderSelectizedInput.attr('disabled', false)
     } else {
-      order_form_group.hide();
-      return order_selectized_input.attr('disabled', true);
+      orderFormGroup.hide()
+      return orderSelectizedInput.attr('disabled', true)
     }
-  };
+  }
 
-  const check_file_type = function() {
-    warning_popup.addClass('hidden');
+  const checkFileType = function () {
+    warningPopup.addClass('hidden')
 
-    if (!receipt_input[0] || (receipt_input[0].files.length <= 0)) { return; }
+    if (!receiptInput[0] || (receiptInput[0].files.length <= 0)) { return }
 
-    const file_type = receipt_input[0].files[0].type;
+    const fileType = receiptInput[0].files[0].type
 
-    if (!/^image/.test(file_type) && (file_type !== 'application/pdf')) {
-      return warning_popup.removeClass('hidden');
+    if (!/^image/.test(fileType) && (fileType !== 'application/pdf')) {
+      return warningPopup.removeClass('hidden')
     }
-  };
+  }
 
-  check_file_type();
-  toggle_project_display();
+  checkFileType()
+  toggleProjectDisplay()
 
-  expense_kind_input.change(e => toggle_project_display());
+  expenseKindInput.change(e => toggleProjectDisplay())
 
-  return receipt_input.change(e => check_file_type());
-});
+  return receiptInput.change(e => checkFileType())
+})

@@ -3,29 +3,26 @@
 //  or later. See the COPYING file at the top-level directory or at
 //  https://github.com/puzzle/puzzletime.
 
+const app = window.App || (window.App = {})
 
-const app = window.App || (window.App = {});
+app.initOrderControllingChart = function (labels, datasets, budget, budgetHours, currency, currentLabel) {
+  const canvas = document.getElementById('order_controlling_chart')
+  const ctx = canvas.getContext('2d')
 
+  Chart.defaults.font.family = 'Roboto, Helvetica, Arial, sans-serif'
+  Chart.defaults.color = '#444444'
+  Chart.defaults.font.size = 14
 
-app.initOrderControllingChart = function(labels, datasets, budget, budget_hours, currency, currentLabel) {
-  let chart;
-  const canvas = document.getElementById('order_controlling_chart');
-  const ctx = canvas.getContext('2d');
-
-  Chart.defaults.font.family = 'Roboto, Helvetica, Arial, sans-serif';
-  Chart.defaults.color = '#444444';
-  Chart.defaults.font.size = 14;
-
-  const budgetColor = '#B44B5B';
-  const todayColor = '#f0ad4e';
-  const gridColor = 'rgba(0,0,0,0.1)';
-  const gridLightColor = 'rgba(0,0,0,0.02)';
+  const budgetColor = '#B44B5B'
+  const todayColor = '#f0ad4e'
+  const gridColor = 'rgba(0,0,0,0.1)'
+  const gridLightColor = 'rgba(0,0,0,0.02)'
 
   const formatCurrency = value => new Intl.NumberFormat('de-CH', {
     style: 'decimal'
-  }).format(value) + ' ' + currency;
+  }).format(value) + ' ' + currency
 
-  return chart = new Chart(ctx, {
+  return new Chart(ctx, {
     type: 'bar',
     data: {
       labels,
@@ -49,8 +46,8 @@ app.initOrderControllingChart = function(labels, datasets, budget, budget_hours,
           gridLines: {
             color: gridLightColor,
             zeroLineColor: gridColor
-          },
-        },
+          }
+        }
       },
       legend: {
         labels: {
@@ -60,16 +57,16 @@ app.initOrderControllingChart = function(labels, datasets, budget, budget_hours,
       plugins: {
         tooltip: {
           callbacks: {
-            label(tooltipItem) {
-              const hours = tooltipItem.dataset.tooltipData[tooltipItem.dataIndex];
-              const datasetLabel = tooltipItem.dataset.label;
-              const value = formatCurrency(tooltipItem.raw);
+            label (tooltipItem) {
+              const hours = tooltipItem.dataset.tooltipData[tooltipItem.dataIndex]
+              const datasetLabel = tooltipItem.dataset.label
+              const value = formatCurrency(tooltipItem.raw)
               return [
                 `${datasetLabel}:`,
                 `${value} (${hours}h)`
-              ];
+              ]
             }
-            }
+          }
         },
         annotation: {
           annotations: [{
@@ -83,13 +80,13 @@ app.initOrderControllingChart = function(labels, datasets, budget, budget_hours,
               content: 'heute',
               position: 'start',
               yAdjust: 10,
-              padding: {x: 2, y: 3},
+              padding: { x: 2, y: 3 },
               backgroundColor: '#ffffff',
               color: todayColor,
               font: {
                 family: Chart.defaults.font.family,
                 size: Chart.defaults.font.size,
-                style: 'normal',
+                style: 'normal'
               }
             }
           }, {
@@ -100,7 +97,7 @@ app.initOrderControllingChart = function(labels, datasets, budget, budget_hours,
             borderWidth: 2,
             label: {
               display: true,
-              content: 'Budget ' + formatCurrency(budget) + ` (${budget_hours}h)`,
+              content: 'Budget ' + formatCurrency(budget) + ` (${budgetHours}h)`,
               position: 'start',
               yAdjust: 11,
               backgroundColor: 'transparent',
@@ -108,12 +105,12 @@ app.initOrderControllingChart = function(labels, datasets, budget, budget_hours,
               font: {
                 family: Chart.defaults.font.family,
                 size: Chart.defaults.font.size,
-                style: 'normal',
+                style: 'normal'
               }
             }
           }]
         }
       }
-    },
-  });
-};
+    }
+  })
+}

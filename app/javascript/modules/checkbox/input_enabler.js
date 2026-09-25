@@ -3,52 +3,48 @@
 //  or later. See the COPYING file at the top-level directory or at
 //  https://github.com/puzzle/puzzletime.
 
-
 // Was a `//= require ./toggler` directive, which esbuild ignores.
-import "./toggler";
+import './toggler'
 
-const app = window.App || (window.App = {});
-if (!app.checkbox) { app.checkbox = {}; }
+const app = window.App || (window.App = {})
+if (!app.checkbox) { app.checkbox = {} }
 
 // Enables/disables all elements with the given selector.
 app.checkbox.InputEnabler = class InputEnabler {
-  constructor(selector) {
-    this.selector = selector;
-    this.inputs = function() {
+  constructor (selector) {
+    this.selector = selector
+    this.inputs = function () {
       return $('input' + this.selector +
         ', select' + this.selector +
-        ', textarea' + this.selector);
-    };
+        ', textarea' + this.selector)
+    }
 
-    this.affected = function() {
-      return $(this.selector);
-    };
-  }
-
-
-  //# public methods
-
-  toggle(enabled) {
-    if (enabled) {
-      return this.enable();
-    } else {
-      return this.disable();
+    this.affected = function () {
+      return $(this.selector)
     }
   }
 
-  enable() {
-    this.inputs().prop('disabled', false);
-    this.affected().removeClass('disabled');
-    return $.each(this.affected(), function(i, e) { if (e.selectize) { return e.selectize.enable(); } });
+  // # public methods
+
+  toggle (enabled) {
+    if (enabled) {
+      return this.enable()
+    } else {
+      return this.disable()
+    }
   }
 
-  disable() {
-    this.inputs().prop('disabled', true);
-    this.affected().addClass('disabled');
-    return $.each(this.affected(), function(i, e) { if (e.selectize) { return e.selectize.disable(); } });
+  enable () {
+    this.inputs().prop('disabled', false)
+    this.affected().removeClass('disabled')
+    return $.each(this.affected(), function (i, e) { if (e.selectize) { return e.selectize.enable() } })
   }
-};
 
+  disable () {
+    this.inputs().prop('disabled', true)
+    this.affected().addClass('disabled')
+    return $.each(this.affected(), function (i, e) { if (e.selectize) { return e.selectize.disable() } })
+  }
+}
 
-
-new app.checkbox.Toggler('enable', app.checkbox.InputEnabler).bind();
+new app.checkbox.Toggler('enable', app.checkbox.InputEnabler).bind()
