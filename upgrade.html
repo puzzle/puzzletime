@@ -299,12 +299,10 @@ reasoning behind each decision and the phase sections for full verification deta
   <div class="timeline-entry accent">
     <div class="timeline-date repeat">Fr, 14.08.2026</div>
     <div class="timeline-spine accent"><button type="button" class="timeline-dot" data-sha="dc843bccd5ccb056cd79e931636605d74725bccb"></button><div class="timeline-line"></div></div>
-    <div class="timeline-content"><strong>daisyUI evaluated as a possible next step</strong> —
-      <a href="upgrade-daisyui.html"><code>upgrade-daisyui.html</code></a>. It is a visual redesign rather than a
-      compatibility layer, so design sign-off gates it; the §4.1 layer stack makes it incremental for free. Has a
-      bearing on <em>this</em> plan's timing, not just what follows it: Phase 5 is 1/8 done and 6 of its 7 remaining
-      components are daisyUI's surface, so finishing them by hand writes the shim layer twice. See
-      <a href="#p7">Phase 7</a>.</div>
+    <div class="timeline-content"><strong>daisyUI evaluated</strong> —
+      <a href="upgrade-daisyui.html"><code>upgrade-daisyui.html</code></a>. A visual redesign rather than a
+      compatibility layer, so design sign-off would have gated it. Raised a timing fork for phase 5 (then 1/8 done),
+      settled below. See <a href="#decisions">D5</a>.</div>
   </div>
 
   <div class="timeline-entry accent">
@@ -567,12 +565,47 @@ copied-out assets and the <code>COMMIT</code> file need to survive, and now they
       assertions, 0 failures; production-mode boot with every <code>url()</code>-referenced asset in the compiled CSS
       resolving 200; <code>docker build</code> end to end.</li>
 </ul>
+
+<p style="margin-top:1.5rem"><strong>Phase 4 — Tailwind in, layered, Preflight on</strong>
+<span class="tag low">complete</span></p>
+<ul style="margin: 0.5rem 0">
+  <li>✓ Tailwind 4 behind the §4.1 layer stack, Preflight on, the known Bootstrap/Tailwind class collisions fixed —
+      plus the <code>[hidden]</code> / jQuery <code>.show()</code> collision the full suite caught. See
+      <a href="#p4">phase 4</a>.</li>
+</ul>
+
+<p style="margin-top:1.5rem"><strong>Phase 5 — Shim the components</strong>
+<span class="tag low">complete — 8 / 8</span></p>
+<ul style="margin: 0.5rem 0">
+  <li>✓ All eight component groups shimmed into <code>@layer components</code> and cut from the frozen file, each
+      verified by a rule-set diff of the compiled CSS. See <a href="#p5">phase 5</a>.</li>
+</ul>
+
+<p style="margin-top:1.5rem"><strong>Phase 6 — Delete the frozen file</strong>
+<span class="tag low">complete</span></p>
+<ul style="margin: 0.5rem 0">
+  <li>✓ <code>bootstrap-frozen.css</code> and the <code>bootstrap</code> layer gone; computed styles identical to the
+      <code>d00ae213</code> baseline across six pages plus the modal. See <a href="#p6">phase 6</a>.</li>
+</ul>
+
+<p style="margin-top:1.5rem"><strong>Open before merge</strong></p>
+<ul style="margin: 0.5rem 0">
+  <li>☐ Production: classify and clear the four null-<code>employee_id</code> worktimes, or
+      <code>20260727130000</code> aborts the release (<a href="#p0">phase 0</a>).</li>
+  <li>✓ <code>_bootstrap_variables.scss</code> shrunk 853 → 83 lines: only the 56 variables the SCSS still reads
+      (transitively) kept; compiled <code>application.css</code> and <code>phone.css</code> byte-identical before/after.</li>
+  <li>☐ Before/after screenshots for the changelog (<a href="#p6">phase 6</a>).</li>
+</ul>
 </div>
 
-<h2 id="state">2. Where the branch stands today</h2>
+<h2 id="state">2. Where the branch stood at the start</h2>
 
-<p>An earlier pass already started the migration. It is <strong>not in a working state</strong> and phase 0 is to
-finish or revert it deliberately:</p>
+<p class="small">Historical: the state found on 2026-07-27, resolved by <a href="#p0">phase 0</a> (which restored
+<code>bootstrap-sass</code>, <code>kaminari-bootstrap</code> and <code>sprockets-rails</code>) and phases 1–6. For the
+current state see the phase progress box above.</p>
+
+<p>An earlier pass had already started the migration. It was <strong>not in a working state</strong> and phase 0 was
+to finish or revert it deliberately:</p>
 
 <table>
   <tr><th>Already done</th><th>Consequence</th></tr>
@@ -2200,8 +2233,9 @@ and the modal. Every rendered element — <code>body</code>, links, headings, li
 <code>form-control</code>, <code>control-label</code>, <code>modal</code>/<code>-content</code>/<code>-header</code>/
 <code>-title</code>/<code>-body</code>, <code>close</code> — is <strong>computed-style-identical to the baseline</strong>.
 The only differences are two inert <code>&lt;html&gt;</code> properties (font-family, line-height) that <code>body</code>
-overrides for everything that renders. <code>_bootstrap_variables.scss</code> shrink and the changelog before/after
-screenshots remain as documented follow-ups.</p>
+overrides for everything that renders. <code>_bootstrap_variables.scss</code> has since been shrunk to its 56 live
+variables (byte-identical CSS); the changelog before/after screenshots remain a documented follow-up.</p>
+</div>
 
 <div class="phase">
 <h3 id="p7">Phase 7 — Out of scope, but write it down <span class="tag low">later</span></h3>
@@ -2218,17 +2252,9 @@ screenshots remain as documented follow-ups.</p>
   <li><code>layouts/mailer.html.haml</code>'s inlined Bootstrap — e-mail needs inline CSS; leave it alone.</li>
 </ul>
 <div class="box">
-<p><strong>A possible next step after phase 6: <a href="upgrade-daisyui.html">daisyUI</a>.</strong> Written up
-separately in <a href="upgrade-daisyui.html"><code>upgrade-daisyui.html</code></a> — an evaluation, not a committed
-plan. Short version: the layer stack built in §4.1 makes it incremental for free, but it is a <em>visual redesign</em>
-and needs design sign-off before anything else. It would also pull the modal and tooltip plugin items above out of
-phase 7 and into itself.</p>
-<p class="small"><s>It has a bearing on this phase's timing rather than only on what follows it: phase 5 is 1/8 done, and
-6 of its 7 remaining components are exactly daisyUI's surface — so finishing them by hand means writing the shim layer
-twice. That fork is cheapest to take now; see its §7.</s> <strong>Settled 2026-08-21 — see <a href="#decisions">D5</a>:
-the fork was taken as (a), finish the shim by hand.</strong> daisyUI is not part of this migration and does not gate
-phase 5; its own §7 is now a description of a road not taken. The modal and tooltip items above therefore stay in this
-phase, and so does <code>selectize.bootstrap3.scss</code>.</p>
+<p><strong>daisyUI — rejected.</strong> Evaluated in <a href="upgrade-daisyui.html"><code>upgrade-daisyui.html</code></a>
+and decided against (<a href="#decisions">D5</a>): it is a visual redesign, not a compatibility layer, and is not a
+follow-up either. The modal and tooltip items above, and <code>selectize.bootstrap3.scss</code>, stay in this phase.</p>
 </div>
 </div>
 
@@ -2445,8 +2471,8 @@ production — so every rewrite would be done twice, once as a throwaway. Phases
 hazards (implicit returns, the <code>Object.prototype</code> monkey-patch, globals) rather than line-by-line, and lean on
 the integration suite.</p>
 
-<h4>D5 — daisyUI, or finish the shim by hand? <span class="tag low">decided 2026-08-21: finish by hand, daisyUI is not
-part of this migration</span></h4>
+<h4>D5 — daisyUI, or finish the shim by hand? <span class="tag low">decided 2026-08-21: finish by hand; daisyUI
+later rejected outright</span></h4>
 <p><a href="upgrade-daisyui.html"><code>upgrade-daisyui.html</code></a> §7 put a fork in front of phase 5 while it was
 1/8 done: <strong>(a)</strong> write the remaining seven components as hand-written Bootstrap-look shims as planned, or
 <strong>(b)</strong> make daisyUI the shim layer, since six of the seven are precisely its surface. The case for (b) is
@@ -2468,11 +2494,10 @@ reasons in the order they mattered:</p>
       wants classes on the individual links, so Kaminari needs a view theme. (b) would touch views and helpers that (a)
       leaves alone, and those diffs bisect less cleanly than a CSS-only commit.</li>
 </ol>
-<p>The evaluation stays valid and stays on file — it becomes the plan for <em>afterwards</em>, on its own branch, once
-this one merges. Two consequences here and now: the modal and tooltip plugin work stays in <a href="#p7">phase 7</a>
-where it already was, and <code>selectize.bootstrap3.scss</code> goes back to being follow-up work rather than a phase-6
-co-requisite — under (a) it sits next to Bootstrap-look shims and matches them, which was never going to be true next to
-daisyUI inputs.</p>
+<p>The fork was first taken as (a) with daisyUI kept as a plan for afterwards; <strong>it has since been dropped
+altogether</strong> — daisyUI is not a follow-up to this migration. Consequences: the modal and tooltip plugin work
+stays in <a href="#p7">phase 7</a> where it already was, and <code>selectize.bootstrap3.scss</code> goes back to being
+follow-up work rather than a phase-6 co-requisite.</p>
 <p class="small">Not adopted either: daisyUI's step 1, wrapping the compiled app SCSS in <code>@layer app</code>. It only
 earns its keep once Tailwind utilities are being added to markup that our own SCSS also styles; under (a) the shims live
 in <code>@layer components</code> and the app SCSS keeps winning over them, which <a href="#risks">§7</a> already calls
