@@ -4,11 +4,11 @@
 -#  https://github.com/puzzle/puzzletime.
 
 
-#headerbar.navbar.navbar-default{role: 'navigation', class: ('lonely' unless @user)}
+#headerbar.navbar.navbar-default{role: 'navigation', 'aria-label' => 'Kopfzeile', class: ('lonely' unless @user)}
   .container-fluid
     .navbar-header
       .navbar-brand#navbar-app-title
-        = image_tag 'logo.svg', size: '41x40'
+        = image_tag 'logo.svg', size: '41x40', alt: 'PuzzleTime'
         PuzzleTime
         = link_to Puzzletime.version, Puzzletime.changelog_url, class: 'version'
     %ul.nav.navbar-nav.navbar-right
@@ -19,7 +19,7 @@
             = @user.label
       - if Settings.help.url
         %li
-          = link_to(Settings.help.url) do
+          = link_to(Settings.help.url, 'aria-label' => 'Hilfe') do
             %i.icon-help
       - if @user
         %li

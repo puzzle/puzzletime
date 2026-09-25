@@ -27,7 +27,7 @@
     %header#main-header
       = render 'layouts/headerbar'
       - if @user
-        %nav
+        %nav{'aria-label' => 'Hauptnavigation'}
           = render 'layouts/menu'
 
           #submenu.navbar.navbar.navbar-default
@@ -43,7 +43,7 @@
     %main#content{ role: 'main' }
       - if content_for?(:content_header)
         = yield :content_header
-      - else
+      - elsif @title.present?
         %h1.h3= @title
 
       #flash

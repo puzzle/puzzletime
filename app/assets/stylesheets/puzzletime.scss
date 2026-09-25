@@ -348,6 +348,12 @@ html.turbolinks-progress-bar::before {
 #ui-datepicker-div {
   // make sure datepicker dialog is visible when used in bootstrap modals
   z-index: $zindex-modal + 1 !important;
+
+  .ui-datepicker-header,
+  th,
+  td .ui-state-default {
+    color: $gray-dark;
+  }
 }
 
 .db-login-panel {
