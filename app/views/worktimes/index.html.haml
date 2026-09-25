@@ -4,6 +4,9 @@
 -#  https://github.com/puzzle/puzzletime.
 
 
+- content_for(:content_header) do
+  %h1.h3 Zeiterfassung
+
 .worktimes-container.unindented{'data-selected-date' => @selected_date}
   .figures
     .balance{ title: 'Saldo per Gestern', 'data-toggle' => 'tooltip' }
@@ -34,6 +37,7 @@
               function selectToday() { $('#week_date').value = getDate(); }
 
             .nowrap
+              = f.label(:work_date, 'Datum', for: 'week_date', class: 'sr-only')
               = f.date_field(:work_date,
                              id: 'week_date',
                              data: { changeyear: true,

@@ -28,4 +28,4 @@
                 data: { method: :delete,
                         confirm: 'Wollen Sie diesen Eintrag wirklich löschen?' }) do
         %i.icon-delete
-  = link_to_if(can?(:edit, worktime), '', edit_polymorphic_url(worktime), class: 'entry-link')
+  = link_to_if(can?(:edit, worktime), '', edit_polymorphic_url(worktime), class: 'entry-link', 'aria-label' => 'Bearbeiten')

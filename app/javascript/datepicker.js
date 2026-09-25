@@ -60,6 +60,7 @@ app.datepicker = new ((function() {
         dateFormat: 'dd.mm.yy',
         setDate: $(elem).val()
       })));
+      $.datepicker.dpDiv.attr({ role: 'region', 'aria-label': 'Kalender' });
       return this.bindListeners();
     }
 
