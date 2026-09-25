@@ -3,7 +3,7 @@
 -#  or later. See the COPYING file at the top-level directory or at
 -#  https://github.com/puzzle/puzzletime.
 
-= form_tag(nil, method: :get, id: :meal_compensations_filter_form, class: 'form-inline', role: 'filter', remote: true) do
+= form_tag(nil, method: :get, id: :meal_compensations_filter_form, class: 'form-inline', role: 'search', remote: true) do
   = hidden_field_tag :page, 1
 
   = direct_filter_select(:period_shortcut, nil, predefined_past_period_options, value: @period.shortcut, prompt: 'benutzerdefiniert')

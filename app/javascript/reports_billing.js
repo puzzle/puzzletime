@@ -3,23 +3,22 @@
 //  or later. See the COPYING file at the top-level directory or at
 //  https://github.com/puzzle/puzzletime.
 
-
-const app = window.App || (window.App = {});
+const app = window.App || (window.App = {})
 
 app.reportsBilling = new (class {
-  init() {
-    return this.dateFilterChanged();
+  init () {
+    return this.dateFilterChanged()
   }
 
-  dateFilterChanged() {
-    $('.billing_reports form[role="filter"]').find('#start_date,#end_date')
-      .datepicker('option', 'disabled', $('#period_shortcut').val());
+  dateFilterChanged () {
+    $('.billing_reports form[role="search"]').find('#start_date,#end_date')
+      .datepicker('option', 'disabled', $('#period_shortcut').val())
     if ($('#period_shortcut').val()) {
-      return $('.billing_reports form[role="filter"]').find('#start_date,#end_date').val("");
+      return $('.billing_reports form[role="search"]').find('#start_date,#end_date').val('')
     }
   }
-});
+})()
 
-$(document).on('ajax:success', '.billing_reports form[role="filter"]', () => app.reportsBilling.init());
+$(document).on('ajax:success', '.billing_reports form[role="search"]', () => app.reportsBilling.init())
 
-$(document).on('turbolinks:load', () => app.reportsBilling.init());
+$(document).on('turbolinks:load', () => app.reportsBilling.init())

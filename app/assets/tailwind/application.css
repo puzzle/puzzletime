@@ -26,11 +26,11 @@
   --color-info: var(--color-brand-blue-light);
   --color-warning: #f0ad4e;
   --color-danger: #a94442; /* Bootstrap's $state-danger-text, what .text-danger rendered as */
-  --color-muted: #999999;
+  --color-muted: #6B6B6B;
 
   --color-gray-darker: #444444;
   --color-gray-dark: #4A4A4A;
-  --color-gray: #999999;
+  --color-gray: #6B6B6B;
   --color-gray-light: #D8D8D8;
   --color-gray-lighter: #F5F5F5;
 
@@ -516,8 +516,8 @@
 
   .btn-primary {
     color: #fff;
-    background-color: #238BCA;
-    border-color: #1f7cb4;
+    background-color: #1E5A96;
+    border-color: #184a7b;
   }
 
   .btn-primary:focus, .btn-primary.focus {
@@ -550,8 +550,8 @@
   .btn-primary[disabled]:hover, .btn-primary[disabled]:focus, .btn-primary.focus[disabled],
   fieldset[disabled] .btn-primary:hover, fieldset[disabled] .btn-primary:focus,
   fieldset[disabled] .btn-primary.focus {
-    background-color: #238BCA;
-    border-color: #1f7cb4;
+    background-color: #1E5A96;
+    border-color: #184a7b;
   }
 
   .btn-success {
@@ -636,7 +636,7 @@
 
   .btn-link {
     font-weight: 400;
-    color: #238BCA;
+    color: #1E5A96;
     border-radius: 0;
   }
 
@@ -835,7 +835,7 @@
     padding-top: 7px;
     font-size: 14px;
     line-height: 1.428571429;
-    color: #999999;
+    color: #6B6B6B;
   }
 
   .form-control {
@@ -845,7 +845,7 @@
     padding: 6px 12px;
     font-size: 14px;
     line-height: 1.428571429;
-    color: #999999;
+    color: #6B6B6B;
     background-color: #fff;
     background-image: none;
     border: 1px solid #ccc;
@@ -1037,7 +1037,7 @@
     display: block;
     margin-top: 5px;
     margin-bottom: 10px;
-    color: #8a8a8a;
+    color: #6B6B6B;
   }
 
   @media (min-width: 768px) {
@@ -1179,7 +1179,7 @@
     font-size: 14px;
     font-weight: 400;
     line-height: 1;
-    color: #999999;
+    color: #6B6B6B;
     text-align: center;
     background-color: #F5F5F5;
     border: 1px solid #ccc;
@@ -1332,7 +1332,7 @@
   }
 
   .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
-    color: #999999;
+    color: #6B6B6B;
     cursor: default;
     background-color: #fff;
     border: 1px solid #ddd;
@@ -1472,7 +1472,7 @@
   }
 
   .navbar-default .navbar-nav > li > a {
-    color: #999999;
+    color: #6B6B6B;
   }
 
   .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
@@ -1676,20 +1676,21 @@
     background-color: #1b6d9f;
   }
 
+  /* white on the brand green/blue-light is 2.38:1 / 2.66:1 — darkened to clear WCAG AA */
   .label-success {
-    background-color: #69B978;
+    background-color: #357A28;
   }
 
   .label-success[href]:hover, .label-success[href]:focus {
-    background-color: #4ca35c;
+    background-color: #2a6120;
   }
 
   .label-info {
-    background-color: #3FA8E0;
+    background-color: #2C7CA8;
   }
 
   .label-info[href]:hover, .label-info[href]:focus {
-    background-color: #2190cb;
+    background-color: #226386;
   }
 
   .label-warning {
@@ -2552,13 +2553,14 @@
     background-color: #fff;
   }
 
+  /* brand blue/green are 3.73:1 / 2.38:1 on white — darkened to clear WCAG AA */
   a {
-    color: #238BCA;
+    color: #1E5A96;
     text-decoration: none;
   }
 
   a:hover, a:focus {
-    color: #69B978;
+    color: #357A28;
     text-decoration: underline;
   }
 

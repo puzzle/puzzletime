@@ -3,23 +3,22 @@
 //  or later. See the COPYING file at the top-level directory or at
 //  https://github.com/puzzle/puzzletime.
 
-
-const app = window.App || (window.App = {});
+const app = window.App || (window.App = {})
 
 app.reportsInvoices = new (class {
-  init() {
-    return this.dateFilterChanged();
+  init () {
+    return this.dateFilterChanged()
   }
 
-  dateFilterChanged() {
-    $('.invoice_reports form[role="filter"]').find('#start_date,#end_date')
-      .datepicker('option', 'disabled', $('#period_shortcut').val());
+  dateFilterChanged () {
+    $('.invoice_reports form[role="search"]').find('#start_date,#end_date')
+      .datepicker('option', 'disabled', $('#period_shortcut').val())
     if ($('#period_shortcut').val()) {
-      return $('.invoice_reports form[role="filter"]').find('#start_date,#end_date').val("");
+      return $('.invoice_reports form[role="search"]').find('#start_date,#end_date').val('')
     }
   }
-});
+})()
 
-$(document).on('ajax:success', '.invoice_reports form[role="filter"]', () => app.reportsInvoices.init());
+$(document).on('ajax:success', '.invoice_reports form[role="search"]', () => app.reportsInvoices.init())
 
-$(document).on('turbolinks:load', () => app.reportsInvoices.init());
+$(document).on('turbolinks:load', () => app.reportsInvoices.init())

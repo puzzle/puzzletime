@@ -3,23 +3,22 @@
 //  or later. See the COPYING file at the top-level directory or at
 //  https://github.com/puzzle/puzzletime.
 
-
-const app = window.App || (window.App = {});
+const app = window.App || (window.App = {})
 
 app.reportsOrders = new (class {
-  init() {
-    return this.dateFilterChanged();
+  init () {
+    return this.dateFilterChanged()
   }
 
-  dateFilterChanged() {
-    $('.order_reports form[role="filter"]').find('#start_date,#end_date')
-      .datepicker('option', 'disabled', $('#period_shortcut').val());
+  dateFilterChanged () {
+    $('.order_reports form[role="search"]').find('#start_date,#end_date')
+      .datepicker('option', 'disabled', $('#period_shortcut').val())
     if ($('#period_shortcut').val()) {
-      return $('.order_reports form[role="filter"]').find('#start_date,#end_date').val("");
+      return $('.order_reports form[role="search"]').find('#start_date,#end_date').val('')
     }
   }
-});
+})()
 
-$(document).on('ajax:success', '.order_reports form[role="filter"]', () => app.reportsOrders.init());
+$(document).on('ajax:success', '.order_reports form[role="search"]', () => app.reportsOrders.init())
 
-$(document).on('turbolinks:load', () => app.reportsOrders.init());
+$(document).on('turbolinks:load', () => app.reportsOrders.init())

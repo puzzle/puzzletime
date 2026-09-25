@@ -3,22 +3,22 @@
 //  or later. See the COPYING file at the top-level directory or at
 //  https://github.com/puzzle/puzzletime.
 
-const app = window.App || (window.App = {});
+const app = window.App || (window.App = {})
 
 app.cockpit = new (class {
-  init() {
-    return this.dateChanged();
+  init () {
+    return this.dateChanged()
   }
 
-  dateChanged() {
-    return $('.filter-elements form[role="filter"]').find('#start_date,#end_date').each(function() {
-      const val = $(this).val();
-      $(this).datepicker('option', 'disabled', $('#period_shortcut').val());
-      return $(this).val(val);
-    });
+  dateChanged () {
+    return $('.filter-elements form[role="search"]').find('#start_date,#end_date').each(function () {
+      const val = $(this).val()
+      $(this).datepicker('option', 'disabled', $('#period_shortcut').val())
+      return $(this).val(val)
+    })
   }
-});
+})()
 
-$(document).on('change', '#period_shortcut', () => app.cockpit.init());
+$(document).on('change', '#period_shortcut', () => app.cockpit.init())
 
-$(document).on('turbolinks:load', () => app.cockpit.init());
+$(document).on('turbolinks:load', () => app.cockpit.init())
