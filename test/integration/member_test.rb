@@ -33,15 +33,17 @@ class MemberTest < ActionDispatch::IntegrationTest
     assert_selector('table#evaluation thead', text: "Member\tNovember    \tÜbrige Ferien")
     assert_selector('table#evaluation tbody tr', count: 3)
 
-    assert_selector('table#evaluation tbody tr:nth-child(1)', text: "Zumkehr Pascal\t8.00 h \t29.00 Tage\t<->")
-    assert_selector('table#evaluation tbody tr:nth-child(2)', text: "Dolores Maria\t6.00 h \t41.85 Tage")
-    assert_selector('table#evaluation tbody tr:nth-child(3)', text: "Dolores Pedro\t2.00 h \t468.33 Tage")
+    # Remaining vacations are counted to the report period's end (2025-11-30),
+    # not to the end of the year.
+    assert_selector('table#evaluation tbody tr:nth-child(1)', text: "Zumkehr Pascal\t8.00 h \t27.73 Tage\t<->")
+    assert_selector('table#evaluation tbody tr:nth-child(2)', text: "Dolores Maria\t6.00 h \t40.58 Tage")
+    assert_selector('table#evaluation tbody tr:nth-child(3)', text: "Dolores Pedro\t2.00 h \t467.06 Tage")
 
     click_link 'Übrige Ferien'
 
-    assert_selector('table#evaluation tbody tr:nth-child(1)', text: "Dolores Pedro\t2.00 h \t468.33 Tage")
-    assert_selector('table#evaluation tbody tr:nth-child(2)', text: "Dolores Maria\t6.00 h \t41.85 Tage")
-    assert_selector('table#evaluation tbody tr:nth-child(3)', text: "Zumkehr Pascal\t8.00 h \t29.00 Tage\t<->")
+    assert_selector('table#evaluation tbody tr:nth-child(1)', text: "Dolores Pedro\t2.00 h \t467.06 Tage")
+    assert_selector('table#evaluation tbody tr:nth-child(2)', text: "Dolores Maria\t6.00 h \t40.58 Tage")
+    assert_selector('table#evaluation tbody tr:nth-child(3)', text: "Zumkehr Pascal\t8.00 h \t27.73 Tage\t<->")
   end
 
   private
