@@ -618,10 +618,10 @@ copied-out assets and the <code>COMMIT</code> file need to survive, and now they
       driven Cuprite/Ferrum since phase 2 and nothing outside <code>Gemfile.lock</code> referenced it. Full suite:
       1565 tests, 1 failure (<code>MemberTest</code>, see <a href="#membertest">§9.4</a>).
       <code>bundle audit</code>: no vulnerabilities.</li>
-  <li>☐ <strong><code>MemberTest</code> reports 27.73 remaining vacation days where it expects 29.00.</strong> The
-      only red test on the branch, and neither date rot nor a missing master fix — see
-      <a href="#membertest">§9.4</a>. Either the expectation legitimately changed or vacation entitlement is being
-      misreported; until it is bisected, nobody knows which.</li>
+  <li>✓ <strong><code>MemberTest</code> reported 27.73 remaining vacation days where it expected 29.00.</strong> Not
+      branch fallout: master's own <code>b00f30f8</code> made remaining vacations count to the report period's end
+      instead of the end of the year, and updated only the three unit suites it touched — this integration test was red
+      on <code>master</code> and <code>stable</code> too. Fixed there (<code>73468ee8</code> / <code>b5eeed8b</code>). See <a href="#membertest">§9.4</a>.</li>
   <li>☐ All 90 commit subjects rewritten to Conventional Commits and force-pushed
       (<code>f3a6cbe0...7e6df3c3</code>) — anyone holding the branch must reset, and the backup ref
       <code>backup/pre-msg-rewrite-20260926</code> can be deleted once that is done. See §9.3.</li>
@@ -2644,29 +2644,38 @@ elsewhere in this document are the pre-rewrite ones.</p>
 file: an unescaped <code>&gt;</code> inside a <code>&lt;code&gt;</code> block in the phase-4 section
 (<code>'~&gt; 4.6'</code>).</p>
 
-<h3 id="membertest">9.4 The one red test <span class="tag high">open</span></h3>
-<p><code>MemberTest#test_members_absences_sorted_by_vacations_left</code> is the only failing test on the branch. It
-expects <code>employees(:pascal)</code> to have <strong>29.00</strong> remaining vacation days and gets
+<h3 id="membertest">9.4 The one red test <span class="tag low">fixed</span></h3>
+<p><code>MemberTest#test_members_absences_sorted_by_vacations_left</code> was the only failing test on the branch. It
+expected <code>employees(:pascal)</code> to have <strong>29.00</strong> remaining vacation days and got
 <strong>27.73</strong>. It blocked the push — the pre-push hook runs the full suite — and the push went out with
 <code>--no-verify</code> rather than with the failure understood.</p>
-<p>What it is <em>not</em>, both checked:</p>
+<p><strong>Not asset- or upgrade-related at all: it is master's own <code>b00f30f8 Fix vacation balance and sort order
+ignoring the report period</code>, which changed the behaviour and never updated this test.</strong> That commit
+<em>is</em> master's HEAD, so the branch inherits a test that is red on master too — "the fix is present" was the right
+check with the wrong conclusion drawn from it. It only updated the three unit-level suites it touched
+(<code>absences_eval_test</code>, <code>employees_eval_test</code>, <code>evaluator_helper_test</code>); the
+integration test that renders the same column was missed.</p>
+<p>The two numbers are exactly the old and new semantics, so no bisect was needed. The test freezes the clock to
+2025-11-01 and selects the <em>Dieser Monat</em> period; every employment starts 2024-01-01 at 60 %:</p>
 <ul>
-  <li><strong>Not date rot.</strong> <code>member_test.rb:14</code> does
-      <code>travel_to Time.zone.local(2025, 11, 1, 1, 4, 44)</code>, so the clock is frozen regardless of the day the
-      suite runs.</li>
-  <li><strong>Not a missing master-side fix.</strong> <code>git merge-base --is-ancestor master HEAD</code> is true,
-      so the branch already contains <code>b00f30f8 Fix vacation balance and sort order ignoring the report
-      period</code> — the obvious suspect, and it is present.</li>
+  <li><strong>Before:</strong> <code>date.end_of_year</code> → 2024-01-01…2025-12-31, two whole years →
+      <code>2.0 × 0.6 × 25 = 30.00</code> granted, minus the 1 day of vacation the test books = <strong>29.00</strong>.</li>
+  <li><strong>After:</strong> the period end, 2025-11-30 → <code>(700/365.25) × 0.6 × 25 = 28.73</code> granted, minus
+      1 = <strong>27.73</strong>. December's 31 days are 1.27 days of entitlement, and all three rows moved by that
+      same 1.27 — Maria 41.85 → 40.58, Pedro 468.33 → 467.06.</li>
 </ul>
-<p>That leaves a behavioural delta introduced somewhere in this branch, in
-<code>Util::EmployeeStatistics#remaining_vacations</code>:
-<code>initial_vacation_days + total_vacations(period) + overtime_vacation_days(period) - used_vacations(period)</code>,
-every term bounded by <code>employment_period_to(date)</code>. Period arithmetic over a framework upgrade is exactly
-where a date/timezone semantic change lands without announcing itself.</p>
-<p>Reproducing it outside the suite failed twice — <code>bin/rails runner</code> has no fixtures loaded, and
-<code>Util::EmployeeStatistics</code> does not resolve there — so the next move is
-<code>git bisect run</code> over <code>origin/master..HEAD</code> against that single test. The range is narrow, but
-bisecting it crosses the Ruby and Rails upgrades, so each step needs its own <code>bundle install</code>.</p>
+<p><strong>Fixed on <code>master</code> and <code>stable</code>, not here.</strong> The six expectations were updated
+to the period-end values on each branch — <code>73468ee8</code> on <code>master</code>, <code>b5eeed8b</code> on
+<code>stable</code> (<code>stable</code> carries the same bug via its own <code>68882655</code>, and its differing
+<code>worktimes</code>/<code>expenses</code> fixtures turn out not to move these numbers). Neither HEAD could be
+amended: both are already on <code>origin</code>. This branch carries a byte-identical copy of the file, so the merge
+is a no-op rather than a conflict.</p>
+<p>Verified by running the test under each branch's own Ruby 3.2.1 bundle: <code>master</code> red before the change
+with exactly the 27.73 seen here, green after; <code>stable</code> green after; this branch green (9 assertions).
+Reproducing it outside the suite needed a throwaway <code>ActiveSupport::TestCase</code> with
+<code>fixtures :all</code>, not <code>bin/rails runner</code> — the class is <code>EmployeeStatistics</code> (in
+<code>app/models/util/</code>), not <code>Util::EmployeeStatistics</code>, which is why the earlier attempts failed to
+resolve it.</p>
 <p class="small">Also noted while pushing: the <code>Brakeman</code> pre-push hook reported FAILED, but its output was
 interleaved with <code>Connection to github.com closed by remote host</code> — the SSH connection timing out during
 the ~8-minute Minitest hook. Run on its own, <code>brakeman -q --no-pager</code> exits 0 with no warnings. The only
