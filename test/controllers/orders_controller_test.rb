@@ -13,45 +13,45 @@ class OrdersControllerTest < ActionController::TestCase
   test 'GET index sorted by order' do
     get :index, params: { sort: 'order', status_id: '' }
 
-    assert_equal orders(:allgemein, :hitobito_demo, :puzzletime, :webauftritt), assigns(:orders)
+    assert_orders_ordered(:allgemein, :hitobito_demo, :puzzletime, :webauftritt)
   end
 
   test 'GET index sorted by kind' do
     get :index, params: { sort: 'kind', status_id: '' }
 
-    assert_equal orders(:allgemein, :puzzletime, :hitobito_demo, :webauftritt), assigns(:orders)
+    assert_orders_ordered(:allgemein, :puzzletime, :hitobito_demo, :webauftritt)
   end
 
   test 'GET index sorted by department' do
     get :index, params: { sort: 'department', status_id: '' }
 
-    assert_equal orders(:puzzletime, :webauftritt, :hitobito_demo, :allgemein), assigns(:orders)
+    assert_orders_ordered(:puzzletime, :webauftritt, :hitobito_demo, :allgemein)
   end
 
   test 'GET index sorted by responsible' do
     get :index, params: { sort: 'responsible', status_id: '' }
 
-    assert_equal orders(:webauftritt, :allgemein, :hitobito_demo, :puzzletime), assigns(:orders)
+    assert_orders_ordered(:webauftritt, :allgemein, :hitobito_demo, :puzzletime)
   end
 
   test 'GET index sorted by status' do
     get :index, params: { sort: 'status', status_id: '' }
 
-    assert_equal orders(:hitobito_demo, :puzzletime, :webauftritt, :allgemein), assigns(:orders)
+    assert_orders_ordered(:hitobito_demo, :puzzletime, :webauftritt, :allgemein)
   end
 
   test 'GET index sorted by major_chance_value' do
     orders(:allgemein).order_chances.create!(name: 'Aare is above 18°', probability: :medium, impact: :low)
     get :index, params: { sort: 'major_chance_value', status_id: '' }
 
-    assert_equal orders(:hitobito_demo, :webauftritt, :allgemein, :puzzletime), assigns(:orders)
+    assert_orders_ordered(:hitobito_demo, :webauftritt, :allgemein, :puzzletime)
   end
 
   test 'GET index sorted by major_risk_value' do
     orders(:allgemein).order_risks.create!(name: 'Aare is below 18°', probability: :medium, impact: :low)
     get :index, params: { sort: 'major_risk_value', status_id: '', sort_dir: 'desc' }
 
-    assert_equal orders(:allgemein, :puzzletime, :hitobito_demo, :webauftritt), assigns(:orders)
+    assert_orders_ordered(:allgemein, :puzzletime, :hitobito_demo, :webauftritt)
   end
 
   test 'GET index with default filter for manager' do
@@ -551,6 +551,20 @@ class OrdersControllerTest < ActionController::TestCase
   end
 
   private
+
+  # Asserts the given fixture orders appear in assigns(:orders) in this relative
+  # order. Other orders may be interleaved, so the assertion stays valid when new
+  # order fixtures are added (e.g. :api_demo).
+  def assert_orders_ordered(*names)
+    ids = assigns(:orders).map(&:id)
+    positions = orders(*names).map { |order| ids.index(order.id) }
+
+    missing = names.zip(positions).select { |_, pos| pos.nil? }.map(&:first)
+
+    assert_empty missing, "expected orders missing from list: #{missing.inspect}"
+    assert_equal positions, positions.sort,
+                 "expected orders #{names.inspect} in this relative order, got ids #{ids.inspect}"
+  end
 
   def find_in_body(body, field, element)
     JSON.parse(body).find { |w| w[field] == element }

@@ -5,12 +5,13 @@ module Apidocs
     include Rails.application.routes.url_helpers
     include Helper
 
-    attr_reader :controller_class, :controller_classes, :controller_spec, :nested_class
+    attr_reader :controller_class, :controller_classes, :controller_spec, :nested_class, :component_schema_names
 
-    def initialize(controller_classes, controller_class, swagger_spec)
+    def initialize(controller_classes, controller_class, swagger_spec, component_schema_names)
       @controller_classes = controller_classes
       @controller_class = controller_class
       @swagger_spec = swagger_spec
+      @component_schema_names = component_schema_names
     end
 
     def run

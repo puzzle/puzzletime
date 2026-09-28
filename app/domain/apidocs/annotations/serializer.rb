@@ -10,6 +10,18 @@ module Apidocs
     module Serializer
       extend ActiveSupport::Concern
 
+      # Maps ActiveRecord column types to json:api/swagger schema types.
+      COLUMN_SCHEMA_TYPES = {
+        integer: { type: :integer },
+        string: { type: :string },
+        text: { type: :string },
+        boolean: { type: :boolean },
+        float: { type: :number, format: :float },
+        decimal: { type: :number, format: :double },
+        date: { type: :string, format: :date },
+        datetime: { type: :string, format: :'date-time' }
+      }.freeze
+
       included do
         class_attribute :attribute_annotations, default: {}, instance_accessor: false
         singleton_class.send(:alias_method, :annotate_attribute, :annotate_attributes)
@@ -27,6 +39,22 @@ module Apidocs
           attributes_list.each do |attr|
             attribute_annotations[attr] = spec
           end
+        end
+
+        # Whether the given attribute has an api doc annotation. Attributes
+        # without one crash the doc generation, so this guards against it.
+        def annotated?(attr)
+          attribute_annotations.key?(attr)
+        end
+
+        # Builds an object schema from an ActiveRecord model's columns, so
+        # attributes serialized via #attributes stay documented without a
+        # hand-maintained property list that drifts from the schema.
+        def object_schema(model)
+          properties = model.columns.to_h do |column|
+            [column.name.to_sym, COLUMN_SCHEMA_TYPES.fetch(column.type, { type: :string })]
+          end
+          { type: :object, properties: }
         end
       end
     end
