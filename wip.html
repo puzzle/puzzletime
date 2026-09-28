@@ -40,8 +40,8 @@
   <li>The selection is <b>remembered in the session</b> as <code>session[:planning_custom_list_ids]</code>, the same way the date period is kept in <code>session[:planning_period]</code>.</li>
 </ul>
 
-<h2>Committed <span class="status done">40a9b639 · not pushed</span></h2>
-<p>Commit <code>40a9b639</code> “WIP: Filter company planning by custom lists”, made on top of <code>b00f30f8</code> with hooks disabled (<code>OVERCOMMIT_DISABLE=1 git commit --no-verify</code>), as you asked.</p>
+<h2>Committed <span class="status done">f782254c · not pushed</span></h2>
+<p>Commit <code>f782254c</code> “WIP: Filter company planning by custom lists”, made on top of <code>b00f30f8</code> with hooks disabled (<code>OVERCOMMIT_DISABLE=1 git commit --no-verify</code>), as you asked. <b>Note:</b> this commit also contains <code>wip.html</code>; drop it when squashing.</p>
 <table>
   <tr><th>File</th><th>Change</th></tr>
   <tr><td><code>app/controllers/plannings/companies_controller.rb</code></td>
@@ -53,32 +53,25 @@
   <tr><td><code>test/fixtures/custom_lists.yml</code></td>
       <td>New <code>list_b</code> (owner 7 = <code>mark</code>, item_ids [5] = <code>long_time_john</code>). The existing <code>list_a</code> has item_ids [1,2,3]; of those, only pedro (2) and pablo (3) are employed.</td></tr>
   <tr><td><code>test/controllers/plannings/companies_controller_test.rb</code></td>
-      <td>4 new tests: one list, union of two lists, selection kept in the session, <code>[""]</code> clears it. Last run: <b>5 runs, 0 failures</b>. That run was <i>before</i> your <code>set_custom_list_ids</code> edit, so re-run it.</td></tr>
+      <td>4 new tests: one list, union of two lists, selection kept in the session, <code>[""]</code> clears it. Re-run after your <code>set_custom_list_ids</code> edit: <b>5 runs, 0 failures</b>. RuboCop and haml-lint clean on all changed files.</td></tr>
   <tr><td><code>.overcommit.yml</code></td>
       <td>Your change: RailsBestPractices <code>problem_on_unmodified_line: warn</code>.</td></tr>
 </table>
 
-<h2>Open issue: “Listen” dropdown shows no options <span class="status open">in progress</span></h2>
-<p>
-  On <code>/plannings/company</code> the select renders (<code>select#custom_list_ids[name="custom_list_ids[]"]</code>) and Selectize starts up (<code>.selectized</code>, placeholder “Alle”). But the select has <b>no <code>&lt;option&gt;</code>s</b> and Selectize's dropdown is empty.
-  The data is there: logged-in dev user is <b>id 12 / MGT</b>, and
-  <code>Employee.find(12).custom_lists.where(item_type: 'Employee').list.count == 2</code>.
-  Cause not found yet.
-</p>
-<p>Next checks:</p>
-<ol>
-  <li>Fetch the server-rendered HTML (curl with the session cookie, or log in again and read the page source) to see whether the <code>&lt;option&gt;</code>s leave the server at all. That tells us whether the problem is on the server or in Selectize.</li>
-  <li>If the server sends no options, check that <code>@custom_lists</code> is set when the partial renders and that <code>current_user</code> is employee 12 in that request.</li>
-  <li>If the server does send them, check whether passing an array to <code>value:</code> or the default <code>prompt: 'Alle'</code> (a blank <code>&lt;option&gt;</code> in a multi-select) confuses Selectize. Compare with <code>orders/_filters.html.haml</code> (<code>status_id</code>, which works).</li>
-  <li>Make sure the check runs on a fresh full page load, not after an AJAX update (<code>show.js.haml</code> only replaces <code>#plannings</code>).</li>
-</ol>
+<h2>“Listen” dropdown showed no options <span class="status done">resolved, no code change</span></h2>
+<p>Not a bug in the feature. Two things together:</p>
+<ul>
+  <li>Selectize removes every non-selected <code>&lt;option&gt;</code> from the original <code>&lt;select&gt;</code> and keeps them in <code>el.selectize.options</code>, so an empty <code>select#custom_list_ids</code> after init is normal.</li>
+  <li>The dev DB had been reseeded: 9 employees, no employee 12 / MGT, and 0 custom lists. So there was nothing to show.</li>
+</ul>
+<p>Checked: the raw server HTML contains <code>&lt;option value="1"&gt;Team A&lt;/option&gt;&lt;option value="2"&gt;Team B&lt;/option&gt;</code>, <code>selectize.options</code> has keys 1 and 2, and opening the control shows both lists.</p>
 
 <h2>Dev data created for testing <span class="status warn">not cleaned up</span></h2>
 <ul>
-  <li><code>CustomList</code> id 1 “Team A”: employees [7, 5, 10] (TBU, DI, MB1), owner 12</li>
-  <li><code>CustomList</code> id 2 “Team B”: employees [9, 2] (AM, AR), owner 12</li>
+  <li><code>CustomList</code> id 1 “Team A”: employees [7, 5] (TBU, DI), owner 1 (MW)</li>
+  <li><code>CustomList</code> id 2 “Team B”: employees [9, 2] (AM, AR), owner 1 (MW)</li>
+  <li>MW's dev password was reset to the seed value <code>a</code> (it no longer matched the seeds).</li>
 </ul>
-<p>I couldn't re-check these because the app server wasn't reachable when this file was written. Delete them or keep them once verification is done.</p>
 
 <h2>Repo incident (for context) <span class="status warn">resolved</span></h2>
 <ul>
@@ -97,9 +90,9 @@
 
 <h2>Remaining tasks <span class="status todo">todo</span></h2>
 <ol>
-  <li>Re-run <code>bin/rails test test/controllers/plannings/companies_controller_test.rb</code> after your <code>set_custom_list_ids</code> edit.</li>
-  <li>Find and fix the empty-options issue (see above).</li>
-  <li>Check in the browser (log in as MGT): pick one list and the table narrows; pick two lists and it shows both; remove all pills and everyone is back; reload and the selection is kept; change the date and the list filter stays applied.</li>
+  <li><s>Re-run the controller tests</s> <span class="status done">done</span></li>
+  <li><s>Empty-options issue</s> <span class="status done">done</span> (see above)</li>
+  <li><s>Browser check as MW</s> <span class="status done">done</span>. Team A → Burkhalter, Illi. Team A + B → Burkhalter, Rava, Illi, Mund. Reload keeps both pills and the filtered rows. Switching to “Nächste 6 Monate” keeps the filter (end date 21.03.2027). Clearing all pills → all 8 employees, and that stays after a reload.</li>
   <li>Clean up: dev CustomLists 1 &amp; 2, <code>tmp/design_canvas_ticket7.html</code>, this <code>wip.html</code>, <code>/tmp/65357-index-corrupt-backup</code>.</li>
   <li>Final commit(s): squash or amend the WIP commit as you prefer. Push / open a PR only when you ask.</li>
   <li>Move task board #7 to in_progress, then completed.</li>
