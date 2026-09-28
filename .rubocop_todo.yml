@@ -173,7 +173,7 @@ Naming/MethodParameterName:
 # ForbiddenPrefixes: is_, has_, have_, does_
 # AllowedMethods: is_a?
 # MethodDefinitionMacros: define_method, define_singleton_method
-Naming/PredicateName:
+Naming/PredicatePrefix:
   Exclude:
     - "app/helpers/dry_crud/form/builder.rb"
     - "app/models/concerns/belonging_to_work_item.rb"
@@ -435,3 +435,13 @@ Style/OptionalBooleanParameter:
 # URISchemes: http, https
 Layout/LineLength:
   Max: 234
+
+# Offense count: 46
+# This cop supports safe autocorrection (--autocorrect).
+Rails/StrongParametersExpect:
+  Enabled: false
+
+# Offense count: 1
+# This cop supports safe autocorrection (--autocorrect).
+Style/ReverseFind:
+  Enabled: false
