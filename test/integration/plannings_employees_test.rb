@@ -43,6 +43,7 @@ class PlanningsEmployeesTest < ActionDispatch::IntegrationTest
     all('.planning-calendar-week')[0].assert_text('50%')
     all('.planning-calendar-week')[1].assert_text('0%')
     page.assert_selector('.planning-panel', visible: false)
+
     assert_percents ['50', '50', '50', '50', '50', '', '', ''], row
 
     drag(row.all('.day')[3], row.all('.day')[6])
@@ -62,6 +63,7 @@ class PlanningsEmployeesTest < ActionDispatch::IntegrationTest
     all('.planning-calendar-week')[0].assert_text('60%')
     all('.planning-calendar-week')[1].assert_text('30%')
     page.assert_selector('.planning-panel', visible: false)
+
     assert_percents ['50', '50', '50', '75', '75', '75', '75', ''], row
   end
 

@@ -9,6 +9,7 @@ class Order
   class Cockpit
     class TotalRow < Row
       include Rails.application.routes.url_helpers
+
       attr_reader :info, :order, :period
 
       def initialize(order, period, rows)

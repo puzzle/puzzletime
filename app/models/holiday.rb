@@ -26,7 +26,7 @@ class Holiday < ApplicationRecord
             uniqueness: { message: 'Pro Datum ist nur ein Feiertag erlaubt' },
             timeliness: { date: true, allow_blank: true }
 
-  scope :list, -> { order('holiday_date DESC') }
+  scope :list, -> { order(holiday_date: :desc) }
 
   class << self
     def period_musttime(period)
@@ -71,7 +71,7 @@ class Holiday < ApplicationRecord
     def cached
       RequestStore.store[model_name.route_key] ||=
         Rails.cache.fetch(model_name.route_key) do
-          Holiday.order('holiday_date')
+          Holiday.order(:holiday_date)
                  .reject { |h| weekend?(h.holiday_date) }
                  .to_h { |h| [h.holiday_date, h.musthours_day] }
         end

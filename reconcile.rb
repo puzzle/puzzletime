@@ -1,16 +1,17 @@
+# frozen_string_literal: true
+
 # Reconcile the phase-1 @extend -> mixin restructuring.
 # Claim under test: the ONLY difference is that selectors our SCSS used to
 # @extend into are no longer glued onto Bootstrap's own rule blocks.
 # So: strip our app selectors out of the baseline's selector lists; what
 # remains must match the current build exactly.
 
-
 APP = [
   /(\A|[\s>+~])main([:.\[\s>+~]|\z)/, /\.form-action([:.\[\s>+~]|\z)/,
   /\.table-stripedbody/, /\.worktimes/,
   # the @extend targets, as they appear glued into Bootstrap's selector lists
   /\.figures/, /\.date-label/, /\.entry/
-]
+].freeze
 
 def app_selector?(sel)
   APP.any? { |a| sel =~ a }
@@ -18,13 +19,17 @@ end
 
 def parse(path)
   css = File.read(path, encoding: 'bom|utf-8').gsub(%r{/\*.*?\*/}m, ' ')
-  out, ctx, buf, depth = [], [], +'', 0
+  out = []
+  ctx = []
+  buf = +''
+  depth = 0
   css.each_char do |c|
     case c
     when '{'
       depth += 1
       if buf.strip.start_with?('@') && buf !~ /@(font-face|page)/
-        ctx.push(buf.strip.squeeze(' ')); buf = +''
+        ctx.push(buf.strip.squeeze(' '))
+        buf = +''
       else
         buf << c
       end
@@ -35,18 +40,19 @@ def parse(path)
         out << [ctx.join(' | '),
                 sel.strip.squeeze(' ').split(',').map(&:strip).reject(&:empty?),
                 decl.strip.squeeze(' ').split(';').map(&:strip).reject(&:empty?)]
-        buf = +''
       else
-        ctx.pop; buf = +''
+        ctx.pop
       end
+      buf = +''
     else
-      buf << (c =~ /\s/ ? ' ' : c)
+      buf << (/\s/.match?(c) ? ' ' : c)
     end
   end
   out
 end
 
-base, cur = parse(ARGV[0]), parse(ARGV[1])
+base = parse(ARGV[0])
+cur = parse(ARGV[1])
 
 # Bootstrap side of the baseline: drop app selectors from every selector list.
 base_bs = base.filter_map do |ctx, sels, decls|
@@ -70,34 +76,37 @@ end
 
 def tally(a) = a.tally
 
-puts "=== BOOTSTRAP-SIDE RULES (app selectors stripped from both) ==="
+puts '=== BOOTSTRAP-SIDE RULES (app selectors stripped from both) ==='
 d1 = tally(base_bs).reject { |k, v| tally(cur_bs)[k] == v }
 d2 = tally(cur_bs).reject { |k, v| tally(base_bs)[k] == v }
 if d1.empty? && d2.empty?
   puts "IDENTICAL — #{base_bs.size} rules. Bootstrap itself is untouched."
 else
   puts "DIFFERS (#{d1.size} missing / #{d2.size} extra):"
-  d1.first(15).each { |k, _| puts "  - #{k.inspect[0, 260]}" }
-  d2.first(15).each { |k, _| puts "  + #{k.inspect[0, 260]}" }
+  d1.first(15).each_key { |k| puts "  - #{k.inspect[0, 260]}" }
+  d2.first(15).each_key { |k| puts "  + #{k.inspect[0, 260]}" }
 end
 
 puts
-puts "=== APP-SIDE: declarations each extended element receives ==="
+puts '=== APP-SIDE: declarations each extended element receives ==='
 # Collapse to: selector -> ordered list of declarations (across all its rules)
 def per_selector(rules)
   h = Hash.new { |x, k| x[k] = [] }
   rules.each { |ctx, sel, decls| sel.split(',').each { |s| h[[ctx, s]].concat(decls) } }
   h
 end
-b, c = per_selector(base_app), per_selector(cur_app)
+b = per_selector(base_app)
+c = per_selector(cur_app)
 (b.keys | c.keys).sort_by(&:to_s).each do |k|
-  bd, cd = (b[k] || []), (c[k] || [])
+  bd = b[k] || []
+  cd = c[k] || []
   # compare as sets of declarations; order only matters for duplicate properties
   lost  = bd - cd
   added = cd - bd
   next if lost.empty? && added.empty?
-  puts "#{k[1]}#{k[0].empty? ? '' : "   [#{k[0]}]"}"
+
+  puts "#{k[1]}#{"   [#{k[0]}]" unless k[0].empty?}"
   puts "    LOST : #{lost.join('; ')}"   unless lost.empty?
   puts "    ADDED: #{added.join('; ')}"  unless added.empty?
 end
-puts "(nothing listed above = every extended element keeps the same declarations)"
+puts '(nothing listed above = every extended element keeps the same declarations)'

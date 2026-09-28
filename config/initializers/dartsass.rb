@@ -12,6 +12,4 @@ Rails.application.config.dartsass.builds = {
 
 # Readable, unminified CSS with source maps outside production; compressed
 # and map-free (the gem's own default) in production.
-unless Rails.env.production?
-  Rails.application.config.dartsass.build_options = ['--style=expanded']
-end
+Rails.application.config.dartsass.build_options = ['--style=expanded'] unless Rails.env.production?

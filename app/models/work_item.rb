@@ -67,7 +67,7 @@ class WorkItem < ApplicationRecord
 
   ### SCOPES
 
-  scope :list,         -> { order('path_shortnames') }
+  scope :list,         -> { order(:path_shortnames) }
   scope :leaves,       -> { where(leaf: true) }
   scope :recordable,   -> { leaves.where(closed: false) }
 
