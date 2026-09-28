@@ -33,6 +33,7 @@ rules:
       locales/
       fixtures/
       .rubocop_todo.yml
+      .overcommit.yml
       .reek.yml
       settings.yml
       database.yml
