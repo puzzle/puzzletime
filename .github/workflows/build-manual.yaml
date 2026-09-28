@@ -1,5 +1,5 @@
 ---
-name: "Manual build without tests"
+name: "Manual build"
 
 "on":
   workflow_dispatch:
@@ -24,14 +24,44 @@ name: "Manual build without tests"
           - pude-ptime-int
           - pude-ptime-prod
         default: "pitc-ptime-int"
-      push:
-        description: "Should we push the image to the registry?"
+      lint:
+        description: "Run lint?"
+        required: true
+        type: boolean
+        default: false
+      test:
+        description: "Run tests?"
+        required: true
+        type: boolean
+        default: false
+      build:
+        description: "Build the image?"
         required: true
         type: boolean
         default: true
+      push:
+        description: "Push the image to the registry?"
+        required: true
+        type: boolean
+        default: true
+      sbom:
+        description: "Generate and upload the SBOM?"
+        required: true
+        type: boolean
+        default: false
 
 jobs:
+  lint:
+    if: ${{ inputs.lint }}
+    uses: ./.github/workflows/reusable-lint.yaml
+
+  test:
+    if: ${{ inputs.test }}
+    uses: ./.github/workflows/reusable-test.yaml
+
   build-dispatch:
+    needs: [lint, test]
+    if: ${{ inputs.build && !failure() && !cancelled() }}
     uses: ./.github/workflows/reusable-build.yaml
     with:
       environment: ${{ inputs.environment }}
@@ -40,3 +70,14 @@ jobs:
     secrets:
       PUZZLE_REGISTRY_USERNAME: ${{ secrets.PUZZLE_REGISTRY_USERNAME }}
       PUZZLE_REGISTRY_TOKEN: ${{ secrets.PUZZLE_REGISTRY_TOKEN }}
+
+  sbom:
+    needs: build-dispatch
+    if: ${{ inputs.sbom && !failure() && !cancelled() }}
+    uses: ./.github/workflows/reusable-sbom.yaml
+    with:
+      project_name: ${{ inputs.project_name }}
+    secrets:
+      dependency_track_url: ${{ secrets.DEPTRACK_URL }}
+      dependency_track_api_key: ${{ secrets.DEPTRACK_API_KEY }}
+...
