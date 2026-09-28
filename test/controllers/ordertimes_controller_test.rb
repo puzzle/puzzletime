@@ -256,7 +256,7 @@ class OrdertimesControllerTest < ActionController::TestCase
     assert_equal "#{reps} Arbeitszeiten wurden erfasst", flash[:notice]
 
     created_dates = Ordertime.last(reps).map(&:work_date)
-    expected_dates = (0..reps - 1).map { |i| work_date + i }
+    expected_dates = (0..(reps - 1)).map { |i| work_date + i }
 
     assert_equal expected_dates, created_dates
   end

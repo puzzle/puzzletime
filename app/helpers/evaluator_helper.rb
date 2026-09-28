@@ -114,7 +114,7 @@ module EvaluatorHelper
   def overtime_vacations_tooltip(employee)
     transfers = employee.overtime_vacations
                         .where(@period ? ['transfer_date <= ?', @period.end_date] : nil)
-                        .order('transfer_date')
+                        .order(:transfer_date)
                         .to_a
     tooltip = ''
     unless transfers.empty?
@@ -199,7 +199,7 @@ module EvaluatorHelper
     employment
       .employment_roles_employments
       .includes(:employment_role, :employment_role_level)
-      .order('percent DESC')
+      .order(percent: :desc)
       .map do |ere|
         role = ere.employment_role.name
         role += " #{ere.employment_role_level.name}" if ere.employment_role_level.present?

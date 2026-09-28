@@ -31,7 +31,7 @@ class OrderComment < ApplicationRecord
 
   ### SCOPES
 
-  scope :list, -> { includes(:creator).order('updated_at DESC') }
+  scope :list, -> { includes(:creator).order(updated_at: :desc) }
 
   ### INSTANCE METHODS
 

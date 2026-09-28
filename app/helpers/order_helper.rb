@@ -128,7 +128,7 @@ module OrderHelper
       .minimal
 
     selected_option = order_option(@order, true)
-    managed_options = safe_join(managed_orders) { order_option(_1) }
+    managed_options = safe_join(managed_orders) { order_option(it) }
 
     managed_options + selected_option
   end

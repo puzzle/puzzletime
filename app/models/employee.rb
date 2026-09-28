@@ -85,7 +85,7 @@ class Employee < ApplicationRecord
 
   has_many :worktimes
   has_many :absences,
-           -> { order('name').distinct },
+           -> { order(:name).distinct },
            through: :worktimes
   has_many :overtime_vacations, dependent: :destroy
   has_many :managed_orders, class_name: 'Order', foreign_key: :responsible_id, dependent: :nullify

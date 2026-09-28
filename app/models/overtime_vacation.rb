@@ -22,7 +22,7 @@ class OvertimeVacation < ApplicationRecord
   validates :hours, inclusion: { in: 0.001...999_999, message: 'Die Stunden müssen positiv sein' }
   validates :transfer_date, timeliness: { date: true, allow_blank: true }
 
-  scope :list, -> { order('transfer_date DESC') }
+  scope :list, -> { order(transfer_date: :desc) }
 
   def to_s
     "von #{hours} Stunden#{" am #{I18n.l(transfer_date)}" if transfer_date}"

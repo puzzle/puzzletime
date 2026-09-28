@@ -64,7 +64,7 @@ class InvoicesController < CrudController
         format.json { head :no_content }
       else
         format.html { redirect_on_failure(options) }
-        format.json { render json: entry.errors, status: :unprocessable_entity }
+        format.json { render json: entry.errors, status: :unprocessable_content }
       end
     end
   end

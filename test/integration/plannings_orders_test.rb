@@ -113,7 +113,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
   test 'create planning entries' do
     assert_selector("#planned_order_#{orders(:puzzletime).id} .total-sum .header-planned-amount",
-                         text: '6 / 100')
+                    text: '6 / 100')
     drag(row_pascal.all('.day')[2], row_pascal.all('.day')[4])
 
     assert_selector('.-selected', count: 3)
@@ -131,7 +131,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     assert_percents ['50', '', '', '', '', ''], row_mark
     assert_percents ['25', '', '100', '100', '100', ''], row_pascal
     assert_selector("#planned_order_#{orders(:puzzletime).id} .total-sum .header-planned-amount",
-                         text: '30 / 100')
+                    text: '30 / 100')
   end
 
   test 'create planning entries with multiple accounting posts' do
@@ -141,11 +141,11 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     visit plannings_order_path(orders(:hitobito_demo))
 
     assert_selector("#planned_order_#{orders(:hitobito_demo).id} .total-sum .header-planned-amount",
-                         text: '16 / 0')
+                    text: '16 / 0')
     assert_selector("#group_header_times_accounting_post_#{accounting_posts(:hitobito_demo_app).id}",
-                         text: '10 / 0 h')
+                    text: '10 / 0 h')
     assert_selector("#group_header_times_accounting_post_#{accounting_posts(:hitobito_demo_site).id}",
-                         text: '6 / 0 h')
+                    text: '6 / 0 h')
 
     row = find("#planning_row_employee_#{employees(:pascal).id}_work_item_#{work_items(:hitobito_demo_app).id}")
     drag(row.all('.day')[2], row.all('.day')[4])
@@ -158,11 +158,11 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     end
 
     assert_selector("#planned_order_#{orders(:hitobito_demo).id} .total-sum .header-planned-amount",
-                         text: '40 / 0')
+                    text: '40 / 0')
     assert_selector("#group_header_times_accounting_post_#{accounting_posts(:hitobito_demo_app).id}",
-                         text: '34 / 0 h')
+                    text: '34 / 0 h')
     assert_selector("#group_header_times_accounting_post_#{accounting_posts(:hitobito_demo_site).id}",
-                         text: '6 / 0 h')
+                    text: '6 / 0 h')
   end
 
   test 'update planning entries' do
@@ -278,7 +278,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
     assert_selector('#planning_row_employee_2_work_item_4', text: 'Dolores Pedro')
     assert_selector('#planning_row_employee_2_work_item_4 .day',
-                         count: workdays_next_n_months(3))
+                    count: workdays_next_n_months(3))
     assert_no_selector('#add_employee_id')
   end
 
@@ -431,7 +431,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     find('.navbar-brand').click # blur select
 
     assert_selector('.planning-calendar-weeks',
-                         text: "KW #{(Time.zone.today + 6.months - 1.week).cweek}")
+                    text: "KW #{(Time.zone.today + 6.months - 1.week).cweek}")
     assert_selector('#start_date', visible: false)
     assert_selector('#end_date', visible: false)
     assert_equal '6M', find('#period_shortcut').value
@@ -458,7 +458,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     find('.navbar-brand').click # blur select
 
     assert_selector('.planning-calendar-weeks',
-                         text: "KW #{(Time.zone.today + 6.months - 1.week).cweek}")
+                    text: "KW #{(Time.zone.today + 6.months - 1.week).cweek}")
     assert_selector('#start_date', visible: false)
     assert_selector('#end_date', visible: false)
     assert_equal '6M', find('#period_shortcut').value
@@ -467,7 +467,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
     assert_selector('.planning-board-header', text: 'Waber Mark')
     assert_selector('.planning-calendar-weeks',
-                         text: "KW #{(Time.zone.today + 6.months - 1.week).cweek}")
+                    text: "KW #{(Time.zone.today + 6.months - 1.week).cweek}")
     assert_selector('#start_date', visible: false)
     assert_selector('#end_date', visible: false)
     assert_equal '6M', find('#period_shortcut').value
@@ -476,7 +476,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
     assert_selector('h1', text: 'Planung aller Members')
     assert_selector('#plannings thead',
-                         text: (Time.zone.today + 6.months - 1.week).cweek)
+                    text: (Time.zone.today + 6.months - 1.week).cweek)
     assert_selector('#start_date', visible: false)
     assert_selector('#end_date', visible: false)
     assert_equal '6M', find('#period_shortcut').value
@@ -492,7 +492,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     select 'Nächste 6 Monate', from: 'period_shortcut' # seems to only update value when selecting 2-times
 
     assert_selector('.planning-calendar-weeks',
-                         text: "KW #{(Time.zone.today + 6.months - 1.week).cweek}")
+                    text: "KW #{(Time.zone.today + 6.months - 1.week).cweek}")
     assert_selector('#start_date,#end_date', visible: false)
 
     assert_no_selector('#add_employee_id')
@@ -504,7 +504,7 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
     assert_selector('#planning_row_employee_2_work_item_4', text: 'Dolores Pedro')
     assert_selector('#planning_row_employee_2_work_item_4 .day',
-                         count: workdays_next_n_months(6))
+                    count: workdays_next_n_months(6))
     assert_no_selector('#add_employee_id')
   end
 
@@ -579,17 +579,17 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     visit plannings_order_path(orders(:puzzletime))
 
     assert_selector("#planned_order_#{orders(:puzzletime).id} .total-sum .header-planned-amount",
-                         text: '14 / 100')
+                    text: '14 / 100')
     assert_selector("#planned_order_#{orders(:puzzletime).id} .inperiod-sum .header-planned-amount",
-                         text: '10')
+                    text: '10')
 
     select 'Nächste 12 Monate', from: 'period_shortcut'
     sleep 0.5 # give time to update values
 
     assert_selector("#planned_order_#{orders(:puzzletime).id} .total-sum .header-planned-amount",
-                         text: '14 / 100')
+                    text: '14 / 100')
     assert_selector("#planned_order_#{orders(:puzzletime).id} .inperiod-sum .header-planned-amount",
-                         text: '14')
+                    text: '14')
   end
 
   test 'dragging over entries correctly sets the worktime in hours of the selected area' do

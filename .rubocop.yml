@@ -38,6 +38,10 @@ Minitest/MultipleAssertions:
 Rails/ActionControllerTestCase:
   Enabled: false
 
+# overcommit's ExecutePermissions hook forbids the +x bit this cop wants
+Lint/ScriptPermission:
+  Enabled: false
+
 # Ignore for existing migrations
 Rails/CreateTableWithTimestamps:
   Exclude:

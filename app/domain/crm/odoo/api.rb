@@ -49,9 +49,9 @@ module Crm
 
       def models(select: nil)
         models = search_read('ir.model', options: { fields: %i[name model state] })
-                 .sort_by { _1['id'] }
+                 .sort_by { it['id'] }
 
-        models = models.select { _1['name'] =~ /#{select}/ } if select
+        models = models.select { it['name'] =~ /#{select}/ } if select
 
         models
       end

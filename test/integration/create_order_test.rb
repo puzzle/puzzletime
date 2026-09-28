@@ -164,6 +164,7 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
       within('.modal-dialog') do
         click_link('Abbrechen')
       end
+
       assert_no_selector('#modal.in')
       selectize('client_work_item_id', 'Swisstopo')
       click_link('category_work_item_id_create_link')
