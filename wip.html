@@ -40,7 +40,7 @@
   <li>The selection is <b>remembered in the session</b> as <code>session[:planning_custom_list_ids]</code>, the same way the date period is kept in <code>session[:planning_period]</code>.</li>
 </ul>
 
-<h2>Committed <span class="status done">f782254c · not pushed</span></h2>
+<h2>Committed <span class="status done">pushed to origin</span></h2>
 <p>Commit <code>f782254c</code> “WIP: Filter company planning by custom lists”, made on top of <code>b00f30f8</code> with hooks disabled (<code>OVERCOMMIT_DISABLE=1 git commit --no-verify</code>), as you asked. <b>Note:</b> this commit also contains <code>wip.html</code>; drop it when squashing.</p>
 <table>
   <tr><th>File</th><th>Change</th></tr>
@@ -49,7 +49,9 @@
   <tr><td><code>app/domain/plannings/company_overview.rb</code></td>
       <td><code>initialize(period, employee_ids: nil)</code>. <code>create_boards</code> adds <code>where(id: @employee_ids)</code> when ids are given.</td></tr>
   <tr><td><code>app/views/plannings/base/_date_filter.html.haml</code></td>
-      <td>Adds <code>hidden_field_tag 'custom_list_ids[]', '', id: nil</code> plus <code>direct_filter_select(:custom_list_ids, 'Listen', @custom_lists, class: 'searchable', multiple: true, value: @custom_list_ids)</code>. The hidden field makes “all pills removed” arrive as <code>[""]</code> instead of no param, so an explicit clear can be told apart from a fresh page load. This partial is only rendered by <code>plannings/companies/show.html.haml</code>.</td></tr>
+      <td>Adds <code>hidden_field_tag 'custom_list_ids[]', '', id: nil</code> plus <code>direct_filter_select(:custom_list_ids, 'Listen', @custom_lists, class: 'searchable', multiple: true, value: @custom_list_ids)</code>. The hidden field makes “all pills removed” arrive as <code>[""]</code> instead of no param, so an explicit clear can be told apart from a fresh page load. <b>Correction:</b> this partial is <i>not</i> only rendered by <code>plannings/companies/show.html.haml</code>. See “Open problem” below.</td></tr>
+  <tr><td><code>app/controllers/plannings/base_controller.rb</code></td>
+      <td>Your stopgap: <code>before_action :set_custom_lists</code> reads and saves the selection (same code as <code>CompaniesController#set_custom_list_ids</code>) and sets <code>@custom_lists</code>. Committed as-is.</td></tr>
   <tr><td><code>test/fixtures/custom_lists.yml</code></td>
       <td>New <code>list_b</code> (owner 7 = <code>mark</code>, item_ids [5] = <code>long_time_john</code>). The existing <code>list_a</code> has item_ids [1,2,3]; of those, only pedro (2) and pablo (3) are employed.</td></tr>
   <tr><td><code>test/controllers/plannings/companies_controller_test.rb</code></td>
@@ -65,6 +67,17 @@
   <li>The dev DB had been reseeded: 9 employees, no employee 12 / MGT, and 0 custom lists. So there was nothing to show.</li>
 </ul>
 <p>Checked: the raw server HTML contains <code>&lt;option value="1"&gt;Team A&lt;/option&gt;&lt;option value="2"&gt;Team B&lt;/option&gt;</code>, <code>selectize.options</code> has keys 1 and 2, and opening the control shows both lists.</p>
+
+<h2>Open problem: “Listen” filter leaks into other planning pages <span class="status open">stopgap committed</span></h2>
+<p><b>Problem.</b> <code>base/_header.html.haml</code> also renders <code>_date_filter</code> (<code>render 'date_filter' if filter</code>), from <code>base/show.html.haml</code> and <code>base/_show_multi.html.haml</code>. That covers the employee, order and multi planning pages (<code>EmployeesController</code>, <code>OrdersController</code>, <code>MultiEmployeesController</code>, <code>MultiOrdersController</code>, all subclasses of <code>Plannings::BaseController</code>). Without <code>@custom_lists</code>, <code>direct_filter_select</code> gets <code>nil</code> and these pages probably raise <code>NoMethodError</code> in <code>options_from_collection_for_select</code>. Not seen in a browser; inferred from the code.</p>
+<p><b>Stopgap (your change in <code>BaseController</code>).</b> Sets <code>@custom_lists</code> so the pages render. Side effects:</p>
+<ul>
+  <li>The “Listen” dropdown shows on employee, order and multi planning pages, but selecting a list there does nothing: only <code>CompanyOverview</code> uses the ids.</li>
+  <li>All of these pages share <code>session[:planning_custom_list_ids]</code>, so a selection made there carries over to the company page.</li>
+  <li>Every planning request does one extra query to load the lists.</li>
+  <li>The selection logic now exists twice (<code>BaseController#set_custom_lists</code> and <code>CompaniesController#set_custom_list_ids</code>).</li>
+</ul>
+<p><b>Proposed fix.</b> Render the list select only on the company page: pass a local from <code>companies/show.html.haml</code> (e.g. <code>render 'plannings/base/date_filter', custom_lists: true</code>) and wrap lines 13–14 of <code>_date_filter.html.haml</code> in <code>- if local_assigns[:custom_lists]</code>. Then revert the <code>BaseController</code> change. Add a test that renders an employee planning page, so this regression is caught. Note: <code>render_views</code> is not available in this suite's <code>ActionController::TestCase</code>, so use an integration test.</p>
 
 <h2>Dev data created for testing <span class="status warn">not cleaned up</span></h2>
 <ul>
@@ -93,8 +106,9 @@
   <li><s>Re-run the controller tests</s> <span class="status done">done</span></li>
   <li><s>Empty-options issue</s> <span class="status done">done</span> (see above)</li>
   <li><s>Browser check as MW</s> <span class="status done">done</span>. Team A → Burkhalter, Illi. Team A + B → Burkhalter, Rava, Illi, Mund. Reload keeps both pills and the filtered rows. Switching to “Nächste 6 Monate” keeps the filter (end date 21.03.2027). Clearing all pills → all 8 employees, and that stays after a reload.</li>
+  <li>Decide on the proposed fix above and apply it (or keep the stopgap).</li>
   <li>Clean up: dev CustomLists 1 &amp; 2, <code>tmp/design_canvas_ticket7.html</code>, this <code>wip.html</code>, <code>/tmp/65357-index-corrupt-backup</code>.</li>
-  <li>Final commit(s): squash or amend the WIP commit as you prefer. Push / open a PR only when you ask.</li>
+  <li>Final commit(s): squash the WIP commits and drop <code>wip.html</code> from history. Open a PR only when you ask.</li>
   <li>Move task board #7 to in_progress, then completed.</li>
 </ol>
 

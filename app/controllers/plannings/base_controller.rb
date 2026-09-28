@@ -16,6 +16,7 @@ module Plannings
     define_render_callbacks :show, :new, :update
 
     before_action :set_period
+    before_action :set_custom_lists
 
     def show
       @board = build_board
@@ -110,6 +111,13 @@ module Plannings
 
     def default_period
       Period.next_n_months(3)
+    end
+
+    def set_custom_lists
+      ids = params[:custom_list_ids] || session[:planning_custom_list_ids]
+      @custom_list_ids = Array(ids).compact_blank
+      session[:planning_custom_list_ids] = @custom_list_ids
+      @custom_lists = current_user.custom_lists.where(item_type: Employee.sti_name).list
     end
 
     def authorize_subject_planning
