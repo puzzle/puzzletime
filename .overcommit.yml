@@ -106,6 +106,7 @@ PreCommit:
     enabled: true
     exclude:
       - bin/**/*
+      - script/**/*
       - git-hooks/**/*
   Fasterer:
     enabled: true
