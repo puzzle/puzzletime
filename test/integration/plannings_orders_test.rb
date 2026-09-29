@@ -613,6 +613,36 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     page.assert_selector("#planned_order_#{orders(:puzzletime).id} .selected-sum .header-planned-amount", text: '0.00')
   end
 
+  # A selection update whose request fails — most often because navigation
+  # aborted it — used to reject a promise nobody caught. The browser reports
+  # that as an uncaught error carrying the jqXHR, which Ferrum surfaces as the
+  # unreadable "Ferrum::JavaScriptError: Object" in whatever step runs next.
+  test 'a failing selection update settles instead of leaking a rejection' do
+    page.execute_script(<<~JS)
+      window.__updateSettled = null
+      const trigger = new window.App.SelectionWatcherTrigger('classChange', '.day', 'ui-selected')
+      // port 1 refuses instantly; hitting an unrouted app path instead would
+      // raise server-side and surface in whatever test runs next
+      const action = new window.App.SelectionWatcherAction('http://127.0.0.1:1/update.js')
+      new window.App.SelectionWatcher(trigger, action)
+        ._runActionsWithSerializedClass()
+        .then(() => { window.__updateSettled = 'handled' },
+              () => { window.__updateSettled = 'unhandled' })
+    JS
+
+    settled = nil
+    Timeout.timeout(Capybara.default_max_wait_time) do
+      sleep 0.05 until (settled = page.evaluate_script('window.__updateSettled'))
+    end
+
+    assert_equal 'handled', settled
+
+    # js_errors is on, so this is where an uncaught page error would be raised.
+    find('body').click
+
+    assert_selector('.planning-calendar')
+  end
+
   private
 
   def workdays_next_n_months(n, date = Time.zone.today)
