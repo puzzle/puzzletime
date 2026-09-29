@@ -536,9 +536,21 @@ reasoning behind each decision and the phase sections for full verification deta
     <div class="timeline-date repeat">Di, 29.09.2026</div>
     <div class="timeline-spine accent"><button type="button" class="timeline-dot" data-sha="39093e18"><span class="vh">39093e18</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content">A <strong>third</strong> subject rewrite: one 73-character subject written after
-      the 26.09 sweep, committed with <code>--no-verify</code> and waved through by CI, which still has no width
-      check. Eight SHAs changed — including the one INT was built from, so
+      the 26.09 sweep, committed with <code>--no-verify</code> and waved through by CI, which had no width check —
+      <code>bin/commit-lint</code> reads the cap out of <code>.overcommit.yml</code> now. Eight SHAs changed —
       <code>git-cedece0d…</code> now resolves in Harbor but not on the branch. See §9.3.</div>
+  </div>
+
+  <div class="timeline-entry bad">
+    <div class="timeline-date repeat">Di, 29.09.2026</div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="8704d12f"><span class="vh">8704d12f</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content"><strong><code>RetryOnFlakyTests</code> was retrying every failing test</strong>,
+      assertion failures included — <code>Array#first</code> takes no block, so the class filter never ran and the
+      predicate always returned truthy. Fixed, which means every flaky rate in this document was a rate of
+      <em>three consecutive</em> failures. It immediately exposed one real uncaught JS error that the retries had
+      been hiding. Chasing the flakiness also showed my own earlier rates were contaminated by two suites sharing
+      <code>puzzletime_test</code> — §5's documented hazard, self-inflicted. See
+      <code>plannings_orders_test_failure.txt</code>.</div>
   </div>
 
 </div>
@@ -808,11 +820,15 @@ copied-out assets and the <code>COMMIT</code> file need to survive, and now they
       <code>CommitMsg/TextWidth/max_subject_width</code> out of <code>.overcommit.yml</code> alongside the
       Conventional Commits pattern, so the two gates cannot drift again — which is what let a
       <code>--no-verify</code> plant the subject that forced the third history rewrite (§9.3).</li>
-  <li class="todo"><strong><code>RetryOnFlakyTests</code> retries every failing test, not the three named
-      exception classes</strong> — <code>Array#first</code> takes no block, so the filter never runs. Every flaky
-      rate in this document is therefore a rate of three consecutive failures. Fixing it will turn currently-green
-      assertion failures red, so it wants its own branch and its own measurement. See
-      <code>plannings_orders_test_failure.txt</code>.</li>
+  <li class="done"><strong><code>RetryOnFlakyTests</code> retried every failing test, not the three named
+      exception classes</strong> — <code>Array#first</code> takes no block, so the filter never ran. Fixed; every
+      flaky rate quoted in this document was therefore a rate of <em>three consecutive</em> failures and is
+      understated. See <code>plannings_orders_test_failure.txt</code>.</li>
+  <li class="todo"><strong>The first thing the retry fix exposed:</strong>
+      <code>PlanningsOrdersTest#test_close_panel_on_escape</code> fails under
+      <code>parallel:test[16]</code> with <code>Ferrum::JavaScriptError</code> — an uncaught JS error that three
+      silent retries had been hiding. Clean 6/6 serially, so it is load-only. Root cause not found; the fix is
+      <em>not</em> to add the class to the retry list.</li>
 </ul>
 </div>
 
@@ -1319,10 +1335,17 @@ flake, "it retries three Ferrum/Cuprite exception classes, not assertion failure
 block never runs and <code>first</code> returns a Class, which is truthy. <em>Every</em> failing test is retried up
 to three times, assertion failures included; the intended class filter has never executed (and would raise
 <code>TypeError</code> if it did — <code>String#=~ String</code>). So the 1-in-2 and 1-in-5 rates above are rates of
-<em>three consecutive</em> failures, and every flaky-test number in this document is understated the same way. Left
-unfixed here deliberately: narrowing the retry will turn currently-green assertion failures red across the suite,
-which is a change that needs its own measurement and does not belong in an asset-pipeline branch. Written up in
-<code>plannings_orders_test_failure.txt</code>.</p>
+<em>three consecutive</em> failures, and every flaky-test number in this document is understated the same way.</p>
+<p class="box ok"><strong>Fixed.</strong> <code>retryable_failure?</code> now tests the failures themselves —
+<code>error.is_a?(error_class)</code>, or the class name appearing in the message, because marshalling a result
+back from a parallel worker turns an unmarshallable exception into a <code>RuntimeError</code> reading
+"<code>Neutered Exception Ferrum::JavaScriptError: …</code>" and a class check alone would stop retrying exactly
+the errors the list exists for. A <code>Minitest::Assertion</code> matches neither arm, so assertion failures
+report on the first attempt. <strong>It cost one test immediately:</strong>
+<code>PlanningsOrdersTest#test_close_panel_on_escape</code> now reports a <code>Ferrum::JavaScriptError</code>
+under <code>parallel:test[16]</code> (4.96s, where the masked runs took 50–90s doing the same work three times).
+That class was never on the retry list; three silent retries had been hiding a real uncaught JS error. Full
+write-up in <code>plannings_orders_test_failure.txt</code>.</p>
 
 <p class="box warn"><strong>The lesson for phases 1–6, not just this one:</strong> a scoped run proves the code you
 touched, not the code you broke. Two of these three were caused by a <em>deliberate, plausible-looking</em> fix to a
