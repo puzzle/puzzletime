@@ -128,6 +128,7 @@
     <li><a href="#risks">Risks and traps</a></li>
     <li><a href="#decisions">Decisions</a></li>
     <li><a href="#a11y">Accessibility, lint and release-check cleanup</a></li>
+    <li><a href="#int">INT deployment — what the running system says</a></li>
   </ol>
 </nav>
 
@@ -461,6 +462,56 @@ reasoning behind each decision and the phase sections for full verification deta
       <code>bin/</code>.</div>
   </div>
 
+  <div class="timeline-entry ok">
+    <div class="timeline-date">Di, 29.09.2026</div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="cedece0d"><span class="vh">cedece0d</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content"><a href="#int"><strong>The branch is deployed to INT</strong></a> and compared against
+      this plan. The build is provably the branch: the headerbar's version link names <code>cedece0d</code>, and all
+      three served assets are <em>byte-identical</em> to a local precompile of that SHA. Eleven authenticated pages,
+      the modal, the datepicker, selectize and the planning add-row all behave — zero page errors, zero console
+      output. See <a href="#int">§10</a>.</div>
+  </div>
+
+  <div class="timeline-entry bad">
+    <div class="timeline-date repeat">Di, 29.09.2026</div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="5975aec1"><span class="vh">5975aec1</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content"><strong>The production image published its JavaScript source map.</strong>
+      <code>--sourcemap</code> sat in <code>package.json</code>'s <code>build</code> script, which is what the
+      Dockerfile runs, so <code>/assets/application-*.js.map</code> served 2.2 MB of unminified source to anyone
+      unauthenticated. The CSS map was correctly absent — dartsass drops it in production, esbuild had no equivalent
+      default. The flag moved to the dev watcher. See <a href="#int">§10.3</a>.</div>
+  </div>
+
+  <div class="timeline-entry bad">
+    <div class="timeline-date repeat">Di, 29.09.2026</div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="5d3ec74c"><span class="vh">5d3ec74c</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content">A one-line deprecation warning in INT's boot log
+      (<code>include_local_variables</code>) turned out to cover <strong>two</strong> bugs: the new option name, and a
+      typo — <code>run.full_versio<em>o</em>n</code> — that had silently sent <code>release = nil</code> to Sentry for
+      years. Fixing the typo alone <em>fails boot</em>: without <code>BUILD_COMMIT</code> the YAML value is the Float
+      <code>2.18</code> and sentry-ruby 7 rejects it. See <a href="#int">§10.4</a>.</div>
+  </div>
+
+  <div class="timeline-entry warn">
+    <div class="timeline-date repeat">Di, 29.09.2026</div>
+    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="49d558e"><span class="vh">49d558e</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content"><strong>Digested assets were served with no <code>max-age</code> at all.</strong>
+      Not the app's doing and not new — an nginx sidecar serves <code>public/</code> from an emptyDir and never set a
+      caching header, so every page view revalidated ~600 kB of content-addressed CSS/JS. Fixed in the
+      <em>deployment</em> repository, one <code>location ^~ /assets/</code> per environment.
+      See <a href="#int">§10.3</a>.</div>
+  </div>
+
+  <div class="timeline-entry bad">
+    <div class="timeline-date repeat">Di, 29.09.2026</div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="cedece0d"><span class="vh">cedece0d</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content">axe-core over eleven INT pages found <strong>four violations that §9.1's ten-page
+      run could not see</strong> — three because the markup only exists with production data or with
+      <code>Settings.meal_compensation.active</code> on, one because the page was not in the ten. One of them is ours:
+      the darkened link colour dropped link-vs-body-text contrast from 2.37:1 to <strong>1.25:1</strong>.
+      <em>A local a11y sweep measures the seed data's markup, not the app's.</em> See <a href="#int">§10.5</a>.</div>
+  </div>
+
 </div>
 
 <p class="timeline-legend">
@@ -710,6 +761,19 @@ copied-out assets and the <code>COMMIT</code> file need to survive, and now they
   <li class="todo">Design sign-off on the darkened brand colours. They are the same hues, but <code>.btn-primary</code> and the
       status badges are visibly darker than <code>master</code>. The alternative (dark text on the light brand
       backgrounds) changes the look more, not less.</li>
+  <li class="done"><strong>Deployed to INT and compared against this plan</strong> (<a href="#int">§10</a>): assets
+      byte-identical to a local precompile of the deployed SHA, eleven pages plus modal/datepicker/selectize/planning
+      add-row exercised, no JS errors. Two deviations found and fixed — the published JS source map
+      (<code>5975aec1</code>) and the Sentry deprecation that hid a dead <code>release</code> tag
+      (<code>5d3ec74c</code>).</li>
+  <li class="todo"><strong>Sync the deployment repository</strong> so nginx starts sending
+      <code>Cache-Control: public, max-age=31536000, immutable</code> for <code>/assets/</code>
+      (<code>49d558e</code>, all five environments). Independent of this branch — master's Sprockets digests are
+      content-addressed too. See <a href="#int">§10.3</a>.</li>
+  <li class="todo"><strong>Decide on the four a11y findings INT surfaced</strong> (<a href="#int">§10.5</a>). Three are
+      pre-existing markup (74 unlabelled graph bars, two unlabelled filter selects); the fourth is ours — links inside
+      body text are now 1.25:1 against their surrounding text, and the fix is a visible one (underline them, or
+      undo part of the darkening).</li>
 </ul>
 </div>
 
@@ -2669,6 +2733,10 @@ plain <code>li &gt; a</code> children do not implement, and was dropped; <code>l
 <strong>zero</strong> axe wcag2a/wcag2aa violations. The one remaining hit is
 <code>input.clipboard</code> without a label inside <code>#console</code> — that is
 <code>web-console</code>'s own markup, development-only, not ours.</p>
+<p class="box warn"><strong>That result is true of the development database and false of the running system.</strong>
+Re-run on INT against production-shaped data and PITC's settings, the same ten pages plus one more report four
+violations (<a href="#int">§10.5</a>): markup that the seed data never renders, a page that was not in the ten, and a
+config flag that is off locally. The sweep was right about what it measured.</p>
 <p class="small">Not attempted: keyboard-trap and focus-order checks, which axe cannot do; the datepicker and the
 planning board are the obvious candidates for a manual pass.</p>
 
@@ -2829,6 +2897,174 @@ security fixes above.</p>
 first pass resolved that by disabling the cop. Wrong way round: the script re-execs itself through
 <code>rails runner</code>, so it <em>is</em> meant to be run directly. It got the bit, and <code>script/**/*</code>
 joined <code>bin/**/*</code> in the hook's exclude list, which is where the exception belonged.</p>
+
+<h2 id="int">10. INT deployment — what the running system says <span class="tag low">2026-09-29</span></h2>
+
+<p>Everything above was verified against a development machine: a seeded database, dev settings, Rails serving its own
+assets, one process. <a href="https://pitc-puzzletime-int.ocp-internal.cloudscale.puzzle.ch">INT</a> is the first time
+the branch ran as a container behind an nginx sidecar, against production-shaped data, with PITC's settings. Four
+things were wrong, and none of them could have been found locally.</p>
+
+<h3>10.1 First: prove the deployment is the branch</h3>
+<p>Comparing a plan against a deployment is worthless if the deployment is an older image. Two independent checks:</p>
+<ul>
+  <li>The headerbar's version link carries the build SHA —
+      <code>…/blob/cedece0d8497b1698edc2516566ee8492b838d24/CHANGELOG.md</code> — which is the branch HEAD.</li>
+  <li><code>npm run build &amp;&amp; RAILS_ENV=production bin/rails assets:precompile</code> at that SHA produces the
+      same three digests INT links (<code>tailwind-5360aa21.css</code>, <code>application-58fbb2b4.css</code>,
+      <code>application-26ae360f.js</code>), and <code>cmp</code> reports all three <strong>byte-identical</strong> to
+      what INT serves. The image is a reproducible build of this tree, not a near-miss.</li>
+  <li>Pulling the image itself
+      (<code>harbor.puzzle.ch/pitc-ruby-public/ptime/int/rails:git-cedece0d…</code>) closes the loop: its whole
+      <code>public/</code> tree — <strong>69 files</strong> — is byte-identical to that precompile, and
+      <code>diff -rq</code> over <code>app</code>, <code>config</code>, <code>lib</code>, <code>db</code>,
+      <code>bin</code>, <code>Gemfile.lock</code> and <code>package.json</code> against the tagged commit is empty.
+      The single exception is <code>assets/.manifest.json</code>, whose <em>mapping</em> is identical and whose
+      <em>key order</em> is not — Propshaft writes it in directory-traversal order, so the file is not reproducible
+      even though everything it describes is.</li>
+</ul>
+<p class="small">Remember to <code>rm -rf public/assets tmp/cache/assets</code> afterwards — the phase-0 trap
+(stale digested assets shadowing your edits) applies to a verification precompile exactly as much as to a baseline one.</p>
+
+<h3>10.2 What INT confirms</h3>
+<table>
+  <tr><th>Expectation</th><th>Evidence on INT</th></tr>
+  <tr><td>Propshaft, Sprockets gone (<a href="#p3">phase 3</a>)</td>
+      <td>8-hex digests; <code>/assets/manifest.js</code> and <code>/assets/.sprockets-manifest.json</code> both 404</td></tr>
+  <tr><td>Frozen file and <code>bootstrap</code> layer gone (<a href="#p6">phase 6</a>)</td>
+      <td><code>tailwind.css</code> declares <code>theme, base, components, utilities</code> (plus Tailwind's own
+          <code>properties</code>) and contains the string <code>bootstrap</code> zero times</td></tr>
+  <tr><td>Preflight on (<a href="#p4">phase 4</a>)</td>
+      <td><code>[hidden]:where(:not([hidden=until-found])){display:none!important}</code> is in the base layer</td></tr>
+  <tr><td>The <code>cfa41627</code> Preflight residues</td>
+      <td><code>h1.h3</code> 24px, <code>p</code> 10px bottom margin, logo <code>img</code> <code>inline-block</code>
+          with its <code>height</code> attribute honoured, native <code>select</code> chrome back</td></tr>
+  <tr><td>The darkened palette (<a href="#a11y">§9.1</a>)</td>
+      <td><code>.btn-primary</code> <code>rgb(30,90,150)</code>, body <code>#4A4A4A</code>,
+          <code>.text-danger</code> <code>#a94442</code>, <code>--color-muted #6B6B6B</code></td></tr>
+  <tr><td>Dead print layout deleted (<a href="#p5">phase 5</a>)</td><td><code>/assets/print.css</code> 404</td></tr>
+  <tr><td>Glyphicons are the only Bootstrap remnant (D2)</td>
+      <td><code>/assets/bootstrap/glyphicons-halflings-regular-*.woff2</code> 200; the Puzzle font renders
+          <code>.icon-help::before</code> from <code>font-family: puzzletime</code></td></tr>
+  <tr><td>Phase 3's <code>url()</code> rewrites</td>
+      <td>every <code>url()</code> in the compiled CSS is digested and resolves 200, including the six
+          <code>jquery-ui/</code> PNGs that came out of the gem's <code>.erb</code> theme</td></tr>
+  <tr><td>Phase 2's four silent interop traps</td>
+      <td><code>jQuery</code>, <code>Turbolinks</code>, <code>$.rails</code>, <code>selectize</code>,
+          <code>datepicker</code>, <code>modal</code>, <code>tooltip</code> all defined; <strong>zero page errors and
+          zero console output</strong> across eleven pages</td></tr>
+  <tr><td>Runtime matches the lockfile (§1, 25.09)</td><td>Rails 8.1.4, puma 8.0.2, ruby 4.0</td></tr>
+</table>
+
+<p>Interaction, which is the half stills cannot cover (<a href="#p0">§5 phase 0</a>'s harness argument):
+the <em>Zeiten freigeben</em> modal fades in to <code>opacity: 1</code> at <code>z-index: 1050</code> over a 0.44
+backdrop and leaves no <code>.modal-backdrop</code> or <code>body.modal-open</code> behind on close; the datepicker
+opens at <code>z-index: 1051</code> under its input; selectize renders the Buchungsposition control; and the planning
+board's add-row — <a href="#p4">phase 4</a>'s <code>[hidden]</code> casualty — goes <code>display: none</code> →
+<code>block</code> with its dropdown populated. <code>.btn-group</code> fix/provisorisch, the <code>h5</code> legend
+and the weekly graph's <code>img</code> bars all render.</p>
+
+<h3>10.3 Deviations found in the deployment, not the code</h3>
+
+<h4>The production image published its source map <span class="tag low">fixed · 5975aec1</span></h4>
+<p><code>/assets/application-c5588db3.js.map</code> answered <strong>200 with 2.2 MB</strong> of unminified
+application and vendor source, to an unauthenticated request. <code>package.json</code>'s <code>build</code> script
+carried <code>--sourcemap</code>, and that script is what <code>assets:precompile</code> runs inside the Dockerfile,
+so Propshaft happily fingerprinted and shipped the map. The CSS map did <em>not</em> leak
+(<code>application-*.css.map</code> 404s) purely because dartsass-rails omits it in production by default — the
+asymmetry is the tell that nobody had chosen either behaviour. <code>--sourcemap</code> now lives on the
+<code>js:</code> line of <code>Procfile.dev</code>, so development keeps maps and no image ships one.</p>
+<p>Confirmed against the image: it carries the map twice, once as the build artifact
+(<code>app/assets/builds/application.js.map</code>) and once fingerprinted
+(<code>public/assets/application-c5588db3.js.map</code>). A precompile of the fixed tree emits neither, and the
+bundle's digest moves <code>26ae360f</code> → <code>b964cef7</code> — the map's <code>sourceMappingURL</code>
+comment was part of the bundle, so this is the one change that is visible in the JS itself.</p>
+<p class="box warn"><strong>Propshaft publishes whatever is sitting in <code>app/assets/builds</code>.</strong>
+The same precompile run on a developer's tree also fingerprinted <code>application.css.map</code> and
+<code>phone.css.map</code> — left there by <code>bin/dev</code>'s watchers, which <em>do</em> emit maps. The image
+is safe because it builds from a clean checkout, but a CI job that ran a dev watcher before
+<code>assets:precompile</code> would ship them. Two more reasons to keep the phase-0 habit:
+<code>rm -rf public/assets tmp/cache/assets</code>, and never precompile on a tree you have been developing in.</p>
+
+<h4>Digested assets had no caching header at all <span class="tag low">fixed · 49d558e, deployment repo</span></h4>
+<p>Assets came back <code>cache-control: private</code> with no <code>max-age</code>, so a browser revalidated every
+one of them on every page view. The path matters for the diagnosis: the responses carry no
+<code>x-request-id</code>, no <code>x-frame-options</code> and an mtime-size <code>etag</code>, so they never reach
+Rails — <code>deployments/base/rails.yaml</code> runs an <strong>nginx sidecar</strong> whose
+<code>prepare-assets</code> init container copies <code>public/</code> into an emptyDir, and misses fall through to
+puma (which is why a missing asset rendered a 175 kB Rails error page). <code>config.public_file_server.headers</code>
+would therefore have changed nothing.</p>
+<p>The fix belongs in the deployment repository, one block per environment file:</p>
+<pre><code>location ^~ /assets/ {
+    add_header Cache-Control "public, max-age=31536000, immutable" always;
+}</code></pre>
+<p>Verified against <code>nginx:stable</code> with the real config: <code>nginx -t</code> passes, an
+<code>/assets/</code> file comes back with the header, <code>/robots.txt</code> is unchanged, and a missing asset is
+now a plain nginx 404 instead of the Rails exception page. Applies to master too — Sprockets digests are
+content-addressed in exactly the same way. The <code>private</code> is HAProxy's, added with the router's sticky
+cookie; it does not stop browser caching, and since sessions live in memcached the affinity cookie buys nothing
+anyway (<code>haproxy.router.openshift.io/disable_cookies</code> if someone wants it gone).</p>
+
+<h4>Two things that are fine as they are</h4>
+<ul>
+  <li><code>/assets/.manifest.json</code> (6 kB) is readable. It is Propshaft's logical-name → digest map, and every
+      value in it is already in the HTML. Worth knowing it enumerates assets no page links, so it is a discovery aid
+      and nothing more; a <code>location = /assets/.manifest.json { return 404; }</code> is available if that ever
+      matters. Propshaft reads it from disk at boot, not over HTTP.</li>
+  <li>A 404 returns the full Rails exception page, stack frames and gem paths included. That is
+      <code>RAILS_ALL_REQUESTS_LOCAL</code>, the same env switch master honours, deliberately on for INT only.</li>
+</ul>
+
+<h3>10.4 One deprecation warning, two bugs</h3>
+<p>INT's boot log carried <code>WARN -- sentry: `include_local_variables` is deprecated; use
+`data_collection.stack_frame_variables` instead.</code> The rename is trivial — sentry-ruby 7 still honours the old
+setter, it just logs — and <code>KeyValueCollection.from(true)</code> gives the same
+<code>collect_stack_frame_variables?</code> as before, so capture behaviour is unchanged.</p>
+<p>Reading the surrounding lines is what found the real defect: <code>config.release =
+Settings.puzzletime.run.full_versio<strong>o</strong>n</code>. The config gem returns <code>nil</code> for an unknown
+key instead of raising, so every deploy has reported <em>no release</em> to Sentry/GlitchTip for as long as the typo
+has existed. And correcting the spelling alone <strong>breaks boot</strong>: <code>settings.yml</code> renders
+<code>full_version</code> as bare <code>2.18</code> when <code>BUILD_COMMIT</code> is unset, YAML parses that as a
+Float, and sentry-ruby 7 raises <code>ArgumentError: expect the argument to be a String or NilClass, got Float</code>.
+Hence <code>.to_s</code>. Verified by booting with the tracker enabled both ways —
+<code>release="2.18"</code> and <code>release="2.18_deadbeef"</code>, no deprecation line.</p>
+<p class="small">The pattern is §9.5's again: a check that reports something and is never read. A warning nobody reads
+sat on top of a value nobody read.</p>
+
+<h3>10.5 axe on real data: four violations the ten-page sweep could not see</h3>
+<p>Same tool, same rule sets as <a href="#a11y">§9.1</a> (axe-core 4.10.2, <code>wcag2a</code> + <code>wcag2aa</code>),
+eleven pages, logged in as a throwaway member account. Four violations — and the interesting part is <em>why each one
+was invisible locally</em>.</p>
+<table>
+  <tr><th>Page</th><th>Violation</th><th>Why §9.1 missed it</th></tr>
+  <tr><td><code>/ordertimes/new</code></td>
+      <td><code>link-in-text-block</code> — the <em>Verpflegungsentschädigung</em> link is
+          <code>#1e5a96</code> on <code>#4a4a4a</code> text: <strong>1.25:1</strong>, needs 3:1</td>
+      <td>The page <em>was</em> in the ten. The link is not: <code>ordertimes/_form.html.haml:65</code> renders it
+          only <code>if Settings.meal_compensation.active</code>, which is on at PITC and off in the dev config.
+          <strong>A settings flag hid a whole control from the audit.</strong></td></tr>
+  <tr><td><code>/weekly_graph/370</code></td>
+      <td><code>image-alt</code> × <strong>74</strong> — every graph bar is an <code>img</code> of
+          <code>space.gif</code> with a background colour and no <code>alt</code>
+          (<code>graph_helper.rb#timebox_div</code>)</td>
+      <td>Page not in the ten, and the count is a function of the data: a seeded employee with no worktimes draws no
+          bars.</td></tr>
+  <tr><td><code>/plannings/employees/:id</code>, <code>/employee_master_data</code></td>
+      <td><code>select-name</code> × 1 each — <code>#period_shortcut</code>, <code>#department_id</code></td>
+      <td><code>filter_helper.rb#direct_filter</code> emits a <code>label</code> only when the caller passes one, and
+          these two callers pass <code>nil</code>. §9.1 hit <code>/plannings</code> (the index), not the board.</td></tr>
+</table>
+<p><strong>Three of the four are pre-existing markup</strong> — untouched by this branch, red on master too. The
+fourth is ours and is the price of the palette: the same link was <code>#238BCA</code> on <code>#4A4A4A</code> before,
+which is 2.37:1 and <em>also</em> fails the 3:1 rule, but darkening the link to clear AA against the white background
+(7.10:1) pushed it to 1.25:1 against the text it sits in. The two requirements pull in opposite directions; satisfying
+both means not relying on colour at all, i.e. underlining links inside text blocks. That is a visible design change, so
+it is listed as open rather than slipped in here.</p>
+<p class="small">Fix sketch, if it is wanted: <code>alt: ''</code> on the two graph <code>image_tag</code>s (decorative
+by construction — the tooltip already carries the text), an <code>aria-label</code> fallback in
+<code>direct_filter</code> when <code>label</code> is <code>nil</code>, and
+<code>text-decoration: underline</code> for <code>a</code> inside <code>p</code>/<code>label</code>/<code>.detail</code>.
+Three small diffs, one design decision.</p>
 
 <hr>
 <p class="small">Generated from a scan of this working tree: 330 HAML views, 36 CoffeeScript files, 6020 lines of SCSS,
