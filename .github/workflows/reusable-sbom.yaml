@@ -60,7 +60,7 @@ jobs:
         run: |
           docker run \
                  --rm \
-                 -v $(pwd):/data \
+                 -v "$(pwd):/data" \
                  cyclonedx/cyclonedx-cli \
                  merge \
                  --input-files data/sbom-ruby.json data/sbom-npm.json \

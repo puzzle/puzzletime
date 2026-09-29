@@ -53,6 +53,10 @@ name: "Manual build"
 jobs:
   lint:
     if: ${{ inputs.lint }}
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
     uses: ./.github/workflows/reusable-lint.yaml
 
   test:
