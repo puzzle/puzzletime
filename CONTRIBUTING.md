@@ -42,8 +42,10 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/): a
 * Keep the body short — bullet points where possible. Put longer rationale in the
   relevant doc and reference it from the body rather than inlining prose.
 
-`./bin/setup` wires a commit template (`.gitmessage`) and installs the
-`overcommit` hooks that enforce this format (`CommitMsg/MessageFormat` in
-`.overcommit.yml`).
+`./bin/setup` wires a commit template (`.gitmessage`). The `overcommit` hooks
+that enforce this format (`CommitMsg/MessageFormat` in `.overcommit.yml`) are
+installed separately by `./bin/setup_overcommit`, which also installs their
+linters — the optional `:overcommit` gem group plus the npm and system binaries
+the hooks shell out to.
 On pull requests, CI re-checks it with `bin/commit-lint` (a separate
 `commit-lint` job), which reads the same pattern from `.overcommit.yml`.
