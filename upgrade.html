@@ -843,6 +843,16 @@ copied-out assets and the <code>COMMIT</code> file need to survive, and now they
       step ran next. Both now let the thenable jqXHR sequence the chain and catch the rejection. Three consecutive
       <code>parallel:test[16]</code> runs clean afterwards; regression test asserts the chain settles
       <em>handled</em>. See <code>plannings_orders_test_failure.txt</code>.</li>
+  <li class="done"><strong>A third flake, and it was not a timing one:</strong>
+      <code>CreateOrderTest</code> failing with "Unable to find visible link
+      <code>client_work_item_id_create_link</code>" is global state, not a race. <code>Crm.init</code> returned early
+      when no CRM is configured, so <code>ShowOrder</code>'s <code>crm_stop</code> left its
+      <code>Crm::Highrise</code> instance in the process-wide <code>cattr</code>; the next test's
+      <code>/orders/new</code> then renders the create link <code>display: none</code>, because
+      <code>restrict_local?</code> is true for Highrise. Only a seed that puts <code>ShowOrder</code> first hits it.
+      <code>Crm.init</code> now assigns unconditionally, which also makes it a real re-init. Deterministic repro:
+      <code>bin/rails test test/integration/show_order_test.rb test/integration/create_order_test.rb --seed 1 -i
+      "/show_additional_crm_orders|create_order_with_new_client_and_new_category/"</code>.</li>
 </ul>
 </div>
 
