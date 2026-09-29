@@ -7,16 +7,6 @@
 
 ENV['RAILS_ENV'] = 'test'
 
-module Warning
-  class << self
-    prepend(Module.new do
-      def warn(msg, category: nil)
-        super unless msg.include?(':unprocessable_entity is deprecated')
-      end
-    end)
-  end
-end
-
 require 'minitest/reporters'
 # Minitest::Reporters.use!
 Minitest::Reporters.use! Minitest::Reporters::ProgressReporter.new(detailed_skip: false, color: true)

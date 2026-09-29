@@ -230,7 +230,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_no_difference('CrudTestModel.count') do
       post :create, params: { crud_test_model: { name: 'illegal', children: 2 } }
     end
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
     assert_template 'new'
     assert_predicate entry, :new_record?
     assert_predicate assigns(:companions), :present?
@@ -263,7 +263,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_no_difference('CrudTestModel.count') do
       post :create, params: { crud_test_model: { children: 2 } }
     end
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
     assert_template 'new'
     assert_predicate entry, :new_record?
     assert assigns(:companions)
@@ -279,7 +279,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_no_difference('CrudTestModel.count') do
       post :create, params: { crud_test_model: { children: 2 } }, format: 'json'
     end
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
     assert_predicate entry, :new_record?
     assert_equal %i[before_create before_save], @controller.called_callbacks
   end
@@ -289,7 +289,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
 
     put :update, params: { id: test_entry.id, crud_test_model: { rating: 20 } }
 
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
     assert_template 'edit'
     assert_predicate entry, :changed?
     assert_predicate flash[:notice], :blank?
@@ -307,7 +307,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
                  },
                  format: 'json'
 
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
     assert_predicate entry, :changed?
     assert_predicate flash[:notice], :blank?
     assert_equal 20, entry.rating
@@ -341,7 +341,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
       delete :destroy, params: test_params(id: crud_test_models(:BBBBB).id,
                                            format: 'json')
     end
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
     assert_predicate flash[:notice], :blank?
   end
 
