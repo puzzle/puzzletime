@@ -11,6 +11,10 @@ name: 'Lint and test on pull request'
 
 jobs:
   lint:
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
     uses: ./.github/workflows/reusable-lint.yaml
     with:
       ref: ${{ github.event.pull_request.head.sha }}

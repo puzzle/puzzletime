@@ -11,6 +11,10 @@ name: 'Lint, test and image build on push'
 
 jobs:
   lint:
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
     uses: ./.github/workflows/reusable-lint.yaml
 
   test:
