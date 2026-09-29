@@ -30,7 +30,7 @@ jobs:
         ports: ["11211:11211"]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ inputs.ref }}
 
@@ -39,7 +39,7 @@ jobs:
           bundler-cache: true
 
       # assets:precompile below runs esbuild via jsbundling-rails
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: '22'
           cache: npm

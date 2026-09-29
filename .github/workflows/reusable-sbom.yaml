@@ -49,7 +49,7 @@ jobs:
     #     ports: [ '11211:11211' ]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: 'Generate SBOM for ruby and npm dependencies'
         run: |
           npm install -g @cyclonedx/cdxgen
@@ -79,7 +79,7 @@ jobs:
                --form "projectVersion=latest" \
                --form "bom=@sbom.xml"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: ${{ inputs.artifact-prefix }}sboms
